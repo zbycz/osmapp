@@ -1,6 +1,8 @@
-import * as React from "react";
-import App, { Container } from 'next/app'
-import { createGlobalStyle } from "styled-components";
+// @flow
+
+import * as React from 'react';
+import App, { Container } from 'next/app';
+import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
   html, body, #__next {
@@ -13,19 +15,21 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 export default class MyApp extends App {
-    static async getInitialProps({ Component, router, ctx }) {
-        const pageProps = Component.getInitialProps ? await Component.getInitialProps(ctx) : {};
-        return { pageProps };
-    }
+  static async getInitialProps({ Component, router, ctx }) {
+    const pageProps = Component.getInitialProps
+      ? await Component.getInitialProps(ctx)
+      : {};
+    return { pageProps };
+  }
 
-    render () {
-        const { Component, pageProps } = this.props;
+  render() {
+    const { Component, pageProps } = this.props;
 
-        return (
-            <Container>
-                <Component {...pageProps} />
-                <GlobalStyle />
-            </Container>
-        )
-    }
+    return (
+      <Container>
+        <Component {...pageProps} />
+        <GlobalStyle />
+      </Container>
+    );
+  }
 }

@@ -1,5 +1,7 @@
-import * as React from "react";
-import styled from "styled-components";
+// @flow
+
+import * as React from 'react';
+import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 
 const Wrapper = styled.div`
@@ -9,6 +11,10 @@ const Wrapper = styled.div`
 
 const MapBrowser = dynamic(() => import('./BrowserMap'), { ssr: false });
 
-const Map = () => <Wrapper><MapBrowser/></Wrapper>;
+const Map = () => (
+  <Wrapper>
+    <MapBrowser />
+  </Wrapper>
+);
 
 export default Map;

@@ -1,11 +1,14 @@
-import * as React from "react";
-import styled from "styled-components";
-import Panel from "../components/Panel/Panel";
-import Map from "../components/Map/Map";
+// @flow
+
+import * as React from 'react';
+import styled from 'styled-components';
+
+import Panel from '../components/Panel/Panel';
+import Map from '../components/Map/Map';
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: 400px 1fr;
   width: 100%;
   height: 100%;
 
@@ -18,10 +21,10 @@ const Wrapper = styled.div`
 `;
 
 const Index = () => (
-    <Wrapper>
-      <Panel />
-      <Map />
-    </Wrapper>
+  <Wrapper>
+    <Panel />
+    <Map />
+  </Wrapper>
 );
 
 export default Index;
