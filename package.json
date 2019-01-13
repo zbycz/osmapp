@@ -1,0 +1,13 @@
+{
+  "name": "osmcz-v2",
+  "scripts": {
+    "dev": "next ./src",
+    "build": "next build ./src",
+    "start": "next start ./src"
+  },
+  "dependencies": {
+    "next": "^7.0.2",
+    "react": "^16.7.0",
+    "react-dom": "^16.7.0"
+  }
+}

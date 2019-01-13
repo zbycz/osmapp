@@ -1,0 +1,11 @@
+/node_modules
+/coverage
+/build
+/dist
+/src/.next
+.DS_Store
+.env
+.idea
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
