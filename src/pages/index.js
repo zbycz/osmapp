@@ -1,8 +1,7 @@
-import React from 'react'
+// @flow
 
-const Home = () => (
-  <div>
-  </div>
-)
+import React from 'react';
 
-export default Home
+const Home = () => <div />;
+
+export default Home;

@@ -2,6 +2,7 @@
   "name": "osmcz-v2",
   "scripts": {
     "dev": "next ./src",
+    "lint": "eslint --print-config . | eslint-config-prettier-check && eslint . --report-unused-disable-directives",
     "build": "next build ./src",
     "start": "next start ./src"
   },
@@ -9,5 +10,12 @@
     "next": "^7.0.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0"
+  },
+  "devDependencies": {
+    "@kiwicom/eslint-config": "^2.1.0",
+    "eslint": "^5.12.1",
+    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "babel-plugin-styled-components": "^1.10.0",
+    "babel-eslint": "^10.0.1"
   }
 }
