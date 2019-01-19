@@ -50,7 +50,8 @@ module.exports = {
         devDependencies: ['/scripts/**', '**/*.test.js', '**/*.spec.js'],
       },
     ],
-    'dependencies/no-cycles': OFF, // cycles are sometimes expected in GraphQL
+    'dependencies/no-cycles': WARN, // cycles are sometimes expected in GraphQL
+    'react/jsx-no-bind': OFF, // https://reactjs.org/docs/hooks-faq.html#are-hooks-slow-because-of-creating-functions-in-render
 
     // Possible future of @kiwicom/eslint-config:
     'jest/prefer-to-be-null': ERROR,

@@ -2,12 +2,28 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
+import Button from '@material-ui/core/Button';
 
 import Property from './Property';
+import LogoOsm from '../../assets/LogoOsm';
+import FeatureHeading from './FeatureHeading';
+import FeatureImage from './FeatureImage';
+import SearchBox from '../SearchBox/SearchBox';
 
 const Wrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+
   background-color: #fafafa;
   height: 100%;
+`;
+
+const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  margin: 20px 15px;
 `;
 
 const TopPanel = styled.div`
@@ -18,42 +34,16 @@ const TopPanel = styled.div`
   box-sizing: border-box;
 `;
 
-const SearchBox = styled.div`
-  height: 48px;
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.24), 0 0 2px 0 rgba(0, 0, 0, 0.12);
-  background-color: #fafafa;
+const StyledEdit = styled.div`
+  margin: 40px 0 20px 0;
+  text-align: center;
 `;
 
-const FeatureImage = styled.div`
-  position: relative;
-  background: url(${({ link }) => link}) center center no-repeat;
-  background-size: cover;
-  height: 238px;
-
-  &:before {
-    content: '';
-    position: absolute;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-image: linear-gradient(
-        to bottom,
-        rgba(55, 71, 79, 0.16),
-        rgba(55, 71, 79, 0.16)
-      ),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0) 71%, #000000);
-    // background-image: linear-gradient(to bottom right,#002f4b,#dc4225);
-    // opacity: .6;
-  }
-`;
-
-const FeatureHeading = styled.div`
-  font-family: Roboto;
-  font-size: 36px;
-  line-height: 0.89;
-  color: rgba(0, 0, 0, 0.7);
-  margin: 20px 15px;
+const Footer = styled.div`
+  color: rgba(0, 0, 0, 0.54);
+  margin-top: auto;
+  font-size: 1rem;
+  line-height: 1.5;
 `;
 
 export const Panel = () => (
@@ -61,11 +51,32 @@ export const Panel = () => (
     <TopPanel>
       <SearchBox />
     </TopPanel>
-    <FeatureImage link="https://cdn.pixabay.com/photo/2014/07/10/10/20/golden-gate-bridge-388917_960_720.jpg" />
-    <FeatureHeading>Billa Golden Gate Bridge</FeatureHeading>
-    <Property label="web" value="www.billa.cz" />
-    <Property label="otevírací doba" value="neděle 9-21" />
-    <Property label="telefon" value="222 451 123" />
+    <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg" />
+    <Content>
+      <FeatureHeading title="Billa u Golden Gatu" />
+      <Property label="web" value="www.billa.cz" />
+      <Property label="otevírací doba" value="neděle 9-21" />
+      <Property label="telefon" value="222 451 123" />
+
+      <StyledEdit>
+        <Button size="large" title="Upravit místo v živé databázi OSM">
+          <LogoOsm width="24" height="24" style={{ marginRight: 10 }} />
+          Upravit místo
+        </Button>
+      </StyledEdit>
+
+      <Footer>
+        Bod v databázi OpenStreetMap
+        <br />
+        50.12341° 14.5542°
+        <br />
+        <a href="https://osmap.cz/n2534123">osmap.cz/n2534123</a>
+        <br />
+        <label>
+          <input type="checkbox" /> Zobrazit tagy
+        </label>
+      </Footer>
+    </Content>
   </Wrapper>
 );
 

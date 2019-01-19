@@ -10,5 +10,14 @@ const GlobalStyle = createGlobalStyle`
     border: 0;
     font-family: 'Roboto', sans-serif;
   }
+  
+  a {
+    color: #0078a8
+    text-decoration: none;
+    
+    &:hover {
+        text-decoration: underline;
+    }
+  }
 `;
 export default GlobalStyle;

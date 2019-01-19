@@ -14,6 +14,7 @@ class BrowserMap extends React.Component {
     this.map = L.map(this.mapRef.current, {
       center: [50.0, 15.0],
       zoom: 8,
+      attributionControl: false,
     });
 
     const baseLayer = L.tileLayer(
