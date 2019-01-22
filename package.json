@@ -4,7 +4,8 @@
     "dev": "next ./src",
     "lint": "eslint --print-config . | eslint-config-prettier-check && eslint . --report-unused-disable-directives",
     "build": "next build ./src",
-    "start": "next start ./src"
+    "start": "next start ./src",
+    "dist": "next build ./src && next export ./src -o dist"
   },
   "dependencies": {
     "@material-ui/core": "^3.9.0",
