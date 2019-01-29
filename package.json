@@ -10,20 +10,20 @@
   "dependencies": {
     "@material-ui/core": "^3.9.0",
     "@material-ui/icons": "^3.0.2",
+    "jss": "^9.8.7",
     "leaflet": "^1.4.0",
     "next": "^7.0.2",
     "react": "^16.8.0-alpha.1",
     "react-dom": "^16.8.0-alpha.1",
     "react-jss": "^8.6.1",
     "styled-components": "^4.1.3",
-    "jss": "^9.8.7",
     "styled-jsx": "^3.2.0"
   },
   "devDependencies": {
     "@kiwicom/eslint-config": "^2.1.0",
-    "eslint": "^5.12.1",
-    "eslint-plugin-jsx-a11y": "^6.1.2",
+    "babel-eslint": "^10.0.1",
     "babel-plugin-styled-components": "^1.10.0",
-    "babel-eslint": "^10.0.1"
+    "eslint": "^5.12.1",
+    "eslint-plugin-jsx-a11y": "^6.1.2"
   }
 }
