@@ -46,38 +46,42 @@ const Footer = styled.div`
   line-height: 1.5;
 `;
 
-export const Panel = () => (
-  <Wrapper>
-    <TopPanel>
-      <SearchBox />
-    </TopPanel>
-    <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg" />
-    <Content>
-      <FeatureHeading title="Billa u Golden Gatu" />
-      <Property label="web" value="www.billa.cz" />
-      <Property label="otevírací doba" value="neděle 9-21" />
-      <Property label="telefon" value="222 451 123" />
+export const Panel = ({ feature }) => {
+  const { name, ...tags } = feature.properties;
 
-      <StyledEdit>
-        <Button size="large" title="Upravit místo v živé databázi OSM">
-          <LogoOsm width="24" height="24" style={{ marginRight: 10 }} />
-          Upravit místo
-        </Button>
-      </StyledEdit>
+  return (
+    <Wrapper>
+      <TopPanel>
+        <SearchBox />
+      </TopPanel>
+      <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg" />
+      <Content>
+        <FeatureHeading title={name} />
+        {Object.keys(tags).map(k => (
+          <Property key={k} label={k} value={tags[k]} />
+        ))}
 
-      <Footer>
-        Bod v databázi OpenStreetMap
-        <br />
-        50.12341° 14.5542°
-        <br />
-        <a href="https://osmap.cz/n2534123">osmap.cz/n2534123</a>
-        <br />
-        <label>
-          <input type="checkbox" /> Zobrazit tagy
-        </label>
-      </Footer>
-    </Content>
-  </Wrapper>
-);
+        <StyledEdit>
+          <Button size="large" title="Upravit místo v živé databázi OSM">
+            <LogoOsm width="24" height="24" style={{ marginRight: 10 }} />
+            Upravit místo
+          </Button>
+        </StyledEdit>
+
+        <Footer>
+          Bod v databázi OpenStreetMap
+          <br />
+          50.12341° 14.5542°
+          <br />
+          <a href="https://osmap.cz/n2534123">osmap.cz/n2534123</a>
+          <br />
+          <label>
+            <input type="checkbox" /> Zobrazit tagy
+          </label>
+        </Footer>
+      </Content>
+    </Wrapper>
+  );
+};
 
 export default Panel;

@@ -7,10 +7,12 @@ import React, { Component } from 'react';
 
 class LogoOsm extends Component {
   displayName = 'LogoOsm';
-  muiName = 'SvgIcon';
+
   shouldComponentUpdate() {
     return false;
   }
+
+  muiName = 'SvgIcon';
 
   render() {
     return (

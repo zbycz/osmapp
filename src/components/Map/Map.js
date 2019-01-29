@@ -35,7 +35,7 @@ const Box = styled.div`
   font-size: 12px;
   line-height: normal;
   color: #000;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: #f8f4f0; /* same as osm-bright */
 
   svg {
     vertical-align: -2px;
@@ -76,9 +76,9 @@ const LayerSwitcherButton = styled.button`
   }
 `;
 
-const Map = () => (
+const Map = ({ onFeatureClicked }) => (
   <Wrapper>
-    <MapBrowser />
+    <MapBrowser onFeatureClicked={onFeatureClicked} />
     <Top>
       <Button variant="outlined">Co je OpenStreetMap?</Button>
       <LayerSwitcherButton>
