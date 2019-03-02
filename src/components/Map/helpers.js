@@ -5,14 +5,14 @@ export function getOsmShortId(features) {
     return false;
   }
 
-  const idStr = `${features[0].id}`;
-  const id = idStr.substring(0, idStr.length - 1);
-  const typeId = idStr.substring(idStr.length - 1);
+  const mapboxglId = `${features[0].id}`;
+  const osmId = mapboxglId.substring(0, mapboxglId.length - 1);
+  const typeId = mapboxglId.substring(mapboxglId.length - 1);
   const type = { '0': 'n', '1': 'w' }[typeId];
-  return type ? `${type}${id}` : false;
+  return type ? `${type}${osmId}` : false;
 }
 
-export function getHumanReadable(features) {
+export function dumpFeatures(features) {
   const filtered = features.map(e => {
     delete e.geometry.coordinates;
     delete e.layer.filter;

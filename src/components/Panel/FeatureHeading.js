@@ -6,7 +6,6 @@ import Edit from '@material-ui/icons/Edit';
 import * as React from 'react';
 
 const Wrapper = styled.div`
-  font-family: Roboto;
   font-size: 36px;
   line-height: 0.89;
   color: rgba(0, 0, 0, 0.7);

@@ -15,7 +15,7 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
-const MapBrowser = dynamic(() => import('./BrowserMap'), {
+const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
   loading: () => '',
 });
@@ -78,7 +78,7 @@ const LayerSwitcherButton = styled.button`
 
 const Map = ({ onFeatureClicked }) => (
   <Wrapper>
-    <MapBrowser onFeatureClicked={onFeatureClicked} />
+    <BrowserMap onFeatureClicked={onFeatureClicked} />
     <Top>
       <Button variant="outlined">Co je OpenStreetMap?</Button>
       <LayerSwitcherButton>

@@ -67,7 +67,6 @@ export const Panel = ({ feature }) => {
             Upravit místo
           </Button>
         </StyledEdit>
-
         <Footer>
           Bod v databázi OpenStreetMap
           <br />

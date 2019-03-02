@@ -5,7 +5,7 @@ import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 
 import mapboxStyle from './mapboxStyle';
 import { fetchElement } from '../../services/osmApi';
-import { getHumanReadable, getOsmShortId } from './helpers';
+import { dumpFeatures, getOsmShortId } from './helpers';
 
 const layers = [
   // {
@@ -39,31 +39,44 @@ const sources = {
   },
 };
 
-async function getFeature(osmShortId) {
+async function getFeatureFromApi(osmShortId) {
   const osmXml = await fetchElement(osmShortId);
 
-  const item = osmXml.getElementsByTagName('osm')[0];
+  const item = osmXml.getElementsByTagName('osm')[0].children[0];
   const tags = item.getElementsByTagName('tag');
   const properties = {};
   for (let i = 0; i < tags.length; i++) {
     const x = tags[i];
     properties[x.getAttribute('k')] = x.getAttribute('v');
   }
+  debugger;
 
   const feature = {
-    lat: item.getAttribute('lat'),
-    lon: item.getAttribute('lon'),
+    geometry: {
+      coordinates: [item.getAttribute('lon'), item.getAttribute('lat')],
+    },
     properties,
   };
+
+  console.log('fetched', feature); // eslint-disable-line no-console
+
   return feature;
 }
 
+const getFeatureFromMap = (features, coordinates) => {
+  const { name, class: glClass, subclass: glSubclass } = features[0].properties;
+  return {
+    geometry: { coordinates },
+    properties: { name },
+    glClass,
+    glSubclass,
+    skeleton: true,
+  };
+};
+
 class BrowserMap extends React.Component {
-  constructor() {
-    super();
-    this.mapRef = React.createRef();
-    this.map = null;
-  }
+  mapRef = React.createRef();
+  map = null;
 
   componentDidMount() {
     this.map = new mapboxgl.Map({
@@ -76,14 +89,17 @@ class BrowserMap extends React.Component {
 
     // TODO https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
     this.map.on('click', async e => {
-      const features = this.map.queryRenderedFeatures(e.point);
+      const point = e.point;
+      const coordinates = this.map.unproject(point).toArray();
+      const features = this.map.queryRenderedFeatures(point);
       const osmShortId = getOsmShortId(features);
 
       if (osmShortId) {
-        console.log(`clicked ${osmShortId}`, getHumanReadable(features)); // eslint-disable-line no-console
-        const feature = await getFeature(osmShortId);
-        console.log('fetched', feature); // eslint-disable-line no-console
-        this.props.onFeatureClicked(feature);
+        console.log(`clicked ${osmShortId}`, dumpFeatures(features)); // eslint-disable-line no-console
+        this.props.onFeatureClicked(
+          await getFeatureFromMap(features, coordinates),
+        );
+        this.props.onFeatureClicked(await getFeatureFromApi(osmShortId));
       }
     });
   }

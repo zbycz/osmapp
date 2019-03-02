@@ -28,6 +28,9 @@ const Index = () => {
       telefon: '222 451 123',
       'otevírací doba': 'neděle 9-21',
     },
+    geometry: {
+      coordinates: [14.123, 50.653],
+    },
   });
 
   return (

@@ -31,6 +31,6 @@ export function fetchOsmXmlAsGeojson(url) {
 
 export function fetchElement(shortId) {
   const { type, id } = getApiId(shortId);
-  const url = `https://www.openstreetmap.org/api/0.6/${type}/${id}`;
+  const url = `https://www.openstreetmap.org/api/0.6/${type}/${id}`; // TODO full to fetch ways  // todo fetch on backend ??
   return fetchOsmXmlAsGeojson(url);
 }
