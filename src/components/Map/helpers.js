@@ -27,6 +27,7 @@ export const getFeatureFromMap = (features, coordinates) => {
   return {
     geometry: { coordinates },
     properties: { name },
+    osmMeta: { type: 'node', id: '1' },
     glClass,
     glSubclass,
     skeleton: true,

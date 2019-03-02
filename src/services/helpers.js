@@ -1,3 +1,5 @@
+// @flow
+
 import fetch from 'isomorphic-unfetch';
 import * as xml2js from 'isomorphic-xml2js';
 

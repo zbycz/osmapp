@@ -1,10 +1,11 @@
 // @flow
 
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import Panel from '../components/Panel/Panel';
 import Map from '../components/Map/Map';
+import { getFeatureFromApi } from '../services/osmApi';
 
 const Wrapper = styled.div`
   display: grid;
@@ -20,18 +21,13 @@ const Wrapper = styled.div`
   }
 `;
 
-const Index = () => {
-  const [feature, setFeature] = useState({
-    properties: {
-      name: 'Billa u Golden Gatu',
-      web: 'www.billa.cz',
-      telefon: '222 451 123',
-      'otevírací doba': 'neděle 9-21',
-    },
-    geometry: {
-      coordinates: [14.123, 50.653],
-    },
-  });
+const getInitialProps = async ctx => {
+  const initialFeature = await getFeatureFromApi('n4171192706');
+  return { initialFeature };
+};
+
+const Index = ({ initialFeature }) => {
+  const [feature, setFeature] = React.useState(initialFeature);
 
   return (
     <Wrapper>
@@ -40,5 +36,6 @@ const Index = () => {
     </Wrapper>
   );
 };
+Index.getInitialProps = getInitialProps;
 
 export default Index;

@@ -9,10 +9,10 @@ export const getApiUrl = shortId => API_URL(getApiId(shortId));
 export const osmToGeojson = async osmXmlStr => {
   const osmXml = await parseXmlString(osmXmlStr);
 
-  delete osmXml['$'];
+  delete osmXml.$;
   const type = Object.keys(osmXml)[0];
   const item = osmXml[type];
-  const osmMeta = { type, ...item['$'] };
+  const osmMeta = { type, ...item.$ };
   const properties = item.tag.reduce(
     (acc, { $: { k, v } }) => ({ ...acc, [k]: v }),
     {},

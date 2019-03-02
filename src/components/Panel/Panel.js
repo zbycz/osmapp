@@ -10,6 +10,8 @@ import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import SearchBox from '../SearchBox/SearchBox';
 import Coordinates from './Coordinates';
+import { getShortId } from '../../services/helpers';
+import { capitalize, useToggleState } from '../helpers';
 
 const Wrapper = styled.div`
   display: flex;
@@ -48,7 +50,11 @@ const Footer = styled.div`
 `;
 
 export const Panel = ({ feature }) => {
-  const { name, ...tags } = feature.properties;
+  const [tagsShown, toggleTags] = useToggleState(false);
+
+  const { geometry, properties, osmMeta, glClass, glSubclass } = feature;
+  const { name, ...otherTags } = properties;
+  const link = `https://osmap.cz/${osmMeta.type}/${osmMeta.id}`;
 
   return (
     <Wrapper>
@@ -58,9 +64,6 @@ export const Panel = ({ feature }) => {
       <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg" />
       <Content>
         <FeatureHeading title={name} />
-        {Object.keys(tags).map(k => (
-          <Property key={k} label={k} value={tags[k]} />
-        ))}
 
         <StyledEdit>
           <Button size="large" title="Upravit místo v živé databázi OSM">
@@ -69,15 +72,23 @@ export const Panel = ({ feature }) => {
           </Button>
         </StyledEdit>
         <Footer>
-          Bod v databázi OpenStreetMap
+          {capitalize(osmMeta.type)} v databázi OpenStreetMap
           <br />
-          <Coordinates coords={feature.geometry.coordinates} />
+          <Coordinates coords={geometry.coordinates} />
           <br />
-          <a href="https://osmap.cz/n2534123">osmap.cz/n2534123</a>
+          <a href={link}>{link}</a>
           <br />
           <label>
-            <input type="checkbox" /> Zobrazit tagy
+            <input type="checkbox" onChange={toggleTags} checked={tagsShown} />{' '}
+            Zobrazit tagy
           </label>
+          {tagsShown && (
+            <div>
+              {Object.keys(otherTags).map(k => (
+                <Property key={k} label={k} value={otherTags[k]} />
+              ))}
+            </div>
+          )}
         </Footer>
       </Content>
     </Wrapper>

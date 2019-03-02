@@ -1,3 +1,5 @@
+// @flow
+
 import { osmToGeojson } from '../osmApi';
 import { node, way } from './fixture';
 
