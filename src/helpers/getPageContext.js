@@ -50,7 +50,7 @@ function createPageContext() {
 
 let pageContext;
 
-export default function getPageContext() {
+const getPageContext = () => {
   // Make sure to create a new context for every server-side request so that data
   // isn't shared between connections (which would be bad).
   if (!process.browser) {
@@ -63,4 +63,6 @@ export default function getPageContext() {
   }
 
   return pageContext;
-}
+};
+
+export default getPageContext;

@@ -9,6 +9,7 @@ import LogoOsm from '../../assets/LogoOsm';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import SearchBox from '../SearchBox/SearchBox';
+import Coordinates from './Coordinates';
 
 const Wrapper = styled.div`
   display: flex;
@@ -70,7 +71,7 @@ export const Panel = ({ feature }) => {
         <Footer>
           Bod v databázi OpenStreetMap
           <br />
-          50.12341° 14.5542°
+          <Coordinates coords={feature.geometry.coordinates} />
           <br />
           <a href="https://osmap.cz/n2534123">osmap.cz/n2534123</a>
           <br />
