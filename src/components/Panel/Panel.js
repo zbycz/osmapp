@@ -80,7 +80,7 @@ export const Panel = ({ feature }) => {
         <Footer>
           {capitalize(osmMeta.type)} v databázi OpenStreetMap
           <br />
-          <Coordinates coords={geometry.coordinates} />
+          <Coordinates feature={feature} />
           <br />
           <a href={shortLink}>{shortLink}</a>
           <br />
