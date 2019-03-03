@@ -2091,6 +2091,12 @@ const mapboxStyle = ({ sources, layers }) => ({
         'text-color': '#666',
         'text-halo-width': 1,
         'text-halo-color': '#ffffff',
+        'icon-opacity': [
+          'case',
+          ['boolean', ['feature-state', 'hover'], false],
+          0.5,
+          1,
+        ],
       },
     },
     {

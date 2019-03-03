@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
+import mapboxgl from 'mapbox-gl';
 
 import mapboxStyle from './mapboxStyle';
 import { dumpFeatures, getFeatureFromMap, getOsmId } from './helpers';
@@ -54,6 +54,7 @@ const scaleControl = new mapboxgl.ScaleControl({
 class BrowserMap extends React.Component {
   mapRef = React.createRef();
   map = null;
+  lastHover = null;
 
   componentDidMount() {
     this.map = new mapboxgl.Map({
@@ -67,7 +68,6 @@ class BrowserMap extends React.Component {
     this.map.addControl(geolocateControl);
     this.map.addControl(scaleControl);
 
-    // TODO https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
     this.map.on('click', async e => {
       const point = e.point;
       const coords = this.map.unproject(point).toArray();
@@ -78,6 +78,26 @@ class BrowserMap extends React.Component {
         console.log(`clicked ${osmApiId}`, dumpFeatures(features)); // eslint-disable-line no-console
         this.props.onFeatureClicked(getFeatureFromMap(features, coords));
         this.props.onFeatureClicked(await getFeatureFromApi(osmApiId));
+      }
+    });
+
+    // TODO try on all clickable features
+    this.map.on('mousemove', 'poi-level-1', e => {
+      if (e.features.length > 0) {
+        const feature = e.features[0];
+        if (this.lastHover !== feature) {
+          this.lastHover &&
+            this.map.setFeatureState(this.lastHover, { hover: false });
+          this.map.setFeatureState(feature, { hover: true });
+          this.lastHover = feature;
+        }
+      }
+    });
+
+    this.map.on('mouseleave', 'poi-level-1', () => {
+      if (this.lastHover) {
+        this.map.setFeatureState(this.lastHover, { hover: false });
+        this.lastHover = null;
       }
     });
   }

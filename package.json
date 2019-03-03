@@ -27,7 +27,7 @@
     "jest": "^24.1.0",
     "jss": "^9.8.7",
     "leaflet": "^1.4.0",
-    "mapbox-gl": "^0.52.0",
+    "mapbox-gl": "^0.53.1",
     "next": "^7.0.2",
     "react": "^16.8.0-alpha.1",
     "react-dom": "^16.8.0-alpha.1",
