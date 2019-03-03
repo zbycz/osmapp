@@ -6,6 +6,7 @@ import Edit from '@material-ui/icons/Edit';
 import Cancel from '@material-ui/icons/Cancel';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
+import WebsiteRenderer from './renderers/WebsiteRenderer';
 
 const Wrapper = styled.div`
   position: relative;
@@ -51,8 +52,14 @@ const Value = styled.div`
   }
 `;
 
-export const Property = ({ label, value }) => {
+const renderers = {
+  website: WebsiteRenderer,
+  __default: ({ v }) => v,
+};
+
+export const Property = ({ k, v }) => {
   const [isInput, setIsInput] = useState(false);
+  const Renderer = renderers[k] || renderers.__default;
 
   return (
     <Wrapper>
@@ -68,8 +75,8 @@ export const Property = ({ label, value }) => {
               nativeColor="#9e9e9e"
             />
           </StyledIconButton>
-          <Label>{label}</Label>
-          <Value>{value || <i>-</i>}</Value>
+          <Label>{k}</Label>
+          <Value>{v ? <Renderer v={v} /> : <i>-</i>}</Value>
         </>
       )}
       {isInput && (
@@ -79,12 +86,12 @@ export const Property = ({ label, value }) => {
           </StyledIconButton>
 
           <TextField // https://codesandbox.io/s/m45ywmp86j
-            label={label}
+            label={k}
             placeholder=""
             margin="none"
             autoFocus
             fullWidth
-            defaultValue={value}
+            defaultValue={v}
             InputLabelProps={{
               shrink: true,
             }}

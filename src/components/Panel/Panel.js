@@ -82,7 +82,7 @@ export const Panel = ({ feature }) => {
         <FeatureHeading title={properties.name} />
 
         {featuredProperties.map(([k, v]) => (
-          <Property key={k} label={k} value={v} />
+          <Property key={k} k={k} v={v} />
         ))}
 
         <StyledEdit>
