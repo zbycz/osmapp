@@ -2,7 +2,7 @@
 
 // https://openmaptiles.github.io/osm-bright-gl-style/style-cdn.json
 
-const mapboxStyle = ({ sources, layers }) => ({
+const mapboxStyle = (sources, backgroundLayers) => ({
   version: 8,
   name: 'OSM Bright',
   metadata: {
@@ -51,7 +51,7 @@ const mapboxStyle = ({ sources, layers }) => ({
   glyphs:
     'https://maps.tilehosting.com/fonts/{fontstack}/{range}.pbf?key=7dlhLl3hiXQ1gsth0kGu',
   layers: [
-    ...layers,
+    ...backgroundLayers,
     {
       id: 'landcover-glacier',
       type: 'fill',

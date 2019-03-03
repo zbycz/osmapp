@@ -17,19 +17,28 @@ const Coordinates = ({ coords, feature }) => {
   if (coords) {
     return <Coords coords={coords} />;
   } else if (feature && feature.geometry) {
+    const type = feature.geometry.type;
+
     // node
-    if (!feature.geometry.type) {
+    if (!type || type === 'Point') {
       return <Coords coords={feature.geometry.coordinates} />;
 
       // way
-    } else if (feature.geometry.type === 'LineString') {
-      const ex = geojsonExtent(feature); //[WSEN]
+    } else if (type === 'LineString' || type === 'Polygon') {
+      let ex;
+      try {
+        ex = geojsonExtent(feature); //[WSEN]
+      } catch (e) {
+        console.warn(e);
+        return 'Unknown center of geojson';
+      }
 
       const avg = (a, b) => (a + b) / 2; //flat earth rulezz
       const lon = avg(ex[0], ex[2]);
       const lat = avg(ex[1], ex[3]);
-      const center = [lon, lat];
-      return <Coords coords={center} />;
+      return <Coords coords={[lon, lat]} />;
+    } else {
+      return `Unknown geometry ${type}`;
     }
   } else {
     return 'Invalid input';

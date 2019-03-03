@@ -32,9 +32,13 @@ export const osmToGeojson = async osmXmlStr => {
 
   const type = osmXml.relation ? 'relation' : osmXml.way ? 'way' : 'node';
   const item = osmXml[type];
+  if (!item) {
+    throw 'Empty osmXml result';
+  }
+
   const osmMeta = { type, ...item.$ };
-  const tags = item.tag.length ? item.tag : [item.tag];
-  const properties = tags.reduce(
+  const tagItems = item.tag.length ? item.tag : [item.tag];
+  const tags = tagItems.reduce(
     (acc, { $: { k, v } }) => ({ ...acc, [k]: v }),
     {},
   );
@@ -43,7 +47,7 @@ export const osmToGeojson = async osmXmlStr => {
     type: 'Feature',
     geometry: getGeometry[type](osmXml, item),
     osmMeta,
-    properties,
+    tags,
   };
 };
 

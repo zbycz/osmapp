@@ -1,36 +1,29 @@
 // @flow
 
-export const getOsmId = features => {
-  if (features.length <= 0 || !features[0].id) {
-    return false;
-  }
+export const getOsmId = feature => {
+  if (!feature || !feature.id) return false;
 
-  const mapboxglId = `${features[0].id}`;
+  const mapboxglId = `${feature.id}`;
   const id = mapboxglId.substring(0, mapboxglId.length - 1);
   const typeId = mapboxglId.substring(mapboxglId.length - 1);
-  const type = { '0': 'node', '1': 'way' }[typeId];
-  return type ? { type, id } : false;
+  const typeOsm = { '0': 'node', '1': 'way' }[typeId];
+  const type = typeOsm || `type${typeId}`;
+  return { type, id };
 };
 
 export const dumpFeatures = features => {
-  const filtered = features.map(e => {
-    delete e.geometry.coordinates;
-    delete e.layer.filter;
-    delete e.layer.paint;
-    return e;
-  });
-  return JSON.parse(JSON.stringify(filtered));
+  return JSON.parse(JSON.stringify(features));
 };
 
-export const getFeatureFromMap = (features, coordinates) => {
-  const osmApiId = getOsmId(features);
-  const { name, class: glClass, subclass: glSubclass } = features[0].properties;
+export const getSkeleton = feature => {
+  const osmApiId = getOsmId(feature);
+  const isOsmObject = ['node', 'way'].includes(osmApiId.type);
   return {
-    geometry: { coordinates },
-    properties: { name },
+    ...feature,
+    geometry: feature.geometry,
     osmMeta: { ...osmApiId },
-    glClass,
-    glSubclass,
+    tags: { name: feature.properties && feature.properties.name },
     skeleton: true,
+    nonOsmSkeleton: !isOsmObject,
   };
 };

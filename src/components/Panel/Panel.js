@@ -60,16 +60,17 @@ export const Panel = ({ feature }) => {
   const [tagsShown, toggleTags] = useToggleState(false);
 
   const {
-    skeleton,
+    loading,
+    nonOsmSkeleton,
     geometry,
-    properties,
+    tags,
     osmMeta,
     glClass,
     glSubclass,
   } = feature;
   const shortLink = getShortLink(osmMeta);
 
-  const featuredProperties = featuredKeys.map(k => [k, properties[k]]);
+  const featuredProperties = featuredKeys.map(k => [k, tags[k]]);
 
   return (
     <Wrapper>
@@ -77,9 +78,9 @@ export const Panel = ({ feature }) => {
         <SearchBox />
       </TopPanel>
       <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg" />
-      <Loading>{skeleton && <LinearProgress />}</Loading>
+      <Loading>{loading && <LinearProgress />}</Loading>
       <Content>
-        <FeatureHeading title={properties.name} />
+        <FeatureHeading title={tags.name} />
 
         {featuredProperties.map(([k, v]) => (
           <Property key={k} k={k} v={v} />
@@ -96,7 +97,7 @@ export const Panel = ({ feature }) => {
           <br />
           <Coordinates feature={feature} />
           <br />
-          <a href={shortLink}>{shortLink}</a>
+          {!nonOsmSkeleton && <a href={shortLink}>{shortLink}</a>}
           <br />
           <label>
             <input type="checkbox" onChange={toggleTags} checked={tagsShown} />{' '}
@@ -104,7 +105,7 @@ export const Panel = ({ feature }) => {
           </label>
           {tagsShown && (
             <table>
-              {Object.entries(properties).map(([k, v]) => (
+              {Object.entries(tags).map(([k, v]) => (
                 <tr key={k}>
                   <td>{k}</td>
                   <td style={{ color: '#000' }}>{v}</td>

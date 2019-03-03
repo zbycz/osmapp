@@ -4,10 +4,10 @@ import * as React from 'react';
 import mapboxgl from 'mapbox-gl';
 
 import mapboxStyle from './mapboxStyle';
-import { dumpFeatures, getFeatureFromMap, getOsmId } from './helpers';
+import { getSkeleton, getOsmId } from './helpers';
 import { getFeatureFromApi } from '../../services/osmApi';
 
-const layers = [
+const backgroundLayers = [
   // {
   //     "id": "simple-tiles",
   //     "type": "raster",
@@ -57,9 +57,10 @@ class BrowserMap extends React.Component {
   lastHover = null;
 
   componentDidMount() {
+    const style = mapboxStyle(sources, backgroundLayers);
     this.map = new mapboxgl.Map({
       container: this.mapRef.current,
-      style: mapboxStyle({ sources, layers }),
+      style,
       center: [14.38906, 50.10062],
       zoom: 17,
       attributionControl: false,
@@ -68,38 +69,66 @@ class BrowserMap extends React.Component {
     this.map.addControl(geolocateControl);
     this.map.addControl(scaleControl);
 
-    this.map.on('click', async e => {
+    this.map.on('click', e => {
       const point = e.point;
       const coords = this.map.unproject(point).toArray();
       const features = this.map.queryRenderedFeatures(point);
-      const osmApiId = getOsmId(features);
+      if (!features.length) {
+        return;
+      }
 
-      if (osmApiId) {
-        console.log(`clicked ${osmApiId}`, dumpFeatures(features)); // eslint-disable-line no-console
-        this.props.onFeatureClicked(getFeatureFromMap(features, coords));
-        this.props.onFeatureClicked(await getFeatureFromApi(osmApiId));
+      const skeleton = getSkeleton(features[0]);
+      console.log(`clicked skeleton: `, skeleton); // eslint-disable-line no-console
+
+      if (skeleton.nonOsmSkeleton) {
+        this.props.onFeatureClicked(skeleton);
+      } else {
+        this.props.onFeatureClicked({ ...skeleton, loading: true });
+        this.fetchFromApi(skeleton.osmMeta);
       }
     });
 
-    // TODO try on all clickable features
-    this.map.on('mousemove', 'poi-level-1', e => {
-      if (e.features.length > 0) {
+    const setHover = (feature, hover) => {
+      if (feature !== null) {
+        this.map.setFeatureState(feature, { hover });
+      }
+    };
+
+    const mousemove = e => {
+      if (e.features && e.features.length > 0) {
         const feature = e.features[0];
-        if (this.lastHover !== feature) {
-          this.lastHover &&
-            this.map.setFeatureState(this.lastHover, { hover: false });
-          this.map.setFeatureState(feature, { hover: true });
+        if (feature !== this.lastHover) {
+          setHover(this.lastHover, false);
+          setHover(feature, true);
           this.lastHover = feature;
+          this.map.getCanvas().style.cursor = 'pointer';
         }
       }
-    });
+    };
 
-    this.map.on('mouseleave', 'poi-level-1', () => {
-      if (this.lastHover) {
-        this.map.setFeatureState(this.lastHover, { hover: false });
-        this.lastHover = null;
-      }
+    const mouseleave = () => {
+      setHover(this.lastHover, false);
+      this.lastHover = null;
+      this.map.getCanvas().style.cursor = ''; // TODO delay 200ms
+    };
+
+    const backgroundIds = backgroundLayers.map(x => x.id);
+    const hoverLayers = style.layers
+      .map(x => x.id)
+      .filter(x => !(x in backgroundIds));
+
+    hoverLayers.forEach(x => {
+      this.map.on('mousemove', x, mousemove);
+      this.map.on('mouseleave', x, mouseleave);
     });
+  }
+
+  async fetchFromApi(osmApiId) {
+    try {
+      this.props.onFeatureClicked(await getFeatureFromApi(osmApiId));
+    } catch (e) {
+      console.warn(e);
+    }
   }
 
   componentWillUnmount() {
