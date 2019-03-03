@@ -10,7 +10,6 @@ import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import SearchBox from '../SearchBox/SearchBox';
 import Coordinates from './Coordinates';
-import { getShortId } from '../../services/helpers';
 import { capitalize, useToggleState } from '../helpers';
 
 const Wrapper = styled.div`
@@ -49,12 +48,16 @@ const Footer = styled.div`
   line-height: 1.5;
 `;
 
+const featuredKeys = ['phone', 'website', 'opening_hours'];
+const getShortLink = apiId => `https://osmap.cz/${apiId.type}/${apiId.id}`;
+
 export const Panel = ({ feature }) => {
   const [tagsShown, toggleTags] = useToggleState(false);
 
   const { geometry, properties, osmMeta, glClass, glSubclass } = feature;
-  const { name, ...otherTags } = properties;
-  const link = `https://osmap.cz/${osmMeta.type}/${osmMeta.id}`;
+  const shortLink = getShortLink(osmMeta);
+
+  const featuredProperties = featuredKeys.map(k => [k, properties[k]]);
 
   return (
     <Wrapper>
@@ -63,7 +66,10 @@ export const Panel = ({ feature }) => {
       </TopPanel>
       <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg" />
       <Content>
-        <FeatureHeading title={name} />
+        <FeatureHeading title={properties.name} />
+        {featuredProperties.map(([k, v]) => (
+          <Property key={k} label={k} value={v} />
+        ))}
 
         <StyledEdit>
           <Button size="large" title="Upravit místo v živé databázi OSM">
@@ -76,18 +82,21 @@ export const Panel = ({ feature }) => {
           <br />
           <Coordinates coords={geometry.coordinates} />
           <br />
-          <a href={link}>{link}</a>
+          <a href={shortLink}>{shortLink}</a>
           <br />
           <label>
             <input type="checkbox" onChange={toggleTags} checked={tagsShown} />{' '}
             Zobrazit tagy
           </label>
           {tagsShown && (
-            <div>
-              {Object.keys(otherTags).map(k => (
-                <Property key={k} label={k} value={otherTags[k]} />
+            <table>
+              {Object.entries(properties).map(([k, v]) => (
+                <tr key={k}>
+                  <td>{k}</td>
+                  <td style={{ color: '#000' }}>{v}</td>
+                </tr>
               ))}
-            </div>
+            </table>
           )}
         </Footer>
       </Content>

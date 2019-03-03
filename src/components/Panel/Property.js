@@ -45,6 +45,10 @@ const Value = styled.div`
   line-height: 1.5;
   color: rgba(0, 0, 0, 0.87);
   padding: 4px 0;
+
+  i {
+    color: rgba(0, 0, 0, 0.54);
+  }
 `;
 
 export const Property = ({ label, value }) => {
@@ -65,7 +69,7 @@ export const Property = ({ label, value }) => {
             />
           </StyledIconButton>
           <Label>{label}</Label>
-          <Value>{value}</Value>
+          <Value>{value || <i>-</i>}</Value>
         </>
       )}
       {isInput && (
