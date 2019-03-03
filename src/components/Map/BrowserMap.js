@@ -51,13 +51,31 @@ const scaleControl = new mapboxgl.ScaleControl({
   unit: window.localStorage.getItem('units') ? 'imperial' : 'metric',
 });
 
+function addHoverPaint(origStyle) {
+  const value = [
+    'case',
+    ['boolean', ['feature-state', 'hover'], false],
+    0.5,
+    1,
+  ];
+  origStyle.layers
+    .filter(x => x.id.match(/^poi-/))
+    .forEach(x => {
+      if (x.paint) {
+        x.paint['icon-opacity'] = value;
+      }
+    });
+  return origStyle;
+}
+
 class BrowserMap extends React.Component {
   mapRef = React.createRef();
   map = null;
   lastHover = null;
 
   componentDidMount() {
-    const style = mapboxStyle(sources, backgroundLayers);
+    const origStyle = mapboxStyle(sources, backgroundLayers);
+    const style = addHoverPaint(origStyle);
     this.map = new mapboxgl.Map({
       container: this.mapRef.current,
       style,
