@@ -2,9 +2,25 @@
 
 import fetch from 'isomorphic-unfetch';
 import * as xml2js from 'isomorphic-xml2js';
+import { isBrowser } from '../components/helpers';
 
-export const fetchText = async url => {
-  const res = await fetch(url); // TODO ajax spinner ?
+const noRequestRunning = { abort: () => {} };
+let abortController = noRequestRunning;
+
+export const fetchText = async (url, opts) => {
+  if (isBrowser() && opts.putInAbortableQueue) {
+    abortController.abort();
+    abortController = new AbortController();
+  }
+
+  const res = await fetch(url, {
+    ...opts,
+    signal: abortController.signal,
+  });
+
+  abortController = noRequestRunning;
+
+  // TODO ajax spinner ?
 
   if (!res.ok || res.status < 200 || res.status >= 300) {
     const data = await res.text();

@@ -13,3 +13,11 @@ export const useBoolState = initialState => {
 };
 
 export const capitalize = s => s && s[0].toUpperCase() + s.slice(1);
+
+export function isBrowser() {
+  return typeof window !== 'undefined';
+}
+
+export function isServer() {
+  return typeof window === 'undefined';
+}

@@ -49,9 +49,10 @@ export const osmToGeojson = async osmXmlStr => {
 
 export const getFeatureFromApi = async shortId => {
   const apiId = getApiId(shortId);
+  const isNode = apiId.type === 'node';
+  const url = isNode ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
 
-  const url = OP_FEATURE_URL(apiId);
-  const response = await fetchText(url);
+  const response = await fetchText(url, { putInAbortableQueue: true });
   const geojson = await osmToGeojson(response);
   console.log('fetched feature', geojson); // eslint-disable-line no-console
   return geojson;
