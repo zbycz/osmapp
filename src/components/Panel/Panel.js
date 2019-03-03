@@ -3,6 +3,7 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import Property from './Property';
 import LogoOsm from '../../assets/LogoOsm';
@@ -48,13 +49,24 @@ const Footer = styled.div`
   line-height: 1.5;
 `;
 
+const Loading = styled.div`
+  height: 0;
+`;
+
 const featuredKeys = ['phone', 'website', 'opening_hours'];
 const getShortLink = apiId => `https://osmap.cz/${apiId.type}/${apiId.id}`;
 
 export const Panel = ({ feature }) => {
   const [tagsShown, toggleTags] = useToggleState(false);
 
-  const { geometry, properties, osmMeta, glClass, glSubclass } = feature;
+  const {
+    skeleton,
+    geometry,
+    properties,
+    osmMeta,
+    glClass,
+    glSubclass,
+  } = feature;
   const shortLink = getShortLink(osmMeta);
 
   const featuredProperties = featuredKeys.map(k => [k, properties[k]]);
@@ -65,8 +77,10 @@ export const Panel = ({ feature }) => {
         <SearchBox />
       </TopPanel>
       <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg" />
+      <Loading>{skeleton && <LinearProgress />}</Loading>
       <Content>
         <FeatureHeading title={properties.name} />
+
         {featuredProperties.map(([k, v]) => (
           <Property key={k} label={k} value={v} />
         ))}
