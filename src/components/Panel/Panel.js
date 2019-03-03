@@ -48,6 +48,16 @@ const Footer = styled.div`
   font-size: 1rem;
   line-height: 1.5;
 `;
+const TagsTable = styled.table`
+  margin-top: 1em;
+  font-size: 1rem;
+
+  th {
+    color: rgba(0, 0, 0, 0.54);
+    text-align: left;
+    font-weight: normal;
+  }
+`;
 
 const Loading = styled.div`
   height: 0;
@@ -82,9 +92,21 @@ export const Panel = ({ feature }) => {
       <Content>
         <FeatureHeading title={tags.name} />
 
-        {featuredProperties.map(([k, v]) => (
-          <Property key={k} k={k} v={v} />
-        ))}
+        {tagsShown && (
+          <TagsTable>
+            <tbody>
+              {Object.entries(tags).map(([k, v]) => (
+                <tr key={k}>
+                  <th>{k}</th>
+                  <td>{v}</td>
+                </tr>
+              ))}
+            </tbody>
+          </TagsTable>
+        )}
+
+        {!tagsShown &&
+          featuredProperties.map(([k, v]) => <Property key={k} k={k} v={v} />)}
 
         <StyledEdit>
           <Button size="large" title="Upravit místo v živé databázi OSM">
@@ -103,16 +125,6 @@ export const Panel = ({ feature }) => {
             <input type="checkbox" onChange={toggleTags} checked={tagsShown} />{' '}
             Zobrazit tagy
           </label>
-          {tagsShown && (
-            <table>
-              {Object.entries(tags).map(([k, v]) => (
-                <tr key={k}>
-                  <td>{k}</td>
-                  <td style={{ color: '#000' }}>{v}</td>
-                </tr>
-              ))}
-            </table>
-          )}
         </Footer>
       </Content>
     </Wrapper>
