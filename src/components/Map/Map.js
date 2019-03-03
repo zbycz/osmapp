@@ -64,12 +64,16 @@ const LayerSwitcherButton = styled.button`
   height: 69px;
   border-radius: 5px;
   border: 0;
-  box-shadow: 0 1px 5px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   background-color: #ffffff;
   font-size: 12px;
   color: rgba(0, 0, 0, 0.8);
   outline: 0;
   cursor: pointer;
+
+  &:hover {
+    background-color: #f2f3f2;
+  }
 
   svg {
     margin: 4px auto 4px auto;

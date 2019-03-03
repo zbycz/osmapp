@@ -39,6 +39,18 @@ const sources = {
   },
 };
 
+const geolocateControl = new mapboxgl.GeolocateControl({
+  positionOptions: {
+    enableHighAccuracy: true,
+  },
+  trackUserLocation: true,
+});
+
+const scaleControl = new mapboxgl.ScaleControl({
+  maxWidth: 80,
+  unit: window.localStorage.getItem('units') ? 'imperial' : 'metric',
+});
+
 class BrowserMap extends React.Component {
   mapRef = React.createRef();
   map = null;
@@ -52,6 +64,9 @@ class BrowserMap extends React.Component {
       attributionControl: false,
     });
 
+    this.map.addControl(geolocateControl);
+    this.map.addControl(scaleControl);
+
     // TODO https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
     this.map.on('click', async e => {
       const point = e.point;
@@ -61,7 +76,7 @@ class BrowserMap extends React.Component {
 
       if (osmApiId) {
         console.log(`clicked ${osmApiId}`, dumpFeatures(features)); // eslint-disable-line no-console
-        this.props.onFeatureClicked(await getFeatureFromMap(features, coords));
+        this.props.onFeatureClicked(getFeatureFromMap(features, coords));
         this.props.onFeatureClicked(await getFeatureFromApi(osmApiId));
       }
     });

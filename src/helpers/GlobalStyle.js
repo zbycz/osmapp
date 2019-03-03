@@ -19,5 +19,9 @@ const GlobalStyle = createGlobalStyle`
         text-decoration: underline;
     }
   }
+  
+  .mapboxgl-ctrl-top-right {
+    top: 83px !important;
+  }
 `;
 export default GlobalStyle;
