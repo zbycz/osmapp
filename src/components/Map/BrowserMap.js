@@ -4,7 +4,7 @@ import * as React from 'react';
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 
 import mapboxStyle from './mapboxStyle';
-import { dumpFeatures, getFeatureFromMap, getOsmShortId } from './helpers';
+import { dumpFeatures, getFeatureFromMap, getOsmId } from './helpers';
 import { getFeatureFromApi } from '../../services/osmApi';
 
 const layers = [
@@ -55,16 +55,14 @@ class BrowserMap extends React.Component {
     // TODO https://docs.mapbox.com/mapbox-gl-js/example/hover-styles/
     this.map.on('click', async e => {
       const point = e.point;
-      const coordinates = this.map.unproject(point).toArray();
+      const coords = this.map.unproject(point).toArray();
       const features = this.map.queryRenderedFeatures(point);
-      const osmShortId = getOsmShortId(features);
+      const osmApiId = getOsmId(features);
 
-      if (osmShortId) {
-        console.log(`clicked ${osmShortId}`, dumpFeatures(features)); // eslint-disable-line no-console
-        this.props.onFeatureClicked(
-          await getFeatureFromMap(features, coordinates),
-        );
-        this.props.onFeatureClicked(await getFeatureFromApi(osmShortId));
+      if (osmApiId) {
+        console.log(`clicked ${osmApiId}`, dumpFeatures(features)); // eslint-disable-line no-console
+        this.props.onFeatureClicked(await getFeatureFromMap(features, coords));
+        this.props.onFeatureClicked(await getFeatureFromApi(osmApiId));
       }
     });
   }

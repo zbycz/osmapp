@@ -1,15 +1,15 @@
 // @flow
 
-export const getOsmShortId = features => {
+export const getOsmId = features => {
   if (features.length <= 0 || !features[0].id) {
     return false;
   }
 
   const mapboxglId = `${features[0].id}`;
-  const osmId = mapboxglId.substring(0, mapboxglId.length - 1);
+  const id = mapboxglId.substring(0, mapboxglId.length - 1);
   const typeId = mapboxglId.substring(mapboxglId.length - 1);
-  const type = { '0': 'n', '1': 'w' }[typeId];
-  return type ? `${type}${osmId}` : false;
+  const type = { '0': 'node', '1': 'way' }[typeId];
+  return type ? { type, id } : false;
 };
 
 export const dumpFeatures = features => {
@@ -23,11 +23,12 @@ export const dumpFeatures = features => {
 };
 
 export const getFeatureFromMap = (features, coordinates) => {
+  const osmApiId = getOsmId(features);
   const { name, class: glClass, subclass: glSubclass } = features[0].properties;
   return {
     geometry: { coordinates },
     properties: { name },
-    osmMeta: { type: 'node', id: '1' },
+    osmMeta: { ...osmApiId },
     glClass,
     glSubclass,
     skeleton: true,

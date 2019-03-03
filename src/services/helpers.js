@@ -52,14 +52,17 @@ export const parseXmlString = (xml, opts) => {
   });
 };
 
+// apiId.replace(/([a-z])[a-z]+\/([0-9]+)/, '$1$2');
 export const getShortId = apiId => {
-  if (typeof apiId === 'string') {
-    return apiId.replace(/([a-z])[a-z]+\/([0-9]+)/, '$1$2');
-  }
   return apiId.type[0] + apiId.id;
 };
 
-export const getApiId = shortId => {
+export const getApiId = value => {
+  if (value.type && value.id) {
+    return value;
+  }
+
+  const shortId = value;
   const type = { w: 'way', n: 'node', r: 'relation' }[shortId[0]];
   const id = shortId.substr(1);
   return { type, id };

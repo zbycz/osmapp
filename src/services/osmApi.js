@@ -47,8 +47,8 @@ export const osmToGeojson = async osmXmlStr => {
   };
 };
 
-export const getFeatureFromApi = async shortId => {
-  const apiId = getApiId(shortId);
+export const getFeatureFromApi = async featureId => {
+  const apiId = getApiId(featureId);
   const isNode = apiId.type === 'node';
   const url = isNode ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
 
