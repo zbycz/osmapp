@@ -127,7 +127,7 @@ export const Panel = ({ feature }) => {
       <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg">
         <PoiType>
           <Maki ico={ico} />
-          {properties.subclass}
+          {tags.name ? properties.subclass : 'beze jména'}
         </PoiType>
 
         <StyledIconButton>
@@ -142,7 +142,7 @@ export const Panel = ({ feature }) => {
       </FeatureImage>
       <Loading>{loading && <LinearProgress />}</Loading>
       <Content>
-        <FeatureHeading title={tags.name} />
+        <FeatureHeading title={tags.name || properties.subclass} />
 
         {tagsShown && (
           <TagsTable>
