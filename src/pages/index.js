@@ -2,10 +2,12 @@
 
 import React from 'react';
 import styled from 'styled-components';
+import Router from 'next/router';
 
 import Panel from '../components/Panel/Panel';
 import Map from '../components/Map/Map';
 import { getFeatureFromApi } from '../services/osmApi';
+import { getShortId } from '../services/helpers';
 
 const Wrapper = styled.div`
   display: grid;
@@ -21,13 +23,26 @@ const Wrapper = styled.div`
   }
 `;
 
-const getInitialProps = async ctx => {
-  const initialFeature = await getFeatureFromApi('n4171192706');
-  return { initialFeature };
+const getInitialProps = async ({ query }) => {
+  try {
+    const initialFeature = await getFeatureFromApi(query.id || 'w316427435');
+    return { initialFeature };
+  } catch (e) {
+    return { initialFeature: await getFeatureFromApi('w316427435') };
+  }
 };
 
 const Index = ({ initialFeature }) => {
-  const [feature, setFeature] = React.useState(initialFeature);
+  const [feature, setFeatureState] = React.useState(initialFeature);
+  const setFeature = feature => {
+    if (feature.nonOsmObject) {
+      Router.push('/', '/', { shallow: true });
+    } else {
+      const id = getShortId(feature.osmMeta);
+      Router.push('/', `/?id=${id}`, { shallow: true });
+    }
+    setFeatureState(feature);
+  };
 
   return (
     <Wrapper>

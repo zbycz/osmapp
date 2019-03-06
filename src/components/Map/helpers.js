@@ -24,6 +24,6 @@ export const getSkeleton = feature => {
     osmMeta: { ...osmApiId },
     tags: { name: feature.properties && feature.properties.name },
     skeleton: true,
-    nonOsmSkeleton: !isOsmObject,
+    nonOsmObject: !isOsmObject,
   };
 };

@@ -107,7 +107,7 @@ export const Panel = ({ feature }) => {
 
   const {
     loading,
-    nonOsmSkeleton,
+    nonOsmObject,
     geometry,
     tags,
     layer,
@@ -176,7 +176,7 @@ export const Panel = ({ feature }) => {
           <br />
           <Coordinates feature={feature} />
           <br />
-          {!nonOsmSkeleton && <a href={shortLink}>{shortLink}</a>}
+          {!nonOsmObject && <a href={shortLink}>{shortLink}</a>}
           <br />
           <label>
             <input type="checkbox" onChange={toggleTags} checked={tagsShown} />{' '}

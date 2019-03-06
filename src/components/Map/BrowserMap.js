@@ -98,7 +98,7 @@ class BrowserMap extends React.Component {
       const skeleton = getSkeleton(features[0]);
       console.log(`clicked skeleton: `, skeleton); // eslint-disable-line no-console
 
-      if (skeleton.nonOsmSkeleton) {
+      if (skeleton.nonOsmObject) {
         this.props.onFeatureClicked(skeleton);
       } else {
         this.props.onFeatureClicked({ ...skeleton, loading: true });
