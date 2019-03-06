@@ -17,7 +17,7 @@ import SearchBox from '../SearchBox/SearchBox';
 import Coordinates from './Coordinates';
 import { capitalize, useToggleState } from '../helpers';
 import IconButton from '@material-ui/core/IconButton';
-import maki from './maki';
+import makiFiles from './makiFiles';
 
 const Wrapper = styled.div`
   display: flex;
@@ -90,13 +90,17 @@ const PoiType = styled.div`
   }
 `;
 
-const Maki = styled.span`
-  display: inline-block;
-  width: ${({ ico }) => ico.width}px;
-  height: ${({ ico }) => ico.height}px;
-  background: url('https://openmaptiles.github.io/osm-bright-gl-style/sprite.png')
-    ${({ ico }) => `-${ico.x}px -${ico.y}px`};
+const MakiImg = styled.img`
+  line-height: 14px;
+  vertical-align: middle;
+  margin-right: 6px;
+  filter: invert(100%);
+  width: 11px;
+  height: 11px;
 `;
+const Maki = ({ ico }) => (
+  <MakiImg src={`/static/maki/${ico}-11.svg`} alt={ico} title={ico} />
+);
 
 export const Panel = ({ feature }) => {
   const [tagsShown, toggleTags] = useToggleState(false);
@@ -111,7 +115,9 @@ export const Panel = ({ feature }) => {
   } = feature;
   const shortLink = getShortLink(osmMeta);
   const featuredProperties = featuredKeys.map(k => [k, tags[k]]);
-  const ico = maki[properties.class + '_11'];
+  const ico = makiFiles.includes(properties.class)
+    ? properties.class
+    : 'information';
 
   return (
     <Wrapper>
@@ -120,7 +126,7 @@ export const Panel = ({ feature }) => {
       </TopPanel>
       <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg">
         <PoiType>
-          {ico ? <Maki ico={ico} /> : <MakiIcon color="#fff" />}
+          <Maki ico={ico} />
           {properties.subclass}
         </PoiType>
 
