@@ -11,7 +11,6 @@ const keys = [
   'sport',
   'tourism',
   'waterway',
-  'highway',
 ];
 
 const shops = [
@@ -76,11 +75,9 @@ const shops = [
   'weapons',
   'wholesale',
 ];
+
+// https://github.com/openmaptiles/openmaptiles/blob/bb00b4e53fa9dbf5778b394c910c629182c441f9/layers/poi/class.sql#L33
 const subclassToClassRules = [
-  {
-    mappingKey: 'highway',
-    resultClass: 'railway',
-  },
   {
     subclass: shops,
     resultClass: 'shop',

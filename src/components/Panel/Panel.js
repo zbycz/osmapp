@@ -110,6 +110,7 @@ export const Panel = ({ feature }) => {
     nonOsmSkeleton,
     geometry,
     tags,
+    layer,
     osmMeta,
     properties,
   } = feature;
@@ -118,6 +119,10 @@ export const Panel = ({ feature }) => {
   const ico = makiFiles.includes(properties.class)
     ? properties.class
     : 'information';
+  const subclass = properties.subclass || (layer && layer.id) || '?';
+
+  // TODO resolve all getPoiClass
+  // TODO copy icons from @mapbox/maki
 
   return (
     <Wrapper>
@@ -127,7 +132,7 @@ export const Panel = ({ feature }) => {
       <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg">
         <PoiType>
           <Maki ico={ico} />
-          {tags.name ? properties.subclass : 'beze jména'}
+          {tags.name ? subclass : 'beze jména'}
         </PoiType>
 
         <StyledIconButton>
@@ -142,7 +147,7 @@ export const Panel = ({ feature }) => {
       </FeatureImage>
       <Loading>{loading && <LinearProgress />}</Loading>
       <Content>
-        <FeatureHeading title={tags.name || properties.subclass} />
+        <FeatureHeading title={tags.name || subclass} />
 
         {tagsShown && (
           <TagsTable>

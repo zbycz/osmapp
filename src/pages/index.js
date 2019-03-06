@@ -38,4 +38,8 @@ const Index = ({ initialFeature }) => {
 };
 Index.getInitialProps = getInitialProps;
 
+// map.fitBounds(bounds, {
+//   padding: 20,
+// });
+
 export default Index;
