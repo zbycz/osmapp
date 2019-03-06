@@ -1,13 +1,8 @@
 // @flow
 
-import styled from 'styled-components';
-import Share from '@material-ui/icons/Share';
-import StarBorder from '@material-ui/icons/StarBorder';
-import Directions from '@material-ui/icons/Directions';
 import * as React from 'react';
+import styled from 'styled-components';
 import IconButton from '@material-ui/core/IconButton';
-
-import MakiIcon from '../../assets/MakiIcon';
 
 const Wrapper = styled.div`
   position: relative;
@@ -34,13 +29,6 @@ const Wrapper = styled.div`
   }
 `;
 
-const StyledIconButton = styled(IconButton)`
-  svg {
-    width: 20px;
-    height: 20px;
-  }
-`;
-
 const Bottom = styled.div`
   position: absolute;
   bottom: 0;
@@ -49,35 +37,9 @@ const Bottom = styled.div`
   width: 100%;
 `;
 
-const PoiType = styled.div`
-  color: #fff;
-  margin: 0 auto 0 15px;
-  font-size: 13px;
-
-  svg {
-    vertical-align: bottom;
-    margin-right: 5px;
-  }
-`;
-
-const FeatureImage = ({ link }) => (
+const FeatureImage = ({ link, children }) => (
   <Wrapper link={link}>
-    <Bottom>
-      <PoiType>
-        <MakiIcon color="#fff" />
-        supermarket
-      </PoiType>
-
-      <StyledIconButton>
-        <Share nativeColor="#fff" titleAccess="Sdílet" />
-      </StyledIconButton>
-      <StyledIconButton>
-        <StarBorder nativeColor="#fff" titleAccess="Uložit" />
-      </StyledIconButton>
-      <StyledIconButton>
-        <Directions nativeColor="#fff" titleAccess="Trasa" />
-      </StyledIconButton>
-    </Bottom>
+    <Bottom>{children}</Bottom>
   </Wrapper>
 );
 
