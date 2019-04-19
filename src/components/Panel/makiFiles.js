@@ -1,3 +1,5 @@
+// @flow
+
 // /src/static/maki$ ls *-11.svg | xargs -i{} echo "{}" > files
 const makiFiles = [
   'aerialway',

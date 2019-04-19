@@ -2,6 +2,7 @@
 
 import fetch from 'isomorphic-unfetch';
 import * as xml2js from 'isomorphic-xml2js';
+
 import { isBrowser } from '../components/helpers';
 
 // TOOD cancel request in map.on('click', ...)

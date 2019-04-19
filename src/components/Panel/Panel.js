@@ -7,6 +7,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import Share from '@material-ui/icons/Share';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
+import IconButton from '@material-ui/core/IconButton';
 
 import MakiIcon from '../../assets/MakiIcon';
 import Property from './Property';
@@ -16,8 +17,8 @@ import FeatureImage from './FeatureImage';
 import SearchBox from '../SearchBox/SearchBox';
 import Coordinates from './Coordinates';
 import { capitalize, useToggleState } from '../helpers';
-import IconButton from '@material-ui/core/IconButton';
 import makiFiles from './makiFiles';
+import TagsTable from './TagsTable';
 
 const Wrapper = styled.div`
   display: flex;
@@ -53,16 +54,6 @@ const Footer = styled.div`
   margin-top: auto;
   font-size: 1rem;
   line-height: 1.5;
-`;
-const TagsTable = styled.table`
-  margin-top: 1em;
-  font-size: 1rem;
-
-  th {
-    color: rgba(0, 0, 0, 0.54);
-    text-align: left;
-    font-weight: normal;
-  }
 `;
 
 const Loading = styled.div`
@@ -103,7 +94,7 @@ const Maki = ({ ico }) => (
 );
 
 export const Panel = ({ feature }) => {
-  const [tagsShown, toggleTags] = useToggleState(false);
+  const [tagsShown, toggleTags] = useToggleState(!false);
 
   const {
     loading,
@@ -149,18 +140,7 @@ export const Panel = ({ feature }) => {
       <Content>
         <FeatureHeading title={tags.name || subclass} />
 
-        {tagsShown && (
-          <TagsTable>
-            <tbody>
-              {Object.entries(tags).map(([k, v]) => (
-                <tr key={k}>
-                  <th>{k}</th>
-                  <td>{v}</td>
-                </tr>
-              ))}
-            </tbody>
-          </TagsTable>
-        )}
+        {tagsShown && <TagsTable tags={tags} />}
 
         {!tagsShown &&
           featuredProperties.map(([k, v]) => <Property key={k} k={k} v={v} />)}
