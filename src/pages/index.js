@@ -25,22 +25,22 @@ const Wrapper = styled.div`
 
 const getInitialProps = async ({ query }) => {
   try {
-    const initialFeature = await getFeatureFromApi(query.id || 'w7663781');
+    const initialFeature = await getFeatureFromApi(query.id || 'w316427435');
     return { initialFeature };
   } catch (e) {
-    return { initialFeature: await getFeatureFromApi('w7663781') };
+    return { initialFeature: await getFeatureFromApi('w316427435') };
   }
 };
 
 const Index = ({ initialFeature }) => {
   const [feature, setFeatureState] = React.useState(initialFeature);
   const setFeature = feature => {
-    // if (feature.nonOsmObject) {
-    //   Router.push('/', '/', { shallow: true });
-    // } else {
-    //   const id = getShortId(feature.osmMeta);
-    //   Router.push('/', `/?id=${id}`, { shallow: true });
-    // }
+    if (feature.nonOsmObject) {
+      Router.push('/', '/', { shallow: true });
+    } else {
+      const id = getShortId(feature.osmMeta);
+      Router.push('/', `/?id=${id}`, { shallow: true });
+    }
     setFeatureState(feature);
   };
 
