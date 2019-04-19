@@ -20,32 +20,18 @@ import { capitalize, useToggleState } from '../helpers';
 import makiFiles from './makiFiles';
 import TagsTable from './TagsTable';
 
+// custom scrollbar
+// better: https://github.com/rommguy/react-custom-scroll
+// maybe https://github.com/malte-wessel/react-custom-scrollbars (larger)
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  max-width: 400px;
-
-  background-color: #fafafa;
   height: 100%;
+  max-width: 410px;
+  background-color: #fafafa;
 
-  &:hover {
-    overflow-y: auto;
-    padding-right: 0;
-  }
-
-  &::-webkit-scrollbar-track {
-    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
-    background-color: #f5f5f5;
-  }
-
-  &::-webkit-scrollbar {
-    width: 5px;
-    background-color: #f5f5f5;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: #999;
-  }
+  overflow: hidden;
+  overflow-y: scroll !important;
 `;
 
 const Content = styled.div`

@@ -7,7 +7,7 @@ import * as React from 'react';
 
 const Wrapper = styled.div`
   font-size: 36px;
-  line-height: 0.89;
+  line-height: 0.98;
   color: rgba(0, 0, 0, 0.7);
   position: relative;
 

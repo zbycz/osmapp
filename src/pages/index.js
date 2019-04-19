@@ -16,7 +16,6 @@ const Wrapper = styled.div`
 
   & > div {
     flex: 1;
-    overflow: hidden;
   }
 `;
 
