@@ -10,16 +10,13 @@ import { getFeatureFromApi } from '../services/osmApi';
 import { getShortId } from '../services/helpers';
 
 const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 400px 1fr;
+  display: flex;
   width: 100%;
   height: 100%;
 
   & > div {
-    max-width: 100%;
-    max-height: 100%;
+    flex: 1;
     overflow: hidden;
-    overflow-y: auto;
   }
 `;
 

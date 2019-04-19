@@ -23,9 +23,29 @@ import TagsTable from './TagsTable';
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
+  max-width: 400px;
 
   background-color: #fafafa;
   height: 100%;
+
+  &:hover {
+    overflow-y: auto;
+    padding-right: 0;
+  }
+
+  &::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    background-color: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background-color: #f5f5f5;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #999;
+  }
 `;
 
 const Content = styled.div`
