@@ -23,9 +23,5 @@ const GlobalStyle = createGlobalStyle`
   .mapboxgl-ctrl-top-right {
     top: 83px !important;
   }
-  
-  .rcs-custom-scroll .rcs-inner-handle {
-    background-color: rgba(70, 70, 70, 0.2);
-  }
 `;
 export default GlobalStyle;
