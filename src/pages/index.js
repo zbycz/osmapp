@@ -29,21 +29,21 @@ const getInitialProps = async ({ query }) => {
 };
 
 const Index = ({ initialFeature }) => {
-  const [feature, setFeatureState] = React.useState(initialFeature);
-  const setFeature = feature => {
+  const [feature, setFeature] = React.useState(initialFeature);
+  const setFeatureHandler = feature => {
     if (feature.nonOsmObject) {
       Router.push('/', '/', { shallow: true });
     } else {
       const id = getShortId(feature.osmMeta);
       Router.push('/', `/?id=${id}`, { shallow: true });
     }
-    setFeatureState(feature);
+    setFeature(feature);
   };
 
   return (
     <Wrapper>
       <Panel feature={feature} />
-      <Map onFeatureClicked={setFeature} />
+      <Map onFeatureClicked={setFeatureHandler} />
     </Wrapper>
   );
 };
