@@ -8,8 +8,6 @@ import Share from '@material-ui/icons/Share';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
 import IconButton from '@material-ui/core/IconButton';
-
-import MakiIcon from '../../assets/MakiIcon';
 import Property from './Property';
 import LogoOsm from '../../assets/LogoOsm';
 import FeatureHeading from './FeatureHeading';
@@ -20,6 +18,7 @@ import { capitalize, useToggleState } from '../helpers';
 import makiFiles from './makiFiles';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
+import { getShortLink } from '../../services/helpers';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -67,9 +66,6 @@ const Loading = styled.div`
   height: 0;
 `;
 
-const featuredKeys = ['phone', 'website', 'opening_hours'];
-const getShortLink = apiId => `https://osmap.cz/${apiId.type}/${apiId.id}`;
-
 const StyledIconButton = styled(IconButton)`
   svg {
     width: 20px;
@@ -101,6 +97,7 @@ export const Panel = ({ feature }) => {
     properties,
   } = feature;
   const shortLink = getShortLink(osmMeta);
+  const featuredKeys = ['phone', 'website', 'opening_hours'];
   const featuredProperties = featuredKeys.map(k => [k, tags[k]]);
   const ico = makiFiles.includes(properties.class)
     ? properties.class

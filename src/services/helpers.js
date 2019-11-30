@@ -69,3 +69,6 @@ export const getApiId = value => {
   const id = shortId.substr(1);
   return { type, id };
 };
+
+export const getShortLink = apiId =>
+  `https://osmap.cz/${apiId.type}/${apiId.id}`;
