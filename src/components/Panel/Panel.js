@@ -19,6 +19,7 @@ import Coordinates from './Coordinates';
 import { capitalize, useToggleState } from '../helpers';
 import makiFiles from './makiFiles';
 import TagsTable from './TagsTable';
+import Maki from '../utils/Maki';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -86,18 +87,6 @@ const PoiType = styled.div`
     margin-right: 5px;
   }
 `;
-
-const MakiImg = styled.img`
-  line-height: 14px;
-  vertical-align: middle;
-  margin-right: 6px;
-  filter: invert(100%);
-  width: 11px;
-  height: 11px;
-`;
-const Maki = ({ ico }) => (
-  <MakiImg src={`/static/maki/${ico}-11.svg`} alt={ico} title={ico} />
-);
 
 export const Panel = ({ feature }) => {
   const [tagsShown, toggleTags] = useToggleState(!false);
