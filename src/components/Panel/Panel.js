@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
+import { Scrollbars } from 'react-custom-scrollbars';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Share from '@material-ui/icons/Share';
@@ -31,15 +32,13 @@ const Wrapper = styled.div`
   background-color: #fafafa;
 
   overflow: hidden;
-  overflow-y: scroll !important;
 `;
 
 const Content = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
-
-  margin: 20px 15px;
+  height: calc(100vh - 72px - 238px); // 100% - TopPanel - FeatureImage
+  padding: 20px 15px;
 `;
 
 const TopPanel = styled.div`
@@ -112,50 +111,58 @@ export const Panel = ({ feature }) => {
       <TopPanel>
         <SearchBox />
       </TopPanel>
-      <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg">
-        <PoiType>
-          <Maki ico={ico} />
-          {tags.name ? subclass : 'beze jména'}
-        </PoiType>
+      <Scrollbars universal autoHide style={{ height: '100%' }}>
+        <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg">
+          <PoiType>
+            <Maki ico={ico} />
+            {tags.name ? subclass : 'beze jména'}
+          </PoiType>
 
-        <StyledIconButton>
-          <Share nativeColor="#fff" titleAccess="Sdílet" />
-        </StyledIconButton>
-        <StyledIconButton>
-          <StarBorder nativeColor="#fff" titleAccess="Uložit" />
-        </StyledIconButton>
-        <StyledIconButton>
-          <Directions nativeColor="#fff" titleAccess="Trasa" />
-        </StyledIconButton>
-      </FeatureImage>
-      <Loading>{loading && <LinearProgress />}</Loading>
-      <Content>
-        <FeatureHeading title={tags.name || subclass} />
+          <StyledIconButton>
+            <Share nativeColor="#fff" titleAccess="Sdílet" />
+          </StyledIconButton>
+          <StyledIconButton>
+            <StarBorder nativeColor="#fff" titleAccess="Uložit" />
+          </StyledIconButton>
+          <StyledIconButton>
+            <Directions nativeColor="#fff" titleAccess="Trasa" />
+          </StyledIconButton>
+        </FeatureImage>
+        <Loading>{loading && <LinearProgress />}</Loading>
+        <Content>
+          <FeatureHeading title={tags.name || subclass} />
 
-        {tagsShown && <TagsTable tags={tags} />}
+          {tagsShown && <TagsTable tags={tags} />}
 
-        {!tagsShown &&
-          featuredProperties.map(([k, v]) => <Property key={k} k={k} v={v} />)}
+          {!tagsShown &&
+            featuredProperties.map(([k, v]) => (
+              <Property key={k} k={k} v={v} />
+            ))}
 
-        <StyledEdit>
-          <Button size="large" title="Upravit místo v živé databázi OSM">
-            <LogoOsm width="24" height="24" style={{ marginRight: 10 }} />
-            Upravit místo
-          </Button>
-        </StyledEdit>
-        <Footer>
-          {capitalize(osmMeta.type)} v databázi OpenStreetMap
-          <br />
-          <Coordinates feature={feature} />
-          <br />
-          {!nonOsmObject && <a href={shortLink}>{shortLink}</a>}
-          <br />
-          <label>
-            <input type="checkbox" onChange={toggleTags} checked={tagsShown} />{' '}
-            Zobrazit tagy
-          </label>
-        </Footer>
-      </Content>
+          <StyledEdit>
+            <Button size="large" title="Upravit místo v živé databázi OSM">
+              <LogoOsm width="24" height="24" style={{ marginRight: 10 }} />
+              Upravit místo
+            </Button>
+          </StyledEdit>
+          <Footer>
+            {capitalize(osmMeta.type)} v databázi OpenStreetMap
+            <br />
+            <Coordinates feature={feature} />
+            <br />
+            {!nonOsmObject && <a href={shortLink}>{shortLink}</a>}
+            <br />
+            <label>
+              <input
+                type="checkbox"
+                onChange={toggleTags}
+                checked={tagsShown}
+              />{' '}
+              Zobrazit tagy
+            </label>
+          </Footer>
+        </Content>
+      </Scrollbars>
     </Wrapper>
   );
 };
