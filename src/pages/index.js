@@ -8,30 +8,36 @@ import Panel from '../components/Panel/Panel';
 import Map from '../components/Map/Map';
 import { getFeatureFromApi } from '../services/osmApi';
 import { getShortId } from '../services/helpers';
+import SearchBox from '../components/SearchBox/SearchBox';
 
-const Wrapper = styled.div`
-  display: flex;
-  width: 100%;
-  height: 100%;
+const TopPanel = styled.div`
+  position: absolute;
+  width: 410px;
+  height: 72px;
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
+  background-color: #eb5757;
+  padding: 12px;
+  box-sizing: border-box;
 
-  & > div {
-    flex: 1;
-  }
+  z-index: 1200;
 `;
 
-const getInitialProps = async ({ query }) => {
+const getInitialFeature = async id => {
   try {
-    const initialFeature = await getFeatureFromApi(query.id || 'w316427435');
-    return { initialFeature };
+    return id ? await getFeatureFromApi(id) : null;
   } catch (e) {
-    return { initialFeature: await getFeatureFromApi('w316427435') };
+    return null;
   }
 };
+
+const getInitialProps = async ({ query }) => ({
+  initialFeature: await getInitialFeature(query.id),
+});
 
 const Index = ({ initialFeature }) => {
   const [feature, setFeature] = React.useState(initialFeature);
   const setFeatureHandler = feature => {
-    if (feature.nonOsmObject) {
+    if (feature == null || feature.nonOsmObject) {
       Router.push('/', '/', { shallow: true });
     } else {
       const id = getShortId(feature.osmMeta);
@@ -41,10 +47,13 @@ const Index = ({ initialFeature }) => {
   };
 
   return (
-    <Wrapper>
-      <Panel feature={feature} />
+    <>
+      <TopPanel>
+        <SearchBox resetFeature={() => setFeatureHandler(null)} />
+      </TopPanel>
+      {feature != null && <Panel feature={feature} />}
       <Map onFeatureClicked={setFeatureHandler} />
-    </Wrapper>
+    </>
   );
 };
 Index.getInitialProps = getInitialProps;

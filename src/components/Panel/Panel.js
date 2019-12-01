@@ -25,13 +25,17 @@ import { getShortLink } from '../../services/helpers';
 // better: https://github.com/rommguy/react-custom-scroll
 // maybe https://github.com/malte-wessel/react-custom-scrollbars (larger)
 const Wrapper = styled.div`
+  position: absolute;
+  left: 0;
+  top: 72px; // TopPanel
+  bottom: 0;
+  width: 410px;
+  background-color: #fafafa;
+  overflow: hidden;
+  z-index: 1100;
+
   display: flex;
   flex-direction: column;
-  height: 100%;
-  max-width: 410px;
-  background-color: #fafafa;
-
-  overflow: hidden;
 `;
 
 const Content = styled.div`
@@ -108,9 +112,6 @@ export const Panel = ({ feature }) => {
 
   return (
     <Wrapper>
-      <TopPanel>
-        <SearchBox />
-      </TopPanel>
       <Scrollbars universal autoHide style={{ height: '100%' }}>
         <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg">
           <PoiType>

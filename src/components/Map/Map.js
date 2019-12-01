@@ -9,12 +9,6 @@ import Button from '@material-ui/core/Button';
 import GithubIcon from '../../assets/GithubIcon';
 import LayersIcon from '../../assets/LayersIcon';
 
-const Wrapper = styled.div`
-  position: relative;
-  background-color: #eee;
-  height: 100%;
-`;
-
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
   loading: () => '',
@@ -43,18 +37,20 @@ const Box = styled.div`
   }
 `;
 
-const Top = styled.div`
-  display: flex;
+const TopCenter = styled.div`
   position: absolute;
   top: 0;
+  left: 48%;
   z-index: 1000;
   padding: 10px;
-  width: 100%;
-  align-items: flex-start;
+`;
 
-  button:first-child {
-    margin: 0 auto;
-  }
+const TopRight = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1000;
+  padding: 10px;
 `;
 
 const LayerSwitcherButton = styled.button`
@@ -81,15 +77,17 @@ const LayerSwitcherButton = styled.button`
 `;
 
 const Map = ({ onFeatureClicked }) => (
-  <Wrapper>
+  <>
     <BrowserMap onFeatureClicked={onFeatureClicked} />
-    <Top>
+    <TopCenter>
       <Button variant="outlined">Co je OpenStreetMap?</Button>
+    </TopCenter>
+    <TopRight>
       <LayerSwitcherButton>
         <LayersIcon />
         Vrstvy
       </LayerSwitcherButton>
-    </Top>
+    </TopRight>
     <BottomRight>
       <Button size="small">
         <BugReport width="10" height="10" />
@@ -103,7 +101,7 @@ const Map = ({ onFeatureClicked }) => (
         </a>
       </Box>
     </BottomRight>
-  </Wrapper>
+  </>
 );
 
 export default Map;

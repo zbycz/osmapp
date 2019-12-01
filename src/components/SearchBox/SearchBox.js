@@ -14,7 +14,6 @@ const styles = {
     padding: '2px 4px',
     display: 'flex',
     alignItems: 'center',
-    width: '100%',
   },
   input: {
     marginLeft: 8,
@@ -30,7 +29,7 @@ const styles = {
   },
 };
 
-const CustomizedInputBase = ({ classes }) => (
+const CustomizedInputBase = ({ classes, resetFeature }) => (
   <Paper className={classes.root} elevation={1}>
     <IconButton className={classes.iconButton} disabled>
       <SearchIcon />
@@ -43,7 +42,11 @@ const CustomizedInputBase = ({ classes }) => (
     {/* <MoreVertIcon /> */}
     {/* </IconButton> */}
     <Divider className={classes.divider} />
-    <IconButton className={classes.iconButton} aria-label="Zavřít panel">
+    <IconButton
+      className={classes.iconButton}
+      aria-label="Zavřít panel"
+      onClick={resetFeature}
+    >
       <CloseIcon />
     </IconButton>
   </Paper>
