@@ -36,7 +36,8 @@ const getInitialProps = async ({ query }) => ({
 
 const Index = ({ initialFeature }) => {
   const [feature, setFeature] = React.useState(initialFeature);
-  const setFeatureHandler = feature => {
+
+  const setFeatureAndUrl = feature => {
     if (feature == null || feature.nonOsmObject) {
       Router.push('/', '/', { shallow: true });
     } else {
@@ -49,10 +50,10 @@ const Index = ({ initialFeature }) => {
   return (
     <>
       <TopPanel>
-        <SearchBox resetFeature={() => setFeatureHandler(null)} />
+        <SearchBox resetFeature={() => setFeatureAndUrl(null)} />
       </TopPanel>
       {feature != null && <Panel feature={feature} />}
-      <Map onFeatureClicked={setFeatureHandler} />
+      <Map onFeatureClicked={setFeatureAndUrl} />
     </>
   );
 };
