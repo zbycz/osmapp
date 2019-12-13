@@ -158,7 +158,7 @@ class BrowserMap extends React.Component {
       <>
         <div ref={this.mapRef} style={{ height: '100%', width: '100%' }} />
         <link
-          href="https://api.mapbox.com/mapbox-gl-js/v0.52.0/mapbox-gl.css"
+          href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css"
           rel="stylesheet"
         />
       </>
