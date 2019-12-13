@@ -10,5 +10,5 @@ WORKDIR /app
 ENV NODE_ENV="production"
 COPY --from=build-stage /app .
 EXPOSE 3000
-CMD ["node", "./node_modules/.bin/next", "start", "./src"]
+CMD ["node", "./node_modules/.bin/next", "start"]
 

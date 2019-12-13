@@ -7,8 +7,8 @@ import { MuiThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import JssProvider from 'react-jss/lib/JssProvider';
 
-import getPageContext from '../helpers/getPageContext';
-import GlobalStyle from '../helpers/GlobalStyle';
+import getPageContext from '../src/helpers/getPageContext';
+import GlobalStyle from '../src/helpers/GlobalStyle';
 
 class MyApp extends App {
   constructor() {
