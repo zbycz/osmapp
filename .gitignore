@@ -2,7 +2,7 @@
 /coverage
 /build
 /dist
-/src/.next
+.next
 .DS_Store
 .env
 .idea

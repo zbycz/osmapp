@@ -1,11 +1,11 @@
 {
   "name": "osmcz-v2",
   "scripts": {
-    "dev": "next ./src",
+    "dev": "next",
     "lint": "eslint --print-config . | eslint-config-prettier-check && eslint . --report-unused-disable-directives",
-    "build": "next build ./src",
-    "start": "next start ./src",
-    "dist": "next build ./src && next export ./src -o dist"
+    "build": "next build",
+    "start": "next start",
+    "dist": "next build && next export -o dist"
   },
   "husky": {
     "hooks": {

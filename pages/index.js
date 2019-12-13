@@ -4,11 +4,11 @@ import React from 'react';
 import styled from 'styled-components';
 import Router from 'next/router';
 
-import Panel from '../components/Panel/Panel';
-import Map from '../components/Map/Map';
-import { getFeatureFromApi } from '../services/osmApi';
-import { getShortId } from '../services/helpers';
-import SearchBox from '../components/SearchBox/SearchBox';
+import Panel from '../src/components/Panel/Panel';
+import Map from '../src/components/Map/Map';
+import { getFeatureFromApi } from '../src/services/osmApi';
+import { getShortId } from '../src/services/helpers';
+import SearchBox from '../src/components/SearchBox/SearchBox';
 
 const TopPanel = styled.div`
   position: absolute;
