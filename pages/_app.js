@@ -5,6 +5,9 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/helpers/theme';
 import GlobalStyle from '../src/helpers/GlobalStyle';
+import { initSentry, captureException } from '../src/helpers/sentry';
+
+initSentry();
 
 export default class MyApp extends App {
   componentDidMount() {
@@ -13,6 +16,11 @@ export default class MyApp extends App {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
+  }
+
+  componentDidCatch(error, errorInfo) {
+    captureException(error, errorInfo);
+    super.componentDidCatch(error, errorInfo);
   }
 
   render() {
