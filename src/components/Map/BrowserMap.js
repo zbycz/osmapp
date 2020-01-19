@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import mapboxgl from 'mapbox-gl';
+import mapboxgl from 'mapbox-gl'; // update CSS import in _document.js
 
 import mapboxStyle from './mapboxStyle';
 import { getSkeleton, getOsmId } from './helpers';
@@ -154,15 +154,7 @@ class BrowserMap extends React.Component {
   }
 
   render() {
-    return (
-      <>
-        <div ref={this.mapRef} style={{ height: '100%', width: '100%' }} />
-        <link
-          href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css"
-          rel="stylesheet"
-        />
-      </>
-    );
+    return <div ref={this.mapRef} style={{ height: '100%', width: '100%' }} />;
   }
 }
 
