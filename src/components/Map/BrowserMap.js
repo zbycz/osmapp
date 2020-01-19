@@ -2,9 +2,8 @@
 
 import * as React from 'react';
 import mapboxgl from 'mapbox-gl'; // update CSS import in _document.js
-
 import mapboxStyle from './mapboxStyle';
-import { getSkeleton, getOsmId } from './helpers';
+import { getSkeleton } from './helpers';
 import { getFeatureFromApi } from '../../services/osmApi';
 
 const backgroundLayers = [
@@ -73,6 +72,55 @@ class BrowserMap extends React.Component {
   map = null;
   lastHover = null;
 
+  async fetchFromApi(osmApiId) {
+    try {
+      this.props.onFeatureClicked(await getFeatureFromApi(osmApiId));
+    } catch (e) {
+      console.warn(e);
+    }
+  }
+
+  onClickHandler = e => {
+    const point = e.point;
+    const coords = this.map.unproject(point).toArray();
+    const features = this.map.queryRenderedFeatures(point);
+    if (!features.length) {
+      return;
+    }
+
+    const skeleton = getSkeleton(features[0]);
+    console.log(`clicked skeleton: `, skeleton); // eslint-disable-line no-console
+
+    if (skeleton.nonOsmObject) {
+      this.props.onFeatureClicked(skeleton);
+    } else {
+      this.props.onFeatureClicked({ ...skeleton, loading: true });
+      this.fetchFromApi(skeleton.osmMeta);
+    }
+  };
+
+  setHover = (feature, hover) =>
+    feature !== null && this.map.setFeatureState(feature, { hover });
+  setHoverOn = feature => this.setHover(feature, true);
+  setHoverOff = feature => this.setHover(feature, false);
+  mousemove = e => {
+    if (e.features && e.features.length > 0) {
+      const feature = e.features[0];
+      if (feature !== this.lastHover) {
+        this.setHoverOff(this.lastHover);
+        this.setHoverOn(feature);
+        this.lastHover = feature;
+        this.map.getCanvas().style.cursor = 'pointer';
+      }
+    }
+  };
+
+  mouseleave = () => {
+    this.setHoverOff(this.lastHover);
+    this.lastHover = null;
+    this.map.getCanvas().style.cursor = ''; // TODO delay 200ms
+  };
+
   componentDidMount() {
     const origStyle = mapboxStyle(sources, backgroundLayers);
     const style = addHoverPaint(origStyle);
@@ -87,48 +135,7 @@ class BrowserMap extends React.Component {
     this.map.addControl(geolocateControl);
     this.map.addControl(scaleControl);
 
-    this.map.on('click', e => {
-      const point = e.point;
-      const coords = this.map.unproject(point).toArray();
-      const features = this.map.queryRenderedFeatures(point);
-      if (!features.length) {
-        return;
-      }
-
-      const skeleton = getSkeleton(features[0]);
-      console.log(`clicked skeleton: `, skeleton); // eslint-disable-line no-console
-
-      if (skeleton.nonOsmObject) {
-        this.props.onFeatureClicked(skeleton);
-      } else {
-        this.props.onFeatureClicked({ ...skeleton, loading: true });
-        this.fetchFromApi(skeleton.osmMeta);
-      }
-    });
-
-    const setHover = (feature, hover) => {
-      if (feature !== null) {
-        this.map.setFeatureState(feature, { hover });
-      }
-    };
-
-    const mousemove = e => {
-      if (e.features && e.features.length > 0) {
-        const feature = e.features[0];
-        if (feature !== this.lastHover) {
-          setHover(this.lastHover, false);
-          setHover(feature, true);
-          this.lastHover = feature;
-          this.map.getCanvas().style.cursor = 'pointer';
-        }
-      }
-    };
-
-    const mouseleave = () => {
-      setHover(this.lastHover, false);
-      this.lastHover = null;
-      this.map.getCanvas().style.cursor = ''; // TODO delay 200ms
-    };
+    this.map.on('click', this.onClickHandler);
 
     const backgroundIds = backgroundLayers.map(x => x.id);
     const hoverLayers = style.layers
@@ -136,17 +143,9 @@ class BrowserMap extends React.Component {
       .filter(x => !(x in backgroundIds));
 
     hoverLayers.forEach(x => {
-      this.map.on('mousemove', x, mousemove);
-      this.map.on('mouseleave', x, mouseleave);
+      this.map.on('mousemove', x, this.mousemove);
+      this.map.on('mouseleave', x, this.mouseleave);
     });
-  }
-
-  async fetchFromApi(osmApiId) {
-    try {
-      this.props.onFeatureClicked(await getFeatureFromApi(osmApiId));
-    } catch (e) {
-      console.warn(e);
-    }
   }
 
   componentWillUnmount() {
