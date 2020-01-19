@@ -5,38 +5,9 @@ import mapboxgl from 'mapbox-gl'; // update CSS import in _document.js
 import mapboxStyle from './mapboxStyle';
 import { getSkeleton } from './helpers';
 import { getFeatureFromApi } from '../../services/osmApi';
+import { sources, backgroundLayers } from './layers';
 
-const backgroundLayers = [
-  // {
-  //     "id": "simple-tiles",
-  //     "type": "raster",
-  //     "source": "osm_mapnik",
-  //     "minzoom": 0,
-  //     "maxzoom": 22
-  // },
-  {
-    id: 'background',
-    type: 'background',
-    paint: {
-      'background-color': '#f8f4f0',
-    },
-  },
-];
-
-const sources = {
-  openmaptiles: {
-    type: 'vector',
-    url: 'https://maps.tilehosting.com/data/v3.json?key=7dlhLl3hiXQ1gsth0kGu', // https://cloud.maptiler.com/account
-  },
-  osm_mapnik: {
-    type: 'raster',
-    tiles: [
-      'https://a.tile.openstreetmap.org/{z}/{x}/{y}.png',
-      'https://b.tile.openstreetmap.org/{z}/{x}/{y}.png',
-    ],
-    tileSize: 256,
-  },
-};
+// mapboxgl.accessToken = 'pk.eyJ1IjoiemJ5Y3oiLCJhIjoiY2oxMGN4enAxMDAyZjMybXF5eGJ5M2lheCJ9.qjvbRJ2C1tL4O9g9jOdJIw';
 
 const geolocateControl = new mapboxgl.GeolocateControl({
   positionOptions: {
@@ -114,7 +85,6 @@ class BrowserMap extends React.Component {
       }
     }
   };
-
   mouseleave = () => {
     this.setHoverOff(this.lastHover);
     this.lastHover = null;
@@ -142,7 +112,6 @@ class BrowserMap extends React.Component {
     const hoverLayers = style.layers
       .map(x => x.id)
       .filter(x => !(x in backgroundIds));
-
     hoverLayers.forEach(x => {
       this.map.on('mousemove', x, this.mousemove);
       this.map.on('mouseleave', x, this.mouseleave);
