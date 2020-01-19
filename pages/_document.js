@@ -1,6 +1,8 @@
 import React from 'react';
 import Document, { Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
+import { ServerStyleSheet } from 'styled-components';
+
 import theme from '../src/helpers/theme';
 
 export default class MyDocument extends Document {
@@ -58,11 +60,13 @@ MyDocument.getInitialProps = async ctx => {
 
   // Render app and page and get the context of the page with collected side effects.
   const sheets = new ServerStyleSheets();
+  const sheets2 = new ServerStyleSheet(); // styled-components
   const originalRenderPage = ctx.renderPage;
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: App => props => sheets.collect(<App {...props} />),
+      enhanceApp: App => props =>
+        sheets.collect(sheets2.collectStyles(<App {...props} />)),
     });
 
   const initialProps = await Document.getInitialProps(ctx);
@@ -73,6 +77,7 @@ MyDocument.getInitialProps = async ctx => {
     styles: [
       ...React.Children.toArray(initialProps.styles),
       sheets.getStyleElement(),
+      sheets2.getStyleElement(),
     ],
   };
 };
