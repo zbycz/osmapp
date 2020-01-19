@@ -5,14 +5,23 @@ import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import BugReport from '@material-ui/icons/BugReport';
 import Button from '@material-ui/core/Button';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import GithubIcon from '../../assets/GithubIcon';
 import LayersIcon from '../../assets/LayersIcon';
+import { useBoolState } from '../helpers';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
   loading: () => '',
 });
+
+const Spinner = styled(CircularProgress)`
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin: -20px 0 0 -20px;
+`;
 
 const BottomRight = styled.div`
   position: absolute;
@@ -76,32 +85,40 @@ const LayerSwitcherButton = styled.button`
   }
 `;
 
-const Map = ({ onFeatureClicked }) => (
-  <>
-    <BrowserMap onFeatureClicked={onFeatureClicked} />
-    <TopCenter>
-      <Button variant="outlined">Co je OpenStreetMap?</Button>
-    </TopCenter>
-    <TopRight>
-      <LayerSwitcherButton>
-        <LayersIcon />
-        Vrstvy
-      </LayerSwitcherButton>
-    </TopRight>
-    <BottomRight>
-      <Button size="small">
-        <BugReport width="10" height="10" />
-        Nahlásit chybu v mapě
-      </Button>
-      <Box>
-        <GithubIcon width="12" height="12" />
-        <a href="#">osmcz-app</a> 2.0.0 | © <a href="#">mapová data</a> |{' '}
-        <a href="#" title="v editoru iD">
-          editovat
-        </a>
-      </Box>
-    </BottomRight>
-  </>
-);
+const Map = ({ onFeatureClicked }) => {
+  const [isMapLoaded, onMapLoaded] = useBoolState(false);
+
+  return (
+    <>
+      <BrowserMap
+        onFeatureClicked={onFeatureClicked}
+        onMapLoaded={onMapLoaded}
+      />
+      {!isMapLoaded && <Spinner color="secondary" />}
+      <TopCenter>
+        <Button variant="outlined">Co je OpenStreetMap?</Button>
+      </TopCenter>
+      <TopRight>
+        <LayerSwitcherButton>
+          <LayersIcon />
+          Vrstvy
+        </LayerSwitcherButton>
+      </TopRight>
+      <BottomRight>
+        <Button size="small">
+          <BugReport width="10" height="10" />
+          Nahlásit chybu v mapě
+        </Button>
+        <Box>
+          <GithubIcon width="12" height="12" />
+          <a href="#">osmcz-app</a> 2.0.0 | © <a href="#">mapová data</a> |{' '}
+          <a href="#" title="v editoru iD">
+            editovat
+          </a>
+        </Box>
+      </BottomRight>
+    </>
+  );
+};
 
 export default Map;

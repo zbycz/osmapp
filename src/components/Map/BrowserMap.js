@@ -136,6 +136,7 @@ class BrowserMap extends React.Component {
     this.map.addControl(scaleControl);
 
     this.map.on('click', this.onClickHandler);
+    this.map.on('load', this.props.onMapLoaded);
 
     const backgroundIds = backgroundLayers.map(x => x.id);
     const hoverLayers = style.layers
