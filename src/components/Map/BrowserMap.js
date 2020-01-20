@@ -2,59 +2,77 @@
 
 import * as React from 'react';
 import mapboxgl from 'mapbox-gl'; // update CSS import in _document.js
-import mapboxStyle from './mapboxStyle';
 import { getSkeleton } from './helpers';
-import { getFeatureFromApi } from '../../services/osmApi';
-import { sources, backgroundLayers } from './layers';
+import { fetchFromApi } from '../../services/osmApi';
+import { hoverLayers, style } from './layers';
+import { useMapEffectFactory } from '../helpers';
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoiemJ5Y3oiLCJhIjoiY2oxMGN4enAxMDAyZjMybXF5eGJ5M2lheCJ9.qjvbRJ2C1tL4O9g9jOdJIw';
-
 const geolocateControl = new mapboxgl.GeolocateControl({
   positionOptions: {
     enableHighAccuracy: true,
   },
   trackUserLocation: true,
 });
-
 const scaleControl = new mapboxgl.ScaleControl({
   maxWidth: 80,
   unit: window.localStorage.getItem('units') ? 'imperial' : 'metric',
 });
 
-function addHoverPaint(origStyle) {
-  const value = [
-    'case',
-    ['boolean', ['feature-state', 'hover'], false],
-    0.5,
-    1,
-  ];
-  origStyle.layers
-    .filter(x => x.id.match(/^poi-/))
-    .forEach(x => {
-      if (x.paint) {
-        x.paint['icon-opacity'] = value;
-      }
+const useInitMap = () => {
+  const mapRef = React.useRef(null);
+  const [mapInState, setMapInState] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!mapRef.current) return;
+
+    const map = new mapboxgl.Map({
+      container: mapRef.current,
+      style,
+      center: [14.38906, 50.10062],
+      zoom: 17,
+      attributionControl: false,
     });
-  return origStyle;
-}
+    setMapInState(map);
 
-class BrowserMap extends React.Component {
-  mapRef = React.createRef();
-  map = null;
-  lastHover = null;
+    map.addControl(geolocateControl);
+    map.addControl(scaleControl);
 
-  async fetchFromApi(osmApiId) {
-    try {
-      this.props.onFeatureClicked(await getFeatureFromApi(osmApiId));
-    } catch (e) {
-      console.warn(e);
-    }
-  }
+    let lastHover = null;
+    const setHover = (f, hover) => f && map.setFeatureState(f, { hover });
+    const setHoverOn = f => setHover(f, true);
+    const setHoverOff = f => setHover(f, false);
+    const onMouseMove = e => {
+      if (e.features && e.features.length > 0) {
+        const feature = e.features[0];
+        if (feature !== lastHover) {
+          setHoverOff(lastHover);
+          setHoverOn(feature);
+          lastHover = feature;
+          map.getCanvas().style.cursor = 'pointer';
+        }
+      }
+    };
+    const onMouseLeave = () => {
+      setHoverOff(lastHover);
+      lastHover = null;
+      map.getCanvas().style.cursor = ''; // TODO delay 200ms
+    };
 
-  onClickHandler = e => {
+    hoverLayers.forEach(x => {
+      map.on('mousemove', x, onMouseMove);
+      map.on('mouseleave', x, onMouseLeave);
+    });
+  }, [mapRef]);
+
+  return [mapInState, mapRef];
+};
+
+const useOnFeatureClicked = useMapEffectFactory((map, onFeatureClicked) => {
+  map.on('click', async e => {
     const point = e.point;
-    const coords = this.map.unproject(point).toArray();
-    const features = this.map.queryRenderedFeatures(point);
+    const coords = map.unproject(point).toArray();
+    const features = map.queryRenderedFeatures(point);
     if (!features.length) {
       return;
     }
@@ -63,68 +81,24 @@ class BrowserMap extends React.Component {
     console.log(`clicked skeleton: `, skeleton); // eslint-disable-line no-console
 
     if (skeleton.nonOsmObject) {
-      this.props.onFeatureClicked(skeleton);
+      onFeatureClicked(skeleton);
     } else {
-      this.props.onFeatureClicked({ ...skeleton, loading: true });
-      this.fetchFromApi(skeleton.osmMeta);
+      onFeatureClicked({ ...skeleton, loading: true });
+      onFeatureClicked(await fetchFromApi(skeleton.osmMeta));
     }
-  };
+  });
+});
 
-  setHover = (feature, hover) =>
-    feature !== null && this.map.setFeatureState(feature, { hover });
-  setHoverOn = feature => this.setHover(feature, true);
-  setHoverOff = feature => this.setHover(feature, false);
-  mousemove = e => {
-    if (e.features && e.features.length > 0) {
-      const feature = e.features[0];
-      if (feature !== this.lastHover) {
-        this.setHoverOff(this.lastHover);
-        this.setHoverOn(feature);
-        this.lastHover = feature;
-        this.map.getCanvas().style.cursor = 'pointer';
-      }
-    }
-  };
-  mouseleave = () => {
-    this.setHoverOff(this.lastHover);
-    this.lastHover = null;
-    this.map.getCanvas().style.cursor = ''; // TODO delay 200ms
-  };
+const useOnMapLoaded = useMapEffectFactory((map, onMapLoaded) => {
+  map.on('load', onMapLoaded);
+});
 
-  componentDidMount() {
-    const origStyle = mapboxStyle(sources, backgroundLayers);
-    const style = addHoverPaint(origStyle);
-    this.map = new mapboxgl.Map({
-      container: this.mapRef.current,
-      style,
-      center: [14.38906, 50.10062],
-      zoom: 17,
-      attributionControl: false,
-    });
+const BrowserMap = ({ onFeatureClicked, onMapLoaded }) => {
+  const [map, mapRef] = useInitMap();
+  useOnFeatureClicked(map, onFeatureClicked);
+  useOnMapLoaded(map, onMapLoaded);
 
-    this.map.addControl(geolocateControl);
-    this.map.addControl(scaleControl);
-
-    this.map.on('click', this.onClickHandler);
-    this.map.on('load', this.props.onMapLoaded);
-
-    const backgroundIds = backgroundLayers.map(x => x.id);
-    const hoverLayers = style.layers
-      .map(x => x.id)
-      .filter(x => !(x in backgroundIds));
-    hoverLayers.forEach(x => {
-      this.map.on('mousemove', x, this.mousemove);
-      this.map.on('mouseleave', x, this.mouseleave);
-    });
-  }
-
-  componentWillUnmount() {
-    if (this.map) this.map.remove();
-  }
-
-  render() {
-    return <div ref={this.mapRef} style={{ height: '100%', width: '100%' }} />;
-  }
-}
+  return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
+};
 
 export default BrowserMap;
