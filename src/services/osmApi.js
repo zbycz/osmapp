@@ -63,3 +63,11 @@ export const getFeatureFromApi = async featureId => {
   console.log('fetched feature', geojson); // eslint-disable-line no-console
   return geojson;
 };
+
+export const fetchFromApi = async function(osmApiId) {
+  try {
+    return await getFeatureFromApi(osmApiId);
+  } catch (e) {
+    console.warn(e);
+  }
+};

@@ -21,3 +21,8 @@ export function isBrowser() {
 export function isServer() {
   return typeof window === 'undefined';
 }
+
+export const useMapEffectFactory = cb => (map, ...rest) =>
+  React.useEffect(() => {
+    map && cb(map, ...rest);
+  }, [map, ...rest]);

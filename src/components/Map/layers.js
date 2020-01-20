@@ -1,5 +1,7 @@
 // @flow
 
+import mapboxStyle from './mapboxStyle';
+
 export const sources = {
   openmaptiles: {
     type: 'vector',
@@ -59,3 +61,26 @@ export const backgroundLayers = [
   //   'type': 'hillshade'
   // },
 ];
+
+function addHoverPaint(origStyle) {
+  const value = [
+    'case',
+    ['boolean', ['feature-state', 'hover'], false],
+    0.5,
+    1,
+  ];
+  origStyle.layers
+    .filter(x => x.id.match(/^poi-/))
+    .forEach(x => {
+      if (x.paint) {
+        x.paint['icon-opacity'] = value;
+      }
+    });
+  return origStyle;
+}
+
+export const style = addHoverPaint(mapboxStyle(sources, backgroundLayers));
+const backgroundIds = backgroundLayers.map(x => x.id);
+export const hoverLayers = style.layers
+  .map(x => x.id)
+  .filter(x => !(x in backgroundIds));
