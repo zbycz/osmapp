@@ -73,6 +73,7 @@ const StyledIconButton = styled(IconButton)`
   svg {
     width: 20px;
     height: 20px;
+    color: #fff;
   }
 `;
 

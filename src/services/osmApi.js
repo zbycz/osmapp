@@ -1,6 +1,6 @@
 // @flow
 
-import { fetchText, getApiId, parseXmlString } from './helpers';
+import { fetchText, getApiId, getCenter, parseXmlString } from './helpers';
 import { getPoiClass } from './getPoiClass';
 
 export const OSM_API = 'https://www.openstreetmap.org/api/0.6';
@@ -16,6 +16,7 @@ export const OP_QUERY = {
 };
 export const OP_FEATURE_URL = ({ type, id }) => OP_URL(OP_QUERY[type](id));
 
+// parse osm xml -> geojson
 const coords = x => [parseFloat(x.$.lon), parseFloat(x.$.lat)];
 const lookupNode = (osmXml, id) => osmXml.node.find(x => x.$.id === id);
 const getGeometry = {
@@ -61,7 +62,10 @@ export const getFeatureFromApi = async featureId => {
   const response = await fetchText(url, { putInAbortableQueue: true });
   const geojson = await osmToGeojson(response);
   console.log('fetched feature', geojson); // eslint-disable-line no-console
-  return geojson;
+  return {
+    ...geojson,
+    center: getCenter(geojson),
+  };
 };
 
 export const fetchFromApi = async function(osmApiId) {

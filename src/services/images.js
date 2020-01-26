@@ -1,7 +1,7 @@
 import { fetchText } from './helpers';
 
 const getMapillaryUrl = async feature => {
-  const lonlat = feature.geometry.coordinates.join(',');
+  const lonlat = feature.center.join(',');
   const url = `https://a.mapillary.com/v3/images?client_id=TTdNZ2w5eTF6MEtCNUV3OWNhVER2dzpjMjdiZGE1MWJmYzljMmJi&lookat=${lonlat}&closeto=${lonlat}&per_page=1`;
   const data = await fetchText(url);
 
@@ -19,6 +19,6 @@ export const getFeatureImageUrl = async feature => {
     return await getMapillaryUrl(feature);
   } catch (e) {
     console.log(e);
-    return '#';
+    return undefined;
   }
 };
