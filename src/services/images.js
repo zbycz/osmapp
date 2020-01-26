@@ -55,9 +55,7 @@ const getWikiApiUrl = tags => {
 };
 
 const getImage = async wikiUrl => {
-  const text = await fetchText(
-    `https://openstreetmap.cz/xhr_proxy.php?url=${encodeURIComponent(wikiUrl)}`,
-  );
+  const text = await fetchText(`${wikiUrl}&origin=*`);
   const data = JSON.parse(text);
   const replyType = getWikiType(data);
   console.log(data, replyType);
