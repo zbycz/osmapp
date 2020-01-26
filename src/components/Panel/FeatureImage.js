@@ -3,10 +3,12 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import { getFeatureImageUrl } from '../../services/images';
+import BrokenImage from '@material-ui/icons/BrokenImage';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Wrapper = styled.div`
   position: relative;
-  background: url(${({ link }) => link}) center center no-repeat;
+  background: url(${({ link }) => link ?? ''}) center center no-repeat;
   background-size: cover;
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
@@ -37,9 +39,32 @@ const Bottom = styled.div`
   width: 100%;
 `;
 
+const IconWrapper = styled.div`
+  line-height: 238px;
+  text-align: center;
+  svg {
+    width: 100px;
+    height: 100px;
+    color: #eee;
+  }
+`;
+
+const Spinner = styled(CircularProgress)`
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  margin: -20px 0 0 -20px;
+  svg {
+    color: #ccc;
+  }
+`;
+
+const LOADING = null;
+
 const FeatureImage = ({ feature, children }) => {
-  const [link, setLink] = React.useState('#');
+  const [link, setLink] = React.useState(LOADING);
   React.useEffect(() => {
+    setLink(LOADING);
     getFeatureImageUrl(feature).then(url => {
       setLink(url);
     });
@@ -47,6 +72,12 @@ const FeatureImage = ({ feature, children }) => {
 
   return (
     <Wrapper link={link}>
+      {link === undefined && (
+        <IconWrapper>
+          <BrokenImage />
+        </IconWrapper>
+      )}
+      {link === LOADING && <Spinner />}
       <Bottom>{children}</Bottom>
     </Wrapper>
   );

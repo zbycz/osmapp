@@ -1,5 +1,7 @@
 // @flow
 
+import { getCenter } from '../../services/helpers';
+
 export const getOsmId = feature => {
   if (!feature || !feature.id) return false;
 
@@ -15,12 +17,13 @@ export const dumpFeatures = features => {
   return JSON.parse(JSON.stringify(features));
 };
 
-export const getSkeleton = feature => {
+export const getSkeleton = (feature, clickCoords) => {
   const osmApiId = getOsmId(feature);
   const isOsmObject = ['node', 'way'].includes(osmApiId.type);
   return {
     ...feature,
     geometry: feature.geometry,
+    center: getCenter(feature) || clickCoords,
     osmMeta: { ...osmApiId },
     tags: { name: feature.properties && feature.properties.name },
     skeleton: true,

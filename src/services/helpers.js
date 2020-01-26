@@ -4,6 +4,7 @@ import fetch from 'isomorphic-unfetch';
 import * as xml2js from 'isomorphic-xml2js';
 
 import { isBrowser } from '../components/helpers';
+import geojsonExtent from '@mapbox/geojson-extent';
 
 // TOOD cancel request in map.on('click', ...)
 const noRequestRunning = { abort: () => {} };
@@ -72,3 +73,30 @@ export const getApiId = value => {
 
 export const getShortLink = apiId =>
   `https://osmap.cz/${apiId.type}/${apiId.id}`;
+
+export const getCenter = feature => {
+  const type = feature.geometry.type;
+
+  // node
+  if (!type || type === 'Point') {
+    return feature.geometry.coordinates;
+  }
+
+  // relation
+  if (type !== 'LineString' && type !== 'Polygon') {
+    console.warn('Error: Unknown geometry', type, feature);
+    return undefined;
+  }
+
+  // way
+  try {
+    const ex = geojsonExtent(feature); // [WSEN]
+    const avg = (a, b) => (a + b) / 2; // flat earth rulezz
+    const lon = avg(ex[0], ex[2]);
+    const lat = avg(ex[1], ex[3]);
+    return [lon, lat];
+  } catch (e) {
+    console.warn('Error: Unknown center of geojson', e, feature);
+    return undefined;
+  }
+};

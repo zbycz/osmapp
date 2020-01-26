@@ -77,7 +77,7 @@ const useOnFeatureClicked = useMapEffectFactory((map, onFeatureClicked) => {
       return;
     }
 
-    const skeleton = getSkeleton(features[0]);
+    const skeleton = getSkeleton(features[0], coords);
     console.log(`clicked skeleton: `, skeleton); // eslint-disable-line no-console
 
     if (skeleton.nonOsmObject) {
