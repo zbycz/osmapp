@@ -40,7 +40,7 @@ const Bottom = styled.div`
 `;
 
 const IconWrapper = styled.div`
-  line-height: 238px;
+  padding-top: 40px;
   text-align: center;
   svg {
     width: 100px;
@@ -66,6 +66,7 @@ const FeatureImage = ({ feature, children }) => {
   React.useEffect(() => {
     setLink(LOADING);
     getFeatureImageUrl(feature).then(url => {
+      // TODO we should wait with showing skeleton's mapillary image until full feature is loaded
       setLink(url);
     });
   }, [feature]);
