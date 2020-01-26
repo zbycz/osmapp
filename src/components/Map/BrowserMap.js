@@ -6,6 +6,8 @@ import { getSkeleton } from './helpers';
 import { fetchFromApi } from '../../services/osmApi';
 import { hoverLayers, style } from './layers';
 import { useMapEffectFactory } from '../helpers';
+import { useMapStateContext } from '../utils/MapStateContext';
+import { throttle } from 'lodash';
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoiemJ5Y3oiLCJhIjoiY2oxMGN4enAxMDAyZjMybXF5eGJ5M2lheCJ9.qjvbRJ2C1tL4O9g9jOdJIw';
 const geolocateControl = new mapboxgl.GeolocateControl({
@@ -29,8 +31,6 @@ const useInitMap = () => {
     const map = new mapboxgl.Map({
       container: mapRef.current,
       style,
-      center: [14.38906, 50.10062],
-      zoom: 17,
       attributionControl: false,
     });
     setMapInState(map);
@@ -93,10 +93,33 @@ const useOnMapLoaded = useMapEffectFactory((map, onMapLoaded) => {
   map.on('load', onMapLoaded);
 });
 
+const useUpdateViewOnMove = useMapEffectFactory((map, _setViewFromMap) => {
+  map.on(
+    'move',
+    throttle(() => {
+      _setViewFromMap([
+        map.getZoom().toFixed(2),
+        map.getCenter().lat.toFixed(4),
+        map.getCenter().lng.toFixed(4),
+      ]);
+    }, 2000),
+  );
+});
+
+const useUpdateMap = useMapEffectFactory((map, _viewForMap) => {
+  const center = [_viewForMap[2], _viewForMap[1]];
+  console.log('map to jump to:', center);
+  map.jumpTo({ center, zoom: _viewForMap[0] });
+});
+
 const BrowserMap = ({ onFeatureClicked, onMapLoaded }) => {
   const [map, mapRef] = useInitMap();
   useOnFeatureClicked(map, onFeatureClicked);
   useOnMapLoaded(map, onMapLoaded);
+
+  const { _viewForMap, _setViewFromMap } = useMapStateContext();
+  useUpdateViewOnMove(map, _setViewFromMap);
+  useUpdateMap(map, _viewForMap);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
