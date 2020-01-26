@@ -11,6 +11,10 @@ import Map from '../src/components/Map/Map';
 import { getFeatureFromApi } from '../src/services/osmApi';
 import { getShortId } from '../src/services/helpers';
 import SearchBox from '../src/components/SearchBox/SearchBox';
+import {
+  MapStateProvider,
+  useMapStateContext,
+} from '../src/components/utils/MapStateContext';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -34,7 +38,7 @@ const fetchInitialFeature = async id => {
 
 const persistFeatureId = id => {
   const url = id ? `?id=${id}` : '';
-  Router.push('/', `/${url}`, { shallow: true });
+  Router.push('/', `/${url}${location.hash}`, { shallow: true });
   Cookies.set('lastFeatureId', id); // TODO longer expire
 };
 
@@ -58,8 +62,17 @@ const useFeatureState = initialFeature => {
   return [feature, setFeatureAndPersist];
 };
 
-const Index = ({ initialFeature }) => {
+function usePersistMapView() {
+  const { view } = useMapStateContext();
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') window.location.hash = view.join('/');
+    Cookies.set('mapView', view.join('/')); // TODO longer expire
+  }, [view]);
+}
+
+const IndexWithProviders = ({ initialFeature }) => {
   const [feature, setFeature] = useFeatureState(initialFeature);
+  usePersistMapView();
 
   return (
     <>
@@ -71,10 +84,23 @@ const Index = ({ initialFeature }) => {
     </>
   );
 };
+
+const Index = ({ initialFeature, initialMapState }) => {
+  return (
+    <MapStateProvider initialMapState={initialMapState}>
+      <IndexWithProviders initialFeature={initialFeature} />
+    </MapStateProvider>
+  );
+};
 Index.getInitialProps = async ctx => {
-  const { lastFeatureId } = nextCookies(ctx);
+  const { lastFeatureId, mapView } = nextCookies(ctx);
+
+  const defaultView = [17, 50.10062, 14.38906];
+  const initialMapState = mapView ? mapView.split('/') : defaultView;
+
   return {
     initialFeature: await fetchInitialFeature(ctx.query.id || lastFeatureId),
+    initialMapState,
   };
 };
 
