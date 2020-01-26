@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import IconButton from '@material-ui/core/IconButton';
+import { getFeatureImageUrl } from '../../services/images';
 
 const Wrapper = styled.div`
   position: relative;
@@ -37,10 +37,19 @@ const Bottom = styled.div`
   width: 100%;
 `;
 
-const FeatureImage = ({ link, children }) => (
-  <Wrapper link={link}>
-    <Bottom>{children}</Bottom>
-  </Wrapper>
-);
+const FeatureImage = ({ feature, children }) => {
+  const [link, setLink] = React.useState('#');
+  React.useEffect(() => {
+    getFeatureImageUrl(feature).then(url => {
+      setLink(url);
+    });
+  }, [feature]);
+
+  return (
+    <Wrapper link={link}>
+      <Bottom>{children}</Bottom>
+    </Wrapper>
+  );
+};
 
 export default FeatureImage;

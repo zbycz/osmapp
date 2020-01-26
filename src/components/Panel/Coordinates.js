@@ -8,7 +8,7 @@ const round = x => x.toFixed(5);
 
 export const Coords = ({ coords: [lon, lat] }) => (
   <>
-    {round(lon)}° {round(lat)}°
+    {round(lat)}° {round(lon)}°
   </>
 );
 

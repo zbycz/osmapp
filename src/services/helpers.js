@@ -10,7 +10,7 @@ const noRequestRunning = { abort: () => {} };
 let abortController = noRequestRunning;
 
 export const fetchText = async (url, opts) => {
-  if (isBrowser() && opts.putInAbortableQueue) {
+  if (isBrowser() && opts?.putInAbortableQueue) {
     abortController.abort();
     abortController = new AbortController();
   }
