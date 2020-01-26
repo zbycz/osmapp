@@ -113,7 +113,7 @@ export const Panel = ({ feature }) => {
   return (
     <Wrapper>
       <Scrollbars universal autoHide style={{ height: '100%' }}>
-        <FeatureImage link="http://upload.zby.cz/golden-gate-bridge.jpg">
+        <FeatureImage feature={feature}>
           <PoiType>
             <Maki ico={ico} />
             {tags.name ? subclass : 'beze jména'}
