@@ -15,6 +15,15 @@ const getMapillaryUrl = async feature => {
 };
 
 export const getFeatureImageUrl = async feature => {
+  const wikiUrl = getWikiApiUrl(feature.tags);
+  console.log(wikiUrl);
+
+  if (wikiUrl) {
+    const image = await getImage(wikiUrl);
+    console.log(image);
+    return image.thumb;
+  }
+
   try {
     return await getMapillaryUrl(feature);
   } catch (e) {
@@ -22,3 +31,109 @@ export const getFeatureImageUrl = async feature => {
     return undefined;
   }
 };
+
+// From https://github.com/osmcz/osmcz/blob/0d3eaaa/js/poi-popup.js - MIT
+const getWikiApiUrl = tags => {
+  if (tags.wikimedia_commons) {
+    return `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${encodeURIComponent(
+      tags.wikimedia_commons,
+    )}`;
+  }
+
+  // if (tags.wikidata) {
+  //   return `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${(encodeURIComponent(tags.wikidata))}`;
+  // }
+
+  const wikipedia = Object.keys(tags).filter(k => k.match(/^wikipedia/));
+  if (wikipedia.length) {
+    const value = tags[wikipedia];
+    const country = value.includes(':') ? value.split(':')[0] : 'en';
+    return `https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=640&format=json&titles=${encodeURIComponent(
+      value,
+    )}`;
+  }
+};
+
+const getImage = async wikiUrl => {
+  const text = await fetchText(
+    `https://openstreetmap.cz/xhr_proxy.php?url=${encodeURIComponent(wikiUrl)}`,
+  );
+  const data = JSON.parse(text);
+  const replyType = getWikiType(data);
+  console.log(data, replyType);
+
+  const page = Object.values(data.query.pages)[0];
+  if (replyType === 'wikimedia') {
+    const images = page.imageinfo;
+    return (
+      images.length && {
+        page: images[0].descriptionshorturl,
+        thumb: images[0].thumburl,
+      }
+    );
+  }
+
+  if (replyType === 'wikipedia') {
+    return (
+      page.pageimage && {
+        page: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
+        thumb: page.thumbnail.source,
+      }
+    );
+  }
+
+  // else if (replyType == 'wikidata') {
+  //   const reply = processWikidataReply(data);
+  //   if (!reply.k) {
+  //     // Wikidata entry does not contains image
+  //     // try other tags
+  //     if (wikimedia.k)
+  //       reply = wikimedia;
+  //     else if (wikipedia.k)
+  //       reply = wikipedia;
+  //   }
+  //
+  //   // get image thumbnail url or try wikimedia/wikipedia if there is no image on wikidata
+  //   if (reply.k) {
+  //     const url = getWikiApiUrl(reply);
+  //     $.ajax({
+  //       url: xhd_proxy_url,
+  //       data: {
+  //         url: url
+  //       },
+  //       dataType: 'json',
+  //       success: function (data) {
+  //         if (getWikiType(data) == 'wikimedia') {
+  //           feature.wikimedia = data;
+  //           showWikimediaCommons();
+  //         } else if (getWikiType(data) == 'wikipedia') {
+  //           feature.wikipedia = data;
+  //           showWikimediaCommons();
+  //         }
+  //       }
+  //     });
+  //   }
+  // }
+};
+
+// Analyze reply and identify wikidata / wikimedia / wikipedia content
+function getWikiType(d) {
+  if (d.query) {
+    if (Object.keys(d.query.pages)[0]) {
+      const k = Object.keys(d.query.pages)[0];
+      if (d.query.pages[k].imageinfo) return 'wikimedia';
+      if (d.query.pages[k].pageimage) return 'wikipedia';
+    }
+  }
+  if (d.claims) return 'wikidata';
+}
+
+// In wikidata entry is image name. but we need thumbnail,
+// so we will convert wikidata reply to wikimedia_commons tag
+function processWikidataReply(d) {
+  const tags = {};
+  if (d.claims.P18) {
+    tags.wikimedia_commons = 'File:' + d.claims.P18[0].mainsnak.datavalue.value;
+  }
+  return tags;
+}
