@@ -10,7 +10,21 @@ import geojsonExtent from '@mapbox/geojson-extent';
 const noRequestRunning = { abort: () => {} };
 let abortController = noRequestRunning;
 
+const cache = {};
+const getKey = (url, opts) => url + JSON.stringify(opts);
+const getCache = key =>
+  isBrowser() ? sessionStorage.getItem(key) : cache[key];
+const removeCache = key =>
+  isBrowser() ? sessionStorage.removeItem(key) : delete cache[key];
+const writeCache = (key, value) =>
+  isBrowser() ? sessionStorage.setItem(key, value) : (cache[key] = value);
+export const removeFetchCache = (url, opts) => removeCache(getKey(url, opts));
+
 export const fetchText = async (url, opts) => {
+  let key = getKey(url, opts);
+  const item = getCache(key);
+  if (item) return item;
+
   if (isBrowser() && opts?.putInAbortableQueue) {
     abortController.abort();
     abortController = new AbortController();
@@ -32,7 +46,11 @@ export const fetchText = async (url, opts) => {
     );
   }
 
-  return res.text();
+  const text = await res.text();
+  if (!opts || !opts.nocache) {
+    writeCache(key, text);
+  }
+  return text;
 };
 
 export const parseXmlString = (xml, opts) => {
