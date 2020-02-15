@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import { getFeatureImageUrl } from '../../services/images';
+import { getFeatureImage } from '../../services/images';
 import BrokenImage from '@material-ui/icons/BrokenImage';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -65,9 +65,8 @@ const FeatureImage = ({ feature, children }) => {
   const [link, setLink] = React.useState(LOADING);
   React.useEffect(() => {
     setLink(LOADING);
-    getFeatureImageUrl(feature).then(url => {
-      // TODO we should wait with showing skeleton's mapillary image until full feature is loaded
-      setLink(url);
+    getFeatureImage(feature).then(images => {
+      setLink(images);
     });
   }, [feature]);
 
