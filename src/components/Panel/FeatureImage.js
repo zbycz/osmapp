@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   background-size: cover;
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
+  ${({ grayscale }) => (grayscale ? 'filter: grayscale(100%);' : '')}
 
   &:before {
     content: '';
@@ -101,7 +102,7 @@ const FeatureImage = ({ feature, children }) => {
   const { source, link, thumb, username } = image ?? {};
 
   return (
-    <Wrapper link={thumb}>
+    <Wrapper link={thumb} grayscale={source === 'Mapillary'}>
       {image === undefined && (
         <IconWrapper>
           <BrokenImage />
