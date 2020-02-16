@@ -118,3 +118,5 @@ export const getCenter = feature => {
     return undefined;
   }
 };
+
+export const prod = process.env.NODE_ENV === 'production';
