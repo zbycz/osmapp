@@ -73,7 +73,7 @@ export const Property = ({ k, v }) => {
           >
             <Edit
               titleAccess="Upravit v živé databázi OpenStreetMap"
-              nativeColor="#9e9e9e"
+              nativecolor="#9e9e9e"
             />
           </StyledIconButton>
           <Label>{k}</Label>
@@ -83,7 +83,7 @@ export const Property = ({ k, v }) => {
       {isInput && (
         <>
           <StyledIconButton mini="true" onClick={() => setIsInput(false)}>
-            <Cancel titleAccess="Zrušit" nativeColor="#9e9e9e" />
+            <Cancel titleAccess="Zrušit" nativecolor="#9e9e9e" />
           </StyledIconButton>
 
           <TextField // https://codesandbox.io/s/m45ywmp86j

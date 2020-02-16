@@ -34,7 +34,7 @@ const FeatureHeading = ({ title }) => (
     <StyledIconButton mini="true" className="show-on-hover">
       <Edit
         titleAccess="Upravit v živé databázi OpenStreetMap"
-        nativeColor="#9e9e9e"
+        nativecolor="#9e9e9e"
       />
     </StyledIconButton>
     {title}
