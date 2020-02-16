@@ -112,6 +112,7 @@ const FeatureImage = ({ feature, children }) => {
           href={link}
           title={`© ${source}${username ? `, ${username}` : ''}`}
           target="_blank"
+          rel="noopener"
         >
           {username ?? source}
         </Attribution>

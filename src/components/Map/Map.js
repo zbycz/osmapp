@@ -118,6 +118,7 @@ const Map = ({ onFeatureClicked }) => {
             href={`https://www.openstreetmap.org/edit#map=${view.join('/')}`}
             title="v editoru iD"
             target="_blank"
+            rel="noopener"
           >
             editovat
           </a>
