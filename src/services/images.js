@@ -45,9 +45,13 @@ export const getFeatureImage = async feature => {
 
   const wikiUrl = getWikiApiUrl(feature.tags);
   if (wikiUrl) {
-    return await getWikiImage(wikiUrl);
+    const wikiImage = await getWikiImage(wikiUrl);
+    if (wikiImage.thumb) {
+      return wikiImage;
+    }
   }
 
+  // fallback to mapillary
   return mapillary ?? (await getMapillaryImage(feature.center));
 };
 
@@ -77,28 +81,24 @@ const getWikiImage = async wikiUrl => {
   const text = await fetchText(`${wikiUrl}&origin=*`);
   const data = JSON.parse(text);
   const replyType = getWikiType(data);
-  console.log(data, replyType);
+  console.log('getWikiImage', replyType, data);
 
   const page = Object.values(data.query.pages)[0];
-  if (replyType === 'wikimedia') {
+  if (replyType === 'wikimedia' && page.imageinfo.length) {
     const images = page.imageinfo;
-    return (
-      images.length && {
-        source: 'Wikimedia',
-        link: images[0].descriptionshorturl,
-        thumb: images[0].thumburl,
-      }
-    );
+    return {
+      source: 'Wikimedia',
+      link: images[0].descriptionshorturl,
+      thumb: images[0].thumburl,
+    };
   }
 
-  if (replyType === 'wikipedia') {
-    return (
-      page.pageimage && {
-        source: 'Wikipedia',
-        link: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
-        thumb: page.thumbnail.source,
-      }
-    );
+  if (replyType === 'wikipedia' && page.pageimage) {
+    return {
+      source: 'Wikipedia',
+      link: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
+      thumb: page.thumbnail.source,
+    };
   }
 
   // else if (replyType == 'wikidata') {
@@ -133,6 +133,8 @@ const getWikiImage = async wikiUrl => {
   //     });
   //   }
   // }
+
+  return {};
 };
 
 // Analyze reply and identify wikidata / wikimedia / wikipedia content
