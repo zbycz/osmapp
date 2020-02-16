@@ -5,6 +5,20 @@ import { ServerStyleSheet } from 'styled-components';
 
 import theme from '../src/helpers/theme';
 
+const AsyncStyle = ({ href }) => (
+  <>
+    <link
+      rel="preload"
+      href={href}
+      as="style"
+      onLoad="this.onload=null;this.rel='stylesheet'"
+    />
+    <noscript>
+      <link rel="stylesheet" href={href} />
+    </noscript>
+  </>
+);
+
 export default class MyDocument extends Document {
   render() {
     return (
@@ -21,11 +35,16 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
-          <link
-            href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css"
-            rel="stylesheet"
-          />
+          <AsyncStyle href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" />
           <link rel="shortcut icon" href="/static/logo_64.png" />
+          <link rel="preconnect" href="https://maps.tilehosting.com" />
+          <link rel="preconnect" href="https://api.maptiler.com" />
+          <link rel="preconnect" href="https://openmaptiles.github.io" />
+          <link rel="preconnect" href="https://a.mapillary.com" />
+          <link rel="preconnect" href="https://images.mapillary.com" />
+          <link rel="preconnect" href="https://commons.wikimedia.org" />
+          <link rel="preconnect" href="https://www.wikidata.org" />
+          <link rel="preconnect" href="https://en.wikidata.org" />
         </Head>
         <body>
           <Main />
