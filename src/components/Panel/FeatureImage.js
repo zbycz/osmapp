@@ -84,7 +84,7 @@ const Attribution = styled.a`
 const LOADING = null;
 
 const FeatureImage = ({ feature, children }) => {
-  const [image, setImage] = React.useState(LOADING);
+  const [image, setImage] = React.useState(feature.featureImage ?? LOADING);
 
   React.useEffect(() => {
     setImage(LOADING);

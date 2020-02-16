@@ -15,6 +15,7 @@ import {
   MapStateProvider,
   useMapStateContext,
 } from '../src/components/utils/MapStateContext';
+import { getFeatureImage } from '../src/services/images';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -97,9 +98,14 @@ Index.getInitialProps = async ctx => {
 
   const defaultView = [17, 50.10062, 14.38906];
   const initialMapState = mapView ? mapView.split('/') : defaultView;
+  const shortId = ctx.query.id || lastFeatureId;
+  const initialFeature = await fetchInitialFeature(shortId);
+  if (initialFeature) {
+    initialFeature.featureImage = await getFeatureImage(initialFeature);
+  }
 
   return {
-    initialFeature: await fetchInitialFeature(ctx.query.id || lastFeatureId),
+    initialFeature,
     initialMapState,
   };
 };

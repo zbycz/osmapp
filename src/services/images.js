@@ -30,7 +30,7 @@ export const getFeatureImage = async feature => {
     return await getMapillaryImage(feature.center);
   }
 
-  // first pass is skeleton
+  // first pass may be a skeleton
   const osmid = getShortId(feature.osmMeta);
   if (feature.skeleton) {
     mapillary = getMapillaryImage(feature.center);
