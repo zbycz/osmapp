@@ -25,7 +25,12 @@ const Wrapper = styled.div`
         rgba(55, 71, 79, 0.16),
         rgba(55, 71, 79, 0.16)
       ),
-      linear-gradient(to bottom, rgba(0, 0, 0, 0) 71%, #000000);
+      linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 70%,
+        rgba(0, 0, 0, 0.15) 76%,
+        #000000
+      );
     // background-image: linear-gradient(to bottom right,#002f4b,#dc4225);
     // opacity: .6;
   }
@@ -59,31 +64,59 @@ const Spinner = styled(CircularProgress)`
   }
 `;
 
+const Attribution = styled.a`
+  position: absolute;
+  right: 0;
+  top: 0;
+  // display: flex;
+  // align-items: center;
+  // width: 100%;
+  text-align: right;
+  padding-right: 3px;
+  font-size: 80%;
+  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  text-decoration: none;
+  opacity: 0.3;
+`;
+
 const LOADING = null;
 
 const FeatureImage = ({ feature, children }) => {
-  const [link, setLink] = React.useState(LOADING);
+  const [image, setImage] = React.useState(LOADING);
+
   React.useEffect(() => {
-    setLink(LOADING);
+    setImage(LOADING);
     getFeatureImage(feature).then(
-      url => {
-        setLink(url);
+      image => {
+        setImage(image);
       },
       e => {
         console.warn('getFeatureImage rejected: ', e);
-        setLink(undefined);
+        setImage(undefined);
       },
     );
   }, [feature]);
 
+  const { source, link, thumb, username } = image ?? {};
+
   return (
-    <Wrapper link={link}>
-      {link === undefined && (
+    <Wrapper link={thumb}>
+      {image === undefined && (
         <IconWrapper>
           <BrokenImage />
         </IconWrapper>
       )}
-      {link === LOADING && <Spinner />}
+      {image === LOADING && <Spinner />}
+      {source && (
+        <Attribution
+          href={link}
+          title={`© ${source}${username ? `, ${username}` : ''}`}
+          target="_blank"
+        >
+          {username ?? source}
+        </Attribution>
+      )}
       <Bottom>{children}</Bottom>
     </Wrapper>
   );
