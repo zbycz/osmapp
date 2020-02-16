@@ -5,9 +5,12 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/helpers/theme';
 import GlobalStyle from '../src/helpers/GlobalStyle';
-import { initSentry, captureException } from '../src/helpers/sentry';
+import { captureException, initSentry } from '../src/helpers/sentry';
+import { prod } from '../src/services/helpers';
 
-initSentry();
+if (prod) {
+  initSentry();
+}
 
 export default class MyApp extends App {
   componentDidMount() {
