@@ -10,6 +10,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import GithubIcon from '../../assets/GithubIcon';
 import LayersIcon from '../../assets/LayersIcon';
 import { useBoolState } from '../helpers';
+import { useMapStateContext } from '../utils/MapStateContext';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -87,6 +88,7 @@ const LayerSwitcherButton = styled.button`
 
 const Map = ({ onFeatureClicked }) => {
   const [isMapLoaded, onMapLoaded] = useBoolState(false);
+  const { view } = useMapStateContext();
 
   return (
     <>
@@ -112,7 +114,11 @@ const Map = ({ onFeatureClicked }) => {
         <Box>
           <GithubIcon width="12" height="12" />
           <a href="#">osmcz-app</a> 2.0.0 | © <a href="#">mapová data</a> |{' '}
-          <a href="#" title="v editoru iD">
+          <a
+            href={`https://www.openstreetmap.org/edit#map=${view.join('/')}`}
+            title="v editoru iD"
+            target="_blank"
+          >
             editovat
           </a>
         </Box>
@@ -120,5 +126,6 @@ const Map = ({ onFeatureClicked }) => {
     </>
   );
 };
+//https://www.openstreetmap.org/edit?lat=50.09231&lon=14.32098&zoom=17
 
 export default Map;

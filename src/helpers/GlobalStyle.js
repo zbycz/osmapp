@@ -11,16 +11,16 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     background-color: #f8f4f0;
   }
-  
+
   a {
-    color: #0078a8
+    color: #0078a8;
     text-decoration: none;
-    
+
     &:hover {
         text-decoration: underline;
     }
   }
-  
+
   .mapboxgl-ctrl-top-right {
     top: 83px !important;
   }
