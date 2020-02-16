@@ -148,7 +148,9 @@ export const Panel = ({ feature }) => {
             </Button>
           </StyledEdit>
           <Footer>
-            {capitalize(osmMeta.type)} v databázi OpenStreetMap
+            {nonOsmObject
+              ? `Mapový prvek ${osmMeta.type}`
+              : `${capitalize(osmMeta.type)} v databázi OpenStreetMap`}
             <br />
             <Coordinates feature={feature} />
             <br />
