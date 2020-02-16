@@ -23,7 +23,7 @@ const TopPanel = styled.div`
   height: 72px;
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
   background-color: #eb5757;
-  padding: 12px;
+  padding: 10px;
   box-sizing: border-box;
 
   z-index: 1200;
@@ -78,7 +78,7 @@ const IndexWithProviders = ({ initialFeature }) => {
   return (
     <>
       <TopPanel>
-        <SearchBox resetFeature={() => setFeature(null)} />
+        <SearchBox setFeature={setFeature} />
       </TopPanel>
       {feature != null && <Panel feature={feature} />}
       <Map onFeatureClicked={setFeature} />
