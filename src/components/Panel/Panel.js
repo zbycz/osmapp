@@ -121,13 +121,13 @@ export const Panel = ({ feature }) => {
           </PoiType>
 
           <StyledIconButton>
-            <Share nativeColor="#fff" titleAccess="Sdílet" />
+            <Share nativecolor="#fff" titleAccess="Sdílet" />
           </StyledIconButton>
           <StyledIconButton>
-            <StarBorder nativeColor="#fff" titleAccess="Uložit" />
+            <StarBorder nativecolor="#fff" titleAccess="Uložit" />
           </StyledIconButton>
           <StyledIconButton>
-            <Directions nativeColor="#fff" titleAccess="Trasa" />
+            <Directions nativecolor="#fff" titleAccess="Trasa" />
           </StyledIconButton>
         </FeatureImage>
         <Loading>{loading && <LinearProgress />}</Loading>
