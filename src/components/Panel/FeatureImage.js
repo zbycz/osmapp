@@ -65,9 +65,15 @@ const FeatureImage = ({ feature, children }) => {
   const [link, setLink] = React.useState(LOADING);
   React.useEffect(() => {
     setLink(LOADING);
-    getFeatureImage(feature).then(images => {
-      setLink(images);
-    });
+    getFeatureImage(feature).then(
+      url => {
+        setLink(url);
+      },
+      e => {
+        console.warn('getFeatureImage rejected: ', e);
+        setLink(undefined);
+      },
+    );
   }, [feature]);
 
   return (
