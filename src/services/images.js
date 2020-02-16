@@ -1,6 +1,6 @@
 import { fetchText, getShortId, removeFetchCache } from './helpers';
 
-const getMapillaryUrl = async center => {
+const getMapillaryImage = async center => {
   const lonlat = center.map(x => x.toFixed(5)).join(',');
   const url = `https://a.mapillary.com/v3/images?client_id=TTdNZ2w5eTF6MEtCNUV3OWNhVER2dzpjMjdiZGE1MWJmYzljMmJi&lookat=${lonlat}&closeto=${lonlat}`;
   const data = await fetchText(url);
@@ -13,38 +13,42 @@ const getMapillaryUrl = async center => {
   }
 
   const image = features[0];
-  const { key } = image.properties;
+  const { key, username } = image.properties;
   console.log('mplr', key);
-  return `https://images.mapillary.com/${key}/thumb-640.jpg`;
+  return {
+    source: `Mapillary`,
+    username,
+    link: `https://www.mapillary.com/app/?focus=photo&pKey=${key}`,
+    thumb: `https://images.mapillary.com/${key}/thumb-640.jpg`,
+  };
 };
 
 let mapillary, mapillaryId;
 
 export const getFeatureImage = async feature => {
   if (feature.nonOsmObject) {
-    return await getMapillaryUrl(feature.center);
+    return await getMapillaryImage(feature.center);
   }
 
   // first pass is skeleton
   const osmid = getShortId(feature.osmMeta);
   if (feature.skeleton) {
-    mapillary = getMapillaryUrl(feature.center);
+    mapillary = getMapillaryImage(feature.center);
     mapillaryId = osmid;
     return;
   }
 
+  // 2nd pass - full object (discard mapillary promise when different)
   if (mapillaryId !== osmid) {
     mapillary = undefined;
   }
 
-  // second pass is full object, can fetch wikipage by tags
   const wikiUrl = getWikiApiUrl(feature.tags);
   if (wikiUrl) {
-    const image = await getImage(wikiUrl);
-    return image.thumb;
+    return await getWikiImage(wikiUrl);
   }
 
-  return mapillary ?? (await getMapillaryUrl(feature.center));
+  return mapillary ?? (await getMapillaryImage(feature.center));
 };
 
 // From https://github.com/osmcz/osmcz/blob/0d3eaaa/js/poi-popup.js - MIT
@@ -69,7 +73,7 @@ const getWikiApiUrl = tags => {
   }
 };
 
-const getImage = async wikiUrl => {
+const getWikiImage = async wikiUrl => {
   const text = await fetchText(`${wikiUrl}&origin=*`);
   const data = JSON.parse(text);
   const replyType = getWikiType(data);
@@ -80,7 +84,8 @@ const getImage = async wikiUrl => {
     const images = page.imageinfo;
     return (
       images.length && {
-        page: images[0].descriptionshorturl,
+        source: 'Wikimedia',
+        link: images[0].descriptionshorturl,
         thumb: images[0].thumburl,
       }
     );
@@ -89,7 +94,8 @@ const getImage = async wikiUrl => {
   if (replyType === 'wikipedia') {
     return (
       page.pageimage && {
-        page: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
+        source: 'Wikipedia',
+        link: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
         thumb: page.thumbnail.source,
       }
     );
