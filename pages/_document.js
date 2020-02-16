@@ -25,6 +25,7 @@ export default class MyDocument extends Document {
             href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css"
             rel="stylesheet"
           />
+          <link rel="shortcut icon" href="/static/logo_64.png" />
         </Head>
         <body>
           <Main />
