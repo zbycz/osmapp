@@ -47,7 +47,7 @@ const ToggleButton = ({ onClick, isShown }) => (
   </StyledToggleButton>
 );
 
-const TagsGroup = ({ tags, label, value }) => {
+const TagsGroup = ({ tags, label, value, hideArrow }) => {
   const [isShown, toggle] = useToggleState(false);
 
   if (!tags.length) {
@@ -59,7 +59,8 @@ const TagsGroup = ({ tags, label, value }) => {
       <tr>
         <th>{label}</th>
         <td>
-          {value} <ToggleButton onClick={toggle} isShown={isShown} />
+          {value}
+          {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
       </tr>
       {isShown && (
@@ -112,6 +113,7 @@ const TagsTable = ({ tags }) => {
           tags={nameTags}
           label="name"
           value={truncate(tags.name, { length: 25 })}
+          hideArrow={nameTags.length === 1}
         />
         <TagsGroup
           tags={addrTags}
