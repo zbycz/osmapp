@@ -23,6 +23,7 @@ const getMapillaryImage = async center => {
   };
 };
 
+export const LOADING = null;
 let mapillary, mapillaryId;
 
 export const getFeatureImage = async feature => {
@@ -35,7 +36,7 @@ export const getFeatureImage = async feature => {
   if (feature.skeleton) {
     mapillary = getMapillaryImage(feature.center);
     mapillaryId = osmid;
-    return;
+    return LOADING;
   }
 
   // 2nd pass - full object (discard mapillary promise when different)

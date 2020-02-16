@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
-import { getFeatureImage } from '../../services/images';
+import { getFeatureImage, LOADING } from '../../services/images';
 import BrokenImage from '@material-ui/icons/BrokenImage';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
@@ -80,8 +80,6 @@ const Attribution = styled.a`
   text-decoration: none;
   opacity: 0.3;
 `;
-
-const LOADING = null;
 
 const FeatureImage = ({ feature, children }) => {
   const [image, setImage] = React.useState(feature.featureImage ?? LOADING);
