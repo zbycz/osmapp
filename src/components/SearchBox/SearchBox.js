@@ -1,7 +1,6 @@
 // @flow
 
 import React from 'react';
-import { withStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
@@ -17,65 +16,32 @@ import parse from 'autosuggest-highlight/parse';
 import match from 'autosuggest-highlight/match';
 import { fetchFromApi } from '../../services/osmApi';
 import { useMapStateContext } from '../utils/MapStateContext';
+import styled from 'styled-components';
 
-const styles = {
-  root: {
-    padding: '2px 4px',
-    display: 'flex',
-    alignItems: 'center',
-  },
-  input: {
-    marginLeft: 8,
-    flex: 1,
-  },
-  iconButton: {
-    padding: 10,
-  },
-  divider: {
-    width: 1,
-    height: 28,
-    margin: 4,
-  },
-};
+const StyledPaper = styled(Paper)`
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+`;
 
-// a = [
-//   {
-//     place_id: 93538005,
-//     licence:
-//       'Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright',
-//     osm_type: 'way',
-//     osm_id: 31134664,
-//     boundingbox: ['50.0902337', '50.0923471', '14.3210646', '14.3216013'],
-//     lat: '50.0913465',
-//     lon: '14.3213162',
-//     display_name:
-//       'Ke Džbánu, Liboc, Praha, okres Hlavní město Praha, Hlavní město Praha, Praha, 16100, Česká republika',
-//     class: 'highway',
-//     type: 'residential',
-//     importance: 0.19999999999999998,
-//     geojson: {
-//       type: 'LineString',
-//       coordinates: [
-//         [14.3216013, 50.0902337],
-//         [14.3210646, 50.0923471],
-//       ],
-//     },
-//     extratags: { oneway: 'yes' },
-//   },
-// ];
-// geometry: {type: "Point", coordinates: Array(2)}
-// center: (2) [14.364232420921326, 50.09869083414364]
-// osmMeta:
-//   type: "node"
-//   id: "3881528398"
-// tags: {name: "Bořislavka"}
-// skeleton: true
-// nonOsmObject: false
-// __proto__: Object
+const SearchIconButton = styled(IconButton)`
+  padding: 10;
+`;
+
+const SearchInput = styled(InputBase)`
+  margin-left: 8;
+  flex: 1;
+`;
+
+const StyledDivider = styled(Divider)`
+  width: 1;
+  height: 28;
+  margin: 4;
+`;
 
 // https://nominatim.openstreetmap.org/search?q=Ke+dzbanu&format=json&extratags=1&viewbox=&polygon_geojson=1&polygon_threshold=0.1
 
-const SearchInput = ({ classes, setFeature }) => {
+const SearchBox = ({ setFeature }) => {
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const { setView } = useMapStateContext();
@@ -142,20 +108,18 @@ const SearchInput = ({ classes, setFeature }) => {
   };
 
   const renderInput = params => (
-    <Paper className={classes.root} elevation={1} ref={params.InputProps.ref}>
-      <IconButton className={classes.iconButton} disabled>
+    <StyledPaper elevation={1} ref={params.InputProps.ref}>
+      <SearchIconButton disabled>
         <SearchIcon />
-      </IconButton>
-      <InputBase
-        className={classes.input}
+      </SearchIconButton>
+      <SearchInput
         placeholder="Prohledat OpenStreetMap"
         autoFocus
         {...params}
         onChange={e => setInputValue(e.target.value)}
       />
-      <Divider className={classes.divider} />
+      <StyledDivider />
       <IconButton
-        className={classes.iconButton}
         aria-label="Zavřít panel"
         onClick={() => {
           setFeature(null);
@@ -164,7 +128,7 @@ const SearchInput = ({ classes, setFeature }) => {
       >
         <CloseIcon />
       </IconButton>
-    </Paper>
+    </StyledPaper>
   );
 
   return (
@@ -185,4 +149,4 @@ const SearchInput = ({ classes, setFeature }) => {
   );
 };
 
-export default withStyles(styles)(SearchInput);
+export default SearchBox;
