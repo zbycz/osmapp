@@ -27,6 +27,10 @@ const getGeometry = {
     type: 'LineString', // TODO Polygon
     coordinates: [way.nd.map(nd => coords(lookupNode(osmXml, nd.$.ref)))],
   }),
+  relation: (osmXml, relation) => ({
+    type: 'LineString',
+    coordinates: [osmXml.node.map(nd => coords(nd))],
+  }),
 };
 
 export const osmToGeojson = async osmXmlStr => {
