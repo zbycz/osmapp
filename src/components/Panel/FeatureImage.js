@@ -8,11 +8,11 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 const Wrapper = styled.div`
   position: relative;
-  background: url(${({ link }) => link ?? ''}) center center no-repeat;
-  background-size: cover;
+  background: #ddd url(${({ link }) => link ?? ''}) center center no-repeat;
+  background-size: ${({ portrait }) => (portrait ? 'contain' : 'cover')};
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
-  ${({ grayscale }) => (grayscale ? 'filter: grayscale(100%);' : '')}
+  ${({ uncertain }) => (uncertain ? 'filter: grayscale(100%);' : '')}
 
   &:before {
     content: '';
@@ -22,18 +22,13 @@ const Wrapper = styled.div`
     bottom: 0;
     left: 0;
     background-image: linear-gradient(
-        to bottom,
-        rgba(55, 71, 79, 0.16),
-        rgba(55, 71, 79, 0.16)
-      ),
-      linear-gradient(
-        to bottom,
-        rgba(0, 0, 0, 0) 70%,
-        rgba(0, 0, 0, 0.15) 76%,
-        #000000
-      );
+      to bottom,
+      rgba(0, 0, 0, 0) 70%,
+      rgba(0, 0, 0, 0.15) 76%,
+      #000000
+    );
     // background-image: linear-gradient(to bottom right,#002f4b,#dc4225);
-    // opacity: .6;
+    opacity: 0.6;
   }
 `;
 
@@ -97,10 +92,14 @@ const FeatureImage = ({ feature, children }) => {
     );
   }, [feature]);
 
-  const { source, link, thumb, username } = image ?? {};
+  const { source, link, thumb, username, portrait } = image ?? {};
 
   return (
-    <Wrapper link={thumb} grayscale={source === 'Mapillary'}>
+    <Wrapper
+      link={thumb}
+      uncertain={source === 'Mapillary'}
+      portrait={portrait}
+    >
       {image === undefined && (
         <IconWrapper>
           <BrokenImage />
