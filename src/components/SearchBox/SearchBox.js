@@ -9,19 +9,20 @@ import { SearchBoxInput } from './SearchBoxInput';
 import { useMapStateContext } from '../utils/MapStateContext';
 
 // https://nominatim.openstreetmap.org/search?q=Ke+dzbanu&format=json&addressdetails=1&viewbox=&polygon_geojson=1&polygon_threshold=0.1
-const apiUrl = s =>
-  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=&polygon_geojson=1&polygon_threshold=0.1&q=${s}`;
+const apiUrl = (s, bb) =>
+  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bb}&q=${s}`;
 
 const SearchBox = ({ setFeature }) => {
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
-  const { setView } = useMapStateContext();
+  const { bbox, setView } = useMapStateContext();
+
   React.useEffect(() => {
     if (inputValue === '') {
       setOptions([]);
       return;
     }
-    fetchText(apiUrl(inputValue)).then(results => {
+    fetchText(apiUrl(inputValue, bbox)).then(results => {
       setOptions(JSON.parse(results) || []);
     });
   }, [inputValue]);

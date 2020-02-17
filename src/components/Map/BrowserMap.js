@@ -97,18 +97,25 @@ const useOnMapLoaded = useMapEffectFactory((map, onMapLoaded) => {
   map.on('load', onMapLoaded);
 });
 
-const useUpdateViewOnMove = useMapEffectFactory((map, _setViewFromMap) => {
-  map.on(
-    'move',
-    throttle(() => {
-      _setViewFromMap([
-        map.getZoom().toFixed(2),
-        map.getCenter().lat.toFixed(4),
-        map.getCenter().lng.toFixed(4),
-      ]);
-    }, 2000),
-  );
-});
+const useUpdateViewOnMove = useMapEffectFactory(
+  (map, _setViewFromMap, setBbox) => {
+    map.on(
+      'move',
+      throttle(() => {
+        _setViewFromMap([
+          map.getZoom().toFixed(2),
+          map.getCenter().lat.toFixed(4),
+          map.getCenter().lng.toFixed(4),
+        ]);
+
+        const b = map.getBounds();
+        //<lon x1>,<lat y1>,<x2>,<y2>
+        const bb = [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()];
+        setBbox(bb.map(x => x.toFixed(5)));
+      }, 2000),
+    );
+  },
+);
 
 const useUpdateMap = useMapEffectFactory((map, _viewForMap) => {
   const center = [_viewForMap[2], _viewForMap[1]];
@@ -121,8 +128,8 @@ const BrowserMap = ({ onFeatureClicked, onMapLoaded }) => {
   useOnFeatureClicked(map, onFeatureClicked);
   useOnMapLoaded(map, onMapLoaded);
 
-  const { _viewForMap, _setViewFromMap } = useMapStateContext();
-  useUpdateViewOnMove(map, _setViewFromMap);
+  const { _viewForMap, _setViewFromMap, setBbox } = useMapStateContext();
+  useUpdateViewOnMove(map, _setViewFromMap, setBbox);
   useUpdateMap(map, _viewForMap);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;

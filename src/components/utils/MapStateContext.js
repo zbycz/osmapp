@@ -5,6 +5,7 @@ import React from 'react';
 export const MapStateContext = React.createContext(undefined);
 
 export const MapStateProvider = ({ children, initialMapState }) => {
+  const [bbox, setBbox] = React.useState();
   const [view, setView] = React.useState(initialMapState);
   const [_viewForMap, _setViewForMap] = React.useState(initialMapState);
   const setBothViews = React.useCallback(view => {
@@ -12,6 +13,8 @@ export const MapStateProvider = ({ children, initialMapState }) => {
     _setViewForMap(view);
   }, []);
   const mapState = {
+    bbox,
+    setBbox,
     view, // always up-to-date (for use in react)
     setView: setBothViews,
     _viewForMap, // updated only when map has to be updated
