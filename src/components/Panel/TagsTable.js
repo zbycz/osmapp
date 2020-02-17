@@ -15,12 +15,18 @@ const Table = styled.table`
   font-size: 1rem;
 
   th {
-    width: 135px;
-    overflow: hidden;
+    width: 140px;
+    max-width: 140px;
+    overflow: auto;
     color: rgba(0, 0, 0, 0.54);
     text-align: left;
     font-weight: normal;
     vertical-align: baseline;
+  }
+
+  td {
+    overflow: auto;
+    max-width: 195px;
   }
 
   th,
@@ -34,8 +40,10 @@ const Table = styled.table`
   }
 `;
 
-const isAddr = k => k.match(/^addr:/);
+const isAddr = k => k.match(/^addr:|uir_adr|:addr/);
 const isName = k => k.match(/^([a-z]+_)?name(:|$)/);
+const isBuilding = k => k.match(/building|roof|^min_level|^max_level|height$/);
+const isNetwork = k => k.match(/network/);
 
 const StyledToggleButton = styled(IconButton)`
   margin: -15px -15px -15px 0 !important;
@@ -59,7 +67,7 @@ const TagsGroup = ({ tags, label, value, hideArrow }) => {
       <tr>
         <th>{label}</th>
         <td>
-          {value}
+          {value || Object.values(tags)[0]}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
       </tr>
@@ -89,7 +97,6 @@ const buildAddress = tagsArr => {
     'addr:street': str,
     'addr:housenumber': num,
     'addr:city': city,
-    ...rest
   } = tags;
 
   return `${str} ${num || ''}${city ? `, ${city}` : ''}`;
@@ -104,7 +111,11 @@ const TagsTable = ({ tags }) => {
   const tagsArr = Object.entries(tags);
   const addrTags = tagsArr.filter(([k]) => isAddr(k));
   const nameTags = tagsArr.filter(([k]) => isName(k));
-  const restTags = tagsArr.filter(([k]) => !isName(k) && !isAddr(k));
+  const buildingTags = tagsArr.filter(([k]) => isBuilding(k));
+  const networkTags = tagsArr.filter(([k]) => isNetwork(k));
+  const restTags = tagsArr.filter(
+    ([k]) => !isName(k) && !isAddr(k) && !isBuilding(k) && !isNetwork(k),
+  );
 
   return (
     <Table>
@@ -126,6 +137,12 @@ const TagsTable = ({ tags }) => {
             <td>{renderValue(k, v)}</td>
           </tr>
         ))}
+        <TagsGroup
+          tags={buildingTags}
+          label="building:*"
+          value={tags.building}
+        />
+        <TagsGroup tags={networkTags} label="network:*" value={tags.network} />
       </tbody>
     </Table>
   );
