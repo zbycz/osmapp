@@ -64,16 +64,18 @@ const getWikiApiUrl = tags => {
     )}`;
   }
 
-  // if (tags.wikidata) {
-  //   return `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${(encodeURIComponent(tags.wikidata))}`;
-  // }
-
-  const wikipedia = Object.keys(tags).filter(k => k.match(/^wikipedia/));
-  if (wikipedia.length) {
-    const value = tags[wikipedia];
+  const wikipediaKeys = Object.keys(tags).filter(k => k.match(/^wikipedia/));
+  if (wikipediaKeys.length) {
+    const value = tags[wikipediaKeys[0]];
     const country = value.includes(':') ? value.split(':')[0] : 'en';
     return `https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=640&format=json&titles=${encodeURIComponent(
       value,
+    )}`;
+  }
+
+  if (tags.wikidata) {
+    return `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${encodeURIComponent(
+      tags.wikidata,
     )}`;
   }
 };
@@ -84,6 +86,19 @@ const getWikiImage = async wikiUrl => {
   const replyType = getWikiType(data);
   console.log('getWikiImage', replyType, data);
 
+  if (replyType === 'wikidata') {
+    if (!data.claims || !data.claims.P18) {
+      return {};
+    }
+    // In wikidata entry is image name, but we need thumbnail,
+    // so we will convert wikidata reply to wikimedia_commons tag
+    const fakeTags = {
+      wikimedia_commons: 'File:' + data.claims.P18[0].mainsnak.datavalue.value,
+    };
+    const url = getWikiApiUrl(fakeTags);
+    return await getWikiImage(url);
+  }
+
   const page = Object.values(data.query.pages)[0];
   if (replyType === 'wikimedia' && page.imageinfo.length) {
     const images = page.imageinfo;
@@ -91,6 +106,7 @@ const getWikiImage = async wikiUrl => {
       source: 'Wikimedia',
       link: images[0].descriptionshorturl,
       thumb: images[0].thumburl,
+      portrait: images[0].thumbwidth < images[0].thumbheight,
     };
   }
 
@@ -99,41 +115,9 @@ const getWikiImage = async wikiUrl => {
       source: 'Wikipedia',
       link: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
       thumb: page.thumbnail.source,
+      portrait: page.thumbnail.width < page.thumbnail.height,
     };
   }
-
-  // else if (replyType == 'wikidata') {
-  //   const reply = processWikidataReply(data);
-  //   if (!reply.k) {
-  //     // Wikidata entry does not contains image
-  //     // try other tags
-  //     if (wikimedia.k)
-  //       reply = wikimedia;
-  //     else if (wikipedia.k)
-  //       reply = wikipedia;
-  //   }
-  //
-  //   // get image thumbnail url or try wikimedia/wikipedia if there is no image on wikidata
-  //   if (reply.k) {
-  //     const url = getWikiApiUrl(reply);
-  //     $.ajax({
-  //       url: xhd_proxy_url,
-  //       data: {
-  //         url: url
-  //       },
-  //       dataType: 'json',
-  //       success: function (data) {
-  //         if (getWikiType(data) == 'wikimedia') {
-  //           feature.wikimedia = data;
-  //           showWikimediaCommons();
-  //         } else if (getWikiType(data) == 'wikipedia') {
-  //           feature.wikipedia = data;
-  //           showWikimediaCommons();
-  //         }
-  //       }
-  //     });
-  //   }
-  // }
 
   return {};
 };
@@ -148,14 +132,4 @@ function getWikiType(d) {
     }
   }
   if (d.claims) return 'wikidata';
-}
-
-// In wikidata entry is image name. but we need thumbnail,
-// so we will convert wikidata reply to wikimedia_commons tag
-function processWikidataReply(d) {
-  const tags = {};
-  if (d.claims.P18) {
-    tags.wikimedia_commons = 'File:' + d.claims.P18[0].mainsnak.datavalue.value;
-  }
-  return tags;
 }
