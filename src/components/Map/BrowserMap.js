@@ -8,6 +8,7 @@ import { hoverLayers, style } from './layers';
 import { useMapEffectFactory } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { throttle } from 'lodash';
+import { getShortId } from '../../services/helpers';
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoiemJ5Y3oiLCJhIjoiY2oxMGN4enAxMDAyZjMybXF5eGJ5M2lheCJ9.qjvbRJ2C1tL4O9g9jOdJIw';
 const geolocateControl = new mapboxgl.GeolocateControl({
@@ -84,7 +85,10 @@ const useOnFeatureClicked = useMapEffectFactory((map, onFeatureClicked) => {
       onFeatureClicked(skeleton);
     } else {
       onFeatureClicked({ ...skeleton, loading: true });
-      onFeatureClicked(await fetchFromApi(skeleton.osmMeta));
+      const fullFeature = await fetchFromApi(skeleton.osmMeta);
+      if (getShortId(fullFeature.osmMeta) === getShortId(skeleton.osmMeta)) {
+        onFeatureClicked(fullFeature);
+      }
     }
   });
 });
