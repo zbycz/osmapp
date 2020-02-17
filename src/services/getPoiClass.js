@@ -3,7 +3,6 @@
 const keys = [
   'aerialway',
   'amenity',
-  'barrier',
   'highway',
   'historic',
   'landuse',
@@ -13,6 +12,8 @@ const keys = [
   'sport',
   'tourism',
   'waterway',
+  'place',
+  'barrier',
 ];
 
 const shops = [
@@ -234,6 +235,10 @@ const subclassToClassRules = [
     subclass: ['castle', 'ruins'],
     resultClass: 'castle',
   },
+  {
+    mappingKey: 'place',
+    resultClass: 'city',
+  },
 ];
 
 export const getPoiClass = tags => {
@@ -244,12 +249,12 @@ export const getPoiClass = tags => {
   const resultRule = subclassToClassRules.find(
     rule =>
       (!rule.mappingKey && rule.subclass.includes(value)) ||
-      (rule.mappingKey === key && rule.subclass.includes(value)) ||
-      (rule.mappingKey === key && !rule.subclass),
+      (rule.mappingKey === key && !rule.subclass) ||
+      (rule.mappingKey === key && rule.subclass.includes(value)),
   );
 
   const resultClass = resultRule ? resultRule.resultClass : value;
-
+  console.log({ resultClass });
   return {
     class: resultClass,
     subclass: value,
