@@ -11,6 +11,7 @@ import GithubIcon from '../../assets/GithubIcon';
 import LayersIcon from '../../assets/LayersIcon';
 import { useBoolState } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { useEffect } from 'react';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -87,8 +88,10 @@ const LayerSwitcherButton = styled.button`
 `;
 
 const Map = ({ onFeatureClicked }) => {
-  const [isMapLoaded, onMapLoaded] = useBoolState(false);
+  const [mapLoaded, onMapLoaded, onStartLoading] = useBoolState(true);
   const { view } = useMapStateContext();
+
+  useEffect(onStartLoading, []);
 
   return (
     <>
@@ -96,7 +99,12 @@ const Map = ({ onFeatureClicked }) => {
         onFeatureClicked={onFeatureClicked}
         onMapLoaded={onMapLoaded}
       />
-      {!isMapLoaded && <Spinner color="secondary" />}
+      {!mapLoaded && <Spinner color="secondary" />}
+      <noscript>
+        <span style={{ position: 'absolute', left: '50%', top: '50%' }}>
+          This map needs Javascript.
+        </span>
+      </noscript>
       <TopCenter>
         <Button variant="outlined">Co je OpenStreetMap?</Button>
       </TopCenter>
