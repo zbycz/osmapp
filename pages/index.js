@@ -9,7 +9,7 @@ import Cookies from 'js-cookie';
 import Panel from '../src/components/Panel/Panel';
 import Map from '../src/components/Map/Map';
 import { getFeatureFromApi } from '../src/services/osmApi';
-import { getShortId } from '../src/services/helpers';
+import { getShortId, getViewFromIP } from '../src/services/helpers';
 import SearchBox from '../src/components/SearchBox/SearchBox';
 import {
   MapStateProvider,
@@ -96,8 +96,11 @@ const Index = ({ initialFeature, initialMapState }) => {
 Index.getInitialProps = async ctx => {
   const { lastFeatureId, mapView } = nextCookies(ctx);
 
-  const defaultView = [17, 50.10062, 14.38906];
-  const initialMapState = mapView ? mapView.split('/') : defaultView;
+  // TODO promise.all
+  const initialMapState = mapView
+    ? mapView.split('/')
+    : await getViewFromIP(ctx);
+
   const shortId = ctx.query.id || lastFeatureId;
   const initialFeature = await fetchInitialFeature(shortId);
   if (initialFeature) {
