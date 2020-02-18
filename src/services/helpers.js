@@ -53,6 +53,9 @@ export const fetchText = async (url, opts) => {
   return text;
 };
 
+export const fetchJson = async (url, opts) =>
+  JSON.parse(await fetchText(url, opts));
+
 export const parseXmlString = (xml, opts) => {
   const parser = new xml2js.Parser(
     opts || {
