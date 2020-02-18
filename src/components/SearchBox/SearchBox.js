@@ -1,7 +1,7 @@
 // @flow
 
 import React from 'react';
-import { fetchText } from '../../services/helpers';
+import { fetchJson } from '../../services/helpers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { onSelectedFactory } from './onSelectedFactory';
 import { renderOptionFactory } from './renderOptionFactory';
@@ -22,8 +22,8 @@ const SearchBox = ({ setFeature }) => {
       setOptions([]);
       return;
     }
-    fetchText(apiUrl(inputValue, bbox)).then(results => {
-      setOptions(JSON.parse(results) || []);
+    fetchJson(apiUrl(inputValue, bbox)).then(results => {
+      setOptions(results || []);
     });
   }, [inputValue]);
 
