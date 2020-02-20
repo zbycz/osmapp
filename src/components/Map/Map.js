@@ -121,7 +121,8 @@ const Map = ({ onFeatureClicked }) => {
         </Button>
         <Box>
           <GithubIcon width="12" height="12" />
-          <a href="#">osmcz-app</a> 2.0.0 | © <a href="#">mapová data</a> |{' '}
+          <a href="https://github.com/zbycz/osmapp">osmapp</a> 0.1 | ©{' '}
+          <a href="#">mapová data</a> |{' '}
           <a
             href={`https://www.openstreetmap.org/edit#map=${view.join('/')}`}
             title="v editoru iD"
