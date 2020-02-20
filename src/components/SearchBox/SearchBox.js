@@ -12,7 +12,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 const apiUrl = (s, bb) =>
   `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bb}&q=${s}`;
 
-const SearchBox = ({ setFeature }) => {
+const SearchBox = ({ feature, setFeature }) => {
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const { bbox, setView } = useMapStateContext();
@@ -39,7 +39,7 @@ const SearchBox = ({ setFeature }) => {
       freeSolo
       disableOpenOnFocus
       renderInput={params => (
-        <SearchBoxInput {...{ params, setFeature, setInputValue }} />
+        <SearchBoxInput {...{ params, feature, setFeature, setInputValue }} />
       )}
       renderOption={renderOptionFactory(inputValue)}
     />

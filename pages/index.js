@@ -78,7 +78,7 @@ const IndexWithProviders = ({ initialFeature }) => {
   return (
     <>
       <TopPanel>
-        <SearchBox setFeature={setFeature} />
+        <SearchBox feature={feature} setFeature={setFeature} />
       </TopPanel>
       {feature != null && <Panel feature={feature} />}
       <Map onFeatureClicked={setFeature} />
