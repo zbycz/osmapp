@@ -57,6 +57,12 @@ export const getFeatureImage = async feature => {
 
 // From https://github.com/osmcz/osmcz/blob/0d3eaaa/js/poi-popup.js - MIT
 const getWikiApiUrl = tags => {
+  if (tags.wikidata) {
+    return `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${encodeURIComponent(
+      tags.wikidata,
+    )}`;
+  }
+
   if (tags.wikimedia_commons) {
     return `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${encodeURIComponent(
       tags.wikimedia_commons,
@@ -69,12 +75,6 @@ const getWikiApiUrl = tags => {
     const country = value.includes(':') ? value.split(':')[0] : 'en';
     return `https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=640&format=json&titles=${encodeURIComponent(
       value,
-    )}`;
-  }
-
-  if (tags.wikidata) {
-    return `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${encodeURIComponent(
-      tags.wikidata,
     )}`;
   }
 };
