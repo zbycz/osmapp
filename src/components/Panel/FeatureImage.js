@@ -84,9 +84,11 @@ const Attribution = styled.a`
 `;
 
 const FeatureImage = ({ feature, children }) => {
-  const [image, setImage] = React.useState(feature.featureImage ?? LOADING);
+  const [image, setImage] = React.useState(feature.ssrFeatureImage ?? LOADING);
 
   React.useEffect(() => {
+    if (feature.ssrFeatureImage) return;
+
     setImage(LOADING);
     getFeatureImage(feature).then(
       image => {
