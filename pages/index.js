@@ -104,7 +104,7 @@ Index.getInitialProps = async ctx => {
   const shortId = ctx.query.id || lastFeatureId;
   const initialFeature = await fetchInitialFeature(shortId);
   if (initialFeature) {
-    initialFeature.featureImage = await getFeatureImage(initialFeature);
+    initialFeature.ssrFeatureImage = await getFeatureImage(initialFeature);
   }
 
   return {
