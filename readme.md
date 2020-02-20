@@ -1,3 +1,4 @@
-# osmcz-v2
+# the OSM app
 
-- master branch: https://osmcz-v2.now.sh/
+- production: https://osmapp.org/
+- master branch: https://osmapp.now.sh/
