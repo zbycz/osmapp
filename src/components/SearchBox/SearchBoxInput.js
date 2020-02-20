@@ -33,7 +33,12 @@ const StyledDivider = styled(Divider)`
   margin: 4;
 `;
 
-export const SearchBoxInput = ({ params, setInputValue, setFeature }) => (
+export const SearchBoxInput = ({
+  params,
+  setInputValue,
+  feature,
+  setFeature,
+}) => (
   <StyledPaper elevation={1} ref={params.InputProps.ref}>
     <SearchIconButton disabled>
       <SearchIcon />
@@ -46,14 +51,17 @@ export const SearchBoxInput = ({ params, setInputValue, setFeature }) => (
       onFocus={e => e.target.select()}
     />
     <StyledDivider />
-    <IconButton
-      aria-label="Zavřít panel"
-      onClick={() => {
-        setFeature(null);
-        setInputValue('');
-      }}
-    >
-      <CloseIcon />
-    </IconButton>
+
+    {feature && (
+      <IconButton
+        aria-label="Zavřít panel"
+        onClick={() => {
+          setFeature(null);
+          setInputValue('');
+        }}
+      >
+        <CloseIcon />
+      </IconButton>
+    )}
   </StyledPaper>
 );
