@@ -2,7 +2,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { fetchFromApi } from '../../services/osmApi';
 
 export const onSelectedFactory = (setFeature, setView) => async (e, loc) => {
-  if (!loc) return;
+  if (!loc || !loc.lat) return;
 
   const { lat, lon, osm_type: type, osm_id: id, display_name } = loc;
 

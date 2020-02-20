@@ -34,6 +34,7 @@ const SearchBox = ({ setFeature }) => {
       getOptionLabel={option => option.display_name}
       onChange={onSelectedFactory(setFeature, setView)}
       autoComplete
+      autoHighlight
       // disableCloseOnSelect
       freeSolo
       disableOpenOnFocus
