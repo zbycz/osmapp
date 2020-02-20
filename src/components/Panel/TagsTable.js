@@ -17,7 +17,6 @@ const Table = styled.table`
   th {
     width: 140px;
     max-width: 140px;
-    overflow: auto;
     color: rgba(0, 0, 0, 0.54);
     text-align: left;
     font-weight: normal;
@@ -25,13 +24,13 @@ const Table = styled.table`
   }
 
   td {
-    overflow: auto;
     max-width: 195px;
   }
 
   th,
   td {
     padding: 0.1em;
+    overflow: hidden;
   }
 
   table {
