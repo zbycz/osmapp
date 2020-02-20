@@ -32,6 +32,7 @@ const StyledDivider = styled(Divider)`
   height: 28;
   margin: 4;
 `;
+
 export const SearchBoxInput = ({ params, setInputValue, setFeature }) => (
   <StyledPaper elevation={1} ref={params.InputProps.ref}>
     <SearchIconButton disabled>
@@ -42,6 +43,7 @@ export const SearchBoxInput = ({ params, setInputValue, setFeature }) => (
       autoFocus
       {...params}
       onChange={e => setInputValue(e.target.value)}
+      onFocus={e => e.target.select()}
     />
     <StyledDivider />
     <IconButton
