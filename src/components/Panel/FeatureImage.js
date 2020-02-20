@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { getFeatureImage, LOADING } from '../../services/images';
 import BrokenImage from '@material-ui/icons/BrokenImage';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import LogoOsmapp from '../../assets/LogoOsmapp';
 
 const Wrapper = styled.div`
   position: relative;
@@ -50,13 +51,19 @@ const IconWrapper = styled.div`
   }
 `;
 
-const Spinner = styled(CircularProgress)`
+const Spinner = styled.div`
   position: absolute;
   left: 50%;
   top: 40%;
   margin: -20px 0 0 -20px;
-  svg {
-    color: #ccc;
+  div {
+    position: absolute;
+    svg {
+      color: #ccc;
+    }
+  }
+  svg.logo {
+    margin: 10px;
   }
 `;
 
@@ -105,7 +112,12 @@ const FeatureImage = ({ feature, children }) => {
           <BrokenImage />
         </IconWrapper>
       )}
-      {image === LOADING && <Spinner />}
+      {image === LOADING && (
+        <Spinner>
+          <CircularProgress />
+          <LogoOsmapp width={20} height={20} className="logo" />
+        </Spinner>
+      )}
       {source && (
         <Attribution
           href={link}

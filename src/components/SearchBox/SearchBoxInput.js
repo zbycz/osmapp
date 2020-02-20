@@ -15,6 +15,11 @@ const StyledPaper = styled(Paper)`
 
 const SearchIconButton = styled(IconButton)`
   padding: 10;
+  svg {
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: 'FlipH';
+  }
 `;
 
 const SearchInput = styled(InputBase)`
