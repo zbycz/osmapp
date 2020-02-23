@@ -158,6 +158,8 @@ const fetchInitialFeature = async id => {
   }
 };
 
+const timeout = time => new Promise(resolve => setTimeout(resolve, time));
+
 export const getInititalFeature = async ctx => {
   const { lastFeatureId } = nextCookies(ctx);
   const shortId = ctx.query.id || lastFeatureId;
@@ -166,12 +168,20 @@ export const getInititalFeature = async ctx => {
   const initialFeature = await fetchInitialFeature(shortId);
 
   const t2 = new Date();
-  if (initialFeature) {
-    initialFeature.ssrFeatureImage = await getFeatureImage(initialFeature);
+  const firstRequest = t2 - t1;
+
+  if (initialFeature && firstRequest < 1600) {
+    const timeLeft = 2000 - firstRequest;
+    initialFeature.ssrFeatureImage = await Promise.race([
+      timeout(timeLeft),
+      getFeatureImage(initialFeature),
+    ]);
   }
 
   const t3 = new Date();
-  console.log(`getInititalFeature(${shortId}): ${t2 - t1}ms [osm] + ${t3 - t2}ms [img]`);
+  console.log(
+    `getInititalFeature(${shortId}): ${t2 - t1}ms [osm] + ${t3 - t2}ms [img]`,
+  );
 
   return initialFeature;
 };
