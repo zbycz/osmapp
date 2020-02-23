@@ -4,14 +4,17 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Edit from '@material-ui/icons/Edit';
 import Cancel from '@material-ui/icons/Cancel';
+import AccessTime from '@material-ui/icons/AccessTime';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 
 import WebsiteRenderer from './renderers/WebsiteRenderer';
+import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
+import PhoneRenderer from './renderers/PhoneRenderer';
 
 const Wrapper = styled.div`
   position: relative;
-  margin: 15px 0 0 0;
+  padding: 1em 0;
 
   & .show-on-hover {
     display: none !important;
@@ -44,23 +47,32 @@ const Label = styled.div`
 
 const Value = styled.div`
   font-size: 1rem;
-  line-height: 1.5;
   color: rgba(0, 0, 0, 0.87);
-  padding: 4px 0;
 
   i {
     color: rgba(0, 0, 0, 0.54);
   }
+
+  > svg {
+    margin: 0 10px -6px 2px;
+    opacity: 0.4;
+  }
 `;
 
+const Spacer = styled.div`
+  padding: 0 0 1em 0;
+`;
+
+const DefaultRender = ({ v }) => v;
 const renderers = {
   website: WebsiteRenderer,
-  __default: ({ v }) => v,
+  phone: PhoneRenderer,
+  opening_hours: OpeningHoursRenderer,
 };
 
-export const Property = ({ k, v }) => {
+const Property = ({ k, v }) => {
   const [isInput, setIsInput] = useState(false);
-  const Renderer = renderers[k] || renderers.__default;
+  const Renderer = renderers[k] || DefaultRender;
 
   return (
     <Wrapper>
@@ -76,7 +88,7 @@ export const Property = ({ k, v }) => {
               nativecolor="#9e9e9e"
             />
           </StyledIconButton>
-          <Label>{k}</Label>
+
           <Value>{v ? <Renderer v={v} /> : <i>-</i>}</Value>
         </>
       )}
@@ -86,17 +98,19 @@ export const Property = ({ k, v }) => {
             <Cancel titleAccess="Zrušit" nativecolor="#9e9e9e" />
           </StyledIconButton>
 
-          <TextField // https://codesandbox.io/s/m45ywmp86j
-            label={k}
-            placeholder=""
-            margin="none"
-            autoFocus
-            fullWidth
-            defaultValue={v}
-            InputLabelProps={{
-              shrink: true,
-            }}
-          />
+          <Spacer>
+            <TextField // https://codesandbox.io/s/m45ywmp86j
+              label={k}
+              placeholder=""
+              margin="none"
+              autoFocus
+              fullWidth
+              defaultValue={v}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Spacer>
         </>
       )}
     </Wrapper>

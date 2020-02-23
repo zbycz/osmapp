@@ -7551,6 +7551,10 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
 
+simple-opening-hours@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/simple-opening-hours/-/simple-opening-hours-0.1.1.tgz#f6059d8aaae63953bbcb4705ffe3250b5bee4d30"
+
 sisteransi@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/sisteransi/-/sisteransi-1.0.4.tgz#386713f1ef688c7c0304dc4c0632898941cad2e3"

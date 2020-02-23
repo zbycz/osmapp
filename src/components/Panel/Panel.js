@@ -13,7 +13,6 @@ import Property from './Property';
 import LogoOsm from '../../assets/LogoOsm';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
-import SearchBox from '../SearchBox/SearchBox';
 import Coordinates from './Coordinates';
 import { capitalize, useToggleState } from '../helpers';
 import makiFiles from './makiFiles';
@@ -21,6 +20,7 @@ import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
 import { getShortLink } from '../../services/helpers';
 import Head from 'next/head';
+import Info from '@material-ui/icons/Info';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -43,7 +43,7 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   height: calc(100vh - 72px - 238px); // 100% - TopPanel - FeatureImage
-  padding: 20px 15px;
+  padding: 20px 15px 0 15px;
 `;
 
 const TopPanel = styled.div`
@@ -62,6 +62,7 @@ const StyledEdit = styled.div`
 const Footer = styled.div`
   color: rgba(0, 0, 0, 0.54);
   margin-top: auto;
+  padding-bottom: 15px;
   font-size: 1rem;
   line-height: 1.5;
 `;
@@ -89,8 +90,10 @@ const PoiType = styled.div`
   }
 `;
 
+const featuredKeys = ['website', 'phone', 'opening_hours'];
+
 export const Panel = ({ feature }) => {
-  const [tagsShown, toggleTags] = useToggleState(!false);
+  const [advanced, toggleAdvanced] = useToggleState(false);
 
   const {
     loading,
@@ -102,12 +105,11 @@ export const Panel = ({ feature }) => {
     properties,
   } = feature;
   const shortLink = getShortLink(osmMeta);
-  const featuredKeys = ['phone', 'website', 'opening_hours'];
-  const featuredProperties = featuredKeys.map(k => [k, tags[k]]);
   const ico = makiFiles.includes(properties.class)
     ? properties.class
     : 'information';
   const subclass = properties.subclass || (layer && layer.id) || '?';
+  const featuredTags = featuredKeys.map(k => [k, tags[k]]).filter(x => x[1]);
 
   // TODO resolve all getPoiClass
   // TODO copy icons from @mapbox/maki
@@ -140,12 +142,14 @@ export const Panel = ({ feature }) => {
         <Content>
           <FeatureHeading title={tags.name || subclass} />
 
-          {tagsShown && <TagsTable tags={tags} />}
+          {!advanced &&
+            featuredTags.map(([k, v]) => <Property key={k} k={k} v={v} />)}
 
-          {!tagsShown &&
-            featuredProperties.map(([k, v]) => (
-              <Property key={k} k={k} v={v} />
-            ))}
+          <TagsTable
+            tags={tags}
+            except={advanced ? [] : ['name', 'layer', ...featuredKeys]}
+            advanced={advanced}
+          />
 
           <StyledEdit>
             <Button size="large" title="Upravit místo v živé databázi OSM">
@@ -153,6 +157,7 @@ export const Panel = ({ feature }) => {
               Upravit místo
             </Button>
           </StyledEdit>
+
           <Footer>
             {nonOsmObject
               ? `Mapový prvek ${osmMeta.type}`
@@ -165,10 +170,10 @@ export const Panel = ({ feature }) => {
             <label>
               <input
                 type="checkbox"
-                onChange={toggleTags}
-                checked={tagsShown}
+                onChange={toggleAdvanced}
+                checked={advanced}
               />{' '}
-              Zobrazit tagy
+              Zobrazit jen tagy
             </label>
           </Footer>
         </Content>

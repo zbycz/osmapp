@@ -3,34 +3,38 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import truncate from 'lodash/truncate';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 
 import { useToggleState } from '../helpers';
-import { getUrlForTag } from './helpers';
+import { getUrlForTag, ToggleButton } from './helpers';
+import Info from '@material-ui/icons/Info';
+
+const Wrapper = styled.div`
+  position: relative;
+  padding-top: 1em;
+`;
 
 const Table = styled.table`
-  margin-top: 1em;
   font-size: 1rem;
-
-  th {
-    width: 140px;
-    max-width: 140px;
-    color: rgba(0, 0, 0, 0.54);
-    text-align: left;
-    font-weight: normal;
-    vertical-align: baseline;
-  }
-
-  td {
-    max-width: 195px;
-  }
+  margin-left: ${({ advanced }) => (advanced ? 0 : '36px')};
 
   th,
   td {
     padding: 0.1em;
     overflow: hidden;
+  }
+
+  th {
+    width: ${({ advanced }) => (advanced ? '140px' : '104px')};
+    max-width: 140px;
+    color: rgba(0, 0, 0, 0.54);
+    text-align: left;
+    font-weight: normal;
+    vertical-align: baseline;
+    padding-left: 0;
+  }
+
+  td {
+    max-width: 195px;
   }
 
   table {
@@ -39,20 +43,18 @@ const Table = styled.table`
   }
 `;
 
+const TagsIcon = styled(Info)`
+  margin: 0 10px -6px 2px;
+  // margin-bottom: -41px;
+  position: absolute;
+  opacity: 0.4;
+`;
+
 const isAddr = k => k.match(/^addr:|uir_adr|:addr/);
 const isName = k => k.match(/^([a-z]+_)?name(:|$)/);
 const isBuilding = k => k.match(/building|roof|^min_level|^max_level|height$/);
 const isNetwork = k => k.match(/network/);
-
-const StyledToggleButton = styled(IconButton)`
-  margin: -15px -15px -15px 0 !important;
-`;
-const ToggleButton = ({ onClick, isShown }) => (
-  <StyledToggleButton onClick={onClick} aria-label="Toggle">
-    {!isShown && <ExpandMoreIcon fontSize="small" />}
-    {isShown && <ExpandLessIcon fontSize="small" />}
-  </StyledToggleButton>
-);
+const isBrand = k => k.match(/^brand/);
 
 const TagsGroup = ({ tags, label, value, hideArrow }) => {
   const [isShown, toggle] = useToggleState(false);
@@ -66,7 +68,7 @@ const TagsGroup = ({ tags, label, value, hideArrow }) => {
       <tr>
         <th>{label}</th>
         <td>
-          {value || Object.values(tags)[0]}
+          {value || tags[0]}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
       </tr>
@@ -106,44 +108,58 @@ const renderValue = (k, v) => {
   return url ? <a href={url}>{v.replace(/^https?:\/\//, '')}</a> : v;
 };
 
-const TagsTable = ({ tags }) => {
-  const tagsArr = Object.entries(tags);
-  const addrTags = tagsArr.filter(([k]) => isAddr(k));
-  const nameTags = tagsArr.filter(([k]) => isName(k));
-  const buildingTags = tagsArr.filter(([k]) => isBuilding(k));
-  const networkTags = tagsArr.filter(([k]) => isNetwork(k));
-  const restTags = tagsArr.filter(
-    ([k]) => !isName(k) && !isAddr(k) && !isBuilding(k) && !isNetwork(k),
+const TagsTable = props => {
+  const tagsArr = Object.entries(props.tags);
+  const tags = tagsArr.filter(([k]) => !props.except.includes(k));
+
+  const addr = tags.filter(([k]) => isAddr(k));
+  const name = tags.filter(([k]) => isName(k));
+  const building = tags.filter(([k]) => isBuilding(k));
+  const network = tags.filter(([k]) => isNetwork(k));
+  const brand = tags.filter(([k]) => isBrand(k));
+  const rest = tags.filter(
+    ([k]) =>
+      !isName(k) &&
+      !isAddr(k) &&
+      !isBuilding(k) &&
+      !isNetwork(k) &&
+      !isBrand(k),
   );
 
   return (
-    <Table>
-      <tbody>
-        <TagsGroup
-          tags={nameTags}
-          label="name"
-          value={truncate(tags.name, { length: 25 })}
-          hideArrow={nameTags.length === 1}
-        />
-        <TagsGroup
-          tags={addrTags}
-          label="addr:*"
-          value={buildAddress(addrTags)}
-        />
-        {restTags.map(([k, v]) => (
-          <tr key={k}>
-            <th>{k}</th>
-            <td>{renderValue(k, v)}</td>
-          </tr>
-        ))}
-        <TagsGroup
-          tags={buildingTags}
-          label="building:*"
-          value={tags.building}
-        />
-        <TagsGroup tags={networkTags} label="network:*" value={tags.network} />
-      </tbody>
-    </Table>
+    <Wrapper>
+      {!props.advanced && !!tags.length && <TagsIcon />}
+      <Table advanced={props.advanced}>
+        <tbody>
+          <TagsGroup
+            tags={name}
+            label="name"
+            value={
+              props.tags.short_name || truncate(props.tags.name, { length: 25 })
+            }
+            hideArrow={name.length === 1}
+          />
+          <TagsGroup tags={addr} label="addr:*" value={buildAddress(addr)} />
+          {rest.map(([k, v]) => (
+            <tr key={k}>
+              <th>{k}</th>
+              <td>{renderValue(k, v)}</td>
+            </tr>
+          ))}
+          <TagsGroup tags={brand} label="brand:*" value={props.tags.brand} />
+          <TagsGroup
+            tags={building}
+            label="building:*"
+            value={props.tags.building}
+          />
+          <TagsGroup
+            tags={network}
+            label="network:*"
+            value={props.tags.network}
+          />
+        </tbody>
+      </Table>
+    </Wrapper>
   );
 };
 
