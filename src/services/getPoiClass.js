@@ -254,7 +254,6 @@ export const getPoiClass = tags => {
   );
 
   const resultClass = resultRule ? resultRule.resultClass : value;
-  console.log({ resultClass });
   return {
     class: resultClass,
     subclass: value,
