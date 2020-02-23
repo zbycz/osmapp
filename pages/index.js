@@ -1,41 +1,21 @@
 // @flow
 
 import React from 'react';
-import styled from 'styled-components';
 import Router from 'next/router';
-import nextCookies from 'next-cookies';
 import Cookies from 'js-cookie';
 
 import Panel from '../src/components/Panel/Panel';
 import Map from '../src/components/Map/Map';
-import { getFeatureFromApi } from '../src/services/osmApi';
-import { getShortId, getViewFromIP } from '../src/services/helpers';
+import {
+  getInitialMapState,
+  getInititalFeature,
+  getShortId,
+} from '../src/services/helpers';
 import SearchBox from '../src/components/SearchBox/SearchBox';
 import {
   MapStateProvider,
   useMapStateContext,
 } from '../src/components/utils/MapStateContext';
-import { getFeatureImage } from '../src/services/images';
-
-const TopPanel = styled.div`
-  position: absolute;
-  width: 410px;
-  height: 72px;
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-  background-color: #eb5757;
-  padding: 10px;
-  box-sizing: border-box;
-
-  z-index: 1200;
-`;
-
-const fetchInitialFeature = async id => {
-  try {
-    return id ? await getFeatureFromApi(id) : null;
-  } catch (e) {
-    return null;
-  }
-};
 
 const persistFeatureId = id => {
   const url = id ? `?id=${id}` : '';
@@ -77,9 +57,7 @@ const IndexWithProviders = ({ initialFeature }) => {
 
   return (
     <>
-      <TopPanel>
-        <SearchBox feature={feature} setFeature={setFeature} />
-      </TopPanel>
+      <SearchBox feature={feature} setFeature={setFeature} />
       {feature != null && <Panel feature={feature} />}
       <Map onFeatureClicked={setFeature} />
     </>
@@ -94,22 +72,9 @@ const Index = ({ initialFeature, initialMapState }) => {
   );
 };
 Index.getInitialProps = async ctx => {
-  const { lastFeatureId, mapView } = nextCookies(ctx);
-
-  // TODO promise.all
-  const initialMapState = mapView
-    ? mapView.split('/')
-    : await getViewFromIP(ctx);
-
-  const shortId = ctx.query.id || lastFeatureId;
-  const initialFeature = await fetchInitialFeature(shortId);
-  if (initialFeature) {
-    initialFeature.ssrFeatureImage = await getFeatureImage(initialFeature);
-  }
-
   return {
-    initialFeature,
-    initialMapState,
+    initialFeature: await getInititalFeature(ctx),
+    initialMapState: await getInitialMapState(ctx),
   };
 };
 

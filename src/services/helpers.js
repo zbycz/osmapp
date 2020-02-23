@@ -5,6 +5,9 @@ import * as xml2js from 'isomorphic-xml2js';
 
 import { isBrowser } from '../components/helpers';
 import geojsonExtent from '@mapbox/geojson-extent';
+import nextCookies from 'next-cookies';
+import { getFeatureImage } from './images';
+import { getFeatureFromApi } from './osmApi';
 
 // TOOD cancel request in map.on('click', ...)
 const noRequestRunning = { abort: () => {} };
@@ -140,4 +143,35 @@ export const getViewFromIP = async ({ req }) => {
     console.warn('getViewFromIP', e);
     return defaultView;
   }
+};
+
+export const getInitialMapState = async ctx => {
+  const { mapView } = nextCookies(ctx);
+  return mapView ? mapView.split('/') : await getViewFromIP(ctx);
+};
+
+const fetchInitialFeature = async id => {
+  try {
+    return id ? await getFeatureFromApi(id) : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+export const getInititalFeature = async ctx => {
+  const { lastFeatureId } = nextCookies(ctx);
+  const shortId = ctx.query.id || lastFeatureId;
+
+  const t1 = new Date();
+  const initialFeature = await fetchInitialFeature(shortId);
+
+  const t2 = new Date();
+  if (initialFeature) {
+    initialFeature.ssrFeatureImage = await getFeatureImage(initialFeature);
+  }
+
+  const t3 = new Date();
+  console.log(`getInititalFeature(${shortId}): ${t2 - t1}ms [osm] + ${t3 - t2}ms [img]`);
+
+  return initialFeature;
 };
