@@ -6,6 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
+import { isBrowser } from '../helpers';
 
 const StyledPaper = styled(Paper)`
   padding: 2px 4px;
@@ -38,30 +39,36 @@ export const SearchBoxInput = ({
   setInputValue,
   feature,
   setFeature,
-}) => (
-  <StyledPaper elevation={1} ref={params.InputProps.ref}>
-    <SearchIconButton disabled>
-      <SearchIcon />
-    </SearchIconButton>
-    <SearchInput
-      placeholder="Prohledat OpenStreetMap"
-      autoFocus
-      {...params}
-      onChange={e => setInputValue(e.target.value)}
-      onFocus={e => e.target.select()}
-    />
-    <StyledDivider />
+}) => {
+  const { InputLabelProps, InputProps, ...restParams } = params; // passing all props causes warning... (why?)
 
-    {feature && (
-      <IconButton
-        aria-label="Zavřít panel"
-        onClick={() => {
-          setFeature(null);
-          setInputValue('');
-        }}
-      >
-        <CloseIcon />
-      </IconButton>
-    )}
-  </StyledPaper>
-);
+  return (
+    <StyledPaper elevation={1} ref={params.InputProps.ref}>
+      <SearchIconButton disabled>
+        <SearchIcon />
+      </SearchIconButton>
+      <SearchInput
+        placeholder="Prohledat OpenStreetMap"
+        // autoFocus={false} // TODO it still focuses on feature close
+        {...restParams}
+        onChange={e => setInputValue(e.target.value)}
+        onFocus={e => e.target.select()}
+      />
+      <StyledDivider />
+
+      {feature && (
+        <IconButton
+          aria-label="Zavřít panel"
+          onClick={e => {
+            e.preventDefault();
+            setFeature(null);
+            // setInputValue('');
+            return false;
+          }}
+        >
+          <CloseIcon />
+        </IconButton>
+      )}
+    </StyledPaper>
+  );
+};
