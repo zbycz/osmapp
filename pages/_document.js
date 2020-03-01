@@ -30,7 +30,7 @@ export default class MyDocument extends Document {
             content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
           />
           {/* PWA primary color = theme.palette.primary.main */}
-          {/*<meta name="theme-color" content="#eb5757" /> too light*/}
+          <meta name="theme-color" content="#000" />
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"

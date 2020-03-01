@@ -32,7 +32,7 @@ export default class MyApp extends App {
     return (
       <React.Fragment>
         <Head>
-          <title>the OSM app</title>
+          <title>osmcz-v2</title>
         </Head>
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}

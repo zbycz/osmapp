@@ -116,11 +116,6 @@ export const Panel = ({ feature }) => {
 
   return (
     <Wrapper>
-      {!nonOsmObject && (
-        <Head>
-          <title>{tags.name || subclass} · osmapp.org</title>
-        </Head>
-      )}
       <Scrollbars universal autoHide style={{ height: '100%' }}>
         <FeatureImage feature={feature}>
           <PoiType>

@@ -1,5 +1,5 @@
 {
-  "name": "osmapp",
+  "name": "osmcz-v2",
   "scripts": {
     "dev": "next",
     "lint": "eslint --print-config . | eslint-config-prettier-check && eslint . --report-unused-disable-directives",
