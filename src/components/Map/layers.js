@@ -5,7 +5,19 @@ import mapboxStyle from './mapboxStyle';
 export const sources = {
   openmaptiles: {
     type: 'vector',
-    url: 'https://maps.tilehosting.com/data/v3.json?key=7dlhLl3hiXQ1gsth0kGu', // https://cloud.maptiler.com/account
+    url:
+      'https://api.maptiler.com/tiles/v3/tiles.json?key=7dlhLl3hiXQ1gsth0kGu', // https://cloud.maptiler.com/account
+  },
+  contours: {
+    type: 'vector',
+    url:
+      'https://api.maptiler.com/tiles/contours/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+  },
+  hillshading: {
+    type: 'raster',
+    url:
+      'https://api.maptiler.com/tiles/hillshades/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    tileSize: 256,
   },
   osm_mapnik: {
     type: 'raster',
@@ -15,14 +27,6 @@ export const sources = {
     ],
     tileSize: 256,
   },
-  // contours: {
-  //   type: 'vector',
-  //   url: 'mapbox://mapbox.mapbox-terrain-v2'
-  // },
-  // dem: {
-  //   'type': 'raster-dem',
-  //   'url': 'mapbox://mapbox.terrain-rgb'
-  // }
 };
 
 export const backgroundLayers = [
@@ -40,6 +44,7 @@ export const backgroundLayers = [
       'background-color': '#f8f4f0',
     },
   },
+
   // {
   //   'id': 'contours',
   //   'type': 'line',
@@ -79,7 +84,8 @@ function addHoverPaint(origStyle) {
   return origStyle;
 }
 
-export const style = addHoverPaint(mapboxStyle(sources, backgroundLayers));
+const origStyle = mapboxStyle(sources, backgroundLayers);
+export const style = addHoverPaint(origStyle);
 
 const backgroundIds = backgroundLayers.map(x => x.id);
 const hoverLayers = style.layers

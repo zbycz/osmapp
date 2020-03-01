@@ -37,7 +37,6 @@ export default class MyDocument extends Document {
           />
           <AsyncStyle href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" />
           <link rel="shortcut icon" href="/static/logo_64.png" />
-          <link rel="preconnect" href="https://maps.tilehosting.com" />
           <link rel="preconnect" href="https://api.maptiler.com" />
           <link rel="preconnect" href="https://openmaptiles.github.io" />
           <link rel="preconnect" href="https://a.mapillary.com" />

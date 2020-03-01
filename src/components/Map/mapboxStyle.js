@@ -1,5 +1,112 @@
 // @flow
 
+// https://github.com/openmaptiles/klokantech-3d-gl-style/blob/master/style.json
+
+const buildings3d = {
+  id: 'building-3d',
+  type: 'fill-extrusion',
+  metadata: {},
+  source: 'openmaptiles',
+  'source-layer': 'building',
+  minzoom: 14,
+  filter: ['all', ['!has', 'hide_3d']],
+  layout: { visibility: 'visible' },
+  paint: {
+    'fill-extrusion-base': {
+      property: 'render_min_height',
+      type: 'identity',
+    },
+    'fill-extrusion-color': 'rgba(189, 185, 181, 1)',
+    'fill-extrusion-height': {
+      property: 'render_height',
+      type: 'identity',
+    },
+    'fill-extrusion-opacity': 0.3,
+
+    // 'fill-extrusion-base': {
+    //   property: 'render_min_height',
+    //   type: 'identity',
+    // },
+    // 'fill-extrusion-color': [
+    //   'case',
+    //   ['has', 'colour'],
+    //   ['get', 'colour'],
+    //   'hsl(39, 41%, 86%)',
+    // ],
+    // 'fill-extrusion-height': {
+    //   property: 'render_height',
+    //   type: 'identity',
+    // },
+    // 'fill-extrusion-opacity': 0.3,
+  },
+};
+
+// https://github.com/openmaptiles/klokantech-terrain-gl-style/blob/master/style.json
+
+const contoursStyle = [
+  {
+    id: 'contour_label',
+    type: 'symbol',
+    metadata: {},
+    source: 'contours',
+    'source-layer': 'contour',
+    filter: [
+      'all',
+      ['==', '$type', 'LineString'],
+      ['in', 'nth_line', 10, 5],
+      ['>', 'height', 0],
+    ],
+    layout: {
+      'symbol-avoid-edges': true,
+      'symbol-placement': 'line',
+      'text-allow-overlap': false,
+      'text-field': '{height} m',
+      'text-font': ['Noto Sans Regular'],
+      'text-ignore-placement': false,
+      'text-padding': 10,
+      'text-rotation-alignment': 'map',
+      'text-size': {
+        base: 1,
+        stops: [
+          [15, 9.5],
+          [20, 12],
+        ],
+      },
+    },
+    paint: {
+      'text-color': 'hsl(0, 0%, 37%)',
+      'text-halo-color': 'hsla(0, 0%, 100%, 0.5)',
+      'text-halo-width': 1.5,
+    },
+  },
+  {
+    id: 'contour_index',
+    type: 'line',
+    source: 'contours',
+    'source-layer': 'contour',
+    filter: ['all', ['>', 'height', 0], ['in', 'nth_line', 10, 5]],
+    layout: { visibility: 'visible' },
+    paint: {
+      'line-color': 'hsl(0, 1%, 58%)',
+      'line-opacity': 0.4,
+      'line-width': 1.1,
+    },
+  },
+  {
+    id: 'contour',
+    type: 'line',
+    source: 'contours',
+    'source-layer': 'contour',
+    filter: ['all', ['!in', 'nth_line', 10, 5], ['>', 'height', 0]],
+    layout: { visibility: 'visible' },
+    paint: {
+      'line-color': 'hsl(0, 1%, 58%)',
+      'line-opacity': 0.3,
+      'line-width': 0.6,
+    },
+  },
+];
+
 // https://openmaptiles.github.io/osm-bright-gl-style/style-cdn.json
 
 const mapboxStyle = (sources, backgroundLayers) => ({
@@ -49,7 +156,7 @@ const mapboxStyle = (sources, backgroundLayers) => ({
   sources,
   sprite: 'https://openmaptiles.github.io/osm-bright-gl-style/sprite',
   glyphs:
-    'https://maps.tilehosting.com/fonts/{fontstack}/{range}.pbf?key=7dlhLl3hiXQ1gsth0kGu',
+    'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=7dlhLl3hiXQ1gsth0kGu',
   layers: [
     ...backgroundLayers,
     {
@@ -68,7 +175,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'fill-color': '#fff',
         'fill-opacity': {
           base: 1,
-          stops: [[0, 0.9], [10, 0.3]],
+          stops: [
+            [0, 0.9],
+            [10, 0.3],
+          ],
         },
       },
     },
@@ -126,6 +236,24 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       },
     },
     {
+      id: 'hillshading',
+      type: 'raster',
+      source: 'hillshading',
+      layout: { visibility: 'visible' },
+      paint: {
+        'raster-contrast': 0,
+        'raster-fade-duration': 300,
+        'raster-opacity': {
+          base: 0.5,
+          stops: [
+            [3, 0],
+            [5, 0.15],
+            [12, 0.15],
+          ],
+        },
+      },
+    },
+    {
       id: 'park',
       type: 'fill',
       metadata: {
@@ -138,7 +266,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'fill-color': '#d8e8c8',
         'fill-opacity': {
           base: 1.8,
-          stops: [[9, 0.5], [12, 0.2]],
+          stops: [
+            [9, 0.5],
+            [12, 0.2],
+          ],
         },
       },
     },
@@ -230,7 +361,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'fill-outline-color': 'hsla(0, 0%, 0%, 0.03)',
         'fill-antialias': {
           base: 1,
-          stops: [[0, false], [9, true]],
+          stops: [
+            [0, false],
+            [9, true],
+          ],
         },
       },
     },
@@ -262,6 +396,7 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'fill-opacity': 0.8,
       },
     },
+    ...contoursStyle,
     {
       id: 'waterway-other',
       type: 'line',
@@ -278,7 +413,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#a0c8f0',
         'line-width': {
           base: 1.3,
-          stops: [[13, 0.5], [20, 2]],
+          stops: [
+            [13, 0.5],
+            [20, 2],
+          ],
         },
       },
     },
@@ -298,7 +436,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#a0c8f0',
         'line-width': {
           base: 1.3,
-          stops: [[13, 0.5], [20, 6]],
+          stops: [
+            [13, 0.5],
+            [20, 6],
+          ],
         },
       },
     },
@@ -318,7 +459,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#a0c8f0',
         'line-width': {
           base: 1.2,
-          stops: [[10, 0.8], [20, 6]],
+          stops: [
+            [10, 0.8],
+            [20, 6],
+          ],
         },
       },
     },
@@ -340,7 +484,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'fill-color': '#a0c8f0',
         'fill-translate': {
           base: 1,
-          stops: [[6, [2, 0]], [8, [0, 0]]],
+          stops: [
+            [6, [2, 0]],
+            [8, [0, 0]],
+          ],
         },
       },
     },
@@ -391,7 +538,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'fill-color': '#fff',
         'fill-opacity': {
           base: 1,
-          stops: [[0, 0.9], [10, 0.3]],
+          stops: [
+            [0, 0.9],
+            [10, 0.3],
+          ],
         },
       },
     },
@@ -406,7 +556,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       paint: {
         'fill-color': {
           base: 1,
-          stops: [[15.5, '#f2eae2'], [16, '#dfdbd7']],
+          stops: [
+            [15.5, '#f2eae2'],
+            [16, '#dfdbd7'],
+          ],
         },
         'fill-antialias': true,
       },
@@ -425,13 +578,19 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       paint: {
         'fill-translate': {
           base: 1,
-          stops: [[14, [0, 0]], [16, [-2, -2]]],
+          stops: [
+            [14, [0, 0]],
+            [16, [-2, -2]],
+          ],
         },
         'fill-outline-color': '#dfdbd7',
         'fill-color': '#f2eae2',
         'fill-opacity': {
           base: 1,
-          stops: [[13, 0], [16, 1]],
+          stops: [
+            [13, 0],
+            [16, 1],
+          ],
         },
       },
     },
@@ -456,7 +615,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [0.5, 0.25],
         'line-width': {
           base: 1.2,
-          stops: [[15, 1], [16, 4], [20, 11]],
+          stops: [
+            [15, 1],
+            [16, 4],
+            [20, 11],
+          ],
         },
       },
     },
@@ -475,11 +638,19 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       paint: {
         'line-color': '#cfcdca',
         'line-opacity': {
-          stops: [[12, 0], [12.5, 1]],
+          stops: [
+            [12, 0],
+            [12.5, 1],
+          ],
         },
         'line-width': {
           base: 1.2,
-          stops: [[12, 0.5], [13, 1], [14, 4], [20, 15]],
+          stops: [
+            [12, 0.5],
+            [13, 1],
+            [14, 4],
+            [20, 15],
+          ],
         },
       },
     },
@@ -504,7 +675,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[8, 1.5], [20, 17]],
+          stops: [
+            [8, 1.5],
+            [20, 17],
+          ],
         },
       },
     },
@@ -528,7 +702,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#e9ac77',
         'line-width': {
           base: 1.2,
-          stops: [[5, 0.4], [6, 0.6], [7, 1.5], [20, 22]],
+          stops: [
+            [5, 0.4],
+            [6, 0.6],
+            [7, 1.5],
+            [20, 22],
+          ],
         },
       },
     },
@@ -550,7 +729,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [0.5, 0.25],
         'line-width': {
           base: 1.2,
-          stops: [[5, 0.4], [6, 0.6], [7, 1.5], [20, 22]],
+          stops: [
+            [5, 0.4],
+            [6, 0.6],
+            [7, 1.5],
+            [20, 22],
+          ],
         },
       },
     },
@@ -572,7 +756,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [1.5, 0.75],
         'line-width': {
           base: 1.2,
-          stops: [[15, 1.2], [20, 4]],
+          stops: [
+            [15, 1.2],
+            [20, 4],
+          ],
         },
       },
     },
@@ -596,7 +783,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fff',
         'line-width': {
           base: 1.2,
-          stops: [[15.5, 0], [16, 2], [20, 7.5]],
+          stops: [
+            [15.5, 0],
+            [16, 2],
+            [20, 7.5],
+          ],
         },
       },
     },
@@ -621,7 +812,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[13.5, 0], [14, 2.5], [20, 11.5]],
+          stops: [
+            [13.5, 0],
+            [14, 2.5],
+            [20, 11.5],
+          ],
         },
       },
     },
@@ -645,7 +840,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fff4c6',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [7, 0.5], [20, 10]],
+          stops: [
+            [6.5, 0],
+            [7, 0.5],
+            [20, 10],
+          ],
         },
       },
     },
@@ -669,7 +868,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fff4c6',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [7, 0.5], [20, 18]],
+          stops: [
+            [6.5, 0],
+            [7, 0.5],
+            [20, 18],
+          ],
         },
       },
     },
@@ -690,7 +893,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#ffdaa6',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [7, 0.5], [20, 18]],
+          stops: [
+            [6.5, 0],
+            [7, 0.5],
+            [20, 18],
+          ],
         },
       },
     },
@@ -707,7 +914,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#bbb',
         'line-width': {
           base: 1.4,
-          stops: [[14, 0.4], [15, 0.75], [20, 2]],
+          stops: [
+            [14, 0.4],
+            [15, 0.75],
+            [20, 2],
+          ],
         },
         'line-dasharray': [2, 2],
       },
@@ -747,7 +958,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'rgba(153, 153, 153, 1)',
         'line-width': {
           base: 1.5,
-          stops: [[11, 2], [17, 12]],
+          stops: [
+            [11, 2],
+            [17, 12],
+          ],
         },
         'line-opacity': 1,
       },
@@ -771,7 +985,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'rgba(153, 153, 153, 1)',
         'line-width': {
           base: 1.5,
-          stops: [[11, 5], [17, 55]],
+          stops: [
+            [11, 5],
+            [17, 55],
+          ],
         },
         'line-opacity': 1,
       },
@@ -796,7 +1013,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       paint: {
         'fill-opacity': {
           base: 1,
-          stops: [[13, 0], [14, 1]],
+          stops: [
+            [13, 0],
+            [14, 1],
+          ],
         },
         'fill-color': 'rgba(255, 255, 255, 1)',
       },
@@ -824,11 +1044,17 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'rgba(255, 255, 255, 1)',
         'line-width': {
           base: 1.5,
-          stops: [[11, 1], [17, 10]],
+          stops: [
+            [11, 1],
+            [17, 10],
+          ],
         },
         'line-opacity': {
           base: 1,
-          stops: [[11, 0], [12, 1]],
+          stops: [
+            [11, 0],
+            [12, 1],
+          ],
         },
       },
     },
@@ -851,11 +1077,17 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'rgba(255, 255, 255, 1)',
         'line-width': {
           base: 1.5,
-          stops: [[11, 4], [17, 50]],
+          stops: [
+            [11, 4],
+            [17, 50],
+          ],
         },
         'line-opacity': {
           base: 1,
-          stops: [[11, 0], [12, 1]],
+          stops: [
+            [11, 0],
+            [12, 1],
+          ],
         },
       },
     },
@@ -901,7 +1133,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[12, 1], [13, 3], [14, 4], [20, 15]],
+          stops: [
+            [12, 1],
+            [13, 3],
+            [14, 4],
+            [20, 15],
+          ],
         },
       },
     },
@@ -936,7 +1173,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[12, 1], [13, 3], [14, 4], [20, 15]],
+          stops: [
+            [12, 1],
+            [13, 3],
+            [14, 4],
+            [20, 15],
+          ],
         },
       },
     },
@@ -964,11 +1206,19 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       paint: {
         'line-color': '#cfcdca',
         'line-opacity': {
-          stops: [[12, 0], [12.5, 1]],
+          stops: [
+            [12, 0],
+            [12.5, 1],
+          ],
         },
         'line-width': {
           base: 1.2,
-          stops: [[12, 0.5], [13, 1], [14, 4], [20, 15]],
+          stops: [
+            [12, 0.5],
+            [13, 1],
+            [14, 4],
+            [20, 15],
+          ],
         },
       },
     },
@@ -995,7 +1245,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[8, 1.5], [20, 17]],
+          stops: [
+            [8, 1.5],
+            [20, 17],
+          ],
         },
       },
     },
@@ -1021,11 +1274,19 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       paint: {
         'line-color': '#e9ac77',
         'line-opacity': {
-          stops: [[7, 0], [8, 1]],
+          stops: [
+            [7, 0],
+            [8, 1],
+          ],
         },
         'line-width': {
           base: 1.2,
-          stops: [[7, 0], [8, 0.6], [9, 1.5], [20, 22]],
+          stops: [
+            [7, 0],
+            [8, 0.6],
+            [9, 1.5],
+            [20, 22],
+          ],
         },
       },
     },
@@ -1051,11 +1312,19 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       paint: {
         'line-color': '#e9ac77',
         'line-opacity': {
-          stops: [[5, 0], [6, 1]],
+          stops: [
+            [5, 0],
+            [6, 1],
+          ],
         },
         'line-width': {
           base: 1.2,
-          stops: [[5, 0], [6, 0.6], [7, 1.5], [20, 22]],
+          stops: [
+            [5, 0],
+            [6, 0.6],
+            [7, 1.5],
+            [20, 22],
+          ],
         },
       },
     },
@@ -1082,10 +1351,19 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#e9ac77',
         'line-width': {
           base: 1.2,
-          stops: [[4, 0], [5, 0.4], [6, 0.6], [7, 1.5], [20, 22]],
+          stops: [
+            [4, 0],
+            [5, 0.4],
+            [6, 0.6],
+            [7, 1.5],
+            [20, 22],
+          ],
         },
         'line-opacity': {
-          stops: [[4, 0], [5, 1]],
+          stops: [
+            [4, 0],
+            [5, 1],
+          ],
         },
       },
     },
@@ -1111,7 +1389,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [1.5, 0.75],
         'line-width': {
           base: 1.2,
-          stops: [[15, 1.2], [20, 4]],
+          stops: [
+            [15, 1.2],
+            [20, 4],
+          ],
         },
       },
     },
@@ -1137,7 +1418,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fc8',
         'line-width': {
           base: 1.2,
-          stops: [[12.5, 0], [13, 1.5], [14, 2.5], [20, 11.5]],
+          stops: [
+            [12.5, 0],
+            [13, 1.5],
+            [14, 2.5],
+            [20, 11.5],
+          ],
         },
       },
     },
@@ -1171,7 +1457,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fea',
         'line-width': {
           base: 1.2,
-          stops: [[12.5, 0], [13, 1.5], [14, 2.5], [20, 11.5]],
+          stops: [
+            [12.5, 0],
+            [13, 1.5],
+            [14, 2.5],
+            [20, 11.5],
+          ],
         },
       },
     },
@@ -1201,7 +1492,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[13.5, 0], [14, 2.5], [20, 11.5]],
+          stops: [
+            [13.5, 0],
+            [14, 2.5],
+            [20, 11.5],
+          ],
         },
       },
     },
@@ -1227,7 +1522,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fea',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [8, 0.5], [20, 13]],
+          stops: [
+            [6.5, 0],
+            [8, 0.5],
+            [20, 13],
+          ],
         },
       },
     },
@@ -1257,7 +1556,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fea',
         'line-width': {
           base: 1.2,
-          stops: [[8.5, 0], [9, 0.5], [20, 18]],
+          stops: [
+            [8.5, 0],
+            [9, 0.5],
+            [20, 18],
+          ],
         },
       },
     },
@@ -1287,7 +1590,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fea',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [7, 0.5], [20, 18]],
+          stops: [
+            [6.5, 0],
+            [7, 0.5],
+            [20, 18],
+          ],
         },
       },
     },
@@ -1318,7 +1625,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fc8',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [7, 0.5], [20, 18]],
+          stops: [
+            [6.5, 0],
+            [7, 0.5],
+            [20, 18],
+          ],
         },
       },
     },
@@ -1342,7 +1653,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'hsla(0, 0%, 73%, 0.77)',
         'line-width': {
           base: 1.4,
-          stops: [[14, 0.4], [20, 1]],
+          stops: [
+            [14, 0.4],
+            [20, 1],
+          ],
         },
       },
     },
@@ -1367,7 +1681,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [0.2, 8],
         'line-width': {
           base: 1.4,
-          stops: [[14.5, 0], [15, 2], [20, 6]],
+          stops: [
+            [14.5, 0],
+            [15, 2],
+            [20, 6],
+          ],
         },
       },
     },
@@ -1388,7 +1706,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'hsla(0, 0%, 73%, 0.77)',
         'line-width': {
           base: 1.4,
-          stops: [[14, 0.4], [20, 1]],
+          stops: [
+            [14, 0.4],
+            [20, 1],
+          ],
         },
       },
     },
@@ -1413,7 +1734,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [0.2, 8],
         'line-width': {
           base: 1.4,
-          stops: [[14.5, 0], [15, 2], [20, 6]],
+          stops: [
+            [14.5, 0],
+            [15, 2],
+            [20, 6],
+          ],
         },
       },
     },
@@ -1439,7 +1764,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#bbb',
         'line-width': {
           base: 1.4,
-          stops: [[14, 0.4], [15, 0.75], [20, 2]],
+          stops: [
+            [14, 0.4],
+            [15, 0.75],
+            [20, 2],
+          ],
         },
       },
     },
@@ -1466,7 +1795,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [0.2, 8],
         'line-width': {
           base: 1.4,
-          stops: [[14.5, 0], [15, 3], [20, 8]],
+          stops: [
+            [14.5, 0],
+            [15, 3],
+            [20, 8],
+          ],
         },
       },
     },
@@ -1491,7 +1824,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[12, 1], [13, 3], [14, 4], [20, 15]],
+          stops: [
+            [12, 1],
+            [13, 3],
+            [14, 4],
+            [20, 15],
+          ],
         },
       },
     },
@@ -1523,7 +1861,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[12, 1], [13, 3], [14, 4], [20, 15]],
+          stops: [
+            [12, 1],
+            [13, 3],
+            [14, 4],
+            [20, 15],
+          ],
         },
       },
     },
@@ -1548,7 +1891,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-opacity': 1,
         'line-width': {
           base: 1.2,
-          stops: [[8, 1.5], [20, 28]],
+          stops: [
+            [8, 1.5],
+            [20, 28],
+          ],
         },
       },
     },
@@ -1572,7 +1918,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'hsl(28, 76%, 67%)',
         'line-width': {
           base: 1.2,
-          stops: [[5, 0.4], [6, 0.6], [7, 1.5], [20, 26]],
+          stops: [
+            [5, 0.4],
+            [6, 0.6],
+            [7, 1.5],
+            [20, 26],
+          ],
         },
       },
     },
@@ -1592,7 +1943,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#e9ac77',
         'line-width': {
           base: 1.2,
-          stops: [[5, 0.4], [6, 0.6], [7, 1.5], [20, 22]],
+          stops: [
+            [5, 0.4],
+            [6, 0.6],
+            [7, 1.5],
+            [20, 22],
+          ],
         },
       },
     },
@@ -1613,7 +1969,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#f8f4f0',
         'line-width': {
           base: 1.2,
-          stops: [[15, 1.2], [20, 18]],
+          stops: [
+            [15, 1.2],
+            [20, 18],
+          ],
         },
       },
     },
@@ -1634,7 +1993,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#cba',
         'line-width': {
           base: 1.2,
-          stops: [[15, 1.2], [20, 4]],
+          stops: [
+            [15, 1.2],
+            [20, 4],
+          ],
         },
         'line-dasharray': [1.5, 0.75],
       },
@@ -1659,7 +2021,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fc8',
         'line-width': {
           base: 1.2,
-          stops: [[12.5, 0], [13, 1.5], [14, 2.5], [20, 11.5]],
+          stops: [
+            [12.5, 0],
+            [13, 1.5],
+            [14, 2.5],
+            [20, 11.5],
+          ],
         },
       },
     },
@@ -1690,7 +2057,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fea',
         'line-width': {
           base: 1.2,
-          stops: [[12.5, 0], [13, 1.5], [14, 2.5], [20, 11.5]],
+          stops: [
+            [12.5, 0],
+            [13, 1.5],
+            [14, 2.5],
+            [20, 11.5],
+          ],
         },
       },
     },
@@ -1714,7 +2086,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fea',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [7, 0.5], [20, 20]],
+          stops: [
+            [6.5, 0],
+            [7, 0.5],
+            [20, 20],
+          ],
         },
       },
     },
@@ -1738,7 +2114,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fea',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [7, 0.5], [20, 18]],
+          stops: [
+            [6.5, 0],
+            [7, 0.5],
+            [20, 18],
+          ],
         },
       },
     },
@@ -1758,7 +2138,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#fc8',
         'line-width': {
           base: 1.2,
-          stops: [[6.5, 0], [7, 0.5], [20, 18]],
+          stops: [
+            [6.5, 0],
+            [7, 0.5],
+            [20, 18],
+          ],
         },
       },
     },
@@ -1775,7 +2159,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': '#bbb',
         'line-width': {
           base: 1.4,
-          stops: [[14, 0.4], [15, 0.75], [20, 2]],
+          stops: [
+            [14, 0.4],
+            [15, 0.75],
+            [20, 2],
+          ],
         },
       },
     },
@@ -1793,7 +2181,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [0.2, 8],
         'line-width': {
           base: 1.4,
-          stops: [[14.5, 0], [15, 3], [20, 8]],
+          stops: [
+            [14.5, 0],
+            [15, 3],
+            [20, 8],
+          ],
         },
       },
     },
@@ -1813,7 +2205,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'hsl(0, 0%, 70%)',
         'line-width': {
           base: 1,
-          stops: [[11, 1], [19, 2.5]],
+          stops: [
+            [11, 1],
+            [19, 2.5],
+          ],
         },
       },
     },
@@ -1833,7 +2228,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'hsl(0, 0%, 70%)',
         'line-width': {
           base: 1,
-          stops: [[11, 3], [19, 5.5]],
+          stops: [
+            [11, 3],
+            [19, 5.5],
+          ],
         },
         'line-dasharray': [2, 3],
       },
@@ -1852,7 +2250,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [3, 1, 1, 1],
         'line-width': {
           base: 1.4,
-          stops: [[4, 0.4], [5, 1], [12, 3]],
+          stops: [
+            [4, 0.4],
+            [5, 1],
+            [12, 3],
+          ],
         },
       },
     },
@@ -1875,7 +2277,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'hsl(248, 7%, 66%)',
         'line-width': {
           base: 1,
-          stops: [[0, 0.6], [4, 1.4], [5, 2], [12, 8]],
+          stops: [
+            [0, 0.6],
+            [4, 1.4],
+            [5, 2],
+            [12, 8],
+          ],
         },
       },
     },
@@ -1894,7 +2301,12 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [1, 3],
         'line-width': {
           base: 1,
-          stops: [[0, 0.6], [4, 1.4], [5, 2], [12, 8]],
+          stops: [
+            [0, 0.6],
+            [4, 1.4],
+            [5, 2],
+            [12, 8],
+          ],
         },
       },
     },
@@ -1912,15 +2324,24 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-color': 'rgba(154, 189, 214, 1)',
         'line-width': {
           base: 1,
-          stops: [[0, 0.6], [4, 1.4], [5, 2], [12, 8]],
+          stops: [
+            [0, 0.6],
+            [4, 1.4],
+            [5, 2],
+            [12, 8],
+          ],
         },
         'line-opacity': {
-          stops: [[6, 0.6], [10, 1]],
+          stops: [
+            [6, 0.6],
+            [10, 1],
+          ],
         },
       },
     },
+    buildings3d,
     {
-      id: 'waterway-name',
+      id: 'wate rway-name',
       type: 'symbol',
       source: 'openmaptiles',
       'source-layer': 'waterway',
@@ -1995,7 +2416,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       layout: {
         'text-font': ['Noto Sans Italic'],
         'text-size': {
-          stops: [[0, 10], [6, 14]],
+          stops: [
+            [0, 10],
+            [6, 14],
+          ],
         },
         'text-field': '{name:latin}\n{name:nonlatin}',
         'text-max-width': 5,
@@ -2140,7 +2564,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       layout: {
         'text-size': {
           base: 1,
-          stops: [[13, 12], [14, 13]],
+          stops: [
+            [13, 12],
+            [14, 13],
+          ],
         },
         'text-font': ['Noto Sans Regular'],
         'text-field': '{name:latin} {name:nonlatin}',
@@ -2167,7 +2594,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       layout: {
         'text-size': {
           base: 1,
-          stops: [[13, 12], [14, 13]],
+          stops: [
+            [13, 12],
+            [14, 13],
+          ],
         },
         'text-font': ['Noto Sans Regular'],
         'text-field': '{name:latin} {name:nonlatin}',
@@ -2190,7 +2620,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       layout: {
         'text-size': {
           base: 1,
-          stops: [[13, 12], [14, 13]],
+          stops: [
+            [13, 12],
+            [14, 13],
+          ],
         },
         'text-font': ['Noto Sans Regular'],
         'text-field': '{name:latin} {name:nonlatin}',
@@ -2223,7 +2656,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Regular'],
         'symbol-placement': {
           base: 1,
-          stops: [[10, 'point'], [11, 'line']],
+          stops: [
+            [10, 'point'],
+            [11, 'line'],
+          ],
         },
         'text-rotation-alignment': 'viewport',
         'icon-size': 1,
@@ -2251,7 +2687,11 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Regular'],
         'symbol-placement': {
           base: 1,
-          stops: [[7, 'point'], [7, 'line'], [8, 'line']],
+          stops: [
+            [7, 'point'],
+            [7, 'line'],
+            [8, 'line'],
+          ],
         },
         'text-rotation-alignment': 'viewport',
         'icon-size': 1,
@@ -2281,7 +2721,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Regular'],
         'symbol-placement': {
           base: 1,
-          stops: [[10, 'point'], [11, 'line']],
+          stops: [
+            [10, 'point'],
+            [11, 'line'],
+          ],
         },
         'text-rotation-alignment': 'viewport',
         'icon-size': 1,
@@ -2339,7 +2782,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-letter-spacing': 0.1,
         'text-size': {
           base: 1.2,
-          stops: [[12, 10], [15, 14]],
+          stops: [
+            [12, 10],
+            [15, 14],
+          ],
         },
         'text-font': ['Noto Sans Bold'],
         'text-field': '{name:latin}\n{name:nonlatin}',
@@ -2366,7 +2812,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Regular'],
         'text-size': {
           base: 1.2,
-          stops: [[10, 12], [15, 22]],
+          stops: [
+            [10, 12],
+            [15, 22],
+          ],
         },
         'text-field': '{name:latin}\n{name:nonlatin}',
         'text-max-width': 8,
@@ -2391,7 +2840,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Regular'],
         'text-size': {
           base: 1.2,
-          stops: [[10, 14], [15, 24]],
+          stops: [
+            [10, 14],
+            [15, 24],
+          ],
         },
         'text-field': '{name:latin}\n{name:nonlatin}',
         'text-max-width': 8,
@@ -2416,7 +2868,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Regular'],
         'text-size': {
           base: 1.2,
-          stops: [[7, 14], [11, 24]],
+          stops: [
+            [7, 14],
+            [11, 24],
+          ],
         },
         'text-field': '{name:latin}\n{name:nonlatin}',
         'text-max-width': 8,
@@ -2441,7 +2896,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Regular'],
         'text-size': {
           base: 1.2,
-          stops: [[7, 14], [11, 24]],
+          stops: [
+            [7, 14],
+            [11, 24],
+          ],
         },
         'text-field': '{name:latin}\n{name:nonlatin}',
         'text-max-width': 8,
@@ -2475,7 +2933,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Italic'],
         'text-field': '{name:latin}',
         'text-size': {
-          stops: [[3, 11], [7, 17]],
+          stops: [
+            [3, 11],
+            [7, 17],
+          ],
         },
         'text-transform': 'uppercase',
         'text-max-width': 6.25,
@@ -2506,7 +2967,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Bold'],
         'text-field': '{name:latin}',
         'text-size': {
-          stops: [[3, 11], [7, 17]],
+          stops: [
+            [3, 11],
+            [7, 17],
+          ],
         },
         'text-transform': 'uppercase',
         'text-max-width': 6.25,
@@ -2537,7 +3001,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Bold'],
         'text-field': '{name:latin}',
         'text-size': {
-          stops: [[2, 11], [5, 17]],
+          stops: [
+            [2, 11],
+            [5, 17],
+          ],
         },
         'text-transform': 'uppercase',
         'text-max-width': 6.25,
@@ -2568,7 +3035,10 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'text-font': ['Noto Sans Bold'],
         'text-field': '{name:latin}',
         'text-size': {
-          stops: [[1, 11], [4, 17]],
+          stops: [
+            [1, 11],
+            [4, 17],
+          ],
         },
         'text-transform': 'uppercase',
         'text-max-width': 6.25,
