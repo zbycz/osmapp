@@ -4,7 +4,7 @@ import * as React from 'react';
 import mapboxgl from 'mapbox-gl'; // update CSS import in _document.js
 import { getSkeleton } from './helpers';
 import { fetchFromApi } from '../../services/osmApi';
-import { hoverLayers, style } from './layers';
+import { setUpHover, style } from './layers';
 import { useMapEffectFactory } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { throttle } from 'lodash';
@@ -38,32 +38,7 @@ const useInitMap = () => {
 
     map.addControl(geolocateControl);
     map.addControl(scaleControl);
-
-    let lastHover = null;
-    const setHover = (f, hover) => f && map.setFeatureState(f, { hover });
-    const setHoverOn = f => setHover(f, true);
-    const setHoverOff = f => setHover(f, false);
-    const onMouseMove = e => {
-      if (e.features && e.features.length > 0) {
-        const feature = e.features[0];
-        if (feature !== lastHover) {
-          setHoverOff(lastHover);
-          setHoverOn(feature);
-          lastHover = feature;
-          map.getCanvas().style.cursor = 'pointer';
-        }
-      }
-    };
-    const onMouseLeave = () => {
-      setHoverOff(lastHover);
-      lastHover = null;
-      map.getCanvas().style.cursor = ''; // TODO delay 200ms
-    };
-
-    hoverLayers.forEach(x => {
-      map.on('mousemove', x, onMouseMove);
-      map.on('mouseleave', x, onMouseLeave);
-    });
+    setUpHover(map);
   }, [mapRef]);
 
   return [mapInState, mapRef];

@@ -80,7 +80,35 @@ function addHoverPaint(origStyle) {
 }
 
 export const style = addHoverPaint(mapboxStyle(sources, backgroundLayers));
+
 const backgroundIds = backgroundLayers.map(x => x.id);
-export const hoverLayers = style.layers
+const hoverLayers = style.layers
   .map(x => x.id)
   .filter(x => !(x in backgroundIds));
+
+export const setUpHover = map => {
+  let lastHover = null;
+  const setHover = (f, hover) => f && map.setFeatureState(f, { hover });
+  const setHoverOn = f => setHover(f, true);
+  const setHoverOff = f => setHover(f, false);
+  const onMouseMove = e => {
+    if (e.features && e.features.length > 0) {
+      const feature = e.features[0];
+      if (feature !== lastHover) {
+        setHoverOff(lastHover);
+        setHoverOn(feature);
+        lastHover = feature;
+        map.getCanvas().style.cursor = 'pointer';
+      }
+    }
+  };
+  const onMouseLeave = () => {
+    setHoverOff(lastHover);
+    lastHover = null;
+    map.getCanvas().style.cursor = ''; // TODO delay 200ms
+  };
+  hoverLayers.forEach(x => {
+    map.on('mousemove', x, onMouseMove);
+    map.on('mouseleave', x, onMouseLeave);
+  });
+};
