@@ -49,9 +49,10 @@ const SearchBox = ({ feature, setFeature }) => {
         onChange={onSelectedFactory(setFeature, setView)}
         autoComplete
         autoHighlight
+        clearOnEscape
         // disableCloseOnSelect
         freeSolo
-        disableOpenOnFocus
+        // disableOpenOnFocus
         renderInput={params => (
           <SearchBoxInput {...{ params, feature, setFeature, setInputValue }} />
         )}
