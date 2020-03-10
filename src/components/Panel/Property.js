@@ -11,10 +11,18 @@ import IconButton from '@material-ui/core/IconButton';
 import WebsiteRenderer from './renderers/WebsiteRenderer';
 import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
 import PhoneRenderer from './renderers/PhoneRenderer';
+import LocalPhone from '@material-ui/icons/LocalPhone';
+import Language from '@material-ui/icons/Language';
 
 const Wrapper = styled.div`
+  display: flex;
   position: relative;
   padding-bottom: 15px;
+
+  .property-icon {
+    position: relative;
+    top: -2px;
+  }
 
   & .show-on-hover {
     display: none !important;
@@ -22,12 +30,24 @@ const Wrapper = styled.div`
   &:hover .show-on-hover {
     display: block !important;
   }
+
+  font-size: 1rem;
+  color: rgba(0, 0, 0, 0.87);
+
+  i {
+    color: rgba(0, 0, 0, 0.54);
+  }
+
+  > svg {
+    margin: 0 10px -6px 2px;
+    opacity: 0.4;
+  }
 `;
 
 const StyledIconButton = styled(IconButton)`
   position: absolute !important; /* TODO mui styles takes precendence, why? */
   right: 0;
-  margin-top: -12px !important;
+  // margin-top: -12px !important;
   z-index: 2;
 
   svg {
@@ -45,19 +65,7 @@ const Label = styled.div`
   transform-origin: top left;
 `;
 
-const Value = styled.div`
-  font-size: 1rem;
-  color: rgba(0, 0, 0, 0.87);
-
-  i {
-    color: rgba(0, 0, 0, 0.54);
-  }
-
-  > svg {
-    margin: 0 10px -6px 2px;
-    opacity: 0.4;
-  }
-`;
+const Value = styled.div``;
 
 const Spacer = styled.div`
   padding: 0 0 1em 0;
@@ -70,17 +78,38 @@ const renderers = {
   opening_hours: OpeningHoursRenderer,
 };
 
-const Property = ({ k, v }) => {
-  const [isInput, setIsInput] = useState(false);
+const icon = {
+  website: Language,
+  phone: LocalPhone,
+  opening_hours: AccessTime,
+};
+
+const StyledInput = styled(TextField)`
+  margin: -3.5px -3px !important;
+
+  input {
+    font-size: 16px;
+    padding: 5px 7px;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.14994px;
+    color: rgba(0, 0, 0, 0.87);
+  }
+`;
+
+const Property = ({ k, v, isEditing, setEditingOn }) => {
   const Renderer = renderers[k] || DefaultRender;
+  const IconComponent = icon[k];
 
   return (
     <Wrapper>
-      {!isInput && (
+      <IconComponent fontSize="small" className="property-icon" />
+
+      {!isEditing && (
         <>
           <StyledIconButton
             mini="true"
-            onClick={() => setIsInput(true)}
+            onClick={setEditingOn}
             className="show-on-hover"
           >
             <Edit
@@ -89,28 +118,27 @@ const Property = ({ k, v }) => {
             />
           </StyledIconButton>
 
-          <Value>{v ? <Renderer v={v} /> : <i>-</i>}</Value>
+          {v ? <Renderer v={v} /> : <i>-</i>}
         </>
       )}
-      {isInput && (
+      {isEditing && (
         <>
-          <StyledIconButton mini="true" onClick={() => setIsInput(false)}>
-            <Cancel titleAccess="Zrušit" nativecolor="#9e9e9e" />
-          </StyledIconButton>
+          {/*<StyledIconButton mini="true" onClick={() => setIsInput(false)}>*/}
+          {/*  <Cancel titleAccess="Zrušit" nativecolor="#9e9e9e" />*/}
+          {/*</StyledIconButton>*/}
 
-          <Spacer>
-            <TextField // https://codesandbox.io/s/m45ywmp86j
-              label={k}
-              placeholder=""
-              margin="none"
-              autoFocus
-              fullWidth
-              defaultValue={v}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </Spacer>
+          <StyledInput // https://codesandbox.io/s/m45ywmp86j
+            // label={k}
+            placeholder=""
+            margin="none"
+            fullWidth
+            variant="outlined"
+            size="small"
+            defaultValue={v}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
         </>
       )}
     </Wrapper>

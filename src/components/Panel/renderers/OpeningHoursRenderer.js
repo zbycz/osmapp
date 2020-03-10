@@ -67,8 +67,7 @@ const OpeningHoursRenderer = ({ v }) => {
 
   const isOpen = opening.isOpenNow();
   return (
-    <>
-      <AccessTime fontSize="small" />
+    <span>
       <OpeningState isOpen={isOpen} days={days} />
       <ToggleButton onClick={toggle} isShown={isExpanded} />
       {isExpanded && (
@@ -81,7 +80,7 @@ const OpeningHoursRenderer = ({ v }) => {
           ))}
         </Table>
       )}
-    </>
+    </span>
   );
 };
 

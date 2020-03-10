@@ -42,6 +42,10 @@ const Wrapper = styled.div`
   @media (min-width: 410px) {
     width: 410px;
   }
+
+  .MuiInput-underline:before {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const Content = styled.div`
@@ -103,6 +107,7 @@ const featuredKeys = ['website', 'phone', 'opening_hours'];
 
 export const Panel = ({ feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
+  const [isEditing, setEditing] = React.useState(false);
 
   const {
     loading,
@@ -149,12 +154,22 @@ export const Panel = ({ feature }) => {
         </FeatureImage>
         <Loading>{loading && <LinearProgress />}</Loading>
         <Content>
-          <FeatureHeading title={tags.name || subclass} />
+          <FeatureHeading
+            title={tags.name || subclass}
+            isEditing={isEditing}
+            setEditingOn={() => setEditing(true)}
+          />
 
           {!advanced && !!featuredTags.length && (
             <>
               {featuredTags.map(([k, v]) => (
-                <Property key={k} k={k} v={v} />
+                <Property
+                  key={k}
+                  k={k}
+                  v={v}
+                  isEditing={isEditing}
+                  setEditingOn={() => setEditing(true)}
+                />
               ))}
               <Spacer />
 
@@ -171,15 +186,16 @@ export const Panel = ({ feature }) => {
           <TagsTable
             tags={tags}
             except={advanced ? [] : ['name', 'layer', ...featuredKeys]}
+            isEditing={isEditing}
           />
 
           <StyledEdit>
             <Button
               size="large"
-              title="Upravit místo v živé databázi OSM"
               startIcon={<EditIcon />}
               variant="outlined"
               color="primary"
+              onClick={() => setEditing(!isEditing)}
             >
               Upravit místo
             </Button>

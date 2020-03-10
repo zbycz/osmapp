@@ -10,7 +10,7 @@ const displayForm = url =>
 
 export const WebsiteRenderer = ({ v }) => (
          <>
-           <Language fontSize="small" />
+
            <a href={fixHttp(v)}>{displayForm(v)}</a>
          </>
        );

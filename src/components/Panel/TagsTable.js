@@ -7,13 +7,21 @@ import truncate from 'lodash/truncate';
 import { useToggleState } from '../helpers';
 import { getUrlForTag, ToggleButton } from './helpers';
 import Info from '@material-ui/icons/Info';
+import TextField from '@material-ui/core/TextField';
+import InputBase from '@material-ui/core/InputBase';
 
 const Wrapper = styled.div`
   position: relative;
+
+  input {
+    padding: 0;
+  }
 `;
 
 const Table = styled.table`
   font-size: 1rem;
+  width: 100%;
+  border-spacing: 0;
 
   th,
   td {
@@ -29,12 +37,45 @@ const Table = styled.table`
     font-weight: normal;
     vertical-align: baseline;
     padding-left: 0;
+    border-right: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-top: 1px solid transparent;
   }
 
   td {
     max-width: 195px;
+    border-right: 1px solid transparent;
+    border-top: 1px solid transparent;
   }
 
+  tr:first-child {
+    th {
+      border-radius: 4px 0 0 0;
+    }
+    td {
+      border-radius: 0 4px 0 0;
+    }
+  }
+  tr:last-child {
+    th {
+      border-radius: 0 0 0 4px;
+      border-bottom: 1px solid transparent;
+    }
+    td {
+      border-radius: 0 0 4px 0;
+      border-bottom: 1px solid transparent;
+    }
+  }
+
+  ${({ isEditing }) =>
+    isEditing &&
+    `
+      td, th {
+        border-color: rgba(0, 0, 0, 0.23) !important;
+      }
+    `}
+
+  // subtable eg. opening_hours
   table {
     padding-left: 1em;
     padding-bottom: 1em;
@@ -109,6 +150,7 @@ const renderValue = (k, v) => {
 const TagsTable = props => {
   const tagsArr = Object.entries(props.tags);
   const tags = tagsArr.filter(([k]) => !props.except.includes(k));
+  const { isEditing } = props;
 
   const addr = tags.filter(([k]) => isAddr(k));
   const name = tags.filter(([k]) => isName(k));
@@ -126,7 +168,7 @@ const TagsTable = props => {
 
   return (
     <Wrapper>
-      <Table>
+      <Table isEditing={isEditing}>
         <tbody>
           <TagsGroup
             tags={name}
@@ -140,7 +182,20 @@ const TagsTable = props => {
           {rest.map(([k, v]) => (
             <tr key={k}>
               <th>{k}</th>
-              <td>{renderValue(k, v)}</td>
+              <td>
+                {isEditing ? (
+                  <InputBase
+                    placeholder=""
+                    margin="none"
+                    fullWidth
+                    defaultValue={v}
+                    variant="outlined"
+                    size="small"
+                  />
+                ) : (
+                  renderValue(k, v)
+                )}
+              </td>
             </tr>
           ))}
           <TagsGroup tags={brand} label="brand:*" value={props.tags.brand} />
