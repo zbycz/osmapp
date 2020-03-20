@@ -11,7 +11,6 @@ import styled from 'styled-components';
 
 const TopPanel = styled.div`
   position: absolute;
-  width: 410px;
   height: 72px;
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
   background-color: #eb5757;
@@ -19,6 +18,11 @@ const TopPanel = styled.div`
   box-sizing: border-box;
 
   z-index: 1200;
+
+  width: 100%;
+  @media (min-width: 410px) {
+    width: 410px;
+  }
 `;
 
 // https://nominatim.openstreetmap.org/search?q=Ke+dzbanu&format=json&addressdetails=1&viewbox=&polygon_geojson=1&polygon_threshold=0.1

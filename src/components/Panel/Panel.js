@@ -30,13 +30,17 @@ const Wrapper = styled.div`
   left: 0;
   top: 72px; // TopPanel
   bottom: 0;
-  width: 410px;
   background-color: #fafafa;
   overflow: hidden;
   z-index: 1100;
 
   display: flex;
   flex-direction: column;
+
+  width: 100%;
+  @media (min-width: 410px) {
+    width: 410px;
+  }
 `;
 
 const Content = styled.div`
