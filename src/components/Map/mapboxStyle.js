@@ -45,6 +45,24 @@ const buildings3d = {
 
 const contoursStyle = [
   {
+    id: 'hillshading',
+    type: 'raster',
+    source: 'hillshading',
+    layout: { visibility: 'visible' },
+    paint: {
+      'raster-contrast': 0,
+      'raster-fade-duration': 300,
+      'raster-opacity': {
+        base: 0.5,
+        stops: [
+          [3, 0],
+          [5, 0.15],
+          [12, 0.15],
+        ],
+      },
+    },
+  },
+  {
     id: 'contour_label',
     type: 'symbol',
     metadata: {},
@@ -233,24 +251,6 @@ const mapboxStyle = (sources, backgroundLayers) => ({
       ],
       paint: {
         'fill-color': 'hsla(49, 100%, 88%, 0.34)',
-      },
-    },
-    {
-      id: 'hillshading',
-      type: 'raster',
-      source: 'hillshading',
-      layout: { visibility: 'visible' },
-      paint: {
-        'raster-contrast': 0,
-        'raster-fade-duration': 300,
-        'raster-opacity': {
-          base: 0.5,
-          stops: [
-            [3, 0],
-            [5, 0.15],
-            [12, 0.15],
-          ],
-        },
       },
     },
     {
@@ -2236,28 +2236,28 @@ const mapboxStyle = (sources, backgroundLayers) => ({
         'line-dasharray': [2, 3],
       },
     },
-    {
-      id: 'boundary-land-level-4',
-      type: 'line',
-      source: 'openmaptiles',
-      'source-layer': 'boundary',
-      filter: ['all', ['in', 'admin_level', 4, 6, 8], ['!=', 'maritime', 1]],
-      layout: {
-        'line-join': 'round',
-      },
-      paint: {
-        'line-color': '#9e9cab',
-        'line-dasharray': [3, 1, 1, 1],
-        'line-width': {
-          base: 1.4,
-          stops: [
-            [4, 0.4],
-            [5, 1],
-            [12, 3],
-          ],
-        },
-      },
-    },
+    // {
+    //   id: 'boundary-land-level-4',
+    //   type: 'line',
+    //   source: 'openmaptiles',
+    //   'source-layer': 'boundary',
+    //   filter: ['all', ['in', 'admin_level', 4, 6, 8], ['!=', 'maritime', 1]],
+    //   layout: {
+    //     'line-join': 'round',
+    //   },
+    //   paint: {
+    //     'line-color': '#9e9cab',
+    //     'line-dasharray': [3, 1, 1, 1],
+    //     'line-width': {
+    //       base: 1.4,
+    //       stops: [
+    //         [4, 0.4],
+    //         [5, 1],
+    //         [12, 3],
+    //       ],
+    //     },
+    //   },
+    // },
     {
       id: 'boundary-land-level-2',
       type: 'line',
