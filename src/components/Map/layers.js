@@ -87,10 +87,13 @@ function addHoverPaint(origStyle) {
 const origStyle = mapboxStyle(sources, backgroundLayers);
 export const style = addHoverPaint(origStyle);
 
-const backgroundIds = backgroundLayers.map(x => x.id);
-const hoverLayers = style.layers
+const isOsmLayer = id => {
+  const prefixes = ['water-name-', 'poi-', 'place-'];
+  return prefixes.some(prefix => id.startsWith(prefix));
+};
+export const layersWithOsmId = style.layers
   .map(x => x.id)
-  .filter(x => !(x in backgroundIds));
+  .filter(id => isOsmLayer(id));
 
 export const setUpHover = map => {
   let lastHover = null;
@@ -113,7 +116,7 @@ export const setUpHover = map => {
     lastHover = null;
     map.getCanvas().style.cursor = ''; // TODO delay 200ms
   };
-  hoverLayers.forEach(x => {
+  layersWithOsmId.forEach(x => {
     map.on('mousemove', x, onMouseMove);
     map.on('mouseleave', x, onMouseLeave);
   });
