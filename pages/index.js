@@ -20,7 +20,6 @@ import {
 const persistFeatureId = id => {
   const url = id ? `?id=${id}` : '';
   Router.push('/', `/${url}${location.hash}`, { shallow: true });
-  Cookies.set('lastFeatureId', id); // TODO longer expire
 };
 
 const useFeatureState = initialFeature => {
