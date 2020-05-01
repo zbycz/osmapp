@@ -5,18 +5,13 @@ import { ServerStyleSheet } from 'styled-components';
 
 import theme from '../src/helpers/theme';
 
+// This stinks so much!! https://github.com/facebook/react/issues/12014#issuecomment-434534770
 const AsyncStyle = ({ href }) => (
-  <>
-    <link
-      rel="preload"
-      href={href}
-      as="style"
-      onLoad="this.onload=null;this.rel='stylesheet'"
-    />
-    <noscript>
-      <link rel="stylesheet" href={href} />
-    </noscript>
-  </>
+  <script
+    dangerouslySetInnerHTML={{
+      __html: `</script><link rel="preload" href="${href}" as="style" onload="this.onload=null;this.rel='stylesheet'"/><script>`,
+    }}
+  />
 );
 
 export default class MyDocument extends Document {
