@@ -63,9 +63,15 @@ const IndexWithProviders = ({ initialFeature }) => {
   );
 };
 
+const getMapStateFromHash = () =>
+  typeof window !== 'undefined' &&
+  window.location.hash &&
+  window.location.hash.substr(1).split('/'); // TODO return only valid map state
+
 const Index = ({ initialFeature, initialMapState }) => {
+  const mapState = getMapStateFromHash() || initialMapState;
   return (
-    <MapStateProvider initialMapState={initialMapState}>
+    <MapStateProvider initialMapState={mapState}>
       <IndexWithProviders initialFeature={initialFeature} />
     </MapStateProvider>
   );
