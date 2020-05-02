@@ -77,10 +77,9 @@ const Index = ({ initialFeature, initialMapState }) => {
   );
 };
 Index.getInitialProps = async ctx => {
-  return {
-    initialFeature: await getInititalFeature(ctx),
-    initialMapState: await getInitialMapState(ctx),
-  };
+  const initialFeature = await getInititalFeature(ctx);
+  const initialMapState = await getInitialMapState(ctx, initialFeature);
+  return { initialFeature, initialMapState };
 };
 
 // map.fitBounds(bounds, {
