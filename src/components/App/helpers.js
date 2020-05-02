@@ -42,7 +42,11 @@ const fetchInitialFeature = async id => {
 const timeout = time => new Promise(resolve => setTimeout(resolve, time));
 
 export const getInititalFeature = async ctx => {
-  const shortId = ctx.query.id;
+  const { osmid, osmtype, id } = ctx.query;
+  const shortId =
+    osmtype && osmtype.match(/^node|way|relation$/)
+      ? osmtype.substr(0, 1) + osmid
+      : id;
 
   const t1 = new Date();
   const initialFeature = await fetchInitialFeature(shortId);

@@ -11,8 +11,11 @@ import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapState, getInititalFeature } from './helpers';
 
-const persistFeatureId = id => {
-  const url = id ? `?id=${id}` : '';
+const getUrl = ({type, id}) => `${type}/${id}`;
+
+const persistFeature = feature => {
+  const hasUrl = feature && !feature.nonOsmObject;
+  const url = hasUrl ? getUrl(feature.osmMeta) : '';
   Router.push('/', `/${url}${location.hash}`, { shallow: true });
 };
 
@@ -20,9 +23,7 @@ const useFeatureState = initialFeature => {
   const [feature, setFeature] = React.useState(initialFeature);
   const setFeatureAndPersist = React.useCallback(
     feature => {
-      const persistable = feature && !feature.nonOsmObject;
-      const id = persistable ? getShortId(feature.osmMeta) : null;
-      persistFeatureId(id);
+      persistFeature(feature);
       setFeature(feature);
     },
     [setFeature],
