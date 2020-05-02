@@ -6,16 +6,10 @@ import Cookies from 'js-cookie';
 
 import Panel from '../Panel/Panel';
 import Map from '../Map/Map';
-import {
-  getInitialMapState,
-  getInititalFeature,
-  getShortId,
-} from '../../services/helpers';
+import { getShortId } from '../../services/helpers';
 import SearchBox from '../SearchBox/SearchBox';
-import {
-  MapStateProvider,
-  useMapStateContext,
-} from '../utils/MapStateContext';
+import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
+import { getInitialMapState, getInititalFeature } from './helpers';
 
 const persistFeatureId = id => {
   const url = id ? `?id=${id}` : '';
@@ -42,13 +36,13 @@ const useFeatureState = initialFeature => {
   return [feature, setFeatureAndPersist];
 };
 
-function usePersistMapView() {
+const usePersistMapView = () => {
   const { view } = useMapStateContext();
   React.useEffect(() => {
     if (typeof window !== 'undefined') window.location.hash = view.join('/');
     Cookies.set('mapView', view.join('/')); // TODO longer expire
   }, [view]);
-}
+};
 
 const IndexWithProviders = ({ initialFeature }) => {
   const [feature, setFeature] = useFeatureState(initialFeature);
