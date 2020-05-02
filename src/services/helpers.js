@@ -145,7 +145,11 @@ export const getViewFromIP = async ({ req }) => {
   }
 };
 
-export const getInitialMapState = async ctx => {
+export const getInitialMapState = async (ctx, initialFeature) => {
+  if (initialFeature) {
+    const [lon, lat] = initialFeature.center;
+    return [17, lat, lon];
+  }
   const { mapView } = nextCookies(ctx);
   return mapView ? mapView.split('/') : await getViewFromIP(ctx);
 };
