@@ -93,7 +93,7 @@ export const getApiId = value => {
 };
 
 export const getShortLink = apiId =>
-  `https://osmap.cz/${apiId.type}/${apiId.id}`;
+  `https://osmapp.org/${apiId.type}/${apiId.id}`;
 
 export const getCenter = feature => {
   const type = feature.geometry.type;
