@@ -100,7 +100,7 @@ const buildAddress = tagsArr => {
     'addr:city': city,
   } = tags;
 
-  return `${str} ${num || ''}${city ? `, ${city}` : ''}`;
+  return `${str || ''} ${num || ''}${city ? `, ${city}` : ''}`.trim();
 };
 
 const renderValue = (k, v) => {
