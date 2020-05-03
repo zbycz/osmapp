@@ -19,6 +19,13 @@ const removeCache = key =>
 const writeCache = (key, value) =>
   isBrowser() ? sessionStorage.setItem(key, value) : (cache[key] = value);
 export const removeFetchCache = (url, opts) => removeCache(getKey(url, opts));
+const writeCacheSafe = (key, value) => {
+  try {
+    writeCache(key, value);
+  } catch (e) {
+    console.warn(`Item ${key} was not saved to cache: `, e);
+  }
+};
 
 export const fetchText = async (url, opts) => {
   let key = getKey(url, opts);
@@ -48,7 +55,7 @@ export const fetchText = async (url, opts) => {
 
   const text = await res.text();
   if (!opts || !opts.nocache) {
-    writeCache(key, text);
+    writeCacheSafe(key, text);
   }
   return text;
 };
