@@ -16,11 +16,11 @@ export const getUrlForTag = (k, v) => {
     }
     return `https://wikipedia.org/wiki/${v}`;
   }
-  if (k.match(/^wikipedia:/) || k.match(/:wikipedia:/)) {
+  if (k.match(/^wikipedia:/) || k.match(/:wikipedia/)) {
     const lang = k.split(':').pop();
     return `https://${lang}.wikipedia.org/wiki/${v}`;
   }
-  if (k.match(/^wikidata$/)) {
+  if (k.match(/^wikidata$/) || k.match(/:wikidata$/)) {
     return `https://www.wikidata.org/wiki/${v}`;
   }
   if (k.match(/^wikimedia_commons$/)) {
