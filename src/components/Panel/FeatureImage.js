@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import styled from 'styled-components';
+import Head from 'next/head';
 import { getFeatureImage, LOADING } from '../../services/images';
 import BrokenImage from '@material-ui/icons/BrokenImage';
 import CircularProgress from '@material-ui/core/CircularProgress';
@@ -129,6 +130,11 @@ const FeatureImage = ({ feature, children }) => {
         >
           {username ?? source}
         </Attribution>
+      )}
+      {thumb && (
+        <Head>
+          <meta property="og:image" content={thumb} />
+        </Head>
       )}
       <Bottom>{children}</Bottom>
     </Wrapper>
