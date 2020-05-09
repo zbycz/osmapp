@@ -68,7 +68,7 @@ const OpeningHoursRenderer = ({ v }) => {
   const isOpen = opening.isOpenNow();
   return (
     <>
-      <AccessTime />
+      <AccessTime fontSize="small" />
       <OpeningState isOpen={isOpen} days={days} />
       <ToggleButton onClick={toggle} isShown={isExpanded} />
       {isExpanded && (
