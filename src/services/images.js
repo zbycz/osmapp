@@ -7,13 +7,12 @@ const getMapillaryImage = async center => {
 
   // {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"ca":71.80811,"camera_make":"Apple","camera_model":"iPhone6,2","captured_at":"2015-05-08T06:02:41.227Z","key":"rPU1sldzMCVIMN2XmjDf2A","pano":false,"sequence_key":"-zanzZ2HpdOhkw-uG166Pg","user_key":"M7Mgl9y1z0KB5Ew9caTDvw","username":"zbycz"},"geometry":{"type":"Point","coordinates":[14.390517,50.100268]}}]}
   if (!features.length) {
-    removeFetchCache(url);
+    removeFetchCache(url); // mapillary sometimes returns image on second try (lets not cache the first try)
     return;
   }
 
   const image = features[0];
   const { key, username } = image.properties;
-  console.log('mplr', key);
   return {
     source: `Mapillary`,
     username,
@@ -23,9 +22,10 @@ const getMapillaryImage = async center => {
 };
 
 export const LOADING = null;
-let mapillary, mapillaryId;
+let mapillaryPromise, mapillaryId;
 
 export const getFeatureImage = async feature => {
+  // for nonOsmObject we dont expect 2nd pass
   if (feature.nonOsmObject) {
     return await getMapillaryImage(feature.center);
   }
@@ -33,14 +33,14 @@ export const getFeatureImage = async feature => {
   // first pass may be a skeleton
   const osmid = getShortId(feature.osmMeta);
   if (feature.skeleton) {
-    mapillary = getMapillaryImage(feature.center);
+    mapillaryPromise = getMapillaryImage(feature.center);
     mapillaryId = osmid;
     return LOADING;
   }
 
   // 2nd pass - full object (discard mapillary promise when different)
   if (mapillaryId !== osmid) {
-    mapillary = undefined;
+    mapillaryPromise = undefined;
   }
 
   const wikiUrl = getWikiApiUrl(feature.tags);
@@ -52,7 +52,7 @@ export const getFeatureImage = async feature => {
   }
 
   // fallback to mapillary
-  return mapillary ?? (await getMapillaryImage(feature.center));
+  return mapillaryPromise ?? (await getMapillaryImage(feature.center));
 };
 
 // From https://github.com/osmcz/osmcz/blob/0d3eaaa/js/poi-popup.js - MIT
