@@ -10,7 +10,7 @@ import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
 import IconButton from '@material-ui/core/IconButton';
 import Property from './Property';
-import LogoOsm from '../../assets/LogoOsm';
+import EditIcon from '@material-ui/icons/Edit';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import Coordinates from './Coordinates';
@@ -21,6 +21,7 @@ import Maki from '../utils/Maki';
 import { getShortLink } from '../../services/helpers';
 import Head from 'next/head';
 import Info from '@material-ui/icons/Info';
+import Typography from '@material-ui/core/Typography';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -59,7 +60,7 @@ const TopPanel = styled.div`
 `;
 
 const StyledEdit = styled.div`
-  margin: 40px 0 20px 0;
+  margin: 60px 0 20px 0;
   text-align: center;
 `;
 
@@ -73,6 +74,10 @@ const Footer = styled.div`
 
 const Loading = styled.div`
   height: 0;
+`;
+
+const Spacer = styled.div`
+  padding-bottom: 10px;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -146,18 +151,36 @@ export const Panel = ({ feature }) => {
         <Content>
           <FeatureHeading title={tags.name || subclass} />
 
-          {!advanced &&
-            featuredTags.map(([k, v]) => <Property key={k} k={k} v={v} />)}
+          {!advanced && !!featuredTags.length && (
+            <>
+              {featuredTags.map(([k, v]) => (
+                <Property key={k} k={k} v={v} />
+              ))}
+              <Spacer />
+
+              <Typography
+                variant="overline"
+                display="block"
+                color="textSecondary"
+              >
+                Další informace
+              </Typography>
+            </>
+          )}
 
           <TagsTable
             tags={tags}
             except={advanced ? [] : ['name', 'layer', ...featuredKeys]}
-            advanced={advanced}
           />
 
           <StyledEdit>
-            <Button size="large" title="Upravit místo v živé databázi OSM">
-              <LogoOsm width="24" height="24" style={{ marginRight: 10 }} />
+            <Button
+              size="large"
+              title="Upravit místo v živé databázi OSM"
+              startIcon={<EditIcon />}
+              variant="outlined"
+              color="primary"
+            >
               Upravit místo
             </Button>
           </StyledEdit>

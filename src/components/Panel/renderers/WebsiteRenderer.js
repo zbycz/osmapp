@@ -9,10 +9,10 @@ const displayForm = url =>
   url.replace(protocol, '').replace(/([^\/]+)\/$/, '$1');
 
 export const WebsiteRenderer = ({ v }) => (
-  <>
-    <Language />
-    <a href={fixHttp(v)}>{displayForm(v)}</a>
-  </>
-);
+         <>
+           <Language fontSize="small" />
+           <a href={fixHttp(v)}>{displayForm(v)}</a>
+         </>
+       );
 
 export default WebsiteRenderer;

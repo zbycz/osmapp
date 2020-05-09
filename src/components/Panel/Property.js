@@ -14,7 +14,7 @@ import PhoneRenderer from './renderers/PhoneRenderer';
 
 const Wrapper = styled.div`
   position: relative;
-  padding: 1em 0;
+  padding-bottom: 15px;
 
   & .show-on-hover {
     display: none !important;

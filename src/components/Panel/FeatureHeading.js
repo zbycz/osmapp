@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   line-height: 0.98;
   color: rgba(0, 0, 0, 0.7);
   position: relative;
-  padding-bottom: 15px;
+  padding-bottom: 30px;
 
   & .show-on-hover {
     display: none !important;
