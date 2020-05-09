@@ -10,12 +10,10 @@ import Info from '@material-ui/icons/Info';
 
 const Wrapper = styled.div`
   position: relative;
-  padding-top: 1em;
 `;
 
 const Table = styled.table`
   font-size: 1rem;
-  margin-left: ${({ advanced }) => (advanced ? 0 : '36px')};
 
   th,
   td {
@@ -24,7 +22,7 @@ const Table = styled.table`
   }
 
   th {
-    width: ${({ advanced }) => (advanced ? '140px' : '104px')};
+    width: 140px;
     max-width: 140px;
     color: rgba(0, 0, 0, 0.54);
     text-align: left;
@@ -128,8 +126,7 @@ const TagsTable = props => {
 
   return (
     <Wrapper>
-      {!props.advanced && !!tags.length && <TagsIcon />}
-      <Table advanced={props.advanced}>
+      <Table>
         <tbody>
           <TagsGroup
             tags={name}
