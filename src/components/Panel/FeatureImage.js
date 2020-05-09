@@ -81,7 +81,7 @@ const Attribution = styled.a`
   text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
   color: #fff;
   text-decoration: none;
-  opacity: 0.5;
+  opacity: ${({portrait}) => portrait ? 1 : 0.5};
 `;
 
 const FeatureImage = ({ feature, children }) => {
@@ -127,6 +127,7 @@ const FeatureImage = ({ feature, children }) => {
           title={`© ${source}${username ? `, ${username}` : ''}`}
           target="_blank"
           rel="noopener"
+          portrait={portrait}
         >
           {username ?? source}
         </Attribution>
