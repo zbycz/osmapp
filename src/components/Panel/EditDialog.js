@@ -12,6 +12,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useToggleState } from '../helpers';
 import TagsTable from './TagsTable';
+import Divider from '@material-ui/core/Divider';
 // import Draggable from 'react-draggable';
 // function PaperComponent(props) {
 //   return (
@@ -29,8 +30,7 @@ const majorKeysNames = {
   opening_hours: 'Otevírací doba',
 };
 const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
-const getActiveMajorKeys = values => majorKeys.filter(k => !!values[k]);
-const getInactiveMajorKeys = values => majorKeys.filter(k => !values[k]);
+const getInitialMajorKeys = tags => majorKeys.filter(k => !!tags[k]);
 
 const EditDialog = ({ feature, open, handleClose }) => {
   const {
@@ -49,8 +49,11 @@ const EditDialog = ({ feature, open, handleClose }) => {
   const [showLocation, toggleShowLocation] = useToggleState(false);
   const [values, setValues] = React.useState(tags);
   const setValue = (k, v) => setValues(state => ({ ...state, [k]: v }));
-  const activeMajorKeys = getActiveMajorKeys(values);
-  const inactiveMajorKeys = getInactiveMajorKeys(values);
+
+  const [activeMajorKeys, setActiveMajorKeys] = React.useState(
+    getInitialMajorKeys(tags),
+  );
+  const inactiveMajorKeys = majorKeys.filter(k => !activeMajorKeys.includes(k));
 
   return (
     <Dialog
@@ -70,7 +73,7 @@ const EditDialog = ({ feature, open, handleClose }) => {
           tabIndex={-1}
         >
           {activeMajorKeys.map(k => (
-            <div>
+            <div key={k}>
               <TextField
                 label={majorKeysNames[k]}
                 value={values[k]}
@@ -79,19 +82,62 @@ const EditDialog = ({ feature, open, handleClose }) => {
                 margin="normal"
                 name={k}
                 onChange={e => setValue(e.target.name, e.target.value)}
+                fullWidth
               />
             </div>
           ))}
+          {!!inactiveMajorKeys.length && (
+            <>
+              Přidat:
+              {inactiveMajorKeys.map(k => (
+                <React.Fragment key={k}>
+                  {' '}
+                  <Button
+                    size="small"
+                    onClick={() => setActiveMajorKeys(arr => [...arr, k])}
+                  >
+                    {majorKeysNames[k]}
+                  </Button>
+                </React.Fragment>
+              ))}
+            </>
+          )}
+
           <br />
           <br />
-          Přidat:
-          {inactiveMajorKeys.map(k => (
-            <Button variant="outlined" onClick={() => setValue(k, 'x')}>
-              {majorKeysNames[k]}
-            </Button>
-          ))}
+
+          <FormControlLabel
+            control={<Checkbox checked={showTags} onChange={toggleShowTags} />}
+            label="Změnit další informace"
+          />
+          {showTags && (
+            <table>
+              <tbody>
+                {Object.entries(values)
+                  .filter(([k]) => !majorKeys.includes(k))
+                  .map(([k, v]) => (
+                    <tr key={k}>
+                      <th>{k}</th>
+                      <td>
+                        <TextField
+                          value={v}
+                          variant="outlined"
+                          size="small"
+                          name={k}
+                          onChange={e =>
+                            setValue(e.target.name, e.target.value)
+                          }
+                          fullWidth
+                        />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+          )}
+
           <br />
-          <br />
+
           <FormControlLabel
             control={
               <Checkbox checked={showLocation} onChange={toggleShowLocation} />
@@ -99,30 +145,21 @@ const EditDialog = ({ feature, open, handleClose }) => {
             label="Změnit polohu"
           />
           {showLocation && (
-            <TextField
-              label="Poznámka k úpravě"
-              placeholder="odkaz na zdroj informace apod."
-              InputLabelProps={{
-                shrink: true,
-              }}
-              multiline
-              fullWidth
-              rows={2}
-              variant="outlined"
-            />
+            <div style={{ marginLeft: 15 }}>
+              <TextField
+                label="Poznámka k úpravě"
+                placeholder="odkaz na zdroj informace apod."
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                multiline
+                fullWidth
+                rows={2}
+                variant="outlined"
+              />
+            </div>
           )}
-          <br />
-          <FormControlLabel
-            control={<Checkbox checked={showTags} onChange={toggleShowTags} />}
-            label="Změnit další informace"
-          />
-          {showTags && (
-            <TagsTable
-              tags={tags}
-              except={['name', 'website', 'phone', 'opening_hours']}
-              isEditing
-            />
-          )}
+
           <p>
             Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Abyste jim
             pomohli ověřit informace, můžete přidat doplňující poznámku.
