@@ -11,17 +11,19 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import { useToggleState } from '../helpers';
-import TagsTable from './TagsTable';
-import Divider from '@material-ui/core/Divider';
-// import Draggable from 'react-draggable';
-// function PaperComponent(props) {
-//   return (
-//     <Draggable handle="#draggable-dialog-title" cancel={'[class*="MuiDialogContent-root"]'}>
-//       <Paper {...props} />
-//     </Draggable>
-//   );
-// }
-// <Dialog PaperComponent={PaperComponent}
+import Typography from '@material-ui/core/Typography';
+import styled from 'styled-components';
+
+const Table = styled.table`
+  font-size: 80%;
+  th {
+    color: rgba(0, 0, 0, 0.54);
+    text-align: left;
+    font-weight: normal;
+    vertical-align: center;
+    padding-left: 0;
+  }
+`;
 
 const majorKeysNames = {
   name: 'Název',
@@ -47,6 +49,9 @@ const EditDialog = ({ feature, open, handleClose }) => {
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [showTags, toggleShowTags] = useToggleState(false);
   const [showLocation, toggleShowLocation] = useToggleState(false);
+  const [placeCanceled, togglePlaceCanceled] = useToggleState(false);
+  const [location, setLocation] = React.useState();
+  const [note, setNote] = React.useState();
   const [values, setValues] = React.useState(tags);
   const setValue = (k, v) => setValues(state => ({ ...state, [k]: v }));
 
@@ -106,12 +111,16 @@ const EditDialog = ({ feature, open, handleClose }) => {
           <br />
           <br />
 
+          <Typography variant="overline" display="block" color="textSecondary">
+            Další možnosti
+          </Typography>
+
           <FormControlLabel
             control={<Checkbox checked={showTags} onChange={toggleShowTags} />}
-            label="Změnit další informace"
+            label="Změnit další vlastnosti (tagy)"
           />
           {showTags && (
-            <table>
+            <Table>
               <tbody>
                 {Object.entries(values)
                   .filter(([k]) => !majorKeys.includes(k))
@@ -133,8 +142,20 @@ const EditDialog = ({ feature, open, handleClose }) => {
                     </tr>
                   ))}
               </tbody>
-            </table>
+            </Table>
           )}
+
+          <br />
+
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={placeCanceled}
+                onChange={togglePlaceCanceled}
+              />
+            }
+            label="Místo zrušeno či zavřeno"
+          />
 
           <br />
 
@@ -142,13 +163,14 @@ const EditDialog = ({ feature, open, handleClose }) => {
             control={
               <Checkbox checked={showLocation} onChange={toggleShowLocation} />
             }
-            label="Změnit polohu"
+            label="Zadat novou polohu"
           />
           {showLocation && (
-            <div style={{ marginLeft: 15 }}>
+            <div style={{ marginLeft: 30 }}>
               <TextField
-                label="Poznámka k úpravě"
-                placeholder="odkaz na zdroj informace apod."
+                value={location}
+                onChange={e => setLocation(e.target.value)}
+                placeholder="např. naproti přes ulici"
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -161,12 +183,14 @@ const EditDialog = ({ feature, open, handleClose }) => {
           )}
 
           <p>
-            Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Abyste jim
-            pomohli ověřit informace, můžete přidat doplňující poznámku.
+            Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Zde můžete
+            přidat doplňující poznámku, nebo popsat úpravu, která ve formuláři
+            není možná. Vhodné je též podložit váš příspěvek odkazem na zdroj
+            informace (web, foto atd.).
           </p>
           <TextField
-            label="Poznámka k úpravě"
-            placeholder="odkaz na zdroj informace, fotku apod."
+            label="Poznámka (nepovinné)"
+            placeholder="speciální úprava, odkaz na zdroj informace apod."
             InputLabelProps={{
               shrink: true,
             }}
@@ -174,6 +198,8 @@ const EditDialog = ({ feature, open, handleClose }) => {
             fullWidth
             rows={2}
             variant="outlined"
+            value={note}
+            onChange={e => setNote(e.target.value)}
           />
         </DialogContentText>
       </DialogContent>
