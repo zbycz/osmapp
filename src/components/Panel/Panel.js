@@ -14,7 +14,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import Coordinates from './Coordinates';
-import { capitalize, useToggleState } from '../helpers';
+import { capitalize, useBoolState, useToggleState } from '../helpers';
 import makiFiles from './makiFiles';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
@@ -22,6 +22,7 @@ import { getShortLink } from '../../services/helpers';
 import Head from 'next/head';
 import Info from '@material-ui/icons/Info';
 import Typography from '@material-ui/core/Typography';
+import EditDialog from "./EditDialog";
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -101,8 +102,9 @@ const PoiType = styled.div`
 
 const featuredKeys = ['website', 'phone', 'opening_hours'];
 
-export const Panel = ({ feature }) => {
+const Panel = ({ feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
+  const [open, handleOpen, handleClose] = useBoolState(!false);
 
   const {
     loading,
@@ -180,10 +182,13 @@ export const Panel = ({ feature }) => {
               startIcon={<EditIcon />}
               variant="outlined"
               color="primary"
+              onClick={handleOpen}
             >
               Upravit místo
             </Button>
           </StyledEdit>
+
+          <EditDialog open={open} handleClose={handleClose} feature={feature} />
 
           <Footer>
             {nonOsmObject
