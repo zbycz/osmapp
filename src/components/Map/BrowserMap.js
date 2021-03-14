@@ -1,7 +1,7 @@
 // @flow
 
 import * as React from 'react';
-import mapboxgl from 'mapbox-gl'; // update CSS import in _document.js
+import maplibregl from 'maplibre-gl'; // update CSS import in _document.js
 import { getSkeleton } from './helpers';
 import { fetchFromApi } from '../../services/osmApi';
 import { setUpHover, style } from './layers';
@@ -11,13 +11,13 @@ import { throttle } from 'lodash';
 import { getShortId } from '../../services/helpers';
 
 // mapboxgl.accessToken = 'pk.eyJ1IjoiemJ5Y3oiLCJhIjoiY2oxMGN4enAxMDAyZjMybXF5eGJ5M2lheCJ9.qjvbRJ2C1tL4O9g9jOdJIw';
-const geolocateControl = new mapboxgl.GeolocateControl({
+const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
     enableHighAccuracy: true,
   },
   trackUserLocation: true,
 });
-const scaleControl = new mapboxgl.ScaleControl({
+const scaleControl = new maplibregl.ScaleControl({
   maxWidth: 80,
   unit: window.localStorage.getItem('units') ? 'imperial' : 'metric',
 });
@@ -29,7 +29,7 @@ const useInitMap = () => {
   React.useEffect(() => {
     if (!mapRef.current) return;
 
-    const map = new mapboxgl.Map({
+    const map = new maplibregl.Map({
       container: mapRef.current,
       style,
       attributionControl: false,
