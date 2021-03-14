@@ -1,25 +1,29 @@
 import { getFeatureImage } from '../../services/images';
 import { getFeatureFromApi } from '../../services/osmApi';
 import nextCookies from 'next-cookies';
-import { fetchJson } from '../../services/helpers';
+import { fetchJson } from '../../services/fetch';
 
-const defaultView = [4, 50, 14];
+const DEFAULT_VIEW = [4, 50, 14];
 
 const isLocalhost = ip => ['127.0.0.1', '::1'].includes(ip);
 
-export const getViewFromIP = async ({ req }) => {
-  const rmtIp = req.connection.remoteAddress;
-  const fwdIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim(); // ngnix: proxy_set_header X-Forwarded-For $remote_addr;
-  const ip = rmtIp && !isLocalhost(rmtIp) ? rmtIp : fwdIp;
-  const url = `http://api.ipstack.com/${ip}?access_key=169a541e2e9936a03b0b9e355dd29ff3&format=1`;
-
+const getViewFromIp = async ip => {
   try {
+    const url = `http://api.ipstack.com/${ip}?access_key=169a541e2e9936a03b0b9e355dd29ff3&format=1`;
     const { latitude: lat, longitude: lon } = await fetchJson(url);
-    return lat && lon ? [7, lat, lon] : defaultView;
+    return lat && lon ? [7, lat, lon] : null;
   } catch (e) {
-    console.warn('getViewFromIP', e);
-    return defaultView;
+    console.warn('getViewFromIp', e.message ?? e);
+    return null;
   }
+};
+
+export const getViewFromCtx = async ({ req }) => {
+  const remoteIp = req.connection.remoteAddress;
+  const fwdIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim(); // ngnix: proxy_set_header X-Forwarded-For $remote_addr;
+  const ip = !isLocalhost(remoteIp) ? remoteIp : fwdIp;
+  const view = ip ? await getViewFromIp(ip) : null;
+  return view ?? DEFAULT_VIEW;
 };
 
 export const getInitialMapState = async (ctx, initialFeature) => {
@@ -28,7 +32,7 @@ export const getInitialMapState = async (ctx, initialFeature) => {
     return [17, lat, lon];
   }
   const { mapView } = nextCookies(ctx);
-  return mapView ? mapView.split('/') : await getViewFromIP(ctx);
+  return mapView ? mapView.split('/') : await getViewFromCtx(ctx);
 };
 
 const fetchInitialFeature = async id => {

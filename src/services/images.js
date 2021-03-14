@@ -1,4 +1,6 @@
-import { fetchJson, getShortId, removeFetchCache } from './helpers';
+import { getShortId } from './helpers';
+import { fetchJson } from './fetch';
+import { removeFetchCache } from './fetchCache';
 
 const getMapillaryImage = async center => {
   const lonlat = center.map(x => x.toFixed(5)).join(',');

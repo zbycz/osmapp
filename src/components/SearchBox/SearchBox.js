@@ -1,13 +1,13 @@
 // @flow
 
 import React from 'react';
-import { fetchJson } from '../../services/helpers';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { onSelectedFactory } from './onSelectedFactory';
 import { renderOptionFactory } from './renderOptionFactory';
 import { SearchBoxInput } from './SearchBoxInput';
 import { useMapStateContext } from '../utils/MapStateContext';
 import styled from 'styled-components';
+import { fetchJson } from '../../services/fetch';
 
 const TopPanel = styled.div`
   position: absolute;
