@@ -9,7 +9,6 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
     }
   },
   "lint-staged": {
@@ -33,7 +32,7 @@
     "jss": "^10.0.4",
     "leaflet": "^1.6.0",
     "lodash": "^4.17.15",
-    "mapbox-gl": "^1.7.0",
+    "maplibre-gl": ">=1.13.0-rc.1",
     "next": "^9.2.1",
     "next-cookies": "^2.0.3",
     "react": "^16.12.0",
