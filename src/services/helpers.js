@@ -1,79 +1,17 @@
 // @flow
 
-import fetch from 'isomorphic-unfetch';
 import * as xml2js from 'isomorphic-xml2js';
-
-import { isBrowser } from '../components/helpers';
 import geojsonExtent from '@mapbox/geojson-extent';
 
-// TOOD cancel request in map.on('click', ...)
-const noRequestRunning = { abort: () => {} };
-let abortController = noRequestRunning;
-
-const cache = {};
-const getKey = (url, opts) => url + JSON.stringify(opts);
-const getCache = key =>
-  isBrowser() ? sessionStorage.getItem(key) : cache[key];
-const removeCache = key =>
-  isBrowser() ? sessionStorage.removeItem(key) : delete cache[key];
-const writeCache = (key, value) =>
-  isBrowser() ? sessionStorage.setItem(key, value) : (cache[key] = value);
-export const removeFetchCache = (url, opts) => removeCache(getKey(url, opts));
-const writeCacheSafe = (key, value) => {
-  try {
-    writeCache(key, value);
-  } catch (e) {
-    console.warn(`Item ${key} was not saved to cache: `, e);
-  }
-};
-
-export const fetchText = async (url, opts) => {
-  let key = getKey(url, opts);
-  const item = getCache(key);
-  if (item) return item;
-
-  if (isBrowser() && opts?.putInAbortableQueue) {
-    abortController.abort();
-    abortController = new AbortController();
-  }
-
-  const res = await fetch(url, {
-    ...opts,
-    signal: abortController.signal,
+export const parseXmlString = xmlString => {
+  const parser = new xml2js.Parser({
+    explicitArray: false,
+    explicitCharkey: false,
+    explicitRoot: false,
   });
 
-  abortController = noRequestRunning;
-
-  // TODO ajax spinner ?
-
-  if (!res.ok || res.status < 200 || res.status >= 300) {
-    const data = await res.text();
-    throw new Error(
-      `Fetch: ${res.status} ${res.statusText} ${res.url} Data: ${data}`,
-    );
-  }
-
-  const text = await res.text();
-  if (!opts || !opts.nocache) {
-    writeCacheSafe(key, text);
-  }
-  return text;
-};
-
-export const fetchJson = async (url, opts) =>
-  JSON.parse(await fetchText(url, opts));
-
-export const parseXmlString = (xml, opts) => {
-  const parser = new xml2js.Parser(
-    opts || {
-      explicitArray: false,
-      explicitCharkey: false,
-      explicitRoot: false,
-    },
-  );
-
   return new Promise((resolve, reject) => {
-    parser.parseString(xml, (err, result) => {
+    parser.parseString(xmlString, (err, result) => {
       if (err) {
         reject(err);
       } else {

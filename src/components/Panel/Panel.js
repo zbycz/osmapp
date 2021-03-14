@@ -22,7 +22,7 @@ import { getShortLink } from '../../services/helpers';
 import Head from 'next/head';
 import Info from '@material-ui/icons/Info';
 import Typography from '@material-ui/core/Typography';
-import EditDialog from "./EditDialog";
+import EditDialog from './EditDialog';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -104,7 +104,7 @@ const featuredKeys = ['website', 'phone', 'opening_hours'];
 
 const Panel = ({ feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
-  const [open, handleOpen, handleClose] = useBoolState(!false);
+  const [open, handleOpen, handleClose] = useBoolState(false);
 
   const {
     loading,

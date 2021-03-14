@@ -1,8 +1,9 @@
 // @flow
 
-import { fetchText, getApiId, getCenter, parseXmlString } from './helpers';
+import { getApiId, getCenter, parseXmlString } from './helpers';
 import { getPoiClass } from './getPoiClass';
 import { isBrowser } from '../components/helpers';
+import { fetchText } from './fetch';
 
 export const OSM_API = 'https://www.openstreetmap.org/api/0.6';
 export const OSM_FEATURE_URL = ({ type, id }) => `${OSM_API}/${type}/${id}`;
