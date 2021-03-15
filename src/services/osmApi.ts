@@ -1,4 +1,3 @@
-
 import { getApiId, getCenter, parseXmlString } from './helpers';
 import { getPoiClass } from './getPoiClass';
 import { isBrowser } from '../components/helpers';
@@ -28,6 +27,7 @@ const getGeometry = {
     type: 'LineString', // TODO Polygon
     coordinates: [way.nd.map((nd) => coords(lookupNode(osmXml, nd.$.ref)))],
   }),
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   relation: (osmXml, relation) => ({
     type: 'LineString',
     coordinates: [osmXml.node.map((nd) => coords(nd))],
@@ -37,10 +37,11 @@ const getGeometry = {
 export const osmToGeojson = async (osmXmlStr) => {
   const osmXml = await parseXmlString(osmXmlStr);
 
+  // eslint-disable-next-line no-nested-ternary
   const type = osmXml.relation ? 'relation' : osmXml.way ? 'way' : 'node';
   const item = osmXml[type];
   if (!item) {
-    throw 'Empty osmXml result';
+    throw new Error('Empty osmXml result');
   }
 
   const osmMeta = { type, ...item.$ };
@@ -59,6 +60,52 @@ export const osmToGeojson = async (osmXmlStr) => {
   };
 };
 
+export type Position = number[]; // [number, number]
+
+export interface Point {
+  coordinates: Position;
+}
+
+export interface LineString {
+  type: 'LineString';
+  coordinates: Position[];
+}
+
+export interface Feature {
+  type: 'Feature';
+  geometry: Point | LineString;
+  osmMeta: {
+    type: string;
+    id: string;
+    visible?: string;
+    version?: string;
+    changeset?: string;
+    timestamp?: string;
+    user?: string;
+    uid?: string;
+    lat?: string;
+    lon?: string;
+  };
+  tags: {
+    [key: string]: string;
+  };
+  properties: {
+    class: string;
+    subclass: string;
+  };
+  center: Position;
+  ssrFeatureImage?: string;
+
+  // skeleton
+  layer?: { id: string };
+  source?: string;
+  sourceLayer?: string;
+  state?: { hover: boolean };
+  skeleton?: boolean;
+  nonOsmObject?: boolean;
+  loading?: true;
+}
+
 export const getFeatureFromApi = async (featureId) => {
   const apiId = getApiId(featureId);
   const isNode = apiId.type === 'node';
@@ -69,10 +116,10 @@ export const getFeatureFromApi = async (featureId) => {
   return {
     ...geojson,
     center: getCenter(geojson),
-  };
+  } as Feature;
 };
 
-export const fetchFromApi = async function (osmApiId) {
+export const fetchFromApi = async (osmApiId) => {
   try {
     const feature = await getFeatureFromApi(osmApiId);
     if (isBrowser()) {
@@ -80,6 +127,8 @@ export const fetchFromApi = async function (osmApiId) {
     }
     return feature;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.warn(e);
+    return null;
   }
 };

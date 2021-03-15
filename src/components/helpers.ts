@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 
 export const useToggleState = (initialState) => {
@@ -21,6 +20,9 @@ export function isServer() {
   return typeof window === 'undefined';
 }
 
-export const useMapEffectFactory = (cb) => (map, ...rest) => React.useEffect(() => {
-  map && cb(map, ...rest);
-}, [map, ...rest]);
+export const useMapEffectFactory = (cb) => (map, ...rest) =>
+  React.useEffect(() => {
+    if (map) {
+      cb(map, ...rest);
+    }
+  }, [map, ...rest]);

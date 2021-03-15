@@ -1,8 +1,6 @@
-
 import { osmToGeojson } from '../osmApi';
 import {
   node,
-  way,
   overpassWay,
   overpassWayMeta,
   overpassBuggyWay,

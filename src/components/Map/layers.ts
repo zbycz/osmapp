@@ -1,4 +1,3 @@
-
 import mapboxStyle from './mapboxStyle';
 
 export const sources = {
@@ -77,6 +76,7 @@ function addHoverPaint(origStyle) {
     .filter((x) => x.id.match(/^poi-/))
     .forEach((x) => {
       if (x.paint) {
+        // eslint-disable-next-line no-param-reassign
         x.paint['icon-opacity'] = value;
       }
     });
@@ -106,14 +106,15 @@ export const setUpHover = (map) => {
         setHoverOff(lastHover);
         setHoverOn(feature);
         lastHover = feature;
-        map.getCanvas().style.cursor = 'pointer';
+        map.getCanvas().style.cursor = 'pointer'; // eslint-disable-line no-param-reassign
       }
     }
   };
   const onMouseLeave = () => {
     setHoverOff(lastHover);
     lastHover = null;
-    map.getCanvas().style.cursor = ''; // TODO delay 200ms
+    // TODO delay 200ms
+    map.getCanvas().style.cursor = ''; // eslint-disable-line no-param-reassign
   };
   layersWithOsmId.forEach((x) => {
     map.on('mousemove', x, onMouseMove);

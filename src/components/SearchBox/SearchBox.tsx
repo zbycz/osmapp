@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import styled from 'styled-components';
@@ -25,7 +24,8 @@ const TopPanel = styled.div`
 `;
 
 // https://nominatim.openstreetmap.org/search?q=Ke+dzbanu&format=json&addressdetails=1&viewbox=&polygon_geojson=1&polygon_threshold=0.1
-const apiUrl = (s, bb) => `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bb}&q=${s}`;
+const apiUrl = (s, bb) =>
+  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bb}&q=${s}`;
 
 const SearchBox = ({ feature, setFeature }) => {
   const [inputValue, setInputValue] = React.useState('');
@@ -56,9 +56,11 @@ const SearchBox = ({ feature, setFeature }) => {
         freeSolo
         // disableOpenOnFocus
         renderInput={(params) => (
-          <SearchBoxInput {...{
-            params, feature, setFeature, setInputValue,
-          }}
+          <SearchBoxInput
+            params={params}
+            feature={feature}
+            setFeature={setFeature}
+            setInputValue={setInputValue}
           />
         )}
         renderOption={renderOptionFactory(inputValue)}

@@ -5,6 +5,17 @@ import AccessTime from '@material-ui/icons/AccessTime';
 import { useToggleState } from '../../helpers';
 import { ToggleButton } from '../helpers';
 
+interface SimpleOpeningHoursTable {
+  su: string[];
+  mo: string[];
+  tu: string[];
+  we: string[];
+  th: string[];
+  fr: string[];
+  sa: string[];
+  ph: string[];
+}
+
 const Table = styled.table`
   margin: 1em;
 
@@ -14,10 +25,6 @@ const Table = styled.table`
     font-weight: normal;
     vertical-align: baseline;
   }
-`;
-
-const Faded = styled.span`
-  color: rgba(0, 0, 0, 0.54);
 `;
 
 // const weekDays = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
@@ -31,9 +38,10 @@ const weekDays = [
   'sobota',
 ];
 
-const formatTimes = (times) => (times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-');
+const formatTimes = (times) =>
+  times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-';
 
-const OpeningState = ({ isOpen, days }) => {
+const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
   const timesByDay = Object.values(days);
   const day = new Date().getDay();
   const today = timesByDay[day];
@@ -52,23 +60,24 @@ const OpeningHoursRenderer = ({ v }) => {
   const [isExpanded, toggle] = useToggleState(false);
 
   const opening = new SimpleOpeningHours(v);
-  const { ph, ...days } = opening.getTable();
+  const daysTable = opening.getTable() as SimpleOpeningHoursTable;
+  const { ph, ...days } = daysTable;
   const timesByDay = Object.values(days).map((times, idx) => ({
     times,
     day: weekDays[idx],
   }));
 
-  const day = new Date().getDay();
+  const currentDay = new Date().getDay();
   const daysStartingToday = [
-    ...timesByDay.slice(day),
-    ...timesByDay.slice(0, day),
+    ...timesByDay.slice(currentDay),
+    ...timesByDay.slice(0, currentDay),
   ];
 
   const isOpen = opening.isOpenNow();
   return (
     <>
       <AccessTime fontSize="small" />
-      <OpeningState isOpen={isOpen} days={days} />
+      {formatDescription(isOpen, daysTable)}
       <ToggleButton onClick={toggle} isShown={isExpanded} />
       {isExpanded && (
         <Table>

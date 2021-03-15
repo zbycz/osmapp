@@ -1,13 +1,12 @@
 import React from 'react';
-import Document, {
-  Html, Head, Main, NextScript,
-} from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
 
 // This stinks so much!! https://github.com/facebook/react/issues/12014#issuecomment-434534770
 const AsyncStyle = ({ href }) => (
   <script
+    // eslint-disable-next-line react/no-danger
     dangerouslySetInnerHTML={{
       __html: `</script><link rel="preload" href="${href}" as="style" onload="this.onload=null;this.rel='stylesheet'"/><script>`,
     }}
@@ -71,9 +70,11 @@ MyDocument.getInitialProps = async (ctx) => {
   const sheets2 = new ServerStyleSheet(); // styled-components
   const originalRenderPage = ctx.renderPage;
 
-  ctx.renderPage = () => originalRenderPage({
-    enhanceApp: (App) => (props) => sheets.collect(sheets2.collectStyles(<App {...props} />)),
-  });
+  ctx.renderPage = () =>
+    originalRenderPage({
+      enhanceApp: (App) => (props) =>
+        sheets.collect(sheets2.collectStyles(<App {...props} />)), // eslint-disable-line react/jsx-props-no-spreading
+    });
 
   const initialProps = await Document.getInitialProps(ctx);
 

@@ -1,4 +1,3 @@
-
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/src/getPageContext.js
 
 import { SheetsRegistry } from 'jss';
@@ -8,7 +7,6 @@ import {
 } from '@material-ui/core/styles';
 import red from '@material-ui/core/colors/red';
 import deepPurple from '@material-ui/core/colors/deepPurple';
-import grey from '@material-ui/core/colors/grey';
 
 // A theme with custom primary and secondary color.
 // It's optional.
@@ -24,14 +22,6 @@ const theme = createMuiTheme({
       main: deepPurple[500],
       dark: deepPurple[700],
     },
-    grey: {
-      light: grey[300],
-      main: grey[500],
-      dark: grey[700],
-    },
-  },
-  typography: {
-    useNextVariants: true,
   },
 });
 

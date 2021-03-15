@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import styled from 'styled-components';
 import { Scrollbars } from 'react-custom-scrollbars';
@@ -10,7 +9,6 @@ import Directions from '@material-ui/icons/Directions';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Head from 'next/head';
-import Info from '@material-ui/icons/Info';
 import Typography from '@material-ui/core/Typography';
 import Property from './Property';
 import FeatureHeading from './FeatureHeading';
@@ -49,14 +47,6 @@ const Content = styled.div`
   flex-direction: column;
   height: calc(100vh - 72px - 238px); // 100% - TopPanel - FeatureImage
   padding: 20px 15px 0 15px;
-`;
-
-const TopPanel = styled.div`
-  height: 72px;
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-  background-color: #eb5757;
-  padding: 12px;
-  box-sizing: border-box;
 `;
 
 const StyledEdit = styled.div`
@@ -105,21 +95,16 @@ const Panel = ({ feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
   const [open, handleOpen, handleClose] = useBoolState(false);
 
-  const {
-    loading,
-    nonOsmObject,
-    geometry,
-    tags,
-    layer,
-    osmMeta,
-    properties,
-  } = feature;
+  const { loading, nonOsmObject, tags, layer, osmMeta, properties } = feature;
+
   const shortLink = getShortLink(osmMeta);
   const ico = makiFiles.includes(properties.class)
     ? properties.class
     : 'information';
   const subclass = properties.subclass || (layer && layer.id) || '?';
-  const featuredTags = featuredKeys.map((k) => [k, tags[k]]).filter((x) => x[1]);
+  const featuredTags = featuredKeys
+    .map((k) => [k, tags[k]])
+    .filter((x) => x[1]);
 
   // TODO resolve all getPoiClass
   // TODO copy icons from @mapbox/maki
@@ -128,11 +113,7 @@ const Panel = ({ feature }) => {
     <Wrapper>
       {!nonOsmObject && (
         <Head>
-          <title>
-            {tags.name || subclass}
-            {' '}
-            · osmapp.org
-          </title>
+          <title>{tags.name || subclass} · osmapp.org</title>
         </Head>
       )}
       <Scrollbars universal autoHide style={{ height: '100%' }}>
@@ -143,13 +124,13 @@ const Panel = ({ feature }) => {
           </PoiType>
 
           <StyledIconButton>
-            <Share nativecolor="#fff" titleAccess="Sdílet" />
+            <Share htmlColor="#fff" titleAccess="Sdílet" />
           </StyledIconButton>
           <StyledIconButton>
-            <StarBorder nativecolor="#fff" titleAccess="Uložit" />
+            <StarBorder htmlColor="#fff" titleAccess="Uložit" />
           </StyledIconButton>
           <StyledIconButton>
-            <Directions nativecolor="#fff" titleAccess="Trasa" />
+            <Directions htmlColor="#fff" titleAccess="Trasa" />
           </StyledIconButton>
         </FeatureImage>
         <Loading>{loading && <LinearProgress />}</Loading>
@@ -207,8 +188,7 @@ const Panel = ({ feature }) => {
                 type="checkbox"
                 onChange={toggleAdvanced}
                 checked={advanced}
-              />
-              {' '}
+              />{' '}
               Zobrazit jen tagy
             </label>
           </Footer>

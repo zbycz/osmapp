@@ -5,10 +5,16 @@ import { isBrowser } from '../components/helpers';
 // TODO cancel request in map.on('click', ...)
 const noRequestRunning = {
   abort: () => {},
+  signal: null,
 };
 let abortController = noRequestRunning;
 
-export const fetchText = async (url, opts) => {
+interface FetchOpts {
+  putInAbortableQueue?: boolean;
+  nocache?: boolean;
+}
+
+export const fetchText = async (url, opts: FetchOpts = {}) => {
   const key = getKey(url, opts);
   const item = getCache(key);
   if (item) return item;
@@ -41,7 +47,7 @@ export const fetchText = async (url, opts) => {
   return text;
 };
 
-export const fetchJson = async (url, opts) => {
+export const fetchJson = async (url, opts = {}) => {
   const text = await fetchText(url, opts);
   try {
     return JSON.parse(text);

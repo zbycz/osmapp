@@ -1,4 +1,4 @@
-
+/* eslint-disable */
 module.exports = {
   webpack: (config, { dev, isServer }) => {
     // Fixes npm packages that depend on `fs` module

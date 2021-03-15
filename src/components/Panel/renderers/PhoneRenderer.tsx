@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React from 'react';
 import LocalPhone from '@material-ui/icons/LocalPhone';
 
 export const WebsiteRenderer = ({ v }) => (

@@ -1,4 +1,3 @@
-
 const keys = [
   'aerialway',
   'amenity',
@@ -246,9 +245,10 @@ export const getPoiClass = (tags) => {
 
   // find first matching rule
   const resultRule = subclassToClassRules.find(
-    (rule) => (!rule.mappingKey && rule.subclass.includes(value))
-      || (rule.mappingKey === key && !rule.subclass)
-      || (rule.mappingKey === key && rule.subclass.includes(value)),
+    (rule) =>
+      (!rule.mappingKey && rule.subclass.includes(value)) ||
+      (rule.mappingKey === key && !rule.subclass) ||
+      (rule.mappingKey === key && rule.subclass.includes(value)),
   );
 
   const resultClass = resultRule ? resultRule.resultClass : value;

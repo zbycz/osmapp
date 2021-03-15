@@ -1,4 +1,3 @@
-
 import { createGlobalStyle } from 'styled-components';
 
 const GlobalStyle = createGlobalStyle`
@@ -11,9 +10,14 @@ const GlobalStyle = createGlobalStyle`
     background-color: #f8f4f0;
   }
 
-  a {
+  a, .linkLikeButton {
     color: #0078a8;
     text-decoration: none;
+    border: 0;
+    padding: 0;
+    font: inherit;
+    background: transparent;
+    outline: 0;
 
     &:hover {
         text-decoration: underline;

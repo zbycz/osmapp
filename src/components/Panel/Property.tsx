@@ -1,9 +1,7 @@
-
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Edit from '@material-ui/icons/Edit';
 import Cancel from '@material-ui/icons/Cancel';
-import AccessTime from '@material-ui/icons/AccessTime';
 import TextField from '@material-ui/core/TextField';
 import IconButton from '@material-ui/core/IconButton';
 
@@ -33,15 +31,6 @@ const StyledIconButton = styled(IconButton)`
     width: 16px;
     height: 16px;
   }
-`;
-
-const Label = styled.div`
-  font-size: 1rem;
-  line-height: 1;
-  color: rgba(0, 0, 0, 0.54);
-
-  transform: translate(0, 1.5px) scale(0.75); /* to be exactly same as TextField Label */
-  transform-origin: top left;
 `;
 
 const Value = styled.div`
@@ -84,7 +73,7 @@ const Property = ({ k, v }) => {
           >
             <Edit
               titleAccess="Upravit v živé databázi OpenStreetMap"
-              nativecolor="#9e9e9e"
+              htmlColor="#9e9e9e"
             />
           </StyledIconButton>
 
@@ -94,7 +83,7 @@ const Property = ({ k, v }) => {
       {isInput && (
         <>
           <StyledIconButton mini="true" onClick={() => setIsInput(false)}>
-            <Cancel titleAccess="Zrušit" nativecolor="#9e9e9e" />
+            <Cancel titleAccess="Zrušit" htmlColor="#9e9e9e" />
           </StyledIconButton>
 
           <Spacer>
