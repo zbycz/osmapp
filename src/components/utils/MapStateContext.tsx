@@ -1,4 +1,3 @@
-// @flow
 
 import React from 'react';
 
@@ -8,7 +7,7 @@ export const MapStateProvider = ({ children, initialMapState }) => {
   const [bbox, setBbox] = React.useState();
   const [view, setView] = React.useState(initialMapState);
   const [_viewForMap, _setViewForMap] = React.useState(initialMapState);
-  const setBothViews = React.useCallback(view => {
+  const setBothViews = React.useCallback((view) => {
     setView(view);
     _setViewForMap(view);
   }, []);

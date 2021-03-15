@@ -1,12 +1,11 @@
-// @flow
 
 import * as React from 'react';
 import styled from 'styled-components';
 import truncate from 'lodash/truncate';
 
+import Info from '@material-ui/icons/Info';
 import { useToggleState } from '../helpers';
 import { getUrlForTag, ToggleButton } from './helpers';
-import Info from '@material-ui/icons/Info';
 
 const Wrapper = styled.div`
   position: relative;
@@ -48,13 +47,15 @@ const TagsIcon = styled(Info)`
   opacity: 0.4;
 `;
 
-const isAddr = k => k.match(/^addr:|uir_adr|:addr/);
-const isName = k => k.match(/^([a-z]+_)?name(:|$)/);
-const isBuilding = k => k.match(/building|roof|^min_level|^max_level|height$/);
-const isNetwork = k => k.match(/network/);
-const isBrand = k => k.match(/^brand/);
+const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
+const isName = (k) => k.match(/^([a-z]+_)?name(:|$)/);
+const isBuilding = (k) => k.match(/building|roof|^min_level|^max_level|height$/);
+const isNetwork = (k) => k.match(/network/);
+const isBrand = (k) => k.match(/^brand/);
 
-const TagsGroup = ({ tags, label, value, hideArrow }) => {
+const TagsGroup = ({
+  tags, label, value, hideArrow,
+}) => {
   const [isShown, toggle] = useToggleState(false);
 
   if (!tags.length) {
@@ -90,7 +91,7 @@ const TagsGroup = ({ tags, label, value, hideArrow }) => {
   );
 };
 
-const buildAddress = tagsArr => {
+const buildAddress = (tagsArr) => {
   const tags = tagsArr.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
   const {
     'addr:street': str,
@@ -106,7 +107,7 @@ const renderValue = (k, v) => {
   return url ? <a href={url}>{v.replace(/^https?:\/\//, '')}</a> : v;
 };
 
-const TagsTable = props => {
+const TagsTable = (props) => {
   const tagsArr = Object.entries(props.tags);
   const tags = tagsArr.filter(([k]) => !props.except.includes(k));
 
@@ -116,12 +117,11 @@ const TagsTable = props => {
   const network = tags.filter(([k]) => isNetwork(k));
   const brand = tags.filter(([k]) => isBrand(k));
   const rest = tags.filter(
-    ([k]) =>
-      !isName(k) &&
-      !isAddr(k) &&
-      !isBuilding(k) &&
-      !isNetwork(k) &&
-      !isBrand(k),
+    ([k]) => !isName(k)
+      && !isAddr(k)
+      && !isBuilding(k)
+      && !isNetwork(k)
+      && !isBrand(k),
   );
 
   return (

@@ -1,4 +1,3 @@
-// @flow
 
 module.exports = {
   webpack: (config, { dev, isServer }) => {

@@ -30,7 +30,7 @@ export default class MyApp extends App {
     const { Component, pageProps } = this.props;
 
     return (
-      <React.Fragment>
+      <>
         <Head>
           <title>the OSM app</title>
           <meta
@@ -44,7 +44,7 @@ export default class MyApp extends App {
           <Component {...pageProps} />
           <GlobalStyle />
         </ThemeProvider>
-      </React.Fragment>
+      </>
     );
   }
 }

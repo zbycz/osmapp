@@ -1,4 +1,3 @@
-// @flow
 
 import { osmToGeojson } from '../osmApi';
 import {

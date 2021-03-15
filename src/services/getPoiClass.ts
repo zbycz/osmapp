@@ -1,4 +1,3 @@
-// @flow
 
 const keys = [
   'aerialway',
@@ -241,16 +240,15 @@ const subclassToClassRules = [
   },
 ];
 
-export const getPoiClass = tags => {
-  const key = keys.find(x => x in tags); // find first matching key
+export const getPoiClass = (tags) => {
+  const key = keys.find((x) => x in tags); // find first matching key
   const value = tags[key]; // its value
 
   // find first matching rule
   const resultRule = subclassToClassRules.find(
-    rule =>
-      (!rule.mappingKey && rule.subclass.includes(value)) ||
-      (rule.mappingKey === key && !rule.subclass) ||
-      (rule.mappingKey === key && rule.subclass.includes(value)),
+    (rule) => (!rule.mappingKey && rule.subclass.includes(value))
+      || (rule.mappingKey === key && !rule.subclass)
+      || (rule.mappingKey === key && rule.subclass.includes(value)),
   );
 
   const resultClass = resultRule ? resultRule.resultClass : value;

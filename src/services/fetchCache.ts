@@ -4,15 +4,15 @@ const cache = {};
 
 const fetchCache = isBrowser()
   ? {
-      get: key => sessionStorage.getItem(key),
-      remove: key => sessionStorage.removeItem(key),
-      put: (key, value) => sessionStorage.setItem(key, value),
-    }
+    get: (key) => sessionStorage.getItem(key),
+    remove: (key) => sessionStorage.removeItem(key),
+    put: (key, value) => sessionStorage.setItem(key, value),
+  }
   : {
-      get: key => cache[key],
-      remove: key => delete cache[key],
-      put: (key, value) => (cache[key] = value),
-    };
+    get: (key) => cache[key],
+    remove: (key) => delete cache[key],
+    put: (key, value) => (cache[key] = value),
+  };
 
 export const getKey = (url, opts) => url + JSON.stringify(opts);
 

@@ -1,13 +1,13 @@
+import nextCookies from 'next-cookies';
 import { getFeatureImage } from '../../services/images';
 import { getFeatureFromApi } from '../../services/osmApi';
-import nextCookies from 'next-cookies';
 import { fetchJson } from '../../services/fetch';
 
 const DEFAULT_VIEW = [4, 50, 14];
 
-const isLocalhost = ip => ['127.0.0.1', '::1'].includes(ip);
+const isLocalhost = (ip) => ['127.0.0.1', '::1'].includes(ip);
 
-const getViewFromIp = async ip => {
+const getViewFromIp = async (ip) => {
   try {
     const url = `http://api.ipstack.com/${ip}?access_key=169a541e2e9936a03b0b9e355dd29ff3&format=1`;
     const { latitude: lat, longitude: lon } = await fetchJson(url);
@@ -32,10 +32,10 @@ export const getInitialMapState = async (ctx, initialFeature) => {
     return [17, lat, lon];
   }
   const { mapView } = nextCookies(ctx);
-  return mapView ? mapView.split('/') : await getViewFromCtx(ctx);
+  return mapView ? mapView.split('/') : getViewFromCtx(ctx);
 };
 
-const fetchInitialFeature = async id => {
+const fetchInitialFeature = async (id) => {
   try {
     return id ? await getFeatureFromApi(id) : null;
   } catch (e) {
@@ -43,14 +43,13 @@ const fetchInitialFeature = async id => {
   }
 };
 
-const timeout = time => new Promise(resolve => setTimeout(resolve, time));
+const timeout = (time) => new Promise((resolve) => setTimeout(resolve, time));
 
-export const getInititalFeature = async ctx => {
+export const getInititalFeature = async (ctx) => {
   const { osmid, osmtype, id } = ctx.query;
-  const shortId =
-    osmtype && osmtype.match(/^node|way|relation$/)
-      ? osmtype.substr(0, 1) + osmid
-      : id;
+  const shortId = osmtype && osmtype.match(/^node|way|relation$/)
+    ? osmtype.substr(0, 1) + osmid
+    : id;
 
   const t1 = new Date();
   const initialFeature = await fetchInitialFeature(shortId);

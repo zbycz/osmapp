@@ -40,7 +40,7 @@ import React from 'react';
 //   },
 // ];
 
-export const renderOptionFactory = inputValue => option => {
+export const renderOptionFactory = (inputValue) => (option) => {
   const matches = match(option.display_name, inputValue);
   const parts = parse(option.display_name, matches);
 

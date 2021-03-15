@@ -10,9 +10,9 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
-import { useToggleState } from '../helpers';
 import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
+import { useToggleState } from '../helpers';
 
 const Table = styled.table`
   font-size: 80%;
@@ -32,7 +32,7 @@ const majorKeysNames = {
   opening_hours: 'Otevírací doba',
 };
 const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
-const getInitialMajorKeys = tags => majorKeys.filter(k => !!tags[k]);
+const getInitialMajorKeys = (tags) => majorKeys.filter((k) => !!tags[k]);
 
 const EditDialog = ({ feature, open, handleClose }) => {
   const {
@@ -53,12 +53,12 @@ const EditDialog = ({ feature, open, handleClose }) => {
   const [location, setLocation] = React.useState();
   const [note, setNote] = React.useState();
   const [values, setValues] = React.useState(tags);
-  const setValue = (k, v) => setValues(state => ({ ...state, [k]: v }));
+  const setValue = (k, v) => setValues((state) => ({ ...state, [k]: v }));
 
   const [activeMajorKeys, setActiveMajorKeys] = React.useState(
     getInitialMajorKeys(tags),
   );
-  const inactiveMajorKeys = majorKeys.filter(k => !activeMajorKeys.includes(k));
+  const inactiveMajorKeys = majorKeys.filter((k) => !activeMajorKeys.includes(k));
 
   return (
     <Dialog
@@ -69,15 +69,17 @@ const EditDialog = ({ feature, open, handleClose }) => {
       aria-describedby="edit-dialog-description"
     >
       <DialogTitle id="edit-dialog-title">
-        Navrhnout úpravu: {tags.name || properties.subclass}
+        Navrhnout úpravu:
+        {' '}
+        {tags.name || properties.subclass}
       </DialogTitle>
-      <DialogContent dividers={true}>
+      <DialogContent dividers>
         <DialogContentText
           id="edit-dialog-description"
           // ref={descriptionElementRef}
           tabIndex={-1}
         >
-          {activeMajorKeys.map(k => (
+          {activeMajorKeys.map((k) => (
             <div key={k}>
               <TextField
                 label={majorKeysNames[k]}
@@ -86,7 +88,7 @@ const EditDialog = ({ feature, open, handleClose }) => {
                 variant="outlined"
                 margin="normal"
                 name={k}
-                onChange={e => setValue(e.target.name, e.target.value)}
+                onChange={(e) => setValue(e.target.name, e.target.value)}
                 fullWidth
               />
             </div>
@@ -94,12 +96,12 @@ const EditDialog = ({ feature, open, handleClose }) => {
           {!!inactiveMajorKeys.length && (
             <>
               Přidat:
-              {inactiveMajorKeys.map(k => (
+              {inactiveMajorKeys.map((k) => (
                 <React.Fragment key={k}>
                   {' '}
                   <Button
                     size="small"
-                    onClick={() => setActiveMajorKeys(arr => [...arr, k])}
+                    onClick={() => setActiveMajorKeys((arr) => [...arr, k])}
                   >
                     {majorKeysNames[k]}
                   </Button>
@@ -133,9 +135,7 @@ const EditDialog = ({ feature, open, handleClose }) => {
                           variant="outlined"
                           size="small"
                           name={k}
-                          onChange={e =>
-                            setValue(e.target.name, e.target.value)
-                          }
+                          onChange={(e) => setValue(e.target.name, e.target.value)}
                           fullWidth
                         />
                       </td>
@@ -148,12 +148,12 @@ const EditDialog = ({ feature, open, handleClose }) => {
           <br />
 
           <FormControlLabel
-            control={
+            control={(
               <Checkbox
                 checked={placeCanceled}
                 onChange={togglePlaceCanceled}
               />
-            }
+            )}
             label="Místo zrušeno či zavřeno"
           />
 
@@ -169,7 +169,7 @@ const EditDialog = ({ feature, open, handleClose }) => {
             <div style={{ marginLeft: 30 }}>
               <TextField
                 value={location}
-                onChange={e => setLocation(e.target.value)}
+                onChange={(e) => setLocation(e.target.value)}
                 placeholder="např. naproti přes ulici"
                 InputLabelProps={{
                   shrink: true,
@@ -199,7 +199,7 @@ const EditDialog = ({ feature, open, handleClose }) => {
             rows={2}
             variant="outlined"
             value={note}
-            onChange={e => setNote(e.target.value)}
+            onChange={(e) => setNote(e.target.value)}
           />
         </DialogContentText>
       </DialogContent>

@@ -1,8 +1,6 @@
-// @flow
-
 import React from 'react';
 
-const SvgComponent = props => (
+const SvgComponent = (props) => (
   <svg width={14} height={14} viewBox="0 0 11 11" {...props}>
     <path
       fill={props.color}

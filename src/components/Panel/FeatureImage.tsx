@@ -1,11 +1,10 @@
-// @flow
 
 import * as React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import { getFeatureImage, LOADING } from '../../services/images';
 import BrokenImage from '@material-ui/icons/BrokenImage';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { getFeatureImage, LOADING } from '../../services/images';
 import LogoOsmapp from '../../assets/LogoOsmapp';
 
 const Wrapper = styled.div`
@@ -81,7 +80,7 @@ const Attribution = styled.a`
   text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
   color: #fff;
   text-decoration: none;
-  opacity: ${({portrait}) => portrait ? 1 : 0.5};
+  opacity: ${({ portrait }) => (portrait ? 1 : 0.5)};
 `;
 
 const FeatureImage = ({ feature, children }) => {
@@ -92,17 +91,19 @@ const FeatureImage = ({ feature, children }) => {
 
     setImage(LOADING);
     getFeatureImage(feature).then(
-      image => {
+      (image) => {
         setImage(image);
       },
-      e => {
+      (e) => {
         console.warn('getFeatureImage rejected: ', e);
         setImage(undefined);
       },
     );
   }, [feature]);
 
-  const { source, link, thumb, username, portrait } = image ?? {};
+  const {
+    source, link, thumb, username, portrait,
+  } = image ?? {};
 
   return (
     <Wrapper

@@ -1,4 +1,3 @@
-// @flow
 
 import { getApiId, getCenter, parseXmlString } from './helpers';
 import { getPoiClass } from './getPoiClass';
@@ -10,32 +9,32 @@ export const OSM_FEATURE_URL = ({ type, id }) => `${OSM_API}/${type}/${id}`;
 
 // https://wiki.openstreetmap.org/wiki/Overpass_API
 export const OP_API = 'https://overpass-api.de/api/interpreter?data=';
-export const OP_URL = query => OP_API + encodeURIComponent(query);
+export const OP_URL = (query) => OP_API + encodeURIComponent(query);
 export const OP_QUERY = {
-  node: id => `node(${id});out;`,
-  way: id => `way(${id});(._;>;);out;`,
-  relation: id => `rel(${id});(._;>;);out;`,
+  node: (id) => `node(${id});out;`,
+  way: (id) => `way(${id});(._;>;);out;`,
+  relation: (id) => `rel(${id});(._;>;);out;`,
 };
 export const OP_FEATURE_URL = ({ type, id }) => OP_URL(OP_QUERY[type](id));
 
 // parse osm xml -> geojson
-const coords = x => [parseFloat(x.$.lon), parseFloat(x.$.lat)];
-const lookupNode = (osmXml, id) => osmXml.node.find(x => x.$.id === id);
+const coords = (x) => [parseFloat(x.$.lon), parseFloat(x.$.lat)];
+const lookupNode = (osmXml, id) => osmXml.node.find((x) => x.$.id === id);
 const getGeometry = {
   node: (osmXml, node) => ({
     coordinates: coords(node),
   }),
   way: (osmXml, way) => ({
     type: 'LineString', // TODO Polygon
-    coordinates: [way.nd.map(nd => coords(lookupNode(osmXml, nd.$.ref)))],
+    coordinates: [way.nd.map((nd) => coords(lookupNode(osmXml, nd.$.ref)))],
   }),
   relation: (osmXml, relation) => ({
     type: 'LineString',
-    coordinates: [osmXml.node.map(nd => coords(nd))],
+    coordinates: [osmXml.node.map((nd) => coords(nd))],
   }),
 };
 
-export const osmToGeojson = async osmXmlStr => {
+export const osmToGeojson = async (osmXmlStr) => {
   const osmXml = await parseXmlString(osmXmlStr);
 
   const type = osmXml.relation ? 'relation' : osmXml.way ? 'way' : 'node';
@@ -60,7 +59,7 @@ export const osmToGeojson = async osmXmlStr => {
   };
 };
 
-export const getFeatureFromApi = async featureId => {
+export const getFeatureFromApi = async (featureId) => {
   const apiId = getApiId(featureId);
   const isNode = apiId.type === 'node';
   const url = isNode ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
@@ -73,7 +72,7 @@ export const getFeatureFromApi = async featureId => {
   };
 };
 
-export const fetchFromApi = async function(osmApiId) {
+export const fetchFromApi = async function (osmApiId) {
   try {
     const feature = await getFeatureFromApi(osmApiId);
     if (isBrowser()) {

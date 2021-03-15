@@ -1,5 +1,3 @@
-// @flow
-
 import React, { Component } from 'react';
 
 // https://jakearchibald.github.io/svgomg/
