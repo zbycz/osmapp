@@ -12,7 +12,7 @@ const MakiImg = styled.img`
   height: 11px;
 `;
 const Maki = ({ ico }) => (
-  <MakiImg src={`/static/maki/${ico}-11.svg`} alt={ico} title={ico} />
+  <MakiImg src={`/maki/${ico}-11.svg`} alt={ico} title={ico} />
 );
 
 export default Maki;

@@ -1,9 +1,7 @@
 import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
-
-import theme from '../src/helpers/theme';
 
 // This stinks so much!! https://github.com/facebook/react/issues/12014#issuecomment-434534770
 const AsyncStyle = ({ href }) => (
@@ -17,21 +15,15 @@ const AsyncStyle = ({ href }) => (
 export default class MyDocument extends Document {
   render() {
     return (
-      <html lang="en">
+      <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
-          <meta
-            name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
-          />
-          {/* PWA primary color = theme.palette.primary.main */}
-          {/*<meta name="theme-color" content="#eb5757" /> too light*/}
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <AsyncStyle href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" />
-          <link rel="shortcut icon" href="/static/logo_64.png" />
+          <link rel="shortcut icon" href="/logo_64.png" />
           <link rel="preconnect" href="https://api.maptiler.com" />
           <link rel="preconnect" href="https://openmaptiles.github.io" />
           <link rel="preconnect" href="https://a.mapillary.com" />
@@ -44,7 +36,7 @@ export default class MyDocument extends Document {
           <Main />
           <NextScript />
         </body>
-      </html>
+      </Html>
     );
   }
 }
