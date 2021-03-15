@@ -1,4 +1,3 @@
-// @flow
 
 import * as Sentry from '@sentry/node'; // in browser aliased to @sentry/browser (next.config.js)
 // import Cookie from 'js-cookie';
@@ -13,7 +12,7 @@ export const initSentry = () => {
 };
 
 export const captureException = (err, errorInfo) => {
-  Sentry.configureScope(scope => {
+  Sentry.configureScope((scope) => {
     if (err.message) {
       // De-duplication currently doesn't work correctly for SSR / browser errors
       // so we force deduplication by error message if it is present

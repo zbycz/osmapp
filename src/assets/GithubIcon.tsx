@@ -1,8 +1,6 @@
-// @flow
-
 import React from 'react';
 
-const SvgComponent = props => (
+const SvgComponent = (props) => (
   <svg viewBox="0 0 16 16" aria-hidden="true" {...props}>
     <path
       fillRule="evenodd"

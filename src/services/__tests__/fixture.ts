@@ -1,4 +1,3 @@
-// @flow
 
 // https://www.openstreetmap.org/api/0.6/${type}/${id} --> xml2js
 export const node = {

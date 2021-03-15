@@ -1,4 +1,3 @@
-// @flow
 
 import React, { useState } from 'react';
 import LocalPhone from '@material-ui/icons/LocalPhone';

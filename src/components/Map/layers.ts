@@ -1,4 +1,3 @@
-// @flow
 
 import mapboxStyle from './mapboxStyle';
 
@@ -75,8 +74,8 @@ function addHoverPaint(origStyle) {
     1,
   ];
   origStyle.layers
-    .filter(x => x.id.match(/^poi-/))
-    .forEach(x => {
+    .filter((x) => x.id.match(/^poi-/))
+    .forEach((x) => {
       if (x.paint) {
         x.paint['icon-opacity'] = value;
       }
@@ -87,20 +86,20 @@ function addHoverPaint(origStyle) {
 const origStyle = mapboxStyle(sources, backgroundLayers);
 export const style = addHoverPaint(origStyle);
 
-const isOsmLayer = id => {
+const isOsmLayer = (id) => {
   const prefixes = ['water-name-', 'poi-', 'place-'];
-  return prefixes.some(prefix => id.startsWith(prefix));
+  return prefixes.some((prefix) => id.startsWith(prefix));
 };
 export const layersWithOsmId = style.layers
-  .map(x => x.id)
-  .filter(id => isOsmLayer(id));
+  .map((x) => x.id)
+  .filter((id) => isOsmLayer(id));
 
-export const setUpHover = map => {
+export const setUpHover = (map) => {
   let lastHover = null;
   const setHover = (f, hover) => f && map.setFeatureState(f, { hover });
-  const setHoverOn = f => setHover(f, true);
-  const setHoverOff = f => setHover(f, false);
-  const onMouseMove = e => {
+  const setHoverOn = (f) => setHover(f, true);
+  const setHoverOff = (f) => setHover(f, false);
+  const onMouseMove = (e) => {
     if (e.features && e.features.length > 0) {
       const feature = e.features[0];
       if (feature !== lastHover) {
@@ -116,7 +115,7 @@ export const setUpHover = map => {
     lastHover = null;
     map.getCanvas().style.cursor = ''; // TODO delay 200ms
   };
-  layersWithOsmId.forEach(x => {
+  layersWithOsmId.forEach((x) => {
     map.on('mousemove', x, onMouseMove);
     map.on('mouseleave', x, onMouseLeave);
   });

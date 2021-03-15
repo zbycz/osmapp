@@ -8,8 +8,7 @@
     "dist": "next build && next export -o dist"
   },
   "husky": {
-    "hooks": {
-    }
+    "hooks": {}
   },
   "lint-staged": {
     "*.{js,json,css,md}": [
@@ -43,11 +42,15 @@
     "styled-jsx": "^3.4.4"
   },
   "devDependencies": {
-    "@kiwicom/eslint-config": "^9.1.10",
+    "@typescript-eslint/eslint-plugin": "^4.4.1",
     "babel-eslint": "^10.1.0",
     "babel-plugin-styled-components": "^1.12.0",
     "eslint": "^7.22.0",
-    "eslint-plugin-jsx-a11y": "^6.4.1",
+    "eslint-config-airbnb-typescript": "^12.3.1",
+    "eslint-plugin-import": "^2.22.0",
+    "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-react": "^7.20.3",
+    "eslint-plugin-react-hooks": "^4.0.8",
     "husky": "^5.1.3",
     "lint-staged": "^10.5.4",
     "typescript": "^4.2.3"

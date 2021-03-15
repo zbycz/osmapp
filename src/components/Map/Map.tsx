@@ -1,4 +1,3 @@
-// @flow
 
 import * as React from 'react';
 import styled from 'styled-components';
@@ -7,11 +6,11 @@ import BugReport from '@material-ui/icons/BugReport';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
+import { useEffect } from 'react';
 import GithubIcon from '../../assets/GithubIcon';
 import LayersIcon from '../../assets/LayersIcon';
 import { useBoolState } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { useEffect } from 'react';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -121,8 +120,14 @@ const Map = ({ onFeatureClicked }) => {
         </Button>
         <Box>
           <GithubIcon width="12" height="12" />
-          <a href="https://github.com/zbycz/osmapp">osmapp</a> 0.1 | ©{' '}
-          <a href="#">mapová data</a> |{' '}
+          <a href="https://github.com/zbycz/osmapp">osmapp</a>
+          {' '}
+          0.1 | ©
+          {' '}
+          <a href="#">mapová data</a>
+          {' '}
+          |
+          {' '}
           <a
             href={`https://www.openstreetmap.org/edit#map=${view.join('/')}`}
             title="v editoru iD"
@@ -136,6 +141,6 @@ const Map = ({ onFeatureClicked }) => {
     </>
   );
 };
-//https://www.openstreetmap.org/edit?lat=50.09231&lon=14.32098&zoom=17
+// https://www.openstreetmap.org/edit?lat=50.09231&lon=14.32098&zoom=17
 
 export default Map;

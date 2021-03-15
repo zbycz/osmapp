@@ -1,9 +1,8 @@
-// @flow
 
 import * as xml2js from 'isomorphic-xml2js';
 import geojsonExtent from '@mapbox/geojson-extent';
 
-export const parseXmlString = xmlString => {
+export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
     explicitArray: false,
     explicitCharkey: false,
@@ -22,11 +21,9 @@ export const parseXmlString = xmlString => {
 };
 
 // apiId.replace(/([a-z])[a-z]+\/([0-9]+)/, '$1$2');
-export const getShortId = apiId => {
-  return apiId.type[0] + apiId.id;
-};
+export const getShortId = (apiId) => apiId.type[0] + apiId.id;
 
-export const getApiId = value => {
+export const getApiId = (value) => {
   if (value.type && value.id) {
     return value;
   }
@@ -37,11 +34,10 @@ export const getApiId = value => {
   return { type, id };
 };
 
-export const getShortLink = apiId =>
-  `https://osmapp.org/${apiId.type}/${apiId.id}`;
+export const getShortLink = (apiId) => `https://osmapp.org/${apiId.type}/${apiId.id}`;
 
-export const getCenter = feature => {
-  const type = feature.geometry.type;
+export const getCenter = (feature) => {
+  const { type } = feature.geometry;
 
   // node
   if (!type || type === 'Point') {

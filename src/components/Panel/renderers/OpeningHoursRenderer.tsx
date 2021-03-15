@@ -1,9 +1,9 @@
 import React from 'react';
 import { SimpleOpeningHours } from 'simple-opening-hours';
 import styled from 'styled-components';
+import AccessTime from '@material-ui/icons/AccessTime';
 import { useToggleState } from '../../helpers';
 import { ToggleButton } from '../helpers';
-import AccessTime from '@material-ui/icons/AccessTime';
 
 const Table = styled.table`
   margin: 1em;
@@ -31,8 +31,7 @@ const weekDays = [
   'sobota',
 ];
 
-const formatTimes = times =>
-  times.length ? times.map(x => x.replace(/:00/g, '')).join(', ') : '-';
+const formatTimes = (times) => (times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-');
 
 const OpeningState = ({ isOpen, days }) => {
   const timesByDay = Object.values(days);

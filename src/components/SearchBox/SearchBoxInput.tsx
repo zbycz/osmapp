@@ -51,15 +51,15 @@ export const SearchBoxInput = ({
         placeholder="Prohledat OpenStreetMap"
         // autoFocus={false} // TODO it still focuses on feature close
         {...restParams}
-        onChange={e => setInputValue(e.target.value)}
-        onFocus={e => e.target.select()}
+        onChange={(e) => setInputValue(e.target.value)}
+        onFocus={(e) => e.target.select()}
       />
       <StyledDivider />
 
       {feature && (
         <IconButton
           aria-label="Zavřít panel"
-          onClick={e => {
+          onClick={(e) => {
             e.preventDefault();
             setFeature(null);
             // setInputValue('');

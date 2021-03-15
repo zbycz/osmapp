@@ -1,4 +1,3 @@
-// @flow
 
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/src/getPageContext.js
 

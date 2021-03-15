@@ -2,8 +2,8 @@ import { getShortId } from './helpers';
 import { fetchJson } from './fetch';
 import { removeFetchCache } from './fetchCache';
 
-const getMapillaryImage = async center => {
-  const lonlat = center.map(x => x.toFixed(5)).join(',');
+const getMapillaryImage = async (center) => {
+  const lonlat = center.map((x) => x.toFixed(5)).join(',');
   const url = `https://a.mapillary.com/v3/images?client_id=TTdNZ2w5eTF6MEtCNUV3OWNhVER2dzpjMjdiZGE1MWJmYzljMmJi&lookat=${lonlat}&closeto=${lonlat}`;
   const { features } = await fetchJson(url);
 
@@ -16,7 +16,7 @@ const getMapillaryImage = async center => {
   const image = features[0];
   const { key, username } = image.properties;
   return {
-    source: `Mapillary`,
+    source: 'Mapillary',
     username,
     link: `https://www.mapillary.com/app/?focus=photo&pKey=${key}`,
     thumb: `https://images.mapillary.com/${key}/thumb-640.jpg`,
@@ -24,12 +24,13 @@ const getMapillaryImage = async center => {
 };
 
 export const LOADING = null;
-let mapillaryPromise, mapillaryId;
+let mapillaryPromise; let
+  mapillaryId;
 
-export const getFeatureImage = async feature => {
+export const getFeatureImage = async (feature) => {
   // for nonOsmObject we dont expect 2nd pass
   if (feature.nonOsmObject) {
-    return await getMapillaryImage(feature.center);
+    return getMapillaryImage(feature.center);
   }
 
   // first pass may be a skeleton
@@ -64,7 +65,7 @@ export const getFeatureImage = async feature => {
 };
 
 // From https://github.com/osmcz/osmcz/blob/0d3eaaa/js/poi-popup.js - MIT
-const getWikiApiUrl = tags => {
+const getWikiApiUrl = (tags) => {
   if (tags.wikidata) {
     return `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${encodeURIComponent(
       tags.wikidata,
@@ -77,7 +78,7 @@ const getWikiApiUrl = tags => {
     )}`;
   }
 
-  const wikipediaKeys = Object.keys(tags).filter(k => k.match(/^wikipedia/));
+  const wikipediaKeys = Object.keys(tags).filter((k) => k.match(/^wikipedia/));
   if (wikipediaKeys.length) {
     const value = tags[wikipediaKeys[0]];
     const country = value.includes(':') ? value.split(':')[0] : 'en';
@@ -87,7 +88,7 @@ const getWikiApiUrl = tags => {
   }
 };
 
-const getWikiImage = async wikiUrl => {
+const getWikiImage = async (wikiUrl) => {
   const data = await fetchJson(`${wikiUrl}&origin=*`);
   const replyType = getWikiType(data);
   console.log('getWikiImage', replyType, data);
@@ -99,7 +100,7 @@ const getWikiImage = async wikiUrl => {
     // In wikidata entry is image name, but we need thumbnail,
     // so we will convert wikidata reply to wikimedia_commons tag
     const fakeTags = {
-      wikimedia_commons: 'File:' + data.claims.P18[0].mainsnak.datavalue.value,
+      wikimedia_commons: `File:${data.claims.P18[0].mainsnak.datavalue.value}`,
     };
     const url = getWikiApiUrl(fakeTags);
     return await getWikiImage(url);
@@ -140,9 +141,9 @@ function getWikiType(d) {
   if (d.claims) return 'wikidata';
 }
 
-const getFodyImage = async center => {
+const getFodyImage = async (center) => {
   try {
-    //const url = `https://osm.fit.vutbr.cz/fody-dev/api/close?lat=${center[1]}&lon=${center[0]}&limit=1&distance=50`; //dev
+    // const url = `https://osm.fit.vutbr.cz/fody-dev/api/close?lat=${center[1]}&lon=${center[0]}&limit=1&distance=50`; //dev
     const url = `https://osm.fit.vutbr.cz/fody/api/close?lat=${center[1]}&lon=${center[0]}&limit=1&distance=50`;
     const { features } = await fetchJson(url);
 
@@ -154,7 +155,7 @@ const getFodyImage = async center => {
     const image = features[0];
     const { id, author, created } = image.properties;
     return {
-      source: `Fody photodb`,
+      source: 'Fody photodb',
       username: author,
       link: `https://osm.fit.vutbr.cz/fody/?id=${id}`,
       thumb: `https://osm.fit.vutbr.cz/fody/files/250px/${id}.jpg`,

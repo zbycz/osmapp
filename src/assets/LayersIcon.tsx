@@ -1,8 +1,6 @@
-// @flow
-
 import React from 'react';
 
-const SvgComponent = props => (
+const SvgComponent = (props) => (
   <svg height={26} width={26} {...props}>
     <path d="M.032 17.056l13-8 13 8-13 8-13-8" fill="#b9b9b9" />
     <path d="M.032 17.056l-.032.93 13 8 13-8 .032-.93-13 8z" fill="#737373" />

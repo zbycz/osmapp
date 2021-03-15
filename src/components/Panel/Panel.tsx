@@ -1,4 +1,3 @@
-// @flow
 
 import * as React from 'react';
 import styled from 'styled-components';
@@ -9,8 +8,11 @@ import Share from '@material-ui/icons/Share';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
 import IconButton from '@material-ui/core/IconButton';
-import Property from './Property';
 import EditIcon from '@material-ui/icons/Edit';
+import Head from 'next/head';
+import Info from '@material-ui/icons/Info';
+import Typography from '@material-ui/core/Typography';
+import Property from './Property';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import Coordinates from './Coordinates';
@@ -19,9 +21,6 @@ import makiFiles from './makiFiles';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
 import { getShortLink } from '../../services/helpers';
-import Head from 'next/head';
-import Info from '@material-ui/icons/Info';
-import Typography from '@material-ui/core/Typography';
 import EditDialog from './EditDialog';
 
 // custom scrollbar
@@ -120,7 +119,7 @@ const Panel = ({ feature }) => {
     ? properties.class
     : 'information';
   const subclass = properties.subclass || (layer && layer.id) || '?';
-  const featuredTags = featuredKeys.map(k => [k, tags[k]]).filter(x => x[1]);
+  const featuredTags = featuredKeys.map((k) => [k, tags[k]]).filter((x) => x[1]);
 
   // TODO resolve all getPoiClass
   // TODO copy icons from @mapbox/maki
@@ -129,7 +128,11 @@ const Panel = ({ feature }) => {
     <Wrapper>
       {!nonOsmObject && (
         <Head>
-          <title>{tags.name || subclass} · osmapp.org</title>
+          <title>
+            {tags.name || subclass}
+            {' '}
+            · osmapp.org
+          </title>
         </Head>
       )}
       <Scrollbars universal autoHide style={{ height: '100%' }}>
@@ -204,7 +207,8 @@ const Panel = ({ feature }) => {
                 type="checkbox"
                 onChange={toggleAdvanced}
                 checked={advanced}
-              />{' '}
+              />
+              {' '}
               Zobrazit jen tagy
             </label>
           </Footer>
