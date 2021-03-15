@@ -33,6 +33,10 @@ export default class MyApp extends App {
       <React.Fragment>
         <Head>
           <title>the OSM app</title>
+          <meta
+            name="viewport"
+            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+          />
         </Head>
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
