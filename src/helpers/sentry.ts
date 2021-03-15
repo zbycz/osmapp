@@ -1,4 +1,3 @@
-
 import * as Sentry from '@sentry/node'; // in browser aliased to @sentry/browser (next.config.js)
 // import Cookie from 'js-cookie';
 

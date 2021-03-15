@@ -1,4 +1,3 @@
-
 import * as React from 'react';
 import maplibregl from 'maplibre-gl'; // update CSS import in _document.js
 import { throttle } from 'lodash';
@@ -9,13 +8,13 @@ import { useMapEffectFactory } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { getShortId } from '../../services/helpers';
 
-// mapboxgl.accessToken = 'pk.eyJ1IjoiemJ5Y3oiLCJhIjoiY2oxMGN4enAxMDAyZjMybXF5eGJ5M2lheCJ9.qjvbRJ2C1tL4O9g9jOdJIw';
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
     enableHighAccuracy: true,
   },
   trackUserLocation: true,
 });
+
 const scaleControl = new maplibregl.ScaleControl({
   maxWidth: 80,
   unit: window.localStorage.getItem('units') ? 'imperial' : 'metric',
@@ -72,11 +71,11 @@ const useOnMapLoaded = useMapEffectFactory((map, onMapLoaded) => {
 });
 
 const useUpdateViewOnMove = useMapEffectFactory(
-  (map, _setViewFromMap, setBbox) => {
+  (map, setViewFromMap, setBbox) => {
     map.on(
       'move',
       throttle(() => {
-        _setViewFromMap([
+        setViewFromMap([
           map.getZoom().toFixed(2),
           map.getCenter().lat.toFixed(4),
           map.getCenter().lng.toFixed(4),
@@ -91,10 +90,10 @@ const useUpdateViewOnMove = useMapEffectFactory(
   },
 );
 
-const useUpdateMap = useMapEffectFactory((map, _viewForMap) => {
-  const center = [_viewForMap[2], _viewForMap[1]];
-  console.log('map to jump to:', center);
-  map.jumpTo({ center, zoom: _viewForMap[0] });
+const useUpdateMap = useMapEffectFactory((map, viewForMap) => {
+  const center = [viewForMap[2], viewForMap[1]];
+  console.log('map will jump to:', center); // eslint-disable-line no-console
+  map.jumpTo({ center, zoom: viewForMap[0] });
 });
 
 const BrowserMap = ({ onFeatureClicked, onMapLoaded }) => {
@@ -102,9 +101,9 @@ const BrowserMap = ({ onFeatureClicked, onMapLoaded }) => {
   useOnFeatureClicked(map, onFeatureClicked);
   useOnMapLoaded(map, onMapLoaded);
 
-  const { _viewForMap, _setViewFromMap, setBbox } = useMapStateContext();
-  useUpdateViewOnMove(map, _setViewFromMap, setBbox);
-  useUpdateMap(map, _viewForMap);
+  const { viewForMap, setViewFromMap, setBbox } = useMapStateContext();
+  useUpdateViewOnMove(map, setViewFromMap, setBbox);
+  useUpdateMap(map, viewForMap);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };

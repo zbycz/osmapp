@@ -6,7 +6,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import Divider from '@material-ui/core/Divider';
-import { isBrowser } from '../helpers';
 
 const StyledPaper = styled(Paper)`
   padding: 2px 4px;
@@ -40,7 +39,10 @@ export const SearchBoxInput = ({
   feature,
   setFeature,
 }) => {
-  const { InputLabelProps, InputProps, ...restParams } = params; // passing all props causes warning... (why?)
+  const { InputLabelProps, InputProps, ...restParams } = params; // TODO passing all props causes warning... (why?)
+
+  const onChange = (e) => setInputValue(e.target.value);
+  const onFocus = (e) => e.target.select();
 
   return (
     <StyledPaper elevation={1} ref={params.InputProps.ref}>
@@ -49,10 +51,10 @@ export const SearchBoxInput = ({
       </SearchIconButton>
       <SearchInput
         placeholder="Prohledat OpenStreetMap"
+        {...restParams} // eslint-disable-line react/jsx-props-no-spreading
+        onChange={onChange}
+        onFocus={onFocus}
         // autoFocus={false} // TODO it still focuses on feature close
-        {...restParams}
-        onChange={(e) => setInputValue(e.target.value)}
-        onFocus={(e) => e.target.select()}
       />
       <StyledDivider />
 

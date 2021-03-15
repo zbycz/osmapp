@@ -4,25 +4,24 @@ import Cookies from 'js-cookie';
 
 import Panel from '../Panel/Panel';
 import Map from '../Map/Map';
-import { getShortId } from '../../services/helpers';
 import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
-import { getInitialMapState, getInititalFeature } from './helpers';
+import { getInitialMapView, getInititalFeature } from './helpers';
 
 const getUrl = ({ type, id }) => `${type}/${id}`;
 
 const persistFeature = (feature) => {
   const hasUrl = feature && !feature.nonOsmObject;
   const url = hasUrl ? getUrl(feature.osmMeta) : '';
-  Router.push('/', `/${url}${location.hash}`, { shallow: true });
+  Router.push('/', `/${url}${window.location.hash}`, { shallow: true });
 };
 
 const useFeatureState = (initialFeature) => {
   const [feature, setFeature] = React.useState(initialFeature);
   const setFeatureAndPersist = React.useCallback(
-    (feature) => {
-      persistFeature(feature);
-      setFeature(feature);
+    (newFeature) => {
+      persistFeature(newFeature);
+      setFeature(newFeature);
     },
     [setFeature],
   );
@@ -56,22 +55,23 @@ const IndexWithProviders = ({ initialFeature }) => {
   );
 };
 
-const getMapStateFromHash = () => typeof window !== 'undefined'
-  && window.location.hash
-  && window.location.hash.substr(1).split('/'); // TODO return only valid map state
+const getMapViewFromHash = () =>
+  typeof window !== 'undefined' &&
+  window.location.hash &&
+  window.location.hash.substr(1).split('/'); // TODO return only valid mapView
 
-const App = ({ initialFeature, initialMapState }) => {
-  const mapState = getMapStateFromHash() || initialMapState;
+const App = ({ initialFeature, initialMapView }) => {
+  const mapView = getMapViewFromHash() || initialMapView;
   return (
-    <MapStateProvider initialMapState={mapState}>
+    <MapStateProvider initialMapView={mapView}>
       <IndexWithProviders initialFeature={initialFeature} />
     </MapStateProvider>
   );
 };
 App.getInitialProps = async (ctx) => {
   const initialFeature = await getInititalFeature(ctx);
-  const initialMapState = await getInitialMapState(ctx, initialFeature);
-  return { initialFeature, initialMapState };
+  const initialMapView = await getInitialMapView(ctx, initialFeature);
+  return { initialFeature, initialMapView };
 };
 
 // map.fitBounds(bounds, {

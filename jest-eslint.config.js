@@ -1,4 +1,3 @@
-
 module.exports = {
   displayName: 'lint',
   verbose: false,

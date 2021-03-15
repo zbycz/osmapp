@@ -1,4 +1,3 @@
-
 import styled from 'styled-components';
 import IconButton from '@material-ui/core/IconButton';
 import Edit from '@material-ui/icons/Edit';
@@ -32,10 +31,7 @@ const StyledIconButton = styled(IconButton)`
 const FeatureHeading = ({ title }) => (
   <Wrapper>
     <StyledIconButton mini="true" className="show-on-hover">
-      <Edit
-        titleAccess="Upravit v živé databázi OpenStreetMap"
-        nativecolor="#9e9e9e"
-      />
+      <Edit titleAccess="Upravit v živé databázi OpenStreetMap" />
     </StyledIconButton>
     {title}
   </Wrapper>

@@ -3,23 +3,27 @@ import React, { Component } from 'react';
 // https://jakearchibald.github.io/svgomg/
 // https://www.smooth-code.com/open-source/svgr/playground/
 
-export default class LogoOsmapp extends Component {
-  displayName = 'LogoOsmapp';
+interface Props {
+  width: number;
+  height: number;
+  className: string;
+}
+export default class LogoOsmapp extends Component<Props> {
+  static muiName = 'SvgIcon';
 
   shouldComponentUpdate() {
     return false;
   }
 
-  muiName = 'SvgIcon';
-
   render() {
+    const { width, height, className } = this.props;
     return (
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        width="255.082"
-        height="251.184"
         viewBox="0 0 256 256"
-        {...this.props}
+        width={width}
+        height={height}
+        className={className}
       >
         <g fillRule="evenodd">
           <path

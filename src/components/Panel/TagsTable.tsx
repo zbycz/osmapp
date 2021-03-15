@@ -1,9 +1,7 @@
-
 import * as React from 'react';
 import styled from 'styled-components';
 import truncate from 'lodash/truncate';
 
-import Info from '@material-ui/icons/Info';
 import { useToggleState } from '../helpers';
 import { getUrlForTag, ToggleButton } from './helpers';
 
@@ -40,22 +38,14 @@ const Table = styled.table`
   }
 `;
 
-const TagsIcon = styled(Info)`
-  margin: 0 10px -6px 2px;
-  // margin-bottom: -41px;
-  position: absolute;
-  opacity: 0.4;
-`;
-
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k) => k.match(/^([a-z]+_)?name(:|$)/);
-const isBuilding = (k) => k.match(/building|roof|^min_level|^max_level|height$/);
+const isBuilding = (k) =>
+  k.match(/building|roof|^min_level|^max_level|height$/);
 const isNetwork = (k) => k.match(/network/);
 const isBrand = (k) => k.match(/^brand/);
 
-const TagsGroup = ({
-  tags, label, value, hideArrow,
-}) => {
+const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
   const [isShown, toggle] = useToggleState(false);
 
   if (!tags.length) {
@@ -73,7 +63,7 @@ const TagsGroup = ({
       </tr>
       {isShown && (
         <tr>
-          <td colSpan="2">
+          <td colSpan={2}>
             <table>
               <tbody>
                 {tags.map(([k, v]) => (
@@ -107,21 +97,21 @@ const renderValue = (k, v) => {
   return url ? <a href={url}>{v.replace(/^https?:\/\//, '')}</a> : v;
 };
 
-const TagsTable = (props) => {
-  const tagsArr = Object.entries(props.tags);
-  const tags = tagsArr.filter(([k]) => !props.except.includes(k));
+const TagsTable = ({ tags, except }) => {
+  const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
-  const addr = tags.filter(([k]) => isAddr(k));
-  const name = tags.filter(([k]) => isName(k));
-  const building = tags.filter(([k]) => isBuilding(k));
-  const network = tags.filter(([k]) => isNetwork(k));
-  const brand = tags.filter(([k]) => isBrand(k));
-  const rest = tags.filter(
-    ([k]) => !isName(k)
-      && !isAddr(k)
-      && !isBuilding(k)
-      && !isNetwork(k)
-      && !isBrand(k),
+  const addr = tagsEntries.filter(([k]) => isAddr(k));
+  const name = tagsEntries.filter(([k]) => isName(k));
+  const building = tagsEntries.filter(([k]) => isBuilding(k));
+  const network = tagsEntries.filter(([k]) => isNetwork(k));
+  const brand = tagsEntries.filter(([k]) => isBrand(k));
+  const rest = tagsEntries.filter(
+    ([k]) =>
+      !isName(k) &&
+      !isAddr(k) &&
+      !isBuilding(k) &&
+      !isNetwork(k) &&
+      !isBrand(k),
   );
 
   return (
@@ -131,9 +121,7 @@ const TagsTable = (props) => {
           <TagsGroup
             tags={name}
             label="name"
-            value={
-              props.tags.short_name || truncate(props.tags.name, { length: 25 })
-            }
+            value={tags.short_name || truncate(tags.name, { length: 25 })}
             hideArrow={name.length === 1}
           />
           <TagsGroup tags={addr} label="addr:*" value={buildAddress(addr)} />
@@ -143,17 +131,9 @@ const TagsTable = (props) => {
               <td>{renderValue(k, v)}</td>
             </tr>
           ))}
-          <TagsGroup tags={brand} label="brand:*" value={props.tags.brand} />
-          <TagsGroup
-            tags={building}
-            label="building:*"
-            value={props.tags.building}
-          />
-          <TagsGroup
-            tags={network}
-            label="network:*"
-            value={props.tags.network}
-          />
+          <TagsGroup tags={brand} label="brand:*" value={tags.brand} />
+          <TagsGroup tags={building} label="building:*" value={tags.building} />
+          <TagsGroup tags={network} label="network:*" value={tags.network} />
         </tbody>
       </Table>
     </Wrapper>

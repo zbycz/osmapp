@@ -1,20 +1,17 @@
-
 import * as React from 'react';
+import { useEffect } from 'react';
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import BugReport from '@material-ui/icons/BugReport';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-
-import { useEffect } from 'react';
-import GithubIcon from '../../assets/GithubIcon';
 import LayersIcon from '../../assets/LayersIcon';
 import { useBoolState } from '../helpers';
-import { useMapStateContext } from '../utils/MapStateContext';
+import { MapFooter } from './MapFooter';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
-  loading: () => '',
+  loading: () => <div />,
 });
 
 const Spinner = styled(CircularProgress)`
@@ -33,20 +30,6 @@ const BottomRight = styled.div`
   padding: 2px;
 `;
 
-const Box = styled.div`
-  margin-top: 10px;
-  padding: 2px;
-  font-size: 12px;
-  line-height: normal;
-  color: #000;
-  background-color: #f8f4f0; /* same as osm-bright */
-
-  svg {
-    vertical-align: -2px;
-    margin-right: 4px;
-  }
-`;
-
 const TopCenter = styled.div`
   position: absolute;
   top: 0;
@@ -63,7 +46,7 @@ const TopRight = styled.div`
   padding: 10px;
 `;
 
-const LayerSwitcherButton = styled.button`
+const StyledLayerSwitcher = styled.button`
   margin: 0;
   padding: 0;
   width: 52px;
@@ -86,57 +69,51 @@ const LayerSwitcherButton = styled.button`
   }
 `;
 
-const Map = ({ onFeatureClicked }) => {
-  const [mapLoaded, onMapLoaded, onStartLoading] = useBoolState(true);
-  const { view } = useMapStateContext();
+const LayerSwitcherButton = () => (
+  <StyledLayerSwitcher>
+    <LayersIcon />
+    Vrstvy
+  </StyledLayerSwitcher>
+);
 
-  useEffect(onStartLoading, []);
+const WhatIsOsmButton = () => (
+  <Button variant="outlined">Co je OpenStreetMap?</Button>
+);
+
+const BugReportButton = () => (
+  <Button size="small">
+    <BugReport width="10" height="10" />
+    Nahlásit chybu v mapě
+  </Button>
+);
+
+const NoscriptMessage = () => (
+  <noscript>
+    <span style={{ position: 'absolute', left: '50%', top: '50%' }}>
+      This map needs Javascript.
+    </span>
+  </noscript>
+);
+
+const Map = ({ onFeatureClicked }) => {
+  const [mapLoaded, setLoaded, setNotLoaded] = useBoolState(true);
+
+  useEffect(setNotLoaded, []);
 
   return (
     <>
-      <BrowserMap
-        onFeatureClicked={onFeatureClicked}
-        onMapLoaded={onMapLoaded}
-      />
+      <BrowserMap onFeatureClicked={onFeatureClicked} onMapLoaded={setLoaded} />
       {!mapLoaded && <Spinner color="secondary" />}
-      <noscript>
-        <span style={{ position: 'absolute', left: '50%', top: '50%' }}>
-          This map needs Javascript.
-        </span>
-      </noscript>
+      <NoscriptMessage />
       <TopCenter>
-        <Button variant="outlined">Co je OpenStreetMap?</Button>
+        <WhatIsOsmButton />
       </TopCenter>
       <TopRight>
-        <LayerSwitcherButton>
-          <LayersIcon />
-          Vrstvy
-        </LayerSwitcherButton>
+        <LayerSwitcherButton />
       </TopRight>
       <BottomRight>
-        <Button size="small">
-          <BugReport width="10" height="10" />
-          Nahlásit chybu v mapě
-        </Button>
-        <Box>
-          <GithubIcon width="12" height="12" />
-          <a href="https://github.com/zbycz/osmapp">osmapp</a>
-          {' '}
-          0.1 | ©
-          {' '}
-          <a href="#">mapová data</a>
-          {' '}
-          |
-          {' '}
-          <a
-            href={`https://www.openstreetmap.org/edit#map=${view.join('/')}`}
-            title="v editoru iD"
-            target="_blank"
-            rel="noopener"
-          >
-            editovat
-          </a>
-        </Box>
+        <BugReportButton />
+        <MapFooter />
       </BottomRight>
     </>
   );

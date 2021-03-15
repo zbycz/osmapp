@@ -1,4 +1,3 @@
-
 // https://github.com/openmaptiles/klokantech-3d-gl-style/blob/master/style.json
 
 const buildings3d = {

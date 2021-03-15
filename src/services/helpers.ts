@@ -1,4 +1,3 @@
-
 import * as xml2js from 'isomorphic-xml2js';
 import geojsonExtent from '@mapbox/geojson-extent';
 
@@ -9,7 +8,7 @@ export const parseXmlString = (xmlString) => {
     explicitRoot: false,
   });
 
-  return new Promise((resolve, reject) => {
+  return new Promise<any>((resolve, reject) => {
     parser.parseString(xmlString, (err, result) => {
       if (err) {
         reject(err);
@@ -34,7 +33,8 @@ export const getApiId = (value) => {
   return { type, id };
 };
 
-export const getShortLink = (apiId) => `https://osmapp.org/${apiId.type}/${apiId.id}`;
+export const getShortLink = (apiId) =>
+  `https://osmapp.org/${apiId.type}/${apiId.id}`;
 
 export const getCenter = (feature) => {
   const { type } = feature.geometry;
@@ -46,7 +46,7 @@ export const getCenter = (feature) => {
 
   // relation
   if (type !== 'LineString' && type !== 'Polygon') {
-    console.warn('Error: Unknown geometry', type, feature);
+    console.warn('Error: Unknown geometry', type, feature); // eslint-disable-line no-console
     return undefined;
   }
 
@@ -58,7 +58,7 @@ export const getCenter = (feature) => {
     const lat = avg(ex[1], ex[3]);
     return [lon, lat];
   } catch (e) {
-    console.warn('Error: Unknown center of geojson', e, feature);
+    console.warn('Error: Unknown center of geojson', e, feature); // eslint-disable-line no-console
     return undefined;
   }
 };

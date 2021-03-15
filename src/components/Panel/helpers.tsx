@@ -1,4 +1,3 @@
-
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import * as React from 'react';
@@ -38,6 +37,8 @@ export const getUrlForTag = (k, v) => {
   if (v.match(urlRegExp)) {
     return v;
   }
+
+  return null;
 };
 
 const StyledToggleButton = styled(IconButton)`

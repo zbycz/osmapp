@@ -1,11 +1,12 @@
-
 import * as React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import BrokenImage from '@material-ui/icons/BrokenImage';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import { ReactNode } from 'react';
 import { getFeatureImage, LOADING } from '../../services/images';
 import LogoOsmapp from '../../assets/LogoOsmapp';
+import { Feature } from '../../services/osmApi';
 
 const Wrapper = styled.div`
   position: relative;
@@ -83,7 +84,12 @@ const Attribution = styled.a`
   opacity: ${({ portrait }) => (portrait ? 1 : 0.5)};
 `;
 
-const FeatureImage = ({ feature, children }) => {
+interface Props {
+  feature: Feature;
+  children: ReactNode;
+}
+
+const FeatureImage = ({ feature, children }: Props) => {
   const [image, setImage] = React.useState(feature.ssrFeatureImage ?? LOADING);
 
   React.useEffect(() => {
@@ -91,19 +97,17 @@ const FeatureImage = ({ feature, children }) => {
 
     setImage(LOADING);
     getFeatureImage(feature).then(
-      (image) => {
-        setImage(image);
+      (newImage) => {
+        setImage(newImage);
       },
       (e) => {
-        console.warn('getFeatureImage rejected: ', e);
+        console.warn('getFeatureImage rejected: ', e); // eslint-disable-line no-console
         setImage(undefined);
       },
     );
   }, [feature]);
 
-  const {
-    source, link, thumb, username, portrait,
-  } = image ?? {};
+  const { source, link, thumb, username, portrait } = image ?? {};
 
   return (
     <Wrapper

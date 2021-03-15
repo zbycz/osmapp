@@ -13,6 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import { useToggleState } from '../helpers';
+import { Feature } from '../../services/osmApi';
 
 const Table = styled.table`
   font-size: 80%;
@@ -34,31 +35,31 @@ const majorKeysNames = {
 const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
 const getInitialMajorKeys = (tags) => majorKeys.filter((k) => !!tags[k]);
 
-const EditDialog = ({ feature, open, handleClose }) => {
-  const {
-    loading,
-    nonOsmObject,
-    geometry,
-    tags,
-    layer,
-    osmMeta,
-    properties,
-  } = feature;
+interface Props {
+  feature: Feature;
+  open: boolean;
+  handleClose: () => void;
+}
+
+const EditDialog = ({ feature, open, handleClose }: Props) => {
+  const { tags, properties } = feature;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const [showTags, toggleShowTags] = useToggleState(false);
   const [showLocation, toggleShowLocation] = useToggleState(false);
   const [placeCanceled, togglePlaceCanceled] = useToggleState(false);
-  const [location, setLocation] = React.useState();
-  const [note, setNote] = React.useState();
+  const [location, setLocation] = React.useState('');
+  const [note, setNote] = React.useState('');
   const [values, setValues] = React.useState(tags);
   const setValue = (k, v) => setValues((state) => ({ ...state, [k]: v }));
 
   const [activeMajorKeys, setActiveMajorKeys] = React.useState(
     getInitialMajorKeys(tags),
   );
-  const inactiveMajorKeys = majorKeys.filter((k) => !activeMajorKeys.includes(k));
+  const inactiveMajorKeys = majorKeys.filter(
+    (k) => !activeMajorKeys.includes(k),
+  );
 
   return (
     <Dialog
@@ -69,9 +70,7 @@ const EditDialog = ({ feature, open, handleClose }) => {
       aria-describedby="edit-dialog-description"
     >
       <DialogTitle id="edit-dialog-title">
-        Navrhnout úpravu:
-        {' '}
-        {tags.name || properties.subclass}
+        Navrhnout úpravu: {tags.name || properties.subclass}
       </DialogTitle>
       <DialogContent dividers>
         <DialogContentText
@@ -135,7 +134,9 @@ const EditDialog = ({ feature, open, handleClose }) => {
                           variant="outlined"
                           size="small"
                           name={k}
-                          onChange={(e) => setValue(e.target.name, e.target.value)}
+                          onChange={(e) =>
+                            setValue(e.target.name, e.target.value)
+                          }
                           fullWidth
                         />
                       </td>
@@ -148,12 +149,12 @@ const EditDialog = ({ feature, open, handleClose }) => {
           <br />
 
           <FormControlLabel
-            control={(
+            control={
               <Checkbox
                 checked={placeCanceled}
                 onChange={togglePlaceCanceled}
               />
-            )}
+            }
             label="Místo zrušeno či zavřeno"
           />
 

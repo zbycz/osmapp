@@ -1,4 +1,3 @@
-
 import { getCenter } from '../../services/helpers';
 import { layersWithOsmId } from './layers';
 

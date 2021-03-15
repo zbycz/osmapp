@@ -51,6 +51,7 @@ export const renderOptionFactory = (inputValue) => (option) => {
       </Grid>
       <Grid item xs>
         {parts.map((part, index) => (
+          // eslint-disable-next-line react/no-array-index-key
           <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
             {part.text}
           </span>
