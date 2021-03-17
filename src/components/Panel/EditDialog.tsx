@@ -61,6 +61,12 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
     (k) => !activeMajorKeys.includes(k),
   );
 
+  const saveDialog = () => {
+    // eslint-disable-next-line no-alert
+    alert('TODO');
+    handleClose();
+  };
+
   return (
     <Dialog
       fullScreen={fullScreen}
@@ -77,6 +83,7 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
           id="edit-dialog-description"
           // ref={descriptionElementRef}
           tabIndex={-1}
+          style={{ outline: 0 }}
         >
           {activeMajorKeys.map((k) => (
             <div key={k}>
@@ -184,14 +191,14 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
           )}
 
           <p>
-            Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Zde můžete
-            přidat doplňující poznámku, nebo popsat úpravu, která ve formuláři
-            není možná. Vhodné je též podložit váš příspěvek odkazem na zdroj
-            informace (web, foto atd.).
+            Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Zde pro ně
+            můžete přidat doplňující poznámku, nebo popsat jinou úpravu. Vhodné
+            je též podložit váš příspěvek odkazem na zdroj informace (web, foto
+            atd.).
           </p>
           <TextField
             label="Poznámka (nepovinné)"
-            placeholder="speciální úprava, odkaz na zdroj informace apod."
+            placeholder="odkaz na zdroj informace apod."
             InputLabelProps={{
               shrink: true,
             }}
@@ -208,7 +215,7 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
         <Button onClick={handleClose} color="primary">
           Zrušit
         </Button>
-        <Button onClick={handleClose} color="primary" variant="contained">
+        <Button onClick={saveDialog} color="primary" variant="contained">
           Uložit
         </Button>
       </DialogActions>

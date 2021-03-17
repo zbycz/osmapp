@@ -18,7 +18,7 @@ import { capitalize, useBoolState, useToggleState } from '../helpers';
 import makiFiles from './makiFiles';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
-import { getShortLink } from '../../services/helpers';
+import { getShortId, getShortLink } from '../../services/helpers';
 import EditDialog from './EditDialog';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 
@@ -177,7 +177,12 @@ const Panel = ({ feature }) => {
             </Button>
           </StyledEdit>
 
-          <EditDialog open={open} handleClose={handleClose} feature={feature} />
+          <EditDialog
+            open={open}
+            handleClose={handleClose}
+            feature={feature}
+            key={getShortId(feature.osmMeta)}
+          />
 
           <Footer>
             {nonOsmObject
