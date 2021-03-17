@@ -8,6 +8,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import LayersIcon from '../../assets/LayersIcon';
 import { useBoolState } from '../helpers';
 import { MapFooter } from './MapFooter';
+import { SHOW_PROTOTYPE_UI } from '../../config';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -105,14 +106,18 @@ const Map = ({ onFeatureClicked }) => {
       <BrowserMap onFeatureClicked={onFeatureClicked} onMapLoaded={setLoaded} />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
-      <TopCenter>
-        <WhatIsOsmButton />
-      </TopCenter>
-      <TopRight>
-        <LayerSwitcherButton />
-      </TopRight>
+      {SHOW_PROTOTYPE_UI && (
+        <TopCenter>
+          <WhatIsOsmButton />
+        </TopCenter>
+      )}
+      {SHOW_PROTOTYPE_UI && (
+        <TopRight>
+          <LayerSwitcherButton />
+        </TopRight>
+      )}
       <BottomRight>
-        <BugReportButton />
+        {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MapFooter />
       </BottomRight>
     </>
