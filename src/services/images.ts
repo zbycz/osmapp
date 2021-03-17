@@ -34,10 +34,12 @@ export const getFeatureImage = async (feature) => {
     }
   }
 
-  // fallback to Fody
-  const fodyImage = await getFodyImage(feature.center);
-  if (fodyImage.thumb) {
-    return fodyImage;
+  // fallback to Fody for guideposts etc.
+  if (feature.tags.information) {
+    const fodyImage = await getFodyImage(feature.center);
+    if (fodyImage.thumb) {
+      return fodyImage;
+    }
   }
 
   // fallback to mapillary

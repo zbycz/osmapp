@@ -27,5 +27,9 @@ const GlobalStyle = createGlobalStyle`
   .mapboxgl-ctrl-top-right {
     top: 83px !important;
   }
+
+  .mapboxgl-canvas {
+    outline: 0;
+  }
 `;
 export default GlobalStyle;

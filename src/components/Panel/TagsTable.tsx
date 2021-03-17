@@ -81,15 +81,19 @@ const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
   );
 };
 
+const joinWithSeparator = (a, sep, b) =>
+  `${a || ''}${a && b ? sep : ''}${b || ''}`;
+
 const buildAddress = (tagsArr) => {
   const tags = tagsArr.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
   const {
-    'addr:street': str,
+    'addr:street': street,
     'addr:housenumber': num,
     'addr:city': city,
   } = tags;
 
-  return `${str || ''} ${num || ''}${city ? `, ${city}` : ''}`.trim();
+  const streetNum = joinWithSeparator(street, ' ', num);
+  return joinWithSeparator(streetNum, ', ', city);
 };
 
 const renderValue = (k, v) => {
