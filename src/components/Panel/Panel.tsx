@@ -20,6 +20,7 @@ import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
 import { getShortLink } from '../../services/helpers';
 import EditDialog from './EditDialog';
+import { SHOW_PROTOTYPE_UI } from '../../config';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -123,15 +124,19 @@ const Panel = ({ feature }) => {
             {tags.name ? subclass : 'beze jména'}
           </PoiType>
 
-          <StyledIconButton>
-            <Share htmlColor="#fff" titleAccess="Sdílet" />
-          </StyledIconButton>
-          <StyledIconButton>
-            <StarBorder htmlColor="#fff" titleAccess="Uložit" />
-          </StyledIconButton>
-          <StyledIconButton>
-            <Directions htmlColor="#fff" titleAccess="Trasa" />
-          </StyledIconButton>
+          {SHOW_PROTOTYPE_UI && (
+            <>
+              <StyledIconButton>
+                <Share htmlColor="#fff" titleAccess="Sdílet" />
+              </StyledIconButton>
+              <StyledIconButton>
+                <StarBorder htmlColor="#fff" titleAccess="Uložit" />
+              </StyledIconButton>
+              <StyledIconButton>
+                <Directions htmlColor="#fff" titleAccess="Trasa" />
+              </StyledIconButton>
+            </>
+          )}
         </FeatureImage>
         <Loading>{loading && <LinearProgress />}</Loading>
         <Content>

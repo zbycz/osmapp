@@ -40,6 +40,7 @@ const Bottom = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  height: 44px;
 `;
 
 const IconWrapper = styled.div`

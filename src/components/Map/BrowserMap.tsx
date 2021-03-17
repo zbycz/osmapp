@@ -7,6 +7,7 @@ import { setUpHover, style } from './layers';
 import { useMapEffectFactory } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { getShortId } from '../../services/helpers';
+import { SHOW_PROTOTYPE_UI } from '../../config';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
@@ -54,14 +55,14 @@ const useOnFeatureClicked = useMapEffectFactory((map, onFeatureClicked) => {
     const skeleton = getSkeleton(features[0], coords);
     console.log('clicked skeleton: ', skeleton); // eslint-disable-line no-console
 
-    if (skeleton.nonOsmObject) {
-      onFeatureClicked(skeleton);
-    } else {
+    if (!skeleton.nonOsmObject) {
       onFeatureClicked({ ...skeleton, loading: true });
       const fullFeature = await fetchFromApi(skeleton.osmMeta);
       if (getShortId(fullFeature.osmMeta) === getShortId(skeleton.osmMeta)) {
         onFeatureClicked(fullFeature);
       }
+    } else if (SHOW_PROTOTYPE_UI) {
+      onFeatureClicked(skeleton);
     }
   });
 });
