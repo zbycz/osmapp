@@ -96,7 +96,15 @@ const Panel = ({ feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
   const [open, handleOpen, handleClose] = useBoolState(false);
 
-  const { loading, nonOsmObject, tags, layer, osmMeta, properties } = feature;
+  const {
+    loading,
+    nonOsmObject,
+    tags,
+    layer,
+    osmMeta,
+    properties,
+    skeleton,
+  } = feature;
 
   const shortLink = getShortLink(osmMeta);
   const ico = makiFiles.includes(properties.class)
@@ -181,7 +189,7 @@ const Panel = ({ feature }) => {
             open={open}
             handleClose={handleClose}
             feature={feature}
-            key={getShortId(feature.osmMeta)}
+            key={getShortId(feature.osmMeta) + (skeleton && 'skel')}
           />
 
           <Footer>

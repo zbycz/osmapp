@@ -24,6 +24,6 @@ export const getFodyImage = async (center) => {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('getFodyImage', e);
-    return {};
+    return undefined;
   }
 };

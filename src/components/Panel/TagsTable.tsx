@@ -81,19 +81,16 @@ const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
   );
 };
 
-const joinWithSeparator = (a, sep, b) =>
-  `${a || ''}${a && b ? sep : ''}${b || ''}`;
+const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
 
 const buildAddress = (tagsArr) => {
-  const tags = tagsArr.reduce((acc, [k, v]) => ({ ...acc, [k]: v }), {});
   const {
     'addr:street': street,
     'addr:housenumber': num,
     'addr:city': city,
-  } = tags;
+  } = Object.fromEntries(tagsArr);
 
-  const streetNum = joinWithSeparator(street, ' ', num);
-  return joinWithSeparator(streetNum, ', ', city);
+  return join(join(street, ' ', num), ', ', city);
 };
 
 const renderValue = (k, v) => {
