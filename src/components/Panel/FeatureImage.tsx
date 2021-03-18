@@ -1,7 +1,6 @@
 import * as React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import BrokenImage from '@material-ui/icons/BrokenImage';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { ReactNode } from 'react';
 import { getFeatureImage, LOADING } from '../../services/images';
@@ -46,10 +45,14 @@ const Bottom = styled.div`
 const IconWrapper = styled.div`
   padding-top: 40px;
   text-align: center;
-  svg {
+  svg,
+  img {
     width: 100px;
     height: 100px;
     color: #eee;
+  }
+  img {
+    opacity: 0.15;
   }
 `;
 
@@ -87,10 +90,11 @@ const Attribution = styled.a`
 
 interface Props {
   feature: Feature;
+  ico: string;
   children: ReactNode;
 }
 
-const FeatureImage = ({ feature, children }: Props) => {
+const FeatureImage = ({ feature, ico, children }: Props) => {
   const [image, setImage] = React.useState(feature.ssrFeatureImage ?? LOADING);
 
   React.useEffect(() => {
@@ -118,7 +122,7 @@ const FeatureImage = ({ feature, children }: Props) => {
     >
       {image === undefined && (
         <IconWrapper>
-          <BrokenImage />
+          <img src={`/maki/${ico}-11.svg`} alt={ico} title={ico} />
         </IconWrapper>
       )}
       {image === LOADING && (

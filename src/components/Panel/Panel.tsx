@@ -126,7 +126,7 @@ const Panel = ({ feature }) => {
         </Head>
       )}
       <Scrollbars universal autoHide style={{ height: '100%' }}>
-        <FeatureImage feature={feature}>
+        <FeatureImage feature={feature} ico={ico}>
           <PoiType>
             <Maki ico={ico} />
             {tags.name ? subclass : 'beze jména'}
