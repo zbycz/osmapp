@@ -9,7 +9,7 @@ export const getMapillaryImage = async (center) => {
   // {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"ca":71.80811,"camera_make":"Apple","camera_model":"iPhone6,2","captured_at":"2015-05-08T06:02:41.227Z","key":"rPU1sldzMCVIMN2XmjDf2A","pano":false,"sequence_key":"-zanzZ2HpdOhkw-uG166Pg","user_key":"M7Mgl9y1z0KB5Ew9caTDvw","username":"zbycz"},"geometry":{"type":"Point","coordinates":[14.390517,50.100268]}}]}
   if (!features.length) {
     removeFetchCache(url); // mapillary sometimes returns image on second try (lets not cache the first try)
-    return null;
+    return undefined;
   }
 
   const image = features[0];

@@ -74,5 +74,5 @@ export const getWikiImage = async (wikiUrl) => {
     };
   }
 
-  return {};
+  return undefined;
 };
