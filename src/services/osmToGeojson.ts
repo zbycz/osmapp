@@ -1,6 +1,7 @@
 import { LineString, Point, Position } from './types';
 import { parseXmlString } from './helpers';
 import { getPoiClass } from './getPoiClass';
+import { getCenter } from './getCenter';
 
 const coords = (x): Position => [parseFloat(x.$.lon), parseFloat(x.$.lat)];
 const lookupNode = (osmXml, id) => osmXml.node.find((x) => x.$.id === id);
@@ -32,6 +33,7 @@ export const osmToGeojson = async (osmXmlStr) => {
   if (!item) {
     throw new Error('Empty osmXml result');
   }
+  const geometry = getGeometry[type](osmXml, item);
 
   const osmMeta = { type, ...item.$ };
   const tagItems = item.tag.length ? item.tag : [item.tag];
@@ -42,7 +44,8 @@ export const osmToGeojson = async (osmXmlStr) => {
 
   return {
     type: 'Feature' as const,
-    geometry: getGeometry[type](osmXml, item),
+    geometry,
+    center: getCenter(geometry),
     osmMeta,
     tags,
     properties: getPoiClass(tags),
