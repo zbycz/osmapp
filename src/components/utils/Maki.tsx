@@ -6,11 +6,9 @@ const MakiImg = styled.img`
   vertical-align: middle;
   margin-right: 6px;
   filter: invert(100%);
-  width: 11px;
-  height: 11px;
 `;
 const Maki = ({ ico }) => (
-  <MakiImg src={`/maki/${ico}-11.svg`} alt={ico} title={ico} />
+  <MakiImg src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
 );
 
 export default Maki;
