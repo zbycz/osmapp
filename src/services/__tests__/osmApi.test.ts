@@ -1,10 +1,10 @@
-import { osmToGeojson } from '../osmApi';
 import {
   node,
   overpassWay,
   overpassWayMeta,
   overpassBuggyWay,
 } from './fixture';
+import { osmToGeojson } from '../osmToGeojson';
 
 describe('osmToGeojson()', () => {
   it('should convert osm_api node', async () => {

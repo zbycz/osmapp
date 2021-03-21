@@ -44,7 +44,8 @@ const fetchInitialFeature = async (id) => {
   }
 };
 
-const timeout = (time) => new Promise((resolve) => setTimeout(resolve, time));
+const timeout = (time) =>
+  new Promise((resolve) => setTimeout(resolve, time)) as Promise<undefined>;
 
 export const getInititalFeature = async (ctx) => {
   const { osmid, osmtype, id } = ctx.query;

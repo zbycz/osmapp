@@ -4,9 +4,9 @@ import * as React from 'react';
 const round = (x) => x.toFixed(5);
 
 export const Coords = ({ coords: [lon, lat] }) => (
-  <>
-    {round(lat)}°{round(lon)}°
-  </>
+  <span title="latitude, longitude (y,x)">
+    {round(lat)}° {round(lon)}°
+  </span>
 );
 
 const Coordinates = ({ feature: { center } }) =>
