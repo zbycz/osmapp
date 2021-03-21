@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useMapStateContext } from '../utils/MapStateContext';
 import GithubIcon from '../../assets/GithubIcon';
@@ -26,10 +26,19 @@ const OsmappLink = () => (
 );
 
 const EditLink = () => {
+  // fixes hydration error - server and browser have different view (cookies and window.hash)
+  // throwed "Warning: Prop `href` did not match."
+  const [browser, setBrowser] = useState(false);
+  useEffect(() => {
+    setBrowser(true);
+  }, []);
+
   const { view } = useMapStateContext();
   return (
     <a
-      href={`https://www.openstreetmap.org/edit#map=${view.join('/')}`}
+      href={`https://www.openstreetmap.org/edit#map=${
+        browser ? view.join('/') : ''
+      }`}
       title="v editoru iD"
       target="_blank"
       rel="noopener"
