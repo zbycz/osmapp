@@ -2,12 +2,14 @@ import { getShortId } from './helpers';
 import { getFodyImage } from './images/getFodyImage';
 import { getMapillaryImage } from './images/getMapillaryImage';
 import { getWikiApiUrl, getWikiImage } from './images/getWikiImage';
+import { Image, Feature } from './types';
 
 export const LOADING = null;
+
 let mapillaryPromise;
 let mapillaryId;
 
-export const getFeatureImage = async (feature) => {
+export const getFeatureImage = async (feature: Feature): Promise<Image> => {
   // for nonOsmObject we dont expect 2nd pass
   if (feature.nonOsmObject) {
     return getMapillaryImage(feature.center);

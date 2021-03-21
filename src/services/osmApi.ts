@@ -2,6 +2,7 @@ import { getApiId, getCenter, parseXmlString } from './helpers';
 import { getPoiClass } from './getPoiClass';
 import { isBrowser } from '../components/helpers';
 import { fetchText } from './fetch';
+import { Feature } from './types';
 
 export const OSM_API = 'https://www.openstreetmap.org/api/0.6';
 export const OSM_FEATURE_URL = ({ type, id }) => `${OSM_API}/${type}/${id}`;
@@ -21,6 +22,7 @@ const coords = (x) => [parseFloat(x.$.lon), parseFloat(x.$.lat)];
 const lookupNode = (osmXml, id) => osmXml.node.find((x) => x.$.id === id);
 const getGeometry = {
   node: (osmXml, node) => ({
+    type: 'Point',
     coordinates: coords(node),
   }),
   way: (osmXml, way) => ({
@@ -59,52 +61,6 @@ export const osmToGeojson = async (osmXmlStr) => {
     properties: getPoiClass(tags),
   };
 };
-
-export type Position = number[]; // [number, number]
-
-export interface Point {
-  coordinates: Position;
-}
-
-export interface LineString {
-  type: 'LineString';
-  coordinates: Position[];
-}
-
-export interface Feature {
-  type: 'Feature';
-  geometry: Point | LineString;
-  osmMeta: {
-    type: string;
-    id: string;
-    visible?: string;
-    version?: string;
-    changeset?: string;
-    timestamp?: string;
-    user?: string;
-    uid?: string;
-    lat?: string;
-    lon?: string;
-  };
-  tags: {
-    [key: string]: string;
-  };
-  properties: {
-    class: string;
-    subclass: string;
-  };
-  center: Position;
-  ssrFeatureImage?: string;
-
-  // skeleton
-  layer?: { id: string };
-  source?: string;
-  sourceLayer?: string;
-  state?: { hover: boolean };
-  skeleton?: boolean;
-  nonOsmObject?: boolean;
-  loading?: true;
-}
 
 export const getFeatureFromApi = async (featureId) => {
   const apiId = getApiId(featureId);

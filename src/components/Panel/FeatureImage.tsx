@@ -5,7 +5,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import { ReactNode } from 'react';
 import { getFeatureImage, LOADING } from '../../services/images';
 import LogoOsmapp from '../../assets/LogoOsmapp';
-import { Feature } from '../../services/osmApi';
+import { Feature } from '../../services/types';
 
 const Wrapper = styled.div`
   position: relative;
