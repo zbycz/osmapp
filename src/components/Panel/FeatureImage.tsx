@@ -1,11 +1,10 @@
 import * as React from 'react';
+import { ReactNode } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { ReactNode } from 'react';
 import { getFeatureImage, LOADING } from '../../services/images';
-import LogoOsmapp from '../../assets/LogoOsmapp';
 import { Feature } from '../../services/types';
+import { InlineSpinner } from './FeatureImage/InlineSpinner';
 
 const Wrapper = styled.div`
   position: relative;
@@ -13,7 +12,7 @@ const Wrapper = styled.div`
   background-size: ${({ portrait }) => (portrait ? 'contain' : 'cover')};
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
-  ${({ uncertain }) => (uncertain ? 'filter: grayscale(100%);' : '')}
+  ${({ uncertainImage }) => (uncertainImage ? 'filter: grayscale(100%);' : '')}
 
   &:before {
     content: '';
@@ -56,36 +55,22 @@ const IconWrapper = styled.div`
   }
 `;
 
-const Spinner = styled.div`
-  position: absolute;
-  left: 50%;
-  top: 40%;
-  margin: -20px 0 0 -20px;
-  div {
-    position: absolute;
-    svg {
-      color: #ccc;
-    }
-  }
-  svg.logo {
-    margin: 10px;
-  }
-`;
-
 const Attribution = styled.a`
   position: absolute;
-  right: 0;
-  top: 0;
-  // display: flex;
-  // align-items: center;
-  // width: 100%;
+  right: 1px;
+  top: 1px;
   text-align: right;
   padding-right: 3px;
   font-size: 80%;
-  text-shadow: 0px 0px 1px rgba(0, 0, 0, 0.3);
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 1);
   color: #fff;
   text-decoration: none;
-  opacity: ${({ portrait }) => (portrait ? 1 : 0.5)};
+  opacity: ${({ portrait }) => (portrait ? 1 : 0.8)};
+
+  &:hover {
+    opacity: 1;
+    text-shadow: 1px 1px 10px rgba(0, 0, 0, 1), 0 0 4px rgba(0, 0, 0, 1);
+  }
 `;
 
 interface Props {
@@ -117,31 +102,26 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
   return (
     <Wrapper
       link={thumb}
-      uncertain={source === 'Mapillary'}
+      uncertainImage={source === 'Mapillary'}
       portrait={portrait}
     >
-      {image === undefined && (
+      {(image === undefined || image === LOADING) && (
         <IconWrapper>
           <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
         </IconWrapper>
       )}
-      {image === LOADING && (
-        <Spinner>
-          <CircularProgress />
-          <LogoOsmapp width={20} height={20} className="logo" />
-        </Spinner>
-      )}
       {source && (
         <Attribution
           href={link}
-          title={`© ${source}${username ? `, ${username}` : ''}`}
+          title={`© ${source}${username ? ` / ${username}` : ''}`}
           target="_blank"
           rel="noopener"
           portrait={portrait}
         >
-          {username ?? source}
+          {`${source}${username ? ` / ${username}` : ''}`}
         </Attribution>
       )}
+      {!feature.loading && image === LOADING && <InlineSpinner />}
       {thumb && (
         <Head>
           <meta property="og:image" content={thumb} />
