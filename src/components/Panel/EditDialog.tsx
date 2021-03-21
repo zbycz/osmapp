@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import { Box } from '@material-ui/core';
 import { useToggleState } from '../helpers';
-import { Feature } from '../../services/osmApi';
+import { Feature } from '../../services/types';
 
 const Table = styled.table`
   font-size: 80%;

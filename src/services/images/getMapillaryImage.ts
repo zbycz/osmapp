@@ -1,7 +1,9 @@
 import { fetchJson } from '../fetch';
 import { removeFetchCache } from '../fetchCache';
+import { Image , Position } from '../types';
 
-export const getMapillaryImage = async (center) => {
+
+export const getMapillaryImage = async (center: Position): Promise<Image> => {
   const lonlat = center.map((x) => x.toFixed(5)).join(',');
   const url = `https://a.mapillary.com/v3/images?client_id=TTdNZ2w5eTF6MEtCNUV3OWNhVER2dzpjMjdiZGE1MWJmYzljMmJi&lookat=${lonlat}&closeto=${lonlat}`;
   const { features } = await fetchJson(url);

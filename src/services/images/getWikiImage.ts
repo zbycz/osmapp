@@ -1,5 +1,6 @@
 // From https://github.com/osmcz/osmcz/blob/0d3eaaa/js/poi-popup.js - MIT
 import { fetchJson } from '../fetch';
+import { Image } from '../types';
 
 export const getWikiApiUrl = (tags) => {
   if (tags.wikidata) {
@@ -25,6 +26,7 @@ export const getWikiApiUrl = (tags) => {
 
   return null;
 };
+
 // Analyze reply and identify wikidata / wikimedia / wikipedia content
 const getWikiType = (d) => {
   if (d.query) {
@@ -36,22 +38,22 @@ const getWikiType = (d) => {
   }
   return d.claims ? 'wikidata' : null;
 };
-export const getWikiImage = async (wikiUrl) => {
+
+export const getWikiImage = async (wikiUrl): Promise<Image> => {
   const data = await fetchJson(`${wikiUrl}&origin=*`);
   const replyType = getWikiType(data);
   console.log('getWikiImage', replyType, data); // eslint-disable-line no-console
 
   if (replyType === 'wikidata') {
     if (!data.claims || !data.claims.P18) {
-      return {};
+      return undefined;
     }
     // In wikidata entry is image name, but we need thumbnail,
     // so we will convert wikidata reply to wikimedia_commons tag
     const fakeTags = {
       wikimedia_commons: `File:${data.claims.P18[0].mainsnak.datavalue.value}`,
     };
-    const url = getWikiApiUrl(fakeTags);
-    return getWikiImage(url);
+    return getWikiImage(getWikiApiUrl(fakeTags));
   }
 
   const page = Object.values(data.query.pages)[0] as any;

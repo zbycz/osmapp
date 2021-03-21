@@ -1,6 +1,7 @@
 import { fetchJson } from '../fetch';
+import { Image, Position } from '../types';
 
-export const getFodyImage = async (center) => {
+export const getFodyImage = async (center: Position): Promise<Image> => {
   try {
     // const url = `https://osm.fit.vutbr.cz/fody-dev/api/close?lat=${center[1]}&lon=${center[0]}&limit=1&distance=50`; //dev
     const url = `https://osm.fit.vutbr.cz/fody/api/close?lat=${center[1]}&lon=${center[0]}&limit=1&distance=50`;
@@ -8,7 +9,7 @@ export const getFodyImage = async (center) => {
 
     // {"type":"FeatureCollection","features":[{"type":"Feature","geometry":{"type":"Point","coordinates":[14.30481,50.09958]},"properties":{"id":25530,"author":"Milancer","ref":"AB030","tags":"pesi:;rozcestnik:","created":"2019-11-10 15:19:18","enabled":"t","distance":4.80058345}}]}
     if (!features.length) {
-      return {};
+      return undefined;
     }
 
     const image = features[0];
