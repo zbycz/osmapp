@@ -15,7 +15,7 @@ import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import Coordinates from './Coordinates';
 import { capitalize, useBoolState, useToggleState } from '../helpers';
-import makiFiles from './makiFiles';
+import { icons } from '../../assets/icons';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
 import { getShortId, getShortLink } from '../../services/helpers';
@@ -83,10 +83,13 @@ const PoiType = styled.div`
   color: #fff;
   margin: 0 auto 0 15px;
   font-size: 13px;
-
+  position: relative;
   svg {
     vertical-align: bottom;
-    margin-right: 5px;
+  }
+  span {
+    position: absolute;
+    left: 20px;
   }
 `;
 
@@ -107,7 +110,7 @@ const Panel = ({ feature }) => {
   } = feature;
 
   const shortLink = getShortLink(osmMeta);
-  const ico = makiFiles.includes(properties.class)
+  const ico = icons.includes(properties.class)
     ? properties.class
     : 'information';
   const subclass = properties.subclass || (layer && layer.id) || '?';
@@ -116,7 +119,6 @@ const Panel = ({ feature }) => {
     .filter((x) => x[1]);
 
   // TODO resolve all getPoiClass
-  // TODO copy icons from @mapbox/maki
 
   return (
     <Wrapper>
@@ -129,7 +131,7 @@ const Panel = ({ feature }) => {
         <FeatureImage feature={feature} ico={ico}>
           <PoiType>
             <Maki ico={ico} />
-            {tags.name ? subclass : 'beze jména'}
+            <span>{tags.name ? subclass : 'beze jména'}</span>
           </PoiType>
 
           {SHOW_PROTOTYPE_UI && (

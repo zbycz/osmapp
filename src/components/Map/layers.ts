@@ -1,4 +1,5 @@
 import mapboxStyle from './mapboxStyle';
+import { prod } from '../../services/helpers';
 
 export const sources = {
   openmaptiles: {
@@ -83,7 +84,11 @@ function addHoverPaint(origStyle) {
   return origStyle;
 }
 
-const origStyle = mapboxStyle(sources, backgroundLayers);
+const sprite = prod
+  ? 'https://osmapp.org/sprites/osmapp'
+  : 'http://localhost:3000/sprites/osmapp';
+
+const origStyle = mapboxStyle(sources, backgroundLayers, sprite);
 export const style = addHoverPaint(origStyle);
 
 const isOsmLayer = (id) => {

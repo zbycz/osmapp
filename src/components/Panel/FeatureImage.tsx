@@ -122,7 +122,7 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
     >
       {image === undefined && (
         <IconWrapper>
-          <img src={`/maki/${ico}-11.svg`} alt={ico} title={ico} />
+          <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
         </IconWrapper>
       )}
       {image === LOADING && (

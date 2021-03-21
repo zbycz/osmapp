@@ -31,7 +31,7 @@ export const getFeatureImage = async (feature: Feature): Promise<Image> => {
   const wikiUrl = getWikiApiUrl(feature.tags);
   if (wikiUrl) {
     const wikiImage = await getWikiImage(wikiUrl);
-    if (wikiImage.thumb) {
+    if (wikiImage) {
       return wikiImage;
     }
   }
@@ -39,7 +39,7 @@ export const getFeatureImage = async (feature: Feature): Promise<Image> => {
   // fallback to Fody for guideposts etc.
   if (feature.tags.information) {
     const fodyImage = await getFodyImage(feature.center);
-    if (fodyImage.thumb) {
+    if (fodyImage) {
       return fodyImage;
     }
   }
