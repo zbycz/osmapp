@@ -125,7 +125,7 @@ const contoursStyle = [
 
 // https://openmaptiles.github.io/osm-bright-gl-style/style-cdn.json
 
-const mapboxStyle = (sources, backgroundLayers) => ({
+const mapboxStyle = (sources, backgroundLayers, sprite) => ({
   version: 8,
   name: 'OSM Bright',
   metadata: {
@@ -170,7 +170,7 @@ const mapboxStyle = (sources, backgroundLayers) => ({
   bearing: 0,
   pitch: 0,
   sources,
-  sprite: 'https://openmaptiles.github.io/osm-bright-gl-style/sprite',
+  sprite,
   glyphs:
     'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=7dlhLl3hiXQ1gsth0kGu',
   layers: [
