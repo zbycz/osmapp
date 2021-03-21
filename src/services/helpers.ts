@@ -1,6 +1,4 @@
 import * as xml2js from 'isomorphic-xml2js';
-import geojsonExtent from '@mapbox/geojson-extent';
-import { Feature, Point, Position } from './types';
 
 export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
@@ -42,32 +40,5 @@ export const getApiId = (value): OsmApiId => {
 
 export const getShortLink = (apiId: OsmApiId) =>
   `https://osmapp.org/${apiId.type}/${apiId.id}`;
-
-export const getCenter = (feature: Feature): Position => {
-  const { type } = feature.geometry;
-
-  // node
-  if (type === 'Point') {
-    return (feature.geometry as Point).coordinates;
-  }
-
-  // relation
-  if (type !== 'LineString' && type !== 'Polygon') {
-    console.warn('Error: Unknown geometry', type, feature); // eslint-disable-line no-console
-    return undefined;
-  }
-
-  // way
-  try {
-    const ex = geojsonExtent(feature); // [WSEN]
-    const avg = (a, b) => (a + b) / 2; // flat earth rulezz
-    const lon = avg(ex[0], ex[2]);
-    const lat = avg(ex[1], ex[3]);
-    return [lon, lat];
-  } catch (e) {
-    console.warn('Error: Unknown center of geojson', e, feature); // eslint-disable-line no-console
-    return undefined;
-  }
-};
 
 export const prod = process.env.NODE_ENV === 'production';
