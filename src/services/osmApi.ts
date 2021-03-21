@@ -3,7 +3,6 @@ import { isBrowser } from '../components/helpers';
 import { fetchText } from './fetch';
 import { Feature } from './types';
 import { osmToGeojson } from './osmToGeojson';
-import { getCenter } from './getCenter';
 
 export const OSM_API = 'https://www.openstreetmap.org/api/0.6';
 export const OSM_FEATURE_URL = ({ type, id }) => `${OSM_API}/${type}/${id}`;
@@ -24,11 +23,7 @@ export const getFeatureFromApi = async (featureId): Promise<Feature> => {
   const url = isNode ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
 
   const response = await fetchText(url, { putInAbortableQueue: true });
-  const geojson = await osmToGeojson(response);
-  return {
-    ...geojson,
-    center: getCenter(geojson.geometry),
-  };
+  return osmToGeojson(response);
 };
 
 export const fetchFromApi = async (osmApiId) => {
@@ -41,6 +36,6 @@ export const fetchFromApi = async (osmApiId) => {
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn(e);
-    return null;
+    return null; // TODO show some user error message
   }
 };
