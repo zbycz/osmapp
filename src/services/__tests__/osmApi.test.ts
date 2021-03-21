@@ -12,11 +12,6 @@ describe('osmToGeojson()', () => {
     expect(geojson).toEqual(node.geojson);
   });
 
-  // it('should convert osm_api way', async () => {
-  //   const geojson = await osmToGeojson(way.xml);
-  //   expect(geojson).toEqual(way.geojson);
-  // });
-
   it('should convert overpassWay', async () => {
     const geojson = await osmToGeojson(overpassWay.xml);
     expect(geojson).toEqual(overpassWay.geojson);
@@ -29,6 +24,9 @@ describe('osmToGeojson()', () => {
 
   it('should convert overpassBuggyWay', async () => {
     const geojson = await osmToGeojson(overpassBuggyWay.xml);
-    expect(geojson).toMatchObject({ properties: { leisure: 'playground' } });
+    expect(geojson).toMatchObject({
+      tags: { leisure: 'playground' },
+      properties: { subclass: 'playground' },
+    });
   });
 });
