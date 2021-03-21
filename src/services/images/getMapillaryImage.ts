@@ -1,7 +1,6 @@
 import { fetchJson } from '../fetch';
 import { removeFetchCache } from '../fetchCache';
-import { Image , Position } from '../types';
-
+import { Image, Position } from '../types';
 
 export const getMapillaryImage = async (center: Position): Promise<Image> => {
   const lonlat = center.map((x) => x.toFixed(5)).join(',');

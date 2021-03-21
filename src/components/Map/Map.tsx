@@ -28,7 +28,6 @@ const BottomRight = styled.div`
   bottom: 0;
   z-index: 1000;
   text-align: right;
-  padding: 2px;
 `;
 
 const TopCenter = styled.div`

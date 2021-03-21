@@ -1,5 +1,5 @@
-import { getCenter } from '../../services/helpers';
 import { layersWithOsmId } from './layers';
+import { getCenter } from '../../services/getCenter';
 
 export const getOsmId = (feature) => {
   if (!feature || !feature.id) return false;
@@ -23,7 +23,7 @@ export const getSkeleton = (feature, clickCoords) => {
   return {
     ...feature,
     geometry: feature.geometry,
-    center: getCenter(feature) || clickCoords,
+    center: getCenter(feature.geometry) || clickCoords,
     osmMeta,
     tags: { name: feature.properties && feature.properties.name },
     skeleton: true,
