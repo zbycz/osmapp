@@ -5,7 +5,6 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
-import Divider from '@material-ui/core/Divider';
 
 const StyledPaper = styled(Paper)`
   padding: 2px 4px;
@@ -14,7 +13,6 @@ const StyledPaper = styled(Paper)`
 `;
 
 const SearchIconButton = styled(IconButton)`
-  padding: 10;
   svg {
     transform: scaleX(-1);
     filter: FlipH;
@@ -23,15 +21,21 @@ const SearchIconButton = styled(IconButton)`
 `;
 
 const SearchInput = styled(InputBase)`
-  margin-left: 8;
   flex: 1;
 `;
 
-const StyledDivider = styled(Divider)`
-  width: 1;
-  height: 28;
-  margin: 4;
-`;
+const ClosePanelButton = ({ setFeature, setInputValue }) => (
+  <IconButton
+    aria-label="Zavřít panel"
+    onClick={(e) => {
+      e.preventDefault();
+      setFeature(null);
+      setInputValue('');
+    }}
+  >
+    <CloseIcon />
+  </IconButton>
+);
 
 export const SearchBoxInput = ({
   params,
@@ -56,20 +60,11 @@ export const SearchBoxInput = ({
         onFocus={onFocus}
         // autoFocus={false} // TODO it still focuses on feature close
       />
-      <StyledDivider />
-
       {feature && (
-        <IconButton
-          aria-label="Zavřít panel"
-          onClick={(e) => {
-            e.preventDefault();
-            setFeature(null);
-            // setInputValue('');
-            return false;
-          }}
-        >
-          <CloseIcon />
-        </IconButton>
+        <ClosePanelButton
+          setFeature={setFeature}
+          setInputValue={setInputValue}
+        />
       )}
     </StyledPaper>
   );
