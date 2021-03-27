@@ -28,15 +28,16 @@ const Table = styled.table`
     padding-left: 0;
   }
 
-  td {
-    max-width: 195px;
-  }
-
   table {
     padding-left: 1em;
     padding-bottom: 1em;
   }
 `;
+
+const renderValue = (k, v) => {
+  const url = getUrlForTag(k, v);
+  return url ? <a href={url}>{v.replace(/^https?:\/\//, '')}</a> : v;
+};
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k) => k.match(/^([a-z]+_)?name(:|$)/);
@@ -69,7 +70,7 @@ const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
                 {tags.map(([k, v]) => (
                   <tr key={k}>
                     <th>{k}</th>
-                    <td>{v}</td>
+                    <td>{renderValue(k, v)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -91,11 +92,6 @@ const buildAddress = (tagsArr) => {
   } = Object.fromEntries(tagsArr);
 
   return join(join(street, ' ', num), ', ', city);
-};
-
-const renderValue = (k, v) => {
-  const url = getUrlForTag(k, v);
-  return url ? <a href={url}>{v.replace(/^https?:\/\//, '')}</a> : v;
 };
 
 const TagsTable = ({ tags, except }) => {

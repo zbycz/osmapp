@@ -21,7 +21,8 @@ const Box = styled.div`
 const OsmappLink = () => (
   <>
     <GithubIcon width="12" height="12" />
-    <a href="https://github.com/zbycz/osmapp">osmapp</a> {packageJson.version}
+    <a href="https://github.com/zbycz/osmapp">osmapp</a>{' '}
+    {packageJson?.version?.replace(/\.0$/, '')}
   </>
 );
 

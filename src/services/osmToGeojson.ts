@@ -20,7 +20,7 @@ const getGeometry = {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   relation: (osmXml, relation): LineString => ({
     type: 'LineString',
-    coordinates: [osmXml.node.map((nd) => coords(nd))],
+    coordinates: osmXml.node.map((nd) => coords(nd)), // we use it only for computing Bounding Box / center
   }),
 };
 
@@ -45,7 +45,7 @@ export const osmToGeojson = async (osmXmlStr) => {
   return {
     type: 'Feature' as const,
     geometry,
-    center: getCenter(geometry),
+    center: getCenter(geometry) ?? [1, 1],
     osmMeta,
     tags,
     properties: getPoiClass(tags),
