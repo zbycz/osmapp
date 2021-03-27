@@ -7,6 +7,7 @@ import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapView, getInititalFeature } from './helpers';
+import { Feature } from '../../services/types';
 
 const getUrl = ({ type, id }) => `${type}/${id}`;
 
@@ -42,7 +43,11 @@ const usePersistMapView = () => {
   }, [view]);
 };
 
-const IndexWithProviders = ({ initialFeature }) => {
+interface Props {
+  initialFeature: Feature | null;
+}
+
+const IndexWithProviders = ({ initialFeature }: Props) => {
   const [feature, setFeature] = useFeatureState(initialFeature);
   usePersistMapView();
 

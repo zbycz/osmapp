@@ -84,6 +84,7 @@ const PoiType = styled.div`
   margin: 0 auto 0 15px;
   font-size: 13px;
   position: relative;
+  width: 100%;
   svg {
     vertical-align: bottom;
   }
@@ -174,18 +175,20 @@ const Panel = ({ feature }) => {
             except={advanced ? [] : ['name', 'layer', ...featuredKeys]}
           />
 
-          <StyledEdit>
-            <Button
-              size="large"
-              title="Upravit místo v živé databázi OSM"
-              startIcon={<EditIcon />}
-              variant="outlined"
-              color="primary"
-              onClick={handleOpen}
-            >
-              Upravit místo
-            </Button>
-          </StyledEdit>
+          {!skeleton && (
+            <StyledEdit>
+              <Button
+                size="large"
+                title="Upravit místo v živé databázi OSM"
+                startIcon={<EditIcon />}
+                variant="outlined"
+                color="primary"
+                onClick={handleOpen}
+              >
+                Upravit místo
+              </Button>
+            </StyledEdit>
+          )}
 
           <EditDialog
             open={open}
