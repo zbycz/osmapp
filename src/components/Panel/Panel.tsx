@@ -10,6 +10,7 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Head from 'next/head';
 import Typography from '@material-ui/core/Typography';
+import { Alert } from '@material-ui/lab';
 import Property from './Property';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
@@ -18,7 +19,7 @@ import { capitalize, useBoolState, useToggleState } from '../helpers';
 import { icons } from '../../assets/icons';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
-import { getShortId, getShortLink } from '../../services/helpers';
+import { getShortId, getShortLink, getUrlOsmId } from '../../services/helpers';
 import EditDialog from './EditDialog';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 
@@ -108,6 +109,7 @@ const Panel = ({ feature }) => {
     osmMeta,
     properties,
     skeleton,
+    error,
   } = feature;
 
   const shortLink = getShortLink(osmMeta);
@@ -152,6 +154,17 @@ const Panel = ({ feature }) => {
         <Loading>{loading && <LinearProgress />}</Loading>
         <Content>
           <FeatureHeading title={tags.name || subclass} />
+
+          {error === 'gone' && (
+            <Alert variant="outlined" severity="warning">
+              Tento prvek byl v mezičase smazán z OpenStreetMap.{' '}
+              <a
+                href={`https://osm.org/${getUrlOsmId(feature.osmMeta)}/history`}
+              >
+                Historie &raquo;
+              </a>
+            </Alert>
+          )}
 
           {!advanced && !!featuredTags.length && (
             <>
