@@ -1,6 +1,6 @@
 import * as React from 'react';
 import maplibregl from 'maplibre-gl'; // update CSS import in _document.js
-import { throttle } from 'lodash';
+import throttle from 'lodash/throttle';
 import { getSkeleton } from './helpers';
 import { fetchFromApi } from '../../services/osmApi';
 import { setUpHover, style } from './layers';

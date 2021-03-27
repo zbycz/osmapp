@@ -1,6 +1,7 @@
 import React from 'react';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import styled from 'styled-components';
+import throttle from 'lodash/throttle';
 import { onSelectedFactory } from './onSelectedFactory';
 import { renderOptionFactory } from './renderOptionFactory';
 import { SearchBoxInput } from './SearchBoxInput';
@@ -23,9 +24,18 @@ const TopPanel = styled.div`
   }
 `;
 
-// https://nominatim.openstreetmap.org/search?q=Ke+dzbanu&format=json&addressdetails=1&viewbox=&polygon_geojson=1&polygon_threshold=0.1
-const apiUrl = (s, bb) =>
-  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bb}&q=${s}`;
+const getApiUrl = (bbox, inputValue: string) => 
+  // polygon_geojson=1&polygon_threshold=0.1
+   `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bbox}&q=${inputValue}`
+;
+
+const fetchNominatim = throttle(
+  async (inputValue: string, bbox, setOptions) => {
+    const options = await fetchJson(getApiUrl(bbox, inputValue));
+    setOptions(options || []);
+  },
+  400,
+);
 
 const SearchBox = ({ feature, setFeature }) => {
   const [inputValue, setInputValue] = React.useState('');
@@ -37,20 +47,19 @@ const SearchBox = ({ feature, setFeature }) => {
       setOptions([]);
       return;
     }
-    fetchJson(apiUrl(inputValue, bbox)).then((results) => {
-      setOptions(results || []);
-    });
+    fetchNominatim(inputValue, bbox, setOptions);
   }, [inputValue]);
 
   return (
     <TopPanel>
       <Autocomplete
+        inputValue={inputValue}
         options={options}
         filterOptions={(x) => x}
         getOptionLabel={(option) => option.display_name}
         onChange={onSelectedFactory(setFeature, setView)}
         autoComplete
-        autoHighlight
+        // autoHighlight
         clearOnEscape
         // disableCloseOnSelect
         freeSolo
