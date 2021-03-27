@@ -27,6 +27,9 @@ export interface OsmApiId {
 export const getShortId = (apiId: OsmApiId): string =>
   `${apiId.type[0]}${apiId.id}`;
 
+export const getUrlOsmId = (apiId: OsmApiId): string =>
+  `${apiId.type}/${apiId.id}`;
+
 export const getApiId = (value): OsmApiId => {
   if (value.type && value.id) {
     return value;

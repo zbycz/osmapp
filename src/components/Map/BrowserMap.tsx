@@ -58,10 +58,19 @@ const useOnFeatureClicked = useMapEffectFactory((map, onFeatureClicked) => {
     if (!skeleton.nonOsmObject) {
       onFeatureClicked({ ...skeleton, loading: true });
       const fullFeature = await fetchFromApi(skeleton.osmMeta);
+
+      if (fullFeature == null) {
+        onFeatureClicked({ ...skeleton, loading: false, error: 'gone' });
+        return;
+      }
+
       if (getShortId(fullFeature.osmMeta) === getShortId(skeleton.osmMeta)) {
         onFeatureClicked(fullFeature);
+        return;
       }
-    } else if (SHOW_PROTOTYPE_UI) {
+    }
+
+    if (SHOW_PROTOTYPE_UI) {
       onFeatureClicked(skeleton);
     }
   });
