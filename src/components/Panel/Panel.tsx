@@ -1,6 +1,5 @@
 import * as React from 'react';
 import styled from 'styled-components';
-import { Scrollbars } from 'react-custom-scrollbars';
 import Button from '@material-ui/core/Button';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Share from '@material-ui/icons/Share';
@@ -22,46 +21,16 @@ import Maki from '../utils/Maki';
 import { getShortId, getShortLink, getUrlOsmId } from '../../services/helpers';
 import EditDialog from './EditDialog';
 import { SHOW_PROTOTYPE_UI } from '../../config';
-
-// custom scrollbar
-// better: https://github.com/rommguy/react-custom-scroll
-// maybe https://github.com/malte-wessel/react-custom-scrollbars (larger)
-const Wrapper = styled.div`
-  position: absolute;
-  left: 0;
-  top: 72px; // TopPanel
-  bottom: 0;
-  background-color: #fafafa;
-  overflow: hidden;
-  z-index: 1100;
-
-  display: flex;
-  flex-direction: column;
-
-  width: 100%;
-  @media (min-width: 410px) {
-    width: 410px;
-  }
-`;
-
-const Content = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: calc(100vh - 72px - 238px); // 100% - TopPanel - FeatureImage
-  padding: 20px 15px 0 15px;
-`;
+import {
+  PanelContent,
+  PanelFooter,
+  PanelWrapper,
+  PanelScrollbars,
+} from '../utils/PanelHelpers';
 
 const StyledEdit = styled.div`
   margin: 60px 0 20px 0;
   text-align: center;
-`;
-
-const Footer = styled.div`
-  color: rgba(0, 0, 0, 0.54);
-  margin-top: auto;
-  padding-bottom: 15px;
-  font-size: 1rem;
-  line-height: 1.5;
 `;
 
 const Loading = styled.div`
@@ -124,13 +93,13 @@ const Panel = ({ feature }) => {
   // TODO resolve all getPoiClass
 
   return (
-    <Wrapper>
+    <PanelWrapper>
       {!nonOsmObject && (
         <Head>
           <title>{tags.name || subclass} · osmapp.org</title>
         </Head>
       )}
-      <Scrollbars universal autoHide style={{ height: '100%' }}>
+      <PanelScrollbars>
         <FeatureImage feature={feature} ico={ico}>
           <PoiType>
             <Maki ico={ico} />
@@ -152,7 +121,7 @@ const Panel = ({ feature }) => {
           )}
         </FeatureImage>
         <Loading>{loading && <LinearProgress />}</Loading>
-        <Content>
+        <PanelContent>
           <FeatureHeading title={tags.name || subclass} />
 
           {error === 'gone' && (
@@ -210,7 +179,7 @@ const Panel = ({ feature }) => {
             key={getShortId(feature.osmMeta) + (skeleton && 'skel')}
           />
 
-          <Footer>
+          <PanelFooter>
             {nonOsmObject
               ? `Mapový prvek ${osmMeta.type}`
               : `${capitalize(osmMeta.type)} v databázi OpenStreetMap`}
@@ -227,10 +196,10 @@ const Panel = ({ feature }) => {
               />{' '}
               Zobrazit jen tagy
             </label>
-          </Footer>
-        </Content>
-      </Scrollbars>
-    </Wrapper>
+          </PanelFooter>
+        </PanelContent>
+      </PanelScrollbars>
+    </PanelWrapper>
   );
 };
 
