@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import IconButton from '@material-ui/core/IconButton';
 import Edit from '@material-ui/icons/Edit';
-import * as React from 'react';
+import React from 'react';
 
 const Wrapper = styled.div`
   font-size: 36px;

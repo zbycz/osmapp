@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 import maplibregl from 'maplibre-gl'; // update CSS import in _document.js
 import throttle from 'lodash/throttle';
 import { getSkeleton } from './helpers';
