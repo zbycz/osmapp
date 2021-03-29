@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React from 'react';
 
 // Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 const round = (x) => x.toFixed(5);

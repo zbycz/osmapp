@@ -1,6 +1,6 @@
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import * as React from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import IconButton from '@material-ui/core/IconButton';
 

@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
+
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
 import BugReport from '@material-ui/icons/BugReport';
