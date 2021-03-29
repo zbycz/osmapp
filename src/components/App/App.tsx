@@ -8,6 +8,7 @@ import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapView, getInititalFeature } from './helpers';
 import { Feature } from '../../services/types';
+import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 
 const getUrl = ({ type, id }) => `${type}/${id}`;
 
@@ -55,6 +56,7 @@ const IndexWithProviders = ({ initialFeature }: Props) => {
     <>
       <SearchBox feature={feature} setFeature={setFeature} />
       {feature != null && <FeaturePanel feature={feature} />}
+      {feature == null && <HomepagePanel />}
       <Map onFeatureClicked={setFeature} />
     </>
   );
