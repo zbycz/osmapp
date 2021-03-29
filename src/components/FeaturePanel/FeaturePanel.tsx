@@ -66,7 +66,7 @@ const PoiType = styled.div`
 
 const featuredKeys = ['website', 'phone', 'opening_hours'];
 
-const Panel = ({ feature }) => {
+const FeaturePanel = ({ feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
   const [open, handleOpen, handleClose] = useBoolState(false);
 
@@ -203,4 +203,4 @@ const Panel = ({ feature }) => {
   );
 };
 
-export default Panel;
+export default FeaturePanel;

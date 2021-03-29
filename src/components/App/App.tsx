@@ -2,7 +2,7 @@ import React from 'react';
 import Router from 'next/router';
 import Cookies from 'js-cookie';
 
-import Panel from '../Panel/Panel';
+import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
@@ -54,7 +54,7 @@ const IndexWithProviders = ({ initialFeature }: Props) => {
   return (
     <>
       <SearchBox feature={feature} setFeature={setFeature} />
-      {feature != null && <Panel feature={feature} />}
+      {feature != null && <FeaturePanel feature={feature} />}
       <Map onFeatureClicked={setFeature} />
     </>
   );
