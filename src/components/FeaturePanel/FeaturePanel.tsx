@@ -96,7 +96,7 @@ const FeaturePanel = ({ feature }) => {
     <PanelWrapper>
       {!nonOsmObject && (
         <Head>
-          <title>{tags.name || subclass} · osmapp.org</title>
+          <title>{tags.name || subclass} · OsmAPP</title>
         </Head>
       )}
       <PanelScrollbars>

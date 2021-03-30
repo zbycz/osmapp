@@ -1,4 +1,4 @@
-# the OSM app – beta
+# OsmAPP – beta
 
 Lets create an universal OSM app for broad public. It should be as easy to use as Google Maps and offer editing capabilites like Maps.me or osmand.
 
