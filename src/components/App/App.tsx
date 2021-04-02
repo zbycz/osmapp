@@ -31,15 +31,32 @@ const usePersistMapView = () => {
   }, [view]);
 };
 
+const useUpdateViewFromFeature = (feature) => {
+  const { setView } = useMapStateContext();
+  const [lastFeature, setLastFeature] = React.useState(feature);
+
+  React.useEffect(() => {
+    const viewAlreadyUpdated = feature?.skeleton || lastFeature?.skeleton;
+
+    if (!viewAlreadyUpdated && feature?.center) {
+      const [lon, lat] = feature.center;
+      setView([17, lat, lon]);
+    }
+
+    setLastFeature(feature);
+  }, [feature]);
+};
+
 interface Props {
   featureFromRouter: Feature | null;
 }
 
 const IndexWithProviders = ({ featureFromRouter }: Props) => {
-  usePersistMapView();
-
   const [feature, setFeature] = useFeatureState(featureFromRouter);
   const featureShown = feature != null;
+
+  useUpdateViewFromFeature(feature);
+  usePersistMapView();
 
   return (
     <>
@@ -67,7 +84,7 @@ const App = ({ featureFromRouter, initialMapView }) => {
 };
 App.getInitialProps = async (ctx) => {
   const featureFromRouter = await getInititalFeature(ctx);
-  const initialMapView = await getInitialMapView(ctx, featureFromRouter);
+  const initialMapView = await getInitialMapView(ctx);
   return { featureFromRouter, initialMapView };
 };
 
