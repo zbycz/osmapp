@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -47,8 +47,13 @@ const Spacer = styled.div`
   padding-bottom: 2em;
 `;
 
-export const HomepagePanel = () => {
-  const [hidden, hide] = useBoolState(false);
+export const HomepagePanel = ({ feature }) => {
+  const [hidden, hide] = useBoolState(feature != null);
+
+  // hide after first shown feature
+  useEffect(() => {
+    if (feature) hide();
+  }, [feature]);
 
   if (hidden) {
     return null;

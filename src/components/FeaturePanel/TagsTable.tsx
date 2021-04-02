@@ -58,7 +58,7 @@ const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
       <tr>
         <th>{label}</th>
         <td>
-          {value || tags[0]}
+          {value || tags[0]?.join(' = ')}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
       </tr>

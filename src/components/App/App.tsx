@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
@@ -14,7 +14,7 @@ const useFeatureState = (featureFromRouter) => {
   // TODO refactor to context provider
   const [feature, setFeature] = useState(featureFromRouter);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     // set feature fetched by next.js router
     setFeature(featureFromRouter);
   }, [featureFromRouter]);
@@ -46,7 +46,7 @@ const IndexWithProviders = ({ featureFromRouter }: Props) => {
       <SearchBox featureShown={featureShown} setFeature={setFeature} />
       <Loading />
       {featureShown && <FeaturePanel feature={feature} />}
-      {!featureShown && <HomepagePanel />}
+      <HomepagePanel feature={feature} />
       <Map setFeature={setFeature} />
     </>
   );

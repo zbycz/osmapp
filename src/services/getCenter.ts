@@ -28,6 +28,5 @@ export const getCenter = (geometry: FeatureGeometry): Position => {
   }
 
   // relation
-  console.warn('Error: Unknown geometry type', { geometry }); // eslint-disable-line no-console
   return undefined;
 };

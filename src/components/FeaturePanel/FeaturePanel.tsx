@@ -60,7 +60,7 @@ const PoiType = styled.div`
   }
 `;
 
-const featuredKeys = ['website', 'phone', 'opening_hours'];
+const featuredKeys = ['website', 'phone', 'opening_hours', 'description'];
 
 const FeaturePanel = ({ feature }: { feature: Feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
