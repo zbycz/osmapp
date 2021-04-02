@@ -1,4 +1,4 @@
-import { getShortId } from './helpers';
+import { getShortId, isValidImage } from './helpers';
 import { getFodyImage } from './images/getFodyImage';
 import { getMapillaryImage } from './images/getMapillaryImage';
 import { getWikiApiUrl, getWikiImage } from './images/getWikiImage';
@@ -7,7 +7,7 @@ import { Image, Feature } from './types';
 export const LOADING = null;
 
 let mapillaryPromise;
-let mapillaryId;
+let mapillaryForOsmId;
 
 export const getFeatureImage = async (feature: Feature): Promise<Image> => {
   // for nonOsmObject we dont expect 2nd pass
@@ -15,17 +15,29 @@ export const getFeatureImage = async (feature: Feature): Promise<Image> => {
     return getMapillaryImage(feature.center);
   }
 
-  // first pass may be a skeleton
+  // first pass may be a skeleton --> start loading mapillary (center is similar)
   const osmid = getShortId(feature.osmMeta);
   if (feature.skeleton) {
     mapillaryPromise = getMapillaryImage(feature.center);
-    mapillaryId = osmid;
+    mapillaryForOsmId = osmid;
     return LOADING;
   }
 
   // 2nd pass - full object (discard mapillary promise when different)
-  if (mapillaryId !== osmid) {
+  if (mapillaryForOsmId !== osmid) {
     mapillaryPromise = undefined;
+  }
+
+  if (feature.tags.image) {
+    const url = feature.tags.image;
+    if (await isValidImage(url)) {
+      return {
+        source: 'image=*',
+        link: url,
+        thumb: url,
+        portrait: true,
+      };
+    }
   }
 
   const wikiUrl = getWikiApiUrl(feature.tags);
