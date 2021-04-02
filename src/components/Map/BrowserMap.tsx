@@ -4,7 +4,7 @@ import throttle from 'lodash/throttle';
 import { getSkeleton } from './helpers';
 import { fetchFromApi } from '../../services/osmApi';
 import { setUpHover, style } from './layers';
-import { useMapEffectFactory } from '../helpers';
+import { useMapEffect, useAddMapEvent } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { getShortId } from '../../services/helpers';
 import { SHOW_PROTOTYPE_UI } from '../../config';
@@ -26,7 +26,7 @@ const useInitMap = () => {
   const [mapInState, setMapInState] = React.useState(null);
 
   React.useEffect(() => {
-    if (!mapRef.current) return;
+    if (!mapRef.current) return undefined;
 
     const map = new maplibregl.Map({
       container: mapRef.current,
@@ -37,14 +37,19 @@ const useInitMap = () => {
 
     map.addControl(geolocateControl);
     map.addControl(scaleControl);
-    setUpHover(map);
+    setUpHover(map); //
+
+    return () => {
+      map.remove();
+    };
   }, [mapRef]);
 
   return [mapInState, mapRef];
 };
 
-const useOnFeatureClicked = useMapEffectFactory((map, onFeatureClicked) => {
-  map.on('click', async (e) => {
+const useOnFeatureClicked = useAddMapEvent((map, onFeatureClicked) => ({
+  eventType: 'click',
+  eventHandler: async (e) => {
     const { point } = e;
     const coords = map.unproject(point).toArray();
     const features = map.queryRenderedFeatures(point);
@@ -73,34 +78,31 @@ const useOnFeatureClicked = useMapEffectFactory((map, onFeatureClicked) => {
     if (SHOW_PROTOTYPE_UI) {
       onFeatureClicked(skeleton);
     }
-  });
-});
-
-const useOnMapLoaded = useMapEffectFactory((map, onMapLoaded) => {
-  map.on('load', onMapLoaded);
-});
-
-const useUpdateViewOnMove = useMapEffectFactory(
-  (map, setViewFromMap, setBbox) => {
-    map.on(
-      'move',
-      throttle(() => {
-        setViewFromMap([
-          map.getZoom().toFixed(2),
-          map.getCenter().lat.toFixed(4),
-          map.getCenter().lng.toFixed(4),
-        ]);
-
-        const b = map.getBounds();
-        // <lon x1>,<lat y1>,<x2>,<y2>
-        const bb = [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()];
-        setBbox(bb.map((x) => x.toFixed(5)));
-      }, 2000),
-    );
   },
-);
+}));
 
-const useUpdateMap = useMapEffectFactory((map, viewForMap) => {
+const useOnMapLoaded = useAddMapEvent((map, onMapLoaded) => ({
+  eventType: 'load',
+  eventHandler: onMapLoaded,
+}));
+
+const useUpdateViewOnMove = useAddMapEvent((map, setViewFromMap, setBbox) => ({
+  eventType: 'move',
+  eventHandler: throttle(() => {
+    setViewFromMap([
+      map.getZoom().toFixed(2),
+      map.getCenter().lat.toFixed(4),
+      map.getCenter().lng.toFixed(4),
+    ]);
+
+    const b = map.getBounds();
+    // <lon x1>,<lat y1>,<x2>,<y2>
+    const bb = [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()];
+    setBbox(bb.map((x) => x.toFixed(5)));
+  }, 2000),
+}));
+
+const useUpdateMap = useMapEffect((map, viewForMap) => {
   const center = [viewForMap[2], viewForMap[1]];
   console.log('map will jump to:', center); // eslint-disable-line no-console
   map.jumpTo({ center, zoom: viewForMap[0] });
