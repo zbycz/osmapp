@@ -2,6 +2,10 @@ import fetch from 'isomorphic-unfetch';
 import { getCache, getKey, writeCacheSafe } from './fetchCache';
 import { isBrowser } from '../components/helpers';
 
+class ApiError extends Error {
+  public code: number;
+}
+
 // TODO cancel request in map.on('click', ...)
 const noRequestRunning = {
   abort: () => {},
@@ -35,9 +39,11 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
 
   if (!res.ok || res.status < 200 || res.status >= 300) {
     const data = await res.text();
-    throw new Error(
+    const error = new ApiError(
       `Fetch: ${res.status} ${res.statusText} ${res.url} Data: ${data}`,
     );
+    error.code = res.status;
+    throw error;
   }
 
   const text = await res.text();

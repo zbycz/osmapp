@@ -1,10 +1,8 @@
 import nextCookies from 'next-cookies';
 import { getFeatureImage } from '../../services/images';
-import { getFeatureFromApi } from '../../services/osmApi';
+import { fetchInitialFeature } from '../../services/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
-import { getApiId, getUrlOsmId } from '../../services/helpers';
-import { Feature } from '../../services/types';
 
 const DEFAULT_VIEW = [4, 50, 14];
 
@@ -31,29 +29,12 @@ export const getViewFromRequest = async (req) => {
 };
 
 export const getInitialMapView = async (ctx, initialFeature) => {
-  if (initialFeature) {
+  if (initialFeature?.center) {
     const [lon, lat] = initialFeature.center;
     return [17, lat, lon];
   }
   const { mapView } = nextCookies(ctx);
   return mapView ? mapView.split('/') : getViewFromRequest(ctx.req);
-};
-
-const fetchInitialFeature = async (id): Promise<Feature> => {
-  try {
-    return id ? await getFeatureFromApi(id) : null;
-  } catch (e) {
-    return {
-      type: 'Feature',
-      skeleton: true,
-      nonOsmObject: false,
-      osmMeta: getApiId(id),
-      center: [NaN, NaN],
-      tags: { name: getUrlOsmId(getApiId(id)) },
-      properties: { class: '', subclass: '' },
-      error: 'gone',
-    };
-  }
 };
 
 const timeout = (time) =>
@@ -85,7 +66,7 @@ export const getInititalFeature = async (ctx) => {
 
   // eslint-disable-next-line no-console
   console.log(
-    `getInititalFeature(${shortId}): ${osmRequest}ms [osm] + ${imageRequest}ms [img]`,
+    `getInititalFeature(${shortId}): ${osmRequest}ms [osm] + ${imageRequest}ms [ssr img]`,
   );
 
   return initialFeature;

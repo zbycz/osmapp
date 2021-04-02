@@ -63,7 +63,6 @@ const SearchBox = ({ featureShown, setFeature }) => {
           <SearchBoxInput
             params={params}
             featureShown={featureShown}
-            setFeature={setFeature}
             setInputValue={setInputValue}
           />
         )}

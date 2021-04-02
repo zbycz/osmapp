@@ -1,5 +1,4 @@
-import { getApiId } from './helpers';
-import { isBrowser } from '../components/helpers';
+import { getApiId, getUrlOsmId } from './helpers';
 import { fetchText } from './fetch';
 import { Feature } from './types';
 import { osmToGeojson } from './osmToGeojson';
@@ -26,16 +25,20 @@ export const getFeatureFromApi = async (featureId): Promise<Feature> => {
   return osmToGeojson(response);
 };
 
-export const fetchFromApi = async (osmApiId) => {
+export const fetchInitialFeature = async (id): Promise<Feature> => {
   try {
-    const feature = await getFeatureFromApi(osmApiId);
-    if (isBrowser()) {
-      console.log('fetched feature', feature); // eslint-disable-line no-console
-    }
-    return feature;
+    return id ? await getFeatureFromApi(id) : null;
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.warn(e);
-    return null; // TODO show some user error message
+    console.error(`Fetch error while fetching id=${id}`, e.code);
+    return {
+      type: 'Feature',
+      skeleton: true,
+      nonOsmObject: false,
+      osmMeta: getApiId(id),
+      center: undefined,
+      tags: { name: getUrlOsmId(getApiId(id)) },
+      properties: { class: '', subclass: '' },
+      error: 'gone',
+    };
   }
 };

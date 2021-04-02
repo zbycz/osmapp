@@ -5,6 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
+import Router from 'next/router';
 
 const StyledPaper = styled(Paper)`
   padding: 2px 4px;
@@ -24,25 +25,20 @@ const SearchInput = styled(InputBase)`
   flex: 1;
 `;
 
-const ClosePanelButton = ({ setFeature, setInputValue }) => (
+const ClosePanelButton = ({ setInputValue }) => (
   <IconButton
     aria-label="Zavřít panel"
     onClick={(e) => {
       e.preventDefault();
-      setFeature(null);
       setInputValue('');
+      Router.push(`/`);
     }}
   >
     <CloseIcon />
   </IconButton>
 );
 
-export const SearchBoxInput = ({
-  params,
-  setInputValue,
-  featureShown,
-  setFeature,
-}) => {
+export const SearchBoxInput = ({ params, setInputValue, featureShown }) => {
   const { InputLabelProps, InputProps, ...restParams } = params; // TODO passing all props causes warning... (why?)
 
   const onChange = (e) => setInputValue(e.target.value);
@@ -60,12 +56,7 @@ export const SearchBoxInput = ({
         onFocus={onFocus}
         // autoFocus={false} // TODO it still focuses on feature close
       />
-      {featureShown && (
-        <ClosePanelButton
-          setFeature={setFeature}
-          setInputValue={setInputValue}
-        />
-      )}
+      {featureShown && <ClosePanelButton setInputValue={setInputValue} />}
     </StyledPaper>
   );
 };

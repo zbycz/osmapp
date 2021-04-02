@@ -121,7 +121,7 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
           {`${source}${username ? ` / ${username}` : ''}`}
         </Attribution>
       )}
-      {!feature.loading && image === LOADING && <InlineSpinner />}
+      {!feature.skeleton && image === LOADING && <InlineSpinner />}
       {thumb && (
         <Head>
           <meta property="og:image" content={thumb} />
