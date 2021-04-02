@@ -28,11 +28,7 @@ export const getViewFromRequest = async (req) => {
   return view ?? DEFAULT_VIEW;
 };
 
-export const getInitialMapView = async (ctx, initialFeature) => {
-  if (initialFeature?.center) {
-    const [lon, lat] = initialFeature.center;
-    return [17, lat, lon];
-  }
+export const getInitialMapView = async (ctx) => {
   const { mapView } = nextCookies(ctx);
   return mapView ? mapView.split('/') : getViewFromRequest(ctx.req);
 };
