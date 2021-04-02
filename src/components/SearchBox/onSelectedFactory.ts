@@ -1,4 +1,5 @@
-import { fetchFromApi } from '../../services/osmApi';
+import Router from 'next/router';
+import { getUrlOsmId } from '../../services/helpers';
 
 export const onSelectedFactory = (setFeature, setView) => async (e, loc) => {
   if (!loc || !loc.lat) return;
@@ -18,5 +19,5 @@ export const onSelectedFactory = (setFeature, setView) => async (e, loc) => {
   console.log('-->skeleton:', skeleton); // eslint-disable-line no-console
   setFeature(skeleton);
   setView([17, lat, lon]);
-  setFeature(await fetchFromApi(skeleton.osmMeta));
+  Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };

@@ -34,7 +34,7 @@ export const isWay = (geometry: FeatureGeometry): geometry is LineString =>
 
 export interface Feature {
   type: 'Feature';
-  geometry: FeatureGeometry;
+  geometry?: FeatureGeometry;
   osmMeta: {
     type: string;
     id: string;
@@ -65,5 +65,4 @@ export interface Feature {
   state?: { hover: boolean };
   skeleton?: boolean;
   nonOsmObject?: boolean;
-  loading?: true;
 }

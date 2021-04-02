@@ -95,14 +95,14 @@ const NoscriptMessage = () => (
   </noscript>
 );
 
-const Map = ({ onFeatureClicked }) => {
+const Map = ({ setFeature }) => {
   const [mapLoaded, setLoaded, setNotLoaded] = useBoolState(true);
 
   useEffect(setNotLoaded, []);
 
   return (
     <>
-      <BrowserMap onFeatureClicked={onFeatureClicked} onMapLoaded={setLoaded} />
+      <BrowserMap setFeature={setFeature} onMapLoaded={setLoaded} />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
       {SHOW_PROTOTYPE_UI && (

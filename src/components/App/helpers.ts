@@ -2,6 +2,9 @@ import nextCookies from 'next-cookies';
 import { getFeatureImage } from '../../services/images';
 import { getFeatureFromApi } from '../../services/osmApi';
 import { fetchJson } from '../../services/fetch';
+import { isServer } from '../helpers';
+import { getApiId, getUrlOsmId } from '../../services/helpers';
+import { Feature } from '../../services/types';
 
 const DEFAULT_VIEW = [4, 50, 14];
 
@@ -36,11 +39,20 @@ export const getInitialMapView = async (ctx, initialFeature) => {
   return mapView ? mapView.split('/') : getViewFromRequest(ctx.req);
 };
 
-const fetchInitialFeature = async (id) => {
+const fetchInitialFeature = async (id): Promise<Feature> => {
   try {
     return id ? await getFeatureFromApi(id) : null;
   } catch (e) {
-    return null;
+    return {
+      type: 'Feature',
+      skeleton: true,
+      nonOsmObject: false,
+      osmMeta: getApiId(id),
+      center: [NaN, NaN],
+      tags: { name: getUrlOsmId(getApiId(id)) },
+      properties: { class: '', subclass: '' },
+      error: 'gone',
+    };
   }
 };
 
@@ -58,10 +70,10 @@ export const getInititalFeature = async (ctx) => {
   const initialFeature = await fetchInitialFeature(shortId);
 
   const t2 = new Date().getTime();
-  const firstRequest = t2 - t1;
+  const osmRequest = t2 - t1;
 
-  if (initialFeature && firstRequest < 1600) {
-    const timeoutIn2Secs = 2000 - firstRequest;
+  if (initialFeature && isServer() && osmRequest < 1600) {
+    const timeoutIn2Secs = 2000 - osmRequest;
     initialFeature.ssrFeatureImage = await Promise.race([
       timeout(timeoutIn2Secs),
       getFeatureImage(initialFeature),
@@ -69,10 +81,11 @@ export const getInititalFeature = async (ctx) => {
   }
 
   const t3 = new Date().getTime();
+  const imageRequest = t3 - t2;
 
   // eslint-disable-next-line no-console
   console.log(
-    `getInititalFeature(${shortId}): ${t2 - t1}ms [osm] + ${t3 - t2}ms [img]`,
+    `getInititalFeature(${shortId}): ${osmRequest}ms [osm] + ${imageRequest}ms [img]`,
   );
 
   return initialFeature;

@@ -5,6 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Link from 'next/link';
 import {
   PanelFooter,
   PanelWrapper,
@@ -12,7 +13,6 @@ import {
 } from '../utils/PanelHelpers';
 import { useBoolState } from '../helpers';
 import LogoOsmapp from '../../assets/LogoOsmapp';
-// import Link from 'next/link'
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -61,7 +61,7 @@ export const HomepagePanel = () => {
         <Content>
           <div>
             <Center>
-              <StyledLogoOsmapp width={130} height={130} className="" />
+              <StyledLogoOsmapp width={130} height={130} />
               <Typography variant="h4" component="h1" color="inherit">
                 OsmAPP
               </Typography>
@@ -80,8 +80,8 @@ export const HomepagePanel = () => {
             </Typography>
 
             <Typography variant="body2" paragraph>
-              eg. <a href="/way/34633854">Empire State Building</a> •{' '}
-              <a href="/way/119016167">Statues of Charles bridge</a>
+              eg. <Link href="/way/34633854">Empire State Building</Link> •{' '}
+              <Link href="/way/119016167">Statues of Charles bridge</Link>
             </Typography>
 
             <Center>

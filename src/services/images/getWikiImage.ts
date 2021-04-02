@@ -42,7 +42,6 @@ const getWikiType = (d) => {
 export const getWikiImage = async (wikiUrl): Promise<Image> => {
   const data = await fetchJson(`${wikiUrl}&origin=*`);
   const replyType = getWikiType(data);
-  console.log('getWikiImage', replyType, data); // eslint-disable-line no-console
 
   if (replyType === 'wikidata') {
     if (!data.claims || !data.claims.P18) {

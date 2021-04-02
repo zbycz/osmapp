@@ -40,7 +40,7 @@ const ClosePanelButton = ({ setFeature, setInputValue }) => (
 export const SearchBoxInput = ({
   params,
   setInputValue,
-  feature,
+  featureShown,
   setFeature,
 }) => {
   const { InputLabelProps, InputProps, ...restParams } = params; // TODO passing all props causes warning... (why?)
@@ -60,7 +60,7 @@ export const SearchBoxInput = ({
         onFocus={onFocus}
         // autoFocus={false} // TODO it still focuses on feature close
       />
-      {feature && (
+      {featureShown && (
         <ClosePanelButton
           setFeature={setFeature}
           setInputValue={setInputValue}
