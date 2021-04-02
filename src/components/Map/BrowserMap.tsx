@@ -1,12 +1,12 @@
 import React from 'react';
 import maplibregl from 'maplibre-gl'; // update CSS import in _document.js
 import throttle from 'lodash/throttle';
+import Router from 'next/router';
 import { getSkeleton } from './helpers';
-import { fetchFromApi } from '../../services/osmApi';
 import { setUpHover, style } from './layers';
-import { useMapEffect, useAddMapEvent } from '../helpers';
+import { useAddMapEvent, useMapEffect } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { getShortId } from '../../services/helpers';
+import { getUrlOsmId } from '../../services/helpers';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 
 const geolocateControl = new maplibregl.GeolocateControl({
@@ -47,7 +47,7 @@ const useInitMap = () => {
   return [mapInState, mapRef];
 };
 
-const useOnFeatureClicked = useAddMapEvent((map, onFeatureClicked) => ({
+const useOnFeatureClicked = useAddMapEvent((map, setFeature) => ({
   eventType: 'click',
   eventHandler: async (e) => {
     const { point } = e;
@@ -61,22 +61,10 @@ const useOnFeatureClicked = useAddMapEvent((map, onFeatureClicked) => ({
     console.log('clicked skeleton: ', skeleton); // eslint-disable-line no-console
 
     if (!skeleton.nonOsmObject) {
-      onFeatureClicked({ ...skeleton, loading: true });
-      const fullFeature = await fetchFromApi(skeleton.osmMeta);
-
-      if (fullFeature == null) {
-        onFeatureClicked({ ...skeleton, loading: false, error: 'gone' });
-        return;
-      }
-
-      if (getShortId(fullFeature.osmMeta) === getShortId(skeleton.osmMeta)) {
-        onFeatureClicked(fullFeature);
-        return;
-      }
-    }
-
-    if (SHOW_PROTOTYPE_UI) {
-      onFeatureClicked(skeleton);
+      setFeature({ ...skeleton });
+      Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
+    } else if (SHOW_PROTOTYPE_UI) {
+      setFeature(skeleton);
     }
   },
 }));
@@ -108,9 +96,9 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
   map.jumpTo({ center, zoom: viewForMap[0] });
 });
 
-const BrowserMap = ({ onFeatureClicked, onMapLoaded }) => {
+const BrowserMap = ({ setFeature, onMapLoaded }) => {
   const [map, mapRef] = useInitMap();
-  useOnFeatureClicked(map, onFeatureClicked);
+  useOnFeatureClicked(map, setFeature);
   useOnMapLoaded(map, onMapLoaded);
 
   const { viewForMap, setViewFromMap, setBbox } = useMapStateContext();

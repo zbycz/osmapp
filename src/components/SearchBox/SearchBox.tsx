@@ -24,20 +24,15 @@ const TopPanel = styled.div`
   }
 `;
 
-const getApiUrl = (bbox, inputValue: string) => 
-  // polygon_geojson=1&polygon_threshold=0.1
-   `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bbox}&q=${inputValue}`
-;
+const getApiUrl = (bbox, inputValue) =>
+  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bbox}&q=${inputValue}`; // polygon_geojson=1&polygon_threshold=0.1
 
-const fetchNominatim = throttle(
-  async (inputValue: string, bbox, setOptions) => {
-    const options = await fetchJson(getApiUrl(bbox, inputValue));
-    setOptions(options || []);
-  },
-  400,
-);
+const fetchNominatim = throttle(async (inputValue, bbox, setOptions) => {
+  const options = await fetchJson(getApiUrl(bbox, inputValue));
+  setOptions(options || []);
+}, 400);
 
-const SearchBox = ({ feature, setFeature }) => {
+const SearchBox = ({ featureShown, setFeature }) => {
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const { bbox, setView } = useMapStateContext();
@@ -67,7 +62,7 @@ const SearchBox = ({ feature, setFeature }) => {
         renderInput={(params) => (
           <SearchBoxInput
             params={params}
-            feature={feature}
+            featureShown={featureShown}
             setFeature={setFeature}
             setInputValue={setInputValue}
           />

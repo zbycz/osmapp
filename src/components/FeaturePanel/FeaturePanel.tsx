@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import Share from '@material-ui/icons/Share';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
@@ -27,14 +26,11 @@ import {
   PanelWrapper,
   PanelScrollbars,
 } from '../utils/PanelHelpers';
+import { Feature } from '../../services/types';
 
 const StyledEdit = styled.div`
   margin: 60px 0 20px 0;
   text-align: center;
-`;
-
-const Loading = styled.div`
-  height: 0;
 `;
 
 const Spacer = styled.div`
@@ -66,12 +62,11 @@ const PoiType = styled.div`
 
 const featuredKeys = ['website', 'phone', 'opening_hours'];
 
-const FeaturePanel = ({ feature }) => {
+const FeaturePanel = ({ feature }: { feature: Feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
   const [open, handleOpen, handleClose] = useBoolState(false);
 
   const {
-    loading,
     nonOsmObject,
     tags,
     layer,
@@ -120,7 +115,6 @@ const FeaturePanel = ({ feature }) => {
             </>
           )}
         </FeatureImage>
-        <Loading>{loading && <LinearProgress />}</Loading>
         <PanelContent>
           <FeatureHeading title={tags.name || subclass} />
 
