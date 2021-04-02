@@ -34,6 +34,7 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 const Value = styled.div`
+  display: flex;
   font-size: 1rem;
   color: rgba(0, 0, 0, 0.87);
 
@@ -51,7 +52,7 @@ const Spacer = styled.div`
   padding: 0 0 1em 0;
 `;
 
-const DefaultRender = ({ v }) => v;
+const DefaultRenderer = ({ v }) => v;
 const renderers = {
   website: WebsiteRenderer,
   phone: PhoneRenderer,
@@ -60,7 +61,7 @@ const renderers = {
 
 const Property = ({ k, v }) => {
   const [isInput, setIsInput] = useState(false);
-  const Renderer = renderers[k] || DefaultRender;
+  const Renderer = renderers[k] || DefaultRenderer;
 
   return (
     <Wrapper>
