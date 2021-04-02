@@ -77,18 +77,22 @@ const OpeningHoursRenderer = ({ v }) => {
   return (
     <>
       <AccessTime fontSize="small" />
-      {formatDescription(isOpen, daysTable)}
-      <ToggleButton onClick={toggle} isShown={isExpanded} />
-      {isExpanded && (
-        <Table>
-          {daysStartingToday.map(({ day, times }) => (
-            <tr key={day}>
-              <th>{day}</th>
-              <td>{formatTimes(times)}</td>
-            </tr>
-          ))}
-        </Table>
-      )}
+      <div>
+        {formatDescription(isOpen, daysTable)}
+        <ToggleButton onClick={toggle} isShown={isExpanded} />
+        {isExpanded && (
+          <Table>
+            <tbody>
+              {daysStartingToday.map(({ day, times }) => (
+                <tr key={day}>
+                  <th>{day}</th>
+                  <td>{formatTimes(times)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </div>
     </>
   );
 };
