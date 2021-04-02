@@ -1,4 +1,6 @@
 import * as xml2js from 'isomorphic-xml2js';
+import fetch from 'isomorphic-unfetch';
+import { isServer } from '../components/helpers';
 
 export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
@@ -45,3 +47,18 @@ export const getShortLink = (apiId: OsmApiId) =>
   `https://osmapp.org/${apiId.type}/${apiId.id}`;
 
 export const prod = process.env.NODE_ENV === 'production';
+
+export const isValidImage = (url): Promise<boolean> => {
+  if (isServer()) {
+    return fetch(url).then(
+      ({ headers }) => !!headers.get('content-type')?.match(/^image\//),
+    );
+  }
+
+  return new Promise((resolve) => {
+    const imgElement = new Image();
+    imgElement.onload = () => resolve(true);
+    imgElement.onerror = () => resolve(false);
+    imgElement.src = url;
+  });
+};

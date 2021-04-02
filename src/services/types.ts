@@ -1,5 +1,5 @@
 export interface ImageUrls {
-  source: string;
+  source?: string;
   link: string;
   thumb: string;
   username?: string;
