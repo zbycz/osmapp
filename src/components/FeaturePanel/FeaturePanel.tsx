@@ -26,7 +26,7 @@ import {
   PanelWrapper,
   PanelScrollbars,
 } from '../utils/PanelHelpers';
-import { Feature } from '../../services/types';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const StyledEdit = styled.div`
   margin: 60px 0 20px 0;
@@ -62,7 +62,9 @@ const PoiType = styled.div`
 
 const featuredKeys = ['website', 'phone', 'opening_hours', 'description'];
 
-const FeaturePanel = ({ feature }: { feature: Feature }) => {
+const FeaturePanel = () => {
+  const { feature } = useFeatureContext();
+
   const [advanced, toggleAdvanced] = useToggleState(false);
   const [dialogOpenedWith, setDialogOpenedWith] = useState<boolean | string>(
     false,

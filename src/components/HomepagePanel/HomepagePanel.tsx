@@ -13,6 +13,7 @@ import {
 } from '../utils/PanelHelpers';
 import { useBoolState } from '../helpers';
 import LogoOsmapp from '../../assets/LogoOsmapp';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -47,7 +48,8 @@ const Spacer = styled.div`
   padding-bottom: 2em;
 `;
 
-export const HomepagePanel = ({ feature }) => {
+export const HomepagePanel = () => {
+  const { feature } = useFeatureContext();
   const [hidden, hide] = useBoolState(feature != null);
 
   // hide after first shown feature

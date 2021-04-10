@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
-export const MapStateContext = React.createContext(undefined);
+export const MapStateContext = createContext(undefined);
 
 export const MapStateProvider = ({ children, initialMapView }) => {
-  const [bbox, setBbox] = React.useState();
-  const [view, setView] = React.useState(initialMapView);
-  const [viewForMap, setViewForMap] = React.useState(initialMapView);
+  const [bbox, setBbox] = useState();
+  const [view, setView] = useState(initialMapView);
+  const [viewForMap, setViewForMap] = useState(initialMapView);
 
-  const setBothViews = React.useCallback((newView) => {
+  const setBothViews = useCallback((newView) => {
     setView(newView);
     setViewForMap(newView);
   }, []);
@@ -28,4 +28,4 @@ export const MapStateProvider = ({ children, initialMapView }) => {
   );
 };
 
-export const useMapStateContext = () => React.useContext(MapStateContext);
+export const useMapStateContext = () => useContext(MapStateContext);
