@@ -1,3 +1,1 @@
-import App from '../../src/components/App/App';
-
-export default App;
+export { default } from '../../src/components/App/App';
