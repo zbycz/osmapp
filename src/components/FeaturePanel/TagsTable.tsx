@@ -46,7 +46,7 @@ const renderValue = (k, v) => {
 };
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
-const isName = (k) => k.match(/^([a-z]+_)?name(:|$)/);
+const isName = (k) => k.match(/^(short_)?name(:|$)/);
 const isBuilding = (k) =>
   k.match(/building|roof|^min_level|^max_level|height$/);
 const isNetwork = (k) => k.match(/network/);
