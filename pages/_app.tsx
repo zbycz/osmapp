@@ -1,6 +1,7 @@
 import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
+import Router from 'next/router';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import theme from '../src/helpers/theme';
@@ -19,6 +20,13 @@ export default class MyApp extends App {
     if (jssStyles) {
       jssStyles.parentElement.removeChild(jssStyles);
     }
+
+    setTimeout(() => {
+      // TODO find a way to load both pages only once (they contain same code)
+      //  OR maybe split the different next pages to contain just specific Panel (and move App.tsx to _app.tsx)
+      Router.prefetch('/'); // works only in PROD
+      Router.prefetch('/[osmtype]/[osmid]');
+    }, 500);
   }
 
   componentDidCatch(error, errorInfo) {
