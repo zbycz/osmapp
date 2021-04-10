@@ -16,6 +16,14 @@ interface SimpleOpeningHoursTable {
   ph: string[];
 }
 
+const parseOpeningHours = (value) => {
+  const sanitized = value.match(/^[0-9:]+-[0-9:]+$/) ? `Mo-Su ${value}` : value;
+  const opening = new SimpleOpeningHours(sanitized);
+  const daysTable = opening.getTable() as SimpleOpeningHoursTable;
+  const isOpen = opening.isOpenNow();
+  return { daysTable, isOpen };
+};
+
 const Table = styled.table`
   margin: 1em;
 
@@ -58,9 +66,7 @@ const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
 
 const OpeningHoursRenderer = ({ v }) => {
   const [isExpanded, toggle] = useToggleState(false);
-
-  const opening = new SimpleOpeningHours(v);
-  const daysTable = opening.getTable() as SimpleOpeningHoursTable;
+  const { daysTable, isOpen } = parseOpeningHours(v);
   const { ph, ...days } = daysTable;
   const timesByDay = Object.values(days).map((times, idx) => ({
     times,
@@ -73,7 +79,6 @@ const OpeningHoursRenderer = ({ v }) => {
     ...timesByDay.slice(0, currentDay),
   ];
 
-  const isOpen = opening.isOpenNow();
   return (
     <>
       <AccessTime fontSize="small" />
