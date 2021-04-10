@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useMapStateContext } from '../utils/MapStateContext';
 import GithubIcon from '../../assets/GithubIcon';
 import packageJson from '../../../package.json';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const Box = styled.div`
   margin-top: 10px;
@@ -35,9 +36,13 @@ const EditLink = () => {
   }, []);
 
   const { view } = useMapStateContext();
+  const { feature } = useFeatureContext();
+  const featureQuery =
+    feature != null ? `?${feature.osmMeta.type}=${feature.osmMeta.id}` : '';
+
   return (
     <a
-      href={`https://www.openstreetmap.org/edit#map=${
+      href={`https://www.openstreetmap.org/edit${featureQuery}#map=${
         browser ? view.join('/') : ''
       }`}
       title="v editoru iD"
