@@ -65,6 +65,7 @@ export const OtherTagsEditor = ({ values, setValue, focusTag }) => {
           </tbody>
         </Table>
       )}
+      <br />
     </>
   );
 };
