@@ -6,6 +6,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import Router from 'next/router';
+import { useMapStateContext } from '../utils/MapStateContext';
 
 const StyledPaper = styled(Paper)`
   padding: 2px 4px;
@@ -25,18 +26,21 @@ const SearchInput = styled(InputBase)`
   flex: 1;
 `;
 
-const ClosePanelButton = ({ setInputValue }) => (
-  <IconButton
-    aria-label="Zavřít panel"
-    onClick={(e) => {
-      e.preventDefault();
-      setInputValue('');
-      Router.push(`/`);
-    }}
-  >
-    <CloseIcon />
-  </IconButton>
-);
+const ClosePanelButton = ({ setInputValue }) => {
+  const { view } = useMapStateContext();
+  return (
+    <IconButton
+      aria-label="Zavřít panel"
+      onClick={(e) => {
+        e.preventDefault();
+        setInputValue('');
+        Router.push(`/#${view.join('/')}`);
+      }}
+    >
+      <CloseIcon />
+    </IconButton>
+  );
+};
 
 export const SearchBoxInput = ({ params, setInputValue, featureShown }) => {
   const { InputLabelProps, InputProps, ...restParams } = params; // TODO passing all props causes warning... (why?)
