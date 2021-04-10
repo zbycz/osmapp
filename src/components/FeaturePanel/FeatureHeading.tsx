@@ -1,7 +1,6 @@
-import styled from 'styled-components';
-import IconButton from '@material-ui/core/IconButton';
-import Edit from '@material-ui/icons/Edit';
 import React from 'react';
+import styled from 'styled-components';
+import { EditIconButton } from './EditIconButton';
 
 const Wrapper = styled.div`
   font-size: 36px;
@@ -10,29 +9,14 @@ const Wrapper = styled.div`
   position: relative;
   padding-bottom: 30px;
 
-  & .show-on-hover {
-    display: none !important;
-  }
   &:hover .show-on-hover {
     display: block !important;
   }
 `;
-const StyledIconButton = styled(IconButton)`
-  position: absolute !important; /* TODO mui styles takes precendence, why? */
-  right: 0;
-  margin-top: -12px !important;
 
-  svg {
-    width: 16px;
-    height: 16px;
-  }
-`;
-
-const FeatureHeading = ({ title }) => (
+const FeatureHeading = ({ title, onEdit }) => (
   <Wrapper>
-    <StyledIconButton mini="true" className="show-on-hover">
-      <Edit titleAccess="Upravit v živé databázi OpenStreetMap" />
-    </StyledIconButton>
+    <EditIconButton onClick={() => onEdit('name')} />
     {title}
   </Wrapper>
 );

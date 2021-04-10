@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -13,7 +13,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import { Box } from '@material-ui/core';
-import { useToggleState } from '../helpers';
+import { isString, useToggleState } from '../helpers';
 import { Feature } from '../../services/types';
 
 const Table = styled.table`
@@ -40,14 +40,30 @@ interface Props {
   feature: Feature;
   open: boolean;
   handleClose: () => void;
+  focusTag: boolean | string;
 }
 
-const EditDialog = ({ feature, open, handleClose }: Props) => {
+const useShowTagsState = (focusTag: boolean | string) => {
+  const focusOpensTags =
+    isString(focusTag) && !majorKeys.includes(focusTag as string);
+  const [showTags, setShowTags] = useState(focusOpensTags);
+  const toggleShowTags = () => setShowTags(!showTags);
+  useEffect(() => {
+    if (focusOpensTags) {
+      setShowTags(focusOpensTags);
+    }
+  }, [focusOpensTags]);
+
+  return [showTags, toggleShowTags];
+};
+
+const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const { tags, properties } = feature;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [showTags, toggleShowTags] = useToggleState(false);
+  const [showTags, toggleShowTags] = useShowTagsState(focusTag);
+
   const [showLocation, toggleShowLocation] = useToggleState(false);
   const [placeCanceled, togglePlaceCanceled] = useToggleState(false);
   const [location, setLocation] = React.useState('');
@@ -74,7 +90,6 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
       open={open}
       onClose={handleClose}
       aria-labelledby="edit-dialog-title"
-      aria-describedby="edit-dialog-description"
     >
       <DialogTitle id="edit-dialog-title">
         Navrhnout úpravu: {tags.name || properties.subclass}
@@ -82,7 +97,6 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
       <DialogContent dividers>
         <DialogContentText
           id="edit-dialog-description"
-          // ref={descriptionElementRef}
           tabIndex={-1}
           style={{ outline: 0 }}
         >
@@ -97,6 +111,7 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
                 name={k}
                 onChange={(e) => setValue(e.target.name, e.target.value)}
                 fullWidth
+                autoFocus={focusTag === k}
               />
             </div>
           ))}
@@ -126,7 +141,7 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
 
           <FormControlLabel
             control={<Checkbox checked={showTags} onChange={toggleShowTags} />}
-            label="Změnit další vlastnosti (tagy)"
+            label="Změnit další vlastnosti - tagy"
           />
           {showTags && (
             <Table>
@@ -146,6 +161,7 @@ const EditDialog = ({ feature, open, handleClose }: Props) => {
                             setValue(e.target.name, e.target.value)
                           }
                           fullWidth
+                          autoFocus={focusTag === k}
                         />
                       </td>
                     </tr>
