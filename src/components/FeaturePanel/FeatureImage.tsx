@@ -12,7 +12,10 @@ const Wrapper = styled.div`
   background-size: ${({ portrait }) => (portrait ? 'contain' : 'cover')};
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
-  ${({ uncertainImage }) => (uncertainImage ? 'filter: grayscale(100%);' : '')}
+  ${({ uncertainImage }) =>
+    uncertainImage
+      ? 'box-shadow: inset 0 0 100px rgba(255,255,255,0.3); opacity: 0.8;'
+      : ''}
 
   &:before {
     content: '';
@@ -98,13 +101,13 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
   }, [feature]);
 
   const { source, link, thumb, username, portrait } = image ?? {};
+  const uncertainImage = source === 'Mapillary';
+  const uncertainTitle = uncertainImage
+    ? '\nThis is the closest street view image. It may show different object.'
+    : '';
 
   return (
-    <Wrapper
-      link={thumb}
-      uncertainImage={source === 'Mapillary'}
-      portrait={portrait}
-    >
+    <Wrapper link={thumb} uncertainImage={uncertainImage} portrait={portrait}>
       {(image === undefined || image === LOADING) && (
         <IconWrapper>
           <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
@@ -113,7 +116,9 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
       {source && (
         <Attribution
           href={link}
-          title={`© ${source}${username ? ` / ${username}` : ''}`}
+          title={`© ${source}${
+            username ? ` / ${username}` : ''
+          }${uncertainTitle}`}
           target="_blank"
           rel="noopener"
           portrait={portrait}
