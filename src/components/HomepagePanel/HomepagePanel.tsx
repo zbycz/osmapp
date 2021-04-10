@@ -11,9 +11,9 @@ import {
   PanelWrapper,
   PanelScrollbars,
 } from '../utils/PanelHelpers';
-import { useBoolState } from '../helpers';
 import LogoOsmapp from '../../assets/LogoOsmapp';
 import { useFeatureContext } from '../utils/FeatureContext';
+import GithubIcon from '../../assets/GithubIcon';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -49,22 +49,21 @@ const Spacer = styled.div`
 `;
 
 export const HomepagePanel = () => {
-  const { feature } = useFeatureContext();
-  const [hidden, hide] = useBoolState(feature != null);
+  const { feature, homepageShown, hideHomepage } = useFeatureContext();
 
   // hide after first shown feature
   useEffect(() => {
-    if (feature) hide();
+    if (feature) hideHomepage();
   }, [feature]);
 
-  if (hidden) {
+  if (!homepageShown) {
     return null;
   }
 
   return (
     <PanelWrapper>
       <PanelScrollbars>
-        <ClosePanelButton hide={hide} />
+        <ClosePanelButton hide={hideHomepage} />
         <Content>
           <div>
             <Center>
@@ -128,6 +127,14 @@ export const HomepagePanel = () => {
 
             <Spacer />
 
+            <Typography
+              variant="overline"
+              display="block"
+              color="textSecondary"
+            >
+              About OsmAPP
+            </Typography>
+
             <Typography variant="body2" paragraph>
               This application was created with the aim of providing best
               OpenStreetMap experience for everyone. Currently it is in beta
@@ -137,17 +144,22 @@ export const HomepagePanel = () => {
             </Typography>
 
             <Typography variant="body2" paragraph>
+              <GithubIcon
+                width="32"
+                height="32"
+                style={{ verticalAlign: '-9px', margin: '0 10px 0 5px' }}
+              />{' '}
               You may suggest new features on{' '}
               <a href="https://github.com/zbycz/osmapp">Github</a>.
             </Typography>
             <Spacer />
-            <Typography variant="body2" paragraph>
-              Special thanks to:
+            <Typography variant="overline" color="textSecondary">
+              Special thanks to
             </Typography>
             <ul>
               <li>
                 <a href="https://www.maptiler.com/">MapTiler</a> for vector map
-                source
+                tiles
               </li>
               <li>
                 <a href="https://www.mapillary.com/">Mapillary</a>,{' '}

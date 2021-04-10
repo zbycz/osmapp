@@ -19,13 +19,19 @@ const Box = styled.div`
   }
 `;
 
-const OsmappLink = () => (
-  <>
-    <GithubIcon width="12" height="12" />
-    <a href="https://github.com/zbycz/osmapp">osmapp</a>{' '}
-    {packageJson?.version?.replace(/\.0$/, '')}
-  </>
-);
+const OsmappLink = () => {
+  const { showHomepage } = useFeatureContext();
+
+  return (
+    <>
+      <GithubIcon width="12" height="12" />
+      <button type="button" className="linkLikeButton" onClick={showHomepage}>
+        osmapp
+      </button>{' '}
+      {packageJson?.version?.replace(/\.0$/, '')}
+    </>
+  );
+};
 
 const EditLink = () => {
   // fixes hydration error - server and browser have different view (cookies and window.hash)
