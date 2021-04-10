@@ -56,7 +56,7 @@ export const PlaceCancelledToggle = ({
       control={
         <Checkbox checked={placeCanceled} onChange={togglePlaceCanceled} />
       }
-      label="Místo zrušeno či zavřeno"
+      label="Místo zrušeno či trvale zavřeno"
     />
     <br />
   </>
@@ -64,9 +64,11 @@ export const PlaceCancelledToggle = ({
 
 export const ContributionInfoBox = () => (
   <Box mt={4} mb={4}>
-    Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Zde pro ně můžete
-    přidat doplňující poznámku, nebo popsat jinou úpravu. Vhodné je též podložit
-    váš příspěvek odkazem na zdroj informace (web, foto atd.).
+    <Typography variant="body1" color="textSecondary" paragraph>
+      Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Zde pro ně můžete
+      přidat doplňující poznámku, nebo popsat jinou úpravu. Vhodné je též
+      podložit váš příspěvek odkazem na zdroj informace (web, foto atd.).
+    </Typography>
   </Box>
 );
 

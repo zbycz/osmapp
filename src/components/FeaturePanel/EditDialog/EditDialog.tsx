@@ -2,7 +2,6 @@ import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -57,30 +56,24 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
         Navrhnout úpravu: {tags.name || properties.subclass}
       </DialogTitle>
       <DialogContent dividers>
-        <DialogContentText
-          id="edit-dialog-description"
-          tabIndex={-1}
-          style={{ outline: 0 }}
-        >
-          <MajorKeysEditor
-            values={values}
-            setValue={setValue}
-            focusTag={focusTag}
-          />
-          <OtherOptionsHeading />
-          <OtherTagsEditor
-            values={values}
-            setValue={setValue}
-            focusTag={focusTag}
-          />
-          <PlaceCancelledToggle
-            placeCanceled={placeCanceled}
-            togglePlaceCanceled={togglePlaceCanceled}
-          />
-          <ChangeLocationEditor location={location} setLocation={setLocation} />
-          <ContributionInfoBox />
-          <NoteField note={note} setNote={setNote} />
-        </DialogContentText>
+        <MajorKeysEditor
+          values={values}
+          setValue={setValue}
+          focusTag={focusTag}
+        />
+        <OtherOptionsHeading />
+        <OtherTagsEditor
+          values={values}
+          setValue={setValue}
+          focusTag={focusTag}
+        />
+        <PlaceCancelledToggle
+          placeCanceled={placeCanceled}
+          togglePlaceCanceled={togglePlaceCanceled}
+        />
+        <ChangeLocationEditor location={location} setLocation={setLocation} />
+        <ContributionInfoBox />
+        <NoteField note={note} setNote={setNote} />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
