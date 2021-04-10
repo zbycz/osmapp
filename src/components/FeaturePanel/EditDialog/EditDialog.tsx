@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -11,22 +11,11 @@ import TextField from '@material-ui/core/TextField';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
-import styled from 'styled-components';
 import { Box } from '@material-ui/core';
-import { isString, useToggleState } from '../../helpers';
+import { useToggleState } from '../../helpers';
 import { Feature } from '../../../services/types';
-import { majorKeys, MajorKeysEditor } from './MajorKeysEditor';
-
-const Table = styled.table`
-  font-size: 80%;
-  th {
-    color: rgba(0, 0, 0, 0.54);
-    text-align: left;
-    font-weight: normal;
-    vertical-align: center;
-    padding-left: 0;
-  }
-`;
+import { MajorKeysEditor } from './MajorKeysEditor';
+import { OtherTagsEditor } from './OtherTagsEditor';
 
 interface Props {
   feature: Feature;
@@ -35,26 +24,11 @@ interface Props {
   focusTag: boolean | string;
 }
 
-const useShowTagsState = (focusTag: boolean | string) => {
-  const focusOpensTags =
-    isString(focusTag) && !majorKeys.includes(focusTag as string);
-  const [showTags, setShowTags] = useState(focusOpensTags);
-  const toggleShowTags = () => setShowTags(!showTags);
-  useEffect(() => {
-    if (focusOpensTags) {
-      setShowTags(focusOpensTags);
-    }
-  }, [focusOpensTags]);
-
-  return [showTags, toggleShowTags];
-};
-
 const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const { tags, properties } = feature;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const [showTags, toggleShowTags] = useShowTagsState(focusTag);
 
   const [showLocation, toggleShowLocation] = useToggleState(false);
   const [placeCanceled, togglePlaceCanceled] = useToggleState(false);
@@ -98,36 +72,11 @@ const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
             Další možnosti
           </Typography>
 
-          <FormControlLabel
-            control={<Checkbox checked={showTags} onChange={toggleShowTags} />}
-            label="Změnit další vlastnosti - tagy"
+          <OtherTagsEditor
+            values={values}
+            setValue={setValue}
+            focusTag={focusTag}
           />
-          {showTags && (
-            <Table>
-              <tbody>
-                {Object.entries(values)
-                  .filter(([k]) => !majorKeys.includes(k))
-                  .map(([k, v]) => (
-                    <tr key={k}>
-                      <th>{k}</th>
-                      <td>
-                        <TextField
-                          value={v}
-                          variant="outlined"
-                          size="small"
-                          name={k}
-                          onChange={(e) =>
-                            setValue(e.target.name, e.target.value)
-                          }
-                          fullWidth
-                          autoFocus={focusTag === k}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </Table>
-          )}
 
           <br />
 
