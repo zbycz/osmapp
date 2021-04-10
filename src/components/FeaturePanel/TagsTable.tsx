@@ -4,6 +4,7 @@ import truncate from 'lodash/truncate';
 
 import { useToggleState } from '../helpers';
 import { getUrlForTag, ToggleButton } from './helpers';
+import { EditIconButton } from './EditIconButton';
 
 const Wrapper = styled.div`
   position: relative;
@@ -11,11 +12,16 @@ const Wrapper = styled.div`
 
 const Table = styled.table`
   font-size: 1rem;
+  width: 100%;
 
   th,
   td {
     padding: 0.1em;
     overflow: hidden;
+
+    &:hover .show-on-hover {
+      display: block !important;
+    }
   }
 
   th {
@@ -47,7 +53,7 @@ const isNetwork = (k) => k.match(/network/);
 const isBrand = (k) => k.match(/^brand/);
 const isPayment = (k) => k.match(/^payment/);
 
-const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
+const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
   const [isShown, toggle] = useToggleState(false);
 
   if (!tags.length) {
@@ -59,6 +65,8 @@ const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
       <tr>
         <th>{label}</th>
         <td>
+          <EditIconButton onClick={() => onEdit(tags[0][0])} />
+
           {value || tags[0]?.join(' = ')}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
@@ -95,7 +103,7 @@ const buildAddress = (tagsArr) => {
   return join(join(street, ' ', num), ', ', city);
 };
 
-const TagsTable = ({ tags, except }) => {
+const TagsTable = ({ tags, except, onEdit }) => {
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
   const addr = tagsEntries.filter(([k]) => isAddr(k));
@@ -120,21 +128,50 @@ const TagsTable = ({ tags, except }) => {
         <tbody>
           <TagsGroup
             tags={name}
-            label="name"
+            label="name:*"
             value={tags.short_name || truncate(tags.name, { length: 25 })}
             hideArrow={name.length === 1}
+            onEdit={onEdit}
           />
-          <TagsGroup tags={addr} label="addr:*" value={buildAddress(addr)} />
+          <TagsGroup
+            tags={addr}
+            label="addr:*"
+            value={buildAddress(addr)}
+            onEdit={onEdit}
+          />
           {rest.map(([k, v]) => (
             <tr key={k}>
               <th>{k}</th>
-              <td>{renderValue(k, v)}</td>
+              <td>
+                <EditIconButton onClick={() => onEdit(k)} />
+                {renderValue(k, v)}
+              </td>
             </tr>
           ))}
-          <TagsGroup tags={brand} label="brand:*" value={tags.brand} />
-          <TagsGroup tags={building} label="building:*" value={tags.building} />
-          <TagsGroup tags={network} label="network:*" value={tags.network} />
-          <TagsGroup tags={payment} label="payment:*" value={tags.payment} />
+          <TagsGroup
+            tags={brand}
+            label="brand:*"
+            value={tags.brand}
+            onEdit={onEdit}
+          />
+          <TagsGroup
+            tags={building}
+            label="building:*"
+            value={tags.building}
+            onEdit={onEdit}
+          />
+          <TagsGroup
+            tags={network}
+            label="network:*"
+            value={tags.network}
+            onEdit={onEdit}
+          />
+          <TagsGroup
+            tags={payment}
+            label="payment:*"
+            value={tags.payment}
+            onEdit={onEdit}
+          />
         </tbody>
       </Table>
     </Wrapper>

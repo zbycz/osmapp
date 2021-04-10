@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Share from '@material-ui/icons/Share';
@@ -13,7 +13,7 @@ import Property from './Property';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import Coordinates from './Coordinates';
-import { capitalize, useBoolState, useToggleState } from '../helpers';
+import { capitalize, useToggleState } from '../helpers';
 import { icons } from '../../assets/icons';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
@@ -64,7 +64,9 @@ const featuredKeys = ['website', 'phone', 'opening_hours', 'description'];
 
 const FeaturePanel = ({ feature }: { feature: Feature }) => {
   const [advanced, toggleAdvanced] = useToggleState(false);
-  const [open, handleOpen, handleClose] = useBoolState(false);
+  const [dialogOpenedWith, setDialogOpenedWith] = useState<boolean | string>(
+    false,
+  );
 
   const {
     nonOsmObject,
@@ -116,7 +118,10 @@ const FeaturePanel = ({ feature }: { feature: Feature }) => {
           )}
         </FeatureImage>
         <PanelContent>
-          <FeatureHeading title={tags.name || subclass} />
+          <FeatureHeading
+            title={tags.name || subclass}
+            onEdit={setDialogOpenedWith}
+          />
 
           {error === 'gone' && (
             <Alert variant="outlined" severity="warning">
@@ -132,7 +137,7 @@ const FeaturePanel = ({ feature }: { feature: Feature }) => {
           {!advanced && !!featuredTags.length && (
             <>
               {featuredTags.map(([k, v]) => (
-                <Property key={k} k={k} v={v} />
+                <Property key={k} k={k} v={v} onEdit={setDialogOpenedWith} />
               ))}
               <Spacer />
 
@@ -149,6 +154,7 @@ const FeaturePanel = ({ feature }: { feature: Feature }) => {
           <TagsTable
             tags={tags}
             except={advanced ? [] : ['name', 'layer', ...featuredKeys]}
+            onEdit={setDialogOpenedWith}
           />
 
           {!skeleton && (
@@ -159,7 +165,7 @@ const FeaturePanel = ({ feature }: { feature: Feature }) => {
                 startIcon={<EditIcon />}
                 variant="outlined"
                 color="primary"
-                onClick={handleOpen}
+                onClick={() => setDialogOpenedWith(true)}
               >
                 Upravit místo
               </Button>
@@ -167,9 +173,10 @@ const FeaturePanel = ({ feature }: { feature: Feature }) => {
           )}
 
           <EditDialog
-            open={open}
-            handleClose={handleClose}
+            open={!!dialogOpenedWith}
+            handleClose={() => setDialogOpenedWith(false)}
             feature={feature}
+            focusTag={dialogOpenedWith}
             key={getShortId(feature.osmMeta) + (skeleton && 'skel')}
           />
 

@@ -49,3 +49,5 @@ export const useAddMapEvent = (getEventDefinition: EventDefintionFn) => (
     }
     return undefined;
   }, [map, ...rest]);
+
+export const isString = (value) => typeof value === 'string';
