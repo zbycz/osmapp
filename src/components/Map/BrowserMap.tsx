@@ -6,7 +6,7 @@ import { getSkeleton } from './helpers';
 import { setUpHover, style } from './layers';
 import { useAddMapEvent, useMapEffect } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { getUrlOsmId } from '../../services/helpers';
+import { getUrlOsmId, isSameOsmId } from '../../services/helpers';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import { useFeatureContext } from '../utils/FeatureContext';
 
@@ -62,7 +62,10 @@ const useOnFeatureClicked = useAddMapEvent((map, setFeature) => ({
     console.log('clicked skeleton: ', skeleton); // eslint-disable-line no-console
 
     if (!skeleton.nonOsmObject) {
-      setFeature({ ...skeleton });
+      // router wouldnt overwrite the skeleton if the page is already loaded
+      setFeature((feature) =>
+        isSameOsmId(feature, skeleton) ? feature : skeleton,
+      );
       Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
     } else if (SHOW_PROTOTYPE_UI) {
       setFeature(skeleton);

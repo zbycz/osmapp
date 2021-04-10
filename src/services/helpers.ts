@@ -46,6 +46,11 @@ export const getApiId = (value): OsmApiId => {
 export const getShortLink = (apiId: OsmApiId) =>
   `https://osmapp.org/${apiId.type}/${apiId.id}`;
 
+export const isSameOsmId = (feature, skeleton) =>
+  feature &&
+  skeleton &&
+  getShortId(feature.osmMeta) === getShortId(skeleton.osmMeta);
+
 export const prod = process.env.NODE_ENV === 'production';
 
 export const isValidImage = (url): Promise<boolean> => {
