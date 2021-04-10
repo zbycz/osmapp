@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Cookies from 'js-cookie';
 
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
@@ -6,22 +6,9 @@ import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapView, getInititalFeature } from './helpers';
-import { Feature } from '../../services/types';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
-
-const useFeatureState = (featureFromRouter) => {
-  // TODO refactor to context provider
-  const [feature, setFeature] = useState(featureFromRouter);
-
-  useEffect(() => {
-    // set feature fetched by next.js router
-    setFeature(featureFromRouter);
-  }, [featureFromRouter]);
-
-  // setFeature - used only for skeletons (otherwise it gets loaded by router)
-  return [feature, setFeature];
-};
+import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -31,7 +18,8 @@ const usePersistMapView = () => {
   }, [view]);
 };
 
-const useUpdateViewFromFeature = (feature) => {
+const useUpdateViewFromFeature = () => {
+  const { feature } = useFeatureContext();
   const { setView } = useMapStateContext();
   const [lastFeature, setLastFeature] = React.useState(feature);
 
@@ -47,24 +35,19 @@ const useUpdateViewFromFeature = (feature) => {
   }, [feature]);
 };
 
-interface Props {
-  featureFromRouter: Feature | null;
-}
+const IndexWithProviders = () => {
+  const { featureShown } = useFeatureContext();
 
-const IndexWithProviders = ({ featureFromRouter }: Props) => {
-  const [feature, setFeature] = useFeatureState(featureFromRouter);
-  const featureShown = feature != null;
-
-  useUpdateViewFromFeature(feature);
+  useUpdateViewFromFeature();
   usePersistMapView();
 
   return (
     <>
-      <SearchBox featureShown={featureShown} setFeature={setFeature} />
+      <SearchBox />
       <Loading />
-      {featureShown && <FeaturePanel feature={feature} />}
-      <HomepagePanel feature={feature} />
-      <Map setFeature={setFeature} />
+      {featureShown && <FeaturePanel />}
+      <HomepagePanel />
+      <Map />
     </>
   );
 };
@@ -77,9 +60,11 @@ const getMapViewFromHash = () =>
 const App = ({ featureFromRouter, initialMapView }) => {
   const mapView = getMapViewFromHash() || initialMapView;
   return (
-    <MapStateProvider initialMapView={mapView}>
-      <IndexWithProviders featureFromRouter={featureFromRouter} />
-    </MapStateProvider>
+    <FeatureProvider featureFromRouter={featureFromRouter}>
+      <MapStateProvider initialMapView={mapView}>
+        <IndexWithProviders />
+      </MapStateProvider>
+    </FeatureProvider>
   );
 };
 App.getInitialProps = async (ctx) => {

@@ -7,6 +7,7 @@ import React from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import Router from 'next/router';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const StyledPaper = styled(Paper)`
   padding: 2px 4px;
@@ -42,8 +43,9 @@ const ClosePanelButton = ({ setInputValue }) => {
   );
 };
 
-export const SearchBoxInput = ({ params, setInputValue, featureShown }) => {
+export const SearchBoxInput = ({ params, setInputValue }) => {
   const { InputLabelProps, InputProps, ...restParams } = params; // TODO passing all props causes warning... (why?)
+  const { featureShown } = useFeatureContext();
 
   const onChange = (e) => setInputValue(e.target.value);
   const onFocus = (e) => e.target.select();

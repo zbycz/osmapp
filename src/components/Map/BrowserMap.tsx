@@ -8,6 +8,7 @@ import { useAddMapEvent, useMapEffect } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { getUrlOsmId } from '../../services/helpers';
 import { SHOW_PROTOTYPE_UI } from '../../config';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
@@ -96,7 +97,8 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
   map.jumpTo({ center, zoom: viewForMap[0] });
 });
 
-const BrowserMap = ({ setFeature, onMapLoaded }) => {
+const BrowserMap = ({ onMapLoaded }) => {
+  const { setFeature } = useFeatureContext();
   const [map, mapRef] = useInitMap();
   useOnFeatureClicked(map, setFeature);
   useOnMapLoaded(map, onMapLoaded);

@@ -7,6 +7,7 @@ import { renderOptionFactory } from './renderOptionFactory';
 import { SearchBoxInput } from './SearchBoxInput';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { fetchJson } from '../../services/fetch';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -32,10 +33,11 @@ const fetchNominatim = throttle(async (inputValue, bbox, setOptions) => {
   setOptions(options || []);
 }, 400);
 
-const SearchBox = ({ featureShown, setFeature }) => {
+const SearchBox = () => {
   const [inputValue, setInputValue] = React.useState('');
   const [options, setOptions] = React.useState([]);
   const { bbox, setView } = useMapStateContext();
+  const { setFeature } = useFeatureContext();
 
   React.useEffect(() => {
     if (inputValue === '') {
@@ -60,11 +62,7 @@ const SearchBox = ({ featureShown, setFeature }) => {
         freeSolo
         // disableOpenOnFocus
         renderInput={(params) => (
-          <SearchBoxInput
-            params={params}
-            featureShown={featureShown}
-            setInputValue={setInputValue}
-          />
+          <SearchBoxInput params={params} setInputValue={setInputValue} />
         )}
         renderOption={renderOptionFactory(inputValue)}
       />
