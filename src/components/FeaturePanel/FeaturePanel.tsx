@@ -18,7 +18,7 @@ import { icons } from '../../assets/icons';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
 import { getShortId, getShortLink, getUrlOsmId } from '../../services/helpers';
-import EditDialog from './EditDialog';
+import EditDialog from './EditDialog/EditDialog';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import {
   PanelContent,

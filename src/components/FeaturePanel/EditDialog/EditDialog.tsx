@@ -13,8 +13,9 @@ import Checkbox from '@material-ui/core/Checkbox';
 import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import { Box } from '@material-ui/core';
-import { isString, useToggleState } from '../helpers';
-import { Feature } from '../../services/types';
+import { isString, useToggleState } from '../../helpers';
+import { Feature } from '../../../services/types';
+import { majorKeys, MajorKeysEditor } from './MajorKeysEditor';
 
 const Table = styled.table`
   font-size: 80%;
@@ -26,15 +27,6 @@ const Table = styled.table`
     padding-left: 0;
   }
 `;
-
-const majorKeysNames = {
-  name: 'Název',
-  website: 'Web',
-  phone: 'Telefon',
-  opening_hours: 'Otevírací doba',
-};
-const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
-const getInitialMajorKeys = (tags) => majorKeys.filter((k) => !!tags[k]);
 
 interface Props {
   feature: Feature;
@@ -71,13 +63,6 @@ const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const [values, setValues] = React.useState(tags);
   const setValue = (k, v) => setValues((state) => ({ ...state, [k]: v }));
 
-  const [activeMajorKeys, setActiveMajorKeys] = React.useState(
-    getInitialMajorKeys(tags),
-  );
-  const inactiveMajorKeys = majorKeys.filter(
-    (k) => !activeMajorKeys.includes(k),
-  );
-
   const saveDialog = () => {
     // eslint-disable-next-line no-alert
     alert('TODO');
@@ -100,37 +85,11 @@ const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           tabIndex={-1}
           style={{ outline: 0 }}
         >
-          {activeMajorKeys.map((k) => (
-            <div key={k}>
-              <TextField
-                label={majorKeysNames[k]}
-                value={values[k]}
-                InputLabelProps={{ shrink: true }}
-                variant="outlined"
-                margin="normal"
-                name={k}
-                onChange={(e) => setValue(e.target.name, e.target.value)}
-                fullWidth
-                autoFocus={focusTag === k}
-              />
-            </div>
-          ))}
-          {!!inactiveMajorKeys.length && (
-            <>
-              Přidat:
-              {inactiveMajorKeys.map((k) => (
-                <React.Fragment key={k}>
-                  {' '}
-                  <Button
-                    size="small"
-                    onClick={() => setActiveMajorKeys((arr) => [...arr, k])}
-                  >
-                    {majorKeysNames[k]}
-                  </Button>
-                </React.Fragment>
-              ))}
-            </>
-          )}
+          <MajorKeysEditor
+            values={values}
+            setValue={setValue}
+            focusTag={focusTag}
+          />
 
           <br />
           <br />
