@@ -1,6 +1,7 @@
 import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
 
 const majorKeysNames = {
   name: 'Název',
@@ -40,7 +41,9 @@ export const MajorKeysEditor = ({ values, setValue, focusTag }) => {
       ))}
       {!!inactiveMajorKeys.length && (
         <>
-          Přidat:
+          <Typography variant="body1" component="span" color="textSecondary">
+            Přidat:
+          </Typography>
           {inactiveMajorKeys.map((k) => (
             <React.Fragment key={k}>
               {' '}

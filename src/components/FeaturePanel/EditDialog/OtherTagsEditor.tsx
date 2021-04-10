@@ -8,6 +8,7 @@ import { majorKeys } from './MajorKeysEditor';
 
 const Table = styled.table`
   font-size: 80%;
+  width: 100%;
 
   th {
     color: rgba(0, 0, 0, 0.54);
