@@ -45,6 +45,7 @@ const isBuilding = (k) =>
   k.match(/building|roof|^min_level|^max_level|height$/);
 const isNetwork = (k) => k.match(/network/);
 const isBrand = (k) => k.match(/^brand/);
+const isPayment = (k) => k.match(/^payment/);
 
 const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
   const [isShown, toggle] = useToggleState(false);
@@ -102,12 +103,14 @@ const TagsTable = ({ tags, except }) => {
   const building = tagsEntries.filter(([k]) => isBuilding(k));
   const network = tagsEntries.filter(([k]) => isNetwork(k));
   const brand = tagsEntries.filter(([k]) => isBrand(k));
+  const payment = tagsEntries.filter(([k]) => isPayment(k));
   const rest = tagsEntries.filter(
     ([k]) =>
       !isName(k) &&
       !isAddr(k) &&
       !isBuilding(k) &&
       !isNetwork(k) &&
+      !isPayment(k) &&
       !isBrand(k),
   );
 
@@ -131,6 +134,7 @@ const TagsTable = ({ tags, except }) => {
           <TagsGroup tags={brand} label="brand:*" value={tags.brand} />
           <TagsGroup tags={building} label="building:*" value={tags.building} />
           <TagsGroup tags={network} label="network:*" value={tags.network} />
+          <TagsGroup tags={payment} label="payment:*" value={tags.payment} />
         </tbody>
       </Table>
     </Wrapper>
