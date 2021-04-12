@@ -3,6 +3,7 @@ import { fetchJson, fetchText } from './fetch';
 import { Feature, Position } from './types';
 import { osmToGeojson } from './osmToGeojson';
 import { removeFetchCache } from './fetchCache';
+import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 
 export const OSM_API = 'https://www.openstreetmap.org/api/0.6';
 export const OSM_FEATURE_URL = ({ type, id }) => `${OSM_API}/${type}/${id}`;
@@ -16,6 +17,7 @@ export const OP_QUERY = {
   relation: (id) => `rel(${id});(._;>;);out;`,
 };
 export const OP_FEATURE_URL = ({ type, id }) => OP_URL(OP_QUERY[type](id));
+
 const FETCH_FEATURE_URL = (apiId) =>
   apiId.type === 'node' ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
 
@@ -36,7 +38,7 @@ export const fetchInitialFeature = async (shortId): Promise<Feature> => {
     return shortId ? await getFeatureFromApi(shortId) : null;
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.error(`Fetch error while fetching id=${shortId}`, e.code);
+    console.error(`Fetch error while fetching id=${shortId}`, e);
     return {
       type: 'Feature',
       skeleton: true,
@@ -75,4 +77,28 @@ export const insertOsmNote = async (point: Position, text: string) => {
     text,
     url: `${prod ? 'https://osm.org' : osmUrl}/note/${noteId}`,
   };
+};
+
+export const OVERPASS_AROUND_URL = ([lat, lon]: Position) => {
+  const point = `${lon},${lat}`;
+  const types = ['place_of_worship', 'public_transport', 'amenity', 'shop'];
+  const contentQuery = types.map(
+    (type) => `
+      relation["${type}"](around:50,${point});
+      way["${type}"](around:50,${point});
+      node["${type}"](around:50,${point});
+      `,
+  );
+  return OP_URL(
+    `[timeout:5][out:json];(${contentQuery.join('')});out 10 body qt center;`,
+  );
+};
+
+export const fetchAroundFeature = async (point: Position) => {
+  const url = OVERPASS_AROUND_URL(point);
+  const response = await fetchJson(url);
+
+  const around = overpassAroundToSkeletons(response);
+  console.log({ around }); // eslint-disable-line no-console
+  return around;
 };

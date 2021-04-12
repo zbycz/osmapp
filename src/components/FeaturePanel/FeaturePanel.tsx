@@ -29,6 +29,7 @@ import {
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
 import { FeatureDescription } from './FeatureDescription';
+import { ObjectsAround } from './ObjectsAround';
 
 const StyledEdit = styled.div`
   margin: 60px 0 20px 0;
@@ -68,19 +69,11 @@ const FeaturePanel = () => {
   const { feature } = useFeatureContext();
 
   const [advanced, toggleAdvanced] = useToggleState(false);
-  const [dialogOpenedWith, setDialogOpenedWith] = useState<boolean | string>(
-    false,
-  );
+  const [dialogOpenedWith, setDialogOpenedWith] =
+    useState<boolean | string>(false);
 
-  const {
-    nonOsmObject,
-    tags,
-    layer,
-    osmMeta,
-    properties,
-    skeleton,
-    error,
-  } = feature;
+  const { nonOsmObject, tags, layer, osmMeta, properties, skeleton, error } =
+    feature;
 
   const osmappLink = getOsmappLink(feature);
   const ico = icons.includes(properties.class)
@@ -103,7 +96,7 @@ const FeaturePanel = () => {
       <PanelScrollbars>
         <FeatureImage feature={feature} ico={ico}>
           <PoiType>
-            <Maki ico={ico} />
+            <Maki ico={ico} invert />
             <span>
               {tags.name
                 ? subclass.replace('_', ' ')
@@ -200,6 +193,8 @@ const FeaturePanel = () => {
             focusTag={dialogOpenedWith}
             key={getShortId(osmMeta) + (skeleton && 'skel')}
           />
+
+          {SHOW_PROTOTYPE_UI && <ObjectsAround />}
 
           <PanelFooter>
             <FeatureDescription osmMeta={osmMeta} nonOsmObject={nonOsmObject} />

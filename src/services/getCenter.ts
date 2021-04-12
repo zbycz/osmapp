@@ -1,6 +1,13 @@
 import { FeatureGeometry, isPoint, isWay, Position } from './types';
 
-const getBbox = (coordinates: Position[]) => {
+interface NamedBbox {
+  w: number;
+  s: number;
+  e: number;
+  n: number;
+}
+
+const getBbox = (coordinates: Position[]): NamedBbox => {
   const [firstX, firstY] = coordinates[0];
   const initialBbox = { w: firstX, s: firstY, e: firstX, n: firstY };
 
@@ -20,7 +27,7 @@ export const getCenter = (geometry: FeatureGeometry): Position => {
     return geometry.coordinates;
   }
 
-  if (isWay(geometry)) {
+  if (isWay(geometry) && geometry.coordinates?.length) {
     const { w, s, e, n } = getBbox(geometry.coordinates); // [WSEN]
     const lon = (w + e) / 2; // flat earth rulezz
     const lat = (s + n) / 2;

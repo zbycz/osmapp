@@ -61,6 +61,7 @@ const useOnFeatureClicked = useAddMapEvent((map, setFeature) => ({
     }
 
     const skeleton = getSkeleton(features[0], coords);
+    addCenterFromMapToCache(getShortId(skeleton.osmMeta), skeleton.center);
     console.log('clicked skeleton: ', skeleton); // eslint-disable-line no-console
 
     if (!skeleton.nonOsmObject) {

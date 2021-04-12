@@ -5,10 +5,10 @@ const MakiImg = styled.img`
   line-height: 14px;
   vertical-align: middle;
   margin-right: 6px;
-  filter: invert(100%);
+  ${({ invert }) => invert && 'filter: invert(100%);'}
 `;
-const Maki = ({ ico }) => (
-  <MakiImg src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
+const Maki = ({ ico, invert = false }) => (
+  <MakiImg src={`/icons/${ico}_11.svg`} alt={ico} title={ico} invert={invert} />
 );
 
 export default Maki;

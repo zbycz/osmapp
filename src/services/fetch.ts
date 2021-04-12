@@ -39,7 +39,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     if (!res.ok || res.status < 200 || res.status >= 300) {
       const data = await res.text();
       const error = new ApiError(
-        `Fetch: ${res.status} ${res.statusText} ${res.url} Data: ${data}`,
+        `${res.status} ${res.statusText} Data: ${data.substring(0, 1000)}`,
       );
       error.code = res.status;
       throw error;
