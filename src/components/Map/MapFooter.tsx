@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useMapStateContext } from '../utils/MapStateContext';
-import GithubIcon from '../../assets/GithubIcon';
 import packageJson from '../../../package.json';
 import { useFeatureContext } from '../utils/FeatureContext';
 
@@ -24,7 +23,6 @@ const OsmappLink = () => {
 
   return (
     <>
-      <GithubIcon width="12" height="12" />
       <button type="button" className="linkLikeButton" onClick={showHomepage}>
         osmapp
       </button>{' '}
