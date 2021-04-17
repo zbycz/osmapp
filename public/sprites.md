@@ -1,7 +1,8 @@
 # Create icon sprite
 
 ```
-sudo apt-get install librsvg2-bin on Linux or with brew install librsvg on OSX.
+brew install librsvg
+# or sudo apt-get install librsvg2-bin
 yarn global add svgo
 
 
@@ -43,7 +44,7 @@ cd ..
 
 
 
-# finalize icons folder + generate sprite
+# finalize icons folder (renames,copies)
 cd icons
 mv toilet_11.svg toilets_11.svg
 mv waste_11.svg waste_basket_11.svg
@@ -53,6 +54,7 @@ cp bicycle_11.svg bicycle_parking_11.svg
 cp bicycle_11.svg cycling_11.svg
 cd ..
 
+# generate sprite
 rm -r sprites
 mkdir sprites
 mv icons sprites/
@@ -62,10 +64,9 @@ mv sprites/icons ./
 
 
 
-# update local icons reference
+# update local icons lookup
 cat << 'EOF' | node > ../src/assets/icons.ts
-  const fs = require('fs')
-  fs.readFile('sprites/osmapp.json', 'utf8' , (err, data) => {
+  require('fs').readFile('sprites/osmapp.json', 'utf8' , (err, data) => {
     if (err) {return console.error(err)}
     const sprite = JSON.parse(data);
     const names = Object.keys(sprite).map(s => s.replace(/_11$/, ''))
