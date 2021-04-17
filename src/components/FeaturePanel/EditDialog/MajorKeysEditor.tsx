@@ -14,9 +14,9 @@ export const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
 
 const getInitialMajorKeys = (tags) => majorKeys.filter((k) => !!tags[k]);
 
-export const MajorKeysEditor = ({ values, setValue, focusTag }) => {
+export const MajorKeysEditor = ({ tags, setTag, focusTag }) => {
   const [activeMajorKeys, setActiveMajorKeys] = React.useState(
-    getInitialMajorKeys(values),
+    getInitialMajorKeys(tags),
   );
   const inactiveMajorKeys = majorKeys.filter(
     (k) => !activeMajorKeys.includes(k),
@@ -28,12 +28,12 @@ export const MajorKeysEditor = ({ values, setValue, focusTag }) => {
         <div key={k}>
           <TextField
             label={majorKeysNames[k]}
-            value={values[k]}
+            value={tags[k]}
             InputLabelProps={{ shrink: true }}
             variant="outlined"
             margin="normal"
             name={k}
-            onChange={(e) => setValue(e.target.name, e.target.value)}
+            onChange={(e) => setTag(e.target.name, e.target.value)}
             fullWidth
             autoFocus={focusTag === k}
           />

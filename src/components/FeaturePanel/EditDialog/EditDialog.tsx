@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -7,7 +7,7 @@ import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useTheme from '@material-ui/core/styles/useTheme';
 import { useToggleState } from '../../helpers';
-import { Feature } from '../../../services/types';
+import { Feature, FeatureTags } from '../../../services/types';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import { OtherTagsEditor } from './OtherTagsEditor';
 import {
@@ -18,6 +18,23 @@ import {
   PlaceCancelledToggle,
 } from './components';
 
+const useIsFullScreen = () => {
+  const theme = useTheme();
+  return useMediaQuery(theme.breakpoints.down('sm'));
+};
+
+const useTagsState = (
+  initialTags: FeatureTags,
+): [FeatureTags, (k: string, v: string) => void] => {
+  const [tags, setTags] = useState(initialTags);
+  const setTag = (k, v) => setTags((state) => ({ ...state, [k]: v }));
+  return [tags, setTag];
+};
+
+const createNote = () => {
+  alert('TODO');
+};
+
 interface Props {
   feature: Feature;
   open: boolean;
@@ -25,23 +42,16 @@ interface Props {
   focusTag: boolean | string;
 }
 
-const useIsFullScreen = () => {
-  const theme = useTheme();
-  return useMediaQuery(theme.breakpoints.down('sm'));
-};
-
 export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
-  const { tags, properties } = feature;
+  const { properties } = feature;
   const fullScreen = useIsFullScreen();
-  const [placeCanceled, togglePlaceCanceled] = useToggleState(false);
-  const [location, setLocation] = React.useState('');
-  const [note, setNote] = React.useState('');
-  const [values, setValues] = React.useState(tags);
-  const setValue = (k, v) => setValues((state) => ({ ...state, [k]: v }));
+  const [cancelled, toggleCancelled] = useToggleState(false);
+  const [location, setLocation] = useState('');
+  const [note, setNote] = useState('');
+  const [tags, setTag] = useTagsState(feature.tags);
 
   const saveDialog = () => {
-    // eslint-disable-next-line no-alert
-    alert('TODO');
+    createNote(feature, tags, cancelled, location, note);
     handleClose();
   };
 
@@ -56,21 +66,10 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
         Navrhnout úpravu: {tags.name || properties.subclass}
       </DialogTitle>
       <DialogContent dividers>
-        <MajorKeysEditor
-          values={values}
-          setValue={setValue}
-          focusTag={focusTag}
-        />
+        <MajorKeysEditor tags={tags} setTag={setTag} focusTag={focusTag} />
         <OtherOptionsHeading />
-        <OtherTagsEditor
-          values={values}
-          setValue={setValue}
-          focusTag={focusTag}
-        />
-        <PlaceCancelledToggle
-          placeCanceled={placeCanceled}
-          togglePlaceCanceled={togglePlaceCanceled}
-        />
+        <OtherTagsEditor tags={tags} setTag={setTag} focusTag={focusTag} />
+        <PlaceCancelledToggle cancelled={cancelled} toggle={toggleCancelled} />
         <ChangeLocationEditor location={location} setLocation={setLocation} />
         <ContributionInfoBox />
         <NoteField note={note} setNote={setNote} />
