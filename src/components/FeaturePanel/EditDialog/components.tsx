@@ -6,14 +6,10 @@ import Typography from '@material-ui/core/Typography';
 import { Box } from '@material-ui/core';
 import { useToggleState } from '../../helpers';
 
-export const OtherOptionsHeading = () => (
-  <>
-    <br />
-    <br />
-    <Typography variant="overline" display="block" color="textSecondary">
-      Další možnosti
-    </Typography>
-  </>
+export const DialogHeading = ({ children }) => (
+  <Typography variant="overline" display="block" color="textSecondary">
+    {children}
+  </Typography>
 );
 
 export const ChangeLocationEditor = ({ location, setLocation }) => {
@@ -68,17 +64,22 @@ export const ContributionInfoBox = () => (
 );
 
 export const NoteField = ({ note, setNote }) => (
-  <TextField
-    label="Poznámka (nepovinné)"
-    placeholder="odkaz na zdroj informace apod."
-    InputLabelProps={{
-      shrink: true,
-    }}
-    multiline
-    fullWidth
-    rows={2}
-    variant="outlined"
-    value={note}
-    onChange={(e) => setNote(e.target.value)}
-  />
+  <>
+    <TextField
+      label="Poznámka (nepovinné)"
+      placeholder="odkaz na zdroj informace apod."
+      InputLabelProps={{
+        shrink: true,
+      }}
+      multiline
+      fullWidth
+      rows={2}
+      variant="outlined"
+      value={note}
+      onChange={(e) => setNote(e.target.value)}
+    />
+    <br />
+    <br />
+    <br />
+  </>
 );

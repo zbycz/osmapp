@@ -1,11 +1,12 @@
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import TextField from '@material-ui/core/TextField';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import { isString } from '../../helpers';
+import Typography from '@material-ui/core/Typography';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { majorKeys } from './MajorKeysEditor';
+import { isString } from '../../helpers';
 
 const Table = styled.table`
   font-size: 80%;
@@ -17,6 +18,7 @@ const Table = styled.table`
     font-weight: normal;
     vertical-align: center;
     padding-left: 0;
+    font-size: 13px;
   }
 
   .MuiInputBase-root {
@@ -81,16 +83,16 @@ const KeyValueRow = ({ k, v, setTag, focusTag }) => (
 );
 
 export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
-  const focusTagsSection =
+  const focusThisSection =
     isString(focusTag) && !majorKeys.includes(focusTag as string);
 
-  const [showTags, setShowTags] = useState(focusTagsSection);
+  const [showTags, setShowTags] = useState(focusThisSection);
 
   useEffect(() => {
-    if (focusTagsSection) {
+    if (focusThisSection) {
       setShowTags(true);
     }
-  }, [focusTagsSection]);
+  }, [focusThisSection]);
 
   const rows = Object.entries(tags)
     .filter(([k]) => !majorKeys.includes(k))
@@ -100,22 +102,33 @@ export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
 
   return (
     <>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={showTags}
-            onChange={() => setShowTags(!showTags)}
-          />
-        }
-        label="Změnit další vlastnosti - tagy"
-      />
+      {!showTags && (
+        <Button
+          variant="outlined"
+          disableElevation
+          onClick={() => setShowTags(!showTags)}
+        >
+          Další vlastnosti - tagy
+          {showTags ? (
+            <ExpandLessIcon fontSize="small" />
+          ) : (
+            <ExpandMoreIcon fontSize="small" />
+          )}
+        </Button>
+      )}
+
       {showTags && (
-        <Table>
-          <tbody>
-            {rows}
-            <NewTagRow setTag={setTag} />
-          </tbody>
-        </Table>
+        <>
+          <Typography variant="overline" display="block" color="textSecondary">
+            Další vlastnosti - tagy
+          </Typography>
+          <Table>
+            <tbody>
+              {rows}
+              <NewTagRow setTag={setTag} />
+            </tbody>
+          </Table>
+        </>
       )}
       <br />
     </>

@@ -63,6 +63,8 @@ export const MajorKeysEditor = ({ tags, setTag, focusTag }) => {
           ))}
         </>
       )}
+      <br />
+      <br />
     </>
   );
 };
