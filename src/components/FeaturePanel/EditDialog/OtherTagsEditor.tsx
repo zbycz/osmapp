@@ -19,7 +19,7 @@ const Table = styled.table`
   }
 `;
 
-export const OtherTagsEditor = ({ values, setValue, focusTag }) => {
+export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
   const focusTags =
     isString(focusTag) && !majorKeys.includes(focusTag as string);
 
@@ -45,7 +45,7 @@ export const OtherTagsEditor = ({ values, setValue, focusTag }) => {
       {showTags && (
         <Table>
           <tbody>
-            {Object.entries(values)
+            {Object.entries(tags)
               .filter(([k]) => !majorKeys.includes(k))
               .map(([k, v]) => (
                 <tr key={k}>
@@ -56,7 +56,7 @@ export const OtherTagsEditor = ({ values, setValue, focusTag }) => {
                       variant="outlined"
                       size="small"
                       name={k}
-                      onChange={(e) => setValue(e.target.name, e.target.value)}
+                      onChange={(e) => setTag(e.target.name, e.target.value)}
                       fullWidth
                       autoFocus={focusTag === k}
                     />

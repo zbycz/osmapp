@@ -47,15 +47,10 @@ export const ChangeLocationEditor = ({ location, setLocation }) => {
   );
 };
 
-export const PlaceCancelledToggle = ({
-  placeCanceled,
-  togglePlaceCanceled,
-}) => (
+export const PlaceCancelledToggle = ({ cancelled, toggle }) => (
   <>
     <FormControlLabel
-      control={
-        <Checkbox checked={placeCanceled} onChange={togglePlaceCanceled} />
-      }
+      control={<Checkbox checked={cancelled} onChange={toggle} />}
       label="Místo zrušeno či trvale zavřeno"
     />
     <br />

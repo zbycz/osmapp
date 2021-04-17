@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
 
-export const useToggleState = (initialState) => {
-  const [value, set] = useState(initialState);
+export const useToggleState = (initialState: boolean): [boolean, (set: boolean) => void] => {
+  const [value, set] = useState<boolean>(initialState);
   return [value, () => set(!value)];
 };
 
