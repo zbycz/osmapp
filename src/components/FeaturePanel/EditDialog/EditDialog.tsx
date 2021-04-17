@@ -6,6 +6,7 @@ import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useTheme from '@material-ui/core/styles/useTheme';
 import DialogContent from '@material-ui/core/DialogContent';
+import { CircularProgress } from '@material-ui/core';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags } from '../../../services/types';
 import { createNote } from './createNote';
@@ -15,11 +16,12 @@ import {
   ChangeLocationEditor,
   ContributionInfoBox,
   NoteField,
-  OtherOptionsHeading,
+  DialogHeading,
   PlaceCancelledToggle,
 } from './components';
 import { OtherTagsEditor } from './OtherTagsEditor';
 import { SuccessContent } from './SuccessContent';
+import { icons } from '../../../assets/icons';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -47,6 +49,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const [location, setLocation] = useState('');
   const [note, setNote] = useState('');
   const [tags, setTag] = useTagsState(feature.tags);
+  const [loading, setLoading] = useState(false);
   const [insertedNote, setInsertedNote] = useState<
     false | { text: string; url: string }
   >(false);
@@ -59,11 +62,16 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
       return;
     }
 
+    setLoading(true);
     setInsertedNote({
       text,
       url: await insertOsmNote(feature.center, text),
     });
   };
+
+  const ico = icons.includes(feature.properties.class)
+    ? feature.properties.class
+    : 'information';
 
   return (
     <Dialog
@@ -73,6 +81,13 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
       aria-labelledby="edit-dialog-title"
     >
       <DialogTitle id="edit-dialog-title">
+        <img
+          src={`/icons/${ico}_11.svg`}
+          alt={ico}
+          title={ico}
+          width={16}
+          height={16}
+        />{' '}
         Navrhnout úpravu: {feature.tags.name || feature.properties.subclass}
       </DialogTitle>
       {insertedNote ? (
@@ -81,8 +96,8 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
         <>
           <DialogContent dividers>
             <MajorKeysEditor tags={tags} setTag={setTag} focusTag={focusTag} />
-            <OtherOptionsHeading />
-            <OtherTagsEditor tags={tags} setTag={setTag} focusTag={focusTag} />
+
+            <DialogHeading>Další možnosti</DialogHeading>
             <PlaceCancelledToggle
               cancelled={cancelled}
               toggle={toggleCancelled}
@@ -93,8 +108,11 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
             />
             <ContributionInfoBox />
             <NoteField note={note} setNote={setNote} />
+
+            <OtherTagsEditor tags={tags} setTag={setTag} focusTag={focusTag} />
           </DialogContent>
           <DialogActions>
+            {loading && <CircularProgress />}
             <Button onClick={handleClose} color="primary">
               Zrušit
             </Button>

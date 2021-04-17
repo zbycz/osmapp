@@ -41,15 +41,15 @@ export const SuccessContent = ({ insertedNote, handleClose }) => (
       <StyledCheckCircleIcon />
 
       <CenterText>
-        <Typography variant="h5">Děkujeme za Váš návrh</Typography>
+        <Typography variant="h5">Děkujeme za Váš návrh!</Typography>
         <Typography variant="body1" color="textSecondary">
           Dobrovolnící z komunity OpenStreetMap ho časem zpracují.
         </Typography>
       </CenterText>
 
       <Typography variant="body2" paragraph>
-        Celý proces obvykle trvá několik dní, ovšem v některých oblastech, kde
-        komunita není to může trvat i velmi dlouho.
+        Celý proces obvykle trvá několik dní. Ovšem v místech, kde komunita není
+        aktivní, to může trvat i velmi dlouho.
       </Typography>
 
       <Typography variant="body2" paragraph>
