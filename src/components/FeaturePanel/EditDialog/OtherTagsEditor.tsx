@@ -20,16 +20,16 @@ const Table = styled.table`
 `;
 
 export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
-  const focusTags =
+  const focusTagsSection =
     isString(focusTag) && !majorKeys.includes(focusTag as string);
 
-  const [showTags, setShowTags] = useState(focusTags);
+  const [showTags, setShowTags] = useState(focusTagsSection);
 
   useEffect(() => {
-    if (focusTags) {
+    if (focusTagsSection) {
       setShowTags(true);
     }
-  }, [focusTags]);
+  }, [focusTagsSection]);
 
   return (
     <>

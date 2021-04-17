@@ -13,7 +13,7 @@ const noRequestRunning = {
 };
 let abortController = noRequestRunning;
 
-interface FetchOpts {
+interface FetchOpts extends RequestInit {
   putInAbortableQueue?: boolean;
   nocache?: boolean;
 }

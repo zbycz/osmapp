@@ -1,6 +1,6 @@
-import { getApiId, getUrlOsmId } from './helpers';
-import { fetchText } from './fetch';
-import { Feature } from './types';
+import { getApiId, getUrlOsmId, prod } from './helpers';
+import { fetchJson, fetchText } from './fetch';
+import { Feature, Position } from './types';
 import { osmToGeojson } from './osmToGeojson';
 
 export const OSM_API = 'https://www.openstreetmap.org/api/0.6';
@@ -29,6 +29,7 @@ export const fetchInitialFeature = async (id): Promise<Feature> => {
   try {
     return id ? await getFeatureFromApi(id) : null;
   } catch (e) {
+    // eslint-disable-next-line no-console
     console.error(`Fetch error while fetching id=${id}`, e.code);
     return {
       type: 'Feature',
@@ -41,4 +42,27 @@ export const fetchInitialFeature = async (id): Promise<Feature> => {
       error: 'gone',
     };
   }
+};
+
+export const insertOsmNote = async (point: Position, text: string) => {
+  const [lon, lat] = point;
+
+  const body = new URLSearchParams();
+  body.append('lat', `${lat}`);
+  body.append('lon', `${lon}`);
+  body.append('text', text);
+
+  const osmUrl = prod
+    ? 'https://www.openstreetmap.org'
+    : 'https://master.apis.dev.openstreetmap.org';
+
+  // {"type":"Feature","geometry":{"type":"Point","coordinates":[14.3244982,50.0927863]},"properties":{"id":26569,"url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569.json","comment_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/comment.json","close_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/close.json","date_created":"2021-04-17 10:37:44 UTC","status":"open","comments":[{"date":"2021-04-17 10:37:44 UTC","action":"opened","text":"way/39695868! Place was marked permanently closed.From https://osmapp.org/way/39695868","html":"\u003cp\u003eway/39695868! Place was marked permanently closed.From \u003ca href=\"https://osmapp.org/way/39695868\" rel=\"nofollow noopener noreferrer\"\u003ehttps://osmapp.org/way/39695868\u003c/a\u003e\u003c/p\u003e"}]}}
+  const reply = await fetchJson(`${osmUrl}/api/0.6/notes.json`, {
+    nocache: true,
+    method: 'POST',
+    body,
+  });
+
+  const noteId = reply.properties.id;
+  return `${prod ? 'https://osm.org' : osmUrl}/note/${noteId}`;
 };

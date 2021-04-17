@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
@@ -21,6 +21,12 @@ export const MajorKeysEditor = ({ tags, setTag, focusTag }) => {
   const inactiveMajorKeys = majorKeys.filter(
     (k) => !activeMajorKeys.includes(k),
   );
+
+  useEffect(() => {
+    if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
+      setActiveMajorKeys((arr) => [...arr, 'name']);
+    }
+  }, [focusTag]);
 
   return (
     <>
