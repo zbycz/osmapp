@@ -20,6 +20,12 @@ export const parseXmlString = (xmlString) => {
   });
 };
 
+export const buildXmlString = (xml) => {
+  const builder = new xml2js.Builder({ rootName: 'osm' });
+  return builder.buildObject(xml);
+};
+
+
 export interface OsmApiId {
   type: string;
   id: string;

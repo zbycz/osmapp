@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -6,11 +6,13 @@ import Button from '@material-ui/core/Button';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useTheme from '@material-ui/core/styles/useTheme';
 import DialogContent from '@material-ui/core/DialogContent';
-import { CircularProgress } from '@material-ui/core';
+import { Box, CircularProgress } from '@material-ui/core';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags } from '../../../services/types';
 import { createNote } from './createNote';
-import { insertOsmNote } from '../../../services/osmApi';
+import {
+  insertOsmNote,
+} from '../../../services/osmApi';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import {
   ChangeLocationEditor,
@@ -22,6 +24,10 @@ import {
 import { OtherTagsEditor } from './OtherTagsEditor';
 import { SuccessContent } from './SuccessContent';
 import { icons } from '../../../assets/icons';
+import Typography from '@material-ui/core/Typography';
+import styled from 'styled-components';
+import { editOsmFeature, fetchOsmUsername, getOsmUsername } from '../../../services/osmApiAuth';
+
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -35,6 +41,12 @@ const useTagsState = (
   const setTag = (k, v) => setTags((state) => ({ ...state, [k]: v }));
   return [tags, setTag];
 };
+
+const StyledDialog = styled(Dialog)`
+  .MuiDialog-container.MuiDialog-scrollPaper {
+    align-items: start;
+  }
+`
 
 interface Props {
   feature: Feature;
@@ -53,6 +65,9 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const [insertedNote, setInsertedNote] = useState<
     false | { text: string; url: string }
   >(false);
+  const [username, setUsername] = useState(getOsmUsername());
+  const onLogin = () => fetchOsmUsername().then(setUsername);
+  // onLogout
 
   const saveDialog = async () => {
     const text = createNote(feature, tags, cancelled, location, note);
@@ -63,10 +78,17 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
     }
 
     setLoading(true);
-    setInsertedNote({
-      text,
-      url: await insertOsmNote(feature.center, text),
-    });
+    if (username) {
+      setInsertedNote({
+        text,
+        ...(await editOsmFeature(feature, tags, text)),
+      });
+    } else {
+      setInsertedNote({
+        text,
+        url: await insertOsmNote(feature.center, text),
+      });
+    }
   };
 
   const ico = icons.includes(feature.properties.class)
@@ -74,7 +96,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
     : 'information';
 
   return (
-    <Dialog
+    <StyledDialog
       fullScreen={fullScreen}
       open={open}
       onClose={handleClose}
@@ -88,28 +110,62 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           width={16}
           height={16}
         />{' '}
-        Navrhnout úpravu: {feature.tags.name || feature.properties.subclass}
+        {username ? 'Upravit: ' : 'Navrhnout úpravu: '}
+        {feature.tags.name || feature.properties.subclass}
       </DialogTitle>
       {insertedNote ? (
         <SuccessContent insertedNote={insertedNote} handleClose={handleClose} />
       ) : (
         <>
           <DialogContent dividers>
-            <MajorKeysEditor tags={tags} setTag={setTag} focusTag={focusTag} />
+            <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+              <MajorKeysEditor
+                tags={tags}
+                setTag={setTag}
+                focusTag={focusTag}
+              />
 
-            <DialogHeading>Další možnosti</DialogHeading>
-            <PlaceCancelledToggle
-              cancelled={cancelled}
-              toggle={toggleCancelled}
-            />
-            <ChangeLocationEditor
-              location={location}
-              setLocation={setLocation}
-            />
-            <ContributionInfoBox />
-            <NoteField note={note} setNote={setNote} />
+              <DialogHeading>Možnosti</DialogHeading>
+              <PlaceCancelledToggle
+                cancelled={cancelled}
+                toggle={toggleCancelled}
+              />
+              <ChangeLocationEditor
+                location={location}
+                setLocation={setLocation}
+              />
 
-            <OtherTagsEditor tags={tags} setTag={setTag} focusTag={focusTag} />
+              <ContributionInfoBox />
+              <NoteField note={note} setNote={setNote} />
+
+              <OtherTagsEditor
+                tags={tags}
+                setTag={setTag}
+                focusTag={focusTag}
+              />
+
+              <Typography variant="body2" color="textSecondary" paragraph>
+                {username ? (
+                  <>
+                    Jste přihlášeni jako <b>{username}</b>, změny se ihned projeví v mapě.
+                  </>
+                ) : (
+                  <>
+                    Vkládáte <b>anonymní</b> poznámku do mapy.
+                    <br />
+                    Pokud se{' '}
+                    <button
+                      type="button"
+                      className="linkLikeButton"
+                      onClick={onLogin}
+                    >
+                      přihlásíte do OpenStreetMap
+                    </button>
+                    , změny se ihned projeví v mapě.
+                  </>
+                )}
+              </Typography>
+            </form>
           </DialogContent>
           <DialogActions>
             {loading && <CircularProgress />}
@@ -122,6 +178,6 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           </DialogActions>
         </>
       )}
-    </Dialog>
+    </StyledDialog>
   );
 };

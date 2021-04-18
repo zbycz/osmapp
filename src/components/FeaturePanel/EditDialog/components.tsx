@@ -57,7 +57,7 @@ export const ContributionInfoBox = () => (
   <Box mt={4} mb={4}>
     <Typography variant="body1" color="textSecondary" paragraph>
       Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Zde pro ně můžete
-      přidat doplňující poznámku, nebo popsat jinou úpravu. Vhodné je též
+      přidat doplňující poznámku, nebo popsat např. úpravu polohy. Vhodné je též
       podložit váš příspěvek odkazem na zdroj informace (web, foto atd.).
     </Typography>
   </Box>

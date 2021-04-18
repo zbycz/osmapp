@@ -48,8 +48,7 @@ export const SuccessContent = ({ insertedNote, handleClose }) => (
       </CenterText>
 
       <Typography variant="body2" paragraph>
-        Celý proces obvykle trvá několik dní. Ovšem v místech, kde komunita není
-        aktivní, to může trvat i velmi dlouho.
+        Celý proces obvykle trvá několik dní. Ovšem v místech, kde není aktivní komunita, to může trvat i velmi dlouho.
       </Typography>
 
       <Typography variant="body2" paragraph>
