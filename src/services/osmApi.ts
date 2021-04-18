@@ -21,7 +21,7 @@ export const getFeatureFromApi = async (featureId): Promise<Feature> => {
   const isNode = apiId.type === 'node';
   const url = isNode ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
 
-  const response = await fetchText(url, { putInAbortableQueue: true });
+  const response = await fetchText(url, { putInAbortableQueue: true }); // TODO 504 gateway busy
   return osmToGeojson(response);
 };
 

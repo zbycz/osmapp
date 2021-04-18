@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import getConfig from 'next/config';
 import { useMapStateContext } from '../utils/MapStateContext';
-import packageJson from '../../../package.json';
 import { useFeatureContext } from '../utils/FeatureContext';
+
+const {
+  publicRuntimeConfig: { osmappVersion },
+} = getConfig();
 
 const Box = styled.div`
   margin-top: 10px;
@@ -26,7 +30,7 @@ const OsmappLink = () => {
       <button type="button" className="linkLikeButton" onClick={showHomepage}>
         osmapp
       </button>{' '}
-      {packageJson?.version?.replace(/\.0$/, '')}
+      {osmappVersion}
     </>
   );
 };

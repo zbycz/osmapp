@@ -1,5 +1,10 @@
 /* eslint-disable */
+const packageJson = require('./package.json');
+
 module.exports = {
+  publicRuntimeConfig: {
+    osmappVersion: packageJson.version.replace(/\.0$/, ''),
+  },
   webpack: (config, { dev, isServer }) => {
     // Fixes npm packages that depend on `fs` module
     config.node = {

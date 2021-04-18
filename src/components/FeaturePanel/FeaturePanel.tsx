@@ -102,7 +102,7 @@ const FeaturePanel = () => {
         <FeatureImage feature={feature} ico={ico}>
           <PoiType>
             <Maki ico={ico} />
-            <span>{tags.name ? subclass : 'beze jména'}</span>
+            <span>{tags.name ? subclass.replace('_', ' ') : 'beze jména'}</span>
           </PoiType>
 
           {SHOW_PROTOTYPE_UI && (
