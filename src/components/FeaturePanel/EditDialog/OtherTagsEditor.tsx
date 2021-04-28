@@ -4,10 +4,8 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { majorKeys } from './MajorKeysEditor';
 import { isString } from '../../helpers';
-import { ToggleButton } from '../helpers';
 
 const Table = styled.table`
   width: calc(100% - 20px);
@@ -103,31 +101,39 @@ export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
 
   return (
     <div>
-
-      {!showTags && (<Button
-        disableElevation
-        onClick={() => setShowTags(!showTags)}
-      >
-        Upravit Další vlastnosti – tagy
-      </Button>)}
+      {!showTags && (
+        <Button
+          variant="outlined"
+          disableElevation
+          onClick={() => setShowTags(!showTags)}
+        >
+          Další vlastnosti – tagy
+          <ExpandMoreIcon fontSize="small" />
+        </Button>
+      )}
 
       {showTags && (
         <>
-          <Typography variant="overline" component="h3" color="textSecondary" style={{position: 'relative'}}>
+          <Typography
+            variant="overline"
+            component="h3"
+            color="textSecondary"
+            style={{ position: 'relative' }}
+          >
             Další vlastnosti – tagy
           </Typography>
-        <Table>
-        <tbody>
-        {rows}
-        <NewTagRow setTag={setTag} />
-        </tbody>
-      </Table>
+          <Table>
+            <tbody>
+              {rows}
+              <NewTagRow setTag={setTag} />
+            </tbody>
+          </Table>
+        </>
+      )}
 
-        </>)}
-
-      <br/>
-      <br/>
-      <br/>
+      <br />
+      <br />
+      <br />
     </div>
   );
 };

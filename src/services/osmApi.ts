@@ -64,5 +64,8 @@ export const insertOsmNote = async (point: Position, text: string) => {
   });
 
   const noteId = reply.properties.id;
-  return `${prod ? 'https://osm.org' : osmUrl}/note/${noteId}`;
+  return {
+    text,
+    noteUrl: `${prod ? 'https://osm.org' : osmUrl}/note/${noteId}`,
+  };
 };

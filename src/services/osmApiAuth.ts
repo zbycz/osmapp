@@ -1,25 +1,34 @@
-import { buildXmlString, getUrlOsmId, OsmApiId, parseXmlString, prod } from './helpers';
 import escape from 'lodash/escape';
-import { Feature, FeatureTags } from './types';
 import OsmAuth from 'osm-auth';
 import getConfig from 'next/config';
+import { Feature, FeatureTags } from './types';
+import {
+  buildXmlString,
+  getUrlOsmId,
+  OsmApiId,
+  parseXmlString,
+  prod,
+} from './helpers';
 
-const { publicRuntimeConfig: { osmappVersion } } = getConfig();
+const {
+  publicRuntimeConfig: { osmappVersion },
+} = getConfig();
 
 const osmUrl = prod
   ? 'https://www.openstreetmap.org'
   : 'https://master.apis.dev.openstreetmap.org';
 
-const oauth = prod ? {
-  oauth_consumer_key: 'OGIlDMpqYIRA35NBggNFNnRBftlWdJt4eE2z7eFb',
-  oauth_secret: '37V3dRzWYfdnRrG8L8vaKyzs6A191HkRtXlaqNH9',
-
-} : {
-  // https://master.apis.dev.openstreetmap.org/changeset/1599
-  // https://master.apis.dev.openstreetmap.org/node/967531
-  oauth_consumer_key: 'eWdvGfVsTdhRCGtwRkn4qOBaBAIuVNX9gTX63TUm',
-  oauth_secret: 'O0UXzrNbpFkbIVB0rqumhMSdqdC1wa9ZFMpPUBYG',
-};
+const oauth = prod
+  ? {
+      oauth_consumer_key: 'OGIlDMpqYIRA35NBggNFNnRBftlWdJt4eE2z7eFb',
+      oauth_secret: '37V3dRzWYfdnRrG8L8vaKyzs6A191HkRtXlaqNH9',
+    }
+  : {
+      // https://master.apis.dev.openstreetmap.org/changeset/1599
+      // https://master.apis.dev.openstreetmap.org/node/967531
+      oauth_consumer_key: 'eWdvGfVsTdhRCGtwRkn4qOBaBAIuVNX9gTX63TUm',
+      oauth_secret: 'O0UXzrNbpFkbIVB0rqumhMSdqdC1wa9ZFMpPUBYG',
+    };
 
 const auth = new OsmAuth({
   ...oauth,
@@ -30,16 +39,13 @@ const auth = new OsmAuth({
 
 const authFetch = async (options) =>
   new Promise<any>((resolve, reject) => {
-    auth.xhr(
-      options,
-      (err, details) => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve(details);
-      },
-    );
+    auth.xhr(options, (err, details) => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve(details);
+    });
   });
 
 export const fetchOsmUsername = async () => {
@@ -55,42 +61,67 @@ export const fetchOsmUsername = async () => {
 export const getOsmUsername = () =>
   auth.authenticated() && window.localStorage.getItem('osm_username');
 
+const getChangesetXml = ({ text, needsReview }) => {
+  const tags = [
+    ['created_by', `OsmAPP ${osmappVersion}`],
+    ['comment', text],
+    ...(needsReview ? [['review_requested', 'yes']] : []),
+  ];
+  return `<osm>
+      <changeset>
+        ${tags.map(([k, v]) => `<tag k='${k}' v='${escape(v)}' />`).join('')}
+      </changeset>
+    </osm>`;
+};
 
-const putChangeset = (text: string) => authFetch({
-  method: 'PUT',
-  path: '/api/0.6/changeset/create',
-  options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
-  content: `<osm><changeset><tag k='created_by' v='OsmAPP ${osmappVersion}'/><tag k='comment' v='${escape(text)}'/></changeset></osm>`,
-});
+const putChangeset = (content: string) =>
+  authFetch({
+    method: 'PUT',
+    path: '/api/0.6/changeset/create',
+    options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
+    content,
+  });
 
-const getItem = (apiId: OsmApiId) => authFetch({
-  method: 'GET',
-  path: `/api/0.6/${getUrlOsmId(apiId)}`,
-});
+const getItem = (apiId: OsmApiId) =>
+  authFetch({
+    method: 'GET',
+    path: `/api/0.6/${getUrlOsmId(apiId)}`,
+  });
 
-const putItem = (apiId: OsmApiId, content: string) => authFetch({
-  method: 'PUT',
-  path: `/api/0.6/${getUrlOsmId(apiId)}`,
-  options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
-  content,
-});
+const putItem = (apiId: OsmApiId, content: string) =>
+  authFetch({
+    method: 'PUT',
+    path: `/api/0.6/${getUrlOsmId(apiId)}`,
+    options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
+    content,
+  });
 
 export const editOsmFeature = async (
   feature: Feature,
-  tags: FeatureTags,
   text: string,
+  newTags: FeatureTags,
+  cancelled: boolean,
+  location: string,
 ) => {
   const apiId = prod ? feature.osmMeta : { type: 'node', id: '967531' };
 
-  const changesetId = await putChangeset(text);
-  const itemXml = await getItem(apiId);
+  const changesetXml = getChangesetXml({ text, needsReview: !!location });
+  const changesetId = await putChangeset(changesetXml);
 
-  const osmXml = await parseXmlString(new XMLSerializer().serializeToString(itemXml));
+  const itemXml = await getItem(apiId);
+  const osmXml = await parseXmlString(
+    new XMLSerializer().serializeToString(itemXml), // TODO get text from osmAuth.xhr ?
+  );
   const element = osmXml[apiId.type];
   element.$.changeset = changesetId;
-  element.tag = Object.entries(tags).map(([k,v]) => ({ '$': {k,v}}))
+  element.tag = Object.entries(newTags).map(([k, v]) => ({ $: { k, v } }));
+  const itemNewXml = buildXmlString(osmXml);
+  await putItem(apiId, itemNewXml);
 
-  await putItem(apiId, buildXmlString(osmXml));
-
-  return { changesetUrl: `${osmUrl}/changeset/${changesetId}` };
+  return {
+    text,
+    changesetXml,
+    itemNewXml,
+    changesetUrl: `${osmUrl}/changeset/${changesetId}`,
+  };
 };

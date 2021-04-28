@@ -25,7 +25,6 @@ export const buildXmlString = (xml) => {
   return builder.buildObject(xml);
 };
 
-
 export interface OsmApiId {
   type: string;
   id: string;

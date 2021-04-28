@@ -35,7 +35,7 @@ const nl2br = (text) =>
     </Fragment>
   ));
 
-export const SuccessContent = ({ insertedNote, handleClose }) => (
+export const SuccessContent = ({ successInfo, handleClose }) => (
   <>
     <DialogContent dividers>
       <StyledCheckCircleIcon />
@@ -48,14 +48,15 @@ export const SuccessContent = ({ insertedNote, handleClose }) => (
       </CenterText>
 
       <Typography variant="body2" paragraph>
-        Celý proces obvykle trvá několik dní. Ovšem v místech, kde není aktivní komunita, to může trvat i velmi dlouho.
+        Celý proces obvykle trvá několik dní. Ovšem v místech, kde není aktivní
+        komunita, to může trvat i velmi dlouho.
       </Typography>
 
       <Typography variant="body2" paragraph>
         Doplnit informace či sledovat vývoj můžete zde:
         <br />
-        <a href={insertedNote.url} rel="noopener nofollow">
-          {insertedNote.url}
+        <a href={successInfo.url} rel="noopener nofollow">
+          {successInfo.url}
         </a>
       </Typography>
 
@@ -64,7 +65,7 @@ export const SuccessContent = ({ insertedNote, handleClose }) => (
           Text poznámky
         </Typography>
         <Typography variant="body2" color="textSecondary">
-          {nl2br(insertedNote.text)}
+          {nl2br(successInfo.text)}
         </Typography>
       </GrayBox>
     </DialogContent>
