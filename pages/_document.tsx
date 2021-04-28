@@ -24,7 +24,17 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <AsyncStyle href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" />
-          <link rel="shortcut icon" href="/logo_64.png" />
+          <link rel="shortcut icon" href="/logo/osmapp_64.png" />
+          <link
+            rel="shortcut icon"
+            href="/logo/osmapp_192.png"
+            sizes="192x192"
+          />
+          <link
+            rel="shortcut icon"
+            href="/logo/osmapp_256.png"
+            sizes="256x256"
+          />
           <link rel="preconnect" href="https://api.maptiler.com" />
           <link rel="preconnect" href="https://openmaptiles.github.io" />
           <link rel="preconnect" href="https://a.mapillary.com" />

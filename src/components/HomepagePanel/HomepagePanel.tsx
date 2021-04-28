@@ -109,7 +109,7 @@ export const HomepagePanel = () => {
             >
               <Grid item xs={4}>
                 <Image
-                  src="/logo-osm-opt.svg"
+                  src="/logo/logo-osm.svg"
                   alt="Logo OpenStreetMap"
                   width={100}
                   height={100}
