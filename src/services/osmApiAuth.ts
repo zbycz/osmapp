@@ -58,6 +58,10 @@ export const fetchOsmUsername = async () => {
   return name;
 };
 
+export const osmLogout = async () => {
+  auth.logout();
+};
+
 export const getOsmUsername = () =>
   auth.authenticated() && window.localStorage.getItem('osm_username');
 

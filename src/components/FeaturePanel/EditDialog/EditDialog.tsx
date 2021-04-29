@@ -28,6 +28,7 @@ import {
   editOsmFeature,
   fetchOsmUsername,
   getOsmUsername,
+  osmLogout,
 } from '../../../services/osmApiAuth';
 
 const useIsFullScreen = () => {
@@ -63,10 +64,13 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const [note, setNote] = useState('');
   const [tags, setTag] = useTagsState(feature.tags);
   const [loading, setLoading] = useState(false);
-  const [successInfo, setSuccessInfo] = useState<any>(false);
+  const [successInfo, setSuccessInfo] = useState<any>({
+    text: 'asdf',
+    changesetUrl: '123',
+  });
   const [osmUser, setOsmUser] = useState(getOsmUsername());
   const onLogin = () => fetchOsmUsername().then(setOsmUser);
-  // TODO onLogout
+  const onLogout = () => osmLogout().then(() => setOsmUser(false));
 
   const saveDialog = async () => {
     const text = createNote(feature, tags, cancelled, location, note);
@@ -128,7 +132,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
                 setLocation={setLocation}
               />
 
-              <ContributionInfoBox />
+              <ContributionInfoBox loggedIn={!!osmUser} />
               <NoteField note={note} setNote={setNote} />
 
               <OtherTagsEditor
@@ -141,7 +145,15 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
                 {osmUser ? (
                   <>
                     Jste přihlášeni jako <b>{osmUser}</b>, změny se ihned
-                    projeví v mapě.
+                    projeví v mapě. (
+                    <button
+                      type="button"
+                      className="linkLikeButton"
+                      onClick={onLogout}
+                    >
+                      odhlásit
+                    </button>
+                    )
                   </>
                 ) : (
                   <>

@@ -35,44 +35,67 @@ const nl2br = (text) =>
     </Fragment>
   ));
 
-export const SuccessContent = ({ successInfo, handleClose }) => (
-  <>
-    <DialogContent dividers>
-      <StyledCheckCircleIcon />
+export const SuccessContent = ({ successInfo, handleClose }) => {
+  const texts = successInfo.noteUrl
+    ? {
+        heading: 'Děkujeme za Váš návrh!',
+        subheading: 'Dobrovolnící z komunity OpenStreetMap ho časem zpracují.',
+        par1: `Celý proces obvykle trvá několik dní. Ovšem v místech, kde není aktivní komunita, to může trvat i velmi dlouho.`,
+        par2: `Doplnit informace či sledovat vývoj můžete zde:`,
+        url: successInfo.noteUrl,
+        textHeading: 'Text poznámky',
+      }
+    : {
+        heading: 'Děkujeme za Vaši editaci!',
+        subheading: 'Již nyní se začíná objevovat v mapách po celém světě.',
+        par1: `Jak rychle bude má úprava vidět? Výchozí mapa OpenStreetMap Mapnik — několik minut až hodina. Zdejší výchozí vrstva, Maps.me, Mapy.cz (mimo ČR+SR) apod. — cca měsíc.`,
+        par2: `
+  Pokud by byla úprava sporná, místní komunita vás může oslovit pomocí komentáře. Přijde vám na mail a též jej naleznete zde:
+  ...
+  Pokud se jedná o omyl, můžete úpravu vzít zpět a napište o tom komentář k této úpravě:
+  `,
+        url: successInfo.changesetUrl,
+        textHeading: 'Poznámka ke změně',
+      };
 
-      <CenterText>
-        <Typography variant="h5">Děkujeme za Váš návrh!</Typography>
-        <Typography variant="body1" color="textSecondary">
-          Dobrovolnící z komunity OpenStreetMap ho časem zpracují.
+  return (
+    <>
+      <DialogContent dividers>
+        <StyledCheckCircleIcon />
+
+        <CenterText>
+          <Typography variant="h5">{texts.heading}</Typography>
+          <Typography variant="body1" color="textSecondary">
+            {texts.subheading}
+          </Typography>
+        </CenterText>
+
+        <Typography variant="body2" paragraph>
+          {texts.par1}
         </Typography>
-      </CenterText>
 
-      <Typography variant="body2" paragraph>
-        Celý proces obvykle trvá několik dní. Ovšem v místech, kde není aktivní
-        komunita, to může trvat i velmi dlouho.
-      </Typography>
-
-      <Typography variant="body2" paragraph>
-        Doplnit informace či sledovat vývoj můžete zde:
-        <br />
-        <a href={successInfo.url} rel="noopener nofollow">
-          {successInfo.url}
-        </a>
-      </Typography>
-
-      <GrayBox mt={6}>
-        <Typography variant="overline" color="textSecondary">
-          Text poznámky
+        <Typography variant="body2" paragraph>
+          {texts.par2}
+          <br />
+          <a href={texts.url} rel="noopener nofollow">
+            {texts.url}
+          </a>
         </Typography>
-        <Typography variant="body2" color="textSecondary">
-          {nl2br(successInfo.text)}
-        </Typography>
-      </GrayBox>
-    </DialogContent>
-    <DialogActions>
-      <Button onClick={handleClose} color="primary">
-        Zavřít
-      </Button>
-    </DialogActions>
-  </>
-);
+
+        <GrayBox mt={6}>
+          <Typography variant="overline" color="textSecondary">
+            {texts.textHeading}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            {nl2br(successInfo.text)}
+          </Typography>
+        </GrayBox>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color="primary">
+          Zavřít
+        </Button>
+      </DialogActions>
+    </>
+  );
+};
