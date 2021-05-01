@@ -5,7 +5,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 
 const {
-  publicRuntimeConfig: { osmappVersion },
+  publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
 } = getConfig();
 
 const Box = styled.div`
@@ -30,7 +30,7 @@ const OsmappLink = () => {
       <button type="button" className="linkLikeButton" onClick={showHomepage}>
         osmapp
       </button>{' '}
-      {osmappVersion}
+      <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
     </>
   );
 };
