@@ -8,6 +8,7 @@ import theme from '../src/helpers/theme';
 import GlobalStyle from '../src/helpers/GlobalStyle';
 import { captureException, initSentry } from '../src/helpers/sentry';
 import { prod } from '../src/services/helpers';
+import { IntlProvider } from '../src/components/utils/IntlContext';
 
 if (prod) {
   initSentry();
@@ -35,7 +36,8 @@ export default class MyApp extends App {
   }
 
   render() {
-    const { Component, pageProps } = this.props;
+    const { Component, pageProps } = this.props as any;
+    const { intl, ...restPageProps } = pageProps;
 
     return (
       <>
@@ -49,8 +51,10 @@ export default class MyApp extends App {
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <Component {...pageProps} />
+          <IntlProvider initialIntl={intl}>
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <Component {...restPageProps} />
+          </IntlProvider>
           <GlobalStyle />
         </ThemeProvider>
       </>

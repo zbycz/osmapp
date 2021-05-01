@@ -14,6 +14,8 @@ import {
 import LogoOsmapp from '../../assets/LogoOsmapp';
 import { useFeatureContext } from '../utils/FeatureContext';
 import GithubIcon from '../../assets/GithubIcon';
+import { useIntlContext } from '../utils/IntlContext';
+import { nl2br } from '../utils/nl2br';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -50,6 +52,7 @@ const Spacer = styled.div`
 
 export const HomepagePanel = () => {
   const { feature, homepageShown, hideHomepage } = useFeatureContext();
+  const { t } = useIntlContext();
 
   // hide after first shown feature
   useEffect(() => {
@@ -76,24 +79,26 @@ export const HomepagePanel = () => {
                 component="h2"
                 color="textSecondary"
               >
-                A universal OpenStreetMap app
+                {t('homepage.subtitle')}
               </Typography>
             </Center>
 
             <Typography variant="body1" paragraph>
-              Start by typing your query into the searchbox. <br />
-              Or click any item on the map.
+              {nl2br(t('homepage.how_to_start'))}
             </Typography>
 
             <Typography variant="body2" paragraph>
-              eg. <Link href="/way/34633854">Empire State Building</Link> •{' '}
-              <Link href="/way/119016167">Statues of Charles bridge</Link>
+              {t('homepage.examples.eg')}{' '}
+              <Link href="/way/34633854">Empire State Building</Link> •{' '}
+              <Link href="/way/119016167">
+                {t('homepage.examples.charles_bridge_statues')}
+              </Link>
             </Typography>
 
             <Center>
               <Image
                 src="/osmapp-screenshot.png"
-                alt="Screenshot of OsmAPP"
+                alt={t('homepage.screenshot_alt')}
                 width={300}
                 height={300 * (1033 / 1371)}
               />

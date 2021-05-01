@@ -2,6 +2,7 @@ import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
+import { getIntl } from '../src/services/getIntl';
 
 // This stinks so much!! https://github.com/facebook/react/issues/12014#issuecomment-434534770
 const AsyncStyle = ({ href }) => (
@@ -82,8 +83,10 @@ MyDocument.getInitialProps = async (ctx) => {
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App) => (props) =>
-        sheets.collect(sheets2.collectStyles(<App {...props} />)), // eslint-disable-line react/jsx-props-no-spreading
+      enhanceApp: (App) => (props) => {
+        props.pageProps.intl = getIntl(ctx); // eslint-disable-line no-param-reassign
+        return sheets.collect(sheets2.collectStyles(<App {...props} />)); // eslint-disable-line react/jsx-props-no-spreading
+      },
     });
 
   const initialProps = await Document.getInitialProps(ctx);

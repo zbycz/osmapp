@@ -31,6 +31,7 @@
     "@sentry/browser": "^6.2.2",
     "@sentry/node": "^6.2.2",
     "@types/maplibre-gl": "^1.13.1",
+    "accept-language-parser": "^1.5.0",
     "autosuggest-highlight": "^3.1.1",
     "isomorphic-unfetch": "^3.1.0",
     "isomorphic-xml2js": "^0.1.3",

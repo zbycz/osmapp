@@ -3,11 +3,12 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import DialogActions from '@material-ui/core/DialogActions';
 import InfoIcon from '@material-ui/icons/Info';
 import Button from '@material-ui/core/Button';
-import React, { Fragment } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import { Box, Tooltip } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import { nl2br } from '../../utils/nl2br';
 
 const StyledCheckCircleIcon = styled(CheckCircleIcon)`
   color: #4b912e;
@@ -27,15 +28,6 @@ const GrayBox = styled(Box)`
   background: #eee;
   padding: 1em;
 `;
-
-const nl2br = (text) =>
-  text.split('\n').map((line, idx) => (
-    // eslint-disable-next-line react/no-array-index-key
-    <Fragment key={idx}>
-      {idx > 0 && <br />}
-      {line}
-    </Fragment>
-  ));
 
 const Wrapper = styled.span`
   display: inline-block;
