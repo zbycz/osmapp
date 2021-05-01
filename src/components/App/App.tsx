@@ -9,6 +9,7 @@ import { getInitialMapView, getInititalFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
+import { OsmAuthProvider } from '../utils/OsmAuthContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -62,7 +63,9 @@ const App = ({ featureFromRouter, initialMapView }) => {
   return (
     <FeatureProvider featureFromRouter={featureFromRouter}>
       <MapStateProvider initialMapView={mapView}>
-        <IndexWithProviders />
+        <OsmAuthProvider>
+          <IndexWithProviders />
+        </OsmAuthProvider>
       </MapStateProvider>
     </FeatureProvider>
   );

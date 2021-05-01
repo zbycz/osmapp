@@ -25,12 +25,8 @@ import {
 import { OtherTagsEditor } from './OtherTagsEditor';
 import { SuccessContent } from './SuccessContent';
 import { icons } from '../../../assets/icons';
-import {
-  editOsmFeature,
-  fetchOsmUsername,
-  getOsmUsername,
-  osmLogout,
-} from '../../../services/osmApiAuth';
+import { editOsmFeature } from '../../../services/osmApiAuth';
+import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -51,6 +47,43 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
+const OsmLogin = () => {
+  const { loggedIn, osmUser, handleLogin, handleLogout } = useOsmAuthContext();
+
+  return (
+    <Typography variant="body2" color="textSecondary" paragraph>
+      {loggedIn ? (
+        <>
+          Jste přihlášeni jako <b>{osmUser}</b>, změny se ihned projeví v mapě.
+          (
+          <button
+            type="button"
+            className="linkLikeButton"
+            onClick={handleLogout}
+          >
+            odhlásit
+          </button>
+          )
+        </>
+      ) : (
+        <>
+          Vkládáte <b>anonymní</b> poznámku do mapy.
+          <br />
+          Pokud se{' '}
+          <button
+            type="button"
+            className="linkLikeButton"
+            onClick={handleLogin}
+          >
+            přihlásíte do OpenStreetMap
+          </button>
+          , změny se ihned projeví v mapě.
+        </>
+      )}
+    </Typography>
+  );
+};
+
 interface Props {
   feature: Feature;
   open: boolean;
@@ -66,12 +99,10 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const [tags, setTag] = useTagsState(feature.tags);
   const [loading, setLoading] = useState(false);
   const [successInfo, setSuccessInfo] = useState<any>(false);
-  const [osmUser, setOsmUser] = useState<false | string>(getOsmUsername());
-  const onLogin = () => fetchOsmUsername().then(setOsmUser);
-  const onLogout = () => osmLogout().then(() => setOsmUser(false));
+  const { loggedIn } = useOsmAuthContext();
 
   const onClose = () => {
-    if (successInfo && !!osmUser) {
+    if (successInfo && loggedIn) {
       handleClose();
       clearFeatureCache(feature.osmMeta);
       Router.reload(); // TODO Router.replace(window.location.pathname) doesnt update the Panel
@@ -87,7 +118,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
       cancelled,
       location,
       note,
-      !!osmUser,
+      loggedIn,
     );
     if (noteText == null) {
       // eslint-disable-next-line no-alert
@@ -97,7 +128,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
 
     setLoading(true);
     setSuccessInfo(
-      osmUser
+      loggedIn
         ? await editOsmFeature(feature, note, tags)
         : await insertOsmNote(feature.center, noteText),
     );
@@ -122,7 +153,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           width={16}
           height={16}
         />{' '}
-        {osmUser ? 'Upravit: ' : 'Navrhnout úpravu: '}
+        {loggedIn ? 'Upravit: ' : 'Navrhnout úpravu: '}
         {feature.tags.name || feature.properties.subclass}
       </DialogTitle>
       {successInfo ? (
@@ -137,7 +168,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
                 focusTag={focusTag}
               />
 
-              {!osmUser && (
+              {!loggedIn && (
                 <>
                   <DialogHeading>Možnosti</DialogHeading>
                   <PlaceCancelledToggle
@@ -151,7 +182,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
                 </>
               )}
 
-              <ContributionInfoBox loggedIn={!!osmUser} />
+              <ContributionInfoBox loggedIn={loggedIn} />
               <NoteField note={note} setNote={setNote} />
 
               <OtherTagsEditor
@@ -160,36 +191,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
                 focusTag={focusTag}
               />
 
-              <Typography variant="body2" color="textSecondary" paragraph>
-                {osmUser ? (
-                  <>
-                    Jste přihlášeni jako <b>{osmUser}</b>, změny se ihned
-                    projeví v mapě. (
-                    <button
-                      type="button"
-                      className="linkLikeButton"
-                      onClick={onLogout}
-                    >
-                      odhlásit
-                    </button>
-                    )
-                  </>
-                ) : (
-                  <>
-                    Vkládáte <b>anonymní</b> poznámku do mapy.
-                    <br />
-                    Pokud se{' '}
-                    <button
-                      type="button"
-                      className="linkLikeButton"
-                      onClick={onLogin}
-                    >
-                      přihlásíte do OpenStreetMap
-                    </button>
-                    , změny se ihned projeví v mapě.
-                  </>
-                )}
-              </Typography>
+              <OsmLogin />
             </form>
           </DialogContent>
           <DialogActions>
