@@ -4,13 +4,12 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { majorKeys } from './MajorKeysEditor';
 import { isString } from '../../helpers';
 
 const Table = styled.table`
-  font-size: 80%;
-  width: 100%;
+  width: calc(100% - 20px);
+  margin-left: 20px;
 
   th {
     color: rgba(0, 0, 0, 0.54);
@@ -40,7 +39,7 @@ const NewTagRow = ({ setTag }) => {
 
   return (
     <tr>
-      <th>
+      <th style={{ verticalAlign: 'baseline' }}>
         <TextField
           value={newKey}
           onChange={(e) => setNewKey(e.target.value)}
@@ -65,7 +64,7 @@ const NewTagRow = ({ setTag }) => {
 };
 
 const KeyValueRow = ({ k, v, setTag, focusTag }) => (
-  <tr key={k}>
+  <tr>
     <th>{k}</th>
     <td>
       <TextField
@@ -97,30 +96,31 @@ export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
   const rows = Object.entries(tags)
     .filter(([k]) => !majorKeys.includes(k))
     .map(([k, v]) => (
-      <KeyValueRow k={k} v={v} setTag={setTag} focusTag={focusTag} />
+      <KeyValueRow key={k} k={k} v={v} setTag={setTag} focusTag={focusTag} />
     ));
 
   return (
-    <>
+    <div>
       {!showTags && (
         <Button
           variant="outlined"
           disableElevation
           onClick={() => setShowTags(!showTags)}
         >
-          Další vlastnosti - tagy
-          {showTags ? (
-            <ExpandLessIcon fontSize="small" />
-          ) : (
-            <ExpandMoreIcon fontSize="small" />
-          )}
+          Další vlastnosti – tagy
+          <ExpandMoreIcon fontSize="small" />
         </Button>
       )}
 
       {showTags && (
         <>
-          <Typography variant="overline" display="block" color="textSecondary">
-            Další vlastnosti - tagy
+          <Typography
+            variant="overline"
+            component="h3"
+            color="textSecondary"
+            style={{ position: 'relative' }}
+          >
+            Další vlastnosti – tagy
           </Typography>
           <Table>
             <tbody>
@@ -130,7 +130,10 @@ export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
           </Table>
         </>
       )}
+
       <br />
-    </>
+      <br />
+      <br />
+    </div>
   );
 };

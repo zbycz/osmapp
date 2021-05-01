@@ -1,7 +1,8 @@
-import { getApiId, getUrlOsmId, prod } from './helpers';
+import { getApiId, getUrlOsmId, OsmApiId, prod } from './helpers';
 import { fetchJson, fetchText } from './fetch';
 import { Feature, Position } from './types';
 import { osmToGeojson } from './osmToGeojson';
+import { removeFetchCache } from './fetchCache';
 
 export const OSM_API = 'https://www.openstreetmap.org/api/0.6';
 export const OSM_FEATURE_URL = ({ type, id }) => `${OSM_API}/${type}/${id}`;
@@ -15,29 +16,34 @@ export const OP_QUERY = {
   relation: (id) => `rel(${id});(._;>;);out;`,
 };
 export const OP_FEATURE_URL = ({ type, id }) => OP_URL(OP_QUERY[type](id));
+const FETCH_FEATURE_URL = (apiId) =>
+  apiId.type === 'node' ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
 
-export const getFeatureFromApi = async (featureId): Promise<Feature> => {
-  const apiId = getApiId(featureId);
-  const isNode = apiId.type === 'node';
-  const url = isNode ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
-
+export const getFeatureFromApi = async (shortId): Promise<Feature> => {
+  const apiId = getApiId(shortId);
+  const url = FETCH_FEATURE_URL(apiId);
   const response = await fetchText(url, { putInAbortableQueue: true }); // TODO 504 gateway busy
   return osmToGeojson(response);
 };
 
-export const fetchInitialFeature = async (id): Promise<Feature> => {
+export const clearFeatureCache = (apiId: OsmApiId) => {
+  const url = FETCH_FEATURE_URL(apiId);
+  removeFetchCache(url, { putInAbortableQueue: true }); // watch out, must be same as above
+};
+
+export const fetchInitialFeature = async (shortId): Promise<Feature> => {
   try {
-    return id ? await getFeatureFromApi(id) : null;
+    return shortId ? await getFeatureFromApi(shortId) : null;
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.error(`Fetch error while fetching id=${id}`, e.code);
+    console.error(`Fetch error while fetching id=${shortId}`, e.code);
     return {
       type: 'Feature',
       skeleton: true,
       nonOsmObject: false,
-      osmMeta: getApiId(id),
+      osmMeta: getApiId(shortId),
       center: undefined,
-      tags: { name: getUrlOsmId(getApiId(id)) },
+      tags: { name: getUrlOsmId(getApiId(shortId)) },
       properties: { class: '', subclass: '' },
       error: 'gone',
     };
@@ -64,5 +70,9 @@ export const insertOsmNote = async (point: Position, text: string) => {
   });
 
   const noteId = reply.properties.id;
-  return `${prod ? 'https://osm.org' : osmUrl}/note/${noteId}`;
+  return {
+    type: 'note',
+    text,
+    url: `${prod ? 'https://osm.org' : osmUrl}/note/${noteId}`,
+  };
 };

@@ -163,7 +163,7 @@ const FeaturePanel = () => {
             <StyledEdit>
               <Button
                 size="large"
-                title="Upravit místo v živé databázi OSM"
+                title="Upravit v databázi OpenStreetMap"
                 startIcon={<EditIcon />}
                 variant="outlined"
                 color="primary"

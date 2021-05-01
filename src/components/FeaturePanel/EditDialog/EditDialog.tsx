@@ -7,10 +7,13 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useTheme from '@material-ui/core/styles/useTheme';
 import DialogContent from '@material-ui/core/DialogContent';
 import { CircularProgress } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import styled from 'styled-components';
+import Router from 'next/router';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags } from '../../../services/types';
-import { createNote } from './createNote';
-import { insertOsmNote } from '../../../services/osmApi';
+import { createNoteText } from './createNoteText';
+import { clearFeatureCache, insertOsmNote } from '../../../services/osmApi';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import {
   ChangeLocationEditor,
@@ -22,6 +25,12 @@ import {
 import { OtherTagsEditor } from './OtherTagsEditor';
 import { SuccessContent } from './SuccessContent';
 import { icons } from '../../../assets/icons';
+import {
+  editOsmFeature,
+  fetchOsmUsername,
+  getOsmUsername,
+  osmLogout,
+} from '../../../services/osmApiAuth';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -35,6 +44,12 @@ const useTagsState = (
   const setTag = (k, v) => setTags((state) => ({ ...state, [k]: v }));
   return [tags, setTag];
 };
+
+const StyledDialog = styled(Dialog)`
+  .MuiDialog-container.MuiDialog-scrollPaper {
+    align-items: start;
+  }
+`;
 
 interface Props {
   feature: Feature;
@@ -50,23 +65,42 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const [note, setNote] = useState('');
   const [tags, setTag] = useTagsState(feature.tags);
   const [loading, setLoading] = useState(false);
-  const [insertedNote, setInsertedNote] = useState<
-    false | { text: string; url: string }
-  >(false);
+  const [successInfo, setSuccessInfo] = useState<any>(false);
+  const [osmUser, setOsmUser] = useState<false | string>(getOsmUsername());
+  const onLogin = () => fetchOsmUsername().then(setOsmUser);
+  const onLogout = () => osmLogout().then(() => setOsmUser(false));
+
+  const onClose = () => {
+    if (successInfo && !!osmUser) {
+      handleClose();
+      clearFeatureCache(feature.osmMeta);
+      Router.reload(); // TODO Router.replace(window.location.pathname) doesnt update the Panel
+    } else {
+      handleClose();
+    }
+  };
 
   const saveDialog = async () => {
-    const text = createNote(feature, tags, cancelled, location, note);
-    if (text == null) {
+    const noteText = createNoteText(
+      feature,
+      tags,
+      cancelled,
+      location,
+      note,
+      !!osmUser,
+    );
+    if (noteText == null) {
       // eslint-disable-next-line no-alert
       alert('Proveďte, prosím, požadované změny.');
       return;
     }
 
     setLoading(true);
-    setInsertedNote({
-      text,
-      url: await insertOsmNote(feature.center, text),
-    });
+    setSuccessInfo(
+      osmUser
+        ? await editOsmFeature(feature, note, tags)
+        : await insertOsmNote(feature.center, noteText),
+    );
   };
 
   const ico = icons.includes(feature.properties.class)
@@ -74,10 +108,10 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
     : 'information';
 
   return (
-    <Dialog
+    <StyledDialog
       fullScreen={fullScreen}
       open={open}
-      onClose={handleClose}
+      onClose={onClose}
       aria-labelledby="edit-dialog-title"
     >
       <DialogTitle id="edit-dialog-title">
@@ -88,32 +122,79 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           width={16}
           height={16}
         />{' '}
-        Navrhnout úpravu: {feature.tags.name || feature.properties.subclass}
+        {osmUser ? 'Upravit: ' : 'Navrhnout úpravu: '}
+        {feature.tags.name || feature.properties.subclass}
       </DialogTitle>
-      {insertedNote ? (
-        <SuccessContent insertedNote={insertedNote} handleClose={handleClose} />
+      {successInfo ? (
+        <SuccessContent successInfo={successInfo} handleClose={onClose} />
       ) : (
         <>
           <DialogContent dividers>
-            <MajorKeysEditor tags={tags} setTag={setTag} focusTag={focusTag} />
+            <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+              <MajorKeysEditor
+                tags={tags}
+                setTag={setTag}
+                focusTag={focusTag}
+              />
 
-            <DialogHeading>Další možnosti</DialogHeading>
-            <PlaceCancelledToggle
-              cancelled={cancelled}
-              toggle={toggleCancelled}
-            />
-            <ChangeLocationEditor
-              location={location}
-              setLocation={setLocation}
-            />
-            <ContributionInfoBox />
-            <NoteField note={note} setNote={setNote} />
+              {!osmUser && (
+                <>
+                  <DialogHeading>Možnosti</DialogHeading>
+                  <PlaceCancelledToggle
+                    cancelled={cancelled}
+                    toggle={toggleCancelled}
+                  />
+                  <ChangeLocationEditor
+                    location={location}
+                    setLocation={setLocation}
+                  />
+                </>
+              )}
 
-            <OtherTagsEditor tags={tags} setTag={setTag} focusTag={focusTag} />
+              <ContributionInfoBox loggedIn={!!osmUser} />
+              <NoteField note={note} setNote={setNote} />
+
+              <OtherTagsEditor
+                tags={tags}
+                setTag={setTag}
+                focusTag={focusTag}
+              />
+
+              <Typography variant="body2" color="textSecondary" paragraph>
+                {osmUser ? (
+                  <>
+                    Jste přihlášeni jako <b>{osmUser}</b>, změny se ihned
+                    projeví v mapě. (
+                    <button
+                      type="button"
+                      className="linkLikeButton"
+                      onClick={onLogout}
+                    >
+                      odhlásit
+                    </button>
+                    )
+                  </>
+                ) : (
+                  <>
+                    Vkládáte <b>anonymní</b> poznámku do mapy.
+                    <br />
+                    Pokud se{' '}
+                    <button
+                      type="button"
+                      className="linkLikeButton"
+                      onClick={onLogin}
+                    >
+                      přihlásíte do OpenStreetMap
+                    </button>
+                    , změny se ihned projeví v mapě.
+                  </>
+                )}
+              </Typography>
+            </form>
           </DialogContent>
           <DialogActions>
             {loading && <CircularProgress />}
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={onClose} color="primary">
               Zrušit
             </Button>
             <Button onClick={saveDialog} color="primary" variant="contained">
@@ -122,6 +203,6 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           </DialogActions>
         </>
       )}
-    </Dialog>
+    </StyledDialog>
   );
 };

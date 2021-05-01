@@ -17,7 +17,7 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 export const EditIconButton = ({ onClick }) => (
-  <StyledIconButton mini="true" className="show-on-hover" onClick={onClick}>
+  <StyledIconButton className="show-on-hover" onClick={onClick}>
     <Edit titleAccess="Upravit v databázi OpenStreetMap" />
   </StyledIconButton>
 );
