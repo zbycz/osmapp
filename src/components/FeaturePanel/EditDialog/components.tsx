@@ -58,8 +58,11 @@ export const ContributionInfoBox = ({ loggedIn }) =>
     <Box mt={4} mb={4}>
       <Typography variant="body1" color="textSecondary" paragraph>
         Vaše úprava bude ihned uložena do databáze OpenStreetMap. Prosíme,
-        vkládejte pouze informace z vlastních nebo věřejných zdrojů. Je zakázano
-        kopírovat z Google Map a jiných map krytých autorským zákonem.
+        vkládejte pouze informace z vlastních nebo ověřených zdrojů. Je zakázano
+        kopírovat data krytá autorským zákonem (např. Google Maps).{' '}
+        <a href="https://wiki.openstreetmap.org/wiki/Cs:Jak_mapujeme">
+          Více informací
+        </a>
       </Typography>
     </Box>
   ) : (

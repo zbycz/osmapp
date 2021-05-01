@@ -9,10 +9,11 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { CircularProgress } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
+import Router from 'next/router';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags } from '../../../services/types';
 import { createNoteText } from './createNoteText';
-import { insertOsmNote } from '../../../services/osmApi';
+import { clearFeatureCache, insertOsmNote } from '../../../services/osmApi';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import {
   ChangeLocationEditor,
@@ -64,10 +65,20 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const [note, setNote] = useState('');
   const [tags, setTag] = useTagsState(feature.tags);
   const [loading, setLoading] = useState(false);
-  const [successInfo, setSuccessInfo] = useState<any>(false);
+  const [successInfo, setSuccessInfo] = useState<any>({ text: 'ahoj' });
   const [osmUser, setOsmUser] = useState<false | string>(getOsmUsername());
   const onLogin = () => fetchOsmUsername().then(setOsmUser);
   const onLogout = () => osmLogout().then(() => setOsmUser(false));
+
+  const onClose = () => {
+    if (successInfo && !!osmUser) {
+      handleClose();
+      clearFeatureCache(feature.osmMeta);
+      Router.reload(); // TODO Router.replace(window.location.pathname) doesnt update the Panel
+    } else {
+      handleClose();
+    }
+  };
 
   const saveDialog = async () => {
     const noteText = createNoteText(
@@ -90,7 +101,6 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
         ? await editOsmFeature(feature, note, tags)
         : await insertOsmNote(feature.center, noteText),
     );
-    // TODO reload on close
   };
 
   const ico = icons.includes(feature.properties.class)
@@ -101,7 +111,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
     <StyledDialog
       fullScreen={fullScreen}
       open={open}
-      onClose={handleClose}
+      onClose={onClose}
       aria-labelledby="edit-dialog-title"
     >
       <DialogTitle id="edit-dialog-title">
@@ -116,7 +126,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
         {feature.tags.name || feature.properties.subclass}
       </DialogTitle>
       {successInfo ? (
-        <SuccessContent successInfo={successInfo} handleClose={handleClose} />
+        <SuccessContent successInfo={successInfo} handleClose={onClose} />
       ) : (
         <>
           <DialogContent dividers>
@@ -184,7 +194,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           </DialogContent>
           <DialogActions>
             {loading && <CircularProgress />}
-            <Button onClick={handleClose} color="primary">
+            <Button onClick={onClose} color="primary">
               Zrušit
             </Button>
             <Button onClick={saveDialog} color="primary" variant="contained">

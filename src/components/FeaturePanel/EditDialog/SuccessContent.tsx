@@ -74,7 +74,7 @@ export const SuccessContent = ({ successInfo, handleClose }) => {
           subheading: 'Již nyní se začíná objevovat v mapách po celém světě.',
           body: `V databázi OSM již je uložena. V řádu několika minut ji uvidíte na mapě "OSM Mapnik". Zdejší mapa a různé jiné aplikace se obnovují cca 1x za měsíc.
 
-        Pokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
+          Pokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
           urlLabel: `Vaše změny:`,
           textLabel: 'Poznámka ke změně',
         };
