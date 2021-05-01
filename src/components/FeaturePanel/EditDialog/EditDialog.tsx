@@ -11,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags } from '../../../services/types';
-import { createNote } from './createNote';
+import { createNoteText } from './createNoteText';
 import { insertOsmNote } from '../../../services/osmApi';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import {
@@ -64,17 +64,21 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const [note, setNote] = useState('');
   const [tags, setTag] = useTagsState(feature.tags);
   const [loading, setLoading] = useState(false);
-  const [successInfo, setSuccessInfo] = useState<any>({
-    text: 'asdf',
-    changesetUrl: '123',
-  });
-  const [osmUser, setOsmUser] = useState(getOsmUsername());
+  const [successInfo, setSuccessInfo] = useState<any>(false);
+  const [osmUser, setOsmUser] = useState<false | string>(getOsmUsername());
   const onLogin = () => fetchOsmUsername().then(setOsmUser);
   const onLogout = () => osmLogout().then(() => setOsmUser(false));
 
   const saveDialog = async () => {
-    const text = createNote(feature, tags, cancelled, location, note);
-    if (text == null) {
+    const noteText = createNoteText(
+      feature,
+      tags,
+      cancelled,
+      location,
+      note,
+      !!osmUser,
+    );
+    if (noteText == null) {
       // eslint-disable-next-line no-alert
       alert('Proveďte, prosím, požadované změny.');
       return;
@@ -83,9 +87,10 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
     setLoading(true);
     setSuccessInfo(
       osmUser
-        ? await editOsmFeature(feature, text, tags, cancelled, location)
-        : await insertOsmNote(feature.center, text),
+        ? await editOsmFeature(feature, note, tags)
+        : await insertOsmNote(feature.center, noteText),
     );
+    // TODO reload on close
   };
 
   const ico = icons.includes(feature.properties.class)
@@ -122,15 +127,19 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
                 focusTag={focusTag}
               />
 
-              <DialogHeading>Možnosti</DialogHeading>
-              <PlaceCancelledToggle
-                cancelled={cancelled}
-                toggle={toggleCancelled}
-              />
-              <ChangeLocationEditor
-                location={location}
-                setLocation={setLocation}
-              />
+              {!osmUser && (
+                <>
+                  <DialogHeading>Možnosti</DialogHeading>
+                  <PlaceCancelledToggle
+                    cancelled={cancelled}
+                    toggle={toggleCancelled}
+                  />
+                  <ChangeLocationEditor
+                    location={location}
+                    setLocation={setLocation}
+                  />
+                </>
+              )}
 
               <ContributionInfoBox loggedIn={!!osmUser} />
               <NoteField note={note} setNote={setNote} />

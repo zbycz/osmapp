@@ -59,26 +59,25 @@ export const InfoButton = ({ title }) => (
 );
 
 export const SuccessContent = ({ successInfo, handleClose }) => {
-  const texts = successInfo.noteUrl
-    ? {
-        heading: 'Děkujeme za Váš návrh!',
-        subheading: 'Dobrovolnící z komunity OpenStreetMap ho časem zpracují.',
-        par1: `Celý proces obvykle trvá několik dní. Ovšem v místech, kde není aktivní komunita, to může trvat i velmi dlouho.`,
-        par2: `Doplnit informace či sledovat vývoj můžete zde:`,
-        url: successInfo.noteUrl,
-        textHeading: 'Text poznámky',
-      }
-    : {
-        heading: 'Děkujeme za Vaši editaci!',
-        subheading: 'Již nyní se začíná objevovat v mapách po celém světě.',
-        info: `Jak rychle bude má úprava vidět?
-        • Mapa OSM Mapnik — několik minut až hodina.
-        • Zdejší výchozí vrstva, Maps.me apod. — cca měsíc.`,
-        par1: `Pokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a uložit.`,
-        par2: `Své změny si můžete prohlédnout zde:`,
-        url: successInfo.changesetUrl,
-        textHeading: 'Poznámka ke změně',
-      };
+  const texts =
+    successInfo.type === 'note'
+      ? {
+          heading: 'Děkujeme za Váš návrh!',
+          subheading:
+            'Dobrovolnící z komunity OpenStreetMap ho časem zpracují.',
+          body: `Celý proces obvykle trvá několik dní. Ovšem v místech, kde není aktivní komunita, to může trvat i velmi dlouho.`,
+          urlLabel: `Doplnit informace či sledovat vývoj můžete zde:`,
+          textLabel: 'Text poznámky',
+        }
+      : {
+          heading: 'Děkujeme za Vaši editaci!',
+          subheading: 'Již nyní se začíná objevovat v mapách po celém světě.',
+          body: `V databázi OSM již je uložena. V řádu několika minut ji uvidíte na mapě "OSM Mapnik". Zdejší mapa a různé jiné aplikace se obnovují cca 1x za měsíc.
+
+        Pokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
+          urlLabel: `Vaše změny:`,
+          textLabel: 'Poznámka ke změně',
+        };
 
   return (
     <>
@@ -89,25 +88,24 @@ export const SuccessContent = ({ successInfo, handleClose }) => {
           <Typography variant="h5">{texts.heading}</Typography>
           <Typography variant="body1" color="textSecondary">
             {texts.subheading}
-            <InfoButton title={texts.info} />
           </Typography>
         </CenterText>
 
         <Typography variant="body2" paragraph>
-          {nl2br(texts.par1)}
+          {nl2br(texts.body)}
         </Typography>
 
         <Typography variant="body2" paragraph>
-          {nl2br(texts.par2)}
+          {nl2br(texts.urlLabel)}
           <br />
-          <a href={texts.url} rel="noopener nofollow">
-            {texts.url}
+          <a href={successInfo.url} rel="noopener nofollow">
+            {successInfo.url}
           </a>
         </Typography>
 
         <GrayBox mt={6}>
           <Typography variant="overline" color="textSecondary">
-            {texts.textHeading}
+            {texts.textLabel}
           </Typography>
           <Typography variant="body2" color="textSecondary">
             {nl2br(successInfo.text)}

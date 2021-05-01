@@ -65,10 +65,10 @@ export const osmLogout = async () => {
 export const getOsmUsername = () =>
   auth.authenticated() && window.localStorage.getItem('osm_username');
 
-const getChangesetXml = ({ text, needsReview }) => {
+const getChangesetXml = ({ comment, needsReview }) => {
   const tags = [
     ['created_by', `OsmAPP ${osmappVersion}`],
-    ['comment', text],
+    ['comment', comment],
     ...(needsReview ? [['review_requested', 'yes']] : []),
   ];
   return `<osm>
@@ -102,14 +102,15 @@ const putItem = (apiId: OsmApiId, content: string) =>
 
 export const editOsmFeature = async (
   feature: Feature,
-  text: string,
+  note: string,
   newTags: FeatureTags,
-  cancelled: boolean,
-  location: string,
 ) => {
   const apiId = prod ? feature.osmMeta : { type: 'node', id: '967531' };
+  const comment = `${note} • Submitted from https://osmapp.org/${getUrlOsmId(
+    feature.osmMeta,
+  )}`;
 
-  const changesetXml = getChangesetXml({ text, needsReview: !!location });
+  const changesetXml = getChangesetXml({ comment, needsReview: false });
   const changesetId = await putChangeset(changesetXml);
 
   const itemXml = await getItem(apiId);
@@ -118,14 +119,15 @@ export const editOsmFeature = async (
   );
   const element = osmXml[apiId.type];
   element.$.changeset = changesetId;
-  element.tag = Object.entries(newTags).map(([k, v]) => ({ $: { k, v } }));
+  element.tag = Object.entries(newTags)
+    .filter(([k, v]) => k && v)
+    .map(([k, v]) => ({ $: { k, v } }));
   const itemNewXml = buildXmlString(osmXml);
   await putItem(apiId, itemNewXml);
 
   return {
-    text,
-    changesetXml,
-    itemNewXml,
-    changesetUrl: `${osmUrl}/changeset/${changesetId}`,
+    type: 'edit',
+    text: comment,
+    url: `${osmUrl}/changeset/${changesetId}`,
   };
 };

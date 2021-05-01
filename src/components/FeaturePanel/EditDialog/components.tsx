@@ -57,7 +57,9 @@ export const ContributionInfoBox = ({ loggedIn }) =>
   loggedIn ? (
     <Box mt={4} mb={4}>
       <Typography variant="body1" color="textSecondary" paragraph>
-        Vaše úprava bude ihned uložena do databáze OpenStreetMap
+        Vaše úprava bude ihned uložena do databáze OpenStreetMap. Prosíme,
+        vkládejte pouze informace z vlastních nebo věřejných zdrojů. Je zakázano
+        kopírovat z Google Map a jiných map krytých autorským zákonem.
       </Typography>
     </Box>
   ) : (

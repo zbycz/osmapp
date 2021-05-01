@@ -1,12 +1,13 @@
 import { Feature, FeatureTags } from '../../../services/types';
 import { getUrlOsmId } from '../../../services/helpers';
 
-export const createNote = (
+export const createNoteText = (
   feature: Feature,
   newTags: FeatureTags,
   placeCancelled: boolean,
   location: string,
   note: string,
+  loggedIn: boolean,
 ) => {
   const isAdded = ([k, v]) => v && !feature.tags[k];
   const isRemoved = ([k, v]) => v && !newTags[k];
@@ -46,7 +47,7 @@ export const createNote = (
 
   if (changeOrAddedTags.length) {
     noteText.push('');
-    noteText.push('Suggested changes:');
+    noteText.push(loggedIn ? 'Changes:' : 'Suggested changes:');
     noteText.push(changeOrAddedTags.map(([k, v]) => `${k}=${v}`).join('\n'));
   }
 
