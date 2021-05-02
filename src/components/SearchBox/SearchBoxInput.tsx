@@ -8,6 +8,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Router from 'next/router';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { t } from '../utils/IntlContext';
 
 const StyledPaper = styled(Paper)`
   padding: 2px 4px;
@@ -56,7 +57,7 @@ export const SearchBoxInput = ({ params, setInputValue }) => {
         <SearchIcon />
       </SearchIconButton>
       <SearchInput
-        placeholder="Prohledat OpenStreetMap"
+        placeholder={t('searchbox.placeholder')}
         {...restParams} // eslint-disable-line react/jsx-props-no-spreading
         onChange={onChange}
         onFocus={onFocus}

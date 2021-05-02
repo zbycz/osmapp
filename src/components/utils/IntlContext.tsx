@@ -1,4 +1,6 @@
 import React, { createContext, FC, useContext, useMemo } from 'react';
+import Cookies from 'js-cookie';
+import Router from 'next/router';
 import { TranslationId } from './types';
 
 type Values = { [variable: string]: string };
@@ -7,9 +9,13 @@ interface IntlType {
   lang: string;
   t: (id: TranslationId, values?: Values) => string;
   Translation: FC<{ id: TranslationId; values?: Values }>;
+  changeLang: (langId: string) => void;
 }
 
-const intl = {} as any;
+export const intl = {
+  lang: '',
+  messages: {},
+};
 
 const VARIABLE_REGEX = /__(?<name>[a-zA-Z_]+)__/g;
 
@@ -19,14 +25,20 @@ const replaceValues = (text: string, values: Values) =>
     return value != null ? value : '?';
   });
 
-const t = (id, values) => {
+export const t = (id: TranslationId, values?: Values) => {
   const translation = intl.messages[id] ?? id;
   return replaceValues(translation, values);
 };
 
-const Translation = ({ id, values }) => {
+export const Translation = ({ id, values }) => {
   const html = t(id, values);
   return <span data-id={id} dangerouslySetInnerHTML={{ __html: html }} />;
+};
+
+export const changeLang = (langId) => {
+  if (langId === intl.lang) return;
+  Cookies.set('lang', langId, { expires: 365, path: '/' });
+  Router.reload();
 };
 
 export const IntlContext = createContext<IntlType>(undefined);
@@ -42,6 +54,7 @@ export const IntlProvider = ({ initialIntl, children }) => {
       lang: intl.lang,
       t,
       Translation,
+      changeLang,
     }),
     [intl],
   );

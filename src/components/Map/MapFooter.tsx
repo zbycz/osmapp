@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import getConfig from 'next/config';
+import { Menu, MenuItem } from '@material-ui/core';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { useIntlContext } from '../utils/IntlContext';
 
 const {
   publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
@@ -31,6 +33,54 @@ const OsmappLink = () => {
         osmapp
       </button>{' '}
       <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
+    </>
+  );
+};
+
+const LangSwitcher = () => {
+  const {
+    publicRuntimeConfig: { languages },
+  } = getConfig();
+  const { lang, changeLang } = useIntlContext();
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const setLang = (k) => {
+    changeLang(k);
+    handleClose();
+  };
+
+  return (
+    <>
+      <Menu
+        id="language-switcher"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+      >
+        {Object.entries(languages).map(([k, name]) => (
+          <MenuItem key={k} onClick={() => setLang(k)}>
+            {name}
+          </MenuItem>
+        ))}
+      </Menu>
+      <button
+        type="button"
+        className="linkLikeButton"
+        aria-controls="language-switcher"
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        {languages[lang]}
+      </button>
     </>
   );
 };
@@ -79,6 +129,8 @@ const MapDataLink = () => (
 export const MapFooter = () => (
   <Box>
     <OsmappLink />
+    {' | '}
+    <LangSwitcher />
     {' | '}
     <MapDataLink />
     {' | '}

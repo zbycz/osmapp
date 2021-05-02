@@ -16,11 +16,13 @@ export default {
   'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp">Github</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.maptiler.com/">MapTiler</a> for vector map tiles
+        <li><a href="https://www.maptiler.com/">MapTiler</a> za vektorové mapové dlaždice
         <li><a href="https://www.mapillary.com/">Mapillary</a>, <a href="https://openstreetmap.cz/fody">Fody</a>,
-              <a href="https://www.wikipedia.org/">Wikipedia</a> for images
-        <li><a href="https://nominatim.openstreetmap.org/">Nominatim</a> for search box
-        <li><a href="https://www.openstreetmap.org/">OpenStreetMap</a> for the best world map database
+              <a href="https://www.wikipedia.org/">Wikipedia</a> za obrázky
+        <li><a href="https://nominatim.openstreetmap.org/">Nominatim</a> za vyhledávání
+        <li><a href="https://www.openstreetmap.org/">OpenStreetMap</a> za nejlepší mapovou databázi
       </ul>
   `,
+
+  'searchbox.placeholder': 'Prohledat OpenStreetMap',
 };

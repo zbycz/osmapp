@@ -28,4 +28,6 @@ export default {
         <li><a href="https://www.openstreetmap.org/">OpenStreetMap</a> for the best world map database
       </ul>
   `,
+
+  'searchbox.placeholder': 'Search OpenStreetMap',
 };
