@@ -52,7 +52,7 @@ const Spacer = styled.div`
 
 export const HomepagePanel = () => {
   const { feature, homepageShown, hideHomepage } = useFeatureContext();
-  const { t } = useIntlContext();
+  const { t, Translation } = useIntlContext();
 
   // hide after first shown feature
   useEffect(() => {
@@ -74,11 +74,7 @@ export const HomepagePanel = () => {
               <Typography variant="h4" component="h1" color="inherit">
                 OsmAPP
               </Typography>
-              <Typography
-                variant="subtitle1"
-                component="h2"
-                color="textSecondary"
-              >
+              <Typography variant="subtitle1" color="textSecondary">
                 {t('homepage.subtitle')}
               </Typography>
             </Center>
@@ -115,17 +111,14 @@ export const HomepagePanel = () => {
               <Grid item xs={4}>
                 <Image
                   src="/logo/logo-osm.svg"
-                  alt="Logo OpenStreetMap"
+                  alt={t('homepage.osm_logo_alt')}
                   width={100}
                   height={100}
                 />
               </Grid>
               <Grid item xs={8}>
                 <Typography variant="body2" paragraph>
-                  All map data is from{' '}
-                  <a href="https://osm.org">OpenStreetMap</a>, a map created by
-                  milions of contributors — similar to Wikipedia. You can find{' '}
-                  <em>Suggest Edit</em> button on each map feature.
+                  <Translation id="homepage.about_osm" />
                 </Typography>
               </Grid>
             </Grid>
@@ -136,16 +129,13 @@ export const HomepagePanel = () => {
               variant="overline"
               display="block"
               color="textSecondary"
+              component="h2"
             >
-              About OsmAPP
+              {t('homepage.heading_about_osmapp')}
             </Typography>
 
             <Typography variant="body2" paragraph>
-              This application was created with the aim of providing best
-              OpenStreetMap experience for everyone. Currently it is in beta
-              stage, but more features are planned - like switching layers,
-              vector outdoor map, driving directions, POI editing capabilites,
-              favourite places, etc.
+              {t('homepage.about_osmapp')}
             </Typography>
 
             <Typography variant="body2" paragraph>
@@ -154,32 +144,15 @@ export const HomepagePanel = () => {
                 height="32"
                 style={{ verticalAlign: '-9px', margin: '0 10px 0 5px' }}
               />{' '}
-              You may suggest new features on{' '}
-              <a href="https://github.com/zbycz/osmapp">Github</a>.
+              <Translation id="homepage.github_link" />
             </Typography>
+
             <Spacer />
-            <Typography variant="overline" color="textSecondary">
-              Special thanks to
+
+            <Typography variant="overline" color="textSecondary" component="h2">
+              {t('homepage.special_thanks_heading')}
             </Typography>
-            <ul>
-              <li>
-                <a href="https://www.maptiler.com/">MapTiler</a> for vector map
-                tiles
-              </li>
-              <li>
-                <a href="https://www.mapillary.com/">Mapillary</a>,{' '}
-                <a href="https://openstreetmap.cz/fody">Fody</a>,{' '}
-                <a href="https://www.wikipedia.org/">Wikipedia</a> for images
-              </li>
-              <li>
-                <a href="https://nominatim.openstreetmap.org/">Nominatim</a> for
-                search box
-              </li>
-              <li>
-                <a href="https://www.openstreetmap.org/">OpenStreetMap</a> for
-                the best world map database
-              </li>
-            </ul>
+            <Translation id="homepage.special_thanks" />
           </div>
           <PanelFooter />
         </Content>

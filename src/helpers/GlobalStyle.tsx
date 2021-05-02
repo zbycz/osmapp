@@ -25,6 +25,10 @@ const GlobalStyle = createGlobalStyle`
     }
   }
 
+  ul {
+    margin-top: 0;
+  }
+
   .mapboxgl-ctrl-top-right {
     top: 83px !important;
   }
