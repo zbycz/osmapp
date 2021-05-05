@@ -3,5 +3,13 @@
   "printWidth": 80,
   "singleQuote": true,
   "tabWidth": 2,
-  "trailingComma": "all"
+  "trailingComma": "all",
+  "overrides": [
+    {
+      "files": "src/locales/**/*.js",
+      "options": {
+        "printWidth": 150
+      }
+    }
+  ]
 }

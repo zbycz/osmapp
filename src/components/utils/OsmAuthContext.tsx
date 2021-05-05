@@ -7,7 +7,7 @@ import {
 
 interface OsmAuthType {
   loggedIn: boolean;
-  osmUser: false | string;
+  osmUser: string;
   handleLogin: () => void;
   handleLogout: () => void;
 }
@@ -15,9 +15,9 @@ interface OsmAuthType {
 export const OsmAuthContext = createContext<OsmAuthType>(undefined);
 
 export const OsmAuthProvider = ({ children }) => {
-  const [osmUser, setOsmUser] = useState<false | string>(getOsmUsername());
+  const [osmUser, setOsmUser] = useState<string>(getOsmUsername() ?? '');
   const handleLogin = () => fetchOsmUsername().then(setOsmUser);
-  const handleLogout = () => osmLogout().then(() => setOsmUser(false));
+  const handleLogout = () => osmLogout().then(() => setOsmUser(''));
 
   const value = {
     loggedIn: !!osmUser,

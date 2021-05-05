@@ -2,12 +2,13 @@ import React, { useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { t } from '../../../services/intl';
 
 const majorKeysNames = {
-  name: 'Název',
-  website: 'Web',
-  phone: 'Telefon',
-  opening_hours: 'Otevírací doba',
+  name: t('tags.name'),
+  website: t('tags.website'),
+  phone: t('tags.phone'),
+  opening_hours: t('tags.opening_hours'),
 };
 
 export const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
@@ -48,7 +49,7 @@ export const MajorKeysEditor = ({ tags, setTag, focusTag }) => {
       {!!inactiveMajorKeys.length && (
         <>
           <Typography variant="body1" component="span" color="textSecondary">
-            Přidat:
+            {t('editdialog.add_major_tag')}:
           </Typography>
           {inactiveMajorKeys.map((k) => (
             <React.Fragment key={k}>

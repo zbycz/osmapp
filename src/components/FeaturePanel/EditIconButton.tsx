@@ -2,6 +2,7 @@ import styled from 'styled-components';
 import IconButton from '@material-ui/core/IconButton';
 import Edit from '@material-ui/icons/Edit';
 import React from 'react';
+import { t } from '../../services/intl';
 
 const StyledIconButton = styled(IconButton)`
   position: absolute !important; /* TODO mui styles takes precendence, why? */
@@ -18,6 +19,6 @@ const StyledIconButton = styled(IconButton)`
 
 export const EditIconButton = ({ onClick }) => (
   <StyledIconButton className="show-on-hover" onClick={onClick}>
-    <Edit titleAccess="Upravit v databázi OpenStreetMap" />
+    <Edit titleAccess={t('featurepanel.inline_edit_title')} />
   </StyledIconButton>
 );

@@ -27,6 +27,7 @@ import {
   PanelScrollbars,
 } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { t } from '../../services/intl';
 
 const StyledEdit = styled.div`
   margin: 60px 0 20px 0;
@@ -102,19 +103,32 @@ const FeaturePanel = () => {
         <FeatureImage feature={feature} ico={ico}>
           <PoiType>
             <Maki ico={ico} />
-            <span>{tags.name ? subclass.replace('_', ' ') : 'beze jména'}</span>
+            <span>
+              {tags.name
+                ? subclass.replace('_', ' ')
+                : t('featurepanel.no_name')}
+            </span>
           </PoiType>
 
           {SHOW_PROTOTYPE_UI && (
             <>
               <StyledIconButton>
-                <Share htmlColor="#fff" titleAccess="Sdílet" />
+                <Share
+                  htmlColor="#fff"
+                  titleAccess={t('featurepanel.share_button')}
+                />
               </StyledIconButton>
               <StyledIconButton>
-                <StarBorder htmlColor="#fff" titleAccess="Uložit" />
+                <StarBorder
+                  htmlColor="#fff"
+                  titleAccess={t('featurepanel.save_button')}
+                />
               </StyledIconButton>
               <StyledIconButton>
-                <Directions htmlColor="#fff" titleAccess="Trasa" />
+                <Directions
+                  htmlColor="#fff"
+                  titleAccess={t('featurepanel.directions_button')}
+                />
               </StyledIconButton>
             </>
           )}
@@ -127,11 +141,11 @@ const FeaturePanel = () => {
 
           {error === 'gone' && (
             <Alert variant="outlined" severity="warning">
-              Tento prvek byl v mezičase smazán z OpenStreetMap.{' '}
+              {t('featurepanel.error_gone')}{' '}
               <a
                 href={`https://osm.org/${getUrlOsmId(feature.osmMeta)}/history`}
               >
-                Historie &raquo;
+                {t('featurepanel.history_button')}
               </a>
             </Alert>
           )}
@@ -148,7 +162,7 @@ const FeaturePanel = () => {
                 display="block"
                 color="textSecondary"
               >
-                Další informace
+                {t('featurepanel.other_info_heading')}
               </Typography>
             </>
           )}
@@ -163,13 +177,13 @@ const FeaturePanel = () => {
             <StyledEdit>
               <Button
                 size="large"
-                title="Upravit v databázi OpenStreetMap"
+                title={t('featurepanel.edit_button_title')}
                 startIcon={<EditIcon />}
                 variant="outlined"
                 color="primary"
                 onClick={() => setDialogOpenedWith(true)}
               >
-                Upravit místo
+                {t('featurepanel.edit_button')}
               </Button>
             </StyledEdit>
           )}
@@ -184,8 +198,12 @@ const FeaturePanel = () => {
 
           <PanelFooter>
             {nonOsmObject
-              ? `Mapový prvek ${osmMeta.type}`
-              : `${capitalize(osmMeta.type)} v databázi OpenStreetMap`}
+              ? t('featurepanel.feature_description_nonosm', {
+                  type: osmMeta.type,
+                })
+              : t('featurepanel.feature_description_osm', {
+                  type: capitalize(osmMeta.type),
+                })}
             <br />
             <Coordinates feature={feature} />
             <br />
@@ -197,7 +215,7 @@ const FeaturePanel = () => {
                 onChange={toggleAdvanced}
                 checked={advanced}
               />{' '}
-              Zobrazit jen tagy
+              {t('featurepanel.show_tags_only_button')}
             </label>
           </PanelFooter>
         </PanelContent>

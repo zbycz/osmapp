@@ -27,6 +27,7 @@ import { SuccessContent } from './SuccessContent';
 import { icons } from '../../../assets/icons';
 import { editOsmFeature } from '../../../services/osmApiAuth';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
+import { t, Translation } from '../../../services/intl';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -54,30 +55,27 @@ const OsmLogin = () => {
     <Typography variant="body2" color="textSecondary" paragraph>
       {loggedIn ? (
         <>
-          Jste přihlášeni jako <b>{osmUser}</b>, změny se ihned projeví v mapě.
-          (
+          <Translation id="editdialog.loggedInMessage" values={{ osmUser }} /> (
           <button
             type="button"
             className="linkLikeButton"
             onClick={handleLogout}
           >
-            odhlásit
+            {t('editdialog.logout')}
           </button>
           )
         </>
       ) : (
         <>
-          Vkládáte <b>anonymní</b> poznámku do mapy.
-          <br />
-          Pokud se{' '}
+          <Translation id="editdialog.anonymousMessage1" />{' '}
           <button
             type="button"
             className="linkLikeButton"
             onClick={handleLogin}
           >
-            přihlásíte do OpenStreetMap
+            {t('editdialog.anonymousMessage2_login')}
           </button>
-          , změny se ihned projeví v mapě.
+          <Translation id="editdialog.anonymousMessage3" />
         </>
       )}
     </Typography>
@@ -122,7 +120,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
     );
     if (noteText == null) {
       // eslint-disable-next-line no-alert
-      alert('Proveďte, prosím, požadované změny.');
+      alert(t('editdialog.changes_needed'));
       return;
     }
 
@@ -153,7 +151,9 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           width={16}
           height={16}
         />{' '}
-        {loggedIn ? 'Upravit: ' : 'Navrhnout úpravu: '}
+        {loggedIn
+          ? t('editdialog.edit_heading')
+          : t('editdialog.suggest_heading')}{' '}
         {feature.tags.name || feature.properties.subclass}
       </DialogTitle>
       {successInfo ? (
@@ -170,7 +170,9 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
 
               {!loggedIn && (
                 <>
-                  <DialogHeading>Možnosti</DialogHeading>
+                  <DialogHeading>
+                    {t('editdialog.options_heading')}
+                  </DialogHeading>
                   <PlaceCancelledToggle
                     cancelled={cancelled}
                     toggle={toggleCancelled}
@@ -197,10 +199,10 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
           <DialogActions>
             {loading && <CircularProgress />}
             <Button onClick={onClose} color="primary">
-              Zrušit
+              {t('editdialog.cancel_button')}
             </Button>
             <Button onClick={saveDialog} color="primary" variant="contained">
-              Uložit
+              {t('editdialog.save_button')}
             </Button>
           </DialogActions>
         </>

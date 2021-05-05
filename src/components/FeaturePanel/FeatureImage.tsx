@@ -5,6 +5,7 @@ import Head from 'next/head';
 import { getFeatureImage, LOADING } from '../../services/images';
 import { Feature } from '../../services/types';
 import { InlineSpinner } from './FeatureImage/InlineSpinner';
+import { t } from '../../services/intl';
 
 const Wrapper = styled.div`
   position: relative;
@@ -103,7 +104,7 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
   const { source, link, thumb, username, portrait } = image ?? {};
   const uncertainImage = source === 'Mapillary';
   const uncertainTitle = uncertainImage
-    ? '\nThis is the closest street view image. It may show different object.'
+    ? `\n${  t('featurepanel.uncertain_image')}`
     : '';
 
   return (

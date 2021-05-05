@@ -6,6 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { majorKeys } from './MajorKeysEditor';
 import { isString } from '../../helpers';
+import { t } from '../../../services/intl';
 
 const Table = styled.table`
   width: calc(100% - 20px);
@@ -45,7 +46,7 @@ const NewTagRow = ({ setTag }) => {
           onChange={(e) => setNewKey(e.target.value)}
           variant="outlined"
           size="small"
-          placeholder="new key"
+          placeholder={t('editdialog.other_tags.new_key')}
         />
       </th>
       <td>
@@ -56,7 +57,7 @@ const NewTagRow = ({ setTag }) => {
           size="small"
         />{' '}
         <Button variant="contained" disableElevation onClick={handleAdd}>
-          Add
+          {t('editdialog.other_tags.add')}
         </Button>
       </td>
     </tr>
@@ -75,7 +76,7 @@ const KeyValueRow = ({ k, v, setTag, focusTag }) => (
         variant="outlined"
         size="small"
         autoFocus={focusTag === k}
-        placeholder="will be deleted"
+        placeholder={t('editdialog.other_tags.will_be_deleted')}
       />
     </td>
   </tr>
@@ -107,7 +108,7 @@ export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
           disableElevation
           onClick={() => setShowTags(!showTags)}
         >
-          Další vlastnosti – tagy
+          {t('editdialog.other_tags')}
           <ExpandMoreIcon fontSize="small" />
         </Button>
       )}
@@ -120,7 +121,7 @@ export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
             color="textSecondary"
             style={{ position: 'relative' }}
           >
-            Další vlastnosti – tagy
+            {t('editdialog.other_tags')}
           </Typography>
           <Table>
             <tbody>

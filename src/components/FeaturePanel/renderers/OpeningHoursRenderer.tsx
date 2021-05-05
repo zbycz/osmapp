@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import AccessTime from '@material-ui/icons/AccessTime';
 import { useToggleState } from '../../helpers';
 import { ToggleButton } from '../helpers';
+import { t } from '../../../services/intl';
 
 interface SimpleOpeningHoursTable {
   su: string[];
@@ -36,15 +37,7 @@ const Table = styled.table`
 `;
 
 // const weekDays = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
-const weekDays = [
-  'neděle',
-  'pondělí',
-  'úterý',
-  'středa',
-  'čtvrtek',
-  'pátek',
-  'sobota',
-];
+const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 
 const formatTimes = (times) =>
   times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-';
@@ -53,15 +46,16 @@ const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
   const timesByDay = Object.values(days);
   const day = new Date().getDay();
   const today = timesByDay[day];
+  const todayTime = formatTimes(today);
 
   if (isOpen) {
-    return `Otevřeno: ${formatTimes(today)}`;
+    return t('opening_hours.open', { todayTime });
   }
 
   const isOpenedToday = today.length;
   return isOpenedToday
-    ? `Nyní zavřeno, dnes: ${formatTimes(today)}`
-    : 'Dnes zavřeno';
+    ? t('opening_hours.now_closed_but_today', { todayTime })
+    : t('opening_hours.today_closed');
 };
 
 const OpeningHoursRenderer = ({ v }) => {

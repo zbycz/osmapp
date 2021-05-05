@@ -4,7 +4,7 @@ import getConfig from 'next/config';
 import { Menu, MenuItem } from '@material-ui/core';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { changeLang, intl } from '../../services/intl';
+import { changeLang, intl, t } from '../../services/intl';
 
 const {
   publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
@@ -102,11 +102,11 @@ const EditLink = () => {
       href={`https://www.openstreetmap.org/edit${featureQuery}#map=${
         browser ? view.join('/') : ''
       }`}
-      title="v editoru iD"
+      title={t('map.edit_button_title')}
       target="_blank"
       rel="noopener"
     >
-      editovat
+      {t('map.edit_button')}
     </a>
   );
 };
@@ -118,9 +118,9 @@ const MapDataLink = () => (
       type="button"
       className="linkLikeButton"
       // eslint-disable-next-line no-alert
-      onClick={() => alert('(c) OpenStreetMap.org contributors')}
+      onClick={() => alert(t('map.copyright'))}
     >
-      mapová data
+      {t('map.map_data_button')}
     </button>
   </>
 );

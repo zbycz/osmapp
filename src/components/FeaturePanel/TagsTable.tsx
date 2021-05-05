@@ -53,6 +53,7 @@ const isNetwork = (k) => k.match(/network/);
 const isBrand = (k) => k.match(/^brand/);
 const isPayment = (k) => k.match(/^payment/);
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
   const [isShown, toggle] = useToggleState(false);
 
@@ -66,7 +67,6 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
         <th>{label}</th>
         <td>
           <EditIconButton onClick={() => onEdit(tags[0][0])} />
-
           {value || tags[0]?.join(' = ')}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>

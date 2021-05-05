@@ -32,7 +32,7 @@ const ClosePanelButton = ({ setInputValue }) => {
   const { view } = useMapStateContext();
   return (
     <IconButton
-      aria-label="Zavřít panel"
+      aria-label={t('searchbox.close_panel')}
       onClick={(e) => {
         e.preventDefault();
         setInputValue('');

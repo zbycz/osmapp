@@ -9,6 +9,7 @@ import Typography from '@material-ui/core/Typography';
 import { Box, Tooltip } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import { nl2br } from '../../utils/nl2br';
+import { t, Translation } from '../../../services/intl';
 
 const StyledCheckCircleIcon = styled(CheckCircleIcon)`
   color: #4b912e;
@@ -54,21 +55,18 @@ export const SuccessContent = ({ successInfo, handleClose }) => {
   const texts =
     successInfo.type === 'note'
       ? {
-          heading: 'Děkujeme za Váš návrh!',
-          subheading:
-            'Dobrovolnící z komunity OpenStreetMap ho časem zpracují.',
-          body: `Celý proces obvykle trvá několik dní. Ovšem v místech, kde není aktivní komunita, to může trvat i velmi dlouho.`,
-          urlLabel: `Doplnit informace či sledovat vývoj můžete zde:`,
-          textLabel: 'Text poznámky',
+          heading: t('editsuccess.note.heading'),
+          subheading: t('editsuccess.note.subheading'),
+          body: <Translation id="editsuccess.note.body" />,
+          urlLabel: t('editsuccess.note.urlLabel'),
+          textLabel: t('editsuccess.note.textLabel'),
         }
       : {
-          heading: 'Děkujeme za Vaši editaci!',
-          subheading: 'Již nyní se začíná objevovat v mapách po celém světě.',
-          body: `V databázi OSM již je uložena. V řádu několika minut ji uvidíte na mapě "OSM Mapnik". Zdejší mapa a různé jiné aplikace se obnovují cca 1x za měsíc.
-
-          Pokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
-          urlLabel: `Vaše změny:`,
-          textLabel: 'Poznámka ke změně',
+          heading: t('editsuccess.edit.heading'),
+          subheading: t('editsuccess.edit.subheading'),
+          body: <Translation id="editsuccess.edit.body" />,
+          urlLabel: t('editsuccess.edit.urlLabel'),
+          textLabel: t('editsuccess.edit.textLabel'),
         };
 
   return (
@@ -84,11 +82,11 @@ export const SuccessContent = ({ successInfo, handleClose }) => {
         </CenterText>
 
         <Typography variant="body2" paragraph>
-          {nl2br(texts.body)}
+          {texts.body}
         </Typography>
 
         <Typography variant="body2" paragraph>
-          {nl2br(texts.urlLabel)}
+          {texts.urlLabel}
           <br />
           <a href={successInfo.url} rel="noopener nofollow">
             {successInfo.url}
@@ -106,7 +104,7 @@ export const SuccessContent = ({ successInfo, handleClose }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">
-          Zavřít
+          {t('editsuccess.close_button')}
         </Button>
       </DialogActions>
     </>
