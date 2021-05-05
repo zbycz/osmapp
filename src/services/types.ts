@@ -1,3 +1,5 @@
+import Vocabulary from '../locales/vocabulary';
+
 export interface ImageUrls {
   source?: string;
   link: string;
@@ -68,3 +70,6 @@ export interface Feature {
   skeleton?: boolean;
   nonOsmObject?: boolean;
 }
+
+export type MessagesType = typeof Vocabulary;
+export type TranslationId = keyof MessagesType;

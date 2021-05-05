@@ -100,6 +100,8 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
   map.jumpTo({ center, zoom: viewForMap[0] });
 });
 
+// TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js
+
 const BrowserMap = ({ onMapLoaded }) => {
   const { setFeature } = useFeatureContext();
   const [map, mapRef] = useInitMap();

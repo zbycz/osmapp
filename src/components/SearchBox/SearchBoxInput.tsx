@@ -8,7 +8,7 @@ import InputBase from '@material-ui/core/InputBase';
 import Router from 'next/router';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { t } from '../utils/IntlContext';
+import { t } from '../../services/intl';
 
 const StyledPaper = styled(Paper)`
   padding: 2px 4px;

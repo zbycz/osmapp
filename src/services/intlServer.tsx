@@ -1,6 +1,7 @@
 import getConfig from 'next/config';
 import acceptLanguageParser from 'accept-language-parser';
 import nextCookies from 'next-cookies';
+import vocabulary from '../locales/vocabulary';
 
 const getMessages = (lang) => require(`../locales/${lang}.js`).default; // eslint-disable-line global-require,import/no-dynamic-require
 
@@ -10,6 +11,7 @@ const getLangFromAcceptHeader = (ctx, languages) => {
 };
 
 const DEFAULT_LANG = 'en';
+
 const {
   publicRuntimeConfig: { languages },
 } = getConfig();
@@ -23,12 +25,11 @@ const getLangFromCtx = (ctx) => {
 
 export const getIntl = (ctx) => {
   const lang = getLangFromCtx(ctx);
-  const defaultMessages = getMessages('vocabulary');
   const messages = lang === DEFAULT_LANG ? {} : getMessages(lang);
   return {
     lang,
-    messages: { ...defaultMessages, ...messages },
+    messages: { ...vocabulary, ...messages },
   };
 };
 
-// consider https://github.com/vinissimus/next-translate
+// This file is run in Server side environment only

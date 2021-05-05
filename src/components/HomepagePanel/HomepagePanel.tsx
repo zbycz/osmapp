@@ -14,8 +14,8 @@ import {
 import LogoOsmapp from '../../assets/LogoOsmapp';
 import { useFeatureContext } from '../utils/FeatureContext';
 import GithubIcon from '../../assets/GithubIcon';
-import { useIntlContext } from '../utils/IntlContext';
 import { nl2br } from '../utils/nl2br';
+import { t, Translation } from '../../services/intl';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -52,7 +52,6 @@ const Spacer = styled.div`
 
 export const HomepagePanel = () => {
   const { feature, homepageShown, hideHomepage } = useFeatureContext();
-  const { t, Translation } = useIntlContext();
 
   // hide after first shown feature
   useEffect(() => {

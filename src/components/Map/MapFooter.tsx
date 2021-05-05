@@ -4,7 +4,7 @@ import getConfig from 'next/config';
 import { Menu, MenuItem } from '@material-ui/core';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { useIntlContext } from '../utils/IntlContext';
+import { changeLang, intl } from '../../services/intl';
 
 const {
   publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
@@ -41,7 +41,6 @@ const LangSwitcher = () => {
   const {
     publicRuntimeConfig: { languages },
   } = getConfig();
-  const { lang, changeLang } = useIntlContext();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -79,7 +78,7 @@ const LangSwitcher = () => {
         aria-haspopup="true"
         onClick={handleClick}
       >
-        {languages[lang]}
+        {languages[intl.lang]}
       </button>
     </>
   );

@@ -31,5 +31,6 @@ module.exports = {
     'jsx-a11y/label-has-associated-control': OFF, // checkbox in <label> was reported
     // "@typescript-eslint/no-unused-vars": OFF,
     // "@typescript-eslint/no-unused-vars-experimental": ERROR,
+    'react/require-default-props': OFF,
   },
 };
