@@ -2,6 +2,7 @@ import React from 'react';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
 import { MessagesType, TranslationId } from './types';
+import { isBrowser } from '../components/helpers';
 
 type Values = { [variable: string]: string };
 
@@ -51,6 +52,24 @@ export const setIntl = (initialIntl: Intl) => {
   }
 };
 
+export const InjectIntl = ({ intl: globalIntl }) => {
+  setIntl(globalIntl); // for SSR
+  return (
+    <script
+      // eslint-disable-next-line react/no-danger
+      dangerouslySetInnerHTML={{
+        __html: `var GLOBAL_INTL = ${JSON.stringify(globalIntl)};`,
+      }}
+    />
+  );
+};
+
+if (isBrowser()) {
+  setIntl((window as any).GLOBAL_INTL);
+}
+
 // We got rid of intl context for easier usage. See commit "Intl: remove intlContext"
 // Only drawback is page refresh while changing language... we can live with that :-)
 // In future consider https://github.com/vinissimus/next-translate
+
+// TODO when switching locales in DEV mode, SSR still remembers old locale. Not a big issue.

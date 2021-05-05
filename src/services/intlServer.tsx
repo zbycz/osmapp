@@ -23,7 +23,7 @@ const getLangFromCtx = (ctx) => {
   return getLangFromAcceptHeader(ctx, Object.keys(languages)) ?? DEFAULT_LANG;
 };
 
-export const getIntl = (ctx) => {
+export const getServerIntl = (ctx) => {
   const lang = getLangFromCtx(ctx);
   const messages = lang === DEFAULT_LANG ? {} : getMessages(lang);
   return {

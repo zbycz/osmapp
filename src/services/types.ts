@@ -1,4 +1,4 @@
-import Vocabulary from '../locales/vocabulary';
+import type Vocabulary from '../locales/vocabulary';
 
 export interface ImageUrls {
   source?: string;
