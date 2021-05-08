@@ -1,12 +1,18 @@
 import * as Sentry from '@sentry/node'; // in browser aliased to @sentry/browser (next.config.js)
-// import Cookie from 'js-cookie';
+import getConfig from 'next/config';
 
 export const initSentry = () => {
+  const {
+    publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
+  } = getConfig();
+
   Sentry.init({
     dsn: 'https://79cd9dbaeb0f4d0f868e2d4574f8b7e2@sentry.io/1858591',
-    release: process.env.SENTRY_RELEASE ?? 'dev',
+    release: `${osmappVersion}-${commitHash}-${commitMessage.substr(0, 10)}`,
     maxBreadcrumbs: 50,
     attachStacktrace: true,
+    // @ts-ignore
+    autoSessionTracking: false, // lots of type:session events https://forum.sentry.io/t/understanding-the-events-sent-by-the-js-sdk-type-session/13606
   });
 };
 
@@ -20,11 +26,7 @@ export const captureException = (err, errorInfo) => {
 
     if (process.browser) {
       scope.setTag('ssr', false);
-
-      const visitorId = ''; // Cookie.get('OSMID');
-      if (visitorId) {
-        scope.setUser({ id: visitorId });
-      }
+      // scope.setUser({ id: visitorId });
     } else {
       scope.setTag('ssr', true);
     }
