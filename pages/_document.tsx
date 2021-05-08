@@ -3,7 +3,7 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
 import { getServerIntl } from '../src/services/intlServer';
-import { InjectIntl } from '../src/services/intl';
+import { InjectIntl, setIntl } from '../src/services/intl';
 
 // This stinks so much!! https://github.com/facebook/react/issues/12014#issuecomment-434534770
 const AsyncStyle = ({ href }) => (
@@ -47,7 +47,7 @@ export default class MyDocument extends Document {
         </Head>
         <body>
           <Main />
-          <InjectIntl intl={(this.props as any).intl} />
+          <InjectIntl intl={(this.props as any).serverIntl} />
           <NextScript />
         </body>
       </Html>
@@ -56,6 +56,9 @@ export default class MyDocument extends Document {
 }
 
 MyDocument.getInitialProps = async (ctx) => {
+  const serverIntl = getServerIntl(ctx);
+  setIntl(serverIntl); // for SSR
+
   // Resolution order
   //
   // On the server:
@@ -85,9 +88,8 @@ MyDocument.getInitialProps = async (ctx) => {
 
   ctx.renderPage = () =>
     originalRenderPage({
-      enhanceApp: (App) => (props) => 
-         sheets.collect(sheets2.collectStyles(<App {...props} />)) // eslint-disable-line react/jsx-props-no-spreading
-      ,
+      enhanceApp: (App) => (props) =>
+        sheets.collect(sheets2.collectStyles(<App {...props} />)), // eslint-disable-line react/jsx-props-no-spreading
     });
 
   const initialProps = await Document.getInitialProps(ctx);
@@ -100,6 +102,6 @@ MyDocument.getInitialProps = async (ctx) => {
       sheets.getStyleElement(),
       sheets2.getStyleElement(),
     ],
-    intl: getServerIntl(ctx),
+    serverIntl,
   };
 };

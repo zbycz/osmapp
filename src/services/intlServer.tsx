@@ -3,6 +3,8 @@ import acceptLanguageParser from 'accept-language-parser';
 import nextCookies from 'next-cookies';
 import vocabulary from '../locales/vocabulary';
 
+// This file runs in Server side environment only
+// -> dynamic require() enabled
 const getMessages = (lang) => require(`../locales/${lang}.js`).default; // eslint-disable-line global-require,import/no-dynamic-require
 
 const getLangFromAcceptHeader = (ctx, languages) => {
@@ -26,10 +28,9 @@ const getLangFromCtx = (ctx) => {
 export const getServerIntl = (ctx) => {
   const lang = getLangFromCtx(ctx);
   const messages = lang === DEFAULT_LANG ? {} : getMessages(lang);
-  return {
+  const intl = {
     lang,
     messages: { ...vocabulary, ...messages },
   };
+  return intl;
 };
-
-// This file is run in Server side environment only

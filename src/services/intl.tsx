@@ -52,9 +52,7 @@ export const setIntl = (initialIntl: Intl) => {
   }
 };
 
-export const InjectIntl = ({ intl: globalIntl }) => {
-  setIntl(globalIntl); // for SSR
-  return (
+export const InjectIntl = ({ intl: globalIntl }) => (
     <script
       // eslint-disable-next-line react/no-danger
       dangerouslySetInnerHTML={{
@@ -62,7 +60,6 @@ export const InjectIntl = ({ intl: globalIntl }) => {
       }}
     />
   );
-};
 
 if (isBrowser()) {
   setIntl((window as any).GLOBAL_INTL);
