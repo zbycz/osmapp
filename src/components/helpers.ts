@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
+import { Feature } from '../services/types';
 
 export const useToggleState = (
   initialState: boolean,
@@ -53,3 +54,9 @@ export const useAddMapEvent = (getEventDefinition: EventDefintionFn) => (
   }, [map, ...rest]);
 
 export const isString = (value) => typeof value === 'string';
+
+export const getIdEditorLink = (feature: Feature, view?: number[]) => {
+  const query = feature ? `?${feature.osmMeta.type}=${feature.osmMeta.id}` : '';
+  const hash = view ? `#map=${view.join('/')}` : '';
+  return `https://www.openstreetmap.org/edit${query}${hash}`;
+};

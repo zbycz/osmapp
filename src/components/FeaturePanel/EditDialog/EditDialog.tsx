@@ -18,7 +18,7 @@ import { MajorKeysEditor } from './MajorKeysEditor';
 import {
   ChangeLocationEditor,
   ContributionInfoBox,
-  NoteField,
+  CommentField,
   DialogHeading,
   PlaceCancelledToggle,
 } from './components';
@@ -93,7 +93,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const fullScreen = useIsFullScreen();
   const [cancelled, toggleCancelled] = useToggleState(false);
   const [location, setLocation] = useState('');
-  const [note, setNote] = useState('');
+  const [comment, setComment] = useState('');
   const [tags, setTag] = useTagsState(feature.tags);
   const [loading, setLoading] = useState(false);
   const [successInfo, setSuccessInfo] = useState<any>(false);
@@ -115,7 +115,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
       tags,
       cancelled,
       location,
-      note,
+      comment,
       loggedIn,
     );
     if (noteText == null) {
@@ -127,7 +127,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
     setLoading(true);
     setSuccessInfo(
       loggedIn
-        ? await editOsmFeature(feature, note, tags)
+        ? await editOsmFeature(feature, comment, tags, cancelled)
         : await insertOsmNote(feature.center, noteText),
     );
   };
@@ -168,24 +168,19 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
                 focusTag={focusTag}
               />
 
-              {!loggedIn && (
-                <>
-                  <DialogHeading>
-                    {t('editdialog.options_heading')}
-                  </DialogHeading>
-                  <PlaceCancelledToggle
-                    cancelled={cancelled}
-                    toggle={toggleCancelled}
-                  />
-                  <ChangeLocationEditor
-                    location={location}
-                    setLocation={setLocation}
-                  />
-                </>
-              )}
+              <DialogHeading>{t('editdialog.options_heading')}</DialogHeading>
+              <PlaceCancelledToggle
+                cancelled={cancelled}
+                toggle={toggleCancelled}
+              />
+              <ChangeLocationEditor
+                location={location}
+                setLocation={setLocation}
+                feature={feature}
+              />
 
               <ContributionInfoBox loggedIn={loggedIn} />
-              <NoteField note={note} setNote={setNote} />
+              <CommentField note={comment} setNote={setComment} />
 
               <OtherTagsEditor
                 tags={tags}

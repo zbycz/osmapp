@@ -17,7 +17,7 @@ import { capitalize, useToggleState } from '../helpers';
 import { icons } from '../../assets/icons';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
-import { getShortId, getShortLink, getUrlOsmId } from '../../services/helpers';
+import { getOsmappLink, getShortId, getUrlOsmId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import {
@@ -81,7 +81,7 @@ const FeaturePanel = () => {
     error,
   } = feature;
 
-  const shortLink = getShortLink(osmMeta);
+  const osmappLink = getOsmappLink(feature);
   const ico = icons.includes(properties.class)
     ? properties.class
     : 'information';
@@ -207,7 +207,7 @@ const FeaturePanel = () => {
             <br />
             <Coordinates feature={feature} />
             <br />
-            {!nonOsmObject && <a href={shortLink}>{shortLink}</a>}
+            {!nonOsmObject && <a href={osmappLink}>{osmappLink}</a>}
             <br />
             <label>
               <input

@@ -70,6 +70,7 @@ export default {
   'editdialog.add_major_tag': 'Add',
   'editdialog.location_checkbox': 'Change location',
   'editdialog.location_placeholder': 'eg. across the street',
+  'editdialog.location_editor_to_be_added': 'The position cannot be edited here yet, you can do so in the <a href="__link__">iD editor</a>.',
   'editdialog.place_cancelled': 'Place cancelled or permanently closed',
   'editdialog.comment': 'Comment (optional)',
   'editdialog.comment_placeholder': 'link to the source of information etc.',

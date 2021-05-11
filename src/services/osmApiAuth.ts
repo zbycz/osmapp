@@ -4,6 +4,7 @@ import getConfig from 'next/config';
 import { Feature, FeatureTags } from './types';
 import {
   buildXmlString,
+  getOsmappLink,
   getUrlOsmId,
   OsmApiId,
   parseXmlString,
@@ -65,11 +66,12 @@ export const osmLogout = async () => {
 export const getOsmUsername = () =>
   auth.authenticated() && window.localStorage.getItem('osm_username');
 
-const getChangesetXml = ({ comment, needsReview }) => {
+const getChangesetXml = ({ comment, feature }) => {
   const tags = [
     ['created_by', `OsmAPP ${osmappVersion}`],
     ['comment', comment],
-    ...(needsReview ? [['review_requested', 'yes']] : []),
+    ['submitted_from', getOsmappLink(feature)],
+    // ...(needsReview ? [['review_requested', 'yes']] : []),
   ];
   return `<osm>
       <changeset>
@@ -86,6 +88,12 @@ const putChangeset = (content: string) =>
     content,
   });
 
+const putChangesetClose = (changesetId: string) =>
+  authFetch({
+    method: 'PUT',
+    path: `/api/0.6/changeset/${changesetId}/close`,
+  });
+
 const getItem = (apiId: OsmApiId) =>
   authFetch({
     method: 'GET',
@@ -100,17 +108,36 @@ const putItem = (apiId: OsmApiId, content: string) =>
     content,
   });
 
+const deleteItem = (apiId: OsmApiId, content: string) =>
+  authFetch({
+    method: 'DELETE',
+    path: `/api/0.6/${getUrlOsmId(apiId)}`,
+    options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
+    content,
+  });
+
+const getAltNote = (cancelled, feature) => {
+  const action = cancelled ? 'Deleted' : 'Edited';
+  const { subclass } = feature.properties;
+  const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
+  return `${action} ${name}`;
+};
+
+const getComment = (note: string, cancelled: boolean, feature: Feature) => {
+  const comment = note || getAltNote(cancelled, feature);
+  return `${comment} #osmapp`;
+};
+
 export const editOsmFeature = async (
   feature: Feature,
   note: string,
   newTags: FeatureTags,
+  cancelled: boolean,
 ) => {
   const apiId = prod ? feature.osmMeta : { type: 'node', id: '967531' };
-  const comment = `${note} • Submitted from https://osmapp.org/${getUrlOsmId(
-    feature.osmMeta,
-  )}`;
+  const comment = getComment(note, cancelled, feature);
 
-  const changesetXml = getChangesetXml({ comment, needsReview: false });
+  const changesetXml = getChangesetXml({ comment, feature });
   const changesetId = await putChangeset(changesetXml);
 
   const itemXml = await getItem(apiId);
@@ -119,11 +146,17 @@ export const editOsmFeature = async (
   );
   const element = osmXml[apiId.type];
   element.$.changeset = changesetId;
-  element.tag = Object.entries(newTags)
-    .filter(([k, v]) => k && v)
-    .map(([k, v]) => ({ $: { k, v } }));
+  if (!cancelled) {
+    element.tag = Object.entries(newTags)
+      .filter(([k, v]) => k && v)
+      .map(([k, v]) => ({ $: { k, v } }));
+  }
   const itemNewXml = buildXmlString(osmXml);
-  await putItem(apiId, itemNewXml);
+  await (cancelled
+    ? deleteItem(apiId, itemNewXml)
+    : putItem(apiId, itemNewXml));
+
+  await putChangesetClose(changesetId);
 
   return {
     type: 'edit',

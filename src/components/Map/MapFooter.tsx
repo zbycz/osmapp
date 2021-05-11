@@ -5,6 +5,7 @@ import { Menu, MenuItem } from '@material-ui/core';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { changeLang, intl, t } from '../../services/intl';
+import { getIdEditorLink } from '../helpers';
 
 const {
   publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
@@ -94,14 +95,10 @@ const EditLink = () => {
 
   const { view } = useMapStateContext();
   const { feature } = useFeatureContext();
-  const featureQuery =
-    feature != null ? `?${feature.osmMeta.type}=${feature.osmMeta.id}` : '';
-
+  const href = getIdEditorLink(feature, browser ? view : []);
   return (
     <a
-      href={`https://www.openstreetmap.org/edit${featureQuery}#map=${
-        browser ? view.join('/') : ''
-      }`}
+      href={href}
       title={t('map.edit_button_title')}
       target="_blank"
       rel="noopener"

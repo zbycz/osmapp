@@ -1,6 +1,7 @@
 import * as xml2js from 'isomorphic-xml2js';
 import fetch from 'isomorphic-unfetch';
 import { isServer } from '../components/helpers';
+import { Feature } from './types';
 
 export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
@@ -48,8 +49,8 @@ export const getApiId = (value): OsmApiId => {
   return { type, id };
 };
 
-export const getShortLink = (apiId: OsmApiId) =>
-  `https://osmapp.org/${apiId.type}/${apiId.id}`;
+export const getOsmappLink = (feature: Feature) =>
+  `https://osmapp.org/${getUrlOsmId(feature.osmMeta)}`;
 
 export const isSameOsmId = (feature, skeleton) =>
   feature &&

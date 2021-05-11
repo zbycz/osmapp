@@ -4,8 +4,9 @@ import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Box } from '@material-ui/core';
-import { useToggleState } from '../../helpers';
+import { getIdEditorLink, useToggleState } from '../../helpers';
 import { t, Translation } from '../../../services/intl';
+import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 
 export const DialogHeading = ({ children }) => (
   <Typography variant="overline" display="block" color="textSecondary">
@@ -13,7 +14,8 @@ export const DialogHeading = ({ children }) => (
   </Typography>
 );
 
-export const ChangeLocationEditor = ({ location, setLocation }) => {
+export const ChangeLocationEditor = ({ location, setLocation, feature }) => {
+  const { loggedIn } = useOsmAuthContext();
   const [showLocation, toggleShowLocation] = useToggleState(false);
 
   return (
@@ -24,7 +26,7 @@ export const ChangeLocationEditor = ({ location, setLocation }) => {
         }
         label={t('editdialog.location_checkbox')}
       />
-      {showLocation && (
+      {showLocation && !loggedIn && (
         <div style={{ marginLeft: 30 }}>
           <TextField
             value={location}
@@ -37,6 +39,14 @@ export const ChangeLocationEditor = ({ location, setLocation }) => {
             fullWidth
             rows={2}
             variant="outlined"
+          />
+        </div>
+      )}
+      {showLocation && loggedIn && (
+        <div style={{ marginLeft: 30 }}>
+          <Translation
+            id="editdialog.location_editor_to_be_added"
+            values={{ link: getIdEditorLink(feature) }}
           />
         </div>
       )}
@@ -69,7 +79,7 @@ export const ContributionInfoBox = ({ loggedIn }) =>
     </Box>
   );
 
-export const NoteField = ({ note, setNote }) => (
+export const CommentField = ({ note, setNote }) => (
   <>
     <TextField
       label={t('editdialog.comment')}

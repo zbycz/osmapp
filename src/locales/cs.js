@@ -65,15 +65,14 @@ export default {
   'editdialog.add_major_tag': 'Přidat',
   'editdialog.location_checkbox': 'Zadat novou polohu',
   'editdialog.location_placeholder': 'např. naproti přes ulici',
+  'editdialog.location_editor_to_be_added': 'Polohu zde zatím upravit nelze, můžete to provést třeba v <a href="__link__">editoru iD</a>.',
   'editdialog.place_cancelled': 'Místo zrušeno či trvale zavřeno',
   'editdialog.comment': 'Poznámka (nepovinné)',
   'editdialog.comment_placeholder': 'odkaz na zdroj informace apod.',
   'editdialog.info_edit': `Vaše úprava bude ihned uložena do databáze OpenStreetMap. Prosíme,
         vkládejte pouze informace z vlastních nebo ověřených zdrojů. Je zakázano
-        kopírovat data krytá autorským zákonem (např. Google Maps).{' '}
-        <a href="https://wiki.openstreetmap.org/wiki/Cs:Jak_mapujeme">
-          Více informací
-        </a>`,
+        kopírovat data krytá autorským zákonem (např. Google Maps).
+        <a href="https://wiki.openstreetmap.org/wiki/Cs:Jak_mapujeme">Více informací</a>`,
   'editdialog.info_note': `Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Zde pro ně
         můžete přidat doplňující poznámku, nebo popsat např. úpravu polohy.
         Vhodné je též podložit váš příspěvek odkazem na zdroj informace (web,
@@ -91,7 +90,7 @@ export default {
   'editsuccess.note.textLabel': 'Text poznámky',
   'editsuccess.edit.heading': 'Děkujeme za Vaši editaci!',
   'editsuccess.edit.subheading': 'Již nyní se začíná objevovat v mapách po celém světě.',
-  'editsuccess.edit.body': `V databázi OSM již je uložena. V řádu několika minut ji uvidíte na mapě "OSM Mapnik". Zdejší mapa a různé jiné aplikace se obnovují cca 1x za měsíc.\n\n          Pokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
+  'editsuccess.edit.body': `Uložení proběhlo do primární databáze OSM. V řádu několika minut změnu uvidíte na mapě "OSM Mapnik". Zdejší mapa a různé jiné aplikace se obnovují cca 1x za měsíc.\n\nPokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
   'editsuccess.edit.urlLabel': `Vaše změny:`,
   'editsuccess.edit.textLabel': 'Poznámka ke změně',
 

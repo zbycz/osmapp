@@ -122,6 +122,5 @@ const Map = () => {
     </>
   );
 };
-// https://www.openstreetmap.org/edit?lat=50.09231&lon=14.32098&zoom=17
 
 export default Map;
