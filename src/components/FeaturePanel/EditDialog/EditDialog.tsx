@@ -180,7 +180,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
               />
 
               <ContributionInfoBox loggedIn={loggedIn} />
-              <CommentField note={comment} setNote={setComment} />
+              <CommentField comment={comment} setComment={setComment} />
 
               <OtherTagsEditor
                 tags={tags}

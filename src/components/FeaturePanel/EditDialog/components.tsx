@@ -79,7 +79,7 @@ export const ContributionInfoBox = ({ loggedIn }) =>
     </Box>
   );
 
-export const CommentField = ({ note, setNote }) => (
+export const CommentField = ({ comment, setComment }) => (
   <>
     <TextField
       label={t('editdialog.comment')}
@@ -91,8 +91,8 @@ export const CommentField = ({ note, setNote }) => (
       fullWidth
       rows={2}
       variant="outlined"
-      value={note}
-      onChange={(e) => setNote(e.target.value)}
+      value={comment}
+      onChange={(e) => setComment(e.target.value)}
     />
     <br />
     <br />

@@ -73,3 +73,6 @@ export const isValidImage = (url): Promise<boolean> => {
     imgElement.src = url;
   });
 };
+
+export const stringifyDomXml = (itemXml) =>
+  new XMLSerializer().serializeToString(itemXml);

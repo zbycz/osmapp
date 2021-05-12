@@ -9,6 +9,7 @@ import {
   OsmApiId,
   parseXmlString,
   prod,
+  stringifyDomXml,
 } from './helpers';
 
 const {
@@ -66,10 +67,10 @@ export const osmLogout = async () => {
 export const getOsmUsername = () =>
   auth.authenticated() && window.localStorage.getItem('osm_username');
 
-const getChangesetXml = ({ comment, feature }) => {
+const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [
     ['created_by', `OsmAPP ${osmappVersion}`],
-    ['comment', comment],
+    ['comment', changesetComment],
     ['submitted_from', getOsmappLink(feature)],
     // ...(needsReview ? [['review_requested', 'yes']] : []),
   ];
@@ -116,46 +117,76 @@ const deleteItem = (apiId: OsmApiId, content: string) =>
     content,
   });
 
-const getAltNote = (cancelled, feature) => {
+const putOrDeleteItem = async (
+  deleted: boolean,
+  apiId: OsmApiId,
+  newItem: string,
+) => {
+  if (deleted) {
+    await deleteItem(apiId, newItem);
+  } else {
+    await putItem(apiId, newItem);
+  }
+};
+
+const getDescription = (cancelled, feature) => {
   const action = cancelled ? 'Deleted' : 'Edited';
   const { subclass } = feature.properties;
   const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
 };
 
-const getComment = (note: string, cancelled: boolean, feature: Feature) => {
-  const comment = note || getAltNote(cancelled, feature);
-  return `${comment} #osmapp`;
+const getChangesetComment = (
+  comment: string,
+  cancelled: boolean,
+  feature: Feature,
+) => {
+  const description = getDescription(cancelled, feature);
+  const dot = comment && ' • ';
+  return `${comment}${dot}${description} #osmapp`;
+};
+
+const getXmlTags = (newTags: FeatureTags) =>
+  Object.entries(newTags)
+    .filter(([k, v]) => k && v)
+    .map(([k, v]) => ({ $: { k, v } }));
+
+const updateItemXml = async (
+  item,
+  apiId: OsmApiId,
+  changesetId: string,
+  newTags?: FeatureTags,
+) => {
+  const xml = await parseXmlString(stringifyDomXml(item));
+
+  xml[apiId.type].$.changeset = changesetId;
+  if (newTags) {
+    xml[apiId.type].tag = getXmlTags(newTags);
+  }
+  return buildXmlString(xml);
 };
 
 export const editOsmFeature = async (
   feature: Feature,
-  note: string,
+  comment: string,
   newTags: FeatureTags,
-  cancelled: boolean,
+  deleted: boolean,
 ) => {
   const apiId = prod ? feature.osmMeta : { type: 'node', id: '967531' };
-  const comment = getComment(note, cancelled, feature);
+  const changesetComment = getChangesetComment(comment, deleted, feature);
+  const changesetXml = getChangesetXml({ changesetComment, feature });
 
-  const changesetXml = getChangesetXml({ comment, feature });
   const changesetId = await putChangeset(changesetXml);
+  const item = await getItem(apiId);
 
-  const itemXml = await getItem(apiId);
-  const osmXml = await parseXmlString(
-    new XMLSerializer().serializeToString(itemXml), // TODO get text from osmAuth.xhr ?
+  const newItem = await updateItemXml(
+    item,
+    apiId,
+    changesetId,
+    !deleted ? newTags : undefined,
   );
-  const element = osmXml[apiId.type];
-  element.$.changeset = changesetId;
-  if (!cancelled) {
-    element.tag = Object.entries(newTags)
-      .filter(([k, v]) => k && v)
-      .map(([k, v]) => ({ $: { k, v } }));
-  }
-  const itemNewXml = buildXmlString(osmXml);
-  await (cancelled
-    ? deleteItem(apiId, itemNewXml)
-    : putItem(apiId, itemNewXml));
 
+  await putOrDeleteItem(deleted, apiId, newItem);
   await putChangesetClose(changesetId);
 
   return {
