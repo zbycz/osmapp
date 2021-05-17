@@ -31,7 +31,7 @@ export default {
   'featurepanel.save_button': 'Uložit',
   'featurepanel.directions_button': 'Trasa',
   'featurepanel.error_gone': 'Tento prvek byl v mezičase smazán z OpenStreetMap.',
-  'featurepanel.history_button': 'Historie &raquo;',
+  'featurepanel.history_button': 'Historie »',
   'featurepanel.other_info_heading': 'Další informace',
   'featurepanel.edit_button_title': 'Upravit v databázi OpenStreetMap',
   'featurepanel.edit_button': 'Upravit místo',

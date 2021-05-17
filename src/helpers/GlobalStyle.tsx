@@ -20,6 +20,10 @@ const GlobalStyle = createGlobalStyle`
     outline: 0;
     cursor: pointer;
 
+    &.colorInherit {
+      color: inherit;
+    }
+
     &:hover {
         text-decoration: underline;
     }

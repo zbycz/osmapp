@@ -36,7 +36,7 @@ export default {
   'featurepanel.save_button': 'Save to favorites',
   'featurepanel.directions_button': 'Directions',
   'featurepanel.error_gone': 'This feature was recently deleted from OpenStreetMap.',
-  'featurepanel.history_button': 'History &raquo;',
+  'featurepanel.history_button': 'History »',
   'featurepanel.other_info_heading': 'More information',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.edit_button': 'Edit place',

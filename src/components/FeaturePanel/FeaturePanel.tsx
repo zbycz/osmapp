@@ -13,7 +13,7 @@ import Property from './Property';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import Coordinates from './Coordinates';
-import { capitalize, useToggleState } from '../helpers';
+import { useToggleState } from '../helpers';
 import { icons } from '../../assets/icons';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
@@ -23,11 +23,12 @@ import { SHOW_PROTOTYPE_UI } from '../../config';
 import {
   PanelContent,
   PanelFooter,
-  PanelWrapper,
   PanelScrollbars,
+  PanelWrapper,
 } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
+import { FeatureDescription } from './FeatureDescription';
 
 const StyledEdit = styled.div`
   margin: 60px 0 20px 0;
@@ -143,7 +144,11 @@ const FeaturePanel = () => {
             <Alert variant="outlined" severity="warning">
               {t('featurepanel.error_gone')}{' '}
               <a
-                href={`https://osm.org/${getUrlOsmId(feature.osmMeta)}/history`}
+                href={`https://openstreetmap.org/${getUrlOsmId(
+                  osmMeta,
+                )}/history`}
+                target="_blank"
+                rel="noopener"
               >
                 {t('featurepanel.history_button')}
               </a>
@@ -193,18 +198,11 @@ const FeaturePanel = () => {
             handleClose={() => setDialogOpenedWith(false)}
             feature={feature}
             focusTag={dialogOpenedWith}
-            key={getShortId(feature.osmMeta) + (skeleton && 'skel')}
+            key={getShortId(osmMeta) + (skeleton && 'skel')}
           />
 
           <PanelFooter>
-            {nonOsmObject
-              ? t('featurepanel.feature_description_nonosm', {
-                  type: osmMeta.type,
-                })
-              : t('featurepanel.feature_description_osm', {
-                  type: capitalize(osmMeta.type),
-                })}
-            <br />
+            <FeatureDescription osmMeta={osmMeta} nonOsmObject={nonOsmObject} />
             <Coordinates feature={feature} />
             <br />
             {!nonOsmObject && <a href={osmappLink}>{osmappLink}</a>}
