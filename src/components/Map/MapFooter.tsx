@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import getConfig from 'next/config';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem, Tooltip } from '@material-ui/core';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { changeLang, intl, t } from '../../services/intl';
 import { getIdEditorLink } from '../helpers';
+import GithubIcon from '../../assets/GithubIcon';
 
 const {
   publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
@@ -28,11 +29,23 @@ const Box = styled.div`
 const OsmappLink = () => {
   const { showHomepage } = useFeatureContext();
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    showHomepage();
+  };
   return (
     <>
-      <button type="button" className="linkLikeButton" onClick={showHomepage}>
+      <a href="https://github.com/zbycz/osmapp" target="_blank" rel="noopener">
+        <GithubIcon width="12" height="12" />
+      </a>
+      <a
+        href="/"
+        type="button"
+        className="linkLikeButton"
+        onClick={handleClick}
+      >
         osmapp
-      </button>{' '}
+      </a>{' '}
       <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
     </>
   );
@@ -111,14 +124,16 @@ const EditLink = () => {
 const MapDataLink = () => (
   <>
     {'© '}
-    <button
-      type="button"
-      className="linkLikeButton"
-      // eslint-disable-next-line no-alert
-      onClick={() => alert(t('map.copyright'))}
-    >
-      {t('map.map_data_button')}
-    </button>
+    <Tooltip title={t('map.copyright')}>
+      <button
+        type="button"
+        className="linkLikeButton"
+        // eslint-disable-next-line no-alert
+        onClick={() => alert(t('map.copyright'))}
+      >
+        {t('map.map_data_button')}
+      </button>
+    </Tooltip>
   </>
 );
 
