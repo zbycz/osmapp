@@ -2,26 +2,52 @@
 import { fetchJson } from '../fetch';
 import { Image } from '../types';
 
+const getCommonsApiUrl = (title) =>
+  `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${encodeURIComponent(
+    title,
+  )}`;
+
+const getWikidataApiUrl = (title) =>
+  `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${encodeURIComponent(
+    title,
+  )}`;
+
+const getWikipediaApiUrl = (country, title) =>
+  `https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=640&format=json&titles=${encodeURIComponent(
+    title,
+  )}`;
+
+const parseCountry = (title) => {
+  if (title.includes(':')) {
+    const parts = title.split(':');
+    return { country: parts[0], title: parts[1] };
+  }
+  return { title, country: 'en' };
+};
+
 export const getWikiApiUrl = (tags) => {
+  if (tags.image?.match(/^File:/)) {
+    return getCommonsApiUrl(tags.image);
+  }
+
   if (tags.wikidata) {
-    return `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${encodeURIComponent(
-      tags.wikidata,
-    )}`;
+    return getWikidataApiUrl(tags.wikidata);
   }
 
   if (tags.wikimedia_commons) {
-    return `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${encodeURIComponent(
-      tags.wikimedia_commons,
-    )}`;
+    return getCommonsApiUrl(tags.wikimedia_commons);
   }
 
-  const wikipediaKeys = Object.keys(tags).filter((k) => k.match(/^wikipedia/));
-  if (wikipediaKeys.length) {
-    const value = tags[wikipediaKeys[0]];
-    const country = value.includes(':') ? value.split(':')[0] : 'en';
-    return `https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=640&format=json&titles=${encodeURIComponent(
-      value,
-    )}`;
+  if (tags.wikipedia) {
+    const { country, title } = parseCountry(tags.wikipedia);
+    return getWikipediaApiUrl(country, title);
+  }
+
+  const localWikis = Object.keys(tags).filter((k) => k.match(/^wikipedia:/));
+  if (localWikis.length) {
+    const key = localWikis[0];
+    const { country } = parseCountry(key);
+    return getWikipediaApiUrl(country, tags[key]);
   }
 
   return null;

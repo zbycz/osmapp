@@ -64,6 +64,7 @@ export const isValidImage = (url): Promise<boolean> => {
   if (isServer()) {
     return fetch(url).then(
       ({ headers }) => !!headers.get('content-type')?.match(/^image\//),
+      () => false,
     );
   }
 

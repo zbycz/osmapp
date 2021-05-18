@@ -28,29 +28,31 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     abortController = new AbortController();
   }
 
-  const res = await fetch(url, {
-    ...opts,
-    signal: abortController.signal,
-  });
+  try {
+    const res = await fetch(url, {
+      ...opts,
+      signal: abortController.signal,
+    });
 
-  abortController = noRequestRunning;
+    abortController = noRequestRunning;
 
-  // TODO ajax spinner ?
+    if (!res.ok || res.status < 200 || res.status >= 300) {
+      const data = await res.text();
+      const error = new ApiError(
+        `Fetch: ${res.status} ${res.statusText} ${res.url} Data: ${data}`,
+      );
+      error.code = res.status;
+      throw error;
+    }
 
-  if (!res.ok || res.status < 200 || res.status >= 300) {
-    const data = await res.text();
-    const error = new ApiError(
-      `Fetch: ${res.status} ${res.statusText} ${res.url} Data: ${data}`,
-    );
-    error.code = res.status;
-    throw error;
+    const text = await res.text();
+    if (!opts || !opts.nocache) {
+      writeCacheSafe(key, text);
+    }
+    return text;
+  } catch (e) {
+    throw new Error(`Fetch: ${e} at ${url}`);
   }
-
-  const text = await res.text();
-  if (!opts || !opts.nocache) {
-    writeCacheSafe(key, text);
-  }
-  return text;
 };
 
 export const fetchJson = async (url, opts = {}) => {
