@@ -2,10 +2,12 @@ import React, { ReactNode } from 'react';
 
 import styled from 'styled-components';
 import Head from 'next/head';
+import { Tooltip } from '@material-ui/core';
 import { getFeatureImage, LOADING } from '../../services/images';
 import { Feature } from '../../services/types';
 import { InlineSpinner } from './FeatureImage/InlineSpinner';
 import { t } from '../../services/intl';
+import { nl2br } from '../utils/nl2br';
 
 const Wrapper = styled.div`
   position: relative;
@@ -59,7 +61,7 @@ const IconWrapper = styled.div`
   }
 `;
 
-const Attribution = styled.a`
+const AttributionLink = styled.a`
   position: absolute;
   right: 1px;
   top: 1px;
@@ -104,8 +106,9 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
   const { source, link, thumb, username, portrait } = image ?? {};
   const uncertainImage = source === 'Mapillary';
   const uncertainTitle = uncertainImage
-    ? `\n${  t('featurepanel.uncertain_image')}`
+    ? `\n${t('featurepanel.uncertain_image')}`
     : '';
+  const attribution = `${source}${username ? ` / ${username}` : ''}`;
 
   return (
     <Wrapper link={thumb} uncertainImage={uncertainImage} portrait={portrait}>
@@ -115,17 +118,16 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
         </IconWrapper>
       )}
       {source && (
-        <Attribution
-          href={link}
-          title={`© ${source}${
-            username ? ` / ${username}` : ''
-          }${uncertainTitle}`}
-          target="_blank"
-          rel="noopener"
-          portrait={portrait}
-        >
-          {`${source}${username ? ` / ${username}` : ''}`}
-        </Attribution>
+        <Tooltip title={nl2br(`© ${attribution}${uncertainTitle}`)} arrow>
+          <AttributionLink
+            href={link}
+            target="_blank"
+            rel="noopener"
+            portrait={portrait}
+          >
+            {attribution}
+          </AttributionLink>
+        </Tooltip>
       )}
       {!feature.skeleton && image === LOADING && <InlineSpinner />}
       {thumb && (

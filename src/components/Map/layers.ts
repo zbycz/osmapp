@@ -65,23 +65,20 @@ export const backgroundLayers = [
   // },
 ];
 
-function addHoverPaint(origStyle) {
-  const value = [
-    'case',
-    ['boolean', ['feature-state', 'hover'], false],
-    0.5,
-    1,
-  ];
+const addHoverPaint = (origStyle) => {
+  const hoverExpr = ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 1]; // prettier-ignore
+  const iconOpacity = ['case', ['boolean', ['feature-state', 'hideIcon'], false], 0, hoverExpr]; // prettier-ignore
+
   origStyle.layers
-    .filter((x) => x.id.match(/^poi-/))
-    .forEach((x) => {
-      if (x.paint) {
-        // eslint-disable-next-line no-param-reassign
-        x.paint['icon-opacity'] = value;
+    .filter((layer) => layer.id.match(/^poi-/))
+    .forEach((layer) => {
+      if (layer.paint) {
+        layer.paint['icon-opacity'] = iconOpacity; // eslint-disable-line no-param-reassign
       }
     });
+
   return origStyle;
-}
+};
 
 const sprite = `${window.location.protocol}//${window.location.host}/sprites/osmapp`;
 
@@ -98,9 +95,12 @@ export const layersWithOsmId = style.layers
 
 export const setUpHover = (map) => {
   let lastHover = null;
-  const setHover = (f, hover) => f && map.setFeatureState(f, { hover });
-  const setHoverOn = (f) => setHover(f, true);
-  const setHoverOff = (f) => setHover(f, false);
+
+  const setHover = (feature, hover) =>
+    feature && map.setFeatureState(feature, { hover });
+  const setHoverOn = (feature) => setHover(feature, true);
+  const setHoverOff = (feature) => setHover(feature, false);
+
   const onMouseMove = (e) => {
     if (e.features && e.features.length > 0) {
       const feature = e.features[0];
@@ -112,14 +112,16 @@ export const setUpHover = (map) => {
       }
     }
   };
+
   const onMouseLeave = () => {
     setHoverOff(lastHover);
     lastHover = null;
     // TODO delay 200ms
     map.getCanvas().style.cursor = ''; // eslint-disable-line no-param-reassign
   };
-  layersWithOsmId.forEach((x) => {
-    map.on('mousemove', x, onMouseMove);
-    map.on('mouseleave', x, onMouseLeave);
+
+  layersWithOsmId.forEach((layer) => {
+    map.on('mousemove', layer, onMouseMove);
+    map.on('mouseleave', layer, onMouseLeave);
   });
 };

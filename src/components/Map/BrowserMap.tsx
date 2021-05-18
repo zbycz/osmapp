@@ -9,6 +9,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { getUrlOsmId, isSameOsmId } from '../../services/helpers';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { useFeatureMarker } from './useFeatureMarker';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
@@ -33,12 +34,13 @@ const useInitMap = () => {
       container: mapRef.current,
       style,
       attributionControl: false,
+      refreshExpiredTiles: false,
     });
     setMapInState(map);
 
     map.addControl(geolocateControl);
     map.addControl(scaleControl);
-    setUpHover(map); //
+    setUpHover(map);
 
     return () => {
       map.remove();
@@ -100,13 +102,14 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
   map.jumpTo({ center, zoom: viewForMap[0] });
 });
 
-// TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js
+// TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
   const { setFeature } = useFeatureContext();
   const [map, mapRef] = useInitMap();
   useOnFeatureClicked(map, setFeature);
   useOnMapLoaded(map, onMapLoaded);
+  useFeatureMarker(map);
 
   const { viewForMap, setViewFromMap, setBbox } = useMapStateContext();
   useUpdateViewOnMove(map, setViewFromMap, setBbox);

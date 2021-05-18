@@ -27,6 +27,7 @@ export const buildXmlString = (xml) => {
 };
 
 export interface OsmApiId {
+  // type: 'node' | 'way' | 'relation';
   type: string;
   id: string;
 }
