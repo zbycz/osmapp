@@ -2,6 +2,10 @@
 const packageJson = require('./package.json');
 
 module.exports = {
+  //TODO fails with current webpack config. Probably needs to get rid of sentry? (@sentry/nextjs was not cool)
+  // future: {
+  //   webpack5: true,
+  // },
   publicRuntimeConfig: {
     osmappVersion: packageJson.version.replace(/\.0$/, ''),
     commitHash: (process.env.VERCEL_GIT_COMMIT_SHA || '').substr(0, 7),
