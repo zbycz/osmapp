@@ -15,10 +15,29 @@ const AsyncStyle = ({ href }) => (
   />
 );
 
+const Favicons = () => (
+  <>
+    <link rel="shortcut icon" href="/logo/osmapp_192.png" sizes="192x192" />
+    <link rel="shortcut icon" href="/logo/osmapp_256.png" sizes="256x256" />
+    <link rel="shortcut icon" href="/logo/osmapp_64.png" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="apple-touch-icon" href="/logo/apple.png" />
+    <link rel="apple-touch-icon" sizes="57x57" href="/logo/apple_57.png" />
+    <link rel="apple-touch-icon" sizes="72x72" href="/logo/apple_72.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="/logo/apple_76.png" />
+    <link rel="apple-touch-icon" sizes="114x114" href="/logo/apple_114.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/logo/apple_120.png" />
+    <link rel="apple-touch-icon" sizes="144x144" href="/logo/apple_144.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/logo/apple_152.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple_180.png" />
+  </>
+);
+
 export default class MyDocument extends Document {
   render() {
+    const {serverIntl} = this.props as any;
     return (
-      <Html lang="en">
+      <Html lang={serverIntl.lang}>
         <Head>
           <meta charSet="utf-8" />
           <link
@@ -26,17 +45,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <AsyncStyle href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" />
-          <link rel="shortcut icon" href="/logo/osmapp_64.png" />
-          <link
-            rel="shortcut icon"
-            href="/logo/osmapp_192.png"
-            sizes="192x192"
-          />
-          <link
-            rel="shortcut icon"
-            href="/logo/osmapp_256.png"
-            sizes="256x256"
-          />
+          <Favicons />
           <link rel="preconnect" href="https://api.maptiler.com" />
           <link rel="preconnect" href="https://openmaptiles.github.io" />
           <link rel="preconnect" href="https://a.mapillary.com" />
@@ -47,7 +56,7 @@ export default class MyDocument extends Document {
         </Head>
         <body>
           <Main />
-          <InjectIntl intl={(this.props as any).serverIntl} />
+          <InjectIntl intl={serverIntl} />
           <NextScript />
         </body>
       </Html>
