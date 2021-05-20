@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
 import { Feature } from '../services/types';
 
@@ -26,32 +26,33 @@ export function isServer() {
   return typeof window === 'undefined';
 }
 
-export const useMapEffect = (mapEffectFn) => (map, ...rest) =>
-  useEffect(() => {
-    if (map) {
-      mapEffectFn(map, ...rest);
-    }
-  }, [map, ...rest]);
+export const useMapEffect =
+  (mapEffectFn) =>
+  (map, ...rest) =>
+    useEffect(() => {
+      if (map) {
+        mapEffectFn(map, ...rest);
+      }
+    }, [map, ...rest]);
 
 type EventDefintionFn = (
   map: Map,
   ...rest: any
 ) => { eventType: keyof MapEventType; eventHandler: any };
 
-export const useAddMapEvent = (getEventDefinition: EventDefintionFn) => (
-  map,
-  ...rest
-) =>
-  useEffect(() => {
-    if (map) {
-      const { eventType, eventHandler } = getEventDefinition(map, ...rest);
-      map.on(eventType, eventHandler);
-      return () => {
-        map.off(eventType, eventHandler);
-      };
-    }
-    return undefined;
-  }, [map, ...rest]);
+export const useAddMapEvent =
+  (getEventDefinition: EventDefintionFn) =>
+  (map, ...rest) =>
+    useEffect(() => {
+      if (map) {
+        const { eventType, eventHandler } = getEventDefinition(map, ...rest);
+        map.on(eventType, eventHandler);
+        return () => {
+          map.off(eventType, eventHandler);
+        };
+      }
+      return undefined;
+    }, [map, ...rest]);
 
 export const isString = (value) => typeof value === 'string';
 
@@ -60,3 +61,16 @@ export const getIdEditorLink = (feature: Feature, view?: number[]) => {
   const hash = view ? `#map=${view.join('/')}` : '';
   return `https://www.openstreetmap.org/edit${query}${hash}`;
 };
+
+export const slashToOptionalBr = (url) =>
+  url.split('/').map((part, idx) => (
+    <>
+      {idx > 0 && (
+        <>
+          /
+          <wbr />
+        </>
+      )}
+      {part}
+    </>
+  ));

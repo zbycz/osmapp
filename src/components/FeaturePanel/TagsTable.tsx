@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import truncate from 'lodash/truncate';
 
-import { useToggleState } from '../helpers';
+import { slashToOptionalBr, useToggleState } from '../helpers';
 import { getUrlForTag, ToggleButton } from './helpers';
 import { EditIconButton } from './EditIconButton';
 
@@ -42,7 +42,23 @@ const Table = styled.table`
 
 const renderValue = (k, v) => {
   const url = getUrlForTag(k, v);
-  return url ? <a href={url}>{v.replace(/^https?:\/\//, '')}</a> : v;
+  return url ? (
+    <a href={url}>
+      {slashToOptionalBr(
+        v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1'),
+        // TODO optionally show just part of the URL ?
+        // .replace(
+        //   /^([^/]+.{0,5})(.*)$/,
+        //   (full, p1, p2) => {
+        //     const charsLeft = 30-p1.length
+        //     return p1 + (full.length > 40 ? `…${p2.substring(p2.length-charsLeft)}` : p2);
+        //   },
+        // )
+      )}
+    </a>
+  ) : (
+    v
+  );
 };
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
