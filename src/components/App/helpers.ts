@@ -1,6 +1,6 @@
 import nextCookies from 'next-cookies';
 import { getFeatureImage } from '../../services/images';
-import { fetchInitialFeature } from '../../services/osmApi';
+import { fetchFeature } from '../../services/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
 
@@ -44,7 +44,7 @@ export const getInititalFeature = async (ctx) => {
       : id;
 
   const t1 = new Date().getTime();
-  const initialFeature = await fetchInitialFeature(shortId);
+  const initialFeature = await fetchFeature(shortId);
 
   const t2 = new Date().getTime();
   const osmRequest = t2 - t1;

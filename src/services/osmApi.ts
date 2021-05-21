@@ -1,46 +1,92 @@
-import { getApiId, getUrlOsmId, OsmApiId, prod } from './helpers';
-import { FetchError, fetchJson, fetchText } from './fetch';
+import { getApiId, getShortId, getUrlOsmId, prod } from './helpers';
+import { FetchError, fetchJson } from './fetch';
 import { Feature, Position } from './types';
-import { osmToGeojson } from './osmToGeojson';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
+import { getPoiClass } from './getPoiClass';
+import { isBrowser } from '../components/helpers';
 
-export const OSM_API = 'https://www.openstreetmap.org/api/0.6';
-export const OSM_FEATURE_URL = ({ type, id }) => `${OSM_API}/${type}/${id}`;
+const getOsmUrl = ({ type, id }) =>
+  `https://www.openstreetmap.org/api/0.6/${type}/${id}.json`;
 
-// https://wiki.openstreetmap.org/wiki/Overpass_API
-export const OP_API = 'https://overpass-api.de/api/interpreter?data=';
-export const OP_URL = (query) => OP_API + encodeURIComponent(query);
-export const OP_QUERY = {
-  node: (id) => `node(${id});out;`,
-  way: (id) => `way(${id});(._;>;);out;`,
-  relation: (id) => `rel(${id});(._;>;);out;`,
-};
-export const OP_FEATURE_URL = ({ type, id }) => OP_URL(OP_QUERY[type](id));
-
-const FETCH_FEATURE_URL = (apiId) =>
-  apiId.type === 'node' ? OSM_FEATURE_URL(apiId) : OP_FEATURE_URL(apiId);
-
-export const getFeatureFromApi = async (shortId): Promise<Feature> => {
-  const apiId = getApiId(shortId);
-  const url = FETCH_FEATURE_URL(apiId);
-  const response = await fetchText(url, { putInAbortableQueue: true }); // TODO 504 gateway busy
-  return osmToGeojson(response);
+// Overpass API is used only for getting cetroids of ways and relations
+const getOverpassUrl = ({ type, id }) => {
+  const queries = {
+    way: (wId) => `[out:json][timeout:1];way(${wId});out 1 ids qt center;`,
+    relation: (rId) => `[out:json][timeout:1];rel(${rId});out 1 ids qt center;`,
+  };
+  return `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+    queries[type](id),
+  )}`;
 };
 
-export const clearFeatureCache = (apiId: OsmApiId) => {
-  const url = FETCH_FEATURE_URL(apiId);
-  removeFetchCache(url, { putInAbortableQueue: true }); // watch out, must be same as above
+const getOsmPromise = (apiId) => fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+
+// we should probably store just the last one, but this cant get too big, right?
+const featureCenterCache = {};
+export const addCenterFromMapToCache = (shortId, center) => {
+  featureCenterCache[shortId] = center;
 };
 
-export const fetchInitialFeature = async (shortId): Promise<Feature> => {
+const getCenterPromise = async (apiId) => {
+  if (apiId.type === 'node') return false;
+
+  if (isBrowser()) {
+    return featureCenterCache[getShortId(apiId)];
+  }
+
   try {
-    return shortId ? await getFeatureFromApi(shortId) : null;
+    const overpass = await fetchJson(getOverpassUrl(apiId));
+    const { lat, lon } = overpass?.elements?.[0]?.center ?? {};
+    return [lon, lat];
   } catch (e) {
+    // eslint-disable-next-line no-console
+    console.warn(e); // eg. 529 too many requests
+    return false;
+  }
+};
+
+export const clearFeatureCache = (apiId) => {
+  const url = getOsmUrl(apiId);
+  removeFetchCache(url); // watch out, must be same as above
+};
+
+const osmToFeature = (osm) => {
+  const element = osm?.elements?.[0] ?? {};
+  const { tags, lat, lon, nodes, members, ...osmMeta } = element;
+  return {
+    type: 'Feature' as const,
+    geometry: undefined,
+    center: lat ? [lon, lat] : undefined,
+    osmMeta,
+    tags,
+    members,
+    properties: getPoiClass(tags),
+  };
+};
+
+export const fetchFeature = async (shortId): Promise<Feature> => {
+  if (!shortId) {
+    return null;
+  }
+
+  try {
+    const apiId = getApiId(shortId);
+    const [osmItem, center] = await Promise.all([
+      getOsmPromise(apiId),
+      getCenterPromise(apiId),
+    ]);
+
+    const feature = osmToFeature(osmItem);
+    if (center) {
+      feature.center = center;
+    }
+
+    return feature;
+  } catch (e) {
+    console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
+
     const error = e instanceof FetchError ? e.code : 'unknown';
-
-    console.error(`Feature id=${shortId}:`, e); // eslint-disable-line no-console
-
     return {
       type: 'Feature',
       skeleton: true,
@@ -81,7 +127,7 @@ export const insertOsmNote = async (point: Position, text: string) => {
   };
 };
 
-export const OVERPASS_AROUND_URL = ([lat, lon]: Position) => {
+const getAroundUrl = ([lat, lon]: Position) => {
   const point = `${lon},${lat}`;
   const types = ['place_of_worship', 'public_transport', 'amenity', 'shop'];
   const contentQuery = types.map(
@@ -91,13 +137,13 @@ export const OVERPASS_AROUND_URL = ([lat, lon]: Position) => {
       node["${type}"](around:50,${point});
       `,
   );
-  return OP_URL(
+  return `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
     `[timeout:5][out:json];(${contentQuery.join('')});out 10 body qt center;`,
-  );
+  )}`;
 };
 
 export const fetchAroundFeature = async (point: Position) => {
-  const url = OVERPASS_AROUND_URL(point);
+  const url = getAroundUrl(point);
   const response = await fetchJson(url);
 
   const around = overpassAroundToSkeletons(response);

@@ -38,6 +38,12 @@ export interface FeatureTags {
   [key: string]: string;
 }
 
+interface RelationMember {
+  ref: number;
+  role: string;
+  type: string;
+}
+
 export interface Feature {
   type: 'Feature';
   geometry?: FeatureGeometry;
@@ -54,6 +60,7 @@ export interface Feature {
     lon?: string;
   };
   tags: FeatureTags;
+  members?: RelationMember[];
   properties: {
     class: string;
     subclass: string;

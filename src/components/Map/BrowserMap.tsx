@@ -6,10 +6,11 @@ import { getSkeleton } from './helpers';
 import { setUpHover, style } from './layers';
 import { useAddMapEvent, useMapEffect } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { getUrlOsmId, isSameOsmId } from '../../services/helpers';
+import { getShortId, getUrlOsmId, isSameOsmId } from '../../services/helpers';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './useFeatureMarker';
+import { addCenterFromMapToCache } from '../../services/osmApi';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
@@ -69,6 +70,8 @@ const useOnFeatureClicked = useAddMapEvent((map, setFeature) => ({
       setFeature((feature) =>
         isSameOsmId(feature, skeleton) ? feature : skeleton,
       );
+      addCenterFromMapToCache(getShortId(skeleton.osmMeta), skeleton.center);
+
       Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
     } else if (SHOW_PROTOTYPE_UI) {
       setFeature(skeleton);
