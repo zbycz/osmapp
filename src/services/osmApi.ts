@@ -1,5 +1,5 @@
 import { getApiId, getUrlOsmId, OsmApiId, prod } from './helpers';
-import { fetchJson, fetchText } from './fetch';
+import { FetchError, fetchJson, fetchText } from './fetch';
 import { Feature, Position } from './types';
 import { osmToGeojson } from './osmToGeojson';
 import { removeFetchCache } from './fetchCache';
@@ -37,8 +37,10 @@ export const fetchInitialFeature = async (shortId): Promise<Feature> => {
   try {
     return shortId ? await getFeatureFromApi(shortId) : null;
   } catch (e) {
-    // eslint-disable-next-line no-console
-    console.error(`Fetch error while fetching id=${shortId}`, e);
+    const error = e instanceof FetchError ? e.code : 'unknown';
+
+    console.error(`Feature id=${shortId}:`, e); // eslint-disable-line no-console
+
     return {
       type: 'Feature',
       skeleton: true,
@@ -47,7 +49,7 @@ export const fetchInitialFeature = async (shortId): Promise<Feature> => {
       center: undefined,
       tags: { name: getUrlOsmId(getApiId(shortId)) },
       properties: { class: '', subclass: '' },
-      error: 'gone',
+      error,
     };
   }
 };

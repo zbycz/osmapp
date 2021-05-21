@@ -8,7 +8,6 @@ import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
 import Head from 'next/head';
 import Typography from '@material-ui/core/Typography';
-import { Alert } from '@material-ui/lab';
 import Property from './Property';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
@@ -17,7 +16,7 @@ import { useToggleState } from '../helpers';
 import { icons } from '../../assets/icons';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
-import { getOsmappLink, getShortId, getUrlOsmId } from '../../services/helpers';
+import { getOsmappLink, getShortId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import {
@@ -30,6 +29,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
 import { FeatureDescription } from './FeatureDescription';
 import { ObjectsAround } from './ObjectsAround';
+import { OsmError } from './OsmError';
 
 const StyledEdit = styled.div`
   margin: 60px 0 20px 0;
@@ -72,8 +72,7 @@ const FeaturePanel = () => {
   const [dialogOpenedWith, setDialogOpenedWith] =
     useState<boolean | string>(false);
 
-  const { nonOsmObject, tags, layer, osmMeta, properties, skeleton, error } =
-    feature;
+  const { nonOsmObject, tags, layer, osmMeta, properties, skeleton } = feature;
 
   const osmappLink = getOsmappLink(feature);
   const ico = icons.includes(properties.class)
@@ -133,20 +132,7 @@ const FeaturePanel = () => {
             onEdit={setDialogOpenedWith}
           />
 
-          {error === 'gone' && (
-            <Alert variant="outlined" severity="warning">
-              {t('featurepanel.error_gone')}{' '}
-              <a
-                href={`https://openstreetmap.org/${getUrlOsmId(
-                  osmMeta,
-                )}/history`}
-                target="_blank"
-                rel="noopener"
-              >
-                {t('featurepanel.history_button')}
-              </a>
-            </Alert>
-          )}
+          <OsmError />
 
           {!advanced && !!featuredTags.length && (
             <>

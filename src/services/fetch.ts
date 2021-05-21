@@ -2,8 +2,19 @@ import fetch from 'isomorphic-unfetch';
 import { getCache, getKey, writeCacheSafe } from './fetchCache';
 import { isBrowser } from '../components/helpers';
 
-class ApiError extends Error {
-  public code: number;
+export class FetchError extends Error {
+  constructor(
+    public message: string = '',
+    public code: string,
+    public data: string,
+  ) {
+    super();
+  }
+
+  toString() {
+    const suffix = this.data && ` Data: ${this.data.substring(0, 1000)}`;
+    return `Fetch: ${this.message}${suffix}`;
+  }
 }
 
 // TODO cancel request in map.on('click', ...)
@@ -38,11 +49,11 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
 
     if (!res.ok || res.status < 200 || res.status >= 300) {
       const data = await res.text();
-      const error = new ApiError(
-        `${res.status} ${res.statusText} Data: ${data.substring(0, 1000)}`,
+      throw new FetchError(
+        `${res.status} ${res.statusText}`,
+        `${res.status}`,
+        data,
       );
-      error.code = res.status;
-      throw error;
     }
 
     const text = await res.text();
@@ -51,7 +62,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     }
     return text;
   } catch (e) {
-    throw new Error(`Fetch: ${e} at ${url}`);
+    throw new FetchError(`${e} at ${url}`, e.code || 'network', e.data); // TODO how to tell network error from code exception?
   }
 };
 

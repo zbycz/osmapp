@@ -53,7 +53,7 @@ export const getInititalFeature = async (ctx) => {
     const timeoutIn2Secs = 2000 - osmRequest;
     initialFeature.ssrFeatureImage = await Promise.race([
       timeout(timeoutIn2Secs),
-      getFeatureImage(initialFeature),
+      getFeatureImage(initialFeature).catch(() => undefined),
     ]);
   }
 

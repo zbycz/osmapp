@@ -60,7 +60,7 @@ export interface Feature {
   };
   center: Position;
   ssrFeatureImage?: Image;
-  error?: 'gone';
+  error?: 'gone' | 'unknown' | string;
 
   // skeleton
   layer?: { id: string };
