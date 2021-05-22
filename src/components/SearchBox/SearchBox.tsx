@@ -1,13 +1,14 @@
-import React from 'react';
-import Autocomplete from '@material-ui/lab/Autocomplete';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import throttle from 'lodash/throttle';
-import { onSelectedFactory } from './onSelectedFactory';
-import { renderOptionFactory } from './renderOptionFactory';
-import { SearchBoxInput } from './SearchBoxInput';
-import { useMapStateContext } from '../utils/MapStateContext';
+import SearchIcon from '@material-ui/icons/Search';
+import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
 import { fetchJson } from '../../services/fetch';
+import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { ClosePanelButton } from './ClosePanelButton';
+import { AutocompleteInput } from './AutocompleteInput';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -25,6 +26,24 @@ const TopPanel = styled.div`
   }
 `;
 
+const StyledPaper = styled(Paper)`
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+
+  .MuiAutocomplete-root {
+    flex: 1;
+  }
+`;
+
+const SearchIconButton = styled(IconButton)`
+  svg {
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: 'FlipH';
+  }
+`;
+
 const getApiUrl = (bbox, inputValue) =>
   `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bbox}&q=${inputValue}`; // polygon_geojson=1&polygon_threshold=0.1
 
@@ -34,10 +53,10 @@ const fetchNominatim = throttle(async (inputValue, bbox, setOptions) => {
 }, 400);
 
 const SearchBox = () => {
-  const [inputValue, setInputValue] = React.useState('');
-  const [options, setOptions] = React.useState([]);
-  const { bbox, setView } = useMapStateContext();
-  const { setFeature } = useFeatureContext();
+  const { bbox } = useMapStateContext();
+  const [inputValue, setInputValue] = useState('');
+  const [options, setOptions] = useState([]);
+  const autocompleteRef = useRef();
 
   React.useEffect(() => {
     if (inputValue === '') {
@@ -47,25 +66,24 @@ const SearchBox = () => {
     fetchNominatim(inputValue, bbox, setOptions);
   }, [inputValue]);
 
+  const { featureShown } = useFeatureContext();
+
   return (
     <TopPanel>
-      <Autocomplete
-        inputValue={inputValue}
-        options={options}
-        filterOptions={(x) => x}
-        getOptionLabel={(option) => option.display_name}
-        onChange={onSelectedFactory(setFeature, setView)}
-        autoComplete
-        // autoHighlight
-        clearOnEscape
-        // disableCloseOnSelect
-        freeSolo
-        // disableOpenOnFocus
-        renderInput={(params) => (
-          <SearchBoxInput params={params} setInputValue={setInputValue} />
-        )}
-        renderOption={renderOptionFactory(inputValue)}
-      />
+      <StyledPaper elevation={1} ref={autocompleteRef}>
+        <SearchIconButton disabled>
+          <SearchIcon />
+        </SearchIconButton>
+
+        <AutocompleteInput
+          inputValue={inputValue}
+          setInputValue={setInputValue}
+          options={options}
+          autocompleteRef={autocompleteRef}
+        />
+
+        {featureShown && <ClosePanelButton setInputValue={setInputValue} />}
+      </StyledPaper>
     </TopPanel>
   );
 };

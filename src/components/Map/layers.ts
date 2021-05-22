@@ -3,18 +3,15 @@ import mapboxStyle from './mapboxStyle';
 export const sources = {
   openmaptiles: {
     type: 'vector',
-    url:
-      'https://api.maptiler.com/tiles/v3/tiles.json?key=7dlhLl3hiXQ1gsth0kGu', // https://cloud.maptiler.com/account
+    url: 'https://api.maptiler.com/tiles/v3/tiles.json?key=7dlhLl3hiXQ1gsth0kGu', // https://cloud.maptiler.com/account
   },
   contours: {
     type: 'vector',
-    url:
-      'https://api.maptiler.com/tiles/contours/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    url: 'https://api.maptiler.com/tiles/contours/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
   },
   hillshading: {
     type: 'raster',
-    url:
-      'https://api.maptiler.com/tiles/hillshades/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    url: 'https://api.maptiler.com/tiles/hillshades/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
     tileSize: 256,
   },
   osm_mapnik: {
@@ -86,6 +83,7 @@ const origStyle = mapboxStyle(sources, backgroundLayers, sprite);
 export const style = addHoverPaint(origStyle);
 
 const isOsmLayer = (id) => {
+  if (id === 'place-country-3') return false; // "Czechia" not clickable :-(
   const prefixes = ['water-name-', 'poi-', 'place-'];
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
