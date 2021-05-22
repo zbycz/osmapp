@@ -561,6 +561,7 @@ export const icons = [
   'suitcase_key',
   'suitcase_xray',
   'surfing',
+  'surveillance',
   'sushi',
   'swamp',
   'swimming',

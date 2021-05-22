@@ -3933,354 +3933,361 @@
     "x": 957,
     "y": 713
   },
-  "sushi_11": {
+  "surveillance_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 0,
+    "y": 746
+  },
+  "sushi_11": {
+    "height": 33,
+    "pixelRatio": 3,
+    "width": 33,
+    "x": 33,
     "y": 746
   },
   "swamp_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 33,
+    "x": 66,
     "y": 746
   },
   "swimming_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 66,
+    "x": 99,
     "y": 746
   },
   "t_bar_lift_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 99,
+    "x": 132,
     "y": 746
   },
   "table_tennis_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 132,
+    "x": 165,
     "y": 746
   },
   "tall_gate_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 165,
+    "x": 198,
     "y": 746
   },
   "tanning2_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 198,
+    "x": 231,
     "y": 746
   },
   "tanning_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 231,
+    "x": 264,
     "y": 746
   },
   "taoism_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 264,
+    "x": 297,
     "y": 746
   },
   "tattoo_machine_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 297,
+    "x": 330,
     "y": 746
   },
   "taxi_stand_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 330,
+    "x": 363,
     "y": 746
   },
   "teahouse_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 363,
+    "x": 396,
     "y": 746
   },
   "telephone_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 396,
+    "x": 429,
     "y": 746
   },
   "telescope_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 429,
+    "x": 462,
     "y": 746
   },
   "temaki_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 462,
+    "x": 495,
     "y": 746
   },
   "tennis_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 495,
+    "x": 528,
     "y": 746
   },
   "tents_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 528,
+    "x": 561,
     "y": 746
   },
   "theatre_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 561,
+    "x": 594,
     "y": 746
   },
   "ticket_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 594,
+    "x": 627,
     "y": 746
   },
   "tiling_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 627,
+    "x": 660,
     "y": 746
   },
   "tire_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 660,
+    "x": 693,
     "y": 746
   },
   "tire_course_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 693,
+    "x": 726,
     "y": 746
   },
   "toilets_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 726,
+    "x": 759,
     "y": 746
   },
   "toll_gantry_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 759,
+    "x": 792,
     "y": 746
   },
   "toolbox_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 792,
+    "x": 825,
     "y": 746
   },
   "tools_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 825,
+    "x": 858,
     "y": 746
   },
   "tower_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 858,
+    "x": 891,
     "y": 746
   },
   "tower_communication_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 891,
+    "x": 924,
     "y": 746
   },
   "town_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 924,
+    "x": 957,
     "y": 746
   },
   "town_hall_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 957,
-    "y": 746
-  },
-  "traffic_signals_11": {
-    "height": 33,
-    "pixelRatio": 3,
-    "width": 33,
     "x": 0,
     "y": 779
   },
-  "train_11": {
+  "traffic_signals_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 33,
     "y": 779
   },
-  "train_bullet_11": {
+  "train_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 66,
     "y": 779
   },
-  "train_diesel_11": {
+  "train_bullet_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 99,
     "y": 779
   },
-  "train_kids_11": {
+  "train_diesel_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 132,
     "y": 779
   },
-  "train_steam_11": {
+  "train_kids_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 165,
     "y": 779
   },
-  "train_wash_11": {
+  "train_steam_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 198,
     "y": 779
   },
-  "tram_11": {
+  "train_wash_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 231,
     "y": 779
   },
-  "tram_side_11": {
+  "tram_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 264,
     "y": 779
   },
-  "transit_11": {
+  "tram_side_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 297,
     "y": 779
   },
-  "transit_shelter_11": {
+  "transit_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 330,
     "y": 779
   },
-  "tree_and_bench_11": {
+  "transit_shelter_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 363,
     "y": 779
   },
-  "tree_row_11": {
+  "tree_and_bench_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 396,
     "y": 779
   },
-  "trench_11": {
+  "tree_row_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 429,
     "y": 779
   },
-  "triangle_11": {
+  "trench_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 462,
     "y": 779
   },
-  "triangle_stroked_11": {
+  "triangle_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 495,
     "y": 779
   },
-  "trolleybus_11": {
+  "triangle_stroked_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 528,
     "y": 779
   },
-  "truck_11": {
+  "trolleybus_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 561,
     "y": 779
   },
-  "tunnel_11": {
+  "truck_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 594,
     "y": 779
   },
-  "turnstile_11": {
+  "tunnel_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 627,
+    "y": 779
+  },
+  "turnstile_11": {
+    "height": 33,
+    "pixelRatio": 3,
+    "width": 33,
+    "x": 660,
     "y": 779
   },
   "us-highway_1": {
@@ -4371,490 +4378,490 @@
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 660,
+    "x": 693,
     "y": 779
   },
   "vacuum_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 693,
+    "x": 726,
     "y": 779
   },
   "vacuum_station_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 726,
+    "x": 759,
     "y": 779
   },
   "valley_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 759,
+    "x": 792,
     "y": 779
   },
   "vase_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 792,
+    "x": 825,
     "y": 779
   },
   "vending_bread_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 825,
+    "x": 858,
     "y": 779
   },
   "vending_cigarettes_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 858,
+    "x": 891,
     "y": 779
   },
   "vending_cold_drink2_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 891,
+    "x": 924,
     "y": 779
   },
   "vending_cold_drink_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 924,
+    "x": 957,
     "y": 779
   },
   "vending_eggs_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 957,
-    "y": 779
+    "x": 0,
+    "y": 812
   },
   "vending_flat_coin_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 0,
+    "x": 33,
     "y": 812
   },
   "vending_hot_drink2_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 33,
+    "x": 66,
     "y": 812
   },
   "vending_hot_drink_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 66,
+    "x": 99,
     "y": 812
   },
   "vending_ice_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 99,
+    "x": 132,
     "y": 812
   },
   "vending_ice_cream2_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 132,
+    "x": 165,
     "y": 812
   },
   "vending_ice_cream_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 165,
+    "x": 198,
     "y": 812
   },
   "vending_lockers_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 198,
+    "x": 231,
     "y": 812
   },
   "vending_love_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 231,
+    "x": 264,
     "y": 812
   },
   "vending_machine_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 264,
+    "x": 297,
     "y": 812
   },
   "vending_medicine_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 297,
+    "x": 330,
     "y": 812
   },
   "vending_newspaper_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 330,
+    "x": 363,
     "y": 812
   },
   "vending_pet_waste_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 363,
+    "x": 396,
     "y": 812
   },
   "vending_stamps_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 396,
+    "x": 429,
     "y": 812
   },
   "vending_tickets_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 429,
+    "x": 462,
     "y": 812
   },
   "vending_venus_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 462,
+    "x": 495,
     "y": 812
   },
   "vertex_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 495,
+    "x": 528,
     "y": 812
   },
   "vertical_rotisserie_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 528,
+    "x": 561,
     "y": 812
   },
   "veterinary_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 561,
+    "x": 594,
     "y": 812
   },
   "veterinary_care_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 594,
+    "x": 627,
     "y": 812
   },
   "viewpoint_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 627,
+    "x": 660,
     "y": 812
   },
   "village_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 660,
+    "x": 693,
     "y": 812
   },
   "volcano_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 693,
+    "x": 726,
     "y": 812
   },
   "volleyball_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 726,
+    "x": 759,
     "y": 812
   },
   "wall_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 759,
+    "x": 792,
     "y": 812
   },
   "warehouse_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 792,
+    "x": 825,
     "y": 812
   },
   "waste_basket_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 825,
+    "x": 858,
     "y": 812
   },
   "waste_device_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 858,
+    "x": 891,
     "y": 812
   },
   "waste_manhole_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 891,
+    "x": 924,
     "y": 812
   },
   "waste_meter_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 924,
+    "x": 957,
     "y": 812
   },
   "waste_shutoff_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
-    "x": 957,
-    "y": 812
-  },
-  "watch_11": {
-    "height": 33,
-    "pixelRatio": 3,
-    "width": 33,
     "x": 0,
     "y": 845
   },
-  "water_11": {
+  "watch_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 33,
     "y": 845
   },
-  "water_bottle_11": {
+  "water_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 66,
     "y": 845
   },
-  "water_device_11": {
+  "water_bottle_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 99,
     "y": 845
   },
-  "water_manhole_11": {
+  "water_device_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 132,
     "y": 845
   },
-  "water_meter_11": {
+  "water_manhole_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 165,
     "y": 845
   },
-  "water_shutoff_11": {
+  "water_meter_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 198,
     "y": 845
   },
-  "water_tap_11": {
+  "water_shutoff_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 231,
     "y": 845
   },
-  "water_tap_drinkable_11": {
+  "water_tap_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 264,
     "y": 845
   },
-  "water_tower_11": {
+  "water_tap_drinkable_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 297,
     "y": 845
   },
-  "waterfall_11": {
+  "water_tower_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 330,
     "y": 845
   },
-  "watermill_11": {
+  "waterfall_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 363,
     "y": 845
   },
-  "waterskiing_11": {
+  "watermill_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 396,
     "y": 845
   },
-  "wave": {
-    "height": 24,
-    "pixelRatio": 3,
-    "width": 48,
-    "x": 957,
-    "y": 845
-  },
-  "well_pump_manual_11": {
+  "waterskiing_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 429,
     "y": 845
   },
-  "well_pump_powered_11": {
+  "wave": {
+    "height": 24,
+    "pixelRatio": 3,
+    "width": 48,
+    "x": 0,
+    "y": 878
+  },
+  "well_pump_manual_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 462,
     "y": 845
   },
-  "wetland_11": {
+  "well_pump_powered_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 495,
     "y": 845
   },
-  "whale_watching_11": {
+  "wetland_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 528,
     "y": 845
   },
-  "wheel_11": {
+  "whale_watching_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 561,
     "y": 845
   },
-  "wheelchair_11": {
+  "wheel_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 594,
     "y": 845
   },
-  "wheelchair_active_11": {
+  "wheelchair_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 627,
     "y": 845
   },
-  "wind_surfing_11": {
+  "wheelchair_active_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 660,
     "y": 845
   },
-  "wind_turbine_11": {
+  "wind_surfing_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 693,
     "y": 845
   },
-  "windmill_11": {
+  "wind_turbine_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 726,
     "y": 845
   },
-  "window_11": {
+  "windmill_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 759,
     "y": 845
   },
-  "windpump_11": {
+  "window_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 792,
     "y": 845
   },
-  "windsock_11": {
+  "windpump_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 825,
     "y": 845
   },
-  "x_oblique_11": {
+  "windsock_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 858,
     "y": 845
   },
-  "yield_11": {
+  "x_oblique_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 891,
     "y": 845
   },
-  "zoo_11": {
+  "yield_11": {
     "height": 33,
     "pixelRatio": 3,
     "width": 33,
     "x": 924,
+    "y": 845
+  },
+  "zoo_11": {
+    "height": 33,
+    "pixelRatio": 3,
+    "width": 33,
+    "x": 957,
     "y": 845
   }
 }

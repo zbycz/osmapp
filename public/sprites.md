@@ -52,17 +52,15 @@ mv meat_11.svg butcher_11.svg
 mv doctor_11.svg doctors_11.svg
 cp bicycle_11.svg bicycle_parking_11.svg
 cp bicycle_11.svg cycling_11.svg
+cp security_camera_11.svg surveillance_11.svg
 cd ..
 
-# generate sprite
+# generate sprite (start docker.app first)
 rm -r sprites
 mkdir sprites
 mv icons sprites/
 docker run --platform linux/amd64 -it -e FOLDER=icons -e THEME=osmapp -v ${PWD}:/data dolomate/spritezero
 mv sprites/icons ./
-
-
-
 
 # update local icons lookup
 cat << 'EOF' | node > ../src/assets/icons.ts
