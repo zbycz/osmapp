@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import Router from 'next/router';
+import Cookies from 'js-cookie';
 import { Feature } from '../../services/types';
 import { useBoolState } from '../helpers';
 
@@ -23,24 +24,34 @@ export const FeatureContext = createContext<FeatureContextType>(undefined);
 interface Props {
   featureFromRouter: Feature | null;
   children: ReactNode;
+  hpCookie: string;
 }
 
-export const FeatureProvider = ({ children, featureFromRouter }: Props) => {
+export const FeatureProvider = ({
+  children,
+  featureFromRouter,
+  hpCookie,
+}: Props) => {
   const [feature, setFeature] = useState(featureFromRouter);
   const featureShown = feature != null;
 
   useEffect(() => {
-    // set feature fetched by next.js router
+    // set feature on next.js router transition
     setFeature(featureFromRouter);
   }, [featureFromRouter]);
 
-  const [homepageShown, showHomepageOrig, hideHomepage] = useBoolState(
-    feature == null,
+  const [homepageShown, showHp, hideHp] = useBoolState(
+    feature == null && hpCookie !== 'yes',
   );
   const showHomepage = () => {
     Router.push('/');
     setFeature(null);
-    showHomepageOrig();
+    showHp();
+    Cookies.remove('hideHomepage');
+  };
+  const hideHomepage = () => {
+    hideHp();
+    Cookies.set('hideHomepage', 'yes', { expires: 30, path: '/' });
   };
 
   const value = {
@@ -51,7 +62,6 @@ export const FeatureProvider = ({ children, featureFromRouter }: Props) => {
     showHomepage,
     hideHomepage,
   };
-
   return (
     <FeatureContext.Provider value={value}>{children}</FeatureContext.Provider>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import Cookies from 'js-cookie';
 
+import nextCookies from 'next-cookies';
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -58,10 +59,10 @@ const getMapViewFromHash = () =>
   window.location.hash &&
   window.location.hash.substr(1).split('/'); // TODO return only valid mapView
 
-const App = ({ featureFromRouter, initialMapView }) => {
+const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
   const mapView = getMapViewFromHash() || initialMapView;
   return (
-    <FeatureProvider featureFromRouter={featureFromRouter}>
+    <FeatureProvider featureFromRouter={featureFromRouter} hpCookie={hpCookie}>
       <MapStateProvider initialMapView={mapView}>
         <OsmAuthProvider>
           <IndexWithProviders />
@@ -71,9 +72,10 @@ const App = ({ featureFromRouter, initialMapView }) => {
   );
 };
 App.getInitialProps = async (ctx) => {
+  const { hideHomepage: hpCookie } = nextCookies(ctx);
   const featureFromRouter = await getInititalFeature(ctx);
   const initialMapView = await getInitialMapView(ctx);
-  return { featureFromRouter, initialMapView };
+  return { featureFromRouter, initialMapView, hpCookie };
 };
 
 // map.fitBounds(bounds, {
