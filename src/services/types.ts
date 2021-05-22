@@ -39,7 +39,7 @@ export interface FeatureTags {
 }
 
 interface RelationMember {
-  ref: number;
+  ref: string;
   role: string;
   type: string;
 }

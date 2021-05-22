@@ -1,14 +1,10 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
 import Share from '@material-ui/icons/Share';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
 import Head from 'next/head';
-import Typography from '@material-ui/core/Typography';
-import Property from './Property';
 import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import Coordinates from './Coordinates';
@@ -30,15 +26,9 @@ import { t } from '../../services/intl';
 import { FeatureDescription } from './FeatureDescription';
 import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
-
-const StyledEdit = styled.div`
-  margin: 60px 0 20px 0;
-  text-align: center;
-`;
-
-const Spacer = styled.div`
-  padding-bottom: 10px;
-`;
+import { Members } from './Members';
+import { FeatureEditButton } from './FeatureEditButton';
+import { FeaturedTags } from './FeaturedTags';
 
 const StyledIconButton = styled(IconButton)`
   svg {
@@ -73,7 +63,8 @@ const FeaturePanel = () => {
   const [dialogOpenedWith, setDialogOpenedWith] =
     useState<boolean | string>(false);
 
-  const { nonOsmObject, tags, layer, osmMeta, properties, skeleton } = feature;
+  const { nonOsmObject, tags, layer, osmMeta, properties, skeleton, members } =
+    feature;
 
   const osmappLink = getOsmappLink(feature);
   const ico = icons.includes(properties.class)
@@ -99,7 +90,7 @@ const FeaturePanel = () => {
             <Maki ico={ico} invert />
             <span>
               {tags.name
-                ? subclass.replaceAll('_', ' ')
+                ? subclass.replace(/_/g, ' ')
                 : t('featurepanel.no_name')}
             </span>
           </PoiType>
@@ -135,22 +126,10 @@ const FeaturePanel = () => {
 
           <OsmError />
 
-          {!!featuredTags.length && (
-            <>
-              {featuredTags.map(([k, v]) => (
-                <Property key={k} k={k} v={v} onEdit={setDialogOpenedWith} />
-              ))}
-              <Spacer />
-
-              <Typography
-                variant="overline"
-                display="block"
-                color="textSecondary"
-              >
-                {t('featurepanel.other_info_heading')}
-              </Typography>
-            </>
-          )}
+          <FeaturedTags
+            featuredTags={featuredTags}
+            setDialogOpenedWith={setDialogOpenedWith}
+          />
 
           <TagsTable
             tags={tags}
@@ -158,19 +137,10 @@ const FeaturePanel = () => {
             onEdit={setDialogOpenedWith}
           />
 
+          {advanced && <Members members={members} />}
+
           {!skeleton && (
-            <StyledEdit>
-              <Button
-                size="large"
-                title={t('featurepanel.edit_button_title')}
-                startIcon={<EditIcon />}
-                variant="outlined"
-                color="primary"
-                onClick={() => setDialogOpenedWith(true)}
-              >
-                {t('featurepanel.edit_button')}
-              </Button>
-            </StyledEdit>
+            <FeatureEditButton setDialogOpenedWith={setDialogOpenedWith} />
           )}
 
           <EditDialog
