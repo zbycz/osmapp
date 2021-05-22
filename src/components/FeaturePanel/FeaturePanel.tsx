@@ -68,7 +68,8 @@ const featuredKeys = ['website', 'phone', 'opening_hours', 'description'];
 const FeaturePanel = () => {
   const { feature } = useFeatureContext();
 
-  const [advanced, toggleAdvanced] = useToggleState(false);
+  const [advanced, setAdvanced] = useState(false);
+  const [showAround, toggleShowAround] = useToggleState(false);
   const [dialogOpenedWith, setDialogOpenedWith] =
     useState<boolean | string>(false);
 
@@ -78,7 +79,7 @@ const FeaturePanel = () => {
   const ico = icons.includes(properties.class)
     ? properties.class
     : 'information';
-  const subclass = properties.subclass || (layer && layer.id) || '?';
+  const subclass = properties.subclass || (layer && layer.id) || osmMeta.type;
   const featuredTags = featuredKeys
     .map((k) => [k, tags[k]])
     .filter((x) => x[1]);
@@ -98,7 +99,7 @@ const FeaturePanel = () => {
             <Maki ico={ico} invert />
             <span>
               {tags.name
-                ? subclass.replace('_', ' ')
+                ? subclass.replaceAll('_', ' ')
                 : t('featurepanel.no_name')}
             </span>
           </PoiType>
@@ -134,7 +135,7 @@ const FeaturePanel = () => {
 
           <OsmError />
 
-          {!advanced && !!featuredTags.length && (
+          {!!featuredTags.length && (
             <>
               {featuredTags.map(([k, v]) => (
                 <Property key={k} k={k} v={v} onEdit={setDialogOpenedWith} />
@@ -180,10 +181,12 @@ const FeaturePanel = () => {
             key={getShortId(osmMeta) + (skeleton && 'skel')}
           />
 
-          {SHOW_PROTOTYPE_UI && <ObjectsAround />}
-
           <PanelFooter>
-            <FeatureDescription osmMeta={osmMeta} nonOsmObject={nonOsmObject} />
+            <FeatureDescription
+              osmMeta={osmMeta}
+              nonOsmObject={nonOsmObject}
+              setAdvanced={setAdvanced}
+            />
             <Coordinates feature={feature} />
             <br />
             {!nonOsmObject && <a href={osmappLink}>{osmappLink}</a>}
@@ -191,11 +194,13 @@ const FeaturePanel = () => {
             <label>
               <input
                 type="checkbox"
-                onChange={toggleAdvanced}
-                checked={advanced}
+                onChange={toggleShowAround}
+                checked={showAround}
               />{' '}
-              {t('featurepanel.show_tags_only_button')}
+              {t('featurepanel.show_objects_around')}
             </label>
+
+            {showAround && <ObjectsAround advanced={advanced} />}
           </PanelFooter>
         </PanelContent>
       </PanelScrollbars>

@@ -1,6 +1,9 @@
 // dentifier should be in the form: foldername.messageid.
 
 export default {
+  loading: 'Loading',
+  error: 'Error',
+
   'homepage.subtitle': 'A universal OpenStreetMap app',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.examples.eg': 'eg.',
@@ -45,9 +48,10 @@ export default {
   'featurepanel.edit_button': 'Edit place',
   'featurepanel.feature_description_nonosm': 'Map feature __type__',
   'featurepanel.feature_description_osm': '__type__ in OpenStreetMap database',
-  'featurepanel.show_tags_only_button': 'Show tags only',
+  'featurepanel.show_objects_around': 'Show objects around',
   'featurepanel.uncertain_image': 'This is the closest street view image. It may show different object.',
   'featurepanel.inline_edit_title': 'Edit',
+  'featurepanel.objects_around': 'Objects around',
 
   'opening_hours.open': 'Open: __todayTime__',
   'opening_hours.now_closed_but_today': 'Now closed, today: __todayTime__',

@@ -32,7 +32,7 @@ const getUrls = ({ type, id, changeset, user }) => ({
   userUrl: user && `https://openstreetmap.org/user/${user}`,
 });
 
-export const FeatureDescription = ({ osmMeta, nonOsmObject }) => {
+export const FeatureDescription = ({ osmMeta, nonOsmObject, setAdvanced }) => {
   const [isShown, toggle] = useToggleState(false);
 
   const { timestamp = '2001-00-00', type, user, version = '?' } = osmMeta;
@@ -42,6 +42,15 @@ export const FeatureDescription = ({ osmMeta, nonOsmObject }) => {
   const description = nonOsmObject
     ? t('featurepanel.feature_description_nonosm', { type })
     : t('featurepanel.feature_description_osm', { type: capitalize(type) });
+
+  const onClick = (e) => {
+    if (!isShown) {
+      if (e.shiftKey && e.altKey) setAdvanced(true);
+    } else {
+      setAdvanced(false);
+    }
+    toggle();
+  };
 
   return (
     <div>
@@ -55,7 +64,10 @@ export const FeatureDescription = ({ osmMeta, nonOsmObject }) => {
         </>
       )}
 
-      <StyledIconButton onClick={toggle}>
+      <StyledIconButton
+        title="Alt+Shift+click to enable advanced mode (show-all-tags, not-filtered-around)"
+        onClick={onClick}
+      >
         {!isShown && <InfoOutlinedIcon fontSize="small" color="secondary" />}
         {isShown && <CloseIcon fontSize="small" color="disabled" />}
       </StyledIconButton>

@@ -40,5 +40,10 @@ const GlobalStyle = createGlobalStyle`
   .mapboxgl-canvas {
     outline: 0;
   }
+
+  @keyframes blink {50% { color: transparent }}
+  .dotloader { animation: 1s blink infinite }
+  .dotloader:nth-child(2) { animation-delay: 250ms }
+  .dotloader:nth-child(3) { animation-delay: 500ms }
 `;
 export default GlobalStyle;

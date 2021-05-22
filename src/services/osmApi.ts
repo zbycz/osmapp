@@ -31,7 +31,7 @@ export const addCenterFromMapToCache = (shortId, center) => {
 const getCenterPromise = async (apiId) => {
   if (apiId.type === 'node') return false;
 
-  if (isBrowser()) {
+  if (isBrowser() && featureCenterCache[getShortId(apiId)]) {
     return featureCenterCache[getShortId(apiId)];
   }
 
@@ -127,26 +127,16 @@ export const insertOsmNote = async (point: Position, text: string) => {
   };
 };
 
-const getAroundUrl = ([lat, lon]: Position) => {
-  const point = `${lon},${lat}`;
-  const types = ['place_of_worship', 'public_transport', 'amenity', 'shop'];
-  const contentQuery = types.map(
-    (type) => `
-      relation["${type}"](around:50,${point});
-      way["${type}"](around:50,${point});
-      node["${type}"](around:50,${point});
-      `,
-  );
-  return `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-    `[timeout:5][out:json];(${contentQuery.join('')});out 10 body qt center;`,
+const getAroundUrl = ([lat, lon]: Position) =>
+  `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+    `[timeout:5][out:json];(
+        relation[~"."~"."](around:50,${lon},${lat});
+        way[~"."~"."](around:50,${lon},${lat});
+        node[~"."~"."](around:50,${lon},${lat});
+      );out 20 body qt center;`, // some will be filtered out
   )}`;
-};
 
 export const fetchAroundFeature = async (point: Position) => {
-  const url = getAroundUrl(point);
-  const response = await fetchJson(url);
-
-  const around = overpassAroundToSkeletons(response);
-  console.log({ around }); // eslint-disable-line no-console
-  return around;
+  const response = await fetchJson(getAroundUrl(point));
+  return overpassAroundToSkeletons(response);
 };

@@ -1,4 +1,7 @@
 export default {
+  loading: 'Nahrávám',
+  error: 'Chyba',
+
   'homepage.subtitle': 'Univerzální appka pro OpenStreetMap',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
   'homepage.examples.eg': 'např.',
@@ -40,9 +43,10 @@ export default {
   'featurepanel.edit_button': 'Upravit místo',
   'featurepanel.feature_description_nonosm': 'Mapový prvek __type__',
   'featurepanel.feature_description_osm': '__type__ v databázi OpenStreetMap',
-  'featurepanel.show_tags_only_button': 'Zobrazit jen tagy',
+  'featurepanel.show_objects_around': 'Zobrazit objekty v okolí',
   'featurepanel.uncertain_image': 'Je zobrazena nejbližší fotka uliční úrovně. Může ukazovat jiný objekt.',
   'featurepanel.inline_edit_title': 'Upravit',
+  'featurepanel.objects_around': 'Objekty v okolí',
 
   'opening_hours.open': 'Otevřeno: __todayTime__',
   'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',

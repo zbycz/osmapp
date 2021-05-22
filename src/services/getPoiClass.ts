@@ -1,3 +1,5 @@
+import { buildAddress } from './helpers';
+
 const keys = [
   'aerialway',
   'amenity',
@@ -12,6 +14,13 @@ const keys = [
   'waterway',
   'place',
   'barrier',
+  'addr:street',
+  'building',
+  'building:part',
+  'entrance',
+  'boundary',
+  'power',
+  'natural',
 ];
 
 const shops = [
@@ -238,6 +247,33 @@ const subclassToClassRules = [
     mappingKey: 'place',
     resultClass: 'city',
   },
+  {
+    mappingKey: 'entrance',
+    resultClass: 'entrance',
+    resultSubclass: 'entrance',
+  },
+  {
+    mappingKey: 'boundary',
+    resultClass: 'star',
+  },
+  {
+    mappingKey: 'building:part',
+    resultClass: 'building',
+    resultSubclass: 'building:part',
+  },
+  {
+    mappingKey: 'highway',
+    subclass: ['footway', 'path'],
+    resultClass: 'pedestrian',
+  },
+  {
+    subclass: 'memorial',
+    resultClass: 'art_gallery',
+  },
+  {
+    mappingKey: 'power',
+    resultClass: 'power',
+  },
 ];
 
 export const getPoiClass = (tags) => {
@@ -252,10 +288,18 @@ export const getPoiClass = (tags) => {
       (rule.mappingKey === key && rule.subclass.includes(value)),
   );
 
+  const address = buildAddress(tags);
+  if (address) {
+    return {
+      class: 'home',
+      subclass: address,
+    };
+  }
+
   return resultRule
     ? {
         class: resultRule.resultClass, // this also determines the icon
-        subclass: value,
+        subclass: resultRule.resultSubclass ?? value,
       }
     : { class: value, subclass: value };
 };

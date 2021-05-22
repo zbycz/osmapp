@@ -5,6 +5,7 @@ import truncate from 'lodash/truncate';
 import { slashToOptionalBr, useToggleState } from '../helpers';
 import { getUrlForTag, ToggleButton } from './helpers';
 import { EditIconButton } from './EditIconButton';
+import { buildAddress } from '../../services/helpers';
 
 const Wrapper = styled.div`
   position: relative;
@@ -100,18 +101,6 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
   );
 };
 
-const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
-
-const buildAddress = (tagsArr) => {
-  const {
-    'addr:street': street,
-    'addr:housenumber': num,
-    'addr:city': city,
-  } = Object.fromEntries(tagsArr);
-
-  return join(join(street, ' ', num), ', ', city);
-};
-
 const TagsTable = ({ tags, except, onEdit }) => {
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
@@ -145,7 +134,7 @@ const TagsTable = ({ tags, except, onEdit }) => {
           <TagsGroup
             tags={addr}
             label="addr:*"
-            value={buildAddress(addr)}
+            value={buildAddress(Object.fromEntries(addr) as any)}
             onEdit={onEdit}
           />
           {rest.map(([k, v]) => (

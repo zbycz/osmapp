@@ -7,8 +7,13 @@ const MakiImg = styled.img`
   margin-right: 6px;
   ${({ invert }) => invert && 'filter: invert(100%);'}
 `;
-const Maki = ({ ico, invert = false }) => (
-  <MakiImg src={`/icons/${ico}_11.svg`} alt={ico} title={ico} invert={invert} />
+const Maki = ({ ico, invert = false, title = undefined }) => (
+  <MakiImg
+    src={`/icons/${ico}_11.svg`}
+    alt={ico}
+    title={title ?? ico}
+    invert={invert}
+  />
 );
 
 export default Maki;

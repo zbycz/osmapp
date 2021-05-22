@@ -78,3 +78,13 @@ export const isValidImage = (url): Promise<boolean> => {
 
 export const stringifyDomXml = (itemXml) =>
   new XMLSerializer().serializeToString(itemXml);
+
+const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
+
+export const buildAddress = ({
+  'addr:place': place,
+  'addr:street': street,
+  'addr:conscriptionnumber': cnum,
+  'addr:housenumber': hnum,
+  'addr:city': city,
+}) => join(join(street ?? place, ' ', join(cnum, '/', hnum)), ', ', city);
