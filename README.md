@@ -31,6 +31,11 @@ In case you really want to, be sure to enjoy. 😁
 - some ideas in [wireframes](https://drive.google.com/open?id=0B7awz2fKhg6yQ0JqTjhJRFV5aEE)
   (like switching layers, vector outdoor map, driving directions or favourite places)
 
+### Compatibility
+
+- tested in Chrome 90 (Mac,Win,Android,iOS), Safari 14, Firefox 88, Edge 90 (slow)
+- [webgl](https://caniuse.com/webgl) technology needed
+
 ## License
 
 GNU GPL

@@ -84,7 +84,9 @@ const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
 export const buildAddress = ({
   'addr:place': place,
   'addr:street': street,
-  'addr:conscriptionnumber': cnum,
   'addr:housenumber': hnum,
+  'addr:conscriptionnumber': cnum,
+  'addr:streetnumber': snum,
   'addr:city': city,
-}) => join(join(street ?? place, ' ', join(cnum, '/', hnum)), ', ', city);
+}) =>
+  join(join(street ?? place, ' ', hnum ?? join(cnum, '/', snum)), ', ', city);

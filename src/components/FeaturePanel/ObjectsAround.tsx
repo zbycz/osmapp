@@ -5,12 +5,12 @@ import { fetchAroundFeature } from '../../services/osmApi';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
 import { getShortId, getUrlOsmId } from '../../services/helpers';
-import { icons } from '../../assets/icons';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 
 const useLoadingState = () => {
   const [around, setAround] = useState<Feature[]>([]);
+  const [error, setError] = useState();
   const [loading, setLoading] = useState(true);
   const finishAround = (payload) => {
     setLoading(false);
@@ -19,21 +19,23 @@ const useLoadingState = () => {
   const startAround = () => {
     setLoading(true);
     setAround([]);
+    setError(undefined);
   };
-  return { around, loading, startAround, finishAround };
+  const failAround = (err) => {
+    setError(err);
+    setLoading(false);
+  };
+  return { around, error, loading, startAround, finishAround, failAround };
 };
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
   const { properties, tags, osmMeta } = feature;
-  const ico = icons.includes(properties.class)
-    ? properties.class
-    : 'information';
   const subclass = properties.subclass || osmMeta.type;
 
   return (
     <li>
       <Maki
-        ico={ico}
+        ico={properties.class}
         title={`${Object.keys(tags).length} keys / ${
           properties.class ?? ''
         } / ${subclass}`}
@@ -48,14 +50,13 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
 // TODO make SSR ?
 export const ObjectsAround = ({ advanced }) => {
   const { feature } = useFeatureContext();
-  const { around, loading, startAround, finishAround } = useLoadingState();
-  const [error, setError] = useState();
+  const { around, loading, error, startAround, finishAround, failAround } =
+    useLoadingState();
 
   useEffect(() => {
     startAround();
-    setError(undefined);
     if (feature.center) {
-      fetchAroundFeature(feature.center).then(finishAround, setError);
+      fetchAroundFeature(feature.center).then(finishAround, failAround);
     }
   }, [getShortId(feature.osmMeta)]);
 
@@ -104,7 +105,7 @@ export const ObjectsAround = ({ advanced }) => {
 
       {!loading && !features.length && (
         <Typography color="secondary" paragraph>
-          none
+          N/A
         </Typography>
       )}
 

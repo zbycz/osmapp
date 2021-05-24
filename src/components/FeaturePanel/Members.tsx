@@ -5,7 +5,7 @@ import { getUrlOsmId } from '../../services/helpers';
 import { Feature } from '../../services/types';
 
 export const Members = ({ members }: Pick<Feature, 'members'>) =>
-  members?.length && (
+  members?.length ? (
     <Box mt={4}>
       <Typography variant="overline" display="block" color="textSecondary">
         Relation members
@@ -13,15 +13,16 @@ export const Members = ({ members }: Pick<Feature, 'members'>) =>
       <ul>
         {members
           .filter((item) => item.role)
-          .map((item) => (
-            <li>
-              <Link href={`/${getUrlOsmId({ type: item.type, id: item.ref })}`}>
-                {`${item.role 
-                  } ${ 
-                  getUrlOsmId({ type: item.type, id: item.ref })}`}
-              </Link>
-            </li>
-          ))}
+          .map((item) => {
+            const urlOsmId = getUrlOsmId({ type: item.type, id: item.ref });
+            return (
+              <li>
+                <Link href={`/${urlOsmId}`}>
+                  {`${item.role} – ${urlOsmId}`}
+                </Link>
+              </li>
+            );
+          })}
       </ul>
     </Box>
-  );
+  ) : null;

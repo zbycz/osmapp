@@ -9,6 +9,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { ClosePanelButton } from './ClosePanelButton';
 import { AutocompleteInput } from './AutocompleteInput';
+import { intl, t } from '../../services/intl';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -45,7 +46,7 @@ const SearchIconButton = styled(IconButton)`
 `;
 
 const getApiUrl = (bbox, inputValue) =>
-  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&viewbox=${bbox}&q=${inputValue}`; // polygon_geojson=1&polygon_threshold=0.1
+  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&accept-language=${intl.lang}&viewbox=${bbox}&q=${inputValue}`; // polygon_geojson=1&polygon_threshold=0.1
 
 const fetchNominatim = throttle(async (inputValue, bbox, setOptions) => {
   const options = await fetchJson(getApiUrl(bbox, inputValue));
@@ -71,7 +72,7 @@ const SearchBox = () => {
   return (
     <TopPanel>
       <StyledPaper elevation={1} ref={autocompleteRef}>
-        <SearchIconButton disabled>
+        <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
         </SearchIconButton>
 

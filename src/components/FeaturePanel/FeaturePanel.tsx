@@ -9,7 +9,6 @@ import FeatureHeading from './FeatureHeading';
 import FeatureImage from './FeatureImage';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
-import { icons } from '../../assets/icons';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
 import { getOsmappLink, getShortId } from '../../services/helpers';
@@ -67,9 +66,6 @@ const FeaturePanel = () => {
     feature;
 
   const osmappLink = getOsmappLink(feature);
-  const ico = icons.includes(properties.class)
-    ? properties.class
-    : 'information';
   const subclass = properties.subclass || (layer && layer.id) || osmMeta.type;
   const featuredTags = featuredKeys
     .map((k) => [k, tags[k]])
@@ -85,9 +81,9 @@ const FeaturePanel = () => {
         </Head>
       )}
       <PanelScrollbars>
-        <FeatureImage feature={feature} ico={ico}>
+        <FeatureImage feature={feature} ico={properties.class}>
           <PoiType>
-            <Maki ico={ico} invert />
+            <Maki ico={properties.class} invert />
             <span>
               {tags.name
                 ? subclass.replace(/_/g, ' ')

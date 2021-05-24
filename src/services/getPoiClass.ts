@@ -1,4 +1,5 @@
 import { buildAddress } from './helpers';
+import { icons } from '../assets/icons';
 
 const keys = [
   'aerialway',
@@ -270,13 +271,14 @@ const subclassToClassRules = [
     subclass: 'memorial',
     resultClass: 'art_gallery',
   },
-  {
-    mappingKey: 'power',
-    resultClass: 'power',
-  },
 ];
 
-export const getPoiClass = (tags) => {
+interface PoiClass {
+  class: string;
+  subclass: string;
+}
+
+export const getPoiClass = (tags): PoiClass => {
   const key = keys.find((x) => x in tags); // find first matching key
   const value = tags[key]; // its value
 
@@ -288,6 +290,21 @@ export const getPoiClass = (tags) => {
       (rule.mappingKey === key && rule.subclass.includes(value)),
   );
 
+  if (resultRule) {
+    return {
+      class: resultRule.resultClass, // this also determines the icon
+      subclass: resultRule.resultSubclass ?? value,
+    };
+  }
+
+  if (icons.includes(value)) {
+    return { class: value, subclass: value };
+  }
+
+  if (icons.includes(key)) {
+    return { class: key, subclass: value };
+  }
+
   const address = buildAddress(tags);
   if (address) {
     return {
@@ -296,10 +313,5 @@ export const getPoiClass = (tags) => {
     };
   }
 
-  return resultRule
-    ? {
-        class: resultRule.resultClass, // this also determines the icon
-        subclass: resultRule.resultSubclass ?? value,
-      }
-    : { class: value, subclass: value };
+  return { class: 'information', subclass: value }; // default icon
 };

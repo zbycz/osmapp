@@ -25,7 +25,17 @@ const GlobalStyle = createGlobalStyle`
     }
 
     &:hover {
-        text-decoration: underline;
+      text-decoration: underline;
+      svg {
+        outline: -webkit-focus-ring-color auto 1px;
+      }
+    }
+
+    &:focus {
+      text-decoration: underline;
+      svg {
+        outline: -webkit-focus-ring-color auto 1px;
+      }
     }
   }
 
@@ -37,7 +47,7 @@ const GlobalStyle = createGlobalStyle`
     top: 83px !important;
   }
 
-  .mapboxgl-canvas {
+  .mapboxgl-canvas:not(:focus) {
     outline: 0;
   }
 

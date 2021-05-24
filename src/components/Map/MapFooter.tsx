@@ -35,7 +35,12 @@ const OsmappLink = () => {
   };
   return (
     <>
-      <a href="https://github.com/zbycz/osmapp" target="_blank" rel="noopener">
+      <a
+        href="https://github.com/zbycz/osmapp"
+        target="_blank"
+        rel="noopener"
+        aria-label="Github"
+      >
         <GithubIcon width="12" height="12" />
       </a>
       <a

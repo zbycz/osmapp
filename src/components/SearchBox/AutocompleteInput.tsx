@@ -46,7 +46,7 @@ export const AutocompleteInput = ({
       onChange={onSelectedFactory(setFeature, setView)}
       autoComplete
       disableClearable
-      // autoHighlight
+      autoHighlight
       clearOnEscape
       // disableCloseOnSelect
       freeSolo

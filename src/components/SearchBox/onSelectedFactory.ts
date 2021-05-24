@@ -1,5 +1,6 @@
 import Router from 'next/router';
-import { getUrlOsmId } from '../../services/helpers';
+import { getShortId, getUrlOsmId } from '../../services/helpers';
+import { addCenterFromMapToCache } from '../../services/osmApi';
 
 export const onSelectedFactory =
   (setFeature, setView) => async (e, location) => {
@@ -24,6 +25,8 @@ export const onSelectedFactory =
     };
 
     console.log('Search item selected:', { location, skeleton }); // eslint-disable-line no-console
+
+    addCenterFromMapToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
     setFeature(skeleton);
     setView([17, lat, lon]);
