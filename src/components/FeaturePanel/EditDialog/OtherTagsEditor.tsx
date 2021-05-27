@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { majorKeys } from './MajorKeysEditor';
 import { isString } from '../../helpers';
-import { t } from '../../../services/intl';
+import { t, Translation } from '../../../services/intl';
 
 const Table = styled.table`
   width: calc(100% - 20px);
@@ -127,6 +127,16 @@ export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
             <tbody>
               {rows}
               <NewTagRow setTag={setTag} />
+              <tr>
+                <td colSpan={2}>
+                  <Typography
+                    color="textSecondary"
+                    style={{ paddingTop: '1em' }}
+                  >
+                    <Translation id="editdialog.other_tags.info" />
+                  </Typography>
+                </td>
+              </tr>
             </tbody>
           </Table>
         </>

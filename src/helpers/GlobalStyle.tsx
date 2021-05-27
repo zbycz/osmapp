@@ -26,9 +26,6 @@ const GlobalStyle = createGlobalStyle`
 
     &:hover {
       text-decoration: underline;
-      svg {
-        outline: -webkit-focus-ring-color auto 1px;
-      }
     }
 
     &:focus {

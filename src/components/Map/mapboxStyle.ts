@@ -2339,7 +2339,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     },
     buildings3d,
     {
-      id: 'wate rway-name',
+      id: 'waterway-name',
       type: 'symbol',
       source: 'openmaptiles',
       'source-layer': 'waterway',

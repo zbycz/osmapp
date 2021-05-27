@@ -53,8 +53,9 @@ export default {
   'opening_hours.today_closed': 'Dnes zavřeno',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'neděle|pondělí|úterý|středa|čtvrtek|pátek|sobota',
 
+  'map.about_title': 'Otevřít stránku o projektu',
   'map.edit_button': 'editovat',
-  'map.edit_button_title': 'otevřít v editoru iD',
+  'map.edit_button_title': 'Otevřít oblast (či zobrazený objekt) v editoru iD',
   'map.copyright': '(c) přispěvatelé OpenStreetMap.org',
   'map.map_data_button': 'mapová data',
 
@@ -88,6 +89,9 @@ export default {
   'editdialog.other_tags.new_key': 'nový klíč',
   'editdialog.other_tags.add': 'Přidat',
   'editdialog.other_tags.will_be_deleted': 'bude smazáno',
+  'editdialog.other_tags.info': `Tagy popisují vlastnosti
+        mapového prvku v dohodnutém formátu. Zde naleznete úplný
+        <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features">přehled všech tagů v OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Zavřít',
   'editsuccess.note.heading': 'Děkujeme za Váš návrh!',

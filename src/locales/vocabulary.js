@@ -58,8 +58,9 @@ export default {
   'opening_hours.today_closed': 'Today closed',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'sunday|monday|tuesday|wednesday|thursday|friday|saturday',
 
+  'map.about_title': 'Show about page',
   'map.edit_button': 'edit',
-  'map.edit_button_title': 'open in iD editor',
+  'map.edit_button_title': 'Edit this area (or shown feature) in iD editor',
   'map.copyright': '(c) OpenStreetMap.org contributors',
   'map.map_data_button': 'map data',
 
@@ -92,6 +93,9 @@ export default {
   'editdialog.other_tags.new_key': 'new key',
   'editdialog.other_tags.add': 'Add',
   'editdialog.other_tags.will_be_deleted': 'will be deleted',
+  'editdialog.other_tags.info': `The Tags describe properties
+        of each map feature in agreed format. Here you will find the complete
+        <a href="https://wiki.openstreetmap.org/wiki/Map_Features">overview of all tags in OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Close',
   'editsuccess.note.heading': 'Thank you for your suggestion!',

@@ -2,11 +2,32 @@
 <html>
   <head>
     <title>OsmAPP auth popup</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   </head>
   <body>
+    <div id="noredirect">
+      <h1>OsmAPP auth popup</h1>
+      <p>
+        [en] If this popup doesn't close automatically, you may close it and
+        proceed back to <a href="/">osmapp.org</a>.
+      </p>
+
+      <p>
+        [cs] Pokud se toto okno nezavře automaticky, můžete ho zavřít a
+        pokračovat na <a href="/">osmapp.org</a>.
+      </p>
+
+      <img src="/logo/osmapp.svg" />
+    </div>
+
     <script>
-      opener.authComplete(window.location.href);
-      window.close();
+      document.getElementById("noredirect").style.display = "none"
+      if (opener && opener.authComplete) {
+        opener.authComplete(window.location.href);
+        window.close();
+      } else {
+        document.getElementById('noredirect').style.display = 'block';
+      }
     </script>
   </body>
 </html>

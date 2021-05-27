@@ -35,22 +35,21 @@ const OsmappLink = () => {
   };
   return (
     <>
-      <a
-        href="https://github.com/zbycz/osmapp"
-        target="_blank"
-        rel="noopener"
-        aria-label="Github"
-      >
-        <GithubIcon width="12" height="12" />
-      </a>
-      <a
-        href="/"
-        type="button"
-        className="linkLikeButton"
-        onClick={handleClick}
-      >
-        osmapp
-      </a>{' '}
+      <Tooltip title="OsmAPP Github">
+        <a
+          href="https://github.com/zbycz/osmapp"
+          target="_blank"
+          rel="noopener"
+          aria-label="Github"
+        >
+          <GithubIcon width="12" height="12" />
+        </a>
+      </Tooltip>
+      <Tooltip title={t('map.about_title')}>
+        <button type="button" className="linkLikeButton" onClick={handleClick}>
+          osmapp
+        </button>
+      </Tooltip>{' '}
       <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
     </>
   );
@@ -115,14 +114,11 @@ const EditLink = () => {
   const { feature } = useFeatureContext();
   const href = getIdEditorLink(feature, browser ? view : []);
   return (
-    <a
-      href={href}
-      title={t('map.edit_button_title')}
-      target="_blank"
-      rel="noopener"
-    >
-      {t('map.edit_button')}
-    </a>
+    <Tooltip title={t('map.edit_button_title')}>
+      <a href={href} target="_blank" rel="noopener">
+        {t('map.edit_button')}
+      </a>
+    </Tooltip>
   );
 };
 
