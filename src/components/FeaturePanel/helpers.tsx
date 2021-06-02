@@ -29,7 +29,7 @@ export const getUrlForTag = (k, v) => {
   }
   if (k === 'ref:npu') {
     const id = encodeURIComponent(v);
-    return `http://pamatkovykatalog.cz/?mode=parametric&isProtected=1&presenter=ElementsResults&indexId=${id}`;
+    return `https://pamatkovykatalog.cz/uskp/podle-relevance/1/seznam/?h=${id}&chranenoTed=1&hlObj=1&fulltext`;
   }
   if (k === 'website') {
     return v.match(urlRegExp) ? v : `http://${v}`;
