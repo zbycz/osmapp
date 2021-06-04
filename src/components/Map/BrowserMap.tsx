@@ -11,17 +11,13 @@ import { SHOW_PROTOTYPE_UI } from '../../config';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './useFeatureMarker';
 import { addFeatureCenterToCache } from '../../services/osmApi';
+import { PersistedScaleControl } from './PersistedScaleControl';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
     enableHighAccuracy: true,
   },
   trackUserLocation: false,
-});
-
-const scaleControl = new maplibregl.ScaleControl({
-  maxWidth: 80,
-  unit: window.localStorage.getItem('units') ? 'imperial' : 'metric',
 });
 
 const navigationControl = new maplibregl.NavigationControl({
@@ -47,7 +43,7 @@ const useInitMap = () => {
 
     map.addControl(navigationControl);
     map.addControl(geolocateControl);
-    map.addControl(scaleControl);
+    map.addControl(PersistedScaleControl);
     setUpHover(map);
 
     return () => {

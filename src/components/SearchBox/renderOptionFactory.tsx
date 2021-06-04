@@ -53,11 +53,11 @@ const IconPart = styled.div`
 
 const getDistance = (point1, point2) => {
   const lat1 = (parseFloat(point1.lat) * Math.PI) / 180;
-    const lng1 = (parseFloat(point1.lon) * Math.PI) / 180;
-    const lat2 = (parseFloat(point2.lat) * Math.PI) / 180;
-    const lng2 = (parseFloat(point2.lon) * Math.PI) / 180;
-    const latdiff = lat2 - lat1;
-    const lngdiff = lng2 - lng1;
+  const lng1 = (parseFloat(point1.lon) * Math.PI) / 180;
+  const lat2 = (parseFloat(point2.lat) * Math.PI) / 180;
+  const lng2 = (parseFloat(point2.lon) * Math.PI) / 180;
+  const latdiff = lat2 - lat1;
+  const lngdiff = lng2 - lng1;
 
   return (
     6372795 *
@@ -106,7 +106,7 @@ export const renderOptionFactory =
   ({ address, class: tagKey, type: tagValue, lon, lat }) => {
     const mapCenter = useMapCenter();
     const dist = getDistance(mapCenter, { lon, lat }) / 1000;
-    const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist);
+    const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
 
     const properties = getPoiClass({ [tagKey]: tagValue });
 
