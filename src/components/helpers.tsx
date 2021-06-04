@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState, Fragment } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
 import { Feature } from '../services/types';
 
@@ -64,7 +64,8 @@ export const getIdEditorLink = (feature: Feature, view?: number[]) => {
 
 export const slashToOptionalBr = (url) =>
   url.split('/').map((part, idx) => (
-    <>
+    // eslint-disable-next-line react/no-array-index-key
+    <Fragment key={idx}>
       {idx > 0 && (
         <>
           /
@@ -72,5 +73,19 @@ export const slashToOptionalBr = (url) =>
         </>
       )}
       {part}
-    </>
+    </Fragment>
+  ));
+
+export const dotToOptionalBr = (url) =>
+  url.split('.').map((part, idx) => (
+    // eslint-disable-next-line react/no-array-index-key
+    <Fragment key={idx}>
+      {idx > 0 && (
+        <>
+          .
+          <wbr />
+        </>
+      )}
+      {part}
+    </Fragment>
   ));
