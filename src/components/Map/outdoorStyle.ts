@@ -1,6 +1,11 @@
 import { building3dBase, buildings3dExtrusion } from './buildings3dStyle';
+import { poiLayers } from './poiLayers';
+import { backgroundLayers, sources, sprite } from './layersParts';
 
-export const outdoorStyle = (sources, backgroundLayers, sprite) => ({
+// TODO add icons for outdoor to our sprite (guideposts, benches, etc)
+// https://api.maptiler.com/maps/outdoor/sprite.png?key=7dlhLl3hiXQ1gsth0kGu
+
+export const outdoorStyle = {
   id: 'outdoor',
   name: 'Outdoor',
   zoom: 7,
@@ -3873,6 +3878,7 @@ export const outdoorStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {},
       'source-layer': 'place',
     },
+    ...poiLayers,
   ],
   bearing: 0,
   sources,
@@ -3884,4 +3890,4 @@ export const outdoorStyle = (sources, backgroundLayers, sprite) => ({
     'openmaptiles:version': '3.x',
   },
   sprite,
-});
+};

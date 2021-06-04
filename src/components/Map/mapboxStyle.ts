@@ -3,8 +3,9 @@
 
 import { building3dBase, buildings3dExtrusion } from './buildings3dStyle';
 import { contoursStyle } from './contoursStyle';
+import { backgroundLayers, sources, sprite } from './layersParts';
 
-const mapboxStyle = (sources, backgroundLayers, sprite) => ({
+const mapboxStyle = {
   version: 8,
   name: 'OSM Bright',
   metadata: {
@@ -2907,6 +2908,6 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     },
   ],
   id: 'ciw6czz2n00242kmg6hw20box',
-});
+};
 
 export default mapboxStyle;

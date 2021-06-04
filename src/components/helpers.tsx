@@ -76,7 +76,7 @@ export const slashToOptionalBr = (url) =>
     </Fragment>
   ));
 
-export const dotToOptionalBr = (url) =>
+export const dotToOptionalBr = (url = '') =>
   url.split('.').map((part, idx) => (
     // eslint-disable-next-line react/no-array-index-key
     <Fragment key={idx}>

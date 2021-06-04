@@ -17,6 +17,7 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import { LayerSwitcherButton } from './LayerSwitcherButton';
 import { dotToOptionalBr } from '../helpers';
+import { Layer, useMapStateContext } from '../utils/MapStateContext';
 
 const StyledList = styled(List)`
   .MuiListItemIcon-root {
@@ -32,32 +33,52 @@ const Spacer = styled.div`
   padding-bottom: 1.5em;
 `;
 
-interface Layer {
-  type: 'basemap' | 'overlay' | 'user' | 'spacer';
-  name?: string;
-  url?: string;
+interface Layers {
+  [key: string]: Layer;
 }
 
-const osmappLayers: Layer[] = [
-  { name: 'Základní', type: 'basemap' },
-  { name: 'Turistická', type: 'basemap' },
-  { type: 'spacer' },
-  { name: 'Mapnik', type: 'basemap' },
-  { name: 'Satelitní', type: 'basemap' },
-  { name: 'MTB', type: 'basemap' },
-  { name: 'Cyklo', type: 'basemap' },
-  { name: 'Zimní', type: 'basemap' },
-  { type: 'spacer' },
-  { name: 'Vrstevnice', type: 'overlay' },
-  { name: 'Stínování kopců', type: 'overlay' },
-  { name: 'Ikonky (POI)', type: 'overlay' },
-  { name: 'Popisky', type: 'overlay' },
-  { type: 'spacer' },
-];
+const retina = (window.devicePixelRatio || 1) >= 2 ? '@2x' : '';
 
-const useUserLayers = () => {
+export const osmappLayers: Layers = {
+  basic: { name: 'Základní', type: 'basemap' },
+  outdoor: { name: 'Outdoorová', type: 'basemap' },
+  s1: { type: 'spacer' },
+  mapnik: {
+    name: 'OSM Mapnik',
+    type: 'basemap',
+    url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+  },
+  sat: {
+    name: 'Satelitní',
+    type: 'basemap',
+    url: 'https://api.maptiler.com/tiles/satellite/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+  },
+  // mtb: {
+  //   name: 'MTB',
+  //   type: 'basemap',
+  //   url: 'https://openstreetmap.cz/proxy.php/tile.mtbmap.cz/mtbmap_tiles/{z}/{x}/{y}.png', // TODO proxy
+  // },
+  bike: {
+    name: 'Cyklo',
+    type: 'basemap',
+    url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=00291b657a5d4c91bbacb0ff096e2c25`,
+  },
+  // snow: {
+  //   name: 'Zimní',
+  //   type: 'basemap',
+  //   url: 'https://www.opensnowmap.org/tiles-pistes/{z}/{x}/{y}.png',
+  // },
+  s2: { type: 'spacer' },
+  // c: { name: 'Vrstevnice', type: 'overlay' },
+  // h: { name: 'Stínování kopců', type: 'overlay' },
+  // p: { name: 'Ikonky (POI)', type: 'overlay' },
+  // l: { name: 'Popisky', type: 'overlay' },
+  // s3: { type: 'spacer' },
+};
+
+const useUserLayers = (init) => {
   const [layers, setLayers] = useState(
-    JSON.parse(window?.localStorage.getItem('userLayers')) ?? [],
+    JSON.parse(window?.localStorage.getItem('userLayers')) ?? init,
   );
   const setUserLayers = (cb) => {
     setLayers((current) => {
@@ -70,8 +91,12 @@ const useUserLayers = () => {
 };
 
 const Content = () => {
-  const [userLayers, setUserLayers] = useUserLayers();
-  const items = [...osmappLayers, ...userLayers];
+  const { activeLayers, setActiveLayers } = useMapStateContext();
+  const [userLayers, setUserLayers] = useUserLayers(['basic']);
+  const items = [
+    ...Object.entries(osmappLayers).map(([key, value]) => ({ ...value, key })),
+    ...userLayers,
+  ] as Layer[];
 
   return (
     <>
@@ -87,37 +112,33 @@ const Content = () => {
 
       <Box m={2}>
         <Typography variant="body2" color="textSecondary">
-          OpenStreetMap je mapová databáze, proto dobrovolníci připravují
-          vlastní varianty mapy pro různá užití.
+          Díky tomu, že OpenStreetMap je databáze zdrojových dat, tak existuje
+          velké množství různých variant.
         </Typography>
       </Box>
 
       <StyledList dense aria-labelledby="layerSwitcher-heading">
-        {items.map(({ name, type, url }, index) => {
-          const labelId = `checkbox-list-label-${name}`;
-
+        {items.map(({ key, name, type, url }) => {
           if (type === 'spacer') {
-            // eslint-disable-next-line react/no-array-index-key
-            return <Spacer key={index} />;
+            return <Spacer key={key} />;
           }
 
+          const labelId = `checkbox-list-label-${name}`;
+
           return (
-            // eslint-disable-next-line react/no-array-index-key
-            <ListItem button key={index}>
+            <ListItem button key={key} onClick={() => setActiveLayers([key])}>
               <ListItemIcon>
                 {type === 'basemap' ? (
                   <Radio
                     size="small"
-                    checked={false}
-                    // onChange={handleChange}
-                    value={name}
+                    checked={activeLayers.includes(key)}
                     name="radio-button-demo"
                     inputProps={{ 'aria-labelledby': labelId }}
                   />
                 ) : (
                   <Checkbox
                     size="small"
-                    checked={false}
+                    checked={activeLayers.includes(key)}
                     inputProps={{ 'aria-labelledby': labelId }}
                   />
                 )}
@@ -128,11 +149,14 @@ const Content = () => {
                   <IconButton
                     edge="end"
                     aria-label="comments"
-                    onClick={() => {
+                    onClick={() =>
                       setUserLayers((current) =>
-                        current.filter((item) => item.url !== url),
-                      );
-                    }}
+                        // if (activeLayers.include(current)) {  // TODO remove
+                        //   setActiveLayers(['basic']);
+                        // }
+                        [...current.filter((item) => item.url !== url)],
+                      )
+                    }
                   >
                     <CloseIcon />
                   </IconButton>
@@ -157,6 +181,7 @@ const Content = () => {
                 {
                   name: url.replace(/^https?:\/\/([^/]+).*$/, '$1'),
                   url,
+                  key: url,
                   type: 'user',
                 },
               ]);

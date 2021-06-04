@@ -1,5 +1,12 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 
+export interface Layer {
+  type: 'basemap' | 'overlay' | 'user' | 'spacer';
+  name?: string;
+  url?: string;
+  key?: string;
+}
+
 // // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
 // export type BBox = [number, number, number, number];
 //
@@ -19,6 +26,7 @@ import React, { createContext, useCallback, useContext, useState } from 'react';
 export const MapStateContext = createContext(undefined);
 
 export const MapStateProvider = ({ children, initialMapView }) => {
+  const [activeLayers, setActiveLayers] = useState([]);
   const [bbox, setBbox] = useState();
   const [view, setView] = useState(initialMapView);
   const [viewForMap, setViewForMap] = useState(initialMapView);
@@ -35,6 +43,8 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setView: setBothViews,
     viewForMap, // updated only when map has to be updated
     setViewFromMap: setView,
+    activeLayers,
+    setActiveLayers,
   };
 
   return (

@@ -13,6 +13,10 @@ import { useFeatureMarker } from './useFeatureMarker';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { PersistedScaleControl } from './PersistedScaleControl';
 import { setUpHover } from './hover';
+import mapboxStyle from './mapboxStyle';
+import { outdoorStyle } from './outdoorStyle';
+import { osmappLayers } from '../LayerSwitcher/LayerSwitcher';
+import { sources, sprite } from './layersParts';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
@@ -44,7 +48,7 @@ const useInitMap = () => {
 
     map.addControl(navigationControl);
     map.addControl(geolocateControl);
-    map.addControl(PersistedScaleControl);
+    map.addControl(PersistedScaleControl as any);
     setUpHover(map, layersWithOsmId);
 
     return () => {
@@ -108,6 +112,60 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
   map.jumpTo({ center, zoom: viewForMap[0] });
 });
 
+const rasterStyle = (id, url) => {
+  const source = url.match('{x}')
+    ? {
+        tiles: ['a', 'b', 'c'].map((c) => url?.replace('{s}', c)),
+      }
+    : {
+        url,
+      };
+  return {
+    id: 'hybrid',
+    name: 'Satellite Hybrid',
+    zoom: 1,
+    pitch: 0,
+    center: [0, 0],
+    sprite,
+    glyphs:
+      'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=7dlhLl3hiXQ1gsth0kGu',
+    layers: [
+      {
+        id,
+        type: 'raster',
+        paint: { 'raster-opacity': 1 },
+        filter: ['all'],
+        layout: { visibility: 'visible' },
+        source: id,
+        minzoom: 0,
+      },
+      // ...poiLayers,
+    ],
+    bearing: 0,
+    sources: {
+      ...sources,
+      [id]: {
+        type: 'raster',
+        tileSize: 256,
+        ...source,
+      },
+    },
+    version: 8,
+    metadata: { 'maputnik:renderer': 'mbgljs', 'openmaptiles:version': '3.x' },
+  };
+};
+
+const useUpdateStyle = useMapEffect((map, activeLayers) => {
+  const idOrUrl = activeLayers[0] ?? 'outdoor';
+
+  if (idOrUrl === 'basic') map.setStyle(mapboxStyle);
+  else if (idOrUrl === 'outdoor') map.setStyle(outdoorStyle);
+  else {
+    const url = osmappLayers[idOrUrl]?.url;
+    map.setStyle(rasterStyle(idOrUrl, url ?? idOrUrl));
+  }
+});
+
 // TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
@@ -117,9 +175,11 @@ const BrowserMap = ({ onMapLoaded }) => {
   useOnMapLoaded(map, onMapLoaded);
   useFeatureMarker(map);
 
-  const { viewForMap, setViewFromMap, setBbox } = useMapStateContext();
+  const { viewForMap, setViewFromMap, setBbox, activeLayers } =
+    useMapStateContext();
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useUpdateMap(map, viewForMap);
+  useUpdateStyle(map, activeLayers);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
