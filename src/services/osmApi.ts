@@ -24,7 +24,7 @@ const getOsmPromise = (apiId) => fetchJson(getOsmUrl(apiId)); // TODO 504 gatewa
 
 // we should probably store just the last one, but this cant get too big, right?
 const featureCenterCache = {};
-export const addCenterFromMapToCache = (shortId, center) => {
+export const addFeatureCenterToCache = (shortId, center) => {
   featureCenterCache[shortId] = center;
 };
 

@@ -10,7 +10,7 @@ import { getShortId, getUrlOsmId, isSameOsmId } from '../../services/helpers';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './useFeatureMarker';
-import { addCenterFromMapToCache } from '../../services/osmApi';
+import { addFeatureCenterToCache } from '../../services/osmApi';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
@@ -69,15 +69,15 @@ const useOnFeatureClicked = useAddMapEvent((map, setFeature) => ({
     }
 
     const skeleton = getSkeleton(features[0], coords);
-    addCenterFromMapToCache(getShortId(skeleton.osmMeta), skeleton.center);
-    console.log('clicked skeleton: ', skeleton); // eslint-disable-line no-console
+    addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
+    console.log('clicked map feature (skeleton): ', skeleton); // eslint-disable-line no-console
 
     if (!skeleton.nonOsmObject) {
       // router wouldnt overwrite the skeleton if the page is already loaded
       setFeature((feature) =>
         isSameOsmId(feature, skeleton) ? feature : skeleton,
       );
-      addCenterFromMapToCache(getShortId(skeleton.osmMeta), skeleton.center);
+      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
       Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
     } else if (SHOW_PROTOTYPE_UI) {
