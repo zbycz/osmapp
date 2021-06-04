@@ -1,7 +1,10 @@
 import mapboxStyle from './mapboxStyle';
+import { outdoorStyle } from './outdoorStyle';
+import { addHoverPaint } from './hover';
+import { SHOW_PROTOTYPE_UI } from '../../config';
 
 export const sources = {
-  openmaptiles: {
+  maptiler_planet: {
     type: 'vector',
     url: 'https://api.maptiler.com/tiles/v3/tiles.json?key=7dlhLl3hiXQ1gsth0kGu', // https://cloud.maptiler.com/account
   },
@@ -13,6 +16,14 @@ export const sources = {
     type: 'raster',
     url: 'https://api.maptiler.com/tiles/hillshades/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
     tileSize: 256,
+  },
+  'terrain-rgb': {
+    url: 'https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    type: 'raster-dem',
+  },
+  outdoor: {
+    url: 'https://api.maptiler.com/tiles/outdoor/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    type: 'vector',
   },
   osm_mapnik: {
     type: 'raster',
@@ -39,47 +50,141 @@ export const backgroundLayers = [
       'background-color': '#f8f4f0',
     },
   },
-
-  // {
-  //   'id': 'contours',
-  //   'type': 'line',
-  //   'source': 'contours',
-  //   'source-layer': 'contour',
-  //   'layout': {
-  //     'visibility': 'visible',
-  //     'line-join': 'round',
-  //     'line-cap': 'round'
-  //   },
-  //   'paint': {
-  //     'line-color': '#877b59',
-  //     'line-width': 1
-  //   }
-  // },
-  // {
-  //   'id': 'hillshading',
-  //   'source': 'dem',
-  //   'type': 'hillshade'
-  // },
 ];
-
-const addHoverPaint = (origStyle) => {
-  const hoverExpr = ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 1]; // prettier-ignore
-  const iconOpacity = ['case', ['boolean', ['feature-state', 'hideIcon'], false], 0, hoverExpr]; // prettier-ignore
-
-  origStyle.layers
-    .filter((layer) => layer.id.match(/^poi-/))
-    .forEach((layer) => {
-      if (layer.paint) {
-        layer.paint['icon-opacity'] = iconOpacity; // eslint-disable-line no-param-reassign
-      }
-    });
-
-  return origStyle;
-};
 
 const sprite = `${window.location.protocol}//${window.location.host}/sprites/osmapp`;
 
-const origStyle = mapboxStyle(sources, backgroundLayers, sprite);
+const getStyle = SHOW_PROTOTYPE_UI ? outdoorStyle : mapboxStyle;
+const origStyle = getStyle(sources, backgroundLayers, sprite);
+
+if (SHOW_PROTOTYPE_UI) {
+  // TODO add icons for outdoor to our sprite (guideposts, benches, etc)
+  // https://api.maptiler.com/maps/outdoor/sprite.png?key=7dlhLl3hiXQ1gsth0kGu
+
+  origStyle.layers.push(
+    ...[
+      {
+        id: 'poi-level-3',
+        type: 'symbol',
+        source: 'maptiler_planet',
+        'source-layer': 'poi',
+        minzoom: 16,
+        filter: ['all', ['==', '$type', 'Point'], ['>=', 'rank', 25]],
+        layout: {
+          'text-padding': 2,
+          'text-font': ['Noto Sans Regular'],
+          'text-anchor': 'top',
+          'icon-image': '{class}_11',
+          'text-field': '{name:latin}\n{name:nonlatin}',
+          'text-offset': [0, 0.6],
+          'text-size': 12,
+          'text-max-width': 9,
+        },
+        paint: {
+          'text-halo-blur': 0.5,
+          'text-color': '#666',
+          'text-halo-width': 1,
+          'text-halo-color': '#ffffff',
+        },
+      },
+      {
+        id: 'poi-level-2',
+        type: 'symbol',
+        source: 'maptiler_planet',
+        'source-layer': 'poi',
+        minzoom: 15,
+        filter: [
+          'all',
+          ['==', '$type', 'Point'],
+          ['<=', 'rank', 24],
+          ['>=', 'rank', 15],
+        ],
+        layout: {
+          'text-padding': 2,
+          'text-font': ['Noto Sans Regular'],
+          'text-anchor': 'top',
+          'icon-image': '{class}_11',
+          'text-field': '{name:latin}\n{name:nonlatin}',
+          'text-offset': [0, 0.6],
+          'text-size': 12,
+          'text-max-width': 9,
+        },
+        paint: {
+          'text-halo-blur': 0.5,
+          'text-color': '#666',
+          'text-halo-width': 1,
+          'text-halo-color': '#ffffff',
+        },
+      },
+      {
+        id: 'poi-level-1',
+        type: 'symbol',
+        source: 'maptiler_planet',
+        'source-layer': 'poi',
+        minzoom: 14,
+        filter: [
+          'all',
+          ['==', '$type', 'Point'],
+          ['<=', 'rank', 14],
+          ['has', 'name'],
+        ],
+        layout: {
+          'text-padding': 2,
+          'text-font': ['Noto Sans Regular'],
+          'text-anchor': 'top',
+          'icon-image': '{class}_11',
+          'text-field': '{name:latin}\n{name:nonlatin}',
+          'text-offset': [0, 0.6],
+          'text-size': 12,
+          'text-max-width': 9,
+        },
+        paint: {
+          'text-halo-blur': 0.5,
+          'text-color': '#666',
+          'text-halo-width': 1,
+          'text-halo-color': '#ffffff',
+        },
+      },
+      {
+        id: 'poi-railway',
+        type: 'symbol',
+        source: 'maptiler_planet',
+        'source-layer': 'poi',
+        minzoom: 13,
+        maxzoom: 24,
+        filter: [
+          'all',
+          ['==', '$type', 'Point'],
+          ['has', 'name'],
+          ['==', 'class', 'railway'],
+          ['==', 'subclass', 'station'],
+        ],
+        layout: {
+          'text-padding': 2,
+          'text-font': ['Noto Sans Regular'],
+          'text-anchor': 'top',
+          'icon-image': '{class}_11',
+          'text-field': '{name:latin}\n{name:nonlatin}',
+          'text-offset': [0, 0.6],
+          'text-size': 12,
+          'text-max-width': 9,
+          'icon-optional': false,
+          'icon-ignore-placement': false,
+          'icon-allow-overlap': false,
+          'text-ignore-placement': false,
+          'text-allow-overlap': false,
+          'text-optional': true,
+        },
+        paint: {
+          'text-halo-blur': 0.5,
+          'text-color': '#666',
+          'text-halo-width': 1,
+          'text-halo-color': '#ffffff',
+        },
+      },
+    ],
+  );
+}
 export const style = addHoverPaint(origStyle);
 
 const isOsmLayer = (id) => {
@@ -90,36 +195,3 @@ const isOsmLayer = (id) => {
 export const layersWithOsmId = style.layers
   .map((x) => x.id)
   .filter((id) => isOsmLayer(id));
-
-export const setUpHover = (map) => {
-  let lastHover = null;
-
-  const setHover = (feature, hover) =>
-    feature && map.setFeatureState(feature, { hover });
-  const setHoverOn = (feature) => setHover(feature, true);
-  const setHoverOff = (feature) => setHover(feature, false);
-
-  const onMouseMove = (e) => {
-    if (e.features && e.features.length > 0) {
-      const feature = e.features[0];
-      if (feature !== lastHover) {
-        setHoverOff(lastHover);
-        setHoverOn(feature);
-        lastHover = feature;
-        map.getCanvas().style.cursor = 'pointer'; // eslint-disable-line no-param-reassign
-      }
-    }
-  };
-
-  const onMouseLeave = () => {
-    setHoverOff(lastHover);
-    lastHover = null;
-    // TODO delay 200ms
-    map.getCanvas().style.cursor = ''; // eslint-disable-line no-param-reassign
-  };
-
-  layersWithOsmId.forEach((layer) => {
-    map.on('mousemove', layer, onMouseMove);
-    map.on('mouseleave', layer, onMouseLeave);
-  });
-};

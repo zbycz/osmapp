@@ -35,18 +35,6 @@ const BottomRight = styled.div`
   text-align: right;
 `;
 
-const TopCenter = styled.div`
-  position: absolute;
-  top: 0;
-  left: 48%;
-  z-index: 1000;
-  padding: 10px;
-`;
-
-const WhatIsOsmButton = () => (
-  <Button variant="outlined">Co je OpenStreetMap?</Button>
-);
-
 const BugReportButton = () => (
   <Button size="small">
     <BugReport width="10" height="10" />
@@ -72,11 +60,6 @@ const Map = () => {
       <BrowserMap onMapLoaded={setLoaded} />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
-      {SHOW_PROTOTYPE_UI && (
-        <TopCenter>
-          <WhatIsOsmButton />
-        </TopCenter>
-      )}
       {SHOW_PROTOTYPE_UI && <LayerSwitcher />}
       <BottomRight>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}

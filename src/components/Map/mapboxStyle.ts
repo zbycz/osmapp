@@ -1,129 +1,8 @@
 // https://github.com/openmaptiles/klokantech-3d-gl-style/blob/master/style.json
-
-const buildings3d = {
-  id: 'building-3d',
-  type: 'fill-extrusion',
-  metadata: {},
-  source: 'openmaptiles',
-  'source-layer': 'building',
-  minzoom: 14,
-  filter: ['all', ['!has', 'hide_3d']],
-  layout: { visibility: 'visible' },
-  paint: {
-    'fill-extrusion-base': {
-      property: 'render_min_height',
-      type: 'identity',
-    },
-    'fill-extrusion-color': 'rgba(189, 185, 181, 1)',
-    'fill-extrusion-height': {
-      property: 'render_height',
-      type: 'identity',
-    },
-    'fill-extrusion-opacity': 0.3,
-
-    // 'fill-extrusion-base': {
-    //   property: 'render_min_height',
-    //   type: 'identity',
-    // },
-    // 'fill-extrusion-color': [
-    //   'case',
-    //   ['has', 'colour'],
-    //   ['get', 'colour'],
-    //   'hsl(39, 41%, 86%)',
-    // ],
-    // 'fill-extrusion-height': {
-    //   property: 'render_height',
-    //   type: 'identity',
-    // },
-    // 'fill-extrusion-opacity': 0.3,
-  },
-};
-
-// https://github.com/openmaptiles/klokantech-terrain-gl-style/blob/master/style.json
-
-const contoursStyle = [
-  {
-    id: 'hillshading',
-    type: 'raster',
-    source: 'hillshading',
-    layout: { visibility: 'visible' },
-    paint: {
-      'raster-contrast': 0,
-      'raster-fade-duration': 300,
-      'raster-opacity': {
-        base: 0.5,
-        stops: [
-          [3, 0],
-          [5, 0.15],
-          [12, 0.15],
-        ],
-      },
-    },
-  },
-  {
-    id: 'contour_label',
-    type: 'symbol',
-    metadata: {},
-    source: 'contours',
-    'source-layer': 'contour',
-    filter: [
-      'all',
-      ['==', '$type', 'LineString'],
-      ['in', 'nth_line', 10, 5],
-      ['>', 'height', 0],
-    ],
-    layout: {
-      'symbol-avoid-edges': true,
-      'symbol-placement': 'line',
-      'text-allow-overlap': false,
-      'text-field': '{height} m',
-      'text-font': ['Noto Sans Regular'],
-      'text-ignore-placement': false,
-      'text-padding': 10,
-      'text-rotation-alignment': 'map',
-      'text-size': {
-        base: 1,
-        stops: [
-          [15, 9.5],
-          [20, 12],
-        ],
-      },
-    },
-    paint: {
-      'text-color': 'hsl(0, 0%, 37%)',
-      'text-halo-color': 'hsla(0, 0%, 100%, 0.5)',
-      'text-halo-width': 1.5,
-    },
-  },
-  {
-    id: 'contour_index',
-    type: 'line',
-    source: 'contours',
-    'source-layer': 'contour',
-    filter: ['all', ['>', 'height', 0], ['in', 'nth_line', 10, 5]],
-    layout: { visibility: 'visible' },
-    paint: {
-      'line-color': 'hsl(0, 1%, 58%)',
-      'line-opacity': 0.4,
-      'line-width': 1.1,
-    },
-  },
-  {
-    id: 'contour',
-    type: 'line',
-    source: 'contours',
-    'source-layer': 'contour',
-    filter: ['all', ['!in', 'nth_line', 10, 5], ['>', 'height', 0]],
-    layout: { visibility: 'visible' },
-    paint: {
-      'line-color': 'hsl(0, 1%, 58%)',
-      'line-opacity': 0.3,
-      'line-width': 0.6,
-    },
-  },
-];
-
 // https://openmaptiles.github.io/osm-bright-gl-style/style-cdn.json
+
+import { building3dBase, buildings3dExtrusion } from './buildings3dStyle';
+import { contoursStyle } from './contoursStyle';
 
 const mapboxStyle = (sources, backgroundLayers, sprite) => ({
   version: 8,
@@ -181,7 +60,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landcover',
       filter: ['==', 'subclass', 'glacier'],
       layout: {
@@ -204,7 +83,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landuse',
       filter: ['==', 'class', 'residential'],
       paint: {
@@ -223,7 +102,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landuse',
       filter: [
         'all',
@@ -240,7 +119,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landuse',
       filter: [
         'all',
@@ -257,7 +136,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'park',
       filter: ['==', '$type', 'Polygon'],
       paint: {
@@ -277,7 +156,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'park',
       filter: ['==', '$type', 'Polygon'],
       layout: {},
@@ -298,7 +177,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landuse',
       filter: ['==', 'class', 'cemetery'],
       paint: {
@@ -311,7 +190,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landuse',
       filter: ['==', 'class', 'hospital'],
       paint: {
@@ -324,7 +203,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landuse',
       filter: ['==', 'class', 'school'],
       paint: {
@@ -337,7 +216,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landuse',
       filter: ['==', 'class', 'railway'],
       paint: {
@@ -350,7 +229,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landcover',
       filter: ['==', 'class', 'wood'],
       paint: {
@@ -372,7 +251,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landcover',
       filter: ['==', 'class', 'grass'],
       paint: {
@@ -386,7 +265,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849388993.3071',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'park',
       filter: ['==', 'class', 'public_park'],
       paint: {
@@ -401,7 +280,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849382550.77',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'waterway',
       filter: ['!in', 'class', 'canal', 'river', 'stream'],
       layout: {
@@ -424,7 +303,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849382550.77',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'waterway',
       filter: ['in', 'class', 'canal', 'stream'],
       layout: {
@@ -447,7 +326,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849382550.77',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'waterway',
       filter: ['==', 'class', 'river'],
       layout: {
@@ -470,7 +349,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849382550.77',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'water',
       maxzoom: 8,
       filter: ['==', '$type', 'Polygon'],
@@ -495,7 +374,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849382550.77',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'water',
       layout: {
         visibility: 'visible',
@@ -510,7 +389,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849382550.77',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'water',
       layout: {
         visibility: 'visible',
@@ -526,7 +405,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849382550.77',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'landcover',
       filter: ['==', 'subclass', 'ice_shelf'],
       layout: {
@@ -543,62 +422,14 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
         },
       },
     },
-    {
-      id: 'building',
-      type: 'fill',
-      metadata: {
-        'mapbox:group': '1444849364238.8171',
-      },
-      source: 'openmaptiles',
-      'source-layer': 'building',
-      paint: {
-        'fill-color': {
-          base: 1,
-          stops: [
-            [15.5, '#f2eae2'],
-            [16, '#dfdbd7'],
-          ],
-        },
-        'fill-antialias': true,
-      },
-    },
-    {
-      id: 'building-top',
-      type: 'fill',
-      metadata: {
-        'mapbox:group': '1444849364238.8171',
-      },
-      source: 'openmaptiles',
-      'source-layer': 'building',
-      layout: {
-        visibility: 'visible',
-      },
-      paint: {
-        'fill-translate': {
-          base: 1,
-          stops: [
-            [14, [0, 0]],
-            [16, [-2, -2]],
-          ],
-        },
-        'fill-outline-color': '#dfdbd7',
-        'fill-color': '#f2eae2',
-        'fill-opacity': {
-          base: 1,
-          stops: [
-            [13, 0],
-            [16, 1],
-          ],
-        },
-      },
-    },
+    ...building3dBase,
     {
       id: 'tunnel-service-track-casing',
       type: 'line',
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -627,7 +458,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'minor']],
       layout: {
@@ -658,7 +489,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -686,7 +517,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -715,7 +546,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'motorway']],
       layout: {
@@ -742,7 +573,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -767,7 +598,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -795,7 +626,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -824,7 +655,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -852,7 +683,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -880,7 +711,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'motorway']],
       layout: {
@@ -905,7 +736,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849354174.1904',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['==', 'brunnel', 'tunnel'], ['==', 'class', 'rail']],
       paint: {
@@ -924,7 +755,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'ferry',
       type: 'line',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['in', 'class', 'ferry']],
       layout: {
@@ -943,7 +774,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'aeroway',
       minzoom: 12,
       filter: ['all', ['in', 'class', 'taxiway']],
@@ -970,7 +801,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'aeroway',
       minzoom: 12,
       filter: ['all', ['in', 'class', 'runway']],
@@ -997,7 +828,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'aeroway',
       minzoom: 4,
       filter: [
@@ -1025,7 +856,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'aeroway',
       minzoom: 4,
       filter: [
@@ -1062,7 +893,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'aeroway',
       minzoom: 4,
       filter: ['all', ['in', 'class', 'runway'], ['==', '$type', 'LineString']],
@@ -1095,7 +926,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['==', '$type', 'Polygon'],
       layout: {
@@ -1114,7 +945,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 12,
       filter: [
@@ -1146,7 +977,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 13,
       filter: [
@@ -1186,7 +1017,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1226,7 +1057,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1256,7 +1087,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 5,
       filter: [
@@ -1294,7 +1125,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 5,
       filter: [
@@ -1332,7 +1163,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 4,
       filter: [
@@ -1371,7 +1202,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1400,7 +1231,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 12,
       filter: [
@@ -1431,7 +1262,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 13,
       filter: [
@@ -1470,7 +1301,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1504,7 +1335,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1534,7 +1365,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1568,7 +1399,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1602,7 +1433,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 5,
       filter: [
@@ -1637,7 +1468,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1664,7 +1495,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1693,7 +1524,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1717,7 +1548,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1746,7 +1577,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1776,7 +1607,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849345966.4436',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1807,7 +1638,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1837,7 +1668,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1874,7 +1705,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1902,7 +1733,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1931,7 +1762,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'motorway']],
       layout: {
@@ -1956,7 +1787,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -1980,7 +1811,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -2005,7 +1836,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -2034,7 +1865,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -2070,7 +1901,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -2098,7 +1929,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: [
         'all',
@@ -2126,7 +1957,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'motorway']],
       layout: {
@@ -2150,7 +1981,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'rail']],
       paint: {
@@ -2171,7 +2002,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849334699.1902',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       filter: ['all', ['==', 'brunnel', 'bridge'], ['==', 'class', 'rail']],
       paint: {
@@ -2190,7 +2021,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'cablecar',
       type: 'line',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 13,
       maxzoom: 24,
@@ -2213,7 +2044,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'cablecar-dash',
       type: 'line',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation',
       minzoom: 13,
       maxzoom: 24,
@@ -2237,7 +2068,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     // {
     //   id: 'boundary-land-level-4',
     //   type: 'line',
-    //   source: 'openmaptiles',
+    //   source: 'maptiler_planet',
     //   'source-layer': 'boundary',
     //   filter: ['all', ['in', 'admin_level', 4, 6, 8], ['!=', 'maritime', 1]],
     //   layout: {
@@ -2259,7 +2090,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'boundary-land-level-2',
       type: 'line',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'boundary',
       filter: [
         'all',
@@ -2287,7 +2118,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'boundary-land-disputed',
       type: 'line',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'boundary',
       filter: ['all', ['!=', 'maritime', 1], ['==', 'disputed', 1]],
       layout: {
@@ -2311,7 +2142,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'boundary-water',
       type: 'line',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'boundary',
       filter: ['all', ['in', 'admin_level', 2, 4], ['==', 'maritime', 1]],
       layout: {
@@ -2337,11 +2168,11 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
         },
       },
     },
-    buildings3d,
+    ...buildings3dExtrusion,
     {
       id: 'waterway-name',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'waterway',
       minzoom: 13,
       filter: ['all', ['==', '$type', 'LineString'], ['has', 'name']],
@@ -2364,7 +2195,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'water-name-lakeline',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'water_name',
       filter: ['==', '$type', 'LineString'],
       layout: {
@@ -2386,7 +2217,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'water-name-ocean',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'water_name',
       filter: ['all', ['==', '$type', 'Point'], ['==', 'class', 'ocean']],
       layout: {
@@ -2408,7 +2239,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'water-name-other',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'water_name',
       filter: ['all', ['==', '$type', 'Point'], ['!in', 'class', 'ocean']],
       layout: {
@@ -2436,7 +2267,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'poi-level-3',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'poi',
       minzoom: 16,
       filter: ['all', ['==', '$type', 'Point'], ['>=', 'rank', 25]],
@@ -2460,7 +2291,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'poi-level-2',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'poi',
       minzoom: 15,
       filter: [
@@ -2489,7 +2320,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'poi-level-1',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'poi',
       minzoom: 14,
       filter: [
@@ -2518,7 +2349,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'poi-railway',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'poi',
       minzoom: 13,
       maxzoom: 24,
@@ -2555,7 +2386,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'highway-name-path',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation_name',
       minzoom: 15.5,
       filter: ['==', 'class', 'path'],
@@ -2581,7 +2412,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'highway-name-minor',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation_name',
       minzoom: 15,
       filter: [
@@ -2611,7 +2442,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'highway-name-major',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation_name',
       minzoom: 12.2,
       filter: ['in', 'class', 'primary', 'secondary', 'tertiary', 'trunk'],
@@ -2637,7 +2468,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'highway-shield',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation_name',
       minzoom: 8,
       filter: [
@@ -2668,7 +2499,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'highway-shield-us-interstate',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation_name',
       minzoom: 7,
       filter: [
@@ -2702,7 +2533,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'highway-shield-us-other',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'transportation_name',
       minzoom: 9,
       filter: [
@@ -2735,7 +2566,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
     {
       id: 'airport-label-major',
       type: 'symbol',
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'aerodrome_label',
       minzoom: 10,
       filter: ['all', ['has', 'iata']],
@@ -2765,7 +2596,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: [
         '!in',
@@ -2803,7 +2634,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: ['==', 'class', 'village'],
       layout: {
@@ -2831,7 +2662,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: ['==', 'class', 'town'],
       layout: {
@@ -2859,7 +2690,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: ['all', ['!=', 'capital', 2], ['==', 'class', 'city']],
       layout: {
@@ -2887,7 +2718,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: ['all', ['==', 'capital', 2], ['==', 'class', 'city']],
       layout: {
@@ -2919,7 +2750,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: [
         'all',
@@ -2953,7 +2784,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: [
         'all',
@@ -2987,7 +2818,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: [
         'all',
@@ -3021,7 +2852,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       filter: [
         'all',
@@ -3055,7 +2886,7 @@ const mapboxStyle = (sources, backgroundLayers, sprite) => ({
       metadata: {
         'mapbox:group': '1444849242106.713',
       },
-      source: 'openmaptiles',
+      source: 'maptiler_planet',
       'source-layer': 'place',
       maxzoom: 1,
       filter: ['==', 'class', 'continent'],

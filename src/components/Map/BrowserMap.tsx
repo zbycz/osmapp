@@ -4,15 +4,15 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import throttle from 'lodash/throttle';
 import Router from 'next/router';
 import { getSkeleton } from './helpers';
-import { setUpHover, style } from './layers';
+import { layersWithOsmId, style } from './layers';
 import { useAddMapEvent, useMapEffect } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { getShortId, getUrlOsmId, isSameOsmId } from '../../services/helpers';
-import { SHOW_PROTOTYPE_UI } from '../../config';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './useFeatureMarker';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { PersistedScaleControl } from './PersistedScaleControl';
+import { setUpHover } from './hover';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
@@ -45,7 +45,7 @@ const useInitMap = () => {
     map.addControl(navigationControl);
     map.addControl(geolocateControl);
     map.addControl(PersistedScaleControl);
-    setUpHover(map);
+    setUpHover(map, layersWithOsmId);
 
     return () => {
       map.remove();
@@ -77,8 +77,6 @@ const useOnFeatureClicked = useAddMapEvent((map, setFeature) => ({
       addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
       Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
-    } else if (SHOW_PROTOTYPE_UI) {
-      setFeature(skeleton);
     }
   },
 }));
