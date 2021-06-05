@@ -60,7 +60,7 @@ const Map = () => {
       <BrowserMap onMapLoaded={setLoaded} />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
-      {SHOW_PROTOTYPE_UI && <LayerSwitcher />}
+      <LayerSwitcher />
       <BottomRight>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MapFooter />

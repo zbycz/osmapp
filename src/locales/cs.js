@@ -12,18 +12,18 @@ export default {
     miliony dobrovolníků — podobně jako Wikipedii.
     Každý rozkliknutý prvek zde můžete pohodlně <em>Upravit</em>.`,
   'homepage.heading_about_osmapp': 'O projektu OsmAPP',
-  'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití OpenStreetmap
-    jako free alternativy bez jakéhokoliv sledování. Zatím je projekt v zárodku, ale už umí zobrazovat a editovat POI,
-    a mapu základně prohledávat. V plánu jsou funkce jako přepínač vrstev,
-    turistická vektorová mapa, navigace či oblíbená místa.`,
-  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp">Github</a>.`,
+  'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
+    včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
+    V plánu jsou funkce jako navigace či oblíbená místa.`,
+  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.maptiler.com/">MapTiler</a> za vektorové mapové dlaždice
-        <li><a href="https://www.mapillary.com/">Mapillary</a>, <a href="https://openstreetmap.cz/fody">Fody</a>,
-              <a href="https://www.wikipedia.org/">Wikipedia</a> za obrázky
-        <li><a href="https://nominatim.openstreetmap.org/">Nominatim</a> za vyhledávání
-        <li><a href="https://www.openstreetmap.org/">OpenStreetMap</a> za nejlepší mapovou databázi
+        <li><a href="https://www.maptiler.com/" rel='noopener' target='_blank'>MapTiler</a> za vektorové mapové dlaždice
+        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> za obrázky
+        <li><a href="https://nominatim.openstreetmap.org/" rel='noopener' target='_blank'>Nominatim</a> za vyhledávání
+        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> za nejlepší mapu Země 😉
       </ul>
   `,
 
@@ -110,4 +110,18 @@ export default {
   'tags.website': 'Web',
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Otevírací doba',
+
+  'layerswitcher.button': 'Vrstvy',
+  'layerswitcher.heading': 'Mapové vrstvy',
+  'layerswitcher.intro': 'Díky tomu, že OpenStreetMap nabízí zdrojová data, tak kdokoliv může vyrobit různé varianty mapy.',
+  'layerswitcher.add_layer_button': 'Přidat vlastní vrstvu',
+  'layerswitcher.add_layer_prompt': 'Přidat vlastní TMS vrstvu – CORS musí být nastaveno:\n(beta funkcionalita)',
+
+  'layers.basic': 'Základní',
+  'layers.outdoor': 'Outdoorová',
+  'layers.mtb': 'MTB',
+  'layers.snow': 'Zimní',
+  'layers.mapnik': 'OSM Mapnik',
+  'layers.sat': 'Satelitní',
+  'layers.bike': 'Cyklo',
 };

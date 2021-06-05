@@ -120,7 +120,7 @@ export const HomepagePanel = () => {
             </Typography>
 
             <Typography variant="body2" paragraph>
-              {t('homepage.about_osmapp')}
+              <Translation id="homepage.about_osmapp" />
             </Typography>
 
             <Typography variant="body2" paragraph>

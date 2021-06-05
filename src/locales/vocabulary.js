@@ -1,4 +1,4 @@
-// dentifier should be in the form: foldername.messageid.
+// identifier should be in the form: foldername.messageid.
 
 export default {
   loading: 'Loading',
@@ -16,19 +16,18 @@ export default {
       milions of contributors — similar to Wikipedia. You can find
       <em>Edit</em> button on each map feature.`,
   'homepage.heading_about_osmapp': 'About OsmAPP',
-  'homepage.about_osmapp': `This application should provide everyday
-        OpenStreetMap experience for everyone. Currently it is in beta
-        stage, but it offers showing and editting POIs and basic search functionality.
-        More features are planned - like switching layers,
-        vector outdoor map, driving directions or favourite places.`,
-  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp">Github</a>.`,
+  'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
+     including editing options. <br/>Currently it includes various map layers, POI editing and a basic search engine.
+     Features such as navigation or favorite places are planned.`,
+  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.maptiler.com/">MapTiler</a> for vector map tiles
-        <li><a href="https://www.mapillary.com/">Mapillary</a>, <a href="https://openstreetmap.cz/fody">Fody</a>,
-              <a href="https://www.wikipedia.org/">Wikipedia</a> for images
-        <li><a href="https://nominatim.openstreetmap.org/">Nominatim</a> for search box
-        <li><a href="https://www.openstreetmap.org/">OpenStreetMap</a> for the best world map database
+        <li><a href="https://www.maptiler.com/" rel='noopener' target='_blank'>MapTiler</a> for vector map tiles
+        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> for images
+        <li><a href="https://nominatim.openstreetmap.org/" rel='noopener' target='_blank'>Nominatim</a> for search box
+        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> for the best world map 😉
       </ul>
   `,
 
@@ -116,4 +115,18 @@ export default {
   'tags.website': 'Web',
   'tags.phone': 'Phone',
   'tags.opening_hours': 'Opening hours',
+
+  'layerswitcher.button': 'Layers',
+  'layerswitcher.heading': 'Map layers',
+  'layerswitcher.intro': 'Thanks to the fact that OpenStreetMap offers source data, anyone can produce different variants of the map.',
+  'layerswitcher.add_layer_button': 'Add custom layer',
+  'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
+
+  'layers.basic': 'Basic',
+  'layers.outdoor': 'Outdoor',
+  'layers.mtb': 'MTB',
+  'layers.snow': 'Snow',
+  'layers.mapnik': 'OSM Mapnik',
+  'layers.sat': 'Satellite',
+  'layers.bike': 'Bike',
 };

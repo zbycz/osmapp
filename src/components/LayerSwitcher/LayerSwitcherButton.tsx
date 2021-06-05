@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import LayersIcon from './LayersIcon';
+import { t } from '../../services/intl';
 
 const TopRight = styled.div`
   position: absolute;
@@ -42,7 +43,7 @@ export const LayerSwitcherButton = ({ onClick }: { onClick?: any }) => (
   <TopRight>
     <StyledLayerSwitcher onClick={onClick}>
       <LayersIcon />
-      Vrstvy
+      {t('layerswitcher.button')}
     </StyledLayerSwitcher>
   </TopRight>
 );

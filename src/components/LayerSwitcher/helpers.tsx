@@ -4,6 +4,9 @@ import Button from '@material-ui/core/Button';
 import CloseIcon from '@material-ui/icons/Close';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { t, Translation } from '../../services/intl';
+
+const TMS_EXAMPLE = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
 
 export const AddUserLayerButton = ({ setUserLayers }) => {
   const { setActiveLayers } = useMapStateContext();
@@ -14,10 +17,7 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
         color="secondary"
         onClick={() => {
           // eslint-disable-next-line no-alert
-          const url = prompt(
-            'TMS vrstva:',
-            'https://osm-{s}.zby.cz/tiles_ipr_last.php/{z}/{x}/{y}.png',
-          );
+          const url = prompt(t('layerswitcher.add_layer_prompt'), TMS_EXAMPLE);
           if (url) {
             setUserLayers((current) => [
               ...current.filter((item) => item.url !== url),
@@ -32,7 +32,7 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
           }
         }}
       >
-        Přidat vlastní vrstvu
+        {t('layerswitcher.add_layer_button')}
       </Button>
     </Box>
   );
@@ -68,14 +68,13 @@ export const LayersHeader = () => (
         style={{ color: 'rgba(0, 0, 0, 0.7)' }}
         id="layerSwitcher-heading"
       >
-        Vrstvy
+        {t('layerswitcher.heading')}
       </Typography>
     </Box>
 
     <Box m={2}>
       <Typography variant="body2" color="textSecondary">
-        Díky tomu, že OpenStreetMap nabízí zdrojová data, tak kdokoliv může
-        vyrobit různé varianty mapy.
+        <Translation id="layerswitcher.intro" />
       </Typography>
     </Box>
   </>
