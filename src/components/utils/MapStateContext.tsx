@@ -1,4 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { usePersistedState } from './usePersistedState';
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer';
@@ -27,7 +28,9 @@ export interface Layer {
 export const MapStateContext = createContext(undefined);
 
 export const MapStateProvider = ({ children, initialMapView }) => {
-  const [activeLayers, setActiveLayers] = useState([]);
+  const [activeLayers, setActiveLayers] = usePersistedState('activeLayers', [
+    'basic',
+  ]);
   const [bbox, setBbox] = useState();
   const [view, setView] = useState(initialMapView);
   const [viewForMap, setViewForMap] = useState(initialMapView);

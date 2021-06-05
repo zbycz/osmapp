@@ -4,7 +4,7 @@ import 'maplibre-gl/dist/maplibre-gl.css';
 import throttle from 'lodash/throttle';
 import Router from 'next/router';
 import { getSkeleton } from './helpers';
-import { layersWithOsmId, style } from './layers';
+import { layersWithOsmId } from './layers';
 import { useAddMapEvent, useMapEffect } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { getShortId, getUrlOsmId, isSameOsmId } from '../../services/helpers';
@@ -40,7 +40,7 @@ const useInitMap = () => {
 
     const map = new maplibregl.Map({
       container: mapRef.current,
-      style,
+      // style,
       attributionControl: false,
       refreshExpiredTiles: false,
     });

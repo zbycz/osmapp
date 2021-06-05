@@ -11,10 +11,10 @@ import {
   LayerIcon,
   LayersHeader,
   RemoveUserLayerAction,
-  useUserLayers,
 } from './helpers';
 import { osmappLayers } from './osmappLayers';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
+import { usePersistedState } from '../utils/usePersistedState';
 
 const StyledList = styled(List)`
   .MuiListItemIcon-root {
@@ -47,7 +47,7 @@ const getAllLayers = (userLayers: Layer[]) => {
 
 export const LayerSwitcherContent = () => {
   const { activeLayers, setActiveLayers } = useMapStateContext();
-  const [userLayers, setUserLayers] = useUserLayers(['basic']);
+  const [userLayers, setUserLayers] = usePersistedState('userLayers', []);
   const layers = getAllLayers(userLayers);
 
   return (

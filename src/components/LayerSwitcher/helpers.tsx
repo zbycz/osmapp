@@ -1,23 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Box, IconButton, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import CloseIcon from '@material-ui/icons/Close';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
-import { Layer, useMapStateContext } from '../utils/MapStateContext';
-
-export const useUserLayers = (init) => {
-  const [layers, setLayers] = useState(
-    JSON.parse(window?.localStorage.getItem('userLayers')) ?? init,
-  );
-  const setUserLayers = (cb) => {
-    setLayers((current) => {
-      const newLayers = cb(current);
-      window?.localStorage.setItem('userLayers', JSON.stringify(newLayers));
-      return newLayers;
-    });
-  };
-  return [layers, setUserLayers] as [Layer[], any];
-};
+import { useMapStateContext } from '../utils/MapStateContext';
 
 export const AddUserLayerButton = ({ setUserLayers }) => {
   const { setActiveLayers } = useMapStateContext();
