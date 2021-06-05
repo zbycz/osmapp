@@ -13,7 +13,7 @@ import { useFeatureMarker } from './useFeatureMarker';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { PersistedScaleControl } from './PersistedScaleControl';
 import { setUpHover } from './hover';
-import mapboxStyle from './mapboxStyle';
+import { mapboxStyle } from './mapboxStyle';
 import { outdoorStyle } from './outdoorStyle';
 import { sources, sprite } from './layersParts';
 import { osmappLayers } from '../LayerSwitcher/osmappLayers';
@@ -40,7 +40,7 @@ const useInitMap = () => {
 
     const map = new maplibregl.Map({
       container: mapRef.current,
-      // style,
+      style: mapboxStyle,
       attributionControl: false,
       refreshExpiredTiles: false,
     });

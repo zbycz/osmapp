@@ -3,8 +3,9 @@
 
 import { building3dBase, buildings3dExtrusion } from './buildings3dStyle';
 import { backgroundLayers, sources, sprite } from './layersParts';
+import { addHoverPaint } from './hover';
 
-const mapboxStyle = {
+export const mapboxStyle = addHoverPaint({
   version: 8,
   name: 'OSM Bright',
   metadata: {
@@ -2907,6 +2908,4 @@ const mapboxStyle = {
     },
   ],
   id: 'ciw6czz2n00242kmg6hw20box',
-};
-
-export default mapboxStyle;
+});

@@ -1,11 +1,12 @@
 import { building3dBase, buildings3dExtrusion } from './buildings3dStyle';
 import { poiLayers } from './poiLayers';
 import { backgroundLayers, sources, sprite } from './layersParts';
+import { addHoverPaint } from './hover';
 
 // TODO add icons for outdoor to our sprite (guideposts, benches, etc)
 // https://api.maptiler.com/maps/outdoor/sprite.png?key=7dlhLl3hiXQ1gsth0kGu
 
-export const outdoorStyle = {
+export const outdoorStyle = addHoverPaint({
   id: 'outdoor',
   name: 'Outdoor',
   zoom: 7,
@@ -3890,4 +3891,4 @@ export const outdoorStyle = {
     'openmaptiles:version': '3.x',
   },
   sprite,
-};
+});
