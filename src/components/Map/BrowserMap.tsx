@@ -1,5 +1,6 @@
 import React from 'react';
-import maplibregl from 'maplibre-gl'; // update CSS import in _document.js
+import maplibregl from 'maplibre-gl';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import throttle from 'lodash/throttle';
 import Router from 'next/router';
 import { getSkeleton } from './helpers';

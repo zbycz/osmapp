@@ -35,7 +35,7 @@ const OsmappLink = () => {
   };
   return (
     <>
-      <Tooltip title="OsmAPP Github">
+      <Tooltip arrow title="Github">
         <a
           href="https://github.com/zbycz/osmapp"
           target="_blank"
@@ -45,7 +45,7 @@ const OsmappLink = () => {
           <GithubIcon width="12" height="12" />
         </a>
       </Tooltip>
-      <Tooltip title={t('map.about_title')}>
+      <Tooltip arrow title={t('map.about_title')}>
         <button type="button" className="linkLikeButton" onClick={handleClick}>
           osmapp
         </button>
@@ -89,15 +89,17 @@ const LangSwitcher = () => {
           </MenuItem>
         ))}
       </Menu>
-      <button
-        type="button"
-        className="linkLikeButton"
-        aria-controls="language-switcher"
-        aria-haspopup="true"
-        onClick={handleClick}
-      >
-        {languages[intl.lang]}
-      </button>
+      <Tooltip arrow title={t('map.language_title')}>
+        <button
+          type="button"
+          className="linkLikeButton"
+          aria-controls="language-switcher"
+          aria-haspopup="true"
+          onClick={handleClick}
+        >
+          {languages[intl.lang]}
+        </button>
+      </Tooltip>
     </>
   );
 };
@@ -114,7 +116,7 @@ const EditLink = () => {
   const { feature } = useFeatureContext();
   const href = getIdEditorLink(feature, browser ? view : []);
   return (
-    <Tooltip title={t('map.edit_button_title')}>
+    <Tooltip arrow title={t('map.edit_button_title')}>
       <a href={href} target="_blank" rel="noopener">
         {t('map.edit_button')}
       </a>
@@ -125,7 +127,7 @@ const EditLink = () => {
 const MapDataLink = () => (
   <>
     {'© '}
-    <Tooltip title={t('map.copyright')}>
+    <Tooltip arrow title={t('map.copyright')}>
       <button
         type="button"
         className="linkLikeButton"

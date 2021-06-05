@@ -5,16 +5,6 @@ import { ServerStyleSheet } from 'styled-components';
 import { getServerIntl } from '../src/services/intlServer';
 import { InjectIntl, setIntl } from '../src/services/intl';
 
-// This stinks so much!! https://github.com/facebook/react/issues/12014#issuecomment-434534770
-const AsyncStyle = ({ href }) => (
-  <script
-    // eslint-disable-next-line react/no-danger
-    dangerouslySetInnerHTML={{
-      __html: `</script><link rel="preload" href="${href}" as="style" onload="this.onload=null;this.rel='stylesheet'"/><script>`,
-    }}
-  />
-);
-
 const Favicons = () => (
   <>
     <link rel="shortcut icon" href="/logo/osmapp_192.png" sizes="192x192" />
@@ -35,7 +25,7 @@ const Favicons = () => (
 
 export default class MyDocument extends Document {
   render() {
-    const {serverIntl} = this.props as any;
+    const { serverIntl } = this.props as any;
     return (
       <Html lang={serverIntl.lang}>
         <Head>
@@ -44,15 +34,13 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
-          <AsyncStyle href="https://api.mapbox.com/mapbox-gl-js/v1.6.1/mapbox-gl.css" />
           <Favicons />
           <link rel="preconnect" href="https://api.maptiler.com" />
-          <link rel="preconnect" href="https://openmaptiles.github.io" />
           <link rel="preconnect" href="https://a.mapillary.com" />
           <link rel="preconnect" href="https://images.mapillary.com" />
           <link rel="preconnect" href="https://commons.wikimedia.org" />
           <link rel="preconnect" href="https://www.wikidata.org" />
-          <link rel="preconnect" href="https://en.wikidata.org" />
+          <link rel="preconnect" href="https://en.wikipedia.org" />
         </Head>
         <body>
           <Main />
