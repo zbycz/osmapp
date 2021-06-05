@@ -54,7 +54,7 @@ const GlobalStyle = createGlobalStyle`
   .dotloader:nth-child(3) { animation-delay: 500ms }
 
   .MuiBackdrop-root {
-    background-color: rgba(0, 0, 0, 0) !important;
+    background-color: rgba(0, 0, 0, 0.2) !important;
   }
 `;
 export default GlobalStyle;

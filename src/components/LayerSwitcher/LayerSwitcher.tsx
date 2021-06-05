@@ -1,5 +1,5 @@
 import React from 'react';
-import { SwipeableDrawer } from '@material-ui/core';
+import { SwipeableDrawer, useMediaQuery } from '@material-ui/core';
 import { useBoolState } from '../helpers';
 import { LayerSwitcherButton } from './LayerSwitcherButton';
 import { LayerSwitcherContent } from './LayerSwitcherContent';
@@ -7,6 +7,7 @@ import { ClosePanelButton } from '../utils/ClosePanelButton';
 
 const LayerSwitcher = () => {
   const [opened, open, close] = useBoolState(false);
+  const desktop = useMediaQuery('(min-width:500px)');
 
   return (
     <>
@@ -16,7 +17,7 @@ const LayerSwitcher = () => {
         open={opened}
         onClose={close}
         onOpen={open}
-        variant="persistent"
+        variant={desktop ? 'persistent' : 'temporary'}
         disableBackdropTransition
       >
         <div role="presentation" style={{ width: '280px', height: '100%' }}>

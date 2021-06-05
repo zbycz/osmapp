@@ -4,10 +4,15 @@ import LayersIcon from './LayersIcon';
 
 const TopRight = styled.div`
   position: absolute;
-  top: 0;
-  right: 0;
   z-index: 1000;
   padding: 10px;
+  right: 0;
+  bottom: 20px;
+
+  @media (min-width: 500px) {
+    top: 0;
+    bottom: auto;
+  }
 `;
 
 const StyledLayerSwitcher = styled.button`
