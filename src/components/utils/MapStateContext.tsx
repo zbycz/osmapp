@@ -5,7 +5,7 @@ export interface Layer {
   name?: string;
   url?: string;
   key?: string;
-  icon?: any;
+  Icon?: React.FC<any>;
 }
 
 // // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState, Fragment } from 'react';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
 import { Feature } from '../services/types';
 

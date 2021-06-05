@@ -1,6 +1,7 @@
 export default {
   loading: 'Nahrávám',
   error: 'Chyba',
+  close_panel: 'Zavřít panel',
 
   'homepage.subtitle': 'Univerzální appka pro OpenStreetMap',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
@@ -27,7 +28,6 @@ export default {
   `,
 
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
-  'searchbox.close_panel': 'Zavřít panel',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',

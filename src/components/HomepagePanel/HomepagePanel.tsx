@@ -1,39 +1,25 @@
 import React, { useEffect } from 'react';
 import Image from 'next/image';
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 import {
   PanelFooter,
-  PanelWrapper,
   PanelScrollbars,
+  PanelWrapper,
 } from '../utils/PanelHelpers';
 import LogoOsmapp from '../../assets/LogoOsmapp';
 import { useFeatureContext } from '../utils/FeatureContext';
 import GithubIcon from '../../assets/GithubIcon';
 import { nl2br } from '../utils/nl2br';
 import { t, Translation } from '../../services/intl';
+import { ClosePanelButton } from '../utils/ClosePanelButton';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
   padding: 20px 2em 0 2em;
 `;
-
-const ClosePanelButton = ({ hide }) => (
-  <IconButton
-    aria-label="Zavřít panel"
-    onClick={(e) => {
-      e.preventDefault();
-      hide();
-    }}
-    style={{ position: 'absolute', right: 0 }}
-  >
-    <CloseIcon />
-  </IconButton>
-);
 
 const StyledLogoOsmapp = styled(LogoOsmapp)`
   width: 41%;
@@ -65,7 +51,7 @@ export const HomepagePanel = () => {
   return (
     <PanelWrapper>
       <PanelScrollbars>
-        <ClosePanelButton hide={hideHomepage} />
+        <ClosePanelButton right onClick={hideHomepage} />
         <Content>
           <div>
             <Center>

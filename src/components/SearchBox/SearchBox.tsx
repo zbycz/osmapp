@@ -4,12 +4,13 @@ import throttle from 'lodash/throttle';
 import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
+import Router from 'next/router';
 import { fetchJson } from '../../services/fetch';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { ClosePanelButton } from './ClosePanelButton';
 import { AutocompleteInput } from './AutocompleteInput';
 import { intl, t } from '../../services/intl';
+import { ClosePanelButton } from '../utils/ClosePanelButton';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -54,7 +55,7 @@ const fetchNominatim = throttle(async (inputValue, bbox, setOptions) => {
 }, 400);
 
 const SearchBox = () => {
-  const { bbox } = useMapStateContext();
+  const { bbox, view } = useMapStateContext();
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState([]);
   const autocompleteRef = useRef();
@@ -68,6 +69,11 @@ const SearchBox = () => {
   }, [inputValue]);
 
   const { featureShown } = useFeatureContext();
+
+  const closePanel = () => {
+    setInputValue('');
+    Router.push(`/#${view.join('/')}`);
+  };
 
   return (
     <TopPanel>
@@ -83,7 +89,7 @@ const SearchBox = () => {
           autocompleteRef={autocompleteRef}
         />
 
-        {featureShown && <ClosePanelButton setInputValue={setInputValue} />}
+        {featureShown && <ClosePanelButton onClick={closePanel} />}
       </StyledPaper>
     </TopPanel>
   );

@@ -15,8 +15,8 @@ import { PersistedScaleControl } from './PersistedScaleControl';
 import { setUpHover } from './hover';
 import mapboxStyle from './mapboxStyle';
 import { outdoorStyle } from './outdoorStyle';
-import { osmappLayers } from '../LayerSwitcher/LayerSwitcher';
 import { sources, sprite } from './layersParts';
+import { osmappLayers } from '../LayerSwitcher/osmappLayers';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {

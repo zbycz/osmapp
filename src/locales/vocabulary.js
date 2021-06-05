@@ -3,6 +3,7 @@
 export default {
   loading: 'Loading',
   error: 'Error',
+  close_panel: 'Close side-panel',
 
   'homepage.subtitle': 'A universal OpenStreetMap app',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
@@ -32,7 +33,6 @@ export default {
   `,
 
   'searchbox.placeholder': 'Search OpenStreetMap',
-  'searchbox.close_panel': 'Close side-panel',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
