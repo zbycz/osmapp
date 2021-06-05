@@ -2,7 +2,6 @@
 // https://openmaptiles.github.io/osm-bright-gl-style/style-cdn.json
 
 import { building3dBase, buildings3dExtrusion } from './buildings3dStyle';
-import { contoursStyle } from './contoursStyle';
 import { backgroundLayers, sources, sprite } from './layersParts';
 
 const mapboxStyle = {
@@ -274,7 +273,7 @@ const mapboxStyle = {
         'fill-opacity': 0.8,
       },
     },
-    ...contoursStyle,
+    // ...contoursStyle,
     {
       id: 'waterway-other',
       type: 'line',

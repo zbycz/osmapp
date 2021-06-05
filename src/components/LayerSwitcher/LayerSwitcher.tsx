@@ -5,28 +5,39 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import {
   Box,
-  Checkbox,
   IconButton,
   ListItemSecondaryAction,
-  Radio,
   SwipeableDrawer,
   Typography,
 } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import { LayerSwitcherButton } from './LayerSwitcherButton';
-import { dotToOptionalBr } from '../helpers';
+import SatelliteIcon from '@material-ui/icons/Satellite';
+import ExploreIcon from '@material-ui/icons/Explore';
+import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
+import FilterHdrIcon from '@material-ui/icons/FilterHdr';
+import MapIcon from '@material-ui/icons/Map';
+
+import PersonAddIcon from '@material-ui/icons/PersonAdd';
+import { t } from '../../services/intl';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
+import { dotToOptionalBr } from '../helpers';
+import { LayerSwitcherButton } from './LayerSwitcherButton';
 
 const StyledList = styled(List)`
   .MuiListItemIcon-root {
     min-width: 45px;
+
+    svg {
+      color: #bbb;
+    }
   }
 
-  .MuiListItem-dense {
-    padding-top: 0;
-    padding-bottom: 0;
+  .Mui-selected {
+    .MuiListItemIcon-root svg {
+      color: #777;
+    }
   }
 `;
 const Spacer = styled.div`
@@ -40,18 +51,20 @@ interface Layers {
 const retina = (window.devicePixelRatio || 1) >= 2 ? '@2x' : '';
 
 export const osmappLayers: Layers = {
-  basic: { name: 'Základní', type: 'basemap' },
-  outdoor: { name: 'Outdoorová', type: 'basemap' },
+  basic: { name: 'Základní', type: 'basemap', icon: ExploreIcon },
+  outdoor: { name: 'Outdoorová', type: 'basemap', icon: FilterHdrIcon },
   s1: { type: 'spacer' },
   mapnik: {
     name: 'OSM Mapnik',
     type: 'basemap',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+    icon: MapIcon,
   },
   sat: {
     name: 'Satelitní',
     type: 'basemap',
     url: 'https://api.maptiler.com/tiles/satellite/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    icon: SatelliteIcon,
   },
   // mtb: {
   //   name: 'MTB',
@@ -62,13 +75,14 @@ export const osmappLayers: Layers = {
     name: 'Cyklo',
     type: 'basemap',
     url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=00291b657a5d4c91bbacb0ff096e2c25`,
+    icon: DirectionsBikeIcon,
   },
   // snow: {
   //   name: 'Zimní',
   //   type: 'basemap',
   //   url: 'https://www.opensnowmap.org/tiles-pistes/{z}/{x}/{y}.png',
   // },
-  s2: { type: 'spacer' },
+  // s2: { type: 'spacer' },
   // c: { name: 'Vrstevnice', type: 'overlay' },
   // h: { name: 'Stínování kopců', type: 'overlay' },
   // p: { name: 'Ikonky (POI)', type: 'overlay' },
@@ -95,6 +109,7 @@ const Content = () => {
   const [userLayers, setUserLayers] = useUserLayers(['basic']);
   const items = [
     ...Object.entries(osmappLayers).map(([key, value]) => ({ ...value, key })),
+    ...(userLayers.length ? [{ type: 'spacer', key: 'userSpacer' }] : []),
     ...userLayers,
   ] as Layer[];
 
@@ -112,56 +127,57 @@ const Content = () => {
 
       <Box m={2}>
         <Typography variant="body2" color="textSecondary">
-          Díky tomu, že OpenStreetMap je databáze zdrojových dat, tak existuje
-          velké množství různých variant.
+          Díky tomu, že OpenStreetMap nabízí zdrojová data, tak kdokoliv může
+          vyrobit různé varianty mapy.
         </Typography>
       </Box>
 
       <StyledList dense aria-labelledby="layerSwitcher-heading">
-        {items.map(({ key, name, type, url }) => {
+        {items.map(({ key, name, type, url, icon }) => {
           if (type === 'spacer') {
             return <Spacer key={key} />;
           }
 
           const labelId = `checkbox-list-label-${name}`;
+          const selected = activeLayers.includes(key);
+          const label = selected ? (
+            <>{dotToOptionalBr(name)}</>
+          ) : (
+            dotToOptionalBr(name)
+          );
 
+          const a = { icon: icon ?? PersonAddIcon };
           return (
-            <ListItem button key={key} onClick={() => setActiveLayers([key])}>
+            <ListItem
+              button
+              key={key}
+              selected={selected}
+              onClick={() => setActiveLayers([key])}
+            >
               <ListItemIcon>
-                {type === 'basemap' ? (
-                  <Radio
-                    size="small"
-                    checked={activeLayers.includes(key)}
-                    name="radio-button-demo"
-                    inputProps={{ 'aria-labelledby': labelId }}
-                  />
-                ) : (
-                  <Checkbox
-                    size="small"
-                    checked={activeLayers.includes(key)}
-                    inputProps={{ 'aria-labelledby': labelId }}
-                  />
-                )}
+                <a.icon fontSize="small" color="textSecondary" />
               </ListItemIcon>
-              <ListItemText id={labelId} primary={dotToOptionalBr(name)} />
-              {type === 'user' && (
-                <ListItemSecondaryAction>
+              <ListItemText id={labelId} primary={label} />
+              <ListItemSecondaryAction>
+                {!icon && (
                   <IconButton
                     edge="end"
                     aria-label="comments"
-                    onClick={() =>
-                      setUserLayers((current) =>
-                        // if (activeLayers.include(current)) {  // TODO remove
-                        //   setActiveLayers(['basic']);
-                        // }
-                        [...current.filter((item) => item.url !== url)],
-                      )
-                    }
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setUserLayers((current) => {
+                        if (activeLayers.includes(key)) {
+                          setActiveLayers(['basic']);
+                        }
+                        return [...current.filter((item) => item.url !== url)];
+                      });
+                      return false;
+                    }}
                   >
-                    <CloseIcon />
+                    <CloseIcon fontSize="small" />
                   </IconButton>
-                </ListItemSecondaryAction>
-              )}
+                )}
+              </ListItemSecondaryAction>
             </ListItem>
           );
         })}
@@ -169,15 +185,16 @@ const Content = () => {
       <Box m={2}>
         <Button
           size="small"
+          color="secondary"
           onClick={() => {
             // eslint-disable-next-line no-alert
             const url = prompt(
               'TMS vrstva:',
-              'https://strava-heatmap.tiles.freemap.sk/all/hot/{z}/{x}/{y}.png?px=256',
+              'https://osm-{s}.zby.cz/tiles_ipr_last.php/{z}/{x}/{y}.png',
             );
             if (url) {
               setUserLayers((current) => [
-                ...current,
+                ...current.filter((item) => item.url !== url),
                 {
                   name: url.replace(/^https?:\/\/([^/]+).*$/, '$1'),
                   url,
@@ -185,6 +202,7 @@ const Content = () => {
                   type: 'user',
                 },
               ]);
+              setActiveLayers([url]);
             }
           }}
         >
@@ -197,19 +215,7 @@ const Content = () => {
 
 const LayerSwitcher = () => {
   const [opened, setOpened] = React.useState(false);
-
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event?.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
-      ) {
-        return;
-      }
-
-      setOpened(open);
-    };
+  const toggleDrawer = (open) => () => setOpened(open);
 
   return (
     <div>
@@ -219,10 +225,17 @@ const LayerSwitcher = () => {
         open={opened}
         onClose={toggleDrawer(false)}
         onOpen={toggleDrawer(true)}
-        // variant="persistent"
+        variant="persistent"
         disableBackdropTransition
       >
         <div role="presentation" style={{ width: '280px', height: '100%' }}>
+          <IconButton
+            aria-label={t('searchbox.close_panel')}
+            onClick={toggleDrawer(false)}
+            style={{ float: 'right' }}
+          >
+            <CloseIcon />
+          </IconButton>
           <Content />
         </div>
       </SwipeableDrawer>
