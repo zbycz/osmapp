@@ -1,10 +1,10 @@
 import {
-  building3dBase,
+  buildings3dBase,
   buildings3dExtrusion,
 } from './layers/buildings3dLayers';
 import { poiLayers } from './layers/poiLayers';
 import { addHoverPaint } from '../behaviour/featureHover';
-import { BACKGROUND, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
+import { BACKGROUND, GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 
 // TODO add icons for outdoor to our sprite (guideposts, benches, etc)
 // https://api.maptiler.com/maps/outdoor/sprite.png?key=7dlhLl3hiXQ1gsth0kGu
@@ -15,8 +15,7 @@ export const outdoorStyle = addHoverPaint({
   zoom: 7,
   pitch: 0,
   center: [8.299512182724584, 46.67124020906036],
-  glyphs:
-    'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=7dlhLl3hiXQ1gsth0kGu',
+  glyphs: GLYPHS,
   layers: [
     ...BACKGROUND,
     {
@@ -576,7 +575,7 @@ export const outdoorStyle = addHoverPaint({
       metadata: {},
       'source-layer': 'aeroway',
     },
-    ...buildings3dExtrusion,
+    ...buildings3dBase,
     {
       id: 'ferry',
       type: 'line',
@@ -956,7 +955,7 @@ export const outdoorStyle = addHoverPaint({
       minzoom: 10,
       'source-layer': 'landuse',
     },
-    ...building3dBase,
+    ...buildings3dExtrusion,
     {
       id: 'trail_yellow_casing_extra',
       type: 'line',

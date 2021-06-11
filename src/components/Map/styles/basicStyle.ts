@@ -2,7 +2,7 @@
 // https://openmaptiles.github.io/osm-bright-gl-style/style-cdn.json
 
 import {
-  building3dBase,
+  buildings3dBase,
   buildings3dExtrusion,
 } from './layers/buildings3dLayers';
 import { addHoverPaint } from '../behaviour/featureHover';
@@ -384,7 +384,7 @@ export const basicStyle = addHoverPaint({
         },
       },
     },
-    ...building3dBase,
+    ...buildings3dBase,
     {
       id: 'tunnel-service-track-casing',
       type: 'line',

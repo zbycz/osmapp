@@ -1,4 +1,4 @@
-export const building3dBase = [
+export const buildings3dBase = [
   {
     id: 'building',
     type: 'fill',
