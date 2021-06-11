@@ -10,28 +10,27 @@ const TMS_EXAMPLE = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
 
 export const AddUserLayerButton = ({ setUserLayers }) => {
   const { setActiveLayers } = useMapStateContext();
+  const onClick = () => {
+    const url = prompt(t('layerswitcher.add_layer_prompt'), TMS_EXAMPLE); // eslint-disable-line no-alert
+    if (!url) {
+      return;
+    }
+    setUserLayers((current) => {
+      const userLayersOmitSame = current.filter((item) => item.url !== url);
+      return [
+        ...userLayersOmitSame,
+        {
+          name: url.replace(/^https?:\/\/([^/]+).*$/, '$1'),
+          url,
+        },
+      ];
+    });
+    setActiveLayers([url]); // if this not found in osmappLayers, value is used as tiles URL
+  };
+
   return (
     <Box m={2}>
-      <Button
-        size="small"
-        color="secondary"
-        onClick={() => {
-          // eslint-disable-next-line no-alert
-          const url = prompt(t('layerswitcher.add_layer_prompt'), TMS_EXAMPLE);
-          if (url) {
-            setUserLayers((current) => [
-              ...current.filter((item) => item.url !== url),
-              {
-                name: url.replace(/^https?:\/\/([^/]+).*$/, '$1'),
-                url,
-                key: url,
-                type: 'user',
-              },
-            ]);
-            setActiveLayers([url]);
-          }
-        }}
-      >
+      <Button size="small" color="secondary" onClick={onClick}>
         {t('layerswitcher.add_layer_button')}
       </Button>
     </Box>
@@ -40,21 +39,19 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
 
 export const RemoveUserLayerAction = ({ url, setUserLayers }) => {
   const { activeLayers, setActiveLayers } = useMapStateContext();
+  const onClick = (e) => {
+    e.preventDefault();
+    setUserLayers((current) => {
+      if (activeLayers.includes(url)) {
+        setActiveLayers(['basic']);
+      }
+      return [...current.filter((item) => item.url !== url)];
+    });
+    return false;
+  };
+
   return (
-    <IconButton
-      edge="end"
-      aria-label="comments"
-      onClick={(e) => {
-        e.preventDefault();
-        setUserLayers((current) => {
-          if (activeLayers.includes(url)) {
-            setActiveLayers(['basic']);
-          }
-          return [...current.filter((item) => item.url !== url)];
-        });
-        return false;
-      }}
-    >
+    <IconButton edge="end" aria-label="comments" onClick={onClick}>
       <CloseIcon fontSize="small" />
     </IconButton>
   );

@@ -41,7 +41,12 @@ const getAllLayers = (userLayers: Layer[]) => {
   return [
     ...Object.entries(osmappLayers).map(([key, val]) => ({ ...val, key })),
     ...(userLayers.length ? [spacer] : []),
-    ...userLayers.map((layer) => ({ ...layer, Icon: PersonAddIcon })),
+    ...userLayers.map((layer) => ({
+      ...layer,
+      key: layer.url,
+      Icon: PersonAddIcon,
+      type: 'user',
+    })),
   ] as Layer[];
 };
 
