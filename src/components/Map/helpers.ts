@@ -8,7 +8,7 @@ const isOsmLayer = (id) => {
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
 
-export const layersWithOsmId = basicStyle.layers
+export const layersWithOsmId = basicStyle.layers // TODO make it custom for basic/outdoor + revert place_
   .map((x) => x.id)
   .filter((id) => isOsmLayer(id));
 

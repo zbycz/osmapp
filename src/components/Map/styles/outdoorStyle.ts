@@ -3473,7 +3473,7 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'waterway',
     },
     {
-      id: 'place_village',
+      id: 'place-village',
       type: 'symbol',
       paint: {
         'text-color': 'rgba(30, 30, 34, 1)',
@@ -3504,7 +3504,7 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'place',
     },
     {
-      id: 'place_other',
+      id: 'place-other',
       type: 'symbol',
       paint: {
         'text-color': {
@@ -3541,7 +3541,7 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'place',
     },
     {
-      id: 'place_town',
+      id: 'place-town',
       type: 'symbol',
       paint: {
         'text-color': 'rgba(30, 30, 34, 1)',
@@ -3575,7 +3575,7 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'place',
     },
     {
-      id: 'place_city',
+      id: 'place-city',
       type: 'symbol',
       paint: {
         'text-color': {
@@ -3619,7 +3619,7 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'place',
     },
     {
-      id: 'place_park',
+      id: 'place-park',
       type: 'symbol',
       paint: {
         'text-color': 'rgba(24, 107, 32, 1)',
@@ -3666,7 +3666,7 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'park',
     },
     {
-      id: 'place_capital',
+      id: 'place-capital',
       type: 'symbol',
       paint: {
         'text-color': '#333',
@@ -3713,7 +3713,7 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'place',
     },
     {
-      id: 'place_state',
+      id: 'place-state',
       type: 'symbol',
       paint: {
         'text-color': 'rgba(124, 124, 129, 1)',

@@ -20,7 +20,7 @@ export const useOnFeatureClicked = useAddMapEvent((map, setFeature) => ({
 
     const skeleton = getSkeleton(features[0], coords);
     addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
-    console.log('clicked map feature (skeleton): ', skeleton); // eslint-disable-line no-console
+    console.log(`clicked map feature (id=${features[0].id}): `, skeleton); // eslint-disable-line no-console
 
     if (!skeleton.nonOsmObject) {
       // router wouldnt overwrite the skeleton if the page is already loaded
