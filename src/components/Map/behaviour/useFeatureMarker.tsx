@@ -1,10 +1,9 @@
 import maplibregl from 'maplibre-gl';
 import { useEffect } from 'react';
-import { useMapEffect } from '../helpers';
-import { layersWithOsmId } from './layers';
-import { convertOsmIdToMapId } from './helpers';
-import { Feature } from '../../services/types';
-import { useFeatureContext } from '../utils/FeatureContext';
+import { useMapEffect } from '../../helpers';
+import { convertOsmIdToMapId, layersWithOsmId } from '../helpers';
+import { Feature } from '../../../services/types';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const MARKER_OPTIONS = {
   color: '#eb5757',

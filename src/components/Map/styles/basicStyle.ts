@@ -1,60 +1,21 @@
 // https://github.com/openmaptiles/klokantech-3d-gl-style/blob/master/style.json
 // https://openmaptiles.github.io/osm-bright-gl-style/style-cdn.json
 
-import { building3dBase, buildings3dExtrusion } from './buildings3dStyle';
-import { backgroundLayers, sources, sprite } from './layersParts';
-import { addHoverPaint } from './hover';
+import {
+  building3dBase,
+  buildings3dExtrusion,
+} from './layers/buildings3dLayers';
+import { addHoverPaint } from '../behaviour/featureHover';
+import { BACKGROUND, GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 
-export const mapboxStyle = addHoverPaint({
+export const basicStyle = addHoverPaint({
   version: 8,
   name: 'OSM Bright',
-  metadata: {
-    'mapbox:type': 'template',
-    'mapbox:groups': {
-      1444849364238.8171: {
-        collapsed: false,
-        name: 'Buildings',
-      },
-      1444849354174.1904: {
-        collapsed: true,
-        name: 'Tunnels',
-      },
-      1444849388993.3071: {
-        collapsed: false,
-        name: 'Land',
-      },
-      1444849242106.713: {
-        collapsed: false,
-        name: 'Places',
-      },
-      1444849382550.77: {
-        collapsed: false,
-        name: 'Water',
-      },
-      1444849345966.4436: {
-        collapsed: false,
-        name: 'Roads',
-      },
-      1444849334699.1902: {
-        collapsed: true,
-        name: 'Bridges',
-      },
-    },
-    'mapbox:autocomposite': false,
-    'openmaptiles:version': '3.x',
-    'openmaptiles:mapbox:owner': 'openmaptiles',
-    'openmaptiles:mapbox:source:url': 'mapbox://openmaptiles.4qljc88t',
-  },
-  center: [8.542, 47.372],
-  zoom: 11.6,
-  bearing: 0,
-  pitch: 0,
-  sources,
-  sprite,
-  glyphs:
-    'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=7dlhLl3hiXQ1gsth0kGu',
+  sources: OSMAPP_SOURCES,
+  sprite: OSMAPP_SPRITE,
+  glyphs: GLYPHS,
   layers: [
-    ...backgroundLayers,
+    ...BACKGROUND,
     {
       id: 'landcover-glacier',
       type: 'fill',

@@ -1,24 +1,32 @@
 // https://github.com/openmaptiles/klokantech-terrain-gl-style/blob/master/style.json
 
-export const contoursStyle = [
-  {
-    id: 'hillshading',
-    type: 'raster',
-    source: 'hillshading',
-    layout: { visibility: 'visible' },
-    paint: {
-      'raster-contrast': 0,
-      'raster-fade-duration': 300,
-      'raster-opacity': {
-        base: 0.5,
-        stops: [
-          [3, 0],
-          [5, 0.15],
-          [12, 0.15],
-        ],
-      },
+// hillshading: {
+//   type: 'raster' as const,
+//   url: `https://api.maptiler.com/tiles/hillshades/tiles.json?key=${apiKey}`,
+//   tileSize: 256,
+// },
+
+const hillshading = {
+  id: 'hillshading',
+  type: 'raster',
+  source: 'hillshading',
+  layout: { visibility: 'visible' },
+  paint: {
+    'raster-contrast': 0,
+    'raster-fade-duration': 300,
+    'raster-opacity': {
+      base: 0.5,
+      stops: [
+        [3, 0],
+        [5, 0.15],
+        [12, 0.15],
+      ],
     },
   },
+};
+
+export const hillsLayers = [
+  hillshading,
   {
     id: 'contour_label',
     type: 'symbol',

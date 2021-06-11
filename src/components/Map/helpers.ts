@@ -1,6 +1,16 @@
-import { layersWithOsmId } from './layers';
 import { getCenter } from '../../services/getCenter';
 import { OsmApiId } from '../../services/helpers';
+import { basicStyle } from './styles/basicStyle';
+
+const isOsmLayer = (id) => {
+  if (id === 'place-country-3') return false; // https://github.com/zbycz/osmapp/issues/35
+  const prefixes = ['water-name-', 'poi-', 'place-'];
+  return prefixes.some((prefix) => id.startsWith(prefix));
+};
+
+export const layersWithOsmId = basicStyle.layers
+  .map((x) => x.id)
+  .filter((id) => isOsmLayer(id));
 
 export const convertMapIdToOsmId = (feature) => {
   if (!feature || !feature.id) return false;

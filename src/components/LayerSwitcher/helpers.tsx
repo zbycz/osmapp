@@ -57,13 +57,13 @@ export const RemoveUserLayerAction = ({ url, setUserLayers }) => {
   );
 };
 
-export const LayersHeader = () => (
+export const LayersHeader = ({ headingId }) => (
   <>
     <Box m={2}>
       <Typography
         variant="h5"
         style={{ color: 'rgba(0, 0, 0, 0.7)' }}
-        id="layerSwitcher-heading"
+        id={headingId}
       >
         {t('layerswitcher.heading')}
       </Typography>

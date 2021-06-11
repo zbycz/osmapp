@@ -16,10 +16,10 @@ export const addHoverPaint = (origStyle) => {
 export const setUpHover = (map, layersWithOsmId) => {
   let lastHover = null;
 
-  const setHover = (feature, hover) =>
-    feature && map.setFeatureState(feature, { hover });
-  const setHoverOn = (feature) => setHover(feature, true);
-  const setHoverOff = (feature) => setHover(feature, false);
+  const setHoverOn = (feature) =>
+    feature && map.setFeatureState(feature, { hover: true });
+  const setHoverOff = (feature) =>
+    feature && map.setFeatureState(feature, { hover: false });
 
   const onMouseMove = (e) => {
     if (e.features && e.features.length > 0) {

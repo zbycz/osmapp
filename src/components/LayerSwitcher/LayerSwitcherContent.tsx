@@ -36,18 +36,22 @@ const Spacer = styled.div`
   padding-bottom: 1.5em;
 `;
 
-const getAllLayers = (userLayers: Layer[]) => {
-  const spacer = { type: 'spacer', key: 'userSpacer' };
+const getAllLayers = (userLayers: Layer[]): Layer[] => {
+  const spacer = { type: 'spacer' as const, key: 'userSpacer' };
+
   return [
-    ...Object.entries(osmappLayers).map(([key, val]) => ({ ...val, key })),
+    ...Object.entries(osmappLayers).map(([key, layer]) => ({
+      ...layer,
+      key,
+    })),
     ...(userLayers.length ? [spacer] : []),
     ...userLayers.map((layer) => ({
       ...layer,
       key: layer.url,
       Icon: PersonAddIcon,
-      type: 'user',
+      type: 'user' as const,
     })),
-  ] as Layer[];
+  ];
 };
 
 export const LayerSwitcherContent = () => {
@@ -57,11 +61,13 @@ export const LayerSwitcherContent = () => {
 
   return (
     <>
-      <LayersHeader />
+      <LayersHeader headingId="layerSwitcher-heading" />
 
       <StyledList dense aria-labelledby="layerSwitcher-heading">
         {layers.map(({ key, name, type, url, Icon }) => {
-          if (type === 'spacer') return <Spacer key={key} />;
+          if (type === 'spacer') {
+            return <Spacer key={key} />;
+          }
           return (
             <ListItem
               button

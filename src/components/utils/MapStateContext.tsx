@@ -1,5 +1,6 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { usePersistedState } from './usePersistedState';
+import { DEFAULT_MAP } from '../../config';
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer';
@@ -29,7 +30,7 @@ export const MapStateContext = createContext(undefined);
 
 export const MapStateProvider = ({ children, initialMapView }) => {
   const [activeLayers, setActiveLayers] = usePersistedState('activeLayers', [
-    'basic',
+    DEFAULT_MAP,
   ]);
   const [bbox, setBbox] = useState();
   const [view, setView] = useState(initialMapView);

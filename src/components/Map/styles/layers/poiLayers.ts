@@ -1,4 +1,4 @@
-// originaly from mapboxStyle
+// originaly from basicStyle
 
 export const poiLayers = [
   {

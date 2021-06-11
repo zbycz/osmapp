@@ -1,7 +1,10 @@
-import { building3dBase, buildings3dExtrusion } from './buildings3dStyle';
-import { poiLayers } from './poiLayers';
-import { backgroundLayers, sources, sprite } from './layersParts';
-import { addHoverPaint } from './hover';
+import {
+  building3dBase,
+  buildings3dExtrusion,
+} from './layers/buildings3dLayers';
+import { poiLayers } from './layers/poiLayers';
+import { addHoverPaint } from '../behaviour/featureHover';
+import { BACKGROUND, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 
 // TODO add icons for outdoor to our sprite (guideposts, benches, etc)
 // https://api.maptiler.com/maps/outdoor/sprite.png?key=7dlhLl3hiXQ1gsth0kGu
@@ -15,7 +18,7 @@ export const outdoorStyle = addHoverPaint({
   glyphs:
     'https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=7dlhLl3hiXQ1gsth0kGu',
   layers: [
-    ...backgroundLayers,
+    ...BACKGROUND,
     {
       id: 'landcover_grass',
       type: 'fill',
@@ -3882,7 +3885,7 @@ export const outdoorStyle = addHoverPaint({
     ...poiLayers,
   ],
   bearing: 0,
-  sources,
+  sources: OSMAPP_SOURCES,
   version: 8,
   metadata: {
     'mapbox:type': 'template',
@@ -3890,5 +3893,5 @@ export const outdoorStyle = addHoverPaint({
       'This style was generated on MapTiler Cloud. Usage outside of MapTiler Cloud requires valid OpenMapTiles Production Package: https://openmaptiles.com/production-package/ -- please contact us.',
     'openmaptiles:version': '3.x',
   },
-  sprite,
+  sprite: OSMAPP_SPRITE,
 });
