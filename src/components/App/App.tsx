@@ -48,7 +48,7 @@ const IndexWithProviders = () => {
       <SearchBox />
       <Loading />
       {featureShown && <FeaturePanel />}
-      <HomepagePanel />
+      {!featureShown && <HomepagePanel />}
       <Map />
     </>
   );
