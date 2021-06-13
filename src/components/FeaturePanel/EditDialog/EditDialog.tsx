@@ -7,7 +7,6 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import useTheme from '@material-ui/core/styles/useTheme';
 import DialogContent from '@material-ui/core/DialogContent';
 import { CircularProgress } from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
 import styled from 'styled-components';
 import Router from 'next/router';
 import { useToggleState } from '../../helpers';
@@ -17,9 +16,10 @@ import { clearFeatureCache, insertOsmNote } from '../../../services/osmApi';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import {
   ChangeLocationEditor,
-  ContributionInfoBox,
   CommentField,
+  ContributionInfoBox,
   DialogHeading,
+  OsmLogin,
   PlaceCancelledToggle,
 } from './components';
 import { OtherTagsEditor } from './OtherTagsEditor';
@@ -27,7 +27,7 @@ import { SuccessContent } from './SuccessContent';
 import { icons } from '../../../assets/icons';
 import { editOsmFeature } from '../../../services/osmApiAuth';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
-import { t, Translation } from '../../../services/intl';
+import { t } from '../../../services/intl';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -48,40 +48,6 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
-const OsmLogin = () => {
-  const { loggedIn, osmUser, handleLogin, handleLogout } = useOsmAuthContext();
-
-  return (
-    <Typography variant="body2" color="textSecondary" paragraph>
-      {loggedIn ? (
-        <>
-          <Translation id="editdialog.loggedInMessage" values={{ osmUser }} /> (
-          <button
-            type="button"
-            className="linkLikeButton"
-            onClick={handleLogout}
-          >
-            {t('editdialog.logout')}
-          </button>
-          )
-        </>
-      ) : (
-        <>
-          <Translation id="editdialog.anonymousMessage1" />{' '}
-          <button
-            type="button"
-            className="linkLikeButton"
-            onClick={handleLogin}
-          >
-            {t('editdialog.anonymousMessage2_login')}
-          </button>
-          <Translation id="editdialog.anonymousMessage3" />
-        </>
-      )}
-    </Typography>
-  );
-};
-
 interface Props {
   feature: Feature;
   open: boolean;
@@ -89,12 +55,43 @@ interface Props {
   focusTag: boolean | string;
 }
 
+const saveDialog = ({
+  feature,
+  tags,
+  cancelled,
+  location,
+  comment,
+  loggedIn,
+  setLoading,
+  setSuccessInfo,
+}) => {
+  const noteText = createNoteText(
+    feature,
+    tags,
+    cancelled,
+    location,
+    comment,
+    loggedIn,
+  );
+  if (noteText == null) {
+    alert(t('editdialog.changes_needed')); // eslint-disable-line no-alert
+    return;
+  }
+
+  setLoading(true);
+  const promise = loggedIn
+    ? editOsmFeature(feature, comment, tags, cancelled)
+    : insertOsmNote(feature.center, noteText);
+
+  promise.then(setSuccessInfo, () => setTimeout(() => setLoading(false), 1000));
+};
+
 export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
   const fullScreen = useIsFullScreen();
+  const [tags, setTag] = useTagsState(feature.tags); // TODO all these should go into `values`, consider Formik
   const [cancelled, toggleCancelled] = useToggleState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
-  const [tags, setTag] = useTagsState(feature.tags);
   const [loading, setLoading] = useState(false);
   const [successInfo, setSuccessInfo] = useState<any>(false);
   const { loggedIn } = useOsmAuthContext();
@@ -109,28 +106,17 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
     }
   };
 
-  const saveDialog = async () => {
-    const noteText = createNoteText(
+  const handleSave = () =>
+    saveDialog({
       feature,
       tags,
       cancelled,
       location,
       comment,
       loggedIn,
-    );
-    if (noteText == null) {
-      // eslint-disable-next-line no-alert
-      alert(t('editdialog.changes_needed'));
-      return;
-    }
-
-    setLoading(true);
-    setSuccessInfo(
-      loggedIn
-        ? await editOsmFeature(feature, comment, tags, cancelled)
-        : await insertOsmNote(feature.center, noteText),
-    );
-  };
+      setLoading,
+      setSuccessInfo,
+    });
 
   const ico = icons.includes(feature.properties.class)
     ? feature.properties.class
@@ -192,11 +178,11 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
             </form>
           </DialogContent>
           <DialogActions>
-            {loading && <CircularProgress />}
+            {loading && <CircularProgress size={20} />}
             <Button onClick={onClose} color="primary">
               {t('editdialog.cancel_button')}
             </Button>
-            <Button onClick={saveDialog} color="primary" variant="contained">
+            <Button onClick={handleSave} color="primary" variant="contained">
               {loggedIn
                 ? cancelled
                   ? t('editdialog.save_button_delete')
