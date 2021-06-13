@@ -62,7 +62,7 @@ const FeaturePanel = () => {
   const [dialogOpenedWith, setDialogOpenedWith] =
     useState<boolean | string>(false);
 
-  const { nonOsmObject, tags, layer, osmMeta, properties, skeleton, members } =
+  const { point, tags, layer, osmMeta, properties, skeleton, members } =
     feature;
 
   const osmappLink = getOsmappLink(feature);
@@ -75,11 +75,9 @@ const FeaturePanel = () => {
 
   return (
     <PanelWrapper>
-      {!nonOsmObject && (
-        <Head>
-          <title>{tags.name || subclass} · OsmAPP</title>
-        </Head>
-      )}
+      <Head>
+        <title>{tags.name || subclass} · OsmAPP</title>
+      </Head>
       <PanelScrollbars>
         <FeatureImage feature={feature} ico={properties.class}>
           <PoiType>
@@ -117,7 +115,7 @@ const FeaturePanel = () => {
         <PanelContent>
           <FeatureHeading
             title={tags.name || subclass}
-            onEdit={setDialogOpenedWith}
+            onEdit={!point && setDialogOpenedWith}
           />
 
           <OsmError />
@@ -135,8 +133,11 @@ const FeaturePanel = () => {
 
           {advanced && <Members members={members} />}
 
-          {!skeleton && (
-            <FeatureEditButton setDialogOpenedWith={setDialogOpenedWith} />
+          {!point && (
+            <FeatureEditButton
+              add={point}
+              setDialogOpenedWith={setDialogOpenedWith}
+            />
           )}
 
           <EditDialog
@@ -148,14 +149,10 @@ const FeaturePanel = () => {
           />
 
           <PanelFooter>
-            <FeatureDescription
-              osmMeta={osmMeta}
-              nonOsmObject={nonOsmObject}
-              setAdvanced={setAdvanced}
-            />
+            <FeatureDescription setAdvanced={setAdvanced} />
             <Coordinates feature={feature} />
             <br />
-            {!nonOsmObject && <a href={osmappLink}>{osmappLink}</a>}
+            <a href={osmappLink}>{osmappLink}</a>
             <br />
             <label>
               <input

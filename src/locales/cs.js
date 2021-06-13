@@ -10,7 +10,7 @@ export default {
   'homepage.osm_logo_alt': 'Logo OpenStreetMap',
   'homepage.about_osm': `Mapová data pochází z projektu <a href="https://osm.org">OpenStreetMap</a>, tvoří ho
     miliony dobrovolníků — podobně jako Wikipedii.
-    Každý rozkliknutý prvek zde můžete pohodlně <em>Upravit</em>.`,
+    Každý rozkliknutý prvek zde můžete <em>Upravit</em>.`,
   'homepage.heading_about_osmapp': 'O projektu OsmAPP',
   'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
     včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
@@ -41,8 +41,10 @@ export default {
   'featurepanel.other_info_heading': 'Další informace',
   'featurepanel.edit_button_title': 'Upravit v databázi OpenStreetMap',
   'featurepanel.edit_button': 'Upravit místo',
+  'featurepanel.add_place_button': 'Přidat místo',
   'featurepanel.feature_description_nonosm': 'Mapový prvek __type__',
   'featurepanel.feature_description_osm': '__type__ v databázi OpenStreetMap',
+  'featurepanel.feature_description_point': 'Mapové souřadnice',
   'featurepanel.show_objects_around': 'Zobrazit objekty v okolí',
   'featurepanel.uncertain_image': 'Je zobrazena nejbližší fotka uliční úrovně. Může ukazovat jiný objekt.',
   'featurepanel.inline_edit_title': 'Upravit',

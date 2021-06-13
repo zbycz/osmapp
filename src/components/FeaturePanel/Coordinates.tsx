@@ -8,7 +8,8 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { toDeg, toDM } from '../../utils';
+import { positionToDeg, positionToDM } from '../../utils';
+import { Position } from '../../services/types';
 
 const StyledMenuItem = styled(MenuItem)`
   svg {
@@ -55,16 +56,21 @@ const LinkItem = ({ href, label }) => (
   </StyledMenuItem>
 );
 
-const useGetItems = (lat, lon) => {
+// Our map uses 512 tiles, so our zoom is "one less"
+// https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
+const MAPBOXGL_ZOOM_DIFFERENCE = 1;
+
+const useGetItems = ([lon, lat]: Position) => {
   const {
-    view: [z],
+    view: [ourZoom],
   } = useMapStateContext();
   const { feature } = useFeatureContext();
 
-  const zInt = Math.round(z);
+  const zoom = parseFloat(ourZoom) + MAPBOXGL_ZOOM_DIFFERENCE;
+  const zoomInt = Math.round(zoom);
   const osmQuery = feature?.osmMeta?.id
     ? `${feature.osmMeta.type}/${feature.osmMeta.id}`
-    : `?mlat=${lat}&mlon=${lon}&zoom=${z}`;
+    : `?mlat=${lat}&mlon=${lon}&zoom=${zoomInt}`;
 
   return [
     {
@@ -77,23 +83,25 @@ const useGetItems = (lat, lon) => {
     },
     {
       label: 'Mapy.cz',
-      href: `https://mapy.cz/zakladni?z=${zInt}&q=${lat}%C2%B0%20${lon}%C2%B0`,
+      href: `https://mapy.cz/zakladni?q=${lat}%C2%B0%20${lon}%C2%B0`,
     },
     {
       label: 'Google Maps',
-      href: `https://google.com/maps/search/${lat}%C2%B0%20${lon}%C2%B0/@${lat},${lon},${z}z`,
+      href: `https://google.com/maps/search/${lat}%C2%B0%20${lon}%C2%B0/@${lat},${lon},${zoomInt}z`,
     },
   ];
 };
 
-export const Coords = ({ coords: [lon, lat] }) => {
+type Props = { coords: Position };
+
+export const Coords = ({ coords }: Props) => {
   const [opened, open, close] = useBoolState(false);
   const anchorRef = React.useRef();
-  const items = useGetItems(lat, lon);
+  const items = useGetItems(coords);
 
   return (
     <span title="latitude, longitude (y, x)">
-      {toDeg(lat, lon)}
+      {positionToDeg(coords)}
       <Menu
         anchorEl={anchorRef.current}
         open={opened}
@@ -104,17 +112,17 @@ export const Coords = ({ coords: [lon, lat] }) => {
           <LinkItem key={label} href={href} label={label} />
         ))}
         <Divider />
-        <CopyTextItem text={toDeg(lat, lon)} />
-        <CopyTextItem text={toDM(lat, lon)} />
+        <CopyTextItem text={positionToDeg(coords)} />
+        <CopyTextItem text={positionToDM(coords)} />
       </Menu>
       <ToggleButton onClick={open} ref={anchorRef} />
     </span>
   );
 };
 
-const Coordinates = ({ feature: { center } }) =>
-  center === undefined || center[0] == null || center[1] == null ? null : (
-    <Coords coords={center} />
-  );
+const Coordinates = ({ feature: { center, roundedCenter = undefined } }) => {
+  const coords = roundedCenter ?? center;
+  return coords ? <Coords coords={coords} /> : null;
+};
 
 export default Coordinates;

@@ -31,7 +31,7 @@ const useUpdateViewFromFeature = () => {
 
     if (!viewAlreadyUpdated && feature?.center) {
       const [lon, lat] = feature.center;
-      setView([17, lat, lon]);
+      setView([17.0, lat, lon]);
     }
 
     setLastFeature(feature);

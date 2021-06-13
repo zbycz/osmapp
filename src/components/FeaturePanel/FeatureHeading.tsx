@@ -16,7 +16,7 @@ const Wrapper = styled.div`
 
 const FeatureHeading = ({ title, onEdit }) => (
   <Wrapper>
-    <EditIconButton onClick={() => onEdit('name')} />
+    {onEdit && <EditIconButton onClick={() => onEdit('name')} />}
     {title}
   </Wrapper>
 );

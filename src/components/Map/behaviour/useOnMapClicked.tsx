@@ -6,9 +6,10 @@ import {
   getUrlOsmId,
   isSameOsmId,
 } from '../../../services/helpers';
-import { toDeg } from '../../../utils';
+import { getRoundedPosition } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
 import { convertMapIdToOsmId, layersWithOsmId } from '../helpers';
+import { getCoordsFeature } from '../../../services/getCoordsFeature';
 
 export const getSkeleton = (feature, clickCoords) => {
   const isOsmObject = layersWithOsmId.includes(feature.layer.id);
@@ -27,17 +28,6 @@ export const getSkeleton = (feature, clickCoords) => {
   };
 };
 
-const getCoordsSkeleton = (coords: number[]) => {
-  const [lon, lat] = coords;
-  return getSkeleton(
-    {
-      layer: { id: 'point' },
-      properties: { name: toDeg(lat, lon), class: 'marker' },
-    },
-    coords,
-  );
-};
-
 export const useOnMapClicked = useAddMapEvent(
   (map, setFeature, setPreview) => ({
     eventType: 'click',
@@ -46,16 +36,18 @@ export const useOnMapClicked = useAddMapEvent(
       const coords = map.unproject(point).toArray();
       const features = map.queryRenderedFeatures(point);
       if (!features.length) {
-        setPreview(getCoordsSkeleton(coords));
+        const roundedPosition = getRoundedPosition(coords, map.getZoom());
+        setPreview(getCoordsFeature(roundedPosition));
         return;
       }
 
       const skeleton = getSkeleton(features[0], coords);
-      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
+      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
       console.log(`clicked map feature (id=${features[0].id}): `, skeleton); // eslint-disable-line no-console
 
       if (skeleton.nonOsmObject) {
-        setPreview(skeleton);
+        const roundedPosition = getRoundedPosition(coords, map.getZoom());
+        setPreview(getCoordsFeature(roundedPosition));
         return;
       }
 
@@ -64,6 +56,7 @@ export const useOnMapClicked = useAddMapEvent(
         isSameOsmId(feature, skeleton) ? feature : skeleton,
       );
       addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
+      setPreview(null);
 
       Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
     },

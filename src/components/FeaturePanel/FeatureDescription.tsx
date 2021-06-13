@@ -5,6 +5,7 @@ import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import CloseIcon from '@material-ui/icons/Close';
 import { capitalize, useToggleState } from '../helpers';
 import { t } from '../../services/intl';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const StyledIconButton = styled(IconButton)`
   position: absolute !important; /* TODO mui styles takes precendence, why? */
@@ -25,23 +26,23 @@ const A = ({ href, children }) =>
     children
   );
 
-const getUrls = ({ type, id, changeset, user }) => ({
+const getUrls = ({ type, id, changeset = '', user = '' }) => ({
   itemUrl: `https://openstreetmap.org/${type}/${id}`,
   historyUrl: `https://openstreetmap.org/${type}/${id}/history`,
   changesetUrl: changeset && `https://openstreetmap.org/changeset/${changeset}`, // prettier-ignore
   userUrl: user && `https://openstreetmap.org/user/${user}`,
 });
 
-export const FeatureDescription = ({ osmMeta, nonOsmObject, setAdvanced }) => {
+export const FeatureDescription = ({ setAdvanced }) => {
+  const {
+    feature: { osmMeta, nonOsmObject, point },
+  } = useFeatureContext();
+
   const [isShown, toggle] = useToggleState(false);
 
   const { timestamp = '2001-00-00', type, user, version = '?' } = osmMeta;
   const { itemUrl, historyUrl, changesetUrl, userUrl } = getUrls(osmMeta);
   const date = timestamp?.split('T')[0];
-
-  const description = nonOsmObject
-    ? t('featurepanel.feature_description_nonosm', { type })
-    : t('featurepanel.feature_description_osm', { type: capitalize(type) });
 
   const onClick = (e) => {
     if (!isShown) {
@@ -52,9 +53,19 @@ export const FeatureDescription = ({ osmMeta, nonOsmObject, setAdvanced }) => {
     toggle();
   };
 
+  if (point) {
+    return <div>{t('featurepanel.feature_description_point')}</div>;
+  }
+  if (nonOsmObject) {
+    return <div>{t('featurepanel.feature_description_nonosm', { type })}</div>;
+  }
+
   return (
     <div>
-      {!isShown && description}
+      {!isShown &&
+        t('featurepanel.feature_description_osm', {
+          type: capitalize(type),
+        })}
       {isShown && (
         <>
           <A href={itemUrl}>{capitalize(type)}</A> •{' '}
@@ -64,15 +75,13 @@ export const FeatureDescription = ({ osmMeta, nonOsmObject, setAdvanced }) => {
         </>
       )}
 
-      {!nonOsmObject && (
-        <StyledIconButton
-          title="Alt+Shift+click to enable advanced mode (show-all-tags, show-members, around-show-all)"
-          onClick={onClick}
-        >
-          {!isShown && <InfoOutlinedIcon fontSize="small" color="secondary" />}
-          {isShown && <CloseIcon fontSize="small" color="disabled" />}
-        </StyledIconButton>
-      )}
+      <StyledIconButton
+        title="Alt+Shift+click to enable advanced mode (show-all-tags, show-members, around-show-all)"
+        onClick={onClick}
+      >
+        {!isShown && <InfoOutlinedIcon fontSize="small" color="secondary" />}
+        {isShown && <CloseIcon fontSize="small" color="disabled" />}
+      </StyledIconButton>
     </div>
   );
 };

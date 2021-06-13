@@ -2,6 +2,7 @@ import * as xml2js from 'isomorphic-xml2js';
 import fetch from 'isomorphic-unfetch';
 import { isServer } from '../components/helpers';
 import { Feature } from './types';
+import { roundedToDegUrl } from '../utils';
 
 export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
@@ -50,8 +51,15 @@ export const getApiId = (value): OsmApiId => {
   return { type, id };
 };
 
-export const getOsmappLink = (feature: Feature) =>
-  `https://osmapp.org/${getUrlOsmId(feature.osmMeta)}`;
+export const getOsmappLink = (feature: Feature) => {
+  if (feature?.nonOsmObject === false && feature?.osmMeta?.id)
+    return `https://osmapp.org/${getUrlOsmId(feature.osmMeta)}`;
+
+  if (feature?.roundedCenter)
+    return `https://osmapp.org/${roundedToDegUrl(feature.roundedCenter)}`;
+
+  return '';
+};
 
 export const isSameOsmId = (feature, skeleton) =>
   feature &&

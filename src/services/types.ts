@@ -14,8 +14,11 @@ export type NoImage = undefined;
 
 export type Image = ImageUrls | LoadingImage | NoImage;
 
-// coordinates in geojson format: [x, y] = [lon, lat]
-export type Position = number[]; // [number, number]
+// TODO rename Position to LonLat
+// coordinates in geojson format
+export type Position = number[]; // [lon, lat] = [x,y]
+
+export type LonLatRounded = string[];
 
 export interface Point {
   type: 'Point';
@@ -44,7 +47,9 @@ interface RelationMember {
   type: string;
 }
 
+// TODO split in two types /extend/
 export interface Feature {
+  point?: boolean;
   type: 'Feature';
   geometry?: FeatureGeometry;
   osmMeta: {
@@ -66,6 +71,7 @@ export interface Feature {
     subclass: string;
   };
   center: Position;
+  roundedCenter?: LonLatRounded;
   ssrFeatureImage?: Image;
   error?: 'gone' | 'unknown' | string;
 

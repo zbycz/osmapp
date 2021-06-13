@@ -1,8 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
+import Router from 'next/router';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
+import { roundedToDegUrl } from '../../utils';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -21,7 +23,8 @@ export const FeaturePreview = () => {
 
   const handleClick = () => {
     setPreview(null);
-    setFeature(preview);
+    setFeature({ ...preview, skeleton: true }); // needed so map doesnt move (Router will create new coordsFeature)
+    Router.push(`/${roundedToDegUrl(preview.roundedCenter)}`);
   };
 
   const onClose = () => {

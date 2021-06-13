@@ -3,6 +3,7 @@ import { getFeatureImage } from '../../services/images';
 import { fetchFeature } from '../../services/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
+import { getCoordsFeature } from '../../services/getCoordsFeature';
 
 const DEFAULT_VIEW = [4, 50, 14];
 
@@ -37,11 +38,28 @@ const timeout = (time) =>
   new Promise((resolve) => setTimeout(resolve, time)) as Promise<undefined>;
 
 export const getInititalFeature = async (ctx) => {
-  const { osmid, osmtype, id } = ctx.query;
+  const { all, id } = ctx.query;
+
+  // url: /
+  if (!all) {
+    return null;
+  }
+
+  if (all[0].match(/^[-.0-9]+,[-.0-9]+$/)) {
+    const [lat, lon] = all[0].split(',');
+    return getCoordsFeature([lon, lat]); // TODO ssr image ?
+  }
+
+  const [osmtype, osmid] = all;
   const shortId =
     osmtype && osmtype.match(/^node|way|relation$/)
       ? osmtype.substr(0, 1) + osmid
       : id;
+
+  if (!shortId) {
+    // TODO 404 when !shortId
+    return null;
+  }
 
   const t1 = new Date().getTime();
   const initialFeature = await fetchFeature(shortId);
@@ -49,6 +67,7 @@ export const getInititalFeature = async (ctx) => {
   const t2 = new Date().getTime();
   const osmRequest = t2 - t1;
 
+  // for SSR try to add image in time limit
   if (initialFeature && isServer() && osmRequest < 1600) {
     const timeoutIn2Secs = 2000 - osmRequest;
     initialFeature.ssrFeatureImage = await Promise.race([
