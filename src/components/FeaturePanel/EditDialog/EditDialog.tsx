@@ -179,7 +179,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
                 feature={feature}
               />
 
-              <ContributionInfoBox loggedIn={loggedIn} />
+              <ContributionInfoBox />
               <CommentField comment={comment} setComment={setComment} />
 
               <OtherTagsEditor
@@ -197,7 +197,11 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
               {t('editdialog.cancel_button')}
             </Button>
             <Button onClick={saveDialog} color="primary" variant="contained">
-              {t('editdialog.save_button')}
+              {loggedIn
+                ? cancelled
+                  ? t('editdialog.save_button_delete')
+                  : t('editdialog.save_button_edit')
+                : t('editdialog.save_button_note')}
             </Button>
           </DialogActions>
         </>
