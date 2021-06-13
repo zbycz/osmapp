@@ -30,9 +30,9 @@ export interface LineString {
 export type FeatureGeometry = Point | LineString;
 
 export const isPoint = (geometry: FeatureGeometry): geometry is Point =>
-  geometry.type === 'Point';
+  geometry?.type === 'Point';
 export const isWay = (geometry: FeatureGeometry): geometry is LineString =>
-  geometry.type === 'LineString';
+  geometry?.type === 'LineString';
 
 export interface FeatureTags {
   [key: string]: string;

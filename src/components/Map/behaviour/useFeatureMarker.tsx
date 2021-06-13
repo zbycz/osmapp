@@ -48,10 +48,10 @@ const updateFeatureMarker = (map, feature) => {
 const useUpdateFeatureMarker = useMapEffect(updateFeatureMarker);
 
 export const useFeatureMarker = (map) => {
-  const { feature } = useFeatureContext();
-  useUpdateFeatureMarker(map, feature);
+  const { preview, feature } = useFeatureContext();
+  useUpdateFeatureMarker(map, preview ?? feature);
 
-  // hide the icon when tiles are fetched
+  // hide the icon when tiles are fetched TODO sometimes broken
   useEffect(() => {
     if (map) {
       const handle = setInterval(() => {

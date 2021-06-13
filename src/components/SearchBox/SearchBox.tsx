@@ -55,6 +55,7 @@ const fetchNominatim = throttle(async (inputValue, bbox, setOptions) => {
 }, 400);
 
 const SearchBox = () => {
+  const { featureShown, setFeature } = useFeatureContext();
   const { bbox, view } = useMapStateContext();
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState([]);
@@ -68,10 +69,9 @@ const SearchBox = () => {
     fetchNominatim(inputValue, bbox, setOptions);
   }, [inputValue]);
 
-  const { featureShown } = useFeatureContext();
-
   const closePanel = () => {
     setInputValue('');
+    setFeature(null); // for nonOsmFeature
     Router.push(`/#${view.join('/')}`);
   };
 

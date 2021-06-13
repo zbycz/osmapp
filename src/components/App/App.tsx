@@ -11,6 +11,7 @@ import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
+import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -38,7 +39,7 @@ const useUpdateViewFromFeature = () => {
 };
 
 const IndexWithProviders = () => {
-  const { featureShown } = useFeatureContext();
+  const { featureShown, preview } = useFeatureContext();
 
   useUpdateViewFromFeature();
   usePersistMapView();
@@ -50,6 +51,7 @@ const IndexWithProviders = () => {
       {featureShown && <FeaturePanel />}
       {!featureShown && <HomepagePanel />}
       <Map />
+      {preview && <FeaturePreview />}
     </>
   );
 };

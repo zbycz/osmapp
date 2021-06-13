@@ -8,6 +8,7 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { toDeg, toDM } from '../../utils';
 
 const StyledMenuItem = styled(MenuItem)`
   svg {
@@ -85,22 +86,14 @@ const useGetItems = (lat, lon) => {
   ];
 };
 
-// Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
-const round = (x) => x.toFixed(5);
-
-const toDM = (x) =>
-  `${Math.floor(x)}° ${((x - Math.floor(x)) * 60).toFixed(3)}'`;
-
 export const Coords = ({ coords: [lon, lat] }) => {
   const [opened, open, close] = useBoolState(false);
   const anchorRef = React.useRef();
   const items = useGetItems(lat, lon);
-  const coordsDeg = `${round(lat)}° ${round(lon)}°`;
-  const coordsDM = `${toDM(lat)} ${toDM(lon)}`;
 
   return (
     <span title="latitude, longitude (y, x)">
-      {coordsDeg}
+      {toDeg(lat, lon)}
       <Menu
         anchorEl={anchorRef.current}
         open={opened}
@@ -111,8 +104,8 @@ export const Coords = ({ coords: [lon, lat] }) => {
           <LinkItem key={label} href={href} label={label} />
         ))}
         <Divider />
-        <CopyTextItem text={coordsDeg} />
-        <CopyTextItem text={coordsDM} />
+        <CopyTextItem text={toDeg(lat, lon)} />
+        <CopyTextItem text={toDM(lat, lon)} />
       </Menu>
       <ToggleButton onClick={open} ref={anchorRef} />
     </span>

@@ -4,7 +4,7 @@ import { useAddMapEvent, useMapEffect } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './behaviour/useFeatureMarker';
-import { useOnFeatureClicked } from './behaviour/useOnFeatureClicked';
+import { useOnMapClicked } from './behaviour/useOnMapClicked';
 import { useUpdateViewOnMove } from './behaviour/useUpdateViewOnMove';
 import { useUpdateStyle } from './behaviour/useUpdateStyle';
 import { useInitMap } from './behaviour/useInitMap';
@@ -22,9 +22,9 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
 // TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
-  const { setFeature } = useFeatureContext();
+  const { setFeature, setPreview } = useFeatureContext();
   const [map, mapRef] = useInitMap();
-  useOnFeatureClicked(map, setFeature);
+  useOnMapClicked(map, setFeature, setPreview);
   useOnMapLoaded(map, onMapLoaded);
   useFeatureMarker(map);
 

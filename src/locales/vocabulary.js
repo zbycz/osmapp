@@ -3,7 +3,7 @@
 export default {
   loading: 'Loading',
   error: 'Error',
-  close_panel: 'Close side-panel',
+  close_panel: 'Close panel',
 
   'homepage.subtitle': 'A universal OpenStreetMap app',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',

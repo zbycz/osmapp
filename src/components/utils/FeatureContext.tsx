@@ -17,6 +17,8 @@ export interface FeatureContextType {
   homepageShown: boolean;
   hideHomepage: () => void;
   showHomepage: () => void;
+  preview: Feature | null;
+  setPreview: (feature: Feature | null) => void;
 }
 
 export const FeatureContext = createContext<FeatureContextType>(undefined);
@@ -32,7 +34,8 @@ export const FeatureProvider = ({
   featureFromRouter,
   hpCookie,
 }: Props) => {
-  const [feature, setFeature] = useState(featureFromRouter);
+  const [preview, setPreview] = useState<Feature>(null);
+  const [feature, setFeature] = useState<Feature>(featureFromRouter);
   const featureShown = feature != null;
 
   useEffect(() => {
@@ -61,6 +64,8 @@ export const FeatureProvider = ({
     homepageShown,
     showHomepage,
     hideHomepage,
+    preview,
+    setPreview,
   };
   return (
     <FeatureContext.Provider value={value}>{children}</FeatureContext.Provider>

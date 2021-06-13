@@ -64,13 +64,15 @@ export const FeatureDescription = ({ osmMeta, nonOsmObject, setAdvanced }) => {
         </>
       )}
 
-      <StyledIconButton
-        title="Alt+Shift+click to enable advanced mode (show-all-tags, show-members, around-show-all)"
-        onClick={onClick}
-      >
-        {!isShown && <InfoOutlinedIcon fontSize="small" color="secondary" />}
-        {isShown && <CloseIcon fontSize="small" color="disabled" />}
-      </StyledIconButton>
+      {!nonOsmObject && (
+        <StyledIconButton
+          title="Alt+Shift+click to enable advanced mode (show-all-tags, show-members, around-show-all)"
+          onClick={onClick}
+        >
+          {!isShown && <InfoOutlinedIcon fontSize="small" color="secondary" />}
+          {isShown && <CloseIcon fontSize="small" color="disabled" />}
+        </StyledIconButton>
+      )}
     </div>
   );
 };
