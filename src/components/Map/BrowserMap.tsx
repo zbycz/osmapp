@@ -1,7 +1,6 @@
 import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useAddMapEvent, useMapEffect } from '../helpers';
+import { useAddMapEvent, useMapEffect, useMobileMode } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './behaviour/useFeatureMarker';
@@ -19,8 +18,6 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
   const center = [viewForMap[2], viewForMap[1]];
   map.jumpTo({ center, zoom: viewForMap[0] });
 });
-
-export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
 
 // TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 

@@ -66,7 +66,7 @@ const IndexWithProviders = () => {
       <SearchBox />
       <Loading />
       {featureShown && <FeaturePanel />}
-      {!featureShown && <HomepagePanel />}
+      <HomepagePanel />
       <Map />
       {preview && <FeaturePreview />}
     </>

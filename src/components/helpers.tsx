@@ -1,5 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
+import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { Feature } from '../services/types';
 
 export const useToggleState = (
@@ -89,3 +90,5 @@ export const dotToOptionalBr = (url = '') =>
       {part}
     </Fragment>
   ));
+
+export const useMobileMode = () => useMediaQuery('(max-width: 700px)');

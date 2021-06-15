@@ -3,7 +3,7 @@ import { getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 
 export const onSelectedFactory =
-  (setFeature, setView) => async (e, location) => {
+  (setFeature, setPreview, setView, mobileMode) => async (e, location) => {
     if (!location?.lat) return;
 
     const {
@@ -28,6 +28,13 @@ export const onSelectedFactory =
 
     addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
+    if (mobileMode) {
+      setPreview(skeleton);
+      setView([17, lat, lon]);
+      return;
+    }
+
+    setPreview(null);
     setFeature(skeleton);
     setView([17, lat, lon]);
     Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);

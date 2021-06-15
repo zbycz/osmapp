@@ -10,9 +10,14 @@ import Maki from '../utils/Maki';
 const Wrapper = styled.div`
   position: absolute;
   z-index: 2000;
-  bottom: 30px;
+  bottom: 40px;
   left: 50%;
-  margin-left: -70px;
+  //margin-left: -70px;
+
+  & > div {
+    position: relative;
+    left: -50%;
+  }
 
   .MuiButtonBase-root {
     text-transform: none;
@@ -44,19 +49,21 @@ export const FeaturePreview = () => {
 
   return (
     <Wrapper>
-      <Button
-        color="primary"
-        onClick={handleClick}
-        variant="contained"
-        startIcon={icon}
-      >
-        {label}
-      </Button>
-      <ClosePanelButton
-        onClick={onClose}
-        right
-        style={{ margin: '-6px -36px 0 0' }}
-      />
+      <div>
+        <Button
+          color="primary"
+          onClick={handleClick}
+          variant="contained"
+          startIcon={icon}
+        >
+          {label}
+        </Button>
+        <ClosePanelButton
+          onClick={onClose}
+          right
+          style={{ margin: '-6px -36px 0 0' }}
+        />
+      </div>
     </Wrapper>
   );
 };

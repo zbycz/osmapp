@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
@@ -37,7 +37,13 @@ const Spacer = styled.div`
 `;
 
 export const HomepagePanel = () => {
-  const { homepageShown, hideHomepage } = useFeatureContext();
+  const { feature, preview, homepageShown, hideHomepage, persistHideHomepage } =
+    useFeatureContext();
+
+  // hide after first shown feature or preview
+  useEffect(() => {
+    if (feature || preview) hideHomepage();
+  }, [feature, preview]);
 
   if (!homepageShown) {
     return null;
@@ -46,7 +52,7 @@ export const HomepagePanel = () => {
   return (
     <PanelWrapper>
       <PanelScrollbars>
-        <ClosePanelButton right onClick={hideHomepage} />
+        <ClosePanelButton right onClick={persistHideHomepage} />
         <Content>
           <div>
             <Center>
