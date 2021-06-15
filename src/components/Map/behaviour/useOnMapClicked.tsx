@@ -8,11 +8,11 @@ import {
 } from '../../../services/helpers';
 import { getRoundedPosition } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
-import { convertMapIdToOsmId, layersWithOsmId } from '../helpers';
+import { convertMapIdToOsmId, getIsOsmObject } from '../helpers';
 import { getCoordsFeature } from '../../../services/getCoordsFeature';
 
 export const getSkeleton = (feature, clickCoords) => {
-  const isOsmObject = layersWithOsmId.includes(feature.layer.id);
+  const isOsmObject = getIsOsmObject(feature);
   const osmMeta = isOsmObject
     ? convertMapIdToOsmId(feature)
     : { type: feature.layer.id, id: feature.id };
