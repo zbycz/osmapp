@@ -29,7 +29,7 @@ export const FeaturePreview = () => {
   const handleClick = () => {
     setPreview(null);
     setFeature({ ...preview, skeleton: true }); // skeleton needed so map doesnt move (Router will create new coordsFeature)
-    Router.push(getOsmappLink(preview)); // this will create brand new coordsFeature()
+    Router.push(`${getOsmappLink(preview)}${window.location.hash}`); // this will create brand new coordsFeature()
   };
 
   const onClose = () => {

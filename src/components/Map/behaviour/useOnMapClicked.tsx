@@ -63,7 +63,7 @@ export const useOnMapClicked = useAddMapEvent(
       );
       setPreview(null);
 
-      Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
+      Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);
     },
   }),
 );

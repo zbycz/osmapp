@@ -14,7 +14,7 @@ export interface Layer {
 // export type BBox = [number, number, number, number];
 //
 // // [z, lat, lon]
-// export type View = [number, number, number];
+// export type View = [string, string, string];
 //
 // interface MapStateContextType {
 //   bbox: BBox;

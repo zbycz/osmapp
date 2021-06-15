@@ -47,7 +47,7 @@ export const FeatureProvider = ({
     feature == null && hpCookie !== 'yes',
   );
   const showHomepage = () => {
-    Router.push('/');
+    Router.push(`/${window.location.hash}`);
     setFeature(null);
     showHp();
     Cookies.remove('hideHomepage');

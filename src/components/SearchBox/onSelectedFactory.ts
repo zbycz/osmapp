@@ -30,5 +30,5 @@ export const onSelectedFactory =
 
     setFeature(skeleton);
     setView([17, lat, lon]);
-    Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
+    Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);
   };

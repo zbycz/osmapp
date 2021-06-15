@@ -94,7 +94,7 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
     setImage(LOADING);
     getFeatureImage(feature).then(
       (newImage) => {
-        setImage(newImage);
+        setImage(newImage); // TODO Can't perform a React state update on an unmounted component. This is a no-op, but it indicates a memory leak in your application. To fix, cancel all subscriptions and asynchronous tasks in a useEffect cleanup function.
       },
       (e) => {
         console.warn('getFeatureImage rejected: ', e); // eslint-disable-line no-console

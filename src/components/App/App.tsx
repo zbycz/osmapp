@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
+import { useRouter } from 'next/router';
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -17,25 +18,39 @@ const usePersistMapView = () => {
   const { view } = useMapStateContext();
   React.useEffect(() => {
     if (typeof window !== 'undefined') window.location.hash = view.join('/');
-    Cookies.set('mapView', view.join('/')); // TODO longer expire
+    Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
   }, [view]);
+};
+
+export const getMapViewFromHash = () => {
+  const view = global.window?.location.hash.substr(1).split('/');
+  return view?.length === 3 ? view : undefined;
 };
 
 const useUpdateViewFromFeature = () => {
   const { feature } = useFeatureContext();
   const { setView } = useMapStateContext();
-  const [lastFeature, setLastFeature] = React.useState(feature);
 
   React.useEffect(() => {
-    const viewAlreadyUpdated = feature?.skeleton || lastFeature?.skeleton;
-
-    if (!viewAlreadyUpdated && feature?.center) {
-      const [lon, lat] = feature.center;
-      setView([17.0, lat, lon]);
+    if (feature?.center && !getMapViewFromHash()) {
+      const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
+      setView(['17.00', lat, lon]);
     }
-
-    setLastFeature(feature);
   }, [feature]);
+};
+
+const useUpdateViewFromHash = () => {
+  const router = useRouter();
+  const { setView } = useMapStateContext();
+  useEffect(() => {
+    router.beforePopState(() => {
+      const mapViewFromHash = getMapViewFromHash();
+      if (mapViewFromHash) {
+        setView(mapViewFromHash);
+      }
+      return true; // let nextjs handle the route change as well
+    });
+  }, []);
 };
 
 const IndexWithProviders = () => {
@@ -43,7 +58,9 @@ const IndexWithProviders = () => {
 
   useUpdateViewFromFeature();
   usePersistMapView();
+  useUpdateViewFromHash();
 
+  // TODO add correct error boundaries
   return (
     <>
       <SearchBox />
@@ -55,11 +72,6 @@ const IndexWithProviders = () => {
     </>
   );
 };
-
-const getMapViewFromHash = () =>
-  typeof window !== 'undefined' &&
-  window.location.hash &&
-  window.location.hash.substr(1).split('/'); // TODO return only valid mapView
 
 const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
   const mapView = getMapViewFromHash() || initialMapView;
