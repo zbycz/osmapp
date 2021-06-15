@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { icons } from '../../assets/icons';
 
 const MakiImg = styled.img`
   line-height: 14px;
@@ -12,14 +13,17 @@ const Maki = ({
   invert = false,
   title = undefined,
   style = undefined,
-}) => (
-  <MakiImg
-    src={`/icons/${ico}_11.svg`}
-    alt={ico}
-    title={title ?? ico}
-    invert={invert}
-    style={style}
-  />
-);
+}) => {
+  const icon = icons.includes(ico) ? ico : 'information';
+  return (
+    <MakiImg
+      src={`/icons/${icon}_11.svg`}
+      alt={ico}
+      title={title ?? ico}
+      invert={invert}
+      style={style}
+    />
+  );
+};
 
 export default Maki;

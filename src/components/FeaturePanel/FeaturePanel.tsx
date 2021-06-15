@@ -66,7 +66,10 @@ const FeaturePanel = () => {
     feature;
 
   const osmappLink = getOsmappLink(feature);
-  const subclass = properties.subclass || (layer && layer.id) || osmMeta.type;
+  const subclass =
+    properties.subclass?.replace(/_/g, ' ') ||
+    (layer && layer.id) ||
+    osmMeta.type;
   const featuredTags = featuredKeys
     .map((k) => [k, tags[k]])
     .filter((x) => x[1]);
@@ -82,11 +85,7 @@ const FeaturePanel = () => {
         <FeatureImage feature={feature} ico={properties.class}>
           <PoiType>
             <Maki ico={properties.class} invert />
-            <span>
-              {tags.name
-                ? subclass.replace(/_/g, ' ')
-                : t('featurepanel.no_name')}
-            </span>
+            <span>{tags.name ? subclass : t('featurepanel.no_name')}</span>
           </PoiType>
 
           {SHOW_PROTOTYPE_UI && (
@@ -152,7 +151,7 @@ const FeaturePanel = () => {
             <FeatureDescription setAdvanced={setAdvanced} />
             <Coordinates feature={feature} />
             <br />
-            <a href={osmappLink}>{osmappLink}</a>
+            <a href={osmappLink}>https://osmapp.org{osmappLink}</a>
             <br />
             <label>
               <input

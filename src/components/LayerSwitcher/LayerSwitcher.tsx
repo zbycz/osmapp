@@ -7,7 +7,7 @@ import { ClosePanelButton } from '../utils/ClosePanelButton';
 
 const LayerSwitcher = () => {
   const [opened, open, close] = useBoolState(false);
-  const desktop = useMediaQuery('(min-width:500px)');
+  const desktop = useMediaQuery('(min-width:500px)'); // see also LayerSwitcherButton
 
   return (
     <>

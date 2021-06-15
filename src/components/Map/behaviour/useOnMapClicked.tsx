@@ -29,10 +29,9 @@ export const getSkeleton = (feature, clickCoords) => {
 };
 
 export const useOnMapClicked = useAddMapEvent(
-  (map, setFeature, setPreview) => ({
+  (map, setFeature, setPreview, mobileMode) => ({
     eventType: 'click',
-    eventHandler: async (e) => {
-      const { point } = e;
+    eventHandler: async ({ point }) => {
       const coords = map.unproject(point).toArray();
       const features = map.queryRenderedFeatures(point);
       if (!features.length) {
@@ -51,11 +50,17 @@ export const useOnMapClicked = useAddMapEvent(
         return;
       }
 
+      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
+
+      if (mobileMode) {
+        setPreview(skeleton);
+        return;
+      }
+
       // router wouldnt overwrite the skeleton if same url is already loaded
       setFeature((feature) =>
         isSameOsmId(feature, skeleton) ? feature : skeleton,
       );
-      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
       setPreview(null);
 
       Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
