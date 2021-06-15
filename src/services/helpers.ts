@@ -52,7 +52,7 @@ export const getApiId = (value): OsmApiId => {
 };
 
 export const getOsmappLink = (feature: Feature) => {
-  if (feature?.nonOsmObject === false && feature?.osmMeta?.id)
+  if (!feature.point && feature?.osmMeta?.id)
     return `https://osmapp.org/${getUrlOsmId(feature.osmMeta)}`;
 
   if (feature?.roundedCenter)

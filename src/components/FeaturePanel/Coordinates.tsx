@@ -37,9 +37,9 @@ const StyledToggleButton = styled(IconButton)`
 
 export const ToggleButton = forwardRef<any, any>(
   ({ onClick, isShown = false }, ref) => (
-    <StyledToggleButton onClick={onClick} aria-label="Toggle" ref={ref}>
-      {!isShown && <ExpandMoreIcon fontSize="small" />}
-      {isShown && <ExpandLessIcon fontSize="small" />}
+    <StyledToggleButton onClick={onClick} aria-label="Toggle">
+      {!isShown && <ExpandMoreIcon fontSize="small" ref={ref} />}
+      {isShown && <ExpandLessIcon fontSize="small" ref={ref} />}
     </StyledToggleButton>
   ),
 );

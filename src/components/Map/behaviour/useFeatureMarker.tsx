@@ -5,12 +5,17 @@ import { convertOsmIdToMapId, layersWithOsmId } from '../helpers';
 import { Feature } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 
-const MARKER_OPTIONS = {
+const FEATURE_MARKER = {
   color: '#eb5757',
   draggable: false,
 };
 
-const setHideIcon = (map, feature, hideIcon) => {
+const PREVIEW_MARKER = {
+  color: '#556cd6',
+  draggable: false,
+};
+
+const setPoiIconVisibility = (map, feature, hideIcon) => {
   if (!feature) return;
 
   const results = map.queryRenderedFeatures(undefined, {
@@ -24,39 +29,42 @@ const setHideIcon = (map, feature, hideIcon) => {
   }
 };
 
-const marker = {} as { ref: maplibregl.Marker; feature: Feature };
-
-const updateFeatureMarker = (map, feature) => {
-  if (marker.feature === feature) {
-    return;
+const featureMarker = {} as { ref: maplibregl.Marker; feature: Feature };
+const useUpdateFeatureMarker = useMapEffect((map, feature) => {
+  if (featureMarker.ref) {
+    featureMarker.ref.remove();
+    setPoiIconVisibility(map, featureMarker.feature, false);
   }
-
-  if (marker.ref) {
-    marker.ref.remove();
-    setHideIcon(map, marker.feature, false);
-  }
-  marker.feature = feature;
-  marker.ref = undefined;
+  featureMarker.feature = feature;
+  featureMarker.ref = undefined;
 
   if (feature?.center) {
-    marker.ref = new maplibregl.Marker(MARKER_OPTIONS)
+    featureMarker.ref = new maplibregl.Marker(FEATURE_MARKER)
       .setLngLat(feature.center)
       .addTo(map);
-    setHideIcon(map, feature, true);
+    setPoiIconVisibility(map, feature, true);
   }
-};
-const useUpdateFeatureMarker = useMapEffect(updateFeatureMarker);
+});
+
+let previewMarker: maplibregl.Marker;
+const useUpdatePreviewMarker = useMapEffect((map, feature) => {
+  previewMarker?.remove();
+  previewMarker = feature?.center
+    ? new maplibregl.Marker(PREVIEW_MARKER).setLngLat(feature.center).addTo(map)
+    : undefined;
+});
 
 export const useFeatureMarker = (map) => {
   const { preview, feature } = useFeatureContext();
-  useUpdateFeatureMarker(map, preview ?? feature);
+  useUpdateFeatureMarker(map, feature);
+  useUpdatePreviewMarker(map, preview);
 
-  // hide the icon when tiles are fetched TODO sometimes broken
+  // hide the icon when tiles are fetched TODO sometimes broken (zoom problem)
   useEffect(() => {
     if (map) {
       const handle = setInterval(() => {
         if (map.areTilesLoaded()) {
-          setHideIcon(map, feature, true);
+          setPoiIconVisibility(map, feature, true);
           clearInterval(handle);
         }
       }, 200);

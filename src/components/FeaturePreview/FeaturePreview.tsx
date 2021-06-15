@@ -23,8 +23,8 @@ export const FeaturePreview = () => {
 
   const handleClick = () => {
     setPreview(null);
-    setFeature({ ...preview, skeleton: true }); // needed so map doesnt move (Router will create new coordsFeature)
-    Router.push(`/${roundedToDegUrl(preview.roundedCenter)}`);
+    setFeature({ ...preview, skeleton: true }); // skeleton needed so map doesnt move (Router will create new coordsFeature)
+    Router.push(`/${roundedToDegUrl(preview.roundedCenter)}`); // this will create brand new coordsFeature()
   };
 
   const onClose = () => {
