@@ -7,7 +7,7 @@ export const rasterStyle = (id, url): maplibregl.Style => {
         tiles: ['a', 'b', 'c'].map((c) => url?.replace('{s}', c)),
       }
     : {
-        url,
+        url, // tileset.json
       };
   return {
     version: 8,

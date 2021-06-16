@@ -115,7 +115,7 @@ export default {
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Otevírací doba',
 
-  'layerswitcher.button': 'Vrstvy',
+  'layerswitcher.button': 'Mapy',
   'layerswitcher.heading': 'Mapové vrstvy',
   'layerswitcher.intro': 'Díky tomu, že OpenStreetMap nabízí zdrojová data, tak kdokoliv může vyrobit různé varianty mapy.',
   'layerswitcher.add_layer_button': 'Přidat vlastní vrstvu',

@@ -120,7 +120,7 @@ export default {
   'tags.phone': 'Phone',
   'tags.opening_hours': 'Opening hours',
 
-  'layerswitcher.button': 'Layers',
+  'layerswitcher.button': 'Maps',
   'layerswitcher.heading': 'Map layers',
   'layerswitcher.intro': 'Thanks to the fact that OpenStreetMap offers source data, anyone can produce different variants of the map.',
   'layerswitcher.add_layer_button': 'Add custom layer',

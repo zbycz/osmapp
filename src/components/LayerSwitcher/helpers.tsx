@@ -6,11 +6,17 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
 
-const TMS_EXAMPLE = 'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png';
+let counter = 0;
+const TMS_EXAMPLES = [
+  'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
+  'https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
+];
 
 export const AddUserLayerButton = ({ setUserLayers }) => {
   const { setActiveLayers } = useMapStateContext();
   const onClick = () => {
+    const TMS_EXAMPLE = TMS_EXAMPLES[counter % TMS_EXAMPLES.length];
+    counter += 1;
     const url = prompt(t('layerswitcher.add_layer_prompt'), TMS_EXAMPLE); // eslint-disable-line no-alert
     if (!url) {
       return;
