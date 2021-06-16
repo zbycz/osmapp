@@ -119,6 +119,8 @@ const FeaturePanel = () => {
 
           <OsmError />
 
+          {point && <ObjectsAround advanced={advanced} />}
+
           <FeaturedTags
             featuredTags={featuredTags}
             setDialogOpenedWith={setDialogOpenedWith}
@@ -157,12 +159,13 @@ const FeaturePanel = () => {
               <input
                 type="checkbox"
                 onChange={toggleShowAround}
-                checked={showAround}
+                checked={point || showAround}
+                disabled={point}
               />{' '}
               {t('featurepanel.show_objects_around')}
             </label>
 
-            {showAround && <ObjectsAround advanced={advanced} />}
+            {!point && showAround && <ObjectsAround advanced={advanced} />}
           </PanelFooter>
         </PanelContent>
       </PanelScrollbars>

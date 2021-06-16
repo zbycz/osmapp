@@ -40,7 +40,7 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
           properties.class ?? ''
         } / ${subclass}`}
       />
-      <Link href={`/${getUrlOsmId(osmMeta)}`}>
+      <Link href={`/${getUrlOsmId(osmMeta)}${window.location.hash}`}>
         {tags.name ?? subclass ?? '?'}
       </Link>
     </li>
