@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { Box, Typography } from '@material-ui/core';
+import Router from 'next/router';
 import { fetchAroundFeature } from '../../services/osmApi';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
@@ -29,20 +29,30 @@ const useLoadingState = () => {
 };
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
+  const { setPreview } = useFeatureContext();
   const { properties, tags, osmMeta } = feature;
   const subclass = properties.subclass || osmMeta.type;
 
+  const handleClick = (e) => {
+    e.preventDefault();
+    setPreview(null);
+    Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
+  };
+
   return (
-    <li>
+    <li
+      onMouseEnter={() => feature.center && setPreview(feature)}
+      onMouseLeave={() => setPreview(null)}
+    >
       <Maki
         ico={properties.class}
         title={`${Object.keys(tags).length} keys / ${
           properties.class ?? ''
         } / ${subclass}`}
       />
-      <Link href={`/${getUrlOsmId(osmMeta)}${window.location.hash}`}>
+      <a href={`/${getUrlOsmId(osmMeta)}`} onClick={handleClick}>
         {tags.name ?? subclass ?? '?'}
-      </Link>
+      </a>
     </li>
   );
 };

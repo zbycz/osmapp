@@ -31,6 +31,6 @@ export const overpassAroundToSkeletons = (response: any): Feature[] =>
       tags,
       properties: getPoiClass(tags),
       geometry,
-      center: getCenter(geometry) ?? [1, 1],
+      center: getCenter(geometry) ?? undefined,
     };
   });

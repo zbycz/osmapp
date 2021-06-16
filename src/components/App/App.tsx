@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -40,10 +40,9 @@ const useUpdateViewFromFeature = () => {
 };
 
 const useUpdateViewFromHash = () => {
-  const router = useRouter();
   const { setView } = useMapStateContext();
   useEffect(() => {
-    router.beforePopState(() => {
+    Router.beforePopState(() => {
       const mapViewFromHash = getMapViewFromHash();
       if (mapViewFromHash) {
         setView(mapViewFromHash);
