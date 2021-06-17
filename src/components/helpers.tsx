@@ -92,3 +92,6 @@ export const dotToOptionalBr = (url = '') =>
   ));
 
 export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
+
+export const trimText = (text, limit) =>
+  text.length > limit ? `${text.substring(0, limit)}…` : text;

@@ -7,6 +7,8 @@ import { Feature } from '../../services/types';
 import { getShortId, getUrlOsmId } from '../../services/helpers';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
+import { FetchError } from '../../services/fetch';
+import { trimText } from '../helpers';
 
 const useLoadingState = () => {
   const [around, setAround] = useState<Feature[]>([]);
@@ -22,7 +24,7 @@ const useLoadingState = () => {
     setError(undefined);
   };
   const failAround = (err) => {
-    setError(err);
+    setError(err instanceof FetchError ? err.message : err);
     setLoading(false);
   };
   return { around, error, loading, startAround, finishAround, failAround };
@@ -100,7 +102,7 @@ export const ObjectsAround = ({ advanced }) => {
 
       {error && (
         <Typography color="secondary" paragraph>
-          {t('error')}: {`${error}`.substring(0, 50)}
+          {t('error')}: {trimText(error, 50)}
         </Typography>
       )}
 
@@ -113,7 +115,7 @@ export const ObjectsAround = ({ advanced }) => {
         </Typography>
       )}
 
-      {!loading && !features.length && (
+      {!loading && !error && !features.length && (
         <Typography color="secondary" paragraph>
           N/A
         </Typography>
