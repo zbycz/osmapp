@@ -12,13 +12,15 @@ const {
   publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
 } = getConfig();
 
-const Box = styled.div`
+const Wrapper = styled.div`
   margin-top: 10px;
   padding: 2px;
   font-size: 12px;
   line-height: normal;
   color: #000;
   background-color: #f8f4f0; /* same as osm-bright */
+  letter-spacing: normal;
+  font-weight: 400;
 
   svg {
     vertical-align: -2px;
@@ -27,7 +29,7 @@ const Box = styled.div`
 `;
 
 const OsmappLink = () => {
-  const { showHomepage } = useFeatureContext();
+  const { showHomepage, homepageShown } = useFeatureContext();
 
   const handleClick = (e) => {
     e.preventDefault();
@@ -45,11 +47,19 @@ const OsmappLink = () => {
           <GithubIcon width="12" height="12" />
         </a>
       </Tooltip>
-      <Tooltip arrow title={t('map.about_title')}>
-        <button type="button" className="linkLikeButton" onClick={handleClick}>
-          osmapp
-        </button>
-      </Tooltip>{' '}
+      {homepageShown ? (
+        'osmapp'
+      ) : (
+        <Tooltip arrow title={t('map.about_title')}>
+          <button
+            type="button"
+            className="linkLikeButton"
+            onClick={handleClick}
+          >
+            osmapp
+          </button>
+        </Tooltip>
+      )}{' '}
       <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
     </>
   );
@@ -141,7 +151,7 @@ const MapDataLink = () => (
 );
 
 export const MapFooter = () => (
-  <Box>
+  <Wrapper>
     <OsmappLink />
     {' | '}
     <LangSwitcher />
@@ -149,5 +159,5 @@ export const MapFooter = () => (
     <MapDataLink />
     {' | '}
     <EditLink />
-  </Box>
+  </Wrapper>
 );
