@@ -30,7 +30,8 @@ const StyledLayerSwitcher = styled.button`
   outline: 0;
   cursor: pointer;
 
-  &:hover {
+  &:hover,
+  &:focus {
     background-color: #f2f3f2;
   }
 

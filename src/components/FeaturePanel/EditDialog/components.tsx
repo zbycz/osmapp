@@ -4,9 +4,10 @@ import TextField from '@material-ui/core/TextField';
 import React from 'react';
 import Typography from '@material-ui/core/Typography';
 import { Box } from '@material-ui/core';
-import { getIdEditorLink, useToggleState } from '../../helpers';
+import { useToggleState } from '../../helpers';
 import { t, Translation } from '../../../services/intl';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
+import { getIdEditorLink } from '../../../utils';
 
 export const DialogHeading = ({ children }) => (
   <Typography variant="overline" display="block" color="textSecondary">

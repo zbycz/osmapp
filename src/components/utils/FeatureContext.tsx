@@ -17,7 +17,7 @@ export interface FeatureContextType {
   homepageShown: boolean;
   hideHomepage: () => void;
   persistHideHomepage: () => void;
-  showHomepage: () => void;
+  persistShowHomepage: () => void;
   preview: Feature | null;
   setPreview: (feature: Feature | null) => void;
 }
@@ -47,10 +47,11 @@ export const FeatureProvider = ({
   const [homepageShown, showHp, hideHomepage] = useBoolState(
     feature == null && hpCookie !== 'yes',
   );
-  const showHomepage = () => {
-    Router.push(`/${window.location.hash}`);
+  const persistShowHomepage = () => {
     setFeature(null);
+    hideHomepage();
     showHp();
+    Router.push(`/${window.location.hash}`);
     Cookies.remove('hideHomepage');
   };
   const persistHideHomepage = () => {
@@ -63,7 +64,7 @@ export const FeatureProvider = ({
     featureShown,
     setFeature,
     homepageShown,
-    showHomepage,
+    persistShowHomepage,
     hideHomepage,
     persistHideHomepage,
     preview,

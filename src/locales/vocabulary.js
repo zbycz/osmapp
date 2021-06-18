@@ -59,12 +59,14 @@ export default {
   'opening_hours.today_closed': 'Today closed',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'sunday|monday|tuesday|wednesday|thursday|friday|saturday',
 
-  'map.about_title': 'About',
+  'map.github_title': 'GitHub',
   'map.language_title': 'Change language',
-  'map.edit_button': 'edit',
-  'map.edit_button_title': 'Edit this area (or shown feature) in iD editor',
   'map.copyright': '(c) OpenStreetMap.org contributors',
   'map.map_data_button': 'map data',
+  'map.more_button': 'more',
+  'map.more_button_title': 'More options...',
+  'map.edit_link': 'Edit this area in iD editor',
+  'map.about_link': 'About this app',
 
   'editdialog.edit_heading': 'Edit:',
   'editdialog.suggest_heading': 'Suggest an edit:',

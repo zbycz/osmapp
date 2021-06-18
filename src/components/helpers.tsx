@@ -1,7 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { Feature } from '../services/types';
 
 export const useToggleState = (
   initialState: boolean,
@@ -56,12 +55,6 @@ export const useAddMapEvent =
     }, [map, ...rest]);
 
 export const isString = (value) => typeof value === 'string';
-
-export const getIdEditorLink = (feature: Feature, view?: number[]) => {
-  const query = feature ? `?${feature.osmMeta.type}=${feature.osmMeta.id}` : '';
-  const hash = view ? `#map=${view.join('/')}` : '';
-  return `https://www.openstreetmap.org/edit${query}${hash}`;
-};
 
 export const slashToOptionalBr = (url) =>
   url.split('/').map((part, idx) => (

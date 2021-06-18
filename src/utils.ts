@@ -1,4 +1,5 @@
-import { LonLatRounded, Position } from './services/types';
+import { Feature, LonLatRounded, Position } from './services/types';
+import { View } from './components/utils/MapStateContext';
 
 // Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 export const roundDeg = (deg) => (deg.toFixed ? deg.toFixed(5) : deg);
@@ -30,3 +31,9 @@ export const getRoundedPosition = (
 };
 
 export const roundedToDegUrl = ([lon, lat]: LonLatRounded) => `${lat},${lon}`;
+
+export const getIdEditorLink = (feature: Feature, view?: View) => {
+  const query = feature ? `?${feature.osmMeta.type}=${feature.osmMeta.id}` : '';
+  const hash = view ? `#map=${view.join('/')}` : '';
+  return `https://www.openstreetmap.org/edit${query}${hash}`;
+};

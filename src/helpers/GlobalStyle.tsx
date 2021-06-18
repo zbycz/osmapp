@@ -30,9 +30,9 @@ const GlobalStyle = createGlobalStyle`
 
     &:focus {
       text-decoration: underline;
-      svg {
-        outline: -webkit-focus-ring-color auto 1px;
-      }
+      //svg {
+      //  outline: -webkit-focus-ring-color auto 1px;
+      //}
     }
   }
 

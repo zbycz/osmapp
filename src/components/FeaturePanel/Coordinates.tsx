@@ -8,7 +8,7 @@ import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { positionToDeg, positionToDM } from '../../utils';
+import { getIdEditorLink, positionToDeg, positionToDM } from '../../utils';
 import { Position } from '../../services/types';
 
 const StyledMenuItem = styled(MenuItem)`
@@ -61,10 +61,9 @@ const LinkItem = ({ href, label }) => (
 const MAPBOXGL_ZOOM_DIFFERENCE = 1;
 
 const useGetItems = ([lon, lat]: Position) => {
-  const {
-    view: [ourZoom],
-  } = useMapStateContext();
   const { feature } = useFeatureContext();
+  const { view } = useMapStateContext();
+  const [ourZoom] = view;
 
   const zoom = parseFloat(ourZoom) + MAPBOXGL_ZOOM_DIFFERENCE;
   const zoomInt = Math.round(zoom);
@@ -88,6 +87,10 @@ const useGetItems = ([lon, lat]: Position) => {
     {
       label: 'Google Maps',
       href: `https://google.com/maps/search/${lat}%C2%B0%20${lon}%C2%B0/@${lat},${lon},${zoomInt}z`,
+    },
+    {
+      label: 'iD editor',
+      href: getIdEditorLink(feature, view), // TODO coordsFeature has random id which gets forwarded LOL
     },
   ];
 };

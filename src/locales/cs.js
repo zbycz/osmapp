@@ -55,12 +55,14 @@ export default {
   'opening_hours.today_closed': 'Dnes zavřeno',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'neděle|pondělí|úterý|středa|čtvrtek|pátek|sobota',
 
-  'map.about_title': 'O projektu',
+  'map.github_title': 'GitHub',
   'map.language_title': 'Změnit jazyk',
-  'map.edit_button': 'editovat',
-  'map.edit_button_title': 'Otevřít oblast (či zobrazený objekt) v editoru iD',
   'map.copyright': '(c) přispěvatelé OpenStreetMap.org',
   'map.map_data_button': 'mapová data',
+  'map.more_button': 'více',
+  'map.more_button_title': 'Další možnosti...',
+  'map.edit_link': 'Otevřít oblast v editoru iD',
+  'map.about_link': 'O aplikaci',
 
   'editdialog.edit_heading': 'Upravit:',
   'editdialog.suggest_heading': 'Navrhnout úpravu:',

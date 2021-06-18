@@ -6,7 +6,7 @@ import BugReport from '@material-ui/icons/BugReport';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { useBoolState } from '../helpers';
-import { MapFooter } from './MapFooter';
+import { MapFooter } from './MapFooter/MapFooter';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 
