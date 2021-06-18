@@ -9,7 +9,7 @@ const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
     enableHighAccuracy: true,
   },
-  trackUserLocation: false,
+  trackUserLocation: true,
 });
 
 const navigationControl = new maplibregl.NavigationControl({
