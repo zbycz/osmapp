@@ -41,17 +41,19 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
   };
 
   return (
-    <li
-      onMouseEnter={() => feature.center && setPreview(feature)}
-      onMouseLeave={() => setPreview(null)}
-    >
-      <Maki
-        ico={properties.class}
-        title={`${Object.keys(tags).length} keys / ${
-          properties.class ?? ''
-        } / ${properties.subclass}`}
-      />
-      <a href={`/${getUrlOsmId(osmMeta)}`} onClick={handleClick}>
+    <li>
+      <a
+        href={`/${getUrlOsmId(osmMeta)}`}
+        onClick={handleClick}
+        onMouseEnter={() => feature.center && setPreview(feature)}
+        onMouseLeave={() => setPreview(null)}
+      >
+        <Maki
+          ico={properties.class}
+          title={`${Object.keys(tags).length} keys / ${
+            properties.class ?? ''
+          } / ${properties.subclass}`}
+        />
         {getNameOrFallback(feature)}
       </a>
     </li>
