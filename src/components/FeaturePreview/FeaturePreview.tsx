@@ -6,6 +6,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { getOsmappLink } from '../../services/helpers';
 import Maki from '../utils/Maki';
+import { getNameOrFallback } from '../../utils';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -41,11 +42,8 @@ export const FeaturePreview = () => {
     setPreview(null);
   };
 
-  const label =
-    preview.tags.name ||
-    preview.properties.class?.replace(/_/g, ' ') ||
-    preview.osmMeta.type;
   const icon = <Maki ico={preview.properties.class} invert />;
+  const label = getNameOrFallback(preview);
 
   return (
     <Wrapper>

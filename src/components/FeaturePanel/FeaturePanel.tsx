@@ -6,12 +6,12 @@ import Directions from '@material-ui/icons/Directions';
 import IconButton from '@material-ui/core/IconButton';
 import Head from 'next/head';
 import FeatureHeading from './FeatureHeading';
-import FeatureImage from './FeatureImage';
+import { FeatureImage } from './FeatureImage';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
 import TagsTable from './TagsTable';
 import Maki from '../utils/Maki';
-import { getOsmappLink, getShortId } from '../../services/helpers';
+import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import {
@@ -26,8 +26,9 @@ import { FeatureDescription } from './FeatureDescription';
 import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
-import { FeatureEditButton } from './FeatureEditButton';
+import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
+import { getNameFromTags, getNameOrFallback } from '../../utils';
 
 const StyledIconButton = styled(IconButton)`
   svg {
@@ -65,7 +66,7 @@ const FeaturePanel = () => {
   const { point, tags, layer, osmMeta, properties, skeleton, members } =
     feature;
 
-  const osmappLink = getOsmappLink(feature);
+  const osmappLink = getFullOsmappLink(feature);
   const subclass =
     properties.subclass?.replace(/_/g, ' ') ||
     (layer && layer.id) ||
@@ -73,19 +74,19 @@ const FeaturePanel = () => {
   const featuredTags = featuredKeys
     .map((k) => [k, tags[k]])
     .filter((x) => x[1]);
-
-  // TODO resolve all getPoiClass
+  const name = getNameFromTags(tags);
+  const nameOrFallback = getNameOrFallback(feature);
 
   return (
     <PanelWrapper>
       <Head>
-        <title>{tags.name || subclass} · OsmAPP</title>
+        <title>{nameOrFallback} · OsmAPP</title>
       </Head>
       <PanelScrollbars>
         <FeatureImage feature={feature} ico={properties.class}>
           <PoiType>
-            <Maki ico={properties.class} invert />
-            <span>{tags.name ? subclass : t('featurepanel.no_name')}</span>
+            <Maki ico={properties.class} invert middle />
+            <span>{name ? subclass : t('featurepanel.no_name')}</span>
           </PoiType>
 
           {SHOW_PROTOTYPE_UI && (
@@ -113,13 +114,11 @@ const FeaturePanel = () => {
         </FeatureImage>
         <PanelContent>
           <FeatureHeading
-            title={tags.name || subclass}
+            title={nameOrFallback}
             onEdit={!point && setDialogOpenedWith}
           />
 
           <OsmError />
-
-          {point && <ObjectsAround advanced={advanced} />}
 
           <FeaturedTags
             featuredTags={featuredTags}
@@ -134,26 +133,27 @@ const FeaturePanel = () => {
 
           {advanced && <Members members={members} />}
 
-          {!point && (
-            <FeatureEditButton
-              add={point}
-              setDialogOpenedWith={setDialogOpenedWith}
-            />
-          )}
+          <EditButton
+            isAddPlace={point}
+            setDialogOpenedWith={setDialogOpenedWith}
+          />
 
           <EditDialog
             open={!!dialogOpenedWith}
             handleClose={() => setDialogOpenedWith(false)}
             feature={feature}
+            isAddPlace={point}
             focusTag={dialogOpenedWith}
-            key={getShortId(osmMeta) + (skeleton && 'skel')}
+            key={getUrlOsmId(osmMeta) + (skeleton && 'skel')} // we need to refresh inner state
           />
+
+          {point && <ObjectsAround advanced={advanced} />}
 
           <PanelFooter>
             <FeatureDescription setAdvanced={setAdvanced} />
             <Coordinates feature={feature} />
             <br />
-            <a href={osmappLink}>https://osmapp.org{osmappLink}</a>
+            <a href={osmappLink}>{osmappLink}</a>
             <br />
             <label>
               <input

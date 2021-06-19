@@ -2,7 +2,7 @@ import * as xml2js from 'isomorphic-xml2js';
 import fetch from 'isomorphic-unfetch';
 import { isServer } from '../components/helpers';
 import { Feature } from './types';
-import { roundedToDegUrl } from '../utils';
+import { join, roundedToDegUrl } from '../utils';
 
 export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
@@ -61,10 +61,11 @@ export const getOsmappLink = (feature: Feature) => {
   return '';
 };
 
+export const getFullOsmappLink = (feature: Feature) =>
+  `https://osmapp.org${getOsmappLink(feature)}`;
+
 export const isSameOsmId = (feature, skeleton) =>
-  feature &&
-  skeleton &&
-  getShortId(feature.osmMeta) === getShortId(skeleton.osmMeta);
+  feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
 
 export const prod = process.env.NODE_ENV === 'production';
 
@@ -86,8 +87,6 @@ export const isValidImage = (url): Promise<boolean> => {
 
 export const stringifyDomXml = (itemXml) =>
   new XMLSerializer().serializeToString(itemXml);
-
-const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
 
 export const buildAddress = ({
   'addr:place': place,

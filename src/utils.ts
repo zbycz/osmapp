@@ -1,4 +1,9 @@
-import { Feature, LonLatRounded, Position } from './services/types';
+import {
+  Feature,
+  FeatureTags,
+  LonLatRounded,
+  Position,
+} from './services/types';
 import { View } from './components/utils/MapStateContext';
 
 // Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
@@ -31,9 +36,34 @@ export const getRoundedPosition = (
 };
 
 export const roundedToDegUrl = ([lon, lat]: LonLatRounded) => `${lat},${lon}`;
+export const roundedToDeg = ([lon, lat]: LonLatRounded) => `${lat}° ${lon}°`;
 
 export const getIdEditorLink = (feature: Feature, view?: View) => {
-  const query = feature ? `?${feature.osmMeta.type}=${feature.osmMeta.id}` : '';
+  const query = feature?.osmMeta?.id
+    ? `?${feature.osmMeta.type}=${feature.osmMeta.id}`
+    : '';
   const hash = view ? `#map=${view.join('/')}` : '';
   return `https://www.openstreetmap.org/edit${query}${hash}`;
 };
+
+export const getNameFromTags = (tags: FeatureTags) => tags.name || tags.ref;
+
+export const getNameOrFallback = ({
+  properties,
+  tags,
+  osmMeta,
+  point,
+  roundedCenter,
+}: Feature) => {
+  if (point) {
+    return roundedToDeg(roundedCenter);
+  }
+
+  return (
+    getNameFromTags(tags) ||
+    properties.subclass?.replace(/_/g, ' ') ||
+    osmMeta.type
+  );
+};
+
+export const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;

@@ -98,7 +98,7 @@ export const SuccessContent = ({ successInfo, handleClose }) => {
             {texts.textLabel}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            {nl2br(successInfo.text)}
+            {nl2br(successInfo.text || '–')}
           </Typography>
         </GrayBox>
       </DialogContent>

@@ -22,6 +22,7 @@ const keys = [
   'boundary',
   'power',
   'natural',
+  'route', // relation route=bicycle etc
 ];
 
 const shops = [

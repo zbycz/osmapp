@@ -85,7 +85,7 @@ interface Props {
   children: ReactNode;
 }
 
-const FeatureImage = ({ feature, ico, children }: Props) => {
+export const FeatureImage = ({ feature, ico, children }: Props) => {
   const [image, setImage] = React.useState(feature.ssrFeatureImage ?? LOADING);
 
   React.useEffect(() => {
@@ -139,5 +139,3 @@ const FeatureImage = ({ feature, ico, children }: Props) => {
     </Wrapper>
   );
 };
-
-export default FeatureImage;

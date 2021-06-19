@@ -6,9 +6,9 @@ export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => ({
   roundedCenter: [lon, lat],
   center: [lon, lat].map(parseFloat),
   osmMeta: {
-    type: 'x',
-    id: `${Math.random()}`, // used as react key for EditDialog, ObjectsAround etc.
+    type: `${Math.random()}`, // used as react key for EditDialog, ObjectsAround etc. (id must be empty)
+    id: '',
   },
-  tags: { name: `${lat}° ${lon}°` },
+  tags: {},
   properties: { class: 'marker', subclass: 'point' },
 });

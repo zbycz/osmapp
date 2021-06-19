@@ -1,5 +1,5 @@
 import { Feature, FeatureTags } from '../../../services/types';
-import { getUrlOsmId } from '../../../services/helpers';
+import { getFullOsmappLink, getUrlOsmId } from '../../../services/helpers';
 
 export const createNoteText = (
   feature: Feature,
@@ -29,7 +29,10 @@ export const createNoteText = (
   }
 
   const noteText = [];
-  noteText.push(getUrlOsmId(feature.osmMeta));
+  if (!feature.point) {
+    noteText.push(getUrlOsmId(feature.osmMeta));
+  }
+
   if (placeCancelled) {
     noteText.push('! Place was marked permanently closed.');
   }
@@ -58,9 +61,7 @@ export const createNoteText = (
   }
 
   noteText.push('\n');
-  noteText.push(
-    `Submitted from https://osmapp.org/${getUrlOsmId(feature.osmMeta)}`,
-  );
+  noteText.push(`Submitted from ${getFullOsmappLink(feature)}`);
 
   return noteText.join('\n');
 };

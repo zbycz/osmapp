@@ -64,13 +64,14 @@ export default {
   'map.edit_link': 'Otevřít oblast v editoru iD',
   'map.about_link': 'O aplikaci',
 
+  'editdialog.add_heading': 'Přidat do OpenStreetMap',
   'editdialog.edit_heading': 'Upravit:',
   'editdialog.suggest_heading': 'Navrhnout úpravu:',
   'editdialog.options_heading': 'Možnosti',
   'editdialog.cancel_button': 'Zrušit',
   'editdialog.save_button_edit': 'Uložit do OSM',
   'editdialog.save_button_delete': 'Smazat objekt',
-  'editdialog.save_button_note': 'Přidat poznámku',
+  'editdialog.save_button_note': 'Odeslat návrh',
   'editdialog.changes_needed': 'Proveďte, prosím, požadované změny.',
   'editdialog.loggedInMessage': 'Jste přihlášeni jako <b>__osmUser__</b>, změny se ihned projeví v mapě.',
   'editdialog.logout': 'odhlásit',
@@ -88,10 +89,9 @@ export default {
         vkládejte pouze informace z vlastních nebo ověřených zdrojů. Je zakázano
         kopírovat data krytá autorským zákonem (např. Google Maps).
         <a href="https://wiki.openstreetmap.org/wiki/Cs:Jak_mapujeme">Více informací</a>`,
-  'editdialog.info_note': `Váš návrh budou zpracovávat dobrovolníci OpenStreetMap. Zde pro ně
-        můžete přidat doplňující poznámku, nebo popsat např. úpravu polohy.
-        Vhodné je též podložit váš příspěvek odkazem na zdroj informace (web,
-        foto atd.).`,
+  'editdialog.info_note': `Váš návrh budou zpracovávat dobrovolníci OpenStreetMap, zde pro ně
+        můžete přidat doplňující poznámku. Vhodné je podložit váš příspěvek odkazem na zdroj
+        informace (web, foto atd.).`,
   'editdialog.other_tags': 'Další vlastnosti – tagy',
   'editdialog.other_tags.new_key': 'nový klíč',
   'editdialog.other_tags.add': 'Přidat',

@@ -1,9 +1,10 @@
 import escape from 'lodash/escape';
 import OsmAuth from 'osm-auth';
 import getConfig from 'next/config';
-import { Feature, FeatureTags } from './types';
+import { Feature, FeatureTags, Position } from './types';
 import {
   buildXmlString,
+  getFullOsmappLink,
   getOsmappLink,
   getUrlOsmId,
   OsmApiId,
@@ -11,6 +12,8 @@ import {
   prod,
   stringifyDomXml,
 } from './helpers';
+import { join } from '../utils';
+import { clearFeatureCache } from './osmApi';
 
 const {
   publicRuntimeConfig: { osmappVersion },
@@ -71,7 +74,7 @@ const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [
     ['created_by', `OsmAPP ${osmappVersion}`],
     ['comment', changesetComment],
-    ['submitted_from', getOsmappLink(feature)],
+    ['submitted_from', getFullOsmappLink(feature)],
     // ...(needsReview ? [['review_requested', 'yes']] : []),
   ];
   return `<osm>
@@ -117,6 +120,14 @@ const deleteItem = (apiId: OsmApiId, content: string) =>
     content,
   });
 
+const createItem = (content: string) =>
+  authFetch({
+    method: 'PUT',
+    path: `/api/0.6/node/create`,
+    options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
+    content,
+  });
+
 const putOrDeleteItem = async (
   deleted: boolean,
   apiId: OsmApiId,
@@ -129,8 +140,8 @@ const putOrDeleteItem = async (
   }
 };
 
-const getDescription = (cancelled, feature) => {
-  const action = cancelled ? 'Deleted' : 'Edited';
+const getDescription = (deleted, feature) => {
+  const action = deleted ? 'Deleted' : 'Edited';
   const { subclass } = feature.properties;
   const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
@@ -138,12 +149,11 @@ const getDescription = (cancelled, feature) => {
 
 const getChangesetComment = (
   comment: string,
-  cancelled: boolean,
+  deleted: boolean,
   feature: Feature,
 ) => {
-  const description = getDescription(cancelled, feature);
-  const dot = comment && ' • ';
-  return `${comment}${dot}${description} #osmapp`;
+  const description = getDescription(deleted, feature);
+  return join(comment, ' • ', `${description} #osmapp`);
 };
 
 const getXmlTags = (newTags: FeatureTags) =>
@@ -189,9 +199,49 @@ export const editOsmFeature = async (
   await putOrDeleteItem(deleted, apiId, newItem);
   await putChangesetClose(changesetId);
 
+  clearFeatureCache(feature.osmMeta);
+
   return {
     type: 'edit',
     text: comment,
     url: `${osmUrl}/changeset/${changesetId}`,
+    redirect: getOsmappLink(feature),
+  };
+};
+
+const getNewItemXml = async (
+  changesetId: string,
+  [lon, lat]: Position,
+  newTags: FeatureTags,
+) => {
+  const xml = await parseXmlString('<osm><node lat="x"/></osm>'); // TODO this is hackish
+  xml.node.$.changeset = changesetId;
+  xml.node.$.lon = lon;
+  xml.node.$.lat = lat;
+  xml.node.tag = getXmlTags(newTags);
+  return buildXmlString(xml);
+};
+
+export const addOsmFeature = async (
+  feature: Feature,
+  comment: string,
+  newTags: FeatureTags,
+) => {
+  const typeTag = Object.entries(newTags)[0]?.join('=');
+  const changesetXml = getChangesetXml({
+    feature,
+    changesetComment: join(comment, ' • ', `Added ${typeTag} #osmapp`),
+  });
+
+  const changesetId = await putChangeset(changesetXml);
+  const content = await getNewItemXml(changesetId, feature.center, newTags);
+  const newNodeId = await createItem(content);
+  await putChangesetClose(changesetId);
+
+  return {
+    type: 'edit',
+    text: comment,
+    url: `${osmUrl}/changeset/${changesetId}`,
+    redirect: `/${getUrlOsmId({ type: 'node', id: newNodeId })}`, // this is internal osmappLink
   };
 };

@@ -12,7 +12,7 @@ import Router from 'next/router';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags } from '../../../services/types';
 import { createNoteText } from './createNoteText';
-import { clearFeatureCache, insertOsmNote } from '../../../services/osmApi';
+import { insertOsmNote } from '../../../services/osmApi';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import {
   ChangeLocationEditor,
@@ -24,10 +24,12 @@ import {
 } from './components';
 import { OtherTagsEditor } from './OtherTagsEditor';
 import { SuccessContent } from './SuccessContent';
-import { icons } from '../../../assets/icons';
-import { editOsmFeature } from '../../../services/osmApiAuth';
+import { addOsmFeature, editOsmFeature } from '../../../services/osmApiAuth';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { t } from '../../../services/intl';
+import Maki from '../../utils/Maki';
+import { getNameOrFallback } from '../../../utils';
+import { FeatureTypeSelect } from './FeatureTypeSelect';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -53,10 +55,12 @@ interface Props {
   open: boolean;
   handleClose: () => void;
   focusTag: boolean | string;
+  isAddPlace: boolean;
 }
 
 const saveDialog = ({
   feature,
+  typeTag,
   tags,
   cancelled,
   location,
@@ -65,50 +69,62 @@ const saveDialog = ({
   setLoading,
   setSuccessInfo,
 }) => {
+  const allTags = typeTag ? { [typeTag.key]: typeTag.value, ...tags } : tags;
   const noteText = createNoteText(
     feature,
-    tags,
+    allTags,
     cancelled,
     location,
     comment,
     loggedIn,
   );
-  if (noteText == null) {
+  if (noteText == null && Object.keys(tags).length === 0) {
+    // TODO we need better check that this ... formik?
     alert(t('editdialog.changes_needed')); // eslint-disable-line no-alert
     return;
   }
 
   setLoading(true);
   const promise = loggedIn
-    ? editOsmFeature(feature, comment, tags, cancelled)
+    ? feature.point
+      ? addOsmFeature(feature, comment, allTags)
+      : editOsmFeature(feature, comment, allTags, cancelled)
     : insertOsmNote(feature.center, noteText);
 
-  promise.then(setSuccessInfo, () => setTimeout(() => setLoading(false), 1000));
+  promise.then(setSuccessInfo, (err) => {
+    console.error(err); // eslint-disable-line no-console
+    setTimeout(() => setLoading(false), 1000);
+  });
 };
 
-export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
+export const EditDialog = ({
+  feature,
+  open,
+  handleClose,
+  focusTag,
+  isAddPlace,
+}: Props) => {
+  const { loggedIn } = useOsmAuthContext();
   const fullScreen = useIsFullScreen();
-  const [tags, setTag] = useTagsState(feature.tags); // TODO all these should go into `values`, consider Formik
+  const [typeTag, setTypeTag] = useState('');
+  const [tags, setTag] = useTagsState(isAddPlace ? {} : feature.tags); // TODO all these should go into `values`, consider Formik
   const [cancelled, toggleCancelled] = useToggleState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
   const [loading, setLoading] = useState(false);
   const [successInfo, setSuccessInfo] = useState<any>(false);
-  const { loggedIn } = useOsmAuthContext();
 
   const onClose = () => {
-    if (successInfo && loggedIn) {
-      handleClose();
-      clearFeatureCache(feature.osmMeta);
-      Router.reload(); // TODO Router.replace(window.location.pathname) doesnt update the Panel
-    } else {
-      handleClose();
+    handleClose();
+    if (successInfo?.redirect) {
+      Router.push(successInfo.redirect);
     }
   };
 
   const handleSave = () =>
     saveDialog({
       feature,
+      typeTag,
       tags,
       cancelled,
       location,
@@ -118,9 +134,13 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
       setSuccessInfo,
     });
 
-  const ico = icons.includes(feature.properties.class)
-    ? feature.properties.class
-    : 'information';
+  const dialogTitle = isAddPlace
+    ? t('editdialog.add_heading')
+    : `${
+        loggedIn
+          ? t('editdialog.edit_heading')
+          : t('editdialog.suggest_heading')
+      } ${getNameOrFallback(feature)}`;
 
   return (
     <StyledDialog
@@ -130,17 +150,7 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
       aria-labelledby="edit-dialog-title"
     >
       <DialogTitle id="edit-dialog-title">
-        <img
-          src={`/icons/${ico}_11.svg`}
-          alt={ico}
-          title={ico}
-          width={16}
-          height={16}
-        />{' '}
-        {loggedIn
-          ? t('editdialog.edit_heading')
-          : t('editdialog.suggest_heading')}{' '}
-        {feature.tags.name || feature.properties.subclass}
+        <Maki ico={feature.properties.class} size={16} /> {dialogTitle}
       </DialogTitle>
       {successInfo ? (
         <SuccessContent successInfo={successInfo} handleClose={onClose} />
@@ -148,22 +158,31 @@ export const EditDialog = ({ feature, open, handleClose, focusTag }: Props) => {
         <>
           <DialogContent dividers>
             <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+              {isAddPlace && (
+                <FeatureTypeSelect type={typeTag} setType={setTypeTag} />
+              )}
               <MajorKeysEditor
                 tags={tags}
                 setTag={setTag}
                 focusTag={focusTag}
               />
 
-              <DialogHeading>{t('editdialog.options_heading')}</DialogHeading>
-              <PlaceCancelledToggle
-                cancelled={cancelled}
-                toggle={toggleCancelled}
-              />
-              <ChangeLocationEditor
-                location={location}
-                setLocation={setLocation}
-                feature={feature}
-              />
+              {!isAddPlace && (
+                <>
+                  <DialogHeading>
+                    {t('editdialog.options_heading')}
+                  </DialogHeading>
+                  <PlaceCancelledToggle
+                    cancelled={cancelled}
+                    toggle={toggleCancelled}
+                  />
+                  <ChangeLocationEditor
+                    location={location}
+                    setLocation={setLocation}
+                    feature={feature}
+                  />
+                </>
+              )}
 
               <ContributionInfoBox />
               <CommentField comment={comment} setComment={setComment} />

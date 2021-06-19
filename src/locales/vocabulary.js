@@ -68,6 +68,7 @@ export default {
   'map.edit_link': 'Edit this area in iD editor',
   'map.about_link': 'About this app',
 
+  'editdialog.add_heading': 'Add to OpenStreetMap',
   'editdialog.edit_heading': 'Edit:',
   'editdialog.suggest_heading': 'Suggest an edit:',
   'editdialog.options_heading': 'Options',

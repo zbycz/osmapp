@@ -4,11 +4,12 @@ import Router from 'next/router';
 import { fetchAroundFeature } from '../../services/osmApi';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
-import { getShortId, getUrlOsmId } from '../../services/helpers';
+import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 import { FetchError } from '../../services/fetch';
 import { trimText } from '../helpers';
+import { getNameOrFallback } from '../../utils';
 
 const useLoadingState = () => {
   const [around, setAround] = useState<Feature[]>([]);
@@ -33,8 +34,6 @@ const useLoadingState = () => {
 const AroundItem = ({ feature }: { feature: Feature }) => {
   const { setPreview } = useFeatureContext();
   const { properties, tags, osmMeta } = feature;
-  const subclass = properties.subclass || osmMeta.type;
-
   const handleClick = (e) => {
     e.preventDefault();
     setPreview(null);
@@ -50,10 +49,10 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
         ico={properties.class}
         title={`${Object.keys(tags).length} keys / ${
           properties.class ?? ''
-        } / ${subclass}`}
+        } / ${properties.subclass}`}
       />
       <a href={`/${getUrlOsmId(osmMeta)}`} onClick={handleClick}>
-        {tags.name ?? subclass ?? '?'}
+        {getNameOrFallback(feature)}
       </a>
     </li>
   );
@@ -68,9 +67,9 @@ export const ObjectsAround = ({ advanced }) => {
   useEffect(() => {
     startAround();
     if (feature.center) {
-      fetchAroundFeature(feature.center).then(finishAround, failAround);
+      fetchAroundFeature(feature.center).then(finishAround, failAround); // TODO fix op on unmounted tree
     }
-  }, [getShortId(feature.osmMeta)]);
+  }, [getOsmappLink(feature)]);
 
   if (!feature.center) {
     return null;
@@ -80,8 +79,7 @@ export const ObjectsAround = ({ advanced }) => {
     ? around
     : around
         .filter((item: Feature) => {
-          if (getShortId(item.osmMeta) === getShortId(feature.osmMeta))
-            return false;
+          if (getOsmappLink(item) === getOsmappLink(feature)) return false;
           if (!item.properties.subclass && Object.keys(item.tags).length <= 2)
             return false;
           if (item.properties.subclass === 'building:part') return false;
@@ -123,7 +121,7 @@ export const ObjectsAround = ({ advanced }) => {
 
       <ul>
         {features.map((item) => (
-          <AroundItem key={getShortId(item.osmMeta)} feature={item} />
+          <AroundItem key={getOsmappLink(item)} feature={item} />
         ))}
       </ul>
     </Box>
