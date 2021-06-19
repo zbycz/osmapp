@@ -21,7 +21,7 @@ https://taginfo.openstreetmap.org/taginfo/apidoc#api_4_key_values
 
 const getData = async () => {
   const body = await fetchJson(
-    `https://taginfo.openstreetmap.org/api/4/key/values?key=amenity&filter=all&lang=${intl.lang}&sortname=count_all&sortorder=desc&page=1&rp=100&qtype=value`, // &format=json_pretty
+    `https://taginfo.openstreetmap.org/api/4/key/values?key=amenity&filter=all&lang=${intl.lang}&sortname=count_all&sortorder=desc&page=1&rp=200&qtype=value`, // &format=json_pretty
   );
   const key = 'amenity';
   return body.data
