@@ -10,7 +10,7 @@ import { getNameOrFallback } from '../../utils';
 
 const Wrapper = styled.div`
   position: absolute;
-  z-index: 2000;
+  z-index: 1200; // 1300 is mui-dialog
   bottom: 40px;
   left: 50%;
   //margin-left: -70px;
