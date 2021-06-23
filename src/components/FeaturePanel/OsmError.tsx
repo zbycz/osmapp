@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert } from '@material-ui/lab';
+import { Box } from '@material-ui/core';
 import { t } from '../../services/intl';
 import { getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -8,20 +9,22 @@ export const OsmError = () => {
   const { feature } = useFeatureContext();
   const code = feature.error;
 
-  if (code === 'gone') {
+  if (code === 'deleted') {
     return (
-      <Alert variant="outlined" severity="warning">
-        {t('featurepanel.error_gone')}{' '}
-        <a
-          href={`https://openstreetmap.org/${getUrlOsmId(
-            feature.osmMeta,
-          )}/history`}
-          target="_blank"
-          rel="noopener"
-        >
-          {t('featurepanel.history_button')}
-        </a>
-      </Alert>
+      <Box mb={3} clone>
+        <Alert variant="outlined" severity="warning">
+          {t('featurepanel.error_deleted')}{' '}
+          <a
+            href={`https://openstreetmap.org/${getUrlOsmId(
+              feature.osmMeta,
+            )}/history`}
+            target="_blank"
+            rel="noopener"
+          >
+            {t('featurepanel.history_button')}
+          </a>
+        </Alert>
+      </Box>
     );
   }
 

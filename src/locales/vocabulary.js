@@ -40,7 +40,7 @@ export default {
   'featurepanel.error': 'Error __code__ while fetching feature from OpenStreetMap',
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',
   'featurepanel.error_network': "Can't get the feature, check your network cable.",
-  'featurepanel.error_gone': 'This feature was recently deleted from OpenStreetMap.',
+  'featurepanel.error_deleted': 'This object is marked as deleted in OpenStreetMap.',
   'featurepanel.history_button': 'History »',
   'featurepanel.other_info_heading': 'More information',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',

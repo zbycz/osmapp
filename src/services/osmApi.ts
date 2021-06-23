@@ -8,6 +8,8 @@ import { isBrowser } from '../components/helpers';
 
 const getOsmUrl = ({ type, id }) =>
   `https://www.openstreetmap.org/api/0.6/${type}/${id}.json`;
+const getOsmHistoryUrl = ({ type, id }) =>
+  `https://www.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
 // Overpass API is used only for getting cetroids of ways and relations
 const getOverpassUrl = ({ type, id }) => {
@@ -20,7 +22,24 @@ const getOverpassUrl = ({ type, id }) => {
   )}`;
 };
 
-const getOsmPromise = (apiId) => fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+const getOsmPromise = async (apiId) => {
+  try {
+    const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+    return elements?.[0];
+  } catch (e) {
+    if (e instanceof FetchError && e.code === '410') {
+      const { elements } = await fetchJson(getOsmHistoryUrl(apiId));
+      const length = elements?.length;
+
+      if (length >= 2) {
+        const lastWithTags = elements[length - 2];
+        const last = elements[length - 1];
+        return { ...lastWithTags, ...last, osmappDeletedMarker: true };
+      }
+    }
+    throw e;
+  }
+};
 
 // we should probably store just the last one, but this cant get too big, right?
 const featureCenterCache = {};
@@ -41,7 +60,7 @@ const getCenterPromise = async (apiId) => {
     return [lon, lat];
   } catch (e) {
     // eslint-disable-next-line no-console
-    console.warn(e); // eg. 529 too many requests
+    console.warn('getCenterPromise()', e); // eg. 529 too many requests
     return false;
   }
 };
@@ -51,9 +70,9 @@ export const clearFeatureCache = (apiId) => {
   removeFetchCache(url); // watch out, must be same as above
 };
 
-const osmToFeature = (osm) => {
-  const element = osm?.elements?.[0] ?? {};
-  const { tags, lat, lon, nodes, members, ...osmMeta } = element;
+const osmToFeature = (element): Feature => {
+  const { tags, lat, lon, nodes, members, osmappDeletedMarker, ...osmMeta } =
+    element;
   return {
     type: 'Feature' as const,
     geometry: undefined,
@@ -62,6 +81,7 @@ const osmToFeature = (osm) => {
     tags,
     members,
     properties: getPoiClass(tags),
+    error: osmappDeletedMarker ? 'deleted' : undefined,
   };
 };
 
@@ -72,12 +92,12 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
   try {
     const apiId = getApiId(shortId);
-    const [osmItem, center] = await Promise.all([
+    const [element, center] = await Promise.all([
       getOsmPromise(apiId),
       getCenterPromise(apiId),
     ]);
 
-    const feature = osmToFeature(osmItem);
+    const feature = osmToFeature(element);
     if (center) {
       feature.center = center;
     }

@@ -28,7 +28,11 @@ import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
-import { getNameFromTags, getNameOrFallback } from '../../utils';
+import {
+  getNameFromTags,
+  getNameOrFallback,
+  getUtfStrikethrough,
+} from '../../utils';
 
 const StyledIconButton = styled(IconButton)`
   svg {
@@ -65,6 +69,7 @@ const FeaturePanel = () => {
 
   const { point, tags, layer, osmMeta, properties, skeleton, members } =
     feature;
+  const deleted = feature.error === 'deleted';
 
   const osmappLink = getFullOsmappLink(feature);
   const subclass =
@@ -73,14 +78,17 @@ const FeaturePanel = () => {
     osmMeta.type;
   const featuredTags = featuredKeys
     .map((k) => [k, tags[k]])
-    .filter((x) => x[1]);
+    .filter((keyValue) => keyValue[1]);
   const name = getNameFromTags(tags);
   const nameOrFallback = getNameOrFallback(feature);
 
   return (
     <PanelWrapper>
       <Head>
-        <title>{nameOrFallback} · OsmAPP</title>
+        <title>
+          {deleted ? getUtfStrikethrough(nameOrFallback) : nameOrFallback} ·
+          OsmAPP
+        </title>
       </Head>
       <PanelScrollbars>
         <FeatureImage feature={feature} ico={properties.class}>
@@ -114,6 +122,7 @@ const FeaturePanel = () => {
         </FeatureImage>
         <PanelContent>
           <FeatureHeading
+            deleted={deleted}
             title={nameOrFallback}
             onEdit={!point && setDialogOpenedWith}
           />
@@ -121,13 +130,15 @@ const FeaturePanel = () => {
           <OsmError />
 
           <FeaturedTags
-            featuredTags={featuredTags}
+            featuredTags={deleted ? [] : featuredTags}
             setDialogOpenedWith={setDialogOpenedWith}
           />
 
           <TagsTable
             tags={tags}
-            except={advanced ? [] : ['name', 'layer', ...featuredKeys]}
+            except={
+              advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
+            }
             onEdit={setDialogOpenedWith}
           />
 

@@ -8,14 +8,15 @@ const Wrapper = styled.div`
   color: rgba(0, 0, 0, 0.7);
   position: relative;
   padding-bottom: 30px;
+  ${({ deleted }) => deleted && 'text-decoration: line-through;'}
 
   &:hover .show-on-hover {
     display: block !important;
   }
 `;
 
-const FeatureHeading = ({ title, onEdit }) => (
-  <Wrapper>
+const FeatureHeading = ({ title, onEdit, deleted }) => (
+  <Wrapper deleted={deleted}>
     {onEdit && <EditIconButton onClick={() => onEdit('name')} />}
     {title}
   </Wrapper>

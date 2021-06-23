@@ -6,7 +6,7 @@ import { Box } from '@material-ui/core';
 import { t } from '../../services/intl';
 
 export const EditButton = ({ isAddPlace, setDialogOpenedWith }) => (
-  <Box mt={5} mb={1} mx="auto" clone>
+  <Box mt={5} mb={3} mx="auto" clone>
     <Button
       size="large"
       startIcon={isAddPlace ? <AddLocationIcon /> : <EditIcon />}

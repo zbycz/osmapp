@@ -46,6 +46,11 @@ export const getIdEditorLink = (feature: Feature, view?: View) => {
   return `https://www.openstreetmap.org/edit${query}${hash}`;
 };
 
+export const getUtfStrikethrough = (text) => text
+    .split('')
+    .map((char) => `${char  }\u0336`)
+    .join('');
+
 export const getNameFromTags = (tags: FeatureTags) => tags.name || tags.ref;
 
 export const getNameOrFallback = ({
@@ -58,7 +63,6 @@ export const getNameOrFallback = ({
   if (point) {
     return roundedToDeg(roundedCenter);
   }
-
   return (
     getNameFromTags(tags) ||
     properties.subclass?.replace(/_/g, ' ') ||

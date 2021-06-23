@@ -36,7 +36,7 @@ export default {
   'featurepanel.error': 'Chyba __code__ při stahování prvku z OpenStreetMap.',
   'featurepanel.error_unknown': 'Při stahování prvku z OpenStreetMap se stala neznámá chyba.',
   'featurepanel.error_network': 'Nelze stáhnout prvek, zkontrolujte připojení k internetu.',
-  'featurepanel.error_gone': 'Tento prvek byl v mezičase smazán z OpenStreetMap.',
+  'featurepanel.error_deleted': 'Tento prvek je v OpenStreetMap označen jako smazaný.',
   'featurepanel.history_button': 'Historie »',
   'featurepanel.other_info_heading': 'Další informace',
   'featurepanel.edit_button_title': 'Upravit v databázi OpenStreetMap',
