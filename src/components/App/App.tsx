@@ -23,7 +23,11 @@ const usePersistMapView = () => {
 };
 
 export const getMapViewFromHash = () => {
-  const view = global.window?.location.hash.substr(1).split('/');
+  const view = global.window?.location.hash
+    .substr(1)
+    .split('/')
+    .map(parseFloat)
+    .map((num) => num.toString());
   return view?.length === 3 ? view : undefined;
 };
 
