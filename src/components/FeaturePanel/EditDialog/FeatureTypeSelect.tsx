@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Box, MenuItem, TextField, Typography } from '@material-ui/core';
 import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
-import { intl } from '../../../services/intl';
+import { intl, t } from '../../../services/intl';
 import { getPoiClass } from '../../../services/getPoiClass';
 import { trimText } from '../../helpers';
 
@@ -57,7 +57,7 @@ export const FeatureTypeSelect = ({ type, setType }) => {
         fullWidth
         value={type}
         SelectProps={{ renderValue, onChange }}
-        label="Zvolte typ objektu"
+        label={t('editdialog.feature_type_select')}
       >
         {options.map((item) => (
           <MenuItem key={item.tag} value={item}>

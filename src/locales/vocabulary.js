@@ -71,6 +71,7 @@ export default {
   'editdialog.add_heading': 'Add to OpenStreetMap',
   'editdialog.edit_heading': 'Edit:',
   'editdialog.suggest_heading': 'Suggest an edit:',
+  'editdialog.feature_type_select': 'Choose type',
   'editdialog.options_heading': 'Options',
   'editdialog.cancel_button': 'Cancel',
   'editdialog.save_button_edit': 'Save to OSM',
