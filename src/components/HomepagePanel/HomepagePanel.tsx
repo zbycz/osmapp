@@ -100,6 +100,7 @@ export const HomepagePanel = () => {
                   alt={t('homepage.osm_logo_alt')}
                   width={100}
                   height={100}
+                  priority
                 />
               </Grid>
               <Grid item xs={8}>
