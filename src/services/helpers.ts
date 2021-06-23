@@ -1,6 +1,6 @@
 import * as xml2js from 'isomorphic-xml2js';
 import fetch from 'isomorphic-unfetch';
-import { isServer } from '../components/helpers';
+import { isServer, isString } from '../components/helpers';
 import { Feature } from './types';
 import { join, roundedToDegUrl } from '../utils';
 
@@ -86,7 +86,7 @@ export const isValidImage = (url): Promise<boolean> => {
 };
 
 export const stringifyDomXml = (itemXml) =>
-  new XMLSerializer().serializeToString(itemXml);
+  isString(itemXml) ? itemXml : new XMLSerializer().serializeToString(itemXml);
 
 export const buildAddress = ({
   'addr:place': place,

@@ -66,8 +66,8 @@ const getCenterPromise = async (apiId) => {
 };
 
 export const clearFeatureCache = (apiId) => {
-  const url = getOsmUrl(apiId);
-  removeFetchCache(url); // watch out, must be same as above
+  removeFetchCache(getOsmUrl(apiId)); // watch out, must be same as in getOsmPromise()
+  removeFetchCache(getOsmHistoryUrl(apiId));
 };
 
 const osmToFeature = (element): Feature => {
@@ -106,7 +106,9 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
   } catch (e) {
     console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
 
-    const error = e instanceof FetchError ? e.code : 'unknown';
+    const error = (
+      e instanceof FetchError ? e.code : 'unknown'
+    ) as Feature['error'];
     return {
       type: 'Feature',
       skeleton: true,

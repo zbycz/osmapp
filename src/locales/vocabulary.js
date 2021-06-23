@@ -46,6 +46,7 @@ export default {
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.edit_button': 'Edit place',
   'featurepanel.add_place_button': 'Add place',
+  'featurepanel.undelete_button': 'Undelete',
   'featurepanel.feature_description_nonosm': 'Map feature __type__',
   'featurepanel.feature_description_osm': '__type__ in OpenStreetMap database',
   'featurepanel.feature_description_point': 'Map coordinates',
@@ -69,13 +70,14 @@ export default {
   'map.about_link': 'About this app',
 
   'editdialog.add_heading': 'Add to OpenStreetMap',
+  'editdialog.undelete_heading': 'Add again to OpenStreetMap',
   'editdialog.edit_heading': 'Edit:',
   'editdialog.suggest_heading': 'Suggest an edit:',
   'editdialog.feature_type_select': 'Choose type',
   'editdialog.options_heading': 'Options',
   'editdialog.cancel_button': 'Cancel',
   'editdialog.save_button_edit': 'Save to OSM',
-  'editdialog.save_button_delete': 'Delete object',
+  'editdialog.save_button_delete': 'Delete',
   'editdialog.save_button_note': 'Add note',
   'editdialog.changes_needed': 'Please, make some changes.',
   'editdialog.loggedInMessage': 'You are logged in as <b>__osmUser__</b>, changes will be saved immediately.',
@@ -114,7 +116,7 @@ export default {
   'editsuccess.edit.heading': 'Thank you for your edit!',
   'editsuccess.edit.subheading': 'Your change is starting to appear on maps around the world.',
   'editsuccess.edit.body': `It is already stored in the OSM database. You will see it on the "OSM Mapnik" map in a few minutes.
-         The local map and various other applications are refreshed about once a month.
+         The OsmAPP map and various other applications are refreshed about once a month.
           <br/><br/>If this is a mistake, you can manually revert the values and save it again.`,
   'editsuccess.edit.urlLabel': `Your changes:`,
   'editsuccess.edit.textLabel': 'Comment',

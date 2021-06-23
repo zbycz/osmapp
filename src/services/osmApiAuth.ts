@@ -104,6 +104,12 @@ const getItem = (apiId: OsmApiId) =>
     path: `/api/0.6/${getUrlOsmId(apiId)}`,
   });
 
+const getItemHistory = (apiId: OsmApiId) =>
+  authFetch({
+    method: 'GET',
+    path: `/api/0.6/${getUrlOsmId(apiId)}/history`,
+  });
+
 const putItem = (apiId: OsmApiId, content: string) =>
   authFetch({
     method: 'PUT',
@@ -129,19 +135,41 @@ const createItem = (content: string) =>
   });
 
 const putOrDeleteItem = async (
-  deleted: boolean,
+  isDelete: boolean,
   apiId: OsmApiId,
   newItem: string,
 ) => {
-  if (deleted) {
+  if (isDelete) {
     await deleteItem(apiId, newItem);
   } else {
     await putItem(apiId, newItem);
   }
 };
 
-const getDescription = (deleted, feature) => {
-  const action = deleted ? 'Deleted' : 'Edited';
+const getItemOrLastHistoric = async (apiId: OsmApiId) => {
+  try {
+    return await getItem(apiId);
+  } catch (e) {
+    // e is probably XMLHttpRequest
+    if (e?.status !== 410) {
+      throw e;
+    }
+
+    // Mind that tags are fetched during feature fetch (osmApi#getOsmPromise()) and replaced after edit
+    const itemHistory = await getItemHistory(apiId);
+    const xml = await parseXmlString(stringifyDomXml(itemHistory));
+    const items = xml[apiId.type];
+    const existingVersion = items[items.length - 2];
+    const deletedVersion = items[items.length - 1];
+    existingVersion.$.version = deletedVersion.$.version;
+    xml[apiId.type] = existingVersion;
+    return buildXmlString(xml);
+  }
+};
+
+const getDescription = (isDelete, feature) => {
+  const undelete = feature.error === 'deleted';
+  const action = undelete ? 'Undeleted' : isDelete ? 'Deleted' : 'Edited';
   const { subclass } = feature.properties;
   const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
@@ -149,10 +177,10 @@ const getDescription = (deleted, feature) => {
 
 const getChangesetComment = (
   comment: string,
-  deleted: boolean,
+  isDelete: boolean,
   feature: Feature,
 ) => {
-  const description = getDescription(deleted, feature);
+  const description = getDescription(isDelete, feature);
   return join(comment, ' • ', `${description} #osmapp`);
 };
 
@@ -165,13 +193,13 @@ const updateItemXml = async (
   item,
   apiId: OsmApiId,
   changesetId: string,
-  newTags?: FeatureTags,
+  tags: FeatureTags,
+  isDelete: boolean,
 ) => {
   const xml = await parseXmlString(stringifyDomXml(item));
-
   xml[apiId.type].$.changeset = changesetId;
-  if (newTags) {
-    xml[apiId.type].tag = getXmlTags(newTags);
+  if (!isDelete) {
+    xml[apiId.type].tag = getXmlTags(tags);
   }
   return buildXmlString(xml);
 };
@@ -180,32 +208,35 @@ export const editOsmFeature = async (
   feature: Feature,
   comment: string,
   newTags: FeatureTags,
-  deleted: boolean,
+  isDelete: boolean,
 ) => {
   const apiId = prod ? feature.osmMeta : { type: 'node', id: '967531' };
-  const changesetComment = getChangesetComment(comment, deleted, feature);
+  const changesetComment = getChangesetComment(comment, isDelete, feature);
   const changesetXml = getChangesetXml({ changesetComment, feature });
 
   const changesetId = await putChangeset(changesetXml);
-  const item = await getItem(apiId);
+  const item = await getItemOrLastHistoric(apiId);
 
+  // TODO use version from `feature` (we dont want to overwrite someones changes)
+  // TODO or at least just apply tags diff (see createNoteText)
   const newItem = await updateItemXml(
     item,
     apiId,
     changesetId,
-    !deleted ? newTags : undefined,
+    newTags,
+    isDelete,
   );
 
-  await putOrDeleteItem(deleted, apiId, newItem);
+  await putOrDeleteItem(isDelete, apiId, newItem);
   await putChangesetClose(changesetId);
 
   clearFeatureCache(feature.osmMeta);
 
   return {
     type: 'edit',
-    text: comment,
+    text: changesetComment,
     url: `${osmUrl}/changeset/${changesetId}`,
-    redirect: getOsmappLink(feature),
+    redirect: `${getOsmappLink(feature)}`,
   };
 };
 
@@ -228,20 +259,19 @@ export const addOsmFeature = async (
   newTags: FeatureTags,
 ) => {
   const typeTag = Object.entries(newTags)[0]?.join('=');
-  const changesetXml = getChangesetXml({
-    feature,
-    changesetComment: join(comment, ' • ', `Added ${typeTag} #osmapp`),
-  });
+  const changesetComment = join(comment, ' • ', `Added ${typeTag} #osmapp`);
+  const changesetXml = getChangesetXml({ feature, changesetComment });
 
   const changesetId = await putChangeset(changesetXml);
   const content = await getNewItemXml(changesetId, feature.center, newTags);
   const newNodeId = await createItem(content);
   await putChangesetClose(changesetId);
 
+  const apiId = { type: 'node', id: newNodeId };
   return {
     type: 'edit',
-    text: comment,
+    text: changesetComment,
     url: `${osmUrl}/changeset/${changesetId}`,
-    redirect: `/${getUrlOsmId({ type: 'node', id: newNodeId })}`, // this is internal osmappLink
+    redirect: `/${getUrlOsmId(apiId)}`,
   };
 };

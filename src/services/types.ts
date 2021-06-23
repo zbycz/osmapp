@@ -73,7 +73,7 @@ export interface Feature {
   center: Position;
   roundedCenter?: LonLatRounded;
   ssrFeatureImage?: Image;
-  error?: 'deleted' | 'unknown' | string;
+  error?: 'deleted' | 'network' | 'unknown' | '404' | '500'; // etc.
 
   // skeleton
   layer?: { id: string };

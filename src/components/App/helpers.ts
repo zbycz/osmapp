@@ -1,9 +1,10 @@
 import nextCookies from 'next-cookies';
 import { getFeatureImage } from '../../services/images';
-import { fetchFeature } from '../../services/osmApi';
+import { clearFeatureCache, fetchFeature } from '../../services/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
 import { getCoordsFeature } from '../../services/getCoordsFeature';
+import { getApiId } from '../../services/helpers';
 
 const DEFAULT_VIEW = [4, 50, 14];
 
@@ -59,6 +60,12 @@ export const getInititalFeature = async (ctx) => {
   if (!shortId) {
     // TODO 404 when !shortId
     return null;
+  }
+
+  if (isServer()) {
+    // we need always fresh OSM element, b/c user can edit a feature and refresh the page
+    // (other stuff like image or overpass is cached)
+    clearFeatureCache(getApiId(shortId));
   }
 
   const t1 = new Date().getTime();

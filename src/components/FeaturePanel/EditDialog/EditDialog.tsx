@@ -8,7 +8,7 @@ import useTheme from '@material-ui/core/styles/useTheme';
 import DialogContent from '@material-ui/core/DialogContent';
 import { CircularProgress } from '@material-ui/core';
 import styled from 'styled-components';
-import Router from 'next/router';
+import { useRouter } from 'next/router';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags } from '../../../services/types';
 import { createNoteText } from './createNoteText';
@@ -44,6 +44,15 @@ const useTagsState = (
   return [tags, setTag];
 };
 
+const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
+  const { loggedIn } = useOsmAuthContext();
+  if (isAddPlace) return t('editdialog.add_heading');
+  if (isUndelete) return t('editdialog.undelete_heading');
+  if (!loggedIn)
+    return `${t('editdialog.suggest_heading')} ${getNameOrFallback(feature)}`;
+  return `${t('editdialog.edit_heading')} ${getNameOrFallback(feature)}`;
+};
+
 const StyledDialog = styled(Dialog)`
   .MuiDialog-container.MuiDialog-scrollPaper {
     align-items: start;
@@ -56,6 +65,7 @@ interface Props {
   handleClose: () => void;
   focusTag: boolean | string;
   isAddPlace: boolean;
+  isUndelete: boolean;
 }
 
 const saveDialog = ({
@@ -68,6 +78,7 @@ const saveDialog = ({
   loggedIn,
   setLoading,
   setSuccessInfo,
+  isUndelete,
 }) => {
   const allTags = typeTag ? { [typeTag.key]: typeTag.value, ...tags } : tags;
   const noteText = createNoteText(
@@ -76,9 +87,9 @@ const saveDialog = ({
     cancelled,
     location,
     comment,
-    loggedIn,
+    isUndelete,
   );
-  if (noteText == null && Object.keys(tags).length === 0) {
+  if (noteText == null) {
     // TODO we need better check that this ... formik?
     alert(t('editdialog.changes_needed')); // eslint-disable-line no-alert
     return;
@@ -103,11 +114,13 @@ export const EditDialog = ({
   handleClose,
   focusTag,
   isAddPlace,
+  isUndelete,
 }: Props) => {
+  const router = useRouter();
   const { loggedIn } = useOsmAuthContext();
   const fullScreen = useIsFullScreen();
   const [typeTag, setTypeTag] = useState('');
-  const [tags, setTag] = useTagsState(isAddPlace ? {} : feature.tags); // TODO all these should go into `values`, consider Formik
+  const [tags, setTag] = useTagsState(feature.tags); // TODO all these should go into `values`, consider Formik
   const [cancelled, toggleCancelled] = useToggleState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
@@ -116,8 +129,8 @@ export const EditDialog = ({
 
   const onClose = () => {
     handleClose();
-    if (successInfo?.redirect) {
-      Router.push(successInfo.redirect);
+    if (successInfo.redirect) {
+      router.replace(successInfo.redirect); // only useRouter reloads the panel client-side
     }
   };
 
@@ -132,15 +145,10 @@ export const EditDialog = ({
       loggedIn,
       setLoading,
       setSuccessInfo,
+      isUndelete,
     });
 
-  const dialogTitle = isAddPlace
-    ? t('editdialog.add_heading')
-    : `${
-        loggedIn
-          ? t('editdialog.edit_heading')
-          : t('editdialog.suggest_heading')
-      } ${getNameOrFallback(feature)}`;
+  const dialogTitle = useGetDialogTitle(isAddPlace, isUndelete, feature);
 
   return (
     <StyledDialog
@@ -167,7 +175,7 @@ export const EditDialog = ({
                 focusTag={focusTag}
               />
 
-              {!isAddPlace && (
+              {!isAddPlace && !isUndelete && (
                 <>
                   <DialogHeading>
                     {t('editdialog.options_heading')}
@@ -183,10 +191,8 @@ export const EditDialog = ({
                   />
                 </>
               )}
-
               <ContributionInfoBox />
               <CommentField comment={comment} setComment={setComment} />
-
               <OtherTagsEditor
                 tags={tags}
                 setTag={setTag}

@@ -7,7 +7,7 @@ export const createNoteText = (
   placeCancelled: boolean,
   location: string,
   note: string,
-  loggedIn: boolean,
+  isUndelete: boolean,
 ) => {
   const isAdded = ([k, v]) => v && !feature.tags[k];
   const isRemoved = ([k, v]) => v && !newTags[k];
@@ -23,7 +23,8 @@ export const createNoteText = (
     !removedTags.length &&
     !placeCancelled &&
     !location &&
-    !note
+    !note &&
+    !isUndelete
   ) {
     return null;
   }
@@ -32,36 +33,32 @@ export const createNoteText = (
   if (!feature.point) {
     noteText.push(getUrlOsmId(feature.osmMeta));
   }
-
+  if (isUndelete) {
+    noteText.push('! Suggested undelete');
+  }
   if (placeCancelled) {
     noteText.push('! Place was marked permanently closed.');
   }
-
   if (note) {
     noteText.push('');
     noteText.push(note);
   }
-
   if (location) {
     noteText.push('');
     noteText.push('Suggested location change:');
     noteText.push(location);
   }
-
   if (changeOrAddedTags.length) {
     noteText.push('');
-    noteText.push(loggedIn ? 'Changes:' : 'Suggested changes:');
+    noteText.push('Suggested changes:');
     noteText.push(changeOrAddedTags.map(([k, v]) => `${k}=${v}`).join('\n'));
   }
-
   if (removedTags.length) {
     noteText.push('');
     noteText.push(`Removed tags:`);
     noteText.push(removedTags.map(([k]) => k).join(', '));
   }
-
   noteText.push('\n');
   noteText.push(`Submitted from ${getFullOsmappLink(feature)}`);
-
   return noteText.join('\n');
 };

@@ -41,11 +41,18 @@ const renderValue = (value) => (
 );
 
 export const FeatureTypeSelect = ({ type, setType }) => {
+  // const { feature } = useFeatureContext();
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
     getData().then(setOptions);
   }, []);
+
+  // useEffect(() => {
+  //   if (options && feature.tags?.amenity) {
+  //     setType(options.find((x) => x.value === feature.tags.amenity));
+  //   }
+  // }, [options, feature]);
 
   const onChange = (event) => setType(event.target.value);
 

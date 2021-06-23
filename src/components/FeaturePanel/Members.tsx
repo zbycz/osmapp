@@ -2,10 +2,14 @@ import Link from 'next/link';
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
 import { getUrlOsmId } from '../../services/helpers';
-import { Feature } from '../../services/types';
+import { useFeatureContext } from '../utils/FeatureContext';
 
-export const Members = ({ members }: Pick<Feature, 'members'>) =>
-  members?.length ? (
+export const Members = () => {
+  const {
+    feature: { members },
+  } = useFeatureContext();
+
+  return members?.length ? (
     <Box mt={4}>
       <Typography variant="overline" display="block" color="textSecondary">
         Relation members
@@ -26,3 +30,4 @@ export const Members = ({ members }: Pick<Feature, 'members'>) =>
       </ul>
     </Box>
   ) : null;
+};

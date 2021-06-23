@@ -15,9 +15,9 @@ const Wrapper = styled.div`
   }
 `;
 
-const FeatureHeading = ({ title, onEdit, deleted }) => (
+const FeatureHeading = ({ title, onEdit, deleted, editEnabled }) => (
   <Wrapper deleted={deleted}>
-    {onEdit && <EditIconButton onClick={() => onEdit('name')} />}
+    {editEnabled && <EditIconButton onClick={() => onEdit('name')} />}
     {title}
   </Wrapper>
 );

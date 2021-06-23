@@ -67,9 +67,9 @@ const FeaturePanel = () => {
   const [dialogOpenedWith, setDialogOpenedWith] =
     useState<boolean | string>(false);
 
-  const { point, tags, layer, osmMeta, properties, skeleton, members } =
-    feature;
-  const deleted = feature.error === 'deleted';
+  const { point, tags, layer, osmMeta, properties, skeleton, error } = feature;
+  const deleted = error === 'deleted';
+  const editEnabled = !skeleton && (!error || deleted);
 
   const osmappLink = getFullOsmappLink(feature);
   const subclass =
@@ -78,7 +78,7 @@ const FeaturePanel = () => {
     osmMeta.type;
   const featuredTags = featuredKeys
     .map((k) => [k, tags[k]])
-    .filter((keyValue) => keyValue[1]);
+    .filter(([, v]) => v);
   const name = getNameFromTags(tags);
   const nameOrFallback = getNameOrFallback(feature);
 
@@ -124,7 +124,8 @@ const FeaturePanel = () => {
           <FeatureHeading
             deleted={deleted}
             title={nameOrFallback}
-            onEdit={!point && setDialogOpenedWith}
+            editEnabled={editEnabled && !point}
+            onEdit={setDialogOpenedWith}
           />
 
           <OsmError />
@@ -142,21 +143,29 @@ const FeaturePanel = () => {
             onEdit={setDialogOpenedWith}
           />
 
-          {advanced && <Members members={members} />}
+          {advanced && <Members />}
 
-          <EditButton
-            isAddPlace={point}
-            setDialogOpenedWith={setDialogOpenedWith}
-          />
+          {editEnabled && (
+            <>
+              <EditButton
+                isAddPlace={point}
+                isUndelete={deleted}
+                setDialogOpenedWith={setDialogOpenedWith}
+              />
 
-          <EditDialog
-            open={!!dialogOpenedWith}
-            handleClose={() => setDialogOpenedWith(false)}
-            feature={feature}
-            isAddPlace={point}
-            focusTag={dialogOpenedWith}
-            key={getUrlOsmId(osmMeta) + (skeleton && 'skel')} // we need to refresh inner state
-          />
+              <EditDialog
+                open={!!dialogOpenedWith}
+                handleClose={() => setDialogOpenedWith(false)}
+                feature={feature}
+                isAddPlace={point}
+                isUndelete={deleted}
+                focusTag={dialogOpenedWith}
+                key={
+                  getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                }
+              />
+            </>
+          )}
 
           {point && <ObjectsAround advanced={advanced} />}
 

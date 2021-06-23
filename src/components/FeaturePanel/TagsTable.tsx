@@ -9,6 +9,7 @@ import { buildAddress } from '../../services/helpers';
 
 const Wrapper = styled.div`
   position: relative;
+  margin-bottom: 2em;
 `;
 
 const Table = styled.table`
