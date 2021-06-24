@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import { Box } from '@material-ui/core';
 import { majorKeys } from './MajorKeysEditor';
 import { isString } from '../../helpers';
 import { t, Translation } from '../../../services/intl';
@@ -17,8 +18,14 @@ const Table = styled.table`
     text-align: left;
     font-weight: normal;
     vertical-align: center;
-    padding-left: 0;
     font-size: 13px;
+    max-width: 25vw;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+
+  td {
+    padding-left: 20px;
   }
 
   .MuiInputBase-root {
@@ -26,7 +33,39 @@ const Table = styled.table`
   }
 `;
 
-const NewTagRow = ({ setTag }) => {
+const OtherTagsHeading = () => (
+  <Typography
+    variant="overline"
+    component="h3"
+    color="textSecondary"
+    style={{ position: 'relative' }}
+  >
+    {t('editdialog.other_tags')}
+  </Typography>
+);
+
+const OtherTagsButton = ({ setVisible }) => (
+  <Button
+    variant="outlined"
+    disableElevation
+    onClick={() => setVisible((currentState) => !currentState)}
+  >
+    {t('editdialog.other_tags')}
+    <ExpandMoreIcon fontSize="small" />
+  </Button>
+);
+
+const OtherTagsInfo = () => (
+  <tr>
+    <td colSpan={2}>
+      <Typography color="textSecondary" style={{ paddingTop: '1em' }}>
+        <Translation id="editdialog.other_tags.info" />
+      </Typography>
+    </td>
+  </tr>
+);
+
+const NewTagRow = ({ setTag, setTmpNewTag }) => {
   const [newKey, setNewKey] = useState('');
   const [newValue, setNewValue] = useState('');
 
@@ -38,29 +77,52 @@ const NewTagRow = ({ setTag }) => {
     }
   };
 
+  const handleKeyChange = ({ target: { value } }) => {
+    setNewKey(value);
+    setTmpNewTag({ [value]: newValue });
+  };
+  const handleValueChange = ({ target: { value } }) => {
+    setNewValue(value);
+    setTmpNewTag({ [newKey]: value });
+  };
   return (
-    <tr>
-      <th style={{ verticalAlign: 'baseline' }}>
-        <TextField
-          value={newKey}
-          onChange={(e) => setNewKey(e.target.value)}
-          variant="outlined"
-          size="small"
-          placeholder={t('editdialog.other_tags.new_key')}
-        />
-      </th>
-      <td>
-        <TextField
-          value={newValue}
-          onChange={(e) => setNewValue(e.target.value)}
-          variant="outlined"
-          size="small"
-        />{' '}
-        <Button variant="contained" disableElevation onClick={handleAdd}>
-          {t('editdialog.other_tags.add')}
-        </Button>
-      </td>
-    </tr>
+    <>
+      <tr>
+        <th style={{ verticalAlign: 'baseline' }}>
+          <TextField
+            value={newKey}
+            onChange={handleKeyChange}
+            variant="outlined"
+            size="small"
+            placeholder={t('editdialog.other_tags.new_key')}
+            inputProps={{ autocapitalize: 'none' }}
+          />
+        </th>
+        <td>
+          <TextField
+            value={newValue}
+            onChange={handleValueChange}
+            fullWidth
+            variant="outlined"
+            size="small"
+            inputProps={{ autocapitalize: 'none' }}
+          />
+        </td>
+      </tr>
+      <tr>
+        <td />
+        <td>
+          <Button
+            variant="contained"
+            disableElevation
+            onClick={handleAdd}
+            disabled={!newKey || !newValue}
+          >
+            {t('editdialog.other_tags.add')}
+          </Button>
+        </td>
+      </tr>
+    </>
   );
 };
 
@@ -75,6 +137,7 @@ const KeyValueRow = ({ k, v, setTag, focusTag }) => (
         fullWidth
         variant="outlined"
         size="small"
+        inputProps={{ autocapitalize: 'none' }}
         autoFocus={focusTag === k}
         placeholder={t('editdialog.other_tags.will_be_deleted')}
       />
@@ -82,69 +145,43 @@ const KeyValueRow = ({ k, v, setTag, focusTag }) => (
   </tr>
 );
 
-export const OtherTagsEditor = ({ tags, setTag, focusTag }) => {
-  const focusThisSection =
+export const OtherTagsEditor = ({ tags, setTag, focusTag, setTmpNewTag }) => {
+  const focusThisEditor =
     isString(focusTag) && !majorKeys.includes(focusTag as string);
 
-  const [showTags, setShowTags] = useState(focusThisSection);
+  const [visible, setVisible] = useState(focusThisEditor);
 
   useEffect(() => {
-    if (focusThisSection) {
-      setShowTags(true);
+    if (focusThisEditor) {
+      setVisible(true);
     }
-  }, [focusThisSection]);
+  }, [focusThisEditor]);
 
-  const rows = Object.entries(tags)
-    .filter(([k]) => !majorKeys.includes(k))
-    .map(([k, v]) => (
-      <KeyValueRow key={k} k={k} v={v} setTag={setTag} focusTag={focusTag} />
-    ));
+  const rows = Object.entries(tags).filter(([k]) => !majorKeys.includes(k));
 
   return (
-    <div>
-      {!showTags && (
-        <Button
-          variant="outlined"
-          disableElevation
-          onClick={() => setShowTags(!showTags)}
-        >
-          {t('editdialog.other_tags')}
-          <ExpandMoreIcon fontSize="small" />
-        </Button>
-      )}
-
-      {showTags && (
+    <Box mb={4}>
+      {!visible && <OtherTagsButton setVisible={setVisible} />}
+      {visible && (
         <>
-          <Typography
-            variant="overline"
-            component="h3"
-            color="textSecondary"
-            style={{ position: 'relative' }}
-          >
-            {t('editdialog.other_tags')}
-          </Typography>
+          <OtherTagsHeading />
           <Table>
             <tbody>
-              {rows}
-              <NewTagRow setTag={setTag} />
-              <tr>
-                <td colSpan={2}>
-                  <Typography
-                    color="textSecondary"
-                    style={{ paddingTop: '1em' }}
-                  >
-                    <Translation id="editdialog.other_tags.info" />
-                  </Typography>
-                </td>
-              </tr>
+              {rows.map(([k, v]) => (
+                <KeyValueRow
+                  key={k}
+                  k={k}
+                  v={v}
+                  setTag={setTag}
+                  focusTag={focusTag}
+                />
+              ))}
+              <NewTagRow setTag={setTag} setTmpNewTag={setTmpNewTag} />
+              <OtherTagsInfo />
             </tbody>
           </Table>
         </>
       )}
-
-      <br />
-      <br />
-      <br />
-    </div>
+    </Box>
   );
 };

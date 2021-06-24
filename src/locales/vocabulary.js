@@ -101,7 +101,7 @@ export default {
          photo, etc.).`,
   'editdialog.other_tags': 'Other properties – tags',
   'editdialog.other_tags.new_key': 'new key',
-  'editdialog.other_tags.add': 'Add',
+  'editdialog.other_tags.add': 'Add another tag',
   'editdialog.other_tags.will_be_deleted': 'will be deleted',
   'editdialog.other_tags.info': `The Tags describe properties
         of each map feature in agreed format. Here you will find the complete

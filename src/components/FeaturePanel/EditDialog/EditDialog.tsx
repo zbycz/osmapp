@@ -72,6 +72,7 @@ const saveDialog = ({
   feature,
   typeTag,
   tags,
+  tmpNewTag,
   cancelled,
   location,
   comment,
@@ -80,7 +81,10 @@ const saveDialog = ({
   setSuccessInfo,
   isUndelete,
 }) => {
-  const allTags = typeTag ? { [typeTag.key]: typeTag.value, ...tags } : tags;
+  const tagsWithType = typeTag
+    ? { [typeTag.key]: typeTag.value, ...tags }
+    : tags;
+  const allTags = { ...tagsWithType, ...tmpNewTag }; // we need to send also unsubmitted new tag
   const noteText = createNoteText(
     feature,
     allTags,
@@ -121,6 +125,7 @@ export const EditDialog = ({
   const fullScreen = useIsFullScreen();
   const [typeTag, setTypeTag] = useState('');
   const [tags, setTag] = useTagsState(feature.tags); // TODO all these should go into `values`, consider Formik
+  const [tmpNewTag, setTmpNewTag] = useState({});
   const [cancelled, toggleCancelled] = useToggleState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
@@ -139,6 +144,7 @@ export const EditDialog = ({
       feature,
       typeTag,
       tags,
+      tmpNewTag,
       cancelled,
       location,
       comment,
@@ -197,6 +203,7 @@ export const EditDialog = ({
                 tags={tags}
                 setTag={setTag}
                 focusTag={focusTag}
+                setTmpNewTag={setTmpNewTag}
               />
 
               <OsmLogin />

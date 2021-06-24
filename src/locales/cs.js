@@ -97,7 +97,7 @@ export default {
         informace (web, foto atd.).`,
   'editdialog.other_tags': 'Další vlastnosti – tagy',
   'editdialog.other_tags.new_key': 'nový klíč',
-  'editdialog.other_tags.add': 'Přidat',
+  'editdialog.other_tags.add': 'Přidat další tag',
   'editdialog.other_tags.will_be_deleted': 'bude smazáno',
   'editdialog.other_tags.info': `Tagy popisují vlastnosti
         mapového prvku v dohodnutém formátu. Zde naleznete úplný
