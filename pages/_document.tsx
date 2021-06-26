@@ -1,27 +1,10 @@
 import React from 'react';
-import Document, { Html, Head, Main, NextScript } from 'next/document';
+import Document, { Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
 import { getServerIntl } from '../src/services/intlServer';
 import { InjectIntl, setIntl } from '../src/services/intl';
-
-const Favicons = () => (
-  <>
-    <link rel="shortcut icon" href="/logo/osmapp_192.png" sizes="192x192" />
-    <link rel="shortcut icon" href="/logo/osmapp_256.png" sizes="256x256" />
-    <link rel="shortcut icon" href="/logo/osmapp_64.png" />
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-    <link rel="apple-touch-icon" href="/logo/apple.png" />
-    <link rel="apple-touch-icon" sizes="57x57" href="/logo/apple_57.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="/logo/apple_72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="/logo/apple_76.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="/logo/apple_114.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="/logo/apple_120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="/logo/apple_144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/logo/apple_152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/logo/apple_180.png" />
-  </>
-);
+import { Favicons } from '../src/helpers/Favicons';
 
 export default class MyDocument extends Document {
   render() {

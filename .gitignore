@@ -10,5 +10,7 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 /public/tmp
-
-
+/public/sw.js
+/public/sw.js.map
+/public/workbox-*.js
+/public/workbox-*.js.map
