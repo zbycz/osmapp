@@ -18,7 +18,7 @@ export const PanelWrapper = styled.div`
   flex-direction: column;
 
   width: 100%;
-  @media (min-width: 410px) {
+  @media (min-width: 500px) {
     width: 410px;
   }
 `;

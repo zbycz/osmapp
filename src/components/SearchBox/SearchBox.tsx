@@ -23,7 +23,7 @@ const TopPanel = styled.div`
   z-index: 1200;
 
   width: 100%;
-  @media (min-width: 410px) {
+  @media (min-width: 500px) {
     width: 410px;
   }
 `;

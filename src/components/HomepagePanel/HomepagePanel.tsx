@@ -83,6 +83,7 @@ export const HomepagePanel = () => {
                 alt={t('homepage.screenshot_alt')}
                 width={300}
                 height={300 * (1033 / 1371)}
+                priority
               />
             </Center>
 

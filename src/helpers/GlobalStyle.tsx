@@ -9,6 +9,13 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     background-color: #f8f4f0;
   }
+  body {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+  }
 
   a, .linkLikeButton {
     color: #0078a8;
