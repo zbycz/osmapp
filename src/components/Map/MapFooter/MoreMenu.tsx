@@ -1,6 +1,6 @@
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import React, { useEffect, useState } from 'react';
-import { Menu, MenuItem, Tooltip } from '@material-ui/core';
+import { Menu, MenuItem } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import HelpIcon from '@material-ui/icons/Help';
 import styled from 'styled-components';
@@ -96,19 +96,18 @@ export const MoreMenu = () => {
         <EditLink closeMenu={close} />
         <AboutLink closeMenu={close} />
       </Menu>
-      <Tooltip arrow title={t('map.more_button_title')}>
-        <button
-          type="button"
-          className="linkLikeButton"
-          aria-controls="more-menu"
-          aria-haspopup="true"
-          onClick={open}
-          ref={anchorRef}
-        >
-          {t('map.more_button')}
-          <StyledChevronRightIcon />
-        </button>
-      </Tooltip>
+      <button
+        type="button"
+        className="linkLikeButton"
+        aria-controls="more-menu"
+        aria-haspopup="true"
+        onClick={open}
+        ref={anchorRef}
+        title={t('map.more_button_title')}
+      >
+        {t('map.more_button')}
+        <StyledChevronRightIcon />
+      </button>
     </>
   );
 };

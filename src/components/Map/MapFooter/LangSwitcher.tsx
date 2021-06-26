@@ -1,6 +1,6 @@
 import getConfig from 'next/config';
 import React from 'react';
-import { Menu, MenuItem, Tooltip } from '@material-ui/core';
+import { Menu, MenuItem } from '@material-ui/core';
 import { useBoolState } from '../../helpers';
 import { changeLang, intl, t } from '../../../services/intl';
 
@@ -32,18 +32,17 @@ export const LangSwitcher = () => {
           </MenuItem>
         ))}
       </Menu>
-      <Tooltip arrow title={t('map.language_title')}>
-        <button
-          type="button"
-          className="linkLikeButton"
-          aria-controls="language-switcher"
-          aria-haspopup="true"
-          onClick={open}
-          ref={anchorRef}
-        >
-          {languages[intl.lang]}
-        </button>
-      </Tooltip>
+      <button
+        type="button"
+        className="linkLikeButton"
+        aria-controls="language-switcher"
+        aria-haspopup="true"
+        onClick={open}
+        ref={anchorRef}
+        title={t('map.language_title')}
+      >
+        {languages[intl.lang]}
+      </button>
     </>
   );
 };

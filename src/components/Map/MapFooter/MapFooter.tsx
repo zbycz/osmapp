@@ -13,7 +13,7 @@ const {
 
 const Wrapper = styled.div`
   margin-top: 10px;
-  padding: 2px;
+  padding: 0 2px;
   font-size: 12px;
   line-height: normal;
   color: #000;
@@ -25,16 +25,24 @@ const Wrapper = styled.div`
     vertical-align: -2px;
     margin-right: 4px;
   }
+
+  a,
+  button {
+    padding: 2px 0;
+  }
 `;
 
 const OsmappLink = () => (
   <>
-    <Tooltip arrow title={t('map.github_title')}>
-      <a href="https://github.com/zbycz/osmapp" target="_blank" rel="noopener">
-        <GithubIcon width="12" height="12" />
-        osmapp
-      </a>
-    </Tooltip>{' '}
+    <a
+      href="https://github.com/zbycz/osmapp"
+      target="_blank"
+      rel="noopener"
+      title={t('map.github_title')}
+    >
+      <GithubIcon width="12" height="12" />
+      osmapp
+    </a>{' '}
     <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
   </>
 );
