@@ -24,6 +24,7 @@ export default class MyDocument extends Document {
           <link rel="preconnect" href="https://www.wikidata.org" />
           <link rel="preconnect" href="https://en.wikipedia.org" />
           <Favicons />
+          {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
         </Head>
         <body>
           <Main />
