@@ -1,7 +1,6 @@
 import React, { ReactNode } from 'react';
 
 import styled from 'styled-components';
-import Head from 'next/head';
 import { Tooltip } from '@material-ui/core';
 import { getFeatureImage, LOADING } from '../../services/images';
 import { Feature } from '../../services/types';
@@ -130,11 +129,6 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
         </Tooltip>
       )}
       {!feature.skeleton && image === LOADING && <InlineSpinner />}
-      {thumb && (
-        <Head>
-          <meta property="og:image" content={thumb} />
-        </Head>
-      )}
       <Bottom>{children}</Bottom>
     </Wrapper>
   );

@@ -17,13 +17,13 @@ export default class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
-          <Favicons />
           <link rel="preconnect" href="https://api.maptiler.com" />
           <link rel="preconnect" href="https://a.mapillary.com" />
           <link rel="preconnect" href="https://images.mapillary.com" />
           <link rel="preconnect" href="https://commons.wikimedia.org" />
           <link rel="preconnect" href="https://www.wikidata.org" />
           <link rel="preconnect" href="https://en.wikipedia.org" />
+          <Favicons />
         </Head>
         <body>
           <Main />

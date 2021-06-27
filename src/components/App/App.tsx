@@ -13,6 +13,7 @@ import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
+import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -72,6 +73,7 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       <Map />
       {preview && <FeaturePreview />}
+      <TitleAndMetaTags />
     </>
   );
 };

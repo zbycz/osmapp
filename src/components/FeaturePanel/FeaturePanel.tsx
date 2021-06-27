@@ -4,7 +4,6 @@ import Share from '@material-ui/icons/Share';
 import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
 import IconButton from '@material-ui/core/IconButton';
-import Head from 'next/head';
 import FeatureHeading from './FeatureHeading';
 import { FeatureImage } from './FeatureImage';
 import Coordinates from './Coordinates';
@@ -28,11 +27,7 @@ import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
-import {
-  getNameFromTags,
-  getNameOrFallback,
-  getUtfStrikethrough,
-} from '../../utils';
+import { getNameFromTags, getNameOrFallback } from '../../utils';
 
 const StyledIconButton = styled(IconButton)`
   svg {
@@ -84,12 +79,6 @@ const FeaturePanel = () => {
 
   return (
     <PanelWrapper>
-      <Head>
-        <title>
-          {deleted ? getUtfStrikethrough(nameOrFallback) : nameOrFallback} ·
-          OsmAPP
-        </title>
-      </Head>
       <PanelScrollbars>
         <FeatureImage feature={feature} ico={properties.class}>
           <PoiType>
