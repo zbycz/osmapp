@@ -13,6 +13,7 @@ import styled from 'styled-components';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddToHomeScreenIcon from '@material-ui/icons/AddToHomeScreen';
 import { isServer } from '../helpers';
+import { t } from '../../services/intl';
 
 const isIOS = () =>
   [
@@ -38,6 +39,7 @@ const getPlatform = () => {
 const StyledDialog = styled(Dialog)`
   .MuiDialog-container.MuiDialog-scrollPaper {
     align-items: start;
+    opacity: 1 !important; // ssr
   }
   .MuiDialogTitle-root {
     padding: 0;
@@ -47,25 +49,53 @@ const StyledDialog = styled(Dialog)`
     }
   }
 
+  ul {
+    padding-left: 1em;
+    margin-bottom: 2em;
+  }
+
   li {
-    padding-bottom: 3em;
+    position: relative;
+    padding-bottom: 1em;
     font-size: 1rem;
+    list-style-type: none;
+
+    &:before {
+      content: '\\2219';
+      font-size: 2rem;
+      line-height: 0;
+      margin-left: -16px;
+      position: absolute;
+      margin-top: 10px;
+    }
+
+    svg {
+      position: absolute;
+      font-size: 18px;
+      color: #777;
+      margin-left: 4px;
+    }
   }
 
   img.MuiPaper-root {
-    margin-top: 1em;
+    margin-top: 0.7em;
+  }
+
+  .MuiTabPanel-root {
+    padding: 0;
   }
 `;
 
 const PaperImg = ({ src, width }) => (
-    <Paper
-      elevation={2}
-      component="img"
-      // @ts-ignore
-      src={src}
-      width={width}
-    />
-  );
+  <Paper
+    variant="outlined"
+    component="img"
+    // @ts-ignore
+    src={src}
+    width={width}
+    style={{ maxWidth: '100%' }}
+  />
+);
 
 export function InstallDialog() {
   const [value, setValue] = React.useState(getPlatform());
@@ -78,10 +108,14 @@ export function InstallDialog() {
     <StyledDialog
       open
       onClose={() => Router.push('/')}
-      aria-labelledby="edit-dialog-title"
+      aria-label={t('install.button')}
+      disablePortal // for ssr
+      BackdropProps={{
+        appear: false,
+      }}
     >
       <TabContext value={value}>
-        <DialogTitle id="edit-dialog-title">
+        <DialogTitle>
           <Tabs
             value={value}
             onChange={handleChange}
@@ -113,7 +147,7 @@ export function InstallDialog() {
               <li>
                 Tap <strong>Add to Home Screen</strong>{' '}
                 <img
-                  src="install/ios_add.png"
+                  src="install/ios_addicon.png"
                   alt="add icon"
                   width={16}
                   height={16}
@@ -124,12 +158,12 @@ export function InstallDialog() {
             </ul>
 
             <Typography paragraph color="textPrimary">
-              Thats all! You may find OsmAPP at your home screen.
+              Thats all! Look for OsmAPP at your home screen.
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: OsmAPP uses PWA technology, featuring quick installation and
-              no need for Google Play or Apple App Store.
+              Note: This uses PWA technology – featuring quick installation and
+              no need for Google Play or App Store.
             </Typography>
           </TabPanel>
           <TabPanel value="android">
@@ -150,12 +184,12 @@ export function InstallDialog() {
             </ul>
 
             <Typography paragraph color="textPrimary">
-              Thats all! You may find OsmAPP at your home screen.
+              Thats all! Look for OsmAPP at your home screen.
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: OsmAPP uses PWA technology, featuring quick installation and
-              no need for Google Play or Apple App Store.
+              Note: This uses PWA technology – featuring quick installation and
+              no need for Google Play or App Store.
             </Typography>
           </TabPanel>
           <TabPanel value="desktop">
@@ -178,12 +212,12 @@ export function InstallDialog() {
             </ul>
 
             <Typography paragraph color="textPrimary">
-              Thats all! You may find OsmAPP at your home screen.
+              Thats all! Look for OsmAPP at your home screen.
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: OsmAPP uses PWA technology, featuring quick installation and
-              no need for Google Play or Apple App Store.
+              Note: This uses PWA technology – featuring quick installation and
+              no need for Google Play or App Store.
             </Typography>
           </TabPanel>
         </DialogContent>
