@@ -15,6 +15,7 @@ export interface FeatureContextType {
   featureShown: boolean;
   setFeature: (feature: Feature | null) => void; // setFeature - used only for skeletons (otherwise it gets loaded by router)
   homepageShown: boolean;
+  showHomepage: () => void;
   hideHomepage: () => void;
   persistHideHomepage: () => void;
   persistShowHomepage: () => void;
@@ -44,13 +45,13 @@ export const FeatureProvider = ({
     setFeature(featureFromRouter);
   }, [featureFromRouter]);
 
-  const [homepageShown, showHp, hideHomepage] = useBoolState(
+  const [homepageShown, showHomepage, hideHomepage] = useBoolState(
     feature == null && hpCookie !== 'yes',
   );
   const persistShowHomepage = () => {
     setFeature(null);
     hideHomepage();
-    showHp();
+    showHomepage();
     Router.push(`/${window.location.hash}`);
     Cookies.remove('hideHomepage');
   };
@@ -64,8 +65,9 @@ export const FeatureProvider = ({
     featureShown,
     setFeature,
     homepageShown,
-    persistShowHomepage,
+    showHomepage,
     hideHomepage,
+    persistShowHomepage,
     persistHideHomepage,
     preview,
     setPreview,

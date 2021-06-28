@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
+import { Button } from '@material-ui/core';
+import GetAppIcon from '@material-ui/icons/GetApp';
 import {
   PanelFooter,
   PanelScrollbars,
@@ -30,6 +32,7 @@ const StyledLogoOsmapp = styled(LogoOsmapp)`
 const Center = styled.div`
   text-align: center;
   margin-bottom: 2em;
+  ${({ mt }) => mt && 'margin-top: 2em;'}
 `;
 
 const Spacer = styled.div`
@@ -134,6 +137,19 @@ export const HomepagePanel = () => {
               />{' '}
               <Translation id="homepage.github_link" />
             </Typography>
+
+            <Center mt>
+              <Link href="/install" passHref>
+                <Button
+                  variant="outlined"
+                  startIcon={<GetAppIcon />}
+                  color="primary"
+                  href="/install"
+                >
+                  {t('install.button')}
+                </Button>
+              </Link>
+            </Center>
 
             <Spacer />
 

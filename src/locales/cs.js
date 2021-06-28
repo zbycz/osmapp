@@ -3,6 +3,8 @@ export default {
   error: 'Chyba',
   close_panel: 'Zavřít panel',
 
+  'install.button': 'Stáhnout aplikaci',
+
   'homepage.subtitle': 'Univerzální appka pro OpenStreetMap',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
   'homepage.examples.eg': 'např.',

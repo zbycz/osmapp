@@ -5,6 +5,8 @@ export default {
   error: 'Error',
   close_panel: 'Close panel',
 
+  'install.button': 'Install app',
+
   'homepage.subtitle': 'A universal OpenStreetMap app',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.examples.eg': 'eg.',

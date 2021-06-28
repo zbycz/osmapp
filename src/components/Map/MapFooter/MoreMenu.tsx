@@ -4,6 +4,8 @@ import { Menu, MenuItem } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import HelpIcon from '@material-ui/icons/Help';
 import styled from 'styled-components';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import Router from 'next/router';
 import { useBoolState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -22,6 +24,12 @@ const PencilIcon = styled(CreateIcon)`
 `;
 
 const HomeIcon = styled(HelpIcon)`
+  color: #555;
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
+const InstallIcon = styled(GetAppIcon)`
   color: #555;
   margin: -2px 6px 0 0;
   font-size: 17px !important;
@@ -70,6 +78,19 @@ const AboutLink = ({ closeMenu }) => {
   );
 };
 
+const InstallLink = ({ closeMenu }) => {
+  const handleClick = () => {
+    closeMenu();
+    Router.push('/install');
+  };
+  return (
+    <MenuItem onClick={handleClick} href="/install">
+      <InstallIcon />
+      {t('install.button')}
+    </MenuItem>
+  );
+};
+
 // TODO maybe
 //            <ListItemIcon>
 //             <InboxIcon fontSize="small" />
@@ -95,6 +116,7 @@ export const MoreMenu = () => {
       >
         <EditLink closeMenu={close} />
         <AboutLink closeMenu={close} />
+        <InstallLink closeMenu={close} />
       </Menu>
       <button
         type="button"

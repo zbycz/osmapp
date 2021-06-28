@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -14,6 +14,7 @@ import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
+import { InstallDialog } from '../HomepagePanel/InstallDialog';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -59,7 +60,7 @@ const useUpdateViewFromHash = () => {
 
 const IndexWithProviders = () => {
   const { featureShown, preview } = useFeatureContext();
-
+  const router = useRouter();
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
@@ -71,6 +72,7 @@ const IndexWithProviders = () => {
       <Loading />
       {featureShown && <FeaturePanel />}
       <HomepagePanel />
+      {router.pathname === '/install' && <InstallDialog />}
       <Map />
       {preview && <FeaturePreview />}
       <TitleAndMetaTags />
