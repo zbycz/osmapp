@@ -2,6 +2,7 @@ export default {
   loading: 'Nahrávám',
   error: 'Chyba',
   close_panel: 'Zavřít panel',
+  webgl_error: `Jejda. Tato mapa potřebuje technologii WebGL.<br /><br />Pokud máte moderní zařízení, zkuste nainstalovat poslední verzi prohlížeče Chrome.`,
 
   'install.button': 'Stáhnout aplikaci',
 

@@ -4,6 +4,7 @@ export default {
   loading: 'Loading',
   error: 'Error',
   close_panel: 'Close panel',
+  webgl_error: `Oops. This map needs WebGL technology.<br /><br />If you have a compatible device, try using the last version of Chrome browser.`,
 
   'install.button': 'Install app',
 

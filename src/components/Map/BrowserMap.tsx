@@ -1,5 +1,6 @@
 import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import maplibregl from 'maplibre-gl';
 import { useAddMapEvent, useMapEffect, useMobileMode } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -8,6 +9,7 @@ import { useOnMapClicked } from './behaviour/useOnMapClicked';
 import { useUpdateViewOnMove } from './behaviour/useUpdateViewOnMove';
 import { useUpdateStyle } from './behaviour/useUpdateStyle';
 import { useInitMap } from './behaviour/useInitMap';
+import { Translation } from '../../services/intl';
 
 const useOnMapLoaded = useAddMapEvent((map, onMapLoaded) => ({
   eventType: 'load',
@@ -19,9 +21,22 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
   map.jumpTo({ center, zoom: viewForMap[0] });
 });
 
+const NotSupportedMessage = () => (
+  <span
+    style={{ position: 'absolute', left: '50%', top: '50%', maxWidth: '300px' }}
+  >
+    <Translation id="webgl_error" />
+  </span>
+);
+
 // TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
+  if (!maplibregl.supported()) {
+    onMapLoaded();
+    return <NotSupportedMessage />;
+  }
+
   const { setFeature, setPreview } = useFeatureContext();
   const [map, mapRef] = useInitMap();
   useOnMapClicked(map, setFeature, setPreview, useMobileMode());
