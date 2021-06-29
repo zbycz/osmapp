@@ -14,6 +14,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddToHomeScreenIcon from '@material-ui/icons/AddToHomeScreen';
 import { isServer } from '../helpers';
 import { t } from '../../services/intl';
+import { ClosePanelButton } from '../utils/ClosePanelButton';
 
 const isIOS = () =>
   [
@@ -43,10 +44,6 @@ const StyledDialog = styled(Dialog)`
   }
   .MuiDialogTitle-root {
     padding: 0;
-
-    button.MuiButtonBase-root:first-child {
-      text-transform: initial;
-    }
   }
 
   ul {
@@ -100,6 +97,7 @@ const PaperImg = ({ src, width }) => (
 export function InstallDialog() {
   const [value, setValue] = React.useState(getPlatform());
 
+  const handleClose = () => Router.push('/');
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -107,7 +105,7 @@ export function InstallDialog() {
   return (
     <StyledDialog
       open
-      onClose={() => Router.push('/')}
+      onClose={handleClose}
       aria-label={t('install.button')}
       disablePortal // for ssr
       BackdropProps={{
@@ -116,6 +114,7 @@ export function InstallDialog() {
     >
       <TabContext value={value}>
         <DialogTitle>
+          <ClosePanelButton right onClick={handleClose} style={{ zIndex: 2 }} />
           <Tabs
             value={value}
             onChange={handleChange}
@@ -162,8 +161,8 @@ export function InstallDialog() {
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: This uses PWA technology – featuring quick installation and
-              no need for Google Play or App Store.
+              Note: This app uses PWA technology – featuring quick installation
+              and no need for Google Play or App Store.
             </Typography>
           </TabPanel>
           <TabPanel value="android">
@@ -177,7 +176,7 @@ export function InstallDialog() {
                 <PaperImg src="install/android_menu.png" width={300} />
               </li>
               <li>
-                Tap <strong>Add to Home screen</strong> <AddToHomeScreenIcon />
+                Tap <strong>Install app</strong> <AddToHomeScreenIcon />
                 <br />
                 <PaperImg src="install/android_add.png" width={300} />
               </li>
@@ -188,8 +187,8 @@ export function InstallDialog() {
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: This uses PWA technology – featuring quick installation and
-              no need for Google Play or App Store.
+              Note: This app uses PWA technology – featuring quick installation
+              and no need for Google Play or App Store.
             </Typography>
           </TabPanel>
           <TabPanel value="desktop">
@@ -216,8 +215,8 @@ export function InstallDialog() {
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: This uses PWA technology – featuring quick installation and
-              no need for Google Play or App Store.
+              Note: This app uses PWA technology – featuring quick installation
+              and no need for Google Play or App Store.
             </Typography>
           </TabPanel>
         </DialogContent>
