@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Dialog from '@material-ui/core/Dialog';
 import { DialogContent, Paper, Tab, Tabs, Typography } from '@material-ui/core';
@@ -12,8 +12,7 @@ import styled from 'styled-components';
 
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddToHomeScreenIcon from '@material-ui/icons/AddToHomeScreen';
-import { isServer } from '../helpers';
-import { t } from '../../services/intl';
+import { t, Translation } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 
 const isIOS = () =>
@@ -32,7 +31,7 @@ const isAndroid = () =>
   navigator.userAgent.toLowerCase().indexOf('android') > -1;
 
 const getPlatform = () => {
-  if (isServer() || isIOS()) return 'ios';
+  if (isIOS()) return 'ios';
   if (isAndroid()) return 'android';
   return 'desktop';
 };
@@ -95,7 +94,11 @@ const PaperImg = ({ src, width }) => (
 );
 
 export function InstallDialog() {
-  const [value, setValue] = React.useState(getPlatform());
+  const [value, setValue] = React.useState('ios');
+
+  useEffect(() => {
+    setValue(getPlatform());
+  }, []);
 
   const handleClose = () => Router.push('/');
   const handleChange = (event, newValue) => {
@@ -118,7 +121,7 @@ export function InstallDialog() {
           <Tabs
             value={value}
             onChange={handleChange}
-            aria-label="Choose your platform"
+            aria-label={t('install.tabs_aria_label')}
           >
             <Tab icon={<AppleIcon />} label="iOS" value="ios" />
             <Tab icon={<AndroidIcon />} label="Android" value="android" />
@@ -128,11 +131,11 @@ export function InstallDialog() {
         <DialogContent dividers>
           <TabPanel value="ios">
             <Typography paragraph color="textSecondary">
-              Open osmapp.org in the <strong>Safari browser</strong>
+              <Translation id="install.ios_intro" />
             </Typography>
             <ul>
               <li>
-                Tap <strong>Share icon</strong>{' '}
+                <Translation id="install.ios_share" />{' '}
                 <img
                   src="install/ios_shareicon.png"
                   srcSet="install/ios_shareicon.png 1x, install/ios_shareicon@2.png 2x"
@@ -144,7 +147,7 @@ export function InstallDialog() {
                 <PaperImg src="install/ios_share.png" width={300} />
               </li>
               <li>
-                Tap <strong>Add to Home Screen</strong>{' '}
+                <Translation id="install.ios_add" />{' '}
                 <img
                   src="install/ios_addicon.png"
                   alt="add icon"
@@ -157,48 +160,45 @@ export function InstallDialog() {
             </ul>
 
             <Typography paragraph color="textPrimary">
-              Thats all! Look for OsmAPP at your home screen.
+              <Translation id="install.outro" />
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: This app uses PWA technology – featuring quick installation
-              and no need for Google Play or App Store.
+              <Translation id="install.note" />
             </Typography>
           </TabPanel>
           <TabPanel value="android">
             <Typography paragraph color="textSecondary">
-              Open osmapp.org in the <strong>Chrome browser</strong>
+              <Translation id="install.android_intro" />
             </Typography>
             <ul>
               <li>
-                Tap the <strong>three dots menu</strong> <MoreVertIcon />
+                <Translation id="install.android_share" /> <MoreVertIcon />
                 <br />
                 <PaperImg src="install/android_menu.png" width={300} />
               </li>
               <li>
-                Tap <strong>Install app</strong> <AddToHomeScreenIcon />
+                <Translation id="install.android_add" /> <AddToHomeScreenIcon />
                 <br />
                 <PaperImg src="install/android_add.png" width={300} />
               </li>
             </ul>
 
             <Typography paragraph color="textPrimary">
-              Thats all! Look for OsmAPP at your home screen.
+              <Translation id="install.outro" />
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: This app uses PWA technology – featuring quick installation
-              and no need for Google Play or App Store.
+              <Translation id="install.note" />
             </Typography>
           </TabPanel>
           <TabPanel value="desktop">
             <Typography paragraph color="textSecondary">
-              Open osmapp.org in <strong>Chrome</strong>,{' '}
-              <strong>FirefoxOS</strong> or <strong>Opera</strong>
+              <Translation id="install.desktop_intro" />
             </Typography>
             <ul>
               <li>
-                Click the <strong>install button</strong>{' '}
+                <Translation id="install.desktop_install" />{' '}
                 <img
                   src="install/desktop_add.png"
                   width={16}
@@ -211,12 +211,11 @@ export function InstallDialog() {
             </ul>
 
             <Typography paragraph color="textPrimary">
-              Thats all! Look for OsmAPP at your home screen.
+              <Translation id="install.outro" />
             </Typography>
 
             <Typography paragraph color="textSecondary">
-              Note: This app uses PWA technology – featuring quick installation
-              and no need for Google Play or App Store.
+              <Translation id="install.note" />
             </Typography>
           </TabPanel>
         </DialogContent>

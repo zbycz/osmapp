@@ -7,6 +7,17 @@ export default {
   webgl_error: `Oops. This map needs WebGL technology.<br /><br />If you have a compatible device, try using the last version of Chrome browser.`,
 
   'install.button': 'Install app',
+  'install.tabs_aria_label': 'Choose your platform',
+  'install.ios_intro': 'Open osmapp.org in the <strong>Safari browser</strong>',
+  'install.ios_share': 'Tap <strong>Share icon</strong>',
+  'install.ios_add': 'Tap <strong>Add to Home Screen</strong>',
+  'install.android_intro': 'Open osmapp.org in the <strong>Chrome browser</strong>',
+  'install.android_share': 'Tap the <strong>three dots menu</strong>',
+  'install.android_add': 'Tap <strong>Install app</strong>',
+  'install.desktop_intro': 'Open osmapp.org in <strong>Chrome</strong>, <strong>FirefoxOS</strong> or <strong>Opera</strong>',
+  'install.desktop_install': 'Click the <strong>install button</strong>',
+  'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
+  'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
 
   'homepage.subtitle': 'A universal OpenStreetMap app',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',

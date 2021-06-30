@@ -5,6 +5,17 @@ export default {
   webgl_error: `Jejda. Tato mapa potřebuje technologii WebGL.<br /><br />Pokud máte moderní zařízení, zkuste nainstalovat poslední verzi prohlížeče Chrome.`,
 
   'install.button': 'Stáhnout aplikaci',
+  'install.tabs_aria_label': 'Vyberte si svou platformu',
+  'install.ios_intro': 'Otevřete osmapp.org v <strong>prohlížeči Safari</strong>',
+  'install.ios_share': 'Ťukněte na <strong>ikonku Sdílet</strong>',
+  'install.ios_add': 'Ťukněte na <strong>Přidat na domovskou obrazovku</strong>',
+  'install.android_intro': 'Otevřete osmapp.org v <strong>prohlížeči Chrome</strong>',
+  'install.android_share': 'Ťukněte na <strong>trojtečkové menu</strong>',
+  'install.android_add': 'Ťukněte na <strong>Instalovat aplikaci</strong>',
+  'install.desktop_intro': 'Otevřete osmapp.org v prohlížečích <strong>Chrome</strong>, <strong>FirefoxOS</strong> nebo <strong>Opera</strong>',
+  'install.desktop_install': 'Klikněte na <strong>Instalovat aplikaci</strong>',
+  'install.outro': 'To je vše! Aplikaci najdete na své domovské obrazovce.',
+  'install.note': 'Poznámka: Používáme technologii PWA – rychlá instalace bez nutnosti Google Play či App Storu.',
 
   'homepage.subtitle': 'Univerzální appka pro OpenStreetMap',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
