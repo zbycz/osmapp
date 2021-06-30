@@ -21,6 +21,26 @@ import { ClosePanelButton } from '../utils/ClosePanelButton';
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
   padding: 20px 2em 0 2em;
+
+  a.maptiler {
+    display: block;
+    color: inherit;
+    text-align: center;
+    margin: 1em 0;
+
+    strong {
+      color: #0078a8;
+      font-weight: normal;
+    }
+
+    &:hover {
+      text-decoration: none;
+
+      & strong {
+        text-decoration: underline;
+      }
+    }
+  }
 `;
 
 const StyledLogoOsmapp = styled(LogoOsmapp)`
@@ -31,7 +51,7 @@ const StyledLogoOsmapp = styled(LogoOsmapp)`
 
 const Center = styled.div`
   text-align: center;
-  margin-bottom: 2em;
+  ${({ mb }) => mb && 'margin-bottom: 2em;'}
   ${({ mt }) => mt && 'margin-top: 2em;'}
 `;
 
@@ -58,7 +78,7 @@ export const HomepagePanel = () => {
         <ClosePanelButton right onClick={persistHideHomepage} />
         <Content>
           <div>
-            <Center>
+            <Center mb>
               <StyledLogoOsmapp width={130} height={130} />
               <Typography variant="h4" component="h1" color="inherit">
                 OsmAPP
@@ -80,7 +100,7 @@ export const HomepagePanel = () => {
               </Link>
             </Typography>
 
-            <Center>
+            <Center mb>
               <Image
                 src="/osmapp-screenshot.png"
                 alt={t('homepage.screenshot_alt')}
@@ -99,12 +119,11 @@ export const HomepagePanel = () => {
               alignItems="flex-start"
             >
               <Grid item xs={4}>
-                <Image
+                <img
                   src="/logo/logo-osm.svg"
-                  alt={t('homepage.osm_logo_alt')}
+                  alt="OpenStreetMap logo"
                   width={100}
                   height={100}
-                  priority
                 />
               </Grid>
               <Grid item xs={8}>
@@ -138,7 +157,7 @@ export const HomepagePanel = () => {
               <Translation id="homepage.github_link" />
             </Typography>
 
-            <Center mt>
+            <Center mb mt>
               <Link href="/install" passHref>
                 <Button
                   variant="outlined"
@@ -156,7 +175,28 @@ export const HomepagePanel = () => {
             <Typography variant="overline" color="textSecondary" component="h2">
               {t('homepage.special_thanks_heading')}
             </Typography>
+
             <Translation id="homepage.special_thanks" />
+
+            <Spacer />
+
+            <a
+              href="https://www.maptiler.com"
+              rel="noopener"
+              target="_blank"
+              className="maptiler"
+            >
+              <img
+                src="/logo/maptiler.svg"
+                alt="MapTiler logo"
+                width={200}
+                height={52}
+              />
+              <br />
+              <Translation id="homepage.maptiler" />
+            </a>
+
+            <Spacer />
           </div>
           <PanelFooter />
         </Content>

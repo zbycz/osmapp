@@ -10,7 +10,6 @@ export default {
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
   'homepage.examples.eg': 'např.',
   'homepage.examples.charles_bridge_statues': 'Sochy na Karlově mostě',
-  'homepage.osm_logo_alt': 'Logo OpenStreetMap',
   'homepage.about_osm': `Mapová data pochází z projektu <a href="https://osm.org">OpenStreetMap</a>, tvoří ho
     miliony dobrovolníků — podobně jako Wikipedii.
     Každý rozkliknutý prvek zde můžete <em>Upravit</em>.`,
@@ -21,14 +20,14 @@ export default {
   'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.maptiler.com/" rel='noopener' target='_blank'>MapTiler</a> za vektorové mapové dlaždice
         <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
               <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> za obrázky
-        <li><a href="https://nominatim.openstreetmap.org/" rel='noopener' target='_blank'>Nominatim</a> za vyhledávání
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> za nejlepší mapu Země 😉
+              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – za obrázky 🖼
+        <li><a href="https://nominatim.openstreetmap.org/" rel='noopener' target='_blank'>Nominatim</a> – za vyhledávání 🔎
+        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – za nejlepší mapu Země 🌎
       </ul>
   `,
+  'homepage.maptiler': '<strong>MapTiler</strong> – za skvělé vektorové mapy <br>a za podporu tohoto projektu  ❤️ ',
 
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
 
@@ -61,10 +60,11 @@ export default {
 
   'map.github_title': 'GitHub',
   'map.language_title': 'Změnit jazyk',
-  'map.copyright': '(c) přispěvatelé OpenStreetMap.org',
-  'map.map_data_button': 'mapová data',
+  'map.osm_copyright_tooltip': '(c) přispěvatelé OpenStreetMap.org<br> – svobodná mapová data světa 👌',
+  'map.maptiler_copyright_tooltip':
+    '(c) MapTiler.com ❤️ <br> – vektorové dlaždice, hosting, turistická mapa<br>Velký dík za podporu tohoto projektu! 🙂 ',
   'map.more_button': 'více',
-  'map.more_button_title': 'Další možnosti...',
+  'map.more_button_title': 'Další možnosti…',
   'map.edit_link': 'Otevřít oblast v editoru iD',
   'map.about_link': 'O aplikaci',
 

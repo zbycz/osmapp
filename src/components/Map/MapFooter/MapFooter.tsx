@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import getConfig from 'next/config';
-import { Tooltip } from '@material-ui/core';
-import { t } from '../../../services/intl';
+import { Tooltip, useMediaQuery } from '@material-ui/core';
+import { t, Translation } from '../../../services/intl';
 import GithubIcon from '../../../assets/GithubIcon';
 import { MoreMenu } from './MoreMenu';
 import { LangSwitcher } from './LangSwitcher';
@@ -20,6 +20,7 @@ const Wrapper = styled.div`
   background-color: #f8f4f0; /* same as osm-bright */
   letter-spacing: normal;
   font-weight: 400;
+  margin-left: 30px;
 
   svg {
     vertical-align: -2px;
@@ -47,21 +48,37 @@ const OsmappLink = () => (
   </>
 );
 
-const MapDataLink = () => (
-  <>
-    {'© '}
-    <Tooltip arrow title={t('map.copyright')}>
-      <button
-        type="button"
-        className="linkLikeButton"
-        // eslint-disable-next-line no-alert
-        onClick={() => alert(t('map.copyright'))}
+const MapDataLink = () => {
+  const short = useMediaQuery('(max-width: 500px)');
+
+  return (
+    <>
+      ©{' '}
+      <Tooltip
+        arrow
+        title={<Translation id="map.maptiler_copyright_tooltip" />}
       >
-        {t('map.map_data_button')}
-      </button>
-    </Tooltip>
-  </>
-);
+        <a
+          href="https://www.maptiler.com/copyright/"
+          target="_blank"
+          rel="noopener"
+        >
+          MapTiler
+        </a>
+      </Tooltip>{' '}
+      ©{' '}
+      <Tooltip arrow title={<Translation id="map.osm_copyright_tooltip" />}>
+        <a
+          href="https://www.openstreetmap.org/copyright"
+          target="_blank"
+          rel="noopener"
+        >
+          {short ? 'OSM' : 'OpenStreetMap'}
+        </a>
+      </Tooltip>
+    </>
+  );
+};
 
 export const MapFooter = () => (
   <Wrapper>

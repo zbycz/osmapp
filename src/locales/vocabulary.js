@@ -13,7 +13,6 @@ export default {
   'homepage.examples.eg': 'eg.',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
   'homepage.screenshot_alt': 'Screenshot of OsmAPP',
-  'homepage.osm_logo_alt': 'OpenStreetMap logo',
   'homepage.about_osm': `All map data is from
       <a href="https://osm.org">OpenStreetMap</a>, a map created by
       milions of contributors — similar to Wikipedia. You can find
@@ -25,14 +24,14 @@ export default {
   'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.maptiler.com/" rel='noopener' target='_blank'>MapTiler</a> for vector map tiles
         <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
               <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> for images
-        <li><a href="https://nominatim.openstreetmap.org/" rel='noopener' target='_blank'>Nominatim</a> for search box
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> for the best world map 😉
+              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – for images 🖼
+        <li><a href="https://nominatim.openstreetmap.org/" rel='noopener' target='_blank'>Nominatim</a> – for search box 🔎
+        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – for the best world map 🌎
       </ul>
   `,
+  'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
 
   'searchbox.placeholder': 'Search OpenStreetMap',
 
@@ -65,10 +64,10 @@ export default {
 
   'map.github_title': 'GitHub',
   'map.language_title': 'Change language',
-  'map.copyright': '(c) OpenStreetMap.org contributors',
-  'map.map_data_button': 'map data',
+  'map.osm_copyright_tooltip': '(c) OpenStreetMap.org contributors<br> – free map data of the Earth 👌',
+  'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> – vector tiles, hosting, outdoor map<br>Big thanks for supporting this project! 🙂 ',
   'map.more_button': 'more',
-  'map.more_button_title': 'More options...',
+  'map.more_button_title': 'More options…',
   'map.edit_link': 'Edit this area in iD editor',
   'map.about_link': 'About this app',
 

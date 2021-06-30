@@ -30,7 +30,6 @@ const GlobalStyle = createGlobalStyle`
     &.colorInherit {
       color: inherit;
     }
-
     &:hover {
       text-decoration: underline;
     }

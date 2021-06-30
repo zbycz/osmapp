@@ -9,6 +9,7 @@ import { useBoolState } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
+import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -65,6 +66,7 @@ const Map = () => {
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MapFooter />
       </BottomRight>
+      <MaptilerLogo />
     </>
   );
 };
