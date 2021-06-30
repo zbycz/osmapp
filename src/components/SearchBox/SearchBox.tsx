@@ -11,6 +11,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { intl, t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
+import { isPanelFixedWidth } from '../helpers';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -23,7 +24,7 @@ const TopPanel = styled.div`
   z-index: 1200;
 
   width: 100%;
-  @media (min-width: 500px) {
+  @media ${isPanelFixedWidth} {
     width: 410px;
   }
 `;

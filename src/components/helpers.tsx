@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { useMediaQuery } from '@material-ui/core';
 
 export const useToggleState = (
   initialState: boolean,
@@ -84,7 +84,9 @@ export const dotToOptionalBr = (url = '') =>
     </Fragment>
   ));
 
-export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
-
 export const trimText = (text, limit) =>
   text?.length > limit ? `${text?.substring(0, limit)}…` : text;
+
+export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
+
+export const isPanelFixedWidth = '(min-width: 500px)';

@@ -92,8 +92,8 @@ export const buildAddress = ({
   'addr:place': place,
   'addr:street': street,
   'addr:housenumber': hnum,
-  'addr:conscriptionnumber': cnum,
-  'addr:streetnumber': snum,
+  'addr:conscriptionnumber': num1, // czech/slovak/hungary
+  'addr:streetnumber': num2,
   'addr:city': city,
 }) =>
-  join(join(street ?? place, ' ', hnum ?? join(cnum, '/', snum)), ', ', city);
+  join(join(street ?? place, ' ', hnum ?? join(num1, '/', num2)), ', ', city);

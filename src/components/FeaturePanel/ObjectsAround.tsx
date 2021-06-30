@@ -8,7 +8,7 @@ import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 import { FetchError } from '../../services/fetch';
-import { trimText } from '../helpers';
+import { trimText, useMobileMode } from '../helpers';
 import { getNameOrFallback } from '../../utils';
 
 const useLoadingState = () => {
@@ -32,6 +32,7 @@ const useLoadingState = () => {
 };
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
+  const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
   const { properties, tags, osmMeta } = feature;
   const handleClick = (e) => {
@@ -45,7 +46,9 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
       <a
         href={`/${getUrlOsmId(osmMeta)}`}
         onClick={handleClick}
-        onMouseEnter={() => feature.center && setPreview(feature)}
+        onMouseEnter={
+          mobileMode ? undefined : () => feature.center && setPreview(feature)
+        }
         onMouseLeave={() => setPreview(null)}
       >
         <Maki

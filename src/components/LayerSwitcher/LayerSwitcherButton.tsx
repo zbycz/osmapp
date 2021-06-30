@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import LayersIcon from './LayersIcon';
 import { t } from '../../services/intl';
+import { isPanelFixedWidth } from '../helpers';
 
 const TopRight = styled.div`
   position: absolute;
@@ -10,7 +11,7 @@ const TopRight = styled.div`
   right: 0;
   bottom: 20px;
 
-  @media (min-width: 500px) {
+  @media ${isPanelFixedWidth} {
     top: 0;
     bottom: auto;
   }

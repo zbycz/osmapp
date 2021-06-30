@@ -1,13 +1,13 @@
 import React from 'react';
 import { SwipeableDrawer, useMediaQuery } from '@material-ui/core';
-import { useBoolState } from '../helpers';
+import { isPanelFixedWidth, useBoolState } from '../helpers';
 import { LayerSwitcherButton } from './LayerSwitcherButton';
 import { LayerSwitcherContent } from './LayerSwitcherContent';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 
 const LayerSwitcher = () => {
   const [opened, open, close] = useBoolState(false);
-  const desktop = useMediaQuery('(min-width:500px)'); // see also LayerSwitcherButton
+  const panelFixed = useMediaQuery(isPanelFixedWidth);
 
   return (
     <>
@@ -17,7 +17,7 @@ const LayerSwitcher = () => {
         open={opened}
         onClose={close}
         onOpen={open}
-        variant={desktop ? 'persistent' : 'temporary'}
+        variant={panelFixed ? 'persistent' : 'temporary'}
         disableBackdropTransition
         disableSwipeToOpen
       >
