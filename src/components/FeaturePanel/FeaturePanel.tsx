@@ -27,7 +27,7 @@ import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
-import { getNameFromTags, getNameOrFallback } from '../../utils';
+import { getLabel, hasName } from '../../helpers/featureLabel';
 
 const StyledIconButton = styled(IconButton)`
   svg {
@@ -74,8 +74,7 @@ const FeaturePanel = () => {
   const featuredTags = featuredKeys
     .map((k) => [k, tags[k]])
     .filter(([, v]) => v);
-  const name = getNameFromTags(tags);
-  const nameOrFallback = getNameOrFallback(feature);
+  const label = getLabel(feature);
 
   return (
     <PanelWrapper>
@@ -83,7 +82,9 @@ const FeaturePanel = () => {
         <FeatureImage feature={feature} ico={properties.class}>
           <PoiType>
             <Maki ico={properties.class} invert middle />
-            <span>{name ? subclass : t('featurepanel.no_name')}</span>
+            <span>
+              {hasName(feature) ? subclass : t('featurepanel.no_name')}
+            </span>
           </PoiType>
 
           {SHOW_PROTOTYPE_UI && (
@@ -112,7 +113,7 @@ const FeaturePanel = () => {
         <PanelContent>
           <FeatureHeading
             deleted={deleted}
-            title={nameOrFallback}
+            title={label}
             editEnabled={editEnabled && !point}
             onEdit={setDialogOpenedWith}
           />

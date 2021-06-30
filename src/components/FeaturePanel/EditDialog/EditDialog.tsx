@@ -28,8 +28,8 @@ import { addOsmFeature, editOsmFeature } from '../../../services/osmApiAuth';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { t } from '../../../services/intl';
 import Maki from '../../utils/Maki';
-import { getNameOrFallback } from '../../../utils';
 import { FeatureTypeSelect } from './FeatureTypeSelect';
+import { getLabel } from '../../../helpers/featureLabel';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -49,8 +49,8 @@ const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
   if (isAddPlace) return t('editdialog.add_heading');
   if (isUndelete) return t('editdialog.undelete_heading');
   if (!loggedIn)
-    return `${t('editdialog.suggest_heading')} ${getNameOrFallback(feature)}`;
-  return `${t('editdialog.edit_heading')} ${getNameOrFallback(feature)}`;
+    return `${t('editdialog.suggest_heading')} ${getLabel(feature)}`;
+  return `${t('editdialog.edit_heading')} ${getLabel(feature)}`;
 };
 
 const StyledDialog = styled(Dialog)`

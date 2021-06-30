@@ -9,7 +9,7 @@ import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 import { FetchError } from '../../services/fetch';
 import { trimText, useMobileMode } from '../helpers';
-import { getNameOrFallback } from '../../utils';
+import { getLabel } from '../../helpers/featureLabel';
 
 const useLoadingState = () => {
   const [around, setAround] = useState<Feature[]>([]);
@@ -57,7 +57,7 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
             properties.class ?? ''
           } / ${properties.subclass}`}
         />
-        {getNameOrFallback(feature)}
+        {getLabel(feature)}
       </a>
     </li>
   );

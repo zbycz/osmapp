@@ -6,7 +6,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { getOsmappLink } from '../../services/helpers';
 import Maki from '../utils/Maki';
-import { getNameOrFallback } from '../../utils';
+import { getLabel } from '../../helpers/featureLabel';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -43,7 +43,7 @@ export const FeaturePreview = () => {
   };
 
   const icon = <Maki ico={preview.properties.class} invert />;
-  const label = getNameOrFallback(preview);
+  const label = getLabel(preview);
 
   return (
     <Wrapper>

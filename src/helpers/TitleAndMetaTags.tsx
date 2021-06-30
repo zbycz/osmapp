@@ -1,9 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
-import { getNameOrFallback, getUtfStrikethrough } from '../utils';
+import { getUtfStrikethrough } from '../utils';
 import { Feature } from '../services/types';
 import { useFeatureContext } from '../components/utils/FeatureContext';
 import { getFullOsmappLink } from '../services/helpers';
+import { getLabel } from './featureLabel';
 
 export const OpenGraphTags = ({
   title = 'OsmAPP',
@@ -20,9 +21,8 @@ export const OpenGraphTags = ({
 );
 
 const getTitle = (feature: Feature) => {
-  const deleted = feature.error === 'deleted';
-  const nameOrFallback = getNameOrFallback(feature);
-  return deleted ? getUtfStrikethrough(nameOrFallback) : nameOrFallback;
+  const label = getLabel(feature);
+  return feature.error === 'deleted' ? getUtfStrikethrough(label) : label;
 };
 
 export const TitleAndMetaTags = () => {

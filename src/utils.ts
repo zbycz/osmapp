@@ -1,9 +1,4 @@
-import {
-  Feature,
-  FeatureTags,
-  LonLatRounded,
-  Position,
-} from './services/types';
+import { Feature, LonLatRounded, Position } from './services/types';
 import { View } from './components/utils/MapStateContext';
 
 // Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
@@ -46,28 +41,10 @@ export const getIdEditorLink = (feature: Feature, view?: View) => {
   return `https://www.openstreetmap.org/edit${query}${hash}`;
 };
 
-export const getUtfStrikethrough = (text) => text
+export const getUtfStrikethrough = (text) =>
+  text
     .split('')
-    .map((char) => `${char  }\u0336`)
+    .map((char) => `${char}\u0336`)
     .join('');
-
-export const getNameFromTags = (tags: FeatureTags) => tags.name || tags.ref;
-
-export const getNameOrFallback = ({
-  properties,
-  tags,
-  osmMeta,
-  point,
-  roundedCenter,
-}: Feature) => {
-  if (point) {
-    return roundedToDeg(roundedCenter);
-  }
-  return (
-    getNameFromTags(tags) ||
-    properties.subclass?.replace(/_/g, ' ') ||
-    osmMeta.type
-  );
-};
 
 export const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
