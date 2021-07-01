@@ -9,7 +9,7 @@ import { getLabel } from './featureLabel';
 export const OpenGraphTags = ({
   title = 'OsmAPP',
   url = 'https://osmapp.org',
-  image = 'https://osmapp.org/_next/image?url=%2Fosmapp-screenshot.png&w=256&q=75',
+  image = 'https://osmapp.org/screens/karlstejn2.png',
 }) => (
   <>
     <meta property="og:type" content="website" />
@@ -17,6 +17,7 @@ export const OpenGraphTags = ({
     <meta property="og:title" content={title} />
     <meta property="og:description" content="A universal OpenStreetMap app" />
     <meta property="og:image" content={image} />
+    <meta property="twitter:card" content="summary_large_image" />
   </>
 );
 
