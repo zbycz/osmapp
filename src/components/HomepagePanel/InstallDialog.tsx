@@ -14,6 +14,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import AddToHomeScreenIcon from '@material-ui/icons/AddToHomeScreen';
 import { t, Translation } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const isIOS = () =>
   [
@@ -95,8 +96,10 @@ const PaperImg = ({ src, width }) => (
 
 export function InstallDialog() {
   const [value, setValue] = React.useState('ios');
+  const { showHomepage } = useFeatureContext();
 
   useEffect(() => {
+    showHomepage();
     setValue(getPlatform());
   }, []);
 
