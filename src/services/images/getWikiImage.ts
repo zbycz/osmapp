@@ -70,13 +70,19 @@ export const getWikiImage = async (wikiUrl): Promise<Image> => {
   const replyType = getWikiType(data);
 
   if (replyType === 'wikidata') {
-    if (!data.claims || !data.claims.P18) {
+    if (!data.claims?.P18) {
       return undefined;
     }
+    const imagesP18 = data.claims.P18;
+    const candidates =
+      imagesP18.length > 1
+        ? imagesP18.filter(({ rank }) => rank !== 'deprecated')
+        : [];
+    const entry = candidates.length > 0 ? candidates[0] : imagesP18[0];
     // In wikidata entry is image name, but we need thumbnail,
     // so we will convert wikidata reply to wikimedia_commons tag
     const fakeTags = {
-      wikimedia_commons: `File:${data.claims.P18[0].mainsnak.datavalue.value}`,
+      wikimedia_commons: `File:${entry.mainsnak.datavalue.value}`,
     };
     return getWikiImage(getWikiApiUrl(fakeTags));
   }
