@@ -12,13 +12,8 @@ const Wrapper = styled.div`
   position: absolute;
   z-index: 1200; // 1300 is mui-dialog
   bottom: 40px;
-  left: 50%;
-  //margin-left: -70px;
-
-  & > div {
-    position: relative;
-    left: -50%;
-  }
+  left: 45%;
+  max-width: 45vw;
 
   .MuiButtonBase-root {
     text-transform: none;
@@ -42,26 +37,21 @@ export const FeaturePreview = () => {
     setPreview(null);
   };
 
-  const icon = <Maki ico={preview.properties.class} invert />;
-  const label = getLabel(preview);
-
   return (
     <Wrapper>
-      <div>
-        <Button
-          color="primary"
-          onClick={handleClick}
-          variant="contained"
-          startIcon={icon}
-        >
-          {label}
-        </Button>
-        <ClosePanelButton
-          onClick={onClose}
-          right
-          style={{ margin: '-6px -36px 0 0' }}
-        />
-      </div>
+      <Button
+        color="primary"
+        onClick={handleClick}
+        variant="contained"
+        startIcon={<Maki ico={preview.properties.class} invert />}
+      >
+        {getLabel(preview)}
+      </Button>
+      <ClosePanelButton
+        onClick={onClose}
+        right
+        style={{ margin: '-6px -36px 0 0' }}
+      />
     </Wrapper>
   );
 };
