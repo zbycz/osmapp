@@ -9,11 +9,10 @@ const TopRight = styled.div`
   z-index: 1000;
   padding: 10px;
   right: 0;
-  bottom: 20px;
+  top: 72px;
 
   @media ${isDesktop} {
     top: 0;
-    bottom: auto;
   }
 `;
 

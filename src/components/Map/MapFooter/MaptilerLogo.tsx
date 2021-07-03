@@ -1,23 +1,20 @@
 import React from 'react';
 import styled from 'styled-components';
-import { isDesktop } from '../../helpers';
 
-const MaptilerLink = styled.a`
+const Link = styled.a`
   position: absolute;
-  right: 75px;
+  right: 8px;
   bottom: 19px;
   z-index: 999;
-
-  @media ${isDesktop} {
-    right: 8px;
-  }
 `;
 
 export const MaptilerLogo = () => (
-  <MaptilerLink href="https://www.maptiler.com" rel="noopener" target="_blank">
+  <Link href="https://www.maptiler.com" rel="noopener" target="_blank">
     <img
-      src="https://api.maptiler.com/resources/logo.svg"
+      src="/logo/maptiler-api.svg"
       alt="MapTiler logo"
+      width={67}
+      height={20}
     />
-  </MaptilerLink>
+  </Link>
 );

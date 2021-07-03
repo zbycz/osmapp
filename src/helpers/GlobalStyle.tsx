@@ -1,4 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
+import { isDesktop } from '../components/helpers';
 
 const GlobalStyle = createGlobalStyle`
   html, body, #__next {
@@ -9,6 +10,7 @@ const GlobalStyle = createGlobalStyle`
     font-family: 'Roboto', sans-serif;
     background-color: #f8f4f0;
   }
+
   body {
     position: fixed;
     top: 0;
@@ -30,6 +32,7 @@ const GlobalStyle = createGlobalStyle`
     &.colorInherit {
       color: inherit;
     }
+
     &:hover {
       text-decoration: underline;
     }
@@ -47,17 +50,34 @@ const GlobalStyle = createGlobalStyle`
   }
 
   .mapboxgl-ctrl-top-right {
-    top: 83px !important;
+    top: ${83 + 72}px  !important;
+
+    @media ${isDesktop} {
+      top: 83px !important;
+    }
   }
 
   .mapboxgl-canvas:not(:focus) {
     outline: 0;
   }
 
-  @keyframes blink {50% { color: transparent }}
-  .dotloader { animation: 1s blink infinite }
-  .dotloader:nth-child(2) { animation-delay: 250ms }
-  .dotloader:nth-child(3) { animation-delay: 500ms }
+  @keyframes blink {
+    50% {
+      color: transparent
+    }
+  }
+
+  .dotloader {
+    animation: 1s blink infinite
+  }
+
+  .dotloader:nth-child(2) {
+    animation-delay: 250ms
+  }
+
+  .dotloader:nth-child(3) {
+    animation-delay: 500ms
+  }
 
   .MuiBackdrop-root {
     background-color: rgba(0, 0, 0, 0.2) !important;

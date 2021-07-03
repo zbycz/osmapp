@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import Image from 'next/image';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
@@ -101,12 +100,11 @@ export const HomepagePanel = () => {
             </Typography>
 
             <Center mb>
-              <Image
+              <img
                 src="/osmapp-screenshot.png"
                 alt={t('homepage.screenshot_alt')}
                 width={300}
                 height={300 * (1033 / 1371)}
-                priority
               />
             </Center>
 
