@@ -2,7 +2,7 @@ import { fetchJson } from '../fetch';
 import { removeFetchCache } from '../fetchCache';
 import { Image, Position } from '../types';
 
-export const getMapillaryImage = async (center: Position): Promise<Image> => {
+const getMapillaryImageRaw = async (center: Position): Promise<Image> => {
   const lonlat = center.map((x) => x.toFixed(5)).join(',');
   const url = `https://a.mapillary.com/v3/images?client_id=TTdNZ2w5eTF6MEtCNUV3OWNhVER2dzpjMjdiZGE1MWJmYzljMmJi&lookat=${lonlat}&closeto=${lonlat}`;
   const { features } = await fetchJson(url);
@@ -21,4 +21,13 @@ export const getMapillaryImage = async (center: Position): Promise<Image> => {
     link: `https://www.mapillary.com/app/?focus=photo&pKey=${key}`,
     thumb: `https://images.mapillary.com/${key}/thumb-640.jpg`,
   };
+};
+
+export const getMapillaryImage = async (center: Position): Promise<Image> => {
+  try {
+    return await getMapillaryImageRaw(center);
+  } catch (e) {
+    console.warn(e);
+    return undefined;
+  }
 };
