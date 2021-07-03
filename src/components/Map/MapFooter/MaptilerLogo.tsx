@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { isPanelFixedWidth } from '../../helpers';
+import { isDesktop } from '../../helpers';
 
 const MaptilerLink = styled.a`
   position: absolute;
@@ -8,7 +8,7 @@ const MaptilerLink = styled.a`
   bottom: 19px;
   z-index: 999;
 
-  @media ${isPanelFixedWidth} {
+  @media ${isDesktop} {
     right: 8px;
   }
 `;

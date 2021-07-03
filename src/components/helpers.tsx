@@ -87,6 +87,8 @@ export const dotToOptionalBr = (url = '') =>
 export const trimText = (text, limit) =>
   text?.length > limit ? `${text?.substring(0, limit)}…` : text;
 
+// (<= tablet size) MobileMode shows preview instead of panel
 export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
 
-export const isPanelFixedWidth = '(min-width: 500px)';
+// (>= mobile size) This changes just the app layout
+export const isDesktop = '(min-width: 500px)';

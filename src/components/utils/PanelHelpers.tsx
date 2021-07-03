@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { isPanelFixedWidth } from '../helpers';
+import { isDesktop } from '../helpers';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -19,7 +19,7 @@ export const PanelWrapper = styled.div`
   flex-direction: column;
 
   width: 100%;
-  @media ${isPanelFixedWidth} {
+  @media ${isDesktop} {
     width: 410px;
   }
 `;

@@ -2,7 +2,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Router from 'next/router';
-import { isPanelFixedWidth, useBoolState } from '../helpers';
+import { isDesktop, useBoolState } from '../helpers';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   z-index: 1200;
 
   width: 100%;
-  @media ${isPanelFixedWidth} {
+  @media ${isDesktop} {
     width: 410px;
   }
 `;
