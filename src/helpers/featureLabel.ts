@@ -1,21 +1,21 @@
 import { Feature } from '../services/types';
 import { roundedToDeg } from '../utils';
 
-const getSubclass = (properties) => properties.subclass?.replace(/_/g, ' '); // TODO translate ? maybe use iD editor logic (already with translations)
+const getSubclass = ({ properties, osmMeta }: Feature) =>
+  properties.subclass?.replace(/_/g, ' ') || osmMeta.type; // TODO translate ? maybe use iD editor logic (already with translations)
 
-const getRef = ({ tags, properties }) =>
-  tags.ref ? `${getSubclass(properties)} ${tags.ref}` : '';
+const getRef = (feature: Feature) =>
+  feature.tags.ref ? `${getSubclass(feature)} ${feature.tags.ref}` : '';
 
-const getName = (feature) => feature.tags.name || getRef(feature);
+const getName = ({ tags }: Feature) => tags.name; // TODO choose a name according to locale
 
-export const hasName = (feature) => feature.point || getName(feature);
+export const hasName = (feature: Feature) => feature.point || getName(feature); // we dont want to show "No name" for point
 
 export const getLabel = (feature: Feature) => {
-  const { properties, osmMeta, point, roundedCenter } = feature;
-
+  const { point, roundedCenter } = feature;
   if (point) {
     return roundedToDeg(roundedCenter);
   }
 
-  return getName(feature) || getSubclass(properties) || osmMeta.type;
+  return getName(feature) || getRef(feature) || getSubclass(feature);
 };

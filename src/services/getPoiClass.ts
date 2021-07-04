@@ -291,19 +291,21 @@ export const getPoiClass = (tags): PoiClass => {
       (rule.mappingKey === key && rule.subclass.includes(value)),
   );
 
+  const subclass = value === 'yes' ? key : value;
+
   if (resultRule) {
     return {
       class: resultRule.resultClass, // this also determines the icon
-      subclass: resultRule.resultSubclass ?? value,
+      subclass: resultRule.resultSubclass ?? subclass,
     };
   }
 
-  if (icons.includes(value)) {
-    return { class: value, subclass: value };
+  if (icons.includes(subclass)) {
+    return { class: subclass, subclass };
   }
 
   if (icons.includes(key)) {
-    return { class: key, subclass: value };
+    return { class: key, subclass };
   }
 
   const address = buildAddress(tags);
@@ -314,5 +316,5 @@ export const getPoiClass = (tags): PoiClass => {
     };
   }
 
-  return { class: 'information', subclass: value }; // default icon
+  return { class: 'information', subclass }; // default icon
 };
