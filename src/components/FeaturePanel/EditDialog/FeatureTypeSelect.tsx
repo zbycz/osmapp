@@ -66,6 +66,7 @@ export const FeatureTypeSelect = ({ type, setType }) => {
         SelectProps={{ renderValue, onChange }}
         label={t('editdialog.feature_type_select')}
       >
+        <MenuItem value="">–</MenuItem>
         {options.map((item) => (
           <MenuItem key={item.tag} value={item}>
             <Box>

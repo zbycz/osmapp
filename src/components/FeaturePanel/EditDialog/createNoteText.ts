@@ -1,5 +1,6 @@
 import { Feature, FeatureTags } from '../../../services/types';
-import { getFullOsmappLink, getUrlOsmId } from '../../../services/helpers';
+import { getFullOsmappLink } from '../../../services/helpers';
+import { getLabel, hasName } from '../../../helpers/featureLabel';
 
 export const createNoteText = (
   feature: Feature,
@@ -31,7 +32,11 @@ export const createNoteText = (
 
   const noteText = [];
   if (!feature.point) {
-    noteText.push(getUrlOsmId(feature.osmMeta));
+    const {subclass} = feature.properties;
+    noteText.push(
+      hasName(feature) ? `${getLabel(feature)} (${subclass}):` : subclass,
+    );
+    noteText.push('');
   }
   if (isUndelete) {
     noteText.push('! Suggested undelete');
@@ -40,25 +45,25 @@ export const createNoteText = (
     noteText.push('! Place was marked permanently closed.');
   }
   if (note) {
-    noteText.push('');
     noteText.push(note);
+    noteText.push('');
   }
   if (location) {
-    noteText.push('');
     noteText.push('Suggested location change:');
     noteText.push(location);
+    noteText.push('');
   }
   if (changeOrAddedTags.length) {
-    noteText.push('');
-    noteText.push('Suggested changes:');
+    noteText.push(feature.point ? 'Suggested tags:' : 'Suggested changes:');
     noteText.push(changeOrAddedTags.map(([k, v]) => `${k}=${v}`).join('\n'));
+    noteText.push('');
   }
   if (removedTags.length) {
-    noteText.push('');
     noteText.push(`Removed tags:`);
     noteText.push(removedTags.map(([k]) => k).join(', '));
+    noteText.push('');
   }
-  noteText.push('\n');
+  noteText.push('');
   noteText.push(`Submitted from ${getFullOsmappLink(feature)}`);
   return noteText.join('\n');
 };
