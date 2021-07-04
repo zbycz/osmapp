@@ -38,6 +38,8 @@ export const useInitMap = () => {
     map.addControl(PersistedScaleControl as any);
     setUpHover(map, layersWithOsmId);
 
+    map.scrollZoom.setWheelZoomRate(1 / 100); // 1/450 is default, bigger value = faster
+
     return () => {
       map.remove();
     };
