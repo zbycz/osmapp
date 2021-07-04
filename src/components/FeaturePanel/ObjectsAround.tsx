@@ -40,15 +40,15 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
     setPreview(null);
     Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
   };
+  const handleHover = () =>
+    feature.center && setPreview({ ...feature, noPreviewButton: true });
 
   return (
     <li>
       <a
         href={`/${getUrlOsmId(osmMeta)}`}
         onClick={handleClick}
-        onMouseEnter={
-          mobileMode ? undefined : () => feature.center && setPreview(feature)
-        }
+        onMouseEnter={mobileMode ? undefined : handleHover}
         onMouseLeave={() => setPreview(null)}
       >
         <Maki

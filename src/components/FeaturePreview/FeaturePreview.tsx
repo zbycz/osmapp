@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 export const FeaturePreview = () => {
   const { preview, setPreview, setFeature } = useFeatureContext();
 
-  if (!preview) {
+  if (!preview || preview.noPreviewButton) {
     return null;
   }
 

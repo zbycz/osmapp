@@ -5,7 +5,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { renderOptionFactory } from './renderOptionFactory';
 import { t } from '../../services/intl';
-import { onSelectedFactory } from './onSelectedFactory';
+import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
 import { useMobileMode } from '../helpers';
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
@@ -45,7 +45,7 @@ export const AutocompleteInput = ({
       filterOptions={(x) => x}
       getOptionLabel={(option) => option.display_name}
       onChange={onSelectedFactory(setFeature, setPreview, setView, mobileMode)}
-      // onHighlightChange={onSelectedFactory(setFeature, setPreview, setView, true)} TODO maybe
+      onHighlightChange={onHighlightFactory(setPreview)}
       autoComplete
       disableClearable
       autoHighlight

@@ -47,6 +47,7 @@ const SearchIconButton = styled(IconButton)`
   }
 `;
 
+// TODO maybe search also in displayed vector map (queryFeatures)
 const getApiUrl = (bbox, inputValue) =>
   `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&accept-language=${intl.lang}&viewbox=${bbox}&q=${inputValue}`; // polygon_geojson=1&polygon_threshold=0.1
 
