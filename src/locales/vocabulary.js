@@ -150,6 +150,6 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'Snow',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satellite',
+  'layers.sat': 'Satellite (z<14)',
   'layers.bike': 'Bike',
 };
