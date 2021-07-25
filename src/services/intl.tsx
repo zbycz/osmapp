@@ -53,13 +53,13 @@ export const setIntl = (initialIntl: Intl) => {
 };
 
 export const InjectIntl = ({ intl: globalIntl }) => (
-    <script
-      // eslint-disable-next-line react/no-danger
-      dangerouslySetInnerHTML={{
-        __html: `var GLOBAL_INTL = ${JSON.stringify(globalIntl)};`,
-      }}
-    />
-  );
+  <script
+    // eslint-disable-next-line react/no-danger
+    dangerouslySetInnerHTML={{
+      __html: `var GLOBAL_INTL = ${JSON.stringify(globalIntl)};`,
+    }}
+  />
+);
 
 if (isBrowser()) {
   setIntl((window as any).GLOBAL_INTL);

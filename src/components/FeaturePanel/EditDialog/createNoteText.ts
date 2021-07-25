@@ -32,7 +32,7 @@ export const createNoteText = (
 
   const noteText = [];
   if (!feature.point) {
-    const {subclass} = feature.properties;
+    const { subclass } = feature.properties;
     noteText.push(
       hasName(feature) ? `${getLabel(feature)} (${subclass}):` : subclass,
     );

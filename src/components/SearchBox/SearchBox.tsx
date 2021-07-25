@@ -13,6 +13,8 @@ import { intl, t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { isDesktop } from '../helpers';
 
+const apiKey = '7dlhLl3hiXQ1gsth0kGu'; // todo merge with consts.ts
+
 const TopPanel = styled.div`
   position: absolute;
   height: 72px;
@@ -48,27 +50,31 @@ const SearchIconButton = styled(IconButton)`
 `;
 
 // TODO maybe search also in displayed vector map (queryFeatures)
-const getApiUrl = (bbox, inputValue) =>
-  `https://nominatim.openstreetmap.org/search?format=json&addressdetails=1&accept-language=${intl.lang}&viewbox=${bbox}&q=${inputValue}`; // polygon_geojson=1&polygon_threshold=0.1
+const getApiUrl = (center, inputValue) =>
+  `https://api.maptiler.com/geocoding/${inputValue}.json?key=${apiKey}&language=${intl.lang}&promixity=${center}`;
 
-const fetchNominatim = throttle(async (inputValue, bbox, setOptions) => {
-  const options = await fetchJson(getApiUrl(bbox, inputValue));
+const fetchOptions = throttle(async (inputValue, center, setOptions) => {
+  const maptilerResponse = await fetchJson(getApiUrl(center, inputValue));
+  const options = maptilerResponse.features;
   setOptions(options || []);
 }, 400);
 
 const SearchBox = () => {
   const { featureShown, setFeature } = useFeatureContext();
-  const { bbox } = useMapStateContext();
+  const { view } = useMapStateContext();
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState([]);
   const autocompleteRef = useRef();
+
+  const [, lat, lon] = view;
+  const center = [lon, lat];
 
   React.useEffect(() => {
     if (inputValue === '') {
       setOptions([]);
       return;
     }
-    fetchNominatim(inputValue, bbox, setOptions);
+    fetchOptions(inputValue, center, setOptions);
   }, [inputValue]);
 
   const closePanel = () => {
