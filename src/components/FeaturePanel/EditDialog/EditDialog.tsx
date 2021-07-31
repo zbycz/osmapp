@@ -172,7 +172,7 @@ export const EditDialog = ({
         <>
           <DialogContent dividers>
             <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
-              {isAddPlace && (
+              {false && (
                 <FeatureTypeSelect type={typeTag} setType={setTypeTag} />
               )}
               <MajorKeysEditor
