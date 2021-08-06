@@ -14,11 +14,11 @@ export type NoImage = undefined;
 
 export type Image = ImageUrls | LoadingImage | NoImage;
 
-// TODO rename Position to LonLat
-// coordinates in geojson format
-export type Position = number[]; // [lon, lat] = [x,y]
-
+// coordinates in geojson format: [lon, lat] = [x,y]
+export type LonLat = number[];
 export type LonLatRounded = string[];
+export type Position = LonLat; // TODO merge those two types
+export type PositionBoth = LonLat | LonLatRounded;
 
 export interface Point {
   type: 'Point';

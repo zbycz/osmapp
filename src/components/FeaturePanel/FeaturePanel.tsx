@@ -161,7 +161,7 @@ const FeaturePanel = () => {
 
           <PanelFooter>
             <FeatureDescription setAdvanced={setAdvanced} />
-            <Coordinates feature={feature} />
+            <Coordinates />
             <br />
             <a href={osmappLink}>{osmappLink}</a>
             <br />

@@ -9,7 +9,8 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { getIdEditorLink, positionToDeg, positionToDM } from '../../utils';
-import { Position } from '../../services/types';
+import { PositionBoth } from '../../services/types';
+import { getFullOsmappLink } from '../../services/helpers';
 
 const StyledMenuItem = styled(MenuItem)`
   svg {
@@ -46,7 +47,7 @@ export const ToggleButton = forwardRef<any, any>(
 
 const CopyTextItem = ({ text }) => (
   <MenuItem onClick={() => navigator.clipboard.writeText(text)}>
-    Copy {text}
+    Copy {text.replace(/^https:\/\//, '')}
   </MenuItem>
 );
 
@@ -60,7 +61,7 @@ const LinkItem = ({ href, label }) => (
 // https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
 const MAPBOXGL_ZOOM_DIFFERENCE = 1;
 
-const useGetItems = ([lon, lat]: Position) => {
+const useGetItems = ([lon, lat]: PositionBoth) => {
   const { feature } = useFeatureContext();
   const { view } = useMapStateContext();
   const [ourZoom] = view;
@@ -95,12 +96,14 @@ const useGetItems = ([lon, lat]: Position) => {
   ];
 };
 
-type Props = { coords: Position };
+type Props = { coords: PositionBoth };
 
 export const Coords = ({ coords }: Props) => {
   const [opened, open, close] = useBoolState(false);
   const anchorRef = React.useRef();
   const items = useGetItems(coords);
+  const { feature } = useFeatureContext();
+  const osmappLink = getFullOsmappLink(feature);
 
   return (
     <span title="latitude, longitude (y, x)">
@@ -117,13 +120,16 @@ export const Coords = ({ coords }: Props) => {
         <Divider />
         <CopyTextItem text={positionToDeg(coords)} />
         <CopyTextItem text={positionToDM(coords)} />
+        <CopyTextItem text={osmappLink} />
       </Menu>
       <ToggleButton onClick={open} ref={anchorRef} />
     </span>
   );
 };
 
-const Coordinates = ({ feature: { center, roundedCenter = undefined } }) => {
+const Coordinates = () => {
+  const { feature } = useFeatureContext();
+  const { center, roundedCenter = undefined } = feature;
   const coords = roundedCenter ?? center;
   return coords ? <Coords coords={coords} /> : null;
 };

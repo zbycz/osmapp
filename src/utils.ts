@@ -1,20 +1,25 @@
-import { Feature, LonLatRounded, Position } from './services/types';
+import {
+  Feature,
+  LonLatRounded,
+  Position,
+  PositionBoth,
+} from './services/types';
 import { View } from './components/utils/MapStateContext';
 
 // Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 export const roundDeg = (deg) => (deg.toFixed ? deg.toFixed(5) : deg);
 
-export const positionToDeg = ([lon, lat]: Position) =>
+export const positionToDeg = ([lon, lat]: PositionBoth) =>
   `${roundDeg(lat)}° ${roundDeg(lon)}°`;
 
-export const positionToDegUrl = ([lon, lat]: Position) =>
+export const positionToDegUrl = ([lon, lat]: PositionBoth) =>
   `${roundDeg(lat)},${roundDeg(lon)}`;
 
 // Degrees and Minutes
 const toDM = (x) =>
   `${Math.floor(x)}° ${((x - Math.floor(x)) * 60).toFixed(3)}'`;
 
-export const positionToDM = ([lat, lon]: Position) =>
+export const positionToDM = ([lat, lon]: PositionBoth) =>
   `${toDM(lat)} ${toDM(lon)}`;
 
 // https://wiki.openstreetmap.org/wiki/Zoom_levels
