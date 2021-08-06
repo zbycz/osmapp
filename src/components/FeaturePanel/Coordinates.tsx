@@ -103,7 +103,7 @@ export const Coords = ({ coords }: Props) => {
   const items = useGetItems(coords);
 
   return (
-    <span title="latitude, longitude (y, x)">
+    <div title="latitude, longitude (y, x)">
       {positionToDeg(coords)}
       <Menu
         anchorEl={anchorRef.current}
@@ -119,7 +119,7 @@ export const Coords = ({ coords }: Props) => {
         <CopyTextItem text={positionToDM(coords)} />
       </Menu>
       <ToggleButton onClick={open} ref={anchorRef} />
-    </span>
+    </div>
   );
 };
 

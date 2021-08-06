@@ -1,33 +1,29 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
-import Share from '@material-ui/icons/Share';
-import StarBorder from '@material-ui/icons/StarBorder';
-import Directions from '@material-ui/icons/Directions';
-import IconButton from '@material-ui/core/IconButton';
-import FeatureHeading from './FeatureHeading';
-import { FeatureImage } from './FeatureImage';
-import Coordinates from './Coordinates';
-import { useToggleState } from '../helpers';
-import TagsTable from './TagsTable';
-import Maki from '../utils/Maki';
-import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
-import { EditDialog } from './EditDialog/EditDialog';
-import { SHOW_PROTOTYPE_UI } from '../../config';
-import {
-  PanelContent,
-  PanelFooter,
-  PanelScrollbars,
-  PanelWrapper,
-} from '../utils/PanelHelpers';
-import { useFeatureContext } from '../utils/FeatureContext';
-import { t } from '../../services/intl';
-import { FeatureDescription } from './FeatureDescription';
-import { ObjectsAround } from './ObjectsAround';
-import { OsmError } from './OsmError';
-import { Members } from './Members';
-import { EditButton } from './EditButton';
-import { FeaturedTags } from './FeaturedTags';
-import { getLabel, hasName } from '../../helpers/featureLabel';
+import React, { useState } from "react";
+import styled from "styled-components";
+import Share from "@material-ui/icons/Share";
+import StarBorder from "@material-ui/icons/StarBorder";
+import Directions from "@material-ui/icons/Directions";
+import IconButton from "@material-ui/core/IconButton";
+import FeatureHeading from "./FeatureHeading";
+import { FeatureImage } from "./FeatureImage";
+import Coordinates from "./Coordinates";
+import { useToggleState } from "../helpers";
+import TagsTable from "./TagsTable";
+import Maki from "../utils/Maki";
+import { getFullOsmappLink, getUrlOsmId } from "../../services/helpers";
+import { EditDialog } from "./EditDialog/EditDialog";
+import { SHOW_PROTOTYPE_UI } from "../../config";
+import { PanelContent, PanelFooter, PanelScrollbars, PanelWrapper } from "../utils/PanelHelpers";
+import { useFeatureContext } from "../utils/FeatureContext";
+import { t } from "../../services/intl";
+import { FeatureDescription } from "./FeatureDescription";
+import { ObjectsAround } from "./ObjectsAround";
+import { OsmError } from "./OsmError";
+import { Members } from "./Members";
+import { EditButton } from "./EditButton";
+import { FeaturedTags } from "./FeaturedTags";
+import { getLabel, hasName } from "../../helpers/featureLabel";
+import { OsmappLink } from "./OsmappLink";
 
 const StyledIconButton = styled(IconButton)`
   svg {
@@ -66,7 +62,6 @@ const FeaturePanel = () => {
   const deleted = error === 'deleted';
   const editEnabled = !skeleton && (!error || deleted);
 
-  const osmappLink = getFullOsmappLink(feature);
   const subclass =
     properties.subclass?.replace(/_/g, ' ') ||
     (layer && layer.id) ||
@@ -75,6 +70,8 @@ const FeaturePanel = () => {
     .map((k) => [k, tags[k]])
     .filter(([, v]) => v);
   const label = getLabel(feature);
+
+  const reactKey = getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
 
   return (
     <PanelWrapper>
@@ -150,9 +147,7 @@ const FeaturePanel = () => {
                 isAddPlace={point}
                 isUndelete={deleted}
                 focusTag={dialogOpenedWith}
-                key={
-                  getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                }
+                key={reactKey                }
               />
             </>
           )}
@@ -162,8 +157,7 @@ const FeaturePanel = () => {
           <PanelFooter>
             <FeatureDescription setAdvanced={setAdvanced} />
             <Coordinates feature={feature} />
-            <br />
-            <a href={osmappLink}>{osmappLink}</a>
+            <OsmappLink key={reactKey} />
             <br />
             <label>
               <input
