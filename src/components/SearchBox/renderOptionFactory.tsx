@@ -72,27 +72,43 @@ const useMapCenter = () => {
   return { lon, lat };
 };
 
+const getMaptilerGeocoderIcon = (placeTypes) => {
+  const placeType = placeTypes?.[0];
+  const ico =
+    placeType === 'state' || placeType === 'country'
+      ? 'star'
+      : placeType === 'subcity'
+      ? 'city'
+      : placeType;
+  return ico;
+};
+
+const isCountry = (item) => item.id?.split('.')[0] === 'country';
+
+const getAdditionalText = (context) => {
+  const country = context?.filter((x) => isCountry(x)) ?? [];
+  const notCountry = context?.filter((x) => !isCountry(x)) ?? [];
+  const orderedContext = [...notCountry, ...country];
+  return orderedContext?.map((x) => x.text).join(', ');
+};
+
 export const renderOptionFactory = () => (option) => {
-  const { center, text, context, place_type: placeType } = option;
+  const { center, text, context, place_type: placeTypes } = option;
   const [lon, lat] = center;
 
   const mapCenter = useMapCenter();
   const dist = getDistance(mapCenter, { lon, lat }) / 1000;
   const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
+  const ico = getMaptilerGeocoderIcon(placeTypes);
+  const additionalText = getAdditionalText(context);
 
-  const country =
-    context?.filter((x) => x.id?.split('.')[0] === 'country') ?? [];
-  const notCountry =
-    context?.filter((x) => x.id?.split('.')[0] !== 'country') ?? [];
-  const orderedContext = [...notCountry, ...country];
-  const additionalText = orderedContext?.map((x) => x.text).join(', ');
   return (
     <>
       <IconPart>
         <Maki
-          ico={placeType}
+          ico={ico}
           style={{ width: '20px', height: '20px', opacity: 0.5 }}
-          title={placeType}
+          title={ico}
         />
         <div>{distKm} km</div>
       </IconPart>
