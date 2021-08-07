@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useMapStateContext } from '../utils/MapStateContext';
 import Maki from '../utils/Maki';
+import { highlightText } from './highlightText';
 
 /** maptiler
 {
@@ -92,7 +93,7 @@ const getAdditionalText = (context) => {
   return orderedContext?.map((x) => x.text).join(', ');
 };
 
-export const renderOptionFactory = () => (option) => {
+export const renderOptionFactory = (inputValue) => (option) => {
   const { center, text, context, place_type: placeTypes } = option;
   const [lon, lat] = center;
 
@@ -113,7 +114,7 @@ export const renderOptionFactory = () => (option) => {
         <div>{distKm} km</div>
       </IconPart>
       <Grid item xs>
-        {text}
+        {highlightText(text, inputValue)}
         <Typography variant="body2" color="textSecondary">
           {additionalText}
         </Typography>
