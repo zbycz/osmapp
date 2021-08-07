@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "next",
     "lint": "eslint . --report-unused-disable-directives",
-    "lintfix": "prettier . --write && eslint . --report-unused-disable-directives --fix",
+    "lintfix": "prettier . --write && eslint ./src ./pages --report-unused-disable-directives --fix",
     "prettify": "prettier . --write",
     "build": "next build",
     "start": "next start",

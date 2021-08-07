@@ -27,7 +27,7 @@ export const getMapillaryImage = async (center: Position): Promise<Image> => {
   try {
     return await getMapillaryImageRaw(center);
   } catch (e) {
-    console.warn(e);
+    console.warn(e); // eslint-disable-line no-console
     return undefined;
   }
 };

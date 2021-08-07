@@ -64,7 +64,6 @@ const isNetwork = (k) => k.match(/network/);
 const isBrand = (k) => k.match(/^brand/);
 const isPayment = (k) => k.match(/^payment/);
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
   const [isShown, toggle] = useToggleState(false);
 
