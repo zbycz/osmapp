@@ -2,8 +2,25 @@ import Router from 'next/router';
 import { getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 
+const getApiIdFromLocation = (osmId) => {
+  if (osmId.startsWith('relation')) {
+    return { type: 'relation', id: osmId.substr(8) };
+  }
+  if (osmId.startsWith('way')) {
+    return { type: 'way', id: osmId.substr(3) };
+  }
+  if (osmId.startsWith('node')) {
+    return { type: 'node', id: osmId.substr(4) };
+  }
+  throw new Error(`Maptiler geocoder osm_id is invalid: ${osmId}`);
+};
+
 const getSkeleton = (location) => {
-  const { lat, lon, osm_type: type, osm_id: id, display_name: name } = location;
+  const { properties, place_name: name, center } = location;
+  const { osm_id: osmId } = properties;
+  const { type, id } = getApiIdFromLocation(osmId);
+  const [lon, lat] = center;
+
   return {
     loading: true,
     skeleton: true,
@@ -22,9 +39,9 @@ export const onHighlightFactory = (setPreview) => (e, location) => {
 
 export const onSelectedFactory =
   (setFeature, setPreview, setView, mobileMode) => (e, location) => {
-    if (!location?.lat) return;
+    if (!location?.center) return;
 
-    const { lat, lon } = location;
+    const [lon, lat] = location.center;
     const skeleton = getSkeleton(location);
     console.log('Search item selected:', { location, skeleton }); // eslint-disable-line no-console
 

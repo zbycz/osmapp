@@ -1,47 +1,42 @@
-import match from 'autosuggest-highlight/match';
-import parse from 'autosuggest-highlight/parse';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { getPoiClass } from '../../services/getPoiClass';
 import Maki from '../utils/Maki';
+import { highlightText } from './highlightText';
 
-// [
-//   {
-//     place_id: 93538005,
-//     licence:
-//       'Data © OpenStreetMap contributors, ODbL 1.0. https://osm.org/copyright',
-//     osm_type: 'way',
-//     osm_id: 31134664,
-//     boundingbox: ['50.0902337', '50.0923471', '14.3210646', '14.3216013'],
-//     lat: '50.0913465',
-//     lon: '14.3213162',
-//     display_name:
-//       'Ke Džbánu, Liboc, Praha, okres Hlavní město Praha, Hlavní město Praha, Praha, 16100, Česká republika',
-//     class: 'highway',
-//     type: 'residential',
-//     importance: 0.19999999999999998,
-//     address: {
-//       road: 'Ke Džbánu',
-//       suburb: 'Liboc',
-//       city: 'Praha',
-//       county: 'okres Hlavní město Praha',
-//       state: 'Praha',
-//       postcode: '16100',
-//       country: 'Česká republika',
-//       country_code: 'cz',
-//     },
-//     geojson: {
-//       type: 'LineString',
-//       coordinates: [
-//         [14.3216013, 50.0902337],
-//         [14.3210646, 50.0923471],
-//       ],
-//     },
-//   },
-// ];
+/** maptiler
+{
+      id: 'city.2273338',
+      type: 'Feature',
+      place_type: ['city'],
+      relevance: 1,
+      properties: {
+        osm_id: 'relation2273338',
+      },
+      text: 'Praha',
+      place_name: 'Praha, Region of Banská Bystrica',
+      bbox: [19.47208254, 48.34734753, 19.52180047, 48.39446473],
+      center: [19.4973869, 48.3708814],
+      geometry: {
+        type: 'Point',
+        coordinates: [19.4973869, 48.3708814],
+      },
+      context: [
+        {
+          id: 'country.14296',
+          osm_id: 'relation14296',
+          text: 'Slovakia',
+        },
+        {
+          id: 'state.388270',
+          osm_id: 'relation388270',
+          text: 'Region of Banská Bystrica',
+        },
+      ],
+    }
+ */
 
 const IconPart = styled.div`
   width: 50px;
@@ -71,8 +66,6 @@ const getDistance = (point1, point2) => {
   );
 };
 
-const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
-
 const useMapCenter = () => {
   const {
     view: [, lat, lon],
@@ -80,55 +73,52 @@ const useMapCenter = () => {
   return { lon, lat };
 };
 
-const highlightText = (resultText, inputValue) => {
-  const parts = parse(resultText, match(resultText, inputValue));
-  const map = parts.map((part, index) => (
-    // eslint-disable-next-line react/no-array-index-key
-    <span key={index} style={{ fontWeight: part.highlight ? 700 : 400 }}>
-      {part.text}
-    </span>
-  ));
-  return map;
+const getMaptilerGeocoderIcon = (placeTypes) => {
+  const placeType = placeTypes?.[0];
+  const ico =
+    placeType === 'state' || placeType === 'country'
+      ? 'star'
+      : placeType === 'subcity'
+      ? 'city'
+      : placeType;
+  return ico;
 };
 
-function getTextsFromAddress(address) {
-  const [, resultText] = Object.entries(address)[0];
-  const additionalText = join(
-    join(address.road, ', ', address.state),
-    ', ',
-    address.country_code?.toUpperCase(),
+const isCountry = (item) => item.id?.split('.')[0] === 'country';
+
+const getAdditionalText = (context) => {
+  const country = context?.filter((x) => isCountry(x)) ?? [];
+  const notCountry = context?.filter((x) => !isCountry(x)) ?? [];
+  const orderedContext = [...notCountry, ...country];
+  return orderedContext?.map((x) => x.text).join(', ');
+};
+
+export const renderOptionFactory = (inputValue) => (option) => {
+  const { center, text, context, place_type: placeTypes } = option;
+  const [lon, lat] = center;
+
+  const mapCenter = useMapCenter();
+  const dist = getDistance(mapCenter, { lon, lat }) / 1000;
+  const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
+  const ico = getMaptilerGeocoderIcon(placeTypes);
+  const additionalText = getAdditionalText(context);
+
+  return (
+    <>
+      <IconPart>
+        <Maki
+          ico={ico}
+          style={{ width: '20px', height: '20px', opacity: 0.5 }}
+          title={ico}
+        />
+        <div>{distKm} km</div>
+      </IconPart>
+      <Grid item xs>
+        {highlightText(text, inputValue)}
+        <Typography variant="body2" color="textSecondary">
+          {additionalText}
+        </Typography>
+      </Grid>
+    </>
   );
-  return { resultText, additionalText };
-}
-
-export const renderOptionFactory =
-  (inputValue) =>
-  ({ address, class: tagKey, type: tagValue, lon, lat }) => {
-    const mapCenter = useMapCenter();
-    const dist = getDistance(mapCenter, { lon, lat }) / 1000;
-    const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
-
-    const properties = getPoiClass({ [tagKey]: tagValue });
-
-    const { resultText, additionalText } = getTextsFromAddress(address);
-
-    return (
-      <>
-        <IconPart>
-          <Maki
-            ico={properties.class}
-            style={{ width: '20px', height: '20px', opacity: 0.5 }}
-            title={`${tagKey}=${tagValue}`}
-          />
-          <div>{distKm} km</div>
-        </IconPart>
-        <Grid item xs>
-          {highlightText(resultText, inputValue)}
-
-          <Typography variant="body2" color="textSecondary">
-            {additionalText}
-          </Typography>
-        </Grid>
-      </>
-    );
-  };
+};
