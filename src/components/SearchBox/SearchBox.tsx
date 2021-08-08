@@ -11,7 +11,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { intl, t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
-import { isDesktop } from '../helpers';
+import { isDesktop, useMobileMode } from '../helpers';
 
 const apiKey = '7dlhLl3hiXQ1gsth0kGu'; // todo merge with consts.ts
 
@@ -60,11 +60,12 @@ const fetchOptions = throttle(async (inputValue, center, setOptions) => {
 }, 400);
 
 const SearchBox = () => {
-  const { featureShown, setFeature } = useFeatureContext();
+  const { featureShown, feature, setFeature, setPreview } = useFeatureContext();
   const { view } = useMapStateContext();
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState([]);
   const autocompleteRef = useRef();
+  const mobileMode = useMobileMode();
 
   const [, lat, lon] = view;
   const center = [lon, lat];
@@ -79,7 +80,10 @@ const SearchBox = () => {
 
   const closePanel = () => {
     setInputValue('');
-    setFeature(null); // for nonOsmFeature
+    if (mobileMode) {
+      setPreview(feature);
+    }
+    setFeature(null);
     Router.push(`/${window.location.hash}`);
   };
 
