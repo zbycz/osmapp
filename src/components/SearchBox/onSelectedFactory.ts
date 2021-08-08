@@ -1,6 +1,8 @@
 import Router from 'next/router';
+import maplibregl from 'maplibre-gl';
 import { getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
+import { getGlobalMap } from '../../services/mapStorage';
 
 const getApiIdFromLocation = (osmId) => {
   if (osmId.startsWith('relation')) {
@@ -37,11 +39,19 @@ export const onHighlightFactory = (setPreview) => (e, location) => {
   setPreview({ ...getSkeleton(location), noPreviewButton: true });
 };
 
+const fitBounds = (location, panelShown = false) => {
+  const [w, s, e, n] = location.bbox;
+  const bbox = new maplibregl.LngLatBounds([w, s], [e, n]);
+  const panelWidth = panelShown ? 410 : 0;
+  getGlobalMap()?.fitBounds(bbox, {
+    padding: { top: 5, bottom: 5, right: 5, left: panelWidth + 5 },
+  });
+};
+
 export const onSelectedFactory =
   (setFeature, setPreview, setView, mobileMode) => (e, location) => {
     if (!location?.center) return;
 
-    const [lon, lat] = location.center;
     const skeleton = getSkeleton(location);
     console.log('Search item selected:', { location, skeleton }); // eslint-disable-line no-console
 
@@ -49,12 +59,12 @@ export const onSelectedFactory =
 
     if (mobileMode) {
       setPreview(skeleton);
-      setView([17, lat, lon]);
+      fitBounds(location);
       return;
     }
 
     setPreview(null);
     setFeature(skeleton);
-    setView([17, lat, lon]);
+    fitBounds(location, true);
     Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);
   };

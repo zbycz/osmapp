@@ -4,6 +4,7 @@ import { basicStyle } from '../styles/basicStyle';
 import { PersistedScaleControl } from './PersistedScaleControl';
 import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
+import { setGlobalMap } from '../../../services/mapStorage';
 
 const geolocateControl = new maplibregl.GeolocateControl({
   positionOptions: {
@@ -31,6 +32,7 @@ export const useInitMap = () => {
       attributionControl: false,
       refreshExpiredTiles: false,
     });
+    setGlobalMap(map);
     setMapInState(map);
 
     map.addControl(navigationControl);
@@ -41,6 +43,7 @@ export const useInitMap = () => {
     map.scrollZoom.setWheelZoomRate(1 / 200); // 1/450 is default, bigger value = faster
 
     return () => {
+      setGlobalMap(null);
       map.remove();
     };
   }, [mapRef]);
