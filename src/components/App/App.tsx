@@ -99,8 +99,4 @@ App.getInitialProps = async (ctx) => {
   return { featureFromRouter, initialMapView, hpCookie };
 };
 
-// map.fitBounds(bounds, {
-//   padding: 20,
-// });
-
 export default App;

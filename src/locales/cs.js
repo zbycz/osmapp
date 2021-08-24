@@ -34,7 +34,6 @@ export default {
         <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
               <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
               <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – za obrázky 🖼
-        <li><a href="https://nominatim.openstreetmap.org/" rel='noopener' target='_blank'>Nominatim</a> – za vyhledávání 🔎
         <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – za nejlepší mapu Země 🌎
       </ul>
   `,

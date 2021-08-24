@@ -38,7 +38,6 @@ export default {
         <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
               <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
               <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – for images 🖼
-        <li><a href="https://nominatim.openstreetmap.org/" rel='noopener' target='_blank'>Nominatim</a> – for search box 🔎
         <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – for the best world map 🌎
       </ul>
   `,
