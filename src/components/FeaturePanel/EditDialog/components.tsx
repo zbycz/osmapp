@@ -83,7 +83,7 @@ export const ContributionInfoBox = () => {
 };
 
 export const CommentField = ({ comment, setComment }) => (
-  <>
+  <Box mb={2}>
     <TextField
       label={t('editdialog.comment')}
       placeholder={t('editdialog.comment_placeholder')}
@@ -97,10 +97,7 @@ export const CommentField = ({ comment, setComment }) => (
       value={comment}
       onChange={(e) => setComment(e.target.value)}
     />
-    <br />
-    <br />
-    <br />
-  </>
+  </Box>
 );
 
 export const OsmLogin = () => {

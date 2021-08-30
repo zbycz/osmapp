@@ -172,9 +172,6 @@ export const EditDialog = ({
         <>
           <DialogContent dividers>
             <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
-              {false && (
-                <FeatureTypeSelect type={typeTag} setType={setTypeTag} />
-              )}
               <MajorKeysEditor
                 tags={tags}
                 setTag={setTag}
@@ -199,13 +196,15 @@ export const EditDialog = ({
               )}
               <ContributionInfoBox />
               <CommentField comment={comment} setComment={setComment} />
+              {isAddPlace && (
+                <FeatureTypeSelect type={typeTag} setType={setTypeTag} />
+              )}
               <OtherTagsEditor
                 tags={tags}
                 setTag={setTag}
                 focusTag={focusTag}
                 setTmpNewTag={setTmpNewTag}
               />
-
               <OsmLogin />
             </form>
           </DialogContent>

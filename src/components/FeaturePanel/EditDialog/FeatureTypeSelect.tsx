@@ -34,11 +34,14 @@ const getData = async () => {
     .sort((a, b) => a.subclass.localeCompare(b.subclass));
 };
 
-const renderValue = (value) => (
-  <>
-    <Maki ico={value.class} size={16} middle /> {value.tag}
-  </>
-);
+const renderValue = (value) =>
+  value ? (
+    <>
+      <Maki ico={value.class} size={16} middle /> {value.tag}
+    </>
+  ) : (
+    '–'
+  );
 
 export const FeatureTypeSelect = ({ type, setType }) => {
   // const { feature } = useFeatureContext();
@@ -63,7 +66,8 @@ export const FeatureTypeSelect = ({ type, setType }) => {
         select
         fullWidth
         value={type}
-        SelectProps={{ renderValue, onChange }}
+        SelectProps={{ renderValue, onChange, displayEmpty: true }}
+        InputLabelProps={{ shrink: true }}
         label={t('editdialog.feature_type_select')}
       >
         <MenuItem value="">–</MenuItem>
