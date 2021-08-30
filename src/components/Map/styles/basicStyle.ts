@@ -7,6 +7,7 @@ import {
 } from './layers/buildings3dLayers';
 import { addHoverPaint } from '../behaviour/featureHover';
 import { BACKGROUND, GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
+import { motorwayConstruction } from './layers/contruction';
 
 export const basicStyle = addHoverPaint({
   version: 8,
@@ -16,6 +17,7 @@ export const basicStyle = addHoverPaint({
   glyphs: GLYPHS,
   layers: [
     ...BACKGROUND,
+    motorwayConstruction,
     {
       id: 'landcover-glacier',
       type: 'fill',
