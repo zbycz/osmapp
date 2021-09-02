@@ -4,7 +4,7 @@ import Info from '@material-ui/icons/Info';
 const DescriptionRenderer = ({ v }) => (
   <>
     <Info fontSize="small" />
-    ${v}
+    {v}
   </>
 );
 
