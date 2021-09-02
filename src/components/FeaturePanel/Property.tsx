@@ -4,6 +4,7 @@ import styled from 'styled-components';
 import WebsiteRenderer from './renderers/WebsiteRenderer';
 import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
 import PhoneRenderer from './renderers/PhoneRenderer';
+import DescriptionRenderer from './renderers/DescriptionRenderer';
 import { EditIconButton } from './EditIconButton';
 
 const Wrapper = styled.div`
@@ -38,6 +39,7 @@ const renderers = {
   website: WebsiteRenderer,
   phone: PhoneRenderer,
   opening_hours: OpeningHoursRenderer,
+  description: DescriptionRenderer,
 };
 
 const Property = ({ k, v, onEdit }) => {
