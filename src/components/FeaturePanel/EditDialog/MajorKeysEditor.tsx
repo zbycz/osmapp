@@ -12,7 +12,7 @@ const majorKeysNames = {
   opening_hours: t('tags.opening_hours'),
 };
 
-export const majorKeys = ['name', 'website', 'phone', 'descriiption', 'opening_hours'];
+export const majorKeys = ['name', 'website', 'phone', 'description', 'opening_hours'];
 
 const getInitialMajorKeys = (tags) => majorKeys.filter((k) => !!tags[k]);
 
