@@ -34,14 +34,15 @@ const Value = styled.div`
 `;
 
 const DefaultRenderer = ({ v }) => v;
-const renderers = {
+var renderers = {
   website: WebsiteRenderer,
-  "contact:website": WebsiteRenderer,
   phone: PhoneRenderer,
-  "contact:phone": PhoneRenderer,
-  "contact:mobile": PhoneRenderer,
   opening_hours: OpeningHoursRenderer,
 };
+
+renderers["contact:website"] = WebsiteRenderer
+renderers["contact:phone"] = PhoneRenderer
+renderers["contact:mobile"] = PhoneRenderer
 
 const Property = ({ k, v, onEdit }) => {
   const Renderer = renderers[k] || DefaultRenderer;
