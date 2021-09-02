@@ -40,9 +40,9 @@ var renderers = {
   opening_hours: OpeningHoursRenderer,
 };
 
-renderers["contact:website"] = WebsiteRenderer
-renderers["contact:phone"] = PhoneRenderer
-renderers["contact:mobile"] = PhoneRenderer
+renderers["contact:website"] = WebsiteRenderer;
+renderers["contact:phone"] = PhoneRenderer;
+renderers["contact:mobile"] = PhoneRenderer;
 
 const Property = ({ k, v, onEdit }) => {
   const Renderer = renderers[k] || DefaultRenderer;
