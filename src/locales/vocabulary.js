@@ -101,7 +101,7 @@ export default {
   'editdialog.location_checkbox': 'Change location',
   'editdialog.location_placeholder': 'eg. across the street',
   'editdialog.location_editor_to_be_added': 'The position cannot be edited here yet, you can do so in the <a href="__link__">iD editor</a>.',
-  'editdialog.place_cancelled': 'Place cancelled or permanently closed',
+  'editdialog.place_cancelled': 'Place permanently closed (delete)',
   'editdialog.comment': 'Comment (optional)',
   'editdialog.comment_placeholder': 'link to the source of information etc.',
   'editdialog.info_edit': `Your edit will be immediately saved to the OpenStreetMap. Please,

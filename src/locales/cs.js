@@ -98,7 +98,7 @@ export default {
   'editdialog.location_checkbox': 'Zadat novou polohu',
   'editdialog.location_placeholder': 'např. naproti přes ulici',
   'editdialog.location_editor_to_be_added': 'Polohu zde zatím upravit nelze, můžete to provést třeba v <a href="__link__">editoru iD</a>.',
-  'editdialog.place_cancelled': 'Místo zrušeno či trvale zavřeno',
+  'editdialog.place_cancelled': 'Místo zrušeno (smazat)',
   'editdialog.comment': 'Poznámka (nepovinné)',
   'editdialog.comment_placeholder': 'odkaz na zdroj informace apod.',
   'editdialog.info_edit': `Vaše úprava bude ihned uložena do databáze OpenStreetMap. Prosíme,
