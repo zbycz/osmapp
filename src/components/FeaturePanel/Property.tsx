@@ -36,7 +36,10 @@ const Value = styled.div`
 const DefaultRenderer = ({ v }) => v;
 const renderers = {
   website: WebsiteRenderer,
+  'contact:website': WebsiteRenderer,
   phone: PhoneRenderer,
+  'contact:phone': PhoneRenderer,
+  'contact:mobile': PhoneRenderer,
   opening_hours: OpeningHoursRenderer,
 };
 

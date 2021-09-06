@@ -31,11 +31,11 @@ export const getUrlForTag = (k, v) => {
     const id = encodeURIComponent(v);
     return `https://pamatkovykatalog.cz/uskp/podle-relevance/1/seznam/?h=${id}&chranenoTed=1&hlObj=1&fulltext`;
   }
-  if (k === 'fhrs:id' ) {
-    return `https://ratings.food.gov.uk/business/en-GB/${v}`
+  if (k === 'fhrs:id') {
+    return `https://ratings.food.gov.uk/business/en-GB/${v}`;
   }
-  if (k === 'ref:edubase' ) {
-    return `https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${v}`
+  if (k === 'ref:edubase') {
+    return `https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${v}`;
   }
   if (k === 'website') {
     return v.match(urlRegExp) ? v : `http://${v}`;

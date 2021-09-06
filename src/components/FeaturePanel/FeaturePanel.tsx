@@ -52,7 +52,15 @@ const PoiType = styled.div`
   }
 `;
 
-const featuredKeys = ['website', 'phone', 'opening_hours', 'description'];
+const featuredKeys = [
+  'website',
+  'contact:website',
+  'phone',
+  'contact:phone',
+  'contact:mobile',
+  'opening_hours',
+  'description',
+];
 
 const FeaturePanel = () => {
   const { feature } = useFeatureContext();
