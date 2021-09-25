@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import WebsiteRenderer from './renderers/WebsiteRenderer';
 import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
 import PhoneRenderer from './renderers/PhoneRenderer';
-import { EditIconButton } from './EditIconButton';
+import { EditIconButton } from './helpers/EditIconButton';
 
 const Wrapper = styled.div`
   position: relative;

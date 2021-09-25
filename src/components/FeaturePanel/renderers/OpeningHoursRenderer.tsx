@@ -3,8 +3,8 @@ import { SimpleOpeningHours } from 'simple-opening-hours';
 import styled from 'styled-components';
 import AccessTime from '@material-ui/icons/AccessTime';
 import { useToggleState } from '../../helpers';
-import { ToggleButton } from '../helpers';
 import { t } from '../../../services/intl';
+import { ToggleButton } from '../helpers/ToggleButton';
 
 interface SimpleOpeningHoursTable {
   su: string[];

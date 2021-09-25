@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import truncate from 'lodash/truncate';
 
 import { slashToOptionalBr, useToggleState } from '../helpers';
-import { getUrlForTag, ToggleButton } from './helpers';
-import { EditIconButton } from './EditIconButton';
+import { getUrlForTag } from './helpers/getUrlForTag';
+import { EditIconButton } from './helpers/EditIconButton';
 import { buildAddress } from '../../services/helpers';
+import { ToggleButton } from './helpers/ToggleButton';
 
 const Wrapper = styled.div`
   position: relative;

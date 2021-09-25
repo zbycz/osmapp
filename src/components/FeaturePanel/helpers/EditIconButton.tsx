@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import IconButton from '@material-ui/core/IconButton';
 import Edit from '@material-ui/icons/Edit';
 import React from 'react';
-import { t } from '../../services/intl';
+import { t } from '../../../services/intl';
 
 const StyledIconButton = styled(IconButton)`
   position: absolute !important; /* TODO mui styles takes precendence, why? */

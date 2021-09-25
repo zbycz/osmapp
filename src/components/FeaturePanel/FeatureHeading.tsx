@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { EditIconButton } from './EditIconButton';
+import { EditIconButton } from './helpers/EditIconButton';
 
 const Wrapper = styled.div`
   font-size: 36px;
