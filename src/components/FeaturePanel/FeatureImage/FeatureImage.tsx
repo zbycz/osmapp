@@ -2,11 +2,11 @@ import React, { ReactNode } from 'react';
 
 import styled from 'styled-components';
 import { Tooltip } from '@material-ui/core';
-import { getFeatureImage, LOADING } from '../../services/images';
-import { Feature } from '../../services/types';
-import { InlineSpinner } from './FeatureImage/InlineSpinner';
-import { t } from '../../services/intl';
-import { nl2br } from '../utils/nl2br';
+import { getFeatureImage, LOADING } from '../../../services/images';
+import { Feature } from '../../../services/types';
+import { InlineSpinner } from './InlineSpinner';
+import { t } from '../../../services/intl';
+import { nl2br } from '../../utils/nl2br';
 
 const Wrapper = styled.div`
   position: relative;

@@ -5,7 +5,7 @@ import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
 import IconButton from '@material-ui/core/IconButton';
 import FeatureHeading from './FeatureHeading';
-import { FeatureImage } from './FeatureImage';
+import { FeatureImage } from './FeatureImage/FeatureImage';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
 import TagsTable from './TagsTable';
