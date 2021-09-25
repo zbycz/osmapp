@@ -20,7 +20,7 @@ import { Members } from './Members';
 import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
 import { getLabel } from '../../helpers/featureLabel';
-import { ImageSection } from './ImageSection';
+import { ImageSection } from './ImageSection/ImageSection';
 
 const featuredKeys = [
   'website',

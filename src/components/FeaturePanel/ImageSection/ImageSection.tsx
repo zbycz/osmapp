@@ -4,12 +4,13 @@ import StarBorder from '@material-ui/icons/StarBorder';
 import Directions from '@material-ui/icons/Directions';
 import React from 'react';
 import styled from 'styled-components';
-import { useFeatureContext } from '../utils/FeatureContext';
-import { FeatureImage } from './FeatureImage/FeatureImage';
-import Maki from '../utils/Maki';
-import { hasName } from '../../helpers/featureLabel';
-import { t } from '../../services/intl';
-import { SHOW_PROTOTYPE_UI } from '../../config';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { FeatureImage } from './FeatureImage';
+import Maki from '../../utils/Maki';
+import { hasName } from '../../../helpers/featureLabel';
+import { t } from '../../../services/intl';
+import { SHOW_PROTOTYPE_UI } from '../../../config';
+import { Feature } from '../../../services/types';
 
 const StyledIconButton = styled(IconButton)`
   svg {
@@ -34,19 +35,24 @@ const PoiType = styled.div`
   }
 `;
 
+const getSubclass = ({ layer, osmMeta, properties }: Feature) =>
+  properties.subclass?.replace(/_/g, ' ') ||
+  (layer && layer.id) || // layer.id specified only when maplibre-gl skeleton displayed
+  osmMeta.type;
+
 export const ImageSection = () => {
   const { feature } = useFeatureContext();
-  const { layer, osmMeta, properties } = feature;
-  const subclass =
-    properties.subclass?.replace(/_/g, ' ') ||
-    (layer && layer.id) ||
-    osmMeta.type;
+  const { properties } = feature;
+
+  const poiType = hasName(feature)
+    ? getSubclass(feature)
+    : t('featurepanel.no_name');
 
   return (
     <FeatureImage feature={feature} ico={properties.class}>
       <PoiType>
         <Maki ico={properties.class} invert middle />
-        <span>{hasName(feature) ? subclass : t('featurepanel.no_name')}</span>
+        <span>{poiType}</span>
       </PoiType>
 
       {SHOW_PROTOTYPE_UI && (
