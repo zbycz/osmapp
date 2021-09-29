@@ -1,6 +1,6 @@
 # OsmAPP – beta
 
-Lets create an universal OSM app for broad public. It should be as easy to use as Google Maps and offer editing capabilites like Maps.me or Osmand.
+Lets create an universal OSM web app for broad public. It should be as easy to use as Google Maps and offer editing capabilites like Maps.me or Osmand. See also [SotM 2021 talk](https://github.com/zbycz/osmapp-talk).
 
 - master branch: https://osmapp.org
 - examples: [Empire State Building](https://osmapp.org/way/34633854#17.00/40.7483/-73.9864), [Prague Castle](https://osmapp.org/relation/3312247#17.00/50.0900/14.4000) or click just anything
@@ -28,8 +28,7 @@ In case you really want to, be sure to enjoy. 😁
 
 - add some features
 - fix some bugs
-- some ideas in [wireframes](https://drive.google.com/open?id=0B7awz2fKhg6yQ0JqTjhJRFV5aEE)
-  (like switching layers, vector outdoor map, driving directions or favourite places)
+- some ideas in [wireframes](https://drive.google.com/drive/folders/0B7awz2fKhg6yQ0JqTjhJRFV5aEE?resourcekey=0-NwX0M0KC3u85IGGyFonJAA&usp=sharing)
 
 ### Compatibility
 
