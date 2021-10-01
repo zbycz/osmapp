@@ -1,0 +1,23 @@
+{
+  "data_format": 1,
+  "data_url": "https://osmapp.org/taginfo.json",
+  "project": {
+    "name": "OsmAPP",
+    "description": "A universal OpenStreetMap browser with editing capability",
+    "project_url": "https://osmapp.org/",
+    "icon_url": "https://osmapp.org/logo/osmapp_256.png",
+    "contact_name": "Pavel Zbytovský",
+    "contact_email": "zbytovsky@gmail.com"
+  },
+  "tags": [
+    { "key": "name", "description": "Shows a detail of any feature. Displays its name and all other tags. It lets the user edit it. See eg.: https://osmapp.org/relation/6706848" },
+    { "key": "image", "description": "Shows feature image, see eg.: https://osmapp.org/relation/6706848"  },
+    { "key": "website" },
+    { "key": "contact:website" },
+    { "key": "phone" },
+    { "key": "contact:phone" },
+    { "key": "contact:mobile" },
+    { "key": "opening_hours", "description": "Shows parsed hours and also lets the user edit it." },
+    { "key": "description" }
+  ]
+}
