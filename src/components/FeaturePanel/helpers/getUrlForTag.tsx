@@ -1,7 +1,7 @@
 const urlRegExp = /^https?:\/\/.+/;
 
 export const getUrlForTag = (k, v) => {
-  if (k.match(/^:?wikipedia$/)) {
+  if (k.match(/:?wikipedia$/)) {
     if (v.match(/:/)) {
       const [lang, article] = v.split(':');
       return `https://${lang}.wikipedia.org/wiki/${article}`;
