@@ -15,18 +15,16 @@ export const Members = () => {
         Relation members
       </Typography>
       <ul>
-        {members
-          .filter((item) => item.role)
-          .map((item) => {
-            const urlOsmId = getUrlOsmId({ type: item.type, id: item.ref });
-            return (
-              <li>
-                <Link href={`/${urlOsmId}`}>
-                  {`${item.role} – ${urlOsmId}`}
-                </Link>
-              </li>
-            );
-          })}
+        {members.map((item) => {
+          const urlOsmId = getUrlOsmId({ type: item.type, id: item.ref });
+          return (
+            <li>
+              <Link href={`/${urlOsmId}`}>
+                {item.role ? `${item.role} – ${urlOsmId}` : urlOsmId}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </Box>
   ) : null;
