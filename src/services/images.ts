@@ -14,12 +14,12 @@ export const getFeatureImage = async (feature: Feature): Promise<Image> => {
 
   // for nonOsmObject we dont expect 2nd pass
   if (nonOsmObject) {
-    return center ? getMapillaryImage(center) : undefined;
+    return center.every(Boolean) ? getMapillaryImage(center) : undefined;
   }
 
   // first pass may be a skeleton --> start loading mapillary (center is similar)
   const osmid = getOsmappLink(feature);
-  if (skeleton && center) {
+  if (skeleton && center.every(Boolean)) {
     mapillaryPromise = getMapillaryImage(center);
     mapillaryForOsmId = osmid;
     return LOADING;
@@ -59,6 +59,7 @@ export const getFeatureImage = async (feature: Feature): Promise<Image> => {
 
   // fallback to mapillary
   return (
-    mapillaryPromise ?? (center ? await getMapillaryImage(center) : undefined)
+    mapillaryPromise ??
+    (center.every(Boolean) ? await getMapillaryImage(center) : undefined)
   );
 };

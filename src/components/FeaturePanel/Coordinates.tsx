@@ -131,7 +131,7 @@ const Coordinates = () => {
   const { feature } = useFeatureContext();
   const { center, roundedCenter = undefined } = feature;
   const coords = roundedCenter ?? center;
-  return coords ? <Coords coords={coords} /> : null;
+  return coords.every(Boolean) ? <Coords coords={coords} /> : null;
 };
 
 export default Coordinates;
