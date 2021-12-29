@@ -16,7 +16,8 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 Then just wait for a comment from a maintainer.
 
 > If you are a JS dev, you may also `git clone` / `yarn` / `yarn dev` \
-> Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) - full dev environment in your browser.
+> Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) - full dev environment in your browser. \
+> If Vercel build is failing, please run `yarn build` locally to debug it.
 
 ## RDD (Random Driven Development)
 
