@@ -12,9 +12,16 @@ const isLocalhost = (ip) => ['127.0.0.1', '::1'].includes(ip);
 
 const getViewFromIp = async (ip) => {
   try {
-    const url = `http://api.ipstack.com/${ip}?access_key=169a541e2e9936a03b0b9e355dd29ff3&format=1`;
-    const { latitude: lat, longitude: lon } = await fetchJson(url);
-    return lat && lon ? [7, lat, lon] : null;
+    // TODO Currently we dont do rate limiting on our side #83
+    // 45 requests per minute from an IP address https://ip-api.com/docs/api:json
+    const url = `http://ip-api.com/json/${ip}?fields=status,lat,lon`;
+    const { status, lat, lon } = await fetchJson(url);
+
+    if (status === 'success') {
+      return lat && lon ? [7, lat, lon] : null;
+    }
+
+    return null;
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('getViewFromIp', e.message ?? e);
