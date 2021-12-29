@@ -41,7 +41,10 @@ const getOsmPromise = async (apiId) => {
   }
 };
 
-// we should probably store just the last one, but this cant get too big, right?
+/**
+ * This holds coords of clicked ways/relations (from vector map), these are often different than those computed by us
+ * TODO: we should probably store just the last one, but this cant get too big, right?
+ */
 const featureCenterCache = {};
 export const addFeatureCenterToCache = (shortId, center) => {
   featureCenterCache[shortId] = center;
@@ -57,7 +60,7 @@ const getCenterPromise = async (apiId) => {
   try {
     const overpass = await fetchJson(getOverpassUrl(apiId));
     const { lat, lon } = overpass?.elements?.[0]?.center ?? {};
-    return [lon, lat];
+    return lon && lat ? [lon, lat] : false; // for some relations there are no coordinates
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('getCenterPromise()', e); // eg. 529 too many requests
