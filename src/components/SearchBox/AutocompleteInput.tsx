@@ -43,7 +43,7 @@ export const AutocompleteInput = ({
       inputValue={inputValue}
       options={options}
       filterOptions={(x) => x}
-      getOptionLabel={(option) => option.place_name}
+      getOptionLabel={(option) => option.properties.name}
       onChange={onSelectedFactory(setFeature, setPreview, setView, mobileMode)}
       onHighlightChange={onHighlightFactory(setPreview)}
       autoComplete

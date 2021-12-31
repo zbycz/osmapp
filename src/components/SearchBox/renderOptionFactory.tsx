@@ -8,34 +8,34 @@ import { highlightText } from './highlightText';
 
 /** maptiler
 {
-      id: 'city.2273338',
-      type: 'Feature',
-      place_type: ['city'],
-      relevance: 1,
-      properties: {
-        osm_id: 'relation2273338',
+  "features": [
+    {
+      "geometry": {
+        "coordinates": [
+          16.5920871,
+          49.2416882
+        ],
+        "type": "Point"
       },
-      text: 'Praha',
-      place_name: 'Praha, Region of Banská Bystrica',
-      bbox: [19.47208254, 48.34734753, 19.52180047, 48.39446473],
-      center: [19.4973869, 48.3708814],
-      geometry: {
-        type: 'Point',
-        coordinates: [19.4973869, 48.3708814],
-      },
-      context: [
-        {
-          id: 'country.14296',
-          osm_id: 'relation14296',
-          text: 'Slovakia',
-        },
-        {
-          id: 'state.388270',
-          osm_id: 'relation388270',
-          text: 'Region of Banská Bystrica',
-        },
-      ],
+      "type": "Feature",
+      "properties": {
+        "osm_id": 2493045013,
+        "country": "Česko",
+        "city": "Brno",
+        "countrycode": "CZ",
+        "postcode": "612 00",
+        "county": "Jihomoravský kraj",
+        "type": "house",
+        "osm_type": "N",
+        "osm_key": "leisure",
+        "street": "Podhájí",
+        "district": "Řečkovice",
+        "osm_value": "sports_centre",
+        "name": "VSK MENDELU",
+        "state": "Jihovýchod"
+      }
     }
+  ]
  */
 
 const IconPart = styled.div`
@@ -73,8 +73,7 @@ const useMapCenter = () => {
   return { lon, lat };
 };
 
-const getMaptilerGeocoderIcon = (placeTypes) => {
-  const placeType = placeTypes?.[0];
+const getIcon = (placeType) => {
   const ico =
     placeType === 'state' || placeType === 'country'
       ? 'star'
@@ -84,24 +83,27 @@ const getMaptilerGeocoderIcon = (placeTypes) => {
   return ico;
 };
 
-const isCountry = (item) => item.id?.split('.')[0] === 'country';
-
-const getAdditionalText = (context) => {
-  const country = context?.filter((x) => isCountry(x)) ?? [];
-  const notCountry = context?.filter((x) => !isCountry(x)) ?? [];
-  const orderedContext = [...notCountry, ...country];
-  return orderedContext?.map((x) => x.text).join(', ');
+const getAdditionalText = (props) => {
+  const address = [
+    props.street,
+    props.district,
+    props.city,
+    props.county,
+    props.state,
+    props.country,
+  ].filter((x) => x !== undefined);
+  return address.join(', ');
 };
 
 export const renderOptionFactory = (inputValue) => (option) => {
-  const { center, text, context, place_type: placeTypes } = option;
-  const [lon, lat] = center;
-
+  const { properties, geometry } = option;
+  const { name: text, type } = properties;
+  const [lon, lat] = geometry.coordinates;
   const mapCenter = useMapCenter();
   const dist = getDistance(mapCenter, { lon, lat }) / 1000;
   const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
-  const ico = getMaptilerGeocoderIcon(placeTypes);
-  const additionalText = getAdditionalText(context);
+  const ico = getIcon(type);
+  const additionalText = getAdditionalText(properties);
 
   return (
     <>
