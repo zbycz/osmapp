@@ -5,8 +5,10 @@ import styled from 'styled-components';
 import { useMapStateContext } from '../utils/MapStateContext';
 import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
+import { join } from '../../utils';
+import { getPoiClass } from '../../services/getPoiClass';
 
-/** maptiler
+/** photon
 {
   "features": [
     {
@@ -34,6 +36,26 @@ import { highlightText } from './highlightText';
         "name": "VSK MENDELU",
         "state": "Jihovýchod"
       }
+    },
+    // housenumber
+    {
+      geometry: { coordinates: [14.4036424, 50.098012], type: 'Point' },
+      type: 'Feature',
+      properties: {
+        osm_id: 296816783,
+        country: 'Czechia',
+        city: 'Prague',
+        countrycode: 'CZ',
+        postcode: '16000',
+        type: 'house',
+        osm_type: 'N',
+        osm_key: 'place',
+        housenumber: '8',
+        street: 'Dejvická',
+        district: 'Dejvice',
+        osm_value: 'house',
+        state: 'Prague',
+      },
     }
   ]
  */
@@ -73,16 +95,6 @@ const useMapCenter = () => {
   return { lon, lat };
 };
 
-const getIcon = (placeType) => {
-  const ico =
-    placeType === 'state' || placeType === 'country'
-      ? 'star'
-      : placeType === 'subcity'
-      ? 'city'
-      : placeType;
-  return ico;
-};
-
 const getAdditionalText = (props) => {
   const address = [
     props.street,
@@ -95,23 +107,33 @@ const getAdditionalText = (props) => {
   return address.join(', ');
 };
 
+const buildPhotonAddress = ({
+  place,
+  street,
+  housenumber: hnum,
+  streetnumber: snum,
+}) => join(street ?? place, ' ', hnum ? hnum.replace(' ', '/') : snum);
+
 export const renderOptionFactory = (inputValue) => (option) => {
   const { properties, geometry } = option;
-  const { name: text, type } = properties;
+  const { name, osm_key: tagKey, osm_value: tagValue } = properties;
+
   const [lon, lat] = geometry.coordinates;
   const mapCenter = useMapCenter();
   const dist = getDistance(mapCenter, { lon, lat }) / 1000;
   const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
-  const ico = getIcon(type);
+
+  const text = name || buildPhotonAddress(properties);
   const additionalText = getAdditionalText(properties);
+  const poiClass = getPoiClass({ [tagKey]: tagValue });
 
   return (
     <>
       <IconPart>
         <Maki
-          ico={ico}
+          ico={poiClass.class}
           style={{ width: '20px', height: '20px', opacity: 0.5 }}
-          title={ico}
+          title={`${tagKey}=${tagValue}`}
         />
         <div>{distKm} km</div>
       </IconPart>
