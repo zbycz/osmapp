@@ -39,11 +39,10 @@ export const onHighlightFactory = (setPreview) => (e, location) => {
   setPreview({ ...getSkeleton(location), noPreviewButton: true });
 };
 
-const fitBounds = (option, setView, panelShown = false) => {
+const fitBounds = (option, panelShown = false) => {
   if (!option.properties.extent) {
-    // TODO smoothly set view to [lat,lon] without known bbox
-    const [lon, lat] = option.geometry.coordinates;
-    setView(['17.00', lat, lon]);
+    const coords = option.geometry.coordinates;
+    getGlobalMap()?.flyTo({ center: coords, zoom: 17 });
   } else {
     const [w, s, e, n] = option.properties.extent;
     const bbox = new maplibregl.LngLatBounds([w, s], [e, n]);
@@ -55,7 +54,7 @@ const fitBounds = (option, setView, panelShown = false) => {
 };
 
 export const onSelectedFactory =
-  (setFeature, setPreview, setView, mobileMode) => (e, option) => {
+  (setFeature, setPreview, mobileMode) => (e, option) => {
     if (!option?.geometry.coordinates) return;
 
     const skeleton = getSkeleton(option);
@@ -65,12 +64,12 @@ export const onSelectedFactory =
 
     if (mobileMode) {
       setPreview(skeleton);
-      fitBounds(option, setView);
+      fitBounds(option);
       return;
     }
 
     setPreview(null);
     setFeature(skeleton);
-    fitBounds(option, setView, true);
+    fitBounds(option, true);
     Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);
   };

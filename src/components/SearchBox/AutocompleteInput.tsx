@@ -2,7 +2,6 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect } from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { useMapStateContext } from '../utils/MapStateContext';
 import { renderOptionFactory } from './renderOptionFactory';
 import { t } from '../../services/intl';
 import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
@@ -36,7 +35,6 @@ export const AutocompleteInput = ({
   autocompleteRef,
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
-  const { setView } = useMapStateContext();
   const mobileMode = useMobileMode();
   return (
     <Autocomplete
@@ -44,7 +42,7 @@ export const AutocompleteInput = ({
       options={options}
       filterOptions={(x) => x}
       getOptionLabel={(option) => option.properties.name}
-      onChange={onSelectedFactory(setFeature, setPreview, setView, mobileMode)}
+      onChange={onSelectedFactory(setFeature, setPreview, mobileMode)}
       onHighlightChange={onHighlightFactory(setPreview)}
       autoComplete
       disableClearable
