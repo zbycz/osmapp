@@ -47,13 +47,14 @@ const SearchIconButton = styled(IconButton)`
   }
 `;
 
-const getApiUrl = (inputValue, center, level) => {
-  const lvl = Math.min(0, Math.max(16, level));
-  return `https://photon.komoot.io/api/?q=${inputValue}&lon=${center[0]}&lat=${center[1]}&zoom=${lvl}`;
+const getApiUrl = (inputValue, view) => {
+  const [zoom, lat, lon] = view;
+  const lvl = Math.max(0, Math.min(16, Math.round(zoom)));
+  return `https://photon.komoot.io/api/?q=${inputValue}&lon=${lon}&lat=${lat}&zoom=${lvl}`;
 };
 
-const fetchOptions = throttle(async (inputValue, center, lvl, setOptions) => {
-  const searchResponse = await fetchJson(getApiUrl(inputValue, center, lvl));
+const fetchOptions = throttle(async (inputValue, view, setOptions) => {
+  const searchResponse = await fetchJson(getApiUrl(inputValue, view));
   const options = searchResponse.features;
   setOptions(options || []);
 }, 400);
@@ -65,15 +66,13 @@ const SearchBox = () => {
   const [options, setOptions] = useState([]);
   const autocompleteRef = useRef();
   const mobileMode = useMobileMode();
-  const [lvl, lat, lon] = view;
-  const center = [lon, lat];
 
   React.useEffect(() => {
     if (inputValue === '') {
       setOptions([]);
       return;
     }
-    fetchOptions(inputValue, center, Math.round(lvl), setOptions);
+    fetchOptions(inputValue, view, setOptions);
   }, [inputValue]);
 
   const closePanel = () => {
