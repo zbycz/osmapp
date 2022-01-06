@@ -9,11 +9,9 @@ import { fetchJson } from '../../services/fetch';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
-import { intl, t } from '../../services/intl';
+import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { isDesktop, useMobileMode } from '../helpers';
-
-const apiKey = '7dlhLl3hiXQ1gsth0kGu'; // todo merge with consts.ts
 
 const TopPanel = styled.div`
   position: absolute;
@@ -49,13 +47,15 @@ const SearchIconButton = styled(IconButton)`
   }
 `;
 
-// TODO maybe search also in displayed vector map (queryFeatures)
-const getApiUrl = (center, inputValue) =>
-  `https://api.maptiler.com/geocoding/${inputValue}.json?key=${apiKey}&language=${intl.lang}&promixity=${center}`;
+const getApiUrl = (inputValue, view) => {
+  const [zoom, lat, lon] = view;
+  const lvl = Math.max(0, Math.min(16, Math.round(zoom)));
+  return `https://photon.komoot.io/api/?q=${inputValue}&lon=${lon}&lat=${lat}&zoom=${lvl}`;
+};
 
-const fetchOptions = throttle(async (inputValue, center, setOptions) => {
-  const maptilerResponse = await fetchJson(getApiUrl(center, inputValue));
-  const options = maptilerResponse.features;
+const fetchOptions = throttle(async (inputValue, view, setOptions) => {
+  const searchResponse = await fetchJson(getApiUrl(inputValue, view));
+  const options = searchResponse.features;
   setOptions(options || []);
 }, 400);
 
@@ -67,15 +67,12 @@ const SearchBox = () => {
   const autocompleteRef = useRef();
   const mobileMode = useMobileMode();
 
-  const [, lat, lon] = view;
-  const center = [lon, lat];
-
   React.useEffect(() => {
     if (inputValue === '') {
       setOptions([]);
       return;
     }
-    fetchOptions(inputValue, center, setOptions);
+    fetchOptions(inputValue, view, setOptions);
   }, [inputValue]);
 
   const closePanel = () => {
