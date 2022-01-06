@@ -2,7 +2,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect } from 'react';
 import InputBase from '@material-ui/core/InputBase';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { renderOptionFactory } from './renderOptionFactory';
+import { renderOptionFactory, buildPhotonAddress } from './renderOptionFactory';
 import { t } from '../../services/intl';
 import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
 import { useMobileMode } from '../helpers';
@@ -41,7 +41,9 @@ export const AutocompleteInput = ({
       inputValue={inputValue}
       options={options}
       filterOptions={(x) => x}
-      getOptionLabel={(option) => option.properties.name}
+      getOptionLabel={(option) =>
+        option.properties.name || buildPhotonAddress(option.properties)
+      }
       onChange={onSelectedFactory(setFeature, setPreview, mobileMode)}
       onHighlightChange={onHighlightFactory(setPreview)}
       autoComplete

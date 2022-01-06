@@ -107,7 +107,7 @@ const getAdditionalText = (props) => {
   return address.join(', ');
 };
 
-const buildPhotonAddress = ({
+export const buildPhotonAddress = ({
   place,
   street,
   housenumber: hnum,
