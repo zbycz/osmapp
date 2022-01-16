@@ -388,6 +388,21 @@ export const basicStyle = addHoverPaint({
     },
     ...buildings3dBase,
     {
+      id: 'housenumber',
+      type: 'symbol',
+      paint: {
+        'text-color': 'rgba(128,128,128,0.7)',
+      },
+      layout: {
+        'text-font': ['Noto Sans Regular'],
+        'text-size': 10,
+        'text-field': '{housenumber}',
+      },
+      source: 'maptiler_planet',
+      minzoom: 18,
+      'source-layer': 'housenumber',
+    },
+    {
       id: 'tunnel-service-track-casing',
       type: 'line',
       metadata: {
