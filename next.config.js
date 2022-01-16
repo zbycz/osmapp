@@ -15,7 +15,7 @@ module.exports = withPWA({
     osmappVersion: packageJson.version.replace(/\.0$/, ''),
     commitHash: (process.env.VERCEL_GIT_COMMIT_SHA || '').substr(0, 7),
     commitMessage: process.env.VERCEL_GIT_COMMIT_MESSAGE || 'dev',
-    languages: { en: 'english', cs: 'česky', pl: 'polski', de: 'Deutsch' },
+    languages: { en: 'English', cs: 'česky', pl: 'polski', de: 'Deutsch' },
   },
   webpack: (config, { dev, isServer }) => {
     // Fixes npm packages that depend on `fs` module
