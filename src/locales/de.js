@@ -65,7 +65,7 @@ export default {
   'featurepanel.show_objects_around': 'Zeige Orte in der Nähe',
   'featurepanel.uncertain_image': 'Dies ist das nächste Street View Bild. Es kann ein anders Objekt zeigen.',
   'featurepanel.inline_edit_title': 'Bearbeiten',
-  'featurepanel.objects_around': 'Objekt in der Nähe',
+  'featurepanel.objects_around': 'Orte in der Nähe',
 
   'opening_hours.open': 'Geöffnet: __todayTime__',
   'opening_hours.now_closed_but_today': 'Geschlossen, heute: __todayTime__',
