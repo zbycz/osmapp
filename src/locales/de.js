@@ -4,7 +4,7 @@ export default {
   loading: 'Lade',
   error: 'Fehler',
   close_panel: 'Panel schließen',
-  webgl_error: `Ups. Diese Karte setzt die WebGL Technologie voraus .<br /><br />Wenn Du ein kompatibles Gerät hast, versuch die letzte Version des Chrome Browsers zu verwenden.`,
+  webgl_error: `Ups. Diese Karte setzt die WebGL Technologie voraus .<br /><br />Wenn Du ein kompatibles Gerät hast, versuche die letzte Version des Chrome Browsers zu verwenden.`,
 
   'install.button': 'App installieren',
   'install.tabs_aria_label': 'Platform wählen',
@@ -17,7 +17,7 @@ export default {
   'install.desktop_intro': 'Öffne osmapp.org im <strong>Chrome</strong>, <strong>FirefoxOS</strong> oder <strong>Opera</strong>',
   'install.desktop_install': 'Drücke die Schaltfläche <strong>Installieren</strong>',
   'install.outro': "Das war's! OsmAPP sollte auf deinem Startbildschirm erscheinen.",
-  'install.note': 'Hinweis: Diese App verwendet PWA Technologie und bietete eine schnelle Installation ohne Google Play oder App Store.',
+  'install.note': 'Hinweis: Diese App verwendet PWA Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
 
   'homepage.subtitle': 'Eine universelle OpenStreetMap app',
   'homepage.how_to_start': 'Tippe einen Begriff in die Suchbox.\nOder klicke auf einen Ort auf der Karte.',
@@ -54,7 +54,7 @@ export default {
   'featurepanel.error_network': 'Kann das Objekt nicht abrufen, bitte überprüfe die Netzwerkverbindung.',
   'featurepanel.error_deleted': 'Das Objekt wurde in OpenStreetMap als gelöscht markiert.',
   'featurepanel.history_button': 'Versionsverlauf »',
-  'featurepanel.other_info_heading': 'Weiter Informationen',
+  'featurepanel.other_info_heading': 'Weitere Informationen',
   'featurepanel.edit_button_title': 'In OpenStreetMap Datenbank bearbeiten',
   'featurepanel.edit_button': 'Ort bearbeiten',
   'featurepanel.add_place_button': 'Ort hinzufügen',
