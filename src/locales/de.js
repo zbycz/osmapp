@@ -106,7 +106,7 @@ export default {
   'editdialog.place_cancelled': 'Endgültig geschlossen (Löschen)',
   'editdialog.comment': 'Kommentar (optional)',
   'editdialog.comment_placeholder': 'Link zur Quelle der Informationen usw.',
-  'editdialog.info_edit': `Deine Änderunge werden direkt in OpenStreetMap gespeichert. Bitte füge nur Informationen
+  'editdialog.info_edit': `Deine Änderungen werden direkt in OpenStreetMap gespeichert. Bitte füge nur Informationen
          von deinen eigenen oder geprüften Quellen hinzu. Es ist nicht erlaubt, Urheberrechtlich geschützte Informationen
          (z.B. von Google Maps) zu kopieren. <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">weitere Informationen</a>`,
   'editdialog.info_note': `Dein Vorschlag wird von Freiwilligen des OpenStreetMap Projektes bearbeitet. Hier
