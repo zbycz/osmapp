@@ -4,7 +4,7 @@ export default {
   loading: 'Lade',
   error: 'Fehler',
   close_panel: 'Panel schließen',
-  webgl_error: `Ups. Diese Karte setzt die WebGL Technologie voraus .<br /><br />Wenn Du ein kompatibles Gerät hast, versuche die letzte Version des Chrome Browsers zu verwenden.`,
+  webgl_error: `Ups. Diese Karte setzt die WebGL Technologie voraus.<br /><br />Wenn Du ein kompatibles Gerät hast, versuche die letzte Version des Chrome Browsers zu verwenden.`,
 
   'install.button': 'App installieren',
   'install.tabs_aria_label': 'Platform wählen',
@@ -31,7 +31,7 @@ export default {
   'homepage.heading_about_osmapp': 'Über OsmAPP',
   'homepage.about_osmapp': `Diese Anwendung soll eine komfortable Oberfläche für die tägliche Nutzung von <i>OpenStreetMap</i>,
      samt Bearbeitungsfunktionen, bieten. <br/> Derzeit umfasst sie verschiedene Kartenebenen, POI-Bearbeitung und eine einfache Suchmaschine.
-     Funktionen wie Navigation und eine Favoritenfunktion sind in Planung`,
+     Funktionen wie Navigation und das Speichern von Favoriten sind in Planung`,
   'homepage.github_link': `Du kannst neue Features auf <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>vorschlagen</a>.`,
   'homepage.special_thanks_heading': `Danke an`,
   'homepage.special_thanks': `<ul>
