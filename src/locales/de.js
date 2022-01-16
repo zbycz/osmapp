@@ -19,7 +19,7 @@ export default {
   'install.outro': "Das war's! OsmAPP sollte auf deinem Startbildschirm erscheinen.",
   'install.note': 'Hinweis: Diese App verwendet PWA Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
 
-  'homepage.subtitle': 'Eine universelle OpenStreetMap app',
+  'homepage.subtitle': 'Eine universelle OpenStreetMap App',
   'homepage.how_to_start': 'Tippe einen Begriff in die Suchbox.\nOder klicke auf einen Ort auf der Karte.',
   'homepage.examples.eg': 'z.B.',
   'homepage.examples.charles_bridge_statues': 'Statuen auf der Karlsbrücke',
