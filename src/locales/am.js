@@ -1,7 +1,7 @@
 // identifier should be in the form: foldername.messageid.
 
 export default {
-  loading: 'በመጫን ላይ'
+  loading: 'በመጫን ላይ',
   error: 'ስህተት',
   close_panel: 'ፓኔል ዝጋ',
   webgl_error: `ይህ ካርታ WebGL ቴክኖሎጂ ያስፈልገዋል.<br /><br />ተመጣጣኝ መሳሪያ ካለዎ፣ የወቅቱን የድረ-ገፅ መዳሰሻ ይጠቀሙ`,
@@ -25,7 +25,7 @@ export default {
   'homepage.examples.charles_bridge_statues': 'የቻርለስ ድልድይ ሀውልቶች',
   'homepage.screenshot_alt': 'የOsmAPP የስክሪን ፎቶ',
   'homepage.about_osm': `ሁሉም የካርታ መረጃ ከ
-      <a href="https://osm.org">OpenStreetMap</a> ሲሆን, ይህም በብዙ ሚሊዮን በሚቆጠሩ ሰዎች ትብብር — ልክ እንደ Wikipedia የተሰራ ነው. በሁሉም የካርታው አካል ውስጥ 
+      <a href="https://osm.org">OpenStreetMap</a> ሲሆን, ይህም በብዙ ሚሊዮን በሚቆጠሩ ሰዎች ትብብር — ልክ እንደ Wikipedia የተሰራ ነው. በሁሉም የካርታው አካል ውስጥ
       <em>አርትዕ</em> የሚል ቁልፍ ያገኛሉ`,
   'homepage.heading_about_osmapp': 'ስለ OsmAPP',
   'homepage.about_osmapp': `የዚህ አፕሊኬሽን ገፅታ እለት ተእለት በ<i>OpenStreetMap</i> የምንጠቀመውን እርማቶች ማድረግን ጨምሮ ግልጋሎቱን ቀላል ያደርገዋል።
@@ -50,7 +50,7 @@ export default {
   'featurepanel.directions_button': 'አቅጣጫዎች',
   'featurepanel.error': 'ከOpenStreetMap የተለያዩ ክፍሎችን ለማምጣት ስህተት __code__ገጥሞታል',
   'featurepanel.error_unknown': 'ከOpenStreetMap የተለያዩ ክፍሎችን ለማምጣት ያልታወቀ ስህተት ገጥሞታል',
-  'featurepanel.error_network': "ማምጣት አልቻልኩም, የመገናኛ መረብዎን ገመዶች ይመርምሩ",
+  'featurepanel.error_network': 'ማምጣት አልቻልኩም, የመገናኛ መረብዎን ገመዶች ይመርምሩ',
   'featurepanel.error_deleted': 'ይህ አካል በOpenStreetMap ላይ ተሰርዟል የሚል ምልክት ተደርጎበታል',
   'featurepanel.history_button': 'ታሪኮች »',
   'featurepanel.other_info_heading': 'ተጨማሪ መረጃ',
@@ -59,7 +59,7 @@ export default {
   'featurepanel.add_place_button': 'አዲስ ቦታን ጨምር',
   'featurepanel.undelete_button': 'ወደተሰረዘበት መልስ',
   'featurepanel.feature_description_nonosm': 'የካርታ አካል __type__',
-  'featurepanel.feature_description_osm': '__type__ በ OpenStreetMap የመረጃ ቋት ውስጥ'
+  'featurepanel.feature_description_osm': '__type__ በ OpenStreetMap የመረጃ ቋት ውስጥ',
   'featurepanel.feature_description_point': 'የካርታ መገኛዎች',
   'featurepanel.show_objects_around': 'በዙሪያው ያሉ አካላትን አሳይ',
   'featurepanel.uncertain_image': 'ይህ በጣም ተቀራራቢው የሆነ የቅርብ ቀን የመንገድ ምልከታ ፎቶ ነው .  የተለየ አካል ሊያሳይ ይችላል.',
@@ -104,7 +104,7 @@ export default {
   'editdialog.comment': 'አስተያየት (እንደምርጫዎ)',
   'editdialog.comment_placeholder': 'ወደ መረጃ ምንጩ  የሚወስድ ማገናኛ.',
   'editdialog.info_edit': `እርትእዎ በፍጥነት OpenStreetMap ላይ ይቀመጣል። እባክዎ የሚያስገቡት መረጃ የርስዎ ወይም ከአስተማማኝ ምንጭ የተገኘ መሆኑን እርግጠኛ ይሁኑ። በህግ የሚጠበቁ ሌሎች ምንጮች መጠቀም ፈፅሞ የተከለከለ ነው። (ለምሳሌ፦ Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">ተጨማሪ መረጃ</a>`,
-  'editdialog.info_note': `ጥቆማዎ በOpenStreetMap በጎ-ፈቃደኞች ይስተናገዳል። እዚህ ጋር ተጨማሪ ማስታወሻዎችን ወይንም የቦታ ማሻሻያ መግለጫዎች የመሳሰሉትን ማስቀመጥ ይችላሉ።         
+  'editdialog.info_note': `ጥቆማዎ በOpenStreetMap በጎ-ፈቃደኞች ይስተናገዳል። እዚህ ጋር ተጨማሪ ማስታወሻዎችን ወይንም የቦታ ማሻሻያ መግለጫዎች የመሳሰሉትን ማስቀመጥ ይችላሉ።
 ያደረጉትን ማሻሻያ (ለውጥ) ምንጩን በማስቀመጥ ማጠናከር ተገቢ ነው። (ድረ-ገፅ፣ ፎቶ ወዘ).`,
   'editdialog.other_tags': 'ሌሎች መገለጫዎች  – መለያዎች',
   'editdialog.other_tags.new_key': 'አዲስ ቁልፍ',
