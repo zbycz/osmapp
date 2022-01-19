@@ -4,7 +4,7 @@ export default {
   loading: 'Lade',
   error: 'Fehler',
   close_panel: 'Panel schließen',
-  webgl_error: `Ups. Diese Karte setzt die WebGL Technologie voraus .<br /><br />Wenn Du ein kompatibles Gerät hast, versuche die letzte Version des Chrome Browsers zu verwenden.`,
+  webgl_error: `Ups. Diese Karte setzt die WebGL Technologie voraus.<br /><br />Wenn Du ein kompatibles Gerät hast, versuche die letzte Version des Chrome Browsers zu verwenden.`,
 
   'install.button': 'App installieren',
   'install.tabs_aria_label': 'Platform wählen',
@@ -19,7 +19,7 @@ export default {
   'install.outro': "Das war's! OsmAPP sollte auf deinem Startbildschirm erscheinen.",
   'install.note': 'Hinweis: Diese App verwendet PWA Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
 
-  'homepage.subtitle': 'Eine universelle OpenStreetMap app',
+  'homepage.subtitle': 'Eine universelle OpenStreetMap App',
   'homepage.how_to_start': 'Tippe einen Begriff in die Suchbox.\nOder klicke auf einen Ort auf der Karte.',
   'homepage.examples.eg': 'z.B.',
   'homepage.examples.charles_bridge_statues': 'Statuen auf der Karlsbrücke',
@@ -31,7 +31,7 @@ export default {
   'homepage.heading_about_osmapp': 'Über OsmAPP',
   'homepage.about_osmapp': `Diese Anwendung soll eine komfortable Oberfläche für die tägliche Nutzung von <i>OpenStreetMap</i>,
      samt Bearbeitungsfunktionen, bieten. <br/> Derzeit umfasst sie verschiedene Kartenebenen, POI-Bearbeitung und eine einfache Suchmaschine.
-     Funktionen wie Navigation und eine Favoritenfunktion sind in Planung`,
+     Funktionen wie Navigation und das Speichern von Favoriten sind in Planung`,
   'homepage.github_link': `Du kannst neue Features auf <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>vorschlagen</a>.`,
   'homepage.special_thanks_heading': `Danke an`,
   'homepage.special_thanks': `<ul>
@@ -95,8 +95,8 @@ export default {
   'editdialog.changes_needed': 'Bitte nimm ein paar Änderungen vor.',
   'editdialog.loggedInMessage': 'Du bist als <b>__osmUser__</b> eingeloggt, Änderungen werden sofort gespeichert.',
   'editdialog.logout': 'logout',
-  'editdialog.anonymousMessage1': 'Ein <b>anonyme</b>Notiz wird der Karte hinzugefügt.<br />Wenn du dich',
-  'editdialog.anonymousMessage2_login': 'auf OpenStreetMap einloggt',
+  'editdialog.anonymousMessage1': 'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt.<br />Wenn du dich',
+  'editdialog.anonymousMessage2_login': 'auf OpenStreetMap einloggst',
   'editdialog.anonymousMessage3': ', werden deine Änderungen direkt gespeichert.',
   'editdialog.add_major_tag': 'Hinzufügen',
   'editdialog.location_checkbox': 'Position ändern',
@@ -106,7 +106,7 @@ export default {
   'editdialog.place_cancelled': 'Endgültig geschlossen (Löschen)',
   'editdialog.comment': 'Kommentar (optional)',
   'editdialog.comment_placeholder': 'Link zur Quelle der Informationen usw.',
-  'editdialog.info_edit': `Deine Änderunge werden direkt in OpenStreetMap gespeichert. Bitte füge nur Informationen
+  'editdialog.info_edit': `Deine Änderungen werden direkt in OpenStreetMap gespeichert. Bitte füge nur Informationen
          von deinen eigenen oder geprüften Quellen hinzu. Es ist nicht erlaubt, Urheberrechtlich geschützte Informationen
          (z.B. von Google Maps) zu kopieren. <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">weitere Informationen</a>`,
   'editdialog.info_note': `Dein Vorschlag wird von Freiwilligen des OpenStreetMap Projektes bearbeitet. Hier
