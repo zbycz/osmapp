@@ -11,7 +11,7 @@ export default {
   'install.ios_intro': 'osmapp.org im <strong>Safari Browser</strong> öffnen',
   'install.ios_share': 'Drücke das <strong>Teilen Icon</strong>',
   'install.ios_add': 'Drücke <strong>Zum Startbildschirm zufügen</strong>',
-  'install.android_intro': 'Öffner osmapp.org im <strong>Chrome Browser</strong>',
+  'install.android_intro': 'Öffner osmapp.org im <strong>Chrome oder Firefox Browser</strong>',
   'install.android_share': 'Drücke das <strong>Drei-Punkte Menü</strong>',
   'install.android_add': 'Drücke <strong>App installieren</strong>',
   'install.desktop_intro': 'Öffne osmapp.org im <strong>Chrome</strong>, <strong>FirefoxOS</strong> oder <strong>Opera</strong>',

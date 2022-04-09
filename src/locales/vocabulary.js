@@ -11,7 +11,7 @@ export default {
   'install.ios_intro': 'Open osmapp.org in the <strong>Safari browser</strong>',
   'install.ios_share': 'Tap <strong>Share icon</strong>',
   'install.ios_add': 'Tap <strong>Add to Home Screen</strong>',
-  'install.android_intro': 'Open osmapp.org in the <strong>Chrome browser</strong>',
+  'install.android_intro': 'Open osmapp.org in the <strong>Chrome or Firefox browser</strong>',
   'install.android_share': 'Tap the <strong>three dots menu</strong>',
   'install.android_add': 'Tap <strong>Install app</strong>',
   'install.desktop_intro': 'Open osmapp.org in <strong>Chrome</strong>, <strong>FirefoxOS</strong> or <strong>Opera</strong>',

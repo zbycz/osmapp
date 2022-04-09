@@ -9,7 +9,7 @@ export default {
   'install.ios_intro': 'Otevřete osmapp.org v <strong>prohlížeči Safari</strong>',
   'install.ios_share': 'Ťukněte na <strong>ikonku Sdílet</strong>',
   'install.ios_add': 'Ťukněte na <strong>Přidat na domovskou obrazovku</strong>',
-  'install.android_intro': 'Otevřete osmapp.org v <strong>prohlížeči Chrome</strong>',
+  'install.android_intro': 'Otevřete osmapp.org v <strong>prohlížeči Chrome či Firefox</strong>',
   'install.android_share': 'Ťukněte na <strong>trojtečkové menu</strong>',
   'install.android_add': 'Ťukněte na <strong>Instalovat aplikaci</strong>',
   'install.desktop_intro': 'Otevřete osmapp.org v prohlížečích <strong>Chrome</strong>, <strong>FirefoxOS</strong> nebo <strong>Opera</strong>',

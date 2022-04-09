@@ -11,7 +11,7 @@ export default {
   'install.ios_intro': 'Otwórz osmapp.org w <strong>przeglądarce Safari</strong>',
   'install.ios_share': 'Dotknij <strong>ikonę Udostępniania</strong>',
   'install.ios_add': 'Dotknij <strong>Dodaj do ekranu domowego</strong>',
-  'install.android_intro': 'Otwórz osmapp.org w <strong>przeglądarce Chrome</strong>',
+  'install.android_intro': 'Otwórz osmapp.org w <strong>przeglądarce Chrome lub Firefox</strong>',
   'install.android_share': 'Dotknij <strong>menu trzech kropek</strong>',
   'install.android_add': 'Dotknij <strong>Zainstaluj aplikację</strong>',
   'install.desktop_intro': 'Otwórz osmapp.org w <strong>Chrome</strong>, <strong>FirefoxOS</strong> lub <strong>Opera</strong>',
@@ -75,7 +75,8 @@ export default {
   'map.github_title': 'GitHub',
   'map.language_title': 'Zmień język',
   'map.osm_copyright_tooltip': '(c) Współtwórcy OpenStreetMap.org<br> – wolne dane mapowe świata 👌',
-  'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> – wektorowe kafelki, hosting, mapa zewnętrzna<br>Wielkie podziękowania za wsparcie tego projektu! 🙂 ',
+  'map.maptiler_copyright_tooltip':
+    '(c) MapTiler.com ❤️ <br> – wektorowe kafelki, hosting, mapa zewnętrzna<br>Wielkie podziękowania za wsparcie tego projektu! 🙂 ',
   'map.more_button': 'więcej',
   'map.more_button_title': 'Więcej opcji…',
   'map.edit_link': 'Edytuj ten obszar w edytorze iD',
@@ -100,7 +101,8 @@ export default {
   'editdialog.add_major_tag': 'Dodaj',
   'editdialog.location_checkbox': 'Zmień położenie',
   'editdialog.location_placeholder': 'np. przez ulicę',
-  'editdialog.location_editor_to_be_added': 'Położenie nie może zostać póki co poddane edycji, możesz ją przeprowadzić w <a href="__link__">edytorze iD</a>.',
+  'editdialog.location_editor_to_be_added':
+    'Położenie nie może zostać póki co poddane edycji, możesz ją przeprowadzić w <a href="__link__">edytorze iD</a>.',
   'editdialog.place_cancelled': 'Miejsce zamknięte na stałe (usunięte)',
   'editdialog.comment': 'Komentarz (opcjonalnie)',
   'editdialog.comment_placeholder': 'odnośnik do źródła informacji itd.',
