@@ -17,6 +17,7 @@ module.exports = withPWA({
     commitMessage: process.env.VERCEL_GIT_COMMIT_MESSAGE || 'dev',
     languages: {
       en: 'English',
+      fr: 'Français',
       cs: 'česky',
       pl: 'polski',
       de: 'Deutsch',
