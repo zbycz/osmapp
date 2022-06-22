@@ -110,9 +110,10 @@ const getAdditionalText = (props) => {
 export const buildPhotonAddress = ({
   place,
   street,
+  city,
   housenumber: hnum,
   streetnumber: snum,
-}) => join(street ?? place, ' ', hnum ? hnum.replace(' ', '/') : snum);
+}) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
 export const renderOptionFactory = (inputValue) => (option) => {
   const { properties, geometry } = option;
