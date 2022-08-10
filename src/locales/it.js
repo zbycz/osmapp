@@ -24,7 +24,7 @@ export default {
   'homepage.examples.eg': 'ad es.',
   'homepage.examples.charles_bridge_statues': 'Statue del ponte Carlo',
   'homepage.screenshot_alt': 'Schermata di OsmAPP',
-  'homepage.about_osm': `Ogni data della mappa proviene da
+  'homepage.about_osm': `Ogni dato della mappa proviene da
       <a href="https://osm.org">OpenStreetMap</a>, una mappa (simile a Wikipedia)
       creata da milioni di contributori. Trovi
       il pusalnte <em>Modifica</em> su ogni elemento della mappa.`,
@@ -78,7 +78,7 @@ export default {
   'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> (tasselli vettoriali, hosting, mappa outdoor<br>Grazie infinite per il supporto a questo progetto! 🙂 ',
   'map.more_button': 'altro',
   'map.more_button_title': 'Altre opzioni…',
-  'map.edit_link': 'Modifica quest’area su iD editor',
+  'map.edit_link': 'Modifica quest’area con iD editor',
   'map.about_link': 'Informazioni su questa app',
 
   'editdialog.add_heading': 'Aggiungi su OpenStreetMap',
