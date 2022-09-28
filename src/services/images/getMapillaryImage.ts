@@ -1,25 +1,44 @@
 import { fetchJson } from '../fetch';
-import { removeFetchCache } from '../fetchCache';
 import { Image, Position } from '../types';
 
-const getMapillaryImageRaw = async (center: Position): Promise<Image> => {
-  const lonlat = center.map((x) => x.toFixed(5)).join(',');
-  const url = `https://a.mapillary.com/v3/images?client_id=TTdNZ2w5eTF6MEtCNUV3OWNhVER2dzpjMjdiZGE1MWJmYzljMmJi&lookat=${lonlat}&closeto=${lonlat}`;
-  const { features } = await fetchJson(url);
+const deltaAngle = (a: number, b: number): number =>
+  Math.min(Math.abs(a - b), a - b + 360);
 
-  // {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"ca":71.80811,"camera_make":"Apple","camera_model":"iPhone6,2","captured_at":"2015-05-08T06:02:41.227Z","key":"rPU1sldzMCVIMN2XmjDf2A","pano":false,"sequence_key":"-zanzZ2HpdOhkw-uG166Pg","user_key":"M7Mgl9y1z0KB5Ew9caTDvw","username":"zbycz"},"geometry":{"type":"Point","coordinates":[14.390517,50.100268]}}]}
-  if (!features.length) {
-    removeFetchCache(url); // mapillary sometimes returns image on second try (lets not cache the first try)
-    return undefined;
+const bearing = (a1: number, a2: number, b1: number, b2: number): number => {
+  const rad2deg = 57.2957795130823209;
+  if (a1 === b1 && a2 === b2) return Infinity;
+  let theta = Math.atan2(b1 - a1, a2 - b2);
+  if (theta < 0) theta += Math.PI * 2;
+  return rad2deg * theta;
+};
+
+const getMapillaryImageRaw = async (pPoi: Position): Promise<Image> => {
+  const bbox = `${pPoi[0] - 0.0004},${pPoi[1] - 0.0004},${pPoi[0] + 0.0004},${
+    pPoi[1] + 0.0004
+  }`;
+  const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,captured_at,thumb_1024_url&bbox=${bbox}`;
+  const { data } = await fetchJson(url);
+
+  let bestImg = null;
+
+  for (let i = 0; i < data.length; i += 1) {
+    const pImg = data[i].computed_geometry.coordinates;
+    const bear = bearing(pImg[0], pImg[1], pPoi[0], pPoi[1]);
+    data[i].angleToPoi = deltaAngle(bear, data[i].compass_angle);
+    if (
+      data[i].angleToPoi < 50 &&
+      (bestImg == null || bestImg.angleToPoi > data[i].angleToPoi)
+    ) {
+      bestImg = data[i];
+    }
   }
 
-  const image = features[0];
-  const { key, username } = image.properties;
+  if (bestImg === null) return undefined;
+
   return {
     source: 'Mapillary',
-    username,
-    link: `https://www.mapillary.com/app/?focus=photo&pKey=${key}`,
-    thumb: `https://images.mapillary.com/${key}/thumb-640.jpg`,
+    link: `https://www.mapillary.com/app/?focus=photo&pKey=${bestImg.id}`,
+    thumb: bestImg.thumb_1024_url,
   };
 };
 
