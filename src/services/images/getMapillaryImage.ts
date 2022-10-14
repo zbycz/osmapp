@@ -1,7 +1,7 @@
+import maplibregl from 'maplibre-gl';
 import { fetchJson } from '../fetch';
 import { Image, Position } from '../types';
-import { getGlobalMap } from "../mapStorage";
-import maplibregl from "maplibre-gl";
+import { getGlobalMap } from '../mapStorage';
 
 const subtractAngle = (a: number, b: number): number =>
   Math.min(Math.abs(a - b), a - b + 360);
@@ -11,14 +11,30 @@ export const getBearing = ([aX, aY]: Position, [bX, bY]: Position): number => {
   return angle < 0 ? angle + 360 : angle;
 };
 
-const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
-  const bbox = `${poiCoords[0] - 0.0004},${poiCoords[1] - 0.0004},${
-    poiCoords[0] + 0.0004
-  },${poiCoords[1] + 0.0004}`;
+const debugOutput = (sorted) => {
+  if (global?.window?.localStorage.getItem('debug_mapillary')) {
+    console.log('Sorted photos:', sorted);
+    sorted.forEach((item) => {
+      new maplibregl.Marker({ rotation: item.compass_angle })
+        .setLngLat(item.computed_geometry.coordinates)
+        .addTo(getGlobalMap());
+    });
+    new maplibregl.Marker({ rotation: sorted[0].compass_angle, color: '#f55' })
+      .setLngLat(sorted[0].computed_geometry.coordinates)
+      .addTo(getGlobalMap());
+  }
+};
 
+const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
   // https://www.mapillary.com/developer/api-documentation/#image
   // left, bottom, right, top (or minLon, minLat, maxLon, maxLat)
-  // consider computed_compass_angle - it is zero for many images, so we would have to fallback to compass_angle
+  const bbox = [
+    poiCoords[0] - 0.0004,
+    poiCoords[1] - 0.0004,
+    poiCoords[0] + 0.0004,
+    poiCoords[1] + 0.0004,
+  ];
+  // consider computed_compass_angle - but it is zero for many images, so we would have to fallback to compass_angle
   const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,captured_at,thumb_1024_url&bbox=${bbox}`;
   const { data } = await fetchJson(url);
 
@@ -26,38 +42,27 @@ const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
     return undefined;
   }
 
-  const itemsWithDeviation = data.map((item) => {
+  const photos = data.map((item) => {
     const photoCoords = item.computed_geometry.coordinates;
     const angleFromPhotoToPoi = getBearing(photoCoords, poiCoords);
     const deviationFromStraightSight = subtractAngle(
       angleFromPhotoToPoi,
       item.compass_angle,
     );
-
-    new maplibregl.Marker({ rotation: item.compass_angle })
-      .setLngLat(photoCoords)
-      .addTo(getGlobalMap());
-
     return { ...item, angleFromPhotoToPoi, deviationFromStraightSight };
   });
 
-  console.log({ itemsWithDeviation });
-
-  const closest = itemsWithDeviation.reduce((acc, item) =>
-    acc.deviationFromStraightSight < item.deviationFromStraightSight
-      ? acc
-      : item,
+  const sorted = photos.sort(
+    (a, b) => a.deviationFromStraightSight - b.deviationFromStraightSight,
   );
 
-  new maplibregl.Marker({ rotation: closest.compass_angle, color: '#eb5757' })
-    .setLngLat(closest.computed_geometry.coordinates)
-    .addTo(getGlobalMap());
+  debugOutput(sorted);
 
   return {
     source: 'Mapillary',
-    link: `https://www.mapillary.com/app/?focus=photo&pKey=${closest.id}`,
-    thumb: closest.thumb_1024_url,
-    timestamp: new Date(closest.captured_at).toLocaleString()
+    link: `https://www.mapillary.com/app/?focus=photo&pKey=${sorted[0].id}`,
+    thumb: sorted[0].thumb_1024_url,
+    timestamp: new Date(sorted[0].captured_at).toLocaleString(),
   };
 };
 
