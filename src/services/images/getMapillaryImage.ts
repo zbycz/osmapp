@@ -1,25 +1,68 @@
+import maplibregl from 'maplibre-gl';
 import { fetchJson } from '../fetch';
-import { removeFetchCache } from '../fetchCache';
 import { Image, Position } from '../types';
+import { getGlobalMap } from '../mapStorage';
 
-const getMapillaryImageRaw = async (center: Position): Promise<Image> => {
-  const lonlat = center.map((x) => x.toFixed(5)).join(',');
-  const url = `https://a.mapillary.com/v3/images?client_id=TTdNZ2w5eTF6MEtCNUV3OWNhVER2dzpjMjdiZGE1MWJmYzljMmJi&lookat=${lonlat}&closeto=${lonlat}`;
-  const { features } = await fetchJson(url);
+const subtractAngle = (a: number, b: number): number =>
+  Math.min(Math.abs(a - b), a - b + 360);
 
-  // {"type":"FeatureCollection","features":[{"type":"Feature","properties":{"ca":71.80811,"camera_make":"Apple","camera_model":"iPhone6,2","captured_at":"2015-05-08T06:02:41.227Z","key":"rPU1sldzMCVIMN2XmjDf2A","pano":false,"sequence_key":"-zanzZ2HpdOhkw-uG166Pg","user_key":"M7Mgl9y1z0KB5Ew9caTDvw","username":"zbycz"},"geometry":{"type":"Point","coordinates":[14.390517,50.100268]}}]}
-  if (!features.length) {
-    removeFetchCache(url); // mapillary sometimes returns image on second try (lets not cache the first try)
+export const getBearing = ([aX, aY]: Position, [bX, bY]: Position): number => {
+  const angle = (Math.atan2(bX - aX, bY - aY) * 180) / Math.PI;
+  return angle < 0 ? angle + 360 : angle;
+};
+
+const debugOutput = (sorted) => {
+  if (global?.window?.localStorage.getItem('debug_mapillary')) {
+    console.log('Sorted photos:', sorted);
+    sorted.forEach((item) => {
+      new maplibregl.Marker({ rotation: item.compass_angle })
+        .setLngLat(item.computed_geometry.coordinates)
+        .addTo(getGlobalMap());
+    });
+    new maplibregl.Marker({ rotation: sorted[0].compass_angle, color: '#f55' })
+      .setLngLat(sorted[0].computed_geometry.coordinates)
+      .addTo(getGlobalMap());
+  }
+};
+
+const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
+  // https://www.mapillary.com/developer/api-documentation/#image
+  // left, bottom, right, top (or minLon, minLat, maxLon, maxLat)
+  const bbox = [
+    poiCoords[0] - 0.0004,
+    poiCoords[1] - 0.0004,
+    poiCoords[0] + 0.0004,
+    poiCoords[1] + 0.0004,
+  ];
+  // consider computed_compass_angle - but it is zero for many images, so we would have to fallback to compass_angle
+  const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,captured_at,thumb_1024_url&bbox=${bbox}`;
+  const { data } = await fetchJson(url);
+
+  if (!data.length) {
     return undefined;
   }
 
-  const image = features[0];
-  const { key, username } = image.properties;
+  const photos = data.map((item) => {
+    const photoCoords = item.computed_geometry.coordinates;
+    const angleFromPhotoToPoi = getBearing(photoCoords, poiCoords);
+    const deviationFromStraightSight = subtractAngle(
+      angleFromPhotoToPoi,
+      item.compass_angle,
+    );
+    return { ...item, angleFromPhotoToPoi, deviationFromStraightSight };
+  });
+
+  const sorted = photos.sort(
+    (a, b) => a.deviationFromStraightSight - b.deviationFromStraightSight,
+  );
+
+  debugOutput(sorted);
+
   return {
     source: 'Mapillary',
-    username,
-    link: `https://www.mapillary.com/app/?focus=photo&pKey=${key}`,
-    thumb: `https://images.mapillary.com/${key}/thumb-640.jpg`,
+    link: `https://www.mapillary.com/app/?focus=photo&pKey=${sorted[0].id}`,
+    thumb: sorted[0].thumb_1024_url,
+    timestamp: new Date(sorted[0].captured_at).toLocaleString(),
   };
 };
 
