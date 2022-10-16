@@ -23,6 +23,7 @@ module.exports = withPWA({
       de: 'Deutsch',
       am: 'አማርኛ',
       it: 'Italiano',
+      es: 'Español',
     },
   },
   webpack: (config, { dev, isServer }) => {
