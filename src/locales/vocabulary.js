@@ -92,6 +92,7 @@ export default {
   'editdialog.save_button_delete': 'Delete',
   'editdialog.save_button_note': 'Add note',
   'editdialog.changes_needed': 'Please, make some changes.',
+  'editdialog.osm_session_expired': 'Your OpenStreetMap session has expired. Please, log in again.',
   'editdialog.loggedInMessage': 'You are logged in as <b>__osmUser__</b>, changes will be saved immediately.',
   'editdialog.logout': 'logout',
   'editdialog.anonymousMessage1': 'An <b>anonymous</b> note will be added to the map.<br />If you',

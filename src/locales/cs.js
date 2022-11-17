@@ -89,6 +89,7 @@ export default {
   'editdialog.save_button_delete': 'Smazat',
   'editdialog.save_button_note': 'Odeslat návrh',
   'editdialog.changes_needed': 'Proveďte, prosím, požadované změny.',
+  'editdialog.osm_session_expired': 'Vaše přihlášení do OpenStreetMap vypršelo. Prosím, přihlašte se znovu.',
   'editdialog.loggedInMessage': 'Jste přihlášeni jako <b>__osmUser__</b>, změny se ihned projeví v mapě.',
   'editdialog.logout': 'odhlásit',
   'editdialog.anonymousMessage1': 'Vkládáte <b>anonymní</b> poznámku do mapy.<br />Pokud se',

@@ -80,6 +80,7 @@ const saveDialog = ({
   setLoading,
   setSuccessInfo,
   isUndelete,
+  handleLogout,
 }) => {
   const tagsWithType = typeTag
     ? { [typeTag.key]: typeTag.value, ...tags }
@@ -107,8 +108,13 @@ const saveDialog = ({
     : insertOsmNote(feature.center, noteText);
 
   promise.then(setSuccessInfo, (err) => {
-    console.error(err); // eslint-disable-line no-console
-    setTimeout(() => setLoading(false), 1000);
+    if (err?.status === 401) {
+      alert(t('editdialog.osm_session_expired')); // eslint-disable-line no-alert
+      handleLogout();
+    } else {
+      console.error(err); // eslint-disable-line no-console
+    }
+    setTimeout(() => setLoading(false), 500);
   });
 };
 
@@ -121,7 +127,7 @@ export const EditDialog = ({
   isUndelete,
 }: Props) => {
   const router = useRouter();
-  const { loggedIn } = useOsmAuthContext();
+  const { loggedIn, handleLogout } = useOsmAuthContext();
   const fullScreen = useIsFullScreen();
   const [typeTag, setTypeTag] = useState('');
   const [tags, setTag] = useTagsState(feature.tags); // TODO all these should go into `values`, consider Formik
@@ -152,6 +158,7 @@ export const EditDialog = ({
       setLoading,
       setSuccessInfo,
       isUndelete,
+      handleLogout,
     });
 
   const dialogTitle = useGetDialogTitle(isAddPlace, isUndelete, feature);
