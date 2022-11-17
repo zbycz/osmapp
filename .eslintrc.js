@@ -33,5 +33,6 @@ module.exports = {
     // "@typescript-eslint/no-unused-vars-experimental": ERROR,
     'react/require-default-props': OFF,
     'no-nested-ternary': OFF,
+    'no-irregular-whitespace': OFF,
   },
 };

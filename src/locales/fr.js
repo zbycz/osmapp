@@ -17,7 +17,8 @@ export default {
   'install.desktop_intro': 'Ouvrir osmapp.org dans <strong>Chrome</strong>, <strong>Firefox</strong> ou <strong>Opera</strong>',
   'install.desktop_install': 'Cliquer sur le <strong>bouton d’installation</strong>',
   'install.outro': 'C’est tout ! OsmApp est sur votre écran d’accueil.',
-  'install.note': 'Note : Cette application fait appel à PWA pour permettre une installation rapide et sans faire appel à Google Play ou l’App Store.',
+  'install.note':
+    'Note : Cette application fait appel à PWA pour permettre une installation rapide et sans faire appel à Google Play ou l’App Store.',
 
   'homepage.subtitle': 'Une application OpenStreetMap universelle',
   'homepage.how_to_start': 'Commencez en tapant votre requête dans la barre de recherche.\nOu cliquez sur un élément de la carte.',
@@ -51,7 +52,7 @@ export default {
   'featurepanel.directions_button': 'Navigation',
   'featurepanel.error': 'Erreur __code__ lors de la requête OpenStreetMap',
   'featurepanel.error_unknown': 'Erreur inconnue lors de la requête OpenStreetMap.',
-  'featurepanel.error_network': "Requête impossible, veuillez vérifier votre connexion.",
+  'featurepanel.error_network': 'Requête impossible, veuillez vérifier votre connexion.',
   'featurepanel.error_deleted': 'Cet élément n’existe plus sur OpenStreetMap.',
   'featurepanel.history_button': 'Historique»',
   'featurepanel.other_info_heading': 'Plus d’informations',
@@ -75,7 +76,8 @@ export default {
   'map.github_title': 'GitHub',
   'map.language_title': 'Langue',
   'map.osm_copyright_tooltip': '© bénévoles OpenStreetMap.org<br> – données libres de la Terre 👌',
-  'map.maptiler_copyright_tooltip': '© MapTiler.com ❤️<br> – tuiles vectorielles, hébergement, carte de plein air<br>Un grand merci pour son support dans ce projet ! 🙂 ',
+  'map.maptiler_copyright_tooltip':
+    '© MapTiler.com ❤️<br> – tuiles vectorielles, hébergement, carte de plein air<br>Un grand merci pour son support dans ce projet ! 🙂 ',
   'map.more_button': 'Plus',
   'map.more_button_title': 'Plus d’options…',
   'map.edit_link': 'Modifier dans l’éditeur iD',
@@ -100,7 +102,8 @@ export default {
   'editdialog.add_major_tag': 'Ajouter',
   'editdialog.location_checkbox': 'Déplacer',
   'editdialog.location_placeholder': 'ex : de l’autre côté de la rue',
-  'editdialog.location_editor_to_be_added': 'L’application ne peut pas encore déplacer cet élément, vous pouvez le faire via l’<a href="__link__">éditeur iD</a>.',
+  'editdialog.location_editor_to_be_added':
+    'L’application ne peut pas encore déplacer cet élément, vous pouvez le faire via l’<a href="__link__">éditeur iD</a>.',
   'editdialog.place_cancelled': 'Élément inexistant (suppression)',
   'editdialog.comment': 'Commentaire (optionnel)',
   'editdialog.comment_placeholder': 'Lien vers la source, etc…',

@@ -1,4 +1,4 @@
-import { addFeatureCenterToCache, fetchFeature } from "../osmApi";
+import { addFeatureCenterToCache, fetchFeature } from '../osmApi';
 import * as helpers from '../../components/helpers';
 import * as fetch from '../fetch';
 import {

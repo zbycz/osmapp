@@ -51,7 +51,7 @@ export default {
   'featurepanel.directions_button': 'Indicazioni',
   'featurepanel.error': 'Errore __code__ durante il recupero di un elemento da OpenStreetMap',
   'featurepanel.error_unknown': 'Errore sconosciuto durante il recupero di un elemento da OpenStreetMap.',
-  'featurepanel.error_network': "Impossibile recuperare l’elemento, controlla il tuo cavo di rete.",
+  'featurepanel.error_network': 'Impossibile recuperare l’elemento, controlla il tuo cavo di rete.',
   'featurepanel.error_deleted': 'Questo oggetto è segnato come eliminato su OpenStreetMap.',
   'featurepanel.history_button': 'Cronologia »',
   'featurepanel.other_info_heading': 'Altre informationi',
@@ -75,7 +75,8 @@ export default {
   'map.github_title': 'GitHub',
   'map.language_title': 'Cambia lingua',
   'map.osm_copyright_tooltip': '(c) OpenStreetMap.org contributori<br> (la mappa libera della Terra 👌)',
-  'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> (tasselli vettoriali, hosting, mappa outdoor<br>Grazie infinite per il supporto a questo progetto! 🙂 ',
+  'map.maptiler_copyright_tooltip':
+    '(c) MapTiler.com ❤️ <br> (tasselli vettoriali, hosting, mappa outdoor<br>Grazie infinite per il supporto a questo progetto! 🙂 ',
   'map.more_button': 'altro',
   'map.more_button_title': 'Altre opzioni…',
   'map.edit_link': 'Modifica quest’area con iD editor',
@@ -122,7 +123,8 @@ export default {
   'editsuccess.close_button': 'Chiudi',
   'editsuccess.note.heading': 'Grazie per il tuo suggerimento!',
   'editsuccess.note.subheading': 'I volontari di OpenStreetMap se ne occuperanno a breve.',
-  'editsuccess.note.body': 'In genere ci vorranno alcuni giorni. Tuttavia, nelle aree in cui non è presente una comunità attiva, potrebbe volerci molto tempo.',
+  'editsuccess.note.body':
+    'In genere ci vorranno alcuni giorni. Tuttavia, nelle aree in cui non è presente una comunità attiva, potrebbe volerci molto tempo.',
   'editsuccess.note.urlLabel': 'Puoi aggiungere informazioni oppure seguire gli aggiornamenti qua:',
   'editsuccess.note.textLabel': 'Testo della nota',
   'editsuccess.edit.heading': 'Grazie per la tua modifica!',

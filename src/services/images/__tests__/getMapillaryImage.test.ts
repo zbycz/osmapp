@@ -1,5 +1,5 @@
-import { Position } from "../../types";
-import { getBearing } from "../getMapillaryImage";
+import { Position } from '../../types';
+import { getBearing } from '../getMapillaryImage';
 
 const point: Position = [0, 0];
 const pointAbove: Position = [0, 1];
@@ -9,7 +9,7 @@ const pointBelow: Position = [0, -1]; // 180
 const point225: Position = [-1, -1]; // 180+45
 const pointLeft: Position = [-1, 0];
 
-const praha: Position = [14.3, 50.1];  //lon, lat  --> x,y
+const praha: Position = [14.3, 50.1]; // lon, lat  --> x,y
 const liberec: Position = [15.05, 50.75];
 
 describe('getBearing', () => {
@@ -27,5 +27,5 @@ describe('getBearing', () => {
     expect(getBearing(point, pointLeft)).toEqual(270);
 
     expect(Math.round(getBearing(praha, liberec))).toEqual(49);
-  })
+  });
 });

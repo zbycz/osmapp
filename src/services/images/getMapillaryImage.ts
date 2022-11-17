@@ -13,7 +13,7 @@ export const getBearing = ([aX, aY]: Position, [bX, bY]: Position): number => {
 
 const debugOutput = (sorted) => {
   if (global?.window?.localStorage.getItem('debug_mapillary')) {
-    console.log('Sorted photos:', sorted);
+    console.log('Sorted photos:', sorted); // eslint-disable-line no-console
     sorted.forEach((item) => {
       new maplibregl.Marker({ rotation: item.compass_angle })
         .setLngLat(item.computed_geometry.coordinates)

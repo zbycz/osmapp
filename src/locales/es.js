@@ -51,7 +51,7 @@ export default {
   'featurepanel.directions_button': 'Indicaciones',
   'featurepanel.error': 'Error __code__ obteniendo un elemento de OpenStreetMap',
   'featurepanel.error_unknown': 'Error desconocido obteniendo un elemento de OpenStreetMap.',
-  'featurepanel.error_network': "No es posible obtener, comprueba tu cable de red.",
+  'featurepanel.error_network': 'No es posible obtener, comprueba tu cable de red.',
   'featurepanel.error_deleted': 'Este objeto está marcado como borrado en OpenStreetMap.',
   'featurepanel.history_button': 'Historia »',
   'featurepanel.other_info_heading': 'Más información',
@@ -75,7 +75,8 @@ export default {
   'map.github_title': 'GitHub',
   'map.language_title': 'Cambiar idioma',
   'map.osm_copyright_tooltip': '(c) Colaboradores de OpenStreetMap.org <br> – el mapa libre de la Tierra 👌',
-  'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> – mosáicos vectoriales, alojamiento, mapa de exteriores<br>Muchas gracias por apoyar a este proyecto! 🙂 ',
+  'map.maptiler_copyright_tooltip':
+    '(c) MapTiler.com ❤️ <br> – mosáicos vectoriales, alojamiento, mapa de exteriores<br>Muchas gracias por apoyar a este proyecto! 🙂 ',
   'map.more_button': 'más',
   'map.more_button_title': 'Más opciones…',
   'map.edit_link': 'Editar esta zona en el editor iD',
@@ -122,7 +123,8 @@ export default {
   'editsuccess.close_button': 'Cerrar',
   'editsuccess.note.heading': '¡Gracias por tu sugerencia!',
   'editsuccess.note.subheading': 'Voluntarios de OpenStreetMap lo procesarán en un tiempo.',
-  'editsuccess.note.body': 'Normalmente esto lleva unos pocos días. Sin embargo, en lugares sin una comunidad activa esto puede llevar un tiempo muy largo.',
+  'editsuccess.note.body':
+    'Normalmente esto lleva unos pocos días. Sin embargo, en lugares sin una comunidad activa esto puede llevar un tiempo muy largo.',
   'editsuccess.note.urlLabel': 'Puedes añadir información o seguir las actualizaciones aquí:',
   'editsuccess.note.textLabel': 'Texto de la nota',
   'editsuccess.edit.heading': '¡Gracias por tu edición!',
