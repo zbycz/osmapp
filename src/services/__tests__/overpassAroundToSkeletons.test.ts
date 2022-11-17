@@ -9,7 +9,7 @@ relation(around:15,50.09336,14.29095);
 out geom(50.09176,14.29022,50.09482,14.29359);
 */
 
-export const response = {
+const response = {
   version: 0.6,
   generator: 'Overpass API 0.7.56.9 76e5016d',
   osm3s: {
@@ -95,21 +95,22 @@ export const response = {
 
 const skeletons = [
   {
-    type: 'Feature',
     center: [14.2909859, 50.0934005],
     geometry: {
       coordinates: [14.2909859, 50.0934005],
       type: 'Point',
     },
     osmMeta: {
-      type: 'node',
       id: 4732783521,
+      type: 'node',
     },
-    properties: {},
+    properties: {
+      class: 'information',
+    },
     tags: {},
+    type: 'Feature',
   },
   {
-    type: 'Feature',
     center: [14.2909539, 50.0933537],
     geometry: {
       coordinates: [14.2909539, 50.0933537],
@@ -120,16 +121,16 @@ const skeletons = [
       type: 'node',
     },
     properties: {
-      class: 'crossing',
+      class: 'information',
       subclass: 'crossing',
     },
     tags: {
       crossing: 'marked',
       highway: 'crossing',
     },
+    type: 'Feature',
   },
   {
-    type: 'Feature',
     center: [14.2912055, 50.09337305],
     geometry: {
       coordinates: [
@@ -143,15 +144,18 @@ const skeletons = [
       id: 480276447,
       type: 'way',
     },
-    properties: {},
+    properties: {
+      class: 'building',
+      subclass: 'roof',
+    },
     tags: {
       building: 'roof',
       height: '18',
       layer: '3',
     },
+    type: 'Feature',
   },
   {
-    type: 'Feature',
     center: [14.290311249999998, 50.093789799999996],
     geometry: {
       coordinates: [
@@ -173,6 +177,7 @@ const skeletons = [
       layer: '2',
       type: 'multipolygon',
     },
+    type: 'Feature',
   },
 ];
 

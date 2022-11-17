@@ -1,4 +1,4 @@
-import { fetchFeature } from '../osmApi';
+import { addFeatureCenterToCache, fetchFeature } from "../osmApi";
 import * as helpers from '../../components/helpers';
 import * as fetch from '../fetch';
 import {
@@ -21,6 +21,7 @@ describe('fetchFeature', () => {
   });
 
   const isServer = jest.spyOn(helpers, 'isServer').mockReturnValue(true);
+  const isBrowser = jest.spyOn(helpers, 'isBrowser').mockReturnValue(false);
 
   it('should work for node', async () => {
     const fetchJson = jest
@@ -56,8 +57,11 @@ describe('fetchFeature', () => {
     expect(feature).toEqual(relationFeature);
   });
 
-  it('should not return center for a way in BROWSER', async () => {
+  it('should return cached center for a way in BROWSER', async () => {
+    isBrowser.mockReturnValue(true);
     isServer.mockReturnValue(false);
+    addFeatureCenterToCache('w51050330', [123, 456]);
+
     const fetchJson = jest
       .spyOn(fetch, 'fetchJson')
       .mockImplementation((url) =>
@@ -66,6 +70,6 @@ describe('fetchFeature', () => {
 
     const feature = await fetchFeature('w51050330');
     expect(fetchJson).toHaveBeenCalledTimes(1);
-    expect(feature).toEqual({ ...wayFeature, center: undefined });
+    expect(feature).toMatchObject({ ...wayFeature, center: [123, 456] });
   });
 });

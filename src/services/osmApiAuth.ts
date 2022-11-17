@@ -30,10 +30,10 @@ const oauth = prod
     }
   : {
       // https://master.apis.dev.openstreetmap.org/changeset/1599
-      // https://master.apis.dev.openstreetmap.org/node/967531
       oauth_consumer_key: 'eWdvGfVsTdhRCGtwRkn4qOBaBAIuVNX9gTX63TUm',
       oauth_secret: 'O0UXzrNbpFkbIVB0rqumhMSdqdC1wa9ZFMpPUBYG',
     };
+const TEST_OSM_ID = { type: 'node', id: '967531' }; // https://master.apis.dev.openstreetmap.org/node/967531
 
 const auth = new OsmAuth({
   ...oauth,
@@ -210,7 +210,7 @@ export const editOsmFeature = async (
   newTags: FeatureTags,
   isDelete: boolean,
 ) => {
-  const apiId = prod ? feature.osmMeta : { type: 'node', id: '967531' };
+  const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
   const changesetComment = getChangesetComment(comment, isDelete, feature);
   const changesetXml = getChangesetXml({ changesetComment, feature });
 
