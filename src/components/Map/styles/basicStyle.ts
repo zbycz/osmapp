@@ -1443,6 +1443,46 @@ export const basicStyle = addHoverPaint({
       },
     },
     {
+      id: 'road_oneway',
+      type: 'symbol',
+      source: 'maptiler_planet',
+      'source-layer': 'transportation',
+      minzoom: 16,
+      layout: {
+        'icon-size': {
+          stops: [
+            [16, 0.5],
+            [19, 1],
+          ],
+        },
+        'text-font': [],
+        'icon-image': 'oneway',
+        visibility: 'visible',
+        'icon-rotate': ['match', ['get', 'oneway'], 1, 90, -90],
+        'icon-padding': 2,
+        'symbol-spacing': 150,
+        'symbol-placement': 'line',
+        'icon-rotation-alignment': 'map',
+        'symbol-avoid-edges': false,
+      },
+      paint: { 'icon-opacity': 0.4 },
+      filter: [
+        'all',
+        ['==', 'oneway', 1],
+        [
+          'in',
+          'class',
+          'motorway',
+          'trunk',
+          'primary',
+          'secondary',
+          'tertiary',
+          'minor',
+          'service',
+        ],
+      ],
+    },
+    {
       id: 'railway-transit',
       type: 'line',
       metadata: {
@@ -2342,7 +2382,7 @@ export const basicStyle = addHoverPaint({
         'text-size': 10,
         'icon-image': 'road_{ref_length}',
         'icon-rotation-alignment': 'viewport',
-        'symbol-spacing': 200,
+        'symbol-spacing': 250,
         'text-font': ['Noto Sans Regular'],
         'symbol-placement': {
           base: 1,
@@ -2373,7 +2413,7 @@ export const basicStyle = addHoverPaint({
         'text-size': 10,
         'icon-image': '{network}_{ref_length}',
         'icon-rotation-alignment': 'viewport',
-        'symbol-spacing': 200,
+        'symbol-spacing': 250,
         'text-font': ['Noto Sans Regular'],
         'symbol-placement': {
           base: 1,
@@ -2407,7 +2447,7 @@ export const basicStyle = addHoverPaint({
         'text-size': 10,
         'icon-image': '{network}_{ref_length}',
         'icon-rotation-alignment': 'viewport',
-        'symbol-spacing': 200,
+        'symbol-spacing': 250,
         'text-font': ['Noto Sans Regular'],
         'symbol-placement': {
           base: 1,
@@ -2423,6 +2463,34 @@ export const basicStyle = addHoverPaint({
       paint: {
         'text-color': 'rgba(0, 0, 0, 1)',
       },
+    },
+    {
+      id: 'highway-junction',
+      type: 'symbol',
+      source: 'maptiler_planet',
+      'source-layer': 'transportation_name',
+      minzoom: 14,
+      maxzoom: 24,
+      layout: {
+        'text-font': ['Noto Sans Regular'],
+        'text-size': 12,
+        'text-field': 'Exit {ref}',
+        'text-pitch-alignment': 'auto',
+        'text-rotation-alignment': 'viewport',
+        'symbol-z-order': 'auto',
+      },
+      paint: {
+        'text-color': 'rgba(94, 94, 94, 1)',
+        'text-halo-blur': 0.5,
+        'text-halo-color': 'hsl(0, 0%, 100%)',
+        'text-halo-width': 1,
+      },
+      filter: [
+        'all',
+        ['==', '$type', 'Point'],
+        ['==', 'subclass', 'junction'],
+        ['>', 'ref_length', 0],
+      ],
     },
     {
       id: 'airport-label-major',
