@@ -2469,7 +2469,7 @@ export const basicStyle = addHoverPaint({
       type: 'symbol',
       source: 'maptiler_planet',
       'source-layer': 'transportation_name',
-      minzoom: 14,
+      minzoom: 12,
       maxzoom: 24,
       layout: {
         'text-font': ['Noto Sans Regular'],
