@@ -75,6 +75,9 @@ const FeaturePanel = () => {
               advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
             }
             onEdit={setDialogOpenedWith}
+            key={
+              getUrlOsmId(osmMeta) // we need to refresh inner state
+            }
           />
 
           {advanced && <Members />}
