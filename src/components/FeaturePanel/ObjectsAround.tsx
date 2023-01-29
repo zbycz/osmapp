@@ -25,7 +25,7 @@ const useLoadingState = () => {
     setError(undefined);
   };
   const failAround = (err) => {
-    setError(err instanceof FetchError ? err.message : err);
+    setError(err.message ? err.message : JSON.stringify(err));
     setLoading(false);
   };
   return { around, error, loading, startAround, finishAround, failAround };
@@ -90,11 +90,11 @@ export const ObjectsAround = ({ advanced }) => {
           if (item.properties.subclass === 'building:part') return false;
           return true;
         })
-        .sort(
-          (a, b) =>
-            (b.properties.class === 'home' ? -5 : Object.keys(b.tags).length) - // leave address points at the bottom
-            Object.keys(a.tags).length,
-        )
+        // .sort(
+        //   (a, b) =>
+        //     (b.properties.class === 'home' ? -5 : Object.keys(b.tags).length) - // leave address points at the bottom
+        //     Object.keys(a.tags).length,
+        // )
         .slice(0, 10);
 
   return (

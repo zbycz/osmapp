@@ -155,13 +155,28 @@ export const insertOsmNote = async (point: Position, text: string) => {
 const getAroundUrl = ([lat, lon]: Position) =>
   `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
     `[timeout:5][out:json];(
-        relation[~"."~"."](around:500,${lon},${lat});
-        way[~"."~"."](around:1000,${lon},${lat});
-        node[~"."~"."](around:1000,${lon},${lat});
-      );out 20 body qt center;`, // some will be filtered out
+        relation[~"."~"."](around:50,${lon},${lat});
+        way[~"."~"."](around:50,${lon},${lat});
+        node[~"."~"."](around:50,${lon},${lat});
+      );out 400 body qt center;`, // some will be filtered out
   )}`;
+
+// intentionaly wrong distance, but faster
+const getDist = (center: Position, point: Position) =>
+  Math.sqrt(
+    Math.pow(center[0] - point[0], 2) + Math.pow(center[1] - point[1], 2),
+  );
 
 export const fetchAroundFeature = async (point: Position) => {
   const response = await fetchJson(getAroundUrl(point));
-  return overpassAroundToSkeletons(response);
+  const features = overpassAroundToSkeletons(response);
+  return features.sort((a, b) => {
+    if (a.center === undefined || b.center === undefined) {
+      return 100;
+    }
+    if (b.properties.class === 'home') {
+      return -1;
+    }
+    return getDist(a.center, point) - getDist(b.center, point);
+  });
 };
