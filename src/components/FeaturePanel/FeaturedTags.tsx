@@ -2,7 +2,7 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
 import { t } from '../../services/intl';
-import Property from './Property';
+import { FeaturedTag } from './FeaturedTag';
 
 const Spacer = styled.div`
   padding-bottom: 10px;
@@ -14,7 +14,7 @@ export const FeaturedTags = ({ featuredTags, setDialogOpenedWith }) => {
   return (
     <>
       {featuredTags.map(([k, v]) => (
-        <Property key={k} k={k} v={v} onEdit={setDialogOpenedWith} />
+        <FeaturedTag key={k} k={k} v={v} onEdit={setDialogOpenedWith} />
       ))}
       <Spacer />
 

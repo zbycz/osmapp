@@ -43,7 +43,7 @@ const renderers = {
   opening_hours: OpeningHoursRenderer,
 };
 
-const Property = ({ k, v, onEdit }) => {
+export const FeaturedTag = ({ k, v, onEdit }) => {
   const Renderer = renderers[k] || DefaultRenderer;
 
   return (
@@ -54,5 +54,3 @@ const Property = ({ k, v, onEdit }) => {
     </Wrapper>
   );
 };
-
-export default Property;
