@@ -23,7 +23,7 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
 
 const NotSupportedMessage = () => (
   <span
-    style={{ position: 'absolute', left: '50%', top: '50%', maxWidth: '300px' }}
+    style={{ position: 'absolute', left: '48%', top: '48%', maxWidth: '350px' }}
   >
     <Translation id="webgl_error" />
   </span>
@@ -32,7 +32,7 @@ const NotSupportedMessage = () => (
 // TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
-  if (!maplibregl.supported()) {
+  if (maplibregl.supported()) {
     onMapLoaded();
     return <NotSupportedMessage />;
   }
