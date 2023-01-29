@@ -2,3 +2,6 @@
 __tests__/fixtures/
 dist/
 .next/
+public/workbox-*.js
+public/sw.js
+public/tmp/

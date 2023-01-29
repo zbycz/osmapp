@@ -140,35 +140,39 @@ export const TagsTable = ({ tags, except, onEdit }) => {
         <tbody>
           <TagsGroup
             tags={names}
-            label={names.length === 1 ? names[0][0] : "name:*"}
+            label={names.length === 1 ? names[0][0] : 'name:*'}
             value={truncate(tags.name, { length: 25 })}
             hideArrow={names.length === 1}
             onEdit={onEdit}
           />
           <TagsGroup
             tags={shortNames}
-            label={shortNames.length === 1 ? shortNames[0][0] : "short_name:*"}
+            label={shortNames.length === 1 ? shortNames[0][0] : 'short_name:*'}
             value={shortNames[0]?.[1]}
             hideArrow={shortNames.length === 1}
             onEdit={onEdit}
           />
           <TagsGroup
             tags={altNames}
-            label={altNames.length === 1 ? altNames[0][0] : "alt_name:*"}
+            label={altNames.length === 1 ? altNames[0][0] : 'alt_name:*'}
             value={altNames[0]?.[1]}
             hideArrow={altNames.length === 1}
             onEdit={onEdit}
           />
           <TagsGroup
             tags={officialNames}
-            label={officialNames.length === 1 ? officialNames[0][0] : "official_name:*"}
+            label={
+              officialNames.length === 1
+                ? officialNames[0][0]
+                : 'official_name:*'
+            }
             value={officialNames[0]?.[1]}
             hideArrow={officialNames.length === 1}
             onEdit={onEdit}
           />
           <TagsGroup
             tags={oldNames}
-            label={oldNames.length === 1 ? oldNames[0][0] : "old_name:*"}
+            label={oldNames.length === 1 ? oldNames[0][0] : 'old_name:*'}
             value={oldNames[0]?.[1]}
             hideArrow={oldNames.length === 1}
             onEdit={onEdit}
