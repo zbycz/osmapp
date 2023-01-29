@@ -4,7 +4,10 @@ export default {
   loading: 'Loading',
   error: 'Error',
   close_panel: 'Close panel',
-  webgl_error: `Oops. This map needs WebGL technology.<br /><br />If you have a compatible device, try using the last version of Chrome browser.`,
+  webgl_error: `Oops. This map needs WebGL technology.<br /><br />
+     If you have a compatible device, try using the latest version of your browser or simply enable WebGL:
+     <ul><li>in <a href="https://otechworld.com/webgl-in-firefox/">Firefox, Librewolf</a>
+     <li>in <a href="https://www.geeksforgeeks.org/how-to-enable-webgl-on-chrome/">Chrome, Chromium, Brave, Edge</a></ul>`,
 
   'install.button': 'Install app',
   'install.tabs_aria_label': 'Choose your platform',

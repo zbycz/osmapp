@@ -23,7 +23,7 @@ const useUpdateMap = useMapEffect((map, viewForMap) => {
 
 const NotSupportedMessage = () => (
   <span
-    style={{ position: 'absolute', left: '50%', top: '50%', maxWidth: '300px' }}
+    style={{ position: 'absolute', left: '48%', top: '48%', maxWidth: '350px' }}
   >
     <Translation id="webgl_error" />
   </span>
