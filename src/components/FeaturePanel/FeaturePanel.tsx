@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import FeatureHeading from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
-import TagsTable from './TagsTable';
+import { TagsTable } from './TagsTable';
 import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import {

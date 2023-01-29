@@ -58,7 +58,11 @@ const renderValue = (k, v) => {
 };
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
-const isName = (k) => k.match(/^(short_)?name(:|$)/);
+const isName = (k) => k.match(/^name(:|$)/);
+const isShortName = (k) => k.match(/^short_name(:|$)/);
+const isAltName = (k) => k.match(/^alt_name(:|$)/);
+const isOfficialName = (k) => k.match(/^official_name(:|$)/);
+const isOldName = (k) => k.match(/^old_name(:|$)/);
 const isBuilding = (k) =>
   k.match(/building|roof|^min_level|^max_level|height$/);
 const isNetwork = (k) => k.match(/network/);
@@ -102,18 +106,27 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
   );
 };
 
-const TagsTable = ({ tags, except, onEdit }) => {
+// This is supposed to be replaced by iD presets in future (see https://github.com/zbycz/osmapp/issues/116)
+export const TagsTable = ({ tags, except, onEdit }) => {
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
-  const addr = tagsEntries.filter(([k]) => isAddr(k));
-  const name = tagsEntries.filter(([k]) => isName(k));
-  const building = tagsEntries.filter(([k]) => isBuilding(k));
-  const network = tagsEntries.filter(([k]) => isNetwork(k));
-  const brand = tagsEntries.filter(([k]) => isBrand(k));
-  const payment = tagsEntries.filter(([k]) => isPayment(k));
+  const addrs = tagsEntries.filter(([k]) => isAddr(k));
+  const names = tagsEntries.filter(([k]) => isName(k));
+  const shortNames = tagsEntries.filter(([k]) => isShortName(k));
+  const altNames = tagsEntries.filter(([k]) => isAltName(k));
+  const officialNames = tagsEntries.filter(([k]) => isOfficialName(k));
+  const oldNames = tagsEntries.filter(([k]) => isOldName(k));
+  const buildings = tagsEntries.filter(([k]) => isBuilding(k));
+  const networks = tagsEntries.filter(([k]) => isNetwork(k));
+  const brands = tagsEntries.filter(([k]) => isBrand(k));
+  const payments = tagsEntries.filter(([k]) => isPayment(k));
   const rest = tagsEntries.filter(
     ([k]) =>
       !isName(k) &&
+      !isShortName(k) &&
+      !isAltName(k) &&
+      !isOfficialName(k) &&
+      !isOldName(k) &&
       !isAddr(k) &&
       !isBuilding(k) &&
       !isNetwork(k) &&
@@ -126,16 +139,44 @@ const TagsTable = ({ tags, except, onEdit }) => {
       <Table>
         <tbody>
           <TagsGroup
-            tags={name}
-            label="name:*"
-            value={tags.short_name || truncate(tags.name, { length: 25 })}
-            hideArrow={name.length === 1}
+            tags={names}
+            label={names.length === 1 ? names[0][0] : "name:*"}
+            value={truncate(tags.name, { length: 25 })}
+            hideArrow={names.length === 1}
             onEdit={onEdit}
           />
           <TagsGroup
-            tags={addr}
+            tags={shortNames}
+            label={shortNames.length === 1 ? shortNames[0][0] : "short_name:*"}
+            value={shortNames[0]?.[1]}
+            hideArrow={shortNames.length === 1}
+            onEdit={onEdit}
+          />
+          <TagsGroup
+            tags={altNames}
+            label={altNames.length === 1 ? altNames[0][0] : "alt_name:*"}
+            value={altNames[0]?.[1]}
+            hideArrow={altNames.length === 1}
+            onEdit={onEdit}
+          />
+          <TagsGroup
+            tags={officialNames}
+            label={officialNames.length === 1 ? officialNames[0][0] : "official_name:*"}
+            value={officialNames[0]?.[1]}
+            hideArrow={officialNames.length === 1}
+            onEdit={onEdit}
+          />
+          <TagsGroup
+            tags={oldNames}
+            label={oldNames.length === 1 ? oldNames[0][0] : "old_name:*"}
+            value={oldNames[0]?.[1]}
+            hideArrow={oldNames.length === 1}
+            onEdit={onEdit}
+          />
+          <TagsGroup
+            tags={addrs}
             label="addr:*"
-            value={buildAddress(Object.fromEntries(addr) as any)}
+            value={buildAddress(Object.fromEntries(addrs) as any)}
             onEdit={onEdit}
           />
           {rest.map(([k, v]) => (
@@ -148,25 +189,25 @@ const TagsTable = ({ tags, except, onEdit }) => {
             </tr>
           ))}
           <TagsGroup
-            tags={brand}
+            tags={brands}
             label="brand:*"
             value={tags.brand}
             onEdit={onEdit}
           />
           <TagsGroup
-            tags={building}
+            tags={buildings}
             label="building:*"
             value={tags.building}
             onEdit={onEdit}
           />
           <TagsGroup
-            tags={network}
+            tags={networks}
             label="network:*"
             value={tags.network}
             onEdit={onEdit}
           />
           <TagsGroup
-            tags={payment}
+            tags={payments}
             label="payment:*"
             value={tags.payment}
             onEdit={onEdit}
@@ -176,5 +217,3 @@ const TagsTable = ({ tags, except, onEdit }) => {
     </Wrapper>
   );
 };
-
-export default TagsTable;
