@@ -114,14 +114,14 @@ export default {
   'editdialog.other_tags_heading': 'Other tags',
   'editdialog.other_tags': 'Edit Tags',
   'editdialog.other_tags.new_key': 'new key',
-  'editdialog.other_tags.add': '+', // this will be put directly in code as an icon, just left this here so we remember
   'editdialog.other_tags.will_be_deleted': 'will be deleted',
   'editdialog.other_tags.info': `Tags contain the data used to display objects on the map!<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features">a reference for all tags on the OpenStreetMap Wiki</a>!`,
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',
   'editsuccess.note.subheading': 'OpenStreetMap volunteers will review it.',
-  'editsuccess.note.body':'It usually takes a few days for a change to be reviewed. If there are no volunteers working on the area it could take a while!',
+  'editsuccess.note.body':
+    'It usually takes a few days for a change to be reviewed. If there are no volunteers working on the area it could take a while!',
   'editsuccess.note.urlLabel': 'You can add information or follow updates here:',
   'editsuccess.note.textLabel': 'Note text',
   'editsuccess.edit.heading': 'Thank you for your edit!',
