@@ -1,4 +1,5 @@
 import TextField from '@material-ui/core/TextField';
+import AddIcon from '@material-ui/icons/Add';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
@@ -118,7 +119,7 @@ const NewTagRow = ({ setTag, setTmpNewTag }) => {
             onClick={handleAdd}
             disabled={!newKey || !newValue}
           >
-            {t('editdialog.other_tags.add')}
+            <AddIcon />
           </Button>
         </td>
       </tr>

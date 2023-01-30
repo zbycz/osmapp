@@ -3475,37 +3475,6 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'waterway',
     },
     {
-      id: 'place-village',
-      type: 'symbol',
-      paint: {
-        'text-color': 'rgba(30, 30, 34, 1)',
-        'text-halo-color': 'rgba(255,255,255,0.8)',
-        'text-halo-width': 1.9,
-      },
-      filter: ['all', ['==', 'class', 'village']],
-      layout: {
-        'text-font': ['Roboto Regular', 'Noto Sans Regular'],
-        'text-size': {
-          base: 1.2,
-          stops: [
-            [10, 12],
-            [15, 22],
-          ],
-        },
-        'icon-image': 'dot_9',
-        'text-field': '{name:latin}\n{name:nonlatin}',
-        'icon-anchor': 'bottom',
-        'icon-offset': [0, 6],
-        'text-anchor': 'bottom',
-        'text-max-width': 8,
-      },
-      source: 'maptiler_planet',
-      maxzoom: 16,
-      minzoom: 10,
-      metadata: {},
-      'source-layer': 'place',
-    },
-    {
       id: 'place-other',
       type: 'symbol',
       paint: {
@@ -3539,6 +3508,84 @@ export const outdoorStyle = addHoverPaint({
         'text-letter-spacing': 0.1,
       },
       source: 'maptiler_planet',
+      metadata: {},
+      'source-layer': 'place',
+    },
+    {
+      id: 'place-park',
+      type: 'symbol',
+      paint: {
+        'text-color': 'rgba(24, 107, 32, 1)',
+        'text-halo-blur': {
+          stops: [
+            [9, 3],
+            [14, 0.5],
+          ],
+        },
+        'text-halo-color': {
+          stops: [
+            [9, 'rgba(239, 249, 239, 0.89)'],
+            [14, 'rgba(236, 239, 236, 0.58)'],
+          ],
+        },
+        'text-halo-width': {
+          stops: [
+            [9, 1.6],
+            [14, 1],
+          ],
+        },
+      },
+      filter: ['all'],
+      layout: {
+        'text-font': ['Roboto Condensed Italic', 'Roboto Italic'],
+        'text-size': {
+          stops: [
+            [13, 13],
+            [16, 14],
+          ],
+        },
+        'text-field': '{name:latin}{name:nonlatin}',
+        'text-padding': {
+          stops: [
+            [6, 39],
+            [14, 99],
+          ],
+        },
+        'symbol-spacing': 550,
+      },
+      source: 'maptiler_planet',
+      maxzoom: 24,
+      minzoom: 11,
+      'source-layer': 'park',
+    },
+    {
+      id: 'place-village',
+      type: 'symbol',
+      paint: {
+        'text-color': 'rgba(30, 30, 34, 1)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
+        'text-halo-width': 1.9,
+      },
+      filter: ['all', ['==', 'class', 'village']],
+      layout: {
+        'text-font': ['Roboto Regular', 'Noto Sans Regular'],
+        'text-size': {
+          base: 1.2,
+          stops: [
+            [10, 12],
+            [15, 22],
+          ],
+        },
+        'icon-image': 'dot_9',
+        'text-field': '{name:latin}\n{name:nonlatin}',
+        'icon-anchor': 'bottom',
+        'icon-offset': [0, 6],
+        'text-anchor': 'bottom',
+        'text-max-width': 8,
+      },
+      source: 'maptiler_planet',
+      maxzoom: 16,
+      minzoom: 10,
       metadata: {},
       'source-layer': 'place',
     },
@@ -3619,53 +3666,6 @@ export const outdoorStyle = addHoverPaint({
       minzoom: 5,
       metadata: {},
       'source-layer': 'place',
-    },
-    {
-      id: 'place-park',
-      type: 'symbol',
-      paint: {
-        'text-color': 'rgba(24, 107, 32, 1)',
-        'text-halo-blur': {
-          stops: [
-            [9, 3],
-            [14, 0.5],
-          ],
-        },
-        'text-halo-color': {
-          stops: [
-            [9, 'rgba(239, 249, 239, 0.89)'],
-            [14, 'rgba(236, 239, 236, 0.58)'],
-          ],
-        },
-        'text-halo-width': {
-          stops: [
-            [9, 1.6],
-            [14, 1],
-          ],
-        },
-      },
-      filter: ['all'],
-      layout: {
-        'text-font': ['Roboto Condensed Italic', 'Roboto Italic'],
-        'text-size': {
-          stops: [
-            [13, 13],
-            [16, 14],
-          ],
-        },
-        'text-field': '{name:latin}{name:nonlatin}',
-        'text-padding': {
-          stops: [
-            [6, 39],
-            [14, 99],
-          ],
-        },
-        'symbol-spacing': 550,
-      },
-      source: 'maptiler_planet',
-      maxzoom: 24,
-      minzoom: 11,
-      'source-layer': 'park',
     },
     {
       id: 'place-capital',
