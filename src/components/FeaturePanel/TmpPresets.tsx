@@ -11,7 +11,8 @@ export const TmpPresets = ({ feature }: { feature: Feature }) => {
     <div>
       <hr />
 
-      <h3>{schema.label} ({schema.presetKey})</h3>
+      <h3>{schema.label} </h3>
+      ({schema.presetKey})<br/>
 
       {schema.matchedFields.map(({ label, value }) => (
         <>

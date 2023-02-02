@@ -42,12 +42,12 @@ const index = {
 
 // build an index by geometry type
 Object.entries(presets).forEach(([presetKey, preset]) => {
-  const { geometry, tags } = preset;
+  const { geometry } = preset;
 
   geometry.forEach((geometryType) => {
     const record = {
       presetKey,
-      originalScore: preset.matchScore ?? 1,
+      originalScore: (preset as any).matchScore ?? 1,
       ...preset,
     };
 

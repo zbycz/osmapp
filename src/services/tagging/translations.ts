@@ -1,5 +1,7 @@
 import { fetchJson } from '../fetch';
 
+const lang = 'en';
+
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.0.0-rc.1/dist/translations/cs.min.json
 const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap`;
 
@@ -11,17 +13,17 @@ const fetchTranslations = async () => {
   const version = presetsPackage.version;
 
   translations = await fetchJson(
-    `${cdnUrl}/id-tagging-schema@${version}/dist/translations/cs.min.json`,
+    `${cdnUrl}/id-tagging-schema@${version}/dist/translations/${lang}.min.json`,
   );
 };
 fetchTranslations();
 
 export const getPresetTranslation = (key: string) => {
-  return translations ? translations.cs.presets.presets[key].name : undefined;
+  return translations ? translations[lang].presets.presets[key].name : undefined;
 };
 
 export const getFieldTranslation = (key: string) => {
   // fields.access.types is what ????
 
-  return translations ? translations.cs.presets.fields[key] : undefined;
+  return translations ? translations[lang].presets.fields[key] : undefined;
 };
