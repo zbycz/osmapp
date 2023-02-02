@@ -21,6 +21,8 @@ import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
+import { getPresetForFeature, getPresetTranslation } from "../../services/tagging/idTaggingScheme";
+import { TmpPresets } from "./TmpPresets";
 
 const featuredKeys = [
   'website',
@@ -63,6 +65,8 @@ const FeaturePanel = () => {
           />
 
           <OsmError />
+
+          <TmpPresets feature={feature} />
 
           <FeaturedTags
             featuredTags={deleted ? [] : featuredTags}
