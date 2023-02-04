@@ -1,41 +1,28 @@
-import presets from '../../../data/presets.json';
-import fields from '../../../data/fields.json';
 import { Feature } from '../types';
 import { getFieldTranslation, getPresetTranslation } from './translations';
 import { getPresetForFeature } from './presets';
+import { Preset } from './types/Presets';
+import { fields, presets } from './data';
 
-
-// build a key lookup table for fields by osm key
-// const fieldsByOsmKey = {};
-// Object.entries(fields).forEach(([fieldKey, field]) => {
-//   if (field.key) {
-//     fieldsByOsmKey[field.key] = fieldKey;
-//   }
-//   if (field.keys) {
-//     field.keys.forEach((key) => (fieldsByOsmKey[key] = fieldKey));
-//   }
-// });
-
-// links to another use that preset's name contained in brackets, like {preset}.
-const getResolvedFields = (fields) => {
-  console.log('fields', fields);
-  const flatMap = fields.flatMap((field) => {
-    if (field.match(/^\{.*\}$/)) {
-      const presetName = field.substr(1, field.length - 2);
-      return getResolvedFields(presets[presetName].fields); // TODO does "{shop}" links to preset's fields or moreFields?
+// links like {shop}, are recursively resolved to their fields
+const getResolvedFields = (fieldKeys: string[]): string[] =>
+  fieldKeys.flatMap((key) => {
+    if (key.match(/^{.*}$/)) {
+      const presetKey = key.substr(1, key.length - 2);
+      return getResolvedFields(presets[presetKey].fields); // TODO does "{shop}" links to preset's fields or moreFields?
     }
-    return field;
+    return key;
   });
-  console.log('flatMap', flatMap);
-  return flatMap;
-};
 
-function getResolvedFieldsWithParents(preset, fieldType) {
+const getResolvedFieldsWithParents = (
+  preset: Preset,
+  fieldType: 'fields' | 'moreFields',
+): string[] => {
   const parts = preset.presetKey.split('/');
 
   if (parts.length > 1) {
     const parentKey = parts.slice(0, parts.length - 1).join('/');
-    const parentPreset = { presetKey: parentKey, ...presets[parentKey] };
+    const parentPreset = presets[parentKey];
     return [
       ...getResolvedFieldsWithParents(parentPreset, fieldType),
       ...(preset[fieldType] ?? []),
@@ -43,35 +30,34 @@ function getResolvedFieldsWithParents(preset, fieldType) {
   }
 
   return preset[fieldType] ?? [];
-}
+};
 
-const getAllFields = (preset) => {
-  const newVar = [
+const getAllFieldKeys = (preset: Preset) => {
+  const allFieldKeys = [
     ...getResolvedFields(getResolvedFieldsWithParents(preset, 'fields')),
     ...getResolvedFields(getResolvedFieldsWithParents(preset, 'moreFields')),
   ];
-  // get unique fields by key
-  newVar.filter((field, index, self) => {
-    return self.indexOf(field) === index;
-  });
 
-  return newVar;
+  // @ts-ignore
+  return [...new Set(allFieldKeys)];
 };
 
 export const getSchemaForFeature = (feature: Feature) => {
   const preset = getPresetForFeature(feature);
 
-  const allFields = getAllFields(preset);
-  const uniqFields = [...new Set(allFields)];
-  const matchedFields = uniqFields.map((fieldKey) => {
-    const field = { fieldKey, ...fields[fieldKey] };
+  const fieldKeys = getAllFieldKeys(preset);
+  const matchedFields = fieldKeys.map((fieldKey: string) => {
+    const field = fields[fieldKey];
     const value = feature.tags[field?.key];
     const fieldTranslation = getFieldTranslation(fieldKey);
+
+    // TODO resolve field.label={building} for its translated label
+    const label = fieldTranslation?.label ?? field.label;
 
     return {
       field,
       fieldTranslation,
-      label: fieldTranslation?.label,
+      label,
       value: fieldTranslation?.options?.[value] ?? value,
     };
   });

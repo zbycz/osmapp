@@ -1,7 +1,9 @@
-import presets from '../../../data/presets.json';
+import { presets } from './data';
 import { Feature } from '../types';
+import { Preset } from "./types/Presets";
 
 // taken from iD codebase https://github.com/openstreetmap/iD/blob/dd30a39d7487e1084396712ce861f4b6c5a07849/modules/presets/preset.js#L61
+// _this is "preset" object with originalScore set
 const matchScore = (_this, entityTags) => {
   const tags = _this.tags;
   let seen = {};
@@ -46,7 +48,6 @@ Object.entries(presets).forEach(([presetKey, preset]) => {
 
   geometry.forEach((geometryType) => {
     const record = {
-      presetKey,
       originalScore: (preset as any).matchScore ?? 1,
       ...preset,
     };
@@ -66,7 +67,7 @@ Object.entries(presets).forEach(([presetKey, preset]) => {
 });
 
 // inspired by _this.matchTags() in iD codebase
-export const getPresetForFeature = (feature: Feature) => {
+export const getPresetForFeature = (feature: Feature): Preset => {
   const { tags, osmMeta } = feature;
   const { type } = osmMeta;
   const candidates = [];
