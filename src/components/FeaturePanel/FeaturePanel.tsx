@@ -21,7 +21,7 @@ import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
-import { TmpPresets } from "./TmpPresets";
+import { TmpPresets } from './TmpPresets';
 
 const featuredKeys = [
   'website',

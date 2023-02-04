@@ -1,16 +1,16 @@
 import { presets } from './data';
 import { Feature } from '../types';
-import { Preset } from "./types/Presets";
+import { Preset } from './types/Presets';
 
 // taken from iD codebase https://github.com/openstreetmap/iD/blob/dd30a39d7487e1084396712ce861f4b6c5a07849/modules/presets/preset.js#L61
 // _this is "preset" object with originalScore set
 const matchScore = (_this, entityTags) => {
-  const tags = _this.tags;
-  let seen = {};
+  const { tags } = _this;
+  const seen = {};
   let score = 0;
 
   // match on tags
-  for (let k in tags) {
+  for (const k in tags) {
     seen[k] = true;
     if (entityTags[k] === tags[k]) {
       score += _this.originalScore;
@@ -22,8 +22,8 @@ const matchScore = (_this, entityTags) => {
   }
 
   // boost score for additional matches in addTags - #6802
-  const addTags = _this.addTags;
-  for (let k in addTags) {
+  const { addTags } = _this;
+  for (const k in addTags) {
     if (!seen[k] && entityTags[k] === addTags[k]) {
       score += _this.originalScore;
     }
@@ -43,7 +43,7 @@ const index = {
 };
 
 // build an index by geometry type
-Object.entries(presets).forEach(([presetKey, preset]) => {
+Object.values(presets).forEach((preset) => {
   const { geometry } = preset;
 
   geometry.forEach((geometryType) => {
@@ -53,15 +53,15 @@ Object.entries(presets).forEach(([presetKey, preset]) => {
     };
 
     // OsmAPP can't distinguish between points and vertices
-    if (geometryType == 'point' || geometryType == 'vertex') {
-      index['node'].push(record);
-    } else if (geometryType == 'line') {
-      index['way'].push(record);
-    } else if (geometryType == 'area') {
-      index['way'].push(record);
-      index['relation'].push(record);
-    } else if (geometryType == 'relation') {
-      index['relation'].push(record);
+    if (geometryType === 'point' || geometryType === 'vertex') {
+      index.node.push(record);
+    } else if (geometryType === 'line') {
+      index.way.push(record);
+    } else if (geometryType === 'area') {
+      index.way.push(record);
+      index.relation.push(record);
+    } else if (geometryType === 'relation') {
+      index.relation.push(record);
     }
   });
 });

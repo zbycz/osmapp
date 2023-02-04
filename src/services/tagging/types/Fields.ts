@@ -220,4 +220,4 @@ export type Field = {
 
 export type Fields = {
   [fieldKey: string]: Field;
-}
+};

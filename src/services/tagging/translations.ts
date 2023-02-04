@@ -10,7 +10,7 @@ const fetchTranslations = async () => {
   const presetsPackage = await fetchJson(
     `${cdnUrl}/id-tagging-schema/package.json`,
   );
-  const version = presetsPackage.version;
+  const { version } = presetsPackage;
 
   translations = await fetchJson(
     `${cdnUrl}/id-tagging-schema@${version}/dist/translations/${lang}.min.json`,
@@ -18,12 +18,10 @@ const fetchTranslations = async () => {
 };
 fetchTranslations();
 
-export const getPresetTranslation = (key: string) => {
-  return translations ? translations[lang].presets.presets[key].name : undefined;
-};
+export const getPresetTranslation = (key: string) =>
+  translations ? translations[lang].presets.presets[key].name : undefined;
 
-export const getFieldTranslation = (key: string) => {
+export const getFieldTranslation = (key: string) =>
   // fields.access.types is what ????
 
-  return translations ? translations[lang].presets.fields[key] : undefined;
-};
+  translations ? translations[lang].presets.fields[key] : undefined;

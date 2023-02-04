@@ -1,4 +1,4 @@
-const fs = require("fs");
+const fs = require('fs');
 
 const filename = 'tagging-scheme.cs.json';
 const content = fs.readFileSync(filename, 'utf8');
