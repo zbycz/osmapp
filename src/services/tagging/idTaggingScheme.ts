@@ -4,6 +4,7 @@ import { Feature } from '../types';
 import { getFieldTranslation, getPresetTranslation } from './translations';
 import { getPresetForFeature } from './presets';
 
+
 // build a key lookup table for fields by osm key
 // const fieldsByOsmKey = {};
 // Object.entries(fields).forEach(([fieldKey, field]) => {
@@ -18,20 +19,18 @@ import { getPresetForFeature } from './presets';
 // links to another use that preset's name contained in brackets, like {preset}.
 const getResolvedFields = (fields) => {
   console.log('fields', fields);
-  return fields.flatMap((field) => {
+  const flatMap = fields.flatMap((field) => {
     if (field.match(/^\{.*\}$/)) {
       const presetName = field.substr(1, field.length - 2);
-      return getResolvedFields(presets[presetName].fields);
+      return getResolvedFields(presets[presetName].fields); // TODO does "{shop}" links to preset's fields or moreFields?
     }
     return field;
   });
+  console.log('flatMap', flatMap);
+  return flatMap;
 };
 
 function getResolvedFieldsWithParents(preset, fieldType) {
-  if (!preset || !preset[fieldType]) {
-    return [];
-  }
-
   const parts = preset.presetKey.split('/');
 
   if (parts.length > 1) {
@@ -39,7 +38,7 @@ function getResolvedFieldsWithParents(preset, fieldType) {
     const parentPreset = { presetKey: parentKey, ...presets[parentKey] };
     return [
       ...getResolvedFieldsWithParents(parentPreset, fieldType),
-      ...preset[fieldType],
+      ...(preset[fieldType] ?? []),
     ];
   }
 
@@ -62,20 +61,20 @@ const getAllFields = (preset) => {
 export const getSchemaForFeature = (feature: Feature) => {
   const preset = getPresetForFeature(feature);
 
-  const matchedFields = getAllFields(preset)
-    .map((fieldKey) => {
-      const field = fields[fieldKey];
-      const value = feature.tags[field?.key];
-      const fieldTranslation = getFieldTranslation(fieldKey);
+  const allFields = getAllFields(preset);
+  const uniqFields = [...new Set(allFields)];
+  const matchedFields = uniqFields.map((fieldKey) => {
+    const field = { fieldKey, ...fields[fieldKey] };
+    const value = feature.tags[field?.key];
+    const fieldTranslation = getFieldTranslation(fieldKey);
 
-      return {
-        field,
-        fieldTranslation,
-        label: fieldTranslation?.label,
-        value: fieldTranslation?.options?.[value] ?? value,
-      };
-    })
-    .filter((field) => field.value);
+    return {
+      field,
+      fieldTranslation,
+      label: fieldTranslation?.label,
+      value: fieldTranslation?.options?.[value] ?? value,
+    };
+  });
 
   return {
     presetKey: preset.presetKey,
