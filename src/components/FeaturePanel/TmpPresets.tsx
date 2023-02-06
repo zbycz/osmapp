@@ -18,6 +18,13 @@ export const TmpPresets = ({ feature }: { feature: Feature }) => {
         </>
       ))}
       <hr />
+      {schema.tagsWithFields.map(({ key, value, label }) => (
+        <>
+          <b>{label}</b>: {value}
+          <br />
+        </>
+      ))}
+      <hr />
     </div>
   );
 };

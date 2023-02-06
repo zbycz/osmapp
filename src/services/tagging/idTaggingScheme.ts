@@ -46,19 +46,34 @@ export const getSchemaForFeature = (feature: Feature) => {
   const preset = getPresetForFeature(feature);
 
   const fieldKeys = getAllFieldKeys(preset);
-  const matchedFields = fieldKeys.map((fieldKey: string) => {
-    const field = fields[fieldKey];
-    const value = feature.tags[field?.key];
-    const fieldTranslation = getFieldTranslation(fieldKey);
+  const matchedFields = fieldKeys
+    .map((fieldKey: string) => {
+      const field = fields[fieldKey];
+      const value = feature.tags[field?.key];
+      const fieldTranslation = getFieldTranslation(fieldKey);
 
-    // TODO resolve field.label={building} for its translated label
-    const label = fieldTranslation?.label ?? field.label;
+      // TODO resolve field.label={building} for its translated label
+      const label = fieldTranslation?.label ?? field.label;
 
+      return {
+        field,
+        fieldTranslation,
+        label,
+        value: fieldTranslation?.options?.[value] ?? value,
+      };
+    })
+    .filter((field) => field.value);
+
+  const tagsWithFields = Object.entries(feature.tags).map(([key, value]) => {
+    const field = Object.values(fields).find(
+      (f) => f.key === key || f.keys?.includes(key),
+    ); // todo cache this
+    const fieldTranslation = field ? getFieldTranslation(field.fieldKey) : {};
     return {
+      key,
+      value,
       field,
-      fieldTranslation,
-      label,
-      value: fieldTranslation?.options?.[value] ?? value,
+      label: fieldTranslation?.label ?? `[${key}]`,
     };
   });
 
@@ -67,5 +82,6 @@ export const getSchemaForFeature = (feature: Feature) => {
     preset,
     label: getPresetTranslation(preset.presetKey),
     matchedFields,
+    tagsWithFields,
   };
 };
