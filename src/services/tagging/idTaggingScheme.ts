@@ -4,6 +4,18 @@ import { getPresetForFeature } from './presets';
 import { Preset } from './types/Presets';
 import { fields, presets } from './data';
 
+// TODO move to shared place
+const featuredKeys = [
+  'name', // this is not in the other place
+  'website',
+  'contact:website',
+  'phone',
+  'contact:phone',
+  'contact:mobile',
+  'opening_hours',
+  'description',
+];
+
 // links like {shop}, are recursively resolved to their fields
 const getResolvedFields = (fieldKeys: string[]): string[] =>
   fieldKeys.flatMap((key) => {
@@ -45,14 +57,22 @@ const getAllFieldKeys = (preset: Preset) => {
 export const getSchemaForFeature = (feature: Feature) => {
   const preset = getPresetForFeature(feature);
 
+  const tagsToDo = Object.keys(feature.tags).filter(
+    (key) => !featuredKeys.includes(key),
+  );
+
   const fieldKeys = getAllFieldKeys(preset);
   const matchedFields = fieldKeys
     .map((fieldKey: string) => {
       const field = fields[fieldKey];
-      const value = feature.tags[field?.key];
-      const fieldTranslation = getFieldTranslation(fieldKey);
+      const osmKey = field?.key;
+      if (!tagsToDo.includes(osmKey) || field.type === 'typeCombo') {
+        // TODO not sure how to tell that tower:type is also already covered (/way/26426951)
+        return {};
+      }
 
-      // TODO resolve field.label={building} for its translated label
+      const value = feature.tags[osmKey];
+      const fieldTranslation = getFieldTranslation(field);
       const label = fieldTranslation?.label ?? field.label;
 
       return {
@@ -64,24 +84,47 @@ export const getSchemaForFeature = (feature: Feature) => {
     })
     .filter((field) => field.value);
 
-  const tagsWithFields = Object.entries(feature.tags).map(([key, value]) => {
-    const field = Object.values(fields).find(
-      (f) => f.key === key || f.keys?.includes(key),
-    ); // todo cache this
-    const fieldTranslation = field ? getFieldTranslation(field.fieldKey) : {};
-    return {
-      key,
-      value,
-      field,
-      label: fieldTranslation?.label ?? `[${key}]`,
-    };
+  matchedFields.forEach((field) => {
+    if (field?.field?.key)
+      tagsToDo.splice(tagsToDo.indexOf(field.field.key), 1);
+    if (field?.field?.keys)
+      field.field.keys.forEach((key) =>
+        tagsToDo.splice(tagsToDo.indexOf(key), 1),
+      );
   });
 
+  const tagsWithFields = tagsToDo
+    .map((key) => {
+      const value = feature.tags[key];
+      const field = Object.values(fields).find(
+        (f) => f.key === key || f.keys?.includes(key),
+      ); // todo cache this
+      const fieldTranslation = field ? getFieldTranslation(field) : undefined;
+
+      return {
+        key,
+        value,
+        field,
+        label: fieldTranslation?.label ?? `[${key}]`,
+      };
+    })
+    .filter((field) => field.field);
+
+  tagsWithFields.forEach((field) => {
+    if (field.field.key) tagsToDo.splice(tagsToDo.indexOf(field.field.key), 1);
+    if (field.field.keys)
+      field.field.keys.forEach((key) =>
+        tagsToDo.splice(tagsToDo.indexOf(key), 1),
+      );
+  });
+
+  // TODO fix one field with more tags! like address
   return {
     presetKey: preset.presetKey,
     preset,
     label: getPresetTranslation(preset.presetKey),
     matchedFields,
     tagsWithFields,
+    restKeys: tagsToDo,
   };
 };

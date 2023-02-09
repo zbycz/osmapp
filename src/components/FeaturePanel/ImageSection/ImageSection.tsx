@@ -35,7 +35,8 @@ const PoiType = styled.div`
   }
 `;
 
-const getSubclass = ({ layer, osmMeta, properties }: Feature) =>
+const getSubclass = ({ layer, osmMeta, properties, schema }: Feature) =>
+  schema?.label ||
   properties.subclass?.replace(/_/g, ' ') ||
   (layer && layer.id) || // layer.id specified only when maplibre-gl skeleton displayed
   osmMeta.type;

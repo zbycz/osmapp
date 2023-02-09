@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import FeatureHeading from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
-import { TagsTable } from './TagsTable';
 import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import {
@@ -65,24 +64,24 @@ const FeaturePanel = () => {
 
           <OsmError />
 
-          <TmpPresets feature={feature} />
-
           <FeaturedTags
             featuredTags={deleted ? [] : featuredTags}
             setDialogOpenedWith={setDialogOpenedWith}
           />
 
-          <TagsTable
-            tags={tags}
-            center={feature.center}
-            except={
-              advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
-            }
-            onEdit={setDialogOpenedWith}
-            key={
-              getUrlOsmId(osmMeta) // we need to refresh inner state
-            }
-          />
+          <TmpPresets feature={feature} />
+
+          {/* <TagsTable */}
+          {/*  tags={tags} */}
+          {/*  center={feature.center} */}
+          {/*  except={ */}
+          {/*    advanced || deleted ? [] : ['name', 'layer', ...featuredKeys] */}
+          {/*  } */}
+          {/*  onEdit={setDialogOpenedWith} */}
+          {/*  key={ */}
+          {/*    getUrlOsmId(osmMeta) // we need to refresh inner state */}
+          {/*  } */}
+          {/* /> */}
 
           {advanced && <Members />}
 

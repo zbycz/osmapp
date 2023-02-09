@@ -5,6 +5,7 @@ import { Preset } from './types/Presets';
 // taken from iD codebase https://github.com/openstreetmap/iD/blob/dd30a39d7487e1084396712ce861f4b6c5a07849/modules/presets/preset.js#L61
 // _this is "preset" object with originalScore set
 const matchScore = (_this, entityTags) => {
+  /* eslint-disable no-restricted-syntax,guard-for-in */
   const { tags } = _this;
   const seen = {};
   let score = 0;
@@ -34,6 +35,7 @@ const matchScore = (_this, entityTags) => {
   }
 
   return score;
+  /* eslint-enable no-restricted-syntax,guard-for-in */
 };
 
 const index = {
