@@ -31,5 +31,7 @@ export const getFieldTranslation = (field: Field) => {
     return translations[lang].presets.fields[resolved];
   }
 
+  // The id 169522276 is different for each language :(
+  // https://www.transifex.com/openstreetmap/id-editor/translate/#cs/presets/169522276?q=key%3Apresets.fields.XXX
   return translations[lang].presets.fields[field.fieldKey];
 };

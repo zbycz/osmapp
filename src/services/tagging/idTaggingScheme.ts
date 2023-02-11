@@ -114,9 +114,14 @@ export const getSchemaForFeature = (feature: Feature) => {
         return {};
       }
       if (field.type === 'typeCombo') {
-        keysToDo.splice(keysToDo.indexOf(field.key), 1); //amenity=restaurant
+        keysToDo.splice(keysToDo.indexOf(field.key), 1); //ignore eg. amenity=restaurant
         return {};
       }
+
+      const keysInField = [...(field.keys ?? []), ...(field.key ? [field.key] : [])];
+      keysInField.forEach((key) => {
+        keysToDo.splice(keysToDo.indexOf(key), 1); //remove all "address:*" keys etc.
+      })
 
       const fieldTranslation = getFieldTranslation(field);
 

@@ -4,6 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import { Field } from '../../services/tagging/types/Fields';
 import { getUrlForTag } from './helpers/getUrlForTag';
 import { slashToOptionalBr } from '../helpers';
+import { buildAddress } from "../../services/helpers";
 
 // taken from src/components/FeaturePanel/TagsTable.tsx
 const Table = styled.table`
@@ -52,6 +53,30 @@ const renderValue = (k, v) => {
   return url ? <a href={url}>{slashToOptionalBr(humanUrl)}</a> : v;
 };
 
+const render = (field: Field, tags, k, v) => {
+  if (field.type === 'address') {
+    return buildAddress(tags);
+  }
+  return renderValue(k, v)
+}
+
+const TrHeader = ({ title }) => (
+  (
+    <tr>
+      <th colSpan={2}>
+        <Typography
+          variant="overline"
+          display="block"
+          color="textSecondary"
+        >
+          {title}
+        </Typography>
+      </th>
+    </tr>
+  )
+);
+
+
 const getTitle = (field: Field) => JSON.stringify(field, null, 2);
 
 export const TmpPresets = ({ feature }) => {
@@ -63,61 +88,25 @@ export const TmpPresets = ({ feature }) => {
     <>
       <Table>
         <tbody>
-          {!!schema.matchedFields.length && (
-            <tr>
-              <th colSpan={2}>
-                <Typography
-                  variant="overline"
-                  display="block"
-                  color="textSecondary"
-                >
-                  Fields from preset
-                </Typography>
-              </th>
-            </tr>
-          )}
+          {!!schema.matchedFields.length && (<TrHeader title="Fields from preset"/>)}
           {schema.matchedFields.map(({ key, value, label, field }) => (
             <tr key={key}>
               <th title={getTitle(field)}>{label}</th>
-              <td>{renderValue(key, value)}</td>
+              <td>{render(field, feature.tags, key, value)}</td>
             </tr>
           ))}
         </tbody>
         <tbody>
-          {!!schema.tagsWithFields.length && (
-            <tr>
-              <th colSpan={2}>
-                <Typography
-                  variant="overline"
-                  display="block"
-                  color="textSecondary"
-                >
-                  Tags matching Fields
-                </Typography>
-              </th>
-            </tr>
-          )}
+          {!!schema.tagsWithFields.length && (<TrHeader title="Tags matching Fields"/>)}
           {schema.tagsWithFields.map(({ key, value, label, field }) => (
             <tr key={key}>
               <th title={getTitle(field)}>{label}</th>
-              <td>{renderValue(key, value)}</td>
+              <td>{render(field, feature.tags, key, value)}</td>
             </tr>
           ))}
         </tbody>
         <tbody>
-          {!!schema.restKeys.length && (
-            <tr>
-              <th colSpan={2}>
-                <Typography
-                  variant="overline"
-                  display="block"
-                  color="textSecondary"
-                >
-                  Tags without Fields
-                </Typography>
-              </th>
-            </tr>
-          )}
+          {!!schema.restKeys.length && (<TrHeader title="Tags without Fields"/>)}
           {schema.restKeys.map((key) => (
             <tr key={key}>
               <th>{key}</th>
