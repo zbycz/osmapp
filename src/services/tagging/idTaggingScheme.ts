@@ -58,8 +58,7 @@ const getAllFieldKeys = (preset: Preset) => {
 
 const getValueForField = (field, fieldTranslation, value: string) => {
   if (field.type === 'semiCombo') {
-    const options = value.split(';').map((v) => fieldTranslation?.options?.[v] ?? v).join(',\n');
-    return options;
+    return value.split(';').map((v) => fieldTranslation?.options?.[v] ?? v).join(',\n');
   }
 
   return fieldTranslation?.options?.[value] ?? value;
@@ -112,6 +111,10 @@ export const getSchemaForFeature = (feature: Feature) => {
         (f) => f.key === key || f.keys?.includes(key),
       ); // todo cache this
       if (!field) {
+        return {};
+      }
+      if (field.type === 'typeCombo') {
+        keysToDo.splice(keysToDo.indexOf(field.key), 1); //amenity=restaurant
         return {};
       }
 

@@ -18,9 +18,9 @@ export const FeaturedTags = ({ featuredTags, setDialogOpenedWith }) => {
       ))}
       <Spacer />
 
-      <Typography variant="overline" display="block" color="textSecondary">
-        {t('featurepanel.other_info_heading')}
-      </Typography>
+      {/*<Typography variant="overline" display="block" color="textSecondary">*/}
+      {/*  {t('featurepanel.other_info_heading')}*/}
+      {/*</Typography>*/}
     </>
   );
 };

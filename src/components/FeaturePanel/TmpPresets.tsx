@@ -2,8 +2,10 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import { Field } from '../../services/tagging/types/Fields';
-import { nl2br } from "../utils/nl2br";
+import { getUrlForTag } from './helpers/getUrlForTag';
+import { slashToOptionalBr } from '../helpers';
 
+// taken from src/components/FeaturePanel/TagsTable.tsx
 const Table = styled.table`
   font-size: 1rem;
   width: 100%;
@@ -34,6 +36,22 @@ const Table = styled.table`
   }
 `;
 
+
+// taken from src/components/FeaturePanel/TagsTable.tsx
+const renderValue = (k, v) => {
+  const url = getUrlForTag(k, v);
+  let humanUrl = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
+  if (k === 'image') {
+    humanUrl = humanUrl.replace(/^([^/]+.{0,5})(.*)$/, (full, p1, p2) => {
+      const charsLeft = 30 - p1.length;
+      return (
+        p1 + (full.length > 40 ? `…${p2.substring(p2.length - charsLeft)}` : p2)
+      );
+    });
+  }
+  return url ? <a href={url}>{slashToOptionalBr(humanUrl)}</a> : v;
+};
+
 const getTitle = (field: Field) => JSON.stringify(field, null, 2);
 
 export const TmpPresets = ({ feature }) => {
@@ -45,37 +63,67 @@ export const TmpPresets = ({ feature }) => {
     <>
       <Table>
         <tbody>
-        {schema.matchedFields.map(({ key, value, label, field }) => (
-          <tr key={key}>
-            <th title={getTitle(field)}>{label}</th>
-            <td>{(value)}</td>
-          </tr>
-        ))}
+          {!!schema.matchedFields.length && (
+            <tr>
+              <th colSpan={2}>
+                <Typography
+                  variant="overline"
+                  display="block"
+                  color="textSecondary"
+                >
+                  Fields from preset
+                </Typography>
+              </th>
+            </tr>
+          )}
+          {schema.matchedFields.map(({ key, value, label, field }) => (
+            <tr key={key}>
+              <th title={getTitle(field)}>{label}</th>
+              <td>{renderValue(key, value)}</td>
+            </tr>
+          ))}
         </tbody>
-      </Table>
-      <Typography variant="overline" display="block" color="textSecondary">
-        Rest
-      </Typography>
-
-      <Table>
         <tbody>
-        {schema.tagsWithFields.map(({ key, value, label, field }) => (
-          <tr key={key}>
-            <th title={getTitle(field)}>{label}</th>
-            <td>{value}</td>
-          </tr>
-        ))}
+          {!!schema.tagsWithFields.length && (
+            <tr>
+              <th colSpan={2}>
+                <Typography
+                  variant="overline"
+                  display="block"
+                  color="textSecondary"
+                >
+                  Tags matching Fields
+                </Typography>
+              </th>
+            </tr>
+          )}
+          {schema.tagsWithFields.map(({ key, value, label, field }) => (
+            <tr key={key}>
+              <th title={getTitle(field)}>{label}</th>
+              <td>{renderValue(key, value)}</td>
+            </tr>
+          ))}
         </tbody>
-      </Table>
-
-      <Table>
         <tbody>
-        {schema.restKeys.map((key) => (
-          <tr key={key}>
-            <th>{key}</th>
-            <td>{feature.tags[key]}</td>
-          </tr>
-        ))}
+          {!!schema.restKeys.length && (
+            <tr>
+              <th colSpan={2}>
+                <Typography
+                  variant="overline"
+                  display="block"
+                  color="textSecondary"
+                >
+                  Tags without Fields
+                </Typography>
+              </th>
+            </tr>
+          )}
+          {schema.restKeys.map((key) => (
+            <tr key={key}>
+              <th>{key}</th>
+              <td>{renderValue(key, feature.tags[key])}</td>
+            </tr>
+          ))}
         </tbody>
       </Table>
     </>
