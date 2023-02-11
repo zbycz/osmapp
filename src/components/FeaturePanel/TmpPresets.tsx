@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import { Field } from '../../services/tagging/types/Fields';
+import { nl2br } from "../utils/nl2br";
 
 const Table = styled.table`
   font-size: 1rem;
@@ -43,33 +44,39 @@ export const TmpPresets = ({ feature }) => {
   return (
     <>
       <Table>
-        {schema.matchedFields.map(({ label, value, field }) => (
-          <tr>
+        <tbody>
+        {schema.matchedFields.map(({ key, value, label, field }) => (
+          <tr key={key}>
             <th title={getTitle(field)}>{label}</th>
-            <td>{value}</td>
+            <td>{(value)}</td>
           </tr>
         ))}
+        </tbody>
       </Table>
       <Typography variant="overline" display="block" color="textSecondary">
         Rest
       </Typography>
 
       <Table>
-        {schema.tagsWithFields.map(({ value, label, field }) => (
-          <tr>
+        <tbody>
+        {schema.tagsWithFields.map(({ key, value, label, field }) => (
+          <tr key={key}>
             <th title={getTitle(field)}>{label}</th>
             <td>{value}</td>
           </tr>
         ))}
+        </tbody>
       </Table>
 
       <Table>
+        <tbody>
         {schema.restKeys.map((key) => (
-          <tr>
+          <tr key={key}>
             <th>{key}</th>
             <td>{feature.tags[key]}</td>
           </tr>
         ))}
+        </tbody>
       </Table>
     </>
   );
