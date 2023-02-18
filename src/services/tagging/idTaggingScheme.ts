@@ -1,8 +1,8 @@
-import { Feature } from "../types";
-import { getFieldTranslation, getPresetTranslation } from "./translations";
-import { getPresetForFeature } from "./presets";
-import { Preset } from "./types/Presets";
-import { fields, presets } from "./data";
+import { Feature } from '../types';
+import { getFieldTranslation, getPresetTranslation } from './translations';
+import { getPresetForFeature } from './presets';
+import { Preset } from './types/Presets';
+import { fields, presets } from './data';
 
 // TODO move to shared place
 const featuredKeys = [
@@ -38,7 +38,7 @@ const getResolvedFieldsWithParents = (
     if (parentPreset) {
       return [
         ...getResolvedFieldsWithParents(parentPreset, fieldType),
-        ...(preset[fieldType] ?? [])
+        ...(preset[fieldType] ?? []),
       ];
     }
   }
@@ -58,7 +58,10 @@ const getAllFieldKeys = (preset: Preset) => {
 
 const getValueForField = (field, fieldTranslation, value: string) => {
   if (field.type === 'semiCombo') {
-    return value.split(';').map((v) => fieldTranslation?.options?.[v] ?? v).join(',\n');
+    return value
+      .split(';')
+      .map((v) => fieldTranslation?.options?.[v] ?? v)
+      .join(',\n');
   }
 
   return fieldTranslation?.options?.[value] ?? value;
@@ -71,13 +74,22 @@ export const getSchemaForFeature = (feature: Feature) => {
     (key) => !featuredKeys.includes(key),
   );
 
+  // remove tags which are already covered by Preset name
+  Object.keys(preset.tags).forEach((key) => {
+    keysToDo.splice(keysToDo.indexOf(key), 1);
+  });
+
   const fieldKeys = getAllFieldKeys(preset);
   const matchedFields = fieldKeys
     .map((fieldKey: string) => {
       const field = fields[fieldKey];
       const key = field?.key;
-      if (!keysToDo.includes(key) || field.type === 'typeCombo') {
+      if (!keysToDo.includes(key)) {
+        return {};
+      }
+      if (field.type === 'typeCombo') {
         // TODO not sure how to tell that tower:type is also already covered (/way/26426951)
+        keysToDo.splice(keysToDo.indexOf(field.key), 1); //ignore eg. amenity=restaurant
         return {};
       }
 
@@ -118,10 +130,11 @@ export const getSchemaForFeature = (feature: Feature) => {
         return {};
       }
 
-      const keysInField = [...(field.keys ?? []), ...(field.key ? [field.key] : [])];
-      keysInField.forEach((key) => {
-        keysToDo.splice(keysToDo.indexOf(key), 1); //remove all "address:*" keys etc.
-      })
+      // TODO gather all tags and just print them near this field
+      // const keysInField = [...(field.keys ?? []), ...(field.key ? [field.key] : [])];
+      // keysInField.forEach((key) => {
+      //   keysToDo.splice(keysToDo.indexOf(key), 1); //remove all "address:*" keys etc.
+      // })
 
       const fieldTranslation = getFieldTranslation(field);
 
@@ -147,6 +160,8 @@ export const getSchemaForFeature = (feature: Feature) => {
   return {
     presetKey: preset.presetKey,
     preset,
+    fieldKeys,
+    feature,
     label: getPresetTranslation(preset.presetKey),
     matchedFields,
     tagsWithFields,
