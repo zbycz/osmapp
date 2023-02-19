@@ -87,6 +87,10 @@ export const getSchemaForFeature = (feature: Feature) => {
       if (!keysToDo.includes(key)) {
         return {};
       }
+      if (field.type === 'typeCombo') {
+        keysToDo.splice(keysToDo.indexOf(field.key), 1); //ignore eg. railway=tram_stop on public_transport=stop_position
+        return {};
+      }
 
       const value = feature.tags[key];
       const fieldTranslation = getFieldTranslation(field);
@@ -118,6 +122,10 @@ export const getSchemaForFeature = (feature: Feature) => {
         (f) => f.key === key || f.keys?.includes(key),
       ); // todo cache this
       if (!field) {
+        return {};
+      }
+      if (field.type === 'typeCombo') {
+        keysToDo.splice(keysToDo.indexOf(field.key), 1); //ignore eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
 
