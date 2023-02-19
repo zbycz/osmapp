@@ -87,11 +87,6 @@ export const getSchemaForFeature = (feature: Feature) => {
       if (!keysToDo.includes(key)) {
         return {};
       }
-      if (field.type === 'typeCombo') {
-        // TODO not sure how to tell that tower:type is also already covered (/way/26426951)
-        keysToDo.splice(keysToDo.indexOf(field.key), 1); //ignore eg. amenity=restaurant
-        return {};
-      }
 
       const value = feature.tags[key];
       const fieldTranslation = getFieldTranslation(field);
@@ -123,10 +118,6 @@ export const getSchemaForFeature = (feature: Feature) => {
         (f) => f.key === key || f.keys?.includes(key),
       ); // todo cache this
       if (!field) {
-        return {};
-      }
-      if (field.type === 'typeCombo') {
-        keysToDo.splice(keysToDo.indexOf(field.key), 1); //ignore eg. amenity=restaurant
         return {};
       }
 
