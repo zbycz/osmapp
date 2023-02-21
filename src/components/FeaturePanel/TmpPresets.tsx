@@ -53,6 +53,7 @@ const renderValue = (k, v) => {
   return url ? <a href={url}>{slashToOptionalBr(humanUrl)}</a> : v;
 };
 
+
 const render = (field: Field, tags, k, v) => {
   if (field.type === 'address') {
     return buildAddress(tags);
@@ -79,6 +80,14 @@ const TrHeader = ({ title }) => (
 
 const getTitle = (field: Field) => JSON.stringify(field, null, 2);
 
+// TODO some fields eg. oneway/bicycle doesnt have units in brackets
+const unitRegExp = / \((.+)\)$/i;
+const removeUnits = label => label.replace(unitRegExp, '');
+const addUnits = (label, value) => {
+  const unit = label.match(unitRegExp);
+  return `${value}${unit ? ` (${unit[1]})` : ''}`;
+};
+
 export const TmpPresets = ({ feature }) => {
   const { schema } = feature;
   if (!schema) return null;
@@ -91,8 +100,8 @@ export const TmpPresets = ({ feature }) => {
           {!!schema.matchedFields.length && (<TrHeader title="Fields from preset"/>)}
           {schema.matchedFields.map(({ key, value, label, field }) => (
             <tr key={key}>
-              <th title={getTitle(field)}>{label}</th>
-              <td>{render(field, feature.tags, key, value)}</td>
+              <th title={getTitle(field)}>{removeUnits(label)}</th>
+              <td>{addUnits(label, render(field, feature.tags, key, value))}</td>
             </tr>
           ))}
         </tbody>
@@ -100,8 +109,8 @@ export const TmpPresets = ({ feature }) => {
           {!!schema.tagsWithFields.length && (<TrHeader title="Tags matching Fields"/>)}
           {schema.tagsWithFields.map(({ key, value, label, field }) => (
             <tr key={key}>
-              <th title={getTitle(field)}>{label}</th>
-              <td>{render(field, feature.tags, key, value)}</td>
+              <th title={getTitle(field)}>{removeUnits(label)}</th>
+              <td>{render(field, feature.tags, key, addUnits(label, value))}</td>
             </tr>
           ))}
         </tbody>
