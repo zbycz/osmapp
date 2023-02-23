@@ -1,14 +1,14 @@
 import { createGlobalStyle } from 'styled-components';
 import { isDesktop } from '../components/helpers';
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
     margin: 0;
     padding: 0;
     height: 100%;
     border: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #f8f4f0;
+    background-color: ${({ theme })=> theme.palette.appBackground};
   }
 
   body {
@@ -83,4 +83,3 @@ const GlobalStyle = createGlobalStyle`
     background-color: rgba(0, 0, 0, 0.2) !important;
   }
 `;
-export default GlobalStyle;

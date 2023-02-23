@@ -2,9 +2,10 @@ import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
 import { ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '../src/helpers/theme';
-import GlobalStyle from '../src/helpers/GlobalStyle';
+import { theme } from '../src/helpers/theme';
+import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { captureException, initSentry } from '../src/helpers/sentry';
 import { prod } from '../src/services/helpers';
 
@@ -46,11 +47,13 @@ export default class MyApp extends App {
           />
         </Head>
         <ThemeProvider theme={theme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-          <Component {...pageProps} />
-          <GlobalStyle />
+          <StyledThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <CssBaseline />
+            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+            <Component {...pageProps} />
+            <GlobalStyle />
+          </StyledThemeProvider>
         </ThemeProvider>
       </>
     );
