@@ -20,7 +20,7 @@ export const OpenGraphTags = ({
     <meta property="twitter:card" content="summary_large_image" />
     <meta
       property="description"
-      content="An open source project which offers a free open world maps from the OpenStreetMap database. Vector maps, search, poi details, photos, editing and more."
+      content="An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!"
     />
   </>
 );
