@@ -18,6 +18,10 @@ export const OpenGraphTags = ({
     <meta property="og:description" content="A universal OpenStreetMap app" />
     <meta property="og:image" content={image} />
     <meta property="twitter:card" content="summary_large_image" />
+    <meta
+      property="description"
+      content="An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!"
+    />
   </>
 );
 
