@@ -35,7 +35,7 @@ export const TitleAndMetaTags = () => {
   if (!feature) {
     return (
       <Head>
-        <title>OsmAPP – browse OpenStreetMap online</title>
+        <title>OsmAPP</title>
         <OpenGraphTags />
       </Head>
     );
