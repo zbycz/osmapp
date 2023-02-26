@@ -2474,7 +2474,7 @@ export const basicStyle = addHoverPaint({
       layout: {
         'text-font': ['Noto Sans Regular'],
         'text-size': 12,
-        'text-field': 'Exit {ref}',
+        'text-field': '{ref}',
         'text-pitch-alignment': 'auto',
         'text-rotation-alignment': 'viewport',
         'symbol-z-order': 'auto',
