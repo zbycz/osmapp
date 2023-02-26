@@ -4,7 +4,9 @@ import Typography from '@material-ui/core/Typography';
 import { Field } from '../../services/tagging/types/Fields';
 import { getUrlForTag } from './helpers/getUrlForTag';
 import { slashToOptionalBr } from '../helpers';
-import { buildAddress } from "../../services/helpers";
+import { buildAddress } from '../../services/helpers';
+import { Feature } from '../../services/types';
+import { t } from '../../services/intl';
 
 // taken from src/components/FeaturePanel/TagsTable.tsx
 const Table = styled.table`
@@ -37,7 +39,6 @@ const Table = styled.table`
   }
 `;
 
-
 // taken from src/components/FeaturePanel/TagsTable.tsx
 const renderValue = (k, v) => {
   const url = getUrlForTag(k, v);
@@ -53,69 +54,62 @@ const renderValue = (k, v) => {
   return url ? <a href={url}>{slashToOptionalBr(humanUrl)}</a> : v;
 };
 
-
-const render = (field: Field, tags, k, v) => {
+const render = (field: Field, feature: Feature, k, v) => {
   if (field.type === 'address') {
-    return buildAddress(tags);
+    return buildAddress(feature.tags as any);
   }
-  return renderValue(k, v)
-}
+  return renderValue(k, v);
+};
 
-const TrHeader = ({ title }) => (
-  (
-    <tr>
-      <th colSpan={2}>
-        <Typography
-          variant="overline"
-          display="block"
-          color="textSecondary"
-        >
-          {title}
-        </Typography>
-      </th>
-    </tr>
-  )
-);
-
-
-const getTitle = (field: Field) => JSON.stringify(field, null, 2);
+const getTitle = (type: string, field: Field) =>
+  `${type}: ${JSON.stringify(field, null, 2)}`;
 
 // TODO some fields eg. oneway/bicycle doesnt have units in brackets
 const unitRegExp = / \((.+)\)$/i;
-const removeUnits = label => label.replace(unitRegExp, '');
+const removeUnits = (label) => label.replace(unitRegExp, '');
 const addUnits = (label, value) => {
   const unit = label.match(unitRegExp);
   return `${value}${unit ? ` (${unit[1]})` : ''}`;
 };
 
-export const TmpPresets = ({ feature }) => {
+export const TmpPresets = ({ feature, featuredTags }) => {
   const { schema } = feature;
   if (!schema) return null;
   if (!Object.keys(schema).length) return null;
 
   return (
     <>
+      {featuredTags.length &&
+      (schema.matchedFields.length ||
+        schema.tagsWithFields.length ||
+        schema.restKeys.length) ? (
+        <Typography variant="overline" display="block" color="textSecondary">
+          {t('featurepanel.other_info_heading')}
+        </Typography>
+      ) : null}
+
       <Table>
         <tbody>
-          {!!schema.matchedFields.length && (<TrHeader title="Fields from preset"/>)}
           {schema.matchedFields.map(({ key, value, label, field }) => (
             <tr key={key}>
-              <th title={getTitle(field)}>{removeUnits(label)}</th>
-              <td>{addUnits(label, render(field, feature.tags, key, value))}</td>
+              <th title={getTitle('from preset', field)}>
+                {removeUnits(label)}
+              </th>
+              <td>{addUnits(label, render(field, feature, key, value))}</td>
             </tr>
           ))}
         </tbody>
         <tbody>
-          {!!schema.tagsWithFields.length && (<TrHeader title="Tags matching Fields"/>)}
           {schema.tagsWithFields.map(({ key, value, label, field }) => (
             <tr key={key}>
-              <th title={getTitle(field)}>{removeUnits(label)}</th>
-              <td>{render(field, feature.tags, key, addUnits(label, value))}</td>
+              <th title={getTitle('standalone field', field)}>
+                {removeUnits(label)}
+              </th>
+              <td>{render(field, feature, key, addUnits(label, value))}</td>
             </tr>
           ))}
         </tbody>
         <tbody>
-          {!!schema.restKeys.length && (<TrHeader title="Tags without Fields"/>)}
           {schema.restKeys.map((key) => (
             <tr key={key}>
               <th>{key}</th>

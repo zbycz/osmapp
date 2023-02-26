@@ -69,7 +69,10 @@ const FeaturePanel = () => {
             setDialogOpenedWith={setDialogOpenedWith}
           />
 
-          <TmpPresets feature={feature} />
+          <TmpPresets
+            featuredTags={deleted ? [] : featuredTags}
+            feature={feature}
+          />
 
           {/* <TagsTable */}
           {/*  tags={tags} */}

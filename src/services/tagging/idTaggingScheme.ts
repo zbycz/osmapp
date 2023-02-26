@@ -83,12 +83,12 @@ export const getSchemaForFeature = (feature: Feature) => {
   const matchedFields = fieldKeys
     .map((fieldKey: string) => {
       const field = fields[fieldKey];
-      const key = field?.key;
+      const key = field?.key; // TODO handle `keys` as well
       if (!keysToDo.includes(key)) {
         return {};
       }
       if (field.type === 'typeCombo') {
-        keysToDo.splice(keysToDo.indexOf(field.key), 1); //ignore eg. railway=tram_stop on public_transport=stop_position
+        keysToDo.splice(keysToDo.indexOf(field.key), 1); // ignore eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
 
@@ -125,15 +125,23 @@ export const getSchemaForFeature = (feature: Feature) => {
         return {};
       }
       if (field.type === 'typeCombo') {
-        keysToDo.splice(keysToDo.indexOf(field.key), 1); //ignore eg. railway=tram_stop on public_transport=stop_position
+        keysToDo.splice(keysToDo.indexOf(field.key), 1); // ignore eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
 
-      // TODO gather all tags and just print them near this field
-      // const keysInField = [...(field.keys ?? []), ...(field.key ? [field.key] : [])];
-      // keysInField.forEach((key) => {
-      //   keysToDo.splice(keysToDo.indexOf(key), 1); //remove all "address:*" keys etc.
-      // })
+      // TODO make this generic + add to matchedFields as well
+      // maybe gather all tags and just print them near this field
+      const keysInField = [
+        ...(field.keys ?? []),
+        ...(field.key ? [field.key] : []),
+      ];
+      const tagsForField = [];
+      keysInField.forEach((k) => {
+        if (feature.tags[k]) {
+          tagsForField.push({ key: k, value: feature.tags[k] });
+        }
+        keysToDo.splice(keysToDo.indexOf(k), 1); // remove all "address:*" keys etc.
+      });
 
       const fieldTranslation = getFieldTranslation(field);
 
@@ -141,6 +149,7 @@ export const getSchemaForFeature = (feature: Feature) => {
         key,
         value: getValueForField(field, fieldTranslation, value),
         field,
+        tagsForField,
         fieldTranslation,
         label: fieldTranslation?.label ?? `[${key}]`,
       };
