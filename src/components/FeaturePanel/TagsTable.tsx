@@ -107,7 +107,7 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
 };
 
 // This is supposed to be replaced by iD presets in future (see https://github.com/zbycz/osmapp/issues/116)
-export const TagsTable = ({ tags, except, onEdit }) => {
+export const TagsTable = ({ tags, center, except, onEdit }) => {
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
   const addrs = tagsEntries.filter(([k]) => isAddr(k));
@@ -180,7 +180,7 @@ export const TagsTable = ({ tags, except, onEdit }) => {
           <TagsGroup
             tags={addrs}
             label="addr:*"
-            value={buildAddress(Object.fromEntries(addrs) as any)}
+            value={buildAddress(Object.fromEntries(addrs) as any, center)}
             onEdit={onEdit}
           />
           {rest.map(([k, v]) => (

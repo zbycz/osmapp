@@ -1,7 +1,7 @@
 import * as xml2js from 'isomorphic-xml2js';
 import fetch from 'isomorphic-unfetch';
 import { isServer, isString } from '../components/helpers';
-import { Feature } from './types';
+import { Feature, Position } from './types';
 import { join, roundedToDegUrl } from '../utils';
 
 export const parseXmlString = (xmlString) => {
@@ -88,12 +88,40 @@ export const isValidImage = (url): Promise<boolean> => {
 export const stringifyDomXml = (itemXml) =>
   isString(itemXml) ? itemXml : new XMLSerializer().serializeToString(itemXml);
 
-export const buildAddress = ({
-  'addr:place': place,
-  'addr:street': street,
-  'addr:housenumber': hnum,
-  'addr:conscriptionnumber': num1, // czech/slovak/hungary
-  'addr:streetnumber': num2,
-  'addr:city': city,
-}) =>
-  join(join(street ?? place, ' ', hnum ?? join(num1, '/', num2)), ', ', city);
+// TODO better mexico border  + add Australia, New Zealand & South Africa
+const polygonUsCan = [[-143, 36], [-117, 32], [-96, 25], [-50, 19], [-56, 71], [-175, 70], [-143, 36]]; // prettier-ignore
+const isInside = ([x, y]: Position, vs) => {
+  // ray-casting algorithm based on
+  // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html/pnpoly.html
+  let inside = false;
+  // eslint-disable-next-line no-plusplus
+  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
+    const [xi, yi] = vs[i];
+    const [xj, yj] = vs[j];
+    const intersect =
+      yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
+    if (intersect) inside = !inside;
+  }
+  return inside;
+};
+
+export const buildAddress = (
+  {
+    'addr:place': place,
+    'addr:street': street,
+    'addr:housenumber': hnum,
+    'addr:conscriptionnumber': num1, // czech/slovak/hungary
+    'addr:streetnumber': num2,
+    'addr:city': city,
+  }: Record<string, string>,
+  loc: Position = undefined,
+) => {
+  if (loc && isInside(loc, polygonUsCan)) {
+    return join(join(hnum ?? num2, ' ', street ?? place), ', ', city);
+  }
+  return join(
+    join(street ?? place, ' ', hnum ?? join(num1, '/', num2)),
+    ', ',
+    city,
+  );
+};

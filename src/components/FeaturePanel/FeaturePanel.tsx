@@ -71,6 +71,7 @@ const FeaturePanel = () => {
 
           <TagsTable
             tags={tags}
+            center={feature.center}
             except={
               advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
             }
