@@ -3,7 +3,8 @@ import acceptLanguageParser from 'accept-language-parser';
 import nextCookies from 'next-cookies';
 
 // the files are not imported in main bundle
-const getMessages = async (lang) => (await import(`../locales/${lang}.js`)).default;
+const getMessages = async (lang) =>
+  (await import(`../locales/${lang}.js`)).default;
 
 const getLangFromAcceptHeader = (ctx, languages) => {
   const header = ctx.req.headers['accept-language'];
