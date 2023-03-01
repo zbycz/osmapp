@@ -3,7 +3,7 @@ import Document, { Head, Html, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
 import { getServerIntl } from '../src/services/intlServer';
-import { InjectIntl, setIntl } from '../src/services/intl';
+import { InjectIntl } from '../src/services/intl';
 import { Favicons } from '../src/helpers/Favicons';
 
 export default class MyDocument extends Document {
@@ -37,8 +37,7 @@ export default class MyDocument extends Document {
 }
 
 MyDocument.getInitialProps = async (ctx) => {
-  const serverIntl = getServerIntl(ctx);
-  setIntl(serverIntl); // for SSR
+  const serverIntl = await getServerIntl(ctx); // not available in App, only in this file
 
   // Resolution order
   //

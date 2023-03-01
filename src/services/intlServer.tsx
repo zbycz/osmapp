@@ -1,11 +1,9 @@
 import getConfig from 'next/config';
 import acceptLanguageParser from 'accept-language-parser';
 import nextCookies from 'next-cookies';
-import vocabulary from '../locales/vocabulary';
 
-// This file runs in Server side environment only
-// -> dynamic require() enabled
-const getMessages = (lang) => require(`../locales/${lang}.js`).default; // eslint-disable-line global-require,import/no-dynamic-require
+// the files are not imported in main bundle
+const getMessages = async (lang) => (await import(`../locales/${lang}.js`)).default;
 
 const getLangFromAcceptHeader = (ctx, languages) => {
   const header = ctx.req.headers['accept-language'];
@@ -25,9 +23,10 @@ const getLangFromCtx = (ctx) => {
   return getLangFromAcceptHeader(ctx, Object.keys(languages)) ?? DEFAULT_LANG;
 };
 
-export const getServerIntl = (ctx) => {
+export const getServerIntl = async (ctx) => {
   const lang = getLangFromCtx(ctx);
-  const messages = lang === DEFAULT_LANG ? {} : getMessages(lang);
+  const vocabulary = await getMessages('vocabulary');
+  const messages = lang === DEFAULT_LANG ? {} : await getMessages(lang);
   const intl = {
     lang,
     messages: { ...vocabulary, ...messages },

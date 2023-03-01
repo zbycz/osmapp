@@ -15,6 +15,7 @@ import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
+import { setIntlForSSR } from '../../services/intl';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -93,6 +94,8 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
   );
 };
 App.getInitialProps = async (ctx) => {
+  await setIntlForSSR(ctx);
+
   const { hideHomepage: hpCookie } = nextCookies(ctx);
   const featureFromRouter = await getInititalFeature(ctx);
   const initialMapView = await getInitialMapView(ctx);
