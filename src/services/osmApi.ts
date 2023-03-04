@@ -100,7 +100,7 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
     const [element, center] = await Promise.all([
       getOsmPromise(apiId),
       getCenterPromise(apiId),
-      fetchSchemaTranslations(),
+      fetchSchemaTranslations(), // TODO this should be mocked in test??? could be moved to setIntl or something
     ]);
 
     const feature = osmToFeature(element);
@@ -108,7 +108,7 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
       feature.center = center;
     }
 
-    const schema = getSchemaForFeature(feature);
+    const schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?
     console.log('schema', schema); // eslint-disable-line no-console
     return { ...feature, schema };
   } catch (e) {

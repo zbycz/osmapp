@@ -56,7 +56,7 @@ const renderValue = (k, v) => {
 
 const render = (field: Field, feature: Feature, k, v) => {
   if (field.type === 'address') {
-    return buildAddress(feature.tags as any);
+    return buildAddress(feature.tags, feature.center);
   }
   return renderValue(k, v);
 };
