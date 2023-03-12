@@ -1,10 +1,10 @@
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { grey, red } from '@material-ui/core/colors';
-import { useEffect, useState } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+import { usePersistedState } from '../components/utils/usePersistedState';
 
-// Create a theme instance.
 const lightTheme = createMuiTheme({
   palette: {
     primary: {
@@ -44,31 +44,50 @@ const darkTheme = createMuiTheme({
   } as unknown,
 });
 
-const getTheme = (
-  userChoice: 'light' | 'dark' | 'system',
-  prefersDarkMode: boolean,
-) => {
-  if (userChoice === 'system') {
-    return prefersDarkMode ? 'dark' : 'light';
-  }
-  return userChoice;
+type UserTheme = 'system' | 'light' | 'dark';
+
+type UserThemeContextType = {
+  userTheme: UserTheme;
+  setUserTheme: (choice: UserTheme) => void;
+  theme: typeof lightTheme | typeof darkTheme;
+  currentTheme: 'light' | 'dark';
 };
 
-export const ThemeContextProvider = ({ children }) => {
-  const [userChoice, setUserChoice] =
-    useState<'light' | 'dark' | 'system'>('system');
+export const UserThemeContext = createContext<UserThemeContextType>(undefined);
+
+const useGetCurrentTheme = (userTheme: UserTheme) => {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const [current, setCurrent] = useState(getTheme(userChoice, prefersDarkMode));
 
-  useEffect(() => {
-    setCurrent(getTheme(userChoice, prefersDarkMode));
-  }, [userChoice, prefersDarkMode]);
+  return useMemo(() => {
+    if (userTheme === 'system') {
+      return prefersDarkMode ? 'dark' : 'light';
+    }
+    return userTheme;
+  }, [userTheme, prefersDarkMode]);
+};
 
-  const theme = current === 'dark' ? darkTheme : lightTheme;
+export const UserThemeProvider = ({ children }) => {
+  const [userTheme, setUserTheme] = usePersistedState<UserTheme>(
+    'userTheme',
+    'system',
+  );
+  const currentTheme = useGetCurrentTheme(userTheme);
+  const theme = currentTheme === 'dark' ? darkTheme : lightTheme;
 
   return (
-    <ThemeProvider theme={theme}>
-      <StyledThemeProvider theme={theme}>{children}</StyledThemeProvider>
-    </ThemeProvider>
+    <UserThemeContext.Provider
+      value={{
+        userTheme,
+        setUserTheme,
+        currentTheme,
+        theme,
+      }}
+    >
+      <ThemeProvider theme={theme}>
+        <StyledThemeProvider theme={theme}>{children}</StyledThemeProvider>
+      </ThemeProvider>
+    </UserThemeContext.Provider>
   );
 };
+
+export const useUserThemeContext = () => useContext(UserThemeContext);

@@ -1,4 +1,7 @@
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
+import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
 import React, { useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
@@ -11,6 +14,7 @@ import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { getIdEditorLink } from '../../../utils';
+import { useUserThemeContext } from "../../../helpers/theme";
 
 const StyledChevronRightIcon = styled(ChevronRightIcon)`
   margin: -2px 0px -2px -1px !important;
@@ -34,6 +38,25 @@ const InstallIcon = styled(GetAppIcon)`
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
+
+const StyledBrightnessAutoIcon = styled(BrightnessAutoIcon)`
+  color: #555;
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
+const StyledBrightness4Icon = styled(Brightness4Icon)`
+  color: #555;
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
+const StyledBrightnessHighIcon = styled(BrightnessHighIcon)`
+  color: #555;
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
 
 const useIsBrowser = () => {
   // fixes hydration error - server and browser have different view (cookies and window.hash)
@@ -91,6 +114,30 @@ const InstallLink = ({ closeMenu }) => {
   );
 };
 
+const ThemeSelection = () => {
+  const { userTheme, setUserTheme } =useUserThemeContext();
+  const choices = {
+    'system': StyledBrightnessAutoIcon,
+    'dark': StyledBrightness4Icon,
+    'light': StyledBrightnessHighIcon,
+  }
+  const nextTheme = userTheme === 'system' ? 'dark' : userTheme === 'dark' ? 'light' : 'system'; //prettier-ignore
+  const Icon = choices[userTheme];
+  const handleClick = () => {
+    setUserTheme(nextTheme);
+  };
+  const label = userTheme === 'system' ? 'auto' : userTheme === 'dark' ? 'on' : 'off'; //prettier-ignore
+  return (
+    <MenuItem onClick={handleClick}>
+      <Icon />
+      Dark mode: {label}
+      {/*<a onClick={() => setUserTheme('dark')} style={{ fontWeight: userTheme == 'dark' ? 'bold' : 'normal' }}>Dark</a>&nbsp;/&nbsp;*/}
+      {/*<a onClick={() => setUserTheme('light')} style={{ fontWeight: userTheme == 'light' ? 'bold' : 'normal' }}>Light</a>&nbsp;/&nbsp;*/}
+      {/*<a onClick={() => setUserTheme('system')} style={{ fontWeight: userTheme == 'system' ? 'bold' : 'normal' }}>Auto</a>*/}
+    </MenuItem>
+  );
+};
+
 // TODO maybe
 //            <ListItemIcon>
 //             <InboxIcon fontSize="small" />
@@ -117,6 +164,7 @@ export const MoreMenu = () => {
         <EditLink closeMenu={close} />
         <AboutLink closeMenu={close} />
         <InstallLink closeMenu={close} />
+        <ThemeSelection />
       </Menu>
       <button
         type="button"
