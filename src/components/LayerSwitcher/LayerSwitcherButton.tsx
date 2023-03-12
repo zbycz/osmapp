@@ -24,15 +24,15 @@ const StyledLayerSwitcher = styled.button`
   border-radius: 5px;
   border: 0;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.palette.background.default};
   font-size: 12px;
-  color: rgba(0, 0, 0, 0.8);
+  color: ${({ theme }) => theme.palette.text.primary};
   outline: 0;
   cursor: pointer;
 
   &:hover,
   &:focus {
-    background-color: #f2f3f2;
+    background-color: ${({ theme }) => theme.palette.background.hover};
   }
 
   svg {
