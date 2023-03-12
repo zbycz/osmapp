@@ -68,7 +68,7 @@ export const LayersHeader = ({ headingId }) => (
     <Box m={2}>
       <Typography
         variant="h5"
-        style={{ color: 'rgba(0, 0, 0, 0.7)' }}
+        color="textPrimary"
         id={headingId}
       >
         {t('layerswitcher.heading')}

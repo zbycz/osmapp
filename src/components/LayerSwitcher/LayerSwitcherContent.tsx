@@ -21,13 +21,13 @@ const StyledList = styled(List)`
     min-width: 45px;
 
     svg {
-      color: #bbb;
+      color: ${({ theme }) => theme.palette.action.disabled}};
     }
   }
 
   .Mui-selected {
     .MuiListItemIcon-root svg {
-      color: #777;
+      color: ${({ theme }) => theme.palette.action.active};
     }
   }
 `;

@@ -14,7 +14,7 @@ import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { getIdEditorLink } from '../../../utils';
-import { useUserThemeContext } from "../../../helpers/theme";
+import { useUserThemeContext } from '../../../helpers/theme';
 
 const StyledChevronRightIcon = styled(ChevronRightIcon)`
   margin: -2px 0px -2px -1px !important;
@@ -22,41 +22,40 @@ const StyledChevronRightIcon = styled(ChevronRightIcon)`
 `;
 
 const PencilIcon = styled(CreateIcon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
 
 const HomeIcon = styled(HelpIcon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
 
 const InstallIcon = styled(GetAppIcon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
 
 const StyledBrightnessAutoIcon = styled(BrightnessAutoIcon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
 
 const StyledBrightness4Icon = styled(Brightness4Icon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
 
 const StyledBrightnessHighIcon = styled(BrightnessHighIcon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
-
 
 const useIsBrowser = () => {
   // fixes hydration error - server and browser have different view (cookies and window.hash)
@@ -115,12 +114,12 @@ const InstallLink = ({ closeMenu }) => {
 };
 
 const ThemeSelection = () => {
-  const { userTheme, setUserTheme } =useUserThemeContext();
+  const { userTheme, setUserTheme, theme } = useUserThemeContext();
   const choices = {
-    'system': StyledBrightnessAutoIcon,
-    'dark': StyledBrightness4Icon,
-    'light': StyledBrightnessHighIcon,
-  }
+    system: StyledBrightnessAutoIcon,
+    dark: StyledBrightness4Icon,
+    light: StyledBrightnessHighIcon,
+  };
   const nextTheme = userTheme === 'system' ? 'dark' : userTheme === 'dark' ? 'light' : 'system'; //prettier-ignore
   const Icon = choices[userTheme];
   const handleClick = () => {
