@@ -19,6 +19,7 @@ const lightTheme = createMuiTheme({
     background: {
       default: '#fff',
       hover: '#f2f3f2',
+      searchBox: '#eb5757',
     },
     appBackground: '#f8f4f0',
     panelBackground: '#fafafa',
@@ -40,6 +41,7 @@ const darkTheme = createMuiTheme({
     background: {
       default: grey['800'],
       hover: grey['700'],
+      searchBox: '#963838',
     },
     appBackground: grey['900'],
     panelBackground: grey['800'],

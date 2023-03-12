@@ -17,7 +17,7 @@ const TopPanel = styled.div`
   position: absolute;
   height: 72px;
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-  background-color: #eb5757;
+  background-color: ${({ theme }) => theme.palette.background.searchBox};
   padding: 10px;
   box-sizing: border-box;
 
