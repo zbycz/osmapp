@@ -8,7 +8,7 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     border: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: ${({ theme })=> theme.palette.appBackground};
+    background-color: ${({ theme }) => theme.palette.appBackground};
   }
 
   body {
@@ -20,7 +20,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   a, .linkLikeButton {
-    color: #0078a8;
+    color: ${({ theme }) => theme.palette.link};
     text-decoration: none;
     border: 0;
     padding: 0;
@@ -39,14 +39,21 @@ export const GlobalStyle = createGlobalStyle`
 
     &:focus {
       text-decoration: underline;
-      //svg {
-      //  outline: -webkit-focus-ring-color auto 1px;
-      //}
     }
   }
 
   ul {
     margin-top: 0;
+  }
+
+  .mapboxgl-ctrl-group {
+    background: ${({ theme }) => theme.palette.background.default};
+    .mapboxgl-ctrl-icon {
+      filter: ${({ theme }) => theme.palette.invertFilter};
+    }
+    button+button {
+      border-top: 1px solid ${({ theme }) => theme.palette.divider};
+    }
   }
 
   .mapboxgl-ctrl-top-right {

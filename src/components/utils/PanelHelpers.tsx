@@ -11,7 +11,7 @@ export const PanelWrapper = styled.div`
   left: 0;
   top: 72px; // TopPanel
   bottom: 0;
-    background-color: ${({ theme })=> theme.palette.panelBackground};
+  background: ${({ theme }) => theme.palette.panelBackground};
   overflow: hidden;
   z-index: 1100;
 
@@ -38,7 +38,7 @@ export const PanelContent = styled.div`
 `;
 
 export const PanelFooter = styled.div`
-  color: rgba(0, 0, 0, 0.54);
+  color: ${({ theme }) => theme.palette.text.secondary};
   margin-top: auto;
   padding-bottom: 15px;
   font-size: 1rem;

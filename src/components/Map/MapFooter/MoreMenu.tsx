@@ -114,25 +114,25 @@ const InstallLink = ({ closeMenu }) => {
 };
 
 const ThemeSelection = () => {
-  const { userTheme, setUserTheme, theme } = useUserThemeContext();
+  const { userTheme, setUserTheme } = useUserThemeContext();
   const choices = {
     system: StyledBrightnessAutoIcon,
     dark: StyledBrightness4Icon,
     light: StyledBrightnessHighIcon,
   };
-  const nextTheme = userTheme === 'system' ? 'dark' : userTheme === 'dark' ? 'light' : 'system'; //prettier-ignore
+  const nextTheme = userTheme === 'light' ? 'dark' : 'light'; // userTheme === 'dark' ? 'light' : 'system'; //prettier-ignore
   const Icon = choices[userTheme];
   const handleClick = () => {
     setUserTheme(nextTheme);
   };
-  const label = userTheme === 'system' ? 'auto' : userTheme === 'dark' ? 'on' : 'off'; //prettier-ignore
+  const label = userTheme === 'system' ? 'auto' : userTheme === 'dark' ? 'on' : 'off'; // prettier-ignore
   return (
     <MenuItem onClick={handleClick}>
       <Icon />
       Dark mode: {label}
-      {/*<a onClick={() => setUserTheme('dark')} style={{ fontWeight: userTheme == 'dark' ? 'bold' : 'normal' }}>Dark</a>&nbsp;/&nbsp;*/}
-      {/*<a onClick={() => setUserTheme('light')} style={{ fontWeight: userTheme == 'light' ? 'bold' : 'normal' }}>Light</a>&nbsp;/&nbsp;*/}
-      {/*<a onClick={() => setUserTheme('system')} style={{ fontWeight: userTheme == 'system' ? 'bold' : 'normal' }}>Auto</a>*/}
+      {/* <a onClick={() => setUserTheme('dark')} style={{ fontWeight: userTheme == 'dark' ? 'bold' : 'normal' }}>Dark</a>&nbsp;/&nbsp; */}
+      {/* <a onClick={() => setUserTheme('light')} style={{ fontWeight: userTheme == 'light' ? 'bold' : 'normal' }}>Light</a>&nbsp;/&nbsp; */}
+      {/* <a onClick={() => setUserTheme('system')} style={{ fontWeight: userTheme == 'system' ? 'bold' : 'normal' }}>Auto</a> */}
     </MenuItem>
   );
 };

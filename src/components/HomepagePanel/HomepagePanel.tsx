@@ -28,7 +28,7 @@ export const Content = styled.div`
     margin: 1em 0;
 
     strong {
-      color: #0078a8;
+      color: ${({ theme }) => theme.palette.link};
       font-weight: normal;
     }
 

@@ -30,6 +30,7 @@ import { t } from '../../../services/intl';
 import Maki from '../../utils/Maki';
 import { FeatureTypeSelect } from './FeatureTypeSelect';
 import { getLabel } from '../../../helpers/featureLabel';
+import { useUserThemeContext } from '../../../helpers/theme';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -126,6 +127,7 @@ export const EditDialog = ({
   isAddPlace,
   isUndelete,
 }: Props) => {
+  const { currentTheme } = useUserThemeContext();
   const router = useRouter();
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const fullScreen = useIsFullScreen();
@@ -171,7 +173,12 @@ export const EditDialog = ({
       aria-labelledby="edit-dialog-title"
     >
       <DialogTitle id="edit-dialog-title">
-        <Maki ico={feature.properties.class} size={16} /> {dialogTitle}
+        <Maki
+          ico={feature.properties.class}
+          size={16}
+          invert={currentTheme === 'dark'}
+        />{' '}
+        {dialogTitle}
       </DialogTitle>
       {successInfo ? (
         <SuccessContent successInfo={successInfo} handleClose={onClose} />

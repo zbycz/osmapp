@@ -20,9 +20,15 @@ const lightTheme = createMuiTheme({
       default: '#fff',
       hover: '#f2f3f2',
       searchBox: '#eb5757',
+      mapFooter: '#f8f4f0', // same as osm-bright
+    },
+    text: {
+      panelHeading: 'rgba(0, 0, 0, 0.7)',
     },
     appBackground: '#f8f4f0',
     panelBackground: '#fafafa',
+    link: '#0078a8',
+    invertFilter: 'invert(0)',
   } as unknown,
 });
 
@@ -30,7 +36,7 @@ const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: '#556cd6',
+      main: '#ffb74d',
     },
     secondary: {
       main: '#737373',
@@ -42,9 +48,15 @@ const darkTheme = createMuiTheme({
       default: grey['800'],
       hover: grey['700'],
       searchBox: '#963838',
+      mapFooter: grey['800'],
+    },
+    text: {
+      panelHeading: 'rgba(255, 255, 255, 0.85)',
     },
     appBackground: grey['900'],
     panelBackground: grey['800'],
+    link: '#0fbbff',
+    invertFilter: 'invert(1)',
   } as unknown,
 });
 
