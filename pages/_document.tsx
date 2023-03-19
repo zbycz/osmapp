@@ -8,7 +8,7 @@ import { Favicons } from '../src/helpers/Favicons';
 
 export default class MyDocument extends Document {
   render() {
-    const { serverIntl } = this.props as any;
+    const { serverIntl, asPath } = this.props as any;
     return (
       <Html lang={serverIntl.lang}>
         <Head>
@@ -23,6 +23,15 @@ export default class MyDocument extends Document {
           <link rel="preconnect" href="https://commons.wikimedia.org" />
           <link rel="preconnect" href="https://www.wikidata.org" />
           <link rel="preconnect" href="https://en.wikipedia.org" />
+          {Object.keys(serverIntl.languages).map((lang) => (
+            <link
+              key={lang}
+              rel="alternate"
+              hrefLang={lang}
+              href={`${asPath}?lang=${lang}`}
+            />
+          ))}
+
           <Favicons />
           {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
         </Head>
@@ -83,5 +92,6 @@ MyDocument.getInitialProps = async (ctx) => {
       sheets2.getStyleElement(),
     ],
     serverIntl,
+    asPath: ctx.asPath,
   };
 };

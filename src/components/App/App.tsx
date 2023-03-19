@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
+import getConfig from 'next/config';
 import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -98,6 +99,16 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
 };
 App.getInitialProps = async (ctx) => {
   await setIntlForSSR(ctx);
+
+  const {
+    publicRuntimeConfig: { languages },
+  } = getConfig();
+
+  if (ctx.query?.lang in languages) {
+    ctx.res.setHeader('set-cookie', [`lang=${ctx.query.lang}`]); // TODO this doesnt work
+    console.log(ctx.res);
+    return { statusCode: 301, redirect: '/' };
+  }
 
   const { hideHomepage: hpCookie } = nextCookies(ctx);
   const featureFromRouter = await getInititalFeature(ctx);

@@ -30,6 +30,7 @@ export const getServerIntl = async (ctx) => {
   const messages = lang === DEFAULT_LANG ? {} : await getMessages(lang);
   const intl = {
     lang,
+    languages,
     messages: { ...vocabulary, ...messages },
   };
   return intl;
