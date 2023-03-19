@@ -45,7 +45,9 @@ export const FeaturedTag = ({ k, v, onEdit }) => {
     <Wrapper>
       <EditIconButton onClick={() => onEdit(k)} />
 
-      <Value><Renderer v={v} /></Value>
+      <Value>
+        <Renderer v={v} />
+      </Value>
     </Wrapper>
   );
 };

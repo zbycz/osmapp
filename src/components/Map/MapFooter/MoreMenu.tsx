@@ -120,7 +120,7 @@ const ThemeSelection = () => {
     dark: StyledBrightness4Icon,
     light: StyledBrightnessHighIcon,
   };
-  const nextTheme = userTheme === 'light' ? 'dark' : 'light'; // userTheme === 'dark' ? 'light' : 'system'; //prettier-ignore
+  const nextTheme = userTheme === 'light' ? 'dark' : userTheme === 'dark' ? 'system' : 'light'; //prettier-ignore
   const Icon = choices[userTheme];
   const handleClick = () => {
     setUserTheme(nextTheme);

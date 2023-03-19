@@ -2,6 +2,7 @@ import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import nextCookies from 'next-cookies';
 import { UserThemeProvider } from '../src/helpers/theme';
 import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { captureException, initSentry } from '../src/helpers/sentry';
@@ -34,6 +35,7 @@ export default class MyApp extends App {
 
   render() {
     const { Component, pageProps } = this.props as any;
+    const { userThemeCookie } = pageProps;
 
     return (
       <>
@@ -44,7 +46,7 @@ export default class MyApp extends App {
             content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
           />
         </Head>
-        <UserThemeProvider>
+        <UserThemeProvider userThemeCookie={userThemeCookie}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           {/* eslint-disable-next-line react/jsx-props-no-spreading */}
@@ -55,3 +57,15 @@ export default class MyApp extends App {
     );
   }
 }
+
+MyApp.getInitialProps = async ({ ctx, Component }) => {
+  const pageProps = await Component.getInitialProps?.(ctx);
+  const { userTheme } = nextCookies(ctx);
+
+  return {
+    pageProps: {
+      ...pageProps,
+      userThemeCookie: userTheme,
+    },
+  };
+};

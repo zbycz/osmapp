@@ -47,7 +47,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .mapboxgl-ctrl-group {
-    background: ${({ theme }) => theme.palette.background.default};
+    background: ${({ theme }) => theme.palette.background.default} !important;
     .mapboxgl-ctrl-icon {
       filter: ${({ theme }) => theme.palette.invertFilter};
     }

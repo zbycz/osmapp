@@ -1,9 +1,9 @@
+import Cookies from 'js-cookie';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import { grey, red } from '@material-ui/core/colors';
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-import { usePersistedState } from '../components/utils/usePersistedState';
 
 const lightTheme = createMuiTheme({
   palette: {
@@ -82,13 +82,17 @@ const useGetCurrentTheme = (userTheme: UserTheme) => {
   }, [userTheme, prefersDarkMode]);
 };
 
-export const UserThemeProvider = ({ children }) => {
-  const [userTheme, setUserTheme] = usePersistedState<UserTheme>(
-    'userTheme',
-    'system',
+export const UserThemeProvider = ({ children, userThemeCookie }) => {
+  const [userTheme, setUserThemeState] = useState<UserTheme>(
+    userThemeCookie ?? 'system',
   );
   const currentTheme = useGetCurrentTheme(userTheme);
   const theme = currentTheme === 'dark' ? darkTheme : lightTheme;
+
+  const setUserTheme = (choice: UserTheme) => {
+    setUserThemeState(choice);
+    Cookies.set('userTheme', choice, { expires: 30 * 12 * 10, path: '/' });
+  };
 
   return (
     <UserThemeContext.Provider
