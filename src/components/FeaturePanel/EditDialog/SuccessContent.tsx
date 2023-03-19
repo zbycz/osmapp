@@ -26,7 +26,7 @@ const CenterText = styled.div`
 `;
 
 const GrayBox = styled(Box)`
-  background: #eee;
+  background: ${({ theme }) => theme.palette.action.hover};
   padding: 1em;
 `;
 
