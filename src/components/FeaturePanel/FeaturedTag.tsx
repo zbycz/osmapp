@@ -21,11 +21,6 @@ const Wrapper = styled.div`
 const Value = styled.div`
   display: flex;
   font-size: 1rem;
-  color: rgba(0, 0, 0, 0.87);
-
-  i {
-    color: rgba(0, 0, 0, 0.54);
-  }
 
   > svg {
     margin: 0 10px -6px 2px;
@@ -50,7 +45,9 @@ export const FeaturedTag = ({ k, v, onEdit }) => {
     <Wrapper>
       <EditIconButton onClick={() => onEdit(k)} />
 
-      <Value>{v ? <Renderer v={v} /> : <i>-</i>}</Value>
+      <Value>
+        <Renderer v={v} />
+      </Value>
     </Wrapper>
   );
 };

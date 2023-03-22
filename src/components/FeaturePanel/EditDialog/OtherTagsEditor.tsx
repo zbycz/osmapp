@@ -15,7 +15,7 @@ const Table = styled.table`
   margin-left: 20px;
 
   th {
-    color: rgba(0, 0, 0, 0.54);
+    color: ${({ theme }) => theme.palette.text.secondary};
     text-align: left;
     font-weight: normal;
     vertical-align: center;

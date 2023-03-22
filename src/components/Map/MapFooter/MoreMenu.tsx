@@ -1,4 +1,7 @@
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
+import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
+import Brightness4Icon from '@material-ui/icons/Brightness4';
+import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
 import React, { useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
@@ -11,6 +14,7 @@ import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { getIdEditorLink } from '../../../utils';
+import { useUserThemeContext } from '../../../helpers/theme';
 
 const StyledChevronRightIcon = styled(ChevronRightIcon)`
   margin: -2px 0px -2px -1px !important;
@@ -18,19 +22,37 @@ const StyledChevronRightIcon = styled(ChevronRightIcon)`
 `;
 
 const PencilIcon = styled(CreateIcon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
 
 const HomeIcon = styled(HelpIcon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
 
 const InstallIcon = styled(GetAppIcon)`
-  color: #555;
+  color: ${({ theme }) => theme.palette.action.active};
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
+const StyledBrightnessAutoIcon = styled(BrightnessAutoIcon)`
+  color: ${({ theme }) => theme.palette.action.active};
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
+const StyledBrightness4Icon = styled(Brightness4Icon)`
+  color: ${({ theme }) => theme.palette.action.active};
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
+const StyledBrightnessHighIcon = styled(BrightnessHighIcon)`
+  color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
 `;
@@ -91,6 +113,38 @@ const InstallLink = ({ closeMenu }) => {
   );
 };
 
+const themeOptions = {
+  system: {
+    icon: StyledBrightnessAutoIcon,
+    label: t('darkmode_auto'),
+    next: 'dark' as const,
+  },
+  dark: {
+    icon: StyledBrightness4Icon,
+    label: t('darkmode_on'),
+    next: 'light' as const,
+  },
+  light: {
+    icon: StyledBrightnessHighIcon,
+    label: t('darkmode_off'),
+    next: 'system' as const,
+  },
+};
+
+const ThemeSelection = () => {
+  const { userTheme, setUserTheme } = useUserThemeContext();
+  const option = themeOptions[userTheme];
+  const handleClick = () => {
+    setUserTheme(option.next);
+  };
+
+  return (
+    <MenuItem onClick={handleClick}>
+      <option.icon /> {option.label}
+    </MenuItem>
+  );
+};
+
 // TODO maybe
 //            <ListItemIcon>
 //             <InboxIcon fontSize="small" />
@@ -117,6 +171,7 @@ export const MoreMenu = () => {
         <EditLink closeMenu={close} />
         <AboutLink closeMenu={close} />
         <InstallLink closeMenu={close} />
+        <ThemeSelection />
       </Menu>
       <button
         type="button"

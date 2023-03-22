@@ -30,7 +30,7 @@ const Table = styled.table`
   th {
     width: 140px;
     max-width: 140px;
-    color: rgba(0, 0, 0, 0.54);
+    color: ${({ theme }) => theme.palette.text.secondary};
     text-align: left;
     font-weight: normal;
     vertical-align: baseline;

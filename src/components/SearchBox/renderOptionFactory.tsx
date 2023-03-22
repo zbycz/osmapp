@@ -65,7 +65,7 @@ const IconPart = styled.div`
   text-align: center;
   padding-right: 10px;
   font-size: 10px;
-  color: #777;
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const getDistance = (point1, point2) => {
@@ -115,7 +115,7 @@ export const buildPhotonAddress = ({
   streetnumber: snum,
 }) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
-export const renderOptionFactory = (inputValue) => (option) => {
+export const renderOptionFactory = (inputValue, currentTheme) => (option) => {
   const { properties, geometry } = option;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 
@@ -135,6 +135,7 @@ export const renderOptionFactory = (inputValue) => (option) => {
           ico={poiClass.class}
           style={{ width: '20px', height: '20px', opacity: 0.5 }}
           title={`${tagKey}=${tagValue}`}
+          invert={currentTheme === 'dark'}
         />
         <div>{distKm} km</div>
       </IconPart>

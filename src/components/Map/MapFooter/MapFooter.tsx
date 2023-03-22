@@ -16,8 +16,8 @@ const Wrapper = styled.div`
   padding: 0 2px;
   font-size: 12px;
   line-height: normal;
-  color: #000;
-  background-color: #f8f4f0; /* same as osm-bright */
+  color: ${({ theme }) => theme.palette.text.primary};
+  background-color: ${({ theme }) => theme.palette.background.mapFooter};
   letter-spacing: normal;
   font-weight: 400;
   margin-left: 30px;
@@ -25,6 +25,7 @@ const Wrapper = styled.div`
   svg {
     vertical-align: -2px;
     margin-right: 4px;
+    filter: ${({ theme }) => theme.palette.invertFilter};
   }
 
   a,
