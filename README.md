@@ -35,8 +35,8 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 
 ### Coming soon
 
-- presets from iD for showing+editing (in progress - PR #131)
-- add routing (#31)
+- presets from iD for showing+editing (in progress) - [PR #131](https://github.com/zbycz/osmapp/pull/131)
+- add routing [#31](https://github.com/zbycz/osmapp/issues/31)
 - some ideas in [wireframes](https://drive.google.com/drive/folders/0B7awz2fKhg6yQ0JqTjhJRFV5aEE?resourcekey=0-NwX0M0KC3u85IGGyFonJAA&usp=sharing)
 
 ### Compatibility
