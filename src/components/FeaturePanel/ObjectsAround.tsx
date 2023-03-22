@@ -10,6 +10,7 @@ import { t } from '../../services/intl';
 import { FetchError } from '../../services/fetch';
 import { trimText, useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
+import { useUserThemeContext } from '../../helpers/theme';
 
 const useLoadingState = () => {
   const [around, setAround] = useState<Feature[]>([]);
@@ -32,6 +33,7 @@ const useLoadingState = () => {
 };
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
+  const { currentTheme } = useUserThemeContext();
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
   const { properties, tags, osmMeta } = feature;
@@ -56,6 +58,7 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
           title={`${Object.keys(tags).length} keys / ${
             properties.class ?? ''
           } / ${properties.subclass}`}
+          invert={currentTheme === 'dark'}
         />
         {getLabel(feature)}
       </a>
