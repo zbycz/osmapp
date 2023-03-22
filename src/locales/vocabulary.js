@@ -8,6 +8,9 @@ export default {
      If you have a compatible device, try using the latest version of your browser or simply enable WebGL:
      <ul><li>in <a href="https://otechworld.com/webgl-in-firefox/">Firefox, Librewolf</a>
      <li>in <a href="https://www.geeksforgeeks.org/how-to-enable-webgl-on-chrome/">Chrome, Chromium, Brave, Edge</a></ul>`,
+  darkmode_auto: 'Dark mode: auto',
+  darkmode_on: 'Dark mode: on',
+  darkmode_off: 'Dark mode: off',
 
   'install.button': 'Install app',
   'install.tabs_aria_label': 'Choose your platform',
