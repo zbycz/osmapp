@@ -16,7 +16,7 @@ const Wrapper = styled.div`
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
   ${({ uncertainImage }) =>
     uncertainImage
-      ? 'box-shadow: inset 0 0 100px rgba(255,255,255,0.3); opacity: 0.8;'
+      ? 'box-shadow: inset 0 0 100px rgba(255,255,255,0.3); filter: contrast(0.6) brightness(1.2);'
       : ''}
 
   &:before {

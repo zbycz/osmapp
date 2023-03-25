@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import FeatureHeading from './FeatureHeading';
+import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
 import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';

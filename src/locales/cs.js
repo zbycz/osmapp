@@ -3,6 +3,9 @@ export default {
   error: 'Chyba',
   close_panel: 'Zavřít panel',
   webgl_error: `Jejda. Tato mapa potřebuje technologii WebGL.<br /><br />Pokud máte moderní zařízení, zkuste nainstalovat poslední verzi prohlížeče Chrome.`,
+  darkmode_auto: 'Tmavý režim: auto',
+  darkmode_on: 'Tmavý režim: zap.',
+  darkmode_off: 'Tmavý režim: vyp.',
 
   'install.button': 'Stáhnout aplikaci',
   'install.tabs_aria_label': 'Vyberte si svou platformu',

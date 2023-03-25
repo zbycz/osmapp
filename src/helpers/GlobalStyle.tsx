@@ -1,14 +1,14 @@
 import { createGlobalStyle } from 'styled-components';
 import { isDesktop } from '../components/helpers';
 
-const GlobalStyle = createGlobalStyle`
+export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
     margin: 0;
     padding: 0;
     height: 100%;
     border: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: #f8f4f0;
+    background-color: ${({ theme }) => theme.palette.appBackground};
   }
 
   body {
@@ -20,7 +20,7 @@ const GlobalStyle = createGlobalStyle`
   }
 
   a, .linkLikeButton {
-    color: #0078a8;
+    color: ${({ theme }) => theme.palette.link};
     text-decoration: none;
     border: 0;
     padding: 0;
@@ -39,14 +39,21 @@ const GlobalStyle = createGlobalStyle`
 
     &:focus {
       text-decoration: underline;
-      //svg {
-      //  outline: -webkit-focus-ring-color auto 1px;
-      //}
     }
   }
 
   ul {
     margin-top: 0;
+  }
+
+  .mapboxgl-ctrl-group {
+    background: ${({ theme }) => theme.palette.background.default} !important;
+    .mapboxgl-ctrl-icon {
+      filter: ${({ theme }) => theme.palette.invertFilter};
+    }
+    button+button {
+      border-top: 1px solid ${({ theme }) => theme.palette.divider};
+    }
   }
 
   .mapboxgl-ctrl-top-right {
@@ -83,4 +90,3 @@ const GlobalStyle = createGlobalStyle`
     background-color: rgba(0, 0, 0, 0.2) !important;
   }
 `;
-export default GlobalStyle;

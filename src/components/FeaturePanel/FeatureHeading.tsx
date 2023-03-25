@@ -5,7 +5,7 @@ import { EditIconButton } from './helpers/EditIconButton';
 const Wrapper = styled.div`
   font-size: 36px;
   line-height: 0.98;
-  color: rgba(0, 0, 0, 0.7);
+  color: ${({ theme }) => theme.palette.text.panelHeading};
   position: relative;
   padding-bottom: 30px;
   ${({ deleted }) => deleted && 'text-decoration: line-through;'}
@@ -15,11 +15,9 @@ const Wrapper = styled.div`
   }
 `;
 
-const FeatureHeading = ({ title, onEdit, deleted, editEnabled }) => (
+export const FeatureHeading = ({ title, onEdit, deleted, editEnabled }) => (
   <Wrapper deleted={deleted}>
     {editEnabled && <EditIconButton onClick={() => onEdit('name')} />}
     {title}
   </Wrapper>
 );
-
-export default FeatureHeading;

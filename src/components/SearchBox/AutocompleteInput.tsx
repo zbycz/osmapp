@@ -6,6 +6,7 @@ import { renderOptionFactory, buildPhotonAddress } from './renderOptionFactory';
 import { t } from '../../services/intl';
 import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
 import { useMobileMode } from '../helpers';
+import { useUserThemeContext } from '../../helpers/theme';
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   const { InputLabelProps, InputProps, ...restParams } = params;
@@ -36,6 +37,7 @@ export const AutocompleteInput = ({
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
   const mobileMode = useMobileMode();
+  const { currentTheme } = useUserThemeContext();
   return (
     <Autocomplete
       inputValue={inputValue}
@@ -60,7 +62,7 @@ export const AutocompleteInput = ({
           autocompleteRef={autocompleteRef}
         />
       )}
-      renderOption={renderOptionFactory(inputValue)}
+      renderOption={renderOptionFactory(inputValue, currentTheme)}
     />
   );
 };

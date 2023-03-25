@@ -1,6 +1,9 @@
 import { useState } from 'react';
 
-export const usePersistedState = (storageKey, init) => {
+export const usePersistedState = <T>(
+  storageKey: string,
+  init: T,
+): [T, (param: T | ((current: T) => T)) => void] => {
   const persist = (value) =>
     window?.localStorage.setItem(storageKey, JSON.stringify(value));
 
@@ -21,5 +24,5 @@ export const usePersistedState = (storageKey, init) => {
       setStateValue(param);
     }
   };
-  return [value, setValue] as [any, any];
+  return [value, setValue];
 };
