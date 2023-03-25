@@ -19,19 +19,19 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 
 ## Features 🗺 📱 🖥
 
-* **clickable map** – poi, cities, localities, ponds (more coming soon)
-* **info panel** – images from Wikipedia, Mapillary or Fody
-* **editing** – for anonymous users inserts a note
-* **search engine** – try for example "Tesco, London"
-* **vector maps** – with the possibility of tilting to 3D (drag the compass, or two fingers drag)
-* **tourist map** – from MapTiler: vector, including marked routes
-* **layer switcher** – still basic, but you can add your own layers
-* **mobile applications** – see [osmapp.org/install](https://osmapp.org/install)
-* **permanent URLs** –  eg. [osmapp.org/way/123557148](https://osmapp.org/way/123557148)
-* **creating POIs** – after clicking the coordinates (see eg. [osmapp.org/50.1,14.39](https://osmapp.org/50.1,14.39))
-* **languages** – interface in English, Czech, German, Polish, Spanish, Amharic, Italian, French
-* **undelete** – undo accidental delete in osmapp or elsewhere, eg. [here](https://osmapp.org/node/1219767385)
-* and lot of little details 🙂
+- **clickable map** – poi, cities, localities, ponds (more coming soon)
+- **info panel** – images from Wikipedia, Mapillary or Fody
+- **editing** – for anonymous users inserts a note
+- **search engine** – try for example "Tesco, London"
+- **vector maps** – with the possibility of tilting to 3D (drag the compass, or two fingers drag)
+- **tourist map** – from MapTiler: vector, including marked routes
+- **layer switcher** – still basic, but you can add your own layers
+- **mobile applications** – see [osmapp.org/install](https://osmapp.org/install)
+- **permanent URLs** – eg. [osmapp.org/way/123557148](https://osmapp.org/way/123557148)
+- **creating POIs** – after clicking the coordinates (see eg. [osmapp.org/50.1,14.39](https://osmapp.org/50.1,14.39))
+- **languages** – interface in English, Czech, German, Polish, Spanish, Amharic, Italian, French
+- **undelete** – undo accidental delete in osmapp or elsewhere, eg. [here](https://osmapp.org/node/1219767385)
+- and lot of little details 🙂
 
 ### Coming soon
 
@@ -43,6 +43,22 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 
 - tested in Chrome 90 (Mac,Win,Android,iOS), Safari 14, Firefox 88, Edge 90 (slow)
 - [webgl](https://caniuse.com/webgl) technology needed
+
+### Changelog
+
+- v1.3.0
+  - added dark mode UI (@zbycz, [PR](https://github.com/zbycz/osmapp/pull/137))
+  - updated to Mapillary v4 (@kudlav, [PR](https://github.com/zbycz/osmapp/pull/113))
+  - added Spanish (@kresp0, [PR](https://github.com/zbycz/osmapp/pull/115))
+  - added Italian (@ricloy, [PR](https://github.com/zbycz/osmapp/pull/108))
+  - added French (@le-jun, [PR](https://github.com/zbycz/osmapp/pull/101))
+- v1.2.0
+  - changed search to Photon API (@kudlav, [PR](https://github.com/zbycz/osmapp/pull/84))
+  - added Amharic (@amenk, [PR](https://github.com/zbycz/osmapp/pull/89))
+  - added German (@amenk, [PR](https://github.com/zbycz/osmapp/pull/88))
+  - added Polish (@strebski, [PR](https://github.com/zbycz/osmapp/pull/77))
+- v1.1.0
+  - changed search to Maptiler API (@charleneolsen, [PR](https://github.com/zbycz/osmapp/pull/57))
 
 ## License
 
