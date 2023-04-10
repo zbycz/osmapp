@@ -22,8 +22,9 @@ export const fetchSchemaTranslations = async () => {
   publishDbgObject('schemaTranslations', translations);
 };
 
-export const mockSchemaTranslations = (mockTranslations) =>
-  (translations = mockTranslations);
+export const mockSchemaTranslations = (mockTranslations) => {
+  translations = mockTranslations;
+};
 
 export const getPresetTranslation = (key: string) =>
   translations ? translations[intl.lang].presets.presets[key].name : undefined;

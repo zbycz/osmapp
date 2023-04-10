@@ -41,11 +41,24 @@ export const computeAllFieldKeys = (preset: Preset) => {
   return [...new Set(allFieldKeys)];
 };
 
-export const getValueForField = (field, fieldTranslation, value: string) => {
+export const getValueForField = (
+  field,
+  fieldTranslation,
+  value: string,
+  tagsForField = [],
+) => {
   if (field.type === 'semiCombo') {
     return value
       .split(';')
       .map((v) => fieldTranslation?.options?.[v] ?? v)
+      .join(',\n');
+  }
+  if (field.type === 'access') {
+    return tagsForField
+      .map(
+        ({ key, value: value2 }) =>
+          `${fieldTranslation.types[key]}: ${fieldTranslation.options[value2]?.title}`,
+      )
       .join(',\n');
   }
 

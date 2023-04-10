@@ -48,104 +48,11 @@ describe('idTaggingScheme', () => {
       { label: 'Lit', value: 'no' },
     ]);
     expect(result.tagsWithFields).toMatchObject([
-      { label: 'Allowed Access', value: 'xxxx' },
+      {
+        label: 'Allowed Access',
+        value: 'Foot: Prohibited,\nBicycles: Prohibited,\nHorses: Prohibited',
+      },
       { label: 'Layer', value: '1' },
     ]);
   });
 });
-
-const a = {
-  key: 'bicycle',
-  value: {
-    title: 'Prohibited',
-    description: 'Access not allowed to the general public',
-  },
-  field: {
-    keys: ['access', 'foot', 'motor_vehicle', 'bicycle', 'horse'],
-    reference: { key: 'access' },
-    type: 'access',
-    options: [
-      'yes',
-      'no',
-      'permissive',
-      'private',
-      'designated',
-      'destination',
-      'customers',
-      'dismount',
-      'permit',
-      'unknown',
-    ],
-    fieldKey: 'access',
-  },
-  tagsForField: [
-    {
-      key: 'foot',
-      value: 'no',
-    },
-    {
-      key: 'bicycle',
-      value: 'no',
-    },
-    {
-      key: 'horse',
-      value: 'no',
-    },
-  ],
-  fieldTranslation: {
-    label: 'Allowed Access',
-    placeholder: 'Not Specified',
-    types: {
-      access: 'All',
-      foot: 'Foot',
-      motor_vehicle: 'Motor Vehicles',
-      bicycle: 'Bicycles',
-      horse: 'Horses',
-    },
-    options: {
-      yes: {
-        title: 'Allowed',
-        description: 'Access allowed by law; a right of way',
-      },
-      no: {
-        title: 'Prohibited',
-        description: 'Access not allowed to the general public',
-      },
-      permissive: {
-        title: 'Permissive',
-        description:
-          'Access allowed until such time as the owner revokes the permission',
-      },
-      private: {
-        title: 'Private',
-        description:
-          'Access allowed only with permission of the owner on an individual basis',
-      },
-      designated: {
-        title: 'Designated',
-        description: 'Access allowed according to signs or specific local laws',
-      },
-      destination: {
-        title: 'Destination',
-        description: 'Access allowed only to reach a destination',
-      },
-      customers: {
-        title: 'Customers',
-        description: 'Restricted to customers at the destination',
-      },
-      dismount: {
-        title: 'Dismount',
-        description: 'Access allowed but rider must dismount',
-      },
-      permit: {
-        title: 'Permit',
-        description: 'Access allowed only with a valid permit or license',
-      },
-      unknown: {
-        title: 'Unknown',
-        description: 'Access conditions are unknown or unclear',
-      },
-    },
-  },
-  label: 'Allowed Access',
-};

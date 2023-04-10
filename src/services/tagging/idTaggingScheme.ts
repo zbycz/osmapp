@@ -4,6 +4,7 @@ import { getPresetForFeature } from './presets';
 import { fields } from './data';
 import { computeAllFieldKeys, getValueForField } from './fields';
 import { Preset } from './types/Presets';
+import { publishDbgObject } from '../../utils';
 
 // TODO move to shared place
 const featuredKeys = [
@@ -23,7 +24,7 @@ const matchFieldsFromPreset = (
   feature: Feature,
 ) => {
   const computedAllFieldKeys = computeAllFieldKeys(preset);
-  console.log('computedAllFieldKeys', computedAllFieldKeys);
+  publishDbgObject('computedAllFieldKeys', computedAllFieldKeys);
 
   return computedAllFieldKeys
     .map((fieldKey: string) => {
@@ -43,7 +44,7 @@ const matchFieldsFromPreset = (
 
       return {
         key,
-        value: getValueForField(field, fieldTranslation, value),
+        value: getValueForField(field, fieldTranslation, value), // TODO add tagsForField
         field,
         fieldTranslation,
         label,
@@ -52,7 +53,8 @@ const matchFieldsFromPreset = (
     .filter((field) => field.value);
 };
 
-const matchRestToFields = (keysTodo: any, feature: Feature) => keysTodo
+const matchRestToFields = (keysTodo: any, feature: Feature) =>
+  keysTodo
     .map((key) => {
       const value = feature.tags[key];
       const field = Object.values(fields).find(
@@ -84,7 +86,7 @@ const matchRestToFields = (keysTodo: any, feature: Feature) => keysTodo
 
       return {
         key,
-        value: getValueForField(field, fieldTranslation, value),
+        value: getValueForField(field, fieldTranslation, value, tagsForField),
         field,
         tagsForField,
         fieldTranslation,
@@ -111,8 +113,8 @@ const keysTodo = {
   remove(key) {
     this.state.splice(this.state.indexOf(key), 1);
   },
-  resolveFields(fields) {
-    fields.forEach((field) => {
+  resolveFields(fieldsArray) {
+    fieldsArray.forEach((field) => {
       if (field?.field?.key)
         this.state.splice(this.state.indexOf(field.field.key), 1);
       if (field?.field?.keys)
@@ -149,8 +151,6 @@ export const getSchemaForFeature = (feature: Feature) => {
     keysTodo: keysTodo.state,
   };
 };
-
-
 
 /* 29 object types:
 "access"

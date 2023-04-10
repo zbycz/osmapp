@@ -9,11 +9,18 @@ import {
   way,
   wayFeature,
 } from './osmApi.fixture';
+import { intl } from "../intl";
 
 const osm = (item) => ({ elements: [item] });
 const overpass = {
   elements: [{ center: { lat: 50, lon: 14 } }],
 };
+
+// TODO maybe write it without need for intl?
+intl.lang = 'en';
+jest.mock('next/config', () => () => ({
+  publicRuntimeConfig: { languages: ['en'] },
+}));
 
 describe('fetchFeature', () => {
   beforeEach(() => {
