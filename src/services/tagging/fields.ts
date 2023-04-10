@@ -1,6 +1,6 @@
 // links like {shop}, are recursively resolved to their fields
-import { Preset } from "./types/Presets";
-import { presets } from "./data";
+import { Preset } from './types/Presets';
+import { presets } from './data';
 
 const getResolvedFields = (fieldKeys: string[]): string[] =>
   fieldKeys.flatMap((key) => {
@@ -13,17 +13,17 @@ const getResolvedFields = (fieldKeys: string[]): string[] =>
 
 const getResolvedFieldsWithParents = (
   preset: Preset,
-  fieldType: "fields" | "moreFields"
+  fieldType: 'fields' | 'moreFields',
 ): string[] => {
-  const parts = preset.presetKey.split("/");
+  const parts = preset.presetKey.split('/');
 
   if (parts.length > 1) {
-    const parentKey = parts.slice(0, parts.length - 1).join("/");
+    const parentKey = parts.slice(0, parts.length - 1).join('/');
     const parentPreset = presets[parentKey];
     if (parentPreset) {
       return [
         ...getResolvedFieldsWithParents(parentPreset, fieldType),
-        ...(preset[fieldType] ?? [])
+        ...(preset[fieldType] ?? []),
       ];
     }
   }
@@ -31,10 +31,10 @@ const getResolvedFieldsWithParents = (
   return preset[fieldType] ?? [];
 };
 
-export const getAllFieldKeys = (preset: Preset) => {
+export const computeAllFieldKeys = (preset: Preset) => {
   const allFieldKeys = [
-    ...getResolvedFields(getResolvedFieldsWithParents(preset, "fields")),
-    ...getResolvedFields(getResolvedFieldsWithParents(preset, "moreFields"))
+    ...getResolvedFields(getResolvedFieldsWithParents(preset, 'fields')),
+    ...getResolvedFields(getResolvedFieldsWithParents(preset, 'moreFields')),
   ];
 
   // @ts-ignore
@@ -42,11 +42,11 @@ export const getAllFieldKeys = (preset: Preset) => {
 };
 
 export const getValueForField = (field, fieldTranslation, value: string) => {
-  if (field.type === "semiCombo") {
+  if (field.type === 'semiCombo') {
     return value
-      .split(";")
+      .split(';')
       .map((v) => fieldTranslation?.options?.[v] ?? v)
-      .join(",\n");
+      .join(',\n');
   }
 
   return fieldTranslation?.options?.[value] ?? value;

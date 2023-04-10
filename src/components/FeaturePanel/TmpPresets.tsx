@@ -110,7 +110,7 @@ export const TmpPresets = ({ feature, featuredTags }) => {
           ))}
         </tbody>
         <tbody>
-          {schema.restKeys.map((key) => (
+          {schema.keysTodo.map((key) => (
             <tr key={key}>
               <th>{key}</th>
               <td>{renderValue(key, feature.tags[key])}</td>

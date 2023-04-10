@@ -4,6 +4,7 @@ import Router from 'next/router';
 import { MessagesType, TranslationId } from './types';
 import { isBrowser, isServer } from '../components/helpers';
 import { getServerIntl } from './intlServer';
+import { publishDbgObject } from '../utils';
 
 type Values = { [variable: string]: string };
 
@@ -50,6 +51,7 @@ export const setIntl = (initialIntl: Intl) => {
   if (initialIntl) {
     intl.lang = initialIntl.lang;
     intl.messages = initialIntl.messages;
+    publishDbgObject('intl', intl);
   }
 };
 

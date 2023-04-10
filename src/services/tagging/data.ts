@@ -2,6 +2,7 @@ import fieldsJson from '../../../data/fields.json';
 import { Fields } from './types/Fields';
 import presetsJson from '../../../data/presets.json';
 import { Presets } from './types/Presets';
+import { publishDbgObject } from '../../utils';
 
 export const fields = fieldsJson as unknown as Fields;
 
@@ -13,6 +14,9 @@ export const presets = presetsJson as unknown as Presets;
 Object.keys(presetsJson).forEach((presetKey) => {
   presets[presetKey].presetKey = presetKey;
 });
+
+publishDbgObject('presets', presets);
+publishDbgObject('fields', fields);
 
 // build a key lookup table for fields by osm key
 // const fieldsByOsmKey = {};

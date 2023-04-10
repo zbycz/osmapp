@@ -1,8 +1,9 @@
 import { fetchJson } from '../fetch';
 import { Field } from './types/Fields';
 import { intl } from '../intl';
+import { publishDbgObject } from '../../utils';
 
-// https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.0.0-rc.1/dist/translations/cs.min.json
+// https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
 const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap`;
 
 let translations = {};
@@ -18,7 +19,11 @@ export const fetchSchemaTranslations = async () => {
   translations = await fetchJson(
     `${cdnUrl}/id-tagging-schema@${version}/dist/translations/${intl.lang}.min.json`,
   );
+  publishDbgObject('schemaTranslations', translations);
 };
+
+export const mockSchemaTranslations = (mockTranslations) =>
+  (translations = mockTranslations);
 
 export const getPresetTranslation = (key: string) =>
   translations ? translations[intl.lang].presets.presets[key].name : undefined;

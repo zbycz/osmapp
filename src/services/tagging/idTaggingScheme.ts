@@ -1,8 +1,9 @@
-import { Feature } from "../types";
-import { getFieldTranslation, getPresetTranslation } from "./translations";
-import { getPresetForFeature } from "./presets";
-import { fields } from "./data";
-import { getAllFieldKeys, getValueForField } from "./fields";
+import { Feature } from '../types';
+import { getFieldTranslation, getPresetTranslation } from './translations';
+import { getPresetForFeature } from './presets';
+import { fields } from './data';
+import { computeAllFieldKeys, getValueForField } from './fields';
+import { Preset } from './types/Presets';
 
 // TODO move to shared place
 const featuredKeys = [
@@ -16,28 +17,23 @@ const featuredKeys = [
   'description',
 ];
 
-export const getSchemaForFeature = (feature: Feature) => {
-  const preset = getPresetForFeature(feature);
+const matchFieldsFromPreset = (
+  preset: Preset,
+  keysTodo: any,
+  feature: Feature,
+) => {
+  const computedAllFieldKeys = computeAllFieldKeys(preset);
+  console.log('computedAllFieldKeys', computedAllFieldKeys);
 
-  const keysToDo = Object.keys(feature.tags).filter(
-    (key) => !featuredKeys.includes(key),
-  );
-
-  // remove tags which are already covered by Preset name
-  Object.keys(preset.tags).forEach((key) => {
-    keysToDo.splice(keysToDo.indexOf(key), 1);
-  });
-
-  const fieldKeys = getAllFieldKeys(preset);
-  const matchedFields = fieldKeys
+  return computedAllFieldKeys
     .map((fieldKey: string) => {
       const field = fields[fieldKey];
       const key = field?.key; // TODO handle `keys` as well
-      if (!keysToDo.includes(key)) {
+      if (keysTodo.isDone(key)) {
         return {};
       }
       if (field.type === 'typeCombo') {
-        keysToDo.splice(keysToDo.indexOf(field.key), 1); // ignore eg. railway=tram_stop on public_transport=stop_position
+        keysTodo.remove(field.key); // ignore eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
 
@@ -54,17 +50,9 @@ export const getSchemaForFeature = (feature: Feature) => {
       };
     })
     .filter((field) => field.value);
+};
 
-  matchedFields.forEach((field) => {
-    if (field?.field?.key)
-      keysToDo.splice(keysToDo.indexOf(field.field.key), 1);
-    if (field?.field?.keys)
-      field.field.keys.forEach((key) =>
-        keysToDo.splice(keysToDo.indexOf(key), 1),
-      );
-  });
-
-  const tagsWithFields = keysToDo
+const matchRestToFields = (keysTodo: any, feature: Feature) => keysTodo
     .map((key) => {
       const value = feature.tags[key];
       const field = Object.values(fields).find(
@@ -74,7 +62,7 @@ export const getSchemaForFeature = (feature: Feature) => {
         return {};
       }
       if (field.type === 'typeCombo') {
-        keysToDo.splice(keysToDo.indexOf(field.key), 1); // ignore eg. railway=tram_stop on public_transport=stop_position
+        keysTodo.remove(field.key); // ignore eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
 
@@ -89,7 +77,7 @@ export const getSchemaForFeature = (feature: Feature) => {
         if (feature.tags[k]) {
           tagsForField.push({ key: k, value: feature.tags[k] });
         }
-        keysToDo.splice(keysToDo.indexOf(k), 1); // remove all "address:*" keys etc.
+        keysTodo.remove(k); // remove all "address:*" keys etc.
       });
 
       const fieldTranslation = getFieldTranslation(field);
@@ -105,23 +93,93 @@ export const getSchemaForFeature = (feature: Feature) => {
     })
     .filter((field) => field.field);
 
-  tagsWithFields.forEach((field) => {
-    if (field.field.key) keysToDo.splice(keysToDo.indexOf(field.field.key), 1);
-    if (field.field.keys)
-      field.field.keys.forEach((key) =>
-        keysToDo.splice(keysToDo.indexOf(key), 1),
-      );
-  });
+const keysTodo = {
+  state: [],
+  init(feature) {
+    this.state = Object.keys(feature.tags).filter(
+      (key) => !featuredKeys.includes(key),
+    );
+  },
+  resolve(tags) {
+    Object.keys(tags).forEach((key) => {
+      this.state.splice(this.state.indexOf(key), 1);
+    });
+  },
+  isDone(key) {
+    return !this.state.includes(key);
+  },
+  remove(key) {
+    this.state.splice(this.state.indexOf(key), 1);
+  },
+  resolveFields(fields) {
+    fields.forEach((field) => {
+      if (field?.field?.key)
+        this.state.splice(this.state.indexOf(field.field.key), 1);
+      if (field?.field?.keys)
+        field.field.keys.forEach((key) =>
+          this.state.splice(this.state.indexOf(key), 1),
+        );
+    });
+  },
+  map(fn) {
+    return this.state.map(fn);
+  },
+};
+
+export const getSchemaForFeature = (feature: Feature) => {
+  const preset = getPresetForFeature(feature);
+
+  keysTodo.init(feature);
+  keysTodo.resolve(preset.tags); // remove tags which are already covered by Preset keys
+
+  const matchedFields = matchFieldsFromPreset(preset, keysTodo, feature);
+  keysTodo.resolveFields(matchedFields);
+
+  const tagsWithFields = matchRestToFields(keysTodo, feature);
+  keysTodo.resolveFields(tagsWithFields);
 
   // TODO fix one field with more tags! like address
   return {
     presetKey: preset.presetKey,
     preset,
-    fieldKeys,
     feature,
     label: getPresetTranslation(preset.presetKey),
     matchedFields,
     tagsWithFields,
-    restKeys: keysToDo,
+    keysTodo: keysTodo.state,
   };
 };
+
+
+
+/* 29 object types:
+"access"
+"address"
+"check"
+"colour"
+"combo"
+"date"
+"defaultCheck"
+"directionalCombo"
+"email"
+"identifier"
+"localized"
+"manyCombo"
+"multiCombo"
+"networkCombo"
+"number"
+"onewayCheck"
+"radio"
+"restrictions"
+"roadheight"
+"roadspeed"
+"semiCombo"
+"structureRadio"
+"tel"
+"text"
+"textarea"
+"typeCombo"
+"url"
+"wikidata"
+"wikipedia"
+ */
