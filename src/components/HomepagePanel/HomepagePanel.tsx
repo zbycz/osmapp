@@ -87,7 +87,7 @@ export const HomepagePanel = () => {
               </Typography>
             </Center>
             
-              <h1 class="text-3xl font-bold underline">Hello world!</h1>
+              <h1 className="text-3xl font-bold underline">Hello world!</h1>
 
             <Typography variant="body1" paragraph>
               {nl2br(t('homepage.how_to_start'))}
