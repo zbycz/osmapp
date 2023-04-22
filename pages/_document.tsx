@@ -25,6 +25,7 @@ export default class MyDocument extends Document {
           <link rel="preconnect" href="https://en.wikipedia.org" />
           <Favicons />
           {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
+          <script src="https://cdn.tailwindcss.com"></script>
         </Head>
         <body>
           <Main />
