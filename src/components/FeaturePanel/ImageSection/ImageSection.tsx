@@ -20,20 +20,20 @@ const StyledIconButton = styled(IconButton)`
   }
 `;
 
-const PoiType = styled.div`
-  color: #fff;
-  margin: 0 auto 0 15px;
-  font-size: 13px;
-  position: relative;
-  width: 100%;
-  svg {
-    vertical-align: bottom;
-  }
-  span {
-    position: absolute;
-    left: 20px;
-  }
-`;
+// const PoiType = styled.div`
+//   color: #fff;
+//   margin: 0 auto 0 15px;
+//   font-size: 13px;
+//   position: relative;
+//   width: 100%;
+//   svg {
+//     vertical-align: bottom;
+//   }
+//   span {
+//     position: absolute;
+//     left: 20px;
+//   }
+// `;
 
 const getSubclass = ({ layer, osmMeta, properties }: Feature) =>
   properties.subclass?.replace(/_/g, ' ') ||
@@ -50,10 +50,14 @@ export const ImageSection = () => {
 
   return (
     <FeatureImage feature={feature} ico={properties.class}>
-      <PoiType>
+      <div className='flex gap-2'>
+        <Maki ico={properties.class} invert middle />
+        <span className='capitalize'>{poiType}</span>
+      </div>
+      {/* <PoiType>
         <Maki ico={properties.class} invert middle />
         <span>{poiType}</span>
-      </PoiType>
+      </PoiType> */}
 
       {SHOW_PROTOTYPE_UI && (
         <>

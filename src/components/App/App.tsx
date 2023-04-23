@@ -9,7 +9,7 @@ import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapView, getInititalFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
-import { Loading } from './Loading';
+// import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
@@ -69,10 +69,16 @@ const IndexWithProviders = () => {
   // TODO add correct error boundaries
   return (
     <>
-      <SearchBox />
-      <Loading />
-      {featureShown && <FeaturePanel />}
+      {/* Left panel */}
+      <div className='absolute h-full flex flex-col w-full sm:w-[424px] p-2 gap-2 z-20'>
+        <SearchBox />
+        {/* <Loading /> */}
+        {featureShown && <FeaturePanel />}
+      </div>
+      
+      {/* First load panel */}
       <HomepagePanel />
+
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
       {preview && <FeaturePreview />}

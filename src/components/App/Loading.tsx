@@ -1,19 +1,20 @@
 import LinearProgress from '@material-ui/core/LinearProgress';
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
+// import styled from 'styled-components';
 import Router from 'next/router';
-import { isDesktop, useBoolState } from '../helpers';
+// import { isDesktop, useBoolState } from '../helpers';
+import { useBoolState } from '../helpers';
 
-const Wrapper = styled.div`
-  position: absolute;
-  top: 72px;
-  z-index: 1200;
+// const Wrapper = styled.div`
+//   position: absolute;
+//   top: 72px;
+//   z-index: 1200;
 
-  width: 100%;
-  @media ${isDesktop} {
-    width: 410px;
-  }
-`;
+//   width: 100%;
+//   @media ${isDesktop} {
+//     width: 410px;
+//   }
+// `;
 
 export const Loading = () => {
   const [loading, start, stop] = useBoolState(false);
@@ -30,5 +31,9 @@ export const Loading = () => {
     };
   }, []);
 
-  return <Wrapper>{loading && <LinearProgress />}</Wrapper>;
+  return (
+    <div className='absolute left-0 right-0 bottom-0 min-h-fit'>
+      {loading && <LinearProgress />}
+    </div>
+  )
 };

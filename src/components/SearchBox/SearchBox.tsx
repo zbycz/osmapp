@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import throttle from 'lodash/throttle';
 import SearchIcon from '@material-ui/icons/Search';
-import Paper from '@material-ui/core/Paper';
+// import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Router from 'next/router';
 import { fetchJson } from '../../services/fetch';
@@ -11,33 +11,35 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
-import { isDesktop, useMobileMode } from '../helpers';
+// import { isDesktop, useMobileMode } from '../helpers';
+import { useMobileMode } from '../helpers';
+import { Loading } from '../App/Loading';
 
-const TopPanel = styled.div`
-  position: absolute;
-  height: 72px;
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-  background-color: ${({ theme }) => theme.palette.background.searchBox};
-  padding: 10px;
-  box-sizing: border-box;
+// const TopPanel = styled.div`
+//   position: absolute;
+//   height: 72px;
+//   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
+//   background-color: ${({ theme }) => theme.palette.background.searchBox};
+//   padding: 10px;
+//   box-sizing: border-box;
 
-  z-index: 1200;
+//   z-index: 1200;
 
-  width: 100%;
-  @media ${isDesktop} {
-    width: 410px;
-  }
-`;
+//   width: 100%;
+//   @media ${isDesktop} {
+//     width: 410px;
+//   }
+// `;
 
-const StyledPaper = styled(Paper)`
-  padding: 2px 4px;
-  display: flex;
-  align-items: center;
+// const StyledPaper = styled(Paper)`
+//   padding: 2px 4px;
+//   display: flex;
+//   align-items: center;
 
-  .MuiAutocomplete-root {
-    flex: 1;
-  }
-`;
+//   .MuiAutocomplete-root {
+//     flex: 1;
+//   }
+// `;
 
 const SearchIconButton = styled(IconButton)`
   svg {
@@ -85,8 +87,13 @@ const SearchBox = () => {
   };
 
   return (
-    <TopPanel>
-      <StyledPaper elevation={1} ref={autocompleteRef}>
+    <div className='h-16 relative z-10 bg-zinc-800 shadow-md rounded-lg border-2 border-zinc-700 hover:brightness-125 overflow-hidden'>
+      <div 
+        className="flex items-center p-2"
+        ref={autocompleteRef}
+      >
+        {/* TODO make the input fill the container so you can click anywhere in it */}
+
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
         </SearchIconButton>
@@ -98,9 +105,14 @@ const SearchBox = () => {
           autocompleteRef={autocompleteRef}
         />
 
-        {featureShown && <ClosePanelButton onClick={closePanel} />}
-      </StyledPaper>
-    </TopPanel>
+        <div className="ml-auto">
+          {featureShown && <ClosePanelButton onClick={closePanel} />}
+        </div>
+        
+      </div>
+      <Loading />
+    </div>
+    
   );
 };
 

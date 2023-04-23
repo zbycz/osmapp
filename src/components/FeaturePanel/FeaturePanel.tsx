@@ -9,7 +9,6 @@ import {
   PanelContent,
   PanelFooter,
   PanelScrollbars,
-  PanelWrapper,
 } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
@@ -51,19 +50,19 @@ const FeaturePanel = () => {
   const label = getLabel(feature);
 
   return (
-    <PanelWrapper>
-      <PanelScrollbars>
-        <ImageSection />
-        <PanelContent>
-          <FeatureHeading
-            deleted={deleted}
-            title={label}
-            editEnabled={editEnabled && !point}
-            onEdit={setDialogOpenedWith}
-          />
+    <div className="grow bg-zinc-800 rounded-lg shadow-md overflow-hidden border-2 border-zinc-700">
+      <ImageSection />
+      
+      <PanelContent>
+        <FeatureHeading
+          deleted={deleted}
+          title={label}
+          editEnabled={editEnabled && !point}
+          onEdit={setDialogOpenedWith}
+        />
 
-          <OsmError />
-
+        <OsmError />
+        <PanelScrollbars>
           <FeaturedTags
             featuredTags={deleted ? [] : featuredTags}
             setDialogOpenedWith={setDialogOpenedWith}
@@ -125,9 +124,10 @@ const FeaturePanel = () => {
 
             {!point && showAround && <ObjectsAround advanced={advanced} />}
           </PanelFooter>
-        </PanelContent>
-      </PanelScrollbars>
-    </PanelWrapper>
+        </PanelScrollbars>
+        
+      </PanelContent>
+    </div>
   );
 };
 
