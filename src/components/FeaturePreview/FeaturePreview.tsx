@@ -50,7 +50,7 @@ export const FeaturePreview = () => {
       <ClosePanelButton
         onClick={onClose}
         right
-        style={{ margin: '-6px -36px 0 0' }}
+        // style={{ margin: '-6px -36px 0 0' }}
       />
     </Wrapper>
   );
