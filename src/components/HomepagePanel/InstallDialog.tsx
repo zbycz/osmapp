@@ -120,7 +120,7 @@ export function InstallDialog() {
     >
       <TabContext value={value}>
         <DialogTitle>
-          <ClosePanelButton right onClick={handleClose} style={{ zIndex: 2 }} />
+          <ClosePanelButton right onClick={handleClose} />
           <Tabs
             value={value}
             onChange={handleChange}
