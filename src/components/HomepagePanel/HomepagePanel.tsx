@@ -68,7 +68,7 @@ export const HomepagePanel = () => {
   }, [feature, preview]);
 
   if (!homepageShown) {
-    // return null;
+    return null;
   }
 
   return (
