@@ -1,5 +1,7 @@
 import React from 'react';
 
+// not used in tailwind version -- can be deleted when ready
+
 const SvgComponent = (props) => (
   // eslint-disable-next-line react/jsx-props-no-spreading
   <svg height={26} width={26} {...props}>

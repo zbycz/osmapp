@@ -70,14 +70,13 @@ const IndexWithProviders = () => {
   return (
     <>
       {/* Left panel */}
-      <div className='absolute h-full flex flex-col w-full sm:w-[424px] p-2 gap-2 z-20'>
+      <div className="absolute flex flex-col w-full sm:w-[424px] p-2 gap-2 z-20 bottom-12 top-0">
         <SearchBox />
         {/* <Loading /> */}
         {featureShown && <FeaturePanel />}
+        {/* First load panel */}
+        <HomepagePanel />
       </div>
-      
-      {/* First load panel */}
-      <HomepagePanel />
 
       {router.pathname === '/install' && <InstallDialog />}
       <Map />

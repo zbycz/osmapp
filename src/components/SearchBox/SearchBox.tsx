@@ -87,11 +87,8 @@ const SearchBox = () => {
   };
 
   return (
-    <div className='h-16 relative z-10 bg-zinc-800 shadow-md rounded-lg border-2 border-zinc-700 hover:brightness-125 overflow-hidden'>
-      <div 
-        className="flex items-center p-2"
-        ref={autocompleteRef}
-      >
+    <div className="h-16 relative z-10 bg-zinc-800 shadow-md rounded-lg border-2 border-zinc-600 hover:brightness-125 overflow-hidden">
+      <div className="flex items-center p-2" ref={autocompleteRef}>
         {/* TODO make the input fill the container so you can click anywhere in it */}
 
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
@@ -108,11 +105,9 @@ const SearchBox = () => {
         <div className="ml-auto">
           {featureShown && <ClosePanelButton onClick={closePanel} />}
         </div>
-        
       </div>
       <Loading />
     </div>
-    
   );
 };
 

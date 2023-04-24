@@ -7,8 +7,9 @@ import { Button } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import {
   PanelFooter,
+  // PanelContent,
   PanelScrollbars,
-  PanelWrapper,
+  // PanelWrapper,
 } from '../utils/PanelHelpers';
 import LogoOsmapp from '../../assets/LogoOsmapp';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -45,7 +46,6 @@ export const Content = styled.div`
 const StyledLogoOsmapp = styled(LogoOsmapp)`
   width: 41%;
   height: auto;
-  margin-top: 3em;
 `;
 
 const Center = styled.div`
@@ -68,26 +68,26 @@ export const HomepagePanel = () => {
   }, [feature, preview]);
 
   if (!homepageShown) {
-    return null;
+    // return null;
   }
 
   return (
-    <PanelWrapper>
-      <PanelScrollbars>
-        <ClosePanelButton right onClick={persistHideHomepage} />
-        <Content>
-          <div>
-            <Center mb>
-              <StyledLogoOsmapp width={130} height={130} />
-              <Typography variant="h4" component="h1" color="inherit">
-                OsmAPP
-              </Typography>
-              <Typography variant="subtitle1" color="textSecondary">
-                {t('homepage.subtitle')}
-              </Typography>
-            </Center>
-            
-              <h1 className="text-3xl font-bold underline">Hello world!</h1>
+    <div className="relative grow rounded-lg shadow-md overflow-hidden border-2 border-zinc-600 bg-gradient-to-b bg-zinc-800">
+      <div className="h-full">
+        <div className="absolute z-20 top-2 left-2">
+          <ClosePanelButton onClick={persistHideHomepage} />
+        </div>
+
+        <PanelScrollbars>
+          {/* <Content> */}
+          <div className="flex flex-col items-center justify-center text-center bg-gradient-to-b from-zinc-800 to-zinc-600 p-4">
+            <StyledLogoOsmapp width={130} height={130} />
+            <Typography variant="h4" component="h1" color="inherit">
+              OsmAPP
+            </Typography>
+            <Typography variant="subtitle1" color="textSecondary">
+              {t('homepage.subtitle')}
+            </Typography>
 
             <Typography variant="body1" paragraph>
               {nl2br(t('homepage.how_to_start'))}
@@ -148,14 +148,16 @@ export const HomepagePanel = () => {
               <Translation id="homepage.about_osmapp" />
             </Typography>
 
-            <Typography variant="body2" paragraph>
+            <div className="flex items-center gap-2">
               <GithubIcon
                 width="32"
                 height="32"
                 style={{ verticalAlign: '-9px', margin: '0 10px 0 5px' }}
               />{' '}
               <Translation id="homepage.github_link" />
-            </Typography>
+            </div>
+
+            <Typography variant="body2" paragraph />
 
             <Center mb mt>
               <Link href="/install" passHref>
@@ -197,10 +199,10 @@ export const HomepagePanel = () => {
             </a>
 
             <Spacer />
+            <PanelFooter />
           </div>
-          <PanelFooter />
-        </Content>
-      </PanelScrollbars>
-    </PanelWrapper>
+        </PanelScrollbars>
+      </div>
+    </div>
   );
 };
