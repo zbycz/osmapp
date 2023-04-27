@@ -4,20 +4,19 @@ import { intl } from '../intl';
 import { publishDbgObject } from '../../utils';
 
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
-const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap`;
+const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
 
+// TODO downloa up-to-date or use node_module?
 let translations = {};
 export const fetchSchemaTranslations = async () => {
   if (translations[intl.lang]) return;
 
-  const presetsPackage = await fetchJson(
-    `${cdnUrl}/id-tagging-schema/package.json`,
-  );
+  const presetsPackage = await fetchJson(`${cdnUrl}/package.json`);
   const { version } = presetsPackage;
 
   // this request is cached in browser
   translations = await fetchJson(
-    `${cdnUrl}/id-tagging-schema@${version}/dist/translations/${intl.lang}.min.json`,
+    `${cdnUrl}@${version}/dist/translations/${intl.lang}.min.json`,
   );
   publishDbgObject('schemaTranslations', translations);
 };

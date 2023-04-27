@@ -1786,6 +1786,11 @@
     "@nodelib/fs.scandir" "2.1.4"
     fastq "^1.6.0"
 
+"@openstreetmap/id-tagging-schema@^6.1.0":
+  version "6.1.0"
+  resolved "https://registry.yarnpkg.com/@openstreetmap/id-tagging-schema/-/id-tagging-schema-6.1.0.tgz#f00c2983370e57dc642602b2aaf2d46a4ec5bc41"
+  integrity sha512-kPDYCsLeHLOOb4/FRs5M9YHSw+6BAuhltPqHC2zf4RGCy1ezw3EG0QnjSQ4tsaW0oeuPE639I4pNIc0j7pR1dA==
+
 "@opentelemetry/api@0.14.0":
   version "0.14.0"
   resolved "https://registry.yarnpkg.com/@opentelemetry/api/-/api-0.14.0.tgz#4e17d8d2f1da72b19374efa7b6526aa001267cae"

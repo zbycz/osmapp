@@ -29,8 +29,10 @@ const matchFieldsFromPreset = (
   return computedAllFieldKeys
     .map((fieldKey: string) => {
       const field = fields[fieldKey];
-      const key = field?.key; // TODO handle `keys` as well
-      if (keysTodo.isDone(key)) {
+      const key = field?.key;
+      const keys = field?.keys;
+      const shouldWeIncludeThisField = keysTodo.has(key) || keysTodo.hasAny(keys);
+      if (!shouldWeIncludeThisField) {
         return {};
       }
       if (field.type === 'typeCombo') {
@@ -39,37 +41,7 @@ const matchFieldsFromPreset = (
       }
 
       const value = feature.tags[key];
-      const fieldTranslation = getFieldTranslation(field);
-      const label = fieldTranslation?.label ?? field.label;
 
-      return {
-        key,
-        value: getValueForField(field, fieldTranslation, value), // TODO add tagsForField
-        field,
-        fieldTranslation,
-        label,
-      };
-    })
-    .filter((field) => field.value);
-};
-
-const matchRestToFields = (keysTodo: any, feature: Feature) =>
-  keysTodo
-    .map((key) => {
-      const value = feature.tags[key];
-      const field = Object.values(fields).find(
-        (f) => f.key === key || f.keys?.includes(key),
-      ); // todo cache this
-      if (!field) {
-        return {};
-      }
-      if (field.type === 'typeCombo') {
-        keysTodo.remove(field.key); // ignore eg. railway=tram_stop on public_transport=stop_position
-        return {};
-      }
-
-      // TODO make this generic + add to matchedFields as well
-      // maybe gather all tags and just print them near this field
       const keysInField = [
         ...(field.keys ?? []),
         ...(field.key ? [field.key] : []),
@@ -90,7 +62,49 @@ const matchRestToFields = (keysTodo: any, feature: Feature) =>
         field,
         tagsForField,
         fieldTranslation,
-        label: fieldTranslation?.label ?? `[${key}]`,
+        label: fieldTranslation?.label ?? field.label,
+      };
+    })
+    .filter((field) => field.value);
+};
+
+const matchRestToFields = (keysTodo: any, feature: Feature) =>
+  keysTodo
+    .map((key) => {
+      const field = Object.values(fields).find(
+        (f) => f.key === key || f.keys?.includes(key),
+      ); // todo cache this
+      if (!field) {
+        return {};
+      }
+      if (field.type === 'typeCombo') {
+        keysTodo.remove(field.key); // ignore eg. railway=tram_stop on public_transport=stop_position
+        return {};
+      }
+
+      const value = feature.tags[key];
+
+      const keysInField = [
+        ...(field.keys ?? []),
+        ...(field.key ? [field.key] : []),
+      ];
+      const tagsForField = [];
+      keysInField.forEach((k) => {
+        if (feature.tags[k]) {
+          tagsForField.push({ key: k, value: feature.tags[k] });
+        }
+        keysTodo.remove(k); // remove all "address:*" keys etc.
+      });
+
+      const fieldTranslation = getFieldTranslation(field);
+
+      return {
+        key,
+        value: getValueForField(field, fieldTranslation, value, tagsForField),
+        field,
+        tagsForField,
+        fieldTranslation,
+        label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
       };
     })
     .filter((field) => field.field);
@@ -107,11 +121,17 @@ const keysTodo = {
       this.state.splice(this.state.indexOf(key), 1);
     });
   },
-  isDone(key) {
-    return !this.state.includes(key);
+  has(key) {
+    return this.state.includes(key);
+  },
+  hasAny(keys) {
+    return keys?.some((key) => this.state.includes(key));
   },
   remove(key) {
-    this.state.splice(this.state.indexOf(key), 1);
+    const index = this.state.indexOf(key);
+    if (index > -1) {
+      this.state.splice(index, 1);
+    }
   },
   resolveFields(fieldsArray) {
     fieldsArray.forEach((field) => {
@@ -152,34 +172,3 @@ export const getSchemaForFeature = (feature: Feature) => {
   };
 };
 
-/* 29 object types:
-"access"
-"address"
-"check"
-"colour"
-"combo"
-"date"
-"defaultCheck"
-"directionalCombo"
-"email"
-"identifier"
-"localized"
-"manyCombo"
-"multiCombo"
-"networkCombo"
-"number"
-"onewayCheck"
-"radio"
-"restrictions"
-"roadheight"
-"roadspeed"
-"semiCombo"
-"structureRadio"
-"tel"
-"text"
-"textarea"
-"typeCombo"
-"url"
-"wikidata"
-"wikipedia"
- */

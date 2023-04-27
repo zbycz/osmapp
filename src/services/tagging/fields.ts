@@ -53,7 +53,8 @@ export const getValueForField = (
       .map((v) => fieldTranslation?.options?.[v] ?? v)
       .join(',\n');
   }
-  if (field.type === 'access') {
+  //eg field.type === 'access' or 'structure'
+  if (fieldTranslation?.types && fieldTranslation?.options) {
     return tagsForField
       .map(
         ({ key, value: value2 }) =>

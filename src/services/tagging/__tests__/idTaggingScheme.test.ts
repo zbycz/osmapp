@@ -1,7 +1,7 @@
 import { getSchemaForFeature } from '../idTaggingScheme';
 import { Feature } from '../../types';
 import { mockSchemaTranslations } from '../translations';
-import translations from '../../../../data/tagging-schema.6.1.0.en.json';
+import translations from '@openstreetmap/id-tagging-schema/dist/translations/en.json';
 import { intl } from '../../intl';
 
 intl.lang = 'en';
@@ -45,13 +45,13 @@ describe('idTaggingScheme', () => {
       { label: 'Speed Limit', value: '55 mph' },
       { label: 'Lanes', value: '2' },
       { label: 'Surface', value: 'Asphalt' },
-      { label: 'Lit', value: 'no' },
-    ]);
-    expect(result.tagsWithFields).toMatchObject([
       {
         label: 'Allowed Access',
         value: 'Foot: Prohibited,\nBicycles: Prohibited,\nHorses: Prohibited',
       },
+      { label: 'Lit', value: 'no' },
+    ]);
+    expect(result.tagsWithFields).toMatchObject([
       { label: 'Layer', value: '1' },
     ]);
   });

@@ -1,6 +1,6 @@
-import fieldsJson from '../../../data/fields.json';
+import fieldsJson from '@openstreetmap/id-tagging-schema/dist/fields.json';
+import presetsJson from '@openstreetmap/id-tagging-schema/dist/presets.json';
 import { Fields } from './types/Fields';
-import presetsJson from '../../../data/presets.json';
 import { Presets } from './types/Presets';
 import { publishDbgObject } from '../../utils';
 
@@ -18,7 +18,7 @@ Object.keys(presetsJson).forEach((presetKey) => {
 publishDbgObject('presets', presets);
 publishDbgObject('fields', fields);
 
-// build a key lookup table for fields by osm key
+// TODO build a key lookup table for fields by osm key ?
 // const fieldsByOsmKey = {};
 // Object.entries(fields).forEach(([fieldKey, field]) => {
 //   if (field.key) {
