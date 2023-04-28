@@ -50,7 +50,8 @@ const SearchIconButton = styled(IconButton)`
 const getApiUrl = (inputValue, view) => {
   const [zoom, lat, lon] = view;
   const lvl = Math.max(0, Math.min(16, Math.round(zoom)));
-  return `https://photon.komoot.io/api/?q=${inputValue}&lon=${lon}&lat=${lat}&zoom=${lvl}`;
+  const q = encodeURIComponent(inputValue);
+  return `https://photon.komoot.io/api/?q=${q}&lon=${lon}&lat=${lat}&zoom=${lvl}`;
 };
 
 const fetchOptions = throttle(async (inputValue, view, setOptions) => {
