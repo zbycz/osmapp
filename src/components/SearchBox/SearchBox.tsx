@@ -16,16 +16,14 @@ import { isDesktop, useMobileMode } from '../helpers';
 const TopPanel = styled.div`
   position: absolute;
   height: 72px;
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-  background-color: ${({ theme }) => theme.palette.background.searchBox};
-  padding: 10px;
+  padding: 12px;
   box-sizing: border-box;
-
+  border-radius: 30px;
   z-index: 1200;
 
   width: 100%;
   @media ${isDesktop} {
-    width: 410px;
+    width: 434px;
   }
 `;
 
@@ -33,10 +31,11 @@ const StyledPaper = styled(Paper)`
   padding: 2px 4px;
   display: flex;
   align-items: center;
-
+  overflow: hidden;
   .MuiAutocomplete-root {
     flex: 1;
   }
+  border-radius: 8px !important;
 `;
 
 const SearchIconButton = styled(IconButton)`
@@ -87,7 +86,7 @@ const SearchBox = () => {
 
   return (
     <TopPanel>
-      <StyledPaper elevation={1} ref={autocompleteRef}>
+      <StyledPaper elevation={3} ref={autocompleteRef}>
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
         </SearchIconButton>

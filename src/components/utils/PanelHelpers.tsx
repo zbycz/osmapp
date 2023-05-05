@@ -8,9 +8,10 @@ import { isDesktop } from '../helpers';
 // maybe https://github.com/malte-wessel/react-custom-scrollbars (larger)
 export const PanelWrapper = styled.div`
   position: absolute;
-  left: 0;
+  left: 12px;
   top: 72px; // TopPanel
-  bottom: 0;
+  bottom: 12px;
+  border-radius: 12px;
   background: ${({ theme }) => theme.palette.panelBackground};
   overflow: hidden;
   z-index: 1100;
@@ -18,7 +19,7 @@ export const PanelWrapper = styled.div`
   display: flex;
   flex-direction: column;
 
-  width: 100%;
+  width: calc(100% - 24px);
   @media ${isDesktop} {
     width: 410px;
   }

@@ -8,7 +8,7 @@ export const ClosePanelButton = ({ onClick, right = false, style = {} }) => (
     aria-label={t('close_panel')}
     onClick={onClick}
     style={{
-      ...(right ? { position: 'absolute', right: 0 } : {}),
+      ...(right ? { position: 'fixed', right: 12 } : {}),
       ...style,
     }}
   >
