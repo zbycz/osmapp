@@ -92,3 +92,6 @@ export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
 
 // (>= mobile size) This changes just the app layout
 export const isDesktop = '(min-width: 500px)';
+
+// (<= mobile size) This changes just the app layout (revesed variable from above)
+export const isMobile = '(max-width: 500px)';

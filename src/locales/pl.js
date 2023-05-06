@@ -139,7 +139,7 @@ export default {
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Godziny otwarcia',
 
-  'layerswitcher.button': 'Mapy',
+  'layerswitcher.button': 'Warstwy',
   'layerswitcher.heading': 'Warstwy mapy',
   'layerswitcher.intro': 'Dzięki temu, że OpenStreetMap oferuje dane źródłowe, każdy może stworzyć różne warianty mapy.',
   'layerswitcher.add_layer_button': 'Dodaj własną warstwę',

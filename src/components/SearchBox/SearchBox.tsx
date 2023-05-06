@@ -11,16 +11,19 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
-import { isDesktop, useMobileMode } from '../helpers';
+import { isDesktop, useMobileMode, isMobile } from '../helpers';
 
 const TopPanel = styled.div`
   position: absolute;
   height: 72px;
   padding: 12px;
   box-sizing: border-box;
-  border-radius: 30px;
   z-index: 1200;
-
+  @media ${isMobile} {
+    background-color: ${({ theme }) => theme.palette.background.searchBox};
+    height: 68px;
+    padding: 8px;
+  }
   width: 100%;
   @media ${isDesktop} {
     width: 434px;

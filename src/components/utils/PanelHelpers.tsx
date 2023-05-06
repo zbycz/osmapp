@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { isDesktop } from '../helpers';
+import { isDesktop, isMobile } from '../helpers';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -9,17 +9,33 @@ import { isDesktop } from '../helpers';
 export const PanelWrapper = styled.div`
   position: absolute;
   left: 12px;
+  @media ${isMobile} {
+    left: 0px;
+  }
   top: 72px; // TopPanel
+  @media ${isMobile} {
+    top: 68px;
+  }
+
   bottom: 12px;
-  border-radius: 12px;
+  @media ${isMobile} {
+    bottom: 0px;
+  }
+  @media ${isDesktop} {
+    border-radius: 12px;
+    // height: calc(100vh - 72px - 12px - 24px);
+    border: 1px solid ${({ theme }) => theme.palette.divider};
+  }
+
   background: ${({ theme }) => theme.palette.panelBackground};
   overflow: hidden;
   z-index: 1100;
 
   display: flex;
   flex-direction: column;
-
-  width: calc(100% - 24px);
+  @media ${isMobile} {
+    width: 100%;
+  }
   @media ${isDesktop} {
     width: 410px;
   }

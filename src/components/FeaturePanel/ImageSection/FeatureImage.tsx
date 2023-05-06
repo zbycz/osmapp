@@ -38,11 +38,9 @@ const Wrapper = styled.div`
 `;
 
 const Bottom = styled.div`
-  position: absolute;
-  bottom: 0;
   display: flex;
   align-items: center;
-  width: 100%;
+  flex: 1;
   height: 44px;
 `;
 
@@ -61,21 +59,25 @@ const IconWrapper = styled.div`
 `;
 
 const AttributionLink = styled.a`
-  position: absolute;
-  right: 1px;
-  top: 1px;
   text-align: right;
   padding-right: 3px;
   font-size: 80%;
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 1);
   color: #fff;
   text-decoration: none;
+  align-self: flex-end;
   opacity: ${({ portrait }) => (portrait ? 1 : 0.8)};
-
+  flex: 0;
   &:hover {
     opacity: 1;
     text-shadow: 1px 1px 10px rgba(0, 0, 0, 1), 0 0 4px rgba(0, 0, 0, 1);
   }
+`;
+const AttributionAndBottomWrapper = styled.div`
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  display: flex;
 `;
 
 interface Props {
@@ -116,20 +118,22 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
           <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
         </IconWrapper>
       )}
-      {source && (
-        <Tooltip title={nl2br(`© ${attribution}${uncertainTitle}`)} arrow>
-          <AttributionLink
-            href={link}
-            target="_blank"
-            rel="noopener"
-            portrait={portrait}
-          >
-            {attribution}
-          </AttributionLink>
-        </Tooltip>
-      )}
       {!feature.skeleton && image === LOADING && <InlineSpinner />}
-      <Bottom>{children}</Bottom>
+      <AttributionAndBottomWrapper>
+        <Bottom>{children}</Bottom>
+        {source && (
+          <Tooltip title={nl2br(`© ${attribution}${uncertainTitle}`)} arrow>
+            <AttributionLink
+              href={link}
+              target="_blank"
+              rel="noopener"
+              portrait={portrait}
+            >
+              {attribution}
+            </AttributionLink>
+          </Tooltip>
+        )}
+      </AttributionAndBottomWrapper>
     </Wrapper>
   );
 };

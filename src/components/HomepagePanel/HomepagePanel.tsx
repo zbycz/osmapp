@@ -53,6 +53,14 @@ const Center = styled.div`
   ${({ mb }) => mb && 'margin-bottom: 2em;'}
   ${({ mt }) => mt && 'margin-top: 2em;'}
 `;
+const ButtonWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: sticky;
+  top: 0px;
+  right: 0px;
+`;
 
 const Spacer = styled.div`
   padding-bottom: 2em;
@@ -74,7 +82,9 @@ export const HomepagePanel = () => {
   return (
     <PanelWrapper>
       <PanelScrollbars>
-        <ClosePanelButton right onClick={persistHideHomepage} />
+        <ButtonWrapper>
+          <ClosePanelButton onClick={persistHideHomepage} />
+        </ButtonWrapper>
         <Content>
           <div>
             <Center mb>
