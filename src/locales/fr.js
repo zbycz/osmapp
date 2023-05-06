@@ -23,7 +23,8 @@ export default {
   'install.desktop_intro': 'Ouvrir osmapp.org dans <strong>Chrome</strong>, <strong>Firefox</strong> ou <strong>Opera</strong>',
   'install.desktop_install': 'Cliquer sur le <strong>bouton d’installation</strong>',
   'install.outro': 'C’est tout ! OsmApp est sur votre écran d’accueil.',
-  'install.note': 'Note : Cette application fait appel à PWA pour permettre une installation rapide et sans faire appel à Google Play ou l’App Store.',
+  'install.note':
+    'Note : Cette application fait appel à PWA pour permettre une installation rapide et sans faire appel à Google Play ou l’App Store.',
 
   'homepage.subtitle': 'Une application OpenStreetMap universelle',
   'homepage.how_to_start': 'Commencez en tapant votre requête dans la barre de recherche.\nOu cliquez sur un élément de la carte.',
