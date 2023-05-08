@@ -1,6 +1,10 @@
 import React from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
+import Accordion from '@material-ui/core/Accordion';
+import AccordionSummary from '@material-ui/core/AccordionSummary';
+import AccordionDetails from '@material-ui/core/AccordionDetails';
+import KeybordArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import { Field } from '../../services/tagging/types/Fields';
 import { getUrlForTag } from './helpers/getUrlForTag';
 import { slashToOptionalBr } from '../helpers';
@@ -71,7 +75,47 @@ const addUnits = (label, value) => {
   const unit = label.match(unitRegExp);
   return `${value}${unit ? ` (${unit[1]})` : ''}`;
 };
-
+const DetailsAccordion = ({ schema, feature }) => (
+  <Accordion
+    style={{
+      backgroundColor: 'transparent',
+      padding: 0,
+    }}
+    elevation={0}
+  >
+    <AccordionSummary
+      style={{
+        padding: 0,
+        margin: 0,
+      }}
+      expandIcon={<KeybordArrowDown />}
+    >
+      <Typography variant="overline">
+        {t('featurepanel.raw_info_heading')}
+      </Typography>
+    </AccordionSummary>
+    <AccordionDetails
+      style={{
+        padding: 0,
+      }}
+    >
+      <table
+        style={{
+          fontFamily: 'monospace',
+        }}
+      >
+        <tbody>
+          {schema.keysTodo.map((key) => (
+            <tr key={key}>
+              <th>{key}</th>
+              <td>{renderValue(key, feature.tags[key])}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </AccordionDetails>
+  </Accordion>
+);
 export const TmpPresets = ({ feature, featuredTags }) => {
   const { schema } = feature;
   if (!schema) return null;
@@ -109,15 +153,10 @@ export const TmpPresets = ({ feature, featuredTags }) => {
             </tr>
           ))}
         </tbody>
-        <tbody>
-          {schema.keysTodo.map((key) => (
-            <tr key={key}>
-              <th>{key}</th>
-              <td>{renderValue(key, feature.tags[key])}</td>
-            </tr>
-          ))}
-        </tbody>
       </Table>
+      {schema.keysTodo.length > 0 && (
+        <DetailsAccordion feature={feature} schema={schema} />
+      )}
     </>
   );
 };

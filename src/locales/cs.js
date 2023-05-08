@@ -54,6 +54,7 @@ export default {
   'featurepanel.error_deleted': 'Tento prvek je v OpenStreetMap označen jako smazaný.',
   'featurepanel.history_button': 'Historie »',
   'featurepanel.other_info_heading': 'Další informace',
+  'featurepanel.raw_info_heading': 'Nezpracovaná data',
   'featurepanel.edit_button_title': 'Upravit v databázi OpenStreetMap',
   'featurepanel.edit_button': 'Upravit místo',
   'featurepanel.add_place_button': 'Přidat místo',

@@ -61,6 +61,7 @@ export default {
   'featurepanel.error_deleted': 'This object is marked as deleted in OpenStreetMap.',
   'featurepanel.history_button': 'History »',
   'featurepanel.other_info_heading': 'Details',
+  'featurepanel.raw_info_heading': 'Raw info',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.note_button': 'Suggest an edit',
   'featurepanel.edit_button': 'Edit details',

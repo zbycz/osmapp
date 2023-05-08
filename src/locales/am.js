@@ -54,6 +54,7 @@ export default {
   'featurepanel.error_deleted': 'ይህ አካል በOpenStreetMap ላይ ተሰርዟል የሚል ምልክት ተደርጎበታል',
   'featurepanel.history_button': 'ታሪኮች »',
   'featurepanel.other_info_heading': 'ተጨማሪ መረጃ',
+  'featurepanel.raw_info_heading': 'ጥሬ ውሂብ',
   'featurepanel.edit_button_title': 'በOpenStreetMap የመረጃ ቋት ውስጥ አርትእ',
   'featurepanel.edit_button': 'ይህን አካባቢ አርትእ',
   'featurepanel.add_place_button': 'አዲስ ቦታን ጨምር',

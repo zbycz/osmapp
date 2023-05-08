@@ -55,6 +55,7 @@ export default {
   'featurepanel.error_deleted': 'Ten obiekt jest oznaczony jako usunięty w OpenStreetMap.',
   'featurepanel.history_button': 'Historia »',
   'featurepanel.other_info_heading': 'Więcej informacji',
+  'featurepanel.raw_info_heading': 'Surowe informacje',
   'featurepanel.edit_button_title': 'Edytuj w bazie danych OpenStreetMap',
   'featurepanel.edit_button': 'Edytuj miejsce',
   'featurepanel.add_place_button': 'Dodaj miejsce',

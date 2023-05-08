@@ -55,6 +55,7 @@ export default {
   'featurepanel.error_deleted': 'Das Objekt wurde in OpenStreetMap als gelöscht markiert.',
   'featurepanel.history_button': 'Versionsverlauf »',
   'featurepanel.other_info_heading': 'Weitere Informationen',
+  'featurepanel.raw_info_heading': 'Rohdaten',
   'featurepanel.edit_button_title': 'In OpenStreetMap Datenbank bearbeiten',
   'featurepanel.edit_button': 'Ort bearbeiten',
   'featurepanel.add_place_button': 'Ort hinzufügen',

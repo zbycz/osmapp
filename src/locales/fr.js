@@ -56,6 +56,7 @@ export default {
   'featurepanel.error_deleted': 'Cet élément n’existe plus sur OpenStreetMap.',
   'featurepanel.history_button': 'Historique»',
   'featurepanel.other_info_heading': 'Plus d’informations',
+  'featurepanel.raw_info_heading': 'Données brutes',
   'featurepanel.edit_button_title': 'Modifier sur OpenStreetMap',
   'featurepanel.edit_button': 'Modifier l’élément',
   'featurepanel.add_place_button': 'Ajouter un élément',
