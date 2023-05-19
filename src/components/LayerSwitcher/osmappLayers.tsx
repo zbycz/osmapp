@@ -25,7 +25,7 @@ export const osmappLayers: Layers = {
   sat: {
     name: t('layers.sat'),
     type: 'basemap',
-    url: 'https://api.maptiler.com/tiles/satellite/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    url: 'https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
     Icon: SatelliteIcon,
   },
   // mtb: {
