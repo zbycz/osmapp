@@ -1,12 +1,10 @@
 /* eslint-disable */
 const packageJson = require('./package.json');
-const withPWA = require('next-pwa');
+const withPWA = require('next-pwa')({
+  dest: 'public'
+});
 
 module.exports = withPWA({
-  pwa: {
-    dest: 'public',
-  },
-
   //TODO fails with current webpack config. Probably needs to get rid of sentry? (@sentry/nextjs was not cool)
   // future: {
   //   webpack5: true,
