@@ -26,7 +26,7 @@ module.exports = withPWA({
   },
   webpack: (config, { dev, isServer }) => {
     if (!dev) {
-      config.devtool = 'source-maps';
+      config.devtool = 'source-map';
       for (const plugin of config.optimization.minimizer) {
         if (plugin.constructor.name === 'TerserPlugin') {
           plugin.options.sourceMap = true;
