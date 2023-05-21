@@ -27,11 +27,6 @@ module.exports = withPWA({
     },
   },
   webpack: (config, { dev, isServer }) => {
-    // Fixes npm packages that depend on `fs` module
-    config.node = {
-      fs: 'empty',
-    };
-
     if (!dev) {
       config.devtool = 'source-maps';
       for (const plugin of config.optimization.minimizer) {
