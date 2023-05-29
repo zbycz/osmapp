@@ -156,4 +156,7 @@ export default {
   'layers.mapnik': 'OSM Mapnik',
   'layers.sat': 'Satellite (z<14)',
   'layers.bike': 'Bike',
+
+  'coordinates.geo_uri': 'GeoURI (open in phone Maps)',
+  'coordinates.copy_value': 'Copy __value__', // keep it short, don't mention clipboard
 };

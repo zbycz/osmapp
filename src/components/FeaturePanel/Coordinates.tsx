@@ -11,6 +11,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { getIdEditorLink, positionToDeg, positionToDM } from '../../utils';
 import { PositionBoth } from '../../services/types';
 import { getFullOsmappLink } from '../../services/helpers';
+import { t } from '../../services/intl';
 
 const StyledMenuItem = styled(MenuItem)`
   svg {
@@ -47,7 +48,9 @@ export const ToggleButton = forwardRef<any, any>(
 
 const CopyTextItem = ({ text }) => (
   <MenuItem onClick={() => navigator.clipboard.writeText(text)}>
-    Copy {text.replace(/^https:\/\//, '')}
+    {t('coordinates.copy_value', {
+      value: text.replace(/^https:\/\//, ''),
+    })}
   </MenuItem>
 );
 
@@ -92,6 +95,10 @@ const useGetItems = ([lon, lat]: PositionBoth) => {
     {
       label: 'iD editor',
       href: getIdEditorLink(feature, view), // TODO coordsFeature has random id which gets forwarded LOL
+    },
+    {
+      label: t('coordinates.geo_uri'),
+      href: `geo:${lat},${lon}`,
     },
   ];
 };
