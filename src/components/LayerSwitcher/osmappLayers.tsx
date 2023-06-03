@@ -5,12 +5,14 @@ import SatelliteIcon from '@material-ui/icons/Satellite';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
 import { Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
+import { isBrowser } from '../helpers';
 
 interface Layers {
   [key: string]: Layer;
 }
 
-const retina = (window.devicePixelRatio || 1) >= 2 ? '@2x' : '';
+const retina =
+  ((isBrowser() && window.devicePixelRatio) || 1) >= 2 ? '@2x' : '';
 
 export const osmappLayers: Layers = {
   basic: {
