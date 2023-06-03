@@ -155,5 +155,6 @@ export default {
   'layers.snow': 'Snow',
   'layers.mapnik': 'OSM Mapnik',
   'layers.sat': 'Satellite (z<14)',
+  'layers.bingSat': 'Bing satellite',
   'layers.bike': 'Bike',
 };

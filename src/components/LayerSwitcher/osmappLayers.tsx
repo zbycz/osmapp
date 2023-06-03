@@ -13,20 +13,32 @@ interface Layers {
 const retina = (window.devicePixelRatio || 1) >= 2 ? '@2x' : '';
 
 export const osmappLayers: Layers = {
-  basic: { name: t('layers.basic'), type: 'basemap', Icon: ExploreIcon },
-  outdoor: { name: t('layers.outdoor'), type: 'basemap', Icon: FilterHdrIcon },
+  basic: {
+    name: t('layers.basic'),
+    type: 'basemap',
+    Icon: ExploreIcon,
+    attribution: ['maptiler', 'osm'],
+  },
+  outdoor: {
+    name: t('layers.outdoor'),
+    type: 'basemap',
+    Icon: FilterHdrIcon,
+    attribution: ['maptiler', 'osm'],
+  },
   s1: { type: 'spacer' },
   mapnik: {
     name: t('layers.mapnik'),
     type: 'basemap',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     Icon: MapIcon,
+    attribution: ['osm'],
   },
   sat: {
     name: t('layers.sat'),
     type: 'basemap',
     url: 'https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
     Icon: SatelliteIcon,
+    attribution: ['maptiler'],
   },
   // mtb: {
   //   name: t('layers.mtb'),
@@ -36,12 +48,16 @@ export const osmappLayers: Layers = {
   bike: {
     name: t('layers.bike'),
     type: 'basemap',
-    url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=00291b657a5d4c91bbacb0ff096e2c25`,
+    url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=18c0cb31f2fd41d28ac90abe4059e359`,
     Icon: DirectionsBikeIcon,
+    attribution: [
+      '&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>',
+      'osm',
+    ],
   },
   // snow: {
   //   name: t('layers.snow'),
-  //   type: 'basemap',
+  //   type: 'overlay',
   //   url: 'https://www.opensnowmap.org/tiles-pistes/{z}/{x}/{y}.png',
   // },
   // s2: { type: 'spacer' },

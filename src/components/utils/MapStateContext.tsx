@@ -8,6 +8,7 @@ export interface Layer {
   url?: string;
   key?: string;
   Icon?: React.FC<any>;
+  attribution?: string[]; // missing in spacer TODO refactor ugly
 }
 
 // // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
