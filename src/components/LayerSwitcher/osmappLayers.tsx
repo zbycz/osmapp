@@ -42,6 +42,13 @@ export const osmappLayers: Layers = {
     Icon: SatelliteIcon,
     attribution: ['maptiler'],
   },
+  bingSat: {
+    name: t('layers.bingSat'),
+    type: 'basemap',
+    url: 'https://ecn.{bingSubdomains}.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=13657',
+    Icon: SatelliteIcon,
+    attribution: ['bing'],
+  },
   // mtb: {
   //   name: t('layers.mtb'),
   //   type: 'basemap',
