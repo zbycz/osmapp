@@ -6,6 +6,7 @@ import Router, { useRouter } from 'next/router';
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
+import SearchBoxNew from '../SearchBox/SearchBoxNew';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapView, getInititalFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
@@ -70,8 +71,9 @@ const IndexWithProviders = () => {
   return (
     <>
       {/* Left panel */}
-      <div className="absolute flex flex-col w-full sm:w-[424px] p-2 gap-2 z-20 bottom-12 top-0">
-        <SearchBox />
+      <div className="absolute flex flex-col w-full sm:w-[424px] p-2 gap-2 z-20 top-0 max-h-[90vh]">
+        {/* <SearchBox /> */}
+        <SearchBoxNew />
         {/* <Loading /> */}
         {featureShown && <FeaturePanel />}
         {/* First load panel */}
