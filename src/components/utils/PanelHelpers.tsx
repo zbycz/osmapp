@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Scrollbars } from 'react-custom-scrollbars';
+import { Scrollbars } from 'react-custom-scrollbars-2';
 import { isDesktop } from '../helpers';
 
 // custom scrollbar

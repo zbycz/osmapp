@@ -72,7 +72,7 @@ export const HomepagePanel = () => {
   }
 
   return (
-    <div className="relative grow rounded-lg shadow-md overflow-hidden border-2 border-zinc-600 bg-gradient-to-b bg-zinc-800">
+    <div className="relative grow h-[90vh] rounded-lg shadow-md overflow-hidden border-2 border-zinc-600 bg-gradient-to-b bg-zinc-800">
       <div className="h-full">
         <div className="absolute z-20 top-2 left-2">
           <ClosePanelButton onClick={persistHideHomepage} />
