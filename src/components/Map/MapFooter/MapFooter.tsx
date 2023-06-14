@@ -67,7 +67,11 @@ const MapDataLink = () => {
   const short = useMediaQuery('(max-width: 500px)');
   const { activeLayers } = useMapStateContext();
   const attributions = uniq(
-    activeLayers.flatMap((layer) => osmappLayers[layer].attribution),
+    activeLayers.flatMap((layer) =>
+      osmappLayers[layer]
+        ? osmappLayers[layer].attribution
+        : decodeURI(new URL(layer)?.hostname),
+    ),
   );
 
   const nodes = attributions.map((attribution) => {

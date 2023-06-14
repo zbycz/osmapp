@@ -13,7 +13,7 @@ const Link = styled.a`
 export const MaptilerLogo = () => {
   const { activeLayers } = useMapStateContext();
   const hasMaptiler = activeLayers.some((layer) =>
-    osmappLayers[layer].attribution?.includes('maptiler'),
+    osmappLayers[layer]?.attribution?.includes('maptiler'),
   );
 
   if (!hasMaptiler) {
