@@ -2,6 +2,7 @@
 /coverage
 /build
 /dist
+/tsconfig.tsbuildinfo
 .next
 .DS_Store
 .env
