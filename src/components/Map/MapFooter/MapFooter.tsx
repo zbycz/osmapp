@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import getConfig from 'next/config';
 import { Tooltip, useMediaQuery } from '@material-ui/core';
@@ -99,14 +99,23 @@ const MapDataLink = () => {
   return nodes;
 };
 
+const ClientOnly = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? children : null;
+};
+
 export const MapFooter = () => (
-  <Wrapper>
-    <OsmappLink />
-    {' | '}
-    <LangSwitcher />
-    {' | '}
-    <MapDataLink />
-    {' | '}
-    <MoreMenu />
-  </Wrapper>
+  // TODO find a way how to render this in SSR (keep layer in cookies?)
+  <ClientOnly>
+    <Wrapper>
+      <OsmappLink />
+      {' | '}
+      <LangSwitcher />
+      {' | '}
+      <MapDataLink />
+      {' | '}
+      <MoreMenu />
+    </Wrapper>
+  </ClientOnly>
 );
