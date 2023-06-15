@@ -9,6 +9,7 @@ export interface Layer {
   key?: string;
   Icon?: React.FC<any>;
   attribution?: string[]; // missing in spacer TODO refactor ugly
+  maxzoom?: number;
 }
 
 // // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]

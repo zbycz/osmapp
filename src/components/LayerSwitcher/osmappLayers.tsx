@@ -36,11 +36,19 @@ export const osmappLayers: Layers = {
     attribution: ['osm'],
   },
   sat: {
-    name: t('layers.sat'),
+    name: t('layers.maptilerSat'),
     type: 'basemap',
     url: 'https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
     Icon: SatelliteIcon,
     attribution: ['maptiler'],
+  },
+  bingSat: {
+    name: t('layers.bingSat'),
+    type: 'basemap',
+    url: 'https://ecn.{bingSubdomains}.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=13657',
+    Icon: SatelliteIcon,
+    attribution: ['&copy; <a href="https://www.bing.com/maps">Microsoft</a>'],
+    maxzoom: 19,
   },
   // mtb: {
   //   name: t('layers.mtb'),

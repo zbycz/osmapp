@@ -148,6 +148,7 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'Zimní',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satelitní',
+  'layers.maptilerSat': 'Letecká Maptiler ',
+  'layers.bingSat': 'Letecká Bing',
   'layers.bike': 'Cyklo',
 };

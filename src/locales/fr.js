@@ -154,6 +154,7 @@ export default {
   'layers.mtb': 'VTT',
   'layers.snow': 'Neige',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satellite (zoom < 14)',
+  'layers.maptilerSat': 'Maptiler Satellite (zoom < 14)',
+  'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Vélo',
 };
