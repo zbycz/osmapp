@@ -154,7 +154,7 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'Snow',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satellite (z<14)',
-  'layers.bingSat': 'Bing satellite',
+  'layers.maptilerSat': 'Maptiler Satellite (z<14)',
+  'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Bike',
 };

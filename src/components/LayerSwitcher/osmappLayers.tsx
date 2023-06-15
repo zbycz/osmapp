@@ -36,7 +36,7 @@ export const osmappLayers: Layers = {
     attribution: ['osm'],
   },
   sat: {
-    name: t('layers.sat'),
+    name: t('layers.maptilerSat'),
     type: 'basemap',
     url: 'https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
     Icon: SatelliteIcon,
