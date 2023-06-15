@@ -47,7 +47,8 @@ export const osmappLayers: Layers = {
     type: 'basemap',
     url: 'https://ecn.{bingSubdomains}.tiles.virtualearth.net/tiles/a{quadkey}.jpeg?g=13657',
     Icon: SatelliteIcon,
-    attribution: ['bing'],
+    attribution: ['&copy; <a href="https://www.bing.com/maps">Microsoft</a>'],
+    maxzoom: 19,
   },
   // mtb: {
   //   name: t('layers.mtb'),
