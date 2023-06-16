@@ -67,7 +67,10 @@ const isBuilding = (k) =>
   k.match(/building|roof|^min_level|^max_level|height$/);
 const isNetwork = (k) => k.match(/network/);
 const isBrand = (k) => k.match(/^brand/);
+const isOperator = (k) => k.match(/^operator/);
 const isPayment = (k) => k.match(/^payment/);
+const isHideTags = (k) =>
+  k.match(/^source|check_date|gnis.*|fixme|comment|note|tiger.*/);
 
 const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
   const [isShown, toggle] = useToggleState(false);
@@ -119,6 +122,7 @@ export const TagsTable = ({ tags, center, except, onEdit }) => {
   const buildings = tagsEntries.filter(([k]) => isBuilding(k));
   const networks = tagsEntries.filter(([k]) => isNetwork(k));
   const brands = tagsEntries.filter(([k]) => isBrand(k));
+  const operator = tagsEntries.filter(([k]) => isOperator(k));
   const payments = tagsEntries.filter(([k]) => isPayment(k));
   const rest = tagsEntries.filter(
     ([k]) =>
@@ -130,8 +134,10 @@ export const TagsTable = ({ tags, center, except, onEdit }) => {
       !isAddr(k) &&
       !isBuilding(k) &&
       !isNetwork(k) &&
+      !isOperator(k) &&
       !isPayment(k) &&
-      !isBrand(k),
+      !isBrand(k) &&
+      !isHideTags(k),
   );
 
   return (
@@ -208,6 +214,12 @@ export const TagsTable = ({ tags, center, except, onEdit }) => {
             tags={networks}
             label="network:*"
             value={tags.network}
+            onEdit={onEdit}
+          />
+          <TagsGroup
+            tags={operator}
+            label="operator:*"
+            value={tags.operator}
             onEdit={onEdit}
           />
           <TagsGroup
