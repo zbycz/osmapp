@@ -156,16 +156,14 @@ export const HomepagePanel = () => {
             </Typography>
 
             <Center mb mt>
-              <Link href="/install" passHref>
-                <Button
-                  variant="outlined"
-                  startIcon={<GetAppIcon />}
-                  color="primary"
-                  href="/install"
-                >
-                  {t('install.button')}
-                </Button>
-              </Link>
+              <Button
+                variant="outlined"
+                startIcon={<GetAppIcon />}
+                color="primary"
+                href="/install"
+              >
+                {t('install.button')}
+              </Button>
             </Center>
 
             <Spacer />

@@ -4,7 +4,13 @@ export default {
   loading: 'Chargement',
   error: 'Erreur',
   close_panel: 'Fermer cet onglet',
-  webgl_error: `Oups, cette carte requiert l’utilisation de WebGL.<br /><br />Si votre appareil est compatible, essayez d’utiliser la dernière version de votre navigateur.`,
+  webgl_error: `Oups, cette carte requiert l’utilisation de WebGL.<br /><br />
+    Si votre appareil est compatible, essayez d’utiliser la dernière version de votre navigateur ou activez simplement WebGL :
+    <ul><li>dans <a href="https://otechworld.com/webgl-in-firefox/">Firefox, Librewolf</a>
+    <li>dans <a href="https://www.geeksforgeeks.org/how-to-enable-webgl-on-chrome/">Chrome, Chromium, Brave, Edge</a></ul>`,
+  darkmode_auto: 'Mode sombre : auto',
+  darkmode_on: 'Mode sombre : activé',
+  darkmode_off: 'Mode sombre : désactivé',
 
   'install.button': 'Installer l’application',
   'install.tabs_aria_label': 'Choisir la plateforme',
@@ -64,7 +70,7 @@ export default {
   'featurepanel.feature_description_osm': '__type__ dans OpenStreetMap',
   'featurepanel.feature_description_point': 'Coordonnées',
   'featurepanel.show_objects_around': 'Montrer les éléments voisins',
-  'featurepanel.uncertain_image': 'Ceci est l’image la plus proche et peut représenter un élément différent..',
+  'featurepanel.uncertain_image': 'Ceci est l’image la plus proche et peut représenter un élément différent.',
   'featurepanel.inline_edit_title': 'Modifier',
   'featurepanel.objects_around': 'Éléments voisins',
 
@@ -110,17 +116,13 @@ export default {
   'editdialog.info_edit': `Votre modificitation sera directement enregistrée sur OpenStreetMap. Veuillez,
          seulement entrer des informations de sources sûres. Il est interdit
          de copier des données sous Copyright (ex : Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">Plus d’informations</a>`,
-  'editdialog.info_note': `Votre demande sera traitée par des bénévoles OpenStreetMap. Vous
-         pouvez ajouter une note supplémentaire ou ou apporter des détails.
-         Il est recommandé d’accompagner votre contribution par un lien vers une source d’information (internet,
-         photo, etc.).`,
+  'editdialog.info_note': `Votre demande sera traitée par des bénévoles OpenStreetMap. Vous pouvez ajouter une note supplémentaire ou ou apporter des détails.
+         Il est recommandé d’accompagner votre contribution par un lien vers une source d’information (internet, photo, etc.).`,
   'editdialog.other_tags': 'Autres attributs (Propriétés)',
   'editdialog.other_tags.new_key': 'Nouvelle clé',
   'editdialog.other_tags.add': 'Ajouter une novuelle clé',
   'editdialog.other_tags.will_be_deleted': 'sera supprimée',
-  'editdialog.other_tags.info': `Les attributs décrivent
-        les éléments selon un format défini. Vous trouverez l’intégralité
-        des attributs sur le <a href="https://wiki.openstreetmap.org/wiki/Map_Features">wiki OpenStreetMap</a>.`,
+  'editdialog.other_tags.info': `Les attributs décrivent les éléments selon un format défini. Vous trouverez l’intégralité des attributs sur le <a href="https://wiki.openstreetmap.org/wiki/Map_Features">wiki OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Fermer',
   'editsuccess.note.heading': 'Merci de votre contribution !',
@@ -152,6 +154,7 @@ export default {
   'layers.mtb': 'VTT',
   'layers.snow': 'Neige',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satellite (zoom < 14)',
+  'layers.maptilerSat': 'Maptiler Satellite (zoom < 14)',
+  'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Vélo',
 };

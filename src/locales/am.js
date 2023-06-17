@@ -143,6 +143,7 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'በረዶ',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'ሳተላይት (z<14)',
+  'layers.maptilerSat': 'Maptiler ሳተላይት (z<14)',
+  'layers.bingSat': 'Bing ሳተላይት',
   'layers.bike': 'ሳይክል',
 };
