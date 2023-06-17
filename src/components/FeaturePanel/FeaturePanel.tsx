@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Typography } from '@material-ui/core';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -77,17 +78,28 @@ const FeaturePanel = () => {
             />
           )}
           {!advanced && (
-            <TagsTable
-              tags={tags}
-              center={feature.center}
-              except={
-                advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
-              }
-              onEdit={setDialogOpenedWith}
-              key={
-                getUrlOsmId(osmMeta) // we need to refresh inner state
-              }
-            />
+            <>
+              {featuredTags.length && (
+                <Typography
+                  variant="overline"
+                  display="block"
+                  color="textSecondary"
+                >
+                  {t('featurepanel.other_info_heading')}
+                </Typography>
+              )}
+              <TagsTable
+                tags={tags}
+                center={feature.center}
+                except={
+                  advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
+                }
+                onEdit={setDialogOpenedWith}
+                key={
+                  getUrlOsmId(osmMeta) // we need to refresh inner state
+                }
+              />
+            </>
           )}
 
           {advanced && <Members />}
