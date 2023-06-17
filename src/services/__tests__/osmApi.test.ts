@@ -9,7 +9,7 @@ import {
   way,
   wayFeature,
 } from './osmApi.fixture';
-import { intl } from "../intl";
+import { intl } from '../intl';
 
 const osm = (item) => ({ elements: [item] });
 const overpass = {

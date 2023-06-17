@@ -31,7 +31,8 @@ const matchFieldsFromPreset = (
       const field = fields[fieldKey];
       const key = field?.key;
       const keys = field?.keys;
-      const shouldWeIncludeThisField = keysTodo.has(key) || keysTodo.hasAny(keys);
+      const shouldWeIncludeThisField =
+        keysTodo.has(key) || keysTodo.hasAny(keys);
       if (!shouldWeIncludeThisField) {
         return {};
       }
@@ -171,4 +172,3 @@ export const getSchemaForFeature = (feature: Feature) => {
     keysTodo: keysTodo.state,
   };
 };
-

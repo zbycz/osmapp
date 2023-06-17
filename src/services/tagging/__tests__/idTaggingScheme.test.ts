@@ -1,7 +1,7 @@
+import translations from '@openstreetmap/id-tagging-schema/dist/translations/en.json';
 import { getSchemaForFeature } from '../idTaggingScheme';
 import { Feature } from '../../types';
 import { mockSchemaTranslations } from '../translations';
-import translations from '@openstreetmap/id-tagging-schema/dist/translations/en.json';
 import { intl } from '../../intl';
 
 intl.lang = 'en';
