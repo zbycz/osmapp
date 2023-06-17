@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import { Field } from '../../services/tagging/types/Fields';
@@ -39,22 +39,34 @@ const Table = styled.table`
   }
 `;
 
-// taken from src/components/FeaturePanel/TagsTable.tsx
-const renderValue = (k, v) => {
-  const url = getUrlForTag(k, v);
-  let humanUrl = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
-  if (k === 'image') {
-    humanUrl = humanUrl.replace(/^([^/]+.{0,5})(.*)$/, (full, p1, p2) => {
-      const charsLeft = 30 - p1.length;
-      return (
-        p1 + (full.length > 40 ? `…${p2.substring(p2.length - charsLeft)}` : p2)
-      );
-    });
-  }
-  return url ? <a href={url}>{slashToOptionalBr(humanUrl)}</a> : v;
+// TODO move to helpers
+const getEllipsisHumanUrl = (humanUrl) => {
+  const MAX_LENGTH = 40;
+  return humanUrl.replace(/^([^/]+.{0,5})(.*)$/, (full, hostname, rest) => {
+    const charsLeft = MAX_LENGTH - 10 - hostname.length;
+    return (
+      hostname +
+      (full.length > MAX_LENGTH
+        ? `…${rest.substring(rest.length - charsLeft)}`
+        : rest)
+    );
+  });
 };
 
-const render = (field: Field, feature: Feature, k, v) => {
+// taken from src/components/FeaturePanel/TagsTable.tsx
+const renderValue = (k, v): string | ReactNode => {
+  const url = getUrlForTag(k, v);
+  if (url) {
+    let humanUrl = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
+    if (k === 'image') {
+      humanUrl = getEllipsisHumanUrl(humanUrl);
+    }
+    return <a href={url}>{slashToOptionalBr(humanUrl)}</a>;
+  }
+  return v;
+};
+
+const render = (field: Field, feature: Feature, k, v): string | ReactNode => {
   if (field.type === 'address') {
     return buildAddress(feature.tags, feature.center);
   }
@@ -67,7 +79,8 @@ const getTitle = (type: string, field: Field) =>
 // TODO some fields eg. oneway/bicycle doesnt have units in brackets
 const unitRegExp = / \((.+)\)$/i;
 const removeUnits = (label) => label.replace(unitRegExp, '');
-const addUnits = (label, value) => {
+const addUnits = (label, value: string | ReactNode) => {
+  if (typeof value !== 'string') return value;
   const unit = label.match(unitRegExp);
   return `${value}${unit ? ` (${unit[1]})` : ''}`;
 };

@@ -63,5 +63,12 @@ export const getValueForField = (
       .join(',\n');
   }
 
+  // TODO this is not correct
+  if (tagsForField.length >= 2) {
+    return tagsForField
+      .map(({ key, value: value2 }) => `${key}: ${value2}`)
+      .join(',\n');
+  }
+
   return fieldTranslation?.options?.[value] ?? value;
 };
