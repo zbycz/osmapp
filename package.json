@@ -31,6 +31,7 @@
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "4.0.0-alpha.58",
+    "@openstreetmap/id-tagging-schema": "^6.1.0",
     "@sentry/browser": "^6.5.1",
     "@sentry/node": "^6.5.1",
     "@types/maplibre-gl": "^1.13.1",
