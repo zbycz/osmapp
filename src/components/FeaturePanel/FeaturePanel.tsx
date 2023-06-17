@@ -20,7 +20,8 @@ import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
-import { TmpPresets } from './TmpPresets';
+import { IdSchemeFields } from './IdSchemeFields';
+import { TagsTable } from './TagsTable';
 
 const featuredKeys = [
   'website',
@@ -69,22 +70,25 @@ const FeaturePanel = () => {
             setDialogOpenedWith={setDialogOpenedWith}
           />
 
-          <TmpPresets
-            featuredTags={deleted ? [] : featuredTags}
-            feature={feature}
-          />
-
-          {/* <TagsTable */}
-          {/*  tags={tags} */}
-          {/*  center={feature.center} */}
-          {/*  except={ */}
-          {/*    advanced || deleted ? [] : ['name', 'layer', ...featuredKeys] */}
-          {/*  } */}
-          {/*  onEdit={setDialogOpenedWith} */}
-          {/*  key={ */}
-          {/*    getUrlOsmId(osmMeta) // we need to refresh inner state */}
-          {/*  } */}
-          {/* /> */}
+          {advanced && (
+            <IdSchemeFields
+              featuredTags={deleted ? [] : featuredTags}
+              feature={feature}
+            />
+          )}
+          {!advanced && (
+            <TagsTable
+              tags={tags}
+              center={feature.center}
+              except={
+                advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
+              }
+              onEdit={setDialogOpenedWith}
+              key={
+                getUrlOsmId(osmMeta) // we need to refresh inner state
+              }
+            />
+          )}
 
           {advanced && <Members />}
 

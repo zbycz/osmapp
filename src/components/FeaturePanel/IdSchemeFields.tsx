@@ -85,7 +85,7 @@ const addUnits = (label, value: string | ReactNode) => {
   return `${value}${unit ? ` (${unit[1]})` : ''}`;
 };
 
-export const TmpPresets = ({ feature, featuredTags }) => {
+export const IdSchemeFields = ({ feature, featuredTags }) => {
   const { schema } = feature;
   if (!schema) return null;
   if (!Object.keys(schema).length) return null;
