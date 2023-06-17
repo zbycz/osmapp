@@ -8,6 +8,8 @@ import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { captureException, initSentry } from '../src/helpers/sentry';
 import { prod } from '../src/services/helpers';
 
+import '../src/globals.css';
+
 if (prod) {
   initSentry();
 }
