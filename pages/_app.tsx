@@ -1,14 +1,14 @@
 import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
-import CssBaseline from '@material-ui/core/CssBaseline';
+// import CssBaseline from '@material-ui/core/CssBaseline';
 import nextCookies from 'next-cookies';
 import { UserThemeProvider } from '../src/helpers/theme';
-import { GlobalStyle } from '../src/helpers/GlobalStyle';
+// import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { captureException, initSentry } from '../src/helpers/sentry';
 import { prod } from '../src/services/helpers';
 
-import '../src/globals.css';
+import '../src/helpers/globals.css';
 
 if (prod) {
   initSentry();
@@ -50,10 +50,10 @@ export default class MyApp extends App {
         </Head>
         <UserThemeProvider userThemeCookie={userThemeCookie}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <CssBaseline />
+          {/* <CssBaseline /> */}
           {/* eslint-disable-next-line react/jsx-props-no-spreading */}
           <Component {...pageProps} />
-          <GlobalStyle />
+          {/* <GlobalStyle /> */}
         </UserThemeProvider>
       </>
     );
