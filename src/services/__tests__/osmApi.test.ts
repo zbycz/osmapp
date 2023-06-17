@@ -10,13 +10,16 @@ import {
   wayFeature,
 } from './osmApi.fixture';
 import { intl } from '../intl';
+import * as tagging from '../tagging/translations';
+import * as idTaggingScheme from '../tagging/idTaggingScheme';
 
 const osm = (item) => ({ elements: [item] });
 const overpass = {
   elements: [{ center: { lat: 50, lon: 14 } }],
 };
 
-// TODO maybe write it without need for intl?
+// fetchFeature() fetches the translations for getSchemaForFeature()
+// TODO maybe refactor it without need for intl?
 intl.lang = 'en';
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: { languages: ['en'] },
@@ -25,6 +28,10 @@ jest.mock('next/config', () => () => ({
 describe('fetchFeature', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    jest.spyOn(tagging, 'fetchSchemaTranslations').mockResolvedValue(true);
+    jest
+      .spyOn(idTaggingScheme, 'getSchemaForFeature')
+      .mockReturnValue(undefined); // this is covered in idTaggingScheme.test.ts
   });
 
   const isServer = jest.spyOn(helpers, 'isServer').mockReturnValue(true);
