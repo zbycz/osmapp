@@ -135,12 +135,12 @@ const keysTodo = {
   },
   resolveFields(fieldsArray) {
     fieldsArray.forEach((field) => {
-      if (field?.field?.key)
-        this.state.splice(this.state.indexOf(field.field.key), 1);
-      if (field?.field?.keys)
-        field.field.keys.forEach((key) =>
-          this.state.splice(this.state.indexOf(key), 1),
-        );
+      if (field?.field?.key) {
+        this.remove(field.field.key);
+      }
+      if (field?.field?.keys) {
+        field.field.keys.forEach((key) => this.remove(key));
+      }
     });
   },
   map(fn) {

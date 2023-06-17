@@ -54,5 +54,11 @@ describe('idTaggingScheme', () => {
     expect(result.tagsWithFields).toMatchObject([
       { label: 'Layer', value: '1' },
     ]);
+    expect(result.keysTodo).toMatchObject([
+      'hgv',
+      'tiger:cfcc',
+      'tiger:county',
+      'tiger:name_base',
+    ]);
   });
 });
