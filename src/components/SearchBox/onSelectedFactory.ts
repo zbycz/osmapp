@@ -34,7 +34,7 @@ const getSkeleton = (option) => {
   };
 };
 
-export const onHighlightFactory = (setPreview) => (e, location) => {
+export const onHighlightFactory = (setPreview, location) => {
   if (!location?.lat) return;
   setPreview({ ...getSkeleton(location), noPreviewButton: true });
 };
@@ -53,23 +53,27 @@ const fitBounds = (option, panelShown = false) => {
   }
 };
 
-export const onSelectedFactory =
-  (setFeature, setPreview, mobileMode) => (e, option) => {
-    if (!option?.geometry.coordinates) return;
+export const onSelectedFactory = (
+  setFeature,
+  setPreview,
+  mobileMode,
+  option,
+) => {
+  if (!option?.geometry.coordinates) return;
 
-    const skeleton = getSkeleton(option);
-    console.log('Search item selected:', { location: option, skeleton }); // eslint-disable-line no-console
+  const skeleton = getSkeleton(option);
+  console.log('Search item selected:', { location: option, skeleton }); // eslint-disable-line no-console
 
-    addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
+  addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
-    if (mobileMode) {
-      setPreview(skeleton);
-      fitBounds(option);
-      return;
-    }
+  if (mobileMode) {
+    setPreview(skeleton);
+    fitBounds(option);
+    return;
+  }
 
-    setPreview(null);
-    setFeature(skeleton);
-    fitBounds(option, true);
-    Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);
-  };
+  setPreview(null);
+  setFeature(skeleton);
+  fitBounds(option, true);
+  Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);
+};

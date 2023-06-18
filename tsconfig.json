@@ -22,8 +22,8 @@
     "**/*.js",
     "**/*.ts",
     "**/*.tsx",
-    "src/components/SearchBoxNew/SearchChoice.jsx",
-    "src/components/SearchBoxNew/SearchBox.tsx"
+    "src/components/SearchBox/SearchChoice.jsx",
+    "src/components/SearchBox/SearchBox.tsx"
   ],
   "exclude": ["node_modules", "public"]
 }
