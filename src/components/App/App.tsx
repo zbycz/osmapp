@@ -5,11 +5,11 @@ import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
-import SearchBox from '../SearchBox/SearchBox';
+import SearchBox from '../SearchBoxNew/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapView, getInititalFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
-import { Loading } from './Loading';
+// import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
@@ -71,12 +71,16 @@ const IndexWithProviders = () => {
   // TODO add correct error boundaries
   return (
     <div className={`${currentTheme}`}>
-      {/* dark theme usage example */}
-      {/* <div className='absolute top-48 left-48 w-48 h-48 bg-zinc-100 dark:bg-zinc-800 z-50'/>  */}
-      <SearchBox />
-      <Loading />
-      {featureShown && <FeaturePanel />}
-      <HomepagePanel />
+      {/* Left panel */}
+      <div className="absolute flex flex-col w-full sm:w-[424px] p-2 gap-2 z-20 top-0 max-h-[90vh]">
+        {/* <SearchBox /> */}
+        <SearchBox />
+        {/* <Loading /> */}
+        {featureShown && <FeaturePanel />}
+        {/* First load panel */}
+        <HomepagePanel />
+      </div>
+
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
       {preview && <FeaturePreview />}

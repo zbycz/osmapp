@@ -21,7 +21,9 @@
     ".eslintrc.js",
     "**/*.js",
     "**/*.ts",
-    "**/*.tsx"
+    "**/*.tsx",
+    "src/components/SearchBoxNew/SearchChoice.jsx",
+    "src/components/SearchBoxNew/SearchBox.tsx"
   ],
   "exclude": ["node_modules", "public"]
 }
