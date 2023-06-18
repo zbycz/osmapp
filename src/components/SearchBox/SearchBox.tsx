@@ -69,7 +69,6 @@ const SearchBox = () => {
       {/* input container */}
       <div className="relative">
         {/* search icon */}
-        {/* magnifying glass icon */}
         <div className="absolute top-0 bottom-0 left-0 flex items-center justify-center pointer-events-none text-zinc-400 aspect-square">
           <MagnifyingGlassIcon className="h-6 w-6" />
         </div>

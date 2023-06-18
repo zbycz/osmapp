@@ -22,7 +22,7 @@
     "**/*.js",
     "**/*.ts",
     "**/*.tsx",
-    "src/components/SearchBox/SearchChoice.jsx",
+    "src/components/SearchBox/SearchChoice.tsx",
     "src/components/SearchBox/SearchBox.tsx"
   ],
   "exclude": ["node_modules", "public"]
