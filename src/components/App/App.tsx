@@ -16,6 +16,7 @@ import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
+import { useUserThemeContext } from '../../helpers/theme';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -60,6 +61,7 @@ const useUpdateViewFromHash = () => {
 };
 
 const IndexWithProviders = () => {
+  const { currentTheme } = useUserThemeContext();
   const { featureShown, preview } = useFeatureContext();
   const router = useRouter();
   useUpdateViewFromFeature();
@@ -68,7 +70,9 @@ const IndexWithProviders = () => {
 
   // TODO add correct error boundaries
   return (
-    <>
+    <div className={`${currentTheme}`}>
+      {/* dark theme usage example */}
+      {/* <div className='absolute top-48 left-48 w-48 h-48 bg-zinc-100 dark:bg-zinc-800 z-50'/>  */}
       <SearchBox />
       <Loading />
       {featureShown && <FeaturePanel />}
@@ -77,7 +81,7 @@ const IndexWithProviders = () => {
       <Map />
       {preview && <FeaturePreview />}
       <TitleAndMetaTags />
-    </>
+    </div>
   );
 };
 

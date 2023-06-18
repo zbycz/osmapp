@@ -49,7 +49,12 @@ const BrowserMap = ({ onMapLoaded }) => {
   useUpdateMap(map, viewForMap);
   useUpdateStyle(map, activeLayers);
 
-  return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
+  return (
+    <div
+      ref={mapRef}
+      style={{ position: 'fixed', top: 0, bottom: 0, left: 0, right: 0 }}
+    />
+  );
 };
 
 export default BrowserMap;
