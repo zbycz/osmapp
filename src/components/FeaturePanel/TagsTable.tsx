@@ -69,8 +69,6 @@ const isNetwork = (k) => k.match(/network/);
 const isBrand = (k) => k.match(/^brand/);
 const isOperator = (k) => k.match(/^operator/);
 const isPayment = (k) => k.match(/^payment/);
-const isHideTags = (k) =>
-  k.match(/^source|check_date|gnis.*|fixme|comment|note|tiger.*/);
 
 const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
   const [isShown, toggle] = useToggleState(false);
@@ -136,8 +134,7 @@ export const TagsTable = ({ tags, center, except, onEdit }) => {
       !isNetwork(k) &&
       !isOperator(k) &&
       !isPayment(k) &&
-      !isBrand(k) &&
-      !isHideTags(k),
+      !isBrand(k),
   );
 
   return (
