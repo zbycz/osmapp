@@ -92,7 +92,7 @@ const MapDataLink = () => {
         />
       );
 
-    return <span dangerouslySetInnerHTML={{ __html: attribution }} />;
+    return <span dangerouslySetInnerHTML={{ __html: attribution }} />; // eslint-disable-line react/no-danger
   });
 
   // place a separator between attributions

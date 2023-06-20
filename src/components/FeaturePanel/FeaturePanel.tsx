@@ -79,7 +79,7 @@ const FeaturePanel = () => {
           )}
           {!advanced && (
             <>
-              {featuredTags.length && (
+              {!!featuredTags.length && (
                 <Typography
                   variant="overline"
                   display="block"
