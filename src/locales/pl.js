@@ -152,4 +152,6 @@ export default {
   'layers.mapnik': 'OSM Mapnik',
   'layers.sat': 'Satelita (p<14)',
   'layers.bike': 'Rower',
+  'coordinates.geo_uri': 'GeoURI (otwórz w mapach na telefonie)',
+  'coordinates.copy_value': 'Kopiuj __value__', // keep it short, don't mention clipboard
 };
