@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { Typography } from '@material-ui/core';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
+import { TagsTable } from './TagsTable';
 import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import {
@@ -21,8 +21,6 @@ import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
-import { IdSchemeFields } from './IdSchemeFields';
-import { TagsTable } from './TagsTable';
 
 const featuredKeys = [
   'website',
@@ -71,36 +69,17 @@ const FeaturePanel = () => {
             setDialogOpenedWith={setDialogOpenedWith}
           />
 
-          {advanced && (
-            <IdSchemeFields
-              featuredTags={deleted ? [] : featuredTags}
-              feature={feature}
-            />
-          )}
-          {!advanced && (
-            <>
-              {featuredTags.length && (
-                <Typography
-                  variant="overline"
-                  display="block"
-                  color="textSecondary"
-                >
-                  {t('featurepanel.other_info_heading')}
-                </Typography>
-              )}
-              <TagsTable
-                tags={tags}
-                center={feature.center}
-                except={
-                  advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
-                }
-                onEdit={setDialogOpenedWith}
-                key={
-                  getUrlOsmId(osmMeta) // we need to refresh inner state
-                }
-              />
-            </>
-          )}
+          <TagsTable
+            tags={tags}
+            center={feature.center}
+            except={
+              advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
+            }
+            onEdit={setDialogOpenedWith}
+            key={
+              getUrlOsmId(osmMeta) // we need to refresh inner state
+            }
+          />
 
           {advanced && <Members />}
 

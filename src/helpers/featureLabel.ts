@@ -1,8 +1,8 @@
 import { Feature } from '../services/types';
 import { roundedToDeg } from '../utils';
 
-const getSubclass = ({ properties, osmMeta, schema }: Feature) =>
-  schema?.label || properties.subclass?.replace(/_/g, ' ') || osmMeta.type;
+const getSubclass = ({ properties, osmMeta }: Feature) =>
+  properties.subclass?.replace(/_/g, ' ') || osmMeta.type; // TODO translate ? maybe use iD editor logic (already with translations)
 
 const getRef = (feature: Feature) =>
   feature.tags.ref ? `${getSubclass(feature)} ${feature.tags.ref}` : '';

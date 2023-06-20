@@ -5,8 +5,6 @@ import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { getPoiClass } from './getPoiClass';
 import { isBrowser } from '../components/helpers';
-import { getSchemaForFeature } from './tagging/idTaggingScheme';
-import { fetchSchemaTranslations } from './tagging/translations';
 
 const getOsmUrl = ({ type, id }) =>
   `https://www.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -100,7 +98,6 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
     const [element, center] = await Promise.all([
       getOsmPromise(apiId),
       getCenterPromise(apiId),
-      fetchSchemaTranslations(), // TODO this should be mocked in test??? could be moved to setIntl or something
     ]);
 
     const feature = osmToFeature(element);
@@ -108,9 +105,7 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
       feature.center = center;
     }
 
-    const schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?
-    console.log('schema', schema); // eslint-disable-line no-console
-    return { ...feature, schema };
+    return feature;
   } catch (e) {
     console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
 

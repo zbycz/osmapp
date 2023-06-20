@@ -9,7 +9,6 @@ import Router from 'next/router';
 import Cookies from 'js-cookie';
 import { Feature } from '../../services/types';
 import { useBoolState } from '../helpers';
-import { publishDbgObject } from '../../utils';
 
 export interface FeatureContextType {
   feature: Feature | null;
@@ -44,8 +43,6 @@ export const FeatureProvider = ({
   useEffect(() => {
     // set feature on next.js router transition
     setFeature(featureFromRouter);
-    publishDbgObject('feature', featureFromRouter);
-    publishDbgObject('schema', featureFromRouter?.schema);
   }, [featureFromRouter]);
 
   const [homepageShown, showHomepage, hideHomepage] = useBoolState(

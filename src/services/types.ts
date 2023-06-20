@@ -1,5 +1,4 @@
 import type Vocabulary from '../locales/vocabulary';
-import type { getSchemaForFeature } from './tagging/idTaggingScheme';
 
 export interface ImageUrls {
   source?: string;
@@ -75,7 +74,6 @@ export interface Feature {
   roundedCenter?: LonLatRounded;
   ssrFeatureImage?: Image;
   error?: 'deleted' | 'network' | 'unknown' | '404' | '500'; // etc.
-  schema?: ReturnType<typeof getSchemaForFeature>;
 
   // skeleton
   layer?: { id: string };
