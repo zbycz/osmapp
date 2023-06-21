@@ -2,8 +2,12 @@
 
 Lets create a universal OpenStreetMap app for broad public. It should be as easy to use as Google Maps, including clickable POIs and editing capabilites. See also [SotM 2021 talk](https://github.com/zbycz/osmapp-talk).
 
-- master branch: https://osmapp.org
-- examples: [Empire State Building](https://osmapp.org/way/34633854#17.00/40.7483/-73.9864), [Prague Castle](https://osmapp.org/relation/3312247#17.00/50.0900/14.4000) or click just anything
+- **production**: https://osmapp.org
+  - examples: [Empire State Building](https://osmapp.org/way/34633854#17.00/40.7483/-73.9864), [Prague Castle](https://osmapp.org/relation/3312247#17.00/50.0900/14.4000) or click just anything
+- **master branch**: https://osmapp-git-master-zbycz.vercel.app/
+  - it is currently undergoing a [major refactoring to TailwindCSS](https://github.com/zbycz/osmapp/issues/165) thanks to [@Flohhhhh](https://github.com/Flohhhhh)
+  - until finished, some components would be MUI and some new design
+  - some functionality may be broken
 
 ## How to contribute 🐱‍💻
 
