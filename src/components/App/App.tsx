@@ -6,6 +6,7 @@ import Router, { useRouter } from 'next/router';
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
+import { Loading } from './Loading';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapView, getInititalFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
@@ -75,11 +76,13 @@ const IndexWithProviders = () => {
       <div className="absolute flex flex-col w-full sm:w-[424px] p-2 gap-2 z-20 top-0 max-h-[90vh]">
         {/* <SearchBox /> */}
         <SearchBox />
-        {/* <Loading /> */}
-        {featureShown && <FeaturePanel />}
-        {/* First load panel */}
-        <HomepagePanel />
       </div>
+
+      {/* TODO these should all be children of the above "left panel" div once they are updated */}
+      <Loading />
+      {featureShown && <FeaturePanel />}
+      {/* First load panel */}
+      <HomepagePanel />
 
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
