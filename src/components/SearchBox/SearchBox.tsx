@@ -137,7 +137,7 @@ const useGetClosePanel = (setQuery: (value: string) => void) => {
 
 const useOnSelectedChoice = (selectedChoice: Choice) => {
   const mobileMode = useMobileMode();
-  const { feature, setFeature, setPreview } = useFeatureContext();
+  const { setFeature, setPreview } = useFeatureContext();
 
   useEffect(() => {
     if (selectedChoice === null) return;

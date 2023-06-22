@@ -53,12 +53,7 @@ const fitBounds = (option, panelShown = false) => {
   }
 };
 
-export const onSelected = (
-  setFeature,
-  setPreview,
-  mobileMode,
-  option,
-) => {
+export const onSelected = (setFeature, setPreview, mobileMode, option) => {
   if (!option?.geometry.coordinates) return;
 
   const skeleton = getSkeleton(option);
