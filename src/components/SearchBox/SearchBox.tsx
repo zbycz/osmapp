@@ -49,23 +49,32 @@ const CloseButton = ({ closePanel }: { closePanel: () => void; }) => {
 
 const SearchInput = ({
   query,
-  onInputChange,
+  setQuery,
 }: {
   query: string;
-  onInputChange: (event) => void;
-}) => (
-  <Combobox.Input
-    className="bg-white dark:bg-zinc-800 shadow-md shadow-black/20 rounded-lg placeholder-zinc-500 dark:placeholder-zinc-400 text-zinc-800 dark:text-zinc-200 pl-12 w-full h-12 outline-0 transition truncate"
-    // @ts-ignore
-    placeholder={t('searchbox.placeholder')}
-    displayValue={(choice: Choice | null) => {
-      if (choice === null) return query;
-      return choice.properties.name;
-    }}
-    onChange={onInputChange}
-    spellCheck="false"
-  />
-);
+  setQuery: (string) => void;
+}) => {
+  const { setPreview } = useFeatureContext();
+
+  const onInputChange = event => {
+    setQuery(event.target.value);
+    onHighlightFactory(setPreview, {});
+  };
+
+  return (
+    <Combobox.Input
+      className="bg-white dark:bg-zinc-800 shadow-md shadow-black/20 rounded-lg placeholder-zinc-500 dark:placeholder-zinc-400 text-zinc-800 dark:text-zinc-200 pl-12 w-full h-12 outline-0 transition truncate"
+      // @ts-ignore
+      placeholder={t("searchbox.placeholder")}
+      displayValue={(choice: Choice | null) => {
+        if (choice === null) return query;
+        return choice.properties.name;
+      }}
+      onChange={onInputChange}
+      spellCheck="false"
+    />
+  );
+};
 
 const ComboBoxChoices = ({
   choices,
@@ -103,11 +112,6 @@ const SearchBox = () => {
   const [choices, setChoices] = useState<Choice[]>([]);
   const [selectedChoice, setSelectedChoice] = useState<Choice | null>(null);
 
-  function onInputChange(event) {
-    setQuery(event.target.value);
-    onHighlightFactory(setPreview, {});
-  }
-
   // close feature panel button (clear selection basically)
   function closePanel() {
     setQuery('');
@@ -140,7 +144,7 @@ const SearchBox = () => {
     <Combobox value={selectedChoice} onChange={setSelectedChoice}>
       <div className="relative">
         <SearchIcon />
-        <SearchInput query={query} onInputChange={onInputChange} />
+        <SearchInput query={query} setQuery={setQuery} />
         <CloseButton closePanel={closePanel} />
       </div>
       <ComboBoxChoices choices={choices} query={query} />
