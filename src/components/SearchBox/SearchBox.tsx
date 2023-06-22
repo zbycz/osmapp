@@ -11,7 +11,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
 import { useMobileMode } from '../helpers';
 import { fetchChoices } from './searchBoxUtils';
-import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
+import { onHighlightFactory, onSelected } from './onSelected';
 // components
 import SearchChoice from './SearchChoice';
 
@@ -28,7 +28,7 @@ const SearchIcon = () => (
   </div>
 );
 
-const CloseButton = ({ closePanel }: { closePanel: () => void; }) => {
+const CloseButton = ({ closePanel }: { closePanel: () => void }) => {
   const { featureShown } = useFeatureContext();
 
   return (
@@ -56,7 +56,7 @@ const SearchInput = ({
 }) => {
   const { setPreview } = useFeatureContext();
 
-  const onInputChange = event => {
+  const onInputChange = (event) => {
     setQuery(event.target.value);
     onHighlightFactory(setPreview, {});
   };
@@ -65,7 +65,7 @@ const SearchInput = ({
     <Combobox.Input
       className="bg-white dark:bg-zinc-800 shadow-md shadow-black/20 rounded-lg placeholder-zinc-500 dark:placeholder-zinc-400 text-zinc-800 dark:text-zinc-200 pl-12 w-full h-12 outline-0 transition truncate"
       // @ts-ignore
-      placeholder={t("searchbox.placeholder")}
+      placeholder={t('searchbox.placeholder')}
       displayValue={(choice: Choice | null) => {
         if (choice === null) return query;
         return choice.properties.name;
@@ -103,26 +103,12 @@ const ComboBoxChoices = ({
   </Combobox.Options>
 );
 
-const SearchBox = () => {
+const useFetchChoices = (
+  query: string,
+  setChoices: (value: Choice[]) => void,
+  setSelectedChoice: (value: Choice | null) => void,
+) => {
   const { view } = useMapStateContext();
-  const mobileMode = useMobileMode();
-  const { feature, setFeature, setPreview } = useFeatureContext();
-
-  const [query, setQuery] = useState('');
-  const [choices, setChoices] = useState<Choice[]>([]);
-  const [selectedChoice, setSelectedChoice] = useState<Choice | null>(null);
-
-  // close feature panel button (clear selection basically)
-  function closePanel() {
-    setQuery('');
-    if (mobileMode) {
-      setPreview(feature);
-    }
-    setFeature(null);
-    Router.push(`/${window.location.hash}`);
-  }
-
-  // on query change
   useEffect(() => {
     // reset if query is empty
     if (query === '') {
@@ -133,12 +119,40 @@ const SearchBox = () => {
     // fetch choices
     fetchChoices(query, view, setChoices);
   }, [query]);
+};
 
-  // when selected changes
+const useGetClosePanel = (setQuery: (value: string) => void) => {
+  const mobileMode = useMobileMode();
+  const { feature, setFeature, setPreview } = useFeatureContext();
+
+  return () => {
+    setQuery('');
+    if (mobileMode) {
+      setPreview(feature);
+    }
+    setFeature(null);
+    Router.push(`/${window.location.hash}`);
+  };
+};
+
+const useOnSelectedChoice = (selectedChoice: Choice) => {
+  const mobileMode = useMobileMode();
+  const { feature, setFeature, setPreview } = useFeatureContext();
+
   useEffect(() => {
     if (selectedChoice === null) return;
-    onSelectedFactory(setFeature, setPreview, mobileMode, selectedChoice);
+    onSelected(setFeature, setPreview, mobileMode, selectedChoice);
   }, [selectedChoice]);
+};
+
+const SearchBox = () => {
+  const [query, setQuery] = useState('');
+  const [choices, setChoices] = useState<Choice[]>([]);
+  const [selectedChoice, setSelectedChoice] = useState<Choice | null>(null);
+  const closePanel = useGetClosePanel(setQuery);
+
+  useFetchChoices(query, setChoices, setSelectedChoice);
+  useOnSelectedChoice(selectedChoice);
 
   return (
     <Combobox value={selectedChoice} onChange={setSelectedChoice}>

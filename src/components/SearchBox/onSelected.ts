@@ -53,7 +53,7 @@ const fitBounds = (option, panelShown = false) => {
   }
 };
 
-export const onSelectedFactory = (
+export const onSelected = (
   setFeature,
   setPreview,
   mobileMode,
