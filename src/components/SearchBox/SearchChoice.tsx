@@ -20,22 +20,25 @@ const SearchChoice = ({ query, choice }) => {
   const poiClass = getPoiClass({ [tagKey]: tagValue });
 
   return (
-    <div className="flex gap-4 items-center px-2 py-1">
-      {/* icon */}
-      <img
-        src={`/icons/${poiClass.class}_11.svg`}
-        className="w-6 h-6 opacity-50 dark:invert"
-        alt={poiClass.class}
-        title={`${tagKey}=${tagValue}`}
-      />
+    <div className="w-full flex gap-4 items-center px-2 py-1">
+      <div className="flex flex-col justify-center items-center min-w-fit">
+        {/* icon */}
+        <img
+          src={`/icons/${poiClass.class}_11.svg`}
+          className="w-6 h-6 opacity-50 dark:invert"
+          alt={poiClass.class}
+          title={`${tagKey}=${tagValue}`}
+        />
+        {/* TODO getting NaN from distanceKm, just put 123 as placeholder */}
+        <div className="text-zinc-400">123 km</div>
+      </div>
+
       {/* text */}
-      <div className="cursor-pointer">
+      <div className="cursor-pointer w-full">
         <div className="flex gap-4">
           <h3 className="text-zinc-800 dark:text-zinc-200">
             {highlightText(text, query)}
           </h3>
-          {/* TODO getting NaN from distanceKm */}
-          {/* <div>{distanceKm} km</div> */}
         </div>
         <p className="text-zinc-400 line-clamp-1">{additionalText}</p>
       </div>
