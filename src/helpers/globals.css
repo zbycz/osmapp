@@ -2,14 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html,
-  body,
-  #__next {
-    @apply bg-zinc-800;
-  }
-}
-
 @layer components {
   .mapboxgl-ctrl-top-right {
     @apply top-36 sm:top-20 !important;
