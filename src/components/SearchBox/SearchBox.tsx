@@ -28,26 +28,24 @@ const SearchIcon = () => (
   </div>
 );
 
-const CloseButton = ({
-  featureShown,
-  closePanel,
-}: {
-  featureShown: boolean;
-  closePanel: () => void;
-}) => (
-  <div className="absolute top-0 bottom-0 right-0 aspect-square">
-    {featureShown && (
-      <button
-        type="button"
-        onClick={closePanel}
-        className="flex items-center justify-center w-full h-full"
-      >
-        <span className="sr-only">Close</span>
-        <XMarkIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-400" />
-      </button>
-    )}
-  </div>
-);
+const CloseButton = ({ closePanel }: { closePanel: () => void; }) => {
+  const { featureShown } = useFeatureContext();
+
+  return (
+    <div className="absolute top-0 bottom-0 right-0 aspect-square">
+      {featureShown && (
+        <button
+          type="button"
+          onClick={closePanel}
+          className="flex items-center justify-center w-full h-full"
+        >
+          <span className="sr-only">Close</span>
+          <XMarkIcon className="h-6 w-6 text-zinc-700 dark:text-zinc-400" />
+        </button>
+      )}
+    </div>
+  );
+};
 
 const SearchInput = ({
   query,
@@ -99,7 +97,7 @@ const ComboBoxChoices = ({
 const SearchBox = () => {
   const { view } = useMapStateContext();
   const mobileMode = useMobileMode();
-  const { featureShown, feature, setFeature, setPreview } = useFeatureContext();
+  const { feature, setFeature, setPreview } = useFeatureContext();
 
   const [query, setQuery] = useState('');
   const [choices, setChoices] = useState<Choice[]>([]);
@@ -143,7 +141,7 @@ const SearchBox = () => {
       <div className="relative">
         <SearchIcon />
         <SearchInput query={query} onInputChange={onInputChange} />
-        <CloseButton featureShown={featureShown} closePanel={closePanel} />
+        <CloseButton closePanel={closePanel} />
       </div>
       <ComboBoxChoices choices={choices} query={query} />
     </Combobox>
