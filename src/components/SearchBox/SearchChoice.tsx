@@ -3,18 +3,23 @@ import React from 'react';
 
 import { getPoiClass } from '../../services/getPoiClass';
 import { highlightText } from './highlightText';
-// import { getDistance, useMapCenter, getAdditionalText, buildPhotonAddress } from './searchBoxUtils'
-import { getAdditionalText, buildPhotonAddress } from './searchBoxUtils';
+import {
+  getDistance,
+  useMapCenter,
+  getAdditionalText,
+  buildPhotonAddress,
+} from './searchBoxUtils';
+// import { getAdditionalText, buildPhotonAddress } from './searchBoxUtils';
 
 const SearchChoice = ({ query, choice }) => {
-  // const theme = useUserThemeContext()
-  // const mapCenter = useMapCenter()
-  const { properties } = choice;
-  // const { properties, geometry } = choice
+  const mapCenter = useMapCenter();
+  const { properties, geometry } = choice;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
-  // const { lat, lon } = geometry
-  // const distance = getDistance(mapCenter, { lat, lon }) / 1000;
-  // const distanceKm = distance < 10 ? Math.round(distance * 10) / 10 : Math.round(distance); // TODO save imperial to mapState and multiply 0.621371192
+  const lon = geometry.coordinates[0];
+  const lat = geometry.coordinates[1];
+  const distance = getDistance(mapCenter, { lat, lon }) / 1000;
+  const distanceKm =
+    distance < 10 ? Math.round(distance * 10) / 10 : Math.round(distance); // TODO save imperial to mapState and multiply 0.621371192
   const text = name || buildPhotonAddress(properties);
   const additionalText = getAdditionalText(properties);
   const poiClass = getPoiClass({ [tagKey]: tagValue });
@@ -30,7 +35,7 @@ const SearchChoice = ({ query, choice }) => {
           title={`${tagKey}=${tagValue}`}
         />
         {/* TODO getting NaN from distanceKm, just put 123 as placeholder */}
-        <div className="text-zinc-400">123 km</div>
+        <div className="text-zinc-400">{distanceKm} km</div>
       </div>
 
       {/* text */}
