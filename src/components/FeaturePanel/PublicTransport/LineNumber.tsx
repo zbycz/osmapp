@@ -19,13 +19,17 @@ function whiteOrBlackText(hexBgColor) {
 }
 
 export const LineNumber: React.FC<LineNumberProps> = ({ name, color }) => {
+  let bgcolor: string;
+  if (!color) bgcolor = '#898989';
+  else bgcolor = color.toLowerCase();
+
   const divStyle: React.CSSProperties = {
-    backgroundColor: color,
+    backgroundColor: bgcolor,
     paddingBlock: '0.2rem',
     paddingInline: '0.4rem',
     borderRadius: '0.125rem',
     display: 'inline',
-    color: whiteOrBlackText(color),
+    color: whiteOrBlackText(bgcolor),
   };
 
   return <div style={divStyle}>{name}</div>;

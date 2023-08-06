@@ -23,6 +23,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
+import { PublicTransport } from './PublicTransport/PublicTransport';
 
 const featuredKeys = [
   'website',
@@ -103,6 +104,8 @@ const FeaturePanel = () => {
           )}
 
           {advanced && <Members />}
+
+          <PublicTransport tags={tags} />
 
           {editEnabled && (
             <>
