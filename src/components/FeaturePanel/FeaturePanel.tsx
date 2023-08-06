@@ -23,6 +23,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
+import { PublicTransportWrapper } from './PublicTransport/PublicTransportWrapper';
 
 const featuredKeys = [
   'website',
@@ -54,6 +55,9 @@ const FeaturePanel = () => {
 
   return (
     <PanelWrapper>
+      <PublicTransportWrapper>
+        <h1>Here</h1>
+      </PublicTransportWrapper>
       <PanelScrollbars>
         <ImageSection />
         <PanelContent>
