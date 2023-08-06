@@ -13,8 +13,8 @@ export async function requestLines(
   // use the overpass api to request the lines in
   const overpassQuery = `[out:csv(ref, colour; false; ';')];
     ${featureType}(${id})->.center;
-    node(around.center:${radius})["railway"="stop"] -> .stops;
-    rel(bn.stops)[route=train];
+    node(around.center:${radius})["public_transport"="stop_position"] -> .stops;
+    rel(bn.stops)["route"~"bus|train|tram|subway|light_rail"];
     out;`;
 
   // send the request
