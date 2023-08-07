@@ -15,9 +15,10 @@ export async function requestLines(
     ${featureType}(${id})->.center;
     (
       node(around.center:${radius})["public_transport"="stop_position"];
-      node(around.center:${radius})["highway"="bus_stop"];
+      nw(around.center:${radius})["highway"="bus_stop"];
+      nwr(around.center:${radius})["amenity"="ferry_terminal"];
     ) -> .stops;
-    rel(bn.stops)["route"~"bus|train|tram|subway|light_rail"];
+    rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
     out;`;
 
   // send the request
