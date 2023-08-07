@@ -1,6 +1,6 @@
 import { fetchText } from '../../../services/fetch';
 
-interface LineInformation {
+export interface LineInformation {
   ref: string;
   colour: string | undefined;
 }
