@@ -19,8 +19,11 @@ function whiteOrBlackText(hexBgColor) {
 }
 
 export const LineNumber: React.FC<LineNumberProps> = ({ name, color }) => {
+  const darkmode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
   let bgcolor: string;
-  if (!color) bgcolor = '#898989';
+  if (!color) bgcolor = darkmode ? '#898989' : '#dddddd';
+  // set the default color
   else bgcolor = color.toLowerCase();
 
   const divStyle: React.CSSProperties = {
