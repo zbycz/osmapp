@@ -1,4 +1,5 @@
 import React from 'react';
+import { useUserThemeContext } from '../../../helpers/theme';
 
 interface LineNumberProps {
   name: string;
@@ -19,7 +20,8 @@ function whiteOrBlackText(hexBgColor) {
 }
 
 export const LineNumber: React.FC<LineNumberProps> = ({ name, color }) => {
-  const darkmode = window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const { currentTheme } = useUserThemeContext();
+  const darkmode = currentTheme === 'dark';
 
   let bgcolor: string;
   if (!color) bgcolor = darkmode ? '#898989' : '#dddddd';
