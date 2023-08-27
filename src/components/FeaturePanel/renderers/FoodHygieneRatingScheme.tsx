@@ -1,6 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { Typography } from '@material-ui/core';
+import { Restaurant } from '@material-ui/icons';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
+
+interface StarRatingProps {
+  stars: number;
+  maxStars: number;
+}
+
+const StarRating = ({ stars, maxStars }: StarRatingProps) => {
+  const starArray = new Array(maxStars).fill(0);
+  return (
+    <div>
+      {starArray.map((_, i) => (
+        <span>{i < stars ? '★' : '☆'}</span>
+      ))}
+    </div>
+  );
+};
 
 const useLoadingState = () => {
   const [rating, setRating] = useState<number>();
@@ -41,7 +58,6 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
     };
 
     loadData();
-    console.log('rating', error);
   }, []);
 
   return (
@@ -54,13 +70,12 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
         </>
       ) : (
         <>
+          <Restaurant fontSize="small" />
           {Number.isNaN(rating) || error ? (
-            <>
-              <Typography color="error">No rating available</Typography>
-            </>
+            <Typography color="error">No rating available</Typography>
           ) : (
             <>
-              <p>Rating: {rating}</p>
+              <StarRating stars={rating} maxStars={5} />
             </>
           )}
         </>
