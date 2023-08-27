@@ -5,6 +5,7 @@ import WebsiteRenderer from './renderers/WebsiteRenderer';
 import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
 import PhoneRenderer from './renderers/PhoneRenderer';
 import { EditIconButton } from './helpers/EditIconButton';
+import { FoodHygieneRatingSchemeRenderer } from './renderers/FoodHygieneRatingScheme';
 
 const Wrapper = styled.div`
   position: relative;
@@ -29,13 +30,16 @@ const Value = styled.div`
 `;
 
 const DefaultRenderer = ({ v }) => v;
-const renderers = {
+const renderers: {
+  [key: string]: React.FC<{ v: string }>;
+} = {
   website: WebsiteRenderer,
   'contact:website': WebsiteRenderer,
   phone: PhoneRenderer,
   'contact:phone': PhoneRenderer,
   'contact:mobile': PhoneRenderer,
   opening_hours: OpeningHoursRenderer,
+  'fhrs:id': FoodHygieneRatingSchemeRenderer,
 };
 
 export const FeaturedTag = ({ k, v, onEdit }) => {
