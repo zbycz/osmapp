@@ -40,8 +40,7 @@ describe('fetchRating', () => {
         NewRatingPending: false,
       });
 
-    const fhrsId = '269382';
-    const rating = await getEstablishmentRatingValue(parseInt(fhrsId, 10));
+    const rating = await getEstablishmentRatingValue(269382);
 
     if (Number.isNaN(rating)) {
       expect(rating).toBeNaN();
