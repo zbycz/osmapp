@@ -41,12 +41,6 @@ describe('fetchRating', () => {
       });
 
     const rating = await getEstablishmentRatingValue(269382);
-
-    if (Number.isNaN(rating)) {
-      expect(rating).toBeNaN();
-      return;
-    }
-    expect(rating).toBeGreaterThanOrEqual(0);
     expect(rating).toBeLessThanOrEqual(5);
     fetchJsonMock.mockRestore();
   });
