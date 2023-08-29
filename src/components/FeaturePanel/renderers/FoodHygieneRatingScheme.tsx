@@ -60,6 +60,15 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
     loadData();
   }, []);
 
+  const linkStyle: React.CSSProperties = {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '0.5rem',
+  };
+  const pStyle: React.CSSProperties = {
+    marginBlock: '0',
+  };
+
   return (
     <>
       {loading ? (
@@ -75,7 +84,14 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
             <Typography color="error">No rating available</Typography>
           ) : (
             <>
-              <StarRating stars={rating} maxStars={5} />
+              <a
+                href={`https://ratings.food.gov.uk/business/${v}`}
+                title="Food Hygiene Rating Scheme"
+                style={linkStyle}
+              >
+                <p style={pStyle}>FHRS</p>
+                <StarRating stars={rating} maxStars={5} />
+              </a>
             </>
           )}
         </>
