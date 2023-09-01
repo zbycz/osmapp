@@ -34,7 +34,13 @@ const useLoadingState = () => {
   return { routes, error, loading, startRoutes, finishRoutes, failRoutes };
 };
 
-const PublicTransportInner = () => {
+interface PublicTransportInnerProps {
+  name: string;
+}
+
+const PublicTransportInner: React.FC<PublicTransportInnerProps> = ({
+  name,
+}) => {
   const router = useRouter();
 
   const { routes, error, loading, startRoutes, finishRoutes, failRoutes } =
@@ -46,6 +52,7 @@ const PublicTransportInner = () => {
       const lines = await requestLines(
         router.query.all[0] as any,
         Number(router.query.all[1]),
+        name,
       ).catch(failRoutes);
       finishRoutes(lines);
     };
@@ -81,12 +88,11 @@ export const PublicTransport: React.FC<PublicTransportProps> = ({ tags }) => {
   const isPublicTransport =
     Object.keys(tags).includes('public_transport') ||
     tags.railway === 'station' ||
-    tags.railway === 'halt' ||
-    tags.railway === 'subway_entrance';
+    tags.railway === 'halt';
 
   if (!isPublicTransport) {
     return null;
   }
 
-  return PublicTransportInner();
+  return PublicTransportInner({ name: tags.name });
 };
