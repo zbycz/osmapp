@@ -41,7 +41,7 @@ describe('fetchRating', () => {
       });
 
     const rating = await getEstablishmentRatingValue(269382);
-    expect(rating).toBeLessThanOrEqual(5);
+    expect(rating).toBe(5);
     fetchJsonMock.mockRestore();
   });
 });
