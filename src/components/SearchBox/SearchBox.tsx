@@ -13,7 +13,10 @@ import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { isDesktop, useMobileMode } from '../helpers';
 import { getGlobalMap } from '../../services/mapStorage';
-import { overpassAroundToSkeletons } from '../../services/overpassAroundToSkeletons';
+import { Feature, LineString, Point } from '../../services/types';
+import { getPoiClass } from '../../services/getPoiClass';
+import { getCenter } from '../../services/getCenter';
+import { OsmApiId } from '../../services/helpers';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -75,16 +78,57 @@ const getOverpassUrl = ([a, b, c, d]) => {
   )}`;
 };
 
+const notNull = (x) => x != null;
+
+const getGeometry = {
+  node: ({ lat, lon }): Point => ({ type: 'Point', coordinates: [lon, lat] }),
+  way: (foo): LineString => {
+    const { geometry } = foo;
+    return {
+      type: 'LineString',
+      coordinates: geometry?.filter(notNull)?.map(({ lat, lon }) => [lon, lat]),
+    };
+  },
+  relation: ({ members }): LineString => ({
+    type: 'LineString',
+    coordinates: members[0]?.geometry
+      ?.filter(notNull)
+      ?.map(({ lat, lon }) => [lon, lat]),
+  }),
+};
+
+export const overpassAroundToSkeletons = (response: any): Feature[] =>
+  response.elements.map((element) => {
+    const { type, id, tags = {} } = element;
+    const geometry = getGeometry[type]?.(element);
+    return {
+      type: 'Feature',
+      osmMeta: { type, id },
+      tags,
+      properties: { ...getPoiClass(tags), tags },
+      geometry,
+      center: getCenter(geometry) ?? undefined,
+    };
+  });
+
+export const convertOsmIdToMapId = (apiId: OsmApiId) => {
+  const osmToMapType = { node: 0, way: 1, relation: 4 };
+  return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
+};
+
 const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
   if (inputValue === 'climbing') {
     const overpass = await fetchJson(getOverpassUrl(bbox));
     console.log(overpass);
     const map = getGlobalMap();
     // put overpass features on mapbox gl map
-    const features = overpassAroundToSkeletons(overpass).filter(
-      (feature) => feature.center,
-    );
-    console.log(features);
+    const features = overpassAroundToSkeletons(overpass)
+      .filter((feature) => feature.center)
+      .map((feature) => ({
+        ...feature,
+        id: convertOsmIdToMapId(feature.osmMeta),
+      }));
+    console.log('overpass', features);
     map.getSource('overpass').setData({ type: 'FeatureCollection', features });
 
     setOptions([]);

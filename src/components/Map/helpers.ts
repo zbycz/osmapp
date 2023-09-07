@@ -23,6 +23,11 @@ export const getIsOsmObject = ({ id, layer }) => {
   if (layer.id === 'water-name-other' && id < 10e5) {
     return false;
   }
+
+  if (layer.id?.startsWith('overpass')) {
+    return true;
+  }
+
   return layersWithOsmId.includes(layer.id);
 };
 
