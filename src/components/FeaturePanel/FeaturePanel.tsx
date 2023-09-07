@@ -24,6 +24,7 @@ import { ImageSection } from './ImageSection/ImageSection';
 import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
+import { ClimbingPanel } from './Climbing/ClimbingPanel';
 
 const featuredKeys = [
   'website',
@@ -54,6 +55,9 @@ const FeaturePanel = () => {
     .filter(([, v]) => v);
   const label = getLabel(feature);
 
+  if (tags.climbing === 'crag') {
+    return <ClimbingPanel />;
+  }
   return (
     <PanelWrapper>
       <PanelScrollbars>
