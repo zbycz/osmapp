@@ -20,4 +20,52 @@ export const useUpdateStyle = useMapEffect((map, activeLayers) => {
       ? outdoorStyle
       : getRasterLayer(key),
   );
+
+  map.addSource('overpass', {
+    type: 'geojson',
+    data: {
+      type: 'FeatureCollection',
+      features: [],
+    },
+  });
+  map.addLayer({
+    id: 'overpass',
+    type: 'line',
+    source: 'overpass',
+    paint: {
+      'line-color': '#f00',
+      'line-width': 2,
+    },
+  });
+  map.addLayer({
+    id: 'overpass-fill',
+    type: 'fill',
+    source: 'overpass',
+    paint: {
+      'fill-color': '#f00',
+      'fill-opacity': 0.5,
+    },
+  });
+  map.addLayer({
+    id: 'overpass-circle',
+    type: 'circle',
+    source: 'overpass',
+    paint: {
+      'circle-color': '#f00',
+      'circle-radius': 5,
+    },
+  });
+  map.addLayer({
+    id: 'overpass-text',
+    type: 'symbol',
+    source: 'overpass',
+    layout: {
+      'text-field': ['get', 'name'],
+      'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+      'text-size': 12,
+    },
+    paint: {
+      'text-color': '#f00',
+    },
+  });
 });
