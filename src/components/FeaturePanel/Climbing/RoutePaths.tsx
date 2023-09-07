@@ -12,7 +12,8 @@ const Svg = styled.svg`
   top: 0;
 `;
 
-const Route = ({ route }) => route.map(({ x, y, type }, index) => {
+const Route = ({ route }) =>
+  route.map(({ x, y, type }, index) => {
     const currentX = IMAGE_WIDTH * x;
     const currentY = IMAGE_HEIGHT * y;
 
@@ -40,9 +41,9 @@ const Route = ({ route }) => route.map(({ x, y, type }, index) => {
   });
 
 export const RoutePaths = ({ data }) => (
-    <Svg>
-      {data.map((route) => (
-        <Route route={route} />
-      ))}
-    </Svg>
-  );
+  <Svg>
+    {data.map((route) => (
+      <Route route={route} />
+    ))}
+  </Svg>
+);
