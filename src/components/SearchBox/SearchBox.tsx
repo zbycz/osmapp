@@ -72,11 +72,9 @@ out body;
 >;
 out skel qt;`;
 
-const getOverpassUrl = ([a, b, c, d]) => {
-  return `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+const getOverpassUrl = ([a, b, c, d]) => `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
     overpassQuery([d, a, b, c]),
   )}`;
-};
 
 const notNull = (x) => x != null;
 
