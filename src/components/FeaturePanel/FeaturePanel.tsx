@@ -33,6 +33,7 @@ const featuredKeys = [
   'contact:mobile',
   'opening_hours',
   'description',
+  'fhrs:id',
 ];
 
 const FeaturePanel = () => {
