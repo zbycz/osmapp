@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Tooltip, Typography } from '@material-ui/core';
 import { Restaurant } from '@material-ui/icons';
-import { Rating } from '@material-ui/lab';
 import styled from 'styled-components';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
 
@@ -36,6 +35,17 @@ const Wrapper = styled.div`
   .MuiRating-root {
     margin-top: -2px;
   }
+`;
+
+const RatingRound = styled.span`
+  border-radius: 50%;
+  background-color: #1a6500;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  position: relative;
+  top: -1px;
 `;
 
 export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
@@ -77,17 +87,16 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
                 href={`https://ratings.food.gov.uk/business/${v}`}
                 className="colorInherit"
               >
-                FHRS
+                FHRS{' '}
+                {Number.isNaN(rating) || error ? (
+                  <Typography color="textSecondary">
+                    (Error while fetching rating)
+                  </Typography>
+                ) : (
+                  <RatingRound>{rating}</RatingRound>
+                )}
               </a>
             </Tooltip>
-
-            {Number.isNaN(rating) || error ? (
-              <Typography color="textSecondary">
-                (Error while fetching rating)
-              </Typography>
-            ) : (
-              <Rating value={rating} readOnly />
-            )}
           </Wrapper>
         </>
       )}
