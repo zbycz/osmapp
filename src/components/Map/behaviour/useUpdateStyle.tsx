@@ -34,24 +34,21 @@ export const useUpdateStyle = useMapEffect((map, activeLayers) => {
     source: 'overpass',
     paint: {
       'line-color': '#f00',
-    //   'line-width': 2
-    // },
-    // layout: {
-    //   'text-font': ['Noto Sans Regular'],
-    //   'text-field': '{name:latin} {name:nonlatin}',
-    //   'symbol-placement': 'line',
-    //   'text-size': 14,
-    //   'text-rotation-alignment': 'map'
-    }
+      //   'line-width': 2
+      // },
+      // layout: {
+      //   'text-font': ['Noto Sans Regular'],
+      //   'text-field': '{name:latin} {name:nonlatin}',
+      //   'symbol-placement': 'line',
+      //   'text-size': 14,
+      //   'text-rotation-alignment': 'map'
+    },
   });
   map.addLayer({
     id: 'overpass-fill',
     type: 'fill',
     source: 'overpass',
-    filter: [
-      'all',
-      ['==', '$type', 'Polygon'],
-    ],
+    filter: ['all', ['==', '$type', 'Polygon']],
     paint: {
       'fill-color': '#f00',
       'fill-opacity': 0.5,
@@ -61,10 +58,7 @@ export const useUpdateStyle = useMapEffect((map, activeLayers) => {
     id: 'overpass-circle',
     type: 'circle',
     source: 'overpass',
-    filter: [
-      'all',
-      ['==', '$type', 'Point'],
-    ],
+    filter: ['all', ['==', '$type', 'Point']],
     paint: {
       'circle-color': '#00f',
       'circle-radius': 5,
