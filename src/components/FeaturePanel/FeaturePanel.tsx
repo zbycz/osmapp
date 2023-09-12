@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography } from '@material-ui/core';
+import { Dialog, Typography } from '@material-ui/core';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -25,6 +25,7 @@ import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { ClimbingPanel } from './Climbing/ClimbingPanel';
+import { ClimbingEditorContextProvider } from './Climbing/contexts/climbingEditorContext';
 
 const featuredKeys = [
   'website',
@@ -39,7 +40,7 @@ const featuredKeys = [
 
 const FeaturePanel = () => {
   const { feature } = useFeatureContext();
-
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [advanced, setAdvanced] = useState(false);
   const [showAround, toggleShowAround] = useToggleState(false);
   const [dialogOpenedWith, setDialogOpenedWith] =
@@ -56,7 +57,18 @@ const FeaturePanel = () => {
   const label = getLabel(feature);
 
   if (tags.climbing === 'crag') {
-    return <ClimbingPanel />;
+    return (
+      <ClimbingEditorContextProvider
+        value={{
+          imageSize,
+          setImageSize,
+        }}
+      >
+        <Dialog fullScreen open onClose={() => null}>
+          <ClimbingPanel />
+        </Dialog>
+      </ClimbingEditorContextProvider>
+    );
   }
   return (
     <PanelWrapper>

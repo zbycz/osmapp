@@ -1,22 +1,19 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
 import { Delete as DeleteIcon } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
-import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutePaths } from './RoutePaths';
 import { t } from '../../../services/intl';
 import type { PathPoints } from './types';
-
-const IMAGE_WIDTH = 410;
-const IMAGE_HEIGHT = 540;
+import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 
 const Container = styled.div`
   position: relative;
 `;
 
-const Image = styled.img`
-  width: ${IMAGE_WIDTH}px;
+const Image2 = styled.img`
+  width: 100%;
 `;
 const GuideContainer = styled.div`
   padding: 10px;
@@ -33,6 +30,16 @@ export const ClimbingPanel = () => {
   const [newPath, setNewPath] = useState<PathPoints>([]);
   const [pathData, setPathData] = useState<Array<PathPoints>>([]);
   const [routeSelected, setRouteSelected] = useState<number>(null);
+
+  const { setImageSize, imageSize } = useContext(ClimbingEditorContext);
+
+  useEffect(() => {
+    const image = new Image();
+    image.onload = () => {
+      setImageSize({ width: image.width, height: image.height });
+    };
+    image.src = 'https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png';
+  }, []);
 
   const onCreateClimbingRouteClick = () => {
     setIsEditable(true);
@@ -63,8 +70,8 @@ export const ClimbingPanel = () => {
       const rect = e.target.getBoundingClientRect();
 
       const newCoordinate = {
-        x: (e.clientX - rect.left) / IMAGE_WIDTH,
-        y: (e.clientY - rect.top) / IMAGE_HEIGHT,
+        x: (e.clientX - rect.left) / imageSize.width,
+        y: (e.clientY - rect.top) / imageSize.height,
       };
       setNewPath([...newPath, newCoordinate]);
       if (isDoubleClick) {
@@ -80,70 +87,63 @@ export const ClimbingPanel = () => {
   };
 
   return (
-    <PanelWrapper>
-      <PanelScrollbars>
-        <Container>
-          <Image src="https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png" />
-          {/* <Image src="https://www.skalnioblasti.cz/image.php?typ=skala&id=13516" /> */}
-          <RoutePaths
-            data={[...pathData, newPath]}
-            isEditable={isEditable}
-            onClick={onCanvasClick}
-            routeSelected={routeSelected}
-            onRouteSelect={onRouteSelect}
-          />
+    <Container>
+      <Image2 src="https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png" />
+      {/* <Image src="https://www.skalnioblasti.cz/image.php?typ=skala&id=13516" /> */}
+      <RoutePaths
+        data={[...pathData, newPath]}
+        isEditable={isEditable}
+        onClick={onCanvasClick}
+        routeSelected={routeSelected}
+        onRouteSelect={onRouteSelect}
+      />
 
-          <GuideContainer>
-            {isEditable ? (
-              <>
-                <Alert severity="info" variant="filled">
-                  {newPath.length === 0
-                    ? t('climbingpanel.create_first_node')
-                    : t('climbingpanel.create_next_node')}
-                </Alert>
-                <ButtonsContainer>
-                  <Button
-                    onClick={onFinishClimbingRouteClick}
-                    color="primary"
-                    variant="contained"
-                  >
-                    {t('climbingpanel.finish_climbing_route')}
-                  </Button>
-                  <Button
-                    onClick={onCancelClimbingRouteClick}
-                    color="secondary"
-                  >
-                    {t('climbingpanel.cancel_climbing_route')}
-                  </Button>
-                </ButtonsContainer>
-              </>
-            ) : (
-              <ButtonsContainer>
-                <Button
-                  onClick={onCreateClimbingRouteClick}
-                  color="primary"
-                  variant="contained"
-                >
-                  {t('climbingpanel.create_climbing_route')}
-                </Button>
-                {routeSelected !== null && (
-                  <Button
-                    onClick={onDeleteExistingClimbingRouteClick}
-                    color="secondary"
-                    variant="text"
-                    size="small"
-                    startIcon={<DeleteIcon />}
-                  >
-                    {t('climbingpanel.delete_climbing_route', {
-                      route: String(routeSelected),
-                    })}
-                  </Button>
-                )}
-              </ButtonsContainer>
+      <GuideContainer>
+        {isEditable ? (
+          <>
+            <Alert severity="info" variant="filled">
+              {newPath.length === 0
+                ? t('climbingpanel.create_first_node')
+                : t('climbingpanel.create_next_node')}
+            </Alert>
+            <ButtonsContainer>
+              <Button
+                onClick={onFinishClimbingRouteClick}
+                color="primary"
+                variant="contained"
+              >
+                {t('climbingpanel.finish_climbing_route')}
+              </Button>
+              <Button onClick={onCancelClimbingRouteClick} color="secondary">
+                {t('climbingpanel.cancel_climbing_route')}
+              </Button>
+            </ButtonsContainer>
+          </>
+        ) : (
+          <ButtonsContainer>
+            <Button
+              onClick={onCreateClimbingRouteClick}
+              color="primary"
+              variant="contained"
+            >
+              {t('climbingpanel.create_climbing_route')}
+            </Button>
+            {routeSelected !== null && (
+              <Button
+                onClick={onDeleteExistingClimbingRouteClick}
+                color="secondary"
+                variant="text"
+                size="small"
+                startIcon={<DeleteIcon />}
+              >
+                {t('climbingpanel.delete_climbing_route', {
+                  route: String(routeSelected),
+                })}
+              </Button>
             )}
-          </GuideContainer>
-        </Container>
-      </PanelScrollbars>
-    </PanelWrapper>
+          </ButtonsContainer>
+        )}
+      </GuideContainer>
+    </Container>
   );
 };

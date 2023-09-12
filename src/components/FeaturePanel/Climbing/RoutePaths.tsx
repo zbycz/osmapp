@@ -1,11 +1,9 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { PathPoints } from './types';
 import { RouteNumber } from './RouteNumber';
 import { RoutePath } from './RoutePath';
-
-const IMAGE_WIDTH = 410;
-const IMAGE_HEIGHT = 540;
+import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 
 const Svg = styled.svg<{ isEditable: boolean }>`
   position: absolute;
@@ -33,8 +31,9 @@ const Route = ({
 }: Props) => {
   if (route.length === 0) return null;
 
-  const x = IMAGE_WIDTH * route[0].x;
-  const y = IMAGE_HEIGHT * route[0].y;
+  const { imageSize } = useContext(ClimbingEditorContext);
+  const x = imageSize.width * route[0].x;
+  const y = imageSize.height * route[0].y;
 
   if (route.length === 1) {
     return (
