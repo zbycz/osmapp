@@ -1,0 +1,83 @@
+/* eslint-disable react/jsx-props-no-spreading */
+import React from 'react';
+import styled from 'styled-components';
+
+type Props = {
+  onRouteSelect: (routeNumber: number) => void;
+  routeSelected: number;
+  children: number;
+  x: number;
+  y: number;
+};
+
+const RouteNameBoxBase = styled.rect`
+  pointer-events: all;
+`;
+
+const HoverableRouteName = RouteNameBoxBase;
+const RouteNameOutline = RouteNameBoxBase;
+const RouteNameBox = RouteNameBoxBase;
+
+export const RouteNumber = ({
+  onRouteSelect,
+  children: routeNumber,
+  x,
+  y,
+  routeSelected,
+}: Props) => {
+  const RECT_WIDTH = String(routeNumber).length * 5 + 15;
+  const RECT_HEIGHT = 20;
+  const RECT_Y_OFFSET = 10;
+  const OUTLINE_WIDTH = 2;
+  const HOVER_WIDTH = 10;
+
+  const commonProps = {
+    onClick: (e) => {
+      onRouteSelect(routeNumber);
+      e.stopPropagation();
+    },
+    cursor: 'pointer',
+  };
+  return (
+    <>
+      <HoverableRouteName
+        x={x - RECT_WIDTH / 2 - HOVER_WIDTH / 2}
+        y={y + RECT_Y_OFFSET - HOVER_WIDTH / 2}
+        width={RECT_WIDTH + HOVER_WIDTH}
+        height={RECT_HEIGHT + HOVER_WIDTH}
+        rx="8"
+        fill="transparent"
+        {...commonProps}
+      />
+
+      <RouteNameOutline
+        x={x - RECT_WIDTH / 2 - OUTLINE_WIDTH / 2}
+        y={y + RECT_Y_OFFSET - OUTLINE_WIDTH / 2}
+        width={RECT_WIDTH + OUTLINE_WIDTH}
+        height={RECT_HEIGHT + OUTLINE_WIDTH}
+        rx="6"
+        fill="white"
+        {...commonProps}
+      />
+      <RouteNameBox
+        x={x - RECT_WIDTH / 2}
+        y={y + RECT_Y_OFFSET}
+        width={RECT_WIDTH}
+        height={RECT_HEIGHT}
+        rx="5"
+        fill={routeSelected === routeNumber ? 'red' : 'black'}
+        {...commonProps}
+      />
+      <text
+        x={x}
+        y={y + RECT_Y_OFFSET + 15}
+        fill="white"
+        textAnchor="middle"
+        fontWeight="bold"
+        {...commonProps}
+      >
+        {routeNumber}
+      </text>
+    </>
+  );
+};

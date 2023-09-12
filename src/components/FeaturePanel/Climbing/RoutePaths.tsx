@@ -1,49 +1,97 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from 'styled-components';
+import { PathPoints } from './types';
+import { RouteNumber } from './RouteNumber';
+import { RoutePath } from './RoutePath';
 
 const IMAGE_WIDTH = 410;
-const IMAGE_HEIGHT = 500;
+const IMAGE_HEIGHT = 540;
 
-const Svg = styled.svg`
+const Svg = styled.svg<{ isEditable: boolean }>`
   position: absolute;
   height: 100%;
   width: 100%;
   left: 0;
   top: 0;
+  ${({ isEditable }) => `cursor: ${isEditable ? 'crosshair' : 'auto'}`}
 `;
 
-const Route = ({ route }) =>
-  route.map(({ x, y, type }, index) => {
-    const currentX = IMAGE_WIDTH * x;
-    const currentY = IMAGE_HEIGHT * y;
+type Props = {
+  route: PathPoints;
+  routeNumber: number;
+  onRouteSelect: (routeNumber: number) => void;
+  routeSelected: number;
+  isEditable: boolean;
+};
 
+const Route = ({
+  route,
+  routeNumber,
+  routeSelected,
+  onRouteSelect,
+  isEditable,
+}: Props) => {
+  if (route.length === 0) return null;
+
+  const x = IMAGE_WIDTH * route[0].x;
+  const y = IMAGE_HEIGHT * route[0].y;
+
+  if (route.length === 1) {
     return (
       <>
-        <circle
-          cx={currentX}
-          cy={currentY}
-          r={10}
-          strokeWidth="0"
-          fill={type === 'anchor' ? 'red' : 'blue'}
-        />
-        {index !== 0 && (
-          <line
-            strokeWidth={5}
-            stroke="red"
-            x1={IMAGE_WIDTH * route[index - 1].x}
-            y1={IMAGE_HEIGHT * route[index - 1].y}
-            x2={currentX}
-            y2={currentY}
-          />
-        )}
+        <circle cx={x} cy={y} r={4} strokeWidth="0" fill="white" />
+        <circle cx={x} cy={y} r={2.5} strokeWidth="0" fill="red" />
+        <RouteNumber
+          onRouteSelect={onRouteSelect}
+          x={x}
+          y={y}
+          routeSelected={routeSelected}
+        >
+          {routeNumber}
+        </RouteNumber>
       </>
     );
-  });
+  }
 
-export const RoutePaths = ({ data }) => (
-  <Svg>
-    {data.map((route) => (
-      <Route route={route} />
+  return (
+    <>
+      <RoutePath
+        routeSelected={routeSelected}
+        onRouteSelect={onRouteSelect}
+        routeNumber={routeNumber}
+        route={route}
+        isEditable={isEditable}
+      />
+
+      <RouteNumber
+        onRouteSelect={onRouteSelect}
+        x={x}
+        y={y}
+        routeSelected={routeSelected}
+      >
+        {routeNumber}
+      </RouteNumber>
+    </>
+  );
+};
+
+export const RoutePaths = ({
+  data,
+  isEditable,
+  onClick,
+  routeSelected,
+  onRouteSelect,
+}) => (
+  <Svg isEditable={isEditable} onClick={onClick}>
+    {data.map((route, index) => (
+      <Route
+        route={route}
+        routeNumber={index}
+        routeSelected={routeSelected}
+        onRouteSelect={onRouteSelect}
+        isEditable={isEditable}
+      />
     ))}
   </Svg>
 );
