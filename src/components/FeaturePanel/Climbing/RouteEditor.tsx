@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { PathPoints } from './types';
+import type { ClimbingRoute } from './types';
 import { RouteNumber } from './RouteNumber';
 import { RoutePath } from './RoutePath';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
@@ -15,7 +15,7 @@ const Svg = styled.svg<{ isEditable: boolean }>`
 `;
 
 type Props = {
-  route: PathPoints;
+  route: ClimbingRoute;
   routeNumber: number;
   onRouteSelect: (routeNumber: number) => void;
   routeSelected: number;
@@ -29,13 +29,13 @@ const Route = ({
   onRouteSelect,
   isEditable,
 }: Props) => {
-  if (route.length === 0) return null;
+  if (route?.path.length === 0) return null;
 
   const { imageSize } = useContext(ClimbingEditorContext);
-  const x = imageSize.width * route[0].x;
-  const y = imageSize.height * route[0].y;
+  const x = imageSize.width * route?.path[0].x;
+  const y = imageSize.height * route?.path[0].y;
 
-  if (route.length === 1) {
+  if (route?.path.length === 1) {
     return (
       <>
         <circle cx={x} cy={y} r={4} strokeWidth="0" fill="white" />
@@ -74,15 +74,15 @@ const Route = ({
   );
 };
 
-export const RoutePaths = ({
-  data,
+export const RouteEditor = ({
+  routes,
   isEditable,
   onClick,
   routeSelected,
   onRouteSelect,
 }) => (
   <Svg isEditable={isEditable} onClick={onClick}>
-    {data.map((route, index) => (
+    {routes.map((route, index) => (
       <Route
         route={route}
         routeNumber={index}

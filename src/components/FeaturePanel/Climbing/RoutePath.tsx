@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext } from 'react';
-import type { PathPoints } from './types';
+import type { ClimbingRoute } from './types';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 
 type Props = {
-  route: PathPoints;
+  route: ClimbingRoute;
   routeSelected: number;
   routeNumber: number;
   onRouteSelect: (routeNumber: number) => void;
@@ -19,7 +19,7 @@ export const RoutePath = ({
   isEditable,
 }: Props) => {
   const { imageSize } = useContext(ClimbingEditorContext);
-  const pointsInString = route.map(({ x, y }, index) => {
+  const pointsInString = route?.path.map(({ x, y }, index) => {
     const currentX = imageSize.width * x;
     const currentY = imageSize.height * y;
     return `${index === 0 ? 'M' : 'L'}${currentX} ${currentY} `;

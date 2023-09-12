@@ -6,3 +6,11 @@ export type PathPoints = Array<{
   type?: PointType;
   note?: string;
 }>;
+
+export type ClimbingRoute = {
+  difficulty?: string;
+  length?: string;
+  name?: string;
+  description?: string;
+  path: PathPoints;
+};
