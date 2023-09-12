@@ -41,7 +41,7 @@ const Route = ({
     return (
       <>
         <circle cx={x} cy={y} r={4} strokeWidth="0" fill="white" />
-        <circle cx={x} cy={y} r={2.5} strokeWidth="0" fill="red" />
+        <circle cx={x} cy={y} r={2.5} strokeWidth="0" fill="royalblue" />
         <RouteNumber
           onRouteSelect={onRouteSelect}
           x={x}

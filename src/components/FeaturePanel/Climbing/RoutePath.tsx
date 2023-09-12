@@ -40,7 +40,7 @@ export const RoutePath = ({
     <>
       <path
         d={`M0 0 ${pointsInString}`}
-        strokeWidth={15}
+        strokeWidth={10}
         stroke="transparent"
         strokeLinecap="round"
         fill="none"
@@ -48,16 +48,16 @@ export const RoutePath = ({
       />
       <path
         d={`M0 0 ${pointsInString}`}
-        strokeWidth={8}
-        stroke="white"
+        strokeWidth={5}
+        stroke={routeSelected === routeNumber ? 'white' : '#666'}
         strokeLinecap="round"
         fill="none"
         {...commonProps}
       />
       <path
         d={`M0 0 ${pointsInString}`}
-        strokeWidth={5}
-        stroke={routeSelected === routeNumber ? 'red' : 'black'}
+        strokeWidth={3}
+        stroke={routeSelected === routeNumber ? 'royalblue' : 'white'}
         strokeLinecap="round"
         fill="none"
         {...commonProps}

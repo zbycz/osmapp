@@ -7,7 +7,6 @@ import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutePaths } from './RoutePaths';
 import { t } from '../../../services/intl';
 import type { PathPoints } from './types';
-import { SEARCH_BOX_HEIGHT } from '../../SearchBox/consts';
 
 const IMAGE_WIDTH = 410;
 const IMAGE_HEIGHT = 540;
@@ -61,9 +60,11 @@ export const ClimbingPanel = () => {
     const isDoubleClick = e.detail === 2;
 
     if (isEditable) {
+      const rect = e.target.getBoundingClientRect();
+
       const newCoordinate = {
-        x: e.clientX / IMAGE_WIDTH,
-        y: (e.clientY - SEARCH_BOX_HEIGHT) / IMAGE_HEIGHT,
+        x: (e.clientX - rect.left) / IMAGE_WIDTH,
+        y: (e.clientY - rect.top) / IMAGE_HEIGHT,
       };
       setNewPath([...newPath, newCoordinate]);
       if (isDoubleClick) {
@@ -82,7 +83,8 @@ export const ClimbingPanel = () => {
     <PanelWrapper>
       <PanelScrollbars>
         <Container>
-          <Image src="https://www.skalnioblasti.cz/image.php?typ=skala&id=13516" />
+          <Image src="https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png" />
+          {/* <Image src="https://www.skalnioblasti.cz/image.php?typ=skala&id=13516" /> */}
           <RoutePaths
             data={[...pathData, newPath]}
             isEditable={isEditable}

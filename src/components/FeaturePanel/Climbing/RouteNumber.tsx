@@ -45,7 +45,7 @@ export const RouteNumber = ({
         y={y + RECT_Y_OFFSET - HOVER_WIDTH / 2}
         width={RECT_WIDTH + HOVER_WIDTH}
         height={RECT_HEIGHT + HOVER_WIDTH}
-        rx="8"
+        rx="10"
         fill="transparent"
         {...commonProps}
       />
@@ -55,8 +55,8 @@ export const RouteNumber = ({
         y={y + RECT_Y_OFFSET - OUTLINE_WIDTH / 2}
         width={RECT_WIDTH + OUTLINE_WIDTH}
         height={RECT_HEIGHT + OUTLINE_WIDTH}
-        rx="6"
-        fill="white"
+        rx="10"
+        fill={routeSelected === routeNumber ? 'white' : '#666'}
         {...commonProps}
       />
       <RouteNameBox
@@ -64,14 +64,14 @@ export const RouteNumber = ({
         y={y + RECT_Y_OFFSET}
         width={RECT_WIDTH}
         height={RECT_HEIGHT}
-        rx="5"
-        fill={routeSelected === routeNumber ? 'red' : 'black'}
+        rx="10"
+        fill={routeSelected === routeNumber ? 'royalblue' : 'white'}
         {...commonProps}
       />
       <text
         x={x}
         y={y + RECT_Y_OFFSET + 15}
-        fill="white"
+        fill={routeSelected === routeNumber ? 'white' : '#666'}
         textAnchor="middle"
         fontWeight="bold"
         {...commonProps}
