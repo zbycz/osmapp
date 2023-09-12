@@ -5,21 +5,21 @@ import type { ClimbingRoute } from './types';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 import { ControlPanel } from './ControlPanel';
 import { RouteList } from './RouteList';
+import { emptyRoute } from './utils/emptyRoute';
 
 const Container = styled.div`
   position: relative;
 `;
 
-const Image2 = styled.img`
+const ImageElement = styled.img`
   width: 100%;
 `;
 
 export const ClimbingPanel = () => {
-  const emptyRoute = { name: '', difficulty: '', length: '', path: [] };
   const [isEditable, setIsEditable] = useState(false);
   const [newRoute, setNewRoute] = useState<ClimbingRoute>(null);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
-  const [routeSelected, setRouteSelected] = useState<number>(null);
+  const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
 
   const { setImageSize, imageSize } = useContext(ClimbingEditorContext);
 
@@ -34,23 +34,36 @@ export const ClimbingPanel = () => {
   const onCreateClimbingRouteClick = () => {
     setIsEditable(true);
     setNewRoute(emptyRoute);
-    setRouteSelected(routes.length);
+    setRouteSelectedIndex(routes.length);
+  };
+  const onUpdateExistingRouteClick = (updatedRouteSelectedIndex: number) => {
+    setIsEditable(true);
+    setNewRoute({ ...routes[updatedRouteSelectedIndex], path: [] });
+    setRouteSelectedIndex(updatedRouteSelectedIndex);
   };
 
   const onFinishClimbingRouteClick = () => {
     setIsEditable(false);
-    setRoutes([...routes, newRoute]);
+    setRoutes([
+      ...routes.slice(0, routeSelectedIndex),
+      newRoute,
+      ...routes.slice(routeSelectedIndex + 1),
+    ]);
     setNewRoute(null);
-    setRouteSelected(null);
+    setRouteSelectedIndex(null);
   };
   const onCancelClimbingRouteClick = () => {
     setIsEditable(false);
     setNewRoute(null);
-    setRouteSelected(null);
+    setRouteSelectedIndex(null);
   };
   const onDeleteExistingClimbingRouteClick = () => {
-    setRoutes(routes.filter((_route, index) => index !== routeSelected));
-    setRouteSelected(null);
+    setRoutes([
+      ...routes.slice(0, routeSelectedIndex),
+      { ...routes[routeSelectedIndex], path: [] },
+      ...routes.slice(routeSelectedIndex + 1),
+    ]);
+    setRouteSelectedIndex(null);
   };
 
   const onCanvasClick = (e) => {
@@ -68,23 +81,31 @@ export const ClimbingPanel = () => {
         onFinishClimbingRouteClick();
       }
     } else {
-      setRouteSelected(null);
+      setRouteSelectedIndex(null);
     }
   };
 
   const onRouteSelect = (routeNumber: number) => {
-    setRouteSelected(routeNumber);
+    setRouteSelectedIndex(routeNumber);
   };
 
   return (
     <Container>
-      <Image2 src="https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png" />
+      <ImageElement src="https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png" />
       {/* <Image src="https://www.skalnioblasti.cz/image.php?typ=skala&id=13516" /> */}
       <RouteEditor
-        routes={[...routes, newRoute]}
+        routes={
+          newRoute
+            ? [
+                ...routes.slice(0, routeSelectedIndex),
+                newRoute,
+                ...routes.slice(routeSelectedIndex + 1),
+              ]
+            : routes
+        }
         isEditable={isEditable}
         onClick={onCanvasClick}
-        routeSelected={routeSelected}
+        routeSelectedIndex={routeSelectedIndex}
         onRouteSelect={onRouteSelect}
       />
 
@@ -95,13 +116,14 @@ export const ClimbingPanel = () => {
         onCancelClimbingRouteClick={onCancelClimbingRouteClick}
         onCreateClimbingRouteClick={onCreateClimbingRouteClick}
         onDeleteExistingClimbingRouteClick={onDeleteExistingClimbingRouteClick}
-        routeSelected={routeSelected}
+        routeSelectedIndex={routeSelectedIndex}
       />
 
       <RouteList
         routes={routes}
-        routeSelected={routeSelected}
+        routeSelectedIndex={routeSelectedIndex}
         setRoutes={setRoutes}
+        onUpdateExistingRouteClick={onUpdateExistingRouteClick}
       />
     </Container>
   );

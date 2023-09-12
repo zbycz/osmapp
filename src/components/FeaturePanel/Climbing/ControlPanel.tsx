@@ -22,7 +22,7 @@ export const ControlPanel = ({
   onCancelClimbingRouteClick,
   onCreateClimbingRouteClick,
   onDeleteExistingClimbingRouteClick,
-  routeSelected,
+  routeSelectedIndex,
 }) => (
   <GuideContainer>
     {isEditable ? (
@@ -54,7 +54,7 @@ export const ControlPanel = ({
         >
           {t('climbingpanel.create_climbing_route')}
         </Button>
-        {routeSelected !== null && (
+        {routeSelectedIndex !== null && (
           <Button
             onClick={onDeleteExistingClimbingRouteClick}
             color="secondary"
@@ -63,7 +63,7 @@ export const ControlPanel = ({
             startIcon={<DeleteIcon />}
           >
             {t('climbingpanel.delete_climbing_route', {
-              route: String(routeSelected),
+              route: String(routeSelectedIndex),
             })}
           </Button>
         )}

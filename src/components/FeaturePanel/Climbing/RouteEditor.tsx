@@ -18,23 +18,24 @@ type Props = {
   route: ClimbingRoute;
   routeNumber: number;
   onRouteSelect: (routeNumber: number) => void;
-  routeSelected: number;
+  routeSelectedIndex: number;
   isEditable: boolean;
 };
 
 const Route = ({
   route,
   routeNumber,
-  routeSelected,
+  routeSelectedIndex,
   onRouteSelect,
   isEditable,
 }: Props) => {
-  if (route?.path.length === 0) return null;
+  if (!route || route.path.length === 0) return null;
 
   const { imageSize } = useContext(ClimbingEditorContext);
   const x = imageSize.width * route?.path[0].x;
   const y = imageSize.height * route?.path[0].y;
 
+  console.log('_____', route);
   if (route?.path.length === 1) {
     return (
       <>
@@ -44,7 +45,7 @@ const Route = ({
           onRouteSelect={onRouteSelect}
           x={x}
           y={y}
-          routeSelected={routeSelected}
+          routeSelectedIndex={routeSelectedIndex}
         >
           {routeNumber}
         </RouteNumber>
@@ -55,7 +56,7 @@ const Route = ({
   return (
     <>
       <RoutePath
-        routeSelected={routeSelected}
+        routeSelectedIndex={routeSelectedIndex}
         onRouteSelect={onRouteSelect}
         routeNumber={routeNumber}
         route={route}
@@ -66,7 +67,7 @@ const Route = ({
         onRouteSelect={onRouteSelect}
         x={x}
         y={y}
-        routeSelected={routeSelected}
+        routeSelectedIndex={routeSelectedIndex}
       >
         {routeNumber}
       </RouteNumber>
@@ -78,7 +79,7 @@ export const RouteEditor = ({
   routes,
   isEditable,
   onClick,
-  routeSelected,
+  routeSelectedIndex,
   onRouteSelect,
 }) => (
   <Svg isEditable={isEditable} onClick={onClick}>
@@ -86,7 +87,7 @@ export const RouteEditor = ({
       <Route
         route={route}
         routeNumber={index}
-        routeSelected={routeSelected}
+        routeSelectedIndex={routeSelectedIndex}
         onRouteSelect={onRouteSelect}
         isEditable={isEditable}
       />

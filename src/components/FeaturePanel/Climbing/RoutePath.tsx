@@ -5,7 +5,7 @@ import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 
 type Props = {
   route: ClimbingRoute;
-  routeSelected: number;
+  routeSelectedIndex: number;
   routeNumber: number;
   onRouteSelect: (routeNumber: number) => void;
   isEditable: boolean;
@@ -13,7 +13,7 @@ type Props = {
 
 export const RoutePath = ({
   route,
-  routeSelected,
+  routeSelectedIndex,
   routeNumber,
   onRouteSelect,
   isEditable,
@@ -34,6 +34,7 @@ export const RoutePath = ({
         },
         cursor: 'pointer',
       };
+  const isSelected = routeSelectedIndex === routeNumber;
 
   return (
     <>
@@ -48,7 +49,7 @@ export const RoutePath = ({
       <path
         d={`M0 0 ${pointsInString}`}
         strokeWidth={5}
-        stroke={routeSelected === routeNumber ? 'white' : '#666'}
+        stroke={isSelected ? 'white' : '#666'}
         strokeLinecap="round"
         fill="none"
         {...commonProps}
@@ -56,7 +57,7 @@ export const RoutePath = ({
       <path
         d={`M0 0 ${pointsInString}`}
         strokeWidth={3}
-        stroke={routeSelected === routeNumber ? 'royalblue' : 'white'}
+        stroke={isSelected ? 'royalblue' : 'white'}
         strokeLinecap="round"
         fill="none"
         {...commonProps}

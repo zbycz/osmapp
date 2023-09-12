@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 type Props = {
   onRouteSelect: (routeNumber: number) => void;
-  routeSelected: number;
+  routeSelectedIndex: number;
   children: number;
   x: number;
   y: number;
@@ -23,7 +23,7 @@ export const RouteNumber = ({
   children: routeNumber,
   x,
   y,
-  routeSelected,
+  routeSelectedIndex,
 }: Props) => {
   const RECT_WIDTH = String(routeNumber).length * 5 + 15;
   const RECT_HEIGHT = 20;
@@ -38,6 +38,8 @@ export const RouteNumber = ({
     },
     cursor: 'pointer',
   };
+  const isSelected = routeSelectedIndex === routeNumber;
+
   return (
     <>
       <HoverableRouteName
@@ -56,7 +58,7 @@ export const RouteNumber = ({
         width={RECT_WIDTH + OUTLINE_WIDTH}
         height={RECT_HEIGHT + OUTLINE_WIDTH}
         rx="10"
-        fill={routeSelected === routeNumber ? 'white' : '#666'}
+        fill={isSelected ? 'white' : '#666'}
         {...commonProps}
       />
       <RouteNameBox
@@ -65,13 +67,13 @@ export const RouteNumber = ({
         width={RECT_WIDTH}
         height={RECT_HEIGHT}
         rx="10"
-        fill={routeSelected === routeNumber ? 'royalblue' : 'white'}
+        fill={isSelected ? 'royalblue' : 'white'}
         {...commonProps}
       />
       <text
         x={x}
         y={y + RECT_Y_OFFSET + 15}
-        fill={routeSelected === routeNumber ? 'white' : '#666'}
+        fill={isSelected ? 'white' : '#666'}
         textAnchor="middle"
         fontWeight="bold"
         {...commonProps}
