@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button, Grid, TextField } from '@material-ui/core';
-import { Edit as EditIcon, Add as AddIcon } from '@material-ui/icons';
+import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 import type { ClimbingRoute } from './types';
 import { emptyRoute } from './utils/emptyRoute';
 

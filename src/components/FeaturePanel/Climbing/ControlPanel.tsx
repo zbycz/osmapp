@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Button } from '@material-ui/core';
-import { Delete as DeleteIcon } from '@material-ui/icons';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { Alert } from '@material-ui/lab';
 import { t } from '../../../services/intl';
 
