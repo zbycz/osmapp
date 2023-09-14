@@ -3887,6 +3887,10 @@ export const outdoorStyle = addHoverPaint({
   ],
   bearing: 0,
   sources: OSMAPP_SOURCES,
+  terrain: {
+    source: 'terrain',
+    exaggeration: 1,
+  },
   version: 8,
   metadata: {
     'mapbox:type': 'template',

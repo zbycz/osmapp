@@ -17,6 +17,12 @@ export const OSMAPP_SOURCES = {
   'terrain-rgb': {
     url: `https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=${apiKey}`,
     type: 'raster-dem' as const,
+    tileSize: 256
+  },
+  'terrain': {
+    url: `https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=${apiKey}`,
+    type: 'raster-dem' as const,
+    tileSize: 256
   },
   outdoor: {
     url: `https://api.maptiler.com/tiles/outdoor/tiles.json?key=${apiKey}`,
