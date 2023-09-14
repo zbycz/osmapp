@@ -4,7 +4,7 @@ import { isBrowser } from '../components/helpers';
 
 export class FetchError extends Error {
   constructor(
-    public message: string = '',
+    public message: string,
     public code: string,
     public data: string,
   ) {
