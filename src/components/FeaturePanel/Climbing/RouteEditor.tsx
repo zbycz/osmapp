@@ -40,7 +40,6 @@ const Route = ({
   const x = imageSize.width * route?.path[0].x;
   const y = imageSize.height * route?.path[0].y;
 
-  console.log('_____', route);
   if (route?.path.length === 1) {
     return (
       <>
