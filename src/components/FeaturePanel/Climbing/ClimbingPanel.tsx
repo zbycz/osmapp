@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -37,14 +37,12 @@ export const ClimbingPanel = ({
   const imageUrl = '/images/rock.png';
   // const imageUrl = "https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png"
   // const imageUrl = "https://www.skalnioblasti.cz/image.php?typ=skala&id=13516"
+  const imageRef = useRef(null);
 
-  useEffect(() => {
-    const image = new Image();
-    image.onload = () => {
-      setImageSize({ width: image.width, height: image.height });
-    };
-    image.src = imageUrl;
-  }, []);
+  const handleImageLoad = () => {
+    const { clientHeight, clientWidth } = imageRef.current;
+    setImageSize({ width: clientWidth, height: clientHeight });
+  };
 
   const onCreateClimbingRouteClick = () => {
     setIsEditable(true);
@@ -106,7 +104,7 @@ export const ClimbingPanel = ({
 
   return (
     <Container>
-      <ImageElement src={imageUrl} />
+      <ImageElement src={imageUrl} onLoad={handleImageLoad} ref={imageRef} />
       <RouteEditor
         routes={
           newRoute
