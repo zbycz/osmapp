@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Tooltip, Typography } from '@material-ui/core';
-import { Restaurant } from '@material-ui/icons';
+import RestaurantIcon from '@material-ui/icons/Restaurant';
 import styled from 'styled-components';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
 
@@ -65,41 +65,41 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
     loadData();
   }, []);
 
+  if (loading) {
+    return (
+      <>
+        <span className="dotloader" />
+        <span className="dotloader" />
+        <span className="dotloader" />
+      </>
+    );
+  }
+
   return (
     <>
-      {loading ? (
-        <>
-          <span className="dotloader" />
-          <span className="dotloader" />
-          <span className="dotloader" />
-        </>
-      ) : (
-        <>
-          <Restaurant fontSize="small" />
-          <Wrapper>
-            <Tooltip
-              arrow
-              interactive
-              title="Food Hygiene Rating Scheme (only in UK)"
-              placement="bottom-end"
-            >
-              <a
-                href={`https://ratings.food.gov.uk/business/${v}`}
-                className="colorInherit"
-              >
-                FHRS{' '}
-                {Number.isNaN(rating) || error ? (
-                  <Typography color="textSecondary">
-                    (Error while fetching rating)
-                  </Typography>
-                ) : (
-                  <RatingRound>{rating}</RatingRound>
-                )}
-              </a>
-            </Tooltip>
-          </Wrapper>
-        </>
-      )}
+      <RestaurantIcon fontSize="small" />
+      <Wrapper>
+        <Tooltip
+          arrow
+          interactive
+          title="Food Hygiene Rating Scheme (only in UK)"
+          placement="bottom-end"
+        >
+          <a
+            href={`https://ratings.food.gov.uk/business/${v}`}
+            className="colorInherit"
+          >
+            FHRS{' '}
+            {Number.isNaN(rating) || error ? (
+              <Typography color="textSecondary">
+                (Error while fetching rating)
+              </Typography>
+            ) : (
+              <RatingRound>{rating}</RatingRound>
+            )}
+          </a>
+        </Tooltip>
+      </Wrapper>
     </>
   );
 };
