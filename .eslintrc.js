@@ -21,7 +21,8 @@ module.exports = {
     node: true,
   },
 
-  extends: ['airbnb-typescript', 'prettier'],
+  extends: ['airbnb', 'airbnb-typescript', 'prettier'],
+  plugins: ['deprecate'],
 
   rules: {
     'react/prop-types': OFF,
@@ -34,5 +35,14 @@ module.exports = {
     'react/require-default-props': OFF,
     'no-nested-ternary': OFF,
     'no-irregular-whitespace': OFF,
+    'no-restricted-exports': OFF,
+    'react/function-component-definition': OFF, // TODO: consider enabling components with "function"
+    'deprecate/import': [
+      'error',
+      {
+        name: '@material-ui/icons',
+        use: 'specific import @material-ui/icons/IconName. The group import somehow kills our SSR on vercel (504 timeout).',
+      },
+    ],
   },
 };

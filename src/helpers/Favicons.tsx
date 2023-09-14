@@ -1,3 +1,4 @@
+/* eslint-disable react/no-invalid-html-attribute */
 // this file is ignored by prettier
 import React from 'react';
 
