@@ -1,5 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { IconButton } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
+import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { RouteEditor } from './RouteEditor';
 import type { ClimbingRoute } from './types';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
@@ -14,8 +17,16 @@ const Container = styled.div`
 const ImageElement = styled.img`
   width: 100%;
 `;
+const DialogIcon = styled.div`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+`;
 
-export const ClimbingPanel = () => {
+export const ClimbingPanel = ({
+  setIsFullscreenDialogOpened,
+  isFullscreenDialogOpened,
+}) => {
   const [isEditable, setIsEditable] = useState(false);
   const [newRoute, setNewRoute] = useState<ClimbingRoute>(null);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
@@ -23,12 +34,16 @@ export const ClimbingPanel = () => {
 
   const { setImageSize, imageSize } = useContext(ClimbingEditorContext);
 
+  const imageUrl = '/images/rock.png';
+  // const imageUrl = "https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png"
+  // const imageUrl = "https://www.skalnioblasti.cz/image.php?typ=skala&id=13516"
+
   useEffect(() => {
     const image = new Image();
     image.onload = () => {
       setImageSize({ width: image.width, height: image.height });
     };
-    image.src = 'https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png';
+    image.src = imageUrl;
   }, []);
 
   const onCreateClimbingRouteClick = () => {
@@ -91,8 +106,7 @@ export const ClimbingPanel = () => {
 
   return (
     <Container>
-      <ImageElement src="https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png" />
-      {/* <Image src="https://www.skalnioblasti.cz/image.php?typ=skala&id=13516" /> */}
+      <ImageElement src={imageUrl} />
       <RouteEditor
         routes={
           newRoute
@@ -124,7 +138,23 @@ export const ClimbingPanel = () => {
         routeSelectedIndex={routeSelectedIndex}
         setRoutes={setRoutes}
         onUpdateExistingRouteClick={onUpdateExistingRouteClick}
+        setRouteSelectedIndex={setRouteSelectedIndex}
       />
+      <DialogIcon>
+        <IconButton
+          color="secondary"
+          edge="end"
+          onClick={() => {
+            setIsFullscreenDialogOpened(!isFullscreenDialogOpened);
+          }}
+        >
+          {isFullscreenDialogOpened ? (
+            <CloseIcon fontSize="small" />
+          ) : (
+            <FullscreenIcon fontSize="small" />
+          )}
+        </IconButton>
+      </DialogIcon>
     </Container>
   );
 };

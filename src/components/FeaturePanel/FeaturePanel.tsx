@@ -43,6 +43,8 @@ const FeaturePanel = () => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [advanced, setAdvanced] = useState(false);
   const [showAround, toggleShowAround] = useToggleState(false);
+  const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
+    useState<boolean>(true);
   const [dialogOpenedWith, setDialogOpenedWith] =
     useState<boolean | string>(false);
 
@@ -56,6 +58,8 @@ const FeaturePanel = () => {
     .filter(([, v]) => v);
   const label = getLabel(feature);
 
+  const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
+
   if (tags.climbing === 'crag') {
     return (
       <ClimbingEditorContextProvider
@@ -64,9 +68,27 @@ const FeaturePanel = () => {
           setImageSize,
         }}
       >
-        <Dialog fullScreen open onClose={() => null}>
-          <ClimbingPanel />
-        </Dialog>
+        {isFullscreenDialogOpened ? (
+          <Dialog
+            fullScreen
+            open={isFullscreenDialogOpened}
+            onClose={onFullscreenDialogClose}
+          >
+            <ClimbingPanel
+              isFullscreenDialogOpened={isFullscreenDialogOpened}
+              setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
+            />
+          </Dialog>
+        ) : (
+          <PanelWrapper>
+            <PanelScrollbars>
+              <ClimbingPanel
+                isFullscreenDialogOpened={isFullscreenDialogOpened}
+                setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
+              />
+            </PanelScrollbars>
+          </PanelWrapper>
+        )}
       </ClimbingEditorContextProvider>
     );
   }

@@ -5,13 +5,18 @@ import { RouteNumber } from './RouteNumber';
 import { RoutePath } from './RoutePath';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 
-const Svg = styled.svg<{ isEditable: boolean }>`
+const Svg = styled.svg<{
+  isEditable: boolean;
+  imageSize: { width: number; height: number };
+}>`
   position: absolute;
-  height: 100%;
-  width: 100%;
+
   left: 0;
   top: 0;
-  ${({ isEditable }) => `cursor: ${isEditable ? 'crosshair' : 'auto'}`}
+  ${({ isEditable }) => `cursor: ${isEditable ? 'crosshair' : 'auto'}`};
+  ${({ imageSize: { width, height } }) =>
+    `width: ${width}px;
+    height:${height}px;`}
 `;
 
 type Props = {
@@ -81,16 +86,19 @@ export const RouteEditor = ({
   onClick,
   routeSelectedIndex,
   onRouteSelect,
-}) => (
-  <Svg isEditable={isEditable} onClick={onClick}>
-    {routes.map((route, index) => (
-      <Route
-        route={route}
-        routeNumber={index}
-        routeSelectedIndex={routeSelectedIndex}
-        onRouteSelect={onRouteSelect}
-        isEditable={isEditable}
-      />
-    ))}
-  </Svg>
-);
+}) => {
+  const { imageSize } = useContext(ClimbingEditorContext);
+  return (
+    <Svg isEditable={isEditable} onClick={onClick} imageSize={imageSize}>
+      {routes.map((route, index) => (
+        <Route
+          route={route}
+          routeNumber={index}
+          routeSelectedIndex={routeSelectedIndex}
+          onRouteSelect={onRouteSelect}
+          isEditable={isEditable}
+        />
+      ))}
+    </Svg>
+  );
+};

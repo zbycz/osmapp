@@ -6,8 +6,10 @@ import AddIcon from '@material-ui/icons/Add';
 import type { ClimbingRoute } from './types';
 import { emptyRoute } from './utils/emptyRoute';
 
-const Line = styled.div<{ isSelected: boolean }>`
-  ${({ isSelected }) => `background: ${isSelected ? 'gray' : 'transparent'}`}
+const Row = styled.div<{ isSelected: boolean }>`
+  ${({ isSelected }) => `background: ${isSelected ? 'gray' : 'transparent'}`};
+  cursor: pointer;
+  width: 100%;
 `;
 
 type Props = {
@@ -15,6 +17,7 @@ type Props = {
   routeSelectedIndex: number;
   setRoutes: (routes: Array<ClimbingRoute>) => void;
   onUpdateExistingRouteClick: (updatedRouteSelectedIndex: number) => void;
+  setRouteSelectedIndex: (routeSelectedIndex: number) => void;
 };
 
 export const RouteList = ({
@@ -22,6 +25,7 @@ export const RouteList = ({
   routeSelectedIndex,
   setRoutes,
   onUpdateExistingRouteClick,
+  setRouteSelectedIndex,
 }: Props) => {
   const onRouteChange = (e, index, updatedField) => {
     const updatedRoute = { ...routes[index], [updatedField]: e.target.value };
@@ -37,10 +41,17 @@ export const RouteList = ({
     setRoutes([...routes, emptyRoute]);
   };
 
+  const onRowClick = (index: number) => {
+    setRouteSelectedIndex(index);
+  };
+
   return (
     <div>
       {routes.map(({ name, difficulty, path }, index) => (
-        <Line isSelected={routeSelectedIndex === index}>
+        <Row
+          isSelected={routeSelectedIndex === index}
+          onClick={() => onRowClick(index)}
+        >
           <Grid container spacing={2}>
             <Grid item>{index}</Grid>
             <Grid item xs={6}>
@@ -74,7 +85,7 @@ export const RouteList = ({
               )}
             </Grid>
           </Grid>
-        </Line>
+        </Row>
       ))}
       <Button
         onClick={onNewRouteCreate}
