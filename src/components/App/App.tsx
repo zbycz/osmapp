@@ -6,16 +6,18 @@ import Router, { useRouter } from 'next/router';
 import FeaturePanel from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
+import { Loading } from './Loading';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
 import { getInitialMapView, getInititalFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
-import { Loading } from './Loading';
+// import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
+import { useUserThemeContext } from '../../helpers/theme';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -60,6 +62,7 @@ const useUpdateViewFromHash = () => {
 };
 
 const IndexWithProviders = () => {
+  const { currentTheme } = useUserThemeContext();
   const { featureShown, preview } = useFeatureContext();
   const router = useRouter();
   useUpdateViewFromFeature();
@@ -68,16 +71,24 @@ const IndexWithProviders = () => {
 
   // TODO add correct error boundaries
   return (
-    <>
-      <SearchBox />
+    <div className={`${currentTheme}`}>
+      {/* Left panel */}
+      <div className="absolute flex flex-col w-full sm:w-[424px] p-2 gap-2 z-20 top-0 max-h-[90vh]">
+        {/* <SearchBox /> */}
+        <SearchBox />
+      </div>
+
+      {/* TODO these should all be children of the above "left panel" div once they are updated */}
       <Loading />
       {featureShown && <FeaturePanel />}
+      {/* First load panel */}
       <HomepagePanel />
+
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
       {preview && <FeaturePreview />}
       <TitleAndMetaTags />
-    </>
+    </div>
   );
 };
 

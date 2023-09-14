@@ -28,6 +28,8 @@
     ]
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.15",
+    "@heroicons/react": "^2.0.18",
     "@material-ui/core": "^4.11.4",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "4.0.0-alpha.58",
@@ -59,6 +61,7 @@
   "devDependencies": {
     "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "autoprefixer": "^10.4.14",
     "babel-eslint": "^10.1.0",
     "babel-plugin-styled-components": "^1.12.0",
     "eslint": "^7.27.0",
@@ -70,7 +73,10 @@
     "eslint-plugin-react-hooks": "^4.0.8",
     "husky": "^4",
     "lint-staged": "^11.0.0",
+    "postcss": "^8.4.24",
     "prettier": "^2.3.0",
+    "tailwind-scrollbar": "^3.0.4",
+    "tailwindcss": "^3.3.2",
     "typescript": "^5.0.4"
   }
 }
