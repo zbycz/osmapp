@@ -9,6 +9,9 @@ export const GlobalStyle = createGlobalStyle`
     border: 0;
     font-family: 'Roboto', sans-serif;
     background-color: ${({ theme }) => theme.palette.appBackground};
+
+    // disable pulling the page around on mobile
+    overscroll-behavior: none;
   }
 
   body {
