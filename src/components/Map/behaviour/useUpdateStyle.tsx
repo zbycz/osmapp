@@ -34,13 +34,24 @@ export const useUpdateStyle = useMapEffect((map, activeLayers) => {
     source: 'overpass',
     paint: {
       'line-color': '#f00',
-      'line-width': 2,
-    },
+    //   'line-width': 2
+    // },
+    // layout: {
+    //   'text-font': ['Noto Sans Regular'],
+    //   'text-field': '{name:latin} {name:nonlatin}',
+    //   'symbol-placement': 'line',
+    //   'text-size': 14,
+    //   'text-rotation-alignment': 'map'
+    }
   });
   map.addLayer({
     id: 'overpass-fill',
     type: 'fill',
     source: 'overpass',
+    filter: [
+      'all',
+      ['==', '$type', 'Polygon'],
+    ],
     paint: {
       'fill-color': '#f00',
       'fill-opacity': 0.5,
@@ -50,22 +61,31 @@ export const useUpdateStyle = useMapEffect((map, activeLayers) => {
     id: 'overpass-circle',
     type: 'circle',
     source: 'overpass',
+    filter: [
+      'all',
+      ['==', '$type', 'Point'],
+    ],
     paint: {
-      'circle-color': '#f00',
+      'circle-color': '#00f',
       'circle-radius': 5,
     },
   });
+
   map.addLayer({
     id: 'overpass-text',
     type: 'symbol',
     source: 'overpass',
     layout: {
-      'text-field': ['get', 'name'],
-      'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-      'text-size': 12,
+      'text-letter-spacing': 0.1,
+      'text-size': 14,
+      'text-font': ['Noto Sans Bold'],
+      'text-field': '{name:latin}\n{name:nonlatin}',
+      'text-transform': 'uppercase',
+      'text-max-width': 9,
+      visibility: 'visible',
     },
     paint: {
-      'text-color': '#f00',
+      'text-color': '#0f0',
     },
   });
 });

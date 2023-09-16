@@ -72,7 +72,8 @@ out body;
 >;
 out skel qt;`;
 
-const getOverpassUrl = ([a, b, c, d]) => `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+const getOverpassUrl = ([a, b, c, d]) =>
+  `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
     overpassQuery([d, a, b, c]),
   )}`;
 
@@ -109,6 +110,50 @@ export const overpassAroundToSkeletons = (response: any): Feature[] =>
     };
   });
 
+// maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
+const osmJsonToSkeletons = (response: any): Feature[] => {
+  const nodes = response.elements.filter((element) => element.type === 'node');
+  // const ways = response.elements.filter((element) => element.type === 'way');
+  const nodesById = nodes.reduce((acc, node) => {
+    acc[node.id] = node;
+    return acc;
+  }, {});
+  // const waysById = ways.reduce((acc, way) => {
+  //   acc[way.id] = way;
+  //   return acc;
+  // }, {});
+
+  const getGeometry = {
+    node: ({ lat, lon }): Point => ({ type: 'Point', coordinates: [lon, lat] }),
+    way: (way): LineString => {
+      const { nodes } = way;
+      return {
+        type: 'LineString',
+        coordinates: nodes?.map((nodeId) => nodesById[nodeId]).map(({ lat, lon }) => [lon, lat]),
+      };
+    },
+    relation: ({ members }): LineString => ({
+      type: 'LineString',
+      coordinates: members[0]?.geometry
+        ?.filter(notNull)
+        ?.map(({ lat, lon }) => [lon, lat]),
+    }),
+  };
+
+  return response.elements.map((element) => {
+    const { type, id, tags = {} } = element;
+    const geometry = getGeometry[type]?.(element);
+    return {
+      type: 'Feature',
+      osmMeta: { type, id },
+      tags,
+      properties: { ...getPoiClass(tags), tags },
+      geometry,
+      center: getCenter(geometry) ?? undefined,
+    };
+  });
+};
+
 export const convertOsmIdToMapId = (apiId: OsmApiId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
@@ -120,14 +165,21 @@ const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
     console.log(overpass);
     const map = getGlobalMap();
     // put overpass features on mapbox gl map
-    const features = overpassAroundToSkeletons(overpass)
-      .filter((feature) => feature.center)
+    const features = osmJsonToSkeletons(overpass)
+      .filter((feature) => feature.center && Object.keys(feature.tags).length > 0)
       .map((feature) => ({
         ...feature,
         id: convertOsmIdToMapId(feature.osmMeta),
       }));
-    console.log('overpass', features);
+    console.log('overpass geojson', features);
     map.getSource('overpass').setData({ type: 'FeatureCollection', features });
+
+    setTimeout(() => {
+      const result = map.queryRenderedFeatures(undefined, {
+        layers: ['overpass']
+      })
+      console.log('overpass rendered', result);
+    }, 1000);
 
     setOptions([]);
     return;
