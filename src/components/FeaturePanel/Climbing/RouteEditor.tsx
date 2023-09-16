@@ -10,7 +10,6 @@ const Svg = styled.svg<{
   imageSize: { width: number; height: number };
 }>`
   position: absolute;
-
   left: 0;
   top: 0;
   ${({ isEditable }) => `cursor: ${isEditable ? 'crosshair' : 'auto'}`};
@@ -23,20 +22,15 @@ type Props = {
   route: ClimbingRoute;
   routeNumber: number;
   onRouteSelect: (routeNumber: number) => void;
-  routeSelectedIndex: number;
-  isEditable: boolean;
 };
 
-const Route = ({
-  route,
-  routeNumber,
-  routeSelectedIndex,
-  onRouteSelect,
-  isEditable,
-}: Props) => {
+const Route = ({ route, routeNumber, onRouteSelect }: Props) => {
   if (!route || route.path.length === 0) return null;
 
-  const { imageSize } = useContext(ClimbingEditorContext);
+  const { imageSize, isSelectedRouteEditable, routeSelectedIndex } = useContext(
+    ClimbingEditorContext,
+  );
+
   const x = imageSize.width * route?.path[0].x;
   const y = imageSize.height * route?.path[0].y;
 
@@ -64,7 +58,7 @@ const Route = ({
         onRouteSelect={onRouteSelect}
         routeNumber={routeNumber}
         route={route}
-        isEditable={isEditable}
+        isEditable={isSelectedRouteEditable}
       />
 
       <RouteNumber
@@ -79,23 +73,21 @@ const Route = ({
   );
 };
 
-export const RouteEditor = ({
-  routes,
-  isEditable,
-  onClick,
-  routeSelectedIndex,
-  onRouteSelect,
-}) => {
-  const { imageSize } = useContext(ClimbingEditorContext);
+export const RouteEditor = ({ routes, onClick, onRouteSelect }) => {
+  const { imageSize, isSelectedRouteEditable } = useContext(
+    ClimbingEditorContext,
+  );
   return (
-    <Svg isEditable={isEditable} onClick={onClick} imageSize={imageSize}>
+    <Svg
+      isEditable={isSelectedRouteEditable}
+      onClick={onClick}
+      imageSize={imageSize}
+    >
       {routes.map((route, index) => (
         <Route
           route={route}
           routeNumber={index}
-          routeSelectedIndex={routeSelectedIndex}
           onRouteSelect={onRouteSelect}
-          isEditable={isEditable}
         />
       ))}
     </Svg>

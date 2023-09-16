@@ -26,6 +26,7 @@ import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { ClimbingPanel } from './Climbing/ClimbingPanel';
 import { ClimbingEditorContextProvider } from './Climbing/contexts/climbingEditorContext';
+import { ClimbingRoute } from './Climbing/types';
 
 const featuredKeys = [
   'website',
@@ -41,6 +42,10 @@ const featuredKeys = [
 const FeaturePanel = () => {
   const { feature } = useFeatureContext();
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
+  const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
+  const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
+
   const [advanced, setAdvanced] = useState(false);
   const [showAround, toggleShowAround] = useToggleState(false);
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
@@ -66,6 +71,12 @@ const FeaturePanel = () => {
         value={{
           imageSize,
           setImageSize,
+          isSelectedRouteEditable,
+          setIsSelectedRouteEditable,
+          routes,
+          setRoutes,
+          routeSelectedIndex,
+          setRouteSelectedIndex,
         }}
       >
         {isFullscreenDialogOpened ? (

@@ -2,6 +2,8 @@ import React, { useContext, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { RouteEditor } from './RouteEditor';
 import type { ClimbingRoute } from './types';
@@ -14,9 +16,16 @@ const Container = styled.div`
   position: relative;
 `;
 
-const ImageElement = styled.img`
-  width: 100%;
+const ImageContainer = styled.div``;
+
+const ImageElement = styled.img<{ zoom: number }>`
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+  // transform: scale(${({ zoom }) => zoom});
+  transition: all 0.1s ease-in;
 `;
+
 const DialogIcon = styled.div`
   position: absolute;
   top: 10px;
@@ -27,12 +36,18 @@ export const ClimbingPanel = ({
   setIsFullscreenDialogOpened,
   isFullscreenDialogOpened,
 }) => {
-  const [isEditable, setIsEditable] = useState(false);
-  const [newRoute, setNewRoute] = useState<ClimbingRoute>(null);
-  const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
-  const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
+  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(null);
+  const [zoom, setZoom] = useState<number>(1);
 
-  const { setImageSize, imageSize } = useContext(ClimbingEditorContext);
+  const {
+    setImageSize,
+    imageSize,
+    setIsSelectedRouteEditable,
+    setRouteSelectedIndex,
+    routes,
+    setRoutes,
+    routeSelectedIndex,
+  } = useContext(ClimbingEditorContext);
 
   const imageUrl = '/images/rock.png';
   // const imageUrl = "https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png"
@@ -45,29 +60,29 @@ export const ClimbingPanel = ({
   };
 
   const onCreateClimbingRouteClick = () => {
-    setIsEditable(true);
-    setNewRoute(emptyRoute);
+    setIsSelectedRouteEditable(true);
+    setTempRoute(emptyRoute);
     setRouteSelectedIndex(routes.length);
   };
   const onUpdateExistingRouteClick = (updatedRouteSelectedIndex: number) => {
-    setIsEditable(true);
-    setNewRoute({ ...routes[updatedRouteSelectedIndex], path: [] });
+    setIsSelectedRouteEditable(true);
+    setTempRoute({ ...routes[updatedRouteSelectedIndex], path: [] });
     setRouteSelectedIndex(updatedRouteSelectedIndex);
   };
 
   const onFinishClimbingRouteClick = () => {
-    setIsEditable(false);
+    setIsSelectedRouteEditable(false);
     setRoutes([
       ...routes.slice(0, routeSelectedIndex),
-      newRoute,
+      tempRoute,
       ...routes.slice(routeSelectedIndex + 1),
     ]);
-    setNewRoute(null);
+    setTempRoute(null);
     setRouteSelectedIndex(null);
   };
   const onCancelClimbingRouteClick = () => {
-    setIsEditable(false);
-    setNewRoute(null);
+    setIsSelectedRouteEditable(false);
+    setTempRoute(null);
     setRouteSelectedIndex(null);
   };
   const onDeleteExistingClimbingRouteClick = () => {
@@ -82,14 +97,14 @@ export const ClimbingPanel = ({
   const onCanvasClick = (e) => {
     const isDoubleClick = e.detail === 2;
 
-    if (isEditable) {
+    if (setIsSelectedRouteEditable) {
       const rect = e.target.getBoundingClientRect();
 
       const newCoordinate = {
         x: (e.clientX - rect.left) / imageSize.width,
         y: (e.clientY - rect.top) / imageSize.height,
       };
-      setNewRoute({ ...newRoute, path: [...newRoute.path, newCoordinate] });
+      setTempRoute({ ...tempRoute, path: [...tempRoute.path, newCoordinate] });
       if (isDoubleClick) {
         onFinishClimbingRouteClick();
       }
@@ -102,42 +117,47 @@ export const ClimbingPanel = ({
     setRouteSelectedIndex(routeNumber);
   };
 
+  React.useEffect(() => {
+    window.addEventListener('resize', handleImageLoad);
+
+    return () => {
+      window.removeEventListener('resize', handleImageLoad);
+    };
+  }, []);
+
   return (
     <Container>
-      <ImageElement src={imageUrl} onLoad={handleImageLoad} ref={imageRef} />
+      <ImageContainer>
+        <ImageElement
+          src={imageUrl}
+          onLoad={handleImageLoad}
+          ref={imageRef}
+          zoom={zoom}
+        />
+      </ImageContainer>
       <RouteEditor
         routes={
-          newRoute
+          tempRoute
             ? [
                 ...routes.slice(0, routeSelectedIndex),
-                newRoute,
+                tempRoute,
                 ...routes.slice(routeSelectedIndex + 1),
               ]
             : routes
         }
-        isEditable={isEditable}
         onClick={onCanvasClick}
-        routeSelectedIndex={routeSelectedIndex}
         onRouteSelect={onRouteSelect}
       />
 
       <ControlPanel
         onFinishClimbingRouteClick={onFinishClimbingRouteClick}
-        isEditable={isEditable}
-        newRoute={newRoute}
+        tempRoute={tempRoute}
         onCancelClimbingRouteClick={onCancelClimbingRouteClick}
         onCreateClimbingRouteClick={onCreateClimbingRouteClick}
         onDeleteExistingClimbingRouteClick={onDeleteExistingClimbingRouteClick}
-        routeSelectedIndex={routeSelectedIndex}
       />
 
-      <RouteList
-        routes={routes}
-        routeSelectedIndex={routeSelectedIndex}
-        setRoutes={setRoutes}
-        onUpdateExistingRouteClick={onUpdateExistingRouteClick}
-        setRouteSelectedIndex={setRouteSelectedIndex}
-      />
+      <RouteList onUpdateExistingRouteClick={onUpdateExistingRouteClick} />
       <DialogIcon>
         <IconButton
           color="secondary"
@@ -151,6 +171,25 @@ export const ClimbingPanel = ({
           ) : (
             <FullscreenIcon fontSize="small" />
           )}
+        </IconButton>
+
+        <IconButton
+          color="secondary"
+          edge="end"
+          onClick={() => {
+            setZoom(zoom + 0.2);
+          }}
+        >
+          <ZoomInIcon fontSize="small" />
+        </IconButton>
+        <IconButton
+          color="secondary"
+          edge="end"
+          onClick={() => {
+            setZoom(zoom - 0.2);
+          }}
+        >
+          <ZoomOutIcon fontSize="small" />
         </IconButton>
       </DialogIcon>
     </Container>

@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Button, Grid, TextField } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import AddIcon from '@material-ui/icons/Add';
-import type { ClimbingRoute } from './types';
 import { emptyRoute } from './utils/emptyRoute';
+import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 
 const Row = styled.div<{ isSelected: boolean }>`
   ${({ isSelected }) => `background: ${isSelected ? 'gray' : 'transparent'}`};
@@ -13,20 +13,13 @@ const Row = styled.div<{ isSelected: boolean }>`
 `;
 
 type Props = {
-  routes: Array<ClimbingRoute>;
-  routeSelectedIndex: number;
-  setRoutes: (routes: Array<ClimbingRoute>) => void;
   onUpdateExistingRouteClick: (updatedRouteSelectedIndex: number) => void;
-  setRouteSelectedIndex: (routeSelectedIndex: number) => void;
 };
 
-export const RouteList = ({
-  routes,
-  routeSelectedIndex,
-  setRoutes,
-  onUpdateExistingRouteClick,
-  setRouteSelectedIndex,
-}: Props) => {
+export const RouteList = ({ onUpdateExistingRouteClick }: Props) => {
+  const { setRouteSelectedIndex, routes, setRoutes, routeSelectedIndex } =
+    useContext(ClimbingEditorContext);
+
   const onRouteChange = (e, index, updatedField) => {
     const updatedRoute = { ...routes[index], [updatedField]: e.target.value };
     const newRoutes = [
