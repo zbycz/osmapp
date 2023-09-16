@@ -8,7 +8,28 @@ import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
 import { useMobileMode } from '../helpers';
 import { useUserThemeContext } from '../../helpers/theme';
 
+const useFocusOnSlash = () => {
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const onKeydown = (e) => {
+      if (e.key === '/') {
+        e.preventDefault();
+        inputRef.current?.focus();
+      }
+    };
+    window.addEventListener('keydown', onKeydown);
+
+    return () => {
+      window.removeEventListener('keydown', onKeydown);
+    };
+  }, []);
+
+  return inputRef;
+};
+
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
+  const inputRef = useFocusOnSlash();
   const { InputLabelProps, InputProps, ...restParams } = params;
 
   useEffect(() => {
@@ -21,8 +42,9 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
 
   return (
     <InputBase
-      placeholder={t('searchbox.placeholder')}
       {...restParams} // eslint-disable-line react/jsx-props-no-spreading
+      inputRef={inputRef}
+      placeholder={t('searchbox.placeholder')}
       onChange={onChange}
       onFocus={onFocus}
     />
