@@ -42,6 +42,7 @@ export const ClimbingPanel = ({
   const {
     setImageSize,
     imageSize,
+    isSelectedRouteEditable,
     setIsSelectedRouteEditable,
     setRouteSelectedIndex,
     routes,
@@ -97,7 +98,7 @@ export const ClimbingPanel = ({
   const onCanvasClick = (e) => {
     const isDoubleClick = e.detail === 2;
 
-    if (setIsSelectedRouteEditable) {
+    if (isSelectedRouteEditable) {
       const rect = e.target.getBoundingClientRect();
 
       const newCoordinate = {

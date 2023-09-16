@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Button, Grid, TextField } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { Button, Grid, IconButton, TextField } from '@material-ui/core';
+import GestureIcon from '@material-ui/icons/Gesture';
 import AddIcon from '@material-ui/icons/Add';
 import { emptyRoute } from './utils/emptyRoute';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
@@ -49,32 +49,34 @@ export const RouteList = ({ onUpdateExistingRouteClick }: Props) => {
             <Grid item>{index}</Grid>
             <Grid item xs={6}>
               <TextField
+                size="small"
                 label="Route name"
                 value={name}
                 placeholder="No name"
                 onChange={(e) => onRouteChange(e, index, 'name')}
                 fullWidth
+                variant="filled"
               />
             </Grid>
             <Grid item xs={1}>
               <TextField
+                size="small"
                 label="Difficulty"
                 value={difficulty}
                 placeholder="6+"
                 onChange={(e) => onRouteChange(e, index, 'difficulty')}
+                variant="filled"
               />
             </Grid>
             <Grid item>
               {path.length === 0 && (
-                <Button
+                <IconButton
                   onClick={() => onUpdateExistingRouteClick(index)}
                   color="secondary"
-                  variant="text"
-                  size="small"
-                  startIcon={<EditIcon />}
+                  title="Draw route to schema"
                 >
-                  Draw to schema
-                </Button>
+                  <GestureIcon fontSize="small" />
+                </IconButton>
               )}
             </Grid>
           </Grid>
