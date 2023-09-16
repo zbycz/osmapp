@@ -5,7 +5,7 @@ const isOsmLayer = (id) => {
   if (id.startsWith('place-country-')) return false; // https://github.com/zbycz/osmapp/issues/35
   if (id === 'place-continent') return false;
   if (id === 'water-name-ocean') return false;
-  const prefixes = ['water-name-', 'poi-', 'place-'];
+  const prefixes = ['water-name-', 'poi-', 'place-', 'overpass-'];
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
 

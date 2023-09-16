@@ -112,24 +112,22 @@ export const overpassAroundToSkeletons = (response: any): Feature[] =>
 
 // maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
 const osmJsonToSkeletons = (response: any): Feature[] => {
-  const nodes = response.elements.filter((element) => element.type === 'node');
-  // const ways = response.elements.filter((element) => element.type === 'way');
-  const nodesById = nodes.reduce((acc, node) => {
-    acc[node.id] = node;
-    return acc;
-  }, {});
-  // const waysById = ways.reduce((acc, way) => {
-  //   acc[way.id] = way;
-  //   return acc;
-  // }, {});
+  const nodesById = response.elements
+    .filter((element) => element.type === 'node')
+    .reduce((acc, node) => {
+      acc[node.id] = node;
+      return acc;
+    }, {});
 
-  const getGeometry = {
+  const getGeometry2 = {
     node: ({ lat, lon }): Point => ({ type: 'Point', coordinates: [lon, lat] }),
     way: (way): LineString => {
       const { nodes } = way;
       return {
         type: 'LineString',
-        coordinates: nodes?.map((nodeId) => nodesById[nodeId]).map(({ lat, lon }) => [lon, lat]),
+        coordinates: nodes
+          ?.map((nodeId) => nodesById[nodeId])
+          .map(({ lat, lon }) => [lon, lat]),
       };
     },
     relation: ({ members }): LineString => ({
@@ -142,12 +140,12 @@ const osmJsonToSkeletons = (response: any): Feature[] => {
 
   return response.elements.map((element) => {
     const { type, id, tags = {} } = element;
-    const geometry = getGeometry[type]?.(element);
+    const geometry = getGeometry2[type]?.(element);
     return {
       type: 'Feature',
       osmMeta: { type, id },
       tags,
-      properties: { ...getPoiClass(tags), tags },
+      properties: { ...getPoiClass(tags), ...tags },
       geometry,
       center: getCenter(geometry) ?? undefined,
     };
@@ -159,14 +157,18 @@ export const convertOsmIdToMapId = (apiId: OsmApiId) => {
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
+// https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
+
 const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
-  if (inputValue === 'climbing') {
+  if (inputValue === 'cli') {
     const overpass = await fetchJson(getOverpassUrl(bbox));
     console.log(overpass);
     const map = getGlobalMap();
     // put overpass features on mapbox gl map
     const features = osmJsonToSkeletons(overpass)
-      .filter((feature) => feature.center && Object.keys(feature.tags).length > 0)
+      .filter(
+        (feature) => feature.center && Object.keys(feature.tags).length > 0,
+      )
       .map((feature) => ({
         ...feature,
         id: convertOsmIdToMapId(feature.osmMeta),
@@ -176,10 +178,10 @@ const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
 
     setTimeout(() => {
       const result = map.queryRenderedFeatures(undefined, {
-        layers: ['overpass']
-      })
+        layers: ['overpass-line-text'],
+      });
       console.log('overpass rendered', result);
-    }, 1000);
+    }, 3000);
 
     setOptions([]);
     return;

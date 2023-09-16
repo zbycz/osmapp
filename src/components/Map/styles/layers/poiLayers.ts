@@ -1,6 +1,8 @@
 // originaly from basicStyle
 
-export const poiLayers = [
+import { AnyLayer } from 'maplibre-gl';
+
+export const poiLayers: AnyLayer[] = [
   {
     id: 'poi-level-3',
     type: 'symbol',

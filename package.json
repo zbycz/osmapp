@@ -6,6 +6,7 @@
   },
   "scripts": {
     "dev": "next",
+    "test": "jest",
     "lint": "eslint . --report-unused-disable-directives",
     "lintfix": "prettier . --write && eslint ./src ./pages --report-unused-disable-directives --fix",
     "prettify": "prettier . --write",

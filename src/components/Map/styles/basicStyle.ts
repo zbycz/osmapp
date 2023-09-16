@@ -9,6 +9,7 @@ import { poiLayers } from './layers/poiLayers';
 import { addHoverPaint } from '../behaviour/featureHover';
 import { BACKGROUND, GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 import { motorwayConstruction } from './layers/contruction';
+import { overpassLayers } from './layers/overpassLayers';
 
 export const basicStyle = addHoverPaint({
   version: 8,
@@ -2835,6 +2836,7 @@ export const basicStyle = addHoverPaint({
       },
     },
     ...poiLayers,
+    ...overpassLayers,
   ],
   id: 'ciw6czz2n00242kmg6hw20box',
 });
