@@ -71,9 +71,8 @@ export const overpassLayers: AnyLayer[] = [
     paint: {
       'circle-color': 'rgba(255,255,255,0.9)',
       'circle-radius': 12,
-      // 'circle-blur': 0.5,
       'circle-stroke-width': 1,
-      'circle-stroke-color': 'rgba(50,50,50,0.9)',
+      'circle-stroke-color': 'rgba(0,0,255,0.9)',
       'circle-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
@@ -99,10 +98,10 @@ export const overpassLayers: AnyLayer[] = [
       'icon-allow-overlap': false,
     },
     paint: {
-      'text-halo-blur': 0.5,
-      'text-color': '#666',
-      'text-halo-width': 1,
-      'text-halo-color': '#ffffff',
+      // 'text-halo-blur': 0.5,
+      'text-color': '#000',
+      'text-halo-width': 1.5,
+      'text-halo-color': 'rgba(255,255,255,0.7)',
       'icon-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],

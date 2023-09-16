@@ -174,7 +174,7 @@ const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
         id: convertOsmIdToMapId(feature.osmMeta),
       }));
     console.log('overpass geojson', features);
-    map.getSource('overpass').setData({ type: 'FeatureCollection', features });
+    map.getSource('overpass')?.setData({ type: 'FeatureCollection', features });
 
     setTimeout(() => {
       const result = map.queryRenderedFeatures(undefined, {
