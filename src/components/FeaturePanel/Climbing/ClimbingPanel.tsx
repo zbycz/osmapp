@@ -11,6 +11,7 @@ import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 import { ControlPanel } from './ControlPanel';
 import { RouteList } from './RouteList';
 import { emptyRoute } from './utils/emptyRoute';
+import { Guide } from './Guide';
 
 const Container = styled.div`
   position: relative;
@@ -22,7 +23,7 @@ const ImageElement = styled.img<{ zoom: number }>`
   max-width: 100%;
   max-height: 80vh;
   object-fit: contain;
-  // transform: scale(${({ zoom }) => zoom});
+  transform: <scale(${({ zoom }) => zoom});
   transition: all 0.1s ease-in;
 `;
 
@@ -35,6 +36,7 @@ const DialogIcon = styled.div`
 export const ClimbingPanel = ({
   setIsFullscreenDialogOpened,
   isFullscreenDialogOpened,
+  isReadOnly,
 }) => {
   const [tempRoute, setTempRoute] = useState<ClimbingRoute>(null);
   const [zoom, setZoom] = useState<number>(1);
@@ -117,6 +119,9 @@ export const ClimbingPanel = ({
   const onRouteSelect = (routeNumber: number) => {
     setRouteSelectedIndex(routeNumber);
   };
+  const onUndoClick = () => {
+    setTempRoute({ ...tempRoute, path: tempRoute.path.slice(0, -1) });
+  };
 
   React.useEffect(() => {
     window.addEventListener('resize', handleImageLoad);
@@ -150,13 +155,19 @@ export const ClimbingPanel = ({
         onRouteSelect={onRouteSelect}
       />
 
-      <ControlPanel
-        onFinishClimbingRouteClick={onFinishClimbingRouteClick}
-        tempRoute={tempRoute}
-        onCancelClimbingRouteClick={onCancelClimbingRouteClick}
-        onCreateClimbingRouteClick={onCreateClimbingRouteClick}
-        onDeleteExistingClimbingRouteClick={onDeleteExistingClimbingRouteClick}
-      />
+      {!isReadOnly && (
+        <ControlPanel
+          onFinishClimbingRouteClick={onFinishClimbingRouteClick}
+          onCancelClimbingRouteClick={onCancelClimbingRouteClick}
+          onCreateClimbingRouteClick={onCreateClimbingRouteClick}
+          onDeleteExistingClimbingRouteClick={
+            onDeleteExistingClimbingRouteClick
+          }
+          onUndoClick={onUndoClick}
+          tempRoute={tempRoute}
+        />
+      )}
+      <Guide tempRoute={tempRoute} />
 
       <RouteList onUpdateExistingRouteClick={onUpdateExistingRouteClick} />
       <DialogIcon>

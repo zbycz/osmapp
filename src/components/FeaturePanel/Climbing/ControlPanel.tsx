@@ -1,78 +1,103 @@
+import { IconButton } from '@material-ui/core';
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
+import TimelineIcon from '@material-ui/icons/Timeline';
+import DeleteIcon from '@material-ui/icons/Delete';
+import CheckIcon from '@material-ui/icons/Check';
+import UndoIcon from '@material-ui/icons/Undo';
+import ClearIcon from '@material-ui/icons/Clear';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Button } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Alert } from '@material-ui/lab';
-import { t } from '../../../services/intl';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
+import { t } from '../../../services/intl';
 
-const GuideContainer = styled.div`
-  padding: 10px;
-`;
-const ButtonsContainer = styled.div`
-  margin-top: 10px;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
+const Container = styled.div`
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  position: absolute;
+  width: 44px;
+  top: 5px;
+  left: 5px;
 `;
 
 export const ControlPanel = ({
   onFinishClimbingRouteClick,
-  tempRoute,
   onCancelClimbingRouteClick,
   onCreateClimbingRouteClick,
   onDeleteExistingClimbingRouteClick,
+  tempRoute,
+  onUndoClick,
 }) => {
-  const { routeSelectedIndex, isSelectedRouteEditable } = useContext(
+  const { routeSelectedIndex, isSelectedRouteEditable, routes } = useContext(
     ClimbingEditorContext,
   );
 
   return (
-    <GuideContainer>
+    <Container>
       {isSelectedRouteEditable ? (
         <>
-          <Alert severity="info" variant="filled">
-            {tempRoute.length === 0
-              ? t('climbingpanel.create_first_node')
-              : t('climbingpanel.create_next_node')}
-          </Alert>
-          <ButtonsContainer>
-            <Button
-              onClick={onFinishClimbingRouteClick}
-              color="primary"
-              variant="contained"
+          <IconButton
+            color="default"
+            edge="end"
+            onClick={onFinishClimbingRouteClick}
+            title={t('climbingpanel.finish_climbing_route')}
+          >
+            <CheckIcon fontSize="small" />
+          </IconButton>
+          <IconButton
+            color="default"
+            edge="end"
+            onClick={onCancelClimbingRouteClick}
+            title={t('climbingpanel.cancel_climbing_route')}
+          >
+            <ClearIcon fontSize="small" />
+          </IconButton>
+          {tempRoute.path.length !== 0 && (
+            <IconButton
+              color="default"
+              edge="end"
+              onClick={onUndoClick}
+              title="Undo last segment"
             >
-              {t('climbingpanel.finish_climbing_route')}
-            </Button>
-            <Button onClick={onCancelClimbingRouteClick} color="secondary">
-              {t('climbingpanel.cancel_climbing_route')}
-            </Button>
-          </ButtonsContainer>
+              <UndoIcon fontSize="small" />
+            </IconButton>
+          )}
         </>
       ) : (
-        <ButtonsContainer>
-          <Button
+        <>
+          <IconButton
+            color="default"
+            edge="end"
             onClick={onCreateClimbingRouteClick}
-            color="primary"
-            variant="contained"
+            title={t('climbingpanel.create_climbing_route')}
           >
-            {t('climbingpanel.create_climbing_route')}
-          </Button>
-          {routeSelectedIndex !== null && (
-            <Button
-              onClick={onDeleteExistingClimbingRouteClick}
-              color="secondary"
-              variant="text"
-              size="small"
-              startIcon={<DeleteIcon />}
-            >
-              {t('climbingpanel.delete_climbing_route', {
-                route: String(routeSelectedIndex),
-              })}
-            </Button>
-          )}
-        </ButtonsContainer>
+            <TimelineIcon fontSize="small" />
+          </IconButton>
+
+          {routeSelectedIndex !== null &&
+            routes[routeSelectedIndex].path.length !== 0 && (
+              <>
+                <IconButton
+                  color="default"
+                  edge="end"
+                  onClick={() => {}}
+                  title="Add new point to existing route"
+                >
+                  <ControlPointIcon fontSize="small" />
+                </IconButton>
+                <IconButton
+                  color="default"
+                  edge="end"
+                  onClick={onDeleteExistingClimbingRouteClick}
+                  title={t('climbingpanel.delete_climbing_route', {
+                    route: String(routeSelectedIndex),
+                  })}
+                >
+                  <DeleteIcon fontSize="small" />
+                </IconButton>
+              </>
+            )}
+        </>
       )}
-    </GuideContainer>
+    </Container>
   );
 };

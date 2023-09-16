@@ -88,6 +88,7 @@ const FeaturePanel = () => {
             <ClimbingPanel
               isFullscreenDialogOpened={isFullscreenDialogOpened}
               setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
+              isReadOnly={false}
             />
           </Dialog>
         ) : (
@@ -96,6 +97,7 @@ const FeaturePanel = () => {
               <ClimbingPanel
                 isFullscreenDialogOpened={isFullscreenDialogOpened}
                 setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
+                isReadOnly
               />
             </PanelScrollbars>
           </PanelWrapper>

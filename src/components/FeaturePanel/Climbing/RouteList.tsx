@@ -72,7 +72,7 @@ export const RouteList = ({ onUpdateExistingRouteClick }: Props) => {
               {path.length === 0 && (
                 <IconButton
                   onClick={() => onUpdateExistingRouteClick(index)}
-                  color="secondary"
+                  color="primary"
                   title="Draw route to schema"
                 >
                   <GestureIcon fontSize="small" />
@@ -84,7 +84,7 @@ export const RouteList = ({ onUpdateExistingRouteClick }: Props) => {
       ))}
       <Button
         onClick={onNewRouteCreate}
-        color="secondary"
+        color="primary"
         variant="text"
         size="small"
         startIcon={<AddIcon />}
