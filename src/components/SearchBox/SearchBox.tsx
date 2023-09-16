@@ -17,6 +17,11 @@ import { Feature, LineString, Point } from '../../services/types';
 import { getPoiClass } from '../../services/getPoiClass';
 import { getCenter } from '../../services/getCenter';
 import { OsmApiId } from '../../services/helpers';
+import { presets } from '../../services/tagging/data';
+import {
+  fetchSchemaTranslations,
+  getPresetTranslation,
+} from '../../services/tagging/translations';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -158,9 +163,28 @@ export const convertOsmIdToMapId = (apiId: OsmApiId) => {
 };
 
 // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
+fetchSchemaTranslations();
 
 const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
-  if (inputValue === 'cli') {
+  // search inputValue in presets
+
+  const keys = Object.keys(presets);
+  const results = keys.filter((presetKey) =>
+    presetKey.toLowerCase().includes(inputValue.toLowerCase()),
+  );
+  const options2 = results.map((key) => ({
+    preset: {
+      key,
+      class: getPoiClass(presets[key].tags).class,
+      icon: presets[key].icon?.split('-', 2)?.[1] ?? 'information',
+      name: getPresetTranslation(key) ?? key,
+    },
+  }));
+  console.log('options', options2);
+  setOptions(options2);
+  return;
+
+  if (inputValue === 'climbing') {
     const overpass = await fetchJson(getOverpassUrl(bbox));
     console.log(overpass);
     const map = getGlobalMap();
@@ -175,13 +199,6 @@ const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
       }));
     console.log('overpass geojson', features);
     map.getSource('overpass')?.setData({ type: 'FeatureCollection', features });
-
-    setTimeout(() => {
-      const result = map.queryRenderedFeatures(undefined, {
-        layers: ['overpass-line-text'],
-      });
-      console.log('overpass rendered', result);
-    }, 3000);
 
     setOptions([]);
     return;

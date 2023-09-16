@@ -2,11 +2,13 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
+import FolderIcon from '@material-ui/icons/Folder';
 import { useMapStateContext } from '../utils/MapStateContext';
 import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
 import { join } from '../../utils';
 import { getPoiClass } from '../../services/getPoiClass';
+import { fetchSchemaTranslations } from "../../services/tagging/translations";
 
 /** photon
 {
@@ -116,6 +118,40 @@ export const buildPhotonAddress = ({
 }) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
 export const renderOptionFactory = (inputValue, currentTheme) => (option) => {
+  if (option.preset) {
+    const text = option.preset.name;
+    const additionalText = option.preset.key;
+    return (
+      <>
+        <IconPart>
+          <Maki
+            ico={option.preset.icon}
+            style={{ width: '20px', height: '20px', opacity: 0.5 }}
+            // title={`${tagKey}=${tagValue}`}
+            invert={currentTheme === 'dark'}
+          />
+          {/*<Maki*/}
+          {/*  ico={option.preset.class}*/}
+          {/*  style={{ width: '20px', height: '20px', opacity: 0.5 }}*/}
+          {/*  // title={`${tagKey}=${tagValue}`}*/}
+          {/*  invert={currentTheme === 'dark'}*/}
+          {/*/>*/}
+          {/*<FolderIcon*/}
+          {/*  color={currentTheme === 'dark' ? 'white' : 'black'}*/}
+          {/*/>*/}
+          <div>{option.preset.icon}</div>
+        </IconPart>
+        <Grid item xs>
+          {highlightText(text, inputValue)}
+          <Typography variant="body2" color="textSecondary">
+            {highlightText(additionalText, inputValue)}
+          </Typography>
+        </Grid>
+      </>
+    );
+  }
+
+
   const { properties, geometry } = option;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 

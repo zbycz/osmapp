@@ -58,6 +58,7 @@
     "styled-jsx": "^3.4.4"
   },
   "devDependencies": {
+    "@types/autosuggest-highlight": "^3.2.0",
     "@types/jest": "^26.0.23",
     "@typescript-eslint/eslint-plugin": "^4.26.0",
     "babel-eslint": "^10.1.0",
