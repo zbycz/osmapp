@@ -59,6 +59,7 @@ export default {
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',
   'featurepanel.error_network': "Can't get the feature, check your network cable.",
   'featurepanel.error_deleted': 'This object is marked as deleted in OpenStreetMap.',
+  'featurepanel.info_no_tags': 'This object has no tags. Usually it means that it only carries geometry/location for a parent object.',
   'featurepanel.history_button': 'History »',
   'featurepanel.other_info_heading': 'Details',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',

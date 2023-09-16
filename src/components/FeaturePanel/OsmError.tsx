@@ -52,5 +52,13 @@ export const OsmError = () => {
     );
   }
 
+  if (Object.keys(feature.tags).length === 0 && !feature.point) {
+    return (
+      <Alert variant="outlined" severity="info">
+        {t('featurepanel.info_no_tags')}
+      </Alert>
+    );
+  }
+
   return null;
 };

@@ -50,7 +50,7 @@ interface RelationMember {
 
 // TODO split in two types /extend/
 export interface Feature {
-  point?: boolean;
+  point?: boolean; // TODO rename to isMarker or isCoords
   type: 'Feature';
   geometry?: FeatureGeometry;
   osmMeta: {
