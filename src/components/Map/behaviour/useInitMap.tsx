@@ -31,18 +31,9 @@ export const useInitMap = () => {
       style: basicStyle,
       attributionControl: false,
       refreshExpiredTiles: false,
-      maxPitch: 85 // todo only for zoom > 15 and outdoor
-
     });
     setGlobalMap(map);
     setMapInState(map);
-
-    map.addControl(
-      new maplibregl.TerrainControl({
-        source: 'terrainSource',
-        exaggeration: 1
-      })
-    );
 
     map.addControl(navigationControl);
     map.addControl(geolocateControl);

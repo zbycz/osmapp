@@ -1,6 +1,5 @@
 import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import maplibregl from 'maplibre-gl';
 import { useAddMapEvent, useMapEffect, useMobileMode } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -10,6 +9,8 @@ import { useUpdateViewOnMove } from './behaviour/useUpdateViewOnMove';
 import { useUpdateStyle } from './behaviour/useUpdateStyle';
 import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
+import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
+import { isWebglSupported } from './helpers';
 
 const useOnMapLoaded = useAddMapEvent((map, onMapLoaded) => ({
   eventType: 'load',
@@ -32,11 +33,10 @@ const NotSupportedMessage = () => (
 // TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
-  // if (!maplibregl.supported()) {
-  //   onMapLoaded();
-  //   return <NotSupportedMessage />;
-  // }
-  //TODO find correct fn
+  if (!isWebglSupported()) {
+    onMapLoaded();
+    return <NotSupportedMessage />;
+  }
 
   const { setFeature, setPreview } = useFeatureContext();
   const [map, mapRef] = useInitMap();
@@ -47,6 +47,7 @@ const BrowserMap = ({ onMapLoaded }) => {
   const { viewForMap, setViewFromMap, setBbox, activeLayers } =
     useMapStateContext();
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
+  useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
   useUpdateStyle(map, activeLayers);
 
