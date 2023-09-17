@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { Dialog, Typography } from '@material-ui/core';
+import styled from 'styled-components';
+import { Button, Dialog, Typography } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -38,6 +40,9 @@ const featuredKeys = [
   'description',
   'fhrs:id',
 ];
+const EditRoutesContainer = styled.div`
+  padding: 10px;
+`;
 
 const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -63,6 +68,7 @@ const FeaturePanel = () => {
     .filter(([, v]) => v);
   const label = getLabel(feature);
 
+  const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
 
   if (tags.climbing === 'crag') {
@@ -98,8 +104,19 @@ const FeaturePanel = () => {
                 isFullscreenDialogOpened={isFullscreenDialogOpened}
                 setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
                 isReadOnly
-                onEditorClick={() => setIsFullscreenDialogOpened(true)}
+                onEditorClick={onFullscreenDialogOpen}
               />
+              <EditRoutesContainer>
+                <Button
+                  onClick={onFullscreenDialogOpen}
+                  color="primary"
+                  size="small"
+                  startIcon={<EditIcon />}
+                  variant="contained"
+                >
+                  Edit routes
+                </Button>
+              </EditRoutesContainer>
             </PanelScrollbars>
           </PanelWrapper>
         )}

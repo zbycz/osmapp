@@ -4,7 +4,6 @@ import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { RouteEditor } from './RouteEditor';
 import type { ClimbingRoute } from './types';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
@@ -79,6 +78,15 @@ export const ClimbingPanel = ({
     setIsSelectedRouteEditable(true);
     setTempRoute({ ...routes[updatedRouteSelectedIndex], path: [] });
     setRouteSelectedIndex(updatedRouteSelectedIndex);
+  };
+  const onDeleteExistingRouteClick = (deletedExistingRouteIndex: number) => {
+    setIsSelectedRouteEditable(false);
+    setRouteSelectedIndex(null);
+    setTempRoute(null);
+    setRoutes([
+      ...routes.slice(0, deletedExistingRouteIndex),
+      ...routes.slice(deletedExistingRouteIndex + 1),
+    ]);
   };
 
   const onFinishClimbingRouteClick = () => {
@@ -180,22 +188,20 @@ export const ClimbingPanel = ({
       <RouteList
         isReadOnly={isReadOnly}
         onUpdateExistingRouteClick={onUpdateExistingRouteClick}
+        onDeleteExistingRouteClick={onDeleteExistingRouteClick}
       />
       <DialogIcon>
-        <IconButton
-          color="primary"
-          edge="end"
-          onClick={() => {
-            setIsFullscreenDialogOpened(!isFullscreenDialogOpened);
-          }}
-        >
-          {isFullscreenDialogOpened ? (
+        {isFullscreenDialogOpened && (
+          <IconButton
+            color="primary"
+            edge="end"
+            onClick={() => {
+              setIsFullscreenDialogOpened(!isFullscreenDialogOpened);
+            }}
+          >
             <CloseIcon fontSize="small" />
-          ) : (
-            <FullscreenIcon fontSize="small" />
-          )}
-        </IconButton>
-
+          </IconButton>
+        )}
         {/* <IconButton
           color="secondary"
           edge="end"

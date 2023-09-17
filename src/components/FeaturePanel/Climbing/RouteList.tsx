@@ -11,6 +11,7 @@ import {
   TableRow,
   TextField,
 } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 import GestureIcon from '@material-ui/icons/Gesture';
 import AddIcon from '@material-ui/icons/Add';
 import { emptyRoute } from './utils/emptyRoute';
@@ -19,6 +20,7 @@ import { ClimbingRoute } from './types';
 
 type Props = {
   onUpdateExistingRouteClick: (updatedRouteSelectedIndex: number) => void;
+  onDeleteExistingRouteClick: (deletedExistingRouteIndex: number) => void;
   isReadOnly: boolean;
 };
 const EmptyValue = styled.div`
@@ -33,6 +35,7 @@ const RenderRow = ({
   routeSelectedIndex,
   onRouteChange,
   onUpdateExistingRouteClick,
+  onDeleteExistingRouteClick,
 }) => {
   const { name, difficulty, path } = route;
   const getText = (field: keyof ClimbingRoute) =>
@@ -43,7 +46,7 @@ const RenderRow = ({
       selected={routeSelectedIndex === index}
       style={{ cursor: 'pointer' }}
     >
-      <TableCell component="th" scope="row">
+      <TableCell component="th" scope="row" width={70}>
         {index}
       </TableCell>
       <TableCell>
@@ -74,15 +77,26 @@ const RenderRow = ({
         )}
       </TableCell>
 
-      <TableCell align="right">
-        {!isReadOnly && path.length === 0 && (
-          <IconButton
-            onClick={() => onUpdateExistingRouteClick(index)}
-            color="primary"
-            title="Draw route to schema"
-          >
-            <GestureIcon fontSize="small" />
-          </IconButton>
+      <TableCell align="right" width={120}>
+        {!isReadOnly && (
+          <>
+            {path.length === 0 && (
+              <IconButton
+                onClick={() => onUpdateExistingRouteClick(index)}
+                color="primary"
+                title="Draw route to schema"
+              >
+                <GestureIcon fontSize="small" />
+              </IconButton>
+            )}
+            <IconButton
+              onClick={() => onDeleteExistingRouteClick(index)}
+              color="primary"
+              title="Delete route"
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
+          </>
         )}
       </TableCell>
     </TableRow>
@@ -91,6 +105,7 @@ const RenderRow = ({
 
 export const RouteList = ({
   onUpdateExistingRouteClick,
+  onDeleteExistingRouteClick,
   isReadOnly = false,
 }: Props) => {
   const { setRouteSelectedIndex, routes, setRoutes, routeSelectedIndex } =
@@ -113,6 +128,7 @@ export const RouteList = ({
   const onRowClick = (index: number) => {
     setRouteSelectedIndex(index);
   };
+  if (isReadOnly && routes.length === 0) return null;
 
   return (
     <div>
@@ -150,6 +166,7 @@ export const RouteList = ({
                 routeSelectedIndex={routeSelectedIndex}
                 onRouteChange={onRouteChange}
                 onUpdateExistingRouteClick={onUpdateExistingRouteClick}
+                onDeleteExistingRouteClick={onDeleteExistingRouteClick}
               />
             ))}
           </TableBody>

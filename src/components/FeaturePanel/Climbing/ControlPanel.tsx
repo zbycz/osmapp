@@ -74,7 +74,7 @@ export const ControlPanel = ({
           </IconButton>
 
           {routeSelectedIndex !== null &&
-            routes[routeSelectedIndex].path.length !== 0 && (
+            routes[routeSelectedIndex]?.path?.length !== 0 && (
               <>
                 <IconButton
                   color="default"
