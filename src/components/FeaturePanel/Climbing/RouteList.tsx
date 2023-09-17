@@ -77,8 +77,8 @@ const RenderRow = ({
         )}
       </TableCell>
 
-      <TableCell align="right" width={120}>
-        {!isReadOnly && (
+      {!isReadOnly && (
+        <TableCell align="right" width={120}>
           <>
             {path.length === 0 && (
               <IconButton
@@ -97,8 +97,8 @@ const RenderRow = ({
               <DeleteIcon fontSize="small" />
             </IconButton>
           </>
-        )}
-      </TableCell>
+        </TableCell>
+      )}
     </TableRow>
   );
 };
@@ -153,7 +153,7 @@ export const RouteList = ({
               <TableCell>N°</TableCell>
               <TableCell>Route name</TableCell>
               <TableCell align="right">Difficulty</TableCell>
-              <TableCell align="right">&nbsp;</TableCell>
+              {!isReadOnly && <TableCell align="right">&nbsp;</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
