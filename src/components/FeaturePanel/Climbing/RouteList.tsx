@@ -1,22 +1,98 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { Button, Grid, IconButton, TextField } from '@material-ui/core';
+import {
+  Button,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  TextField,
+} from '@material-ui/core';
 import GestureIcon from '@material-ui/icons/Gesture';
 import AddIcon from '@material-ui/icons/Add';
 import { emptyRoute } from './utils/emptyRoute';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
-
-const Row = styled.div<{ isSelected: boolean }>`
-  ${({ isSelected }) => `background: ${isSelected ? 'gray' : 'transparent'}`};
-  cursor: pointer;
-  width: 100%;
-`;
+import { ClimbingRoute } from './types';
 
 type Props = {
   onUpdateExistingRouteClick: (updatedRouteSelectedIndex: number) => void;
+  isReadOnly: boolean;
+};
+const EmptyValue = styled.div`
+  color: #666;
+`;
+
+const RenderRow = ({
+  route,
+  isReadOnly,
+  index,
+  onRowClick,
+  routeSelectedIndex,
+  onRouteChange,
+  onUpdateExistingRouteClick,
+}) => {
+  const { name, difficulty, path } = route;
+  const getText = (field: keyof ClimbingRoute) =>
+    route[field] !== '' ? route[field] : <EmptyValue>?</EmptyValue>;
+  return (
+    <TableRow
+      onClick={() => onRowClick(index)}
+      selected={routeSelectedIndex === index}
+      style={{ cursor: 'pointer' }}
+    >
+      <TableCell component="th" scope="row">
+        {index}
+      </TableCell>
+      <TableCell>
+        {isReadOnly ? (
+          getText('name')
+        ) : (
+          <TextField
+            size="small"
+            value={name}
+            placeholder="No name"
+            onChange={(e) => onRouteChange(e, index, 'name')}
+            fullWidth
+            variant="outlined"
+          />
+        )}
+      </TableCell>
+      <TableCell width={50}>
+        {isReadOnly ? (
+          getText('difficulty')
+        ) : (
+          <TextField
+            size="small"
+            value={difficulty}
+            placeholder="6+"
+            onChange={(e) => onRouteChange(e, index, 'difficulty')}
+            variant="outlined"
+          />
+        )}
+      </TableCell>
+
+      <TableCell align="right">
+        {!isReadOnly && path.length === 0 && (
+          <IconButton
+            onClick={() => onUpdateExistingRouteClick(index)}
+            color="primary"
+            title="Draw route to schema"
+          >
+            <GestureIcon fontSize="small" />
+          </IconButton>
+        )}
+      </TableCell>
+    </TableRow>
+  );
 };
 
-export const RouteList = ({ onUpdateExistingRouteClick }: Props) => {
+export const RouteList = ({
+  onUpdateExistingRouteClick,
+  isReadOnly = false,
+}: Props) => {
   const { setRouteSelectedIndex, routes, setRoutes, routeSelectedIndex } =
     useContext(ClimbingEditorContext);
 
@@ -40,57 +116,45 @@ export const RouteList = ({ onUpdateExistingRouteClick }: Props) => {
 
   return (
     <div>
-      {routes.map(({ name, difficulty, path }, index) => (
-        <Row
-          isSelected={routeSelectedIndex === index}
-          onClick={() => onRowClick(index)}
-        >
-          <Grid container spacing={2}>
-            <Grid item>{index}</Grid>
-            <Grid item xs={6}>
-              <TextField
+      <TableContainer>
+        <Table size="small">
+          {!isReadOnly && (
+            <caption>
+              {' '}
+              <Button
+                onClick={onNewRouteCreate}
+                color="primary"
+                variant="text"
                 size="small"
-                label="Route name"
-                value={name}
-                placeholder="No name"
-                onChange={(e) => onRouteChange(e, index, 'name')}
-                fullWidth
-                variant="filled"
+                startIcon={<AddIcon />}
+              >
+                Add new route
+              </Button>
+            </caption>
+          )}
+          <TableHead>
+            <TableRow>
+              <TableCell>N°</TableCell>
+              <TableCell>Route name</TableCell>
+              <TableCell align="right">Difficulty</TableCell>
+              <TableCell align="right">&nbsp;</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {routes.map((route, index) => (
+              <RenderRow
+                route={route}
+                index={index}
+                onRowClick={onRowClick}
+                isReadOnly={isReadOnly}
+                routeSelectedIndex={routeSelectedIndex}
+                onRouteChange={onRouteChange}
+                onUpdateExistingRouteClick={onUpdateExistingRouteClick}
               />
-            </Grid>
-            <Grid item xs={1}>
-              <TextField
-                size="small"
-                label="Difficulty"
-                value={difficulty}
-                placeholder="6+"
-                onChange={(e) => onRouteChange(e, index, 'difficulty')}
-                variant="filled"
-              />
-            </Grid>
-            <Grid item>
-              {path.length === 0 && (
-                <IconButton
-                  onClick={() => onUpdateExistingRouteClick(index)}
-                  color="primary"
-                  title="Draw route to schema"
-                >
-                  <GestureIcon fontSize="small" />
-                </IconButton>
-              )}
-            </Grid>
-          </Grid>
-        </Row>
-      ))}
-      <Button
-        onClick={onNewRouteCreate}
-        color="primary"
-        variant="text"
-        size="small"
-        startIcon={<AddIcon />}
-      >
-        Add new route
-      </Button>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </div>
   );
 };

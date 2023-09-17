@@ -98,6 +98,7 @@ const FeaturePanel = () => {
                 isFullscreenDialogOpened={isFullscreenDialogOpened}
                 setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
                 isReadOnly
+                onEditorClick={() => setIsFullscreenDialogOpened(true)}
               />
             </PanelScrollbars>
           </PanelWrapper>

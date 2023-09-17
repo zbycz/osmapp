@@ -2,8 +2,8 @@ import React, { useContext, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+// import ZoomInIcon from '@material-ui/icons/ZoomIn';
+// import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import FullscreenIcon from '@material-ui/icons/Fullscreen';
 import { RouteEditor } from './RouteEditor';
 import type { ClimbingRoute } from './types';
@@ -13,17 +13,24 @@ import { RouteList } from './RouteList';
 import { emptyRoute } from './utils/emptyRoute';
 import { Guide } from './Guide';
 
+type Props = {
+  setIsFullscreenDialogOpened: (isFullscreenDialogOpened: boolean) => void;
+  isFullscreenDialogOpened: boolean;
+  isReadOnly: boolean;
+  onEditorClick?: () => void;
+};
+
 const Container = styled.div`
   position: relative;
 `;
 
 const ImageContainer = styled.div``;
 
-const ImageElement = styled.img<{ zoom: number }>`
+const ImageElement = styled.img<{ zoom?: number }>`
   max-width: 100%;
   max-height: 80vh;
   object-fit: contain;
-  transform: <scale(${({ zoom }) => zoom});
+  // transform: <scale(${({ zoom }) => zoom});
   transition: all 0.1s ease-in;
 `;
 
@@ -37,9 +44,10 @@ export const ClimbingPanel = ({
   setIsFullscreenDialogOpened,
   isFullscreenDialogOpened,
   isReadOnly,
-}) => {
+  onEditorClick,
+}: Props) => {
   const [tempRoute, setTempRoute] = useState<ClimbingRoute>(null);
-  const [zoom, setZoom] = useState<number>(1);
+  // const [zoom, setZoom] = useState<number>(1);
 
   const {
     setImageSize,
@@ -138,7 +146,7 @@ export const ClimbingPanel = ({
           src={imageUrl}
           onLoad={handleImageLoad}
           ref={imageRef}
-          zoom={zoom}
+          // zoom={zoom}
         />
       </ImageContainer>
       <RouteEditor
@@ -151,7 +159,7 @@ export const ClimbingPanel = ({
               ]
             : routes
         }
-        onClick={onCanvasClick}
+        onClick={onEditorClick || onCanvasClick}
         onRouteSelect={onRouteSelect}
       />
 
@@ -169,10 +177,13 @@ export const ClimbingPanel = ({
       )}
       <Guide tempRoute={tempRoute} />
 
-      <RouteList onUpdateExistingRouteClick={onUpdateExistingRouteClick} />
+      <RouteList
+        isReadOnly={isReadOnly}
+        onUpdateExistingRouteClick={onUpdateExistingRouteClick}
+      />
       <DialogIcon>
         <IconButton
-          color="secondary"
+          color="primary"
           edge="end"
           onClick={() => {
             setIsFullscreenDialogOpened(!isFullscreenDialogOpened);
@@ -185,7 +196,7 @@ export const ClimbingPanel = ({
           )}
         </IconButton>
 
-        <IconButton
+        {/* <IconButton
           color="secondary"
           edge="end"
           onClick={() => {
@@ -202,7 +213,7 @@ export const ClimbingPanel = ({
           }}
         >
           <ZoomOutIcon fontSize="small" />
-        </IconButton>
+        </IconButton> */}
       </DialogIcon>
     </Container>
   );
