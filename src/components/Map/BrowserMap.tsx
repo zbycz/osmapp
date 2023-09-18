@@ -11,6 +11,7 @@ import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
 import { isWebglSupported } from './helpers';
+import { useIntegerZoomInRaster } from "./behaviour/useIntegerZoomInRaster";
 
 const useOnMapLoaded = useAddMapEvent((map, onMapLoaded) => ({
   eventType: 'load',
@@ -47,6 +48,7 @@ const BrowserMap = ({ onMapLoaded }) => {
   const { viewForMap, setViewFromMap, setBbox, activeLayers } =
     useMapStateContext();
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
+  useIntegerZoomInRaster(map, activeLayers);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
   useUpdateStyle(map, activeLayers);
