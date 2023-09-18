@@ -41,3 +41,26 @@ export const convertOsmIdToMapId = (apiId: OsmApiId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
+
+// maplibregl.supported() no longer exists
+// copied from https://maplibre.org/maplibre-gl-js/docs/examples/check-for-support/
+export const isWebglSupported = () => {
+  if (window.WebGLRenderingContext) {
+    const canvas = document.createElement('canvas');
+    try {
+      // Note that { failIfMajorPerformanceCaveat: true } can be passed as a second argument
+      // to canvas.getContext(), causing the check to fail if hardware rendering is not available. See
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+      // for more details.
+      const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+      if (context && typeof context.getParameter === 'function') {
+        return true;
+      }
+    } catch (e) {
+      // WebGL is supported, but disabled
+    }
+    return false;
+  }
+  // WebGL not supported
+  return false;
+};
