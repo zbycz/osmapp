@@ -11,7 +11,7 @@ import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
 import { isWebglSupported } from './helpers';
-import { useIntegerZoomInRaster } from "./behaviour/useIntegerZoomInRaster";
+import { useIntegerZoomInRaster } from './behaviour/useIntegerZoomInRaster';
 
 const useOnMapLoaded = useAddMapEvent((map, onMapLoaded) => ({
   eventType: 'load',
