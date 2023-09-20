@@ -1,26 +1,25 @@
-import React, { useRef, useState } from "react";
-import styled from "styled-components";
-import throttle from "lodash/throttle";
-import SearchIcon from "@material-ui/icons/Search";
-import Paper from "@material-ui/core/Paper";
-import IconButton from "@material-ui/core/IconButton";
-import Router from "next/router";
-import match from "autosuggest-highlight/match";
+import React, { useRef, useState } from 'react';
+import styled from 'styled-components';
+import throttle from 'lodash/throttle';
+import SearchIcon from '@material-ui/icons/Search';
+import Paper from '@material-ui/core/Paper';
+import IconButton from '@material-ui/core/IconButton';
+import Router from 'next/router';
+import match from 'autosuggest-highlight/match';
 
-import { fetchJson } from "../../services/fetch";
-import { useMapStateContext } from "../utils/MapStateContext";
-import { useFeatureContext } from "../utils/FeatureContext";
-import { AutocompleteInput } from "./AutocompleteInput";
-import { t } from "../../services/intl";
-import { ClosePanelButton } from "../utils/ClosePanelButton";
-import { isDesktop, useMobileMode } from "../helpers";
-import { presets } from "../../services/tagging/data";
+import { fetchJson } from '../../services/fetch';
+import { useMapStateContext } from '../utils/MapStateContext';
+import { useFeatureContext } from '../utils/FeatureContext';
+import { AutocompleteInput } from './AutocompleteInput';
+import { t } from '../../services/intl';
+import { ClosePanelButton } from '../utils/ClosePanelButton';
+import { isDesktop, useMobileMode } from '../helpers';
+import { presets } from '../../services/tagging/data';
 import {
   fetchSchemaTranslations,
   getPresetTermsTranslation,
-  getPresetTranslation
-} from "../../services/tagging/translations";
-import { performOverpassSearch } from "../../services/overpassSearch";
+  getPresetTranslation,
+} from '../../services/tagging/translations';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -75,7 +74,8 @@ fetchSchemaTranslations().then(() => {
       return {
         key: presetKey,
         name: getPresetTranslation(presetKey) ?? name ?? 'x',
-        tags: tagsAsStrings.join(', '),
+        tags,
+        tagsAsOneString: tagsAsStrings.join(', '),
         texts: [
           ...(getPresetTermsTranslation(presetKey) ?? terms ?? 'x').split(','),
           ...tagsAsStrings,
@@ -117,13 +117,7 @@ const findInPresets = (inputValue) => {
   return options;
 };
 
-const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
-  if (inputValue === 'climbing') {
-    await performOverpassSearch(bbox);
-    setOptions([]);
-    return;
-  }
-
+const fetchOptions = throttle(async (inputValue, view, setOptions) => {
   const presetOptions = findInPresets(inputValue);
   const slice = presetOptions.slice(0, 3);
   setOptions(slice);
@@ -138,7 +132,7 @@ const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
 
 const SearchBox = () => {
   const { featureShown, feature, setFeature, setPreview } = useFeatureContext();
-  const { view, bbox } = useMapStateContext();
+  const { view } = useMapStateContext();
   const [inputValue, setInputValue] = useState('');
   const [options, setOptions] = useState([]);
   const autocompleteRef = useRef();
@@ -149,7 +143,7 @@ const SearchBox = () => {
       setOptions([]);
       return;
     }
-    fetchOptions(inputValue, view, setOptions, bbox);
+    fetchOptions(inputValue, view, setOptions);
   }, [inputValue]);
 
   const closePanel = () => {

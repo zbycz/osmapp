@@ -125,8 +125,8 @@ export const renderOptionFactory =
         preset.presetForSearch.texts
           .filter((text, idx) => preset.textsByOne[idx] > 0)
           .slice(0, 1)
-          .join(', ') || preset.presetForSearch.tags;
-      // const {tags} = option.preset.presetForSearch;
+          .join(', ') || preset.presetForSearch.tagsAsOneString;
+      const { tagsAsOneString } = preset.presetForSearch;
 
       return (
         <>
@@ -138,7 +138,12 @@ export const renderOptionFactory =
             <Typography variant="body2" color="textSecondary">
               {window.location.search === '?ver2'
                 ? 'kategorie'
-                : highlightText(/* tags */ additionalText, inputValue)}
+                : highlightText(
+                    window.location.search === '?ver3'
+                      ? tagsAsOneString
+                      : additionalText,
+                    inputValue,
+                  )}
             </Typography>
           </Grid>
         </>

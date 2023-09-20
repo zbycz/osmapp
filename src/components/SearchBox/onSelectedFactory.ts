@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import { getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { getGlobalMap } from '../../services/mapStorage';
+import { performOverpassSearch } from '../../services/overpassSearch';
 
 const getElementType = (osmType) => {
   switch (osmType) {
@@ -54,7 +55,16 @@ const fitBounds = (option, panelShown = false) => {
 };
 
 export const onSelectedFactory =
-  (setFeature, setPreview, mobileMode) => (e, option) => {
+  (setFeature, setPreview, mobileMode, bbox) => (e, option) => {
+    if (option.preset) {
+      performOverpassSearch(bbox, option.preset.presetForSearch.tags).then(
+        () => {
+          // todo
+        },
+      );
+      return;
+    }
+
     if (!option?.geometry.coordinates) return;
 
     const skeleton = getSkeleton(option);

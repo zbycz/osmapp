@@ -7,6 +7,7 @@ import { t } from '../../services/intl';
 import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
 import { useMobileMode } from '../helpers';
 import { useUserThemeContext } from '../../helpers/theme';
+import { useMapStateContext } from '../utils/MapStateContext';
 
 const useFocusOnSlash = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -58,6 +59,7 @@ export const AutocompleteInput = ({
   autocompleteRef,
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
+  const { bbox } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { currentTheme } = useUserThemeContext();
   return (
@@ -66,9 +68,11 @@ export const AutocompleteInput = ({
       options={options}
       filterOptions={(x) => x}
       getOptionLabel={(option) =>
-        option.properties?.name || option.preset?.presetForSearch?.name || buildPhotonAddress(option.properties)
+        option.properties?.name ||
+        option.preset?.presetForSearch?.name ||
+        buildPhotonAddress(option.properties)
       }
-      onChange={onSelectedFactory(setFeature, setPreview, mobileMode)}
+      onChange={onSelectedFactory(setFeature, setPreview, mobileMode, bbox)}
       onHighlightChange={onHighlightFactory(setPreview)}
       autoComplete
       disableClearable
