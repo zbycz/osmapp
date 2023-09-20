@@ -66,7 +66,7 @@ export const AutocompleteInput = ({
       options={options}
       filterOptions={(x) => x}
       getOptionLabel={(option) =>
-        option.properties.name || buildPhotonAddress(option.properties)
+        option.properties?.name || option.preset?.presetForSearch?.name || buildPhotonAddress(option.properties)
       }
       onChange={onSelectedFactory(setFeature, setPreview, mobileMode)}
       onHighlightChange={onHighlightFactory(setPreview)}
