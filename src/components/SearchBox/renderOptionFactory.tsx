@@ -8,7 +8,7 @@ import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
 import { join } from '../../utils';
 import { getPoiClass } from '../../services/getPoiClass';
-import { fetchSchemaTranslations } from "../../services/tagging/translations";
+import { fetchSchemaTranslations } from '../../services/tagging/translations';
 
 /** photon
 {
@@ -119,27 +119,19 @@ export const buildPhotonAddress = ({
 
 export const renderOptionFactory = (inputValue, currentTheme) => (option) => {
   if (option.preset) {
-    const text = option.preset.name;
-    const additionalText = option.preset.key;
+    const text = option.preset.presetForSearch.name;
+    // const additionalText = option.preset.key + ' . ' + option.preset.tags + ' . ' + option.preset.terms ;
+    const additionalText =
+      option.preset.tags > 0
+        ? option.preset.presetForSearch.tags
+        : option.preset.presetForSearch.terms
+            .split(',')
+            .filter((term, idx) => option.preset.termsByOne[idx] > 0)
+            .join(', ');
     return (
       <>
         <IconPart>
-          <Maki
-            ico={option.preset.icon}
-            style={{ width: '20px', height: '20px', opacity: 0.5 }}
-            // title={`${tagKey}=${tagValue}`}
-            invert={currentTheme === 'dark'}
-          />
-          {/*<Maki*/}
-          {/*  ico={option.preset.class}*/}
-          {/*  style={{ width: '20px', height: '20px', opacity: 0.5 }}*/}
-          {/*  // title={`${tagKey}=${tagValue}`}*/}
-          {/*  invert={currentTheme === 'dark'}*/}
-          {/*/>*/}
-          {/*<FolderIcon*/}
-          {/*  color={currentTheme === 'dark' ? 'white' : 'black'}*/}
-          {/*/>*/}
-          <div>{option.preset.icon}</div>
+          <FolderIcon color={currentTheme === 'dark' ? 'white' : 'black'} />
         </IconPart>
         <Grid item xs>
           {highlightText(text, inputValue)}
@@ -150,7 +142,6 @@ export const renderOptionFactory = (inputValue, currentTheme) => (option) => {
       </>
     );
   }
-
 
   const { properties, geometry } = option;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;

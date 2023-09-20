@@ -5,6 +5,8 @@ import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
 import Router from 'next/router';
+import match from 'autosuggest-highlight/match';
+
 import { fetchJson } from '../../services/fetch';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -20,6 +22,7 @@ import { OsmApiId } from '../../services/helpers';
 import { presets } from '../../services/tagging/data';
 import {
   fetchSchemaTranslations,
+  getPresetTermsTranslation,
   getPresetTranslation,
 } from '../../services/tagging/translations';
 
@@ -165,25 +168,52 @@ export const convertOsmIdToMapId = (apiId: OsmApiId) => {
 // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
 fetchSchemaTranslations();
 
-const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
-  // search inputValue in presets
+const presetsForSearch = Object.values(presets).map(
+  ({ name, presetKey, tags, terms }) => ({
+    key: presetKey,
+    name: getPresetTranslation(presetKey) ?? name ?? 'x',
+    terms: getPresetTermsTranslation(presetKey) ?? terms ?? 'x',
+    tags: Object.entries(tags)
+      .map(([k, v]) => `${k}=${v}`)
+      .join(`,`),
+  }),
+);
 
-  const keys = Object.keys(presets);
-  const results = keys.filter((presetKey) =>
-    presetKey.toLowerCase().includes(inputValue.toLowerCase()),
-  );
-  const options2 = results.map((key) => ({
-    preset: {
-      key,
-      class: getPoiClass(presets[key].tags).class,
-      icon: presets[key].icon?.split('-', 2)?.[1] ?? 'information',
-      name: getPresetTranslation(key) ?? key,
-    },
+const num = (text, inputValue) => {
+  return match(text, inputValue, {
+    insideWords: true,
+    findAllOccurrences: true,
+  }).length;
+
+  //return text.toLowerCase().includes(inputValue.toLowerCase());
+};
+
+const findInPresets = (inputValue) => {
+  const start = performance.now();
+  const results = presetsForSearch.map((presetForSearch) => ({
+    name: num(presetForSearch.name, inputValue)*10,
+    terms: num(presetForSearch.terms, inputValue),
+    tags: num(presetForSearch.tags, inputValue),
+    termsByOne: presetForSearch.terms.split(',').map(term => num(term, inputValue)),
+    presetForSearch,
   }));
-  console.log('options', options2);
-  setOptions(options2);
-  return;
+  const options = results
+    .filter((result) => result.name + result.terms + result.tags > 0)
+    .sort((a, b) => {
+      // by number of matches
+      const aMatches = a.name + a.terms + a.tags;
+      const bMatches = b.name + b.terms + b.tags;
+      if (aMatches > bMatches) return -1;
+      if (aMatches < bMatches) return 1;
+      return 0
+    })
+    .map((result) => ({ preset: result }));
 
+  console.log('results time', performance.now() - start, options);
+  return options;
+};
+
+const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
   if (inputValue === 'climbing') {
     const overpass = await fetchJson(getOverpassUrl(bbox));
     console.log(overpass);
@@ -204,9 +234,16 @@ const fetchOptions = throttle(async (inputValue, view, setOptions, bbox) => {
     return;
   }
 
+  const presetOptions = findInPresets(inputValue);
+  const slice = presetOptions.slice(0, 3);
+  setOptions(slice);
+
   const searchResponse = await fetchJson(getApiUrl(inputValue, view));
   const options = searchResponse.features;
-  setOptions(options || []);
+  setOptions([
+    ...(options?.length < 3 ? presetOptions : slice),
+    ...(options || []),
+  ]);
 }, 400);
 
 const SearchBox = () => {
