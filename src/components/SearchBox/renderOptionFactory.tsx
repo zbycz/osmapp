@@ -8,7 +8,6 @@ import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
 import { join } from '../../utils';
 import { getPoiClass } from '../../services/getPoiClass';
-import { fetchSchemaTranslations } from '../../services/tagging/translations';
 
 /** photon
 {
@@ -117,60 +116,63 @@ export const buildPhotonAddress = ({
   streetnumber: snum,
 }) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
-export const renderOptionFactory = (inputValue, currentTheme) => (option) => {
-  if (option.preset) {
-    const name = option.preset.presetForSearch.name;
-    const additionalText = option.preset.presetForSearch.texts
-      .filter((text, idx) => option.preset.textsByOne[idx] > 0)
-      .slice(0, 1)
-      .join(', ') || option.preset.presetForSearch.tags;
-    const tags = option.preset.presetForSearch.tags;
+export const renderOptionFactory =
+  (inputValue, currentTheme) =>
+  ({ geometry, preset, properties }) => {
+    if (preset) {
+      const { name } = preset.presetForSearch;
+      const additionalText =
+        preset.presetForSearch.texts
+          .filter((text, idx) => preset.textsByOne[idx] > 0)
+          .slice(0, 1)
+          .join(', ') || preset.presetForSearch.tags;
+      // const {tags} = option.preset.presetForSearch;
+
+      return (
+        <>
+          <IconPart>
+            <FolderIcon />
+          </IconPart>
+          <Grid item xs>
+            {highlightText(name, inputValue)}
+            <Typography variant="body2" color="textSecondary">
+              {window.location.search === '?ver2'
+                ? 'kategorie'
+                : highlightText(/* tags */ additionalText, inputValue)}
+            </Typography>
+          </Grid>
+        </>
+      );
+    }
+
+    const { name, osm_key: tagKey, osm_value: tagValue } = properties;
+
+    const [lon, lat] = geometry.coordinates;
+    const mapCenter = useMapCenter();
+    const dist = getDistance(mapCenter, { lon, lat }) / 1000;
+    const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
+
+    const text = name || buildPhotonAddress(properties);
+    const additionalText = getAdditionalText(properties);
+    const poiClass = getPoiClass({ [tagKey]: tagValue });
 
     return (
       <>
         <IconPart>
-          <FolderIcon color={currentTheme === 'dark' ? 'white' : 'black'} />
+          <Maki
+            ico={poiClass.class}
+            style={{ width: '20px', height: '20px', opacity: 0.5 }}
+            title={`${tagKey}=${tagValue}`}
+            invert={currentTheme === 'dark'}
+          />
+          <div>{distKm} km</div>
         </IconPart>
         <Grid item xs>
-          {highlightText(name, inputValue)}
+          {highlightText(text, inputValue)}
           <Typography variant="body2" color="textSecondary">
-            kategorie
-            {/*{highlightText(additionalText, inputValue)}*/}
+            {additionalText}
           </Typography>
         </Grid>
       </>
     );
-  }
-
-  const { properties, geometry } = option;
-  const { name, osm_key: tagKey, osm_value: tagValue } = properties;
-
-  const [lon, lat] = geometry.coordinates;
-  const mapCenter = useMapCenter();
-  const dist = getDistance(mapCenter, { lon, lat }) / 1000;
-  const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
-
-  const text = name || buildPhotonAddress(properties);
-  const additionalText = getAdditionalText(properties);
-  const poiClass = getPoiClass({ [tagKey]: tagValue });
-
-  return (
-    <>
-      <IconPart>
-        <Maki
-          ico={poiClass.class}
-          style={{ width: '20px', height: '20px', opacity: 0.5 }}
-          title={`${tagKey}=${tagValue}`}
-          invert={currentTheme === 'dark'}
-        />
-        <div>{distKm} km</div>
-      </IconPart>
-      <Grid item xs>
-        {highlightText(text, inputValue)}
-        <Typography variant="body2" color="textSecondary">
-          {additionalText}
-        </Typography>
-      </Grid>
-    </>
-  );
-};
+  };

@@ -170,7 +170,6 @@ export const convertOsmIdToMapId = (apiId: OsmApiId) => {
 let presetsForSearch = [];
 
 fetchSchemaTranslations().then(() => {
-
   // resolve symlinks to {landuse...} etc
   presetsForSearch = Object.values(presets).map(
     ({ name, presetKey, tags, terms }) => {
@@ -187,20 +186,15 @@ fetchSchemaTranslations().then(() => {
       };
     },
   );
+});
 
-})
-
-
-
-const num = (text, inputValue) => {
-  return match(text, inputValue, {
+const num = (text, inputValue) =>
+  match(text, inputValue, {
     insideWords: true,
     findAllOccurrences: true,
   }).length;
 
-  //return text.toLowerCase().includes(inputValue.toLowerCase());
-};
-
+// return text.toLowerCase().includes(inputValue.toLowerCase());
 const findInPresets = (inputValue) => {
   const start = performance.now();
   const results = presetsForSearch.map((presetForSearch) => {
