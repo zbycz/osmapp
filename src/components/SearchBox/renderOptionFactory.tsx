@@ -134,7 +134,8 @@ export const renderOptionFactory = (inputValue, currentTheme) => (option) => {
         <Grid item xs>
           {highlightText(name, inputValue)}
           <Typography variant="body2" color="textSecondary">
-            {highlightText(/*tags*/additionalText, inputValue)}
+            kategorie
+            {/*{highlightText(additionalText, inputValue)}*/}
           </Typography>
         </Grid>
       </>
