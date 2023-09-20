@@ -6,7 +6,7 @@ import { fetchJson } from './fetch';
 import { getGlobalMap } from './mapStorage';
 
 const overpassQuery = (bbox, tags) => {
-  const query = tags.map(([k, v]) => `["${k}"="${v}"]`).join('');
+  const query = tags.map(([k, v]) => v === '*' ? `["${k}"]` : `["${k}"="${v}"]`).join('');
 
   return `[out:json][timeout:25];
   (
