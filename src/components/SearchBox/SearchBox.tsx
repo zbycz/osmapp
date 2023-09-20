@@ -166,18 +166,31 @@ export const convertOsmIdToMapId = (apiId: OsmApiId) => {
 };
 
 // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
-fetchSchemaTranslations();
 
-const presetsForSearch = Object.values(presets).map(
-  ({ name, presetKey, tags, terms }) => ({
-    key: presetKey,
-    name: getPresetTranslation(presetKey) ?? name ?? 'x',
-    terms: getPresetTermsTranslation(presetKey) ?? terms ?? 'x',
-    tags: Object.entries(tags)
-      .map(([k, v]) => `${k}=${v}`)
-      .join(`,`),
-  }),
-);
+let presetsForSearch = [];
+
+fetchSchemaTranslations().then(() => {
+
+  // resolve symlinks to {landuse...} etc
+  presetsForSearch = Object.values(presets).map(
+    ({ name, presetKey, tags, terms }) => {
+      const tagsAsStrings = Object.entries(tags).map(([k, v]) => `${k}=${v}`);
+      return {
+        key: presetKey,
+        name: getPresetTranslation(presetKey) ?? name ?? 'x',
+        tags: tagsAsStrings.join(', '),
+        texts: [
+          ...(getPresetTermsTranslation(presetKey) ?? terms ?? 'x').split(','),
+          ...tagsAsStrings,
+          presetKey,
+        ],
+      };
+    },
+  );
+
+})
+
+
 
 const num = (text, inputValue) => {
   return match(text, inputValue, {
@@ -190,22 +203,21 @@ const num = (text, inputValue) => {
 
 const findInPresets = (inputValue) => {
   const start = performance.now();
-  const results = presetsForSearch.map((presetForSearch) => ({
-    name: num(presetForSearch.name, inputValue)*10,
-    terms: num(presetForSearch.terms, inputValue),
-    tags: num(presetForSearch.tags, inputValue),
-    termsByOne: presetForSearch.terms.split(',').map(term => num(term, inputValue)),
-    presetForSearch,
-  }));
+  const results = presetsForSearch.map((presetForSearch) => {
+    const name = num(presetForSearch.name, inputValue) * 10;
+    const textsByOne = presetForSearch.texts.map((term) =>
+      num(term, inputValue),
+    );
+    const sum = name + textsByOne.reduce((a, b) => a + b, 0);
+    return { name, textsByOne, sum, presetForSearch };
+  });
   const options = results
-    .filter((result) => result.name + result.terms + result.tags > 0)
+    .filter((result) => result.sum > 0)
     .sort((a, b) => {
       // by number of matches
-      const aMatches = a.name + a.terms + a.tags;
-      const bMatches = b.name + b.terms + b.tags;
-      if (aMatches > bMatches) return -1;
-      if (aMatches < bMatches) return 1;
-      return 0
+      if (a.sum > b.sum) return -1;
+      if (a.sum < b.sum) return 1;
+      return 0;
     })
     .map((result) => ({ preset: result }));
 

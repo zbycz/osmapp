@@ -119,24 +119,22 @@ export const buildPhotonAddress = ({
 
 export const renderOptionFactory = (inputValue, currentTheme) => (option) => {
   if (option.preset) {
-    const text = option.preset.presetForSearch.name;
-    // const additionalText = option.preset.key + ' . ' + option.preset.tags + ' . ' + option.preset.terms ;
-    const additionalText =
-      option.preset.tags > 0
-        ? option.preset.presetForSearch.tags
-        : option.preset.presetForSearch.terms
-            .split(',')
-            .filter((term, idx) => option.preset.termsByOne[idx] > 0)
-            .join(', ');
+    const name = option.preset.presetForSearch.name;
+    const additionalText = option.preset.presetForSearch.texts
+      .filter((text, idx) => option.preset.textsByOne[idx] > 0)
+      .slice(0, 1)
+      .join(', ') || option.preset.presetForSearch.tags;
+    const tags = option.preset.presetForSearch.tags;
+
     return (
       <>
         <IconPart>
           <FolderIcon color={currentTheme === 'dark' ? 'white' : 'black'} />
         </IconPart>
         <Grid item xs>
-          {highlightText(text, inputValue)}
+          {highlightText(name, inputValue)}
           <Typography variant="body2" color="textSecondary">
-            {highlightText(additionalText, inputValue)}
+            {highlightText(/*tags*/additionalText, inputValue)}
           </Typography>
         </Grid>
       </>
