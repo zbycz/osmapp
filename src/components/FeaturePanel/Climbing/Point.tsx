@@ -32,6 +32,7 @@ export const Point = ({ x, y, onPointClick, type, index }) => {
         cx={imageSize.width * x}
         cy={imageSize.height * y}
         fill={isBelayVisible ? 'transparent' : 'white'}
+        stroke="royalblue"
         r={3}
         onClick={onClick}
         cursor="pointer"

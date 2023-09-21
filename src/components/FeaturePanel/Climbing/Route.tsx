@@ -11,7 +11,7 @@ type Props = {
   route: ClimbingRoute;
   routeNumber: number;
   onRouteSelect: (routeNumber: number) => void;
-  onPointClick: (event: React.MouseEvent<SVGCircleElement>) => void;
+  onPointClick: (event: React.MouseEvent<any>) => void;
 };
 
 export const Route = ({

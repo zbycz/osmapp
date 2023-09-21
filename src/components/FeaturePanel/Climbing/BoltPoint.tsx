@@ -32,14 +32,14 @@ export const Bolt = ({ x, y, isSelected }) => {
         height={strokeWidth}
         x={0}
         y={0 + size / 2 - strokeWidth / 2}
-        fill={isSelected ? 'black' : 'white'}
+        fill={isSelected ? 'royalblue' : 'white'}
       />
       <rect
         width={strokeWidth}
         height={size}
         x={0 + size / 2 - strokeWidth / 2}
         y={0}
-        fill={isSelected ? 'black' : 'white'}
+        fill={isSelected ? 'royalblue' : 'white'}
       />
 
       <title>Bolt</title>
