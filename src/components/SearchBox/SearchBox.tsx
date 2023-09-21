@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import throttle from 'lodash/throttle';
+import debounce from 'lodash/debounce';
 import SearchIcon from '@material-ui/icons/Search';
 import Paper from '@material-ui/core/Paper';
 import IconButton from '@material-ui/core/IconButton';
@@ -117,18 +117,25 @@ const findInPresets = (inputValue) => {
   return options;
 };
 
-const fetchOptions = throttle(async (inputValue, view, setOptions) => {
-  const presetOptions = findInPresets(inputValue);
-  const slice = presetOptions.slice(0, 3);
-  setOptions(slice);
+const fetchOptions = debounce(
+  async (inputValue, view, setOptions, presetOptions = []) => {
+    const slice = presetOptions.slice(0, 3);
 
-  const searchResponse = await fetchJson(getApiUrl(inputValue, view));
-  const options = searchResponse.features;
-  setOptions([
-    ...(options?.length < 3 ? presetOptions : slice),
-    ...(options || []),
-  ]);
-}, 400);
+    try {
+      const searchResponse = await fetchJson(getApiUrl(inputValue, view), {
+        putInAbortableQueue: true,
+      });
+      const options = searchResponse.features;
+      setOptions([
+        ...(options?.length < 3 ? presetOptions : slice),
+        ...(options || []),
+      ]);
+    } catch (e) {
+      console.log('search aborted', e);
+    }
+  },
+  400,
+);
 
 const SearchBox = () => {
   const { featureShown, feature, setFeature, setPreview } = useFeatureContext();
@@ -143,7 +150,14 @@ const SearchBox = () => {
       setOptions([]);
       return;
     }
-    fetchOptions(inputValue, view, setOptions);
+    if (inputValue.length > 2) {
+      const presetOptions = findInPresets(inputValue);
+      const slice = presetOptions.slice(0, 3);
+      setOptions(slice);
+      fetchOptions(inputValue, view, setOptions, presetOptions);
+    } else {
+      fetchOptions(inputValue, view, setOptions);
+    }
   }, [inputValue]);
 
   const closePanel = () => {

@@ -62,6 +62,10 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     }
     return text;
   } catch (e) {
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      throw e;
+    }
+
     throw new FetchError(`${e.message} at ${url}`, e.code || 'network', e.data); // TODO how to tell network error from code exception?
   }
 };
@@ -71,6 +75,10 @@ export const fetchJson = async (url, opts = {}) => {
   try {
     return JSON.parse(text);
   } catch (e) {
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      throw e;
+    }
+
     throw new Error(`fetchJson: ${e.message}, in "${text?.substr(0, 30)}..."`);
   }
 };
