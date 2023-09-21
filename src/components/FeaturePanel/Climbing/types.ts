@@ -1,4 +1,4 @@
-export type PointType = 'anchor' | 'bolt-hanger' | 'bolt' | 'piton';
+export type PointType = 'belay' | 'bolt' | 'piton';
 
 export type PathPoints = Array<{
   x: number;

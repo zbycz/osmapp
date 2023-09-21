@@ -1,31 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext } from 'react';
-import type { ClimbingRoute } from './types';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 
-type Props = {
-  route: ClimbingRoute;
-  routeSelectedIndex: number;
-  routeNumber: number;
-  onRouteSelect: (routeNumber: number) => void;
-  isEditable: boolean;
-};
-
-export const RoutePath = ({
-  route,
-  routeSelectedIndex,
-  routeNumber,
-  onRouteSelect,
-  isEditable,
-}: Props) => {
-  const { imageSize } = useContext(ClimbingEditorContext);
+export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
+  const { imageSize, isSelectedRouteEditable, routeSelectedIndex } = useContext(
+    ClimbingEditorContext,
+  );
+  const isSelected = routeSelectedIndex === routeNumber;
   const pointsInString = route?.path.map(({ x, y }, index) => {
     const currentX = imageSize.width * x;
     const currentY = imageSize.height * y;
     return `${index === 0 ? 'M' : 'L'}${currentX} ${currentY} `;
   });
-
-  const commonProps = isEditable
+  const commonProps = isSelectedRouteEditable
     ? {}
     : {
         onClick: (e) => {
@@ -34,7 +21,6 @@ export const RoutePath = ({
         },
         cursor: 'pointer',
       };
-  const isSelected = routeSelectedIndex === routeNumber;
 
   return (
     <>
@@ -60,6 +46,9 @@ export const RoutePath = ({
         stroke={isSelected ? 'royalblue' : 'white'}
         strokeLinecap="round"
         fill="none"
+        markerEnd={
+          isSelected && isSelectedRouteEditable ? 'url(#triangle)' : null
+        }
         {...commonProps}
       />
     </>

@@ -50,6 +50,7 @@ const FeaturePanel = () => {
   const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
+  const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
 
   const [advanced, setAdvanced] = useState(false);
   const [showAround, toggleShowAround] = useToggleState(false);
@@ -71,58 +72,60 @@ const FeaturePanel = () => {
   const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
 
-  if (tags.climbing === 'crag') {
-    return (
-      <ClimbingEditorContextProvider
-        value={{
-          imageSize,
-          setImageSize,
-          isSelectedRouteEditable,
-          setIsSelectedRouteEditable,
-          routes,
-          setRoutes,
-          routeSelectedIndex,
-          setRouteSelectedIndex,
-        }}
-      >
-        {isFullscreenDialogOpened ? (
-          <Dialog
-            fullScreen
-            open={isFullscreenDialogOpened}
-            onClose={onFullscreenDialogClose}
-          >
+  // if (tags.climbing === 'crag') {
+  return (
+    <ClimbingEditorContextProvider
+      value={{
+        imageSize,
+        setImageSize,
+        isSelectedRouteEditable,
+        setIsSelectedRouteEditable,
+        routes,
+        setRoutes,
+        routeSelectedIndex,
+        setRouteSelectedIndex,
+        pointSelectedIndex,
+        setPointSelectedIndex,
+      }}
+    >
+      {isFullscreenDialogOpened ? (
+        <Dialog
+          fullScreen
+          open={isFullscreenDialogOpened}
+          onClose={onFullscreenDialogClose}
+        >
+          <ClimbingPanel
+            isFullscreenDialogOpened={isFullscreenDialogOpened}
+            setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
+            isReadOnly={false}
+          />
+        </Dialog>
+      ) : (
+        <PanelWrapper>
+          <PanelScrollbars>
             <ClimbingPanel
               isFullscreenDialogOpened={isFullscreenDialogOpened}
               setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-              isReadOnly={false}
+              isReadOnly
+              onEditorClick={onFullscreenDialogOpen}
             />
-          </Dialog>
-        ) : (
-          <PanelWrapper>
-            <PanelScrollbars>
-              <ClimbingPanel
-                isFullscreenDialogOpened={isFullscreenDialogOpened}
-                setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-                isReadOnly
-                onEditorClick={onFullscreenDialogOpen}
-              />
-              <EditRoutesContainer>
-                <Button
-                  onClick={onFullscreenDialogOpen}
-                  color="primary"
-                  size="small"
-                  startIcon={<EditIcon />}
-                  variant="contained"
-                >
-                  Edit routes
-                </Button>
-              </EditRoutesContainer>
-            </PanelScrollbars>
-          </PanelWrapper>
-        )}
-      </ClimbingEditorContextProvider>
-    );
-  }
+            <EditRoutesContainer>
+              <Button
+                onClick={onFullscreenDialogOpen}
+                color="primary"
+                size="small"
+                startIcon={<EditIcon />}
+                variant="contained"
+              >
+                Edit routes
+              </Button>
+            </EditRoutesContainer>
+          </PanelScrollbars>
+        </PanelWrapper>
+      )}
+    </ClimbingEditorContextProvider>
+  );
+  // }
   return (
     <PanelWrapper>
       <PanelScrollbars>
