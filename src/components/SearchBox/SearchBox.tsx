@@ -123,7 +123,7 @@ const fetchOptions = debounce(
 
     try {
       const searchResponse = await fetchJson(getApiUrl(inputValue, view), {
-        putInAbortableQueue: true,
+        abortableQueueName: 'search',
       });
       const options = searchResponse.features;
       setOptions([
