@@ -72,7 +72,7 @@ export const overpassLayers: AnyLayer[] = [
       'circle-color': 'rgba(255,255,255,0.9)',
       'circle-radius': 12,
       'circle-stroke-width': 1,
-      'circle-stroke-color': 'rgba(0,0,255,0.9)',
+      'circle-stroke-color': 'rgba(255,0,0,0.9)',
       'circle-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],

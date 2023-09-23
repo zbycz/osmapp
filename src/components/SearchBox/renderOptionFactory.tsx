@@ -134,8 +134,12 @@ export const renderOptionFactory =
 
     if (preset) {
       const { name } = preset.presetForSearch;
-      // const additionalText =
-      //   preset.presetForSearch.texts
+      const additionalText =
+        preset.name === 0
+          ? ` (${preset.presetForSearch.texts
+              .find((text, idx) => preset.textsByOne[idx] > 0)})`
+          : '';
+      // preset.presetForSearch.texts
       //     .filter((text, idx) => preset.textsByOne[idx] > 0)
       //     .slice(0, 1)
       //     .join(', ') || preset.presetForSearch.tagsAsOneString;
@@ -148,6 +152,7 @@ export const renderOptionFactory =
           </IconPart>
           <Grid item xs>
             {highlightText(name, inputValue)}
+            {highlightText(additionalText, inputValue)}
             <Typography variant="body2" color="textSecondary">
               kategorie
             </Typography>

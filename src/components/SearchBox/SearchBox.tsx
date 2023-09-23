@@ -95,14 +95,22 @@ const num = (text, inputValue) =>
 // return text.toLowerCase().includes(inputValue.toLowerCase());
 const findInPresets = (inputValue) => {
   const start = performance.now();
-  const results = presetsForSearch.map((presetForSearch) => {
-    const name = num(presetForSearch.name, inputValue) * 10;
-    const textsByOne = presetForSearch.texts.map((term) =>
-      num(term, inputValue),
-    );
+
+  const results = presetsForSearch.map((preset) => {
+    const name = num(preset.name, inputValue) * 10;
+    const textsByOne = preset.texts.map((term) => num(term, inputValue));
     const sum = name + textsByOne.reduce((a, b) => a + b, 0);
-    return { name, textsByOne, sum, presetForSearch };
+    return { name, textsByOne, sum, presetForSearch: preset };
   });
+
+  const nameMatches = results
+    .filter((result) => result.name > 0)
+    .map((result) => ({ preset: result }));
+
+  const rest = results
+    .filter((result) => result.name === 0 && result.sum > 0)
+    .map((result) => ({ preset: result }));
+
   const options = results
     .filter((result) => result.sum > 0)
     .sort((a, b) => {
@@ -114,26 +122,26 @@ const findInPresets = (inputValue) => {
     .map((result) => ({ preset: result }));
 
   console.log('results time', performance.now() - start, options);
-  return options;
+  return { nameMatches, rest, options };
 };
 
 const fetchOptions = debounce(
-  async (inputValue, view, setOptions, allPresets = []) => {
+  async (inputValue, view, setOptions, nameMatches = [], rest = []) => {
     try {
       const searchResponse = await fetchJson(getApiUrl(inputValue, view), {
         abortableQueueName: 'search',
       });
       const options = searchResponse.features;
 
-      const ALL = 0;
-      const numBefore =
-        options?.length < 3 ? ALL : inputValue.length > 4 ? 3 : 1;
-      const presetsBefore = numBefore
-        ? allPresets.slice(0, numBefore)
-        : allPresets;
-      const presetsAfter = numBefore ? allPresets.slice(numBefore) : [];
+      // const ALL = 0;
+      // const numBefore =
+      //   options?.length < 3 ? ALL : inputValue.length > 4 ? 3 : 1;
+      // const presetsBefore = numBefore
+      //   ? allPresets.slice(0, numBefore)
+      //   : allPresets;
+      // const presetsAfter = numBefore ? allPresets.slice(numBefore) : [];
 
-      setOptions([...presetsBefore, ...(options || []), ...presetsAfter]);
+      setOptions([...nameMatches, ...(options || []), ...rest]);
     } catch (e) {
       console.log('search aborted', e);
     }
@@ -155,10 +163,9 @@ const SearchBox = () => {
       return;
     }
     if (inputValue.length > 2) {
-      const presetOptions = findInPresets(inputValue);
-      const slice = presetOptions.slice(0, 1);
-      setOptions([...slice, { loader: true }]);
-      fetchOptions(inputValue, view, setOptions, presetOptions);
+      const { nameMatches, rest } = findInPresets(inputValue);
+      setOptions([...nameMatches, { loader: true }]);
+      fetchOptions(inputValue, view, setOptions, nameMatches, rest);
     } else {
       fetchOptions(inputValue, view, setOptions);
     }
