@@ -118,15 +118,28 @@ export const buildPhotonAddress = ({
 
 export const renderOptionFactory =
   (inputValue, currentTheme) =>
-  ({ geometry, preset, properties }) => {
+  ({ geometry, preset, properties, loader }) => {
+    if (loader) {
+      return (
+        <>
+          <IconPart>{/* <CircularProgress /> */}</IconPart>
+          <Grid item xs>
+            <Typography variant="body2" color="textSecondary">
+              Načítám...
+            </Typography>
+          </Grid>
+        </>
+      );
+    }
+
     if (preset) {
       const { name } = preset.presetForSearch;
-      const additionalText =
-        preset.presetForSearch.texts
-          .filter((text, idx) => preset.textsByOne[idx] > 0)
-          .slice(0, 1)
-          .join(', ') || preset.presetForSearch.tagsAsOneString;
-      const { tagsAsOneString } = preset.presetForSearch;
+      // const additionalText =
+      //   preset.presetForSearch.texts
+      //     .filter((text, idx) => preset.textsByOne[idx] > 0)
+      //     .slice(0, 1)
+      //     .join(', ') || preset.presetForSearch.tagsAsOneString;
+      // const { tagsAsOneString } = preset.presetForSearch;
 
       return (
         <>
@@ -136,14 +149,7 @@ export const renderOptionFactory =
           <Grid item xs>
             {highlightText(name, inputValue)}
             <Typography variant="body2" color="textSecondary">
-              {window.location.search === '?ver2'
-                ? 'kategorie'
-                : highlightText(
-                    window.location.search === '?ver3'
-                      ? tagsAsOneString
-                      : additionalText,
-                    inputValue,
-                  )}
+              kategorie
             </Typography>
           </Grid>
         </>

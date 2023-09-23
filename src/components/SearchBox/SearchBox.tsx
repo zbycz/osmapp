@@ -118,18 +118,22 @@ const findInPresets = (inputValue) => {
 };
 
 const fetchOptions = debounce(
-  async (inputValue, view, setOptions, presetOptions = []) => {
-    const slice = presetOptions.slice(0, 3);
-
+  async (inputValue, view, setOptions, allPresets = []) => {
     try {
       const searchResponse = await fetchJson(getApiUrl(inputValue, view), {
         abortableQueueName: 'search',
       });
       const options = searchResponse.features;
-      setOptions([
-        ...(options?.length < 3 ? presetOptions : slice),
-        ...(options || []),
-      ]);
+
+      const ALL = 0;
+      const numBefore =
+        options?.length < 3 ? ALL : inputValue.length > 4 ? 3 : 1;
+      const presetsBefore = numBefore
+        ? allPresets.slice(0, numBefore)
+        : allPresets;
+      const presetsAfter = numBefore ? allPresets.slice(numBefore) : [];
+
+      setOptions([...presetsBefore, ...(options || []), ...presetsAfter]);
     } catch (e) {
       console.log('search aborted', e);
     }
@@ -152,8 +156,8 @@ const SearchBox = () => {
     }
     if (inputValue.length > 2) {
       const presetOptions = findInPresets(inputValue);
-      const slice = presetOptions.slice(0, 3);
-      setOptions(slice);
+      const slice = presetOptions.slice(0, 1);
+      setOptions([...slice, { loader: true }]);
       fetchOptions(inputValue, view, setOptions, presetOptions);
     } else {
       fetchOptions(inputValue, view, setOptions);
