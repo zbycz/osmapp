@@ -1,4 +1,4 @@
-import maplibregl from 'maplibre-gl';
+import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 
 const getSource = (url) => {
@@ -21,7 +21,7 @@ const getSource = (url) => {
   };
 };
 
-export const rasterStyle = (id, url): maplibregl.Style => {
+export const rasterStyle = (id, url): StyleSpecification => {
   const source = getSource(url);
   return {
     version: 8,

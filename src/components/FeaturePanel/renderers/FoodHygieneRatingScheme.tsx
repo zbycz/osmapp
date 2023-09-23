@@ -1,23 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Typography } from '@material-ui/core';
-import { Restaurant } from '@material-ui/icons';
+import { Tooltip, Typography } from '@material-ui/core';
+import RestaurantIcon from '@material-ui/icons/Restaurant';
+import styled from 'styled-components';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
-
-interface StarRatingProps {
-  stars: number;
-  maxStars: number;
-}
-
-const StarRating = ({ stars, maxStars }: StarRatingProps) => {
-  const starArray = new Array(maxStars).fill(0);
-  return (
-    <div>
-      {starArray.map((_, i) => (
-        <span>{i < stars ? '★' : '☆'}</span>
-      ))}
-    </div>
-  );
-};
 
 const useLoadingState = () => {
   const [rating, setRating] = useState<number>();
@@ -43,6 +28,26 @@ const useLoadingState = () => {
   return { rating, error, loading, startRating, finishRating, failRating };
 };
 
+const Wrapper = styled.div`
+  display: flex;
+  gap: 0.5rem;
+
+  .MuiRating-root {
+    margin-top: -2px;
+  }
+`;
+
+const RatingRound = styled.span`
+  border-radius: 50%;
+  background-color: #1a6500;
+  color: #fff;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+  font-weight: bold;
+  position: relative;
+  top: -1px;
+`;
+
 export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
   const { rating, error, loading, startRating, finishRating, failRating } =
     useLoadingState();
@@ -60,42 +65,41 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
     loadData();
   }, []);
 
-  const linkStyle: React.CSSProperties = {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '0.5rem',
-  };
-  const pStyle: React.CSSProperties = {
-    marginBlock: '0',
-  };
+  if (loading) {
+    return (
+      <>
+        <span className="dotloader" />
+        <span className="dotloader" />
+        <span className="dotloader" />
+      </>
+    );
+  }
 
   return (
     <>
-      {loading ? (
-        <>
-          <span className="dotloader" />
-          <span className="dotloader" />
-          <span className="dotloader" />
-        </>
-      ) : (
-        <>
-          <Restaurant fontSize="small" />
-          {Number.isNaN(rating) || error ? (
-            <Typography color="error">No rating available</Typography>
-          ) : (
-            <>
-              <a
-                href={`https://ratings.food.gov.uk/business/${v}`}
-                title="Food Hygiene Rating Scheme"
-                style={linkStyle}
-              >
-                <p style={pStyle}>FHRS</p>
-                <StarRating stars={rating} maxStars={5} />
-              </a>
-            </>
-          )}
-        </>
-      )}
+      <RestaurantIcon fontSize="small" />
+      <Wrapper>
+        <Tooltip
+          arrow
+          interactive
+          title="Food Hygiene Rating Scheme (only in UK)"
+          placement="bottom-end"
+        >
+          <a
+            href={`https://ratings.food.gov.uk/business/${v}`}
+            className="colorInherit"
+          >
+            FHRS{' '}
+            {Number.isNaN(rating) || error ? (
+              <Typography color="textSecondary">
+                (Error while fetching rating)
+              </Typography>
+            ) : (
+              <RatingRound>{rating}</RatingRound>
+            )}
+          </a>
+        </Tooltip>
+      </Wrapper>
     </>
   );
 };
