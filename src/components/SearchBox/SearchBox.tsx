@@ -11,7 +11,7 @@ import { fetchJson } from '../../services/fetch';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
-import { t } from '../../services/intl';
+import { intl, t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { isDesktop, useMobileMode } from '../helpers';
 import { presets } from '../../services/tagging/data';
@@ -55,11 +55,14 @@ const SearchIconButton = styled(IconButton)`
   }
 `;
 
+const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
+
 const getApiUrl = (inputValue, view) => {
   const [zoom, lat, lon] = view;
   const lvl = Math.max(0, Math.min(16, Math.round(zoom)));
   const q = encodeURIComponent(inputValue);
-  return `https://photon.komoot.io/api/?q=${q}&lon=${lon}&lat=${lat}&zoom=${lvl}`;
+  const lang = intl.lang in PHOTON_SUPPORTED_LANGS ? intl.lang : 'default';
+  return `https://photon.komoot.io/api/?q=${q}&lon=${lon}&lat=${lat}&zoom=${lvl}&lang=${lang}`;
 };
 
 // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
