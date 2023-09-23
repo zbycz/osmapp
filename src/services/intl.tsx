@@ -5,6 +5,7 @@ import { MessagesType, TranslationId } from './types';
 import { isBrowser, isServer } from '../components/helpers';
 import { getServerIntl } from './intlServer';
 import { publishDbgObject } from '../utils';
+import { fetchSchemaTranslations } from './tagging/translations'; // eslint-disable-line import/no-cycle
 
 type Values = { [variable: string]: string | number };
 
@@ -71,6 +72,7 @@ if (isBrowser()) {
 export const setIntlForSSR = async (ctx) => {
   if (isServer()) {
     setIntl(await getServerIntl(ctx));
+    await fetchSchemaTranslations(); // TODO import cycle
   }
 };
 

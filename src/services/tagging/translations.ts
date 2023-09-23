@@ -1,6 +1,6 @@
 import { fetchJson } from '../fetch';
 import { Field } from './types/Fields';
-import { intl } from '../intl';
+import { intl } from '../intl'; // eslint-disable-line import/no-cycle
 import { publishDbgObject } from '../../utils';
 
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json

@@ -16,6 +16,7 @@ import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
+import { CategoryPanel } from '../CategoryPanel/CategoryPanel';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -72,6 +73,7 @@ const IndexWithProviders = () => {
       <SearchBox />
       <Loading />
       {featureShown && <FeaturePanel />}
+      {router.pathname === '/category/[[...key]]' && <CategoryPanel />}
       <HomepagePanel />
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
