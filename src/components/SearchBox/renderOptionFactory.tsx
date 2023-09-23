@@ -8,6 +8,7 @@ import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
 import { join } from '../../utils';
 import { getPoiClass } from '../../services/getPoiClass';
+import { t } from '../../services/intl';
 
 /** photon
 {
@@ -122,10 +123,13 @@ export const renderOptionFactory =
     if (loader) {
       return (
         <>
-          <IconPart>{/* <CircularProgress /> */}</IconPart>
+          <IconPart />
           <Grid item xs>
             <Typography variant="body2" color="textSecondary">
-              Načítám...
+              {t('loading')}
+              <span className="dotloader">.</span>
+              <span className="dotloader">.</span>
+              <span className="dotloader">.</span>
             </Typography>
           </Grid>
         </>
@@ -136,14 +140,10 @@ export const renderOptionFactory =
       const { name } = preset.presetForSearch;
       const additionalText =
         preset.name === 0
-          ? ` (${preset.presetForSearch.texts
-              .find((text, idx) => preset.textsByOne[idx] > 0)})`
+          ? ` (${preset.presetForSearch.texts.find(
+              (_, idx) => preset.textsByOne[idx] > 0,
+            )})`
           : '';
-      // preset.presetForSearch.texts
-      //     .filter((text, idx) => preset.textsByOne[idx] > 0)
-      //     .slice(0, 1)
-      //     .join(', ') || preset.presetForSearch.tagsAsOneString;
-      // const { tagsAsOneString } = preset.presetForSearch;
 
       return (
         <>
@@ -151,8 +151,7 @@ export const renderOptionFactory =
             <FolderIcon />
           </IconPart>
           <Grid item xs>
-            {highlightText(name, inputValue)}
-            {highlightText(additionalText, inputValue)}
+            {highlightText(`${name}${additionalText}`, inputValue)}
             <Typography variant="body2" color="textSecondary">
               kategorie
             </Typography>

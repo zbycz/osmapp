@@ -71,8 +71,9 @@ let presetsForSearch = [];
 
 fetchSchemaTranslations().then(() => {
   // resolve symlinks to {landuse...} etc
-  presetsForSearch = Object.values(presets).map(
-    ({ name, presetKey, tags, terms }) => {
+  presetsForSearch = Object.values(presets)
+    .filter(({ searchable }) => searchable === undefined || searchable)
+    .map(({ name, presetKey, tags, terms }) => {
       const tagsAsStrings = Object.entries(tags).map(([k, v]) => `${k}=${v}`);
       return {
         key: presetKey,
@@ -85,8 +86,7 @@ fetchSchemaTranslations().then(() => {
           presetKey,
         ],
       };
-    },
-  );
+    });
 });
 
 const num = (text, inputValue) =>
@@ -94,8 +94,8 @@ const num = (text, inputValue) =>
     insideWords: true,
     findAllOccurrences: true,
   }).length;
-
 // return text.toLowerCase().includes(inputValue.toLowerCase());
+
 const findInPresets = (inputValue) => {
   const start = performance.now();
 
@@ -103,7 +103,7 @@ const findInPresets = (inputValue) => {
     const name = num(preset.name, inputValue) * 10;
     const textsByOne = preset.texts.map((term) => num(term, inputValue));
     const sum = name + textsByOne.reduce((a, b) => a + b, 0);
-    return { name, textsByOne, sum, presetForSearch: preset };
+    return { name, textsByOne, sum, presetForSearch: preset }; // TODO refactor this, not needed anymore
   });
 
   const nameMatches = results
@@ -125,7 +125,9 @@ const findInPresets = (inputValue) => {
     .map((result) => ({ preset: result }));
 
   console.log('results time', performance.now() - start, options);
-  return { nameMatches, rest, options };
+  return nameMatches.length
+    ? { nameMatches, rest }
+    : { nameMatches: rest, rest: [] };
 };
 
 const fetchOptions = debounce(
