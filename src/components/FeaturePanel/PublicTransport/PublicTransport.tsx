@@ -34,13 +34,7 @@ const useLoadingState = () => {
   return { routes, error, loading, startRoutes, finishRoutes, failRoutes };
 };
 
-interface PublicTransportInnerProps {
-  name: string;
-}
-
-const PublicTransportInner: React.FC<PublicTransportInnerProps> = ({
-  name,
-}) => {
+const PublicTransportInner = () => {
   const router = useRouter();
 
   const { routes, error, loading, startRoutes, finishRoutes, failRoutes } =
@@ -52,7 +46,6 @@ const PublicTransportInner: React.FC<PublicTransportInnerProps> = ({
       const lines = await requestLines(
         router.query.all[0] as any,
         Number(router.query.all[1]),
-        name,
       ).catch(failRoutes);
       finishRoutes(lines);
     };
@@ -94,5 +87,5 @@ export const PublicTransport: React.FC<PublicTransportProps> = ({ tags }) => {
     return null;
   }
 
-  return PublicTransportInner({ name: tags.name });
+  return PublicTransportInner();
 };
