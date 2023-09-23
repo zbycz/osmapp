@@ -43,6 +43,7 @@ export default {
   'homepage.maptiler': '<strong>MapTiler</strong> – za skvělé vektorové mapy <br>a za podporu tohoto projektu  ❤️ ',
 
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
+  'searchbox.category': 'kategorie',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',

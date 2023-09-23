@@ -153,7 +153,7 @@ export const renderOptionFactory =
           <Grid item xs>
             {highlightText(`${name}${additionalText}`, inputValue)}
             <Typography variant="body2" color="textSecondary">
-              kategorie
+              {t('searchbox.category')}
             </Typography>
           </Grid>
         </>

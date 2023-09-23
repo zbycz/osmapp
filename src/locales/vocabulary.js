@@ -50,6 +50,7 @@ export default {
   'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
 
   'searchbox.placeholder': 'Search OpenStreetMap',
+  'searchbox.category': 'category',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
