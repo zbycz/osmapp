@@ -130,6 +130,16 @@ const findInPresets = (inputValue) => {
     : { nameMatches: rest, rest: [] };
 };
 
+const getOverpassQuery = (inputValue: string) => {
+  if (inputValue.match(/^[-:_a-zA-Z]+=/)) {
+    const [key, value] = inputValue.split('=', 2);
+
+    return [{ overpass: [key, value || '*'] }];
+  }
+
+  return [];
+};
+
 const fetchOptions = debounce(
   async (inputValue, view, setOptions, nameMatches = [], rest = []) => {
     try {
@@ -168,9 +178,11 @@ const SearchBox = () => {
       return;
     }
     if (inputValue.length > 2) {
+      const overpassQuery = getOverpassQuery(inputValue);
       const { nameMatches, rest } = findInPresets(inputValue);
-      setOptions([...nameMatches, { loader: true }]);
-      fetchOptions(inputValue, view, setOptions, nameMatches, rest);
+      setOptions([...overpassQuery, ...nameMatches, { loader: true }]);
+      const before = [...overpassQuery, ...nameMatches];
+      fetchOptions(inputValue, view, setOptions, before, rest);
     } else {
       fetchOptions(inputValue, view, setOptions);
     }

@@ -56,6 +56,10 @@ const fitBounds = (option, panelShown = false) => {
 
 export const onSelectedFactory =
   (setFeature, setPreview, mobileMode, bbox) => (e, option) => {
+    if (option.overpass) {
+      console.log(option.overpass);
+      return;
+    }
     if (option.preset) {
       performOverpassSearch(bbox, option.preset.presetForSearch.tags).then(
         () => {

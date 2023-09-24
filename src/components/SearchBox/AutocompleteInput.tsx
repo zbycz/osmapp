@@ -70,10 +70,12 @@ export const AutocompleteInput = ({
       getOptionLabel={(option) =>
         option.properties?.name ||
         option.preset?.presetForSearch?.name ||
-        buildPhotonAddress(option.properties)
+        option.overpass?.join('=') ||
+        (option.loader ? '' : buildPhotonAddress(option.properties))
       }
       onChange={onSelectedFactory(setFeature, setPreview, mobileMode, bbox)}
       onHighlightChange={onHighlightFactory(setPreview)}
+      getOptionDisabled={(o) => o.loader}
       autoComplete
       disableClearable
       autoHighlight

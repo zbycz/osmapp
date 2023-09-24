@@ -9,6 +9,7 @@ import { highlightText } from './highlightText';
 import { join } from '../../utils';
 import { getPoiClass } from '../../services/getPoiClass';
 import { t } from '../../services/intl';
+import SearchIcon from '@material-ui/icons/Search';
 
 /** photon
 {
@@ -119,13 +120,32 @@ export const buildPhotonAddress = ({
 
 export const renderOptionFactory =
   (inputValue, currentTheme) =>
-  ({ geometry, preset, properties, loader }) => {
+  ({ geometry, preset, properties, overpass, loader }) => {
+    if (overpass) {
+      return (
+        <>
+          <IconPart>
+            <SearchIcon />
+          </IconPart>
+          <Grid item xs>
+            <span style={{ fontWeight: 700 }}>
+              {overpass[0]} = {overpass[1]}
+            </span>
+            <Typography variant="body2" color="textSecondary">
+              overpass search
+              {/*{t('searchbox.category')}*/}
+            </Typography>
+          </Grid>
+        </>
+      );
+    }
+
     if (loader) {
       return (
         <>
           <IconPart />
           <Grid item xs>
-            <Typography variant="body2" color="textSecondary">
+            <Typography>
               {t('loading')}
               <span className="dotloader">.</span>
               <span className="dotloader">.</span>
