@@ -73,6 +73,7 @@ fetchSchemaTranslations().then(() => {
   // resolve symlinks to {landuse...} etc
   presetsForSearch = Object.values(presets)
     .filter(({ searchable }) => searchable === undefined || searchable)
+    .filter(({ locationSet }) => !locationSet?.include)
     .map(({ name, presetKey, tags, terms }) => {
       const tagsAsStrings = Object.entries(tags).map(([k, v]) => `${k}=${v}`);
       return {
