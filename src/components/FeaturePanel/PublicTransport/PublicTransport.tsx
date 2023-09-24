@@ -81,8 +81,7 @@ export const PublicTransport: React.FC<PublicTransportProps> = ({ tags }) => {
   const isPublicTransport =
     Object.keys(tags).includes('public_transport') ||
     tags.railway === 'station' ||
-    tags.railway === 'halt' ||
-    tags.railway === 'subway_entrance';
+    tags.railway === 'halt';
 
   if (!isPublicTransport) {
     return null;
