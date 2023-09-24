@@ -59,7 +59,7 @@ export const AutocompleteInput = ({
   autocompleteRef,
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
-  const { bbox } = useMapStateContext();
+  const { bbox, showToast } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { currentTheme } = useUserThemeContext();
   return (
@@ -73,7 +73,13 @@ export const AutocompleteInput = ({
         option.overpass?.join('=') ||
         (option.loader ? '' : buildPhotonAddress(option.properties))
       }
-      onChange={onSelectedFactory(setFeature, setPreview, mobileMode, bbox)}
+      onChange={onSelectedFactory(
+        setFeature,
+        setPreview,
+        mobileMode,
+        bbox,
+        showToast,
+      )}
       onHighlightChange={onHighlightFactory(setPreview)}
       getOptionDisabled={(o) => o.loader}
       autoComplete

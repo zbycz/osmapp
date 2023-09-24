@@ -3,13 +3,13 @@ import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
 import FolderIcon from '@material-ui/icons/Folder';
+import SearchIcon from '@material-ui/icons/Search';
 import { useMapStateContext } from '../utils/MapStateContext';
 import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
 import { join } from '../../utils';
 import { getPoiClass } from '../../services/getPoiClass';
 import { t } from '../../services/intl';
-import SearchIcon from '@material-ui/icons/Search';
 
 /** photon
 {
@@ -133,7 +133,7 @@ export const renderOptionFactory =
             </span>
             <Typography variant="body2" color="textSecondary">
               overpass search
-              {/*{t('searchbox.category')}*/}
+              {/* {t('searchbox.category')} */}
             </Typography>
           </Grid>
         </>

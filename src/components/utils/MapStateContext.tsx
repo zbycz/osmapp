@@ -1,4 +1,6 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config';
 
@@ -43,6 +45,16 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewForMap(newView);
   }, []);
 
+  const [msg, setMsg] = React.useState(undefined);
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setMsg(undefined);
+  };
+
   const mapState = {
     bbox,
     setBbox,
@@ -52,11 +64,17 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewFromMap: setView,
     activeLayers,
     setActiveLayers,
+    showToast: setMsg,
   };
 
   return (
     <MapStateContext.Provider value={mapState}>
       {children}
+      <Snackbar open={!!msg} autoHideDuration={10000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={msg?.type ?? 'success'}>
+          {msg?.content}
+        </Alert>
+      </Snackbar>
     </MapStateContext.Provider>
   );
 };

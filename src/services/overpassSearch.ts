@@ -3,7 +3,6 @@ import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
 import { fetchJson } from './fetch';
-import { getGlobalMap } from './mapStorage';
 
 const overpassQuery = (bbox, tags) => {
   const query = tags
@@ -106,11 +105,13 @@ const convertOsmIdToMapId = (apiId: OsmApiId) => {
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-export async function performOverpassSearch(bbox, tags) {
+export async function performOverpassSearch(
+  bbox,
+  tags: Record<string, string>,
+) {
   console.log('seaching for tags: ', tags);
   const overpass = await fetchJson(getOverpassUrl(bbox, Object.entries(tags)));
   console.log(overpass);
-  const map = getGlobalMap();
   // put overpass features on mapbox gl map
   const features = osmJsonToSkeletons(overpass)
     .filter((feature) => feature.center && Object.keys(feature.tags).length > 0)
@@ -119,5 +120,6 @@ export async function performOverpassSearch(bbox, tags) {
       id: convertOsmIdToMapId(feature.osmMeta),
     }));
   console.log('overpass geojson', features);
-  map.getSource('overpass')?.setData({ type: 'FeatureCollection', features });
+
+  return { type: 'FeatureCollection', features };
 }

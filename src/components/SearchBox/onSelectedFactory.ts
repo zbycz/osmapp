@@ -55,17 +55,20 @@ const fitBounds = (option, panelShown = false) => {
 };
 
 export const onSelectedFactory =
-  (setFeature, setPreview, mobileMode, bbox) => (e, option) => {
-    if (option.overpass) {
-      console.log(option.overpass);
-      return;
-    }
-    if (option.preset) {
-      performOverpassSearch(bbox, option.preset.presetForSearch.tags).then(
-        () => {
-          // todo
-        },
-      );
+  (setFeature, setPreview, mobileMode, bbox, showToast) => (_, option) => {
+    if (option.overpass || option.preset) {
+      const tags = option.overpass || option.preset.presetForSearch.tags;
+      performOverpassSearch(bbox, tags)
+        .then((geojson) => {
+          showToast({ content: `Results found: ${geojson.features.length}` });
+          getGlobalMap().getSource('overpass')?.setData(geojson);
+        })
+        .catch((e) => {
+          showToast({
+            content: `Error fetching results. ${`${e}`.substring(0, 100)}`,
+            type: 'error',
+          });
+        });
       return;
     }
 
