@@ -70,7 +70,10 @@ export const AutocompleteInput = ({
       getOptionLabel={(option) =>
         option.properties?.name ||
         option.preset?.presetForSearch?.name ||
-        option.overpass?.join('=') ||
+        (option.overpass &&
+          Object.entries(option.overpass)
+            ?.map(([k, v]) => `${k}=${v}`)
+            .join(' ')) ||
         (option.loader ? '' : buildPhotonAddress(option.properties))
       }
       onChange={onSelectedFactory(

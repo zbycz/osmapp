@@ -135,7 +135,7 @@ const getOverpassQuery = (inputValue: string) => {
   if (inputValue.match(/^[-:_a-zA-Z]+=/)) {
     const [key, value] = inputValue.split('=', 2);
 
-    return [{ overpass: [key, value || '*'] }];
+    return [{ overpass: { [key]: value || '*' } }];
   }
 
   return [];

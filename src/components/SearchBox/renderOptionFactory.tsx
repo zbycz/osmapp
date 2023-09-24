@@ -129,7 +129,9 @@ export const renderOptionFactory =
           </IconPart>
           <Grid item xs>
             <span style={{ fontWeight: 700 }}>
-              {overpass[0]} = {overpass[1]}
+              {Object.entries(overpass)
+                .map(([k, v]) => `${k} = ${v}`)
+                .join(' ')}
             </span>
             <Typography variant="body2" color="textSecondary">
               overpass search
