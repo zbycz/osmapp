@@ -8,14 +8,16 @@ const GuideContainer = styled.div`
   padding: 10px;
 `;
 
-export const Guide = ({ tempRoute }) => {
-  const { isSelectedRouteEditable } = useContext(ClimbingEditorContext);
+export const Guide = () => {
+  const { isSelectedRouteEditable, routeSelectedIndex, routes } = useContext(
+    ClimbingEditorContext,
+  );
 
   return (
     <GuideContainer>
       {isSelectedRouteEditable && (
         <Alert severity="info" variant="filled">
-          {tempRoute.length === 0
+          {routes[routeSelectedIndex].path.length === 0
             ? t('climbingpanel.create_first_node')
             : t('climbingpanel.create_next_node')}
         </Alert>

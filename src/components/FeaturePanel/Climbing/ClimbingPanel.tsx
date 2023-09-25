@@ -1,11 +1,10 @@
-import React, { useContext, useRef, useState } from 'react';
+import React, { useContext, useRef } from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import { RouteEditor } from './RouteEditor';
-import type { ClimbingRoute } from './types';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 import { ControlPanel } from './ControlPanel';
 import { RouteList } from './RouteList';
@@ -45,7 +44,6 @@ export const ClimbingPanel = ({
   isReadOnly,
   onEditorClick,
 }: Props) => {
-  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(null);
   // const [zoom, setZoom] = useState<number>(1);
 
   const {
@@ -71,18 +69,23 @@ export const ClimbingPanel = ({
 
   const onCreateClimbingRouteClick = () => {
     setIsSelectedRouteEditable(true);
-    setTempRoute(emptyRoute);
+    setRoutes([...routes, emptyRoute]);
     setRouteSelectedIndex(routes.length);
   };
-  const onUpdateExistingRouteClick = (updatedRouteSelectedIndex: number) => {
+  const onCreateSchemaForExistingRouteClick = (
+    updatedRouteSelectedIndex: number,
+  ) => {
     setIsSelectedRouteEditable(true);
-    setTempRoute({ ...routes[updatedRouteSelectedIndex], path: [] });
+    setRoutes([
+      ...routes.slice(0, updatedRouteSelectedIndex),
+      { ...routes[updatedRouteSelectedIndex], path: [] },
+      ...routes.slice(updatedRouteSelectedIndex + 1),
+    ]);
     setRouteSelectedIndex(updatedRouteSelectedIndex);
   };
   const onDeleteExistingRouteClick = (deletedExistingRouteIndex: number) => {
     setIsSelectedRouteEditable(false);
     setRouteSelectedIndex(null);
-    setTempRoute(null);
     setRoutes([
       ...routes.slice(0, deletedExistingRouteIndex),
       ...routes.slice(deletedExistingRouteIndex + 1),
@@ -91,17 +94,18 @@ export const ClimbingPanel = ({
 
   const onFinishClimbingRouteClick = () => {
     setIsSelectedRouteEditable(false);
-    setRoutes([
-      ...routes.slice(0, routeSelectedIndex),
-      tempRoute,
-      ...routes.slice(routeSelectedIndex + 1),
-    ]);
-    setTempRoute(null);
     setRouteSelectedIndex(null);
   };
+  const onEditClimbingRouteClick = () => {
+    setIsSelectedRouteEditable(true);
+  };
+
   const onCancelClimbingRouteClick = () => {
     setIsSelectedRouteEditable(false);
-    setTempRoute(null);
+    setRoutes([
+      ...routes.slice(0, routeSelectedIndex),
+      ...routes.slice(routeSelectedIndex + 1),
+    ]);
     setRouteSelectedIndex(null);
   };
   const onDeleteExistingClimbingRouteClick = () => {
@@ -123,7 +127,14 @@ export const ClimbingPanel = ({
         x: (e.clientX - rect.left) / imageSize.width,
         y: (e.clientY - rect.top) / imageSize.height,
       };
-      setTempRoute({ ...tempRoute, path: [...tempRoute.path, newCoordinate] });
+      setRoutes([
+        ...routes.slice(0, routeSelectedIndex),
+        {
+          ...routes[routeSelectedIndex],
+          path: [...routes[routeSelectedIndex].path, newCoordinate],
+        },
+        ...routes.slice(routeSelectedIndex + 1),
+      ]);
       if (isDoubleClick) {
         onFinishClimbingRouteClick();
       }
@@ -135,8 +146,16 @@ export const ClimbingPanel = ({
   const onRouteSelect = (routeNumber: number) => {
     setRouteSelectedIndex(routeNumber);
   };
+
   const onUndoClick = () => {
-    setTempRoute({ ...tempRoute, path: tempRoute.path.slice(0, -1) });
+    setRoutes([
+      ...routes.slice(0, routeSelectedIndex),
+      {
+        ...routes[routeSelectedIndex],
+        path: routes[routeSelectedIndex].path.slice(0, -1),
+      },
+      ...routes.slice(routeSelectedIndex + 1),
+    ]);
   };
 
   React.useEffect(() => {
@@ -158,21 +177,14 @@ export const ClimbingPanel = ({
         />
       </ImageContainer>
       <RouteEditor
-        routes={
-          tempRoute
-            ? [
-                ...routes.slice(0, routeSelectedIndex),
-                tempRoute,
-                ...routes.slice(routeSelectedIndex + 1),
-              ]
-            : routes
-        }
+        routes={routes}
         onClick={onEditorClick || onCanvasClick}
         onRouteSelect={onRouteSelect}
       />
 
       {!isReadOnly && (
         <ControlPanel
+          onEditClimbingRouteClick={onEditClimbingRouteClick}
           onFinishClimbingRouteClick={onFinishClimbingRouteClick}
           onCancelClimbingRouteClick={onCancelClimbingRouteClick}
           onCreateClimbingRouteClick={onCreateClimbingRouteClick}
@@ -180,14 +192,15 @@ export const ClimbingPanel = ({
             onDeleteExistingClimbingRouteClick
           }
           onUndoClick={onUndoClick}
-          tempRoute={tempRoute}
         />
       )}
-      <Guide tempRoute={tempRoute} />
+      <Guide />
 
       <RouteList
         isReadOnly={isReadOnly}
-        onUpdateExistingRouteClick={onUpdateExistingRouteClick}
+        onCreateSchemaForExistingRouteClick={
+          onCreateSchemaForExistingRouteClick
+        }
         onDeleteExistingRouteClick={onDeleteExistingRouteClick}
       />
       <DialogIcon>

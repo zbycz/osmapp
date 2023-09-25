@@ -23,7 +23,9 @@ import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 import { ClimbingRoute } from './types';
 
 type Props = {
-  onUpdateExistingRouteClick: (updatedRouteSelectedIndex: number) => void;
+  onCreateSchemaForExistingRouteClick: (
+    updatedRouteSelectedIndex: number,
+  ) => void;
   onDeleteExistingRouteClick: (deletedExistingRouteIndex: number) => void;
   isReadOnly: boolean;
 };
@@ -38,7 +40,7 @@ const RenderRow = ({
   onRowClick,
   routeSelectedIndex,
   onRouteChange,
-  onUpdateExistingRouteClick,
+  onCreateSchemaForExistingRouteClick,
   onDeleteExistingRouteClick,
 }) => {
   const { name, difficulty, path } = route;
@@ -98,7 +100,7 @@ const RenderRow = ({
             <>
               {path.length === 0 && (
                 <IconButton
-                  onClick={() => onUpdateExistingRouteClick(index)}
+                  onClick={() => onCreateSchemaForExistingRouteClick(index)}
                   color="primary"
                   title="Draw route to schema"
                 >
@@ -128,7 +130,7 @@ const RenderRow = ({
 };
 
 export const RouteList = ({
-  onUpdateExistingRouteClick,
+  onCreateSchemaForExistingRouteClick,
   onDeleteExistingRouteClick,
   isReadOnly = false,
 }: Props) => {
@@ -190,7 +192,9 @@ export const RouteList = ({
                 isReadOnly={isReadOnly}
                 routeSelectedIndex={routeSelectedIndex}
                 onRouteChange={onRouteChange}
-                onUpdateExistingRouteClick={onUpdateExistingRouteClick}
+                onCreateSchemaForExistingRouteClick={
+                  onCreateSchemaForExistingRouteClick
+                }
                 onDeleteExistingRouteClick={onDeleteExistingRouteClick}
               />
             ))}

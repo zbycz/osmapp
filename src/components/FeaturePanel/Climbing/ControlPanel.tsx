@@ -3,6 +3,7 @@ import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
+import EditIcon from '@material-ui/icons/Edit';
 import UndoIcon from '@material-ui/icons/Undo';
 import ClearIcon from '@material-ui/icons/Clear';
 import React, { useContext } from 'react';
@@ -20,11 +21,11 @@ const Container = styled.div`
 `;
 
 export const ControlPanel = ({
+  onEditClimbingRouteClick,
   onFinishClimbingRouteClick,
   onCancelClimbingRouteClick,
   onCreateClimbingRouteClick,
   onDeleteExistingClimbingRouteClick,
-  tempRoute,
   onUndoClick,
 }) => {
   const { routeSelectedIndex, isSelectedRouteEditable, routes } = useContext(
@@ -51,7 +52,7 @@ export const ControlPanel = ({
           >
             <ClearIcon fontSize="small" />
           </IconButton>
-          {tempRoute.path.length !== 0 && (
+          {routes[routeSelectedIndex].path.length !== 0 && (
             <IconButton
               color="default"
               edge="end"
@@ -76,6 +77,14 @@ export const ControlPanel = ({
           {routeSelectedIndex !== null &&
             routes[routeSelectedIndex]?.path?.length !== 0 && (
               <>
+                <IconButton
+                  color="default"
+                  edge="end"
+                  onClick={onEditClimbingRouteClick}
+                  title={t('climbingpanel.edit_climbing_route')}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
                 <IconButton
                   color="default"
                   edge="end"
