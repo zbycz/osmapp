@@ -76,6 +76,7 @@ export const Route = ({
                 type={type}
                 onPointClick={onPointClick}
                 index={index}
+                routeNumber={routeNumber}
               />
             )}
           </>
