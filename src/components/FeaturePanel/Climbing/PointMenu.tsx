@@ -15,7 +15,7 @@ import { ClimbingEditorContext } from './contexts/climbingEditorContext';
 import { PointType } from './types';
 
 export const PointMenu = ({ anchorEl, setAnchorEl }) => {
-  const { routeSelectedIndex, routes, setRoutes, pointSelectedIndex } =
+  const { routeSelectedIndex, routes, pointSelectedIndex, updateRouteOnIndex } =
     useContext(ClimbingEditorContext);
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
@@ -29,18 +29,15 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   };
 
   const onPointTypeChange = (type: PointType) => {
-    setRoutes([
-      ...routes.slice(0, routeSelectedIndex),
-      {
-        ...route,
-        path: [
-          ...route.path.slice(0, pointSelectedIndex),
-          { ...selectedPoint, type },
-          ...route.path.slice(pointSelectedIndex + 1),
-        ],
-      },
-      ...routes.slice(routeSelectedIndex + 1),
-    ]);
+    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
+      ...currentRoute,
+      path: [
+        ...currentRoute.path.slice(0, pointSelectedIndex),
+        { ...selectedPoint, type },
+        ...currentRoute.path.slice(pointSelectedIndex + 1),
+      ],
+    }));
+
     onPopoverClose();
   };
 

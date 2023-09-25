@@ -3,6 +3,10 @@ import React from 'react';
 export const Bolt = ({ x, y, isSelected }) => {
   const size = 10;
   const strokeWidth = 2;
+  const shift = size / 2 - strokeWidth / 2;
+
+  const backgroundColor = isSelected ? 'white' : 'black';
+  const foregroundColor = isSelected ? 'royalblue' : 'white';
 
   return (
     <g
@@ -15,31 +19,32 @@ export const Bolt = ({ x, y, isSelected }) => {
         width={size}
         height={strokeWidth}
         x={0}
-        y={0 + size / 2 - strokeWidth / 2}
+        y={shift}
         fill="transparent"
-        stroke={isSelected ? 'white' : 'black'}
+        stroke={backgroundColor}
       />
       <rect
         width={strokeWidth}
         height={size}
-        x={0 + size / 2 - strokeWidth / 2}
+        x={shift}
         y={0}
         fill="transparent"
-        stroke={isSelected ? 'white' : 'black'}
+        stroke={backgroundColor}
       />
+
       <rect
         width={size}
         height={strokeWidth}
         x={0}
-        y={0 + size / 2 - strokeWidth / 2}
-        fill={isSelected ? 'royalblue' : 'white'}
+        y={shift}
+        fill={foregroundColor}
       />
       <rect
         width={strokeWidth}
         height={size}
-        x={0 + size / 2 - strokeWidth / 2}
+        x={shift}
         y={0}
-        fill={isSelected ? 'royalblue' : 'white'}
+        fill={foregroundColor}
       />
 
       <title>Bolt</title>

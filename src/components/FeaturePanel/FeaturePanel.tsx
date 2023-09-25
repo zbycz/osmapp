@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Button, Dialog, Typography } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { Typography } from '@material-ui/core';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -27,8 +25,6 @@ import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { ClimbingPanel } from './Climbing/ClimbingPanel';
-import { ClimbingEditorContextProvider } from './Climbing/contexts/climbingEditorContext';
-import { ClimbingRoute } from './Climbing/types';
 
 const featuredKeys = [
   'website',
@@ -40,22 +36,13 @@ const featuredKeys = [
   'description',
   'fhrs:id',
 ];
-const EditRoutesContainer = styled.div`
-  padding: 10px;
-`;
 
 const FeaturePanel = () => {
   const { feature } = useFeatureContext();
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-  const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
-  const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
-  const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
-  const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
 
   const [advanced, setAdvanced] = useState(false);
   const [showAround, toggleShowAround] = useToggleState(false);
-  const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
-    useState<boolean>(true);
+
   const [dialogOpenedWith, setDialogOpenedWith] =
     useState<boolean | string>(false);
 
@@ -69,62 +56,8 @@ const FeaturePanel = () => {
     .filter(([, v]) => v);
   const label = getLabel(feature);
 
-  const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
-  const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
-
   // if (tags.climbing === 'crag') {
-  return (
-    <ClimbingEditorContextProvider
-      value={{
-        imageSize,
-        setImageSize,
-        isSelectedRouteEditable,
-        setIsSelectedRouteEditable,
-        routes,
-        setRoutes,
-        routeSelectedIndex,
-        setRouteSelectedIndex,
-        pointSelectedIndex,
-        setPointSelectedIndex,
-      }}
-    >
-      {isFullscreenDialogOpened ? (
-        <Dialog
-          fullScreen
-          open={isFullscreenDialogOpened}
-          onClose={onFullscreenDialogClose}
-        >
-          <ClimbingPanel
-            isFullscreenDialogOpened={isFullscreenDialogOpened}
-            setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-            isReadOnly={false}
-          />
-        </Dialog>
-      ) : (
-        <PanelWrapper>
-          <PanelScrollbars>
-            <ClimbingPanel
-              isFullscreenDialogOpened={isFullscreenDialogOpened}
-              setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-              isReadOnly
-              onEditorClick={onFullscreenDialogOpen}
-            />
-            <EditRoutesContainer>
-              <Button
-                onClick={onFullscreenDialogOpen}
-                color="primary"
-                size="small"
-                startIcon={<EditIcon />}
-                variant="contained"
-              >
-                Edit routes
-              </Button>
-            </EditRoutesContainer>
-          </PanelScrollbars>
-        </PanelWrapper>
-      )}
-    </ClimbingEditorContextProvider>
-  );
+  return <ClimbingPanel />;
   // }
   return (
     <PanelWrapper>

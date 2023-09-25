@@ -16,6 +16,10 @@ type ClimbingEditorContextType = {
   setRoutes: (routes: Array<ClimbingRoute>) => void;
   setRouteSelectedIndex: (routeSelectedIndex: number) => void;
   setPointSelectedIndex: (pointSelectedIndex: number) => void;
+  updateRouteOnIndex: (
+    routeIndex: number,
+    callback?: (route: ClimbingRoute) => ClimbingRoute,
+  ) => void;
 };
 
 export const ClimbingEditorContext = createContext<ClimbingEditorContextType>({
@@ -32,6 +36,7 @@ export const ClimbingEditorContext = createContext<ClimbingEditorContextType>({
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
   setPointSelectedIndex: () => null,
+  updateRouteOnIndex: () => null,
 });
 
 export const ClimbingEditorContextProvider = ClimbingEditorContext.Provider;
