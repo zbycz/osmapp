@@ -99,7 +99,7 @@ export const ClimbingPanel = ({
     setIsSelectedRouteEditable(true);
   };
 
-  const onCancelClimbingRouteClick = () => {
+  const onDeleteExistingClimbingRouteClick = () => {
     setIsSelectedRouteEditable(false);
     setRoutes([
       ...routes.slice(0, routeSelectedIndex),
@@ -107,14 +107,6 @@ export const ClimbingPanel = ({
     ]);
     setRouteSelectedIndex(null);
   };
-  // const onDeleteExistingClimbingRouteClick = () => {
-  //   setRoutes([
-  //     ...routes.slice(0, routeSelectedIndex),
-  //     { ...routes[routeSelectedIndex], path: [] },
-  //     ...routes.slice(routeSelectedIndex + 1),
-  //   ]);
-  //   setRouteSelectedIndex(null);
-  // };
 
   const onCanvasClick = (e) => {
     const isDoubleClick = e.detail === 2;
@@ -185,7 +177,9 @@ export const ClimbingPanel = ({
         <ControlPanel
           onEditClimbingRouteClick={onEditClimbingRouteClick}
           onFinishClimbingRouteClick={onFinishClimbingRouteClick}
-          onCancelClimbingRouteClick={onCancelClimbingRouteClick}
+          onDeleteExistingClimbingRouteClick={
+            onDeleteExistingClimbingRouteClick
+          }
           onCreateClimbingRouteClick={onCreateClimbingRouteClick}
           onUndoClick={onUndoClick}
         />

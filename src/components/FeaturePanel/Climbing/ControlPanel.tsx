@@ -21,7 +21,7 @@ const Container = styled.div`
 export const ControlPanel = ({
   onEditClimbingRouteClick,
   onFinishClimbingRouteClick,
-  onCancelClimbingRouteClick,
+  onDeleteExistingClimbingRouteClick,
   onCreateClimbingRouteClick,
   onUndoClick,
 }) => {
@@ -55,8 +55,8 @@ export const ControlPanel = ({
           <IconButton
             color="default"
             edge="end"
-            onClick={onCancelClimbingRouteClick}
-            title={t('climbingpanel.cancel_climbing_route')}
+            onClick={onDeleteExistingClimbingRouteClick}
+            title={t('climbingpanel.delete_climbing_route')}
           >
             <DeleteIcon fontSize="small" />
           </IconButton>
@@ -83,24 +83,6 @@ export const ControlPanel = ({
                 >
                   <EditIcon fontSize="small" />
                 </IconButton>
-                {/* <IconButton
-                  color="default"
-                  edge="end"
-                  onClick={() => {}}
-                  title="Add new point to existing route"
-                >
-                  <ControlPointIcon fontSize="small" />
-                </IconButton> */}
-                {/* <IconButton
-                  color="default"
-                  edge="end"
-                  onClick={onDeleteExistingClimbingRouteClick}
-                  title={t('climbingpanel.delete_climbing_route', {
-                    route: String(routeSelectedIndex),
-                  })}
-                >
-                  <DeleteIcon fontSize="small" />
-                </IconButton> */}
               </>
             )}
         </>
