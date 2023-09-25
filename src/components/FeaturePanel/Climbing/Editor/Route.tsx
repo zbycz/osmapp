@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import type { ClimbingRoute } from './types';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
+import type { ClimbingRoute } from '../types';
+import { ClimbingContext } from '../contexts/climbingContext';
 import { Belay } from './BelayPoint';
 import { Bolt } from './BoltPoint';
 import { Point } from './Point';
@@ -20,9 +20,8 @@ export const Route = ({
   onRouteSelect,
   onPointClick,
 }: Props) => {
-  const { imageSize, routeSelectedIndex, isSelectedRouteEditable } = useContext(
-    ClimbingEditorContext,
-  );
+  const { imageSize, routeSelectedIndex, isSelectedRouteEditable } =
+    useContext(ClimbingContext);
 
   const isSelected = routeSelectedIndex === routeNumber;
   const isPointVisible = isSelectedRouteEditable && isSelected;

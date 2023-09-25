@@ -6,8 +6,8 @@ import EditIcon from '@material-ui/icons/Edit';
 import UndoIcon from '@material-ui/icons/Undo';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
-import { t } from '../../../services/intl';
+import { ClimbingContext } from '../contexts/climbingContext';
+import { t } from '../../../../services/intl';
 
 const Container = styled.div`
   background: rgba(0, 0, 0, 0.5);
@@ -25,9 +25,8 @@ export const ControlPanel = ({
   onCreateClimbingRouteClick,
   onUndoClick,
 }) => {
-  const { routeSelectedIndex, isSelectedRouteEditable, routes } = useContext(
-    ClimbingEditorContext,
-  );
+  const { routeSelectedIndex, isSelectedRouteEditable, routes } =
+    useContext(ClimbingContext);
 
   return (
     <Container>

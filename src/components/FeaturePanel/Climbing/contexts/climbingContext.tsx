@@ -5,7 +5,7 @@ type ImageSize = {
   width: number;
   height: number;
 };
-type ClimbingEditorContextType = {
+type ClimbingContextType = {
   imageSize: ImageSize;
   isSelectedRouteEditable: boolean;
   routes: Array<ClimbingRoute>;
@@ -22,7 +22,7 @@ type ClimbingEditorContextType = {
   ) => void;
 };
 
-export const ClimbingEditorContext = createContext<ClimbingEditorContextType>({
+export const ClimbingContext = createContext<ClimbingContextType>({
   imageSize: {
     width: 0,
     height: 0,
@@ -39,4 +39,4 @@ export const ClimbingEditorContext = createContext<ClimbingEditorContextType>({
   updateRouteOnIndex: () => null,
 });
 
-export const ClimbingEditorContextProvider = ClimbingEditorContext.Provider;
+export const ClimbingContextProvider = ClimbingContext.Provider;

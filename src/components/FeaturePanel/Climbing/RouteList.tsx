@@ -19,7 +19,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import AddIcon from '@material-ui/icons/Add';
 import { emptyRoute } from './utils/emptyRoute';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
+import { ClimbingContext } from './contexts/climbingContext';
 import { ClimbingRoute } from './types';
 
 type Props = {
@@ -135,7 +135,7 @@ export const RouteList = ({
   isReadOnly = false,
 }: Props) => {
   const { setRouteSelectedIndex, routes, setRoutes, routeSelectedIndex } =
-    useContext(ClimbingEditorContext);
+    useContext(ClimbingContext);
 
   const onRouteChange = (e, index, updatedField) => {
     const updatedRoute = { ...routes[index], [updatedField]: e.target.value };

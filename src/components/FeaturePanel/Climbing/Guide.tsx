@@ -2,16 +2,15 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Alert } from '@material-ui/lab';
 import { t } from '../../../services/intl';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
+import { ClimbingContext } from './contexts/climbingContext';
 
 const GuideContainer = styled.div`
   padding: 10px;
 `;
 
 export const Guide = () => {
-  const { isSelectedRouteEditable, routeSelectedIndex, routes } = useContext(
-    ClimbingEditorContext,
-  );
+  const { isSelectedRouteEditable, routeSelectedIndex, routes } =
+    useContext(ClimbingContext);
 
   return (
     <GuideContainer>

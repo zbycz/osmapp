@@ -4,9 +4,9 @@ import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
-import { RouteEditor } from './RouteEditor';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
-import { ControlPanel } from './ControlPanel';
+import { RouteEditor } from './Editor/RouteEditor';
+import { ClimbingContext } from './contexts/climbingContext';
+import { ControlPanel } from './Editor/ControlPanel';
 import { RouteList } from './RouteList';
 import { emptyRoute } from './utils/emptyRoute';
 import { Guide } from './Guide';
@@ -56,7 +56,7 @@ export const ClimbingView = ({
     setRoutes,
     routeSelectedIndex,
     updateRouteOnIndex,
-  } = useContext(ClimbingEditorContext);
+  } = useContext(ClimbingContext);
 
   const imageUrl = '/images/rock.png';
   // const imageUrl = "https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png"
@@ -73,6 +73,7 @@ export const ClimbingView = ({
     setRoutes([...routes, emptyRoute]);
     setRouteSelectedIndex(routes.length);
   };
+
   const onCreateSchemaForExistingRouteClick = (
     updatedRouteSelectedIndex: number,
   ) => {
@@ -83,6 +84,7 @@ export const ClimbingView = ({
     }));
     setRouteSelectedIndex(updatedRouteSelectedIndex);
   };
+
   const onDeleteExistingRouteClick = (deletedExistingRouteIndex: number) => {
     setIsSelectedRouteEditable(false);
     setRouteSelectedIndex(null);
@@ -92,6 +94,7 @@ export const ClimbingView = ({
   const onFinishClimbingRouteClick = () => {
     setIsSelectedRouteEditable(false);
   };
+
   const onEditClimbingRouteClick = () => {
     setIsSelectedRouteEditable(true);
   };

@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext } from 'react';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
+import { ClimbingContext } from '../contexts/climbingContext';
 
 export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
-  const { imageSize, isSelectedRouteEditable, routeSelectedIndex } = useContext(
-    ClimbingEditorContext,
-  );
+  const { imageSize, isSelectedRouteEditable, routeSelectedIndex } =
+    useContext(ClimbingContext);
   const isSelected = routeSelectedIndex === routeNumber;
   const pointsInString = route?.path.map(({ x, y }, index) => {
     const currentX = imageSize.width * x;

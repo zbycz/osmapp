@@ -1,9 +1,9 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import type { ClimbingRoute } from './types';
+import type { ClimbingRoute } from '../types';
 import { RouteNumber } from './RouteNumber';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
+import { ClimbingContext } from '../contexts/climbingContext';
 import { Route } from './Route';
 import { PointMenu } from './PointMenu';
 
@@ -35,7 +35,7 @@ const RouteWithLabel = ({
 }: Props) => {
   if (!route || route.path.length === 0) return null;
 
-  const { imageSize, routeSelectedIndex } = useContext(ClimbingEditorContext);
+  const { imageSize, routeSelectedIndex } = useContext(ClimbingContext);
   const isSelected = routeSelectedIndex === routeNumber;
   const x = imageSize.width * route?.path[0].x;
   const y = imageSize.height * route?.path[0].y;
@@ -93,9 +93,7 @@ const RouteWithLabel = ({
 export const RouteEditor = ({ routes, onClick, onRouteSelect }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const { imageSize, isSelectedRouteEditable } = useContext(
-    ClimbingEditorContext,
-  );
+  const { imageSize, isSelectedRouteEditable } = useContext(ClimbingContext);
 
   const onPointClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(anchorEl !== null ? null : event.currentTarget);

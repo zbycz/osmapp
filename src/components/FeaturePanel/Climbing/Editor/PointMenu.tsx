@@ -11,12 +11,12 @@ import {
 } from '@material-ui/core';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import CloseIcon from '@material-ui/icons/Close';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
-import { PointType } from './types';
+import { ClimbingContext } from '../contexts/climbingContext';
+import { PointType } from '../types';
 
 export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   const { routeSelectedIndex, routes, pointSelectedIndex, updateRouteOnIndex } =
-    useContext(ClimbingEditorContext);
+    useContext(ClimbingContext);
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
   const route = routes[routeSelectedIndex];

@@ -1,12 +1,10 @@
 import React, { useContext } from 'react';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
+import { ClimbingContext } from '../contexts/climbingContext';
 
 export const Point = ({ x, y, onPointClick, type, index }) => {
   const isBelayVisible = type === 'belay';
 
-  const { imageSize, setPointSelectedIndex } = useContext(
-    ClimbingEditorContext,
-  );
+  const { imageSize, setPointSelectedIndex } = useContext(ClimbingContext);
   const onClick = (e) => {
     onPointClick(e);
     setPointSelectedIndex(index);

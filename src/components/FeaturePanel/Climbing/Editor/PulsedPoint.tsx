@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { ClimbingEditorContext } from './contexts/climbingEditorContext';
+import { ClimbingContext } from '../contexts/climbingContext';
 
 const pulseAnimation = keyframes`
 0% {
@@ -31,7 +31,7 @@ const PulsedPointElement = styled.circle`
 `;
 
 export const PulsedPoint = ({ x, y }) => {
-  const { imageSize } = useContext(ClimbingEditorContext);
+  const { imageSize } = useContext(ClimbingContext);
   return (
     <g transform={`translate(${imageSize.width * x},${imageSize.height * y})`}>
       <PulsedPointElement cx="0" cy="0" id="radarPoint" fill="white" r={3} />

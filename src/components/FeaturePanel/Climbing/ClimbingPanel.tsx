@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Button, Dialog } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import { ClimbingView } from './ClimbingView';
-import { ClimbingEditorContextProvider } from './contexts/climbingEditorContext';
+import { ClimbingContextProvider } from './contexts/climbingContext';
 import { ClimbingRoute } from './types';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 
@@ -36,7 +36,7 @@ export const ClimbingPanel = () => {
   };
 
   return (
-    <ClimbingEditorContextProvider
+    <ClimbingContextProvider
       value={{
         imageSize,
         setImageSize,
@@ -86,6 +86,6 @@ export const ClimbingPanel = () => {
           </PanelScrollbars>
         </PanelWrapper>
       )}
-    </ClimbingEditorContextProvider>
+    </ClimbingContextProvider>
   );
 };
