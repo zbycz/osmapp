@@ -134,17 +134,19 @@ export const RouteList = ({
   onDeleteExistingRouteClick,
   isReadOnly = false,
 }: Props) => {
-  const { setRouteSelectedIndex, routes, setRoutes, routeSelectedIndex } =
-    useContext(ClimbingContext);
+  const {
+    setRouteSelectedIndex,
+    routes,
+    setRoutes,
+    routeSelectedIndex,
+    updateRouteOnIndex,
+  } = useContext(ClimbingContext);
 
   const onRouteChange = (e, index, updatedField) => {
-    const updatedRoute = { ...routes[index], [updatedField]: e.target.value };
-    const newRoutes = [
-      ...routes.slice(0, index),
-      updatedRoute,
-      ...routes.slice(index + 1),
-    ];
-    setRoutes(newRoutes);
+    updateRouteOnIndex(routeSelectedIndex, (route) => ({
+      ...route,
+      [updatedField]: e.target.value,
+    }));
   };
 
   const onNewRouteCreate = () => {
