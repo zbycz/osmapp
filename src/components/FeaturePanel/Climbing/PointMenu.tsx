@@ -19,21 +19,23 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
     useContext(ClimbingEditorContext);
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
+  const route = routes[routeSelectedIndex];
+  if (!route) return null;
+  const selectedPoint = route.path[pointSelectedIndex];
+  if (!selectedPoint) return null;
 
   const onPopoverClose = () => {
     setAnchorEl(null);
   };
 
   const onPointTypeChange = (type: PointType) => {
-    const route = routes[routeSelectedIndex];
-
     setRoutes([
       ...routes.slice(0, routeSelectedIndex),
       {
         ...route,
         path: [
           ...route.path.slice(0, pointSelectedIndex),
-          { ...route.path[pointSelectedIndex], type },
+          { ...selectedPoint, type },
           ...route.path.slice(pointSelectedIndex + 1),
         ],
       },
@@ -60,11 +62,17 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
       </Box>
       <Divider />
       <MenuList>
-        <MenuItem onClick={() => onPointTypeChange(null)}>
+        <MenuItem
+          onClick={() => onPointTypeChange(null)}
+          selected={!selectedPoint.type}
+        >
           <ListItemIcon />
           <Typography variant="inherit">Nothing</Typography>
         </MenuItem>
-        <MenuItem onClick={() => onPointTypeChange('bolt')}>
+        <MenuItem
+          onClick={() => onPointTypeChange('bolt')}
+          selected={selectedPoint.type === 'bolt'}
+        >
           <ListItemIcon>
             <CloseIcon fontSize="small" />
           </ListItemIcon>
@@ -72,7 +80,10 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
             Bolt / Ring / Hanger
           </Typography>
         </MenuItem>
-        <MenuItem onClick={() => onPointTypeChange('belay')}>
+        <MenuItem
+          onClick={() => onPointTypeChange('belay')}
+          selected={selectedPoint.type === 'belay'}
+        >
           <ListItemIcon>
             <RemoveCircleIcon fontSize="small" />
           </ListItemIcon>

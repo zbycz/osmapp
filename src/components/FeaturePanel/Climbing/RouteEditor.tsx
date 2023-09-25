@@ -36,15 +36,27 @@ const RouteWithLabel = ({
   if (!route || route.path.length === 0) return null;
 
   const { imageSize, routeSelectedIndex } = useContext(ClimbingEditorContext);
-
+  const isSelected = routeSelectedIndex === routeNumber;
   const x = imageSize.width * route?.path[0].x;
   const y = imageSize.height * route?.path[0].y;
 
   if (route?.path.length === 1) {
     return (
       <>
-        <circle cx={x} cy={y} r={4} strokeWidth="0" fill="white" />
-        <circle cx={x} cy={y} r={2.5} strokeWidth="0" fill="royalblue" />
+        <circle
+          cx={x}
+          cy={y}
+          r={4}
+          strokeWidth="0"
+          fill={isSelected ? 'white' : '#666'}
+        />
+        <circle
+          cx={x}
+          cy={y}
+          r={2.5}
+          strokeWidth="0"
+          fill={isSelected ? 'royalblue' : 'white'}
+        />
         <RouteNumber
           onRouteSelect={onRouteSelect}
           x={x}

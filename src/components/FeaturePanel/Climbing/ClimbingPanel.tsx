@@ -94,7 +94,6 @@ export const ClimbingPanel = ({
 
   const onFinishClimbingRouteClick = () => {
     setIsSelectedRouteEditable(false);
-    setRouteSelectedIndex(null);
   };
   const onEditClimbingRouteClick = () => {
     setIsSelectedRouteEditable(true);
@@ -108,14 +107,14 @@ export const ClimbingPanel = ({
     ]);
     setRouteSelectedIndex(null);
   };
-  const onDeleteExistingClimbingRouteClick = () => {
-    setRoutes([
-      ...routes.slice(0, routeSelectedIndex),
-      { ...routes[routeSelectedIndex], path: [] },
-      ...routes.slice(routeSelectedIndex + 1),
-    ]);
-    setRouteSelectedIndex(null);
-  };
+  // const onDeleteExistingClimbingRouteClick = () => {
+  //   setRoutes([
+  //     ...routes.slice(0, routeSelectedIndex),
+  //     { ...routes[routeSelectedIndex], path: [] },
+  //     ...routes.slice(routeSelectedIndex + 1),
+  //   ]);
+  //   setRouteSelectedIndex(null);
+  // };
 
   const onCanvasClick = (e) => {
     const isDoubleClick = e.detail === 2;
@@ -188,9 +187,6 @@ export const ClimbingPanel = ({
           onFinishClimbingRouteClick={onFinishClimbingRouteClick}
           onCancelClimbingRouteClick={onCancelClimbingRouteClick}
           onCreateClimbingRouteClick={onCreateClimbingRouteClick}
-          onDeleteExistingClimbingRouteClick={
-            onDeleteExistingClimbingRouteClick
-          }
           onUndoClick={onUndoClick}
         />
       )}

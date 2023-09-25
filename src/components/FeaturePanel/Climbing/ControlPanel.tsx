@@ -1,11 +1,9 @@
 import { IconButton } from '@material-ui/core';
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import UndoIcon from '@material-ui/icons/Undo';
-import ClearIcon from '@material-ui/icons/Clear';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { ClimbingEditorContext } from './contexts/climbingEditorContext';
@@ -25,7 +23,6 @@ export const ControlPanel = ({
   onFinishClimbingRouteClick,
   onCancelClimbingRouteClick,
   onCreateClimbingRouteClick,
-  onDeleteExistingClimbingRouteClick,
   onUndoClick,
 }) => {
   const { routeSelectedIndex, isSelectedRouteEditable, routes } = useContext(
@@ -44,14 +41,7 @@ export const ControlPanel = ({
           >
             <CheckIcon fontSize="small" />
           </IconButton>
-          <IconButton
-            color="default"
-            edge="end"
-            onClick={onCancelClimbingRouteClick}
-            title={t('climbingpanel.cancel_climbing_route')}
-          >
-            <ClearIcon fontSize="small" />
-          </IconButton>
+
           {routes[routeSelectedIndex].path.length !== 0 && (
             <IconButton
               color="default"
@@ -62,6 +52,14 @@ export const ControlPanel = ({
               <UndoIcon fontSize="small" />
             </IconButton>
           )}
+          <IconButton
+            color="default"
+            edge="end"
+            onClick={onCancelClimbingRouteClick}
+            title={t('climbingpanel.cancel_climbing_route')}
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
         </>
       ) : (
         <>
@@ -85,15 +83,15 @@ export const ControlPanel = ({
                 >
                   <EditIcon fontSize="small" />
                 </IconButton>
-                <IconButton
+                {/* <IconButton
                   color="default"
                   edge="end"
                   onClick={() => {}}
                   title="Add new point to existing route"
                 >
                   <ControlPointIcon fontSize="small" />
-                </IconButton>
-                <IconButton
+                </IconButton> */}
+                {/* <IconButton
                   color="default"
                   edge="end"
                   onClick={onDeleteExistingClimbingRouteClick}
@@ -102,7 +100,7 @@ export const ControlPanel = ({
                   })}
                 >
                   <DeleteIcon fontSize="small" />
-                </IconButton>
+                </IconButton> */}
               </>
             )}
         </>
