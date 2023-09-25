@@ -1,5 +1,5 @@
 import { IconButton } from '@material-ui/core';
-import TimelineIcon from '@material-ui/icons/Timeline';
+import ControlPointIcon from '@material-ui/icons/ControlPoint';
 import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
@@ -69,7 +69,7 @@ export const ControlPanel = ({
             onClick={onCreateClimbingRouteClick}
             title={t('climbingpanel.create_climbing_route')}
           >
-            <TimelineIcon fontSize="small" />
+            <ControlPointIcon fontSize="small" />
           </IconButton>
 
           {routeSelectedIndex !== null &&
