@@ -33,6 +33,17 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
     setAnchorEl(null);
     setPointSelectedIndex(null);
   };
+  const onDeletePoint = () => {
+    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
+      ...currentRoute,
+      path: [
+        ...currentRoute.path.slice(0, pointSelectedIndex),
+        ...currentRoute.path.slice(pointSelectedIndex + 1),
+      ],
+    }));
+    setAnchorEl(null);
+    setPointSelectedIndex(null);
+  };
 
   const onPointTypeChange = (type: PointType) => {
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
@@ -95,7 +106,9 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
       </MenuList>
       <Divider />
       <Box marginLeft={2} marginY={1}>
-        <Button size="small">Delete point</Button>
+        <Button size="small" onClick={onDeletePoint}>
+          Delete point
+        </Button>
       </Box>
     </Popover>
   );

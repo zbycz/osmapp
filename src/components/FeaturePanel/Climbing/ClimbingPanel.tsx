@@ -3,11 +3,8 @@ import styled from 'styled-components';
 import { Button, Dialog } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import { ClimbingView } from './ClimbingView';
-import {
-  ClimbingContextProvider,
-  EditorPosition,
-} from './contexts/climbingContext';
-import { ClimbingRoute } from './types';
+import { ClimbingContextProvider } from './contexts/climbingContext';
+import { ClimbingRoute, EditorPosition } from './types';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 
 const EditRoutesContainer = styled.div`
