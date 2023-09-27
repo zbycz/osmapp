@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import { Button, Dialog } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import { ClimbingView } from './ClimbingView';
-import { ClimbingContextProvider } from './contexts/climbingContext';
+import {
+  ClimbingContextProvider,
+  EditorPosition,
+} from './contexts/climbingContext';
 import { ClimbingRoute } from './types';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 
@@ -15,6 +18,10 @@ export const ClimbingPanel = () => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
+  const [editorPosition, setEditorPosition] = useState<EditorPosition>({
+    top: 0,
+    left: 0,
+  });
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
@@ -44,6 +51,8 @@ export const ClimbingPanel = () => {
         setIsSelectedRouteEditable,
         routes,
         setRoutes,
+        editorPosition,
+        setEditorPosition,
         routeSelectedIndex,
         setRouteSelectedIndex,
         pointSelectedIndex,

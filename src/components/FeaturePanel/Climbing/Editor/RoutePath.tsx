@@ -3,6 +3,7 @@ import React, { useContext } from 'react';
 import { ClimbingContext } from '../contexts/climbingContext';
 
 export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
+  // const [isHovered, setIsHovered] = useState(false);
   const { imageSize, isSelectedRouteEditable, routeSelectedIndex } =
     useContext(ClimbingContext);
   const isSelected = routeSelectedIndex === routeNumber;
@@ -11,6 +12,19 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     const currentY = imageSize.height * y;
     return `${index === 0 ? 'M' : 'L'}${currentX} ${currentY} `;
   });
+
+  // const onMouseEnter = () => {
+  //   if (isSelectedRouteEditable) {
+  //     setIsHovered(true);
+  //   }
+  // };
+
+  // const onMouseLeave = () => {
+  //   if (isSelectedRouteEditable) {
+  //     setIsHovered(false);
+  //   }
+  // };
+
   const commonProps = isSelectedRouteEditable
     ? {}
     : {
@@ -29,6 +43,8 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
         stroke="transparent"
         strokeLinecap="round"
         fill="none"
+        // onMouseEnter={onMouseEnter}
+        // onMouseLeave={onMouseLeave}
         {...commonProps}
       />
       <path

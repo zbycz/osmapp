@@ -15,15 +15,17 @@ const PointElement = styled.circle<{ isHovered: boolean }>`
 export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   const isBelayVisible = type === 'belay';
   const [isHovered, setIsHovered] = useState(false);
+  const [isMoving, setIsMoving] = useState(false);
+  const [wasMoved, setWasMoved] = useState(false);
   const {
     imageSize,
     setPointSelectedIndex,
     pointSelectedIndex,
     routeSelectedIndex,
+    updateRouteOnIndex,
+    editorPosition,
   } = useContext(ClimbingContext);
   const onClick = (e) => {
-    onPointClick(e);
-    setPointSelectedIndex(index);
     e.stopPropagation();
   };
 
@@ -33,6 +35,45 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
 
   const onMouseLeave = () => {
     setIsHovered(false);
+  };
+  const onMouseDown = () => {
+    setPointSelectedIndex(index);
+    setIsMoving(true);
+  };
+
+  const onMouseUp = (e) => {
+    setPointSelectedIndex(null);
+    setIsMoving(false);
+
+    if (!wasMoved) {
+      onPointClick(e);
+      setPointSelectedIndex(index);
+    }
+    setWasMoved(false);
+    e.stopPropagation();
+    e.preventDefault();
+    return null;
+  };
+  const onMouseMove = (e) => {
+    if (isMoving) {
+      setWasMoved(true);
+      const newCoordinate = {
+        x: (e.clientX - editorPosition.left) / imageSize.width,
+        y: (e.clientY - editorPosition.top) / imageSize.height,
+      };
+      updateRouteOnIndex(routeSelectedIndex, (route) => ({
+        ...route,
+        path: [
+          ...route.path.slice(0, pointSelectedIndex),
+          {
+            ...route.path[pointSelectedIndex],
+            x: newCoordinate.x,
+            y: newCoordinate.y,
+          },
+          ...route.path.slice(pointSelectedIndex + 1),
+        ],
+      }));
+    }
   };
 
   const isPointSelected =
@@ -56,6 +97,9 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
         cursor="pointer"
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}
       >
         {type && <title>{type}</title>}
       </circle>
@@ -71,6 +115,9 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
         cursor="pointer"
         onMouseEnter={onMouseEnter}
         onMouseLeave={onMouseLeave}
+        onMouseDown={onMouseDown}
+        onMouseUp={onMouseUp}
+        onMouseMove={onMouseMove}
         isHovered={isHovered}
         isPointSelected={isPointSelected}
       >

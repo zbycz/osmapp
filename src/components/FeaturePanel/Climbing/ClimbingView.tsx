@@ -56,6 +56,7 @@ export const ClimbingView = ({
     setRoutes,
     routeSelectedIndex,
     updateRouteOnIndex,
+    setEditorPosition,
   } = useContext(ClimbingContext);
 
   const imageUrl = '/images/rock.png';
@@ -110,6 +111,7 @@ export const ClimbingView = ({
 
     if (isSelectedRouteEditable) {
       const rect = e.target.getBoundingClientRect();
+      setEditorPosition({ left: rect.left, top: rect.top });
 
       const newCoordinate = {
         x: (e.clientX - rect.left) / imageSize.width,

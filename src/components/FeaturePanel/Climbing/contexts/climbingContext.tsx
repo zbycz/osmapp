@@ -5,12 +5,16 @@ type ImageSize = {
   width: number;
   height: number;
 };
+export type EditorPosition = { top: number; left: number };
+
 type ClimbingContextType = {
   imageSize: ImageSize;
   isSelectedRouteEditable: boolean;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
   pointSelectedIndex: number;
+  editorPosition: EditorPosition;
+  setEditorPosition: (position: EditorPosition) => void;
   setImageSize: (ImageSize) => void;
   setIsSelectedRouteEditable: (isSelectedRouteEditable: boolean) => void;
   setRoutes: (routes: Array<ClimbingRoute>) => void;
@@ -32,6 +36,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   routes: [],
   routeSelectedIndex: null,
   pointSelectedIndex: null,
+  editorPosition: { top: 0, left: 0 },
+  setEditorPosition: () => null,
   setIsSelectedRouteEditable: () => null,
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
