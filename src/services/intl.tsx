@@ -23,7 +23,7 @@ const VARIABLE_REGEX = /__(?<name>[a-zA-Z_]+)__/g;
 const replaceValues = (text: string, values: Values) =>
   text.replace(VARIABLE_REGEX, (match, variableName) => {
     const value = values && values[variableName];
-    return value != null ? value : '?';
+    return value != null ? `${value}` : '?';
   });
 
 export const t = (id: TranslationId, values?: Values) => {
