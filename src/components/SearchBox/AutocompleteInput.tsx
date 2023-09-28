@@ -66,6 +66,8 @@ export const AutocompleteInput = ({
     <Autocomplete
       inputValue={inputValue}
       options={options}
+      // we need null to be able to select the same again (eg. category search)
+      value={null}
       filterOptions={(x) => x}
       getOptionLabel={(option) =>
         option.properties?.name ||

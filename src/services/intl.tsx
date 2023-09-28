@@ -6,7 +6,7 @@ import { isBrowser, isServer } from '../components/helpers';
 import { getServerIntl } from './intlServer';
 import { publishDbgObject } from '../utils';
 
-type Values = { [variable: string]: string };
+type Values = { [variable: string]: string | number };
 
 interface Intl {
   lang: string;

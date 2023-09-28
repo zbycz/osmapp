@@ -4,6 +4,7 @@ import { getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { getGlobalMap } from '../../services/mapStorage';
 import { performOverpassSearch } from '../../services/overpassSearch';
+import { t } from '../../services/intl';
 
 const getElementType = (osmType) => {
   switch (osmType) {
@@ -60,18 +61,18 @@ export const onSelectedFactory =
       const tags = option.overpass || option.preset.presetForSearch.tags;
       performOverpassSearch(bbox, tags)
         .then((geojson) => {
-          showToast({ content: `Results found: ${geojson.features.length}` });
+          const count = geojson.features.length;
+          const content = t('searchbox.overpass_success', { count });
+          showToast({ content });
           getGlobalMap().getSource('overpass')?.setData(geojson);
         })
         .catch((e) => {
-          showToast({
-            content: `Error fetching results. ${`${e}`.substring(0, 100)}`,
-            type: 'error',
-          });
+          const message = `${e}`.substring(0, 100);
+          const content = t('searchbox.overpass_error', { message });
+          showToast({ content, type: 'error' });
         });
       return;
     }
-
     if (!option?.geometry.coordinates) return;
 
     const skeleton = getSkeleton(option);

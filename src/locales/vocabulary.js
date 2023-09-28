@@ -51,6 +51,8 @@ export default {
 
   'searchbox.placeholder': 'Search OpenStreetMap',
   'searchbox.category': 'category',
+  'searchbox.overpass_success': 'Results found: __count__',
+  'searchbox.overpass_error': 'Error fetching results. __message__',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',

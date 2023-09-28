@@ -164,7 +164,7 @@ export const renderOptionFactory =
         preset.name === 0
           ? ` (${preset.presetForSearch.texts.find(
               (_, idx) => preset.textsByOne[idx] > 0,
-            )})`
+            )}…)`
           : '';
 
       return (
