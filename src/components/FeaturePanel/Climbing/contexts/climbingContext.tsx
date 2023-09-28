@@ -1,25 +1,26 @@
 import { createContext } from 'react';
-import { ClimbingRoute } from '../types';
+import { ClimbingRoute, EditorPosition } from '../types';
 
 type ImageSize = {
   width: number;
   height: number;
 };
-export type EditorPosition = { top: number; left: number };
 
 type ClimbingContextType = {
+  editorPosition: EditorPosition;
   imageSize: ImageSize;
+  isPointMoving: boolean;
   isSelectedRouteEditable: boolean;
+  pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
-  pointSelectedIndex: number;
-  editorPosition: EditorPosition;
   setEditorPosition: (position: EditorPosition) => void;
   setImageSize: (ImageSize) => void;
+  setIsPointMoving: (isPointMoving: boolean) => void;
   setIsSelectedRouteEditable: (isSelectedRouteEditable: boolean) => void;
+  setPointSelectedIndex: (pointSelectedIndex: number) => void;
   setRoutes: (routes: Array<ClimbingRoute>) => void;
   setRouteSelectedIndex: (routeSelectedIndex: number) => void;
-  setPointSelectedIndex: (pointSelectedIndex: number) => void;
   updateRouteOnIndex: (
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
@@ -27,21 +28,23 @@ type ClimbingContextType = {
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
+  editorPosition: { top: 0, left: 0 },
   imageSize: {
     width: 0,
     height: 0,
   },
-  setImageSize: () => null,
+  isPointMoving: false,
   isSelectedRouteEditable: false,
+  pointSelectedIndex: null,
   routes: [],
   routeSelectedIndex: null,
-  pointSelectedIndex: null,
-  editorPosition: { top: 0, left: 0 },
   setEditorPosition: () => null,
+  setImageSize: () => null,
+  setIsPointMoving: () => null,
   setIsSelectedRouteEditable: () => null,
+  setPointSelectedIndex: () => null,
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
-  setPointSelectedIndex: () => null,
   updateRouteOnIndex: () => null,
 });
 

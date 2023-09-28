@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -57,6 +57,7 @@ export const ClimbingView = ({
     routeSelectedIndex,
     updateRouteOnIndex,
     setEditorPosition,
+    editorPosition,
   } = useContext(ClimbingContext);
 
   const imageUrl = '/images/rock.png';
@@ -65,8 +66,17 @@ export const ClimbingView = ({
   const imageRef = useRef(null);
 
   const handleImageLoad = () => {
+    // const { clientHeight, clientWidth, left, top } = imageRef.current;
+    // console.log('____SET', imageRef.current.top, imageRef.current.left);
+    // setImageSize({ width: clientWidth, height: clientHeight });
+    // setEditorPosition({ left, top });
+
+    // const rect = e.target.getBoundingClientRect();
     const { clientHeight, clientWidth } = imageRef.current;
+    const { left, top } = imageRef.current.getBoundingClientRect();
+    console.log('____SET', clientWidth, clientHeight, left, top);
     setImageSize({ width: clientWidth, height: clientHeight });
+    setEditorPosition({ left, top });
   };
 
   const onCreateClimbingRouteClick = () => {
@@ -106,25 +116,20 @@ export const ClimbingView = ({
     setRouteSelectedIndex(null);
   };
 
+  useEffect(() => {
+    handleImageLoad();
+  }, []);
+
   const onCanvasClick = (e) => {
-    const isDoubleClick = e.detail === 2;
-
     if (isSelectedRouteEditable) {
-      const rect = e.target.getBoundingClientRect();
-      setEditorPosition({ left: rect.left, top: rect.top });
-
       const newCoordinate = {
-        x: (e.clientX - rect.left) / imageSize.width,
-        y: (e.clientY - rect.top) / imageSize.height,
+        x: (e.clientX - editorPosition.left) / imageSize.width,
+        y: (e.clientY - editorPosition.top) / imageSize.height,
       };
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
         path: [...route.path, newCoordinate],
       }));
-
-      if (isDoubleClick) {
-        onFinishClimbingRouteClick();
-      }
     } else {
       setRouteSelectedIndex(null);
     }
@@ -162,6 +167,7 @@ export const ClimbingView = ({
       <RouteEditor
         routes={routes}
         onClick={onEditorClick || onCanvasClick}
+        onFinishClimbingRouteClick={onFinishClimbingRouteClick}
         onRouteSelect={onRouteSelect}
       />
 

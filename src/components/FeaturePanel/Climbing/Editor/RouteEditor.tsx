@@ -90,12 +90,30 @@ const RouteWithLabel = ({
   );
 };
 
-export const RouteEditor = ({ routes, onClick, onRouteSelect }) => {
+export const RouteEditor = ({
+  routes,
+  onClick,
+  onRouteSelect,
+  onFinishClimbingRouteClick,
+}) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
-  const { imageSize, isSelectedRouteEditable } = useContext(ClimbingContext);
+  const {
+    imageSize,
+    isSelectedRouteEditable,
+    pointSelectedIndex,
+    routeSelectedIndex,
+  } = useContext(ClimbingContext);
 
   const onPointClick = (event: React.MouseEvent<HTMLElement>) => {
+    const isDoubleClick = event.detail === 2;
+    if (pointSelectedIndex === routes[routeSelectedIndex].path.length - 1) {
+      if (isDoubleClick) {
+        onFinishClimbingRouteClick();
+        return;
+      }
+    }
+
     setAnchorEl(anchorEl !== null ? null : event.currentTarget);
   };
 
@@ -118,7 +136,11 @@ export const RouteEditor = ({ routes, onClick, onRouteSelect }) => {
         ))}
       </Svg>
 
-      <PointMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
+      <PointMenu
+        anchorEl={anchorEl}
+        setAnchorEl={setAnchorEl}
+        onFinishClimbingRouteClick={onFinishClimbingRouteClick}
+      />
     </>
   );
 };

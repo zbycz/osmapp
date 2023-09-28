@@ -15,7 +15,6 @@ const PointElement = styled.circle<{ isHovered: boolean }>`
 export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   const isBelayVisible = type === 'belay';
   const [isHovered, setIsHovered] = useState(false);
-  const [isMoving, setIsMoving] = useState(false);
   const [wasMoved, setWasMoved] = useState(false);
   const {
     imageSize,
@@ -24,6 +23,8 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     routeSelectedIndex,
     updateRouteOnIndex,
     editorPosition,
+    setIsPointMoving,
+    isPointMoving,
   } = useContext(ClimbingContext);
   const onClick = (e) => {
     e.stopPropagation();
@@ -38,12 +39,12 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   };
   const onMouseDown = () => {
     setPointSelectedIndex(index);
-    setIsMoving(true);
+    setIsPointMoving(true);
   };
 
   const onMouseUp = (e) => {
     setPointSelectedIndex(null);
-    setIsMoving(false);
+    setIsPointMoving(false);
 
     if (!wasMoved) {
       onPointClick(e);
@@ -55,7 +56,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     return null;
   };
   const onMouseMove = (e) => {
-    if (isMoving) {
+    if (isPointMoving) {
       setWasMoved(true);
       const newCoordinate = {
         x: (e.clientX - editorPosition.left) / imageSize.width,
@@ -118,6 +119,9 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
         onMouseDown={onMouseDown}
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
+        onTouchStart={onMouseDown}
+        onTouchEnd={onMouseUp}
+        onTouchMove={onMouseMove}
         isHovered={isHovered}
         isPointSelected={isPointSelected}
       >

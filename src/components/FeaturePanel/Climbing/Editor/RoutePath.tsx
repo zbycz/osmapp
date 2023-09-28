@@ -1,6 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useState } from 'react';
-import { debounce } from 'lodash';
 import { ClimbingContext } from '../contexts/climbingContext';
 import { EditorPosition } from '../types';
 
@@ -19,6 +18,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     routeSelectedIndex,
     editorPosition,
     updateRouteOnIndex,
+    isPointMoving,
   } = useContext(ClimbingContext);
   const isSelected = routeSelectedIndex === routeNumber;
   const pointsInString = route?.path.map(({ x, y }, index) => {
@@ -29,12 +29,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
 
   const onMouseMove = (e, lineIndex: number) => {
     if (isSelectedRouteEditable) {
-      console.log(
-        e.clientX,
-        e.clientY,
-        editorPosition.left,
-        editorPosition.top,
-      );
+      if (!isHovered) setIsHovered(true);
       setTempPointPosition({
         left: e.clientX - editorPosition.left,
         top: e.clientY - editorPosition.top,
@@ -68,7 +63,10 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     e.stopPropagation();
   };
 
-  const commonProps = isSelectedRouteEditable
+  const isEditableSelectedRouteHovered =
+    !isPointMoving && isSelectedRouteEditable && isSelected && isHovered;
+
+  const commonProps = isEditableSelectedRouteHovered
     ? { cursor: 'copy' }
     : {
         onClick: (e) => {
@@ -77,8 +75,6 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
         },
         cursor: 'pointer',
       };
-
-  const debouncedOnMouseLeave = debounce(onMouseLeave, 1500);
 
   return (
     <>
@@ -115,29 +111,29 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
             return (
               <line
                 stroke="transparent"
-                strokeWidth={10}
+                strokeWidth={20}
                 x1={imageSize.width * x}
                 y1={imageSize.height * y}
                 x2={imageSize.width * route.path[index + 1].x}
                 y2={imageSize.height * route.path[index + 1].y}
                 onMouseEnter={onMouseEnter}
-                onMouseLeave={debouncedOnMouseLeave}
+                onMouseLeave={onMouseLeave}
                 onMouseMove={(e) => onMouseMove(e, index)}
+                onClick={onPointAdd}
                 {...commonProps}
               />
             );
           }
           return null;
         })}
-      {isSelectedRouteEditable && isHovered && (
+      {isEditableSelectedRouteHovered && (
         <circle
           cx={tempPointPosition.left}
           cy={tempPointPosition.top}
-          onClick={onPointAdd}
           fill="white"
-          pointerEvents="all"
+          pointerEvents="none"
           stroke="rgba(0,0,0,0.3)"
-          r={7}
+          r={5}
           cursor="copy"
         />
       )}

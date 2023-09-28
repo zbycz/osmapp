@@ -1,7 +1,7 @@
 import React from 'react';
 
 export const Bolt = ({ x, y, isSelected }) => {
-  const size = 10;
+  const size = 12;
   const strokeWidth = 2;
   const shift = size / 2 - strokeWidth / 2;
 

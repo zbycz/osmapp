@@ -15,6 +15,7 @@ export const ClimbingPanel = () => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
+  const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [editorPosition, setEditorPosition] = useState<EditorPosition>({
     top: 0,
     left: 0,
@@ -42,18 +43,20 @@ export const ClimbingPanel = () => {
   return (
     <ClimbingContextProvider
       value={{
-        imageSize,
-        setImageSize,
-        isSelectedRouteEditable,
-        setIsSelectedRouteEditable,
-        routes,
-        setRoutes,
         editorPosition,
-        setEditorPosition,
-        routeSelectedIndex,
-        setRouteSelectedIndex,
+        imageSize,
+        isPointMoving,
+        isSelectedRouteEditable,
         pointSelectedIndex,
+        routes,
+        routeSelectedIndex,
+        setEditorPosition,
+        setImageSize,
+        setIsPointMoving,
+        setIsSelectedRouteEditable,
         setPointSelectedIndex,
+        setRoutes,
+        setRouteSelectedIndex,
         updateRouteOnIndex,
       }}
     >

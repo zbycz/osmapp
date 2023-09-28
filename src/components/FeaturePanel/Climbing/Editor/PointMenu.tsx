@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import {
-  Box,
-  Button,
+  DialogTitle,
   Divider,
   ListItemIcon,
   MenuItem,
@@ -11,10 +10,16 @@ import {
 } from '@material-ui/core';
 import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import CloseIcon from '@material-ui/icons/Close';
+import CheckIcon from '@material-ui/icons/Check';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { ClimbingContext } from '../contexts/climbingContext';
 import { PointType } from '../types';
 
-export const PointMenu = ({ anchorEl, setAnchorEl }) => {
+export const PointMenu = ({
+  anchorEl,
+  setAnchorEl,
+  onFinishClimbingRouteClick,
+}) => {
   const {
     routeSelectedIndex,
     routes,
@@ -69,12 +74,8 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
       }}
       onClose={onPopoverClose}
     >
-      <Box marginLeft={2} marginTop={1}>
-        <Typography variant="caption" display="block" gutterBottom>
-          Choose point type:
-        </Typography>
-      </Box>
-      <Divider />
+      <DialogTitle>Choose point type</DialogTitle>
+
       <MenuList>
         <MenuItem
           onClick={() => onPointTypeChange(null)}
@@ -103,13 +104,29 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
           </ListItemIcon>
           <Typography variant="inherit">Belay</Typography>
         </MenuItem>
+        <Divider />
+        <MenuItem onClick={onDeletePoint}>
+          <ListItemIcon>
+            <DeleteIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography variant="inherit" noWrap>
+            Delete point
+          </Typography>
+        </MenuItem>
+        <MenuItem
+          onClick={() => {
+            onPopoverClose();
+            onFinishClimbingRouteClick();
+          }}
+        >
+          <ListItemIcon>
+            <CheckIcon fontSize="small" />
+          </ListItemIcon>
+          <Typography variant="inherit" noWrap>
+            Finish editing
+          </Typography>
+        </MenuItem>
       </MenuList>
-      <Divider />
-      <Box marginLeft={2} marginY={1}>
-        <Button size="small" onClick={onDeletePoint}>
-          Delete point
-        </Button>
-      </Box>
     </Popover>
   );
 };
