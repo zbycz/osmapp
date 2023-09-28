@@ -95,7 +95,8 @@ export const overpassLayers: AnyLayer[] = [
       'text-offset': [0, 0.6],
       'text-size': 12,
       'text-max-width': 9,
-      'icon-allow-overlap': false,
+      'icon-allow-overlap': true,
+      'icon-ignore-placement': true,
     },
     paint: {
       // 'text-halo-blur': 0.5,

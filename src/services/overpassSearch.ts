@@ -27,37 +27,6 @@ const getOverpassUrl = ([a, b, c, d], tags) =>
 
 const notNull = (x) => x != null;
 
-const getGeometry = {
-  node: ({ lat, lon }): Point => ({ type: 'Point', coordinates: [lon, lat] }),
-  way: (foo): LineString => {
-    const { geometry } = foo;
-    return {
-      type: 'LineString',
-      coordinates: geometry?.filter(notNull)?.map(({ lat, lon }) => [lon, lat]),
-    };
-  },
-  relation: ({ members }): LineString => ({
-    type: 'LineString',
-    coordinates: members[0]?.geometry
-      ?.filter(notNull)
-      ?.map(({ lat, lon }) => [lon, lat]),
-  }),
-};
-
-export const overpassAroundToSkeletons = (response: any): Feature[] =>
-  response.elements.map((element) => {
-    const { type, id, tags = {} } = element;
-    const geometry = getGeometry[type]?.(element);
-    return {
-      type: 'Feature',
-      osmMeta: { type, id },
-      tags,
-      properties: { ...getPoiClass(tags), tags },
-      geometry,
-      center: getCenter(geometry) ?? undefined,
-    };
-  });
-
 // maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
 const osmJsonToSkeletons = (response: any): Feature[] => {
   const nodesById = response.elements
@@ -72,7 +41,7 @@ const osmJsonToSkeletons = (response: any): Feature[] => {
     way: (way): LineString => {
       const { nodes } = way;
       return {
-        type: 'LineString',
+        type: 'LineString', // TODO distinguish area - match id-presets, then add icon for polygons
         coordinates: nodes
           ?.map((nodeId) => nodesById[nodeId])
           .map(({ lat, lon }) => [lon, lat]),
@@ -80,7 +49,7 @@ const osmJsonToSkeletons = (response: any): Feature[] => {
     },
     relation: ({ members }): LineString => ({
       type: 'LineString',
-      coordinates: members[0]?.geometry
+      coordinates: members[0]?.geometry // TODO make proper relation handling
         ?.filter(notNull)
         ?.map(({ lat, lon }) => [lon, lat]),
     }),
