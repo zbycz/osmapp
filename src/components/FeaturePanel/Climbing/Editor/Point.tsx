@@ -1,9 +1,15 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ClimbingContext } from '../contexts/climbingContext';
 
+const ClickableArea = styled.circle`
+  touch-action: none;
+`;
+
 const PointElement = styled.circle<{ isHovered: boolean }>`
   transition: all 0.1s ease-in-out;
+  touch-action: none;
   ${({ isHovered, isPointSelected }) =>
     `${
       isHovered || isPointSelected
@@ -96,46 +102,44 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   };
   const pointColor = getPointColor();
 
+  const isTouchDevice = 'ontouchstart' in window;
+
+  const commonProps = {
+    onClick,
+    cursor: 'pointer',
+    onMouseEnter,
+    onMouseLeave,
+    onMouseDown,
+    onMouseUp,
+    onMouseMove,
+    onTouchStart: onMouseDown,
+    onTouchEnd: onMouseUp,
+    onTouchMove,
+    cx: 0,
+    cy: 0,
+  };
+  const title = type && <title>{type}</title>;
   return (
     <g transform={`translate(${imageSize.width * x},${imageSize.height * y})`}>
-      <circle
+      <ClickableArea
         id="clickablePoint"
-        cx={0}
-        cy={0}
         fill="transparent"
-        r={10}
-        onClick={onClick}
-        cursor="pointer"
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
+        r={isTouchDevice ? 20 : 10}
+        {...commonProps}
       >
-        {type && <title>{type}</title>}
-      </circle>
+        {title}
+      </ClickableArea>
 
       <PointElement
         id="coloredPoint"
-        cx={0}
-        cy={0}
         fill={pointColor}
         stroke={isHovered ? 'rgba(0,0,0,0.3)' : 'royalblue'}
-        r={3}
-        onClick={onClick}
-        cursor="pointer"
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onMouseDown={onMouseDown}
-        onMouseUp={onMouseUp}
-        onMouseMove={onMouseMove}
-        onTouchStart={onMouseDown}
-        onTouchEnd={onMouseUp}
-        onTouchMove={onTouchMove}
+        r={isTouchDevice ? 5 : 3}
         isHovered={isHovered}
         isPointSelected={isPointSelected}
+        {...commonProps}
       >
-        {type && <title>{type}</title>}
+        {title}
       </PointElement>
     </g>
   );
