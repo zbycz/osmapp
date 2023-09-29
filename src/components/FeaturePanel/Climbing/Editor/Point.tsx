@@ -55,12 +55,13 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     e.preventDefault();
     return null;
   };
-  const onMouseMove = (e) => {
+
+  const onMove = (position: { x: number; y: number }) => {
     if (isPointMoving) {
       setWasMoved(true);
       const newCoordinate = {
-        x: (e.clientX - editorPosition.left) / imageSize.width,
-        y: (e.clientY - editorPosition.top) / imageSize.height,
+        x: (position.x - editorPosition.left) / imageSize.width,
+        y: (position.y - editorPosition.top) / imageSize.height,
       };
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
@@ -77,6 +78,14 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     }
   };
 
+  const onTouchMove = (e) => {
+    onMove({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+  };
+
+  const onMouseMove = (e) => {
+    onMove({ x: e.clientX, y: e.clientY });
+  };
+
   const isPointSelected =
     routeSelectedIndex === routeNumber && pointSelectedIndex === index;
   const getPointColor = () => {
@@ -86,6 +95,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     return 'white';
   };
   const pointColor = getPointColor();
+
   return (
     <g transform={`translate(${imageSize.width * x},${imageSize.height * y})`}>
       <circle
@@ -121,7 +131,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
         onMouseMove={onMouseMove}
         onTouchStart={onMouseDown}
         onTouchEnd={onMouseUp}
-        onTouchMove={onMouseMove}
+        onTouchMove={onTouchMove}
         isHovered={isHovered}
         isPointSelected={isPointSelected}
       >

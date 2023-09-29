@@ -74,7 +74,6 @@ export const ClimbingView = ({
     // const rect = e.target.getBoundingClientRect();
     const { clientHeight, clientWidth } = imageRef.current;
     const { left, top } = imageRef.current.getBoundingClientRect();
-    console.log('____SET', clientWidth, clientHeight, left, top);
     setImageSize({ width: clientWidth, height: clientHeight });
     setEditorPosition({ left, top });
   };
