@@ -1,7 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useState } from 'react';
+import styled from 'styled-components';
 import { ClimbingContext } from '../contexts/climbingContext';
 import { EditorPosition } from '../types';
+
+const RouteLine = styled.path``;
+const RouteBorder = styled.path``;
+const InteractiveArea = styled.line``;
+const AddNewPoint = styled.circle`
+  pointer-events: none;
+  cursor: copy;
+`;
 
 export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
   const [isHovered, setIsHovered] = useState(false);
@@ -21,6 +30,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     isPointMoving,
   } = useContext(ClimbingContext);
   const isSelected = routeSelectedIndex === routeNumber;
+
   const pointsInString = route?.path.map(({ x, y }, index) => {
     const currentX = imageSize.width * x;
     const currentY = imageSize.height * y;
@@ -48,6 +58,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
       setIsHovered(false);
     }
   };
+
   const onPointAdd = (e) => {
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
       ...currentRoute,
@@ -78,7 +89,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
 
   return (
     <>
-      <path
+      <RouteBorder
         d={`M0 0 ${pointsInString}`}
         strokeWidth={5}
         stroke={isSelected ? 'white' : '#666'}
@@ -86,7 +97,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
         fill="none"
         {...commonProps}
       />
-      <path
+      <RouteLine
         d={`M0 0 ${pointsInString}`}
         strokeWidth={3}
         stroke={isSelected ? 'royalblue' : 'white'}
@@ -97,19 +108,11 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
         }
         {...commonProps}
       />
-      <path
-        d={`M0 0 ${pointsInString}`}
-        strokeWidth={10}
-        stroke="transparent"
-        strokeLinecap="round"
-        fill="none"
-        {...commonProps}
-      />
       {route.path.length > 1 &&
         route.path.map(({ x, y }, index) => {
           if (route?.path && index < route.path.length - 1) {
             return (
-              <line
+              <InteractiveArea
                 stroke="transparent"
                 strokeWidth={20}
                 x1={imageSize.width * x}
@@ -127,14 +130,12 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
           return null;
         })}
       {isEditableSelectedRouteHovered && (
-        <circle
+        <AddNewPoint
           cx={tempPointPosition.left}
           cy={tempPointPosition.top}
           fill="white"
-          pointerEvents="none"
           stroke="rgba(0,0,0,0.3)"
           r={5}
-          cursor="copy"
         />
       )}
     </>

@@ -2,6 +2,7 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ClimbingContext } from '../contexts/climbingContext';
+import { updateElementOnIndex } from '../utils';
 
 const ClickableArea = styled.circle`
   touch-action: none;
@@ -71,15 +72,11 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
       };
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
-        path: [
-          ...route.path.slice(0, pointSelectedIndex),
-          {
-            ...route.path[pointSelectedIndex],
-            x: newCoordinate.x,
-            y: newCoordinate.y,
-          },
-          ...route.path.slice(pointSelectedIndex + 1),
-        ],
+        path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
+          ...point,
+          x: newCoordinate.x,
+          y: newCoordinate.y,
+        })),
       }));
     }
   };

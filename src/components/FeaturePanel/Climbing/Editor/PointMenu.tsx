@@ -14,6 +14,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { ClimbingContext } from '../contexts/climbingContext';
 import { PointType } from '../types';
+import { updateElementOnIndex } from '../utils';
 
 export const PointMenu = ({
   anchorEl,
@@ -41,10 +42,7 @@ export const PointMenu = ({
   const onDeletePoint = () => {
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
       ...currentRoute,
-      path: [
-        ...currentRoute.path.slice(0, pointSelectedIndex),
-        ...currentRoute.path.slice(pointSelectedIndex + 1),
-      ],
+      path: updateElementOnIndex(currentRoute.path, pointSelectedIndex),
     }));
     setAnchorEl(null);
     setPointSelectedIndex(null);
@@ -53,11 +51,14 @@ export const PointMenu = ({
   const onPointTypeChange = (type: PointType) => {
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
       ...currentRoute,
-      path: [
-        ...currentRoute.path.slice(0, pointSelectedIndex),
-        { ...selectedPoint, type },
-        ...currentRoute.path.slice(pointSelectedIndex + 1),
-      ],
+      path: updateElementOnIndex(
+        currentRoute.path,
+        pointSelectedIndex,
+        (point) => ({
+          ...point,
+          type,
+        }),
+      ),
     }));
 
     onPopoverClose();

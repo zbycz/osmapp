@@ -6,6 +6,7 @@ import { ClimbingView } from './ClimbingView';
 import { ClimbingContextProvider } from './contexts/climbingContext';
 import { ClimbingRoute, EditorPosition } from './types';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
+import { updateElementOnIndex } from './utils';
 
 const EditRoutesContainer = styled.div`
   padding: 10px;
@@ -32,12 +33,12 @@ export const ClimbingPanel = () => {
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
   ) => {
-    const updatedRoute = callback ? callback(routes[routeIndex]) : null;
-    setRoutes([
-      ...routes.slice(0, routeIndex),
-      ...(updatedRoute ? [updatedRoute] : []),
-      ...routes.slice(routeIndex + 1),
-    ]);
+    const updatedArray = updateElementOnIndex<ClimbingRoute>(
+      routes,
+      routeIndex,
+      callback,
+    );
+    setRoutes(updatedArray);
   };
 
   return (
