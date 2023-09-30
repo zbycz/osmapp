@@ -44,6 +44,8 @@ export default {
 
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
   'searchbox.category': 'kategorie',
+  'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
+  'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',
