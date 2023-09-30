@@ -79,17 +79,18 @@ export async function performOverpassSearch(
   bbox,
   tags: Record<string, string>,
 ) {
-  console.log('seaching for tags: ', tags);
+  console.log('seaching overpass for tags: ', tags); // eslint-disable-line no-console
   const overpass = await fetchJson(getOverpassUrl(bbox, Object.entries(tags)));
-  console.log(overpass);
-  // put overpass features on mapbox gl map
+  console.log('overpass result:', overpass); // eslint-disable-line no-console
+
   const features = osmJsonToSkeletons(overpass)
     .filter((feature) => feature.center && Object.keys(feature.tags).length > 0)
     .map((feature) => ({
       ...feature,
       id: convertOsmIdToMapId(feature.osmMeta),
     }));
-  console.log('overpass geojson', features);
+
+  console.log('overpass geojson', features); // eslint-disable-line no-console
 
   return { type: 'FeatureCollection', features };
 }

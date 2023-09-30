@@ -98,7 +98,7 @@ const num = (text, inputValue) =>
 // return text.toLowerCase().includes(inputValue.toLowerCase());
 
 const findInPresets = (inputValue) => {
-  const start = performance.now();
+  // const start = performance.now();
 
   const results = presetsForSearch.map((preset) => {
     const name = num(preset.name, inputValue) * 10;
@@ -115,17 +115,18 @@ const findInPresets = (inputValue) => {
     .filter((result) => result.name === 0 && result.sum > 0)
     .map((result) => ({ preset: result }));
 
-  const options = results
-    .filter((result) => result.sum > 0)
-    .sort((a, b) => {
-      // by number of matches
-      if (a.sum > b.sum) return -1;
-      if (a.sum < b.sum) return 1;
-      return 0;
-    })
-    .map((result) => ({ preset: result }));
+  // // experiment with sorting by number of matches
+  // const options = results
+  //   .filter((result) => result.sum > 0)
+  //   .sort((a, b) => {
+  //     // by number of matches
+  //     if (a.sum > b.sum) return -1;
+  //     if (a.sum < b.sum) return 1;
+  //     return 0;
+  //   })
+  //   .map((result) => ({ preset: result }));
+  // console.log('results time', performance.now() - start, options);
 
-  console.log('results time', performance.now() - start, options);
   return nameMatches.length
     ? { nameMatches, rest }
     : { nameMatches: rest, rest: [] };
@@ -154,6 +155,7 @@ const fetchOptions = debounce(
 
       setOptions([...before, ...(options || []), ...after]);
     } catch (e) {
+      // eslint-disable-next-line no-console
       console.log('search aborted', e);
     }
   },
