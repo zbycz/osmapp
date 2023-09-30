@@ -18,6 +18,7 @@ const overpassQuery = (bbox, tags) => {
   out body;
   >;
   out skel qt;`;
+  // consider: out body geom
 };
 
 const getOverpassUrl = ([a, b, c, d], tags) =>
@@ -28,7 +29,7 @@ const getOverpassUrl = ([a, b, c, d], tags) =>
 const notNull = (x) => x != null;
 
 // maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
-const osmJsonToSkeletons = (response: any): Feature[] => {
+export const osmJsonToSkeletons = (response: any): Feature[] => {
   const nodesById = response.elements
     .filter((element) => element.type === 'node')
     .reduce((acc, node) => {
