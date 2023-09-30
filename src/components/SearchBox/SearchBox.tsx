@@ -149,15 +149,10 @@ const fetchOptions = debounce(
       });
       const options = searchResponse.features;
 
-      // const ALL = 0;
-      // const numBefore =
-      //   options?.length < 3 ? ALL : inputValue.length > 4 ? 3 : 1;
-      // const presetsBefore = numBefore
-      //   ? allPresets.slice(0, numBefore)
-      //   : allPresets;
-      // const presetsAfter = numBefore ? allPresets.slice(numBefore) : [];
+      const before = nameMatches.slice(0, 2);
+      const after = [...nameMatches.slice(2), ...rest];
 
-      setOptions([...nameMatches, ...(options || []), ...rest]);
+      setOptions([...before, ...(options || []), ...after]);
     } catch (e) {
       console.log('search aborted', e);
     }
@@ -181,10 +176,15 @@ const SearchBox = () => {
     if (inputValue.length > 2) {
       const overpassQuery = getOverpassQuery(inputValue);
       const { nameMatches, rest } = findInPresets(inputValue);
-      setOptions([...overpassQuery, ...nameMatches, { loader: true }]);
+      setOptions([
+        ...overpassQuery,
+        ...nameMatches.slice(0, 2),
+        { loader: true },
+      ]);
       const before = [...overpassQuery, ...nameMatches];
       fetchOptions(inputValue, view, setOptions, before, rest);
     } else {
+      setOptions([{ loader: true }]);
       fetchOptions(inputValue, view, setOptions);
     }
   }, [inputValue]);
