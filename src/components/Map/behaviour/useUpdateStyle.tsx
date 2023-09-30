@@ -5,7 +5,7 @@ import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { rasterStyle } from '../styles/rasterStyle';
 import { DEFAULT_MAP } from '../../../config';
 
-export const getRasterLayer = (key) => {
+export const getRasterStyle = (key) => {
   const url = osmappLayers[key]?.url ?? key; // if `key` not found, it contains tiles URL
   return rasterStyle(key, url);
 };
@@ -18,6 +18,6 @@ export const useUpdateStyle = useMapEffect((map, activeLayers) => {
       ? basicStyle
       : key === 'outdoor'
       ? outdoorStyle
-      : getRasterLayer(key),
+      : getRasterStyle(key),
   );
 });

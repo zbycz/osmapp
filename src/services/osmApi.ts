@@ -76,8 +76,15 @@ export const clearFeatureCache = (apiId) => {
 };
 
 const osmToFeature = (element): Feature => {
-  const { tags, lat, lon, nodes, members, osmappDeletedMarker, ...osmMeta } =
-    element;
+  const {
+    tags = {},
+    lat,
+    lon,
+    nodes,
+    members,
+    osmappDeletedMarker,
+    ...osmMeta
+  } = element;
   return {
     type: 'Feature' as const,
     geometry: undefined,

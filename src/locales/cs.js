@@ -43,6 +43,9 @@ export default {
   'homepage.maptiler': '<strong>MapTiler</strong> – za skvělé vektorové mapy <br>a za podporu tohoto projektu  ❤️ ',
 
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
+  'searchbox.category': 'kategorie',
+  'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
+  'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',
@@ -52,6 +55,7 @@ export default {
   'featurepanel.error_unknown': 'Při stahování prvku z OpenStreetMap se stala neznámá chyba.',
   'featurepanel.error_network': 'Nelze stáhnout prvek, zkontrolujte připojení k internetu.',
   'featurepanel.error_deleted': 'Tento prvek je v OpenStreetMap označen jako smazaný.',
+  'featurepanel.info_no_tags': 'Tento prvek nemá žádné vlastnosti (tagy). Obvykle to znamená, že nese pouze geometrii/polohu pro nadřazený objekt.',
   'featurepanel.history_button': 'Historie »',
   'featurepanel.other_info_heading': 'Další informace',
   'featurepanel.edit_button_title': 'Upravit v databázi OpenStreetMap',

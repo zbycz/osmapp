@@ -6,6 +6,7 @@ import { poiLayers } from './layers/poiLayers';
 import { addHoverPaint } from '../behaviour/featureHover';
 import { BACKGROUND, GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 import { motorwayConstruction } from './layers/contruction';
+import { overpassLayers } from './layers/overpassLayers';
 
 // TODO add icons for outdoor to our sprite (guideposts, benches, etc)
 // https://api.maptiler.com/maps/outdoor/sprite.png?key=7dlhLl3hiXQ1gsth0kGu
@@ -3884,6 +3885,7 @@ export const outdoorStyle = addHoverPaint({
       'source-layer': 'place',
     },
     ...poiLayers,
+    ...overpassLayers,
   ],
   bearing: 0,
   sources: OSMAPP_SOURCES,

@@ -1,5 +1,6 @@
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
+import { overpassLayers } from './layers/overpassLayers';
 
 const getSource = (url) => {
   if (url.match('{bingSubdomains}')) {
@@ -38,6 +39,7 @@ export const rasterStyle = (id, url): StyleSpecification => {
         minzoom: 0,
       },
       // ...poiLayers, // TODO maybe add POIs
+      ...overpassLayers,
     ],
     sources: {
       ...OSMAPP_SOURCES, // keep default sources for faster switching

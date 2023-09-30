@@ -26,7 +26,10 @@ export const mockSchemaTranslations = (mockTranslations) => {
 };
 
 export const getPresetTranslation = (key: string) =>
-  translations ? translations[intl.lang].presets.presets[key].name : undefined;
+  translations?.[intl.lang]?.presets?.presets?.[key]?.name;
+
+export const getPresetTermsTranslation = (key: string) =>
+  translations?.[intl.lang]?.presets?.presets?.[key]?.terms;
 
 export const getFieldTranslation = (field: Field) => {
   if (!translations) return undefined;

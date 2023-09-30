@@ -1,4 +1,5 @@
 // https://cloud.maptiler.com/account
+
 const apiKey = '7dlhLl3hiXQ1gsth0kGu';
 
 export const OSMAPP_SPRITE = `${window.location.protocol}//${window.location.host}/sprites/osmapp`;
@@ -27,6 +28,13 @@ export const OSMAPP_SOURCES = {
   outdoor: {
     url: `https://api.maptiler.com/tiles/outdoor/tiles.json?key=${apiKey}`,
     type: 'vector' as const,
+  },
+  overpass: {
+    type: 'geojson' as const,
+    data: {
+      type: 'FeatureCollection',
+      features: [],
+    },
   },
 };
 

@@ -5,7 +5,7 @@ const isOsmLayer = (id) => {
   if (id.startsWith('place-country-')) return false; // https://github.com/zbycz/osmapp/issues/35
   if (id === 'place-continent') return false;
   if (id === 'water-name-ocean') return false;
-  const prefixes = ['water-name-', 'poi-', 'place-'];
+  const prefixes = ['water-name-', 'poi-', 'place-', 'overpass-'];
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
 
@@ -23,6 +23,11 @@ export const getIsOsmObject = ({ id, layer }) => {
   if (layer.id === 'water-name-other' && id < 10e5) {
     return false;
   }
+
+  if (layer.id?.startsWith('overpass')) {
+    return true;
+  }
+
   return layersWithOsmId.includes(layer.id);
 };
 
