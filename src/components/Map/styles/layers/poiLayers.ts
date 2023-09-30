@@ -1,8 +1,7 @@
+import type { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
+
 // originaly from basicStyle
-
-import { AnyLayer } from 'maplibre-gl';
-
-export const poiLayers: AnyLayer[] = [
+export const poiLayers: LayerSpecification[] = [
   {
     id: 'poi-level-3',
     type: 'symbol',

@@ -1,5 +1,4 @@
 // https://cloud.maptiler.com/account
-import { GeoJSONSourceRaw } from 'maplibre-gl';
 
 const apiKey = '7dlhLl3hiXQ1gsth0kGu';
 
@@ -36,7 +35,7 @@ export const OSMAPP_SOURCES = {
       type: 'FeatureCollection',
       features: [],
     },
-  } as GeoJSONSourceRaw,
+  },
 };
 
 export const BACKGROUND = [

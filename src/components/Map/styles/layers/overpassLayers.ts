@@ -1,6 +1,6 @@
-import { AnyLayer } from 'maplibre-gl';
+import type { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 
-export const overpassLayers: AnyLayer[] = [
+export const overpassLayers: LayerSpecification[] = [
   {
     id: 'overpass-line-casing',
     type: 'line',
