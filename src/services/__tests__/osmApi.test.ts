@@ -29,7 +29,7 @@ jest.mock('next/config', () => () => ({
 describe('fetchFeature', () => {
   beforeEach(() => {
     jest.clearAllMocks();
-    jest.spyOn(tagging, 'fetchSchemaTranslations').mockResolvedValue();
+    jest.spyOn(tagging, 'fetchSchemaTranslations').mockResolvedValue(undefined);
     jest
       .spyOn(idTaggingScheme, 'getSchemaForFeature')
       .mockReturnValue(undefined); // this is covered in idTaggingScheme.test.ts

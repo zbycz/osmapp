@@ -8,16 +8,12 @@ export interface LineInformation {
 export async function requestLines(
   featureType: 'node' | 'way' | 'relation',
   id: number,
-  radius = 150,
 ) {
   // use the overpass api to request the lines in
   const overpassQuery = `[out:csv(ref, colour; false; ';')];
-    ${featureType}(${id})->.center;
-    (
-      node(around.center:${radius})["public_transport"="stop_position"];
-      nw(around.center:${radius})["highway"="bus_stop"];
-      nwr(around.center:${radius})["amenity"="ferry_terminal"];
-    ) -> .stops;
+  ${featureType}(${id});
+  rel(bn)["public_transport"="stop_area"];
+node(r: "stop") -> .stops;
     rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
     out;`;
 

@@ -2,12 +2,8 @@
 
 Lets create a universal OpenStreetMap app for broad public. It should be as easy to use as Google Maps, including clickable POIs and editing capabilites. See also [SotM 2021 talk](https://github.com/zbycz/osmapp-talk).
 
-- **production**: https://osmapp.org
-  - examples: [Empire State Building](https://osmapp.org/way/34633854#17.00/40.7483/-73.9864), [Prague Castle](https://osmapp.org/relation/3312247#17.00/50.0900/14.4000) or click just anything
-- **master branch**: https://osmapp-git-master-zbycz.vercel.app/
-  - it is currently undergoing a [major refactoring to TailwindCSS](https://github.com/zbycz/osmapp/issues/165) thanks to [@Flohhhhh](https://github.com/Flohhhhh)
-  - until finished, some components would be MUI and some new design
-  - some functionality may be broken
+- master branch: https://osmapp.org
+- examples: [Empire State Building](https://osmapp.org/way/34633854#17.00/40.7483/-73.9864), [Prague Castle](https://osmapp.org/relation/3312247#17.00/50.0900/14.4000) or click just anything
 
 ## How to contribute 🐱‍💻
 
@@ -24,10 +20,11 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 ## Features 🗺 📱 🖥
 
 - **clickable map** – poi, cities, localities, ponds (more coming soon)
-- **info panel** – images from Wikipedia, Mapillary or Fody
+- **info panel** – images from Wikipedia, Mapillary or Fody, line numbers on public transport stops
 - **editing** – for anonymous users inserts a note
 - **search engine** – try for example "Tesco, London"
 - **vector maps** – with the possibility of tilting to 3D (drag the compass, or two fingers drag)
+- **3D terrain** - tilt to 3D and then click terrain icon to show 3D terrain
 - **tourist map** – from MapTiler: vector, including marked routes
 - **layer switcher** – still basic, but you can add your own layers
 - **mobile applications** – see [osmapp.org/install](https://osmapp.org/install)
