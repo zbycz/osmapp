@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 
 import { RouteNumber } from './RouteNumber';
-import { ClimbingContext } from '../contexts/climbingContext';
+import { ClimbingContext } from '../contexts/ClimbingContext';
 import { Route } from './Route';
 import { ClimbingRoute } from '../types';
 import { StartPoint } from './StartPoint';

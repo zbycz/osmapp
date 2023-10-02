@@ -6,7 +6,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import UndoIcon from '@material-ui/icons/Undo';
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { ClimbingContext } from '../contexts/climbingContext';
+import { ClimbingContext } from '../contexts/ClimbingContext';
 import { t } from '../../../../services/intl';
 
 const Container = styled.div`

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import type { ClimbingRoute } from '../types';
-import { ClimbingContext } from '../contexts/climbingContext';
+import { ClimbingContext } from '../contexts/ClimbingContext';
 import { Belay } from './BelayPoint';
 import { Bolt } from './BoltPoint';
 import { Point } from './Point';

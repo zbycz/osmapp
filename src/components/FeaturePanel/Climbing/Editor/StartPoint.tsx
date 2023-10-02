@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { RouteNumber } from './RouteNumber';
-import { ClimbingContext } from '../contexts/climbingContext';
+import { ClimbingContext } from '../contexts/ClimbingContext';
 
 type Props = {
   x: number;

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { ClimbingContext } from '../contexts/climbingContext';
+import { ClimbingContext } from '../contexts/ClimbingContext';
 import { Position } from '../types';
 
 const RouteLine = styled.path``;

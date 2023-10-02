@@ -5,7 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import { RouteEditor } from './Editor/RouteEditor';
-import { ClimbingContext } from './contexts/climbingContext';
+import { ClimbingContext } from './contexts/ClimbingContext';
 import { ControlPanel } from './Editor/ControlPanel';
 import { RouteList } from './RouteList';
 import { emptyRoute } from './utils/emptyRoute';

@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
-import { ClimbingContext } from '../contexts/climbingContext';
+import { ClimbingContext } from '../contexts/ClimbingContext';
 import { PointMenu } from './PointMenu';
 import { RouteWithLabel } from './RouteWithLabel';
 

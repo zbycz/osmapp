@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import styled, { keyframes } from 'styled-components';
-import { ClimbingContext } from '../contexts/climbingContext';
+import { ClimbingContext } from '../contexts/ClimbingContext';
 
 const pulseAnimation = keyframes`
 0% {

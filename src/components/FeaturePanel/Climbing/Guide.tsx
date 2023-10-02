@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { Alert } from '@material-ui/lab';
 import { t } from '../../../services/intl';
-import { ClimbingContext } from './contexts/climbingContext';
+import { ClimbingContext } from './contexts/ClimbingContext';
 
 const GuideContainer = styled.div`
   padding: 10px;

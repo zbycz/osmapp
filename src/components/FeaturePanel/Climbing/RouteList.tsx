@@ -19,7 +19,7 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import AddIcon from '@material-ui/icons/Add';
 import { emptyRoute } from './utils/emptyRoute';
-import { ClimbingContext } from './contexts/climbingContext';
+import { ClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingRoute } from './types';
 
 type Props = {
