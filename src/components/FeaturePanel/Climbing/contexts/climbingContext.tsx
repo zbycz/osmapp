@@ -11,6 +11,7 @@ type ClimbingContextType = {
   editorPosition: EditorPosition;
   imageSize: ImageSize;
   isPointMoving: boolean;
+  isRouteSelected: (routeNumber: number) => boolean;
   isSelectedRouteEditable: boolean;
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
@@ -35,6 +36,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
     height: 0,
   },
   isPointMoving: false,
+  isRouteSelected: () => null,
   isSelectedRouteEditable: false,
   pointSelectedIndex: null,
   routes: [],
@@ -60,6 +62,9 @@ export const ClimbingContextProvider = ({ children }) => {
   });
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
+
+  const isRouteSelected = (routeNumber: number) =>
+    routeSelectedIndex === routeNumber;
 
   const updateRouteOnIndex = (
     routeIndex: number,
@@ -89,6 +94,7 @@ export const ClimbingContextProvider = ({ children }) => {
     setRoutes,
     setRouteSelectedIndex,
     updateRouteOnIndex,
+    isRouteSelected,
   };
 
   return (

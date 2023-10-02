@@ -5,7 +5,6 @@ import { ClimbingContext } from '../contexts/climbingContext';
 
 type Props = {
   onClick: (routeNumber: number) => void;
-  routeSelectedIndex: number;
   children: number;
   x: number;
   y: number;
@@ -24,7 +23,6 @@ export const RouteNumber = ({
   children: routeNumber,
   x,
   y,
-  routeSelectedIndex,
 }: Props) => {
   const RECT_WIDTH = String(routeNumber).length * 5 + 15;
   const RECT_HEIGHT = 20;
@@ -32,7 +30,7 @@ export const RouteNumber = ({
   const OUTLINE_WIDTH = 2;
   const HOVER_WIDTH = 10;
 
-  const { imageSize } = useContext(ClimbingContext);
+  const { imageSize, isRouteSelected } = useContext(ClimbingContext);
   const newY = // this shifts Y coordinate in case of too small photo
     y + RECT_Y_OFFSET + RECT_HEIGHT > imageSize.height
       ? imageSize.height - RECT_HEIGHT - OUTLINE_WIDTH
@@ -45,7 +43,7 @@ export const RouteNumber = ({
     },
     cursor: 'pointer',
   };
-  const isSelected = routeSelectedIndex === routeNumber;
+  const isSelected = isRouteSelected(routeNumber);
 
   return (
     <>

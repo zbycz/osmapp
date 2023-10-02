@@ -21,7 +21,7 @@ export const RouteWithLabel = ({
 }: Props) => {
   if (!route || route.path.length === 0) return null;
 
-  const { imageSize, routeSelectedIndex } = useContext(ClimbingContext);
+  const { imageSize } = useContext(ClimbingContext);
 
   const x = imageSize.width * route.path[0].x; // @TODO do contextu, rename x?
   const y = imageSize.height * route.path[0].y; // @TODO do contextu
@@ -46,12 +46,7 @@ export const RouteWithLabel = ({
         onPointClick={onPointClick}
       />
 
-      <RouteNumber
-        onClick={onRouteSelect}
-        x={x}
-        y={y}
-        routeSelectedIndex={routeSelectedIndex}
-      >
+      <RouteNumber onClick={onRouteSelect} x={x} y={y}>
         {routeNumber}
       </RouteNumber>
     </>

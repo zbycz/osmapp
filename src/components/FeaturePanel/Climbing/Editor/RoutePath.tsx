@@ -29,10 +29,11 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     editorPosition,
     updateRouteOnIndex,
     isPointMoving,
+    isRouteSelected,
     // setPointSelectedIndex,
     // setIsPointMoving,
   } = useContext(ClimbingContext);
-  const isSelected = routeSelectedIndex === routeNumber;
+  const isSelected = isRouteSelected(routeNumber);
 
   const pointsInString = route?.path.map(({ x, y }, index) => {
     const currentX = imageSize.width * x;

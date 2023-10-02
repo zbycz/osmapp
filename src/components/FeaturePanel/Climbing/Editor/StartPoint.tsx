@@ -10,8 +10,8 @@ type Props = {
 };
 
 export const StartPoint = ({ x, y, onClick, routeNumber }: Props) => {
-  const { routeSelectedIndex } = useContext(ClimbingContext);
-  const isSelected = routeSelectedIndex === routeNumber; // @TODO do contextu
+  const { isRouteSelected } = useContext(ClimbingContext);
+  const isSelected = isRouteSelected(routeNumber);
   return (
     <>
       <circle
@@ -28,12 +28,7 @@ export const StartPoint = ({ x, y, onClick, routeNumber }: Props) => {
         strokeWidth="0"
         fill={isSelected ? 'royalblue' : 'white'}
       />
-      <RouteNumber
-        onClick={onClick}
-        x={x}
-        y={y}
-        routeSelectedIndex={routeSelectedIndex}
-      >
+      <RouteNumber onClick={onClick} x={x} y={y}>
         {routeNumber}
       </RouteNumber>
     </>

@@ -20,10 +20,10 @@ export const Route = ({
   onRouteSelect,
   onPointClick,
 }: Props) => {
-  const { imageSize, routeSelectedIndex, isSelectedRouteEditable } =
+  const { imageSize, isSelectedRouteEditable, isRouteSelected } =
     useContext(ClimbingContext);
 
-  const isSelected = routeSelectedIndex === routeNumber;
+  const isSelected = isRouteSelected(routeNumber);
   const isThisRouteEditMode = isSelectedRouteEditable && isSelected;
   // move defs
   return (
