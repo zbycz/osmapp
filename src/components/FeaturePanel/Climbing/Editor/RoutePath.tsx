@@ -2,7 +2,7 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ClimbingContext } from '../contexts/climbingContext';
-import { EditorPosition } from '../types';
+import { Position } from '../types';
 
 const RouteLine = styled.path``;
 const RouteBorder = styled.path``;
@@ -16,14 +16,13 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
   const [isHovered, setIsHovered] = useState(false);
   // const [isDraggingPoint, setIsDraggingPoint] = useState(false);
   const [tempPointPosition, setTempPointPosition] = useState<
-    EditorPosition & { lineIndex: number }
+    Position & { lineIndex: number }
   >({
-    top: 0,
-    left: 0,
+    x: 0,
+    y: 0,
     lineIndex: 0,
   });
   const {
-    imageSize,
     isSelectedRouteEditable,
     routeSelectedIndex,
     editorPosition,
@@ -32,21 +31,23 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     isRouteSelected,
     // setPointSelectedIndex,
     // setIsPointMoving,
+    getPixelPosition,
+    getPercentagePosition,
   } = useContext(ClimbingContext);
   const isSelected = isRouteSelected(routeNumber);
 
   const pointsInString = route?.path.map(({ x, y }, index) => {
-    const currentX = imageSize.width * x;
-    const currentY = imageSize.height * y;
-    return `${index === 0 ? 'M' : 'L'}${currentX} ${currentY} `;
+    const position = getPixelPosition({ x, y });
+
+    return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
   });
 
   const onMouseMove = (e, lineIndex: number) => {
     if (isSelectedRouteEditable) {
       if (!isHovered) setIsHovered(true);
       setTempPointPosition({
-        left: e.clientX - editorPosition.left,
-        top: e.clientY - editorPosition.top,
+        x: e.clientX - editorPosition.x,
+        y: e.clientY - editorPosition.y,
         lineIndex,
       });
     }
@@ -72,14 +73,16 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
   // };
 
   const onPointAdd = () => {
+    const position = getPercentagePosition({
+      x: tempPointPosition.x,
+      y: tempPointPosition.y,
+    });
+
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
       ...currentRoute,
       path: [
         ...currentRoute.path.slice(0, tempPointPosition.lineIndex + 1),
-        {
-          x: tempPointPosition.left / imageSize.width,
-          y: tempPointPosition.top / imageSize.height,
-        },
+        position,
         ...currentRoute.path.slice(tempPointPosition.lineIndex + 1),
       ],
     }));
@@ -137,15 +140,18 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
       />
       {route.path.length > 1 &&
         route.path.map(({ x, y }, index) => {
+          const position1 = getPixelPosition({ x, y });
+
           if (route?.path && index < route.path.length - 1) {
+            const position2 = getPixelPosition(route.path[index + 1]);
             return (
               <InteractiveArea
                 stroke="transparent"
                 strokeWidth={20}
-                x1={imageSize.width * x}
-                y1={imageSize.height * y}
-                x2={imageSize.width * route.path[index + 1].x}
-                y2={imageSize.height * route.path[index + 1].y}
+                x1={position1.x}
+                y1={position1.y}
+                x2={position2.x}
+                y2={position2.y}
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onMouseMove={(e) => onMouseMove(e, index)}
@@ -160,8 +166,8 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
         })}
       {isEditableSelectedRouteHovered && (
         <AddNewPoint
-          cx={tempPointPosition.left}
-          cy={tempPointPosition.top}
+          cx={tempPointPosition.x}
+          cy={tempPointPosition.y}
           fill="white"
           stroke="rgba(0,0,0,0.3)"
           r={5}

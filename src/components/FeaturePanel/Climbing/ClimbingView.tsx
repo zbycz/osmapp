@@ -48,7 +48,6 @@ export const ClimbingView = ({
 
   const {
     setImageSize,
-    imageSize,
     isSelectedRouteEditable,
     setIsSelectedRouteEditable,
     setRouteSelectedIndex,
@@ -58,6 +57,7 @@ export const ClimbingView = ({
     updateRouteOnIndex,
     setEditorPosition,
     editorPosition,
+    getPercentagePosition,
   } = useContext(ClimbingContext);
 
   const imageUrl = '/images/rock.png';
@@ -69,13 +69,13 @@ export const ClimbingView = ({
     // const { clientHeight, clientWidth, left, top } = imageRef.current;
     // console.log('____SET', imageRef.current.top, imageRef.current.left);
     // setImageSize({ width: clientWidth, height: clientHeight });
-    // setEditorPosition({ left, top });
+    // setEditorPosition({ x:left, y:top });
 
     // const rect = e.target.getBoundingClientRect();
     const { clientHeight, clientWidth } = imageRef.current;
     const { left, top } = imageRef.current.getBoundingClientRect();
     setImageSize({ width: clientWidth, height: clientHeight });
-    setEditorPosition({ left, top });
+    setEditorPosition({ x: left, y: top });
   };
 
   const onCreateClimbingRouteClick = () => {
@@ -121,10 +121,11 @@ export const ClimbingView = ({
 
   const onCanvasClick = (e) => {
     if (isSelectedRouteEditable) {
-      const newCoordinate = {
-        x: (e.clientX - editorPosition.left) / imageSize.width,
-        y: (e.clientY - editorPosition.top) / imageSize.height,
-      };
+      const newCoordinate = getPercentagePosition({
+        x: e.clientX - editorPosition.x,
+        y: e.clientY - editorPosition.y,
+      });
+
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
         path: [...route.path, newCoordinate],

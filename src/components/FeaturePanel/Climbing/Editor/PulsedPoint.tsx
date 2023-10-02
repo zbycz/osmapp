@@ -31,9 +31,11 @@ const PulsedPointElement = styled.circle`
 `;
 
 export const PulsedPoint = ({ x, y }) => {
-  const { imageSize } = useContext(ClimbingContext);
+  const { getPixelPosition } = useContext(ClimbingContext);
+  const position = getPixelPosition({ x, y });
+
   return (
-    <g transform={`translate(${imageSize.width * x},${imageSize.height * y})`}>
+    <g transform={`translate(${position.x},${position.y})`}>
       <PulsedPointElement cx="0" cy="0" id="radarPoint" fill="white" r={3} />
     </g>
   );

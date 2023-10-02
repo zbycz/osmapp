@@ -21,10 +21,9 @@ export const RouteWithLabel = ({
 }: Props) => {
   if (!route || route.path.length === 0) return null;
 
-  const { imageSize } = useContext(ClimbingContext);
+  const { getPixelPosition } = useContext(ClimbingContext);
 
-  const x = imageSize.width * route.path[0].x; // @TODO do contextu, rename x?
-  const y = imageSize.height * route.path[0].y; // @TODO do contextu
+  const { x, y } = getPixelPosition(route.path[0]);
 
   if (route.path.length === 1) {
     return (

@@ -1,13 +1,16 @@
 export type PointType = 'belay' | 'bolt' | 'piton';
 
-export type EditorPosition = { top: number; left: number };
-
-export type PathPoints = Array<{
+export type Position = {
   x: number;
   y: number;
-  type?: PointType;
-  note?: string;
-}>;
+};
+
+export type PathPoints = Array<
+  Position & {
+    type?: PointType;
+    note?: string;
+  }
+>;
 
 export type ClimbingRoute = {
   difficulty?: string;

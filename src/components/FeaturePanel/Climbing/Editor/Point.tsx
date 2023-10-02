@@ -24,7 +24,6 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   const [isHovered, setIsHovered] = useState(false);
   const [wasMoved, setWasMoved] = useState(false);
   const {
-    imageSize,
     setPointSelectedIndex,
     pointSelectedIndex,
     routeSelectedIndex,
@@ -32,6 +31,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     editorPosition,
     setIsPointMoving,
     isPointMoving,
+    getPercentagePosition,
   } = useContext(ClimbingContext);
 
   const onClick = (e) => {
@@ -67,10 +67,10 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   const onMove = (position: { x: number; y: number }) => {
     if (isPointMoving) {
       setWasMoved(true);
-      const newCoordinate = {
-        x: (position.x - editorPosition.left) / imageSize.width,
-        y: (position.y - editorPosition.top) / imageSize.height,
-      };
+      const newCoordinate = getPercentagePosition({
+        x: position.x - editorPosition.x,
+        y: position.y - editorPosition.y,
+      });
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
         path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
@@ -119,8 +119,9 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     cy: 0,
   };
   const title = type && <title>{type}</title>;
+
   return (
-    <g transform={`translate(${imageSize.width * x},${imageSize.height * y})`}>
+    <g transform={`translate(${x},${y})`}>
       <ClickableArea
         fill="transparent"
         r={isTouchDevice ? 20 : 10}

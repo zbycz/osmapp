@@ -20,7 +20,7 @@ export const Route = ({
   onRouteSelect,
   onPointClick,
 }: Props) => {
-  const { imageSize, isSelectedRouteEditable, isRouteSelected } =
+  const { getPixelPosition, isSelectedRouteEditable, isRouteSelected } =
     useContext(ClimbingContext);
 
   const isSelected = isRouteSelected(routeNumber);
@@ -51,28 +51,21 @@ export const Route = ({
       {route.path.map(({ x, y, type }, index) => {
         const isBoltVisible = type === 'bolt';
         const isBelayVisible = type === 'belay';
+        const position = getPixelPosition({ x, y });
 
         return (
           <>
             {isThisRouteEditMode && <PulsedPoint x={x} y={y} />}
             {isBoltVisible && (
-              <Bolt
-                x={imageSize.width * x}
-                y={imageSize.height * y}
-                isSelected={isSelected}
-              />
+              <Bolt x={position.x} y={position.y} isSelected={isSelected} />
             )}
             {isBelayVisible && (
-              <Belay
-                x={imageSize.width * x}
-                y={imageSize.height * y}
-                isSelected={isSelected}
-              />
+              <Belay x={position.x} y={position.y} isSelected={isSelected} />
             )}
             {isThisRouteEditMode && (
               <Point
-                x={x}
-                y={y}
+                x={position.x}
+                y={position.y}
                 type={type}
                 onPointClick={onPointClick}
                 index={index}

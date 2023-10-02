@@ -1,5 +1,5 @@
 import React, { createContext, useState } from 'react';
-import { ClimbingRoute, EditorPosition } from '../types';
+import { ClimbingRoute, Position } from '../types';
 import { updateElementOnIndex } from '../utils';
 
 type ImageSize = {
@@ -8,7 +8,7 @@ type ImageSize = {
 };
 
 type ClimbingContextType = {
-  editorPosition: EditorPosition;
+  editorPosition: Position;
   imageSize: ImageSize;
   isPointMoving: boolean;
   isRouteSelected: (routeNumber: number) => boolean;
@@ -16,7 +16,7 @@ type ClimbingContextType = {
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
-  setEditorPosition: (position: EditorPosition) => void;
+  setEditorPosition: (position: Position) => void;
   setImageSize: (ImageSize) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
   setIsSelectedRouteEditable: (isSelectedRouteEditable: boolean) => void;
@@ -27,10 +27,12 @@ type ClimbingContextType = {
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
   ) => void;
+  getPixelPosition: (position: Position) => Position;
+  getPercentagePosition: (position: Position) => Position;
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
-  editorPosition: { top: 0, left: 0 },
+  editorPosition: { x: 0, y: 0 },
   imageSize: {
     width: 0,
     height: 0,
@@ -49,6 +51,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
   updateRouteOnIndex: () => null,
+  getPixelPosition: () => null,
+  getPercentagePosition: () => null,
 });
 
 export const ClimbingContextProvider = ({ children }) => {
@@ -56,15 +60,25 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
-  const [editorPosition, setEditorPosition] = useState<EditorPosition>({
-    top: 0,
-    left: 0,
+  const [editorPosition, setEditorPosition] = useState<Position>({
+    x: 0,
+    y: 0,
   });
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
 
   const isRouteSelected = (routeNumber: number) =>
     routeSelectedIndex === routeNumber;
+
+  const getPercentagePosition = ({ x, y }: Position) => ({
+    x: x / imageSize.width,
+    y: y / imageSize.height,
+  });
+
+  const getPixelPosition = ({ x, y }: Position) => ({
+    x: imageSize.width * x,
+    y: imageSize.height * y,
+  });
 
   const updateRouteOnIndex = (
     routeIndex: number,
@@ -95,6 +109,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setRouteSelectedIndex,
     updateRouteOnIndex,
     isRouteSelected,
+    getPixelPosition,
+    getPercentagePosition,
   };
 
   return (

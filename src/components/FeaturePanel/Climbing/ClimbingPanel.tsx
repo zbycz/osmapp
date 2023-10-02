@@ -14,7 +14,6 @@ export const ClimbingPanel = () => {
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(true);
 
-  // @TODO add states to contexts
   const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
   return (
