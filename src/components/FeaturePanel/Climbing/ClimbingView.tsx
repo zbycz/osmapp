@@ -129,9 +129,11 @@ export const ClimbingView = ({
         ...route,
         path: [...route.path, newCoordinate],
       }));
-    } else {
-      setRouteSelectedIndex(null);
+
+      return;
     }
+
+    setRouteSelectedIndex(null);
   };
 
   const onRouteSelect = (routeNumber: number) => {
@@ -153,6 +155,7 @@ export const ClimbingView = ({
     };
   }, []);
 
+  // @TODO udělat header footer jako edit dialog
   return (
     <Container>
       <ImageContainer>

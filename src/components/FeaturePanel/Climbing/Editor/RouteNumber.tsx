@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { ClimbingContext } from '../contexts/climbingContext';
 
 type Props = {
-  onRouteSelect: (routeNumber: number) => void;
+  onClick: (routeNumber: number) => void;
   routeSelectedIndex: number;
   children: number;
   x: number;
@@ -20,7 +20,7 @@ const RouteNameOutline = RouteNameBoxBase;
 const RouteNameBox = RouteNameBoxBase;
 
 export const RouteNumber = ({
-  onRouteSelect,
+  onClick,
   children: routeNumber,
   x,
   y,
@@ -40,7 +40,7 @@ export const RouteNumber = ({
 
   const commonProps = {
     onClick: (e) => {
-      onRouteSelect(routeNumber);
+      onClick(routeNumber);
       e.stopPropagation();
     },
     cursor: 'pointer',

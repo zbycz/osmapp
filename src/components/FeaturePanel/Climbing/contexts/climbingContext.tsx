@@ -1,5 +1,6 @@
-import { createContext } from 'react';
+import React, { createContext, useState } from 'react';
 import { ClimbingRoute, EditorPosition } from '../types';
+import { updateElementOnIndex } from '../utils';
 
 type ImageSize = {
   width: number;
@@ -48,4 +49,51 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   updateRouteOnIndex: () => null,
 });
 
-export const ClimbingContextProvider = ClimbingContext.Provider;
+export const ClimbingContextProvider = ({ children }) => {
+  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
+  const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
+  const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
+  const [editorPosition, setEditorPosition] = useState<EditorPosition>({
+    top: 0,
+    left: 0,
+  });
+  const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
+  const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
+
+  const updateRouteOnIndex = (
+    routeIndex: number,
+    callback?: (route: ClimbingRoute) => ClimbingRoute,
+  ) => {
+    const updatedArray = updateElementOnIndex<ClimbingRoute>(
+      routes,
+      routeIndex,
+      callback,
+    );
+    setRoutes(updatedArray);
+  };
+
+  const climbingState = {
+    editorPosition,
+    imageSize,
+    isPointMoving,
+    isSelectedRouteEditable,
+    pointSelectedIndex,
+    routes,
+    routeSelectedIndex,
+    setEditorPosition,
+    setImageSize,
+    setIsPointMoving,
+    setIsSelectedRouteEditable,
+    setPointSelectedIndex,
+    setRoutes,
+    setRouteSelectedIndex,
+    updateRouteOnIndex,
+  };
+
+  return (
+    <ClimbingContext.Provider value={climbingState}>
+      {children}
+    </ClimbingContext.Provider>
+  );
+};

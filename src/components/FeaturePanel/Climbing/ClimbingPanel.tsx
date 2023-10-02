@@ -4,63 +4,21 @@ import { Button, Dialog } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import { ClimbingView } from './ClimbingView';
 import { ClimbingContextProvider } from './contexts/climbingContext';
-import { ClimbingRoute, EditorPosition } from './types';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
-import { updateElementOnIndex } from './utils';
 
 const EditRoutesContainer = styled.div`
   padding: 10px;
 `;
 
 export const ClimbingPanel = () => {
-  const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-  const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
-  const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
-  const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
-  const [editorPosition, setEditorPosition] = useState<EditorPosition>({
-    top: 0,
-    left: 0,
-  });
-  const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
-  const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(true);
 
+  // @TODO add states to contexts
   const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
-
-  const updateRouteOnIndex = (
-    routeIndex: number,
-    callback?: (route: ClimbingRoute) => ClimbingRoute,
-  ) => {
-    const updatedArray = updateElementOnIndex<ClimbingRoute>(
-      routes,
-      routeIndex,
-      callback,
-    );
-    setRoutes(updatedArray);
-  };
-
   return (
-    <ClimbingContextProvider
-      value={{
-        editorPosition,
-        imageSize,
-        isPointMoving,
-        isSelectedRouteEditable,
-        pointSelectedIndex,
-        routes,
-        routeSelectedIndex,
-        setEditorPosition,
-        setImageSize,
-        setIsPointMoving,
-        setIsSelectedRouteEditable,
-        setPointSelectedIndex,
-        setRoutes,
-        setRouteSelectedIndex,
-        updateRouteOnIndex,
-      }}
-    >
+    <ClimbingContextProvider>
       {isFullscreenDialogOpened ? (
         <Dialog
           fullScreen

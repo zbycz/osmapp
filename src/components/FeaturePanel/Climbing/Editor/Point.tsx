@@ -5,7 +5,7 @@ import { ClimbingContext } from '../contexts/climbingContext';
 import { updateElementOnIndex } from '../utils';
 
 const ClickableArea = styled.circle`
-  touch-action: none;
+  // touch-action: none;
 `;
 
 const PointElement = styled.circle<{ isHovered: boolean }>`
@@ -33,6 +33,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     setIsPointMoving,
     isPointMoving,
   } = useContext(ClimbingContext);
+
   const onClick = (e) => {
     e.stopPropagation();
   };
@@ -86,6 +87,8 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   };
 
   const onMouseMove = (e) => {
+    console.log('___onMouseMove');
+
     onMove({ x: e.clientX, y: e.clientY });
   };
 
@@ -119,7 +122,6 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   return (
     <g transform={`translate(${imageSize.width * x},${imageSize.height * y})`}>
       <ClickableArea
-        id="clickablePoint"
         fill="transparent"
         r={isTouchDevice ? 20 : 10}
         {...commonProps}
@@ -128,7 +130,6 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
       </ClickableArea>
 
       <PointElement
-        id="coloredPoint"
         fill={pointColor}
         stroke={isHovered ? 'rgba(0,0,0,0.3)' : 'royalblue'}
         r={isTouchDevice ? 5 : 3}

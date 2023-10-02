@@ -24,8 +24,8 @@ export const Route = ({
     useContext(ClimbingContext);
 
   const isSelected = routeSelectedIndex === routeNumber;
-  const isPointVisible = isSelectedRouteEditable && isSelected;
-
+  const isThisRouteEditMode = isSelectedRouteEditable && isSelected;
+  // move defs
   return (
     <>
       <defs>
@@ -54,7 +54,7 @@ export const Route = ({
 
         return (
           <>
-            {isPointVisible && <PulsedPoint x={x} y={y} />}
+            {isThisRouteEditMode && <PulsedPoint x={x} y={y} />}
             {isBoltVisible && (
               <Bolt
                 x={imageSize.width * x}
@@ -69,7 +69,7 @@ export const Route = ({
                 isSelected={isSelected}
               />
             )}
-            {isPointVisible && (
+            {isThisRouteEditMode && (
               <Point
                 x={x}
                 y={y}

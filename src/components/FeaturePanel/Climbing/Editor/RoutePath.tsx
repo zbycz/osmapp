@@ -14,6 +14,7 @@ const AddNewPoint = styled.circle`
 
 export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
   const [isHovered, setIsHovered] = useState(false);
+  // const [isDraggingPoint, setIsDraggingPoint] = useState(false);
   const [tempPointPosition, setTempPointPosition] = useState<
     EditorPosition & { lineIndex: number }
   >({
@@ -28,6 +29,8 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     editorPosition,
     updateRouteOnIndex,
     isPointMoving,
+    // setPointSelectedIndex,
+    // setIsPointMoving,
   } = useContext(ClimbingContext);
   const isSelected = routeSelectedIndex === routeNumber;
 
@@ -46,6 +49,10 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
         lineIndex,
       });
     }
+    // if (isDraggingPoint) {
+    //   setPointSelectedIndex(tempPointPosition.lineIndex + 1);
+    //   setIsPointMoving(true);
+    // }
   };
   const onMouseEnter = () => {
     if (isSelectedRouteEditable) {
@@ -58,8 +65,12 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
       setIsHovered(false);
     }
   };
+  // const onMouseUp = () => {
+  //   console.log('____onMouseUp');
+  //   setIsDraggingPoint(false);
+  // };
 
-  const onPointAdd = (e) => {
+  const onPointAdd = () => {
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
       ...currentRoute,
       path: [
@@ -71,11 +82,26 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
         ...currentRoute.path.slice(tempPointPosition.lineIndex + 1),
       ],
     }));
+  };
+
+  const onMouseDown = (e) => {
+    console.log('____onMouseDown');
+    // setIsDraggingPoint(true);
+    onPointAdd();
+
     e.stopPropagation();
+    // e.preventDefault();
   };
 
   const isEditableSelectedRouteHovered =
     !isPointMoving && isSelectedRouteEditable && isSelected && isHovered;
+  // console.log(
+  //   '________',
+  //   !isPointMoving,
+  //   isSelectedRouteEditable,
+  //   isSelected,
+  //   isHovered,
+  // );
 
   const commonProps = isEditableSelectedRouteHovered
     ? { cursor: 'copy' }
@@ -122,7 +148,9 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onMouseMove={(e) => onMouseMove(e, index)}
-                onClick={onPointAdd}
+                // onMouseDown={onMouseDown}
+                onClick={onMouseDown}
+                // onMouseUp={onMouseUp}
                 {...commonProps}
               />
             );
