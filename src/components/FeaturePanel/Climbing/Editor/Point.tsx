@@ -32,7 +32,9 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     setIsPointMoving,
     isPointMoving,
     getPercentagePosition,
+    useMachine,
   } = useContext(ClimbingContext);
+  const machine = useMachine();
 
   const onClick = (e) => {
     e.stopPropagation();
@@ -66,6 +68,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
 
   const onMove = (position: { x: number; y: number }) => {
     if (isPointMoving) {
+      machine.execute('dragPoint');
       setWasMoved(true);
       const newCoordinate = getPercentagePosition({
         x: position.x - editorPosition.x,

@@ -33,14 +33,18 @@ export const RouteEditor = ({
     isSelectedRouteEditable,
     pointSelectedIndex,
     routeSelectedIndex,
+    useMachine,
   } = useContext(ClimbingContext);
 
   // @TODO rename? on point in selected route clicked
+  const machine = useMachine();
   const onPointClick = (event: React.MouseEvent<HTMLElement>) => {
+    machine.execute('showPointMenu');
     const isDoubleClick = event.detail === 2;
     const lastPointIndex = routes[routeSelectedIndex].path.length - 1;
 
     if (isDoubleClick && pointSelectedIndex === lastPointIndex) {
+      machine.execute('finishRoute');
       onFinishClimbingRouteClick();
       return;
     }

@@ -58,12 +58,16 @@ export const ClimbingView = ({
     setEditorPosition,
     editorPosition,
     getPercentagePosition,
+    useMachine,
   } = useContext(ClimbingContext);
 
   const imageUrl = '/images/rock.png';
   // const imageUrl = "https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png"
   // const imageUrl = "https://www.skalnioblasti.cz/image.php?typ=skala&id=13516"
+  // const imageUrl =
+  // 'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
   const imageRef = useRef(null);
+  const machine = useMachine();
 
   const handleImageLoad = () => {
     // const { clientHeight, clientWidth, left, top } = imageRef.current;
@@ -79,6 +83,7 @@ export const ClimbingView = ({
   };
 
   const onCreateClimbingRouteClick = () => {
+    machine.execute('createRoute');
     setIsSelectedRouteEditable(true);
     setRoutes([...routes, emptyRoute]);
     setRouteSelectedIndex(routes.length);
@@ -87,6 +92,7 @@ export const ClimbingView = ({
   const onCreateSchemaForExistingRouteClick = (
     updatedRouteSelectedIndex: number,
   ) => {
+    machine.execute('createRoute');
     setIsSelectedRouteEditable(true);
     updateRouteOnIndex(updatedRouteSelectedIndex, (route) => ({
       ...route,
@@ -96,20 +102,26 @@ export const ClimbingView = ({
   };
 
   const onDeleteExistingRouteClick = (deletedExistingRouteIndex: number) => {
+    // @TODO co to je?
+    machine.execute('deleteRoute');
     setIsSelectedRouteEditable(false);
     setRouteSelectedIndex(null);
     updateRouteOnIndex(deletedExistingRouteIndex);
   };
 
   const onFinishClimbingRouteClick = () => {
+    machine.execute('finishRoute');
     setIsSelectedRouteEditable(false);
   };
 
   const onEditClimbingRouteClick = () => {
+    machine.execute('editRoute');
     setIsSelectedRouteEditable(true);
   };
 
   const onDeleteExistingClimbingRouteClick = () => {
+    // @TODO co to je?
+    machine.execute('deleteRoute');
     setIsSelectedRouteEditable(false);
     updateRouteOnIndex(routeSelectedIndex);
     setRouteSelectedIndex(null);
@@ -120,6 +132,7 @@ export const ClimbingView = ({
   }, []);
 
   const onCanvasClick = (e) => {
+    machine.execute('addPoint');
     if (isSelectedRouteEditable) {
       const newCoordinate = getPercentagePosition({
         x: e.clientX - editorPosition.x,
@@ -138,10 +151,12 @@ export const ClimbingView = ({
   };
 
   const onRouteSelect = (routeNumber: number) => {
+    machine.execute('routeSelect');
     setRouteSelectedIndex(routeNumber);
   };
 
   const onUndoClick = () => {
+    machine.execute('undoPoint');
     updateRouteOnIndex(routeSelectedIndex, (route) => ({
       ...route,
       path: route.path.slice(0, -1),

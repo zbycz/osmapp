@@ -27,7 +27,9 @@ export const PointMenu = ({
     pointSelectedIndex,
     setPointSelectedIndex,
     updateRouteOnIndex,
+    useMachine,
   } = useContext(ClimbingContext);
+  const machine = useMachine();
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
   const route = routes[routeSelectedIndex];
@@ -40,6 +42,7 @@ export const PointMenu = ({
     setPointSelectedIndex(null);
   };
   const onDeletePoint = () => {
+    machine.execute('deletePoint');
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
       ...currentRoute,
       path: updateElementOnIndex(currentRoute.path, pointSelectedIndex),
@@ -49,6 +52,7 @@ export const PointMenu = ({
   };
 
   const onPointTypeChange = (type: PointType) => {
+    machine.execute('changePointType');
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
       ...currentRoute,
       path: updateElementOnIndex(
@@ -73,7 +77,10 @@ export const PointMenu = ({
         vertical: 'bottom',
         horizontal: 'left',
       }}
-      onClose={onPopoverClose}
+      onClose={() => {
+        machine.execute('cancelPointMenu');
+        onPopoverClose();
+      }}
     >
       <DialogTitle>Choose point type</DialogTitle>
 

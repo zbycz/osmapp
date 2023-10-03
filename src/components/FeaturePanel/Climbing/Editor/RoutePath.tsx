@@ -33,9 +33,10 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     // setIsPointMoving,
     getPixelPosition,
     getPercentagePosition,
+    useMachine,
   } = useContext(ClimbingContext);
   const isSelected = isRouteSelected(routeNumber);
-
+  const machine = useMachine();
   const pointsInString = route?.path.map(({ x, y }, index) => {
     const position = getPixelPosition({ x, y });
 
@@ -73,6 +74,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
   // };
 
   const onPointAdd = () => {
+    machine.execute('addPoint');
     const position = getPercentagePosition({
       x: tempPointPosition.x,
       y: tempPointPosition.y,
@@ -111,6 +113,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     ? { cursor: 'copy' }
     : {
         onClick: (e) => {
+          machine.execute('changeRouteSelection');
           onRouteSelect(routeNumber);
           e.stopPropagation();
         },
