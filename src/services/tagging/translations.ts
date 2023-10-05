@@ -19,6 +19,26 @@ export const fetchSchemaTranslations = async () => {
   translations = await fetchJson(
     `${cdnUrl}@${version}/dist/translations/${intl.lang}.min.json`,
   );
+
+
+  translations[intl.lang].presets.presets['leisure/climbing/site'] = {
+    name: 'Climbing site',
+    terms: 'Místo k lezení'
+  }
+  translations[intl.lang].presets.presets['leisure/climbing/route'] = {
+    name: 'Climbing route',
+    terms: 'lezecká cesta'
+  }
+  translations[intl.lang].presets.presets['leisure/climbing/route_bottom'] = {
+    name: 'Bottom of climbing route',
+    terms: 'začátek lezecké cesty'
+  }
+  translations[intl.lang].presets.presets['leisure/climbing/route_top'] = {
+    name: 'Top of climbing route',
+    terms: 'top lezecké cesty'
+  }
+
+
   publishDbgObject('schemaTranslations', translations);
 };
 
