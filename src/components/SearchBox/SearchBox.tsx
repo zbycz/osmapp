@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import debounce from 'lodash/debounce';
 import SearchIcon from '@material-ui/icons/Search';
@@ -7,6 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import Router from 'next/router';
 import match from 'autosuggest-highlight/match';
 
+import { CircularProgress } from '@material-ui/core';
 import { fetchJson } from '../../services/fetch';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -53,6 +54,10 @@ const SearchIconButton = styled(IconButton)`
     filter: FlipH;
     -ms-filter: 'FlipH';
   }
+`;
+
+const OverpassCircularProgress = styled(CircularProgress)`
+  padding: 10px;
 `;
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
@@ -162,15 +167,9 @@ const fetchOptions = debounce(
   400,
 );
 
-const SearchBox = () => {
-  const { featureShown, feature, setFeature, setPreview } = useFeatureContext();
+const useFetchOptions = (inputValue: string, setOptions) => {
   const { view } = useMapStateContext();
-  const [inputValue, setInputValue] = useState('');
-  const [options, setOptions] = useState([]);
-  const autocompleteRef = useRef();
-  const mobileMode = useMobileMode();
-
-  React.useEffect(() => {
+  useEffect(() => {
     if (inputValue === '') {
       setOptions([]);
       return;
@@ -190,8 +189,13 @@ const SearchBox = () => {
       fetchOptions(inputValue, view, setOptions);
     }
   }, [inputValue]);
+};
 
-  const closePanel = () => {
+const useOnClosePanel = (setInputValue) => {
+  const { feature, setFeature, setPreview } = useFeatureContext();
+  const mobileMode = useMobileMode();
+
+  return () => {
     setInputValue('');
     if (mobileMode) {
       setPreview(feature);
@@ -199,6 +203,17 @@ const SearchBox = () => {
     setFeature(null);
     Router.push(`/${window.location.hash}`);
   };
+};
+
+const SearchBox = () => {
+  const { featureShown } = useFeatureContext();
+  const [inputValue, setInputValue] = useState('');
+  const [options, setOptions] = useState([]);
+  const [overpassLoading, setOverpassLoading] = useState(false);
+  const autocompleteRef = useRef();
+  const onClosePanel = useOnClosePanel(setInputValue);
+
+  useFetchOptions(inputValue, setOptions);
 
   return (
     <TopPanel>
@@ -212,9 +227,11 @@ const SearchBox = () => {
           setInputValue={setInputValue}
           options={options}
           autocompleteRef={autocompleteRef}
+          setOverpassLoading={setOverpassLoading}
         />
 
-        {featureShown && <ClosePanelButton onClick={closePanel} />}
+        {featureShown && <ClosePanelButton onClick={onClosePanel} />}
+        {overpassLoading && <OverpassCircularProgress />}
       </StyledPaper>
     </TopPanel>
   );

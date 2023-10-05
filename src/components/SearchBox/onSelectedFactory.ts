@@ -56,9 +56,15 @@ const fitBounds = (option, panelShown = false) => {
 };
 
 export const onSelectedFactory =
-  (setFeature, setPreview, mobileMode, bbox, showToast) => (_, option) => {
+  (setFeature, setPreview, mobileMode, bbox, showToast, setOverpassLoading) =>
+  (_, option) => {
     if (option.overpass || option.preset) {
       const tags = option.overpass || option.preset.presetForSearch.tags;
+
+      const timeout = setTimeout(() => {
+        setOverpassLoading(true);
+      }, 300);
+
       performOverpassSearch(bbox, tags)
         .then((geojson) => {
           const count = geojson.features.length;
@@ -70,6 +76,10 @@ export const onSelectedFactory =
           const message = `${e}`.substring(0, 100);
           const content = t('searchbox.overpass_error', { message });
           showToast({ content, type: 'error' });
+        })
+        .finally(() => {
+          clearTimeout(timeout);
+          setOverpassLoading(false);
         });
       return;
     }
