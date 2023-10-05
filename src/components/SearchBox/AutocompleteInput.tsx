@@ -57,6 +57,7 @@ export const AutocompleteInput = ({
   setInputValue,
   options,
   autocompleteRef,
+  setOverpassLoading,
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
   const { bbox, showToast } = useMapStateContext();
@@ -84,6 +85,7 @@ export const AutocompleteInput = ({
         mobileMode,
         bbox,
         showToast,
+        setOverpassLoading,
       )}
       onHighlightChange={onHighlightFactory(setPreview)}
       getOptionDisabled={(o) => o.loader}
