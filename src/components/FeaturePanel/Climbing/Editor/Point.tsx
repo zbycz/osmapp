@@ -2,7 +2,6 @@
 import React, { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { ClimbingContext } from '../contexts/ClimbingContext';
-import { updateElementOnIndex } from '../utils';
 
 const ClickableArea = styled.circle`
   // touch-action: none;
@@ -22,19 +21,14 @@ const PointElement = styled.circle<{ isHovered: boolean }>`
 export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   const isBelayVisible = type === 'belay';
   const [isHovered, setIsHovered] = useState(false);
-  const [wasMoved, setWasMoved] = useState(false);
   const {
     setPointSelectedIndex,
     pointSelectedIndex,
     routeSelectedIndex,
-    updateRouteOnIndex,
-    editorPosition,
     setIsPointMoving,
+    setIsPointClicked,
     isPointMoving,
-    getPercentagePosition,
-    useMachine,
   } = useContext(ClimbingContext);
-  const machine = useMachine();
 
   const onClick = (e) => {
     e.stopPropagation();
@@ -49,50 +43,20 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   };
   const onMouseDown = () => {
     setPointSelectedIndex(index);
-    setIsPointMoving(true);
+    setIsPointClicked(true);
   };
 
   const onMouseUp = (e) => {
     setPointSelectedIndex(null);
-    setIsPointMoving(false);
-
-    if (!wasMoved) {
+    if (!isPointMoving) {
       onPointClick(e);
       setPointSelectedIndex(index);
     }
-    setWasMoved(false);
+    setIsPointMoving(false);
+    setIsPointClicked(false);
     e.stopPropagation();
     e.preventDefault();
     return null;
-  };
-
-  const onMove = (position: { x: number; y: number }) => {
-    if (isPointMoving) {
-      machine.execute('dragPoint');
-      setWasMoved(true);
-      const newCoordinate = getPercentagePosition({
-        x: position.x - editorPosition.x,
-        y: position.y - editorPosition.y,
-      });
-      updateRouteOnIndex(routeSelectedIndex, (route) => ({
-        ...route,
-        path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
-          ...point,
-          x: newCoordinate.x,
-          y: newCoordinate.y,
-        })),
-      }));
-    }
-  };
-
-  const onTouchMove = (e) => {
-    onMove({ x: e.touches[0].clientX, y: e.touches[0].clientY });
-  };
-
-  const onMouseMove = (e) => {
-    console.log('___onMouseMove');
-
-    onMove({ x: e.clientX, y: e.clientY });
   };
 
   const isPointSelected =
@@ -114,10 +78,8 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     onMouseLeave,
     onMouseDown,
     onMouseUp,
-    onMouseMove,
     onTouchStart: onMouseDown,
     onTouchEnd: onMouseUp,
-    onTouchMove,
     cx: 0,
     cy: 0,
   };

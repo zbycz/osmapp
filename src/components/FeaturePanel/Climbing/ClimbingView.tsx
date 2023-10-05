@@ -10,6 +10,8 @@ import { ControlPanel } from './Editor/ControlPanel';
 import { RouteList } from './RouteList';
 import { emptyRoute } from './utils/emptyRoute';
 import { Guide } from './Guide';
+import { Position } from './types';
+import { updateElementOnIndex } from './utils';
 
 type Props = {
   setIsFullscreenDialogOpened: (isFullscreenDialogOpened: boolean) => void;
@@ -59,6 +61,9 @@ export const ClimbingView = ({
     editorPosition,
     getPercentagePosition,
     useMachine,
+    isPointClicked,
+    setIsPointMoving,
+    pointSelectedIndex,
   } = useContext(ClimbingContext);
 
   const imageUrl = '/images/rock.png';
@@ -155,6 +160,33 @@ export const ClimbingView = ({
     setRouteSelectedIndex(routeNumber);
   };
 
+  const onMove = (position: Position) => {
+    if (isPointClicked) {
+      machine.execute('dragPoint');
+      setIsPointMoving(true);
+      const newCoordinate = getPercentagePosition({
+        x: position.x - editorPosition.x,
+        y: position.y - editorPosition.y,
+      });
+      updateRouteOnIndex(routeSelectedIndex, (route) => ({
+        ...route,
+        path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
+          ...point,
+          x: newCoordinate.x,
+          y: newCoordinate.y,
+        })),
+      }));
+    }
+  };
+
+  const onTouchMove = (e) => {
+    onMove({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+  };
+
+  const onMouseMove = (e) => {
+    onMove({ x: e.clientX, y: e.clientY });
+  };
+
   const onUndoClick = () => {
     machine.execute('undoPoint');
     updateRouteOnIndex(routeSelectedIndex, (route) => ({
@@ -185,6 +217,8 @@ export const ClimbingView = ({
       <RouteEditor
         routes={routes}
         onClick={onEditorClick || onCanvasClick}
+        onEditorMouseMove={onMouseMove}
+        onEditorTouchMove={onTouchMove}
         onFinishClimbingRouteClick={onFinishClimbingRouteClick}
         onRouteSelect={onRouteSelect}
       />

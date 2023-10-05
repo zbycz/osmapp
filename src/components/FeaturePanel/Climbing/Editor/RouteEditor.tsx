@@ -25,6 +25,8 @@ export const RouteEditor = ({
   onClick,
   onRouteSelect,
   onFinishClimbingRouteClick,
+  onEditorMouseMove,
+  onEditorTouchMove,
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); // @TODO rename
 
@@ -59,6 +61,8 @@ export const RouteEditor = ({
         onClick={(e) => {
           onClick(e);
         }}
+        onMouseMove={onEditorMouseMove}
+        onTouchMove={onEditorTouchMove}
         imageSize={imageSize}
       >
         {routes.map((route, index) => (

@@ -74,6 +74,8 @@ type ClimbingContextType = {
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
+  isPointClicked: boolean;
+  setIsPointClicked: (isPointClicked: boolean) => void;
   setEditorPosition: (position: Position) => void;
   setImageSize: (ImageSize) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
@@ -88,7 +90,7 @@ type ClimbingContextType = {
   getPixelPosition: (position: Position) => Position;
   getPercentagePosition: (position: Position) => Position;
   useMachine: () => {
-    currentState: ActionWithCallback;
+    currentState: Partial<Record<Action, ActionWithCallback>>;
     execute: (desiredAction: Action) => void;
   };
 };
@@ -99,6 +101,9 @@ export const ClimbingContext = createContext<ClimbingContextType>({
     width: 0,
     height: 0,
   },
+  getPercentagePosition: () => null,
+  getPixelPosition: () => null,
+  isPointClicked: false,
   isPointMoving: false,
   isRouteSelected: () => null,
   isSelectedRouteEditable: false,
@@ -107,14 +112,13 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   routeSelectedIndex: null,
   setEditorPosition: () => null,
   setImageSize: () => null,
+  setIsPointClicked: () => null,
   setIsPointMoving: () => null,
   setIsSelectedRouteEditable: () => null,
   setPointSelectedIndex: () => null,
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
   updateRouteOnIndex: () => null,
-  getPixelPosition: () => null,
-  getPercentagePosition: () => null,
   useMachine: () => ({ currentState: null, execute: () => null }),
 });
 
@@ -128,6 +132,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
+  const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [editorPosition, setEditorPosition] = useState<Position>({
     x: 0,
     y: 0,
@@ -179,23 +184,25 @@ export const ClimbingContextProvider = ({ children }) => {
 
   const climbingState = {
     editorPosition,
+    getPercentagePosition,
+    getPixelPosition,
     imageSize,
+    isPointClicked,
     isPointMoving,
+    isRouteSelected,
     isSelectedRouteEditable,
     pointSelectedIndex,
     routes,
     routeSelectedIndex,
     setEditorPosition,
     setImageSize,
+    setIsPointClicked,
     setIsPointMoving,
     setIsSelectedRouteEditable,
     setPointSelectedIndex,
     setRoutes,
     setRouteSelectedIndex,
     updateRouteOnIndex,
-    isRouteSelected,
-    getPixelPosition,
-    getPercentagePosition,
     useMachine,
   };
 
