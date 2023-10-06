@@ -153,7 +153,7 @@ export const ClimbingView = ({
 
   const onMove = (position: Position) => {
     if (isPointClicked) {
-      // machine.execute('dragPoint', { position });
+      machine.execute('dragPoint', { position });
 
       setIsPointMoving(true);
       const newCoordinate = getPercentagePosition({
