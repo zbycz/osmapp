@@ -24,9 +24,10 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
     setPointSelectedIndex,
     // updateRouteOnIndex,
     useMachine,
+    isPointMoving,
   } = useContext(ClimbingContext);
   const machine = useMachine();
-  const open = Boolean(anchorEl);
+  const open = Boolean(anchorEl) && !isPointMoving;
   const id = open ? 'simple-popper' : undefined;
   const route = routes[routeSelectedIndex];
   if (!route) return null;
@@ -71,6 +72,7 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
 
       <MenuList>
         <MenuItem
+          dense
           onClick={() => onPointTypeChange(null)}
           selected={!selectedPoint.type}
         >
@@ -78,6 +80,7 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
           <Typography variant="inherit">Nothing</Typography>
         </MenuItem>
         <MenuItem
+          dense
           onClick={() => onPointTypeChange('bolt')}
           selected={selectedPoint.type === 'bolt'}
         >
@@ -89,6 +92,7 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
           </Typography>
         </MenuItem>
         <MenuItem
+          dense
           onClick={() => onPointTypeChange('belay')}
           selected={selectedPoint.type === 'belay'}
         >
@@ -98,7 +102,7 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
           <Typography variant="inherit">Belay</Typography>
         </MenuItem>
         <Divider />
-        <MenuItem onClick={onDeletePoint}>
+        <MenuItem onClick={onDeletePoint} dense>
           <ListItemIcon>
             <DeleteIcon fontSize="small" />
           </ListItemIcon>
@@ -107,6 +111,7 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
           </Typography>
         </MenuItem>
         <MenuItem
+          dense
           onClick={() => {
             onPopoverClose();
             machine.execute('finishRoute');

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Button, Dialog } from '@material-ui/core';
+import { Button, Dialog, DialogContent } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import { ClimbingView } from './ClimbingView';
 import { ClimbingContextProvider } from './contexts/ClimbingContext';
@@ -8,9 +8,6 @@ import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 
 const EditRoutesContainer = styled.div`
   padding: 10px;
-`;
-const Content = styled.div`
-  overscroll-behavior: none;
 `;
 
 export const ClimbingPanel = () => {
@@ -27,13 +24,13 @@ export const ClimbingPanel = () => {
           open={isFullscreenDialogOpened}
           onClose={onFullscreenDialogClose}
         >
-          <Content>
+          <DialogContent style={{ overscrollBehavior: 'none' }}>
             <ClimbingView
               isFullscreenDialogOpened={isFullscreenDialogOpened}
               setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
               isReadOnly={false}
             />
-          </Content>
+          </DialogContent>
         </Dialog>
       ) : (
         <PanelWrapper>
