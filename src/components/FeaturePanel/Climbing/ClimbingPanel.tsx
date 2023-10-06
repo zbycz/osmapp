@@ -24,7 +24,7 @@ export const ClimbingPanel = () => {
           open={isFullscreenDialogOpened}
           onClose={onFullscreenDialogClose}
         >
-          <DialogContent style={{ overscrollBehavior: 'none' }}>
+          <DialogContent style={{ overscrollBehavior: 'none', padding: 0 }}>
             <ClimbingView
               isFullscreenDialogOpened={isFullscreenDialogOpened}
               setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
