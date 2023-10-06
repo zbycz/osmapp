@@ -1,6 +1,7 @@
 import React, { createContext, useState } from 'react';
 import { ClimbingRoute, Position } from '../types';
 import { updateElementOnIndex } from '../utils';
+import { emptyRoute } from '../utils/emptyRoute';
 
 type ImageSize = {
   width: number;
@@ -21,6 +22,7 @@ type Action =
   | 'editRoute'
   | 'finishRoute'
   | 'routeSelect'
+  | 'updateRoute'
   | 'showPointMenu'
   | 'undoPoint';
 
@@ -123,11 +125,43 @@ export const ClimbingContextProvider = ({ children }) => {
   const cancelRouteSelection = () => {
     setRouteSelectedIndex(null);
   };
+
+  const deletePoint = () => {
+    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
+      ...currentRoute,
+      path: updateElementOnIndex(currentRoute.path, pointSelectedIndex),
+    }));
+    setPointSelectedIndex(null);
+  };
+
   const editRoute = () => {
     setIsSelectedRouteEditable(true);
   };
+
   const finishRoute = () => {
     setIsSelectedRouteEditable(false);
+  };
+
+  const createRoute = () => {
+    setIsSelectedRouteEditable(true);
+    setRouteSelectedIndex(routes.length);
+    setRoutes([...routes, emptyRoute]);
+  };
+
+  const updateRoute = ({ updatedRouteSelectedIndex }) => {
+    setIsSelectedRouteEditable(true);
+    updateRouteOnIndex(updatedRouteSelectedIndex, (route) => ({
+      ...route,
+      path: [],
+    }));
+    setRouteSelectedIndex(updatedRouteSelectedIndex);
+  };
+
+  const undoPoint = () => {
+    updateRouteOnIndex(routeSelectedIndex, (route) => ({
+      ...route,
+      path: route.path.slice(0, -1),
+    }));
   };
 
   const getPixelPosition = ({ x, y }: Position) => ({
@@ -172,7 +206,8 @@ export const ClimbingContextProvider = ({ children }) => {
 
   const states: Machine = {
     init: {
-      createRoute: { nextState: 'editRoute', callback: () => null },
+      createRoute: { nextState: 'editRoute', callback: createRoute },
+      updateRoute: { nextState: 'editRoute', callback: updateRoute },
       routeSelect: {
         nextState: 'routeSelected',
         callback: routeSelect,
@@ -180,7 +215,7 @@ export const ClimbingContextProvider = ({ children }) => {
     },
     editRoute: {
       deleteRoute: { nextState: 'init', callback: () => null },
-      undoPoint: { nextState: 'editRoute', callback: () => null },
+      undoPoint: { nextState: 'editRoute', callback: undoPoint },
       dragPoint: { nextState: 'editRoute', callback: dragPoint },
       addPoint: { nextState: 'editRoute', callback: () => null },
       showPointMenu: { nextState: 'pointMenu' },
@@ -188,12 +223,12 @@ export const ClimbingContextProvider = ({ children }) => {
     },
     pointMenu: {
       changePointType: { nextState: 'editRoute', callback: changePointType },
-      deletePoint: { nextState: 'editRoute', callback: () => null },
+      deletePoint: { nextState: 'editRoute', callback: deletePoint },
       cancelPointMenu: { nextState: 'editRoute' },
       finishRoute: { nextState: 'routeSelected', callback: finishRoute },
     },
     routeSelected: {
-      createRoute: { nextState: 'editRoute', callback: () => null },
+      createRoute: { nextState: 'editRoute', callback: createRoute },
       routeSelect: {
         nextState: 'routeSelected',
         callback: routeSelect,

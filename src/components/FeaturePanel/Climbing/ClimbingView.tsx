@@ -8,7 +8,6 @@ import { RouteEditor } from './Editor/RouteEditor';
 import { ClimbingContext } from './contexts/ClimbingContext';
 import { ControlPanel } from './Editor/ControlPanel';
 import { RouteList } from './RouteList';
-import { emptyRoute } from './utils/emptyRoute';
 import { Guide } from './Guide';
 import { Position } from './types';
 import { updateElementOnIndex } from './utils';
@@ -56,7 +55,6 @@ export const ClimbingView = ({
     setIsSelectedRouteEditable,
     setRouteSelectedIndex,
     routes,
-    setRoutes,
     routeSelectedIndex,
     updateRouteOnIndex,
     setEditorPosition,
@@ -91,21 +89,12 @@ export const ClimbingView = ({
 
   const onCreateClimbingRouteClick = () => {
     machine.execute('createRoute');
-    setIsSelectedRouteEditable(true);
-    setRoutes([...routes, emptyRoute]);
-    setRouteSelectedIndex(routes.length);
   };
 
   const onCreateSchemaForExistingRouteClick = (
     updatedRouteSelectedIndex: number,
   ) => {
-    machine.execute('createRoute');
-    setIsSelectedRouteEditable(true);
-    updateRouteOnIndex(updatedRouteSelectedIndex, (route) => ({
-      ...route,
-      path: [],
-    }));
-    setRouteSelectedIndex(updatedRouteSelectedIndex);
+    machine.execute('updateRoute', { updatedRouteSelectedIndex });
   };
 
   const onDeleteExistingRouteClick = (deletedExistingRouteIndex: number) => {
@@ -181,10 +170,6 @@ export const ClimbingView = ({
 
   const onUndoClick = () => {
     machine.execute('undoPoint');
-    updateRouteOnIndex(routeSelectedIndex, (route) => ({
-      ...route,
-      path: route.path.slice(0, -1),
-    }));
   };
 
   React.useEffect(() => {
