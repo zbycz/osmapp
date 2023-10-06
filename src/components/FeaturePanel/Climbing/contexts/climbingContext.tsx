@@ -247,13 +247,17 @@ export const ClimbingContextProvider = ({ children }) => {
       if (desiredAction in states[currentState]) {
         const { nextState, callback } = states[currentState][desiredAction];
         setCurrentState(nextState);
-        console.log('______CHANGE STATE____!', desiredAction, nextState, props);
+        console.log(
+          '______CHANGE STATE____!',
+          desiredAction,
+          nextState,
+          props,
+          callback ? 'callback' : 'no callback',
+        );
         if (callback) callback(props);
-        // return states[desiredState];
       } else {
         console.log('wrong action', currentState, desiredAction);
       }
-      // return null;
     },
   });
 

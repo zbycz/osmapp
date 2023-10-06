@@ -9,6 +9,9 @@ import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 const EditRoutesContainer = styled.div`
   padding: 10px;
 `;
+const Content = styled.div`
+  overscroll-behavior: none;
+`;
 
 export const ClimbingPanel = () => {
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
@@ -24,11 +27,13 @@ export const ClimbingPanel = () => {
           open={isFullscreenDialogOpened}
           onClose={onFullscreenDialogClose}
         >
-          <ClimbingView
-            isFullscreenDialogOpened={isFullscreenDialogOpened}
-            setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-            isReadOnly={false}
-          />
+          <Content>
+            <ClimbingView
+              isFullscreenDialogOpened={isFullscreenDialogOpened}
+              setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
+              isReadOnly={false}
+            />
+          </Content>
         </Dialog>
       ) : (
         <PanelWrapper>
