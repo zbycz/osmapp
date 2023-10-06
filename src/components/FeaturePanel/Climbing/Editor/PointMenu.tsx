@@ -16,11 +16,7 @@ import { ClimbingContext } from '../contexts/ClimbingContext';
 import { PointType } from '../types';
 import { updateElementOnIndex } from '../utils';
 
-export const PointMenu = ({
-  anchorEl,
-  setAnchorEl,
-  onFinishClimbingRouteClick,
-}) => {
+export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   const {
     routeSelectedIndex,
     routes,
@@ -52,18 +48,7 @@ export const PointMenu = ({
   };
 
   const onPointTypeChange = (type: PointType) => {
-    machine.execute('changePointType');
-    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
-      ...currentRoute,
-      path: updateElementOnIndex(
-        currentRoute.path,
-        pointSelectedIndex,
-        (point) => ({
-          ...point,
-          type,
-        }),
-      ),
-    }));
+    machine.execute('changePointType', { type });
 
     onPopoverClose();
   };
@@ -124,7 +109,7 @@ export const PointMenu = ({
         <MenuItem
           onClick={() => {
             onPopoverClose();
-            onFinishClimbingRouteClick();
+            machine.execute('finishRoute');
           }}
         >
           <ListItemIcon>

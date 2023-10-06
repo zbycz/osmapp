@@ -20,13 +20,17 @@ const Container = styled.div`
 
 export const ControlPanel = ({
   onEditClimbingRouteClick,
-  onFinishClimbingRouteClick,
   onDeleteExistingClimbingRouteClick,
   onCreateClimbingRouteClick,
   onUndoClick,
 }) => {
-  const { routeSelectedIndex, isSelectedRouteEditable, routes } =
+  const { routeSelectedIndex, isSelectedRouteEditable, routes, useMachine } =
     useContext(ClimbingContext);
+  const machine = useMachine();
+
+  const onFinishClimbingRouteClick = () => {
+    machine.execute('finishRoute');
+  };
 
   return (
     <Container>

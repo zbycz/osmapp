@@ -23,7 +23,6 @@ const Svg = styled.svg<{
 export const RouteEditor = ({
   routes,
   onClick,
-  onFinishClimbingRouteClick,
   onEditorMouseMove,
   onEditorTouchMove,
 }) => {
@@ -46,7 +45,6 @@ export const RouteEditor = ({
 
     if (isDoubleClick && pointSelectedIndex === lastPointIndex) {
       machine.execute('finishRoute');
-      onFinishClimbingRouteClick();
       return;
     }
 
@@ -73,11 +71,7 @@ export const RouteEditor = ({
         ))}
       </Svg>
 
-      <PointMenu
-        anchorEl={anchorEl}
-        setAnchorEl={setAnchorEl}
-        onFinishClimbingRouteClick={onFinishClimbingRouteClick}
-      />
+      <PointMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
     </>
   );
 };

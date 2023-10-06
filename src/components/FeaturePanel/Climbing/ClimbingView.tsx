@@ -24,7 +24,9 @@ const Container = styled.div`
   position: relative;
 `;
 
-const ImageContainer = styled.div``;
+const ImageContainer = styled.div`
+  user-select: none;
+`;
 
 const ImageElement = styled.img<{ zoom?: number }>`
   max-width: 100%;
@@ -114,14 +116,8 @@ export const ClimbingView = ({
     updateRouteOnIndex(deletedExistingRouteIndex);
   };
 
-  const onFinishClimbingRouteClick = () => {
-    machine.execute('finishRoute');
-    setIsSelectedRouteEditable(false);
-  };
-
   const onEditClimbingRouteClick = () => {
     machine.execute('editRoute');
-    setIsSelectedRouteEditable(true);
   };
 
   const onDeleteExistingClimbingRouteClick = () => {
@@ -152,12 +148,13 @@ export const ClimbingView = ({
       return;
     }
 
-    setRouteSelectedIndex(null);
+    machine.execute('cancelRouteSelection');
   };
 
   const onMove = (position: Position) => {
     if (isPointClicked) {
-      machine.execute('dragPoint');
+      // machine.execute('dragPoint', { position });
+
       setIsPointMoving(true);
       const newCoordinate = getPercentagePosition({
         x: position.x - editorPosition.x,
@@ -214,13 +211,11 @@ export const ClimbingView = ({
         onClick={onEditorClick || onCanvasClick}
         onEditorMouseMove={onMouseMove}
         onEditorTouchMove={onTouchMove}
-        onFinishClimbingRouteClick={onFinishClimbingRouteClick}
       />
 
       {!isReadOnly && (
         <ControlPanel
           onEditClimbingRouteClick={onEditClimbingRouteClick}
-          onFinishClimbingRouteClick={onFinishClimbingRouteClick}
           onDeleteExistingClimbingRouteClick={
             onDeleteExistingClimbingRouteClick
           }

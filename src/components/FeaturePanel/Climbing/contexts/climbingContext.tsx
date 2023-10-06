@@ -26,7 +26,7 @@ type Action =
 
 type ActionWithCallback = {
   nextState: State;
-  callback: (props: unknown) => void;
+  callback?: (props: unknown) => void;
 };
 
 type Machine = {
@@ -104,69 +104,6 @@ export const ClimbingContextProvider = ({ children }) => {
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
   const [currentState, setCurrentState] = useState<State>('init');
 
-  const routeSelect = ({ routeNumber }) => {
-    console.log('______TEST');
-    setRouteSelectedIndex(routeNumber);
-  };
-  const states: Machine = {
-    init: {
-      createRoute: { nextState: 'editRoute', callback: () => null },
-      routeSelect: {
-        nextState: 'routeSelected',
-        callback: routeSelect,
-      },
-    },
-    editRoute: {
-      deleteRoute: { nextState: 'init', callback: () => null },
-      undoPoint: { nextState: 'editRoute', callback: () => null },
-      dragPoint: { nextState: 'editRoute', callback: () => null },
-      addPoint: { nextState: 'editRoute', callback: () => null },
-      showPointMenu: { nextState: 'pointMenu', callback: () => null },
-      finishRoute: { nextState: 'routeSelected', callback: () => null },
-    },
-    pointMenu: {
-      changePointType: { nextState: 'editRoute', callback: () => null },
-      deletePoint: { nextState: 'editRoute', callback: () => null },
-      cancelPointMenu: { nextState: 'editRoute', callback: () => null },
-      finishRoute: { nextState: 'routeSelected', callback: () => null },
-    },
-    routeSelected: {
-      routeSelect: {
-        nextState: 'routeSelected',
-        callback: routeSelect,
-      },
-      cancelRouteSelection: { nextState: 'init', callback: () => null },
-      editRoute: { nextState: 'editRoute', callback: () => null },
-    },
-  };
-
-  const useMachine = () => ({
-    currentState: states[currentState],
-    execute: (desiredAction: Action, props?: unknown) => {
-      if (desiredAction in states[currentState]) {
-        const { nextState, callback } = states[currentState][desiredAction];
-        setCurrentState(nextState);
-        console.log('______CHANGE STATE____!', desiredAction, nextState, props);
-        callback(props);
-        // return states[desiredState];
-      }
-      // return null;
-    },
-  });
-
-  const isRouteSelected = (routeNumber: number) =>
-    routeSelectedIndex === routeNumber;
-
-  const getPercentagePosition = ({ x, y }: Position) => ({
-    x: x / imageSize.width,
-    y: y / imageSize.height,
-  });
-
-  const getPixelPosition = ({ x, y }: Position) => ({
-    x: imageSize.width * x,
-    y: imageSize.height * y,
-  });
-
   const updateRouteOnIndex = (
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
@@ -178,6 +115,115 @@ export const ClimbingContextProvider = ({ children }) => {
     );
     setRoutes(updatedArray);
   };
+
+  const routeSelect = ({ routeNumber }) => {
+    setRouteSelectedIndex(routeNumber);
+  };
+
+  const cancelRouteSelection = () => {
+    setRouteSelectedIndex(null);
+  };
+  const editRoute = () => {
+    setIsSelectedRouteEditable(true);
+  };
+  const finishRoute = () => {
+    setIsSelectedRouteEditable(false);
+  };
+
+  const getPixelPosition = ({ x, y }: Position) => ({
+    x: imageSize.width * x,
+    y: imageSize.height * y,
+  });
+
+  const getPercentagePosition = ({ x, y }: Position) => ({
+    x: x / imageSize.width,
+    y: y / imageSize.height,
+  });
+
+  const dragPoint = () => {
+    // setIsPointMoving(true);
+    // const newCoordinate = getPercentagePosition({
+    //   x: position.x - editorPosition.x,
+    //   y: position.y - editorPosition.y,
+    // });
+    // updateRouteOnIndex(routeSelectedIndex, (route) => ({
+    //   ...route,
+    //   path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
+    //     ...point,
+    //     x: newCoordinate.x,
+    //     y: newCoordinate.y,
+    //   })),
+    // }));
+  };
+
+  const changePointType = ({ type }) => {
+    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
+      ...currentRoute,
+      path: updateElementOnIndex(
+        currentRoute.path,
+        pointSelectedIndex,
+        (point) => ({
+          ...point,
+          type,
+        }),
+      ),
+    }));
+  };
+
+  const states: Machine = {
+    init: {
+      createRoute: { nextState: 'editRoute', callback: () => null },
+      routeSelect: {
+        nextState: 'routeSelected',
+        callback: routeSelect,
+      },
+    },
+    editRoute: {
+      deleteRoute: { nextState: 'init', callback: () => null },
+      undoPoint: { nextState: 'editRoute', callback: () => null },
+      dragPoint: { nextState: 'editRoute', callback: dragPoint },
+      addPoint: { nextState: 'editRoute', callback: () => null },
+      showPointMenu: { nextState: 'pointMenu' },
+      finishRoute: { nextState: 'routeSelected', callback: finishRoute },
+    },
+    pointMenu: {
+      changePointType: { nextState: 'editRoute', callback: changePointType },
+      deletePoint: { nextState: 'editRoute', callback: () => null },
+      cancelPointMenu: { nextState: 'editRoute' },
+      finishRoute: { nextState: 'routeSelected', callback: finishRoute },
+    },
+    routeSelected: {
+      createRoute: { nextState: 'editRoute', callback: () => null },
+      routeSelect: {
+        nextState: 'routeSelected',
+        callback: routeSelect,
+      },
+      cancelRouteSelection: {
+        nextState: 'init',
+        callback: cancelRouteSelection,
+      },
+      editRoute: { nextState: 'editRoute', callback: editRoute },
+    },
+  };
+
+  const useMachine = () => ({
+    currentState: states[currentState],
+    execute: (desiredAction: Action, props?: unknown) => {
+      if (desiredAction in states[currentState]) {
+        const { nextState, callback } = states[currentState][desiredAction];
+        setCurrentState(nextState);
+        console.log('______CHANGE STATE____!', desiredAction, nextState, props);
+        if (callback) callback(props);
+        // return states[desiredState];
+      } else {
+        console.log('wrong action', currentState, desiredAction);
+      }
+      // return null;
+    },
+  });
+
+  const isRouteSelected = (routeNumber: number) =>
+    routeSelectedIndex === routeNumber;
 
   const climbingState = {
     editorPosition,
