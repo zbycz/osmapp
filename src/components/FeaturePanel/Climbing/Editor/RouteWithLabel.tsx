@@ -9,16 +9,10 @@ import { StartPoint } from './StartPoint';
 type Props = {
   route: ClimbingRoute;
   routeNumber: number;
-  onRouteSelect: (routeNumber: number) => void;
   onPointClick: (event: React.MouseEvent<any>) => void;
 };
 
-export const RouteWithLabel = ({
-  route,
-  routeNumber,
-  onRouteSelect,
-  onPointClick,
-}: Props) => {
+export const RouteWithLabel = ({ route, routeNumber, onPointClick }: Props) => {
   if (!route || route.path.length === 0) return null;
 
   const { getPixelPosition } = useContext(ClimbingContext);
@@ -26,26 +20,18 @@ export const RouteWithLabel = ({
   const { x, y } = getPixelPosition(route.path[0]);
 
   if (route.path.length === 1) {
-    return (
-      <StartPoint
-        x={x}
-        y={y}
-        onClick={onRouteSelect}
-        routeNumber={routeNumber}
-      />
-    );
+    return <StartPoint x={x} y={y} routeNumber={routeNumber} />;
   }
 
   return (
     <>
       <Route
-        onRouteSelect={onRouteSelect}
         routeNumber={routeNumber}
         route={route}
         onPointClick={onPointClick}
       />
 
-      <RouteNumber onClick={onRouteSelect} x={x} y={y}>
+      <RouteNumber x={x} y={y}>
         {routeNumber}
       </RouteNumber>
     </>

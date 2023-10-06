@@ -23,7 +23,6 @@ const Svg = styled.svg<{
 export const RouteEditor = ({
   routes,
   onClick,
-  onRouteSelect,
   onFinishClimbingRouteClick,
   onEditorMouseMove,
   onEditorTouchMove,
@@ -69,7 +68,6 @@ export const RouteEditor = ({
           <RouteWithLabel
             route={route}
             routeNumber={index}
-            onRouteSelect={onRouteSelect}
             onPointClick={onPointClick}
           />
         ))}

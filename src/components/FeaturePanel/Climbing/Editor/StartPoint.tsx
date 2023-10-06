@@ -5,13 +5,13 @@ import { ClimbingContext } from '../contexts/ClimbingContext';
 type Props = {
   x: number;
   y: number;
-  onClick: (routeNumber: number) => void;
   routeNumber: number;
 };
 
-export const StartPoint = ({ x, y, onClick, routeNumber }: Props) => {
+export const StartPoint = ({ x, y, routeNumber }: Props) => {
   const { isRouteSelected } = useContext(ClimbingContext);
   const isSelected = isRouteSelected(routeNumber);
+
   return (
     <>
       <circle
@@ -28,7 +28,7 @@ export const StartPoint = ({ x, y, onClick, routeNumber }: Props) => {
         strokeWidth="0"
         fill={isSelected ? 'royalblue' : 'white'}
       />
-      <RouteNumber onClick={onClick} x={x} y={y}>
+      <RouteNumber x={x} y={y}>
         {routeNumber}
       </RouteNumber>
     </>

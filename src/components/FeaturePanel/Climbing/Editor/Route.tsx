@@ -10,16 +10,10 @@ import { RoutePath } from './RoutePath';
 type Props = {
   route: ClimbingRoute;
   routeNumber: number;
-  onRouteSelect: (routeNumber: number) => void;
   onPointClick: (event: React.MouseEvent<any>) => void;
 };
 
-export const Route = ({
-  route,
-  routeNumber,
-  onRouteSelect,
-  onPointClick,
-}: Props) => {
+export const Route = ({ route, routeNumber, onPointClick }: Props) => {
   const { getPixelPosition, isSelectedRouteEditable, isRouteSelected } =
     useContext(ClimbingContext);
 
@@ -42,11 +36,7 @@ export const Route = ({
           <path d="M 0 0 L 10 5 L 0 10 z" fill="white" />
         </marker>
       </defs>
-      <RoutePath
-        onRouteSelect={onRouteSelect}
-        route={route}
-        routeNumber={routeNumber}
-      />
+      <RoutePath route={route} routeNumber={routeNumber} />
 
       {route.path.map(({ x, y, type }, index) => {
         const isBoltVisible = type === 'bolt';

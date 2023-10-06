@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import { ClimbingContext } from '../contexts/ClimbingContext';
 
 type Props = {
-  onClick: (routeNumber: number) => void;
   children: number;
   x: number;
   y: number;
@@ -18,27 +17,24 @@ const HoverableRouteName = RouteNameBoxBase;
 const RouteNameOutline = RouteNameBoxBase;
 const RouteNameBox = RouteNameBoxBase;
 
-export const RouteNumber = ({
-  onClick,
-  children: routeNumber,
-  x,
-  y,
-}: Props) => {
+export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   const RECT_WIDTH = String(routeNumber).length * 5 + 15;
   const RECT_HEIGHT = 20;
   const RECT_Y_OFFSET = 10;
   const OUTLINE_WIDTH = 2;
   const HOVER_WIDTH = 10;
 
-  const { imageSize, isRouteSelected } = useContext(ClimbingContext);
+  const { imageSize, isRouteSelected, useMachine } =
+    useContext(ClimbingContext);
+
   const newY = // this shifts Y coordinate in case of too small photo
     y + RECT_Y_OFFSET + RECT_HEIGHT > imageSize.height
       ? imageSize.height - RECT_HEIGHT - OUTLINE_WIDTH
       : y + RECT_Y_OFFSET;
-
+  const machine = useMachine();
   const commonProps = {
     onClick: (e) => {
-      onClick(routeNumber);
+      machine.execute('routeSelect', { routeNumber });
       e.stopPropagation();
     },
     cursor: 'pointer',

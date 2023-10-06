@@ -7,19 +7,13 @@ type ImageSize = {
   height: number;
 };
 
-type State =
-  | 'editRoute'
-  | 'init'
-  | 'pointMenu'
-  | 'routeSelected'
-  | 'routeSelected';
+type State = 'editRoute' | 'init' | 'pointMenu' | 'routeSelected';
 
 type Action =
   | 'addPoint'
   | 'cancelPointMenu'
   | 'cancelRouteSelection'
   | 'changePointType'
-  | 'changeRouteSelection'
   | 'createRoute'
   | 'deletePoint'
   | 'deleteRoute'
@@ -32,37 +26,11 @@ type Action =
 
 type ActionWithCallback = {
   nextState: State;
-  callback: () => void;
+  callback: (props: unknown) => void;
 };
 
 type Machine = {
   [key in State]: Partial<Record<Action, ActionWithCallback>>;
-};
-
-const states: Machine = {
-  init: {
-    createRoute: { nextState: 'editRoute', callback: () => null },
-    routeSelect: { nextState: 'routeSelected', callback: () => null },
-  },
-  editRoute: {
-    deleteRoute: { nextState: 'init', callback: () => null },
-    undoPoint: { nextState: 'editRoute', callback: () => null },
-    dragPoint: { nextState: 'editRoute', callback: () => null },
-    addPoint: { nextState: 'editRoute', callback: () => null },
-    showPointMenu: { nextState: 'pointMenu', callback: () => null },
-    finishRoute: { nextState: 'routeSelected', callback: () => null },
-  },
-  pointMenu: {
-    changePointType: { nextState: 'editRoute', callback: () => null },
-    deletePoint: { nextState: 'editRoute', callback: () => null },
-    cancelPointMenu: { nextState: 'editRoute', callback: () => null },
-    finishRoute: { nextState: 'routeSelected', callback: () => null },
-  },
-  routeSelected: {
-    changeRouteSelection: { nextState: 'routeSelected', callback: () => null },
-    cancelRouteSelection: { nextState: 'init', callback: () => null },
-    editRoute: { nextState: 'editRoute', callback: () => null },
-  },
 };
 
 type ClimbingContextType = {
@@ -91,7 +59,7 @@ type ClimbingContextType = {
   getPercentagePosition: (position: Position) => Position;
   useMachine: () => {
     currentState: Partial<Record<Action, ActionWithCallback>>;
-    execute: (desiredAction: Action) => void;
+    execute: (desiredAction: Action, props?: unknown) => void;
   };
 };
 
@@ -122,11 +90,6 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   useMachine: () => ({ currentState: null, execute: () => null }),
 });
 
-console.log(states);
-
-// const {machine} = useMachine()
-// machine.init();
-
 export const ClimbingContextProvider = ({ children }) => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
@@ -141,21 +104,55 @@ export const ClimbingContextProvider = ({ children }) => {
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
   const [currentState, setCurrentState] = useState<State>('init');
 
+  const routeSelect = ({ routeNumber }) => {
+    console.log('______TEST');
+    setRouteSelectedIndex(routeNumber);
+  };
+  const states: Machine = {
+    init: {
+      createRoute: { nextState: 'editRoute', callback: () => null },
+      routeSelect: {
+        nextState: 'routeSelected',
+        callback: routeSelect,
+      },
+    },
+    editRoute: {
+      deleteRoute: { nextState: 'init', callback: () => null },
+      undoPoint: { nextState: 'editRoute', callback: () => null },
+      dragPoint: { nextState: 'editRoute', callback: () => null },
+      addPoint: { nextState: 'editRoute', callback: () => null },
+      showPointMenu: { nextState: 'pointMenu', callback: () => null },
+      finishRoute: { nextState: 'routeSelected', callback: () => null },
+    },
+    pointMenu: {
+      changePointType: { nextState: 'editRoute', callback: () => null },
+      deletePoint: { nextState: 'editRoute', callback: () => null },
+      cancelPointMenu: { nextState: 'editRoute', callback: () => null },
+      finishRoute: { nextState: 'routeSelected', callback: () => null },
+    },
+    routeSelected: {
+      routeSelect: {
+        nextState: 'routeSelected',
+        callback: routeSelect,
+      },
+      cancelRouteSelection: { nextState: 'init', callback: () => null },
+      editRoute: { nextState: 'editRoute', callback: () => null },
+    },
+  };
+
   const useMachine = () => ({
     currentState: states[currentState],
-    execute: (desiredAction: Action) => {
+    execute: (desiredAction: Action, props?: unknown) => {
       if (desiredAction in states[currentState]) {
-        const { nextState } = states[currentState][desiredAction];
+        const { nextState, callback } = states[currentState][desiredAction];
         setCurrentState(nextState);
-        console.log('______CHANGE STATE____', desiredAction, nextState);
+        console.log('______CHANGE STATE____!', desiredAction, nextState, props);
+        callback(props);
         // return states[desiredState];
       }
       // return null;
     },
   });
-
-  // const machine = useMachine();
-  // machine.createRoute.callback();
 
   const isRouteSelected = (routeNumber: number) =>
     routeSelectedIndex === routeNumber;

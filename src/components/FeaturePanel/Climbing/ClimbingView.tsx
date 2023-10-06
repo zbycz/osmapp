@@ -155,11 +155,6 @@ export const ClimbingView = ({
     setRouteSelectedIndex(null);
   };
 
-  const onRouteSelect = (routeNumber: number) => {
-    machine.execute('routeSelect');
-    setRouteSelectedIndex(routeNumber);
-  };
-
   const onMove = (position: Position) => {
     if (isPointClicked) {
       machine.execute('dragPoint');
@@ -220,7 +215,6 @@ export const ClimbingView = ({
         onEditorMouseMove={onMouseMove}
         onEditorTouchMove={onTouchMove}
         onFinishClimbingRouteClick={onFinishClimbingRouteClick}
-        onRouteSelect={onRouteSelect}
       />
 
       {!isReadOnly && (

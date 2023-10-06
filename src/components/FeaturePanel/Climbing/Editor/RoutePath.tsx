@@ -12,7 +12,7 @@ const AddNewPoint = styled.circle`
   cursor: copy;
 `;
 
-export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
+export const RoutePath = ({ route, routeNumber }) => {
   const [isHovered, setIsHovered] = useState(false);
   // const [isDraggingPoint, setIsDraggingPoint] = useState(false);
   const [tempPointPosition, setTempPointPosition] = useState<
@@ -113,8 +113,7 @@ export const RoutePath = ({ onRouteSelect, route, routeNumber }) => {
     ? { cursor: 'copy' }
     : {
         onClick: (e) => {
-          machine.execute('changeRouteSelection');
-          onRouteSelect(routeNumber);
+          machine.execute('routeSelect', { routeNumber });
           e.stopPropagation();
         },
         cursor: 'pointer',
