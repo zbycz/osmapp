@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Typography } from '@material-ui/core';
+import { Box, Typography } from '@material-ui/core';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -41,6 +41,7 @@ const FeaturePanel = () => {
 
   const [advanced, setAdvanced] = useState(false);
   const [showAround, toggleShowAround] = useToggleState(false);
+  const [showTags, toggleShowTags] = useToggleState(false);
   const [dialogOpenedWith, setDialogOpenedWith] =
     useState<boolean | string>(false);
 
@@ -73,13 +74,14 @@ const FeaturePanel = () => {
             setDialogOpenedWith={setDialogOpenedWith}
           />
 
-          {advanced && (
+          {!showTags && (
             <IdSchemeFields
               featuredTags={deleted ? [] : featuredTags}
               feature={feature}
+              key={getUrlOsmId(osmMeta)+ (deleted && 'del')}
             />
           )}
-          {!advanced && (
+          {showTags && (
             <>
               {!!featuredTags.length && (
                 <Typography
@@ -87,7 +89,8 @@ const FeaturePanel = () => {
                   display="block"
                   color="textSecondary"
                 >
-                  {t('featurepanel.other_info_heading')}
+                  Další OSM tagy
+                  {/* {t('featurepanel.other_info_heading')} */}
                 </Typography>
               )}
               <TagsTable
@@ -141,13 +144,21 @@ const FeaturePanel = () => {
             <label>
               <input
                 type="checkbox"
+                onChange={toggleShowTags}
+                checked={showTags}
+                disabled={point}
+              />{' '}
+              Zobrazit tagy{/* {t('featurepanel.show_objects_around')} */}
+            </label>{' '}
+            <label>
+              <input
+                type="checkbox"
                 onChange={toggleShowAround}
                 checked={point || showAround}
                 disabled={point}
               />{' '}
               {t('featurepanel.show_objects_around')}
             </label>
-
             {!point && showAround && <ObjectsAround advanced={advanced} />}
           </PanelFooter>
         </PanelContent>

@@ -1,9 +1,14 @@
-import React, { ReactNode } from 'react';
+import React, { forwardRef, ReactNode } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import IconButton from '@material-ui/core/IconButton';
+import ChevronRight from '@material-ui/icons/ChevronRight';
 import { Field } from '../../services/tagging/types/Fields';
 import { getUrlForTag } from './helpers/getUrlForTag';
-import { slashToOptionalBr } from '../helpers';
+import { slashToOptionalBr, useToggleState } from '../helpers';
 import { buildAddress } from '../../services/helpers';
 import { Feature } from '../../services/types';
 import { t } from '../../services/intl';
@@ -85,7 +90,22 @@ const addUnits = (label, value: string | ReactNode) => {
   return `${value}${unit ? ` (${unit[1]})` : ''}`;
 };
 
+const StyledToggleButton = styled(Button)`
+  svg {
+    font-size: 17px;
+  }
+`;
+
+export const ToggleButton = ({ onClick, isShown, num }) => (
+  <StyledToggleButton onClick={onClick} aria-label="Toggle">
+    zbylé tagy ({num}) {/* {t('featurepanel.edit_in_osm')} */}
+    {!isShown && <ChevronRight fontSize="small" />}
+    {isShown && <ExpandMoreIcon fontSize="small" />}
+  </StyledToggleButton>
+);
+
 export const IdSchemeFields = ({ feature, featuredTags }) => {
+  const [restTagsShown, toggleRestTagsShown] = useToggleState(false);
   const { schema } = feature;
   if (!schema) return null;
   if (!Object.keys(schema).length) return null;
@@ -95,7 +115,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
       {featuredTags.length &&
       (schema.matchedFields.length ||
         schema.tagsWithFields.length ||
-        schema.restKeys.length) ? (
+        schema.keysTodo.length) ? (
         <Typography variant="overline" display="block" color="textSecondary">
           {t('featurepanel.other_info_heading')}
         </Typography>
@@ -112,24 +132,35 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
             </tr>
           ))}
         </tbody>
-        <tbody>
-          {schema.tagsWithFields.map(({ key, value, label, field }) => (
+        {!!(schema.keysTodo.length + schema.tagsWithFields.length) && (
+          <tbody>
+          {/* TODO TADY HERE QUI */ (<tr>
+            <td colSpan={2} style={{'textAlign': 'right'}}>
+              <ToggleButton
+                num={schema.keysTodo.length + schema.tagsWithFields.length}
+                isShown={restTagsShown}
+                onClick={toggleRestTagsShown}
+              />
+            </td>
+          </tr>)}
+          {restTagsShown && schema.tagsWithFields.map(({ key, value, label, field }) => (
             <tr key={key}>
-              <th title={getTitle('standalone field', field)}>
-                {removeUnits(label)}
-              </th>
-              <td>{render(field, feature, key, addUnits(label, value))}</td>
+              <th title={getTitle('standalone field', field)}>{removeUnits(label)}</th>
+              <td style={{color: 'gray'}}>
+                {render(field, feature, key, addUnits(label, value))}
+              </td>
             </tr>
           ))}
-        </tbody>
-        <tbody>
-          {schema.keysTodo.map((key) => (
-            <tr key={key}>
-              <th>{key}</th>
-              <td>{renderValue(key, feature.tags[key])}</td>
-            </tr>
-          ))}
-        </tbody>
+
+            {restTagsShown &&
+              schema.keysTodo.map((key) => (
+                <tr key={key}>
+                  <th>{key}</th>
+                  <td style={{color: 'gray'}}>{renderValue(key, feature.tags[key])}</td>
+                </tr>
+              ))}
+          </tbody>
+        )}
       </Table>
     </>
   );

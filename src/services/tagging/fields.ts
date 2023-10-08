@@ -1,12 +1,21 @@
 // links like {shop}, are recursively resolved to their fields
 import { Preset } from './types/Presets';
-import { presets } from './data';
+import { fields, presets } from './data';
 
 const getResolvedFields = (fieldKeys: string[]): string[] =>
   fieldKeys.flatMap((key) => {
     if (key.match(/^{.*}$/)) {
       const presetKey = key.substr(1, key.length - 2);
-      return getResolvedFields(presets[presetKey].fields); // TODO does "{shop}" links to preset's fields or moreFields?
+      return getResolvedFields(presets[presetKey].fields);
+    }
+    return key;
+  });
+
+const getResolvedMoreFields = (fieldKeys: string[]): string[] =>
+  fieldKeys.flatMap((key) => {
+    if (key.match(/^{.*}$/)) {
+      const presetKey = key.substr(1, key.length - 2);
+      return getResolvedMoreFields(presets[presetKey].moreFields);
     }
     return key;
   });
@@ -34,7 +43,13 @@ const getResolvedFieldsWithParents = (
 export const computeAllFieldKeys = (preset: Preset) => {
   const allFieldKeys = [
     ...getResolvedFields(getResolvedFieldsWithParents(preset, 'fields')),
-    ...getResolvedFields(getResolvedFieldsWithParents(preset, 'moreFields')),
+    ...getResolvedMoreFields(
+      getResolvedFieldsWithParents(preset, 'moreFields'),
+    ),
+    ...Object.values(fields)
+      .filter((f) => f.universal)
+      .map((f) => f.fieldKey),
+    'operator'
   ];
 
   // @ts-ignore
