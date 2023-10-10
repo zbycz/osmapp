@@ -47,6 +47,7 @@ export const ClimbingView = ({
   isReadOnly,
   onEditorClick,
 }: Props) => {
+  // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
 
   const {
@@ -66,7 +67,8 @@ export const ClimbingView = ({
     pointSelectedIndex,
   } = useContext(ClimbingContext);
 
-  const imageUrl = '/images/rock.png';
+  // const imageUrl = '/images/rock.png';
+  const imageUrl = '/images/rock2.jpg';
   // const imageUrl = "https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png"
   // const imageUrl = "https://www.skalnioblasti.cz/image.php?typ=skala&id=13516"
   // const imageUrl =
@@ -97,7 +99,7 @@ export const ClimbingView = ({
     machine.execute('updateRoute', { updatedRouteSelectedIndex });
   };
 
-  const onDeleteExistingRouteClick = (deletedExistingRouteIndex: number) => {
+  const onDeleteWholeRouteClick = (deletedExistingRouteIndex: number) => {
     // @TODO co to je?
     machine.execute('deleteRoute');
     setIsSelectedRouteEditable(false);
@@ -112,9 +114,6 @@ export const ClimbingView = ({
   const onDeleteExistingClimbingRouteClick = () => {
     // @TODO co to je?
     machine.execute('deleteRoute');
-    setIsSelectedRouteEditable(false);
-    updateRouteOnIndex(routeSelectedIndex);
-    setRouteSelectedIndex(null);
   };
 
   useEffect(() => {
@@ -215,7 +214,7 @@ export const ClimbingView = ({
         onCreateSchemaForExistingRouteClick={
           onCreateSchemaForExistingRouteClick
         }
-        onDeleteExistingRouteClick={onDeleteExistingRouteClick}
+        onDeleteExistingRouteClick={onDeleteWholeRouteClick}
       />
       <DialogIcon>
         {isFullscreenDialogOpened && (

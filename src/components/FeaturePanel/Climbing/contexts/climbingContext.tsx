@@ -148,6 +148,12 @@ export const ClimbingContextProvider = ({ children }) => {
     setRoutes([...routes, emptyRoute]);
   };
 
+  const deleteRoute = () => {
+    setIsSelectedRouteEditable(false);
+    updateRouteOnIndex(routeSelectedIndex);
+    setRouteSelectedIndex(null);
+  };
+
   const updateRoute = ({ updatedRouteSelectedIndex }) => {
     setIsSelectedRouteEditable(true);
     updateRouteOnIndex(updatedRouteSelectedIndex, (route) => ({
@@ -214,7 +220,7 @@ export const ClimbingContextProvider = ({ children }) => {
       },
     },
     editRoute: {
-      deleteRoute: { nextState: 'init', callback: () => null },
+      deleteRoute: { nextState: 'init', callback: deleteRoute },
       undoPoint: { nextState: 'editRoute', callback: undoPoint },
       dragPoint: { nextState: 'editRoute', callback: dragPoint },
       addPoint: { nextState: 'editRoute', callback: () => null },
