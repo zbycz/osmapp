@@ -4,10 +4,10 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import UndoIcon from '@material-ui/icons/Undo';
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { ClimbingContext } from '../contexts/ClimbingContext';
 import { t } from '../../../../services/intl';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 
 const Container = styled.div`
   background: rgba(0, 0, 0, 0.5);
@@ -25,7 +25,7 @@ export const ControlPanel = ({
   onUndoClick,
 }) => {
   const { routeSelectedIndex, isSelectedRouteEditable, routes, useMachine } =
-    useContext(ClimbingContext);
+    useClimbingContext();
   const machine = useMachine();
 
   const onFinishClimbingRouteClick = () => {

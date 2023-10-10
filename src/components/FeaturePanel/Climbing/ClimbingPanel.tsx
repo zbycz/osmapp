@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Dialog, DialogContent } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import { ClimbingView } from './ClimbingView';
-import { ClimbingContextProvider } from './contexts/ClimbingContext';
+import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 
 const EditRoutesContainer = styled.div`
@@ -11,20 +11,31 @@ const EditRoutesContainer = styled.div`
 `;
 
 export const ClimbingPanel = () => {
+  const contentRef = useRef(null);
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(true);
 
+  const { setScrollOffset } = useClimbingContext();
+
   const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
+  const onScroll = (e) => {
+    setScrollOffset({ x: e.target.scrollLeft, y: e.target.scrollTop });
+  };
+
   return (
-    <ClimbingContextProvider>
+    <>
       {isFullscreenDialogOpened ? (
         <Dialog
           fullScreen
           open={isFullscreenDialogOpened}
           onClose={onFullscreenDialogClose}
         >
-          <DialogContent style={{ overscrollBehavior: 'none', padding: 0 }}>
+          <DialogContent
+            style={{ overscrollBehavior: 'none', padding: 0 }}
+            ref={contentRef}
+            onScroll={onScroll}
+          >
             <ClimbingView
               isFullscreenDialogOpened={isFullscreenDialogOpened}
               setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
@@ -55,6 +66,6 @@ export const ClimbingPanel = () => {
           </PanelScrollbars>
         </PanelWrapper>
       )}
-    </ClimbingContextProvider>
+    </>
   );
 };

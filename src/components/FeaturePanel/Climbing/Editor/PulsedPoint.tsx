@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled, { keyframes } from 'styled-components';
-import { ClimbingContext } from '../contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 
 const pulseAnimation = keyframes`
 0% {
@@ -31,7 +31,7 @@ const PulsedPointElement = styled.circle`
 `;
 
 export const PulsedPoint = ({ x, y }) => {
-  const { getPixelPosition } = useContext(ClimbingContext);
+  const { getPixelPosition } = useClimbingContext();
   const position = getPixelPosition({ x, y });
 
   return (

@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import { RouteNumber } from './RouteNumber';
-import { ClimbingContext } from '../contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Route } from './Route';
 import { ClimbingRoute } from '../types';
 import { StartPoint } from './StartPoint';
@@ -15,7 +15,7 @@ type Props = {
 export const RouteWithLabel = ({ route, routeNumber, onPointClick }: Props) => {
   if (!route || route.path.length === 0) return null;
 
-  const { getPixelPosition } = useContext(ClimbingContext);
+  const { getPixelPosition } = useClimbingContext();
 
   const { x, y } = getPixelPosition(route.path[0]);
 

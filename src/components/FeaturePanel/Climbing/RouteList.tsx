@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import {
   Box,
@@ -19,8 +19,8 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import AddIcon from '@material-ui/icons/Add';
 import { emptyRoute } from './utils/emptyRoute';
-import { ClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingRoute } from './types';
+import { useClimbingContext } from './contexts/ClimbingContext';
 
 type Props = {
   onCreateSchemaForExistingRouteClick: (
@@ -140,7 +140,7 @@ export const RouteList = ({
     setRoutes,
     routeSelectedIndex,
     updateRouteOnIndex,
-  } = useContext(ClimbingContext);
+  } = useClimbingContext();
 
   const onRouteChange = (e, index, updatedField) => {
     updateRouteOnIndex(routeSelectedIndex, (route) => ({

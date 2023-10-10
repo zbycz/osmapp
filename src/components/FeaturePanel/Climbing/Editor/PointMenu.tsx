@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import {
   DialogTitle,
   Divider,
@@ -12,8 +12,8 @@ import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
-import { ClimbingContext } from '../contexts/ClimbingContext';
 import { PointType } from '../types';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 // import { updateElementOnIndex } from '../utils';
 
 export const PointMenu = ({ anchorEl, setAnchorEl }) => {
@@ -25,7 +25,7 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
     // updateRouteOnIndex,
     useMachine,
     isPointMoving,
-  } = useContext(ClimbingContext);
+  } = useClimbingContext();
   const machine = useMachine();
   const open = Boolean(anchorEl) && !isPointMoving;
   const id = open ? 'simple-popper' : undefined;

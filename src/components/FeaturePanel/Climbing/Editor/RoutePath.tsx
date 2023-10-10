@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ClimbingContext } from '../contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Position } from '../types';
 
 const RouteLine = styled.path``;
@@ -34,7 +34,8 @@ export const RoutePath = ({ route, routeNumber }) => {
     getPixelPosition,
     getPercentagePosition,
     useMachine,
-  } = useContext(ClimbingContext);
+    scrollOffset,
+  } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = useMachine();
   const pointsInString = route?.path.map(({ x, y }, index) => {
@@ -73,12 +74,14 @@ export const RoutePath = ({ route, routeNumber }) => {
   //   setIsDraggingPoint(false);
   // };
 
+  const hoveredPosition = {
+    x: scrollOffset.x + tempPointPosition.x,
+    y: scrollOffset.y + tempPointPosition.y,
+  };
+
   const onPointAdd = () => {
     machine.execute('addPoint');
-    const position = getPercentagePosition({
-      x: tempPointPosition.x,
-      y: tempPointPosition.y,
-    });
+    const position = getPercentagePosition(hoveredPosition);
 
     updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
       ...currentRoute,
@@ -91,7 +94,7 @@ export const RoutePath = ({ route, routeNumber }) => {
   };
 
   const onMouseDown = (e) => {
-    console.log('____onMouseDown');
+    // console.log('____onMouseDown');
     // setIsDraggingPoint(true);
     onPointAdd();
 
@@ -168,8 +171,8 @@ export const RoutePath = ({ route, routeNumber }) => {
         })}
       {isEditableSelectedRouteHovered && (
         <AddNewPoint
-          cx={tempPointPosition.x}
-          cy={tempPointPosition.y}
+          cx={hoveredPosition.x}
+          cy={hoveredPosition.y}
           fill="white"
           stroke="rgba(0,0,0,0.3)"
           r={5}

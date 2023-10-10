@@ -25,6 +25,7 @@ import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { ClimbingPanel } from './Climbing/ClimbingPanel';
+import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 
 const featuredKeys = [
   'website',
@@ -57,7 +58,11 @@ const FeaturePanel = () => {
   const label = getLabel(feature);
 
   // if (tags.climbing === 'crag') {
-  return <ClimbingPanel />;
+  return (
+    <ClimbingContextProvider>
+      <ClimbingPanel />
+    </ClimbingContextProvider>
+  );
   // }
   return (
     <PanelWrapper>

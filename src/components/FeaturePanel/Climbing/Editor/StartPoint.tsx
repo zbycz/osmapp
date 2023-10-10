@@ -1,6 +1,6 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { RouteNumber } from './RouteNumber';
-import { ClimbingContext } from '../contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 
 type Props = {
   x: number;
@@ -9,7 +9,7 @@ type Props = {
 };
 
 export const StartPoint = ({ x, y, routeNumber }: Props) => {
-  const { isRouteSelected } = useContext(ClimbingContext);
+  const { isRouteSelected } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
 
   return (

@@ -1,11 +1,11 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import { RouteEditor } from './Editor/RouteEditor';
-import { ClimbingContext } from './contexts/ClimbingContext';
+import { useClimbingContext } from './contexts/ClimbingContext';
 import { ControlPanel } from './Editor/ControlPanel';
 import { RouteList } from './RouteList';
 import { Guide } from './Guide';
@@ -65,7 +65,8 @@ export const ClimbingView = ({
     isPointClicked,
     setIsPointMoving,
     pointSelectedIndex,
-  } = useContext(ClimbingContext);
+    scrollOffset,
+  } = useClimbingContext();
 
   // const imageUrl = '/images/rock.png';
   const imageUrl = '/images/rock2.jpg';
@@ -124,8 +125,8 @@ export const ClimbingView = ({
     machine.execute('addPoint');
     if (isSelectedRouteEditable) {
       const newCoordinate = getPercentagePosition({
-        x: e.clientX - editorPosition.x,
-        y: e.clientY - editorPosition.y,
+        x: scrollOffset.x + e.clientX - editorPosition.x,
+        y: scrollOffset.y + e.clientY - editorPosition.y,
       });
 
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
@@ -164,7 +165,12 @@ export const ClimbingView = ({
   };
 
   const onMouseMove = (e) => {
-    onMove({ x: e.clientX, y: e.clientY });
+    const hoveredPosition = {
+      x: scrollOffset.x + e.clientX,
+      y: scrollOffset.y + e.clientY,
+    };
+
+    onMove(hoveredPosition);
   };
 
   const onUndoClick = () => {

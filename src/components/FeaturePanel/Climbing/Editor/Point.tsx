@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
-import { ClimbingContext } from '../contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 
 const ClickableArea = styled.circle`
   // touch-action: none;
@@ -28,7 +28,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     setIsPointMoving,
     setIsPointClicked,
     isPointMoving,
-  } = useContext(ClimbingContext);
+  } = useClimbingContext();
 
   const onClick = (e) => {
     e.stopPropagation();

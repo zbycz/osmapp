@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { ClimbingContext } from '../contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 
 type Props = {
   children: number;
@@ -24,8 +24,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   const OUTLINE_WIDTH = 2;
   const HOVER_WIDTH = 10;
 
-  const { imageSize, isRouteSelected, useMachine } =
-    useContext(ClimbingContext);
+  const { imageSize, isRouteSelected, useMachine } = useClimbingContext();
 
   const newY = // this shifts Y coordinate in case of too small photo
     y + RECT_Y_OFFSET + RECT_HEIGHT > imageSize.height

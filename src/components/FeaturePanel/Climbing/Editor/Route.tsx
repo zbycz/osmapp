@@ -1,11 +1,11 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import type { ClimbingRoute } from '../types';
-import { ClimbingContext } from '../contexts/ClimbingContext';
 import { Belay } from './BelayPoint';
 import { Bolt } from './BoltPoint';
 import { Point } from './Point';
 import { PulsedPoint } from './PulsedPoint';
 import { RoutePath } from './RoutePath';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 
 type Props = {
   route: ClimbingRoute;
@@ -15,7 +15,7 @@ type Props = {
 
 export const Route = ({ route, routeNumber, onPointClick }: Props) => {
   const { getPixelPosition, isSelectedRouteEditable, isRouteSelected } =
-    useContext(ClimbingContext);
+    useClimbingContext();
 
   const isSelected = isRouteSelected(routeNumber);
   const isThisRouteEditMode = isSelectedRouteEditable && isSelected;

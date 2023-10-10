@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import { ClimbingContext } from '../contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PointMenu } from './PointMenu';
 import { RouteWithLabel } from './RouteWithLabel';
 
@@ -34,7 +34,7 @@ export const RouteEditor = ({
     pointSelectedIndex,
     routeSelectedIndex,
     useMachine,
-  } = useContext(ClimbingContext);
+  } = useClimbingContext();
 
   // @TODO rename? on point in selected route clicked
   const machine = useMachine();

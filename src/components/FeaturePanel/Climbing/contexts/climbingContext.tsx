@@ -1,4 +1,4 @@
-import React, { createContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { ClimbingRoute, Position } from '../types';
 import { updateElementOnIndex } from '../utils';
 import { emptyRoute } from '../utils/emptyRoute';
@@ -63,6 +63,8 @@ type ClimbingContextType = {
     currentState: Partial<Record<Action, ActionWithCallback>>;
     execute: (desiredAction: Action, props?: unknown) => void;
   };
+  scrollOffset: Position;
+  setScrollOffset: (scrollOffset: Position) => void;
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
@@ -90,6 +92,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setRouteSelectedIndex: () => null,
   updateRouteOnIndex: () => null,
   useMachine: () => ({ currentState: null, execute: () => null }),
+  scrollOffset: { x: 0, y: 0 },
+  setScrollOffset: () => null,
 });
 
 export const ClimbingContextProvider = ({ children }) => {
@@ -99,6 +103,10 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [editorPosition, setEditorPosition] = useState<Position>({
+    x: 0,
+    y: 0,
+  });
+  const [scrollOffset, setScrollOffset] = useState<Position>({
     x: 0,
     y: 0,
   });
@@ -292,6 +300,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setRouteSelectedIndex,
     updateRouteOnIndex,
     useMachine,
+    scrollOffset,
+    setScrollOffset,
   };
 
   return (
@@ -299,4 +309,14 @@ export const ClimbingContextProvider = ({ children }) => {
       {children}
     </ClimbingContext.Provider>
   );
+};
+
+export const useClimbingContext = () => {
+  const context = useContext(ClimbingContext);
+  if (!context) {
+    throw new Error(
+      'useClimbingContext must be used within a ClimbingProvider',
+    );
+  }
+  return context;
 };
