@@ -32,7 +32,7 @@ export const ClimbingPanel = () => {
           onClose={onFullscreenDialogClose}
         >
           <DialogContent
-            style={{ overscrollBehavior: 'none', padding: 0 }}
+            style={{ padding: 0 }}
             ref={contentRef}
             onScroll={onScroll}
           >

@@ -22,9 +22,15 @@ type Props = {
 const Container = styled.div`
   position: relative;
 `;
+const StickyContainer = styled.div<{ imageHeight: number }>`
+  position: relative;
+  height: ${({ imageHeight }) => `${imageHeight}px`};
+`;
 
 const ImageContainer = styled.div`
   user-select: none;
+  position: absolute;
+  top: 0;
 `;
 
 const ImageElement = styled.img<{ zoom?: number }>`
@@ -52,6 +58,7 @@ export const ClimbingView = ({
 
   const {
     setImageSize,
+    imageSize,
     isSelectedRouteEditable,
     setIsSelectedRouteEditable,
     setRouteSelectedIndex,
@@ -179,40 +186,44 @@ export const ClimbingView = ({
 
   React.useEffect(() => {
     window.addEventListener('resize', handleImageLoad);
+    window.addEventListener('orientationchange', handleImageLoad);
 
     return () => {
       window.removeEventListener('resize', handleImageLoad);
+      window.removeEventListener('orientationchange', handleImageLoad);
     };
   }, []);
 
   // @TODO udělat header footer jako edit dialog
   return (
     <Container>
-      <ImageContainer>
-        <ImageElement
-          src={imageUrl}
-          onLoad={handleImageLoad}
-          ref={imageRef}
-          // zoom={zoom}
+      <StickyContainer imageHeight={imageSize.height}>
+        {!isReadOnly && (
+          <ControlPanel
+            onEditClimbingRouteClick={onEditClimbingRouteClick}
+            onDeleteExistingClimbingRouteClick={
+              onDeleteExistingClimbingRouteClick
+            }
+            onCreateClimbingRouteClick={onCreateClimbingRouteClick}
+            onUndoClick={onUndoClick}
+          />
+        )}
+        <ImageContainer>
+          <ImageElement
+            src={imageUrl}
+            onLoad={handleImageLoad}
+            ref={imageRef}
+            // zoom={zoom}
+          />
+        </ImageContainer>
+        <RouteEditor
+          routes={routes}
+          onClick={onEditorClick || onCanvasClick}
+          onEditorMouseMove={onMouseMove}
+          onEditorTouchMove={onTouchMove}
         />
-      </ImageContainer>
-      <RouteEditor
-        routes={routes}
-        onClick={onEditorClick || onCanvasClick}
-        onEditorMouseMove={onMouseMove}
-        onEditorTouchMove={onTouchMove}
-      />
+      </StickyContainer>
 
-      {!isReadOnly && (
-        <ControlPanel
-          onEditClimbingRouteClick={onEditClimbingRouteClick}
-          onDeleteExistingClimbingRouteClick={
-            onDeleteExistingClimbingRouteClick
-          }
-          onCreateClimbingRouteClick={onCreateClimbingRouteClick}
-          onUndoClick={onUndoClick}
-        />
-      )}
       <Guide />
 
       <RouteList

@@ -12,10 +12,11 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 const Container = styled.div`
   background: rgba(0, 0, 0, 0.5);
   border-radius: 4px;
-  position: absolute;
+  position: sticky;
   width: 44px;
   top: 5px;
   left: 5px;
+  z-index: 1;
 `;
 
 export const ControlPanel = ({
