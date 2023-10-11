@@ -29,6 +29,11 @@ type Props = {
   onDeleteExistingRouteClick: (deletedExistingRouteIndex: number) => void;
   isReadOnly: boolean;
 };
+const Container = styled.div`
+  flex: 1;
+  overflow: auto;
+`;
+
 const EmptyValue = styled.div`
   color: #666;
 `;
@@ -159,7 +164,7 @@ export const RouteList = ({
   if (isReadOnly && routes.length === 0) return null;
 
   return (
-    <div>
+    <Container>
       <TableContainer>
         <Table size="small">
           {!isReadOnly && (
@@ -203,6 +208,6 @@ export const RouteList = ({
           </TableBody>
         </Table>
       </TableContainer>
-    </div>
+    </Container>
   );
 };

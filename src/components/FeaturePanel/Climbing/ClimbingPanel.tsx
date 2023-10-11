@@ -8,6 +8,7 @@ import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 
 const EditRoutesContainer = styled.div`
   padding: 10px;
+  overflow: auto;
 `;
 
 export const ClimbingPanel = () => {

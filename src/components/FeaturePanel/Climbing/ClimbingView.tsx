@@ -21,6 +21,9 @@ type Props = {
 
 const Container = styled.div`
   position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 `;
 const StickyContainer = styled.div<{ imageHeight: number }>`
   position: relative;

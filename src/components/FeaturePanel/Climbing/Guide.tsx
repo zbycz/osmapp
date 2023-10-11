@@ -13,14 +13,14 @@ export const Guide = () => {
     useClimbingContext();
 
   return (
-    <GuideContainer>
-      {isSelectedRouteEditable && (
+    isSelectedRouteEditable && (
+      <GuideContainer>
         <Alert severity="info" variant="filled">
           {routes[routeSelectedIndex].path.length === 0
             ? t('climbingpanel.create_first_node')
             : t('climbingpanel.create_next_node')}
         </Alert>
-      )}
-    </GuideContainer>
+      </GuideContainer>
+    )
   );
 };
