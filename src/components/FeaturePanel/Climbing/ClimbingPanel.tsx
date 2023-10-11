@@ -15,7 +15,7 @@ export const ClimbingPanel = () => {
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(true);
 
-  const { setScrollOffset } = useClimbingContext();
+  const { setScrollOffset, isPointMoving } = useClimbingContext();
 
   const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
@@ -32,7 +32,10 @@ export const ClimbingPanel = () => {
           onClose={onFullscreenDialogClose}
         >
           <DialogContent
-            style={{ padding: 0 }}
+            style={{
+              overscrollBehavior: isPointMoving ? 'none' : undefined,
+              padding: 0,
+            }}
             ref={contentRef}
             onScroll={onScroll}
           >
