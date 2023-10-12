@@ -20,7 +20,7 @@ const {
 } = getConfig();
 
 const osmUrl = prod
-  ? 'https://www.openstreetmap.org'
+  ? 'https://api.openstreetmap.org'
   : 'https://master.apis.dev.openstreetmap.org';
 
 const oauth = prod
