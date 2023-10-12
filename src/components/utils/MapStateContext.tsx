@@ -74,7 +74,7 @@ export const MapStateProvider = ({ children, initialMapView }) => {
   };
 
   const [brokenShown, setBrokenShown] = React.useState(true);
-  const onBrokenClose = (_, reason) => {
+  const onBrokenClose = (event?: React.SyntheticEvent, reason?: string) => {
     if (reason !== 'clickaway') {
       setBrokenShown(false);
     }
