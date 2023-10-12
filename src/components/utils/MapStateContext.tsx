@@ -73,12 +73,30 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     showToast,
   };
 
+  const [brokenShown, setBrokenShown] = React.useState(true);
+  const onBrokenClose = (_, reason) => {
+    if (reason !== 'clickaway') {
+      setBrokenShown(false);
+    }
+  };
   return (
     <MapStateContext.Provider value={mapState}>
       {children}
       <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={msg?.type} variant="filled">
           {msg?.content}
+        </Alert>
+      </Snackbar>
+      <Snackbar open={brokenShown} onClose={onBrokenClose}>
+        <Alert onClose={onBrokenClose} severity="info" variant="filled">
+          Clickable POIs are currently broken on Maptiler –{' '}
+          <a
+            href="https://github.com/openmaptiles/openmaptiles/issues/1587"
+            style={{ color: '#fff', textDecoration: 'underline' }}
+          >
+            issue here
+          </a>
+          .
         </Alert>
       </Snackbar>
     </MapStateContext.Provider>
