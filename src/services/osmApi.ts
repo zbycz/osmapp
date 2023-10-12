@@ -9,9 +9,9 @@ import { getSchemaForFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
 
 const getOsmUrl = ({ type, id }) =>
-  `https://www.openstreetmap.org/api/0.6/${type}/${id}.json`;
+  `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
 const getOsmHistoryUrl = ({ type, id }) =>
-  `https://www.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
+  `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
 // Overpass API is used only for getting cetroids of ways and relations
 const getOverpassUrl = ({ type, id }) => {
@@ -146,7 +146,7 @@ export const insertOsmNote = async (point: Position, text: string) => {
   body.append('text', text);
 
   const osmUrl = prod
-    ? 'https://www.openstreetmap.org'
+    ? 'https://api.openstreetmap.org'
     : 'https://master.apis.dev.openstreetmap.org';
 
   // {"type":"Feature","geometry":{"type":"Point","coordinates":[14.3244982,50.0927863]},"properties":{"id":26569,"url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569.json","comment_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/comment.json","close_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/close.json","date_created":"2021-04-17 10:37:44 UTC","status":"open","comments":[{"date":"2021-04-17 10:37:44 UTC","action":"opened","text":"way/39695868! Place was marked permanently closed.From https://osmapp.org/way/39695868","html":"\u003cp\u003eway/39695868! Place was marked permanently closed.From \u003ca href=\"https://osmapp.org/way/39695868\" rel=\"nofollow noopener noreferrer\"\u003ehttps://osmapp.org/way/39695868\u003c/a\u003e\u003c/p\u003e"}]}}
