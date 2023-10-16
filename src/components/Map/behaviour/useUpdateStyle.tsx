@@ -12,12 +12,13 @@ export const getRasterStyle = (key) => {
 
 export const useUpdateStyle = useMapEffect((map, activeLayers) => {
   const key = activeLayers[0] ?? DEFAULT_MAP;
+
   map.setMaxZoom(osmappLayers[key]?.maxzoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
-  map.setStyle(
-    key === 'basic'
-      ? basicStyle
-      : key === 'outdoor'
-      ? outdoorStyle
-      : getRasterStyle(key),
-  );
+
+  if (key === 'basic' || key === 'outdoor') {
+    map.setStyle(key === 'basic' ? basicStyle : outdoorStyle);
+  } else {
+    map.setStyle(getRasterStyle(key));
+    map.setZoom(Math.round(map.getZoom()));
+  }
 });
