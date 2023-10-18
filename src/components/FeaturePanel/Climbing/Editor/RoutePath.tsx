@@ -112,14 +112,17 @@ export const RoutePath = ({ route, routeNumber }) => {
   //   isHovered,
   // );
 
+  const isInteractionDisabled =
+    isSelectedRouteEditable && !isRouteSelected(routeNumber);
   const commonProps = isEditableSelectedRouteHovered
     ? { cursor: 'copy' }
     : {
         onClick: (e) => {
+          if (isInteractionDisabled) return;
           machine.execute('routeSelect', { routeNumber });
           e.stopPropagation();
         },
-        cursor: 'pointer',
+        cursor: isInteractionDisabled ? undefined : 'pointer',
       };
 
   return (
@@ -147,7 +150,11 @@ export const RoutePath = ({ route, routeNumber }) => {
         route.path.map(({ x, y }, index) => {
           const position1 = getPixelPosition({ x, y });
 
-          if (route?.path && index < route.path.length - 1) {
+          if (
+            route?.path &&
+            index < route.path.length - 1 &&
+            !isInteractionDisabled
+          ) {
             const position2 = getPixelPosition(route.path[index + 1]);
             return (
               <InteractiveArea

@@ -34,6 +34,7 @@ export const RouteEditor = ({
     pointSelectedIndex,
     routeSelectedIndex,
     useMachine,
+    isRouteSelected,
   } = useClimbingContext();
 
   // @TODO rename? on point in selected route clicked
@@ -51,6 +52,27 @@ export const RouteEditor = ({
     setAnchorEl(anchorEl !== null ? null : event.currentTarget);
   };
 
+  const sortedRoutes = routes.reduce(
+    (acc, route, index) => {
+      const RenderRoute = () => (
+        <RouteWithLabel
+          route={route}
+          routeNumber={index}
+          onPointClick={onPointClick}
+        />
+      );
+
+      if (isRouteSelected(index)) {
+        return {
+          ...acc,
+          selected: [...acc.selected, <RenderRoute />],
+        };
+      }
+      return { ...acc, rest: [...acc.rest, <RenderRoute />] };
+    },
+    { selected: [], rest: [] },
+  );
+
   return (
     <>
       <Svg
@@ -62,13 +84,8 @@ export const RouteEditor = ({
         onTouchMove={onEditorTouchMove}
         imageSize={imageSize}
       >
-        {routes.map((route, index) => (
-          <RouteWithLabel
-            route={route}
-            routeNumber={index}
-            onPointClick={onPointClick}
-          />
-        ))}
+        {sortedRoutes.rest}
+        {sortedRoutes.selected}
       </Svg>
 
       <PointMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
 import {
-  Box,
   Button,
   Collapse,
   IconButton,
@@ -13,6 +12,7 @@ import {
   TableRow,
   TextField,
 } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
 import GestureIcon from '@material-ui/icons/Gesture';
 import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
@@ -23,9 +23,6 @@ import { ClimbingRoute } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
 
 type Props = {
-  onCreateSchemaForExistingRouteClick: (
-    updatedRouteSelectedIndex: number,
-  ) => void;
   onDeleteExistingRouteClick: (deletedExistingRouteIndex: number) => void;
   isReadOnly: boolean;
 };
@@ -37,15 +34,20 @@ const Container = styled.div`
 const EmptyValue = styled.div`
   color: #666;
 `;
+// const Row = styled.div`
+//   display: flex;
+// `;
+// const Number = styled.div``;
+// const Name = styled.div``;
+// const Difficulty = styled.div``;
+// const Actions = styled.div``;
 
 const RenderRow = ({
   route,
   isReadOnly,
   index,
   onRowClick,
-  routeSelectedIndex,
   onRouteChange,
-  onCreateSchemaForExistingRouteClick,
   onDeleteExistingRouteClick,
 }) => {
   const { name, difficulty, path } = route;
@@ -53,11 +55,71 @@ const RenderRow = ({
     route[field] !== '' ? route[field] : <EmptyValue>?</EmptyValue>;
   const [open, setOpen] = React.useState(false);
 
+  const { isSelectedRouteEditable, useMachine, isRouteSelected } =
+    useClimbingContext();
+  const isSelected = isRouteSelected(index);
+  const machine = useMachine();
+  const onEditClick = () => {
+    machine.execute('editRoute');
+  };
+
   return (
+    // <Row>
+    //   <Number>{index}</Number>
+    //   <Name>
+    //     {isReadOnly ? (
+    //       getText('name')
+    //     ) : (
+    //       <TextField
+    //         size="small"
+    //         value={name}
+    //         placeholder="No name"
+    //         onChange={(e) => onRouteChange(e, index, 'name')}
+    //         fullWidth
+    //         variant="outlined"
+    //       />
+    //     )}
+    //   </Name>
+    //   <Difficulty>
+    //     {isReadOnly ? (
+    //       getText('difficulty')
+    //     ) : (
+    //       <TextField
+    //         size="small"
+    //         value={difficulty}
+    //         placeholder="6+"
+    //         onChange={(e) => onRouteChange(e, index, 'difficulty')}
+    //         variant="outlined"
+    //       />
+    //     )}
+    //   </Difficulty>
+    //   <Actions>
+    //     {!isReadOnly && (
+    //       <>
+    //         {path.length === 0 && (
+    //           <IconButton
+    //             onClick={() => onCreateSchemaForExistingRouteClick(index)}
+    //             color="primary"
+    //             title="Draw route to schema"
+    //           >
+    //             <GestureIcon fontSize="small" />
+    //           </IconButton>
+    //         )}
+    //         <IconButton
+    //           onClick={() => onDeleteExistingRouteClick(index)}
+    //           color="primary"
+    //           title="Delete route"
+    //         >
+    //           <DeleteIcon fontSize="small" />
+    //         </IconButton>
+    //       </>
+    //     )}
+    //   </Actions>
+    // </Row>
     <>
       <TableRow
         onClick={() => onRowClick(index)}
-        selected={routeSelectedIndex === index}
+        selected={isSelected}
         style={{ cursor: 'pointer' }}
       >
         <TableCell width={50}>
@@ -73,7 +135,7 @@ const RenderRow = ({
           {index}
         </TableCell>
         <TableCell>
-          {isReadOnly ? (
+          {isReadOnly || !isSelectedRouteEditable || !isSelected ? (
             getText('name')
           ) : (
             <TextField
@@ -87,7 +149,7 @@ const RenderRow = ({
           )}
         </TableCell>
         <TableCell width={50}>
-          {isReadOnly ? (
+          {isReadOnly || !isSelectedRouteEditable || !isSelected ? (
             getText('difficulty')
           ) : (
             <TextField
@@ -103,21 +165,14 @@ const RenderRow = ({
         {!isReadOnly && (
           <TableCell align="right" width={120}>
             <>
-              {path.length === 0 && (
-                <IconButton
-                  onClick={() => onCreateSchemaForExistingRouteClick(index)}
-                  color="primary"
-                  title="Draw route to schema"
-                >
-                  <GestureIcon fontSize="small" />
-                </IconButton>
-              )}
+              {path.length === 0 && <GestureIcon fontSize="small" />}
               <IconButton
-                onClick={() => onDeleteExistingRouteClick(index)}
+                onClick={() => onEditClick()}
                 color="primary"
-                title="Delete route"
+                size="small"
+                title="Edit"
               >
-                <DeleteIcon fontSize="small" />
+                <EditIcon fontSize="small" />
               </IconButton>
             </>
           </TableCell>
@@ -126,7 +181,14 @@ const RenderRow = ({
       <TableRow>
         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box>TODO</Box>
+            <IconButton
+              onClick={() => onDeleteExistingRouteClick(index)}
+              color="primary"
+              size="small"
+              title="Delete route"
+            >
+              <DeleteIcon fontSize="small" />
+            </IconButton>
           </Collapse>
         </TableCell>
       </TableRow>
@@ -135,7 +197,6 @@ const RenderRow = ({
 };
 
 export const RouteList = ({
-  onCreateSchemaForExistingRouteClick,
   onDeleteExistingRouteClick,
   isReadOnly = false,
 }: Props) => {
@@ -159,7 +220,7 @@ export const RouteList = ({
   };
 
   const onRowClick = (index: number) => {
-    setRouteSelectedIndex(index);
+    setRouteSelectedIndex(routeSelectedIndex === index ? null : index);
   };
   if (isReadOnly && routes.length === 0) return null;
 
@@ -197,11 +258,7 @@ export const RouteList = ({
                 index={index}
                 onRowClick={onRowClick}
                 isReadOnly={isReadOnly}
-                routeSelectedIndex={routeSelectedIndex}
                 onRouteChange={onRouteChange}
-                onCreateSchemaForExistingRouteClick={
-                  onCreateSchemaForExistingRouteClick
-                }
                 onDeleteExistingRouteClick={onDeleteExistingRouteClick}
               />
             ))}

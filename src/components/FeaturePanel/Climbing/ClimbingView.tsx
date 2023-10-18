@@ -76,6 +76,7 @@ export const ClimbingView = ({
     setIsPointMoving,
     pointSelectedIndex,
     scrollOffset,
+    findClosestPoint,
   } = useClimbingContext();
 
   // const imageUrl = '/images/rock.png';
@@ -104,12 +105,6 @@ export const ClimbingView = ({
     machine.execute('createRoute');
   };
 
-  const onCreateSchemaForExistingRouteClick = (
-    updatedRouteSelectedIndex: number,
-  ) => {
-    machine.execute('updateRoute', { updatedRouteSelectedIndex });
-  };
-
   const onDeleteWholeRouteClick = (deletedExistingRouteIndex: number) => {
     // @TODO co to je?
     machine.execute('deleteRoute');
@@ -133,15 +128,18 @@ export const ClimbingView = ({
 
   const onCanvasClick = (e) => {
     machine.execute('addPoint');
+
     if (isSelectedRouteEditable) {
       const newCoordinate = getPercentagePosition({
         x: scrollOffset.x + e.clientX - editorPosition.x,
         y: scrollOffset.y + e.clientY - editorPosition.y,
       });
 
+      const closestPoint = findClosestPoint(newCoordinate);
+
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
-        path: [...route.path, newCoordinate],
+        path: [...(route?.path ?? []), closestPoint ?? newCoordinate],
       }));
 
       return;
@@ -231,9 +229,6 @@ export const ClimbingView = ({
 
       <RouteList
         isReadOnly={isReadOnly}
-        onCreateSchemaForExistingRouteClick={
-          onCreateSchemaForExistingRouteClick
-        }
         onDeleteExistingRouteClick={onDeleteWholeRouteClick}
       />
       <DialogIcon>

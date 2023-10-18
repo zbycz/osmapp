@@ -22,7 +22,6 @@ type Action =
   | 'editRoute'
   | 'finishRoute'
   | 'routeSelect'
-  | 'updateRoute'
   | 'showPointMenu'
   | 'undoPoint';
 
@@ -65,6 +64,7 @@ type ClimbingContextType = {
   };
   scrollOffset: Position;
   setScrollOffset: (scrollOffset: Position) => void;
+  findClosestPoint: (position: Position) => Position | null;
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
@@ -94,6 +94,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   useMachine: () => ({ currentState: null, execute: () => null }),
   scrollOffset: { x: 0, y: 0 },
   setScrollOffset: () => null,
+  findClosestPoint: () => null,
 });
 
 export const ClimbingContextProvider = ({ children }) => {
@@ -162,15 +163,6 @@ export const ClimbingContextProvider = ({ children }) => {
     setRouteSelectedIndex(null);
   };
 
-  const updateRoute = ({ updatedRouteSelectedIndex }) => {
-    setIsSelectedRouteEditable(true);
-    updateRouteOnIndex(updatedRouteSelectedIndex, (route) => ({
-      ...route,
-      path: [],
-    }));
-    setRouteSelectedIndex(updatedRouteSelectedIndex);
-  };
-
   const undoPoint = () => {
     updateRouteOnIndex(routeSelectedIndex, (route) => ({
       ...route,
@@ -218,10 +210,30 @@ export const ClimbingContextProvider = ({ children }) => {
     }));
   };
 
+  const findClosestPoint = (checkedPosition: Position) => {
+    if (!routeSelectedIndex) return null;
+
+    const STICKY_THRESHOLD = 0.015;
+
+    return routes
+      .map((route, index) => {
+        if (index === routeSelectedIndex) return [];
+        return route.path;
+      })
+      .flat()
+      .find(
+        (point) =>
+          checkedPosition.x - STICKY_THRESHOLD < point.x &&
+          checkedPosition.x + STICKY_THRESHOLD > point.x &&
+          checkedPosition.y - STICKY_THRESHOLD < point.y &&
+          checkedPosition.y + STICKY_THRESHOLD > point.y,
+      );
+  };
+
   const states: Machine = {
     init: {
       createRoute: { nextState: 'editRoute', callback: createRoute },
-      updateRoute: { nextState: 'editRoute', callback: updateRoute },
+      editRoute: { nextState: 'editRoute', callback: editRoute },
       routeSelect: {
         nextState: 'routeSelected',
         callback: routeSelect,
@@ -267,6 +279,8 @@ export const ClimbingContextProvider = ({ children }) => {
           nextState,
           props,
           callback ? 'callback' : 'no callback',
+          routeSelectedIndex,
+          pointSelectedIndex,
         );
         if (callback) callback(props);
       } else {
@@ -302,6 +316,7 @@ export const ClimbingContextProvider = ({ children }) => {
     useMachine,
     scrollOffset,
     setScrollOffset,
+    findClosestPoint,
   };
 
   return (

@@ -1,6 +1,5 @@
 import { IconButton } from '@material-ui/core';
 import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import DeleteIcon from '@material-ui/icons/Delete';
 import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import UndoIcon from '@material-ui/icons/Undo';
@@ -21,7 +20,6 @@ const Container = styled.div`
 
 export const ControlPanel = ({
   onEditClimbingRouteClick,
-  onDeleteExistingClimbingRouteClick,
   onCreateClimbingRouteClick,
   onUndoClick,
 }) => {
@@ -46,7 +44,7 @@ export const ControlPanel = ({
             <CheckIcon fontSize="small" />
           </IconButton>
 
-          {routes[routeSelectedIndex].path.length !== 0 && (
+          {routes[routeSelectedIndex]?.path.length !== 0 && (
             <IconButton
               color="default"
               edge="end"
@@ -56,14 +54,14 @@ export const ControlPanel = ({
               <UndoIcon fontSize="small" />
             </IconButton>
           )}
-          <IconButton
+          {/* <IconButton
             color="default"
             edge="end"
             onClick={onDeleteExistingClimbingRouteClick}
             title={t('climbingpanel.delete_climbing_route')}
           >
             <DeleteIcon fontSize="small" />
-          </IconButton>
+          </IconButton> */}
         </>
       ) : (
         <>
@@ -76,19 +74,18 @@ export const ControlPanel = ({
             <ControlPointIcon fontSize="small" />
           </IconButton>
 
-          {routeSelectedIndex !== null &&
-            routes[routeSelectedIndex]?.path?.length !== 0 && (
-              <>
-                <IconButton
-                  color="default"
-                  edge="end"
-                  onClick={onEditClimbingRouteClick}
-                  title={t('climbingpanel.edit_climbing_route')}
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              </>
-            )}
+          {routeSelectedIndex !== null && (
+            <>
+              <IconButton
+                color="default"
+                edge="end"
+                onClick={onEditClimbingRouteClick}
+                title={t('climbingpanel.edit_climbing_route')}
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+            </>
+          )}
         </>
       )}
     </Container>
