@@ -79,12 +79,11 @@ export const ClimbingView = ({
     findClosestPoint,
   } = useClimbingContext();
 
-  // const imageUrl = '/images/rock.png';
-  const imageUrl = '/images/rock2.jpg';
-  // const imageUrl = "https://upload.zby.cz/screenshot-2023-09-12-at-17.12.24.png"
-  // const imageUrl = "https://www.skalnioblasti.cz/image.php?typ=skala&id=13516"
+  const imageUrl = '/images/rock.png';
+  // const imageUrl = '/images/rock2.jpg';
+  // const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
   // const imageUrl =
-  // 'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
+  //   'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
   const imageRef = useRef(null);
   const machine = useMachine();
 
@@ -117,10 +116,10 @@ export const ClimbingView = ({
     machine.execute('editRoute');
   };
 
-  const onDeleteExistingClimbingRouteClick = () => {
-    // @TODO co to je?
-    machine.execute('deleteRoute');
-  };
+  // const onDeleteExistingClimbingRouteClick = () => {
+  //   // @TODO co to je?
+  //   machine.execute('deleteRoute');
+  // };
 
   useEffect(() => {
     handleImageLoad();
@@ -202,9 +201,6 @@ export const ClimbingView = ({
         {!isReadOnly && (
           <ControlPanel
             onEditClimbingRouteClick={onEditClimbingRouteClick}
-            onDeleteExistingClimbingRouteClick={
-              onDeleteExistingClimbingRouteClick
-            }
             onCreateClimbingRouteClick={onCreateClimbingRouteClick}
             onUndoClick={onUndoClick}
           />
