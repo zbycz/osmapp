@@ -9,6 +9,10 @@ type Props = {
   y: number;
 };
 
+const Text = styled.text`
+  user-select: none;
+`;
+
 const RouteNameBoxBase = styled.rect`
   pointer-events: all;
 `;
@@ -70,7 +74,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         fill={isSelected ? 'royalblue' : 'white'}
         {...commonProps}
       />
-      <text
+      <Text
         x={x}
         y={newY + 15}
         fill={isSelected ? 'white' : '#666'}
@@ -79,7 +83,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         {...commonProps}
       >
         {routeNumber}
-      </text>
+      </Text>
     </>
   );
 };

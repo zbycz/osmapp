@@ -133,6 +133,7 @@ export const RoutePath = ({ route, routeNumber }) => {
         stroke={isSelected ? 'white' : '#666'}
         strokeLinecap="round"
         fill="none"
+        opacity={0.8}
         {...commonProps}
       />
       <RouteLine

@@ -2,7 +2,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { updateElementOnIndex } from '../utils';
 
 const ClickableArea = styled.circle`
   // touch-action: none;
@@ -29,9 +28,6 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     setIsPointMoving,
     setIsPointClicked,
     isPointMoving,
-    findClosestPoint,
-    routes,
-    updateRouteOnIndex,
   } = useClimbingContext();
 
   const onClick = (e) => {
@@ -51,23 +47,6 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   };
 
   const onMouseUp = (e) => {
-    const currentPoint = routes[routeSelectedIndex].path[pointSelectedIndex];
-    const closestPoint = findClosestPoint(currentPoint);
-    if (closestPoint) {
-      updateRouteOnIndex(routeSelectedIndex, (route) => ({
-        ...route,
-        path: updateElementOnIndex(
-          route.path,
-          pointSelectedIndex ?? route.path.length,
-          (point) => ({
-            ...point,
-            x: closestPoint.x,
-            y: closestPoint.y,
-          }),
-        ),
-      }));
-    }
-
     setPointSelectedIndex(null);
     if (!isPointMoving) {
       onPointClick(e);

@@ -156,12 +156,16 @@ export const ClimbingView = ({
         x: position.x - editorPosition.x,
         y: position.y - editorPosition.y,
       });
+
+      const closestPoint = findClosestPoint(newCoordinate);
+
+      const updatedPoint = closestPoint ?? newCoordinate;
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
         path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
           ...point,
-          x: newCoordinate.x,
-          y: newCoordinate.y,
+          x: updatedPoint.x,
+          y: updatedPoint.y,
         })),
       }));
     }
