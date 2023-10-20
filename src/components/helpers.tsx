@@ -92,3 +92,24 @@ export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
 
 // (>= mobile size) This changes just the app layout
 export const isDesktop = '(min-width: 500px)';
+
+export function appendSearchParams(url: string, params: Object) {
+  const searchParams = new URLSearchParams();
+
+  Object.entries(params).forEach(([key, value]) => {
+    searchParams.append(key, value);
+  });
+
+  const urlWithParams = `${url}?${searchParams.toString()}`;
+
+  return urlWithParams;
+}
+
+export function findFirstMatchingKey(tags: Object, keys: Array<string>) {
+  for (let i = 0; i < keys.length; i += 1) {
+    if (keys[i] in tags) {
+      return tags[keys[i]];
+    }
+  }
+  return null;
+}
