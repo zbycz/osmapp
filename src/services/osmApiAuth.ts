@@ -19,8 +19,8 @@ const {
   publicRuntimeConfig: { osmappVersion },
 } = getConfig();
 
-const osmUrl = prod
-  ? 'https://api.openstreetmap.org'
+const osmEditUrl = prod
+  ? 'https://www.openstreetmap.org' // iD uses same URL https://ideditor.netlify.app/
   : 'https://master.apis.dev.openstreetmap.org';
 
 const oauth = prod
@@ -39,7 +39,7 @@ const auth = new OsmAuth({
   ...oauth,
   auto: true,
   landing: '/oauth-token.html',
-  url: osmUrl,
+  url: osmEditUrl,
 });
 
 const authFetch = async (options) =>
@@ -235,7 +235,7 @@ export const editOsmFeature = async (
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmUrl}/changeset/${changesetId}`,
+    url: `${osmEditUrl}/changeset/${changesetId}`,
     redirect: `${getOsmappLink(feature)}`,
   };
 };
@@ -271,7 +271,7 @@ export const addOsmFeature = async (
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmUrl}/changeset/${changesetId}`,
+    url: `${osmEditUrl}/changeset/${changesetId}`,
     redirect: `/${getUrlOsmId(apiId)}`,
   };
 };
