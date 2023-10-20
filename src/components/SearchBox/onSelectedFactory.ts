@@ -65,6 +65,10 @@ export const onSelectedFactory =
         setOverpassLoading(true);
       }, 300);
 
+      // change url to /category, fetching will be done there
+      console.log(option.preset.presetForSearch, 'asdf'); // eslint-disable-line no-console
+      Router.push(`/category/${option.preset.presetForSearch.key}`);
+
       performOverpassSearch(bbox, tags)
         .then((geojson) => {
           const count = geojson.features.length;
