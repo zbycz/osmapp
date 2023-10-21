@@ -25,8 +25,27 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
 `;
-const StickyContainer = styled.div<{ imageHeight: number }>`
+const EditorContainer = styled.div<{ imageHeight: number }>`
+  display: flex;
+  justify-content: center;
+  height: ${({ imageHeight }) => `${imageHeight}px`};
+  top: 0;
+  position: absolute;
+  width: 100%;
+`;
+const BlurContainer = styled.div`
+  backdrop-filter: blur(15px);
+  background-color: rgba(0, 0, 0, 0.6);
+  height: 100%;
+`;
+
+const StickyContainer = styled.div<{ imageHeight: number; imageUrl: string }>`
   position: relative;
+  background: #111 url(${({ imageUrl }) => imageUrl}) no-repeat;
+  background-size: 100% auto;
+  object-fit: cover;
+  object-position: center;
+
   height: ${({ imageHeight }) => `${imageHeight}px`};
 `;
 
@@ -34,6 +53,7 @@ const ImageContainer = styled.div`
   user-select: none;
   position: absolute;
   top: 0;
+  box-shadow: 0 -0 110px rgba(0, 0, 0, 0.1);
 `;
 
 const ImageElement = styled.img<{ zoom?: number }>`
@@ -201,31 +221,34 @@ export const ClimbingView = ({
   // @TODO udělat header footer jako edit dialog
   return (
     <Container>
-      <StickyContainer imageHeight={imageSize.height}>
-        {!isReadOnly && (
-          <ControlPanel
-            onEditClimbingRouteClick={onEditClimbingRouteClick}
-            onCreateClimbingRouteClick={onCreateClimbingRouteClick}
-            onUndoClick={onUndoClick}
-          />
-        )}
-        <ImageContainer>
-          <ImageElement
-            src={imageUrl}
-            onLoad={handleImageLoad}
-            ref={imageRef}
-            // zoom={zoom}
-          />
-        </ImageContainer>
-        <RouteEditor
-          routes={routes}
-          onClick={onEditorClick || onCanvasClick}
-          onEditorMouseMove={onMouseMove}
-          onEditorTouchMove={onTouchMove}
-        />
+      <StickyContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
+        <BlurContainer>
+          {!isReadOnly && (
+            <ControlPanel
+              onEditClimbingRouteClick={onEditClimbingRouteClick}
+              onCreateClimbingRouteClick={onCreateClimbingRouteClick}
+              onUndoClick={onUndoClick}
+            />
+          )}
+          <EditorContainer imageHeight={imageSize.height}>
+            <ImageContainer>
+              <ImageElement
+                src={imageUrl}
+                onLoad={handleImageLoad}
+                ref={imageRef}
+                // zoom={zoom}
+              />
+            </ImageContainer>
+            <RouteEditor
+              routes={routes}
+              onClick={onEditorClick || onCanvasClick}
+              onEditorMouseMove={onMouseMove}
+              onEditorTouchMove={onTouchMove}
+            />
+            <Guide />
+          </EditorContainer>
+        </BlurContainer>
       </StickyContainer>
-
-      <Guide />
 
       <RouteList
         isReadOnly={isReadOnly}

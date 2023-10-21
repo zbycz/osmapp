@@ -10,7 +10,7 @@ const Svg = styled.svg<{
   imageSize: { width: number; height: number };
 }>`
   position: absolute;
-  left: 0;
+  /* left: 0; */
   top: 0;
   ${({ hasEditableCursor }) =>
     `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};

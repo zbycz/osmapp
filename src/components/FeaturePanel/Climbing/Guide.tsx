@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Alert } from '@material-ui/lab';
+import { Snackbar } from '@material-ui/core';
 import { t } from '../../../services/intl';
 import { useClimbingContext } from './contexts/ClimbingContext';
 
@@ -9,18 +10,26 @@ const GuideContainer = styled.div`
 `;
 
 export const Guide = () => {
+  const [isGuideClosed, setIsGuideClosed] = useState(false);
   const { isSelectedRouteEditable, routeSelectedIndex, routes } =
     useClimbingContext();
 
+  const handleClose = () => {
+    setIsGuideClosed(true);
+  };
   return (
-    isSelectedRouteEditable && (
-      <GuideContainer>
-        <Alert severity="info" variant="filled">
+    <GuideContainer>
+      <Snackbar
+        open={isSelectedRouteEditable && !isGuideClosed}
+        // autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert onClose={handleClose} severity="info" variant="filled">
           {routes[routeSelectedIndex]?.path.length === 0
             ? t('climbingpanel.create_first_node')
             : t('climbingpanel.create_next_node')}
         </Alert>
-      </GuideContainer>
-    )
+      </Snackbar>
+    </GuideContainer>
   );
 };
