@@ -83,22 +83,9 @@ const render = (
     return buildAddress(feature.tags, feature.center);
   }
 
-  // if (field.type === 'wikipedia') {
-  //   return (
-  //     <>
-  //       {renderValue('wikipedia', feature.tags.wikipedia)}
-  //       {feature.tags.wikidata && (
-  //         <sup>
-  //           {' '}
-  //           <a href={`https://www.wikidata.org/wiki/${feature.tags.wikidata}`}>
-  //             wd
-  //           </a>
-  //         </sup>
-  //       )}
-  //       {/* <svg xmlns="http://www.w3.org/2000/svg" width="1052.36" height="744.09" version="1.2"><path d="M119.42 543.017h29.163V43.052h-29.162v499.965zm60.273 0h89.43V43.052h-89.43v499.965zM298.291 43.052V543h89.43V43.052h-89.43zM838.98 543.052h29.168v-500H838.98v500zm60.278-500v500h29.163v-500h-29.163zm-481.404 500h29.163v-500h-29.163v500zm60.278-500v499.983h29.17V43.052h-29.17z" /><path d="M537.422 543.052h89.442v-500h-89.442v500zm118.599 0h31.103v-500h-31.103v500zm60.272-500v499.983h89.43V43.052h-89.43z"/></svg> */}
-  //     </>
-  //   );
-  // }
+  if (field.type === 'wikidata') {
+    return renderValue('wikidata', feature.tags.wikidata);
+  }
 
   if (tagsForField?.length >= 2) {
     return (
@@ -230,16 +217,26 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 </tr>
               }
               {restTagsShown &&
-                schema.tagsWithFields.map(({ key, value, label, field, tagsForField }) => (
-                  <tr key={key}>
-                    <th title={getTitle('standalone field', field)}>
-                      {removeUnits(label)}
-                    </th>
-                    <td style={{ color: 'gray' }}>
-                      {render(field, feature, key, addUnits(label, value), tagsForField)}
-                    </td>
-                  </tr>
-                ))}
+                schema.tagsWithFields.map(
+                  ({ key, value, label, field, tagsForField }) => (
+                    <tr key={key}>
+                      <th title={getTitle('standalone field', field)}>
+                        {removeUnits(label)}
+                      </th>
+                      <td
+                        // style={{ color: 'gray' }}
+                      >
+                        {render(
+                          field,
+                          feature,
+                          key,
+                          addUnits(label, value),
+                          tagsForField,
+                        )}
+                      </td>
+                    </tr>
+                  ),
+                )}
 
               {/* {restTagsShown && */}
               {/*  schema.keysTodo.map((key) => ( */}
@@ -253,20 +250,24 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
 
           {restTagsShown && (
             <>
-            <TagsTable
-              tags={schema.keysTodo.reduce(
-                (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
-                {},
-              )}
-              center={feature.center}
-              except={[]}
-              onEdit={() => {
-                // setDialogOpenedWith;
-              }}
-            />
-              <p>OpenStreetMap každému objektu přiřazuje vlastnosti (tagy), které nemají striktní pravidla.
-                Pokud ovšem dojde ke shodě, jak některou věc otagovat, benefitují z toho všichni (po celém světě lze využít stejný mapový styl).
-                Nahoře jsou vypsány všechny tagy, které mají shodu. Zde jsou ty, které zatím shodu nemají, nebo jsou technického rázu.
+              <TagsTable
+                tags={schema.keysTodo.reduce(
+                  (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
+                  {},
+                )}
+                center={feature.center}
+                except={[]}
+                onEdit={() => {
+                  // setDialogOpenedWith;
+                }}
+              />
+              <p>
+                OpenStreetMap každému objektu přiřazuje vlastnosti (tagy), které
+                nemají striktní pravidla. Pokud ovšem dojde ke shodě, jak
+                některou věc otagovat, benefitují z toho všichni (po celém světě
+                lze využít stejný mapový styl). Nahoře jsou vypsány všechny
+                tagy, které mají shodu. Zde jsou ty, které zatím shodu nemají,
+                nebo jsou technického rázu.
               </p>
             </>
           )}

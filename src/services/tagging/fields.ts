@@ -48,6 +48,8 @@ export const computeAllFieldKeys = (preset: Preset) => {
     ),
     ...Object.values(fields)
       .filter((f) => f.universal)
+      // already covered in featuredKeys
+      .filter(f => f.fieldKey !== 'wikipedia')
       .map((f) => f.fieldKey),
     'operator',
   ];
