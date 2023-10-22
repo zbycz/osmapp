@@ -64,9 +64,11 @@ const renderValue = (k, v): string | ReactNode => {
   const url = getUrlForTag(k, v);
   if (url) {
     let humanUrl = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
+
     if (k === 'image') {
       humanUrl = getEllipsisHumanUrl(humanUrl);
     }
+
     return <a href={url}>{slashToOptionalBr(humanUrl)}</a>;
   }
   return v;
@@ -83,7 +85,7 @@ const render = (
     return buildAddress(feature.tags, feature.center);
   }
 
-  if (field.type === 'wikidata') {
+  if (field.fieldKey === 'wikidata') {
     return renderValue('wikidata', feature.tags.wikidata);
   }
 
@@ -91,7 +93,7 @@ const render = (
     return (
       <>
         {tagsForField.map(({ key, value: value2 }) => (
-          <div>{value2}</div>
+          <div>{renderValue(key, value2)}</div>
         ))}
       </>
     );
@@ -104,7 +106,7 @@ const render = (
   return renderValue(k, v);
 };
 
-const getTitle = (type: string, field: Field) =>
+const getTitle = (type: string, field) =>
   `${type}: ${JSON.stringify(field, null, 2)}`;
 
 // TODO some fields eg. oneway/bicycle doesnt have units in brackets
@@ -173,7 +175,13 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
           {schema.matchedFields.map(
             ({ key, value, label, field, tagsForField }) => (
               <tr key={key}>
-                <th title={getTitle('from preset', field)}>
+                <th
+                  title={getTitle('from preset', {
+                    field,
+                    value,
+                    tagsForField,
+                  })}
+                >
                   {removeUnits(label)}
                 </th>
                 <td>
@@ -224,7 +232,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                         {removeUnits(label)}
                       </th>
                       <td
-                        // style={{ color: 'gray' }}
+                      // style={{ color: 'gray' }}
                       >
                         {render(
                           field,
@@ -262,12 +270,9 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 }}
               />
               <p>
-                OpenStreetMap každému objektu přiřazuje vlastnosti (tagy), které
-                nemají striktní pravidla. Pokud ovšem dojde ke shodě, jak
-                některou věc otagovat, benefitují z toho všichni (po celém světě
-                lze využít stejný mapový styl). Nahoře jsou vypsány všechny
-                tagy, které mají shodu. Zde jsou ty, které zatím shodu nemají,
-                nebo jsou technického rázu.
+                OpenStreetMap každému objektu přiřazuje vlastnosti (tagy). Ty
+                standardizované mají přeložený název. Kdokoliv může přidat další
+                tagy, ty se nachází níže.
               </p>
             </>
           )}

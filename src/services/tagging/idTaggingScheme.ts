@@ -142,8 +142,6 @@ const keysTodo = {
   },
 };
 
-
-
 // TODO move to shared place
 const featuredKeys = [
   'name', // this is not in the other place
@@ -154,7 +152,6 @@ const featuredKeys = [
   'contact:mobile',
   'opening_hours',
   'description',
-
 ];
 
 const featuredKeysO = [
@@ -171,21 +168,32 @@ const featuredKeysO = [
   // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
 ];
 
+const getFeaturedTags = (feature: Feature) => {
+  const tags = feature.tags;
+
+  // TODO no featuredTags for deleted
+
+  const featuredKeys = [
+    ...featuredKeysO,
+    ...(tags.wikipedia ? ['wikipedia'] : tags.wikidata ? ['wikidata'] : []),
+  ];
+  return featuredKeys.reduce((acc, key) => {
+    if (tags[key]) {
+      acc[key] = tags[key];
+    }
+    return acc;
+  }, {});
+};
+
 export const getSchemaForFeature = (feature: Feature) => {
   const preset = getPresetForFeature(feature);
+
   keysTodo.init(feature);
-
-  // name is always rendered by FeaturePanel
-  keysTodo.remove('name')
-
-  const tags = feature.tags;
-  const featuredKeys = [...featuredKeysO, ...(tags.wikipedia ? ['wikipedia'] : (tags.wikidata ? ['wikidata'] : []))]
-  const featuredTags = featuredKeys
-    .map((k) => [k, tags[k]])
-    .filter(([, v]) => v);
-  keysTodo.resolveTags(featuredTags); // TODO no featuredTags for deleted
-
   keysTodo.resolveTags(preset.tags); // remove tags which are already covered by Preset keys
+  keysTodo.remove('name'); // always rendered by FeaturePanel
+
+  const featuredTags = getFeaturedTags(feature);
+  keysTodo.resolveTags(featuredTags);
 
   const matchedFields = matchFieldsFromPreset(preset, keysTodo, feature);
   keysTodo.resolveFields(matchedFields);
@@ -198,7 +206,7 @@ export const getSchemaForFeature = (feature: Feature) => {
     preset,
     feature,
     label: getPresetTranslation(preset.presetKey),
-    featuredTags,
+    featuredTags: Object.entries(featuredTags),
     matchedFields,
     tagsWithFields,
     keysTodo: keysTodo.state,

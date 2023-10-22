@@ -48,11 +48,14 @@ export const computeAllFieldKeys = (preset: Preset) => {
     ),
     ...Object.values(fields)
       .filter((f) => f.universal)
-      // already covered in featuredKeys
-      .filter(f => f.fieldKey !== 'wikipedia')
       .map((f) => f.fieldKey),
     'operator',
-  ];
+  ]
+    // already covered in featuredKeys
+    .filter(f => f !== 'wikipedia')
+    // lets leave these to tagsWithFields
+    .filter(f => f !== 'source' && f !== 'check_date')
+
 
   // @ts-ignore
   return [...new Set(allFieldKeys)];
