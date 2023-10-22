@@ -41,10 +41,12 @@ export type Field = {
 
   /**
    * Tag key whose value is to be displayed
+   * https://github.com/ideditor/schema-builder#keykeys
    */
   key?: string;
   /**
    * Tag keys whose value is to be displayed
+   * https://github.com/ideditor/schema-builder#keykeys
    */
   keys?: string[];
   /**

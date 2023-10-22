@@ -9,9 +9,10 @@ import ChevronRight from '@material-ui/icons/ChevronRight';
 import { Field } from '../../services/tagging/types/Fields';
 import { getUrlForTag } from './helpers/getUrlForTag';
 import { slashToOptionalBr, useToggleState } from '../helpers';
-import { buildAddress } from '../../services/helpers';
+import { buildAddress, getUrlOsmId } from '../../services/helpers';
 import { Feature } from '../../services/types';
 import { t } from '../../services/intl';
+import { TagsTable } from './TagsTable';
 
 // taken from src/components/FeaturePanel/TagsTable.tsx
 const Table = styled.table`
@@ -22,6 +23,7 @@ const Table = styled.table`
   td {
     padding: 0.1em;
     overflow: hidden;
+    vertical-align: baseline;
 
     &:hover .show-on-hover {
       display: block !important;
@@ -34,7 +36,6 @@ const Table = styled.table`
     color: ${({ theme }) => theme.palette.text.secondary};
     text-align: left;
     font-weight: normal;
-    vertical-align: baseline;
     padding-left: 0;
   }
 
@@ -71,16 +72,46 @@ const renderValue = (k, v): string | ReactNode => {
   return v;
 };
 
-const render = (field: Field, feature: Feature, k, v, tagsForField): string | ReactNode => {
-
+const render = (
+  field: Field,
+  feature: Feature,
+  k,
+  v,
+  tagsForField,
+): string | ReactNode => {
   if (field.type === 'address') {
     return buildAddress(feature.tags, feature.center);
   }
 
+  if (field.type === 'wikipedia') {
+    return (
+      <>
+        {renderValue('wikipedia', feature.tags.wikipedia)}
+        {feature.tags.wikidata && (
+          <sup>
+            {' '}
+            <a href={`https://www.wikidata.org/wiki/${feature.tags.wikidata}`}>
+              wd
+            </a>
+          </sup>
+        )}
+        {/* <svg xmlns="http://www.w3.org/2000/svg" width="1052.36" height="744.09" version="1.2"><path d="M119.42 543.017h29.163V43.052h-29.162v499.965zm60.273 0h89.43V43.052h-89.43v499.965zM298.291 43.052V543h89.43V43.052h-89.43zM838.98 543.052h29.168v-500H838.98v500zm60.278-500v500h29.163v-500h-29.163zm-481.404 500h29.163v-500h-29.163v500zm60.278-500v499.983h29.17V43.052h-29.17z" /><path d="M537.422 543.052h89.442v-500h-89.442v500zm118.599 0h31.103v-500h-31.103v500zm60.272-500v499.983h89.43V43.052h-89.43z"/></svg> */}
+      </>
+    );
+  }
+
   if (tagsForField?.length >= 2) {
-    return <ul>
-      {tagsForField.map(({ key, value: value2 }) => (<li>{key} = {value2}</li>))}
-    </ul>;
+    return (
+      <>
+        {tagsForField.map(({ key, value: value2 }) => (
+          <div>{value2}</div>
+        ))}
+      </>
+    );
+  }
+
+  if (!k) {
+    return renderValue(tagsForField[0].key, tagsForField[0].value);
   }
 
   return renderValue(k, v);
@@ -123,8 +154,6 @@ const TagsList = styled.ul`
     color: ${({ theme }) => theme.palette.text.secondary};
     font-weight: normal;
   }
-
-
 `;
 
 export const ToggleButton = ({ onClick, isShown, num }) => (
@@ -152,59 +181,91 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
         </Typography>
       ) : null}
 
-        {/*<tbody>*/}
-        {/*  {schema.matchedFields.map(({ key, value, label, field, tagsForField }) => (*/}
-        {/*    <tr key={key}>*/}
-        {/*      <th title={getTitle('from preset', field)}>*/}
-        {/*        {removeUnits(label)}*/}
-        {/*      </th>*/}
-        {/*      <td>{addUnits(label, render(field, feature, key, value, tagsForField))}</td>*/}
-        {/*    </tr>*/}
-        {/*  ))}*/}
-        {/*</tbody>*/}
-
-        <TagsList>
-        {schema.matchedFields.map(({ key, value, label, field, tagsForField }) => (
-          <li key={key}  title={getTitle('from preset', field)}>
-            <strong>
-              {removeUnits(label)}:
-            </strong>{key === 'wikimedia_commons' ? <br /> : " "}
-            {addUnits(label, render(field, feature, key, value, tagsForField))}
-          </li>
-        ))}
-        </TagsList>
       <Table>
-
-        {!!(schema.keysTodo.length + schema.tagsWithFields.length) && (
-          <tbody>
-          {/* TODO TADY HERE QUI */ (<tr>
-            <td colSpan={2} style={{'textAlign': 'right'}}>
-              <ToggleButton
-                num={schema.keysTodo.length + schema.tagsWithFields.length}
-                isShown={restTagsShown}
-                onClick={toggleRestTagsShown}
-              />
-            </td>
-          </tr>)}
-          {restTagsShown && schema.tagsWithFields.map(({ key, value, label, field }) => (
-            <tr key={key}>
-              <th title={getTitle('standalone field', field)}>{removeUnits(label)}</th>
-              <td style={{color: 'gray'}}>
-                {render(field, feature, key, addUnits(label, value))}
-              </td>
-            </tr>
-          ))}
-
-            {restTagsShown &&
-              schema.keysTodo.map((key) => (
-                <tr key={key}>
-                  <th>{key}</th>
-                  <td style={{color: 'gray'}}>{renderValue(key, feature.tags[key])}</td>
-                </tr>
-              ))}
-          </tbody>
-        )}
+        <tbody>
+          {schema.matchedFields.map(
+            ({ key, value, label, field, tagsForField }) => (
+              <tr key={key}>
+                <th title={getTitle('from preset', field)}>
+                  {removeUnits(label)}
+                </th>
+                <td>
+                  {addUnits(
+                    label,
+                    render(field, feature, key, value, tagsForField),
+                  )}
+                </td>
+              </tr>
+            ),
+          )}
+        </tbody>
       </Table>
+
+      {/* <TagsList> */}
+      {/* {schema.matchedFields.map(({ key, value, label, field, tagsForField }) => ( */}
+      {/*  <li key={key}  title={getTitle('from preset', field)}> */}
+      {/*    <strong> */}
+      {/*      {removeUnits(label)}: */}
+      {/*    </strong>{key === 'wikimedia_commons' ? <br /> : " "} */}
+      {/*    {addUnits(label, render(field, feature, key, value, tagsForField))} */}
+      {/*  </li> */}
+      {/* ))} */}
+      {/* </TagsList> */}
+
+      {!!(schema.keysTodo.length + schema.tagsWithFields.length) && (
+        <>
+          <Table>
+            <tbody>
+              {
+                /* TODO TADY HERE QUI */ <tr>
+                  <td colSpan={2} style={{ textAlign: 'right' }}>
+                    <ToggleButton
+                      num={
+                        schema.keysTodo.length + schema.tagsWithFields.length
+                      }
+                      isShown={restTagsShown}
+                      onClick={toggleRestTagsShown}
+                    />
+                  </td>
+                </tr>
+              }
+              {restTagsShown &&
+                schema.tagsWithFields.map(({ key, value, label, field }) => (
+                  <tr key={key}>
+                    <th title={getTitle('standalone field', field)}>
+                      {removeUnits(label)}
+                    </th>
+                    <td style={{ color: 'gray' }}>
+                      {render(field, feature, key, addUnits(label, value))}
+                    </td>
+                  </tr>
+                ))}
+
+              {/* {restTagsShown && */}
+              {/*  schema.keysTodo.map((key) => ( */}
+              {/*    <tr key={key}> */}
+              {/*      <th>{key}</th> */}
+              {/*      <td style={{color: 'gray'}}>{renderValue(key, feature.tags[key])}</td> */}
+              {/*    </tr> */}
+              {/*  ))} */}
+            </tbody>
+          </Table>
+
+          {restTagsShown && (
+            <TagsTable
+              tags={schema.keysTodo.reduce(
+                (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
+                {},
+              )}
+              center={feature.center}
+              except={[]}
+              onEdit={() => {
+                // setDialogOpenedWith;
+              }}
+            />
+          )}
+        </>
+      )}
     </>
   );
 };

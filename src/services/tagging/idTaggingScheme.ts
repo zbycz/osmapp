@@ -6,6 +6,8 @@ import { computeAllFieldKeys, getValueForField } from './fields';
 import { Preset } from './types/Presets';
 import { publishDbgObject } from '../../utils';
 
+const deduplicate = (strings: string[]) => [...new Set(strings)];
+
 // TODO move to shared place
 const featuredKeys = [
   'name', // this is not in the other place
@@ -37,16 +39,16 @@ const matchFieldsFromPreset = (
         return {};
       }
       if (field.type === 'typeCombo') {
-        keysTodo.remove(field.key); // ignore eg. railway=tram_stop on public_transport=stop_position
+        keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
 
       const value = feature.tags[key];
 
-      const keysInField = [
+      const keysInField = deduplicate([
         ...(field.keys ?? []),
         ...(field.key ? [field.key] : []),
-      ];
+      ]);
       const tagsForField = [];
       keysInField.forEach((k) => {
         if (feature.tags[k]) {
@@ -72,23 +74,26 @@ const matchFieldsFromPreset = (
 const matchRestToFields = (keysTodo: any, feature: Feature) =>
   keysTodo
     .map((key) => {
-      const field = Object.values(fields).find(
-        (f) => f.key === key || f.keys?.includes(key),
-      ); // todo cache this
+      const field =
+        key === 'ref'
+          ? fields.ref
+          : Object.values(fields).find(
+              (f) => f.key === key || f.keys?.includes(key),
+            ); // todo cache this
       if (!field) {
         return {};
       }
       if (field.type === 'typeCombo') {
-        keysTodo.remove(field.key); // ignore eg. railway=tram_stop on public_transport=stop_position
+        keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
 
       const value = feature.tags[key];
 
-      const keysInField = [
+      const keysInField = deduplicate([
         ...(field.keys ?? []),
         ...(field.key ? [field.key] : []),
-      ];
+      ]);
       const tagsForField = [];
       keysInField.forEach((k) => {
         if (feature.tags[k]) {

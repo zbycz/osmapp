@@ -25,6 +25,7 @@ import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 
+// more in here: Object.values(dbg.fields).filter(o=>o.universal)
 const featuredKeys = [
   'website',
   'contact:website',
@@ -78,7 +79,7 @@ const FeaturePanel = () => {
             <IdSchemeFields
               featuredTags={deleted ? [] : featuredTags}
               feature={feature}
-              key={getUrlOsmId(osmMeta)+ (deleted && 'del')}
+              key={getUrlOsmId(osmMeta) + (deleted && 'del')}
             />
           )}
           {showTags && (

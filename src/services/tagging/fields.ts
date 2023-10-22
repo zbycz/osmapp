@@ -49,7 +49,7 @@ export const computeAllFieldKeys = (preset: Preset) => {
     ...Object.values(fields)
       .filter((f) => f.universal)
       .map((f) => f.fieldKey),
-    'operator'
+    'operator',
   ];
 
   // @ts-ignore
