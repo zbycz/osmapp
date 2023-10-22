@@ -71,10 +71,18 @@ const renderValue = (k, v): string | ReactNode => {
   return v;
 };
 
-const render = (field: Field, feature: Feature, k, v): string | ReactNode => {
+const render = (field: Field, feature: Feature, k, v, tagsForField): string | ReactNode => {
+
   if (field.type === 'address') {
     return buildAddress(feature.tags, feature.center);
   }
+
+  if (tagsForField?.length >= 2) {
+    return <ul>
+      {tagsForField.map(({ key, value: value2 }) => (<li>{key} = {value2}</li>))}
+    </ul>;
+  }
+
   return renderValue(k, v);
 };
 
@@ -94,6 +102,29 @@ const StyledToggleButton = styled(Button)`
   svg {
     font-size: 17px;
   }
+`;
+
+const TagsList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  margin-bottom: 1em;
+  font-size: 1rem;
+  width: 100%;
+
+  color: #fff;
+
+  li {
+    display: block;
+    padding: 0.13em 0;
+  }
+
+  strong {
+    color: ${({ theme }) => theme.palette.text.secondary};
+    font-weight: normal;
+  }
+
+
 `;
 
 export const ToggleButton = ({ onClick, isShown, num }) => (
@@ -121,17 +152,29 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
         </Typography>
       ) : null}
 
+        {/*<tbody>*/}
+        {/*  {schema.matchedFields.map(({ key, value, label, field, tagsForField }) => (*/}
+        {/*    <tr key={key}>*/}
+        {/*      <th title={getTitle('from preset', field)}>*/}
+        {/*        {removeUnits(label)}*/}
+        {/*      </th>*/}
+        {/*      <td>{addUnits(label, render(field, feature, key, value, tagsForField))}</td>*/}
+        {/*    </tr>*/}
+        {/*  ))}*/}
+        {/*</tbody>*/}
+
+        <TagsList>
+        {schema.matchedFields.map(({ key, value, label, field, tagsForField }) => (
+          <li key={key}  title={getTitle('from preset', field)}>
+            <strong>
+              {removeUnits(label)}:
+            </strong>{key === 'wikimedia_commons' ? <br /> : " "}
+            {addUnits(label, render(field, feature, key, value, tagsForField))}
+          </li>
+        ))}
+        </TagsList>
       <Table>
-        <tbody>
-          {schema.matchedFields.map(({ key, value, label, field }) => (
-            <tr key={key}>
-              <th title={getTitle('from preset', field)}>
-                {removeUnits(label)}
-              </th>
-              <td>{addUnits(label, render(field, feature, key, value))}</td>
-            </tr>
-          ))}
-        </tbody>
+
         {!!(schema.keysTodo.length + schema.tagsWithFields.length) && (
           <tbody>
           {/* TODO TADY HERE QUI */ (<tr>
