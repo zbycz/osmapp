@@ -159,6 +159,8 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
   if (!schema) return null;
   if (!Object.keys(schema).length) return null;
 
+  // TODO add link to reference as Tooltip https://wiki.openstreetmap.org/w/api.php?action=wbgetentities&format=json&languagefallback=1&languages=en%7Ccs%7Cen-us%7Csk&origin=*&sites=wiki&titles=Locale%3Acs%7CLocale%3Aen-us%7CLocale%3Ask%7CKey%3Astart%20date%7CTag%3Astart%20date%3D1752
+
   return (
     <>
       {featuredTags.length &&
@@ -232,7 +234,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                         {removeUnits(label)}
                       </th>
                       <td
-                      // style={{ color: 'gray' }}
+                      style={{ color: 'gray' }}
                       >
                         {render(
                           field,

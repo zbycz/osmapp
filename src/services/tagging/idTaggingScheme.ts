@@ -149,9 +149,7 @@ const keysTodo = {
     );
   },
   resolveTags(tags) {
-    Object.keys(tags).forEach((key) => {
-      this.state.splice(this.state.indexOf(key), 1);
-    });
+    Object.keys(tags).forEach((key) => this.remove(key));
   },
   has(key) {
     return this.state.includes(key);

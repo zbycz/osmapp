@@ -69,7 +69,7 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
         <th>{label}</th>
         <td>
           <EditIconButton onClick={() => onEdit(tags[0][0])} />
-          {value || tags[0]?.join(' = ')}
+          {value || tags[0]?.[1]}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
       </tr>
@@ -93,7 +93,8 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
   );
 };
 
-// This is supposed to be replaced by iD presets in future (see https://github.com/zbycz/osmapp/issues/116)
+// TODO make it dynamic - count how many "first parts before :" are there, and group all >= 2
+
 export const TagsTable = ({ tags, center, except, onEdit }) => {
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
