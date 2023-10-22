@@ -80,6 +80,7 @@ const render = (
   k,
   v,
   tagsForField,
+  fieldTranslation
 ): string | ReactNode => {
   if (field.type === 'address') {
     return buildAddress(feature.tags, feature.center);
@@ -87,6 +88,14 @@ const render = (
 
   if (field.fieldKey === 'wikidata') {
     return renderValue('wikidata', feature.tags.wikidata);
+  }
+
+  if (fieldTranslation?.types && fieldTranslation?.options) {
+    return tagsForField
+      .map(
+        ({ key, value: value2 }) =>
+          <div key={key}>{fieldTranslation.types[key]}: {renderValue(key, fieldTranslation.options[value2]?.title)}</div>
+      )
   }
 
   if (tagsForField?.length >= 2) {
@@ -184,7 +193,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
       <Table>
         <tbody>
           {schema.matchedFields.map(
-            ({ key, value, label, field, tagsForField }) => (
+            ({ key, value, label, field, fieldTranslation, tagsForField }) => (
               <tr key={key}>
                 <th
                   title={getTitle('from preset', {
@@ -198,7 +207,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 <td>
                   {addUnits(
                     label,
-                    render(field, feature, key, value, tagsForField),
+                    render(field, feature, key, value, tagsForField, fieldTranslation),
                   )}
                 </td>
               </tr>
@@ -222,7 +231,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
               </tr>
               {otherTagsShown &&
                 schema.tagsWithFields.map(
-                  ({ key, value, label, field, tagsForField }) => (
+                  ({ key, value, label, field, fieldTranslation, tagsForField }) => (
                     <tr key={key}>
                       <th title={getTitle('standalone field', field)}>
                         {removeUnits(label)}
@@ -234,6 +243,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                           key,
                           addUnits(label, value),
                           tagsForField,
+                          fieldTranslation
                         )}
                       </td>
                     </tr>

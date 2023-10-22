@@ -4,8 +4,14 @@ import LocalPhone from '@material-ui/icons/LocalPhone';
 export const WebsiteRenderer = ({ v }) => (
   <>
     <LocalPhone fontSize="small" />
-
-    <a href={`tel:${v}`}>{v}</a>
+    <span>
+    {v.split(';').map((v2, index) => (
+      <>
+        {index === 0 ? '' : ', '}
+        <a href={`tel:${v2}`}>{v2}</a>
+      </>
+    ))}
+    </span>
   </>
 );
 
