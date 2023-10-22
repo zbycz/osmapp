@@ -110,6 +110,7 @@ describe('idTaggingScheme', () => {
       'ele_node',
       'description',
       'ref/linz/place_id-NZ',
+      'architect',
     ]);
   });
 
@@ -117,6 +118,7 @@ describe('idTaggingScheme', () => {
     const feature = {
       osmMeta: {
         type: 'way',
+        id: 149398903,
       },
       tags: {
         amenity: 'fountain',
@@ -130,14 +132,14 @@ describe('idTaggingScheme', () => {
 
     const schema = getSchemaForFeature(feature);
 
+    expect(schema.label).toBe('Fountain');
     expect(schema.featuredTags).toEqual([['wikidata', 'Q94435643']]);
     expect(schema.matchedFields.map((x: any) => x.field.fieldKey)).toEqual([
-      'water',
       'wikimedia_commons',
     ]);
     expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
-      'horse_stables',
       'source',
+      'water',
     ]);
     expect(schema.keysTodo).toEqual([]);
   });
