@@ -7,6 +7,7 @@ import { EditIconButton } from './helpers/EditIconButton';
 import { buildAddress } from '../../services/helpers';
 import { ToggleButton } from './helpers/ToggleButton';
 import { renderValue } from './helpers/renderValue';
+import { useEditDialogContext } from "./helpers/EditDialogContext";
 
 const Wrapper = styled.div`
   position: relative;
@@ -95,7 +96,9 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
 
 // TODO make it dynamic - count how many "first parts before :" are there, and group all >= 2
 
-export const TagsTable = ({ tags, center, except, onEdit }) => {
+export const TagsTable = ({ tags, center, except }) => {
+  const {openWithTag:onEdit} = useEditDialogContext()
+
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
   const addrs = tagsEntries.filter(([k]) => isAddr(k));
