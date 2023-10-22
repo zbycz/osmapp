@@ -42,7 +42,7 @@ export const useOnMapClicked = useAddMapEvent(
 
       const skeleton = getSkeleton(features[0], coords);
       addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
-      console.log(`clicked map feature (id=${features[0].id}): `, skeleton); // eslint-disable-line no-console
+      console.log(`clicked map feature (id=${features[0].id}): `, features[0]); // eslint-disable-line no-console
 
       if (skeleton.nonOsmObject) {
         const roundedPosition = getRoundedPosition(coords, map.getZoom());

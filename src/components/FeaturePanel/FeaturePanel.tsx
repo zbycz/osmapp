@@ -25,7 +25,7 @@ import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 
-// more in here: Object.values(dbg.fields).filter(o=>o.universal)
+// TODO move to shared place
 const featuredKeys = [
   'website',
   'contact:website',
@@ -35,6 +35,9 @@ const featuredKeys = [
   'opening_hours',
   'description',
   'fhrs:id',
+  'wikipedia',
+  'wikidata',
+  // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
 ];
 
 const FeaturePanel = () => {

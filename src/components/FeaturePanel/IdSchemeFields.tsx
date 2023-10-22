@@ -252,6 +252,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
           </Table>
 
           {restTagsShown && (
+            <>
             <TagsTable
               tags={schema.keysTodo.reduce(
                 (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
@@ -263,6 +264,11 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 // setDialogOpenedWith;
               }}
             />
+              <p>OpenStreetMap každému objektu přiřazuje vlastnosti (tagy), které nemají striktní pravidla.
+                Pokud ovšem dojde ke shodě, jak některou věc otagovat, benefitují z toho všichni (po celém světě lze využít stejný mapový styl).
+                Nahoře jsou vypsány všechny tagy, které mají shodu. Zde jsou ty, které zatím shodu nemají, nebo jsou technického rázu.
+              </p>
+            </>
           )}
         </>
       )}

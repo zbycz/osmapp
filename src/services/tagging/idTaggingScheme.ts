@@ -18,6 +18,8 @@ const featuredKeys = [
   'contact:mobile',
   'opening_hours',
   'description',
+  'wikipedia',
+  'wikidata',
 ];
 
 const matchFieldsFromPreset = (

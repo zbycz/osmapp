@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
-import truncate from 'lodash/truncate';
+import React from "react";
+import styled from "styled-components";
+import truncate from "lodash/truncate";
 
-import { slashToOptionalBr, useToggleState } from '../helpers';
-import { getUrlForTag } from './helpers/getUrlForTag';
-import { EditIconButton } from './helpers/EditIconButton';
-import { buildAddress } from '../../services/helpers';
-import { ToggleButton } from './helpers/ToggleButton';
+import { useToggleState } from "../helpers";
+import { EditIconButton } from "./helpers/EditIconButton";
+import { buildAddress } from "../../services/helpers";
+import { ToggleButton } from "./helpers/ToggleButton";
+import { renderValue } from "./helpers/renderValue";
 
 const Wrapper = styled.div`
   position: relative;
@@ -42,20 +42,6 @@ const Table = styled.table`
     padding-bottom: 1em;
   }
 `;
-
-const renderValue = (k, v) => {
-  const url = getUrlForTag(k, v);
-  let humanUrl = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
-  if (k === 'image') {
-    humanUrl = humanUrl.replace(/^([^/]+.{0,5})(.*)$/, (full, p1, p2) => {
-      const charsLeft = 30 - p1.length;
-      return (
-        p1 + (full.length > 40 ? `…${p2.substring(p2.length - charsLeft)}` : p2)
-      );
-    });
-  }
-  return url ? <a href={url}>{slashToOptionalBr(humanUrl)}</a> : v;
-};
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k) => k.match(/^name(:|$)/);
