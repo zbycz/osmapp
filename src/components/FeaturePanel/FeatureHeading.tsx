@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { EditIconButton } from './helpers/EditIconButton';
-import { useEditDialogContext } from "./helpers/EditDialogContext";
+import { useEditDialogContext } from './helpers/EditDialogContext';
 
 const Wrapper = styled.div`
   font-size: 36px;
@@ -21,7 +21,7 @@ export const FeatureHeading = ({ title, deleted, editEnabled }) => {
 
   return (
     <Wrapper deleted={deleted}>
-      {editEnabled && <EditIconButton onClick={() => openWithTag("name")} />}
+      {editEnabled && <EditIconButton onClick={() => openWithTag('name')} />}
       {title}
     </Wrapper>
   );

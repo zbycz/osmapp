@@ -33,7 +33,7 @@ const Value = styled.div`
 
 const DefaultRenderer = ({ v }) => v;
 const renderers: {
-  [key: string]: React.FC<{ v: string }>;
+  [key: string]: React.FC<{ k: string; v: string }>;
 } = {
   website: WebsiteRenderer,
   'contact:website': WebsiteRenderer,

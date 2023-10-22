@@ -5,7 +5,7 @@ import React from 'react';
 import { Box } from '@material-ui/core';
 import { t } from '../../services/intl';
 import { useOsmAuthContext } from '../utils/OsmAuthContext';
-import { useEditDialogContext } from "./helpers/EditDialogContext";
+import { useEditDialogContext } from './helpers/EditDialogContext';
 
 const getLabel = (loggedIn, isAddPlace, isUndelete) => {
   if (isAddPlace) return t('featurepanel.add_place_button');
@@ -14,10 +14,9 @@ const getLabel = (loggedIn, isAddPlace, isUndelete) => {
   return t('featurepanel.note_button');
 };
 
-export const EditButton = ({ isAddPlace, isUndelete, setDialogOpenedWith }) => {
+export const EditButton = ({ isAddPlace, isUndelete }) => {
   const { loggedIn } = useOsmAuthContext();
-  const {open} = useEditDialogContext()
-
+  const { open } = useEditDialogContext();
 
   return (
     <Box mt={3} mb={3} mx="auto" clone>

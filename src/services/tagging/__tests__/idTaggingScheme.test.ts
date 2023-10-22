@@ -1,5 +1,4 @@
 import translations from '@openstreetmap/id-tagging-schema/dist/translations/en.json';
-import { beforeEach } from '@jest/globals';
 import { getSchemaForFeature } from '../idTaggingScheme';
 import { Feature } from '../../types';
 import { mockSchemaTranslations } from '../translations';
@@ -120,24 +119,23 @@ describe('idTaggingScheme', () => {
         type: 'way',
       },
       tags: {
-        "amenity": "clock",
-        "check_date": "2023-07-03",
-        "display": "analog",
-        "man_made": "tower",
-        "support": "tower",
-        "tower:type": "clock",
-        "visibility": "street"
+        amenity: 'fountain',
+        natural: 'water',
+        source: 'CZ:IPRPraha:ortofoto',
+        water: 'fountain',
+        wikidata: 'Q94435643',
+        wikimedia_commons: 'Category:Fountain (metro Malostranská)',
       },
     } as unknown as Feature;
 
     const schema = getSchemaForFeature(feature);
 
     expect(schema.featuredTags).toEqual([['wikidata', 'Q94435643']]);
-    expect(schema.matchedFields.map((x) => x.field.fieldKey)).toEqual([
+    expect(schema.matchedFields.map((x: any) => x.field.fieldKey)).toEqual([
       'water',
       'wikimedia_commons',
     ]);
-    expect(schema.tagsWithFields.map((x) => x.field.fieldKey)).toEqual([
+    expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
       'horse_stables',
       'source',
     ]);

@@ -50,7 +50,7 @@ export const computeAllFieldKeys = (preset: Preset) => {
       .filter((f) => f.universal)
       .map((f) => f.fieldKey),
     'operator',
-    'architect'
+    'architect',
   ]
     // already covered in featuredKeys
     .filter((f) => f !== 'wikipedia')

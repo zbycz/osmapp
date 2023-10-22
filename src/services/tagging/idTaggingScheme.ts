@@ -7,18 +7,7 @@ import { Preset } from './types/Presets';
 import { publishDbgObject } from '../../utils';
 
 // TODO move to shared place
-const featuredKeys = [
-  'name', // this is not in the other place
-  'website',
-  'contact:website',
-  'phone',
-  'contact:phone',
-  'contact:mobile',
-  'opening_hours',
-  'description',
-];
-
-const featuredKeysO = [
+const featuredKeys0 = [
   'website',
   'contact:website',
   'phone',
@@ -32,7 +21,7 @@ const featuredKeysO = [
   // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
 ];
 
-const deduplicate = (strings: string[]) => [...new Set(strings)];
+const deduplicate = (strings: string[]) => Array.from(new Set(strings));
 
 const matchFieldsFromPreset = (
   preset: Preset,
@@ -85,7 +74,7 @@ const matchFieldsFromPreset = (
     .filter((field) => field.value);
 };
 
-const matchRestToFields = (keysTodo: typeof keysTodo, feature: Feature) =>
+const matchRestToFields = (keysTodo: KeysTodo, feature: Feature) =>
   keysTodo
     .map((key) => {
       // const field =
@@ -102,6 +91,7 @@ const matchRestToFields = (keysTodo: typeof keysTodo, feature: Feature) =>
       const field =
         matchingFields.find((f) => f.fieldKey === key) ?? matchingFields[0];
       if (matchingFields.length > 1) {
+        // eslint-disable-next-line no-console
         console.warn(
           `More fields matching key ${key}: ${matchingFields.map(
             (f) => f.fieldKey,
@@ -142,13 +132,14 @@ const matchRestToFields = (keysTodo: typeof keysTodo, feature: Feature) =>
         label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
       };
     })
-    .filter((field) => field.field);
+    .filter((field: any) => field.field);
 
+type KeysTodo = typeof keysTodo;
 const keysTodo = {
   state: [],
   init(feature) {
     this.state = Object.keys(feature.tags).filter(
-      (key) => !featuredKeys.includes(key),
+      (key) => !featuredKeys0.includes(key),
     );
   },
   resolveTags(tags) {
@@ -188,7 +179,7 @@ const getFeaturedTags = (feature: Feature) => {
   // TODO no featuredTags for deleted
 
   const featuredKeys = [
-    ...featuredKeysO,
+    ...featuredKeys0,
     ...(tags.wikipedia ? ['wikipedia'] : tags.wikidata ? ['wikidata'] : []),
   ];
   return featuredKeys.reduce((acc, key) => {

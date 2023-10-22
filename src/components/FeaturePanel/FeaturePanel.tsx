@@ -41,112 +41,109 @@ const FeaturePanel = () => {
   const label = getLabel(feature);
 
   return (
-      <PanelWrapper>
-        <PanelScrollbars>
-          <ImageSection />
-          <PanelContent>
-            <FeatureHeading
-              deleted={deleted}
-              title={label}
-              editEnabled={editEnabled && !point}
-            />
+    <PanelWrapper>
+      <PanelScrollbars>
+        <ImageSection />
+        <PanelContent>
+          <FeatureHeading
+            deleted={deleted}
+            title={label}
+            editEnabled={editEnabled && !point}
+          />
 
-            <OsmError />
+          <OsmError />
 
-            <FeaturedTags
+          <FeaturedTags
+            featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
+          />
+
+          {!showTags && (
+            <IdSchemeFields
               featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
+              feature={feature}
+              key={getUrlOsmId(osmMeta) + (deleted && 'del')}
             />
-
-            {!showTags && (
-              <IdSchemeFields
-                featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
-                feature={feature}
-                key={getUrlOsmId(osmMeta) + (deleted && 'del')}
+          )}
+          {showTags && (
+            <>
+              {!!feature.schema.featuredTags.length && (
+                <Typography
+                  variant="overline"
+                  display="block"
+                  color="textSecondary"
+                >
+                  {t('featurepanel.details_heading')}
+                </Typography>
+              )}
+              <TagsTable
+                tags={tags}
+                center={feature.center}
+                except={
+                  advanced || deleted
+                    ? []
+                    : [
+                        'name',
+                        'layer',
+                        ...Object.keys(feature.schema.featuredTags),
+                      ]
+                }
+                key={
+                  getUrlOsmId(osmMeta) // we need to refresh inner state
+                }
               />
-            )}
-            {showTags && (
-              <>
-                {!!feature.schema.featuredTags.length && (
-                  <Typography
-                    variant="overline"
-                    display="block"
-                    color="textSecondary"
-                  >
-                    {t('featurepanel.details_heading')}
-                  </Typography>
-                )}
-                <TagsTable
-                  tags={tags}
-                  center={feature.center}
-                  except={
-                    advanced || deleted
-                      ? []
-                      : [
-                          'name',
-                          'layer',
-                          ...Object.keys(feature.schema.featuredTags),
-                        ]
-                  }
-                  key={
-                    getUrlOsmId(osmMeta) // we need to refresh inner state
-                  }
-                />
-              </>
-            )}
+            </>
+          )}
 
-            {advanced && <Members />}
+          {advanced && <Members />}
 
-            <PublicTransport tags={tags} />
+          <PublicTransport tags={tags} />
 
-            {editEnabled && (
-              <>
-                <EditButton
-                  isAddPlace={point}
-                  isUndelete={deleted}
-                />
+          {editEnabled && (
+            <>
+              <EditButton isAddPlace={point} isUndelete={deleted} />
 
-                <EditDialog
-                  feature={feature}
-                  isAddPlace={point}
-                  isUndelete={deleted}
-                  key={
-                    getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                  }
-                />
-              </>
-            )}
+              <EditDialog
+                feature={feature}
+                isAddPlace={point}
+                isUndelete={deleted}
+                key={
+                  getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                }
+              />
+            </>
+          )}
 
-            {point && <ObjectsAround advanced={advanced} />}
+          {point && <ObjectsAround advanced={advanced} />}
 
-            <PanelFooter>
-              <FeatureDescription setAdvanced={setAdvanced} />
-              <Coordinates />
-              <br />
-              <a href={osmappLink}>{osmappLink}</a>
-              <br />
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={toggleShowTags}
-                  checked={showTags}
-                  disabled={point}
-                />{' '}
-                Zobrazit tagy{/* {t('featurepanel.show_objects_around')} */}
-              </label>{' '}
-              <label>
-                <input
-                  type="checkbox"
-                  onChange={toggleShowAround}
-                  checked={point || showAround}
-                  disabled={point}
-                />{' '}
-                {t('featurepanel.show_objects_around')}
-              </label>
-              {!point && showAround && <ObjectsAround advanced={advanced} />}
-            </PanelFooter>
-          </PanelContent>
-        </PanelScrollbars>
-      </PanelWrapper>
+          <PanelFooter>
+            <FeatureDescription setAdvanced={setAdvanced} />
+            <Coordinates />
+            <br />
+            <a href={osmappLink}>{osmappLink}</a>
+            <br />
+            <label>
+              <input
+                type="checkbox"
+                onChange={toggleShowTags}
+                checked={showTags}
+                disabled={point}
+              />{' '}
+              Zobrazit tagy{/* {t('featurepanel.show_objects_around')} */}
+            </label>{' '}
+            <label>
+              <input
+                type="checkbox"
+                onChange={toggleShowAround}
+                checked={point || showAround}
+                disabled={point}
+              />{' '}
+              {t('featurepanel.show_objects_around')}
+            </label>
+            {!point && showAround && <ObjectsAround advanced={advanced} />}
+          </PanelFooter>
+        </PanelContent>
+      </PanelScrollbars>
+    </PanelWrapper>
   );
 };
 

@@ -1,15 +1,13 @@
-import React, { forwardRef, ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import IconButton from '@material-ui/core/IconButton';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import { Field } from '../../services/tagging/types/Fields';
 import { getUrlForTag } from './helpers/getUrlForTag';
 import { slashToOptionalBr, useToggleState } from '../helpers';
-import { buildAddress, getUrlOsmId } from '../../services/helpers';
+import { buildAddress } from '../../services/helpers';
 import { Feature } from '../../services/types';
 import { t } from '../../services/intl';
 import { TagsTable } from './TagsTable';
@@ -80,7 +78,7 @@ const render = (
   k,
   v,
   tagsForField,
-  fieldTranslation
+  fieldTranslation,
 ): string | ReactNode => {
   if (field.type === 'address') {
     return buildAddress(feature.tags, feature.center);
@@ -91,11 +89,12 @@ const render = (
   }
 
   if (fieldTranslation?.types && fieldTranslation?.options) {
-    return tagsForField
-      .map(
-        ({ key, value: value2 }) =>
-          <div key={key}>{fieldTranslation.types[key]}: {renderValue(key, fieldTranslation.options[value2]?.title)}</div>
-      )
+    return tagsForField.map(({ key, value: value2 }) => (
+      <div key={key}>
+        {fieldTranslation.types[key]}:{' '}
+        {renderValue(key, fieldTranslation.options[value2]?.title)}
+      </div>
+    ));
   }
 
   if (tagsForField?.length >= 2) {
@@ -130,27 +129,6 @@ const addUnits = (label, value: string | ReactNode) => {
 const StyledToggleButton = styled(Button)`
   svg {
     font-size: 17px;
-  }
-`;
-
-const TagsList = styled.ul`
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  margin-bottom: 1em;
-  font-size: 1rem;
-  width: 100%;
-
-  color: #fff;
-
-  li {
-    display: block;
-    padding: 0.13em 0;
-  }
-
-  strong {
-    color: ${({ theme }) => theme.palette.text.secondary};
-    font-weight: normal;
   }
 `;
 
@@ -207,7 +185,14 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 <td>
                   {addUnits(
                     label,
-                    render(field, feature, key, value, tagsForField, fieldTranslation),
+                    render(
+                      field,
+                      feature,
+                      key,
+                      value,
+                      tagsForField,
+                      fieldTranslation,
+                    ),
                   )}
                 </td>
               </tr>
@@ -231,7 +216,14 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
               </tr>
               {otherTagsShown &&
                 schema.tagsWithFields.map(
-                  ({ key, value, label, field, fieldTranslation, tagsForField }) => (
+                  ({
+                    key,
+                    value,
+                    label,
+                    field,
+                    fieldTranslation,
+                    tagsForField,
+                  }) => (
                     <tr key={key}>
                       <th title={getTitle('standalone field', field)}>
                         {removeUnits(label)}
@@ -243,7 +235,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                           key,
                           addUnits(label, value),
                           tagsForField,
-                          fieldTranslation
+                          fieldTranslation,
                         )}
                       </td>
                     </tr>
@@ -261,16 +253,13 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 )}
                 center={feature.center}
                 except={[]}
-                onEdit={() => {
-                  // setDialogOpenedWith;
-                }}
               />
-              {/*<p>*/}
-              {/*  OpenStreetMap každému objektu přiřazuje vlastnosti (tagy). Můžou*/}
-              {/*  být standardizované (Adresa, Telefon) nebo zcela volné*/}
-              {/*  (identifikátory do jiných databází). Sami zde můžete chybějící*/}
-              {/*  vlastnosti přidat.*/}
-              {/*</p>*/}
+              {/* <p> */}
+              {/*  OpenStreetMap každému objektu přiřazuje vlastnosti (tagy). Můžou */}
+              {/*  být standardizované (Adresa, Telefon) nebo zcela volné */}
+              {/*  (identifikátory do jiných databází). Sami zde můžete chybějící */}
+              {/*  vlastnosti přidat. */}
+              {/* </p> */}
             </>
           )}
         </>

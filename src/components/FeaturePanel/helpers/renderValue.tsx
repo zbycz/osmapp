@@ -16,7 +16,7 @@ export const renderValue = (k, v, featured = false) => {
   }
 
   if (k.match(/:?wikipedia$/) && v.match(/:/)) {
-    humanValue = v.split(':', 2)[1];
+    humanValue = v.split(':', 2)[1]; // eslint-disable-line prefer-destructuring
   }
   if (featured && k.match(/wikidata$/)) {
     humanValue = `Wikipedia (wikidata)`; // TODO fetch label from wikidata
