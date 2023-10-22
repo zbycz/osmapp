@@ -35,8 +35,8 @@ const featuredKeys = [
   'opening_hours',
   'description',
   'fhrs:id',
-  'wikipedia',
-  'wikidata',
+  // 'wikipedia',
+  // 'wikidata',
   // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
 ];
 
@@ -54,6 +54,9 @@ const FeaturePanel = () => {
   const editEnabled = !skeleton && (!error || deleted);
 
   const osmappLink = getFullOsmappLink(feature);
+
+  // TODO velký špatný, to chce refaktorovat, aby se používalo jedno featuredKeys už z fetche - tj. vedle schematu
+  const featuredKeys = [...featuredKeys, ...(tags.wikipedia ? ['wikipedia'] : (tags.wikidata ? ['wikidata'] : []))]
   const featuredTags = featuredKeys
     .map((k) => [k, tags[k]])
     .filter(([, v]) => v);
