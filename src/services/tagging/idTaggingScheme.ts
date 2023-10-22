@@ -88,12 +88,23 @@ const matchFieldsFromPreset = (
 const matchRestToFields = (keysTodo: typeof keysTodo, feature: Feature) =>
   keysTodo
     .map((key) => {
-      const field =
-        key === "ref"
-          ? fields.ref
-          : Object.values(fields).find(
-          (f) => f.key === key || f.keys?.includes(key)
-          ); // todo cache this
+      // const field =
+      //   key === "ref"
+      //     ? fields.ref
+      //     : Object.values(fields).find(
+      //     (f) => f.key === key || f.keys?.includes(key)
+      //     ); // todo cache this
+
+
+
+      // if more fielas are matching, select the one which has fieldKey equal key
+      const matchingFields = Object.values(fields).filter(
+        (f) => f.key === key || f.keys?.includes(key)
+      );
+      const field = matchingFields.find(f => f.fieldKey === key) ?? matchingFields[0];
+      if (matchingFields.length > 1) {
+        console.warn(`More fields matching key ${key}: ${matchingFields.map(f => f.fieldKey)}`);
+      }
 
       if (!field) {
         return {};

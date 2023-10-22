@@ -2,7 +2,7 @@ import React from 'react';
 import { getUrlForTag } from './getUrlForTag';
 import { slashToOptionalBr } from '../../helpers';
 
-export const renderValue = (k, v) => {
+export const renderValue = (k, v, featured = false) => {
   const url = getUrlForTag(k, v);
   let humanValue = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
 
@@ -17,6 +17,9 @@ export const renderValue = (k, v) => {
 
   if (k.match(/:?wikipedia$/) && v.match(/:/)) {
     humanValue = v.split(':', 2)[1];
+  }
+  if (featured && k.match(/wikidata$/)) {
+    humanValue = `Wikipedia/Wikidata`; // TODO fetch label from wikidata
   }
 
   return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : v;

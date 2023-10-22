@@ -154,7 +154,7 @@ export const ToggleButton = ({ onClick, isShown, num }) => (
 );
 
 export const IdSchemeFields = ({ feature, featuredTags }) => {
-  const [restTagsShown, toggleRestTagsShown] = useToggleState(false);
+  const [restTagsShown, toggleRestTagsShown] = useToggleState(!false); // TODO fixme !
   const { schema } = feature;
   if (!schema) return null;
   if (!Object.keys(schema).length) return null;

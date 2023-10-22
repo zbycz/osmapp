@@ -12,41 +12,36 @@ jest.mock('next/config', () => () => ({
   publicRuntimeConfig: { languages: ['en'] },
 }));
 
-const feature = {
-  type: 'Feature',
-  center: [14.4092441, 50.0910942],
-  osmMeta: {
-    type: 'way',
-    id: 149398903,
-    timestamp: '2023-08-06T12:00:52Z',
-    version: 7,
-    changeset: 139512928,
-    user: 'tg4567',
-    uid: 12500589,
-  },
-  tags: {
-    amenity: 'fountain',
-    natural: 'water',
-    source: 'CZ:IPRPraha:ortofoto',
-    water: 'fountain',
-    wikidata: 'Q94435643',
-    wikimedia_commons: 'Category:Fountain (metro Malostranská)',
-  },
-  properties: { class: 'fountain', subclass: 'fountain' },
-} as unknown as Feature;
-
-const featureWithTemplate = {
-  osmMeta: { type: 'way' },
-  tags: { amenity: 'school' },
-} as unknown as Feature;
-
 describe('idTaggingScheme', () => {
   beforeEach(() => {
     mockSchemaTranslations(translations);
   });
 
   it('should multiple access', () => {
+    const feature = {
+      osmMeta: { type: 'way' },
+      tags: {
+        bicycle: 'no',
+        bridge: 'yes',
+        foot: 'no',
+        hgv: 'designated',
+        highway: 'motorway',
+        horse: 'no',
+        lanes: '2',
+        layer: '1',
+        lit: 'no',
+        maxspeed: '55 mph',
+        oneway: 'yes',
+        ref: 'I 84',
+        surface: 'asphalt',
+        'tiger:cfcc': 'A15',
+        'tiger:county': 'Orange, NY',
+        'tiger:name_base': 'I-84',
+      },
+    } as unknown as Feature;
+
     const result = getSchemaForFeature(feature);
+
     expect(result.label).toBe('Motorway');
     expect(result.presetKey).toBe('highway/motorway');
     expect(result.matchedFields).toMatchObject([
@@ -73,8 +68,14 @@ describe('idTaggingScheme', () => {
   });
 
   it('should use @template field', () => {
+    const featureWithTemplate = {
+      osmMeta: { type: 'way' },
+      tags: { amenity: 'school' },
+    } as unknown as Feature;
+
     const schema = getSchemaForFeature(featureWithTemplate);
     const computedAllFieldKeys = computeAllFieldKeys(schema.preset);
+
     expect(computedAllFieldKeys).toEqual([
       'amenity',
       'name',
@@ -100,6 +101,45 @@ describe('idTaggingScheme', () => {
       'level',
       'polling_station',
       'wheelchair',
+      'wikimedia_commons',
+      'wikidata',
+      'start_date',
+      'note',
+      'mapillary',
+      'image',
+      'fixme',
+      'ele_node',
+      'description',
+      'ref/linz/place_id-NZ',
     ]);
+  });
+
+  it('should map all tags to fields', () => {
+    const feature = {
+      osmMeta: {
+        type: 'way',
+      },
+      tags: {
+        amenity: 'fountain',
+        natural: 'water',
+        source: 'CZ:IPRPraha:ortofoto',
+        water: 'fountain',
+        wikidata: 'Q94435643',
+        wikimedia_commons: 'Category:Fountain (metro Malostranská)',
+      },
+    } as unknown as Feature;
+
+    const schema = getSchemaForFeature(feature);
+
+    expect(schema.featuredTags).toEqual([['wikidata', 'Q94435643']]);
+    expect(schema.matchedFields.map((x) => x.field.fieldKey)).toEqual([
+      'water',
+      'wikimedia_commons',
+    ]);
+    expect(schema.tagsWithFields.map((x) => x.field.fieldKey)).toEqual([
+      'horse_stables',
+      'source',
+    ]);
+    expect(schema.keysTodo).toEqual([]);
   });
 });
