@@ -95,21 +95,24 @@ const matchRestToFields = (keysTodo: typeof keysTodo, feature: Feature) =>
       //     (f) => f.key === key || f.keys?.includes(key)
       //     ); // todo cache this
 
-
-
       // if more fielas are matching, select the one which has fieldKey equal key
       const matchingFields = Object.values(fields).filter(
-        (f) => f.key === key || f.keys?.includes(key)
+        (f) => f.key === key || f.keys?.includes(key),
       );
-      const field = matchingFields.find(f => f.fieldKey === key) ?? matchingFields[0];
+      const field =
+        matchingFields.find((f) => f.fieldKey === key) ?? matchingFields[0];
       if (matchingFields.length > 1) {
-        console.warn(`More fields matching key ${key}: ${matchingFields.map(f => f.fieldKey)}`);
+        console.warn(
+          `More fields matching key ${key}: ${matchingFields.map(
+            (f) => f.fieldKey,
+          )}`,
+        );
       }
 
       if (!field) {
         return {};
       }
-      if (field.type === "typeCombo") {
+      if (field.type === 'typeCombo') {
         keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
@@ -118,7 +121,7 @@ const matchRestToFields = (keysTodo: typeof keysTodo, feature: Feature) =>
 
       const keysInField = deduplicate([
         ...(field.keys ?? []),
-        ...(field.key ? [field.key] : [])
+        ...(field.key ? [field.key] : []),
       ]);
       const tagsForField = [];
       keysInField.forEach((k) => {
@@ -136,7 +139,7 @@ const matchRestToFields = (keysTodo: typeof keysTodo, feature: Feature) =>
         field,
         tagsForField,
         fieldTranslation,
-        label: fieldTranslation?.label ?? field.label ?? `[${key}]`
+        label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
       };
     })
     .filter((field) => field.field);
@@ -180,7 +183,7 @@ const keysTodo = {
 };
 
 const getFeaturedTags = (feature: Feature) => {
-  const {tags} = feature;
+  const { tags } = feature;
 
   // TODO no featuredTags for deleted
 

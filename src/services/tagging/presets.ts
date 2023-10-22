@@ -81,5 +81,19 @@ export const getPresetForFeature = (feature: Feature): Preset => {
     }
   });
 
-  return candidates.sort((a, b) => b.score - a.score)[0].candidate;
+  // iD editor has index by keys, which is sorted by alphabet. So amenities (eg.amenity=fountain) is sooner than natural=water .. LOL
+  const sortedByKey = candidates.sort((a, b) =>
+    Object.keys(a.candidate.tags)?.[0]?.localeCompare(
+      Object.keys(b.candidate.tags)?.[0],
+    ),
+  );
+  const sortedByScore = sortedByKey.sort((a, b) => b.score - a.score);
+  const winner = sortedByScore[0];
+
+  const winners = sortedByScore.filter((c) => c.score === winner.score);
+  if (winners.length > 1) {
+    console.info('This feature matches more presets by same score:', winners);
+  }
+
+  return winner.candidate;
 };

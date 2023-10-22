@@ -19,7 +19,7 @@ export const renderValue = (k, v, featured = false) => {
     humanValue = v.split(':', 2)[1];
   }
   if (featured && k.match(/wikidata$/)) {
-    humanValue = `Wikipedia/Wikidata`; // TODO fetch label from wikidata
+    humanValue = `Wikipedia (wikidata)`; // TODO fetch label from wikidata
   }
 
   return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : v;

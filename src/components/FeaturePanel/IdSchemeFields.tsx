@@ -233,9 +233,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                       <th title={getTitle('standalone field', field)}>
                         {removeUnits(label)}
                       </th>
-                      <td
-                      style={{ color: 'gray' }}
-                      >
+                      <td style={{ color: 'gray' }}>
                         {render(
                           field,
                           feature,
