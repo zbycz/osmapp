@@ -13,25 +13,26 @@ jest.mock('next/config', () => () => ({
 }));
 
 const feature = {
-  osmMeta: { type: 'way' },
-  tags: {
-    bicycle: 'no',
-    bridge: 'yes',
-    foot: 'no',
-    hgv: 'designated',
-    highway: 'motorway',
-    horse: 'no',
-    lanes: '2',
-    layer: '1',
-    lit: 'no',
-    maxspeed: '55 mph',
-    oneway: 'yes',
-    ref: 'I 84',
-    surface: 'asphalt',
-    'tiger:cfcc': 'A15',
-    'tiger:county': 'Orange, NY',
-    'tiger:name_base': 'I-84',
+  type: 'Feature',
+  center: [14.4092441, 50.0910942],
+  osmMeta: {
+    type: 'way',
+    id: 149398903,
+    timestamp: '2023-08-06T12:00:52Z',
+    version: 7,
+    changeset: 139512928,
+    user: 'tg4567',
+    uid: 12500589,
   },
+  tags: {
+    amenity: 'fountain',
+    natural: 'water',
+    source: 'CZ:IPRPraha:ortofoto',
+    water: 'fountain',
+    wikidata: 'Q94435643',
+    wikimedia_commons: 'Category:Fountain (metro Malostranská)',
+  },
+  properties: { class: 'fountain', subclass: 'fountain' },
 } as unknown as Feature;
 
 const featureWithTemplate = {
@@ -71,7 +72,7 @@ describe('idTaggingScheme', () => {
     ]);
   });
 
-  it('should use template', () => {
+  it('should use @template field', () => {
     const schema = getSchemaForFeature(featureWithTemplate);
     const computedAllFieldKeys = computeAllFieldKeys(schema.preset);
     expect(computedAllFieldKeys).toEqual([

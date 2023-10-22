@@ -1,6 +1,6 @@
+import React from 'react';
 import { getUrlForTag } from './getUrlForTag';
 import { slashToOptionalBr } from '../../helpers';
-import React from 'react';
 
 export const renderValue = (k, v) => {
   const url = getUrlForTag(k, v);

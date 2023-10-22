@@ -84,7 +84,13 @@ const FeaturePanel = () => {
                 tags={tags}
                 center={feature.center}
                 except={
-                  advanced || deleted ? [] : ['name', 'layer', ...Object.keys(feature.schema.featuredTags)]
+                  advanced || deleted
+                    ? []
+                    : [
+                        'name',
+                        'layer',
+                        ...Object.keys(feature.schema.featuredTags),
+                      ]
                 }
                 onEdit={setDialogOpenedWith}
                 key={

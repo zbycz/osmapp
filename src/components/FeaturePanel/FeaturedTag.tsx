@@ -6,8 +6,8 @@ import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
 import PhoneRenderer from './renderers/PhoneRenderer';
 import { EditIconButton } from './helpers/EditIconButton';
 import { FoodHygieneRatingSchemeRenderer } from './renderers/FoodHygieneRatingScheme';
-import { WikipediaRenderer } from "./renderers/WikipediaRenderer";
-import { WikidataRenderer } from "./renderers/WikidataRenderer";
+import { WikipediaRenderer } from './renderers/WikipediaRenderer';
+import { WikidataRenderer } from './renderers/WikidataRenderer';
 
 const Wrapper = styled.div`
   position: relative;
@@ -42,8 +42,8 @@ const renderers: {
   'contact:mobile': PhoneRenderer,
   opening_hours: OpeningHoursRenderer,
   'fhrs:id': FoodHygieneRatingSchemeRenderer,
-  'wikipedia': WikipediaRenderer,
-  'wikidata': WikidataRenderer,
+  wikipedia: WikipediaRenderer,
+  wikidata: WikidataRenderer,
 };
 
 export const FeaturedTag = ({ k, v, onEdit }) => {

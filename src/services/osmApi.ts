@@ -116,7 +116,6 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
     }
 
     const schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?
-    console.log('schema', schema); // eslint-disable-line no-console
     return { ...feature, schema };
   } catch (e) {
     console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console

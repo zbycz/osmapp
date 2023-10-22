@@ -6,6 +6,32 @@ import { computeAllFieldKeys, getValueForField } from './fields';
 import { Preset } from './types/Presets';
 import { publishDbgObject } from '../../utils';
 
+// TODO move to shared place
+const featuredKeys = [
+  'name', // this is not in the other place
+  'website',
+  'contact:website',
+  'phone',
+  'contact:phone',
+  'contact:mobile',
+  'opening_hours',
+  'description',
+];
+
+const featuredKeysO = [
+  'website',
+  'contact:website',
+  'phone',
+  'contact:phone',
+  'contact:mobile',
+  'opening_hours',
+  'description',
+  'fhrs:id',
+  // 'wikipedia',
+  // 'wikidata',
+  // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
+];
+
 const deduplicate = (strings: string[]) => [...new Set(strings)];
 
 const matchFieldsFromPreset = (
@@ -59,19 +85,20 @@ const matchFieldsFromPreset = (
     .filter((field) => field.value);
 };
 
-const matchRestToFields = (keysTodo: any, feature: Feature) =>
+const matchRestToFields = (keysTodo: typeof keysTodo, feature: Feature) =>
   keysTodo
     .map((key) => {
       const field =
-        key === 'ref'
+        key === "ref"
           ? fields.ref
           : Object.values(fields).find(
-              (f) => f.key === key || f.keys?.includes(key),
-            ); // todo cache this
+          (f) => f.key === key || f.keys?.includes(key)
+          ); // todo cache this
+
       if (!field) {
         return {};
       }
-      if (field.type === 'typeCombo') {
+      if (field.type === "typeCombo") {
         keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
         return {};
       }
@@ -80,7 +107,7 @@ const matchRestToFields = (keysTodo: any, feature: Feature) =>
 
       const keysInField = deduplicate([
         ...(field.keys ?? []),
-        ...(field.key ? [field.key] : []),
+        ...(field.key ? [field.key] : [])
       ]);
       const tagsForField = [];
       keysInField.forEach((k) => {
@@ -98,7 +125,7 @@ const matchRestToFields = (keysTodo: any, feature: Feature) =>
         field,
         tagsForField,
         fieldTranslation,
-        label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
+        label: fieldTranslation?.label ?? field.label ?? `[${key}]`
       };
     })
     .filter((field) => field.field);
@@ -138,38 +165,13 @@ const keysTodo = {
     });
   },
   map(fn) {
-    return this.state.map(fn);
+    // we need a clone, because we modify the array
+    return [...this.state].map(fn);
   },
 };
 
-// TODO move to shared place
-const featuredKeys = [
-  'name', // this is not in the other place
-  'website',
-  'contact:website',
-  'phone',
-  'contact:phone',
-  'contact:mobile',
-  'opening_hours',
-  'description',
-];
-
-const featuredKeysO = [
-  'website',
-  'contact:website',
-  'phone',
-  'contact:phone',
-  'contact:mobile',
-  'opening_hours',
-  'description',
-  'fhrs:id',
-  // 'wikipedia',
-  // 'wikidata',
-  // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
-];
-
 const getFeaturedTags = (feature: Feature) => {
-  const tags = feature.tags;
+  const {tags} = feature;
 
   // TODO no featuredTags for deleted
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { WikipediaIcon } from '../../../assets/WikipediaIcon';
-import { renderValue } from "../helpers/renderValue";
-import { WikidataIcon } from "../../../assets/WikidataIcon";
+import { renderValue } from '../helpers/renderValue';
+import { WikidataIcon } from '../../../assets/WikidataIcon';
 
 export const WikipediaRenderer = ({ k, v }) => (
   <>
@@ -9,4 +9,3 @@ export const WikipediaRenderer = ({ k, v }) => (
     {renderValue(k, v)}
   </>
 );
-

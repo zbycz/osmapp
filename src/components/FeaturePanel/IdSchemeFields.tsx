@@ -93,7 +93,7 @@ const render = (
     return (
       <>
         {tagsForField.map(({ key, value: value2 }) => (
-          <div>{renderValue(key, value2)}</div>
+          <div key={key}>{renderValue(key, value2)}</div>
         ))}
       </>
     );
