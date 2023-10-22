@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -25,21 +25,6 @@ import { IdSchemeFields } from './IdSchemeFields';
 import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 
-// TODO move to shared place
-const featuredKeys = [
-  'website',
-  'contact:website',
-  'phone',
-  'contact:phone',
-  'contact:mobile',
-  'opening_hours',
-  'description',
-  'fhrs:id',
-  // 'wikipedia',
-  // 'wikidata',
-  // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
-];
-
 const FeaturePanel = () => {
   const { feature } = useFeatureContext();
 
@@ -55,11 +40,6 @@ const FeaturePanel = () => {
 
   const osmappLink = getFullOsmappLink(feature);
 
-  // TODO velký špatný, to chce refaktorovat, aby se používalo jedno featuredKeys už z fetche - tj. vedle schematu
-  const featuredKeys = [...featuredKeys, ...(tags.wikipedia ? ['wikipedia'] : (tags.wikidata ? ['wikidata'] : []))]
-  const featuredTags = featuredKeys
-    .map((k) => [k, tags[k]])
-    .filter(([, v]) => v);
   const label = getLabel(feature);
 
   return (
@@ -77,20 +57,20 @@ const FeaturePanel = () => {
           <OsmError />
 
           <FeaturedTags
-            featuredTags={deleted ? [] : featuredTags}
+            featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
             setDialogOpenedWith={setDialogOpenedWith}
           />
 
           {!showTags && (
             <IdSchemeFields
-              featuredTags={deleted ? [] : featuredTags}
+              featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
               feature={feature}
               key={getUrlOsmId(osmMeta) + (deleted && 'del')}
             />
           )}
           {showTags && (
             <>
-              {!!featuredTags.length && (
+              {!!feature.schema.featuredTags.length && (
                 <Typography
                   variant="overline"
                   display="block"
@@ -104,7 +84,7 @@ const FeaturePanel = () => {
                 tags={tags}
                 center={feature.center}
                 except={
-                  advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
+                  advanced || deleted ? [] : ['name', 'layer', ...Object.keys(feature.schema.featuredTags)]
                 }
                 onEdit={setDialogOpenedWith}
                 key={

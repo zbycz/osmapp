@@ -83,22 +83,22 @@ const render = (
     return buildAddress(feature.tags, feature.center);
   }
 
-  if (field.type === 'wikipedia') {
-    return (
-      <>
-        {renderValue('wikipedia', feature.tags.wikipedia)}
-        {feature.tags.wikidata && (
-          <sup>
-            {' '}
-            <a href={`https://www.wikidata.org/wiki/${feature.tags.wikidata}`}>
-              wd
-            </a>
-          </sup>
-        )}
-        {/* <svg xmlns="http://www.w3.org/2000/svg" width="1052.36" height="744.09" version="1.2"><path d="M119.42 543.017h29.163V43.052h-29.162v499.965zm60.273 0h89.43V43.052h-89.43v499.965zM298.291 43.052V543h89.43V43.052h-89.43zM838.98 543.052h29.168v-500H838.98v500zm60.278-500v500h29.163v-500h-29.163zm-481.404 500h29.163v-500h-29.163v500zm60.278-500v499.983h29.17V43.052h-29.17z" /><path d="M537.422 543.052h89.442v-500h-89.442v500zm118.599 0h31.103v-500h-31.103v500zm60.272-500v499.983h89.43V43.052h-89.43z"/></svg> */}
-      </>
-    );
-  }
+  // if (field.type === 'wikipedia') {
+  //   return (
+  //     <>
+  //       {renderValue('wikipedia', feature.tags.wikipedia)}
+  //       {feature.tags.wikidata && (
+  //         <sup>
+  //           {' '}
+  //           <a href={`https://www.wikidata.org/wiki/${feature.tags.wikidata}`}>
+  //             wd
+  //           </a>
+  //         </sup>
+  //       )}
+  //       {/* <svg xmlns="http://www.w3.org/2000/svg" width="1052.36" height="744.09" version="1.2"><path d="M119.42 543.017h29.163V43.052h-29.162v499.965zm60.273 0h89.43V43.052h-89.43v499.965zM298.291 43.052V543h89.43V43.052h-89.43zM838.98 543.052h29.168v-500H838.98v500zm60.278-500v500h29.163v-500h-29.163zm-481.404 500h29.163v-500h-29.163v500zm60.278-500v499.983h29.17V43.052h-29.17z" /><path d="M537.422 543.052h89.442v-500h-89.442v500zm118.599 0h31.103v-500h-31.103v500zm60.272-500v499.983h89.43V43.052h-89.43z"/></svg> */}
+  //     </>
+  //   );
+  // }
 
   if (tagsForField?.length >= 2) {
     return (
@@ -158,7 +158,7 @@ const TagsList = styled.ul`
 
 export const ToggleButton = ({ onClick, isShown, num }) => (
   <StyledToggleButton onClick={onClick} aria-label="Toggle">
-    zbylé tagy ({num}) {/* {t('featurepanel.edit_in_osm')} */}
+    other tags ({num}) {/* {t('featurepanel.edit_in_osm')} */}
     {!isShown && <ChevronRight fontSize="small" />}
     {isShown && <ExpandMoreIcon fontSize="small" />}
   </StyledToggleButton>
@@ -230,13 +230,13 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 </tr>
               }
               {restTagsShown &&
-                schema.tagsWithFields.map(({ key, value, label, field }) => (
+                schema.tagsWithFields.map(({ key, value, label, field, tagsForField }) => (
                   <tr key={key}>
                     <th title={getTitle('standalone field', field)}>
                       {removeUnits(label)}
                     </th>
                     <td style={{ color: 'gray' }}>
-                      {render(field, feature, key, addUnits(label, value))}
+                      {render(field, feature, key, addUnits(label, value), tagsForField)}
                     </td>
                   </tr>
                 ))}

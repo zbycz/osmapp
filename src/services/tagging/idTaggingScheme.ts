@@ -8,20 +8,6 @@ import { publishDbgObject } from '../../utils';
 
 const deduplicate = (strings: string[]) => [...new Set(strings)];
 
-// TODO move to shared place
-const featuredKeys = [
-  'name', // this is not in the other place
-  'website',
-  'contact:website',
-  'phone',
-  'contact:phone',
-  'contact:mobile',
-  'opening_hours',
-  'description',
-  'wikipedia',
-  'wikidata',
-];
-
 const matchFieldsFromPreset = (
   preset: Preset,
   keysTodo: any,
@@ -124,7 +110,7 @@ const keysTodo = {
       (key) => !featuredKeys.includes(key),
     );
   },
-  resolve(tags) {
+  resolveTags(tags) {
     Object.keys(tags).forEach((key) => {
       this.state.splice(this.state.indexOf(key), 1);
     });
@@ -156,11 +142,50 @@ const keysTodo = {
   },
 };
 
+
+
+// TODO move to shared place
+const featuredKeys = [
+  'name', // this is not in the other place
+  'website',
+  'contact:website',
+  'phone',
+  'contact:phone',
+  'contact:mobile',
+  'opening_hours',
+  'description',
+
+];
+
+const featuredKeysO = [
+  'website',
+  'contact:website',
+  'phone',
+  'contact:phone',
+  'contact:mobile',
+  'opening_hours',
+  'description',
+  'fhrs:id',
+  // 'wikipedia',
+  // 'wikidata',
+  // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
+];
+
 export const getSchemaForFeature = (feature: Feature) => {
   const preset = getPresetForFeature(feature);
-
   keysTodo.init(feature);
-  keysTodo.resolve(preset.tags); // remove tags which are already covered by Preset keys
+
+  // name is always rendered by FeaturePanel
+  keysTodo.remove('name')
+
+  const tags = feature.tags;
+  const featuredKeys = [...featuredKeysO, ...(tags.wikipedia ? ['wikipedia'] : (tags.wikidata ? ['wikidata'] : []))]
+  const featuredTags = featuredKeys
+    .map((k) => [k, tags[k]])
+    .filter(([, v]) => v);
+  keysTodo.resolveTags(featuredTags); // TODO no featuredTags for deleted
+
+  keysTodo.resolveTags(preset.tags); // remove tags which are already covered by Preset keys
 
   const matchedFields = matchFieldsFromPreset(preset, keysTodo, feature);
   keysTodo.resolveFields(matchedFields);
@@ -168,12 +193,12 @@ export const getSchemaForFeature = (feature: Feature) => {
   const tagsWithFields = matchRestToFields(keysTodo, feature);
   keysTodo.resolveFields(tagsWithFields);
 
-  // TODO fix one field with more tags! like address
   return {
     presetKey: preset.presetKey,
     preset,
     feature,
     label: getPresetTranslation(preset.presetKey),
+    featuredTags,
     matchedFields,
     tagsWithFields,
     keysTodo: keysTodo.state,

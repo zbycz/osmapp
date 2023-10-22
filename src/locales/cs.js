@@ -59,6 +59,7 @@ export default {
   'featurepanel.history_button': 'Historie »',
   'featurepanel.other_info_heading': 'Další informace',
   'featurepanel.edit_button_title': 'Upravit v databázi OpenStreetMap',
+  'featurepanel.note_button': 'Navrhnout úpravu',
   'featurepanel.edit_button': 'Upravit místo',
   'featurepanel.add_place_button': 'Přidat místo',
   'featurepanel.undelete_button': 'Znovu přidat',
