@@ -54,7 +54,7 @@ export default {
   'featurepanel.error_network': 'No es posible obtener, comprueba tu cable de red.',
   'featurepanel.error_deleted': 'Este objeto está marcado como borrado en OpenStreetMap.',
   'featurepanel.history_button': 'Historia »',
-  'featurepanel.other_info_heading': 'Más información',
+  'featurepanel.details_heading': 'Más información',
   'featurepanel.edit_button_title': 'Editar en la base de datos de OpenStreetMap',
   'featurepanel.edit_button': 'Editar lugar',
   'featurepanel.add_place_button': 'Añadir lugar',

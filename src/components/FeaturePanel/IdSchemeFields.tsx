@@ -147,28 +147,37 @@ const TagsList = styled.ul`
 
 export const ToggleButton = ({ onClick, isShown, num }) => (
   <StyledToggleButton onClick={onClick} aria-label="Toggle">
-    other tags ({num}) {/* {t('featurepanel.edit_in_osm')} */}
+    {t('featurepanel.other_properties')} ({num}){' '}
+    {/* {t('featurepanel.edit_in_osm')} */}
     {!isShown && <ChevronRight fontSize="small" />}
     {isShown && <ExpandMoreIcon fontSize="small" />}
   </StyledToggleButton>
 );
 
 export const IdSchemeFields = ({ feature, featuredTags }) => {
-  const [restTagsShown, toggleRestTagsShown] = useToggleState(!false); // TODO fixme !
+  const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
   const { schema } = feature;
   if (!schema) return null;
   if (!Object.keys(schema).length) return null;
 
   // TODO add link to reference as Tooltip https://wiki.openstreetmap.org/w/api.php?action=wbgetentities&format=json&languagefallback=1&languages=en%7Ccs%7Cen-us%7Csk&origin=*&sites=wiki&titles=Locale%3Acs%7CLocale%3Aen-us%7CLocale%3Ask%7CKey%3Astart%20date%7CTag%3Astart%20date%3D1752
+  // TODO preset translations https://github.com/zbycz/osmapp/issues/190
+
+  const numberOfItems =
+    featuredTags.length +
+    schema.matchedFields.length +
+    schema.tagsWithFields.length +
+    schema.keysTodo.length;
+
+  if (!numberOfItems) {
+    return <div style={{ width: '100%', height: '50px' }} />;
+  }
 
   return (
     <>
-      {featuredTags.length &&
-      (schema.matchedFields.length ||
-        schema.tagsWithFields.length ||
-        schema.keysTodo.length) ? (
+      {featuredTags.length && schema.matchedFields.length ? (
         <Typography variant="overline" display="block" color="textSecondary">
-          {t('featurepanel.other_info_heading')}
+          {t('featurepanel.details_heading')}
         </Typography>
       ) : null}
 
@@ -198,42 +207,27 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
         </tbody>
       </Table>
 
-      {/* <TagsList> */}
-      {/* {schema.matchedFields.map(({ key, value, label, field, tagsForField }) => ( */}
-      {/*  <li key={key}  title={getTitle('from preset', field)}> */}
-      {/*    <strong> */}
-      {/*      {removeUnits(label)}: */}
-      {/*    </strong>{key === 'wikimedia_commons' ? <br /> : " "} */}
-      {/*    {addUnits(label, render(field, feature, key, value, tagsForField))} */}
-      {/*  </li> */}
-      {/* ))} */}
-      {/* </TagsList> */}
-
       {!!(schema.keysTodo.length + schema.tagsWithFields.length) && (
         <>
           <Table>
             <tbody>
-              {
-                /* TODO TADY HERE QUI */ <tr>
-                  <td colSpan={2} style={{ textAlign: 'right' }}>
-                    <ToggleButton
-                      num={
-                        schema.keysTodo.length + schema.tagsWithFields.length
-                      }
-                      isShown={restTagsShown}
-                      onClick={toggleRestTagsShown}
-                    />
-                  </td>
-                </tr>
-              }
-              {restTagsShown &&
+              <tr>
+                <td colSpan={2} style={{ textAlign: 'right' }}>
+                  <ToggleButton
+                    num={schema.keysTodo.length + schema.tagsWithFields.length}
+                    isShown={otherTagsShown}
+                    onClick={toggleOtherTagsShown}
+                  />
+                </td>
+              </tr>
+              {otherTagsShown &&
                 schema.tagsWithFields.map(
                   ({ key, value, label, field, tagsForField }) => (
                     <tr key={key}>
                       <th title={getTitle('standalone field', field)}>
                         {removeUnits(label)}
                       </th>
-                      <td style={{ color: 'gray' }}>
+                      <td>
                         {render(
                           field,
                           feature,
@@ -245,18 +239,10 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                     </tr>
                   ),
                 )}
-
-              {/* {restTagsShown && */}
-              {/*  schema.keysTodo.map((key) => ( */}
-              {/*    <tr key={key}> */}
-              {/*      <th>{key}</th> */}
-              {/*      <td style={{color: 'gray'}}>{renderValue(key, feature.tags[key])}</td> */}
-              {/*    </tr> */}
-              {/*  ))} */}
             </tbody>
           </Table>
 
-          {restTagsShown && (
+          {otherTagsShown && (
             <>
               <TagsTable
                 tags={schema.keysTodo.reduce(
@@ -269,11 +255,12 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                   // setDialogOpenedWith;
                 }}
               />
-              <p>
-                OpenStreetMap každému objektu přiřazuje vlastnosti (tagy). Ty
-                standardizované mají přeložený název. Kdokoliv může přidat další
-                tagy, ty se nachází níže.
-              </p>
+              {/*<p>*/}
+              {/*  OpenStreetMap každému objektu přiřazuje vlastnosti (tagy). Můžou*/}
+              {/*  být standardizované (Adresa, Telefon) nebo zcela volné*/}
+              {/*  (identifikátory do jiných databází). Sami zde můžete chybějící*/}
+              {/*  vlastnosti přidat.*/}
+              {/*</p>*/}
             </>
           )}
         </>

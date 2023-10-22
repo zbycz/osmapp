@@ -120,12 +120,13 @@ describe('idTaggingScheme', () => {
         type: 'way',
       },
       tags: {
-        amenity: 'fountain',
-        natural: 'water',
-        source: 'CZ:IPRPraha:ortofoto',
-        water: 'fountain',
-        wikidata: 'Q94435643',
-        wikimedia_commons: 'Category:Fountain (metro Malostranská)',
+        "amenity": "clock",
+        "check_date": "2023-07-03",
+        "display": "analog",
+        "man_made": "tower",
+        "support": "tower",
+        "tower:type": "clock",
+        "visibility": "street"
       },
     } as unknown as Feature;
 

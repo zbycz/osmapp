@@ -76,8 +76,7 @@ const FeaturePanel = () => {
                   display="block"
                   color="textSecondary"
                 >
-                  Další OSM tagy
-                  {/* {t('featurepanel.other_info_heading')} */}
+                   {t('featurepanel.details_heading')}
                 </Typography>
               )}
               <TagsTable
