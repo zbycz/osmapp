@@ -11,6 +11,8 @@ import { buildAddress } from '../../services/helpers';
 import { Feature } from '../../services/types';
 import { t } from '../../services/intl';
 import { TagsTable } from './TagsTable';
+import { EditIconButton } from './helpers/EditIconButton';
+import { useEditDialogContext } from './helpers/EditDialogContext';
 
 // taken from src/components/FeaturePanel/TagsTable.tsx
 const Table = styled.table`
@@ -142,6 +144,7 @@ export const ToggleButton = ({ onClick, isShown, num }) => (
 );
 
 export const IdSchemeFields = ({ feature, featuredTags }) => {
+  const { openWithTag } = useEditDialogContext();
   const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
   const { schema } = feature;
   if (!schema) return null;
@@ -183,6 +186,9 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                   {removeUnits(label)}
                 </th>
                 <td>
+                  <EditIconButton
+                    onClick={() => openWithTag(key ?? tagsForField?.[0]?.k)}
+                  />
                   {addUnits(
                     label,
                     render(
@@ -229,6 +235,11 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                         {removeUnits(label)}
                       </th>
                       <td>
+                        <EditIconButton
+                          onClick={() =>
+                            openWithTag(key ?? tagsForField?.[0]?.k)
+                          }
+                        />
                         {render(
                           field,
                           feature,
