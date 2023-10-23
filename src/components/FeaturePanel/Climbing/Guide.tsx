@@ -22,7 +22,9 @@ export const Guide = () => {
       <Snackbar
         open={isSelectedRouteEditable && !isGuideClosed}
         // autoHideDuration={6000}
-        onClose={handleClose}
+
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        // onClose={handleClose}
       >
         <Alert onClose={handleClose} severity="info" variant="filled">
           {routes[routeSelectedIndex]?.path.length === 0

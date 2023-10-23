@@ -93,4 +93,34 @@ export const GlobalStyle = createGlobalStyle`
   .MuiBackdrop-root {
     background-color: rgba(0, 0, 0, 0.2) !important;
   }
+  .Resizer.horizontal {
+    height: 15px;
+    margin: -7px 0;
+
+    z-index: 100000;
+    cursor: row-resize;
+    &:hover {
+      &::after {
+      border-color: #151515;
+      border-width: 3px;
+      margin-top: 6px;
+
+    }
+    }
+    &::after {
+      position: absolute;
+      content:'';
+
+      width: 100%;
+      height: 1px;
+      margin-top: 7px;
+      border-top: solid 1px #222;
+      transition: all 0.1s ease;
+
+    }
+  }
+  .Pane.horizontal.Pane2  {
+    margin-top: 0;
+    overflow: auto
+  }
 `;

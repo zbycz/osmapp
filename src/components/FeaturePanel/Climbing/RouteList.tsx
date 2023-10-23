@@ -29,6 +29,7 @@ type Props = {
 const Container = styled.div`
   flex: 1;
   overflow: auto;
+  padding-top: 10px;
 `;
 
 const EmptyValue = styled.div`

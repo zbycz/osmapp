@@ -47,6 +47,8 @@ type ClimbingContextType = {
   setIsPointClicked: (isPointClicked: boolean) => void;
   setEditorPosition: (position: Position) => void;
   setImageSize: (ImageSize) => void;
+  splitPaneHeight: number;
+  setSplitPaneHeight: (height: number) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
   setIsSelectedRouteEditable: (isSelectedRouteEditable: boolean) => void;
   setPointSelectedIndex: (pointSelectedIndex: number) => void;
@@ -90,6 +92,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setPointSelectedIndex: () => null,
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
+  setSplitPaneHeight: () => null,
+  splitPaneHeight: 800,
   updateRouteOnIndex: () => null,
   useMachine: () => ({ currentState: null, execute: () => null }),
   scrollOffset: { x: 0, y: 0 },
@@ -101,6 +105,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
+  const [splitPaneHeight, setSplitPaneHeight] = useState<number>(800);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [editorPosition, setEditorPosition] = useState<Position>({
@@ -347,6 +352,8 @@ export const ClimbingContextProvider = ({ children }) => {
     scrollOffset,
     setScrollOffset,
     findClosestPoint,
+    splitPaneHeight,
+    setSplitPaneHeight,
   };
 
   return (

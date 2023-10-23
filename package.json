@@ -52,6 +52,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.2.0",
     "react-jss": "^10.6.0",
+    "react-split-pane": "^0.1.92",
     "simple-opening-hours": "^0.1.1",
     "styled-components": "^5.3.0",
     "styled-jsx": "^3.4.4"

@@ -16,7 +16,9 @@ const Svg = styled.svg<{
     `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};
   ${({ imageSize: { width, height } }) =>
     `width: ${width}px;
-    height:${height}px;`}
+    height:${height}px;
+    height: 100%;
+    `}
 `;
 
 // @TODO rename onFinishClimbingRouteClick?

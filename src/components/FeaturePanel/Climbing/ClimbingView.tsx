@@ -1,9 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
+import SplitPane from 'react-split-pane';
 import { RouteEditor } from './Editor/RouteEditor';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ControlPanel } from './Editor/ControlPanel';
@@ -32,10 +33,12 @@ const EditorContainer = styled.div<{ imageHeight: number }>`
   top: 0;
   position: absolute;
   width: 100%;
+  height: 100%;
 `;
 const BlurContainer = styled.div`
   backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
+
   height: 100%;
 `;
 
@@ -45,23 +48,25 @@ const StickyContainer = styled.div<{ imageHeight: number; imageUrl: string }>`
   background-size: 100% auto;
   object-fit: cover;
   object-position: center;
-
-  height: ${({ imageHeight }) => `${imageHeight}px`};
+  width: 100%;
+  height: 100%;
 `;
 
 const ImageContainer = styled.div`
   user-select: none;
   position: absolute;
   top: 0;
+  height: 100%;
   box-shadow: 0 -0 110px rgba(0, 0, 0, 0.1);
 `;
 
 const ImageElement = styled.img<{ zoom?: number }>`
-  max-width: 100%;
-  max-height: 80vh;
-  object-fit: contain;
+  /* max-width: 100%; */
+  /* max-height: 80vh; */
+  /* object-fit: contain; */
   // transform: <scale(${({ zoom }) => zoom});
   transition: all 0.1s ease-in;
+  height: 100%;
 `;
 
 const DialogIcon = styled.div`
@@ -97,11 +102,13 @@ export const ClimbingView = ({
     pointSelectedIndex,
     scrollOffset,
     findClosestPoint,
+    splitPaneHeight,
+    setSplitPaneHeight,
   } = useClimbingContext();
-
-  const imageUrl = '/images/rock.png';
+  const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
+  // const imageUrl = '/images/rock.png';
   // const imageUrl = '/images/rock2.jpg';
-  // const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
+  const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
   // const imageUrl =
   //   'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
   const imageRef = useRef(null);
@@ -143,7 +150,7 @@ export const ClimbingView = ({
 
   useEffect(() => {
     handleImageLoad();
-  }, []);
+  }, [splitPaneHeight]);
 
   const onCanvasClick = (e) => {
     machine.execute('addPoint');
@@ -218,42 +225,61 @@ export const ClimbingView = ({
     };
   }, []);
 
+  const onDragStarted = () => {
+    setIsSplitViewDragging(true);
+  };
+  const onDragFinished = (splitHeight) => {
+    setIsSplitViewDragging(false);
+    setSplitPaneHeight(splitHeight);
+  };
+
   // @TODO udělat header footer jako edit dialog
   return (
     <Container>
-      <StickyContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
-        <BlurContainer>
-          {!isReadOnly && (
-            <ControlPanel
-              onEditClimbingRouteClick={onEditClimbingRouteClick}
-              onCreateClimbingRouteClick={onCreateClimbingRouteClick}
-              onUndoClick={onUndoClick}
-            />
-          )}
-          <EditorContainer imageHeight={imageSize.height}>
-            <ImageContainer>
-              <ImageElement
-                src={imageUrl}
-                onLoad={handleImageLoad}
-                ref={imageRef}
-                // zoom={zoom}
+      <SplitPane
+        split="horizontal"
+        minSize={100}
+        maxSize="90%"
+        size={splitPaneHeight}
+        onDragStarted={onDragStarted}
+        onDragFinished={onDragFinished}
+      >
+        <StickyContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
+          <BlurContainer>
+            {!isReadOnly && (
+              <ControlPanel
+                onEditClimbingRouteClick={onEditClimbingRouteClick}
+                onCreateClimbingRouteClick={onCreateClimbingRouteClick}
+                onUndoClick={onUndoClick}
               />
-            </ImageContainer>
-            <RouteEditor
-              routes={routes}
-              onClick={onEditorClick || onCanvasClick}
-              onEditorMouseMove={onMouseMove}
-              onEditorTouchMove={onTouchMove}
-            />
-            <Guide />
-          </EditorContainer>
-        </BlurContainer>
-      </StickyContainer>
+            )}
+            <EditorContainer imageHeight={imageSize.height}>
+              <ImageContainer>
+                <ImageElement
+                  src={imageUrl}
+                  onLoad={handleImageLoad}
+                  ref={imageRef}
+                  // zoom={zoom}
+                />
+              </ImageContainer>
+              {!isSplitViewDragging && (
+                <RouteEditor
+                  routes={routes}
+                  onClick={onEditorClick || onCanvasClick}
+                  onEditorMouseMove={onMouseMove}
+                  onEditorTouchMove={onTouchMove}
+                />
+              )}
+              <Guide />
+            </EditorContainer>
+          </BlurContainer>
+        </StickyContainer>
 
-      <RouteList
-        isReadOnly={isReadOnly}
-        onDeleteExistingRouteClick={onDeleteWholeRouteClick}
-      />
+        <RouteList
+          isReadOnly={isReadOnly}
+          onDeleteExistingRouteClick={onDeleteWholeRouteClick}
+        />
+      </SplitPane>
       <DialogIcon>
         {isFullscreenDialogOpened && (
           <IconButton
