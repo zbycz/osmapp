@@ -9,8 +9,8 @@ import { t } from '../../../../services/intl';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 const Container = styled.div`
-  background: rgba(0, 0, 0, 0.5);
-  border-radius: 4px;
+  background: #222;
+  border-radius: 8px;
   position: sticky;
   width: 44px;
   top: 5px;

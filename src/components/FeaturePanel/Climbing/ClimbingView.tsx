@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { IconButton } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import SplitPane from 'react-split-pane';
@@ -14,8 +12,6 @@ import { Position } from './types';
 import { updateElementOnIndex } from './utils';
 
 type Props = {
-  setIsFullscreenDialogOpened: (isFullscreenDialogOpened: boolean) => void;
-  isFullscreenDialogOpened: boolean;
   isReadOnly: boolean;
   onEditorClick?: () => void;
 };
@@ -75,12 +71,7 @@ const DialogIcon = styled.div`
   right: 10px;
 `;
 
-export const ClimbingView = ({
-  setIsFullscreenDialogOpened,
-  isFullscreenDialogOpened,
-  isReadOnly,
-  onEditorClick,
-}: Props) => {
+export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
 
@@ -104,11 +95,12 @@ export const ClimbingView = ({
     findClosestPoint,
     splitPaneHeight,
     setSplitPaneHeight,
+    areRoutesVisible,
   } = useClimbingContext();
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   // const imageUrl = '/images/rock.png';
-  // const imageUrl = '/images/rock2.jpg';
-  const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
+  const imageUrl = '/images/rock2.jpg';
+  // const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
   // const imageUrl =
   //   'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
   const imageRef = useRef(null);
@@ -246,7 +238,7 @@ export const ClimbingView = ({
       >
         <StickyContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
           <BlurContainer>
-            {!isReadOnly && (
+            {!isReadOnly && areRoutesVisible && (
               <ControlPanel
                 onEditClimbingRouteClick={onEditClimbingRouteClick}
                 onCreateClimbingRouteClick={onCreateClimbingRouteClick}
@@ -262,15 +254,17 @@ export const ClimbingView = ({
                   // zoom={zoom}
                 />
               </ImageContainer>
-              {!isSplitViewDragging && (
-                <RouteEditor
-                  routes={routes}
-                  onClick={onEditorClick || onCanvasClick}
-                  onEditorMouseMove={onMouseMove}
-                  onEditorTouchMove={onTouchMove}
-                />
+              {!isSplitViewDragging && areRoutesVisible && (
+                <>
+                  <RouteEditor
+                    routes={routes}
+                    onClick={onEditorClick || onCanvasClick}
+                    onEditorMouseMove={onMouseMove}
+                    onEditorTouchMove={onTouchMove}
+                  />
+                  <Guide />
+                </>
               )}
-              <Guide />
             </EditorContainer>
           </BlurContainer>
         </StickyContainer>
@@ -281,17 +275,6 @@ export const ClimbingView = ({
         />
       </SplitPane>
       <DialogIcon>
-        {isFullscreenDialogOpened && (
-          <IconButton
-            color="primary"
-            edge="end"
-            onClick={() => {
-              setIsFullscreenDialogOpened(!isFullscreenDialogOpened);
-            }}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        )}
         {/* <IconButton
           color="secondary"
           edge="end"

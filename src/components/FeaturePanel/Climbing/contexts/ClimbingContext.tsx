@@ -67,6 +67,8 @@ type ClimbingContextType = {
   scrollOffset: Position;
   setScrollOffset: (scrollOffset: Position) => void;
   findClosestPoint: (position: Position) => Position | null;
+  areRoutesVisible: boolean;
+  setAreRoutesVisible: (areRoutesVisible: boolean) => void;
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
@@ -99,6 +101,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   scrollOffset: { x: 0, y: 0 },
   setScrollOffset: () => null,
   findClosestPoint: () => null,
+  areRoutesVisible: true,
+  setAreRoutesVisible: () => null,
 });
 
 export const ClimbingContextProvider = ({ children }) => {
@@ -108,6 +112,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const [splitPaneHeight, setSplitPaneHeight] = useState<number>(800);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
+  const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(false);
   const [editorPosition, setEditorPosition] = useState<Position>({
     x: 0,
     y: 0,
@@ -354,6 +359,8 @@ export const ClimbingContextProvider = ({ children }) => {
     findClosestPoint,
     splitPaneHeight,
     setSplitPaneHeight,
+    areRoutesVisible,
+    setAreRoutesVisible,
   };
 
   return (

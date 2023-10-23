@@ -1,7 +1,18 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
-import { Button, Dialog, DialogContent } from '@material-ui/core';
+import {
+  AppBar,
+  Button,
+  Dialog,
+  DialogContent,
+  IconButton,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import CloseIcon from '@material-ui/icons/Close';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import VisibilityIcon from '@material-ui/icons/Visibility';
 import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
@@ -10,13 +21,21 @@ const EditRoutesContainer = styled.div`
   padding: 10px;
   overflow: auto;
 `;
+const Title = styled.div`
+  flex: 1;
+`;
 
 export const ClimbingPanel = () => {
   const contentRef = useRef(null);
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(true);
 
-  const { setScrollOffset, isPointMoving } = useClimbingContext();
+  const {
+    setScrollOffset,
+    isPointMoving,
+    areRoutesVisible,
+    setAreRoutesVisible,
+  } = useClimbingContext();
 
   const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
@@ -24,6 +43,9 @@ export const ClimbingPanel = () => {
     setScrollOffset({ x: e.target.scrollLeft, y: e.target.scrollTop });
   };
 
+  const VisibilityIconElement = areRoutesVisible
+    ? VisibilityOffIcon
+    : VisibilityIcon;
   return (
     <>
       {isFullscreenDialogOpened ? (
@@ -32,6 +54,39 @@ export const ClimbingPanel = () => {
           open={isFullscreenDialogOpened}
           onClose={onFullscreenDialogClose}
         >
+          <AppBar position="static" color="transparent">
+            <Toolbar variant="dense">
+              <Title>
+                <Typography variant="h6" component="div">
+                  Roviště
+                </Typography>
+              </Title>
+              <>
+                <IconButton
+                  color="primary"
+                  edge="end"
+                  title={areRoutesVisible ? 'Hide routes' : 'Show routes'}
+                  onClick={() => {
+                    setAreRoutesVisible(!areRoutesVisible);
+                  }}
+                >
+                  <VisibilityIconElement fontSize="small" />
+                </IconButton>
+              </>
+              {isFullscreenDialogOpened && (
+                <IconButton
+                  color="primary"
+                  edge="end"
+                  onClick={() => {
+                    setIsFullscreenDialogOpened(!isFullscreenDialogOpened);
+                  }}
+                >
+                  <CloseIcon fontSize="small" />
+                </IconButton>
+              )}
+            </Toolbar>
+          </AppBar>
+
           <DialogContent
             style={{
               overscrollBehavior: isPointMoving ? 'none' : undefined,
@@ -40,22 +95,13 @@ export const ClimbingPanel = () => {
             ref={contentRef}
             onScroll={onScroll}
           >
-            <ClimbingView
-              isFullscreenDialogOpened={isFullscreenDialogOpened}
-              setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-              isReadOnly={false}
-            />
+            <ClimbingView isReadOnly={false} />
           </DialogContent>
         </Dialog>
       ) : (
         <PanelWrapper>
           <PanelScrollbars>
-            <ClimbingView
-              isFullscreenDialogOpened={isFullscreenDialogOpened}
-              setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-              isReadOnly
-              onEditorClick={onFullscreenDialogOpen}
-            />
+            <ClimbingView isReadOnly onEditorClick={onFullscreenDialogOpen} />
             <EditRoutesContainer>
               <Button
                 onClick={onFullscreenDialogOpen}
