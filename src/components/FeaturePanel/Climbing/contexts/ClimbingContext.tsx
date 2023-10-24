@@ -112,7 +112,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const [splitPaneHeight, setSplitPaneHeight] = useState<number>(800);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
-  const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(false);
+  const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
   const [editorPosition, setEditorPosition] = useState<Position>({
     x: 0,
     y: 0,

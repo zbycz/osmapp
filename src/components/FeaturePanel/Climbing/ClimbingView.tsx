@@ -235,6 +235,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
         size={splitPaneHeight}
         onDragStarted={onDragStarted}
         onDragFinished={onDragFinished}
+        pane1Style={{ maxHeight: '90%' }}
       >
         <StickyContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
           <BlurContainer>
