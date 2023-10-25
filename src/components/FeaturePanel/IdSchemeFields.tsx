@@ -45,6 +45,11 @@ const Table = styled.table`
   }
 `;
 
+const Spacer = styled.div`
+  width: 100%;
+  height: 50px;
+`;
+
 const render = (
   field: Field,
   feature: Feature,
@@ -87,9 +92,6 @@ const render = (
   return renderValue(k, v);
 };
 
-const getTitle = (type: string, field) =>
-  `${type}: ${JSON.stringify(field, null, 2)}`;
-
 // TODO some fields eg. oneway/bicycle doesnt have units in brackets
 const unitRegExp = / \((.+)\)$/i;
 const removeUnits = (label) => label.replace(unitRegExp, '');
@@ -121,7 +123,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
   if (!schema) return null;
   if (!Object.keys(schema).length) return null;
 
-  // TODO add link to reference as Tooltip https://wiki.openstreetmap.org/w/api.php?action=wbgetentities&format=json&languagefallback=1&languages=en%7Ccs%7Cen-us%7Csk&origin=*&sites=wiki&titles=Locale%3Acs%7CLocale%3Aen-us%7CLocale%3Ask%7CKey%3Astart%20date%7CTag%3Astart%20date%3D1752
+  // TODO add link to osm key reference as Tooltip https://wiki.openstreetmap.org/w/api.php?action=wbgetentities&format=json&languagefallback=1&languages=en%7Ccs%7Cen-us%7Csk&origin=*&sites=wiki&titles=Locale%3Acs%7CLocale%3Aen-us%7CLocale%3Ask%7CKey%3Astart%20date%7CTag%3Astart%20date%3D1752
   // TODO preset translations https://github.com/zbycz/osmapp/issues/190
 
   const numberOfItems =
@@ -131,7 +133,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
     schema.keysTodo.length;
 
   if (!numberOfItems) {
-    return <div style={{ width: '100%', height: '50px' }} />;
+    return <Spacer />;
   }
 
   return (
@@ -147,15 +149,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
           {schema.matchedFields.map(
             ({ key, value, label, field, fieldTranslation, tagsForField }) => (
               <tr key={key}>
-                <th
-                  title={getTitle('from preset', {
-                    field,
-                    value,
-                    tagsForField,
-                  })}
-                >
-                  {removeUnits(label)}
-                </th>
+                <th>{removeUnits(label)}</th>
                 <td>
                   <EditIconButton
                     onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
@@ -202,9 +196,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                     tagsForField,
                   }) => (
                     <tr key={key}>
-                      <th title={getTitle('standalone field', field)}>
-                        {removeUnits(label)}
-                      </th>
+                      <th>{removeUnits(label)}</th>
                       <td>
                         <EditIconButton
                           onClick={() =>

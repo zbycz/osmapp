@@ -16,8 +16,7 @@ const featuredKeys0 = [
   'opening_hours',
   'description',
   'fhrs:id',
-  // 'wikipedia',
-  // 'wikidata',
+  // wikipedia or wikidata is added dynamically
   // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
 ];
 
@@ -186,8 +185,6 @@ const keysTodo = {
 
 const getFeaturedTags = (feature: Feature) => {
   const { tags } = feature;
-
-  // TODO no featuredTags for deleted
 
   const featuredKeys = [
     ...featuredKeys0,
