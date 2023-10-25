@@ -140,6 +140,31 @@ describe('idTaggingScheme', () => {
       'source',
       'water',
     ]);
-    expect(schema.keysTodo).toEqual([]);
+    expect(schema.keysTodo).toEqual(['natural']);
+  });
+
+  it('should remove from keysTodo if address is in restTags', () => {
+    const feature = {
+      osmMeta: {
+        type: 'way',
+        id: 149398903,
+      },
+      tags: {
+        'addr:city': 'Brno',
+        'addr:country': 'CZ',
+        historic: 'city_gate',
+        source: 'cuzk:km',
+        tourism: 'museum',
+        asdf: 'asdf',
+      },
+    } as unknown as Feature;
+
+    const schema = getSchemaForFeature(feature);
+
+    expect(schema.presetKey).toEqual('historic/city_gate');
+    expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
+      'address',
+      'source',
+    ]);
   });
 });

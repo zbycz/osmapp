@@ -73,7 +73,7 @@ const FeaturePanel = () => {
                 display="block"
                 color="textSecondary"
               >
-                 {t('featurepanel.all_tags_heading')}
+                {t('featurepanel.all_tags_heading')}
               </Typography>
               <TagsTable
                 tags={tags}

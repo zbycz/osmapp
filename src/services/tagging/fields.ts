@@ -51,6 +51,7 @@ export const computeAllFieldKeys = (preset: Preset) => {
       .map((f) => f.fieldKey),
     'operator',
     'architect',
+    'address'
   ]
     .filter((f) => f !== 'wikipedia') // already covered in featuredKeys
     .filter((f) => f !== 'image') // already covered in feature image

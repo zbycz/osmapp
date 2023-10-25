@@ -75,64 +75,62 @@ const matchFieldsFromPreset = (
 };
 
 const matchRestToFields = (keysTodo: KeysTodo, feature: Feature) =>
-  keysTodo
-    .map((key) => {
-      // const field =
-      //   key === "ref"
-      //     ? fields.ref
-      //     : Object.values(fields).find(
-      //     (f) => f.key === key || f.keys?.includes(key)
-      //     ); // todo cache this
+  keysTodo.mapOrSkip((key) => {
+    // const field =
+    //   key === "ref"
+    //     ? fields.ref
+    //     : Object.values(fields).find(
+    //     (f) => f.key === key || f.keys?.includes(key)
+    //     ); // todo cache this
 
-      // if more fielas are matching, select the one which has fieldKey equal key
-      const matchingFields = Object.values(fields).filter(
-        (f) => f.key === key || f.keys?.includes(key),
+    // if more fielas are matching, select the one which has fieldKey equal key
+    const matchingFields = Object.values(fields).filter(
+      (f) => f.key === key || f.keys?.includes(key),
+    );
+    const field =
+      matchingFields.find((f) => f.fieldKey === key) ?? matchingFields[0];
+    if (matchingFields.length > 1) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        `More fields matching key ${key}: ${matchingFields.map(
+          (f) => f.fieldKey,
+        )}`,
       );
-      const field =
-        matchingFields.find((f) => f.fieldKey === key) ?? matchingFields[0];
-      if (matchingFields.length > 1) {
-        // eslint-disable-next-line no-console
-        console.warn(
-          `More fields matching key ${key}: ${matchingFields.map(
-            (f) => f.fieldKey,
-          )}`,
-        );
+    }
+
+    if (!field) {
+      return false;
+    }
+    if (field.type === 'typeCombo') {
+      keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
+      return false;
+    }
+
+    const value = feature.tags[key];
+
+    const keysInField = deduplicate([
+      ...(field.keys ?? []),
+      ...(field.key ? [field.key] : []),
+    ]);
+    const tagsForField = [];
+    keysInField.forEach((k) => {
+      if (feature.tags[k]) {
+        tagsForField.push({ key: k, value: feature.tags[k] });
       }
+      keysTodo.remove(k); // remove all "address:*" keys etc.
+    });
 
-      if (!field) {
-        return {};
-      }
-      if (field.type === 'typeCombo') {
-        keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
-        return {};
-      }
+    const fieldTranslation = getFieldTranslation(field);
 
-      const value = feature.tags[key];
-
-      const keysInField = deduplicate([
-        ...(field.keys ?? []),
-        ...(field.key ? [field.key] : []),
-      ]);
-      const tagsForField = [];
-      keysInField.forEach((k) => {
-        if (feature.tags[k]) {
-          tagsForField.push({ key: k, value: feature.tags[k] });
-        }
-        keysTodo.remove(k); // remove all "address:*" keys etc.
-      });
-
-      const fieldTranslation = getFieldTranslation(field);
-
-      return {
-        key,
-        value: getValueForField(field, fieldTranslation, value, tagsForField),
-        field,
-        tagsForField,
-        fieldTranslation,
-        label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
-      };
-    })
-    .filter((field: any) => field.field);
+    return {
+      key,
+      value: getValueForField(field, fieldTranslation, value, tagsForField),
+      field,
+      tagsForField,
+      fieldTranslation,
+      label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
+    };
+  });
 
 type KeysTodo = typeof keysTodo;
 const keysTodo = {
@@ -167,9 +165,22 @@ const keysTodo = {
       }
     });
   },
-  map(fn) {
-    // we need a clone, because we modify the array
-    return [...this.state].map(fn);
+  mapOrSkip<T>(fn: (key: string) => T): NonNullable<T>[] {
+    const skippedFields = [];
+    const output = [];
+
+    while (this.state.length) {
+      const field = this.state.shift();
+      const result = fn(field); // this can remove items from this.state
+      if (result) {
+        output.push(result);
+      } else {
+        skippedFields.push(field);
+      }
+    }
+
+    this.state = skippedFields;
+    return output;
   },
 };
 
