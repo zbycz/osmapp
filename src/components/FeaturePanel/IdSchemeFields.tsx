@@ -187,7 +187,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 </th>
                 <td>
                   <EditIconButton
-                    onClick={() => openWithTag(key ?? tagsForField?.[0]?.k)}
+                    onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
                   />
                   {addUnits(
                     label,
@@ -237,7 +237,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                       <td>
                         <EditIconButton
                           onClick={() =>
-                            openWithTag(key ?? tagsForField?.[0]?.k)
+                            openWithTag(tagsForField?.[0]?.key ?? key)
                           }
                         />
                         {render(

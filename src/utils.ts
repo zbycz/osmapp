@@ -60,5 +60,9 @@ export const publishDbgObject = (key, value) => {
     if (!window.dbg) window.dbg = {};
     // @ts-ignore
     window.dbg[key] = value;
+    // @ts-ignore
+    if (!window.d) window.d = {};
+    // @ts-ignore
+    window.d[key] = value;
   }
 };
