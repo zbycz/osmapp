@@ -68,27 +68,17 @@ const FeaturePanel = () => {
           )}
           {showTagsTable && (
             <>
-              {!!feature.schema?.featuredTags?.length && (
-                <Typography
-                  variant="overline"
-                  display="block"
-                  color="textSecondary"
-                >
-                  All tags{/* {t('featurepanel.details_heading')} */}
-                </Typography>
-              )}
+              <Typography
+                variant="overline"
+                display="block"
+                color="textSecondary"
+              >
+                 {t('featurepanel.all_tags_heading')}
+              </Typography>
               <TagsTable
                 tags={tags}
                 center={feature.center}
-                except={
-                  advanced || deleted
-                    ? []
-                    : [
-                        // 'name',
-                        // 'layer',
-                        // ...Object.keys(feature.schema.featuredTags),
-                      ]
-                }
+                except={[]}
                 key={
                   getUrlOsmId(osmMeta) // we need to refresh inner state
                 }

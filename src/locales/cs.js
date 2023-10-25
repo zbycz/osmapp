@@ -57,6 +57,7 @@ export default {
   'featurepanel.error_deleted': 'Tento prvek je v OpenStreetMap označen jako smazaný.',
   'featurepanel.info_no_tags': 'Tento prvek nemá žádné vlastnosti (tagy). Obvykle to znamená, že nese pouze geometrii/polohu pro nadřazený objekt.',
   'featurepanel.history_button': 'Historie »',
+  'featurepanel.all_tags_heading': 'Tagy',
   'featurepanel.details_heading': 'Detaily',
   'featurepanel.other_properties': 'Další vlastnosti',
   'featurepanel.edit_button_title': 'Upravit v databázi OpenStreetMap',

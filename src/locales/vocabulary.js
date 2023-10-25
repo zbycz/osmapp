@@ -65,6 +65,7 @@ export default {
   'featurepanel.info_no_tags': 'This object has no tags. Usually it means that it only carries geometry/location for a parent object.',
   'featurepanel.history_button': 'History »',
   'featurepanel.details_heading': 'Details',
+  'featurepanel.all_tags_heading': 'All tags',
   'featurepanel.other_properties': 'Other properties',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.note_button': 'Suggest an edit',

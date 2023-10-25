@@ -105,7 +105,6 @@ describe('idTaggingScheme', () => {
       'start_date',
       'note',
       'mapillary',
-      'image',
       'fixme',
       'ele_node',
       'description',
