@@ -128,7 +128,7 @@ const FeaturePanel = () => {
                 checked={showTags}
                 disabled={point}
               />{' '}
-              Zobrazit tagy{/* {t('featurepanel.show_objects_around')} */}
+              {t('featurepanel.show_tags')}
             </label>{' '}
             <label>
               <input
