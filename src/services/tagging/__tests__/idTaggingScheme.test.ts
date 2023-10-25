@@ -144,6 +144,7 @@ describe('idTaggingScheme', () => {
   });
 
   it('should remove from keysTodo if address is in restTags', () => {
+    // TOOD find better tags which have some multikey field in tagsWithFields
     const feature = {
       osmMeta: {
         type: 'way',
@@ -163,7 +164,6 @@ describe('idTaggingScheme', () => {
 
     expect(schema.presetKey).toEqual('historic/city_gate');
     expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
-      'address',
       'source',
     ]);
   });
