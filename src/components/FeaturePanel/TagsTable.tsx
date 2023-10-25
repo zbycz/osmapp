@@ -6,7 +6,7 @@ import { useToggleState } from '../helpers';
 import { EditIconButton } from './helpers/EditIconButton';
 import { buildAddress } from '../../services/helpers';
 import { ToggleButton } from './helpers/ToggleButton';
-import { renderValue } from './helpers/renderValue';
+import { renderValue } from './TagsTable/renderValue';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 
 const Wrapper = styled.div`

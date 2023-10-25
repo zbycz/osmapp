@@ -35,6 +35,7 @@ const FeaturePanel = () => {
   const { point, tags, osmMeta, skeleton, error } = feature;
   const deleted = error === 'deleted';
   const editEnabled = !skeleton && (!error || deleted);
+  const showTagsTable = deleted || showTags;
 
   const osmappLink = getFullOsmappLink(feature);
 
@@ -53,26 +54,27 @@ const FeaturePanel = () => {
 
           <OsmError />
 
-          <FeaturedTags
-            featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
-          />
-
-          {!showTags && (
-            <IdSchemeFields
-              featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
-              feature={feature}
-              key={getUrlOsmId(osmMeta) + (deleted && 'del')}
-            />
-          )}
-          {showTags && (
+          {!showTagsTable && (
             <>
-              {!!feature.schema.featuredTags.length && (
+              <FeaturedTags
+                featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
+              />
+              <IdSchemeFields
+                featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
+                feature={feature}
+                key={getUrlOsmId(osmMeta) + (deleted && 'del')}
+              />
+            </>
+          )}
+          {showTagsTable && (
+            <>
+              {!!feature.schema?.featuredTags?.length && (
                 <Typography
                   variant="overline"
                   display="block"
                   color="textSecondary"
                 >
-                  {t('featurepanel.details_heading')}
+                  All tags{/* {t('featurepanel.details_heading')} */}
                 </Typography>
               )}
               <TagsTable
@@ -82,9 +84,9 @@ const FeaturePanel = () => {
                   advanced || deleted
                     ? []
                     : [
-                        'name',
-                        'layer',
-                        ...Object.keys(feature.schema.featuredTags),
+                        // 'name',
+                        // 'layer',
+                        // ...Object.keys(feature.schema.featuredTags),
                       ]
                 }
                 key={
@@ -125,8 +127,8 @@ const FeaturePanel = () => {
               <input
                 type="checkbox"
                 onChange={toggleShowTags}
-                checked={showTags}
-                disabled={point}
+                checked={showTagsTable}
+                disabled={point || deleted}
               />{' '}
               {t('featurepanel.show_tags')}
             </label>{' '}

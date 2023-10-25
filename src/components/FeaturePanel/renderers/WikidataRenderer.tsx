@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderValue } from '../helpers/renderValue';
+import { renderValue } from '../TagsTable/renderValue';
 import { WikipediaIcon } from '../../../assets/WikipediaIcon';
 
 export const WikidataRenderer = ({ k, v }) => (

@@ -5,14 +5,14 @@ import Button from '@material-ui/core/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import { Field } from '../../services/tagging/types/Fields';
-import { getUrlForTag } from './helpers/getUrlForTag';
-import { slashToOptionalBr, useToggleState } from '../helpers';
+import { useToggleState } from '../helpers';
 import { buildAddress } from '../../services/helpers';
 import { Feature } from '../../services/types';
 import { t } from '../../services/intl';
 import { TagsTable } from './TagsTable';
 import { EditIconButton } from './helpers/EditIconButton';
 import { useEditDialogContext } from './helpers/EditDialogContext';
+import { renderValue } from './TagsTable/renderValue';
 
 // taken from src/components/FeaturePanel/TagsTable.tsx
 const Table = styled.table`
@@ -44,35 +44,6 @@ const Table = styled.table`
     padding-bottom: 1em;
   }
 `;
-
-// TODO move to helpers
-const getEllipsisHumanUrl = (humanUrl) => {
-  const MAX_LENGTH = 40;
-  return humanUrl.replace(/^([^/]+.{0,5})(.*)$/, (full, hostname, rest) => {
-    const charsLeft = MAX_LENGTH - 10 - hostname.length;
-    return (
-      hostname +
-      (full.length > MAX_LENGTH
-        ? `…${rest.substring(rest.length - charsLeft)}`
-        : rest)
-    );
-  });
-};
-
-// taken from src/components/FeaturePanel/TagsTable.tsx
-const renderValue = (k, v): string | ReactNode => {
-  const url = getUrlForTag(k, v);
-  if (url) {
-    let humanUrl = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
-
-    if (k === 'image') {
-      humanUrl = getEllipsisHumanUrl(humanUrl);
-    }
-
-    return <a href={url}>{slashToOptionalBr(humanUrl)}</a>;
-  }
-  return v;
-};
 
 const render = (
   field: Field,
