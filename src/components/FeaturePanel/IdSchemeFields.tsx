@@ -228,12 +228,6 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                 center={feature.center}
                 except={[]}
               />
-              {/* <p> */}
-              {/*  OpenStreetMap každému objektu přiřazuje vlastnosti (tagy). Můžou */}
-              {/*  být standardizované (Adresa, Telefon) nebo zcela volné */}
-              {/*  (identifikátory do jiných databází). Sami zde můžete chybějící */}
-              {/*  vlastnosti přidat. */}
-              {/* </p> */}
             </>
           )}
         </>
