@@ -1,48 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
 import truncate from 'lodash/truncate';
 
-import { useToggleState } from '../helpers';
-import { EditIconButton } from './helpers/EditIconButton';
-import { buildAddress } from '../../services/helpers';
-import { ToggleButton } from './helpers/ToggleButton';
-import { renderValue } from './TagsTable/renderValue';
-import { useEditDialogContext } from './helpers/EditDialogContext';
-
-const Wrapper = styled.div`
-  position: relative;
-  margin-bottom: 2em;
-`;
-
-const Table = styled.table`
-  font-size: 1rem;
-  width: 100%;
-
-  th,
-  td {
-    padding: 0.1em;
-    overflow: hidden;
-
-    &:hover .show-on-hover {
-      display: block !important;
-    }
-  }
-
-  th {
-    width: 140px;
-    max-width: 140px;
-    color: ${({ theme }) => theme.palette.text.secondary};
-    text-align: left;
-    font-weight: normal;
-    vertical-align: baseline;
-    padding-left: 0;
-  }
-
-  table {
-    padding-left: 1em;
-    padding-bottom: 1em;
-  }
-`;
+import { useToggleState } from '../../helpers';
+import { EditIconButton } from '../helpers/EditIconButton';
+import { buildAddress } from '../../../services/helpers';
+import { ToggleButton } from '../helpers/ToggleButton';
+import { renderValue } from './renderValue';
+import { useEditDialogContext } from '../helpers/EditDialogContext';
+import { Wrapper } from './Wrapper';
+import { Table } from './Table';
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k) => k.match(/^name(:|$)/);
@@ -96,7 +62,7 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
 
 // TODO make it dynamic - count how many "first parts before :" are there, and group all >= 2
 
-export const TagsTable = ({ tags, center, except }) => {
+export const TagsTableInner = ({ tags, center, except }) => {
   const { openWithTag: onEdit } = useEditDialogContext();
 
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));

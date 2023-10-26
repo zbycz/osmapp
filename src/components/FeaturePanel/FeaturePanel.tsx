@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { Typography } from '@material-ui/core';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -18,14 +17,12 @@ import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { EditButton } from './EditButton';
-import { FeaturedTags } from './FeaturedTags';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
-import { IdSchemeFields } from './IdSchemeFields';
-import { TagsTable } from './TagsTable';
 import { PublicTransport } from './PublicTransport/PublicTransport';
+import { TagsTable } from './TagsTable/TagsTable';
 
-const FeaturePanel = () => {
+export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
 
   const [advanced, setAdvanced] = useState(false);
@@ -54,37 +51,10 @@ const FeaturePanel = () => {
 
           <OsmError />
 
-          {!showTagsTable && (
-            <>
-              <FeaturedTags
-                featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
-              />
-              <IdSchemeFields
-                featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
-                feature={feature}
-                key={getUrlOsmId(osmMeta) + (deleted && 'del')}
-              />
-            </>
-          )}
-          {showTagsTable && (
-            <>
-              <Typography
-                variant="overline"
-                display="block"
-                color="textSecondary"
-              >
-                {t('featurepanel.all_tags_heading')}
-              </Typography>
-              <TagsTable
-                tags={tags}
-                center={feature.center}
-                except={[]}
-                key={
-                  getUrlOsmId(osmMeta) // we need to refresh inner state
-                }
-              />
-            </>
-          )}
+          <TagsTable
+            showTags={showTagsTable}
+            key={getUrlOsmId(osmMeta) + (deleted && 'del')}
+          />
 
           {advanced && <Members />}
 
@@ -138,5 +108,3 @@ const FeaturePanel = () => {
     </PanelWrapper>
   );
 };
-
-export default FeaturePanel;

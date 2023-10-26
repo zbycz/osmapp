@@ -3,7 +3,7 @@ import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
-import FeaturePanel from '../FeaturePanel/FeaturePanel';
+import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';

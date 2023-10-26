@@ -4,15 +4,15 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import ChevronRight from '@material-ui/icons/ChevronRight';
-import { Field } from '../../services/tagging/types/Fields';
-import { useToggleState } from '../helpers';
-import { buildAddress } from '../../services/helpers';
-import { Feature } from '../../services/types';
-import { t } from '../../services/intl';
-import { TagsTable } from './TagsTable';
-import { EditIconButton } from './helpers/EditIconButton';
-import { useEditDialogContext } from './helpers/EditDialogContext';
-import { renderValue } from './TagsTable/renderValue';
+import { Field } from '../../../services/tagging/types/Fields';
+import { useToggleState } from '../../helpers';
+import { buildAddress } from '../../../services/helpers';
+import { Feature } from '../../../services/types';
+import { t } from '../../../services/intl';
+import { TagsTableInner } from './TagsTableInner';
+import { EditIconButton } from '../helpers/EditIconButton';
+import { useEditDialogContext } from '../helpers/EditDialogContext';
+import { renderValue } from './renderValue';
 
 // taken from src/components/FeaturePanel/TagsTable.tsx
 const Table = styled.table`
@@ -220,7 +220,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
 
           {otherTagsShown && (
             <>
-              <TagsTable
+              <TagsTableInner
                 tags={schema.keysTodo.reduce(
                   (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
                   {},
