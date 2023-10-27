@@ -17,10 +17,7 @@ export const Properties = ({ showTags }) => {
           <FeaturedTags
             featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
           />
-          <IdSchemeFields
-            featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
-            feature={feature}
-          />
+          <IdSchemeFields />
         </>
       )}
       {showTags && (

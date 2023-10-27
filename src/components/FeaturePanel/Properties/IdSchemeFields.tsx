@@ -12,6 +12,7 @@ import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { renderValue } from './renderValue';
 import { Table } from './Table';
 import { ShowMoreButton } from './helpers';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const Spacer = styled.div`
   width: 100%;
@@ -81,10 +82,14 @@ const addUnits = (label, value: string | ReactNode) => {
 const getTooltip = (field: Field, key: string, value: string) =>
   `field: ${field.fieldKey}${key === field.fieldKey ? '' : `, key: ${key}`}`;
 
-export const IdSchemeFields = ({ feature, featuredTags }) => {
+export const IdSchemeFields = () => {
   const { openWithTag } = useEditDialogContext();
   const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
+  const { feature } = useFeatureContext();
+  const deleted = feature.error === 'deleted';
+  const featuredTags = deleted ? [] : feature.schema?.featuredTags ?? [];
   const { schema } = feature;
+
   if (!schema) return null;
   if (!Object.keys(schema).length) return null;
 
