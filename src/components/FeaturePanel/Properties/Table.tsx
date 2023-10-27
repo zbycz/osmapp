@@ -8,6 +8,7 @@ export const Table = styled.table`
   td {
     padding: 0.1em;
     overflow: hidden;
+    vertical-align: baseline;
 
     &:hover .show-on-hover {
       display: block !important;

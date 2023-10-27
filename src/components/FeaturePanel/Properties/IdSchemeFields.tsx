@@ -13,37 +13,7 @@ import { TagsTableInner } from './TagsTableInner';
 import { EditIconButton } from '../helpers/EditIconButton';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { renderValue } from './renderValue';
-
-// taken from src/components/FeaturePanel/TagsTable.tsx
-const Table = styled.table`
-  font-size: 1rem;
-  width: 100%;
-
-  th,
-  td {
-    padding: 0.1em;
-    overflow: hidden;
-    vertical-align: baseline;
-
-    &:hover .show-on-hover {
-      display: block !important;
-    }
-  }
-
-  th {
-    width: 140px;
-    max-width: 140px;
-    color: ${({ theme }) => theme.palette.text.secondary};
-    text-align: left;
-    font-weight: normal;
-    padding-left: 0;
-  }
-
-  table {
-    padding-left: 1em;
-    padding-bottom: 1em;
-  }
-`;
+import { Table } from './Table';
 
 const Spacer = styled.div`
   width: 100%;
@@ -215,7 +185,9 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
                     tagsForField,
                   }) => (
                     <tr key={key}>
-                      <th>{removeUnits(label)}</th>
+                      <th title={getTooltip(field, key, value)}>
+                        {removeUnits(label)}
+                      </th>
                       <td>
                         <EditIconButton
                           onClick={() =>
