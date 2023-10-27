@@ -131,6 +131,9 @@ export const ToggleButton = ({ onClick, isShown }) => (
   </StyledToggleButton>
 );
 
+const getTooltip = (field: Field, key: string, value: string) =>
+  `field: ${field.fieldKey}${key === field.fieldKey ? '' : `, key: ${key}`}`;
+
 export const IdSchemeFields = ({ feature, featuredTags }) => {
   const { openWithTag } = useEditDialogContext();
   const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
@@ -164,7 +167,9 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
           {schema.matchedFields.map(
             ({ key, value, label, field, fieldTranslation, tagsForField }) => (
               <tr key={key}>
-                <th>{removeUnits(label)}</th>
+                <th title={getTooltip(field, key, value)}>
+                  {removeUnits(label)}
+                </th>
                 <td>
                   <EditIconButton
                     onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
