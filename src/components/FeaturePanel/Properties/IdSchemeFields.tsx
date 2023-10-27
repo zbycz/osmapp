@@ -1,9 +1,6 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
-import ChevronRight from '@material-ui/icons/ChevronRight';
 import { Field } from '../../../services/tagging/types/Fields';
 import { useToggleState } from '../../helpers';
 import { buildAddress } from '../../../services/helpers';
@@ -14,6 +11,7 @@ import { EditIconButton } from '../helpers/EditIconButton';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { renderValue } from './renderValue';
 import { Table } from './Table';
+import { ShowMoreButton } from './helpers';
 
 const Spacer = styled.div`
   width: 100%;
@@ -79,27 +77,6 @@ const addUnits = (label, value: string | ReactNode) => {
   const unit = label.match(unitRegExp);
   return `${value}${unit ? ` (${unit[1]})` : ''}`;
 };
-
-const StyledToggleButton = styled(Button)`
-  svg {
-    font-size: 17px;
-  }
-`;
-
-export const ToggleButton = ({ onClick, isShown }) => (
-  <StyledToggleButton onClick={onClick} aria-label="Toggle">
-    {!isShown && (
-      <>
-        {t('show_more')} <ChevronRight fontSize="small" />
-      </>
-    )}
-    {isShown && (
-      <>
-        {t('show_less')} <ExpandLessIcon fontSize="small" />
-      </>
-    )}
-  </StyledToggleButton>
-);
 
 const getTooltip = (field: Field, key: string, value: string) =>
   `field: ${field.fieldKey}${key === field.fieldKey ? '' : `, key: ${key}`}`;
@@ -168,7 +145,7 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
             <tbody>
               <tr>
                 <td colSpan={2} style={{ textAlign: 'right' }}>
-                  <ToggleButton
+                  <ShowMoreButton
                     isShown={otherTagsShown}
                     onClick={toggleOtherTagsShown}
                   />
