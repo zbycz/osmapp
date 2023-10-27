@@ -1,6 +1,6 @@
 import React from 'react';
 import { WikipediaIcon } from '../../../assets/WikipediaIcon';
-import { renderValue } from '../TagsTable/renderValue';
+import { renderValue } from '../Properties/renderValue';
 
 export const WikipediaRenderer = ({ k, v }) => (
   <>

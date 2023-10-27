@@ -6,6 +6,8 @@ export default {
   darkmode_auto: 'Tmavý režim: auto',
   darkmode_on: 'Tmavý režim: zap.',
   darkmode_off: 'Tmavý režim: vyp.',
+  show_more: 'Zobrazit více',
+  show_less: 'Zobrazit méně',
 
   'install.button': 'Stáhnout aplikaci',
   'install.tabs_aria_label': 'Vyberte si svou platformu',
@@ -59,7 +61,6 @@ export default {
   'featurepanel.history_button': 'Historie »',
   'featurepanel.all_tags_heading': 'Tagy',
   'featurepanel.details_heading': 'Detaily',
-  'featurepanel.other_properties': 'Další vlastnosti',
   'featurepanel.edit_button_title': 'Upravit v databázi OpenStreetMap',
   'featurepanel.note_button': 'Navrhnout úpravu',
   'featurepanel.edit_button': 'Upravit místo',

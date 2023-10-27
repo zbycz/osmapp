@@ -11,6 +11,8 @@ export default {
   darkmode_auto: 'Dark mode: auto',
   darkmode_on: 'Dark mode: on',
   darkmode_off: 'Dark mode: off',
+  show_more: 'Show more',
+  show_less: 'Show less',
 
   'install.button': 'Install app',
   'install.tabs_aria_label': 'Choose your platform',
@@ -66,7 +68,6 @@ export default {
   'featurepanel.history_button': 'History »',
   'featurepanel.details_heading': 'Details',
   'featurepanel.all_tags_heading': 'All tags',
-  'featurepanel.other_properties': 'Other properties',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.note_button': 'Suggest an edit',
   'featurepanel.edit_button': 'Edit details',

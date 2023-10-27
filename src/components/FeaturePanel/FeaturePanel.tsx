@@ -20,7 +20,7 @@ import { EditButton } from './EditButton';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
-import { TagsTable } from './TagsTable/TagsTable';
+import { Properties } from './Properties/Properties';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -51,7 +51,7 @@ export const FeaturePanel = () => {
 
           <OsmError />
 
-          <TagsTable
+          <Properties
             showTags={showTagsTable}
             key={getUrlOsmId(osmMeta) + (deleted && 'del')}
           />

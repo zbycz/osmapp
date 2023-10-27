@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import styled from 'styled-components';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import { Field } from '../../../services/tagging/types/Fields';
 import { useToggleState } from '../../helpers';
@@ -107,12 +107,18 @@ const StyledToggleButton = styled(Button)`
   }
 `;
 
-export const ToggleButton = ({ onClick, isShown, num }) => (
+export const ToggleButton = ({ onClick, isShown }) => (
   <StyledToggleButton onClick={onClick} aria-label="Toggle">
-    {t('featurepanel.other_properties')} ({num}){' '}
-    {/* {t('featurepanel.edit_in_osm')} */}
-    {!isShown && <ChevronRight fontSize="small" />}
-    {isShown && <ExpandMoreIcon fontSize="small" />}
+    {!isShown && (
+      <>
+        {t('show_more')} <ChevronRight fontSize="small" />
+      </>
+    )}
+    {isShown && (
+      <>
+        {t('show_less')} <ExpandLessIcon fontSize="small" />
+      </>
+    )}
   </StyledToggleButton>
 );
 
@@ -179,7 +185,6 @@ export const IdSchemeFields = ({ feature, featuredTags }) => {
               <tr>
                 <td colSpan={2} style={{ textAlign: 'right' }}>
                   <ToggleButton
-                    num={schema.keysTodo.length + schema.tagsWithFields.length}
                     isShown={otherTagsShown}
                     onClick={toggleOtherTagsShown}
                   />
