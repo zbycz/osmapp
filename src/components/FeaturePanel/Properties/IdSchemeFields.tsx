@@ -75,6 +75,15 @@ const render = (
     ));
   }
 
+  if (field?.type === 'manyCombo') {
+    return tagsForField.map(({ key, value: value2 }) => (
+      <div key={key}>
+        {fieldTranslation.options[key]}:{' '}
+        {renderValue(key, fieldTranslation.options[value2]?.title ?? value2)}
+      </div>
+    ));
+  }
+
   if (tagsForField?.length >= 2) {
     return (
       <>

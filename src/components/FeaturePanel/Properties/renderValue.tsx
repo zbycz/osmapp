@@ -32,6 +32,12 @@ const getHumanValue = (k, v, featured: boolean) => {
   if (featured && k === 'wikidata') {
     return `Wikipedia (wikidata)`; // TODO fetch label from wikidata
   }
+  if (v === 'yes') {
+    return '✓';
+  }
+  if (v === 'no') {
+    return '✗';
+  }
 
   return humanValue;
 };
@@ -40,5 +46,5 @@ export const renderValue = (k, v, featured = false) => {
   const url = getUrlForTag(k, v);
   const humanValue = getHumanValue(k, v, featured);
 
-  return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : v;
+  return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : humanValue;
 };
