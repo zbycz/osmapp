@@ -29,9 +29,8 @@ export const FeaturePanel = () => {
   const [showAround, toggleShowAround] = useToggleState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
 
-  const { point, tags, osmMeta, skeleton, error } = feature;
-  const deleted = error === 'deleted';
-  const editEnabled = !skeleton && (!error || deleted);
+  const { point, tags, osmMeta, skeleton, deleted } = feature;
+  const editEnabled = !skeleton;
   const showTagsTable = deleted || showTags;
 
   const osmappLink = getFullOsmappLink(feature);

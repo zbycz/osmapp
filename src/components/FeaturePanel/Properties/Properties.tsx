@@ -8,14 +8,15 @@ import { Subheading } from '../helpers/Subheading';
 
 export const Properties = ({ showTags }) => {
   const { feature } = useFeatureContext();
-  const deleted = feature.error === 'deleted';
 
   return (
     <>
       {!showTags && (
         <>
           <FeaturedTags
-            featuredTags={deleted ? [] : feature.schema?.featuredTags ?? []}
+            featuredTags={
+              feature.deleted ? [] : feature.schema?.featuredTags ?? []
+            }
           />
           <IdSchemeFields />
         </>

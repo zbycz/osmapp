@@ -93,7 +93,7 @@ const osmToFeature = (element): Feature => {
     tags,
     members,
     properties: getPoiClass(tags),
-    error: osmappDeletedMarker ? 'deleted' : undefined,
+    deleted: osmappDeletedMarker,
   };
 };
 

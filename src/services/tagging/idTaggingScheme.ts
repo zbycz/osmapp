@@ -26,7 +26,7 @@ const matchFieldsFromPreset = (
   preset: Preset,
   keysTodo: any,
   feature: Feature,
-) => {
+): any => {
   const computedAllFieldKeys = computeAllFieldKeys(preset);
   publishDbgObject('computedAllFieldKeys', computedAllFieldKeys);
 
@@ -38,11 +38,11 @@ const matchFieldsFromPreset = (
       const shouldWeIncludeThisField =
         keysTodo.has(key) || keysTodo.hasAny(keys);
       if (!shouldWeIncludeThisField) {
-        return {};
+        return undefined;
       }
       if (field.type === 'typeCombo') {
         keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
-        return {};
+        return undefined;
       }
 
       const value = feature.tags[key];
@@ -98,11 +98,11 @@ const matchRestToFields = (keysTodo: KeysTodo, feature: Feature) =>
     }
 
     if (!field) {
-      return false;
+      return undefined;
     }
     if (field.type === 'typeCombo') {
       keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
-      return false;
+      return undefined;
     }
 
     const value = feature.tags[key];

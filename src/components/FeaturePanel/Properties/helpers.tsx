@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import { t } from '../../../services/intl';
 import ChevronRight from '@material-ui/icons/ChevronRight';
 import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import React from 'react';
+import { t } from '../../../services/intl';
 
 const StyledToggleButton = styled(Button)`
   svg {

@@ -79,15 +79,16 @@ const addUnits = (label, value: string | ReactNode) => {
   return `${value}${unit ? ` (${unit[1]})` : ''}`;
 };
 
-const getTooltip = (field: Field, key: string, value: string) =>
+const getTooltip = (field: Field, key: string) =>
   `field: ${field.fieldKey}${key === field.fieldKey ? '' : `, key: ${key}`}`;
 
 export const IdSchemeFields = () => {
   const { openWithTag } = useEditDialogContext();
   const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
   const { feature } = useFeatureContext();
-  const deleted = feature.error === 'deleted';
-  const featuredTags = deleted ? [] : feature.schema?.featuredTags ?? [];
+  const featuredTags = feature.deleted
+    ? []
+    : feature.schema?.featuredTags ?? [];
   const { schema } = feature;
 
   if (!schema) return null;
@@ -119,7 +120,7 @@ export const IdSchemeFields = () => {
           {schema.matchedFields.map(
             ({ key, value, label, field, fieldTranslation, tagsForField }) => (
               <tr key={key}>
-                <th title={getTooltip(field, key, value)}>
+                <th title={getTooltip(field, key)}>
                   {removeUnits(label)}
                 </th>
                 <td>
@@ -167,7 +168,7 @@ export const IdSchemeFields = () => {
                     tagsForField,
                   }) => (
                     <tr key={key}>
-                      <th title={getTooltip(field, key, value)}>
+                      <th title={getTooltip(field, key)}>
                         {removeUnits(label)}
                       </th>
                       <td>
