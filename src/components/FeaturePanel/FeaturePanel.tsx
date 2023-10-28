@@ -31,7 +31,7 @@ export const FeaturePanel = () => {
 
   const { point, tags, osmMeta, skeleton, deleted } = feature;
   const editEnabled = !skeleton;
-  const showTagsTable = deleted || showTags || !feature.schema;
+  const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
 
   const osmappLink = getFullOsmappLink(feature);
 
@@ -48,33 +48,37 @@ export const FeaturePanel = () => {
             editEnabled={editEnabled && !point}
           />
 
-          <OsmError />
-
-          <Properties
-            showTags={showTagsTable}
-            key={getUrlOsmId(osmMeta) + (deleted && 'del')}
-          />
-
-          {advanced && <Members />}
-
-          <PublicTransport tags={tags} />
-
-          {editEnabled && (
+          {!skeleton && (
             <>
-              <EditButton isAddPlace={point} isUndelete={deleted} />
+              <OsmError />
 
-              <EditDialog
-                feature={feature}
-                isAddPlace={point}
-                isUndelete={deleted}
-                key={
-                  getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                }
+              <Properties
+                showTags={showTagsTable}
+                key={getUrlOsmId(osmMeta) + (deleted && 'del')}
               />
+
+              {advanced && <Members />}
+
+              <PublicTransport tags={tags} />
+
+              {editEnabled && (
+                <>
+                  <EditButton isAddPlace={point} isUndelete={deleted} />
+
+                  <EditDialog
+                    feature={feature}
+                    isAddPlace={point}
+                    isUndelete={deleted}
+                    key={
+                      getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                    }
+                  />
+                </>
+              )}
+
+              {point && <ObjectsAround advanced={advanced} />}
             </>
           )}
-
-          {point && <ObjectsAround advanced={advanced} />}
 
           <PanelFooter>
             <FeatureDescription setAdvanced={setAdvanced} />
@@ -87,7 +91,7 @@ export const FeaturePanel = () => {
                 type="checkbox"
                 onChange={toggleShowTags}
                 checked={showTagsTable}
-                disabled={point || deleted || !feature.schema}
+                disabled={point || deleted || (!skeleton && !feature.schema)}
               />{' '}
               {t('featurepanel.show_tags')}
             </label>{' '}

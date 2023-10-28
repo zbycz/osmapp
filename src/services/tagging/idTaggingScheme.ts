@@ -206,7 +206,7 @@ export const getSchemaForFeature = (feature: Feature) => {
   keysTodo.resolveTags(preset.tags); // remove tags which are already covered by Preset keys
   keysTodo.remove('name'); // always rendered by FeaturePanel
 
-  const featuredTags = getFeaturedTags(feature);
+  const featuredTags = feature.deleted ? [] : getFeaturedTags(feature);
   keysTodo.resolveTags(featuredTags);
 
   const matchedFields = matchFieldsFromPreset(preset, keysTodo, feature);
