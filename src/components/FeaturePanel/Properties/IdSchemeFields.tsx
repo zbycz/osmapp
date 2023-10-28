@@ -120,9 +120,7 @@ export const IdSchemeFields = () => {
           {schema.matchedFields.map(
             ({ key, value, label, field, fieldTranslation, tagsForField }) => (
               <tr key={key}>
-                <th title={getTooltip(field, key)}>
-                  {removeUnits(label)}
-                </th>
+                <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
                 <td>
                   <EditIconButton
                     onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}

@@ -5,7 +5,7 @@ import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { getPoiClass } from './getPoiClass';
 import { isBrowser } from '../components/helpers';
-import { getSchemaForFeature } from './tagging/idTaggingScheme';
+import { addSchemaToFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
 
 const getOsmUrl = ({ type, id }) =>
@@ -115,8 +115,7 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
       feature.center = center;
     }
 
-    const schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?
-    return { ...feature, schema };
+    return addSchemaToFeature(feature);
   } catch (e) {
     console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
 

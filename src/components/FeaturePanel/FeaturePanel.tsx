@@ -31,7 +31,7 @@ export const FeaturePanel = () => {
 
   const { point, tags, osmMeta, skeleton, deleted } = feature;
   const editEnabled = !skeleton;
-  const showTagsTable = deleted || showTags;
+  const showTagsTable = deleted || showTags || !feature.schema;
 
   const osmappLink = getFullOsmappLink(feature);
 
@@ -87,7 +87,7 @@ export const FeaturePanel = () => {
                 type="checkbox"
                 onChange={toggleShowTags}
                 checked={showTagsTable}
-                disabled={point || deleted}
+                disabled={point || deleted || !feature.schema}
               />{' '}
               {t('featurepanel.show_tags')}
             </label>{' '}

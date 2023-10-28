@@ -76,7 +76,7 @@ export interface Feature {
   ssrFeatureImage?: Image;
   error?: 'network' | 'unknown' | '404' | '500'; // etc.
   deleted?: boolean;
-  schema?: ReturnType<typeof getSchemaForFeature>;
+  schema?: ReturnType<typeof getSchemaForFeature>; // undefined means error
 
   // skeleton
   layer?: { id: string };

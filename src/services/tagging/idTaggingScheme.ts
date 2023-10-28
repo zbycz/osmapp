@@ -5,6 +5,7 @@ import { fields } from './data';
 import { computeAllFieldKeys, getValueForField } from './fields';
 import { Preset } from './types/Presets';
 import { publishDbgObject } from '../../utils';
+import { getShortId } from '../helpers';
 
 // TODO move to shared place
 const featuredKeys0 = [
@@ -70,7 +71,7 @@ const matchFieldsFromPreset = (
         label: fieldTranslation?.label ?? field.label,
       };
     })
-    .filter((field) => field.value);
+    .filter((field) => field?.value);
 };
 
 const matchRestToFields = (keysTodo: KeysTodo, feature: Feature) =>
@@ -224,4 +225,17 @@ export const getSchemaForFeature = (feature: Feature) => {
     tagsWithFields,
     keysTodo: keysTodo.state,
   };
+};
+
+export const addSchemaToFeature = (feature: Feature) => {
+  let schema;
+  try {
+    schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?
+  } catch (e) {
+    // TODO sentry
+    console.error(`getSchemaForFeature(${getShortId(feature.osmMeta)}):`, e); // eslint-disable-line no-console
+    return feature;
+  }
+
+  return { ...feature, schema };
 };
