@@ -80,7 +80,9 @@ const addUnits = (label, value: string | ReactNode) => {
 };
 
 const getTooltip = (field: Field, key: string) =>
-  `field: ${field.fieldKey}${key === field.fieldKey ? '' : `, key: ${key}`}`;
+  `field: ${field.fieldKey}${key === field.fieldKey ? '' : `, key: ${key}`} (${
+    field.type
+  })`;
 
 export const IdSchemeFields = () => {
   const { openWithTag } = useEditDialogContext();
@@ -141,57 +143,48 @@ export const IdSchemeFields = () => {
             ),
           )}
         </tbody>
-      </Table>
 
-      {!!(schema.keysTodo.length + schema.tagsWithFields.length) && (
-        <>
-          <Table>
-            <tbody>
-              <tr>
-                <td colSpan={2} style={{ textAlign: 'right' }}>
-                  <ShowMoreButton
-                    isShown={otherTagsShown}
-                    onClick={toggleOtherTagsShown}
-                  />
-                </td>
-              </tr>
-              {otherTagsShown &&
-                schema.tagsWithFields.map(
-                  ({
-                    key,
-                    value,
-                    label,
-                    field,
-                    fieldTranslation,
-                    tagsForField,
-                  }) => (
-                    <tr key={key}>
-                      <th title={getTooltip(field, key)}>
-                        {removeUnits(label)}
-                      </th>
-                      <td>
-                        <EditIconButton
-                          onClick={() =>
-                            openWithTag(tagsForField?.[0]?.key ?? key)
-                          }
-                        />
-                        {render(
-                          field,
-                          feature,
-                          key,
-                          addUnits(label, value),
-                          tagsForField,
-                          fieldTranslation,
-                        )}
-                      </td>
-                    </tr>
-                  ),
-                )}
-            </tbody>
-          </Table>
-
-          {otherTagsShown && (
-            <>
+        {!!(schema.keysTodo.length + schema.tagsWithFields.length) && (
+          <tbody>
+            <tr>
+              <td colSpan={2} style={{ textAlign: 'right' }}>
+                <ShowMoreButton
+                  isShown={otherTagsShown}
+                  onClick={toggleOtherTagsShown}
+                />
+              </td>
+            </tr>
+            {otherTagsShown &&
+              schema.tagsWithFields.map(
+                ({
+                  key,
+                  value,
+                  label,
+                  field,
+                  fieldTranslation,
+                  tagsForField,
+                }) => (
+                  <tr key={key}>
+                    <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
+                    <td>
+                      <EditIconButton
+                        onClick={() =>
+                          openWithTag(tagsForField?.[0]?.key ?? key)
+                        }
+                      />
+                      {render(
+                        field,
+                        feature,
+                        key,
+                        addUnits(label, value),
+                        tagsForField,
+                        fieldTranslation,
+                      )}
+                    </td>
+                  </tr>
+                ),
+              )}
+            {otherTagsShown && (
               <TagsTableInner
                 tags={schema.keysTodo.reduce(
                   (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
@@ -200,10 +193,10 @@ export const IdSchemeFields = () => {
                 center={feature.center}
                 except={[]}
               />
-            </>
-          )}
-        </>
-      )}
+            )}
+          </tbody>
+        )}
+      </Table>
     </>
   );
 };

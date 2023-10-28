@@ -5,6 +5,8 @@ import { t } from '../../../services/intl';
 import { TagsTableInner } from './TagsTableInner';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Subheading } from '../helpers/Subheading';
+import { Wrapper } from './Wrapper';
+import { Table } from './Table';
 
 export const Properties = ({ showTags }) => {
   const { feature } = useFeatureContext();
@@ -24,11 +26,17 @@ export const Properties = ({ showTags }) => {
       {showTags && (
         <>
           <Subheading>{t('featurepanel.all_tags_heading')}</Subheading>
-          <TagsTableInner
-            tags={feature.tags}
-            center={feature.center}
-            except={[]}
-          />
+          <Wrapper>
+            <Table>
+              <tbody>
+                <TagsTableInner
+                  tags={feature.tags}
+                  center={feature.center}
+                  except={[]}
+                />
+              </tbody>
+            </Table>
+          </Wrapper>
         </>
       )}
     </>

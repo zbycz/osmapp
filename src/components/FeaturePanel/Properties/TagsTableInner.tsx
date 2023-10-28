@@ -7,8 +7,6 @@ import { buildAddress } from '../../../services/helpers';
 import { ToggleButton } from '../helpers/ToggleButton';
 import { renderValue } from './renderValue';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
-import { Wrapper } from './Wrapper';
-import { Table } from './Table';
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k) => k.match(/^name(:|$)/);
@@ -94,95 +92,89 @@ export const TagsTableInner = ({ tags, center, except }) => {
   );
 
   return (
-    <Wrapper>
-      <Table>
-        <tbody>
-          <TagsGroup
-            tags={names}
-            label={names.length === 1 ? names[0][0] : 'name:*'}
-            value={truncate(tags.name, { length: 25 })}
-            hideArrow={names.length === 1}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={shortNames}
-            label={shortNames.length === 1 ? shortNames[0][0] : 'short_name:*'}
-            value={shortNames[0]?.[1]}
-            hideArrow={shortNames.length === 1}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={altNames}
-            label={altNames.length === 1 ? altNames[0][0] : 'alt_name:*'}
-            value={altNames[0]?.[1]}
-            hideArrow={altNames.length === 1}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={officialNames}
-            label={
-              officialNames.length === 1
-                ? officialNames[0][0]
-                : 'official_name:*'
-            }
-            value={officialNames[0]?.[1]}
-            hideArrow={officialNames.length === 1}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={oldNames}
-            label={oldNames.length === 1 ? oldNames[0][0] : 'old_name:*'}
-            value={oldNames[0]?.[1]}
-            hideArrow={oldNames.length === 1}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={addrs}
-            label="addr:*"
-            value={buildAddress(Object.fromEntries(addrs) as any, center)}
-            onEdit={onEdit}
-          />
-          {rest.map(([k, v]) => (
-            <tr key={k}>
-              <th>{k}</th>
-              <td>
-                <EditIconButton onClick={() => onEdit(k)} />
-                {renderValue(k, v)}
-              </td>
-            </tr>
-          ))}
-          <TagsGroup
-            tags={brands}
-            label="brand:*"
-            value={tags.brand}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={buildings}
-            label="building:*"
-            value={tags.building}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={networks}
-            label="network:*"
-            value={tags.network}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={operator}
-            label="operator:*"
-            value={tags.operator}
-            onEdit={onEdit}
-          />
-          <TagsGroup
-            tags={payments}
-            label="payment:*"
-            value={tags.payment}
-            onEdit={onEdit}
-          />
-        </tbody>
-      </Table>
-    </Wrapper>
+    <>
+      <TagsGroup
+        tags={names}
+        label={names.length === 1 ? names[0][0] : 'name:*'}
+        value={truncate(tags.name, { length: 25 })}
+        hideArrow={names.length === 1}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={shortNames}
+        label={shortNames.length === 1 ? shortNames[0][0] : 'short_name:*'}
+        value={shortNames[0]?.[1]}
+        hideArrow={shortNames.length === 1}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={altNames}
+        label={altNames.length === 1 ? altNames[0][0] : 'alt_name:*'}
+        value={altNames[0]?.[1]}
+        hideArrow={altNames.length === 1}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={officialNames}
+        label={
+          officialNames.length === 1 ? officialNames[0][0] : 'official_name:*'
+        }
+        value={officialNames[0]?.[1]}
+        hideArrow={officialNames.length === 1}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={oldNames}
+        label={oldNames.length === 1 ? oldNames[0][0] : 'old_name:*'}
+        value={oldNames[0]?.[1]}
+        hideArrow={oldNames.length === 1}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={addrs}
+        label="addr:*"
+        value={buildAddress(Object.fromEntries(addrs) as any, center)}
+        onEdit={onEdit}
+      />
+      {rest.map(([k, v]) => (
+        <tr key={k}>
+          <th>{k}</th>
+          <td>
+            <EditIconButton onClick={() => onEdit(k)} />
+            {renderValue(k, v)}
+          </td>
+        </tr>
+      ))}
+      <TagsGroup
+        tags={brands}
+        label="brand:*"
+        value={tags.brand}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={buildings}
+        label="building:*"
+        value={tags.building}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={networks}
+        label="network:*"
+        value={tags.network}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={operator}
+        label="operator:*"
+        value={tags.operator}
+        onEdit={onEdit}
+      />
+      <TagsGroup
+        tags={payments}
+        label="payment:*"
+        value={tags.payment}
+        onEdit={onEdit}
+      />
+    </>
   );
 };

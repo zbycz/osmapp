@@ -6,7 +6,7 @@ import {
   getUrlOsmId,
   isSameOsmId,
 } from '../../../services/helpers';
-import { getRoundedPosition } from '../../../utils';
+import { getRoundedPosition, publishDbgObject } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
 import { convertMapIdToOsmId, getIsOsmObject } from '../helpers';
 import { getCoordsFeature } from '../../../services/getCoordsFeature';
@@ -43,7 +43,7 @@ export const useOnMapClicked = useAddMapEvent(
       const skeleton = getSkeleton(features[0], coords);
       addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
       console.log(`clicked map feature (id=${features[0].id}): `, features[0]); // eslint-disable-line no-console
-      console.log(`^- skeleton ${getUrlOsmId(skeleton.osmMeta)}`, skeleton); // eslint-disable-line no-console
+      publishDbgObject('last skeleton', skeleton);
 
       if (skeleton.nonOsmObject) {
         const roundedPosition = getRoundedPosition(coords, map.getZoom());
