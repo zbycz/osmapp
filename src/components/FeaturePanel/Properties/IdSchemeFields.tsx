@@ -1,6 +1,5 @@
 import React, { ReactNode } from 'react';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
 import { Field } from '../../../services/tagging/types/Fields';
 import { useToggleState } from '../../helpers';
 import { buildAddress } from '../../../services/helpers';
@@ -13,6 +12,7 @@ import { renderValue } from './renderValue';
 import { Table } from './Table';
 import { ShowMoreButton } from './helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { Subheading } from '../helpers/Subheading';
 
 const Spacer = styled.div`
   width: 100%;
@@ -84,67 +84,100 @@ const getTooltip = (field: Field, key: string) =>
     field.type
   })`;
 
-export const IdSchemeFields = () => {
+const OtherTags = () => {
   const { openWithTag } = useEditDialogContext();
-  const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
   const { feature } = useFeatureContext();
-  const featuredTags = feature.deleted
-    ? []
-    : feature.schema?.featuredTags ?? [];
   const { schema } = feature;
 
-  if (!schema) return null;
-  if (!Object.keys(schema).length) return null;
+  return (
+    <>
+      {schema.tagsWithFields.map(
+        ({ key, value, label, field, fieldTranslation, tagsForField }) => (
+          <tr key={key}>
+            <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
+            <td>
+              <EditIconButton
+                onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
+              />
+              {render(
+                field,
+                feature,
+                key,
+                addUnits(label, value),
+                tagsForField,
+                fieldTranslation,
+              )}
+            </td>
+          </tr>
+        ),
+      )}
+      <TagsTableInner
+        tags={schema.keysTodo.reduce(
+          (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
+          {},
+        )}
+        center={feature.center}
+      />
+    </>
+  );
+};
+
+const MatchedFields = () => {
+  const { openWithTag } = useEditDialogContext();
+  const { feature } = useFeatureContext();
+  const { schema } = feature;
+
+  return schema.matchedFields.map(
+    ({ key, value, label, field, fieldTranslation, tagsForField }) => (
+      <tr key={key}>
+        <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
+        <td>
+          <EditIconButton
+            onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
+          />
+          {addUnits(
+            label,
+            render(field, feature, key, value, tagsForField, fieldTranslation),
+          )}
+        </td>
+      </tr>
+    ),
+  );
+};
+
+export const IdSchemeFields = () => {
+  const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
+  const { feature } = useFeatureContext();
+  const { schema } = feature;
+  const { keysTodo, featuredTags, matchedFields, tagsWithFields } = schema;
 
   // TODO add link to osm key reference as Tooltip https://wiki.openstreetmap.org/w/api.php?action=wbgetentities&format=json&languagefallback=1&languages=en%7Ccs%7Cen-us%7Csk&origin=*&sites=wiki&titles=Locale%3Acs%7CLocale%3Aen-us%7CLocale%3Ask%7CKey%3Astart%20date%7CTag%3Astart%20date%3D1752
   // TODO preset translations https://github.com/zbycz/osmapp/issues/190
 
   const numberOfItems =
     featuredTags.length +
-    schema.matchedFields.length +
-    schema.tagsWithFields.length +
-    schema.keysTodo.length;
+    matchedFields.length +
+    tagsWithFields.length +
+    keysTodo.length;
 
   if (!numberOfItems) {
     return <Spacer />;
   }
 
+  const showDetailsHeading = !!(featuredTags.length + matchedFields.length);
+  const showOtherSection = !!(keysTodo.length + tagsWithFields.length);
+
   return (
     <>
-      {featuredTags.length && schema.matchedFields.length ? (
-        <Typography variant="overline" display="block" color="textSecondary">
-          {t('featurepanel.details_heading')}
-        </Typography>
-      ) : null}
+      {showDetailsHeading && (
+        <Subheading>{t('featurepanel.details_heading')}</Subheading>
+      )}
 
       <Table>
         <tbody>
-          {schema.matchedFields.map(
-            ({ key, value, label, field, fieldTranslation, tagsForField }) => (
-              <tr key={key}>
-                <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
-                <td>
-                  <EditIconButton
-                    onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
-                  />
-                  {addUnits(
-                    label,
-                    render(
-                      field,
-                      feature,
-                      key,
-                      value,
-                      tagsForField,
-                      fieldTranslation,
-                    ),
-                  )}
-                </td>
-              </tr>
-            ),
-          )}
+          <MatchedFields />
         </tbody>
-
-        {!!(schema.keysTodo.length + schema.tagsWithFields.length) && (
+        {showOtherSection && (
           <tbody>
             <tr>
               <td colSpan={2} style={{ textAlign: 'right' }}>
@@ -154,46 +187,7 @@ export const IdSchemeFields = () => {
                 />
               </td>
             </tr>
-            {otherTagsShown &&
-              schema.tagsWithFields.map(
-                ({
-                  key,
-                  value,
-                  label,
-                  field,
-                  fieldTranslation,
-                  tagsForField,
-                }) => (
-                  <tr key={key}>
-                    <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
-                    <td>
-                      <EditIconButton
-                        onClick={() =>
-                          openWithTag(tagsForField?.[0]?.key ?? key)
-                        }
-                      />
-                      {render(
-                        field,
-                        feature,
-                        key,
-                        addUnits(label, value),
-                        tagsForField,
-                        fieldTranslation,
-                      )}
-                    </td>
-                  </tr>
-                ),
-              )}
-            {otherTagsShown && (
-              <TagsTableInner
-                tags={schema.keysTodo.reduce(
-                  (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
-                  {},
-                )}
-                center={feature.center}
-                except={[]}
-              />
-            )}
+            {otherTagsShown && <OtherTags />}
           </tbody>
         )}
       </Table>

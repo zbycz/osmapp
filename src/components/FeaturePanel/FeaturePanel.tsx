@@ -34,7 +34,6 @@ export const FeaturePanel = () => {
   const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
 
   const osmappLink = getFullOsmappLink(feature);
-
   const label = getLabel(feature);
 
   return (

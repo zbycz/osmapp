@@ -60,7 +60,7 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
 
 // TODO make it dynamic - count how many "first parts before :" are there, and group all >= 2
 
-export const TagsTableInner = ({ tags, center, except }) => {
+export const TagsTableInner = ({ tags, center, except = [] }) => {
   const { openWithTag: onEdit } = useEditDialogContext();
 
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));

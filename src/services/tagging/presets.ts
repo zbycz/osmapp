@@ -18,13 +18,16 @@ const matchScore = (_this, entityTags) => {
     seen[k] = true;
     if (entityTags[k] === tags[k]) {
       score += _this.originalScore;
-    } else if (k === 'addr:*' && entityKeys.some((key) => key.startsWith('addr:'))) {
-        score += _this.originalScore;
-      } else if (tags[k] === '*' && k in entityTags) {
-        score += _this.originalScore / 2;
-      } else {
-        return -1;
-      }
+    } else if (
+      k === 'addr:*' &&
+      entityKeys.some((key) => key.startsWith('addr:'))
+    ) {
+      score += _this.originalScore;
+    } else if (tags[k] === '*' && k in entityTags) {
+      score += _this.originalScore / 2;
+    } else {
+      return -1;
+    }
   }
 
   // boost score for additional matches in addTags - #6802
