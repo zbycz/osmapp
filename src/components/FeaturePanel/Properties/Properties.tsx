@@ -15,11 +15,7 @@ export const Properties = ({ showTags }) => {
     <>
       {!showTags && (
         <>
-          <FeaturedTags
-            featuredTags={
-              feature.deleted ? [] : feature.schema?.featuredTags ?? []
-            }
-          />
+          <FeaturedTags featuredTags={feature.schema?.featuredTags} />
           <IdSchemeFields />
         </>
       )}
@@ -29,11 +25,7 @@ export const Properties = ({ showTags }) => {
           <Wrapper>
             <Table>
               <tbody>
-                <TagsTableInner
-                  tags={feature.tags}
-                  center={feature.center}
-                  except={[]}
-                />
+                <TagsTableInner tags={feature.tags} center={feature.center} />
               </tbody>
             </Table>
           </Wrapper>
