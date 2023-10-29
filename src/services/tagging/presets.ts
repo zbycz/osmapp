@@ -3,6 +3,7 @@ import { Feature } from '../types';
 import { Preset } from './types/Presets';
 
 // taken from iD codebase https://github.com/openstreetmap/iD/blob/dd30a39d7487e1084396712ce861f4b6c5a07849/modules/presets/preset.js#L61
+// added code for addr:* matching
 // _this is "preset" object with originalScore set
 const matchScore = (_this, entityTags) => {
   /* eslint-disable no-restricted-syntax,guard-for-in */
@@ -10,16 +11,20 @@ const matchScore = (_this, entityTags) => {
   const seen = {};
   let score = 0;
 
+  const entityKeys = Object.keys(entityTags);
+
   // match on tags
   for (const k in tags) {
     seen[k] = true;
     if (entityTags[k] === tags[k]) {
       score += _this.originalScore;
-    } else if (tags[k] === '*' && k in entityTags) {
-      score += _this.originalScore / 2;
-    } else {
-      return -1;
-    }
+    } else if (k === 'addr:*' && entityKeys.some((key) => key.startsWith('addr:'))) {
+        score += _this.originalScore;
+      } else if (tags[k] === '*' && k in entityTags) {
+        score += _this.originalScore / 2;
+      } else {
+        return -1;
+      }
   }
 
   // boost score for additional matches in addTags - #6802
