@@ -36,7 +36,7 @@ export const getFieldTranslation = (field: Field): FieldTranslation => {
   if (!translations) return undefined;
 
   if (field.label?.match(/^{.*}$/)) {
-    const resolved = field.label.substring(1, field.label.length - 2);
+    const resolved = field.label.substring(1, field.label.length - 1);
     return translations[intl.lang].presets.fields[resolved];
   }
 

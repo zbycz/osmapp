@@ -93,9 +93,7 @@ const matchRestToFields = (keysTodo: KeysTodo, feature: Feature): UiField[] =>
     const field =
       matchingFields.find((f) => f.fieldKey === key) ?? matchingFields?.[0];
 
-    const includeThisField = field;
-
-    if (!includeThisField) {
+    if (!field) {
       return undefined;
     }
     return getUiField(field, keysTodo, feature, key);
@@ -163,8 +161,8 @@ const getFeaturedTags = (feature: Feature) => {
     'contact:mobile',
     'opening_hours',
     ...(tags.wikipedia ? ['wikipedia'] : tags.wikidata ? ['wikidata'] : []),
-    'description',
     'fhrs:id',
+    'description',
   ];
 
   return keys.reduce(
@@ -177,7 +175,7 @@ export const getSchemaForFeature = (feature: Feature) => {
   const preset = getPresetForFeature(feature);
 
   keysTodo.init(feature);
-  keysTodo.resolveTags(preset.tags); // remove tags which are already covered by Preset keys
+  keysTodo.resolveTags(preset.tags); // remove tags which are already covered by Preset
   keysTodo.remove('name'); // always rendered by FeaturePanel
 
   const featuredTags = feature.deleted ? [] : getFeaturedTags(feature);
