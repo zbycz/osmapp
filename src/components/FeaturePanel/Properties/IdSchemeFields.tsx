@@ -153,8 +153,8 @@ export const IdSchemeFields = () => {
     return <Spacer />;
   }
 
-  const showDetailsHeading = !!(featuredTags.length + matchedFields.length);
-  const showOtherTagsSection = !!(tagsWithFields.length + keysTodo.length);
+  const showDetailsHeading = !!(featuredTags.length && matchedFields.length);
+  const showOtherTagsSection = !!(tagsWithFields.length || keysTodo.length);
 
   return (
     <>
