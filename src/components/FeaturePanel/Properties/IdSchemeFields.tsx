@@ -13,20 +13,16 @@ import { Table } from './Table';
 import { ShowMoreButton } from './helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Subheading } from '../helpers/Subheading';
+import { UiField } from '../../../services/tagging/types/Presets';
 
 const Spacer = styled.div`
   width: 100%;
   height: 50px;
 `;
 
-const render = (
-  field: Field,
-  feature: Feature,
-  k,
-  v,
-  tagsForField,
-  fieldTranslation,
-): string | ReactNode => {
+const render = (uiField: UiField, feature: Feature): string | ReactNode => {
+  const { field, key: k, value: v, tagsForField, fieldTranslation } = uiField;
+
   if (field.type === 'address') {
     return buildAddress(feature.tags, feature.center);
   }
@@ -84,69 +80,62 @@ const getTooltip = (field: Field, key: string) =>
     field.type
   })`;
 
-const OtherTags = () => {
+const UiFields = ({ fields }: { fields: UiField[] }) => {
   const { openWithTag } = useEditDialogContext();
   const { feature } = useFeatureContext();
-  const { schema } = feature;
 
   return (
     <>
-      {schema.tagsWithFields.map(
-        ({ key, value, label, field, fieldTranslation, tagsForField }) => (
+      {fields.map((uiField) => {
+        const { key, label, field, tagsForField } = uiField;
+        return (
           <tr key={key}>
             <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
             <td>
               <EditIconButton
                 onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
               />
-              {render(
-                field,
-                feature,
-                key,
-                addUnits(label, value),
-                tagsForField,
-                fieldTranslation,
-              )}
+              {addUnits(label, render(uiField, feature))}
             </td>
           </tr>
-        ),
-      )}
-      <TagsTableInner
-        tags={schema.keysTodo.reduce(
-          (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
-          {},
-        )}
-        center={feature.center}
-      />
+        );
+      })}
     </>
   );
 };
 
-const MatchedFields = () => {
-  const { openWithTag } = useEditDialogContext();
+const OtherTagsSection = () => {
+  const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
   const { feature } = useFeatureContext();
   const { schema } = feature;
 
-  return schema.matchedFields.map(
-    ({ key, value, label, field, fieldTranslation, tagsForField }) => (
-      <tr key={key}>
-        <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
-        <td>
-          <EditIconButton
-            onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
+  return (
+    <>
+      <tr>
+        <td colSpan={2} style={{ textAlign: 'right' }}>
+          <ShowMoreButton
+            isShown={otherTagsShown}
+            onClick={toggleOtherTagsShown}
           />
-          {addUnits(
-            label,
-            render(field, feature, key, value, tagsForField, fieldTranslation),
-          )}
         </td>
       </tr>
-    ),
+      {otherTagsShown && (
+        <>
+          <UiFields fields={schema.tagsWithFields} />
+          <TagsTableInner
+            tags={schema.keysTodo.reduce(
+              (acc, key) => ({ ...acc, [key]: feature.tags[key] }),
+              {},
+            )}
+            center={feature.center}
+          />
+        </>
+      )}
+    </>
   );
 };
 
 export const IdSchemeFields = () => {
-  const [otherTagsShown, toggleOtherTagsShown] = useToggleState(false);
   const { feature } = useFeatureContext();
   const { schema } = feature;
   const { keysTodo, featuredTags, matchedFields, tagsWithFields } = schema;
@@ -165,7 +154,7 @@ export const IdSchemeFields = () => {
   }
 
   const showDetailsHeading = !!(featuredTags.length + matchedFields.length);
-  const showOtherSection = !!(keysTodo.length + tagsWithFields.length);
+  const showOtherTagsSection = !!(tagsWithFields.length + keysTodo.length);
 
   return (
     <>
@@ -175,21 +164,9 @@ export const IdSchemeFields = () => {
 
       <Table>
         <tbody>
-          <MatchedFields />
+          <UiFields fields={schema.matchedFields} />
+          {showOtherTagsSection && <OtherTagsSection />}
         </tbody>
-        {showOtherSection && (
-          <tbody>
-            <tr>
-              <td colSpan={2} style={{ textAlign: 'right' }}>
-                <ShowMoreButton
-                  isShown={otherTagsShown}
-                  onClick={toggleOtherTagsShown}
-                />
-              </td>
-            </tr>
-            {otherTagsShown && <OtherTags />}
-          </tbody>
-        )}
       </Table>
     </>
   );

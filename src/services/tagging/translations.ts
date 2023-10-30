@@ -2,6 +2,7 @@ import { fetchJson } from '../fetch';
 import { Field } from './types/Fields';
 import { intl } from '../intl';
 import { publishDbgObject } from '../../utils';
+import { FieldTranslation } from './types/Presets';
 
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
 const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
@@ -25,17 +26,17 @@ export const mockSchemaTranslations = (mockTranslations) => {
   translations = mockTranslations;
 };
 
-export const getPresetTranslation = (key: string) =>
-  translations?.[intl.lang]?.presets?.presets?.[key]?.name;
+export const getPresetTranslation = (key: string): string =>
+  translations?.[intl.lang]?.presets?.presets?.[key]?.name ?? `[${key}]`;
 
 export const getPresetTermsTranslation = (key: string) =>
   translations?.[intl.lang]?.presets?.presets?.[key]?.terms;
 
-export const getFieldTranslation = (field: Field) => {
+export const getFieldTranslation = (field: Field): FieldTranslation => {
   if (!translations) return undefined;
 
   if (field.label?.match(/^{.*}$/)) {
-    const resolved = field.label.substr(1, field.label.length - 2);
+    const resolved = field.label.substring(1, field.label.length - 2);
     return translations[intl.lang].presets.fields[resolved];
   }
 
