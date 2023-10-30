@@ -29,6 +29,11 @@ const Value = styled.div`
     margin: 0 10px -6px 2px;
     opacity: 0.4;
   }
+
+  :last-child {
+    min-width: 0;
+    overflow: hidden;
+  }
 `;
 
 const DefaultRenderer = ({ v }) => v;
