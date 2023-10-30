@@ -74,8 +74,9 @@ export interface Feature {
   center: Position;
   roundedCenter?: LonLatRounded;
   ssrFeatureImage?: Image;
-  error?: 'deleted' | 'network' | 'unknown' | '404' | '500'; // etc.
-  schema?: ReturnType<typeof getSchemaForFeature>;
+  error?: 'network' | 'unknown' | '404' | '500'; // etc.
+  deleted?: boolean;
+  schema?: ReturnType<typeof getSchemaForFeature>; // undefined means error
 
   // skeleton
   layer?: { id: string };

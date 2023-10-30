@@ -54,7 +54,7 @@ export default {
   'featurepanel.error_network': 'Nie można uzyskać tej funkcji, sprawdź połączenie sieciowe.',
   'featurepanel.error_deleted': 'Ten obiekt jest oznaczony jako usunięty w OpenStreetMap.',
   'featurepanel.history_button': 'Historia »',
-  'featurepanel.other_info_heading': 'Więcej informacji',
+  'featurepanel.details_heading': 'Więcej informacji',
   'featurepanel.edit_button_title': 'Edytuj w bazie danych OpenStreetMap',
   'featurepanel.edit_button': 'Edytuj miejsce',
   'featurepanel.add_place_button': 'Dodaj miejsce',

@@ -167,9 +167,9 @@ const getItemOrLastHistoric = async (apiId: OsmApiId) => {
   }
 };
 
-const getDescription = (isDelete, feature) => {
-  const undelete = feature.error === 'deleted';
-  const action = undelete ? 'Undeleted' : isDelete ? 'Deleted' : 'Edited';
+const getDescription = (isCancelled, feature) => {
+  const undelete = feature.deleted;
+  const action = undelete ? 'Undeleted' : isCancelled ? 'Deleted' : 'Edited';
   const { subclass } = feature.properties;
   const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
@@ -177,10 +177,10 @@ const getDescription = (isDelete, feature) => {
 
 const getChangesetComment = (
   comment: string,
-  isDelete: boolean,
+  isCancelled: boolean,
   feature: Feature,
 ) => {
-  const description = getDescription(isDelete, feature);
+  const description = getDescription(isCancelled, feature);
   return join(comment, ' • ', `${description} #osmapp`);
 };
 
@@ -208,10 +208,10 @@ export const editOsmFeature = async (
   feature: Feature,
   comment: string,
   newTags: FeatureTags,
-  isDelete: boolean,
+  isCancelled: boolean,
 ) => {
   const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
-  const changesetComment = getChangesetComment(comment, isDelete, feature);
+  const changesetComment = getChangesetComment(comment, isCancelled, feature);
   const changesetXml = getChangesetXml({ changesetComment, feature });
 
   const changesetId = await putChangeset(changesetXml);
@@ -224,10 +224,10 @@ export const editOsmFeature = async (
     apiId,
     changesetId,
     newTags,
-    isDelete,
+    isCancelled,
   );
 
-  await putOrDeleteItem(isDelete, apiId, newItem);
+  await putOrDeleteItem(isCancelled, apiId, newItem);
   await putChangesetClose(changesetId);
 
   clearFeatureCache(feature.osmMeta);

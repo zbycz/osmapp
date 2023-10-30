@@ -3,6 +3,7 @@ import { Feature } from '../types';
 import { Preset } from './types/Presets';
 
 // taken from iD codebase https://github.com/openstreetmap/iD/blob/dd30a39d7487e1084396712ce861f4b6c5a07849/modules/presets/preset.js#L61
+// added code for addr:* matching
 // _this is "preset" object with originalScore set
 const matchScore = (_this, entityTags) => {
   /* eslint-disable no-restricted-syntax,guard-for-in */
@@ -10,10 +11,17 @@ const matchScore = (_this, entityTags) => {
   const seen = {};
   let score = 0;
 
+  const entityKeys = Object.keys(entityTags);
+
   // match on tags
   for (const k in tags) {
     seen[k] = true;
     if (entityTags[k] === tags[k]) {
+      score += _this.originalScore;
+    } else if (
+      k === 'addr:*' &&
+      entityKeys.some((key) => key.startsWith('addr:'))
+    ) {
       score += _this.originalScore;
     } else if (tags[k] === '*' && k in entityTags) {
       score += _this.originalScore / 2;
@@ -81,5 +89,20 @@ export const getPresetForFeature = (feature: Feature): Preset => {
     }
   });
 
-  return candidates.sort((a, b) => b.score - a.score)[0].candidate;
+  // iD editor has index by keys, which is sorted by alphabet. So amenities (eg.amenity=fountain) is sooner than natural=water .. LOL
+  const sortedByKey = candidates.sort((a, b) =>
+    Object.keys(a.candidate.tags)?.[0]?.localeCompare(
+      Object.keys(b.candidate.tags)?.[0],
+    ),
+  );
+  const sortedByScore = sortedByKey.sort((a, b) => b.score - a.score);
+  const winner = sortedByScore[0];
+
+  const winners = sortedByScore.filter((c) => c.score === winner.score);
+  if (winners.length > 1) {
+    // eslint-disable-next-line no-console
+    console.info('This feature matches more presets by same score:', winners);
+  }
+
+  return winner.candidate;
 };

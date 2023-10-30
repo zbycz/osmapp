@@ -31,8 +31,8 @@ describe('fetchFeature', () => {
     jest.clearAllMocks();
     jest.spyOn(tagging, 'fetchSchemaTranslations').mockResolvedValue(undefined);
     jest
-      .spyOn(idTaggingScheme, 'getSchemaForFeature')
-      .mockReturnValue(undefined); // this is covered in idTaggingScheme.test.ts
+      .spyOn(idTaggingScheme, 'addSchemaToFeature')
+      .mockImplementation((f) => f); // this is covered in idTaggingScheme.test.ts
   });
 
   const isServer = jest.spyOn(helpers, 'isServer').mockReturnValue(true);

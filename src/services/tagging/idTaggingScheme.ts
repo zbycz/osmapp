@@ -1,28 +1,68 @@
-import { Feature } from '../types';
+import { Feature, FeatureTags } from '../types';
 import { getFieldTranslation, getPresetTranslation } from './translations';
 import { getPresetForFeature } from './presets';
 import { fields } from './data';
 import { computeAllFieldKeys, getValueForField } from './fields';
-import { Preset } from './types/Presets';
+import { Preset, UiField } from './types/Presets';
 import { publishDbgObject } from '../../utils';
+import { getShortId } from '../helpers';
+import { Field } from './types/Fields';
 
-// TODO move to shared place
-const featuredKeys = [
-  'name', // this is not in the other place
-  'website',
-  'contact:website',
-  'phone',
-  'contact:phone',
-  'contact:mobile',
-  'opening_hours',
-  'description',
-];
+const logMoreMatchingFields = (matchingFields: Field[], key: string) => {
+  if (matchingFields.length > 1) {
+    // eslint-disable-next-line no-console
+    console.warn(
+      `More fields matching key ${key}: ${matchingFields.map(
+        (f) => f.fieldKey,
+      )}`,
+    );
+  }
+};
+
+const deduplicate = (strings: string[]) => Array.from(new Set(strings));
+
+const getUiField = (
+  field: Field,
+  keysTodo: KeysTodo,
+  feature: Feature,
+  key: string,
+): UiField => {
+  if (field.type === 'typeCombo') {
+    keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
+    return undefined;
+  }
+
+  const value = feature.tags[key];
+
+  const keysInField = deduplicate([
+    ...(field.keys ?? []),
+    ...(field.key ? [field.key] : []),
+  ]);
+  const tagsForField = [];
+  keysInField.forEach((k) => {
+    if (feature.tags[k]) {
+      tagsForField.push({ key: k, value: feature.tags[k] });
+    }
+    keysTodo.remove(k); // remove all "address:*" keys etc.
+  });
+
+  const fieldTranslation = getFieldTranslation(field);
+
+  return {
+    key,
+    value: getValueForField(field, fieldTranslation, value, tagsForField), // TODO this may be removed
+    label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
+    tagsForField,
+    field,
+    fieldTranslation,
+  };
+};
 
 const matchFieldsFromPreset = (
   preset: Preset,
   keysTodo: any,
   feature: Feature,
-) => {
+): UiField[] => {
   const computedAllFieldKeys = computeAllFieldKeys(preset);
   publishDbgObject('computedAllFieldKeys', computedAllFieldKeys);
 
@@ -31,96 +71,42 @@ const matchFieldsFromPreset = (
       const field = fields[fieldKey];
       const key = field?.key;
       const keys = field?.keys;
-      const shouldWeIncludeThisField =
-        keysTodo.has(key) || keysTodo.hasAny(keys);
-      if (!shouldWeIncludeThisField) {
-        return {};
-      }
-      if (field.type === 'typeCombo') {
-        keysTodo.remove(field.key); // ignore eg. railway=tram_stop on public_transport=stop_position
-        return {};
+      const includeThisField = keysTodo.has(key) || keysTodo.hasAny(keys);
+
+      if (!includeThisField) {
+        return undefined;
       }
 
-      const value = feature.tags[key];
-
-      const keysInField = [
-        ...(field.keys ?? []),
-        ...(field.key ? [field.key] : []),
-      ];
-      const tagsForField = [];
-      keysInField.forEach((k) => {
-        if (feature.tags[k]) {
-          tagsForField.push({ key: k, value: feature.tags[k] });
-        }
-        keysTodo.remove(k); // remove all "address:*" keys etc.
-      });
-
-      const fieldTranslation = getFieldTranslation(field);
-
-      return {
-        key,
-        value: getValueForField(field, fieldTranslation, value, tagsForField),
-        field,
-        tagsForField,
-        fieldTranslation,
-        label: fieldTranslation?.label ?? field.label,
-      };
+      return getUiField(field, keysTodo, feature, key);
     })
-    .filter((field) => field.value);
+    .filter((field) => field?.value);
 };
 
-const matchRestToFields = (keysTodo: any, feature: Feature) =>
-  keysTodo
-    .map((key) => {
-      const field = Object.values(fields).find(
-        (f) => f.key === key || f.keys?.includes(key),
-      ); // todo cache this
-      if (!field) {
-        return {};
-      }
-      if (field.type === 'typeCombo') {
-        keysTodo.remove(field.key); // ignore eg. railway=tram_stop on public_transport=stop_position
-        return {};
-      }
-
-      const value = feature.tags[key];
-
-      const keysInField = [
-        ...(field.keys ?? []),
-        ...(field.key ? [field.key] : []),
-      ];
-      const tagsForField = [];
-      keysInField.forEach((k) => {
-        if (feature.tags[k]) {
-          tagsForField.push({ key: k, value: feature.tags[k] });
-        }
-        keysTodo.remove(k); // remove all "address:*" keys etc.
-      });
-
-      const fieldTranslation = getFieldTranslation(field);
-
-      return {
-        key,
-        value: getValueForField(field, fieldTranslation, value, tagsForField),
-        field,
-        tagsForField,
-        fieldTranslation,
-        label: fieldTranslation?.label ?? field.label ?? `[${key}]`,
-      };
-    })
-    .filter((field) => field.field);
-
-const keysTodo = {
-  state: [],
-  init(feature) {
-    this.state = Object.keys(feature.tags).filter(
-      (key) => !featuredKeys.includes(key),
+const matchRestToFields = (keysTodo: KeysTodo, feature: Feature): UiField[] =>
+  keysTodo.mapOrSkip((key) => {
+    const matchingFields = Object.values(fields).filter(
+      (f) => f.key === key || f.keys?.includes(key), // todo cache this
     );
+    logMoreMatchingFields(matchingFields, key);
+
+    // if more fields are matching, select the one which has fieldKey equal key
+    const field =
+      matchingFields.find((f) => f.fieldKey === key) ?? matchingFields?.[0];
+
+    if (!field) {
+      return undefined;
+    }
+    return getUiField(field, keysTodo, feature, key);
+  });
+
+type KeysTodo = typeof keysTodo;
+const keysTodo = {
+  state: [] as string[],
+  init(feature) {
+    this.state = Object.keys(feature.tags);
   },
-  resolve(tags) {
-    Object.keys(tags).forEach((key) => {
-      this.state.splice(this.state.indexOf(key), 1);
-    });
+  resolveTags(tags) {
+    Object.keys(tags).forEach((key) => this.remove(key));
   },
   has(key) {
     return this.state.includes(key);
@@ -144,16 +130,56 @@ const keysTodo = {
       }
     });
   },
-  map(fn) {
-    return this.state.map(fn);
+  mapOrSkip<T>(fn: (key: string) => T): NonNullable<T>[] {
+    const skippedFields = [];
+    const output = [];
+
+    while (this.state.length) {
+      const field = this.state.shift();
+      const result = fn(field); // this can remove items from this.state
+      if (result) {
+        output.push(result);
+      } else {
+        skippedFields.push(field);
+      }
+    }
+
+    this.state = skippedFields;
+    return output;
   },
+};
+
+const getFeaturedTags = (feature: Feature) => {
+  const { tags } = feature;
+
+  // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
+  const keys = [
+    'website',
+    'contact:website',
+    'phone',
+    'contact:phone',
+    'contact:mobile',
+    'opening_hours',
+    ...(tags.wikipedia ? ['wikipedia'] : tags.wikidata ? ['wikidata'] : []),
+    'fhrs:id',
+    'description',
+  ];
+
+  return keys.reduce(
+    (acc, key) => (tags[key] ? { ...acc, [key]: tags[key] } : acc),
+    {} as FeatureTags,
+  );
 };
 
 export const getSchemaForFeature = (feature: Feature) => {
   const preset = getPresetForFeature(feature);
 
   keysTodo.init(feature);
-  keysTodo.resolve(preset.tags); // remove tags which are already covered by Preset keys
+  keysTodo.resolveTags(preset.tags); // remove tags which are already covered by Preset
+  keysTodo.remove('name'); // always rendered by FeaturePanel
+
+  const featuredTags = feature.deleted ? [] : getFeaturedTags(feature);
+  keysTodo.resolveTags(featuredTags);
 
   const matchedFields = matchFieldsFromPreset(preset, keysTodo, feature);
   keysTodo.resolveFields(matchedFields);
@@ -161,14 +187,26 @@ export const getSchemaForFeature = (feature: Feature) => {
   const tagsWithFields = matchRestToFields(keysTodo, feature);
   keysTodo.resolveFields(tagsWithFields);
 
-  // TODO fix one field with more tags! like address
   return {
     presetKey: preset.presetKey,
     preset,
-    feature,
     label: getPresetTranslation(preset.presetKey),
+    featuredTags: Object.entries(featuredTags),
     matchedFields,
     tagsWithFields,
     keysTodo: keysTodo.state,
   };
+};
+
+export const addSchemaToFeature = (feature: Feature) => {
+  let schema;
+  try {
+    schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?
+  } catch (e) {
+    // TODO sentry
+    console.error(`getSchemaForFeature(${getShortId(feature.osmMeta)}):`, e); // eslint-disable-line no-console
+    return feature;
+  }
+
+  return { ...feature, schema };
 };

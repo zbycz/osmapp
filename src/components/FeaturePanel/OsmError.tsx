@@ -9,7 +9,7 @@ export const OsmError = () => {
   const { feature } = useFeatureContext();
   const code = feature.error;
 
-  if (code === 'deleted') {
+  if (feature.deleted) {
     return (
       <Box mb={3} clone>
         <Alert variant="outlined" severity="warning">

@@ -1,3 +1,5 @@
+import { Field } from './Fields';
+
 /**
  * Associates an icon, form fields, and other UI with a set of OSM tags
  */
@@ -95,3 +97,24 @@ export interface Preset {
 export type Presets = {
   [presetKey: string]: Preset;
 };
+
+export type FieldTranslation = {
+  label: string;
+  placeholder: string;
+  terms: string;
+  options: {
+    [key: string]: { title: string; description: string };
+  };
+  types: {
+    [key: string]: string;
+  };
+};
+
+export interface UiField {
+  key: string;
+  value: string;
+  label: string;
+  tagsForField: Array<{ key: string; value: string }>;
+  fieldTranslation?: FieldTranslation;
+  field: Field; // debug only
+}
