@@ -21,7 +21,7 @@ export const Properties = ({ showTags }) => {
       )}
       {showTags && (
         <>
-          <Subheading>{t('featurepanel.all_tags_heading')}</Subheading>
+          {!!Object.keys(feature.tags).length && <Subheading>{t("featurepanel.all_tags_heading")}</Subheading>}
           <Wrapper>
             <Table>
               <tbody>
