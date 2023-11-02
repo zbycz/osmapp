@@ -158,7 +158,7 @@ export default {
   'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
 
   'layers.basic': 'Basic',
-  'layers.makina_africa': 'Makina Africa',
+  'layers.makina_africa': 'OpenPlaceGuide Africa',
   'layers.outdoor': 'Outdoor',
   'layers.mtb': 'MTB',
   'layers.snow': 'Snow',

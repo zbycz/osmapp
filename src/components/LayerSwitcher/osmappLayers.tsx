@@ -26,7 +26,7 @@ export const osmappLayers: Layers = {
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: [
-      '&copy; <a href="https://africa.tiles.openplaceguide.org/">Makina Maps project</a>',
+      '<a href="https://openplaceguide.org/">OPG</a> © <a href="https://openmaptiles.org/">OpenMapTiles</a>',
       'osm',
     ],
   },
