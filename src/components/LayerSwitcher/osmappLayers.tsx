@@ -21,6 +21,15 @@ export const osmappLayers: Layers = {
     Icon: ExploreIcon,
     attribution: ['maptiler', 'osm'],
   },
+  makinaAfrica: {
+    name: t('layers.makina_africa'),
+    type: 'basemap',
+    Icon: ExploreIcon,
+    attribution: [
+      '&copy; <a href="https://africa.tiles.openplaceguide.org/">Makina Maps project</a>',
+      'osm',
+    ],
+  },
   outdoor: {
     name: t('layers.outdoor'),
     type: 'basemap',
