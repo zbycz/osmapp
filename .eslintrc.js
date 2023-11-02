@@ -34,5 +34,13 @@ module.exports = {
     'react/require-default-props': OFF,
     'no-nested-ternary': OFF,
     'no-irregular-whitespace': OFF,
+    '@typescript-eslint/no-unused-vars': [
+      'error',
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
   },
 };

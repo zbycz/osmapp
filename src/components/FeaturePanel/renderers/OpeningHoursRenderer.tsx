@@ -61,7 +61,7 @@ const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
 const OpeningHoursRenderer = ({ v }) => {
   const [isExpanded, toggle] = useToggleState(false);
   const { daysTable, isOpen } = parseOpeningHours(v);
-  const { ph, ...days } = daysTable;
+  const { ph, ...days } = daysTable; // eslint-disable-line @typescript-eslint/no-unused-vars
   const timesByDay = Object.values(days).map((times, idx) => ({
     times,
     day: weekDays[idx],
