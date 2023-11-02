@@ -80,6 +80,7 @@ const osmToFeature = (element): Feature => {
     tags = {},
     lat,
     lon,
+    nodes,
     members,
     osmappDeletedMarker,
     ...osmMeta

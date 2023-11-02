@@ -31,6 +31,7 @@ const useFocusOnSlash = () => {
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   const inputRef = useFocusOnSlash();
+  const { InputLabelProps, InputProps, ...restParams } = params;
 
   useEffect(() => {
     // @ts-ignore
@@ -42,7 +43,7 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
 
   return (
     <InputBase
-      {...params} // eslint-disable-line react/jsx-props-no-spreading
+      {...restParams} // eslint-disable-line react/jsx-props-no-spreading
       inputRef={inputRef}
       placeholder={t('searchbox.placeholder')}
       onChange={onChange}
