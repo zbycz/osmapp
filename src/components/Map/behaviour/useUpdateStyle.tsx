@@ -4,6 +4,7 @@ import { outdoorStyle } from '../styles/outdoorStyle';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { rasterStyle } from '../styles/rasterStyle';
 import { DEFAULT_MAP } from '../../../config';
+import { makinaAfricaStyle } from '../styles/makinaAfricaStyle';
 
 export const getRasterStyle = (key) => {
   const url = osmappLayers[key]?.url ?? key; // if `key` not found, it contains tiles URL
@@ -15,10 +16,22 @@ export const useUpdateStyle = useMapEffect((map, activeLayers) => {
 
   map.setMaxZoom(osmappLayers[key]?.maxzoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
 
-  if (key === 'basic' || key === 'outdoor') {
-    map.setStyle(key === 'basic' ? basicStyle : outdoorStyle);
-  } else {
-    map.setStyle(getRasterStyle(key));
-    map.setZoom(Math.round(map.getZoom()));
+  switch (key) {
+    case 'basic':
+      map.setStyle(basicStyle);
+      break;
+
+    case 'makinaAfrica':
+      map.setStyle(makinaAfricaStyle);
+      break;
+
+    case 'outdoor':
+      map.setStyle(outdoorStyle);
+      break;
+
+    default:
+      map.setStyle(getRasterStyle(key));
+      map.setZoom(Math.round(map.getZoom()));
+      break;
   }
 });
