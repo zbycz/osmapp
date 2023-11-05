@@ -1,0 +1,9 @@
+https://overpass-api.de/api/interpreter?data=%5Bout%3Ajson%5D%5Btimeout%3A25%5D%3B%0A%2F%2F%20%5Bout%3Acsv%28%3A%3Acount%2C%20%3A%3A%22count%3Anodes%22%2C%20%3A%3A%22count%3Aways%22%2C%20%3A%3A%22count%3Arelations%22%29%5D%5Btimeout%3A25%5D%3B%0A%0Aarea%28id%3A3600442333%29-%3E.searchArea%3B%0A%28%0A%20%20nwr%5B%22name%22%5D%28area.searchArea%29%3B%0A%29%3B%0Aout%3B
+
+
+Beroun 
+- Json 7secs 7 MB
+- Count 2 secs
+@count	@count:nodes	@count:ways	@count:relations
+1312	387	794	131
+
