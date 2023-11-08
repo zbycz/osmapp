@@ -1,7 +1,7 @@
 import React from 'react';
 import { Alert } from '@material-ui/lab';
 import { FeaturedTags } from '../FeaturedTags';
-import { IdSchemeFields } from './IdSchemeFields';
+import { IdSchemaFields } from './IdSchemaFields';
 import { t } from '../../../services/intl';
 import { TagsTableInner } from './TagsTableInner';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -86,7 +86,7 @@ export const Properties = ({ showTags }) => {
       {!showTags && (
         <ErrorBoundary key={key} fallback={<OnlyTagsTable />}>
           <FeaturedTags featuredTags={feature.schema?.featuredTags} />
-          <IdSchemeFields />
+          <IdSchemaFields />
         </ErrorBoundary>
       )}
     </>
