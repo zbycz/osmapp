@@ -76,7 +76,7 @@ const OpeningHoursRenderer = ({ v }) => {
   return (
     <>
       <AccessTime fontSize="small" />
-      <div>
+      <div suppressHydrationWarning>
         {formatDescription(isOpen, daysTable)}
         <ToggleButton onClick={toggle} isShown={isExpanded} />
         {isExpanded && (
