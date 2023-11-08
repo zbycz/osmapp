@@ -3,67 +3,7 @@ import presetsJson from '@openstreetmap/id-tagging-schema/dist/presets.json';
 import { Fields } from './types/Fields';
 import { Presets } from './types/Presets';
 import { publishDbgObject } from '../../utils';
-
-
-const ourPresets = { // i want only sport=climbing without gyms: leisure=sport_center
-  'leisure/climbing/site': {
-    icon: 'temaki-abseiling',
-    geometry: ['point', 'way', 'area'],
-    fields: [],
-    tags: {
-      sport: 'climbing'
-    },
-    reference: {
-      key: 'sport',
-      value: 'climbing',
-    },
-    name: 'Climbing site', // could be both gym or
-  },
-  'leisure/climbing/route': {
-    icon: 'temaki-abseiling',
-    geometry: ['point', 'way'],
-    fields: [],
-    tags: {
-      climbing: 'route',
-    },
-    addTags: {
-      sport: 'climbing',
-      climbing: 'route',
-    },
-    reference: {
-      key: 'climbing',
-      value: 'route',
-    },
-    name: 'Climbing route',
-  },
-  'leisure/climbing/route_bottom': {
-    icon: 'temaki-abseiling',
-    geometry: ['point'],
-    fields: [],
-    tags: {
-      climbing: 'route_bottom',
-    },
-    reference: {
-      key: 'climbing',
-      value: 'route',
-    },
-    name: 'Bottom of climbing route',
-  },
-  'leisure/climbing/route_top': {
-    icon: 'temaki-abseiling',
-    geometry: ['point'],
-    fields: [],
-    tags: {
-      climbing: 'route_top',
-    },
-    reference: {
-      key: 'climbing',
-      value: 'route',
-    },
-    name: 'Top of climbing route',
-  },
-} as Presets;
-
+import { ourPresets } from './ourPresets';
 
 export const fields = fieldsJson as unknown as Fields;
 

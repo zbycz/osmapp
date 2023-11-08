@@ -1,8 +1,10 @@
+import { merge } from 'lodash';
 import { fetchJson } from '../fetch';
 import { Field } from './types/Fields';
 import { intl } from '../intl';
 import { publishDbgObject } from '../../utils';
 import { FieldTranslation } from './types/Presets';
+import { getOurTranslations } from './ourPresets';
 
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
 const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
@@ -20,24 +22,7 @@ export const fetchSchemaTranslations = async () => {
     `${cdnUrl}@${version}/dist/translations/${intl.lang}.min.json`,
   );
 
-
-  translations[intl.lang].presets.presets['leisure/climbing/site'] = {
-    name: 'Climbing site',
-    terms: 'Místo k lezení'
-  }
-  translations[intl.lang].presets.presets['leisure/climbing/route'] = {
-    name: 'Climbing route',
-    terms: 'lezecká cesta'
-  }
-  translations[intl.lang].presets.presets['leisure/climbing/route_bottom'] = {
-    name: 'Bottom of climbing route',
-    terms: 'začátek lezecké cesty'
-  }
-  translations[intl.lang].presets.presets['leisure/climbing/route_top'] = {
-    name: 'Top of climbing route',
-    terms: 'top lezecké cesty'
-  }
-
+  merge(translations, getOurTranslations(intl.lang));
 
   publishDbgObject('schemaTranslations', translations);
 };
