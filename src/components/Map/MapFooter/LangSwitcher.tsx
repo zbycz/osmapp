@@ -5,11 +5,6 @@ import { useRouter } from 'next/router';
 import { useBoolState } from '../../helpers';
 import { changeLang, intl, t } from '../../../services/intl';
 
-const getLink = (lang, path) => {
-  const current = intl.lang;
-  return `${path}${lang === current ? '' : `?lang=${lang}`}`;
-};
-
 export const LangSwitcher = () => {
   const {
     publicRuntimeConfig: { languages },
@@ -37,7 +32,7 @@ export const LangSwitcher = () => {
           <MenuItem
             key={lang}
             component="a"
-            href={getLink(lang, asPath)}
+            href={`/${lang}${asPath}`}
             onClick={getLangSetter(lang)}
           >
             {name}
