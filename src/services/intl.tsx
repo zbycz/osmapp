@@ -65,6 +65,7 @@ export const InjectIntl = ({ intl: globalIntl }) => (
 );
 
 if (isBrowser()) {
+  // GLOBAL_INTL is set in _document.tsx
   setIntl((window as any).GLOBAL_INTL);
 }
 
