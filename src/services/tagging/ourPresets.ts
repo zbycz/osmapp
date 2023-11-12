@@ -1,86 +1,98 @@
 import { Presets } from './types/Presets';
 
-export const getOurTranslations = (lang) => ({
-  [lang]: {
-    presets: {
-      presets: {
-        'leisure/climbing/site': {
-          name: 'Climbing site',
-          terms: 'Místo k lezení',
-        },
-        'leisure/climbing/route': {
-          name: 'Climbing route',
-          terms: 'lezecká cesta',
-        },
-        'leisure/climbing/route_bottom': {
-          name: 'Start of climbing route',
-          terms: 'začátek lezecké cesty',
-        },
-        'leisure/climbing/route_top': {
-          name: 'Top of climbing route',
-          terms: 'top lezecké cesty',
-        },
-      },
-    },
-  },
-});
-
 export const ourPresets = {
-  // i want only sport=climbing without gyms: leisure=sport_center
-  'leisure/climbing/site': {
+  'leisure/climbing/crag_2': {
     icon: 'temaki-abseiling',
-    geometry: ['point', 'way', 'area'],
-    fields: [],
-    tags: {
-      sport: 'climbing',
-    },
-    reference: {
-      key: 'sport',
-      value: 'climbing',
-    },
-    name: 'Climbing site', // could be both gym or
+    fields: ['climbing/rock', 'climbing/orientation', 'climbing/routes'],
+    geometry: ['point', 'relation'],
+    tags: { climbing: 'crag' },
+    name: 'Climbing crag',
   },
+
   'leisure/climbing/route': {
     icon: 'temaki-abseiling',
-    geometry: ['point', 'way'],
     fields: [],
-    tags: {
-      climbing: 'route',
-    },
-    addTags: {
-      sport: 'climbing',
-      climbing: 'route',
-    },
-    reference: {
-      key: 'climbing',
-      value: 'route',
-    },
+    geometry: ['point', 'way'],
+    tags: { climbing: 'route' },
     name: 'Climbing route',
   },
   'leisure/climbing/route_bottom': {
     icon: 'temaki-abseiling',
+    fields: ['climbing/length', 'climbing/bolts'],
     geometry: ['point'],
-    fields: [],
-    tags: {
-      climbing: 'route_bottom',
-    },
-    reference: {
-      key: 'climbing',
-      value: 'route',
-    },
-    name: 'Bottom of climbing route',
+    tags: { climbing: 'route_bottom' },
+    name: 'Climbing route - start',
   },
   'leisure/climbing/route_top': {
     icon: 'temaki-abseiling',
-    geometry: ['point'],
     fields: [],
-    tags: {
-      climbing: 'route_top',
-    },
-    reference: {
-      key: 'climbing',
-      value: 'route',
-    },
-    name: 'Top of climbing route',
+    geometry: ['point'],
+    tags: { climbing: 'route_top' },
+    name: 'Climbing route - top',
+  },
+
+  'leisure/climbing/site': {
+    icon: 'temaki-abseiling',
+    fields: [],
+    geometry: ['point', 'way', 'area'],
+    tags: { sport: 'climbing' }, // we need only sport=climbing without gyms: leisure=sport_center, is it possible?
+    name: 'Climbing site',
+    // matchScore: 0.9,
   },
 } as unknown as Presets;
+
+export const ourFields = {
+  'climbing/length': {
+    key: 'climbing:length',
+    type: 'number',
+    minValue: 0,
+    label: 'Length (m)',
+  },
+  'climbing/bolts': {
+    key: 'climbing:bolts',
+    type: 'number',
+    minValue: 0,
+    label: 'Bolts',
+  },
+  'climbing/rock': {
+    key: 'climbing:rock',
+    type: 'combo',
+    label: 'Rock type',
+  },
+  'climbing/orientation': {
+    key: 'climbing:orientation',
+    type: 'combo',
+    options: {
+      N: 'North',
+      NE: 'North-East',
+      E: 'East',
+      SE: 'South-East',
+      S: 'South',
+      SW: 'South-West',
+      W: 'West',
+      NW: 'North-West',
+    },
+    label: 'Orientation',
+  },
+  // 'climbing/urls': {
+  //   keys: ['climbing:url:mountainproject', 'climbing:url:openbeta', 'climbing:url:thecrag'],
+  //   type: 'url',
+  //   label: 'Websites',
+  // }
+
+  'climbing/routes': {
+    key: 'climbing:routes',
+    type: 'number',
+    minValue: 0,
+    label: 'Number of routes',
+  },
+};
+
+export const getOurTranslations = (lang) => ({
+  [lang]: {
+    presets: {
+      presets: ourPresets,
+      fields: ourFields,
+    },
+  },
+});

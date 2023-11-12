@@ -27,10 +27,11 @@ const getUiField = (
   feature: Feature,
   key: string,
 ): UiField => {
-  if (field.type === 'typeCombo') {
-    keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
-    return undefined;
-  }
+  // TODO this should be removed now the parsing works ok
+  // if (field.type === 'typeCombo') {
+  //   keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
+  //   return undefined;
+  // }
 
   const value = feature.tags[key];
 

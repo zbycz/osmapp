@@ -31,6 +31,12 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return renderValue('wikidata', feature.tags.wikidata);
   }
 
+  // combo with options
+  if (fieldTranslation?.options?.[v]) {
+    return renderValue(k, fieldTranslation.options[v]?.title);
+  }
+
+  // multicombo ?
   if (fieldTranslation?.types && fieldTranslation?.options) {
     return tagsForField.map(({ key, value: value2 }) => (
       <div key={key}>
@@ -72,7 +78,9 @@ const removeUnits = (label) => label.replace(unitRegExp, '');
 const addUnits = (label, value: string | ReactNode) => {
   if (typeof value !== 'string') return value;
   const unit = label.match(unitRegExp);
-  return `${value}${unit ? ` (${unit[1]})` : ''}`;
+  if (!unit) return value;
+  if (unit[1] === 'm') return `${value} m`;
+  return `${value} (${unit[1]})`;
 };
 
 const getTooltip = (field: Field, key: string) =>
