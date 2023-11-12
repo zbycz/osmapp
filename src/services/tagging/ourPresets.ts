@@ -1,45 +1,4 @@
-import { Presets } from './types/Presets';
-
-export const ourPresets = {
-  'leisure/climbing/crag_2': {
-    icon: 'temaki-abseiling',
-    fields: ['climbing/rock', 'climbing/orientation', 'climbing/routes'],
-    geometry: ['point', 'relation'],
-    tags: { climbing: 'crag' },
-    name: 'Climbing crag',
-  },
-
-  'leisure/climbing/route': {
-    icon: 'temaki-abseiling',
-    fields: [],
-    geometry: ['point', 'way'],
-    tags: { climbing: 'route' },
-    name: 'Climbing route',
-  },
-  'leisure/climbing/route_bottom': {
-    icon: 'temaki-abseiling',
-    fields: ['climbing/length', 'climbing/bolts'],
-    geometry: ['point'],
-    tags: { climbing: 'route_bottom' },
-    name: 'Climbing route - start',
-  },
-  'leisure/climbing/route_top': {
-    icon: 'temaki-abseiling',
-    fields: [],
-    geometry: ['point'],
-    tags: { climbing: 'route_top' },
-    name: 'Climbing route - top',
-  },
-
-  'leisure/climbing/site': {
-    icon: 'temaki-abseiling',
-    fields: [],
-    geometry: ['point', 'way', 'area'],
-    tags: { sport: 'climbing' }, // we need only sport=climbing without gyms: leisure=sport_center, is it possible?
-    name: 'Climbing site',
-    // matchScore: 0.9,
-  },
-} as unknown as Presets;
+import { RawPresets } from './types/Presets';
 
 export const ourFields = {
   'climbing/length': {
@@ -59,6 +18,21 @@ export const ourFields = {
     type: 'combo',
     label: 'Rock type',
   },
+
+  'climbing/grade': {
+    keys: [
+      'climbing:grade:uiaa', // plus :min :max :mean variants ???
+      'climbing:grade:french',
+      'climbing:grade:saxon',
+      'climbing:grade:aid',
+      'climbing:grade:hueco',
+      'climbing:grade:yds_class',
+      'climbing:grade:ice',
+    ],
+    type: 'text',
+    label: 'Grade',
+  },
+
   'climbing/orientation': {
     key: 'climbing:orientation',
     type: 'combo',
@@ -74,11 +48,15 @@ export const ourFields = {
     },
     label: 'Orientation',
   },
-  // 'climbing/urls': {
-  //   keys: ['climbing:url:mountainproject', 'climbing:url:openbeta', 'climbing:url:thecrag'],
-  //   type: 'url',
-  //   label: 'Websites',
-  // }
+  'climbing/urls': {
+    keys: [
+      'climbing:url:mountainproject',
+      'climbing:url:openbeta',
+      'climbing:url:thecrag',
+    ],
+    type: 'url',
+    label: 'Websites',
+  },
 
   'climbing/routes': {
     key: 'climbing:routes',
@@ -87,6 +65,62 @@ export const ourFields = {
     label: 'Number of routes',
   },
 };
+
+export const ourPresets = {
+  'leisure/climbing/crag_2': {
+    icon: 'temaki-abseiling',
+    fields: ['climbing/rock', 'climbing/orientation', 'climbing/routes'],
+    moreFields: Object.keys(ourFields),
+    geometry: ['point', 'relation'],
+    tags: { climbing: 'crag' },
+    name: 'Climbing crag',
+  },
+
+  'leisure/climbing/route': {
+    icon: 'temaki-abseiling',
+    fields: [
+      'climbing/grade',
+      'climbing/length',
+      'climbing/bolts',
+      'climbing/orientation',
+    ],
+    moreFields: Object.keys(ourFields),
+    geometry: ['point', 'line'],
+    tags: { climbing: 'route' },
+    name: 'Climbing route',
+  },
+  'leisure/climbing/route_bottom': {
+    icon: 'temaki-abseiling',
+    fields: [
+      'climbing/grade',
+      'climbing/length',
+      'climbing/bolts',
+      'climbing/orientation',
+    ],
+    moreFields: Object.keys(ourFields),
+    geometry: ['point'],
+    tags: { climbing: 'route_bottom' },
+    name: 'Climbing route - start',
+  },
+  'leisure/climbing/route_top': {
+    icon: 'temaki-abseiling',
+    fields: [],
+    moreFields: Object.keys(ourFields),
+    geometry: ['point'],
+    tags: { climbing: 'route_top' },
+    name: 'Climbing route - top',
+  },
+
+  'leisure/climbing/site': {
+    icon: 'temaki-abseiling',
+    fields: [],
+    moreFields: Object.keys(ourFields),
+    geometry: ['point', 'line', 'area'],
+    tags: { sport: 'climbing' }, // we need only sport=climbing without gyms: leisure=sport_center, is it possible?
+    name: 'Climbing site',
+    matchScore: 0.9,
+  },
+} as RawPresets;
 
 export const getOurTranslations = (lang) => ({
   [lang]: {

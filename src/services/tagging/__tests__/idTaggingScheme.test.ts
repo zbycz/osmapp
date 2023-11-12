@@ -43,12 +43,15 @@ describe('idTaggingScheme', () => {
 
     expect(result.label).toBe('Motorway');
     expect(result.presetKey).toBe('highway/motorway');
-    expect(result.matchedFields).toMatchObject([
+    expect(
+      result.matchedFields.map(({ label, value }) => ({ label, value })),
+    ).toMatchObject([
       { label: 'Road Number', value: 'I 84' },
       { label: 'One Way', value: 'Yes' },
       { label: 'Speed Limit', value: '55 mph' },
       { label: 'Lanes', value: '2' },
       { label: 'Surface', value: 'Asphalt' },
+      { label: 'Structure', value: undefined },
       {
         label: 'Allowed Access',
         value: 'Foot: Prohibited,\nBicycles: Prohibited,\nHorses: Prohibited',
@@ -167,4 +170,30 @@ describe('idTaggingScheme', () => {
       'source',
     ]);
   });
+  //
+  //
+  // it('xxxsxhouafdld remove from keysTodo if address is in restTags', () => {
+  //   // TOOD find better tags which have some multikey field in tagsWithFields
+  //   const feature = {
+  //     osmMeta: {
+  //       type: 'way',
+  //       id: 149398903,
+  //     },
+  //     tags: {
+  //       "climbing": "route",
+  //       "climbing:boulder": "yes",
+  //       "climbing:grade:uiaa": "7+",
+  //       "description": "Hard boulder problem",
+  //       "sport": "climbing"
+  //     }
+  //     ,
+  //   } as unknown as Feature;
+  //
+  //   const schema = getSchemaForFeature(feature);
+  //
+  //   expect(schema.presetKey).toEqual('leisure/climbing/route');
+  //   expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
+  //     'source',
+  //   ]);
+  // });
 });

@@ -19,6 +19,7 @@ const PoiType = styled.div`
   span {
     position: absolute;
     left: 20px;
+    ${({ isSkeleton }) => isSkeleton && 'opacity: 0.4;'}
   }
 `;
 
@@ -31,7 +32,7 @@ export const PoiDescription = () => {
     : t('featurepanel.no_name');
 
   return (
-    <PoiType>
+    <PoiType isSkeleton={feature.skeleton}>
       <Maki ico={properties.class} invert middle />
       <span>{poiType}</span>
     </PoiType>

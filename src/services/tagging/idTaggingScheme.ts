@@ -80,7 +80,7 @@ const matchFieldsFromPreset = (
 
       return getUiField(field, keysTodo, feature, key);
     })
-    .filter((field) => field?.value);
+    .filter(Boolean);
 };
 
 const matchRestToFields = (keysTodo: KeysTodo, feature: Feature): UiField[] =>
