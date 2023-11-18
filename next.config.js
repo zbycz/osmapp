@@ -16,6 +16,7 @@ const languages = {
 };
 
 module.exports = withPWA({
+  output: process.env.NEXTJS_OUTPUT || undefined,
   //TODO fails with current webpack config. Probably needs to get rid of sentry? (@sentry/nextjs was not cool)
   // future: {
   //   webpack5: true,
