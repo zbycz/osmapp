@@ -45,6 +45,8 @@ export const RouteEditor = ({
     useMachine,
     isRouteSelected,
     getPixelPosition,
+    editorPosition,
+    scrollOffset,
   } = useClimbingContext();
 
   // @TODO rename? on point in selected route clicked
@@ -109,7 +111,16 @@ export const RouteEditor = ({
 
       <PointMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
       {lastPointOfSelectedRoute && (
-        <RouteFloatingMenuContainer position={lastPointOfSelectedRoute}>
+        <RouteFloatingMenuContainer
+          position={{
+            x:
+              lastPointOfSelectedRoute.x +
+              editorPosition.x +
+              scrollOffset.x +
+              25,
+            y: lastPointOfSelectedRoute.y + scrollOffset.y - 15,
+          }}
+        >
           <RouteFloatingMenu />
         </RouteFloatingMenuContainer>
       )}
