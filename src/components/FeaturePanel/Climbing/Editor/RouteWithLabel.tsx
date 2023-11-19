@@ -20,7 +20,14 @@ export const RouteWithLabel = ({ route, routeNumber, onPointClick }: Props) => {
   const { x, y } = getPixelPosition(route.path[0]);
 
   if (route.path.length === 1) {
-    return <StartPoint x={x} y={y} routeNumber={routeNumber} />;
+    return (
+      <StartPoint
+        onPointClick={onPointClick}
+        x={x}
+        y={y}
+        routeNumber={routeNumber}
+      />
+    );
   }
 
   return (

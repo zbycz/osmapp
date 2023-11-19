@@ -78,8 +78,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   const {
     setImageSize,
     imageSize,
-    isSelectedRouteEditable,
-    setIsSelectedRouteEditable,
+    // selectedRouteState,
     setRouteSelectedIndex,
     routes,
     routeSelectedIndex,
@@ -96,6 +95,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
     splitPaneHeight,
     setSplitPaneHeight,
     areRoutesVisible,
+    setMousePosition,
   } = useClimbingContext();
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   // const imageUrl = '/images/rock.png';
@@ -126,7 +126,6 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   const onDeleteWholeRouteClick = (deletedExistingRouteIndex: number) => {
     // @TODO co to je?
     machine.execute('deleteRoute');
-    setIsSelectedRouteEditable(false);
     setRouteSelectedIndex(null);
     updateRouteOnIndex(deletedExistingRouteIndex);
   };
@@ -147,7 +146,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   const onCanvasClick = (e) => {
     machine.execute('addPoint');
 
-    if (isSelectedRouteEditable) {
+    if (machine.currentStateName === 'extendRoute') {
       const newCoordinate = getPercentagePosition({
         x: scrollOffset.x + e.clientX - editorPosition.x,
         y: scrollOffset.y + e.clientY - editorPosition.y,
@@ -168,6 +167,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
 
   const onMove = (position: Position) => {
     if (isPointClicked) {
+      setMousePosition(null);
       machine.execute('dragPoint', { position });
 
       setIsPointMoving(true);
@@ -187,6 +187,10 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
           y: updatedPoint.y,
         })),
       }));
+    } else if (machine.currentStateName !== 'extendRoute') {
+      setMousePosition(null);
+    } else {
+      setMousePosition(position);
     }
   };
 

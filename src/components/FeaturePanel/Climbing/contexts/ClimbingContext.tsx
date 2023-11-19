@@ -8,7 +8,12 @@ type ImageSize = {
   height: number;
 };
 
-type State = 'editRoute' | 'init' | 'pointMenu' | 'routeSelected';
+type State =
+  | 'editRoute'
+  | 'extendRoute'
+  | 'init'
+  | 'pointMenu'
+  | 'routeSelected';
 
 type Action =
   | 'addPoint'
@@ -20,6 +25,7 @@ type Action =
   | 'deleteRoute'
   | 'dragPoint'
   | 'editRoute'
+  | 'extendRoute'
   | 'finishRoute'
   | 'routeSelect'
   | 'showPointMenu'
@@ -39,7 +45,6 @@ type ClimbingContextType = {
   imageSize: ImageSize;
   isPointMoving: boolean;
   isRouteSelected: (routeNumber: number) => boolean;
-  isSelectedRouteEditable: boolean;
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
@@ -50,7 +55,7 @@ type ClimbingContextType = {
   splitPaneHeight: number;
   setSplitPaneHeight: (height: number) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
-  setIsSelectedRouteEditable: (isSelectedRouteEditable: boolean) => void;
+
   setPointSelectedIndex: (pointSelectedIndex: number) => void;
   setRoutes: (routes: Array<ClimbingRoute>) => void;
   setRouteSelectedIndex: (routeSelectedIndex: number) => void;
@@ -62,6 +67,7 @@ type ClimbingContextType = {
   getPercentagePosition: (position: Position) => Position;
   useMachine: () => {
     currentState: Partial<Record<Action, ActionWithCallback>>;
+    currentStateName: State;
     execute: (desiredAction: Action, props?: unknown) => void;
   };
   scrollOffset: Position;
@@ -69,6 +75,8 @@ type ClimbingContextType = {
   findClosestPoint: (position: Position) => Position | null;
   areRoutesVisible: boolean;
   setAreRoutesVisible: (areRoutesVisible: boolean) => void;
+  mousePosition: Position;
+  setMousePosition: (mousePosition: Position | null) => void;
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
@@ -78,11 +86,12 @@ export const ClimbingContext = createContext<ClimbingContextType>({
     height: 0,
   },
   getPercentagePosition: () => null,
+  mousePosition: { x: 0, y: 0 },
+  setMousePosition: () => null,
   getPixelPosition: () => null,
   isPointClicked: false,
   isPointMoving: false,
   isRouteSelected: () => null,
-  isSelectedRouteEditable: false,
   pointSelectedIndex: null,
   routes: [],
   routeSelectedIndex: null,
@@ -90,14 +99,17 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setImageSize: () => null,
   setIsPointClicked: () => null,
   setIsPointMoving: () => null,
-  setIsSelectedRouteEditable: () => null,
   setPointSelectedIndex: () => null,
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
   setSplitPaneHeight: () => null,
   splitPaneHeight: 800,
   updateRouteOnIndex: () => null,
-  useMachine: () => ({ currentState: null, execute: () => null }),
+  useMachine: () => ({
+    currentState: null,
+    currentStateName: null,
+    execute: () => null,
+  }),
   scrollOffset: { x: 0, y: 0 },
   setScrollOffset: () => null,
   findClosestPoint: () => null,
@@ -107,12 +119,12 @@ export const ClimbingContext = createContext<ClimbingContextType>({
 
 export const ClimbingContextProvider = ({ children }) => {
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-  const [isSelectedRouteEditable, setIsSelectedRouteEditable] = useState(false);
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
   const [splitPaneHeight, setSplitPaneHeight] = useState<number>(800);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
+  const [mousePosition, setMousePosition] = useState<Position | null>(null);
   const [editorPosition, setEditorPosition] = useState<Position>({
     x: 0,
     y: 0,
@@ -153,22 +165,19 @@ export const ClimbingContextProvider = ({ children }) => {
     setPointSelectedIndex(null);
   };
 
-  const editRoute = () => {
-    setIsSelectedRouteEditable(true);
-  };
+  const editRoute = () => {};
+  const extendRoute = () => {};
 
   const finishRoute = () => {
-    setIsSelectedRouteEditable(false);
+    setMousePosition(null);
   };
 
   const createRoute = () => {
-    setIsSelectedRouteEditable(true);
     setRouteSelectedIndex(routes.length);
     setRoutes([...routes, emptyRoute]);
   };
 
   const deleteRoute = () => {
-    setIsSelectedRouteEditable(false);
     updateRouteOnIndex(routeSelectedIndex);
     setRouteSelectedIndex(null);
   };
@@ -272,7 +281,7 @@ export const ClimbingContextProvider = ({ children }) => {
 
   const states: Machine = {
     init: {
-      createRoute: { nextState: 'editRoute', callback: createRoute },
+      createRoute: { nextState: 'extendRoute', callback: createRoute },
       editRoute: { nextState: 'editRoute', callback: editRoute },
       routeSelect: {
         nextState: 'routeSelected',
@@ -281,11 +290,16 @@ export const ClimbingContextProvider = ({ children }) => {
     },
     editRoute: {
       deleteRoute: { nextState: 'init', callback: deleteRoute },
-      undoPoint: { nextState: 'editRoute', callback: undoPoint },
+
       dragPoint: { nextState: 'editRoute', callback: dragPoint },
       addPoint: { nextState: 'editRoute', callback: () => null },
       showPointMenu: { nextState: 'pointMenu' },
       finishRoute: { nextState: 'routeSelected', callback: finishRoute },
+      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
+    },
+    extendRoute: {
+      finishRoute: { nextState: 'routeSelected', callback: finishRoute },
+      undoPoint: { nextState: 'extendRoute', callback: undoPoint },
     },
     pointMenu: {
       changePointType: { nextState: 'editRoute', callback: changePointType },
@@ -294,7 +308,7 @@ export const ClimbingContextProvider = ({ children }) => {
       finishRoute: { nextState: 'routeSelected', callback: finishRoute },
     },
     routeSelected: {
-      createRoute: { nextState: 'editRoute', callback: createRoute },
+      createRoute: { nextState: 'extendRoute', callback: createRoute },
       routeSelect: {
         nextState: 'routeSelected',
         callback: routeSelect,
@@ -307,8 +321,10 @@ export const ClimbingContextProvider = ({ children }) => {
     },
   };
 
+  // @TODO rename
   const useMachine = () => ({
     currentState: states[currentState],
+    currentStateName: currentState,
     execute: (desiredAction: Action, props?: unknown) => {
       if (desiredAction in states[currentState]) {
         const { nextState, callback } = states[currentState][desiredAction];
@@ -340,7 +356,6 @@ export const ClimbingContextProvider = ({ children }) => {
     isPointClicked,
     isPointMoving,
     isRouteSelected,
-    isSelectedRouteEditable,
     pointSelectedIndex,
     routes,
     routeSelectedIndex,
@@ -348,7 +363,6 @@ export const ClimbingContextProvider = ({ children }) => {
     setImageSize,
     setIsPointClicked,
     setIsPointMoving,
-    setIsSelectedRouteEditable,
     setPointSelectedIndex,
     setRoutes,
     setRouteSelectedIndex,
@@ -361,6 +375,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setSplitPaneHeight,
     areRoutesVisible,
     setAreRoutesVisible,
+    mousePosition,
+    setMousePosition,
   };
 
   return (

@@ -14,11 +14,15 @@ type Props = {
 };
 
 export const Route = ({ route, routeNumber, onPointClick }: Props) => {
-  const { getPixelPosition, isSelectedRouteEditable, isRouteSelected } =
+  const { getPixelPosition, isRouteSelected, useMachine } =
     useClimbingContext();
 
+  const machine = useMachine();
   const isSelected = isRouteSelected(routeNumber);
-  const isThisRouteEditMode = isSelectedRouteEditable && isSelected;
+  const isThisRouteEditOrExtendMode =
+    (machine.currentStateName === 'extendRoute' ||
+      machine.currentStateName === 'editRoute') &&
+    isSelected;
   // move defs
   return (
     <>
@@ -45,14 +49,14 @@ export const Route = ({ route, routeNumber, onPointClick }: Props) => {
 
         return (
           <>
-            {isThisRouteEditMode && <PulsedPoint x={x} y={y} />}
+            {isThisRouteEditOrExtendMode && <PulsedPoint x={x} y={y} />}
             {isBoltVisible && (
               <Bolt x={position.x} y={position.y} isSelected={isSelected} />
             )}
             {isBelayVisible && (
               <Belay x={position.x} y={position.y} isSelected={isSelected} />
             )}
-            {isThisRouteEditMode && (
+            {isThisRouteEditOrExtendMode && (
               <Point
                 x={position.x}
                 y={position.y}

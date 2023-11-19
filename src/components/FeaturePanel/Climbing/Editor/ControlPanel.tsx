@@ -23,8 +23,7 @@ export const ControlPanel = ({
   onCreateClimbingRouteClick,
   onUndoClick,
 }) => {
-  const { routeSelectedIndex, isSelectedRouteEditable, routes, useMachine } =
-    useClimbingContext();
+  const { routeSelectedIndex, routes, useMachine } = useClimbingContext();
   const machine = useMachine();
 
   const onFinishClimbingRouteClick = () => {
@@ -33,8 +32,9 @@ export const ControlPanel = ({
 
   return (
     <Container>
-      {isSelectedRouteEditable ? (
-        <>
+      <>
+        {(machine.currentStateName === 'editRoute' ||
+          machine.currentStateName === 'extendRoute') && (
           <IconButton
             color="default"
             edge="end"
@@ -43,8 +43,10 @@ export const ControlPanel = ({
           >
             <CheckIcon fontSize="small" />
           </IconButton>
+        )}
 
-          {routes[routeSelectedIndex]?.path.length !== 0 && (
+        {machine.currentStateName === 'extendRoute' &&
+          routes[routeSelectedIndex]?.path.length !== 0 && (
             <IconButton
               color="default"
               edge="end"
@@ -54,7 +56,7 @@ export const ControlPanel = ({
               <UndoIcon fontSize="small" />
             </IconButton>
           )}
-          {/* <IconButton
+        {/* <IconButton
             color="default"
             edge="end"
             onClick={onDeleteExistingClimbingRouteClick}
@@ -62,32 +64,33 @@ export const ControlPanel = ({
           >
             <DeleteIcon fontSize="small" />
           </IconButton> */}
-        </>
-      ) : (
-        <>
-          <IconButton
-            color="default"
-            edge="end"
-            onClick={onCreateClimbingRouteClick}
-            title={t('climbingpanel.create_climbing_route')}
-          >
-            <ControlPointIcon fontSize="small" />
-          </IconButton>
+      </>
+      {machine.currentStateName !== 'editRoute' &&
+        machine.currentStateName !== 'extendRoute' && (
+          <>
+            <IconButton
+              color="default"
+              edge="end"
+              onClick={onCreateClimbingRouteClick}
+              title={t('climbingpanel.create_climbing_route')}
+            >
+              <ControlPointIcon fontSize="small" />
+            </IconButton>
 
-          {routeSelectedIndex !== null && (
-            <>
-              <IconButton
-                color="default"
-                edge="end"
-                onClick={onEditClimbingRouteClick}
-                title={t('climbingpanel.edit_climbing_route')}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </>
-          )}
-        </>
-      )}
+            {routeSelectedIndex !== null && (
+              <>
+                <IconButton
+                  color="default"
+                  edge="end"
+                  onClick={onEditClimbingRouteClick}
+                  title={t('climbingpanel.edit_climbing_route')}
+                >
+                  <EditIcon fontSize="small" />
+                </IconButton>
+              </>
+            )}
+          </>
+        )}
     </Container>
   );
 };

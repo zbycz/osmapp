@@ -3,9 +3,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Position } from '../types';
+import { PathWithBorder } from './PathWithBorder';
+import { MouseTrackingLine } from './MouseTrackingLine';
 
-const RouteLine = styled.path``;
-const RouteBorder = styled.path``;
 const InteractiveArea = styled.line``;
 const AddNewPoint = styled.circle`
   pointer-events: none;
@@ -23,7 +23,6 @@ export const RoutePath = ({ route, routeNumber }) => {
     lineIndex: 0,
   });
   const {
-    isSelectedRouteEditable,
     routeSelectedIndex,
     editorPosition,
     updateRouteOnIndex,
@@ -45,7 +44,7 @@ export const RoutePath = ({ route, routeNumber }) => {
   });
 
   const onMouseMove = (e, lineIndex: number) => {
-    if (isSelectedRouteEditable) {
+    if (machine.currentStateName === 'editRoute') {
       if (!isHovered) setIsHovered(true);
       setTempPointPosition({
         x: e.clientX - editorPosition.x,
@@ -59,13 +58,14 @@ export const RoutePath = ({ route, routeNumber }) => {
     // }
   };
   const onMouseEnter = () => {
-    if (isSelectedRouteEditable) {
+    console.log('__ENTER');
+    if (machine.currentStateName === 'editRoute') {
       setIsHovered(true);
     }
   };
 
   const onMouseLeave = () => {
-    if (isSelectedRouteEditable) {
+    if (machine.currentStateName === 'editRoute') {
       setIsHovered(false);
     }
   };
@@ -94,7 +94,7 @@ export const RoutePath = ({ route, routeNumber }) => {
   };
 
   const onMouseDown = (e) => {
-    // console.log('____onMouseDown');
+    console.log('____onMouseDown');
     // setIsDraggingPoint(true);
     onPointAdd();
 
@@ -103,21 +103,19 @@ export const RoutePath = ({ route, routeNumber }) => {
   };
 
   const isEditableSelectedRouteHovered =
-    !isPointMoving && isSelectedRouteEditable && isSelected && isHovered;
-  // console.log(
-  //   '________',
-  //   !isPointMoving,
-  //   isSelectedRouteEditable,
-  //   isSelected,
-  //   isHovered,
-  // );
+    !isPointMoving &&
+    machine.currentStateName === 'editRoute' &&
+    isSelected &&
+    isHovered;
 
   const isInteractionDisabled =
-    isSelectedRouteEditable && !isRouteSelected(routeNumber);
+    machine.currentStateName === 'extendRoute' && !isRouteSelected(routeNumber);
+
   const commonProps = isEditableSelectedRouteHovered
     ? { cursor: 'copy' }
     : {
         onClick: (e) => {
+          console.log('___//', isInteractionDisabled);
           if (isInteractionDisabled) return;
           machine.execute('routeSelect', { routeNumber });
           e.stopPropagation();
@@ -125,9 +123,16 @@ export const RoutePath = ({ route, routeNumber }) => {
         cursor: isInteractionDisabled ? undefined : 'pointer',
       };
 
+  console.log('___', isHovered);
   return (
     <>
-      <RouteBorder
+      <PathWithBorder
+        d={`M0 0 ${pointsInString}`}
+        isSelected={isSelected}
+        {...commonProps}
+      />
+
+      {/* <RouteBorder
         d={`M0 0 ${pointsInString}`}
         strokeWidth={5}
         stroke={isSelected ? 'white' : '#666'}
@@ -142,11 +147,11 @@ export const RoutePath = ({ route, routeNumber }) => {
         stroke={isSelected ? 'royalblue' : 'white'}
         strokeLinecap="round"
         fill="none"
-        markerEnd={
-          isSelected && isSelectedRouteEditable ? 'url(#triangle)' : null
-        }
+        // markerEnd={
+        //   isSelected && machine.currentStateName === 'extendRoute' ? 'url(#triangle)' : null
+        // }
         {...commonProps}
-      />
+      /> */}
       {route.path.length > 1 &&
         route.path.map(({ x, y }, index) => {
           const position1 = getPixelPosition({ x, y });
@@ -185,6 +190,9 @@ export const RoutePath = ({ route, routeNumber }) => {
           stroke="rgba(0,0,0,0.3)"
           r={5}
         />
+      )}
+      {machine.currentStateName === 'extendRoute' && !isHovered && (
+        <MouseTrackingLine routeNumber={routeNumber} />
       )}
     </>
   );

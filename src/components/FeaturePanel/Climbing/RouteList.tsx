@@ -56,8 +56,7 @@ const RenderRow = ({
     route[field] !== '' ? route[field] : <EmptyValue>?</EmptyValue>;
   const [open, setOpen] = React.useState(false);
 
-  const { isSelectedRouteEditable, useMachine, isRouteSelected } =
-    useClimbingContext();
+  const { useMachine, isRouteSelected } = useClimbingContext();
   const isSelected = isRouteSelected(index);
   const machine = useMachine();
   const onEditClick = () => {
@@ -136,7 +135,10 @@ const RenderRow = ({
           {index}
         </TableCell>
         <TableCell>
-          {isReadOnly || !isSelectedRouteEditable || !isSelected ? (
+          {isReadOnly ||
+          (machine.currentStateName !== 'editRoute' &&
+            machine.currentStateName !== 'extendRoute') ||
+          !isSelected ? (
             getText('name')
           ) : (
             <TextField
@@ -150,7 +152,10 @@ const RenderRow = ({
           )}
         </TableCell>
         <TableCell width={50}>
-          {isReadOnly || !isSelectedRouteEditable || !isSelected ? (
+          {isReadOnly ||
+          (machine.currentStateName !== 'editRoute' &&
+            machine.currentStateName !== 'extendRoute') ||
+          !isSelected ? (
             getText('difficulty')
           ) : (
             <TextField

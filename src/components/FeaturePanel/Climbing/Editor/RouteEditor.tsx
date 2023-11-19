@@ -4,6 +4,8 @@ import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PointMenu } from './PointMenu';
 import { RouteWithLabel } from './RouteWithLabel';
+import { RouteFloatingMenu } from './RouteFloatingMenu';
+import { Position } from '../types';
 
 const Svg = styled.svg<{
   hasEditableCursor: boolean;
@@ -21,6 +23,12 @@ const Svg = styled.svg<{
     `}
 `;
 
+const RouteFloatingMenuContainer = styled.div<{ position: Position }>`
+  position: absolute;
+  left: ${({ position }) => position.x}px;
+  top: ${({ position }) => position.y}px;
+`;
+
 // @TODO rename onFinishClimbingRouteClick?
 export const RouteEditor = ({
   routes,
@@ -32,11 +40,11 @@ export const RouteEditor = ({
 
   const {
     imageSize,
-    isSelectedRouteEditable,
     pointSelectedIndex,
     routeSelectedIndex,
     useMachine,
     isRouteSelected,
+    getPixelPosition,
   } = useClimbingContext();
 
   // @TODO rename? on point in selected route clicked
@@ -75,10 +83,19 @@ export const RouteEditor = ({
     { selected: [], rest: [] },
   );
 
+  const lastPointOfSelectedRoute =
+    routeSelectedIndex !== null && routes[routeSelectedIndex].path.length > 0
+      ? getPixelPosition(
+          routes[routeSelectedIndex].path[
+            routes[routeSelectedIndex].path.length - 1
+          ],
+        )
+      : null;
+
   return (
     <>
       <Svg
-        hasEditableCursor={isSelectedRouteEditable}
+        hasEditableCursor={machine.currentStateName === 'extendRoute'}
         onClick={(e) => {
           onClick(e);
         }}
@@ -91,6 +108,11 @@ export const RouteEditor = ({
       </Svg>
 
       <PointMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
+      {lastPointOfSelectedRoute && (
+        <RouteFloatingMenuContainer position={lastPointOfSelectedRoute}>
+          <RouteFloatingMenu />
+        </RouteFloatingMenuContainer>
+      )}
     </>
   );
 };

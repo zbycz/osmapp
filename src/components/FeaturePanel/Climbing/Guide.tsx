@@ -11,8 +11,8 @@ const GuideContainer = styled.div`
 
 export const Guide = () => {
   const [isGuideClosed, setIsGuideClosed] = useState(false);
-  const { isSelectedRouteEditable, routeSelectedIndex, routes } =
-    useClimbingContext();
+  const { routeSelectedIndex, routes, useMachine } = useClimbingContext();
+  const machine = useMachine();
 
   const handleClose = () => {
     setIsGuideClosed(true);
@@ -20,12 +20,24 @@ export const Guide = () => {
   return (
     <GuideContainer>
       <Snackbar
-        open={isSelectedRouteEditable && !isGuideClosed}
+        open={machine.currentStateName === 'extendRoute' && !isGuideClosed}
         // autoHideDuration={6000}
 
         anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
         // onClose={handleClose}
       >
+        {/* <Alert
+          onClose={handleClose}
+          severity="warning"
+          variant="filled"
+          action={
+            <Button color="inherit" size="small">
+              Add route to scheme
+            </Button>
+          }
+        >
+          Selected route is not in scheme
+        </Alert> */}
         <Alert onClose={handleClose} severity="info" variant="filled">
           {routes[routeSelectedIndex]?.path.length === 0
             ? t('climbingpanel.create_first_node')
