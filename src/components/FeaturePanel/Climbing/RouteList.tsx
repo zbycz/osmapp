@@ -63,6 +63,9 @@ const RenderRow = ({
     machine.execute('editRoute');
   };
 
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
   return (
     // <Row>
     //   <Number>{index}</Number>
@@ -146,6 +149,7 @@ const RenderRow = ({
               value={name}
               placeholder="No name"
               onChange={(e) => onRouteChange(e, index, 'name')}
+              onClick={stopPropagation}
               fullWidth
               variant="outlined"
             />
@@ -163,6 +167,7 @@ const RenderRow = ({
               value={difficulty}
               placeholder="6+"
               onChange={(e) => onRouteChange(e, index, 'difficulty')}
+              onClick={stopPropagation}
               variant="outlined"
             />
           )}
@@ -173,7 +178,7 @@ const RenderRow = ({
             <>
               {path.length === 0 && <GestureIcon fontSize="small" />}
               <IconButton
-                onClick={() => onEditClick()}
+                onClick={onEditClick}
                 color="primary"
                 size="small"
                 title="Edit"

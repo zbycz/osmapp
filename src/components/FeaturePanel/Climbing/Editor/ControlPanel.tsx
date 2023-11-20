@@ -9,7 +9,7 @@ import { t } from '../../../../services/intl';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 const Container = styled.div`
-  background: #222;
+  background: ${({ theme }) => theme.palette.background.default};
   border-radius: 8px;
   position: sticky;
   width: 44px;
