@@ -115,7 +115,6 @@ export const RoutePath = ({ route, routeNumber }) => {
     ? { cursor: 'copy' }
     : {
         onClick: (e) => {
-          console.log('___//', isInteractionDisabled);
           if (isInteractionDisabled) return;
           machine.execute('routeSelect', { routeNumber });
           e.stopPropagation();
@@ -123,7 +122,7 @@ export const RoutePath = ({ route, routeNumber }) => {
         cursor: isInteractionDisabled ? undefined : 'pointer',
       };
 
-  console.log('___', isHovered);
+  // console.log('___', isHovered);
   return (
     <>
       <PathWithBorder

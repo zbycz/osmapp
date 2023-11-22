@@ -3,6 +3,13 @@ export type PointType = 'belay' | 'bolt' | 'piton';
 export type Position = {
   x: number;
   y: number;
+  // units: 'percentage';
+};
+export type PositionPx = {
+  // @TODO
+  x: number;
+  y: number;
+  units: 'px';
 };
 
 export type PathPoints = Array<

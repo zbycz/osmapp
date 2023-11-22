@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckIcon from '@material-ui/icons/Check';
 import AddLocationIcon from '@material-ui/icons/AddLocation';
-import { Button } from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 export const RouteFloatingMenu = () => {
@@ -16,29 +16,21 @@ export const RouteFloatingMenu = () => {
   };
 
   return (
-    <>
-      {machine.currentStateName === 'extendRoute' && (
+    <ButtonGroup variant="contained" size="small" color="primary">
+      {machine.currentStateName === 'editRoute' && (
         <Button
-          color="primary"
-          variant="contained"
-          onClick={onFinishClimbingRouteClick}
-          size="small"
-          startIcon={<CheckIcon />}
+          onClick={onContinueClimbingRouteClick}
+          startIcon={<AddLocationIcon />}
         >
+          Extend
+        </Button>
+      )}
+      {(machine.currentStateName === 'editRoute' ||
+        machine.currentStateName === 'extendRoute') && (
+        <Button onClick={onFinishClimbingRouteClick} startIcon={<CheckIcon />}>
           Done
         </Button>
       )}
-      {machine.currentStateName === 'editRoute' && (
-        <Button
-          color="primary"
-          variant="contained"
-          onClick={onContinueClimbingRouteClick}
-          size="small"
-          startIcon={<AddLocationIcon />}
-        >
-          Continue
-        </Button>
-      )}
-    </>
+    </ButtonGroup>
   );
 };

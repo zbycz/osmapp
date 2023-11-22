@@ -28,6 +28,8 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     setIsPointMoving,
     setIsPointClicked,
     isPointMoving,
+    pointElement,
+    setPointElement,
   } = useClimbingContext();
 
   const onClick = (e) => {
@@ -50,6 +52,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
     setPointSelectedIndex(null);
     if (!isPointMoving) {
       onPointClick(e);
+      setPointElement(pointElement !== null ? null : e.currentTarget);
       setPointSelectedIndex(index);
     }
     setIsPointMoving(false);

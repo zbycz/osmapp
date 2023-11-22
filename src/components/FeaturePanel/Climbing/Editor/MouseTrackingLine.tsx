@@ -7,23 +7,35 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     mousePosition,
     isRouteSelected,
     getPixelPosition,
+    getPercentagePosition,
     routes,
-    editorPosition,
+    findClosestPoint,
+    getPositionWithoutEditor,
   } = useClimbingContext();
 
   const route = routes[routeNumber];
-  const lastPointPositionInPx = getPixelPosition(
-    route.path[route.path.length - 1],
+  const lastPoint = route.path[route.path.length - 1];
+  const lastPointPositionInPx = getPixelPosition(lastPoint);
+  const mousePositionWithEditorPosition =
+    getPositionWithoutEditor(mousePosition);
+  const closerMousePositionPoint = mousePositionWithEditorPosition
+    ? findClosestPoint(getPercentagePosition(mousePositionWithEditorPosition))
+    : null;
+  const mousePosition2 = closerMousePositionPoint
+    ? getPixelPosition(closerMousePositionPoint)
+    : mousePositionWithEditorPosition;
+  console.log(
+    '____',
+    mousePositionWithEditorPosition,
+    closerMousePositionPoint,
   );
 
   const isSelected = isRouteSelected(routeNumber);
   return (
-    mousePosition &&
+    mousePosition2 &&
     isSelected && (
       <PathWithBorder
-        d={`M ${lastPointPositionInPx.x} ${lastPointPositionInPx.y} L ${
-          mousePosition.x - editorPosition.x
-        } ${mousePosition.y - editorPosition.y}`}
+        d={`M ${lastPointPositionInPx.x} ${lastPointPositionInPx.y} L ${mousePosition2.x} ${mousePosition2.y}`}
         isSelected={isSelected}
         pointerEvents="none"
         opacity={0.4}

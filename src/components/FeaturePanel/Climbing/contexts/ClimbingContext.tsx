@@ -65,6 +65,7 @@ type ClimbingContextType = {
   ) => void;
   getPixelPosition: (position: Position) => Position;
   getPercentagePosition: (position: Position) => Position;
+  getPositionWithoutEditor: (position: Position) => Position;
   useMachine: () => {
     currentState: Partial<Record<Action, ActionWithCallback>>;
     currentStateName: State;
@@ -77,6 +78,9 @@ type ClimbingContextType = {
   setAreRoutesVisible: (areRoutesVisible: boolean) => void;
   mousePosition: Position;
   setMousePosition: (mousePosition: Position | null) => void;
+  pointElement: null | HTMLElement;
+  setPointElement: (pointElement: null | HTMLElement) => void;
+  moveRoute: (from: number, to: number) => void;
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
@@ -89,6 +93,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   mousePosition: { x: 0, y: 0 },
   setMousePosition: () => null,
   getPixelPosition: () => null,
+  getPositionWithoutEditor: () => null,
   isPointClicked: false,
   isPointMoving: false,
   isRouteSelected: () => null,
@@ -115,6 +120,9 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   findClosestPoint: () => null,
   areRoutesVisible: true,
   setAreRoutesVisible: () => null,
+  pointElement: null,
+  setPointElement: () => null,
+  moveRoute: () => null,
 });
 
 export const ClimbingContextProvider = ({ children }) => {
@@ -136,6 +144,8 @@ export const ClimbingContextProvider = ({ children }) => {
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
   const [currentState, setCurrentState] = useState<State>('init');
+  const [pointElement, setPointElement] =
+    React.useState<null | HTMLElement>(null);
 
   const updateRouteOnIndex = (
     routeIndex: number,
@@ -147,6 +157,20 @@ export const ClimbingContextProvider = ({ children }) => {
       callback,
     );
     setRoutes(updatedArray);
+  };
+
+  const moveRoute = (fromIndex: number, toIndex: number) => {
+    if (
+      fromIndex < routes.length &&
+      toIndex < routes.length &&
+      fromIndex >= 0 &&
+      toIndex >= 0
+    ) {
+      const itemToMove = routes[fromIndex];
+      const newArray = routes.filter((_, index) => index !== fromIndex); // Vytvoří nové pole bez přesunutého prvku
+      newArray.splice(toIndex, 0, itemToMove); // Vloží prvek na novou pozici
+      setRoutes(newArray);
+    }
   };
 
   const routeSelect = ({ routeNumber }) => {
@@ -199,6 +223,15 @@ export const ClimbingContextProvider = ({ children }) => {
     y: y / imageSize.height,
   });
 
+  const getPositionWithoutEditor = (position: Position | null) => {
+    if (!position) return null;
+    const { x, y } = position;
+    return {
+      x: x - editorPosition.x,
+      y: y - editorPosition.y,
+    };
+  };
+
   const dragPoint = () => {
     // setIsPointMoving(true);
     // const newCoordinate = getPercentagePosition({
@@ -246,7 +279,10 @@ export const ClimbingContextProvider = ({ children }) => {
     }
     return point2;
   };
+
+  // @TODO findCloserPoint
   const findClosestPoint = (checkedPosition: Position) => {
+    // PositionPx
     if (!routeSelectedIndex) return null;
 
     const STICKY_THRESHOLD = 0.015;
@@ -266,7 +302,14 @@ export const ClimbingContextProvider = ({ children }) => {
           checkedPosition.y + STICKY_THRESHOLD > point.y;
 
         if (isPointNearby) {
+          console.log(
+            '_____isPointNearby',
+            closestPoint,
+            checkedPosition,
+            point,
+          );
           if (closestPoint) {
+            // console.log('_____closestPoint');
             return getCloserPoint({
               to: checkedPosition,
               point1: closestPoint,
@@ -377,6 +420,10 @@ export const ClimbingContextProvider = ({ children }) => {
     setAreRoutesVisible,
     mousePosition,
     setMousePosition,
+    pointElement,
+    setPointElement,
+    moveRoute,
+    getPositionWithoutEditor,
   };
 
   return (

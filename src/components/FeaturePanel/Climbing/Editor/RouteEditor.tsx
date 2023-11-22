@@ -27,6 +27,7 @@ const RouteFloatingMenuContainer = styled.div<{ position: Position }>`
   position: absolute;
   left: ${({ position }) => position.x}px;
   top: ${({ position }) => position.y}px;
+  z-index: 10000;
 `;
 
 // @TODO rename onFinishClimbingRouteClick?
@@ -36,7 +37,7 @@ export const RouteEditor = ({
   onEditorMouseMove,
   onEditorTouchMove,
 }) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); // @TODO rename
+  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); // @TODO rename
 
   const {
     imageSize,
@@ -47,6 +48,8 @@ export const RouteEditor = ({
     getPixelPosition,
     editorPosition,
     scrollOffset,
+    pointElement,
+    setPointElement,
   } = useClimbingContext();
 
   // @TODO rename? on point in selected route clicked
@@ -58,11 +61,12 @@ export const RouteEditor = ({
 
     if (isDoubleClick && pointSelectedIndex === lastPointIndex) {
       machine.execute('finishRoute');
-      return;
+      
     }
 
-    setAnchorEl(anchorEl !== null ? null : event.currentTarget);
+    // setAnchorEl(anchorEl !== null ? null : event.currentTarget);
   };
+  // console.log('_______', pointElement);
 
   const sortedRoutes = routes.reduce(
     (acc, route, index) => {
@@ -86,7 +90,7 @@ export const RouteEditor = ({
   );
 
   const lastPointOfSelectedRoute =
-    routeSelectedIndex !== null && routes[routeSelectedIndex].path.length > 0
+    routeSelectedIndex !== null && routes[routeSelectedIndex]?.path.length > 0
       ? getPixelPosition(
           routes[routeSelectedIndex].path[
             routes[routeSelectedIndex].path.length - 1
@@ -109,7 +113,7 @@ export const RouteEditor = ({
         {sortedRoutes.selected}
       </Svg>
 
-      <PointMenu anchorEl={anchorEl} setAnchorEl={setAnchorEl} />
+      <PointMenu anchorEl={pointElement} setAnchorEl={setPointElement} />
       {lastPointOfSelectedRoute && (
         <RouteFloatingMenuContainer
           position={{
