@@ -43,7 +43,7 @@ export const RouteEditor = ({
     imageSize,
     pointSelectedIndex,
     routeSelectedIndex,
-    useMachine,
+    getMachine,
     isRouteSelected,
     getPixelPosition,
     editorPosition,
@@ -52,9 +52,11 @@ export const RouteEditor = ({
     setPointElement,
   } = useClimbingContext();
 
-  // @TODO rename? on point in selected route clicked
-  const machine = useMachine();
-  const onPointClick = (event: React.MouseEvent<HTMLElement>) => {
+  const machine = getMachine();
+
+  const onPointInSelectedRouteClick = (
+    event: React.MouseEvent<HTMLElement>,
+  ) => {
     machine.execute('showPointMenu');
     const isDoubleClick = event.detail === 2;
     const lastPointIndex = routes[routeSelectedIndex].path.length - 1;
@@ -73,7 +75,7 @@ export const RouteEditor = ({
         <RouteWithLabel
           route={route}
           routeNumber={index}
-          onPointClick={onPointClick}
+          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
         />
       );
 

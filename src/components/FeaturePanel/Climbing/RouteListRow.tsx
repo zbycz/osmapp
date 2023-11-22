@@ -32,9 +32,9 @@ export const RenderListRow = ({
     route[field] !== '' ? route[field] : <EmptyValue>?</EmptyValue>;
   const [open, setOpen] = React.useState(false);
 
-  const { useMachine, isRouteSelected } = useClimbingContext();
+  const { getMachine, isRouteSelected } = useClimbingContext();
   const isSelected = isRouteSelected(index);
-  const machine = useMachine();
+  const machine = getMachine();
   const onEditClick = () => {
     machine.execute('editRoute');
   };

@@ -11,8 +11,8 @@ const GuideContainer = styled.div`
 
 export const Guide = () => {
   const [isGuideClosed, setIsGuideClosed] = useState(false);
-  const { routeSelectedIndex, routes, useMachine } = useClimbingContext();
-  const machine = useMachine();
+  const { routeSelectedIndex, routes, getMachine } = useClimbingContext();
+  const machine = getMachine();
 
   const handleClose = () => {
     setIsGuideClosed(true);

@@ -9,7 +9,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     getPixelPosition,
     getPercentagePosition,
     routes,
-    findClosestPoint,
+    findCloserPoint,
     countPositionWith,
   } = useClimbingContext();
 
@@ -21,7 +21,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     mousePosition,
   );
   const closerMousePositionPoint = mousePositionWithEditorPosition
-    ? findClosestPoint(getPercentagePosition(mousePositionWithEditorPosition))
+    ? findCloserPoint(getPercentagePosition(mousePositionWithEditorPosition))
     : null;
   const mousePosition2 = closerMousePositionPoint
     ? getPixelPosition(closerMousePositionPoint)

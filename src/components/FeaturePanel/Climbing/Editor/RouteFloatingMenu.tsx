@@ -5,8 +5,8 @@ import { Button, ButtonGroup } from '@material-ui/core';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 export const RouteFloatingMenu = () => {
-  const { useMachine } = useClimbingContext();
-  const machine = useMachine();
+  const { getMachine } = useClimbingContext();
+  const machine = getMachine();
 
   const onFinishClimbingRouteClick = () => {
     machine.execute('finishRoute');

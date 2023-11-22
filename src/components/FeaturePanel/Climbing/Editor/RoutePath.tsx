@@ -32,11 +32,11 @@ export const RoutePath = ({ route, routeNumber }) => {
     // setIsPointMoving,
     getPixelPosition,
     getPercentagePosition,
-    useMachine,
+    getMachine,
     countPositionWith,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
-  const machine = useMachine();
+  const machine = getMachine();
   const pointsInString = route?.path.map(({ x, y }, index) => {
     const position = getPixelPosition({ x, y, units: 'percentage' });
 

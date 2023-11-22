@@ -23,10 +23,10 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
     pointSelectedIndex,
     setPointSelectedIndex,
     // updateRouteOnIndex,
-    useMachine,
+    getMachine,
     isPointMoving,
   } = useClimbingContext();
-  const machine = useMachine();
+  const machine = getMachine();
   const open = Boolean(anchorEl) && !isPointMoving;
   const id = open ? 'simple-popper' : undefined;
   const route = routes[routeSelectedIndex];

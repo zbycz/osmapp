@@ -85,11 +85,11 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
     updateRouteOnIndex,
     setEditorPosition,
     getPercentagePosition,
-    useMachine,
+    getMachine,
     isPointClicked,
     setIsPointMoving,
     pointSelectedIndex,
-    findClosestPoint,
+    findCloserPoint,
     splitPaneHeight,
     setSplitPaneHeight,
     areRoutesVisible,
@@ -103,7 +103,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   // const imageUrl =
   //   'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
   const imageRef = useRef(null);
-  const machine = useMachine();
+  const machine = getMachine();
 
   const handleImageLoad = () => {
     // const { clientHeight, clientWidth, left, top } = imageRef.current;
@@ -154,7 +154,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
         }),
       );
 
-      const closestPoint = findClosestPoint(newCoordinate);
+      const closestPoint = findCloserPoint(newCoordinate);
 
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
@@ -177,7 +177,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
         countPositionWith(['editorPosition'], position),
       );
 
-      const closestPoint = findClosestPoint(newCoordinate);
+      const closestPoint = findCloserPoint(newCoordinate);
 
       const updatedPoint = closestPoint ?? newCoordinate;
       updateRouteOnIndex(routeSelectedIndex, (route) => ({

@@ -18,7 +18,14 @@ const PointElement = styled.circle<{ isHovered: boolean }>`
     }`}
 `;
 
-export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
+export const Point = ({
+  x,
+  y,
+  onPointInSelectedRouteClick,
+  type,
+  index,
+  routeNumber,
+}) => {
   const isBelayVisible = type === 'belay';
   const [isHovered, setIsHovered] = useState(false);
   const {
@@ -51,7 +58,7 @@ export const Point = ({ x, y, onPointClick, type, index, routeNumber }) => {
   const onMouseUp = (e) => {
     setPointSelectedIndex(null);
     if (!isPointMoving) {
-      onPointClick(e);
+      onPointInSelectedRouteClick(e);
       setPointElement(pointElement !== null ? null : e.currentTarget);
       setPointSelectedIndex(index);
     }

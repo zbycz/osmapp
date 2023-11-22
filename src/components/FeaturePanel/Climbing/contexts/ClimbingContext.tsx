@@ -71,14 +71,14 @@ type ClimbingContextType = {
     entities: Array<CountPositionEntity>,
     position: PositionPx,
   ) => PositionPx;
-  useMachine: () => {
+  getMachine: () => {
     currentState: Partial<Record<Action, ActionWithCallback>>;
     currentStateName: State;
     execute: (desiredAction: Action, props?: unknown) => void;
   };
   scrollOffset: PositionPx;
   setScrollOffset: (scrollOffset: PositionPx) => void;
-  findClosestPoint: (position: Position) => Position | null;
+  findCloserPoint: (position: Position) => Position | null;
   areRoutesVisible: boolean;
   setAreRoutesVisible: (areRoutesVisible: boolean) => void;
   mousePosition: PositionPx;
@@ -115,14 +115,14 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setSplitPaneHeight: () => null,
   splitPaneHeight: 800,
   updateRouteOnIndex: () => null,
-  useMachine: () => ({
+  getMachine: () => ({
     currentState: null,
     currentStateName: null,
     execute: () => null,
   }),
   scrollOffset: { x: 0, y: 0, units: 'px' },
   setScrollOffset: () => null,
-  findClosestPoint: () => null,
+  findCloserPoint: () => null,
   areRoutesVisible: true,
   setAreRoutesVisible: () => null,
   pointElement: null,
@@ -232,7 +232,6 @@ export const ClimbingContextProvider = ({ children }) => {
     units: 'percentage',
   });
 
-  // @TODO use also on other places
   const countPositionWith = (
     entities: Array<CountPositionEntity>,
     position: PositionPx | null,
@@ -303,9 +302,7 @@ export const ClimbingContextProvider = ({ children }) => {
     return point2;
   };
 
-  // @TODO findCloserPoint
-  const findClosestPoint = (checkedPosition: Position) => {
-    // PositionPx
+  const findCloserPoint = (checkedPosition: Position) => {
     if (!routeSelectedIndex) return null;
 
     const STICKY_THRESHOLD = 0.015;
@@ -325,14 +322,7 @@ export const ClimbingContextProvider = ({ children }) => {
           checkedPosition.y + STICKY_THRESHOLD > point.y;
 
         if (isPointNearby) {
-          console.log(
-            '_____isPointNearby',
-            closestPoint,
-            checkedPosition,
-            point,
-          );
           if (closestPoint) {
-            // console.log('_____closestPoint');
             return getCloserPoint({
               to: checkedPosition,
               point1: closestPoint,
@@ -387,8 +377,7 @@ export const ClimbingContextProvider = ({ children }) => {
     },
   };
 
-  // @TODO rename
-  const useMachine = () => ({
+  const getMachine = () => ({
     currentState: states[currentState],
     currentStateName: currentState,
     execute: (desiredAction: Action, props?: unknown) => {
@@ -433,10 +422,10 @@ export const ClimbingContextProvider = ({ children }) => {
     setRoutes,
     setRouteSelectedIndex,
     updateRouteOnIndex,
-    useMachine,
+    getMachine,
     scrollOffset,
     setScrollOffset,
-    findClosestPoint,
+    findCloserPoint,
     splitPaneHeight,
     setSplitPaneHeight,
     areRoutesVisible,

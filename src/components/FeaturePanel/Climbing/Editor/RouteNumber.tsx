@@ -28,13 +28,13 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   const OUTLINE_WIDTH = 2;
   const HOVER_WIDTH = 10;
 
-  const { imageSize, isRouteSelected, useMachine } = useClimbingContext();
+  const { imageSize, isRouteSelected, getMachine } = useClimbingContext();
 
   const newY = // this shifts Y coordinate in case of too small photo
     y + RECT_Y_OFFSET + RECT_HEIGHT > imageSize.height
       ? imageSize.height - RECT_HEIGHT - OUTLINE_WIDTH
       : y + RECT_Y_OFFSET;
-  const machine = useMachine();
+  const machine = getMachine();
   const commonProps = {
     onClick: (e) => {
       machine.execute('routeSelect', { routeNumber });

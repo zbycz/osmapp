@@ -10,14 +10,18 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 type Props = {
   route: ClimbingRoute;
   routeNumber: number;
-  onPointClick: (event: React.MouseEvent<any>) => void;
+  onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
 };
 
-export const Route = ({ route, routeNumber, onPointClick }: Props) => {
-  const { getPixelPosition, isRouteSelected, useMachine } =
+export const Route = ({
+  route,
+  routeNumber,
+  onPointInSelectedRouteClick,
+}: Props) => {
+  const { getPixelPosition, isRouteSelected, getMachine } =
     useClimbingContext();
 
-  const machine = useMachine();
+  const machine = getMachine();
   const isSelected = isRouteSelected(routeNumber);
   const isThisRouteEditOrExtendMode =
     (machine.currentStateName === 'extendRoute' ||
@@ -61,7 +65,7 @@ export const Route = ({ route, routeNumber, onPointClick }: Props) => {
                 x={position.x}
                 y={position.y}
                 type={type}
-                onPointClick={onPointClick}
+                onPointInSelectedRouteClick={onPointInSelectedRouteClick}
                 index={index}
                 routeNumber={routeNumber}
               />

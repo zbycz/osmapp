@@ -6,7 +6,6 @@ export type Position = {
   units: 'percentage';
 };
 export type PositionPx = {
-  // @TODO
   x: number;
   y: number;
   units: 'px';

@@ -23,8 +23,8 @@ export const ControlPanel = ({
   onCreateClimbingRouteClick,
   onUndoClick,
 }) => {
-  const { routeSelectedIndex, routes, useMachine } = useClimbingContext();
-  const machine = useMachine();
+  const { routeSelectedIndex, routes, getMachine } = useClimbingContext();
+  const machine = getMachine();
 
   const onFinishClimbingRouteClick = () => {
     machine.execute('finishRoute');

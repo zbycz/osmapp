@@ -8,7 +8,7 @@ type Props = {
   x: number;
   y: number;
   routeNumber: number;
-  onPointClick: (event: React.MouseEvent<any>) => void;
+  onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
 };
 
 const NonEditablePoint = ({ x, y, isSelected }) => (
@@ -30,10 +30,15 @@ const NonEditablePoint = ({ x, y, isSelected }) => (
   </>
 );
 
-export const StartPoint = ({ x, y, routeNumber, onPointClick }: Props) => {
-  const { isRouteSelected, useMachine } = useClimbingContext();
+export const StartPoint = ({
+  x,
+  y,
+  routeNumber,
+  onPointInSelectedRouteClick,
+}: Props) => {
+  const { isRouteSelected, getMachine } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
-  const machine = useMachine();
+  const machine = getMachine();
 
   return (
     <>
@@ -41,7 +46,7 @@ export const StartPoint = ({ x, y, routeNumber, onPointClick }: Props) => {
         <Point
           x={x}
           y={y}
-          onPointClick={onPointClick}
+          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
           index={0}
           routeNumber={routeNumber}
           type={undefined}
