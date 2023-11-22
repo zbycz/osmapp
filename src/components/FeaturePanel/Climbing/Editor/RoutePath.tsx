@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { Position } from '../types';
+import { PositionPx } from '../types';
 import { PathWithBorder } from './PathWithBorder';
 import { MouseTrackingLine } from './MouseTrackingLine';
 
@@ -16,15 +16,15 @@ export const RoutePath = ({ route, routeNumber }) => {
   const [isHovered, setIsHovered] = useState(false);
   // const [isDraggingPoint, setIsDraggingPoint] = useState(false);
   const [tempPointPosition, setTempPointPosition] = useState<
-    Position & { lineIndex: number }
+    PositionPx & { lineIndex: number }
   >({
     x: 0,
     y: 0,
+    units: 'px',
     lineIndex: 0,
   });
   const {
     routeSelectedIndex,
-    editorPosition,
     updateRouteOnIndex,
     isPointMoving,
     isRouteSelected,
@@ -33,12 +33,12 @@ export const RoutePath = ({ route, routeNumber }) => {
     getPixelPosition,
     getPercentagePosition,
     useMachine,
-    scrollOffset,
+    countPositionWith,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = useMachine();
   const pointsInString = route?.path.map(({ x, y }, index) => {
-    const position = getPixelPosition({ x, y });
+    const position = getPixelPosition({ x, y, units: 'percentage' });
 
     return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
   });
@@ -47,8 +47,11 @@ export const RoutePath = ({ route, routeNumber }) => {
     if (machine.currentStateName === 'editRoute') {
       if (!isHovered) setIsHovered(true);
       setTempPointPosition({
-        x: e.clientX - editorPosition.x,
-        y: e.clientY - editorPosition.y,
+        ...countPositionWith(['editorPosition'], {
+          x: e.clientX,
+          y: e.clientY,
+          units: 'px',
+        }),
         lineIndex,
       });
     }
@@ -74,10 +77,11 @@ export const RoutePath = ({ route, routeNumber }) => {
   //   setIsDraggingPoint(false);
   // };
 
-  const hoveredPosition = {
-    x: scrollOffset.x + tempPointPosition.x,
-    y: scrollOffset.y + tempPointPosition.y,
-  };
+  const hoveredPosition = countPositionWith(['scrollOffset'], {
+    x: tempPointPosition.x,
+    y: tempPointPosition.y,
+    units: 'px',
+  });
 
   const onPointAdd = () => {
     machine.execute('addPoint');
@@ -153,14 +157,17 @@ export const RoutePath = ({ route, routeNumber }) => {
       /> */}
       {route.path.length > 1 &&
         route.path.map(({ x, y }, index) => {
-          const position1 = getPixelPosition({ x, y });
+          const position1 = getPixelPosition({ x, y, units: 'percentage' });
 
           if (
             route?.path &&
             index < route.path.length - 1 &&
             !isInteractionDisabled
           ) {
-            const position2 = getPixelPosition(route.path[index + 1]);
+            const position2 = getPixelPosition({
+              ...route.path[index + 1],
+              units: 'percentage',
+            });
             return (
               <InteractiveArea
                 stroke="transparent"

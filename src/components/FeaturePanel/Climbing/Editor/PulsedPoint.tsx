@@ -32,7 +32,7 @@ const PulsedPointElement = styled.circle`
 
 export const PulsedPoint = ({ x, y }) => {
   const { getPixelPosition } = useClimbingContext();
-  const position = getPixelPosition({ x, y });
+  const position = getPixelPosition({ x, y, units: 'percentage' });
 
   return (
     <g transform={`translate(${position.x},${position.y})`}>

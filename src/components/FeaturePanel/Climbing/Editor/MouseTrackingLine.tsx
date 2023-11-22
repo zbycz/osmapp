@@ -10,25 +10,22 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     getPercentagePosition,
     routes,
     findClosestPoint,
-    getPositionWithoutEditor,
+    countPositionWith,
   } = useClimbingContext();
 
   const route = routes[routeNumber];
   const lastPoint = route.path[route.path.length - 1];
   const lastPointPositionInPx = getPixelPosition(lastPoint);
-  const mousePositionWithEditorPosition =
-    getPositionWithoutEditor(mousePosition);
+  const mousePositionWithEditorPosition = countPositionWith(
+    ['editorPosition'],
+    mousePosition,
+  );
   const closerMousePositionPoint = mousePositionWithEditorPosition
     ? findClosestPoint(getPercentagePosition(mousePositionWithEditorPosition))
     : null;
   const mousePosition2 = closerMousePositionPoint
     ? getPixelPosition(closerMousePositionPoint)
     : mousePositionWithEditorPosition;
-  console.log(
-    '____',
-    mousePositionWithEditorPosition,
-    closerMousePositionPoint,
-  );
 
   const isSelected = isRouteSelected(routeNumber);
   return (

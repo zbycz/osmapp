@@ -45,7 +45,7 @@ export const Route = ({ route, routeNumber, onPointClick }: Props) => {
       {route.path.map(({ x, y, type }, index) => {
         const isBoltVisible = type === 'bolt';
         const isBelayVisible = type === 'belay';
-        const position = getPixelPosition({ x, y });
+        const position = getPixelPosition({ x, y, units: 'percentage' });
 
         return (
           <>

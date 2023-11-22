@@ -8,7 +8,7 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { ControlPanel } from './Editor/ControlPanel';
 import { RouteList } from './RouteList';
 import { Guide } from './Guide';
-import { Position } from './types';
+import { PositionPx } from './types';
 import { updateElementOnIndex } from './utils';
 
 type Props = {
@@ -79,23 +79,22 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
     setImageSize,
     imageSize,
     // selectedRouteState,
-    setRouteSelectedIndex,
+    // setRouteSelectedIndex,
     routes,
     routeSelectedIndex,
     updateRouteOnIndex,
     setEditorPosition,
-    editorPosition,
     getPercentagePosition,
     useMachine,
     isPointClicked,
     setIsPointMoving,
     pointSelectedIndex,
-    scrollOffset,
     findClosestPoint,
     splitPaneHeight,
     setSplitPaneHeight,
     areRoutesVisible,
     setMousePosition,
+    countPositionWith,
   } = useClimbingContext();
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   // const imageUrl = '/images/rock.png';
@@ -116,19 +115,19 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
     const { clientHeight, clientWidth } = imageRef.current;
     const { left, top } = imageRef.current.getBoundingClientRect();
     setImageSize({ width: clientWidth, height: clientHeight });
-    setEditorPosition({ x: left, y: top });
+    setEditorPosition({ x: left, y: top, units: 'px' });
   };
 
   const onCreateClimbingRouteClick = () => {
     machine.execute('createRoute');
   };
 
-  const onDeleteWholeRouteClick = (deletedExistingRouteIndex: number) => {
-    // @TODO co to je?
-    machine.execute('deleteRoute');
-    setRouteSelectedIndex(null);
-    updateRouteOnIndex(deletedExistingRouteIndex);
-  };
+  // const onDeleteWholeRouteClick = (deletedExistingRouteIndex: number) => {
+  //   // @TODO co to je?
+  //   machine.execute('deleteRoute');
+  //   setRouteSelectedIndex(null);
+  //   updateRouteOnIndex(deletedExistingRouteIndex);
+  // };
 
   const onEditClimbingRouteClick = () => {
     machine.execute('editRoute');
@@ -147,10 +146,13 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
     machine.execute('addPoint');
 
     if (machine.currentStateName === 'extendRoute') {
-      const newCoordinate = getPercentagePosition({
-        x: scrollOffset.x + e.clientX - editorPosition.x,
-        y: scrollOffset.y + e.clientY - editorPosition.y,
-      });
+      const newCoordinate = getPercentagePosition(
+        countPositionWith(['scrollOffset', 'editorPosition'], {
+          x: e.clientX,
+          y: e.clientY,
+          units: 'px',
+        }),
+      );
 
       const closestPoint = findClosestPoint(newCoordinate);
 
@@ -165,16 +167,15 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
     machine.execute('cancelRouteSelection');
   };
 
-  const onMove = (position: Position) => {
+  const onMove = (position: PositionPx) => {
     if (isPointClicked) {
       setMousePosition(null);
       machine.execute('dragPoint', { position });
 
       setIsPointMoving(true);
-      const newCoordinate = getPercentagePosition({
-        x: position.x - editorPosition.x,
-        y: position.y - editorPosition.y,
-      });
+      const newCoordinate = getPercentagePosition(
+        countPositionWith(['editorPosition'], position),
+      );
 
       const closestPoint = findClosestPoint(newCoordinate);
 
@@ -195,16 +196,17 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   };
 
   const onTouchMove = (e) => {
-    onMove({ x: e.touches[0].clientX, y: e.touches[0].clientY });
+    onMove({ x: e.touches[0].clientX, y: e.touches[0].clientY, units: 'px' });
   };
 
   const onMouseMove = (e) => {
-    const hoveredPosition = {
-      x: scrollOffset.x + e.clientX,
-      y: scrollOffset.y + e.clientY,
-    };
-
-    onMove(hoveredPosition);
+    onMove(
+      countPositionWith(['scrollOffset'], {
+        x: e.clientX,
+        y: e.clientY,
+        units: 'px',
+      }),
+    );
   };
 
   const onUndoClick = () => {
@@ -276,7 +278,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
 
         <RouteList
           isReadOnly={isReadOnly}
-          onDeleteExistingRouteClick={onDeleteWholeRouteClick}
+          // onDeleteExistingRouteClick={onDeleteWholeRouteClick}
         />
       </SplitPane>
       <DialogIcon>

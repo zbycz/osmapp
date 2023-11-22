@@ -17,7 +17,7 @@ export const RouteWithLabel = ({ route, routeNumber, onPointClick }: Props) => {
 
   const { getPixelPosition } = useClimbingContext();
 
-  const { x, y } = getPixelPosition(route.path[0]);
+  const { x, y } = getPixelPosition({ ...route.path[0], units: 'percentage' });
 
   if (route.path.length === 1) {
     return (

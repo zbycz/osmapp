@@ -3,7 +3,7 @@ export type PointType = 'belay' | 'bolt' | 'piton';
 export type Position = {
   x: number;
   y: number;
-  // units: 'percentage';
+  units: 'percentage';
 };
 export type PositionPx = {
   // @TODO

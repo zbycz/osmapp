@@ -61,7 +61,6 @@ export const RouteEditor = ({
 
     if (isDoubleClick && pointSelectedIndex === lastPointIndex) {
       machine.execute('finishRoute');
-      
     }
 
     // setAnchorEl(anchorEl !== null ? null : event.currentTarget);

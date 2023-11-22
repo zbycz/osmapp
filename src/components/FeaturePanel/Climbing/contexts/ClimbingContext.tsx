@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { ClimbingRoute, Position } from '../types';
+import { ClimbingRoute, Position, PositionPx } from '../types';
 import { updateElementOnIndex } from '../utils';
 import { emptyRoute } from '../utils/emptyRoute';
 
@@ -36,12 +36,14 @@ type ActionWithCallback = {
   callback?: (props: unknown) => void;
 };
 
+type CountPositionEntity = 'editorPosition' | 'scrollOffset';
+
 type Machine = {
   [key in State]: Partial<Record<Action, ActionWithCallback>>;
 };
 
 type ClimbingContextType = {
-  editorPosition: Position;
+  editorPosition: PositionPx;
   imageSize: ImageSize;
   isPointMoving: boolean;
   isRouteSelected: (routeNumber: number) => boolean;
@@ -50,7 +52,7 @@ type ClimbingContextType = {
   routeSelectedIndex: number;
   isPointClicked: boolean;
   setIsPointClicked: (isPointClicked: boolean) => void;
-  setEditorPosition: (position: Position) => void;
+  setEditorPosition: (position: PositionPx) => void;
   setImageSize: (ImageSize) => void;
   splitPaneHeight: number;
   setSplitPaneHeight: (height: number) => void;
@@ -63,37 +65,40 @@ type ClimbingContextType = {
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
   ) => void;
-  getPixelPosition: (position: Position) => Position;
-  getPercentagePosition: (position: Position) => Position;
-  getPositionWithoutEditor: (position: Position) => Position;
+  getPixelPosition: (position: Position) => PositionPx;
+  getPercentagePosition: (position: PositionPx) => Position;
+  countPositionWith: (
+    entities: Array<CountPositionEntity>,
+    position: PositionPx,
+  ) => PositionPx;
   useMachine: () => {
     currentState: Partial<Record<Action, ActionWithCallback>>;
     currentStateName: State;
     execute: (desiredAction: Action, props?: unknown) => void;
   };
-  scrollOffset: Position;
-  setScrollOffset: (scrollOffset: Position) => void;
+  scrollOffset: PositionPx;
+  setScrollOffset: (scrollOffset: PositionPx) => void;
   findClosestPoint: (position: Position) => Position | null;
   areRoutesVisible: boolean;
   setAreRoutesVisible: (areRoutesVisible: boolean) => void;
-  mousePosition: Position;
-  setMousePosition: (mousePosition: Position | null) => void;
+  mousePosition: PositionPx;
+  setMousePosition: (mousePosition: PositionPx | null) => void;
   pointElement: null | HTMLElement;
   setPointElement: (pointElement: null | HTMLElement) => void;
   moveRoute: (from: number, to: number) => void;
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
-  editorPosition: { x: 0, y: 0 },
+  editorPosition: { x: 0, y: 0, units: 'px' },
   imageSize: {
     width: 0,
     height: 0,
   },
   getPercentagePosition: () => null,
-  mousePosition: { x: 0, y: 0 },
+  mousePosition: { x: 0, y: 0, units: 'px' },
   setMousePosition: () => null,
   getPixelPosition: () => null,
-  getPositionWithoutEditor: () => null,
+  countPositionWith: () => null,
   isPointClicked: false,
   isPointMoving: false,
   isRouteSelected: () => null,
@@ -115,7 +120,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
     currentStateName: null,
     execute: () => null,
   }),
-  scrollOffset: { x: 0, y: 0 },
+  scrollOffset: { x: 0, y: 0, units: 'px' },
   setScrollOffset: () => null,
   findClosestPoint: () => null,
   areRoutesVisible: true,
@@ -132,14 +137,16 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
-  const [mousePosition, setMousePosition] = useState<Position | null>(null);
-  const [editorPosition, setEditorPosition] = useState<Position>({
+  const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
+  const [editorPosition, setEditorPosition] = useState<PositionPx>({
     x: 0,
     y: 0,
+    units: 'px',
   });
-  const [scrollOffset, setScrollOffset] = useState<Position>({
+  const [scrollOffset, setScrollOffset] = useState<PositionPx>({
     x: 0,
     y: 0,
+    units: 'px',
   });
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
@@ -213,23 +220,39 @@ export const ClimbingContextProvider = ({ children }) => {
     }));
   };
 
-  const getPixelPosition = ({ x, y }: Position) => ({
+  const getPixelPosition = ({ x, y }: Position): PositionPx => ({
     x: imageSize.width * x,
     y: imageSize.height * y,
+    units: 'px',
   });
 
-  const getPercentagePosition = ({ x, y }: Position) => ({
+  const getPercentagePosition = ({ x, y }: PositionPx): Position => ({
     x: x / imageSize.width,
     y: y / imageSize.height,
+    units: 'percentage',
   });
 
-  const getPositionWithoutEditor = (position: Position | null) => {
+  // @TODO use also on other places
+  const countPositionWith = (
+    entities: Array<CountPositionEntity>,
+    position: PositionPx | null,
+  ): PositionPx => {
     if (!position) return null;
-    const { x, y } = position;
-    return {
-      x: x - editorPosition.x,
-      y: y - editorPosition.y,
-    };
+
+    return entities.reduce((acc, entity) => {
+      if (entity === 'editorPosition') {
+        return {
+          x: acc.x - editorPosition.x,
+          y: acc.y - editorPosition.y,
+          units: 'px',
+        };
+      }
+      return {
+        x: scrollOffset.x + acc.x,
+        y: scrollOffset.y + acc.y,
+        units: 'px',
+      };
+    }, position);
   };
 
   const dragPoint = () => {
@@ -423,7 +446,7 @@ export const ClimbingContextProvider = ({ children }) => {
     pointElement,
     setPointElement,
     moveRoute,
-    getPositionWithoutEditor,
+    countPositionWith,
   };
 
   return (
