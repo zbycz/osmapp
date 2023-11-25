@@ -1,86 +1,93 @@
 import React from 'react';
-import styled from 'styled-components';
-import {
-  Button,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from '@material-ui/core';
+import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { emptyRoute } from './utils/emptyRoute';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import Dnd from './Dnd';
+import { RouteListDndContent } from './RouteListDndContent';
 
 // type Item = {
 //   id: number;
 //   content: React.ReactNode;
 // };
 
-type Props = {
-  // onDeleteExistingRouteClick: (deletedExistingRouteIndex: number) => void;
-  isReadOnly: boolean;
-};
-const Container = styled.div`
-  flex: 1;
-  overflow: auto;
-  padding-top: 10px;
-`;
+// type Props = {
+//   onDeleteExistingRouteClick: (deletedExistingRouteIndex: number) => void;
+// };
 
-// const Row = styled.div`
-//   display: flex;
-// `;
-// const Number = styled.div``;
-// const Name = styled.div``;
-// const Difficulty = styled.div``;
-// const Actions = styled.div``;
-
-export const RouteList = ({
-  // onDeleteExistingRouteClick,
-  isReadOnly = false,
-}: Props) => {
-  const { routes, setRoutes } = useClimbingContext();
+// onDeleteExistingRouteClick,
+export const RouteList = () => {
+  const {
+    routes,
+    setRoutes,
+    isEditMode,
+    setRouteSelectedIndex,
+    routeSelectedIndex,
+  } = useClimbingContext();
 
   const onNewRouteCreate = () => {
     setRoutes([...routes, emptyRoute]);
   };
 
-  if (isReadOnly && routes.length === 0) return null;
+  React.useEffect(() => {
+    const downHandler = (e) => {
+      if (e.key === 'ArrowDown') {
+        const nextRoute = routes[routeSelectedIndex + 1];
+        if (nextRoute) {
+          setRouteSelectedIndex(routeSelectedIndex + 1);
+        }
+      }
+      if (e.key === 'ArrowUp') {
+        const prevRoute = routes[routeSelectedIndex - 1];
+        if (prevRoute) {
+          setRouteSelectedIndex(routeSelectedIndex - 1);
+        }
+      }
+
+      e.preventDefault();
+    };
+
+    window.addEventListener('keydown', downHandler);
+
+    return () => {
+      window.removeEventListener('keydown', downHandler);
+    };
+  }, [routeSelectedIndex, routes]);
+
+  if (!isEditMode && routes.length === 0) return null;
 
   return (
-    <Container>
-      <TableContainer>
-        <Table size="small">
-          {!isReadOnly && (
-            <caption>
-              {' '}
-              <Button
-                onClick={onNewRouteCreate}
-                color="primary"
-                variant="text"
-                size="small"
-                startIcon={<AddIcon />}
-              >
-                Add new route
-              </Button>
-            </caption>
-          )}
-          <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>N°</TableCell>
-              <TableCell>Route name</TableCell>
-              <TableCell align="right">Difficulty</TableCell>
-              {!isReadOnly && <TableCell align="right">&nbsp;</TableCell>}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <Dnd isReadOnly={isReadOnly} />
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Container>
+    <>
+      <RouteListDndContent />
+      <Button
+        onClick={onNewRouteCreate}
+        color="primary"
+        variant="text"
+        size="small"
+        startIcon={<AddIcon />}
+      >
+        Add new route
+      </Button>
+    </>
   );
+
+  // return (
+  //   <Container>
+  //     <TableContainer>
+  //       <Table size="small">
+  //         <TableHead>
+  //           <TableRow>
+  //             <TableCell />
+  //             <TableCell>N°</TableCell>
+  //             <TableCell>Route name</TableCell>
+  //             <TableCell align="right">Difficulty</TableCell>
+  //             {isEditMode && <TableCell align="right">&nbsp;</TableCell>}
+  //           </TableRow>
+  //         </TableHead>
+  //         <TableBody>
+  //           <RouteListDndContent />
+  //         </TableBody>
+  //       </Table>
+  //     </TableContainer>
+  //   </Container>
+  // );
 };

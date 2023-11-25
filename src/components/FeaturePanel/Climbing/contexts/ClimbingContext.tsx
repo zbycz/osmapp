@@ -16,7 +16,8 @@ type State =
   | 'routeSelected';
 
 type Action =
-  | 'addPoint'
+  | 'addPointInBetween'
+  | 'addPointToEnd'
   | 'cancelPointMenu'
   | 'cancelRouteSelection'
   | 'changePointType'
@@ -86,6 +87,8 @@ type ClimbingContextType = {
   pointElement: null | HTMLElement;
   setPointElement: (pointElement: null | HTMLElement) => void;
   moveRoute: (from: number, to: number) => void;
+  isEditMode: boolean;
+  setIsEditMode: (isEditMode: boolean) => void;
 };
 
 export const ClimbingContext = createContext<ClimbingContextType>({
@@ -109,6 +112,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setImageSize: () => null,
   setIsPointClicked: () => null,
   setIsPointMoving: () => null,
+  isEditMode: false,
+  setIsEditMode: () => null,
   setPointSelectedIndex: () => null,
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
@@ -131,6 +136,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
 });
 
 export const ClimbingContextProvider = ({ children }) => {
+  const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
   const [splitPaneHeight, setSplitPaneHeight] = useState<number>(800);
@@ -335,9 +341,42 @@ export const ClimbingContextProvider = ({ children }) => {
       }, null);
   };
 
+  const addPointInBetween = ({ hoveredPosition, tempPointPosition }) => {
+    const position = getPercentagePosition(hoveredPosition);
+
+    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
+      ...currentRoute,
+      path: [
+        ...currentRoute.path.slice(0, tempPointPosition.lineIndex + 1),
+        position,
+        ...currentRoute.path.slice(tempPointPosition.lineIndex + 1),
+      ],
+    }));
+  };
+
+  const addPointToEnd = (props: { position: PositionPx }) => {
+    if (!props) return;
+    const { x, y } = props.position;
+    const newCoordinate = getPercentagePosition(
+      countPositionWith(['scrollOffset', 'editorPosition'], {
+        x,
+        y,
+        units: 'px',
+      }),
+    );
+
+    const closestPoint = findCloserPoint(newCoordinate);
+
+    updateRouteOnIndex(routeSelectedIndex, (route) => ({
+      ...route,
+      path: [...(route?.path ?? []), closestPoint ?? newCoordinate],
+    }));
+  };
+
   const states: Machine = {
     init: {
       createRoute: { nextState: 'extendRoute', callback: createRoute },
+      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
       editRoute: { nextState: 'editRoute', callback: editRoute },
       routeSelect: {
         nextState: 'routeSelected',
@@ -346,9 +385,11 @@ export const ClimbingContextProvider = ({ children }) => {
     },
     editRoute: {
       deleteRoute: { nextState: 'init', callback: deleteRoute },
-
       dragPoint: { nextState: 'editRoute', callback: dragPoint },
-      addPoint: { nextState: 'editRoute', callback: () => null },
+      addPointInBetween: {
+        nextState: 'editRoute',
+        callback: addPointInBetween,
+      },
       showPointMenu: { nextState: 'pointMenu' },
       finishRoute: { nextState: 'routeSelected', callback: finishRoute },
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
@@ -356,6 +397,10 @@ export const ClimbingContextProvider = ({ children }) => {
     extendRoute: {
       finishRoute: { nextState: 'routeSelected', callback: finishRoute },
       undoPoint: { nextState: 'extendRoute', callback: undoPoint },
+      addPointToEnd: {
+        nextState: 'extendRoute',
+        callback: addPointToEnd,
+      },
     },
     pointMenu: {
       changePointType: { nextState: 'editRoute', callback: changePointType },
@@ -374,6 +419,7 @@ export const ClimbingContextProvider = ({ children }) => {
         callback: cancelRouteSelection,
       },
       editRoute: { nextState: 'editRoute', callback: editRoute },
+      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
     },
   };
 
@@ -436,6 +482,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setPointElement,
     moveRoute,
     countPositionWith,
+    isEditMode,
+    setIsEditMode,
   };
 
   return (

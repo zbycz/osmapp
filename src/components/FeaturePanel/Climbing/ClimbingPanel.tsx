@@ -5,7 +5,9 @@ import {
   Button,
   Dialog,
   DialogContent,
+  FormControlLabel,
   IconButton,
+  Switch,
   Toolbar,
   Typography,
 } from '@material-ui/core';
@@ -35,9 +37,20 @@ export const ClimbingPanel = () => {
     isPointMoving,
     areRoutesVisible,
     setAreRoutesVisible,
+    setIsEditMode,
+    getMachine,
   } = useClimbingContext();
-
-  const onFullscreenDialogOpen = () => setIsFullscreenDialogOpened(true);
+  const machine = getMachine();
+  const onFullscreenDialogOpen = (
+    mode: 'editMode' | 'readOnly' = 'readOnly',
+  ) => {
+    if (mode === 'editMode') {
+      setIsEditMode(true);
+    } else {
+      setIsEditMode(false);
+    }
+    setIsFullscreenDialogOpened(true);
+  };
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
   const onScroll = (e) => {
     setScrollOffset({ x: e.target.scrollLeft, y: e.target.scrollTop });
@@ -46,6 +59,13 @@ export const ClimbingPanel = () => {
   const VisibilityIconElement = areRoutesVisible
     ? VisibilityOffIcon
     : VisibilityIcon;
+
+  const onEditChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsEditMode(event.target.checked);
+    if (event.target.checked) {
+      machine.execute('editRoute');
+    }
+  };
   return (
     <>
       {isFullscreenDialogOpened ? (
@@ -62,6 +82,11 @@ export const ClimbingPanel = () => {
                 </Typography>
               </Title>
               <>
+                <FormControlLabel
+                  value="bottom"
+                  control={<Switch color="primary" onChange={onEditChange} />}
+                  label="Edit"
+                />
                 <IconButton
                   color="primary"
                   edge="end"
@@ -95,16 +120,16 @@ export const ClimbingPanel = () => {
             ref={contentRef}
             onScroll={onScroll}
           >
-            <ClimbingView isReadOnly={false} />
+            <ClimbingView />
           </DialogContent>
         </Dialog>
       ) : (
         <PanelWrapper>
           <PanelScrollbars>
-            <ClimbingView isReadOnly onEditorClick={onFullscreenDialogOpen} />
+            <ClimbingView onEditorClick={onFullscreenDialogOpen} />
             <EditRoutesContainer>
               <Button
-                onClick={onFullscreenDialogOpen}
+                onClick={() => onFullscreenDialogOpen('editMode')}
                 color="primary"
                 size="small"
                 startIcon={<EditIcon />}

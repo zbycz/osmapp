@@ -57,6 +57,7 @@ export const RouteEditor = ({
   const onPointInSelectedRouteClick = (
     event: React.MouseEvent<HTMLElement>,
   ) => {
+    if (!routes[routeSelectedIndex].path) return;
     machine.execute('showPointMenu');
     const isDoubleClick = event.detail === 2;
     const lastPointIndex = routes[routeSelectedIndex].path.length - 1;

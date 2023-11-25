@@ -3,6 +3,8 @@ import styled from 'styled-components';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import SplitPane from 'react-split-pane';
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import { IconButton } from '@material-ui/core';
 import { RouteEditor } from './Editor/RouteEditor';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ControlPanel } from './Editor/ControlPanel';
@@ -12,7 +14,6 @@ import { PositionPx } from './types';
 import { updateElementOnIndex } from './utils';
 
 type Props = {
-  isReadOnly: boolean;
   onEditorClick?: () => void;
 };
 
@@ -21,6 +22,11 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+`;
+const ShowImageButton = styled.div`
+  position: absolute;
+  z-index: 10000;
+  background-color: white;
 `;
 const EditorContainer = styled.div<{ imageHeight: number }>`
   display: flex;
@@ -71,7 +77,7 @@ const DialogIcon = styled.div`
   right: 10px;
 `;
 
-export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
+export const ClimbingView = ({ onEditorClick }: Props) => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
 
@@ -95,10 +101,11 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
     areRoutesVisible,
     setMousePosition,
     countPositionWith,
+    isEditMode,
   } = useClimbingContext();
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
-  // const imageUrl = '/images/rock.png';
-  const imageUrl = '/images/rock2.jpg';
+  const imageUrl = '/images/rock.png';
+  // const imageUrl = '/images/rock2.jpg';
   // const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
   // const imageUrl =
   //   'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
@@ -130,7 +137,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   // };
 
   const onEditClimbingRouteClick = () => {
-    machine.execute('editRoute');
+    machine.execute('editRoute'); // možná tímhle nahradit isEditMode
   };
 
   // const onDeleteExistingClimbingRouteClick = () => {
@@ -139,28 +146,16 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   // };
 
   useEffect(() => {
+    // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
+    // setSplitPaneHeight();
     handleImageLoad();
   }, [splitPaneHeight]);
 
   const onCanvasClick = (e) => {
-    machine.execute('addPoint');
-
     if (machine.currentStateName === 'extendRoute') {
-      const newCoordinate = getPercentagePosition(
-        countPositionWith(['scrollOffset', 'editorPosition'], {
-          x: e.clientX,
-          y: e.clientY,
-          units: 'px',
-        }),
-      );
-
-      const closestPoint = findCloserPoint(newCoordinate);
-
-      updateRouteOnIndex(routeSelectedIndex, (route) => ({
-        ...route,
-        path: [...(route?.path ?? []), closestPoint ?? newCoordinate],
-      }));
-
+      machine.execute('addPointToEnd', {
+        position: { x: e.clientX, y: e.clientY },
+      });
       return;
     }
 
@@ -212,10 +207,16 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   const onUndoClick = () => {
     machine.execute('undoPoint');
   };
+  const onSplitPaneHeightReset = () => {
+    setSplitPaneHeight(300);
+  };
 
   React.useEffect(() => {
     window.addEventListener('resize', handleImageLoad);
     window.addEventListener('orientationchange', handleImageLoad);
+
+    // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
+    // setSplitPaneHeight();
 
     return () => {
       window.removeEventListener('resize', handleImageLoad);
@@ -234,18 +235,29 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
   // @TODO udělat header footer jako edit dialog
   return (
     <Container>
+      {splitPaneHeight < 100 && (
+        <ShowImageButton>
+          <IconButton
+            onClick={onSplitPaneHeightReset}
+            color="primary"
+            size="small"
+          >
+            <ArrowDownwardIcon fontSize="small" />
+          </IconButton>
+        </ShowImageButton>
+      )}
       <SplitPane
         split="horizontal"
-        minSize={100}
-        maxSize="90%"
+        minSize={0}
+        maxSize="100%"
         size={splitPaneHeight}
         onDragStarted={onDragStarted}
         onDragFinished={onDragFinished}
-        pane1Style={{ maxHeight: '90%' }}
+        pane1Style={{ maxHeight: '100%' }}
       >
         <StickyContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
           <BlurContainer>
-            {!isReadOnly && areRoutesVisible && (
+            {isEditMode && areRoutesVisible && (
               <ControlPanel
                 onEditClimbingRouteClick={onEditClimbingRouteClick}
                 onCreateClimbingRouteClick={onCreateClimbingRouteClick}
@@ -277,8 +289,7 @@ export const ClimbingView = ({ isReadOnly, onEditorClick }: Props) => {
         </StickyContainer>
 
         <RouteList
-          isReadOnly={isReadOnly}
-          // onDeleteExistingRouteClick={onDeleteWholeRouteClick}
+        // onDeleteExistingRouteClick={onDeleteWholeRouteClick}
         />
       </SplitPane>
       <DialogIcon>

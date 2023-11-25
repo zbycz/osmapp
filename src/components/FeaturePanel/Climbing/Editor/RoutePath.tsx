@@ -24,14 +24,14 @@ export const RoutePath = ({ route, routeNumber }) => {
     lineIndex: 0,
   });
   const {
-    routeSelectedIndex,
-    updateRouteOnIndex,
+    // routeSelectedIndex,
+    // updateRouteOnIndex,
     isPointMoving,
     isRouteSelected,
     // setPointSelectedIndex,
     // setIsPointMoving,
     getPixelPosition,
-    getPercentagePosition,
+    // getPercentagePosition,
     getMachine,
     countPositionWith,
   } = useClimbingContext();
@@ -84,17 +84,10 @@ export const RoutePath = ({ route, routeNumber }) => {
   });
 
   const onPointAdd = () => {
-    machine.execute('addPoint');
-    const position = getPercentagePosition(hoveredPosition);
-
-    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
-      ...currentRoute,
-      path: [
-        ...currentRoute.path.slice(0, tempPointPosition.lineIndex + 1),
-        position,
-        ...currentRoute.path.slice(tempPointPosition.lineIndex + 1),
-      ],
-    }));
+    machine.execute('addPointInBetween', {
+      hoveredPosition,
+      tempPointPosition,
+    });
   };
 
   const onMouseDown = (e) => {

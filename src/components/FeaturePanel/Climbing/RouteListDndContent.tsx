@@ -9,19 +9,56 @@ type Item = {
   content: React.ReactNode;
 };
 
-const DragControl = styled.div`
-  width: 40px;
-  cursor: move;
+const Container = styled.div`
+  width: 100%;
 `;
-const RowContent = styled.div``;
+const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
+  background-color: ${({ isSelected }) =>
+    isSelected ? '#ccc' : 'transparent'};
+  &:nth-child(4n) {
+    ${({ isSelected }) => !isSelected && `background-color: #f5f5f5`};
+  }
+  border-bottom: solid 1px #eee;
+  /* background-color: ${({ isDraggedOver }) =>
+    isDraggedOver ? '#f0f0f0' : 'transparent'}; */
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 40px;
+  font-size: 16px;
+`;
+const DragHandler = styled.div`
+  width: 30px;
+  cursor: move;
+  align-items: center;
+  display: flex;
+  color: #888;
+`;
+const RowContent = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+`;
+const HighlightedDropzone = styled.div<{ isActive: boolean }>`
+  position: absolute;
+  width: 100%;
+  margin-top: -2px;
+  height: 4px;
+  background: ${({ isActive }) => (isActive ? 'royalblue' : 'transparent')};
+  z-index: 1000000;
+`;
 
-const DragAndDropList = ({ isReadOnly }) => {
+export const RouteListDndContent = () => {
   const {
     routes,
     moveRoute,
     setRouteSelectedIndex,
     routeSelectedIndex,
     updateRouteOnIndex,
+    isRouteSelected,
+    isEditMode,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
 
@@ -69,24 +106,24 @@ const DragAndDropList = ({ isReadOnly }) => {
       const targetRect = target.getBoundingClientRect();
       const offsetY = e.clientY - targetRect.top;
 
-      console.log('____////', offsetY, targetRect.height);
+      // console.log('____////', offsetY, targetRect.height);
       if (offsetY < targetRect.height / 2) {
-        console.log('_____A');
+        // console.log('_____A');
         newIndex = index; // nahoru
       } else if (
         index === items.length - 1 &&
         offsetY > targetRect.height / 2
       ) {
-        console.log('_____B');
+        // console.log('_____B');
         newIndex = items.length; // poslední
       } else {
-        console.log('_____C');
+        // console.log('_____C');
         newIndex = index; // dolu
       }
     }
 
     if (newIndex !== draggedOverIndex) {
-      console.log('_____D');
+      // console.log('_____D');
       setDraggedOverIndex(newIndex);
     }
   };
@@ -131,51 +168,49 @@ const DragAndDropList = ({ isReadOnly }) => {
   };
 
   return (
-    <div>
-      {items.map((item, index) => (
-        <React.Fragment key={item.id}>
-          <div
-            style={{
-              height: '4px',
-              background: draggedOverIndex === index ? 'blue' : 'white',
-            }}
-          />
-          <div
-            draggable
-            onDragStart={(e) => handleDragStart(e, item)}
-            onDragOver={(e) => handleDragOver(e, index)}
-            onDragEnd={handleDragEnd}
-            style={{
-              backgroundColor:
-                index === draggedOverIndex ? '#f0f0f0' : 'transparent',
-              position: 'relative',
-              display: 'flex',
-              flexDirection: 'row',
-              alignItems: 'center',
-            }}
-          >
-            <DragControl
+    <Container>
+      {items.map((item, index) => {
+        console.log('___', draggedItem?.id, index);
+        const isSelected = isRouteSelected(index);
+
+        return (
+          <React.Fragment key={item.id}>
+            {draggedItem?.id > index && (
+              <HighlightedDropzone isActive={draggedOverIndex === index} />
+            )}
+            <RowWithDragHandler
+              isDraggedOver={index === draggedOverIndex}
               draggable
-              onDragStart={(e) => handleControlDragStart(e, item)}
-              onDragEnd={handleControlDragEnd}
+              onDragStart={(e) => handleDragStart(e, item)}
+              onDragOver={(e) => handleDragOver(e, index)}
+              onDragEnd={handleDragEnd}
+              isSelected={isSelected}
             >
-              <DragIndicatorIcon />
-            </DragControl>
-            <RowContent>
-              <RenderListRow
-                isReadOnly={isReadOnly}
-                route={item.route}
-                onRowClick={onRowClick}
-                onRouteChange={onRouteChange}
-                onDeleteExistingRouteClick={() => null}
-                index={index}
-              />
-            </RowContent>
-          </div>
-        </React.Fragment>
-      ))}
-    </div>
+              {isEditMode && (
+                <DragHandler
+                  draggable
+                  onDragStart={(e) => handleControlDragStart(e, item)}
+                  onDragEnd={handleControlDragEnd}
+                >
+                  <DragIndicatorIcon />
+                </DragHandler>
+              )}
+              <RowContent>
+                <RenderListRow
+                  route={item.route}
+                  onRowClick={onRowClick}
+                  onRouteChange={onRouteChange}
+                  onDeleteExistingRouteClick={() => null}
+                  index={index}
+                />
+              </RowContent>
+            </RowWithDragHandler>
+            {draggedItem?.id <= index && (
+              <HighlightedDropzone isActive={draggedOverIndex === index} />
+            )}
+          </React.Fragment>
+        );
+      })}
+    </Container>
   );
 };
-
-export default DragAndDropList;

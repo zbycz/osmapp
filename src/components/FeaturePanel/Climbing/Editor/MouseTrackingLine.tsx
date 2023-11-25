@@ -35,7 +35,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
         d={`M ${lastPointPositionInPx.x} ${lastPointPositionInPx.y} L ${mousePosition2.x} ${mousePosition2.y}`}
         isSelected={isSelected}
         pointerEvents="none"
-        opacity={0.4}
+        opacity={0.7}
         // markerEnd={isSelected ? 'url(#triangle)' : null}
       />
     )

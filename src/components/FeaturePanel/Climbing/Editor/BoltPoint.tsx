@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const Bolt = ({ x, y, isSelected }) => {
-  const size = 12;
-  const strokeWidth = 2;
+  const size = 16;
+  const strokeWidth = 4;
   const shift = size / 2 - strokeWidth / 2;
 
   const backgroundColor = isSelected ? 'white' : 'black';
@@ -10,7 +10,7 @@ export const Bolt = ({ x, y, isSelected }) => {
 
   return (
     <g
-      transform={` translate(${x + 10} ${
+      transform={` translate(${x + 15} ${
         y - size / 2 - strokeWidth / 2
       }) rotate(45)`}
       cursor="help"

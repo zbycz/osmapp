@@ -1,8 +1,8 @@
 import React from 'react';
 
 export const Belay = ({ x, y, isSelected }) => {
-  const size = 6;
-  const minusHeight = 2;
+  const size = 9;
+  const minusHeight = 3;
   return (
     <g transform={` translate(${x} ${y})`} cursor="help">
       <circle
