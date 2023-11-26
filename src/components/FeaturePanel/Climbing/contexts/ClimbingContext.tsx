@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { ClimbingRoute, Position, PositionPx } from '../types';
+import { ClimbingRoute, Position, PositionPx, Size } from '../types';
 import { updateElementOnIndex } from '../utils';
 import { emptyRoute } from '../utils/emptyRoute';
 
@@ -58,7 +58,6 @@ type ClimbingContextType = {
   splitPaneHeight: number;
   setSplitPaneHeight: (height: number) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
-
   setPointSelectedIndex: (pointSelectedIndex: number) => void;
   setRoutes: (routes: Array<ClimbingRoute>) => void;
   setRouteSelectedIndex: (routeSelectedIndex: number) => void;
@@ -89,8 +88,11 @@ type ClimbingContextType = {
   moveRoute: (from: number, to: number) => void;
   isEditMode: boolean;
   setIsEditMode: (isEditMode: boolean) => void;
+  viewportSize: Size;
+  setViewportSize: (size: Size) => void;
 };
 
+// @TODO generate?
 export const ClimbingContext = createContext<ClimbingContextType>({
   editorPosition: { x: 0, y: 0, units: 'px' },
   imageSize: {
@@ -133,6 +135,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   pointElement: null,
   setPointElement: () => null,
   moveRoute: () => null,
+  viewportSize: { width: 0, height: 0 },
+  setViewportSize: () => null,
 });
 
 export const ClimbingContextProvider = ({ children }) => {
@@ -148,6 +152,10 @@ export const ClimbingContextProvider = ({ children }) => {
     x: 0,
     y: 0,
     units: 'px',
+  });
+  const [viewportSize, setViewportSize] = useState<Size>({
+    width: 0,
+    height: 0,
   });
   const [scrollOffset, setScrollOffset] = useState<PositionPx>({
     x: 0,
@@ -484,6 +492,8 @@ export const ClimbingContextProvider = ({ children }) => {
     countPositionWith,
     isEditMode,
     setIsEditMode,
+    viewportSize,
+    setViewportSize,
   };
 
   return (

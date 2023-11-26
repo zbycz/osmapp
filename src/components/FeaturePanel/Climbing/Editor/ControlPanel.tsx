@@ -11,7 +11,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 const Container = styled.div`
   background: ${({ theme }) => theme.palette.background.default};
   border-radius: 8px;
-  position: sticky;
+  position: absolute;
   width: 44px;
   top: 5px;
   left: 5px;

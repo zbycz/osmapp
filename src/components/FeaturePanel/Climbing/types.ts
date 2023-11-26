@@ -11,6 +11,11 @@ export type PositionPx = {
   units: 'px';
 };
 
+export type Size = {
+  width: number;
+  height: number;
+};
+
 export type PathPoints = Array<
   Position & {
     type?: PointType;

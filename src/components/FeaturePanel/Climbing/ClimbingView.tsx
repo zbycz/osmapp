@@ -4,6 +4,7 @@ import styled from 'styled-components';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
+import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { IconButton } from '@material-ui/core';
 import { RouteEditor } from './Editor/RouteEditor';
 import { useClimbingContext } from './contexts/ClimbingContext';
@@ -23,10 +24,23 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
 `;
-const ShowImageButton = styled.div`
+const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   position: absolute;
   z-index: 10000;
   background-color: white;
+  left: 50%;
+  width: 30px;
+  border-radius: 0 0 50% 50%;
+  ${({ arrowOnTop }) =>
+    arrowOnTop
+      ? undefined
+      : `
+  bottom: 0;
+  border-radius: 50% 50% 0 0 ;
+  `};
+  justify-content: center;
+  display: flex;
+  /* border: solid 1px red; */
 `;
 const EditorContainer = styled.div<{ imageHeight: number }>`
   display: flex;
@@ -44,8 +58,10 @@ const BlurContainer = styled.div`
   height: 100%;
 `;
 
-const StickyContainer = styled.div<{ imageHeight: number; imageUrl: string }>`
-  position: relative;
+const BackgroundContainer = styled.div<{
+  imageHeight: number;
+  imageUrl: string;
+}>`
   background: #111 url(${({ imageUrl }) => imageUrl}) no-repeat;
   background-size: 100% auto;
   object-fit: cover;
@@ -102,6 +118,9 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
     setMousePosition,
     countPositionWith,
     isEditMode,
+    viewportSize,
+    setViewportSize,
+    editorPosition,
   } = useClimbingContext();
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   const imageUrl = '/images/rock.png';
@@ -119,10 +138,12 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
     // setEditorPosition({ x:left, y:top });
 
     // const rect = e.target.getBoundingClientRect();
+    // getWindowDimensions;
     const { clientHeight, clientWidth } = imageRef.current;
     const { left, top } = imageRef.current.getBoundingClientRect();
     setImageSize({ width: clientWidth, height: clientHeight });
     setEditorPosition({ x: left, y: top, units: 'px' });
+    setViewportSize({ width: window?.innerWidth, height: window?.innerHeight });
   };
 
   const onCreateClimbingRouteClick = () => {
@@ -233,18 +254,25 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
   };
 
   // @TODO udělat header footer jako edit dialog
+  const showArrowOnTop = splitPaneHeight === 0;
+  const showArrowOnBottom =
+    splitPaneHeight === viewportSize.height - editorPosition.y;
   return (
     <Container>
-      {splitPaneHeight < 100 && (
-        <ShowImageButton>
+      {(showArrowOnTop || showArrowOnBottom) && (
+        <ArrowExpanderButton arrowOnTop={showArrowOnTop}>
           <IconButton
             onClick={onSplitPaneHeightReset}
             color="primary"
             size="small"
           >
-            <ArrowDownwardIcon fontSize="small" />
+            {showArrowOnTop ? (
+              <ArrowDownwardIcon fontSize="small" />
+            ) : (
+              <ArrowUpwardIcon fontSize="small" />
+            )}
           </IconButton>
-        </ShowImageButton>
+        </ArrowExpanderButton>
       )}
       <SplitPane
         split="horizontal"
@@ -255,7 +283,7 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
         onDragFinished={onDragFinished}
         pane1Style={{ maxHeight: '100%' }}
       >
-        <StickyContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
+        <BackgroundContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
           <BlurContainer>
             {isEditMode && areRoutesVisible && (
               <ControlPanel
@@ -286,7 +314,7 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
               )}
             </EditorContainer>
           </BlurContainer>
-        </StickyContainer>
+        </BackgroundContainer>
 
         <RouteList
         // onDeleteExistingRouteClick={onDeleteWholeRouteClick}

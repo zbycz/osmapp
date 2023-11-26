@@ -1,10 +1,15 @@
 import React from 'react';
+import styled from 'styled-components';
+
 import { Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { emptyRoute } from './utils/emptyRoute';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
 
+const Container = styled.div`
+  background: ${({ theme }) => theme.palette.background.default};
+`;
 // type Item = {
 //   id: number;
 //   content: React.ReactNode;
@@ -56,7 +61,7 @@ export const RouteList = () => {
   if (!isEditMode && routes.length === 0) return null;
 
   return (
-    <>
+    <Container>
       <RouteListDndContent />
       <Button
         onClick={onNewRouteCreate}
@@ -67,7 +72,7 @@ export const RouteList = () => {
       >
         Add new route
       </Button>
-    </>
+    </Container>
   );
 
   // return (
