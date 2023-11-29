@@ -47,12 +47,13 @@ export const RenderListRow = ({
   const { getMachine, isRouteSelected, isEditMode } = useClimbingContext();
   const isSelected = isRouteSelected(index);
   const machine = getMachine();
-  const onEditClick = () => {
+  const onEditClick = (e) => {
     if (path.length === 0) {
-      machine.execute('extendRoute');
+      machine.execute('extendRoute', { routeNumber: index });
     } else {
       machine.execute('editRoute');
     }
+    e.stopPropagation();
   };
 
   const stopPropagation = (e) => {

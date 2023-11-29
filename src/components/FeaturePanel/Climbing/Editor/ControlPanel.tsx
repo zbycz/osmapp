@@ -1,6 +1,6 @@
 import { IconButton } from '@material-ui/core';
-import ControlPointIcon from '@material-ui/icons/ControlPoint';
-import CheckIcon from '@material-ui/icons/Check';
+// import ControlPointIcon from '@material-ui/icons/ControlPoint';
+// import CheckIcon from '@material-ui/icons/Check';
 import EditIcon from '@material-ui/icons/Edit';
 import UndoIcon from '@material-ui/icons/Undo';
 import React from 'react';
@@ -20,20 +20,20 @@ const Container = styled.div`
 
 export const ControlPanel = ({
   onEditClimbingRouteClick,
-  onCreateClimbingRouteClick,
+  // onCreateClimbingRouteClick,
   onUndoClick,
 }) => {
   const { routeSelectedIndex, routes, getMachine } = useClimbingContext();
   const machine = getMachine();
 
-  const onFinishClimbingRouteClick = () => {
-    machine.execute('finishRoute');
-  };
+  // const onFinishClimbingRouteClick = () => {
+  //   machine.execute('finishRoute');
+  // };
 
   return (
     <Container>
       <>
-        {(machine.currentStateName === 'editRoute' ||
+        {/* {(machine.currentStateName === 'editRoute' ||
           machine.currentStateName === 'extendRoute') && (
           <IconButton
             color="default"
@@ -43,7 +43,7 @@ export const ControlPanel = ({
           >
             <CheckIcon fontSize="small" />
           </IconButton>
-        )}
+        )} */}
 
         {machine.currentStateName === 'extendRoute' &&
           routes[routeSelectedIndex]?.path.length !== 0 && (
@@ -68,14 +68,14 @@ export const ControlPanel = ({
       {machine.currentStateName !== 'editRoute' &&
         machine.currentStateName !== 'extendRoute' && (
           <>
-            <IconButton
+            {/* <IconButton
               color="default"
               edge="end"
               onClick={onCreateClimbingRouteClick}
               title={t('climbingpanel.create_climbing_route')}
             >
               <ControlPointIcon fontSize="small" />
-            </IconButton>
+            </IconButton> */}
 
             {routeSelectedIndex !== null && (
               <>

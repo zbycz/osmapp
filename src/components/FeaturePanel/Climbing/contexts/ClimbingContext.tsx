@@ -211,14 +211,17 @@ export const ClimbingContextProvider = ({ children }) => {
   };
 
   const editRoute = () => {};
-  const extendRoute = () => {};
+  const extendRoute = (props: { routeNumber?: number }) => {
+    if (props?.routeNumber) setRouteSelectedIndex(props.routeNumber);
+  };
 
   const finishRoute = () => {
     setMousePosition(null);
   };
 
   const createRoute = () => {
-    setRouteSelectedIndex(routes.length);
+    const newIndex = routes.length;
+    setRouteSelectedIndex(newIndex);
     setRoutes([...routes, emptyRoute]);
   };
 
@@ -380,10 +383,13 @@ export const ClimbingContextProvider = ({ children }) => {
       path: [...(route?.path ?? []), closestPoint ?? newCoordinate],
     }));
   };
+  const commonActions: Partial<Record<Action, ActionWithCallback>> = {
+    createRoute: { nextState: 'editRoute', callback: createRoute },
+  };
 
   const states: Machine = {
     init: {
-      createRoute: { nextState: 'extendRoute', callback: createRoute },
+      ...commonActions,
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
       editRoute: { nextState: 'editRoute', callback: editRoute },
       routeSelect: {
@@ -392,6 +398,7 @@ export const ClimbingContextProvider = ({ children }) => {
       },
     },
     editRoute: {
+      ...commonActions,
       deleteRoute: { nextState: 'init', callback: deleteRoute },
       dragPoint: { nextState: 'editRoute', callback: dragPoint },
       addPointInBetween: {
@@ -403,6 +410,7 @@ export const ClimbingContextProvider = ({ children }) => {
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
     },
     extendRoute: {
+      ...commonActions,
       finishRoute: { nextState: 'routeSelected', callback: finishRoute },
       undoPoint: { nextState: 'extendRoute', callback: undoPoint },
       addPointToEnd: {
@@ -411,23 +419,33 @@ export const ClimbingContextProvider = ({ children }) => {
       },
     },
     pointMenu: {
+      ...commonActions,
       changePointType: { nextState: 'editRoute', callback: changePointType },
       deletePoint: { nextState: 'editRoute', callback: deletePoint },
       cancelPointMenu: { nextState: 'editRoute' },
       finishRoute: { nextState: 'routeSelected', callback: finishRoute },
     },
     routeSelected: {
-      createRoute: { nextState: 'extendRoute', callback: createRoute },
+      ...commonActions,
       routeSelect: {
         nextState: 'routeSelected',
         callback: routeSelect,
       },
       cancelRouteSelection: {
+        ...commonActions,
         nextState: 'init',
         callback: cancelRouteSelection,
       },
-      editRoute: { nextState: 'editRoute', callback: editRoute },
-      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
+      editRoute: {
+        ...commonActions,
+        nextState: 'editRoute',
+        callback: editRoute,
+      },
+      extendRoute: {
+        ...commonActions,
+        nextState: 'extendRoute',
+        callback: extendRoute,
+      },
     },
   };
 
@@ -449,7 +467,7 @@ export const ClimbingContextProvider = ({ children }) => {
         );
         if (callback) callback(props);
       } else {
-        console.log('wrong action', currentState, desiredAction);
+        console.error('wrong action', currentState, desiredAction);
       }
     },
   });

@@ -28,6 +28,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     : mousePositionWithEditorPosition;
 
   const isSelected = isRouteSelected(routeNumber);
+  console.log('____TU', isSelected);
   return (
     mousePosition2 &&
     isSelected && (

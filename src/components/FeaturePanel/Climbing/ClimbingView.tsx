@@ -5,7 +5,8 @@ import styled from 'styled-components';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { IconButton } from '@material-ui/core';
+import { Fab, IconButton } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
 import { RouteEditor } from './Editor/RouteEditor';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ControlPanel } from './Editor/ControlPanel';
@@ -24,10 +25,15 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
 `;
+const AddButton = styled.div`
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+`;
 const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   position: absolute;
   z-index: 10000;
-  background-color: white;
+  background: ${({ theme }) => theme.palette.background.default};
   left: 50%;
   width: 30px;
   border-radius: 0 0 50% 50%;
@@ -174,9 +180,11 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
 
   const onCanvasClick = (e) => {
     if (machine.currentStateName === 'extendRoute') {
+      console.log('____', routes);
       machine.execute('addPointToEnd', {
         position: { x: e.clientX, y: e.clientY },
       });
+      console.log('____2', routes);
       return;
     }
 
@@ -199,6 +207,7 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
         path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
+          // @TODO route.path can be undefined, why?
           ...point,
           x: updatedPoint.x,
           y: updatedPoint.y,
@@ -230,6 +239,13 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
   };
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(300);
+  };
+
+  const onNewRouteCreate = () => {
+    machine.execute('createRoute');
+    // const newIndex = routes.length;
+    // setRoutes([...routes, emptyRoute]);
+    // setRouteSelectedIndex(newIndex);
   };
 
   React.useEffect(() => {
@@ -320,6 +336,12 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
         // onDeleteExistingRouteClick={onDeleteWholeRouteClick}
         />
       </SplitPane>
+      <AddButton>
+        <Fab color="primary" variant="extended" onClick={onNewRouteCreate}>
+          <AddIcon />
+          New route
+        </Fab>
+      </AddButton>
       <DialogIcon>
         {/* <IconButton
           color="secondary"

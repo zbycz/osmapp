@@ -1,14 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Button } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-import { emptyRoute } from './utils/emptyRoute';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
 
 const Container = styled.div`
   background: ${({ theme }) => theme.palette.background.default};
+  margin-bottom: 65px;
 `;
 // type Item = {
 //   id: number;
@@ -21,17 +19,8 @@ const Container = styled.div`
 
 // onDeleteExistingRouteClick,
 export const RouteList = () => {
-  const {
-    routes,
-    setRoutes,
-    isEditMode,
-    setRouteSelectedIndex,
-    routeSelectedIndex,
-  } = useClimbingContext();
-
-  const onNewRouteCreate = () => {
-    setRoutes([...routes, emptyRoute]);
-  };
+  const { routes, isEditMode, setRouteSelectedIndex, routeSelectedIndex } =
+    useClimbingContext();
 
   React.useEffect(() => {
     const downHandler = (e) => {
@@ -63,7 +52,7 @@ export const RouteList = () => {
   return (
     <Container>
       <RouteListDndContent />
-      <Button
+      {/* <Button
         onClick={onNewRouteCreate}
         color="primary"
         variant="text"
@@ -71,7 +60,7 @@ export const RouteList = () => {
         startIcon={<AddIcon />}
       >
         Add new route
-      </Button>
+      </Button> */}
     </Container>
   );
 

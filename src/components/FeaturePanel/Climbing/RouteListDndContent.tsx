@@ -15,9 +15,11 @@ const Container = styled.div`
 const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
   background-color: ${({ isSelected }) =>
     isSelected ? '#ccc' : 'transparent'};
-  &:nth-child(4n) {
+  background: ${({ isSelected, theme }) =>
+    isSelected ? theme.palette.background.hover : 'transparent'};
+  /* &:nth-child(2n) {
     ${({ isSelected }) => !isSelected && `background-color: #f5f5f5`};
-  }
+  } */
   border-bottom: solid 1px #eee;
   /* background-color: ${({ isDraggedOver }) =>
     isDraggedOver ? '#f0f0f0' : 'transparent'}; */
@@ -74,6 +76,7 @@ export const RouteListDndContent = () => {
   const [draggedOverIndex, setDraggedOverIndex] = useState<number | null>(null);
 
   const onRouteChange = (e, index, updatedField) => {
+    console.log('____', e, index, updatedField);
     updateRouteOnIndex(routeSelectedIndex, (route) => ({
       ...route,
       [updatedField]: e.target.value,
@@ -170,7 +173,7 @@ export const RouteListDndContent = () => {
   return (
     <Container>
       {items.map((item, index) => {
-        console.log('___', draggedItem?.id, index);
+        // console.log('___', draggedItem?.id, index);
         const isSelected = isRouteSelected(index);
 
         return (
