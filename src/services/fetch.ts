@@ -13,6 +13,7 @@ interface FetchOpts extends RequestInit {
 
 export const fetchText = async (url, opts: FetchOpts = {}) => {
   const key = getKey(url, opts);
+  console.log('fetchText', key, url, opts)
   const item = getCache(key);
   if (item) return item;
 
@@ -42,7 +43,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     }
 
     const text = await res.text();
-    if (!opts || !opts.nocache) {
+    if (!opts || !opts.nocache || opts.method !== 'POST') {
       writeCacheSafe(key, text);
     }
     return text;

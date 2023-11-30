@@ -1,33 +1,46 @@
 import React, { ChangeEvent, useState } from "react";
-import { fetchJson } from "../../../services/fetch";
+import { fetchText } from "../../../services/fetch";
 import { Button } from "@material-ui/core";
 import { useFeatureContext } from "../../utils/FeatureContext";
+import {  getUrlOsmId } from "../../../services/helpers";
 
 const UploadButton = () => {
+  const { feature } = useFeatureContext();
   const [uploading, setUploading] = useState(false);
 
   const handleFileUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+
     if (!file) {
       return;
     }
+
+    if (file.size > 100 * 1024 * 1024) {
+      alert("Maximum file size is 100 MB.");
+      return;
+    }
+
     setUploading(true);
 
     const formData = new FormData();
     formData.append("filename", file.name);
     formData.append("file", file);
+    formData.append("osmEntity", getUrlOsmId(feature.osmMeta));
 
-    const uploadResponse = await fetchJson(
-      process.env.NEXT_PUBLIC_BASE_URL + "/api/upload",
-      {
-        method: "POST",
-        body: formData
-      }
-    );
+    try {
+      const uploadResponse = await fetchText(
+        "/api/upload",
+        {
+          method: "POST",
+          body: formData
+        }
+      );
 
-    console.log("uploadResponse", uploadResponse);
-
-    setUploading(false);
+      console.log("uploadResponse", uploadResponse);
+    }
+    finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -42,7 +55,7 @@ const UploadButton = () => {
         Nahrát obrázek
         <input
           type="file"
-          accept="image/*"
+          // accept="image/*"
           hidden
           onChange={handleFileUpload}
         />
