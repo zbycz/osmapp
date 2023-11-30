@@ -18,15 +18,27 @@ const fetchCache = isBrowser()
       clear: () => {},
     };
 
-export const getKey = (url, opts) => url + JSON.stringify(opts);
+export const getKey = (url, opts) => {
+  if (opts.method === 'POST') {
+    return false;
+  }
 
-export const getCache = fetchCache.get;
+  return url + JSON.stringify(opts);
+};
+
+export const getCache = (key) => {
+  if (key) {
+    return fetchCache.get(key);
+  }
+};
 
 export const removeFetchCache = (url, opts = {}) => {
   fetchCache.remove(getKey(url, opts));
 };
 
 export const writeCacheSafe = (key, value) => {
+  if (!key) return;
+
   try {
     fetchCache.put(key, value);
   } catch (e) {
