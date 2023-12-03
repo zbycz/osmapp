@@ -4,10 +4,12 @@ import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
 import { fetchJson } from './fetch';
 
-const overpassQuery = (bbox, tags) => {
+const overpassQuery = ([a, b, c, d], tags) => {
   const query = tags
     .map(([k, v]) => (v === '*' ? `["${k}"]` : `["${k}"="${v}"]`))
     .join('');
+
+  const bbox = [d, a, b, c];
 
   return `[out:json][timeout:25];
   (
