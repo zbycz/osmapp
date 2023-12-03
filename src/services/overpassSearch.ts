@@ -18,10 +18,8 @@ const overpassQuery = (bbox, tags) => {
   out geom qt;`; // "out geom;>;out geom qt;" to get all full subitems as well
 };
 
-const getOverpassUrl = ([a, b, c, d], tags) =>
-  `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-    overpassQuery([d, a, b, c], tags),
-  )}`;
+const getOverpassUrl = (query) =>
+  `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`;
 
 const GEOMETRY = {
   node: ({ lat, lon }): Point => ({ type: 'Point', coordinates: [lon, lat] }),
@@ -72,12 +70,28 @@ export const performOverpassSearch = async (
   bbox,
   tags: Record<string, string>,
 ) => {
+  const query = overpassQuery(bbox, Object.entries(tags));
   console.log('seaching overpass for tags: ', tags); // eslint-disable-line no-console
-  const overpass = await fetchJson(getOverpassUrl(bbox, Object.entries(tags)));
+
+  const overpass = await fetchJson(getOverpassUrl(query));
   console.log('overpass result:', overpass); // eslint-disable-line no-console
 
   const features = overpassGeomToGeojson(overpass);
   console.log('overpass geojson', features); // eslint-disable-line no-console
+
+  return { type: 'FeatureCollection', features };
+};
+
+export const fetchOverpassGeojson = async (element: Feature) => {
+  const { type, id } = element.osmMeta;
+
+  if (type === 'node') {
+    return {};
+  }
+
+  const query = `[out:json][timeout:25];(${type}(id:${id}););out geom qt;`;
+  const overpass = await fetchJson(getOverpassUrl(query));
+  const features = overpassGeomToGeojson(overpass);
 
   return { type: 'FeatureCollection', features };
 };
