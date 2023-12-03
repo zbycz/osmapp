@@ -79,6 +79,7 @@ fetchSchemaTranslations().then(() => {
   presetsForSearch = Object.values(presets)
     .filter(({ searchable }) => searchable === undefined || searchable)
     .filter(({ locationSet }) => !locationSet?.include)
+    .filter(({ tags }) => Object.keys(tags).length > 0)
     .map(({ name, presetKey, tags, terms }) => {
       const tagsAsStrings = Object.entries(tags).map(([k, v]) => `${k}=${v}`);
       return {
