@@ -67,7 +67,7 @@ export const overpassLayers: LayerSpecification[] = [
     id: 'overpass-circle',
     type: 'circle',
     source: 'overpass',
-    filter: ['all', ['==', '$type', 'Point']],
+    filter: ['all', ['==', '$type', 'Point'], ['!=', 'osmappType', 'relation']],
     paint: {
       'circle-color': 'rgba(255,255,255,0.9)',
       'circle-radius': 12,
@@ -82,21 +82,32 @@ export const overpassLayers: LayerSpecification[] = [
     },
   } as LayerSpecification,
   {
+    id: 'overpass-circle-relation',
+    type: 'circle',
+    source: 'overpass',
+    filter: ['all', ['==', '$type', 'Point'], ['==', 'osmappType', 'relation']],
+    paint: {
+      'circle-color': 'rgba(255,0,0,0.7)',
+      'circle-radius': 5,
+      'circle-opacity': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        0.5,
+        1,
+      ],
+    },
+  } as LayerSpecification,
+  {
     id: 'overpass-symbol',
     type: 'symbol',
     source: 'overpass',
-    filter: ['all', ['==', '$type', 'Point']],
+    filter: ['all', ['==', '$type', 'Point'], ['!=', 'osmappType', 'relation']],
     layout: {
       'text-padding': 2,
       'text-font': ['Noto Sans Regular'],
       'text-anchor': 'top',
       'icon-image': '{class}_11',
-      'text-field': [
-        'case',
-        ['==', ['get', 'osmappType'], 'relation'],
-        '',
-        ['get', 'name'],
-      ],
+      'text-field': '{name}',
       'text-offset': [0, 0.6],
       'text-size': 12,
       'text-max-width': 9,
