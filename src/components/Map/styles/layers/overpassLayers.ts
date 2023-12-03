@@ -9,7 +9,7 @@ export const overpassLayers: LayerSpecification[] = [
       'line-color': '#f8f4f0',
       'line-width': 6,
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-line',
     type: 'line',
@@ -24,7 +24,7 @@ export const overpassLayers: LayerSpecification[] = [
         1,
       ],
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-line-text',
     type: 'symbol',
@@ -47,7 +47,7 @@ export const overpassLayers: LayerSpecification[] = [
         1,
       ],
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-fill',
     type: 'fill',
@@ -62,7 +62,7 @@ export const overpassLayers: LayerSpecification[] = [
         0.5,
       ],
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-circle',
     type: 'circle',
@@ -80,7 +80,7 @@ export const overpassLayers: LayerSpecification[] = [
         1,
       ],
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-symbol',
     type: 'symbol',
@@ -91,7 +91,12 @@ export const overpassLayers: LayerSpecification[] = [
       'text-font': ['Noto Sans Regular'],
       'text-anchor': 'top',
       'icon-image': '{class}_11',
-      'text-field': '{name}',
+      'text-field': [
+        'case',
+        ['==', ['get', 'osmappType'], 'relation'],
+        '',
+        ['get', 'name'],
+      ],
       'text-offset': [0, 0.6],
       'text-size': 12,
       'text-max-width': 9,
@@ -116,5 +121,5 @@ export const overpassLayers: LayerSpecification[] = [
         1,
       ],
     },
-  },
+  } as LayerSpecification,
 ];

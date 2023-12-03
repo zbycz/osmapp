@@ -100,13 +100,14 @@ const response = {
   ],
 };
 
-const skeletons = [
+const geojson = [
   {
     center: [14.3231551, 49.9594996],
     geometry: {
       coordinates: [14.3231551, 49.9594996],
       type: 'Point',
     },
+    id: 7615416770,
     osmMeta: {
       id: 761541677,
       type: 'node',
@@ -115,6 +116,7 @@ const skeletons = [
       class: 'information',
       crossing: 'marked',
       highway: 'crossing',
+      osmappType: 'node',
       subclass: 'crossing',
     },
     tags: {
@@ -133,6 +135,7 @@ const skeletons = [
       ],
       type: 'LineString',
     },
+    id: 110050211,
     osmMeta: {
       id: 11005021,
       type: 'way',
@@ -140,6 +143,7 @@ const skeletons = [
     properties: {
       class: 'information',
       highway: 'track',
+      osmappType: 'way',
       subclass: 'track',
       tracktype: 'grade3',
     },
@@ -169,6 +173,7 @@ const skeletons = [
       ],
       type: 'GeometryCollection',
     },
+    id: 83379084,
     osmMeta: {
       id: 8337908,
       type: 'relation',
@@ -179,6 +184,7 @@ const skeletons = [
       name: '243: Kazín ⇒ Lipence',
       network: 'PID',
       operator: 'cz:DPP',
+      osmappType: 'relation',
       'public_transport:version': '2',
       ref: '243',
       route: 'bus',
@@ -206,5 +212,5 @@ const skeletons = [
 ];
 
 test('conversion', () => {
-  expect(overpassGeomToGeojson(response)).toEqual(skeletons);
+  expect(overpassGeomToGeojson(response)).toEqual(geojson);
 });

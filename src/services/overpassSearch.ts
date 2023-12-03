@@ -46,6 +46,11 @@ const GEOMETRY = {
   }),
 };
 
+const convertOsmIdToMapId = (apiId: OsmApiId) => {
+  const osmToMapType = { node: 0, way: 1, relation: 4 };
+  return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
+};
+
 // maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
 
 export const overpassGeomToGeojson = (response: any): Feature[] =>
@@ -57,16 +62,11 @@ export const overpassGeomToGeojson = (response: any): Feature[] =>
       id: convertOsmIdToMapId({ type, id }),
       osmMeta: { type, id },
       tags,
-      properties: { ...getPoiClass(tags), ...tags },
+      properties: { ...getPoiClass(tags), ...tags, osmappType: type },
       geometry,
       center: getCenter(geometry) ?? undefined,
     };
   });
-
-const convertOsmIdToMapId = (apiId: OsmApiId) => {
-  const osmToMapType = { node: 0, way: 1, relation: 4 };
-  return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
-};
 
 export const performOverpassSearch = async (
   bbox,

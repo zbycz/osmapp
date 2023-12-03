@@ -69,7 +69,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
   }
 };
 
-export const fetchJson = async <T>(url, opts: FetchOpts = {}): Promise<T> => {
+export const fetchJson = async (url, opts: FetchOpts = {}) => {
   const text = await fetchText(url, opts);
   try {
     return JSON.parse(text);

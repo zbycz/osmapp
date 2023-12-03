@@ -41,8 +41,10 @@ export const getCenter = (geometry: FeatureGeometry): Position => {
   }
 
   if (isRelation(geometry)) {
-    const allCoords = geometry.geometries.flatMap((geometry) =>
-      isPoint(geometry) ? [geometry.coordinates] : geometry.coordinates,
+    const allCoords = geometry.geometries.flatMap((subGeometry) =>
+      isPoint(subGeometry)
+        ? [subGeometry.coordinates]
+        : subGeometry.coordinates,
     );
     return getCenterOfBbox(allCoords);
   }
