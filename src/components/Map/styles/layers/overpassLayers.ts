@@ -9,7 +9,7 @@ export const overpassLayers: LayerSpecification[] = [
       'line-color': '#f8f4f0',
       'line-width': 6,
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-line',
     type: 'line',
@@ -24,7 +24,7 @@ export const overpassLayers: LayerSpecification[] = [
         1,
       ],
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-line-text',
     type: 'symbol',
@@ -47,7 +47,7 @@ export const overpassLayers: LayerSpecification[] = [
         1,
       ],
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-fill',
     type: 'fill',
@@ -62,12 +62,12 @@ export const overpassLayers: LayerSpecification[] = [
         0.5,
       ],
     },
-  },
+  } as LayerSpecification,
   {
     id: 'overpass-circle',
     type: 'circle',
     source: 'overpass',
-    filter: ['all', ['==', '$type', 'Point']],
+    filter: ['all', ['==', '$type', 'Point'], ['!=', 'osmappType', 'relation']],
     paint: {
       'circle-color': 'rgba(255,255,255,0.9)',
       'circle-radius': 12,
@@ -80,12 +80,28 @@ export const overpassLayers: LayerSpecification[] = [
         1,
       ],
     },
-  },
+  } as LayerSpecification,
+  {
+    id: 'overpass-circle-relation',
+    type: 'circle',
+    source: 'overpass',
+    filter: ['all', ['==', '$type', 'Point'], ['==', 'osmappType', 'relation']],
+    paint: {
+      'circle-color': 'rgba(255,0,0,0.7)',
+      'circle-radius': 5,
+      'circle-opacity': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        0.5,
+        1,
+      ],
+    },
+  } as LayerSpecification,
   {
     id: 'overpass-symbol',
     type: 'symbol',
     source: 'overpass',
-    filter: ['all', ['==', '$type', 'Point']],
+    filter: ['all', ['==', '$type', 'Point'], ['!=', 'osmappType', 'relation']],
     layout: {
       'text-padding': 2,
       'text-font': ['Noto Sans Regular'],
@@ -116,5 +132,5 @@ export const overpassLayers: LayerSpecification[] = [
         1,
       ],
     },
-  },
+  } as LayerSpecification,
 ];
