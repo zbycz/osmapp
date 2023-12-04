@@ -25,6 +25,7 @@ export const Route = ({
   const isSelected = isRouteSelected(routeNumber);
   const isThisRouteEditOrExtendMode =
     (machine.currentStateName === 'extendRoute' ||
+      machine.currentStateName === 'pointMenu' ||
       machine.currentStateName === 'editRoute') &&
     isSelected;
   // move defs

@@ -127,6 +127,7 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
     viewportSize,
     setViewportSize,
     editorPosition,
+    isLineInteractiveAreaHovered,
   } = useClimbingContext();
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   const imageUrl = '/images/rock.png';
@@ -215,7 +216,7 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
       }));
     } else if (machine.currentStateName !== 'extendRoute') {
       setMousePosition(null);
-    } else {
+    } else if (!isLineInteractiveAreaHovered) {
       setMousePosition(position);
     }
   };
@@ -234,9 +235,6 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
     );
   };
 
-  const onUndoClick = () => {
-    machine.execute('undoPoint');
-  };
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(300);
   };
@@ -303,9 +301,7 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
           <BlurContainer>
             {isEditMode && areRoutesVisible && (
               <ControlPanel
-                onEditClimbingRouteClick={onEditClimbingRouteClick}
                 onCreateClimbingRouteClick={onCreateClimbingRouteClick}
-                onUndoClick={onUndoClick}
               />
             )}
             <EditorContainer imageHeight={imageSize.height}>

@@ -90,6 +90,10 @@ type ClimbingContextType = {
   setIsEditMode: (isEditMode: boolean) => void;
   viewportSize: Size;
   setViewportSize: (size: Size) => void;
+  isLineInteractiveAreaHovered: boolean;
+  setIsLineInteractiveAreaHovered: (
+    isLineInteractiveAreaHovered: boolean,
+  ) => void;
 };
 
 // @TODO generate?
@@ -137,6 +141,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   moveRoute: () => null,
   viewportSize: { width: 0, height: 0 },
   setViewportSize: () => null,
+  isLineInteractiveAreaHovered: false,
+  setIsLineInteractiveAreaHovered: () => null,
 });
 
 export const ClimbingContextProvider = ({ children }) => {
@@ -147,6 +153,8 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
+  const [isLineInteractiveAreaHovered, setIsLineInteractiveAreaHovered] =
+    useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
   const [editorPosition, setEditorPosition] = useState<PositionPx>({
     x: 0,
@@ -213,6 +221,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const editRoute = () => {};
   const extendRoute = (props: { routeNumber?: number }) => {
     if (props?.routeNumber) setRouteSelectedIndex(props.routeNumber);
+    setIsLineInteractiveAreaHovered(false);
   };
 
   const finishRoute = () => {
@@ -385,13 +394,14 @@ export const ClimbingContextProvider = ({ children }) => {
   };
   const commonActions: Partial<Record<Action, ActionWithCallback>> = {
     createRoute: { nextState: 'editRoute', callback: createRoute },
+    editRoute: { nextState: 'editRoute', callback: editRoute },
   };
 
   const states: Machine = {
     init: {
       ...commonActions,
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
-      editRoute: { nextState: 'editRoute', callback: editRoute },
+
       routeSelect: {
         nextState: 'routeSelected',
         callback: routeSelect,
@@ -413,6 +423,11 @@ export const ClimbingContextProvider = ({ children }) => {
       ...commonActions,
       finishRoute: { nextState: 'routeSelected', callback: finishRoute },
       undoPoint: { nextState: 'extendRoute', callback: undoPoint },
+      showPointMenu: { nextState: 'pointMenu' },
+      addPointInBetween: {
+        nextState: 'extendRoute',
+        callback: addPointInBetween,
+      },
       addPointToEnd: {
         nextState: 'extendRoute',
         callback: addPointToEnd,
@@ -432,17 +447,10 @@ export const ClimbingContextProvider = ({ children }) => {
         callback: routeSelect,
       },
       cancelRouteSelection: {
-        ...commonActions,
         nextState: 'init',
         callback: cancelRouteSelection,
       },
-      editRoute: {
-        ...commonActions,
-        nextState: 'editRoute',
-        callback: editRoute,
-      },
       extendRoute: {
-        ...commonActions,
         nextState: 'extendRoute',
         callback: extendRoute,
       },
@@ -467,7 +475,7 @@ export const ClimbingContextProvider = ({ children }) => {
         );
         if (callback) callback(props);
       } else {
-        console.error('wrong action', currentState, desiredAction);
+        console.warn('wrong action', currentState, desiredAction);
       }
     },
   });
@@ -512,6 +520,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setIsEditMode,
     viewportSize,
     setViewportSize,
+    isLineInteractiveAreaHovered,
+    setIsLineInteractiveAreaHovered,
   };
 
   return (

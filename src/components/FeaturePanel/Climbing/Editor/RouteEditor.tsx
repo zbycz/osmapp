@@ -100,6 +100,16 @@ export const RouteEditor = ({
         )
       : null;
 
+  const selectedPointOfSelectedRoute =
+    pointSelectedIndex !== null
+      ? getPixelPosition(routes[routeSelectedIndex].path[pointSelectedIndex])
+      : null;
+
+  const routeFloatingMenuPosition =
+    machine.currentStateName === 'pointMenu'
+      ? selectedPointOfSelectedRoute
+      : lastPointOfSelectedRoute;
+
   return (
     <>
       <Svg
@@ -115,16 +125,16 @@ export const RouteEditor = ({
         {sortedRoutes.selected}
       </Svg>
 
-      <PointMenu anchorEl={pointElement} setAnchorEl={setPointElement} />
-      {lastPointOfSelectedRoute && (
+      {/* <PointMenu anchorEl={pointElement} setAnchorEl={setPointElement} /> */}
+      {routeFloatingMenuPosition && (
         <RouteFloatingMenuContainer
           position={{
             x:
-              lastPointOfSelectedRoute.x +
+              routeFloatingMenuPosition.x +
               editorPosition.x +
               scrollOffset.x +
               25,
-            y: lastPointOfSelectedRoute.y + scrollOffset.y - 15,
+            y: routeFloatingMenuPosition.y + scrollOffset.y - 15,
           }}
         >
           <RouteFloatingMenu />

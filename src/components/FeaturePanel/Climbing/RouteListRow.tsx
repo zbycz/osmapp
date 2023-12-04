@@ -48,11 +48,7 @@ export const RenderListRow = ({
   const isSelected = isRouteSelected(index);
   const machine = getMachine();
   const onEditClick = (e) => {
-    if (path.length === 0) {
-      machine.execute('extendRoute', { routeNumber: index });
-    } else {
-      machine.execute('editRoute');
-    }
+    machine.execute('editRoute');
     e.stopPropagation();
   };
 
@@ -116,20 +112,20 @@ export const RenderListRow = ({
           )}
         </Cell>
 
-        {isEditMode && (
-          <Cell align="right">
-            <>
-              <IconButton
-                onClick={onEditClick}
-                color="primary"
-                size="small"
-                title="Edit"
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </>
-          </Cell>
-        )}
+        {/* {isEditMode && ( */}
+        <Cell align="right">
+          <>
+            <IconButton
+              onClick={onEditClick}
+              color="primary"
+              size="small"
+              title="Edit"
+            >
+              <EditIcon fontSize="small" />
+            </IconButton>
+          </>
+        </Cell>
+        {/* )} */}
       </Row>
       {/* <Row>
         <Cell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

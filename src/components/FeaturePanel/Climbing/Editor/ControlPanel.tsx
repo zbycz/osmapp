@@ -18,13 +18,13 @@ const Container = styled.div`
   z-index: 1;
 `;
 
-export const ControlPanel = ({
-  onEditClimbingRouteClick,
-  // onCreateClimbingRouteClick,
-  onUndoClick,
-}) => {
+export const ControlPanel = () => {
   const { routeSelectedIndex, routes, getMachine } = useClimbingContext();
   const machine = getMachine();
+
+  const onUndoClick = () => {
+    machine.execute('undoPoint');
+  };
 
   // const onFinishClimbingRouteClick = () => {
   //   machine.execute('finishRoute');
@@ -77,7 +77,7 @@ export const ControlPanel = ({
               <ControlPointIcon fontSize="small" />
             </IconButton> */}
 
-            {routeSelectedIndex !== null && (
+            {/* {routeSelectedIndex !== null && (
               <>
                 <IconButton
                   color="default"
@@ -88,7 +88,7 @@ export const ControlPanel = ({
                   <EditIcon fontSize="small" />
                 </IconButton>
               </>
-            )}
+            )} */}
           </>
         )}
     </Container>
