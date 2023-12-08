@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { IconButton, TextField } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
+import { debounce } from 'lodash';
 import { ClimbingRoute } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
+import { emptyRoute } from './utils/emptyRoute';
 
+const DEBOUNCE_TIME = 500;
 const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
   width: ${({ width }) => width}px;
   text-align: ${({ align }) => align};
@@ -32,17 +35,15 @@ const EmptyValue = styled.div`
   color: #666;
 `;
 
-export const RenderListRow = ({
-  route,
-  index,
-  onRowClick,
-  onRouteChange,
-  // onDeleteExistingRouteClick,
-}) => {
-  const { name, difficulty, path } = route;
+export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
+  const [tempRoute, setTempRoute] = useState(emptyRoute);
+  const { path } = route;
   const getText = (field: keyof ClimbingRoute) =>
     route[field] !== '' ? route[field] : <EmptyValue>?</EmptyValue>;
-  // const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    setTempRoute(route);
+  }, [route]);
 
   const { getMachine, isRouteSelected, isEditMode } = useClimbingContext();
   const isSelected = isRouteSelected(index);
@@ -52,9 +53,21 @@ export const RenderListRow = ({
     e.stopPropagation();
   };
 
+  const onValueChange = (e, propName: keyof ClimbingRoute) => {
+    onRouteChange(e, index, propName);
+  };
+
   const stopPropagation = (e) => {
     e.stopPropagation();
   };
+  const debouncedValueChange = (e, propName) =>
+    debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)(e);
+
+  const onTempRouteChange = (e, propName: keyof ClimbingRoute) => {
+    setTempRoute({ ...tempRoute, [propName]: e.target.value });
+    debouncedValueChange(e, propName);
+  };
+
   return (
     <>
       <Row
@@ -83,11 +96,9 @@ export const RenderListRow = ({
           ) : (
             <TextField
               size="small"
-              value={name}
+              value={tempRoute.name}
               placeholder="No name"
-              onChange={(e) => {
-                onRouteChange(e, index, 'name');
-              }}
+              onChange={(e) => onTempRouteChange(e, 'name')}
               onClick={stopPropagation}
               fullWidth
             />
@@ -105,7 +116,7 @@ export const RenderListRow = ({
           ) : (
             <TextField
               size="small"
-              value={difficulty}
+              value={tempRoute.difficulty}
               placeholder="6+"
               onChange={(e) => onRouteChange(e, index, 'difficulty')}
               onClick={stopPropagation}

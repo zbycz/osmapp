@@ -21,7 +21,7 @@ export const routes1: ClimbingRoute[] = [
     ],
   },
   {
-    name: 'Krutý řím varianta pro borce',
+    name: 'Krutý řím (varianta pro borce)',
     difficulty: '8',
     length: '',
     path: [
