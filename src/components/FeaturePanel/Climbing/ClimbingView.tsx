@@ -5,8 +5,7 @@ import styled from 'styled-components';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { Fab, IconButton } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import { IconButton } from '@material-ui/core';
 import { RouteEditor } from './Editor/RouteEditor';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ControlPanel } from './Editor/ControlPanel';
@@ -15,21 +14,13 @@ import { Guide } from './Guide';
 import { PositionPx } from './types';
 import { updateElementOnIndex } from './utils';
 
-type Props = {
-  onEditorClick?: () => void;
-};
-
 const Container = styled.div`
   position: relative;
   display: flex;
   flex-direction: column;
   height: 100%;
 `;
-const AddButton = styled.div`
-  position: fixed;
-  bottom: 10px;
-  right: 10px;
-`;
+
 const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   position: absolute;
   z-index: 10000;
@@ -99,7 +90,7 @@ const DialogIcon = styled.div`
   right: 10px;
 `;
 
-export const ClimbingView = ({ onEditorClick }: Props) => {
+export const ClimbingView = () => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
 
@@ -130,8 +121,8 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
     isLineInteractiveAreaHovered,
   } = useClimbingContext();
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
-  const imageUrl = '/images/rock.png';
-  // const imageUrl = '/images/rock2.jpg';
+  // const imageUrl = '/images/rock.png';
+  const imageUrl = '/images/rock2.jpg';
   // const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
   // const imageUrl =
   //   'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
@@ -153,25 +144,15 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
     setViewportSize({ width: window?.innerWidth, height: window?.innerHeight });
   };
 
-  const onCreateClimbingRouteClick = () => {
-    machine.execute('createRoute');
-  };
+  useEffect(() => {
+    if (isEditMode && machine.currentStateName === 'routeSelected') {
+      machine.execute('editRoute', { routeNumber: routeSelectedIndex }); // možná tímhle nahradit isEditMode
+    }
 
-  // const onDeleteWholeRouteClick = (deletedExistingRouteIndex: number) => {
-  //   // @TODO co to je?
-  //   machine.execute('deleteRoute');
-  //   setRouteSelectedIndex(null);
-  //   updateRouteOnIndex(deletedExistingRouteIndex);
-  // };
-
-  const onEditClimbingRouteClick = () => {
-    machine.execute('editRoute'); // možná tímhle nahradit isEditMode
-  };
-
-  // const onDeleteExistingClimbingRouteClick = () => {
-  //   // @TODO co to je?
-  //   machine.execute('deleteRoute');
-  // };
+    if (!isEditMode && machine.currentStateName === 'editRoute') {
+      machine.execute('routeSelect', { routeNumber: routeSelectedIndex });
+    }
+  }, [isEditMode]);
 
   useEffect(() => {
     // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
@@ -239,13 +220,6 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
     setSplitPaneHeight(300);
   };
 
-  const onNewRouteCreate = () => {
-    machine.execute('createRoute');
-    // const newIndex = routes.length;
-    // setRoutes([...routes, emptyRoute]);
-    // setRouteSelectedIndex(newIndex);
-  };
-
   React.useEffect(() => {
     window.addEventListener('resize', handleImageLoad);
     window.addEventListener('orientationchange', handleImageLoad);
@@ -299,11 +273,7 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
       >
         <BackgroundContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
           <BlurContainer>
-            {isEditMode && areRoutesVisible && (
-              <ControlPanel
-                onCreateClimbingRouteClick={onCreateClimbingRouteClick}
-              />
-            )}
+            {isEditMode && areRoutesVisible && <ControlPanel />}
             <EditorContainer imageHeight={imageSize.height}>
               <ImageContainer>
                 <ImageElement
@@ -317,11 +287,11 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
                 <>
                   <RouteEditor
                     routes={routes}
-                    onClick={onEditorClick || onCanvasClick}
+                    onClick={onCanvasClick}
                     onEditorMouseMove={onMouseMove}
                     onEditorTouchMove={onTouchMove}
                   />
-                  <Guide />
+                  {isEditMode && <Guide />}
                 </>
               )}
             </EditorContainer>
@@ -332,12 +302,15 @@ export const ClimbingView = ({ onEditorClick }: Props) => {
         // onDeleteExistingRouteClick={onDeleteWholeRouteClick}
         />
       </SplitPane>
-      <AddButton>
-        <Fab color="primary" variant="extended" onClick={onNewRouteCreate}>
-          <AddIcon />
-          New route
-        </Fab>
-      </AddButton>
+      {/* {isEditMode && (
+        <AddButton>
+          <Fab color="primary" variant="extended" onClick={onNewRouteCreate}>
+            <AddIcon />
+            New route
+          </Fab>
+        </AddButton>
+      )} */}
+
       <DialogIcon>
         {/* <IconButton
           color="secondary"

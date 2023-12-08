@@ -47,8 +47,8 @@ export const RenderListRow = ({
   const { getMachine, isRouteSelected, isEditMode } = useClimbingContext();
   const isSelected = isRouteSelected(index);
   const machine = getMachine();
-  const onEditClick = (e) => {
-    machine.execute('editRoute');
+  const onEditClick = (e, editIndex: number) => {
+    machine.execute('editRoute', { routeNumber: editIndex });
     e.stopPropagation();
   };
 
@@ -85,7 +85,9 @@ export const RenderListRow = ({
               size="small"
               value={name}
               placeholder="No name"
-              onChange={(e) => onRouteChange(e, index, 'name')}
+              onChange={(e) => {
+                onRouteChange(e, index, 'name');
+              }}
               onClick={stopPropagation}
               fullWidth
             />
@@ -112,20 +114,20 @@ export const RenderListRow = ({
           )}
         </Cell>
 
-        {/* {isEditMode && ( */}
-        <Cell align="right">
-          <>
-            <IconButton
-              onClick={onEditClick}
-              color="primary"
-              size="small"
-              title="Edit"
-            >
-              <EditIcon fontSize="small" />
-            </IconButton>
-          </>
-        </Cell>
-        {/* )} */}
+        {isEditMode && (
+          <Cell align="right">
+            <>
+              <IconButton
+                onClick={(e) => onEditClick(e, index)}
+                color="primary"
+                size="small"
+                title="Edit"
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+            </>
+          </Cell>
+        )}
       </Row>
       {/* <Row>
         <Cell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

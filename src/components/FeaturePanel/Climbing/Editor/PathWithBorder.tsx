@@ -12,6 +12,7 @@ export const PathWithBorder = ({ d, isSelected, ...props }) => (
       strokeWidth={7}
       stroke={isSelected ? 'white' : '#555'}
       strokeLinecap="round"
+      strokeLinejoin="round"
       fill="none"
       opacity={0.8}
       {...props}
@@ -21,6 +22,7 @@ export const PathWithBorder = ({ d, isSelected, ...props }) => (
       strokeWidth={5}
       stroke={isSelected ? 'royalblue' : 'white'}
       strokeLinecap="round"
+      strokeLinejoin="round"
       fill="none"
       pointerEvents="none"
       {...props}

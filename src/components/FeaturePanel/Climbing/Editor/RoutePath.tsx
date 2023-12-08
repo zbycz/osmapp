@@ -33,6 +33,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     getPixelPosition,
     // getPercentagePosition,
     getMachine,
+    isEditMode,
     countPositionWith,
     isLineInteractiveAreaHovered,
     setIsLineInteractiveAreaHovered,
@@ -125,7 +126,11 @@ export const RoutePath = ({ route, routeNumber }) => {
     : {
         onClick: (e) => {
           if (isInteractionDisabled) return;
-          machine.execute('routeSelect', { routeNumber });
+          if (isEditMode) {
+            machine.execute('editRoute', { routeNumber });
+          } else {
+            machine.execute('routeSelect', { routeNumber });
+          }
           e.stopPropagation();
         },
         cursor: isInteractionDisabled ? undefined : 'pointer',

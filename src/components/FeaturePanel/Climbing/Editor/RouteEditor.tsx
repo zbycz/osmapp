@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { PointMenu } from './PointMenu';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteFloatingMenu } from './RouteFloatingMenu';
 import { Position } from '../types';
@@ -48,8 +47,6 @@ export const RouteEditor = ({
     getPixelPosition,
     editorPosition,
     scrollOffset,
-    pointElement,
-    setPointElement,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -101,7 +98,7 @@ export const RouteEditor = ({
       : null;
 
   const selectedPointOfSelectedRoute =
-    pointSelectedIndex !== null
+    pointSelectedIndex !== null && routes[routeSelectedIndex]
       ? getPixelPosition(routes[routeSelectedIndex].path[pointSelectedIndex])
       : null;
 

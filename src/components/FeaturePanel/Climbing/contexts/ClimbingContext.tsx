@@ -87,7 +87,7 @@ type ClimbingContextType = {
   setPointElement: (pointElement: null | HTMLElement) => void;
   moveRoute: (from: number, to: number) => void;
   isEditMode: boolean;
-  setIsEditMode: (isEditMode: boolean) => void;
+  setIsEditMode: (value: boolean | ((old: boolean) => boolean)) => void;
   viewportSize: Size;
   setViewportSize: (size: Size) => void;
   isLineInteractiveAreaHovered: boolean;
@@ -218,7 +218,10 @@ export const ClimbingContextProvider = ({ children }) => {
     setPointSelectedIndex(null);
   };
 
-  const editRoute = () => {};
+  const editRoute = ({ routeNumber }) => {
+    setRouteSelectedIndex(routeNumber);
+  };
+
   const extendRoute = (props: { routeNumber?: number }) => {
     if (props?.routeNumber) setRouteSelectedIndex(props.routeNumber);
     setIsLineInteractiveAreaHovered(false);
@@ -401,29 +404,31 @@ export const ClimbingContextProvider = ({ children }) => {
     init: {
       ...commonActions,
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
-
-      routeSelect: {
-        nextState: 'routeSelected',
-        callback: routeSelect,
-      },
+      routeSelect: { nextState: 'routeSelected', callback: routeSelect },
     },
     editRoute: {
       ...commonActions,
       deleteRoute: { nextState: 'init', callback: deleteRoute },
       dragPoint: { nextState: 'editRoute', callback: dragPoint },
+      cancelRouteSelection: {
+        nextState: 'init',
+        callback: cancelRouteSelection,
+      },
       addPointInBetween: {
         nextState: 'editRoute',
         callback: addPointInBetween,
       },
       showPointMenu: { nextState: 'pointMenu' },
-      finishRoute: { nextState: 'routeSelected', callback: finishRoute },
+      finishRoute: { nextState: 'editRoute', callback: finishRoute },
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
+      routeSelect: { nextState: 'routeSelected', callback: routeSelect },
     },
     extendRoute: {
       ...commonActions,
-      finishRoute: { nextState: 'routeSelected', callback: finishRoute },
+      finishRoute: { nextState: 'editRoute', callback: finishRoute },
       undoPoint: { nextState: 'extendRoute', callback: undoPoint },
       showPointMenu: { nextState: 'pointMenu' },
+      dragPoint: { nextState: 'extendRoute', callback: dragPoint },
       addPointInBetween: {
         nextState: 'extendRoute',
         callback: addPointInBetween,
@@ -438,22 +443,17 @@ export const ClimbingContextProvider = ({ children }) => {
       changePointType: { nextState: 'editRoute', callback: changePointType },
       deletePoint: { nextState: 'editRoute', callback: deletePoint },
       cancelPointMenu: { nextState: 'editRoute' },
-      finishRoute: { nextState: 'routeSelected', callback: finishRoute },
+      finishRoute: { nextState: 'editRoute', callback: finishRoute },
+      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
     },
     routeSelected: {
       ...commonActions,
-      routeSelect: {
-        nextState: 'routeSelected',
-        callback: routeSelect,
-      },
+      routeSelect: { nextState: 'routeSelected', callback: routeSelect },
       cancelRouteSelection: {
         nextState: 'init',
         callback: cancelRouteSelection,
       },
-      extendRoute: {
-        nextState: 'extendRoute',
-        callback: extendRoute,
-      },
+      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
     },
   };
 

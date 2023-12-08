@@ -1,20 +1,13 @@
 import React from 'react';
 import CheckIcon from '@material-ui/icons/Check';
 import AddLocationIcon from '@material-ui/icons/AddLocation';
-import CloseIcon from '@material-ui/icons/Close';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
 import DeleteIcon from '@material-ui/icons/Delete';
-import {
-  Button,
-  ButtonGroup,
-  FormControl,
-  MenuItem,
-  Select,
-} from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 export const RouteFloatingMenu = () => {
-  const { getMachine } = useClimbingContext();
+  const { getMachine, pointSelectedIndex, routes, routeSelectedIndex } =
+    useClimbingContext();
   const machine = getMachine();
 
   const onFinishClimbingRouteClick = () => {
@@ -29,14 +22,16 @@ export const RouteFloatingMenu = () => {
 
   return (
     <ButtonGroup variant="contained" size="small" color="primary">
-      {machine.currentStateName === 'editRoute' && (
-        <Button
-          onClick={onContinueClimbingRouteClick}
-          startIcon={<AddLocationIcon />}
-        >
-          Extend
-        </Button>
-      )}
+      {machine.currentStateName === 'pointMenu' &&
+        routes[routeSelectedIndex] &&
+        pointSelectedIndex === routes[routeSelectedIndex].path.length - 1 && (
+          <Button
+            onClick={onContinueClimbingRouteClick}
+            startIcon={<AddLocationIcon />}
+          >
+            Extend
+          </Button>
+        )}
       {machine.currentStateName === 'pointMenu' && (
         <Button onClick={() => {}}>Type</Button>
       )}
@@ -51,12 +46,10 @@ export const RouteFloatingMenu = () => {
         </Button>
       )} */}
       {machine.currentStateName === 'pointMenu' && (
-        <Button onClick={onDeletePoint} startIcon={<DeleteIcon />}></Button>
+        <Button onClick={onDeletePoint} startIcon={<DeleteIcon />} />
       )}
 
-      {(machine.currentStateName === 'editRoute' ||
-        machine.currentStateName === 'extendRoute' ||
-        machine.currentStateName === 'pointMenu') && (
+      {machine.currentStateName === 'extendRoute' && (
         <Button onClick={onFinishClimbingRouteClick} startIcon={<CheckIcon />}>
           Done
         </Button>

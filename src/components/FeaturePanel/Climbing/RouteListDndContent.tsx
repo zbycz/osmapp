@@ -61,9 +61,10 @@ export const RouteListDndContent = () => {
     updateRouteOnIndex,
     isRouteSelected,
     isEditMode,
+    getMachine,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
-
+  const machine = getMachine();
   useEffect(() => {
     const content = routes.map((route, index) => ({
       id: index,
@@ -76,7 +77,6 @@ export const RouteListDndContent = () => {
   const [draggedOverIndex, setDraggedOverIndex] = useState<number | null>(null);
 
   const onRouteChange = (e, index, updatedField) => {
-    console.log('____', e, index, updatedField);
     updateRouteOnIndex(routeSelectedIndex, (route) => ({
       ...route,
       [updatedField]: e.target.value,
@@ -84,7 +84,12 @@ export const RouteListDndContent = () => {
   };
 
   const onRowClick = (index: number) => {
-    setRouteSelectedIndex(routeSelectedIndex === index ? null : index);
+    const routeNumber = routeSelectedIndex === index ? null : index;
+    if (isEditMode) {
+      machine.execute('editRoute', { routeNumber });
+    } else {
+      machine.execute('routeSelect', { routeNumber });
+    }
   };
 
   const handleDragStart = (

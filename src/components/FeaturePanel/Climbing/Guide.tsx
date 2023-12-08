@@ -21,6 +21,8 @@ export const Guide = () => {
     machine.execute('extendRoute', { routeNumber: routeSelectedIndex });
   };
   const isInSchema = routes[routeSelectedIndex]?.path.length > 0;
+  const showDrawButton =
+    !isInSchema && machine.currentStateName !== 'extendRoute';
   return (
     <GuideContainer>
       <Snackbar
@@ -30,7 +32,10 @@ export const Guide = () => {
         }
         // autoHideDuration={6000}
 
-        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        anchorOrigin={{
+          vertical: showDrawButton ? 'bottom' : 'top',
+          horizontal: 'center',
+        }}
         // onClose={handleClose}
       >
         {/* <Alert
@@ -46,13 +51,18 @@ export const Guide = () => {
           Selected route is not in scheme
         </Alert> */}
 
-        {!isInSchema && machine.currentStateName !== 'extendRoute' ? (
+        {showDrawButton ? (
           <Alert
             onClose={handleClose}
             severity="warning"
             variant="filled"
             action={
-              <Button color="inherit" size="small" onClick={onDrawRouteClick}>
+              <Button
+                color="primary"
+                variant="contained"
+                size="small"
+                onClick={onDrawRouteClick}
+              >
                 Zakreslit
               </Button>
             }

@@ -30,3 +30,5 @@ export type ClimbingRoute = {
   description?: string;
   path: PathPoints;
 };
+
+// images: Array<Array<ClimbingRoute>>

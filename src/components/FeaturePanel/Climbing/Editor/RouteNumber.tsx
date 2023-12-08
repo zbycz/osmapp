@@ -28,7 +28,8 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   const OUTLINE_WIDTH = 2;
   const HOVER_WIDTH = 10;
 
-  const { imageSize, isRouteSelected, getMachine } = useClimbingContext();
+  const { imageSize, isRouteSelected, getMachine, isEditMode } =
+    useClimbingContext();
 
   const newY = // this shifts Y coordinate in case of too small photo
     y + RECT_Y_OFFSET + RECT_HEIGHT > imageSize.height
@@ -37,7 +38,11 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   const machine = getMachine();
   const commonProps = {
     onClick: (e) => {
-      machine.execute('routeSelect', { routeNumber });
+      if (isEditMode) {
+        machine.execute('editRoute', { routeNumber });
+      } else {
+        machine.execute('routeSelect', { routeNumber });
+      }
       e.stopPropagation();
     },
     cursor: 'pointer',
