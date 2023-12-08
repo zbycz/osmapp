@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { ClimbingRoute, Position, PositionPx, Size } from '../types';
 import { updateElementOnIndex } from '../utils';
 import { emptyRoute } from '../utils/emptyRoute';
+import { routes1 } from './mock';
 
 type ImageSize = {
   width: number;
@@ -148,7 +149,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
 export const ClimbingContextProvider = ({ children }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-  const [routes, setRoutes] = useState<Array<ClimbingRoute>>([]);
+  const [routes, setRoutes] = useState<Array<ClimbingRoute>>(routes1);
   const [splitPaneHeight, setSplitPaneHeight] = useState<number>(800);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
@@ -204,10 +205,12 @@ export const ClimbingContextProvider = ({ children }) => {
 
   const routeSelect = ({ routeNumber }) => {
     setRouteSelectedIndex(routeNumber);
+    setPointSelectedIndex(null);
   };
 
   const cancelRouteSelection = () => {
     setRouteSelectedIndex(null);
+    setPointSelectedIndex(null);
   };
 
   const deletePoint = () => {
@@ -220,10 +223,14 @@ export const ClimbingContextProvider = ({ children }) => {
 
   const editRoute = ({ routeNumber }) => {
     setRouteSelectedIndex(routeNumber);
+    setPointSelectedIndex(null);
   };
 
   const extendRoute = (props: { routeNumber?: number }) => {
-    if (props?.routeNumber) setRouteSelectedIndex(props.routeNumber);
+    if (props?.routeNumber) {
+      setRouteSelectedIndex(props.routeNumber);
+      setPointSelectedIndex(null);
+    }
     setIsLineInteractiveAreaHovered(false);
   };
 
@@ -234,12 +241,14 @@ export const ClimbingContextProvider = ({ children }) => {
   const createRoute = () => {
     const newIndex = routes.length;
     setRouteSelectedIndex(newIndex);
+    setPointSelectedIndex(null);
     setRoutes([...routes, emptyRoute]);
   };
 
   const deleteRoute = () => {
     updateRouteOnIndex(routeSelectedIndex);
     setRouteSelectedIndex(null);
+    setPointSelectedIndex(null);
   };
 
   const undoPoint = () => {

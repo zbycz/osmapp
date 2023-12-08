@@ -37,6 +37,7 @@ export const Point = ({
     isPointMoving,
     pointElement,
     setPointElement,
+    setIsLineInteractiveAreaHovered,
   } = useClimbingContext();
 
   const onClick = (e) => {
@@ -45,10 +46,12 @@ export const Point = ({
 
   const onMouseEnter = () => {
     setIsHovered(true);
+    setIsLineInteractiveAreaHovered(true);
   };
 
   const onMouseLeave = () => {
     setIsHovered(false);
+    setIsLineInteractiveAreaHovered(false);
   };
   const onMouseDown = () => {
     setPointSelectedIndex(index);

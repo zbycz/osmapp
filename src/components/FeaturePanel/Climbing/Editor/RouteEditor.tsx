@@ -97,6 +97,14 @@ export const RouteEditor = ({
         )
       : null;
 
+  console.log(
+    '_____TADY',
+    routes,
+    routes[routeSelectedIndex]?.path,
+    routeSelectedIndex,
+    pointSelectedIndex,
+    routes[routeSelectedIndex]?.path[pointSelectedIndex],
+  );
   const selectedPointOfSelectedRoute =
     pointSelectedIndex !== null && routes[routeSelectedIndex]
       ? getPixelPosition(routes[routeSelectedIndex].path[pointSelectedIndex])

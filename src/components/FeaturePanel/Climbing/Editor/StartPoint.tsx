@@ -42,7 +42,8 @@ export const StartPoint = ({
 
   return (
     <>
-      {machine.currentStateName === 'extendRoute' ? (
+      {machine.currentStateName === 'editRoute' ||
+      machine.currentStateName === 'extendRoute' ? (
         <Point
           x={x}
           y={y}

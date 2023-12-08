@@ -241,6 +241,8 @@ export const ClimbingView = () => {
     setSplitPaneHeight(splitHeight);
   };
 
+  console.log(JSON.stringify(routes));
+
   // @TODO udělat header footer jako edit dialog
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
