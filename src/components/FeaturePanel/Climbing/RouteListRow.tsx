@@ -7,7 +7,7 @@ import { ClimbingRoute } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { emptyRoute } from './utils/emptyRoute';
 
-const DEBOUNCE_TIME = 500;
+const DEBOUNCE_TIME = 1000;
 const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
   width: ${({ width }) => width}px;
   text-align: ${({ align }) => align};
