@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { IconButton, TextField } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
@@ -36,6 +36,7 @@ const EmptyValue = styled.div`
 `;
 
 export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
+  const ref = useRef(null);
   const [tempRoute, setTempRoute] = useState(emptyRoute);
   const { path } = route;
   const getText = (field: keyof ClimbingRoute) =>
@@ -45,7 +46,15 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     setTempRoute(route);
   }, [route]);
 
-  const { getMachine, isRouteSelected, isEditMode } = useClimbingContext();
+  const { getMachine, isRouteSelected, isEditMode, routeSelectedIndex } =
+    useClimbingContext();
+
+  useEffect(() => {
+    if (routeSelectedIndex === index) {
+      ref.current?.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [routeSelectedIndex]);
+
   const isSelected = isRouteSelected(index);
   const machine = getMachine();
   const onEditClick = (e, editIndex: number) => {
@@ -71,7 +80,10 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   return (
     <>
       <Row
-        onClick={() => onRowClick(index)}
+        ref={ref}
+        onClick={() => {
+          onRowClick(index);
+        }}
         selected={isSelected}
         style={{ cursor: 'pointer' }}
       >
