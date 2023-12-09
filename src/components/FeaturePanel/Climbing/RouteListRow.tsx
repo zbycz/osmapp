@@ -6,6 +6,7 @@ import { debounce } from 'lodash';
 import { ClimbingRoute } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { emptyRoute } from './utils/emptyRoute';
+import { RouteNumber } from './RouteNumber';
 
 const DEBOUNCE_TIME = 1000;
 const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
@@ -33,21 +34,6 @@ const Row = styled.div`
 `;
 const EmptyValue = styled.div`
   color: #666;
-`;
-
-const RouteNumber = styled.div`
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
-  border-radius: 50%;
-  background: ${({ isSelected, hasRoute }) =>
-    isSelected ? 'royalblue' : hasRoute ? '#ccc' : 'transparent'};
-  color: ${({ isSelected, hasRoute }) =>
-    isSelected ? 'white' : hasRoute ? '#444' : '#444'};
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 12px;
 `;
 
 export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {

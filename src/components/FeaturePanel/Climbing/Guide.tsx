@@ -4,9 +4,14 @@ import { Alert } from '@material-ui/lab';
 import { Button, Snackbar } from '@material-ui/core';
 import { t } from '../../../services/intl';
 import { useClimbingContext } from './contexts/ClimbingContext';
+import { RouteNumber } from './RouteNumber';
 
 const GuideContainer = styled.div`
   padding: 10px;
+`;
+
+const DrawRouteButton = styled(Button)`
+  align-items: baseline;
 `;
 
 export const Guide = () => {
@@ -34,7 +39,7 @@ export const Guide = () => {
 
         anchorOrigin={{
           vertical: showDrawButton ? 'bottom' : 'top',
-          horizontal: 'center',
+          horizontal: showDrawButton ? 'right' : 'center',
         }}
         // onClose={handleClose}
       >
@@ -52,23 +57,15 @@ export const Guide = () => {
         </Alert> */}
 
         {showDrawButton ? (
-          <Alert
-            onClose={handleClose}
-            severity="warning"
-            variant="filled"
-            action={
-              <Button
-                color="primary"
-                variant="contained"
-                size="small"
-                onClick={onDrawRouteClick}
-              >
-                Zakreslit
-              </Button>
-            }
+          <DrawRouteButton
+            variant="contained"
+            size="small"
+            onClick={onDrawRouteClick}
           >
-            Tato cesta zatím není zakreslena na fotce.
-          </Alert>
+            Zakreslit cestu &nbsp;
+            <RouteNumber isSelected>{routeSelectedIndex + 1}</RouteNumber>
+            {/* Tato cesta zatím není zakreslena na fotce. */}
+          </DrawRouteButton>
         ) : (
           <Alert onClose={handleClose} severity="info" variant="filled">
             {routes[routeSelectedIndex]?.path.length === 0
