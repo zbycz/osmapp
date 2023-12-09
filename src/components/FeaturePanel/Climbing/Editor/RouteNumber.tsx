@@ -11,6 +11,9 @@ type Props = {
 
 const Text = styled.text`
   user-select: none;
+  font-size: 12px;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
 `;
 
 const RouteNameBoxBase = styled.rect`
