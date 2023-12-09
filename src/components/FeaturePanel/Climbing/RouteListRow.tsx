@@ -35,6 +35,21 @@ const EmptyValue = styled.div`
   color: #666;
 `;
 
+const RouteNumber = styled.div`
+  width: 20px;
+  height: 20px;
+  line-height: 20px;
+  border-radius: 50%;
+  background: ${({ isSelected, hasRoute }) =>
+    isSelected ? 'royalblue' : hasRoute ? '#ccc' : 'transparent'};
+  color: ${({ isSelected, hasRoute }) =>
+    isSelected ? 'white' : hasRoute ? '#444' : '#444'};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 12px;
+`;
+
 export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   const ref = useRef(null);
   const [tempRoute, setTempRoute] = useState(emptyRoute);
@@ -46,8 +61,13 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     setTempRoute(route);
   }, [route]);
 
-  const { getMachine, isRouteSelected, isEditMode, routeSelectedIndex } =
-    useClimbingContext();
+  const {
+    getMachine,
+    isRouteSelected,
+    hasPath,
+    isEditMode,
+    routeSelectedIndex,
+  } = useClimbingContext();
 
   useEffect(() => {
     if (routeSelectedIndex === index) {
@@ -56,6 +76,8 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   }, [routeSelectedIndex]);
 
   const isSelected = isRouteSelected(index);
+  const hasRoute = !!hasPath(index);
+
   const machine = getMachine();
   const onEditClick = (e, editIndex: number) => {
     machine.execute('editRoute', { routeNumber: editIndex });
@@ -97,7 +119,9 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
           </IconButton>
         </Cell> */}
         <RouteNumberCell component="th" scope="row" width={30}>
-          {index}
+          <RouteNumber isSelected={isSelected} hasRoute={hasRoute}>
+            {index}
+          </RouteNumber>
         </RouteNumberCell>
         <NameCell>
           {!isEditMode ||

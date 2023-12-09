@@ -49,6 +49,7 @@ type ClimbingContextType = {
   imageSize: ImageSize;
   isPointMoving: boolean;
   isRouteSelected: (routeNumber: number) => boolean;
+  hasPath: (routeNumber: number) => boolean;
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
@@ -112,6 +113,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   isPointClicked: false,
   isPointMoving: false,
   isRouteSelected: () => null,
+  hasPath: () => null,
   pointSelectedIndex: null,
   routes: [],
   routeSelectedIndex: null,
@@ -489,8 +491,8 @@ export const ClimbingContextProvider = ({ children }) => {
     },
   });
 
-  const isRouteSelected = (routeNumber: number) =>
-    routeSelectedIndex === routeNumber;
+  const isRouteSelected = (index: number) => routeSelectedIndex === index;
+  const hasPath = (index: number) => (routes[index]?.path ?? []).length > 0;
 
   const climbingState = {
     editorPosition,
@@ -500,6 +502,7 @@ export const ClimbingContextProvider = ({ children }) => {
     isPointClicked,
     isPointMoving,
     isRouteSelected,
+    hasPath,
     pointSelectedIndex,
     routes,
     routeSelectedIndex,

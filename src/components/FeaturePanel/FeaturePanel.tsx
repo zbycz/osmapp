@@ -57,13 +57,13 @@ const FeaturePanel = () => {
     .filter(([, v]) => v);
   const label = getLabel(feature);
 
-  // if (tags.climbing === 'crag') {
-  return (
-    <ClimbingContextProvider>
-      <ClimbingPanel />
-    </ClimbingContextProvider>
-  );
-  // }
+  if (tags.climbing === 'crag') {
+    return (
+      <ClimbingContextProvider>
+        <ClimbingPanel />
+      </ClimbingContextProvider>
+    );
+  }
   return (
     <PanelWrapper>
       <PanelScrollbars>

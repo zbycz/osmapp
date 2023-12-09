@@ -19,7 +19,7 @@ import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 
-const EditRoutesContainer = styled.div`
+const ShowFullscreenContainer = styled.div`
   padding: 10px;
   overflow: auto;
 `;
@@ -35,7 +35,7 @@ const Title = styled.div`
 export const ClimbingPanel = () => {
   const contentRef = useRef(null);
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
-    useState<boolean>(true);
+    useState<boolean>(false);
 
   const {
     setScrollOffset,
@@ -120,6 +120,7 @@ export const ClimbingPanel = () => {
             >
               <ClimbingView />
             </DialogContent>
+
             {isEditMode && (
               <DialogActions>
                 <Flex>
@@ -148,8 +149,10 @@ export const ClimbingPanel = () => {
               </DialogActions>
             )}
           </Dialog>
-          {!isFullscreenDialogOpened && <ClimbingView />}
-          <EditRoutesContainer>
+
+          {!isFullscreenDialogOpened && <ClimbingView fixedHeight={238} />}
+
+          <ShowFullscreenContainer>
             <Button
               onClick={() => setIsFullscreenDialogOpened(true)}
               color="primary"
@@ -158,7 +161,7 @@ export const ClimbingPanel = () => {
             >
               Show fullscreen
             </Button>
-          </EditRoutesContainer>
+          </ShowFullscreenContainer>
         </PanelScrollbars>
       </PanelWrapper>
     </>

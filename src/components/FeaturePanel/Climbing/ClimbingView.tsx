@@ -90,7 +90,12 @@ const DialogIcon = styled.div`
   right: 10px;
 `;
 
-export const ClimbingView = () => {
+const imageUrl = '/images/rock2.jpg';
+// const imageUrl = '/images/rock.png';
+// const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
+// const imageUrl = 'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
+
+export const ClimbingView = ({ fixedHeight = undefined }) => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
 
@@ -120,12 +125,8 @@ export const ClimbingView = () => {
     editorPosition,
     isLineInteractiveAreaHovered,
   } = useClimbingContext();
+
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
-  // const imageUrl = '/images/rock.png';
-  const imageUrl = '/images/rock2.jpg';
-  // const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
-  // const imageUrl =
-  //   'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
   const imageRef = useRef(null);
   const machine = getMachine();
 
@@ -137,8 +138,10 @@ export const ClimbingView = () => {
 
     // const rect = e.target.getBoundingClientRect();
     // getWindowDimensions;
+
     const { clientHeight, clientWidth } = imageRef.current;
     const { left, top } = imageRef.current.getBoundingClientRect();
+
     setImageSize({ width: clientWidth, height: clientHeight });
     setEditorPosition({ x: left, y: top, units: 'px' });
     setViewportSize({ width: window?.innerWidth, height: window?.innerHeight });
@@ -268,7 +271,7 @@ export const ClimbingView = () => {
         split="horizontal"
         minSize={0}
         maxSize="100%"
-        size={splitPaneHeight}
+        size={fixedHeight || splitPaneHeight}
         onDragStarted={onDragStarted}
         onDragFinished={onDragFinished}
         pane1Style={{ maxHeight: '100%' }}
@@ -285,6 +288,7 @@ export const ClimbingView = () => {
                   // zoom={zoom}
                 />
               </ImageContainer>
+
               {!isSplitViewDragging && areRoutesVisible && (
                 <>
                   <RouteEditor

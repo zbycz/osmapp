@@ -1,7 +1,7 @@
 import React from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
-export const Belay = ({ x, y /*isSelected*/ }) => {
+export const Belay = ({ x, y /* isSelected */ }) => {
   const { isEditMode } = useClimbingContext();
 
   const size = 9;
