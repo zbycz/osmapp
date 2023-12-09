@@ -1,7 +1,8 @@
 import React from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
-export const Bolt = ({ x, y /* isSelected */ }) => {
+// eslint-disable-next-line  @typescript-eslint/no-unused-vars
+export const Bolt = ({ x, y, isSelected }) => {
   const { isEditMode } = useClimbingContext();
 
   const size = 16;

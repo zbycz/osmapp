@@ -208,7 +208,6 @@ export const RouteListDndContent = () => {
                   route={item.route}
                   onRowClick={onRowClick}
                   onRouteChange={onRouteChange}
-                  onDeleteExistingRouteClick={() => null}
                   index={index}
                 />
               </RowContent>

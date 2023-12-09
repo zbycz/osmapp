@@ -49,7 +49,11 @@ export const ClimbingPanel = () => {
   const machine = getMachine();
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
   const onScroll = (e) => {
-    setScrollOffset({ x: e.target.scrollLeft, y: e.target.scrollTop });
+    setScrollOffset({
+      x: e.target.scrollLeft,
+      y: e.target.scrollTop,
+      units: 'px',
+    });
   };
 
   useEffect(() => {
