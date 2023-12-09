@@ -1,14 +1,42 @@
 import styled from 'styled-components';
 
-export const RouteNumber = styled.div`
+const getColor = ({ isEditMode, isSelected, hasRoute }) => {
+  if (!isEditMode && !hasRoute) {
+    return {
+      background: 'transparent',
+      text: '#444',
+    };
+  }
+
+  if (isSelected) {
+    return {
+      background: 'royalblue',
+      text: 'white',
+    };
+  }
+  if (hasRoute) {
+    return {
+      background: '#ccc',
+      text: '#444',
+    };
+  }
+  return {
+    background: 'transparent',
+    text: '#444',
+  };
+};
+
+export const RouteNumber = styled.div<{
+  isEditMode: boolean;
+  isSelected: boolean;
+  hasRoute: boolean;
+}>`
   width: 22px;
   height: 22px;
   line-height: 20px;
   border-radius: 50%;
-  background: ${({ isSelected, hasRoute }) =>
-    isSelected ? 'royalblue' : hasRoute ? '#ccc' : 'transparent'};
-  color: ${({ isSelected, hasRoute }) =>
-    isSelected ? 'white' : hasRoute ? '#444' : '#444'};
+  background: ${(props) => getColor(props).background};
+  color: ${(props) => getColor(props).text};
   display: flex;
   justify-content: center;
   align-items: center;

@@ -105,7 +105,11 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
           </IconButton>
         </Cell> */}
         <RouteNumberCell component="th" scope="row" width={30}>
-          <RouteNumber isSelected={isSelected} hasRoute={hasRoute}>
+          <RouteNumber
+            isSelected={isSelected}
+            hasRoute={hasRoute}
+            isEditMode={isEditMode}
+          >
             {index + 1}
           </RouteNumber>
         </RouteNumberCell>
