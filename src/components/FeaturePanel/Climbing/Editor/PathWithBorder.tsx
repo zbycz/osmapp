@@ -9,7 +9,7 @@ export const PathWithBorder = ({ d, isSelected, ...props }) => (
   <>
     <RouteBorder
       d={d}
-      strokeWidth={7}
+      strokeWidth={3}
       stroke={isSelected ? 'white' : '#555'}
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -19,7 +19,7 @@ export const PathWithBorder = ({ d, isSelected, ...props }) => (
     />
     <RouteLine
       d={d}
-      strokeWidth={5}
+      strokeWidth={2}
       stroke={isSelected ? 'royalblue' : 'white'}
       strokeLinecap="round"
       strokeLinejoin="round"

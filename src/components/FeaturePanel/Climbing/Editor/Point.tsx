@@ -18,6 +18,13 @@ const PointElement = styled.circle<{ isHovered: boolean }>`
     }`}
 `;
 
+const getPointColor = (type, isHovered) => {
+  if (type) return { pointColor: 'transparent', pointStroke: 'transparent' };
+  if (isHovered) return { pointColor: 'white', pointStroke: 'rgba(0,0,0,0.3)' };
+
+  return { pointColor: 'white', pointStroke: 'royalblue' };
+};
+
 export const Point = ({
   x,
   y,
@@ -26,7 +33,6 @@ export const Point = ({
   index,
   routeNumber,
 }) => {
-  const isBelayVisible = type === 'belay';
   const [isHovered, setIsHovered] = useState(false);
   const {
     setPointSelectedIndex,
@@ -74,13 +80,7 @@ export const Point = ({
 
   const isPointSelected =
     routeSelectedIndex === routeNumber && pointSelectedIndex === index;
-  const getPointColor = () => {
-    if (isBelayVisible) return 'transparent';
-    if (isHovered) return 'white';
-
-    return 'white';
-  };
-  const pointColor = getPointColor();
+  const { pointColor, pointStroke } = getPointColor(type, isHovered);
 
   const isTouchDevice = 'ontouchstart' in window;
 
@@ -110,7 +110,7 @@ export const Point = ({
 
       <PointElement
         fill={pointColor}
-        stroke={isHovered ? 'rgba(0,0,0,0.3)' : 'royalblue'}
+        stroke={pointStroke}
         r={isTouchDevice ? 5 : 3}
         isHovered={isHovered}
         isPointSelected={isPointSelected}

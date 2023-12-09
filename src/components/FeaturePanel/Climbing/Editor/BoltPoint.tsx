@@ -1,19 +1,23 @@
 import React from 'react';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 
-export const Bolt = ({ x, y, isSelected }) => {
+export const Bolt = ({ x, y /*isSelected*/ }) => {
+  const { isEditMode } = useClimbingContext();
+
   const size = 16;
   const strokeWidth = 4;
   const shift = size / 2 - strokeWidth / 2;
 
-  const backgroundColor = isSelected ? 'white' : 'black';
-  const foregroundColor = isSelected ? 'royalblue' : 'white';
+  const backgroundColor = false /* isSelected */ ? 'white' : 'black';
+  const foregroundColor = false /* isSelected */ ? 'royalblue' : 'white';
+
+  const dx = x + 0; /* TODO was 15 */
+  const dy = y - size / 2 - strokeWidth / 2;
 
   return (
     <g
-      transform={` translate(${x + 15} ${
-        y - size / 2 - strokeWidth / 2
-      }) rotate(45)`}
-      cursor="help"
+      transform={`translate(${dx} ${dy}) rotate(45)`}
+      cursor={!isEditMode && 'help'}
     >
       <rect
         width={size}
