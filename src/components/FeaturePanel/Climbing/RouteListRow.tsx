@@ -51,7 +51,7 @@ const RouteNumber = styled.div`
 `;
 
 export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
   const [tempRoute, setTempRoute] = useState(emptyRoute);
   const { path } = route;
   const getText = (field: keyof ClimbingRoute) =>
@@ -71,7 +71,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
 
   useEffect(() => {
     if (routeSelectedIndex === index) {
-      ref.current?.scrollIntoView({ behavior: 'smooth' });
+      ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [routeSelectedIndex]);
 
@@ -120,7 +120,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
         </Cell> */}
         <RouteNumberCell component="th" scope="row" width={30}>
           <RouteNumber isSelected={isSelected} hasRoute={hasRoute}>
-            {index}
+            {index + 1}
           </RouteNumber>
         </RouteNumberCell>
         <NameCell>

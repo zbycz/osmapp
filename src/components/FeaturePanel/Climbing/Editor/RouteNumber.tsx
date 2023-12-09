@@ -87,7 +87,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         fontWeight="bold"
         {...commonProps}
       >
-        {routeNumber}
+        {routeNumber + 1}
       </Text>
     </>
   );
