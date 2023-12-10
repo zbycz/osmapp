@@ -19,6 +19,7 @@ import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { EditButton } from './EditButton';
 import { FeaturedTags } from './FeaturedTags';
+import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 
@@ -63,6 +64,11 @@ const FeaturePanel = () => {
           />
 
           <OsmError />
+
+          <FeatureOpenPlaceGuideLink
+            center={feature.center}
+            osmId={getUrlOsmId(osmMeta)}
+          />
 
           <FeaturedTags
             featuredTags={deleted ? [] : featuredTags}
