@@ -16,11 +16,16 @@ const debugOutput = (sorted) => {
     console.log('Sorted photos:', sorted); // eslint-disable-line no-console
     sorted.forEach((item) => {
       new maplibregl.Marker({ rotation: item.compass_angle })
-        .setLngLat(item.computed_geometry.coordinates)
+        .setLngLat(
+          item.computed_geometry?.coordinates ?? item.geometry.coordinates,
+        )
         .addTo(getGlobalMap());
     });
     new maplibregl.Marker({ rotation: sorted[0].compass_angle, color: '#f55' })
-      .setLngLat(sorted[0].computed_geometry.coordinates)
+      .setLngLat(
+        sorted[0].computed_geometry?.coordinates ??
+          sorted[0].geometry.coordinates,
+      )
       .addTo(getGlobalMap());
   }
 };
@@ -35,7 +40,7 @@ const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
     poiCoords[1] + 0.0004,
   ];
   // consider computed_compass_angle - but it is zero for many images, so we would have to fallback to compass_angle
-  const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,captured_at,thumb_1024_url&bbox=${bbox}`;
+  const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,geometry,captured_at,thumb_1024_url&bbox=${bbox}`;
   const { data } = await fetchJson(url);
 
   if (!data.length) {
@@ -43,7 +48,8 @@ const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
   }
 
   const photos = data.map((item) => {
-    const photoCoords = item.computed_geometry.coordinates;
+    const photoCoords =
+      item.computed_geometry?.coordinates ?? item.geometry.coordinates;
     const angleFromPhotoToPoi = getBearing(photoCoords, poiCoords);
     const deviationFromStraightSight = subtractAngle(
       angleFromPhotoToPoi,

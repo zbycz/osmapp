@@ -1,4 +1,5 @@
 import type Vocabulary from '../locales/vocabulary';
+import type { getSchemaForFeature } from './tagging/idTaggingScheme';
 
 export interface ImageUrls {
   source?: string;
@@ -30,12 +31,20 @@ export interface LineString {
   coordinates: Position[];
 }
 
-export type FeatureGeometry = Point | LineString;
+export interface GeometryCollection {
+  type: 'GeometryCollection';
+  geometries: Array<Point | LineString>;
+}
+
+export type FeatureGeometry = Point | LineString | GeometryCollection;
 
 export const isPoint = (geometry: FeatureGeometry): geometry is Point =>
   geometry?.type === 'Point';
 export const isWay = (geometry: FeatureGeometry): geometry is LineString =>
   geometry?.type === 'LineString';
+export const isRelation = (
+  geometry: FeatureGeometry,
+): geometry is GeometryCollection => geometry?.type === 'GeometryCollection';
 
 export interface FeatureTags {
   [key: string]: string;
@@ -49,7 +58,7 @@ interface RelationMember {
 
 // TODO split in two types /extend/
 export interface Feature {
-  point?: boolean;
+  point?: boolean; // TODO rename to isMarker or isCoords
   type: 'Feature';
   geometry?: FeatureGeometry;
   osmMeta: {
@@ -73,7 +82,9 @@ export interface Feature {
   center: Position;
   roundedCenter?: LonLatRounded;
   ssrFeatureImage?: Image;
-  error?: 'deleted' | 'network' | 'unknown' | '404' | '500'; // etc.
+  error?: 'network' | 'unknown' | '404' | '500'; // etc.
+  deleted?: boolean;
+  schema?: ReturnType<typeof getSchemaForFeature>; // undefined means error
 
   // skeleton
   layer?: { id: string };

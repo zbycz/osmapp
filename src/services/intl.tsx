@@ -4,8 +4,9 @@ import Router from 'next/router';
 import { MessagesType, TranslationId } from './types';
 import { isBrowser, isServer } from '../components/helpers';
 import { getServerIntl } from './intlServer';
+import { publishDbgObject } from '../utils';
 
-type Values = { [variable: string]: string };
+type Values = { [variable: string]: string | number };
 
 interface Intl {
   lang: string;
@@ -22,7 +23,7 @@ const VARIABLE_REGEX = /__(?<name>[a-zA-Z_]+)__/g;
 const replaceValues = (text: string, values: Values) =>
   text.replace(VARIABLE_REGEX, (match, variableName) => {
     const value = values && values[variableName];
-    return value != null ? value : '?';
+    return value != null ? `${value}` : '?';
   });
 
 export const t = (id: TranslationId, values?: Values) => {
@@ -50,6 +51,7 @@ export const setIntl = (initialIntl: Intl) => {
   if (initialIntl) {
     intl.lang = initialIntl.lang;
     intl.messages = initialIntl.messages;
+    publishDbgObject('intl', intl);
   }
 };
 
@@ -63,6 +65,7 @@ export const InjectIntl = ({ intl: globalIntl }) => (
 );
 
 if (isBrowser()) {
+  // GLOBAL_INTL is set in _document.tsx
   setIntl((window as any).GLOBAL_INTL);
 }
 

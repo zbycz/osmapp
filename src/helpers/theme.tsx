@@ -24,6 +24,8 @@ const lightTheme = createMuiTheme({
     },
     text: {
       panelHeading: 'rgba(0, 0, 0, 0.7)',
+      primary: '#000',
+      primaryInvert: '#fff',
     },
     appBackground: '#f8f4f0',
     panelBackground: '#fafafa',
@@ -52,6 +54,8 @@ const darkTheme = createMuiTheme({
     },
     text: {
       panelHeading: 'rgba(255, 255, 255, 0.85)',
+      primary: '#fff',
+      primaryInvert: '#000',
     },
     appBackground: grey['900'],
     panelBackground: grey['800'],

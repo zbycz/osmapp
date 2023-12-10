@@ -88,40 +88,43 @@ export const isValidImage = (url): Promise<boolean> => {
 export const stringifyDomXml = (itemXml) =>
   isString(itemXml) ? itemXml : new XMLSerializer().serializeToString(itemXml);
 
-// TODO better mexico border  + add Australia, New Zealand & South Africa
+// TODO better mexico border + add Australia, New Zealand & South Africa
 const polygonUsCan = [[-143, 36], [-117, 32], [-96, 25], [-50, 19], [-56, 71], [-175, 70], [-143, 36]]; // prettier-ignore
-const isInside = ([x, y]: Position, vs) => {
-  // ray-casting algorithm based on
-  // https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html/pnpoly.html
+const isInside = ([x, y]: Position, points) => {
+  // ray-casting algorithm based on https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
   let inside = false;
-  // eslint-disable-next-line no-plusplus
-  for (let i = 0, j = vs.length - 1; i < vs.length; j = i++) {
-    const [xi, yi] = vs[i];
-    const [xj, yj] = vs[j];
+  for (let i = 0, j = points.length - 1; i < points.length; j = i, i += 1) {
+    const [xi, yi] = points[i];
+    const [xj, yj] = points[j];
     const intersect =
       yi > y !== yj > y && x < ((xj - xi) * (y - yi)) / (yj - yi) + xi;
     if (intersect) inside = !inside;
   }
   return inside;
 };
+const isNumberFirst = (loc: Position) => loc && isInside(loc, polygonUsCan);
 
 export const buildAddress = (
   {
     'addr:place': place,
     'addr:street': street,
     'addr:housenumber': hnum,
-    'addr:conscriptionnumber': num1, // czech/slovak/hungary
-    'addr:streetnumber': num2,
+    'addr:conscriptionnumber': cnum, // czech/slovak/hungary
+    'addr:streetnumber': snum,
     'addr:city': city,
+    'addr:state': state,
+    'addr:postcode': postcode,
   }: Record<string, string>,
-  loc: Position = undefined,
+  loc?: Position,
 ) => {
-  if (loc && isInside(loc, polygonUsCan)) {
-    return join(join(hnum ?? num2, ' ', street ?? place), ', ', city);
-  }
+  const number = hnum ?? join(cnum, '/', snum);
+  const streetPlace = street ?? place;
+
   return join(
-    join(street ?? place, ' ', hnum ?? join(num1, '/', num2)),
+    isNumberFirst(loc)
+      ? join(number, ' ', streetPlace)
+      : join(streetPlace, ' ', number),
     ', ',
-    city,
+    join(join(postcode, ' ', city), ', ', state),
   );
 };

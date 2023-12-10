@@ -2,11 +2,14 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
+import FolderIcon from '@material-ui/icons/Folder';
+import SearchIcon from '@material-ui/icons/Search';
 import { useMapStateContext } from '../utils/MapStateContext';
 import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
 import { join } from '../../utils';
 import { getPoiClass } from '../../services/getPoiClass';
+import { t } from '../../services/intl';
 
 /** photon
 {
@@ -115,36 +118,98 @@ export const buildPhotonAddress = ({
   streetnumber: snum,
 }) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
-export const renderOptionFactory = (inputValue, currentTheme) => (option) => {
-  const { properties, geometry } = option;
-  const { name, osm_key: tagKey, osm_value: tagValue } = properties;
+export const renderOptionFactory =
+  (inputValue, currentTheme) =>
+  ({ geometry, preset, properties, overpass, loader }) => {
+    if (overpass) {
+      return (
+        <>
+          <IconPart>
+            <SearchIcon />
+          </IconPart>
+          <Grid item xs>
+            <span style={{ fontWeight: 700 }}>
+              {Object.entries(overpass)
+                .map(([k, v]) => `${k} = ${v}`)
+                .join(' ')}
+            </span>
+            <Typography variant="body2" color="textSecondary">
+              overpass search
+              {/* {t('searchbox.category')} */}
+            </Typography>
+          </Grid>
+        </>
+      );
+    }
 
-  const [lon, lat] = geometry.coordinates;
-  const mapCenter = useMapCenter();
-  const dist = getDistance(mapCenter, { lon, lat }) / 1000;
-  const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
+    if (loader) {
+      return (
+        <>
+          <IconPart />
+          <Grid item xs>
+            <Typography>
+              {t('loading')}
+              <span className="dotloader">.</span>
+              <span className="dotloader">.</span>
+              <span className="dotloader">.</span>
+            </Typography>
+          </Grid>
+        </>
+      );
+    }
 
-  const text = name || buildPhotonAddress(properties);
-  const additionalText = getAdditionalText(properties);
-  const poiClass = getPoiClass({ [tagKey]: tagValue });
+    if (preset) {
+      const { name } = preset.presetForSearch;
+      const additionalText =
+        preset.name === 0
+          ? ` (${preset.presetForSearch.texts.find(
+              (_, idx) => preset.textsByOne[idx] > 0,
+            )}…)`
+          : '';
 
-  return (
-    <>
-      <IconPart>
-        <Maki
-          ico={poiClass.class}
-          style={{ width: '20px', height: '20px', opacity: 0.5 }}
-          title={`${tagKey}=${tagValue}`}
-          invert={currentTheme === 'dark'}
-        />
-        <div>{distKm} km</div>
-      </IconPart>
-      <Grid item xs>
-        {highlightText(text, inputValue)}
-        <Typography variant="body2" color="textSecondary">
-          {additionalText}
-        </Typography>
-      </Grid>
-    </>
-  );
-};
+      return (
+        <>
+          <IconPart>
+            <FolderIcon />
+          </IconPart>
+          <Grid item xs>
+            {highlightText(`${name}${additionalText}`, inputValue)}
+            <Typography variant="body2" color="textSecondary">
+              {t('searchbox.category')}
+            </Typography>
+          </Grid>
+        </>
+      );
+    }
+
+    const { name, osm_key: tagKey, osm_value: tagValue } = properties;
+
+    const [lon, lat] = geometry.coordinates;
+    const mapCenter = useMapCenter();
+    const dist = getDistance(mapCenter, { lon, lat }) / 1000;
+    const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
+
+    const text = name || buildPhotonAddress(properties);
+    const additionalText = getAdditionalText(properties);
+    const poiClass = getPoiClass({ [tagKey]: tagValue });
+
+    return (
+      <>
+        <IconPart>
+          <Maki
+            ico={poiClass.class}
+            style={{ width: '20px', height: '20px', opacity: 0.5 }}
+            title={`${tagKey}=${tagValue}`}
+            invert={currentTheme === 'dark'}
+          />
+          <div>{distKm} km</div>
+        </IconPart>
+        <Grid item xs>
+          {highlightText(text, inputValue)}
+          <Typography variant="body2" color="textSecondary">
+            {additionalText}
+          </Typography>
+        </Grid>
+      </>
+    );
+  };

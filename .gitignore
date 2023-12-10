@@ -2,10 +2,12 @@
 /coverage
 /build
 /dist
+/tsconfig.tsbuildinfo
 .next
 .DS_Store
 .env
 .idea
+next-env.d.ts
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

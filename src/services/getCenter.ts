@@ -1,4 +1,4 @@
-import { FeatureGeometry, isPoint, isWay, Position } from './types';
+import { FeatureGeometry, isPoint, isRelation, isWay, Position } from './types';
 
 interface NamedBbox {
   w: number;
@@ -22,18 +22,32 @@ const getBbox = (coordinates: Position[]): NamedBbox => {
   );
 };
 
+const getCenterOfBbox = (coordinates: Position[]) => {
+  if (!coordinates.length) return undefined;
+
+  const { w, s, e, n } = getBbox(coordinates); // [WSEN]
+  const lon = (w + e) / 2; // flat earth rulezz
+  const lat = (s + n) / 2;
+  return [lon, lat];
+};
+
 export const getCenter = (geometry: FeatureGeometry): Position => {
   if (isPoint(geometry)) {
     return geometry.coordinates;
   }
 
-  if (isWay(geometry) && geometry.coordinates?.length) {
-    const { w, s, e, n } = getBbox(geometry.coordinates); // [WSEN]
-    const lon = (w + e) / 2; // flat earth rulezz
-    const lat = (s + n) / 2;
-    return [lon, lat];
+  if (isWay(geometry)) {
+    return getCenterOfBbox(geometry.coordinates);
   }
 
-  // relation
+  if (isRelation(geometry)) {
+    const allCoords = geometry.geometries.flatMap((subGeometry) =>
+      isPoint(subGeometry)
+        ? [subGeometry.coordinates]
+        : subGeometry.coordinates,
+    );
+    return getCenterOfBbox(allCoords);
+  }
+
   return undefined;
 };

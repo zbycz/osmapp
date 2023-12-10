@@ -31,6 +31,10 @@ export const getUrlForTag = (k, v) => {
   if (k === 'ref:edubase') {
     return `https://get-information-schools.service.gov.uk/Establishments/Establishment/Details/${v}`;
   }
+  if (k === 'gnis:feature_id') {
+    // alternative url in https://github.com/openstreetmap/id-tagging-schema/issues/272
+    return `https://edits.nationalmap.gov/apps/gaz-domestic/public/search/names/${v}`;
+  }
   if (k === 'website') {
     return v.match(urlRegExp) ? v : `http://${v}`;
   }

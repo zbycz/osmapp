@@ -11,6 +11,8 @@ export default {
   darkmode_auto: 'Dark mode: auto',
   darkmode_on: 'Dark mode: on',
   darkmode_off: 'Dark mode: off',
+  show_more: 'Show more',
+  show_less: 'Show less',
 
   'install.button': 'Install app',
   'install.tabs_aria_label': 'Choose your platform',
@@ -50,6 +52,9 @@ export default {
   'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
 
   'searchbox.placeholder': 'Search OpenStreetMap',
+  'searchbox.category': 'category',
+  'searchbox.overpass_success': 'Results found: __count__',
+  'searchbox.overpass_error': 'Error fetching results. __message__',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
@@ -59,8 +64,10 @@ export default {
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',
   'featurepanel.error_network': "Can't get the feature, check your network cable.",
   'featurepanel.error_deleted': 'This object is marked as deleted in OpenStreetMap.',
+  'featurepanel.info_no_tags': 'This object has no tags. Usually it means that it only carries geometry/location for a parent object.',
   'featurepanel.history_button': 'History »',
-  'featurepanel.other_info_heading': 'Details',
+  'featurepanel.details_heading': 'Details',
+  'featurepanel.all_tags_heading': 'All tags',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.note_button': 'Suggest an edit',
   'featurepanel.edit_button': 'Edit details',
@@ -69,6 +76,7 @@ export default {
   'featurepanel.feature_description_nonosm': 'Map feature __type__',
   'featurepanel.feature_description_osm': '__type__ in OpenStreetMap database',
   'featurepanel.feature_description_point': 'Map coordinates',
+  'featurepanel.show_tags': 'Show tags',
   'featurepanel.show_objects_around': 'Show nearby objects',
   'featurepanel.uncertain_image': 'This is the closest street view image from Mapillary. It may be inaccurate.',
   'featurepanel.inline_edit_title': 'Edit',
@@ -151,10 +159,12 @@ export default {
   'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
 
   'layers.basic': 'Basic',
+  'layers.makina_africa': 'OpenPlaceGuide Africa',
   'layers.outdoor': 'Outdoor',
   'layers.mtb': 'MTB',
   'layers.snow': 'Snow',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satellite (z<14)',
+  'layers.maptilerSat': 'Maptiler Satellite (z<14)',
+  'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Bike',
 };

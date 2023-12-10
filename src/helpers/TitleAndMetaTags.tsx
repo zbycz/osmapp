@@ -27,7 +27,7 @@ export const OpenGraphTags = ({
 
 const getTitle = (feature: Feature) => {
   const label = getLabel(feature);
-  return feature.error === 'deleted' ? getUtfStrikethrough(label) : label;
+  return feature.deleted ? getUtfStrikethrough(label) : label;
 };
 
 export const TitleAndMetaTags = () => {

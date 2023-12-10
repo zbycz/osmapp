@@ -1,5 +1,11 @@
 import React from 'react';
-import Document, { Head, Html, Main, NextScript } from 'next/document';
+import Document, {
+  DocumentInitialProps,
+  Head,
+  Html,
+  Main,
+  NextScript,
+} from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
 import { getServerIntl } from '../src/services/intlServer';
@@ -8,7 +14,7 @@ import { Favicons } from '../src/helpers/Favicons';
 
 export default class MyDocument extends Document {
   render() {
-    const { serverIntl } = this.props as any;
+    const { serverIntl, asPath } = this.props as any;
     return (
       <Html lang={serverIntl.lang}>
         <Head>
@@ -23,6 +29,16 @@ export default class MyDocument extends Document {
           <link rel="preconnect" href="https://commons.wikimedia.org" />
           <link rel="preconnect" href="https://www.wikidata.org" />
           <link rel="preconnect" href="https://en.wikipedia.org" />
+          {/* we dont need this to change after SSR */}
+          {Object.keys(serverIntl.languages).map((lang) => (
+            <link
+              key={lang}
+              rel="alternate"
+              hrefLang={lang}
+              href={`/${lang}${asPath}`}
+            />
+          ))}
+
           <Favicons />
           {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
         </Head>
@@ -83,5 +99,6 @@ MyDocument.getInitialProps = async (ctx) => {
       sheets2.getStyleElement(),
     ],
     serverIntl,
-  };
+    asPath: ctx.asPath,
+  } as DocumentInitialProps;
 };

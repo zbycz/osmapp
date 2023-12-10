@@ -54,7 +54,7 @@ export default {
   'featurepanel.error_network': 'Impossibile recuperare l’elemento, controlla il tuo cavo di rete.',
   'featurepanel.error_deleted': 'Questo oggetto è segnato come eliminato su OpenStreetMap.',
   'featurepanel.history_button': 'Cronologia »',
-  'featurepanel.other_info_heading': 'Altre informationi',
+  'featurepanel.details_heading': 'Altre informationi',
   'featurepanel.edit_button_title': 'Modifica nel database OpenStreetMap',
   'featurepanel.edit_button': 'Modifica luogo',
   'featurepanel.add_place_button': 'Aggiungi luogo',
@@ -110,7 +110,7 @@ export default {
          È proibita la copia di dati protetti da copyright (ad es. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/IT:How_We_Map">Ulteriori informazioni</a>`,
   'editdialog.info_note': `Il tuo suggerimento verrà valutato dai volontari di OpenStreetMap. Qua
          puoi aggiungere un’ulteriore nota oppure descrivere la posizione precisa, etc.
-         Sarebbe anche appropriato supportare il tuo contributo con un link ad una fonte (sito web, 
+         Sarebbe anche appropriato supportare il tuo contributo con un link ad una fonte (sito web,
          foto, etc.).`,
   'editdialog.other_tags': 'Altre proprietà (etichette)',
   'editdialog.other_tags.new_key': 'nuova chiave',
@@ -151,6 +151,7 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'Neve',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satellite (z<14)',
+  'layers.maptilerSat': 'Maptiler Satellite (z<14)',
+  'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Bici',
 };

@@ -5,6 +5,9 @@ import WebsiteRenderer from './renderers/WebsiteRenderer';
 import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
 import PhoneRenderer from './renderers/PhoneRenderer';
 import { EditIconButton } from './helpers/EditIconButton';
+import { FoodHygieneRatingSchemeRenderer } from './renderers/FoodHygieneRatingScheme';
+import { WikipediaRenderer } from './renderers/WikipediaRenderer';
+import { WikidataRenderer } from './renderers/WikidataRenderer';
 
 const Wrapper = styled.div`
   position: relative;
@@ -26,16 +29,26 @@ const Value = styled.div`
     margin: 0 10px -6px 2px;
     opacity: 0.4;
   }
+
+  :last-child {
+    min-width: 0;
+    overflow: hidden;
+  }
 `;
 
 const DefaultRenderer = ({ v }) => v;
-const renderers = {
+const renderers: {
+  [key: string]: React.FC<{ k: string; v: string }>;
+} = {
   website: WebsiteRenderer,
   'contact:website': WebsiteRenderer,
   phone: PhoneRenderer,
   'contact:phone': PhoneRenderer,
   'contact:mobile': PhoneRenderer,
   opening_hours: OpeningHoursRenderer,
+  'fhrs:id': FoodHygieneRatingSchemeRenderer,
+  wikipedia: WikipediaRenderer,
+  wikidata: WikidataRenderer,
 };
 
 export const FeaturedTag = ({ k, v, onEdit }) => {
@@ -46,7 +59,7 @@ export const FeaturedTag = ({ k, v, onEdit }) => {
       <EditIconButton onClick={() => onEdit(k)} />
 
       <Value>
-        <Renderer v={v} />
+        <Renderer k={k} v={v} />
       </Value>
     </Wrapper>
   );

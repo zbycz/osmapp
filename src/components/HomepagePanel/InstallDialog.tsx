@@ -140,25 +140,25 @@ export function InstallDialog() {
               <li>
                 <Translation id="install.ios_share" />{' '}
                 <img
-                  src="install/ios_shareicon.png"
-                  srcSet="install/ios_shareicon.png 1x, install/ios_shareicon@2.png 2x"
+                  src="/install/ios_shareicon.png"
+                  srcSet="/install/ios_shareicon.png 1x, /install/ios_shareicon@2.png 2x"
                   width={16}
                   height={16}
                   alt="share icon"
                 />
                 <br />
-                <PaperImg src="install/ios_share.png" width={300} />
+                <PaperImg src="/install/ios_share.png" width={300} />
               </li>
               <li>
                 <Translation id="install.ios_add" />{' '}
                 <img
-                  src="install/ios_addicon.png"
+                  src="/install/ios_addicon.png"
                   alt="add icon"
                   width={16}
                   height={16}
                 />
                 <br />
-                <PaperImg src="install/ios_add.png" width={300} />
+                <PaperImg src="/install/ios_add.png" width={300} />
               </li>
             </ul>
 
@@ -178,12 +178,12 @@ export function InstallDialog() {
               <li>
                 <Translation id="install.android_share" /> <MoreVertIcon />
                 <br />
-                <PaperImg src="install/android_menu.png" width={300} />
+                <PaperImg src="/install/android_menu.png" width={300} />
               </li>
               <li>
                 <Translation id="install.android_add" /> <AddToHomeScreenIcon />
                 <br />
-                <PaperImg src="install/android_add.png" width={300} />
+                <PaperImg src="/install/android_add.png" width={300} />
               </li>
             </ul>
 
@@ -203,13 +203,13 @@ export function InstallDialog() {
               <li>
                 <Translation id="install.desktop_install" />{' '}
                 <img
-                  src="install/desktop_add.png"
+                  src="/install/desktop_add.png"
                   width={16}
                   height={16}
                   alt="add icon"
                 />
                 <br />
-                <PaperImg src="install/desktop_add_screen.png" width={300} />
+                <PaperImg src="/install/desktop_add_screen.png" width={300} />
               </li>
             </ul>
 
