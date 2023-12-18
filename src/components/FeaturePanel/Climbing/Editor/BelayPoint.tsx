@@ -1,5 +1,6 @@
 import React from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
+import { config } from '../config';
 
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
 export const Belay = ({ x, y, isSelected }) => {
@@ -12,18 +13,18 @@ export const Belay = ({ x, y, isSelected }) => {
       <circle
         cx={0}
         cy={0}
-        fill={false /* isSelected */ ? 'royalblue' : 'white'}
+        fill={config.belayColor}
         r={size}
         cursor="pointer"
         strokeWidth={1}
-        stroke={false /* isSelected */ ? 'white' : '#666'}
+        stroke={config.belayBorderColor}
       />
       <rect
         width={size}
         height={minusHeight}
         x={-size / 2}
         y={-minusHeight / 2}
-        fill={false /* isSelected */ ? 'white' : '#666'}
+        fill={config.belayBorderColor}
         rx={1}
       />
       <title>Belay</title>

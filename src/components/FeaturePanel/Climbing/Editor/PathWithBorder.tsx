@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from 'styled-components';
+import { config } from '../config';
 
 const RouteLine = styled.path``;
 const RouteBorder = styled.path``;
@@ -9,18 +10,22 @@ export const PathWithBorder = ({ d, isSelected, ...props }) => (
   <>
     <RouteBorder
       d={d}
-      strokeWidth={3}
-      stroke={isSelected ? 'white' : '#555'}
+      strokeWidth={config.pathBorderWidth}
+      stroke={
+        isSelected ? config.pathBorderColorSelected : config.pathBorderColor
+      }
       strokeLinecap="round"
       strokeLinejoin="round"
       fill="none"
-      opacity={0.8}
+      opacity={config.pathBorderOpacity}
       {...props}
     />
     <RouteLine
       d={d}
-      strokeWidth={2}
-      stroke={isSelected ? 'royalblue' : 'white'}
+      strokeWidth={config.pathStrokeWidth}
+      stroke={
+        isSelected ? config.pathStrokeColorSelected : config.pathStrokeColor
+      }
       strokeLinecap="round"
       strokeLinejoin="round"
       fill="none"

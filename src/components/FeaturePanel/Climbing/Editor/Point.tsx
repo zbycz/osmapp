@@ -65,17 +65,17 @@ export const Point = ({
   };
 
   const onMouseUp = (e) => {
-    setPointSelectedIndex(null);
     if (!isPointMoving) {
+      console.log('________onMouseUp');
+      setPointSelectedIndex(null);
       onPointInSelectedRouteClick(e);
       setPointElement(pointElement !== null ? null : e.currentTarget);
       setPointSelectedIndex(index);
+      setIsPointMoving(false);
+      setIsPointClicked(false);
+      e.stopPropagation();
+      e.preventDefault();
     }
-    setIsPointMoving(false);
-    setIsPointClicked(false);
-    e.stopPropagation();
-    e.preventDefault();
-    return null;
   };
 
   const isPointSelected =

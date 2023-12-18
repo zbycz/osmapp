@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
+import { config } from './config';
 
 type Item = {
   id: number;
@@ -48,7 +49,8 @@ const HighlightedDropzone = styled.div<{ isActive: boolean }>`
   width: 100%;
   margin-top: -2px;
   height: 4px;
-  background: ${({ isActive }) => (isActive ? 'royalblue' : 'transparent')};
+  background: ${({ isActive }) =>
+    isActive ? config.routeListDropZoneColor : 'transparent'};
   z-index: 1000000;
 `;
 

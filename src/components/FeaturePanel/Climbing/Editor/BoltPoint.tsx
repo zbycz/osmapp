@@ -1,5 +1,6 @@
 import React from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
+import { config } from '../config';
 
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
 export const Bolt = ({ x, y, isSelected }) => {
@@ -8,9 +9,6 @@ export const Bolt = ({ x, y, isSelected }) => {
   const size = 16;
   const strokeWidth = 4;
   const shift = size / 2 - strokeWidth / 2;
-
-  const backgroundColor = false /* isSelected */ ? 'white' : 'black';
-  const foregroundColor = false /* isSelected */ ? 'royalblue' : 'white';
 
   const dx = x + 0; /* TODO was 15 */
   const dy = y - size / 2 - strokeWidth / 2;
@@ -26,7 +24,7 @@ export const Bolt = ({ x, y, isSelected }) => {
         x={0}
         y={shift}
         fill="transparent"
-        stroke={backgroundColor}
+        stroke={config.belayBorderColor}
       />
       <rect
         width={strokeWidth}
@@ -34,7 +32,7 @@ export const Bolt = ({ x, y, isSelected }) => {
         x={shift}
         y={0}
         fill="transparent"
-        stroke={backgroundColor}
+        stroke={config.belayBorderColor}
       />
 
       <rect
@@ -42,14 +40,14 @@ export const Bolt = ({ x, y, isSelected }) => {
         height={strokeWidth}
         x={0}
         y={shift}
-        fill={foregroundColor}
+        fill={config.belayColor}
       />
       <rect
         width={strokeWidth}
         height={size}
         x={shift}
         y={0}
-        fill={foregroundColor}
+        fill={config.belayColor}
       />
 
       <title>Bolt</title>

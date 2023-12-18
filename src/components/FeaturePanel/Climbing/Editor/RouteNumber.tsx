@@ -2,6 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
+import { config } from '../config';
 
 type Props = {
   children: number;
@@ -70,7 +71,11 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         width={RECT_WIDTH + OUTLINE_WIDTH}
         height={RECT_HEIGHT + OUTLINE_WIDTH}
         rx="10"
-        fill={isSelected ? 'white' : '#666'}
+        fill={
+          isSelected
+            ? config.routeNumberBorderColorSelected
+            : config.routeNumberBorderColorColor
+        }
         {...commonProps}
       />
       <RouteNameBox
@@ -79,13 +84,21 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         width={RECT_WIDTH}
         height={RECT_HEIGHT}
         rx="10"
-        fill={isSelected ? 'royalblue' : 'white'}
+        fill={
+          isSelected
+            ? config.routeNumberBackgroundSelected
+            : config.routeNumberBackground
+        }
         {...commonProps}
       />
       <Text
         x={x}
         y={newY + 15}
-        fill={isSelected ? 'white' : '#666'}
+        fill={
+          isSelected
+            ? config.routeNumberTextColorSelected
+            : config.routeNumberTextColor
+        }
         textAnchor="middle"
         fontWeight="bold"
         {...commonProps}

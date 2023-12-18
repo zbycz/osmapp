@@ -343,7 +343,7 @@ export const ClimbingContextProvider = ({ children }) => {
   };
 
   const findCloserPoint = (checkedPosition: Position) => {
-    if (!routeSelectedIndex) return null;
+    if (routeSelectedIndex === null) return null;
 
     const STICKY_THRESHOLD = 0.015;
 
@@ -456,6 +456,7 @@ export const ClimbingContextProvider = ({ children }) => {
       cancelPointMenu: { nextState: 'editRoute' },
       finishRoute: { nextState: 'editRoute', callback: finishRoute },
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
+      dragPoint: { nextState: 'editRoute', callback: dragPoint },
     },
     routeSelected: {
       ...commonActions,

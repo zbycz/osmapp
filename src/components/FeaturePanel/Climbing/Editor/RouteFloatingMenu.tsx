@@ -46,7 +46,7 @@ export const RouteFloatingMenu = () => {
         <DialogTitle id="alert-dialog-title">Delete point?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            bla bla bla
+            Do you want to delete this point?
           </DialogContentText>
         </DialogContent>
         <DialogActions>

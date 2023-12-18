@@ -47,6 +47,10 @@ export const RouteEditor = ({
     getPixelPosition,
     editorPosition,
     scrollOffset,
+    isPointMoving,
+    setIsPointClicked,
+    setIsPointMoving,
+    setPointSelectedIndex,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -66,6 +70,14 @@ export const RouteEditor = ({
     // setAnchorEl(anchorEl !== null ? null : event.currentTarget);
   };
   // console.log('_______', pointElement);
+
+  const handleMovingPointDrop = () => {
+    if (isPointMoving) {
+      setPointSelectedIndex(null);
+      setIsPointMoving(false);
+      setIsPointClicked(false);
+    }
+  };
 
   const sortedRoutes = routes.reduce(
     (acc, route, index) => {
@@ -97,14 +109,6 @@ export const RouteEditor = ({
         )
       : null;
 
-  console.log(
-    '_____TADY',
-    routes,
-    routes[routeSelectedIndex]?.path,
-    routeSelectedIndex,
-    pointSelectedIndex,
-    routes[routeSelectedIndex]?.path[pointSelectedIndex],
-  );
   const selectedPointOfSelectedRoute =
     pointSelectedIndex !== null && routes[routeSelectedIndex]
       ? getPixelPosition(routes[routeSelectedIndex].path[pointSelectedIndex])
@@ -122,6 +126,7 @@ export const RouteEditor = ({
         onClick={(e) => {
           onClick(e);
         }}
+        onMouseUp={handleMovingPointDrop}
         onMouseMove={onEditorMouseMove}
         onTouchMove={onEditorTouchMove}
         imageSize={imageSize}

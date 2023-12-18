@@ -3,6 +3,7 @@ import { RouteNumber } from './RouteNumber';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Point } from './Point';
 import { MouseTrackingLine } from './MouseTrackingLine';
+import { config } from '../config';
 
 type Props = {
   x: number;
@@ -18,14 +19,18 @@ const NonEditablePoint = ({ x, y, isSelected }) => (
       cy={y}
       r={4}
       strokeWidth="0"
-      fill={isSelected ? 'white' : '#666'}
+      fill={
+        isSelected ? config.pathBorderColorSelected : config.pathBorderColor
+      }
     />
     <circle
       cx={x}
       cy={y}
       r={2.5}
       strokeWidth="0"
-      fill={isSelected ? 'royalblue' : 'white'}
+      fill={
+        isSelected ? config.pathStrokeColorSelected : config.pathStrokeColor
+      }
     />
   </>
 );
