@@ -85,10 +85,24 @@ export const RouteFloatingMenu = () => {
           </Button>
           <Button
             onClick={() => {
-              onPointTypeChange('belay');
+              onPointTypeChange('anchor');
             }}
           >
             Belay
+          </Button>
+          <Button
+            onClick={() => {
+              onPointTypeChange('sling');
+            }}
+          >
+            Sling
+          </Button>
+          <Button
+            onClick={() => {
+              onPointTypeChange('piton');
+            }}
+          >
+            Piton
           </Button>
           <Button
             onClick={() => {

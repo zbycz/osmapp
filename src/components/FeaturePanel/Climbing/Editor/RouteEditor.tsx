@@ -9,10 +9,13 @@ import { Position } from '../types';
 const Svg = styled.svg<{
   hasEditableCursor: boolean;
   imageSize: { width: number; height: number };
+  isVisible: boolean;
 }>`
   position: absolute;
   /* left: 0; */
   top: 0;
+  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
+  transition: ${({ isVisible }) => (isVisible ? 'opacity 0.6s ease' : 'none')};
   ${({ hasEditableCursor }) =>
     `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};
   ${({ imageSize: { width, height } }) =>
@@ -35,6 +38,7 @@ export const RouteEditor = ({
   onClick,
   onEditorMouseMove,
   onEditorTouchMove,
+  isVisible,
 }) => {
   // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); // @TODO rename
 
@@ -130,6 +134,7 @@ export const RouteEditor = ({
         onMouseMove={onEditorMouseMove}
         onTouchMove={onEditorTouchMove}
         imageSize={imageSize}
+        isVisible={isVisible}
       >
         {sortedRoutes.rest}
         {sortedRoutes.selected}
@@ -143,7 +148,7 @@ export const RouteEditor = ({
               routeFloatingMenuPosition.x +
               editorPosition.x +
               scrollOffset.x +
-              25,
+              30,
             y: routeFloatingMenuPosition.y + scrollOffset.y - 15,
           }}
         >

@@ -1,7 +1,7 @@
 import React from 'react';
 import { RouteNumber } from './RouteNumber';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { Point } from './Point';
+import { Point } from './Points/Point';
 import { MouseTrackingLine } from './MouseTrackingLine';
 import { useConfig } from '../config';
 

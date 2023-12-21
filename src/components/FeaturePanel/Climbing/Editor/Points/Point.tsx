@@ -1,8 +1,8 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useClimbingContext } from '../contexts/ClimbingContext';
-import { useConfig } from '../config';
+import { useClimbingContext } from '../../contexts/ClimbingContext';
+import { useConfig } from '../../config';
 
 const ClickableArea = styled.circle`
   // touch-action: none;
@@ -22,7 +22,7 @@ const PointElement = styled.circle<{ isHovered: boolean }>`
 const usePointColor = (type, isHovered) => {
   const config = useConfig();
 
-  if (type === 'bolt')
+  if (type === 'bolt' || type === 'piton')
     return { pointColor: 'transparent', pointStroke: 'transparent' };
   if (isHovered)
     return {

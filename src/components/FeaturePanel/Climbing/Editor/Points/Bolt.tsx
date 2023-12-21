@@ -1,9 +1,10 @@
 import React from 'react';
-import { useClimbingContext } from '../contexts/ClimbingContext';
-import { useConfig } from '../config';
+import { useClimbingContext } from '../../contexts/ClimbingContext';
+import { useConfig } from '../../config';
+import { PointProps } from './PointTypes';
 
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-export const Bolt = ({ x, y, isPointSelected }) => {
+export const Bolt = ({ x, y, isPointSelected, onClick }: PointProps) => {
   const { isEditMode } = useClimbingContext();
   const config = useConfig();
   const size = 16;
@@ -14,16 +15,17 @@ export const Bolt = ({ x, y, isPointSelected }) => {
   const dy = y - size / 2 - strokeWidth / 2;
 
   const foregroundColor = isPointSelected
-    ? config.belayColorSelected
-    : config.belayColor;
+    ? config.anchorColorSelected
+    : config.anchorColor;
   const borderColor = isPointSelected
-    ? config.belayBorderColorSelected
-    : config.belayBorderColor;
+    ? config.anchorBorderColorSelected
+    : config.anchorBorderColor;
 
   return (
     <g
       transform={`translate(${dx} ${dy}) rotate(45)`}
       cursor={!isEditMode && 'help'}
+      onClick={onClick}
     >
       <rect
         width={size}

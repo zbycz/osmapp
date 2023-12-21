@@ -93,8 +93,8 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
         </MenuItem>
         <MenuItem
           dense
-          onClick={() => onPointTypeChange('belay')}
-          selected={selectedPoint.type === 'belay'}
+          onClick={() => onPointTypeChange('anchor')}
+          selected={selectedPoint.type === 'anchor'}
         >
           <ListItemIcon>
             <RemoveCircleIcon fontSize="small" />

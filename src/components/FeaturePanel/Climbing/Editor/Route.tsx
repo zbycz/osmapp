@@ -1,11 +1,13 @@
 import React from 'react';
 import type { ClimbingRoute } from '../types';
-import { Belay } from './BelayPoint';
-import { Bolt } from './BoltPoint';
-import { Point } from './Point';
-import { PulsedPoint } from './PulsedPoint';
+import { Anchor } from './Points/Anchor';
+import { Bolt } from './Points/Bolt';
+import { Point } from './Points/Point';
+import { PulsedPoint } from './Points/PulsedPoint';
 import { RoutePath } from './RoutePath';
 import { useClimbingContext } from '../contexts/ClimbingContext';
+import { Sling } from './Points/Sling';
+import { Piton } from './Points/Piton';
 
 type Props = {
   route: ClimbingRoute;
@@ -34,22 +36,33 @@ export const Route = ({
       <defs>
         <marker
           id="triangle"
-          viewBox="0 0 10 10"
-          refX="-5"
+          viewBox="0 0 15 15"
+          refX="30"
           refY="5"
           markerUnits="strokeWidth"
-          markerWidth="4"
-          markerHeight="4"
           orient="auto"
         >
-          <path d="M 0 0 L 10 5 L 0 10 z" fill="white" />
+          <path
+            d="M 0 0 L 10 5 L 0 10"
+            stroke="white"
+            strokeWidth={5}
+            fill="none"
+          />
+          <path
+            d="M 0 0 L 10 5 L 0 10"
+            stroke="black"
+            strokeWidth={3}
+            fill="none"
+          />
         </marker>
       </defs>
       <RoutePath route={route} routeNumber={routeNumber} />
 
       {route.path.map(({ x, y, type }, index) => {
         const isBoltVisible = type === 'bolt';
-        const isBelayVisible = type === 'belay';
+        const isAnchorVisible = type === 'anchor';
+        const isSlingVisible = type === 'sling';
+        const isPitonVisible = type === 'piton';
         const position = getPixelPosition({ x, y, units: 'percentage' });
         const isActualPointSelected = isSelected && isPointSelected(index);
 
@@ -61,13 +74,31 @@ export const Route = ({
                 x={position.x}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
+                // onClick={onPointInSelectedRouteClick}
               />
             )}
-            {isBelayVisible && (
-              <Belay
+            {isPitonVisible && (
+              <Piton
                 x={position.x}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
+                // onClick={onPointInSelectedRouteClick}
+              />
+            )}
+            {isSlingVisible && (
+              <Sling
+                x={position.x}
+                y={position.y}
+                isPointSelected={isActualPointSelected}
+                // onClick={onPointInSelectedRouteClick}
+              />
+            )}
+            {isAnchorVisible && (
+              <Anchor
+                x={position.x}
+                y={position.y}
+                isPointSelected={isActualPointSelected}
+                // onClick={onPointInSelectedRouteClick}
               />
             )}
             {isThisRouteEditOrExtendMode && (

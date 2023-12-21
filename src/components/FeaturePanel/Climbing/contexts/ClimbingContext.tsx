@@ -224,6 +224,9 @@ export const ClimbingContextProvider = ({ children }) => {
     }));
     setPointSelectedIndex(null);
   };
+  const cancelPointMenu = () => {
+    setPointSelectedIndex(null);
+  };
 
   const editRoute = ({ routeNumber }) => {
     setRouteSelectedIndex(routeNumber);
@@ -455,7 +458,7 @@ export const ClimbingContextProvider = ({ children }) => {
       ...commonActions,
       changePointType: { nextState: 'editRoute', callback: changePointType },
       deletePoint: { nextState: 'editRoute', callback: deletePoint },
-      cancelPointMenu: { nextState: 'editRoute' },
+      cancelPointMenu: { nextState: 'editRoute', callback: cancelPointMenu },
       finishRoute: { nextState: 'editRoute', callback: finishRoute },
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
       dragPoint: { nextState: 'editRoute', callback: dragPoint },

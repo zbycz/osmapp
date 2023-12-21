@@ -31,6 +31,7 @@ export const PathWithBorder = ({ d, isSelected, ...props }) => {
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
+        // markerMid="url(#triangle)"
         pointerEvents="none"
         {...props}
       />

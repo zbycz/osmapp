@@ -1,4 +1,4 @@
-export type PointType = 'belay' | 'bolt' | 'piton';
+export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling';
 
 export type Position = {
   x: number;

@@ -291,17 +291,14 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
                 />
               </ImageContainer>
 
-              {!isSplitViewDragging && areRoutesVisible && (
-                <>
-                  <RouteEditor
-                    routes={routes}
-                    onClick={onCanvasClick}
-                    onEditorMouseMove={onMouseMove}
-                    onEditorTouchMove={onTouchMove}
-                  />
-                  {isEditMode && <Guide />}
-                </>
-              )}
+              <RouteEditor
+                isVisible={!isSplitViewDragging && areRoutesVisible}
+                routes={routes}
+                onClick={onCanvasClick}
+                onEditorMouseMove={onMouseMove}
+                onEditorTouchMove={onTouchMove}
+              />
+              {isEditMode && <Guide />}
             </EditorContainer>
           </BlurContainer>
         </BackgroundContainer>

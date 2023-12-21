@@ -1,15 +1,21 @@
 import React from 'react';
-import { useClimbingContext } from '../contexts/ClimbingContext';
-import { useConfig } from '../config';
+import { useConfig } from '../../config';
+import { PointProps } from './PointTypes';
 
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-export const Belay = ({ x, y, isPointSelected }) => {
-  const { isEditMode } = useClimbingContext();
+export const Anchor = ({ x, y, isPointSelected, onClick }: PointProps) => {
   const config = useConfig();
   const size = 5;
 
+  const foregroundColor = isPointSelected
+    ? config.anchorColorSelected
+    : config.anchorColor;
+  const borderColor = isPointSelected
+    ? config.anchorBorderColorSelected
+    : config.anchorBorderColor;
+
   return (
-    <g transform={` translate(${x + 15} ${y})`} cursor={!isEditMode && 'help'}>
+    <g transform={` translate(${x + 15} ${y})`} cursor="help" onClick={onClick}>
       <circle
         cx={0}
         cy={0}
@@ -17,17 +23,17 @@ export const Belay = ({ x, y, isPointSelected }) => {
         r={size}
         cursor="pointer"
         strokeWidth={5}
-        stroke={config.belayBorderColor}
+        stroke={borderColor}
       />
       <g transform="translate(-1.5, 0)">
         <path
           d="M6.54999 0.5L6.54999 16.95"
-          stroke={config.belayBorderColor}
+          stroke={borderColor}
           strokeWidth="5"
         />
         <path
           d="M2 12.75L6.55 18L11.1 12.75"
-          stroke={config.belayBorderColor}
+          stroke={borderColor}
           fill="none"
           strokeWidth="5"
           strokeLinecap="round"
@@ -42,17 +48,17 @@ export const Belay = ({ x, y, isPointSelected }) => {
         r={size}
         cursor="pointer"
         strokeWidth={3}
-        stroke={config.belayColor}
+        stroke={foregroundColor}
       />
       <g transform="translate(-1.5, 0)">
         <path
           d="M6.54999 0.5L6.54999 16.95"
-          stroke={config.belayColor}
+          stroke={foregroundColor}
           strokeWidth="3"
         />
         <path
           d="M2 12.75L6.55 18L11.1 12.75"
-          stroke={config.belayColor}
+          stroke={foregroundColor}
           fill="none"
           strokeWidth="3"
           strokeLinecap="round"
