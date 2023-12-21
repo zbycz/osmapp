@@ -7,11 +7,11 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
 
 const Container = styled.div`
-  background: ${({ theme }) => theme.palette.background.default};
   margin-bottom: 65px;
 `;
 const ButtonContainer = styled.div`
-  margin: 8px;
+  margin-top: 16px;
+  margin-left: 40px;
 `;
 // type Item = {
 //   id: number;
@@ -79,9 +79,8 @@ export const RouteList = () => {
           <Button
             onClick={handleEdit}
             color="primary"
-            variant="text"
-            size="small"
-            startIcon={<EditIcon />}
+            variant="outlined"
+            endIcon={<EditIcon />}
           >
             Edit routes
           </Button>

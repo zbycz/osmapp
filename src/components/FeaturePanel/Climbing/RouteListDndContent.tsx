@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
-import { config } from './config';
 
 type Item = {
   id: number;
@@ -17,11 +16,11 @@ const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
   background-color: ${({ isSelected }) =>
     isSelected ? '#ccc' : 'transparent'};
   background: ${({ isSelected, theme }) =>
-    isSelected ? theme.palette.background.hover : 'transparent'};
+    isSelected ? theme.backgroundSurfaceElevation1 : 'transparent'};
   /* &:nth-child(2n) {
     ${({ isSelected }) => !isSelected && `background-color: #f5f5f5`};
   } */
-  border-bottom: solid 1px #eee;
+  border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation0};
   /* background-color: ${({ isDraggedOver }) =>
     isDraggedOver ? '#f0f0f0' : 'transparent'}; */
   position: relative;
@@ -49,9 +48,26 @@ const HighlightedDropzone = styled.div<{ isActive: boolean }>`
   width: 100%;
   margin-top: -2px;
   height: 4px;
-  background: ${({ isActive }) =>
-    isActive ? config.routeListDropZoneColor : 'transparent'};
+  background: ${({ isActive, theme }) =>
+    isActive ? theme.borderSecondary : 'transparent'};
   z-index: 1000000;
+`;
+const TableHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  color: ${({ theme }) => theme.textSubdued};
+  font-size: 11px;
+  padding-top: 12px;
+  padding-bottom: 4px;
+  border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation1};
+  background-color: ${({ theme }) => theme.backgroundSurfaceElevation1};
+`;
+const NameHeader = styled.div`
+  padding-left: 40px;
+`;
+const DifficultyHeader = styled.div`
+  width: 60px;
 `;
 
 export const RouteListDndContent = () => {
@@ -179,6 +195,10 @@ export const RouteListDndContent = () => {
 
   return (
     <Container>
+      <TableHeader>
+        <NameHeader>Name</NameHeader>
+        <DifficultyHeader>Difficulty</DifficultyHeader>
+      </TableHeader>
       {items.map((item, index) => {
         // console.log('___', draggedItem?.id, index);
         const isSelected = isRouteSelected(index);

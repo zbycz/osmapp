@@ -63,7 +63,7 @@ export const Guide = () => {
             onClick={onDrawRouteClick}
           >
             Zakreslit cestu &nbsp;
-            <RouteNumber isSelected isEditMode>
+            <RouteNumber isSelected hasRoute>
               {routeSelectedIndex + 1}
             </RouteNumber>
             {/* Tato cesta zatím není zakreslena na fotce. */}

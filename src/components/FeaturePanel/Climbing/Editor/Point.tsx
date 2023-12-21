@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
+import { useConfig } from '../config';
 
 const ClickableArea = styled.circle`
   // touch-action: none;
@@ -18,11 +19,21 @@ const PointElement = styled.circle<{ isHovered: boolean }>`
     }`}
 `;
 
-const getPointColor = (type, isHovered) => {
-  if (type) return { pointColor: 'transparent', pointStroke: 'transparent' };
-  if (isHovered) return { pointColor: 'white', pointStroke: 'rgba(0,0,0,0.3)' };
+const usePointColor = (type, isHovered) => {
+  const config = useConfig();
 
-  return { pointColor: 'white', pointStroke: 'royalblue' };
+  if (type === 'bolt')
+    return { pointColor: 'transparent', pointStroke: 'transparent' };
+  if (isHovered)
+    return {
+      pointColor: config.pathBorderColor,
+      pointStroke: config.pathBorderColorSelected,
+    };
+
+  return {
+    pointColor: config.pathBorderColor,
+    pointStroke: config.pathBorderColorSelected,
+  };
 };
 
 export const Point = ({
@@ -80,7 +91,7 @@ export const Point = ({
 
   const isPointSelected =
     routeSelectedIndex === routeNumber && pointSelectedIndex === index;
-  const { pointColor, pointStroke } = getPointColor(type, isHovered);
+  const { pointColor, pointStroke } = usePointColor(type, isHovered);
 
   const isTouchDevice = 'ontouchstart' in window;
 

@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { IconButton, TextField } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
+import { TextField } from '@material-ui/core';
 import { debounce } from 'lodash';
 import { ClimbingRoute } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
@@ -20,11 +19,6 @@ const RouteNumberCell = styled(Cell)`
   color: #999;
   margin-left: 8px;
 `;
-const NoSchemaCell = styled(Cell)`
-  color: #999;
-  font-size: 12px;
-  margin-right: 8px;
-`;
 const Row = styled.div`
   width: 100%;
   height: 100%;
@@ -39,7 +33,6 @@ const EmptyValue = styled.div`
 export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [tempRoute, setTempRoute] = useState(emptyRoute);
-  const { path } = route;
   const getText = (field: keyof ClimbingRoute) =>
     route[field] !== '' ? route[field] : <EmptyValue>?</EmptyValue>;
 
@@ -65,10 +58,6 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   const hasRoute = !!hasPath(index);
 
   const machine = getMachine();
-  const onEditClick = (e, editIndex: number) => {
-    machine.execute('editRoute', { routeNumber: editIndex });
-    e.stopPropagation();
-  };
 
   const onValueChange = (e, propName: keyof ClimbingRoute) => {
     onRouteChange(e, index, propName);
@@ -105,11 +94,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
           </IconButton>
         </Cell> */}
         <RouteNumberCell component="th" scope="row" width={30}>
-          <RouteNumber
-            isSelected={isSelected}
-            hasRoute={hasRoute}
-            isEditMode={isEditMode}
-          >
+          <RouteNumber isSelected={isSelected} hasRoute={hasRoute}>
             {index + 1}
           </RouteNumber>
         </RouteNumberCell>
@@ -130,10 +115,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
             />
           )}
         </NameCell>
-        {path.length === 0 && (
-          <NoSchemaCell align="right">no schema</NoSchemaCell>
-        )}
-        <Cell width={50}>
+        <Cell width={60}>
           {!isEditMode ||
           (machine.currentStateName !== 'editRoute' &&
             machine.currentStateName !== 'extendRoute') ||
@@ -151,7 +133,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
           )}
         </Cell>
 
-        {isEditMode && (
+        {/* {isEditMode && (
           <Cell align="right">
             <>
               <IconButton
@@ -164,7 +146,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
               </IconButton>
             </>
           </Cell>
-        )}
+        )} */}
       </Row>
       {/* <Row>
         <Cell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>

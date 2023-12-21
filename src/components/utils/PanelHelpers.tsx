@@ -11,7 +11,7 @@ export const PanelWrapper = styled.div`
   left: 0;
   top: 72px; // TopPanel
   bottom: 0;
-  background: ${({ theme }) => theme.palette.panelBackground};
+  background: ${({ theme }) => theme.backgroundSurfaceElevation0};
   overflow: hidden;
   z-index: 1100;
 

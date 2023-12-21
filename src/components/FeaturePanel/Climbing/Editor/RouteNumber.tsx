@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { config } from '../config';
+import { useConfig } from '../config';
 
 type Props = {
   children: number;
@@ -14,7 +14,7 @@ const Text = styled.text`
   user-select: none;
   font-size: 12px;
   font-family: 'Roboto', sans-serif;
-  font-weight: 400;
+  font-weight: 600;
 `;
 
 const RouteNameBoxBase = styled.rect`
@@ -34,6 +34,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
 
   const { imageSize, isRouteSelected, getMachine, isEditMode } =
     useClimbingContext();
+  const config = useConfig();
 
   const newY = // this shifts Y coordinate in case of too small photo
     y + RECT_Y_OFFSET + RECT_HEIGHT > imageSize.height
@@ -74,7 +75,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         fill={
           isSelected
             ? config.routeNumberBorderColorSelected
-            : config.routeNumberBorderColorColor
+            : config.routeNumberBorderColor
         }
         {...commonProps}
       />
@@ -100,7 +101,6 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
             : config.routeNumberTextColor
         }
         textAnchor="middle"
-        fontWeight="bold"
         {...commonProps}
       >
         {routeNumber + 1}

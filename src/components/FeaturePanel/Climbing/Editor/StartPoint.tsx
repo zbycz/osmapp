@@ -3,7 +3,7 @@ import { RouteNumber } from './RouteNumber';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Point } from './Point';
 import { MouseTrackingLine } from './MouseTrackingLine';
-import { config } from '../config';
+import { useConfig } from '../config';
 
 type Props = {
   x: number;
@@ -12,28 +12,31 @@ type Props = {
   onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
 };
 
-const NonEditablePoint = ({ x, y, isSelected }) => (
-  <>
-    <circle
-      cx={x}
-      cy={y}
-      r={4}
-      strokeWidth="0"
-      fill={
-        isSelected ? config.pathBorderColorSelected : config.pathBorderColor
-      }
-    />
-    <circle
-      cx={x}
-      cy={y}
-      r={2.5}
-      strokeWidth="0"
-      fill={
-        isSelected ? config.pathStrokeColorSelected : config.pathStrokeColor
-      }
-    />
-  </>
-);
+const NonEditablePoint = ({ x, y, isSelected }) => {
+  const config = useConfig();
+  return (
+    <>
+      <circle
+        cx={x}
+        cy={y}
+        r={4}
+        strokeWidth="0"
+        fill={
+          isSelected ? config.pathBorderColorSelected : config.pathBorderColor
+        }
+      />
+      <circle
+        cx={x}
+        cy={y}
+        r={2.5}
+        strokeWidth="0"
+        fill={
+          isSelected ? config.pathStrokeColorSelected : config.pathStrokeColor
+        }
+      />
+    </>
+  );
+};
 
 export const StartPoint = ({
   x,

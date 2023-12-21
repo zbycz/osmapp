@@ -173,7 +173,11 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
       return;
     }
 
-    machine.execute('cancelRouteSelection');
+    if (machine.currentStateName === 'pointMenu') {
+      machine.execute('cancelPointMenu');
+    } else {
+      machine.execute('cancelRouteSelection');
+    }
   };
 
   const onMove = (position: PositionPx) => {

@@ -101,7 +101,8 @@ export const GlobalStyle = createGlobalStyle`
     cursor: row-resize;
     &:hover {
       &::after {
-      border-color: #151515;
+      border-color: ${({ theme }) => theme.borderSecondary};
+      transition: all 0.5s ease-out;
       border-width: 3px;
       margin-top: 6px;
 

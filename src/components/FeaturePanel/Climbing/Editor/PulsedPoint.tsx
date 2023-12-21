@@ -1,6 +1,7 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
+import { useConfig } from '../config';
 
 const pulseAnimation = keyframes`
 0% {
@@ -34,9 +35,16 @@ export const PulsedPoint = ({ x, y }) => {
   const { getPixelPosition } = useClimbingContext();
   const position = getPixelPosition({ x, y, units: 'percentage' });
 
+  const config = useConfig();
   return (
     <g transform={`translate(${position.x},${position.y})`}>
-      <PulsedPointElement cx="0" cy="0" id="radarPoint" fill="white" r={3} />
+      <PulsedPointElement
+        cx="0"
+        cy="0"
+        id="radarPoint"
+        fill={config.pathBorderColor}
+        r={3}
+      />
     </g>
   );
 };

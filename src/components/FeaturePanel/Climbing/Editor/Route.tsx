@@ -18,7 +18,7 @@ export const Route = ({
   routeNumber,
   onPointInSelectedRouteClick,
 }: Props) => {
-  const { getPixelPosition, isRouteSelected, getMachine } =
+  const { getPixelPosition, isRouteSelected, getMachine, isPointSelected } =
     useClimbingContext();
 
   const machine = getMachine();
@@ -51,15 +51,24 @@ export const Route = ({
         const isBoltVisible = type === 'bolt';
         const isBelayVisible = type === 'belay';
         const position = getPixelPosition({ x, y, units: 'percentage' });
+        const isActualPointSelected = isSelected && isPointSelected(index);
 
         return (
           <>
             {isThisRouteEditOrExtendMode && <PulsedPoint x={x} y={y} />}
             {isBoltVisible && (
-              <Bolt x={position.x} y={position.y} isSelected={isSelected} />
+              <Bolt
+                x={position.x}
+                y={position.y}
+                isPointSelected={isActualPointSelected}
+              />
             )}
             {isBelayVisible && (
-              <Belay x={position.x} y={position.y} isSelected={isSelected} />
+              <Belay
+                x={position.x}
+                y={position.y}
+                isPointSelected={isActualPointSelected}
+              />
             )}
             {isThisRouteEditOrExtendMode && (
               <Point
