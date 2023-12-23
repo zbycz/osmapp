@@ -39,7 +39,7 @@ export const Guide = () => {
 
         anchorOrigin={{
           vertical: showDrawButton ? 'bottom' : 'top',
-          horizontal: showDrawButton ? 'right' : 'center',
+          horizontal: showDrawButton ? 'left' : 'center',
         }}
         // onClose={handleClose}
       >

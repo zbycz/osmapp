@@ -252,8 +252,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setRoutes([...routes, emptyRoute]);
   };
 
-  const deleteRoute = () => {
-    updateRouteOnIndex(routeSelectedIndex);
+  const deleteRoute = ({ routeNumber }: { routeNumber?: number }) => {
+    updateRouteOnIndex(routeNumber || routeSelectedIndex);
     setRouteSelectedIndex(null);
     setPointSelectedIndex(null);
   };
@@ -441,6 +441,7 @@ export const ClimbingContextProvider = ({ children }) => {
     },
     extendRoute: {
       ...commonActions,
+      deleteRoute: { nextState: 'init', callback: deleteRoute },
       finishRoute: { nextState: 'editRoute', callback: finishRoute },
       undoPoint: { nextState: 'extendRoute', callback: undoPoint },
       showPointMenu: { nextState: 'pointMenu' },

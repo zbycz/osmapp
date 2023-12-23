@@ -1,1 +1,9 @@
-export const emptyRoute = { name: '', difficulty: '', length: '', path: [] };
+import { ClimbingRoute } from '../types';
+
+export const emptyRoute: ClimbingRoute = {
+  name: '',
+  difficulty: '',
+  length: '',
+  path: [],
+  description: '',
+};

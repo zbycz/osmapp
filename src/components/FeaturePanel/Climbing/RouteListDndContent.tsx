@@ -26,12 +26,12 @@ const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
   position: relative;
   display: flex;
   flex-direction: row;
-  align-items: center;
-  height: 40px;
+  align-items: flex-start;
   font-size: 16px;
 `;
 const DragHandler = styled.div`
   width: 30px;
+  padding-top: 7px;
   cursor: move;
   align-items: center;
   display: flex;
@@ -67,7 +67,7 @@ const NameHeader = styled.div`
   padding-left: 40px;
 `;
 const DifficultyHeader = styled.div`
-  width: 60px;
+  width: 95px;
 `;
 
 export const RouteListDndContent = () => {

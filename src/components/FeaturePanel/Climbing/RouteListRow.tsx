@@ -1,13 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { TextField } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
+  TextField,
+} from '@material-ui/core';
 import { debounce } from 'lodash';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { ClimbingRoute } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { emptyRoute } from './utils/emptyRoute';
 import { RouteNumber } from './RouteNumber';
 
 const DEBOUNCE_TIME = 1000;
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+`;
+
 const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
   width: ${({ width }) => width}px;
   text-align: ${({ align }) => align};
@@ -19,22 +36,42 @@ const RouteNumberCell = styled(Cell)`
   color: #999;
   margin-left: 8px;
 `;
-const Row = styled.div`
+const ExpandIcon = styled(ExpandMoreIcon)<{ isExpanded: boolean }>`
+  transform: rotate(${({ isExpanded }) => (isExpanded ? 0 : 180)}deg);
+  transition: all 0.3s ease !important;
+`;
+
+const Row = styled.div<{ isExpanded?: boolean }>`
+  min-height: 40px;
+  background-color: ${({ isExpanded, theme }) =>
+    isExpanded ? theme.backgroundSurfaceElevation1 : 'none'};
+  overflow: hidden;
+
   width: 100%;
-  height: 100%;
   display: flex;
   align-items: center;
   gap: 4px;
 `;
+
+const ExpandedRow = styled(Row)<{ isExpanded?: boolean }>`
+  height: ${({ isExpanded }) => (isExpanded === false ? 0 : '100px')};
+  padding-left: 40px;
+  transition: all 0.3s ease-out;
+  min-height: 0;
+`;
+
 const EmptyValue = styled.div`
   color: #666;
 `;
 
 export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const [isExpanded, setIsExpanded] = useState(false);
   const [tempRoute, setTempRoute] = useState(emptyRoute);
+  const [routeToDelete, setRouteToDelete] = useState<number | null>(null);
+
   const getText = (field: keyof ClimbingRoute) =>
-    route[field] !== '' ? route[field] : <EmptyValue>?</EmptyValue>;
+    route[field] ? route[field] : <EmptyValue>?</EmptyValue>;
 
   useEffect(() => {
     setTempRoute(route);
@@ -59,6 +96,10 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
 
   const machine = getMachine();
 
+  const hideDeleteDialog = () => {
+    setRouteToDelete(null);
+  };
+
   const onValueChange = (e, propName: keyof ClimbingRoute) => {
     onRouteChange(e, index, propName);
   };
@@ -73,9 +114,19 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     setTempRoute({ ...tempRoute, [propName]: e.target.value });
     debouncedValueChange(e, propName);
   };
+  const onDeleteExistingRouteClick = (routeNumber: number) => {
+    machine.execute('deleteRoute', { routeNumber });
+    hideDeleteDialog();
+  };
+
+  const isReadOnly =
+    !isEditMode ||
+    (machine.currentStateName !== 'editRoute' &&
+      machine.currentStateName !== 'extendRoute') ||
+    !isSelected;
 
   return (
-    <>
+    <Container>
       <Row
         ref={ref}
         onClick={() => {
@@ -99,10 +150,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
           </RouteNumber>
         </RouteNumberCell>
         <NameCell>
-          {!isEditMode ||
-          (machine.currentStateName !== 'editRoute' &&
-            machine.currentStateName !== 'extendRoute') ||
-          !isSelected ? (
+          {isReadOnly ? (
             getText('name')
           ) : (
             <TextField
@@ -116,52 +164,86 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
           )}
         </NameCell>
         <Cell width={60}>
-          {!isEditMode ||
-          (machine.currentStateName !== 'editRoute' &&
-            machine.currentStateName !== 'extendRoute') ||
-          !isSelected ? (
+          {isReadOnly ? (
             getText('difficulty')
           ) : (
             <TextField
               size="small"
               value={tempRoute.difficulty}
               placeholder="6+"
-              onChange={(e) => onRouteChange(e, index, 'difficulty')}
+              onChange={(e) => onTempRouteChange(e, 'difficulty')}
               onClick={stopPropagation}
               style={{ paddingTop: 0 }}
             />
           )}
         </Cell>
 
-        {/* {isEditMode && (
-          <Cell align="right">
-            <>
-              <IconButton
-                onClick={(e) => onEditClick(e, index)}
-                color="primary"
-                size="small"
-                title="Edit"
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </>
-          </Cell>
-        )} */}
-      </Row>
-      {/* <Row>
-        <Cell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <IconButton
-              onClick={() => onDeleteExistingRouteClick(index)}
-              color="primary"
-              size="small"
-              title="Delete route"
-            >
-              <DeleteIcon fontSize="small" />
-            </IconButton>
-          </Collapse>
+        <Cell align="right">
+          <IconButton
+            onClick={(e) => {
+              setIsExpanded(!isExpanded);
+              stopPropagation(e);
+            }}
+            color="primary"
+            size="small"
+            title="Toggle"
+          >
+            <ExpandIcon isExpanded={isExpanded} />
+          </IconButton>
         </Cell>
-      </Row> */}
-    </>
+      </Row>
+
+      <ExpandedRow isExpanded={isExpanded}>
+        {isReadOnly ? (
+          getText('description')
+        ) : (
+          <TextField
+            size="small"
+            value={tempRoute.description}
+            onChange={(e) => onTempRouteChange(e, 'description')}
+            onClick={stopPropagation}
+            style={{ marginTop: 10 }}
+            variant="outlined"
+            label="Description"
+            fullWidth
+            multiline
+          />
+        )}
+        {!isReadOnly && (
+          <IconButton
+            onClick={() => setRouteToDelete(index)}
+            color="primary"
+            size="small"
+            title="Delete route"
+          >
+            <DeleteIcon fontSize="small" />
+          </IconButton>
+        )}
+      </ExpandedRow>
+      <Dialog
+        open={routeToDelete !== null}
+        onClose={hideDeleteDialog}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Delete route?</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Do you want to delete this route?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={hideDeleteDialog} autoFocus>
+            Cancel
+          </Button>
+          <Button
+            onClick={() => onDeleteExistingRouteClick(routeToDelete)}
+            variant="contained"
+          >
+            Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Container>
   );
 };
