@@ -60,6 +60,8 @@ type ClimbingContextType = {
   setImageSize: (ImageSize) => void;
   splitPaneHeight: number;
   setSplitPaneHeight: (height: number) => void;
+  photoPath: string;
+  setPhotoPath: (path: string) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
   setPointSelectedIndex: (pointSelectedIndex: number) => void;
   setRoutes: (routes: Array<ClimbingRoute>) => void;
@@ -125,6 +127,8 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setIsPointMoving: () => null,
   isEditMode: false,
   setIsEditMode: () => null,
+  photoPath: null,
+  setPhotoPath: () => null,
   setPointSelectedIndex: () => null,
   setRoutes: () => null,
   setRouteSelectedIndex: () => null,
@@ -151,6 +155,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
 });
 
 export const ClimbingContextProvider = ({ children }) => {
+  const [photoPath, setPhotoPath] = useState<string>('/images/rock2.jpg');
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(routes1);
@@ -543,6 +548,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setViewportSize,
     isLineInteractiveAreaHovered,
     setIsLineInteractiveAreaHovered,
+    photoPath,
+    setPhotoPath,
   };
 
   return (

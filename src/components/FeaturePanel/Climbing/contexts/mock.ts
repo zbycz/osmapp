@@ -2,6 +2,7 @@ import { ClimbingRoute } from '../types';
 
 export const routes1: ClimbingRoute[] = [
   {
+    id: 'a',
     name: 'Krutý řím',
     difficulty: '5',
     length: '',
@@ -21,6 +22,7 @@ export const routes1: ClimbingRoute[] = [
     ],
   },
   {
+    id: 'b',
     name: 'Krutý řím (varianta pro borce)',
     difficulty: '8',
     length: '',
@@ -39,6 +41,7 @@ export const routes1: ClimbingRoute[] = [
     ],
   },
   {
+    id: 'c',
     name: 'Krajina Snů',
     difficulty: '6',
     length: '',
@@ -54,6 +57,7 @@ export const routes1: ClimbingRoute[] = [
     ],
   },
   {
+    id: 'd',
     name: 'Krajina snů direkt',
     difficulty: '6+',
     length: '',
@@ -68,6 +72,7 @@ export const routes1: ClimbingRoute[] = [
     ],
   },
   {
+    id: 'e',
     name: 'Sfinga',
     difficulty: '7-',
     length: '',
@@ -82,6 +87,7 @@ export const routes1: ClimbingRoute[] = [
     ],
   },
   {
+    id: 'f',
     name: 'Supito presto',
     difficulty: '8',
     length: '',
@@ -95,6 +101,7 @@ export const routes1: ClimbingRoute[] = [
     ],
   },
   {
+    id: 'g',
     name: 'Další prosím',
     difficulty: '4+',
     length: '',
@@ -106,10 +113,16 @@ export const routes1: ClimbingRoute[] = [
       { x: 0.716, y: 0.24266666666666667, units: 'percentage', type: 'anchor' },
     ],
   },
-  { name: 'Rock oslav', difficulty: '7-', length: '', path: [] },
-  { name: 'Příliš vzdálená hvězda', difficulty: '5', length: '', path: [] },
-  { name: 'Epizoda ze života', difficulty: '7', length: '', path: [] },
-  { name: 'Sans Souci', difficulty: '4', length: '', path: [] },
-  { name: 'Ostudy kabát', difficulty: '8+', length: '', path: [] },
-  { name: 'Přepište dějiny', difficulty: '7', length: '', path: [] },
+  { id: 'h', name: 'Rock oslav', difficulty: '7-', length: '', path: [] },
+  {
+    id: 'i',
+    name: 'Příliš vzdálená hvězda',
+    difficulty: '5',
+    length: '',
+    path: [],
+  },
+  { id: 'j', name: 'Epizoda ze života', difficulty: '7', length: '', path: [] },
+  { id: 'k', name: 'Sans Souci', difficulty: '4', length: '', path: [] },
+  { id: 'l', name: 'Ostudy kabát', difficulty: '8+', length: '', path: [] },
+  { id: 'm', name: 'Přepište dějiny', difficulty: '7', length: '', path: [] },
 ];

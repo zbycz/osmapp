@@ -90,7 +90,7 @@ const DialogIcon = styled.div`
   right: 10px;
 `;
 
-const imageUrl = '/images/rock2.jpg';
+// const imageUrl = '/images/rock2.jpg';
 // const imageUrl = '/images/rock.png';
 // const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
 // const imageUrl = 'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
@@ -124,6 +124,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
     setViewportSize,
     editorPosition,
     isLineInteractiveAreaHovered,
+    photoPath,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -278,13 +279,16 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
         onDragFinished={onDragFinished}
         pane1Style={{ maxHeight: '100%' }}
       >
-        <BackgroundContainer imageHeight={imageSize.height} imageUrl={imageUrl}>
+        <BackgroundContainer
+          imageHeight={imageSize.height}
+          imageUrl={photoPath}
+        >
           <BlurContainer>
             {isEditMode && areRoutesVisible && <ControlPanel />}
             <EditorContainer imageHeight={imageSize.height}>
               <ImageContainer>
                 <ImageElement
-                  src={imageUrl}
+                  src={photoPath}
                   onLoad={handleImageLoad}
                   ref={imageRef}
                   // zoom={zoom}

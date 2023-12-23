@@ -24,6 +24,7 @@ export type PathPoints = Array<
 >;
 
 export type ClimbingRoute = {
+  id: string;
   difficulty?: string;
   length?: string;
   name?: string;
