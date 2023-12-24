@@ -89,12 +89,6 @@ const DialogIcon = styled.div`
   top: 10px;
   right: 10px;
 `;
-
-// const imageUrl = '/images/rock2.jpg';
-// const imageUrl = '/images/rock.png';
-// const imageUrl = 'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516';
-// const imageUrl = 'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5';
-
 export const ClimbingView = ({ fixedHeight = undefined }) => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
@@ -102,11 +96,8 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
   const {
     setImageSize,
     imageSize,
-    // selectedRouteState,
-    // setRouteSelectedIndex,
     routes,
     routeSelectedIndex,
-    updateRouteOnIndex,
     setEditorPosition,
     getPercentagePosition,
     getMachine,
@@ -125,6 +116,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
     editorPosition,
     isLineInteractiveAreaHovered,
     photoPath,
+    updatePathOnRouteIndex,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -132,14 +124,6 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
   const machine = getMachine();
 
   const handleImageLoad = () => {
-    // const { clientHeight, clientWidth, left, top } = imageRef.current;
-    // console.log('____SET', imageRef.current.top, imageRef.current.left);
-    // setImageSize({ width: clientWidth, height: clientHeight });
-    // setEditorPosition({ x:left, y:top });
-
-    // const rect = e.target.getBoundingClientRect();
-    // getWindowDimensions;
-
     const { clientHeight, clientWidth } = imageRef.current;
     const { left, top } = imageRef.current.getBoundingClientRect();
 
@@ -166,11 +150,9 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
 
   const onCanvasClick = (e) => {
     if (machine.currentStateName === 'extendRoute') {
-      console.log('____', routes);
       machine.execute('addPointToEnd', {
         position: { x: e.clientX, y: e.clientY },
       });
-      console.log('____2', routes);
       return;
     }
 
@@ -194,22 +176,13 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
       const closestPoint = findCloserPoint(newCoordinate);
 
       const updatedPoint = closestPoint ?? newCoordinate;
-      updateRouteOnIndex(routeSelectedIndex, (route) => ({
-        ...route,
-        paths: {
-          ...route.paths,
-          [photoPath]: updateElementOnIndex(
-            route.paths[photoPath],
-            pointSelectedIndex,
-            (point) => ({
-              // @TODO route.path can be undefined, why?
-              ...point,
-              x: updatedPoint.x,
-              y: updatedPoint.y,
-            }),
-          ),
-        },
-      }));
+      updatePathOnRouteIndex(routeSelectedIndex, (path) =>
+        updateElementOnIndex(path, pointSelectedIndex, (point) => ({
+          ...point,
+          x: updatedPoint.x,
+          y: updatedPoint.y,
+        })),
+      );
     } else if (machine.currentStateName !== 'extendRoute') {
       setMousePosition(null);
     } else if (!isLineInteractiveAreaHovered) {
@@ -314,18 +287,8 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
           </BlurContainer>
         </BackgroundContainer>
 
-        <RouteList
-        // onDeleteExistingRouteClick={onDeleteWholeRouteClick}
-        />
+        <RouteList />
       </SplitPane>
-      {/* {isEditMode && (
-        <AddButton>
-          <Fab color="primary" variant="extended" onClick={onNewRouteCreate}>
-            <AddIcon />
-            New route
-          </Fab>
-        </AddButton>
-      )} */}
 
       <DialogIcon>
         {/* <IconButton

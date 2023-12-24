@@ -37,11 +37,13 @@ export const RoutePath = ({ route, routeNumber }) => {
     countPositionWith,
     isLineInteractiveAreaHovered,
     setIsLineInteractiveAreaHovered,
-    photoPath,
+    getPathForRoute,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
-  const pointsInString = route?.paths[photoPath].map(({ x, y }, index) => {
+  const path = getPathForRoute(route);
+  if (!path) return null;
+  const pointsInString = path.map(({ x, y }, index) => {
     const position = getPixelPosition({ x, y, units: 'percentage' });
 
     return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
@@ -138,8 +140,6 @@ export const RoutePath = ({ route, routeNumber }) => {
       };
 
   // console.log('___', isHovered);
-  const path = route.paths[photoPath];
-  if (!path) return null;
 
   return (
     <>

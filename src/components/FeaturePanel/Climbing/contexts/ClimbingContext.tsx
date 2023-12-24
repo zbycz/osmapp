@@ -76,7 +76,12 @@ type ClimbingContextType = {
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
   ) => void;
+  updatePathOnRouteIndex: (
+    routeIndex: number,
+    callback?: (path: PathPoints) => PathPoints,
+  ) => void;
   getPixelPosition: (position: Position) => PositionPx;
+  getPathForRoute: (route: ClimbingRoute) => PathPoints;
   getCurrentPath: () => PathPoints;
   getPercentagePosition: (position: PositionPx) => Position;
   countPositionWith: (
@@ -120,6 +125,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setMousePosition: () => null,
   getPixelPosition: () => null,
   countPositionWith: () => null,
+  getPathForRoute: () => null,
   getCurrentPath: () => null,
   isPointClicked: false,
   isPointMoving: false,
@@ -143,6 +149,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   setSplitPaneHeight: () => null,
   splitPaneHeight: 800,
   updateRouteOnIndex: () => null,
+  updatePathOnRouteIndex: () => null,
   getMachine: () => ({
     currentState: null,
     currentStateName: null,
@@ -196,6 +203,10 @@ export const ClimbingContextProvider = ({ children }) => {
 
   const getPathOnIndex = (index: number) =>
     routes[index]?.paths[photoPath] || [];
+
+  const getPathForRoute = (route: ClimbingRoute) =>
+    route?.paths[photoPath] || [];
+
   const getCurrentPath = () => getPathOnIndex(routeSelectedIndex);
 
   const updateRouteOnIndex = (
@@ -209,6 +220,18 @@ export const ClimbingContextProvider = ({ children }) => {
     );
     setRoutes(updatedArray);
   };
+
+  const updatePathOnRouteIndex = (
+    routeIndex: number,
+    callback?: (route: PathPoints) => PathPoints,
+  ) =>
+    updateRouteOnIndex(routeSelectedIndex, (route) => ({
+      ...route,
+      paths: {
+        ...route.paths,
+        [photoPath]: callback(getPathOnIndex(routeIndex)),
+      },
+    }));
 
   const moveRoute = (fromIndex: number, toIndex: number) => {
     if (
@@ -235,16 +258,9 @@ export const ClimbingContextProvider = ({ children }) => {
   };
 
   const deletePoint = () => {
-    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
-      ...currentRoute,
-      paths: {
-        ...currentRoute.paths,
-        [photoPath]: updateElementOnIndex(
-          currentRoute.paths[photoPath],
-          pointSelectedIndex,
-        ),
-      },
-    }));
+    updatePathOnRouteIndex(routeSelectedIndex, (path) =>
+      updateElementOnIndex(path, pointSelectedIndex),
+    );
     setPointSelectedIndex(null);
   };
   const cancelPointMenu = () => {
@@ -282,13 +298,7 @@ export const ClimbingContextProvider = ({ children }) => {
   };
 
   const undoPoint = () => {
-    updateRouteOnIndex(routeSelectedIndex, (route) => ({
-      ...route,
-      paths: {
-        ...route.paths,
-        [photoPath]: route.paths[photoPath].slice(0, -1),
-      },
-    }));
+    updatePathOnRouteIndex(routeSelectedIndex, (path) => path.slice(0, -1));
   };
 
   const getPixelPosition = ({ x, y }: Position): PositionPx => ({
@@ -342,20 +352,12 @@ export const ClimbingContextProvider = ({ children }) => {
   };
 
   const changePointType = ({ type }) => {
-    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
-      ...currentRoute,
-      paths: {
-        ...currentRoute.paths,
-        [photoPath]: updateElementOnIndex(
-          currentRoute.paths[photoPath],
-          pointSelectedIndex,
-          (point) => ({
-            ...point,
-            type,
-          }),
-        ),
-      },
-    }));
+    updatePathOnRouteIndex(routeSelectedIndex, (path) =>
+      updateElementOnIndex(path, pointSelectedIndex, (point) => ({
+        ...point,
+        type,
+      })),
+    );
   };
 
   const getCloserPoint = ({
@@ -386,7 +388,7 @@ export const ClimbingContextProvider = ({ children }) => {
       .map((route, index) => {
         const isCurrentRoute = index === routeSelectedIndex;
         if (isCurrentRoute) return [];
-        return route.paths[photoPath];
+        return getPathForRoute(route);
       })
       .flat()
       .reduce((closestPoint, point) => {
@@ -414,22 +416,11 @@ export const ClimbingContextProvider = ({ children }) => {
   const addPointInBetween = ({ hoveredPosition, tempPointPosition }) => {
     const position = getPercentagePosition(hoveredPosition);
 
-    updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
-      ...currentRoute,
-      paths: {
-        ...currentRoute.paths,
-        [photoPath]: [
-          ...currentRoute.paths[photoPath].slice(
-            0,
-            tempPointPosition.lineIndex + 1,
-          ),
-          position,
-          ...currentRoute.paths[photoPath].slice(
-            tempPointPosition.lineIndex + 1,
-          ),
-        ],
-      },
-    }));
+    updatePathOnRouteIndex(routeSelectedIndex, (path) => [
+      ...path.slice(0, tempPointPosition.lineIndex + 1),
+      position,
+      ...path.slice(tempPointPosition.lineIndex + 1),
+    ]);
   };
 
   const addPointToEnd = (props: { position: PositionPx }) => {
@@ -445,17 +436,12 @@ export const ClimbingContextProvider = ({ children }) => {
 
     const closestPoint = findCloserPoint(newCoordinate);
 
-    updateRouteOnIndex(routeSelectedIndex, (route) => ({
-      ...route,
-      paths: {
-        ...route.paths,
-        [photoPath]: [
-          ...(route?.paths[photoPath] ?? []),
-          closestPoint ?? newCoordinate,
-        ],
-      },
-    }));
+    updatePathOnRouteIndex(routeSelectedIndex, (path) => [
+      ...path,
+      closestPoint ?? newCoordinate,
+    ]);
   };
+
   const commonActions: Partial<Record<Action, ActionWithCallback>> = {
     createRoute: { nextState: 'editRoute', callback: createRoute },
     editRoute: { nextState: 'editRoute', callback: editRoute },
@@ -568,7 +554,9 @@ export const ClimbingContextProvider = ({ children }) => {
     setRoutes,
     setRouteSelectedIndex,
     updateRouteOnIndex,
+    updatePathOnRouteIndex,
     getMachine,
+    getPathForRoute,
     getCurrentPath,
     scrollOffset,
     setScrollOffset,

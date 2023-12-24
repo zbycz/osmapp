@@ -11,11 +11,11 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     routes,
     findCloserPoint,
     countPositionWith,
-    photoPath,
+    getPathForRoute,
   } = useClimbingContext();
 
   const route = routes[routeNumber];
-  const path = route.paths[photoPath];
+  const path = getPathForRoute(route);
   const lastPoint = path[path.length - 1];
   const lastPointPositionInPx = getPixelPosition(lastPoint);
   const mousePositionWithEditorPosition = countPositionWith(

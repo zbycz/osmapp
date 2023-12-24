@@ -25,7 +25,7 @@ export const Route = ({
     isRouteSelected,
     getMachine,
     isPointSelected,
-    photoPath,
+    getPathForRoute,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -63,7 +63,7 @@ export const Route = ({
       </defs>
       <RoutePath route={route} routeNumber={routeNumber} />
 
-      {route.paths[photoPath].map(({ x, y, type }, index) => {
+      {getPathForRoute(route).map(({ x, y, type }, index) => {
         const isBoltVisible = type === 'bolt';
         const isAnchorVisible = type === 'anchor';
         const isSlingVisible = type === 'sling';

@@ -18,21 +18,21 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 
 export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   const {
-    routeSelectedIndex,
-    routes,
+    // routeSelectedIndex,
+    // routes,
     pointSelectedIndex,
     setPointSelectedIndex,
     // updateRouteOnIndex,
     getMachine,
     isPointMoving,
-    photoPath,
+    getCurrentPath,
   } = useClimbingContext();
   const machine = getMachine();
   const open = Boolean(anchorEl) && !isPointMoving;
   const id = open ? 'simple-popper' : undefined;
-  const route = routes[routeSelectedIndex];
-  if (!route) return null;
-  const selectedPoint = route.paths[photoPath][pointSelectedIndex];
+  // const route = routes[routeSelectedIndex];
+  // if (!route) return null;
+  const selectedPoint = getCurrentPath()[pointSelectedIndex];
   if (!selectedPoint) return null;
 
   const onPopoverClose = () => {
@@ -41,12 +41,6 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   };
   const onDeletePoint = () => {
     machine.execute('deletePoint');
-    // updateRouteOnIndex(routeSelectedIndex, (currentRoute) => ({
-    //   ...currentRoute,
-    //   path: updateElementOnIndex(currentRoute.path, pointSelectedIndex),
-    // }));
-    // setPointSelectedIndex(null);
-    // setAnchorEl(null);
   };
 
   const onPointTypeChange = (type: PointType) => {

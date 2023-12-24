@@ -19,8 +19,13 @@ export const RouteFloatingMenu = () => {
   const [isDeletePointDialogVisible, setIsDeletePointDialogVisible] =
     useState(false);
   const [showTypeMenu, setShowTypeMenu] = useState(false);
-  const { getMachine, pointSelectedIndex, routes, routeSelectedIndex } =
-    useClimbingContext();
+  const {
+    getMachine,
+    pointSelectedIndex,
+    routes,
+    routeSelectedIndex,
+    getCurrentPath,
+  } = useClimbingContext();
   const machine = getMachine();
 
   const onFinishClimbingRouteClick = () => {
@@ -116,8 +121,7 @@ export const RouteFloatingMenu = () => {
         <ButtonGroup variant="contained" size="small" color="primary">
           {machine.currentStateName === 'pointMenu' &&
             routes[routeSelectedIndex] &&
-            pointSelectedIndex ===
-              routes[routeSelectedIndex].path.length - 1 && (
+            pointSelectedIndex === getCurrentPath().length - 1 && (
               <Button
                 onClick={onContinueClimbingRouteClick}
                 startIcon={<AddLocationIcon />}

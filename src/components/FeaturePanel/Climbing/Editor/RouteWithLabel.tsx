@@ -17,8 +17,8 @@ export const RouteWithLabel = ({
   routeNumber,
   onPointInSelectedRouteClick,
 }: Props) => {
-  const { getPixelPosition, photoPath } = useClimbingContext();
-  const path = route.paths[photoPath];
+  const { getPixelPosition, getPathForRoute } = useClimbingContext();
+  const path = getPathForRoute(route);
   if (!route || !path || path?.length === 0) return null;
 
   const { x, y } = getPixelPosition({
