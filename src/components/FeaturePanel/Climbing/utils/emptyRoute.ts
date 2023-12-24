@@ -5,6 +5,6 @@ export const emptyRoute: ClimbingRoute = {
   name: '',
   difficulty: '',
   length: '',
-  path: [],
+  paths: {},
   description: '',
 };

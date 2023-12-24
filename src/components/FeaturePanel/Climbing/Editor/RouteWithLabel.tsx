@@ -17,13 +17,16 @@ export const RouteWithLabel = ({
   routeNumber,
   onPointInSelectedRouteClick,
 }: Props) => {
-  if (!route || route.path.length === 0) return null;
+  const { getPixelPosition, photoPath } = useClimbingContext();
+  const path = route.paths[photoPath];
+  if (!route || !path || path?.length === 0) return null;
 
-  const { getPixelPosition } = useClimbingContext();
+  const { x, y } = getPixelPosition({
+    ...path[0],
+    units: 'percentage',
+  });
 
-  const { x, y } = getPixelPosition({ ...route.path[0], units: 'percentage' });
-
-  if (route.path.length === 1) {
+  if (path.length === 1) {
     return (
       <StartPoint
         onPointInSelectedRouteClick={onPointInSelectedRouteClick}

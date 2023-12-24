@@ -15,7 +15,7 @@ const Container = styled.div`
 `;
 
 export const ControlPanel = () => {
-  const { routeSelectedIndex, routes, getMachine } = useClimbingContext();
+  const { getMachine, getCurrentPath } = useClimbingContext();
   const machine = getMachine();
 
   const onUndoClick = () => {
@@ -25,6 +25,8 @@ export const ControlPanel = () => {
   // const onFinishClimbingRouteClick = () => {
   //   machine.execute('finishRoute');
   // };
+
+  const path = getCurrentPath();
 
   return (
     <Container>
@@ -41,17 +43,16 @@ export const ControlPanel = () => {
           </IconButton>
         )} */}
 
-        {machine.currentStateName === 'extendRoute' &&
-          routes[routeSelectedIndex]?.path.length !== 0 && (
-            <IconButton
-              color="default"
-              edge="end"
-              onClick={onUndoClick}
-              title="Undo last segment"
-            >
-              <UndoIcon fontSize="small" />
-            </IconButton>
-          )}
+        {machine.currentStateName === 'extendRoute' && path.length !== 0 && (
+          <IconButton
+            color="default"
+            edge="end"
+            onClick={onUndoClick}
+            title="Undo last segment"
+          >
+            <UndoIcon fontSize="small" />
+          </IconButton>
+        )}
         {/* <IconButton
             color="default"
             edge="end"

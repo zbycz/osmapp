@@ -20,8 +20,13 @@ export const Route = ({
   routeNumber,
   onPointInSelectedRouteClick,
 }: Props) => {
-  const { getPixelPosition, isRouteSelected, getMachine, isPointSelected } =
-    useClimbingContext();
+  const {
+    getPixelPosition,
+    isRouteSelected,
+    getMachine,
+    isPointSelected,
+    photoPath,
+  } = useClimbingContext();
 
   const machine = getMachine();
   const isSelected = isRouteSelected(routeNumber);
@@ -58,7 +63,7 @@ export const Route = ({
       </defs>
       <RoutePath route={route} routeNumber={routeNumber} />
 
-      {route.path.map(({ x, y, type }, index) => {
+      {route.paths[photoPath].map(({ x, y, type }, index) => {
         const isBoltVisible = type === 'bolt';
         const isAnchorVisible = type === 'anchor';
         const isSlingVisible = type === 'sling';

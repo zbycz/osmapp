@@ -55,17 +55,19 @@ export const RouteEditor = ({
     setIsPointClicked,
     setIsPointMoving,
     setPointSelectedIndex,
+    getCurrentPath,
   } = useClimbingContext();
 
   const machine = getMachine();
+  const path = getCurrentPath();
+  if (!path) return null;
 
   const onPointInSelectedRouteClick = (
     event: React.MouseEvent<HTMLElement>,
   ) => {
-    if (!routes[routeSelectedIndex].path) return;
     machine.execute('showPointMenu');
     const isDoubleClick = event.detail === 2;
-    const lastPointIndex = routes[routeSelectedIndex].path.length - 1;
+    const lastPointIndex = path.length - 1;
 
     if (isDoubleClick && pointSelectedIndex === lastPointIndex) {
       machine.execute('finishRoute');
@@ -105,17 +107,13 @@ export const RouteEditor = ({
   );
 
   const lastPointOfSelectedRoute =
-    routeSelectedIndex !== null && routes[routeSelectedIndex]?.path.length > 0
-      ? getPixelPosition(
-          routes[routeSelectedIndex].path[
-            routes[routeSelectedIndex].path.length - 1
-          ],
-        )
+    routeSelectedIndex !== null && path.length > 0
+      ? getPixelPosition(path[path.length - 1])
       : null;
 
   const selectedPointOfSelectedRoute =
     pointSelectedIndex !== null && routes[routeSelectedIndex]
-      ? getPixelPosition(routes[routeSelectedIndex].path[pointSelectedIndex])
+      ? getPixelPosition(path[pointSelectedIndex])
       : null;
 
   const routeFloatingMenuPosition =

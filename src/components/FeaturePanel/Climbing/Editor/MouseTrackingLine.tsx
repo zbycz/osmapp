@@ -11,10 +11,12 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     routes,
     findCloserPoint,
     countPositionWith,
+    photoPath,
   } = useClimbingContext();
 
   const route = routes[routeNumber];
-  const lastPoint = route.path[route.path.length - 1];
+  const path = route.paths[photoPath];
+  const lastPoint = path[path.length - 1];
   const lastPointPositionInPx = getPixelPosition(lastPoint);
   const mousePositionWithEditorPosition = countPositionWith(
     ['editorPosition'],
@@ -28,7 +30,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     : mousePositionWithEditorPosition;
 
   const isSelected = isRouteSelected(routeNumber);
-  console.log('____TU', isSelected);
+
   return (
     mousePosition2 &&
     isSelected && (

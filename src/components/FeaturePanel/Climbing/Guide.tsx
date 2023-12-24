@@ -16,8 +16,10 @@ const DrawRouteButton = styled(Button)`
 
 export const Guide = () => {
   const [isGuideClosed, setIsGuideClosed] = useState(false);
-  const { routeSelectedIndex, routes, getMachine } = useClimbingContext();
+  const { routeSelectedIndex, getMachine, getCurrentPath } =
+    useClimbingContext();
   const machine = getMachine();
+  const path = getCurrentPath();
 
   const handleClose = () => {
     setIsGuideClosed(true);
@@ -25,7 +27,7 @@ export const Guide = () => {
   const onDrawRouteClick = () => {
     machine.execute('extendRoute', { routeNumber: routeSelectedIndex });
   };
-  const isInSchema = routes[routeSelectedIndex]?.path.length > 0;
+  const isInSchema = path.length > 0;
   const showDrawButton =
     !isInSchema && machine.currentStateName !== 'extendRoute';
   return (
@@ -70,7 +72,7 @@ export const Guide = () => {
           </DrawRouteButton>
         ) : (
           <Alert onClose={handleClose} severity="info" variant="filled">
-            {routes[routeSelectedIndex]?.path.length === 0
+            {path.length === 0
               ? t('climbingpanel.create_first_node')
               : t('climbingpanel.create_next_node')}
           </Alert>

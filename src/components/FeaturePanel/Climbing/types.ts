@@ -29,7 +29,7 @@ export type ClimbingRoute = {
   length?: string;
   name?: string;
   description?: string;
-  path: PathPoints;
+  paths: { [photoUrl: string]: PathPoints };
 };
 
 // images: Array<Array<ClimbingRoute>>

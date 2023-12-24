@@ -25,13 +25,14 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
     // updateRouteOnIndex,
     getMachine,
     isPointMoving,
+    photoPath,
   } = useClimbingContext();
   const machine = getMachine();
   const open = Boolean(anchorEl) && !isPointMoving;
   const id = open ? 'simple-popper' : undefined;
   const route = routes[routeSelectedIndex];
   if (!route) return null;
-  const selectedPoint = route.path[pointSelectedIndex];
+  const selectedPoint = route.paths[photoPath][pointSelectedIndex];
   if (!selectedPoint) return null;
 
   const onPopoverClose = () => {

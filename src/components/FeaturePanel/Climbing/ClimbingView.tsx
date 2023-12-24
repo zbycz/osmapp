@@ -196,12 +196,19 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
       const updatedPoint = closestPoint ?? newCoordinate;
       updateRouteOnIndex(routeSelectedIndex, (route) => ({
         ...route,
-        path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
-          // @TODO route.path can be undefined, why?
-          ...point,
-          x: updatedPoint.x,
-          y: updatedPoint.y,
-        })),
+        paths: {
+          ...route.paths,
+          [photoPath]: updateElementOnIndex(
+            route.paths[photoPath],
+            pointSelectedIndex,
+            (point) => ({
+              // @TODO route.path can be undefined, why?
+              ...point,
+              x: updatedPoint.x,
+              y: updatedPoint.y,
+            }),
+          ),
+        },
       }));
     } else if (machine.currentStateName !== 'extendRoute') {
       setMousePosition(null);

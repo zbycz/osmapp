@@ -37,10 +37,11 @@ export const RoutePath = ({ route, routeNumber }) => {
     countPositionWith,
     isLineInteractiveAreaHovered,
     setIsLineInteractiveAreaHovered,
+    photoPath,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
-  const pointsInString = route?.path.map(({ x, y }, index) => {
+  const pointsInString = route?.paths[photoPath].map(({ x, y }, index) => {
     const position = getPixelPosition({ x, y, units: 'percentage' });
 
     return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
@@ -137,6 +138,9 @@ export const RoutePath = ({ route, routeNumber }) => {
       };
 
   // console.log('___', isHovered);
+  const path = route.paths[photoPath];
+  if (!path) return null;
+
   return (
     <>
       <PathWithBorder
@@ -165,17 +169,13 @@ export const RoutePath = ({ route, routeNumber }) => {
         // }
         {...commonProps}
       /> */}
-      {route.path.length > 1 &&
-        route.path.map(({ x, y }, index) => {
+      {path.length > 1 &&
+        path.map(({ x, y }, index) => {
           const position1 = getPixelPosition({ x, y, units: 'percentage' });
 
-          if (
-            route?.path &&
-            index < route.path.length - 1 &&
-            !isInteractionDisabled
-          ) {
+          if (path && index < path.length - 1 && !isInteractionDisabled) {
             const position2 = getPixelPosition({
-              ...route.path[index + 1],
+              ...path[index + 1],
               units: 'percentage',
             });
             return (
