@@ -3,36 +3,43 @@ import styled from 'styled-components';
 import { useTheme } from '@material-ui/core';
 import { useConfig } from './config';
 
-const useColor = ({ isSelected, hasRoute }) => {
+const useColor = ({ isSelected, hasRoute, hasRouteInDifferentPhotos }) => {
   const theme = useTheme();
   const config = useConfig();
-
-  if (!hasRoute) {
-    return {
-      background: 'transparent',
-      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
-      border: 'transparent',
-    };
-  }
 
   if (isSelected) {
     return {
       background: config.routeNumberBackgroundSelected,
       text: config.routeNumberTextColorSelected,
-      border: config.routeNumberBorderColorSelected,
+      border: `solid 1px ${config.routeNumberBorderColorSelected}`,
     };
   }
   if (hasRoute) {
     return {
       background: config.routeNumberBackground,
       text: config.routeNumberTextColor,
-      border: config.routeNumberBorderColor,
+      border: `solid 1px ${config.routeNumberBorderColor}`,
     };
   }
+  if (hasRouteInDifferentPhotos) {
+    return {
+      background: 'transparent',
+      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
+      border: `dashed 1px ${config.routeNumberBorderColor}`,
+    };
+  }
+  if (!hasRoute) {
+    return {
+      background: 'transparent',
+      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
+      border: 'solid 1px transparent',
+    };
+  }
+
   return {
     background: 'transparent',
     text: theme.textOnPrimary,
-    border: 'transparent',
+    border: 'solid 1px transparent',
   };
 };
 
@@ -51,15 +58,23 @@ const Container = styled.div<{
   font-size: 12px;
   font-weight: 600;
 
-  border: solid 1px ${({ colors }) => colors.border};
+  border: ${({ colors }) => colors.border};
 `;
 
-export const RouteNumber = ({ children, isSelected, hasRoute }) => {
-  const colors = useColor({ isSelected, hasRoute });
+export const RouteNumber = ({
+  children,
+  isSelected,
+  hasRoute,
+  hasRouteInDifferentPhotos = false,
+}) => {
+  const colors = useColor({ isSelected, hasRoute, hasRouteInDifferentPhotos });
 
   const getTitle = () => {
     if (hasRoute) {
       return 'Route marked in schema';
+    }
+    if (hasRouteInDifferentPhotos) {
+      return 'Route is available in different photo';
     }
     return 'Route is not in schema';
   };

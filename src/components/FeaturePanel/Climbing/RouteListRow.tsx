@@ -83,6 +83,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     hasPath,
     isEditMode,
     routeSelectedIndex,
+    hasPathInDifferentPhotos,
   } = useClimbingContext();
 
   useEffect(() => {
@@ -93,6 +94,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
 
   const isSelected = isRouteSelected(index);
   const hasRoute = !!hasPath(index);
+  const hasRouteInDifferentPhotos = !!hasPathInDifferentPhotos(index);
 
   const machine = getMachine();
 
@@ -145,7 +147,11 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
           </IconButton>
         </Cell> */}
         <RouteNumberCell component="th" scope="row" width={30}>
-          <RouteNumber isSelected={isSelected} hasRoute={hasRoute}>
+          <RouteNumber
+            isSelected={isSelected}
+            hasRoute={hasRoute}
+            hasRouteInDifferentPhotos={hasRouteInDifferentPhotos}
+          >
             {index + 1}
           </RouteNumber>
         </RouteNumberCell>

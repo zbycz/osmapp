@@ -57,6 +57,7 @@ type ClimbingContextType = {
   isRouteSelected: (routeNumber: number) => boolean;
   isPointSelected: (pointNumber: number) => boolean;
   hasPath: (routeNumber: number) => boolean;
+  hasPathInDifferentPhotos: (routeNumber: number) => boolean;
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
@@ -132,6 +133,7 @@ export const ClimbingContext = createContext<ClimbingContextType>({
   isRouteSelected: () => null,
   isPointSelected: () => null,
   hasPath: () => null,
+  hasPathInDifferentPhotos: () => null,
   pointSelectedIndex: null,
   routes: [],
   routeSelectedIndex: null,
@@ -532,6 +534,19 @@ export const ClimbingContextProvider = ({ children }) => {
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
   const isPointSelected = (index: number) => pointSelectedIndex === index;
   const hasPath = (index: number) => getPathOnIndex(index).length > 0;
+  const hasPathInDifferentPhotos = (index: number) => {
+    const paths = routes[index]?.paths;
+    const availablePhotos = Object.keys(paths);
+    return availablePhotos.find((availablePhotoPath) => {
+      if (
+        availablePhotoPath !== photoPath &&
+        paths[availablePhotoPath].length > 0
+      ) {
+        return true;
+      }
+      return false;
+    }, []);
+  };
 
   const climbingState = {
     editorPosition,
@@ -543,6 +558,7 @@ export const ClimbingContextProvider = ({ children }) => {
     isRouteSelected,
     isPointSelected,
     hasPath,
+    hasPathInDifferentPhotos,
     pointSelectedIndex,
     routes,
     routeSelectedIndex,
