@@ -115,61 +115,7 @@ type ClimbingContextType = {
 };
 
 // @TODO generate?
-export const ClimbingContext = createContext<ClimbingContextType>({
-  editorPosition: { x: 0, y: 0, units: 'px' },
-  imageSize: {
-    width: 0,
-    height: 0,
-  },
-  getPercentagePosition: () => null,
-  mousePosition: { x: 0, y: 0, units: 'px' },
-  setMousePosition: () => null,
-  getPixelPosition: () => null,
-  countPositionWith: () => null,
-  getPathForRoute: () => null,
-  getCurrentPath: () => null,
-  isPointClicked: false,
-  isPointMoving: false,
-  isRouteSelected: () => null,
-  isPointSelected: () => null,
-  hasPath: () => null,
-  hasPathInDifferentPhotos: () => null,
-  pointSelectedIndex: null,
-  routes: [],
-  routeSelectedIndex: null,
-  setEditorPosition: () => null,
-  setImageSize: () => null,
-  setIsPointClicked: () => null,
-  setIsPointMoving: () => null,
-  isEditMode: false,
-  setIsEditMode: () => null,
-  photoPath: null,
-  setPhotoPath: () => null,
-  setPointSelectedIndex: () => null,
-  setRoutes: () => null,
-  setRouteSelectedIndex: () => null,
-  setSplitPaneHeight: () => null,
-  splitPaneHeight: 800,
-  updateRouteOnIndex: () => null,
-  updatePathOnRouteIndex: () => null,
-  getMachine: () => ({
-    currentState: null,
-    currentStateName: null,
-    execute: () => null,
-  }),
-  scrollOffset: { x: 0, y: 0, units: 'px' },
-  setScrollOffset: () => null,
-  findCloserPoint: () => null,
-  areRoutesVisible: true,
-  setAreRoutesVisible: () => null,
-  pointElement: null,
-  setPointElement: () => null,
-  moveRoute: () => null,
-  viewportSize: { width: 0, height: 0 },
-  setViewportSize: () => null,
-  isLineInteractiveAreaHovered: false,
-  setIsLineInteractiveAreaHovered: () => null,
-});
+export const ClimbingContext = createContext<ClimbingContextType | null>(null);
 
 export const ClimbingContextProvider = ({ children }) => {
   const [photoPath, setPhotoPath] = useState<string>('/images/rock2.jpg');
@@ -537,7 +483,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const hasPathInDifferentPhotos = (index: number) => {
     const paths = routes[index]?.paths;
     const availablePhotos = Object.keys(paths);
-    return availablePhotos.find((availablePhotoPath) => {
+    return !!availablePhotos.find((availablePhotoPath) => {
       if (
         availablePhotoPath !== photoPath &&
         paths[availablePhotoPath].length > 0
