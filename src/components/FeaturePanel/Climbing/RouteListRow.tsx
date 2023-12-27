@@ -93,8 +93,8 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   }, [routeSelectedIndex]);
 
   const isSelected = isRouteSelected(index);
-  const hasRoute = !!hasPath(index);
-  const hasRouteInDifferentPhotos = !!hasPathInDifferentPhotos(index);
+  const hasRoute = hasPath(index);
+  const hasRouteInDifferentPhotos = hasPathInDifferentPhotos(index);
 
   const machine = getMachine();
 

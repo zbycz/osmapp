@@ -1,4 +1,5 @@
 import { Position, PositionPx } from '../types';
+import { roundNumber } from './number';
 
 export type CountPositionEntity = 'editorPosition' | 'scrollOffset';
 
@@ -14,8 +15,8 @@ export const positionUtilsFactory = ({
   });
 
   const getPercentagePosition = ({ x, y }: PositionPx): Position => ({
-    x: x / imageSize.width,
-    y: y / imageSize.height,
+    x: roundNumber(x / imageSize.width),
+    y: roundNumber(y / imageSize.height),
     units: 'percentage',
   });
 
