@@ -7,49 +7,21 @@ import {
   Size,
 } from '../types';
 import { updateElementOnIndex } from '../utils';
-import { emptyRoute } from '../utils/emptyRoute';
 import { routes1 } from './mock';
 import { findCloserPointFactory } from '../utils/findCloserPoint';
+import {
+  ActionWithCallback,
+  State,
+  StateAction,
+  stateMachineFactory,
+} from '../utils/stateMachine';
 
 type ImageSize = {
   width: number;
   height: number;
 };
 
-type State =
-  | 'editRoute'
-  | 'extendRoute'
-  | 'init'
-  | 'pointMenu'
-  | 'routeSelected';
-
-type Action =
-  | 'addPointInBetween'
-  | 'addPointToEnd'
-  | 'cancelPointMenu'
-  | 'cancelRouteSelection'
-  | 'changePointType'
-  | 'createRoute'
-  | 'deletePoint'
-  | 'deleteRoute'
-  | 'dragPoint'
-  | 'editRoute'
-  | 'extendRoute'
-  | 'finishRoute'
-  | 'routeSelect'
-  | 'showPointMenu'
-  | 'undoPoint';
-
-type ActionWithCallback = {
-  nextState: State;
-  callback?: (props: unknown) => void;
-};
-
 type CountPositionEntity = 'editorPosition' | 'scrollOffset';
-
-type Machine = {
-  [key in State]: Partial<Record<Action, ActionWithCallback>>;
-};
 
 type ClimbingContextType = {
   editorPosition: PositionPx;
@@ -91,9 +63,9 @@ type ClimbingContextType = {
     position: PositionPx,
   ) => PositionPx;
   getMachine: () => {
-    currentState: Partial<Record<Action, ActionWithCallback>>;
+    currentState: Partial<Record<StateAction, ActionWithCallback>>;
     currentStateName: State;
-    execute: (desiredAction: Action, props?: unknown) => void;
+    execute: (desiredAction: StateAction, props?: unknown) => void;
   };
   scrollOffset: PositionPx;
   setScrollOffset: (scrollOffset: PositionPx) => void;
@@ -146,7 +118,7 @@ export const ClimbingContextProvider = ({ children }) => {
   });
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
-  const [currentState, setCurrentState] = useState<State>('init');
+
   const [pointElement, setPointElement] =
     React.useState<null | HTMLElement>(null);
 
@@ -196,72 +168,21 @@ export const ClimbingContextProvider = ({ children }) => {
     }
   };
 
-  const routeSelect = ({ routeNumber }) => {
-    setRouteSelectedIndex(routeNumber);
-    setPointSelectedIndex(null);
-  };
-
-  const cancelRouteSelection = () => {
-    setRouteSelectedIndex(null);
-    setPointSelectedIndex(null);
-  };
-
-  const deletePoint = () => {
-    updatePathOnRouteIndex(routeSelectedIndex, (path) =>
-      updateElementOnIndex(path, pointSelectedIndex),
-    );
-    setPointSelectedIndex(null);
-  };
-  const cancelPointMenu = () => {
-    setPointSelectedIndex(null);
-  };
-
-  const editRoute = ({ routeNumber }) => {
-    setRouteSelectedIndex(routeNumber);
-    setPointSelectedIndex(null);
-  };
-
-  const extendRoute = (props: { routeNumber?: number }) => {
-    if (props?.routeNumber) {
-      setRouteSelectedIndex(props.routeNumber);
-      setPointSelectedIndex(null);
-    }
-    setIsLineInteractiveAreaHovered(false);
-  };
-
-  const finishRoute = () => {
-    setMousePosition(null);
-  };
-
-  const createRoute = () => {
-    const newIndex = routes.length;
-    setRouteSelectedIndex(newIndex);
-    setPointSelectedIndex(null);
-    setRoutes([...routes, emptyRoute]);
-  };
-
-  const deleteRoute = ({ routeNumber }: { routeNumber?: number }) => {
-    updateRouteOnIndex(routeNumber || routeSelectedIndex);
-    setRouteSelectedIndex(null);
-    setPointSelectedIndex(null);
-  };
-
-  const undoPoint = () => {
-    updatePathOnRouteIndex(routeSelectedIndex, (path) => path.slice(0, -1));
-  };
-
+  // @TODO: extract
   const getPixelPosition = ({ x, y }: Position): PositionPx => ({
     x: imageSize.width * x,
     y: imageSize.height * y,
     units: 'px',
   });
 
+  // @TODO: extract
   const getPercentagePosition = ({ x, y }: PositionPx): Position => ({
     x: x / imageSize.width,
     y: y / imageSize.height,
     units: 'percentage',
   });
 
+  // @TODO: extract
   const countPositionWith = (
     entities: Array<CountPositionEntity>,
     position: PositionPx | null,
@@ -284,151 +205,27 @@ export const ClimbingContextProvider = ({ children }) => {
     }, position);
   };
 
-  const dragPoint = () => {
-    // setIsPointMoving(true);
-    // const newCoordinate = getPercentagePosition({
-    //   x: position.x - editorPosition.x,
-    //   y: position.y - editorPosition.y,
-    // });
-    // updateRouteOnIndex(routeSelectedIndex, (route) => ({
-    //   ...route,
-    //   path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
-    //     ...point,
-    //     x: newCoordinate.x,
-    //     y: newCoordinate.y,
-    //   })),
-    // }));
-  };
-
-  const changePointType = ({ type }) => {
-    updatePathOnRouteIndex(routeSelectedIndex, (path) =>
-      updateElementOnIndex(path, pointSelectedIndex, (point) => ({
-        ...point,
-        type,
-      })),
-    );
-  };
-
   const findCloserPoint = findCloserPointFactory({
     routeSelectedIndex,
     routes,
     getPathForRoute,
   });
 
-  const addPointInBetween = ({ hoveredPosition, tempPointPosition }) => {
-    const position = getPercentagePosition(hoveredPosition);
-
-    updatePathOnRouteIndex(routeSelectedIndex, (path) => [
-      ...path.slice(0, tempPointPosition.lineIndex + 1),
-      position,
-      ...path.slice(tempPointPosition.lineIndex + 1),
-    ]);
-  };
-
-  const addPointToEnd = (props: { position: PositionPx }) => {
-    if (!props) return;
-    const { x, y } = props.position;
-    const newCoordinate = getPercentagePosition(
-      countPositionWith(['scrollOffset', 'editorPosition'], {
-        x,
-        y,
-        units: 'px',
-      }),
-    );
-
-    const closestPoint = findCloserPoint(newCoordinate);
-
-    updatePathOnRouteIndex(routeSelectedIndex, (path) => [
-      ...path,
-      closestPoint ?? newCoordinate,
-    ]);
-  };
-
-  const commonActions: Partial<Record<Action, ActionWithCallback>> = {
-    createRoute: { nextState: 'editRoute', callback: createRoute },
-    editRoute: { nextState: 'editRoute', callback: editRoute },
-  };
-
-  const states: Machine = {
-    init: {
-      ...commonActions,
-      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
-      routeSelect: { nextState: 'routeSelected', callback: routeSelect },
-    },
-    editRoute: {
-      ...commonActions,
-      deleteRoute: { nextState: 'init', callback: deleteRoute },
-      dragPoint: { nextState: 'editRoute', callback: dragPoint },
-      cancelRouteSelection: {
-        nextState: 'init',
-        callback: cancelRouteSelection,
-      },
-      addPointInBetween: {
-        nextState: 'editRoute',
-        callback: addPointInBetween,
-      },
-      showPointMenu: { nextState: 'pointMenu' },
-      finishRoute: { nextState: 'editRoute', callback: finishRoute },
-      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
-      routeSelect: { nextState: 'routeSelected', callback: routeSelect },
-    },
-    extendRoute: {
-      ...commonActions,
-      deleteRoute: { nextState: 'init', callback: deleteRoute },
-      finishRoute: { nextState: 'editRoute', callback: finishRoute },
-      undoPoint: { nextState: 'extendRoute', callback: undoPoint },
-      showPointMenu: { nextState: 'pointMenu' },
-      dragPoint: { nextState: 'extendRoute', callback: dragPoint },
-      addPointInBetween: {
-        nextState: 'extendRoute',
-        callback: addPointInBetween,
-      },
-      addPointToEnd: {
-        nextState: 'extendRoute',
-        callback: addPointToEnd,
-      },
-    },
-    pointMenu: {
-      ...commonActions,
-      changePointType: { nextState: 'editRoute', callback: changePointType },
-      deletePoint: { nextState: 'editRoute', callback: deletePoint },
-      cancelPointMenu: { nextState: 'editRoute', callback: cancelPointMenu },
-      finishRoute: { nextState: 'editRoute', callback: finishRoute },
-      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
-      dragPoint: { nextState: 'editRoute', callback: dragPoint },
-    },
-    routeSelected: {
-      ...commonActions,
-      routeSelect: { nextState: 'routeSelected', callback: routeSelect },
-      cancelRouteSelection: {
-        nextState: 'init',
-        callback: cancelRouteSelection,
-      },
-      extendRoute: { nextState: 'extendRoute', callback: extendRoute },
-    },
-  };
-
-  const getMachine = () => ({
-    currentState: states[currentState],
-    currentStateName: currentState,
-    execute: (desiredAction: Action, props?: unknown) => {
-      if (desiredAction in states[currentState]) {
-        const { nextState, callback } = states[currentState][desiredAction];
-        setCurrentState(nextState);
-        console.log(
-          '______CHANGE STATE____!',
-          desiredAction,
-          nextState,
-          props,
-          callback ? 'callback' : 'no callback',
-          routeSelectedIndex,
-          pointSelectedIndex,
-        );
-        if (callback) callback(props);
-      } else {
-        console.warn('wrong action', currentState, desiredAction);
-      }
-    },
+  const getMachine = stateMachineFactory({
+    setRouteSelectedIndex,
+    setPointSelectedIndex,
+    updatePathOnRouteIndex,
+    updateElementOnIndex,
+    routeSelectedIndex,
+    pointSelectedIndex,
+    setIsLineInteractiveAreaHovered,
+    setMousePosition,
+    setRoutes,
+    routes,
+    updateRouteOnIndex,
+    getPercentagePosition,
+    countPositionWith,
+    findCloserPoint,
   });
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
