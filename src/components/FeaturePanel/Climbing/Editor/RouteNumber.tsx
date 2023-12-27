@@ -26,7 +26,8 @@ const RouteNameOutline = RouteNameBoxBase;
 const RouteNameBox = RouteNameBoxBase;
 
 export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
-  const RECT_WIDTH = String(routeNumber).length * 5 + 15;
+  const digits = String(routeNumber).length;
+  const RECT_WIDTH = (digits > 2 ? digits : 0) * 3 + 20;
   const RECT_HEIGHT = 20;
   const RECT_Y_OFFSET = 10;
   const OUTLINE_WIDTH = 2;

@@ -8,6 +8,7 @@ import { useConfig } from '../config';
 type Props = {
   x: number;
   y: number;
+  routeNumberXShift: number;
   routeNumber: number;
   onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
 };
@@ -42,16 +43,17 @@ export const StartPoint = ({
   x,
   y,
   routeNumber,
+  routeNumberXShift = 0,
   onPointInSelectedRouteClick,
 }: Props) => {
   const { isRouteSelected, getMachine } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
-
   return (
     <>
-      {machine.currentStateName === 'editRoute' ||
-      machine.currentStateName === 'extendRoute' ? (
+      {isSelected &&
+      (machine.currentStateName === 'editRoute' ||
+        machine.currentStateName === 'extendRoute') ? (
         <Point
           x={x}
           y={y}
@@ -64,7 +66,7 @@ export const StartPoint = ({
         <NonEditablePoint isSelected={isSelected} x={x} y={y} />
       )}
       <MouseTrackingLine routeNumber={routeNumber} />
-      <RouteNumber x={x} y={y}>
+      <RouteNumber x={x + routeNumberXShift} y={y}>
         {routeNumber}
       </RouteNumber>
     </>

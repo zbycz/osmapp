@@ -89,7 +89,7 @@ export const ClimbingPanel = () => {
               <Toolbar variant="dense">
                 <Title>
                   <Typography variant="h6" component="div">
-                    Roviště
+                    Roviště - Krutý Řím
                   </Typography>
                   <a onClick={() => onPhotoChange('/images/rock2.jpg')}>
                     photo 1

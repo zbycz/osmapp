@@ -112,7 +112,7 @@ export const RouteEditor = ({
       : null;
 
   const selectedPointOfSelectedRoute =
-    pointSelectedIndex !== null && routes[routeSelectedIndex]
+    pointSelectedIndex !== null && path.length > 0 && routes[routeSelectedIndex]
       ? getPixelPosition(path[pointSelectedIndex])
       : null;
 

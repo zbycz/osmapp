@@ -5,6 +5,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Route } from './Route';
 import { ClimbingRoute } from '../types';
 import { StartPoint } from './StartPoint';
+import { getShiftForStartPoint } from '../utils/startPoint';
 
 type Props = {
   route: ClimbingRoute;
@@ -17,9 +18,17 @@ export const RouteWithLabel = ({
   routeNumber,
   onPointInSelectedRouteClick,
 }: Props) => {
-  const { getPixelPosition, getPathForRoute } = useClimbingContext();
+  const { getPixelPosition, getPathForRoute, routes, photoPath } =
+    useClimbingContext();
   const path = getPathForRoute(route);
   if (!route || !path || path?.length === 0) return null;
+
+  const shift = getShiftForStartPoint({
+    currentRouteSelectedIndex: routeNumber,
+    currentPosition: path[0],
+    checkedRoutes: routes,
+    photoPath,
+  });
 
   const { x, y } = getPixelPosition({
     ...path[0],
@@ -32,6 +41,7 @@ export const RouteWithLabel = ({
         onPointInSelectedRouteClick={onPointInSelectedRouteClick}
         x={x}
         y={y}
+        routeNumberXShift={shift}
         routeNumber={routeNumber}
       />
     );
@@ -45,7 +55,7 @@ export const RouteWithLabel = ({
         onPointInSelectedRouteClick={onPointInSelectedRouteClick}
       />
 
-      <RouteNumber x={x} y={y}>
+      <RouteNumber x={x + shift} y={y}>
         {routeNumber}
       </RouteNumber>
     </>
