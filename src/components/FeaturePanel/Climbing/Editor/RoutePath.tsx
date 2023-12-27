@@ -34,7 +34,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     // getPercentagePosition,
     getMachine,
     isEditMode,
-    countPositionWith,
+    addOffsets,
     isLineInteractiveAreaHovered,
     setIsLineInteractiveAreaHovered,
     getPathForRoute,
@@ -56,7 +56,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     ) {
       if (!isLineInteractiveAreaHovered) setIsLineInteractiveAreaHovered(true);
       setTempPointPosition({
-        ...countPositionWith(['editorPosition'], {
+        ...addOffsets(['editorPosition'], {
           x: e.clientX,
           y: e.clientY,
           units: 'px',
@@ -92,7 +92,7 @@ export const RoutePath = ({ route, routeNumber }) => {
   //   setIsDraggingPoint(false);
   // };
 
-  const hoveredPosition = countPositionWith(['scrollOffset'], {
+  const hoveredPosition = addOffsets(['scrollOffset'], {
     x: tempPointPosition.x,
     y: tempPointPosition.y,
     units: 'px',

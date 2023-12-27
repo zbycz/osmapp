@@ -34,7 +34,7 @@ export type Machine = {
   [key in State]: Partial<Record<StateAction, ActionWithCallback>>;
 };
 
-export const stateMachineFactory = ({
+export const getMachineFactory = ({
   setRouteSelectedIndex,
   setPointSelectedIndex,
   updatePathOnRouteIndex,
@@ -47,7 +47,7 @@ export const stateMachineFactory = ({
   routes,
   updateRouteOnIndex,
   getPercentagePosition,
-  countPositionWith,
+  addOffsets: addOffsets,
   findCloserPoint,
 }) => {
   const [currentState, setCurrentState] = useState<State>('init');
@@ -145,7 +145,7 @@ export const stateMachineFactory = ({
     if (!props) return;
     const { x, y } = props.position;
     const newCoordinate = getPercentagePosition(
-      countPositionWith(['scrollOffset', 'editorPosition'], {
+      addOffsets(['scrollOffset', 'editorPosition'], {
         x,
         y,
         units: 'px',

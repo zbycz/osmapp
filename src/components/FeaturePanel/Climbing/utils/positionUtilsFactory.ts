@@ -2,7 +2,7 @@ import { Position, PositionPx } from '../types';
 
 export type CountPositionEntity = 'editorPosition' | 'scrollOffset';
 
-export const positionFactory = ({
+export const positionUtilsFactory = ({
   editorPosition,
   scrollOffset,
   imageSize,
@@ -19,14 +19,14 @@ export const positionFactory = ({
     units: 'percentage',
   });
 
-  const countPositionWith = (
-    entities: Array<CountPositionEntity>,
+  const addOffsets = (
+    offsets: Array<CountPositionEntity>,
     position: PositionPx | null,
   ): PositionPx => {
     if (!position) return null;
 
-    return entities.reduce((acc, entity) => {
-      if (entity === 'editorPosition') {
+    return offsets.reduce((acc, offset) => {
+      if (offset === 'editorPosition') {
         return {
           x: acc.x - editorPosition.x,
           y: acc.y - editorPosition.y,
@@ -44,6 +44,6 @@ export const positionFactory = ({
   return {
     getPixelPosition,
     getPercentagePosition,
-    countPositionWith,
+    addOffsets,
   };
 };

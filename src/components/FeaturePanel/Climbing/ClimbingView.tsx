@@ -109,7 +109,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
     setSplitPaneHeight,
     areRoutesVisible,
     setMousePosition,
-    countPositionWith,
+    addOffsets,
     isEditMode,
     viewportSize,
     setViewportSize,
@@ -170,7 +170,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
 
       setIsPointMoving(true);
       const newCoordinate = getPercentagePosition(
-        countPositionWith(['editorPosition'], position),
+        addOffsets(['editorPosition'], position),
       );
 
       const closestPoint = findCloserPoint(newCoordinate);
@@ -196,7 +196,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
 
   const onMouseMove = (e) => {
     onMove(
-      countPositionWith(['scrollOffset'], {
+      addOffsets(['scrollOffset'], {
         x: e.clientX,
         y: e.clientY,
         units: 'px',

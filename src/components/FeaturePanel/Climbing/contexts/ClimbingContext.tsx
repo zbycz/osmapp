@@ -13,9 +13,9 @@ import {
   ActionWithCallback,
   State,
   StateAction,
-  stateMachineFactory,
-} from '../utils/stateMachine';
-import { CountPositionEntity, positionFactory } from '../utils/position';
+  getMachineFactory,
+} from '../utils/getMachineFactory';
+import { CountPositionEntity, positionUtilsFactory } from '../utils/positionUtilsFactory';
 
 type ImageSize = {
   width: number;
@@ -57,7 +57,7 @@ type ClimbingContextType = {
   getPathForRoute: (route: ClimbingRoute) => PathPoints;
   getCurrentPath: () => PathPoints;
   getPercentagePosition: (position: PositionPx) => Position;
-  countPositionWith: (
+  addOffsets: (
     entities: Array<CountPositionEntity>,
     position: PositionPx,
   ) => PositionPx;
@@ -173,14 +173,14 @@ export const ClimbingContextProvider = ({ children }) => {
     getPathForRoute,
   });
 
-  const { getPixelPosition, getPercentagePosition, countPositionWith } =
-    positionFactory({
+  const { getPixelPosition, getPercentagePosition, addOffsets } =
+    positionUtilsFactory({
       editorPosition,
       scrollOffset,
       imageSize,
     });
 
-  const getMachine = stateMachineFactory({
+  const getMachine = getMachineFactory({
     setRouteSelectedIndex,
     setPointSelectedIndex,
     updatePathOnRouteIndex,
@@ -193,7 +193,7 @@ export const ClimbingContextProvider = ({ children }) => {
     routes,
     updateRouteOnIndex,
     getPercentagePosition,
-    countPositionWith,
+    addOffsets,
     findCloserPoint,
   });
 
@@ -252,7 +252,7 @@ export const ClimbingContextProvider = ({ children }) => {
     pointElement,
     setPointElement,
     moveRoute,
-    countPositionWith,
+    addOffsets,
     isEditMode,
     setIsEditMode,
     viewportSize,
