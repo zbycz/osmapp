@@ -1,4 +1,41 @@
-# OsmAPP
+# OsmAPP - OpenPlaceGuide Fork
+
+Additional features for OpenPlaceGuide
+
+- Allow Proxying requests which are not handled by OsmAPP
+- Include link to OpenPlaceGuide pages (via discover service)
+- Short links have a prefix "-"
+- Currently branded for the beta deployment on [map.et](https://map.et/)
+
+## Versioning
+
+We use calver, `YY.MM.DD_MICRO` for the released, tagged on opg-master which is irregularly rebased on upstream/master
+
+## Building / OPG-pages
+
+This app integrates with OPG-pages to create a business directory with the interactive map as the start page.
+
+To use this container together with the `docker-compose.yml` of [opg-pages](https://github.com/OpenPlaceGuide/opg-pages),
+we specify `PROXY_BACKEND` during build.
+
+```bash
+docker build --build-arg PROXY_BACKEND=http://opg-pages/ . -t osmapp
+```
+
+## Development
+
+We regularly rebase on upstream/master and try to keep changes as minimal as possible as well to contribute back anything
+which is useful.
+
+```
+git fetch upstream
+git checkout opg-master
+git rebase upstream/master
+```
+
+That means our master branch does not reflect the full history. Old state can be restored using the release tags.
+
+# OsmAPP – beta (Original Readme)
 
 Let's create a universal app for OpenStreetMap ecosystem.
 It should be as easy to use as Google Maps, including clickable POIs and editing capabilites.
