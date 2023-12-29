@@ -66,11 +66,8 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
-// TODO quick fix #220
-/* eslint-disable */
-
 // TODO make SSR ?
-export const ObjectsAroundInner = ({ advanced }) => {
+export const ObjectsAround = ({ advanced }) => {
   const { feature } = useFeatureContext();
   const { around, loading, error, startAround, finishAround, failAround } =
     useLoadingState();
@@ -131,34 +128,10 @@ export const ObjectsAroundInner = ({ advanced }) => {
       )}
 
       <ul>
-        {features.map((item, idx) => (
-          <AroundItem key={idx} feature={item} />
-          // <AroundItem key={getOsmappLink(item)} feature={item} />
+        {features.map((item) => (
+          <AroundItem key={getOsmappLink(item)} feature={item} />
         ))}
       </ul>
     </Box>
   );
 };
-
-class ErrorBoundary extends React.Component<{}, { hasError: boolean }> {
-  state = { hasError: false };
-
-  static getDerivedStateFromError(error) {
-    console.log(error);
-    return { hasError: true };
-  }
-
-  componentDidCatch(error, errorInfo) {
-    console.log(error, errorInfo);
-  }
-
-  render() {
-    return this.state.hasError ? <span>error</span> : this.props.children;
-  }
-}
-
-export const ObjectsAround = (props) => (
-  <ErrorBoundary>
-    <ObjectsAroundInner {...props} />
-  </ErrorBoundary>
-);

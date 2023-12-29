@@ -7,7 +7,7 @@ interface NamedBbox {
   n: number;
 }
 
-const getBbox = (coordinates: Position[]): NamedBbox => {
+export const getBbox = (coordinates: Position[]): NamedBbox => {
   const [firstX, firstY] = coordinates[0];
   const initialBbox = { w: firstX, s: firstY, e: firstX, n: firstY };
 

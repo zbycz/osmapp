@@ -1,6 +1,31 @@
-import { Feature, LineString, Point } from './types';
+import {
+  Feature,
+  LineString,
+  Point,
+  FeatureGeometry,
+  isPoint,
+  isWay,
+  Position,
+} from './types';
+
 import { getPoiClass } from './getPoiClass';
-import { getCenter } from './getCenter';
+import { getBbox } from './getCenter';
+
+export const getCenter = (geometry: FeatureGeometry): Position => {
+  if (isPoint(geometry)) {
+    return geometry.coordinates;
+  }
+
+  if (isWay(geometry) && geometry.coordinates?.length) {
+    const { w, s, e, n } = getBbox(geometry.coordinates); // [WSEN]
+    const lon = (w + e) / 2; // flat earth rulezz
+    const lat = (s + n) / 2;
+    return [lon, lat];
+  }
+
+  // relation
+  return undefined;
+};
 
 const notNull = (x) => x != null;
 
