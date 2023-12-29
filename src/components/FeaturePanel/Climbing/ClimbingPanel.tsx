@@ -1,23 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import {
-  AppBar,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  IconButton,
-  Toolbar,
-  Typography,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 
-import CloseIcon from '@material-ui/icons/Close';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import VisibilityIcon from '@material-ui/icons/Visibility';
 import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
+import { ClimbingDialogHeader } from './ClimbingDialogHeader';
 
 const ShowFullscreenContainer = styled.div`
   padding: 10px;
@@ -28,9 +22,6 @@ const Flex = styled.div`
   justify-content: space-between;
   width: 100%;
 `;
-const Title = styled.div`
-  flex: 1;
-`;
 
 export const ClimbingPanel = () => {
   const contentRef = useRef(null);
@@ -40,12 +31,9 @@ export const ClimbingPanel = () => {
   const {
     setScrollOffset,
     isPointMoving,
-    areRoutesVisible,
-    setAreRoutesVisible,
     setIsEditMode,
     isEditMode,
     getMachine,
-    setPhotoPath,
   } = useClimbingContext();
   const machine = getMachine();
   const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
@@ -68,13 +56,6 @@ export const ClimbingPanel = () => {
   const onNewRouteCreate = () => {
     machine.execute('createRoute');
   };
-  const VisibilityIconElement = areRoutesVisible
-    ? VisibilityOffIcon
-    : VisibilityIcon;
-
-  const onPhotoChange = (photoUrl: string) => {
-    setPhotoPath(photoUrl);
-  };
 
   return (
     <>
@@ -85,65 +66,10 @@ export const ClimbingPanel = () => {
             open={isFullscreenDialogOpened}
             onClose={onFullscreenDialogClose}
           >
-            <AppBar position="static" color="transparent">
-              <Toolbar variant="dense">
-                <Title>
-                  <Typography variant="h6" component="div">
-                    Roviště - Krutý Řím
-                  </Typography>
-                  <a onClick={() => onPhotoChange('/images/rock2.jpg')}>
-                    photo 1
-                  </a>{' '}
-                  |{' '}
-                  <a onClick={() => onPhotoChange('/images/rock.png')}>
-                    photo 2
-                  </a>{' '}
-                  |{' '}
-                  <a
-                    onClick={() =>
-                      onPhotoChange(
-                        'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516',
-                      )
-                    }
-                  >
-                    photo 3
-                  </a>{' '}
-                  |{' '}
-                  <a
-                    onClick={() =>
-                      onPhotoChange(
-                        'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5',
-                      )
-                    }
-                  >
-                    photo 4
-                  </a>
-                </Title>
-                <>
-                  <IconButton
-                    color="primary"
-                    edge="end"
-                    title={areRoutesVisible ? 'Hide routes' : 'Show routes'}
-                    onClick={() => {
-                      setAreRoutesVisible(!areRoutesVisible);
-                    }}
-                  >
-                    <VisibilityIconElement fontSize="small" />
-                  </IconButton>
-                </>
-                {isFullscreenDialogOpened && (
-                  <IconButton
-                    color="primary"
-                    edge="end"
-                    onClick={() => {
-                      setIsFullscreenDialogOpened(!isFullscreenDialogOpened);
-                    }}
-                  >
-                    <CloseIcon fontSize="small" />
-                  </IconButton>
-                )}
-              </Toolbar>
-            </AppBar>
+            <ClimbingDialogHeader
+              isFullscreenDialogOpened={isFullscreenDialogOpened}
+              setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
+            />
 
             <DialogContent
               dividers

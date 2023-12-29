@@ -282,7 +282,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
                 onEditorMouseMove={onMouseMove}
                 onEditorTouchMove={onTouchMove}
               />
-              {isEditMode && <Guide />}
+              {isEditMode && areRoutesVisible && <Guide />}
             </EditorContainer>
           </BlurContainer>
         </BackgroundContainer>

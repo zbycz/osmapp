@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { MenuItem, Select, TextField } from '@material-ui/core';
+import { TextField } from '@material-ui/core';
 import { RouteDifficulty } from './types';
+import { GradeSystem } from './utils/gradeTable';
+import { GradeSystemSelect } from './GradeSystemSelect';
+import { useClimbingContext } from './contexts/ClimbingContext';
+import { convertGrade } from './utils/routeGrade';
 
 const Flex = styled.div`
   display: flex;
@@ -9,43 +13,92 @@ const Flex = styled.div`
 
 type Props = {
   difficulty: RouteDifficulty;
-  onClick: () => void;
+  onClick: (e: any) => void;
+  onDifficultyChanged: (difficulty: RouteDifficulty) => void;
+  routeNumber: number;
 };
 
-// const options = [
-//   { label: 'The Godfather', id: 1 },
-//   { label: 'Pulp Fiction', id: 2 },
-// ];
-export const RouteDifficultySelect = ({ difficulty, onClick }: Props) => (
-  <Flex>
-    {/* <Autocomplete
-        options={options}
-        renderInput={(params) => <TextField {...params} label="Movie" />}
-      /> */}
-    <TextField
-      size="small"
-      value={difficulty.grade}
-      // onChange={(e) => onTempRouteChange(e, 'difficulty')}
-      onClick={onClick}
-      style={{ paddingTop: 0 }}
-    />
+export const RouteDifficultySelect = ({
+  difficulty,
+  onClick,
+  onDifficultyChanged,
+  routeNumber,
+}: Props) => {
+  // const [grade, setGrade] = useState<string>(null);
+  const [tempGrade, setTempGrade] = useState<string>(null);
+  const [tempGradeSystem, setTempGradeSystem] = useState<GradeSystem>(null);
 
-    <Select
-      value={difficulty.gradeSystem}
-      label="Grade system"
-      onChange={() => {}}
-    >
-      <MenuItem value="uiaa">UIAA (recommended)</MenuItem>
-      <MenuItem value="uktech">UK tech</MenuItem>
-      <MenuItem value="ukadj">UKA adj</MenuItem>
-      <MenuItem value="fb">French British</MenuItem>
-      <MenuItem value="french">French</MenuItem>
-      <MenuItem value="saxon">Saxon</MenuItem>
-      <MenuItem value="nordic">Nordic</MenuItem>
-      <MenuItem value="yds">yds</MenuItem>
-      <MenuItem value="vgrade">vgrade</MenuItem>
-      <MenuItem value="wi">wi</MenuItem>
-      <MenuItem value="mixed">Mixed</MenuItem>
-    </Select>
-  </Flex>
-);
+  const { updateRouteOnIndex } = useClimbingContext();
+
+  // const [selectedRouteSystem, setSelectedRouteSystem] =
+  //   useState<GradeSystem>(null);
+  // const options: Array<{ label: string }> =
+  //   selectedRouteSystem && gradeTable[selectedRouteSystem]
+  //     ? gradeTable[selectedRouteSystem].map((grade) => ({ label: grade }))
+  //     : [];
+
+  useEffect(() => {
+    if (!tempGrade || !tempGradeSystem) {
+      setTempGrade(difficulty.grade);
+      setTempGradeSystem(difficulty.gradeSystem);
+    }
+  }, [difficulty]);
+
+  useEffect(() => {
+    if (tempGrade && tempGradeSystem) {
+      const newGrade = convertGrade(
+        difficulty.gradeSystem,
+        tempGradeSystem,
+        tempGrade,
+      );
+      setTempGrade(newGrade);
+
+      onDifficultyChanged({ grade: tempGrade, gradeSystem: tempGradeSystem });
+    }
+  }, [tempGradeSystem]);
+
+  const handleGradeChange = (e: any) => {
+    const newGrade = e.target.value;
+    setTempGrade(newGrade);
+
+    updateRouteOnIndex(routeNumber, (route) => ({
+      ...route,
+      difficulty: {
+        grade: newGrade,
+        gradeSystem: tempGradeSystem,
+      },
+    }));
+  };
+
+  // const selectedValue = React.useMemo(
+  //   () => options.find((v) => v.label === difficulty.grade),
+  //   [options],
+  // );
+  return (
+    <Flex>
+      <TextField
+        value={tempGrade}
+        size="small"
+        label="Grade"
+        onChange={handleGradeChange}
+      />
+      <GradeSystemSelect
+        setGradeSystem={setTempGradeSystem}
+        gradeSystem={tempGradeSystem}
+        onClick={onClick}
+      />
+
+      {/* <Autocomplete
+        options={options}
+        getOptionLabel={(option) => option.label.toString()}
+        disableClearable
+        renderInput={(params) => (
+          <TextField {...params} size="small" label="Grade" />
+        )}
+        onClick={onClick}
+        value={grade ? { label: grade } : undefined}
+        onChange={() => {}}
+      /> */}
+    </Flex>
+  );
+};

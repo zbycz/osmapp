@@ -8,6 +8,8 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
+  List,
+  ListItem,
   TextField,
 } from '@material-ui/core';
 import { debounce } from 'lodash';
@@ -56,7 +58,7 @@ const Row = styled.div<{ isExpanded?: boolean }>`
 `;
 
 const ExpandedRow = styled(Row)<{ isExpanded?: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded === false ? 0 : '100px')};
+  height: ${({ isExpanded }) => (isExpanded === false ? 0 : 'auto')};
   padding-left: 40px;
   transition: all 0.3s ease-out;
   min-height: 0;
@@ -85,6 +87,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     isEditMode,
     routeSelectedIndex,
     hasPathInDifferentPhotos,
+    selectedRouteSystem,
   } = useClimbingContext();
 
   useEffect(() => {
@@ -126,7 +129,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     !isEditMode ||
     (machine.currentStateName !== 'editRoute' &&
       machine.currentStateName !== 'extendRoute') ||
-    !isSelected;
+    !isExpanded;
 
   return (
     <Container>
@@ -170,24 +173,17 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
             />
           )}
         </NameCell>
-        <Cell width={60}>
-          {isReadOnly ? (
-            getText(
-              convertGrade(
-                tempRoute.difficulty.gradeSystem,
-                'french',
-                tempRoute.difficulty.grade,
-              ),
-            )
-          ) : (
-            <RouteDifficultySelect
-              onClick={stopPropagation}
-              difficulty={tempRoute.difficulty}
-            />
+        <Cell width={50}>
+          {getText(
+            convertGrade(
+              tempRoute.difficulty.gradeSystem,
+              selectedRouteSystem,
+              tempRoute.difficulty.grade,
+            ),
           )}
         </Cell>
 
-        <Cell align="right">
+        <Cell width={50}>
           <IconButton
             onClick={(e) => {
               setIsExpanded(!isExpanded);
@@ -203,21 +199,51 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
       </Row>
 
       <ExpandedRow isExpanded={isExpanded}>
-        {isReadOnly ? (
-          getText('description')
-        ) : (
-          <TextField
-            size="small"
-            value={tempRoute.description}
-            onChange={(e) => onTempRouteChange(e, 'description')}
-            onClick={stopPropagation}
-            style={{ marginTop: 10 }}
-            variant="outlined"
-            label="Description"
-            fullWidth
-            multiline
-          />
-        )}
+        <List>
+          <ListItem>
+            <RouteDifficultySelect
+              onClick={stopPropagation}
+              difficulty={tempRoute.difficulty}
+              onDifficultyChanged={(difficulty) => {
+                setTempRoute({ ...tempRoute, difficulty });
+              }}
+              routeNumber={index}
+            />
+          </ListItem>
+          <ListItem>
+            {isReadOnly ? (
+              getText(tempRoute.length)
+            ) : (
+              <TextField
+                size="small"
+                value={tempRoute.length}
+                onChange={(e) => onTempRouteChange(e, 'length')}
+                onClick={stopPropagation}
+                style={{ marginTop: 10 }}
+                variant="outlined"
+                label="Length"
+              />
+            )}
+          </ListItem>
+          <ListItem>
+            {isReadOnly ? (
+              getText(tempRoute.description)
+            ) : (
+              <TextField
+                size="small"
+                value={tempRoute.description}
+                onChange={(e) => onTempRouteChange(e, 'description')}
+                onClick={stopPropagation}
+                style={{ marginTop: 10 }}
+                variant="outlined"
+                label="Description"
+                fullWidth
+                multiline
+              />
+            )}
+          </ListItem>
+        </List>
+
         {!isReadOnly && (
           <IconButton
             onClick={() => setRouteToDelete(index)}

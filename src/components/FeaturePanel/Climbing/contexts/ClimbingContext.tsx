@@ -15,7 +15,11 @@ import {
   StateAction,
   getMachineFactory,
 } from '../utils/getMachineFactory';
-import { CountPositionEntity, positionUtilsFactory } from '../utils/positionUtilsFactory';
+import {
+  CountPositionEntity,
+  positionUtilsFactory,
+} from '../utils/positionUtilsFactory';
+import { GradeSystem } from '../utils/gradeTable';
 
 type ImageSize = {
   width: number;
@@ -84,6 +88,8 @@ type ClimbingContextType = {
   setIsLineInteractiveAreaHovered: (
     isLineInteractiveAreaHovered: boolean,
   ) => void;
+  selectedRouteSystem: GradeSystem;
+  setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
 };
 
 // @TODO generate?
@@ -94,13 +100,15 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(routes1);
-  const [splitPaneHeight, setSplitPaneHeight] = useState<number>(800);
+  const [splitPaneHeight, setSplitPaneHeight] = useState<number>(600);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
   const [isLineInteractiveAreaHovered, setIsLineInteractiveAreaHovered] =
     useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
+  const [selectedRouteSystem, setSelectedRouteSystem] =
+    useState<GradeSystem>('uiaa'); // @TODO move to config
   const [editorPosition, setEditorPosition] = useState<PositionPx>({
     x: 0,
     y: 0,
@@ -122,10 +130,10 @@ export const ClimbingContextProvider = ({ children }) => {
     React.useState<null | HTMLElement>(null);
 
   const getPathOnIndex = (index: number) =>
-    routes[index]?.paths[photoPath] || [];
+    routes[index]?.paths?.[photoPath] || [];
 
   const getPathForRoute = (route: ClimbingRoute) =>
-    route?.paths[photoPath] || [];
+    route?.paths?.[photoPath] || [];
 
   const getCurrentPath = () => getPathOnIndex(routeSelectedIndex);
 
@@ -202,6 +210,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const hasPath = (index: number) => getPathOnIndex(index).length > 0;
   const hasPathInDifferentPhotos = (index: number) => {
     const paths = routes[index]?.paths;
+    if (!paths) return false;
     const availablePhotos = Object.keys(paths);
     return !!availablePhotos.find((availablePhotoPath) => {
       if (
@@ -261,6 +270,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setIsLineInteractiveAreaHovered,
     photoPath,
     setPhotoPath,
+    setSelectedRouteSystem,
+    selectedRouteSystem,
   };
 
   return (
