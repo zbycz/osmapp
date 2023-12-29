@@ -1,9 +1,15 @@
 import React from 'react';
 import { useConfig } from '../../config';
-import { PointProps } from './PointTypes';
+import { PointProps } from './pointTypes';
 
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-export const Anchor = ({ x, y, isPointSelected, onClick }: PointProps) => {
+export const Anchor = ({
+  x,
+  y,
+  isPointSelected,
+  onClick,
+  pointerEvents,
+}: PointProps) => {
   const config = useConfig();
   const size = 5;
 
@@ -15,7 +21,12 @@ export const Anchor = ({ x, y, isPointSelected, onClick }: PointProps) => {
     : config.anchorBorderColor;
 
   return (
-    <g transform={` translate(${x + 15} ${y})`} cursor="help" onClick={onClick}>
+    <g
+      transform={` translate(${x + 15} ${y})`}
+      cursor="help"
+      onClick={onClick}
+      pointerEvents={pointerEvents}
+    >
       <circle
         cx={0}
         cy={0}

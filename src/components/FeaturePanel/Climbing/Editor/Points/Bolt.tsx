@@ -1,10 +1,16 @@
 import React from 'react';
 import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
-import { PointProps } from './PointTypes';
+import { PointProps } from './pointTypes';
 
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-export const Bolt = ({ x, y, isPointSelected, onClick }: PointProps) => {
+export const Bolt = ({
+  x,
+  y,
+  isPointSelected,
+  onClick,
+  pointerEvents,
+}: PointProps) => {
   const { isEditMode } = useClimbingContext();
   const config = useConfig();
   const size = 16;
@@ -34,6 +40,7 @@ export const Bolt = ({ x, y, isPointSelected, onClick }: PointProps) => {
         y={shift}
         fill="transparent"
         stroke={borderColor}
+        pointerEvents={pointerEvents}
       />
       <rect
         width={strokeWidth}
@@ -42,6 +49,7 @@ export const Bolt = ({ x, y, isPointSelected, onClick }: PointProps) => {
         y={0}
         fill="transparent"
         stroke={borderColor}
+        pointerEvents={pointerEvents}
       />
 
       <rect
@@ -50,6 +58,7 @@ export const Bolt = ({ x, y, isPointSelected, onClick }: PointProps) => {
         x={0}
         y={shift}
         fill={foregroundColor}
+        pointerEvents={pointerEvents}
       />
       <rect
         width={strokeWidth}
@@ -57,6 +66,7 @@ export const Bolt = ({ x, y, isPointSelected, onClick }: PointProps) => {
         x={shift}
         y={0}
         fill={foregroundColor}
+        pointerEvents={pointerEvents}
       />
 
       <title>Bolt</title>

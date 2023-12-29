@@ -3,4 +3,5 @@ export type PointProps = {
   y: number;
   isPointSelected: boolean;
   onClick?: () => void;
+  pointerEvents?: string;
 };

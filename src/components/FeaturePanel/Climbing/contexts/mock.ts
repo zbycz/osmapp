@@ -4,7 +4,7 @@ export const routes1: ClimbingRoute[] = [
   {
     id: 'a',
     name: 'Krutý řím',
-    difficulty: '5',
+    difficulty: { grade: '5', gradeSystem: 'uiaa' },
     length: '',
     paths: {
       '/images/rock.png': [
@@ -31,7 +31,7 @@ export const routes1: ClimbingRoute[] = [
   {
     id: 'b',
     name: 'Krutý řím (varianta pro borce)',
-    difficulty: '8',
+    difficulty: { grade: '8', gradeSystem: 'uiaa' },
     length: '',
     paths: {
       '/images/rock2.jpg': [
@@ -60,7 +60,7 @@ export const routes1: ClimbingRoute[] = [
   {
     id: 'c',
     name: 'Krajina Snů',
-    difficulty: '6',
+    difficulty: { grade: '6', gradeSystem: 'uiaa' },
     length: '',
     paths: {
       '/images/rock2.jpg': [
@@ -83,7 +83,7 @@ export const routes1: ClimbingRoute[] = [
   {
     id: 'd',
     name: 'Krajina snů direkt',
-    difficulty: '6+',
+    difficulty: { grade: '6+', gradeSystem: 'uiaa' },
     length: '',
     paths: {
       '/images/rock2.jpg': [
@@ -100,7 +100,7 @@ export const routes1: ClimbingRoute[] = [
   {
     id: 'e',
     name: 'Sfinga',
-    difficulty: '7-',
+    difficulty: { grade: '7-', gradeSystem: 'uiaa' },
     length: '',
     paths: {
       '/images/rock2.jpg': [
@@ -122,7 +122,7 @@ export const routes1: ClimbingRoute[] = [
   {
     id: 'f',
     name: 'Supito presto',
-    difficulty: '8',
+    difficulty: { grade: '8', gradeSystem: 'uiaa' },
     length: '',
     paths: {
       '/images/rock2.jpg': [
@@ -138,7 +138,7 @@ export const routes1: ClimbingRoute[] = [
   {
     id: 'g',
     name: 'Další prosím',
-    difficulty: '4+',
+    difficulty: { grade: '4+', gradeSystem: 'uiaa' },
     length: '',
     paths: {
       '/images/rock2.jpg': [
@@ -163,21 +163,21 @@ export const routes1: ClimbingRoute[] = [
   {
     id: 'h',
     name: 'Rock oslav',
-    difficulty: '7-',
+    difficulty: { grade: '7-', gradeSystem: 'uiaa' },
     length: '',
     paths: { '/images/rock2.jpg': [] },
   },
   {
     id: 'i',
     name: 'Příliš vzdálená hvězda',
-    difficulty: '5',
+    difficulty: { grade: '5', gradeSystem: 'uiaa' },
     length: '',
     paths: { '/images/rock2.jpg': [] },
   },
   {
     id: 'j',
     name: 'Epizoda ze života',
-    difficulty: '7',
+    difficulty: { grade: '7', gradeSystem: 'uiaa' },
     length: '',
     paths: {},
   },

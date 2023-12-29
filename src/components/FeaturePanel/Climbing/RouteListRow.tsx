@@ -17,6 +17,8 @@ import { ClimbingRoute } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { emptyRoute } from './utils/emptyRoute';
 import { RouteNumber } from './RouteNumber';
+import { convertGrade } from './utils/routeGrade';
+import { RouteDifficultySelect } from './RouteDifficultySelect';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -70,8 +72,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   const [tempRoute, setTempRoute] = useState(emptyRoute);
   const [routeToDelete, setRouteToDelete] = useState<number | null>(null);
 
-  const getText = (field: keyof ClimbingRoute) =>
-    route[field] ? route[field] : <EmptyValue>?</EmptyValue>;
+  const getText = (text: string) => text || <EmptyValue>?</EmptyValue>;
 
   useEffect(() => {
     setTempRoute(route);
@@ -157,7 +158,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
         </RouteNumberCell>
         <NameCell>
           {isReadOnly ? (
-            getText('name')
+            getText(tempRoute.name)
           ) : (
             <TextField
               size="small"
@@ -171,15 +172,17 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
         </NameCell>
         <Cell width={60}>
           {isReadOnly ? (
-            getText('difficulty')
+            getText(
+              convertGrade(
+                tempRoute.difficulty.gradeSystem,
+                'french',
+                tempRoute.difficulty.grade,
+              ),
+            )
           ) : (
-            <TextField
-              size="small"
-              value={tempRoute.difficulty}
-              placeholder="6+"
-              onChange={(e) => onTempRouteChange(e, 'difficulty')}
+            <RouteDifficultySelect
               onClick={stopPropagation}
-              style={{ paddingTop: 0 }}
+              difficulty={tempRoute.difficulty}
             />
           )}
         </Cell>

@@ -1,3 +1,5 @@
+import { GradeSystem } from './utils/gradeTable';
+
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling';
 
 export type Position = {
@@ -23,9 +25,14 @@ export type PathPoints = Array<
   }
 >;
 
+export type RouteDifficulty = {
+  gradeSystem: GradeSystem;
+  grade: string;
+};
+
 export type ClimbingRoute = {
   id: string;
-  difficulty?: string;
+  difficulty?: RouteDifficulty;
   length?: string;
   name?: string;
   description?: string;

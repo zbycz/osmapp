@@ -70,7 +70,7 @@ export const Route = ({
         const isPitonVisible = type === 'piton';
         const position = getPixelPosition({ x, y, units: 'percentage' });
         const isActualPointSelected = isSelected && isPointSelected(index);
-
+        const pointerEvents = isSelected ? 'auto' : 'none';
         return (
           <>
             {isThisRouteEditOrExtendMode && <PulsedPoint x={x} y={y} />}
@@ -79,7 +79,7 @@ export const Route = ({
                 x={position.x}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
-                // onClick={onPointInSelectedRouteClick}
+                pointerEvents={pointerEvents}
               />
             )}
             {isPitonVisible && (
@@ -87,7 +87,7 @@ export const Route = ({
                 x={position.x}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
-                // onClick={onPointInSelectedRouteClick}
+                pointerEvents={pointerEvents}
               />
             )}
             {isSlingVisible && (
@@ -95,7 +95,7 @@ export const Route = ({
                 x={position.x}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
-                // onClick={onPointInSelectedRouteClick}
+                pointerEvents={pointerEvents}
               />
             )}
             {isAnchorVisible && (
@@ -103,7 +103,7 @@ export const Route = ({
                 x={position.x}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
-                // onClick={onPointInSelectedRouteClick}
+                pointerEvents={pointerEvents}
               />
             )}
             {isThisRouteEditOrExtendMode && (

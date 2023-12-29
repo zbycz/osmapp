@@ -1,9 +1,15 @@
 import React from 'react';
 import { useConfig } from '../../config';
-import { PointProps } from './PointTypes';
+import { PointProps } from './pointTypes';
 
 // eslint-disable-next-line  @typescript-eslint/no-unused-vars
-export const Piton = ({ x, y, isPointSelected, onClick }: PointProps) => {
+export const Piton = ({
+  x,
+  y,
+  isPointSelected,
+  onClick,
+  pointerEvents,
+}: PointProps) => {
   const config = useConfig();
 
   const foregroundColor = isPointSelected
@@ -18,6 +24,7 @@ export const Piton = ({ x, y, isPointSelected, onClick }: PointProps) => {
       transform={` translate(${x - 4} ${y - 6})`}
       cursor="help"
       onClick={onClick}
+      pointerEvents={pointerEvents}
     >
       <g>
         <path
