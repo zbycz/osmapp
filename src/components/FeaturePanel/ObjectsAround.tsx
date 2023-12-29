@@ -66,6 +66,9 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
+// TODO quick fix #220
+/* eslint-disable */
+
 // TODO make SSR ?
 export const ObjectsAroundInner = ({ advanced }) => {
   const { feature } = useFeatureContext();
@@ -128,15 +131,14 @@ export const ObjectsAroundInner = ({ advanced }) => {
       )}
 
       <ul>
-        {features.map((item) => (
-          <AroundItem key={getOsmappLink(item)} feature={item} />
+        {features.map((item, idx) => (
+          <AroundItem key={idx} feature={item} />
+          // <AroundItem key={getOsmappLink(item)} feature={item} />
         ))}
       </ul>
     </Box>
   );
 };
-
-/* eslint-disable */
 
 class ErrorBoundary extends React.Component<{}, { hasError: boolean }> {
   state = { hasError: false };
