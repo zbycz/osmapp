@@ -101,10 +101,11 @@ export const HomepagePanel = () => {
 
             <Center mb>
               <img
-                src="/osmapp-screenshot.png"
+                src="/osmapp-screenshot-300px.png"
+                srcSet="/osmapp-screenshot-300px@2x.png 2x"
                 alt={t('homepage.screenshot_alt')}
                 width={300}
-                height={300 * (1033 / 1371)}
+                height={226}
               />
             </Center>
 
