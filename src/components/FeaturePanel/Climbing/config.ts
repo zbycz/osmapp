@@ -1,4 +1,4 @@
-import { useTheme } from '@material-ui/core';
+import { useTheme } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 
 export const useConfig = () => {
@@ -21,8 +21,8 @@ export const useConfig = () => {
     anchorBorderColor: borderColor,
     anchorBorderColorSelected: inactiveColor,
 
-    pathBorderWidth: 6 / photoZoom.scale,
+    pathBorderWidth: 5.1 / photoZoom.scale,
     pathBorderOpacity: 1,
-    pathStrokeWidth: 4 / photoZoom.scale,
+    pathStrokeWidth: 3.5 / photoZoom.scale,
   };
 };

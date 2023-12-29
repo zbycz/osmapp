@@ -1,5 +1,5 @@
 import React from 'react';
-import { SwipeableDrawer, useMediaQuery } from '@material-ui/core';
+import { SwipeableDrawer, useMediaQuery } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
 import { LayerSwitcherButton } from './LayerSwitcherButton';
 import { LayerSwitcherContent } from './LayerSwitcherContent';
@@ -22,7 +22,7 @@ const LayerSwitcher = () => {
         disableSwipeToOpen
       >
         <div role="presentation" style={{ width: '280px', height: '100%' }}>
-          <ClosePanelButton right onClick={close} />
+          <ClosePanelButton right onClick={close} style={{ top: 13 }} />
           <LayerSwitcherContent />
         </div>
       </SwipeableDrawer>

@@ -1,5 +1,5 @@
+import { IconButton } from '@mui/material';
 import styled from 'styled-components';
-import IconButton from '@material-ui/core/IconButton';
 
 export const StyledActionButton = styled(IconButton)`
   svg {

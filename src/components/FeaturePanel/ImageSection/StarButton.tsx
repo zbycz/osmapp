@@ -1,7 +1,7 @@
-import Star from '@material-ui/icons/Star';
-import StarBorder from '@material-ui/icons/StarBorder';
+import Star from '@mui/icons-material/Star';
+import StarBorder from '@mui/icons-material/StarBorder';
 import React from 'react';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
 import { useStarsContext } from '../../utils/StarsContext';
 import { StyledActionButton } from './utils';

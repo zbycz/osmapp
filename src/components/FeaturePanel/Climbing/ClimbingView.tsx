@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SplitPane from 'react-split-pane';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { CircularProgress, IconButton, useTheme } from '@material-ui/core';
-
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { CircularProgress, IconButton, useTheme } from '@mui/material';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
@@ -12,10 +11,10 @@ import { RoutesEditor } from './Editor/RoutesEditor';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
-import { useScrollShadow } from './utils/useScrollShadow';
+import { useFeatureContext } from '../../utils/FeatureContext';
 import { RouteDistribution } from './RouteDistribution';
 import { getFeaturePhotos } from './utils/photo';
-import { useFeatureContext } from '../../utils/FeatureContext';
+import { useScrollShadow } from './utils/useScrollShadow';
 
 const Container = styled.div`
   position: relative;

@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import CheckIcon from '@material-ui/icons/Check';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import CheckIcon from '@mui/icons-material/Check';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import {
-  Button,
-  ButtonGroup,
   Dialog,
-  DialogActions,
+  DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-} from '@material-ui/core';
+  DialogActions,
+  Button,
+  ButtonGroup,
+} from '@mui/material';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PointType } from '../types';
 

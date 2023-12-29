@@ -1,20 +1,20 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import AddIcon from '@mui/icons-material/Add';
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   List,
   ListItem,
   TextField,
-} from '@material-ui/core';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import AddIcon from '@material-ui/icons/Add';
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@mui/material';
 import { RouteDifficultySelect } from '../RouteDifficultySelect';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';

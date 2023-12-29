@@ -1,7 +1,7 @@
-import IconButton from '@material-ui/core/IconButton';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import React from 'react';
 import styled from 'styled-components';
+import { IconButton } from '@mui/material';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 
 const StyledUserImg = styled.img`

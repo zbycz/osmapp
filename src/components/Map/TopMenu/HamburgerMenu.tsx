@@ -1,16 +1,15 @@
-import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
-import React, { forwardRef, useEffect, useState } from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
-import CreateIcon from '@material-ui/icons/Create';
-import HelpIcon from '@material-ui/icons/Help';
+import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import React, { useEffect, forwardRef, useState } from 'react';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import CreateIcon from '@mui/icons-material/Create';
+import HelpIcon from '@mui/icons-material/Help';
 import styled from 'styled-components';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from '@mui/icons-material/GetApp';
 import Router from 'next/router';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import MenuIcon from '@mui/icons-material/Menu';
 import { useBoolState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -229,7 +228,6 @@ export const HamburgerMenu = () => {
           vertical: 'bottom',
           horizontal: 'right',
         }}
-        getContentAnchorEl={null}
         open={opened}
         onClose={close}
       >

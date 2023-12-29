@@ -1,13 +1,8 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
 import Router from 'next/router';
+import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
 import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingDialogHeader } from './ClimbingDialogHeader';

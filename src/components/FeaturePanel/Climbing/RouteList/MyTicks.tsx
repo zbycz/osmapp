@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import DeleteIcon from '@material-ui/icons/Delete';
-import { Button, FormControl, MenuItem, Select } from '@material-ui/core';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { format } from 'date-fns';
+import { FormControl, Select, MenuItem, Button } from '@mui/material';
 import {
   findTicks,
   onTickDelete,

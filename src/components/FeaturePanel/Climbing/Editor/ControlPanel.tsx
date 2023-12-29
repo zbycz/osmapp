@@ -1,7 +1,7 @@
-import { IconButton } from '@material-ui/core';
-import UndoIcon from '@material-ui/icons/Undo';
+import UndoIcon from '@mui/icons-material/Undo';
 import React from 'react';
 import styled from 'styled-components';
+import { IconButton } from '@mui/material';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 const Container = styled.div`

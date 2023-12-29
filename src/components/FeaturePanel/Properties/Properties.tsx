@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/material';
 import { FeaturedTags } from '../FeaturedTags';
 import { IdSchemaFields } from './IdSchemaFields';
 import { t } from '../../../services/intl';

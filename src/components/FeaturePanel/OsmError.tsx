@@ -1,6 +1,6 @@
 import React from 'react';
-import { Alert } from '@material-ui/lab';
-import { Box } from '@material-ui/core';
+import { Alert } from '@mui/lab';
+import { Box } from '@mui/material';
 import { t } from '../../services/intl';
 import { getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -11,7 +11,7 @@ export const OsmError = () => {
 
   if (feature.deleted) {
     return (
-      <Box mb={3} clone>
+      <Box mb={3}>
         <Alert variant="outlined" severity="warning">
           {t('featurepanel.error_deleted')}{' '}
           <a

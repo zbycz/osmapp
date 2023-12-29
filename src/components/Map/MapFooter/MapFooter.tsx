@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { IconButton, Tooltip, useMediaQuery } from '@material-ui/core';
+import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import uniq from 'lodash/uniq';
-import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Translation } from '../../../services/intl';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
@@ -14,7 +14,7 @@ const IconContainer = styled.div`
 
 const StyledIconButton = styled(IconButton)`
   position: relative;
-  top: -3px;
+  top: -5px;
 `;
 
 const Wrapper = styled.div`
@@ -34,7 +34,7 @@ const Wrapper = styled.div`
   }
 `;
 
-const Attribution = ({ label, link, title }) => (
+export const Attribution = ({ label, link, title }) => (
   <>
     ©{' '}
     <Tooltip arrow title={title}>
