@@ -1,6 +1,6 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { Snackbar } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Snackbar } from '@mui/material';
+import { Alert } from '@mui/lab';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config';
 

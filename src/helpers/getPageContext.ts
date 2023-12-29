@@ -1,16 +1,15 @@
 // https://github.com/mui-org/material-ui/blob/master/examples/nextjs/src/getPageContext.js
 
 import { SheetsRegistry } from 'jss';
-import {
-  createMuiTheme,
-  createGenerateClassName,
-} from '@material-ui/core/styles';
-import red from '@material-ui/core/colors/red';
-import deepPurple from '@material-ui/core/colors/deepPurple';
+// import { createGenerateClassName } from '@material-ui/core/styles';
+import { createTheme } from '@mui/material/styles';
+
+import red from '@mui/material/colors/red';
+import deepPurple from '@mui/material/colors/deepPurple';
 
 // A theme with custom primary and secondary color.
 // It's optional.
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       light: red[300],
@@ -33,7 +32,7 @@ function createPageContext() {
     // This is needed in order to inject the critical CSS.
     sheetsRegistry: new SheetsRegistry(),
     // The standard class name generator.
-    generateClassName: createGenerateClassName(),
+    // generateClassName: createGenerateClassName(),
   };
 }
 

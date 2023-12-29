@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import getConfig from 'next/config';
-import { Tooltip, useMediaQuery } from '@material-ui/core';
+import { Tooltip, useMediaQuery } from '@mui/material';
 import uniq from 'lodash/uniq';
 import { t, Translation } from '../../../services/intl';
 import GithubIcon from '../../../assets/GithubIcon';

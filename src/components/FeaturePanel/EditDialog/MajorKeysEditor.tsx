@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
+
+import { Button, TextField, Typography } from '@mui/material';
+
 import { t } from '../../../services/intl';
 
 const majorKeysNames = {

@@ -1,6 +1,6 @@
 import getConfig from 'next/config';
 import React from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
 import { useBoolState } from '../../helpers';
 import { changeLang, intl, t } from '../../../services/intl';

@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import IconButton from '@material-ui/core/IconButton';
-import Edit from '@material-ui/icons/Edit';
+import { IconButton } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
 import React from 'react';
 import { t } from '../../../services/intl';
 
@@ -19,6 +19,6 @@ const StyledIconButton = styled(IconButton)`
 
 export const EditIconButton = ({ onClick }) => (
   <StyledIconButton className="show-on-hover" onClick={onClick}>
-    <Edit titleAccess={t('featurepanel.inline_edit_title')} />
+    <EditIcon titleAccess={t('featurepanel.inline_edit_title')} />
   </StyledIconButton>
 );

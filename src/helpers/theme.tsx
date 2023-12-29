@@ -1,9 +1,10 @@
 import Cookies from 'js-cookie';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { grey, red } from '@material-ui/core/colors';
+import { ThemeProvider } from '@mui/styles';
+import { grey, red } from '@mui/material/colors';
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { useMediaQuery } from '@material-ui/core';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+import { createTheme } from '@mui/material';
 
 // @TODO lets define design properly, this is just a copy&paste
 const customTheme = {
@@ -143,7 +144,7 @@ const customTheme = {
   },
 };
 
-const lightTheme = createMuiTheme({
+const lightTheme = createTheme({
   palette: {
     primary: {
       main: '#556cd6',
@@ -174,7 +175,7 @@ const lightTheme = createMuiTheme({
   ...customTheme.light,
 });
 
-const darkTheme = createMuiTheme({
+const darkTheme = createTheme({
   palette: {
     type: 'dark',
     primary: {
@@ -195,6 +196,7 @@ const darkTheme = createMuiTheme({
     text: {
       panelHeading: 'rgba(255, 255, 255, 0.85)',
       primary: '#fff',
+      secondary: '#fff',
       primaryInvert: '#000',
     },
     appBackground: grey['900'],

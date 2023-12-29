@@ -1,8 +1,7 @@
 import React from 'react';
-import { Box, IconButton, Typography } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
-import CloseIcon from '@material-ui/icons/Close';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
+import { Button, Box, IconButton, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import ListIcon from '@mui/icons-material/List';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
 
@@ -80,5 +79,5 @@ export const LayersHeader = ({ headingId }) => (
 );
 
 export const LayerIcon = ({ Icon }) => (
-  <ListItemIcon>{Icon && <Icon fontSize="small" />}</ListItemIcon>
+  <ListIcon>{Icon && <Icon fontSize="small" />}</ListIcon>
 );

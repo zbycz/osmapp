@@ -3,8 +3,8 @@ import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
-import { Snackbar } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Alert } from '@mui/lab';
+import { Snackbar } from '@mui/material';
 import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';

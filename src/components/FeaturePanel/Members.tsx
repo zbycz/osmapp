@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box, Typography } from '@mui/material';
 import { getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 

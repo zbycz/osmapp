@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
-import { useMediaQuery } from '@material-ui/core';
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 export const useToggleState = (
   initialState: boolean,

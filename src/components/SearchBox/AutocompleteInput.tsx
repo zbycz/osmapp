@@ -1,6 +1,5 @@
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect } from 'react';
-import InputBase from '@material-ui/core/InputBase';
+import { Autocomplete, InputBase } from '@mui/material';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { renderOptionFactory, buildPhotonAddress } from './renderOptionFactory';
 import { t } from '../../services/intl';
