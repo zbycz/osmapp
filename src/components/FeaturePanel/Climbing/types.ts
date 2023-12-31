@@ -34,6 +34,7 @@ export type ClimbingRoute = {
   id: string;
   difficulty?: RouteDifficulty;
   length?: string;
+  author?: string;
   name?: string;
   description?: string;
   paths: { [photoUrl: string]: PathPoints };

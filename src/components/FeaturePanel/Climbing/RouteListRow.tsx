@@ -21,6 +21,7 @@ import { emptyRoute } from './utils/emptyRoute';
 import { RouteNumber } from './RouteNumber';
 import { convertGrade } from './utils/routeGrade';
 import { RouteDifficultySelect } from './RouteDifficultySelect';
+import { toggleElementInArray } from './utils/array';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -59,10 +60,27 @@ const Row = styled.div<{ isExpanded?: boolean }>`
 
 const ExpandedRow = styled(Row)<{ isExpanded?: boolean }>`
   height: ${({ isExpanded }) => (isExpanded === false ? 0 : 'auto')};
-  padding-left: 40px;
   transition: all 0.3s ease-out;
   min-height: 0;
+  display: flex;
+  align-items: flex-start;
+  background-color: ${({ theme }) => theme.backgroundSurfaceElevation2};
 `;
+
+const Left = styled.div`
+  flex: 1;
+`;
+const Right = styled.div`
+  min-width: 120px;
+`;
+
+const Label = styled.div`
+  font-size: 10px;
+  color: ${({ theme }) => theme.textSubdued};
+  display: block;
+`;
+
+const Value = styled.div``;
 
 const EmptyValue = styled.div`
   color: #666;
@@ -70,7 +88,6 @@ const EmptyValue = styled.div`
 
 export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [tempRoute, setTempRoute] = useState(emptyRoute);
   const [routeToDelete, setRouteToDelete] = useState<number | null>(null);
 
@@ -88,6 +105,8 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     routeSelectedIndex,
     hasPathInDifferentPhotos,
     selectedRouteSystem,
+    routesExpanded,
+    setRoutesExpanded,
   } = useClimbingContext();
 
   useEffect(() => {
@@ -125,6 +144,9 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     hideDeleteDialog();
   };
 
+  console.log('___', routesExpanded);
+  const isExpanded = routesExpanded.indexOf(index) > -1;
+
   const isReadOnly =
     !isEditMode ||
     (machine.currentStateName !== 'editRoute' &&
@@ -136,7 +158,11 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
       <Row
         ref={ref}
         onClick={() => {
-          onRowClick(index);
+          if (isSelected) {
+            setRoutesExpanded(toggleElementInArray(routesExpanded, index));
+          } else {
+            onRowClick(index);
+          }
         }}
         selected={isSelected}
         style={{ cursor: 'pointer' }}
@@ -186,7 +212,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
         <Cell width={50}>
           <IconButton
             onClick={(e) => {
-              setIsExpanded(!isExpanded);
+              setRoutesExpanded(toggleElementInArray(routesExpanded, index));
               stopPropagation(e);
             }}
             color="primary"
@@ -199,50 +225,90 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
       </Row>
 
       <ExpandedRow isExpanded={isExpanded}>
-        <List>
-          <ListItem>
-            <RouteDifficultySelect
-              onClick={stopPropagation}
-              difficulty={tempRoute.difficulty}
-              onDifficultyChanged={(difficulty) => {
-                setTempRoute({ ...tempRoute, difficulty });
-              }}
-              routeNumber={index}
-            />
-          </ListItem>
-          <ListItem>
-            {isReadOnly ? (
-              getText(tempRoute.length)
-            ) : (
-              <TextField
-                size="small"
-                value={tempRoute.length}
-                onChange={(e) => onTempRouteChange(e, 'length')}
-                onClick={stopPropagation}
-                style={{ marginTop: 10 }}
-                variant="outlined"
-                label="Length"
-              />
-            )}
-          </ListItem>
-          <ListItem>
-            {isReadOnly ? (
-              getText(tempRoute.description)
-            ) : (
-              <TextField
-                size="small"
-                value={tempRoute.description}
-                onChange={(e) => onTempRouteChange(e, 'description')}
-                onClick={stopPropagation}
-                style={{ marginTop: 10 }}
-                variant="outlined"
-                label="Description"
-                fullWidth
-                multiline
-              />
-            )}
-          </ListItem>
-        </List>
+        <Left>
+          <List>
+            <ListItem>
+              {isReadOnly ? (
+                <div>
+                  <Label>Description</Label>
+                  <Value>{getText(tempRoute.description)}</Value>
+                </div>
+              ) : (
+                <TextField
+                  size="small"
+                  value={tempRoute.description}
+                  onChange={(e) => onTempRouteChange(e, 'description')}
+                  onClick={stopPropagation}
+                  style={{ marginTop: 10 }}
+                  variant="outlined"
+                  label="Description"
+                  fullWidth
+                  multiline
+                />
+              )}
+            </ListItem>
+          </List>
+        </Left>
+        <Right>
+          <List>
+            <ListItem>
+              {isEditMode ? (
+                <RouteDifficultySelect
+                  onClick={stopPropagation}
+                  difficulty={tempRoute.difficulty}
+                  onDifficultyChanged={(difficulty) => {
+                    setTempRoute({ ...tempRoute, difficulty });
+                  }}
+                  routeNumber={index}
+                />
+              ) : (
+                <div>
+                  <Label>Difficulty</Label>
+                  <Value>
+                    {getText(tempRoute.difficulty.grade)} (
+                    {getText(tempRoute.difficulty.gradeSystem)})
+                  </Value>
+                </div>
+              )}
+            </ListItem>
+            <ListItem>
+              {isReadOnly ? (
+                <div>
+                  <Label>Length</Label>
+                  <Value>{getText(tempRoute.length)}</Value>
+                </div>
+              ) : (
+                <TextField
+                  size="small"
+                  value={tempRoute.length}
+                  onChange={(e) => onTempRouteChange(e, 'length')}
+                  onClick={stopPropagation}
+                  style={{ marginTop: 10 }}
+                  variant="outlined"
+                  label="Length"
+                />
+              )}
+            </ListItem>
+            <ListItem>
+              {isReadOnly ? (
+                <div>
+                  <Label>Author</Label>
+                  <Value>{getText(tempRoute.author)}</Value>
+                </div>
+              ) : (
+                <TextField
+                  size="small"
+                  value={tempRoute.author}
+                  onChange={(e) => onTempRouteChange(e, 'author')}
+                  onClick={stopPropagation}
+                  style={{ marginTop: 10 }}
+                  variant="outlined"
+                  label="Author"
+                />
+              )}
+            </ListItem>
+          </List>
+        </Right>
 
         {!isReadOnly && (
           <IconButton

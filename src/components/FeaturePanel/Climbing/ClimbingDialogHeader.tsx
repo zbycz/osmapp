@@ -26,9 +26,14 @@ export const ClimbingDialogHeader = ({
       <Toolbar variant="dense">
         <Title>
           <Typography variant="h6" component="div">
-            Roviště - Krutý Řím
+            Jickovice: Hlavní oblast - patro
           </Typography>
-          <a onClick={() => onPhotoChange('/images/rock2.jpg')}>photo 1</a> |{' '}
+          <a onClick={() => onPhotoChange('/images/jickovice1.jpg')}>photo 1</a>{' '}
+          |{' '}
+          <a onClick={() => onPhotoChange('/images/jickovice2.jpg')}>photo 2</a>{' '}
+          |{' '}
+          <a onClick={() => onPhotoChange('/images/jickovice3.jpg')}>photo 3</a>{' '}
+          {/* | <a onClick={() => onPhotoChange('/images/rock2.jpg')}>photo 1</a> |{' '}
           <a onClick={() => onPhotoChange('/images/rock.png')}>photo 2</a> |{' '}
           <a
             onClick={() =>
@@ -48,7 +53,7 @@ export const ClimbingDialogHeader = ({
             }
           >
             photo 4
-          </a>
+          </a> */}
         </Title>
 
         <IconButton

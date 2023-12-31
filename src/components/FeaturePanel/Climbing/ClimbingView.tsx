@@ -12,7 +12,7 @@ import { ControlPanel } from './Editor/ControlPanel';
 import { RouteList } from './RouteList';
 import { Guide } from './Guide';
 import { PositionPx } from './types';
-import { updateElementOnIndex } from './utils';
+import { updateElementOnIndex } from './utils/array';
 
 const Container = styled.div`
   position: relative;
@@ -233,6 +233,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
     splitPaneHeight === viewportSize.height - editorPosition.y;
+  console.log('____R', JSON.stringify(routes));
   return (
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (

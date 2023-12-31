@@ -61,7 +61,6 @@ const TableHeader = styled.div`
   padding-top: 12px;
   padding-bottom: 4px;
   border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation1};
-  background-color: ${({ theme }) => theme.backgroundSurfaceElevation1};
 `;
 const NameHeader = styled.div`
   padding-left: 40px;

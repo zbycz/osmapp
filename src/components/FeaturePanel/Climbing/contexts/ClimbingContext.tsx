@@ -6,7 +6,7 @@ import {
   PositionPx,
   Size,
 } from '../types';
-import { updateElementOnIndex } from '../utils';
+import { updateElementOnIndex } from '../utils/array';
 import { routes1 } from './mock';
 import { findCloserPointFactory } from '../utils/findCloserPoint';
 import {
@@ -90,13 +90,15 @@ type ClimbingContextType = {
   ) => void;
   selectedRouteSystem: GradeSystem;
   setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
+  routesExpanded: Array<number>;
+  setRoutesExpanded: (routesExpanded: Array<number>) => void;
 };
 
 // @TODO generate?
 export const ClimbingContext = createContext<ClimbingContextType | null>(null);
 
 export const ClimbingContextProvider = ({ children }) => {
-  const [photoPath, setPhotoPath] = useState<string>('/images/rock2.jpg'); // photo, should be null
+  const [photoPath, setPhotoPath] = useState<string>('/images/jickovice1.jpg'); // photo, should be null
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(routes1);
@@ -107,6 +109,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isLineInteractiveAreaHovered, setIsLineInteractiveAreaHovered] =
     useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
+  const [routesExpanded, setRoutesExpanded] = useState<Array<number>>([]);
   const [selectedRouteSystem, setSelectedRouteSystem] =
     useState<GradeSystem>('uiaa'); // @TODO move to config
   const [editorPosition, setEditorPosition] = useState<PositionPx>({
@@ -272,6 +275,8 @@ export const ClimbingContextProvider = ({ children }) => {
     setPhotoPath,
     setSelectedRouteSystem,
     selectedRouteSystem,
+    routesExpanded,
+    setRoutesExpanded,
   };
 
   return (

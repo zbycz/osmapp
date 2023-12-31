@@ -14,7 +14,7 @@ import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { PointType } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-// import { updateElementOnIndex } from '../utils';
+// import { updateElementOnIndex } from '../utils/array';
 
 export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   const {
