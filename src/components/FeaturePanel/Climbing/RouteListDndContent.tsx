@@ -69,7 +69,7 @@ const DifficultyHeader = styled.div`
   width: 130px;
 `;
 
-export const RouteListDndContent = () => {
+export const RouteListDndContent = ({ isEditable }) => {
   const {
     routes,
     moveRoute,
@@ -215,7 +215,7 @@ export const RouteListDndContent = () => {
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
             >
-              {isEditMode && (
+              {isEditMode && isEditable && (
                 <DragHandler
                   draggable
                   onDragStart={(e) => handleControlDragStart(e, item)}

@@ -13,12 +13,18 @@ const Title = styled.div`
 export const ClimbingDialogHeader = ({
   isFullscreenDialogOpened,
   setIsFullscreenDialogOpened,
+  imageRef,
 }) => {
   const [isSettingsOpened, setIsSettingsOpened] = useState<boolean>(false);
-  const { areRoutesVisible, setPhotoPath } = useClimbingContext();
+  const { areRoutesVisible, setPhotoPath, handleImageLoad } =
+    useClimbingContext();
 
-  const onPhotoChange = (photoUrl: string) => {
-    setPhotoPath(photoUrl);
+  const onPhotoChange = (photoPath: string) => {
+    setPhotoPath(photoPath);
+    setTimeout(() => {
+      // @TODO fix it without timeout
+      handleImageLoad(imageRef);
+    }, 100);
   };
 
   return (
@@ -28,13 +34,18 @@ export const ClimbingDialogHeader = ({
           <Typography variant="h6" component="div">
             Jickovice: Hlavní oblast - patro
           </Typography>
-          <a onClick={() => onPhotoChange('/images/jickovice1.jpg')}>photo 1</a>{' '}
+          <a onClick={() => onPhotoChange('/images/jickovice1.jpg')}>
+            jickovice1
+          </a>{' '}
           |{' '}
-          <a onClick={() => onPhotoChange('/images/jickovice2.jpg')}>photo 2</a>{' '}
+          <a onClick={() => onPhotoChange('/images/jickovice2.jpg')}>
+            jickovice2
+          </a>{' '}
           |{' '}
-          <a onClick={() => onPhotoChange('/images/jickovice3.jpg')}>photo 3</a>{' '}
-          {/* | <a onClick={() => onPhotoChange('/images/rock2.jpg')}>photo 1</a> |{' '}
-          <a onClick={() => onPhotoChange('/images/rock.png')}>photo 2</a> |{' '}
+          <a onClick={() => onPhotoChange('/images/jickovice3.jpg')}>
+            jickovice3
+          </a>{' '}
+          {/* | <a onClick={() => onPhotoChange('/images/rock.png')}>photo 2</a> |{' '}
           <a
             onClick={() =>
               onPhotoChange(

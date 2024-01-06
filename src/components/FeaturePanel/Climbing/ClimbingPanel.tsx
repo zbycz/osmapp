@@ -1,129 +1,79 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
-
-import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
-import { ClimbingDialogHeader } from './ClimbingDialogHeader';
+import { RoutesLayer } from './Editor/RoutesLayer';
+import { RouteList } from './RouteList';
+import { Size } from './types';
+import { FullscreenIconContainer, ShowFullscreen } from './ShowFullscreen';
+import { ClimbingDialog } from './ClimbingDialog';
 
-const ShowFullscreenContainer = styled.div`
-  padding: 10px;
-  overflow: auto;
-`;
-const Flex = styled.div`
-  display: flex;
-  justify-content: space-between;
+const ThumbnailContainer = styled.div<{ imageSize: Size }>`
   width: 100%;
+  height: ${({ imageSize }) => imageSize.height}px;
+  position: relative;
+  :hover ${FullscreenIconContainer} {
+    visibility: visible;
+    backdrop-filter: blur(3px);
+    background-color: rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+  }
+`;
+
+const Thumbnail = styled.img`
+  width: 100%;
+  position: absolute;
 `;
 
 export const ClimbingPanel = () => {
-  const contentRef = useRef(null);
+  const imageRef = useRef(null);
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(false);
 
-  const {
-    setScrollOffset,
-    isPointMoving,
-    setIsEditMode,
-    isEditMode,
-    getMachine,
-  } = useClimbingContext();
-  const machine = getMachine();
-  const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
-  const onScroll = (e) => {
-    setScrollOffset({
-      x: e.target.scrollLeft,
-      y: e.target.scrollTop,
-      units: 'px',
-    });
-  };
+  const { setIsEditMode, handleImageLoad, imageSize, photoPath } =
+    useClimbingContext();
 
   useEffect(() => {
     if (!isFullscreenDialogOpened) {
       setIsEditMode(false);
     }
   }, [isFullscreenDialogOpened]);
-  const handleSave = () => {
-    setIsEditMode(false);
-  };
-  const onNewRouteCreate = () => {
-    machine.execute('createRoute');
-  };
+
+  useEffect(() => {
+    handleImageLoad(imageRef);
+  }, [isFullscreenDialogOpened]);
 
   return (
     <>
       <PanelWrapper>
         <PanelScrollbars>
-          <Dialog
-            fullScreen
-            open={isFullscreenDialogOpened}
-            onClose={onFullscreenDialogClose}
-          >
-            <ClimbingDialogHeader
-              isFullscreenDialogOpened={isFullscreenDialogOpened}
-              setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-            />
+          {/* <ImageSection /> */}
+          {/* <PanelContent>
+          <FeatureHeading
+            deleted={deleted}
+            title={label}
+            editEnabled={editEnabled && !point}
+            onEdit={setDialogOpenedWith}
+          />
+          </PanelContent> */}
+          <ClimbingDialog
+            isFullscreenDialogOpened={isFullscreenDialogOpened}
+            setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
+            imageRef={imageRef}
+          />
 
-            <DialogContent
-              dividers
-              style={{
-                overscrollBehavior: isPointMoving ? 'none' : undefined,
-                padding: 0,
-              }}
-              ref={contentRef}
-              onScroll={onScroll}
-            >
-              <ClimbingView />
-            </DialogContent>
-
-            {isEditMode && (
-              <DialogActions>
-                <Flex>
-                  {isEditMode && (
-                    <Button
-                      onClick={onNewRouteCreate}
-                      color="primary"
-                      startIcon={<AddIcon />}
-                    >
-                      Add new route
-                    </Button>
-                  )}
-                  <div>
-                    <Button autoFocus onClick={onFullscreenDialogClose}>
-                      Cancel
-                    </Button>
-                    <Button
-                      onClick={handleSave}
-                      variant="contained"
-                      color="primary"
-                    >
-                      Save
-                    </Button>
-                  </div>
-                </Flex>
-              </DialogActions>
-            )}
-          </Dialog>
-
-          {!isFullscreenDialogOpened && <ClimbingView fixedHeight={238} />}
-
-          <ShowFullscreenContainer>
-            <Button
-              onClick={() => setIsFullscreenDialogOpened(true)}
-              color="primary"
-              size="small"
-              variant="contained"
-            >
-              Show fullscreen
-            </Button>
-          </ShowFullscreenContainer>
+          {!isFullscreenDialogOpened && (
+            <>
+              <ThumbnailContainer imageSize={imageSize}>
+                <Thumbnail src={photoPath} ref={imageRef} />
+                <RoutesLayer onClick={() => null} />
+                <ShowFullscreen
+                  onClick={() => setIsFullscreenDialogOpened(true)}
+                />
+              </ThumbnailContainer>
+              <RouteList />
+            </>
+          )}
         </PanelScrollbars>
       </PanelWrapper>
     </>

@@ -6,6 +6,7 @@ import {
   ListItem,
   ListItemText,
   Switch,
+  Slider,
 } from '@material-ui/core';
 import React from 'react';
 import { useClimbingContext } from './contexts/ClimbingContext';
@@ -17,7 +18,10 @@ export const ClimbingSettings = ({ isSettingsOpened, setIsSettingsOpened }) => {
     setAreRoutesVisible,
     setSelectedRouteSystem,
     selectedRouteSystem,
+    // filterDifficulty,
+    // setFilterDifficulty,
   } = useClimbingContext();
+  // const a = selectedRouteSystem
 
   return (
     <Dialog
@@ -47,6 +51,16 @@ export const ClimbingSettings = ({ isSettingsOpened, setIsSettingsOpened }) => {
             <GradeSystemSelect
               setGradeSystem={setSelectedRouteSystem}
               gradeSystem={selectedRouteSystem}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText>Filter difficulty</ListItemText>
+            <Slider
+              value={[0, 1]}
+              min={0}
+              max={10}
+              onChange={() => {}}
+              valueLabelDisplay="auto"
             />
           </ListItem>
         </List>

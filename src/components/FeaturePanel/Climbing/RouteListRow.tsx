@@ -113,7 +113,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     if (routeSelectedIndex === index) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [routeSelectedIndex]);
+  }, [routeSelectedIndex, routesExpanded]);
 
   const isSelected = isRouteSelected(index);
   const hasRoute = hasPath(index);
@@ -144,7 +144,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     hideDeleteDialog();
   };
 
-  console.log('___', routesExpanded);
+  // console.log('___', routesExpanded);
   const isExpanded = routesExpanded.indexOf(index) > -1;
 
   const isReadOnly =
@@ -154,9 +154,8 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
     !isExpanded;
 
   return (
-    <Container>
+    <Container ref={ref}>
       <Row
-        ref={ref}
         onClick={() => {
           if (isSelected) {
             setRoutesExpanded(toggleElementInArray(routesExpanded, index));

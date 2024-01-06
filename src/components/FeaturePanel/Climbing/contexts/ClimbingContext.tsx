@@ -41,8 +41,8 @@ type ClimbingContextType = {
   setIsPointClicked: (isPointClicked: boolean) => void;
   setEditorPosition: (position: PositionPx) => void;
   setImageSize: (ImageSize) => void;
-  splitPaneHeight: number;
-  setSplitPaneHeight: (height: number) => void;
+  splitPaneHeight: number | null;
+  setSplitPaneHeight: (height: number | null) => void;
   photoPath: string;
   setPhotoPath: (path: string) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
@@ -92,6 +92,9 @@ type ClimbingContextType = {
   setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
   routesExpanded: Array<number>;
   setRoutesExpanded: (routesExpanded: Array<number>) => void;
+  handleImageLoad: (imageLoad: React.MutableRefObject<any>) => void;
+  filterDifficulty: Array<string>;
+  setFilterDifficulty: (filterDifficulty: Array<string>) => void;
 };
 
 // @TODO generate?
@@ -102,13 +105,14 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(routes1);
-  const [splitPaneHeight, setSplitPaneHeight] = useState<number>(600);
+  const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
   const [isLineInteractiveAreaHovered, setIsLineInteractiveAreaHovered] =
     useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
+  const [filterDifficulty, setFilterDifficulty] = useState<Array<string>>([]);
   const [routesExpanded, setRoutesExpanded] = useState<Array<number>>([]);
   const [selectedRouteSystem, setSelectedRouteSystem] =
     useState<GradeSystem>('uiaa'); // @TODO move to config
@@ -226,6 +230,21 @@ export const ClimbingContextProvider = ({ children }) => {
     }, []);
   };
 
+  const handleImageLoad = (imageRef: React.MutableRefObject<any>) => {
+    if (imageRef.current) {
+      const { clientHeight, clientWidth } = imageRef.current;
+      console.log('____,imageRef', clientHeight, clientWidth);
+      const { left, top } = imageRef.current.getBoundingClientRect();
+
+      setImageSize({ width: clientWidth, height: clientHeight });
+      setEditorPosition({ x: left, y: top, units: 'px' });
+      setViewportSize({
+        width: window?.innerWidth,
+        height: window?.innerHeight,
+      });
+    }
+  };
+
   const climbingState = {
     editorPosition,
     getPercentagePosition,
@@ -277,6 +296,9 @@ export const ClimbingContextProvider = ({ children }) => {
     selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
+    handleImageLoad,
+    filterDifficulty,
+    setFilterDifficulty,
   };
 
   return (

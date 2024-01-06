@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteFloatingMenu } from './RouteFloatingMenu';
-import { Position } from '../types';
+import { Position, Size } from '../types';
 
 const Svg = styled.svg<{
   hasEditableCursor: boolean;
@@ -21,7 +21,7 @@ const Svg = styled.svg<{
   ${({ imageSize: { width, height } }) =>
     `width: ${width}px;
     height:${height}px;
-    height: 100%;
+    /*height: 100%;*/
     `}
 `;
 
@@ -35,7 +35,8 @@ type Props = {
   onClick: (e: any) => void;
   onEditorMouseMove?: (e: any) => void;
   onEditorTouchMove?: (e: any) => void;
-  isVisible: boolean;
+  isVisible?: boolean;
+  // imageSize: Size;
 };
 
 // @TODO rename onFinishClimbingRouteClick?
@@ -43,7 +44,7 @@ export const RoutesLayer = ({
   onClick,
   onEditorMouseMove,
   onEditorTouchMove,
-  isVisible,
+  isVisible = true,
 }: Props) => {
   // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); // @TODO rename
 
@@ -64,6 +65,7 @@ export const RoutesLayer = ({
     routes,
   } = useClimbingContext();
 
+  // console.log('____imageSize', imageSize);
   const machine = getMachine();
   const path = getCurrentPath();
   if (!path) return null;

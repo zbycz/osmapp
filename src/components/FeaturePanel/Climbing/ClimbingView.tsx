@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 // import ZoomInIcon from '@material-ui/icons/ZoomIn';
 // import ZoomOutIcon from '@material-ui/icons/ZoomOut';
@@ -6,13 +6,11 @@ import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { IconButton } from '@material-ui/core';
-import { RouteEditor } from './Editor/RouteEditor';
+
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { ControlPanel } from './Editor/ControlPanel';
 import { RouteList } from './RouteList';
-import { Guide } from './Guide';
-import { PositionPx } from './types';
-import { updateElementOnIndex } from './utils/array';
+
+import { RoutesEditor } from './Editor/RoutesEditor';
 
 const Container = styled.div`
   position: relative;
@@ -39,15 +37,7 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   display: flex;
   /* border: solid 1px red; */
 `;
-const EditorContainer = styled.div<{ imageHeight: number }>`
-  display: flex;
-  justify-content: center;
-  height: ${({ imageHeight }) => `${imageHeight}px`};
-  top: 0;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-`;
+
 const BlurContainer = styled.div`
   backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
@@ -67,70 +57,32 @@ const BackgroundContainer = styled.div<{
   height: 100%;
 `;
 
-const ImageContainer = styled.div`
-  user-select: none;
-  position: absolute;
-  top: 0;
-  height: 100%;
-  box-shadow: 0 -0 110px rgba(0, 0, 0, 0.1);
-`;
-
-const ImageElement = styled.img<{ zoom?: number }>`
-  /* max-width: 100%; */
-  /* max-height: 80vh; */
-  /* object-fit: contain; */
-  // transform: <scale(${({ zoom }) => zoom});
-  transition: all 0.1s ease-in;
-  height: 100%;
-`;
-
 const DialogIcon = styled.div`
   position: absolute;
   top: 10px;
   right: 10px;
 `;
-export const ClimbingView = ({ fixedHeight = undefined }) => {
+export const ClimbingView = ({ fixedHeight = undefined, imageRef }) => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
 
   const {
-    setImageSize,
     imageSize,
-    routes,
     routeSelectedIndex,
-    setEditorPosition,
-    getPercentagePosition,
     getMachine,
-    isPointClicked,
-    setIsPointMoving,
-    pointSelectedIndex,
-    findCloserPoint,
     splitPaneHeight,
     setSplitPaneHeight,
     areRoutesVisible,
-    setMousePosition,
-    addOffsets,
     isEditMode,
     viewportSize,
-    setViewportSize,
     editorPosition,
-    isLineInteractiveAreaHovered,
     photoPath,
-    updatePathOnRouteIndex,
+    handleImageLoad,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
-  const imageRef = useRef(null);
+
   const machine = getMachine();
-
-  const handleImageLoad = () => {
-    const { clientHeight, clientWidth } = imageRef.current;
-    const { left, top } = imageRef.current.getBoundingClientRect();
-
-    setImageSize({ width: clientWidth, height: clientHeight });
-    setEditorPosition({ x: left, y: top, units: 'px' });
-    setViewportSize({ width: window?.innerWidth, height: window?.innerHeight });
-  };
 
   useEffect(() => {
     if (isEditMode && machine.currentStateName === 'routeSelected') {
@@ -145,79 +97,34 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
   useEffect(() => {
     // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
     // setSplitPaneHeight();
-    handleImageLoad();
+
+    handleImageLoad(imageRef);
   }, [splitPaneHeight]);
 
-  const onCanvasClick = (e) => {
-    if (machine.currentStateName === 'extendRoute') {
-      machine.execute('addPointToEnd', {
-        position: { x: e.clientX, y: e.clientY },
-      });
-      return;
-    }
-
-    if (machine.currentStateName === 'pointMenu') {
-      machine.execute('cancelPointMenu');
-    } else {
-      machine.execute('cancelRouteSelection');
-    }
-  };
-
-  const onMove = (position: PositionPx) => {
-    if (isPointClicked) {
-      setMousePosition(null);
-      machine.execute('dragPoint', { position });
-
-      setIsPointMoving(true);
-      const newCoordinate = getPercentagePosition(
-        addOffsets(['editorPosition'], position),
-      );
-
-      const closestPoint = findCloserPoint(newCoordinate);
-
-      const updatedPoint = closestPoint ?? newCoordinate;
-      updatePathOnRouteIndex(routeSelectedIndex, (path) =>
-        updateElementOnIndex(path, pointSelectedIndex, (point) => ({
-          ...point,
-          x: updatedPoint.x,
-          y: updatedPoint.y,
-        })),
-      );
-    } else if (machine.currentStateName !== 'extendRoute') {
-      setMousePosition(null);
-    } else if (!isLineInteractiveAreaHovered) {
-      setMousePosition(position);
-    }
-  };
-
-  const onTouchMove = (e) => {
-    onMove({ x: e.touches[0].clientX, y: e.touches[0].clientY, units: 'px' });
-  };
-
-  const onMouseMove = (e) => {
-    onMove(
-      addOffsets(['scrollOffset'], {
-        x: e.clientX,
-        y: e.clientY,
-        units: 'px',
-      }),
-    );
-  };
+  useEffect(() => {
+    console.log('________LOAD');
+    if (!splitPaneHeight) setSplitPaneHeight(600);
+    handleImageLoad(imageRef);
+  }, []);
 
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(300);
   };
 
   React.useEffect(() => {
-    window.addEventListener('resize', handleImageLoad);
-    window.addEventListener('orientationchange', handleImageLoad);
+    window.addEventListener('resize', () => handleImageLoad(imageRef));
+    window.addEventListener('orientationchange', () =>
+      handleImageLoad(imageRef),
+    );
 
     // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
     // setSplitPaneHeight();
 
     return () => {
-      window.removeEventListener('resize', handleImageLoad);
-      window.removeEventListener('orientationchange', handleImageLoad);
+      window.removeEventListener('resize', () => handleImageLoad(imageRef));
+      window.removeEventListener('orientationchange', () =>
+        handleImageLoad(imageRef),
+      );
     };
   }, []);
 
@@ -233,7 +140,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
     splitPaneHeight === viewportSize.height - editorPosition.y;
-  console.log('____R', JSON.stringify(routes));
+
   return (
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (
@@ -265,30 +172,14 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
           imageUrl={photoPath}
         >
           <BlurContainer>
-            {isEditMode && areRoutesVisible && <ControlPanel />}
-            <EditorContainer imageHeight={imageSize.height}>
-              <ImageContainer>
-                <ImageElement
-                  src={photoPath}
-                  onLoad={handleImageLoad}
-                  ref={imageRef}
-                  // zoom={zoom}
-                />
-              </ImageContainer>
-
-              <RouteEditor
-                isVisible={!isSplitViewDragging && areRoutesVisible}
-                routes={routes}
-                onClick={onCanvasClick}
-                onEditorMouseMove={onMouseMove}
-                onEditorTouchMove={onTouchMove}
-              />
-              {isEditMode && areRoutesVisible && <Guide />}
-            </EditorContainer>
+            <RoutesEditor
+              imageRef={imageRef}
+              isRoutesLayerVisible={!isSplitViewDragging && areRoutesVisible}
+            />
           </BlurContainer>
         </BackgroundContainer>
 
-        <RouteList />
+        <RouteList isEditable />
       </SplitPane>
 
       <DialogIcon>

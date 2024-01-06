@@ -24,7 +24,7 @@ const ButtonContainer = styled.div`
 // };
 
 // onDeleteExistingRouteClick,
-export const RouteList = () => {
+export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
   const {
     routes,
     isEditMode,
@@ -70,6 +70,8 @@ export const RouteList = () => {
           setRoutesExpanded(
             addElementToArray(routesExpanded, routeSelectedIndex),
           );
+          // @TODO: scroll to expanded container:
+          // ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           e.preventDefault();
         }
       }
@@ -98,8 +100,8 @@ export const RouteList = () => {
 
   return (
     <Container>
-      {routes.length !== 0 && <RouteListDndContent />}
-      {!isEditMode && (
+      {routes.length !== 0 && <RouteListDndContent isEditable={isEditable} />}
+      {!isEditMode && isEditable && (
         <ButtonContainer>
           <Button
             onClick={handleEdit}

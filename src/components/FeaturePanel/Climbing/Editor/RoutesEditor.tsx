@@ -34,7 +34,7 @@ const ImageElement = styled.img<{ zoom?: number }>`
   height: 100%;
 `;
 
-export const RoutesEditor = ({ isRoutesLayerVisible, imageRef }) => {
+export const RoutesEditor = ({ isRoutesLayerVisible = true, imageRef }) => {
   const {
     imageSize,
     areRoutesVisible,

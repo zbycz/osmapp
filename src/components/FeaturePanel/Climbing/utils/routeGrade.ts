@@ -2,7 +2,7 @@ import { GradeSystem, gradeTable } from './gradeTable';
 
 export const convertGrade = (from, to, value) => {
   if (!from || !to || !value || !gradeTable[from]) return null;
-  console.log('___from', from, to, value);
+  // console.log('___from', from, to, value);
   const indexInTable = gradeTable[from].indexOf(value);
 
   if (gradeTable[to][indexInTable]) return gradeTable[to][indexInTable];
