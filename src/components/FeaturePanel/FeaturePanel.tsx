@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -21,6 +21,8 @@ import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
+import { fetchOverpassGeojson } from '../../services/overpassSearch';
+import { getGlobalMap } from '../../services/mapStorage';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -35,6 +37,19 @@ export const FeaturePanel = () => {
 
   const osmappLink = getFullOsmappLink(feature);
   const label = getLabel(feature);
+
+  useEffect(() => {
+    fetchOverpassGeojson(feature).then((geojson) => {
+      if (getGlobalMap()) {
+        getGlobalMap().getSource('overpass')?.setData(geojson);
+      }
+
+      // lets hope :D
+      setTimeout(() => {
+        getGlobalMap()?.getSource('overpass')?.setData(geojson);
+      }, 1000);
+    });
+  }, [feature]);
 
   return (
     <PanelWrapper>
