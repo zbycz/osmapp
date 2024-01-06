@@ -37,10 +37,27 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
     useClimbingContext();
   const config = useConfig();
 
-  const newY = // this shifts Y coordinate in case of too small photo
-    y + RECT_Y_OFFSET + RECT_HEIGHT > imageSize.height
-      ? imageSize.height - RECT_HEIGHT - OUTLINE_WIDTH
-      : y + RECT_Y_OFFSET;
+  const getX = () => {
+    const isFarRight = x + RECT_WIDTH / 2 + OUTLINE_WIDTH > imageSize.width;
+    const isFarLeft = x < RECT_WIDTH / 2 + OUTLINE_WIDTH;
+    if (isFarRight) {
+      return imageSize.width - RECT_WIDTH / 2 - OUTLINE_WIDTH;
+    }
+    if (isFarLeft) {
+      return RECT_WIDTH / 2 + OUTLINE_WIDTH;
+    }
+    return x;
+  };
+
+  const getY = () => {
+    const isFarBottom = y + RECT_Y_OFFSET + RECT_HEIGHT > imageSize.height;
+    if (isFarBottom) return imageSize.height - RECT_HEIGHT - OUTLINE_WIDTH;
+    return y + RECT_Y_OFFSET;
+  };
+
+  const newX = getX(); // this shifts X coordinate in case of too small photo
+  const newY = getY(); // this shifts Y coordinate in case of too small photo
+
   const machine = getMachine();
   const commonProps = {
     onClick: (e) => {
@@ -58,7 +75,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   return (
     <>
       <HoverableRouteName
-        x={x - RECT_WIDTH / 2 - HOVER_WIDTH / 2}
+        x={newX - RECT_WIDTH / 2 - HOVER_WIDTH / 2}
         y={newY - HOVER_WIDTH / 2}
         width={RECT_WIDTH + HOVER_WIDTH}
         height={RECT_HEIGHT + HOVER_WIDTH}
@@ -68,7 +85,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
       />
 
       <RouteNameOutline
-        x={x - RECT_WIDTH / 2 - OUTLINE_WIDTH / 2}
+        x={newX - RECT_WIDTH / 2 - OUTLINE_WIDTH / 2}
         y={newY - OUTLINE_WIDTH / 2}
         width={RECT_WIDTH + OUTLINE_WIDTH}
         height={RECT_HEIGHT + OUTLINE_WIDTH}
@@ -81,7 +98,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         {...commonProps}
       />
       <RouteNameBox
-        x={x - RECT_WIDTH / 2}
+        x={newX - RECT_WIDTH / 2}
         y={newY}
         width={RECT_WIDTH}
         height={RECT_HEIGHT}
@@ -94,7 +111,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         {...commonProps}
       />
       <Text
-        x={x}
+        x={newX}
         y={newY + 15}
         fill={
           isSelected

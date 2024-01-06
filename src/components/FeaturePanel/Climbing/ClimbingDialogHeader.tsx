@@ -22,11 +22,11 @@ export const ClimbingDialogHeader = ({
   setIsFullscreenDialogOpened,
 }) => {
   const [isSettingsOpened, setIsSettingsOpened] = useState<boolean>(false);
-  const { areRoutesVisible, setPhotoPath, handleImageLoad } =
+  const { areRoutesVisible, setPhotoPath, photoPath, handleImageLoad } =
     useClimbingContext();
 
-  const onPhotoChange = (photoPath: string) => {
-    setPhotoPath(photoPath);
+  const onPhotoChange = (photo: string) => {
+    setPhotoPath(photo);
     setTimeout(() => {
       // @TODO fix it without timeout
       handleImageLoad();
@@ -48,7 +48,10 @@ export const ClimbingDialogHeader = ({
           </Typography>
           <PhotoLinks>
             {photos.map((photo) => (
-              <PhotoLink onClick={() => onPhotoChange(photo)}>
+              <PhotoLink
+                onClick={() => onPhotoChange(photo)}
+                isCurrentPhoto={photo === photoPath}
+              >
                 {photo}
               </PhotoLink>
             ))}

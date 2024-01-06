@@ -41,7 +41,7 @@ export const RouteWithLabel = ({
         onPointInSelectedRouteClick={onPointInSelectedRouteClick}
         x={x}
         y={y}
-        routeNumberXShift={shift}
+        routeNumberXShift={100}
         routeNumber={routeNumber}
       />
     );
