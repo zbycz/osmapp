@@ -87,6 +87,21 @@ export const ExpandedRow = ({
                   />
                 )}
               </ListItem>
+              <ListItem>
+                <RouteInDifferentPhotos route={tempRoute} />
+              </ListItem>
+              <ListItem>
+                {!isReadOnly && (
+                  <Button
+                    onClick={() => setRouteToDelete(index)}
+                    color="primary"
+                    size="small"
+                    startIcon={<DeleteIcon fontSize="small" />}
+                  >
+                    Delete route
+                  </Button>
+                )}
+              </ListItem>
             </List>
           </Left>
           <Right>
@@ -150,24 +165,6 @@ export const ExpandedRow = ({
             </List>
           </Right>
         </Flex>
-
-        <List>
-          <ListItem>
-            <RouteInDifferentPhotos route={tempRoute} />
-          </ListItem>
-          <ListItem>
-            {!isReadOnly && (
-              <Button
-                onClick={() => setRouteToDelete(index)}
-                color="primary"
-                size="small"
-                startIcon={<DeleteIcon fontSize="small" />}
-              >
-                Delete route
-              </Button>
-            )}
-          </ListItem>
-        </List>
       </ExpandedRowContainer>
       <Dialog
         open={routeToDelete !== null}

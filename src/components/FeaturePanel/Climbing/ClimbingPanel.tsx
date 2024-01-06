@@ -4,13 +4,12 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
 import { RouteList } from './RouteList/RouteList';
-import { Size } from './types';
 import { FullscreenIconContainer, ShowFullscreen } from './ShowFullscreen';
 import { ClimbingDialog } from './ClimbingDialog';
 
-const ThumbnailContainer = styled.div<{ imageSize: Size }>`
+const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
-  height: ${({ imageSize }) => imageSize.height}px;
+  height: ${({ height }) => height}px;
   position: relative;
   :hover ${FullscreenIconContainer} {
     visibility: visible;
@@ -62,7 +61,7 @@ export const ClimbingPanel = () => {
 
           {!isFullscreenDialogOpened && (
             <>
-              <ThumbnailContainer imageSize={imageSize}>
+              <ThumbnailContainer height={imageSize.height}>
                 <Thumbnail src={photoPath} ref={photoRef} />
                 <RoutesLayer onClick={() => null} />
                 <ShowFullscreen
