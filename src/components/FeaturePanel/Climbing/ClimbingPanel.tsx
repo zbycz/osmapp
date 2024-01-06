@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
-import { RouteList } from './RouteList';
+import { RouteList } from './RouteList/RouteList';
 import { Size } from './types';
 import { FullscreenIconContainer, ShowFullscreen } from './ShowFullscreen';
 import { ClimbingDialog } from './ClimbingDialog';
@@ -26,11 +26,10 @@ const Thumbnail = styled.img`
 `;
 
 export const ClimbingPanel = () => {
-  const imageRef = useRef(null);
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(false);
 
-  const { setIsEditMode, handleImageLoad, imageSize, photoPath } =
+  const { setIsEditMode, handleImageLoad, imageSize, photoPath, photoRef } =
     useClimbingContext();
 
   useEffect(() => {
@@ -40,7 +39,7 @@ export const ClimbingPanel = () => {
   }, [isFullscreenDialogOpened]);
 
   useEffect(() => {
-    handleImageLoad(imageRef);
+    handleImageLoad();
   }, [isFullscreenDialogOpened]);
 
   return (
@@ -59,13 +58,12 @@ export const ClimbingPanel = () => {
           <ClimbingDialog
             isFullscreenDialogOpened={isFullscreenDialogOpened}
             setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-            imageRef={imageRef}
           />
 
           {!isFullscreenDialogOpened && (
             <>
               <ThumbnailContainer imageSize={imageSize}>
-                <Thumbnail src={photoPath} ref={imageRef} />
+                <Thumbnail src={photoPath} ref={photoRef} />
                 <RoutesLayer onClick={() => null} />
                 <ShowFullscreen
                   onClick={() => setIsFullscreenDialogOpened(true)}

@@ -3,9 +3,9 @@ import styled from 'styled-components';
 
 import { Button } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
-import { useClimbingContext } from './contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
-import { addElementToArray, deleteFromArray } from './utils/array';
+import { addElementToArray, deleteFromArray } from '../utils/array';
 
 const Container = styled.div`
   margin-bottom: 65px;
@@ -53,19 +53,12 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
       }
       if (e.key === 'ArrowLeft') {
         const index = routesExpanded.indexOf(routeSelectedIndex);
-        console.log('___----', routesExpanded, routeSelectedIndex, index);
         if (index > -1) {
           setRoutesExpanded(deleteFromArray(routesExpanded, index));
           e.preventDefault();
         }
       }
       if (e.key === 'ArrowRight') {
-        console.log(
-          '___----',
-          routesExpanded,
-          routeSelectedIndex,
-          routesExpanded.indexOf(routeSelectedIndex) === -1,
-        );
         if (routesExpanded.indexOf(routeSelectedIndex) === -1) {
           setRoutesExpanded(
             addElementToArray(routesExpanded, routeSelectedIndex),

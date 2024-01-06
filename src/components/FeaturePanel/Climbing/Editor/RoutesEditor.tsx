@@ -34,7 +34,7 @@ const ImageElement = styled.img<{ zoom?: number }>`
   height: 100%;
 `;
 
-export const RoutesEditor = ({ isRoutesLayerVisible = true, imageRef }) => {
+export const RoutesEditor = ({ isRoutesLayerVisible = true }) => {
   const {
     imageSize,
     areRoutesVisible,
@@ -52,6 +52,7 @@ export const RoutesEditor = ({ isRoutesLayerVisible = true, imageRef }) => {
     isPointClicked,
     isLineInteractiveAreaHovered,
     handleImageLoad,
+    photoRef,
   } = useClimbingContext();
   const machine = getMachine();
 
@@ -119,7 +120,7 @@ export const RoutesEditor = ({ isRoutesLayerVisible = true, imageRef }) => {
           <ImageElement
             src={photoPath}
             onLoad={handleImageLoad}
-            ref={imageRef}
+            ref={photoRef}
           />
         </ImageContainer>
 

@@ -5,15 +5,21 @@ import CloseIcon from '@material-ui/icons/Close';
 import TuneIcon from '@material-ui/icons/Tune';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingSettings } from './ClimbingSettings';
+import { PhotoLink } from './PhotoLink';
 
 const Title = styled.div`
   flex: 1;
+`;
+const PhotoLinks = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  margin-bottom: 2px;
 `;
 
 export const ClimbingDialogHeader = ({
   isFullscreenDialogOpened,
   setIsFullscreenDialogOpened,
-  imageRef,
 }) => {
   const [isSettingsOpened, setIsSettingsOpened] = useState<boolean>(false);
   const { areRoutesVisible, setPhotoPath, handleImageLoad } =
@@ -23,9 +29,15 @@ export const ClimbingDialogHeader = ({
     setPhotoPath(photoPath);
     setTimeout(() => {
       // @TODO fix it without timeout
-      handleImageLoad(imageRef);
+      handleImageLoad();
     }, 100);
   };
+
+  const photos = [
+    '/images/jickovice1.jpg',
+    '/images/jickovice2.jpg',
+    '/images/jickovice3.jpg',
+  ];
 
   return (
     <AppBar position="static" color="transparent">
@@ -34,17 +46,14 @@ export const ClimbingDialogHeader = ({
           <Typography variant="h6" component="div">
             Jickovice: Hlavní oblast - patro
           </Typography>
-          <a onClick={() => onPhotoChange('/images/jickovice1.jpg')}>
-            jickovice1
-          </a>{' '}
-          |{' '}
-          <a onClick={() => onPhotoChange('/images/jickovice2.jpg')}>
-            jickovice2
-          </a>{' '}
-          |{' '}
-          <a onClick={() => onPhotoChange('/images/jickovice3.jpg')}>
-            jickovice3
-          </a>{' '}
+          <PhotoLinks>
+            {photos.map((photo) => (
+              <PhotoLink onClick={() => onPhotoChange(photo)}>
+                {photo}
+              </PhotoLink>
+            ))}
+          </PhotoLinks>
+
           {/* | <a onClick={() => onPhotoChange('/images/rock.png')}>photo 2</a> |{' '}
           <a
             onClick={() =>

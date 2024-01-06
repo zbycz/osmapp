@@ -18,7 +18,6 @@ const Flex = styled.div`
 `;
 
 export const ClimbingDialog = ({
-  imageRef,
   isFullscreenDialogOpened,
   setIsFullscreenDialogOpened,
 }) => {
@@ -58,7 +57,6 @@ export const ClimbingDialog = ({
       <ClimbingDialogHeader
         isFullscreenDialogOpened={isFullscreenDialogOpened}
         setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-        imageRef={imageRef}
       />
 
       <DialogContent
@@ -70,7 +68,7 @@ export const ClimbingDialog = ({
         ref={contentRef}
         onScroll={onScroll}
       >
-        <ClimbingView imageRef={imageRef} />
+        <ClimbingView />
       </DialogContent>
 
       {isEditMode && (

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useRef, useState } from 'react';
 import {
   ClimbingRoute,
   PathPoints,
@@ -92,15 +92,17 @@ type ClimbingContextType = {
   setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
   routesExpanded: Array<number>;
   setRoutesExpanded: (routesExpanded: Array<number>) => void;
-  handleImageLoad: (imageLoad: React.MutableRefObject<any>) => void;
+  handleImageLoad: () => void;
   filterDifficulty: Array<string>;
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
+  photoRef: React.MutableRefObject<any>;
 };
 
 // @TODO generate?
 export const ClimbingContext = createContext<ClimbingContextType | null>(null);
 
 export const ClimbingContextProvider = ({ children }) => {
+  const photoRef = useRef(null);
   const [photoPath, setPhotoPath] = useState<string>('/images/jickovice1.jpg'); // photo, should be null
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
@@ -230,11 +232,11 @@ export const ClimbingContextProvider = ({ children }) => {
     }, []);
   };
 
-  const handleImageLoad = (imageRef: React.MutableRefObject<any>) => {
-    if (imageRef.current) {
-      const { clientHeight, clientWidth } = imageRef.current;
-      console.log('____,imageRef', clientHeight, clientWidth);
-      const { left, top } = imageRef.current.getBoundingClientRect();
+  const handleImageLoad = () => {
+    if (photoRef.current) {
+      const { clientHeight, clientWidth } = photoRef.current;
+      console.log('____,photoRef', clientHeight, clientWidth);
+      const { left, top } = photoRef.current.getBoundingClientRect();
 
       setImageSize({ width: clientWidth, height: clientHeight });
       setEditorPosition({ x: left, y: top, units: 'px' });
@@ -299,6 +301,7 @@ export const ClimbingContextProvider = ({ children }) => {
     handleImageLoad,
     filterDifficulty,
     setFilterDifficulty,
+    photoRef,
   };
 
   return (

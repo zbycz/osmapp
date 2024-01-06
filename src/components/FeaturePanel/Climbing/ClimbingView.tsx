@@ -8,7 +8,7 @@ import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { IconButton } from '@material-ui/core';
 
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { RouteList } from './RouteList';
+import { RouteList } from './RouteList/RouteList';
 
 import { RoutesEditor } from './Editor/RoutesEditor';
 
@@ -62,7 +62,7 @@ const DialogIcon = styled.div`
   top: 10px;
   right: 10px;
 `;
-export const ClimbingView = ({ fixedHeight = undefined, imageRef }) => {
+export const ClimbingView = ({ fixedHeight = undefined }) => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
 
@@ -98,13 +98,13 @@ export const ClimbingView = ({ fixedHeight = undefined, imageRef }) => {
     // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
     // setSplitPaneHeight();
 
-    handleImageLoad(imageRef);
+    handleImageLoad();
   }, [splitPaneHeight]);
 
   useEffect(() => {
     console.log('________LOAD');
     if (!splitPaneHeight) setSplitPaneHeight(600);
-    handleImageLoad(imageRef);
+    handleImageLoad();
   }, []);
 
   const onSplitPaneHeightReset = () => {
@@ -112,19 +112,15 @@ export const ClimbingView = ({ fixedHeight = undefined, imageRef }) => {
   };
 
   React.useEffect(() => {
-    window.addEventListener('resize', () => handleImageLoad(imageRef));
-    window.addEventListener('orientationchange', () =>
-      handleImageLoad(imageRef),
-    );
+    window.addEventListener('resize', () => handleImageLoad());
+    window.addEventListener('orientationchange', () => handleImageLoad());
 
     // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
     // setSplitPaneHeight();
 
     return () => {
-      window.removeEventListener('resize', () => handleImageLoad(imageRef));
-      window.removeEventListener('orientationchange', () =>
-        handleImageLoad(imageRef),
-      );
+      window.removeEventListener('resize', () => handleImageLoad());
+      window.removeEventListener('orientationchange', () => handleImageLoad());
     };
   }, []);
 
@@ -173,7 +169,6 @@ export const ClimbingView = ({ fixedHeight = undefined, imageRef }) => {
         >
           <BlurContainer>
             <RoutesEditor
-              imageRef={imageRef}
               isRoutesLayerVisible={!isSplitViewDragging && areRoutesVisible}
             />
           </BlurContainer>
