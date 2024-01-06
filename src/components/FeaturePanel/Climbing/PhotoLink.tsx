@@ -1,6 +1,13 @@
+import React from 'react';
 import styled from 'styled-components';
 
-export const PhotoLink = styled.div<{ isCurrentPhoto: boolean }>`
+type Props = {
+  children: string;
+  isCurrentPhoto: boolean;
+  onClick: () => void;
+};
+
+const Container = styled.div<{ isCurrentPhoto: boolean }>`
   display: block;
   background: ${({ isCurrentPhoto, theme }) =>
     isCurrentPhoto ? theme.backgroundNeutralSubdued : 'transparent'};
@@ -11,3 +18,9 @@ export const PhotoLink = styled.div<{ isCurrentPhoto: boolean }>`
   font-size: 12px;
   cursor: pointer;
 `;
+
+export const PhotoLink = ({ children, isCurrentPhoto, onClick }: Props) => (
+  <Container isCurrentPhoto={isCurrentPhoto} onClick={onClick}>
+    {children.split('/').pop()}
+  </Container>
+);

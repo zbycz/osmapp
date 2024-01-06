@@ -76,6 +76,7 @@ export const Point = ({
   };
 
   const onMouseUp = (e) => {
+    // @TODO unify with RouteMarks.tsx
     if (!isPointMoving) {
       console.log('________onMouseUp');
       setPointSelectedIndex(null);

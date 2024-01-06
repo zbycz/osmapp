@@ -4,7 +4,10 @@ import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteFloatingMenu } from './RouteFloatingMenu';
-import { Position, Size } from '../types';
+import { Position } from '../types';
+import { RouteMarks } from './RouteMarks';
+
+type RouteRenders = { route: React.ReactNode; marks: React.ReactNode };
 
 const Svg = styled.svg<{
   hasEditableCursor: boolean;
@@ -39,15 +42,12 @@ type Props = {
   // imageSize: Size;
 };
 
-// @TODO rename onFinishClimbingRouteClick?
 export const RoutesLayer = ({
   onClick,
   onEditorMouseMove,
   onEditorTouchMove,
   isVisible = true,
 }: Props) => {
-  // const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null); // @TODO rename
-
   const {
     imageSize,
     pointSelectedIndex,
@@ -65,7 +65,6 @@ export const RoutesLayer = ({
     routes,
   } = useClimbingContext();
 
-  // console.log('____imageSize', imageSize);
   const machine = getMachine();
   const path = getCurrentPath();
   if (!path) return null;
@@ -80,10 +79,7 @@ export const RoutesLayer = ({
     if (isDoubleClick && pointSelectedIndex === lastPointIndex) {
       machine.execute('finishRoute');
     }
-
-    // setAnchorEl(anchorEl !== null ? null : event.currentTarget);
   };
-  // console.log('_______', pointElement);
 
   const handleMovingPointDrop = () => {
     if (isPointMoving) {
@@ -93,10 +89,20 @@ export const RoutesLayer = ({
     }
   };
 
-  const sortedRoutes = routes.reduce(
+  const sortedRoutes = routes.reduce<{
+    selected: Array<RouteRenders>;
+    rest: Array<RouteRenders>;
+  }>(
     (acc, route, index) => {
       const RenderRoute = () => (
         <RouteWithLabel
+          route={route}
+          routeNumber={index}
+          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
+        />
+      );
+      const RenderRouteMarks = () => (
+        <RouteMarks
           route={route}
           routeNumber={index}
           onPointInSelectedRouteClick={onPointInSelectedRouteClick}
@@ -106,10 +112,19 @@ export const RoutesLayer = ({
       if (isRouteSelected(index)) {
         return {
           ...acc,
-          selected: [...acc.selected, <RenderRoute />],
+          selected: [
+            ...acc.selected,
+            { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+          ],
         };
       }
-      return { ...acc, rest: [...acc.rest, <RenderRoute />] };
+      return {
+        ...acc,
+        rest: [
+          ...acc.rest,
+          { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+        ],
+      };
     },
     { selected: [], rest: [] },
   );
@@ -119,6 +134,7 @@ export const RoutesLayer = ({
       ? getPixelPosition(path[path.length - 1])
       : null;
 
+  console.log('______P', path, pointSelectedIndex, path[pointSelectedIndex]);
   const selectedPointOfSelectedRoute =
     pointSelectedIndex !== null && path.length > 0 && routes[routeSelectedIndex]
       ? getPixelPosition(path[pointSelectedIndex])
@@ -142,11 +158,12 @@ export const RoutesLayer = ({
         imageSize={imageSize}
         isVisible={isVisible}
       >
-        {sortedRoutes.rest}
-        {sortedRoutes.selected}
+        {sortedRoutes.rest.map((item) => item.route)}
+        {sortedRoutes.rest.map((item) => item.marks)}
+        {sortedRoutes.selected.map((item) => item.route)}
+        {sortedRoutes.selected.map((item) => item.marks)}
       </Svg>
 
-      {/* <PointMenu anchorEl={pointElement} setAnchorEl={setPointElement} /> */}
       {routeFloatingMenuPosition && (
         <RouteFloatingMenuContainer
           position={{
