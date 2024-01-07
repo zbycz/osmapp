@@ -34,7 +34,10 @@ const ImageElement = styled.img<{ zoom?: number }>`
   height: 100%;
 `;
 
-export const RoutesEditor = ({ isRoutesLayerVisible = true }) => {
+export const RoutesEditor = ({
+  isRoutesLayerVisible = true,
+  setIsPhotoLoaded,
+}) => {
   const {
     imageSize,
     areRoutesVisible,
@@ -112,18 +115,17 @@ export const RoutesEditor = ({ isRoutesLayerVisible = true }) => {
     );
   };
 
+  const onPhotoLoad = () => {
+    setIsPhotoLoaded(true);
+    handleImageLoad();
+  };
   return (
     <>
       {isEditMode && areRoutesVisible && <ControlPanel />}
       <EditorContainer imageHeight={imageSize.height}>
         <ImageContainer>
-          <ImageElement
-            src={photoPath}
-            onLoad={handleImageLoad}
-            ref={photoRef}
-          />
+          <ImageElement src={photoPath} onLoad={onPhotoLoad} ref={photoRef} />
         </ImageContainer>
-
         <RoutesLayer
           isVisible={isRoutesLayerVisible}
           onClick={onCanvasClick}

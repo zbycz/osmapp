@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { IconButton } from '@material-ui/core';
+import { CircularProgress, IconButton } from '@material-ui/core';
 
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
@@ -17,6 +17,16 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
+`;
+const LoadingContainer = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+  align-items: center;
 `;
 
 const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
@@ -38,18 +48,23 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   /* border: solid 1px red; */
 `;
 
-const BlurContainer = styled.div`
+const BlurContainer = styled.div<{ isVisible: boolean }>`
   backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
-
+  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
   height: 100%;
 `;
 
 const BackgroundContainer = styled.div<{
   imageHeight: number;
   imageUrl: string;
+  isVisible: boolean;
 }>`
-  background: #111 url(${({ imageUrl }) => imageUrl}) no-repeat;
+  transition: 0.3s all;
+
+  background: #111
+    ${({ isVisible, imageUrl }) =>
+      isVisible ? `url(${imageUrl}) no-repeat` : ''};
   background-size: 100% auto;
   object-fit: cover;
   object-position: center;
@@ -131,6 +146,11 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
     setIsSplitViewDragging(false);
     setSplitPaneHeight(splitHeight);
   };
+  const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
+
+  useEffect(() => {
+    setIsPhotoLoaded(false);
+  }, [photoPath]);
 
   // @TODO udělat header footer jako edit dialog
   const showArrowOnTop = splitPaneHeight === 0;
@@ -166,14 +186,20 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
         <BackgroundContainer
           imageHeight={imageSize.height}
           imageUrl={photoPath}
+          isVisible={isPhotoLoaded}
         >
-          <BlurContainer>
+          {!isPhotoLoaded && (
+            <LoadingContainer>
+              <CircularProgress />
+            </LoadingContainer>
+          )}
+          <BlurContainer isVisible={isPhotoLoaded}>
             <RoutesEditor
               isRoutesLayerVisible={!isSplitViewDragging && areRoutesVisible}
+              setIsPhotoLoaded={setIsPhotoLoaded}
             />
           </BlurContainer>
         </BackgroundContainer>
-
         <RouteList isEditable />
       </SplitPane>
 

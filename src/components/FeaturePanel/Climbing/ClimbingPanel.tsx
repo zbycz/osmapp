@@ -44,7 +44,7 @@ export const ClimbingPanel = () => {
 
   useEffect(() => {
     if (!isFullscreenDialogOpened) {
-      // @TODO create new state for closing fullscreen dialog
+      // @TODO create a new state for closing fullscreen dialog
       setIsEditMode(false);
       setPointSelectedIndex(null);
     }

@@ -37,6 +37,7 @@ export const ClimbingDialogHeader = ({
     '/images/jickovice1.jpg',
     '/images/jickovice2.jpg',
     '/images/jickovice3.jpg',
+    'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516',
   ];
 
   return (
