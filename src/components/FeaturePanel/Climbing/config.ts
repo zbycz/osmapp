@@ -1,7 +1,7 @@
 import { useTheme } from '@material-ui/core';
 
 export const useConfig = () => {
-  const theme = useTheme();
+  const theme: any = useTheme();
 
   const activeColor = theme.textSecondaryHighlight;
   const inactiveColor = theme.backgroundSurfaceElevation0;

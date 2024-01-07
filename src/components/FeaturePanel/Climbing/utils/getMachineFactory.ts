@@ -47,7 +47,7 @@ export const getMachineFactory = ({
   routes,
   updateRouteOnIndex,
   getPercentagePosition,
-  addOffsets: addOffsets,
+  addOffsets,
   findCloserPoint,
 }) => {
   const [currentState, setCurrentState] = useState<State>('init');
