@@ -248,7 +248,7 @@ export const routes1: ClimbingRoute[] = [
   },
   {
     id: '',
-    name: 'Krtkova Erekce',
+    name: 'Krtkova',
     difficulty: { grade: '5+', gradeSystem: 'uiaa' },
     length: '',
     author: '',

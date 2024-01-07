@@ -19,6 +19,11 @@ const ThumbnailContainer = styled.div<{ height: number }>`
   }
 `;
 
+const Heading = styled.div`
+  margin: 12px 8px 4px;
+  font-size: 20px;
+  font-weight: 700;
+`;
 const Thumbnail = styled.img`
   width: 100%;
   position: absolute;
@@ -28,12 +33,20 @@ export const ClimbingPanel = () => {
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(false);
 
-  const { setIsEditMode, handleImageLoad, imageSize, photoPath, photoRef } =
-    useClimbingContext();
+  const {
+    setIsEditMode,
+    handleImageLoad,
+    imageSize,
+    photoPath,
+    photoRef,
+    setPointSelectedIndex,
+  } = useClimbingContext();
 
   useEffect(() => {
     if (!isFullscreenDialogOpened) {
+      // @TODO create new state for closing fullscreen dialog
       setIsEditMode(false);
+      setPointSelectedIndex(null);
     }
   }, [isFullscreenDialogOpened]);
 
@@ -61,13 +74,16 @@ export const ClimbingPanel = () => {
 
           {!isFullscreenDialogOpened && (
             <>
+              <Heading>Jickovice: Hlavní oblast - patro</Heading>
               <ThumbnailContainer height={imageSize.height}>
                 <Thumbnail src={photoPath} ref={photoRef} />
+
                 <RoutesLayer onClick={() => null} />
                 <ShowFullscreen
                   onClick={() => setIsFullscreenDialogOpened(true)}
                 />
               </ThumbnailContainer>
+
               <RouteList />
             </>
           )}

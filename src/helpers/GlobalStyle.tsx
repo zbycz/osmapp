@@ -96,14 +96,38 @@ export const GlobalStyle = createGlobalStyle`
   .Resizer.horizontal {
     height: 15px;
     margin: -7px 0;
-
     z-index: 100000;
     cursor: row-resize;
+    display: flex;
+    justify-content: center;
+    &::before {
+      position: absolute;
+      content:'...';
+      border-radius: 6px;
+      width: 40px;
+      height: 12px;
+      background:${({ theme }) => theme.backgroundPrimarySubtleOnElevation0};
+      margin-top: 1px;
+      z-index: 1;
+      transition: all 0.1s ease;
+      border: solid 1px ${({ theme }) => theme.borderOnElevation0};
+      text-align: center;
+      line-height: 0px;
+      font-size:20px;
+      color: ${({ theme }) => theme.textPrimaryDefault};
+      letter-spacing: 1px;
+    }
+
     &:hover {
+      &::before {
+        background-color: ${({ theme }) => theme.borderSecondary};
+        border: solid 1px ${({ theme }) => theme.borderSecondary};
+        color: ${({ theme }) => theme.textOnPrimary};
+      }
       &::after {
       border-color: ${({ theme }) => theme.borderSecondary};
       transition: all 0.5s ease-out;
-      border-width: 3px;
+      border-width: 1px;
       margin-top: 6px;
 
     }
