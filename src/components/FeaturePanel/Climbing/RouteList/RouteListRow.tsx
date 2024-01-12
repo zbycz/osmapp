@@ -26,6 +26,8 @@ const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
 `;
 const NameCell = styled(Cell)`
   flex: 1;
+  font-weight: 900;
+  color: ${({ theme }) => theme.textPrimaryDefault};
 `;
 const RouteNumberCell = styled(Cell)`
   color: #999;
@@ -52,7 +54,7 @@ const EmptyValue = styled.div`
   color: #666;
 `;
 
-export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
+export const RenderListRow = ({ route, index, onRouteChange }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [tempRoute, setTempRoute] = useState(emptyRoute);
 
@@ -122,17 +124,7 @@ export const RenderListRow = ({ route, index, onRowClick, onRouteChange }) => {
 
   return (
     <Container ref={ref}>
-      <Row
-        onClick={() => {
-          if (isSelected) {
-            setRoutesExpanded(toggleElementInArray(routesExpanded, index));
-          } else {
-            onRowClick(index);
-          }
-        }}
-        selected={isSelected}
-        style={{ cursor: 'pointer' }}
-      >
+      <Row style={{ cursor: 'pointer' }}>
         {/* <Cell width={50}>
           <IconButton
             aria-label="expand row"

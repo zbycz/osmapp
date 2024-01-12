@@ -77,7 +77,7 @@ const DialogIcon = styled.div`
   top: 10px;
   right: 10px;
 `;
-export const ClimbingView = ({ fixedHeight = undefined }) => {
+export const ClimbingView = () => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
 
@@ -118,7 +118,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
 
   useEffect(() => {
     console.log('________LOAD');
-    if (!splitPaneHeight) setSplitPaneHeight(600);
+    // if (!splitPaneHeight) setSplitPaneHeight(600);
     handleImageLoad();
   }, []);
 
@@ -178,7 +178,7 @@ export const ClimbingView = ({ fixedHeight = undefined }) => {
         split="horizontal"
         minSize={0}
         maxSize="100%"
-        size={fixedHeight || splitPaneHeight}
+        size={splitPaneHeight || '60vh'}
         onDragStarted={onDragStarted}
         onDragFinished={onDragFinished}
         pane1Style={{ maxHeight: '100%' }}

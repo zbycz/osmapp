@@ -3,16 +3,30 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
+import { toggleElementInArray } from '../utils/array';
 
 type Item = {
   id: number;
   content: React.ReactNode;
 };
 
+const MaxWidthContainer = styled.div`
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: row;
+`;
 const Container = styled.div`
   width: 100%;
+
+  margin: 0 auto;
 `;
 const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
   background-color: ${({ isSelected }) =>
     isSelected ? '#ccc' : 'transparent'};
   background: ${({ isSelected, theme }) =>
@@ -24,9 +38,7 @@ const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
   /* background-color: ${({ isDraggedOver }) =>
     isDraggedOver ? '#f0f0f0' : 'transparent'}; */
   position: relative;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-start;
+
   font-size: 16px;
 `;
 const DragHandler = styled.div`
@@ -54,7 +66,7 @@ const HighlightedDropzone = styled.div<{ isActive: boolean }>`
 `;
 const TableHeader = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   font-weight: 700;
   color: ${({ theme }) => theme.textSubdued};
   font-size: 11px;
@@ -63,6 +75,7 @@ const TableHeader = styled.div`
   border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation1};
 `;
 const NameHeader = styled.div`
+  flex: 1;
   padding-left: 40px;
 `;
 const DifficultyHeader = styled.div`
@@ -79,6 +92,8 @@ export const RouteListDndContent = ({ isEditable }) => {
     isRouteSelected,
     isEditMode,
     getMachine,
+    setRoutesExpanded,
+    routesExpanded,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
   const machine = getMachine();
@@ -195,8 +210,10 @@ export const RouteListDndContent = ({ isEditable }) => {
   return (
     <Container>
       <TableHeader>
-        <NameHeader>Name</NameHeader>
-        <DifficultyHeader>Difficulty</DifficultyHeader>
+        <MaxWidthContainer>
+          <NameHeader>Name</NameHeader>
+          <DifficultyHeader>Difficulty</DifficultyHeader>
+        </MaxWidthContainer>
       </TableHeader>
       {items.map((item, index) => {
         // console.log('___', draggedItem?.id, index);
@@ -214,24 +231,34 @@ export const RouteListDndContent = ({ isEditable }) => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
+              onClick={() => {
+                if (isSelected) {
+                  setRoutesExpanded(
+                    toggleElementInArray(routesExpanded, index),
+                  );
+                } else {
+                  onRowClick(index);
+                }
+              }}
             >
-              {isEditMode && isEditable && (
-                <DragHandler
-                  draggable
-                  onDragStart={(e) => handleControlDragStart(e, item)}
-                  onDragEnd={handleControlDragEnd}
-                >
-                  <DragIndicatorIcon />
-                </DragHandler>
-              )}
-              <RowContent>
-                <RenderListRow
-                  route={item.route}
-                  onRowClick={onRowClick}
-                  onRouteChange={onRouteChange}
-                  index={index}
-                />
-              </RowContent>
+              <MaxWidthContainer>
+                {isEditMode && isEditable && (
+                  <DragHandler
+                    draggable
+                    onDragStart={(e) => handleControlDragStart(e, item)}
+                    onDragEnd={handleControlDragEnd}
+                  >
+                    <DragIndicatorIcon />
+                  </DragHandler>
+                )}
+                <RowContent>
+                  <RenderListRow
+                    route={item.route}
+                    onRouteChange={onRouteChange}
+                    index={index}
+                  />
+                </RowContent>
+              </MaxWidthContainer>
             </RowWithDragHandler>
             {draggedItem?.id <= index && (
               <HighlightedDropzone isActive={draggedOverIndex === index} />

@@ -34,7 +34,6 @@ const ExpandedRowContainer = styled.div<{ isExpanded?: boolean }>`
   transition: all 0.3s ease-out;
   min-height: 0;
   overflow: hidden;
-  background-color: ${({ theme }) => theme.backgroundSurfaceElevation2};
 `;
 
 const Value = styled.div``;

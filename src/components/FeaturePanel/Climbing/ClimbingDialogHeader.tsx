@@ -22,14 +22,22 @@ export const ClimbingDialogHeader = ({
   setIsFullscreenDialogOpened,
 }) => {
   const [isSettingsOpened, setIsSettingsOpened] = useState<boolean>(false);
-  const { areRoutesVisible, setPhotoPath, photoPath, handleImageLoad } =
-    useClimbingContext();
+  const {
+    areRoutesVisible,
+    setPhotoPath,
+    photoPath,
+    handleImageLoad,
+    setAreRoutesVisible,
+  } = useClimbingContext();
 
   const onPhotoChange = (photo: string) => {
+    // @TODO skrýt zobrazení cest
+    setAreRoutesVisible(false);
     setPhotoPath(photo);
     setTimeout(() => {
       // @TODO fix it without timeout
       handleImageLoad();
+      setAreRoutesVisible(true);
     }, 100);
   };
 
