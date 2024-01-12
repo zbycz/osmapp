@@ -31,7 +31,6 @@ export const ClimbingDialogHeader = ({
   } = useClimbingContext();
 
   const onPhotoChange = (photo: string) => {
-    // @TODO skrýt zobrazení cest
     setAreRoutesVisible(false);
     setPhotoPath(photo);
     setTimeout(() => {

@@ -93,6 +93,7 @@ export const ClimbingView = () => {
     editorPosition,
     photoPath,
     handleImageLoad,
+    setAreRoutesVisible,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -112,7 +113,7 @@ export const ClimbingView = () => {
   useEffect(() => {
     // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
     // setSplitPaneHeight();
-
+    setAreRoutesVisible(false);
     handleImageLoad();
   }, [splitPaneHeight]);
 

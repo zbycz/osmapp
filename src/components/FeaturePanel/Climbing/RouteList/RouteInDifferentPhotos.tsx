@@ -10,16 +10,23 @@ const Container = styled.div`
   flex-direction: column;
 `;
 
-export const RouteInDifferentPhotos = ({ route }: { route: ClimbingRoute }) => {
+export const RouteInDifferentPhotos = ({
+  route,
+  stopPropagation,
+}: {
+  route: ClimbingRoute;
+  stopPropagation: (e: any) => void;
+}) => {
   const { setPhotoPath, handleImageLoad, photoPath } = useClimbingContext();
 
-  const onPhotoChange = (photo: string) => {
+  const onPhotoChange = (e: any, photo: string) => {
     // @TODO probably move to machine state function
     setPhotoPath(photo);
     setTimeout(() => {
       // @TODO fix it without timeout
       handleImageLoad();
     }, 100);
+    stopPropagation(e);
   };
 
   const photos = Object.keys(route.paths);
@@ -30,7 +37,7 @@ export const RouteInDifferentPhotos = ({ route }: { route: ClimbingRoute }) => {
         {photos.map((photo) => (
           <PhotoLink
             isCurrentPhoto={photoPath === photo}
-            onClick={() => onPhotoChange(photo)}
+            onClick={(e) => onPhotoChange(e, photo)}
           >
             {photo}
           </PhotoLink>

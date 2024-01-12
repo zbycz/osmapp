@@ -207,6 +207,10 @@ export const RouteListDndContent = ({ isEditable }) => {
     setDraggedOverIndex(null);
   };
 
+  const stopPropagation = (e) => {
+    e.stopPropagation();
+  };
+
   return (
     <Container>
       <TableHeader>
@@ -256,6 +260,7 @@ export const RouteListDndContent = ({ isEditable }) => {
                     route={item.route}
                     onRouteChange={onRouteChange}
                     index={index}
+                    stopPropagation={stopPropagation}
                   />
                 </RowContent>
               </MaxWidthContainer>

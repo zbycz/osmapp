@@ -18,7 +18,7 @@ const Svg = styled.svg<{
   /* left: 0; */
   top: 0;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  transition: ${({ isVisible }) => (isVisible ? 'opacity 0.3s ease' : 'none')};
+  transition: ${({ isVisible }) => (isVisible ? 'opacity 0.1s ease' : 'none')};
   ${({ hasEditableCursor }) =>
     `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};
   ${({ imageSize: { width, height } }) =>

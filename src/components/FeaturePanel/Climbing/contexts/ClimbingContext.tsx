@@ -245,6 +245,8 @@ export const ClimbingContextProvider = ({ children }) => {
         height: window?.innerHeight,
       });
     }
+    console.log('___TU');
+    setAreRoutesVisible(true);
   };
 
   const climbingState = {

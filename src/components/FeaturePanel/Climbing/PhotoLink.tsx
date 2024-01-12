@@ -4,7 +4,7 @@ import styled from 'styled-components';
 type Props = {
   children: string;
   isCurrentPhoto: boolean;
-  onClick: () => void;
+  onClick: (e: any) => void;
 };
 
 const Container = styled.div<{ isCurrentPhoto: boolean }>`

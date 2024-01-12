@@ -87,7 +87,10 @@ export const ExpandedRow = ({
                 )}
               </ListItem>
               <ListItem>
-                <RouteInDifferentPhotos route={tempRoute} />
+                <RouteInDifferentPhotos
+                  route={tempRoute}
+                  stopPropagation={stopPropagation}
+                />
               </ListItem>
               <ListItem>
                 {!isReadOnly && (

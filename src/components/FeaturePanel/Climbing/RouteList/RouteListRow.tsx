@@ -54,7 +54,12 @@ const EmptyValue = styled.div`
   color: #666;
 `;
 
-export const RenderListRow = ({ route, index, onRouteChange }) => {
+export const RenderListRow = ({
+  route,
+  index,
+  onRouteChange,
+  stopPropagation,
+}) => {
   const ref = useRef<HTMLDivElement>(null);
   const [tempRoute, setTempRoute] = useState(emptyRoute);
 
@@ -92,9 +97,6 @@ export const RenderListRow = ({ route, index, onRouteChange }) => {
     onRouteChange(e, index, propName);
   };
 
-  const stopPropagation = (e) => {
-    e.stopPropagation();
-  };
   const debouncedValueChange = (e, propName) =>
     debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)(e);
 
