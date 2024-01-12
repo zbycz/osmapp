@@ -182,7 +182,8 @@ export const ClimbingView = () => {
         size={splitPaneHeight || '60vh'}
         onDragStarted={onDragStarted}
         onDragFinished={onDragFinished}
-        pane1Style={{ maxHeight: '100%' }}
+        pane1Style={{ maxHeight: '90%' }}
+        className="blabla"
       >
         <BackgroundContainer
           imageHeight={imageSize.height}
