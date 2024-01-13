@@ -8,7 +8,8 @@ import { RouteListDndContent } from './RouteListDndContent';
 import { addElementToArray, deleteFromArray } from '../utils/array';
 
 const Container = styled.div`
-  margin-bottom: 65px;
+  padding-bottom: 65px;
+  background-color: ${({ theme }) => theme.backgroundSurfaceElevationNegative};
 `;
 const ButtonContainer = styled.div`
   margin-top: 16px;

@@ -29,19 +29,26 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
+const ArrowExpanderContainer = styled.div`
   position: absolute;
-  z-index: 10000;
+  z-index: 1000000;
+  width: 100%;
+  top: -6px;
+`;
+
+const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   background: ${({ theme }) => theme.palette.background.default};
-  left: 50%;
+  /* left: 50%; */
   width: 30px;
-  border-radius: 0 0 50% 50%;
+  height: 30px;
+  margin: auto;
+  border-radius: 50%;
   ${({ arrowOnTop }) =>
     arrowOnTop
       ? undefined
       : `
   bottom: 0;
-  border-radius: 50% 50% 0 0 ;
+  border-radius: 50%;
   `};
   justify-content: center;
   display: flex;
@@ -65,18 +72,19 @@ const BackgroundContainer = styled.div<{
   background: #111
     ${({ isVisible, imageUrl }) =>
       isVisible ? `url(${imageUrl}) no-repeat` : ''};
-  background-size: 100% auto;
+  background-size: cover;
+  background-position: center;
   object-fit: cover;
   object-position: center;
   width: 100%;
   height: 100%;
 `;
 
-const DialogIcon = styled.div`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-`;
+// const DialogIcon = styled.div`
+//   position: absolute;
+//   top: 10px;
+//   right: 10px;
+// `;
 export const ClimbingView = () => {
   // https://js-image-viewer-article-ydp7qa.stackblitz.io
   // const [zoom, setZoom] = useState<number>(1);
@@ -93,7 +101,8 @@ export const ClimbingView = () => {
     editorPosition,
     photoPath,
     handleImageLoad,
-    setAreRoutesVisible,
+    setAreRoutesLoading,
+    areRoutesLoading,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -113,8 +122,8 @@ export const ClimbingView = () => {
   useEffect(() => {
     // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
     // setSplitPaneHeight();
-    setAreRoutesVisible(false);
     handleImageLoad();
+    setAreRoutesLoading(true);
   }, [splitPaneHeight]);
 
   useEffect(() => {
@@ -144,8 +153,8 @@ export const ClimbingView = () => {
     setIsSplitViewDragging(true);
   };
   const onDragFinished = (splitHeight) => {
-    setIsSplitViewDragging(false);
     setSplitPaneHeight(splitHeight);
+    setIsSplitViewDragging(false);
   };
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
 
@@ -160,30 +169,36 @@ export const ClimbingView = () => {
 
   return (
     <Container>
+      {/* <TransformWrapper doubleClick={{ step: 3 }}>
+        <TransformComponent>
+          <img src="/images/jickovice1.jpg" width={300} />
+        </TransformComponent>
+      </TransformWrapper> */}
       {(showArrowOnTop || showArrowOnBottom) && (
-        <ArrowExpanderButton arrowOnTop={showArrowOnTop}>
-          <IconButton
-            onClick={onSplitPaneHeightReset}
-            color="primary"
-            size="small"
-          >
-            {showArrowOnTop ? (
-              <ArrowDownwardIcon fontSize="small" />
-            ) : (
-              <ArrowUpwardIcon fontSize="small" />
-            )}
-          </IconButton>
-        </ArrowExpanderButton>
+        <ArrowExpanderContainer>
+          <ArrowExpanderButton arrowOnTop={showArrowOnTop}>
+            <IconButton
+              onClick={onSplitPaneHeightReset}
+              color="primary"
+              size="small"
+            >
+              {showArrowOnTop ? (
+                <ArrowDownwardIcon fontSize="small" />
+              ) : (
+                <ArrowUpwardIcon fontSize="small" />
+              )}
+            </IconButton>
+          </ArrowExpanderButton>
+        </ArrowExpanderContainer>
       )}
       <SplitPane
         split="horizontal"
         minSize={0}
         maxSize="100%"
-        size={splitPaneHeight || '60vh'}
+        size={splitPaneHeight ?? '60vh'}
         onDragStarted={onDragStarted}
         onDragFinished={onDragFinished}
         pane1Style={{ maxHeight: '90%' }}
-        className="blabla"
       >
         <BackgroundContainer
           imageHeight={imageSize.height}
@@ -197,7 +212,9 @@ export const ClimbingView = () => {
           )}
           <BlurContainer isVisible={isPhotoLoaded}>
             <RoutesEditor
-              isRoutesLayerVisible={!isSplitViewDragging && areRoutesVisible}
+              isRoutesLayerVisible={
+                !isSplitViewDragging && areRoutesVisible && !areRoutesLoading
+              }
               setIsPhotoLoaded={setIsPhotoLoaded}
             />
           </BlurContainer>
@@ -205,8 +222,8 @@ export const ClimbingView = () => {
         <RouteList isEditable />
       </SplitPane>
 
-      <DialogIcon>
-        {/* <IconButton
+      {/* <DialogIcon>
+        <IconButton
           color="secondary"
           edge="end"
           onClick={() => {
@@ -223,8 +240,8 @@ export const ClimbingView = () => {
           }}
         >
           <ZoomOutIcon fontSize="small" />
-        </IconButton> */}
-      </DialogIcon>
+        </IconButton>
+      </DialogIcon> */}
     </Container>
   );
 };

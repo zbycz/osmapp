@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
+import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { RoutesLayer } from './RoutesLayer';
 import { ControlPanel } from './ControlPanel';
 import { Guide } from '../Guide';
@@ -26,9 +27,11 @@ const ImageContainer = styled.div`
 `;
 
 const ImageElement = styled.img<{ zoom?: number }>`
-  /* max-width: 100%; */
+  /* max-width: 100vw; */
   /* max-height: 80vh; */
   /* object-fit: contain; */
+  object-fit: contain;
+  max-width: 100%;
   // transform: <scale(${({ zoom }) => zoom});
   transition: all 0.1s ease-in;
   height: 100%;
@@ -56,8 +59,10 @@ export const RoutesEditor = ({
     isLineInteractiveAreaHovered,
     handleImageLoad,
     photoRef,
+    setImageZoom,
   } = useClimbingContext();
   const machine = getMachine();
+  const [transformOrigin, setTransformOrigin] = useState({ x: 0, y: 0 });
 
   const onCanvasClick = (e) => {
     if (machine.currentStateName === 'extendRoute') {
@@ -124,13 +129,47 @@ export const RoutesEditor = ({
       {isEditMode && areRoutesVisible && <ControlPanel />}
       <EditorContainer imageHeight={imageSize.height}>
         <ImageContainer>
-          <ImageElement src={photoPath} onLoad={onPhotoLoad} ref={photoRef} />
+          <TransformWrapper
+            wheel={{ step: 100 }}
+            options={{
+              centerContent: false,
+              limitToBounds: false,
+            }}
+            onZoomStart={(ref, event) => {
+              console.log('____zoom', ref);
+              setTransformOrigin({ x: event.x, y: event.y });
+            }}
+            onTransformed={(
+              _ref,
+              state: { scale: number; positionX: number; positionY: number },
+            ) => {
+              setImageZoom(state);
+              console.log('____state', _ref, state);
+            }}
+          >
+            {(rest) => {
+              console.log('____rest', rest);
+              return (
+                <TransformComponent
+                  wrapperStyle={{ height: '100%' }}
+                  contentStyle={{ height: '100%' }}
+                >
+                  <ImageElement
+                    src={photoPath}
+                    onLoad={onPhotoLoad}
+                    ref={photoRef}
+                  />
+                </TransformComponent>
+              );
+            }}
+          </TransformWrapper>
         </ImageContainer>
         <RoutesLayer
           isVisible={isRoutesLayerVisible}
           onClick={onCanvasClick}
           onEditorMouseMove={onMouseMove}
           onEditorTouchMove={onTouchMove}
+          transformOrigin={transformOrigin}
         />
         {isEditMode && areRoutesVisible && <Guide />}
       </EditorContainer>

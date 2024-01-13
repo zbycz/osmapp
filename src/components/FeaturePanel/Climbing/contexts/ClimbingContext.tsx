@@ -25,6 +25,11 @@ type ImageSize = {
   width: number;
   height: number;
 };
+type ZoomState = {
+  scale: number;
+  positionX: number;
+  positionY: number;
+};
 
 type ClimbingContextType = {
   editorPosition: PositionPx;
@@ -73,8 +78,12 @@ type ClimbingContextType = {
   scrollOffset: PositionPx;
   setScrollOffset: (scrollOffset: PositionPx) => void;
   findCloserPoint: (position: Position) => Position | null;
+  imageZoom: ZoomState;
+  setImageZoom: (imageZoom: ZoomState) => void;
   areRoutesVisible: boolean;
   setAreRoutesVisible: (areRoutesVisible: boolean) => void;
+  areRoutesLoading: boolean;
+  setAreRoutesLoading: (areRoutesLoading: boolean) => void;
   mousePosition: PositionPx;
   setMousePosition: (mousePosition: PositionPx | null) => void;
   pointElement: null | HTMLElement;
@@ -111,6 +120,7 @@ export const ClimbingContextProvider = ({ children }) => {
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
+  const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
   const [isLineInteractiveAreaHovered, setIsLineInteractiveAreaHovered] =
     useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
@@ -122,6 +132,11 @@ export const ClimbingContextProvider = ({ children }) => {
     x: 0,
     y: 0,
     units: 'px',
+  });
+  const [imageZoom, setImageZoom] = useState<ZoomState>({
+    scale: 1,
+    positionX: 0,
+    positionY: 0,
   });
   const [viewportSize, setViewportSize] = useState<Size>({
     width: 0,
@@ -304,6 +319,10 @@ export const ClimbingContextProvider = ({ children }) => {
     filterDifficulty,
     setFilterDifficulty,
     photoRef,
+    areRoutesLoading,
+    setAreRoutesLoading,
+    imageZoom,
+    setImageZoom,
   };
 
   return (

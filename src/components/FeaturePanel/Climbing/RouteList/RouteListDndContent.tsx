@@ -235,8 +235,9 @@ export const RouteListDndContent = ({ isEditable }) => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
-              onClick={() => {
-                if (isSelected) {
+              onClick={(event) => {
+                const isDoubleClick = event.detail === 2;
+                if (isDoubleClick) {
                   setRoutesExpanded(
                     toggleElementInArray(routesExpanded, index),
                   );

@@ -27,16 +27,16 @@ export const ClimbingDialogHeader = ({
     setPhotoPath,
     photoPath,
     handleImageLoad,
-    setAreRoutesVisible,
+    setAreRoutesLoading,
   } = useClimbingContext();
 
   const onPhotoChange = (photo: string) => {
-    setAreRoutesVisible(false);
+    setAreRoutesLoading(true);
     setPhotoPath(photo);
     setTimeout(() => {
       // @TODO fix it without timeout
       handleImageLoad();
-      setAreRoutesVisible(true);
+      setAreRoutesLoading(false);
     }, 100);
   };
 

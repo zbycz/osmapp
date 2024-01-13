@@ -151,6 +151,7 @@ export const GlobalStyle = createGlobalStyle`
   .Pane2{
   overflow: auto;
 
+
   background:
     /* Shadow Cover TOP */ linear-gradient(
         black 30%,
