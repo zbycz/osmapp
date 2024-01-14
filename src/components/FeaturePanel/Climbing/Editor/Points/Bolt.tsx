@@ -3,7 +3,6 @@ import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
 import { PointProps } from './pointTypes';
 
-// eslint-disable-next-line  @typescript-eslint/no-unused-vars
 export const Bolt = ({
   x,
   y,

@@ -104,7 +104,7 @@ export const ClimbingView = () => {
     handleImageLoad,
     setAreRoutesLoading,
     areRoutesLoading,
-    setImageZoom, // TODO remove it from context
+    // setImageZoom, // TODO remove it from context
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -203,13 +203,7 @@ export const ClimbingView = () => {
           isVisible={isPhotoLoaded}
         >
           <BlurContainer isVisible={isPhotoLoaded}>
-            <TransformWrapper
-              wheel={{ step: 100 }}
-              options={{
-                centerContent: false,
-                limitToBounds: false,
-              }}
-            >
+            <TransformWrapper wheel={{ step: 100 }}>
               <TransformComponent
                 wrapperStyle={{ height: '100%', width: '100%' }}
                 contentStyle={{ height: '100%', width: '100%' }}

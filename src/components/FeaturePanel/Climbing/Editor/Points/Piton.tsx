@@ -2,7 +2,6 @@ import React from 'react';
 import { useConfig } from '../../config';
 import { PointProps } from './pointTypes';
 
-// eslint-disable-next-line  @typescript-eslint/no-unused-vars
 export const Piton = ({
   x,
   y,

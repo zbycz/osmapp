@@ -48,7 +48,7 @@ type Props = {
   onEditorMouseMove?: (e: any) => void;
   onEditorTouchMove?: (e: any) => void;
   isVisible?: boolean;
-  transformOrigin: any;
+  transformOrigin?: any;
   // imageSize: Size;
 };
 
