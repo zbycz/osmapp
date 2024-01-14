@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { TransformWrapper, TransformComponent } from 'react-zoom-pan-pinch';
 import { RoutesLayer } from './RoutesLayer';
 import { ControlPanel } from './ControlPanel';
 import { Guide } from '../Guide';
@@ -59,12 +58,13 @@ export const RoutesEditor = ({
     isLineInteractiveAreaHovered,
     handleImageLoad,
     photoRef,
-    setImageZoom,
   } = useClimbingContext();
   const machine = getMachine();
-  const [transformOrigin, setTransformOrigin] = useState({ x: 0, y: 0 });
+  const [transformOrigin] = useState({ x: 0, y: 0 }); // TODO remove ?
 
   const onCanvasClick = (e) => {
+    console.log("canvas click - not working now", { x: e.clientX, y: e.clientY })
+
     if (machine.currentStateName === 'extendRoute') {
       machine.execute('addPointToEnd', {
         position: { x: e.clientX, y: e.clientY },
@@ -129,40 +129,7 @@ export const RoutesEditor = ({
       {isEditMode && areRoutesVisible && <ControlPanel />}
       <EditorContainer imageHeight={imageSize.height}>
         <ImageContainer>
-          <TransformWrapper
-            wheel={{ step: 100 }}
-            options={{
-              centerContent: false,
-              limitToBounds: false,
-            }}
-            onZoomStart={(ref, event) => {
-              console.log('____zoom', ref);
-              setTransformOrigin({ x: event.x, y: event.y });
-            }}
-            onTransformed={(
-              _ref,
-              state: { scale: number; positionX: number; positionY: number },
-            ) => {
-              setImageZoom(state);
-              console.log('____state', _ref, state);
-            }}
-          >
-            {(rest) => {
-              console.log('____rest', rest);
-              return (
-                <TransformComponent
-                  wrapperStyle={{ height: '100%' }}
-                  contentStyle={{ height: '100%' }}
-                >
-                  <ImageElement
-                    src={photoPath}
-                    onLoad={onPhotoLoad}
-                    ref={photoRef}
-                  />
-                </TransformComponent>
-              );
-            }}
-          </TransformWrapper>
+          <ImageElement src={photoPath} onLoad={onPhotoLoad} ref={photoRef} />
         </ImageContainer>
         <RoutesLayer
           isVisible={isRoutesLayerVisible}

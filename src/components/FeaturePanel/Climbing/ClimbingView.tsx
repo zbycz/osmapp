@@ -7,6 +7,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { CircularProgress, IconButton } from '@material-ui/core';
 
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
 
@@ -103,6 +104,7 @@ export const ClimbingView = () => {
     handleImageLoad,
     setAreRoutesLoading,
     areRoutesLoading,
+    setImageZoom, // TODO remove it from context
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -169,11 +171,6 @@ export const ClimbingView = () => {
 
   return (
     <Container>
-      {/* <TransformWrapper doubleClick={{ step: 3 }}>
-        <TransformComponent>
-          <img src="/images/jickovice1.jpg" width={300} />
-        </TransformComponent>
-      </TransformWrapper> */}
       {(showArrowOnTop || showArrowOnBottom) && (
         <ArrowExpanderContainer>
           <ArrowExpanderButton arrowOnTop={showArrowOnTop}>
@@ -205,18 +202,35 @@ export const ClimbingView = () => {
           imageUrl={photoPath}
           isVisible={isPhotoLoaded}
         >
-          {!isPhotoLoaded && (
-            <LoadingContainer>
-              <CircularProgress />
-            </LoadingContainer>
-          )}
           <BlurContainer isVisible={isPhotoLoaded}>
-            <RoutesEditor
-              isRoutesLayerVisible={
-                !isSplitViewDragging && areRoutesVisible && !areRoutesLoading
-              }
-              setIsPhotoLoaded={setIsPhotoLoaded}
-            />
+            <TransformWrapper
+              wheel={{ step: 100 }}
+              options={{
+                centerContent: false,
+                limitToBounds: false,
+              }}
+            >
+              <TransformComponent
+                wrapperStyle={{ height: '100%', width: '100%' }}
+                contentStyle={{ height: '100%', width: '100%' }}
+              >
+                <>
+                  {!isPhotoLoaded && (
+                    <LoadingContainer>
+                      <CircularProgress />
+                    </LoadingContainer>
+                  )}
+                  <RoutesEditor
+                    isRoutesLayerVisible={
+                      !isSplitViewDragging &&
+                      areRoutesVisible &&
+                      !areRoutesLoading
+                    }
+                    setIsPhotoLoaded={setIsPhotoLoaded}
+                  />
+                </>
+              </TransformComponent>
+            </TransformWrapper>
           </BlurContainer>
         </BackgroundContainer>
         <RouteList isEditable />
