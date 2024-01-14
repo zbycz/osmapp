@@ -14,7 +14,7 @@ const AddNewPoint = styled.circle`
 
 export const RoutePath = ({ route, routeNumber }) => {
   // const [isHovered, setIsLineInteractiveAreaHovered] = useState(false);
-  const [isDraggingPoint, setIsDraggingPoint] = useState(false);
+  // const [isDraggingPoint, setIsDraggingPoint] = useState(false);
   const [tempPointPosition, setTempPointPosition] = useState<
     PositionPx & { lineIndex: number }
   >({
@@ -24,14 +24,14 @@ export const RoutePath = ({ route, routeNumber }) => {
     lineIndex: 0,
   });
   const {
-    routeSelectedIndex,
-    updateRouteOnIndex,
+    // routeSelectedIndex,
+    // updateRouteOnIndex,
     isPointMoving,
     isRouteSelected,
-    setPointSelectedIndex,
-    setIsPointMoving,
+    // setPointSelectedIndex,
+    // setIsPointMoving,
     getPixelPosition,
-    getPercentagePosition,
+    // getPercentagePosition,
     getMachine,
     isEditMode,
     addOffsets,
@@ -64,10 +64,10 @@ export const RoutePath = ({ route, routeNumber }) => {
         lineIndex,
       });
     }
-    if (isDraggingPoint) {
-      setPointSelectedIndex(tempPointPosition.lineIndex + 1);
-      setIsPointMoving(true);
-    }
+    // if (isDraggingPoint) {
+    //   setPointSelectedIndex(tempPointPosition.lineIndex + 1);
+    //   setIsPointMoving(true);
+    // }
   };
   const onMouseEnter = () => {
     console.log('__ENTER');
