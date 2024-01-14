@@ -16,15 +16,14 @@ const Svg = styled.svg<{
   imageZoom: any;
   transformOrigin: any;
 }>`
-  background: rgba(255, 0, 0, 0.5);
+  /* background: rgba(255, 0, 0, 0.5); */
   position: absolute;
   pointer-events: none;
   /* left: 0; */
   top: 0;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transition: ${({ isVisible }) => (isVisible ? 'opacity 0.1s ease' : 'none')};
-  transform-origin: ${({ transformOrigin }) =>
-    `${-transformOrigin.x}px ${-transformOrigin.y}`}px;
+  transform-origin: 0 0;
   transform: translate(
       ${({ imageZoom }) => `${imageZoom.positionX}px, ${imageZoom.positionY}px`}
     )
