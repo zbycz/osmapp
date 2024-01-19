@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { getSubclass, hasName } from "../../../helpers/featureLabel";
+import { getSubclass, hasName } from '../../../helpers/featureLabel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { t } from '../../../services/intl';
 import Maki from '../../utils/Maki';
-import { Feature } from '../../../services/types';
 
 const PoiType = styled.div`
   color: #fff;

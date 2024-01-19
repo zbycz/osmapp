@@ -114,7 +114,7 @@ async function fetchFeatureWithCenter(apiId: OsmApiId) {
 
 const shouldFetchMembers = (feature: Feature) =>
   feature.osmMeta.type === 'relation' &&
-  (feature.tags['climbing'] === 'crag' || feature.tags['climbing'] === 'area');
+  (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
 
 // TODO we can probably fetch full.json for all relations eg https://api.openstreetmap.org/api/0.6/relation/14334600/full.json - lets measure how long it takes for different sizes
 export const addMemberFeatures = async (feature: Feature) => {
@@ -129,7 +129,7 @@ export const addMemberFeatures = async (feature: Feature) => {
   const memberFeatures = await Promise.all(promises);
 
   const duration = Math.round(performance.now() - start);
-  console.log(`addMemberFeaturesToCrag took ${duration} ms`);
+  console.log(`addMemberFeaturesToCrag took ${duration} ms`); // eslint-disable-line no-console
 
   return {
     ...feature,

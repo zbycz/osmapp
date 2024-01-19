@@ -21,7 +21,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
-import { MemberFeatures } from "./MemberFeatures";
+import { MemberFeatures } from './MemberFeatures';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();

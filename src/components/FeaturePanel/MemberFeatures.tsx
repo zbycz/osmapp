@@ -1,13 +1,12 @@
-import Link from 'next/link';
 import React from 'react';
 import { Box, Typography } from '@material-ui/core';
+import Router from 'next/router';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
-import { getLabel, getSubclass } from '../../helpers/featureLabel';
+import { getLabel } from '../../helpers/featureLabel';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMobileMode } from '../helpers';
-import Router from 'next/router';
 import Maki from '../utils/Maki';
 
 const Item = ({ feature }: { feature: Feature }) => {
@@ -53,7 +52,12 @@ export const MemberFeatures = () => {
     return null;
   }
 
-  const heading = tags['climbing'] === 'crag' ? 'Routes' : tags['climbing'] === 'area' ? 'Crags' : 'Subitems';
+  const heading =
+    tags.climbing === 'crag'
+      ? 'Routes'
+      : tags.climbing === 'area'
+      ? 'Crags'
+      : 'Subitems';
   return (
     <Box mt={4}>
       <Typography variant="overline" display="block" color="textSecondary">
