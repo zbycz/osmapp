@@ -1,8 +1,11 @@
 import { Feature } from '../services/types';
 import { roundedToDeg } from '../utils';
 
-const getSubclass = ({ properties, osmMeta, schema }: Feature) =>
-  schema?.label || properties.subclass?.replace(/_/g, ' ') || osmMeta.type;
+export const getSubclass = ({ layer, osmMeta, properties, schema }: Feature) =>
+  schema?.label ||
+  properties.subclass?.replace(/_/g, ' ') ||
+  (layer && layer.id) || // layer.id specified only when maplibre-gl skeleton displayed
+  osmMeta.type;
 
 const getRef = (feature: Feature) =>
   feature.tags.ref ? `${getSubclass(feature)} ${feature.tags.ref}` : '';

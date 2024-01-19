@@ -21,6 +21,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
+import { MemberFeatures } from './MemberFeatures';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -56,6 +57,7 @@ export const FeaturePanel = () => {
                 key={getUrlOsmId(osmMeta) + (deleted && 'del')}
               />
 
+              <MemberFeatures />
               {advanced && <Members />}
 
               <PublicTransport tags={tags} />
