@@ -112,27 +112,29 @@ async function fetchFeatureWithCenter(apiId: OsmApiId) {
   return addSchemaToFeature(feature);
 }
 
-export const addMemberFeaturesToCrag = async (feature: Feature) => {
-  if (
-    feature.osmMeta.type === 'relation' &&
-    (feature.tags['climbing'] === 'crag' || feature.tags['climbing'] === 'area')
-  ) {
-    const start = performance.now();
+const shouldFetchMembers = (feature: Feature) =>
+  feature.osmMeta.type === 'relation' &&
+  (feature.tags['climbing'] === 'crag' || feature.tags['climbing'] === 'area');
 
-    const apiIds = feature.members.map(({ type, ref }) => ({ type, id: ref }));
-    const promises = apiIds.map((apiId) => fetchFeatureWithCenter(apiId)); // TODO optimize n+1 center-requests
-    const memberFeatures = await Promise.all(promises);
-
-    const duration = Math.round(performance.now() - start);
-    console.log(`addMemberFeaturesToCrag took ${duration} ms`);
-
-    return {
-      ...feature,
-      memberFeatures,
-    };
+// TODO we can probably fetch full.json for all relations eg https://api.openstreetmap.org/api/0.6/relation/14334600/full.json - lets measure how long it takes for different sizes
+export const addMemberFeatures = async (feature: Feature) => {
+  if (!shouldFetchMembers(feature)) {
+    return feature;
   }
 
-  return feature;
+  const start = performance.now();
+
+  const apiIds = feature.members.map(({ type, ref }) => ({ type, id: ref }));
+  const promises = apiIds.map((apiId) => fetchFeatureWithCenter(apiId)); // TODO optimize n+1 center-requests or fetch full
+  const memberFeatures = await Promise.all(promises);
+
+  const duration = Math.round(performance.now() - start);
+  console.log(`addMemberFeaturesToCrag took ${duration} ms`);
+
+  return {
+    ...feature,
+    memberFeatures,
+  };
 };
 
 export const fetchFeature = async (shortId): Promise<Feature> => {
@@ -143,7 +145,7 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
   try {
     const apiId = getApiId(shortId);
     const withCenter = await fetchFeatureWithCenter(apiId);
-    const withMembers = await addMemberFeaturesToCrag(withCenter);
+    const withMembers = await addMemberFeatures(withCenter);
 
     return withMembers;
   } catch (e) {
