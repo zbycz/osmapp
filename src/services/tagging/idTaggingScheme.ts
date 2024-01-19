@@ -1,11 +1,11 @@
-import { Feature, FeatureTags } from '../types';
-import { getFieldTranslation, getPresetTranslation } from './translations';
+import { Feature, FeatureTags, Position } from "../types";
+import { fetchSchemaTranslations, getFieldTranslation, getPresetTranslation } from "./translations";
 import { getPresetForFeature } from './presets';
 import { fields } from './data';
 import { computeAllFieldKeys, getValueForField } from './fields';
 import { Preset, UiField } from './types/Presets';
 import { publishDbgObject } from '../../utils';
-import { getShortId } from '../helpers';
+import { getShortId, OsmApiId } from "../helpers";
 import { Field } from './types/Fields';
 
 const logMoreMatchingFields = (matchingFields: Field[], key: string) => {

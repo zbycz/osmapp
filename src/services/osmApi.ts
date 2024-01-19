@@ -1,4 +1,4 @@
-import { getApiId, getShortId, getUrlOsmId, prod } from './helpers';
+import { getApiId, getShortId, getUrlOsmId, OsmApiId, prod } from './helpers';
 import { FetchError, fetchJson } from './fetch';
 import { Feature, Position } from './types';
 import { removeFetchCache } from './fetchCache';
@@ -97,6 +97,44 @@ const osmToFeature = (element): Feature => {
   };
 };
 
+async function fetchFeatureWithCenter(apiId: OsmApiId) {
+  const [element, center] = await Promise.all([
+    getOsmPromise(apiId),
+    getCenterPromise(apiId),
+    fetchSchemaTranslations(), // TODO this should be mocked in test??? could be moved to setIntl or something
+  ]);
+
+  const feature = osmToFeature(element);
+  if (center) {
+    feature.center = center;
+  }
+
+  return addSchemaToFeature(feature);
+}
+
+export const addMemberFeaturesToCrag = async (feature: Feature) => {
+  if (
+    feature.osmMeta.type === 'relation' &&
+    (feature.tags['climbing'] === 'crag' || feature.tags['climbing'] === 'area')
+  ) {
+    const start = performance.now();
+
+    const apiIds = feature.members.map(({ type, ref }) => ({ type, id: ref }));
+    const promises = apiIds.map((apiId) => fetchFeatureWithCenter(apiId)); // TODO optimize n+1 center-requests
+    const memberFeatures = await Promise.all(promises);
+
+    const duration = Math.round(performance.now() - start);
+    console.log(`addMemberFeaturesToCrag took ${duration} ms`);
+
+    return {
+      ...feature,
+      memberFeatures,
+    };
+  }
+
+  return feature;
+};
+
 export const fetchFeature = async (shortId): Promise<Feature> => {
   if (!shortId) {
     return null;
@@ -104,24 +142,17 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
   try {
     const apiId = getApiId(shortId);
-    const [element, center] = await Promise.all([
-      getOsmPromise(apiId),
-      getCenterPromise(apiId),
-      fetchSchemaTranslations(), // TODO this should be mocked in test??? could be moved to setIntl or something
-    ]);
+    const withCenter = await fetchFeatureWithCenter(apiId);
+    const withMembers = await addMemberFeaturesToCrag(withCenter);
 
-    const feature = osmToFeature(element);
-    if (center) {
-      feature.center = center;
-    }
-
-    return addSchemaToFeature(feature);
+    return withMembers;
   } catch (e) {
     console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
 
     const error = (
       e instanceof FetchError ? e.code : 'unknown'
     ) as Feature['error'];
+
     return {
       type: 'Feature',
       skeleton: true,

@@ -75,6 +75,7 @@ export interface Feature {
   };
   tags: FeatureTags;
   members?: RelationMember[];
+  memberFeatures?: Feature[];
   properties: {
     class: string;
     subclass: string;
