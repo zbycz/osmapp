@@ -18,17 +18,18 @@ export const RouteWithLabel = ({
   routeNumber,
   onPointInSelectedRouteClick,
 }: Props) => {
-  const { getPixelPosition, getPathForRoute, routes, photoPath } =
+  const { getPixelPosition, getPathForRoute, routes, photoPath, imageZoom } =
     useClimbingContext();
   const path = getPathForRoute(route);
   if (!route || !path || path?.length === 0) return null;
 
-  const shift = getShiftForStartPoint({
-    currentRouteSelectedIndex: routeNumber,
-    currentPosition: path[0],
-    checkedRoutes: routes,
-    photoPath,
-  });
+  const shift =
+    getShiftForStartPoint({
+      currentRouteSelectedIndex: routeNumber,
+      currentPosition: path[0],
+      checkedRoutes: routes,
+      photoPath,
+    }) / imageZoom.scale;
 
   const { x, y } = getPixelPosition({
     ...path[0],

@@ -5,6 +5,7 @@ import {
   Position,
   PositionPx,
   Size,
+  ZoomState,
 } from '../types';
 import { updateElementOnIndex } from '../utils/array';
 import { routes1 } from './mock';
@@ -24,11 +25,6 @@ import { GradeSystem } from '../utils/gradeTable';
 type ImageSize = {
   width: number;
   height: number;
-};
-type ZoomState = {
-  scale: number;
-  positionX: number;
-  positionY: number;
 };
 
 type ClimbingContextType = {
@@ -70,6 +66,7 @@ type ClimbingContextType = {
     entities: Array<CountPositionEntity>,
     position: PositionPx,
   ) => PositionPx;
+  addZoom: (position: PositionPx) => PositionPx;
   getMachine: () => {
     currentState: Partial<Record<StateAction, ActionWithCallback>>;
     currentStateName: State;
@@ -205,11 +202,12 @@ export const ClimbingContextProvider = ({ children }) => {
     getPathForRoute,
   });
 
-  const { getPixelPosition, getPercentagePosition, addOffsets } =
+  const { getPixelPosition, getPercentagePosition, addOffsets, addZoom } =
     positionUtilsFactory({
       editorPosition,
       scrollOffset,
       imageSize,
+      imageZoom,
     });
 
   const getMachine = getMachineFactory({
@@ -323,6 +321,7 @@ export const ClimbingContextProvider = ({ children }) => {
     setAreRoutesLoading,
     imageZoom,
     setImageZoom,
+    addZoom,
   };
 
   return (

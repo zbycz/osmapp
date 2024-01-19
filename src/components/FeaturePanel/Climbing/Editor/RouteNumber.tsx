@@ -10,9 +10,9 @@ type Props = {
   y: number;
 };
 
-const Text = styled.text`
+const Text = styled.text<{ scale: number }>`
   user-select: none;
-  font-size: 12px;
+  font-size: ${({ scale }) => 12 / scale}px;
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
 `;
@@ -26,15 +26,16 @@ const RouteNameOutline = RouteNameBoxBase;
 const RouteNameBox = RouteNameBoxBase;
 
 export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
-  const digits = String(routeNumber).length;
-  const RECT_WIDTH = (digits > 2 ? digits : 0) * 3 + 20;
-  const RECT_HEIGHT = 20;
-  const RECT_Y_OFFSET = 10;
-  const OUTLINE_WIDTH = 2;
-  const HOVER_WIDTH = 10;
-
-  const { imageSize, isRouteSelected, getMachine, isEditMode } =
+  const { imageSize, imageZoom, isRouteSelected, getMachine, isEditMode } =
     useClimbingContext();
+  const digits = String(routeNumber).length;
+  const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 20) / imageZoom.scale;
+  const RECT_HEIGHT = 20 / imageZoom.scale;
+  const RECT_Y_OFFSET = 10 / imageZoom.scale;
+  const OUTLINE_WIDTH = 2 / imageZoom.scale;
+  const HOVER_WIDTH = 10 / imageZoom.scale;
+  const TEXT_Y_SHIFT = 15 / imageZoom.scale;
+
   const config = useConfig();
 
   const getX = () => {
@@ -112,7 +113,8 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
       />
       <Text
         x={newX}
-        y={newY + 15}
+        y={newY + TEXT_Y_SHIFT}
+        scale={imageZoom.scale}
         fill={
           isSelected
             ? config.routeNumberTextColorSelected

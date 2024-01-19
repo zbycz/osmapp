@@ -40,4 +40,10 @@ export type ClimbingRoute = {
   paths: { [photoUrl: string]: PathPoints };
 };
 
+export type ZoomState = {
+  scale: number;
+  positionX: number;
+  positionY: number;
+};
+
 // images: Array<Array<ClimbingRoute>>

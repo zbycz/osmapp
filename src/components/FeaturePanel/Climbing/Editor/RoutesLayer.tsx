@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteFloatingMenu } from './RouteFloatingMenu';
-import { Position } from '../types';
+import { Position, ZoomState } from '../types';
 import { RouteMarks } from './RouteMarks';
 
 type RouteRenders = { route: React.ReactNode; marks: React.ReactNode };
@@ -13,21 +13,21 @@ const Svg = styled.svg<{
   hasEditableCursor: boolean;
   imageSize: { width: number; height: number };
   isVisible: boolean;
-  imageZoom: any;
+  imageZoom: ZoomState;
   transformOrigin: any;
 }>`
   /* background: rgba(255, 0, 0, 0.5); */
   position: absolute;
-  pointer-events: none;
+  /* pointer-events: none; */
   /* left: 0; */
   top: 0;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transition: ${({ isVisible }) => (isVisible ? 'opacity 0.1s ease' : 'none')};
   transform-origin: 0 0;
-  transform: translate(
+  /* transform: translate(
       ${({ imageZoom }) => `${imageZoom.positionX}px, ${imageZoom.positionY}px`}
     )
-    scale(${({ imageZoom }) => imageZoom.scale});
+    scale(${({ imageZoom }) => imageZoom.scale}); */
   ${({ hasEditableCursor }) =>
     `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};
   ${({ imageSize: { width, height } }) =>
@@ -75,7 +75,7 @@ export const RoutesLayer = ({
     setPointSelectedIndex,
     getCurrentPath,
     routes,
-    imageZoom,
+    // imageZoom,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -170,7 +170,7 @@ export const RoutesLayer = ({
         onTouchMove={onEditorTouchMove}
         imageSize={imageSize}
         isVisible={isVisible}
-        imageZoom={imageZoom}
+        // imageZoom={imageZoom}
         transformOrigin={transformOrigin}
       >
         {sortedRoutes.rest.map((item) => item.route)}

@@ -7,7 +7,11 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { CircularProgress, IconButton } from '@material-ui/core';
 
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+import {
+  TransformComponent,
+  TransformWrapper,
+  // MiniMap,
+} from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
 
@@ -102,9 +106,9 @@ export const ClimbingView = () => {
     editorPosition,
     photoPath,
     handleImageLoad,
-    setAreRoutesLoading,
+    // setAreRoutesLoading,
     areRoutesLoading,
-    // setImageZoom, // TODO remove it from context
+    setImageZoom, // TODO remove it from context
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -122,10 +126,8 @@ export const ClimbingView = () => {
   }, [isEditMode]);
 
   useEffect(() => {
-    // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
-    // setSplitPaneHeight();
     handleImageLoad();
-    setAreRoutesLoading(true);
+    // setAreRoutesLoading(true);
   }, [splitPaneHeight]);
 
   useEffect(() => {
@@ -135,7 +137,7 @@ export const ClimbingView = () => {
   }, []);
 
   const onSplitPaneHeightReset = () => {
-    setSplitPaneHeight(300);
+    setSplitPaneHeight(null);
   };
 
   React.useEffect(() => {
@@ -203,7 +205,24 @@ export const ClimbingView = () => {
           isVisible={isPhotoLoaded}
         >
           <BlurContainer isVisible={isPhotoLoaded}>
-            <TransformWrapper wheel={{ step: 100 }}>
+            <TransformWrapper
+              wheel={{ step: 100 }}
+              onTransformed={(
+                _ref,
+                state: { scale: number; positionX: number; positionY: number },
+              ) => {
+                setImageZoom(state);
+                // console.log('____state', _ref, state);
+              }}
+            >
+              {/* {isPhotoLoaded && (
+                <MiniMap width={200}>
+                  <RoutesEditor
+                    isRoutesLayerVisible={false}
+                    setIsPhotoLoaded={setIsPhotoLoaded}
+                  />
+                </MiniMap>
+              )} */}
               <TransformComponent
                 wrapperStyle={{ height: '100%', width: '100%' }}
                 contentStyle={{ height: '100%', width: '100%' }}

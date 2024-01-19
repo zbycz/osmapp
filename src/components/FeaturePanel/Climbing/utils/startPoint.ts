@@ -1,6 +1,6 @@
 import { Position, ClimbingRoute } from '../types';
 
-const SHIFT_WIDTH = 15;
+const SHIFT_WIDTH = 18;
 
 export const getShiftForStartPoint = ({
   currentPosition: { x, y },

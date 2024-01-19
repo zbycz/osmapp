@@ -3,8 +3,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { useConfig } from '../config';
 
-const RouteLine = styled.path``;
-const RouteBorder = styled.path``;
+const RouteLine = styled.path`
+  pointer-events: all;
+`;
+const RouteBorder = styled.path`
+  pointer-events: all;
+`;
 
 export const PathWithBorder = ({ d, isSelected, ...props }) => {
   const config = useConfig();

@@ -6,7 +6,9 @@ import { PositionPx } from '../types';
 import { PathWithBorder } from './PathWithBorder';
 import { MouseTrackingLine } from './MouseTrackingLine';
 
-const InteractiveArea = styled.line``;
+const InteractiveArea = styled.line`
+  pointer-events: all;
+`;
 const AddNewPoint = styled.circle`
   pointer-events: none;
   cursor: copy;
@@ -38,6 +40,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     isLineInteractiveAreaHovered,
     setIsLineInteractiveAreaHovered,
     getPathForRoute,
+    // addZoom,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
@@ -55,12 +58,17 @@ export const RoutePath = ({ route, routeNumber }) => {
       machine.currentStateName === 'extendRoute'
     ) {
       if (!isLineInteractiveAreaHovered) setIsLineInteractiveAreaHovered(true);
+
+      const position = addOffsets(['editorPosition'], {
+        x: e.clientX,
+        y: e.clientY,
+        units: 'px',
+      });
+
+      // const positionWithZoom = addZoom(position);
+      // console.log('____ZOOM', position, positionWithZoom);
       setTempPointPosition({
-        ...addOffsets(['editorPosition'], {
-          x: e.clientX,
-          y: e.clientY,
-          units: 'px',
-        }),
+        ...position,
         lineIndex,
       });
     }
@@ -91,7 +99,7 @@ export const RoutePath = ({ route, routeNumber }) => {
   //   console.log('____onMouseUp');
   //   setIsDraggingPoint(false);
   // };
-
+  console.log('________', tempPointPosition);
   const hoveredPosition = addOffsets(['scrollOffset'], {
     x: tempPointPosition.x,
     y: tempPointPosition.y,
@@ -199,15 +207,17 @@ export const RoutePath = ({ route, routeNumber }) => {
           }
           return null;
         })}
-      {isEditableSelectedRouteHovered && (
-        <AddNewPoint
-          cx={hoveredPosition.x}
-          cy={hoveredPosition.y}
-          fill="white"
-          stroke="rgba(0,0,0,0.3)"
-          r={5}
-        />
-      )}
+      {isEditableSelectedRouteHovered &&
+        hoveredPosition.x !== 0 &&
+        hoveredPosition.y !== 0 && (
+          <AddNewPoint
+            cx={hoveredPosition.x}
+            cy={hoveredPosition.y}
+            fill="white"
+            stroke="rgba(0,0,0,0.3)"
+            r={5}
+          />
+        )}
       {machine.currentStateName === 'extendRoute' &&
         !isLineInteractiveAreaHovered && (
           <MouseTrackingLine routeNumber={routeNumber} />

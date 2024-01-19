@@ -1,6 +1,7 @@
 import React from 'react';
 import { useConfig } from '../../config';
 import { PointProps } from './pointTypes';
+import { useClimbingContext } from '../../contexts/ClimbingContext';
 
 export const Anchor = ({
   x,
@@ -10,6 +11,7 @@ export const Anchor = ({
   pointerEvents,
 }: PointProps) => {
   const config = useConfig();
+  const { imageZoom } = useClimbingContext();
   const size = 5;
 
   const foregroundColor = isPointSelected
@@ -21,7 +23,7 @@ export const Anchor = ({
 
   return (
     <g
-      transform={` translate(${x + 15} ${y})`}
+      transform={`translate(${x + 15} ${y}) scale(${1 / imageZoom.scale})`}
       cursor="help"
       onClick={onClick}
       pointerEvents={pointerEvents}

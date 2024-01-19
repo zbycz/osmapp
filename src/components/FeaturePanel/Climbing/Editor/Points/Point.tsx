@@ -10,6 +10,7 @@ const ClickableArea = styled.circle`
 
 const PointElement = styled.circle<{ isHovered: boolean }>`
   transition: all 0.1s ease-in-out;
+  pointer-events: all;
   touch-action: none;
   ${({ isHovered, isPointSelected }) =>
     `${
