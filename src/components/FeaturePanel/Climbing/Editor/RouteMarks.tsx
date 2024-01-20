@@ -3,7 +3,7 @@ import { Bolt } from './Points/Bolt';
 import { Piton } from './Points/Piton';
 import { Point } from './Points/Point';
 import { PulsedPoint } from './Points/PulsedPoint';
-import { Sling } from './Points/Sling';
+import { Sling } from './Points/Sling.1';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Anchor } from './Points/Anchor';
 import { ClimbingRoute } from '../types';

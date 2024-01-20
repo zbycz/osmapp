@@ -106,7 +106,6 @@ export const ClimbingView = () => {
     editorPosition,
     photoPath,
     handleImageLoad,
-    // setAreRoutesLoading,
     areRoutesLoading,
     setImageZoom, // TODO remove it from context
   } = useClimbingContext();
@@ -132,7 +131,6 @@ export const ClimbingView = () => {
 
   useEffect(() => {
     console.log('________LOAD');
-    // if (!splitPaneHeight) setSplitPaneHeight(600);
     handleImageLoad();
   }, []);
 
@@ -143,9 +141,6 @@ export const ClimbingView = () => {
   React.useEffect(() => {
     window.addEventListener('resize', () => handleImageLoad());
     window.addEventListener('orientationchange', () => handleImageLoad());
-
-    // @TODO tady někde počítat šířku obrázku a nastavit podle toho výšku
-    // setSplitPaneHeight();
 
     return () => {
       window.removeEventListener('resize', () => handleImageLoad());

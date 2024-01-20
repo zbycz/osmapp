@@ -99,7 +99,7 @@ export const RoutePath = ({ route, routeNumber }) => {
   //   console.log('____onMouseUp');
   //   setIsDraggingPoint(false);
   // };
-  console.log('________', tempPointPosition);
+  // console.log('________', tempPointPosition);
   const hoveredPosition = addOffsets(['scrollOffset'], {
     x: tempPointPosition.x,
     y: tempPointPosition.y,

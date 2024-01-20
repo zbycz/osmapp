@@ -56,6 +56,7 @@ export const Point = ({
     pointElement,
     setPointElement,
     setIsLineInteractiveAreaHovered,
+    imageZoom,
   } = useClimbingContext();
 
   const onClick = (e) => {
@@ -71,12 +72,15 @@ export const Point = ({
     setIsHovered(false);
     setIsLineInteractiveAreaHovered(false);
   };
+
   const onMouseDown = () => {
+    console.log('____onMouseDown');
     setPointSelectedIndex(index);
     setIsPointClicked(true);
   };
 
   const onMouseUp = (e) => {
+    console.log('____onMouseUp');
     // @TODO unify with RouteMarks.tsx
     if (!isPointMoving) {
       console.log('________onMouseUp');
@@ -91,6 +95,11 @@ export const Point = ({
     }
   };
 
+  const onTouchMove = () => {
+    // setIsPointMoving(true);
+    // console.log('___MOVE', isPointMoving);
+  };
+
   const isPointSelected =
     routeSelectedIndex === routeNumber && pointSelectedIndex === index;
   const { pointColor, pointStroke } = usePointColor(type, isHovered);
@@ -102,7 +111,10 @@ export const Point = ({
     cursor: 'pointer',
     onMouseEnter,
     onMouseLeave,
+
     onMouseDown,
+    onTouchMove,
+    onPointerMove: onTouchMove,
     onMouseUp,
     onTouchStart: onMouseDown,
     onTouchEnd: onMouseUp,
@@ -112,7 +124,7 @@ export const Point = ({
   const title = type && <title>{type}</title>;
 
   return (
-    <g transform={`translate(${x},${y})`}>
+    <g transform={`translate(${x},${y}) scale(${1 / imageZoom.scale})`}>
       <ClickableArea
         fill="transparent"
         r={isTouchDevice ? 20 : 10}

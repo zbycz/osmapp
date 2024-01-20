@@ -34,6 +34,9 @@ const Svg = styled.svg<{
     `width: ${width}px;
     height:${height}px;
     /*height: 100%;*/
+    > * {
+      -webkit-tap-highlight-color: transparent
+    }
     `}
 `;
 
@@ -59,7 +62,7 @@ export const RoutesLayer = ({
   isVisible = true,
   transformOrigin = { x: 0, y: 0 },
 }: Props) => {
-  console.log('____transformOrigin', transformOrigin);
+  // console.log('____transformOrigin', transformOrigin);
   const {
     imageSize,
     pointSelectedIndex,
@@ -147,7 +150,7 @@ export const RoutesLayer = ({
       ? getPixelPosition(path[path.length - 1])
       : null;
 
-  console.log('______P', path, pointSelectedIndex, path[pointSelectedIndex]);
+  // console.log('______P', path, pointSelectedIndex, path[pointSelectedIndex]);
   const selectedPointOfSelectedRoute =
     pointSelectedIndex !== null && path.length > 0 && routes[routeSelectedIndex]
       ? getPixelPosition(path[pointSelectedIndex])
@@ -168,6 +171,7 @@ export const RoutesLayer = ({
         onMouseUp={handleMovingPointDrop}
         onMouseMove={onEditorMouseMove}
         onTouchMove={onEditorTouchMove}
+        onPointerMove={onEditorTouchMove}
         imageSize={imageSize}
         isVisible={isVisible}
         // imageZoom={imageZoom}

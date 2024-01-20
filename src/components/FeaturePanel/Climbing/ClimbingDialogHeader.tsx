@@ -9,9 +9,11 @@ import { PhotoLink } from './PhotoLink';
 
 const Title = styled.div`
   flex: 1;
+  overflow: hidden;
 `;
 const PhotoLinks = styled.div`
   display: flex;
+  flex-wrap: wrap;
   flex-direction: row;
   gap: 4px;
   margin-bottom: 2px;
@@ -36,7 +38,6 @@ export const ClimbingDialogHeader = ({
     setTimeout(() => {
       // @TODO fix it without timeout
       handleImageLoad();
-      setAreRoutesLoading(false);
     }, 100);
   };
 
@@ -51,16 +52,16 @@ export const ClimbingDialogHeader = ({
     <AppBar position="static" color="transparent">
       <Toolbar variant="dense">
         <Title>
-          <Typography variant="h6" component="div">
+          <Typography noWrap variant="h6" component="div">
             Jickovice: Hlavní oblast - patro
           </Typography>
           <PhotoLinks>
-            {photos.map((photo) => (
+            {photos.map((photo, index) => (
               <PhotoLink
                 onClick={() => onPhotoChange(photo)}
                 isCurrentPhoto={photo === photoPath}
               >
-                {photo}
+                {index}
               </PhotoLink>
             ))}
           </PhotoLinks>

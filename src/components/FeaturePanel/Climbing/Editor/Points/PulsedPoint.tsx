@@ -32,12 +32,16 @@ const PulsedPointElement = styled.circle`
 `;
 
 export const PulsedPoint = ({ x, y }) => {
-  const { getPixelPosition } = useClimbingContext();
+  const { getPixelPosition, imageZoom } = useClimbingContext();
   const position = getPixelPosition({ x, y, units: 'percentage' });
 
   const config = useConfig();
   return (
-    <g transform={`translate(${position.x},${position.y})`}>
+    <g
+      transform={`translate(${position.x},${position.y}) scale(${
+        1 / imageZoom.scale
+      })`}
+    >
       <PulsedPointElement
         cx="0"
         cy="0"

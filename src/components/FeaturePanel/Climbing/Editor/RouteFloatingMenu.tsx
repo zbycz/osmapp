@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import CheckIcon from '@material-ui/icons/Check';
 import AddLocationIcon from '@material-ui/icons/AddLocation';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -15,6 +16,10 @@ import {
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PointType } from '../types';
 
+const ScaleContainer = styled.div<{ scale: number }>`
+  transform: scale(${({ scale }) => 1 / scale});
+`;
+
 export const RouteFloatingMenu = () => {
   const [isDeletePointDialogVisible, setIsDeletePointDialogVisible] =
     useState(false);
@@ -25,6 +30,7 @@ export const RouteFloatingMenu = () => {
     routes,
     routeSelectedIndex,
     getCurrentPath,
+    imageZoom,
   } = useClimbingContext();
   const machine = getMachine();
 
@@ -74,71 +80,74 @@ export const RouteFloatingMenu = () => {
       </Dialog>
 
       {showTypeMenu ? (
-        <ButtonGroup variant="contained" size="small" color="primary">
-          <Button
-            onClick={() => {
-              setShowTypeMenu(false);
-            }}
-            startIcon={<ArrowBackIcon />}
-          />
-          <Button
-            onClick={() => {
-              onPointTypeChange('bolt');
-            }}
-          >
-            Bolt
-          </Button>
-          <Button
-            onClick={() => {
-              onPointTypeChange('anchor');
-            }}
-          >
-            Belay
-          </Button>
-          <Button
-            onClick={() => {
-              onPointTypeChange('sling');
-            }}
-          >
-            Sling
-          </Button>
-          <Button
-            onClick={() => {
-              onPointTypeChange('piton');
-            }}
-          >
-            Piton
-          </Button>
-          <Button
-            onClick={() => {
-              onPointTypeChange(null);
-            }}
-          >
-            None
-          </Button>
-        </ButtonGroup>
-      ) : (
-        <ButtonGroup variant="contained" size="small" color="primary">
-          {machine.currentStateName === 'pointMenu' &&
-            routes[routeSelectedIndex] &&
-            pointSelectedIndex === getCurrentPath().length - 1 && (
-              <Button
-                onClick={onContinueClimbingRouteClick}
-                startIcon={<AddLocationIcon />}
-              >
-                Extend
-              </Button>
-            )}
-          {machine.currentStateName === 'pointMenu' && (
+        <ScaleContainer scale={imageZoom.scale}>
+          <ButtonGroup variant="contained" size="small" color="primary">
             <Button
               onClick={() => {
-                setShowTypeMenu(true);
+                setShowTypeMenu(false);
+              }}
+              startIcon={<ArrowBackIcon />}
+            />
+            <Button
+              onClick={() => {
+                onPointTypeChange('bolt');
               }}
             >
-              Type
+              Bolt
             </Button>
-          )}
-          {/* {machine.currentStateName === 'pointMenu' && (
+            <Button
+              onClick={() => {
+                onPointTypeChange('anchor');
+              }}
+            >
+              Belay
+            </Button>
+            <Button
+              onClick={() => {
+                onPointTypeChange('sling');
+              }}
+            >
+              Sling
+            </Button>
+            <Button
+              onClick={() => {
+                onPointTypeChange('piton');
+              }}
+            >
+              Piton
+            </Button>
+            <Button
+              onClick={() => {
+                onPointTypeChange(null);
+              }}
+            >
+              None
+            </Button>
+          </ButtonGroup>
+        </ScaleContainer>
+      ) : (
+        <ScaleContainer scale={imageZoom.scale}>
+          <ButtonGroup variant="contained" size="small" color="primary">
+            {machine.currentStateName === 'pointMenu' &&
+              routes[routeSelectedIndex] &&
+              pointSelectedIndex === getCurrentPath().length - 1 && (
+                <Button
+                  onClick={onContinueClimbingRouteClick}
+                  startIcon={<AddLocationIcon />}
+                >
+                  Extend
+                </Button>
+              )}
+            {machine.currentStateName === 'pointMenu' && (
+              <Button
+                onClick={() => {
+                  setShowTypeMenu(true);
+                }}
+              >
+                Type
+              </Button>
+            )}
+            {/* {machine.currentStateName === 'pointMenu' && (
         <Button onClick={() => {}} startIcon={<CloseIcon />}>
           Bolt
         </Button>
@@ -148,22 +157,23 @@ export const RouteFloatingMenu = () => {
           Belay
         </Button>
       )} */}
-          {machine.currentStateName === 'pointMenu' && (
-            <Button
-              onClick={toggleDeletePointDialog}
-              startIcon={<DeleteIcon />}
-            />
-          )}
+            {machine.currentStateName === 'pointMenu' && (
+              <Button
+                onClick={toggleDeletePointDialog}
+                startIcon={<DeleteIcon />}
+              />
+            )}
 
-          {machine.currentStateName === 'extendRoute' && (
-            <Button
-              onClick={onFinishClimbingRouteClick}
-              startIcon={<CheckIcon />}
-            >
-              Done
-            </Button>
-          )}
-        </ButtonGroup>
+            {machine.currentStateName === 'extendRoute' && (
+              <Button
+                onClick={onFinishClimbingRouteClick}
+                startIcon={<CheckIcon />}
+              >
+                Done
+              </Button>
+            )}
+          </ButtonGroup>
+        </ScaleContainer>
       )}
     </>
   );

@@ -1,6 +1,7 @@
 import React from 'react';
 import { useConfig } from '../../config';
 import { PointProps } from './pointTypes';
+import { useClimbingContext } from '../../contexts/ClimbingContext';
 
 export const Piton = ({
   x,
@@ -10,6 +11,7 @@ export const Piton = ({
   pointerEvents,
 }: PointProps) => {
   const config = useConfig();
+  const { imageZoom } = useClimbingContext();
 
   const foregroundColor = isPointSelected
     ? config.anchorColorSelected
@@ -20,7 +22,7 @@ export const Piton = ({
 
   return (
     <g
-      transform={` translate(${x - 4} ${y - 6})`}
+      transform={` translate(${x - 4} ${y - 6}) scale(${1 / imageZoom.scale})`}
       cursor="help"
       onClick={onClick}
       pointerEvents={pointerEvents}

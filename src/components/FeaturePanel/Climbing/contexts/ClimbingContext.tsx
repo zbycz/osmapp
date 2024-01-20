@@ -260,6 +260,7 @@ export const ClimbingContextProvider = ({ children }) => {
     }
     console.log('___TU');
     setAreRoutesVisible(true);
+    setAreRoutesLoading(false);
   };
 
   const climbingState = {
