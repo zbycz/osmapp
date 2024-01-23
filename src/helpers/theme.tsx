@@ -145,7 +145,7 @@ const customTheme = {
 const lightTheme = createMuiTheme({
   palette: {
     primary: {
-      main: customTheme.light.backgroundPrimaryDefault,
+      main: '#556cd6',
     },
     secondary: {
       main: '#737373',
@@ -177,7 +177,7 @@ const darkTheme = createMuiTheme({
   palette: {
     type: 'dark',
     primary: {
-      main: customTheme.dark.backgroundPrimaryDefault,
+      main: '#ffb74d',
     },
     secondary: {
       main: '#737373',
