@@ -17,20 +17,32 @@ const {
   publicRuntimeConfig: { languages },
 } = getConfig();
 
-const getLangFromCtx = (ctx) => {
+const resolveCurrentLang = (ctx) => {
+  const langInUrl = ctx.locale;
+
+  // language is forced by URL prefix
+  if (languages[langInUrl]) {
+    ctx.res.setHeader('set-cookie', `lang=${langInUrl}; Path=/`);
+    return langInUrl;
+  }
+
+  // app is usually used without lang prefix (cookie or accept-language)
   const { lang } = nextCookies(ctx);
-  if (lang && languages[lang]) return lang;
+  if (lang && languages[lang]) {
+    return lang;
+  }
 
   return getLangFromAcceptHeader(ctx, Object.keys(languages)) ?? DEFAULT_LANG;
 };
 
 export const getServerIntl = async (ctx) => {
-  const lang = getLangFromCtx(ctx);
+  const lang = resolveCurrentLang(ctx);
   const vocabulary = await getMessages('vocabulary');
   const messages = lang === DEFAULT_LANG ? {} : await getMessages(lang);
-  const intl = {
+
+  return {
     lang,
+    languages,
     messages: { ...vocabulary, ...messages },
   };
-  return intl;
 };

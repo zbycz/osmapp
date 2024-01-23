@@ -13,8 +13,9 @@ import {
   RemoveUserLayerAction,
 } from './helpers';
 import { osmappLayers } from './osmappLayers';
-import { Layer, useMapStateContext } from '../utils/MapStateContext';
+import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
 import { usePersistedState } from '../utils/usePersistedState';
+import { isViewInsideAfrica } from '../Map/styles/makinaAfricaStyle';
 
 const StyledList = styled(List)`
   .MuiListItemIcon-root {
@@ -36,14 +37,16 @@ const Spacer = styled.div`
   padding-bottom: 1.5em;
 `;
 
-const getAllLayers = (userLayers: Layer[]): Layer[] => {
-  const spacer = { type: 'spacer' as const, key: 'userSpacer' };
+const getAllLayers = (userLayers: Layer[], view: View): Layer[] => {
+  const spacer: Layer = { type: 'spacer' as const, key: 'userSpacer' };
+  const toLayer = ([key, layer]) => ({ ...layer, key });
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const filterMakina = ([key, _]) =>
+    key === 'makinaAfrica' ? isViewInsideAfrica(view) : true; // needs suppressHydrationWarning
 
   return [
-    ...Object.entries(osmappLayers).map(([key, layer]) => ({
-      ...layer,
-      key,
-    })),
+    ...Object.entries(osmappLayers).filter(filterMakina).map(toLayer),
     ...(userLayers.length ? [spacer] : []),
     ...userLayers.map((layer) => ({
       ...layer,
@@ -55,15 +58,19 @@ const getAllLayers = (userLayers: Layer[]): Layer[] => {
 };
 
 export const LayerSwitcherContent = () => {
-  const { activeLayers, setActiveLayers } = useMapStateContext();
+  const { view, activeLayers, setActiveLayers } = useMapStateContext();
   const [userLayers, setUserLayers] = usePersistedState('userLayers', []);
-  const layers = getAllLayers(userLayers);
+  const layers = getAllLayers(userLayers, view);
 
   return (
     <>
       <LayersHeader headingId="layerSwitcher-heading" />
 
-      <StyledList dense aria-labelledby="layerSwitcher-heading">
+      <StyledList
+        dense
+        aria-labelledby="layerSwitcher-heading"
+        suppressHydrationWarning
+      >
         {layers.map(({ key, name, type, url, Icon }) => {
           if (type === 'spacer') {
             return <Spacer key={key} />;

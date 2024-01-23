@@ -78,6 +78,7 @@ const MapDataLink = () => {
     if (attribution === 'maptiler')
       return (
         <Attribution
+          key={attribution}
           label="MapTiler"
           link="https://www.maptiler.com/"
           title={<Translation id="map.maptiler_copyright_tooltip" />}
@@ -86,16 +87,22 @@ const MapDataLink = () => {
     if (attribution === 'osm')
       return (
         <Attribution
+          key={attribution}
           label={short ? 'OSM' : 'OpenStreetMap'}
           link="https://www.openstreetmap.org/"
           title={<Translation id="map.osm_copyright_tooltip" />}
         />
       );
 
-    return <span dangerouslySetInnerHTML={{ __html: attribution }} />; // eslint-disable-line react/no-danger
+    return (
+      <span
+        key={attribution}
+        dangerouslySetInnerHTML={{ __html: attribution }} // eslint-disable-line react/no-danger
+      />
+    );
   });
 
-  // place a separator between attributions
+  // place a space between attributions
   for (let i = 1; i < nodes.length; i += 2) {
     nodes.splice(i, 0, ' ');
   }

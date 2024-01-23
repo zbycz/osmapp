@@ -1,4 +1,4 @@
-import { osmJsonToSkeletons } from '../overpassSearch';
+import { overpassGeomToGeojson } from '../overpassSearch';
 
 /*
 [out:json][timeout:25];
@@ -20,6 +20,36 @@ const response = {
   },
   elements: [
     {
+      type: 'node',
+      id: 761541677,
+      lat: 49.9594996,
+      lon: 14.3231551,
+      tags: {
+        highway: 'crossing',
+        crossing: 'marked',
+      },
+    },
+    {
+      type: 'way',
+      id: 11005021,
+      bounds: {
+        minlat: 49.9414065,
+        minlon: 14.2801555,
+        maxlat: 49.944281,
+        maxlon: 14.2929424,
+      },
+      nodes: [73359754, 9441919612, 97951778],
+      geometry: [
+        { lat: 49.9414065, lon: 14.2929424 },
+        { lat: 49.942755, lon: 14.2892883 },
+        { lat: 49.944281, lon: 14.2801555 },
+      ],
+      tags: {
+        highway: 'track',
+        tracktype: 'grade3',
+      },
+    },
+    {
       type: 'relation',
       id: 8337908,
       bounds: {
@@ -37,30 +67,6 @@ const response = {
           lon: 14.3409309,
         },
         {
-          type: 'node',
-          ref: 4303193147,
-          role: 'platform',
-          lat: 49.9560895,
-          lon: 14.3420546,
-        },
-        {
-          type: 'node',
-          ref: 5650107055,
-          role: 'platform',
-          lat: 49.95976,
-          lon: 14.35261,
-        },
-        {
-          type: 'way',
-          ref: 143079042,
-          role: '',
-          geometry: [
-            { lat: 49.9510996, lon: 14.3406283 },
-            { lat: 49.9512392, lon: 14.340966 },
-            { lat: 49.9512882, lon: 14.3409961 },
-          ],
-        },
-        {
           type: 'way',
           ref: 431070311,
           role: '',
@@ -72,75 +78,9 @@ const response = {
           ],
         },
         {
-          type: 'way',
-          ref: 143079039,
-          role: '',
-          geometry: [
-            { lat: 49.9512723, lon: 14.3405453 },
-            { lat: 49.9512769, lon: 14.3403348 },
-            { lat: 49.9512638, lon: 14.3402265 },
-            { lat: 49.9512376, lon: 14.3399046 },
-            { lat: 49.9512538, lon: 14.3397224 },
-            { lat: 49.9513307, lon: 14.3396011 },
-            { lat: 49.9514674, lon: 14.339525 },
-            { lat: 49.9516502, lon: 14.3394962 },
-            { lat: 49.9519514, lon: 14.3395323 },
-            { lat: 49.9524812, lon: 14.3397353 },
-            { lat: 49.9528361, lon: 14.3398737 },
-            { lat: 49.9529293, lon: 14.3399175 },
-            { lat: 49.9533275, lon: 14.3401047 },
-            { lat: 49.9536045, lon: 14.3402959 },
-            { lat: 49.9543101, lon: 14.340794 },
-            { lat: 49.9555376, lon: 14.3415765 },
-            { lat: 49.9564591, lon: 14.3422582 },
-            { lat: 49.9569866, lon: 14.3425944 },
-            { lat: 49.9574162, lon: 14.3429583 },
-            { lat: 49.9576284, lon: 14.3431366 },
-            { lat: 49.9578467, lon: 14.3434496 },
-            { lat: 49.9582484, lon: 14.3441399 },
-            { lat: 49.9588316, lon: 14.3454072 },
-            { lat: 49.9589787, lon: 14.3459137 },
-            { lat: 49.9590815, lon: 14.3465416 },
-          ],
-        },
-        {
-          type: 'way',
-          ref: 538959927,
-          role: '',
-          geometry: [
-            { lat: 49.9590815, lon: 14.3465416 },
-            { lat: 49.9596598, lon: 14.3496964 },
-            { lat: 49.9598834, lon: 14.3509159 },
-            { lat: 49.959959, lon: 14.3513285 },
-            { lat: 49.9600528, lon: 14.3518402 },
-            { lat: 49.9600898, lon: 14.3520419 },
-            { lat: 49.9602015, lon: 14.3522125 },
-          ],
-        },
-        {
-          type: 'way',
-          ref: 311389592,
-          role: '',
-          geometry: [
-            { lat: 49.9598062, lon: 14.3530042 },
-            { lat: 49.9598857, lon: 14.3529381 },
-            { lat: 49.9599703, lon: 14.3528484 },
-            { lat: 49.9600301, lon: 14.3527557 },
-            { lat: 49.9600872, lon: 14.3526668 },
-            { lat: 49.9601506, lon: 14.3525137 },
-            { lat: 49.9602015, lon: 14.3522125 },
-          ],
-        },
-        {
-          type: 'way',
-          ref: 166349501,
-          role: '',
-          geometry: [
-            { lat: 49.9598062, lon: 14.3530042 },
-            { lat: 49.9597388, lon: 14.3526991 },
-            { lat: 49.9596846, lon: 14.3526796 },
-            { lat: 49.9595677, lon: 14.3527257 },
-          ],
+          type: 'relation',
+          ref: 388266,
+          role: 'subarea',
         },
       ],
       tags: {
@@ -160,11 +100,80 @@ const response = {
   ],
 };
 
-const skeletons = [
+const geojson = [
   {
+    center: [14.3231551, 49.9594996],
     geometry: {
+      coordinates: [14.3231551, 49.9594996],
+      type: 'Point',
+    },
+    id: 7615416770,
+    osmMeta: {
+      id: 761541677,
+      type: 'node',
+    },
+    properties: {
+      class: 'information',
+      crossing: 'marked',
+      highway: 'crossing',
+      osmappType: 'node',
+      subclass: 'crossing',
+    },
+    tags: {
+      crossing: 'marked',
+      highway: 'crossing',
+    },
+    type: 'Feature',
+  },
+  {
+    center: [14.28654895, 49.942843749999994],
+    geometry: {
+      coordinates: [
+        [14.2929424, 49.9414065],
+        [14.2892883, 49.942755],
+        [14.2801555, 49.944281],
+      ],
       type: 'LineString',
     },
+    id: 110050211,
+    osmMeta: {
+      id: 11005021,
+      type: 'way',
+    },
+    properties: {
+      class: 'information',
+      highway: 'track',
+      osmappType: 'way',
+      subclass: 'track',
+      tracktype: 'grade3',
+    },
+    tags: {
+      highway: 'track',
+      tracktype: 'grade3',
+    },
+    type: 'Feature',
+  },
+  {
+    center: [14.3407707, 49.95124845],
+    geometry: {
+      geometries: [
+        {
+          coordinates: [14.3409309, 49.9511921],
+          type: 'Point',
+        },
+        {
+          coordinates: [
+            [14.3409961, 49.9512882],
+            [14.3408764, 49.9513048],
+            [14.3406756, 49.9512958],
+            [14.3405453, 49.9512723],
+          ],
+          type: 'LineString',
+        },
+      ],
+      type: 'GeometryCollection',
+    },
+    id: 83379084,
     osmMeta: {
       id: 8337908,
       type: 'relation',
@@ -175,6 +184,7 @@ const skeletons = [
       name: '243: Kazín ⇒ Lipence',
       network: 'PID',
       operator: 'cz:DPP',
+      osmappType: 'relation',
       'public_transport:version': '2',
       ref: '243',
       route: 'bus',
@@ -202,5 +212,5 @@ const skeletons = [
 ];
 
 test('conversion', () => {
-  expect(osmJsonToSkeletons(response)).toEqual(skeletons);
+  expect(overpassGeomToGeojson(response)).toEqual(geojson);
 });

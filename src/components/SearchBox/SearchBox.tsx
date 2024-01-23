@@ -80,6 +80,7 @@ fetchSchemaTranslations().then(() => {
   presetsForSearch = Object.values(presets)
     .filter(({ searchable }) => searchable === undefined || searchable)
     .filter(({ locationSet }) => !locationSet?.include)
+    .filter(({ tags }) => Object.keys(tags).length > 0)
     .map(({ name, presetKey, tags, terms }) => {
       const tagsAsStrings = Object.entries(tags).map(([k, v]) => `${k}=${v}`);
       return {
@@ -121,7 +122,7 @@ const findInPresets = (inputValue) => {
     .filter((result) => result.name === 0 && result.sum > 0)
     .map((result) => ({ preset: result }));
 
-  // // experiment with sorting by number of matches
+  // // experiment with sorting by number of matches // TODO search in all words
   // const options = results
   //   .filter((result) => result.sum > 0)
   //   .sort((a, b) => {
@@ -170,11 +171,13 @@ const fetchOptions = debounce(
 
 const useFetchOptions = (inputValue: string, setOptions) => {
   const { view } = useMapStateContext();
+
   useEffect(() => {
     if (inputValue === '') {
       setOptions([]);
       return;
     }
+
     if (inputValue.length > 2) {
       const overpassQuery = getOverpassQuery(inputValue);
       const { nameMatches, rest } = findInPresets(inputValue);
@@ -185,10 +188,11 @@ const useFetchOptions = (inputValue: string, setOptions) => {
       ]);
       const before = [...overpassQuery, ...nameMatches];
       fetchOptions(inputValue, view, setOptions, before, rest);
-    } else {
-      setOptions([{ loader: true }]);
-      fetchOptions(inputValue, view, setOptions);
+      return;
     }
+
+    setOptions([{ loader: true }]);
+    fetchOptions(inputValue, view, setOptions);
   }, [inputValue]);
 };
 

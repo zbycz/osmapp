@@ -1,10 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { hasName } from '../../../helpers/featureLabel';
+import { getSubclass, hasName } from '../../../helpers/featureLabel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { t } from '../../../services/intl';
 import Maki from '../../utils/Maki';
-import { Feature } from '../../../services/types';
 
 const PoiType = styled.div`
   color: #fff;
@@ -22,12 +21,6 @@ const PoiType = styled.div`
     left: 20px;
   }
 `;
-
-const getSubclass = ({ layer, osmMeta, properties, schema }: Feature) =>
-  schema?.label ||
-  properties.subclass?.replace(/_/g, ' ') ||
-  (layer && layer.id) || // layer.id specified only when maplibre-gl skeleton displayed
-  osmMeta.type;
 
 export const PoiDescription = () => {
   const { feature } = useFeatureContext();

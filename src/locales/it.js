@@ -54,7 +54,7 @@ export default {
   'featurepanel.error_network': 'Impossibile recuperare l’elemento, controlla il tuo cavo di rete.',
   'featurepanel.error_deleted': 'Questo oggetto è segnato come eliminato su OpenStreetMap.',
   'featurepanel.history_button': 'Cronologia »',
-  'featurepanel.other_info_heading': 'Altre informationi',
+  'featurepanel.details_heading': 'Altre informationi',
   'featurepanel.edit_button_title': 'Modifica nel database OpenStreetMap',
   'featurepanel.edit_button': 'Modifica luogo',
   'featurepanel.add_place_button': 'Aggiungi luogo',

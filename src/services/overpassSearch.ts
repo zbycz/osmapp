@@ -1,4 +1,4 @@
-import { Feature, LineString, Point } from './types';
+import { Feature, GeometryCollection, LineString, Point } from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
@@ -15,10 +15,7 @@ const overpassQuery = (bbox, tags) => {
     way${query}(${bbox});
     relation${query}(${bbox});
   );
-  out body;
-  >;
-  out skel qt;`;
-  // consider: out body geom
+  out geom qt;`; // "out geom;>;out geom qt;" to get all full subitems as well
 };
 
 const getOverpassUrl = ([a, b, c, d], tags) =>
@@ -26,48 +23,27 @@ const getOverpassUrl = ([a, b, c, d], tags) =>
     overpassQuery([d, a, b, c], tags),
   )}`;
 
-const notNull = (x) => x != null;
+const GEOMETRY = {
+  node: ({ lat, lon }): Point => ({ type: 'Point', coordinates: [lon, lat] }),
 
-// maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
-export const osmJsonToSkeletons = (response: any): Feature[] => {
-  const nodesById = response.elements
-    .filter((element) => element.type === 'node')
-    .reduce((acc, node) => {
-      acc[node.id] = node;
-      return acc;
-    }, {});
+  way: ({ geometry }): LineString => ({
+    type: 'LineString',
+    coordinates: geometry.map(({ lat, lon }) => [lon, lat]),
+  }),
 
-  const getGeometry2 = {
-    node: ({ lat, lon }): Point => ({ type: 'Point', coordinates: [lon, lat] }),
-    way: (way): LineString => {
-      const { nodes } = way;
-      return {
-        type: 'LineString', // TODO distinguish area - match id-presets, then add icon for polygons
-        coordinates: nodes
-          ?.map((nodeId) => nodesById[nodeId])
-          .map(({ lat, lon }) => [lon, lat]),
-      };
-    },
-    relation: ({ members }): LineString => ({
-      type: 'LineString',
-      coordinates: members[0]?.geometry // TODO make proper relation handling
-        ?.filter(notNull)
-        ?.map(({ lat, lon }) => [lon, lat]),
-    }),
-  };
-
-  return response.elements.map((element) => {
-    const { type, id, tags = {} } = element;
-    const geometry = getGeometry2[type]?.(element);
-    return {
-      type: 'Feature',
-      osmMeta: { type, id },
-      tags,
-      properties: { ...getPoiClass(tags), ...tags },
-      geometry,
-      center: getCenter(geometry) ?? undefined,
-    };
-  });
+  relation: ({ members }): GeometryCollection => ({
+    type: 'GeometryCollection',
+    geometries:
+      members
+        ?.map((el) =>
+          el.type === 'node'
+            ? GEOMETRY.node(el)
+            : el.type === 'way'
+            ? GEOMETRY.way(el)
+            : null,
+        )
+        .filter(Boolean) ?? [],
+  }),
 };
 
 const convertOsmIdToMapId = (apiId: OsmApiId) => {
@@ -75,22 +51,33 @@ const convertOsmIdToMapId = (apiId: OsmApiId) => {
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-export async function performOverpassSearch(
+// maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
+
+export const overpassGeomToGeojson = (response: any): Feature[] =>
+  response.elements.map((element) => {
+    const { type, id, tags = {} } = element;
+    const geometry = GEOMETRY[type]?.(element);
+    return {
+      type: 'Feature',
+      id: convertOsmIdToMapId({ type, id }),
+      osmMeta: { type, id },
+      tags,
+      properties: { ...getPoiClass(tags), ...tags, osmappType: type },
+      geometry,
+      center: getCenter(geometry) ?? undefined,
+    };
+  });
+
+export const performOverpassSearch = async (
   bbox,
   tags: Record<string, string>,
-) {
+) => {
   console.log('seaching overpass for tags: ', tags); // eslint-disable-line no-console
   const overpass = await fetchJson(getOverpassUrl(bbox, Object.entries(tags)));
   console.log('overpass result:', overpass); // eslint-disable-line no-console
 
-  const features = osmJsonToSkeletons(overpass)
-    .filter((feature) => feature.center && Object.keys(feature.tags).length > 0)
-    .map((feature) => ({
-      ...feature,
-      id: convertOsmIdToMapId(feature.osmMeta),
-    }));
-
+  const features = overpassGeomToGeojson(overpass);
   console.log('overpass geojson', features); // eslint-disable-line no-console
 
   return { type: 'FeatureCollection', features };
-}
+};

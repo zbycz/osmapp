@@ -106,7 +106,7 @@ export const Coords = ({ coords }: Props) => {
   const osmappLink = getFullOsmappLink(feature);
 
   return (
-    <span title="latitude, longitude (y, x)">
+    <span title="latitude, longitude (y, x)" ref={anchorRef}>
       {positionToDeg(coords)}
       <Menu
         anchorEl={anchorRef.current}
@@ -122,7 +122,7 @@ export const Coords = ({ coords }: Props) => {
         <CopyTextItem text={positionToDM(coords)} />
         <CopyTextItem text={osmappLink} />
       </Menu>
-      <ToggleButton onClick={open} ref={anchorRef} />
+      <ToggleButton onClick={open} />
     </span>
   );
 };
