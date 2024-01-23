@@ -20,7 +20,6 @@ export const GlobalStyle = createGlobalStyle`
     right: 0;
     bottom: 0;
     left: 0;
-    overscroll-behavior: none;
   }
 
   a, .linkLikeButton {
