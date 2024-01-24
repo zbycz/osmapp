@@ -35,7 +35,7 @@ const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
   /* &:nth-child(2n) {
     ${({ isSelected }) => !isSelected && `background-color: #f5f5f5`};
   } */
-  border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation0};
+  //border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation0};
   /* background-color: ${({ isDraggedOver }) =>
     isDraggedOver ? '#f0f0f0' : 'transparent'}; */
   position: relative;
@@ -73,7 +73,7 @@ const TableHeader = styled.div`
   font-size: 11px;
   padding-top: 12px;
   padding-bottom: 4px;
-  border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation1};
+  //border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation1};
 `;
 const NameHeader = styled.div`
   flex: 1;

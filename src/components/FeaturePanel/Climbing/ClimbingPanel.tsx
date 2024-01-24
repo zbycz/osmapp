@@ -21,8 +21,9 @@ const ThumbnailContainer = styled.div<{ height: number }>`
 
 const Heading = styled.div`
   margin: 12px 8px 4px;
-  font-size: 20px;
-  font-weight: 700;
+  font-size: 36px;
+  line-height: 0.98;
+  color: ${({ theme }) => theme.palette.text.panelHeading};
 `;
 const Thumbnail = styled.img`
   width: 100%;
@@ -74,7 +75,6 @@ export const ClimbingPanel = () => {
 
           {!isFullscreenDialogOpened && (
             <>
-              <Heading>Jickovice: Hlavní oblast - patro</Heading>
               <ThumbnailContainer height={imageSize.height}>
                 <Thumbnail src={photoPath} ref={photoRef} />
 
@@ -83,6 +83,7 @@ export const ClimbingPanel = () => {
                   onClick={() => setIsFullscreenDialogOpened(true)}
                 />
               </ThumbnailContainer>
+              <Heading>Jickovice: Hlavní oblast - patro</Heading>
 
               <RouteList />
             </>

@@ -9,7 +9,7 @@ import { addElementToArray, deleteFromArray } from '../utils/array';
 
 const Container = styled.div`
   padding-bottom: 65px;
-  background-color: ${({ theme }) => theme.backgroundSurfaceElevationNegative};
+  background-color: ${({ theme }) => theme.panelBackground};
 `;
 const ButtonContainer = styled.div`
   margin-top: 16px;

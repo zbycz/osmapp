@@ -34,7 +34,7 @@ const RouteNumberCell = styled(Cell)`
   margin-left: 8px;
 `;
 const ExpandIcon = styled(ExpandMoreIcon)<{ isExpanded: boolean }>`
-  transform: rotate(${({ isExpanded }) => (isExpanded ? 0 : 180)}deg);
+  transform: rotate(${({ isExpanded }) => (isExpanded ? 180 : 0)}deg);
   transition: all 0.3s ease !important;
 `;
 
@@ -175,7 +175,6 @@ export const RenderListRow = ({
               setRoutesExpanded(toggleElementInArray(routesExpanded, index));
               stopPropagation(e);
             }}
-            color="primary"
             size="small"
             title="Toggle"
           >
