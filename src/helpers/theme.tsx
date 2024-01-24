@@ -156,7 +156,6 @@ const lightTheme = createMuiTheme({
     background: {
       default: '#fff',
       hover: '#f2f3f2',
-      paper: customTheme.light.backgroundSurfaceElevationNegative,
       searchBox: '#eb5757',
       mapFooter: '#f8f4f0', // same as osm-bright
     },
@@ -187,7 +186,6 @@ const darkTheme = createMuiTheme({
     },
     background: {
       default: grey['800'],
-      paper: customTheme.dark.backgroundSurfaceElevationNegative,
       hover: grey['700'],
       searchBox: '#963838',
       mapFooter: grey['800'],
