@@ -61,7 +61,7 @@ export const RenderListRow = ({
   stopPropagation,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [tempRoute, setTempRoute] = useState(emptyRoute);
+  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(emptyRoute);
 
   const getText = (text: string) => text || <EmptyValue>?</EmptyValue>;
 
@@ -162,9 +162,9 @@ export const RenderListRow = ({
         <Cell width={50}>
           {getText(
             convertGrade(
-              tempRoute.difficulty.gradeSystem,
+              tempRoute.difficulty?.gradeSystem,
               selectedRouteSystem,
-              tempRoute.difficulty.grade,
+              tempRoute.difficulty?.grade,
             ),
           )}
         </Cell>

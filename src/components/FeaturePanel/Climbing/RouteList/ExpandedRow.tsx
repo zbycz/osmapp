@@ -122,8 +122,8 @@ export const ExpandedRow = ({
                   <div>
                     <Label>Difficulty</Label>
                     <Value>
-                      {getText(tempRoute.difficulty.grade)} (
-                      {getText(tempRoute.difficulty.gradeSystem)})
+                      {getText(tempRoute.difficulty?.grade)} (
+                      {getText(tempRoute.difficulty?.gradeSystem)})
                     </Value>
                   </div>
                 )}

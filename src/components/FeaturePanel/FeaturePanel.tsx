@@ -70,7 +70,7 @@ export const FeaturePanel = () => {
 
   if (tags.climbing === 'crag') {
     return (
-      <ClimbingContextProvider>
+      <ClimbingContextProvider feature={feature}>
         <ClimbingPanel footer={footer} />
       </ClimbingContextProvider>
     );

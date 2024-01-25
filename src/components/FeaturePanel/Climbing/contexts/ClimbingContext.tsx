@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useRef, useState } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useContext,
+  useRef,
+  useState,
+} from 'react';
 import {
   ClimbingRoute,
   PathPoints,
@@ -8,19 +14,20 @@ import {
   ZoomState,
 } from '../types';
 import { updateElementOnIndex } from '../utils/array';
-import { routes1 } from './mock';
 import { findCloserPointFactory } from '../utils/findCloserPoint';
 import {
   ActionWithCallback,
+  getMachineFactory,
   State,
   StateAction,
-  getMachineFactory,
 } from '../utils/getMachineFactory';
 import {
   CountPositionEntity,
   positionUtilsFactory,
 } from '../utils/positionUtilsFactory';
 import { GradeSystem } from '../utils/gradeTable';
+import { Feature } from '../../../../services/types';
+import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 
 type ImageSize = {
   width: number;
@@ -107,12 +114,19 @@ type ClimbingContextType = {
 // @TODO generate?
 export const ClimbingContext = createContext<ClimbingContextType | null>(null);
 
-export const ClimbingContextProvider = ({ children }) => {
+type Props = {
+  children: ReactNode;
+  feature: Feature;
+};
+
+export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const photoRef = useRef(null);
   const [photoPath, setPhotoPath] = useState<string>('/images/jickovice1.jpg'); // photo, should be null
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-  const [routes, setRoutes] = useState<Array<ClimbingRoute>>(routes1);
+  const [routes, setRoutes] = useState<Array<ClimbingRoute>>(
+    osmToClimbingRoutes(feature),
+  );
   const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
