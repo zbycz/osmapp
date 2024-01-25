@@ -30,8 +30,8 @@ const Flex = styled.div`
 `;
 
 const ExpandedRowContainer = styled.div<{ isExpanded?: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded === false ? 0 : 'auto')};
-  transition: all 0.3s ease-out;
+  height: ${({ isExpanded }) => (isExpanded === false ? 0 : '200px')};
+  transition: all 0.1s ease-in-out;
   min-height: 0;
   overflow: hidden;
 `;

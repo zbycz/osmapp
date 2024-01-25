@@ -85,7 +85,7 @@ export const RenderListRow = ({
     if (routeSelectedIndex === index) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [routeSelectedIndex, routesExpanded]);
+  }, [routeSelectedIndex]);
 
   const isSelected = isRouteSelected(index);
   const hasRoute = hasPath(index);

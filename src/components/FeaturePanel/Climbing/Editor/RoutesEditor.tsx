@@ -111,7 +111,7 @@ export const RoutesEditor = ({
   };
 
   const onTouchMove = (e) => {
-    console.log('____onTouchMove');
+    // console.log('____onTouchMove');
     // onMove({ x: e.touches[0].clientX, y: e.touches[0].clientY, units: 'px' });
     onMove({ x: e.clientX, y: e.clientY, units: 'px' });
   };

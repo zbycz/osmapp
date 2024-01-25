@@ -9,6 +9,9 @@ const Container = styled.div`
   display: flex;
   flex-direction: column;
 `;
+const Row = styled.div`
+  display: flex;
+`;
 
 export const RouteInDifferentPhotos = ({
   route,
@@ -33,16 +36,16 @@ export const RouteInDifferentPhotos = ({
   return photos.length > 0 ? (
     <Container>
       <Label>Available in photos:</Label>
-      <div>
-        {photos.map((photo) => (
+      <Row>
+        {photos.map((photo, index) => (
           <PhotoLink
             isCurrentPhoto={photoPath === photo}
             onClick={(e) => onPhotoChange(e, photo)}
           >
-            {photo}
+            {index}
           </PhotoLink>
         ))}
-      </div>
+      </Row>
     </Container>
   ) : (
     <Label>Route is not marked in any photo</Label>
