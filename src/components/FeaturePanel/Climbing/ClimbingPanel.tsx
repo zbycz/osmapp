@@ -6,6 +6,8 @@ import { RoutesLayer } from './Editor/RoutesLayer';
 import { RouteList } from './RouteList/RouteList';
 import { FullscreenIconContainer, ShowFullscreen } from './ShowFullscreen';
 import { ClimbingDialog } from './ClimbingDialog';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { getLabel } from '../../../helpers/featureLabel';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -30,9 +32,12 @@ const Thumbnail = styled.img`
   position: absolute;
 `;
 
-export const ClimbingPanel = () => {
+export const ClimbingPanel = ({ footer }) => {
   const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
     useState<boolean>(false);
+
+  const { feature } = useFeatureContext();
+  const label = getLabel(feature);
 
   const {
     setIsEditMode,
@@ -83,11 +88,14 @@ export const ClimbingPanel = () => {
                   onClick={() => setIsFullscreenDialogOpened(true)}
                 />
               </ThumbnailContainer>
-              <Heading>Jickovice: Hlavní oblast - patro</Heading>
+              <Heading>{label}</Heading>
 
               <RouteList />
             </>
           )}
+
+          {/* TODO unite with parent panel */}
+          <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
         </PanelScrollbars>
       </PanelWrapper>
     </>
