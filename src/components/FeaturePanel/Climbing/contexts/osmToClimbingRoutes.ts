@@ -29,6 +29,7 @@ function getPathsByImage(tags: FeatureTags) {
 }
 
 export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
+  if (!feature.memberFeatures) return [];
   const routes = feature.memberFeatures.filter(({ tags }) =>
     ['route', 'route_bottom'].includes(tags.climbing),
   );
