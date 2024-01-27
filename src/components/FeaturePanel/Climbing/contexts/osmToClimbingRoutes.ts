@@ -23,6 +23,7 @@ function getPathsByImage(tags: FeatureTags) {
   // TODO parse all tags starting with `climbing:image*`
 
   if (image) {
+    // console.log('____', image, points);
     return { [image]: points };
   }
   return {};
@@ -38,6 +39,10 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
     length: route.tags['climbing:length'],
     name: route.tags.name,
     description: route.tags.description,
+    difficulty: {
+      gradeSystem: 'uiaa',
+      grade: route.tags['climbing:grade:uiaa'],
+    },
     paths: getPathsByImage(route.tags),
   }));
 };

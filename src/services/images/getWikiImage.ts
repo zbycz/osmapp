@@ -1,4 +1,5 @@
 // From https://github.com/osmcz/osmcz/blob/0d3eaaa/js/poi-popup.js - MIT
+import { md5 } from 'js-md5';
 import { fetchJson } from '../fetch';
 import { Image } from '../types';
 
@@ -63,6 +64,15 @@ const getWikiType = (d) => {
     }
   }
   return d.claims ? 'wikidata' : null;
+};
+
+export const getWikiImage2 = (photoName): string => {
+  if (!photoName) return null;
+  const fileName = photoName.replace(/ /g, '_');
+  const md4FileName = md5(fileName);
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${
+    md4FileName[0]
+  }/${md4FileName.substring(0, 2)}/${fileName}/800px-${fileName}`;
 };
 
 export const getWikiImage = async (wikiUrl): Promise<Image> => {

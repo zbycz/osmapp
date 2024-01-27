@@ -32,7 +32,7 @@ export type RouteDifficulty = {
 
 export type ClimbingRoute = {
   id: string;
-  difficulty?: RouteDifficulty;
+  difficulty?: RouteDifficulty; // RouteDifficulty[]
   length?: string;
   author?: string;
   name?: string;

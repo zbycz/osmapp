@@ -8,6 +8,7 @@ import { FullscreenIconContainer, ShowFullscreen } from './ShowFullscreen';
 import { ClimbingDialog } from './ClimbingDialog';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
+import { getWikiImage2 } from '../../../services/images/getWikiImage';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -46,6 +47,9 @@ export const ClimbingPanel = ({ footer }) => {
     photoPath,
     photoRef,
     setPointSelectedIndex,
+    getAllRoutesPhotos,
+    photoPaths,
+    setPhotoPath,
   } = useClimbingContext();
 
   useEffect(() => {
@@ -55,10 +59,13 @@ export const ClimbingPanel = ({ footer }) => {
       setPointSelectedIndex(null);
     }
   }, [isFullscreenDialogOpened]);
+  if (photoPaths.length === 0) getAllRoutesPhotos();
+  if (!photoPath && photoPaths.length > 0) setPhotoPath(photoPaths[0]);
+  const image = getWikiImage2(photoPath);
 
   useEffect(() => {
     handleImageLoad();
-  }, [isFullscreenDialogOpened]);
+  }, [isFullscreenDialogOpened, photoPath]);
 
   return (
     <>
@@ -81,7 +88,7 @@ export const ClimbingPanel = ({ footer }) => {
           {!isFullscreenDialogOpened && (
             <>
               <ThumbnailContainer height={imageSize.height}>
-                <Thumbnail src={photoPath} ref={photoRef} />
+                {image && <Thumbnail src={image} ref={photoRef} />}
 
                 <RoutesLayer onClick={() => null} />
                 <ShowFullscreen

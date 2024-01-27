@@ -28,6 +28,7 @@ import {
 import { GradeSystem } from '../utils/gradeTable';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
+import { publishDbgObject } from '../../../../utils';
 
 type ImageSize = {
   width: number;
@@ -51,6 +52,7 @@ type ClimbingContextType = {
   setImageSize: (ImageSize) => void;
   splitPaneHeight: number | null;
   setSplitPaneHeight: (height: number | null) => void;
+  photoPaths: Array<string>;
   photoPath: string;
   setPhotoPath: (path: string) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
@@ -109,6 +111,7 @@ type ClimbingContextType = {
   filterDifficulty: Array<string>;
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
   photoRef: React.MutableRefObject<any>;
+  getAllRoutesPhotos: () => void;
 };
 
 // @TODO generate?
@@ -120,13 +123,14 @@ type Props = {
 };
 
 export const ClimbingContextProvider = ({ children, feature }: Props) => {
+  const initialRoutes = osmToClimbingRoutes(feature);
+  publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);
-  const [photoPath, setPhotoPath] = useState<string>('/images/jickovice1.jpg'); // photo, should be null
+  const [photoPaths, setPhotoPaths] = useState<Array<string>>([]);
+  const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
-  const [routes, setRoutes] = useState<Array<ClimbingRoute>>(
-    osmToClimbingRoutes(feature),
-  );
+  const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
   const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
@@ -259,10 +263,19 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     }, []);
   };
 
+  const getAllRoutesPhotos = () => {
+    const photos = routes.reduce((acc, route) => {
+      const routePhotos = Object.keys(route.paths);
+
+      return [...new Set([...acc, ...routePhotos])];
+    }, []);
+    console.log('-____', routes, photos);
+    setPhotoPaths(photos.sort());
+  };
+
   const handleImageLoad = () => {
     if (photoRef.current) {
       const { clientHeight, clientWidth } = photoRef.current;
-      console.log('____,photoRef', clientHeight, clientWidth);
       const { left, top } = photoRef.current.getBoundingClientRect();
 
       setImageSize({ width: clientWidth, height: clientHeight });
@@ -272,7 +285,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
         height: window?.innerHeight,
       });
     }
-    console.log('___TU');
     setAreRoutesVisible(true);
     setAreRoutesLoading(false);
   };
@@ -323,6 +335,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     isLineInteractiveAreaHovered,
     setIsLineInteractiveAreaHovered,
     photoPath,
+    photoPaths,
     setPhotoPath,
     setSelectedRouteSystem,
     selectedRouteSystem,
@@ -337,6 +350,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     imageZoom,
     setImageZoom,
     addZoom,
+    getAllRoutesPhotos,
   };
 
   return (

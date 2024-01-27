@@ -30,6 +30,7 @@ export const ClimbingDialogHeader = ({
     photoPath,
     handleImageLoad,
     setAreRoutesLoading,
+    photoPaths,
   } = useClimbingContext();
 
   const onPhotoChange = (photo: string) => {
@@ -41,13 +42,6 @@ export const ClimbingDialogHeader = ({
     }, 100);
   };
 
-  const photos = [
-    '/images/jickovice1.jpg',
-    '/images/jickovice2.jpg',
-    '/images/jickovice3.jpg',
-    'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516',
-  ];
-
   return (
     <AppBar position="static" color="transparent">
       <Toolbar variant="dense">
@@ -56,7 +50,7 @@ export const ClimbingDialogHeader = ({
             Jickovice: Hlavní oblast - patro
           </Typography>
           <PhotoLinks>
-            {photos.map((photo, index) => (
+            {photoPaths.map((photo, index) => (
               <PhotoLink
                 onClick={() => onPhotoChange(photo)}
                 isCurrentPhoto={photo === photoPath}
