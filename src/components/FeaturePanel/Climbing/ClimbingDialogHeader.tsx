@@ -6,6 +6,8 @@ import TuneIcon from '@material-ui/icons/Tune';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingSettings } from './ClimbingSettings';
 import { PhotoLink } from './PhotoLink';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { getLabel } from '../../../helpers/featureLabel';
 
 const Title = styled.div`
   flex: 1;
@@ -41,13 +43,15 @@ export const ClimbingDialogHeader = ({
       handleImageLoad();
     }, 100);
   };
+  const { feature } = useFeatureContext();
+  const label = getLabel(feature);
 
   return (
     <AppBar position="static" color="transparent">
       <Toolbar variant="dense">
         <Title>
           <Typography noWrap variant="h6" component="div">
-            Jickovice: Hlavní oblast - patro
+            {label}
           </Typography>
           <PhotoLinks>
             {photoPaths.map((photo, index) => (

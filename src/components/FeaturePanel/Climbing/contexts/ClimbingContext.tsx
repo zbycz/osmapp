@@ -255,7 +255,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     return !!availablePhotos.find((availablePhotoPath) => {
       if (
         availablePhotoPath !== photoPath &&
-        paths[availablePhotoPath].length > 0
+        paths[availablePhotoPath]?.length > 0
       ) {
         return true;
       }
@@ -269,7 +269,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
 
       return [...new Set([...acc, ...routePhotos])];
     }, []);
-    console.log('-____', routes, photos);
     setPhotoPaths(photos.sort());
   };
 

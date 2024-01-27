@@ -107,6 +107,7 @@ export const ClimbingView = () => {
     photoPath,
     handleImageLoad,
     areRoutesLoading,
+    routes,
     setImageZoom, // TODO remove it from context
   } = useClimbingContext();
 
@@ -164,6 +165,8 @@ export const ClimbingView = () => {
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
     splitPaneHeight === viewportSize.height - editorPosition.y;
+
+  console.log('_______________', JSON.stringify(routes));
 
   return (
     <Container>
