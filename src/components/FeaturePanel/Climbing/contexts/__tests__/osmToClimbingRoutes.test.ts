@@ -37,9 +37,6 @@ const feature: Feature = {
         climbing: 'route',
         'climbing:grade:yds_class': '5.7',
         'climbing:length': "100'",
-        'climbing:pitches': '1',
-        'climbing:toprope': 'yes',
-        'climbing:trad': 'yes',
         name: 'Otter',
         sport: 'climbing',
       },
@@ -63,8 +60,8 @@ const feature: Feature = {
         'climbing:pitches': '1',
         'climbing:toprope': 'yes',
         'climbing:trad': 'yes',
-        'climbing:image': `jickovice1.jpg#0.8,0.8|0.573,0.245`,
-        'climbing:image2': `jickovice2.jpg#0.1,0.1|0.573,0.245`,
+        'climbing:image': `jickovice1.jpg#0.8,0.8B|0.573,0.245A`,
+        'climbing:image2': `jickovice2.jpg#0.1,0.1|0.573,0.245A`,
         name: 'Red Squirrel',
         sport: 'climbing',
       },
@@ -101,11 +98,13 @@ const climbingRoutes = [
           units: 'percentage',
           x: 0.8,
           y: 0.8,
+          type: 'bolt',
         },
         {
           units: 'percentage',
           x: 0.573,
           y: 0.245,
+          type: 'anchor',
         },
       ],
       'jickovice2.jpg': [
@@ -118,12 +117,13 @@ const climbingRoutes = [
           units: 'percentage',
           x: 0.573,
           y: 0.245,
+          type: 'anchor',
         },
       ],
     },
   },
 ];
 
-test('conversion', () => {
+test('osmToClimbingRoutes', () => {
   expect(osmToClimbingRoutes(feature)).toEqual(climbingRoutes);
 });

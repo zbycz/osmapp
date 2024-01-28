@@ -1,7 +1,19 @@
 import { Feature, FeatureTags } from '../../../../services/types';
-import { ClimbingRoute, PathPoints, RouteDifficulty } from '../types';
+import {
+  ClimbingRoute,
+  PathPoints,
+  PointType,
+  RouteDifficulty,
+} from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
 import { GradeSystem } from '../utils/gradeTable';
+
+const boltCodeMap: Record<string, PointType> = {
+  B: 'bolt',
+  A: 'anchor',
+  P: 'piton',
+  S: 'sling',
+};
 
 const parsePathString = (pathString?: string): PathPoints =>
   pathString
@@ -11,6 +23,7 @@ const parsePathString = (pathString?: string): PathPoints =>
       x: parseFloat(x),
       y: parseFloat(y),
       units: 'percentage' as const,
+      type: boltCodeMap[y.slice(-1)],
     }));
 // TODO filter( where x and y are really numbers)
 
@@ -55,10 +68,14 @@ const getDifficulty = (tags: FeatureTags): RouteDifficulty | undefined => {
 };
 
 export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
-  if (!feature.memberFeatures) return [];
+  if (!feature.memberFeatures) {
+    return [];
+  }
+
   const routes = feature.memberFeatures.filter(({ tags }) =>
     ['route', 'route_bottom'].includes(tags.climbing),
   );
+
   return routes.map((route) => ({
     id: getUrlOsmId(route.osmMeta),
     length: route.tags['climbing:length'],
