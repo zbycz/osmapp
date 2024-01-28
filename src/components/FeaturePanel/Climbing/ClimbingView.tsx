@@ -16,6 +16,7 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
 
 import { RoutesEditor } from './Editor/RoutesEditor';
+import { getWikiImage2 } from '../../../services/images/getWikiImage';
 
 const Container = styled.div`
   position: relative;
@@ -111,7 +112,7 @@ export const ClimbingView = () => {
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
-
+  const [imageUrl, setImageUrl] = useState(null);
   const machine = getMachine();
 
   useEffect(() => {
@@ -158,6 +159,8 @@ export const ClimbingView = () => {
 
   useEffect(() => {
     setIsPhotoLoaded(false);
+    const image = getWikiImage2(photoPath);
+    setImageUrl(image);
   }, [photoPath]);
 
   // @TODO udělat header footer jako edit dialog
@@ -197,7 +200,7 @@ export const ClimbingView = () => {
       >
         <BackgroundContainer
           imageHeight={imageSize.height}
-          imageUrl={photoPath}
+          imageUrl={imageUrl}
           isVisible={isPhotoLoaded}
         >
           <BlurContainer isVisible={isPhotoLoaded}>
@@ -235,6 +238,7 @@ export const ClimbingView = () => {
                       areRoutesVisible &&
                       !areRoutesLoading
                     }
+                    imageUrl={imageUrl}
                     setIsPhotoLoaded={setIsPhotoLoaded}
                   />
                 </>

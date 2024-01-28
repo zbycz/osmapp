@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { RoutesLayer } from './RoutesLayer';
 import { ControlPanel } from './ControlPanel';
@@ -6,7 +6,6 @@ import { Guide } from '../Guide';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
-import { getWikiImage2 } from '../../../../services/images/getWikiImage';
 
 const EditorContainer = styled.div<{ imageHeight: number }>`
   display: flex;
@@ -40,13 +39,12 @@ const ImageElement = styled.img<{ zoom?: number }>`
 export const RoutesEditor = ({
   isRoutesLayerVisible = true,
   setIsPhotoLoaded,
+  imageUrl,
 }) => {
-  const [imageUrl, setImageUrl] = useState(null);
   const {
     imageSize,
     areRoutesVisible,
     isEditMode,
-    photoPath,
     getMachine,
     addOffsets,
     setMousePosition,
@@ -132,10 +130,6 @@ export const RoutesEditor = ({
     setIsPhotoLoaded(true);
     handleImageLoad();
   };
-  useEffect(() => {
-    const image = getWikiImage2(photoPath);
-    setImageUrl(image);
-  }, [photoPath]);
 
   return (
     <>
