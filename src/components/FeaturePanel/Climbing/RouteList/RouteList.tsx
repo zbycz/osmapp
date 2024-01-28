@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Button } from '@material-ui/core';
+import { Button, ButtonGroup } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
@@ -34,6 +34,9 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     setIsEditMode,
     routesExpanded,
     setRoutesExpanded,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    setRoutes,
+    showDebugMenu,
   } = useClimbingContext();
 
   React.useEffect(() => {
@@ -82,6 +85,50 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     setIsEditMode(true);
   };
 
+  const getRoutesJson = () => {
+    console.log(`____EXPORT JSON`, JSON.stringify(routes));
+  };
+
+  const getRoutesCsv = () => {
+    const boltCodeMap = {
+      bolt: 'B',
+      anchor: 'A',
+      piton: 'P',
+      sling: 'S',
+    };
+
+    const getPathString = (path) =>
+      path
+        ?.map(({ x, y, type }) => `${x},${y}${type ? boltCodeMap[type] : ''}`)
+        .join('|');
+
+    const getImage = (o) =>
+      o && o.length > 1 ? `${o?.[0]}#${getPathString(o?.[1])}` : '';
+
+    const csv = routes
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      .map((r, _idx) =>
+        [
+          r.name,
+          getImage(Object.entries(r.paths)?.[0]),
+          getImage(Object.entries(r.paths)?.[1]),
+          getImage(Object.entries(r.paths)?.[2]),
+          // JSON.stringify(r.difficulty),
+          // idx,
+        ].join(';'),
+      )
+      .join(`\n`);
+    console.log(
+      `____EXPORT CSV
+`,
+      csv,
+    );
+  };
+
+  const mockRoutes = () => {
+    // setRoutes();
+  };
+
   // @TODO scroll to end
 
   //   const divRef = useRef(null);
@@ -107,27 +154,22 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
           </Button>
         </ButtonContainer>
       )}
+      {showDebugMenu && (
+        <>
+          <br />
+          <ButtonGroup variant="contained" size="small" color="primary">
+            <Button size="small" onClick={getRoutesCsv}>
+              routes CSV
+            </Button>
+            <Button size="small" onClick={getRoutesJson}>
+              routes JSON
+            </Button>
+            <Button size="small" onClick={mockRoutes}>
+              Mock
+            </Button>
+          </ButtonGroup>
+        </>
+      )}
     </Container>
   );
-
-  // return (
-  //   <Container>
-  //     <TableContainer>
-  //       <Table size="small">
-  //         <TableHead>
-  //           <TableRow>
-  //             <TableCell />
-  //             <TableCell>N°</TableCell>
-  //             <TableCell>Route name</TableCell>
-  //             <TableCell align="right">Difficulty</TableCell>
-  //             {isEditMode && <TableCell align="right">&nbsp;</TableCell>}
-  //           </TableRow>
-  //         </TableHead>
-  //         <TableBody>
-  //           <RouteListDndContent />
-  //         </TableBody>
-  //       </Table>
-  //     </TableContainer>
-  //   </Container>
-  // );
 };

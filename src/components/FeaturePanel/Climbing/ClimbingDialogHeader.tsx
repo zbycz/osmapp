@@ -34,6 +34,7 @@ export const ClimbingDialogHeader = ({
   setIsFullscreenDialogOpened,
 }) => {
   const [isSettingsOpened, setIsSettingsOpened] = useState<boolean>(false);
+  const [clickCounter, setClickCounter] = useState<number>(0);
   const {
     areRoutesVisible,
     setPhotoPath,
@@ -41,6 +42,7 @@ export const ClimbingDialogHeader = ({
     handleImageLoad,
     setAreRoutesLoading,
     photoPaths,
+    setShowDebugMenu,
   } = useClimbingContext();
 
   const onPhotoChange = (photo: string) => {
@@ -54,11 +56,24 @@ export const ClimbingDialogHeader = ({
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
 
+  const handleOnClick = () => {
+    setClickCounter(clickCounter + 1);
+    if (clickCounter === 4) {
+      setShowDebugMenu(true);
+      setClickCounter(0);
+    }
+  };
+
   return (
     <AppBar position="static" color="transparent">
       <Toolbar variant="dense">
         <Title>
-          <Typography noWrap variant="h6" component="div">
+          <Typography
+            noWrap
+            variant="h6"
+            component="div"
+            onClick={handleOnClick}
+          >
             {label}
           </Typography>
           {photoPaths.length > 1 && (

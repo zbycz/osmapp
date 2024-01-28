@@ -168,8 +168,6 @@ export const ClimbingView = () => {
   const showArrowOnBottom =
     splitPaneHeight === viewportSize.height - editorPosition.y;
 
-  // console.log('_______________', JSON.stringify(routes));
-
   return (
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (
@@ -246,6 +244,7 @@ export const ClimbingView = () => {
             </TransformWrapper>
           </BlurContainer>
         </BackgroundContainer>
+
         <RouteList isEditable />
       </SplitPane>
 

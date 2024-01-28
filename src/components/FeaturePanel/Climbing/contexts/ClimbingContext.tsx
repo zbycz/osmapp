@@ -115,6 +115,8 @@ type ClimbingContextType = {
   getAllRoutesPhotos: () => void;
   isDifficultyHeatmapEnabled: boolean;
   setIsDifficultyHeatmapEnabled: (isDifficultyHeatmapEnabled: boolean) => void;
+  showDebugMenu: boolean;
+  setShowDebugMenu: (showDebugMenu: boolean) => void;
 };
 
 // @TODO generate?
@@ -131,6 +133,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const photoRef = useRef(null);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>([]);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
+  const [showDebugMenu, setShowDebugMenu] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
@@ -360,6 +363,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     getAllRoutesPhotos,
     isDifficultyHeatmapEnabled, // @TODO move to some settings object
     setIsDifficultyHeatmapEnabled,
+    showDebugMenu,
+    setShowDebugMenu,
   };
 
   return (
