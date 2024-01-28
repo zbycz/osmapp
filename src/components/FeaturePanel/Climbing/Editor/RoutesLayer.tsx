@@ -21,6 +21,8 @@ const Svg = styled.svg<{
   /* pointer-events: none; */
   /* left: 0; */
   top: 0;
+  bottom: 0;
+  margin: auto;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transition: ${({ isVisible }) => (isVisible ? 'opacity 0.1s ease' : 'none')};
   transform-origin: 0 0;

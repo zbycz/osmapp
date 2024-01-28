@@ -29,6 +29,7 @@ import { GradeSystem } from '../utils/gradeTable';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
+import { getContainedSizeImage } from '../utils/image';
 
 type ImageSize = {
   width: number;
@@ -274,10 +275,13 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
 
   const handleImageLoad = () => {
     if (photoRef.current) {
-      const { clientHeight, clientWidth } = photoRef.current;
+      const [width, height] = getContainedSizeImage(photoRef.current);
       const { left, top } = photoRef.current.getBoundingClientRect();
 
-      setImageSize({ width: clientWidth, height: clientHeight });
+      setImageSize({
+        width,
+        height,
+      });
       setEditorPosition({ x: left, y: top, units: 'px' });
       setViewportSize({
         width: window?.innerWidth,

@@ -28,9 +28,10 @@ const Heading = styled.div`
   line-height: 0.98;
   color: ${({ theme }) => theme.palette.text.panelHeading};
 `;
-const Thumbnail = styled.img`
+const Thumbnail = styled.img<{ isLoaded: boolean }>`
   width: 100%;
   position: absolute;
+  visibility: ${({ isLoaded }) => (isLoaded ? 'visible' : 'hidden')};
 `;
 
 export const ClimbingPanel = ({ footer }) => {
@@ -63,9 +64,13 @@ export const ClimbingPanel = ({ footer }) => {
   if (!photoPath && photoPaths.length > 0) setPhotoPath(photoPaths[0]);
   const image = getWikiImage2(photoPath);
 
+  const onPhotoLoad = () => {
+    handleImageLoad();
+  };
+
   useEffect(() => {
     handleImageLoad();
-  }, [isFullscreenDialogOpened, photoPath]);
+  }, [isFullscreenDialogOpened]);
 
   return (
     <>
@@ -88,7 +93,14 @@ export const ClimbingPanel = ({ footer }) => {
           {!isFullscreenDialogOpened && (
             <>
               <ThumbnailContainer height={imageSize.height}>
-                {image && <Thumbnail src={image} ref={photoRef} />}
+                {image && (
+                  <Thumbnail
+                    src={image}
+                    ref={photoRef}
+                    onLoad={onPhotoLoad}
+                    isLoaded={imageSize.height !== 0}
+                  />
+                )}
 
                 <RoutesLayer onClick={() => null} />
                 <ShowFullscreen
