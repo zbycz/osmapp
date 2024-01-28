@@ -13,6 +13,14 @@ const Title = styled.div`
   flex: 1;
   overflow: hidden;
 `;
+const PhotosContainer = styled.div`
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+`;
+const PhotosTitle = styled.div`
+  color: ${({ theme }) => theme.textSubdued};
+`;
 const PhotoLinks = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -53,16 +61,21 @@ export const ClimbingDialogHeader = ({
           <Typography noWrap variant="h6" component="div">
             {label}
           </Typography>
-          <PhotoLinks>
-            {photoPaths.map((photo, index) => (
-              <PhotoLink
-                onClick={() => onPhotoChange(photo)}
-                isCurrentPhoto={photo === photoPath}
-              >
-                {index}
-              </PhotoLink>
-            ))}
-          </PhotoLinks>
+          {photoPaths.length > 1 && (
+            <PhotosContainer>
+              <PhotosTitle>Photos:</PhotosTitle>
+              <PhotoLinks>
+                {photoPaths.map((photo, index) => (
+                  <PhotoLink
+                    onClick={() => onPhotoChange(photo)}
+                    isCurrentPhoto={photo === photoPath}
+                  >
+                    {index}
+                  </PhotoLink>
+                ))}
+              </PhotoLinks>
+            </PhotosContainer>
+          )}
 
           {/* | <a onClick={() => onPhotoChange('/images/rock.png')}>photo 2</a> |{' '}
           <a

@@ -20,6 +20,8 @@ export const ClimbingSettings = ({ isSettingsOpened, setIsSettingsOpened }) => {
     selectedRouteSystem,
     // filterDifficulty,
     // setFilterDifficulty,
+    isDifficultyHeatmapEnabled,
+    setIsDifficultyHeatmapEnabled,
   } = useClimbingContext();
   // const a = selectedRouteSystem
 
@@ -35,6 +37,17 @@ export const ClimbingSettings = ({ isSettingsOpened, setIsSettingsOpened }) => {
       <DialogTitle>Settings</DialogTitle>
       <DialogContent>
         <List>
+          <ListItem>
+            <ListItemText>Show difficulties as heatmap</ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              onChange={(e) => {
+                setIsDifficultyHeatmapEnabled(e.target.checked);
+              }}
+              checked={isDifficultyHeatmapEnabled}
+            />
+          </ListItem>
           <ListItem>
             <ListItemText>Show routes on photo</ListItemText>
             <Switch

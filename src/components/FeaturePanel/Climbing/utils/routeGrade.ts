@@ -1,4 +1,5 @@
-import { GradeSystem, gradeTable } from './gradeTable';
+import { RouteDifficulty } from '../types';
+import { GradeSystem, gradeTable, gradeColors } from './gradeTable';
 
 export const convertGrade = (from, to, value) => {
   if (!from || !to || !value || !gradeTable[from]) return null;
@@ -7,6 +8,16 @@ export const convertGrade = (from, to, value) => {
 
   if (gradeTable[to][indexInTable]) return gradeTable[to][indexInTable];
   return null;
+};
+export const getDifficultyColor = (difficulty: RouteDifficulty) => {
+  const DEFAULT_COLOR = 'black';
+  if (!difficulty) return DEFAULT_COLOR;
+
+  const uiaaGrade =
+    difficulty.gradeSystem !== 'uiaa'
+      ? convertGrade(difficulty.gradeSystem, 'uiaa', difficulty.grade)
+      : difficulty.grade;
+  return gradeColors[uiaaGrade] || DEFAULT_COLOR;
 };
 
 export const getRouteGrade = (

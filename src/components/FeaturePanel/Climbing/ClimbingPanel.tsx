@@ -42,7 +42,7 @@ const LoadingContainer = styled.div`
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100px;
+  height: 100%;
   align-items: center;
 `;
 
@@ -98,7 +98,7 @@ export const ClimbingPanel = ({ footer }) => {
             <>
               {image && (
                 <ThumbnailContainer
-                  height={isPhotoLoading ? 100 : imageSize.height}
+                  height={isPhotoLoading ? 200 : imageSize.height}
                 >
                   {isPhotoLoading && (
                     <LoadingContainer>

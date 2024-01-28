@@ -156,6 +156,7 @@ export const RoutePath = ({ route, routeNumber }) => {
         isSelected={isSelected}
         {...commonProps}
         style={{ pointerEvents: 'all' }}
+        route={route}
       />
 
       {/* <RouteBorder

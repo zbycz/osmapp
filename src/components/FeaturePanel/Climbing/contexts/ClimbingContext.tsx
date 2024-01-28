@@ -113,6 +113,8 @@ type ClimbingContextType = {
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
   photoRef: React.MutableRefObject<any>;
   getAllRoutesPhotos: () => void;
+  isDifficultyHeatmapEnabled: boolean;
+  setIsDifficultyHeatmapEnabled: (isDifficultyHeatmapEnabled: boolean) => void;
 };
 
 // @TODO generate?
@@ -135,6 +137,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
+  const [isDifficultyHeatmapEnabled, setIsDifficultyHeatmapEnabled] =
+    useState<boolean>(false);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
   const [isLineInteractiveAreaHovered, setIsLineInteractiveAreaHovered] =
@@ -323,7 +327,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     findCloserPoint,
     splitPaneHeight,
     setSplitPaneHeight,
-    areRoutesVisible,
+    areRoutesVisible, // @TODO move to some settings object
     setAreRoutesVisible,
     mousePosition,
     setMousePosition,
@@ -354,6 +358,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setImageZoom,
     addZoom,
     getAllRoutesPhotos,
+    isDifficultyHeatmapEnabled, // @TODO move to some settings object
+    setIsDifficultyHeatmapEnabled,
   };
 
   return (
