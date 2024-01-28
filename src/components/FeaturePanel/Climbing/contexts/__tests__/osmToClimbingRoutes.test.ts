@@ -1,28 +1,12 @@
 import { osmToClimbingRoutes } from '../osmToClimbingRoutes';
 import { Feature } from '../../../../../services/types';
 
-const path1 = [
-  { x: 0.8, y: 0.712, units: 'percentage' },
-  { x: 0.783, y: 0.547, units: 'percentage' },
-  { x: 0.675, y: 0.387, units: 'percentage' },
-  { x: 0.583, y: 0.368, units: 'percentage' },
-  { x: 0.546, y: 0.282, units: 'percentage' },
-  { x: 0.571, y: 0.27, units: 'percentage' },
-  { x: 0.573, y: 0.245, units: 'percentage' },
-];
-const getPathString = (path) => path.map(({ x, y }) => `${x},${y}`).join('|');
-
 const feature: Feature = {
   type: 'Feature',
   center: [-73.0630908, 43.9068891],
   osmMeta: {
     type: 'relation',
     id: 14334600,
-    timestamp: '2023-12-22T17:12:51Z',
-    version: 4,
-    changeset: 145414117,
-    user: '4b3eff',
-    uid: 14349548,
   },
   tags: {
     climbing: 'crag',
@@ -47,11 +31,6 @@ const feature: Feature = {
       osmMeta: {
         type: 'way',
         id: 1076927500,
-        timestamp: '2022-07-18T17:03:11Z',
-        version: 2,
-        changeset: 123772465,
-        user: 'Adam Franco',
-        uid: 27832,
         role: '',
       },
       tags: {
@@ -75,11 +54,6 @@ const feature: Feature = {
       osmMeta: {
         type: 'way',
         id: 1076927501,
-        timestamp: '2022-07-08T19:29:58Z',
-        version: 1,
-        changeset: 123379162,
-        user: 'Adam Franco',
-        uid: 27832,
         role: '',
       },
       tags: {
@@ -89,7 +63,8 @@ const feature: Feature = {
         'climbing:pitches': '1',
         'climbing:toprope': 'yes',
         'climbing:trad': 'yes',
-        'climbing:image': `/images/jickovice1.jpg#${getPathString(path1)}`,
+        'climbing:image': `jickovice1.jpg#0.8,0.8|0.573,0.245`,
+        'climbing:image2': `jickovice2.jpg#0.1,0.1|0.573,0.245`,
         name: 'Red Squirrel',
         sport: 'climbing',
       },
@@ -103,24 +78,47 @@ const feature: Feature = {
 
 const climbingRoutes = [
   {
+    difficulty: {
+      grade: '5.7',
+      gradeSystem: 'yds_class',
+    },
     id: 'way/1076927500',
     length: "100'",
     name: 'Otter',
     paths: {},
   },
   {
+    difficulty: {
+      grade: '5.7',
+      gradeSystem: 'yds_class',
+    },
     id: 'way/1076927501',
     length: "100'",
     name: 'Red Squirrel',
     paths: {
-      '/images/jickovice1.jpg': [
-        { x: 0.8, y: 0.712, units: 'percentage' },
-        { x: 0.783, y: 0.547, units: 'percentage' },
-        { x: 0.675, y: 0.387, units: 'percentage' },
-        { x: 0.583, y: 0.368, units: 'percentage' },
-        { x: 0.546, y: 0.282, units: 'percentage' },
-        { x: 0.571, y: 0.27, units: 'percentage' },
-        { x: 0.573, y: 0.245, units: 'percentage' },
+      'jickovice1.jpg': [
+        {
+          units: 'percentage',
+          x: 0.8,
+          y: 0.8,
+        },
+        {
+          units: 'percentage',
+          x: 0.573,
+          y: 0.245,
+        },
+      ],
+      'jickovice2.jpg': [
+        {
+          units: 'percentage',
+          x: 0.1,
+          y: 0.1,
+        },
+        {
+          units: 'percentage',
+          x: 0.573,
+          y: 0.245,
+        },
       ],
     },
   },

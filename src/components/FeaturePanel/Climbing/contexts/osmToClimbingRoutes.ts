@@ -1,6 +1,7 @@
 import { Feature, FeatureTags } from '../../../../services/types';
-import { ClimbingRoute, PathPoints } from '../types';
+import { ClimbingRoute, PathPoints, RouteDifficulty } from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
+import { GradeSystem } from '../utils/gradeTable';
 
 const parsePathString = (pathString?: string): PathPoints =>
   pathString
@@ -18,16 +19,40 @@ const parseImageTag = (value: string) => {
   return { image, points: parsePathString(pathString) };
 };
 
-function getPathsByImage(tags: FeatureTags) {
-  const { image, points } = parseImageTag(tags['climbing:image']);
-  // TODO parse all tags starting with `climbing:image*`
+const getPathsByImage = (tags: FeatureTags) => {
+  const climbingImages = Object.keys(tags).filter((key) =>
+    key.startsWith('climbing:image'),
+  );
 
-  if (image) {
-    // console.log('____', image, points);
-    return { [image]: points };
+  const out = {};
+
+  climbingImages.forEach((key) => {
+    const { image, points } = parseImageTag(tags[key]);
+    if (image) {
+      out[image] = points;
+    }
+  });
+
+  return out;
+};
+
+const getDifficulty = (tags: FeatureTags): RouteDifficulty | undefined => {
+  const gradeKeys = Object.keys(tags).filter((key) =>
+    key.startsWith('climbing:grade'),
+  );
+
+  if (gradeKeys.length) {
+    const key = gradeKeys[0]; // TODO store all found grades
+    const system = key.split(':', 3)[2];
+
+    return {
+      gradeSystem: (system ?? 'uiaa') as GradeSystem, // TODO `gradeSystem` type should be `string`
+      grade: tags[key],
+    };
   }
-  return {};
-}
+
+  return undefined;
+};
 
 export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
   if (!feature.memberFeatures) return [];
@@ -39,10 +64,7 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
     length: route.tags['climbing:length'],
     name: route.tags.name,
     description: route.tags.description,
-    difficulty: {
-      gradeSystem: 'uiaa',
-      grade: route.tags['climbing:grade:uiaa'],
-    },
+    difficulty: getDifficulty(route.tags),
     paths: getPathsByImage(route.tags),
   }));
 };
