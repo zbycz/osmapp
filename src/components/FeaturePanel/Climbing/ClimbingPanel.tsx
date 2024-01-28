@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { CircularProgress } from '@material-ui/core';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
@@ -28,10 +29,21 @@ const Heading = styled.div`
   line-height: 0.98;
   color: ${({ theme }) => theme.palette.text.panelHeading};
 `;
-const Thumbnail = styled.img<{ isLoaded: boolean }>`
+const Thumbnail = styled.img<{ isLoading: boolean }>`
   width: 100%;
   position: absolute;
-  visibility: ${({ isLoaded }) => (isLoaded ? 'visible' : 'hidden')};
+  visibility: ${({ isLoading }) => (isLoading ? 'hidden' : 'visible')};
+`;
+
+const LoadingContainer = styled.div`
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100px;
+  align-items: center;
 `;
 
 export const ClimbingPanel = ({ footer }) => {
@@ -72,19 +84,11 @@ export const ClimbingPanel = ({ footer }) => {
     handleImageLoad();
   }, [isFullscreenDialogOpened]);
 
+  const isPhotoLoading = imageSize.height === 0;
   return (
     <>
       <PanelWrapper>
         <PanelScrollbars>
-          {/* <ImageSection /> */}
-          {/* <PanelContent>
-          <FeatureHeading
-            deleted={deleted}
-            title={label}
-            editEnabled={editEnabled && !point}
-            onEdit={setDialogOpenedWith}
-          />
-          </PanelContent> */}
           <ClimbingDialog
             isFullscreenDialogOpened={isFullscreenDialogOpened}
             setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
@@ -92,21 +96,29 @@ export const ClimbingPanel = ({ footer }) => {
 
           {!isFullscreenDialogOpened && (
             <>
-              <ThumbnailContainer height={imageSize.height}>
-                {image && (
+              {image && (
+                <ThumbnailContainer
+                  height={isPhotoLoading ? 100 : imageSize.height}
+                >
+                  {isPhotoLoading && (
+                    <LoadingContainer>
+                      <CircularProgress />
+                    </LoadingContainer>
+                  )}
+
                   <Thumbnail
                     src={image}
                     ref={photoRef}
                     onLoad={onPhotoLoad}
-                    isLoaded={imageSize.height !== 0}
+                    isLoading={isPhotoLoading}
                   />
-                )}
 
-                <RoutesLayer onClick={() => null} />
-                <ShowFullscreen
-                  onClick={() => setIsFullscreenDialogOpened(true)}
-                />
-              </ThumbnailContainer>
+                  {!isPhotoLoading && <RoutesLayer onClick={() => null} />}
+                  <ShowFullscreen
+                    onClick={() => setIsFullscreenDialogOpened(true)}
+                  />
+                </ThumbnailContainer>
+              )}
               <Heading>{label}</Heading>
 
               <RouteList />
