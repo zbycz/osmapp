@@ -10,6 +10,7 @@ import { addElementToArray, deleteFromArray } from '../utils/array';
 const Container = styled.div`
   padding-bottom: 65px;
   background-color: ${({ theme }) => theme.panelBackground};
+  position: relative; // mobile safari fix
 `;
 const ButtonContainer = styled.div`
   margin-top: 16px;

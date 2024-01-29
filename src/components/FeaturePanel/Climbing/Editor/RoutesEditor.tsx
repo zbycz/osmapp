@@ -23,6 +23,12 @@ const ImageContainer = styled.div`
   top: 0;
   height: 100%;
   box-shadow: 0 -0 110px rgba(0, 0, 0, 0.1);
+
+  // fix positioning on mobile
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
 `;
 
 const ImageElement = styled.img<{ zoom?: number }>`
