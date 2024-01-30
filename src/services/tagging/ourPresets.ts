@@ -1,132 +1,157 @@
 import { RawPresets } from './types/Presets';
 
 export const ourFields = {
+  'climbing/summit_log': {
+    key: 'climbing:summit_log',
+    type: 'check',
+  },
+  'climbing/routes': {
+    key: 'climbing:routes',
+    type: 'number',
+    minValue: 0,
+  },
+  'climbing/rock': {
+    key: 'climbing:rock',
+    type: 'combo',
+    options: ['limestone', 'sandstone', 'granite', 'basalt'],
+  },
+  'climbing/quality': {
+    key: 'climbing:quality',
+    type: 'combo',
+    options: ['fragile', 'medium', 'solid'],
+  },
+  'climbing/orientation': {
+    key: 'climbing:orientation',
+    type: 'combo',
+    options: ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'],
+  },
   'climbing/length': {
     key: 'climbing:length',
     type: 'number',
     minValue: 0,
-    label: 'Length (m)',
+  },
+  'climbing/grade': {
+    key: 'climbing:grade:uiaa',
+    type: 'text',
   },
   'climbing/bolts': {
     key: 'climbing:bolts',
     type: 'number',
     minValue: 0,
-    label: 'Bolts',
   },
-  'climbing/rock': {
-    key: 'climbing:rock',
+  'climbing/bolted': {
+    key: 'climbing:bolted',
+    type: 'check',
+  },
+  'climbing/bolt_type': {
+    key: 'climbing:bolt_type',
     type: 'combo',
-    label: 'Rock type',
-  },
-
-  'climbing/grade': {
-    keys: [
-      'climbing:grade:uiaa', // plus :min :max :mean variants ???
-      'climbing:grade:french',
-      'climbing:grade:saxon',
-      'climbing:grade:aid',
-      'climbing:grade:hueco',
-      'climbing:grade:yds_class',
-      'climbing:grade:ice',
-    ],
-    type: 'text',
-    label: 'Grade',
-  },
-
-  'climbing/orientation': {
-    key: 'climbing:orientation',
-    type: 'combo',
-    options: {
-      N: 'North',
-      NE: 'North-East',
-      E: 'East',
-      SE: 'South-East',
-      S: 'South',
-      SW: 'South-West',
-      W: 'West',
-      NW: 'North-West',
-    },
-    label: 'Orientation',
-  },
-  'climbing/urls': {
-    keys: [
-      'climbing:url:mountainproject',
-      'climbing:url:openbeta',
-      'climbing:url:thecrag',
-    ],
-    type: 'url',
-    label: 'Websites',
-  },
-
-  'climbing/routes': {
-    key: 'climbing:routes',
-    type: 'number',
-    minValue: 0,
-    label: 'Number of routes',
+    options: ['expansion', 'glue-in', 'ring'],
   },
 };
 
 export const ourPresets = {
-  'leisure/climbing/crag_2': {
+  'climbing/route': {
     icon: 'temaki-abseiling',
-    fields: ['climbing/rock', 'climbing/orientation', 'climbing/routes'],
-    moreFields: Object.keys(ourFields),
-    geometry: ['point', 'relation'],
-    tags: { climbing: 'crag' },
-    name: 'Climbing crag',
-  },
-
-  'leisure/climbing/route': {
-    icon: 'temaki-abseiling',
-    fields: [
-      'climbing/grade',
-      'climbing/length',
-      'climbing/bolts',
-      'climbing/orientation',
-    ],
-    moreFields: Object.keys(ourFields),
     geometry: ['point', 'line'],
-    tags: { climbing: 'route' },
-    name: 'Climbing route',
-  },
-  'leisure/climbing/route_bottom': {
-    icon: 'temaki-abseiling',
     fields: [
       'climbing/grade',
-      'climbing/length',
       'climbing/bolts',
+      'climbing/bolt_type',
+      'climbing/bolted',
+      'climbing/length',
       'climbing/orientation',
+      'climbing/quality',
+      'climbing/rock',
+      'climbing/summit_log',
+      'website',
     ],
-    moreFields: Object.keys(ourFields),
-    geometry: ['point'],
-    tags: { climbing: 'route_bottom' },
-    name: 'Climbing route - start',
+    moreFields: ['ele'],
+    tags: {
+      climbing: 'route',
+    },
   },
-  'leisure/climbing/route_top': {
+  'climbing/crag': {
     icon: 'temaki-abseiling',
-    fields: [],
-    moreFields: Object.keys(ourFields),
-    geometry: ['point'],
-    tags: { climbing: 'route_top' },
-    name: 'Climbing route - top',
-  },
-
-  'leisure/climbing/site': {
-    icon: 'temaki-abseiling',
-    fields: [],
-    moreFields: Object.keys(ourFields),
-    geometry: ['point', 'line', 'area'],
-    tags: { sport: 'climbing' }, // we need only sport=climbing without gyms: leisure=sport_center, is it possible?
-    name: 'Climbing site',
-    matchScore: 0.9,
+    geometry: ['point', 'line'],
+    fields: [
+      'climbing/routes',
+      'climbing/bolt_type',
+      'climbing/bolted',
+      'climbing/length',
+      'climbing/orientation',
+      'climbing/quality',
+      'climbing/rock',
+      'website',
+    ],
+    moreFields: ['ele'],
+    tags: {
+      climbing: 'crag',
+    },
   },
 } as RawPresets;
 
 export const getOurTranslations = (lang) => ({
   [lang]: {
     presets: {
-      presets: ourPresets,
-      fields: ourFields,
+      presets: {
+        'climbing/route': {
+          name: 'Climbing route',
+          terms: 'rock climbing,climbing',
+        },
+        'climbing/crag': {
+          name: 'Climbing crag',
+          terms: 'rock climbing,climbing',
+        },
+      },
+      fields: {
+        'climbing/summit_log': {
+          label: 'Summit log',
+        },
+        'climbing/routes': {
+          label: 'Number of routes',
+        },
+        'climbing/rock': {
+          label: 'Rock type',
+        },
+        'climbing/quality': {
+          label: 'Rock quality',
+        },
+        'climbing/orientation': {
+          label: 'Orientation',
+          options: {
+            N: 'North',
+            NE: 'North-East',
+            E: 'East',
+            SE: 'South-East',
+            S: 'South',
+            SW: 'South-West',
+            W: 'West',
+            NW: 'North-West',
+          },
+        },
+        'climbing/length': {
+          label: 'Length (m)',
+        },
+        'climbing/grade': {
+          label: 'Grade',
+          placeholder: '6+',
+        },
+        'climbing/bolts': {
+          label: 'Number of bolts',
+        },
+        'climbing/bolted': {
+          label: 'Bolted',
+        },
+        'climbing/bolt_type': {
+          label: 'Bolt type',
+          options: {
+            expansion: 'expansion bolt',
+            'glue-in': 'glue-in bolt',
+            ring: 'ring bolt',
+          },
+        },
+      },
     },
   },
 });
