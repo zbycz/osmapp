@@ -179,5 +179,7 @@ export const GlobalStyle = createGlobalStyle`
     background-repeat: no-repeat;
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
+
+    background-color: ${({ theme }) => theme.palette.panelBackground};
   }
 `;

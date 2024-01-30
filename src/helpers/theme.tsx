@@ -166,7 +166,7 @@ const lightTheme = createMuiTheme({
     },
     appBackground: '#f8f4f0',
     panelBackground: '#fafafa',
-    panelScrollCover: 'rgba(0, 0, 0, 0.3)',
+    panelScrollCover: 'rgba(0, 0, 0, 0.2)',
     link: '#0078a8',
     invertFilter: 'invert(0)',
   } as unknown,
