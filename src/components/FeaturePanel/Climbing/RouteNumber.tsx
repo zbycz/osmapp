@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { useTheme } from '@material-ui/core';
+import { Tooltip, useTheme } from '@material-ui/core';
 import { useConfig } from './config';
 
 const useColor = ({ isSelected, hasRoute, hasRouteInDifferentPhotos }) => {
@@ -72,16 +72,17 @@ export const RouteNumber = ({
 
   const getTitle = () => {
     if (hasRoute) {
-      return 'Route marked in schema';
+      return '';
     }
     if (hasRouteInDifferentPhotos) {
       return 'Route is available in different photo';
     }
     return 'Route is not in schema';
   };
+
   return (
-    <Container colors={colors} title={getTitle()}>
-      {children}
-    </Container>
+    <Tooltip arrow title={getTitle()}>
+      <Container colors={colors}>{children}</Container>
+    </Tooltip>
   );
 };
