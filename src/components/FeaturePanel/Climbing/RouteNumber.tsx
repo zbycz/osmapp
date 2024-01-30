@@ -8,7 +8,7 @@ const useColor = ({ isSelected, hasRoute, hasRouteInDifferentPhotos }) => {
   const theme: any = useTheme();
   const config = useConfig();
 
-  if (isSelected) {
+  if (hasRoute && isSelected) {
     return {
       background: config.routeNumberBackgroundSelected,
       text: config.routeNumberTextColorSelected,
