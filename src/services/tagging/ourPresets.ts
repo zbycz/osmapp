@@ -82,7 +82,7 @@ export const ourPresets = {
   },
   'climbing/crag': {
     icon: 'temaki-abseiling',
-    geometry: ['point', 'line'],
+    geometry: ['point', 'relation'],
     fields: [
       'climbing/routes',
       'climbing/bolt_type',
