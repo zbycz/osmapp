@@ -51,6 +51,15 @@ export const ourFields = {
 };
 
 export const ourPresets = {
+  'climbing/route_bottom': {
+    icon: 'temaki-abseiling',
+    geometry: ['point'],
+    fields: ['{climbing/route}'],
+    moreFields: ['{climbing/route}'],
+    tags: {
+      climbing: 'route_bottom',
+    },
+  },
   'climbing/route': {
     icon: 'temaki-abseiling',
     geometry: ['point', 'line'],
@@ -95,6 +104,10 @@ export const getOurTranslations = (lang) => ({
   [lang]: {
     presets: {
       presets: {
+        'climbing/route_bottom': {
+          name: 'Climbing route - bottom',
+          terms: 'rock climbing,climbing',
+        },
         'climbing/route': {
           name: 'Climbing route',
           terms: 'rock climbing,climbing',
