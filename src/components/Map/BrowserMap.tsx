@@ -11,6 +11,8 @@ import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
 import { isWebglSupported } from './helpers';
+import { fetchJson } from '../../services/fetch';
+import { overpassGeomToGeojson } from '../../services/overpassSearch';
 
 const useOnMapLoaded = useAddMapEvent((map, onMapLoaded) => ({
   eventType: 'load',
@@ -32,6 +34,15 @@ const NotSupportedMessage = () => (
 
 // TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
+const fetchCrags = async () => {
+  const query = `[out:json][timeout:25];(relation["climbing"="crag"](48,11,51,19););out geom qt;`;
+  const data = encodeURIComponent(query);
+  const url = `https://overpass-api.de/api/interpreter?data=${data}`;
+  const overpass = await fetchJson(url);
+  const features = overpassGeomToGeojson(overpass);
+  return { type: 'FeatureCollection', features };
+};
+
 const BrowserMap = ({ onMapLoaded }) => {
   if (!isWebglSupported()) {
     onMapLoaded();
@@ -42,6 +53,9 @@ const BrowserMap = ({ onMapLoaded }) => {
   const [map, mapRef] = useInitMap();
   useOnMapClicked(map, setFeature, setPreview, useMobileMode());
   useOnMapLoaded(map, onMapLoaded);
+  useOnMapLoaded(map, async () => {
+    map.getSource('overpass')?.setData(await fetchCrags());
+  });
   useFeatureMarker(map);
 
   const { viewForMap, setViewFromMap, setBbox, activeLayers } =
