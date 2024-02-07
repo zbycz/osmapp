@@ -27,20 +27,18 @@ const parsePathString = (pathString?: string): PathPoints =>
     }));
 // TODO filter( where x and y are really numbers)
 
-const parseImageTag = (value: string) => {
-  const [image, pathString] = value?.split('#', 2) ?? [];
-  return { image, points: parsePathString(pathString) };
-};
-
 const getPathsByImage = (tags: FeatureTags) => {
-  const climbingImages = Object.keys(tags).filter((key) =>
-    key.startsWith('climbing:image'),
+  const keys = Object.keys(tags).filter((key) =>
+    key.match(/^wikimedia_commons\d$/),
   );
 
   const out = {};
 
-  climbingImages.forEach((key) => {
-    const { image, points } = parseImageTag(tags[key]);
+  keys.forEach((key) => {
+    const image = tags[key]?.replace(/^File:/, '');
+    const path = tags[`${key}:path`];
+
+    const points = parsePathString(path);
     if (image) {
       out[image] = points;
     }
