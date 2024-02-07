@@ -4,6 +4,7 @@ import React from 'react';
 import styled from 'styled-components';
 import FolderIcon from '@material-ui/icons/Folder';
 import SearchIcon from '@material-ui/icons/Search';
+import StarIcon from '@material-ui/icons/Star';
 import { useMapStateContext } from '../utils/MapStateContext';
 import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
@@ -120,7 +121,7 @@ export const buildPhotonAddress = ({
 
 export const renderOptionFactory =
   (inputValue, currentTheme) =>
-  ({ geometry, preset, properties, overpass, loader }) => {
+  ({ geometry, preset, properties, overpass, star, loader }) => {
     if (overpass) {
       return (
         <>
@@ -135,6 +136,23 @@ export const renderOptionFactory =
             </span>
             <Typography variant="body2" color="textSecondary">
               overpass search
+              {/* {t('searchbox.category')} */}
+            </Typography>
+          </Grid>
+        </>
+      );
+    }
+
+    if (star) {
+      return (
+        <>
+          <IconPart>
+            <StarIcon />
+          </IconPart>
+          <Grid item xs>
+            <span style={{ fontWeight: 700 }}>{star.label}</span>
+            <Typography variant="body2" color="textSecondary">
+              favourite
               {/* {t('searchbox.category')} */}
             </Typography>
           </Grid>

@@ -19,6 +19,7 @@ import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
+import { StarsProvider } from '../utils/StarsContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -113,9 +114,11 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
     <FeatureProvider featureFromRouter={featureFromRouter} hpCookie={hpCookie}>
       <MapStateProvider initialMapView={mapView}>
         <OsmAuthProvider>
-          <EditDialogProvider /* TODO supply router.query */>
-            <IndexWithProviders />
-          </EditDialogProvider>
+          <StarsProvider>
+            <EditDialogProvider /* TODO supply router.query */>
+              <IndexWithProviders />
+            </EditDialogProvider>
+          </StarsProvider>
         </OsmAuthProvider>
       </MapStateProvider>
     </FeatureProvider>
