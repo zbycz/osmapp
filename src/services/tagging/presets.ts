@@ -101,7 +101,7 @@ export const getPresetForFeature = (feature: Feature): Preset => {
   const winners = sortedByScore.filter((c) => c.score === winner.score);
   if (winners.length > 1) {
     // eslint-disable-next-line no-console
-    console.info('This feature matches more presets by same score:', winners);
+    console.debug('This feature matches more presets by same score:', winners);
   }
 
   return winner.candidate;
