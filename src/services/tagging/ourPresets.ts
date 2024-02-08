@@ -43,8 +43,8 @@ export const ourFields = {
     key: 'climbing:bolted',
     type: 'check',
   },
-  'climbing/bolt_type': {
-    key: 'climbing:bolt_type',
+  'climbing/bolt': {
+    key: 'climbing:bolt',
     type: 'combo',
     options: ['expansion', 'glue-in', 'ring'],
   },
@@ -66,7 +66,7 @@ export const ourPresets = {
     fields: [
       'climbing/grade',
       'climbing/bolts',
-      'climbing/bolt_type',
+      'climbing/bolt',
       'climbing/bolted',
       'climbing/length',
       'climbing/orientation',
@@ -85,7 +85,7 @@ export const ourPresets = {
     geometry: ['point', 'relation'],
     fields: [
       'climbing/routes',
-      'climbing/bolt_type',
+      'climbing/bolt',
       'climbing/bolted',
       'climbing/length',
       'climbing/orientation',
@@ -156,7 +156,7 @@ export const getOurTranslations = (lang) => ({
         'climbing/bolted': {
           label: 'Bolted',
         },
-        'climbing/bolt_type': {
+        'climbing/bolt': {
           label: 'Bolt type',
           options: {
             expansion: 'expansion bolt',
