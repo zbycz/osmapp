@@ -105,7 +105,7 @@ export const getOurTranslations = (lang) => ({
     presets: {
       presets: {
         'climbing/route_bottom': {
-          name: 'Climbing route - bottom',
+          name: 'Climbing route (start)',
           terms: 'rock climbing,climbing',
         },
         'climbing/route': {
