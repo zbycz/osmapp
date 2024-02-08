@@ -63,7 +63,8 @@ export const useOnMapClicked = useAddMapEvent(
       setPreview(null);
 
       const result = await maptilerFix(features[0].id, skeleton);
-      addFeatureCenterToCache(getShortId(result.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
+      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
+      addFeatureCenterToCache(getShortId(result.osmMeta), skeleton.center);
       const url = `/${getUrlOsmId(result.osmMeta)}${window.location.hash}`;
       Router.push(url, undefined, { locale: 'default' });
     },

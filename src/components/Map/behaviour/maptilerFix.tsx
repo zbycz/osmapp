@@ -31,6 +31,10 @@ const isMaptilerCorruptedId = (feature: Feature, skeleton: Feature) => {
   return false;
 };
 
+// Maptiler is not encoding IDs correctly, sometimes type encoding is missing, sometimes the type is just wrong
+// This function tries to fix the ID by fetching possible variants and comparing them by name and distance
+// more in: https://github.com/openmaptiles/openmaptiles/issues/1587
+
 export const maptilerFix = async (mapFeatureId, skeleton) => {
   const shortId = getShortId(skeleton.osmMeta);
   const feature = await fetchFeature(shortId); // this is cached, so real fetchFeature after router would be fast
@@ -61,8 +65,10 @@ export const maptilerFix = async (mapFeatureId, skeleton) => {
     );
     if (nameHit) {
       const newId = getShortId(nameHit.osmMeta);
+
+      // eslint-disable-next-line no-console
       console.warn('maptiler fix: found correct id by name match', {
-        oldId: id,
+        oldId: shortId,
         newId,
       });
       addFeatureCenterToCache(newId, skeleton.center);
@@ -72,8 +78,10 @@ export const maptilerFix = async (mapFeatureId, skeleton) => {
     const closeHit = existingFeatures.find((f) => isClose(f, skeleton));
     if (closeHit) {
       const newId = getShortId(closeHit.osmMeta);
+
+      // eslint-disable-next-line no-console
       console.warn('maptiler fix: found correct id by close match', {
-        oldId: id,
+        oldId: shortId,
         newId,
       });
       addFeatureCenterToCache(newId, skeleton.center);
