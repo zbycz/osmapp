@@ -23,6 +23,7 @@ const keys = [
   'power',
   'natural',
   'route', // relation route=bicycle etc
+  'climbing',
 ];
 
 const shops = [
@@ -90,7 +91,7 @@ const shops = [
 
 // https://github.com/openmaptiles/openmaptiles/blob/bb00b4e53fa9dbf5778b394c910c629182c441f9/layers/poi/class.sql#L33
 // TODO get from here https://github.com/openmaptiles/openmaptiles/blob/1614a46/layers/poi/poi.yaml#L18
-const subclassToClassRules = [
+const rules = [
   {
     subclass: shops,
     resultClass: 'shop',
@@ -272,6 +273,10 @@ const subclassToClassRules = [
     subclass: 'memorial',
     resultClass: 'art_gallery',
   },
+  // {
+  //   mappingKey: 'climbing',
+  //   resultClass: 'climbing',
+  // }
 ];
 
 interface PoiClass {
@@ -284,7 +289,7 @@ export const getPoiClass = (tags): PoiClass => {
   const value = tags[key]; // its value
 
   // find first matching rule
-  const resultRule = subclassToClassRules.find(
+  const resultRule = rules.find(
     (rule) =>
       (!rule.mappingKey && rule.subclass.includes(value)) ||
       (rule.mappingKey === key && !rule.subclass) ||
