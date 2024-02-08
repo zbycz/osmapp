@@ -10,6 +10,7 @@ import { getRoundedPosition, publishDbgObject } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
 import { convertMapIdToOsmId, getIsOsmObject } from '../helpers';
 import { getCoordsFeature } from '../../../services/getCoordsFeature';
+import { maptilerFix } from './maptilerFix';
 
 export const getSkeleton = (feature, clickCoords) => {
   const isOsmObject = getIsOsmObject(feature);
@@ -41,7 +42,6 @@ export const useOnMapClicked = useAddMapEvent(
       }
 
       const skeleton = getSkeleton(features[0], coords);
-      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
       console.log(`clicked map feature (id=${features[0].id}): `, features[0]); // eslint-disable-line no-console
       publishDbgObject('last skeleton', skeleton);
 
@@ -50,8 +50,6 @@ export const useOnMapClicked = useAddMapEvent(
         setPreview(getCoordsFeature(roundedPosition));
         return;
       }
-
-      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
       if (mobileMode) {
         setPreview(skeleton);
@@ -64,7 +62,9 @@ export const useOnMapClicked = useAddMapEvent(
       );
       setPreview(null);
 
-      const url = `/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`;
+      const result = await maptilerFix(features[0].id, skeleton);
+      addFeatureCenterToCache(getShortId(result.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
+      const url = `/${getUrlOsmId(result.osmMeta)}${window.location.hash}`;
       Router.push(url, undefined, { locale: 'default' });
     },
   }),
