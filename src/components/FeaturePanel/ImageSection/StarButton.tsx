@@ -38,7 +38,7 @@ export const StarButton = () => {
       {isClient ? (
         <StarButtonPure isStarred={isStarred} toggleStar={toggleStar} />
       ) : (
-        <StarButtonPure isStarred={false} onClick={() => {}} />
+        <StarButtonPure isStarred={false} toggleStar={() => {}} />
       )}
     </>
   );

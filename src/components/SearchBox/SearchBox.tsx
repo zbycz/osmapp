@@ -175,8 +175,8 @@ const useFetchOptions = (inputValue: string, setOptions) => {
 
   useEffect(() => {
     if (inputValue === '') {
-      const options = Object.entries(stars).map(([shortId, label]) => ({
-        star: { shortId, label },
+      const options = stars.map(({ shortId, poiType, label }) => ({
+        star: { shortId, poiType, label },
       }));
       setOptions(options);
       return;

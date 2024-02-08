@@ -2,41 +2,39 @@ import React, { createContext, useContext } from 'react';
 import { usePersistedState } from './usePersistedState';
 import { useFeatureContext } from './FeatureContext';
 import { getShortId } from '../../services/helpers';
-import { getLabel } from '../../helpers/featureLabel';
+import { getLabel, getPoiType } from '../../helpers/featureLabel';
+
+type Star = { shortId: string; poiType: string; label: string };
 
 interface StarsType {
-  stars: Record<string, string>;
+  stars: Star[];
   isStarred: boolean;
   toggleStar: () => void;
 }
 
 export const StarsContext = createContext<StarsType>(undefined);
 
+const hasStar = (stars: Star[], shortId: string) =>
+  !!stars.find((star) => star.shortId === shortId);
+
 export const StarsProvider = ({ children }) => {
   const { feature } = useFeatureContext();
 
-  const [stars, setStars] = usePersistedState('stars', {});
-
+  const [stars, setStars] = usePersistedState<Star[]>('stars', []);
   const shortId = feature ? getShortId(feature.osmMeta) : undefined;
-  const isStarred = !!stars[shortId];
-
+  const isStarred = hasStar(stars, shortId);
   const toggleStar = () => {
     if (!shortId) {
       return;
     }
 
-    setStars((stars2) => {
-      if (stars2[shortId]) {
-        const starsClone = { ...stars2 };
-        delete starsClone[shortId];
-        return { ...starsClone };
-      }
-
-      return {
-        ...stars2,
-        [shortId]: getLabel(feature),
-      };
-    });
+    setStars((data) => hasStar(data, shortId)
+        ? data.filter((star) => star.shortId !== shortId)
+        : data.concat({
+            shortId,
+            poiType: getPoiType(feature),
+            label: getLabel(feature),
+          }));
   };
 
   const value = { stars, isStarred, toggleStar };

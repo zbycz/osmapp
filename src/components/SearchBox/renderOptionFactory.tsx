@@ -152,8 +152,7 @@ export const renderOptionFactory =
           <Grid item xs>
             <span style={{ fontWeight: 700 }}>{star.label}</span>
             <Typography variant="body2" color="textSecondary">
-              favourite
-              {/* {t('searchbox.category')} */}
+              {star.poiType}
             </Typography>
           </Grid>
         </>
