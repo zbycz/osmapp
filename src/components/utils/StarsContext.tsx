@@ -28,13 +28,15 @@ export const StarsProvider = ({ children }) => {
       return;
     }
 
-    setStars((data) => hasStar(data, shortId)
+    setStars((data) =>
+      hasStar(data, shortId)
         ? data.filter((star) => star.shortId !== shortId)
         : data.concat({
             shortId,
             poiType: getPoiType(feature),
             label: getLabel(feature),
-          }));
+          }),
+    );
   };
 
   const value = { stars, isStarred, toggleStar };
