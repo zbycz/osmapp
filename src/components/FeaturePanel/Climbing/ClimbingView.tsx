@@ -108,6 +108,7 @@ export const ClimbingView = () => {
     photoPath,
     handleImageLoad,
     areRoutesLoading,
+    setArePointerEventsDisabled,
     setImageZoom, // TODO remove it from context
   } = useClimbingContext();
 
@@ -168,6 +169,19 @@ export const ClimbingView = () => {
   const showArrowOnBottom =
     splitPaneHeight === viewportSize.height - editorPosition.y;
 
+  // const stopPointerEvents2 = () => {
+  //   setArePointerEventsDisabled(false);
+  //   setTimeout(() => {
+  //     setArePointerEventsDisabled(true);
+  //   }, 1000);
+  // };
+  const startPointerEvents = () => {
+    setArePointerEventsDisabled(false);
+  };
+  const stopPointerEvents = () => {
+    setArePointerEventsDisabled(true);
+  };
+
   return (
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (
@@ -203,6 +217,14 @@ export const ClimbingView = () => {
         >
           <BlurContainer isVisible={isPhotoLoaded}>
             <TransformWrapper
+              onWheelStart={stopPointerEvents}
+              onWheelStop={startPointerEvents}
+              onPinchingStart={stopPointerEvents}
+              onPinchingStop={startPointerEvents}
+              onZoomStart={stopPointerEvents}
+              onZoomStop={startPointerEvents}
+              onPanningStart={startPointerEvents}
+              onPanningStop={startPointerEvents}
               wheel={{ step: 100 }}
               onTransformed={(
                 _ref,
@@ -213,13 +235,13 @@ export const ClimbingView = () => {
               }}
             >
               {/* {isPhotoLoaded && (
-                <MiniMap width={200}>
-                  <RoutesEditor
-                    isRoutesLayerVisible={false}
-                    setIsPhotoLoaded={setIsPhotoLoaded}
-                  />
-                </MiniMap>
-              )} */}
+          <MiniMap width={200}>
+            <RoutesEditor
+              isRoutesLayerVisible={false}
+              setIsPhotoLoaded={setIsPhotoLoaded}
+            />
+          </MiniMap>
+        )} */}
               <TransformComponent
                 wrapperStyle={{ height: '100%', width: '100%' }}
                 contentStyle={{ height: '100%', width: '100%' }}

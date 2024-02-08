@@ -41,6 +41,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     setIsLineInteractiveAreaHovered,
     getPathForRoute,
     // addZoom,
+    // arePointerEventsDisabled,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
@@ -148,13 +149,14 @@ export const RoutePath = ({ route, routeNumber }) => {
       };
 
   // console.log('___', isHovered);
-
+  // console.log('______arePointerEventsDisabled', arePointerEventsDisabled);
   return (
     <>
       <PathWithBorder
         d={`M0 0 ${pointsInString}`}
         isSelected={isSelected}
         {...commonProps}
+        // style={{ pointerEvents: arePointerEventsDisabled ? 'none' : 'all' }}
         style={{ pointerEvents: 'all' }}
         route={route}
       />
@@ -202,6 +204,7 @@ export const RoutePath = ({ route, routeNumber }) => {
                 // onMouseDown={onMouseDown}
                 onClick={onMouseDown}
                 // onMouseUp={onMouseUp}
+                // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
                 {...commonProps}
               />
             );

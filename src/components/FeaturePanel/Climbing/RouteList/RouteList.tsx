@@ -6,6 +6,7 @@ import EditIcon from '@material-ui/icons/Edit';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
 import { addElementToArray, deleteFromArray } from '../utils/array';
+import { getCsvGradeData } from '../utils/routeGrade';
 
 const Container = styled.div`
   padding-bottom: 65px;
@@ -34,10 +35,17 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     setIsEditMode,
     routesExpanded,
     setRoutesExpanded,
+    // arePointerEventsDisabled,
+    gradeTable,
+    setGradeTable,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     setRoutes,
     showDebugMenu,
   } = useClimbingContext();
+
+  React.useEffect(() => {
+    if (!gradeTable) setGradeTable(getCsvGradeData());
+  }, []);
 
   React.useEffect(() => {
     const downHandler = (e) => {
@@ -102,27 +110,40 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
         ?.map(({ x, y, type }) => `${x},${y}${type ? boltCodeMap[type] : ''}`)
         .join('|');
 
-    const getImage = (o) =>
-      o && o.length > 1 ? `${o?.[0]}#${getPathString(o?.[1])}` : '';
+    const getImage = (name: string) => `File:${name}`;
 
-    const csv = routes
+    const object = routes
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      .map((r, _idx) =>
-        [
-          r.name,
-          getImage(Object.entries(r.paths)?.[0]),
-          getImage(Object.entries(r.paths)?.[1]),
-          getImage(Object.entries(r.paths)?.[2]),
-          // JSON.stringify(r.difficulty),
-          // idx,
-        ].join(';'),
-      )
-      .join(`\n`);
-    console.log(
-      `____EXPORT CSV
-`,
-      csv,
-    );
+      .map((route, _idx) => {
+        const photos = Object.entries(route.paths);
+
+        return photos.map((photoName) => [
+          route.name,
+          getImage(photoName?.[0]),
+          getPathString(photoName?.[1]),
+        ]);
+      })
+      .flat();
+    console.table(object);
+
+    //     const csv = routes
+    //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    //       .map((r, _idx) =>
+    //         [
+    //           r.name,
+    //           getImage(Object.entries(r.paths)?.[0]),
+    //           getImage(Object.entries(r.paths)?.[1]),
+    //           getImage(Object.entries(r.paths)?.[2]),
+    //           // JSON.stringify(r.difficulty),
+    //           // idx,
+    //         ].join(';'),
+    //       )
+    //       .join(`\n`);
+    //     console.log(
+    //       `____EXPORT CSV
+    // `,
+    //       csv,
+    //     );
   };
 
   const mockRoutes = () => {
@@ -141,6 +162,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
 
   return (
     <Container>
+      {/* {arePointerEventsDisabled ? 'NONE' : 'ALL'} */}
       {routes.length !== 0 && <RouteListDndContent isEditable={isEditable} />}
       {!isEditMode && isEditable && (
         <ButtonContainer>
@@ -159,10 +181,10 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
           <br />
           <ButtonGroup variant="contained" size="small" color="primary">
             <Button size="small" onClick={getRoutesCsv}>
-              routes CSV
+              export OSM
             </Button>
             <Button size="small" onClick={getRoutesJson}>
-              routes JSON
+              export JSON
             </Button>
             <Button size="small" onClick={mockRoutes}>
               Mock

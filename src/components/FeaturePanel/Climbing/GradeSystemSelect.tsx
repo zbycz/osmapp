@@ -1,7 +1,7 @@
 import React from 'react';
 
 import { MenuItem, Select } from '@material-ui/core';
-import { GradeSystem } from './utils/gradeTable';
+import { GradeSystem } from './types';
 
 type Props = {
   gradeSystem: GradeSystem;

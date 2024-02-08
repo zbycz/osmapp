@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import {
   ClimbingRoute,
+  GradeSystem,
+  GradeTable,
   PathPoints,
   Position,
   PositionPx,
@@ -25,7 +27,6 @@ import {
   CountPositionEntity,
   positionUtilsFactory,
 } from '../utils/positionUtilsFactory';
-import { GradeSystem } from '../utils/gradeTable';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
@@ -117,6 +118,10 @@ type ClimbingContextType = {
   setIsDifficultyHeatmapEnabled: (isDifficultyHeatmapEnabled: boolean) => void;
   showDebugMenu: boolean;
   setShowDebugMenu: (showDebugMenu: boolean) => void;
+  arePointerEventsDisabled: boolean;
+  setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
+  gradeTable: GradeTable;
+  setGradeTable: (gradeTable: GradeTable) => void;
 };
 
 // @TODO generate?
@@ -131,7 +136,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const initialRoutes = osmToClimbingRoutes(feature);
   publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);
-  const [photoPaths, setPhotoPaths] = useState<Array<string>>([]);
+  const [gradeTable, setGradeTable] = useState<Array<GradeTable>>(null);
+  const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -144,6 +150,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     useState<boolean>(false);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
+  const [arePointerEventsDisabled, setArePointerEventsDisabled] =
+    useState<boolean>(false);
   const [isLineInteractiveAreaHovered, setIsLineInteractiveAreaHovered] =
     useState<boolean>(false);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
@@ -273,10 +281,11 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
 
   const getAllRoutesPhotos = () => {
     const photos = routes.reduce((acc, route) => {
+      if (!route.paths) return [];
       const routePhotos = Object.keys(route.paths);
-
       return [...new Set([...acc, ...routePhotos])];
     }, []);
+
     setPhotoPaths(photos.sort());
   };
 
@@ -365,6 +374,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setIsDifficultyHeatmapEnabled,
     showDebugMenu,
     setShowDebugMenu,
+    arePointerEventsDisabled,
+    setArePointerEventsDisabled,
+    gradeTable,
+    setGradeTable,
   };
 
   return (

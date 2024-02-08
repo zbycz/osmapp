@@ -79,6 +79,7 @@ export const RenderListRow = ({
     selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
+    gradeTable,
   } = useClimbingContext();
 
   useEffect(() => {
@@ -162,6 +163,7 @@ export const RenderListRow = ({
         <Cell width={50}>
           {getText(
             convertGrade(
+              gradeTable,
               tempRoute.difficulty?.gradeSystem,
               selectedRouteSystem,
               tempRoute.difficulty?.grade,

@@ -1,12 +1,12 @@
 import { Feature, FeatureTags } from '../../../../services/types';
 import {
   ClimbingRoute,
+  GradeSystem,
   PathPoints,
   PointType,
   RouteDifficulty,
 } from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
-import { GradeSystem } from '../utils/gradeTable';
 
 const boltCodeMap: Record<string, PointType> = {
   B: 'bolt',

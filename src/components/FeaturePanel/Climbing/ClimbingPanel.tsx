@@ -72,8 +72,8 @@ export const ClimbingPanel = ({ footer }) => {
       setPointSelectedIndex(null);
     }
   }, [isFullscreenDialogOpened]);
-  if (photoPaths.length === 0) getAllRoutesPhotos();
-  if (!photoPath && photoPaths.length > 0) setPhotoPath(photoPaths[0]);
+  if (photoPaths === null) getAllRoutesPhotos();
+  if (!photoPath && photoPaths?.length > 0) setPhotoPath(photoPaths[0]);
   const image = getWikiImage2(photoPath);
 
   const onPhotoLoad = () => {

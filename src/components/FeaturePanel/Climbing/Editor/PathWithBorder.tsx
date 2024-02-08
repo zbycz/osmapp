@@ -14,12 +14,12 @@ const RouteBorder = styled.path`
 
 export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
   const config = useConfig();
-  const { isDifficultyHeatmapEnabled } = useClimbingContext();
+  const { isDifficultyHeatmapEnabled, gradeTable } = useClimbingContext();
   const borderColor = isDifficultyHeatmapEnabled
     ? config.pathStrokeColor
     : config.pathBorderColor;
   const strokeColor = isDifficultyHeatmapEnabled
-    ? getDifficultyColor(route.difficulty)
+    ? getDifficultyColor(gradeTable, route.difficulty)
     : config.pathStrokeColor;
   return (
     <>
@@ -31,6 +31,7 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
         strokeLinejoin="round"
         fill="none"
         opacity={config.pathBorderOpacity}
+        // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
       />
       <RouteLine
@@ -41,7 +42,7 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
         strokeLinejoin="round"
         fill="none"
         // markerMid="url(#triangle)"
-        pointerEvents="none"
+        // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
       />
     </>

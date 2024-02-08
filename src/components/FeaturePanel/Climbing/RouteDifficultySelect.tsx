@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { TextField } from '@material-ui/core';
-import { RouteDifficulty } from './types';
-import { GradeSystem } from './utils/gradeTable';
+import { GradeSystem, RouteDifficulty } from './types';
 import { GradeSystemSelect } from './GradeSystemSelect';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { convertGrade } from './utils/routeGrade';
@@ -28,7 +27,7 @@ export const RouteDifficultySelect = ({
   const [tempGrade, setTempGrade] = useState<string>(null);
   const [tempGradeSystem, setTempGradeSystem] = useState<GradeSystem>(null);
 
-  const { updateRouteOnIndex } = useClimbingContext();
+  const { updateRouteOnIndex, gradeTable } = useClimbingContext();
 
   // const [selectedRouteSystem, setSelectedRouteSystem] =
   //   useState<GradeSystem>(null);
@@ -47,6 +46,7 @@ export const RouteDifficultySelect = ({
   useEffect(() => {
     if (tempGrade && tempGradeSystem) {
       const newGrade = convertGrade(
+        gradeTable,
         difficulty.gradeSystem,
         tempGradeSystem,
         tempGrade,

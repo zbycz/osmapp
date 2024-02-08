@@ -1,4 +1,4 @@
-import { GradeSystem } from './utils/gradeTable';
+import { gradeSystem } from './utils/gradeData';
 
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling';
 
@@ -46,4 +46,5 @@ export type ZoomState = {
   positionY: number;
 };
 
-// images: Array<Array<ClimbingRoute>>
+export type GradeTable = Array<Array<string>>;
+export type GradeSystem = typeof gradeSystem[number]['key'];
