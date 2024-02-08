@@ -58,7 +58,8 @@ export default {
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
-  'featurepanel.save_button': 'Save to favorites',
+  'featurepanel.favorites_save_button': 'Save to favorites',
+  'featurepanel.favorites_unsave_button': 'Remove from favorites',
   'featurepanel.directions_button': 'Directions',
   'featurepanel.error': 'Error __code__ while fetching feature from OpenStreetMap',
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',

@@ -1,6 +1,6 @@
 import Router from 'next/router';
 import maplibregl from 'maplibre-gl';
-import { getShortId, getUrlOsmId } from '../../services/helpers';
+import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { getGlobalMap } from '../../services/mapStorage';
 import { performOverpassSearch } from '../../services/overpassSearch';
@@ -58,6 +58,13 @@ const fitBounds = (option, panelShown = false) => {
 export const onSelectedFactory =
   (setFeature, setPreview, mobileMode, bbox, showToast, setOverpassLoading) =>
   (_, option) => {
+    if (option.star) {
+      const apiId = getApiId(option.star.shortId);
+      Router.push(`/${getUrlOsmId(apiId)}`);
+      // Router.push(`/${getUrlOsmId(apiId)}${window.location.hash}`); ????
+      return;
+    }
+
     if (option.overpass || option.preset) {
       const tags = option.overpass || option.preset.presetForSearch.tags;
 
