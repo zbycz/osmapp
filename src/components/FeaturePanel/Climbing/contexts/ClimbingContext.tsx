@@ -136,7 +136,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const initialRoutes = osmToClimbingRoutes(feature);
   publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);
-  const [gradeTable, setGradeTable] = useState<Array<GradeTable>>(null);
+  const [gradeTable, setGradeTable] = useState<GradeTable>(null);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);

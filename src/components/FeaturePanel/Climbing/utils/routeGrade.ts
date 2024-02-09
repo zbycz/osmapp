@@ -8,7 +8,7 @@ const csvToArray = (csv: string) => {
   const data = rows.slice(2);
   return data.map((dataRow) => {
     const rowDifficulties = dataRow.split(',');
-    return rowDifficulties;
+    return rowDifficulties.map((difficulty) => difficulty.trimStart().trim());
   });
 };
 

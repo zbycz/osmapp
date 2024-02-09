@@ -72,7 +72,7 @@ export const getWikiImage2 = (photoName): string => {
   const md4FileName = md5(fileName);
   return `https://upload.wikimedia.org/wikipedia/commons/thumb/${
     md4FileName[0]
-  }/${md4FileName.substring(0, 2)}/${fileName}/1000px-${fileName}`;
+  }/${md4FileName.substring(0, 2)}/${fileName}/3000px-${fileName}`;
 };
 
 export const getWikiImage = async (wikiUrl): Promise<Image> => {

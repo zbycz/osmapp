@@ -46,5 +46,5 @@ export type ZoomState = {
   positionY: number;
 };
 
-export type GradeTable = Array<Array<string>>;
 export type GradeSystem = typeof gradeSystem[number]['key'];
+export type GradeTable = Record<GradeSystem, Array<string>>;
