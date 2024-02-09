@@ -111,12 +111,13 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
 
   return (
     <Wrapper link={thumb} uncertainImage={uncertainImage} portrait={portrait}>
+      {image && image !== LOADING && <Photo image={image} />}
+
       {(image === undefined || image === LOADING) && (
         <IconWrapper>
           <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
         </IconWrapper>
       )}
-      {image && image !== LOADING && <Photo image={image} />}
       {source && (
         <Tooltip title={nl2br(`© ${attribution}${uncertainTitle}`)} arrow>
           <AttributionLink
