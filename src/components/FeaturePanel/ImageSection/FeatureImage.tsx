@@ -7,11 +7,11 @@ import { Feature } from '../../../services/types';
 import { InlineSpinner } from './InlineSpinner';
 import { t } from '../../../services/intl';
 import { nl2br } from '../../utils/nl2br';
+import { Photo } from './Photo';
 
 const Wrapper = styled.div`
   position: relative;
-  background: #ddd url(${({ link }) => link ?? ''}) center center no-repeat;
-  background-size: ${({ portrait }) => (portrait ? 'contain' : 'cover')};
+  background: #ddd;
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
   ${({ uncertainImage }) =>
@@ -116,6 +116,7 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
           <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
         </IconWrapper>
       )}
+      {image && image !== LOADING && <Photo image={image} />}
       {source && (
         <Tooltip title={nl2br(`© ${attribution}${uncertainTitle}`)} arrow>
           <AttributionLink
