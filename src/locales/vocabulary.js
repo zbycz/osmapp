@@ -34,7 +34,7 @@ export default {
   'homepage.screenshot_alt': 'Screenshot of OsmAPP',
   'homepage.about_osm': `All map data is from
       <a href="https://osm.org">OpenStreetMap</a>, a map created by
-      milions of contributors — similar to Wikipedia. You can find
+      millions of contributors — similar to Wikipedia. You can find
       <em>Edit</em> button on each map feature.`,
   'homepage.heading_about_osmapp': 'About OsmAPP',
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
