@@ -37,7 +37,7 @@ export const RouteDifficultySelect = ({
   //     : [];
 
   useEffect(() => {
-    if (!tempGrade || !tempGradeSystem) {
+    if (difficulty && (!tempGrade || !tempGradeSystem)) {
       setTempGrade(difficulty.grade);
       setTempGradeSystem(difficulty.gradeSystem);
     }

@@ -17,6 +17,7 @@ import { RouteList } from './RouteList/RouteList';
 
 import { RoutesEditor } from './Editor/RoutesEditor';
 import { getWikiImage2 } from '../../../services/images/getWikiImage';
+import { Guide } from './Guide';
 
 const Container = styled.div`
   position: relative;
@@ -264,6 +265,7 @@ export const ClimbingView = () => {
                 </>
               </TransformComponent>
             </TransformWrapper>
+            {isEditMode && areRoutesVisible && <Guide />}
           </BlurContainer>
         </BackgroundContainer>
 

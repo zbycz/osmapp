@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { RoutesLayer } from './RoutesLayer';
 import { ControlPanel } from './ControlPanel';
-import { Guide } from '../Guide';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
@@ -151,7 +150,6 @@ export const RoutesEditor = ({
           onEditorTouchMove={onTouchMove}
           transformOrigin={transformOrigin}
         />
-        {isEditMode && areRoutesVisible && <Guide />}
       </EditorContainer>
     </>
   );
