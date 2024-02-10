@@ -27,7 +27,7 @@ export default {
   'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
   'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
 
-  'homepage.subtitle': 'A universal OpenStreetMap app',
+  'homepage.subtitle': 'A universal app for OpenStreetMap',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.examples.eg': 'eg.',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
@@ -50,6 +50,9 @@ export default {
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
+  'homepage.disclaimer_heading': 'Disclaimer',
+  'homepage.disclaimer': `OpenStreetMap and OSM are a trademark of the OpenStreetMap Foundation. This project is not endorsed by or affiliated with the <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a>.`,
+  'homepage.disclaimer_maptiler': `Vector maps ("Basic" and "Outdoor") contain some place names from the Wikidata project, more <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>here</a>.`,
 
   'searchbox.placeholder': 'Search OpenStreetMap',
   'searchbox.category': 'category',

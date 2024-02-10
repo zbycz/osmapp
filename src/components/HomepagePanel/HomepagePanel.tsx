@@ -194,6 +194,18 @@ export const HomepagePanel = () => {
             </a>
 
             <Spacer />
+            <Spacer />
+
+            <Typography variant="overline" color="textSecondary" component="h2">
+              {t('homepage.disclaimer_heading')}
+            </Typography>
+
+            <Translation id="homepage.disclaimer" />
+            <br/>
+            <br/>
+            <Translation id="homepage.disclaimer_maptiler" />
+
+            <Spacer />
           </div>
           <PanelFooter />
         </Content>
