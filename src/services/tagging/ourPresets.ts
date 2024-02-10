@@ -30,10 +30,6 @@ export const ourFields = {
     type: 'number',
     minValue: 0,
   },
-  'climbing/grade': {
-    key: 'climbing:grade:uiaa',
-    type: 'text',
-  },
   'climbing/bolts': {
     key: 'climbing:bolts',
     type: 'number',
@@ -47,6 +43,18 @@ export const ourFields = {
     key: 'climbing:bolt',
     type: 'combo',
     options: ['expansion', 'glue-in', 'ring'],
+  },
+  'climbing/grade/uiaa': {
+    key: 'climbing:grade:uiaa',
+    type: 'text',
+  },
+  'climbing/grade/saxon': {
+    key: 'climbing:grade:saxon',
+    type: 'text',
+  },
+  'climbing/grade/french': {
+    key: 'climbing:grade:french',
+    type: 'text',
   },
 };
 
@@ -64,18 +72,23 @@ export const ourPresets = {
     icon: 'temaki-abseiling',
     geometry: ['point', 'line'],
     fields: [
-      'climbing/grade',
-      'climbing/bolts',
-      'climbing/bolt',
-      'climbing/bolted',
+      'name',
       'climbing/length',
+      'climbing/grade/uiaa',
+      'climbing/grade/french',
+      'climbing/grade/saxon',
+    ],
+    moreFields: [
+      'climbing/bolts',
+      'climbing/bolted',
+      'climbing/bolt',
       'climbing/orientation',
       'climbing/quality',
       'climbing/rock',
       'climbing/summit_log',
       'website',
+      'ele',
     ],
-    moreFields: ['ele'],
     tags: {
       climbing: 'route',
     },
@@ -83,17 +96,18 @@ export const ourPresets = {
   'climbing/crag': {
     icon: 'temaki-abseiling',
     geometry: ['point', 'relation'],
-    fields: [
-      'climbing/routes',
-      'climbing/bolt',
-      'climbing/bolted',
+    fields: ['name'],
+    moreFields: [
       'climbing/length',
+      'climbing/routes',
+      'climbing/bolted',
+      'climbing/bolt',
       'climbing/orientation',
       'climbing/quality',
       'climbing/rock',
       'website',
+      'ele',
     ],
-    moreFields: ['ele'],
     tags: {
       climbing: 'crag',
     },
@@ -146,10 +160,6 @@ export const getOurTranslations = (lang) => ({
         'climbing/length': {
           label: 'Length (m)',
         },
-        'climbing/grade': {
-          label: 'Grade',
-          placeholder: '6+',
-        },
         'climbing/bolts': {
           label: 'Number of bolts',
         },
@@ -163,6 +173,18 @@ export const getOurTranslations = (lang) => ({
             'glue-in': 'glue-in bolt',
             ring: 'ring bolt',
           },
+        },
+        'climbing/grade/uiaa': {
+          label: 'Grade (UIAA)',
+          placeholder: '6-',
+        },
+        'climbing/grade/saxon': {
+          label: 'Grade (saxon)',
+          placeholder: 'VIIa',
+        },
+        'climbing/grade/french': {
+          label: 'Grade (french)',
+          placeholder: '5c',
         },
       },
     },
