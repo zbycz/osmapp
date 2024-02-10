@@ -43,6 +43,9 @@ export default {
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – za skvělé vektorové mapy <br>a za podporu tohoto projektu  ❤️ ',
+  'homepage.disclaimer_heading': 'Poznámka',
+  'homepage.disclaimer': `OpenStreetMap a OSM jsou ochranné známky nadace OpenStreetMap. Tento projekt není schválen ani spojen s nadací <a href="https://osmfoundation.org/">OpenStreetMap Foundation</a>.`,
+  'homepage.disclaimer_maptiler': `Vektorové mapy ("Základní" a "Outdoorová") obsahují některé názvy míst z projektu Wikidata,  více <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>zde</a>.`,
 
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
   'searchbox.category': 'kategorie',
