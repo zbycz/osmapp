@@ -29,6 +29,11 @@ const Heading = styled.div`
   font-size: 36px;
   line-height: 0.98;
   color: ${({ theme }) => theme.palette.text.panelHeading};
+
+  :hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
 `;
 const Thumbnail = styled.img<{ isLoading: boolean }>`
   width: 100%;
@@ -79,7 +84,7 @@ export const ClimbingPanel = ({ footer }) => {
   if (photoPaths === null) getAllRoutesPhotos();
   if (!photoPath && photoPaths?.length > 0) setPhotoPath(photoPaths[0]);
 
-  const image = getWikiImage2(photoPath);
+  const image = getWikiImage2(photoPath, 500);
 
   const onPhotoLoad = () => {
     handleImageLoad();
@@ -115,7 +120,7 @@ export const ClimbingPanel = ({ footer }) => {
               <ShowFullscreen onClick={onFullScreenClick} />
             </ThumbnailContainer>
           )}
-          <Heading>{label}</Heading>
+          <Heading onClick={onFullScreenClick}>{label}</Heading>
 
           <RouteList />
 

@@ -168,7 +168,7 @@ export const ClimbingView = () => {
 
   useEffect(() => {
     setIsPhotoLoaded(false);
-    const image = getWikiImage2(photoPath);
+    const image = getWikiImage2(photoPath, 1500);
     setImageUrl(image);
   }, [photoPath]);
 

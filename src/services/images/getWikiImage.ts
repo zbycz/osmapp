@@ -66,13 +66,16 @@ const getWikiType = (d) => {
   return d.claims ? 'wikidata' : null;
 };
 
-export const getWikiImage2 = (photoName): string => {
+export const getWikiImage2 = (photoName, horizontalResolution): string => {
   if (!photoName) return null;
   const fileName = photoName.replace(/ /g, '_');
   const md4FileName = md5(fileName);
   return `https://upload.wikimedia.org/wikipedia/commons/thumb/${
     md4FileName[0]
-  }/${md4FileName.substring(0, 2)}/${fileName}/1000px-${fileName}`;
+  }/${md4FileName.substring(
+    0,
+    2,
+  )}/${fileName}/${horizontalResolution}px-${fileName}`;
 };
 
 export const getWikiImage = async (wikiUrl): Promise<Image> => {
