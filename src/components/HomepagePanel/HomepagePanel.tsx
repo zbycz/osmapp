@@ -201,8 +201,8 @@ export const HomepagePanel = () => {
             </Typography>
 
             <Translation id="homepage.disclaimer" />
-            <br/>
-            <br/>
+            <br />
+            <br />
             <Translation id="homepage.disclaimer_maptiler" />
 
             <Spacer />
