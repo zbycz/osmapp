@@ -62,6 +62,12 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   /* border: solid 1px red; */
 `;
 
+const NoPhoto = styled.div<{ isVisible: boolean }>`
+  text-align: center;
+  color: ${({ theme }) => theme.textSubdued};
+  padding: 10px;
+`;
+
 const BlurContainer = styled.div<{ isVisible: boolean }>`
   backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
@@ -223,31 +229,37 @@ export const ClimbingView = () => {
           imageUrl={imageUrl}
           isVisible={isPhotoLoaded}
         >
-          {!isPhotoLoaded && (
-            <LoadingContainer>
-              <CircularProgress color="primary" />
-            </LoadingContainer>
-          )}
-          <BlurContainer isVisible={isPhotoLoaded}>
-            <TransformWrapper
-              onWheelStart={stopPointerEvents}
-              onWheelStop={startPointerEvents}
-              onPinchingStart={stopPointerEvents}
-              onPinchingStop={startPointerEvents}
-              onZoomStart={stopPointerEvents}
-              onZoomStop={startPointerEvents}
-              onPanningStart={startPointerEvents}
-              onPanningStop={startPointerEvents}
-              wheel={{ step: 100 }}
-              onTransformed={(
-                _ref,
-                state: { scale: number; positionX: number; positionY: number },
-              ) => {
-                setImageZoom(state);
-                // console.log('____state', _ref, state);
-              }}
-            >
-              {/* {isPhotoLoaded && (
+          {photoPath ? (
+            <>
+              {!isPhotoLoaded && (
+                <LoadingContainer>
+                  <CircularProgress color="primary" />
+                </LoadingContainer>
+              )}
+              <BlurContainer isVisible={isPhotoLoaded}>
+                <TransformWrapper
+                  onWheelStart={stopPointerEvents}
+                  onWheelStop={startPointerEvents}
+                  onPinchingStart={stopPointerEvents}
+                  onPinchingStop={startPointerEvents}
+                  onZoomStart={stopPointerEvents}
+                  onZoomStop={startPointerEvents}
+                  onPanningStart={startPointerEvents}
+                  onPanningStop={startPointerEvents}
+                  wheel={{ step: 100 }}
+                  onTransformed={(
+                    _ref,
+                    state: {
+                      scale: number;
+                      positionX: number;
+                      positionY: number;
+                    },
+                  ) => {
+                    setImageZoom(state);
+                    // console.log('____state', _ref, state);
+                  }}
+                >
+                  {/* {isPhotoLoaded && (
           <MiniMap width={200}>
             <RoutesEditor
               isRoutesLayerVisible={false}
@@ -255,25 +267,29 @@ export const ClimbingView = () => {
             />
           </MiniMap>
         )} */}
-              <TransformComponent
-                wrapperStyle={{ height: '100%', width: '100%' }}
-                contentStyle={{ height: '100%', width: '100%' }}
-              >
-                <>
-                  <RoutesEditor
-                    isRoutesLayerVisible={
-                      !isSplitViewDragging &&
-                      areRoutesVisible &&
-                      !areRoutesLoading
-                    }
-                    imageUrl={imageUrl}
-                    setIsPhotoLoaded={setIsPhotoLoaded}
-                  />
-                </>
-              </TransformComponent>
-            </TransformWrapper>
-            {isEditMode && areRoutesVisible && <Guide />}
-          </BlurContainer>
+                  <TransformComponent
+                    wrapperStyle={{ height: '100%', width: '100%' }}
+                    contentStyle={{ height: '100%', width: '100%' }}
+                  >
+                    <>
+                      <RoutesEditor
+                        isRoutesLayerVisible={
+                          !isSplitViewDragging &&
+                          areRoutesVisible &&
+                          !areRoutesLoading
+                        }
+                        imageUrl={imageUrl}
+                        setIsPhotoLoaded={setIsPhotoLoaded}
+                      />
+                    </>
+                  </TransformComponent>
+                </TransformWrapper>
+                {isEditMode && areRoutesVisible && <Guide />}
+              </BlurContainer>
+            </>
+          ) : (
+            <NoPhoto>No image</NoPhoto>
+          )}
         </BackgroundContainer>
 
         <RouteList isEditable />

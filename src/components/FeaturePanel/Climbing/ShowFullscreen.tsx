@@ -21,6 +21,7 @@ const CenteredContainer = styled.div<{ imageSize: Size }>`
   flex-direction: column;
   gap: 8px;
   height: 100%;
+  color: #fff;
 `;
 
 const ShowFullscreenText = styled.div`
