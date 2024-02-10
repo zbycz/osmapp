@@ -271,7 +271,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     return !!availablePhotos.find((availablePhotoPath) => {
       if (
         availablePhotoPath !== photoPath &&
-        paths[availablePhotoPath]?.length > 0
+        paths[availablePhotoPath] !== null
       ) {
         return true;
       }

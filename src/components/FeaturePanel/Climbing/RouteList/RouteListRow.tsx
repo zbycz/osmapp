@@ -124,6 +124,12 @@ export const RenderListRow = ({
     index,
     isExpanded,
   };
+  const convertedGrade = convertGrade(
+    gradeTable,
+    tempRoute.difficulty?.gradeSystem,
+    selectedRouteSystem,
+    tempRoute.difficulty?.grade,
+  );
 
   return (
     <Container ref={ref}>
@@ -161,14 +167,7 @@ export const RenderListRow = ({
           )}
         </NameCell>
         <Cell width={50}>
-          {getText(
-            convertGrade(
-              gradeTable,
-              tempRoute.difficulty?.gradeSystem,
-              selectedRouteSystem,
-              tempRoute.difficulty?.grade,
-            ),
-          )}
+          {getText(convertedGrade ?? tempRoute.difficulty?.grade)}
         </Cell>
 
         <Cell width={50}>

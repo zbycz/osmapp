@@ -21,7 +21,7 @@ export const RouteInDifferentPhotos = ({
   stopPropagation: (e: any) => void;
 }) => {
   const { setPhotoPath, handleImageLoad, photoPath } = useClimbingContext();
-
+  console.log('___route', route);
   const onPhotoChange = (e: any, photo: string) => {
     // @TODO probably move to machine state function
     setPhotoPath(photo);
