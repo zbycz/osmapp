@@ -6,10 +6,6 @@ import { t } from '../../../services/intl';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteNumber } from './RouteNumber';
 
-const GuideContainer = styled.div`
-  padding: 10px;
-`;
-
 const DrawRouteButton = styled(Button)`
   align-items: baseline;
 `;
@@ -31,53 +27,37 @@ export const Guide = () => {
   const showDrawButton =
     !isInSchema && machine.currentStateName !== 'extendRoute';
   return (
-    <GuideContainer>
-      <Snackbar
-        open={
-          (machine.currentStateName === 'extendRoute' && !isGuideClosed) ||
-          (routeSelectedIndex !== null && !isInSchema)
-        }
-        // autoHideDuration={6000}
+    <Snackbar
+      open={
+        (machine.currentStateName === 'extendRoute' && !isGuideClosed) ||
+        (routeSelectedIndex !== null && !isInSchema)
+      }
+      // autoHideDuration={6000}
 
-        anchorOrigin={{
-          vertical: showDrawButton ? 'bottom' : 'top',
-          horizontal: showDrawButton ? 'left' : 'center',
-        }}
-        // onClose={handleClose}
-      >
-        {/* <Alert
-          onClose={handleClose}
-          severity="warning"
-          variant="filled"
-          action={
-            <Button color="inherit" size="small">
-              Add route to scheme
-            </Button>
-          }
+      anchorOrigin={{
+        vertical: showDrawButton ? 'bottom' : 'top',
+        horizontal: showDrawButton ? 'left' : 'center',
+      }}
+    >
+      {showDrawButton ? (
+        <DrawRouteButton
+          variant="contained"
+          size="small"
+          onClick={onDrawRouteClick}
         >
-          Selected route is not in scheme
-        </Alert> */}
-
-        {showDrawButton ? (
-          <DrawRouteButton
-            variant="contained"
-            size="small"
-            onClick={onDrawRouteClick}
-          >
-            Zakreslit cestu &nbsp;
-            <RouteNumber isSelected hasRoute>
-              {routeSelectedIndex + 1}
-            </RouteNumber>
-            {/* Tato cesta zatím není zakreslena na fotce. */}
-          </DrawRouteButton>
-        ) : (
-          <Alert onClose={handleClose} severity="info" variant="filled">
-            {path.length === 0
-              ? t('climbingpanel.create_first_node')
-              : t('climbingpanel.create_next_node')}
-          </Alert>
-        )}
-      </Snackbar>
-    </GuideContainer>
+          Zakreslit cestu &nbsp;
+          <RouteNumber isSelected hasRoute>
+            {routeSelectedIndex + 1}
+          </RouteNumber>
+          {/* Tato cesta zatím není zakreslena na fotce. */}
+        </DrawRouteButton>
+      ) : (
+        <Alert onClose={handleClose} severity="info" variant="filled">
+          {path.length === 0
+            ? t('climbingpanel.create_first_node')
+            : t('climbingpanel.create_next_node')}
+        </Alert>
+      )}
+    </Snackbar>
   );
 };

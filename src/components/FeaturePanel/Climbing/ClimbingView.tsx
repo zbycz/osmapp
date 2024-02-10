@@ -111,6 +111,9 @@ export const ClimbingView = () => {
     areRoutesLoading,
     setArePointerEventsDisabled,
     setImageZoom, // TODO remove it from context
+    photoPaths,
+    getAllRoutesPhotos,
+    setPhotoPath,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -158,6 +161,10 @@ export const ClimbingView = () => {
     setIsSplitViewDragging(false);
   };
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
+
+  // @TODO unify XYZ1
+  if (photoPaths === null) getAllRoutesPhotos();
+  if (!photoPath && photoPaths?.length > 0) setPhotoPath(photoPaths[0]);
 
   useEffect(() => {
     setIsPhotoLoaded(false);
@@ -216,6 +223,11 @@ export const ClimbingView = () => {
           imageUrl={imageUrl}
           isVisible={isPhotoLoaded}
         >
+          {!isPhotoLoaded && (
+            <LoadingContainer>
+              <CircularProgress color="primary" />
+            </LoadingContainer>
+          )}
           <BlurContainer isVisible={isPhotoLoaded}>
             <TransformWrapper
               onWheelStart={stopPointerEvents}
@@ -248,11 +260,6 @@ export const ClimbingView = () => {
                 contentStyle={{ height: '100%', width: '100%' }}
               >
                 <>
-                  {!isPhotoLoaded && (
-                    <LoadingContainer>
-                      <CircularProgress />
-                    </LoadingContainer>
-                  )}
                   <RoutesEditor
                     isRoutesLayerVisible={
                       !isSplitViewDragging &&

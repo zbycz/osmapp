@@ -7,9 +7,12 @@ import {
   DialogContent,
 } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import Router from 'next/router';
 import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingDialogHeader } from './ClimbingDialogHeader';
+import { getOsmappLink } from '../../../services/helpers';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const Flex = styled.div`
   display: flex;
@@ -17,10 +20,7 @@ const Flex = styled.div`
   width: 100%;
 `;
 
-export const ClimbingDialog = ({
-  isFullscreenDialogOpened,
-  setIsFullscreenDialogOpened,
-}) => {
+export const ClimbingDialog = () => {
   const contentRef = useRef(null);
 
   const {
@@ -30,9 +30,10 @@ export const ClimbingDialog = ({
     isEditMode,
     getMachine,
   } = useClimbingContext();
+  const { feature } = useFeatureContext();
 
   const machine = getMachine();
-  const onFullscreenDialogClose = () => setIsFullscreenDialogOpened(false);
+
   const onScroll = (e) => {
     setScrollOffset({
       x: e.target.scrollLeft,
@@ -44,20 +45,18 @@ export const ClimbingDialog = ({
   const handleSave = () => {
     setIsEditMode(false);
   };
+
+  const handleClose = () => {
+    Router.push(`${getOsmappLink(feature)}${window.location.hash}`);
+  };
+
   const onNewRouteCreate = () => {
     machine.execute('createRoute');
   };
 
   return (
-    <Dialog
-      fullScreen
-      open={isFullscreenDialogOpened}
-      onClose={onFullscreenDialogClose}
-    >
-      <ClimbingDialogHeader
-        isFullscreenDialogOpened={isFullscreenDialogOpened}
-        setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-      />
+    <Dialog fullScreen open onClose={handleClose}>
+      <ClimbingDialogHeader onClose={handleClose} />
 
       <DialogContent
         dividers
@@ -84,7 +83,7 @@ export const ClimbingDialog = ({
               </Button>
             )}
             <div>
-              <Button autoFocus onClick={onFullscreenDialogClose}>
+              <Button autoFocus onClick={handleClose}>
                 Cancel
               </Button>
               <Button onClick={handleSave} variant="contained" color="primary">

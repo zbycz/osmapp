@@ -29,10 +29,7 @@ const PhotoLinks = styled.div`
   margin-bottom: 2px;
 `;
 
-export const ClimbingDialogHeader = ({
-  isFullscreenDialogOpened,
-  setIsFullscreenDialogOpened,
-}) => {
+export const ClimbingDialogHeader = ({ onClose }) => {
   const [isSettingsOpened, setIsSettingsOpened] = useState<boolean>(false);
   const [clickCounter, setClickCounter] = useState<number>(0);
   const {
@@ -54,6 +51,7 @@ export const ClimbingDialogHeader = ({
     }, 100);
   };
   const { feature } = useFeatureContext();
+
   const label = getLabel(feature);
 
   const handleOnClick = () => {
@@ -76,7 +74,7 @@ export const ClimbingDialogHeader = ({
           >
             {label}
           </Typography>
-          {photoPaths.length > 1 && (
+          {photoPaths?.length > 1 && (
             <PhotosContainer>
               <PhotosTitle>Photos:</PhotosTitle>
               <PhotoLinks>
@@ -125,17 +123,9 @@ export const ClimbingDialogHeader = ({
           <TuneIcon fontSize="small" />
         </IconButton>
 
-        {isFullscreenDialogOpened && (
-          <IconButton
-            color="primary"
-            edge="end"
-            onClick={() => {
-              setIsFullscreenDialogOpened(!isFullscreenDialogOpened);
-            }}
-          >
-            <CloseIcon fontSize="small" />
-          </IconButton>
-        )}
+        <IconButton color="primary" edge="end" onClick={onClose}>
+          <CloseIcon fontSize="small" />
+        </IconButton>
       </Toolbar>
       <ClimbingSettings
         isSettingsOpened={isSettingsOpened}

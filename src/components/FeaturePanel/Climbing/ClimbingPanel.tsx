@@ -1,15 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { CircularProgress } from '@material-ui/core';
+import Router from 'next/router';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
 import { RouteList } from './RouteList/RouteList';
 import { FullscreenIconContainer, ShowFullscreen } from './ShowFullscreen';
-import { ClimbingDialog } from './ClimbingDialog';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
 import { getWikiImage2 } from '../../../services/images/getWikiImage';
+import { getOsmappLink } from '../../../services/helpers';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -47,83 +48,76 @@ const LoadingContainer = styled.div`
 `;
 
 export const ClimbingPanel = ({ footer }) => {
-  const [isFullscreenDialogOpened, setIsFullscreenDialogOpened] =
-    useState<boolean>(false);
-
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
 
   const {
-    setIsEditMode,
+    // setIsEditMode,
     handleImageLoad,
     imageSize,
     photoPath,
     photoRef,
-    setPointSelectedIndex,
+    // setPointSelectedIndex,
     getAllRoutesPhotos,
     photoPaths,
     setPhotoPath,
   } = useClimbingContext();
 
-  useEffect(() => {
-    if (!isFullscreenDialogOpened) {
-      // @TODO create a new state for closing fullscreen dialog
-      setIsEditMode(false);
-      setPointSelectedIndex(null);
-    }
-  }, [isFullscreenDialogOpened]);
+  // useEffect(() => {
+  //   if (!isFullscreenDialogOpened) {
+  //     // @TODO create a new state for closing fullscreen dialog
+  //     setIsEditMode(false);
+  //     setPointSelectedIndex(null);
+  //   }
+  // }, [isFullscreenDialogOpened]);
+
+  const onFullScreenClick = () => {
+    Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
+  };
+
+  // @TODO unify XYZ1
   if (photoPaths === null) getAllRoutesPhotos();
   if (!photoPath && photoPaths?.length > 0) setPhotoPath(photoPaths[0]);
+
   const image = getWikiImage2(photoPath);
 
   const onPhotoLoad = () => {
     handleImageLoad();
   };
 
-  useEffect(() => {
-    handleImageLoad();
-  }, [isFullscreenDialogOpened]);
+  // useEffect(() => {
+  //   handleImageLoad();
+  // }, [isFullscreenDialogOpened]);
 
   const isPhotoLoading = imageSize.height === 0;
   return (
     <>
       <PanelWrapper>
         <PanelScrollbars>
-          <ClimbingDialog
-            isFullscreenDialogOpened={isFullscreenDialogOpened}
-            setIsFullscreenDialogOpened={setIsFullscreenDialogOpened}
-          />
-
-          {!isFullscreenDialogOpened && (
-            <>
-              {image && (
-                <ThumbnailContainer
-                  height={isPhotoLoading ? 200 : imageSize.height}
-                >
-                  {isPhotoLoading && (
-                    <LoadingContainer>
-                      <CircularProgress />
-                    </LoadingContainer>
-                  )}
-
-                  <Thumbnail
-                    src={image}
-                    ref={photoRef}
-                    onLoad={onPhotoLoad}
-                    isLoading={isPhotoLoading}
-                  />
-
-                  {!isPhotoLoading && <RoutesLayer onClick={() => null} />}
-                  <ShowFullscreen
-                    onClick={() => setIsFullscreenDialogOpened(true)}
-                  />
-                </ThumbnailContainer>
+          {image && (
+            <ThumbnailContainer
+              height={isPhotoLoading ? 200 : imageSize.height}
+            >
+              {isPhotoLoading && (
+                <LoadingContainer>
+                  <CircularProgress />
+                </LoadingContainer>
               )}
-              <Heading>{label}</Heading>
 
-              <RouteList />
-            </>
+              <Thumbnail
+                src={image}
+                ref={photoRef}
+                onLoad={onPhotoLoad}
+                isLoading={isPhotoLoading}
+              />
+
+              {!isPhotoLoading && <RoutesLayer onClick={() => null} />}
+              <ShowFullscreen onClick={onFullScreenClick} />
+            </ThumbnailContainer>
           )}
+          <Heading>{label}</Heading>
+
+          <RouteList />
 
           {/* TODO unite with parent panel */}
           <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
