@@ -1,4 +1,5 @@
 // From https://github.com/osmcz/osmcz/blob/0d3eaaa/js/poi-popup.js - MIT
+import { md5 } from 'js-md5';
 import { fetchJson } from '../fetch';
 import { Image } from '../types';
 
@@ -108,4 +109,21 @@ export const getWikiImage = async (wikiUrl): Promise<Image> => {
   }
 
   return undefined;
+};
+
+export const getCommonsImageUrl = (
+  photoName: string,
+  width: number,
+): string | null => {
+  if (!photoName) return null;
+  if (!photoName.startsWith('File:')) {
+    // eslint-disable-next-line no-console
+    console.warn('Invalid Commons photo name without "File:":', photoName);
+    return null;
+  }
+  const fileName = photoName.replace(/^File:/, '').replace(/ /g, '_');
+  const hash = md5(fileName);
+  const part1 = hash[0];
+  const part2 = hash.substring(0, 2);
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${part1}/${part2}/${fileName}/${width}px-${fileName}`;
 };

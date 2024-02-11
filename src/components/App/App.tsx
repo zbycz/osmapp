@@ -19,6 +19,9 @@ import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
+import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
+import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
+import { StarsProvider } from '../utils/StarsContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -63,7 +66,7 @@ const useUpdateViewFromHash = () => {
 };
 
 const IndexWithProviders = () => {
-  const { featureShown, preview } = useFeatureContext();
+  const { feature, featureShown, preview } = useFeatureContext();
   const router = useRouter();
   useUpdateViewFromFeature();
   usePersistMapView();
@@ -78,11 +81,19 @@ const IndexWithProviders = () => {
   };
 
   // TODO add correct error boundaries
+
+  const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   return (
     <>
       <SearchBox />
       <Loading />
       {featureShown && <FeaturePanel />}
+      {isClimbingDialogShown && (
+        <ClimbingContextProvider feature={feature}>
+          <ClimbingDialog />
+        </ClimbingContextProvider>
+      )}
+
       <HomepagePanel />
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
@@ -113,9 +124,11 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
     <FeatureProvider featureFromRouter={featureFromRouter} hpCookie={hpCookie}>
       <MapStateProvider initialMapView={mapView}>
         <OsmAuthProvider>
-          <EditDialogProvider /* TODO supply router.query */>
-            <IndexWithProviders />
-          </EditDialogProvider>
+          <StarsProvider>
+            <EditDialogProvider /* TODO supply router.query */>
+              <IndexWithProviders />
+            </EditDialogProvider>
+          </StarsProvider>
         </OsmAuthProvider>
       </MapStateProvider>
     </FeatureProvider>
