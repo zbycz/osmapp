@@ -147,16 +147,7 @@ export const RouteFloatingMenu = () => {
                 Type
               </Button>
             )}
-            {/* {machine.currentStateName === 'pointMenu' && (
-        <Button onClick={() => {}} startIcon={<CloseIcon />}>
-          Bolt
-        </Button>
-      )}
-      {machine.currentStateName === 'pointMenu' && (
-        <Button onClick={() => {}} startIcon={<RemoveCircleIcon />}>
-          Belay
-        </Button>
-      )} */}
+
             {machine.currentStateName === 'pointMenu' && (
               <Button
                 onClick={toggleDeletePointDialog}

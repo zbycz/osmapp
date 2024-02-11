@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-// import ZoomInIcon from '@material-ui/icons/ZoomIn';
-// import ZoomOutIcon from '@material-ui/icons/ZoomOut';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
 import { CircularProgress, IconButton } from '@material-ui/core';
 
-import {
-  TransformComponent,
-  TransformWrapper,
-  // MiniMap,
-} from 'react-zoom-pan-pinch';
+import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
 
@@ -45,7 +39,6 @@ const ArrowExpanderContainer = styled.div`
 
 const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   background: ${({ theme }) => theme.palette.background.default};
-  /* left: 50%; */
   width: 30px;
   height: 30px;
   margin: auto;
@@ -59,7 +52,6 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   `};
   justify-content: center;
   display: flex;
-  /* border: solid 1px red; */
 `;
 
 const NoPhoto = styled.div<{ isVisible: boolean }>`
@@ -93,15 +85,7 @@ const BackgroundContainer = styled.div<{
   height: 100%;
 `;
 
-// const DialogIcon = styled.div`
-//   position: absolute;
-//   top: 10px;
-//   right: 10px;
-// `;
 export const ClimbingView = () => {
-  // https://js-image-viewer-article-ydp7qa.stackblitz.io
-  // const [zoom, setZoom] = useState<number>(1);
-
   const {
     imageSize,
     routeSelectedIndex,
@@ -116,7 +100,7 @@ export const ClimbingView = () => {
     loadPhotoRelatedData,
     areRoutesLoading,
     setArePointerEventsDisabled,
-    setPhotoZoom, // TODO remove it from context
+    setPhotoZoom,
     preparePhotosAndSetFirst,
   } = useClimbingContext();
 
@@ -136,7 +120,6 @@ export const ClimbingView = () => {
 
   useEffect(() => {
     loadPhotoRelatedData();
-    // setAreRoutesLoading(true);
   }, [splitPaneHeight]);
 
   useEffect(() => {
@@ -176,17 +159,10 @@ export const ClimbingView = () => {
     setImageUrl(image);
   }, [photoPath]);
 
-  // @TODO udělat header footer jako edit dialog
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
     splitPaneHeight === viewportSize.height - editorPosition.y;
 
-  // const stopPointerEvents2 = () => {
-  //   setArePointerEventsDisabled(false);
-  //   setTimeout(() => {
-  //     setArePointerEventsDisabled(true);
-  //   }, 1000);
-  // };
   const startPointerEvents = () => {
     setArePointerEventsDisabled(false);
   };
@@ -254,17 +230,8 @@ export const ClimbingView = () => {
                     },
                   ) => {
                     setPhotoZoom(state);
-                    // console.log('____state', _ref, state);
                   }}
                 >
-                  {/* {isPhotoLoaded && (
-          <MiniMap width={200}>
-            <RoutesEditor
-              isRoutesLayerVisible={false}
-              setIsPhotoLoaded={setIsPhotoLoaded}
-            />
-          </MiniMap>
-        )} */}
                   <TransformComponent
                     wrapperStyle={{ height: '100%', width: '100%' }}
                     contentStyle={{ height: '100%', width: '100%' }}
@@ -292,27 +259,6 @@ export const ClimbingView = () => {
 
         <RouteList isEditable />
       </SplitPane>
-
-      {/* <DialogIcon>
-        <IconButton
-          color="secondary"
-          edge="end"
-          onClick={() => {
-            setZoom(zoom + 0.2);
-          }}
-        >
-          <ZoomInIcon fontSize="small" />
-        </IconButton>
-        <IconButton
-          color="secondary"
-          edge="end"
-          onClick={() => {
-            setZoom(zoom - 0.2);
-          }}
-        >
-          <ZoomOutIcon fontSize="small" />
-        </IconButton>
-      </DialogIcon> */}
     </Container>
   );
 };

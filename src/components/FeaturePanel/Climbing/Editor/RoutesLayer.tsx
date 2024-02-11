@@ -16,20 +16,13 @@ const Svg = styled.svg<{
   photoZoom: ZoomState;
   transformOrigin: any;
 }>`
-  /* background: rgba(255, 0, 0, 0.5); */
   position: absolute;
-  /* pointer-events: none; */
-  /* left: 0; */
   top: 0;
   bottom: 0;
   margin: auto;
   opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
   transition: ${({ isVisible }) => (isVisible ? 'opacity 0.1s ease' : 'none')};
   transform-origin: 0 0;
-  /* transform: translate(
-      ${({ photoZoom }) => `${photoZoom.positionX}px, ${photoZoom.positionY}px`}
-    )
-    scale(${({ photoZoom }) => photoZoom.scale}); */
   ${({ hasEditableCursor }) =>
     `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};
   ${({ imageSize: { width, height } }) =>
@@ -54,7 +47,6 @@ type Props = {
   onEditorTouchMove?: (e: any) => void;
   isVisible?: boolean;
   transformOrigin?: any;
-  // imageSize: Size;
 };
 
 export const RoutesLayer = ({
@@ -64,7 +56,6 @@ export const RoutesLayer = ({
   isVisible = true,
   transformOrigin = { x: 0, y: 0 },
 }: Props) => {
-  // console.log('____transformOrigin', transformOrigin);
   const {
     imageSize,
     pointSelectedIndex,
@@ -80,7 +71,6 @@ export const RoutesLayer = ({
     setPointSelectedIndex,
     getCurrentPath,
     routes,
-    // photoZoom,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -152,7 +142,6 @@ export const RoutesLayer = ({
       ? getPixelPosition(path[path.length - 1])
       : null;
 
-  // console.log('______P', path, pointSelectedIndex, path[pointSelectedIndex]);
   const selectedPointOfSelectedRoute =
     pointSelectedIndex !== null && path.length > 0 && routes[routeSelectedIndex]
       ? getPixelPosition(path[pointSelectedIndex])
@@ -176,7 +165,6 @@ export const RoutesLayer = ({
         onPointerMove={onEditorTouchMove}
         imageSize={imageSize}
         isVisible={isVisible}
-        // photoZoom={photoZoom}
         transformOrigin={transformOrigin}
       >
         {sortedRoutes.rest.map((item) => item.route)}

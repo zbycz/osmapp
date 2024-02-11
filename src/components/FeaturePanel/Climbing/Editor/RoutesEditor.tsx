@@ -23,7 +23,7 @@ const ImageContainer = styled.div`
   height: 100%;
   box-shadow: 0 -0 110px rgba(0, 0, 0, 0.1);
 
-  // fix positioning on mobile
+  // @TODO fix positioning on mobile
   left: 0;
   right: 0;
   display: flex;
@@ -31,12 +31,8 @@ const ImageContainer = styled.div`
 `;
 
 const ImageElement = styled.img<{ zoom?: number }>`
-  /* max-width: 100vw; */
-  /* max-height: 80vh; */
-  /* object-fit: contain; */
   object-fit: contain;
   max-width: 100%;
-  // transform: <scale(${({ zoom }) => zoom});
   transition: all 0.1s ease-in;
   height: 100%;
 `;
@@ -65,7 +61,7 @@ export const RoutesEditor = ({
     photoRef,
   } = useClimbingContext();
   const machine = getMachine();
-  const [transformOrigin] = useState({ x: 0, y: 0 }); // TODO remove ?
+  const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
 
   const onCanvasClick = (e) => {
     console.log('canvas click - not working now', {
@@ -87,7 +83,7 @@ export const RoutesEditor = ({
     }
   };
 
-  // tohle nejde na telefonu
+  // @TODO doesn't work on mobile
   const onMove = (position: PositionPx) => {
     if (isPointClicked) {
       setMousePosition(null);
@@ -116,8 +112,6 @@ export const RoutesEditor = ({
   };
 
   const onTouchMove = (e) => {
-    // console.log('____onTouchMove');
-    // onMove({ x: e.touches[0].clientX, y: e.touches[0].clientY, units: 'px' });
     onMove({ x: e.clientX, y: e.clientY, units: 'px' });
   };
 

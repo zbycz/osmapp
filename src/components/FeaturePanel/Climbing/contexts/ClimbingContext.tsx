@@ -118,7 +118,7 @@ type ClimbingContextType = {
   setIsDifficultyHeatmapEnabled: (isDifficultyHeatmapEnabled: boolean) => void;
   showDebugMenu: boolean;
   setShowDebugMenu: (showDebugMenu: boolean) => void;
-  arePointerEventsDisabled: boolean;
+  arePointerEventsDisabled: boolean; // @TODO do we need it?
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
   gradeTable: GradeTable;
   setGradeTable: (gradeTable: GradeTable) => void;

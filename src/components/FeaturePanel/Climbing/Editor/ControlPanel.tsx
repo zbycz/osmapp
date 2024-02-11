@@ -22,72 +22,20 @@ export const ControlPanel = () => {
     machine.execute('undoPoint');
   };
 
-  // const onFinishClimbingRouteClick = () => {
-  //   machine.execute('finishRoute');
-  // };
-
   const path = getCurrentPath();
 
   return (
     <Container>
-      <>
-        {/* {(machine.currentStateName === 'editRoute' ||
-          machine.currentStateName === 'extendRoute') && (
-          <IconButton
-            color="default"
-            edge="end"
-            onClick={onFinishClimbingRouteClick}
-            title={t('climbingpanel.finish_climbing_route')}
-          >
-            <CheckIcon fontSize="small" />
-          </IconButton>
-        )} */}
-
-        {machine.currentStateName === 'extendRoute' && path.length !== 0 && (
-          <IconButton
-            color="default"
-            edge="end"
-            onClick={onUndoClick}
-            title="Undo last segment"
-          >
-            <UndoIcon fontSize="small" />
-          </IconButton>
-        )}
-        {/* <IconButton
-            color="default"
-            edge="end"
-            onClick={onDeleteExistingClimbingRouteClick}
-            title={t('climbingpanel.delete_climbing_route')}
-          >
-            <DeleteIcon fontSize="small" />
-          </IconButton> */}
-      </>
-      {machine.currentStateName !== 'editRoute' &&
-        machine.currentStateName !== 'extendRoute' && (
-          <>
-            {/* <IconButton
-              color="default"
-              edge="end"
-              onClick={onCreateClimbingRouteClick}
-              title={t('climbingpanel.create_climbing_route')}
-            >
-              <ControlPointIcon fontSize="small" />
-            </IconButton> */}
-
-            {/* {routeSelectedIndex !== null && (
-              <>
-                <IconButton
-                  color="default"
-                  edge="end"
-                  onClick={onEditClimbingRouteClick}
-                  title={t('climbingpanel.edit_climbing_route')}
-                >
-                  <EditIcon fontSize="small" />
-                </IconButton>
-              </>
-            )} */}
-          </>
-        )}
+      {machine.currentStateName === 'extendRoute' && path.length !== 0 && (
+        <IconButton
+          color="default"
+          edge="end"
+          onClick={onUndoClick}
+          title="Undo last segment"
+        >
+          <UndoIcon fontSize="small" />
+        </IconButton>
+      )}
     </Container>
   );
 };

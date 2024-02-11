@@ -23,18 +23,10 @@ export const RouteDifficultySelect = ({
   onDifficultyChanged,
   routeNumber,
 }: Props) => {
-  // const [grade, setGrade] = useState<string>(null);
   const [tempGrade, setTempGrade] = useState<string>(null);
   const [tempGradeSystem, setTempGradeSystem] = useState<GradeSystem>(null);
 
   const { updateRouteOnIndex, gradeTable } = useClimbingContext();
-
-  // const [selectedRouteSystem, setSelectedRouteSystem] =
-  //   useState<GradeSystem>(null);
-  // const options: Array<{ label: string }> =
-  //   selectedRouteSystem && gradeTable[selectedRouteSystem]
-  //     ? gradeTable[selectedRouteSystem].map((grade) => ({ label: grade }))
-  //     : [];
 
   useEffect(() => {
     if (difficulty && (!tempGrade || !tempGradeSystem)) {
@@ -70,10 +62,6 @@ export const RouteDifficultySelect = ({
     }));
   };
 
-  // const selectedValue = React.useMemo(
-  //   () => options.find((v) => v.label === difficulty.grade),
-  //   [options],
-  // );
   return (
     <Flex>
       <TextField
@@ -84,21 +72,9 @@ export const RouteDifficultySelect = ({
       />
       <GradeSystemSelect
         setGradeSystem={setTempGradeSystem}
-        gradeSystem={tempGradeSystem}
+        selectedGradeSystem={tempGradeSystem}
         onClick={onClick}
       />
-
-      {/* <Autocomplete
-        options={options}
-        getOptionLabel={(option) => option.label.toString()}
-        disableClearable
-        renderInput={(params) => (
-          <TextField {...params} size="small" label="Grade" />
-        )}
-        onClick={onClick}
-        value={grade ? { label: grade } : undefined}
-        onChange={() => {}}
-      /> */}
     </Flex>
   );
 };

@@ -14,15 +14,11 @@ import CheckIcon from '@material-ui/icons/Check';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { PointType } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-// import { updateElementOnIndex } from '../utils/array';
 
 export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   const {
-    // routeSelectedIndex,
-    // routes,
     pointSelectedIndex,
     setPointSelectedIndex,
-    // updateRouteOnIndex,
     getMachine,
     isPointMoving,
     getCurrentPath,
@@ -30,9 +26,8 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   const machine = getMachine();
   const open = Boolean(anchorEl) && !isPointMoving;
   const id = open ? 'simple-popper' : undefined;
-  // const route = routes[routeSelectedIndex];
-  // if (!route) return null;
   const selectedPoint = getCurrentPath()[pointSelectedIndex];
+
   if (!selectedPoint) return null;
 
   const onPopoverClose = () => {

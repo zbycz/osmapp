@@ -32,8 +32,6 @@ export const Guide = () => {
         (machine.currentStateName === 'extendRoute' && !isGuideClosed) ||
         (routeSelectedIndex !== null && !isInSchema)
       }
-      // autoHideDuration={6000}
-
       anchorOrigin={{
         vertical: showDrawButton ? 'bottom' : 'top',
         horizontal: showDrawButton ? 'left' : 'center',
@@ -49,7 +47,6 @@ export const Guide = () => {
           <RouteNumber isSelected hasRoute>
             {routeSelectedIndex + 1}
           </RouteNumber>
-          {/* Tato cesta zatím není zakreslena na fotce. */}
         </DrawRouteButton>
       ) : (
         <Alert onClose={handleClose} severity="info" variant="filled">

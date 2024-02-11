@@ -25,7 +25,7 @@ const parsePathString = (pathString?: string): PathPoints =>
       units: 'percentage' as const,
       type: boltCodeMap[y.slice(-1)],
     })) ?? [];
-// TODO filter( where x and y are really numbers)
+// @TODO filter( where x and y are really numbers)
 
 const getPathsByImage = (tags: FeatureTags) => {
   const keys = Object.keys(tags).filter((key) =>
@@ -39,9 +39,7 @@ const getPathsByImage = (tags: FeatureTags) => {
     const path = tags[`${key}:path`];
 
     const points = parsePathString(path);
-    // if (image) {
     out[image] = points;
-    // }
   });
 
   return out;
@@ -53,11 +51,11 @@ const getDifficulty = (tags: FeatureTags): RouteDifficulty | undefined => {
   );
 
   if (gradeKeys.length) {
-    const key = gradeKeys[0]; // TODO store all found grades
+    const key = gradeKeys[0]; // @TODO store all found grades
     const system = key.split(':', 3)[2];
 
     return {
-      gradeSystem: (system ?? 'uiaa') as GradeSystem, // TODO `gradeSystem` type should be `string`
+      gradeSystem: (system ?? 'uiaa') as GradeSystem, // @TODO `gradeSystem` type should be `string`
       grade: tags[key],
     };
   }

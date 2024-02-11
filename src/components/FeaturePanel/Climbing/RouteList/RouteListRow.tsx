@@ -106,7 +106,6 @@ export const RenderListRow = ({
     debouncedValueChange(e, propName);
   };
 
-  // console.log('___', routesExpanded);
   const isExpanded = routesExpanded.indexOf(index) > -1;
 
   const isReadOnly =
@@ -134,15 +133,6 @@ export const RenderListRow = ({
   return (
     <Container ref={ref}>
       <Row style={{ cursor: 'pointer' }}>
-        {/* <Cell width={50}>
-          <IconButton
-            aria-label="expand row"
-            size="small"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </Cell> */}
         <RouteNumberCell component="th" scope="row" width={30}>
           <RouteNumber
             isSelected={isSelected}

@@ -40,7 +40,6 @@ export const MouseTrackingLine = ({ routeNumber }) => {
         pointerEvents="none"
         opacity={0.7}
         route={route}
-        // markerStart={isSelected ? 'url(#triangle)' : null}
       />
     )
   );

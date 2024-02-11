@@ -89,27 +89,6 @@ export const ClimbingDialogHeader = ({ onClose }) => {
               </PhotoLinks>
             </PhotosContainer>
           )}
-
-          {/* | <a onClick={() => onPhotoChange('/images/rock.png')}>photo 2</a> |{' '}
-          <a
-            onClick={() =>
-              onPhotoChange(
-                'https://www.skalnioblasti.cz/image.php?typ=skala&id=13516',
-              )
-            }
-          >
-            photo 3
-          </a>{' '}
-          |{' '}
-          <a
-            onClick={() =>
-              onPhotoChange(
-                'https://image.thecrag.com/2063x960/5b/ea/5bea45dd2e45a4d8e2469223dde84bacf70478b5',
-              )
-            }
-          >
-            photo 4
-          </a> */}
         </Title>
 
         <IconButton

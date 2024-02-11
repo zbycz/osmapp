@@ -15,8 +15,6 @@ const AddNewPoint = styled.circle`
 `;
 
 export const RoutePath = ({ route, routeNumber }) => {
-  // const [isHovered, setIsLineInteractiveAreaHovered] = useState(false);
-  // const [isDraggingPoint, setIsDraggingPoint] = useState(false);
   const [tempPointPosition, setTempPointPosition] = useState<
     PositionPx & { lineIndex: number }
   >({
@@ -26,22 +24,15 @@ export const RoutePath = ({ route, routeNumber }) => {
     lineIndex: 0,
   });
   const {
-    // routeSelectedIndex,
-    // updateRouteOnIndex,
     isPointMoving,
     isRouteSelected,
-    // setPointSelectedIndex,
-    // setIsPointMoving,
     getPixelPosition,
-    // getPercentagePosition,
     getMachine,
     isEditMode,
     addOffsets,
     isLineInteractiveAreaHovered,
     setIsLineInteractiveAreaHovered,
     getPathForRoute,
-    // addZoom,
-    // arePointerEventsDisabled,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
@@ -66,20 +57,13 @@ export const RoutePath = ({ route, routeNumber }) => {
         units: 'px',
       });
 
-      // const positionWithZoom = addZoom(position);
-      // console.log('____ZOOM', position, positionWithZoom);
       setTempPointPosition({
         ...position,
         lineIndex,
       });
     }
-    // if (isDraggingPoint) {
-    //   setPointSelectedIndex(tempPointPosition.lineIndex + 1);
-    //   setIsPointMoving(true);
-    // }
   };
   const onMouseEnter = () => {
-    console.log('__ENTER');
     if (
       machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute'
@@ -96,11 +80,7 @@ export const RoutePath = ({ route, routeNumber }) => {
       setIsLineInteractiveAreaHovered(false);
     }
   };
-  // const onMouseUp = () => {
-  //   console.log('____onMouseUp');
-  //   setIsDraggingPoint(false);
-  // };
-  // console.log('________', tempPointPosition);
+
   const hoveredPosition = addOffsets(['scrollOffset'], {
     x: tempPointPosition.x,
     y: tempPointPosition.y,
@@ -115,12 +95,9 @@ export const RoutePath = ({ route, routeNumber }) => {
   };
 
   const onMouseDown = (e) => {
-    console.log('____onMouseDown');
-    // setIsDraggingPoint(true);
     onPointAdd();
 
     e.stopPropagation();
-    // e.preventDefault();
   };
 
   const isEditableSelectedRouteHovered =
@@ -148,8 +125,6 @@ export const RoutePath = ({ route, routeNumber }) => {
         cursor: isInteractionDisabled ? undefined : 'pointer',
       };
 
-  // console.log('___', isHovered);
-  // console.log('______arePointerEventsDisabled', arePointerEventsDisabled);
   return (
     <>
       <PathWithBorder
@@ -161,26 +136,6 @@ export const RoutePath = ({ route, routeNumber }) => {
         route={route}
       />
 
-      {/* <RouteBorder
-        d={`M0 0 ${pointsInString}`}
-        strokeWidth={5}
-        stroke={isSelected ? 'white' : '#666'}
-        strokeLinecap="round"
-        fill="none"
-        opacity={0.8}
-        {...commonProps}
-      />
-      <RouteLine
-        d={`M0 0 ${pointsInString}`}
-        strokeWidth={3}
-        stroke={isSelected ? 'royalblue' : 'white'}
-        strokeLinecap="round"
-        fill="none"
-        // markerEnd={
-        //   isSelected && machine.currentStateName === 'extendRoute' ? 'url(#triangle)' : null
-        // }
-        {...commonProps}
-      /> */}
       {path.length > 1 &&
         path.map(({ x, y }, index) => {
           const position1 = getPixelPosition({ x, y, units: 'percentage' });
@@ -201,10 +156,7 @@ export const RoutePath = ({ route, routeNumber }) => {
                 onMouseEnter={onMouseEnter}
                 onMouseLeave={onMouseLeave}
                 onMouseMove={(e) => onMouseMove(e, index)}
-                // onMouseDown={onMouseDown}
                 onClick={onMouseDown}
-                // onMouseUp={onMouseUp}
-                // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
                 {...commonProps}
               />
             );

@@ -43,23 +43,15 @@ export const positionUtilsFactory = ({
     }, position);
   };
   const addZoom = (position: PositionPx | null): PositionPx => {
-    // editorPosition,position,photoZoom
     const transformedEditorPosition = {
       x: editorPosition.x + photoZoom.positionX || 0,
       y: editorPosition.y + photoZoom.positionY || 0,
     };
-    console.log('___1', transformedEditorPosition);
     const relativeNewPosition = {
       x: (position.x - editorPosition.x) * imageSize.scale || 1,
       y: (position.y - editorPosition.y) * imageSize.scale || 1,
     };
-    console.log(
-      '___2',
-      relativeNewPosition,
-      position.x,
-      editorPosition.x,
-      imageSize.scale,
-    );
+
     const newPosition = {
       x: transformedEditorPosition.x + relativeNewPosition.x,
       y: transformedEditorPosition.y + relativeNewPosition.y,

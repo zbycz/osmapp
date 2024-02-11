@@ -106,21 +106,7 @@ export const getMachineFactory = ({
     updatePathOnRouteIndex(routeSelectedIndex, (path) => path.slice(0, -1));
   };
 
-  const dragPoint = () => {
-    // setIsPointMoving(true);
-    // const newCoordinate = getPercentagePosition({
-    //   x: position.x - editorPosition.x,
-    //   y: position.y - editorPosition.y,
-    // });
-    // updateRouteOnIndex(routeSelectedIndex, (route) => ({
-    //   ...route,
-    //   path: updateElementOnIndex(route.path, pointSelectedIndex, (point) => ({
-    //     ...point,
-    //     x: newCoordinate.x,
-    //     y: newCoordinate.y,
-    //   })),
-    // }));
-  };
+  const dragPoint = () => {};
 
   const changePointType = ({ type }) => {
     updatePathOnRouteIndex(routeSelectedIndex, (path) =>

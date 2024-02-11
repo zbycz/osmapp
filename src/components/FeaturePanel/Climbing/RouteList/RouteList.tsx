@@ -16,16 +16,7 @@ const ButtonContainer = styled.div`
   margin-top: 16px;
   margin-left: 40px;
 `;
-// type Item = {
-//   id: number;
-//   content: React.ReactNode;
-// };
 
-// type Props = {
-//   onDeleteExistingRouteClick: (deletedExistingRouteIndex: number) => void;
-// };
-
-// onDeleteExistingRouteClick,
 export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
   const {
     routes,
@@ -35,11 +26,8 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     setIsEditMode,
     routesExpanded,
     setRoutesExpanded,
-    // arePointerEventsDisabled,
     gradeTable,
     setGradeTable,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    setRoutes,
     showDebugMenu,
   } = useClimbingContext();
 
@@ -125,40 +113,11 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
       })
       .flat();
     console.table(object);
-
-    //     const csv = routes
-    //       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    //       .map((r, _idx) =>
-    //         [
-    //           r.name,
-    //           getImage(Object.entries(r.paths)?.[0]),
-    //           getImage(Object.entries(r.paths)?.[1]),
-    //           getImage(Object.entries(r.paths)?.[2]),
-    //           // JSON.stringify(r.difficulty),
-    //           // idx,
-    //         ].join(';'),
-    //       )
-    //       .join(`\n`);
-    //     console.log(
-    //       `____EXPORT CSV
-    // `,
-    //       csv,
-    //     );
   };
 
   const mockRoutes = () => {
     // setRoutes();
   };
-
-  // @TODO scroll to end
-
-  //   const divRef = useRef(null);
-
-  //   useEffect(() => {
-  //     divRef.current.scrollIntoView({ behavior: 'smooth' });
-  //   });
-
-  //   return <div ref={divRef} />;
 
   return (
     <Container>

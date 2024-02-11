@@ -32,14 +32,7 @@ const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
     isSelected ? '#ccc' : 'transparent'};
   background: ${({ isSelected, theme }) =>
     isSelected ? theme.backgroundSurfaceElevation1 : 'transparent'};
-  /* &:nth-child(2n) {
-    ${({ isSelected }) => !isSelected && `background-color: #f5f5f5`};
-  } */
-  //border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation0};
-  /* background-color: ${({ isDraggedOver }) =>
-    isDraggedOver ? '#f0f0f0' : 'transparent'}; */
   position: relative;
-
   font-size: 16px;
 `;
 const DragHandler = styled.div`
@@ -73,7 +66,6 @@ const TableHeader = styled.div`
   font-size: 11px;
   padding-top: 12px;
   padding-bottom: 4px;
-  //border-bottom: solid 1px ${({ theme }) => theme.borderOnElevation1};
 `;
 const NameHeader = styled.div`
   flex: 1;
@@ -147,24 +139,19 @@ export const RouteListDndContent = ({ isEditable }) => {
       const targetRect = target.getBoundingClientRect();
       const offsetY = e.clientY - targetRect.top;
 
-      // console.log('____////', offsetY, targetRect.height);
       if (offsetY < targetRect.height / 2) {
-        // console.log('_____A');
-        newIndex = index; // nahoru
+        newIndex = index; // up
       } else if (
         index === items.length - 1 &&
         offsetY > targetRect.height / 2
       ) {
-        // console.log('_____B');
-        newIndex = items.length; // poslední
+        newIndex = items.length; // last
       } else {
-        // console.log('_____C');
-        newIndex = index; // dolu
+        newIndex = index; // down
       }
     }
 
     if (newIndex !== draggedOverIndex) {
-      // console.log('_____D');
       setDraggedOverIndex(newIndex);
     }
   };
@@ -188,7 +175,6 @@ export const RouteListDndContent = ({ isEditable }) => {
       moveRoute(oldIndex, newIndex);
       if (routeSelectedIndex === oldIndex) setRouteSelectedIndex(newIndex);
       if (routeSelectedIndex === newIndex) setRouteSelectedIndex(oldIndex);
-      // console.log('____///', items);
     }
     setDraggedItem(null);
     setDraggedOverIndex(null);
@@ -221,7 +207,6 @@ export const RouteListDndContent = ({ isEditable }) => {
         </MaxWidthContainer>
       </TableHeader>
       {items.map((item, index) => {
-        // console.log('___', draggedItem?.id, index);
         const isSelected = isRouteSelected(index);
 
         return (

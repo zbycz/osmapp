@@ -21,7 +21,6 @@ const getCloserPoint = ({
 export const findCloserPointFactory =
   ({ routeSelectedIndex, routes, getPathForRoute }) =>
   (checkedPosition: Position) => {
-    // dát jinam
     if (routeSelectedIndex === null || !checkedPosition.x || !checkedPosition.y)
       return null;
 

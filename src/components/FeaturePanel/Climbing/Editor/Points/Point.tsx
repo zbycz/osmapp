@@ -4,9 +4,7 @@ import styled from 'styled-components';
 import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
 
-const ClickableArea = styled.circle`
-  // touch-action: none;
-`;
+const ClickableArea = styled.circle``;
 
 const PointElement = styled.circle<{ isHovered: boolean }>`
   transition: all 0.1s ease-in-out;
@@ -74,16 +72,13 @@ export const Point = ({
   };
 
   const onMouseDown = () => {
-    console.log('____onMouseDown');
     setPointSelectedIndex(index);
     setIsPointClicked(true);
   };
 
   const onMouseUp = (e) => {
-    console.log('____onMouseUp');
     // @TODO unify with RouteMarks.tsx
     if (!isPointMoving) {
-      console.log('________onMouseUp');
       setPointSelectedIndex(null);
       onPointInSelectedRouteClick(e);
       setPointElement(pointElement !== null ? null : e.currentTarget);
@@ -95,10 +90,7 @@ export const Point = ({
     }
   };
 
-  const onTouchMove = () => {
-    // setIsPointMoving(true);
-    // console.log('___MOVE', isPointMoving);
-  };
+  const onTouchMove = () => {};
 
   const isPointSelected =
     routeSelectedIndex === routeNumber && pointSelectedIndex === index;

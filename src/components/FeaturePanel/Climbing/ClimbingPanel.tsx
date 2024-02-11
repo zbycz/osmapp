@@ -57,22 +57,12 @@ export const ClimbingPanel = ({ footer }) => {
   const label = getLabel(feature);
 
   const {
-    // setIsEditMode,
     loadPhotoRelatedData,
     imageSize,
     photoPath,
     photoRef,
-    // setPointSelectedIndex,
     preparePhotosAndSetFirst,
   } = useClimbingContext();
-
-  // useEffect(() => {
-  //   if (!isFullscreenDialogOpened) {
-  //     // @TODO create a new state for closing fullscreen dialog
-  //     setIsEditMode(false);
-  //     setPointSelectedIndex(null);
-  //   }
-  // }, [isFullscreenDialogOpened]);
 
   const onFullScreenClick = () => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
@@ -85,10 +75,6 @@ export const ClimbingPanel = ({ footer }) => {
   const onPhotoLoad = () => {
     loadPhotoRelatedData();
   };
-
-  // useEffect(() => {
-  //   loadPhotoRelatedData();
-  // }, [isFullscreenDialogOpened]);
 
   const isPhotoLoading = imageSize.height === 0;
   return (
@@ -120,7 +106,7 @@ export const ClimbingPanel = ({ footer }) => {
 
           <RouteList />
 
-          {/* TODO unite with parent panel */}
+          {/* @TODO unite with parent panel */}
           <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
         </PanelScrollbars>
       </PanelWrapper>

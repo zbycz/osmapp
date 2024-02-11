@@ -18,12 +18,9 @@ export const ClimbingSettings = ({ isSettingsOpened, setIsSettingsOpened }) => {
     setAreRoutesVisible,
     setSelectedRouteSystem,
     selectedRouteSystem,
-    // filterDifficulty,
-    // setFilterDifficulty,
     isDifficultyHeatmapEnabled,
     setIsDifficultyHeatmapEnabled,
   } = useClimbingContext();
-  // const a = selectedRouteSystem
 
   return (
     <Dialog
@@ -63,7 +60,7 @@ export const ClimbingSettings = ({ isSettingsOpened, setIsSettingsOpened }) => {
             <ListItemText>Default grade system</ListItemText>
             <GradeSystemSelect
               setGradeSystem={setSelectedRouteSystem}
-              gradeSystem={selectedRouteSystem}
+              selectedGradeSystem={selectedRouteSystem}
             />
           </ListItem>
           <ListItem>

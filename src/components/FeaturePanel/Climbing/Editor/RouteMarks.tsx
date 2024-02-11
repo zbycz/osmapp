@@ -3,7 +3,7 @@ import { Bolt } from './Points/Bolt';
 import { Piton } from './Points/Piton';
 import { Point } from './Points/Point';
 import { PulsedPoint } from './Points/PulsedPoint';
-import { Sling } from './Points/Sling.1';
+import { Sling } from './Points/Sling';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Anchor } from './Points/Anchor';
 import { ClimbingRoute } from '../types';
@@ -40,7 +40,6 @@ export const RouteMarks = ({
         const handleClick = (e: any) => {
           // @TODO unify with Point.tsx
           if (!isPointMoving) {
-            console.log('________onMouseUp');
             setPointSelectedIndex(null);
             onPointInSelectedRouteClick(e);
             setPointElement(pointElement !== null ? null : e.currentTarget);
