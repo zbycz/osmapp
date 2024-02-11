@@ -66,18 +66,6 @@ const getWikiType = (d) => {
   return d.claims ? 'wikidata' : null;
 };
 
-export const getWikiImage2 = (photoName, horizontalResolution): string => {
-  if (!photoName) return null;
-  const fileName = photoName.replace(/ /g, '_');
-  const md4FileName = md5(fileName);
-  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${
-    md4FileName[0]
-  }/${md4FileName.substring(
-    0,
-    2,
-  )}/${fileName}/${horizontalResolution}px-${fileName}`;
-};
-
 export const getWikiImage = async (wikiUrl): Promise<Image> => {
   const data = await fetchJson(`${wikiUrl}&origin=*`);
   const replyType = getWikiType(data);
@@ -121,4 +109,20 @@ export const getWikiImage = async (wikiUrl): Promise<Image> => {
   }
 
   return undefined;
+};
+
+export const getCommonsImageUrl = (
+  photoName: string,
+  width: number,
+): string => {
+  if (!photoName) return null;
+  if (!photoName.startsWith('File:')) {
+    console.warn('Invalid Commons photo name without "File:":', photoName);
+    return;
+  }
+  const fileName = photoName.replace(/^File:/, '').replace(/ /g, '_');
+  const hash = md5(fileName);
+  const part1 = hash[0];
+  const part2 = hash.substring(0, 2);
+  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${part1}/${part2}/${fileName}/${width}px-${fileName}`;
 };

@@ -9,7 +9,7 @@ import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
 import { RoutesEditor } from './Editor/RoutesEditor';
-import { getWikiImage2 } from '../../../services/images/getWikiImage';
+import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 
@@ -246,8 +246,8 @@ export const ClimbingView = () => {
 
   useEffect(() => {
     setIsPhotoLoaded(false);
-    const image = getWikiImage2(photoPath, 1500);
-    setImageUrl(image);
+    const url = getCommonsImageUrl(`File:${photoPath}`, 1500);
+    setImageUrl(url);
   }, [photoPath]);
 
   const showArrowOnTop = splitPaneHeight === 0;

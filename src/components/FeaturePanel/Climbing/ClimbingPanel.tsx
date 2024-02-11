@@ -9,7 +9,7 @@ import { RouteList } from './RouteList/RouteList';
 import { FullscreenIconContainer, ShowFullscreen } from './ShowFullscreen';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
-import { getWikiImage2 } from '../../../services/images/getWikiImage';
+import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { getOsmappLink } from '../../../services/helpers';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
@@ -70,7 +70,7 @@ export const ClimbingPanel = ({ footer }) => {
 
   preparePhotosAndSetFirst();
 
-  const image = getWikiImage2(photoPath, 500);
+  const imageUrl = getCommonsImageUrl(`File:${photoPath}`, 500);
 
   const onPhotoLoad = () => {
     loadPhotoRelatedData();
@@ -81,7 +81,7 @@ export const ClimbingPanel = ({ footer }) => {
     <>
       <PanelWrapper>
         <PanelScrollbars>
-          {image && (
+          {imageUrl && (
             <ThumbnailContainer
               height={isPhotoLoading ? 200 : imageSize.height}
             >
@@ -92,7 +92,7 @@ export const ClimbingPanel = ({ footer }) => {
               )}
 
               <Thumbnail
-                src={image}
+                src={imageUrl}
                 ref={photoRef}
                 onLoad={onPhotoLoad}
                 isLoading={isPhotoLoading}
