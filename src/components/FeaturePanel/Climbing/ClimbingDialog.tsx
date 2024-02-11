@@ -30,6 +30,7 @@ export const ClimbingDialog = () => {
     setIsEditMode,
     isEditMode,
     getMachine,
+    showDebugMenu,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
   const handleSave = useGetHandleSave(setIsEditMode);
@@ -84,9 +85,15 @@ export const ClimbingDialog = () => {
               <Button autoFocus onClick={handleClose}>
                 Cancel
               </Button>
-              <Button onClick={handleSave} variant="contained" color="primary">
-                Save
-              </Button>
+              {showDebugMenu && (
+                <Button
+                  onClick={handleSave}
+                  variant="contained"
+                  color="primary"
+                >
+                  Save
+                </Button>
+              )}
             </div>
           </Flex>
         </DialogActions>
