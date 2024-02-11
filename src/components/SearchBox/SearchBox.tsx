@@ -22,6 +22,7 @@ import {
   getPresetTranslation,
 } from '../../services/tagging/translations';
 import { SEARCH_BOX_HEIGHT } from './consts';
+import { useStarsContext } from '../utils/StarsContext';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -171,10 +172,14 @@ const fetchOptions = debounce(
 
 const useFetchOptions = (inputValue: string, setOptions) => {
   const { view } = useMapStateContext();
+  const { stars } = useStarsContext();
 
   useEffect(() => {
     if (inputValue === '') {
-      setOptions([]);
+      const options = stars.map(({ shortId, poiType, label }) => ({
+        star: { shortId, poiType, label },
+      }));
+      setOptions(options);
       return;
     }
 
@@ -193,7 +198,7 @@ const useFetchOptions = (inputValue: string, setOptions) => {
 
     setOptions([{ loader: true }]);
     fetchOptions(inputValue, view, setOptions);
-  }, [inputValue]);
+  }, [inputValue, stars]);
 };
 
 const useOnClosePanel = (setInputValue) => {

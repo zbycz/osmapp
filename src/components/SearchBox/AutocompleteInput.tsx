@@ -77,6 +77,7 @@ export const AutocompleteInput = ({
           Object.entries(option.overpass)
             ?.map(([k, v]) => `${k}=${v}`)
             .join(' ')) ||
+        (option.star && option.star.label) ||
         (option.loader ? '' : buildPhotonAddress(option.properties))
       }
       onChange={onSelectedFactory(

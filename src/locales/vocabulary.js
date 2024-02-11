@@ -27,14 +27,14 @@ export default {
   'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
   'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
 
-  'homepage.subtitle': 'A universal OpenStreetMap app',
+  'homepage.subtitle': 'A universal app for OpenStreetMap',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.examples.eg': 'eg.',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
   'homepage.screenshot_alt': 'Screenshot of OsmAPP',
   'homepage.about_osm': `All map data is from
       <a href="https://osm.org">OpenStreetMap</a>, a map created by
-      milions of contributors — similar to Wikipedia. You can find
+      millions of contributors — similar to Wikipedia. You can find
       <em>Edit</em> button on each map feature.`,
   'homepage.heading_about_osmapp': 'About OsmAPP',
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
@@ -50,6 +50,9 @@ export default {
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
+  'homepage.disclaimer_heading': 'Disclaimer',
+  'homepage.disclaimer': `OpenStreetMap and OSM are a trademark of the OpenStreetMap Foundation. This project is not endorsed by or affiliated with the <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a>.`,
+  'homepage.disclaimer_maptiler': `Vector maps ("Basic" and "Outdoor") contain some place names from the Wikidata project, more <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>here</a>.`,
 
   'searchbox.placeholder': 'Search OpenStreetMap',
   'searchbox.category': 'category',
@@ -58,7 +61,8 @@ export default {
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
-  'featurepanel.save_button': 'Save to favorites',
+  'featurepanel.favorites_save_button': 'Save to favorites',
+  'featurepanel.favorites_unsave_button': 'Remove from favorites',
   'featurepanel.directions_button': 'Directions',
   'featurepanel.error': 'Error __code__ while fetching feature from OpenStreetMap',
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',

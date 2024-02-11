@@ -21,6 +21,7 @@ import { setIntlForSSR } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
 import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
+import { StarsProvider } from '../utils/StarsContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -123,9 +124,11 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
     <FeatureProvider featureFromRouter={featureFromRouter} hpCookie={hpCookie}>
       <MapStateProvider initialMapView={mapView}>
         <OsmAuthProvider>
-          <EditDialogProvider /* TODO supply router.query */>
-            <IndexWithProviders />
-          </EditDialogProvider>
+          <StarsProvider>
+            <EditDialogProvider /* TODO supply router.query */>
+              <IndexWithProviders />
+            </EditDialogProvider>
+          </StarsProvider>
         </OsmAuthProvider>
       </MapStateProvider>
     </FeatureProvider>

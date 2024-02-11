@@ -1,5 +1,6 @@
 import { Feature } from '../services/types';
 import { roundedToDeg } from '../utils';
+import { t } from '../services/intl';
 
 export const getSubclass = ({ layer, osmMeta, properties, schema }: Feature) =>
   schema?.label ||
@@ -13,6 +14,9 @@ const getRef = (feature: Feature) =>
 const getName = ({ tags }: Feature) => tags.name; // TODO choose a name according to locale
 
 export const hasName = (feature: Feature) => feature.point || getName(feature); // we dont want to show "No name" for point
+
+export const getPoiType = (feature: Feature) =>
+  hasName(feature) ? getSubclass(feature) : t('featurepanel.no_name');
 
 export const getLabel = (feature: Feature) => {
   const { point, roundedCenter } = feature;

@@ -11,7 +11,7 @@ import { Field } from './types/Fields';
 const logMoreMatchingFields = (matchingFields: Field[], key: string) => {
   if (matchingFields.length > 1) {
     // eslint-disable-next-line no-console
-    console.warn(
+    console.debug(
       `More fields matching key ${key}: ${matchingFields.map(
         (f) => f.fieldKey,
       )}`,
