@@ -28,6 +28,13 @@ export const getCsvGradeData = () => {
   return table;
 };
 
+export const exportGradeDataToWikiTable = () => {
+  const csvArray = csvToArray(gradeTableString);
+  const table = csvArray.map((row) => `|${row.join('\n|')}`).join('\n|-\n');
+
+  console.log('_____WIKI table', table);
+};
+
 // @TODO use memo for this function?
 export const convertGrade = (gradeTable, from, to, value) => {
   if (!from || !to || !value || !gradeTable?.[from]) return null;
