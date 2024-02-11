@@ -170,4 +170,12 @@ export default {
   'layers.maptilerSat': 'Maptiler Satellite (z<14)',
   'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Bike',
+
+  'climbingpanel.create_climbing_route': 'Draw new route in schema',
+  'climbingpanel.edit_climbing_route': 'Edit route in schema',
+  'climbingpanel.finish_climbing_route': 'Finish route',
+  'climbingpanel.cancel_climbing_route': 'Cancel',
+  'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
+  'climbingpanel.create_first_node': 'Click on the beginning of the route',
+  'climbingpanel.create_next_node': 'Follow direction of the route',
 };
