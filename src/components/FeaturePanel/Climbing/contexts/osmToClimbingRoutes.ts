@@ -32,17 +32,19 @@ const getPathsByImage = (tags: FeatureTags) => {
     key.match(/^wikimedia_commons\d?$/),
   );
 
-  const out = {};
+  const paths = {};
+  const photoToKeyMap = {};
 
   keys.forEach((key) => {
     const image = tags[key]?.replace(/^File:/, '');
     const path = tags[`${key}:path`];
 
     const points = parsePathString(path);
-    out[image] = points;
+    paths[image] = points;
+    photoToKeyMap[image] = key;
   });
 
-  return out;
+  return { photoToKeyMap, paths };
 };
 
 const getDifficulty = (tags: FeatureTags): RouteDifficulty | undefined => {
@@ -72,12 +74,17 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
     ['route', 'route_bottom'].includes(tags.climbing),
   );
 
-  return routes.map((route) => ({
-    id: getUrlOsmId(route.osmMeta),
-    length: route.tags['climbing:length'],
-    name: route.tags.name,
-    description: route.tags.description,
-    difficulty: getDifficulty(route.tags),
-    paths: getPathsByImage(route.tags),
-  }));
+  return routes.map((route) => {
+    const { paths, photoToKeyMap } = getPathsByImage(route.tags);
+    return {
+      id: getUrlOsmId(route.osmMeta),
+      length: route.tags['climbing:length'],
+      name: route.tags.name,
+      description: route.tags.description,
+      difficulty: getDifficulty(route.tags),
+      paths,
+      photoToKeyMap,
+      feature: route,
+    };
+  });
 };

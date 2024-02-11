@@ -1,4 +1,5 @@
 import { gradeSystem } from './utils/gradeData';
+import { Feature } from '../../../services/types';
 
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling';
 
@@ -38,6 +39,8 @@ export type ClimbingRoute = {
   name?: string;
   description?: string;
   paths: { [photoUrl: string]: PathPoints };
+  feature?: Feature;
+  photoToKeyMap?: Record<string, string>;
 };
 
 export type ZoomState = {

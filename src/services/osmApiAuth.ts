@@ -15,6 +15,7 @@ import {
 import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
 import { isBrowser } from '../components/helpers';
+import { getLabel } from '../helpers/featureLabel';
 
 const {
   publicRuntimeConfig: { osmappVersion },
@@ -266,5 +267,51 @@ export const addOsmFeature = async (
     text: changesetComment,
     url: `${osmEditUrl}/changeset/${changesetId}`,
     redirect: `/${getUrlOsmId(apiId)}`,
+  };
+};
+
+export const editCrag = async (
+  crag: Feature,
+  comment: string,
+  toEdit: Array<{ feature: Feature; allTags: FeatureTags; isDelete: boolean }>,
+) => {
+  if (!toEdit.length) {
+    return {
+      type: 'error',
+      text: 'No route has changed.',
+    };
+  }
+
+  const changesetComment = join(
+    comment,
+    ' • ',
+    `Edited ${getLabel(crag)} #osmapp #climbing`,
+  );
+  const changesetXml = getChangesetXml({ changesetComment, feature: crag });
+  const changesetId = await putChangeset(changesetXml);
+
+  for (const { feature, newTags, isDelete } of toEdit) {
+    const apiId = feature.osmMeta;
+    const item = await getItem(apiId);
+
+    // TODO use version from `feature` (we dont want to overwrite someones changes) or at least just apply tags diff (see createNoteText)
+    const newItem = await updateItemXml(
+      item,
+      apiId,
+      changesetId,
+      newTags,
+      isDelete,
+    );
+
+    await putOrDeleteItem(isDelete, apiId, newItem);
+  }
+
+  await putChangesetClose(changesetId);
+
+  return {
+    type: 'edit',
+    text: changesetComment,
+    url: `${osmEditUrl}/changeset/${changesetId}`,
+    redirect: `${getOsmappLink(crag)}`,
   };
 };

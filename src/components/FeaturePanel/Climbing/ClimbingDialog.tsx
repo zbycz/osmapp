@@ -13,6 +13,7 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingDialogHeader } from './ClimbingDialogHeader';
 import { getOsmappLink } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { useGetHandleSave } from './useGetHandleSave';
 
 const Flex = styled.div`
   display: flex;
@@ -31,6 +32,7 @@ export const ClimbingDialog = () => {
     getMachine,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
+  const handleSave = useGetHandleSave(setIsEditMode);
 
   const machine = getMachine();
 
@@ -40,10 +42,6 @@ export const ClimbingDialog = () => {
       y: e.target.scrollTop,
       units: 'px',
     });
-  };
-
-  const handleSave = () => {
-    setIsEditMode(false);
   };
 
   const handleClose = () => {
