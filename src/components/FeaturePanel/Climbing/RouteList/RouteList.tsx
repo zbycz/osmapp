@@ -82,6 +82,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
   };
 
   const getRoutesJson = () => {
+    // eslint-disable-next-line no-console
     console.log(`____EXPORT JSON`, JSON.stringify(routes));
   };
 
@@ -112,6 +113,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
         ]);
       })
       .flat();
+    // eslint-disable-next-line no-console
     console.table(object);
   };
 

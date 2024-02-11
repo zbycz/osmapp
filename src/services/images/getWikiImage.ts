@@ -117,6 +117,7 @@ export const getCommonsImageUrl = (
 ): string | null => {
   if (!photoName) return null;
   if (!photoName.startsWith('File:')) {
+    // eslint-disable-next-line no-console
     console.warn('Invalid Commons photo name without "File:":', photoName);
     return null;
   }

@@ -81,7 +81,7 @@ export const ClimbingPanel = ({ footer }) => {
     <>
       <PanelWrapper>
         <PanelScrollbars>
-          {imageUrl && (
+          {photoPath && imageUrl && (
             <ThumbnailContainer
               height={isPhotoLoading ? 200 : imageSize.height}
             >

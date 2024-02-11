@@ -61,11 +61,6 @@ export const RoutesEditor = ({
   const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
 
   const onCanvasClick = (e) => {
-    console.log('canvas click - not working now', {
-      x: e.clientX,
-      y: e.clientY,
-    });
-
     if (machine.currentStateName === 'extendRoute') {
       machine.execute('addPointToEnd', {
         position: { x: e.clientX, y: e.clientY },

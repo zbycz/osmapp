@@ -30,9 +30,9 @@ export const getCsvGradeData = () => {
 
 export const exportGradeDataToWikiTable = () => {
   const csvArray = csvToArray(gradeTableString);
-  const table = csvArray.map((row) => `|${row.join('\n|')}`).join('\n|-\n');
+  const data = csvArray.map((row) => `|${row.join('\n|')}`).join('\n|-\n');
 
-  console.log('_____WIKI table', table);
+  return data;
 };
 
 // @TODO use memo for this function?
