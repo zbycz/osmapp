@@ -1,6 +1,6 @@
 import escape from 'lodash/escape';
-import OsmAuth from 'osm-auth';
 import getConfig from 'next/config';
+import { osmAuth } from 'osm-auth';
 import { Feature, FeatureTags, Position } from './types';
 import {
   buildXmlString,
@@ -9,37 +9,30 @@ import {
   getUrlOsmId,
   OsmApiId,
   parseXmlString,
-  prod,
+  // prod,
   stringifyDomXml,
 } from './helpers';
 import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
+import { isBrowser } from '../components/helpers';
 
 const {
   publicRuntimeConfig: { osmappVersion },
 } = getConfig();
 
+const prod = true;
 const osmEditUrl = prod
   ? 'https://www.openstreetmap.org' // iD uses same URL https://ideditor.netlify.app/
   : 'https://master.apis.dev.openstreetmap.org';
-
-const oauth = prod
-  ? {
-      oauth_consumer_key: 'OGIlDMpqYIRA35NBggNFNnRBftlWdJt4eE2z7eFb',
-      oauth_secret: '37V3dRzWYfdnRrG8L8vaKyzs6A191HkRtXlaqNH9',
-    }
-  : {
-      // https://master.apis.dev.openstreetmap.org/changeset/1599
-      oauth_consumer_key: 'eWdvGfVsTdhRCGtwRkn4qOBaBAIuVNX9gTX63TUm',
-      oauth_secret: 'O0UXzrNbpFkbIVB0rqumhMSdqdC1wa9ZFMpPUBYG',
-    };
 const TEST_OSM_ID = { type: 'node', id: '967531' }; // https://master.apis.dev.openstreetmap.org/node/967531
 
-const auth = new OsmAuth({
-  ...oauth,
+// TS file in osm-auth is probably broken (new is required)
+// @ts-ignore
+const auth = osmAuth({
+  client_id: 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68',
+  redirect_uri: isBrowser() && `${window.location.origin}/oauth-token.html`,
+  scope: 'read_prefs write_api write_notes openid',
   auto: true,
-  landing: '/oauth-token.html',
-  url: osmEditUrl,
 });
 
 const authFetch = async (options) =>
