@@ -85,6 +85,8 @@ const climbingRoutes = [
     length: "100'",
     name: 'Otter',
     paths: {},
+    photoToKeyMap: {},
+    feature: feature.memberFeatures[0],
   },
   {
     difficulty: {
@@ -123,6 +125,11 @@ const climbingRoutes = [
         },
       ],
     },
+    photoToKeyMap: {
+      'jickovice1.jpg': 'wikimedia_commons',
+      'jickovice2.jpg': 'wikimedia_commons2',
+    },
+    feature: feature.memberFeatures[1],
   },
 ];
 

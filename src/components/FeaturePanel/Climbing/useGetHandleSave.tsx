@@ -2,7 +2,7 @@ import { ClimbingRoute } from './types';
 import { FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { editCrag } from '../../../services/osmApiAuth';
+import { Change, editCrag } from '../../../services/osmApiAuth';
 
 const boltCodeMap = {
   bolt: 'B',
@@ -22,7 +22,7 @@ const getUpdatedTags = (route: ClimbingRoute) => {
   const updatedTags = {};
   Object.entries(route.paths).forEach(([photoName, points]) => {
     const photoTagKey = route.photoToKeyMap[photoName];
-    if(!photoTagKey) {
+    if (!photoTagKey) {
       updatedTags[photoTagKey] = `File:${photoName}`;
     }
     updatedTags[`${photoTagKey}:path`] = getPathString(points);
@@ -37,25 +37,24 @@ const isSameTags = (updatedTags: {}, origTags: FeatureTags) => {
   return isSame;
 };
 
-const getFeaturesToEdit = (routes: Array<ClimbingRoute>) => {
-  const featuresToEdit = [];
-  for (const route of routes) {
-    if (!route.feature) {
-      continue; // probably a new route // eslint-disable-line no-continue
-    }
-    const updatedTags = getUpdatedTags(route);
-    if (isSameTags(updatedTags, route.feature.tags)) {
-      continue; // eslint-disable-line no-continue
-    }
-    featuresToEdit.push({
-      feature: route.feature,
-      newTags: {
-        ...route.feature.tags,
-        ...updatedTags,
-      },
-    });
-  }
-  return featuresToEdit;
+const getChanges = (routes: ClimbingRoute[]): Change[] => {
+  const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
+
+  return existingRoutes
+    .map((route) => {
+      const updatedTags = getUpdatedTags(route);
+      const isSame = isSameTags(updatedTags, route.feature.tags);
+      return isSame
+        ? undefined
+        : {
+            feature: route.feature,
+            allTags: {
+              ...route.feature.tags,
+              ...updatedTags,
+            },
+          };
+    })
+    .filter(Boolean);
 };
 
 export const useGetHandleSave = (
@@ -70,10 +69,9 @@ export const useGetHandleSave = (
       return;
     }
 
-    const featuresToEdit = getFeaturesToEdit(routes);
-    const comment = `${featuresToEdit.length} routes`;
-
-    const result = await editCrag(crag, comment, featuresToEdit);
+    const changes = getChanges(routes);
+    const comment = `${changes.length} routes`;
+    const result = await editCrag(crag, comment, changes);
 
     console.log('All routes saved', result); // eslint-disable-line no-console
     setIsEditMode(false);

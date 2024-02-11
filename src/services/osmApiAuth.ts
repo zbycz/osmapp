@@ -9,7 +9,6 @@ import {
   getUrlOsmId,
   OsmApiId,
   parseXmlString,
-  // prod,
   stringifyDomXml,
 } from './helpers';
 import { join } from '../utils';
@@ -270,12 +269,37 @@ export const addOsmFeature = async (
   };
 };
 
+export type Change = {
+  feature: Feature;
+  allTags: FeatureTags;
+  isDelete?: boolean;
+};
+
+const saveChange = async (
+  changesetId: any,
+  { feature, allTags, isDelete }: Change,
+) => {
+  const apiId = feature.osmMeta;
+  const item = await getItem(apiId);
+
+  // TODO use version from `feature` (we dont want to overwrite someones changes) or at least just apply tags diff (see createNoteText)
+  const newItem = await updateItemXml(
+    item,
+    apiId,
+    changesetId,
+    allTags,
+    isDelete,
+  );
+
+  await putOrDeleteItem(isDelete, apiId, newItem);
+};
+
 export const editCrag = async (
   crag: Feature,
   comment: string,
-  toEdit: Array<{ feature: Feature; allTags: FeatureTags; isDelete: boolean }>,
+  changes: Change[],
 ) => {
-  if (!toEdit.length) {
+  if (!changes.length) {
     return {
       type: 'error',
       text: 'No route has changed.',
@@ -290,22 +314,7 @@ export const editCrag = async (
   const changesetXml = getChangesetXml({ changesetComment, feature: crag });
   const changesetId = await putChangeset(changesetXml);
 
-  for (const { feature, newTags, isDelete } of toEdit) {
-    const apiId = feature.osmMeta;
-    const item = await getItem(apiId);
-
-    // TODO use version from `feature` (we dont want to overwrite someones changes) or at least just apply tags diff (see createNoteText)
-    const newItem = await updateItemXml(
-      item,
-      apiId,
-      changesetId,
-      newTags,
-      isDelete,
-    );
-
-    await putOrDeleteItem(isDelete, apiId, newItem);
-  }
-
+  await Promise.all(changes.map((change) => saveChange(changesetId, change)));
   await putChangesetClose(changesetId);
 
   return {
