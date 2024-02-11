@@ -58,14 +58,12 @@ export const ClimbingPanel = ({ footer }) => {
 
   const {
     // setIsEditMode,
-    handleImageLoad,
+    loadPhotoRelatedData,
     imageSize,
     photoPath,
     photoRef,
     // setPointSelectedIndex,
-    getAllRoutesPhotos,
-    photoPaths,
-    setPhotoPath,
+    preparePhotosAndSetFirst,
   } = useClimbingContext();
 
   // useEffect(() => {
@@ -80,18 +78,16 @@ export const ClimbingPanel = ({ footer }) => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
   };
 
-  // @TODO unify XYZ1
-  if (photoPaths === null) getAllRoutesPhotos();
-  if (!photoPath && photoPaths?.length > 0) setPhotoPath(photoPaths[0]);
+  preparePhotosAndSetFirst();
 
   const image = getWikiImage2(photoPath, 500);
 
   const onPhotoLoad = () => {
-    handleImageLoad();
+    loadPhotoRelatedData();
   };
 
   // useEffect(() => {
-  //   handleImageLoad();
+  //   loadPhotoRelatedData();
   // }, [isFullscreenDialogOpened]);
 
   const isPhotoLoading = imageSize.height === 0;

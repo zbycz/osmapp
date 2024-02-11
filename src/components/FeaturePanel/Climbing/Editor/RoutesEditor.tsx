@@ -61,7 +61,7 @@ export const RoutesEditor = ({
     pointSelectedIndex,
     isPointClicked,
     isLineInteractiveAreaHovered,
-    handleImageLoad,
+    loadPhotoRelatedData,
     photoRef,
   } = useClimbingContext();
   const machine = getMachine();
@@ -133,7 +133,7 @@ export const RoutesEditor = ({
 
   const onPhotoLoad = () => {
     setIsPhotoLoaded(true);
-    handleImageLoad();
+    loadPhotoRelatedData();
   };
 
   return (

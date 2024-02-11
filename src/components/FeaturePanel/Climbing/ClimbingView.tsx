@@ -113,13 +113,11 @@ export const ClimbingView = () => {
     viewportSize,
     editorPosition,
     photoPath,
-    handleImageLoad,
+    loadPhotoRelatedData,
     areRoutesLoading,
     setArePointerEventsDisabled,
     setImageZoom, // TODO remove it from context
-    photoPaths,
-    getAllRoutesPhotos,
-    setPhotoPath,
+    preparePhotosAndSetFirst,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -137,12 +135,12 @@ export const ClimbingView = () => {
   }, [isEditMode]);
 
   useEffect(() => {
-    handleImageLoad();
+    loadPhotoRelatedData();
     // setAreRoutesLoading(true);
   }, [splitPaneHeight]);
 
   useEffect(() => {
-    handleImageLoad();
+    loadPhotoRelatedData();
   }, []);
 
   const onSplitPaneHeightReset = () => {
@@ -150,12 +148,14 @@ export const ClimbingView = () => {
   };
 
   React.useEffect(() => {
-    window.addEventListener('resize', () => handleImageLoad());
-    window.addEventListener('orientationchange', () => handleImageLoad());
+    window.addEventListener('resize', () => loadPhotoRelatedData());
+    window.addEventListener('orientationchange', () => loadPhotoRelatedData());
 
     return () => {
-      window.removeEventListener('resize', () => handleImageLoad());
-      window.removeEventListener('orientationchange', () => handleImageLoad());
+      window.removeEventListener('resize', () => loadPhotoRelatedData());
+      window.removeEventListener('orientationchange', () =>
+        loadPhotoRelatedData(),
+      );
     };
   }, []);
 
@@ -168,9 +168,7 @@ export const ClimbingView = () => {
   };
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
 
-  // @TODO unify XYZ1
-  if (photoPaths === null) getAllRoutesPhotos();
-  if (!photoPath && photoPaths?.length > 0) setPhotoPath(photoPaths[0]);
+  preparePhotosAndSetFirst();
 
   useEffect(() => {
     setIsPhotoLoaded(false);

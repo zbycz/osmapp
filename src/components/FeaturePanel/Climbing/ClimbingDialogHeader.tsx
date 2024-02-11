@@ -36,7 +36,7 @@ export const ClimbingDialogHeader = ({ onClose }) => {
     areRoutesVisible,
     setPhotoPath,
     photoPath,
-    handleImageLoad,
+    loadPhotoRelatedData,
     setAreRoutesLoading,
     photoPaths,
     setShowDebugMenu,
@@ -47,7 +47,7 @@ export const ClimbingDialogHeader = ({ onClose }) => {
     setPhotoPath(photo);
     setTimeout(() => {
       // @TODO fix it without timeout
-      handleImageLoad();
+      loadPhotoRelatedData();
     }, 100);
   };
   const { feature } = useFeatureContext();

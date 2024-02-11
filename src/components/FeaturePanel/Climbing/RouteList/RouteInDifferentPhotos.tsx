@@ -20,13 +20,14 @@ export const RouteInDifferentPhotos = ({
   route: ClimbingRoute;
   stopPropagation: (e: any) => void;
 }) => {
-  const { setPhotoPath, handleImageLoad, photoPath } = useClimbingContext();
+  const { setPhotoPath, loadPhotoRelatedData, photoPath } =
+    useClimbingContext();
   const onPhotoChange = (e: any, photo: string) => {
     // @TODO probably move to machine state function
     setPhotoPath(photo);
     setTimeout(() => {
       // @TODO fix it without timeout
-      handleImageLoad();
+      loadPhotoRelatedData();
     }, 100);
     stopPropagation(e);
   };

@@ -109,7 +109,7 @@ type ClimbingContextType = {
   setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
   routesExpanded: Array<number>;
   setRoutesExpanded: (routesExpanded: Array<number>) => void;
-  handleImageLoad: () => void;
+  loadPhotoRelatedData: () => void;
   filterDifficulty: Array<string>;
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
   photoRef: React.MutableRefObject<any>;
@@ -122,6 +122,7 @@ type ClimbingContextType = {
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
   gradeTable: GradeTable;
   setGradeTable: (gradeTable: GradeTable) => void;
+  preparePhotosAndSetFirst: () => void;
 };
 
 // @TODO generate?
@@ -288,8 +289,12 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
 
     setPhotoPaths(photos.sort());
   };
+  const preparePhotosAndSetFirst = () => {
+    if (photoPaths === null) getAllRoutesPhotos();
+    if (!photoPath && photoPaths?.length > 0) setPhotoPath(photoPaths[0]);
+  };
 
-  const handleImageLoad = () => {
+  const loadPhotoRelatedData = () => {
     if (photoRef.current) {
       const [width, height] = getContainedSizeImage(photoRef.current);
       const { left, top } = photoRef.current.getBoundingClientRect();
@@ -360,7 +365,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
-    handleImageLoad,
+    loadPhotoRelatedData,
     filterDifficulty,
     setFilterDifficulty,
     photoRef,
@@ -378,6 +383,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setArePointerEventsDisabled,
     gradeTable,
     setGradeTable,
+    preparePhotosAndSetFirst,
   };
 
   return (
