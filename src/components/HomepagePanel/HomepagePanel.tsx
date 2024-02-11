@@ -99,35 +99,6 @@ export const HomepagePanel = () => {
               </Link>
             </Typography>
 
-            <ul>
-              <li>
-                <Link href="/relation/17089246">
-                  Lomy nad Velkou - Borová Věž
-                </Link>
-              </li>
-              <li>
-                <Link href="/relation/17089534">
-                  Lomy nad Velkou - Šípkový lom
-                </Link>
-              </li>
-              <li>
-                <Link href="/relation/17092792">Roviště - Krutý Řím</Link>
-              </li>
-              <li>
-                <Link href="/relation/17130318">Roviště - Monolit</Link>
-              </li>
-              <li>
-                <Link href="/relation/17130100">Roviště - El Krakonoš</Link>
-              </li>
-              <li>
-                <Link href="/relation/17087286">
-                  Jickovice - Hlavní oblast - patro
-                </Link>
-              </li>
-              <li>
-                <Link href="/relation/17129043">Županovice</Link>
-              </li>
-            </ul>
             <Center mb>
               <img
                 src="/osmapp-screenshot-300px.png"
