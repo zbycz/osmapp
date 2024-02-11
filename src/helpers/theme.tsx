@@ -5,6 +5,7 @@ import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useMediaQuery } from '@material-ui/core';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
+// @TODO lets define design properly, this is just a copy&paste
 const customTheme = {
   light: {
     transparent: '#00000000',
