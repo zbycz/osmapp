@@ -114,11 +114,11 @@ export const getWikiImage = async (wikiUrl): Promise<Image> => {
 export const getCommonsImageUrl = (
   photoName: string,
   width: number,
-): string => {
+): string | null => {
   if (!photoName) return null;
   if (!photoName.startsWith('File:')) {
     console.warn('Invalid Commons photo name without "File:":', photoName);
-    return;
+    return null;
   }
   const fileName = photoName.replace(/^File:/, '').replace(/ /g, '_');
   const hash = md5(fileName);

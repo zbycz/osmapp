@@ -28,18 +28,18 @@ const Container = styled.div`
     justify-content: center;
     &::before {
       position: absolute;
-      content:'...';
+      content: '...';
       border-radius: 6px;
       width: 40px;
       height: 12px;
-      background:${({ theme }) => theme.backgroundPrimarySubtleOnElevation0};
+      background: ${({ theme }) => theme.backgroundPrimarySubtleOnElevation0};
       margin-top: 1px;
       z-index: 1;
       transition: all 0.1s ease;
       border: solid 1px ${({ theme }) => theme.borderOnElevation0};
       text-align: center;
       line-height: 0px;
-      font-size:20px;
+      font-size: 20px;
       color: ${({ theme }) => theme.textPrimaryDefault};
       letter-spacing: 1px;
     }
@@ -55,24 +55,22 @@ const Container = styled.div`
         transition: all 0.5s ease-out;
         border-width: 1px;
         margin-top: 6px;
-
       }
     }
     &::after {
       position: absolute;
-      content:'';
+      content: '';
 
       width: 100%;
       height: 1px;
       margin-top: 7px;
       border-top: solid 1px #222;
       transition: all 0.1s ease;
-
     }
   }
-  .Pane.horizontal.Pane2  {
+  .Pane.horizontal.Pane2 {
     margin-top: 0;
-    overflow: auto
+    overflow: auto;
   }
   .Pane2 {
     overflow: auto;
@@ -80,29 +78,32 @@ const Container = styled.div`
     /* TODO cover for light mode wrong Cover color */
     background:
       /* Shadow Cover TOP */ radial-gradient(
-      farthest-side at 50% 0,
-      ${({ theme }) => theme.palette.panelBackground},
-      ${({ theme }) => theme.palette.panelBackground}
-    )
-    center top,
-      /* Shadow Cover BOTTOM */ radial-gradient(
-      farthest-side at 50% 100%,
-      ${({ theme }) => theme.palette.panelBackground},
-      ${({ theme }) => theme.palette.panelBackground}
-    )
-    center bottom,
-      /* Shadow TOP */ radial-gradient(
-      farthest-side at 50% 0,
-      ${({ theme }) => theme.palette.panelScrollCover},
-      transparent
-    )
-    center top,
-      /* Shadow BOTTOM */ radial-gradient(
-      farthest-side at 50% 100%,
-      ${({ theme }) => theme.palette.panelScrollCover},
-      transparent
-    )
-    center bottom;
+          farthest-side at 50% 0,
+          ${({ theme }) => theme.palette.panelBackground},
+          ${({ theme }) => theme.palette.panelBackground}
+        )
+        center top,
+      /* Shadow Cover BOTTOM */
+        radial-gradient(
+          farthest-side at 50% 100%,
+          ${({ theme }) => theme.palette.panelBackground},
+          ${({ theme }) => theme.palette.panelBackground}
+        )
+        center bottom,
+      /* Shadow TOP */
+        radial-gradient(
+          farthest-side at 50% 0,
+          ${({ theme }) => theme.palette.panelScrollCover},
+          transparent
+        )
+        center top,
+      /* Shadow BOTTOM */
+        radial-gradient(
+          farthest-side at 50% 100%,
+          ${({ theme }) => theme.palette.panelScrollCover},
+          transparent
+        )
+        center bottom;
     background-repeat: no-repeat;
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
