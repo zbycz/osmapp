@@ -47,7 +47,7 @@
     "next": "^13.4.3",
     "next-cookies": "^2.0.3",
     "next-pwa": "^5.2.21",
-    "osm-auth": "^1.1.1",
+    "osm-auth": "^2.4.0",
     "react": "^18.2.0",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.2.0",
