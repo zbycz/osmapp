@@ -86,8 +86,8 @@ type ClimbingContextType = {
   scrollOffset: PositionPx;
   setScrollOffset: (scrollOffset: PositionPx) => void;
   findCloserPoint: (position: Position) => Position | null;
-  imageZoom: ZoomState;
-  setImageZoom: (imageZoom: ZoomState) => void;
+  photoZoom: ZoomState;
+  setPhotoZoom: (photoZoom: ZoomState) => void;
   areRoutesVisible: boolean;
   setAreRoutesVisible: (areRoutesVisible: boolean) => void;
   areRoutesLoading: boolean;
@@ -165,7 +165,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     y: 0,
     units: 'px',
   });
-  const [imageZoom, setImageZoom] = useState<ZoomState>({
+  const [photoZoom, setPhotoZoom] = useState<ZoomState>({
     scale: 1,
     positionX: 0,
     positionY: 0,
@@ -242,7 +242,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       editorPosition,
       scrollOffset,
       imageSize,
-      imageZoom,
+      photoZoom,
     });
 
   const getMachine = getMachineFactory({
@@ -371,8 +371,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     photoRef,
     areRoutesLoading,
     setAreRoutesLoading,
-    imageZoom,
-    setImageZoom,
+    photoZoom,
+    setPhotoZoom,
     addZoom,
     getAllRoutesPhotos,
     isDifficultyHeatmapEnabled, // @TODO move to some settings object

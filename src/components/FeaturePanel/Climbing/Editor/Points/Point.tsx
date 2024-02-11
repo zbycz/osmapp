@@ -56,7 +56,7 @@ export const Point = ({
     pointElement,
     setPointElement,
     setIsLineInteractiveAreaHovered,
-    imageZoom,
+    photoZoom,
   } = useClimbingContext();
 
   const onClick = (e) => {
@@ -124,7 +124,7 @@ export const Point = ({
   const title = type && <title>{type}</title>;
 
   return (
-    <g transform={`translate(${x},${y}) scale(${1 / imageZoom.scale})`}>
+    <g transform={`translate(${x},${y}) scale(${1 / photoZoom.scale})`}>
       <ClickableArea
         fill="transparent"
         r={isTouchDevice ? 20 : 10}

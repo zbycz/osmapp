@@ -30,7 +30,7 @@ export const RouteFloatingMenu = () => {
     routes,
     routeSelectedIndex,
     getCurrentPath,
-    imageZoom,
+    photoZoom,
   } = useClimbingContext();
   const machine = getMachine();
 
@@ -80,7 +80,7 @@ export const RouteFloatingMenu = () => {
       </Dialog>
 
       {showTypeMenu ? (
-        <ScaleContainer scale={imageZoom.scale}>
+        <ScaleContainer scale={photoZoom.scale}>
           <ButtonGroup variant="contained" size="small" color="primary">
             <Button
               onClick={() => {
@@ -126,7 +126,7 @@ export const RouteFloatingMenu = () => {
           </ButtonGroup>
         </ScaleContainer>
       ) : (
-        <ScaleContainer scale={imageZoom.scale}>
+        <ScaleContainer scale={photoZoom.scale}>
           <ButtonGroup variant="contained" size="small" color="primary">
             {machine.currentStateName === 'pointMenu' &&
               routes[routeSelectedIndex] &&

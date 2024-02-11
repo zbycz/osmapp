@@ -116,7 +116,7 @@ export const ClimbingView = () => {
     loadPhotoRelatedData,
     areRoutesLoading,
     setArePointerEventsDisabled,
-    setImageZoom, // TODO remove it from context
+    setPhotoZoom, // TODO remove it from context
     preparePhotosAndSetFirst,
   } = useClimbingContext();
 
@@ -253,7 +253,7 @@ export const ClimbingView = () => {
                       positionY: number;
                     },
                   ) => {
-                    setImageZoom(state);
+                    setPhotoZoom(state);
                     // console.log('____state', _ref, state);
                   }}
                 >

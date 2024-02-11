@@ -11,7 +11,7 @@ export const Piton = ({
   pointerEvents,
 }: PointProps) => {
   const config = useConfig();
-  const { imageZoom } = useClimbingContext();
+  const { photoZoom } = useClimbingContext();
 
   const foregroundColor = isPointSelected
     ? config.anchorColorSelected
@@ -22,7 +22,7 @@ export const Piton = ({
 
   return (
     <g
-      transform={` translate(${x - 4} ${y - 6}) scale(${1 / imageZoom.scale})`}
+      transform={` translate(${x - 4} ${y - 6}) scale(${1 / photoZoom.scale})`}
       cursor="help"
       onClick={onClick}
       pointerEvents={pointerEvents}

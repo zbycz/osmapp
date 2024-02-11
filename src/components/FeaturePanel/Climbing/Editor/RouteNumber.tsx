@@ -26,15 +26,15 @@ const RouteNameOutline = RouteNameBoxBase;
 const RouteNameBox = RouteNameBoxBase;
 
 export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
-  const { imageSize, imageZoom, isRouteSelected, getMachine, isEditMode } =
+  const { imageSize, photoZoom, isRouteSelected, getMachine, isEditMode } =
     useClimbingContext();
   const digits = String(routeNumber).length;
-  const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 20) / imageZoom.scale;
-  const RECT_HEIGHT = 20 / imageZoom.scale;
-  const RECT_Y_OFFSET = 10 / imageZoom.scale;
-  const OUTLINE_WIDTH = 2 / imageZoom.scale;
-  const HOVER_WIDTH = 10 / imageZoom.scale;
-  const TEXT_Y_SHIFT = 15 / imageZoom.scale;
+  const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 20) / photoZoom.scale;
+  const RECT_HEIGHT = 20 / photoZoom.scale;
+  const RECT_Y_OFFSET = 10 / photoZoom.scale;
+  const OUTLINE_WIDTH = 2 / photoZoom.scale;
+  const HOVER_WIDTH = 10 / photoZoom.scale;
+  const TEXT_Y_SHIFT = 15 / photoZoom.scale;
 
   const config = useConfig();
 
@@ -114,7 +114,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
       <Text
         x={newX}
         y={newY + TEXT_Y_SHIFT}
-        scale={imageZoom.scale}
+        scale={photoZoom.scale}
         fill={
           isSelected
             ? config.routeNumberTextColorSelected

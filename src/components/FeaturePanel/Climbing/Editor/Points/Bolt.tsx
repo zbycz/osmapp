@@ -10,7 +10,7 @@ export const Bolt = ({
   onClick,
   pointerEvents,
 }: PointProps) => {
-  const { isEditMode, imageZoom } = useClimbingContext();
+  const { isEditMode, photoZoom } = useClimbingContext();
   const config = useConfig();
   const size = 16;
   const strokeWidth = 3;
@@ -29,7 +29,7 @@ export const Bolt = ({
   return (
     <g
       transform={`translate(${dx} ${dy}) rotate(45) scale(${
-        1 / imageZoom.scale
+        1 / photoZoom.scale
       })`}
       cursor={!isEditMode && 'help'}
       onClick={onClick}

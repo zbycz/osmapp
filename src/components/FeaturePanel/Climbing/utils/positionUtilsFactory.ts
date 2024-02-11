@@ -7,7 +7,7 @@ export const positionUtilsFactory = ({
   editorPosition,
   scrollOffset,
   imageSize,
-  imageZoom,
+  photoZoom,
 }) => {
   const getPixelPosition = ({ x, y }: Position): PositionPx => ({
     x: imageSize.width * x,
@@ -43,10 +43,10 @@ export const positionUtilsFactory = ({
     }, position);
   };
   const addZoom = (position: PositionPx | null): PositionPx => {
-    // editorPosition,position,imageZoom
+    // editorPosition,position,photoZoom
     const transformedEditorPosition = {
-      x: editorPosition.x + imageZoom.positionX || 0,
-      y: editorPosition.y + imageZoom.positionY || 0,
+      x: editorPosition.x + photoZoom.positionX || 0,
+      y: editorPosition.y + photoZoom.positionY || 0,
     };
     console.log('___1', transformedEditorPosition);
     const relativeNewPosition = {

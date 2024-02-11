@@ -11,7 +11,7 @@ export const Sling = ({
   pointerEvents,
 }: PointProps) => {
   const config = useConfig();
-  const { imageZoom } = useClimbingContext();
+  const { photoZoom } = useClimbingContext();
 
   const foregroundColor = isPointSelected
     ? config.anchorColorSelected
@@ -23,7 +23,7 @@ export const Sling = ({
   return (
     <g
       transform={` translate(${x + 15} ${y - 10}) scale(${
-        1 / imageZoom.scale
+        1 / photoZoom.scale
       })`}
       cursor="help"
       onClick={onClick}

@@ -3,7 +3,7 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 
 export const useConfig = () => {
   const theme: any = useTheme();
-  const { imageZoom } = useClimbingContext();
+  const { photoZoom } = useClimbingContext();
 
   const activeColor = theme.textSecondaryHighlight;
   const inactiveColor = theme.backgroundSurfaceElevation0;
@@ -25,8 +25,8 @@ export const useConfig = () => {
     anchorBorderColor: borderColor,
     anchorBorderColorSelected: inactiveColor,
 
-    pathBorderWidth: 6 / imageZoom.scale,
+    pathBorderWidth: 6 / photoZoom.scale,
     pathBorderOpacity: 0.8,
-    pathStrokeWidth: 4 / imageZoom.scale,
+    pathStrokeWidth: 4 / photoZoom.scale,
   };
 };

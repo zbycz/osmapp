@@ -13,7 +13,7 @@ const Svg = styled.svg<{
   hasEditableCursor: boolean;
   imageSize: { width: number; height: number };
   isVisible: boolean;
-  imageZoom: ZoomState;
+  photoZoom: ZoomState;
   transformOrigin: any;
 }>`
   /* background: rgba(255, 0, 0, 0.5); */
@@ -27,9 +27,9 @@ const Svg = styled.svg<{
   transition: ${({ isVisible }) => (isVisible ? 'opacity 0.1s ease' : 'none')};
   transform-origin: 0 0;
   /* transform: translate(
-      ${({ imageZoom }) => `${imageZoom.positionX}px, ${imageZoom.positionY}px`}
+      ${({ photoZoom }) => `${photoZoom.positionX}px, ${photoZoom.positionY}px`}
     )
-    scale(${({ imageZoom }) => imageZoom.scale}); */
+    scale(${({ photoZoom }) => photoZoom.scale}); */
   ${({ hasEditableCursor }) =>
     `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};
   ${({ imageSize: { width, height } }) =>
@@ -80,7 +80,7 @@ export const RoutesLayer = ({
     setPointSelectedIndex,
     getCurrentPath,
     routes,
-    // imageZoom,
+    // photoZoom,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -176,7 +176,7 @@ export const RoutesLayer = ({
         onPointerMove={onEditorTouchMove}
         imageSize={imageSize}
         isVisible={isVisible}
-        // imageZoom={imageZoom}
+        // photoZoom={photoZoom}
         transformOrigin={transformOrigin}
       >
         {sortedRoutes.rest.map((item) => item.route)}
