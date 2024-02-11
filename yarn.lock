@@ -5116,11 +5116,6 @@ jsesc@~0.5.0:
   resolved "https://registry.yarnpkg.com/jsesc/-/jsesc-0.5.0.tgz#e7dee66e35d6fc16f710fe91d5cf69f70f08911d"
   integrity sha512-uZz5UnB7u4T9LvwmFqXii7pZSouaRPorGs5who1Ip7VO0wxanFvBL7GkM6dTHlgX+jhBApRetaWpnDabOeTcnA==
 
-jshashes@~1.0.8:
-  version "1.0.8"
-  resolved "https://registry.yarnpkg.com/jshashes/-/jshashes-1.0.8.tgz#f60d837428383abf73ab022e1542e6614bd75514"
-  integrity sha512-btmQZ/w1rj8Lb6nEwvhjM7nBYoj54yaEFo2PWh3RkxZ8qNwuvOxvQYN/JxVuwoMmdIluL+XwYVJ+pEEZoSYybQ==
-
 json-parse-better-errors@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/json-parse-better-errors/-/json-parse-better-errors-1.0.2.tgz#bb867cfb3450e69107c131d1c514bab3dc8bcaa9"
@@ -5914,13 +5909,6 @@ object.values@^1.1.4:
     define-properties "^1.1.3"
     es-abstract "^1.18.2"
 
-ohauth@~1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/ohauth/-/ohauth-1.0.1.tgz#a5d4ab8e5390bb1cad68a58cc9c58630173c02f2"
-  integrity sha512-R9ZUN3+FVCwzeOOHCJpzA9jw/byRxp5O9X06mTL6Sp/LIQn/rLrMv6cwYctX+hoIKzRUsalGJXZ1kG5wBmSskQ==
-  dependencies:
-    jshashes "~1.0.8"
-
 once@^1.3.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/once/-/once-1.4.0.tgz#583b1aa775961d4b113ac17d9c50baef9dd76bd1"
@@ -5964,14 +5952,10 @@ optionator@^0.9.1:
     type-check "^0.4.0"
     word-wrap "^1.2.3"
 
-osm-auth@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/osm-auth/-/osm-auth-1.1.1.tgz#2a6be41fb45998d9276b879154f8b86628de17d7"
-  integrity sha512-U2Q7wvjcLJSi7P1a4JKIgTSvWlVq2rqCsjYLHX/cMeIuiMDM8y0B/LQCQyvM7KKJa1juk3Do35dhlwPGxtxc/Q==
-  dependencies:
-    ohauth "~1.0.1"
-    resolve-url "~0.2.1"
-    store "~2.0.12"
+osm-auth@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/osm-auth/-/osm-auth-2.4.0.tgz#d77a0c17ce985b867902871186b71fd32a21f731"
+  integrity sha512-FvTyYnIl+pjLi9cKJWNM74PjrLUED1f2TnWpAexxJ2qoxr8sdndON/EzXHf0nfMLB07Pn9DPyWVEbTXZ/nID8A==
 
 p-each-series@^2.1.0:
   version "2.2.0"
@@ -6563,11 +6547,6 @@ resolve-protobuf-schema@^2.1.0:
   dependencies:
     protocol-buffers-schema "^3.3.1"
 
-resolve-url@~0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/resolve-url/-/resolve-url-0.2.1.tgz#2c637fe77c893afd2a663fe21aa9080068e2052a"
-  integrity sha1-LGN/53yJOv0qZj/iGqkIAGjiBSo=
-
 resolve@^1.10.0, resolve@^1.12.0, resolve@^1.13.1, resolve@^1.20.0:
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.20.0.tgz#629a013fb3f70755d6f0b7935cc1c2c5378b1975"
@@ -6968,11 +6947,6 @@ stack-utils@^2.0.3:
   integrity sha512-gL//fkxfWUsIlFL2Tl42Cl6+HFALEaB1FU76I/Fy+oZjRreP7OPMXFlGbxM7NQsI0ZpUfw76sHnv0WNYuTb7Iw==
   dependencies:
     escape-string-regexp "^2.0.0"
-
-store@~2.0.12:
-  version "2.0.12"
-  resolved "https://registry.yarnpkg.com/store/-/store-2.0.12.tgz#8c534e2a0b831f72b75fc5f1119857c44ef5d593"
-  integrity sha1-jFNOKguDH3K3X8XxEZhXxE711ZM=
 
 streamsearch@^1.1.0:
   version "1.1.0"
