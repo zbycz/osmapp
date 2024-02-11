@@ -8,10 +8,10 @@ import { CircularProgress, IconButton } from '@material-ui/core';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
-
 import { RoutesEditor } from './Editor/RoutesEditor';
 import { getWikiImage2 } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
+import { ControlPanel } from './Editor/ControlPanel';
 
 const Container = styled.div`
   position: relative;
@@ -249,7 +249,12 @@ export const ClimbingView = () => {
                     </>
                   </TransformComponent>
                 </TransformWrapper>
-                {isEditMode && areRoutesVisible && <Guide />}
+                {isEditMode && areRoutesVisible && (
+                  <>
+                    <ControlPanel />
+                    <Guide />
+                  </>
+                )}
               </BlurContainer>
             </>
           ) : (

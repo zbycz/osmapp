@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { RoutesLayer } from './RoutesLayer';
-import { ControlPanel } from './ControlPanel';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
@@ -44,8 +43,6 @@ export const RoutesEditor = ({
 }) => {
   const {
     imageSize,
-    areRoutesVisible,
-    isEditMode,
     getMachine,
     addOffsets,
     setMousePosition,
@@ -131,20 +128,17 @@ export const RoutesEditor = ({
   };
 
   return (
-    <>
-      {isEditMode && areRoutesVisible && <ControlPanel />}
-      <EditorContainer imageHeight={imageSize.height}>
-        <ImageContainer>
-          <ImageElement src={imageUrl} onLoad={onPhotoLoad} ref={photoRef} />
-        </ImageContainer>
-        <RoutesLayer
-          isVisible={isRoutesLayerVisible}
-          onClick={onCanvasClick}
-          onEditorMouseMove={onMouseMove}
-          onEditorTouchMove={onTouchMove}
-          transformOrigin={transformOrigin}
-        />
-      </EditorContainer>
-    </>
+    <EditorContainer imageHeight={imageSize.height}>
+      <ImageContainer>
+        <ImageElement src={imageUrl} onLoad={onPhotoLoad} ref={photoRef} />
+      </ImageContainer>
+      <RoutesLayer
+        isVisible={isRoutesLayerVisible}
+        onClick={onCanvasClick}
+        onEditorMouseMove={onMouseMove}
+        onEditorTouchMove={onTouchMove}
+        transformOrigin={transformOrigin}
+      />
+    </EditorContainer>
   );
 };
