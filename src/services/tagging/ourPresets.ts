@@ -67,6 +67,10 @@ export const ourPresets = {
     tags: {
       climbing: 'route_bottom',
     },
+    addTags: {
+      sport: 'climbing',
+      climbing: 'route_bottom',
+    },
   },
   'climbing/route': {
     icon: 'temaki-abseiling',
@@ -92,6 +96,10 @@ export const ourPresets = {
     tags: {
       climbing: 'route',
     },
+    addTags: {
+      sport: 'climbing',
+      climbing: 'route',
+    },
   },
   'climbing/crag': {
     icon: 'temaki-abseiling',
@@ -109,6 +117,10 @@ export const ourPresets = {
       'ele',
     ],
     tags: {
+      climbing: 'crag',
+    },
+    addTags: {
+      sport: 'climbing',
       climbing: 'crag',
     },
   },
