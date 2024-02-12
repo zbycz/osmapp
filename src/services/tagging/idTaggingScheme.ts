@@ -27,6 +27,7 @@ const getUiField = (
   feature: Feature,
   key: string,
 ): UiField => {
+  // TODO this should be removed now the parsing works ok (+run tests)
   if (field.type === 'typeCombo') {
     keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
     return undefined;
@@ -79,7 +80,7 @@ const matchFieldsFromPreset = (
 
       return getUiField(field, keysTodo, feature, key);
     })
-    .filter((field) => field?.value);
+    .filter(Boolean);
 };
 
 const matchRestToFields = (keysTodo: KeysTodo, feature: Feature): UiField[] =>
