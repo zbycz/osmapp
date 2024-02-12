@@ -22,6 +22,8 @@ import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
+import { ClimbingPanel } from './Climbing/ClimbingPanel';
+import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -36,6 +38,43 @@ export const FeaturePanel = () => {
 
   const osmappLink = getFullOsmappLink(feature);
   const label = getLabel(feature);
+
+  const footer = (
+    <PanelFooter>
+      <FeatureDescription setAdvanced={setAdvanced} />
+      <Coordinates />
+      <br />
+      <a href={osmappLink}>{osmappLink}</a>
+      <br />
+      <label>
+        <input
+          type="checkbox"
+          onChange={toggleShowTags}
+          checked={showTagsTable}
+          disabled={point || deleted || (!skeleton && !feature.schema)}
+        />{' '}
+        {t('featurepanel.show_tags')}
+      </label>{' '}
+      <label>
+        <input
+          type="checkbox"
+          onChange={toggleShowAround}
+          checked={point || showAround}
+          disabled={point}
+        />{' '}
+        {t('featurepanel.show_objects_around')}
+      </label>
+      {!point && showAround && <ObjectsAround advanced={advanced} />}
+    </PanelFooter>
+  );
+
+  if (tags.climbing === 'crag') {
+    return (
+      <ClimbingContextProvider feature={feature}>
+        <ClimbingPanel footer={footer} />
+      </ClimbingContextProvider>
+    );
+  }
 
   return (
     <PanelWrapper>
@@ -81,32 +120,7 @@ export const FeaturePanel = () => {
             </>
           )}
 
-          <PanelFooter>
-            <FeatureDescription setAdvanced={setAdvanced} />
-            <Coordinates />
-            <br />
-            <a href={osmappLink}>{osmappLink}</a>
-            <br />
-            <label>
-              <input
-                type="checkbox"
-                onChange={toggleShowTags}
-                checked={showTagsTable}
-                disabled={point || deleted || (!skeleton && !feature.schema)}
-              />{' '}
-              {t('featurepanel.show_tags')}
-            </label>{' '}
-            <label>
-              <input
-                type="checkbox"
-                onChange={toggleShowAround}
-                checked={point || showAround}
-                disabled={point}
-              />{' '}
-              {t('featurepanel.show_objects_around')}
-            </label>
-            {!point && showAround && <ObjectsAround advanced={advanced} />}
-          </PanelFooter>
+          {footer}
         </PanelContent>
       </PanelScrollbars>
     </PanelWrapper>
