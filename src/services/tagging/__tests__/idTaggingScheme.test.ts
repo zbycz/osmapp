@@ -170,30 +170,4 @@ describe('idTaggingScheme', () => {
       'source',
     ]);
   });
-  //
-  //
-  // it('xxxsxhouafdld remove from keysTodo if address is in restTags', () => {
-  //   // TOOD find better tags which have some multikey field in tagsWithFields
-  //   const feature = {
-  //     osmMeta: {
-  //       type: 'way',
-  //       id: 149398903,
-  //     },
-  //     tags: {
-  //       "climbing": "route",
-  //       "climbing:boulder": "yes",
-  //       "climbing:grade:uiaa": "7+",
-  //       "description": "Hard boulder problem",
-  //       "sport": "climbing"
-  //     }
-  //     ,
-  //   } as unknown as Feature;
-  //
-  //   const schema = getSchemaForFeature(feature);
-  //
-  //   expect(schema.presetKey).toEqual('leisure/climbing/route');
-  //   expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
-  //     'source',
-  //   ]);
-  // });
 });
