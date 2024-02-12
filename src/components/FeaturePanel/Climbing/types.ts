@@ -1,7 +1,7 @@
 import { gradeSystem } from './utils/gradeData';
 import { Feature } from '../../../services/types';
 
-export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling';
+export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling' | 'unfinished';
 
 export type Position = {
   x: number;

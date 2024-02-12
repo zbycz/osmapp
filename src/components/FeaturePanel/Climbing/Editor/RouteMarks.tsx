@@ -7,6 +7,7 @@ import { Sling } from './Points/Sling';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Anchor } from './Points/Anchor';
 import { ClimbingRoute } from '../types';
+import { UnfinishedPoint } from './Points/UnfinishedPoint';
 
 type Props = {
   route: ClimbingRoute;
@@ -55,6 +56,7 @@ export const RouteMarks = ({
         const isAnchorVisible = type === 'anchor';
         const isSlingVisible = type === 'sling';
         const isPitonVisible = type === 'piton';
+        const isUnfinishedPointVisible = type === 'unfinished';
         const position = getPixelPosition({ x, y, units: 'percentage' });
         const isActualPointSelected = isSelected && isPointSelected(index);
         const pointerEvents = isSelected ? 'auto' : 'none';
@@ -97,6 +99,15 @@ export const RouteMarks = ({
             )}
             {isAnchorVisible && (
               <Anchor
+                x={position.x}
+                y={position.y}
+                isPointSelected={isActualPointSelected}
+                pointerEvents={pointerEvents}
+                onClick={handleClick}
+              />
+            )}
+            {isUnfinishedPointVisible && (
+              <UnfinishedPoint
                 x={position.x}
                 y={position.y}
                 isPointSelected={isActualPointSelected}

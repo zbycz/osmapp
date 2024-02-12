@@ -118,6 +118,13 @@ export const RouteFloatingMenu = () => {
             </Button>
             <Button
               onClick={() => {
+                onPointTypeChange('unfinished');
+              }}
+            >
+              Unfinished
+            </Button>
+            <Button
+              onClick={() => {
                 onPointTypeChange(null);
               }}
             >
