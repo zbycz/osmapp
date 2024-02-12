@@ -20,9 +20,11 @@ const PointElement = styled.circle<{ isHovered: boolean }>`
 
 const usePointColor = (type, isHovered) => {
   const config = useConfig();
+  const invisiblePointsForTypes = ['bolt', 'piton', 'unfinished'];
 
-  if (type === 'bolt' || type === 'piton')
+  if (invisiblePointsForTypes.includes(type))
     return { pointColor: 'transparent', pointStroke: 'transparent' };
+
   if (isHovered)
     return {
       pointColor: config.pathBorderColor,

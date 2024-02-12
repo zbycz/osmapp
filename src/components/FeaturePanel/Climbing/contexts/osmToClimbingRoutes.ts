@@ -13,6 +13,7 @@ const boltCodeMap: Record<string, PointType> = {
   A: 'anchor',
   P: 'piton',
   S: 'sling',
+  U: 'unfinished',
 };
 
 const parsePathString = (pathString?: string): PathPoints =>
