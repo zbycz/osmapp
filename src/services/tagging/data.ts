@@ -3,15 +3,15 @@ import presetsJson from '@openstreetmap/id-tagging-schema/dist/presets.json';
 import { Fields } from './types/Fields';
 import { Presets } from './types/Presets';
 import { publishDbgObject } from '../../utils';
+import { ourFields, ourPresets } from './ourPresets';
 
-export const fields = fieldsJson as unknown as Fields;
-
-Object.keys(fieldsJson).forEach((fieldKey) => {
+export const fields = { ...fieldsJson, ...ourFields } as unknown as Fields;
+Object.keys(fields).forEach((fieldKey) => {
   fields[fieldKey].fieldKey = fieldKey;
 });
 
-export const presets = presetsJson as unknown as Presets;
-Object.keys(presetsJson).forEach((presetKey) => {
+export const presets = { ...presetsJson, ...ourPresets } as unknown as Presets;
+Object.keys(presets).forEach((presetKey) => {
   presets[presetKey].presetKey = presetKey;
 });
 

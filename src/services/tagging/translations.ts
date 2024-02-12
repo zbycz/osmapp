@@ -1,8 +1,10 @@
+import { merge } from 'lodash';
 import { fetchJson } from '../fetch';
 import { Field } from './types/Fields';
 import { intl } from '../intl';
 import { publishDbgObject } from '../../utils';
 import { FieldTranslation } from './types/Presets';
+import { getOurTranslations } from './ourPresets';
 
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
 const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
@@ -19,6 +21,9 @@ export const fetchSchemaTranslations = async () => {
   translations = await fetchJson(
     `${cdnUrl}@${version}/dist/translations/${intl.lang}.min.json`,
   );
+
+  merge(translations, getOurTranslations(intl.lang));
+
   publishDbgObject('schemaTranslations', translations);
 };
 
