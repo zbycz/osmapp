@@ -11,16 +11,16 @@ export default {
   'install.ios_intro': 'osmapp.org im <strong>Safari Browser</strong> öffnen',
   'install.ios_share': 'Drücke das <strong>Teilen Icon</strong>',
   'install.ios_add': 'Drücke <strong>Zum Startbildschirm zufügen</strong>',
-  'install.android_intro': 'Öffner osmapp.org im <strong>Chrome oder Firefox Browser</strong>',
+  'install.android_intro': 'Öffne osmapp.org in <strong>Chrome oder Firefox Browser</strong>',
   'install.android_share': 'Drücke das <strong>Drei-Punkte Menü</strong>',
   'install.android_add': 'Drücke <strong>App installieren</strong>',
-  'install.desktop_intro': 'Öffne osmapp.org im <strong>Chrome</strong>, <strong>FirefoxOS</strong> oder <strong>Opera</strong>',
+  'install.desktop_intro': 'Öffne osmapp.org in <strong>Chrome</strong>, <strong>FirefoxOS</strong> oder <strong>Opera</strong>',
   'install.desktop_install': 'Drücke die Schaltfläche <strong>Installieren</strong>',
   'install.outro': "Das war's! OsmAPP sollte auf deinem Startbildschirm erscheinen.",
-  'install.note': 'Hinweis: Diese App verwendet PWA Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
+  'install.note': 'Hinweis: Diese App verwendet die PWA Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
 
   'homepage.subtitle': 'Eine universelle App für OpenStreetMap',
-  'homepage.how_to_start': 'Tippe einen Begriff in die Suchbox.\nOder klicke auf einen Ort auf der Karte.',
+  'homepage.how_to_start': 'Tippe einen Begriff in das Suchfeld.\nOder klicke auf einen Ort auf der Karte.',
   'homepage.examples.eg': 'z.B.',
   'homepage.examples.charles_bridge_statues': 'Statuen auf der Karlsbrücke',
   'homepage.screenshot_alt': 'Screenshot der OsmAPP',
@@ -29,7 +29,7 @@ export default {
       — ähnlich wie bei Wikipedia. Du findest die Schaltfläche
       <em>Bearbeiten</em> bei jedem Kartenelement.`,
   'homepage.heading_about_osmapp': 'Über OsmAPP',
-  'homepage.about_osmapp': `Diese Anwendung soll eine komfortable Oberfläche für die tägliche Nutzung von <i>OpenStreetMap</i>,
+  'homepage.about_osmapp': `Diese App soll eine komfortable Oberfläche für die tägliche Nutzung von <i>OpenStreetMap</i>,
      samt Bearbeitungsfunktionen, bieten. <br/> Derzeit umfasst sie verschiedene Kartenebenen, POI-Bearbeitung und eine einfache Suchmaschine.
      Funktionen wie Navigation und das Speichern von Favoriten sind in Planung`,
   'homepage.github_link': `Du kannst neue Features auf <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>vorschlagen</a>.`,
@@ -79,10 +79,10 @@ export default {
     '(c) MapTiler.com ❤️ <br> – Vektor Tiles, Hosting, Outdoor Karte<br>Vielen Dank für die Unterstützung dieses Projekts! 🙂 ',
   'map.more_button': 'mehr',
   'map.more_button_title': 'Mehr Optionen…',
-  'map.edit_link': 'Diesen Breich im iD Editor bearbeiten',
+  'map.edit_link': 'Diesen Bereich im iD Editor bearbeiten',
   'map.about_link': 'Über diese App',
 
-  'editdialog.add_heading': 'Zu OpenStreetMap hinzfügen',
+  'editdialog.add_heading': 'Zu OpenStreetMap hinzufügen',
   'editdialog.undelete_heading': 'Wieder zu OpenStreetMap hinzufügen',
   'editdialog.edit_heading': 'Bearbeiten:',
   'editdialog.suggest_heading': 'Änderung vorschlagen:',
@@ -102,12 +102,12 @@ export default {
   'editdialog.location_checkbox': 'Position ändern',
   'editdialog.location_placeholder': 'z.B. gegenüber auf der Straße',
   'editdialog.location_editor_to_be_added':
-    'Die Position kann hier noch nicht bearbeitet werden, dies ist aber im <a href="__link__">iD editor</a> möglich.',
+    'Die Position kann hier noch nicht bearbeitet werden, dies ist aber im <a href="__link__">iD Editor</a> möglich.',
   'editdialog.place_cancelled': 'Endgültig geschlossen (Löschen)',
   'editdialog.comment': 'Kommentar (optional)',
   'editdialog.comment_placeholder': 'Link zur Quelle der Informationen usw.',
   'editdialog.info_edit': `Deine Änderungen werden direkt in OpenStreetMap gespeichert. Bitte füge nur Informationen
-         von deinen eigenen oder geprüften Quellen hinzu. Es ist nicht erlaubt, Urheberrechtlich geschützte Informationen
+         von deinen eigenen oder geprüften Quellen hinzu. Es ist nicht erlaubt, urheberrechtlich geschützte Informationen
          (z.B. von Google Maps) zu kopieren. <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">weitere Informationen</a>`,
   'editdialog.info_note': `Dein Vorschlag wird von Freiwilligen des OpenStreetMap Projektes bearbeitet. Hier
          kannst du weitere Hinweise oder Beschreibungen der neuen Position usw. hinzufügen.
@@ -129,7 +129,7 @@ export default {
   'editsuccess.note.textLabel': 'Notiz',
   'editsuccess.edit.heading': 'Danke für deine Bearbeitung!',
   'editsuccess.edit.subheading': 'Deine Änderung erscheint auf Karten auf der ganzen Welt.',
-  'editsuccess.edit.body': `Die Änderung ist bereits in der OSM Datenbank gespeichert. Du wirst dieses auf der "OSM Mapnik" Karte in wenigen Minuten sehen können.
+  'editsuccess.edit.body': `Die Änderung ist bereits in der OSM Datenbank gespeichert. Du wirst diese auf der "OSM Carto" Karte in wenigen Minuten sehen können.
          Die OsmAPP Karte und verschiedene anderen Karten werden ca. einmal im Monat aktualisiert.
           <br/><br/>Wenn dies ein Versehen war, kannst du die Werte manuell rückgängig machen und erneut speichern.`,
   'editsuccess.edit.urlLabel': `Deine Änderungen:`,
@@ -150,7 +150,7 @@ export default {
   'layers.outdoor': 'Outdoor',
   'layers.mtb': 'MTB',
   'layers.snow': 'Schnee',
-  'layers.mapnik': 'OSM Mapnik',
+  'layers.mapnik': 'OSM Carto',
   'layers.maptilerSat': 'Maptiler Satellit (z<14)',
   'layers.bingSat': 'Bing Satellit',
   'layers.bike': 'Fahrrad',
