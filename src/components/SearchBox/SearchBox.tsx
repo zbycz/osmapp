@@ -201,12 +201,11 @@ const useFetchOptions = (inputValue: string, setOptions) => {
   }, [inputValue, stars]);
 };
 
-const useOnClosePanel = (setInputValue) => {
+const useOnClosePanel = () => {
   const { feature, setFeature, setPreview } = useFeatureContext();
   const mobileMode = useMobileMode();
 
   return () => {
-    setInputValue('');
     if (mobileMode) {
       setPreview(feature);
     }
@@ -221,7 +220,7 @@ const SearchBox = () => {
   const [options, setOptions] = useState([]);
   const [overpassLoading, setOverpassLoading] = useState(false);
   const autocompleteRef = useRef();
-  const onClosePanel = useOnClosePanel(setInputValue);
+  const onClosePanel = useOnClosePanel();
 
   useFetchOptions(inputValue, setOptions);
 
