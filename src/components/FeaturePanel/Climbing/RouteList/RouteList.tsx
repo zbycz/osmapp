@@ -7,6 +7,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
 import { addElementToArray, deleteFromArray } from '../utils/array';
 import { getCsvGradeData } from '../utils/routeGrade';
+import { invertedBoltCodeMap } from '../utils/boltCodes';
 
 const Container = styled.div`
   padding-bottom: 65px;
@@ -87,12 +88,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
   };
 
   const getRoutesCsv = () => {
-    const boltCodeMap = {
-      bolt: 'B',
-      anchor: 'A',
-      piton: 'P',
-      sling: 'S',
-    };
+    const boltCodeMap = invertedBoltCodeMap();
 
     const getPathString = (path) =>
       path

@@ -3,18 +3,10 @@ import {
   ClimbingRoute,
   GradeSystem,
   PathPoints,
-  PointType,
   RouteDifficulty,
 } from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
-
-const boltCodeMap: Record<string, PointType> = {
-  B: 'bolt',
-  A: 'anchor',
-  P: 'piton',
-  S: 'sling',
-  U: 'unfinished',
-};
+import { boltCodeMap } from '../utils/boltCodes';
 
 const parsePathString = (pathString?: string): PathPoints =>
   pathString
