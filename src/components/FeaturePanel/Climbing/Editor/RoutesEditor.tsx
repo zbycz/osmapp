@@ -83,7 +83,7 @@ export const RoutesEditor = ({
 
       setIsPointMoving(true);
       const newCoordinate = getPercentagePosition(
-        addOffsets(['editorPosition'], position),
+        addOffsets(['editorPosition', 'imageContainer'], position),
       );
 
       const closestPoint = findCloserPoint(newCoordinate);

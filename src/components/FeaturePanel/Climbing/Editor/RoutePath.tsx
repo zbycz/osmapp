@@ -51,7 +51,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     ) {
       if (!isLineInteractiveAreaHovered) setIsLineInteractiveAreaHovered(true);
 
-      const position = addOffsets(['editorPosition'], {
+      const position = addOffsets(['editorPosition', 'imageContainer'], {
         x: e.clientX,
         y: e.clientY,
         units: 'px',
