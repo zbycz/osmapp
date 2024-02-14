@@ -127,6 +127,9 @@ export const addMemberFeatures = async (feature: Feature) => {
   const apiIds = feature.members.map(({ type, ref }) => ({ type, id: ref }));
   const promises = apiIds.map((apiId) => fetchFeatureWithCenter(apiId)); // TODO optimize n+1 center-requests or fetch full
   const memberFeatures = await Promise.all(promises);
+  memberFeatures.forEach((memberFeature, index) => {
+    memberFeature.osmMeta.role = feature.members[index].role; // eslint-disable-line no-param-reassign
+  });
 
   const duration = Math.round(performance.now() - start);
   console.log(`addMemberFeaturesToCrag took ${duration} ms`); // eslint-disable-line no-console

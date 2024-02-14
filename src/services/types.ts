@@ -73,6 +73,7 @@ export interface Feature {
     uid?: string;
     lat?: string;
     lon?: string;
+    role?: string; // only for memberFeatures
   };
   tags: FeatureTags;
   members?: RelationMember[];

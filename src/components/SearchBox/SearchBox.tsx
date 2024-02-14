@@ -21,11 +21,12 @@ import {
   getPresetTermsTranslation,
   getPresetTranslation,
 } from '../../services/tagging/translations';
+import { SEARCH_BOX_HEIGHT } from './consts';
 import { useStarsContext } from '../utils/StarsContext';
 
 const TopPanel = styled.div`
   position: absolute;
-  height: 72px;
+  height: ${SEARCH_BOX_HEIGHT}px;
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
   background-color: ${({ theme }) => theme.palette.background.searchBox};
   padding: 10px;
@@ -200,12 +201,11 @@ const useFetchOptions = (inputValue: string, setOptions) => {
   }, [inputValue, stars]);
 };
 
-const useOnClosePanel = (setInputValue) => {
+const useOnClosePanel = () => {
   const { feature, setFeature, setPreview } = useFeatureContext();
   const mobileMode = useMobileMode();
 
   return () => {
-    setInputValue('');
     if (mobileMode) {
       setPreview(feature);
     }
@@ -220,7 +220,7 @@ const SearchBox = () => {
   const [options, setOptions] = useState([]);
   const [overpassLoading, setOverpassLoading] = useState(false);
   const autocompleteRef = useRef();
-  const onClosePanel = useOnClosePanel(setInputValue);
+  const onClosePanel = useOnClosePanel();
 
   useFetchOptions(inputValue, setOptions);
 
