@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Tooltip, Typography } from '@material-ui/core';
-import RestaurantIcon from '@material-ui/icons/Restaurant';
+import { Tooltip, Typography } from '@mui/material';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import styled from 'styled-components';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
 

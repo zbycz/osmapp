@@ -6,7 +6,7 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document';
-import { ServerStyleSheets } from '@material-ui/core/styles';
+import { ServerStyleSheets } from '@mui/styles';
 import { ServerStyleSheet } from 'styled-components';
 import { getServerIntl } from '../src/services/intlServer';
 import { InjectIntl } from '../src/services/intl';

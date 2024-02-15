@@ -1,10 +1,8 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
-import { Button } from '@material-ui/core';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import { Typography, Grid, Button } from '@mui/material';
 import {
   PanelFooter,
   PanelScrollbars,

@@ -1,10 +1,10 @@
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
-import FolderIcon from '@material-ui/icons/Folder';
-import SearchIcon from '@material-ui/icons/Search';
-import StarIcon from '@material-ui/icons/Star';
+
+import StarIcon from '@mui/icons-material/Star';
+import FolderIcon from '@mui/icons-material/Folder';
+import SearchIcon from '@mui/icons-material/Search';
+import { Grid, Typography } from '@mui/material';
 import { useMapStateContext } from '../utils/MapStateContext';
 import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
@@ -119,114 +119,117 @@ export const buildPhotonAddress = ({
   streetnumber: snum,
 }) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
-export const renderOptionFactory =
-  (inputValue, currentTheme) =>
-  ({ geometry, preset, properties, overpass, star, loader }) => {
-    if (overpass) {
-      return (
-        <>
-          <IconPart>
-            <SearchIcon />
-          </IconPart>
-          <Grid item xs>
-            <span style={{ fontWeight: 700 }}>
-              {Object.entries(overpass)
-                .map(([k, v]) => `${k} = ${v}`)
-                .join(' ')}
-            </span>
-            <Typography variant="body2" color="textSecondary">
-              overpass search
-              {/* {t('searchbox.category')} */}
-            </Typography>
-          </Grid>
-        </>
-      );
-    }
-
-    if (star) {
-      return (
-        <>
-          <IconPart>
-            <StarIcon />
-          </IconPart>
-          <Grid item xs>
-            <span style={{ fontWeight: 700 }}>{star.label}</span>
-            <Typography variant="body2" color="textSecondary">
-              {star.poiType}
-            </Typography>
-          </Grid>
-        </>
-      );
-    }
-
-    if (loader) {
-      return (
-        <>
-          <IconPart />
-          <Grid item xs>
-            <Typography>
-              {t('loading')}
-              <span className="dotloader">.</span>
-              <span className="dotloader">.</span>
-              <span className="dotloader">.</span>
-            </Typography>
-          </Grid>
-        </>
-      );
-    }
-
-    if (preset) {
-      const { name } = preset.presetForSearch;
-      const additionalText =
-        preset.name === 0
-          ? ` (${preset.presetForSearch.texts.find(
-              (_, idx) => preset.textsByOne[idx] > 0,
-            )}…)`
-          : '';
-
-      return (
-        <>
-          <IconPart>
-            <FolderIcon />
-          </IconPart>
-          <Grid item xs>
-            {highlightText(`${name}${additionalText}`, inputValue)}
-            <Typography variant="body2" color="textSecondary">
-              {t('searchbox.category')}
-            </Typography>
-          </Grid>
-        </>
-      );
-    }
-
-    const { name, osm_key: tagKey, osm_value: tagValue } = properties;
-
-    const [lon, lat] = geometry.coordinates;
-    const mapCenter = useMapCenter();
-    const dist = getDistance(mapCenter, { lon, lat }) / 1000;
-    const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
-
-    const text = name || buildPhotonAddress(properties);
-    const additionalText = getAdditionalText(properties);
-    const poiClass = getPoiClass({ [tagKey]: tagValue });
-
+export const renderOptionFactory = (inputValue, currentTheme) => (aaa) => {
+  console.log('____', aaa, inputValue, currentTheme);
+  // (props, option, state) =>
+  //   [props, option, state.index] as React.ReactNode
+  // }
+  const { geometry, preset, properties, overpass, star, loader } = aaa;
+  if (overpass) {
     return (
       <>
         <IconPart>
-          <Maki
-            ico={poiClass.class}
-            style={{ width: '20px', height: '20px', opacity: 0.5 }}
-            title={`${tagKey}=${tagValue}`}
-            invert={currentTheme === 'dark'}
-          />
-          <div>{distKm} km</div>
+          <SearchIcon />
         </IconPart>
         <Grid item xs>
-          {highlightText(text, inputValue)}
+          <span style={{ fontWeight: 700 }}>
+            {Object.entries(overpass)
+              .map(([k, v]) => `${k} = ${v}`)
+              .join(' ')}
+          </span>
           <Typography variant="body2" color="textSecondary">
-            {additionalText}
+            overpass search
+            {/* {t('searchbox.category')} */}
           </Typography>
         </Grid>
       </>
     );
-  };
+  }
+
+  if (star) {
+    return (
+      <>
+        <IconPart>
+          <StarIcon />
+        </IconPart>
+        <Grid item xs>
+          <span style={{ fontWeight: 700 }}>{star.label}</span>
+          <Typography variant="body2" color="textSecondary">
+            {star.poiType}
+          </Typography>
+        </Grid>
+      </>
+    );
+  }
+
+  if (loader) {
+    return (
+      <>
+        <IconPart />
+        <Grid item xs>
+          <Typography>
+            {t('loading')}
+            <span className="dotloader">.</span>
+            <span className="dotloader">.</span>
+            <span className="dotloader">.</span>
+          </Typography>
+        </Grid>
+      </>
+    );
+  }
+
+  if (preset) {
+    const { name } = preset.presetForSearch;
+    const additionalText =
+      preset.name === 0
+        ? ` (${preset.presetForSearch.texts.find(
+            (_, idx) => preset.textsByOne[idx] > 0,
+          )}…)`
+        : '';
+
+    return (
+      <>
+        <IconPart>
+          <FolderIcon />
+        </IconPart>
+        <Grid item xs>
+          {highlightText(`${name}${additionalText}`, inputValue)}
+          <Typography variant="body2" color="textSecondary">
+            {t('searchbox.category')}
+          </Typography>
+        </Grid>
+      </>
+    );
+  }
+
+  const { name, osm_key: tagKey, osm_value: tagValue } = properties;
+
+  const [lon, lat] = geometry.coordinates;
+  const mapCenter = useMapCenter();
+  const dist = getDistance(mapCenter, { lon, lat }) / 1000;
+  const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
+
+  const text = name || buildPhotonAddress(properties);
+  const additionalText = getAdditionalText(properties);
+  const poiClass = getPoiClass({ [tagKey]: tagValue });
+
+  return (
+    <>
+      <IconPart>
+        <Maki
+          ico={poiClass.class}
+          style={{ width: '20px', height: '20px', opacity: 0.5 }}
+          title={`${tagKey}=${tagValue}`}
+          invert={currentTheme === 'dark'}
+        />
+        <div>{distKm} km</div>
+      </IconPart>
+      <Grid item xs>
+        {highlightText(text, inputValue)}
+        <Typography variant="body2" color="textSecondary">
+          {additionalText}
+        </Typography>
+      </Grid>
+    </>
+  );
+};

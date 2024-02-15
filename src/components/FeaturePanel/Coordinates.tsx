@@ -1,10 +1,11 @@
 import React, { forwardRef } from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+
 import styled from 'styled-components';
-import { Divider, Menu, MenuItem } from '@material-ui/core';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+
+import { MenuItem, IconButton, Menu, Divider } from '@mui/material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';

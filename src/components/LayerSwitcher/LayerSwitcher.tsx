@@ -1,5 +1,5 @@
 import React from 'react';
-import { SwipeableDrawer, useMediaQuery } from '@material-ui/core';
+import { SwipeableDrawer, useMediaQuery } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
 import { LayerSwitcherButton } from './LayerSwitcherButton';
 import { LayerSwitcherContent } from './LayerSwitcherContent';

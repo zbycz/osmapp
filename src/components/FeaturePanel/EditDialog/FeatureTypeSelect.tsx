@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Box, MenuItem, TextField, Typography } from '@material-ui/core';
+import { Box, MenuItem, TextField, Typography } from '@mui/material';
 import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
 import { intl, t } from '../../../services/intl';

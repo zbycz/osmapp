@@ -1,8 +1,8 @@
-import ExploreIcon from '@material-ui/icons/Explore';
-import FilterHdrIcon from '@material-ui/icons/FilterHdr';
-import MapIcon from '@material-ui/icons/Map';
-import SatelliteIcon from '@material-ui/icons/Satellite';
-import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
+import ExploreIcon from '@mui/icons-material/Explore';
+import FilterHdrIcon from '@mui/icons-material/FilterHdr';
+import MapIcon from '@mui/icons-material/Map';
+import SatelliteIcon from '@mui/icons-material/Satellite';
+import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import { Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';

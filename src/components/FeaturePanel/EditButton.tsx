@@ -1,8 +1,7 @@
-import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
+import { Box, Button } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
 import React from 'react';
-import { Box } from '@material-ui/core';
 import { t } from '../../services/intl';
 import { useOsmAuthContext } from '../utils/OsmAuthContext';
 import { useEditDialogContext } from './helpers/EditDialogContext';

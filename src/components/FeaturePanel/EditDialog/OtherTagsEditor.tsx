@@ -1,11 +1,8 @@
-import TextField from '@material-ui/core/TextField';
-import AddIcon from '@material-ui/icons/Add';
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { Box } from '@material-ui/core';
+import { Box, Button, TextField, Typography } from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from './MajorKeysEditor';
 import { isString } from '../../helpers';
 import { t, Translation } from '../../../services/intl';

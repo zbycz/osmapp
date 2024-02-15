@@ -1,10 +1,14 @@
-import List from '@material-ui/core/List';
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+
 import React from 'react';
 import styled from 'styled-components';
-import { ListItemSecondaryAction } from '@material-ui/core';
+
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+} from '@mui/material';
 import { dotToOptionalBr } from '../helpers';
 import {
   AddUserLayerButton,

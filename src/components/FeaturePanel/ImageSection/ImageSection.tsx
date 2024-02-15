@@ -1,5 +1,5 @@
-import Share from '@material-ui/icons/Share';
-import Directions from '@material-ui/icons/Directions';
+import Share from '@mui/icons-material/Share';
+import Directions from '@mui/icons-material/Directions';
 import React from 'react';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { FeatureImage } from './FeatureImage';

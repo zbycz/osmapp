@@ -1,8 +1,8 @@
-import IconButton from '@material-ui/core/IconButton';
 import React from 'react';
 import styled from 'styled-components';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import CloseIcon from '@material-ui/icons/Close';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton } from '@mui/material';
 import { capitalize, useToggleState } from '../helpers';
 import { t } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';

@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 
 import styled from 'styled-components';
 import dynamic from 'next/dynamic';
-import BugReport from '@material-ui/icons/BugReport';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import BugReport from '@mui/icons-material/BugReport';
+import { Button, CircularProgress } from '@mui/material';
 import { useBoolState } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
 import { SHOW_PROTOTYPE_UI } from '../../config';
