@@ -15,8 +15,14 @@ import {
 import { osmappLayers } from './osmappLayers';
 import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
 import { usePersistedState } from '../utils/usePersistedState';
-import { isViewInsideAfrica } from '../Map/styles/makinaAfricaStyle';
 import { Overlays } from './Overlays';
+
+export const isViewInsideBbox = ([, lat, lon]: View, bbox?: number[]) =>
+  !bbox ||
+  (parseFloat(lat) > bbox[1] &&
+    parseFloat(lat) < bbox[3] &&
+    parseFloat(lon) > bbox[0] &&
+    parseFloat(lon) < bbox[2]);
 
 type AllLayers = {
   basemapLayers: Layer[];
@@ -26,17 +32,14 @@ type AllLayers = {
 const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
   const spacer: Layer = { type: 'spacer' as const, key: 'userSpacer' };
   const toLayer = ([key, layer]) => ({ ...layer, key });
+  const filterByBBox = ([, layer]) => isViewInsideBbox(view, layer.bbox); // needs suppressHydrationWarning
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const filterMakina = ([key, _]) =>
-    key === 'makinaAfrica' ? isViewInsideAfrica(view) : true; // needs suppressHydrationWarning
-
-  const entries = Object.entries(osmappLayers);
+  const entries = Object.entries(osmappLayers).filter(filterByBBox);
   const basemaps = entries.filter(([, v]) => v.type === 'basemap');
   const overlays = entries.filter(([, v]) => v.type.startsWith('overlay'));
 
   const basemapLayers = [
-    ...basemaps.filter(filterMakina).map(toLayer),
+    ...basemaps.map(toLayer),
     ...(userLayers.length ? [spacer] : []),
     ...userLayers.map((layer) => ({
       ...layer,
