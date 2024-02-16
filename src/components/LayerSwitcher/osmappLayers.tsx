@@ -1,3 +1,4 @@
+import React from 'react';
 import ExploreIcon from '@material-ui/icons/Explore';
 import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 import MapIcon from '@material-ui/icons/Map';
@@ -7,6 +8,7 @@ import AcUnitIcon from '@material-ui/icons/AcUnit';
 import { Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
+import Maki from '../utils/Maki';
 
 interface Layers {
   [key: string]: Layer;
@@ -14,6 +16,10 @@ interface Layers {
 
 const retina =
   ((isBrowser() && window.devicePixelRatio) || 1) >= 2 ? '@2x' : '';
+
+const ClimbingIcon = () => (
+  <Maki ico="climbing" size={16} style={{ opacity: 0.3, marginLeft: '3px' }} />
+);
 
 export const osmappLayers: Layers = {
   basic: {
@@ -84,5 +90,11 @@ export const osmappLayers: Layers = {
       '&copy; <a href="https://www.opensnowmap.org/">opensnowmap.org</a>',
       'osm',
     ],
+  },
+  climbing: {
+    name: t('layers.climbing'),
+    type: 'overlayClimbing',
+    Icon: ClimbingIcon,
+    attribution: ['osm'],
   },
 };

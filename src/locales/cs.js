@@ -163,4 +163,5 @@ export default {
   'layers.maptilerSat': 'Letecká Maptiler ',
   'layers.bingSat': 'Letecká Bing',
   'layers.bike': 'Cyklo',
+  'layers.climbing': 'Sportovní lezení',
 };

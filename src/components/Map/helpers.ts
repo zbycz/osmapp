@@ -1,17 +1,19 @@
 import { OsmApiId } from '../../services/helpers';
 import { basicStyle } from './styles/basicStyle';
+import { climbingLayers } from './styles/layers/climbingLayers';
 
 const isOsmLayer = (id) => {
   if (id.startsWith('place-country-')) return false; // https://github.com/zbycz/osmapp/issues/35
   if (id === 'place-continent') return false;
   if (id === 'water-name-ocean') return false;
-  const prefixes = ['water-name-', 'poi-', 'place-', 'overpass-'];
+  const prefixes = ['water-name-', 'poi-', 'place-', 'overpass-', 'climbing-'];
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
 
 export const layersWithOsmId = basicStyle.layers // TODO make it custom for basic/outdoor + revert place_
   .map((x) => x.id)
-  .filter((id) => isOsmLayer(id));
+  .filter((id) => isOsmLayer(id))
+  .concat(climbingLayers.map((x) => x.id));
 
 export const getIsOsmObject = ({ id, layer }) => {
   // these layers with id <= ~10000 are broken
@@ -24,7 +26,7 @@ export const getIsOsmObject = ({ id, layer }) => {
     return false;
   }
 
-  if (layer.id?.startsWith('overpass')) {
+  if (layer.id?.startsWith('overpass') || layer.id?.startsWith('climbing-')) {
     return true;
   }
 

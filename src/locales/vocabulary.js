@@ -170,6 +170,7 @@ export default {
   'layers.maptilerSat': 'Maptiler Satellite (z<14)',
   'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Bike',
+  'layers.climbing': 'Climbing',
 
   'climbingpanel.create_climbing_route': 'Draw new route in schema',
   'climbingpanel.edit_climbing_route': 'Edit route in schema',

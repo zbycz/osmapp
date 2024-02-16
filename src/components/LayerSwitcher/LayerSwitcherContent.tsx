@@ -33,7 +33,7 @@ const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
 
   const entries = Object.entries(osmappLayers);
   const basemaps = entries.filter(([, v]) => v.type === 'basemap');
-  const overlays = entries.filter(([, v]) => v.type === 'overlay');
+  const overlays = entries.filter(([, v]) => v.type.startsWith('overlay'));
 
   const basemapLayers = [
     ...basemaps.filter(filterMakina).map(toLayer),
