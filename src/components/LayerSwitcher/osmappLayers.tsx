@@ -21,6 +21,20 @@ const ClimbingIcon = () => (
   <Maki ico="climbing" size={16} style={{ opacity: 0.3, marginLeft: '3px' }} />
 );
 
+const africaBbox = [
+  -20, // west
+  -35, // south
+  55, // east
+  40, // north
+];
+
+const czBbox = [
+  12.09, // west
+  48.55, // south
+  18.87, // east
+  51.06, // north
+];
+
 export const osmappLayers: Layers = {
   basic: {
     name: t('layers.basic'),
@@ -36,6 +50,7 @@ export const osmappLayers: Layers = {
       '<a href="https://openplaceguide.org/">OPG</a> © <a href="https://openmaptiles.org/">OpenMapTiles</a>',
       'osm',
     ],
+    bbox: africaBbox,
   },
   outdoor: {
     name: t('layers.outdoor'),
@@ -65,6 +80,14 @@ export const osmappLayers: Layers = {
     Icon: SatelliteIcon,
     attribution: ['&copy; <a href="https://www.bing.com/maps">Microsoft</a>'],
     maxzoom: 19,
+  },
+  cuzkSat: {
+    name: 'ČÚZK ortofoto (CZ)',
+    type: 'basemap',
+    url: 'https://geoportal.cuzk.cz/WMS_ORTOFOTO_PUB/service.svc/get?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.3.0&SERVICE=WMS&REQUEST=GetMap&LAYERS=GR_ORTFOTORGB&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}',
+    Icon: SatelliteIcon,
+    attribution: ['&copy; <a href="https://geoportal.cuzk.cz">ČÚZK</a>'],
+    bbox: czBbox,
   },
   // mtb: {
   //   name: t('layers.mtb'),
@@ -96,5 +119,6 @@ export const osmappLayers: Layers = {
     type: 'overlayClimbing',
     Icon: ClimbingIcon,
     attribution: ['osm'],
+    bbox: czBbox,
   },
 };
