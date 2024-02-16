@@ -1,12 +1,16 @@
 import { Position, PositionPx } from '../types';
 import { roundNumber } from './number';
 
-export type CountPositionEntity = 'editorPosition' | 'scrollOffset';
+export type CountPositionEntity =
+  | 'editorPosition'
+  | 'scrollOffset'
+  | 'imageContainer';
 
 export const positionUtilsFactory = ({
   editorPosition,
   scrollOffset,
   imageSize,
+  imageContainerSize,
   photoZoom,
 }) => {
   const getPixelPosition = ({ x, y }: Position): PositionPx => ({
@@ -32,6 +36,13 @@ export const positionUtilsFactory = ({
         return {
           x: acc.x - editorPosition.x,
           y: acc.y - editorPosition.y,
+          units: 'px',
+        };
+      }
+      if (offset === 'imageContainer') {
+        return {
+          x: acc.x - (imageContainerSize.width - imageSize.width) / 2,
+          y: acc.y - (imageContainerSize.height - imageSize.height) / 2,
           units: 'px',
         };
       }

@@ -131,7 +131,7 @@ export const getMachineFactory = ({
     if (!props) return;
     const { x, y } = props.position;
     const newCoordinate = getPercentagePosition(
-      addOffsets(['scrollOffset', 'editorPosition'], {
+      addOffsets(['scrollOffset', 'editorPosition', 'imageContainer'], {
         x,
         y,
         units: 'px',

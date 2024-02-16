@@ -3,13 +3,7 @@ import { FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
-
-const boltCodeMap = {
-  bolt: 'B',
-  anchor: 'A',
-  piton: 'P',
-  sling: 'S',
-};
+import { boltCodeMap } from './utils/boltCodes';
 
 const getPathString = (path) =>
   path.length === 0

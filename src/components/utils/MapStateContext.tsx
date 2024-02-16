@@ -5,13 +5,14 @@ import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config';
 
 export interface Layer {
-  type: 'basemap' | 'overlay' | 'user' | 'spacer';
+  type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
   name?: string;
   url?: string;
   key?: string;
   Icon?: React.FC<any>;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
+  bbox?: number[];
 }
 
 // // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]

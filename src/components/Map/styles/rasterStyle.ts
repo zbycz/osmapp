@@ -11,7 +11,7 @@ const getSource = (url) => {
     };
   }
 
-  if (url.match('{x}')) {
+  if (url.match('{x}') || url.match('{bbox')) {
     return {
       tiles: ['a', 'b', 'c'].map((c) => url?.replace('{s}', c)),
     };

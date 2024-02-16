@@ -40,6 +40,7 @@ type ImageSize = {
 type ClimbingContextType = {
   editorPosition: PositionPx;
   imageSize: ImageSize;
+  imageContainerSize: ImageSize;
   isPointMoving: boolean;
   isRouteSelected: (routeNumber: number) => boolean;
   isPointSelected: (pointNumber: number) => boolean;
@@ -52,6 +53,7 @@ type ClimbingContextType = {
   setIsPointClicked: (isPointClicked: boolean) => void;
   setEditorPosition: (position: PositionPx) => void;
   setImageSize: (ImageSize) => void;
+  setImageContainerSize: (ImageSize) => void;
   splitPaneHeight: number | null;
   setSplitPaneHeight: (height: number | null) => void;
   photoPaths: Array<string>;
@@ -143,6 +145,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [showDebugMenu, setShowDebugMenu] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
+  const [imageContainerSize, setImageContainerSize] = useState({
+    width: 0,
+    height: 0,
+  });
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
   const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
@@ -242,6 +248,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       editorPosition,
       scrollOffset,
       imageSize,
+      imageContainerSize,
       photoZoom,
     });
 
@@ -299,6 +306,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       const [width, height] = getContainedSizeImage(photoRef.current);
       const { left, top } = photoRef.current.getBoundingClientRect();
 
+      setImageContainerSize({
+        width: photoRef.current.width,
+        height: photoRef.current.height,
+      });
       setImageSize({
         width,
         height,
@@ -384,6 +395,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     gradeTable,
     setGradeTable,
     preparePhotosAndSetFirst,
+    imageContainerSize,
+    setImageContainerSize,
   };
 
   return (

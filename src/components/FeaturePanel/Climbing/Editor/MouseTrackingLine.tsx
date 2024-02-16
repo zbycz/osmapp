@@ -19,7 +19,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
   const lastPoint = path[path.length - 1];
   const lastPointPositionInPx = getPixelPosition(lastPoint);
   const mousePositionWithEditorPosition = addOffsets(
-    ['editorPosition'],
+    ['editorPosition', 'imageContainer'],
     mousePosition,
   );
   const closerMousePositionPoint = mousePositionWithEditorPosition
