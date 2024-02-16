@@ -3,6 +3,7 @@ import FilterHdrIcon from '@material-ui/icons/FilterHdr';
 import MapIcon from '@material-ui/icons/Map';
 import SatelliteIcon from '@material-ui/icons/Satellite';
 import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
+import AcUnitIcon from '@material-ui/icons/AcUnit';
 import { Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
@@ -74,15 +75,14 @@ export const osmappLayers: Layers = {
       'osm',
     ],
   },
-  // snow: {
-  //   name: t('layers.snow'),
-  //   type: 'overlay',
-  //   url: 'https://www.opensnowmap.org/tiles-pistes/{z}/{x}/{y}.png',
-  // },
-  // s2: { type: 'spacer' },
-  // c: { name: 'Vrstevnice/Contours', type: 'overlay' },
-  // h: { name: 'Stínování kopců/Hillshading', type: 'overlay' },
-  // p: { name: 'Ikonky (POI)', type: 'overlay' },
-  // l: { name: 'Popisky/Labels', type: 'overlay' },
-  // s3: { type: 'spacer' },
+  snow: {
+    name: t('layers.snow'),
+    type: 'overlay',
+    url: 'https://www.opensnowmap.org/tiles-pistes/{z}/{x}/{y}.png',
+    Icon: AcUnitIcon,
+    attribution: [
+      '&copy; <a href="https://www.opensnowmap.org/">opensnowmap.org</a>',
+      'osm',
+    ],
+  },
 };

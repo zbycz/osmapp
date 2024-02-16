@@ -3,6 +3,8 @@ import { Box, IconButton, Typography } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import CloseIcon from '@material-ui/icons/Close';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
+import List from '@material-ui/core/List';
+import styled from 'styled-components';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
 
@@ -35,7 +37,7 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
   };
 
   return (
-    <Box m={2}>
+    <Box m={2} mt={6}>
       <Button size="small" color="secondary" onClick={onClick}>
         {t('layerswitcher.add_layer_button')}
       </Button>
@@ -57,7 +59,7 @@ export const RemoveUserLayerAction = ({ url, setUserLayers }) => {
   };
 
   return (
-    <IconButton edge="end" aria-label="comments" onClick={onClick}>
+    <IconButton edge="end" aria-label="close" onClick={onClick}>
       <CloseIcon fontSize="small" />
     </IconButton>
   );
@@ -82,3 +84,23 @@ export const LayersHeader = ({ headingId }) => (
 export const LayerIcon = ({ Icon }) => (
   <ListItemIcon>{Icon && <Icon fontSize="small" />}</ListItemIcon>
 );
+
+export const StyledList = styled(List)`
+  .MuiListItemIcon-root {
+    min-width: 45px;
+
+    svg {
+      color: ${({ theme }) => theme.palette.action.disabled}};
+    }
+  }
+
+  .Mui-selected {
+    .MuiListItemIcon-root svg {
+      color: ${({ theme }) => theme.palette.action.active};
+    }
+  }
+`;
+
+export const Spacer = styled.div`
+  padding-bottom: 1.5em;
+`;

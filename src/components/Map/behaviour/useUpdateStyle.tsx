@@ -1,3 +1,5 @@
+import type { Map } from 'maplibre-gl';
+import cloneDeep from 'lodash/cloneDeep';
 import { useMapEffect } from '../../helpers';
 import { basicStyle } from '../styles/basicStyle';
 import { outdoorStyle } from '../styles/outdoorStyle';
@@ -11,27 +13,37 @@ export const getRasterStyle = (key) => {
   return rasterStyle(key, url);
 };
 
-export const useUpdateStyle = useMapEffect((map, activeLayers) => {
-  const key = activeLayers[0] ?? DEFAULT_MAP;
+const getBaseStyle = (key) => {
+  if (key === 'basic') {
+    return basicStyle;
+  }
+  if (key === 'makinaAfrica') {
+    return makinaAfricaStyle;
+  }
+  if (key === 'outdoor') {
+    return outdoorStyle;
+  }
+
+  return getRasterStyle(key);
+};
+
+export const useUpdateStyle = useMapEffect((map: Map, activeLayers) => {
+  const [basemap, ...overlays] = activeLayers;
+
+  const key = basemap ?? DEFAULT_MAP;
 
   map.setMaxZoom(osmappLayers[key]?.maxzoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
 
-  switch (key) {
-    case 'basic':
-      map.setStyle(basicStyle);
-      break;
+  const style = cloneDeep(getBaseStyle(key));
+  overlays.forEach((overlayKey) => {
+    const overlay = osmappLayers[overlayKey];
 
-    case 'makinaAfrica':
-      map.setStyle(makinaAfricaStyle);
-      break;
+    if (overlay?.type === 'overlay') {
+      const raster = getRasterStyle(overlayKey);
+      style.sources[overlayKey] = raster.sources[overlayKey];
+      style.layers.push(raster.layers[0]);
+    }
+  });
 
-    case 'outdoor':
-      map.setStyle(outdoorStyle);
-      break;
-
-    default:
-      map.setStyle(getRasterStyle(key));
-      map.setZoom(Math.round(map.getZoom()));
-      break;
-  }
+  map.setStyle(style, { diff: true });
 });
