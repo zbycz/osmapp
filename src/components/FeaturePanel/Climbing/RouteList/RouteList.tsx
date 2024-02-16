@@ -1,13 +1,13 @@
-import React from "react";
-import styled from "styled-components";
+import React from 'react';
+import styled from 'styled-components';
 
-import { Button, ButtonGroup } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/Edit";
-import { useClimbingContext } from "../contexts/ClimbingContext";
-import { RouteListDndContent } from "./RouteListDndContent";
-import { addElementToArray, deleteFromArray } from "../utils/array";
-import { getCsvGradeData } from "../utils/routeGrade";
-import { invertedBoltCodeMap } from "../utils/boltCodes";
+import { Button, ButtonGroup } from '@material-ui/core';
+import EditIcon from '@material-ui/icons/Edit';
+import { useClimbingContext } from '../contexts/ClimbingContext';
+import { RouteListDndContent } from './RouteListDndContent';
+import { addElementToArray, deleteFromArray } from '../utils/array';
+import { getCsvGradeData } from '../utils/routeGrade';
+import { invertedBoltCodeMap } from '../utils/boltCodes';
 
 const Container = styled.div`
   padding-bottom: 65px;
