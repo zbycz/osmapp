@@ -55,14 +55,16 @@ export const useUpdateStyle = useMapEffect((map: Map, activeLayers) => {
       const raster = getRasterStyle(overlayKey);
       style.sources[overlayKey] = raster.sources[overlayKey];
       style.layers.push(raster.layers[0]);
+
+      // TODO maxzoom 19 only for snow overlay
     }
 
     if (overlay?.type === 'overlayClimbing') {
       style.sources.climbing = emptyGeojsonSource;
-      style.layers.push(...climbingLayers);
+      style.layers.push(...climbingLayers); // must be also in `layersWithOsmId` because of hover effect
       fetchCrags().then((geojson) => {
         const geojsonSource = map.getSource('climbing') as GeoJSONSource;
-        geojsonSource.setData(geojson);
+        geojsonSource?.setData(geojson); // TODO can be undefined at first map render
       });
     }
   });
