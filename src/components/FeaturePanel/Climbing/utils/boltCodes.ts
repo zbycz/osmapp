@@ -9,4 +9,4 @@ export const boltCodeMap: Record<string, PointType> = {
   U: 'unfinished',
 };
 
-export const invertedBoltCodeMap = () => invert(boltCodeMap);
+export const invertedBoltCodeMap = invert(boltCodeMap);
