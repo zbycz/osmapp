@@ -5,7 +5,7 @@ import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config';
 
 export interface Layer {
-  type: 'basemap' | 'overlay' | 'user' | 'spacer';
+  type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
   name?: string;
   url?: string;
   key?: string;
