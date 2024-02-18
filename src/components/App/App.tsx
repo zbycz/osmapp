@@ -3,8 +3,6 @@ import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
-import { Snackbar } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -72,14 +70,6 @@ const IndexWithProviders = () => {
   usePersistMapView();
   useUpdateViewFromHash();
 
-  // temporary Alert until the issue is fixed
-  const [brokenShown, setBrokenShown] = React.useState(true);
-  const onBrokenClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason !== 'clickaway') {
-      setBrokenShown(false);
-    }
-  };
-
   // TODO add correct error boundaries
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
@@ -99,21 +89,6 @@ const IndexWithProviders = () => {
       <Map />
       {preview && <FeaturePreview />}
       <TitleAndMetaTags />
-
-      {!featureShown && !preview && (
-        <Snackbar open={brokenShown} onClose={onBrokenClose}>
-          <Alert onClose={onBrokenClose} severity="info" variant="outlined">
-            Some clickable POIs are broken on Maptiler –{' '}
-            <a
-              href="https://github.com/openmaptiles/openmaptiles/issues/1587"
-              style={{ textDecoration: 'underline' }}
-            >
-              issue here
-            </a>
-            .
-          </Alert>
-        </Snackbar>
-      )}
     </>
   );
 };
