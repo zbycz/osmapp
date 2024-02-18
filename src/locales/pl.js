@@ -139,6 +139,9 @@ export default {
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Godziny otwarcia',
 
+  'coordinates.geo_uri': 'GeoURI (aplikacja mapowa na telefonie)',
+  'coordinates.copy_value': 'Kopiuj __value__', // keep it short, don't mention clipboard
+
   'layerswitcher.button': 'Mapy',
   'layerswitcher.heading': 'Warstwy mapy',
   'layerswitcher.intro': 'Dzięki temu, że OpenStreetMap oferuje dane źródłowe, każdy może stworzyć różne warianty mapy.',
