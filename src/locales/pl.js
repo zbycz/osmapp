@@ -139,6 +139,9 @@ export default {
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Godziny otwarcia',
 
+  'coordinates.geo_uri': 'GeoURI (aplikacja mapowa na telefonie)',
+  'coordinates.copy_value': 'Kopiuj __value__', // keep it short, don't mention clipboard
+
   'layerswitcher.button': 'Mapy',
   'layerswitcher.heading': 'Warstwy mapy',
   'layerswitcher.intro': 'Dzięki temu, że OpenStreetMap oferuje dane źródłowe, każdy może stworzyć różne warianty mapy.',
@@ -153,6 +156,4 @@ export default {
   'layers.maptilerSat': 'Maptiler Satelita (p<14)',
   'layers.bingSat': 'Bing Satelita',
   'layers.bike': 'Rower',
-  'coordinates.geo_uri': 'GeoURI (otwórz w mapach na telefonie)',
-  'coordinates.copy_value': 'Kopiuj __value__', // keep it short, don't mention clipboard
 };

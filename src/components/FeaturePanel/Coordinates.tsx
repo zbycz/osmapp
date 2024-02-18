@@ -96,10 +96,14 @@ const useGetItems = ([lon, lat]: PositionBoth) => {
       label: 'iD editor',
       href: getIdEditorLink(feature, view), // TODO coordsFeature has random id which gets forwarded LOL
     },
-    {
-      label: t('coordinates.geo_uri'),
-      href: `geo:${lat},${lon}`,
-    },
+    ...(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)
+      ? [
+          {
+            label: t('coordinates.geo_uri'),
+            href: `geo:${lat},${lon}`,
+          },
+        ]
+      : []),
   ];
 };
 
