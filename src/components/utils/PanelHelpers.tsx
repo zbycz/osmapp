@@ -22,6 +22,13 @@ export const PanelWrapper = styled.div`
   @media ${isDesktop} {
     width: 410px;
   }
+
+  & > div > div {
+    // disable pulling panel around on mobile
+    // second div due to implementation of react-custom-scrollbars
+    overscroll-behavior: none;
+    overscroll-behavior-y: auto;
+  }
 `;
 
 export const PanelScrollbars = ({ children }) => (

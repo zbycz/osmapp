@@ -11,6 +11,8 @@ export default {
   darkmode_auto: 'Dark mode: auto',
   darkmode_on: 'Dark mode: on',
   darkmode_off: 'Dark mode: off',
+  show_more: 'Show more',
+  show_less: 'Show less',
 
   'install.button': 'Install app',
   'install.tabs_aria_label': 'Choose your platform',
@@ -25,14 +27,14 @@ export default {
   'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
   'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
 
-  'homepage.subtitle': 'A universal OpenStreetMap app',
+  'homepage.subtitle': 'A universal app for OpenStreetMap',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.examples.eg': 'eg.',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
   'homepage.screenshot_alt': 'Screenshot of OsmAPP',
   'homepage.about_osm': `All map data is from
       <a href="https://osm.org">OpenStreetMap</a>, a map created by
-      milions of contributors — similar to Wikipedia. You can find
+      millions of contributors — similar to Wikipedia. You can find
       <em>Edit</em> button on each map feature.`,
   'homepage.heading_about_osmapp': 'About OsmAPP',
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
@@ -48,19 +50,28 @@ export default {
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
+  'homepage.disclaimer_heading': 'Disclaimer',
+  'homepage.disclaimer': `OpenStreetMap and OSM are a trademark of the OpenStreetMap Foundation. This project is not endorsed by or affiliated with the <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a>.`,
+  'homepage.disclaimer_maptiler': `Vector maps ("Basic" and "Outdoor") contain some place names from the Wikidata project, more <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>here</a>.`,
 
   'searchbox.placeholder': 'Search OpenStreetMap',
+  'searchbox.category': 'category',
+  'searchbox.overpass_success': 'Results found: __count__',
+  'searchbox.overpass_error': 'Error fetching results. __message__',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
-  'featurepanel.save_button': 'Save to favorites',
+  'featurepanel.favorites_save_button': 'Save to favorites',
+  'featurepanel.favorites_unsave_button': 'Remove from favorites',
   'featurepanel.directions_button': 'Directions',
   'featurepanel.error': 'Error __code__ while fetching feature from OpenStreetMap',
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',
   'featurepanel.error_network': "Can't get the feature, check your network cable.",
   'featurepanel.error_deleted': 'This object is marked as deleted in OpenStreetMap.',
+  'featurepanel.info_no_tags': 'This object has no tags. Usually it means that it only carries geometry/location for a parent object.',
   'featurepanel.history_button': 'History »',
-  'featurepanel.other_info_heading': 'Details',
+  'featurepanel.details_heading': 'Details',
+  'featurepanel.all_tags_heading': 'All tags',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.note_button': 'Suggest an edit',
   'featurepanel.edit_button': 'Edit details',
@@ -69,6 +80,7 @@ export default {
   'featurepanel.feature_description_nonosm': 'Map feature __type__',
   'featurepanel.feature_description_osm': '__type__ in OpenStreetMap database',
   'featurepanel.feature_description_point': 'Map coordinates',
+  'featurepanel.show_tags': 'Show tags',
   'featurepanel.show_objects_around': 'Show nearby objects',
   'featurepanel.uncertain_image': 'This is the closest street view image from Mapillary. It may be inaccurate.',
   'featurepanel.inline_edit_title': 'Edit',
@@ -150,13 +162,21 @@ export default {
   'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
 
   'layers.basic': 'Basic',
+  'layers.makina_africa': 'OpenPlaceGuide Africa',
   'layers.outdoor': 'Outdoor',
   'layers.mtb': 'MTB',
   'layers.snow': 'Snow',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satellite (z<14)',
+  'layers.maptilerSat': 'Maptiler Satellite (z<14)',
+  'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Bike',
+  'layers.climbing': 'Climbing',
 
-  'coordinates.geo_uri': 'GeoURI (open in phone Maps)',
-  'coordinates.copy_value': 'Copy __value__', // keep it short, don't mention clipboard
+  'climbingpanel.create_climbing_route': 'Draw new route in schema',
+  'climbingpanel.edit_climbing_route': 'Edit route in schema',
+  'climbingpanel.finish_climbing_route': 'Finish route',
+  'climbingpanel.cancel_climbing_route': 'Cancel',
+  'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
+  'climbingpanel.create_first_node': 'Click on the beginning of the route',
+  'climbingpanel.create_next_node': 'Follow direction of the route',
 };

@@ -9,6 +9,9 @@ export const GlobalStyle = createGlobalStyle`
     border: 0;
     font-family: 'Roboto', sans-serif;
     background-color: ${({ theme }) => theme.palette.appBackground};
+
+    // disable pulling the page around on mobile
+    overscroll-behavior: none;
   }
 
   body {
@@ -46,9 +49,9 @@ export const GlobalStyle = createGlobalStyle`
     margin-top: 0;
   }
 
-  .mapboxgl-ctrl-group {
+  .maplibregl-ctrl-group {
     background: ${({ theme }) => theme.palette.background.default} !important;
-    .mapboxgl-ctrl-icon {
+    .maplibregl-ctrl-icon {
       filter: ${({ theme }) => theme.palette.invertFilter};
     }
     button+button {
@@ -56,7 +59,7 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
-  .mapboxgl-ctrl-top-right {
+  .maplibregl-ctrl-top-right {
     top: ${83 + 72}px  !important;
 
     @media ${isDesktop} {
@@ -64,7 +67,7 @@ export const GlobalStyle = createGlobalStyle`
     }
   }
 
-  .mapboxgl-canvas:not(:focus) {
+  .maplibregl-canvas:not(:focus) {
     outline: 0;
   }
 

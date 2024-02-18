@@ -1,15 +1,17 @@
-import { getApiId, getShortId, getUrlOsmId, prod } from './helpers';
+import { getApiId, getShortId, getUrlOsmId, OsmApiId, prod } from './helpers';
 import { FetchError, fetchJson } from './fetch';
 import { Feature, Position } from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { getPoiClass } from './getPoiClass';
 import { isBrowser } from '../components/helpers';
+import { addSchemaToFeature } from './tagging/idTaggingScheme';
+import { fetchSchemaTranslations } from './tagging/translations';
 
 const getOsmUrl = ({ type, id }) =>
-  `https://www.openstreetmap.org/api/0.6/${type}/${id}.json`;
+  `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
 const getOsmHistoryUrl = ({ type, id }) =>
-  `https://www.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
+  `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
 // Overpass API is used only for getting cetroids of ways and relations
 const getOverpassUrl = ({ type, id }) => {
@@ -74,8 +76,15 @@ export const clearFeatureCache = (apiId) => {
 };
 
 const osmToFeature = (element): Feature => {
-  const { tags, lat, lon, nodes, members, osmappDeletedMarker, ...osmMeta } =
-    element;
+  const {
+    tags = {},
+    lat,
+    lon,
+    nodes,
+    members,
+    osmappDeletedMarker,
+    ...osmMeta
+  } = element;
   return {
     type: 'Feature' as const,
     geometry: undefined,
@@ -84,7 +93,50 @@ const osmToFeature = (element): Feature => {
     tags,
     members,
     properties: getPoiClass(tags),
-    error: osmappDeletedMarker ? 'deleted' : undefined,
+    deleted: osmappDeletedMarker,
+  };
+};
+
+async function fetchFeatureWithCenter(apiId: OsmApiId) {
+  const [element, center] = await Promise.all([
+    getOsmPromise(apiId),
+    getCenterPromise(apiId),
+    fetchSchemaTranslations(), // TODO this should be mocked in test??? could be moved to setIntl or something
+  ]);
+
+  const feature = osmToFeature(element);
+  if (center) {
+    feature.center = center;
+  }
+
+  return addSchemaToFeature(feature);
+}
+
+const shouldFetchMembers = (feature: Feature) =>
+  feature.osmMeta.type === 'relation' &&
+  (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
+
+// TODO we can probably fetch full.json for all relations eg https://api.openstreetmap.org/api/0.6/relation/14334600/full.json - lets measure how long it takes for different sizes
+export const addMemberFeatures = async (feature: Feature) => {
+  if (!shouldFetchMembers(feature)) {
+    return feature;
+  }
+
+  const start = performance.now();
+
+  const apiIds = feature.members.map(({ type, ref }) => ({ type, id: ref }));
+  const promises = apiIds.map((apiId) => fetchFeatureWithCenter(apiId)); // TODO optimize n+1 center-requests or fetch full
+  const memberFeatures = await Promise.all(promises);
+  memberFeatures.forEach((memberFeature, index) => {
+    memberFeature.osmMeta.role = feature.members[index].role; // eslint-disable-line no-param-reassign
+  });
+
+  const duration = Math.round(performance.now() - start);
+  console.log(`addMemberFeaturesToCrag took ${duration} ms`); // eslint-disable-line no-console
+
+  return {
+    ...feature,
+    memberFeatures,
   };
 };
 
@@ -95,23 +147,17 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
   try {
     const apiId = getApiId(shortId);
-    const [element, center] = await Promise.all([
-      getOsmPromise(apiId),
-      getCenterPromise(apiId),
-    ]);
+    const withCenter = await fetchFeatureWithCenter(apiId);
+    const withMembers = await addMemberFeatures(withCenter);
 
-    const feature = osmToFeature(element);
-    if (center) {
-      feature.center = center;
-    }
-
-    return feature;
+    return withMembers;
   } catch (e) {
     console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
 
     const error = (
       e instanceof FetchError ? e.code : 'unknown'
     ) as Feature['error'];
+
     return {
       type: 'Feature',
       skeleton: true,
@@ -134,7 +180,7 @@ export const insertOsmNote = async (point: Position, text: string) => {
   body.append('text', text);
 
   const osmUrl = prod
-    ? 'https://www.openstreetmap.org'
+    ? 'https://api.openstreetmap.org'
     : 'https://master.apis.dev.openstreetmap.org';
 
   // {"type":"Feature","geometry":{"type":"Point","coordinates":[14.3244982,50.0927863]},"properties":{"id":26569,"url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569.json","comment_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/comment.json","close_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/close.json","date_created":"2021-04-17 10:37:44 UTC","status":"open","comments":[{"date":"2021-04-17 10:37:44 UTC","action":"opened","text":"way/39695868! Place was marked permanently closed.From https://osmapp.org/way/39695868","html":"\u003cp\u003eway/39695868! Place was marked permanently closed.From \u003ca href=\"https://osmapp.org/way/39695868\" rel=\"nofollow noopener noreferrer\"\u003ehttps://osmapp.org/way/39695868\u003c/a\u003e\u003c/p\u003e"}]}}

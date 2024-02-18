@@ -18,14 +18,10 @@ export class FetchError extends Error {
 }
 
 // TODO cancel request in map.on('click', ...)
-const noRequestRunning = {
-  abort: () => {},
-  signal: null,
-};
-let abortController = noRequestRunning;
+const abortableQueues: Record<string, AbortController> = {};
 
 interface FetchOpts extends RequestInit {
-  putInAbortableQueue?: boolean;
+  abortableQueueName?: string;
   nocache?: boolean;
 }
 
@@ -34,18 +30,21 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
   const item = getCache(key);
   if (item) return item;
 
-  if (isBrowser() && opts?.putInAbortableQueue) {
-    abortController.abort();
-    abortController = new AbortController();
+  const name = isBrowser() ? opts?.abortableQueueName : undefined;
+  if (name) {
+    abortableQueues[name]?.abort();
+    abortableQueues[name] = new AbortController();
   }
 
   try {
     const res = await fetch(url, {
       ...opts,
-      signal: abortController.signal,
+      signal: abortableQueues[name]?.signal,
     });
 
-    abortController = noRequestRunning;
+    if (name) {
+      delete abortableQueues[name];
+    }
 
     if (!res.ok || res.status < 200 || res.status >= 300) {
       const data = await res.text();
@@ -62,15 +61,23 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     }
     return text;
   } catch (e) {
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      throw e;
+    }
+
     throw new FetchError(`${e.message} at ${url}`, e.code || 'network', e.data); // TODO how to tell network error from code exception?
   }
 };
 
-export const fetchJson = async (url, opts = {}) => {
+export const fetchJson = async (url, opts: FetchOpts = {}) => {
   const text = await fetchText(url, opts);
   try {
     return JSON.parse(text);
   } catch (e) {
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      throw e;
+    }
+
     throw new Error(`fetchJson: ${e.message}, in "${text?.substr(0, 30)}..."`);
   }
 };

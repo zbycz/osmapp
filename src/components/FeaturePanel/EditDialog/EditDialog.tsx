@@ -31,6 +31,7 @@ import Maki from '../../utils/Maki';
 import { FeatureTypeSelect } from './FeatureTypeSelect';
 import { getLabel } from '../../../helpers/featureLabel';
 import { useUserThemeContext } from '../../../helpers/theme';
+import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -62,9 +63,6 @@ const StyledDialog = styled(Dialog)`
 
 interface Props {
   feature: Feature;
-  open: boolean;
-  handleClose: () => void;
-  focusTag: boolean | string;
   isAddPlace: boolean;
   isUndelete: boolean;
 }
@@ -119,17 +117,12 @@ const saveDialog = ({
   });
 };
 
-export const EditDialog = ({
-  feature,
-  open,
-  handleClose,
-  focusTag,
-  isAddPlace,
-  isUndelete,
-}: Props) => {
+export const EditDialog = ({ feature, isAddPlace, isUndelete }: Props) => {
   const { currentTheme } = useUserThemeContext();
   const router = useRouter();
   const { loggedIn, handleLogout } = useOsmAuthContext();
+  const { opened, close, focusTag } = useEditDialogContext();
+
   const fullScreen = useIsFullScreen();
   const [typeTag, setTypeTag] = useState('');
   const [tags, setTag] = useTagsState(feature.tags); // TODO all these should go into `values`, consider Formik
@@ -141,7 +134,7 @@ export const EditDialog = ({
   const [successInfo, setSuccessInfo] = useState<any>(false);
 
   const onClose = () => {
-    handleClose();
+    close();
     if (successInfo.redirect) {
       router.replace(successInfo.redirect); // only useRouter reloads the panel client-side
     }
@@ -168,7 +161,7 @@ export const EditDialog = ({
   return (
     <StyledDialog
       fullScreen={fullScreen}
-      open={open}
+      open={opened}
       onClose={onClose}
       aria-labelledby="edit-dialog-title"
     >

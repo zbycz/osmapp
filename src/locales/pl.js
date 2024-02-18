@@ -54,7 +54,7 @@ export default {
   'featurepanel.error_network': 'Nie można uzyskać tej funkcji, sprawdź połączenie sieciowe.',
   'featurepanel.error_deleted': 'Ten obiekt jest oznaczony jako usunięty w OpenStreetMap.',
   'featurepanel.history_button': 'Historia »',
-  'featurepanel.other_info_heading': 'Więcej informacji',
+  'featurepanel.details_heading': 'Więcej informacji',
   'featurepanel.edit_button_title': 'Edytuj w bazie danych OpenStreetMap',
   'featurepanel.edit_button': 'Edytuj miejsce',
   'featurepanel.add_place_button': 'Dodaj miejsce',
@@ -150,7 +150,8 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'Śnieg',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satelita (p<14)',
+  'layers.maptilerSat': 'Maptiler Satelita (p<14)',
+  'layers.bingSat': 'Bing Satelita',
   'layers.bike': 'Rower',
   'coordinates.geo_uri': 'GeoURI (otwórz w mapach na telefonie)',
   'coordinates.copy_value': 'Kopiuj __value__', // keep it short, don't mention clipboard

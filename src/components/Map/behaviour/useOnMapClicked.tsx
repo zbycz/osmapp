@@ -6,10 +6,11 @@ import {
   getUrlOsmId,
   isSameOsmId,
 } from '../../../services/helpers';
-import { getRoundedPosition } from '../../../utils';
+import { getRoundedPosition, publishDbgObject } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
 import { convertMapIdToOsmId, getIsOsmObject } from '../helpers';
 import { getCoordsFeature } from '../../../services/getCoordsFeature';
+import { maptilerFix } from './maptilerFix';
 
 export const getSkeleton = (feature, clickCoords) => {
   const isOsmObject = getIsOsmObject(feature);
@@ -41,16 +42,14 @@ export const useOnMapClicked = useAddMapEvent(
       }
 
       const skeleton = getSkeleton(features[0], coords);
-      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
-      console.log(`clicked map feature (id=${features[0].id}): `, skeleton); // eslint-disable-line no-console
+      console.log(`clicked map feature (id=${features[0].id}): `, features[0]); // eslint-disable-line no-console
+      publishDbgObject('last skeleton', skeleton);
 
       if (skeleton.nonOsmObject) {
         const roundedPosition = getRoundedPosition(coords, map.getZoom());
         setPreview(getCoordsFeature(roundedPosition));
         return;
       }
-
-      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
       if (mobileMode) {
         setPreview(skeleton);
@@ -63,7 +62,11 @@ export const useOnMapClicked = useAddMapEvent(
       );
       setPreview(null);
 
-      Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);
+      const result = await maptilerFix(features[0].id, skeleton);
+      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
+      addFeatureCenterToCache(getShortId(result.osmMeta), skeleton.center);
+      const url = `/${getUrlOsmId(result.osmMeta)}${window.location.hash}`;
+      Router.push(url, undefined, { locale: 'default' });
     },
   }),
 );

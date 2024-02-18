@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
-import { TagsTable } from './TagsTable';
 import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import {
@@ -18,37 +17,64 @@ import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { EditButton } from './EditButton';
-import { FeaturedTags } from './FeaturedTags';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
+import { PublicTransport } from './PublicTransport/PublicTransport';
+import { Properties } from './Properties/Properties';
+import { MemberFeatures } from './MemberFeatures';
+import { ClimbingPanel } from './Climbing/ClimbingPanel';
+import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 
-const featuredKeys = [
-  'website',
-  'contact:website',
-  'phone',
-  'contact:phone',
-  'contact:mobile',
-  'opening_hours',
-  'description',
-];
-
-const FeaturePanel = () => {
+export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
 
   const [advanced, setAdvanced] = useState(false);
   const [showAround, toggleShowAround] = useToggleState(false);
-  const [dialogOpenedWith, setDialogOpenedWith] =
-    useState<boolean | string>(false);
+  const [showTags, toggleShowTags] = useToggleState(false);
 
-  const { point, tags, osmMeta, skeleton, error } = feature;
-  const deleted = error === 'deleted';
-  const editEnabled = !skeleton && (!error || deleted);
+  const { point, tags, osmMeta, skeleton, deleted } = feature;
+  const editEnabled = !skeleton;
+  const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
 
   const osmappLink = getFullOsmappLink(feature);
-  const featuredTags = featuredKeys
-    .map((k) => [k, tags[k]])
-    .filter(([, v]) => v);
   const label = getLabel(feature);
+
+  const footer = (
+    <PanelFooter>
+      <FeatureDescription setAdvanced={setAdvanced} />
+      <Coordinates />
+      <br />
+      <a href={osmappLink}>{osmappLink}</a>
+      <br />
+      <label>
+        <input
+          type="checkbox"
+          onChange={toggleShowTags}
+          checked={showTagsTable}
+          disabled={point || deleted || (!skeleton && !feature.schema)}
+        />{' '}
+        {t('featurepanel.show_tags')}
+      </label>{' '}
+      <label>
+        <input
+          type="checkbox"
+          onChange={toggleShowAround}
+          checked={point || showAround}
+          disabled={point}
+        />{' '}
+        {t('featurepanel.show_objects_around')}
+      </label>
+      {!point && showAround && <ObjectsAround advanced={advanced} />}
+    </PanelFooter>
+  );
+
+  if (tags.climbing === 'crag') {
+    return (
+      <ClimbingContextProvider feature={feature}>
+        <ClimbingPanel footer={footer} />
+      </ClimbingContextProvider>
+    );
+  }
 
   return (
     <PanelWrapper>
@@ -59,76 +85,44 @@ const FeaturePanel = () => {
             deleted={deleted}
             title={label}
             editEnabled={editEnabled && !point}
-            onEdit={setDialogOpenedWith}
           />
 
-          <OsmError />
-
-          <FeaturedTags
-            featuredTags={deleted ? [] : featuredTags}
-            setDialogOpenedWith={setDialogOpenedWith}
-          />
-
-          <TagsTable
-            tags={tags}
-            center={feature.center}
-            except={
-              advanced || deleted ? [] : ['name', 'layer', ...featuredKeys]
-            }
-            onEdit={setDialogOpenedWith}
-            key={
-              getUrlOsmId(osmMeta) // we need to refresh inner state
-            }
-          />
-
-          {advanced && <Members />}
-
-          {editEnabled && (
+          {!skeleton && (
             <>
-              <EditButton
-                isAddPlace={point}
-                isUndelete={deleted}
-                setDialogOpenedWith={setDialogOpenedWith}
+              <OsmError />
+
+              <Properties
+                showTags={showTagsTable}
+                key={getUrlOsmId(osmMeta) + (deleted && 'del')}
               />
 
-              <EditDialog
-                open={!!dialogOpenedWith}
-                handleClose={() => setDialogOpenedWith(false)}
-                feature={feature}
-                isAddPlace={point}
-                isUndelete={deleted}
-                focusTag={dialogOpenedWith}
-                key={
-                  getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                }
-              />
+              <MemberFeatures />
+              {advanced && <Members />}
+
+              <PublicTransport tags={tags} />
+
+              {editEnabled && (
+                <>
+                  <EditButton isAddPlace={point} isUndelete={deleted} />
+
+                  <EditDialog
+                    feature={feature}
+                    isAddPlace={point}
+                    isUndelete={deleted}
+                    key={
+                      getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                    }
+                  />
+                </>
+              )}
+
+              {point && <ObjectsAround advanced={advanced} />}
             </>
           )}
 
-          {point && <ObjectsAround advanced={advanced} />}
-
-          <PanelFooter>
-            <FeatureDescription setAdvanced={setAdvanced} />
-            <Coordinates />
-            <br />
-            <a href={osmappLink}>{osmappLink}</a>
-            <br />
-            <label>
-              <input
-                type="checkbox"
-                onChange={toggleShowAround}
-                checked={point || showAround}
-                disabled={point}
-              />{' '}
-              {t('featurepanel.show_objects_around')}
-            </label>
-
-            {!point && showAround && <ObjectsAround advanced={advanced} />}
-          </PanelFooter>
+          {footer}
         </PanelContent>
       </PanelScrollbars>
     </PanelWrapper>
   );
 };
-
-export default FeaturePanel;

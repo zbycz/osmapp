@@ -1,17 +1,19 @@
 import { OsmApiId } from '../../services/helpers';
 import { basicStyle } from './styles/basicStyle';
+import { climbingLayers } from './styles/layers/climbingLayers';
 
 const isOsmLayer = (id) => {
   if (id.startsWith('place-country-')) return false; // https://github.com/zbycz/osmapp/issues/35
   if (id === 'place-continent') return false;
   if (id === 'water-name-ocean') return false;
-  const prefixes = ['water-name-', 'poi-', 'place-'];
+  const prefixes = ['water-name-', 'poi-', 'place-', 'overpass-', 'climbing-'];
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
 
 export const layersWithOsmId = basicStyle.layers // TODO make it custom for basic/outdoor + revert place_
   .map((x) => x.id)
-  .filter((id) => isOsmLayer(id));
+  .filter((id) => isOsmLayer(id))
+  .concat(climbingLayers.map((x) => x.id));
 
 export const getIsOsmObject = ({ id, layer }) => {
   // these layers with id <= ~10000 are broken
@@ -23,6 +25,11 @@ export const getIsOsmObject = ({ id, layer }) => {
   if (layer.id === 'water-name-other' && id < 10e5) {
     return false;
   }
+
+  if (layer.id?.startsWith('overpass') || layer.id?.startsWith('climbing-')) {
+    return true;
+  }
+
   return layersWithOsmId.includes(layer.id);
 };
 
@@ -40,4 +47,27 @@ export const convertMapIdToOsmId = (feature) => {
 export const convertOsmIdToMapId = (apiId: OsmApiId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
+};
+
+// maplibregl.supported() no longer exists
+// copied from https://maplibre.org/maplibre-gl-js/docs/examples/check-for-support/
+export const isWebglSupported = () => {
+  if (window.WebGLRenderingContext) {
+    const canvas = document.createElement('canvas');
+    try {
+      // Note that { failIfMajorPerformanceCaveat: true } can be passed as a second argument
+      // to canvas.getContext(), causing the check to fail if hardware rendering is not available. See
+      // https://developer.mozilla.org/en-US/docs/Web/API/HTMLCanvasElement/getContext
+      // for more details.
+      const context = canvas.getContext('webgl2') || canvas.getContext('webgl');
+      if (context && typeof context.getParameter === 'function') {
+        return true;
+      }
+    } catch (e) {
+      // WebGL is supported, but disabled
+    }
+    return false;
+  }
+  // WebGL not supported
+  return false;
 };

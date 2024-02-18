@@ -24,7 +24,7 @@ export default {
   'homepage.examples.eg': 'ej.',
   'homepage.examples.charles_bridge_statues': 'Estatuas del puente Charles',
   'homepage.screenshot_alt': 'Pantallazo de OsmAPP',
-  'homepage.about_osm': `Todos los datos del mapa son de 
+  'homepage.about_osm': `Todos los datos del mapa son de
       <a href="https://osm.org">OpenStreetMap</a>, un mapa creado por
       millones de contribuidores — similar a Wikipedia. Puedes encontrar el
       botón <em>Editar</em> en cada elemento del mapa.`,
@@ -54,7 +54,7 @@ export default {
   'featurepanel.error_network': 'No es posible obtener, comprueba tu cable de red.',
   'featurepanel.error_deleted': 'Este objeto está marcado como borrado en OpenStreetMap.',
   'featurepanel.history_button': 'Historia »',
-  'featurepanel.other_info_heading': 'Más información',
+  'featurepanel.details_heading': 'Más información',
   'featurepanel.edit_button_title': 'Editar en la base de datos de OpenStreetMap',
   'featurepanel.edit_button': 'Editar lugar',
   'featurepanel.add_place_button': 'Añadir lugar',
@@ -106,9 +106,9 @@ export default {
   'editdialog.comment': 'Commentar (opcional)',
   'editdialog.comment_placeholder': 'enlace a la fuente de la información etc.',
   'editdialog.info_edit': `Tu edición será guardada inmediatamente en OpenStreetMap. Por favor,
-         introduce únicamente información que tú poseas o que venga de fuentes verificadas. Está prohibido 
+         introduce únicamente información que tú poseas o que venga de fuentes verificadas. Está prohibido
          copiar información con derechos de autor (por ej. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/ES:C%C3%B3mo_mapeamos">Más información</a>`,
-  'editdialog.info_note': `Tu sugerencia será procesada por voluntarios de OpenStreetMap volunteers. Aquí 
+  'editdialog.info_note': `Tu sugerencia será procesada por voluntarios de OpenStreetMap volunteers. Aquí
          puedes añadir una nota adicional o describir un ajuste de la posición, etc
         También es apropiado apoyar tu contribución con un enlace a la fuente de la información (web,
          foto, etc.).`,
@@ -117,7 +117,7 @@ export default {
   'editdialog.other_tags.add': 'Añadir otra etiqueta',
   'editdialog.other_tags.will_be_deleted': 'será borrado',
   'editdialog.other_tags.info': `Las Etiquetas describen las propiedades
-        de cada elemento del mapa en un formato acordado. Aquí puedes encontrar una 
+        de cada elemento del mapa en un formato acordado. Aquí puedes encontrar una
         <a href="https://wiki.openstreetmap.org/wiki/ES:Objetos_del_mapa">descripción general de todas las etiquetas en OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Cerrar',
@@ -151,6 +151,7 @@ export default {
   'layers.mtb': 'BTT',
   'layers.snow': 'Nieve',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satélite (z<14)',
+  'layers.maptilerSat': 'Maptiler Satélite (z<14)',
+  'layers.bingSat': 'Bing Satélite',
   'layers.bike': 'Bici',
 };

@@ -53,7 +53,7 @@ export default {
   'featurepanel.error_network': 'ማምጣት አልቻልኩም, የመገናኛ መረብዎን ገመዶች ይመርምሩ',
   'featurepanel.error_deleted': 'ይህ አካል በOpenStreetMap ላይ ተሰርዟል የሚል ምልክት ተደርጎበታል',
   'featurepanel.history_button': 'ታሪኮች »',
-  'featurepanel.other_info_heading': 'ተጨማሪ መረጃ',
+  'featurepanel.details_heading': 'ተጨማሪ መረጃ',
   'featurepanel.edit_button_title': 'በOpenStreetMap የመረጃ ቋት ውስጥ አርትእ',
   'featurepanel.edit_button': 'ይህን አካባቢ አርትእ',
   'featurepanel.add_place_button': 'አዲስ ቦታን ጨምር',
@@ -143,6 +143,7 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'በረዶ',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'ሳተላይት (z<14)',
+  'layers.maptilerSat': 'Maptiler ሳተላይት (z<14)',
+  'layers.bingSat': 'Bing ሳተላይት',
   'layers.bike': 'ሳይክል',
 };

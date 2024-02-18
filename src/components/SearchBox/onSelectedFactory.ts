@@ -1,8 +1,10 @@
 import Router from 'next/router';
 import maplibregl from 'maplibre-gl';
-import { getShortId, getUrlOsmId } from '../../services/helpers';
+import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { getGlobalMap } from '../../services/mapStorage';
+import { performOverpassSearch } from '../../services/overpassSearch';
+import { t } from '../../services/intl';
 
 const getElementType = (osmType) => {
   switch (osmType) {
@@ -54,7 +56,40 @@ const fitBounds = (option, panelShown = false) => {
 };
 
 export const onSelectedFactory =
-  (setFeature, setPreview, mobileMode) => (e, option) => {
+  (setFeature, setPreview, mobileMode, bbox, showToast, setOverpassLoading) =>
+  (_, option) => {
+    if (option.star) {
+      const apiId = getApiId(option.star.shortId);
+      Router.push(`/${getUrlOsmId(apiId)}`);
+      // Router.push(`/${getUrlOsmId(apiId)}${window.location.hash}`); ????
+      return;
+    }
+
+    if (option.overpass || option.preset) {
+      const tags = option.overpass || option.preset.presetForSearch.tags;
+
+      const timeout = setTimeout(() => {
+        setOverpassLoading(true);
+      }, 300);
+
+      performOverpassSearch(bbox, tags)
+        .then((geojson) => {
+          const count = geojson.features.length;
+          const content = t('searchbox.overpass_success', { count });
+          showToast({ content });
+          getGlobalMap().getSource('overpass')?.setData(geojson);
+        })
+        .catch((e) => {
+          const message = `${e}`.substring(0, 100);
+          const content = t('searchbox.overpass_error', { message });
+          showToast({ content, type: 'error' });
+        })
+        .finally(() => {
+          clearTimeout(timeout);
+          setOverpassLoading(false);
+        });
+      return;
+    }
     if (!option?.geometry.coordinates) return;
 
     const skeleton = getSkeleton(option);

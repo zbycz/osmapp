@@ -16,6 +16,7 @@ const Maki = ({
   middle = undefined,
 }) => {
   const icon = icons.includes(ico) ? ico : 'information';
+  // console.log(icon, ' was: ',ico)
   return (
     <MakiImg
       src={`/icons/${icon}_11.svg`}

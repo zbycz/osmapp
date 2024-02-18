@@ -53,3 +53,16 @@ export const getUtfStrikethrough = (text) =>
     .join('');
 
 export const join = (a, sep, b) => `${a || ''}${a && b ? sep : ''}${b || ''}`;
+
+export const publishDbgObject = (key, value) => {
+  if (typeof window !== 'undefined') {
+    // @ts-ignore
+    if (!window.dbg) window.dbg = {};
+    // @ts-ignore
+    window.dbg[key] = value;
+    // @ts-ignore
+    if (!window.d) window.d = {};
+    // @ts-ignore
+    window.d[key] = value;
+  }
+};

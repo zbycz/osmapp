@@ -1,13 +1,18 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
+import { Snackbar } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config';
 
 export interface Layer {
-  type: 'basemap' | 'overlay' | 'user' | 'spacer';
+  type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
   name?: string;
   url?: string;
   key?: string;
   Icon?: React.FC<any>;
+  attribution?: string[]; // missing in spacer TODO refactor ugly
+  maxzoom?: number;
+  bbox?: number[];
 }
 
 // // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
@@ -41,6 +46,22 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewForMap(newView);
   }, []);
 
+  const [open, setOpen] = React.useState(false);
+  const [msg, setMsg] = React.useState(undefined);
+
+  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setOpen(false);
+  };
+
+  const showToast = (message) => {
+    setMsg(message);
+    setOpen(true);
+  };
+
   const mapState = {
     bbox,
     setBbox,
@@ -50,11 +71,17 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewFromMap: setView,
     activeLayers,
     setActiveLayers,
+    showToast,
   };
 
   return (
     <MapStateContext.Provider value={mapState}>
       {children}
+      <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+        <Alert onClose={handleClose} severity={msg?.type} variant="filled">
+          {msg?.content}
+        </Alert>
+      </Snackbar>
     </MapStateContext.Provider>
   );
 };

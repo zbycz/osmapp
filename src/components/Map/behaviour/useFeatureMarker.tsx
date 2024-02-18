@@ -59,7 +59,7 @@ export const useFeatureMarker = (map) => {
   useUpdateFeatureMarker(map, feature);
   useUpdatePreviewMarker(map, preview);
 
-  // hide the icon when tiles are fetched TODO sometimes broken (zoom problem)
+  // hide the icon when tiles are fetched TODO sometimes broken (zoom problem) (also maybe causes webgl blackout)
   useEffect(() => {
     if (map) {
       const handle = setInterval(() => {

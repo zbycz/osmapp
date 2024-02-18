@@ -1,6 +1,6 @@
 import escape from 'lodash/escape';
-import OsmAuth from 'osm-auth';
 import getConfig from 'next/config';
+import { osmAuth } from 'osm-auth';
 import { Feature, FeatureTags, Position } from './types';
 import {
   buildXmlString,
@@ -9,37 +9,30 @@ import {
   getUrlOsmId,
   OsmApiId,
   parseXmlString,
-  prod,
   stringifyDomXml,
 } from './helpers';
 import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
+import { isBrowser } from '../components/helpers';
+import { getLabel } from '../helpers/featureLabel';
 
 const {
   publicRuntimeConfig: { osmappVersion },
 } = getConfig();
 
-const osmUrl = prod
-  ? 'https://www.openstreetmap.org'
+const prod = true;
+const osmEditUrl = prod
+  ? 'https://www.openstreetmap.org' // iD uses same URL https://ideditor.netlify.app/
   : 'https://master.apis.dev.openstreetmap.org';
-
-const oauth = prod
-  ? {
-      oauth_consumer_key: 'OGIlDMpqYIRA35NBggNFNnRBftlWdJt4eE2z7eFb',
-      oauth_secret: '37V3dRzWYfdnRrG8L8vaKyzs6A191HkRtXlaqNH9',
-    }
-  : {
-      // https://master.apis.dev.openstreetmap.org/changeset/1599
-      oauth_consumer_key: 'eWdvGfVsTdhRCGtwRkn4qOBaBAIuVNX9gTX63TUm',
-      oauth_secret: 'O0UXzrNbpFkbIVB0rqumhMSdqdC1wa9ZFMpPUBYG',
-    };
 const TEST_OSM_ID = { type: 'node', id: '967531' }; // https://master.apis.dev.openstreetmap.org/node/967531
 
-const auth = new OsmAuth({
-  ...oauth,
+// TS file in osm-auth is probably broken (new is required)
+// @ts-ignore
+const auth = osmAuth({
+  client_id: 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68',
+  redirect_uri: isBrowser() && `${window.location.origin}/oauth-token.html`,
+  scope: 'read_prefs write_api write_notes openid',
   auto: true,
-  landing: '/oauth-token.html',
-  url: osmUrl,
 });
 
 const authFetch = async (options) =>
@@ -167,9 +160,9 @@ const getItemOrLastHistoric = async (apiId: OsmApiId) => {
   }
 };
 
-const getDescription = (isDelete, feature) => {
-  const undelete = feature.error === 'deleted';
-  const action = undelete ? 'Undeleted' : isDelete ? 'Deleted' : 'Edited';
+const getDescription = (isCancelled, feature) => {
+  const undelete = feature.deleted;
+  const action = undelete ? 'Undeleted' : isCancelled ? 'Deleted' : 'Edited';
   const { subclass } = feature.properties;
   const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
@@ -177,10 +170,10 @@ const getDescription = (isDelete, feature) => {
 
 const getChangesetComment = (
   comment: string,
-  isDelete: boolean,
+  isCancelled: boolean,
   feature: Feature,
 ) => {
-  const description = getDescription(isDelete, feature);
+  const description = getDescription(isCancelled, feature);
   return join(comment, ' • ', `${description} #osmapp`);
 };
 
@@ -208,10 +201,10 @@ export const editOsmFeature = async (
   feature: Feature,
   comment: string,
   newTags: FeatureTags,
-  isDelete: boolean,
+  isCancelled: boolean,
 ) => {
   const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
-  const changesetComment = getChangesetComment(comment, isDelete, feature);
+  const changesetComment = getChangesetComment(comment, isCancelled, feature);
   const changesetXml = getChangesetXml({ changesetComment, feature });
 
   const changesetId = await putChangeset(changesetXml);
@@ -224,10 +217,10 @@ export const editOsmFeature = async (
     apiId,
     changesetId,
     newTags,
-    isDelete,
+    isCancelled,
   );
 
-  await putOrDeleteItem(isDelete, apiId, newItem);
+  await putOrDeleteItem(isCancelled, apiId, newItem);
   await putChangesetClose(changesetId);
 
   clearFeatureCache(feature.osmMeta);
@@ -235,7 +228,7 @@ export const editOsmFeature = async (
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmUrl}/changeset/${changesetId}`,
+    url: `${osmEditUrl}/changeset/${changesetId}`,
     redirect: `${getOsmappLink(feature)}`,
   };
 };
@@ -271,7 +264,63 @@ export const addOsmFeature = async (
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmUrl}/changeset/${changesetId}`,
+    url: `${osmEditUrl}/changeset/${changesetId}`,
     redirect: `/${getUrlOsmId(apiId)}`,
+  };
+};
+
+export type Change = {
+  feature: Feature;
+  allTags: FeatureTags;
+  isDelete?: boolean;
+};
+
+const saveChange = async (
+  changesetId: any,
+  { feature, allTags, isDelete }: Change,
+) => {
+  const apiId = feature.osmMeta;
+  const item = await getItem(apiId);
+
+  // TODO use version from `feature` (we dont want to overwrite someones changes) or at least just apply tags diff (see createNoteText)
+  const newItem = await updateItemXml(
+    item,
+    apiId,
+    changesetId,
+    allTags,
+    isDelete,
+  );
+
+  await putOrDeleteItem(isDelete, apiId, newItem);
+};
+
+export const editCrag = async (
+  crag: Feature,
+  comment: string,
+  changes: Change[],
+) => {
+  if (!changes.length) {
+    return {
+      type: 'error',
+      text: 'No route has changed.',
+    };
+  }
+
+  const changesetComment = join(
+    comment,
+    ' • ',
+    `Edited ${getLabel(crag)} #osmapp #climbing`,
+  );
+  const changesetXml = getChangesetXml({ changesetComment, feature: crag });
+  const changesetId = await putChangeset(changesetXml);
+
+  await Promise.all(changes.map((change) => saveChange(changesetId, change)));
+  await putChangesetClose(changesetId);
+
+  return {
+    type: 'edit',
+    text: changesetComment,
+    url: `${osmEditUrl}/changeset/${changesetId}`,
+    redirect: `${getOsmappLink(crag)}`,
   };
 };

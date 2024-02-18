@@ -1,9 +1,7 @@
-import List from '@material-ui/core/List';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
-import styled from 'styled-components';
 import { ListItemSecondaryAction } from '@material-ui/core';
 import { dotToOptionalBr } from '../helpers';
 import {
@@ -11,39 +9,37 @@ import {
   LayerIcon,
   LayersHeader,
   RemoveUserLayerAction,
+  Spacer,
+  StyledList,
 } from './helpers';
 import { osmappLayers } from './osmappLayers';
-import { Layer, useMapStateContext } from '../utils/MapStateContext';
+import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
 import { usePersistedState } from '../utils/usePersistedState';
+import { Overlays } from './Overlays';
 
-const StyledList = styled(List)`
-  .MuiListItemIcon-root {
-    min-width: 45px;
+export const isViewInsideBbox = ([, lat, lon]: View, bbox?: number[]) =>
+  !bbox ||
+  (parseFloat(lat) > bbox[1] &&
+    parseFloat(lat) < bbox[3] &&
+    parseFloat(lon) > bbox[0] &&
+    parseFloat(lon) < bbox[2]);
 
-    svg {
-      color: ${({ theme }) => theme.palette.action.disabled}};
-    }
-  }
+type AllLayers = {
+  basemapLayers: Layer[];
+  overlayLayers: Layer[];
+};
 
-  .Mui-selected {
-    .MuiListItemIcon-root svg {
-      color: ${({ theme }) => theme.palette.action.active};
-    }
-  }
-`;
+const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
+  const spacer: Layer = { type: 'spacer' as const, key: 'userSpacer' };
+  const toLayer = ([key, layer]) => ({ ...layer, key });
+  const filterByBBox = ([, layer]) => isViewInsideBbox(view, layer.bbox); // needs suppressHydrationWarning
 
-const Spacer = styled.div`
-  padding-bottom: 1.5em;
-`;
+  const entries = Object.entries(osmappLayers).filter(filterByBBox);
+  const basemaps = entries.filter(([, v]) => v.type === 'basemap');
+  const overlays = entries.filter(([, v]) => v.type.startsWith('overlay'));
 
-const getAllLayers = (userLayers: Layer[]): Layer[] => {
-  const spacer = { type: 'spacer' as const, key: 'userSpacer' };
-
-  return [
-    ...Object.entries(osmappLayers).map(([key, layer]) => ({
-      ...layer,
-      key,
-    })),
+  const basemapLayers = [
+    ...basemaps.map(toLayer),
     ...(userLayers.length ? [spacer] : []),
     ...userLayers.map((layer) => ({
       ...layer,
@@ -52,28 +48,39 @@ const getAllLayers = (userLayers: Layer[]): Layer[] => {
       type: 'user' as const,
     })),
   ];
+
+  return {
+    basemapLayers,
+    overlayLayers: overlays.map(toLayer),
+  };
 };
 
 export const LayerSwitcherContent = () => {
-  const { activeLayers, setActiveLayers } = useMapStateContext();
+  const { view, activeLayers, setActiveLayers } = useMapStateContext();
   const [userLayers, setUserLayers] = usePersistedState('userLayers', []);
-  const layers = getAllLayers(userLayers);
+  const { basemapLayers, overlayLayers } = getAllLayers(userLayers, view);
 
   return (
     <>
       <LayersHeader headingId="layerSwitcher-heading" />
 
-      <StyledList dense aria-labelledby="layerSwitcher-heading">
-        {layers.map(({ key, name, type, url, Icon }) => {
+      <StyledList
+        dense
+        aria-labelledby="layerSwitcher-heading"
+        suppressHydrationWarning
+      >
+        {basemapLayers.map(({ key, name, type, url, Icon }) => {
           if (type === 'spacer') {
             return <Spacer key={key} />;
           }
+          const setActiveBaseMap = () =>
+            setActiveLayers((prev) => [key, ...prev.slice(1)]);
           return (
             <ListItem
               button
               key={key}
               selected={activeLayers.includes(key)}
-              onClick={() => setActiveLayers([key])}
+              onClick={setActiveBaseMap}
             >
               <LayerIcon Icon={Icon} />
               <ListItemText primary={dotToOptionalBr(name)} />
@@ -89,6 +96,13 @@ export const LayerSwitcherContent = () => {
           );
         })}
       </StyledList>
+
+      <Overlays
+        overlayLayers={overlayLayers}
+        activeLayers={activeLayers}
+        setActiveLayers={setActiveLayers}
+      />
+
       <AddUserLayerButton setUserLayers={setUserLayers} />
     </>
   );

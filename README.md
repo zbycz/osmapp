@@ -20,10 +20,11 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 ## Features 🗺 📱 🖥
 
 - **clickable map** – poi, cities, localities, ponds (more coming soon)
-- **info panel** – images from Wikipedia, Mapillary or Fody
+- **info panel** – images from Wikipedia, Mapillary or Fody, line numbers on public transport stops
 - **editing** – for anonymous users inserts a note
 - **search engine** – try for example "Tesco, London"
 - **vector maps** – with the possibility of tilting to 3D (drag the compass, or two fingers drag)
+- **3D terrain** - tilt to 3D and then click terrain icon to show 3D terrain
 - **tourist map** – from MapTiler: vector, including marked routes
 - **layer switcher** – still basic, but you can add your own layers
 - **mobile applications** – see [osmapp.org/install](https://osmapp.org/install)

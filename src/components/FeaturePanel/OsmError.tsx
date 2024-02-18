@@ -9,7 +9,7 @@ export const OsmError = () => {
   const { feature } = useFeatureContext();
   const code = feature.error;
 
-  if (code === 'deleted') {
+  if (feature.deleted) {
     return (
       <Box mb={3} clone>
         <Alert variant="outlined" severity="warning">
@@ -48,6 +48,14 @@ export const OsmError = () => {
     return (
       <Alert variant="outlined" severity="warning">
         {t('featurepanel.error', { code })}
+      </Alert>
+    );
+  }
+
+  if (Object.keys(feature.tags).length === 0 && !feature.point) {
+    return (
+      <Alert variant="outlined" severity="info">
+        {t('featurepanel.info_no_tags')}
       </Alert>
     );
   }

@@ -61,7 +61,7 @@ export default {
   'featurepanel.error_network': 'Requête impossible, veuillez vérifier votre connexion.',
   'featurepanel.error_deleted': 'Cet élément n’existe plus sur OpenStreetMap.',
   'featurepanel.history_button': 'Historique»',
-  'featurepanel.other_info_heading': 'Plus d’informations',
+  'featurepanel.details_heading': 'Plus d’informations',
   'featurepanel.edit_button_title': 'Modifier sur OpenStreetMap',
   'featurepanel.edit_button': 'Modifier l’élément',
   'featurepanel.add_place_button': 'Ajouter un élément',
@@ -154,6 +154,7 @@ export default {
   'layers.mtb': 'VTT',
   'layers.snow': 'Neige',
   'layers.mapnik': 'OSM Mapnik',
-  'layers.sat': 'Satellite (zoom < 14)',
+  'layers.maptilerSat': 'Maptiler Satellite (zoom < 14)',
+  'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Vélo',
 };

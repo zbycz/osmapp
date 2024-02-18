@@ -62,14 +62,14 @@ const LinkItem = ({ href, label }) => (
 
 // Our map uses 512 tiles, so our zoom is "one less"
 // https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
-const MAPBOXGL_ZOOM_DIFFERENCE = 1;
+const MAPLIBREGL_ZOOM_DIFFERENCE = 1;
 
 const useGetItems = ([lon, lat]: PositionBoth) => {
   const { feature } = useFeatureContext();
   const { view } = useMapStateContext();
   const [ourZoom] = view;
 
-  const zoom = parseFloat(ourZoom) + MAPBOXGL_ZOOM_DIFFERENCE;
+  const zoom = parseFloat(ourZoom) + MAPLIBREGL_ZOOM_DIFFERENCE;
   const zoomInt = Math.round(zoom);
   const osmQuery = feature?.osmMeta?.id
     ? `${feature.osmMeta.type}/${feature.osmMeta.id}`
@@ -113,7 +113,7 @@ export const Coords = ({ coords }: Props) => {
   const osmappLink = getFullOsmappLink(feature);
 
   return (
-    <span title="latitude, longitude (y, x)">
+    <span title="latitude, longitude (y, x)" ref={anchorRef}>
       {positionToDeg(coords)}
       <Menu
         anchorEl={anchorRef.current}
@@ -129,7 +129,7 @@ export const Coords = ({ coords }: Props) => {
         <CopyTextItem text={positionToDM(coords)} />
         <CopyTextItem text={osmappLink} />
       </Menu>
-      <ToggleButton onClick={open} ref={anchorRef} />
+      <ToggleButton onClick={open} />
     </span>
   );
 };
