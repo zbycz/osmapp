@@ -6,7 +6,7 @@ import styled from 'styled-components';
 import { Divider, Menu, MenuItem } from '@material-ui/core';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { isBrowser, useBoolState } from "../helpers";
+import { isBrowser, useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { getIdEditorLink, positionToDeg, positionToDM } from '../../utils';
 import { PositionBoth } from '../../services/types';
@@ -64,7 +64,8 @@ const LinkItem = ({ href, label }) => (
 // https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
 const MAPLIBREGL_ZOOM_DIFFERENCE = 1;
 
-const isMobile = () => isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error
+const isMobile = () =>
+  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error
 
 const useGetItems = ([lon, lat]: PositionBoth) => {
   const { feature } = useFeatureContext();
