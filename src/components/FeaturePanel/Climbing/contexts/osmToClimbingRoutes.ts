@@ -22,7 +22,7 @@ const parsePathString = (pathString?: string): PathPoints =>
 
 const getPathsByImage = (tags: FeatureTags) => {
   const keys = Object.keys(tags).filter((key) =>
-    key.match(/^wikimedia_commons\d?$/),
+    key.match(/^wikimedia_commons:?\d*$/),
   );
 
   const paths = {};
