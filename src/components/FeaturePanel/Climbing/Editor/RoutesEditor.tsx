@@ -36,11 +36,7 @@ const ImageElement = styled.img<{ zoom?: number }>`
   height: 100%;
 `;
 
-export const RoutesEditor = ({
-  isRoutesLayerVisible = true,
-  setIsPhotoLoaded,
-  imageUrl,
-}) => {
+export const RoutesEditor = ({ isRoutesLayerVisible = true, imageUrl }) => {
   const {
     imageSize,
     getMachine,
@@ -118,7 +114,6 @@ export const RoutesEditor = ({
   };
 
   const onPhotoLoad = () => {
-    setIsPhotoLoaded(true);
     loadPhotoRelatedData();
   };
 

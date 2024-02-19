@@ -194,6 +194,8 @@ export const ClimbingView = () => {
     setArePointerEventsDisabled,
     setPhotoZoom,
     preparePhotosAndSetFirst,
+    isPhotoLoaded,
+    setIsPhotoLoaded,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -211,12 +213,14 @@ export const ClimbingView = () => {
   }, [isEditMode]);
 
   useEffect(() => {
-    loadPhotoRelatedData();
-  }, [splitPaneHeight]);
+    setIsPhotoLoaded(false);
+    const url = getCommonsImageUrl(`File:${photoPath}`, 1500);
+    setImageUrl(url);
+  }, [photoPath]);
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, []);
+  }, [splitPaneHeight, imageUrl]);
 
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(null);
@@ -241,15 +245,7 @@ export const ClimbingView = () => {
     setSplitPaneHeight(splitHeight);
     setIsSplitViewDragging(false);
   };
-  const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
-
   preparePhotosAndSetFirst();
-
-  useEffect(() => {
-    setIsPhotoLoaded(false);
-    const url = getCommonsImageUrl(`File:${photoPath}`, 1500);
-    setImageUrl(url);
-  }, [photoPath]);
 
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
@@ -313,6 +309,7 @@ export const ClimbingView = () => {
                   onPanningStart={startPointerEvents}
                   onPanningStop={startPointerEvents}
                   wheel={{ step: 100 }}
+                  centerOnInit
                   onTransformed={(
                     _ref,
                     state: {
@@ -336,7 +333,6 @@ export const ClimbingView = () => {
                           !areRoutesLoading
                         }
                         imageUrl={imageUrl}
-                        setIsPhotoLoaded={setIsPhotoLoaded}
                       />
                     </>
                   </TransformComponent>

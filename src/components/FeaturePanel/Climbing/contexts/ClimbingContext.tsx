@@ -90,6 +90,8 @@ type ClimbingContextType = {
   findCloserPoint: (position: Position) => Position | null;
   photoZoom: ZoomState;
   setPhotoZoom: (photoZoom: ZoomState) => void;
+  isPhotoLoaded: boolean;
+  setIsPhotoLoaded: (isPhotoLoaded: boolean) => void;
   areRoutesVisible: boolean;
   setAreRoutesVisible: (areRoutesVisible: boolean) => void;
   areRoutesLoading: boolean;
@@ -142,6 +144,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [gradeTable, setGradeTable] = useState<GradeTable>(null);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
+  const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
   const [showDebugMenu, setShowDebugMenu] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
@@ -322,6 +325,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     }
     setAreRoutesVisible(true);
     setAreRoutesLoading(false);
+    setIsPhotoLoaded(true);
   };
 
   const climbingState = {
@@ -397,6 +401,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     preparePhotosAndSetFirst,
     imageContainerSize,
     setImageContainerSize,
+    isPhotoLoaded,
+    setIsPhotoLoaded,
   };
 
   return (
