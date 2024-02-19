@@ -31,6 +31,7 @@ export const RouteFloatingMenu = () => {
     routeSelectedIndex,
     getCurrentPath,
     photoZoom,
+    setIsLineInteractiveAreaHovered,
   } = useClimbingContext();
   const machine = getMachine();
 
@@ -53,6 +54,14 @@ export const RouteFloatingMenu = () => {
     machine.execute('changePointType', { type });
 
     setShowTypeMenu(false);
+  };
+
+  const onMouseEnter = () => {
+    setIsLineInteractiveAreaHovered(true);
+  };
+
+  const onMouseLeave = () => {
+    setIsLineInteractiveAreaHovered(false);
   };
 
   return (
@@ -166,6 +175,8 @@ export const RouteFloatingMenu = () => {
               <Button
                 onClick={onFinishClimbingRouteClick}
                 startIcon={<CheckIcon />}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
               >
                 Done
               </Button>

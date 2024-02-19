@@ -57,15 +57,21 @@ export const Point = ({
     setPointElement,
     setIsLineInteractiveAreaHovered,
     photoZoom,
+    getCurrentPath,
   } = useClimbingContext();
 
+  const isPointSelected =
+    routeSelectedIndex === routeNumber && pointSelectedIndex === index;
   const onClick = (e) => {
     e.stopPropagation();
   };
 
   const onMouseEnter = () => {
     setIsHovered(true);
-    setIsLineInteractiveAreaHovered(true);
+    const isLastPoint = getCurrentPath().length - 1 === index;
+    if (!isLastPoint) {
+      setIsLineInteractiveAreaHovered(true);
+    }
   };
 
   const onMouseLeave = () => {
@@ -94,8 +100,6 @@ export const Point = ({
 
   const onTouchMove = () => {};
 
-  const isPointSelected =
-    routeSelectedIndex === routeNumber && pointSelectedIndex === index;
   const { pointColor, pointStroke } = usePointColor(type, isHovered);
 
   const isTouchDevice = 'ontouchstart' in window;
