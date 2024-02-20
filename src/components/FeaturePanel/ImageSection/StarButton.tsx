@@ -1,6 +1,7 @@
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
 import React, { useEffect, useState } from 'react';
+import { Tooltip } from '@material-ui/core';
 import { t } from '../../../services/intl';
 import { useStarsContext } from '../../utils/StarsContext';
 import { StyledActionButton } from './utils';
@@ -16,15 +17,13 @@ const useIsClient = () => {
 const StarButtonPure = ({ isStarred, toggleStar }) => (
   <StyledActionButton onClick={toggleStar}>
     {isStarred ? (
-      <Star
-        htmlColor="#fff"
-        titleAccess={t('featurepanel.favorites_save_button')}
-      />
+      <Tooltip arrow title={t('featurepanel.favorites_unsave_button')}>
+        <Star htmlColor="#fff" />
+      </Tooltip>
     ) : (
-      <StarBorder
-        htmlColor="#fff"
-        titleAccess={t('featurepanel.favorites_unsave_button')}
-      />
+      <Tooltip arrow title={t('featurepanel.favorites_save_button')}>
+        <StarBorder htmlColor="#fff" />
+      </Tooltip>
     )}
   </StyledActionButton>
 );
