@@ -15,14 +15,8 @@ const AddNewPoint = styled.circle`
 `;
 
 export const RoutePath = ({ route, routeNumber }) => {
-  const [tempPointPosition, setTempPointPosition] = useState<
-    PositionPx & { lineIndex: number }
-  >({
-    x: 0,
-    y: 0,
-    units: 'px',
-    lineIndex: 0,
-  });
+  const [tempPointPosition, setTempPointPosition] =
+    useState<(PositionPx & { lineIndex: number }) | null>(null);
   const {
     isPointMoving,
     isRouteSelected,
@@ -81,17 +75,21 @@ export const RoutePath = ({ route, routeNumber }) => {
     }
   };
 
-  const hoveredPosition = addOffsets(['scrollOffset'], {
-    x: tempPointPosition.x,
-    y: tempPointPosition.y,
-    units: 'px',
-  });
+  const hoveredPosition = tempPointPosition
+    ? addOffsets(['scrollOffset'], {
+        x: tempPointPosition.x,
+        y: tempPointPosition.y,
+        units: 'px',
+      })
+    : null;
 
   const onPointAdd = () => {
-    machine.execute('addPointInBetween', {
-      hoveredPosition,
-      tempPointPosition,
-    });
+    if (tempPointPosition) {
+      machine.execute('addPointInBetween', {
+        hoveredPosition,
+        tempPointPosition,
+      });
+    }
   };
 
   const onMouseDown = (e) => {
@@ -163,17 +161,15 @@ export const RoutePath = ({ route, routeNumber }) => {
           }
           return null;
         })}
-      {isEditableSelectedRouteHovered &&
-        hoveredPosition.x !== 0 &&
-        hoveredPosition.y !== 0 && (
-          <AddNewPoint
-            cx={hoveredPosition.x}
-            cy={hoveredPosition.y}
-            fill="white"
-            stroke="rgba(0,0,0,0.3)"
-            r={5}
-          />
-        )}
+      {isEditableSelectedRouteHovered && tempPointPosition && (
+        <AddNewPoint
+          cx={hoveredPosition.x}
+          cy={hoveredPosition.y}
+          fill="white"
+          stroke="rgba(0,0,0,0.3)"
+          r={5}
+        />
+      )}
       {machine.currentStateName === 'extendRoute' &&
         !isLineInteractiveAreaHovered && (
           <MouseTrackingLine routeNumber={routeNumber} />
