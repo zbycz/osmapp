@@ -143,7 +143,10 @@ export const RoutesLayer = ({
       : null;
 
   const selectedPointOfSelectedRoute =
-    pointSelectedIndex !== null && path.length > 0 && routes[routeSelectedIndex]
+    pointSelectedIndex !== null &&
+    path.length > 0 &&
+    routes[routeSelectedIndex] &&
+    path[pointSelectedIndex]
       ? getPixelPosition(path[pointSelectedIndex])
       : null;
 
