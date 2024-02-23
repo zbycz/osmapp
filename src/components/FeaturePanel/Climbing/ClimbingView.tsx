@@ -304,6 +304,9 @@ export const ClimbingView = () => {
               )}
               <BlurContainer isVisible={isPhotoLoaded}>
                 <TransformWrapper
+                  doubleClick={{
+                    disabled: true,
+                  }}
                   onWheelStart={stopPointerEvents}
                   onWheelStop={startPointerEvents}
                   onPinchingStart={stopPointerEvents}
