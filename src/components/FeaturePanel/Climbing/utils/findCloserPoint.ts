@@ -1,4 +1,4 @@
-import { Position } from '../types';
+import { ClimbingRoute, PathPoint, PathPoints, Position } from '../types';
 
 const getCloserPoint = ({
   to,
@@ -6,8 +6,8 @@ const getCloserPoint = ({
   point2,
 }: {
   to: Position;
-  point1: Position;
-  point2: Position;
+  point1: PathPoint;
+  point2: PathPoint;
 }) => {
   const distanceTo1 = Math.sqrt(point1.x - to.x ** 2 + point1.y - to.y ** 2);
   const distanceTo2 = Math.sqrt(point2.x - to.x ** 2 + point2.y - to.y ** 2);
@@ -19,7 +19,15 @@ const getCloserPoint = ({
 };
 
 export const findCloserPointFactory =
-  ({ routeSelectedIndex, routes, getPathForRoute }) =>
+  ({
+    routeSelectedIndex,
+    routes,
+    getPathForRoute,
+  }: {
+    routeSelectedIndex: number;
+    routes: Array<ClimbingRoute>;
+    getPathForRoute: (route: ClimbingRoute) => PathPoints;
+  }) =>
   (checkedPosition: Position) => {
     if (routeSelectedIndex === null || !checkedPosition.x || !checkedPosition.y)
       return null;
@@ -33,7 +41,7 @@ export const findCloserPointFactory =
         return getPathForRoute(route);
       })
       .flat()
-      .reduce((closestPoint, point) => {
+      .reduce<PathPoint | null>((closestPoint, point) => {
         if (!point) return closestPoint;
         const isPointNearby =
           checkedPosition.x - STICKY_THRESHOLD < point.x &&

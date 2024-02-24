@@ -9,6 +9,7 @@ import {
   ClimbingRoute,
   GradeSystem,
   GradeTable,
+  PathPoint,
   PathPoints,
   Position,
   PositionPx,
@@ -87,7 +88,7 @@ type ClimbingContextType = {
   };
   scrollOffset: PositionPx;
   setScrollOffset: (scrollOffset: PositionPx) => void;
-  findCloserPoint: (position: Position) => Position | null;
+  findCloserPoint: (position: Position) => PathPoint | null;
   photoZoom: ZoomState;
   setPhotoZoom: (photoZoom: ZoomState) => void;
   areRoutesVisible: boolean;
