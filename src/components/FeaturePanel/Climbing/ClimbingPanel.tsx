@@ -11,6 +11,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { getOsmappLink } from '../../../services/helpers';
+import { StarButton } from '../ImageSection/StarButton';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -22,6 +23,12 @@ const ThumbnailContainer = styled.div<{ height: number }>`
     background-color: rgba(0, 0, 0, 0.5);
     cursor: pointer;
   }
+`;
+
+const HeadingContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const Heading = styled.div`
@@ -102,8 +109,10 @@ export const ClimbingPanel = ({ footer }) => {
               <ShowFullscreen onClick={onFullScreenClick} />
             </ThumbnailContainer>
           )}
-          <Heading onClick={onFullScreenClick}>{label}</Heading>
-
+          <HeadingContainer>
+            <Heading onClick={onFullScreenClick}>{label}</Heading>
+            <StarButton />
+          </HeadingContainer>
           <RouteList />
 
           {/* @TODO unite with parent panel */}
