@@ -4,42 +4,55 @@ import styled from 'styled-components';
 import { Tooltip, useTheme } from '@material-ui/core';
 import { useConfig } from './config';
 
-const useColor = ({ isSelected, hasRoute, hasRouteInDifferentPhotos }) => {
+const useColor = ({
+  isSelected,
+  hasPathOnThisPhoto,
+  isOnThisPhoto,
+  hasPathInDifferentPhoto,
+  isOnDifferentPhoto,
+}) => {
   const theme: any = useTheme();
   const config = useConfig();
 
-  if (hasRoute && isSelected) {
+  if (hasPathOnThisPhoto && isSelected) {
     return {
       background: config.routeNumberBackgroundSelected,
       text: config.routeNumberTextColorSelected,
       border: `solid 1px ${config.routeNumberBorderColorSelected}`,
     };
   }
-  if (hasRoute) {
+  if (hasPathOnThisPhoto) {
     return {
       background: config.routeNumberBackground,
       text: config.routeNumberTextColor,
       border: `solid 1px ${config.routeNumberBorderColor}`,
     };
   }
-  if (hasRouteInDifferentPhotos) {
+  if (isOnThisPhoto) {
+    return {
+      background: config.routeNumberBackground,
+      text: config.routeNumberTextColor,
+      border: `dashed 1px ${config.routeNumberBorderColor}`,
+    };
+  }
+  if (hasPathInDifferentPhoto) {
+    return {
+      background: 'transparent',
+      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
+      border: `solid 1px ${config.routeNumberBorderColor}`,
+    };
+  }
+  if (isOnDifferentPhoto) {
     return {
       background: 'transparent',
       text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
       border: `dashed 1px ${config.routeNumberBorderColor}`,
     };
   }
-  if (!hasRoute) {
-    return {
-      background: 'transparent',
-      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
-      border: 'solid 1px transparent',
-    };
-  }
 
   return {
     background: 'transparent',
-    text: theme.textOnPrimary,
+    text: theme.textSubdued,
     border: 'solid 1px transparent',
   };
 };
@@ -62,22 +75,35 @@ const Container = styled.div<{
   border: ${({ colors }) => colors.border};
 `;
 
-export const RouteNumber = ({
-  children,
-  isSelected,
-  hasRoute,
-  hasRouteInDifferentPhotos = false,
-}) => {
-  const colors = useColor({ isSelected, hasRoute, hasRouteInDifferentPhotos });
+export const RouteNumber = ({ children, isSelected, photoInfoForRoute }) => {
+  const hasPathOnThisPhoto = photoInfoForRoute === 'hasPathOnThisPhoto';
+  const isOnThisPhoto = photoInfoForRoute === 'isOnThisPhoto';
+  const hasPathInDifferentPhoto =
+    photoInfoForRoute === 'hasPathInDifferentPhoto';
+  const isOnDifferentPhoto = photoInfoForRoute === 'isOnDifferentPhoto';
+
+  const colors = useColor({
+    isSelected,
+    hasPathOnThisPhoto,
+    isOnThisPhoto,
+    hasPathInDifferentPhoto,
+    isOnDifferentPhoto,
+  });
 
   const getTitle = () => {
-    if (hasRoute) {
-      return '';
+    if (hasPathOnThisPhoto) {
+      return 'Route has path on this photo';
     }
-    if (hasRouteInDifferentPhotos) {
-      return 'Route is available in different photo';
+    if (isOnThisPhoto) {
+      return 'Route is on this photo';
     }
-    return 'Route is not in schema';
+    if (hasPathInDifferentPhoto) {
+      return 'Route has path available on different photo';
+    }
+    if (isOnDifferentPhoto) {
+      return 'Route is available on different photo';
+    }
+    return 'Route is not marked yet';
   };
 
   return (

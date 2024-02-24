@@ -316,6 +316,7 @@ export const ClimbingView = () => {
                   onPanningStart={startPointerEvents}
                   onPanningStop={startPointerEvents}
                   wheel={{ step: 100 }}
+                  centerOnInit
                   onTransformed={(
                     _ref,
                     state: {

@@ -37,6 +37,12 @@ type ImageSize = {
   width: number;
   height: number;
 };
+type PhotoInfo =
+  | null
+  | 'hasPathOnThisPhoto'
+  | 'isOnThisPhoto'
+  | 'hasPathInDifferentPhoto'
+  | 'isOnDifferentPhoto';
 
 type ClimbingContextType = {
   editorPosition: PositionPx;
@@ -45,8 +51,7 @@ type ClimbingContextType = {
   isPointMoving: boolean;
   isRouteSelected: (routeNumber: number) => boolean;
   isPointSelected: (pointNumber: number) => boolean;
-  hasPath: (routeNumber: number) => boolean;
-  hasPathInDifferentPhotos: (routeNumber: number) => boolean;
+  getPhotoInfoForRoute: (routeNumber: number) => PhotoInfo;
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
@@ -272,20 +277,32 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
   const isPointSelected = (index: number) => pointSelectedIndex === index;
-  const hasPath = (index: number) => getPathOnIndex(index).length > 0;
-  const hasPathInDifferentPhotos = (index: number) => {
-    const paths = routes[index]?.paths;
-    if (!paths) return false;
-    const availablePhotos = Object.keys(paths);
-    return !!availablePhotos.find((availablePhotoPath) => {
-      if (
-        availablePhotoPath !== photoPath &&
-        paths[availablePhotoPath] !== null
-      ) {
-        return true;
-      }
-      return false;
-    }, []);
+  const getPhotoInfoForRoute = (index: number): PhotoInfo => {
+    const checkedPaths = routes[index]?.paths;
+    if (!checkedPaths) return null;
+    const availablePhotos = Object.keys(checkedPaths);
+
+    return availablePhotos.reduce<PhotoInfo>(
+      (photoInfo, availablePhotoPath) => {
+        if (
+          !checkedPaths[availablePhotoPath] ||
+          photoInfo === 'hasPathOnThisPhoto' ||
+          photoInfo === 'isOnThisPhoto'
+        )
+          return photoInfo;
+
+        if (availablePhotoPath === photoPath) {
+          if (checkedPaths[availablePhotoPath].length > 0)
+            return 'hasPathOnThisPhoto';
+          return 'isOnThisPhoto';
+        }
+
+        if (checkedPaths[availablePhotoPath].length > 0)
+          return 'hasPathInDifferentPhoto';
+        return 'isOnDifferentPhoto';
+      },
+      null,
+    );
   };
 
   const getAllRoutesPhotos = () => {
@@ -334,8 +351,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     isPointMoving,
     isRouteSelected,
     isPointSelected,
-    hasPath,
-    hasPathInDifferentPhotos,
+    getPhotoInfoForRoute,
     pointSelectedIndex,
     routes,
     routeSelectedIndex,
