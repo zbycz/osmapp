@@ -44,7 +44,7 @@ export const Guide = () => {
           onClick={onDrawRouteClick}
         >
           Zakreslit cestu &nbsp;
-          <RouteNumber isSelected hasRoute>
+          <RouteNumber isSelected photoInfoForRoute="hasPathOnThisPhoto">
             {routeSelectedIndex + 1}
           </RouteNumber>
         </DrawRouteButton>

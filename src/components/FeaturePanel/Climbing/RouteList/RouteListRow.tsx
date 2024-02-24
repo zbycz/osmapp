@@ -72,14 +72,13 @@ export const RenderListRow = ({
   const {
     getMachine,
     isRouteSelected,
-    hasPath,
     isEditMode,
     routeSelectedIndex,
-    hasPathInDifferentPhotos,
     selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
     gradeTable,
+    getPhotoInfoForRoute,
   } = useClimbingContext();
 
   useEffect(() => {
@@ -89,8 +88,7 @@ export const RenderListRow = ({
   }, [routeSelectedIndex]);
 
   const isSelected = isRouteSelected(index);
-  const hasRoute = hasPath(index);
-  const hasRouteInDifferentPhotos = hasPathInDifferentPhotos(index);
+  const photoInfoForRoute = getPhotoInfoForRoute(index);
 
   const machine = getMachine();
 
@@ -136,8 +134,7 @@ export const RenderListRow = ({
         <RouteNumberCell component="th" scope="row" width={30}>
           <RouteNumber
             isSelected={isSelected}
-            hasRoute={hasRoute}
-            hasRouteInDifferentPhotos={hasRouteInDifferentPhotos}
+            photoInfoForRoute={photoInfoForRoute}
           >
             {index + 1}
           </RouteNumber>
