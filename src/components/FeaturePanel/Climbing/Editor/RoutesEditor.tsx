@@ -94,6 +94,7 @@ export const RoutesEditor = ({
           ...point,
           x: updatedPoint.x,
           y: updatedPoint.y,
+          ...(closestPoint?.type ? { type: closestPoint?.type } : {}),
         })),
       );
     } else if (machine.currentStateName !== 'extendRoute') {

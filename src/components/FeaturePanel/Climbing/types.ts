@@ -19,12 +19,11 @@ export type Size = {
   height: number;
 };
 
-export type PathPoints = Array<
-  Position & {
-    type?: PointType;
-    note?: string;
-  }
->;
+export type PathPoint = Position & {
+  type?: PointType;
+  note?: string;
+};
+export type PathPoints = Array<PathPoint>;
 
 export type RouteDifficulty = {
   gradeSystem: GradeSystem;
