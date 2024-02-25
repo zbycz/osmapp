@@ -47,7 +47,7 @@ export const getDifficultyColor = (
   gradeTable: GradeTable,
   difficulty: RouteDifficulty,
 ) => {
-  const DEFAULT_COLOR = 'black';
+  const DEFAULT_COLOR = '#555';
   if (!difficulty) return DEFAULT_COLOR;
 
   const uiaaGrade =

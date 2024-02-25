@@ -160,7 +160,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [isDifficultyHeatmapEnabled, setIsDifficultyHeatmapEnabled] =
-    useState<boolean>(false);
+    useState<boolean>(true);
   const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
   const [arePointerEventsDisabled, setArePointerEventsDisabled] =
