@@ -35,7 +35,6 @@ const Heading = styled.div`
   margin: 12px 8px 4px;
   font-size: 36px;
   line-height: 0.98;
-  color: ${({ theme }) => theme.palette.text.panelHeading};
 
   :hover {
     text-decoration: underline;

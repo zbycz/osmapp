@@ -19,7 +19,7 @@ const PhotosContainer = styled.div`
   gap: 4px;
 `;
 const PhotosTitle = styled.div`
-  color: ${({ theme }) => theme.textSubdued};
+  color: ${({ theme }) => theme.palette.text.hint};
 `;
 const PhotoLinks = styled.div`
   display: flex;

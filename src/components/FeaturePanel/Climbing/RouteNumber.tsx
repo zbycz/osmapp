@@ -38,21 +38,25 @@ const useColor = ({
   if (hasPathInDifferentPhoto) {
     return {
       background: 'transparent',
-      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
+      text: isSelected
+        ? theme.palette.climbing.text
+        : theme.palette.text.primary,
       border: `solid 1px ${config.routeNumberBorderColor}`,
     };
   }
   if (isOnDifferentPhoto) {
     return {
       background: 'transparent',
-      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
+      text: isSelected
+        ? theme.palette.climbing.text
+        : theme.palette.text.primary,
       border: `dashed 1px ${config.routeNumberBorderColor}`,
     };
   }
 
   return {
     background: 'transparent',
-    text: theme.textSubdued,
+    text: theme.palette.text.hint,
     border: 'solid 1px transparent',
   };
 };

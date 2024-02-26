@@ -11,9 +11,10 @@ export const PanelWrapper = styled.div`
   left: 0;
   top: 72px; // TopPanel
   bottom: 0;
-  background: ${({ theme }) => theme.palette.panelBackground};
+  background: ${({ theme }) => theme.palette.background.paper};
   overflow: hidden;
   z-index: 1100;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 
   display: flex;
   flex-direction: column;
