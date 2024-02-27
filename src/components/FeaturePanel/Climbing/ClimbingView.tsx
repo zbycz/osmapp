@@ -32,26 +32,26 @@ const Container = styled.div`
       border-radius: 6px;
       width: 40px;
       height: 12px;
-      background: ${({ theme }) => theme.backgroundPrimarySubtleOnElevation0};
+      background: ${({ theme }) => theme.palette.background.paper};
       margin-top: 1px;
       z-index: 1;
       transition: all 0.1s ease;
-      border: solid 1px ${({ theme }) => theme.borderOnElevation0};
+      border: solid 1px ${({ theme }) => theme.palette.divider};
       text-align: center;
       line-height: 0px;
       font-size: 20px;
-      color: ${({ theme }) => theme.textPrimaryDefault};
+      color: ${({ theme }) => theme.palette.climbing.text};
       letter-spacing: 1px;
     }
 
     &:hover {
       &::before {
-        background-color: ${({ theme }) => theme.borderSecondary};
-        border: solid 1px ${({ theme }) => theme.borderSecondary};
-        color: ${({ theme }) => theme.textOnPrimary};
+        background-color: ${({ theme }) => theme.palette.climbing.active};
+        border: solid 1px ${({ theme }) => theme.palette.climbing.active};
+        color: ${({ theme }) => theme.palette.primary.contrastText};
       }
       &::after {
-        border-color: ${({ theme }) => theme.borderSecondary};
+        border-color: ${({ theme }) => theme.palette.climbing.active};
         transition: all 0.5s ease-out;
         border-width: 1px;
         margin-top: 6px;
@@ -79,28 +79,28 @@ const Container = styled.div`
     background:
       /* Shadow Cover TOP */ radial-gradient(
           farthest-side at 50% 0,
-          ${({ theme }) => theme.palette.panelBackground},
-          ${({ theme }) => theme.palette.panelBackground}
+          ${({ theme }) => theme.palette.background.paper},
+          ${({ theme }) => theme.palette.background.paper}
         )
         center top,
       /* Shadow Cover BOTTOM */
         radial-gradient(
           farthest-side at 50% 100%,
-          ${({ theme }) => theme.palette.panelBackground},
-          ${({ theme }) => theme.palette.panelBackground}
+          ${({ theme }) => theme.palette.background.paper},
+          ${({ theme }) => theme.palette.background.paper}
         )
         center bottom,
       /* Shadow TOP */
         radial-gradient(
           farthest-side at 50% 0,
-          ${({ theme }) => theme.palette.panelScrollCover},
+          ${({ theme }) => theme.palette.grey['600']},
           transparent
         )
         center top,
       /* Shadow BOTTOM */
         radial-gradient(
           farthest-side at 50% 100%,
-          ${({ theme }) => theme.palette.panelScrollCover},
+          ${({ theme }) => theme.palette.grey['600']},
           transparent
         )
         center bottom;
@@ -108,7 +108,7 @@ const Container = styled.div`
     background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
     background-attachment: local, local, scroll, scroll;
 
-    background-color: ${({ theme }) => theme.palette.panelBackground};
+    background-color: ${({ theme }) => theme.palette.background.paper};
   }
 `;
 const LoadingContainer = styled.div`
@@ -148,7 +148,7 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
 
 const NoPhoto = styled.div<{ isVisible: boolean }>`
   text-align: center;
-  color: ${({ theme }) => theme.textSubdued};
+  color: ${({ theme }) => theme.palette.text.hint};
   padding: 10px;
 `;
 

@@ -12,8 +12,8 @@ export const Bolt = ({
 }: PointProps) => {
   const { isEditMode, photoZoom } = useClimbingContext();
   const config = useConfig();
-  const size = 16;
-  const strokeWidth = 3;
+  const size = 14;
+  const strokeWidth = 2;
   const shift = size / 2 - strokeWidth / 2;
 
   const dx = x + 0; /* TODO was 15 */

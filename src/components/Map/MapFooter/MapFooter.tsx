@@ -14,13 +14,17 @@ const {
   publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
 } = getConfig();
 
+const StyledGithubIcon = styled(GithubIcon)`
+  filter: ${({ theme }) => theme.palette.invertFilter};
+`;
+
 const Wrapper = styled.div`
   margin-top: 10px;
   padding: 0 2px;
   font-size: 12px;
   line-height: normal;
   color: ${({ theme }) => theme.palette.text.primary};
-  background-color: ${({ theme }) => theme.palette.background.mapFooter};
+  background-color: ${({ theme }) => theme.palette.background.paper};
   letter-spacing: normal;
   font-weight: 400;
   margin-left: 30px;
@@ -28,7 +32,6 @@ const Wrapper = styled.div`
   svg {
     vertical-align: -2px;
     margin-right: 4px;
-    filter: ${({ theme }) => theme.palette.invertFilter};
   }
 
   a,
@@ -45,7 +48,7 @@ const OsmappLink = () => (
       rel="noopener"
       title={t('map.github_title')}
     >
-      <GithubIcon width="12" height="12" />
+      <StyledGithubIcon width="12" height="12" />
       osmapp
     </a>{' '}
     <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
