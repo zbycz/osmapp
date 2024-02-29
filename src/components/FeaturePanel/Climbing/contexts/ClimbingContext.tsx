@@ -130,7 +130,7 @@ type ClimbingContextType = {
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
   gradeTable: GradeTable;
   setGradeTable: (gradeTable: GradeTable) => void;
-  preparePhotosAndSetFirst: () => void;
+  preparePhotosAndSet: (photoIndex?: number) => void;
 };
 
 // @TODO generate?
@@ -314,9 +314,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
 
     setPhotoPaths(photos.sort());
   };
-  const preparePhotosAndSetFirst = () => {
+  const preparePhotosAndSet = (photoIndex?: number) => {
     if (photoPaths === null) getAllRoutesPhotos();
-    if (!photoPath && photoPaths?.length > 0) setPhotoPath(photoPaths[0]);
+    if (!photoPath && photoPaths?.length > 0)
+      setPhotoPath(photoPaths[photoIndex || 0]);
   };
 
   const loadPhotoRelatedData = () => {
@@ -411,7 +412,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setArePointerEventsDisabled,
     gradeTable,
     setGradeTable,
-    preparePhotosAndSetFirst,
+    preparePhotosAndSet,
     imageContainerSize,
     setImageContainerSize,
   };

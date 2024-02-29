@@ -22,6 +22,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     ['editorPosition', 'imageContainer'],
     mousePosition,
   );
+
   const closerMousePositionPoint = mousePositionWithEditorPosition
     ? findCloserPoint(getPercentagePosition(mousePositionWithEditorPosition))
     : null;

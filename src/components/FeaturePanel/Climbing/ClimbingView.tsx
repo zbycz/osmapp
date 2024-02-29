@@ -177,7 +177,7 @@ const BackgroundContainer = styled.div<{
   height: 100%;
 `;
 
-export const ClimbingView = () => {
+export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
   const {
     imageSize,
     routeSelectedIndex,
@@ -193,7 +193,7 @@ export const ClimbingView = () => {
     areRoutesLoading,
     setArePointerEventsDisabled,
     setPhotoZoom,
-    preparePhotosAndSetFirst,
+    preparePhotosAndSet,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -243,7 +243,7 @@ export const ClimbingView = () => {
   };
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
 
-  preparePhotosAndSetFirst();
+  preparePhotosAndSet(photoIndex);
 
   useEffect(() => {
     setIsPhotoLoaded(false);
