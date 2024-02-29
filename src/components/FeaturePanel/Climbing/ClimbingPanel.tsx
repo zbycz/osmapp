@@ -67,14 +67,14 @@ export const ClimbingPanel = ({ footer }) => {
     imageSize,
     photoPath,
     photoRef,
-    preparePhotosAndSetFirst,
+    preparePhotosAndSet,
   } = useClimbingContext();
 
   const onFullScreenClick = () => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
   };
 
-  preparePhotosAndSetFirst();
+  preparePhotosAndSet();
 
   const imageUrl = getCommonsImageUrl(`File:${photoPath}`, 500);
 
