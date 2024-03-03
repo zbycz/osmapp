@@ -33,6 +33,7 @@ export const RouteFloatingMenu = () => {
     photoZoom,
     setIsLineInteractiveAreaHovered,
   } = useClimbingContext();
+
   const machine = getMachine();
 
   const onFinishClimbingRouteClick = () => {
@@ -63,6 +64,35 @@ export const RouteFloatingMenu = () => {
   const onMouseLeave = () => {
     setIsLineInteractiveAreaHovered(false);
   };
+
+  React.useEffect(() => {
+    const downHandler = (e) => {
+      if (e.key === 'b') {
+        onPointTypeChange('bolt');
+      }
+      if (e.key === 'a') {
+        onPointTypeChange('anchor');
+      }
+      if (e.key === 's') {
+        onPointTypeChange('sling');
+      }
+      if (e.key === 'p') {
+        onPointTypeChange('piton');
+      }
+      if (e.key === 'u') {
+        onPointTypeChange('unfinished');
+      }
+      if (e.key === 'n') {
+        onPointTypeChange(null);
+      }
+    };
+
+    window.addEventListener('keydown', downHandler);
+
+    return () => {
+      window.removeEventListener('keydown', downHandler);
+    };
+  }, [onPointTypeChange]);
 
   return (
     <>
@@ -109,7 +139,7 @@ export const RouteFloatingMenu = () => {
                 onPointTypeChange('anchor');
               }}
             >
-              Belay
+              Anchor
             </Button>
             <Button
               onClick={() => {
