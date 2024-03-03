@@ -317,7 +317,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const preparePhotosAndSet = (photoIndex?: number) => {
     if (photoPaths === null) getAllRoutesPhotos();
     if (!photoPath && photoPaths?.length > 0)
-      setPhotoPath(photoPaths[photoIndex || 0]);
+      setPhotoPath(photoPaths[photoIndex ?? 0]);
   };
 
   const loadPhotoRelatedData = () => {
