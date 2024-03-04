@@ -17,9 +17,10 @@ import { nl2br } from '../utils/nl2br';
 import { t, Translation } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import {
-  PROJECT_DECRIPTION, PROJECT_ID,
-  PROJECT_NAME
-} from "../../services/project";
+  PROJECT_DECRIPTION,
+  PROJECT_ID,
+  PROJECT_NAME,
+} from '../../services/project';
 import { LogoOpenclimbing } from '../../assets/LogoOpenclimbing';
 
 export const Content = styled.div`

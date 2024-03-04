@@ -8,11 +8,11 @@ import Document, {
 } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
+import type { DocumentContext } from 'next/dist/shared/lib/utils';
 import { getServerIntl } from '../src/services/intlServer';
 import { InjectIntl, setIntl } from '../src/services/intl';
 import { Favicons } from '../src/helpers/Favicons';
 import { setProjectForSSR } from '../src/services/project';
-import type { DocumentContext } from 'next/dist/shared/lib/utils';
 
 export default class MyDocument extends Document {
   render() {
