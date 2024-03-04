@@ -12,6 +12,8 @@ export default {
   darkmode_on: 'Mode sombre : activé',
   darkmode_off: 'Mode sombre : désactivé',
 
+  'project.osmapp.description': 'Une application OpenStreetMap universelle',
+
   'install.button': 'Installer l’application',
   'install.tabs_aria_label': 'Choisir la plateforme',
   'install.ios_intro': 'Ouvrir osmapp.org dans le <strong>navigateur Safari</strong>',
@@ -26,7 +28,6 @@ export default {
   'install.note':
     'Note : Cette application fait appel à PWA pour permettre une installation rapide et sans faire appel à Google Play ou l’App Store.',
 
-  'homepage.subtitle': 'Une application OpenStreetMap universelle',
   'homepage.how_to_start': 'Commencez en tapant votre requête dans la barre de recherche.\nOu cliquez sur un élément de la carte.',
   'homepage.examples.eg': 'ex : ',
   'homepage.examples.charles_bridge_statues': 'Statuet du pont Charles',

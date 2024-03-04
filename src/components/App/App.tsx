@@ -111,7 +111,7 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
   );
 };
 App.getInitialProps = async (ctx) => {
-  await setIntlForSSR(ctx);
+  await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
   const { hideHomepage: hpCookie } = nextCookies(ctx);
   const featureFromRouter = await getInititalFeature(ctx);

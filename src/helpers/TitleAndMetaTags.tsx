@@ -5,44 +5,52 @@ import { Feature } from '../services/types';
 import { useFeatureContext } from '../components/utils/FeatureContext';
 import { getFullOsmappLink } from '../services/helpers';
 import { getLabel } from './featureLabel';
+import {
+  PROJECT_DECRIPTION,
+  PROJECT_NAME,
+  PROJECT_OG_IMAGE,
+  PROJECT_SERP_DESCRIPTION,
+  PROJECT_URL,
+} from '../services/project';
+import { t } from '../services/intl';
 
-export const OpenGraphTags = ({
-  title = 'OsmAPP',
-  url = 'https://osmapp.org',
-  image = 'https://osmapp.org/screens/karlstejn2.png',
-}) => (
+const OpenGraphTags = ({ title, url, image }) => (
   <>
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
-    <meta property="og:description" content="A universal OpenStreetMap app" />
     <meta property="og:image" content={image} />
     <meta property="twitter:card" content="summary_large_image" />
-    <meta
-      property="description"
-      content="An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!"
-    />
+    <meta property="og:description" content={t(PROJECT_DECRIPTION)} />
+    <meta property="description" content={t(PROJECT_SERP_DESCRIPTION)} />
   </>
 );
 
-const getTitle = (feature: Feature) => {
+const getTitleLabel = (feature: Feature) => {
   const label = getLabel(feature);
   return feature.deleted ? getUtfStrikethrough(label) : label;
 };
 
 export const TitleAndMetaTags = () => {
   const { feature } = useFeatureContext();
+
   if (!feature) {
     return (
       <Head>
-        <title>OsmAPP</title>
-        <OpenGraphTags />
+        <title>{PROJECT_NAME}</title>
+        <OpenGraphTags
+          title={PROJECT_NAME}
+          url={PROJECT_URL}
+          image={PROJECT_OG_IMAGE}
+        />
       </Head>
     );
   }
 
   const osmappLink = getFullOsmappLink(feature);
-  const title = `${getTitle(feature)} · OsmAPP`;
+  const titleLabel = getTitleLabel(feature);
+  const title = `${titleLabel} · ${PROJECT_NAME}`;
+
   return (
     <Head>
       <title>{title}</title>

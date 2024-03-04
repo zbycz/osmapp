@@ -4,7 +4,7 @@ import {
   Position,
   PositionBoth,
 } from './services/types';
-import { View } from './components/utils/MapStateContext';
+import type { View } from './components/utils/MapStateContext';
 
 // Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 export const roundDeg = (deg) => (deg.toFixed ? deg.toFixed(5) : deg);
