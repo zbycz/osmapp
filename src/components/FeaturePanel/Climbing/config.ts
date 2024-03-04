@@ -5,15 +5,16 @@ export const useConfig = () => {
   const theme: any = useTheme();
   const { photoZoom } = useClimbingContext();
 
-  const activeColor = theme.textSecondaryHighlight;
-  const inactiveColor = theme.backgroundSurfaceElevation0;
-  const borderColor = theme.borderInverse;
+  const activeColor = theme.palette.climbing.active;
+  const inactiveColor = theme.palette.climbing.inactive;
+  const borderColor = theme.palette.climbing.border;
+  const selectedColor = theme.palette.climbing.selected;
 
   return {
     pathBorderColor: borderColor,
     pathBorderColorSelected: inactiveColor,
     pathStrokeColor: inactiveColor,
-    pathStrokeColorSelected: activeColor,
+    pathStrokeColorSelected: selectedColor,
     routeNumberBackgroundSelected: activeColor,
     routeNumberBackground: inactiveColor,
     routeNumberTextColorSelected: inactiveColor,
@@ -25,8 +26,8 @@ export const useConfig = () => {
     anchorBorderColor: borderColor,
     anchorBorderColorSelected: inactiveColor,
 
-    pathBorderWidth: 6 / photoZoom.scale,
-    pathBorderOpacity: 0.8,
+    pathBorderWidth: 5 / photoZoom.scale,
+    pathBorderOpacity: 1,
     pathStrokeWidth: 4 / photoZoom.scale,
   };
 };

@@ -34,7 +34,7 @@ export const Content = styled.div`
     margin: 1em 0;
 
     strong {
-      color: ${({ theme }) => theme.palette.link};
+      color: ${({ theme }) => theme.palette.primary.main};
       font-weight: normal;
     }
 

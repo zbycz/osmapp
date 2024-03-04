@@ -20,7 +20,6 @@ const MaxWidthContainer = styled.div`
 `;
 const Container = styled.div`
   width: 100%;
-
   margin: 0 auto;
 `;
 const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
@@ -28,12 +27,13 @@ const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
   display: flex;
   justify-content: center;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
-  background-color: ${({ isSelected }) =>
-    isSelected ? '#ccc' : 'transparent'};
+  /* background-color: ${({ isSelected }) =>
+    isSelected ? '#ccc' : 'transparent'}; */
   background: ${({ isSelected, theme }) =>
-    isSelected ? theme.backgroundSurfaceElevation1 : 'transparent'};
+    isSelected ? theme.palette.action.selected : 'transparent'};
   position: relative;
   font-size: 16px;
+  border-top: solid 1px ${({ theme }) => theme.palette.divider};
 `;
 const DragHandler = styled.div`
   width: 30px;
@@ -55,14 +55,14 @@ const HighlightedDropzone = styled.div<{ isActive: boolean }>`
   margin-top: -2px;
   height: 4px;
   background: ${({ isActive, theme }) =>
-    isActive ? theme.borderSecondary : 'transparent'};
+    isActive ? theme.palette.climbing.active : 'transparent'};
   z-index: 1000000;
 `;
 const TableHeader = styled.div`
   display: flex;
   justify-content: center;
   font-weight: 700;
-  color: ${({ theme }) => theme.textSubdued};
+  color: ${({ theme }) => theme.palette.text.hint};
   font-size: 11px;
   padding-top: 12px;
   padding-bottom: 4px;

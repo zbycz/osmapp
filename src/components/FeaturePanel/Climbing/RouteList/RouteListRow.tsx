@@ -27,7 +27,7 @@ const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
 const NameCell = styled(Cell)`
   flex: 1;
   font-weight: 900;
-  color: ${({ theme }) => theme.textPrimaryDefault};
+  color: ${({ theme }) => theme.palette.climbing.text};
 `;
 const RouteNumberCell = styled(Cell)`
   color: #999;
@@ -41,7 +41,7 @@ const ExpandIcon = styled(ExpandMoreIcon)<{ isExpanded: boolean }>`
 const Row = styled.div<{ isExpanded?: boolean }>`
   min-height: 40px;
   background-color: ${({ isExpanded, theme }) =>
-    isExpanded ? theme.backgroundSurfaceElevation1 : 'none'};
+    isExpanded ? theme.palette.action.selected : 'none'};
   overflow: hidden;
 
   width: 100%;

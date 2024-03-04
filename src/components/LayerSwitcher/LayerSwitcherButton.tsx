@@ -24,7 +24,7 @@ const StyledLayerSwitcher = styled.button`
   border-radius: 5px;
   border: 0;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-  background-color: ${({ theme }) => theme.palette.background.default};
+  background-color: ${({ theme }) => theme.palette.background.paper};
   font-size: 12px;
   color: ${({ theme }) => theme.palette.text.primary};
   outline: 0;

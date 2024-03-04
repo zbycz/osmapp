@@ -35,7 +35,6 @@ const Heading = styled.div`
   margin: 12px 8px 4px;
   font-size: 36px;
   line-height: 0.98;
-  color: ${({ theme }) => theme.palette.text.panelHeading};
 
   :hover {
     text-decoration: underline;
@@ -68,14 +67,14 @@ export const ClimbingPanel = ({ footer }) => {
     imageSize,
     photoPath,
     photoRef,
-    preparePhotosAndSetFirst,
+    preparePhotosAndSet,
   } = useClimbingContext();
 
   const onFullScreenClick = () => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
   };
 
-  preparePhotosAndSetFirst();
+  preparePhotosAndSet();
 
   const imageUrl = getCommonsImageUrl(`File:${photoPath}`, 500);
 

@@ -8,7 +8,7 @@ export const GlobalStyle = createGlobalStyle`
     height: 100%;
     border: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: ${({ theme }) => theme.palette.appBackground};
+    background-color: ${({ theme }) => theme.palette.background.default};
 
     // disable pulling the page around on mobile
     overscroll-behavior: none;
@@ -23,7 +23,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   a, .linkLikeButton {
-    color: ${({ theme }) => theme.palette.link};
+    color: ${({ theme }) => theme.palette.tertiary.main};
     text-decoration: none;
     border: 0;
     padding: 0;
@@ -50,7 +50,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .maplibregl-ctrl-group {
-    background: ${({ theme }) => theme.palette.background.default} !important;
+    background: ${({ theme }) => theme.palette.background.paper} !important;
     .maplibregl-ctrl-icon {
       filter: ${({ theme }) => theme.palette.invertFilter};
     }

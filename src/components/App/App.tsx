@@ -73,6 +73,7 @@ const IndexWithProviders = () => {
   // TODO add correct error boundaries
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
+  const photoIndex = Number(router.query.all?.[3]);
   return (
     <>
       <SearchBox />
@@ -80,7 +81,7 @@ const IndexWithProviders = () => {
       {featureShown && <FeaturePanel />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
-          <ClimbingDialog />
+          <ClimbingDialog photoIndex={photoIndex} />
         </ClimbingContextProvider>
       )}
 
