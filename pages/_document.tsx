@@ -9,12 +9,15 @@ import Document, {
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
 import { getServerIntl } from '../src/services/intlServer';
-import { InjectIntl } from '../src/services/intl';
+import { InjectIntl, setIntl } from '../src/services/intl';
 import { Favicons } from '../src/helpers/Favicons';
+import { setProjectForSSR } from '../src/services/project';
+import type { DocumentContext } from 'next/dist/shared/lib/utils';
 
 export default class MyDocument extends Document {
   render() {
     const { serverIntl, asPath } = this.props as any;
+
     return (
       <Html lang={serverIntl.lang}>
         <Head>
@@ -29,7 +32,7 @@ export default class MyDocument extends Document {
           <link rel="preconnect" href="https://commons.wikimedia.org" />
           <link rel="preconnect" href="https://www.wikidata.org" />
           <link rel="preconnect" href="https://en.wikipedia.org" />
-          {/* we dont need this to change after SSR */}
+          {/* only for bots - we dont need to change this after SSR: */}
           {Object.keys(serverIntl.languages).map((lang) => (
             <link
               key={lang}
@@ -52,8 +55,12 @@ export default class MyDocument extends Document {
   }
 }
 
-MyDocument.getInitialProps = async (ctx) => {
-  const serverIntl = await getServerIntl(ctx); // not available in App, only in this file
+MyDocument.getInitialProps = async (ctx: DocumentContext) => {
+  // server intl is not available in App, only in this file (because we don't want to sent messages over and over again)
+  const serverIntl = await getServerIntl(ctx);
+  setIntl(serverIntl); // for ssr
+
+  setProjectForSSR(ctx);
 
   // Resolution order
   //

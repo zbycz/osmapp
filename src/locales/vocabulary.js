@@ -14,6 +14,13 @@ export default {
   show_more: 'Show more',
   show_less: 'Show less',
 
+  'project.osmapp.description': 'A universal app for OpenStreetMap',
+  'project.osmapp.serpDescription':
+    'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
+
+  'project.openclimbing.description': 'Free wiki climbing map',
+  'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
+
   'install.button': 'Install app',
   'install.tabs_aria_label': 'Choose your platform',
   'install.ios_intro': 'Open osmapp.org in the <strong>Safari browser</strong>',
@@ -26,8 +33,6 @@ export default {
   'install.desktop_install': 'Click the <strong>install button</strong>',
   'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
   'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
-
-  'homepage.subtitle': 'A universal app for OpenStreetMap',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.examples.eg': 'eg.',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
@@ -163,6 +168,7 @@ export default {
   'layerswitcher.intro': 'Thanks to the fact that OpenStreetMap offers source data, anyone can produce different variants of the map.',
   'layerswitcher.add_layer_button': 'Add custom layer',
   'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
+  'layerswitcher.overlays': 'Overlays',
 
   'layers.basic': 'Basic',
   'layers.makina_africa': 'OpenPlaceGuide Africa',

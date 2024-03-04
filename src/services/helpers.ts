@@ -3,6 +3,7 @@ import fetch from 'isomorphic-unfetch';
 import { isServer, isString } from '../components/helpers';
 import { Feature, Position } from './types';
 import { join, roundedToDegUrl } from '../utils';
+import { PROJECT_URL } from './project';
 
 export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
@@ -62,7 +63,7 @@ export const getOsmappLink = (feature: Feature) => {
 };
 
 export const getFullOsmappLink = (feature: Feature) =>
-  `https://osmapp.org${getOsmappLink(feature)}`;
+  `${PROJECT_URL}${getOsmappLink(feature)}`;
 
 export const isSameOsmId = (feature, skeleton) =>
   feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);

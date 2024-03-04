@@ -9,6 +9,12 @@ export default {
   show_more: 'Zobrazit více',
   show_less: 'Zobrazit méně',
 
+  'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
+  'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
+
+  'project.openclimbing.description': 'Otevřená lezecká wiki-mapa',
+  'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
+
   'install.button': 'Stáhnout aplikaci',
   'install.tabs_aria_label': 'Vyberte si svou platformu',
   'install.ios_intro': 'Otevřete osmapp.org v <strong>prohlížeči Safari</strong>',
@@ -21,8 +27,6 @@ export default {
   'install.desktop_install': 'Klikněte na <strong>Instalovat aplikaci</strong>',
   'install.outro': 'To je vše! Aplikaci najdete na své domovské obrazovce.',
   'install.note': 'Poznámka: Používáme technologii PWA – rychlá instalace bez nutnosti Google Play či App Storu.',
-
-  'homepage.subtitle': 'Univerzální appka pro OpenStreetMap',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
   'homepage.examples.eg': 'např.',
   'homepage.examples.charles_bridge_statues': 'Sochy na Karlově mostě',
@@ -157,6 +161,7 @@ export default {
   'layerswitcher.intro': 'Díky tomu, že OpenStreetMap nabízí zdrojová data, tak kdokoliv může vyrobit různé varianty mapy.',
   'layerswitcher.add_layer_button': 'Přidat vlastní vrstvu',
   'layerswitcher.add_layer_prompt': 'Přidat vlastní TMS vrstvu – CORS musí být nastaveno:\n(beta funkcionalita)',
+  'layerswitcher.overlays': 'Překryvné vrstvy',
 
   'layers.basic': 'Základní',
   'layers.outdoor': 'Outdoorová',

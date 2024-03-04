@@ -19,7 +19,7 @@ export default {
   'install.outro': ' ይኼው ነው ተጠናቋል! OsmAPP የሚለውን ምልክት በዋና ገፅዎ ላይ ይፈልጋል.',
   'install.note': 'ማስታወሻ: ይህ አፕሊኬሽን PWA ቴክኖሎጂን ይጠቀማል – ይህም Google Play or App Store መጠቀም ሳያስፈልግ በፈጣኑ መጫን የሚችል ነው።',
 
-  'homepage.subtitle': 'ዓለማቀፍ OpenStreetMap አፕሊኬሽን',
+  'project.osmapp.description': 'ዓለማቀፍ OpenStreetMap አፕሊኬሽን',
   'homepage.how_to_start': 'ጥያቄዎን በመፈለጊያ ሳጥን ውስጥ መፃፍ ይጅምሩ.\n ወይንም ማንኛውንም በካርታው ላይ የሚገኝ ምልክት ጫን ያድርጉ ',
   'homepage.examples.eg': 'ለምሳሌ',
   'homepage.examples.charles_bridge_statues': 'የቻርለስ ድልድይ ሀውልቶች',

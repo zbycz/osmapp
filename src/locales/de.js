@@ -6,6 +6,8 @@ export default {
   close_panel: 'Panel schließen',
   webgl_error: `Ups. Diese Karte setzt die WebGL Technologie voraus.<br /><br />Wenn Du ein kompatibles Gerät hast, versuche die letzte Version des Chrome Browsers zu verwenden.`,
 
+  'project.osmapp.description': 'Eine universelle App für OpenStreetMap',
+
   'install.button': 'App installieren',
   'install.tabs_aria_label': 'Platform wählen',
   'install.ios_intro': 'osmapp.org im <strong>Safari Browser</strong> öffnen',
@@ -19,7 +21,6 @@ export default {
   'install.outro': "Das war's! OsmAPP sollte auf deinem Startbildschirm erscheinen.",
   'install.note': 'Hinweis: Diese App verwendet die PWA Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
 
-  'homepage.subtitle': 'Eine universelle App für OpenStreetMap',
   'homepage.how_to_start': 'Tippe einen Begriff in das Suchfeld.\nOder klicke auf einen Ort auf der Karte.',
   'homepage.examples.eg': 'z.B.',
   'homepage.examples.charles_bridge_statues': 'Statuen auf der Karlsbrücke',

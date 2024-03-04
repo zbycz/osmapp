@@ -6,6 +6,8 @@ export default {
   close_panel: 'Cerrar panel',
   webgl_error: `Ups. Este mapa necesita de la tecnología WebGL.<br /><br />Si tienes un dispositivo compatible, prueba usando la última version del navegador Chrome.`,
 
+  'project.osmapp.description': 'Una app OpenStreetMap universal',
+
   'install.button': 'Instalar app',
   'install.tabs_aria_label': 'Elige tu plataforma',
   'install.ios_intro': 'Abrir osmapp.org en el <strong>navegador Safari</strong>',
@@ -19,7 +21,6 @@ export default {
   'install.outro': 'Esto es todo! Busca OsmAPP en tu pantalla principal.',
   'install.note': 'Nota: Esta app usa la tecnología PWA – con instalación rápida sin necesidad de Google Play ni App Store.',
 
-  'homepage.subtitle': 'Una app OpenStreetMap universal',
   'homepage.how_to_start': 'Comienza escribiendo tu búsqueda en la caja de búsqueda. \nO haz click en cualquier elemento en el mapa.',
   'homepage.examples.eg': 'ej.',
   'homepage.examples.charles_bridge_statues': 'Estatuas del puente Charles',

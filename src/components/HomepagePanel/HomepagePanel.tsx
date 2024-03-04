@@ -16,6 +16,11 @@ import GithubIcon from '../../assets/GithubIcon';
 import { nl2br } from '../utils/nl2br';
 import { t, Translation } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
+import {
+  PROJECT_DECRIPTION, PROJECT_ID,
+  PROJECT_NAME
+} from "../../services/project";
+import { LogoOpenclimbing } from '../../assets/LogoOpenclimbing';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -58,6 +63,23 @@ const Spacer = styled.div`
   padding-bottom: 2em;
 `;
 
+const Examples = () => (
+  <>
+    <Link href="/way/34633854">Empire State Building</Link> •{' '}
+    <Link href="/way/119016167">
+      {t('homepage.examples.charles_bridge_statues')}
+    </Link>
+  </>
+);
+
+const ExamplesClimbing = () => (
+  <>
+    <Link href="/relation/17262674">Prokopské údolí</Link> •{' '}
+    <Link href="/relation/17130100">Roviště</Link> •{' '}
+    <Link href="/relation/17089246">Lomy nad Velkou</Link>
+  </>
+);
+
 export const HomepagePanel = () => {
   const { feature, preview, homepageShown, hideHomepage, persistHideHomepage } =
     useFeatureContext();
@@ -71,6 +93,8 @@ export const HomepagePanel = () => {
     return null;
   }
 
+  const isClimbing = PROJECT_ID === 'openclimbing';
+
   return (
     <PanelWrapper>
       <PanelScrollbars>
@@ -78,12 +102,16 @@ export const HomepagePanel = () => {
         <Content>
           <div>
             <Center mb>
-              <StyledLogoOsmapp width={130} height={130} />
+              {isClimbing ? (
+                <LogoOpenclimbing width={130} height={130} />
+              ) : (
+                <StyledLogoOsmapp width={130} height={130} />
+              )}
               <Typography variant="h4" component="h1" color="inherit">
-                OsmAPP
+                {PROJECT_NAME}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
-                {t('homepage.subtitle')}
+                {t(PROJECT_DECRIPTION)}
               </Typography>
             </Center>
 
@@ -93,10 +121,7 @@ export const HomepagePanel = () => {
 
             <Typography variant="body2" paragraph>
               {t('homepage.examples.eg')}{' '}
-              <Link href="/way/34633854">Empire State Building</Link> •{' '}
-              <Link href="/way/119016167">
-                {t('homepage.examples.charles_bridge_statues')}
-              </Link>
+              {isClimbing ? <ExamplesClimbing /> : <Examples />}
             </Typography>
 
             <Center mb>
