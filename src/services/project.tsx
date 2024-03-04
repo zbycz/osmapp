@@ -40,8 +40,9 @@ const domains: Record<string, Project> = {
   'osmapp.org': osmapp,
   'openclimbing.org': openclimbing,
   '127.0.0.1:3000': openclimbing,
-  '^osmapp-git(.*)climbing(.*)vercel.app$': openclimbing,
 };
+const prUrl = (host: string) =>
+  /^osmapp-git(.*)climbing(.*)vercel.app$/.test(host) ? openclimbing : null;
 
 // Globals
 export let PROJECT_ID = 'error: PROJECT not set';
@@ -52,7 +53,7 @@ export let PROJECT_DECRIPTION = 'error: PROJECT not set' as TranslationId;
 export let PROJECT_SERP_DESCRIPTION = 'error: PROJECT not set' as TranslationId;
 
 const setProject = (host) => {
-  const project = domains[host] ?? osmappDev;
+  const project = domains[host] ?? prUrl(host) ?? osmappDev;
   PROJECT_ID = project.id;
   PROJECT_NAME = project.name;
   PROJECT_URL = project.url;
