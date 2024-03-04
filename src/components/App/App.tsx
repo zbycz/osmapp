@@ -15,6 +15,7 @@ import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
+import { setIntlForSSR } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
 import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
@@ -109,6 +110,8 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
   );
 };
 App.getInitialProps = async (ctx) => {
+  await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
+
   const { hideHomepage: hpCookie } = nextCookies(ctx);
   const featureFromRouter = await getInititalFeature(ctx);
   const initialMapView = await getInitialMapView(ctx);
