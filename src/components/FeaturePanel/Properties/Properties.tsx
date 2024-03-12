@@ -1,4 +1,5 @@
 import React from 'react';
+import { Alert } from '@material-ui/lab';
 import { FeaturedTags } from '../FeaturedTags';
 import { IdSchemeFields } from './IdSchemeFields';
 import { t } from '../../../services/intl';
@@ -8,7 +9,6 @@ import { Subheading } from '../helpers/Subheading';
 import { Wrapper } from './Wrapper';
 import { Table } from './Table';
 import { getUrlOsmId } from '../../../services/helpers';
-import { Alert } from '@material-ui/lab';
 import { captureException } from '../../../helpers/sentry';
 
 class ErrorBoundary extends React.Component<
@@ -20,7 +20,7 @@ class ErrorBoundary extends React.Component<
     this.state = { hasError: false };
   }
 
-  static getDerivedStateFromError(error) {
+  static getDerivedStateFromError() {
     return { hasError: true };
   }
 
@@ -31,7 +31,10 @@ class ErrorBoundary extends React.Component<
   }
 
   render() {
-    if (this.state.hasError) {
+    const { hasError } = this.state;
+    const { fallback, children } = this.props;
+
+    if (hasError) {
       // const tryAgain = () => this.setState({ hasError: false });
 
       return (
@@ -44,12 +47,12 @@ class ErrorBoundary extends React.Component<
             There was an error displaying fields. Showing tags instead.
           </Alert>
 
-          {this.props.fallback || null}
+          {fallback || null}
         </div>
       );
     }
 
-    return this.props.children;
+    return children;
   }
 }
 
