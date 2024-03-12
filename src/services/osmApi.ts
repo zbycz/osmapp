@@ -10,6 +10,8 @@ import { fetchSchemaTranslations } from './tagging/translations';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
+const getOsmParentUrl = ({ type, id }) =>
+  `https://api.openstreetmap.org/api/0.6/${type}/${id}/relations.json`;
 const getOsmHistoryUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
@@ -30,7 +32,7 @@ const getOsmPromise = async (apiId) => {
     return elements?.[0];
   } catch (e) {
     if (e instanceof FetchError && e.code === '410') {
-      const { elements } = await fetchJson(getOsmHistoryUrl(apiId));
+      const { elements } = await fetchJson(getOsmHistoryUrl(apiId)); // TODO use multi fetch instead of history: https://wiki.openstreetmap.org/wiki/API_v0.6#Multi_fetch:_GET_/api/0.6/[nodes|ways|relations]?#parameters
       const length = elements?.length;
 
       if (length >= 2) {
@@ -41,6 +43,11 @@ const getOsmPromise = async (apiId) => {
     }
     throw e;
   }
+};
+
+const getOsmParentPromise = async (apiId) => {
+  const { elements } = await fetchJson(getOsmParentUrl(apiId));
+  return { elements };
 };
 
 /**
@@ -97,7 +104,7 @@ const osmToFeature = (element): Feature => {
   };
 };
 
-async function fetchFeatureWithCenter(apiId: OsmApiId) {
+const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   const [element, center] = await Promise.all([
     getOsmPromise(apiId),
     getCenterPromise(apiId),
@@ -110,26 +117,45 @@ async function fetchFeatureWithCenter(apiId: OsmApiId) {
   }
 
   return addSchemaToFeature(feature);
-}
+};
 
-const shouldFetchMembers = (feature: Feature) =>
+const fetchParentFeatures = async (apiId: OsmApiId) => {
+  const { elements } = await getOsmParentPromise(apiId);
+  return elements.map((element) => addSchemaToFeature(osmToFeature(element)));
+};
+
+const assignRoleToEach = (memberFeatures: Feature[], feature: Feature) => {
+  memberFeatures.forEach((memberFeature, index) => {
+    memberFeature.osmMeta.role = feature.members[index].role; // eslint-disable-line no-param-reassign
+  });
+};
+
+const isClimbingRelation = (feature: Feature) =>
   feature.osmMeta.type === 'relation' &&
   (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
 
 // TODO we can probably fetch full.json for all relations eg https://api.openstreetmap.org/api/0.6/relation/14334600/full.json - lets measure how long it takes for different sizes
-export const addMemberFeatures = async (feature: Feature) => {
-  if (!shouldFetchMembers(feature)) {
+// TODO parent should be probably fetched for every feaure in fetchFeatureWithCenter()
+export const addMembersAndParents = async (
+  feature: Feature,
+): Promise<Feature> => {
+  if (!isClimbingRelation(feature)) {
     return feature;
   }
 
   const start = performance.now();
 
+  const parentPromise = fetchParentFeatures(feature.osmMeta);
+
   const apiIds = feature.members.map(({ type, ref }) => ({ type, id: ref }));
-  const promises = apiIds.map((apiId) => fetchFeatureWithCenter(apiId)); // TODO optimize n+1 center-requests or fetch full
-  const memberFeatures = await Promise.all(promises);
-  memberFeatures.forEach((memberFeature, index) => {
-    memberFeature.osmMeta.role = feature.members[index].role; // eslint-disable-line no-param-reassign
-  });
+  const memberPromises = apiIds.map((apiId) => fetchFeatureWithCenter(apiId)); // TODO optimize n+1 center-requests or fetch full
+
+  const [parentFeatures, ...memberFeatures] = await Promise.all([
+    parentPromise,
+    ...memberPromises,
+  ]);
+
+  assignRoleToEach(memberFeatures, feature);
 
   const duration = Math.round(performance.now() - start);
   console.log(`addMemberFeaturesToCrag took ${duration} ms`); // eslint-disable-line no-console
@@ -137,6 +163,7 @@ export const addMemberFeatures = async (feature: Feature) => {
   return {
     ...feature,
     memberFeatures,
+    parentFeatures,
   };
 };
 
@@ -147,10 +174,10 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
   try {
     const apiId = getApiId(shortId);
-    const withCenter = await fetchFeatureWithCenter(apiId);
-    const withMembers = await addMemberFeatures(withCenter);
+    const feature = await fetchFeatureWithCenter(apiId);
+    const finalFeature = await addMembersAndParents(feature);
 
-    return withMembers;
+    return finalFeature;
   } catch (e) {
     console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
 

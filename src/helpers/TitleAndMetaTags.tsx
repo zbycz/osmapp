@@ -1,10 +1,10 @@
 import React from 'react';
 import Head from 'next/head';
-import { getUtfStrikethrough } from '../utils';
+import { getUtfStrikethrough, join } from '../utils';
 import { Feature } from '../services/types';
 import { useFeatureContext } from '../components/utils/FeatureContext';
 import { getFullOsmappLink } from '../services/helpers';
-import { getLabel } from './featureLabel';
+import { getLabel, getParentLabel } from './featureLabel';
 import {
   PROJECT_DECRIPTION,
   PROJECT_NAME,
@@ -27,7 +27,8 @@ const OpenGraphTags = ({ title, url, image }) => (
 );
 
 const getTitleLabel = (feature: Feature) => {
-  const label = getLabel(feature);
+  const label = join(getLabel(feature), ' – ', getParentLabel(feature));
+
   return feature.deleted ? getUtfStrikethrough(label) : label;
 };
 
