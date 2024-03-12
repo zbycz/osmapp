@@ -55,7 +55,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     ));
   }
 
-  if (tagsForField?.length >= 2) {
+  if (tagsForField?.length >= 1) {
     return (
       <>
         {tagsForField.map(({ key, value: value2 }) => (
