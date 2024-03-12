@@ -12,6 +12,7 @@ import { getLabel } from '../../../helpers/featureLabel';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { getOsmappLink } from '../../../services/helpers';
 import { StarButton } from '../ImageSection/StarButton';
+import Link from 'next/link';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -29,6 +30,10 @@ const HeadingContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+`;
+
+const ParentItem = styled.div`
+  margin: 12px 8px 0 8px;
 `;
 
 const Heading = styled.div`
@@ -108,6 +113,16 @@ export const ClimbingPanel = ({ footer }) => {
               <ShowFullscreen onClick={onFullScreenClick} />
             </ThumbnailContainer>
           )}
+
+          {feature.parentFeatures?.map((parentFeature) => (
+            <ParentItem>
+              {'< '}
+              <Link href={getOsmappLink(parentFeature)}>
+                {getLabel(parentFeature)}
+              </Link>
+            </ParentItem>
+          ))}
+
           <HeadingContainer>
             <Heading onClick={onFullScreenClick}>{label}</Heading>
             <StarButton />
