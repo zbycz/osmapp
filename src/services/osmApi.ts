@@ -130,13 +130,16 @@ const assignRoleToEach = (memberFeatures: Feature[], feature: Feature) => {
   });
 };
 
-const shouldFetchMembers = (feature: Feature) =>
+const isClimbingRelation = (feature: Feature) =>
   feature.osmMeta.type === 'relation' &&
   (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
 
 // TODO we can probably fetch full.json for all relations eg https://api.openstreetmap.org/api/0.6/relation/14334600/full.json - lets measure how long it takes for different sizes
-export const addMemberFeatures = async (feature: Feature): Promise<Feature> => {
-  if (!shouldFetchMembers(feature)) {
+// TODO parent should be probably fetched for every feaure in fetchFeatureWithCenter()
+export const addMembersAndParents = async (
+  feature: Feature,
+): Promise<Feature> => {
+  if (!isClimbingRelation(feature)) {
     return feature;
   }
 
@@ -171,10 +174,10 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
   try {
     const apiId = getApiId(shortId);
-    const withCenter = await fetchFeatureWithCenter(apiId);
-    const withMembers = await addMemberFeatures(withCenter);
+    const feature = await fetchFeatureWithCenter(apiId);
+    const finalFeature = await addMembersAndParents(feature);
 
-    return withMembers;
+    return finalFeature;
   } catch (e) {
     console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
 

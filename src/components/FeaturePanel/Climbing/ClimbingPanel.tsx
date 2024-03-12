@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { CircularProgress } from '@material-ui/core';
 import Router from 'next/router';
+import Link from 'next/link';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
@@ -12,7 +13,6 @@ import { getLabel } from '../../../helpers/featureLabel';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { getOsmappLink } from '../../../services/helpers';
 import { StarButton } from '../ImageSection/StarButton';
-import Link from 'next/link';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
