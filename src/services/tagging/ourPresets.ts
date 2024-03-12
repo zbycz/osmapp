@@ -124,6 +124,18 @@ export const ourPresets = {
       climbing: 'crag',
     },
   },
+  'climbing/area': {
+    icon: 'temaki-abseiling',
+    geometry: ['relation'],
+    fields: ['name'],
+    tags: {
+      climbing: 'area',
+    },
+    addTags: {
+      sport: 'climbing',
+      climbing: 'area',
+    },
+  },
 } as RawPresets;
 
 export const getOurTranslations = (lang) => ({
@@ -140,6 +152,10 @@ export const getOurTranslations = (lang) => ({
         },
         'climbing/crag': {
           name: 'Climbing crag',
+          terms: 'rock climbing,climbing',
+        },
+        'climbing/area': {
+          name: 'Climbing area',
           terms: 'rock climbing,climbing',
         },
       },
