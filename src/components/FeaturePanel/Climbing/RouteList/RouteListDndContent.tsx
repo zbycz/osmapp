@@ -72,7 +72,7 @@ const NameHeader = styled.div`
   padding-left: 40px;
 `;
 const DifficultyHeader = styled.div`
-  width: 130px;
+  width: 115px;
 `;
 
 export const RouteListDndContent = ({ isEditable }) => {

@@ -8,10 +8,10 @@ import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { emptyRoute } from '../utils/emptyRoute';
 import { RouteNumber } from '../RouteNumber';
-import { convertGrade } from '../utils/routeGrade';
 
 import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
+import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -26,8 +26,9 @@ const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
 `;
 const NameCell = styled(Cell)`
   flex: 1;
-  font-weight: 900;
-  color: ${({ theme }) => theme.palette.climbing.text};
+`;
+const DifficultyCell = styled(Cell)`
+  margin-right: 8px;
 `;
 const RouteNumberCell = styled(Cell)`
   color: #999;
@@ -77,7 +78,6 @@ export const RenderListRow = ({
     selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
-    gradeTable,
     getPhotoInfoForRoute,
   } = useClimbingContext();
 
@@ -121,12 +121,6 @@ export const RenderListRow = ({
     index,
     isExpanded,
   };
-  const convertedGrade = convertGrade(
-    gradeTable,
-    tempRoute.difficulty?.gradeSystem,
-    selectedRouteSystem,
-    tempRoute.difficulty?.grade,
-  );
 
   return (
     <Container ref={ref}>
@@ -153,9 +147,12 @@ export const RenderListRow = ({
             />
           )}
         </NameCell>
-        <Cell width={50}>
-          {getText(convertedGrade ?? tempRoute.difficulty?.grade)}
-        </Cell>
+        <DifficultyCell width={50}>
+          <RouteDifficultyBadge
+            routeDifficulty={tempRoute.difficulty}
+            selectedRouteSystem={selectedRouteSystem}
+          />
+        </DifficultyCell>
 
         <Cell width={50}>
           <IconButton

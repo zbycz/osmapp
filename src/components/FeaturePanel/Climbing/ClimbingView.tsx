@@ -40,18 +40,18 @@ const Container = styled.div`
       text-align: center;
       line-height: 0px;
       font-size: 20px;
-      color: ${({ theme }) => theme.palette.climbing.text};
+      color: ${({ theme }) => theme.palette.primary.text};
       letter-spacing: 1px;
     }
 
     &:hover {
       &::before {
-        background-color: ${({ theme }) => theme.palette.climbing.active};
-        border: solid 1px ${({ theme }) => theme.palette.climbing.active};
+        background-color: ${({ theme }) => theme.palette.primary.main};
+        border: solid 1px ${({ theme }) => theme.palette.primary.main};
         color: ${({ theme }) => theme.palette.primary.contrastText};
       }
       &::after {
-        border-color: ${({ theme }) => theme.palette.climbing.active};
+        border-color: ${({ theme }) => theme.palette.primary.main};
         transition: all 0.5s ease-out;
         border-width: 1px;
         margin-top: 6px;
@@ -153,6 +153,7 @@ const NoPhoto = styled.div<{ isVisible: boolean }>`
 `;
 
 const BlurContainer = styled.div<{ isVisible: boolean }>`
+  -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
   visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};

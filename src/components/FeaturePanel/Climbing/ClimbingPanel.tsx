@@ -24,6 +24,7 @@ const ThumbnailContainer = styled.div<{ height: number }>`
   position: relative;
   :hover ${FullscreenIconContainer} {
     visibility: visible;
+    -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     background-color: rgba(0, 0, 0, 0.5);
     cursor: pointer;
@@ -37,7 +38,11 @@ const HeadingContainer = styled.div`
 `;
 
 const ParentItem = styled.div`
-  margin: 12px 8px 0 8px;
+  margin: 12px 8px -8px 8px;
+  a {
+    color: ${({ theme }) => theme.palette.secondary.main};
+    font-size: 13px;
+  }
 `;
 
 const Heading = styled.div`
@@ -116,8 +121,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
 
           {feature.parentFeatures?.map((parentFeature) => (
             <ParentItem>
-              {'< '}
-              <Link href={getOsmappLink(parentFeature)}>
+              <Link href={getOsmappLink(parentFeature)} color="secondary">
                 {getLabel(parentFeature)}
               </Link>
             </ParentItem>
