@@ -5,8 +5,8 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { FeatureImage } from './FeatureImage';
 import { t } from '../../../services/intl';
 import { SHOW_PROTOTYPE_UI } from '../../../config';
-import { PoiDescription } from './PoiDescription';
-import { StarButton } from './StarButton';
+import { PoiDescriptionDark } from './PoiDescription';
+import { StarButtonDark } from './StarButton';
 import { StyledActionButton } from './utils';
 
 export const ImageSection = () => {
@@ -15,7 +15,7 @@ export const ImageSection = () => {
 
   return (
     <FeatureImage feature={feature} ico={properties.class}>
-      <PoiDescription />
+      <PoiDescriptionDark />
 
       {SHOW_PROTOTYPE_UI && (
         <>
@@ -28,7 +28,7 @@ export const ImageSection = () => {
         </>
       )}
 
-      <StarButton />
+      <StarButtonDark />
 
       {SHOW_PROTOTYPE_UI && (
         <>

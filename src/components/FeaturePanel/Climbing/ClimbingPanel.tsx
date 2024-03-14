@@ -1,8 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 import Router from 'next/router';
 import Link from 'next/link';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
@@ -13,6 +14,9 @@ import { getLabel } from '../../../helpers/featureLabel';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { getOsmappLink } from '../../../services/helpers';
 import { StarButton } from '../ImageSection/StarButton';
+import { OsmError } from '../OsmError';
+import { Properties } from '../Properties/Properties';
+import { PoiDescription } from '../ImageSection/PoiDescription';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -40,12 +44,8 @@ const Heading = styled.div`
   margin: 12px 8px 4px;
   font-size: 36px;
   line-height: 0.98;
-
-  :hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
 `;
+
 const Thumbnail = styled.img<{ isLoading: boolean }>`
   width: 100%;
   position: absolute;
@@ -63,7 +63,7 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export const ClimbingPanel = ({ footer }) => {
+export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
 
@@ -124,9 +124,30 @@ export const ClimbingPanel = ({ footer }) => {
           ))}
 
           <HeadingContainer>
-            <Heading onClick={onFullScreenClick}>{label}</Heading>
+            <Heading>{label}</Heading>
             <StarButton />
           </HeadingContainer>
+
+          <PoiDescription />
+
+          <OsmError />
+
+          <div style={{ padding: '35px 15px 5px' }}>
+            <Properties showTags={showTagsTable} />
+          </div>
+
+          <div style={{ padding: '3em 15px', textAlign: 'center' }}>
+            <Button
+              color="primary"
+              variant="outlined"
+              size="large"
+              startIcon={<ZoomInIcon fontSize="inherit" />}
+              onClick={onFullScreenClick}
+            >
+              Show crag detail
+            </Button>
+          </div>
+
           <RouteList />
 
           {/* @TODO unite with parent panel */}
