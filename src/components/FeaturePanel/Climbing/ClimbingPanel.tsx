@@ -132,10 +132,6 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
 
           <OsmError />
 
-          <div style={{ padding: '35px 15px 5px' }}>
-            <Properties showTags={showTagsTable} />
-          </div>
-
           <div style={{ padding: '3em 15px', textAlign: 'center' }}>
             <Button
               color="primary"
@@ -149,6 +145,10 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
           </div>
 
           <RouteList />
+
+          <div style={{ padding: '35px 15px 5px' }}>
+            <Properties showTags={showTagsTable} />
+          </div>
 
           {/* @TODO unite with parent panel */}
           <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
