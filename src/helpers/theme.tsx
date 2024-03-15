@@ -29,7 +29,11 @@ const lightTheme = createMuiTheme({
     },
     invertFilter: 'invert(0)',
     climbing: {
-      text: '#0f6148ff',
+      primary: '#D1D1D1',
+      secondary: '#202020',
+      tertiary: '#666',
+
+      // @TODO: following colors should be deleted in the future
       active: '#00854dff',
       inactive: '#f6f6f6ff',
       border: '#555555ff',
@@ -62,7 +66,11 @@ const darkTheme = createMuiTheme({
     },
     invertFilter: 'invert(1)',
     climbing: {
-      text: '#61dbb7ff',
+      primary: '#000000',
+      secondary: '#fff',
+      tertiary: '#666',
+
+      // @TODO: following colors should be deleted in the future
       active: '#2fbc81ff',
       inactive: '#0a0a0aff',
       border: '#ffffffff',

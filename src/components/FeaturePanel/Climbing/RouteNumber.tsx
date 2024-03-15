@@ -1,65 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Tooltip, useTheme } from '@material-ui/core';
-import { useConfig } from './config';
-
-const useColor = ({
-  isSelected,
-  hasPathOnThisPhoto,
-  isOnThisPhoto,
-  hasPathInDifferentPhoto,
-  isOnDifferentPhoto,
-}) => {
-  const theme: any = useTheme();
-  const config = useConfig();
-
-  if (hasPathOnThisPhoto && isSelected) {
-    return {
-      background: config.routeNumberBackgroundSelected,
-      text: config.routeNumberTextColorSelected,
-      border: `solid 1px ${config.routeNumberBorderColorSelected}`,
-    };
-  }
-  if (hasPathOnThisPhoto) {
-    return {
-      background: config.routeNumberBackground,
-      text: config.routeNumberTextColor,
-      border: `solid 1px ${config.routeNumberBorderColor}`,
-    };
-  }
-  if (isOnThisPhoto) {
-    return {
-      background: config.routeNumberBackground,
-      text: config.routeNumberTextColor,
-      border: `dashed 1px ${config.routeNumberBorderColor}`,
-    };
-  }
-  if (hasPathInDifferentPhoto) {
-    return {
-      background: 'transparent',
-      text: isSelected
-        ? theme.palette.climbing.text
-        : theme.palette.text.primary,
-      border: `solid 1px ${config.routeNumberBorderColor}`,
-    };
-  }
-  if (isOnDifferentPhoto) {
-    return {
-      background: 'transparent',
-      text: isSelected
-        ? theme.palette.climbing.text
-        : theme.palette.text.primary,
-      border: `dashed 1px ${config.routeNumberBorderColor}`,
-    };
-  }
-
-  return {
-    background: 'transparent',
-    text: theme.palette.text.hint,
-    border: 'solid 1px transparent',
-  };
-};
+import { Tooltip } from '@material-ui/core';
+import { useRouteNumberColors } from './utils/useRouteNumberColors';
 
 const Container = styled.div<{
   colors: Record<string, string>;
@@ -86,7 +29,7 @@ export const RouteNumber = ({ children, isSelected, photoInfoForRoute }) => {
     photoInfoForRoute === 'hasPathInDifferentPhoto';
   const isOnDifferentPhoto = photoInfoForRoute === 'isOnDifferentPhoto';
 
-  const colors = useColor({
+  const colors = useRouteNumberColors({
     isSelected,
     hasPathOnThisPhoto,
     isOnThisPhoto,

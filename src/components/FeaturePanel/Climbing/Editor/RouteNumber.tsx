@@ -2,7 +2,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { useConfig } from '../config';
+import { useRouteNumberColors } from '../utils/useRouteNumberColors';
 
 type Props = {
   children: number;
@@ -35,8 +35,6 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   const OUTLINE_WIDTH = 2 / photoZoom.scale;
   const HOVER_WIDTH = 10 / photoZoom.scale;
   const TEXT_Y_SHIFT = 15 / photoZoom.scale;
-
-  const config = useConfig();
 
   const getX = () => {
     const isFarRight = x + RECT_WIDTH / 2 + OUTLINE_WIDTH > imageSize.width;
@@ -73,6 +71,11 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   };
   const isSelected = isRouteSelected(routeNumber);
 
+  const colors = useRouteNumberColors({
+    isSelected,
+    hasPathOnThisPhoto: true,
+  });
+
   return (
     <>
       <HoverableRouteName
@@ -91,11 +94,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         width={RECT_WIDTH + OUTLINE_WIDTH}
         height={RECT_HEIGHT + OUTLINE_WIDTH}
         rx="10"
-        fill={
-          isSelected
-            ? config.routeNumberBorderColorSelected
-            : config.routeNumberBorderColor
-        }
+        fill={colors.border}
         {...commonProps}
       />
       <RouteNameBox
@@ -104,22 +103,14 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         width={RECT_WIDTH}
         height={RECT_HEIGHT}
         rx="10"
-        fill={
-          isSelected
-            ? config.routeNumberBackgroundSelected
-            : config.routeNumberBackground
-        }
+        fill={colors.background}
         {...commonProps}
       />
       <Text
         x={newX}
         y={newY + TEXT_Y_SHIFT}
         scale={photoZoom.scale}
-        fill={
-          isSelected
-            ? config.routeNumberTextColorSelected
-            : config.routeNumberTextColor
-        }
+        fill={colors.text}
         textAnchor="middle"
         {...commonProps}
       >

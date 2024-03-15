@@ -15,12 +15,7 @@ export const useConfig = () => {
     pathBorderColorSelected: inactiveColor,
     pathStrokeColor: inactiveColor,
     pathStrokeColorSelected: selectedColor,
-    routeNumberBackgroundSelected: activeColor,
-    routeNumberBackground: inactiveColor,
-    routeNumberTextColorSelected: inactiveColor,
-    routeNumberTextColor: activeColor,
-    routeNumberBorderColorSelected: inactiveColor,
-    routeNumberBorderColor: activeColor,
+
     anchorColor: inactiveColor,
     anchorColorSelected: activeColor,
     anchorBorderColor: borderColor,
