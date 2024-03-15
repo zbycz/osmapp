@@ -10,7 +10,7 @@ import { getCsvGradeData } from '../utils/routeGrade';
 import { invertedBoltCodeMap } from '../utils/boltCodes';
 
 const Container = styled.div`
-  padding-bottom: 65px;
+  padding-bottom: 20px;
   position: relative; // mobile safari fix
 `;
 const ButtonContainer = styled.div`
