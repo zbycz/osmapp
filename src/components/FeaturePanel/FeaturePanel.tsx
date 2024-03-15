@@ -70,8 +70,11 @@ export const FeaturePanel = () => {
 
   if (tags.climbing === 'crag') {
     return (
-      <ClimbingContextProvider feature={feature}>
-        <ClimbingPanel footer={footer} />
+      <ClimbingContextProvider
+        feature={feature}
+        key={getUrlOsmId(osmMeta) + (deleted && 'del')} // TODO: hack to reset state
+      >
+        <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
       </ClimbingContextProvider>
     );
   }
