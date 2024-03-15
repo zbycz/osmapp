@@ -38,7 +38,7 @@ const HeadingContainer = styled.div`
 `;
 
 const ParentItem = styled.div`
-  margin: 12px 8px -8px 8px;
+  margin: 12px 8px -4px 8px;
   a {
     color: ${({ theme }) => theme.palette.secondary.main};
     font-size: 13px;
@@ -119,13 +119,13 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
             </ThumbnailContainer>
           )}
 
-          {feature.parentFeatures?.map((parentFeature) => (
-            <ParentItem>
+          <ParentItem>
+            {feature.parentFeatures?.map((parentFeature) => (
               <Link href={getOsmappLink(parentFeature)} color="secondary">
                 {getLabel(parentFeature)}
               </Link>
-            </ParentItem>
-          ))}
+            ))}
+          </ParentItem>
 
           <HeadingContainer>
             <Heading>{label}</Heading>
@@ -136,18 +136,6 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
 
           <OsmError />
 
-          <div style={{ padding: '3em 15px', textAlign: 'center' }}>
-            <Button
-              color="primary"
-              variant="outlined"
-              size="large"
-              startIcon={<ZoomInIcon fontSize="inherit" />}
-              onClick={onFullScreenClick}
-            >
-              Show crag detail
-            </Button>
-          </div>
-
           <RouteList />
 
           <div style={{ padding: '35px 15px 5px' }}>
@@ -157,6 +145,18 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
           {/* @TODO unite with parent panel */}
           <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
         </PanelScrollbars>
+        <div style={{ padding: '8px' }}>
+          <Button
+            color="primary"
+            size="large"
+            startIcon={<ZoomInIcon fontSize="inherit" />}
+            onClick={onFullScreenClick}
+            fullWidth
+            variant="contained"
+          >
+            Show crag detail
+          </Button>
+        </div>
       </PanelWrapper>
     </>
   );
