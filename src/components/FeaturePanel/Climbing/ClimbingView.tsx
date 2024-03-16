@@ -146,12 +146,6 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   display: flex;
 `;
 
-const NoPhoto = styled.div<{ isVisible: boolean }>`
-  text-align: center;
-  color: ${({ theme }) => theme.palette.text.hint};
-  padding: 10px;
-`;
-
 const BlurContainer = styled.div<{ isVisible: boolean }>`
   -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
@@ -282,21 +276,21 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
           </ArrowExpanderButton>
         </ArrowExpanderContainer>
       )}
-      <SplitPane
-        split="horizontal"
-        minSize={0}
-        maxSize="100%"
-        size={splitPaneHeight ?? '60vh'}
-        onDragStarted={onDragStarted}
-        onDragFinished={onDragFinished}
-        pane1Style={{ maxHeight: '90%' }}
-      >
-        <BackgroundContainer
-          imageHeight={imageSize.height}
-          imageUrl={imageUrl}
-          isVisible={isPhotoLoaded}
+      {photoPath ? (
+        <SplitPane
+          split="horizontal"
+          minSize={0}
+          maxSize="100%"
+          size={splitPaneHeight ?? '60vh'}
+          onDragStarted={onDragStarted}
+          onDragFinished={onDragFinished}
+          pane1Style={{ maxHeight: '90%' }}
         >
-          {photoPath ? (
+          <BackgroundContainer
+            imageHeight={imageSize.height}
+            imageUrl={imageUrl}
+            isVisible={isPhotoLoaded}
+          >
             <>
               {!isPhotoLoaded && (
                 <LoadingContainer>
@@ -354,13 +348,13 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
                 )}
               </BlurContainer>
             </>
-          ) : (
-            <NoPhoto>No image</NoPhoto>
-          )}
-        </BackgroundContainer>
+          </BackgroundContainer>
 
+          <RouteList isEditable />
+        </SplitPane>
+      ) : (
         <RouteList isEditable />
-      </SplitPane>
+      )}
     </Container>
   );
 };
