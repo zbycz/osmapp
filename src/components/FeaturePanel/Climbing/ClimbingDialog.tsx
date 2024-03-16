@@ -48,6 +48,9 @@ export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
   const handleClose = () => {
     Router.push(`${getOsmappLink(feature)}${window.location.hash}`);
   };
+  const handleCancel = () => {
+    setIsEditMode(false);
+  };
 
   const onNewRouteCreate = () => {
     machine.execute('createRoute');
@@ -82,7 +85,7 @@ export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
               </Button>
             )}
             <div>
-              <Button autoFocus onClick={handleClose}>
+              <Button autoFocus onClick={handleCancel}>
                 Cancel
               </Button>
               {showDebugMenu && (
