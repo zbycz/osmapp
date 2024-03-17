@@ -11,7 +11,6 @@ const PoiType = styled.div<{ isSkeleton: Boolean; alwaysWhiteFont: Boolean }>`
   margin: 0 auto 0 15px;
   font-size: 13px;
   position: relative;
-  width: 100%;
 
   svg {
     vertical-align: bottom;
