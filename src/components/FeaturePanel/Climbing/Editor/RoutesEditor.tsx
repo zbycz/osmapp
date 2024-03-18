@@ -53,7 +53,7 @@ export const RoutesEditor = ({
     routeSelectedIndex,
     pointSelectedIndex,
     isPointClicked,
-    isLineInteractiveAreaHovered,
+    routeIndexHovered,
     loadPhotoRelatedData,
     photoRef,
   } = useClimbingContext();
@@ -99,7 +99,7 @@ export const RoutesEditor = ({
       );
     } else if (machine.currentStateName !== 'extendRoute') {
       setMousePosition(null);
-    } else if (!isLineInteractiveAreaHovered) {
+    } else if (routeIndexHovered === null) {
       setMousePosition(position);
     }
   };

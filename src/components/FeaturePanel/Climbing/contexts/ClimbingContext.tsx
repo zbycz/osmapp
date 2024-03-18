@@ -109,10 +109,8 @@ type ClimbingContextType = {
   setIsEditMode: (value: boolean | ((old: boolean) => boolean)) => void;
   viewportSize: Size;
   setViewportSize: (size: Size) => void;
-  isLineInteractiveAreaHovered: boolean;
-  setIsLineInteractiveAreaHovered: (
-    isLineInteractiveAreaHovered: boolean,
-  ) => void;
+  routeIndexHovered: number;
+  setRouteIndexHovered: (routeIndexHovered: number) => void;
   selectedRouteSystem: GradeSystem;
   setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
   routesExpanded: Array<number>;
@@ -165,8 +163,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
   const [arePointerEventsDisabled, setArePointerEventsDisabled] =
     useState<boolean>(false);
-  const [isLineInteractiveAreaHovered, setIsLineInteractiveAreaHovered] =
-    useState<boolean>(false);
+  const [routeIndexHovered, setRouteIndexHovered] = useState<number>(null);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
   const [filterDifficulty, setFilterDifficulty] = useState<Array<string>>([]);
   const [routesExpanded, setRoutesExpanded] = useState<Array<number>>([]);
@@ -265,7 +262,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     updateElementOnIndex,
     routeSelectedIndex,
     pointSelectedIndex,
-    setIsLineInteractiveAreaHovered,
+    setRouteIndexHovered,
     setMousePosition,
     setRoutes,
     routes,
@@ -385,8 +382,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setIsEditMode,
     viewportSize,
     setViewportSize,
-    isLineInteractiveAreaHovered,
-    setIsLineInteractiveAreaHovered,
+    routeIndexHovered,
+    setRouteIndexHovered,
     photoPath,
     photoPaths,
     setPhotoPath,
