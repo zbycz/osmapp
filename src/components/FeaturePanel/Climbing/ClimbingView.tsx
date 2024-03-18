@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { CircularProgress, IconButton } from '@material-ui/core';
+import { CircularProgress, IconButton, useTheme } from '@material-ui/core';
 
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
@@ -12,6 +12,7 @@ import { RoutesEditor } from './Editor/RoutesEditor';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
+import { useScrollShadow } from './utils/useScrollShadow';
 
 const Container = styled.div`
   position: relative;
@@ -69,48 +70,14 @@ const Container = styled.div`
     }
   }
   .Pane.horizontal.Pane2 {
-    margin-top: 0;
-    overflow: auto;
-  }
-  .Pane2 {
-    overflow: auto;
-
-    /* TODO cover for light mode wrong Cover color */
-    background:
-      /* Shadow Cover TOP */ radial-gradient(
-          farthest-side at 50% 0,
-          ${({ theme }) => theme.palette.background.paper},
-          ${({ theme }) => theme.palette.background.paper}
-        )
-        center top,
-      /* Shadow Cover BOTTOM */
-        radial-gradient(
-          farthest-side at 50% 100%,
-          ${({ theme }) => theme.palette.background.paper},
-          ${({ theme }) => theme.palette.background.paper}
-        )
-        center bottom,
-      /* Shadow TOP */
-        radial-gradient(
-          farthest-side at 50% 0,
-          ${({ theme }) => theme.palette.grey['600']},
-          transparent
-        )
-        center top,
-      /* Shadow BOTTOM */
-        radial-gradient(
-          farthest-side at 50% 100%,
-          ${({ theme }) => theme.palette.grey['600']},
-          transparent
-        )
-        center bottom;
-    background-repeat: no-repeat;
-    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
-    background-attachment: local, local, scroll, scroll;
-
-    background-color: ${({ theme }) => theme.palette.background.paper};
+    overflow: hidden;
   }
 `;
+const BottomPanel = styled.div`
+  height: 100%;
+  overflow: auto;
+`;
+
 const LoadingContainer = styled.div`
   position: absolute;
   left: 0;
@@ -257,6 +224,15 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
     setArePointerEventsDisabled(true);
   };
 
+  const {
+    scrollElementRef,
+    onScroll,
+    ShadowContainer,
+    ShadowTop,
+    ShadowBottom,
+  } = useScrollShadow([areRoutesLoading]);
+  const theme = useTheme();
+
   return (
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (
@@ -350,7 +326,13 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
             </>
           </BackgroundContainer>
 
-          <RouteList isEditable />
+          <ShadowContainer>
+            <ShadowTop backgroundColor={theme.palette.background.paper} />
+            <BottomPanel onScroll={onScroll} ref={scrollElementRef}>
+              <RouteList isEditable />
+            </BottomPanel>
+            <ShadowBottom backgroundColor={theme.palette.background.paper} />
+          </ShadowContainer>
         </SplitPane>
       ) : (
         <RouteList isEditable />
