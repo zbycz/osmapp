@@ -21,6 +21,14 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
   const strokeColor = isDifficultyHeatmapEnabled
     ? getDifficultyColor(gradeTable, route.difficulty)
     : config.pathStrokeColor;
+
+  const getColor = () => {
+    if (isSelected) {
+      return config.pathStrokeColorSelected;
+    }
+    return strokeColor;
+  };
+
   return (
     <>
       <RouteBorder
@@ -37,7 +45,7 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
       <RouteLine
         d={d}
         strokeWidth={config.pathStrokeWidth}
-        stroke={isSelected ? config.pathStrokeColorSelected : strokeColor}
+        stroke={getColor()}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
