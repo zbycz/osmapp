@@ -31,7 +31,7 @@ export const RouteFloatingMenu = () => {
     routeSelectedIndex,
     getCurrentPath,
     photoZoom,
-    setIsLineInteractiveAreaHovered,
+    setRouteIndexHovered,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -58,11 +58,11 @@ export const RouteFloatingMenu = () => {
   };
 
   const onMouseEnter = () => {
-    setIsLineInteractiveAreaHovered(true);
+    setRouteIndexHovered(routeSelectedIndex);
   };
 
   const onMouseLeave = () => {
-    setIsLineInteractiveAreaHovered(false);
+    setRouteIndexHovered(null);
   };
 
   React.useEffect(() => {

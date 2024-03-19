@@ -55,7 +55,7 @@ export const Point = ({
     isPointMoving,
     pointElement,
     setPointElement,
-    setIsLineInteractiveAreaHovered,
+    setRouteIndexHovered,
     photoZoom,
     getCurrentPath,
   } = useClimbingContext();
@@ -70,13 +70,13 @@ export const Point = ({
     setIsHovered(true);
     const isLastPoint = getCurrentPath().length - 1 === index;
     if (!isLastPoint) {
-      setIsLineInteractiveAreaHovered(true);
+      setRouteIndexHovered(routeNumber);
     }
   };
 
   const onMouseLeave = () => {
     setIsHovered(false);
-    setIsLineInteractiveAreaHovered(false);
+    setRouteIndexHovered(null);
   };
 
   const onMouseDown = () => {
@@ -109,7 +109,6 @@ export const Point = ({
     cursor: 'pointer',
     onMouseEnter,
     onMouseLeave,
-
     onMouseDown,
     onTouchMove,
     onPointerMove: onTouchMove,

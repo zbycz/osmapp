@@ -12,9 +12,16 @@ const RouteBorder = styled.path`
   pointer-events: all;
 `;
 
-export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
+export const PathWithBorder = ({
+  d,
+  routeNumber,
+  isSelected,
+  route,
+  ...props
+}) => {
   const config = useConfig();
-  const { isDifficultyHeatmapEnabled, gradeTable } = useClimbingContext();
+  const { isDifficultyHeatmapEnabled, gradeTable, routeIndexHovered } =
+    useClimbingContext();
   const borderColor = isDifficultyHeatmapEnabled
     ? config.pathStrokeColor
     : config.pathBorderColor;
@@ -22,11 +29,22 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
     ? getDifficultyColor(gradeTable, route.difficulty)
     : config.pathStrokeColor;
 
-  const getColor = () => {
+  const getPathColor = () => {
     if (isSelected) {
       return config.pathStrokeColorSelected;
     }
+    if (routeIndexHovered === routeNumber) {
+      return config.pathStrokeColorSelected;
+    }
+
     return strokeColor;
+  };
+  const getBorderColor = () => {
+    if (isSelected) {
+      return config.pathBorderColorSelected;
+    }
+
+    return borderColor;
   };
 
   return (
@@ -34,7 +52,7 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
       <RouteBorder
         d={d}
         strokeWidth={config.pathBorderWidth}
-        stroke={isSelected ? config.pathBorderColorSelected : borderColor}
+        stroke={getBorderColor()}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
@@ -45,7 +63,7 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
       <RouteLine
         d={d}
         strokeWidth={config.pathStrokeWidth}
-        stroke={getColor()}
+        stroke={getPathColor()}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"

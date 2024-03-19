@@ -24,8 +24,8 @@ export const RoutePath = ({ route, routeNumber }) => {
     getMachine,
     isEditMode,
     addOffsets,
-    isLineInteractiveAreaHovered,
-    setIsLineInteractiveAreaHovered,
+    routeIndexHovered,
+    setRouteIndexHovered,
     getPathForRoute,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
@@ -43,7 +43,7 @@ export const RoutePath = ({ route, routeNumber }) => {
       machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute'
     ) {
-      if (!isLineInteractiveAreaHovered) setIsLineInteractiveAreaHovered(true);
+      if (!routeIndexHovered) setRouteIndexHovered(routeNumber);
 
       const position = addOffsets(['editorPosition', 'imageContainer'], {
         x: e.clientX,
@@ -57,22 +57,13 @@ export const RoutePath = ({ route, routeNumber }) => {
       });
     }
   };
+
   const onMouseEnter = () => {
-    if (
-      machine.currentStateName === 'editRoute' ||
-      machine.currentStateName === 'extendRoute'
-    ) {
-      setIsLineInteractiveAreaHovered(true);
-    }
+    setRouteIndexHovered(routeNumber);
   };
 
   const onMouseLeave = () => {
-    if (
-      machine.currentStateName === 'editRoute' ||
-      machine.currentStateName === 'extendRoute'
-    ) {
-      setIsLineInteractiveAreaHovered(false);
-    }
+    setRouteIndexHovered(null);
   };
 
   const hoveredPosition = tempPointPosition
@@ -103,7 +94,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     (machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute') &&
     isSelected &&
-    isLineInteractiveAreaHovered;
+    routeIndexHovered !== null;
 
   const isInteractionDisabled =
     machine.currentStateName === 'extendRoute' && !isRouteSelected(routeNumber);
@@ -132,6 +123,7 @@ export const RoutePath = ({ route, routeNumber }) => {
         // style={{ pointerEvents: arePointerEventsDisabled ? 'none' : 'all' }}
         style={{ pointerEvents: 'all' }}
         route={route}
+        routeNumber={routeNumber}
       />
 
       {path.length > 1 &&
@@ -171,7 +163,7 @@ export const RoutePath = ({ route, routeNumber }) => {
         />
       )}
       {machine.currentStateName === 'extendRoute' &&
-        !isLineInteractiveAreaHovered && (
+        routeIndexHovered === null && (
           <MouseTrackingLine routeNumber={routeNumber} />
         )}
     </>

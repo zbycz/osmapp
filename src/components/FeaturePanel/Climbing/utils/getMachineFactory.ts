@@ -41,7 +41,7 @@ export const getMachineFactory = ({
   updateElementOnIndex,
   routeSelectedIndex,
   pointSelectedIndex,
-  setIsLineInteractiveAreaHovered,
+  setRouteIndexHovered,
   setMousePosition,
   setRoutes,
   routes,
@@ -82,7 +82,7 @@ export const getMachineFactory = ({
       setRouteSelectedIndex(props.routeNumber);
       setPointSelectedIndex(null);
     }
-    setIsLineInteractiveAreaHovered(false);
+    setRouteIndexHovered(null);
   };
 
   const finishRoute = () => {

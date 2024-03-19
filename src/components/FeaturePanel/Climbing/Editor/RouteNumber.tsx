@@ -26,8 +26,15 @@ const RouteNameOutline = RouteNameBoxBase;
 const RouteNameBox = RouteNameBoxBase;
 
 export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
-  const { imageSize, photoZoom, isRouteSelected, getMachine, isEditMode } =
-    useClimbingContext();
+  const {
+    imageSize,
+    photoZoom,
+    isRouteSelected,
+    getMachine,
+    isEditMode,
+    routeIndexHovered,
+    setRouteIndexHovered,
+  } = useClimbingContext();
   const digits = String(routeNumber).length;
   const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 20) / photoZoom.scale;
   const RECT_HEIGHT = 20 / photoZoom.scale;
@@ -54,11 +61,21 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
     return y + RECT_Y_OFFSET;
   };
 
+  const onMouseEnter = () => {
+    setRouteIndexHovered(routeNumber);
+  };
+
+  const onMouseLeave = () => {
+    setRouteIndexHovered(null);
+  };
+
   const newX = getX(); // this shifts X coordinate in case of too small photo
   const newY = getY(); // this shifts Y coordinate in case of too small photo
 
   const machine = getMachine();
   const commonProps = {
+    cursor: 'pointer',
+    pointerEvents: 'none',
     onClick: (e) => {
       if (isEditMode) {
         machine.execute('editRoute', { routeNumber });
@@ -67,12 +84,13 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
       }
       e.stopPropagation();
     },
-    cursor: 'pointer',
+    onMouseEnter,
+    onMouseLeave,
   };
   const isSelected = isRouteSelected(routeNumber);
 
   const colors = useRouteNumberColors({
-    isSelected,
+    isSelected: isSelected || routeIndexHovered === routeNumber,
     hasPathOnThisPhoto: true,
   });
 

@@ -41,6 +41,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
         pointerEvents="none"
         opacity={0.7}
         route={route}
+        routeNumber={routeNumber}
       />
     )
   );
