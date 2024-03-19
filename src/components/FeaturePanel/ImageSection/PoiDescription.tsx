@@ -5,12 +5,12 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import Maki from '../../utils/Maki';
 import { useUserThemeContext } from '../../../helpers/theme';
 
-const PoiType = styled.div<{ isSkeleton: Boolean; alwaysWhiteFont: Boolean }>`
-  color: ${({ alwaysWhiteFont, theme }) =>
-    alwaysWhiteFont ? '#fff' : theme.palette.text.secondary};
+const PoiType = styled.div<{ isSkeleton: Boolean; dark: Boolean }>`
+  color: ${({ dark, theme }) => (dark ? '#fff' : theme.palette.text.secondary)};
   margin: 0 auto 0 15px;
   font-size: 13px;
   position: relative;
+  width: 100%;
 
   svg {
     vertical-align: bottom;
@@ -29,7 +29,7 @@ export const PoiDescriptionDark = () => {
   const poiType = getPoiType(feature);
 
   return (
-    <PoiType isSkeleton={feature.skeleton} alwaysWhiteFont>
+    <PoiType isSkeleton={feature.skeleton} dark>
       <Maki ico={properties.class} invert middle />
       <span>{poiType}</span>
     </PoiType>

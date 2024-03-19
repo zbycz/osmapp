@@ -156,6 +156,7 @@ const getFeaturedTags = (feature: Feature) => {
   // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
   const keys = [
     'website',
+    'website:2',
     'contact:website',
     'phone',
     'contact:phone',
