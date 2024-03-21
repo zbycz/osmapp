@@ -24,6 +24,7 @@ import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
 import { ClimbingPanel } from './Climbing/ClimbingPanel';
 import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
+import { ImagePane } from './ImagePane/ImagePane';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -93,6 +94,8 @@ export const FeaturePanel = () => {
           {!skeleton && (
             <>
               <OsmError />
+
+              <ImagePane />
 
               <Properties
                 showTags={showTagsTable}
