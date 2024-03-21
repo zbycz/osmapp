@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useTheme } from '@material-ui/core';
 import { FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 
@@ -8,29 +7,21 @@ const Svg = styled.svg`
   width: 100%;
   height: 200px;
   border: 1px red solid;
+
+  path {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
 `;
 const BorderPath = styled.path`
   stroke-width: 5;
   stroke: ${({ theme }) => theme.palette.climbing.border};
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
 `;
 const LinePath = styled.path`
   stroke-width: 4;
   stroke: ${({ theme }) => theme.palette.climbing.inactive};
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  fill: none;
 `;
-const PathWithBorder = ({ d }) => {
-  return (
-    <>
-      <BorderPath d={d} />
-      <LinePath d={d} />
-    </>
-  );
-};
 
 const parsePathString = (pathString?: string) =>
   pathString
@@ -60,14 +51,18 @@ export const ImagePane = () => {
   const { feature } = useFeatureContext();
   const images = getImages(feature.tags);
 
-  const pointsInString = images[0].points.map(
-    ({ x, y }, idx) => `${idx > 0 ? 'L' : 'M'}${x * 100} ${y * 100}`,
-  );
+  const mainImage = images[0]; // only this will be SSRed
+
+  const d = mainImage.points
+    .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * 100} ${y * 100}`)
+    .join(',');
 
   return (
     <div>
       <Svg>
-        <PathWithBorder d={`M0 0 ${pointsInString}`} />
+        <image href="mdn_logo_only_color.png" height="200" width="200" />
+        <BorderPath d={d} />
+        <LinePath d={d} />
       </Svg>
     </div>
   );
