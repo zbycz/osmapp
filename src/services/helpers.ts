@@ -86,6 +86,18 @@ export const isValidImage = (url): Promise<boolean> => {
   });
 };
 
+export type ImageSize = { width: number; height: number } | null;
+
+export const getImageSize = (url): Promise<ImageSize> => {
+  return new Promise((resolve) => {
+    const imgElement = new Image();
+    imgElement.onload = () =>
+      resolve({ width: imgElement.width, height: imgElement.height });
+    imgElement.onerror = () => resolve(null);
+    imgElement.src = url;
+  });
+};
+
 export const stringifyDomXml = (itemXml) =>
   isString(itemXml) ? itemXml : new XMLSerializer().serializeToString(itemXml);
 
