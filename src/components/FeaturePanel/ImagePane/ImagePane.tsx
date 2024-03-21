@@ -7,6 +7,8 @@ import { getImageSize, ImageSize } from '../../../services/helpers';
 import { Path } from './Path';
 
 const Svg = styled.svg`
+  border-radius: 4px;
+
   path {
     stroke-linecap: round;
     stroke-linejoin: round;
@@ -66,36 +68,46 @@ const getTagImages = (tags: FeatureTags): TagImage[] => {
     });
 };
 
-export const ImagePane = () => {
-  const { feature } = useFeatureContext();
-  const images = getTagImages(feature.tags); //TODO move to Feature
-
-  const mainImage = images[0]; // only this will be SSRed
-
+const Image = ({ image }: { image: TagImage }) => {
   const [imageSize, setImageSize] = useState<ImageSize>(null);
 
   useEffect(() => {
-    getImageSize(mainImage.url).then((size) => {
+    getImageSize(image.url).then((size) => {
       setImageSize(size);
     });
-  }, [mainImage]);
+  }, [image]);
 
   return (
     <div>
       {imageSize && (
         <Svg width={imageSize.width} height={imageSize.height}>
           <image
-            href={mainImage.url}
+            href={image.url}
             width={imageSize.width}
             height={imageSize.height}
           />
           <Path
-            points={mainImage.points}
+            points={image.points}
             width={imageSize.width}
             height={imageSize.height}
           />
         </Svg>
       )}
+    </div>
+  );
+};
+
+export const ImagePane = () => {
+  const { feature } = useFeatureContext();
+  const images = getTagImages(feature.tags); //TODO move to Feature
+
+  const mainImage = images[0]; // only this will be SSRed
+
+  return (
+    <div>
+      {images.map((image, i) => (
+        <Image key={i} image={image} />
+      ))}
     </div>
   );
 };
