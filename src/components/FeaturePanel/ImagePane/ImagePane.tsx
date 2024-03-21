@@ -4,6 +4,7 @@ import { FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { getImageSize, ImageSize } from '../../../services/helpers';
+import { Path } from './Path';
 
 const Svg = styled.svg`
   path {
@@ -12,25 +13,10 @@ const Svg = styled.svg`
     fill: none;
   }
 `;
-const PathBorder = styled.path`
-  stroke-width: 5;
-  stroke: ${({ theme }) => theme.palette.climbing.border};
-`;
-const PathLine = styled.path`
-  stroke-width: 4;
-  stroke: ${({ theme }) => theme.palette.climbing.inactive};
-`;
-const Path = ({ points, width, height }) => {
-  const d = points
-    .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * width} ${y * height}`)
-    .join(',');
 
-  return (
-    <>
-      <PathBorder d={d} />
-      <PathLine d={d} />
-    </>
-  );
+const getSuffix = (y: string) => {
+  const matches = y.match(/([^.0-9].*)$/);
+  return matches ? matches[1] : '';
 };
 
 const parsePathString = (pathString?: string) =>
@@ -40,7 +26,7 @@ const parsePathString = (pathString?: string) =>
     .map(([x, y]) => ({
       x: parseFloat(x),
       y: parseFloat(y),
-      type: y.slice(-1), // TODO only letter
+      suffix: getSuffix(y),
     }))
     .filter(({ x, y }) => !isNaN(x) && !isNaN(y)) ?? [];
 
@@ -50,7 +36,7 @@ type TagImage = {
   v: string;
   url: string;
   path: string;
-  points: { x: number; y: number; type: string }[];
+  points: { x: number; y: number; suffix: string }[];
 };
 
 const imageRegexp = /^(image|wikimedia_commons)(:?\d*)$/;
