@@ -134,7 +134,7 @@ const findInPresets = async (inputValue) => {
 };
 
 const getOverpassQuery = (inputValue: string) => {
-  if (inputValue.match(/^[-:_a-zA-Z]+=/)) {
+  if (inputValue.match(/^[-:_a-zA-Z0-9]+=/)) {
     const [key, value] = inputValue.split('=', 2);
 
     return [{ overpass: { [key]: value || '*' } }];
