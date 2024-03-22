@@ -32,16 +32,17 @@ const parsePathString = (pathString?: string) =>
     }))
     .filter(({ x, y }) => !isNaN(x) && !isNaN(y)) ?? [];
 
-type TagImage = {
-  type: 'image' | 'wikimedia_commons';
+type ImageTag = {
+  type: 'image' | 'wikimedia_commons' | 'wikidata' | 'wikipedia' | 'website';
   k: string;
   v: string;
-  url: string;
+  imageUrl: string | null; // null = API call needed
   path: string;
   points: { x: number; y: number; suffix: string }[];
 };
 
-const imageRegexp = /^(image|wikimedia_commons)(:?\d*)$/;
+const imageRegexp =
+  /^(image|wikimedia_commons|wikidata|wikipedia|wikipedia:[a-z+]|website)(:?\d*)$/;
 
 const getImageUrl = (type: TagImage['type'], v: string): string | null => {
   if (type === 'image') {
@@ -52,62 +53,70 @@ const getImageUrl = (type: TagImage['type'], v: string): string | null => {
     return getCommonsImageUrl(v, 200);
   }
 
-  return null;
+  return null; // API call needed
 };
 
-const getTagImages = (tags: FeatureTags): TagImage[] => {
+const getImageTags = (tags: FeatureTags): ImageTag[] => {
   return Object.keys(tags)
     .filter((k) => k.match(imageRegexp))
     .map((k) => {
-      const type = k.match(imageRegexp)?.[1] as TagImage['type'];
+      const type = k.match(imageRegexp)?.[1] as ImageTag['type'];
       const v = tags[k];
-      const url = getImageUrl(type, v);
+      const imageUrl = getImageUrl(type, v);
       const path = tags[`${k}:path`];
       const points = parsePathString(path);
-      return { type, k, v, url, path, points };
+      return { type, k, v, imageUrl, path, points };
     });
 };
 
-const Image = ({ image }: { image: TagImage }) => {
+const Image = ({ imageTag }: { imageTag: ImageTag }) => {
   const [imageSize, setImageSize] = useState<ImageSize>(null);
 
   useEffect(() => {
-    getImageSize(image.url).then((size) => {
-      setImageSize(size);
-    });
-  }, [image]);
+    if (imageTag.imageUrl) {
+      getImageSize(imageTag.imageUrl).then((size) => {
+        setImageSize(size);
+      });
+    } else {
+      // TODO api calls
+      setImageSize(null);
+    }
+  }, [imageTag]);
 
   return (
     <div>
       {imageSize && (
         <Svg width={imageSize.width} height={imageSize.height}>
           <image
-            href={image.url}
+            href={imageTag.imageUrl}
             width={imageSize.width}
             height={imageSize.height}
           />
           <Path
-            points={image.points}
+            points={imageTag.points}
             width={imageSize.width}
             height={imageSize.height}
           />
         </Svg>
       )}
+      {!imageSize && <div>Loading {imageTag.type}...</div>}
     </div>
   );
 };
 
 export const ImagePane = () => {
   const { feature } = useFeatureContext();
-  const images = getTagImages(feature.tags); //TODO move to Feature
-
-  const mainImage = images[0]; // only this will be SSRed
+  const imageTags = getImageTags(feature.tags); //TODO move to osmToFeature()
+  // const mainImage = images[0]; // only this will be SSRed
 
   return (
     <div>
-      {images.map((image, i) => (
-        <Image key={i} image={image} />
+      {imageTags.map((imageTag, i) => (
+        <Image key={i} imageTag={imageTag} />
       ))}
+      {/*Fody*/}
+      {/*Mapillary*/}
+      {/*Upload new*/}
     </div>
   );
 };
