@@ -5,9 +5,12 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { getImageSize, ImageSize } from '../../../services/helpers';
 import { Path } from './Path';
+import { Slider } from './Slider';
 
 const Svg = styled.svg`
-  border-radius: 4px;
+  border-radius: 8px;
+  height: 130px;
+  width: auto;
 
   path {
     stroke-linecap: round;
@@ -83,23 +86,19 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
     }
   }, [imageTag]);
 
+  if (!imageSize) {
+    return null; //<div>Loading {imageTag.type}...</div>;
+  }
+
+  const { height, width } = imageSize;
+
   return (
     <div>
-      {imageSize && (
-        <Svg width={imageSize.width} height={imageSize.height}>
-          <image
-            href={imageTag.imageUrl}
-            width={imageSize.width}
-            height={imageSize.height}
-          />
-          <Path
-            points={imageTag.points}
-            width={imageSize.width}
-            height={imageSize.height}
-          />
-        </Svg>
-      )}
-      {!imageSize && <div>Loading {imageTag.type}...</div>}
+      {/*<Svg width={width} height={height}>*/}
+      <Svg viewBox={`0 0 ${width} ${height}`}>
+        <image href={imageTag.imageUrl} width={width} height={height} />
+        <Path points={imageTag.points} width={width} height={height} />
+      </Svg>
     </div>
   );
 };
@@ -107,16 +106,18 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
 export const ImagePane = () => {
   const { feature } = useFeatureContext();
   const imageTags = getImageTags(feature.tags); //TODO move to osmToFeature()
-  // const mainImage = images[0]; // only this will be SSRed
+  // const mainImage = images[0]; // only this will be SSRed as /node/1234/image.jpg
 
   return (
     <div>
-      {imageTags.map((imageTag, i) => (
-        <Image key={i} imageTag={imageTag} />
-      ))}
-      {/*Fody*/}
-      {/*Mapillary*/}
-      {/*Upload new*/}
+      <Slider>
+        {imageTags.map((imageTag, i) => (
+          <Image key={i} imageTag={imageTag} />
+        ))}
+        {/*Fody*/}
+        {/*Mapillary*/}
+        {/*Upload new*/}
+      </Slider>
     </div>
   );
 };
