@@ -34,6 +34,7 @@ const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
   position: relative;
   font-size: 16px;
   border-top: solid 1px ${({ theme }) => theme.palette.divider};
+  z-index: ${({ isSelected }) => (isSelected ? '2' : 'auto')};
 `;
 const DragHandler = styled.div`
   width: 30px;
