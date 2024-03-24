@@ -8,6 +8,7 @@ export interface ImageUrls {
   username?: string;
   portrait?: boolean;
   timestamp?: string;
+  isPano?: boolean;
 }
 
 export type LoadingImage = null;
@@ -103,3 +104,5 @@ export interface Feature {
 
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;
+
+export type MapillaryApiResponse = {};
