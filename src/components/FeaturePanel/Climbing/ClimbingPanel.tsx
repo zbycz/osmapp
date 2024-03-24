@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { Button, CircularProgress } from '@material-ui/core';
 import Router from 'next/router';
@@ -71,14 +71,6 @@ const LoadingContainer = styled.div`
 export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
-  useEffect(() => {
-    console.log(
-      '____',
-      window
-        .getComputedStyle(document.documentElement)
-        .getPropertyValue('--sat'),
-    );
-  }, []);
 
   const {
     loadPhotoRelatedData,
