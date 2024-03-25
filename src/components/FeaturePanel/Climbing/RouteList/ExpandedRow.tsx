@@ -173,7 +173,7 @@ export const ExpandedRow = ({
                   onClick={onNodeDetailClick}
                   color="secondary"
                   size="small"
-                  variant="contained"
+                  variant="text"
                   endIcon={<ArrowForwardIcon />}
                 >
                   Show route detail

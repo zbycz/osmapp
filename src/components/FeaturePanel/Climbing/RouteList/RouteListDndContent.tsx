@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
-import { toggleElementInArray } from '../utils/array';
 
 type Item = {
   id: number;
@@ -86,8 +85,6 @@ export const RouteListDndContent = ({ isEditable }) => {
     isRouteSelected,
     isEditMode,
     getMachine,
-    setRoutesExpanded,
-    routesExpanded,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
   const machine = getMachine();
@@ -222,15 +219,8 @@ export const RouteListDndContent = ({ isEditable }) => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
-              onClick={(event) => {
-                const isDoubleClick = event.detail === 2;
-                if (isDoubleClick) {
-                  setRoutesExpanded(
-                    toggleElementInArray(routesExpanded, index),
-                  );
-                } else {
-                  onRowClick(index);
-                }
+              onClick={() => {
+                onRowClick(index);
               }}
             >
               <MaxWidthContainer>
