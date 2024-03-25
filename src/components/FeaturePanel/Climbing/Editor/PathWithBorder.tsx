@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from 'styled-components';
+import { useTheme } from '@material-ui/core';
 import { useConfig } from '../config';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { getDifficultyColor } from '../utils/routeGrade';
@@ -22,9 +23,7 @@ export const PathWithBorder = ({
   const config = useConfig();
   const { isDifficultyHeatmapEnabled, gradeTable, routeIndexHovered } =
     useClimbingContext();
-  const borderColor = isDifficultyHeatmapEnabled
-    ? config.pathStrokeColor
-    : config.pathBorderColor;
+
   const strokeColor = isDifficultyHeatmapEnabled
     ? getDifficultyColor(gradeTable, route.difficulty)
     : config.pathStrokeColor;
@@ -33,26 +32,21 @@ export const PathWithBorder = ({
     if (isSelected) {
       return config.pathStrokeColorSelected;
     }
-    if (routeIndexHovered === routeNumber) {
-      return config.pathStrokeColorSelected;
-    }
 
     return strokeColor;
   };
-  const getBorderColor = () => {
-    if (isSelected) {
-      return config.pathBorderColorSelected;
-    }
 
-    return borderColor;
-  };
+  const theme = useTheme();
+  const contrastColor = theme.palette.getContrastText(
+    isSelected ? config.pathStrokeColorSelected : strokeColor,
+  );
 
   return (
     <>
       <RouteBorder
         d={d}
         strokeWidth={config.pathBorderWidth}
-        stroke={getBorderColor()}
+        stroke={contrastColor}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
@@ -71,6 +65,17 @@ export const PathWithBorder = ({
         // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
       />
+      {routeIndexHovered === routeNumber && (
+        <RouteLine
+          d={d}
+          strokeWidth={config.pathStrokeWidth}
+          stroke={`${config.pathStrokeColorSelected}80`}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          {...props}
+        />
+      )}
     </>
   );
 };

@@ -64,12 +64,13 @@ export const useScrollShadow = (deps = []) => {
   }, deps);
 
   useEffect(() => {
-    window.addEventListener('resize', () => setShadows());
-    window.addEventListener('orientationchange', () => setShadows());
+    const handleShadows = () => setShadows();
+    window.addEventListener('resize', handleShadows);
+    window.addEventListener('orientationchange', handleShadows);
 
     return () => {
-      window.removeEventListener('resize', () => setShadows());
-      window.removeEventListener('orientationchange', () => setShadows());
+      window.removeEventListener('resize', handleShadows);
+      window.removeEventListener('orientationchange', handleShadows);
     };
   }, []);
 
