@@ -62,6 +62,7 @@ export const RoutesLayer = ({
     routeSelectedIndex,
     getMachine,
     isRouteSelected,
+    isRouteHovered,
     getPixelPosition,
     editorPosition,
     scrollOffset,
@@ -100,6 +101,7 @@ export const RoutesLayer = ({
   const sortedRoutes = routes.reduce<{
     selected: Array<RouteRenders>;
     rest: Array<RouteRenders>;
+    hovered: Array<RouteRenders>;
   }>(
     (acc, route, index) => {
       const RenderRoute = () => (
@@ -126,6 +128,15 @@ export const RoutesLayer = ({
           ],
         };
       }
+      if (isRouteHovered(index)) {
+        return {
+          ...acc,
+          hovered: [
+            ...acc.hovered,
+            { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+          ],
+        };
+      }
       return {
         ...acc,
         rest: [
@@ -134,7 +145,7 @@ export const RoutesLayer = ({
         ],
       };
     },
-    { selected: [], rest: [] },
+    { selected: [], rest: [], hovered: [] },
   );
 
   const lastPointOfSelectedRoute =
@@ -174,6 +185,8 @@ export const RoutesLayer = ({
         {sortedRoutes.rest.map((item) => item.marks)}
         {sortedRoutes.selected.map((item) => item.route)}
         {sortedRoutes.selected.map((item) => item.marks)}
+        {sortedRoutes.hovered.map((item) => item.route)}
+        {sortedRoutes.hovered.map((item) => item.marks)}
       </Svg>
 
       {routeFloatingMenuPosition && (

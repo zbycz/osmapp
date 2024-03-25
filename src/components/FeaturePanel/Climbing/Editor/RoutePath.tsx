@@ -138,7 +138,7 @@ export const RoutePath = ({ route, routeNumber }) => {
             return (
               <InteractiveArea
                 stroke="transparent"
-                strokeWidth={20}
+                strokeWidth={15}
                 x1={position1.x}
                 y1={position1.y}
                 x2={position2.x}

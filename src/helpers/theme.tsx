@@ -74,7 +74,7 @@ const darkTheme = createMuiTheme({
       active: '#2fbc81ff',
       inactive: '#0a0a0aff',
       border: '#ffffffff',
-      selected: '#fff',
+      selected: '#ffffff',
     },
   } as unknown,
 });
