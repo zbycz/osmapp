@@ -36,12 +36,12 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
     setRouteIndexHovered,
   } = useClimbingContext();
   const digits = String(routeNumber).length;
-  const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 20) / photoZoom.scale;
-  const RECT_HEIGHT = 20 / photoZoom.scale;
-  const RECT_Y_OFFSET = 10 / photoZoom.scale;
+  const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 18) / photoZoom.scale;
+  const RECT_HEIGHT = 18 / photoZoom.scale;
+  const RECT_Y_OFFSET = 8 / photoZoom.scale;
   const OUTLINE_WIDTH = 2 / photoZoom.scale;
   const HOVER_WIDTH = 10 / photoZoom.scale;
-  const TEXT_Y_SHIFT = 15 / photoZoom.scale;
+  const TEXT_Y_SHIFT = 13 / photoZoom.scale;
 
   const getX = () => {
     const isFarRight = x + RECT_WIDTH / 2 + OUTLINE_WIDTH > imageSize.width;

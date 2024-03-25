@@ -52,7 +52,7 @@ export const useScrollShadow = (deps = []) => {
       const { scrollTop, scrollHeight, clientHeight } =
         (scrollElementRef.current as any)?.view ?? scrollElementRef.current; // hack because of react-custom-scroll
 
-      setIsScrolledToTop(scrollTop === 0);
+      setIsScrolledToTop(scrollTop <= 0);
       setIsScrolledToBottom(
         Math.ceil(scrollTop + clientHeight) >= scrollHeight,
       );

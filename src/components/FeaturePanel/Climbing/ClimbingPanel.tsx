@@ -37,6 +37,14 @@ const HeadingContainer = styled.div`
   align-items: center;
 `;
 
+const DetailButtonContainer = styled.div`
+  margin: 8px;
+  @supports (-webkit-touch-callout: none) {
+    /* CSS specific to iOS devices */
+    margin-bottom: 28px;
+  }
+`;
+
 const ParentItem = styled.div`
   margin: 12px 8px -4px 8px;
   a {
@@ -145,7 +153,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
           {/* @TODO unite with parent panel */}
           <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
         </PanelScrollbars>
-        <div style={{ padding: '8px' }}>
+        <DetailButtonContainer>
           <Button
             color="primary"
             size="large"
@@ -156,7 +164,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
           >
             Show crag detail
           </Button>
-        </div>
+        </DetailButtonContainer>
       </PanelWrapper>
     </>
   );

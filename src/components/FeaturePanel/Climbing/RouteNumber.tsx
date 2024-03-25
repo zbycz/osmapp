@@ -7,8 +7,8 @@ import { useRouteNumberColors } from './utils/useRouteNumberColors';
 const Container = styled.div<{
   colors: Record<string, string>;
 }>`
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   line-height: 20px;
   border-radius: 50%;
   background: ${({ colors }) => colors.background};
