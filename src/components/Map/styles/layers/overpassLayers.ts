@@ -82,6 +82,22 @@ export const overpassLayers: LayerSpecification[] = [
     },
   } as LayerSpecification,
   {
+    // just for wider clicking area
+    id: 'overpass-circle-relation-click-area',
+    type: 'circle',
+    source: 'overpass',
+    filter: ['all', ['==', '$type', 'Point'], ['==', 'osmappType', 'relation']],
+    paint: {
+      'circle-color': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        'rgba(255,255,255,0)',
+        'rgba(255,255,255,0)',
+      ],
+      'circle-radius': 20,
+    },
+  } as LayerSpecification,
+  {
     id: 'overpass-circle-relation',
     type: 'circle',
     source: 'overpass',
@@ -96,6 +112,7 @@ export const overpassLayers: LayerSpecification[] = [
       'circle-radius': 6,
     },
   } as LayerSpecification,
+
   {
     id: 'overpass-symbol',
     type: 'symbol',
