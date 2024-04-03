@@ -17,6 +17,7 @@ import { StarButton } from '../ImageSection/StarButton';
 import { OsmError } from '../OsmError';
 import { Properties } from '../Properties/Properties';
 import { PoiDescription } from '../ImageSection/PoiDescription';
+import { RouteDistribution } from './RouteDistribution';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -144,6 +145,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
 
           <OsmError />
 
+          <RouteDistribution />
           <RouteList />
 
           <div style={{ padding: '35px 15px 5px' }}>

@@ -140,4 +140,5 @@ export const gradeColors = {
   '13+': { light: '#9C0101', dark: '#690000' },
   '13+/14-': { light: '#9C0101', dark: '#690000' },
   '14-': { light: '#9C0101', dark: '#690000' },
+  '14': { light: '#9C0101', dark: '#690000' },
 };

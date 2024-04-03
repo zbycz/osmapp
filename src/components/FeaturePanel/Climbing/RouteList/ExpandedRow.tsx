@@ -37,6 +37,7 @@ const ExpandedRowContainer = styled.div<{ isExpanded?: boolean }>`
   transition: all 0.1s ease-in-out;
   min-height: 0;
   overflow: hidden;
+  margin-left: 26px;
 `;
 
 const Value = styled.div``;
