@@ -13,6 +13,7 @@ import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 import { useScrollShadow } from './utils/useScrollShadow';
+import { RouteDistribution } from './RouteDistribution';
 
 const Container = styled.div`
   position: relative;
@@ -138,6 +139,13 @@ const BackgroundContainer = styled.div<{
   width: 100%;
   height: 100%;
 `;
+
+const MainContent = () => (
+  <>
+    <RouteList isEditable />
+    <RouteDistribution />
+  </>
+);
 
 export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
   const {
@@ -329,13 +337,13 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
           <ShadowContainer>
             <ShadowTop backgroundColor={theme.palette.background.paper} />
             <BottomPanel onScroll={onScroll} ref={scrollElementRef}>
-              <RouteList isEditable />
+              <MainContent />
             </BottomPanel>
             <ShadowBottom backgroundColor={theme.palette.background.paper} />
           </ShadowContainer>
         </SplitPane>
       ) : (
-        <RouteList isEditable />
+        <MainContent />
       )}
     </Container>
   );

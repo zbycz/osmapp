@@ -9,6 +9,11 @@ type Item = {
   content: React.ReactNode;
 };
 
+const Container = styled.div`
+  width: 100%;
+  margin: 0 auto;
+`;
+
 const MaxWidthContainer = styled.div`
   width: 100%;
   max-width: 800px;
@@ -17,10 +22,7 @@ const MaxWidthContainer = styled.div`
   justify-content: center;
   flex-direction: row;
 `;
-const Container = styled.div`
-  width: 100%;
-  margin: 0 auto;
-`;
+
 const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
   cursor: pointer;
   display: flex;
@@ -32,7 +34,7 @@ const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
     isSelected ? theme.palette.action.selected : 'transparent'};
   position: relative;
   font-size: 16px;
-  border-top: solid 1px ${({ theme }) => theme.palette.divider};
+  border-top: dotted 1px ${({ theme }) => theme.palette.divider};
   z-index: ${({ isSelected }) => (isSelected ? '2' : 'auto')};
 `;
 const DragHandler = styled.div`
