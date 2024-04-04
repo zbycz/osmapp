@@ -26,7 +26,9 @@ const NumberOfRoutes = styled.div`
   text-align: center;
   font-size: 9px;
 `;
-const Column = styled.div``;
+const Column = styled.div`
+  flex: 1;
+`;
 const DifficultyLevel = styled.div<{ isActive: boolean }>`
   text-align: center;
   color: ${({ color, isActive, theme }) =>
@@ -39,7 +41,6 @@ const Chart = styled.div<{ ratio: number; color: string }>`
   height: ${({ ratio }) => MAX_HEIGHT * ratio}px;
   background-color: ${({ color, theme, ratio }) =>
     ratio === 0 ? theme.palette.secondary.main : color};
-  width: 24px;
   border-radius: 2px;
 `;
 
