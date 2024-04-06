@@ -6,7 +6,7 @@ import nextCookies from 'next-cookies';
 import { UserThemeProvider } from '../src/helpers/theme';
 import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { captureException, initSentry } from '../src/helpers/sentry';
-import { prod } from '../src/services/helpers';
+import { prod, doShortenerRedirect } from '../src/services/helpers';
 
 if (prod) {
   initSentry();
@@ -59,6 +59,10 @@ export default class MyApp extends App {
 }
 
 MyApp.getInitialProps = async ({ ctx, Component }) => {
+  if (doShortenerRedirect(ctx)) {
+    return {};
+  }
+
   const pageProps = await Component.getInitialProps?.(ctx);
   const { userTheme } = nextCookies(ctx);
 

@@ -4,6 +4,7 @@ import { isServer, isString } from '../components/helpers';
 import { Feature, Position } from './types';
 import { join, roundedToDegUrl } from '../utils';
 import { PROJECT_URL } from './project';
+import { getIdFromShortener, getShortenerSlug } from './shortener';
 
 export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
@@ -64,6 +65,11 @@ export const getOsmappLink = (feature: Feature) => {
 
 export const getFullOsmappLink = (feature: Feature) =>
   `${PROJECT_URL}${getOsmappLink(feature)}`;
+
+export const getShortLink = (feature: Feature) => {
+  const slug = getShortenerSlug(feature.osmMeta);
+  return slug === null ? null : `${PROJECT_URL}/${slug}`;
+};
 
 export const isSameOsmId = (feature, skeleton) =>
   feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
@@ -128,4 +134,23 @@ export const buildAddress = (
     ', ',
     join(join(postcode, ' ', city), ', ', state),
   );
+};
+
+export const doShortenerRedirect = (ctx) => {
+  const {
+    query: { all },
+  } = ctx;
+
+  if (all?.length === 1) {
+    const apiId = getIdFromShortener(all[0]);
+
+    if (apiId !== null) {
+      const location = `/${getUrlOsmId(apiId)}`;
+
+      ctx.res.writeHead(301, { location }).end();
+      return true;
+    }
+  }
+
+  return false;
 };
