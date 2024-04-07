@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
+import { isAscent } from '../utils/ascents';
 
 type Item = {
   id: number;
@@ -23,15 +24,22 @@ const MaxWidthContainer = styled.div`
   flex-direction: row;
 `;
 
-const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
+const RowWithDragHandler = styled.div<{
+  isDraggedOver: boolean;
+  isAscent: boolean;
+}>`
   cursor: pointer;
   display: flex;
   justify-content: center;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
   /* background-color: ${({ isSelected }) =>
     isSelected ? '#ccc' : 'transparent'}; */
-  background: ${({ isSelected, theme }) =>
-    isSelected ? theme.palette.action.selected : 'transparent'};
+  background: ${({ isSelected, theme, isAscented }) =>
+    isSelected
+      ? theme.palette.action.selected
+      : isAscented
+      ? theme.palette.climbing.ascent
+      : 'transparent'};
   position: relative;
   font-size: 16px;
   border-top: dotted 1px ${({ theme }) => theme.palette.divider};
@@ -207,6 +215,7 @@ export const RouteListDndContent = ({ isEditable }) => {
         </MaxWidthContainer>
       </TableHeader>
       {items.map((item, index) => {
+        const osmId = item.route.feature?.osmMeta.id ?? null;
         const isSelected = isRouteSelected(index);
 
         return (
@@ -221,6 +230,7 @@ export const RouteListDndContent = ({ isEditable }) => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
+              isAscented={isAscent(osmId)}
               onClick={() => {
                 onRowClick(index);
               }}

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import { Tooltip } from '@material-ui/core';
 import { useRouteNumberColors } from './utils/useRouteNumberColors';
+import { isAscent } from './utils/ascents';
 
 const Container = styled.div<{
   colors: Record<string, string>;
@@ -22,7 +23,12 @@ const Container = styled.div<{
   border: ${({ colors }) => colors.border};
 `;
 
-export const RouteNumber = ({ children, isSelected, photoInfoForRoute }) => {
+export const RouteNumber = ({
+  children,
+  isSelected,
+  photoInfoForRoute,
+  osmId,
+}) => {
   const hasPathOnThisPhoto = photoInfoForRoute === 'hasPathOnThisPhoto';
   const isOnThisPhoto = photoInfoForRoute === 'isOnThisPhoto';
   const hasPathInDifferentPhoto =
@@ -35,6 +41,7 @@ export const RouteNumber = ({ children, isSelected, photoInfoForRoute }) => {
     isOnThisPhoto,
     hasPathInDifferentPhoto,
     isOnDifferentPhoto,
+    isAscent: isAscent(osmId),
   });
 
   const getTitle = () => {

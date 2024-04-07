@@ -14,12 +14,15 @@ import {
 
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import AddIcon from '@material-ui/icons/Add';
 import Router from 'next/router';
 import { RouteDifficultySelect } from '../RouteDifficultySelect';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
+import { onAscentAdd } from '../utils/ascents';
+import { MyAscents } from './MyAscents';
 
 const Left = styled.div`
   flex: 1;
@@ -51,6 +54,7 @@ export const ExpandedRow = ({
   isReadOnly,
   index,
   isExpanded,
+  osmId,
 }) => {
   const { isEditMode, getMachine } = useClimbingContext();
   const machine = getMachine();
@@ -67,6 +71,7 @@ export const ExpandedRow = ({
   const onNodeDetailClick = () => {
     Router.push(`${getOsmappLink(tempRoute.feature)}${window.location.hash}`);
   };
+
   return (
     <>
       <ExpandedRowContainer isExpanded={isExpanded}>
@@ -180,9 +185,24 @@ export const ExpandedRow = ({
                   Show route detail
                 </Button>
               </ListItem>
+              <ListItem>
+                <Button
+                  onClick={() => {
+                    onAscentAdd({ osmId });
+                    // stopPropagation(e);
+                  }}
+                  color="secondary"
+                  size="small"
+                  variant="text"
+                  endIcon={<AddIcon />}
+                >
+                  Mark ascent
+                </Button>
+              </ListItem>
             </List>
           </Right>
         </Flex>
+        <MyAscents osmId={osmId} />
       </ExpandedRowContainer>
       <Dialog
         open={routeToDelete !== null}

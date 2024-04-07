@@ -35,6 +35,7 @@ export const RouteWithLabel = ({
     ...path[0],
     units: 'percentage',
   });
+  const osmId = route.feature?.osmMeta.id ?? null;
 
   if (path.length === 1) {
     return (
@@ -44,6 +45,7 @@ export const RouteWithLabel = ({
         y={y}
         routeNumberXShift={shift}
         routeNumber={routeNumber}
+        osmId={osmId}
       />
     );
   }
@@ -75,7 +77,7 @@ export const RouteWithLabel = ({
       </defs>
 
       <RoutePath route={route} routeNumber={routeNumber} />
-      <RouteNumber x={x + shift} y={y}>
+      <RouteNumber x={x + shift} y={y} osmId={osmId}>
         {routeNumber}
       </RouteNumber>
     </>
