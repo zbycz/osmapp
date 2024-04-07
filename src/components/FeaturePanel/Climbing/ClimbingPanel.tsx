@@ -18,6 +18,7 @@ import { OsmError } from '../OsmError';
 import { Properties } from '../Properties/Properties';
 import { PoiDescription } from '../ImageSection/PoiDescription';
 import { RouteDistribution } from './RouteDistribution';
+import { YellowedBadge } from './YellowedBadge';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -138,6 +139,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
 
           <HeadingContainer>
             <Heading>{label}</Heading>
+            <YellowedBadge />
             <StarButton />
           </HeadingContainer>
 
