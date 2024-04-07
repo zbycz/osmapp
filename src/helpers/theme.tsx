@@ -32,6 +32,7 @@ const lightTheme = createMuiTheme({
       primary: '#D1D1D1',
       secondary: '#202020',
       tertiary: '#666',
+      ascent: '#F2EFCB',
 
       // @TODO: following colors should be deleted in the future
       active: '#00854dff',
@@ -69,6 +70,7 @@ const darkTheme = createMuiTheme({
       primary: '#000000',
       secondary: '#fff',
       tertiary: '#666',
+      ascent: '#5B5C50',
 
       // @TODO: following colors should be deleted in the future
       active: '#2fbc81ff',

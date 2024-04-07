@@ -86,7 +86,7 @@ export const RenderListRow = ({
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [routeSelectedIndex]);
-
+  const osmId = route.feature?.osmMeta.id ?? null;
   const isSelected = isRouteSelected(index);
   const photoInfoForRoute = getPhotoInfoForRoute(index);
 
@@ -120,6 +120,7 @@ export const RenderListRow = ({
     isReadOnly,
     index,
     isExpanded,
+    osmId,
   };
 
   return (
@@ -129,6 +130,7 @@ export const RenderListRow = ({
           <RouteNumber
             isSelected={isSelected}
             photoInfoForRoute={photoInfoForRoute}
+            osmId={osmId}
           >
             {index + 1}
           </RouteNumber>

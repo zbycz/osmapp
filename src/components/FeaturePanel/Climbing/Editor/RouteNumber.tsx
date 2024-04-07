@@ -3,11 +3,13 @@ import React from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useRouteNumberColors } from '../utils/useRouteNumberColors';
+import { isAscent } from '../utils/ascents';
 
 type Props = {
   children: number;
   x: number;
   y: number;
+  osmId: string;
 };
 
 const Text = styled.text<{ scale: number }>`
@@ -25,7 +27,7 @@ const HoverableRouteName = RouteNameBoxBase;
 const RouteNameOutline = RouteNameBoxBase;
 const RouteNameBox = RouteNameBoxBase;
 
-export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
+export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
   const {
     imageSize,
     photoZoom,
@@ -92,6 +94,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
   const colors = useRouteNumberColors({
     isSelected: isSelected || routeIndexHovered === routeNumber,
     hasPathOnThisPhoto: true,
+    isAscent: isAscent(osmId),
   });
 
   return (
