@@ -4,6 +4,7 @@ const KEY = 'ascents';
 
 // @TODO generic util?
 export const getLocalStorageItem = (key: string) => {
+  if (typeof window === 'undefined') return [];
   const raw = window?.localStorage.getItem(key);
   if (raw) {
     try {
@@ -19,6 +20,7 @@ export const getLocalStorageItem = (key: string) => {
 
 // @TODO generic util?
 export const setLocalStorageItem = (key: string, value: JSONValue) => {
+  if (typeof window === 'undefined') return;
   window?.localStorage.setItem(key, JSON.stringify(value));
 };
 
