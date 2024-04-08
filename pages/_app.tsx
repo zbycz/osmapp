@@ -60,7 +60,7 @@ export default class MyApp extends App {
 
 MyApp.getInitialProps = async ({ ctx, Component }) => {
   if (doShortenerRedirect(ctx)) {
-    return {};
+    return { pageProps: undefined };
   }
 
   const pageProps = await Component.getInitialProps?.(ctx);
