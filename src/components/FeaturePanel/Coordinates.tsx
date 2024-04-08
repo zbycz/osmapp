@@ -10,7 +10,7 @@ import { isBrowser, useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { getIdEditorLink, positionToDeg, positionToDM } from '../../utils';
 import { PositionBoth } from '../../services/types';
-import { getFullOsmappLink } from '../../services/helpers';
+import { getFullOsmappLink, getShortLink } from '../../services/helpers';
 import { t } from '../../services/intl';
 
 const StyledMenuItem = styled(MenuItem)`
@@ -46,13 +46,14 @@ export const ToggleButton = forwardRef<any, any>(
   ),
 );
 
-const CopyTextItem = ({ text }) => (
-  <MenuItem onClick={() => navigator.clipboard.writeText(text)}>
-    {t('coordinates.copy_value', {
-      value: text.replace(/^https:\/\//, ''),
-    })}
-  </MenuItem>
-);
+const CopyTextItem = ({ text }: { text: string | null }) =>
+  text === null ? null : (
+    <MenuItem onClick={() => navigator.clipboard.writeText(text)}>
+      {t('coordinates.copy_value', {
+        value: text.replace(/^https:\/\//, ''),
+      })}
+    </MenuItem>
+  );
 
 const LinkItem = ({ href, label }) => (
   <StyledMenuItem component="a" href={href} target="_blank" rel="noopener">
@@ -118,6 +119,7 @@ export const Coords = ({ coords }: Props) => {
   const items = useGetItems(coords);
   const { feature } = useFeatureContext();
   const osmappLink = getFullOsmappLink(feature);
+  const shortLink = getShortLink(feature);
 
   return (
     <span title="latitude, longitude (y, x)" ref={anchorRef}>
@@ -135,6 +137,7 @@ export const Coords = ({ coords }: Props) => {
         <CopyTextItem text={positionToDeg(coords)} />
         <CopyTextItem text={positionToDM(coords)} />
         <CopyTextItem text={osmappLink} />
+        <CopyTextItem text={shortLink} />
       </Menu>
       <ToggleButton onClick={open} />
     </span>
