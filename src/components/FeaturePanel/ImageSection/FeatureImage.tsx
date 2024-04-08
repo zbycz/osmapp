@@ -11,13 +11,7 @@ import { Photo } from './Photo';
 
 const Wrapper = styled.div`
   position: relative;
-  background: #ddd
-    linear-gradient(
-      to bottom,
-      rgba(0, 0, 0, 0) 70%,
-      rgba(0, 0, 0, 0.09) 76%,
-      #5b5b5b
-    );
+  background: #ddd;
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
   ${({ uncertainImage }) =>
@@ -100,7 +94,9 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
 
   return (
     <Wrapper uncertainImage={uncertainImage}>
-      {image && image !== LOADING && <Photo image={image} />}
+      {image && image !== LOADING && (
+        <Photo image={image} isCertain={!uncertainImage} />
+      )}
       {(image === undefined || image === LOADING) && (
         <IconWrapper>
           <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />

@@ -1,15 +1,15 @@
 import * as React from 'react';
 import { Image } from '../../../services/types';
 
-interface PhotoProps {
+interface PhotoInnerProps {
   image: Image;
 }
 
-export const Photo: React.FC<PhotoProps> = ({ image }) => {
+const InnerPhoto: React.FC<PhotoInnerProps> = ({ image }) => {
   if (image.isPano) {
     const pannellumUrl = `https://cdn.pannellum.org/2.5/pannellum.htm#panorama=${encodeURIComponent(
       image.thumb,
-    )}&autoLoad=true`;
+    )}&autoLoad=true&autoRotate=-1`;
 
     return (
       <iframe
@@ -35,5 +35,50 @@ export const Photo: React.FC<PhotoProps> = ({ image }) => {
       }}
       alt={`Provided by ${image.source}`}
     />
+  );
+};
+
+interface PhotoProps {
+  image: Image;
+  isCertain: boolean;
+}
+
+export const Photo: React.FC<PhotoProps> = ({ image, isCertain }) => {
+  return (
+    <div
+      style={{
+        width: '100%',
+        height: '100%',
+        position: 'relative',
+      }}
+    >
+      <InnerPhoto image={image} />
+      {!isCertain && (
+        <div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            height: '100%',
+            width: '100%',
+            backdropFilter: 'contrast(0.8) brightness(1.1)',
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+      <div
+        style={{
+          background:
+            'linear-gradient(to bottom, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.09) 76%, #5b5b5b)',
+          position: 'absolute',
+          width: '100%',
+          height: '3rem',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          pointerEvents: 'none',
+        }}
+      />
+    </div>
   );
 };
