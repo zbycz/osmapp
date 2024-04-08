@@ -51,42 +51,40 @@ interface PhotoProps {
   isCertain: boolean;
 }
 
-export const Photo: React.FC<PhotoProps> = ({ image, isCertain }) => {
-  return (
-    <div
-      style={{
-        width: '100%',
-        height: '100%',
-        position: 'relative',
-      }}
-    >
-      <InnerPhoto image={image} />
-      {!isCertain && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            height: '100%',
-            width: '100%',
-            backdropFilter: 'contrast(0.8) brightness(1.1)',
-            pointerEvents: 'none',
-          }}
-        />
-      )}
+export const Photo: React.FC<PhotoProps> = ({ image, isCertain }) => (
+  <div
+    style={{
+      width: '100%',
+      height: '100%',
+      position: 'relative',
+    }}
+  >
+    <InnerPhoto image={image} />
+    {!isCertain && (
       <div
         style={{
-          background:
-            'linear-gradient(to bottom, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.09) 76%, #5b5b5b)',
           position: 'absolute',
-          width: '100%',
-          height: '3rem',
-          bottom: 0,
+          top: 0,
           left: 0,
-          right: 0,
+          height: '100%',
+          width: '100%',
+          backdropFilter: 'contrast(0.8) brightness(1.1)',
           pointerEvents: 'none',
         }}
       />
-    </div>
-  );
-};
+    )}
+    <div
+      style={{
+        background:
+          'linear-gradient(to bottom, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.09) 76%, #5b5b5b)',
+        position: 'absolute',
+        width: '100%',
+        height: '3rem',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        pointerEvents: 'none',
+      }}
+    />
+  </div>
+);
