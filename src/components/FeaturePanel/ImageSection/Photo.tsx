@@ -5,13 +5,15 @@ interface PhotoInnerProps {
   image: Image;
 }
 
-const InnerPhoto: React.FC<PhotoInnerProps> = ({ image }) => {
-  if (image.isPano) {
-    const pannellumUrl = `https://cdn.pannellum.org/2.5/pannellum.htm#panorama=${encodeURIComponent(
-      image.thumb,
-    )}&autoLoad=true&autoRotate=-1`;
+const InnerPano: React.FC<PhotoInnerProps> = ({ image }) => {
+  const pannellumUrl = `https://cdn.pannellum.org/2.5/pannellum.htm#panorama=${encodeURIComponent(
+    image.thumb,
+  )}&config=${encodeURIComponent(
+    'http://localhost:3000/pannellum-config.json',
+  )}`;
 
-    return (
+  return (
+    <>
       <iframe
         title="panorama picture"
         allowFullScreen
@@ -22,7 +24,13 @@ const InnerPhoto: React.FC<PhotoInnerProps> = ({ image }) => {
         }}
         src={pannellumUrl}
       />
-    );
+    </>
+  );
+};
+
+const InnerPhoto: React.FC<PhotoInnerProps> = ({ image }) => {
+  if (image.isPano) {
+    return <InnerPano image={image} />;
   }
 
   return (
