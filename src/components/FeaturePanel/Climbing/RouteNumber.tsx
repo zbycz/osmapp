@@ -1,54 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import { Tooltip, useTheme } from '@material-ui/core';
-import { useConfig } from './config';
-
-const useColor = ({ isSelected, hasRoute, hasRouteInDifferentPhotos }) => {
-  const theme: any = useTheme();
-  const config = useConfig();
-
-  if (hasRoute && isSelected) {
-    return {
-      background: config.routeNumberBackgroundSelected,
-      text: config.routeNumberTextColorSelected,
-      border: `solid 1px ${config.routeNumberBorderColorSelected}`,
-    };
-  }
-  if (hasRoute) {
-    return {
-      background: config.routeNumberBackground,
-      text: config.routeNumberTextColor,
-      border: `solid 1px ${config.routeNumberBorderColor}`,
-    };
-  }
-  if (hasRouteInDifferentPhotos) {
-    return {
-      background: 'transparent',
-      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
-      border: `dashed 1px ${config.routeNumberBorderColor}`,
-    };
-  }
-  if (!hasRoute) {
-    return {
-      background: 'transparent',
-      text: isSelected ? theme.textPrimaryDefault : theme.textDefault,
-      border: 'solid 1px transparent',
-    };
-  }
-
-  return {
-    background: 'transparent',
-    text: theme.textOnPrimary,
-    border: 'solid 1px transparent',
-  };
-};
+import { Tooltip } from '@material-ui/core';
+import { useRouteNumberColors } from './utils/useRouteNumberColors';
+import { isAscent } from './utils/ascents';
 
 const Container = styled.div<{
   colors: Record<string, string>;
 }>`
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   line-height: 20px;
   border-radius: 50%;
   background: ${({ colors }) => colors.background};
@@ -65,19 +26,38 @@ const Container = styled.div<{
 export const RouteNumber = ({
   children,
   isSelected,
-  hasRoute,
-  hasRouteInDifferentPhotos = false,
+  photoInfoForRoute,
+  osmId,
 }) => {
-  const colors = useColor({ isSelected, hasRoute, hasRouteInDifferentPhotos });
+  const hasPathOnThisPhoto = photoInfoForRoute === 'hasPathOnThisPhoto';
+  const isOnThisPhoto = photoInfoForRoute === 'isOnThisPhoto';
+  const hasPathInDifferentPhoto =
+    photoInfoForRoute === 'hasPathInDifferentPhoto';
+  const isOnDifferentPhoto = photoInfoForRoute === 'isOnDifferentPhoto';
+
+  const colors = useRouteNumberColors({
+    isSelected,
+    hasPathOnThisPhoto,
+    isOnThisPhoto,
+    hasPathInDifferentPhoto,
+    isOnDifferentPhoto,
+    isAscent: isAscent(osmId),
+  });
 
   const getTitle = () => {
-    if (hasRoute) {
-      return '';
+    if (hasPathOnThisPhoto) {
+      return 'Route has path on this photo';
     }
-    if (hasRouteInDifferentPhotos) {
-      return 'Route is available in different photo';
+    if (isOnThisPhoto) {
+      return 'Route is on this photo';
     }
-    return 'Route is not in schema';
+    if (hasPathInDifferentPhoto) {
+      return 'Route has path available on different photo';
+    }
+    if (isOnDifferentPhoto) {
+      return 'Route is available on different photo';
+    }
+    return 'Route is not marked yet';
   };
 
   return (

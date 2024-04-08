@@ -2,12 +2,14 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { useConfig } from '../config';
+import { useRouteNumberColors } from '../utils/useRouteNumberColors';
+import { isAscent } from '../utils/ascents';
 
 type Props = {
   children: number;
   x: number;
   y: number;
+  osmId: string;
 };
 
 const Text = styled.text<{ scale: number }>`
@@ -25,18 +27,23 @@ const HoverableRouteName = RouteNameBoxBase;
 const RouteNameOutline = RouteNameBoxBase;
 const RouteNameBox = RouteNameBoxBase;
 
-export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
-  const { imageSize, photoZoom, isRouteSelected, getMachine, isEditMode } =
-    useClimbingContext();
+export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
+  const {
+    imageSize,
+    photoZoom,
+    isRouteSelected,
+    getMachine,
+    isEditMode,
+    routeIndexHovered,
+    setRouteIndexHovered,
+  } = useClimbingContext();
   const digits = String(routeNumber).length;
-  const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 20) / photoZoom.scale;
-  const RECT_HEIGHT = 20 / photoZoom.scale;
-  const RECT_Y_OFFSET = 10 / photoZoom.scale;
+  const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 18) / photoZoom.scale;
+  const RECT_HEIGHT = 18 / photoZoom.scale;
+  const RECT_Y_OFFSET = 8 / photoZoom.scale;
   const OUTLINE_WIDTH = 2 / photoZoom.scale;
   const HOVER_WIDTH = 10 / photoZoom.scale;
-  const TEXT_Y_SHIFT = 15 / photoZoom.scale;
-
-  const config = useConfig();
+  const TEXT_Y_SHIFT = 13 / photoZoom.scale;
 
   const getX = () => {
     const isFarRight = x + RECT_WIDTH / 2 + OUTLINE_WIDTH > imageSize.width;
@@ -56,11 +63,21 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
     return y + RECT_Y_OFFSET;
   };
 
+  const onMouseEnter = () => {
+    setRouteIndexHovered(routeNumber);
+  };
+
+  const onMouseLeave = () => {
+    setRouteIndexHovered(null);
+  };
+
   const newX = getX(); // this shifts X coordinate in case of too small photo
   const newY = getY(); // this shifts Y coordinate in case of too small photo
 
   const machine = getMachine();
   const commonProps = {
+    cursor: 'pointer',
+    pointerEvents: 'none',
     onClick: (e) => {
       if (isEditMode) {
         machine.execute('editRoute', { routeNumber });
@@ -69,9 +86,16 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
       }
       e.stopPropagation();
     },
-    cursor: 'pointer',
+    onMouseEnter,
+    onMouseLeave,
   };
   const isSelected = isRouteSelected(routeNumber);
+
+  const colors = useRouteNumberColors({
+    isSelected: isSelected || routeIndexHovered === routeNumber,
+    hasPathOnThisPhoto: true,
+    isAscent: isAscent(osmId),
+  });
 
   return (
     <>
@@ -91,11 +115,7 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         width={RECT_WIDTH + OUTLINE_WIDTH}
         height={RECT_HEIGHT + OUTLINE_WIDTH}
         rx="10"
-        fill={
-          isSelected
-            ? config.routeNumberBorderColorSelected
-            : config.routeNumberBorderColor
-        }
+        fill={colors.border}
         {...commonProps}
       />
       <RouteNameBox
@@ -104,22 +124,14 @@ export const RouteNumber = ({ children: routeNumber, x, y }: Props) => {
         width={RECT_WIDTH}
         height={RECT_HEIGHT}
         rx="10"
-        fill={
-          isSelected
-            ? config.routeNumberBackgroundSelected
-            : config.routeNumberBackground
-        }
+        fill={colors.background}
         {...commonProps}
       />
       <Text
         x={newX}
         y={newY + TEXT_Y_SHIFT}
         scale={photoZoom.scale}
-        fill={
-          isSelected
-            ? config.routeNumberTextColorSelected
-            : config.routeNumberTextColor
-        }
+        fill={colors.text}
         textAnchor="middle"
         {...commonProps}
       >

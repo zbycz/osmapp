@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { useTheme } from '@material-ui/core';
 import { isDesktop } from '../helpers';
+import { useScrollShadow } from '../FeaturePanel/Climbing/utils/useScrollShadow';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -11,9 +13,10 @@ export const PanelWrapper = styled.div`
   left: 0;
   top: 72px; // TopPanel
   bottom: 0;
-  background: ${({ theme }) => theme.palette.panelBackground};
+  background: ${({ theme }) => theme.palette.background.paper};
   overflow: hidden;
   z-index: 1100;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 
   display: flex;
   flex-direction: column;
@@ -31,11 +34,34 @@ export const PanelWrapper = styled.div`
   }
 `;
 
-export const PanelScrollbars = ({ children }) => (
-  <Scrollbars universal autoHide style={{ height: '100%' }}>
-    {children}
-  </Scrollbars>
-);
+export const PanelScrollbars = ({ children }) => {
+  const theme = useTheme();
+
+  // @TODO refresh on panel height first update
+  const {
+    scrollElementRef,
+    onScroll,
+    ShadowContainer,
+    ShadowTop,
+    ShadowBottom,
+  } = useScrollShadow();
+
+  return (
+    <ShadowContainer>
+      <ShadowTop backgroundColor={theme.palette.background.paper} />
+      <Scrollbars
+        universal
+        autoHide
+        style={{ height: '100%' }}
+        onScroll={onScroll}
+        ref={scrollElementRef}
+      >
+        {children}
+      </Scrollbars>
+      <ShadowBottom backgroundColor={theme.palette.background.paper} />
+    </ShadowContainer>
+  );
+};
 
 export const PanelContent = styled.div`
   display: flex;

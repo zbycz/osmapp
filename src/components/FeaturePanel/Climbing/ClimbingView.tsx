@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { CircularProgress, IconButton } from '@material-ui/core';
+import { CircularProgress, IconButton, useTheme } from '@material-ui/core';
 
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
@@ -12,6 +12,8 @@ import { RoutesEditor } from './Editor/RoutesEditor';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
+import { useScrollShadow } from './utils/useScrollShadow';
+import { RouteDistribution } from './RouteDistribution';
 
 const Container = styled.div`
   position: relative;
@@ -32,26 +34,26 @@ const Container = styled.div`
       border-radius: 6px;
       width: 40px;
       height: 12px;
-      background: ${({ theme }) => theme.backgroundPrimarySubtleOnElevation0};
+      background: ${({ theme }) => theme.palette.background.paper};
       margin-top: 1px;
       z-index: 1;
       transition: all 0.1s ease;
-      border: solid 1px ${({ theme }) => theme.borderOnElevation0};
+      border: solid 1px ${({ theme }) => theme.palette.divider};
       text-align: center;
       line-height: 0px;
       font-size: 20px;
-      color: ${({ theme }) => theme.textPrimaryDefault};
+      color: ${({ theme }) => theme.palette.primary.text};
       letter-spacing: 1px;
     }
 
     &:hover {
       &::before {
-        background-color: ${({ theme }) => theme.borderSecondary};
-        border: solid 1px ${({ theme }) => theme.borderSecondary};
-        color: ${({ theme }) => theme.textOnPrimary};
+        background-color: ${({ theme }) => theme.palette.primary.main};
+        border: solid 1px ${({ theme }) => theme.palette.primary.main};
+        color: ${({ theme }) => theme.palette.primary.contrastText};
       }
       &::after {
-        border-color: ${({ theme }) => theme.borderSecondary};
+        border-color: ${({ theme }) => theme.palette.primary.main};
         transition: all 0.5s ease-out;
         border-width: 1px;
         margin-top: 6px;
@@ -69,48 +71,14 @@ const Container = styled.div`
     }
   }
   .Pane.horizontal.Pane2 {
-    margin-top: 0;
-    overflow: auto;
-  }
-  .Pane2 {
-    overflow: auto;
-
-    /* TODO cover for light mode wrong Cover color */
-    background:
-      /* Shadow Cover TOP */ radial-gradient(
-          farthest-side at 50% 0,
-          ${({ theme }) => theme.palette.panelBackground},
-          ${({ theme }) => theme.palette.panelBackground}
-        )
-        center top,
-      /* Shadow Cover BOTTOM */
-        radial-gradient(
-          farthest-side at 50% 100%,
-          ${({ theme }) => theme.palette.panelBackground},
-          ${({ theme }) => theme.palette.panelBackground}
-        )
-        center bottom,
-      /* Shadow TOP */
-        radial-gradient(
-          farthest-side at 50% 0,
-          ${({ theme }) => theme.palette.panelScrollCover},
-          transparent
-        )
-        center top,
-      /* Shadow BOTTOM */
-        radial-gradient(
-          farthest-side at 50% 100%,
-          ${({ theme }) => theme.palette.panelScrollCover},
-          transparent
-        )
-        center bottom;
-    background-repeat: no-repeat;
-    background-size: 100% 40px, 100% 40px, 100% 14px, 100% 14px;
-    background-attachment: local, local, scroll, scroll;
-
-    background-color: ${({ theme }) => theme.palette.panelBackground};
+    overflow: hidden;
   }
 `;
+const BottomPanel = styled.div`
+  height: 100%;
+  overflow: auto;
+`;
+
 const LoadingContainer = styled.div`
   position: absolute;
   left: 0;
@@ -146,13 +114,8 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   display: flex;
 `;
 
-const NoPhoto = styled.div<{ isVisible: boolean }>`
-  text-align: center;
-  color: ${({ theme }) => theme.textSubdued};
-  padding: 10px;
-`;
-
 const BlurContainer = styled.div<{ isVisible: boolean }>`
+  -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
   visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
@@ -177,7 +140,14 @@ const BackgroundContainer = styled.div<{
   height: 100%;
 `;
 
-export const ClimbingView = () => {
+const MainContent = () => (
+  <>
+    <RouteList isEditable />
+    <RouteDistribution />
+  </>
+);
+
+export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
   const {
     imageSize,
     routeSelectedIndex,
@@ -193,7 +163,7 @@ export const ClimbingView = () => {
     areRoutesLoading,
     setArePointerEventsDisabled,
     setPhotoZoom,
-    preparePhotosAndSetFirst,
+    preparePhotosAndSet,
   } = useClimbingContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
@@ -243,7 +213,7 @@ export const ClimbingView = () => {
   };
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
 
-  preparePhotosAndSetFirst();
+  preparePhotosAndSet(photoIndex);
 
   useEffect(() => {
     setIsPhotoLoaded(false);
@@ -261,6 +231,15 @@ export const ClimbingView = () => {
   const stopPointerEvents = () => {
     setArePointerEventsDisabled(true);
   };
+
+  const {
+    scrollElementRef,
+    onScroll,
+    ShadowContainer,
+    ShadowTop,
+    ShadowBottom,
+  } = useScrollShadow([areRoutesLoading]);
+  const theme = useTheme();
 
   return (
     <Container>
@@ -281,21 +260,21 @@ export const ClimbingView = () => {
           </ArrowExpanderButton>
         </ArrowExpanderContainer>
       )}
-      <SplitPane
-        split="horizontal"
-        minSize={0}
-        maxSize="100%"
-        size={splitPaneHeight ?? '60vh'}
-        onDragStarted={onDragStarted}
-        onDragFinished={onDragFinished}
-        pane1Style={{ maxHeight: '90%' }}
-      >
-        <BackgroundContainer
-          imageHeight={imageSize.height}
-          imageUrl={imageUrl}
-          isVisible={isPhotoLoaded}
+      {photoPath ? (
+        <SplitPane
+          split="horizontal"
+          minSize={0}
+          maxSize="100%"
+          size={splitPaneHeight ?? '60vh'}
+          onDragStarted={onDragStarted}
+          onDragFinished={onDragFinished}
+          pane1Style={{ maxHeight: '90%' }}
         >
-          {photoPath ? (
+          <BackgroundContainer
+            imageHeight={imageSize.height}
+            imageUrl={imageUrl}
+            isVisible={isPhotoLoaded}
+          >
             <>
               {!isPhotoLoaded && (
                 <LoadingContainer>
@@ -304,6 +283,9 @@ export const ClimbingView = () => {
               )}
               <BlurContainer isVisible={isPhotoLoaded}>
                 <TransformWrapper
+                  doubleClick={{
+                    disabled: true,
+                  }}
                   onWheelStart={stopPointerEvents}
                   onWheelStop={startPointerEvents}
                   onPinchingStart={stopPointerEvents}
@@ -313,6 +295,7 @@ export const ClimbingView = () => {
                   onPanningStart={startPointerEvents}
                   onPanningStop={startPointerEvents}
                   wheel={{ step: 100 }}
+                  centerOnInit
                   onTransformed={(
                     _ref,
                     state: {
@@ -349,13 +332,19 @@ export const ClimbingView = () => {
                 )}
               </BlurContainer>
             </>
-          ) : (
-            <NoPhoto>No image</NoPhoto>
-          )}
-        </BackgroundContainer>
+          </BackgroundContainer>
 
-        <RouteList isEditable />
-      </SplitPane>
+          <ShadowContainer>
+            <ShadowTop backgroundColor={theme.palette.background.paper} />
+            <BottomPanel onScroll={onScroll} ref={scrollElementRef}>
+              <MainContent />
+            </BottomPanel>
+            <ShadowBottom backgroundColor={theme.palette.background.paper} />
+          </ShadowContainer>
+        </SplitPane>
+      ) : (
+        <MainContent />
+      )}
     </Container>
   );
 };

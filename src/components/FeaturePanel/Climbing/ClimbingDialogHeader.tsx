@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Router from 'next/router';
 import styled from 'styled-components';
 import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
@@ -8,6 +9,7 @@ import { ClimbingSettings } from './ClimbingSettings';
 import { PhotoLink } from './PhotoLink';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
+import { getOsmappLink } from '../../../services/helpers';
 
 const Title = styled.div`
   flex: 1;
@@ -19,7 +21,7 @@ const PhotosContainer = styled.div`
   gap: 4px;
 `;
 const PhotosTitle = styled.div`
-  color: ${({ theme }) => theme.textSubdued};
+  color: ${({ theme }) => theme.palette.text.hint};
 `;
 const PhotoLinks = styled.div`
   display: flex;
@@ -42,7 +44,13 @@ export const ClimbingDialogHeader = ({ onClose }) => {
     setShowDebugMenu,
   } = useClimbingContext();
 
-  const onPhotoChange = (photo: string) => {
+  const { feature } = useFeatureContext();
+
+  const onPhotoChange = (photo: string, photoIndex: number) => {
+    Router.push(
+      `${getOsmappLink(feature)}/climbing/${photoIndex}${window.location.hash}`,
+    );
+
     setAreRoutesLoading(true);
     setPhotoPath(photo);
     setTimeout(() => {
@@ -50,7 +58,6 @@ export const ClimbingDialogHeader = ({ onClose }) => {
       loadPhotoRelatedData();
     }, 100);
   };
-  const { feature } = useFeatureContext();
 
   const label = getLabel(feature);
 
@@ -80,7 +87,7 @@ export const ClimbingDialogHeader = ({ onClose }) => {
               <PhotoLinks>
                 {photoPaths.map((photo, index) => (
                   <PhotoLink
-                    onClick={() => onPhotoChange(photo)}
+                    onClick={() => onPhotoChange(photo, index)}
                     isCurrentPhoto={photo === photoPath}
                   >
                     {index}

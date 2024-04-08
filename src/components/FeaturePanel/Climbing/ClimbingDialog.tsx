@@ -21,7 +21,7 @@ const Flex = styled.div`
   width: 100%;
 `;
 
-export const ClimbingDialog = () => {
+export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
   const contentRef = useRef(null);
 
   const {
@@ -48,6 +48,9 @@ export const ClimbingDialog = () => {
   const handleClose = () => {
     Router.push(`${getOsmappLink(feature)}${window.location.hash}`);
   };
+  const handleCancel = () => {
+    setIsEditMode(false);
+  };
 
   const onNewRouteCreate = () => {
     machine.execute('createRoute');
@@ -66,7 +69,7 @@ export const ClimbingDialog = () => {
         ref={contentRef}
         onScroll={onScroll}
       >
-        <ClimbingView />
+        <ClimbingView photoIndex={photoIndex} />
       </DialogContent>
 
       {isEditMode && (
@@ -82,7 +85,7 @@ export const ClimbingDialog = () => {
               </Button>
             )}
             <div>
-              <Button autoFocus onClick={handleClose}>
+              <Button autoFocus onClick={handleCancel}>
                 Cancel
               </Button>
               {showDebugMenu && (

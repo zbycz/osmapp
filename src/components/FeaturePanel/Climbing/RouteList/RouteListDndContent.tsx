@@ -3,12 +3,17 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
-import { toggleElementInArray } from '../utils/array';
+import { isAscent } from '../utils/ascents';
 
 type Item = {
   id: number;
   content: React.ReactNode;
 };
+
+const Container = styled.div`
+  width: 100%;
+  margin: 0 auto;
+`;
 
 const MaxWidthContainer = styled.div`
   width: 100%;
@@ -18,22 +23,27 @@ const MaxWidthContainer = styled.div`
   justify-content: center;
   flex-direction: row;
 `;
-const Container = styled.div`
-  width: 100%;
 
-  margin: 0 auto;
-`;
-const RowWithDragHandler = styled.div<{ isDraggedOver: boolean }>`
+const RowWithDragHandler = styled.div<{
+  isDraggedOver: boolean;
+  isAscent: boolean;
+}>`
   cursor: pointer;
   display: flex;
   justify-content: center;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
-  background-color: ${({ isSelected }) =>
-    isSelected ? '#ccc' : 'transparent'};
-  background: ${({ isSelected, theme }) =>
-    isSelected ? theme.backgroundSurfaceElevation1 : 'transparent'};
+  /* background-color: ${({ isSelected }) =>
+    isSelected ? '#ccc' : 'transparent'}; */
+  background: ${({ isSelected, theme, isAscented }) =>
+    isSelected
+      ? theme.palette.action.selected
+      : isAscented
+      ? theme.palette.climbing.ascent
+      : 'transparent'};
   position: relative;
   font-size: 16px;
+  border-top: dotted 1px ${({ theme }) => theme.palette.divider};
+  z-index: ${({ isSelected }) => (isSelected ? '2' : 'auto')};
 `;
 const DragHandler = styled.div`
   width: 30px;
@@ -55,14 +65,14 @@ const HighlightedDropzone = styled.div<{ isActive: boolean }>`
   margin-top: -2px;
   height: 4px;
   background: ${({ isActive, theme }) =>
-    isActive ? theme.borderSecondary : 'transparent'};
+    isActive ? theme.palette.climbing.active : 'transparent'};
   z-index: 1000000;
 `;
 const TableHeader = styled.div`
   display: flex;
   justify-content: center;
   font-weight: 700;
-  color: ${({ theme }) => theme.textSubdued};
+  color: ${({ theme }) => theme.palette.text.hint};
   font-size: 11px;
   padding-top: 12px;
   padding-bottom: 4px;
@@ -72,7 +82,7 @@ const NameHeader = styled.div`
   padding-left: 40px;
 `;
 const DifficultyHeader = styled.div`
-  width: 130px;
+  width: 115px;
 `;
 
 export const RouteListDndContent = ({ isEditable }) => {
@@ -85,8 +95,6 @@ export const RouteListDndContent = ({ isEditable }) => {
     isRouteSelected,
     isEditMode,
     getMachine,
-    setRoutesExpanded,
-    routesExpanded,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
   const machine = getMachine();
@@ -207,6 +215,7 @@ export const RouteListDndContent = ({ isEditable }) => {
         </MaxWidthContainer>
       </TableHeader>
       {items.map((item, index) => {
+        const osmId = item.route.feature?.osmMeta.id ?? null;
         const isSelected = isRouteSelected(index);
 
         return (
@@ -221,15 +230,9 @@ export const RouteListDndContent = ({ isEditable }) => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
-              onClick={(event) => {
-                const isDoubleClick = event.detail === 2;
-                if (isDoubleClick) {
-                  setRoutesExpanded(
-                    toggleElementInArray(routesExpanded, index),
-                  );
-                } else {
-                  onRowClick(index);
-                }
+              isAscented={isAscent(osmId)}
+              onClick={() => {
+                onRowClick(index);
               }}
             >
               <MaxWidthContainer>

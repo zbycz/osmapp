@@ -15,14 +15,8 @@ const AddNewPoint = styled.circle`
 `;
 
 export const RoutePath = ({ route, routeNumber }) => {
-  const [tempPointPosition, setTempPointPosition] = useState<
-    PositionPx & { lineIndex: number }
-  >({
-    x: 0,
-    y: 0,
-    units: 'px',
-    lineIndex: 0,
-  });
+  const [tempPointPosition, setTempPointPosition] =
+    useState<(PositionPx & { lineIndex: number }) | null>(null);
   const {
     isPointMoving,
     isRouteSelected,
@@ -30,8 +24,8 @@ export const RoutePath = ({ route, routeNumber }) => {
     getMachine,
     isEditMode,
     addOffsets,
-    isLineInteractiveAreaHovered,
-    setIsLineInteractiveAreaHovered,
+    routeIndexHovered,
+    setRouteIndexHovered,
     getPathForRoute,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
@@ -49,7 +43,7 @@ export const RoutePath = ({ route, routeNumber }) => {
       machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute'
     ) {
-      if (!isLineInteractiveAreaHovered) setIsLineInteractiveAreaHovered(true);
+      if (!routeIndexHovered) setRouteIndexHovered(routeNumber);
 
       const position = addOffsets(['editorPosition', 'imageContainer'], {
         x: e.clientX,
@@ -63,35 +57,30 @@ export const RoutePath = ({ route, routeNumber }) => {
       });
     }
   };
+
   const onMouseEnter = () => {
-    if (
-      machine.currentStateName === 'editRoute' ||
-      machine.currentStateName === 'extendRoute'
-    ) {
-      setIsLineInteractiveAreaHovered(true);
-    }
+    setRouteIndexHovered(routeNumber);
   };
 
   const onMouseLeave = () => {
-    if (
-      machine.currentStateName === 'editRoute' ||
-      machine.currentStateName === 'extendRoute'
-    ) {
-      setIsLineInteractiveAreaHovered(false);
-    }
+    setRouteIndexHovered(null);
   };
 
-  const hoveredPosition = addOffsets(['scrollOffset'], {
-    x: tempPointPosition.x,
-    y: tempPointPosition.y,
-    units: 'px',
-  });
+  const hoveredPosition = tempPointPosition
+    ? addOffsets(['scrollOffset'], {
+        x: tempPointPosition.x,
+        y: tempPointPosition.y,
+        units: 'px',
+      })
+    : null;
 
   const onPointAdd = () => {
-    machine.execute('addPointInBetween', {
-      hoveredPosition,
-      tempPointPosition,
-    });
+    if (tempPointPosition) {
+      machine.execute('addPointInBetween', {
+        hoveredPosition,
+        tempPointPosition,
+      });
+    }
   };
 
   const onMouseDown = (e) => {
@@ -105,7 +94,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     (machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute') &&
     isSelected &&
-    isLineInteractiveAreaHovered;
+    routeIndexHovered !== null;
 
   const isInteractionDisabled =
     machine.currentStateName === 'extendRoute' && !isRouteSelected(routeNumber);
@@ -134,6 +123,7 @@ export const RoutePath = ({ route, routeNumber }) => {
         // style={{ pointerEvents: arePointerEventsDisabled ? 'none' : 'all' }}
         style={{ pointerEvents: 'all' }}
         route={route}
+        routeNumber={routeNumber}
       />
 
       {path.length > 1 &&
@@ -148,7 +138,7 @@ export const RoutePath = ({ route, routeNumber }) => {
             return (
               <InteractiveArea
                 stroke="transparent"
-                strokeWidth={20}
+                strokeWidth={15}
                 x1={position1.x}
                 y1={position1.y}
                 x2={position2.x}
@@ -163,19 +153,17 @@ export const RoutePath = ({ route, routeNumber }) => {
           }
           return null;
         })}
-      {isEditableSelectedRouteHovered &&
-        hoveredPosition.x !== 0 &&
-        hoveredPosition.y !== 0 && (
-          <AddNewPoint
-            cx={hoveredPosition.x}
-            cy={hoveredPosition.y}
-            fill="white"
-            stroke="rgba(0,0,0,0.3)"
-            r={5}
-          />
-        )}
+      {isEditableSelectedRouteHovered && tempPointPosition && (
+        <AddNewPoint
+          cx={hoveredPosition.x}
+          cy={hoveredPosition.y}
+          fill="white"
+          stroke="rgba(0,0,0,0.3)"
+          r={5}
+        />
+      )}
       {machine.currentStateName === 'extendRoute' &&
-        !isLineInteractiveAreaHovered && (
+        routeIndexHovered === null && (
           <MouseTrackingLine routeNumber={routeNumber} />
         )}
     </>

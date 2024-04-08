@@ -6,11 +6,12 @@ import styled from 'styled-components';
 import { Divider, Menu, MenuItem } from '@material-ui/core';
 import OpenInNewIcon from '@material-ui/icons/OpenInNew';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { useBoolState } from '../helpers';
+import { isBrowser, useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { getIdEditorLink, positionToDeg, positionToDM } from '../../utils';
 import { PositionBoth } from '../../services/types';
 import { getFullOsmappLink } from '../../services/helpers';
+import { t } from '../../services/intl';
 
 const StyledMenuItem = styled(MenuItem)`
   svg {
@@ -47,7 +48,9 @@ export const ToggleButton = forwardRef<any, any>(
 
 const CopyTextItem = ({ text }) => (
   <MenuItem onClick={() => navigator.clipboard.writeText(text)}>
-    Copy {text.replace(/^https:\/\//, '')}
+    {t('coordinates.copy_value', {
+      value: text.replace(/^https:\/\//, ''),
+    })}
   </MenuItem>
 );
 
@@ -60,6 +63,9 @@ const LinkItem = ({ href, label }) => (
 // Our map uses 512 tiles, so our zoom is "one less"
 // https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
 const MAPLIBREGL_ZOOM_DIFFERENCE = 1;
+
+const isMobile = () =>
+  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error
 
 const useGetItems = ([lon, lat]: PositionBoth) => {
   const { feature } = useFeatureContext();
@@ -93,6 +99,14 @@ const useGetItems = ([lon, lat]: PositionBoth) => {
       label: 'iD editor',
       href: getIdEditorLink(feature, view), // TODO coordsFeature has random id which gets forwarded LOL
     },
+    ...(isMobile()
+      ? [
+          {
+            label: t('coordinates.geo_uri'),
+            href: `geo:${lat},${lon}`,
+          },
+        ]
+      : []),
   ];
 };
 

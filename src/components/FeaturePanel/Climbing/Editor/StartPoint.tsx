@@ -11,6 +11,7 @@ type Props = {
   routeNumberXShift: number;
   routeNumber: number;
   onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
+  osmId: string;
 };
 
 const NonEditablePoint = ({ x, y, isSelected }) => {
@@ -44,6 +45,7 @@ export const StartPoint = ({
   y,
   routeNumber,
   routeNumberXShift = 0,
+  osmId,
   onPointInSelectedRouteClick,
 }: Props) => {
   const { isRouteSelected, getMachine } = useClimbingContext();
@@ -66,7 +68,7 @@ export const StartPoint = ({
         <NonEditablePoint isSelected={isSelected} x={x} y={y} />
       )}
       <MouseTrackingLine routeNumber={routeNumber} />
-      <RouteNumber x={x + routeNumberXShift} y={y}>
+      <RouteNumber x={x + routeNumberXShift} y={y} osmId={osmId}>
         {routeNumber}
       </RouteNumber>
     </>

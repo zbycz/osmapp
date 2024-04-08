@@ -8,10 +8,10 @@ import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { emptyRoute } from '../utils/emptyRoute';
 import { RouteNumber } from '../RouteNumber';
-import { convertGrade } from '../utils/routeGrade';
 
 import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
+import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -26,8 +26,9 @@ const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
 `;
 const NameCell = styled(Cell)`
   flex: 1;
-  font-weight: 900;
-  color: ${({ theme }) => theme.textPrimaryDefault};
+`;
+const DifficultyCell = styled(Cell)`
+  margin-right: 8px;
 `;
 const RouteNumberCell = styled(Cell)`
   color: #999;
@@ -41,7 +42,7 @@ const ExpandIcon = styled(ExpandMoreIcon)<{ isExpanded: boolean }>`
 const Row = styled.div<{ isExpanded?: boolean }>`
   min-height: 40px;
   background-color: ${({ isExpanded, theme }) =>
-    isExpanded ? theme.backgroundSurfaceElevation1 : 'none'};
+    isExpanded ? theme.palette.action.selected : 'none'};
   overflow: hidden;
 
   width: 100%;
@@ -72,14 +73,12 @@ export const RenderListRow = ({
   const {
     getMachine,
     isRouteSelected,
-    hasPath,
     isEditMode,
     routeSelectedIndex,
-    hasPathInDifferentPhotos,
     selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
-    gradeTable,
+    getPhotoInfoForRoute,
   } = useClimbingContext();
 
   useEffect(() => {
@@ -87,10 +86,9 @@ export const RenderListRow = ({
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [routeSelectedIndex]);
-
+  const osmId = route.feature?.osmMeta.id ?? null;
   const isSelected = isRouteSelected(index);
-  const hasRoute = hasPath(index);
-  const hasRouteInDifferentPhotos = hasPathInDifferentPhotos(index);
+  const photoInfoForRoute = getPhotoInfoForRoute(index);
 
   const machine = getMachine();
 
@@ -122,13 +120,8 @@ export const RenderListRow = ({
     isReadOnly,
     index,
     isExpanded,
+    osmId,
   };
-  const convertedGrade = convertGrade(
-    gradeTable,
-    tempRoute.difficulty?.gradeSystem,
-    selectedRouteSystem,
-    tempRoute.difficulty?.grade,
-  );
 
   return (
     <Container ref={ref}>
@@ -136,8 +129,8 @@ export const RenderListRow = ({
         <RouteNumberCell component="th" scope="row" width={30}>
           <RouteNumber
             isSelected={isSelected}
-            hasRoute={hasRoute}
-            hasRouteInDifferentPhotos={hasRouteInDifferentPhotos}
+            photoInfoForRoute={photoInfoForRoute}
+            osmId={osmId}
           >
             {index + 1}
           </RouteNumber>
@@ -156,9 +149,12 @@ export const RenderListRow = ({
             />
           )}
         </NameCell>
-        <Cell width={50}>
-          {getText(convertedGrade ?? tempRoute.difficulty?.grade)}
-        </Cell>
+        <DifficultyCell width={50}>
+          <RouteDifficultyBadge
+            routeDifficulty={tempRoute.difficulty}
+            selectedRouteSystem={selectedRouteSystem}
+          />
+        </DifficultyCell>
 
         <Cell width={50}>
           <IconButton

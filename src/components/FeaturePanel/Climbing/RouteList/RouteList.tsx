@@ -8,9 +8,11 @@ import { RouteListDndContent } from './RouteListDndContent';
 import { addElementToArray, deleteFromArray } from '../utils/array';
 import { getCsvGradeData } from '../utils/routeGrade';
 import { invertedBoltCodeMap } from '../utils/boltCodes';
+import { PanelLabel } from '../PanelLabel';
+import { ContentContainer } from '../ContentContainer';
 
 const Container = styled.div`
-  padding-bottom: 65px;
+  padding-bottom: 20px;
   position: relative; // mobile safari fix
 `;
 const ButtonContainer = styled.div`
@@ -31,6 +33,8 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     setGradeTable,
     showDebugMenu,
   } = useClimbingContext();
+
+  if (routes.length === 0) return null;
 
   React.useEffect(() => {
     if (!gradeTable) setGradeTable(getCsvGradeData());
@@ -120,36 +124,39 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
 
   return (
     <Container>
+      <PanelLabel addition={`${routes.length} routes`}>Routes</PanelLabel>
       {/* {arePointerEventsDisabled ? 'NONE' : 'ALL'} */}
       {routes.length !== 0 && <RouteListDndContent isEditable={isEditable} />}
-      {!isEditMode && isEditable && (
-        <ButtonContainer>
-          <Button
-            onClick={handleEdit}
-            color="primary"
-            variant="outlined"
-            endIcon={<EditIcon />}
-          >
-            Edit routes
-          </Button>
-        </ButtonContainer>
-      )}
-      {showDebugMenu && (
-        <>
-          <br />
-          <ButtonGroup variant="contained" size="small" color="primary">
-            <Button size="small" onClick={getRoutesCsv}>
-              export OSM
+      <ContentContainer>
+        {!isEditMode && isEditable && (
+          <ButtonContainer>
+            <Button
+              onClick={handleEdit}
+              color="primary"
+              variant="outlined"
+              endIcon={<EditIcon />}
+            >
+              Edit routes
             </Button>
-            <Button size="small" onClick={getRoutesJson}>
-              export JSON
-            </Button>
-            <Button size="small" onClick={mockRoutes}>
-              Mock
-            </Button>
-          </ButtonGroup>
-        </>
-      )}
+          </ButtonContainer>
+        )}
+        {showDebugMenu && (
+          <>
+            <br />
+            <ButtonGroup variant="contained" size="small" color="primary">
+              <Button size="small" onClick={getRoutesCsv}>
+                export OSM
+              </Button>
+              <Button size="small" onClick={getRoutesJson}>
+                export JSON
+              </Button>
+              <Button size="small" onClick={mockRoutes}>
+                Mock
+              </Button>
+            </ButtonGroup>
+          </>
+        )}
+      </ContentContainer>
     </Container>
   );
 };

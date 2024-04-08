@@ -9,6 +9,7 @@ export const Table = styled.table`
     padding: 0.1em;
     overflow: hidden;
     vertical-align: baseline;
+    word-break: break-all;
 
     &:hover .show-on-hover {
       display: block !important;

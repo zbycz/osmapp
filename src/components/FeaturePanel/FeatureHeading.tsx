@@ -6,7 +6,6 @@ import { useEditDialogContext } from './helpers/EditDialogContext';
 const Wrapper = styled.div`
   font-size: 36px;
   line-height: 0.98;
-  color: ${({ theme }) => theme.palette.text.panelHeading};
   position: relative;
   padding-bottom: 30px;
   ${({ deleted }) => deleted && 'text-decoration: line-through;'}

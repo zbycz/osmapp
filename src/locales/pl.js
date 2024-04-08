@@ -6,6 +6,8 @@ export default {
   close_panel: 'Zamknij panel',
   webgl_error: `Ups. Ta mapa wymaga technologii WebGL.<br /><br />Jeśli masz zgodne urządzenie, spróbuj użyć ostatniej wersji przeglądarki Chrome.`,
 
+  'project.osmapp.description': 'Uniwersalna aplikacja OpenStreetMap',
+
   'install.button': 'Zainstaluj aplikację',
   'install.tabs_aria_label': 'Wybierz swoją platformę',
   'install.ios_intro': 'Otwórz osmapp.org w <strong>przeglądarce Safari</strong>',
@@ -19,7 +21,6 @@ export default {
   'install.outro': 'To wszystko! Zobacz OsmAPP na swoim domowym ekranie.',
   'install.note': 'Uwaga: ta aplikacja korzysta z technologii PWA – zapewnia szybką instalację i nie wymaga Google Play ani App Store.',
 
-  'homepage.subtitle': 'Uniwersalna aplikacja OpenStreetMap',
   'homepage.how_to_start': 'Zacznij od wpisania zapytania w polu wyszukiwania.\nAlbo też kliknij dowolny obiekt na mapie.',
   'homepage.examples.eg': 'np.',
   'homepage.examples.charles_bridge_statues': 'Pomniki na Moście Karola',
@@ -138,6 +139,9 @@ export default {
   'tags.website': 'Strona www',
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Godziny otwarcia',
+
+  'coordinates.geo_uri': 'GeoURI (aplikacja mapowa na telefonie)',
+  'coordinates.copy_value': 'Kopiuj __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Mapy',
   'layerswitcher.heading': 'Warstwy mapy',

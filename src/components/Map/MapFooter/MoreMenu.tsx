@@ -17,6 +17,7 @@ import { getIdEditorLink } from '../../../utils';
 import { useUserThemeContext } from '../../../helpers/theme';
 
 const StyledChevronRightIcon = styled(ChevronRightIcon)`
+  color: ${({ theme }) => theme.palette.tertiary.main};
   margin: -2px 0px -2px -1px !important;
   font-size: 15px !important;
 `;

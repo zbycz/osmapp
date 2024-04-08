@@ -9,6 +9,7 @@ import React from 'react';
 import { LayerIcon, Spacer, StyledList } from './helpers';
 import { Layer } from '../utils/MapStateContext';
 import { dotToOptionalBr } from '../helpers';
+import { t } from '../../services/intl';
 
 type Props = {
   overlayLayers: Layer[];
@@ -28,7 +29,7 @@ export const Overlays = ({
       color="textSecondary"
       style={{ padding: '1em 0 0 1em' }}
     >
-      Overlays
+      {t('layerswitcher.overlays')}
     </Typography>
 
     <StyledList dense>

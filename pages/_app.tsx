@@ -43,7 +43,7 @@ export default class MyApp extends App {
           <title>OsmAPP</title>
           <meta
             name="viewport"
-            content="minimum-scale=1, initial-scale=1, width=device-width, shrink-to-fit=no"
+            content="width=device-width, user-scalable=no, initial-scale=1"
           />
         </Head>
         <UserThemeProvider userThemeCookie={userThemeCookie}>

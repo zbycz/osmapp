@@ -7,9 +7,7 @@ import { Size } from './types';
 export const FullscreenIconContainer = styled.div`
   position: absolute;
   inset: 0 0 0 0;
-
   font-size: 100px;
-  backdrop-filter: blur(0px);
   transition: all 0.1s ease;
   visibility: hidden;
 `;

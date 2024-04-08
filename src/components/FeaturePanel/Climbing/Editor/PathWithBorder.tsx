@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from 'styled-components';
+import { useTheme } from '@material-ui/core';
 import { useConfig } from '../config';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { getDifficultyColor } from '../utils/routeGrade';
@@ -12,21 +13,40 @@ const RouteBorder = styled.path`
   pointer-events: all;
 `;
 
-export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
+export const PathWithBorder = ({
+  d,
+  routeNumber,
+  isSelected,
+  route,
+  ...props
+}) => {
   const config = useConfig();
-  const { isDifficultyHeatmapEnabled, gradeTable } = useClimbingContext();
-  const borderColor = isDifficultyHeatmapEnabled
-    ? config.pathStrokeColor
-    : config.pathBorderColor;
+  const { isDifficultyHeatmapEnabled, gradeTable, routeIndexHovered } =
+    useClimbingContext();
+
   const strokeColor = isDifficultyHeatmapEnabled
     ? getDifficultyColor(gradeTable, route.difficulty)
     : config.pathStrokeColor;
+
+  const getPathColor = () => {
+    if (isSelected) {
+      return config.pathStrokeColorSelected;
+    }
+
+    return strokeColor;
+  };
+
+  const theme = useTheme();
+  const contrastColor = theme.palette.getContrastText(
+    isSelected ? config.pathStrokeColorSelected : strokeColor,
+  );
+
   return (
     <>
       <RouteBorder
         d={d}
         strokeWidth={config.pathBorderWidth}
-        stroke={isSelected ? config.pathBorderColorSelected : borderColor}
+        stroke={contrastColor}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
@@ -37,7 +57,7 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
       <RouteLine
         d={d}
         strokeWidth={config.pathStrokeWidth}
-        stroke={isSelected ? config.pathStrokeColorSelected : strokeColor}
+        stroke={getPathColor()}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
@@ -45,6 +65,17 @@ export const PathWithBorder = ({ d, isSelected, route, ...props }) => {
         // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
       />
+      {routeIndexHovered === routeNumber && (
+        <RouteLine
+          d={d}
+          strokeWidth={config.pathStrokeWidth}
+          stroke={`${config.pathStrokeColorSelected}80`}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          fill="none"
+          {...props}
+        />
+      )}
     </>
   );
 };

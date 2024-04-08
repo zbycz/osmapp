@@ -31,7 +31,9 @@ export const RouteFloatingMenu = () => {
     routeSelectedIndex,
     getCurrentPath,
     photoZoom,
+    setRouteIndexHovered,
   } = useClimbingContext();
+
   const machine = getMachine();
 
   const onFinishClimbingRouteClick = () => {
@@ -54,6 +56,43 @@ export const RouteFloatingMenu = () => {
 
     setShowTypeMenu(false);
   };
+
+  const onMouseEnter = () => {
+    setRouteIndexHovered(routeSelectedIndex);
+  };
+
+  const onMouseLeave = () => {
+    setRouteIndexHovered(null);
+  };
+
+  React.useEffect(() => {
+    const downHandler = (e) => {
+      if (e.key === 'b') {
+        onPointTypeChange('bolt');
+      }
+      if (e.key === 'a') {
+        onPointTypeChange('anchor');
+      }
+      if (e.key === 's') {
+        onPointTypeChange('sling');
+      }
+      if (e.key === 'p') {
+        onPointTypeChange('piton');
+      }
+      if (e.key === 'u') {
+        onPointTypeChange('unfinished');
+      }
+      if (e.key === 'n') {
+        onPointTypeChange(null);
+      }
+    };
+
+    window.addEventListener('keydown', downHandler);
+
+    return () => {
+      window.removeEventListener('keydown', downHandler);
+    };
+  }, [onPointTypeChange]);
 
   return (
     <>
@@ -100,7 +139,7 @@ export const RouteFloatingMenu = () => {
                 onPointTypeChange('anchor');
               }}
             >
-              Belay
+              Anchor
             </Button>
             <Button
               onClick={() => {
@@ -166,6 +205,8 @@ export const RouteFloatingMenu = () => {
               <Button
                 onClick={onFinishClimbingRouteClick}
                 startIcon={<CheckIcon />}
+                onMouseEnter={onMouseEnter}
+                onMouseLeave={onMouseLeave}
               >
                 Done
               </Button>

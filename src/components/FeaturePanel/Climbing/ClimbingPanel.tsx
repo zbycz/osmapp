@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
-import { CircularProgress } from '@material-ui/core';
+import { Button, CircularProgress } from '@material-ui/core';
 import Router from 'next/router';
+import Link from 'next/link';
+import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
@@ -11,6 +13,12 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { getOsmappLink } from '../../../services/helpers';
+import { StarButton } from '../ImageSection/StarButton';
+import { OsmError } from '../OsmError';
+import { Properties } from '../Properties/Properties';
+import { PoiDescription } from '../ImageSection/PoiDescription';
+import { RouteDistribution } from './RouteDistribution';
+import { YellowedBadge } from './YellowedBadge';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -18,9 +26,32 @@ const ThumbnailContainer = styled.div<{ height: number }>`
   position: relative;
   :hover ${FullscreenIconContainer} {
     visibility: visible;
+    -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);
     background-color: rgba(0, 0, 0, 0.5);
     cursor: pointer;
+  }
+`;
+
+const HeadingContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const DetailButtonContainer = styled.div`
+  margin: 8px;
+  @supports (-webkit-touch-callout: none) {
+    /* CSS specific to iOS devices */
+    margin-bottom: 28px;
+  }
+`;
+
+const ParentItem = styled.div`
+  margin: 12px 8px -4px 8px;
+  a {
+    color: ${({ theme }) => theme.palette.secondary.main};
+    font-size: 13px;
   }
 `;
 
@@ -28,13 +59,8 @@ const Heading = styled.div`
   margin: 12px 8px 4px;
   font-size: 36px;
   line-height: 0.98;
-  color: ${({ theme }) => theme.palette.text.panelHeading};
-
-  :hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
 `;
+
 const Thumbnail = styled.img<{ isLoading: boolean }>`
   width: 100%;
   position: absolute;
@@ -52,7 +78,7 @@ const LoadingContainer = styled.div`
   align-items: center;
 `;
 
-export const ClimbingPanel = ({ footer }) => {
+export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
 
@@ -61,14 +87,14 @@ export const ClimbingPanel = ({ footer }) => {
     imageSize,
     photoPath,
     photoRef,
-    preparePhotosAndSetFirst,
+    preparePhotosAndSet,
   } = useClimbingContext();
 
   const onFullScreenClick = () => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
   };
 
-  preparePhotosAndSetFirst();
+  preparePhotosAndSet();
 
   const imageUrl = getCommonsImageUrl(`File:${photoPath}`, 500);
 
@@ -102,13 +128,47 @@ export const ClimbingPanel = ({ footer }) => {
               <ShowFullscreen onClick={onFullScreenClick} />
             </ThumbnailContainer>
           )}
-          <Heading onClick={onFullScreenClick}>{label}</Heading>
 
+          <ParentItem>
+            {feature.parentFeatures?.map((parentFeature) => (
+              <Link href={getOsmappLink(parentFeature)} color="secondary">
+                {getLabel(parentFeature)}
+              </Link>
+            ))}
+          </ParentItem>
+
+          <HeadingContainer>
+            <Heading>{label}</Heading>
+            <YellowedBadge />
+            <StarButton />
+          </HeadingContainer>
+
+          <PoiDescription />
+
+          <OsmError />
+
+          <RouteDistribution />
           <RouteList />
+
+          <div style={{ padding: '35px 15px 5px' }}>
+            <Properties showTags={showTagsTable} />
+          </div>
 
           {/* @TODO unite with parent panel */}
           <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
         </PanelScrollbars>
+        <DetailButtonContainer>
+          <Button
+            color="primary"
+            size="large"
+            startIcon={<ZoomInIcon fontSize="inherit" />}
+            onClick={onFullScreenClick}
+            fullWidth
+            variant="contained"
+          >
+            Show crag detail
+          </Button>
+        </DetailButtonContainer>
       </PanelWrapper>
     </>
   );

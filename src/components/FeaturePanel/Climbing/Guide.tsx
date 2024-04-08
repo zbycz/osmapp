@@ -5,6 +5,7 @@ import { Button, Snackbar } from '@material-ui/core';
 import { t } from '../../../services/intl';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteNumber } from './RouteNumber';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const DrawRouteButton = styled(Button)`
   align-items: baseline;
@@ -26,6 +27,12 @@ export const Guide = () => {
   const isInSchema = path.length > 0;
   const showDrawButton =
     !isInSchema && machine.currentStateName !== 'extendRoute';
+
+  const {
+    feature: {
+      osmMeta: { id },
+    },
+  } = useFeatureContext();
   return (
     <Snackbar
       open={
@@ -44,7 +51,11 @@ export const Guide = () => {
           onClick={onDrawRouteClick}
         >
           Zakreslit cestu &nbsp;
-          <RouteNumber isSelected hasRoute>
+          <RouteNumber
+            isSelected
+            photoInfoForRoute="hasPathOnThisPhoto"
+            osmId={id}
+          >
             {routeSelectedIndex + 1}
           </RouteNumber>
         </DrawRouteButton>

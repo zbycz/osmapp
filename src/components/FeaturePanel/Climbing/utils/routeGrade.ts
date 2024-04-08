@@ -1,3 +1,4 @@
+import { useTheme } from '@material-ui/core';
 import { GradeSystem, GradeTable, RouteDifficulty } from '../types';
 import { gradeColors, gradeSystem, gradeTableString } from './gradeData';
 
@@ -36,7 +37,12 @@ export const exportGradeDataToWikiTable = () => {
 };
 
 // @TODO use memo for this function?
-export const convertGrade = (gradeTable, from, to, value) => {
+export const convertGrade = (
+  gradeTable: GradeTable,
+  from: GradeSystem,
+  to: GradeSystem,
+  value: string,
+) => {
   if (!from || !to || !value || !gradeTable?.[from]) return null;
   const indexInTable = gradeTable[from].indexOf(value);
 
@@ -47,9 +53,10 @@ export const getDifficultyColor = (
   gradeTable: GradeTable,
   difficulty: RouteDifficulty,
 ) => {
-  const DEFAULT_COLOR = 'black';
+  const DEFAULT_COLOR = '#555';
   if (!difficulty) return DEFAULT_COLOR;
-
+  const theme = useTheme();
+  const { type } = theme.palette;
   const uiaaGrade =
     difficulty.gradeSystem !== 'uiaa'
       ? convertGrade(
@@ -59,7 +66,7 @@ export const getDifficultyColor = (
           difficulty.grade,
         )
       : difficulty.grade;
-  return gradeColors[uiaaGrade] || DEFAULT_COLOR;
+  return gradeColors[uiaaGrade]?.[type] || DEFAULT_COLOR;
 };
 
 export const getRouteGrade = (
@@ -76,3 +83,6 @@ export const getRouteGrade = (
     return convertedGrade;
   }, null);
 };
+
+export const getGradeSystemName = (gradeSystemKey: GradeSystem) =>
+  gradeSystem.find((item) => item.key === gradeSystemKey)?.name;

@@ -23,7 +23,7 @@ export const Anchor = ({
 
   return (
     <g
-      transform={`translate(${x + 15} ${y}) scale(${1 / photoZoom.scale})`}
+      transform={`translate(${x + 5} ${y}) scale(${1 / photoZoom.scale})`}
       cursor="help"
       onClick={onClick}
       pointerEvents={pointerEvents}

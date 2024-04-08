@@ -3,13 +3,16 @@ import { FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
-import { boltCodeMap } from './utils/boltCodes';
+import { invertedBoltCodeMap } from './utils/boltCodes';
 
 const getPathString = (path) =>
   path.length === 0
     ? undefined // TODO if there was empty key='', we will delete it, even though we shouldn't
     : path
-        ?.map(({ x, y, type }) => `${x},${y}${type ? boltCodeMap[type] : ''}`)
+        ?.map(
+          ({ x, y, type }) =>
+            `${x},${y}${type ? invertedBoltCodeMap[type] : ''}`,
+        )
         .join('|');
 
 const getUpdatedTags = (route: ClimbingRoute) => {

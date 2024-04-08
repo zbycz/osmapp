@@ -13,10 +13,16 @@ import {
 } from '@material-ui/core';
 
 import DeleteIcon from '@material-ui/icons/Delete';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import AddIcon from '@material-ui/icons/Add';
+import Router from 'next/router';
 import { RouteDifficultySelect } from '../RouteDifficultySelect';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
+import { getOsmappLink } from '../../../../services/helpers';
+import { onAscentAdd } from '../utils/ascents';
+import { MyAscents } from './MyAscents';
 
 const Left = styled.div`
   flex: 1;
@@ -30,10 +36,11 @@ const Flex = styled.div`
 `;
 
 const ExpandedRowContainer = styled.div<{ isExpanded?: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded === false ? 0 : '200px')};
+  height: ${({ isExpanded }) => (isExpanded === false ? 0 : 'auto')};
   transition: all 0.1s ease-in-out;
   min-height: 0;
   overflow: hidden;
+  margin-left: 26px;
 `;
 
 const Value = styled.div``;
@@ -47,6 +54,7 @@ export const ExpandedRow = ({
   isReadOnly,
   index,
   isExpanded,
+  osmId,
 }) => {
   const { isEditMode, getMachine } = useClimbingContext();
   const machine = getMachine();
@@ -60,32 +68,38 @@ export const ExpandedRow = ({
     machine.execute('deleteRoute', { routeNumber });
     hideDeleteDialog();
   };
+  const onNodeDetailClick = () => {
+    Router.push(`${getOsmappLink(tempRoute.feature)}${window.location.hash}`);
+  };
+
   return (
     <>
       <ExpandedRowContainer isExpanded={isExpanded}>
         <Flex>
           <Left>
             <List>
-              <ListItem>
-                {isReadOnly ? (
-                  <div>
-                    <Label>Description</Label>
-                    <Value>{getText(tempRoute.description)}</Value>
-                  </div>
-                ) : (
-                  <TextField
-                    size="small"
-                    value={tempRoute.description}
-                    onChange={(e) => onTempRouteChange(e, 'description')}
-                    onClick={stopPropagation}
-                    style={{ marginTop: 10 }}
-                    variant="outlined"
-                    label="Description"
-                    fullWidth
-                    multiline
-                  />
-                )}
-              </ListItem>
+              {tempRoute.description && (
+                <ListItem>
+                  {isReadOnly ? (
+                    <div>
+                      <Label>Description</Label>
+                      <Value>{getText(tempRoute.description)}</Value>
+                    </div>
+                  ) : (
+                    <TextField
+                      size="small"
+                      value={tempRoute.description}
+                      onChange={(e) => onTempRouteChange(e, 'description')}
+                      onClick={stopPropagation}
+                      style={{ marginTop: 10 }}
+                      variant="outlined"
+                      label="Description"
+                      fullWidth
+                      multiline
+                    />
+                  )}
+                </ListItem>
+              )}
               <ListItem>
                 <RouteInDifferentPhotos
                   route={tempRoute}
@@ -108,8 +122,8 @@ export const ExpandedRow = ({
           </Left>
           <Right>
             <List>
-              <ListItem>
-                {isEditMode ? (
+              {isEditMode && (
+                <ListItem>
                   <RouteDifficultySelect
                     onClick={stopPropagation}
                     difficulty={tempRoute.difficulty}
@@ -118,55 +132,77 @@ export const ExpandedRow = ({
                     }}
                     routeNumber={index}
                   />
-                ) : (
-                  <div>
-                    <Label>Difficulty</Label>
-                    <Value>
-                      {getText(tempRoute.difficulty?.grade)} (
-                      {getText(tempRoute.difficulty?.gradeSystem)})
-                    </Value>
-                  </div>
-                )}
+                </ListItem>
+              )}
+              {tempRoute.length && (
+                <ListItem>
+                  {isReadOnly ? (
+                    <div>
+                      <Label>Length</Label>
+                      <Value>{getText(tempRoute.length)}</Value>
+                    </div>
+                  ) : (
+                    <TextField
+                      size="small"
+                      value={tempRoute.length}
+                      onChange={(e) => onTempRouteChange(e, 'length')}
+                      onClick={stopPropagation}
+                      style={{ marginTop: 10 }}
+                      variant="outlined"
+                      label="Length"
+                    />
+                  )}
+                </ListItem>
+              )}
+              {tempRoute.author && (
+                <ListItem>
+                  {isReadOnly ? (
+                    <div>
+                      <Label>Author</Label>
+                      <Value>{getText(tempRoute.author)}</Value>
+                    </div>
+                  ) : (
+                    <TextField
+                      size="small"
+                      value={tempRoute.author}
+                      onChange={(e) => onTempRouteChange(e, 'author')}
+                      onClick={stopPropagation}
+                      style={{ marginTop: 10 }}
+                      variant="outlined"
+                      label="Author"
+                    />
+                  )}
+                </ListItem>
+              )}
+              <ListItem>
+                <Button
+                  onClick={onNodeDetailClick}
+                  color="secondary"
+                  size="small"
+                  variant="text"
+                  endIcon={<ArrowForwardIcon />}
+                >
+                  Show route detail
+                </Button>
               </ListItem>
               <ListItem>
-                {isReadOnly ? (
-                  <div>
-                    <Label>Length</Label>
-                    <Value>{getText(tempRoute.length)}</Value>
-                  </div>
-                ) : (
-                  <TextField
-                    size="small"
-                    value={tempRoute.length}
-                    onChange={(e) => onTempRouteChange(e, 'length')}
-                    onClick={stopPropagation}
-                    style={{ marginTop: 10 }}
-                    variant="outlined"
-                    label="Length"
-                  />
-                )}
-              </ListItem>
-              <ListItem>
-                {isReadOnly ? (
-                  <div>
-                    <Label>Author</Label>
-                    <Value>{getText(tempRoute.author)}</Value>
-                  </div>
-                ) : (
-                  <TextField
-                    size="small"
-                    value={tempRoute.author}
-                    onChange={(e) => onTempRouteChange(e, 'author')}
-                    onClick={stopPropagation}
-                    style={{ marginTop: 10 }}
-                    variant="outlined"
-                    label="Author"
-                  />
-                )}
+                <Button
+                  onClick={() => {
+                    onAscentAdd({ osmId });
+                    // stopPropagation(e);
+                  }}
+                  color="secondary"
+                  size="small"
+                  variant="text"
+                  endIcon={<AddIcon />}
+                >
+                  Mark ascent
+                </Button>
               </ListItem>
             </List>
           </Right>
         </Flex>
+        <MyAscents osmId={osmId} />
       </ExpandedRowContainer>
       <Dialog
         open={routeToDelete !== null}

@@ -3,6 +3,7 @@ import { Snackbar } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config';
+import { PROJECT_ID } from '../../services/project';
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
@@ -33,10 +34,14 @@ export type View = [string, string, string];
 // export const MapStateContext = createContext<MapStateContextType>(undefined);
 export const MapStateContext = createContext(undefined);
 
+const useActiveLayersState = () => {
+  const isClimbing = PROJECT_ID === 'openclimbing';
+  const initLayers = isClimbing ? ['outdoor', 'climbing'] : [DEFAULT_MAP];
+  return usePersistedState('activeLayers', initLayers);
+};
+
 export const MapStateProvider = ({ children, initialMapView }) => {
-  const [activeLayers, setActiveLayers] = usePersistedState('activeLayers', [
-    DEFAULT_MAP,
-  ]);
+  const [activeLayers, setActiveLayers] = useActiveLayersState();
   const [bbox, setBbox] = useState();
   const [view, setView] = useState(initialMapView);
   const [viewForMap, setViewForMap] = useState(initialMapView);

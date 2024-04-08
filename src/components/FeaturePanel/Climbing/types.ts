@@ -1,6 +1,13 @@
 import { gradeSystem } from './utils/gradeData';
 import { Feature } from '../../../services/types';
 
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | { [x: string]: JSONValue }
+  | Array<JSONValue>;
+
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling' | 'unfinished';
 
 export type Position = {
@@ -19,12 +26,11 @@ export type Size = {
   height: number;
 };
 
-export type PathPoints = Array<
-  Position & {
-    type?: PointType;
-    note?: string;
-  }
->;
+export type PathPoint = Position & {
+  type?: PointType;
+  note?: string;
+};
+export type PathPoints = Array<PathPoint>;
 
 export type RouteDifficulty = {
   gradeSystem: GradeSystem;

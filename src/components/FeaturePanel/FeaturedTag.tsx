@@ -41,6 +41,7 @@ const renderers: {
   [key: string]: React.FC<{ k: string; v: string }>;
 } = {
   website: WebsiteRenderer,
+  'website:2': WebsiteRenderer,
   'contact:website': WebsiteRenderer,
   phone: PhoneRenderer,
   'contact:phone': PhoneRenderer,

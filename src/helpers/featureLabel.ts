@@ -26,3 +26,10 @@ export const getLabel = (feature: Feature) => {
 
   return getName(feature) || getRefLabel(feature) || getSubclass(feature);
 };
+
+export const getParentLabel = (feature: Feature) => {
+  const firstParentWithName = feature.parentFeatures?.find(hasName);
+  const parent = firstParentWithName ?? feature.parentFeatures?.[0];
+
+  return parent ? getLabel(parent) : '';
+};
