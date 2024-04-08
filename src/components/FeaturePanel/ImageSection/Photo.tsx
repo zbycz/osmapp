@@ -6,24 +6,35 @@ interface PhotoInnerProps {
 }
 
 const InnerPano: React.FC<PhotoInnerProps> = ({ image }) => {
-  const pannellumUrl = `https://cdn.pannellum.org/2.5/pannellum.htm#panorama=${encodeURIComponent(
-    image.thumb,
-  )}&config=${encodeURIComponent(
-    'http://localhost:3000/pannellum-config.json',
-  )}`;
+  const [url, setUrl] = React.useState('');
+  const [pannellumUrl, setPannellumUrl] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setUrl(`${window.location.protocol}//${window.location.host}`);
+  }, []);
+
+  React.useEffect(() => {
+    setPannellumUrl(
+      `https://cdn.pannellum.org/2.5/pannellum.htm#panorama=${encodeURIComponent(
+        image.thumb,
+      )}&config=${encodeURIComponent(`${url}/pannellum-config.json`)}`,
+    );
+  }, [url]);
 
   return (
     <>
-      <iframe
-        title="panorama picture"
-        allowFullScreen
-        style={{
-          borderStyle: 'none',
-          width: '100%',
-          height: '100%',
-        }}
-        src={pannellumUrl}
-      />
+      {pannellumUrl && (
+        <iframe
+          title="panorama picture"
+          allowFullScreen
+          style={{
+            borderStyle: 'none',
+            width: '100%',
+            height: '100%',
+          }}
+          src={pannellumUrl}
+        />
+      )}
     </>
   );
 };
