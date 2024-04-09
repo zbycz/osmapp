@@ -6,7 +6,7 @@ export const OSMAPP_SPRITE = `${window.location.protocol}//${window.location.hos
 
 export const GLYPHS = `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${apiKey}`;
 
-export const emptyGeojsonSource = {
+export const EMPTY_GEOJSON_SOURCE = {
   type: 'geojson' as const,
   data: {
     type: 'FeatureCollection',
@@ -37,7 +37,7 @@ export const OSMAPP_SOURCES = {
     url: `https://api.maptiler.com/tiles/outdoor/tiles.json?key=${apiKey}`,
     type: 'vector' as const,
   },
-  overpass: emptyGeojsonSource,
+  overpass: EMPTY_GEOJSON_SOURCE,
 };
 
 export const BACKGROUND = [

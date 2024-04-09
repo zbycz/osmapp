@@ -60,6 +60,7 @@ interface RelationMember {
 export interface Feature {
   point?: boolean; // TODO rename to isMarker or isCoords
   type: 'Feature';
+  id?: number; // for map hover effect
   geometry?: FeatureGeometry;
   osmMeta: {
     type: string;
@@ -81,6 +82,7 @@ export interface Feature {
   properties: {
     class: string;
     subclass: string;
+    [key: string]: string;
   };
   center: Position;
   roundedCenter?: LonLatRounded;
