@@ -144,7 +144,7 @@ export default {
   'editsuccess.note.textLabel': 'Text poznámky',
   'editsuccess.edit.heading': 'Děkujeme za Vaši editaci!',
   'editsuccess.edit.subheading': 'Již nyní se začíná objevovat v mapách po celém světě.',
-  'editsuccess.edit.body': `Uložení proběhlo do primární databáze OSM. V řádu několika minut změnu uvidíte na mapě "OSM Mapnik". Zdejší mapa a různé jiné aplikace se obnovují cca 1x za měsíc.\n\nPokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
+  'editsuccess.edit.body': `Uložení proběhlo do primární databáze OSM. V řádu několika minut změnu uvidíte na mapě "OSM Carto". Zdejší mapa a různé jiné aplikace se obnovují cca 1x za měsíc.\n\nPokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
   'editsuccess.edit.urlLabel': `Vaše změny:`,
   'editsuccess.edit.textLabel': 'Poznámka ke změně',
 
@@ -167,7 +167,7 @@ export default {
   'layers.outdoor': 'Outdoorová',
   'layers.mtb': 'MTB',
   'layers.snow': 'Zimní',
-  'layers.mapnik': 'OSM Mapnik',
+  'layers.carto': 'OSM Carto',
   'layers.maptilerSat': 'Letecká Maptiler ',
   'layers.bingSat': 'Letecká Bing',
   'layers.bike': 'Cyklo',

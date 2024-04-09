@@ -133,7 +133,7 @@ export default {
   'editsuccess.note.textLabel': 'Texte de la Note',
   'editsuccess.edit.heading': 'Merci de votre contribution !',
   'editsuccess.edit.subheading': 'Votre modification est en cours de diffusion autour du monde.',
-  'editsuccess.edit.body': `La base de données a été modifiée. Le changement devrait apparaître sur « OSM Mapnik » dans quelques minutes.
+  'editsuccess.edit.body': `La base de données a été modifiée. Le changement devrait apparaître sur « OSM Carto » dans quelques minutes.
          Les cartes telles qu’OsmAPP sont mises à jour selon une fréquence mensuelle.
           <br/><br/>Si une erreur a été faite, vous pouvez annulez les informations manuellement et enregistrer à nouveau.`,
   'editsuccess.edit.urlLabel': `Vos modifications :`,
@@ -154,7 +154,7 @@ export default {
   'layers.outdoor': 'Plein Air',
   'layers.mtb': 'VTT',
   'layers.snow': 'Neige',
-  'layers.mapnik': 'OSM Mapnik',
+  'layers.carto': 'OSM Carto',
   'layers.maptilerSat': 'Maptiler Satellite (zoom < 14)',
   'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Vélo',
