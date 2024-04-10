@@ -138,3 +138,42 @@ const geojson = [
 test('conversion', () => {
   expect(cragsToGeojson(response)).toEqual(geojson);
 });
+
+const area2 = {
+  type: 'relation',
+  id: 555,
+  members: [{ type: 'relation', ref: 17089246, role: '' }],
+  tags: {},
+};
+const crag2 = {
+  type: 'relation',
+  id: 17089246,
+  center: { lat: 49.6540645, lon: 14.2524021 },
+  members: [],
+  tags: {},
+};
+test('conversion with centers', () => {
+  expect(cragsToGeojson({ elements: [area2, crag2] })).toEqual([
+    {
+      center: [14, 51],
+      geometry: {
+        geometries: [{ coordinates: [14, 51], type: 'Point' }],
+        type: 'GeometryCollection',
+      },
+      id: 5554,
+      osmMeta: { id: 555, type: 'relation' },
+      properties: { class: 'information', osmappType: 'relation' },
+      tags: {},
+      type: 'Feature',
+    },
+    {
+      center: [14, 51],
+      geometry: { coordinates: [14, 51], type: 'Point' },
+      id: 170892464,
+      osmMeta: { id: 17089246, type: 'relation' },
+      properties: { class: 'information', osmappType: 'relation' },
+      tags: {},
+      type: 'Feature',
+    },
+  ]);
+});

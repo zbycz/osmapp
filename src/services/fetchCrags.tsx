@@ -1,11 +1,5 @@
 import { fetchJson } from './fetch';
-import {
-  Feature,
-  FeatureGeometry,
-  GeometryCollection,
-  LineString,
-  Point,
-} from './types';
+import { Feature, FeatureGeometry, LineString, Point } from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
@@ -52,7 +46,7 @@ const convert = (
   };
 };
 
-const getLookup = (elements): Record<string, Point | LineString> =>
+const getLookup = (elements): Record<string, FeatureGeometry> =>
   elements.reduce(
     (acc, { geometry, osmMeta }) => ({
       ...acc,
@@ -78,9 +72,8 @@ const getWayGeomFn =
   });
 
 function getRelationGeomFn(waysLookup, nodesLookup, relationsLookup) {
-  return ({ id, members }): GeometryCollection => ({
-    type: 'GeometryCollection',
-    geometries: members
+  return ({ id, center, members }): FeatureGeometry => {
+    const geometries = members
       .map(({ type, ref }) => {
         if (type === 'way') {
           return waysLookup[ref];
@@ -94,8 +87,17 @@ function getRelationGeomFn(waysLookup, nodesLookup, relationsLookup) {
 
         throw new Error(`Unknown member type: ${type} in relation: ${id}`);
       })
-      .filter(Boolean),
-  });
+      .filter(Boolean);
+
+    return geometries.length
+      ? {
+          type: 'GeometryCollection',
+          geometries,
+        }
+      : center
+      ? { type: 'Point', coordinates: [center.lon, center.lat] }
+      : undefined;
+  };
 }
 
 export const cragsToGeojson = (response: any): Feature[] => {
@@ -135,6 +137,7 @@ export const fetchCrags = async () => {
     (
       nwr["climbing"](49.64474,14.21855,49.67273,14.28025);
       >;<;
+      rel["climbing"="crag"](48,11,51,19);
     );
     (
       ._;
@@ -151,7 +154,6 @@ export const fetchCrags = async () => {
     .filter((f) => f.osmMeta.type === 'relation' && f.center)
     .map((element) => ({
       ...element,
-      id: `${element.osmMeta.id}7`,
       geometry: {
         type: 'Point',
         coordinates: element.center,

@@ -1,4 +1,21 @@
-import type { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
+import type {
+  LayerSpecification,
+  ExpressionSpecification,
+} from '@maplibre/maplibre-gl-style-spec';
+
+const linear14To16Fade = [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  0,
+  1,
+
+  14,
+  1,
+
+  16,
+  0.3,
+] as ExpressionSpecification;
 
 export const climbingLayers: LayerSpecification[] = [
   {
@@ -101,7 +118,7 @@ export const climbingLayers: LayerSpecification[] = [
       'text-padding': 2,
       'text-font': ['Noto Sans Bold'],
       'text-anchor': 'top',
-      'icon-image': '{class}_11',
+      'icon-image': 'circle_11',
       'text-field': '{name}',
       'text-offset': [0, 0.6],
       'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
@@ -115,39 +132,11 @@ export const climbingLayers: LayerSpecification[] = [
       'text-optional': true,
     },
     paint: {
-      // 'text-halo-blur': 0.5,
-      // 'text-color': '#666',
-      // 'text-halo-width': 1,
-      // 'text-halo-color': '#ffffff',
-      'icon-opacity': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        0,
-        1,
-        14,
-        1,
-        16,
-        0.3,
-      ],
-      'text-opacity': [
-        'interpolate',
-        ['linear'],
-        ['zoom'],
-        0,
-        1,
-
-        14,
-        1,
-
-        16,
-        0.3,
-      ],
-      'text-opacity-transition': { duration: 2000 },
-
-      "text-color": "rgba(0, 95, 204, 1)",
-      "text-halo-color": "rgba(250, 250, 250, 1)",
-      "text-halo-width": 3
+      'icon-opacity': linear14To16Fade,
+      'text-opacity': linear14To16Fade,
+      'text-color': 'rgba(0, 95, 204, 1)',
+      'text-halo-color': 'rgba(250, 250, 250, 1)',
+      'text-halo-width': 2,
     },
   },
 ];
