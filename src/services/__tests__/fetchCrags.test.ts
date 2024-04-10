@@ -148,7 +148,7 @@ const area2 = {
 const crag2 = {
   type: 'relation',
   id: 17089246,
-  center: { lat: 49.6540645, lon: 14.2524021 },
+  center: { lat: 51, lon: 14 },
   members: [],
   tags: {},
 };
