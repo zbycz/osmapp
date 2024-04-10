@@ -9,7 +9,7 @@ import {
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
-import { publishDbgObject } from "../utils";
+import { publishDbgObject } from '../utils';
 
 // inspired by overpassSearch - but this computes all geometries (doesnt fetch them by 'geom' modifier)
 
@@ -72,7 +72,9 @@ const getWayGeomFn =
   (nodesLookup) =>
   ({ nodes }): LineString => ({
     type: 'LineString' as const,
-    coordinates: nodes.map((ref) => nodesLookup[ref]),
+    coordinates: nodes
+      .map((ref) => nodesLookup[ref]?.coordinates)
+      .filter(Boolean), // some nodes may be missing
   });
 
 function getRelationGeomFn(waysLookup, nodesLookup, relationsLookup) {
@@ -131,7 +133,7 @@ export const cragsToGeojson = (response: any): Feature[] => {
 export const fetchCrags = async () => {
   const query = `[out:json][timeout:25];
     (
-      nwr["climbing"](49.65296,14.25032,49.65524,14.25448);
+      nwr["climbing"](49.64474,14.21855,49.67273,14.28025);
       >;<;
     );
     (
@@ -144,6 +146,27 @@ export const fetchCrags = async () => {
   const url = `https://overpass-api.de/api/interpreter?data=${data}`;
   const overpass = await fetchJson(url);
   const features = cragsToGeojson(overpass);
-  publishDbgObject('fetchCrags', features);
-  return { type: 'FeatureCollection', features } as GeoJSON.FeatureCollection;
+
+  const relationPoints = features
+    .filter((f) => f.osmMeta.type === 'relation' && f.center)
+    .map((element) => ({
+      ...element,
+      id: `${element.osmMeta.id}7`,
+      geometry: {
+        type: 'Point',
+        coordinates: element.center,
+      },
+      properties: {
+        ...element.properties,
+        osmappType: 'relationPoint',
+      },
+    }));
+
+  const featuresWithRelationPoints = [...features, ...relationPoints];
+  publishDbgObject('fetchCrags', featuresWithRelationPoints);
+
+  return {
+    type: 'FeatureCollection',
+    features: featuresWithRelationPoints,
+  } as GeoJSON.FeatureCollection;
 };

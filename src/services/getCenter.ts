@@ -29,10 +29,10 @@ export const getBbox = (coordinates: Position[]): NamedBbox => {
   );
 };
 
-const getCenterOfBbox = (coordinates: Position[]) => {
-  if (!coordinates.length) return undefined;
+const getCenterOfBbox = (points: Position[]) => {
+  if (!points.length) return undefined;
 
-  const { w, s, e, n } = getBbox(coordinates); // [WSEN]
+  const { w, s, e, n } = getBbox(points); // [WSEN]
   const lon = (w + e) / 2; // flat earth rulezz
   const lat = (s + n) / 2;
   return [lon, lat];

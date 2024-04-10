@@ -13,7 +13,7 @@ export const poiLayers: LayerSpecification[] = [
       ['==', '$type', 'Point'],
       ['>=', 'rank', 25],
       ['!=', 'subclass', 'garden'],
-      ['!=', 'subclass', 'climbing'],
+      ['!=', 'class', 'climbing'],
     ],
     layout: {
       'text-padding': 2,
@@ -67,7 +67,7 @@ export const poiLayers: LayerSpecification[] = [
       ['==', '$type', 'Point'],
       ['<=', 'rank', 24],
       ['>=', 'rank', 15],
-      ['!=', 'subclass', 'climbing'],
+      ['!=', 'class', 'climbing'],
     ],
     layout: {
       'text-padding': 2,
@@ -97,6 +97,7 @@ export const poiLayers: LayerSpecification[] = [
       ['==', '$type', 'Point'],
       ['<=', 'rank', 14],
       ['has', 'name'],
+      ['!=', 'class', 'climbing'],
     ],
     layout: {
       'text-padding': 2,

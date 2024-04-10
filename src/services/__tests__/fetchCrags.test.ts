@@ -34,6 +34,12 @@ const areaRelation = {
   ],
   tags: { climbing: 'area', name: 'Lomy nad Velkou' },
 };
+const someWay = {
+  type: 'way',
+  id: 222,
+  nodes: [11557711620, 123],
+  tags: {},
+};
 const cragRelation = {
   type: 'relation',
   id: 17089246,
@@ -42,7 +48,7 @@ const cragRelation = {
   tags: { climbing: 'crag', name: 'Borová věž' },
 };
 const response = {
-  elements: [routeNode, anotherNode, areaRelation, cragRelation],
+  elements: [routeNode, anotherNode, someWay, areaRelation, cragRelation],
 };
 
 const geojson = [
@@ -67,6 +73,21 @@ const geojson = [
     id: 1230,
     osmMeta: { id: 123, type: 'node' },
     properties: { class: 'information', osmappType: 'node' },
+    tags: {},
+    type: 'Feature',
+  },
+  {
+    center: [12.125, 52.325],
+    geometry: {
+      coordinates: [
+        [14.25, 49.65],
+        [10, 55],
+      ],
+      type: 'LineString',
+    },
+    id: 2221,
+    osmMeta: { id: 222, type: 'way' },
+    properties: { class: 'information', osmappType: 'way' },
     tags: {},
     type: 'Feature',
   },
