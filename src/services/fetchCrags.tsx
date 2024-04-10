@@ -2,7 +2,6 @@ import { fetchJson } from './fetch';
 import {
   Feature,
   FeatureGeometry,
-  FeatureTags,
   GeometryCollection,
   LineString,
   Point,
@@ -10,6 +9,7 @@ import {
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
+import { publishDbgObject } from "../utils";
 
 // inspired by overpassSearch - but this computes all geometries (doesnt fetch them by 'geom' modifier)
 
@@ -48,7 +48,7 @@ const convert = (
     tags,
     properties: { ...getPoiClass(tags), ...tags, osmappType: type },
     geometry,
-    center: center,
+    center,
   };
 };
 
@@ -61,10 +61,12 @@ const getLookup = (elements): Record<string, Point | LineString> =>
     {},
   );
 
-const getNodeGeomFn = () => (node: any): Point => ({
-  type: 'Point',
-  coordinates: [node.lon, node.lat],
-});
+const getNodeGeomFn =
+  () =>
+  (node: any): Point => ({
+    type: 'Point',
+    coordinates: [node.lon, node.lat],
+  });
 
 const getWayGeomFn =
   (nodesLookup) =>
@@ -74,9 +76,8 @@ const getWayGeomFn =
   });
 
 function getRelationGeomFn(waysLookup, nodesLookup, relationsLookup) {
-
-  return ({ members }): GeometryCollection => ({
-    type: 'GeometryCollection' as const,
+  return ({ id, members }): GeometryCollection => ({
+    type: 'GeometryCollection',
     geometries: members
       .map(({ type, ref }) => {
         if (type === 'way') {
@@ -88,13 +89,15 @@ function getRelationGeomFn(waysLookup, nodesLookup, relationsLookup) {
         if (type === 'relation') {
           return relationsLookup[ref]; // this can be undefined in first pass, hence filter
         }
+
+        throw new Error(`Unknown member type: ${type} in relation: ${id}`);
       })
       .filter(Boolean),
   });
 }
 
 export const cragsToGeojson = (response: any): Feature[] => {
-  const elements = response.elements;
+  const { elements } = response;
   const { nodes, ways, relations } = getItems(elements);
 
   const NODE_GEOM = getNodeGeomFn();
@@ -111,7 +114,7 @@ export const cragsToGeojson = (response: any): Feature[] => {
   );
   const relationsLookup = getLookup(relationsOut1);
 
-  // we need second pass for climbing=area
+  // we need second pass for climbing=area  (TODO: loop while number of geometries changes)
   const RELATION_GEOM2 = getRelationGeomFn(
     waysLookup,
     nodesLookup,
@@ -141,5 +144,6 @@ export const fetchCrags = async () => {
   const url = `https://overpass-api.de/api/interpreter?data=${data}`;
   const overpass = await fetchJson(url);
   const features = cragsToGeojson(overpass);
+  publishDbgObject('fetchCrags', features);
   return { type: 'FeatureCollection', features } as GeoJSON.FeatureCollection;
 };

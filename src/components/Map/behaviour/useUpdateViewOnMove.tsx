@@ -1,6 +1,6 @@
-import throttle from "lodash/throttle";
-import { useAddMapEvent } from "../../helpers";
-import { publishDbgObject } from "../../../utils";
+import throttle from 'lodash/throttle';
+import { useAddMapEvent } from '../../helpers';
+import { publishDbgObject } from '../../../utils';
 
 export const useUpdateViewOnMove = useAddMapEvent(
   (map, setViewFromMap, setBbox) => ({
@@ -17,7 +17,7 @@ export const useUpdateViewOnMove = useAddMapEvent(
       const bb = [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()];
       const bbox = bb.map((x) => x.toFixed(5));
       setBbox(bbox);
-      publishDbgObject('map bbox', bbox)
+      publishDbgObject('map bbox', bbox);
     }, 2000),
   }),
 );

@@ -27,10 +27,10 @@ const anotherNode = {
 };
 const areaRelation = {
   type: 'relation',
-  id: 17142287,
+  id: 555,
   members: [
     { type: 'relation', ref: 17089246, role: '' },
-    { type: 'node', role: '' },
+    { type: 'node', ref: 123, role: '' },
   ],
   tags: { climbing: 'area', name: 'Lomy nad Velkou' },
 };
@@ -82,8 +82,8 @@ const geojson = [
       ],
       type: 'GeometryCollection',
     },
-    id: 171422874,
-    osmMeta: { id: 17142287, type: 'relation' },
+    id: 5554,
+    osmMeta: { id: 555, type: 'relation' },
     properties: {
       class: 'climbing',
       subclass: 'area',

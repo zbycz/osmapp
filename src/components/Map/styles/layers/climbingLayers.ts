@@ -16,9 +16,7 @@ export const climbingLayers: LayerSpecification[] = [
     type: 'symbol',
     source: 'climbing',
     minzoom: 16,
-    filter: [
-      'all'
-    ],
+    filter: ['all'],
     layout: {
       'text-padding': 2,
       'text-font': ['Noto Sans Regular'],
