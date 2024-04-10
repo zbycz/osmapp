@@ -40,6 +40,7 @@ const convert = (
 ): Feature => {
   const { type, id, tags = {} } = element;
   const geometry = geometryFn(element);
+  const center = getCenter(geometry) ?? undefined;
   return {
     type: 'Feature',
     id: convertOsmIdToMapId({ type, id }),
@@ -47,45 +48,48 @@ const convert = (
     tags,
     properties: { ...getPoiClass(tags), ...tags, osmappType: type },
     geometry,
-    center: getCenter(geometry) ?? undefined,
+    center: center,
   };
 };
 
-const NODE_GEOM = (node) => ({
-  type: 'Point',
-  coordinates: [node.lon, node.lat],
-});
-
-const getLookup = (elements) =>
+const getLookup = (elements): Record<string, Point | LineString> =>
   elements.reduce(
     (acc, { geometry, osmMeta }) => ({
       ...acc,
-      [osmMeta.id]: geometry.coordinates,
+      [osmMeta.id]: geometry,
     }),
     {},
   );
 
-const getWayGeom =
+const getNodeGeomFn = () => (node: any): Point => ({
+  type: 'Point',
+  coordinates: [node.lon, node.lat],
+});
+
+const getWayGeomFn =
   (nodesLookup) =>
   ({ nodes }): LineString => ({
-    type: 'LineString',
+    type: 'LineString' as const,
     coordinates: nodes.map((ref) => nodesLookup[ref]),
   });
 
-function getRelationGeom(waysLookup, nodesLookup, relationsLookup: {}) {
+function getRelationGeomFn(waysLookup, nodesLookup, relationsLookup) {
+
   return ({ members }): GeometryCollection => ({
-    type: "GeometryCollection",
-    geometries: members.map(({ type, ref }) => {
-      if (type === "way") {
-        return waysLookup[ref];
-      }
-      if (type === "node") {
-        return nodesLookup[ref];
-      }
-      if (type === "relation") {
-        return relationsLookup[ref];
-      }
-    })
+    type: 'GeometryCollection' as const,
+    geometries: members
+      .map(({ type, ref }) => {
+        if (type === 'way') {
+          return waysLookup[ref];
+        }
+        if (type === 'node') {
+          return nodesLookup[ref];
+        }
+        if (type === 'relation') {
+          return relationsLookup[ref]; // this can be undefined in first pass, hence filter
+        }
+      })
+      .filter(Boolean),
   });
 }
 
@@ -93,26 +97,31 @@ export const cragsToGeojson = (response: any): Feature[] => {
   const elements = response.elements;
   const { nodes, ways, relations } = getItems(elements);
 
+  const NODE_GEOM = getNodeGeomFn();
   const nodesOut = nodes.map((node) => convert(node, NODE_GEOM));
   const nodesLookup = getLookup(nodesOut);
 
-  const WAY_GEOM = getWayGeom(nodesLookup);
+  const WAY_GEOM = getWayGeomFn(nodesLookup);
   const waysOut = ways.map((way) => convert(way, WAY_GEOM));
   const waysLookup = getLookup(waysOut);
 
-  const RELATION_GEOM1 = getRelationGeom(waysLookup, nodesLookup, {});
+  const RELATION_GEOM1 = getRelationGeomFn(waysLookup, nodesLookup, {});
   const relationsOut1 = relations.map((relation) =>
     convert(relation, RELATION_GEOM1),
   );
+  const relationsLookup = getLookup(relationsOut1);
 
   // we need second pass for climbing=area
-  const relationsLookup = getLookup(relationsOut1);
-  const RELATION_GEOM2 = getRelationGeom(waysLookup, nodesLookup, relationsLookup);
+  const RELATION_GEOM2 = getRelationGeomFn(
+    waysLookup,
+    nodesLookup,
+    relationsLookup,
+  );
   const relationsOut2 = relations.map((relation) =>
     convert(relation, RELATION_GEOM2),
   );
 
-  return [...nodesOut, ...waysOut, ...relationsOut2]
+  return [...nodesOut, ...waysOut, ...relationsOut2];
 };
 
 // on CZ 48,11,51,19 makes 12 MB   (only crags is 700kB)

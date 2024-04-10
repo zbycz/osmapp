@@ -9,7 +9,7 @@ import { DEFAULT_MAP } from '../../../config';
 import { makinaAfricaStyle } from '../styles/makinaAfricaStyle';
 import { climbingLayers } from '../styles/layers/climbingLayers';
 import { EMPTY_GEOJSON_SOURCE } from '../consts';
-import { fetchCrags } from './fetchCrags';
+import { fetchCrags } from "../../../services/fetchCrags";
 
 export const getRasterStyle = (key) => {
   const url = osmappLayers[key]?.url ?? key; // if `key` not found, it contains tiles URL

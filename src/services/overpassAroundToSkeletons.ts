@@ -4,7 +4,7 @@ import {
   Point,
   FeatureGeometry,
   isPoint,
-  isWay,
+  isLineString,
   Position,
 } from './types';
 
@@ -16,7 +16,7 @@ export const getCenter = (geometry: FeatureGeometry): Position => {
     return geometry.coordinates;
   }
 
-  if (isWay(geometry) && geometry.coordinates?.length) {
+  if (isLineString(geometry) && geometry.coordinates?.length) {
     const { w, s, e, n } = getBbox(geometry.coordinates); // [WSEN]
     const lon = (w + e) / 2; // flat earth rulezz
     const lat = (s + n) / 2;

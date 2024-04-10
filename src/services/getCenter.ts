@@ -1,4 +1,11 @@
-import { FeatureGeometry, isPoint, isRelation, isWay, Position } from './types';
+import {
+  FeatureGeometry,
+  GeometryCollection,
+  isGeometryCollection,
+  isLineString,
+  isPoint,
+  Position,
+} from './types';
 
 interface NamedBbox {
   w: number;
@@ -31,22 +38,32 @@ const getCenterOfBbox = (coordinates: Position[]) => {
   return [lon, lat];
 };
 
+const getPointsRecursive = (geometry: GeometryCollection): Position[] =>
+  geometry.geometries.flatMap((subGeometry) => {
+    if (isGeometryCollection(subGeometry)) {
+      return getPointsRecursive(subGeometry);
+    }
+    if (isLineString(subGeometry)) {
+      return subGeometry.coordinates;
+    }
+    if (isPoint(subGeometry)) {
+      return [subGeometry.coordinates];
+    }
+    return [];
+  });
+
 export const getCenter = (geometry: FeatureGeometry): Position => {
   if (isPoint(geometry)) {
     return geometry.coordinates;
   }
 
-  if (isWay(geometry)) {
+  if (isLineString(geometry)) {
     return getCenterOfBbox(geometry.coordinates);
   }
 
-  if (isRelation(geometry)) {
-    const allCoords = geometry.geometries.flatMap((subGeometry) =>
-      isPoint(subGeometry)
-        ? [subGeometry.coordinates]
-        : subGeometry.coordinates,
-    );
-    return getCenterOfBbox(allCoords);
+  if (isGeometryCollection(geometry)) {
+    const allPoints = getPointsRecursive(geometry);
+    return getCenterOfBbox(allPoints);
   }
 
   return undefined;

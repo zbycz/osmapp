@@ -40,9 +40,9 @@ export type FeatureGeometry = Point | LineString | GeometryCollection;
 
 export const isPoint = (geometry: FeatureGeometry): geometry is Point =>
   geometry?.type === 'Point';
-export const isWay = (geometry: FeatureGeometry): geometry is LineString =>
+export const isLineString = (geometry: FeatureGeometry): geometry is LineString =>
   geometry?.type === 'LineString';
-export const isRelation = (
+export const isGeometryCollection = (
   geometry: FeatureGeometry,
 ): geometry is GeometryCollection => geometry?.type === 'GeometryCollection';
 
@@ -82,7 +82,7 @@ export interface Feature {
   properties: {
     class: string;
     subclass: string;
-    [key: string]: string;
+    // [key: string]: string;
   };
   center: Position;
   roundedCenter?: LonLatRounded;
