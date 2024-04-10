@@ -1,28 +1,39 @@
 import type {
-  LayerSpecification,
   ExpressionSpecification,
+  LayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 
-const linear14To16Fade = [
+const linearFadeOut = (from: number, to: number): ExpressionSpecification => [
   'interpolate',
   ['linear'],
   ['zoom'],
-  0,
+  from,
   1,
-
-  14,
-  1,
-
-  16,
+  to,
   0.3,
-] as ExpressionSpecification;
+];
+
+const linear = (
+  from: number,
+  num1: number,
+  to: number,
+  num2: number,
+): ExpressionSpecification => [
+  'interpolate',
+  ['linear'],
+  ['zoom'],
+  from,
+  num1,
+  to,
+  num2,
+];
 
 export const climbingLayers: LayerSpecification[] = [
   {
     id: 'climbing-3-routes-circle',
     type: 'circle',
     source: 'climbing',
-    minzoom: 19,
+    minzoom: 16,
 
     filter: [
       'all',
@@ -36,11 +47,12 @@ export const climbingLayers: LayerSpecification[] = [
         '#4150a0',
         '#ea5540',
       ],
-      'circle-radius': 4,
+      'circle-radius': linear(16, 1, 21, 6),
+      'circle-opacity': linear(16, 0.4, 21, 1),
     },
   } as LayerSpecification,
   {
-    id: 'climbing-3-routes',
+    id: 'climbing-3-routes-labels',
     type: 'symbol',
     source: 'climbing',
     minzoom: 19,
@@ -51,12 +63,11 @@ export const climbingLayers: LayerSpecification[] = [
     ],
     layout: {
       'text-padding': 2,
-      'text-font': ['Noto Sans Regular'],
-      'text-anchor': 'top',
-      // 'icon-image': '{class}_11',
+      'text-font': ['Noto Sans Medium'],
+      'text-anchor': 'left',
       'text-field': '{name} {climbing:grade:uiaa}',
-      'text-offset': [0, 0.6],
-      'text-size': 12,
+      'text-offset': [1, 0],
+      'text-size': linear(20, 12, 26, 30),
       'text-max-width': 9,
       'text-allow-overlap': false,
       'text-optional': true,
@@ -74,6 +85,7 @@ export const climbingLayers: LayerSpecification[] = [
     type: 'symbol',
     source: 'climbing',
     minzoom: 15,
+    maxzoom: 20,
     filter: [
       'all',
       ['==', 'osmappType', 'relationPoint'],
@@ -81,12 +93,18 @@ export const climbingLayers: LayerSpecification[] = [
     ],
     layout: {
       'text-padding': 2,
-      'text-font': ['Noto Sans Regular'],
+      'text-font': ['Noto Sans Bold'],
       'text-anchor': 'top',
-      'icon-image': '{class}_11',
+      'icon-image': 'circle_11',
       'text-field': '{name}',
-      'text-offset': [0, 0.6],
-      'text-size': 12,
+      'text-offset': [
+        'step',
+        ['zoom'],
+        ['literal', [0, 0.6]],
+        18.5,
+        ['literal', [0, 0.8]],
+      ],
+      'text-size': linear(15, 12, 21, 18),
       'text-max-width': 9,
       'icon-optional': false,
       'icon-ignore-placement': false,
@@ -94,11 +112,12 @@ export const climbingLayers: LayerSpecification[] = [
       'text-ignore-placement': false,
       'text-allow-overlap': false,
       'text-optional': true,
+      'icon-size': linear(15, 1, 21, 2),
     },
     paint: {
       'text-halo-blur': 0.5,
-      'text-color': '#666',
-      'text-halo-width': 1,
+      'text-color': '#ea5540',
+      'text-halo-width': 2,
       'text-halo-color': '#ffffff',
     },
   },
@@ -118,7 +137,7 @@ export const climbingLayers: LayerSpecification[] = [
       'text-padding': 2,
       'text-font': ['Noto Sans Bold'],
       'text-anchor': 'top',
-      'icon-image': 'circle_11',
+      'icon-image': 'square_11',
       'text-field': '{name}',
       'text-offset': [0, 0.6],
       'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
@@ -132,8 +151,8 @@ export const climbingLayers: LayerSpecification[] = [
       'text-optional': true,
     },
     paint: {
-      'icon-opacity': linear14To16Fade,
-      'text-opacity': linear14To16Fade,
+      'icon-opacity': linearFadeOut(14, 16),
+      'text-opacity': linearFadeOut(14, 16),
       'text-color': 'rgba(0, 95, 204, 1)',
       'text-halo-color': 'rgba(250, 250, 250, 1)',
       'text-halo-width': 2,
