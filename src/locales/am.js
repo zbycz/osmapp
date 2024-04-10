@@ -121,7 +121,7 @@ export default {
   'editsuccess.note.textLabel': 'የማስታወሻ ፅሁፎች',
   'editsuccess.edit.heading': 'ስለ አርትእ እናመሰግናለን',
   'editsuccess.edit.subheading': 'ያደረጉዋቸው ለውጦች በአለም ላይ ካርታዎች ላይ መታየት ጀምረዋል።',
-  'editsuccess.edit.body': `በOSM የመረጃ ቋት ውስጥ ቀድሞውኑ የተካተተ። በ"OSM Mapnik" በጥቂት ደቀቃዎች ውስጥ ያገኙታል።
+  'editsuccess.edit.body': `በOSM የመረጃ ቋት ውስጥ ቀድሞውኑ የተካተተ። በ"OSM Carto" በጥቂት ደቀቃዎች ውስጥ ያገኙታል።
          የOsmAPP ካርታ እና ሌሎች የተለያዩ አፕሊኬሽኖች በወር አንድ ጊዜ አካባቢ ሪፍሬሽ ያደርጋሉ።
           <br/><br/>ይህ ስህተት ከሆነ እራስዎ ወደነበረበት በመመለስ በድጋሚ ማስቀመጥ ይችላሉ።`,
   'editsuccess.edit.urlLabel': `የርስዎ ማሻሻያዎ:`,
@@ -142,7 +142,7 @@ export default {
   'layers.outdoor': 'ከቤት ውጭ',
   'layers.mtb': 'MTB',
   'layers.snow': 'በረዶ',
-  'layers.mapnik': 'OSM Mapnik',
+  'layers.carto': 'OSM Carto',
   'layers.maptilerSat': 'Maptiler ሳተላይት (z<14)',
   'layers.bingSat': 'Bing ሳተላይት',
   'layers.bike': 'ሳይክል',

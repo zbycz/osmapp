@@ -130,7 +130,7 @@ export default {
   'editsuccess.note.textLabel': 'Texto de la nota',
   'editsuccess.edit.heading': '¡Gracias por tu edición!',
   'editsuccess.edit.subheading': 'Tu cambio está empezando a aparecer en mapas por todo el mundo.',
-  'editsuccess.edit.body': `Ya está guardado en la base de datos de OSM. Lo verás en el mapa "OSM Mapnik" en unos minutos.
+  'editsuccess.edit.body': `Ya está guardado en la base de datos de OSM. Lo verás en el mapa "OSM Carto" en unos minutos.
          La aplicación OsmAPP map y otras aplicaciones se actualizan aproximadamente una vez al mes.
           <br/><br/>Si esto es un error, puedes revertir los cambios y guardar de nuevo.`,
   'editsuccess.edit.urlLabel': `Tus cambios:`,
@@ -151,7 +151,7 @@ export default {
   'layers.outdoor': 'Exteriores',
   'layers.mtb': 'BTT',
   'layers.snow': 'Nieve',
-  'layers.mapnik': 'OSM Mapnik',
+  'layers.carto': 'OSM Carto',
   'layers.maptilerSat': 'Maptiler Satélite (z<14)',
   'layers.bingSat': 'Bing Satélite',
   'layers.bike': 'Bici',

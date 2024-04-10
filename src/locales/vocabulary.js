@@ -149,7 +149,7 @@ export default {
   'editsuccess.note.textLabel': 'Note text',
   'editsuccess.edit.heading': 'Thank you for your edit!',
   'editsuccess.edit.subheading': 'Your change is starting to appear on maps around the world.',
-  'editsuccess.edit.body': `Your change will appear in the OSM database immediately, it will be visible in the "OSM Mapnik" layer in a few minutes!
+  'editsuccess.edit.body': `Your change will appear in the OSM database immediately, it will be visible in the "OSM Carto" layer in a few minutes!
          OsmAPP map and other applications are refreshed about once a month.
           <br/><br/>If this is a mistake, you can manually revert the values and save it again.`,
   'editsuccess.edit.urlLabel': `Your changes:`,
@@ -175,7 +175,7 @@ export default {
   'layers.outdoor': 'Outdoor',
   'layers.mtb': 'MTB',
   'layers.snow': 'Snow',
-  'layers.mapnik': 'OSM Mapnik',
+  'layers.carto': 'OSM Carto',
   'layers.maptilerSat': 'Maptiler Satellite (z<14)',
   'layers.bingSat': 'Bing Satellite',
   'layers.bike': 'Bike',
