@@ -19,7 +19,7 @@ export const climbingLayers: LayerSpecification[] = [
         '#4150a0',
         '#ea5540',
       ],
-      'circle-radius': 6,
+      'circle-radius': 4,
     },
   } as LayerSpecification,
   {
@@ -41,6 +41,8 @@ export const climbingLayers: LayerSpecification[] = [
       'text-offset': [0, 0.6],
       'text-size': 12,
       'text-max-width': 9,
+      'text-allow-overlap': false,
+      'text-optional': true,
     },
     paint: {
       'text-halo-blur': 0.5,
@@ -97,7 +99,7 @@ export const climbingLayers: LayerSpecification[] = [
     ],
     layout: {
       'text-padding': 2,
-      'text-font': ['Noto Sans Regular'],
+      'text-font': ['Noto Sans Bold'],
       'text-anchor': 'top',
       'icon-image': '{class}_11',
       'text-field': '{name}',
@@ -113,10 +115,10 @@ export const climbingLayers: LayerSpecification[] = [
       'text-optional': true,
     },
     paint: {
-      'text-halo-blur': 0.5,
-      'text-color': '#666',
-      'text-halo-width': 1,
-      'text-halo-color': '#ffffff',
+      // 'text-halo-blur': 0.5,
+      // 'text-color': '#666',
+      // 'text-halo-width': 1,
+      // 'text-halo-color': '#ffffff',
       'icon-opacity': [
         'interpolate',
         ['linear'],
@@ -126,7 +128,7 @@ export const climbingLayers: LayerSpecification[] = [
         14,
         1,
         16,
-        0.5,
+        0.3,
       ],
       'text-opacity': [
         'interpolate',
@@ -134,12 +136,18 @@ export const climbingLayers: LayerSpecification[] = [
         ['zoom'],
         0,
         1,
+
         14,
         1,
+
         16,
-        0.5,
+        0.3,
       ],
       'text-opacity-transition': { duration: 2000 },
+
+      "text-color": "rgba(0, 95, 204, 1)",
+      "text-halo-color": "rgba(250, 250, 250, 1)",
+      "text-halo-width": 3
     },
   },
 ];
