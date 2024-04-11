@@ -81,7 +81,6 @@ const crags: LayerSpecification = {
   maxzoom: 20,
   filter: [
     'all',
-    ['==', 'osmappType', 'relationPoint'],
     ['==', 'climbing', 'crag'],
   ],
   layout: {
@@ -122,7 +121,6 @@ const areas: LayerSpecification = {
   maxzoom: 16,
   filter: [
     'all',
-    ['==', 'osmappType', 'relationPoint'],
     ['==', 'climbing', 'area'],
   ],
   layout: {

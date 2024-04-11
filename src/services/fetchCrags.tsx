@@ -117,27 +117,27 @@ const getRelationWithAreaCount = (
     return relation;
   });
 
-const getFakeAreas = (relationsOut3: Feature[]) => {
-  const cragsWithArea = { node: {}, way: {}, relation: {} };
-  relationsOut3.forEach((relation) => {
-    if (relation.tags.climbing === 'area') {
-      relation.members.forEach(({ type, ref }) => {
-        cragsWithArea[type][ref] = true;
+const getFakeAreas = (items: Feature[]) => {
+  const cragsInAreas = { node: {}, way: {}, relation: {} };
+  items.forEach(({ members, tags }) => {
+    if (tags.climbing === 'area') {
+      members?.forEach(({ type, ref }) => {
+        cragsInAreas[type][ref] = true;
       });
     }
   });
 
   const fakeAreas = [];
-  relationsOut3.forEach((relation) => {
+  items.forEach((item) => {
     if (
-      relation.tags.climbing === 'crag' &&
-      !cragsWithArea.relation[relation.osmMeta.id]
+      item.tags.climbing === 'crag' &&
+      !cragsInAreas[item.osmMeta.type][item.osmMeta.id]
     ) {
       fakeAreas.push({
-        ...relation,
+        ...item,
         properties: {
-          ...relation.properties,
-          name: relation.tags.name,
+          ...item.properties,
+          name: item.tags.name,
           climbing: 'area',
         },
       });
@@ -178,23 +178,27 @@ export const cragsToGeojson = (response: any): Feature[] => {
   );
 
   const relationsOut3 = getRelationWithAreaCount(relationsOut2, lookup);
-  const fakeAreas = getFakeAreas(relationsOut3);
 
-  return [...nodesOut, ...waysOut, ...relationsOut3, ...fakeAreas];
+  const allElements = [...nodesOut, ...waysOut, ...relationsOut3];
+  const fakeAreas = getFakeAreas(allElements);
+
+  return [...allElements, ...fakeAreas];
 };
 
 // on CZ 48,11,51,19 makes 12 MB   (only crags is 700kB)
+// eu: 19.06,-20.68,69.16,41.27
 export const fetchCrags = async () => {
   const query = `[out:json][timeout:25];
     (
-      nwr["climbing"](49.64474,14.21855,49.67273,14.28025);
-      >;<;
-      rel["climbing"="crag"];
+      //nwr["climbing"](49.64474,14.21855,49.67273,14.28025);
+      //>;<;
+      node["climbing"="crag"](19.06,-20.68,69.16,41.27);
+      <;
     );
-    (
-      ._;
-      rel(br);
-    );
+    // (
+    //   ._;
+    //   rel(br);
+    // );
     out center qt;
   `;
   const data = encodeURIComponent(query);
