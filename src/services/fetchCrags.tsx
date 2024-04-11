@@ -35,14 +35,26 @@ const convert = (
   const { type, id, tags = {} } = element;
   const geometry = geometryFn(element);
   const center = getCenter(geometry) ?? undefined;
+  const properties = {
+    ...getPoiClass(tags),
+    ...tags,
+    osmappType: type,
+    osmappRouteCount:
+      element.tags.climbing === 'crag'
+        ? element.members?.length ??
+          parseInt(element.tags['climbing:sport'] ?? 0, 10)
+        : undefined,
+  };
+
   return {
     type: 'Feature',
     id: convertOsmIdToMapId({ type, id }),
     osmMeta: { type, id },
     tags,
-    properties: { ...getPoiClass(tags), ...tags, osmappType: type },
+    properties,
     geometry,
     center,
+    members: element.members,
   };
 };
 
@@ -63,7 +75,7 @@ const getWayGeomFn =
   });
 
 function getRelationGeomFn(lookup) {
-  return ({ id, center, members }): FeatureGeometry => {
+  return ({ center, members }): FeatureGeometry => {
     const geometries = members
       .map(({ type, ref }) => lookup[type][ref]?.geometry)
       .filter(Boolean); // some members may be undefined in first pass
@@ -81,6 +93,7 @@ function getRelationGeomFn(lookup) {
 
 const addToLookup = (items: Feature[], lookup) => {
   items.forEach((item) => {
+    // eslint-disable-next-line no-param-reassign
     lookup[item.osmMeta.type][item.osmMeta.id] = item;
   });
 };
@@ -88,7 +101,10 @@ const addToLookup = (items: Feature[], lookup) => {
 export const cragsToGeojson = (response: any): Feature[] => {
   const { nodes, ways, relations } = getItems(response.elements);
 
-  const lookup = { node: {}, way: {}, relation: {} };
+  const lookup = { node: {}, way: {}, relation: {} } as Record<
+    string,
+    Record<string, Feature>
+  >;
 
   const NODE_GEOM = getNodeGeomFn();
   const nodesOut = nodes.map((node) => convert(node, NODE_GEOM));
@@ -113,7 +129,22 @@ export const cragsToGeojson = (response: any): Feature[] => {
     convert(relation, RELATION_GEOM2),
   );
 
-  return [...nodesOut, ...waysOut, ...relationsOut2];
+  const relationWithAreaCount = relationsOut2.map((relation) => {
+    if (relation.tags.climbing === 'area') {
+      const cragsCount = relation.members.map(
+        ({ type, ref }) => lookup[type][ref]?.properties?.osmappRouteCount ?? 0,
+      );
+      const osmappRouteCount = cragsCount.reduce((acc, count) => acc + count);
+      return {
+        ...relation,
+        properties: { ...relation.properties, osmappRouteCount },
+      };
+    }
+
+    return relation;
+  });
+
+  return [...nodesOut, ...waysOut, ...relationWithAreaCount];
 };
 
 // on CZ 48,11,51,19 makes 12 MB   (only crags is 700kB)

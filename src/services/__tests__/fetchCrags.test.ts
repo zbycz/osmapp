@@ -23,7 +23,7 @@ const anotherNode = {
   id: 123,
   lat: 55,
   lon: 10,
-  tags: {},
+  tags: { climbing: 'crag', 'climbing:sport': '30' },
 };
 const areaRelation = {
   type: 'relation',
@@ -72,8 +72,18 @@ const geojson = [
     geometry: { coordinates: [10, 55], type: 'Point' },
     id: 1230,
     osmMeta: { id: 123, type: 'node' },
-    properties: { class: 'information', osmappType: 'node' },
-    tags: {},
+    properties: {
+      class: 'climbing',
+      climbing: 'crag',
+      'climbing:sport': '30',
+      osmappRouteCount: 30,
+      osmappType: 'node',
+      subclass: 'crag',
+    },
+    tags: {
+      climbing: 'crag',
+      'climbing:sport': '30',
+    },
     type: 'Feature',
   },
   {
@@ -111,9 +121,14 @@ const geojson = [
       climbing: 'area',
       name: 'Lomy nad Velkou',
       osmappType: 'relation',
+      osmappRouteCount: 31,
     },
     tags: { climbing: 'area', name: 'Lomy nad Velkou' },
     type: 'Feature',
+    members: [
+      { type: 'relation', ref: 17089246, role: '' },
+      { type: 'node', ref: 123, role: '' },
+    ],
   },
   {
     center: [14.25, 49.65],
@@ -129,13 +144,15 @@ const geojson = [
       climbing: 'crag',
       name: 'Borová věž',
       osmappType: 'relation',
+      osmappRouteCount: 1,
     },
     tags: { climbing: 'crag', name: 'Borová věž' },
     type: 'Feature',
+    members: [{ type: 'node', ref: 11557711620, role: '' }],
   },
 ];
 
-test('conversion', () => {
+test('basic conversion', () => {
   expect(cragsToGeojson(response)).toEqual(geojson);
 });
 
@@ -152,28 +169,30 @@ const crag2 = {
   members: [],
   tags: {},
 };
-test('conversion with centers', () => {
+test('conversion with centers instead of geometries', () => {
   expect(cragsToGeojson({ elements: [area2, crag2] })).toEqual([
     {
+      type: 'Feature',
+      osmMeta: { id: 555, type: 'relation' },
+      id: 5554,
       center: [14, 51],
       geometry: {
         geometries: [{ coordinates: [14, 51], type: 'Point' }],
         type: 'GeometryCollection',
       },
-      id: 5554,
-      osmMeta: { id: 555, type: 'relation' },
       properties: { class: 'information', osmappType: 'relation' },
       tags: {},
-      type: 'Feature',
+      members: [{ type: 'relation', ref: 17089246, role: '' }],
     },
     {
+      type: 'Feature',
+      osmMeta: { id: 17089246, type: 'relation' },
+      id: 170892464,
       center: [14, 51],
       geometry: { coordinates: [14, 51], type: 'Point' },
-      id: 170892464,
-      osmMeta: { id: 17089246, type: 'relation' },
       properties: { class: 'information', osmappType: 'relation' },
       tags: {},
-      type: 'Feature',
+      members: [],
     },
   ]);
 });
