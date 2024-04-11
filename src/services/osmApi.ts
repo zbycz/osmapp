@@ -99,7 +99,7 @@ const osmToFeature = (element): Feature => {
     osmMeta,
     tags,
     members,
-    properties: getPoiClass(tags),
+    properties: { ...getPoiClass(tags) },
     deleted: osmappDeletedMarker,
   };
 };
