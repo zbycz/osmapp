@@ -7,6 +7,7 @@ import { UserThemeProvider } from '../src/helpers/theme';
 import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { captureException, initSentry } from '../src/helpers/sentry';
 import { prod, doShortenerRedirect } from '../src/services/helpers';
+import { PROJECT_ID } from '../src/services/project';
 
 if (prod) {
   initSentry();
@@ -34,13 +35,14 @@ export default class MyApp extends App {
   }
 
   render() {
+    const isOpenClimbing = PROJECT_ID === 'openclimbing';
     const { Component, pageProps } = this.props as any;
     const { userThemeCookie } = pageProps;
 
     return (
       <>
         <Head>
-          <title>OsmAPP</title>
+          <title>{isOpenClimbing ? 'openclimbing.org' : 'OsmAPP'}</title>
           <meta
             name="viewport"
             content="width=device-width, user-scalable=no, initial-scale=1"

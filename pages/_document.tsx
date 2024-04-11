@@ -11,8 +11,11 @@ import { ServerStyleSheet } from 'styled-components';
 import type { DocumentContext } from 'next/dist/shared/lib/utils';
 import { getServerIntl } from '../src/services/intlServer';
 import { InjectIntl, setIntl } from '../src/services/intl';
-import { Favicons } from '../src/helpers/Favicons';
-import { setProjectForSSR } from '../src/services/project';
+import { OsmappFavicons } from '../src/helpers/OsmappFavicons';
+import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
+import { OpenClimbingFavicons } from '../src/helpers/OpenClimbingFavicons';
+
+const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
 export default class MyDocument extends Document {
   render() {
@@ -42,7 +45,7 @@ export default class MyDocument extends Document {
             />
           ))}
 
-          <Favicons />
+          {isOpenClimbing ? <OpenClimbingFavicons /> : <OsmappFavicons />}
           {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
         </Head>
         <body>
