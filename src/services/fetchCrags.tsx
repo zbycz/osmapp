@@ -46,15 +46,6 @@ const convert = (
   };
 };
 
-const getLookup = (elements): Record<string, FeatureGeometry> =>
-  elements.reduce(
-    (acc, { geometry, osmMeta }) => ({
-      ...acc,
-      [osmMeta.id]: geometry,
-    }),
-    {},
-  );
-
 const getNodeGeomFn =
   () =>
   (node: any): Point => ({
@@ -63,31 +54,19 @@ const getNodeGeomFn =
   });
 
 const getWayGeomFn =
-  (nodesLookup) =>
+  (lookup) =>
   ({ nodes }): LineString => ({
     type: 'LineString' as const,
     coordinates: nodes
-      .map((ref) => nodesLookup[ref]?.coordinates)
+      .map((ref) => lookup.node[ref]?.geometry?.coordinates)
       .filter(Boolean), // some nodes may be missing
   });
 
-function getRelationGeomFn(waysLookup, nodesLookup, relationsLookup) {
+function getRelationGeomFn(lookup) {
   return ({ id, center, members }): FeatureGeometry => {
     const geometries = members
-      .map(({ type, ref }) => {
-        if (type === 'way') {
-          return waysLookup[ref];
-        }
-        if (type === 'node') {
-          return nodesLookup[ref];
-        }
-        if (type === 'relation') {
-          return relationsLookup[ref]; // this can be undefined in first pass, hence filter
-        }
-
-        throw new Error(`Unknown member type: ${type} in relation: ${id}`);
-      })
-      .filter(Boolean);
+      .map(({ type, ref }) => lookup[type][ref]?.geometry)
+      .filter(Boolean); // some members may be undefined in first pass
 
     return geometries.length
       ? {
@@ -100,30 +79,36 @@ function getRelationGeomFn(waysLookup, nodesLookup, relationsLookup) {
   };
 }
 
+const addToLookup = (items: Feature[], lookup) => {
+  items.forEach((item) => {
+    lookup[item.osmMeta.type][item.osmMeta.id] = item;
+  });
+};
+
 export const cragsToGeojson = (response: any): Feature[] => {
-  const { elements } = response;
-  const { nodes, ways, relations } = getItems(elements);
+  const { nodes, ways, relations } = getItems(response.elements);
+
+  const lookup = { node: {}, way: {}, relation: {} };
 
   const NODE_GEOM = getNodeGeomFn();
   const nodesOut = nodes.map((node) => convert(node, NODE_GEOM));
-  const nodesLookup = getLookup(nodesOut);
+  addToLookup(nodesOut, lookup);
 
-  const WAY_GEOM = getWayGeomFn(nodesLookup);
+  const WAY_GEOM = getWayGeomFn(lookup);
   const waysOut = ways.map((way) => convert(way, WAY_GEOM));
-  const waysLookup = getLookup(waysOut);
+  addToLookup(waysOut, lookup);
 
-  const RELATION_GEOM1 = getRelationGeomFn(waysLookup, nodesLookup, {});
+  // first pass
+  const RELATION_GEOM1 = getRelationGeomFn(lookup);
   const relationsOut1 = relations.map((relation) =>
     convert(relation, RELATION_GEOM1),
   );
-  const relationsLookup = getLookup(relationsOut1);
+  addToLookup(relationsOut1, lookup);
 
-  // we need second pass for climbing=area  (TODO: loop while number of geometries changes)
-  const RELATION_GEOM2 = getRelationGeomFn(
-    waysLookup,
-    nodesLookup,
-    relationsLookup,
-  );
+  // second pass for climbing=area geometries
+  // TODO: loop while number of geometries changes
+  // TODO: update only geometries (?)
+  const RELATION_GEOM2 = getRelationGeomFn(lookup);
   const relationsOut2 = relations.map((relation) =>
     convert(relation, RELATION_GEOM2),
   );
