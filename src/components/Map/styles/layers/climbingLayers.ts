@@ -130,7 +130,7 @@ const areas: LayerSpecification = {
     'text-font': ['Noto Sans Bold'],
     'text-anchor': 'top',
     'icon-image': 'square_11',
-    'text-field': '{name}',
+    'text-field': '{name}\n{osmappRouteCount}',
     'text-offset': [0, 0.6],
     'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
     // 'icon-size': 1.5,
