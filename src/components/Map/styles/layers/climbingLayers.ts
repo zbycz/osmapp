@@ -119,7 +119,6 @@ const areas: LayerSpecification = {
   id: 'climbing-1-areas',
   type: 'symbol',
   source: 'climbing',
-  minzoom: 5,
   maxzoom: 16,
   filter: [
     'all',
