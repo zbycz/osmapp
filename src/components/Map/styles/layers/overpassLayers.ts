@@ -88,12 +88,7 @@ export const overpassLayers: LayerSpecification[] = [
     source: 'overpass',
     filter: ['all', ['==', '$type', 'Point'], ['==', 'osmappType', 'relation']],
     paint: {
-      'circle-color': [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        'rgba(255,255,255,0)',
-        'rgba(255,255,255,0)',
-      ],
+      'circle-color': 'rgba(255,255,255,0)',
       'circle-radius': 20,
     },
   } as LayerSpecification,

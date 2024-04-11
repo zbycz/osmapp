@@ -30,7 +30,6 @@ export const cliffsLayers: LayerSpecification[] = [
     filter: ['==', ['geometry-type'], 'LineString'],
     'source-layer': 'mountain_peak',
     minzoom: 7,
-    maxzoom: 22,
   },
   {
     id: 'Cliffs ticks 0-18',
@@ -92,6 +91,5 @@ export const cliffsLayers: LayerSpecification[] = [
     filter: ['==', ['geometry-type'], 'LineString'],
     'source-layer': 'mountain_peak',
     minzoom: 18,
-    maxzoom: 22,
   },
 ];

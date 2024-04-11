@@ -34,16 +34,17 @@ export interface LineString {
 
 export interface GeometryCollection {
   type: 'GeometryCollection';
-  geometries: Array<Point | LineString>;
+  geometries: Array<Point | LineString | GeometryCollection>;
 }
 
 export type FeatureGeometry = Point | LineString | GeometryCollection;
 
 export const isPoint = (geometry: FeatureGeometry): geometry is Point =>
   geometry?.type === 'Point';
-export const isWay = (geometry: FeatureGeometry): geometry is LineString =>
-  geometry?.type === 'LineString';
-export const isRelation = (
+export const isLineString = (
+  geometry: FeatureGeometry,
+): geometry is LineString => geometry?.type === 'LineString';
+export const isGeometryCollection = (
   geometry: FeatureGeometry,
 ): geometry is GeometryCollection => geometry?.type === 'GeometryCollection';
 
@@ -61,6 +62,7 @@ interface RelationMember {
 export interface Feature {
   point?: boolean; // TODO rename to isMarker or isCoords
   type: 'Feature';
+  id?: number; // for map hover effect
   geometry?: FeatureGeometry;
   osmMeta: {
     type: string;
@@ -82,6 +84,9 @@ export interface Feature {
   properties: {
     class: string;
     subclass: string;
+    [key: string]: string | number;
+    osmappRouteCount?: number;
+    osmappType?: 'node' | 'way' | 'relation';
   };
   center: Position;
   roundedCenter?: LonLatRounded;

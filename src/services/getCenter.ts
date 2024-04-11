@@ -1,4 +1,11 @@
-import { FeatureGeometry, isPoint, isRelation, isWay, Position } from './types';
+import {
+  FeatureGeometry,
+  GeometryCollection,
+  isGeometryCollection,
+  isLineString,
+  isPoint,
+  Position,
+} from './types';
 
 interface NamedBbox {
   w: number;
@@ -22,31 +29,41 @@ export const getBbox = (coordinates: Position[]): NamedBbox => {
   );
 };
 
-const getCenterOfBbox = (coordinates: Position[]) => {
-  if (!coordinates.length) return undefined;
+const getCenterOfBbox = (points: Position[]) => {
+  if (!points.length) return undefined;
 
-  const { w, s, e, n } = getBbox(coordinates); // [WSEN]
+  const { w, s, e, n } = getBbox(points); // [WSEN]
   const lon = (w + e) / 2; // flat earth rulezz
   const lat = (s + n) / 2;
   return [lon, lat];
 };
+
+const getPointsRecursive = (geometry: GeometryCollection): Position[] =>
+  geometry.geometries.flatMap((subGeometry) => {
+    if (isGeometryCollection(subGeometry)) {
+      return getPointsRecursive(subGeometry);
+    }
+    if (isLineString(subGeometry)) {
+      return subGeometry.coordinates;
+    }
+    if (isPoint(subGeometry)) {
+      return [subGeometry.coordinates];
+    }
+    return [];
+  });
 
 export const getCenter = (geometry: FeatureGeometry): Position => {
   if (isPoint(geometry)) {
     return geometry.coordinates;
   }
 
-  if (isWay(geometry)) {
+  if (isLineString(geometry)) {
     return getCenterOfBbox(geometry.coordinates);
   }
 
-  if (isRelation(geometry)) {
-    const allCoords = geometry.geometries.flatMap((subGeometry) =>
-      isPoint(subGeometry)
-        ? [subGeometry.coordinates]
-        : subGeometry.coordinates,
-    );
-    return getCenterOfBbox(allCoords);
+  if (isGeometryCollection(geometry)) {
+    const allPoints = getPointsRecursive(geometry);
+    return getCenterOfBbox(allPoints);
   }
 
   return undefined;

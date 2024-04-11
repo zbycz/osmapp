@@ -59,8 +59,8 @@ export const osmappLayers: Layers = {
     attribution: ['maptiler', 'osm'],
   },
   s1: { type: 'spacer' },
-  mapnik: {
-    name: t('layers.mapnik'),
+  carto: {
+    name: t('layers.carto'),
     type: 'basemap',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     Icon: MapIcon,
