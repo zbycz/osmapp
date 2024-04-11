@@ -22,12 +22,7 @@ export const MaptilerLogo = () => {
 
   return (
     <Link href="https://www.maptiler.com" rel="noopener" target="_blank">
-      <img
-        src="/logo/maptiler-api.svg"
-        alt="MapTiler logo"
-        width={67}
-        height={20}
-      />
+      <img src="/maptiler-api.svg" alt="MapTiler logo" width={67} height={20} />
     </Link>
   );
 };

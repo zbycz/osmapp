@@ -11,14 +11,13 @@ import { ServerStyleSheet } from 'styled-components';
 import type { DocumentContext } from 'next/dist/shared/lib/utils';
 import { getServerIntl } from '../src/services/intlServer';
 import { InjectIntl, setIntl } from '../src/services/intl';
-import { OsmappFavicons } from '../src/helpers/OsmappFavicons';
+import { FaviconsOsmapp } from '../src/helpers/FaviconsOsmapp';
 import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
-import { OpenClimbingFavicons } from '../src/helpers/OpenClimbingFavicons';
-
-const isOpenClimbing = PROJECT_ID === 'openclimbing';
+import { FaviconsOpenClimbing } from '../src/helpers/FaviconsOpenClimbing';
 
 export default class MyDocument extends Document {
   render() {
+    const isOpenClimbing = PROJECT_ID === 'openclimbing';
     const { serverIntl, asPath } = this.props as any;
 
     return (
@@ -45,7 +44,7 @@ export default class MyDocument extends Document {
             />
           ))}
 
-          {isOpenClimbing ? <OpenClimbingFavicons /> : <OsmappFavicons />}
+          {isOpenClimbing ? <FaviconsOpenClimbing /> : <FaviconsOsmapp />}
           {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
         </Head>
         <body>
