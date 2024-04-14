@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Tooltip } from '@material-ui/core';
 import { useRouteNumberColors } from './utils/useRouteNumberColors';
-import { isAscent } from './utils/ascents';
+import { isTicked } from '../../../services/ticks';
 
 const Container = styled.div<{
   colors: Record<string, string>;
@@ -41,7 +41,7 @@ export const RouteNumber = ({
     isOnThisPhoto,
     hasPathInDifferentPhoto,
     isOnDifferentPhoto,
-    isAscent: isAscent(osmId),
+    isTicked: isTicked(osmId),
   });
 
   const getTitle = () => {
