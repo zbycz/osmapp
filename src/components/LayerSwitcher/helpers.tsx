@@ -7,41 +7,29 @@ import List from '@material-ui/core/List';
 import styled from 'styled-components';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
-
-let counter = 0;
-const TMS_EXAMPLES = [
-  'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-  'https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
-];
+import { useAddLayerContext } from './helpers/AddLayerContext';
+import { AddCustomDialog } from './AddCustomLayer';
 
 export const AddUserLayerButton = ({ setUserLayers }) => {
   const { setActiveLayers } = useMapStateContext();
-  const onClick = () => {
-    const TMS_EXAMPLE = TMS_EXAMPLES[counter % TMS_EXAMPLES.length];
-    counter += 1;
-    const url = prompt(t('layerswitcher.add_layer_prompt'), TMS_EXAMPLE); // eslint-disable-line no-alert
-    if (!url) {
-      return;
-    }
-    setUserLayers((current) => {
-      const userLayersOmitSame = current.filter((item) => item.url !== url);
-      return [
-        ...userLayersOmitSame,
-        {
-          name: url.replace(/^https?:\/\/([^/]+).*$/, '$1'),
-          url,
-        },
-      ];
-    });
-    setActiveLayers([url]); // if this not found in osmappLayers, value is used as tiles URL
-  };
+  const { open } = useAddLayerContext();
 
   return (
-    <Box m={2} mt={6}>
-      <Button size="small" color="secondary" onClick={onClick}>
-        {t('layerswitcher.add_layer_button')}
-      </Button>
-    </Box>
+    <>
+      <Box m={2} mt={6}>
+        <Button size="small" color="secondary" onClick={open}>
+          {t('layerswitcher.add_layer_button')}
+        </Button>
+      </Box>
+
+      <AddCustomDialog save={(url, name) => {
+        setUserLayers((current) => {
+          const userLayersOmitSame = current.filter((item) => item.url !== url);
+          return [...userLayersOmitSame, { name, url }];
+        });
+        setActiveLayers([url]); // if this not found in osmappLayers, value is used as tiles URL
+      }} />
+    </>
   );
 };
 

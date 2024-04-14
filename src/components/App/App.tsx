@@ -20,6 +20,7 @@ import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
 import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
+import { AddLayerDialogProvider } from '../LayerSwitcher/helpers/AddLayerContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -102,7 +103,9 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
         <OsmAuthProvider>
           <StarsProvider>
             <EditDialogProvider /* TODO supply router.query */>
-              <IndexWithProviders />
+              <AddLayerDialogProvider>
+                <IndexWithProviders />
+              </AddLayerDialogProvider>
             </EditDialogProvider>
           </StarsProvider>
         </OsmAuthProvider>
