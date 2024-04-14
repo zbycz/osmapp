@@ -4,7 +4,8 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import { useAddLayerContext } from './helpers/AddLayerContext';
-import { Button, TextField } from '@material-ui/core';
+import { Button, CircularProgress, TextField } from '@material-ui/core';
+import { loadLayers } from "@dlurak/editor-layer-index"
 
 const TMS_EXAMPLES = {
   'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png': 'French osm tiles',
@@ -20,6 +21,10 @@ interface LayerDataInputProps {
   counter: number;
 }
 
+type SuccessLayerDataInputProps = LayerDataInputProps & {
+  index: unknown[]
+}
+
 /**
  * Starts with https?://
  * Includes each of those exactly one time:
@@ -27,12 +32,7 @@ interface LayerDataInputProps {
  */
 const mapLayerRegex = /^https?:\/\/(?=.*\{x})(?=.*\{y})(?=.*\{z}).*$/
 
-const LayerDataInput: React.FC<LayerDataInputProps> = ({
-  onName,
-  onUrl,
-  onDefault,
-  counter,
-}) => {
+const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({ counter, onDefault, onUrl, onName }) => {
   const TMS_EXAMPLE =
     Object.entries(TMS_EXAMPLES)[counter % Object.keys(TMS_EXAMPLES).length];
 
@@ -100,6 +100,49 @@ const LayerDataInput: React.FC<LayerDataInputProps> = ({
       />
     </div>
   );
+}
+
+const LoadingLayerInput = () => {
+  return (
+    <div style={{
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center"
+    }}>
+      <CircularProgress />
+      <p style={{
+        fontSize: "1rem",
+        color: "gray"
+      }}>Fetching the layer index...</p>
+    </div>
+  )
+}
+
+const ErrorLayerInput = () => {
+return (
+  <div>
+    <p>An error occured while fetching the layer index</p>
+  </div>
+)
+}
+
+const LayerDataInput: React.FC<LayerDataInputProps> = (props) => {
+  const [layerIndex, setLayerIndex] = React.useState([])
+  const [layerIndexState, setLayerIndexState] = React.useState<"success" | "loading" | "error">("loading");
+
+  React.useEffect(() => {
+    loadLayers().then(result => {
+      setLayerIndex(result)
+      setLayerIndexState("success")
+    }).catch(() => {
+      setLayerIndex([])
+      setLayerIndexState("error")
+    })
+  }, [])
+
+  if (layerIndexState === "success") return <SuccessLayerInput index={layerIndex} {...props} />
+  if (layerIndexState === "error") return <ErrorLayerInput />
+  if (layerIndexState === "loading") return <LoadingLayerInput />
 };
 
 interface AddDialogProps {
