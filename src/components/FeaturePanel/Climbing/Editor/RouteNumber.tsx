@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useRouteNumberColors } from '../utils/useRouteNumberColors';
-import { isTicked } from '../utils/ticks';
+import { isTicked } from '../../../../services/ticks';
 
 type Props = {
   children: number;

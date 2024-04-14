@@ -1,8 +1,7 @@
-import { JSONValue } from '../types';
+import { JSONValue } from './types';
 
 const KEY = 'ticks';
 
-// @TODO generic util?
 export const getLocalStorageItem = (key: string) => {
   if (typeof window === 'undefined') return [];
   const raw = window?.localStorage.getItem(key);
@@ -18,7 +17,6 @@ export const getLocalStorageItem = (key: string) => {
   return [];
 };
 
-// @TODO generic util?
 export const setLocalStorageItem = (key: string, value: JSONValue) => {
   if (typeof window === 'undefined') return;
   window?.localStorage.setItem(key, JSON.stringify(value));

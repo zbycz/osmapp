@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Button } from '@material-ui/core';
-import { findTicks, onTickDelete } from '../utils/ticks';
+import { findTicks, onTickDelete } from '../../../../services/ticks';
 import { PanelLabel } from '../PanelLabel';
 
 const Container = styled.div`

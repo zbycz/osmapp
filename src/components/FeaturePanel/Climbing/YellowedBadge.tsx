@@ -2,7 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import CheckIcon from '@material-ui/icons/Check';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { isTicked } from './utils/ticks';
+import { isTicked } from '../../../services/ticks';
+import { getShortId } from '../../../services/helpers';
 
 const Text = styled.div``;
 const Container = styled.div`
@@ -19,10 +20,12 @@ const Container = styled.div`
 
 export const YellowedBadge = () => {
   const { routes } = useClimbingContext();
-  const isVisible = routes.every((route) => {
-    const osmId = route.feature?.osmMeta.id ?? null;
-    return isTicked(osmId);
-  });
+  const isVisible =
+    routes.length > 0 &&
+    routes.every((route) => {
+      const osmId = getShortId(route.feature?.osmMeta) ?? null;
+      return isTicked(osmId);
+    });
 
   return isVisible ? (
     <Container>

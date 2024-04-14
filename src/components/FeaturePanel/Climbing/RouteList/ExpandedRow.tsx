@@ -21,7 +21,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
-import { onTickAdd } from '../utils/ticks';
+import { onTickAdd } from '../../../../services/ticks';
 import { MyTicks } from './MyTicks';
 
 const Left = styled.div`

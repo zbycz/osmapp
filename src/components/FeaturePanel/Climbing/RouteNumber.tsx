@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import { Tooltip } from '@material-ui/core';
 import { useRouteNumberColors } from './utils/useRouteNumberColors';
-import { isTicked } from './utils/ticks';
+import { isTicked } from '../../../services/ticks';
 
 const Container = styled.div<{
   colors: Record<string, string>;

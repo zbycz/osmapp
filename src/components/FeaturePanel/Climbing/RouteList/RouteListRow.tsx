@@ -12,6 +12,7 @@ import { RouteNumber } from '../RouteNumber';
 import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
+import { getShortId } from '../../../../services/helpers';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -86,7 +87,7 @@ export const RenderListRow = ({
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [routeSelectedIndex]);
-  const osmId = route.feature?.osmMeta.id ?? null;
+  const osmId = getShortId(route.feature?.osmMeta) ?? null;
   const isSelected = isRouteSelected(index);
   const photoInfoForRoute = getPhotoInfoForRoute(index);
 

@@ -108,3 +108,10 @@ export interface Feature {
 
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;
+
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | { [x: string]: JSONValue }
+  | Array<JSONValue>;
