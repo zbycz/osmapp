@@ -83,7 +83,9 @@ export interface Feature {
   properties: {
     class: string;
     subclass: string;
-    // [key: string]: string;
+    [key: string]: string | number;
+    osmappRouteCount?: number;
+    osmappType?: 'node' | 'way' | 'relation';
   };
   center: Position;
   roundedCenter?: LonLatRounded;
