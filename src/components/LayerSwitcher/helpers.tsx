@@ -24,13 +24,13 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
 
       <AddCustomDialog
         save={(layer) => {
-          const { url: baseUrl, name } = layer;
-          const url = baseUrl.replace('{zoom}', '{z}');
+          const { url, name } = layer;
 
           setUserLayers((current) => {
             const userLayersOmitSame = current.filter(
               (item) => item.url !== url,
             );
+
             return [...userLayersOmitSame, { name, url }];
           });
           setActiveLayers([url]); // if this not found in osmappLayers, value is used as tiles URL

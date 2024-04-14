@@ -1,4 +1,4 @@
-import { ReactNode, createContext, useContext, useState } from 'react';
+import * as React from 'react';
 
 interface AddLayerDialogType {
   opened: boolean;
@@ -6,10 +6,15 @@ interface AddLayerDialogType {
   close: () => void;
 }
 
-const AddLayerDialogContext = createContext<AddLayerDialogType>(undefined);
+const AddLayerDialogContext =
+  React.createContext<AddLayerDialogType>(undefined);
 
-export const AddLayerDialogProvider = (props: { children: ReactNode }) => {
-  const [opened, setOpened] = useState(false);
+type AddLayerDialogProviderProps = { children: React.ReactNode };
+
+export const AddLayerDialogProvider = ({
+  children,
+}: AddLayerDialogProviderProps) => {
+  const [opened, setOpened] = React.useState(false);
 
   const value = {
     opened,
@@ -22,10 +27,10 @@ export const AddLayerDialogProvider = (props: { children: ReactNode }) => {
 
   return (
     <AddLayerDialogContext.Provider value={value}>
-      {props.children}
+      {children}
     </AddLayerDialogContext.Provider>
   );
 };
 
 export const useAddLayerContext = () =>
-  useContext<AddLayerDialogType>(AddLayerDialogContext);
+  React.useContext<AddLayerDialogType>(AddLayerDialogContext);

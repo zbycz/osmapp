@@ -3,10 +3,10 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import { useAddLayerContext } from './helpers/AddLayerContext';
-import { Button, CircularProgress, Input, TextField } from '@material-ui/core';
+import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { loadLayers } from '@dlurak/editor-layer-index';
 import { Autocomplete } from '@material-ui/lab';
+import { useAddLayerContext } from './helpers/AddLayerContext';
 
 type SuccessLayerDataInputProps = {
   index: any[];
@@ -16,51 +16,43 @@ type SuccessLayerDataInputProps = {
 const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
   index,
   onSelect,
-}) => {
-  const [layer, setLayer] = React.useState<any | undefined>(undefined);
+}) => (
+  <Autocomplete
+    options={index.map((l) => l.name)}
+    onChange={(_, val) => {
+      const newLayer = index.find((l) => l.name === val);
+      onSelect(newLayer);
+    }}
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    renderInput={(params) => <TextField {...params} label="Layer" />}
+  />
+);
 
-  return (
-    <Autocomplete
-      options={index.map((l) => l.name)}
-      onChange={(_, val) => {
-        const layer = index.find((l) => l.name === val);
-        setLayer(layer);
-        onSelect(layer);
-      }}
-      renderInput={(params) => <TextField {...params} label="Layer" />}
-    />
-  );
-};
-
-const LoadingLayerInput = () => {
-  return (
-    <div
+const LoadingLayerInput = () => (
+  <div
+    style={{
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+    }}
+  >
+    <CircularProgress />
+    <p
       style={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
+        fontSize: '1rem',
+        color: 'gray',
       }}
     >
-      <CircularProgress />
-      <p
-        style={{
-          fontSize: '1rem',
-          color: 'gray',
-        }}
-      >
-        Fetching the layer index...
-      </p>
-    </div>
-  );
-};
+      Fetching the layer index...
+    </p>
+  </div>
+);
 
-const ErrorLayerInput = () => {
-  return (
-    <div>
-      <p>An error occured while fetching the layer index</p>
-    </div>
-  );
-};
+const ErrorLayerInput = () => (
+  <div>
+    <p>An error occured while fetching the layer index</p>
+  </div>
+);
 
 const LayerDataInput: React.FC<{ onSelect: (layer: any) => void }> = ({
   onSelect,
@@ -81,10 +73,16 @@ const LayerDataInput: React.FC<{ onSelect: (layer: any) => void }> = ({
       });
   }, []);
 
-  if (layerIndexState === 'success')
-    return <SuccessLayerInput index={layerIndex} onSelect={onSelect} />;
-  if (layerIndexState === 'error') return <ErrorLayerInput />;
-  if (layerIndexState === 'loading') return <LoadingLayerInput />;
+  switch (layerIndexState) {
+    case 'success':
+      return <SuccessLayerInput index={layerIndex} onSelect={onSelect} />;
+    case 'error':
+      return <ErrorLayerInput />;
+    case 'loading':
+      return <LoadingLayerInput />;
+    default:
+      return <LoadingLayerInput />;
+  }
 };
 
 const dynamicPartsRegex = /{((?!y|x|zoom)[a-zA-Z:,]+)}/g;
@@ -120,8 +118,6 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
     onValidation(desiredLength === valuesLength);
   }, [values]);
 
-  // description
-  //
   return (
     <div
       style={{
@@ -135,10 +131,13 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
           alignItems: 'center',
         }}
       >
-        {layer.icon && <img src={layer.icon} height={20} />}
+        {layer.icon && (
+          <img alt={`${layer.name}s logo`} src={layer.icon} height={20} />
+        )}
         <h3>{layer.name}</h3>
       </span>
       {layer.description && <p>{layer.description}</p>}
+      {layer.category && <p>{layer.category}</p>}
       <span
         style={{
           display: 'flex',
@@ -166,6 +165,7 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
             <Autocomplete
               options={part.options}
               renderInput={(params) => (
+                // eslint-disable-next-line react/jsx-props-no-spreading
                 <TextField {...params} label={part.title} />
               )}
               onChange={(_, val) => {
@@ -207,15 +207,15 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
   const [layer, setLayer] = React.useState<any | null>(null);
   const [layerUrl, setLayerUrl] = React.useState<string | null>(null);
 
-  const onSave = () => {
-    save(layer);
-    close();
-  };
-
-  const onCancel = () => {
+  const onReset = () => {
     close();
     setPage(0);
     setLayer(null);
+  };
+
+  const onSave = () => {
+    save({ ...layer, url: layerUrl });
+    onReset();
   };
 
   return (
@@ -227,9 +227,9 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
       <DialogContent>
         {page === 0 && (
           <LayerDataInput
-            onSelect={(layer) => {
-              setLayer(layer);
-              setDisableSave(!layer);
+            onSelect={(newLayer) => {
+              setLayer(newLayer);
+              setDisableSave(!newLayer);
             }}
           />
         )}
@@ -237,12 +237,10 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
           <Details
             layer={layer}
             onChange={(vals) => {
-              let baseUrl = layer.url.replace('{zoom}', '{z}');
-
-              for (const key of Object.keys(vals)) {
+              const baseUrl = Object.keys(vals).reduce((acc, key) => {
                 const keyPattern = new RegExp(`{${key}(:[a-z,]+)?}`);
-                baseUrl = baseUrl.replace(keyPattern, vals[key]);
-              }
+                return acc.replace(keyPattern, vals[key]);
+              }, layer.url.replace('{zoom}', '{z}'));
 
               setLayerUrl(baseUrl);
             }}
@@ -253,7 +251,7 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
         )}
 
         <DialogActions>
-          <Button onClick={onCancel} color="secondary" variant="outlined">
+          <Button onClick={onReset} color="secondary" variant="outlined">
             Cancel
           </Button>
 
@@ -264,8 +262,7 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
                 return;
               }
 
-              save({ ...layer, url: layerUrl });
-              close();
+              onSave();
             }}
             color="primary"
             variant="contained"
