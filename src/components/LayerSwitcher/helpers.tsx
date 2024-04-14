@@ -22,13 +22,20 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
         </Button>
       </Box>
 
-      <AddCustomDialog save={(url, name) => {
-        setUserLayers((current) => {
-          const userLayersOmitSame = current.filter((item) => item.url !== url);
-          return [...userLayersOmitSame, { name, url }];
-        });
-        setActiveLayers([url]); // if this not found in osmappLayers, value is used as tiles URL
-      }} />
+      <AddCustomDialog
+        save={(layer) => {
+          const { url: baseUrl, name } = layer;
+          const url = baseUrl.replace('{zoom}', '{z}');
+
+          setUserLayers((current) => {
+            const userLayersOmitSame = current.filter(
+              (item) => item.url !== url,
+            );
+            return [...userLayersOmitSame, { name, url }];
+          });
+          setActiveLayers([url]); // if this not found in osmappLayers, value is used as tiles URL
+        }}
+      />
     </>
   );
 };

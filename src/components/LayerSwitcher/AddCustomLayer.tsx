@@ -4,160 +4,218 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import { useAddLayerContext } from './helpers/AddLayerContext';
-import { Button, CircularProgress, TextField } from '@material-ui/core';
-import { loadLayers } from "@dlurak/editor-layer-index"
+import { Button, CircularProgress, Input, TextField } from '@material-ui/core';
+import { loadLayers } from '@dlurak/editor-layer-index';
+import { Autocomplete } from '@material-ui/lab';
 
-const TMS_EXAMPLES = {
-  'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png': 'French osm tiles',
+type SuccessLayerDataInputProps = {
+  index: any[];
+  onSelect: (layer: any | undefined) => void;
 };
 
-const getTileName = (url: string) =>
-  TMS_EXAMPLES[url] || url.replace(/^https?:\/\/([^/]+).*$/, '$1');
+const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
+  index,
+  onSelect,
+}) => {
+  const [layer, setLayer] = React.useState<any | undefined>(undefined);
 
-interface LayerDataInputProps {
-  onName?: (name: string) => void;
-  onUrl?: (url: string) => void;
-  onDefault: (url: string, name: string) => void;
-  counter: number;
-}
+  return (
+    <Autocomplete
+      options={index.map((l) => l.name)}
+      onChange={(_, val) => {
+        const layer = index.find((l) => l.name === val);
+        setLayer(layer);
+        onSelect(layer);
+      }}
+      renderInput={(params) => <TextField {...params} label="Layer" />}
+    />
+  );
+};
 
-type SuccessLayerDataInputProps = LayerDataInputProps & {
-  index: unknown[]
-}
-
-/**
- * Starts with https?://
- * Includes each of those exactly one time:
- * {x} {y} {z}
- */
-const mapLayerRegex = /^https?:\/\/(?=.*\{x})(?=.*\{y})(?=.*\{z}).*$/
-
-const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({ counter, onDefault, onUrl, onName }) => {
-  const TMS_EXAMPLE =
-    Object.entries(TMS_EXAMPLES)[counter % Object.keys(TMS_EXAMPLES).length];
-
-  const [urlValue, setUrlValue] = React.useState(TMS_EXAMPLE[0]);
-  const [nameValue, setNameValue] = React.useState(TMS_EXAMPLE[1]);
-
-  onDefault(urlValue, nameValue)
-
-  const [isDefaultName, setIsDefaultName] = React.useState(true);
-
-  const [nameHelperText, setNameHelperText] = React.useState("")
-  const [urlHelperText, setUrlHelperText] = React.useState("")
-
-  const onNameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-
-    setIsDefaultName(false);
-    setNameValue(value);
-    if (onName) onName(value);
-  };
-
-  const onUrlInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    setUrlValue(newValue);
-    if (isDefaultName) setNameValue(getTileName(newValue));
-
-    if (onUrl) onUrl(newValue);
-  };
-
-  React.useEffect(() => {
-    if (!nameValue.trim()) setNameHelperText("Name must not be empty")
-    else setNameHelperText("")
-  }, [nameValue])
-
-  React.useEffect(() => {
-    if (!mapLayerRegex.test(urlValue)) setUrlHelperText("URL must contain exactly one of those {x}, {z}, {y} and {s}")
-    else setUrlHelperText("")
-  }, [urlValue])
-
+const LoadingLayerInput = () => {
   return (
     <div
       style={{
         display: 'flex',
         flexDirection: 'column',
-        gap: '1rem',
+        alignItems: 'center',
       }}
     >
-      <TextField
-        label="Name"
-        variant="outlined"
-        onChange={onNameInput}
-        value={nameValue}
-        fullWidth
-        error={!!nameHelperText}
-        helperText={nameHelperText}
-      />
-      <TextField
-        label="URL"
-        variant="outlined"
-        onChange={onUrlInput}
-        value={urlValue}
-        fullWidth
-        error={!!urlHelperText}
-        helperText={urlHelperText}
-      />
+      <CircularProgress />
+      <p
+        style={{
+          fontSize: '1rem',
+          color: 'gray',
+        }}
+      >
+        Fetching the layer index...
+      </p>
     </div>
   );
-}
-
-const LoadingLayerInput = () => {
-  return (
-    <div style={{
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center"
-    }}>
-      <CircularProgress />
-      <p style={{
-        fontSize: "1rem",
-        color: "gray"
-      }}>Fetching the layer index...</p>
-    </div>
-  )
-}
+};
 
 const ErrorLayerInput = () => {
-return (
-  <div>
-    <p>An error occured while fetching the layer index</p>
-  </div>
-)
-}
+  return (
+    <div>
+      <p>An error occured while fetching the layer index</p>
+    </div>
+  );
+};
 
-const LayerDataInput: React.FC<LayerDataInputProps> = (props) => {
-  const [layerIndex, setLayerIndex] = React.useState([])
-  const [layerIndexState, setLayerIndexState] = React.useState<"success" | "loading" | "error">("loading");
+const LayerDataInput: React.FC<{ onSelect: (layer: any) => void }> = ({
+  onSelect,
+}) => {
+  const [layerIndex, setLayerIndex] = React.useState([]);
+  const [layerIndexState, setLayerIndexState] =
+    React.useState<'success' | 'loading' | 'error'>('loading');
 
   React.useEffect(() => {
-    loadLayers().then(result => {
-      setLayerIndex(result)
-      setLayerIndexState("success")
-    }).catch(() => {
-      setLayerIndex([])
-      setLayerIndexState("error")
-    })
-  }, [])
+    loadLayers()
+      .then((result) => {
+        setLayerIndex(result);
+        setLayerIndexState('success');
+      })
+      .catch(() => {
+        setLayerIndex([]);
+        setLayerIndexState('error');
+      });
+  }, []);
 
-  if (layerIndexState === "success") return <SuccessLayerInput index={layerIndex} {...props} />
-  if (layerIndexState === "error") return <ErrorLayerInput />
-  if (layerIndexState === "loading") return <LoadingLayerInput />
+  if (layerIndexState === 'success')
+    return <SuccessLayerInput index={layerIndex} onSelect={onSelect} />;
+  if (layerIndexState === 'error') return <ErrorLayerInput />;
+  if (layerIndexState === 'loading') return <LoadingLayerInput />;
+};
+
+const dynamicPartsRegex = /{((?!y|x|zoom)[a-zA-Z:,]+)}/g;
+
+interface Detailsprops {
+  layer: any;
+  onChange: (values: Record<string, string>) => void;
+  onValidation: (ok: boolean) => void;
+}
+
+const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
+  const url = layer.url as string;
+
+  const dynamicParts =
+    url.match(dynamicPartsRegex)?.map((part) => {
+      const [baseTitle, baseOptions] = part.split(':');
+      const options = baseOptions
+        ? baseOptions.split(',').map((o) => o.match(/[a-z]+/)[0])
+        : null;
+
+      const title = baseTitle.match(/[a-z]+/)[0];
+
+      return { title, options };
+    }) || [];
+
+  const [values, setValues] = React.useState<Record<string, string>>({});
+
+  React.useEffect(() => {
+    onChange(values);
+
+    const valuesLength = Object.keys(values).length;
+    const desiredLength = dynamicParts.length;
+    onValidation(desiredLength === valuesLength);
+  }, [values]);
+
+  // description
+  //
+  return (
+    <div
+      style={{
+        display: 'grid',
+      }}
+    >
+      <span
+        style={{
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'center',
+        }}
+      >
+        {layer.icon && <img src={layer.icon} height={20} />}
+        <h3>{layer.name}</h3>
+      </span>
+      {layer.description && <p>{layer.description}</p>}
+      <span
+        style={{
+          display: 'flex',
+          gap: '1rem',
+          alignItems: 'center',
+        }}
+      >
+        {layer.license_url && <a href={layer.license_url}>License</a>}
+        {layer.privacy_policy_url && (
+          <a href={layer.privacy_policy_url}>Privacy policy</a>
+        )}
+      </span>
+
+      <hr
+        style={{
+          width: '100%',
+        }}
+      />
+
+      {dynamicParts.map((part) => {
+        const hasOptions = !!part.options;
+
+        if (hasOptions)
+          return (
+            <Autocomplete
+              options={part.options}
+              renderInput={(params) => (
+                <TextField {...params} label={part.title} />
+              )}
+              onChange={(_, val) => {
+                setValues((prev) => ({
+                  ...prev,
+                  [part.title]: val,
+                }));
+              }}
+              key={part.title}
+            />
+          );
+
+        return (
+          <TextField
+            label={part.title}
+            key={part.title}
+            onChange={(val) => {
+              setValues((prev) => ({
+                ...prev,
+                [part.title]: val.target.value,
+              }));
+            }}
+          />
+        );
+      })}
+    </div>
+  );
 };
 
 interface AddDialogProps {
-  save: (url: string, name: string) => void
+  save: (layer: any) => void;
 }
 
 export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
-  const { opened, close, counter } = useAddLayerContext();
-  const [isSaveDisabled, setDisableSave] = React.useState(false);
-  const [url, setUrl] = React.useState('');
-  const [name, setName] = React.useState('');
+  const { opened, close } = useAddLayerContext();
+  const [isSaveDisabled, setDisableSave] = React.useState(true);
+  const [page, setPage] = React.useState(0);
+
+  const [layer, setLayer] = React.useState<any | null>(null);
+  const [layerUrl, setLayerUrl] = React.useState<string | null>(null);
 
   const onSave = () => {
-    save(url, name);
+    save(layer);
     close();
+  };
+
+  const onCancel = () => {
+    close();
+    setPage(0);
+    setLayer(null);
   };
 
   return (
@@ -166,32 +224,54 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
         <p>Add a layer</p>
       </DialogTitle>
 
-      <DialogContent dividers>
-        <LayerDataInput
-          onDefault={(url, name) => {
-            setUrl(url)
-            setName(name)
-          }}
-          onUrl={(url) => {
-            setDisableSave(!url);
-            setUrl(url)
-          }}
-          onName={setName}
-          counter={counter}
-        />
+      <DialogContent>
+        {page === 0 && (
+          <LayerDataInput
+            onSelect={(layer) => {
+              setLayer(layer);
+              setDisableSave(!layer);
+            }}
+          />
+        )}
+        {page === 1 && (
+          <Details
+            layer={layer}
+            onChange={(vals) => {
+              let baseUrl = layer.url.replace('{zoom}', '{z}');
+
+              for (const key of Object.keys(vals)) {
+                const keyPattern = new RegExp(`{${key}(:[a-z,]+)?}`);
+                baseUrl = baseUrl.replace(keyPattern, vals[key]);
+              }
+
+              setLayerUrl(baseUrl);
+            }}
+            onValidation={(isOk) => {
+              setDisableSave(!isOk);
+            }}
+          />
+        )}
 
         <DialogActions>
-          <Button onClick={close} color="secondary" variant="outlined">
+          <Button onClick={onCancel} color="secondary" variant="outlined">
             Cancel
           </Button>
 
           <Button
-            onClick={onSave}
+            onClick={() => {
+              if (page === 0) {
+                setPage((prev) => prev + 1);
+                return;
+              }
+
+              save({ ...layer, url: layerUrl });
+              close();
+            }}
             color="primary"
             variant="contained"
             disabled={isSaveDisabled}
           >
-            Add layer
+            {page === 0 ? 'Next' : 'Save'}
           </Button>
         </DialogActions>
       </DialogContent>

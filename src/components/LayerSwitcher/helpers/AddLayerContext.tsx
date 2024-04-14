@@ -4,22 +4,17 @@ interface AddLayerDialogType {
   opened: boolean;
   open: () => void;
   close: () => void;
-  counter: number;
 }
 
 const AddLayerDialogContext = createContext<AddLayerDialogType>(undefined);
 
 export const AddLayerDialogProvider = (props: { children: ReactNode }) => {
   const [opened, setOpened] = useState(false);
-  const [counter, setCounter] = useState(0);
 
   const value = {
     opened,
-    counter,
-    open: ({ save }) => {
+    open: () => {
       setOpened(true);
-      setCounter((prev) => prev + 1);
-      return save
     },
     save: () => {},
     close: () => setOpened(false),
