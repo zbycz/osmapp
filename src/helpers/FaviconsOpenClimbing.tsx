@@ -67,9 +67,9 @@ export const FaviconsOpenClimbing = () => (
       color="#eb5757"
     />{' '}
     {/* For safari tab-favicon */}
-    <link rel="manifest" href="/manifest-osmapp.json" />
-    <meta name="application-name" content="OsmAPP maps" />
-    <meta name="apple-mobile-web-app-title" content="OsmAPP maps" />
+    <link rel="manifest" href="/manifest-openclimbing.json" />
+    <meta name="application-name" content="OpenClimbing.org" />
+    <meta name="apple-mobile-web-app-title" content="OpenClimbing.org" />
     <meta name="theme-color" content="#ffffff" />{' '}
     {/* override for chrome desktop PWA */}
     <meta name="theme-color" content="#eb5757" />{' '}
