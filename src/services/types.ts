@@ -5,6 +5,7 @@ export interface ImageUrls {
   source?: string;
   link: string;
   thumb: string;
+  sharp?: string;
   username?: string;
   portrait?: boolean;
   timestamp?: string;
@@ -109,5 +110,3 @@ export interface Feature {
 
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;
-
-export type MapillaryApiResponse = {};

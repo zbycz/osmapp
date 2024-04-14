@@ -6,20 +6,17 @@ interface PhotoInnerProps {
 }
 
 const InnerPano: React.FC<PhotoInnerProps> = ({ image }) => {
-  const [url, setUrl] = React.useState('');
   const [pannellumUrl, setPannellumUrl] = React.useState<string | null>(null);
 
   React.useEffect(() => {
-    setUrl(`${window.location.protocol}//${window.location.host}`);
-  }, []);
+    const url = `${window.location.protocol}//${window.location.host}`;
 
-  React.useEffect(() => {
     setPannellumUrl(
       `https://cdn.pannellum.org/2.5/pannellum.htm#panorama=${encodeURIComponent(
-        image.thumb,
+        image.sharp || image.thumb,
       )}&config=${encodeURIComponent(`${url}/pannellum-config.json`)}`,
     );
-  }, [url]);
+  }, []);
 
   return (
     <>
@@ -86,11 +83,16 @@ export const Photo: React.FC<PhotoProps> = ({ image, isCertain }) => (
     )}
     <div
       style={{
-        background:
-          'linear-gradient(to bottom, rgba(0, 0, 0, 0) 70%, rgba(0, 0, 0, 0.09) 76%, #5b5b5b)',
+        background: `linear-gradient(
+          to bottom,
+          rgba(0, 0, 0, 0) 70%,
+          rgba(0, 0, 0, 0.15) 76%,
+          #000000
+        )`,
         position: 'absolute',
         width: '100%',
-        height: '3rem',
+        height: '100%',
+        top: 0,
         bottom: 0,
         left: 0,
         right: 0,
