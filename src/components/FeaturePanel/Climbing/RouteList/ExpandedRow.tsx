@@ -21,8 +21,8 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
-import { onAscentAdd } from '../utils/ascents';
-import { MyAscents } from './MyAscents';
+import { onTickAdd } from '../utils/ticks';
+import { MyTicks } from './MyTicks';
 
 const Left = styled.div`
   flex: 1;
@@ -188,7 +188,7 @@ export const ExpandedRow = ({
               <ListItem>
                 <Button
                   onClick={() => {
-                    onAscentAdd({ osmId });
+                    onTickAdd({ osmId });
                     // stopPropagation(e);
                   }}
                   color="secondary"
@@ -196,13 +196,13 @@ export const ExpandedRow = ({
                   variant="text"
                   endIcon={<AddIcon />}
                 >
-                  Mark ascent
+                  Add tick
                 </Button>
               </ListItem>
             </List>
           </Right>
         </Flex>
-        <MyAscents osmId={osmId} />
+        <MyTicks osmId={osmId} />
       </ExpandedRowContainer>
       <Dialog
         open={routeToDelete !== null}

@@ -1,6 +1,6 @@
 import { JSONValue } from '../types';
 
-const KEY = 'ascents';
+const KEY = 'ticks';
 
 // @TODO generic util?
 export const getLocalStorageItem = (key: string) => {
@@ -24,54 +24,54 @@ export const setLocalStorageItem = (key: string, value: JSONValue) => {
   window?.localStorage.setItem(key, JSON.stringify(value));
 };
 
-export const onAscentAdd = ({ osmId }) => {
+export const onTickAdd = ({ osmId }) => {
   if (!osmId) return;
-  const ascents = getLocalStorageItem(KEY);
+  const ticks = getLocalStorageItem(KEY);
   setLocalStorageItem(KEY, [
-    ...ascents,
+    ...ticks,
     { id: osmId, date: new Date().toISOString() },
   ]);
 };
 
-export const findAscents = (osmId: string) => {
-  const ascents = getLocalStorageItem(KEY);
-  return ascents?.filter((ascent) => osmId === ascent.id) ?? null;
+export const findTicks = (osmId: string) => {
+  const ticks = getLocalStorageItem(KEY);
+  return ticks?.filter((tick) => osmId === tick.id) ?? null;
 };
 
-export const onAscentDelete = ({
+export const onTickDelete = ({
   osmId,
   index,
 }: {
   osmId: string;
   index: number;
 }) => {
-  const ascents = getLocalStorageItem(KEY);
+  const ticks = getLocalStorageItem(KEY);
 
-  const newArray = ascents.reduce(
-    (acc, ascent) => {
-      if (osmId === ascent.id) {
+  const newArray = ticks.reduce(
+    (acc, tick) => {
+      if (osmId === tick.id) {
         const newIndex = acc.index + 1;
         if (acc.index === index) {
           return {
-            ascents: acc.ascents,
+            ticks: acc.ticks,
             index: newIndex,
           };
         }
         return {
-          ascents: [...acc.ascents, ascent],
+          ticks: [...acc.ticks, tick],
           index: newIndex,
         };
       }
 
       return {
-        ascents: [...acc.ascents, ascent],
+        ticks: [...acc.ticks, tick],
         index: acc.index,
       };
     },
-    { index: 0, ascents: [] },
-  ).ascents;
+    { index: 0, ticks: [] },
+  ).ticks;
 
   setLocalStorageItem(KEY, newArray);
 };
 
-export const isAscent = (osmId: string) => findAscents(osmId).length > 0;
+export const isTicked = (osmId: string) => findTicks(osmId).length > 0;
