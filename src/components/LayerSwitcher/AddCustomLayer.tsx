@@ -160,13 +160,19 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
       {dynamicParts.map((part) => {
         const hasOptions = !!part.options;
 
+        const prettyTitle =
+          {
+            switch: 'Tile server',
+            apikey: 'API-Key',
+          }[part.title] || part.title;
+
         if (hasOptions)
           return (
             <Autocomplete
               options={part.options}
               renderInput={(params) => (
                 // eslint-disable-next-line react/jsx-props-no-spreading
-                <TextField {...params} label={part.title} />
+                <TextField {...params} label={prettyTitle} />
               )}
               onChange={(_, val) => {
                 setValues((prev) => ({
@@ -180,7 +186,7 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
 
         return (
           <TextField
-            label={part.title}
+            label={prettyTitle}
             key={part.title}
             onChange={(val) => {
               setValues((prev) => ({
