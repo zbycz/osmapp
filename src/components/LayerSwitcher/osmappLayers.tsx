@@ -118,6 +118,6 @@ export const osmappLayers: Layers = {
     name: t('layers.climbing'),
     type: 'overlayClimbing',
     Icon: ClimbingIcon,
-    attribution: ['osm']
+    attribution: ['osm'],
   },
 };
