@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {
   PanelFooter,
   PanelScrollbars,
@@ -22,6 +23,7 @@ import {
   PROJECT_ID,
   PROJECT_NAME,
 } from '../../services/project';
+import { useMobileMode } from '../helpers';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -57,6 +59,7 @@ const StyledLogoOsmapp = styled(LogoOsmapp)`
 const Center = styled.div`
   text-align: center;
   ${({ mb }) => mb && 'margin-bottom: 2em;'}
+  ${({ mb4 }) => mb4 && 'margin-bottom: 4em;'}
   ${({ mt }) => mt && 'margin-top: 2em;'}
 `;
 
@@ -84,6 +87,7 @@ const ExamplesClimbing = () => (
 export const HomepagePanel = () => {
   const { feature, preview, homepageShown, hideHomepage, persistHideHomepage } =
     useFeatureContext();
+  const isMobileMode = useMobileMode();
 
   // hide after first shown feature or preview
   useEffect(() => {
@@ -118,7 +122,7 @@ export const HomepagePanel = () => {
                 variant="h4"
                 component="h1"
                 color="inherit"
-                style={{ fontWeight: 900 }}
+                style={{ fontWeight: isClimbing ? 900 : undefined }}
               >
                 {PROJECT_NAME}
               </Typography>
@@ -135,6 +139,19 @@ export const HomepagePanel = () => {
               {t('homepage.examples.eg')}{' '}
               {isClimbing ? <ExamplesClimbing /> : <Examples />}
             </Typography>
+
+            {isMobileMode && (
+              <Center mt mb4>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  endIcon={<ArrowForwardIcon />}
+                  onClick={persistHideHomepage}
+                >
+                  {t('homepage.go_to_map_button')}
+                </Button>
+              </Center>
+            )}
 
             <Center mb>
               <img
