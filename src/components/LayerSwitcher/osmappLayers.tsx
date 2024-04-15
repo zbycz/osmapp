@@ -119,6 +119,5 @@ export const osmappLayers: Layers = {
     type: 'overlayClimbing',
     Icon: ClimbingIcon,
     attribution: ['osm'],
-    bbox: czBbox,
   },
 };
