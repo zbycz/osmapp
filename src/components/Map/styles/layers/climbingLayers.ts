@@ -89,7 +89,7 @@ const crags: LayerSpecification = {
     'text-font': ['Noto Sans Bold'],
     'text-anchor': 'top',
     'icon-image': 'circle_11',
-    'text-field': '{name}',
+    'text-field': '{name}\n{osmappRouteCount}',
     'text-offset': [
       'step',
       ['zoom'],
