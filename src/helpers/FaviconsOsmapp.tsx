@@ -63,7 +63,7 @@ export const FaviconsOsmapp = () => (
       color="#eb5757"
     />{' '}
     {/* For safari tab-favicon */}
-    <link rel="manifest" href="/manifest-openclimbing.json" />
+    <link rel="manifest" href="/manifest-osmapp.json" />
     <meta name="application-name" content="OsmAPP maps" />
     <meta name="apple-mobile-web-app-title" content="OsmAPP maps" />
     <meta name="theme-color" content="#ffffff" />{' '}
