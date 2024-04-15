@@ -3,7 +3,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useRouteNumberColors } from '../utils/useRouteNumberColors';
-import { isAscent } from '../utils/ascents';
+import { isTicked } from '../../../../services/ticks';
 
 type Props = {
   children: number;
@@ -94,7 +94,7 @@ export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
   const colors = useRouteNumberColors({
     isSelected: isSelected || routeIndexHovered === routeNumber,
     hasPathOnThisPhoto: true,
-    isAscent: isAscent(osmId),
+    isTicked: isTicked(osmId),
   });
 
   return (
