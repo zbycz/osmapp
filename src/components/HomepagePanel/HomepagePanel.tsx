@@ -11,6 +11,7 @@ import {
   PanelWrapper,
 } from '../utils/PanelHelpers';
 import LogoOsmapp from '../../assets/LogoOsmapp';
+import { LogoOpenClimbing } from '../../assets/LogoOpenClimbing';
 import { useFeatureContext } from '../utils/FeatureContext';
 import GithubIcon from '../../assets/GithubIcon';
 import { nl2br } from '../utils/nl2br';
@@ -21,7 +22,6 @@ import {
   PROJECT_ID,
   PROJECT_NAME,
 } from '../../services/project';
-import { LogoOpenclimbing } from '../../assets/LogoOpenclimbing';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -104,11 +104,22 @@ export const HomepagePanel = () => {
           <div>
             <Center mb>
               {isClimbing ? (
-                <LogoOpenclimbing width={130} height={130} />
+                <LogoOpenClimbing
+                  width={100}
+                  style={{
+                    marginTop: 24,
+                    marginBottom: 16,
+                  }}
+                />
               ) : (
                 <StyledLogoOsmapp width={130} height={130} />
               )}
-              <Typography variant="h4" component="h1" color="inherit">
+              <Typography
+                variant="h4"
+                component="h1"
+                color="inherit"
+                style={{ fontWeight: 900 }}
+              >
                 {PROJECT_NAME}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
@@ -127,11 +138,18 @@ export const HomepagePanel = () => {
 
             <Center mb>
               <img
-                src="/osmapp-screenshot-300px.png"
-                srcSet="/osmapp-screenshot-300px@2x.png 2x"
+                src={
+                  isClimbing
+                    ? '/openclimbing/openclimbing-screenshot-300px.png'
+                    : '/osmapp/osmapp-screenshot-300px.png'
+                }
+                srcSet={
+                  isClimbing
+                    ? '/openclimbing/openclimbing-screenshot-300px@2x.png 2x'
+                    : '/osmapp/osmapp-screenshot-300px@2x.png 2x'
+                }
                 alt={t('homepage.screenshot_alt')}
                 width={300}
-                height={226}
               />
             </Center>
 
@@ -145,7 +163,7 @@ export const HomepagePanel = () => {
             >
               <Grid item xs={4}>
                 <img
-                  src="/logo/logo-osm.svg"
+                  src="/logo-osm.svg"
                   alt="OpenStreetMap logo"
                   width={100}
                   height={100}
@@ -210,7 +228,7 @@ export const HomepagePanel = () => {
               className="maptiler"
             >
               <img
-                src="/logo/maptiler.svg"
+                src="/maptiler.svg"
                 alt="MapTiler logo"
                 width={200}
                 height={52}

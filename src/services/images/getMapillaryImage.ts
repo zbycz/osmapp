@@ -40,7 +40,7 @@ const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
     poiCoords[1] + 0.0004,
   ];
   // consider computed_compass_angle - but it is zero for many images, so we would have to fallback to compass_angle
-  const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,geometry,captured_at,thumb_1024_url&bbox=${bbox}`;
+  const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,geometry,captured_at,thumb_1024_url,thumb_original_url,is_pano&bbox=${bbox}`;
   const { data } = await fetchJson(url);
 
   if (!data.length) {
@@ -58,17 +58,21 @@ const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
     return { ...item, angleFromPhotoToPoi, deviationFromStraightSight };
   });
 
-  const sorted = photos.sort(
+  const panos = photos.filter((pic) => pic.is_pano);
+  const sorted = (panos.length ? panos : photos).sort(
     (a, b) => a.deviationFromStraightSight - b.deviationFromStraightSight,
   );
 
   debugOutput(sorted);
 
+  const imageToUse = sorted[0]; // it is save to assume that it has at least one element
   return {
     source: 'Mapillary',
     link: `https://www.mapillary.com/app/?focus=photo&pKey=${sorted[0].id}`,
-    thumb: sorted[0].thumb_1024_url,
-    timestamp: new Date(sorted[0].captured_at).toLocaleString(),
+    thumb: imageToUse.thumb_1024_url,
+    sharp: imageToUse.thumb_original_url,
+    timestamp: new Date(imageToUse.captured_at).toLocaleString(),
+    isPano: imageToUse.is_pano,
   };
 };
 

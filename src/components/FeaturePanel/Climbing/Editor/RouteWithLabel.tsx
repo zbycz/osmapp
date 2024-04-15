@@ -6,6 +6,7 @@ import { ClimbingRoute } from '../types';
 import { StartPoint } from './StartPoint';
 import { getShiftForStartPoint } from '../utils/startPoint';
 import { RoutePath } from './RoutePath';
+import { getShortId } from '../../../../services/helpers';
 
 type Props = {
   route: ClimbingRoute;
@@ -35,7 +36,7 @@ export const RouteWithLabel = ({
     ...path[0],
     units: 'percentage',
   });
-  const osmId = route.feature?.osmMeta.id ?? null;
+  const osmId = getShortId(route.feature?.osmMeta) ?? null;
 
   if (path.length === 1) {
     return (

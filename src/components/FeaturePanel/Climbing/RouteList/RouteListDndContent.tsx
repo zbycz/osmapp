@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
-import { isAscent } from '../utils/ascents';
+import { isTicked } from '../../../../services/ticks';
 
 type Item = {
   id: number;
@@ -26,7 +26,7 @@ const MaxWidthContainer = styled.div`
 
 const RowWithDragHandler = styled.div<{
   isDraggedOver: boolean;
-  isAscent: boolean;
+  isTicked: boolean;
 }>`
   cursor: pointer;
   display: flex;
@@ -34,11 +34,11 @@ const RowWithDragHandler = styled.div<{
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
   /* background-color: ${({ isSelected }) =>
     isSelected ? '#ccc' : 'transparent'}; */
-  background: ${({ isSelected, theme, isAscented }) =>
+  background: ${({ isSelected, theme, isTickeded }) =>
     isSelected
       ? theme.palette.action.selected
-      : isAscented
-      ? theme.palette.climbing.ascent
+      : isTickeded
+      ? theme.palette.climbing.tick
       : 'transparent'};
   position: relative;
   font-size: 16px;
@@ -230,7 +230,7 @@ export const RouteListDndContent = ({ isEditable }) => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
-              isAscented={isAscent(osmId)}
+              isTickeded={isTicked(osmId)}
               onClick={() => {
                 onRowClick(index);
               }}

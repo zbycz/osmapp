@@ -1,76 +1,76 @@
 {
-  "name": "OsmAPP maps",
-  "short_name": "OsmAPP",
-  "description": "A universal OpenStreetMap app",
+  "name": "openclimbing.org",
+  "short_name": "openclimbing",
+  "description": "A universal open-source climbing app",
   "icons": [
     {
-      "src": "/logo/pwa/maskable_x48.png",
+      "src": "/openclimbing/logo/pwa/maskable_x48.png",
       "sizes": "48x48",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logo/pwa/maskable_x72.png",
+      "src": "/openclimbing/logo/pwa/maskable_x72.png",
       "sizes": "72x72",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logo/pwa/maskable_x96.png",
+      "src": "/openclimbing/logo/pwa/maskable_x96.png",
       "sizes": "96x96",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logo/pwa/maskable_x128.png",
+      "src": "/openclimbing/logo/pwa/maskable_x128.png",
       "sizes": "128x128",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logo/pwa/maskable_x192.png",
+      "src": "/openclimbing/logo/pwa/maskable_x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logo/pwa/maskable_x384.png",
+      "src": "/openclimbing/logo/pwa/maskable_x384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logo/pwa/maskable_x512.png",
+      "src": "/openclimbing/logo/pwa/maskable_x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/logo/osmapp_16.png",
+      "src": "/openclimbing/logo/openclimbing_16.png",
       "sizes": "16x16",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo/osmapp_64.png",
+      "src": "/openclimbing/logo/openclimbing_64.png",
       "sizes": "64x64",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo/osmapp_192.png",
+      "src": "/openclimbing/logo/openclimbing_192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo/osmapp_256.png",
+      "src": "/openclimbing/logo/openclimbing_256.png",
       "sizes": "256x256",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/logo/osmapp_1024.png",
+      "src": "/openclimbing/logo/openclimbing_1024.png",
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"

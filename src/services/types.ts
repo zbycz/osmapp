@@ -5,9 +5,11 @@ export interface ImageUrls {
   source?: string;
   link: string;
   thumb: string;
+  sharp?: string;
   username?: string;
   portrait?: boolean;
   timestamp?: string;
+  isPano?: boolean;
 }
 
 export type LoadingImage = null;
@@ -108,3 +110,10 @@ export interface Feature {
 
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;
+
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | { [x: string]: JSONValue }
+  | Array<JSONValue>;
