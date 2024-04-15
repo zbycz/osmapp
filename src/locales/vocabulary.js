@@ -34,6 +34,7 @@ export default {
   'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
   'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
+  'homepage.start_browsing_button': 'Start browsing',
   'homepage.examples.eg': 'eg.',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
   'homepage.screenshot_alt': 'Screenshot of OsmAPP',

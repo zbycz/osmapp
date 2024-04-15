@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
+import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 import {
   PanelFooter,
   PanelScrollbars,
@@ -22,6 +23,7 @@ import {
   PROJECT_ID,
   PROJECT_NAME,
 } from '../../services/project';
+import { useMobileMode } from '../helpers';
 
 export const Content = styled.div`
   height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
@@ -58,6 +60,7 @@ const Center = styled.div`
   text-align: center;
   ${({ mb }) => mb && 'margin-bottom: 2em;'}
   ${({ mt }) => mt && 'margin-top: 2em;'}
+  ${({ mt4 }) => mt4 && 'margin-top: 4em;'}
 `;
 
 const Spacer = styled.div`
@@ -84,6 +87,7 @@ const ExamplesClimbing = () => (
 export const HomepagePanel = () => {
   const { feature, preview, homepageShown, hideHomepage, persistHideHomepage } =
     useFeatureContext();
+  const isMobileMode = useMobileMode();
 
   // hide after first shown feature or preview
   useEffect(() => {
@@ -118,7 +122,7 @@ export const HomepagePanel = () => {
                 variant="h4"
                 component="h1"
                 color="inherit"
-                style={{ fontWeight: 900 }}
+                style={{ fontWeight: isClimbing ? 900 : undefined }}
               >
                 {PROJECT_NAME}
               </Typography>
@@ -130,6 +134,19 @@ export const HomepagePanel = () => {
             <Typography variant="body1" paragraph>
               {nl2br(t('homepage.how_to_start'))}
             </Typography>
+
+            {isMobileMode && (
+              <Center mb mt4>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  startIcon={<PlayCircleFilledWhiteIcon />}
+                  onClick={persistHideHomepage}
+                >
+                  {t('homepage.start_browsing_button')}
+                </Button>
+              </Center>
+            )}
 
             <Typography variant="body2" paragraph>
               {t('homepage.examples.eg')}{' '}
