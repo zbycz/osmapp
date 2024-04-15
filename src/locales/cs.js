@@ -28,7 +28,7 @@ export default {
   'install.outro': 'To je vše! Aplikaci najdete na své domovské obrazovce.',
   'install.note': 'Poznámka: Používáme technologii PWA – rychlá instalace bez nutnosti Google Play či App Storu.',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
-  'homepage.start_browsing_button': 'Začít prohlížet',
+  'homepage.go_to_map_button': 'Přejít do mapy',
   'homepage.examples.eg': 'např.',
   'homepage.examples.charles_bridge_statues': 'Sochy na Karlově mostě',
   'homepage.about_osm': `Mapová data pochází z projektu <a href="https://osm.org">OpenStreetMap</a>, tvoří ho

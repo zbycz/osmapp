@@ -5,7 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
 import { Button } from '@material-ui/core';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import {
   PanelFooter,
   PanelScrollbars,
@@ -59,8 +59,8 @@ const StyledLogoOsmapp = styled(LogoOsmapp)`
 const Center = styled.div`
   text-align: center;
   ${({ mb }) => mb && 'margin-bottom: 2em;'}
+  ${({ mb4 }) => mb4 && 'margin-bottom: 4em;'}
   ${({ mt }) => mt && 'margin-top: 2em;'}
-  ${({ mt4 }) => mt4 && 'margin-top: 4em;'}
 `;
 
 const Spacer = styled.div`
@@ -135,23 +135,23 @@ export const HomepagePanel = () => {
               {nl2br(t('homepage.how_to_start'))}
             </Typography>
 
-            {isMobileMode && (
-              <Center mb mt4>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  startIcon={<PlayCircleFilledWhiteIcon />}
-                  onClick={persistHideHomepage}
-                >
-                  {t('homepage.start_browsing_button')}
-                </Button>
-              </Center>
-            )}
-
             <Typography variant="body2" paragraph>
               {t('homepage.examples.eg')}{' '}
               {isClimbing ? <ExamplesClimbing /> : <Examples />}
             </Typography>
+
+            {isMobileMode && (
+              <Center mt mb4>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  endIcon={<ArrowForwardIcon />}
+                  onClick={persistHideHomepage}
+                >
+                  {t('homepage.go_to_map_button')}
+                </Button>
+              </Center>
+            )}
 
             <Center mb>
               <img
