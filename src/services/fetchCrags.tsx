@@ -1,5 +1,11 @@
 import { fetchJson } from './fetch';
-import { Feature, FeatureGeometry, LineString, Point } from './types';
+import {
+  Feature,
+  FeatureGeometry,
+  FeatureTags,
+  LineString,
+  Point,
+} from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
@@ -31,7 +37,7 @@ function getItems(elements) {
 const numberToSuperScript = (number: number) =>
   number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]);
 
-const getLabel = (tags: {}, osmappRouteCount) =>
+const getLabel = (tags: FeatureTags, osmappRouteCount) =>
   `${tags.name}${
     osmappRouteCount ? `\n${numberToSuperScript(osmappRouteCount)}` : ''
   }`;
