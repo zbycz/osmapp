@@ -92,3 +92,7 @@ export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
 
 // (>= mobile size) This changes just the app layout
 export const isDesktop = '(min-width: 500px)';
+
+// is mobile device - specific behaviour like longpress or geouri
+export const isMobileDevice = () =>
+  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error

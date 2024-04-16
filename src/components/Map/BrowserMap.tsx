@@ -15,6 +15,7 @@ import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
 import { isWebglSupported } from './helpers';
+import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 
 const useOnMapLoaded = createMapEventHook((map, onMapLoaded) => ({
   eventType: 'load',
@@ -45,6 +46,7 @@ const BrowserMap = ({ onMapLoaded }) => {
   const { setFeature, setPreview } = useFeatureContext();
   const [map, mapRef] = useInitMap();
   useOnMapClicked(map, setFeature, setPreview, useMobileMode());
+  useOnMapLongPressed(map, setPreview);
   useOnMapLoaded(map, onMapLoaded);
   useFeatureMarker(map);
 

@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { createMapEventHook } from '../../helpers';
+import { createMapEventHook, isMobileDevice } from '../../helpers';
 import { addFeatureCenterToCache } from '../../../services/osmApi';
 import {
   getShortId,
@@ -29,6 +29,15 @@ export const getSkeleton = (feature, clickCoords) => {
   };
 };
 
+const getCoordsPreview = (coords, zoom) => {
+  if (isMobileDevice()) {
+    return null; // handled by useOnMapLongPressed
+  }
+
+  return (preview) =>
+    preview ? null : getCoordsFeature(getRoundedPosition(coords, zoom));
+};
+
 export const useOnMapClicked = createMapEventHook(
   (map, setFeature, setPreview, mobileMode) => ({
     eventType: 'click',
@@ -36,8 +45,7 @@ export const useOnMapClicked = createMapEventHook(
       const coords = map.unproject(point).toArray();
       const features = map.queryRenderedFeatures(point);
       if (!features.length) {
-        const roundedPosition = getRoundedPosition(coords, map.getZoom());
-        setPreview(getCoordsFeature(roundedPosition));
+        setPreview(getCoordsPreview(coords, map.getZoom()));
         return;
       }
 
@@ -46,8 +54,7 @@ export const useOnMapClicked = createMapEventHook(
       publishDbgObject('last skeleton', skeleton);
 
       if (skeleton.nonOsmObject) {
-        const roundedPosition = getRoundedPosition(coords, map.getZoom());
-        setPreview(getCoordsFeature(roundedPosition));
+        setPreview(getCoordsPreview(coords, map.getZoom()));
         return;
       }
 
