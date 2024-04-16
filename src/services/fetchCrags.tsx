@@ -9,7 +9,7 @@ import {
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
-import { join, publishDbgObject } from "../utils";
+import { join, publishDbgObject } from '../utils';
 
 // inspired by overpassSearch - but this computes all geometries (doesnt fetch them by 'geom' modifier)
 
@@ -38,7 +38,7 @@ const numberToSuperScript = (number?: number) =>
   number?.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]);
 
 const getLabel = (tags: FeatureTags, osmappRouteCount) =>
-  join(tags.name, '\n', numberToSuperScript(osmappRouteCount))
+  join(tags.name, '\n', numberToSuperScript(osmappRouteCount));
 
 const convert = (
   element: any,
