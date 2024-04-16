@@ -3,16 +3,16 @@ import { getRoundedPosition } from '../../../utils';
 import { getCoordsFeature } from '../../../services/getCoordsFeature';
 import { isMobileDevice } from '../../helpers';
 
-const iosLongPressListeners = (map, eventHandler) => {
-  let iosTimeout = null;
+const emulatedLongPressListeners = (map, eventHandler) => {
+  let timeout = null;
   const clearIosTimeout = () => {
-    clearTimeout(iosTimeout);
+    clearTimeout(timeout);
   };
   const onTouchStart = (e) => {
     if (e.originalEvent.touches.length > 1) {
       return;
     }
-    iosTimeout = setTimeout(() => {
+    timeout = setTimeout(() => {
       eventHandler(e);
     }, 500);
   };
@@ -42,27 +42,27 @@ const iosLongPressListeners = (map, eventHandler) => {
   };
 };
 
-const isIOS = () =>
-  [
-    'iPad Simulator',
-    'iPhone Simulator',
-    'iPod Simulator',
-    'iPad',
-    'iPhone',
-    'iPod',
-  ].includes(navigator.platform) ||
-  // iPad on iOS 13 detection
-  (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
-
-// https://stackoverflow.com/questions/43459539/mapbox-gl-js-long-tap-press
-const longPressListeners = (map, eventHandler) => {
-  if (isIOS()) {
-    return iosLongPressListeners(map, eventHandler);
-  }
-
-  map.on('contextmenu', eventHandler);
-  return () => map.off('contextmenu', eventHandler);
-};
+// const isIOS = () =>
+//   [
+//     'iPad Simulator',
+//     'iPhone Simulator',
+//     'iPod Simulator',
+//     'iPad',
+//     'iPhone',
+//     'iPod',
+//   ].includes(navigator.platform) ||
+//   // iPad on iOS 13 detection
+//   (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
+//
+// // https://stackoverflow.com/questions/43459539/mapbox-gl-js-long-tap-press
+// const longPressListeners = (map, eventHandler) => {
+//   if (isIOS()) {
+//     return emulatedLongPressListeners(map, eventHandler);
+//   }
+//
+//   map.on('contextmenu', eventHandler);
+//   return () => map.off('contextmenu', eventHandler);
+// };
 
 export const useOnMapLongPressed = (map, setPreview) => {
   useEffect(() => {
@@ -80,6 +80,6 @@ export const useOnMapLongPressed = (map, setPreview) => {
       setPreview(getCoordsFeature(roundedPosition));
     };
 
-    return longPressListeners(map, showCoords);
+    return emulatedLongPressListeners(map, showCoords);
   }, [map, setPreview]);
 };
