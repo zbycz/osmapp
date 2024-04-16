@@ -35,6 +35,10 @@ const auth = osmAuth({
   auto: true,
 });
 
+export const setAccessToken = (token) => {
+  auth.setAccessToken(token)
+}
+
 const authFetch = async (options) =>
   new Promise<any>((resolve, reject) => {
     auth.xhr(options, (err, details) => {
@@ -67,6 +71,23 @@ export const fetchOsmUser = async (): Promise<OsmUser> => {
   window.localStorage.setItem('osm_user', JSON.stringify(user));
   return user;
 };
+
+const login = async () => {
+  const accessToken = auth.getAccessToken();
+  await fetch('/api/token-login', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ accessToken }),
+  });
+}
+
+export const loginAndFetchOsmUsername = async () => {
+  const [, username] = Promise.all([login(), fetchOsmUsername()]);
+
+  return username;
+}
 
 export const getOsmUser = (): OsmUser | undefined =>
   auth.authenticated()

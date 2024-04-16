@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import {
-  fetchOsmUser,
+  loginAndGetOsmUser,
   getOsmUser,
   osmLogout,
   OsmUser,
@@ -29,7 +29,7 @@ export const OsmAuthProvider = ({ children }) => {
     });
   };
 
-  const handleLogin = () => fetchOsmUser().then(successfulLogin);
+  const handleLogin = () => loginAndGetOsmUser().then(successfulLogin);
   const handleLogout = () => osmLogout().then(() => setOsmUser(undefined));
 
   const value = {
