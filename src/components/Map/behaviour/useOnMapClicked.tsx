@@ -1,5 +1,5 @@
 import Router from 'next/router';
-import { useAddMapEvent } from '../../helpers';
+import { createMapEventHook } from '../../helpers';
 import { addFeatureCenterToCache } from '../../../services/osmApi';
 import {
   getShortId,
@@ -29,7 +29,7 @@ export const getSkeleton = (feature, clickCoords) => {
   };
 };
 
-export const useOnMapClicked = useAddMapEvent(
+export const useOnMapClicked = createMapEventHook(
   (map, setFeature, setPreview, mobileMode) => ({
     eventType: 'click',
     eventHandler: async ({ point }) => {

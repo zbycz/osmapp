@@ -1,6 +1,10 @@
 import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { useAddMapEvent, useMapEffect, useMobileMode } from '../helpers';
+import {
+  createMapEventHook,
+  createMapEffectHook,
+  useMobileMode,
+} from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './behaviour/useFeatureMarker';
@@ -12,12 +16,12 @@ import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
 import { isWebglSupported } from './helpers';
 
-const useOnMapLoaded = useAddMapEvent((map, onMapLoaded) => ({
+const useOnMapLoaded = createMapEventHook((map, onMapLoaded) => ({
   eventType: 'load',
   eventHandler: onMapLoaded,
 }));
 
-const useUpdateMap = useMapEffect((map, viewForMap) => {
+const useUpdateMap = createMapEffectHook((map, viewForMap) => {
   const center = [viewForMap[2], viewForMap[1]];
   map.jumpTo({ center, zoom: viewForMap[0] });
 });

@@ -1,8 +1,8 @@
 import throttle from 'lodash/throttle';
-import { useAddMapEvent } from '../../helpers';
+import { createMapEventHook } from '../../helpers';
 import { publishDbgObject } from '../../../utils';
 
-export const useUpdateViewOnMove = useAddMapEvent(
+export const useUpdateViewOnMove = createMapEventHook(
   (map, setViewFromMap, setBbox) => ({
     eventType: 'move',
     eventHandler: throttle(() => {

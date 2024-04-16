@@ -26,7 +26,7 @@ export function isServer() {
   return typeof window === 'undefined';
 }
 
-export const useMapEffect =
+export const createMapEffectHook =
   (mapEffectFn) =>
   (map, ...rest) =>
     useEffect(() => {
@@ -40,7 +40,7 @@ type EventDefintionFn = (
   ...rest: any
 ) => { eventType: keyof MapEventType; eventHandler: any };
 
-export const useAddMapEvent =
+export const createMapEventHook =
   (getEventDefinition: EventDefintionFn) =>
   (map, ...rest) =>
     useEffect(() => {

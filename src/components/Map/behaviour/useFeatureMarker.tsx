@@ -1,6 +1,6 @@
 import maplibregl from 'maplibre-gl';
 import { useEffect } from 'react';
-import { useMapEffect } from '../../helpers';
+import { createMapEffectHook } from '../../helpers';
 import { convertOsmIdToMapId, layersWithOsmId } from '../helpers';
 import { Feature } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -30,7 +30,7 @@ const setPoiIconVisibility = (map, feature, hideIcon) => {
 };
 
 const featureMarker = {} as { ref: maplibregl.Marker; feature: Feature };
-const useUpdateFeatureMarker = useMapEffect((map, feature) => {
+const useUpdateFeatureMarker = createMapEffectHook((map, feature) => {
   if (featureMarker.ref) {
     featureMarker.ref.remove();
     setPoiIconVisibility(map, featureMarker.feature, false);
@@ -47,7 +47,7 @@ const useUpdateFeatureMarker = useMapEffect((map, feature) => {
 });
 
 let previewMarker: maplibregl.Marker;
-const useUpdatePreviewMarker = useMapEffect((map, feature) => {
+const useUpdatePreviewMarker = createMapEffectHook((map, feature) => {
   previewMarker?.remove();
   previewMarker = feature?.center
     ? new maplibregl.Marker(PREVIEW_MARKER).setLngLat(feature.center).addTo(map)
