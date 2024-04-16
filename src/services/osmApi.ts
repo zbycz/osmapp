@@ -10,6 +10,8 @@ import { fetchSchemaTranslations } from './tagging/translations';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
+const getOsmFullUrl = ({ type, id }) =>
+  `https://api.openstreetmap.org/api/0.6/${type}/${id}/full.json`;
 const getOsmParentUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/relations.json`;
 const getOsmHistoryUrl = ({ type, id }) =>
@@ -124,9 +126,29 @@ const fetchParentFeatures = async (apiId: OsmApiId) => {
   return elements.map((element) => addSchemaToFeature(osmToFeature(element)));
 };
 
-const assignRoleToEach = (memberFeatures: Feature[], feature: Feature) => {
-  memberFeatures.forEach((memberFeature, index) => {
-    memberFeature.osmMeta.role = feature.members[index].role; // eslint-disable-line no-param-reassign
+const getItemsMap = (elements) => {
+  const map = { node: {}, way: {}, relation: {} };
+  elements.forEach((element) => {
+    map[element.type][element.id] = element;
+  });
+  return map;
+};
+
+const fetchMemberFeatures = async (apiId: OsmApiId) => {
+  // TODO we can compute geometry using cragsToGeojson() and display it in the map
+  const full = await fetchJson(getOsmFullUrl(apiId));
+  const map = getItemsMap(full.elements);
+  const mainFeature = map[apiId.type][apiId.id];
+
+  return mainFeature.members.map(({ type, ref, role }) => {
+    const element = map[type][ref];
+    if (!element) {
+      return null;
+    }
+
+    const feature = addSchemaToFeature(osmToFeature(element));
+    feature.osmMeta.role = role;
+    return feature;
   });
 };
 
@@ -134,8 +156,10 @@ const isClimbingRelation = (feature: Feature) =>
   feature.osmMeta.type === 'relation' &&
   (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
 
-// TODO we can probably fetch full.json for all relations eg https://api.openstreetmap.org/api/0.6/relation/14334600/full.json - lets measure how long it takes for different sizes
 // TODO parent should be probably fetched for every feaure in fetchFeatureWithCenter()
+//  - wait until UI is prepared
+//  - maybe this can be merged in fetchFeatureWithCenter()
+//  - check: Warning: data for page "/[[...all]]" (path "/relation/4810774") is 627 kB which exceeds the threshold of 128 kB, this amount of data can reduce performance. See more info here: https://nextjs.org/docs/messages/large-page-data
 export const addMembersAndParents = async (
   feature: Feature,
 ): Promise<Feature> => {
@@ -143,28 +167,12 @@ export const addMembersAndParents = async (
     return feature;
   }
 
-  const start = performance.now();
-
-  const parentPromise = fetchParentFeatures(feature.osmMeta);
-
-  const apiIds = feature.members.map(({ type, ref }) => ({ type, id: ref }));
-  const memberPromises = apiIds.map((apiId) => fetchFeatureWithCenter(apiId)); // TODO optimize n+1 center-requests or fetch full
-
-  const [parentFeatures, ...memberFeatures] = await Promise.all([
-    parentPromise,
-    ...memberPromises,
+  const [parentFeatures, memberFeatures] = await Promise.all([
+    fetchParentFeatures(feature.osmMeta),
+    fetchMemberFeatures(feature.osmMeta),
   ]);
 
-  assignRoleToEach(memberFeatures, feature);
-
-  const duration = Math.round(performance.now() - start);
-  console.log(`addMemberFeaturesToCrag took ${duration} ms`); // eslint-disable-line no-console
-
-  return {
-    ...feature,
-    memberFeatures,
-    parentFeatures,
-  };
+  return { ...feature, memberFeatures, parentFeatures };
 };
 
 export const fetchFeature = async (shortId): Promise<Feature> => {
