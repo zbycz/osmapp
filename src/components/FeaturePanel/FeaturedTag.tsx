@@ -36,13 +36,17 @@ const Value = styled.div`
   }
 `;
 
-const DefaultRenderer = ({ v }) => v;
-const renderers: {
+type Renderers = {
   [key: string]: React.FC<{ k: string; v: string }>;
-} = {
+};
+
+const DefaultRenderer = ({ v }) => v;
+const renderers: Renderers = {
+  // also updatd in schema – getFeaturedTags()
   website: WebsiteRenderer,
   'website:2': WebsiteRenderer,
   'contact:website': WebsiteRenderer,
+  url: WebsiteRenderer,
   phone: PhoneRenderer,
   'contact:phone': PhoneRenderer,
   'contact:mobile': PhoneRenderer,

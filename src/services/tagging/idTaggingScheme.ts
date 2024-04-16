@@ -159,6 +159,7 @@ const getFeaturedTags = (feature: Feature) => {
     'website',
     'website:2',
     'contact:website',
+    'url',
     'phone',
     'contact:phone',
     'contact:mobile',
