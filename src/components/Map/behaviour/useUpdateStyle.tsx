@@ -1,6 +1,6 @@
 import type { GeoJSONSource, Map } from 'maplibre-gl';
 import cloneDeep from 'lodash/cloneDeep';
-import { useMapEffect } from '../../helpers';
+import { createMapEffectHook } from '../../helpers';
 import { basicStyle } from '../styles/basicStyle';
 import { outdoorStyle } from '../styles/outdoorStyle';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
@@ -30,7 +30,7 @@ const getBaseStyle = (key) => {
   return getRasterStyle(key);
 };
 
-export const useUpdateStyle = useMapEffect((map: Map, activeLayers) => {
+export const useUpdateStyle = createMapEffectHook((map: Map, activeLayers) => {
   const [basemap, ...overlays] = activeLayers;
 
   const key = basemap ?? DEFAULT_MAP;
