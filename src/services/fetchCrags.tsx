@@ -28,6 +28,14 @@ function getItems(elements) {
   return { nodes, ways, relations };
 }
 
+const numberToSuperScript = (number: number) =>
+  number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]);
+
+const getLabel = (tags: {}, osmappRouteCount) =>
+  `${tags.name}${
+    osmappRouteCount ? `\n${numberToSuperScript(osmappRouteCount)}` : ''
+  }`;
+
 const convert = (
   element: any,
   geometryFn: (element: any) => FeatureGeometry,
@@ -35,15 +43,17 @@ const convert = (
   const { type, id, tags = {} } = element;
   const geometry = geometryFn(element);
   const center = getCenter(geometry) ?? undefined;
+  const osmappRouteCount =
+    element.tags.climbing === 'crag'
+      ? element.members?.length ??
+        parseInt(element.tags['climbing:sport'] ?? 0, 10)
+      : undefined;
   const properties = {
     ...getPoiClass(tags),
     ...tags,
     osmappType: type,
-    osmappRouteCount:
-      element.tags.climbing === 'crag'
-        ? element.members?.length ??
-          parseInt(element.tags['climbing:sport'] ?? 0, 10)
-        : undefined,
+    osmappRouteCount,
+    osmappLabel: getLabel(tags, osmappRouteCount),
   };
 
   return {
@@ -110,7 +120,11 @@ const getRelationWithAreaCount = (
       const osmappRouteCount = cragsCount.reduce((acc, count) => acc + count);
       return {
         ...relation,
-        properties: { ...relation.properties, osmappRouteCount },
+        properties: {
+          ...relation.properties,
+          osmappRouteCount,
+          osmappLabel: getLabel(relation.tags, osmappRouteCount),
+        },
       };
     }
 
@@ -190,6 +204,7 @@ export const fetchCrags = async () => {
       nwr["climbing"](49.64474,14.21855,49.67273,14.28025);
       >;<;
       rel["climbing"="crag"];
+      rel["climbing"="area"];
     );
     (
       ._;
