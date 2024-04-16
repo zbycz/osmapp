@@ -35,7 +35,12 @@ const isMaptilerCorruptedId = (feature: Feature, skeleton: Feature) => {
 // This function tries to fix the ID by fetching possible variants and comparing them by name and distance
 // more in: https://github.com/openmaptiles/openmaptiles/issues/1587
 
-export const maptilerFix = async (mapFeatureId, skeleton) => {
+export const maptilerFix = async (mapFeature, skeleton) => {
+  const { source, id: mapFeatureId } = mapFeature;
+  if (source !== 'maptiler_planet') {
+    return skeleton;
+  }
+
   const shortId = getShortId(skeleton.osmMeta);
   const feature = await fetchFeature(shortId); // this is cached, so real fetchFeature after router would be fast
 
