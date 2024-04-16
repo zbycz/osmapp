@@ -20,6 +20,24 @@ const Wrapper = styled.div`
       : ''}
 `;
 
+const GradientCover = styled.div`
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  opacity: 0.6;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0) 70%,
+    rgba(0, 0, 0, 0.15) 76%,
+    #000000
+  );
+`;
+
 const Bottom = styled.div`
   position: absolute;
   bottom: 0;
@@ -97,6 +115,7 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
       {image && image !== LOADING && (
         <Photo image={image} isCertain={!uncertainImage} />
       )}
+      <GradientCover />
       {(image === undefined || image === LOADING) && (
         <IconWrapper>
           <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />

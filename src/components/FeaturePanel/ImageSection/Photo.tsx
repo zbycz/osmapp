@@ -81,23 +81,5 @@ export const Photo: React.FC<PhotoProps> = ({ image, isCertain }) => (
         }}
       />
     )}
-    <div
-      style={{
-        background: `linear-gradient(
-          to bottom,
-          rgba(0, 0, 0, 0) 70%,
-          rgba(0, 0, 0, 0.15) 76%,
-          #000000
-        )`,
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        top: 0,
-        bottom: 0,
-        left: 0,
-        right: 0,
-        pointerEvents: 'none',
-      }}
-    />
   </div>
 );
