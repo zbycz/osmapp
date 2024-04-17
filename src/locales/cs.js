@@ -9,6 +9,9 @@ export default {
   show_more: 'Zobrazit více',
   show_less: 'Zobrazit méně',
 
+  'user.login': 'Přihlásit se',
+  'user.logout': 'Odhlásit se',
+
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
 

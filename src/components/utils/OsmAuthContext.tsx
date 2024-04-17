@@ -1,14 +1,16 @@
 import React, { createContext, useContext, useState } from 'react';
 import {
-  fetchOsmUsername,
-  getOsmUsername,
+  fetchOsmUser,
+  getOsmUser,
   osmLogout,
+  OsmUser,
 } from '../../services/osmApiAuth';
 import { useMapStateContext } from './MapStateContext';
 
 interface OsmAuthType {
   loggedIn: boolean;
   osmUser: string;
+  userImage: string;
   handleLogin: () => void;
   handleLogout: () => void;
 }
@@ -17,22 +19,23 @@ export const OsmAuthContext = createContext<OsmAuthType>(undefined);
 
 export const OsmAuthProvider = ({ children }) => {
   const mapStateContext = useMapStateContext();
-  const [osmUser, setOsmUser] = useState<string>(getOsmUsername() ?? '');
+  const [osmUser, setOsmUser] = useState<OsmUser | undefined>(getOsmUser());
 
-  const successfulLogin = (username: string) => {
-    setOsmUser(username);
+  const successfulLogin = (user: OsmUser) => {
+    setOsmUser(user);
     mapStateContext.showToast({
-      content: `Logged in as ${username}`,
+      content: `Logged in as ${user.name}`,
       type: 'success',
     });
   };
 
-  const handleLogin = () => fetchOsmUsername().then(successfulLogin);
-  const handleLogout = () => osmLogout().then(() => setOsmUser(''));
+  const handleLogin = () => fetchOsmUser().then(successfulLogin);
+  const handleLogout = () => osmLogout().then(() => setOsmUser(undefined));
 
   const value = {
     loggedIn: !!osmUser,
-    osmUser,
+    osmUser: osmUser?.name || '', // TODO rename
+    userImage: osmUser?.imageUrl || '',
     handleLogin,
     handleLogout,
   };

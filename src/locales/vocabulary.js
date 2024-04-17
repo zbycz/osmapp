@@ -14,6 +14,9 @@ export default {
   show_more: 'Show more',
   show_less: 'Show less',
 
+  'user.login': 'Login',
+  'user.logout': 'Logout',
+
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
