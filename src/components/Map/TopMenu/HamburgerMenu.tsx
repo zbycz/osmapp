@@ -2,7 +2,7 @@ import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
 import React, { forwardRef, useEffect, useState } from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Divider, Menu, MenuItem } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import HelpIcon from '@material-ui/icons/Help';
 import styled from 'styled-components';
@@ -16,6 +16,8 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { getIdEditorLink } from '../../../utils';
 import { useUserThemeContext } from '../../../helpers/theme';
+import { useOsmAuthContext } from '../../utils/OsmAuthContext';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 
 const PencilIcon = styled(CreateIcon)`
   color: ${({ theme }) => theme.palette.action.active};
@@ -51,6 +53,16 @@ const StyledBrightnessHighIcon = styled(BrightnessHighIcon)`
   color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
+`;
+
+const StyledAccountCircleIcon = styled(AccountCircleIcon)`
+  color: ${({ theme }) => theme.palette.action.active};
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
+const StyledDivider = styled.hr`
+  border-top: 1px solid ${({ theme }) => theme.palette.divider};
 `;
 
 const useIsBrowser = () => {
@@ -127,7 +139,7 @@ const themeOptions = {
   },
 };
 
-const ThemeSelection = forwardRef<HTMLLIElement>((_, ref) => {
+const ThemeSelection = () => {
   const { userTheme, setUserTheme } = useUserThemeContext();
   const option = themeOptions[userTheme];
   const handleClick = () => {
@@ -135,9 +147,38 @@ const ThemeSelection = forwardRef<HTMLLIElement>((_, ref) => {
   };
 
   return (
-    <MenuItem onClick={handleClick} ref={ref}>
+    <MenuItem onClick={handleClick}>
       <option.icon /> {option.label}
     </MenuItem>
+  );
+};
+
+const UserLogin = forwardRef<HTMLLIElement>((_, ref) => {
+  const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
+
+  if (!osmUser) {
+    return (
+      <MenuItem ref={ref} onClick={handleLogin}>
+        <StyledAccountCircleIcon />
+        {t('Přihlásit se')}
+      </MenuItem>
+    );
+  }
+
+  return (
+    <>
+      <MenuItem
+        ref={ref}
+        component="a"
+        href={`https://www.openstreetmap.org/user/${osmUser}`}
+        target="_blank"
+      >
+        <StyledAccountCircleIcon />
+        <strong>{osmUser}</strong>
+      </MenuItem>
+
+      <MenuItem onClick={handleLogout}>{t('Odhlásit se')}</MenuItem>
+    </>
   );
 });
 
@@ -169,6 +210,8 @@ export const HamburgerMenu = () => {
         open={opened}
         onClose={close}
       >
+        <UserLogin />
+        <StyledDivider />
         <ThemeSelection />
         <EditLink closeMenu={close} />
         <InstallLink closeMenu={close} />
