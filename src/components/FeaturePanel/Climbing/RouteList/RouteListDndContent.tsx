@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
-import { isTicked } from '../../../../services/ticks';
 
 type Item = {
   id: number;
@@ -26,7 +25,7 @@ const MaxWidthContainer = styled.div`
 
 const RowWithDragHandler = styled.div<{
   isDraggedOver: boolean;
-  isTicked: boolean;
+  isSelected: boolean;
 }>`
   cursor: pointer;
   display: flex;
@@ -34,12 +33,8 @@ const RowWithDragHandler = styled.div<{
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
   /* background-color: ${({ isSelected }) =>
     isSelected ? '#ccc' : 'transparent'}; */
-  background: ${({ isSelected, theme, isTickeded }) =>
-    isSelected
-      ? theme.palette.action.selected
-      : isTickeded
-      ? theme.palette.climbing.tick
-      : 'transparent'};
+  background: ${({ isSelected, theme }) =>
+    isSelected ? theme.palette.action.selected : 'transparent'};
   position: relative;
   font-size: 16px;
   border-top: dotted 1px ${({ theme }) => theme.palette.divider};
@@ -215,9 +210,7 @@ export const RouteListDndContent = ({ isEditable }) => {
         </MaxWidthContainer>
       </TableHeader>
       {items.map((item, index) => {
-        const osmId = item.route.feature?.osmMeta.id ?? null;
         const isSelected = isRouteSelected(index);
-
         return (
           <React.Fragment key={item.id}>
             {draggedItem?.id > index && (
@@ -230,7 +223,6 @@ export const RouteListDndContent = ({ isEditable }) => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
-              isTickeded={isTicked(osmId)}
               onClick={() => {
                 onRowClick(index);
               }}

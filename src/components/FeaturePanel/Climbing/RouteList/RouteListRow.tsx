@@ -1,18 +1,19 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { IconButton, TextField } from '@material-ui/core';
+import { IconButton, TextField, Tooltip } from '@material-ui/core';
 import { debounce } from 'lodash';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import CheckIcon from '@material-ui/icons/Check';
 import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { emptyRoute } from '../utils/emptyRoute';
 import { RouteNumber } from '../RouteNumber';
-
 import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import { getShortId } from '../../../../services/helpers';
+import { isTicked } from '../../../../services/ticks';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -27,6 +28,9 @@ const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
 `;
 const NameCell = styled(Cell)`
   flex: 1;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
 `;
 const DifficultyCell = styled(Cell)`
   margin-right: 8px;
@@ -104,7 +108,7 @@ export const RenderListRow = ({
     setTempRoute({ ...tempRoute, [propName]: e.target.value });
     debouncedValueChange(e, propName);
   };
-
+  const ticked = isTicked(osmId);
   const isExpanded = routesExpanded.indexOf(index) > -1;
 
   const isReadOnly =
@@ -148,6 +152,11 @@ export const RenderListRow = ({
               onClick={stopPropagation}
               fullWidth
             />
+          )}
+          {ticked && (
+            <Tooltip title="You ticked this route">
+              <CheckIcon color="primary" style={{ marginRight: 20 }} />
+            </Tooltip>
           )}
         </NameCell>
         <DifficultyCell width={50}>
