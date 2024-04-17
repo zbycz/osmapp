@@ -46,22 +46,37 @@ const authFetch = async (options) =>
     });
   });
 
-export const fetchOsmUsername = async () => {
-  const details = await authFetch({
+export type OsmUser = {
+  name: string;
+  imageUrl: string;
+};
+
+export const fetchOsmUser = async (): Promise<OsmUser> => {
+  const response = await authFetch({
     method: 'GET',
     path: '/api/0.6/user/details.json',
   });
-  const name = JSON.parse(details).user.display_name;
-  window.localStorage.setItem('osm_username', name);
-  return name;
+  const details = JSON.parse(response).user;
+  const user = {
+    name: details.display_name,
+    imageUrl:
+      details.img?.href ??
+      `https://www.gravatar.com/avatar/${details.id}?s=24&d=robohash`,
+  };
+
+  window.localStorage.setItem('osm_user', JSON.stringify(user));
+  return user;
 };
+
+export const getOsmUser = (): OsmUser | undefined =>
+  auth.authenticated()
+    ? JSON.parse(window.localStorage.getItem('osm_user'))
+    : undefined;
 
 export const osmLogout = async () => {
   auth.logout();
+  window.localStorage.removeItem('osm_user');
 };
-
-export const getOsmUsername = () =>
-  auth.authenticated() && window.localStorage.getItem('osm_username');
 
 const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [

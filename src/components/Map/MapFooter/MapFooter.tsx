@@ -5,7 +5,6 @@ import { Tooltip, useMediaQuery } from '@material-ui/core';
 import uniq from 'lodash/uniq';
 import { t, Translation } from '../../../services/intl';
 import GithubIcon from '../../../assets/GithubIcon';
-import { MoreMenu } from './MoreMenu';
 import { LangSwitcher } from './LangSwitcher';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
@@ -128,8 +127,6 @@ export const MapFooter = () => (
       <LangSwitcher />
       {' | '}
       <MapDataLink />
-      {' | '}
-      <MoreMenu />
     </Wrapper>
   </ClientOnly>
 );

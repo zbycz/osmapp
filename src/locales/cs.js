@@ -9,6 +9,9 @@ export default {
   show_more: 'Zobrazit více',
   show_less: 'Zobrazit méně',
 
+  'user.login': 'Přihlásit se',
+  'user.logout': 'Odhlásit se',
+
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
 
@@ -95,7 +98,7 @@ export default {
     '(c) MapTiler.com ❤️ <br> – vektorové dlaždice, hosting, turistická mapa<br>Velký dík za podporu tohoto projektu! 🙂 ',
   'map.more_button': 'více',
   'map.more_button_title': 'Další možnosti…',
-  'map.edit_link': 'Otevřít oblast v editoru iD',
+  'map.edit_link': 'Otevřít mapu v editoru iD',
   'map.about_link': 'O aplikaci',
 
   'editdialog.add_heading': 'Přidat do OpenStreetMap',
