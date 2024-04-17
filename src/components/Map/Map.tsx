@@ -10,7 +10,7 @@ import { MapFooter } from './MapFooter/MapFooter';
 import { SHOW_PROTOTYPE_UI } from '../../config';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
-import { TopMenu } from './TopMenu';
+import { TopMenu } from './TopMenu/TopMenu';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,

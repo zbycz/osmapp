@@ -95,7 +95,7 @@ export default {
     '(c) MapTiler.com ❤️ <br> – vektorové dlaždice, hosting, turistická mapa<br>Velký dík za podporu tohoto projektu! 🙂 ',
   'map.more_button': 'více',
   'map.more_button_title': 'Další možnosti…',
-  'map.edit_link': 'Otevřít oblast v editoru iD',
+  'map.edit_link': 'Otevřít mapu v editoru iD',
   'map.about_link': 'O aplikaci',
 
   'editdialog.add_heading': 'Přidat do OpenStreetMap',
