@@ -15,7 +15,6 @@ import {
 import DeleteIcon from '@material-ui/icons/Delete';
 import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 import AddIcon from '@material-ui/icons/Add';
-import Router from 'next/router';
 import { RouteDifficultySelect } from '../RouteDifficultySelect';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
@@ -67,9 +66,6 @@ export const ExpandedRow = ({
   const onDeleteExistingRouteClick = (routeNumber: number) => {
     machine.execute('deleteRoute', { routeNumber });
     hideDeleteDialog();
-  };
-  const onNodeDetailClick = () => {
-    Router.push(`${getOsmappLink(tempRoute.feature)}${window.location.hash}`);
   };
 
   return (
@@ -175,15 +171,20 @@ export const ExpandedRow = ({
                 </ListItem>
               )}
               <ListItem>
-                <Button
-                  onClick={onNodeDetailClick}
-                  color="secondary"
-                  size="small"
-                  variant="text"
-                  endIcon={<ArrowForwardIcon />}
-                >
-                  Show route detail
-                </Button>
+                {tempRoute.feature ? (
+                  <Button
+                    color="secondary"
+                    size="small"
+                    variant="text"
+                    endIcon={<ArrowForwardIcon />}
+                    href={`${getOsmappLink(tempRoute.feature)}${
+                      window.location.hash
+                    }`}
+                    component="a"
+                  >
+                    Show route detail
+                  </Button>
+                ) : null}
               </ListItem>
               <ListItem>
                 <Button
