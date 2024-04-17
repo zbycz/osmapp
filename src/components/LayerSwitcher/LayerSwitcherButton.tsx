@@ -1,7 +1,7 @@
-import React from "react";
+import React from 'react';
 import styled from 'styled-components';
-import LayersIcon from "./LayersIcon";
-import { t } from "../../services/intl";
+import LayersIcon from './LayersIcon';
+import { t } from '../../services/intl';
 
 const StyledLayerSwitcher = styled.button`
   margin: 0;
@@ -28,8 +28,8 @@ const StyledLayerSwitcher = styled.button`
 `;
 
 export const LayerSwitcherButton = ({ onClick }: { onClick?: any }) => (
-    <StyledLayerSwitcher onClick={onClick}>
-      <LayersIcon />
-      {t('layerswitcher.button')}
-    </StyledLayerSwitcher>
+  <StyledLayerSwitcher onClick={onClick}>
+    <LayersIcon />
+    {t('layerswitcher.button')}
+  </StyledLayerSwitcher>
 );
