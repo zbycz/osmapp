@@ -75,6 +75,28 @@ export const onTickAdd = ({ osmId }) => {
   ]);
 };
 
+export const getStorageIndex = (
+  ticks: Array<Tick>,
+  osmId: string,
+  routeIndex: number,
+): number | null => {
+  const found = ticks?.reduce(
+    (acc, tick, storageIndex) => {
+      if (osmId === tick.osmId) {
+        const newRouteIndex = acc.routeIndex + 1;
+        return {
+          storageIndex:
+            newRouteIndex === routeIndex ? storageIndex : acc.storageIndex,
+          routeIndex: newRouteIndex,
+        };
+      }
+      return acc;
+    },
+    { routeIndex: -1, storageIndex: null },
+  );
+  return found.storageIndex;
+};
+
 export const findTicks = (osmId: string): Array<Tick> => {
   const ticks = getLocalStorageItem(KEY);
 
@@ -90,10 +112,11 @@ export const onTickUpdate = ({
   index: number;
   updatedObject: Partial<Tick>;
 }) => {
-  const routeTicks = findTicks(osmId);
+  const ticks = getLocalStorageItem(KEY);
+  const storageIndex = getStorageIndex(ticks, osmId, index);
   const updatedArray = updateElementOnIndex<Tick>(
-    routeTicks,
-    index,
+    ticks,
+    storageIndex,
     (item) => ({ ...item, ...updatedObject }),
   );
   setLocalStorageItem(KEY, updatedArray);
