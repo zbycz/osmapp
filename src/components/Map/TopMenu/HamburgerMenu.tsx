@@ -88,7 +88,6 @@ const EditLink = ({ closeMenu }) => {
       target="_blank"
       rel="noopener"
       onClick={closeMenu}
-
     >
       <PencilIcon />
       {t('map.edit_link')}
@@ -155,7 +154,7 @@ const ThemeSelection = () => {
   );
 };
 
-const UserLogin = forwardRef<HTMLLIElement, any>(({closeMenu}, ref) => {
+const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
   const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
 
   if (!osmUser) {
@@ -213,7 +212,7 @@ export const HamburgerMenu = () => {
         open={opened}
         onClose={close}
       >
-        <UserLogin closeMenu={close}/>
+        <UserLogin closeMenu={close} />
         <StyledDivider />
         <ThemeSelection />
         <EditLink closeMenu={close} />
