@@ -91,7 +91,7 @@ export const trimText = (text, limit) =>
 export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
 
 // (>= mobile size) This changes just the app layout
-export const isDesktop = '(min-width: 500px)';
+export const isDesktop = '(min-width: 516px)';
 
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>

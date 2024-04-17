@@ -1,20 +1,7 @@
-import React from 'react';
+import React from "react";
 import styled from 'styled-components';
-import LayersIcon from './LayersIcon';
-import { t } from '../../services/intl';
-import { isDesktop } from '../helpers';
-
-const TopRight = styled.div`
-  position: absolute;
-  z-index: 1000;
-  padding: 10px;
-  right: 0;
-  top: 72px;
-
-  @media ${isDesktop} {
-    top: 0;
-  }
-`;
+import LayersIcon from "./LayersIcon";
+import { t } from "../../services/intl";
 
 const StyledLayerSwitcher = styled.button`
   margin: 0;
@@ -41,10 +28,8 @@ const StyledLayerSwitcher = styled.button`
 `;
 
 export const LayerSwitcherButton = ({ onClick }: { onClick?: any }) => (
-  <TopRight>
     <StyledLayerSwitcher onClick={onClick}>
       <LayersIcon />
       {t('layerswitcher.button')}
     </StyledLayerSwitcher>
-  </TopRight>
 );
