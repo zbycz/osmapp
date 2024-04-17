@@ -1,7 +1,7 @@
 import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import HelpIcon from '@material-ui/icons/Help';
@@ -127,7 +127,7 @@ const themeOptions = {
   },
 };
 
-const ThemeSelection = () => {
+const ThemeSelection = forwardRef<HTMLLIElement>((_, ref) => {
   const { userTheme, setUserTheme } = useUserThemeContext();
   const option = themeOptions[userTheme];
   const handleClick = () => {
@@ -135,11 +135,11 @@ const ThemeSelection = () => {
   };
 
   return (
-    <MenuItem onClick={handleClick}>
+    <MenuItem onClick={handleClick} ref={ref}>
       <option.icon /> {option.label}
     </MenuItem>
   );
-};
+});
 
 // TODO maybe
 //            <ListItemIcon>
