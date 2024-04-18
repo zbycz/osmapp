@@ -43,7 +43,6 @@ const out = {
   file_path: '/tmp/cda0f39b9e13dc5cd1ea4cb07',
   filename: 'svatý Mikuláš (Christian Church) - OsmAPP.jpg',
   comment: 'Initial upload from OsmAPP.org',
-  tags: 'tag1|tag2',
   ignorewarnings: 1,
   description: expect.anything(),
   date: '2024-03-16T11:35:56Z',
@@ -79,7 +78,7 @@ const outDescription = `
 }}
 
 =={{int:license-header}}==
-{{Self|cc-by-4.0|author=OpenStreetMap user [https://www.openstreetmap.org/user/zby-cz#id162287 zby-cz]}}
+{{Self|cc-by-4.0|author=OpenStreetMap user [https://www.openstreetmap.org/user/zby-cz#id=162287 zby-cz]}}
 {{FoP-Czech_Republic}}
 `;
 

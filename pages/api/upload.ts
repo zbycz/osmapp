@@ -40,10 +40,13 @@ export const uploadToWikimediaCommons = async (
     lang,
   );
 
-  return wikiapiUploadRequest;
+  const password = process.env.OSMAPPBOT_PASSWORD;
+  if (!password) {
+    throw new Error('OSMAPPBOT_PASSWORD not set');
+  }
 
   const wiki = new Wikiapi();
-  await wiki.login('OsmappBot', 'pass', 'test');
+  await wiki.login('OsmappBot', password, 'commons');
   const result = await wiki.upload(wikiapiUploadRequest);
 
   // TODO  ošetřit existující filename jakoby (2)
@@ -98,11 +101,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const out = await uploadToWikimediaCommons(user, feature, file, lang);
 
     res.status(200).json({
-      user,
-      feature,
-      file,
+      // user,
+      // feature,
+      // file,
       success: true,
-      // out,
+      out,
     });
   } catch (err) {
     console.error(err); // eslint-disable-line no-console

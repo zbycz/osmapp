@@ -25,6 +25,7 @@ export const getWikiapiUploadRequest = (
     ? `${name} (${presetName})`
     : `${presetName} at ${location.map((x) => x.toFixed(5))}`;
   const suffix = ` - OsmAPP.${filename.split('.').pop()}`;
+  const osmUserUrl = `https://www.openstreetmap.org/user/${user.username}#id=${user.id}`;
 
   // TODO construct description (categories)
   // TODO  each file must belong to at least one category that describes its content or function
@@ -34,10 +35,10 @@ export const getWikiapiUploadRequest = (
   const text = `
 =={{int:filedesc}}==
 {{Information
-  |description    = {${lang}|1=${title}}
+  |description    = {{${lang}|1=${title}}}
   |date           = ${date}
   |source         = {{Own photo}}
-  |author         = OpenStreetMap user [https://www.openstreetmap.org/user/${user.username}#id${user.id} ${user.username}]
+  |author         = OpenStreetMap user [${osmUserUrl} ${user.username}]
   |other_fields_1 =
     {{Information field
      |name  = {{Label|P180|link=-|capitalization=ucfirst}}
@@ -51,7 +52,7 @@ export const getWikiapiUploadRequest = (
 }}
 
 =={{int:license-header}}==
-{{Self|cc-by-4.0|author=OpenStreetMap user [https://www.openstreetmap.org/user/${user.username}#id${user.id} ${user.username}]}}
+{{Self|cc-by-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
 {{FoP-Czech_Republic}}
 `;
 
@@ -63,7 +64,6 @@ export const getWikiapiUploadRequest = (
     file_path: file.filepath,
     filename: title + suffix,
     comment: 'Initial upload from OsmAPP.org', // Upload comment. Also used as the initial page text for new files if text is not specified.
-    tags: 'tag1|tag2', // Change tags to apply to the upload log entry and file page revision.
     ignorewarnings: 1, // overwrite existing file
     description: text, // text  //Initial page text for new files.
     date: date,
@@ -78,6 +78,7 @@ export const getWikiapiUploadRequest = (
 
     token: '', // TODO ??? GET a CSRF token: api.php?action=query&format=json&meta=tokens
     // https://www.mediawiki.org/wiki/API:Upload
+    // tags: 'tag1|tag2', // Change tags to apply to the upload log entry and file page revision.
     // filekey // Key that identifies a previous upload that was stashed temporarily.
     // stash // If set, the server will stash the file temporarily instead of adding it to the repository.
     // filesize
