@@ -154,3 +154,18 @@ export const doShortenerRedirect = (ctx) => {
 
   return false;
 };
+
+export class FetchError extends Error {
+  constructor(
+    public message: string = '',
+    public code: string,
+    public data: string,
+  ) {
+    super();
+  }
+
+  toString() {
+    const suffix = this.data && ` Data: ${this.data.substring(0, 1000)}`;
+    return `Fetch: ${this.message}${suffix}`;
+  }
+}

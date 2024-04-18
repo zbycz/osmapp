@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import {
-  fetchOsmUser,
-  getOsmUser,
+  loginAndfetchOsmUser,
   osmLogout,
   OsmUser,
 } from '../../services/osmApiAuth';
@@ -15,11 +14,16 @@ interface OsmAuthType {
   handleLogout: () => void;
 }
 
+const useOsmUserState = (cookies) => {
+  const initialState = cookies.osmUserForSSR;
+  return useState<OsmUser | undefined>(initialState);
+};
+
 export const OsmAuthContext = createContext<OsmAuthType>(undefined);
 
-export const OsmAuthProvider = ({ children }) => {
+export const OsmAuthProvider = ({ children, cookies }) => {
   const mapStateContext = useMapStateContext();
-  const [osmUser, setOsmUser] = useState<OsmUser | undefined>(getOsmUser());
+  const [osmUser, setOsmUser] = useOsmUserState(cookies);
 
   const successfulLogin = (user: OsmUser) => {
     setOsmUser(user);
@@ -29,7 +33,7 @@ export const OsmAuthProvider = ({ children }) => {
     });
   };
 
-  const handleLogin = () => fetchOsmUser().then(successfulLogin);
+  const handleLogin = () => loginAndfetchOsmUser().then(successfulLogin);
   const handleLogout = () => osmLogout().then(() => setOsmUser(undefined));
 
   const value = {

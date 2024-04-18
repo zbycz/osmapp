@@ -156,10 +156,20 @@ const ThemeSelection = () => {
 
 const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
   const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
+  const login = () => {
+    closeMenu();
+    handleLogin();
+  };
+  const logout = () => {
+    closeMenu();
+    setTimeout(() => {
+      handleLogout();
+    }, 100);
+  };
 
   if (!osmUser) {
     return (
-      <MenuItem ref={ref} onClick={handleLogin}>
+      <MenuItem ref={ref} onClick={login}>
         <StyledAccountCircleIcon />
         {t('user.login')}
       </MenuItem>
@@ -178,17 +188,10 @@ const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
         <StyledAccountCircleIcon ref={ref} />
         <strong>{osmUser}</strong>
       </MenuItem>
-
-      <MenuItem onClick={handleLogout}>{t('user.logout')}</MenuItem>
+      <MenuItem onClick={logout}>{t('user.logout')}</MenuItem>
     </>
   );
 });
-
-// TODO maybe
-//            <ListItemIcon>
-//             <InboxIcon fontSize="small" />
-//           </ListItemIcon>
-//           <ListItemText primary="Inbox" />
 
 // TODO custom Item components are not keyboard accesible
 // seems like a bug in material-ui

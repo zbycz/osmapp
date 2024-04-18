@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
 import getConfig from 'next/config';
 import { osmAuth } from 'osm-auth';
@@ -57,25 +58,32 @@ export const fetchOsmUser = async (): Promise<OsmUser> => {
     path: '/api/0.6/user/details.json',
   });
   const details = JSON.parse(response).user;
-  const user = {
+  return {
     name: details.display_name,
     imageUrl:
       details.img?.href ??
       `https://www.gravatar.com/avatar/${details.id}?s=24&d=robohash`,
   };
-
-  window.localStorage.setItem('osm_user', JSON.stringify(user));
-  return user;
 };
 
-export const getOsmUser = (): OsmUser | undefined =>
-  auth.authenticated()
-    ? JSON.parse(window.localStorage.getItem('osm_user'))
-    : undefined;
+export const loginAndfetchOsmUser = async (): Promise<OsmUser> => {
+  const osmUser = await fetchOsmUser();
+
+  const { url } = auth.options();
+  const osmAccessToken = localStorage.getItem(`${url}oauth2_access_token`);
+  const osmUserForSSR = JSON.stringify(osmUser);
+  Cookies.set('osmAccessToken', osmAccessToken, { path: '/', expires: 365 });
+  Cookies.set('osmUserForSSR', osmUserForSSR, { path: '/', expires: 365 });
+
+  await fetch('/api/token-login');
+
+  return osmUser;
+};
 
 export const osmLogout = async () => {
   auth.logout();
-  window.localStorage.removeItem('osm_user');
+  Cookies.remove('osmAccessToken', { path: '/' });
+  Cookies.remove('osmUserForSSR', { path: '/' });
 };
 
 const getChangesetXml = ({ changesetComment, feature }) => {

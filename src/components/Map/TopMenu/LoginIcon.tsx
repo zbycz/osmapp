@@ -8,6 +8,7 @@ const StyledUserImg = styled.img`
   width: 24px;
   height: 24px;
   border-radius: 50%;
+  background-color: white;
 `;
 export const LoginIcon = ({ onClick }) => {
   const { osmUser, userImage } = useOsmAuthContext();
