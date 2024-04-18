@@ -10,7 +10,7 @@ const osmAuthFetch = async <T = any>(
   options: OsmAuthFetchOpts,
 ): Promise<T> => {
   const { osmAccessToken, ...restOptions } = options;
-  if (!osmAccessToken) throw new Error('No access token');
+  if (!osmAccessToken) throw new FetchError('No access token', '401');
 
   const url = `https://api.openstreetmap.org${endpoint}`;
   const headers = {
@@ -36,9 +36,11 @@ const osmAuthFetch = async <T = any>(
   return response.json();
 };
 
+export type ServerOsmUser = { id: number; username: string };
+
 export const serverFetchOsmUser = async (
   options: OsmAuthFetchOpts,
-): Promise<{ id: number; username: string }> => {
+): Promise<ServerOsmUser> => {
   const { user } = await osmAuthFetch('/api/0.6/user/details.json', options);
   return {
     id: user.id,

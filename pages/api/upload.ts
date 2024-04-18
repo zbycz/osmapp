@@ -2,6 +2,11 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import Wikiapi from 'wikiapi';
 import fs from 'fs';
+import {
+  serverFetchOsmUser,
+  ServerOsmUser,
+} from '../../src/services/osmApiAuthServer';
+import { fetchFeature } from '../../src/services/osmApi';
 
 export const config = {
   api: {
@@ -14,16 +19,19 @@ export const config = {
 // MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
 // https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
 
-const uploadToWikimediaCommons = async (filepath: string) => {
-  const username = 'zby-cz';
-  const userId = '123123';
+const uploadToWikimediaCommons = async (
+  user: ServerOsmUser,
+  filepath: string,
+) => {
+  const {username} = user;
+  const userId = user.id;
   const name = 'Na Vrškách';
   const location = [50.123, 14.123];
   const presetKey = 'amenity/restaurant';
   const presetName = 'Restaurace';
   const filename = 'IMG_1234.jpg';
   const osmEntity = 'node/11111111';
-  const filemtime = fs.statSync(filepath).mtime.toISOString(); //.replace(/\.\d+Z$/, 'Z'); // případně file[0].mtime
+  const filemtime = fs.statSync(filepath).mtime.toISOString(); // .replace(/\.\d+Z$/, 'Z'); // případně file[0].mtime
   // TODO EXIF location, date information.date = {{According to Exif data|2023-11-16}}
 
   // transform
@@ -34,11 +42,9 @@ const uploadToWikimediaCommons = async (filepath: string) => {
   // TODO  each file must belong to at least one category that describes its content or function
   // TODO  get category based on location eg
 
-
   // checks
 
   const text = `{{description|1=${presetKey}|2=${name}|3=${location}}}`; // {{description|amenity/restaurant|Na Vrškách|50.123,14.123}}
-
 
   // camera location
   // location made
@@ -69,10 +75,8 @@ const uploadToWikimediaCommons = async (filepath: string) => {
     `;
   // TODO choose correct FOP based on country: https://commons.wikimedia.org/wiki/Category:FoP_templates
 
-
   const wiki = new Wikiapi();
   await wiki.login('OsmappBot', 'password', 'test');
-
 
   // TODO  check duplicate by sha1
 
@@ -95,7 +99,7 @@ const uploadToWikimediaCommons = async (filepath: string) => {
       token // A "csrf" token retrieved from action=query&meta=tokens
   * */
 
-  let result = await wiki.upload({
+  const result = await wiki.upload({
     file_path: filepath,
     filename: title,
     comment: 'Initial upload from OsmAPP.org',
@@ -120,10 +124,8 @@ const uploadToWikimediaCommons = async (filepath: string) => {
 
   // TODO  send structured data
 
-
   // Step 3: Final upload using the filekey to commit the upload out of the stash area
   // api.php?action=upload&format=json&filename=File_1.jpg&filekey=somefilekey1234.jpg&token=123Token&comment=upload_comment_here&text=file_description [try in ApiSandbox]
-
 
   // TODO LATER  pokud se vkládal nový osm prvek, tak updatnout link a přidat rename do description:
   // {{Rename|required newname.ext|required rationale number|reason=required text reason}}
@@ -132,53 +134,37 @@ const uploadToWikimediaCommons = async (filepath: string) => {
 // TODO upgrade Nextjs and use export async function POST(request: NextRequest) {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    // const form = formidable({ uploadDir: '/tmp' });
-    // const [fields, files] = await form.parse(req);
-    //
-    // const path = files.file[0].filepath;
-    // const size = files.file[0].size;
-    // const filemtime = files.file[0].mtime;
-    // const name = fields.filename[0];
-    // const osmEntity = fields.osmEntity[0];
-    //
-    // if (size > 100 * 1024 * 1024) {
-    //   throw new Error('File larger than 100MB');
-    // }
+    const form = formidable({ uploadDir: '/tmp' });
+    const [fields, files] = await form.parse(req);
 
-    await uploadToWikimediaCommons('./IMG_3379.HEIC');
-    // reply 200 + { name, url} to show Succes Dialog
+    const path = files.file[0].filepath;
+    const {size} = files.file[0];
+    const filemtime = files.file[0].mtime;
+
+    const name = fields.filename[0];
+    const osmShortId = fields.osmShortId[0];
+    if (size > 100 * 1024 * 1024) {
+      throw new Error('File larger than 100MB');
+    }
+
+    const { osmAccessToken } = req.cookies;
+    const user = await serverFetchOsmUser({ osmAccessToken });
+    const feature = await fetchFeature(osmShortId);
+
+    // await uploadToWikimediaCommons(user, './IMG_3379.HEIC');
 
     res.status(200).json({
-      status: 'ok',
-      // path,
-      // name,
-      // osmEntity,
+      user,
+      path,
+      size,
+      filemtime,
+      name,
+      osmShortId,
+      feature,
+      success: true,
     });
   } catch (err) {
-    console.error(err);
-    res.status(err.httpCode || 400).send(String(err));
+    console.error(err); // eslint-disable-line no-console
+    res.status(err.code ?? 400).send(String(err));
   }
 };
-
-// import { writeFile } from 'fs/promises'
-// import { NextRequest, NextResponse } from 'next/server'
-//
-// export async function POST(request: NextRequest) {
-//   const data = await request.formData()
-//   const file: File | null = data.get('file') as unknown as File
-//
-//   if (!file) {
-//     return NextResponse.json({ success: false })
-//   }
-//
-//   const bytes = await file.arrayBuffer()
-//   const buffer = Buffer.from(bytes)
-//
-//   // With the file data in the buffer, you can do whatever you want with it.
-//   // For this, we'll just write it to the filesystem in a new location
-//   const path = `/tmp/${file.name}`
-//   await writeFile(path, buffer)
-//   console.log(`open ${path} to see the uploaded file`)
-//
-//   return NextResponse.json({ success: true })
-// }

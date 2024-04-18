@@ -97,7 +97,6 @@ export const FeaturePanel = () => {
 
               <UploadDialog />
 
-
               <Properties
                 showTags={showTagsTable}
                 key={getUrlOsmId(osmMeta) + (deleted && 'del')}

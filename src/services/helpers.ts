@@ -159,7 +159,7 @@ export class FetchError extends Error {
   constructor(
     public message: string = '',
     public code: string,
-    public data: string,
+    public data: string = '',
   ) {
     super();
   }
