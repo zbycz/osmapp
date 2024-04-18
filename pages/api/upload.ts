@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
-import Wikiapi from 'wikiapi';
 import exifr from 'exifr';
+import fs from 'fs';
 import {
   serverFetchOsmUser,
   ServerOsmUser,
@@ -13,6 +13,10 @@ import { setIntl } from '../../src/services/intl';
 import getConfig from 'next/config';
 import type { LonLat } from '../../src/services/types';
 import { getName, getTypeLabel } from '../../src/helpers/featureLabel';
+import {
+  getMediaWikiSession,
+  UploadParams,
+} from '../../src/services/mediawiki';
 
 export const config = {
   api: {
@@ -27,7 +31,7 @@ export type File = {
   date: Date;
 };
 
-export const getWikiapiUploadRequest = (
+export const getUploadData = (
   user: ServerOsmUser,
   feature: Feature,
   file: File,
@@ -35,7 +39,7 @@ export const getWikiapiUploadRequest = (
 ) => {
   const name = getName(feature);
   const location = file.location ?? feature.center;
-  const presetKey = feature.schema.presetKey;
+  // const presetKey = feature.schema.presetKey;
   const presetName = getTypeLabel(feature);
   const filename = file.name;
   const date = file.date.toISOString().replace(/\.\d+Z$/, 'Z'); // TODO EXIF location, date information.date = {{According to Exif data|2023-11-16}}
@@ -65,7 +69,7 @@ export const getWikiapiUploadRequest = (
   |other_fields =
     {{Information field
      |name  = {{ucfirst: {{I18n/location|made}} }}
-     |value = {{#invoke:Information|SDC_Location|icon=true}} {{#if:{{#property:P1071|from=M{{PAGEID}} }}|(<small>{{#invoke:PropertyChain|PropertyChain|qID={{#invoke:WikidataIB |followQid |props=P1071}}|pID=P131|endpID=P17}}</small>)}}
+     |value = {{#invoke:Information|SDC_Location|icon=true}} {{#if:{{#property:P1259|from=M{{PAGEID}} }}|(<small>{{#invoke:PropertyChain|PropertyChain|qID={{#invoke:WikidataIB |followQid |props=P1259}}|pID=P131|endpID=P17}}</small>)}}
     }}
 }}
 
@@ -73,36 +77,19 @@ export const getWikiapiUploadRequest = (
 {{Self|cc-by-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
 {{FoP-Czech_Republic}}
 `;
-
   // TODO choose correct FOP based on country: https://commons.wikimedia.org/wiki/Category:FoP_templates
 
   return {
-    file_path: file.filepath,
-    filename: title + suffix,
-    comment: 'Initial upload from OsmAPP.org', // Upload comment. Also used as the initial page text for new files if text is not specified.
-    ignorewarnings: 1, // overwrite existing file
-    description: text, // text  //Initial page text for new files.
-    date: date,
-    source_url: 'https://github.com/kanasimi/wikiapi',
-    author: `[https://www.openstreetmap.org/user/${user.username} ${user.username}] (${user.id})`,
-    permission: '{{cc-by-sa-2.5}}',
-    other_versions: '',
-    other_fields: '',
-    license: ['{{cc-by-sa-2.5}}'],
-    categories: ['[[Category:test images]]'],
-    bot: 1,
-
-    token: '', // TODO ??? GET a CSRF token: api.php?action=query&format=json&meta=tokens
-    // https://www.mediawiki.org/wiki/API:Upload
-    // tags: 'tag1|tag2', // Change tags to apply to the upload log entry and file page revision.
-    // filekey // Key that identifies a previous upload that was stashed temporarily.
-    // stash // If set, the server will stash the file temporarily instead of adding it to the repository.
-    // filesize
-    // offset // Offset of chunk in bytes.
-    // chunk Must be posted as a file upload using multipart/form-data. -- chunks 1 MB
-    // async // Make potentially large file operations asynchronous when possible.
-    // checkstatus // Only fetch the upload status for the given file key.
-    // token // A "csrf" token retrieved from action=query&meta=tokens
+    uploadParams: {
+      file: fs.createReadStream(file.filepath),
+      filename: title + suffix,
+      text,
+      comment: 'Initial upload from OsmAPP.org',
+      ignorewarnings: true,
+    } as UploadParams,
+    date,
+    photoLocation: file.location,
+    placeLocation: feature.center,
   };
 };
 
@@ -111,31 +98,24 @@ export const getWikiapiUploadRequest = (
 // MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
 // https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
 
-export const uploadToWikimediaCommons = async (wikiapiUploadRequest) => {
+export const uploadToWikimediaCommons = async (data) => {
   const password = process.env.OSMAPPBOT_PASSWORD;
   if (!password) {
     throw new Error('OSMAPPBOT_PASSWORD not set');
   }
 
+  const wiki = getMediaWikiSession();
+  await wiki.login('OsmappBot@osmapp-upload', password);
+  // const result = await wiki.upload(data.uploadParams);
 
-  const wiki = new Wikiapi();
-  await wiki.login('OsmappBot', password, 'commons');
+  const filename = data.uploadParams.filename;
+  // const result = await wiki.addClaimDate(filename, data.date);
+  const result = await wiki.addPhotoLocation(869250201, data.photoLocation);
+  // const result = await wiki.addPlaceLocation(filename, data.placeLocation);
 
-  // TODO  check duplicate by sha1
-
-  const result = await wiki.upload(wikiapiUploadRequest);
-
-  // TODO  ošetřit existující filename jakoby (2)
-  // TODO  check for API errors
-
-  // TODO  send structured data
-
-  // Step 3: Final upload using the filekey to commit the upload out of the stash area
-  // api.php?action=upload&format=json&filename=File_1.jpg&filekey=somefilekey1234.jpg&token=123Token&comment=upload_comment_here&text=file_description [try in ApiSandbox]
-
-  // TODO LATER  pokud se vkládal nový osm prvek, tak updatnout link a přidat rename do description:
-  // {{Rename|required newname.ext|required rationale number|reason=required text reason}}
-
+  // TODO check duplicate by sha1 before upload
+  // TODO check duplicate name before upload
+  // TODO return filename;
   return result;
 };
 
@@ -174,17 +154,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     setIntl({ lang, messages: [] });
     const feature = await fetchFeatureWithCenter(apiId);
 
-    const wikiapiUploadRequest = getWikiapiUploadRequest(
-      user,
-      feature,
-      file,
-      lang,
-    );
-    const out = await uploadToWikimediaCommons(wikiapiUploadRequest);
+    const data = getUploadData(user, feature, file, lang);
+    const out = await uploadToWikimediaCommons(data);
 
     res.status(200).json({
       success: true,
-      wikiapiUploadRequest,
       out,
     });
   } catch (err) {

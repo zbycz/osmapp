@@ -20,7 +20,6 @@ interface FetchOpts extends RequestInit {
 
 export const fetchText = async (url, opts: FetchOpts = {}) => {
   const key = getKey(url, opts);
-  console.log('fetchText', key, url, opts);
   const item = getCache(key);
   if (item) return item;
 
