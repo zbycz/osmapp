@@ -38,9 +38,9 @@ const osmAuthFetch = async <T = any>(
 
 export type ServerOsmUser = { id: number; username: string };
 
-export const serverFetchOsmUser = async (
-  options: OsmAuthFetchOpts,
-): Promise<ServerOsmUser> => {
+export const serverFetchOsmUser = async (req): Promise<ServerOsmUser> => {
+  const { osmAccessToken } = req.cookies;
+  const options = { osmAccessToken };
   const { user } = await osmAuthFetch('/api/0.6/user/details.json', options);
   return {
     id: user.id,
