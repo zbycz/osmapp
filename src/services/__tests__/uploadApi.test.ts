@@ -1,5 +1,5 @@
 import type { Feature } from '../types';
-import { getWikiapiUploadRequest } from '../../../pages/api/upload';
+import { getUploadData } from '../../../pages/api/upload';
 
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: { languages: ['en'] },
@@ -83,7 +83,7 @@ const outDescription = `
 `;
 
 test('getWikiapiUploadRequest', () => {
-  const wikiapiUploadRequest = getWikiapiUploadRequest(
+  const wikiapiUploadRequest = getUploadData(
     user,
     feature,
     file,
