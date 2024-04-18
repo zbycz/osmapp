@@ -4,6 +4,7 @@ import { fetchText } from '../../../services/fetch';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getShortId } from '../../../services/helpers';
 import { loginAndfetchOsmUser } from '../../../services/osmApiAuth';
+import { intl } from "../../../services/intl";
 
 const WIKIPEDIA_LIMIT = 100 * 1024 * 1024;
 
@@ -12,6 +13,7 @@ const performUpload = async (file, feature) => {
   formData.append('filename', file.name);
   formData.append('file', file);
   formData.append('osmShortId', getShortId(feature.osmMeta));
+  formData.append('lang', intl.lang);
 
   const uploadResponse = await fetchText('/api/upload', {
     method: 'POST',
