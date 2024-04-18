@@ -95,7 +95,6 @@ const IndexWithProviders = () => {
 };
 
 const App = ({ featureFromRouter, initialMapView, cookies }) => {
-
   const mapView = getMapViewFromHash() || initialMapView;
   return (
     <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>

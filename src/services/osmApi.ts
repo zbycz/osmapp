@@ -1,4 +1,11 @@
-import { FetchError, getApiId, getShortId, getUrlOsmId, OsmApiId, prod } from "./helpers";
+import {
+  FetchError,
+  getApiId,
+  getShortId,
+  getUrlOsmId,
+  OsmApiId,
+  prod,
+} from './helpers';
 import { fetchJson } from './fetch';
 import { Feature, Position } from './types';
 import { removeFetchCache } from './fetchCache';

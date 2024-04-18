@@ -1,10 +1,10 @@
-import * as xml2js from "isomorphic-xml2js";
-import fetch from "isomorphic-unfetch";
-import { isServer, isString } from "../components/helpers";
-import { Feature, Position } from "./types";
-import { join, roundedToDegUrl } from "../utils";
-import { PROJECT_URL } from "./project";
-import { getIdFromShortener, getShortenerSlug } from "./shortener";
+import * as xml2js from 'isomorphic-xml2js';
+import fetch from 'isomorphic-unfetch';
+import { isServer, isString } from '../components/helpers';
+import { Feature, Position } from './types';
+import { join, roundedToDegUrl } from '../utils';
+import { PROJECT_URL } from './project';
+import { getIdFromShortener, getShortenerSlug } from './shortener';
 
 export const parseXmlString = (xmlString) => {
   const parser = new xml2js.Parser({
@@ -157,9 +157,9 @@ export const doShortenerRedirect = (ctx) => {
 
 export class FetchError extends Error {
   constructor(
-    public message: string = "",
+    public message: string = '',
     public code: string,
-    public data: string
+    public data: string,
   ) {
     super();
   }

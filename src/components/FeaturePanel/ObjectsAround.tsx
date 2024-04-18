@@ -4,7 +4,7 @@ import Router from 'next/router';
 import { fetchAroundFeature } from '../../services/osmApi';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
-import { FetchError, getOsmappLink, getUrlOsmId } from "../../services/helpers";
+import { FetchError, getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 import { trimText, useMobileMode } from '../helpers';

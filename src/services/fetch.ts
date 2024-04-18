@@ -1,7 +1,7 @@
-import fetch from "isomorphic-unfetch";
-import { getCache, getKey, writeCacheSafe } from "./fetchCache";
-import { isBrowser } from "../components/helpers";
-import { FetchError } from "./helpers";
+import fetch from 'isomorphic-unfetch';
+import { getCache, getKey, writeCacheSafe } from './fetchCache';
+import { isBrowser } from '../components/helpers';
+import { FetchError } from './helpers';
 
 // TODO cancel request in map.on('click', ...)
 const abortableQueues: Record<string, AbortController> = {};

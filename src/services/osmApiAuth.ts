@@ -34,7 +34,6 @@ const auth = osmAuth({
   redirect_uri: isBrowser() && `${window.location.origin}/oauth-token.html`,
   scope: 'read_prefs write_api write_notes openid',
   auto: true,
-  url: 'https://www.openstreetmap.org',
 });
 
 const authFetch = async (options) =>
