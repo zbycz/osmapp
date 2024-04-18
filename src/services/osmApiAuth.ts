@@ -1,3 +1,4 @@
+import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
 import getConfig from 'next/config';
 import { osmAuth } from 'osm-auth';
@@ -33,11 +34,8 @@ const auth = osmAuth({
   redirect_uri: isBrowser() && `${window.location.origin}/oauth-token.html`,
   scope: 'read_prefs write_api write_notes openid',
   auto: true,
+  url: 'https://www.openstreetmap.org',
 });
-
-export const setAccessToken = (token) => {
-  auth.setOuth2AccessToken(token);
-};
 
 const authFetch = async (options) =>
   new Promise<any>((resolve, reject) => {
@@ -61,43 +59,32 @@ export const fetchOsmUser = async (): Promise<OsmUser> => {
     path: '/api/0.6/user/details.json',
   });
   const details = JSON.parse(response).user;
-  const user = {
+  return {
     name: details.display_name,
     imageUrl:
       details.img?.href ??
       `https://www.gravatar.com/avatar/${details.id}?s=24&d=robohash`,
   };
-
-  window.localStorage.setItem('osm_user', JSON.stringify(user));
-  return user;
-};
-
-const doServerLogin = async () => {
-  const accessToken = auth.getOuth2AccessToken();
-  await fetch('/api/token-login', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ accessToken }),
-  });
 };
 
 export const loginAndfetchOsmUser = async (): Promise<OsmUser> => {
   const osmUser = await fetchOsmUser();
-  await doServerLogin();
+
+  const { url } = auth.options();
+  const osmAccessToken = localStorage.getItem(`${url}oauth2_access_token`);
+  const osmUserForSSR = JSON.stringify(osmUser);
+  Cookies.set('osmAccessToken', osmAccessToken, { path: '/', expires: 365 });
+  Cookies.set('osmUserForSSR', osmUserForSSR, { path: '/', expires: 365 });
+
+  await fetch('/api/token-login');
 
   return osmUser;
 };
 
-export const getOsmUser = (): OsmUser | undefined =>
-  auth.authenticated()
-    ? JSON.parse(window.localStorage.getItem('osm_user'))
-    : undefined;
-
 export const osmLogout = async () => {
   auth.logout();
-  window.localStorage.removeItem('osm_user');
+  Cookies.remove('osmAccessToken', { path: '/' });
+  Cookies.remove('osmUserForSSR', { path: '/' });
 };
 
 const getChangesetXml = ({ changesetComment, feature }) => {

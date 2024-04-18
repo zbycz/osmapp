@@ -2,17 +2,20 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import fetch from 'isomorphic-unfetch';
 
 interface OsmAuthFetchOpts extends RequestInit {
-  accessToken: string;
+  osmAccessToken: string;
 }
 
-const osmAuthFetch = async <T = any>(
+export const osmAuthFetch = async <T = any>(
   endpoint: string,
   options: OsmAuthFetchOpts,
 ): Promise<T> => {
+  if (!options.osmAccessToken) throw new Error('No access token');
+
   const url = `https://api.openstreetmap.org${endpoint}`;
   const headers = {
+    'User-Agent': 'osmapp (SSR; https://osmapp.org/)',
     'Content-Type': 'application/x-www-form-urlencoded',
-    Authorization: `Bearer ${options.accessToken}`,
+    Authorization: `Bearer ${options.osmAccessToken}`,
   };
 
   const response = await fetch(url, {
@@ -37,29 +40,14 @@ export const fetchOsmUsername = async (
 };
 
 
-const year = 60 * 60 * 24 * 365;
 
 // TODO upgrade Nextjs and use export async function POST(request: NextRequest) {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    if (req.method !== 'POST') {
-      res.status(405).send({ message: 'Only POST requests allowed' });
-      return;
-    }
+    const { osmAccessToken } = req.cookies;
+    const osmUser = await fetchOsmUsername({ osmAccessToken });
 
-    const accessToken = req.body.accessToken;
-    if (!accessToken) {
-      res.status(400).send({ message: 'accessToken mising' });
-      return;
-    }
-
-    const osmUser = await fetchOsmUsername({ accessToken });
-
-    res.setHeader(
-      'Set-Cookie',
-      `accessToken=${accessToken}; Path=/; Max-Age=${year}; SameSite=Strict; Secure; HttpOnly`,
-    );
-    res.status(200).json({ body: req.body, osmUser, accessToken });
+    res.status(200).json({ body: req.body, osmUser, osmAccessToken });
 
   } catch (err) {
     console.error(err);

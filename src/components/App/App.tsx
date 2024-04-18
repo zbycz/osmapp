@@ -94,12 +94,13 @@ const IndexWithProviders = () => {
   );
 };
 
-const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
+const App = ({ featureFromRouter, initialMapView, cookies }) => {
+
   const mapView = getMapViewFromHash() || initialMapView;
   return (
-    <FeatureProvider featureFromRouter={featureFromRouter} hpCookie={hpCookie}>
+    <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>
       <MapStateProvider initialMapView={mapView}>
-        <OsmAuthProvider>
+        <OsmAuthProvider cookies={cookies}>
           <StarsProvider>
             <EditDialogProvider /* TODO supply router.query */>
               <IndexWithProviders />
@@ -113,10 +114,10 @@ const App = ({ featureFromRouter, initialMapView, hpCookie }) => {
 App.getInitialProps = async (ctx) => {
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
-  const { hideHomepage: hpCookie } = nextCookies(ctx);
+  const cookies = nextCookies(ctx);
   const featureFromRouter = await getInititalFeature(ctx);
   const initialMapView = await getInitialMapView(ctx);
-  return { featureFromRouter, initialMapView, hpCookie };
+  return { featureFromRouter, initialMapView, cookies };
 };
 
 export default App;
