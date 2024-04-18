@@ -1,5 +1,5 @@
-import { getWikiapiUploadRequest } from '../uploadService';
-import type { Feature } from '../../types';
+import type { Feature } from '../types';
+import { getWikiapiUploadRequest } from '../../../pages/api/upload';
 
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: { languages: ['en'] },
