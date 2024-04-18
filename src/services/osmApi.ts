@@ -113,7 +113,7 @@ const osmToFeature = (element): Feature => {
   };
 };
 
-const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
+export const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   const [element, center] = await Promise.all([
     getOsmPromise(apiId),
     getCenterPromise(apiId),
