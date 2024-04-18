@@ -76,8 +76,6 @@ export const loginAndfetchOsmUser = async (): Promise<OsmUser> => {
   Cookies.set('osmAccessToken', osmAccessToken, { path: '/', expires: 365 });
   Cookies.set('osmUserForSSR', osmUserForSSR, { path: '/', expires: 365 });
 
-  await fetch('/api/token-login');
-
   return osmUser;
 };
 
