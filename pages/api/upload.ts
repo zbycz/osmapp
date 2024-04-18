@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import Wikiapi from 'wikiapi';
+import exifr from 'exifr';
 import fs from 'fs';
 import {
   serverFetchOsmUser,
@@ -142,15 +143,17 @@ const parseHttpRequest = async (req: NextApiRequest) => {
     throw new Error('File larger than 100MB');
   }
 
-  const file = { filepath, size, mtime, name };
+  const exif = await exifr.parse(filepath);
+
+  const file = { filepath, size, mtime, name, exif };
   return { file, osmShortId };
 };
 
 // TODO upgrade Nextjs and use export async function POST(request: NextRequest) {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { file, osmShortId } = await parseHttpRequest(req);
     const user = await serverFetchOsmUser(req);
+    const { file, osmShortId } = await parseHttpRequest(req);
     const feature = await fetchFeature(osmShortId);
 
     // await uploadToWikimediaCommons(user, './IMG_3379.HEIC');
