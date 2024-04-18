@@ -23,7 +23,7 @@ const uploadToWikimediaCommons = async (
   user: ServerOsmUser,
   filepath: string,
 ) => {
-  const {username} = user;
+  const { username } = user;
   const userId = user.id;
   const name = 'Na Vrškách';
   const location = [50.123, 14.123];
@@ -131,36 +131,34 @@ const uploadToWikimediaCommons = async (
   // {{Rename|required newname.ext|required rationale number|reason=required text reason}}
 };
 
+const parseHttpRequest = async (req: NextApiRequest) => {
+  const form = formidable({ uploadDir: '/tmp' });
+  const [fields, files] = await form.parse(req);
+  const { filepath, size, mtime } = files.file[0];
+  const name = fields.filename[0];
+  const osmShortId = fields.osmShortId[0];
+
+  if (size > 100 * 1024 * 1024) {
+    throw new Error('File larger than 100MB');
+  }
+
+  const file = { filepath, size, mtime, name };
+  return { file, osmShortId };
+};
+
 // TODO upgrade Nextjs and use export async function POST(request: NextRequest) {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const form = formidable({ uploadDir: '/tmp' });
-    const [fields, files] = await form.parse(req);
-
-    const path = files.file[0].filepath;
-    const {size} = files.file[0];
-    const filemtime = files.file[0].mtime;
-
-    const name = fields.filename[0];
-    const osmShortId = fields.osmShortId[0];
-    if (size > 100 * 1024 * 1024) {
-      throw new Error('File larger than 100MB');
-    }
-
-    const { osmAccessToken } = req.cookies;
-    const user = await serverFetchOsmUser({ osmAccessToken });
+    const { file, osmShortId } = await parseHttpRequest(req);
+    const user = await serverFetchOsmUser(req);
     const feature = await fetchFeature(osmShortId);
 
     // await uploadToWikimediaCommons(user, './IMG_3379.HEIC');
 
     res.status(200).json({
       user,
-      path,
-      size,
-      filemtime,
-      name,
-      osmShortId,
       feature,
+      file,
       success: true,
     });
   } catch (err) {
