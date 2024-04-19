@@ -9,7 +9,12 @@ import { getApiId } from "../../src/services/helpers";
 import { setIntl } from "../../src/services/intl";
 import getConfig from "next/config";
 import { getName, getTypeLabel } from "../../src/helpers/featureLabel";
-import { claimsHelpers, getMediaWikiSession, getPageRevisions, UploadParams } from "../../src/services/mediawiki";
+import { claimsHelpers, getMediaWikiSession, isTitleAvailable, UploadParams } from "../../src/services/mediawiki";
+
+// inspiration: https://commons.wikimedia.org/wiki/File:Drive_approaching_the_Grecian_Lodges_-_geograph.org.uk_-_5765640.jpg
+// https://github.com/multichill/toollabs/blob/master/bot/commons/geograph_uploader.py
+// TODO https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
+
 
 export const config = {
   api: {
@@ -24,24 +29,35 @@ export type File = {
   date: Date;
 };
 
+const getTitle = feature => {
+  const presetName = getTypeLabel(feature);
+  const title = name
+    ? `${name} (${presetName})`
+    : `${presetName} at ${location.map((x) => x.toFixed(5))}`;
+  return title;
+};
+
+const getFilename = (feature, file, suffix) => {
+  const title = getTitle(feature);
+
+  const extension = file.name.split('.').pop();
+  return `${title} - OsmAPP${suffix}.${extension}`;
+};
+
 export const getUploadData = (
   user: ServerOsmUser,
   feature: Feature,
   file: File,
   lang: string,
-  photoNumber: number | undefined = undefined
+  suffix: string,
 ) => {
   const name = getName(feature);
   const location = file.location ?? feature.center;
   // const presetKey = feature.schema.presetKey;
-  const presetName = getTypeLabel(feature);
-  const date = file.date.toISOString().replace(/\.\d+Z$/, 'Z'); // TODO EXIF location, date information.date = {{According to Exif data|2023-11-16}}
-  const title = name
-    ? `${name} (${presetName})`
-    : `${presetName} at ${location.map((x) => x.toFixed(5))}`;
-  const suffix = ` - OsmAPP.${file.name.split('.').pop()}`;
-  const filename = `${title}${photoNumber ? ` ${photoNumber}` : ''}${suffix}`;
+  const title = getTitle(feature);
+  const filename = getFilename(feature, file, suffix);
   const osmUserUrl = `https://www.openstreetmap.org/user/${user.username}#id=${user.id}`;
+  const date = file.date.toISOString().replace(/\.\d+Z$/, 'Z'); // TODO EXIF location, date information.date = {{According to Exif data|2023-11-16}}
 
   // TODO construct description (categories)
   // TODO  each file must belong to at least one category that describes its content or function
@@ -72,6 +88,7 @@ export const getUploadData = (
 {{FoP-Czech_Republic}}
 `;
   // TODO choose correct FOP based on country: https://commons.wikimedia.org/wiki/Category:FoP_templates
+  // TODO https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
 
   return {
     uploadParams: {
@@ -79,7 +96,6 @@ export const getUploadData = (
       filename,
       text,
       comment: 'Initial upload from OsmAPP.org',
-      ignorewarnings: true,
     } as UploadParams,
     date,
     photoLocation: file.location,
@@ -87,10 +103,18 @@ export const getUploadData = (
   };
 };
 
-// https://commons.wikimedia.org/wiki/File:Drive_approaching_the_Grecian_Lodges_-_geograph.org.uk_-_5765640.jpg
-// https://github.com/multichill/toollabs/blob/master/bot/commons/geograph_uploader.py
-// MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
-// https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
+async function findFreeSuffix(feature: Feature, file: File) {
+  for (let i = 1; i < 20; i++) {
+    const suffix = i === 1 ? "" : ` (${i})`;
+    const filename = getFilename(feature, file, suffix);
+    const isFree = await isTitleAvailable(`File:${filename}`);
+    if (isFree) {
+      return suffix;
+    }
+  }
+
+  throw new Error(`Could not find free suffix for ${file.name}`);
+}
 
 export const uploadToWikimediaCommons = async (
   user: ServerOsmUser,
@@ -103,22 +127,13 @@ export const uploadToWikimediaCommons = async (
     throw new Error('OSMAPPBOT_PASSWORD not set');
   }
 
-
-
   const session = getMediaWikiSession();
   await session.login('OsmappBot@osmapp-upload', password);
 
-  let photoNumber = undefined;
+  const suffix = await findFreeSuffix(feature, file);
 
-
-  const data = getUploadData(user, feature, file, lang, photoNumber);
-  const pageInfos = await getPageRevisions(['File:'+data.uploadParams.filename]);
-  if (pageInfos[0].pageid) {
-    throw new Error('File already exists');
-  }
-
-
-  // const result = await wiki.upload(data.uploadParams);
+  const data = getUploadData(user, feature, file, lang, suffix);
+  // const uploadResult = await wiki.upload(data.uploadParams);
 
   const pageId = '147484063';
 
@@ -128,12 +143,12 @@ export const uploadToWikimediaCommons = async (
     claimsHelpers.createPhotoLocation(data.photoLocation),
   ];
   console.log(JSON.stringify(claims, null, 2));
-  const result = await session.editClaims(`M${pageId}`, claims);
+  const claimsResult = await session.editClaims(`M${pageId}`, claims);
 
   // TODO check duplicate by sha1 before upload
   // TODO check duplicate name before upload
-  // TODO return filename;
-  return result;
+  return { uploadResult, claimsResult, filename: data.uploadParams.filename };
+  // MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
 };
 
 const parseHttpRequest = async (req: NextApiRequest) => {

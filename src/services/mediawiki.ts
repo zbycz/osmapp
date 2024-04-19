@@ -142,3 +142,17 @@ export const getPageRevisions = async (titles: string[]) => {
   const data = await response.json();
   return data.query.pages as PageInfo[];
 };
+
+
+export const isTitleAvailable = async (title: string) => {
+  const response = await fetch(WIKI_URL, {
+    method: 'POST',
+    body: getBody({
+      action: 'query',
+      titles: title,
+      format: 'json',
+    }),
+  });
+  const data = await response.json();
+  return data.query.pages[0].missing;
+}
