@@ -1,22 +1,15 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import formidable from 'formidable';
-import exifr from 'exifr';
-import fs from 'fs';
-import {
-  serverFetchOsmUser,
-  ServerOsmUser,
-} from '../../src/services/osmApiAuthServer';
-import { fetchFeatureWithCenter } from '../../src/services/osmApi';
-import type { Feature } from '../../src/services/types';
-import { getApiId } from '../../src/services/helpers';
-import { setIntl } from '../../src/services/intl';
-import getConfig from 'next/config';
-import type { LonLat } from '../../src/services/types';
-import { getName, getTypeLabel } from '../../src/helpers/featureLabel';
-import {
-  getMediaWikiSession,
-  UploadParams,
-} from '../../src/services/mediawiki';
+import type { NextApiRequest, NextApiResponse } from "next";
+import formidable from "formidable";
+import exifr from "exifr";
+import fs from "fs";
+import { serverFetchOsmUser, ServerOsmUser } from "../../src/services/osmApiAuthServer";
+import { fetchFeatureWithCenter } from "../../src/services/osmApi";
+import type { Feature, LonLat } from "../../src/services/types";
+import { getApiId } from "../../src/services/helpers";
+import { setIntl } from "../../src/services/intl";
+import getConfig from "next/config";
+import { getName, getTypeLabel } from "../../src/helpers/featureLabel";
+import { claimsHelpers, getMediaWikiSession, getPageRevisions, UploadParams } from "../../src/services/mediawiki";
 
 export const config = {
   api: {
@@ -36,17 +29,18 @@ export const getUploadData = (
   feature: Feature,
   file: File,
   lang: string,
+  photoNumber: number | undefined = undefined
 ) => {
   const name = getName(feature);
   const location = file.location ?? feature.center;
   // const presetKey = feature.schema.presetKey;
   const presetName = getTypeLabel(feature);
-  const filename = file.name;
   const date = file.date.toISOString().replace(/\.\d+Z$/, 'Z'); // TODO EXIF location, date information.date = {{According to Exif data|2023-11-16}}
   const title = name
     ? `${name} (${presetName})`
     : `${presetName} at ${location.map((x) => x.toFixed(5))}`;
-  const suffix = ` - OsmAPP.${filename.split('.').pop()}`;
+  const suffix = ` - OsmAPP.${file.name.split('.').pop()}`;
+  const filename = `${title}${photoNumber ? ` ${photoNumber}` : ''}${suffix}`;
   const osmUserUrl = `https://www.openstreetmap.org/user/${user.username}#id=${user.id}`;
 
   // TODO construct description (categories)
@@ -82,7 +76,7 @@ export const getUploadData = (
   return {
     uploadParams: {
       file: fs.createReadStream(file.filepath),
-      filename: title + suffix,
+      filename,
       text,
       comment: 'Initial upload from OsmAPP.org',
       ignorewarnings: true,
@@ -98,20 +92,43 @@ export const getUploadData = (
 // MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
 // https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
 
-export const uploadToWikimediaCommons = async (data) => {
+export const uploadToWikimediaCommons = async (
+  user: ServerOsmUser,
+  feature: Feature,
+  file: File,
+  lang: string,
+) => {
   const password = process.env.OSMAPPBOT_PASSWORD;
   if (!password) {
     throw new Error('OSMAPPBOT_PASSWORD not set');
   }
 
-  const wiki = getMediaWikiSession();
-  await wiki.login('OsmappBot@osmapp-upload', password);
+
+
+  const session = getMediaWikiSession();
+  await session.login('OsmappBot@osmapp-upload', password);
+
+  let photoNumber = undefined;
+
+
+  const data = getUploadData(user, feature, file, lang, photoNumber);
+  const pageInfos = await getPageRevisions(['File:'+data.uploadParams.filename]);
+  if (pageInfos[0].pageid) {
+    throw new Error('File already exists');
+  }
+
+
   // const result = await wiki.upload(data.uploadParams);
 
-  const filename = data.uploadParams.filename;
-  // const result = await wiki.addClaimDate(filename, data.date);
-  const result = await wiki.addPhotoLocation(869250201, data.photoLocation);
-  // const result = await wiki.addPlaceLocation(filename, data.placeLocation);
+  const pageId = '147484063';
+
+  const claims = [
+    claimsHelpers.createDate(data.date),
+    claimsHelpers.createPlaceLocation(data.placeLocation),
+    claimsHelpers.createPhotoLocation(data.photoLocation),
+  ];
+  console.log(JSON.stringify(claims, null, 2));
+  const result = await session.editClaims(`M${pageId}`, claims);
 
   // TODO check duplicate by sha1 before upload
   // TODO check duplicate name before upload
@@ -154,8 +171,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     setIntl({ lang, messages: [] });
     const feature = await fetchFeatureWithCenter(apiId);
 
-    const data = getUploadData(user, feature, file, lang);
-    const out = await uploadToWikimediaCommons(data);
+    const out = await uploadToWikimediaCommons(user, feature, file, lang);
 
     res.status(200).json({
       success: true,
