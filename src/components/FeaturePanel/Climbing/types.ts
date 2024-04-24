@@ -28,6 +28,8 @@ export type PathPoints = Array<PathPoint>;
 export type RouteDifficulty = {
   gradeSystem: GradeSystem;
   grade: string;
+  gradeMin?: string;
+  gradeMax?: string;
 };
 
 export type ClimbingRoute = {
