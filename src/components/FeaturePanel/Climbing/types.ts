@@ -52,3 +52,19 @@ export type ZoomState = {
 
 export type GradeSystem = typeof gradeSystem[number]['key'];
 export type GradeTable = Record<GradeSystem, Array<string>>;
+
+export type TickStyle =
+  | 'OS'
+  | 'FL'
+  | 'RP'
+  | 'PP'
+  | 'RK'
+  | 'AF'
+  | 'TR'
+  | 'FS'
+  | null;
+export type Tick = {
+  osmId: string;
+  style: TickStyle;
+  date: string;
+};

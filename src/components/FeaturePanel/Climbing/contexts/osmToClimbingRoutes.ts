@@ -63,9 +63,7 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
     return [];
   }
 
-  const routes = feature.memberFeatures.filter(({ tags }) =>
-    ['route', 'route_bottom'].includes(tags.climbing),
-  );
+  const routes = feature.memberFeatures;
 
   return routes.map((route) => {
     const { paths, photoToKeyMap } = getPathsByImage(route.tags);

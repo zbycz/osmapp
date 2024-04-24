@@ -1,26 +1,24 @@
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@material-ui/core';
 import CreateIcon from '@material-ui/icons/Create';
 import HelpIcon from '@material-ui/icons/Help';
 import styled from 'styled-components';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import Router from 'next/router';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { useBoolState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { getIdEditorLink } from '../../../utils';
 import { useUserThemeContext } from '../../../helpers/theme';
-
-const StyledChevronRightIcon = styled(ChevronRightIcon)`
-  color: ${({ theme }) => theme.palette.tertiary.main};
-  margin: -2px 0px -2px -1px !important;
-  font-size: 15px !important;
-`;
+import { useOsmAuthContext } from '../../utils/OsmAuthContext';
+import { LoginIcon } from './LoginIcon';
 
 const PencilIcon = styled(CreateIcon)`
   color: ${({ theme }) => theme.palette.action.active};
@@ -56,6 +54,16 @@ const StyledBrightnessHighIcon = styled(BrightnessHighIcon)`
   color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
+`;
+
+const StyledAccountCircleIcon = styled(AccountCircleIcon)`
+  color: ${({ theme }) => theme.palette.action.active};
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
+
+const StyledDivider = styled.hr`
+  border-top: 1px solid ${({ theme }) => theme.palette.divider};
 `;
 
 const useIsBrowser = () => {
@@ -146,46 +154,85 @@ const ThemeSelection = () => {
   );
 };
 
-// TODO maybe
-//            <ListItemIcon>
-//             <InboxIcon fontSize="small" />
-//           </ListItemIcon>
-//           <ListItemText primary="Inbox" />
+const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
+  const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
+  const login = () => {
+    closeMenu();
+    handleLogin();
+  };
+  const logout = () => {
+    closeMenu();
+    setTimeout(() => {
+      handleLogout();
+    }, 100);
+  };
+
+  if (!osmUser) {
+    return (
+      <MenuItem ref={ref} onClick={login}>
+        <StyledAccountCircleIcon />
+        {t('user.login')}
+      </MenuItem>
+    );
+  }
+
+  return (
+    <>
+      <MenuItem
+        component="a"
+        href={`https://www.openstreetmap.org/user/${osmUser}`}
+        target="_blank"
+        rel="noopener"
+        onClick={closeMenu}
+      >
+        <StyledAccountCircleIcon ref={ref} />
+        <strong>{osmUser}</strong>
+      </MenuItem>
+      <MenuItem onClick={logout}>{t('user.logout')}</MenuItem>
+    </>
+  );
+});
 
 // TODO custom Item components are not keyboard accesible
 // seems like a bug in material-ui
 // https://github.com/mui-org/material-ui/issues/22912
 // https://github.com/mui-org/material-ui/issues?q=is%3Aissue+is%3Aopen+menuitem+keyboard
 
-export const MoreMenu = () => {
+export const HamburgerMenu = () => {
   const anchorRef = React.useRef();
   const [opened, open, close] = useBoolState(false);
 
   return (
     <>
       <Menu
-        id="more-menu"
+        id="hamburger-menu"
         anchorEl={anchorRef.current}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'right',
+        }}
+        getContentAnchorEl={null}
         open={opened}
         onClose={close}
       >
-        <EditLink closeMenu={close} />
-        <AboutLink closeMenu={close} />
-        <InstallLink closeMenu={close} />
+        <UserLogin closeMenu={close} />
+        <StyledDivider />
         <ThemeSelection />
+        <EditLink closeMenu={close} />
+        <InstallLink closeMenu={close} />
+        <AboutLink closeMenu={close} />
       </Menu>
-      <button
-        type="button"
-        className="linkLikeButton"
-        aria-controls="more-menu"
-        aria-haspopup="true"
-        onClick={open}
+      <LoginIcon onClick={open} />
+      <IconButton
         ref={anchorRef}
+        aria-controls="hamburger-menu"
+        aria-haspopup="true"
         title={t('map.more_button_title')}
+        color="secondary"
+        onClick={open}
       >
-        {t('map.more_button')}
-        <StyledChevronRightIcon />
-      </button>
+        <MenuIcon />
+      </IconButton>
     </>
   );
 };

@@ -74,9 +74,14 @@ const getApiUrl = (inputValue, view) => {
 
 // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
 
-let presetsForSearch = [];
+let presetsForSearch;
+const getPresetsForSearch = async () => {
+  if (presetsForSearch) {
+    return presetsForSearch;
+  }
 
-fetchSchemaTranslations().then(() => {
+  await fetchSchemaTranslations();
+
   // resolve symlinks to {landuse...} etc
   presetsForSearch = Object.values(presets)
     .filter(({ searchable }) => searchable === undefined || searchable)
@@ -96,7 +101,9 @@ fetchSchemaTranslations().then(() => {
         ],
       };
     });
-});
+
+  return presetsForSearch;
+};
 
 const num = (text, inputValue) =>
   match(text, inputValue, {
@@ -105,10 +112,8 @@ const num = (text, inputValue) =>
   }).length;
 // return text.toLowerCase().includes(inputValue.toLowerCase());
 
-const findInPresets = (inputValue) => {
-  // const start = performance.now();
-
-  const results = presetsForSearch.map((preset) => {
+const findInPresets = async (inputValue) => {
+  const results = (await getPresetsForSearch()).map((preset) => {
     const name = num(preset.name, inputValue) * 10;
     const textsByOne = preset.texts.map((term) => num(term, inputValue));
     const sum = name + textsByOne.reduce((a, b) => a + b, 0);
@@ -122,18 +127,6 @@ const findInPresets = (inputValue) => {
   const rest = results
     .filter((result) => result.name === 0 && result.sum > 0)
     .map((result) => ({ preset: result }));
-
-  // // experiment with sorting by number of matches // TODO search in all words
-  // const options = results
-  //   .filter((result) => result.sum > 0)
-  //   .sort((a, b) => {
-  //     // by number of matches
-  //     if (a.sum > b.sum) return -1;
-  //     if (a.sum < b.sum) return 1;
-  //     return 0;
-  //   })
-  //   .map((result) => ({ preset: result }));
-  // console.log('results time', performance.now() - start, options);
 
   return nameMatches.length
     ? { nameMatches, rest }
@@ -175,29 +168,31 @@ const useFetchOptions = (inputValue: string, setOptions) => {
   const { stars } = useStarsContext();
 
   useEffect(() => {
-    if (inputValue === '') {
-      const options = stars.map(({ shortId, poiType, label }) => ({
-        star: { shortId, poiType, label },
-      }));
-      setOptions(options);
-      return;
-    }
+    (async () => {
+      if (inputValue === '') {
+        const options = stars.map(({ shortId, poiType, label }) => ({
+          star: { shortId, poiType, label },
+        }));
+        setOptions(options);
+        return;
+      }
 
-    if (inputValue.length > 2) {
-      const overpassQuery = getOverpassQuery(inputValue);
-      const { nameMatches, rest } = findInPresets(inputValue);
-      setOptions([
-        ...overpassQuery,
-        ...nameMatches.slice(0, 2),
-        { loader: true },
-      ]);
-      const before = [...overpassQuery, ...nameMatches];
-      fetchOptions(inputValue, view, setOptions, before, rest);
-      return;
-    }
+      if (inputValue.length > 2) {
+        const overpassQuery = getOverpassQuery(inputValue);
+        const { nameMatches, rest } = await findInPresets(inputValue);
+        setOptions([
+          ...overpassQuery,
+          ...nameMatches.slice(0, 2),
+          { loader: true },
+        ]);
+        const before = [...overpassQuery, ...nameMatches];
+        fetchOptions(inputValue, view, setOptions, before, rest);
+        return;
+      }
 
-    setOptions([{ loader: true }]);
-    fetchOptions(inputValue, view, setOptions);
+      setOptions([{ loader: true }]);
+      fetchOptions(inputValue, view, setOptions);
+    })();
   }, [inputValue, stars]);
 };
 

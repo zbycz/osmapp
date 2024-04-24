@@ -78,7 +78,12 @@
   ],
   "theme_color": "#eb5757",
   "background_color": "#f8f4f0",
-  "start_url": "/",
+  "start_url": "/last-url",
   "display": "standalone",
-  "orientation": "any"
+  "orientation": "any",
+  "url_handlers": [
+    {
+      "origin": "https://openclimbing.org"
+    }
+  ]
 }

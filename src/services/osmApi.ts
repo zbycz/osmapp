@@ -1,5 +1,12 @@
-import { getApiId, getShortId, getUrlOsmId, OsmApiId, prod } from './helpers';
-import { FetchError, fetchJson } from './fetch';
+import {
+  FetchError,
+  getApiId,
+  getShortId,
+  getUrlOsmId,
+  OsmApiId,
+  prod,
+} from './helpers';
+import { fetchJson } from './fetch';
 import { Feature, Position } from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';

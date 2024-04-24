@@ -1,10 +1,12 @@
 import nextCookies from 'next-cookies';
+import Cookies from 'js-cookie';
 import { getFeatureImage } from '../../services/images';
 import { clearFeatureCache, fetchFeature } from '../../services/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
 import { getCoordsFeature } from '../../services/getCoordsFeature';
-import { getApiId } from '../../services/helpers';
+import { getApiId, getOsmappLink } from '../../services/helpers';
+import { Feature } from '../../services/types';
 
 const DEFAULT_VIEW = [4, 50, 14];
 
@@ -45,6 +47,15 @@ export const getInitialMapView = async (ctx) => {
 const timeout = (time) =>
   new Promise((resolve) => setTimeout(resolve, time)) as Promise<undefined>;
 
+const saveLastUrl = (ctx, feature: Feature) => {
+  const url = getOsmappLink(feature);
+  if (ctx.res) {
+    ctx.res.setHeader('Set-Cookie', `last-url=${url}; Path=/; Max-Age=86400`);
+  } else {
+    Cookies.set('last-url', url, { expires: 1, path: '/' });
+  }
+};
+
 export const getInititalFeature = async (ctx) => {
   const { all, id } = ctx.query;
 
@@ -55,7 +66,9 @@ export const getInititalFeature = async (ctx) => {
 
   if (all[0].match(/^[-.0-9]+,[-.0-9]+$/)) {
     const [lat, lon] = all[0].split(',');
-    return getCoordsFeature([lon, lat]); // TODO ssr image ?
+    const coordsFeature = getCoordsFeature([lon, lat]);
+    saveLastUrl(ctx, coordsFeature);
+    return coordsFeature; // TODO ssr image ?
   }
 
   const [osmtype, osmid] = all;
@@ -77,6 +90,7 @@ export const getInititalFeature = async (ctx) => {
 
   const t1 = new Date().getTime();
   const initialFeature = await fetchFeature(shortId);
+  saveLastUrl(ctx, initialFeature);
 
   const t2 = new Date().getTime();
   const osmRequest = t2 - t1;

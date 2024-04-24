@@ -19,7 +19,7 @@ export const fetchSchemaTranslations = async () => {
 
   // this request is cached in browser
   translations = await fetchJson(
-    `${cdnUrl}@${version}/dist/translations/${intl.lang}.min.json`,
+    `${cdnUrl}@${version}/dist/translations/${intl.lang || 'en'}.min.json`,
   );
 
   merge(translations, getOurTranslations(intl.lang));

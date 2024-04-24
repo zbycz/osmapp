@@ -29,13 +29,13 @@ export const FeatureContext = createContext<FeatureContextType>(undefined);
 interface Props {
   featureFromRouter: Feature | null;
   children: ReactNode;
-  hpCookie: string;
+  cookies: Record<string, string>;
 }
 
 export const FeatureProvider = ({
   children,
   featureFromRouter,
-  hpCookie,
+  cookies,
 }: Props) => {
   const [preview, setPreview] = useState<Feature>(null);
   const [feature, setFeature] = useState<Feature>(featureFromRouter);
@@ -49,7 +49,7 @@ export const FeatureProvider = ({
   }, [featureFromRouter]);
 
   const [homepageShown, showHomepage, hideHomepage] = useBoolState(
-    feature == null && hpCookie !== 'yes',
+    feature == null && cookies.hideHomepage !== 'yes',
   );
   const persistShowHomepage = () => {
     setFeature(null);
