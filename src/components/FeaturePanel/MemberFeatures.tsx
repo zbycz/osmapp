@@ -1,9 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Box, Tooltip } from '@material-ui/core';
+import { Box, useTheme } from '@material-ui/core';
 import Router from 'next/router';
-import PhotoIcon from '@material-ui/icons/Photo';
-import PhotoLibraryIcon from '@material-ui/icons/PhotoLibrary';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -13,22 +11,31 @@ import { useUserThemeContext } from '../../helpers/theme';
 import { useMobileMode } from '../helpers';
 import Maki from '../utils/Maki';
 import { PanelLabel } from './Climbing/PanelLabel';
+import { getCommonsImageUrl } from '../../services/images/getWikiImage';
+import { useScrollShadow } from './Climbing/utils/useScrollShadow';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
   margin-left: 12px;
 `;
 
+const HeadingRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
 const Container = styled.div`
+  overflow: auto;
+  flex-direction: column;
   display: flex;
   gap: 8px;
   justify-content: space-between;
-  align-items: center;
   cursor: pointer;
   border-radius: 8px;
   padding: 12px;
+  background-color: ${({ theme }) => theme.palette.background.elevation};
   &:hover {
-    background-color: rgba(0, 0, 0, 0.1);
     ${ArrowIcon} {
       opacity: 1;
     }
@@ -37,6 +44,9 @@ const Container = styled.div`
 
 const CragList = styled.div`
   margin: 12px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 `;
 const Anchor = styled.a`
   text-decoration: none !important;
@@ -47,12 +57,29 @@ const Content = styled.div`
 const CragName = styled.div`
   padding: 0;
   font-weight: 900;
-  font-size: 18px;
+  font-size: 20px;
   color: ${({ theme }) => theme.palette.primary.main};
 `;
+const Attributes = styled.div`
+  display: flex;
+  gap: 8px;
+`;
 const NumberOfRoutes = styled.div`
-  font-size: 12px;
+  font-size: 13px;
   color: ${({ theme }) => theme.palette.secondary.main};
+`;
+const Gallery = styled.div`
+  display: flex;
+  gap: 8px;
+  border-radius: 8px;
+  overflow: auto;
+  margin-top: 12px;
+`;
+const Image = styled.img`
+  border-radius: 8px;
+  height: 200px;
+  flex: 1;
+  object-fit: cover;
 `;
 
 const Item = ({ feature }: { feature: Feature }) => {
@@ -90,6 +117,8 @@ const Item = ({ feature }: { feature: Feature }) => {
 };
 
 const CragItem = ({ feature }: { feature: Feature }) => {
+  const theme: any = useTheme();
+
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
   const { osmMeta } = feature;
@@ -101,10 +130,17 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   const handleHover = () =>
     feature.center && setPreview({ ...feature, noPreviewButton: true });
 
-  const cragPhotos = Object.keys(feature.tags).filter((k) =>
+  const cragPhotoTags = Object.keys(feature.tags).filter((k) =>
     k.startsWith('wikimedia_commons'),
   );
 
+  const {
+    scrollElementRef,
+    onScroll,
+    ShadowContainer,
+    ShadowLeft,
+    ShadowRight,
+  } = useScrollShadow();
   return (
     <Anchor
       href={`/${getUrlOsmId(osmMeta)}`}
@@ -113,23 +149,43 @@ const CragItem = ({ feature }: { feature: Feature }) => {
       onMouseLeave={() => setPreview(null)}
     >
       <Container>
-        <Content>
-          <CragName>{getLabel(feature)}</CragName>{' '}
-          {feature.members?.length > 0 && (
-            <NumberOfRoutes>{feature.members.length} routes </NumberOfRoutes>
-          )}
-        </Content>
-        {cragPhotos.length === 1 && (
-          <Tooltip title="This crag has photo">
-            <PhotoIcon color="secondary" />
-          </Tooltip>
+        <HeadingRow>
+          <Content>
+            <CragName>{getLabel(feature)}</CragName>{' '}
+            <Attributes>
+              {feature.members?.length > 0 && (
+                <NumberOfRoutes>
+                  {feature.members.length} routes{' '}
+                </NumberOfRoutes>
+              )}
+              {cragPhotoTags.length > 0 && (
+                <NumberOfRoutes>{cragPhotoTags.length} photos </NumberOfRoutes>
+              )}
+            </Attributes>
+          </Content>
+          <ArrowIcon color="primary" />
+        </HeadingRow>
+        {cragPhotoTags.length > 0 && (
+          <ShadowContainer>
+            <ShadowLeft
+              backgroundColor={theme.palette.background.elevation}
+              gradientPercentage={7}
+              opacity={0.9}
+            />
+            <Gallery onScroll={onScroll} ref={scrollElementRef}>
+              {cragPhotoTags.map((cragPhotoTag) => {
+                const photoPath = feature.tags[cragPhotoTag];
+                const url = getCommonsImageUrl(photoPath, 400);
+                return <Image src={url} />;
+              })}
+            </Gallery>
+            <ShadowRight
+              backgroundColor={theme.palette.background.elevation}
+              gradientPercentage={7}
+              opacity={0.9}
+            />
+          </ShadowContainer>
         )}
-        {cragPhotos.length > 1 && (
-          <Tooltip title={`This crag has ${cragPhotos.length} photos`}>
-            <PhotoLibraryIcon color="secondary" />
-          </Tooltip>
-        )}
-        <ArrowIcon color="primary" />
       </Container>
     </Anchor>
   );

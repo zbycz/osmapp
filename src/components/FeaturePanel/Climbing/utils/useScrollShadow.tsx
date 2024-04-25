@@ -1,6 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled, { CSSObject, css } from 'styled-components';
+import { convertHexToRgba } from '../../../utils/colorUtils';
 
+const DEFAULT_GRADIENT_PERCENTAGE = 3;
+const DEFAULT_OPACITY = 0.7;
 const ShadowContainer = styled.div`
   overflow: auto;
   position: relative;
@@ -12,24 +15,30 @@ const ShadowContainer = styled.div`
 interface GradientProps {
   $isVisible: boolean;
   $backgroundColor: string;
+  $gradientPercentage?: number;
+  $opacity?: number;
 }
 
 const gradientBase = css<GradientProps>`
   width: 100%;
-  height: 45px;
+  height: 100%;
   z-index: 1;
   position: absolute;
   pointer-events: none;
-  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
-  transition: all 2s ease-in;
+  visibility: ${({ $isVisible }) => ($isVisible ? 'visible' : 'hidden')};
+  transition: all 2s;
 `;
 
 const GradientBefore = styled.div<GradientProps>`
   ${gradientBase}
   top: 0;
   background: linear-gradient(
-    ${({ $backgroundColor }) => $backgroundColor},
+    to top,
     rgba(0 0 0 / 0%)
+      ${({ $gradientPercentage = DEFAULT_GRADIENT_PERCENTAGE }) =>
+        `${100 - $gradientPercentage}%`},
+    ${({ $backgroundColor, $opacity = DEFAULT_OPACITY }) =>
+      convertHexToRgba($backgroundColor, $opacity)}
   );
 `;
 
@@ -37,8 +46,40 @@ const GradientAfter = styled.div<GradientProps>`
   ${gradientBase}
   bottom: 0;
   background: linear-gradient(
-    rgba(0 0 0 / 0%),
-    ${({ $backgroundColor }) => $backgroundColor}
+    to bottom,
+    rgba(0 0 0 / 0%)
+      ${({ $gradientPercentage = DEFAULT_GRADIENT_PERCENTAGE }) =>
+        `${100 - $gradientPercentage}%`},
+    ${({ $backgroundColor, $opacity = DEFAULT_OPACITY }) =>
+      convertHexToRgba($backgroundColor, $opacity)}
+  );
+`;
+
+const GradientLeft = styled.div<GradientProps>`
+  ${gradientBase}
+  left: 0;
+  height: 100%;
+  background: linear-gradient(
+    to left,
+    rgba(0 0 0 / 0%)
+      ${({ $gradientPercentage = DEFAULT_GRADIENT_PERCENTAGE }) =>
+        `${100 - $gradientPercentage}%`},
+    ${({ $backgroundColor, $opacity = DEFAULT_OPACITY }) =>
+      convertHexToRgba($backgroundColor, $opacity)}
+  );
+`;
+
+const GradientRight = styled.div<GradientProps>`
+  ${gradientBase}
+  right: 0;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(0 0 0 / 0%)
+      ${({ $gradientPercentage = DEFAULT_GRADIENT_PERCENTAGE }) =>
+        `${100 - $gradientPercentage}%`},
+    ${({ $backgroundColor, $opacity = DEFAULT_OPACITY }) =>
+      convertHexToRgba($backgroundColor, $opacity)}
   );
 `;
 
@@ -46,16 +87,26 @@ export const useScrollShadow = (deps = []) => {
   const scrollElementRef = useRef<HTMLDivElement>(null);
   const [isScrolledToTop, setIsScrolledToTop] = useState(true);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
+  const [isScrolledToLeft, setIsScrolledToLeft] = useState(true);
+  const [isScrolledToRight, setIsScrolledToRight] = useState(true);
 
   const setShadows = () => {
     if (scrollElementRef?.current) {
-      const { scrollTop, scrollHeight, clientHeight } =
-        (scrollElementRef.current as any)?.view ?? scrollElementRef.current; // hack because of react-custom-scroll
+      const {
+        scrollTop,
+        scrollHeight,
+        clientHeight,
+        clientWidth,
+        scrollLeft,
+        scrollWidth,
+      } = (scrollElementRef.current as any)?.view ?? scrollElementRef.current; // hack because of react-custom-scroll
 
       setIsScrolledToTop(scrollTop <= 0);
       setIsScrolledToBottom(
         Math.ceil(scrollTop + clientHeight) >= scrollHeight,
       );
+      setIsScrolledToLeft(scrollLeft <= 0);
+      setIsScrolledToRight(Math.ceil(scrollLeft + clientWidth) >= scrollWidth);
     }
   };
 
@@ -77,20 +128,67 @@ export const useScrollShadow = (deps = []) => {
   const onScroll = () => {
     setShadows();
   };
-  type ShadowProps = { backgroundColor: string; style?: CSSObject };
+  type ShadowProps = {
+    backgroundColor: string;
+    style?: CSSObject;
+    gradientPercentage?: number;
+    opacity?: number;
+  };
 
-  const ShadowTop = ({ backgroundColor, style }: ShadowProps) => (
+  const ShadowTop = ({
+    backgroundColor,
+    style,
+    gradientPercentage,
+    opacity,
+  }: ShadowProps) => (
     <GradientBefore
       $backgroundColor={backgroundColor}
       style={style}
       $isVisible={!isScrolledToTop}
+      $gradientPercentage={gradientPercentage}
+      $opacity={opacity}
     />
   );
-  const ShadowBottom = ({ backgroundColor, style }: ShadowProps) => (
+  const ShadowBottom = ({
+    backgroundColor,
+    style,
+    gradientPercentage,
+    opacity,
+  }: ShadowProps) => (
     <GradientAfter
       $backgroundColor={backgroundColor}
       style={style}
       $isVisible={!isScrolledToBottom}
+      $gradientPercentage={gradientPercentage}
+      $opacity={opacity}
+    />
+  );
+  const ShadowLeft = ({
+    backgroundColor,
+    style,
+    gradientPercentage,
+    opacity,
+  }: ShadowProps) => (
+    <GradientLeft
+      $backgroundColor={backgroundColor}
+      style={style}
+      $isVisible={!isScrolledToLeft}
+      $gradientPercentage={gradientPercentage}
+      $opacity={opacity}
+    />
+  );
+  const ShadowRight = ({
+    backgroundColor,
+    style,
+    gradientPercentage,
+    opacity,
+  }: ShadowProps) => (
+    <GradientRight
+      $backgroundColor={backgroundColor}
+      style={style}
+      $isVisible={!isScrolledToRight}
+      $gradientPercentage={gradientPercentage}
+      $opacity={opacity}
     />
   );
 
@@ -100,5 +198,7 @@ export const useScrollShadow = (deps = []) => {
     ShadowContainer,
     ShadowTop,
     ShadowBottom,
+    ShadowLeft,
+    ShadowRight,
   };
 };
