@@ -9,22 +9,31 @@ import { getOurTranslations } from './ourPresets';
 // https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema@6.1.0/dist/translations/en.min.json
 const cdnUrl = `https://cdn.jsdelivr.net/npm/@openstreetmap/id-tagging-schema`;
 
-// TODO downloa up-to-date or use node_module?
+// TODO download up-to-date or use node_module?
 let translations = {};
 export const fetchSchemaTranslations = async () => {
   if (translations[intl.lang]) return;
 
-  const presetsPackage = await fetchJson(`${cdnUrl}/package.json`);
-  const { version } = presetsPackage;
+  try {
+    const presetsPackage = await fetchJson(`${cdnUrl}/package.json`);
+    const { version } = presetsPackage;
 
-  // this request is cached in browser
-  translations = await fetchJson(
-    `${cdnUrl}@${version}/dist/translations/${intl.lang || 'en'}.min.json`,
-  );
+    // this request is cached in browser
+    translations = await fetchJson(
+      `${cdnUrl}@${version}/dist/translations/${intl.lang || 'en'}.min.json`,
+    );
 
-  merge(translations, getOurTranslations(intl.lang));
-
-  publishDbgObject('schemaTranslations', translations);
+    merge(translations, getOurTranslations(intl.lang));
+  } catch (e) {
+    console.log('fetchSchemaTranslations() failed, using local npm', e); // eslint-disable-line no-console
+    const localTranslation = await import(
+      `@openstreetmap/id-tagging-schema/dist/translations/${intl.lang}.json`
+    );
+    translations[intl.lang] = localTranslation[intl.lang];
+    merge(translations, getOurTranslations(intl.lang));
+  } finally {
+    publishDbgObject('schemaTranslations', translations);
+  }
 };
 
 export const mockSchemaTranslations = (mockTranslations) => {
