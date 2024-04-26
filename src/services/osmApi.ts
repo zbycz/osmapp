@@ -14,6 +14,7 @@ import { getPoiClass } from './getPoiClass';
 import { isBrowser } from '../components/helpers';
 import { addSchemaToFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
+import { TEST_CRAG, TestNode } from './osmApiTestItems';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -189,6 +190,16 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
   try {
     const apiId = getApiId(shortId);
+
+    if (apiId.type === 'relation' && apiId.id === '6') {
+      await fetchSchemaTranslations();
+      return TEST_CRAG;
+    }
+    if (apiId.type === 'node' && apiId.id === '6') {
+      await fetchSchemaTranslations();
+      return addSchemaToFeature(osmToFeature(TestNode));
+    }
+
     const feature = await fetchFeatureWithCenter(apiId);
     const finalFeature = await addMembersAndParents(feature);
 
