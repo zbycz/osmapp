@@ -16,7 +16,7 @@ const lightTheme = createMuiTheme({
       main: '#737373',
     },
     tertiary: {
-      main: '#0078a8',
+      main: '#0078a8', // links
     },
     error: {
       main: red.A400,
@@ -54,7 +54,7 @@ const darkTheme = createMuiTheme({
       main: '#737373',
     },
     tertiary: {
-      main: '#0fbbff',
+      main: '#0fbbff', // links
     },
     error: {
       main: red.A400,
