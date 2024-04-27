@@ -7,7 +7,7 @@ import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
 import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
-import { getInitialMapView, getInititalFeature } from './helpers';
+import { getInitialMapView, getInitialFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
@@ -114,7 +114,7 @@ App.getInitialProps = async (ctx) => {
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
   const cookies = nextCookies(ctx);
-  const featureFromRouter = await getInititalFeature(ctx);
+  const featureFromRouter = await getInitialFeature(ctx);
   const initialMapView = await getInitialMapView(ctx);
   return { featureFromRouter, initialMapView, cookies };
 };

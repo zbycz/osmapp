@@ -56,7 +56,7 @@ const saveLastUrl = (ctx, feature: Feature) => {
   }
 };
 
-export const getInititalFeature = async (ctx) => {
+export const getInitialFeature = async (ctx) => {
   const { all, id } = ctx.query;
 
   // url: /
