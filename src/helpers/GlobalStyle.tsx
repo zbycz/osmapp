@@ -43,6 +43,10 @@ export const GlobalStyle = createGlobalStyle`
     &:focus {
       text-decoration: underline;
     }
+
+    .MuiTooltip-tooltip & {
+      color: #82dcff;
+    }
   }
 
   ul {
@@ -51,16 +55,18 @@ export const GlobalStyle = createGlobalStyle`
 
   .maplibregl-ctrl-group {
     background: ${({ theme }) => theme.palette.background.paper} !important;
+
     .maplibregl-ctrl-icon {
       filter: ${({ theme }) => theme.palette.invertFilter};
     }
-    button+button {
+
+    button + button {
       border-top: 1px solid ${({ theme }) => theme.palette.divider};
     }
   }
 
   .maplibregl-ctrl-top-right {
-    top: ${83 + 72}px  !important;
+    top: ${83 + 72}px !important;
 
     @media ${isDesktop} {
       top: 83px !important;
