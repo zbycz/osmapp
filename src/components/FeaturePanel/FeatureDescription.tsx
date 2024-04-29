@@ -62,7 +62,7 @@ const FromOsm = () => (
       justify="flex-start"
       alignItems="flex-start"
     >
-      <Grid item xs={3} alignItems="">
+      <Grid item xs={3}>
         <Box mt={2}>
           <img
             src="/logo-osm.svg"
