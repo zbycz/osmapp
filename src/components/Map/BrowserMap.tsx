@@ -1,8 +1,8 @@
 import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
 import {
-  createMapEventHook,
   createMapEffectHook,
+  createMapEventHook,
   useMobileMode,
 } from '../helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
@@ -16,6 +16,7 @@ import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
 import { isWebglSupported } from './helpers';
 import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
+import { useAddTopRightControls } from './useAddTopRightControls';
 
 const useOnMapLoaded = createMapEventHook((map, onMapLoaded) => ({
   eventType: 'load',
@@ -43,9 +44,11 @@ const BrowserMap = ({ onMapLoaded }) => {
     return <NotSupportedMessage />;
   }
 
+  const mobileMode = useMobileMode();
   const { setFeature, setPreview } = useFeatureContext();
   const [map, mapRef] = useInitMap();
-  useOnMapClicked(map, setFeature, setPreview, useMobileMode());
+  useAddTopRightControls(map, mobileMode);
+  useOnMapClicked(map, setFeature, setPreview, mobileMode);
   useOnMapLongPressed(map, setPreview);
   useOnMapLoaded(map, onMapLoaded);
   useFeatureMarker(map);
