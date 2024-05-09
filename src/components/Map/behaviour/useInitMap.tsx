@@ -6,19 +6,6 @@ import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
 import { setGlobalMap } from '../../../services/mapStorage';
 
-const geolocateControl = new maplibregl.GeolocateControl({
-  positionOptions: {
-    enableHighAccuracy: true,
-  },
-  trackUserLocation: true,
-});
-
-const navigationControl = new maplibregl.NavigationControl({
-  showCompass: true,
-  showZoom: true,
-  visualizePitch: true,
-});
-
 export const useInitMap = () => {
   const mapRef = React.useRef(null);
   const [mapInState, setMapInState] = React.useState(null);
@@ -35,8 +22,6 @@ export const useInitMap = () => {
     setGlobalMap(map);
     setMapInState(map);
 
-    map.addControl(navigationControl);
-    map.addControl(geolocateControl);
     map.addControl(PersistedScaleControl as any);
     setUpHover(map, layersWithOsmId);
 
