@@ -160,7 +160,7 @@ const fetchMemberFeatures = async (apiId: OsmApiId) => {
   });
 };
 
-const isClimbingRelation = (feature: Feature) =>
+export const isClimbingRelation = (feature: Feature) =>
   feature.osmMeta.type === 'relation' &&
   (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
 
@@ -171,6 +171,15 @@ const isClimbingRelation = (feature: Feature) =>
 export const addMembersAndParents = async (
   feature: Feature,
 ): Promise<Feature> => {
+  if (feature.tags.climbing?.includes('route')) {
+    const parentFeatures = await fetchParentFeatures(feature.osmMeta);
+
+    return {
+      ...feature,
+      parentFeatures,
+    };
+  }
+
   if (!isClimbingRelation(feature)) {
     return feature;
   }

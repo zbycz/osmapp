@@ -10,7 +10,7 @@ const PoiType = styled.div<{ isSkeleton: Boolean; dark: Boolean }>`
   margin: 0 auto 0 15px;
   font-size: 13px;
   position: relative;
-  flex: 1;
+  ${({ dark }) => dark && 'flex: 1;'}
 
   svg {
     vertical-align: bottom;

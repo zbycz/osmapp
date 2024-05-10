@@ -8,6 +8,7 @@ import {
   PanelContent,
   PanelFooter,
   PanelScrollbars,
+  PanelSidePadding,
   PanelWrapper,
 } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -24,6 +25,8 @@ import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
 import { ClimbingPanel } from './Climbing/ClimbingPanel';
 import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
+import { isClimbingRelation } from '../../services/osmApi';
+import { ParentLink } from './ParentLink';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -68,7 +71,11 @@ export const FeaturePanel = () => {
     </PanelFooter>
   );
 
-  if (tags.climbing === 'crag') {
+  if (
+    isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
+    feature.tags.climbing === 'crag' &&
+    !advanced
+  ) {
     return (
       <ClimbingContextProvider
         feature={feature}
@@ -84,46 +91,51 @@ export const FeaturePanel = () => {
       <PanelScrollbars>
         <ImageSection />
         <PanelContent>
-          <FeatureHeading
-            deleted={deleted}
-            title={label}
-            editEnabled={editEnabled && !point}
-          />
+          <PanelSidePadding>
+            <ParentLink />
+            <FeatureHeading
+              deleted={deleted}
+              title={label}
+              editEnabled={editEnabled && !point}
+            />
+
+            <OsmError />
+          </PanelSidePadding>
 
           {!skeleton && (
             <>
-              <OsmError />
+              <PanelSidePadding>
+                <Properties
+                  showTags={showTagsTable}
+                  key={getUrlOsmId(osmMeta) + (deleted && 'del')}
+                />
 
-              <Properties
-                showTags={showTagsTable}
-                key={getUrlOsmId(osmMeta) + (deleted && 'del')}
-              />
+                <MemberFeatures />
+                {advanced && <Members />}
 
-              <MemberFeatures />
-              {advanced && <Members />}
+                <PublicTransport tags={tags} />
 
-              <PublicTransport tags={tags} />
+                {editEnabled && (
+                  <div style={{ textAlign: 'center' }}>
+                    <EditButton isAddPlace={point} isUndelete={deleted} />
 
-              {editEnabled && (
-                <>
-                  <EditButton isAddPlace={point} isUndelete={deleted} />
+                    <EditDialog
+                      feature={feature}
+                      isAddPlace={point}
+                      isUndelete={deleted}
+                      key={
+                        getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                      }
+                    />
+                  </div>
+                )}
 
-                  <EditDialog
-                    feature={feature}
-                    isAddPlace={point}
-                    isUndelete={deleted}
-                    key={
-                      getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                    }
-                  />
-                </>
-              )}
-
-              {point && <ObjectsAround advanced={advanced} />}
+                {point && <ObjectsAround advanced={advanced} />}
+              </PanelSidePadding>
             </>
           )}
 
-          {footer}
+          <PanelSidePadding>{footer}</PanelSidePadding>
         </PanelContent>
       </PanelScrollbars>
     </PanelWrapper>
