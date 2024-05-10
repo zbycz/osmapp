@@ -1,5 +1,6 @@
 import { Feature } from './types';
 import { getPoiClass } from './getPoiClass';
+import { getImageTags } from './images/getImageTags';
 
 export const osmToFeature = (element): Feature => {
   const {
@@ -18,6 +19,7 @@ export const osmToFeature = (element): Feature => {
     osmMeta,
     tags,
     members,
+    imageTags: getImageTags(tags),
     properties: { ...getPoiClass(tags) },
     deleted: osmappDeletedMarker,
   };
