@@ -10,11 +10,10 @@ import { fetchJson } from './fetch';
 import { Feature, Position } from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
-import { getPoiClass } from './getPoiClass';
 import { isBrowser } from '../components/helpers';
 import { addSchemaToFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
-import { TEST_CRAG, TestNode } from './osmApiTestItems';
+import { osmToFeature } from './osmToFeature';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -90,28 +89,6 @@ const getCenterPromise = async (apiId) => {
 export const clearFeatureCache = (apiId) => {
   removeFetchCache(getOsmUrl(apiId)); // watch out, must be same as in getOsmPromise()
   removeFetchCache(getOsmHistoryUrl(apiId));
-};
-
-const osmToFeature = (element): Feature => {
-  const {
-    tags = {},
-    lat,
-    lon,
-    nodes,
-    members,
-    osmappDeletedMarker,
-    ...osmMeta
-  } = element;
-  return {
-    type: 'Feature' as const,
-    geometry: undefined,
-    center: lat ? [lon, lat] : undefined,
-    osmMeta,
-    tags,
-    members,
-    properties: { ...getPoiClass(tags) },
-    deleted: osmappDeletedMarker,
-  };
 };
 
 const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
@@ -202,11 +179,13 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
     if (apiId.type === 'relation' && apiId.id === '6') {
       await fetchSchemaTranslations();
-      return TEST_CRAG;
+      const osmApiTestItems = await import('./osmApiTestItems');
+      return osmApiTestItems.TEST_CRAG;
     }
     if (apiId.type === 'node' && apiId.id === '6') {
       await fetchSchemaTranslations();
-      return addSchemaToFeature(osmToFeature(TestNode));
+      const osmApiTestItems = await import('./osmApiTestItems');
+      return osmApiTestItems.TEST_NODE;
     }
 
     const feature = await fetchFeatureWithCenter(apiId);
