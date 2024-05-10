@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import { Button, CircularProgress } from '@material-ui/core';
 import Router from 'next/router';
-import Link from 'next/link';
 import ZoomInIcon from '@material-ui/icons/ZoomIn';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
@@ -19,6 +18,7 @@ import { Properties } from '../Properties/Properties';
 import { PoiDescription } from '../ImageSection/PoiDescription';
 import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
+import { ClimbingParentLink } from '../ParentLink';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -44,14 +44,6 @@ const DetailButtonContainer = styled.div`
   @supports (-webkit-touch-callout: none) {
     /* CSS specific to iOS devices */
     margin-bottom: 28px;
-  }
-`;
-
-const ParentItem = styled.div`
-  margin: 12px 8px -4px 8px;
-  a {
-    color: ${({ theme }) => theme.palette.secondary.main};
-    font-size: 13px;
   }
 `;
 
@@ -129,13 +121,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
             </ThumbnailContainer>
           )}
 
-          <ParentItem>
-            {feature.parentFeatures?.map((parentFeature) => (
-              <Link href={getOsmappLink(parentFeature)} color="secondary">
-                {getLabel(parentFeature)}
-              </Link>
-            ))}
-          </ParentItem>
+          <ClimbingParentLink />
 
           <HeadingContainer>
             <Heading>{label}</Heading>

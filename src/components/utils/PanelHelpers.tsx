@@ -4,6 +4,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@material-ui/core';
 import { isDesktop } from '../helpers';
 import { useScrollShadow } from '../FeaturePanel/Climbing/utils/useScrollShadow';
+import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -66,8 +67,10 @@ export const PanelScrollbars = ({ children }) => {
 export const PanelContent = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(100vh - 72px - 238px); // 100% - TopPanel - FeatureImage
-  padding: 20px 15px 0 15px;
+  height: calc(
+    100vh - ${SEARCH_BOX_HEIGHT}px - 238px
+  ); // 100% - TopPanel - FeatureImage
+  padding: 20px 0 0 0;
 `;
 
 export const PanelFooter = styled.div`
@@ -76,4 +79,8 @@ export const PanelFooter = styled.div`
   padding-bottom: 15px;
   font-size: 1rem;
   line-height: 1.5;
+`;
+
+export const PanelSidePadding = styled.div`
+  padding: 0 15px;
 `;
