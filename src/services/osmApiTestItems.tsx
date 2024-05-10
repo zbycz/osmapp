@@ -1,6 +1,9 @@
 import { Feature } from './types';
+import { addSchemaToFeature } from './tagging/idTaggingScheme';
+import { osmToFeature } from './osmToFeature';
 
-export const TestNode = {
+// this is raw response from openstreetmap api
+const nodeResponse = {
   type: 'node',
   id: 6,
   lat: 49.6541269,
@@ -16,6 +19,7 @@ export const TestNode = {
     name: 'Test item for images',
     description: 'Originally Detonátor route',
     sport: 'climbing',
+    /*
     wikimedia_commons: 'File:Lomy nad Velkou - Borová věž.jpg',
     'wikimedia_commons:2': 'File:Lomy nad Velkou - Borová věž3.jpg',
     'wikimedia_commons:2:path':
@@ -24,14 +28,52 @@ export const TestNode = {
     'wikimedia_commons:3:path': '0.933,0.757|0.729,0.286|0.637,0.136',
     'wikimedia_commons:path':
       '0.32,0.902|0.371,0.537B|0.372,0.433B|0.388,0.298B|0.4,0.206B|0.406,0.173A',
-    image: 'http://localhost:3000/screens/karlstejn2.png',
+    */
+    image: 'http://localhost:3000/images/Lomy_nad_Velkou_-_Borová_věž.jpg',
+    'image:path':
+      '0.32,0.902|0.371,0.537B|0.372,0.433B|0.388,0.298B|0.4,0.206B|0.406,0.173A',
+    'image:2': 'http://localhost:3000/images/Lomy_nad_Velkou_-_Borová_věž3.jpg',
+    'image:2:path':
+      '0.924,0.797|0.773,0.428B|0.708,0.307B|0.636,0.174B|0.581,0.086B|0.562,0.056A',
+    'image:3': 'http://localhost:3000/images/Lomy_nad_Velkou_-_Borová_věž4.jpg',
+    'image:3:path': '0.933,0.757|0.729,0.286|0.637,0.136',
 
     // from nearby village
     wikidata: 'Q11878531',
   },
 };
+export const TEST_NODE = {
+  ...addSchemaToFeature(osmToFeature(nodeResponse)),
+  parentFeatures: [
+    addSchemaToFeature({
+      type: 'Feature',
+      osmMeta: {
+        type: 'relation',
+        id: 17262674,
+      },
+      tags: {
+        climbing: 'crag',
+        name: 'Pravá plotna',
+        site: 'climbing',
+        type: 'site',
+        wikimedia_commons: 'File:Hlubočepské plotny - Pravá plotna.jpg',
+      },
+      properties: {
+        class: 'climbing',
+        subclass: 'crag',
+      },
+    } as unknown as Feature),
+    {
+      type: 'Feature',
+      osmMeta: { type: 'relation', id: 6 },
+      tags: { name: 'Nejlepší cesty v ČR' },
+    },
+  ],
+} as unknown as Feature;
+// TODO correct types inspiro in shelve
 
 // TODO duplicated code from testfile
+// this is already converted to osmapp's Feature
 export const TEST_CRAG: Feature = {
   type: 'Feature',
   center: [-73.0630908, 43.9068891],
