@@ -64,3 +64,17 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 ## License
 
 GNU GPL
+
+## Related projects
+
+Both via [#217](https://github.com/zbycz/osmapp/issues/217)
+
+- **Qwant Maps** (sadly not developed anymore)
+
+  - great tech stack: [BE in Python](https://github.com/Qwant/idunn), geocoding, directions, maplibre gl
+  - https://github.com/Qwant/qwantmaps (may be recycled for osmapp in future)
+  - eg. https://qwant.com/maps/place/osm:node:1369322781 - super fast
+
+- Future.eco Voyage
+  - Universal osm app by [@leam](https://github.com/laem)
+  - https://futur.eco/voyage ([github](https://github.com/laem/futureco/tree/master/app/voyage))
