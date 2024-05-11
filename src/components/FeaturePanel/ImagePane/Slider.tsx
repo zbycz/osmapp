@@ -35,6 +35,8 @@ const Wrapper = styled.div`
   //  background: transparent;
   //}
   .slides > div {
+    position: relative;
+
     //scroll-snap-align: start;
     flex-shrink: 0;
     //width: 300px;
@@ -46,14 +48,18 @@ const Wrapper = styled.div`
     transform-origin: center center;
     transform: scale(1);
     transition: transform 0.2s;
-    position: relative;
 
     display: flex;
     justify-content: center;
     align-items: center;
     font-size: 100px;
 
-    padding-bottom: 15px;
+    margin-bottom: 15px;
+    height: 100%;
+
+    img {
+      border-radius: 8px;
+    }
   }
   .slides > div:hover {
     //transform: scale(0.95);

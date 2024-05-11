@@ -2,12 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 
 const PathBorder = styled.path`
-  stroke-width: 3;
+  stroke-width: 2%;
   stroke: ${({ theme }) => theme.palette.climbing.border};
 `;
 
 const PathLine = styled.path`
-  stroke-width: 2;
+  stroke-width: 1%;
   stroke: ${({ theme }) => theme.palette.climbing.inactive};
 `;
 

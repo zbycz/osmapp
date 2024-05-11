@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { getImageSize, ImageSize } from '../../../services/helpers';
 import { Path } from './Path';
 import { Slider } from './Slider';
+import { ImageTag } from '../../../services/types';
 
 const Svg = styled.svg`
+  position: absolute;
+  height: 100%;
+  width: 100%;
   border-radius: 8px;
-  height: 200px;
-  width: auto;
 
   path {
     stroke-linecap: round;
@@ -18,29 +19,35 @@ const Svg = styled.svg`
 `;
 
 const Image = ({ imageTag }: { imageTag: ImageTag }) => {
-  const [imageSize, setImageSize] = useState<ImageSize>(null);
+  // const [imageSize, setImageSize] = useState<ImageSize>(null);
+  //
+  // useEffect(() => {
+  //   if (imageTag.imageUrl) {
+  //     getImageSize(imageTag.imageUrl).then((size) => {
+  //       setImageSize(size);
+  //     });
+  //   } else {
+  //     // TODO api calls
+  //     setImageSize(null);
+  //   }
+  // }, [imageTag]);
+  //
+  // if (!imageSize) {
+  //   return null; // <div>Loading {imageTag.type}...</div>;
+  // }
 
-  useEffect(() => {
-    if (imageTag.imageUrl) {
-      getImageSize(imageTag.imageUrl).then((size) => {
-        setImageSize(size);
-      });
-    } else {
-      // TODO api calls
-      setImageSize(null);
-    }
-  }, [imageTag]);
-
-  if (!imageSize) {
+  if (!imageTag.imageUrl) {
     return null; // <div>Loading {imageTag.type}...</div>;
   }
 
-  const { height, width } = imageSize;
+  const width = 100;
+  const height = 100;
 
   return (
     <div>
-      <Svg viewBox={`0 0 ${width} ${height}`}>
-        <image href={imageTag.imageUrl} width={width} height={height} />
+      <img src={imageTag.imageUrl} alt="x" />
+
+      <Svg viewBox={`0 0 ${width} ${height}`} preserveAspectRatio="none">
         <Path points={imageTag.points} width={width} height={height} />
       </Svg>
     </div>

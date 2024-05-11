@@ -44,7 +44,7 @@ export type Image2 = {
 // export const getFeatureImages = (feature: Feature): Promise<Image>[] => {
 
 export const getFeatureImage = async (feature: Feature): Promise<Image> => {
-  const { center, nonOsmObject, skeleton, tags, imageTags } = feature;
+  const { center, nonOsmObject, skeleton, tags } = feature; // TODO imageTags
 
   if (skeleton) {
     return LOADING;
