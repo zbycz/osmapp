@@ -19,11 +19,11 @@ const parsePathString = (pathString?: string) =>
 
 const getImageUrl = (type: ImageTag['type'], v: string): string | null => {
   if (type === 'image') {
-    return v.match(/^File:/) ? getCommonsImageUrl(v, 200) : v;
+    return v.match(/^File:/) ? getCommonsImageUrl(v, 400) : v;
   }
 
   if (type === 'wikimedia_commons') {
-    return getCommonsImageUrl(v, 200);
+    return getCommonsImageUrl(v, 400);
   }
 
   return null; // API call needed
@@ -33,10 +33,11 @@ export const getImageTags = (tags: FeatureTags): ImageTag[] =>
   Object.keys(tags)
     .filter((k) => k.match(imageTagRegexp))
     .map((k) => {
-      const type = k.match(imageTagRegexp)?.[1] as ImageTag['type'];
+      const type = k.match(imageTagRegexp)?.[1] as ImageTag['type']; // TODO wikipedia:xx
       const v = tags[k];
       const imageUrl = getImageUrl(type, v);
       const path = tags[`${k}:path`];
       const points = parsePathString(path);
       return { type, k, v, imageUrl, path, points };
-    });
+    })
+    .sort((a, b) => b.points.length - a.points.length);

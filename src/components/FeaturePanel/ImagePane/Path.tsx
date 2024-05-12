@@ -1,6 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 
+const WIDTH = 100;
+const HEIGHT = 100;
+
+const Svg = styled.svg`
+  pointer-events: none;
+
+  path {
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+  }
+`;
+
 const PathBorder = styled.path`
   stroke-width: 2%;
   stroke: ${({ theme }) => theme.palette.climbing.border};
@@ -11,9 +24,9 @@ const PathLine = styled.path`
   stroke: ${({ theme }) => theme.palette.climbing.inactive};
 `;
 
-export const Path = ({ points, width, height }) => {
+export const Path = ({ points }) => {
   const d = points
-    .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * width} ${y * height}`)
+    .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * WIDTH} ${y * HEIGHT}`)
     .join(',');
 
   return (
@@ -23,3 +36,9 @@ export const Path = ({ points, width, height }) => {
     </>
   );
 };
+
+export const PathSvg = ({ children }) => (
+  <Svg viewBox={`0 0 ${WIDTH} ${HEIGHT}`} preserveAspectRatio="none">
+    {children}
+  </Svg>
+);

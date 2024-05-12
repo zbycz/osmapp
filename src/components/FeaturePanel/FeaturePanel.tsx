@@ -27,7 +27,7 @@ import { ClimbingPanel } from './Climbing/ClimbingPanel';
 import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
-import { ImagePane } from './ImagePane/ImagePane';
+import { ImageSlider } from './ImagePane/ImageSlider';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -105,9 +105,9 @@ export const FeaturePanel = () => {
 
           {!skeleton && (
             <>
-              <PanelSidePadding>
-                <ImagePane />
+              <ImageSlider />
 
+              <PanelSidePadding>
                 <Properties
                   showTags={showTagsTable}
                   key={getUrlOsmId(osmMeta) + (deleted && 'del')}

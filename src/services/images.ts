@@ -43,6 +43,8 @@ export type Image2 = {
 
 // export const getFeatureImages = (feature: Feature): Promise<Image>[] => {
 
+// const mainImage = images[0]; // only this will be SSRed as /node/1234/image.jpg
+
 export const getFeatureImage = async (feature: Feature): Promise<Image> => {
   const { center, nonOsmObject, skeleton, tags } = feature; // TODO imageTags
 
