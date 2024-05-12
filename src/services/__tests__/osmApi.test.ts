@@ -73,6 +73,7 @@ describe('fetchFeature', () => {
   });
 
   it('should return some fetched routes', async () => {
+    // TODO refactor this to separate file + mock overpass request
     const features = await requestLines('node', 3862767512);
 
     features.forEach((feature) => {

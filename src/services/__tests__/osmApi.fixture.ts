@@ -14,6 +14,7 @@ export const node = {
 };
 
 export const nodeFeature = {
+  type: 'Feature',
   center: [14.3904481, 50.103985],
   osmMeta: {
     changeset: 68073678,
@@ -31,7 +32,7 @@ export const nodeFeature = {
   tags: {
     amenity: 'library',
   },
-  type: 'Feature',
+  imageTags: [],
 };
 
 export const way = {
@@ -59,6 +60,7 @@ export const wayFeature = {
   },
   properties: { class: 'school', subclass: 'school' },
   tags: { amenity: 'school' },
+  imageTags: [],
 };
 export const relation = {
   type: 'relation',
@@ -87,6 +89,7 @@ export const relation = {
 };
 
 export const relationFeature = {
+  type: 'Feature',
   center: [14, 50],
   members: [
     {
@@ -117,5 +120,5 @@ export const relationFeature = {
     amenity: 'university',
     type: 'multipolygon',
   },
-  type: 'Feature',
+  imageTags: [],
 };

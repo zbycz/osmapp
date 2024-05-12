@@ -27,6 +27,7 @@ import { ClimbingPanel } from './Climbing/ClimbingPanel';
 import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
+import { ImageSlider } from './ImagePane/ImageSlider';
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -104,6 +105,8 @@ export const FeaturePanel = () => {
 
           {!skeleton && (
             <>
+              <ImageSlider />
+
               <PanelSidePadding>
                 <Properties
                   showTags={showTagsTable}
