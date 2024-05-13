@@ -5742,6 +5742,11 @@ natural-compare@^1.4.0:
   resolved "https://registry.yarnpkg.com/natural-compare/-/natural-compare-1.4.0.tgz#4abebfeed7541f2c27acfb29bdbbd15c8d5ba4f7"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
+next-codegrid@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/next-codegrid/-/next-codegrid-1.0.2.tgz#e36a297fd6b6eaf4425eb8736d96157bc59c09fc"
+  integrity sha512-7gp+Q49ies8UNczepSv9taS9ZcganKJYkjjWDjd718sOjAsP7m2xL2QyrxsH7xlUKR5SDX1YYfcv7+eKs6Iolg==
+
 next-cookies@^2.0.3:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/next-cookies/-/next-cookies-2.0.3.tgz#5a3eabcb6afa9b4d4ade69dfaaad749d16cd4a9a"

@@ -121,6 +121,7 @@ export const Coords = ({ coords }: Props) => {
   return (
     <span title="latitude, longitude (y, x)" ref={anchorRef}>
       {positionToDeg(coords)}
+      {feature.countryCode && ` (${feature.countryCode.toUpperCase()})`}
       <Menu
         anchorEl={anchorRef.current}
         open={opened}
