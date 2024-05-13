@@ -27,7 +27,7 @@ export const fetchSchemaTranslations = async () => {
   } catch (e) {
     console.log('fetchSchemaTranslations() failed, using local npm', e); // eslint-disable-line no-console
     const localTranslation = await import(
-      `@openstreetmap/id-tagging-schema/dist/translations/${intl.lang}.json`
+      `@openstreetmap/id-tagging-schema/dist/translations/en.min.json`
     );
     translations[intl.lang] = localTranslation[intl.lang];
     merge(translations, getOurTranslations(intl.lang));
