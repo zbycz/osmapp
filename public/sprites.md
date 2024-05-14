@@ -15,7 +15,7 @@ unzip maki.zip
 unzip temaki.zip
 unzip omt.zip
 mkdir ../maki ../omt ../temaki
-cp maki-master/icons/* ../maki/
+cp maki-main/icons/* ../maki/
 cp osm-bright-gl-style-master/icons/* ../omt/
 cp temaki-main/icons/* ../temaki/
 cd ..
@@ -23,8 +23,8 @@ cd ..
 
 # work on each icon set separately
 cd maki
-rm *-15.svg
 for f in *.svg; do mv $f ${f//-/_}; done
+for f in *.svg; do mv $f ${f//.svg/_11.svg}; done
 cd ..
 
 mkdir temaki-11
@@ -44,18 +44,20 @@ cd ..
 
 
 
-# finalize icons folder (renames,copies)
+# finalize icons folder (bright-style needs these renames, iD understands without them)
 cd icons
-mv toilet_11.svg toilets_11.svg
-mv waste_11.svg waste_basket_11.svg
-mv meat_11.svg butcher_11.svg
-mv doctor_11.svg doctors_11.svg
+cp toilet_11.svg toilets_11.svg
+cp waste_11.svg waste_basket_11.svg
+cp meat_11.svg butcher_11.svg
+cp doctor_11.svg doctors_11.svg
 cp bicycle_11.svg bicycle_parking_11.svg
 cp bicycle_11.svg cycling_11.svg
 cp security_camera_11.svg surveillance_11.svg
 cd ..
 
-# generate sprite (start docker.app first)
+# add our own icons like circle2_11.svg
+
+# generate sprite in public/ directory (start docker.app first)
 rm -r sprites
 mkdir sprites
 mv icons sprites/
@@ -70,6 +72,31 @@ cat << 'EOF' | node > ../src/assets/icons.ts
     const names = Object.keys(sprite).map(s => s.replace(/_11$/, ''))
     console.log(`export const icons = ${JSON.stringify(names)};`)
   })
+EOF
+
+
+## TODO  - later
+
+# We can use more sprite files and import them directly from iD project
+// Icon prefixes:
+// 2 far
+// 250 fas
+// 71 iD
+// 550 maki
+// 13 roentgen
+// 630 temaki
+// 50 undefined
+
+cat << 'EOF' | node > ../src/assets/icons.ts
+  const sprites = ['iD-sprite', 'maki-sprite', 'temaki-sprite', 'fa-sprite', 'roentgen-sprite'];
+  const promises = sprites.map((f) => require('fs').promises.readFile('sprites/'+f+'.svg', 'utf8'));
+  
+  Promise.all(promises).then((values) => {
+    const icons = values.map((content) => {
+      return [...content.matchAll(/id="([^"]+)"/g)].map((matches) => matches[1]);
+    })
+    console.log(`export const icons = ${JSON.stringify(icons.flat())};`)
+  });
 EOF
 
 ```
