@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg version="1.1" id="square-stroked-11" xmlns="http://www.w3.org/2000/svg" width="11px" height="11px" viewBox="0 0 11 11">
-  <path d="M9.19,1H1.81C1.3626,1,1,1.3626,1,1.81v7.38C1,9.6374,1.3626,10,1.81,10c0,0,0,0,0,0h7.38C9.6374,10,10,9.6374,10,9.19v0&#xA;&#x9;V1.81C10,1.3626,9.6374,1,9.19,1L9.19,1L9.19,1z M2,2h7v7H2V2z"/>
+<svg width="15" height="15" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg" id="square-stroked">
+  <path d="M11.7 3.3V11.7H3.3V3.3H11.7ZM12 2H3C2.4477 2 2 2.4477 2 3V12C2 12.5523 2.4477 13 3 13H12C12.5523 13 13 12.5523 13 12V3C13 2.4477 12.5523 2 12 2Z"/>
 </svg>
