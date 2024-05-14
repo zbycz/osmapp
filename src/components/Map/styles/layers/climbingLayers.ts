@@ -2,6 +2,7 @@ import type {
   ExpressionSpecification,
   LayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
+import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
 
 const linear = (
   from: number,
@@ -73,6 +74,24 @@ const routes: LayerSpecification[] = [
   },
 ];
 
+const ifHasImages = <T>(value: T, elseValue: T) =>
+  [
+    'case',
+    ['get', 'osmappHasImages'],
+    value,
+    elseValue,
+  ] as ExpressionSpecification;
+
+const sortKey = [
+  '*',
+  -1,
+  [
+    '+',
+    ['get', 'osmappRouteCount'],
+    ['case', ['get', 'osmappHasImages'], 99999, 0], // preference for items with images
+  ],
+] as DataDrivenPropertyValueSpecification<number>;
+
 const crags: LayerSpecification = {
   id: 'climbing-2-crags',
   type: 'symbol',
@@ -88,7 +107,7 @@ const crags: LayerSpecification = {
     'text-padding': 2,
     'text-font': ['Noto Sans Bold'],
     'text-anchor': 'top',
-    'icon-image': 'circle_11',
+    'icon-image': 'circle2_11',
     'text-field': '{osmappLabel}',
     'text-offset': [
       'step',
@@ -105,16 +124,17 @@ const crags: LayerSpecification = {
     'text-ignore-placement': false,
     'text-allow-overlap': false,
     'text-optional': true,
-    'icon-size': linear(15, 1, 21, 2),
-    'symbol-sort-key': ['*', -1, ['to-number', ['get', 'osmappRouteCount']]],
+    'icon-size': linear(15, 0.5, 21, 2),
+    'symbol-sort-key': sortKey,
   },
   paint: {
     'text-halo-blur': 0.5,
-    'text-color': '#ea5540',
-    'text-halo-width': 2,
+    'text-halo-width': 1.5,
     'text-halo-color': '#ffffff',
+    'text-color': ifHasImages('#ea5540', '#777'),
   },
 };
+
 const areas: LayerSpecification = {
   id: 'climbing-1-areas',
   type: 'symbol',
@@ -129,24 +149,24 @@ const areas: LayerSpecification = {
     'text-padding': 2,
     'text-font': ['Noto Sans Bold'],
     'text-anchor': 'top',
-    'icon-image': 'square_11',
+    'icon-image': ifHasImages('circle2_11', 'circle2_11'),
     'text-field': '{osmappLabel}',
     'text-offset': [0, 0.6],
     'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
-    // 'icon-size': 1.5,
     'text-max-width': 9,
+    'icon-size': ifHasImages(1, 0.6),
+
     'icon-optional': false,
     'icon-ignore-placement': false,
-    'icon-allow-overlap': false,
+    'icon-allow-overlap': true,
     'text-ignore-placement': false,
     'text-allow-overlap': false,
     'text-optional': true,
-    'symbol-sort-key': ['*', -1, ['to-number', ['get', 'osmappRouteCount']]],
+    'symbol-sort-key': sortKey,
   },
   paint: {
-    'icon-opacity': linearFadeOut(14, 16),
     'text-opacity': linearFadeOut(14, 16),
-    'text-color': 'rgba(0, 95, 204, 1)',
+    'text-color': ifHasImages('rgba(0, 95, 204, 1)', '#777'),
     'text-halo-color': 'rgba(250, 250, 250, 1)',
     'text-halo-width': 2,
   },
