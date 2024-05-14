@@ -58,6 +58,9 @@ const convert = (
     osmappType: type,
     osmappRouteCount,
     osmappLabel: getLabel(tags, osmappRouteCount),
+    osmappHasImages: Object.keys(tags).some((key) =>
+      key.startsWith('wikimedia_commons'),
+    ),
   };
 
   return {
@@ -118,15 +121,22 @@ const getRelationWithAreaCount = (
 ) =>
   relations.map((relation) => {
     if (relation.tags.climbing === 'area') {
-      const cragsCount = relation.members.map(
-        ({ type, ref }) => lookup[type][ref]?.properties?.osmappRouteCount ?? 0,
+      const members = relation.members.map(
+        ({ type, ref }) => lookup[type][ref]?.properties,
       );
-      const osmappRouteCount = cragsCount.reduce((acc, count) => acc + count);
+      const osmappRouteCount = members
+        .map((member) => member?.osmappRouteCount ?? 0)
+        .reduce((acc, count) => acc + count);
+      const osmappHasImages = members
+        .map((member) => member?.osmappHasImages)
+        .some((value) => value === true);
+
       return {
         ...relation,
         properties: {
           ...relation.properties,
           osmappRouteCount,
+          osmappHasImages,
           osmappLabel: getLabel(relation.tags, osmappRouteCount),
         },
       };

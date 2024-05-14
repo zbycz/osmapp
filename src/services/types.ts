@@ -98,8 +98,9 @@ export interface Feature {
   properties: {
     class: string;
     subclass: string;
-    [key: string]: string | number;
+    [key: string]: string | number | boolean;
     osmappRouteCount?: number;
+    osmappHasImages?: boolean;
     osmappType?: 'node' | 'way' | 'relation';
     osmappLabel?: string;
   };
