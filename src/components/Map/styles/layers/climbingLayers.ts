@@ -19,6 +19,21 @@ const linear = (
   num2,
 ];
 
+const linearByRouteCount = (
+  from: number,
+  num1: number,
+  to: number,
+  num2: number,
+): ExpressionSpecification => [
+  'interpolate',
+  ['linear'],
+  ['get', 'osmappRouteCount'],
+  from,
+  num1,
+  to,
+  num2,
+];
+
 const linearFadeOut = (from: number, to: number): ExpressionSpecification =>
   linear(from, 1, to, 0.3);
 
@@ -131,45 +146,80 @@ const crags: LayerSpecification = {
     'text-halo-blur': 0.5,
     'text-halo-width': 1.5,
     'text-halo-color': '#ffffff',
-    'text-color': ifHasImages('#ea5540', '#777'),
+    'text-color': ifHasImages('#ea5540', '#666'),
   },
 };
 
-const areas: LayerSpecification = {
-  id: 'climbing-1-areas',
-  type: 'symbol',
-  source: 'climbing',
-  maxzoom: 16,
-  filter: [
-    'all',
-    ['==', 'osmappType', 'relationPoint'],
-    ['==', 'climbing', 'area'],
-  ],
-  layout: {
-    'text-padding': 2,
-    'text-font': ['Noto Sans Bold'],
-    'text-anchor': 'top',
-    'icon-image': ifHasImages('circle2_11', 'circle2_11'),
-    'text-field': '{osmappLabel}',
-    'text-offset': [0, 0.6],
-    'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
-    'text-max-width': 9,
-    'icon-size': ifHasImages(1, 0.6),
+const areas: LayerSpecification[] = [
+  {
+    id: 'climbing-area-circle',
+    type: 'circle',
+    source: 'climbing',
+    maxzoom: 16,
+    filter: [
+      'all',
+      ['==', 'osmappType', 'relationPoint'],
+      ['==', 'climbing', 'area'],
+    ],
+    layout: {
+      'circle-sort-key': sortKey,
+    },
+    paint: {
+      'circle-radius': linearByRouteCount(0, 3, 400, 12),
+      'circle-stroke-width': 2,
+      'circle-stroke-color': 'white',
+      'circle-opacity': linearFadeOut(14, 16),
 
-    'icon-optional': false,
-    'icon-ignore-placement': false,
-    'icon-allow-overlap': true,
-    'text-ignore-placement': false,
-    'text-allow-overlap': false,
-    'text-optional': true,
-    'symbol-sort-key': sortKey,
+      'circle-color': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        ifHasImages('rgba(0, 59, 210, 0.7)', 'black'),
+        ifHasImages('rgba(0, 59, 210, 1)', '#666'),
+      ],
+    },
   },
-  paint: {
-    'text-opacity': linearFadeOut(14, 16),
-    'text-color': ifHasImages('rgba(0, 95, 204, 1)', '#777'),
-    'text-halo-color': 'rgba(250, 250, 250, 1)',
-    'text-halo-width': 2,
+  {
+    id: 'climbing-1-areas',
+    type: 'symbol',
+    source: 'climbing',
+    maxzoom: 16,
+    filter: [
+      'all',
+      ['==', 'osmappType', 'relationPoint'],
+      ['==', 'climbing', 'area'],
+    ],
+    layout: {
+      'text-padding': 2,
+      'text-font': ['Noto Sans Bold'],
+      'text-anchor': 'top',
+      'text-field': '{osmappLabel}',
+      'text-offset': [0, 0.6],
+      'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
+      'text-max-width': 9,
+      'icon-optional': false,
+      'icon-ignore-placement': false,
+      'icon-allow-overlap': true,
+      'text-ignore-placement': false,
+      'text-allow-overlap': false,
+      'text-optional': true,
+      'symbol-sort-key': sortKey,
+    },
+    paint: {
+      'text-opacity': linearFadeOut(14, 16),
+      'text-color': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        ifHasImages('rgba(0, 59, 210, 0.7)', 'black'),
+        ifHasImages('rgba(0, 59, 210, 1)', '#666'),
+      ],
+      'text-halo-color': 'rgba(250, 250, 250, 1)',
+      'text-halo-width': 2,
+    },
   },
-};
+];
 
-export const climbingLayers: LayerSpecification[] = [...routes, crags, areas];
+export const climbingLayers: LayerSpecification[] = [
+  ...routes,
+  crags,
+  ...areas,
+];
