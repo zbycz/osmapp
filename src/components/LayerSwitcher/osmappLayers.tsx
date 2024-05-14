@@ -9,6 +9,7 @@ import { Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
 import Maki from '../utils/Maki';
+import { useUserThemeContext } from '../../helpers/theme';
 
 interface Layers {
   [key: string]: Layer;
@@ -17,9 +18,17 @@ interface Layers {
 const retina =
   ((isBrowser() && window.devicePixelRatio) || 1) >= 2 ? '@2x' : '';
 
-const ClimbingIcon = () => (
-  <Maki ico="climbing" size={16} style={{ opacity: 0.3, marginLeft: '3px' }} />
-);
+const ClimbingIcon = () => {
+  const { currentTheme } = useUserThemeContext();
+  return (
+    <Maki
+      ico="climbing"
+      size={16}
+      style={{ opacity: 0.3, marginLeft: '3px' }}
+      invert={currentTheme === 'dark'}
+    />
+  );
+};
 
 const africaBbox = [
   -20, // west
