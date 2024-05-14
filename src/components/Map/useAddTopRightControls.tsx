@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
+import { getGlobalMap } from '../../services/mapStorage';
 
 const navigation = {
   mobile: new maplibregl.NavigationControl({
@@ -27,8 +28,14 @@ export const useAddTopRightControls = (map: any, mobileMode: boolean) => {
     map?.addControl(geolocation);
 
     return () => {
-      map?.removeControl(mobileMode ? navigation.mobile : navigation.desktop);
-      map?.removeControl(geolocation);
+      // QUICK FIX: in hot reload the map is unmounted,
+      // so this destructors calls `map` which is alread map.remove()'d
+      // getGlobalMap is not a state, so it has instantly a null
+      const gmap = getGlobalMap();
+      if (gmap) {
+        map?.removeControl(mobileMode ? navigation.mobile : navigation.desktop);
+        map?.removeControl(geolocation);
+      }
     };
   }, [map, mobileMode]);
 };
