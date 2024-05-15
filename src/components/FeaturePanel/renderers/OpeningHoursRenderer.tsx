@@ -4,7 +4,8 @@ import AccessTime from '@material-ui/icons/AccessTime';
 import { useToggleState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { ToggleButton } from '../helpers/ToggleButton';
-import { SimpleOpeningHoursTable, parseOpeningHours } from './openingHours';
+import { parseOpeningHours } from './openingHours';
+import { SimpleOpeningHoursTable } from './openingHours/types';
 
 const Table = styled.table`
   margin: 1em;
