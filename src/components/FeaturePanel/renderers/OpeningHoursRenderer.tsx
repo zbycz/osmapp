@@ -1,29 +1,10 @@
 import React from 'react';
-import { SimpleOpeningHours } from 'simple-opening-hours';
 import styled from 'styled-components';
 import AccessTime from '@material-ui/icons/AccessTime';
 import { useToggleState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { ToggleButton } from '../helpers/ToggleButton';
-
-interface SimpleOpeningHoursTable {
-  su: string[];
-  mo: string[];
-  tu: string[];
-  we: string[];
-  th: string[];
-  fr: string[];
-  sa: string[];
-  ph: string[];
-}
-
-const parseOpeningHours = (value) => {
-  const sanitized = value.match(/^[0-9:]+-[0-9:]+$/) ? `Mo-Su ${value}` : value;
-  const opening = new SimpleOpeningHours(sanitized);
-  const daysTable = opening.getTable() as SimpleOpeningHoursTable;
-  const isOpen = opening.isOpenNow();
-  return { daysTable, isOpen };
-};
+import { SimpleOpeningHoursTable, parseOpeningHours } from './openingHours';
 
 const Table = styled.table`
   margin: 1em;
@@ -39,7 +20,7 @@ const Table = styled.table`
 // const weekDays = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
 const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 
-const formatTimes = (times) =>
+const formatTimes = (times: string[]) =>
   times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-';
 
 const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
