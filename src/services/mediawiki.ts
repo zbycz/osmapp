@@ -1,11 +1,12 @@
 import fetch from 'isomorphic-unfetch';
 import type { LonLat } from './types';
-import form from 'form-data';
+import { FormData } from 'formdata-node';
+import { fileFromPath } from "formdata-node/file-from-path";
 
 const WIKI_URL = 'https://commons.wikimedia.org/w/api.php';
 
 const getUploadOptions = (params: Record<string, string | Blob>) => {
-  const formData = new form();
+  const formData = new FormData();
   Object.entries(params).forEach(([k, v]) => {
     formData.append(k, v);
   });
@@ -16,14 +17,6 @@ const getBody = (params: Record<string, string | Blob>) =>
   params.action === 'upload'
     ? getUploadOptions(params)
     : new URLSearchParams(params);
-
-export type UploadParams = {
-  file: any;
-  filename: string;
-  text: string;
-  comment: string;
-  ignorewarnings: boolean; // overwrite existing file
-};
 
 const createLocationClaim = (property, [longitude, latitude]: LonLat) => ({
   type: 'statement',
@@ -59,16 +52,20 @@ export const getMediaWikiSession = () => {
   let sessionCookie;
 
   const action = async (action, params) =>
-    await fetch(WIKI_URL, {
+    await fetch(
+      // action === 'upload' ? 'http://httpbin.org/post' :
+        WIKI_URL + (action === 'upload' ? '?action=upload' : ''), {
       method: 'POST',
-      headers: { Cookie: sessionCookie },
-      body: getBody({ action, format: 'json', bot: true, ...params }),
+      headers: {
+        Cookie: sessionCookie,
+      },
+      body: getBody({ action, format: 'json', ...params }),
     });
 
   const getLoginToken = async () => {
     const response = await action('query', { meta: 'tokens', type: 'login' });
-    sessionCookie = response.headers.get('set-cookie').split(';')[0];
     const data = await response.json();
+    sessionCookie = response.headers.get('set-cookie').split(';')[0];
     return data.query.tokens.logintoken;
   };
 
@@ -81,13 +78,21 @@ export const getMediaWikiSession = () => {
   const getCsrfToken = async () => {
     const response = await action('query', { meta: 'tokens' });
     const data = await response.json();
-    return data.query.tokens.csrftoken;
+    const csrftoken = data.query.tokens.csrftoken;
+    console.log('tok', { csrftoken });
+    return csrftoken;
   };
 
-  const upload = async (params: UploadParams) => {
-    const token = await getCsrfToken();
-    console.log({ token });
-    const response = await action('upload', { ...params, token });
+  const upload = async (filepath, filename, text) => {
+    const token = 'xx'; //await getCsrfToken();
+    const response = await action('upload', {
+      file: await fileFromPath(filepath),
+      filename,
+      text,
+      comment: 'Initial upload from OsmAPP.org',
+      token,
+      formatversion: '2',
+    });
     return await response.text();
   };
 
@@ -143,7 +148,6 @@ export const getPageRevisions = async (titles: string[]) => {
   return data.query.pages as PageInfo[];
 };
 
-
 export const isTitleAvailable = async (title: string) => {
   const response = await fetch(WIKI_URL, {
     method: 'POST',
@@ -151,8 +155,9 @@ export const isTitleAvailable = async (title: string) => {
       action: 'query',
       titles: title,
       format: 'json',
+      formatversion: '2',
     }),
   });
   const data = await response.json();
   return data.query.pages[0].missing;
-}
+};

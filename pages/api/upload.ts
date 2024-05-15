@@ -8,7 +8,7 @@ import {
 } from '../../src/services/osmApiAuthServer';
 import { fetchFeatureWithCenter } from '../../src/services/osmApi';
 import type { Feature, LonLat } from '../../src/services/types';
-import { getApiId } from '../../src/services/helpers';
+import { getApiId, getFullOsmappLink, getUrlOsmId } from "../../src/services/helpers";
 import { setIntl } from '../../src/services/intl';
 import getConfig from 'next/config';
 import { getName, getTypeLabel } from '../../src/helpers/featureLabel';
@@ -60,10 +60,12 @@ export const getUploadData = (
 ) => {
   const name = getName(feature);
   // const presetKey = feature.schema.presetKey;
-  const title = getTitle(feature);
+  const title = getTitle(feature, file);
   const filename = getFilename(feature, file, suffix);
   const osmUserUrl = `https://www.openstreetmap.org/user/${user.username}#id=${user.id}`;
   const date = file.date.toISOString().replace(/\.\d+Z$/, 'Z'); // TODO EXIF location, date information.date = {{According to Exif data|2023-11-16}}
+  const osmUrl = `https://www.openstreetmap.org/${getUrlOsmId(feature.osmMeta)}`;
+  const osmappUrl = getFullOsmappLink(feature);
 
   // TODO construct description (categories)
   // TODO  each file must belong to at least one category that describes its content or function
@@ -87,6 +89,7 @@ export const getUploadData = (
      |name  = {{ucfirst: {{I18n/location|made}} }}
      |value = {{#invoke:Information|SDC_Location|icon=true}} {{#if:{{#property:P1259|from=M{{PAGEID}} }}|(<small>{{#invoke:PropertyChain|PropertyChain|qID={{#invoke:WikidataIB |followQid |props=P1259}}|pID=P131|endpID=P17}}</small>)}}
     }}
+    {{Information field |name= OpenStreetMap |value= ${osmUrl}<br>${osmappUrl} }}
 }}
 
 =={{int:license-header}}==
@@ -97,12 +100,9 @@ export const getUploadData = (
   // TODO https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
 
   return {
-    uploadParams: {
-      file: fs.createReadStream(file.filepath),
-      filename,
-      text,
-      comment: 'Initial upload from OsmAPP.org',
-    } as UploadParams,
+    filepath: file.filepath,
+    filename,
+    text,
     date,
     photoLocation: file.location,
     placeLocation: feature.center,
@@ -137,9 +137,11 @@ export const uploadToWikimediaCommons = async (
   await session.login('OsmappBot@osmapp-upload', password);
 
   const suffix = await findFreeSuffix(feature, file);
-
   const data = getUploadData(user, feature, file, lang, suffix);
-  const uploadResult = await session.upload(data.uploadParams);
+
+  console.log(data.filepath, data.filename)
+
+  const uploadResult = await session.upload(data.filepath, data.filename, data.text);
 
   // const pageId = '147484063';
 
@@ -152,7 +154,11 @@ export const uploadToWikimediaCommons = async (
   // const claimsResult = await session.editClaims(`M${pageId}`, claims);
 
   // TODO check duplicate by sha1 before upload
-  return { uploadResult, claimsResult, filename: data.uploadParams.filename };
+  return {
+    uploadResult,
+    //claimsResult,
+    filename: data.filename,
+  };
   // MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
 };
 
