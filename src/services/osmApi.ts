@@ -1,3 +1,4 @@
+import { resolveCountryCode } from 'next-codegrid';
 import {
   FetchError,
   getApiId,
@@ -102,6 +103,8 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   if (center) {
     feature.center = center;
   }
+
+  feature.countryCode = await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
 
   return addSchemaToFeature(feature);
 };
