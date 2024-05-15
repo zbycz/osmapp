@@ -19,7 +19,7 @@ const fetchCache = isBrowser()
     };
 
 export const getKey = (url, opts) => {
-  if (opts.method === 'POST') {
+  if (['POST', 'PUT', 'DELETE'].includes(opts.method)) {
     return false;
   }
 

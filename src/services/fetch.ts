@@ -49,10 +49,13 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     }
 
     const text = await res.text();
-    if (!opts || !opts.nocache || opts.method !== 'POST') {
+    const noCache =
+      opts?.nocache || ['POST', 'PUT', 'DELETE'].includes(opts.method);
+    if (!noCache) {
       writeCacheSafe(key, text);
     }
     return text;
+
   } catch (e) {
     if (isBrowser() && e instanceof DOMException && e.name === 'AbortError') {
       throw e;

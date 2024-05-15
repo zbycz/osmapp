@@ -1,20 +1,26 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import formidable from "formidable";
-import exifr from "exifr";
-import fs from "fs";
-import { serverFetchOsmUser, ServerOsmUser } from "../../src/services/osmApiAuthServer";
-import { fetchFeatureWithCenter } from "../../src/services/osmApi";
-import type { Feature, LonLat } from "../../src/services/types";
-import { getApiId } from "../../src/services/helpers";
-import { setIntl } from "../../src/services/intl";
-import getConfig from "next/config";
-import { getName, getTypeLabel } from "../../src/helpers/featureLabel";
-import { claimsHelpers, getMediaWikiSession, isTitleAvailable, UploadParams } from "../../src/services/mediawiki";
+import type { NextApiRequest, NextApiResponse } from 'next';
+import formidable from 'formidable';
+import exifr from 'exifr';
+import fs from 'fs';
+import {
+  serverFetchOsmUser,
+  ServerOsmUser,
+} from '../../src/services/osmApiAuthServer';
+import { fetchFeatureWithCenter } from '../../src/services/osmApi';
+import type { Feature, LonLat } from '../../src/services/types';
+import { getApiId } from '../../src/services/helpers';
+import { setIntl } from '../../src/services/intl';
+import getConfig from 'next/config';
+import { getName, getTypeLabel } from '../../src/helpers/featureLabel';
+import {
+  getMediaWikiSession,
+  isTitleAvailable,
+  UploadParams,
+} from '../../src/services/mediawiki';
 
 // inspiration: https://commons.wikimedia.org/wiki/File:Drive_approaching_the_Grecian_Lodges_-_geograph.org.uk_-_5765640.jpg
 // https://github.com/multichill/toollabs/blob/master/bot/commons/geograph_uploader.py
 // TODO https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
-
 
 export const config = {
   api: {
@@ -29,16 +35,17 @@ export type File = {
   date: Date;
 };
 
-const getTitle = feature => {
+const getTitle = (feature, file) => {
+  const name = getName(feature);
   const presetName = getTypeLabel(feature);
-  const title = name
+  const location = file.location ?? feature.center;
+  return name
     ? `${name} (${presetName})`
     : `${presetName} at ${location.map((x) => x.toFixed(5))}`;
-  return title;
 };
 
 const getFilename = (feature, file, suffix) => {
-  const title = getTitle(feature);
+  const title = getTitle(feature, file);
 
   const extension = file.name.split('.').pop();
   return `${title} - OsmAPP${suffix}.${extension}`;
@@ -52,7 +59,6 @@ export const getUploadData = (
   suffix: string,
 ) => {
   const name = getName(feature);
-  const location = file.location ?? feature.center;
   // const presetKey = feature.schema.presetKey;
   const title = getTitle(feature);
   const filename = getFilename(feature, file, suffix);
@@ -105,7 +111,7 @@ export const getUploadData = (
 
 async function findFreeSuffix(feature: Feature, file: File) {
   for (let i = 1; i < 20; i++) {
-    const suffix = i === 1 ? "" : ` (${i})`;
+    const suffix = i === 1 ? '' : ` (${i})`;
     const filename = getFilename(feature, file, suffix);
     const isFree = await isTitleAvailable(`File:${filename}`);
     if (isFree) {
@@ -133,20 +139,19 @@ export const uploadToWikimediaCommons = async (
   const suffix = await findFreeSuffix(feature, file);
 
   const data = getUploadData(user, feature, file, lang, suffix);
-  // const uploadResult = await wiki.upload(data.uploadParams);
+  const uploadResult = await session.upload(data.uploadParams);
 
-  const pageId = '147484063';
+  // const pageId = '147484063';
 
-  const claims = [
-    claimsHelpers.createDate(data.date),
-    claimsHelpers.createPlaceLocation(data.placeLocation),
-    claimsHelpers.createPhotoLocation(data.photoLocation),
-  ];
-  console.log(JSON.stringify(claims, null, 2));
-  const claimsResult = await session.editClaims(`M${pageId}`, claims);
+  // const claims = [
+  //   claimsHelpers.createDate(data.date),
+  //   claimsHelpers.createPlaceLocation(data.placeLocation),
+  //   claimsHelpers.createPhotoLocation(data.photoLocation),
+  // ];
+  // console.log(JSON.stringify(claims, null, 2));
+  // const claimsResult = await session.editClaims(`M${pageId}`, claims);
 
   // TODO check duplicate by sha1 before upload
-  // TODO check duplicate name before upload
   return { uploadResult, claimsResult, filename: data.uploadParams.filename };
   // MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
 };
