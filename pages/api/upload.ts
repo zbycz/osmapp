@@ -191,6 +191,17 @@ const parseHttpRequest = async (req: NextApiRequest) => {
 // TODO upgrade Nextjs and use export async function POST(request: NextRequest) {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    fetch("https://test.wikipedia.org/w/api.php", {
+      "headers": {
+        "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryn4nr36VFDeyzCBVa",
+        "cookie": "GeoIP=CZ:10:Prague:50.05:14.40:v4; centralauth_ss0-User=Zbytovsky; centralauth_ss0-Token=56de1dfd013e04a14e5a73e2d6c44c6b; ss0-centralauth_Session=1a24faeefb5f9bf12ce0a105690e42c2; centralauth_User=Zbytovsky; WMF-Last-Access-Global=15-May-2024; testwikiSession=dp9lik93hgnjd7bp1nng70ttk4tritpv; testwikiUserID=61401; testwikiUserName=Zbytovsky; WMF-Last-Access=15-May-2024; testwikimwuser-sessionId=8e0f311dd85f1124e562; centralauth_Token=56de1dfd013e04a14e5a73e2d6c44c6b; centralauth_Session=e597ed1d7406dd83d8fcdda5c3225966; NetworkProbeLimit=0.001",
+      },
+      "body": "------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"action\"\r\n\r\nupload\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"format\"\r\n\r\njsonfm\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"filename\"\r\n\r\nFile_1.jpg\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"file\"; filename=\"IMG_3379-EDIT Small.jpeg\"\r\nContent-Type: image/jpeg\r\n\r\n\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"formatversion\"\r\n\r\n2\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"wrappedhtml\"\r\n\r\n1\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"token\"\r\n\r\n6c671cec5e3046118e5d3494575b7a616644b2ce+\\\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa--\r\n",
+      "method": "POST"
+    });
+
+
+
     const user = await serverFetchOsmUser(req);
     const { file, apiId, lang } = await parseHttpRequest(req);
 

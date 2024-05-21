@@ -1,11 +1,11 @@
-import fetch from 'isomorphic-unfetch';
-import type { LonLat } from './types';
-import { FormData } from 'formdata-node';
+import fetch from "isomorphic-unfetch";
+import type { LonLat } from "./types";
+// import { FormData } from 'formdata-node';
 import { fileFromPath } from "formdata-node/file-from-path";
 
-const WIKI_URL = 'https://commons.wikimedia.org/w/api.php';
+const WIKI_URL = 'https://test.wikidata.org/w/api.php';
 
-const getUploadOptions = (params: Record<string, string | Blob>) => {
+const getUploadBody = (params: Record<string, string | Blob>) => {
   const formData = new FormData();
   Object.entries(params).forEach(([k, v]) => {
     formData.append(k, v);
@@ -15,7 +15,7 @@ const getUploadOptions = (params: Record<string, string | Blob>) => {
 
 const getBody = (params: Record<string, string | Blob>) =>
   params.action === 'upload'
-    ? getUploadOptions(params)
+    ? getUploadBody(params)
     : new URLSearchParams(params);
 
 const createLocationClaim = (property, [longitude, latitude]: LonLat) => ({
@@ -48,24 +48,53 @@ export const claimsHelpers = {
   createPlaceLocation: (lonLat: LonLat) => createLocationClaim('P9149', lonLat), // https://www.wikidata.org/wiki/Property:P9149 coordinates of depicted place
 };
 
+function parseCookies(response: Response) {
+  const headers = new Headers(response.headers);
+  const setCookies = headers.getSetCookie();
+
+  return setCookies.map((cookie) => {
+    const [name, value] = cookie.split(';')[0].split('=');
+    return `${name}=${value}`;
+  }).join(';');
+}
+
 export const getMediaWikiSession = () => {
   let sessionCookie;
 
-  const action = async (action, params) =>
-    await fetch(
+  const action = async (action, params) => {
+    if (action === 'upload') {
+      return await fetch(WIKI_URL, {
+        method: 'POST',
+        headers: {
+          Cookie: sessionCookie,
+          // "content-type": "multipart/form-data; boundary=----WebKitFormBoundaryn4nr36VFDeyzCBVa",
+        },
+        body: //"------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"action\"\r\n\r\nupload\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"format\"\r\n\r\njson\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"filename\"\r\n\r\nFile_1.jpg\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"file\"; filename=\"IMG_3379-EDIT Small.jpeg\"\r\nContent-Type: image/jpeg\r\n\r\n\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"formatversion\"\r\n\r\n2\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"wrappedhtml\"\r\n\r\n0\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa\r\nContent-Disposition: form-data; name=\"token\"\r\n\r\n6c671cec5e3046118e5d3494575b7a616644b2ce+\\\r\n------WebKitFormBoundaryn4nr36VFDeyzCBVa--\r\n"
+         getUploadBody({ action, format: "json", ...params })
+      });
+    }
+
+
+    return await fetch(
       // action === 'upload' ? 'http://httpbin.org/post' :
-        WIKI_URL + (action === 'upload' ? '?action=upload' : ''), {
-      method: 'POST',
-      headers: {
-        Cookie: sessionCookie,
-      },
-      body: getBody({ action, format: 'json', ...params }),
-    });
+      WIKI_URL, {
+        method: "POST",
+        headers: {
+          Cookie: sessionCookie
+        },
+        body: getBody({ action, format: "json", ...params })
+      });
+  };
 
   const getLoginToken = async () => {
-    const response = await action('query', { meta: 'tokens', type: 'login' });
+    const response = await fetch(`${WIKI_URL}?action=query&format=json&meta=tokens&type=login`, {
+      headers: {
+        Cookie: sessionCookie
+      }
+    });
     const data = await response.json();
-    sessionCookie = response.headers.get('set-cookie').split(';')[0];
+    sessionCookie = parseCookies(response)
+    console.log("data.query.tokens.logintoken", {sessionCookie, setcookies: response.headers.get('set-cookie'), logintok: data.query.tokens.logintoken})
     return data.query.tokens.logintoken;
   };
 
@@ -76,23 +105,28 @@ export const getMediaWikiSession = () => {
   };
 
   const getCsrfToken = async () => {
-    const response = await action('query', { meta: 'tokens' });
+    const response = await fetch(`${WIKI_URL}?action=query&format=json&meta=tokens`, {
+        headers: {
+          Cookie: sessionCookie
+        }
+      });
     const data = await response.json();
     const csrftoken = data.query.tokens.csrftoken;
-    console.log('tok', { csrftoken });
+    console.log('tok', { sessionCookie, tokens: data.query.tokens, csrftoken });
     return csrftoken;
   };
 
   const upload = async (filepath, filename, text) => {
-    const token = 'xx'; //await getCsrfToken();
-    const response = await action('upload', {
+    const token = await getCsrfToken();
+    const params = {
       file: await fileFromPath(filepath),
       filename,
       text,
       comment: 'Initial upload from OsmAPP.org',
       token,
       formatversion: '2',
-    });
+    };
+    const response = await action('upload', params);
     return await response.text();
   };
 
