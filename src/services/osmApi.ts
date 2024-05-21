@@ -102,9 +102,8 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   const feature = osmToFeature(element);
   if (center) {
     feature.center = center;
+    feature.countryCode = await resolveCountryCode(center); // takes 0-100ms for first resolution, then instant
   }
-
-  feature.countryCode = await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
 
   return addSchemaToFeature(feature);
 };
