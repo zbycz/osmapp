@@ -103,8 +103,8 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
     );
   }, [feature]);
 
-  const { source, link, username, portrait } = image ?? {};
-  const uncertainImage = source === 'Mapillary';
+  const { source, link, username, portrait, isPano } = image ?? {};
+  const uncertainImage = source === 'Mapillary' && !isPano;
   const uncertainTitle = uncertainImage
     ? `\n${t('featurepanel.uncertain_image')}`
     : '';
