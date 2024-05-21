@@ -1,10 +1,15 @@
 import { parseComplexOpeningHours } from './complex';
-import { parseSimpleOpeningHours } from './simple';
+import { Address } from './types';
 
-export const parseOpeningHours = (value: string) => {
+export const parseOpeningHours = (
+  value: string,
+  lat: number,
+  lon: number,
+  address: Address,
+): ReturnType<typeof parseComplexOpeningHours> | null => {
   try {
-    return parseComplexOpeningHours(value);
+    return parseComplexOpeningHours(value, lat, lon, address);
   } catch {
-    return parseSimpleOpeningHours(value);
+    return null;
   }
 };

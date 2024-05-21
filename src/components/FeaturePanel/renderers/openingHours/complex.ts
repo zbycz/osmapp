@@ -1,6 +1,6 @@
 import OpeningHours from 'opening_hours';
 import { isInRange } from './utils';
-import { SimpleOpeningHoursTable } from './types';
+import { Address, SimpleOpeningHoursTable } from './types';
 
 type Weekday = keyof SimpleOpeningHoursTable;
 const weekdays: Weekday[] = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'ph'];
@@ -17,8 +17,17 @@ const weekdayMappings: Record<string, Weekday> = {
 const fmtDate = (d: Date) =>
   d.toLocaleTimeString(undefined, { hour: 'numeric', minute: 'numeric' });
 
-export const parseComplexOpeningHours = (value: string) => {
-  const oh = new OpeningHours(value);
+export const parseComplexOpeningHours = (
+  value: string,
+  lat: number,
+  lon: number,
+  address: Address,
+) => {
+  const oh = new OpeningHours(value, {
+    lat,
+    lon,
+    address,
+  });
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);

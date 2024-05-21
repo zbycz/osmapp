@@ -6,6 +6,7 @@ import { t } from '../../../services/intl';
 import { ToggleButton } from '../helpers/ToggleButton';
 import { parseOpeningHours } from './openingHours';
 import { SimpleOpeningHoursTable } from './openingHours/types';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const Table = styled.table`
   margin: 1em;
@@ -42,7 +43,16 @@ const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
 
 const OpeningHoursRenderer = ({ v }) => {
   const [isExpanded, toggle] = useToggleState(false);
-  const { daysTable, isOpen } = parseOpeningHours(v);
+
+  const { countryCode, center } = useFeatureContext().feature;
+
+  const openingHours = parseOpeningHours(v, center[0], center[0], {
+    country_code: countryCode,
+    state: '',
+  });
+  if (!openingHours) return null;
+  const { daysTable, isOpen } = openingHours;
+
   const { ph, ...days } = daysTable;
   const timesByDay = Object.values(days).map((times, idx) => ({
     times,

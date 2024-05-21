@@ -8,3 +8,8 @@ export interface SimpleOpeningHoursTable {
   sa: string[];
   ph: string[];
 }
+
+export type Address = {
+  country_code: string;
+  state: string;
+};
