@@ -1,6 +1,7 @@
 import OpeningHours from 'opening_hours';
 import { isInRange } from './utils';
 import { Address, SimpleOpeningHoursTable } from './types';
+import { LonLat } from '../../../../services/types';
 
 type Weekday = keyof SimpleOpeningHoursTable;
 const weekdays: Weekday[] = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'ph'];
@@ -19,8 +20,7 @@ const fmtDate = (d: Date) =>
 
 export const parseComplexOpeningHours = (
   value: string,
-  lat: number,
-  lon: number,
+  [lon, lat]: LonLat,
   address: Address,
 ) => {
   const oh = new OpeningHours(value, {

@@ -46,7 +46,7 @@ const OpeningHoursRenderer = ({ v }) => {
 
   const { countryCode, center } = useFeatureContext().feature;
 
-  const openingHours = parseOpeningHours(v, center[0], center[0], {
+  const openingHours = parseOpeningHours(v, center, {
     country_code: countryCode,
     state: '',
   });
