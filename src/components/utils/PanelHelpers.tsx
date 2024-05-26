@@ -9,23 +9,30 @@ import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
 // maybe https://github.com/malte-wessel/react-custom-scrollbars (larger)
-export const PanelWrapper = styled.div`
-  position: absolute;
-  left: 0;
-  top: 72px; // TopPanel
-  bottom: 0;
+export const PanelWrapper = styled.div<{ fromLeft: boolean }>`
+  /* position: absolute; */
+  /* left: 0; */
+  /* top: 72px; // TopPanel */
+  /* bottom: 0; */
   background: ${({ theme }) => theme.palette.background.paper};
   overflow: hidden;
-  z-index: 1100;
+  /* z-index: 1100; */
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
 
   display: flex;
   flex-direction: column;
 
-  width: 100%;
-  @media ${isDesktop} {
+  ${({ fromLeft }) =>
+    fromLeft
+      ? `
     width: 410px;
-  }
+    height: 100%;
+    margin-top: 72px; // TopPanel
+  `
+      : `
+    width: 100vw;
+    height: 100%;
+  `}
 
   & > div > div {
     // disable pulling panel around on mobile

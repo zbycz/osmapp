@@ -100,7 +100,12 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   /* Hide compass by default */
-.hidden-compass .maplibregl-ctrl-compass {
-  display: none;
-}
+  .hidden-compass .maplibregl-ctrl-compass {
+    display: none;
+  }
+
+  .MuiDrawer-root > .MuiPaper-root {
+    height: calc(90% - 72px);
+    overflow: visible;
+  }
 `;

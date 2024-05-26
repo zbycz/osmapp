@@ -10,7 +10,6 @@ import {
   PanelFooter,
   PanelScrollbars,
   PanelSidePadding,
-  PanelWrapper,
 } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
@@ -83,71 +82,70 @@ export const FeaturePanel = () => {
     !advanced
   ) {
     return (
-      <ClimbingContextProvider
-        feature={feature}
-        key={getUrlOsmId(osmMeta) + (deleted && 'del')} // TODO: hack to reset state
-      >
-        <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
-      </ClimbingContextProvider>
+      <>
+        <ClimbingContextProvider
+          feature={feature}
+          key={getUrlOsmId(osmMeta) + (deleted && 'del')} // TODO: hack to reset state
+        >
+          <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
+        </ClimbingContextProvider>
+      </>
     );
   }
 
   return (
-    <PanelWrapper>
-      <PanelScrollbars>
+    <PanelScrollbars>
+      <PanelContent>
+        {/* <PanelSidePadding> */}
+        <FeatureHeading
+          deleted={deleted}
+          title={label}
+          editEnabled={editEnabled && !point}
+        />
+        <ParentLink />
+
         <ImageSection />
-        <PanelContent>
-          <PanelSidePadding>
-            <ParentLink />
-            <FeatureHeading
-              deleted={deleted}
-              title={label}
-              editEnabled={editEnabled && !point}
-            />
+        <OsmError />
+        {/* </PanelSidePadding> */}
 
-            <OsmError />
-          </PanelSidePadding>
+        {!skeleton && (
+          <>
+            <ImageSlider />
+            <Flex>
+              {/* <PanelSidePadding> */}
+              <Properties
+                showTags={showTagsTable}
+                key={getUrlOsmId(osmMeta) + (deleted && 'del')}
+              />
 
-          {!skeleton && (
-            <>
-              <ImageSlider />
+              <MemberFeatures />
+              {advanced && <Members />}
 
-              <Flex>
-                <PanelSidePadding>
-                  <Properties
-                    showTags={showTagsTable}
-                    key={getUrlOsmId(osmMeta) + (deleted && 'del')}
+              <PublicTransport tags={tags} />
+
+              {editEnabled && (
+                <div style={{ textAlign: 'center' }}>
+                  <EditButton isAddPlace={point} isUndelete={deleted} />
+
+                  <EditDialog
+                    feature={feature}
+                    isAddPlace={point}
+                    isUndelete={deleted}
+                    key={
+                      getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                    }
                   />
+                </div>
+              )}
 
-                  <MemberFeatures />
-                  {advanced && <Members />}
+              {point && <ObjectsAround advanced={advanced} />}
+              {/* </PanelSidePadding> */}
+            </Flex>
+          </>
+        )}
 
-                  <PublicTransport tags={tags} />
-
-                  {editEnabled && (
-                    <div style={{ textAlign: 'center' }}>
-                      <EditButton isAddPlace={point} isUndelete={deleted} />
-
-                      <EditDialog
-                        feature={feature}
-                        isAddPlace={point}
-                        isUndelete={deleted}
-                        key={
-                          getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                        }
-                      />
-                    </div>
-                  )}
-
-                  {point && <ObjectsAround advanced={advanced} />}
-                </PanelSidePadding>
-              </Flex>
-            </>
-          )}
-
-          <PanelSidePadding>{footer}</PanelSidePadding>
-        </PanelContent>
-      </PanelScrollbars>
-    </PanelWrapper>
+        <PanelSidePadding>{footer}</PanelSidePadding>
+      </PanelContent>
+    </PanelScrollbars>
   );
 };

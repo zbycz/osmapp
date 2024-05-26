@@ -1,8 +1,11 @@
 import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 
+import styled from 'styled-components';
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
+import { SwipeableDrawer, useMediaQuery, useTheme } from '@material-ui/core';
+import { grey } from '@material-ui/core/colors';
 import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -21,6 +24,21 @@ import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
+import { isDesktop } from '../helpers';
+import { PanelWrapper } from '../utils/PanelHelpers';
+import { ClosePanelButton } from '../utils/ClosePanelButton';
+import { getOsmappLink } from '../../services/helpers';
+
+const Puller = styled.div`
+  width: 30px;
+  height: 6px;
+  background-color: ${({ theme }) =>
+    theme.palette.mode === 'light' ? grey[300] : grey[900]};
+  border-radius: 3px;
+  position: absolute;
+  top: 8px;
+  left: calc(50% - 15px);
+`;
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -75,11 +93,105 @@ const IndexWithProviders = () => {
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   const photo = router.query.all?.[3];
+  const panelFromLeft = useMediaQuery(isDesktop);
+  const [open, setOpen] = React.useState(false);
+  const { setFeature } = useFeatureContext();
+  const theme = useTheme();
+
+  const toggleDrawer = () => {
+    setOpen(!open);
+  };
+
+  useEffect(() => {
+    if (preview) {
+      setFeature({ ...preview, skeleton: true }); // skeleton needed so map doesnt move (Router will create new coordsFeature)
+    }
+  }, [preview]);
+
+  // console.log('____featureShown', featureShown);
   return (
     <>
       <SearchBox />
       <Loading />
-      {featureShown && <FeaturePanel />}
+      {preview && (
+        <SwipeableDrawer
+          anchor="bottom"
+          open={open}
+          onClose={() => setOpen(false)}
+          onOpen={() => {
+            console.log('____TU2');
+            setOpen(true);
+            Router.push(`${getOsmappLink(preview)}${window.location.hash}`);
+          }}
+          swipeAreaWidth={72}
+          disableSwipeToOpen={false}
+          ModalProps={{
+            keepMounted: true,
+          }}
+        >
+          <div
+            style={{
+              position: 'absolute',
+              background: theme.palette.background.paper,
+              height: '100%',
+              top: -72,
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+              visibility: 'visible',
+              right: 0,
+              left: 0,
+              overflow: 'hidden',
+            }}
+          >
+            <Puller />
+            <FeaturePanel />
+          </div>
+        </SwipeableDrawer>
+      )}
+      {/* {featureShown && (
+        <SwipeableDrawer
+          anchor={panelFromLeft ? 'left' : 'bottom'}
+          open={open}
+          onClose={toggleDrawer}
+          onOpen={() => {}}
+          variant="persistent"
+          // disableBackdropTransition
+          // BackdropProps={{ invisible: true, open: false }}
+          // disableSwipeToOpen
+          // hideBackdrop
+          ModalProps={{
+            keepMounted: true,
+          }}
+          swipeAreaWidth={53}
+          disableSwipeToOpen={false}
+          // ModalProps={{
+          //   hideBackdrop: true,
+          // }}
+        >
+          <div
+            data-testid="ASDFG"
+            style={{
+              position: 'absolute',
+              background: 'red',
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8,
+              visibility: 'visible',
+              right: 0,
+              left: 0,
+              height: 200,
+              bottom: 0,
+              top: -100,
+              zIndex: 10000,
+            }}
+          >
+
+            <PanelWrapper fromLeft={panelFromLeft}>
+              {featureShown && <FeaturePanel />}
+              <ClosePanelButton right onClick={toggleDrawer} />
+            </PanelWrapper>
+          </div>
+        </SwipeableDrawer> )} */}
+
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
           <ClimbingDialog photo={photo} />
@@ -89,7 +201,7 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
-      {preview && <FeaturePreview />}
+      {/* {preview && <FeaturePreview />} */}
       <TitleAndMetaTags />
     </>
   );
