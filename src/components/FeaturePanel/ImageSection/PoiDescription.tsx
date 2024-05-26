@@ -6,7 +6,7 @@ import Maki from '../../utils/Maki';
 import { useUserThemeContext } from '../../../helpers/theme';
 
 const PoiType = styled.div<{ isSkeleton: Boolean; dark: Boolean }>`
-  color: ${({ dark, theme }) => (dark ? '#fff' : theme.palette.text.secondary)};
+  color: ${({ theme }) => theme.palette.secondary.main};
   margin: 0 auto 0 15px;
   font-size: 13px;
   position: relative;
@@ -17,8 +17,6 @@ const PoiType = styled.div<{ isSkeleton: Boolean; dark: Boolean }>`
   }
 
   span {
-    position: absolute;
-    left: 20px;
     ${({ isSkeleton }) => isSkeleton && 'opacity: 0.4;'}
   }
 `;

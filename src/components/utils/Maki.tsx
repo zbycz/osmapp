@@ -5,6 +5,7 @@ import { icons } from '../../assets/icons';
 const MakiImg = styled.img`
   line-height: 14px;
   margin-right: 6px;
+  user-select: none;
   ${({ invert }) => invert && 'filter: invert(100%);'}
 `;
 const Maki = ({

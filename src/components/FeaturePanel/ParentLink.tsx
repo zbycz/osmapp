@@ -1,9 +1,21 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import React from 'react';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { getOsmappLink } from '../../services/helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
+
+const Row = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
+`;
+
+const IconWrapper = styled.div`
+  position: relative;
+  top: 1px;
+`;
 
 const ClimbingParentItem = styled.div`
   margin: 12px 8px -4px 8px;
@@ -12,6 +24,14 @@ const ClimbingParentItem = styled.div`
     color: ${({ theme }) => theme.palette.secondary.main};
     font-size: 13px;
     display: block;
+    &:hover {
+      text-decoration: none;
+      color: ${({ theme }) => theme.palette.text.secondary};
+    }
+    &:hover svg {
+      fill: ${({ theme }) => theme.palette.text.secondary};
+      transition: none;
+    }
   }
 `;
 
@@ -46,7 +66,12 @@ export const ClimbingParentLink = () => {
     <ClimbingParentItem>
       {feature.parentFeatures?.map((parentFeature) => (
         <Link href={getOsmappLink(parentFeature)} color="secondary">
-          {getLabel(parentFeature)}
+          <Row>
+            <IconWrapper>
+              <ArrowBackIcon fontSize="small" color="secondary" />
+            </IconWrapper>
+            {getLabel(parentFeature)}
+          </Row>
         </Link>
       ))}
     </ClimbingParentItem>
