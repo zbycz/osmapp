@@ -11,10 +11,10 @@ export const sanitizeWikimediaCommonsPhotoName = (
   return withoutFile;
 };
 
-export const getCragPhotoKeys = (feature: Feature) =>
+export const getFeaturePhotoKeys = (feature: Feature) =>
   Object.keys(feature.tags).filter((k) => k.startsWith('wikimedia_commons'));
 
-export const getCragPhotos = (feature: Feature) =>
-  getCragPhotoKeys(feature).map((key) =>
+export const getFeaturePhotos = (feature: Feature) =>
+  getFeaturePhotoKeys(feature).map((key) =>
     sanitizeWikimediaCommonsPhotoName(feature.tags[key]),
   );

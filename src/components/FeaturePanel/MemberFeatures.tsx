@@ -13,7 +13,7 @@ import Maki from '../utils/Maki';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { getCommonsImageUrl } from '../../services/images/getWikiImage';
 import { useScrollShadow } from './Climbing/utils/useScrollShadow';
-import { getCragPhotoKeys } from './Climbing/utils/photo';
+import { getFeaturePhotoKeys } from './Climbing/utils/photo';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -131,7 +131,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   const handleHover = () =>
     feature.center && setPreview({ ...feature, noPreviewButton: true });
 
-  const cragPhotoKeys = getCragPhotoKeys(feature);
+  const cragPhotoKeys = getFeaturePhotoKeys(feature);
 
   const {
     scrollElementRef,
