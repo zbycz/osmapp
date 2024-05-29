@@ -4,6 +4,9 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
+import { getFeaturePhotoKeys } from './utils/photo';
+
+const WIKIMEDIA_COMMONS = 'wikimedia_commons';
 
 const getPathString = (path) =>
   path.length === 0
@@ -15,14 +18,46 @@ const getPathString = (path) =>
         )
         .join('|');
 
+export const getNewPhotoIndex = (photoKeys: Array<string>) => {
+  const maxKey = photoKeys.reduce((max, item) => {
+    if (item === WIKIMEDIA_COMMONS) return Math.max(max, 1);
+
+    const parts = item.split(':');
+    if (parts[0] === WIKIMEDIA_COMMONS && parts.length > 1) {
+      const number = parseInt(parts[1], 10);
+      if (!Number.isNaN(number)) {
+        return Math.max(max, number);
+      }
+    }
+    return max;
+  }, 0);
+
+  return maxKey + 1;
+};
+
+const getNewPhotoKey = (photoIndex: number, offset: number) => {
+  const photoIndexWithOffset = photoIndex + offset;
+  return `${WIKIMEDIA_COMMONS}${
+    photoIndexWithOffset === 1 ? '' : `:${photoIndexWithOffset}`
+  }`;
+};
+
 const getUpdatedTags = (route: ClimbingRoute) => {
   const updatedTags = {};
+  const photoKeys = getFeaturePhotoKeys(route.feature);
+  const newPhotoIndex = getNewPhotoIndex(photoKeys);
+
+  let offset = 0;
   Object.entries(route.paths).forEach(([photoName, points]) => {
-    const photoTagKey = route.photoToKeyMap[photoName];
-    if (!photoTagKey) {
-      updatedTags[photoTagKey] = `File:${photoName}`;
+    const newPhotoKeyWithOffset = getNewPhotoKey(newPhotoIndex, offset);
+    const currentPhotoKey = route.photoToKeyMap[photoName];
+
+    updatedTags[`${currentPhotoKey ?? newPhotoKeyWithOffset}:path`] =
+      getPathString(points);
+    if (!currentPhotoKey) {
+      updatedTags[newPhotoKeyWithOffset] = `File:${photoName}`;
+      offset += 1;
     }
-    updatedTags[`${photoTagKey}:path`] = getPathString(points);
   });
   return updatedTags;
 };

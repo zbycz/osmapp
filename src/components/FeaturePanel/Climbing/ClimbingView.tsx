@@ -14,7 +14,7 @@ import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 import { useScrollShadow } from './utils/useScrollShadow';
 import { RouteDistribution } from './RouteDistribution';
-import { getCragPhotos } from './utils/photo';
+import { getFeaturePhotos } from './utils/photo';
 import { useFeatureContext } from '../../utils/FeatureContext';
 
 const Container = styled.div`
@@ -216,7 +216,7 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
   };
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
 
-  const cragPhotos = getCragPhotos(feature);
+  const cragPhotos = getFeaturePhotos(feature);
   preparePhotosAndSet(cragPhotos, photoIndex);
 
   useEffect(() => {
