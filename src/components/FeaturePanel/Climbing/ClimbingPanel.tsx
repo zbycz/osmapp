@@ -19,6 +19,7 @@ import { PoiDescription } from '../ImageSection/PoiDescription';
 import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
 import { ClimbingParentLink } from '../ParentLink';
+import { getCragPhotos } from './utils/photo';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -85,8 +86,8 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const onFullScreenClick = () => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
   };
-
-  preparePhotosAndSet();
+  const cragPhotos = getCragPhotos(feature);
+  preparePhotosAndSet(cragPhotos);
 
   const imageUrl = getCommonsImageUrl(`File:${photoPath}`, 500);
 
