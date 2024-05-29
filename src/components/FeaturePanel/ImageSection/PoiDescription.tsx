@@ -6,7 +6,8 @@ import Maki from '../../utils/Maki';
 import { useUserThemeContext } from '../../../helpers/theme';
 
 const PoiType = styled.div<{ isSkeleton: Boolean; forceWhite: Boolean }>`
-  color: ${({ forceWhite, theme }) => (forceWhite ? '#fff' : theme.palette.secondary.main)};
+  color: ${({ forceWhite, theme }) =>
+    forceWhite ? '#fff' : theme.palette.secondary.main};
   margin: 0 auto 0 15px;
   font-size: 13px;
   position: relative;
