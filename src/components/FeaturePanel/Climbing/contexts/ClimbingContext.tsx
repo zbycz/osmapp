@@ -311,7 +311,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       return [...new Set([...acc, ...cragPhotos, ...routePhotos])];
     }, []);
 
-    setPhotoPaths(photos.sort());
+    setPhotoPaths(photos);
   };
 
   const preparePhotosAndSet = (
