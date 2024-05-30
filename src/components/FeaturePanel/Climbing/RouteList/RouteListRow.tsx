@@ -91,7 +91,9 @@ export const RenderListRow = ({
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [routeSelectedIndex]);
-  const osmId = getShortId(route.feature?.osmMeta) ?? null;
+  const osmId = route.feature?.osmMeta
+    ? getShortId(route.feature.osmMeta)
+    : null;
   const isSelected = isRouteSelected(index);
   const photoInfoForRoute = getPhotoInfoForRoute(index);
 

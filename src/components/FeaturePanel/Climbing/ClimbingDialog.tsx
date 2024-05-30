@@ -75,28 +75,25 @@ export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
       {isEditMode && (
         <DialogActions>
           <Flex>
-            {isEditMode && (
-              <Button
-                onClick={onNewRouteCreate}
-                color="primary"
-                startIcon={<AddIcon />}
-              >
-                Add new route
-              </Button>
-            )}
+            <div>
+              {isEditMode && showDebugMenu && (
+                <Button
+                  onClick={onNewRouteCreate}
+                  color="primary"
+                  startIcon={<AddIcon />}
+                >
+                  Add new route
+                </Button>
+              )}
+            </div>
             <div>
               <Button autoFocus onClick={handleCancel}>
                 Cancel
               </Button>
-              {showDebugMenu && (
-                <Button
-                  onClick={handleSave}
-                  variant="contained"
-                  color="primary"
-                >
-                  Save
-                </Button>
-              )}
+
+              <Button onClick={handleSave} variant="contained" color="primary">
+                Save
+              </Button>
             </div>
           </Flex>
         </DialogActions>

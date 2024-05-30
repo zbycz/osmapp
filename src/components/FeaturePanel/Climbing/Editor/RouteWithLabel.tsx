@@ -36,7 +36,9 @@ export const RouteWithLabel = ({
     ...path[0],
     units: 'percentage',
   });
-  const osmId = getShortId(route.feature?.osmMeta) ?? null;
+  const osmId = route.feature?.osmMeta
+    ? getShortId(route.feature.osmMeta)
+    : null;
 
   if (path.length === 1) {
     return (
