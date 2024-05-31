@@ -47,9 +47,9 @@ export const getInitialMapView = async (ctx) => {
 const timeout = (time) =>
   new Promise((resolve) => setTimeout(resolve, time)) as Promise<undefined>;
 
-const saveLastUrl = (ctx, feature: Feature) => {
+const saveLastUrl = (feature: Feature, ctx?) => {
   const url = getOsmappLink(feature);
-  if (ctx.res) {
+  if (ctx?.res) {
     ctx.res.setHeader('Set-Cookie', `last-url=${url}; Path=/; Max-Age=86400`);
   } else {
     Cookies.set('last-url', url, { expires: 1, path: '/' });
@@ -67,7 +67,7 @@ export const getInitialFeature = async (ctx) => {
   if (all[0].match(/^[-.0-9]+,[-.0-9]+$/)) {
     const [lat, lon] = all[0].split(',');
     const coordsFeature = getCoordsFeature([lon, lat]);
-    saveLastUrl(ctx, coordsFeature);
+    saveLastUrl(coordsFeature, ctx);
     return coordsFeature; // TODO ssr image ?
   }
 
@@ -90,7 +90,7 @@ export const getInitialFeature = async (ctx) => {
 
   const t1 = new Date().getTime();
   const initialFeature = await fetchFeature(shortId);
-  saveLastUrl(ctx, initialFeature);
+  saveLastUrl(initialFeature, ctx);
 
   const t2 = new Date().getTime();
   const osmRequest = t2 - t1;

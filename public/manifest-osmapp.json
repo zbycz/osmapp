@@ -1,7 +1,17 @@
 {
   "name": "OsmAPP maps",
   "short_name": "OsmAPP",
-  "description": "A universal OpenStreetMap app",
+  "description": "A universal app for OpenStreetMap",
+  "theme_color": "#eb5757",
+  "background_color": "#f8f4f0",
+  "start_url": "/start",
+  "display": "standalone",
+  "orientation": "any",
+  "url_handlers": [
+    {
+      "origin": "https://osmapp.org"
+    }
+  ],
   "icons": [
     {
       "src": "/osmapp/logo/pwa/maskable_x48.png",
@@ -74,16 +84,6 @@
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"
-    }
-  ],
-  "theme_color": "#eb5757",
-  "background_color": "#f8f4f0",
-  "start_url": "/last-url",
-  "display": "standalone",
-  "orientation": "any",
-  "url_handlers": [
-    {
-      "origin": "https://osmapp.org"
     }
   ]
 }
