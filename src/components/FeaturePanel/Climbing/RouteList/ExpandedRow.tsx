@@ -74,28 +74,28 @@ export const ExpandedRow = ({
         <Flex>
           <Left>
             <List>
-              {tempRoute.description && (
-                <ListItem>
-                  {isReadOnly ? (
-                    <div>
-                      <Label>Description</Label>
-                      <Value>{getText(tempRoute.description)}</Value>
-                    </div>
-                  ) : (
-                    <TextField
-                      size="small"
-                      value={tempRoute.description}
-                      onChange={(e) => onTempRouteChange(e, 'description')}
-                      onClick={stopPropagation}
-                      style={{ marginTop: 10 }}
-                      variant="outlined"
-                      label="Description"
-                      fullWidth
-                      multiline
-                    />
-                  )}
-                </ListItem>
-              )}
+              <ListItem>
+                {isReadOnly && tempRoute.description && (
+                  <div>
+                    <Label>Description</Label>
+                    <Value>{getText(tempRoute.description)}</Value>
+                  </div>
+                )}
+                {isEditMode && (
+                  <TextField
+                    size="small"
+                    value={tempRoute.description}
+                    onChange={(e) => onTempRouteChange(e, 'description')}
+                    onClick={stopPropagation}
+                    style={{ marginTop: 10 }}
+                    variant="outlined"
+                    label="Description"
+                    fullWidth
+                    multiline
+                  />
+                )}
+              </ListItem>
+
               <ListItem>
                 <RouteInDifferentPhotos
                   route={tempRoute}
@@ -150,26 +150,26 @@ export const ExpandedRow = ({
                   )}
                 </ListItem>
               )}
-              {tempRoute.author && (
-                <ListItem>
-                  {isReadOnly ? (
-                    <div>
-                      <Label>Author</Label>
-                      <Value>{getText(tempRoute.author)}</Value>
-                    </div>
-                  ) : (
-                    <TextField
-                      size="small"
-                      value={tempRoute.author}
-                      onChange={(e) => onTempRouteChange(e, 'author')}
-                      onClick={stopPropagation}
-                      style={{ marginTop: 10 }}
-                      variant="outlined"
-                      label="Author"
-                    />
-                  )}
-                </ListItem>
-              )}
+
+              <ListItem>
+                {isReadOnly && tempRoute.author && (
+                  <div>
+                    <Label>Author</Label>
+                    <Value>{getText(tempRoute.author)}</Value>
+                  </div>
+                )}
+                {isEditMode && (
+                  <TextField
+                    size="small"
+                    value={tempRoute.author}
+                    onChange={(e) => onTempRouteChange(e, 'author')}
+                    onClick={stopPropagation}
+                    style={{ marginTop: 10 }}
+                    variant="outlined"
+                    label="Author"
+                  />
+                )}
+              </ListItem>
               <ListItem>
                 {tempRoute.feature ? (
                   <Button

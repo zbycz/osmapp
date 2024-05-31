@@ -5,6 +5,7 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { getFeaturePhotoKeys } from './utils/photo';
+import { getOsmTagFromGradeSystem } from './utils/routeGrade';
 
 const WIKIMEDIA_COMMONS = 'wikimedia_commons';
 
@@ -42,7 +43,30 @@ const getNewPhotoKey = (photoIndex: number, offset: number) => {
   }`;
 };
 
-const getUpdatedTags = (route: ClimbingRoute) => {
+const getUpdatedBasicTags = (route: ClimbingRoute) => {
+  const checkedTags = ['name', 'description', 'author'];
+  const updatedTags = {};
+  checkedTags.forEach((tagToCheck) => {
+    if (route[tagToCheck] !== route.feature.tags[tagToCheck]) {
+      updatedTags[tagToCheck] = route[tagToCheck];
+    }
+  });
+
+  const newGradeSystem = route.difficulty.gradeSystem;
+  const gradeSystemKey = getOsmTagFromGradeSystem(newGradeSystem);
+  const featureDifficulty = route.feature.tags[gradeSystemKey];
+
+  const isGradeUpdated = route.difficulty.grade !== featureDifficulty;
+
+  if (isGradeUpdated) {
+    updatedTags[gradeSystemKey] = route.difficulty.grade;
+    // @TODO: delete previous grade? if(!featureDifficulty)
+  }
+
+  return updatedTags;
+};
+
+const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   const updatedTags = {};
   const photoKeys = getFeaturePhotoKeys(route.feature);
   const newPhotoIndex = getNewPhotoIndex(photoKeys);
@@ -74,7 +98,10 @@ const getChanges = (routes: ClimbingRoute[]): Change[] => {
 
   return existingRoutes
     .map((route) => {
-      const updatedTags = getUpdatedTags(route);
+      const updatedTags = {
+        ...getUpdatedBasicTags(route),
+        ...getUpdatedPhotoTags(route),
+      };
       const isSame = isSameTags(updatedTags, route.feature.tags);
       return isSame
         ? undefined
