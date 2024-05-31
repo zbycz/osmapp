@@ -86,3 +86,6 @@ export const getRouteGrade = (
 
 export const getGradeSystemName = (gradeSystemKey: GradeSystem) =>
   gradeSystem.find((item) => item.key === gradeSystemKey)?.name;
+
+export const getOsmTagFromGradeSystem = (gradeSystemKey: GradeSystem) =>
+  `climbing:grade:${gradeSystemKey}`;
