@@ -39,6 +39,12 @@ const getHumanValue = (k, v, featured: boolean) => {
     return '✗';
   }
 
+  // if the string can be converted to a number
+  if (!Number.isNaN(Number(v))) {
+    const foratter = new Intl.NumberFormat(undefined, { notation: 'compact' });
+    return foratter.format(Number(v));
+  }
+
   return humanValue;
 };
 
