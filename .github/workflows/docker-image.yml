@@ -1,0 +1,22 @@
+name: Docker Image CI - for opg-pages
+
+on:
+  push:
+    branches: [ "opg-master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Login to Github Packages
+      uses: docker/login-action@v1
+      with:
+        registry: ghcr.io
+        username: ${{ github.actor }}
+        password: ${{ secrets.GHCR_PAT }}
+    - name: Build the Docker image
+      if: github.ref == 'refs/heads/opg-master'
+      run: |
+        docker build --build-arg PROXY_BACKEND=http://opg-pages/ . --file Dockerfile --tag ghcr.io/openplaceguide/osmapp:latest
+        docker push ghcr.io/openplaceguide/osmapp:latest
