@@ -39,12 +39,6 @@ const getHumanValue = (k, v, featured: boolean) => {
     return '✗';
   }
 
-  // if the string can be converted to a number
-  if (!Number.isNaN(Number(v))) {
-    const foratter = new Intl.NumberFormat(undefined, { notation: 'compact' });
-    return foratter.format(Number(v));
-  }
-
   return humanValue;
 };
 
@@ -52,5 +46,15 @@ export const renderValue = (k, v, featured = false) => {
   const url = getUrlForTag(k, v);
   const humanValue = getHumanValue(k, v, featured);
 
-  return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : humanValue;
+  if (url) {
+    return <a href={url}>{slashToOptionalBr(humanValue)}</a>;
+  }
+
+  // if the string can be converted to a number and the k is population
+  if (k === 'population' && !Number.isNaN(Number(v))) {
+    const foratter = new Intl.NumberFormat(undefined, { notation: 'compact' });
+    return foratter.format(Number(v));
+  }
+
+  return humanValue;
 };
