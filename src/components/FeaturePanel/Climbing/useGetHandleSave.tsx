@@ -53,13 +53,13 @@ const getUpdatedBasicTags = (route: ClimbingRoute) => {
     }
   });
 
-  const newGradeSystem = route.difficulty.gradeSystem;
+  const newGradeSystem = route.difficulty?.gradeSystem;
   const gradeSystemKey = getOsmTagFromGradeSystem(newGradeSystem);
   const featureDifficulty = route.feature.tags[gradeSystemKey];
 
-  const isGradeUpdated = route.difficulty.grade !== featureDifficulty;
+  const isGradeUpdated = route.difficulty?.grade !== featureDifficulty;
 
-  if (isGradeUpdated) {
+  if (newGradeSystem && isGradeUpdated) {
     updatedTags[gradeSystemKey] = route.difficulty.grade;
     // @TODO: delete previous grade? if(!featureDifficulty)
   }
