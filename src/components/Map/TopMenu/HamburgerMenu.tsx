@@ -19,6 +19,13 @@ import { getIdEditorLink } from '../../../utils';
 import { useUserThemeContext } from '../../../helpers/theme';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { LoginIcon } from './LoginIcon';
+import GithubIcon from '../../../assets/GithubIcon';
+import { LangSwitcher } from './LangSwitcher';
+
+const StyledGithubIcon = styled(GithubIcon)`
+  filter: ${({ theme }) => theme.palette.invertFilter};
+  margin: -2px 8px 0 0;
+`;
 
 const PencilIcon = styled(CreateIcon)`
   color: ${({ theme }) => theme.palette.action.active};
@@ -108,6 +115,17 @@ const AboutLink = ({ closeMenu }) => {
     </MenuItem>
   );
 };
+const GithubLink = ({ closeMenu }) => (
+  <MenuItem
+    href="https://github.com/zbycz/osmapp"
+    component="a"
+    target="_blank"
+    onClick={closeMenu}
+  >
+    <StyledGithubIcon width={14} height={14} />
+    {t('map.github_title')}
+  </MenuItem>
+);
 
 const InstallLink = ({ closeMenu }) => {
   const handleClick = () => {
@@ -221,6 +239,8 @@ export const HamburgerMenu = () => {
         <EditLink closeMenu={close} />
         <InstallLink closeMenu={close} />
         <AboutLink closeMenu={close} />
+        <GithubLink closeMenu={close} />
+        <LangSwitcher />
       </Menu>
       <LoginIcon onClick={open} />
       <IconButton

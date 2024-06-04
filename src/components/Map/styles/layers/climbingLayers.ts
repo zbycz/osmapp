@@ -4,6 +4,31 @@ import type {
 } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
 
+export const CRAG_VISIBLE_FROM_ZOOM = 13;
+
+export const COLORS = {
+  AREA: {
+    HAS_IMAGES: {
+      HOVER: 'rgba(0, 59, 210, 0.7)',
+      DEFAULT: 'rgba(0, 59, 210, 1)',
+    },
+    NO_IMAGES: {
+      HOVER: 'black',
+      DEFAULT: '#666',
+    },
+  },
+  CRAG: {
+    HAS_IMAGES: {
+      HOVER: 'rgba(234, 85, 64, 0.7)',
+      DEFAULT: '#ea5540',
+    },
+    NO_IMAGES: {
+      HOVER: 'black',
+      DEFAULT: '#666',
+    },
+  },
+};
+
 const linear = (
   from: number,
   num1: number,
@@ -111,7 +136,7 @@ const crags: LayerSpecification = {
   id: 'climbing-2-crags',
   type: 'symbol',
   source: 'climbing',
-  minzoom: 15,
+  minzoom: CRAG_VISIBLE_FROM_ZOOM,
   maxzoom: 20,
   filter: [
     'all',
@@ -146,7 +171,15 @@ const crags: LayerSpecification = {
     'text-halo-blur': 0.5,
     'text-halo-width': 1.5,
     'text-halo-color': '#ffffff',
-    'text-color': ifHasImages('#ea5540', '#666'),
+    'text-color': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      ifHasImages(COLORS.CRAG.HAS_IMAGES.HOVER, COLORS.CRAG.NO_IMAGES.HOVER),
+      ifHasImages(
+        COLORS.CRAG.HAS_IMAGES.DEFAULT,
+        COLORS.CRAG.NO_IMAGES.DEFAULT,
+      ),
+    ],
   },
 };
 
@@ -173,8 +206,11 @@ const areas: LayerSpecification[] = [
       'circle-color': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
-        ifHasImages('rgba(0, 59, 210, 0.7)', 'black'),
-        ifHasImages('rgba(0, 59, 210, 1)', '#666'),
+        ifHasImages(COLORS.AREA.HAS_IMAGES.HOVER, COLORS.AREA.NO_IMAGES.HOVER),
+        ifHasImages(
+          COLORS.AREA.HAS_IMAGES.DEFAULT,
+          COLORS.AREA.NO_IMAGES.DEFAULT,
+        ),
       ],
     },
   },
@@ -209,8 +245,11 @@ const areas: LayerSpecification[] = [
       'text-color': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
-        ifHasImages('rgba(0, 59, 210, 0.7)', 'black'),
-        ifHasImages('rgba(0, 59, 210, 1)', '#666'),
+        ifHasImages(COLORS.AREA.HAS_IMAGES.HOVER, COLORS.AREA.NO_IMAGES.HOVER),
+        ifHasImages(
+          COLORS.AREA.HAS_IMAGES.DEFAULT,
+          COLORS.AREA.NO_IMAGES.DEFAULT,
+        ),
       ],
       'text-halo-color': 'rgba(250, 250, 250, 1)',
       'text-halo-width': 2,
