@@ -6,6 +6,7 @@ import { Change, editCrag } from '../../../services/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { getFeaturePhotoKeys } from './utils/photo';
 import { getOsmTagFromGradeSystem } from './utils/routeGrade';
+import { useSnackbar } from '../../utils/SnackbarContext';
 
 const WIKIMEDIA_COMMONS = 'wikimedia_commons';
 
@@ -93,7 +94,7 @@ const isSameTags = (updatedTags: {}, origTags: FeatureTags) => {
   return isSame;
 };
 
-const getChanges = (routes: ClimbingRoute[]): Change[] => {
+export const getChanges = (routes: ClimbingRoute[]): Change[] => {
   const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
 
   return existingRoutes
@@ -121,6 +122,7 @@ export const useGetHandleSave = (
 ) => {
   const { feature: crag } = useFeatureContext();
   const { routes } = useClimbingContext();
+  const showSnackbar = useSnackbar();
 
   return async () => {
     // eslint-disable-next-line no-alert
@@ -133,6 +135,7 @@ export const useGetHandleSave = (
     const result = await editCrag(crag, comment, changes);
 
     console.log('All routes saved', result); // eslint-disable-line no-console
+    showSnackbar('Data saved successfully!', 'success');
     setIsEditMode(false);
   };
 };

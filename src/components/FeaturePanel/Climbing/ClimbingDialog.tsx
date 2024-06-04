@@ -34,7 +34,7 @@ export const ClimbingDialog = ({ photo }: { photo?: string }) => {
   } = useClimbingContext();
   const { feature } = useFeatureContext();
   const handleSave = useGetHandleSave(setIsEditMode);
-
+  // const { routes } = useClimbingContext();
   const machine = getMachine();
 
   const onScroll = (e) => {
@@ -46,6 +46,16 @@ export const ClimbingDialog = ({ photo }: { photo?: string }) => {
   };
 
   const handleClose = () => {
+    // @TODO update saved data first
+    // const isDataChanged = getChanges(routes).length > 0;
+    // if (
+    //   isDataChanged &&
+    //   window.confirm(
+    //     'Are you sure you want to discard changes without saving?',
+    //   ) === false
+    // ) {
+    //   return;
+    // }
     Router.push(`${getOsmappLink(feature)}${window.location.hash}`);
   };
   const handleCancel = () => {
