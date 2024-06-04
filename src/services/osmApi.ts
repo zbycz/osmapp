@@ -15,6 +15,7 @@ import { isBrowser } from '../components/helpers';
 import { addSchemaToFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
 import { osmToFeature } from './osmToFeature';
+import { mergeMemberImages } from './images/getImageTags';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -167,6 +168,8 @@ export const addMembersAndParents = async (
     fetchParentFeatures(feature.osmMeta),
     fetchMemberFeatures(feature.osmMeta),
   ]);
+
+  mergeMemberImages(feature, memberFeatures); // TODO test
 
   return { ...feature, memberFeatures, parentFeatures };
 };

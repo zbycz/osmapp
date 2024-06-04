@@ -20,6 +20,7 @@ import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
 import { ClimbingParentLink } from '../ParentLink';
 import { getFeaturePhotos } from './utils/photo';
+import { ImageSlider } from '../ImagePane/ImageSlider';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -133,6 +134,8 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
           <PoiDescription />
 
           <OsmError />
+
+          <ImageSlider />
 
           <RouteDistribution />
           <RouteList />
