@@ -6,6 +6,11 @@ import { getOsmappLink } from '../../services/helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
 
+const Comma = styled.span`
+  color: ${({ theme }) => theme.palette.secondary.main};
+  position: relative;
+  left: -2px;
+`;
 const Row = styled.div`
   display: flex;
   align-items: center;
@@ -45,35 +50,50 @@ const ParentItem = styled.div`
   }
 `;
 
-export const ParentLink = () => {
+export const Arrow = ({ children }) => (
+  <Row>
+    <IconWrapper>
+      <ArrowBackIcon fontSize="small" color="secondary" />
+    </IconWrapper>
+    {children}
+  </Row>
+);
+export const ParentLinkContent = () => {
   const { feature } = useFeatureContext();
 
+  const hasMoreParents = feature.parentFeatures?.length > 1;
   return (
-    <ParentItem>
-      {feature.parentFeatures?.map((parentFeature) => (
-        <Link href={getOsmappLink(parentFeature)} color="secondary">
-          {getLabel(parentFeature)}
-        </Link>
-      ))}
-    </ParentItem>
+    <>
+      {hasMoreParents ? (
+        <Arrow>
+          {feature.parentFeatures?.map((parentFeature, i) => (
+            <>
+              <Link href={getOsmappLink(parentFeature)} color="secondary">
+                {getLabel(parentFeature)}
+              </Link>
+              {feature.parentFeatures.length > i + 1 && <Comma>,</Comma>}
+            </>
+          ))}
+        </Arrow>
+      ) : (
+        feature.parentFeatures?.map((parentFeature) => (
+          <Link href={getOsmappLink(parentFeature)} color="secondary">
+            <Arrow>{getLabel(parentFeature)}</Arrow>
+          </Link>
+        ))
+      )}
+    </>
   );
 };
 
-export const ClimbingParentLink = () => {
-  const { feature } = useFeatureContext();
+export const ParentLink = () => (
+  <ParentItem>
+    <ParentLinkContent />
+  </ParentItem>
+);
 
-  return (
-    <ClimbingParentItem>
-      {feature.parentFeatures?.map((parentFeature) => (
-        <Link href={getOsmappLink(parentFeature)} color="secondary">
-          <Row>
-            <IconWrapper>
-              <ArrowBackIcon fontSize="small" color="secondary" />
-            </IconWrapper>
-            {getLabel(parentFeature)}
-          </Row>
-        </Link>
-      ))}
-    </ClimbingParentItem>
-  );
-};
+export const ClimbingParentLink = () => (
+  <ClimbingParentItem>
+    <ParentLinkContent />
+  </ClimbingParentItem>
+);
