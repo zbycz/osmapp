@@ -42,8 +42,7 @@ const geojson = {
       imageUrl:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Lomy_nad_Velkou_-_Borová_věž.jpg/400px-Lomy_nad_Velkou_-_Borová_věž.jpg',
       k: 'wikimedia_commons',
-      pathTag:
-        '0.32,0.902|0.371,0.537B|0.372,0.433B|0.388,0.298B|0.4,0.206B|0.406,0.173A',
+      pathTag: '0.32,0.902|0.371,0.537B|0.406,0.173A',
       paths: [
         {
           path: [
@@ -61,8 +60,7 @@ const geojson = {
       imageUrl:
         'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Lomy_nad_Velkou_-_Borová_věž3.jpg/400px-Lomy_nad_Velkou_-_Borová_věž3.jpg',
       k: 'wikimedia_commons:2',
-      pathTag:
-        '0.924,0.797|0.773,0.428B|0.708,0.307B|0.636,0.174B|0.581,0.086B|0.562,0.056A',
+      pathTag: '0.924,0.797|0.773,0.428B|0.562,0.056A',
       paths: [
         {
           path: [
