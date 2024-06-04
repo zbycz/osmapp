@@ -4,10 +4,7 @@ import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 
 const Link = styled.a`
-  position: absolute;
-  right: 8px;
-  bottom: 19px;
-  z-index: 999;
+  pointer-events: all;
 `;
 
 export const MaptilerLogo = () => {
@@ -21,7 +18,7 @@ export const MaptilerLogo = () => {
   }
 
   return (
-    <Link href="https://www.maptiler.com" rel="noopener" target="_blank">
+    <Link href="https://www.maptiler.com" target="_blank">
       <img src="/maptiler-api.svg" alt="MapTiler logo" width={67} height={20} />
     </Link>
   );

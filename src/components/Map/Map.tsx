@@ -11,6 +11,7 @@ import { SHOW_PROTOTYPE_UI } from '../../config';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
+import { ClimbingLegend } from './MapFooter/ClimbingLegend';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -50,6 +51,7 @@ const BottomRight = styled.div`
   bottom: 0;
   z-index: 1000;
   text-align: right;
+  pointer-events: none;
 `;
 
 const BugReportButton = () => (
@@ -82,9 +84,10 @@ const Map = () => {
       </TopRight>
       <BottomRight>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
+        <MaptilerLogo />
+        <ClimbingLegend />
         <MapFooter />
       </BottomRight>
-      <MaptilerLogo />
     </>
   );
 };
