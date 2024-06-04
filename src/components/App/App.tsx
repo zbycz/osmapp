@@ -20,6 +20,7 @@ import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
 import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
+import { SnackbarProvider } from '../utils/SnackbarContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -97,17 +98,19 @@ const IndexWithProviders = () => {
 const App = ({ featureFromRouter, initialMapView, cookies }) => {
   const mapView = getMapViewFromHash() || initialMapView;
   return (
-    <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>
-      <MapStateProvider initialMapView={mapView}>
-        <OsmAuthProvider cookies={cookies}>
-          <StarsProvider>
-            <EditDialogProvider /* TODO supply router.query */>
-              <IndexWithProviders />
-            </EditDialogProvider>
-          </StarsProvider>
-        </OsmAuthProvider>
-      </MapStateProvider>
-    </FeatureProvider>
+    <SnackbarProvider>
+      <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>
+        <MapStateProvider initialMapView={mapView}>
+          <OsmAuthProvider cookies={cookies}>
+            <StarsProvider>
+              <EditDialogProvider /* TODO supply router.query */>
+                <IndexWithProviders />
+              </EditDialogProvider>
+            </StarsProvider>
+          </OsmAuthProvider>
+        </MapStateProvider>
+      </FeatureProvider>
+    </SnackbarProvider>
   );
 };
 App.getInitialProps = async (ctx) => {
