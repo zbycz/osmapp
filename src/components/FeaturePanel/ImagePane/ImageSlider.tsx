@@ -32,7 +32,7 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
     <ImageWrapper>
       <img src={imageTag.imageUrl} alt={imageTag.k} width={200} />
       <PathSvg>
-        {imageTag.paths.map((path) => (
+        {imageTag.paths.map(({ path }) => (
           <Path path={path} />
         ))}
       </PathSvg>
@@ -46,7 +46,7 @@ export const ImageSlider = () => {
   } = useFeatureContext();
 
   // temporary - until ImageSlider is finished
-  if (!imageTags?.some(({ points }) => points.length)) {
+  if (!imageTags?.some(({ paths }) => paths.length)) {
     return null;
   }
 

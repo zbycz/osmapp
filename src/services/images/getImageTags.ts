@@ -1,5 +1,5 @@
 import { getCommonsImageUrl } from './getWikiImage';
-import { FeatureTags, ImageTag, imageTagRegexp } from '../types';
+import { Feature, FeatureTags, ImageTag, imageTagRegexp } from '../types';
 
 const getSuffix = (y: string) => {
   const matches = y.match(/([^.0-9].*)$/);
@@ -29,7 +29,12 @@ const getImageUrl = (type: ImageTag['type'], v: string): string | null => {
   return null; // API call needed
 };
 
-export const getImageTags = (tags: FeatureTags): ImageTag[] =>
+const getPaths = (pathTag: string, shortId: string) => {
+  const path = parsePathTag(pathTag);
+  return path.length ? [{ path, shortId }] : [];
+};
+
+export const getImageTags = (tags: FeatureTags, shortId: string): ImageTag[] =>
   Object.keys(tags)
     .filter((k) => k.match(imageTagRegexp))
     .map((k) => {
@@ -37,6 +42,23 @@ export const getImageTags = (tags: FeatureTags): ImageTag[] =>
       const v = tags[k];
       const imageUrl = getImageUrl(type, v);
       const pathTag = tags[`${k}:path`];
-      const paths = [parsePathTag(pathTag)];
+      const paths = getPaths(pathTag, shortId);
       return { type, k, v, imageUrl, pathTag, paths };
     });
+
+export const mergeMemberImages = (
+  feature: Feature,
+  memberFeatures: Feature[],
+) => {
+  memberFeatures
+    .map((member) => member.imageTags)
+    .flat()
+    .forEach((imageTag) => {
+      const match = feature.imageTags.find((tag) => tag.v === imageTag.v);
+      if (match) {
+        match.paths.push(...imageTag.paths);
+      } else {
+        feature.imageTags.push(imageTag);
+      }
+    });
+};

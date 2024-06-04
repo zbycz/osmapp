@@ -27,7 +27,7 @@ export type ImageTag = {
   v: string;
   imageUrl: string | null; // null = API call needed
   pathTag: string | undefined;
-  paths: ImagePath[];
+  paths: { path: ImagePath; shortId: string }[];
 };
 
 // coordinates in geojson format: [lon, lat] = [x,y]
