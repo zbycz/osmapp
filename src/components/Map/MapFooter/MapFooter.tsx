@@ -6,7 +6,6 @@ import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Translation } from '../../../services/intl';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
-import { PROJECT_ID } from '../../../services/project';
 
 const IconContainer = styled.div`
   width: 20px;
@@ -106,23 +105,21 @@ export const MapFooter = ({ isLegendVisible, setIsLegendVisible }) => (
       <div>
         <MapDataLink />
       </div>
-      {PROJECT_ID === 'openclimbing' && (
-        <IconContainer>
-          {!isLegendVisible && (
-            <Tooltip title="Show climbing legend" enterDelay={1000}>
-              <StyledIconButton
-                size="small"
-                edge="end"
-                onClick={() => {
-                  setIsLegendVisible(true);
-                }}
-              >
-                <KeyboardArrowUpIcon fontSize="small" />
-              </StyledIconButton>
-            </Tooltip>
-          )}
-        </IconContainer>
-      )}
+      <IconContainer>
+        {!isLegendVisible && (
+          <Tooltip title="Show climbing legend" enterDelay={1000}>
+            <StyledIconButton
+              size="small"
+              edge="end"
+              onClick={() => {
+                setIsLegendVisible(true);
+              }}
+            >
+              <KeyboardArrowUpIcon fontSize="small" />
+            </StyledIconButton>
+          </Tooltip>
+        )}
+      </IconContainer>
     </Wrapper>
   </ClientOnly>
 );

@@ -1,11 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
+import Router from 'next/router';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Path, PathSvg } from './Path';
 import { Slider } from './Slider';
-import { ImageTag } from '../../../services/types';
+import { Feature, ImageTag } from '../../../services/types';
+import { getOsmappLink } from '../../../services/helpers';
+import { sanitizeWikimediaCommonsPhotoName } from '../Climbing/utils/photo';
 
-const ImageWrapper = styled.div`
+const ImageWrapper = styled.a`
   position: relative;
   display: flex;
   height: 100%;
@@ -23,13 +26,30 @@ const ImageWrapper = styled.div`
   }
 `;
 
-const Image = ({ imageTag }: { imageTag: ImageTag }) => {
+const Image = ({
+  imageTag,
+  feature,
+}: {
+  imageTag: ImageTag;
+  feature: Feature;
+}) => {
   if (!imageTag.imageUrl) {
     return null;
   }
 
+  const onPhotoClick = () => {
+    const isCrag = feature.tags.climbing === 'crag';
+    if (isCrag) {
+      Router.push(
+        `/${getOsmappLink(
+          feature,
+        )}/climbing/${sanitizeWikimediaCommonsPhotoName(imageTag.v)}`,
+      );
+    }
+  };
+
   return (
-    <ImageWrapper>
+    <ImageWrapper onClick={onPhotoClick}>
       <img src={imageTag.imageUrl} alt={imageTag.k} height={270} />
       <PathSvg>
         {imageTag.paths.map(({ path }) => (
@@ -41,20 +61,18 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
 };
 
 export const ImageSlider = () => {
-  const {
-    feature: { imageTags },
-  } = useFeatureContext();
+  const { feature } = useFeatureContext();
 
   // temporary - until ImageSlider is finished
-  if (!imageTags?.some(({ paths }) => paths.length)) {
+  if (!feature.imageTags?.some(({ paths }) => paths.length)) {
     return null;
   }
 
   return (
     <div>
       <Slider>
-        {imageTags.map((imageTag) => (
-          <Image key={imageTag.k} imageTag={imageTag} />
+        {feature.imageTags.map((imageTag) => (
+          <Image key={imageTag.k} imageTag={imageTag} feature={feature} />
         ))}
         {/* Fody */}
         {/* Mapillary */}

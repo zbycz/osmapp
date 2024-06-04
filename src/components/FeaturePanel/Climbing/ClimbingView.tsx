@@ -149,7 +149,7 @@ const MainContent = () => (
   </>
 );
 
-export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
+export const ClimbingView = ({ photo }: { photo?: string }) => {
   const {
     imageSize,
     routeSelectedIndex,
@@ -217,7 +217,7 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
 
   const cragPhotos = getFeaturePhotos(feature);
-  preparePhotosAndSet(cragPhotos, photoIndex);
+  preparePhotosAndSet(cragPhotos, photo);
 
   useEffect(() => {
     setIsPhotoLoaded(false);

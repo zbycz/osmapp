@@ -10,6 +10,7 @@ const Wrapper = styled.div`
 
   .slides {
     display: flex;
+    gap: 8px;
     align-items: center;
     overflow-x: auto;
     scroll-behavior: smooth;

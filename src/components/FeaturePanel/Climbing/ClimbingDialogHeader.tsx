@@ -46,9 +46,9 @@ export const ClimbingDialogHeader = ({ onClose }) => {
 
   const { feature } = useFeatureContext();
 
-  const onPhotoChange = (photo: string, photoIndex: number) => {
+  const onPhotoChange = (photo: string) => {
     Router.push(
-      `${getOsmappLink(feature)}/climbing/${photoIndex}${window.location.hash}`,
+      `${getOsmappLink(feature)}/climbing/${photo}${window.location.hash}`,
     );
 
     setAreRoutesLoading(true);
@@ -87,7 +87,7 @@ export const ClimbingDialogHeader = ({ onClose }) => {
               <PhotoLinks>
                 {photoPaths.map((photo, index) => (
                   <PhotoLink
-                    onClick={() => onPhotoChange(photo, index)}
+                    onClick={() => onPhotoChange(photo)}
                     isCurrentPhoto={photo === photoPath}
                   >
                     {index}
