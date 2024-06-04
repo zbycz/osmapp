@@ -54,6 +54,7 @@ const BottomRight = styled.div`
   z-index: 1000;
   text-align: right;
   pointer-events: none;
+  z-index: 999;
 `;
 
 const FooterContainer = styled.div`

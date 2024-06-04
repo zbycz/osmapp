@@ -129,7 +129,7 @@ type ClimbingContextType = {
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
   gradeTable: GradeTable;
   setGradeTable: (gradeTable: GradeTable) => void;
-  preparePhotosAndSet: (cragPhotos: Array<string>, photoIndex?: number) => void;
+  preparePhotosAndSet: (cragPhotos: Array<string>, photo?: string) => void;
 };
 
 // @TODO generate?
@@ -314,13 +314,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setPhotoPaths(photos);
   };
 
-  const preparePhotosAndSet = (
-    cragPhotos: Array<string>,
-    photoIndex?: number,
-  ) => {
+  const preparePhotosAndSet = (cragPhotos: Array<string>, photo?: string) => {
     if (photoPaths === null) getAllRoutesPhotos(cragPhotos);
     if (!photoPath && photoPaths?.length > 0)
-      setPhotoPath(photoPaths[photoIndex || 0]);
+      setPhotoPath(photo || photoPaths[0]);
   };
 
   const loadPhotoRelatedData = () => {

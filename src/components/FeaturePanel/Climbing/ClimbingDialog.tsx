@@ -21,7 +21,7 @@ const Flex = styled.div`
   width: 100%;
 `;
 
-export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
+export const ClimbingDialog = ({ photo }: { photo?: string }) => {
   const contentRef = useRef(null);
 
   const {
@@ -69,7 +69,7 @@ export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
         ref={contentRef}
         onScroll={onScroll}
       >
-        <ClimbingView photoIndex={photoIndex} />
+        <ClimbingView photo={photo} />
       </DialogContent>
 
       {isEditMode && (
