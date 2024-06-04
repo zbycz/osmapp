@@ -96,3 +96,11 @@ export const isDesktop = '(min-width: 500px)';
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>
   isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error
+
+export const useIsClient = () => {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  return isClient;
+};

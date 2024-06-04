@@ -100,7 +100,7 @@ export default {
   'opening_hours.today_closed': 'Closed today',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',
 
-  'map.github_title': 'GitHub',
+  'map.github_title': 'GitHub repository',
   'map.language_title': 'Change language',
   'map.osm_copyright_tooltip': '(c) OpenStreetMap.org contributors<br> – free map data of the Earth 👌',
   'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> – vector tiles, hosting, outdoor map<br>Big thanks for supporting this project! 🙂 ',

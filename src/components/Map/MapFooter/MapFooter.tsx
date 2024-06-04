@@ -1,24 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import getConfig from 'next/config';
 import { Tooltip, useMediaQuery } from '@material-ui/core';
 import uniq from 'lodash/uniq';
-import { t, Translation } from '../../../services/intl';
-import GithubIcon from '../../../assets/GithubIcon';
-import { LangSwitcher } from './LangSwitcher';
+import { Translation } from '../../../services/intl';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 
-const {
-  publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
-} = getConfig();
-
-const StyledGithubIcon = styled(GithubIcon)`
-  filter: ${({ theme }) => theme.palette.invertFilter};
-`;
-
 const Wrapper = styled.div`
-  margin-top: 10px;
   padding: 0 2px;
   font-size: 12px;
   line-height: normal;
@@ -38,21 +26,6 @@ const Wrapper = styled.div`
     padding: 2px 0;
   }
 `;
-
-const OsmappLink = () => (
-  <>
-    <a
-      href="https://github.com/zbycz/osmapp"
-      target="_blank"
-      rel="noopener"
-      title={t('map.github_title')}
-    >
-      <StyledGithubIcon width="12" height="12" />
-      osmapp
-    </a>{' '}
-    <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
-  </>
-);
 
 const Attribution = ({ label, link, title }) => (
   <>
@@ -122,10 +95,6 @@ export const MapFooter = () => (
   // TODO find a way how to render this in SSR (keep layer in cookies?)
   <ClientOnly>
     <Wrapper>
-      <OsmappLink />
-      {' | '}
-      <LangSwitcher />
-      {' | '}
       <MapDataLink />
     </Wrapper>
   </ClientOnly>

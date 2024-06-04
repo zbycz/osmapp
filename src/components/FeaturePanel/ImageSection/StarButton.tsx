@@ -1,19 +1,12 @@
 import Star from '@material-ui/icons/Star';
 import StarBorder from '@material-ui/icons/StarBorder';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Tooltip } from '@material-ui/core';
 import { t } from '../../../services/intl';
 import { useStarsContext } from '../../utils/StarsContext';
 import { StyledActionButton } from './utils';
 import { useUserThemeContext } from '../../../helpers/theme';
-
-const useIsClient = () => {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  return isClient;
-};
+import { useIsClient } from '../../helpers';
 
 const StarButtonDarkPure = ({ isStarred, toggleStar }) => (
   <StyledActionButton onClick={toggleStar}>
