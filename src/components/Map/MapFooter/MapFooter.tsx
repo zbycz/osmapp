@@ -1,29 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { Tooltip, useMediaQuery } from '@material-ui/core';
+import { IconButton, Tooltip, useMediaQuery } from '@material-ui/core';
 import uniq from 'lodash/uniq';
+import KeyboardArrowUpIcon from '@material-ui/icons/KeyboardArrowUp';
 import { Translation } from '../../../services/intl';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
+import { PROJECT_ID } from '../../../services/project';
+
+const IconContainer = styled.div`
+  width: 20px;
+  height: 20px;
+`;
+
+const StyledIconButton = styled(IconButton)`
+  position: relative;
+  top: -3px;
+`;
 
 const Wrapper = styled.div`
   padding: 0 2px;
   font-size: 12px;
-  line-height: normal;
   color: ${({ theme }) => theme.palette.text.primary};
-  background-color: ${({ theme }) => theme.palette.background.paper};
-  letter-spacing: normal;
   font-weight: 400;
-  margin-left: 30px;
+  text-align: left;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: space-between;
 
-  svg {
-    vertical-align: -2px;
-    margin-right: 4px;
-  }
-
-  a,
-  button {
-    padding: 2px 0;
+  a {
+    color: ${({ theme }) => theme.palette.text.primary};
+    text-decoration: underline;
   }
 `;
 
@@ -91,11 +99,30 @@ const ClientOnly = ({ children }) => {
   return mounted ? children : null;
 };
 
-export const MapFooter = () => (
+export const MapFooter = ({ isLegendVisible, setIsLegendVisible }) => (
   // TODO find a way how to render this in SSR (keep layer in cookies?)
   <ClientOnly>
     <Wrapper>
-      <MapDataLink />
+      <div>
+        <MapDataLink />
+      </div>
+      {PROJECT_ID === 'openclimbing' && (
+        <IconContainer>
+          {!isLegendVisible && (
+            <Tooltip title="Show climbing legend" enterDelay={1000}>
+              <StyledIconButton
+                size="small"
+                edge="end"
+                onClick={() => {
+                  setIsLegendVisible(true);
+                }}
+              >
+                <KeyboardArrowUpIcon fontSize="small" />
+              </StyledIconButton>
+            </Tooltip>
+          )}
+        </IconContainer>
+      )}
     </Wrapper>
   </ClientOnly>
 );

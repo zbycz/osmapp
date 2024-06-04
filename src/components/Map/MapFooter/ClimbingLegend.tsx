@@ -1,11 +1,27 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IconButton } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import { IconButton, Tooltip } from '@material-ui/core';
+import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { COLORS } from '../styles/layers/climbingLayers';
-import { usePersistedState } from '../../utils/usePersistedState';
 import { useIsClient } from '../../helpers';
+import { convertHexToRgba } from '../../utils/colorUtils';
+
+const HideableContainer = styled.div<{ isVisible: boolean }>`
+  transition: max-height 0.15s ease-out;
+  max-height: ${({ isVisible }) => (isVisible ? 500 : 0)}px;
+  overflow: hidden;
+`;
+
+const Container = styled.div`
+  border-bottom: solid 1px
+    ${({ theme }) => convertHexToRgba(theme.palette.text.primary, 0.4)};
+  margin-bottom: 6px;
+  padding-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+`;
 
 const Dot = styled.div<{ color: string }>`
   border-radius: 50%;
@@ -33,24 +49,7 @@ const Heading = styled.div`
   font-weight: bold;
 `;
 
-const Container = styled.div`
-  margin: 4px;
-  pointer-events: all;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  border-radius: 8px;
-  padding: 8px;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
-  color: ${({ theme }) => theme.palette.text.primary};
-  background-color: ${({ theme }) => theme.palette.background.paper};
-`;
-
-export const ClimbingLegend = () => {
-  const [isLegendVisible, setIsLegendVisible] = usePersistedState<boolean>(
-    'isLegendVisible',
-    true,
-  );
+export const ClimbingLegend = ({ isLegendVisible, setIsLegendVisible }) => {
   const isClient = useIsClient();
   const { activeLayers } = useMapStateContext();
 
@@ -60,31 +59,36 @@ export const ClimbingLegend = () => {
     setIsLegendVisible(false);
   };
 
-  return isLegendVisible && isClimbingLayerVisible && isClient ? (
-    <Container>
-      <HeadingRow>
-        <Heading>Climbing legend</Heading>
-        <IconButton
-          size="small"
-          edge="end"
-          aria-label="close"
-          onClick={onLegendClose}
-        >
-          <CloseIcon fontSize="small" />
-        </IconButton>
-      </HeadingRow>
-      <Item>
-        <Dot color={COLORS.AREA.HAS_IMAGES.DEFAULT} />
-        Area with photos
-      </Item>
-      <Item>
-        <Dot color={COLORS.CRAG.HAS_IMAGES.DEFAULT} />
-        Crag with photos
-      </Item>
-      <Item>
-        <Dot color={COLORS.AREA.NO_IMAGES.DEFAULT} />
-        Area/crag without photos
-      </Item>
-    </Container>
-  ) : null;
+  const isVisible = isLegendVisible && isClimbingLayerVisible && isClient;
+  return (
+    <HideableContainer isVisible={isVisible}>
+      <Container>
+        <HeadingRow>
+          <Heading>Climbing legend</Heading>
+          <Tooltip title="Hide climbing legend" enterDelay={1000}>
+            <IconButton
+              size="small"
+              edge="end"
+              aria-label="close"
+              onClick={onLegendClose}
+            >
+              <KeyboardArrowDownIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </HeadingRow>
+        <Item>
+          <Dot color={COLORS.AREA.HAS_IMAGES.DEFAULT} />
+          Area with photos
+        </Item>
+        <Item>
+          <Dot color={COLORS.CRAG.HAS_IMAGES.DEFAULT} />
+          Crag with photos
+        </Item>
+        <Item>
+          <Dot color={COLORS.AREA.NO_IMAGES.DEFAULT} />
+          Area/crag without photos
+        </Item>
+      </Container>
+    </HideableContainer>
+  );
 };

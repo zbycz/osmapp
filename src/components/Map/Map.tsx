@@ -12,6 +12,8 @@ import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
 import { ClimbingLegend } from './MapFooter/ClimbingLegend';
+import { convertHexToRgba } from '../utils/colorUtils';
+import { usePersistedState } from '../utils/usePersistedState';
 
 const BrowserMap = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -54,6 +56,18 @@ const BottomRight = styled.div`
   pointer-events: none;
 `;
 
+const FooterContainer = styled.div`
+  margin: 0 4px 4px 4px;
+  pointer-events: all;
+  border-radius: 8px;
+  padding: 6px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+  color: ${({ theme }) => theme.palette.text.primary};
+  background-color: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.paper, 0.5)};
+  backdrop-filter: blur(10px);
+`;
+
 const BugReportButton = () => (
   <Button size="small">
     <BugReport width="10" height="10" />
@@ -72,7 +86,10 @@ const NoscriptMessage = () => (
 const Map = () => {
   const [mapLoaded, setLoaded, setNotLoaded] = useBoolState(true);
   useEffect(setNotLoaded, []);
-
+  const [isLegendVisible, setIsLegendVisible] = usePersistedState<boolean>(
+    'isLegendVisible',
+    true,
+  );
   return (
     <>
       <BrowserMap onMapLoaded={setLoaded} />
@@ -85,8 +102,16 @@ const Map = () => {
       <BottomRight>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
-        <ClimbingLegend />
-        <MapFooter />
+        <FooterContainer>
+          <ClimbingLegend
+            isLegendVisible={isLegendVisible}
+            setIsLegendVisible={setIsLegendVisible}
+          />
+          <MapFooter
+            isLegendVisible={isLegendVisible}
+            setIsLegendVisible={setIsLegendVisible}
+          />
+        </FooterContainer>
       </BottomRight>
     </>
   );
