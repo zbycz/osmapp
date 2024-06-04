@@ -30,14 +30,11 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
 
   return (
     <ImageWrapper>
-      <img
-        src={imageTag.imageUrl}
-        alt={imageTag.k}
-        title={imageTag.k}
-        width={200}
-      />
+      <img src={imageTag.imageUrl} alt={imageTag.k} width={200} />
       <PathSvg>
-        <Path points={imageTag.points} />
+        {imageTag.paths.map((path) => (
+          <Path path={path} />
+        ))}
       </PathSvg>
     </ImageWrapper>
   );

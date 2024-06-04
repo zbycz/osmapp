@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { ImagePath } from '../../../services/types';
 
 const WIDTH = 100;
 const HEIGHT = 100;
@@ -24,8 +25,8 @@ const PathLine = styled.path`
   stroke: ${({ theme }) => theme.palette.climbing.inactive};
 `;
 
-export const Path = ({ points }) => {
-  const d = points
+export const Path = ({ path }: { path: ImagePath }) => {
+  const d = path
     .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * WIDTH} ${y * HEIGHT}`)
     .join(',');
 

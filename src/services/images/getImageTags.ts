@@ -6,7 +6,7 @@ const getSuffix = (y: string) => {
   return matches ? matches[1] : '';
 };
 
-const parsePathString = (pathString?: string) =>
+const parsePathTag = (pathString?: string) =>
   pathString
     ?.split('|')
     .map((coords) => coords.split(',', 2))
@@ -36,8 +36,7 @@ export const getImageTags = (tags: FeatureTags): ImageTag[] =>
       const type = k.match(imageTagRegexp)?.[1] as ImageTag['type']; // TODO wikipedia:xx
       const v = tags[k];
       const imageUrl = getImageUrl(type, v);
-      const path = tags[`${k}:path`];
-      const points = parsePathString(path);
-      return { type, k, v, imageUrl, path, points };
-    })
-    .sort((a, b) => b.points.length - a.points.length);
+      const pathTag = tags[`${k}:path`];
+      const paths = [parsePathTag(pathTag)];
+      return { type, k, v, imageUrl, pathTag, paths };
+    });
