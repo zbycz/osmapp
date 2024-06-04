@@ -5,6 +5,7 @@ import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 
 const Link = styled.a`
   pointer-events: all;
+  margin-right: 2px;
 `;
 
 export const MaptilerLogo = () => {

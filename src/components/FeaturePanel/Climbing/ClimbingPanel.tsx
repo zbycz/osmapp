@@ -135,10 +135,9 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
 
           <OsmError />
 
-          <ImageSlider />
-
           <RouteDistribution />
           <RouteList />
+          <ImageSlider />
 
           <div style={{ padding: '35px 15px 5px' }}>
             <Properties showTags={showTagsTable} />
