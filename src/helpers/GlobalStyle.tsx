@@ -98,4 +98,9 @@ export const GlobalStyle = createGlobalStyle`
   .MuiBackdrop-root {
     background-color: rgba(0, 0, 0, 0.2) !important;
   }
+
+  /* Hide compass by default */
+.hidden-compass .maplibregl-ctrl-compass {
+  display: none;
+}
 `;
