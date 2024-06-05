@@ -105,7 +105,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .MuiDrawer-root > .MuiPaper-root {
-    height: calc(90% - 72px);
+    height: calc(90vh - 72px);
     overflow: visible;
   }
 `;

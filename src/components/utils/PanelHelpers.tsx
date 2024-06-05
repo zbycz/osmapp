@@ -74,9 +74,9 @@ export const PanelScrollbars = ({ children }) => {
 export const PanelContent = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(
+  /* height: calc(
     100vh - ${SEARCH_BOX_HEIGHT}px - 238px
-  ); // 100% - TopPanel - FeatureImage
+  ); // 100% - TopPanel - FeatureImage */
   padding: 20px 0 0 0;
 `;
 

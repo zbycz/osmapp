@@ -4,8 +4,6 @@ import Cookies from 'js-cookie';
 import styled from 'styled-components';
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
-import { SwipeableDrawer, useMediaQuery, useTheme } from '@material-ui/core';
-import { grey } from '@material-ui/core/colors';
 import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -28,7 +26,10 @@ import { isDesktop } from '../helpers';
 import { PanelWrapper } from '../utils/PanelHelpers';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { getOsmappLink } from '../../services/helpers';
+import { useMediaQuery, SwipeableDrawer, useTheme } from '@mui/material';
+import { grey } from '@mui/material/colors';
 
+const drawerBleeding = 72;
 const Puller = styled.div`
   width: 30px;
   height: 6px;
@@ -39,6 +40,11 @@ const Puller = styled.div`
   top: 8px;
   left: calc(50% - 15px);
 `;
+
+const ListContainer = styled('div')(() => ({
+  maxHeight: '300px',
+  overflow: 'auto',
+}));
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -97,27 +103,126 @@ const IndexWithProviders = () => {
   const [open, setOpen] = React.useState(false);
   const { setFeature } = useFeatureContext();
   const theme = useTheme();
+  // const container =
+  //   window !== undefined ? () => window.document.body : undefined;
 
-  const toggleDrawer = () => {
-    setOpen(!open);
+  const toggleDrawer = (newOpen: boolean) => () => {
+    setOpen(newOpen);
   };
 
   useEffect(() => {
     if (preview) {
+      Router.push(`${getOsmappLink(preview)}${window.location.hash}`);
       setFeature({ ...preview, skeleton: true }); // skeleton needed so map doesnt move (Router will create new coordsFeature)
     }
   }, [preview]);
 
   // console.log('____featureShown', featureShown);
   return (
-    <>
+    <div style={{ height: '100%' }}>
       <SearchBox />
       <Loading />
-      {preview && (
+      {/* <SwipeableDrawer
+        // container={container}
+        anchor="bottom"
+        open={open}
+        onClose={toggleDrawer(false)}
+        onOpen={toggleDrawer(true)}
+        swipeAreaWidth={drawerBleeding}
+        disableSwipeToOpen={false}
+        ModalProps={{
+          keepMounted: true,
+        }}
+      >
+        <div
+          style={{
+            position: 'relative',
+            marginTop: `${-drawerBleeding}px`,
+            borderTopLeftRadius: 8,
+            borderTopRightRadius: 8,
+            visibility: 'visible',
+            right: 0,
+            left: 0,
+          }}
+        >
+          <Puller />
+          <ListContainer>
+            Contrary to popular belief, Lorem Ipsum is not simply random text.
+            It has roots in a piece of classical Latin literature from 45 BC,
+            making it over 2000 years old. Richard McClintock, a Latin professor
+            at Hampden-Sydney College in Virginia, looked up one of the more
+            obscure Latin words, consectetur, from a Lorem Ipsum passage, and
+            going through the cites of the word in classical literature,
+            discovered the undoubtable source. Lorem Ipsum comes from sections
+            1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum" (The Extremes
+            of Good and Evil) by Cicero, written in 45 BC. This book is a
+            treatise on the theory of ethics, very popular during the
+            Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit
+            amet..", comes from a line in section 1.10.32. Contrary to popular
+            belief, Lorem Ipsum is not simply random text. It has roots in a
+            piece of classical Latin literature from 45 BC, making it over 2000
+            years old. Richard McClintock, a Latin professor at Hampden-Sydney
+            College in Virginia, looked up one of the more obscure Latin words,
+            consectetur, from a Lorem Ipsum passage, and going through the cites
+            of the word in classical literature, discovered the undoubtable
+            source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de
+            Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by
+            Cicero, written in 45 BC. This book is a treatise on the theory of
+            ethics, very popular during the Renaissance. The first line of Lorem
+            Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section
+            1.10.32. Contrary to popular belief, Lorem Ipsum is not simply
+            random text. It has roots in a piece of classical Latin literature
+            from 45 BC, making it over 2000 years old. Richard McClintock, a
+            Latin professor at Hampden-Sydney College in Virginia, looked up one
+            of the more obscure Latin words, consectetur, from a Lorem Ipsum
+            passage, and going through the cites of the word in classical
+            literature, discovered the undoubtable source. Lorem Ipsum comes
+            from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum"
+            (The Extremes of Good and Evil) by Cicero, written in 45 BC. This
+            book is a treatise on the theory of ethics, very popular during the
+            Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit
+            amet..", comes from a line in section 1.10.32. Contrary to popular
+            belief, Lorem Ipsum is not simply random text. It has roots in a
+            piece of classical Latin literature from 45 BC, making it over 2000
+            years old. Richard McClintock, a Latin professor at Hampden-Sydney
+            College in Virginia, looked up one of the more obscure Latin words,
+            consectetur, from a Lorem Ipsum passage, and going through the cites
+            of the word in classical literature, discovered the undoubtable
+            source. Lorem Ipsum comes from sections 1.10.32 and 1.10.33 of "de
+            Finibus Bonorum et Malorum" (The Extremes of Good and Evil) by
+            Cicero, written in 45 BC. This book is a treatise on the theory of
+            ethics, very popular during the Renaissance. The first line of Lorem
+            Ipsum, "Lorem ipsum dolor sit amet..", comes from a line in section
+            1.10.32. Contrary to popular belief, Lorem Ipsum is not simply
+            random text. It has roots in a piece of classical Latin literature
+            from 45 BC, making it over 2000 years old. Richard McClintock, a
+            Latin professor at Hampden-Sydney College in Virginia, looked up one
+            of the more obscure Latin words, consectetur, from a Lorem Ipsum
+            passage, and going through the cites of the word in classical
+            literature, discovered the undoubtable source. Lorem Ipsum comes
+            from sections 1.10.32 and 1.10.33 of "de Finibus Bonorum et Malorum"
+            (The Extremes of Good and Evil) by Cicero, written in 45 BC. This
+            book is a treatise on the theory of ethics, very popular during the
+            Renaissance. The first line of Lorem Ipsum, "Lorem ipsum dolor sit
+            amet..", comes from a line in section 1.10.32.
+          </ListContainer>
+        </div>
+      </SwipeableDrawer> */}
+
+      {featureShown && (
         <SwipeableDrawer
           anchor="bottom"
           open={open}
           onClose={() => setOpen(false)}
+          style={{
+            position: 'relative',
+            marginTop: `-72px`,
+            borderTopLeftRadius: 8,
+            borderTopRightRadius: 8,
+            visibility: 'visible',
+            right: 0,
+            left: 0,
+          }}
           onOpen={() => {
             console.log('____TU2');
             setOpen(true);
@@ -184,13 +289,13 @@ const IndexWithProviders = () => {
               zIndex: 10000,
             }}
           >
-
             <PanelWrapper fromLeft={panelFromLeft}>
               {featureShown && <FeaturePanel />}
               <ClosePanelButton right onClick={toggleDrawer} />
             </PanelWrapper>
           </div>
-        </SwipeableDrawer> )} */}
+        </SwipeableDrawer>
+      )} */}
 
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
@@ -201,9 +306,9 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
-      {/* {preview && <FeaturePreview />} */}
+      {preview && <FeaturePreview />}
       <TitleAndMetaTags />
-    </>
+    </div>
   );
 };
 
