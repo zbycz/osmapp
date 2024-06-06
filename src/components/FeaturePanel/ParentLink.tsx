@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 import Link from 'next/link';
 import React from 'react';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { getOsmappLink } from '../../services/helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';

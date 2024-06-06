@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -28,6 +29,10 @@ import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
 import { ImageSlider } from './ImagePane/ImageSlider';
+
+const Flex = styled.div`
+  flex: 1;
+`;
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
@@ -107,34 +112,36 @@ export const FeaturePanel = () => {
             <>
               <ImageSlider />
 
-              <PanelSidePadding>
-                <Properties
-                  showTags={showTagsTable}
-                  key={getUrlOsmId(osmMeta) + (deleted && 'del')}
-                />
+              <Flex>
+                <PanelSidePadding>
+                  <Properties
+                    showTags={showTagsTable}
+                    key={getUrlOsmId(osmMeta) + (deleted && 'del')}
+                  />
 
-                <MemberFeatures />
-                {advanced && <Members />}
+                  <MemberFeatures />
+                  {advanced && <Members />}
 
-                <PublicTransport tags={tags} />
+                  <PublicTransport tags={tags} />
 
-                {editEnabled && (
-                  <div style={{ textAlign: 'center' }}>
-                    <EditButton isAddPlace={point} isUndelete={deleted} />
+                  {editEnabled && (
+                    <div style={{ textAlign: 'center' }}>
+                      <EditButton isAddPlace={point} isUndelete={deleted} />
 
-                    <EditDialog
-                      feature={feature}
-                      isAddPlace={point}
-                      isUndelete={deleted}
-                      key={
-                        getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                      }
-                    />
-                  </div>
-                )}
+                      <EditDialog
+                        feature={feature}
+                        isAddPlace={point}
+                        isUndelete={deleted}
+                        key={
+                          getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                        }
+                      />
+                    </div>
+                  )}
 
-                {point && <ObjectsAround advanced={advanced} />}
-              </PanelSidePadding>
+                  {point && <ObjectsAround advanced={advanced} />}
+                </PanelSidePadding>
+              </Flex>
             </>
           )}
 

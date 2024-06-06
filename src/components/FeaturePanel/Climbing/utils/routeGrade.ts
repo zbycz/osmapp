@@ -1,4 +1,4 @@
-import { useTheme } from '@material-ui/core';
+import { useTheme } from '@mui/material';
 import { GradeSystem, GradeTable, RouteDifficulty } from '../types';
 import { gradeColors, gradeSystem, gradeTableString } from './gradeData';
 
@@ -56,7 +56,7 @@ export const getDifficultyColor = (
   const DEFAULT_COLOR = '#555';
   if (!difficulty) return DEFAULT_COLOR;
   const theme = useTheme();
-  const { type } = theme.palette;
+  const { mode } = theme.palette;
   const uiaaGrade =
     difficulty.gradeSystem !== 'uiaa'
       ? convertGrade(
@@ -66,7 +66,7 @@ export const getDifficultyColor = (
           difficulty.grade,
         )
       : difficulty.grade;
-  return gradeColors[uiaaGrade]?.[type] || DEFAULT_COLOR;
+  return gradeColors[uiaaGrade]?.[mode] || DEFAULT_COLOR;
 };
 
 export const getRouteGrade = (

@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
 import styled from 'styled-components';
-import { AppBar, Toolbar, Typography, IconButton } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import TuneIcon from '@material-ui/icons/Tune';
+import CloseIcon from '@mui/icons-material/Close';
+import TuneIcon from '@mui/icons-material/Tune';
+import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingSettings } from './ClimbingSettings';
 import { PhotoLink } from './PhotoLink';

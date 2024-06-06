@@ -1,15 +1,19 @@
-import DialogContent from '@material-ui/core/DialogContent';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import DialogActions from '@material-ui/core/DialogActions';
-import InfoIcon from '@material-ui/icons/Info';
-import Button from '@material-ui/core/Button';
 import React from 'react';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
-import { Box, Tooltip } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import { nl2br } from '../../utils/nl2br';
+
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import InfoIcon from '@mui/icons-material/Info';
+import {
+  Box,
+  Tooltip,
+  IconButton,
+  DialogContent,
+  Typography,
+  DialogActions,
+  Button,
+} from '@mui/material';
 import { t, Translation } from '../../../services/intl';
+import { nl2br } from '../../utils/nl2br';
 
 const StyledCheckCircleIcon = styled(CheckCircleIcon)`
   color: #4b912e;
@@ -43,7 +47,7 @@ const Wrapper = styled.span`
 
 export const InfoButton = ({ title }) => (
   <Wrapper>
-    <Tooltip arrow interactive title={nl2br(title)} placement="bottom-end">
+    <Tooltip arrow title={nl2br(title)} placement="bottom-end">
       <IconButton>
         <InfoIcon />
       </IconButton>

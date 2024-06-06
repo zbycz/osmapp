@@ -1,6 +1,5 @@
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect } from 'react';
-import InputBase from '@material-ui/core/InputBase';
+import { Autocomplete, InputBase } from '@mui/material';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { renderOptionFactory, buildPhotonAddress } from './renderOptionFactory';
 import { t } from '../../services/intl';
@@ -44,6 +43,9 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   return (
     <InputBase
       {...restParams} // eslint-disable-line react/jsx-props-no-spreading
+      sx={{
+        height: '47px',
+      }}
       inputRef={inputRef}
       placeholder={t('searchbox.placeholder')}
       onChange={onChange}
@@ -104,7 +106,13 @@ export const AutocompleteInput = ({
           autocompleteRef={autocompleteRef}
         />
       )}
-      renderOption={renderOptionFactory(inputValue, currentTheme)}
+      // renderOption={renderOptionFactory(inputValue, currentTheme)}
+      renderOption={(props, option) => (
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <li {...props}>
+          {renderOptionFactory(inputValue, currentTheme)(props, option)}
+        </li>
+      )}
     />
   );
 };

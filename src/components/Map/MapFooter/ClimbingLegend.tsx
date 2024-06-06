@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { IconButton, Tooltip } from '@material-ui/core';
-import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Tooltip, IconButton } from '@mui/material';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { COLORS } from '../styles/layers/climbingLayers';
 import { useIsClient } from '../../helpers';

@@ -1,10 +1,10 @@
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import React from 'react';
 import styled from 'styled-components';
-import FolderIcon from '@material-ui/icons/Folder';
-import SearchIcon from '@material-ui/icons/Search';
-import StarIcon from '@material-ui/icons/Star';
+
+import StarIcon from '@mui/icons-material/Star';
+import FolderIcon from '@mui/icons-material/Folder';
+import SearchIcon from '@mui/icons-material/Search';
+import { Grid, Typography } from '@mui/material';
 import { useMapStateContext } from '../utils/MapStateContext';
 import Maki from '../utils/Maki';
 import { highlightText } from './highlightText';
@@ -120,8 +120,8 @@ export const buildPhotonAddress = ({
 }) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
 export const renderOptionFactory =
-  (inputValue, currentTheme) =>
-  ({ geometry, preset, properties, overpass, star, loader }) => {
+  (inputValue, currentTheme) => (_props, option) => {
+    const { geometry, preset, properties, overpass, star, loader } = option;
     if (overpass) {
       return (
         <>
@@ -149,7 +149,7 @@ export const renderOptionFactory =
           <IconPart>
             <StarIcon />
           </IconPart>
-          <Grid item xs>
+          <Grid item xs={8}>
             <span style={{ fontWeight: 700 }}>{star.label}</span>
             <Typography variant="body2" color="textSecondary">
               {star.poiType}
@@ -199,7 +199,7 @@ export const renderOptionFactory =
       );
     }
 
-    const { name, osm_key: tagKey, osm_value: tagValue } = properties;
+    const { name, osm_key: tagKey, osm_value: tagValue } = properties; // @TODO
 
     const [lon, lat] = geometry.coordinates;
     const mapCenter = useMapCenter();

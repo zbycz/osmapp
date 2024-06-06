@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import CheckIcon from '@material-ui/icons/Check';
+import CheckIcon from '@mui/icons-material/Check';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { isTicked } from '../../../services/ticks';
 import { getShortId } from '../../../services/helpers';

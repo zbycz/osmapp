@@ -91,7 +91,7 @@ export default {
   'opening_hours.today_closed': 'Dnes zavřeno',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'neděle|pondělí|úterý|středa|čtvrtek|pátek|sobota',
 
-  'map.github_title': 'GitHub',
+  'map.github_title': 'GitHub repozitář',
   'map.language_title': 'Změnit jazyk',
   'map.osm_copyright_tooltip': '(c) přispěvatelé OpenStreetMap.org<br> – svobodná mapová data světa 👌',
   'map.maptiler_copyright_tooltip':

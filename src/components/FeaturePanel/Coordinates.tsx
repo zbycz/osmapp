@@ -1,10 +1,11 @@
 import React, { forwardRef } from 'react';
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+
 import styled from 'styled-components';
-import { Divider, Menu, MenuItem } from '@material-ui/core';
-import OpenInNewIcon from '@material-ui/icons/OpenInNew';
+
+import { MenuItem, IconButton, Menu, Divider } from '@mui/material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { isMobileDevice, useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -30,7 +31,7 @@ const StyledMenuItem = styled(MenuItem)`
 
 const StyledToggleButton = styled(IconButton)`
   position: absolute !important;
-  margin: -10px 0 0 -10px !important;
+  margin: -5px 0 0 0 !important;
 
   svg {
     font-size: 17px;

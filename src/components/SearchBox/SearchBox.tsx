@@ -1,13 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import debounce from 'lodash/debounce';
-import SearchIcon from '@material-ui/icons/Search';
-import Paper from '@material-ui/core/Paper';
-import IconButton from '@material-ui/core/IconButton';
+import SearchIcon from '@mui/icons-material/Search';
+import { CircularProgress, IconButton, Paper } from '@mui/material';
 import Router from 'next/router';
 import match from 'autosuggest-highlight/match';
-
-import { CircularProgress } from '@material-ui/core';
 import { fetchJson } from '../../services/fetch';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';

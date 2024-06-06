@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { GradeSystem, RouteDifficulty } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import {

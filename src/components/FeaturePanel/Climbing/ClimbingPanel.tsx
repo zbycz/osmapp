@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, CircularProgress } from '@material-ui/core';
 import Router from 'next/router';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import { CircularProgress, Button } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
@@ -16,11 +16,11 @@ import { StarButton } from '../ImageSection/StarButton';
 import { OsmError } from '../OsmError';
 import { Properties } from '../Properties/Properties';
 import { PoiDescription } from '../ImageSection/PoiDescription';
+import { ImageSlider } from '../ImagePane/ImageSlider';
+import { ClimbingParentLink } from '../ParentLink';
 import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
-import { ClimbingParentLink } from '../ParentLink';
 import { getFeaturePhotos } from './utils/photo';
-import { ImageSlider } from '../ImagePane/ImageSlider';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;

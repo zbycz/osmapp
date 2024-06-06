@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { MenuItem, Select } from '@material-ui/core';
+import { Select, MenuItem } from '@mui/material';
 import { GradeSystem } from './types';
 import { gradeSystem } from './utils/gradeData';
 

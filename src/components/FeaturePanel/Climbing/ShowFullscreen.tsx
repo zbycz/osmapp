@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
 
 import { Size } from './types';
 

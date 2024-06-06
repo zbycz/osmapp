@@ -1,9 +1,12 @@
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
-import TextField from '@material-ui/core/TextField';
 import React from 'react';
-import Typography from '@material-ui/core/Typography';
-import { Box } from '@material-ui/core';
+
+import {
+  Typography,
+  FormControlLabel,
+  Checkbox,
+  TextField,
+  Box,
+} from '@mui/material';
 import { useToggleState } from '../../helpers';
 import { t, Translation } from '../../../services/intl';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';

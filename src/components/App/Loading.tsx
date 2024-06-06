@@ -1,7 +1,7 @@
-import LinearProgress from '@material-ui/core/LinearProgress';
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import Router from 'next/router';
+import { LinearProgress } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
 
 const Wrapper = styled.div`

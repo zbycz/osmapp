@@ -4,9 +4,9 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
-import { getFeaturePhotoKeys } from './utils/photo';
 import { getOsmTagFromGradeSystem } from './utils/routeGrade';
 import { useSnackbar } from '../../utils/SnackbarContext';
+import { getFeaturePhotoKeys } from './utils/photo';
 
 const WIKIMEDIA_COMMONS = 'wikimedia_commons';
 

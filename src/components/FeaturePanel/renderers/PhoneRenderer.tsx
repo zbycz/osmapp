@@ -1,5 +1,5 @@
 import React from 'react';
-import LocalPhone from '@material-ui/icons/LocalPhone';
+import LocalPhone from '@mui/icons-material/LocalPhone';
 
 export const WebsiteRenderer = ({ v }) => (
   <>

@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Box, useTheme } from '@material-ui/core';
+import { Box, useTheme } from '@mui/material';
 import Router from 'next/router';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';

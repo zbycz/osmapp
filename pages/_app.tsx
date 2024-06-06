@@ -1,7 +1,7 @@
 import React from 'react';
 import App from 'next/app';
 import Head from 'next/head';
-import CssBaseline from '@material-ui/core/CssBaseline';
+import CssBaseline from '@mui/material/CssBaseline';
 import nextCookies from 'next-cookies';
 import { UserThemeProvider } from '../src/helpers/theme';
 import { GlobalStyle } from '../src/helpers/GlobalStyle';
