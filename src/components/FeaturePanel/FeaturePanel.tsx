@@ -50,7 +50,7 @@ export const FeaturePanel = () => {
 
   const footer = (
     <PanelFooter>
-      <FeatureDescription setAdvanced={setAdvanced} />
+      <FeatureDescription advanced={advanced} setAdvanced={setAdvanced} />
       <Coordinates />
       <br />
       <a href={osmappLink}>{osmappLink}</a>

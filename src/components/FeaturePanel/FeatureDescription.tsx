@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { IconButton, Box, Tooltip, Grid, Typography } from '@mui/material';
-import { capitalize, useToggleState } from '../helpers';
+import { capitalize, isMobileDevice, useToggleState } from '../helpers';
 import { t, Translation } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';
 
@@ -81,21 +81,23 @@ const FromOsm = () => (
   </Box>
 );
 
-export const FeatureDescription = ({ setAdvanced }) => {
+export const FeatureDescription = ({ advanced, setAdvanced }) => {
   const {
     feature: { osmMeta, nonOsmObject, point },
   } = useFeatureContext();
   const { type } = osmMeta;
 
-  const [isShown, toggle] = useToggleState(false);
+  const isMobile = isMobileDevice();
+  const [mobileTooltipShown, toggleMobileTooltip] = useToggleState(false);
 
   const onClick = (e) => {
-    if (!isShown) {
-      if (e.shiftKey && e.altKey) setAdvanced(true);
-    } else {
-      setAdvanced(false);
+    // Alt+Shift+click to enable FeaturePanel advanced mode
+    if (e.shiftKey && e.altKey) {
+      setAdvanced((v) => !v);
     }
-    toggle();
+    if (isMobile) {
+      toggleMobileTooltip();
+    }
   };
 
   if (point) {
@@ -107,19 +109,25 @@ export const FeatureDescription = ({ setAdvanced }) => {
 
   return (
     <div>
-      {!isShown &&
+      {!advanced &&
         t('featurepanel.feature_description_osm', {
           type: capitalize(type),
         })}
-      {isShown && <Urls />}
+      {advanced && <Urls />}
 
-      <Tooltip arrow title={<FromOsm />} placement="top">
-        <StyledIconButton
-          title="Alt+Shift+click to enable advanced mode (show-all-tags, show-members, around-show-all)"
-          onClick={onClick}
-        >
-          {!isShown && <InfoOutlinedIcon fontSize="small" color="secondary" />}
-          {isShown && <CloseIcon fontSize="small" color="disabled" />}
+      <Tooltip
+        arrow
+        title={<FromOsm />}
+        placement="top"
+        open={isMobile ? mobileTooltipShown : undefined}
+      >
+        <StyledIconButton onClick={onClick}>
+          {!mobileTooltipShown && (
+            <InfoOutlinedIcon fontSize="small" color="secondary" />
+          )}
+          {mobileTooltipShown && (
+            <CloseIcon fontSize="small" color="disabled" />
+          )}
         </StyledIconButton>
       </Tooltip>
     </div>
