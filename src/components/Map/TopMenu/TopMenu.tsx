@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { isDesktop } from '../../helpers';
 import { HamburgerMenu } from './HamburgerMenu';
+import { LoginMenu } from './LoginMenu';
 
 const Wrapper = styled.span`
   vertical-align: top;
@@ -12,18 +13,11 @@ const Wrapper = styled.span`
   @media ${isDesktop} {
     margin-top: -5px;
   }
-
-  button:last-child {
-    margin-left: -10px;
-  }
-
-  svg {
-    filter: drop-shadow(0 0 2px #ffffff);
-  }
 `;
 
 export const TopMenu = () => (
   <Wrapper>
+    <LoginMenu />
     <HamburgerMenu />
   </Wrapper>
 );
