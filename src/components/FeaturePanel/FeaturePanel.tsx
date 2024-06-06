@@ -6,9 +6,9 @@ import { useToggleState } from '../helpers';
 import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import {
-  PanelContent,
+  // PanelContent,
   PanelFooter,
-  PanelScrollbars,
+  // PanelScrollbars,
   PanelSidePadding,
 } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -94,58 +94,60 @@ export const FeaturePanel = () => {
   }
 
   return (
-    <PanelScrollbars>
-      <PanelContent>
-        {/* <PanelSidePadding> */}
-        <FeatureHeading
-          deleted={deleted}
-          title={label}
-          editEnabled={editEnabled && !point}
-        />
-        <ParentLink />
+    <>
+      {/* <PanelScrollbars> */}
+      {/* <PanelContent> */}
+      {/* <PanelSidePadding> */}
+      <FeatureHeading
+        deleted={deleted}
+        title={label}
+        editEnabled={editEnabled && !point}
+      />
+      <ParentLink />
 
-        <ImageSection />
-        <OsmError />
-        {/* </PanelSidePadding> */}
+      <ImageSection />
+      <OsmError />
+      {/* </PanelSidePadding> */}
 
-        {!skeleton && (
-          <>
-            <ImageSlider />
-            <Flex>
-              {/* <PanelSidePadding> */}
-              <Properties
-                showTags={showTagsTable}
-                key={getUrlOsmId(osmMeta) + (deleted && 'del')}
-              />
+      {!skeleton && (
+        <>
+          <ImageSlider />
+          <Flex>
+            {/* <PanelSidePadding> */}
+            <Properties
+              showTags={showTagsTable}
+              key={getUrlOsmId(osmMeta) + (deleted && 'del')}
+            />
 
-              <MemberFeatures />
-              {advanced && <Members />}
+            <MemberFeatures />
+            {advanced && <Members />}
 
-              <PublicTransport tags={tags} />
+            <PublicTransport tags={tags} />
 
-              {editEnabled && (
-                <div style={{ textAlign: 'center' }}>
-                  <EditButton isAddPlace={point} isUndelete={deleted} />
+            {editEnabled && (
+              <div style={{ textAlign: 'center' }}>
+                <EditButton isAddPlace={point} isUndelete={deleted} />
 
-                  <EditDialog
-                    feature={feature}
-                    isAddPlace={point}
-                    isUndelete={deleted}
-                    key={
-                      getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                    }
-                  />
-                </div>
-              )}
+                <EditDialog
+                  feature={feature}
+                  isAddPlace={point}
+                  isUndelete={deleted}
+                  key={
+                    getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                  }
+                />
+              </div>
+            )}
 
-              {point && <ObjectsAround advanced={advanced} />}
-              {/* </PanelSidePadding> */}
-            </Flex>
-          </>
-        )}
+            {point && <ObjectsAround advanced={advanced} />}
+            {/* </PanelSidePadding> */}
+          </Flex>
+        </>
+      )}
 
-        <PanelSidePadding>{footer}</PanelSidePadding>
-      </PanelContent>
-    </PanelScrollbars>
+      <PanelSidePadding>{footer}</PanelSidePadding>
+      {/* </PanelContent> */}
+      {/* </PanelScrollbars> */}
+    </>
   );
 };

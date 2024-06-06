@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@mui/material';
-import { isDesktop } from '../helpers';
+// import { isDesktop } from '../helpers';
 import { useScrollShadow } from '../FeaturePanel/Climbing/utils/useScrollShadow';
 import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 

@@ -26,6 +26,7 @@ export const FeaturePreview = () => {
   if (!preview || preview.noPreviewButton) {
     return null;
   }
+  Router.push(`${getOsmappLink(preview)}${window.location.hash}`);
 
   const handleClick = () => {
     setPreview(null);

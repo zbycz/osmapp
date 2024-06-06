@@ -4,6 +4,12 @@ import Cookies from 'js-cookie';
 import styled from 'styled-components';
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
+import {
+  // useMediaQuery,
+  SwipeableDrawer,
+  useTheme,
+} from '@mui/material';
+import { grey } from '@mui/material/colors';
 import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -13,7 +19,7 @@ import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
-import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
+// import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
@@ -22,14 +28,12 @@ import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
-import { isDesktop } from '../helpers';
-import { PanelWrapper } from '../utils/PanelHelpers';
-import { ClosePanelButton } from '../utils/ClosePanelButton';
+// import { isDesktop } from '../helpers';
+// import { PanelWrapper } from '../utils/PanelHelpers';
+// import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { getOsmappLink } from '../../services/helpers';
-import { useMediaQuery, SwipeableDrawer, useTheme } from '@mui/material';
-import { grey } from '@mui/material/colors';
 
-const drawerBleeding = 72;
+// const drawerBleeding = 72;
 const Puller = styled.div`
   width: 30px;
   height: 6px;
@@ -42,7 +46,7 @@ const Puller = styled.div`
 `;
 
 const ListContainer = styled('div')(() => ({
-  maxHeight: '300px',
+  maxHeight: '90vh',
   overflow: 'auto',
 }));
 
@@ -99,16 +103,16 @@ const IndexWithProviders = () => {
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   const photo = router.query.all?.[3];
-  const panelFromLeft = useMediaQuery(isDesktop);
+  // const panelFromLeft = useMediaQuery(isDesktop);
   const [open, setOpen] = React.useState(false);
   const { setFeature } = useFeatureContext();
   const theme = useTheme();
   // const container =
   //   window !== undefined ? () => window.document.body : undefined;
 
-  const toggleDrawer = (newOpen: boolean) => () => {
-    setOpen(newOpen);
-  };
+  // const toggleDrawer = (newOpen: boolean) => () => {
+  //   setOpen(newOpen);
+  // };
 
   useEffect(() => {
     if (preview) {
@@ -214,19 +218,10 @@ const IndexWithProviders = () => {
           anchor="bottom"
           open={open}
           onClose={() => setOpen(false)}
-          style={{
-            position: 'relative',
-            marginTop: `-72px`,
-            borderTopLeftRadius: 8,
-            borderTopRightRadius: 8,
-            visibility: 'visible',
-            right: 0,
-            left: 0,
-          }}
           onOpen={() => {
             console.log('____TU2');
+            // Router.push(`${getOsmappLink(preview)}${window.location.hash}`);
             setOpen(true);
-            Router.push(`${getOsmappLink(preview)}${window.location.hash}`);
           }}
           swipeAreaWidth={72}
           disableSwipeToOpen={false}
@@ -236,20 +231,18 @@ const IndexWithProviders = () => {
         >
           <div
             style={{
-              position: 'absolute',
+              position: 'relative',
               background: theme.palette.background.paper,
-              height: '100%',
-              top: -72,
+              marginTop: `-72px`,
               borderTopLeftRadius: 8,
               borderTopRightRadius: 8,
               visibility: 'visible',
               right: 0,
               left: 0,
-              overflow: 'hidden',
             }}
           >
             <Puller />
-            <FeaturePanel />
+            <ListContainer>{preview && <FeaturePanel />}</ListContainer>
           </div>
         </SwipeableDrawer>
       )}
@@ -306,7 +299,7 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
-      {preview && <FeaturePreview />}
+      {/* {preview && <FeaturePreview />} */}
       <TitleAndMetaTags />
     </div>
   );
