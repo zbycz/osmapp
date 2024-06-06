@@ -30,7 +30,7 @@ const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
     return (
       <MenuItem ref={ref} onClick={login}>
         <StyledAccountCircleIcon />
-        {t('user.login')}
+        {t('user.login_register')}
       </MenuItem>
     );
   }
