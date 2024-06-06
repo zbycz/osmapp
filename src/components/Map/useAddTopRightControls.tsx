@@ -19,6 +19,9 @@ const geolocation = new maplibregl.GeolocateControl({
   positionOptions: {
     enableHighAccuracy: true,
   },
+  fitBoundsOptions: {
+    duration: 4000,
+  },
   trackUserLocation: true,
 });
 
