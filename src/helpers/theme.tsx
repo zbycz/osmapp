@@ -88,7 +88,7 @@ const darkTheme = createTheme({
   },
 });
 
-type UserTheme = 'system' | 'light' | 'dark';
+export type UserTheme = 'system' | 'light' | 'dark';
 
 type UserThemeContextType = {
   userTheme: UserTheme;

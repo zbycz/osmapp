@@ -13,10 +13,6 @@ const Wrapper = styled.span`
     margin-top: -5px;
   }
 
-  button:last-child {
-    margin-left: -10px;
-  }
-
   svg {
     filter: drop-shadow(0 0 2px #ffffff);
   }

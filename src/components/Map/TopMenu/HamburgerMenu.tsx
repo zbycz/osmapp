@@ -2,24 +2,24 @@ import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import React, { useEffect, forwardRef, useState } from 'react';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import React, { forwardRef, useEffect, useState } from 'react';
+import { Menu, MenuItem } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import HelpIcon from '@mui/icons-material/Help';
 import styled from 'styled-components';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import Router from 'next/router';
-import MenuIcon from '@mui/icons-material/Menu';
 import { useBoolState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { getIdEditorLink } from '../../../utils';
-import { useUserThemeContext } from '../../../helpers/theme';
+import { UserTheme, useUserThemeContext } from "../../../helpers/theme";
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
-import { LoginIcon } from './LoginIcon';
+import { LoginIconButton } from './LoginIconButton';
 import GithubIcon from '../../../assets/GithubIcon';
 import { LangSwitcher } from './LangSwitcher';
+import { HamburgerIconButton } from './HamburgerIconButton';
 
 const StyledGithubIcon = styled(GithubIcon)`
   filter: ${({ theme }) => theme.palette.invertFilter};
@@ -143,17 +143,17 @@ const themeOptions = {
   system: {
     icon: StyledBrightnessAutoIcon,
     label: t('darkmode_auto'),
-    next: 'dark' as const,
+    next: 'dark' as UserTheme,
   },
   dark: {
     icon: StyledBrightness4Icon,
     label: t('darkmode_on'),
-    next: 'light' as const,
+    next: 'light' as UserTheme,
   },
   light: {
     icon: StyledBrightnessHighIcon,
     label: t('darkmode_off'),
-    next: 'system' as const,
+    next: 'system' as UserTheme,
   },
 };
 
@@ -240,17 +240,8 @@ export const HamburgerMenu = () => {
         <GithubLink closeMenu={close} />
         <LangSwitcher />
       </Menu>
-      <LoginIcon onClick={open} />
-      <IconButton
-        ref={anchorRef}
-        aria-controls="hamburger-menu"
-        aria-haspopup="true"
-        title={t('map.more_button_title')}
-        color="secondary"
-        onClick={open}
-      >
-        <MenuIcon />
-      </IconButton>
+      <LoginIconButton onClick={open} />
+      <HamburgerIconButton anchorRef={anchorRef} onClick={open} />
     </>
   );
 };
