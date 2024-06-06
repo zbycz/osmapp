@@ -1,12 +1,16 @@
 import { IconButton } from '@mui/material';
-import { t } from '../../../services/intl';
 import MenuIcon from '@mui/icons-material/Menu';
 import React from 'react';
 import styled from 'styled-components';
+import { t } from '../../../services/intl';
 
 const StyledIconButton = styled(IconButton)`
   padding: 12px;
   margin-left: -10px;
+
+  svg {
+    filter: drop-shadow(0 0 2px #ffffff);
+  }
 `;
 
 export const HamburgerIconButton = ({ anchorRef, onClick }) => (

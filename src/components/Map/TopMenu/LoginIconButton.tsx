@@ -6,6 +6,10 @@ import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 
 const StyledIconButton = styled(IconButton)`
   padding: 12px;
+
+  svg {
+    filter: drop-shadow(0 0 2px #ffffff);
+  }
 `;
 
 const StyledUserImg = styled.img`
@@ -15,11 +19,11 @@ const StyledUserImg = styled.img`
   background-color: white;
 `;
 
-export const LoginIconButton = ({ onClick }) => {
+export const LoginIconButton = ({ anchorRef, onClick }) => {
   const { osmUser, userImage } = useOsmAuthContext();
 
   return (
-    <StyledIconButton color="secondary" onClick={onClick}>
+    <StyledIconButton ref={anchorRef} color="secondary" onClick={onClick}>
       {osmUser ? (
         <StyledUserImg src={userImage} alt={osmUser} onClick={onClick} />
       ) : (

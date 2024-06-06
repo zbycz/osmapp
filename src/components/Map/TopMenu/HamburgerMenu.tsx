@@ -1,8 +1,7 @@
 import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import React, { forwardRef, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import HelpIcon from '@mui/icons-material/Help';
@@ -14,9 +13,7 @@ import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { getIdEditorLink } from '../../../utils';
-import { UserTheme, useUserThemeContext } from "../../../helpers/theme";
-import { useOsmAuthContext } from '../../utils/OsmAuthContext';
-import { LoginIconButton } from './LoginIconButton';
+import { UserTheme, useUserThemeContext } from '../../../helpers/theme';
 import GithubIcon from '../../../assets/GithubIcon';
 import { LangSwitcher } from './LangSwitcher';
 import { HamburgerIconButton } from './HamburgerIconButton';
@@ -57,12 +54,6 @@ const StyledBrightness4Icon = styled(Brightness4Icon)`
 `;
 
 const StyledBrightnessHighIcon = styled(BrightnessHighIcon)`
-  color: ${({ theme }) => theme.palette.action.active};
-  margin: -2px 6px 0 0;
-  font-size: 17px !important;
-`;
-
-const StyledAccountCircleIcon = styled(AccountCircleIcon)`
   color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
@@ -171,45 +162,6 @@ const ThemeSelection = () => {
   );
 };
 
-const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
-  const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
-  const login = () => {
-    closeMenu();
-    handleLogin();
-  };
-  const logout = () => {
-    closeMenu();
-    setTimeout(() => {
-      handleLogout();
-    }, 100);
-  };
-
-  if (!osmUser) {
-    return (
-      <MenuItem ref={ref} onClick={login}>
-        <StyledAccountCircleIcon />
-        {t('user.login')}
-      </MenuItem>
-    );
-  }
-
-  return (
-    <>
-      <MenuItem
-        component="a"
-        href={`https://www.openstreetmap.org/user/${osmUser}`}
-        target="_blank"
-        rel="noopener"
-        onClick={closeMenu}
-      >
-        <StyledAccountCircleIcon ref={ref} />
-        <strong>{osmUser}</strong>
-      </MenuItem>
-      <MenuItem onClick={logout}>{t('user.logout')}</MenuItem>
-    </>
-  );
-});
-
 // TODO custom Item components are not keyboard accesible
 // seems like a bug in material-ui
 // https://github.com/mui-org/material-ui/issues/22912
@@ -231,16 +183,15 @@ export const HamburgerMenu = () => {
         open={opened}
         onClose={close}
       >
-        <UserLogin closeMenu={close} />
-        <StyledDivider />
         <ThemeSelection />
         <EditLink closeMenu={close} />
+        <StyledDivider />
         <InstallLink closeMenu={close} />
         <AboutLink closeMenu={close} />
         <GithubLink closeMenu={close} />
+        <StyledDivider />
         <LangSwitcher />
       </Menu>
-      <LoginIconButton onClick={open} />
       <HamburgerIconButton anchorRef={anchorRef} onClick={open} />
     </>
   );
