@@ -14,7 +14,7 @@ export default {
   show_more: 'Show more',
   show_less: 'Show less',
 
-  'user.login': 'Login',
+  'user.login_register': 'Login / register',
   'user.logout': 'Logout',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',
