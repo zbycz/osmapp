@@ -29,7 +29,7 @@ const TopPanel = styled.div`
   padding: 10px;
   box-sizing: border-box;
 
-  z-index: 1200;
+  z-index: 1201;
 
   width: 100%;
   @media ${isDesktop} {

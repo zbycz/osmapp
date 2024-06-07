@@ -4,12 +4,13 @@ import { EditIconButton } from './helpers/EditIconButton';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 
 const Wrapper = styled.div`
-  font-size: 36px;
+  font-size: 30px;
   line-height: 0.98;
   position: relative;
   padding-bottom: 30px;
   ${({ deleted }) => deleted && 'text-decoration: line-through;'}
 
+  padding: 25px 20px;
   &:hover .show-on-hover {
     display: block !important;
   }

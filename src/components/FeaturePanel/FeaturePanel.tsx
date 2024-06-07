@@ -6,11 +6,10 @@ import { useToggleState } from '../helpers';
 import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { EditDialog } from './EditDialog/EditDialog';
 import {
-  PanelContent,
+  // PanelContent,
   PanelFooter,
-  PanelScrollbars,
+  // PanelScrollbars,
   PanelSidePadding,
-  PanelWrapper,
 } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
@@ -83,71 +82,72 @@ export const FeaturePanel = () => {
     !advanced
   ) {
     return (
-      <ClimbingContextProvider
-        feature={feature}
-        key={getUrlOsmId(osmMeta) + (deleted && 'del')} // TODO: hack to reset state
-      >
-        <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
-      </ClimbingContextProvider>
+      <>
+        <ClimbingContextProvider
+          feature={feature}
+          key={getUrlOsmId(osmMeta) + (deleted && 'del')} // TODO: hack to reset state
+        >
+          <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
+        </ClimbingContextProvider>
+      </>
     );
   }
 
   return (
-    <PanelWrapper>
-      <PanelScrollbars>
-        <ImageSection />
-        <PanelContent>
-          <PanelSidePadding>
-            <ParentLink />
-            <FeatureHeading
-              deleted={deleted}
-              title={label}
-              editEnabled={editEnabled && !point}
+    <>
+      {/* <PanelScrollbars> */}
+      {/* <PanelContent> */}
+      {/* <PanelSidePadding> */}
+      <FeatureHeading
+        deleted={deleted}
+        title={label}
+        editEnabled={editEnabled && !point}
+      />
+      <ParentLink />
+
+      <ImageSection />
+      <OsmError />
+      {/* </PanelSidePadding> */}
+
+      {!skeleton && (
+        <>
+          <ImageSlider />
+          <Flex>
+            {/* <PanelSidePadding> */}
+            <Properties
+              showTags={showTagsTable}
+              key={getUrlOsmId(osmMeta) + (deleted && 'del')}
             />
 
-            <OsmError />
-          </PanelSidePadding>
+            <MemberFeatures />
+            {advanced && <Members />}
 
-          {!skeleton && (
-            <>
-              <ImageSlider />
+            <PublicTransport tags={tags} />
 
-              <Flex>
-                <PanelSidePadding>
-                  <Properties
-                    showTags={showTagsTable}
-                    key={getUrlOsmId(osmMeta) + (deleted && 'del')}
-                  />
+            {editEnabled && (
+              <div style={{ textAlign: 'center' }}>
+                <EditButton isAddPlace={point} isUndelete={deleted} />
 
-                  <MemberFeatures />
-                  {advanced && <Members />}
+                <EditDialog
+                  feature={feature}
+                  isAddPlace={point}
+                  isUndelete={deleted}
+                  key={
+                    getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
+                  }
+                />
+              </div>
+            )}
 
-                  <PublicTransport tags={tags} />
+            {point && <ObjectsAround advanced={advanced} />}
+            {/* </PanelSidePadding> */}
+          </Flex>
+        </>
+      )}
 
-                  {editEnabled && (
-                    <div style={{ textAlign: 'center' }}>
-                      <EditButton isAddPlace={point} isUndelete={deleted} />
-
-                      <EditDialog
-                        feature={feature}
-                        isAddPlace={point}
-                        isUndelete={deleted}
-                        key={
-                          getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                        }
-                      />
-                    </div>
-                  )}
-
-                  {point && <ObjectsAround advanced={advanced} />}
-                </PanelSidePadding>
-              </Flex>
-            </>
-          )}
-
-          <PanelSidePadding>{footer}</PanelSidePadding>
-        </PanelContent>
-      </PanelScrollbars>
-    </PanelWrapper>
+      <PanelSidePadding>{footer}</PanelSidePadding>
+      {/* </PanelContent> */}
+      {/* </PanelScrollbars> */}
+    </>
   );
 };
