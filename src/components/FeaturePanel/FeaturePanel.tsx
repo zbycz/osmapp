@@ -4,7 +4,6 @@ import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
 import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
-import { EditDialog } from './EditDialog/EditDialog';
 import {
   PanelContent,
   PanelFooter,
@@ -18,7 +17,6 @@ import { FeatureDescription } from './FeatureDescription';
 import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
-import { EditButton } from './EditButton';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
@@ -29,6 +27,7 @@ import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
 import { ImageSlider } from './ImagePane/ImageSlider';
+import { SuggestEdit } from './SuggestEdit';
 
 const Flex = styled.div`
   flex: 1;
@@ -124,20 +123,7 @@ export const FeaturePanel = () => {
 
                   <PublicTransport tags={tags} />
 
-                  {editEnabled && (
-                    <div style={{ textAlign: 'center' }}>
-                      <EditButton isAddPlace={point} isUndelete={deleted} />
-
-                      <EditDialog
-                        feature={feature}
-                        isAddPlace={point}
-                        isUndelete={deleted}
-                        key={
-                          getUrlOsmId(osmMeta) + (deleted && 'del') // we need to refresh inner state
-                        }
-                      />
-                    </div>
-                  )}
+                  {editEnabled && <SuggestEdit />}
 
                   {point && <ObjectsAround advanced={advanced} />}
                 </PanelSidePadding>
