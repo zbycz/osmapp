@@ -55,10 +55,12 @@ const getUpdatedPhotoTags = (route: ClimbingRoute) => {
     const newPhotoKeyWithOffset = getPhotoKey(newPhotoIndex, offset);
     const currentPhotoKey = route.photoToKeyMap[photoName];
 
-    updatedTags[`${currentPhotoKey ?? newPhotoKeyWithOffset}:path`] =
-      getPathString(points);
-    if (!currentPhotoKey) {
+    if (currentPhotoKey) {
+      updatedTags[`${currentPhotoKey}:path`] = getPathString(points);
+    } else {
+      const newPhotoKeyWithOffset = getNewPhotoKey(newPhotoIndex, offset);
       updatedTags[newPhotoKeyWithOffset] = `File:${photoName}`;
+      updatedTags[`${newPhotoKeyWithOffset}:path`] = getPathString(points);
       offset += 1;
     }
   });
