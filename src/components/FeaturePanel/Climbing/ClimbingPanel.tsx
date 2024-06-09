@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import Router from 'next/router';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
-import { CircularProgress, Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
@@ -20,7 +20,11 @@ import { ImageSlider } from '../ImagePane/ImageSlider';
 import { ClimbingParentLink } from '../ParentLink';
 import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
-import { getFeaturePhotos } from './utils/photo';
+import {
+  getWikimediaCommonsKeys,
+  getWikimediaCommonsTags,
+  removeFilePrefix,
+} from './utils/photo';
 import { SuggestEdit } from '../SuggestEdit';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
@@ -88,7 +92,8 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const onFullScreenClick = () => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
   };
-  const cragPhotos = getFeaturePhotos(feature);
+  const cragPhotos = getWikimediaCommonsValues(feature.tags)
+    .map(removeFilePrefix);
   preparePhotosAndSet(cragPhotos);
 
   const imageUrl = getCommonsImageUrl(`File:${photoPath}`, 500);

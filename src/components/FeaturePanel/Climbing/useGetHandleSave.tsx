@@ -7,9 +7,9 @@ import { invertedBoltCodeMap } from './utils/boltCodes';
 import { getOsmTagFromGradeSystem } from './utils/routeGrade';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
-  getFeaturePhotoKeys,
-  getNewPhotoIndex,
-  getPhotoKey,
+  getNewWikimediaCommonsIndex,
+  getWikimediaCommonsKey,
+  getWikimediaCommonsKeys,
 } from './utils/photo';
 
 const getPathString = (path) =>
@@ -47,20 +47,18 @@ const getUpdatedBasicTags = (route: ClimbingRoute) => {
 
 const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   const updatedTags = {};
-  const photoKeys = getFeaturePhotoKeys(route.feature);
-  const newPhotoIndex = getNewPhotoIndex(photoKeys);
+  const newIndex = getNewWikimediaCommonsIndex(route.feature);
 
   let offset = 0;
   Object.entries(route.paths).forEach(([photoName, points]) => {
-    const newPhotoKeyWithOffset = getPhotoKey(newPhotoIndex, offset);
     const currentPhotoKey = route.photoToKeyMap[photoName];
 
     if (currentPhotoKey) {
       updatedTags[`${currentPhotoKey}:path`] = getPathString(points);
     } else {
-      const newPhotoKeyWithOffset = getNewPhotoKey(newPhotoIndex, offset);
-      updatedTags[newPhotoKeyWithOffset] = `File:${photoName}`;
-      updatedTags[`${newPhotoKeyWithOffset}:path`] = getPathString(points);
+      const newKey = getWikimediaCommonsKey(newIndex + offset);
+      updatedTags[newKey] = `File:${photoName}`;
+      updatedTags[`${newKey}:path`] = getPathString(points);
       offset += 1;
     }
   });

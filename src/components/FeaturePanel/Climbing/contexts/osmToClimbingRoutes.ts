@@ -7,7 +7,7 @@ import {
 } from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
 import { boltCodeMap } from '../utils/boltCodes';
-import { sanitizeWikimediaCommonsPhotoName } from '../utils/photo';
+import { removeFilePrefix } from '../utils/photo';
 
 const parsePathString = (pathString?: string): PathPoints =>
   pathString
@@ -30,7 +30,7 @@ const getPathsByImage = (tags: FeatureTags) => {
   const photoToKeyMap = {};
 
   keys.forEach((key) => {
-    const image = sanitizeWikimediaCommonsPhotoName(tags[key]);
+    const image = removeFilePrefix(tags[key]);
     const path = tags[`${key}:path`];
 
     const points = parsePathString(path);
