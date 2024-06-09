@@ -21,6 +21,7 @@ import { ClimbingParentLink } from '../ParentLink';
 import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
 import { getFeaturePhotos } from './utils/photo';
+import { SuggestEdit } from '../SuggestEdit';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -142,6 +143,8 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
           <div style={{ padding: '35px 15px 5px' }}>
             <Properties showTags={showTagsTable} />
           </div>
+
+          <SuggestEdit />
 
           {/* @TODO unite with parent panel */}
           <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
