@@ -4,7 +4,7 @@ import Router from 'next/router';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Path, PathSvg } from './Path';
 import { Slider } from './Slider';
-import { Feature, ImageTag } from '../../../services/types';
+import { ImageTag } from '../../../services/types';
 import { getOsmappLink } from '../../../services/helpers';
 import { removeFilePrefix } from '../Climbing/utils/photo';
 
@@ -44,7 +44,7 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
 
   return (
     <ImageWrapper onClick={onClick}>
-      <img src={imageTag.imageUrl} height={270} />
+      <img src={imageTag.imageUrl} height={270} alt={imageTag.v} />
       <PathSvg>
         {imageTag.paths.map(({ path }) => (
           <Path path={path} />
@@ -54,8 +54,7 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
   );
 };
 
-const sources = ['imageTags', 'fody', 'mapillary', 'new'];
-
+// const sources = ['imageTags', 'fody', 'mapillary', 'new'];
 
 // source / imageTags - images
 // image {
@@ -66,8 +65,6 @@ const sources = ['imageTags', 'fody', 'mapillary', 'new'];
 //   <Image image={image}
 //
 //
-
-
 
 export const ImageSlider = () => {
   const { feature } = useFeatureContext();

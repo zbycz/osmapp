@@ -22,16 +22,18 @@ const getData = (newIndex: number = 0, offset: number) => {
   const numberOfNewItems = offset + 1;
   const wikimediaCommonKeys = Array(numberOfNewItems)
     .fill('')
-    .map((_, currentOffset) => getWikimediaCommonsKey(newIndex + currentOffset));
+    .map((_, currentOffset) =>
+      getWikimediaCommonsKey(newIndex + currentOffset),
+    );
 
   const wikimediaCommonNames = Array(numberOfNewItems)
     .fill('')
     .reduce(
       (acc, _, currentOffset) => ({
         ...acc,
-        [getWikimediaCommonsKey(newIndex + currentOffset)]: `Wikimedia commons photo (${
-          currentOffset + newIndex
-        })`,
+        [getWikimediaCommonsKey(
+          newIndex + currentOffset,
+        )]: `Wikimedia commons photo (${currentOffset + newIndex})`,
       }),
       {},
     );

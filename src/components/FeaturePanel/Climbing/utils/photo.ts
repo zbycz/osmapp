@@ -5,9 +5,7 @@ import { Feature, FeatureTags } from '../../../../services/types';
 export const getWikimediaCommonsKey = (index: number) =>
   `wikimedia_commons${index === 1 ? '' : `:${index}`}`;
 
-export const removeFilePrefix = (name: string) => {
-  return name?.replace(/^File:/, '');
-};
+export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 
 export const isWikimediaCommons = (tag: string) =>
   tag.startsWith('wikimedia_commons');

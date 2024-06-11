@@ -20,11 +20,7 @@ import { ImageSlider } from '../ImagePane/ImageSlider';
 import { ClimbingParentLink } from '../ParentLink';
 import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
-import {
-  getWikimediaCommonsKeys,
-  getWikimediaCommonsTags,
-  removeFilePrefix,
-} from './utils/photo';
+import { getWikimediaCommonsKeys, removeFilePrefix } from './utils/photo';
 import { SuggestEdit } from '../SuggestEdit';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
@@ -92,7 +88,8 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const onFullScreenClick = () => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
   };
-  const cragPhotos = getWikimediaCommonsValues(feature.tags)
+  const cragPhotos = getWikimediaCommonsKeys(feature.tags)
+    .map((key) => feature.tags[key])
     .map(removeFilePrefix);
   preparePhotosAndSet(cragPhotos);
 

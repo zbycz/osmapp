@@ -9,7 +9,6 @@ import { useSnackbar } from '../../utils/SnackbarContext';
 import {
   getNewWikimediaCommonsIndex,
   getWikimediaCommonsKey,
-  getWikimediaCommonsKeys,
 } from './utils/photo';
 
 const getPathString = (path) =>

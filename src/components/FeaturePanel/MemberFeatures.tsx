@@ -1,19 +1,19 @@
-import React from "react";
-import styled from "styled-components";
-import { Box, useTheme } from "@mui/material";
-import Router from "next/router";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import { getOsmappLink, getUrlOsmId } from "../../services/helpers";
-import { useFeatureContext } from "../utils/FeatureContext";
-import { Feature } from "../../services/types";
-import { getLabel } from "../../helpers/featureLabel";
-import { useUserThemeContext } from "../../helpers/theme";
-import { useMobileMode } from "../helpers";
-import Maki from "../utils/Maki";
-import { PanelLabel } from "./Climbing/PanelLabel";
-import { getCommonsImageUrl } from "../../services/images/getWikiImage";
-import { useScrollShadow } from "./Climbing/utils/useScrollShadow";
-import { getWikimediaCommonsKeys } from "./Climbing/utils/photo";
+import React from 'react';
+import styled from 'styled-components';
+import { Box, useTheme } from '@mui/material';
+import Router from 'next/router';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
+import { useFeatureContext } from '../utils/FeatureContext';
+import { Feature } from '../../services/types';
+import { getLabel } from '../../helpers/featureLabel';
+import { useUserThemeContext } from '../../helpers/theme';
+import { useMobileMode } from '../helpers';
+import Maki from '../utils/Maki';
+import { PanelLabel } from './Climbing/PanelLabel';
+import { getCommonsImageUrl } from '../../services/images/getWikiImage';
+import { useScrollShadow } from './Climbing/utils/useScrollShadow';
+import { getWikimediaCommonsKeys } from './Climbing/utils/photo';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;

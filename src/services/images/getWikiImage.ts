@@ -2,7 +2,6 @@
 import { md5 } from 'js-md5';
 import { fetchJson } from '../fetch';
 import { Image } from '../types';
-import { removeFilePrefix } from '../../components/FeaturePanel/Climbing/utils/photo';
 
 const getCommonsApiUrl = (title) =>
   `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${encodeURIComponent(
