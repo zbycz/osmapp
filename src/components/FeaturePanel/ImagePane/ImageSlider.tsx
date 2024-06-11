@@ -54,18 +54,6 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
   );
 };
 
-// const sources = ['imageTags', 'fody', 'mapillary', 'new'];
-
-// source / imageTags - images
-// image {
-//    type: imageTag / fody / mapillary / new
-//    imageTag: { key: wikimedia_commons:1  value: Category:Drchlava }
-//    offset
-// }
-//   <Image image={image}
-//
-//
-
 export const ImageSlider = () => {
   const { feature } = useFeatureContext();
 

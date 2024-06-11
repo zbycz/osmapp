@@ -11,7 +11,7 @@ export const isWikimediaCommons = (tag: string) =>
   tag.startsWith('wikimedia_commons');
 
 export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
-  Object.keys(tags).filter(isWikimediaCommons);
+  Object.keys(tags).filter(isWikimediaCommons); // TODO this returns also :path keys, not sure if intended
 
 export const getNewWikimediaCommonsIndex = (feature: Feature) => {
   const keys = getWikimediaCommonsKeys(feature.tags);

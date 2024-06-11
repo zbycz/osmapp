@@ -50,12 +50,12 @@ const getUpdatedPhotoTags = (route: ClimbingRoute) => {
 
   let offset = 0;
   Object.entries(route.paths).forEach(([photoName, points]) => {
-    const currentPhotoKey = route.photoToKeyMap[photoName];
+    const photoKey = route.photoToKeyMap[photoName];
 
-    if (currentPhotoKey) {
-      updatedTags[`${currentPhotoKey}:path`] = getPathString(points);
+    if (photoKey) {
+      updatedTags[`${photoKey}:path`] = getPathString(points);
     } else {
-      const newKey = getWikimediaCommonsKey(newIndex + offset);
+      const newKey = getWikimediaCommonsKey(newIndex + offset); // TODO this offset looks broken
       updatedTags[newKey] = `File:${photoName}`;
       updatedTags[`${newKey}:path`] = getPathString(points);
       offset += 1;
