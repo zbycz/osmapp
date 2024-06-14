@@ -13,7 +13,7 @@ import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { RouteDistribution } from './RouteDistribution';
-import { getFeaturePhotos } from './utils/photo';
+import { getWikimediaCommonsKeys, removeFilePrefix } from './utils/photo';
 import { useScrollShadow } from './utils/useScrollShadow';
 
 const Container = styled.div`
@@ -215,7 +215,9 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   };
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
 
-  const cragPhotos = getFeaturePhotos(feature);
+  const cragPhotos = getWikimediaCommonsKeys(feature.tags)
+    .map((key) => feature.tags[key])
+    .map(removeFilePrefix);
   preparePhotosAndSet(cragPhotos, photo);
 
   useEffect(() => {

@@ -4,11 +4,11 @@ import Router from 'next/router';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Path, PathSvg } from './Path';
 import { Slider } from './Slider';
-import { Feature, ImageTag } from '../../../services/types';
+import { ImageTag } from '../../../services/types';
 import { getOsmappLink } from '../../../services/helpers';
-import { sanitizeWikimediaCommonsPhotoName } from '../Climbing/utils/photo';
+import { removeFilePrefix } from '../Climbing/utils/photo';
 
-const ImageWrapper = styled.a`
+const ImageWrapper = styled.div`
   position: relative;
   display: flex;
   height: 100%;
@@ -26,31 +26,25 @@ const ImageWrapper = styled.a`
   }
 `;
 
-const Image = ({
-  imageTag,
-  feature,
-}: {
-  imageTag: ImageTag;
-  feature: Feature;
-}) => {
+const Image = ({ imageTag }: { imageTag: ImageTag }) => {
+  const { feature } = useFeatureContext();
+
   if (!imageTag.imageUrl) {
     return null;
   }
 
-  const onPhotoClick = () => {
+  const onClick = () => {
     const isCrag = feature.tags.climbing === 'crag';
     if (isCrag) {
-      Router.push(
-        `/${getOsmappLink(
-          feature,
-        )}/climbing/${sanitizeWikimediaCommonsPhotoName(imageTag.v)}`,
-      );
+      const featureLink = getOsmappLink(feature);
+      const photoLink = removeFilePrefix(imageTag.v);
+      Router.push(`${featureLink}/climbing/${photoLink}`);
     }
   };
 
   return (
-    <ImageWrapper onClick={onPhotoClick}>
-      <img src={imageTag.imageUrl} alt={imageTag.k} height={270} />
+    <ImageWrapper onClick={onClick}>
+      <img src={imageTag.imageUrl} height={270} alt={imageTag.v} />
       <PathSvg>
         {imageTag.paths.map(({ path }) => (
           <Path path={path} />
@@ -72,7 +66,7 @@ export const ImageSlider = () => {
     <div>
       <Slider>
         {feature.imageTags.map((imageTag) => (
-          <Image key={imageTag.k} imageTag={imageTag} feature={feature} />
+          <Image key={imageTag.k} imageTag={imageTag} />
         ))}
         {/* Fody */}
         {/* Mapillary */}

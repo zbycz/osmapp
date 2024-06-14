@@ -2,7 +2,6 @@
 import { md5 } from 'js-md5';
 import { fetchJson } from '../fetch';
 import { Image } from '../types';
-import { sanitizeWikimediaCommonsPhotoName } from '../../components/FeaturePanel/Climbing/utils/photo';
 
 const getCommonsApiUrl = (title) =>
   `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${encodeURIComponent(
@@ -122,7 +121,7 @@ export const getCommonsImageUrl = (
     console.warn('Invalid Commons photo name without "File:":', photoName);
     return null;
   }
-  const fileName = sanitizeWikimediaCommonsPhotoName(photoName, true);
+  const fileName = photoName.replace(/^File:/, '').replace(/ /g, '_');
   const hash = md5(fileName);
   const part1 = hash[0];
   const part2 = hash.substring(0, 2);
