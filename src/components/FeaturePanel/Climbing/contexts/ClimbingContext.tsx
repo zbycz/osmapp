@@ -47,6 +47,7 @@ type ClimbingContextType = {
   imageContainerSize: ImageSize;
   isPointMoving: boolean;
   isRouteSelected: (routeNumber: number) => boolean;
+  isOtherRouteSelected: (routeNumber: number) => boolean;
   isRouteHovered: (routeNumber: number) => boolean;
   isPointSelected: (pointNumber: number) => boolean;
   pointSelectedIndex: number;
@@ -273,6 +274,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   });
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
+  const isOtherRouteSelected = (index: number) =>
+    routeSelectedIndex !== null && isRouteSelected(index) === false;
   const isRouteHovered = (index: number) => routeIndexHovered === index;
   const isPointSelected = (index: number) => pointSelectedIndex === index;
 
@@ -320,6 +323,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     isPointClicked,
     isPointMoving,
     isRouteSelected,
+    isOtherRouteSelected,
     isRouteHovered,
     isPointSelected,
     pointSelectedIndex,
