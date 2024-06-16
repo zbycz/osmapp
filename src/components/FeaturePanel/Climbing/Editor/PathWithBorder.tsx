@@ -21,46 +21,44 @@ export const PathWithBorder = ({
   ...props
 }) => {
   const config = useConfig();
-  const { isDifficultyHeatmapEnabled, gradeTable, routeIndexHovered } =
-    useClimbingContext();
+  const {
+    isDifficultyHeatmapEnabled,
+    gradeTable,
+    routeIndexHovered,
+    isOtherRouteSelected,
+  } = useClimbingContext();
 
   const strokeColor = isDifficultyHeatmapEnabled
     ? getDifficultyColor(gradeTable, route.difficulty)
     : config.pathStrokeColor;
 
-  const getPathColor = () => {
-    if (isSelected) {
-      return config.pathStrokeColorSelected;
-    }
-
-    return strokeColor;
-  };
-
   const theme = useTheme();
   const contrastColor = theme.palette.getContrastText(
     isSelected ? config.pathStrokeColorSelected : strokeColor,
   );
+  const isOtherSelected = isOtherRouteSelected(routeNumber);
 
   return (
     <>
       <RouteBorder
         d={d}
-        strokeWidth={config.pathBorderWidth}
+        strokeWidth={isOtherSelected ? 2 : config.pathBorderWidth}
         stroke={contrastColor}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity={config.pathBorderOpacity}
+        opacity={isOtherSelected ? 0 : 1}
         // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
       />
       <RouteLine
         d={d}
         strokeWidth={config.pathStrokeWidth}
-        stroke={getPathColor()}
+        stroke={strokeColor}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
+        opacity={isOtherSelected ? 0 : 1}
         // markerMid="url(#triangle)"
         // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
