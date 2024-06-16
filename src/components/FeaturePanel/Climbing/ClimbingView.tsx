@@ -148,6 +148,14 @@ const MainContent = () => (
   </>
 );
 
+function getWindowDimensions() {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+}
+
 export const ClimbingView = ({ photo }: { photo?: string }) => {
   const {
     imageSize,
@@ -165,9 +173,13 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     setArePointerEventsDisabled,
     setPhotoZoom,
     preparePhotosAndSet,
+    photoZoom,
+    setLoadedPhotos,
+    loadedPhotos,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
 
+  const [photoResolution, setPhotoResolution] = useState(200);
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const machine = getMachine();
@@ -213,18 +225,47 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     setSplitPaneHeight(splitHeight);
     setIsSplitViewDragging(false);
   };
-  const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
+  // const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions(),
+  );
 
   const cragPhotos = getWikimediaCommonsKeys(feature.tags)
     .map((key) => feature.tags[key])
     .map(removeFilePrefix);
   preparePhotosAndSet(cragPhotos, photo);
 
+  const getResolution = () => {
+    const width = Math.ceil(windowDimensions.width / 1.1 / 100) * 100;
+
+    if (photoZoom.scale >= 4.5) return width * 4;
+    if (photoZoom.scale > 2.5) return width * 3;
+    if (photoZoom.scale > 1.5) return width * 2;
+
+    return width;
+
+    console.log('___photoZoom', photoZoom);
+  };
+
   useEffect(() => {
-    setIsPhotoLoaded(false);
-    const url = getCommonsImageUrl(`File:${photoPath}`, 1500);
+    function handleResize() {
+      setWindowDimensions(getWindowDimensions());
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // useEffect(() => {
+  //   setIsPhotoLoaded(false);
+  // }, [photoPath]);
+  useEffect(() => {
+    // setIsPhotoLoaded(false);
+
+    setPhotoResolution(getResolution());
+    const url = getCommonsImageUrl(`File:${photoPath}`, photoResolution);
     setImageUrl(url);
-  }, [photoPath]);
+  }, [photoPath, photoZoom.scale, windowDimensions]);
 
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
@@ -245,6 +286,8 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     ShadowBottom,
   } = useScrollShadow([areRoutesLoading]);
   const theme = useTheme();
+
+  const isPhotoLoaded = loadedPhotos?.[photoPath]?.[photoResolution] || false;
 
   return (
     <Container>
@@ -281,12 +324,12 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
             isVisible={isPhotoLoaded}
           >
             <>
-              {!isPhotoLoaded && (
+              {/* {!isPhotoLoaded && (
                 <LoadingContainer>
                   <CircularProgress color="primary" />
                 </LoadingContainer>
-              )}
-              <BlurContainer isVisible={isPhotoLoaded}>
+              )} */}
+              <BlurContainer isVisible={true ?? isPhotoLoaded}>
                 <TransformWrapper
                   doubleClick={{
                     disabled: true,
@@ -297,8 +340,13 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                   onPinchingStop={startPointerEvents}
                   onZoomStart={stopPointerEvents}
                   onZoomStop={startPointerEvents}
+                  // onZoom={(a) => {
+                  //   console.log('_____aaa', a.state.scale);
+                  //   if(a.state.scale > 0)
+                  // }}
                   onPanningStart={startPointerEvents}
                   onPanningStop={startPointerEvents}
+                  disablePadding
                   wheel={{ step: 100 }}
                   centerOnInit
                   onTransformed={(
@@ -324,7 +372,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                           !areRoutesLoading
                         }
                         imageUrl={imageUrl}
-                        setIsPhotoLoaded={setIsPhotoLoaded}
+                        photoResolution={photoResolution}
                       />
                     </>
                   </TransformComponent>

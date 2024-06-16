@@ -33,6 +33,7 @@ import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
 import { getContainedSizeImage } from '../utils/image';
 
+type LoadedPhotos = Record<string, Record<number, boolean>>;
 type ImageSize = {
   width: number;
   height: number;
@@ -116,6 +117,8 @@ type ClimbingContextType = {
   setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
   routesExpanded: Array<number>;
   setRoutesExpanded: (routesExpanded: Array<number>) => void;
+  loadedPhotos: LoadedPhotos;
+  setLoadedPhotos: (loadedPhotos: LoadedPhotos) => void;
   loadPhotoRelatedData: () => void;
   filterDifficulty: Array<string>;
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
@@ -154,6 +157,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     width: 0,
     height: 0,
   });
+  const [loadedPhotos, setLoadedPhotos] = useState<LoadedPhotos>({});
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
   const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
@@ -416,6 +420,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     preparePhotosAndSet,
     imageContainerSize,
     setImageContainerSize,
+    loadedPhotos,
+    setLoadedPhotos,
   };
 
   return (
