@@ -29,18 +29,18 @@ const NumberOfRoutes = styled.div`
 const Column = styled.div`
   flex: 1;
 `;
-const DifficultyLevel = styled.div<{ isActive: boolean }>`
+const DifficultyLevel = styled.div<{ $isActive: boolean; $color: string }>`
   text-align: center;
-  color: ${({ color, isActive, theme }) =>
-    isActive ? color : theme.palette.secondary.main};
+  color: ${({ $color, $isActive, theme }) =>
+    $isActive ? $color : theme.palette.secondary.main};
   font-weight: bold;
   font-size: 11px;
 `;
 
-const Chart = styled.div<{ ratio: number; color: string }>`
-  height: ${({ ratio }) => MAX_HEIGHT * ratio}px;
-  background-color: ${({ color, theme, ratio }) =>
-    ratio === 0 ? theme.palette.secondary.main : color};
+const Chart = styled.div<{ $ratio: number; $color: string }>`
+  height: ${({ $ratio }) => MAX_HEIGHT * $ratio}px;
+  background-color: ${({ $color, theme, $ratio }) =>
+    $ratio === 0 ? theme.palette.secondary.main : $color};
   border-radius: 2px;
 `;
 
@@ -112,9 +112,9 @@ export const RouteDistribution = () => {
                   {numberOfRoutes > 0 && (
                     <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
                   )}
-                  <Chart color={color} ratio={heightRatioItem.ratio} />
+                  <Chart $color={color} $ratio={heightRatioItem.ratio} />
 
-                  <DifficultyLevel color={color} isActive={isColumnActive}>
+                  <DifficultyLevel $color={color} $isActive={isColumnActive}>
                     {heightRatioItem.grade}
                   </DifficultyLevel>
                 </Column>

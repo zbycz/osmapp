@@ -6,13 +6,16 @@ import { useConfig } from '../../config';
 
 const ClickableArea = styled.circle``;
 
-const PointElement = styled.circle<{ isHovered: boolean }>`
+const PointElement = styled.circle<{
+  $isHovered: boolean;
+  $isPointSelected: boolean;
+}>`
   transition: all 0.1s ease-in-out;
   pointer-events: all;
   touch-action: none;
-  ${({ isHovered, isPointSelected }) =>
+  ${({ $isHovered, $isPointSelected }) =>
     `${
-      isHovered || isPointSelected
+      $isHovered || $isPointSelected
         ? 'transform: scale(1.8);'
         : 'transform: scale(1);'
     }`}
@@ -134,8 +137,8 @@ export const Point = ({
         fill={pointColor}
         stroke={pointStroke}
         r={isTouchDevice ? 5 : 3}
-        isHovered={isHovered}
-        isPointSelected={isPointSelected}
+        $isHovered={isHovered}
+        $isPointSelected={isPointSelected}
         {...commonProps}
       >
         {title}

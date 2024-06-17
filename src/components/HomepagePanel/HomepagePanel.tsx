@@ -54,11 +54,11 @@ const StyledLogoOsmapp = styled(LogoOsmapp)`
   margin-top: 3em;
 `;
 
-const Center = styled.div`
+const Center = styled.div<{ $mb?: boolean; $mb4?: boolean; $mt?: boolean }>`
   text-align: center;
-  ${({ mb }) => mb && 'margin-bottom: 2em;'}
-  ${({ mb4 }) => mb4 && 'margin-bottom: 4em;'}
-  ${({ mt }) => mt && 'margin-top: 2em;'}
+  ${({ $mb }) => $mb && 'margin-bottom: 2em;'}
+  ${({ $mb4 }) => $mb4 && 'margin-bottom: 4em;'}
+  ${({ $mt }) => $mt && 'margin-top: 2em;'}
 `;
 
 const Spacer = styled.div`
@@ -104,7 +104,7 @@ export const HomepagePanel = () => {
         <ClosePanelButton right onClick={persistHideHomepage} />
         <Content>
           <div>
-            <Center mb>
+            <Center $mb>
               {isClimbing ? (
                 <LogoOpenClimbing
                   width={100}
@@ -139,7 +139,7 @@ export const HomepagePanel = () => {
             </Typography>
 
             {isMobileMode && (
-              <Center mt mb4>
+              <Center $mt $mb4>
                 <Button
                   variant="contained"
                   color="primary"
@@ -151,7 +151,7 @@ export const HomepagePanel = () => {
               </Center>
             )}
 
-            <Center mb>
+            <Center $mb>
               <img
                 src={
                   isClimbing
@@ -215,7 +215,7 @@ export const HomepagePanel = () => {
               <Translation id="homepage.github_link" />
             </Typography>
 
-            <Center mb mt>
+            <Center $mb $mt>
               <Button
                 variant="outlined"
                 startIcon={<GetAppIcon />}

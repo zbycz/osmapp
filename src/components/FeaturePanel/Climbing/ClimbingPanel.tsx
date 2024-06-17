@@ -56,10 +56,10 @@ const Heading = styled.div`
   line-height: 0.98;
 `;
 
-const Thumbnail = styled.img<{ isLoading: boolean }>`
+const Thumbnail = styled.img<{ $isLoading: boolean }>`
   width: 100%;
   position: absolute;
-  visibility: ${({ isLoading }) => (isLoading ? 'hidden' : 'visible')};
+  visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
 `;
 
 const LoadingContainer = styled.div`
@@ -118,7 +118,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
                 src={imageUrl}
                 ref={photoRef}
                 onLoad={onPhotoLoad}
-                isLoading={isPhotoLoading}
+                $isLoading={isPhotoLoading}
               />
 
               {!isPhotoLoading && <RoutesLayer onClick={() => null} />}
