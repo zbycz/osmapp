@@ -1,6 +1,7 @@
 import { OsmApiId } from '../../services/helpers';
 import { basicStyle } from './styles/basicStyle';
 import { climbingLayers } from './styles/layers/climbingLayers';
+import { isBrowser } from '../helpers';
 
 const isOsmLayer = (id) => {
   if (id.startsWith('place-country-')) return false; // https://github.com/zbycz/osmapp/issues/35
@@ -51,7 +52,7 @@ export const convertOsmIdToMapId = (apiId: OsmApiId) => {
 
 // maplibregl.supported() no longer exists
 // copied from https://maplibre.org/maplibre-gl-js/docs/examples/check-for-support/
-export const isWebglSupported = () => {
+const isWebglSupported = () => {
   if (window.WebGLRenderingContext) {
     const canvas = document.createElement('canvas');
     try {
@@ -71,3 +72,5 @@ export const isWebglSupported = () => {
   // WebGL not supported
   return false;
 };
+
+export const webglSupported = isBrowser() ? isWebglSupported() : true;
