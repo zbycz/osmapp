@@ -14,7 +14,7 @@ import { useUpdateStyle } from './behaviour/useUpdateStyle';
 import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
-import { isWebglSupported } from './helpers';
+import { webglSupported } from './helpers';
 import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 import { useAddTopRightControls } from './useAddTopRightControls';
 
@@ -39,7 +39,7 @@ const NotSupportedMessage = () => (
 // TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
-  if (!isWebglSupported()) {
+  if (!webglSupported) {
     onMapLoaded();
     return <NotSupportedMessage />;
   }
