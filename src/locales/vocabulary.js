@@ -108,6 +108,7 @@ export default {
   'map.more_button_title': 'More options…',
   'map.edit_link': 'Edit this area in iD editor',
   'map.about_link': 'About this app',
+  'map.compass_tooltip': 'Drag to enter 3D. Click to reset.',
 
   'editdialog.add_heading': 'Add to OpenStreetMap',
   'editdialog.undelete_heading': 'Add again to OpenStreetMap',

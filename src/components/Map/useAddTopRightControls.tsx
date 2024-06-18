@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
 import { getGlobalMap } from '../../services/mapStorage';
+import { t } from '../../services/intl';
 
 const navigation = {
   mobile: new maplibregl.NavigationControl({
@@ -13,6 +14,19 @@ const navigation = {
     showCompass: true,
     visualizePitch: true,
   }),
+};
+
+// TODO create custom NavigationControl and move it there (see OsmappTerrainControl)
+export const COMPASS_TOOLTIP = t('map.compass_tooltip');
+const updateCompassFactory = (map: any, mobileMode: boolean) => () => {
+  const bearing = map.getBearing();
+  const pitch = map.getPitch();
+
+  if (mobileMode && bearing === 0 && pitch === 0) {
+    map.getContainer().classList.add('hidden-compass');
+  } else {
+    map.getContainer().classList.remove('hidden-compass');
+  }
 };
 
 const geolocation = new maplibregl.GeolocateControl({
@@ -30,26 +44,13 @@ export const useAddTopRightControls = (map: any, mobileMode: boolean) => {
     if (map) {
       const navControl = mobileMode ? navigation.mobile : navigation.desktop;
 
-      map.getContainer().classList.add('hidden-compass');
-
       map.addControl(navControl);
       map.addControl(geolocation);
 
-      const updateCompassVisibility = () => {
-        const bearing = map.getBearing();
-        const compass: HTMLElement = document.querySelector(
-          '.maplibregl-ctrl-compass',
-        );
-        if (Math.abs(bearing) > 0.1) {
-          map.getContainer().classList.remove('hidden-compass');
-          compass.style.display = 'block';
-        } else {
-          compass.style.display = 'none';
-        }
-      };
-
-      map.on('rotate', updateCompassVisibility);
-      map.on('load', updateCompassVisibility);
+      const updateCompass = updateCompassFactory(map, mobileMode);
+      map.on('rotateend', updateCompass);
+      map.on('pitchend', updateCompass);
+      updateCompass();
 
       return () => {
         // QUICK FIX: in hot reload the map is unmounted,
@@ -59,8 +60,8 @@ export const useAddTopRightControls = (map: any, mobileMode: boolean) => {
         if (gmap) {
           map.removeControl(navControl);
           map.removeControl(geolocation);
-          map.off('rotate', updateCompassVisibility);
-          map.off('load', updateCompassVisibility);
+          map.off('rotateend', updateCompass);
+          map.off('pitchend', updateCompass);
         }
       };
     }

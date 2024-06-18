@@ -3,6 +3,7 @@ import maplibregl from 'maplibre-gl';
 import { basicStyle } from '../styles/basicStyle';
 import { PersistedScaleControl } from './PersistedScaleControl';
 import { setGlobalMap } from '../../../services/mapStorage';
+import { COMPASS_TOOLTIP } from '../useAddTopRightControls';
 
 export const useInitMap = () => {
   const mapRef = React.useRef(null);
@@ -16,6 +17,9 @@ export const useInitMap = () => {
       style: basicStyle,
       attributionControl: false,
       refreshExpiredTiles: false,
+      locale: {
+        'NavigationControl.ResetBearing': COMPASS_TOOLTIP,
+      },
     });
     setGlobalMap(map);
     setMapInState(map);
