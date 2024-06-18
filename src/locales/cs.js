@@ -100,6 +100,7 @@ export default {
   'map.more_button_title': 'Další možnosti…',
   'map.edit_link': 'Otevřít mapu v editoru iD',
   'map.about_link': 'O aplikaci',
+  'map.compass_tooltip': 'Potáhnutí (drag) kompasu spustí 3D. Pro reset klikněte.',
 
   'editdialog.add_heading': 'Přidat do OpenStreetMap',
   'editdialog.undelete_heading': 'Znovu přidat do OpenStreetMap',
