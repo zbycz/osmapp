@@ -1,7 +1,5 @@
 import React, { forwardRef } from 'react';
-
 import styled from 'styled-components';
-
 import { MenuItem, IconButton, Menu, Divider } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -27,7 +25,7 @@ const StyledMenuItem = styled(MenuItem)`
       outline: 0;
     }
   }
-`;
+` as unknown as any; // <Menu> expects "li", but it as "a"
 
 const StyledToggleButton = styled(IconButton)`
   position: absolute !important;

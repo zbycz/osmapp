@@ -46,8 +46,8 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
     <ImageWrapper onClick={onClick}>
       <img src={imageTag.imageUrl} height={270} alt={imageTag.v} />
       <PathSvg>
-        {imageTag.paths.map(({ path }) => (
-          <Path path={path} />
+        {imageTag.paths.map(({ shortId, path }) => (
+          <Path key={shortId} path={path} />
         ))}
       </PathSvg>
     </ImageWrapper>

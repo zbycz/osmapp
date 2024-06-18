@@ -13,7 +13,11 @@ const StyledAccountCircleIcon = styled(AccountCircleIcon)`
   font-size: 17px !important;
 `;
 
-const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
+type Props = {
+  closeMenu: () => void;
+};
+
+const UserLogin = forwardRef<SVGSVGElement, Props>(({ closeMenu }, ref) => {
   const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
   const login = () => {
     closeMenu();
@@ -28,8 +32,8 @@ const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
 
   if (!osmUser) {
     return (
-      <MenuItem ref={ref} onClick={login}>
-        <StyledAccountCircleIcon />
+      <MenuItem onClick={login}>
+        <StyledAccountCircleIcon ref={ref} />
         {t('user.login_register')}
       </MenuItem>
     );

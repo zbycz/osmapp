@@ -42,7 +42,7 @@ const StarButtonPure = ({ isStarred, toggleStar }) => {
   const color = currentTheme === 'dark' ? '#fff' : '#000';
 
   return (
-    <StyledActionButton onClick={toggleStar} color={color}>
+    <StyledActionButton onClick={toggleStar} $color={color}>
       {isStarred ? (
         <Tooltip arrow title={t('featurepanel.favorites_unsave_button')}>
           <Star htmlColor={color} />

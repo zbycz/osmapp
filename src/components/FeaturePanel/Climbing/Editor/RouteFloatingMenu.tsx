@@ -17,8 +17,8 @@ import {
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PointType } from '../types';
 
-const ScaleContainer = styled.div<{ scale: number }>`
-  transform: scale(${({ scale }) => 1 / scale});
+const ScaleContainer = styled.div<{ $scale: number }>`
+  transform: scale(${({ $scale }) => 1 / $scale});
 `;
 
 export const RouteFloatingMenu = () => {
@@ -120,7 +120,7 @@ export const RouteFloatingMenu = () => {
       </Dialog>
 
       {showTypeMenu ? (
-        <ScaleContainer scale={photoZoom.scale}>
+        <ScaleContainer $scale={photoZoom.scale}>
           <ButtonGroup variant="contained" size="small" color="primary">
             <Button
               onClick={() => {
@@ -173,7 +173,7 @@ export const RouteFloatingMenu = () => {
           </ButtonGroup>
         </ScaleContainer>
       ) : (
-        <ScaleContainer scale={photoZoom.scale}>
+        <ScaleContainer $scale={photoZoom.scale}>
           <ButtonGroup variant="contained" size="small" color="primary">
             {machine.currentStateName === 'pointMenu' &&
               routes[routeSelectedIndex] &&

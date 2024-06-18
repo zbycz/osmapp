@@ -175,7 +175,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
               {cragPhotoKeys.map((cragPhotoTag) => {
                 const photoPath = feature.tags[cragPhotoTag];
                 const url = getCommonsImageUrl(photoPath, 400);
-                return <Image src={url} />;
+                return <Image src={url} key={cragPhotoTag} />;
               })}
             </Gallery>
             <ShadowRight

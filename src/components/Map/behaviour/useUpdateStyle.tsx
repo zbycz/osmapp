@@ -10,6 +10,8 @@ import { makinaAfricaStyle } from '../styles/makinaAfricaStyle';
 import { climbingLayers } from '../styles/layers/climbingLayers';
 import { EMPTY_GEOJSON_SOURCE } from '../consts';
 import { fetchCrags } from '../../../services/fetchCrags';
+import { setUpHover } from './featureHover';
+import { layersWithOsmId } from '../helpers';
 
 export const getRasterStyle = (key) => {
   const url = osmappLayers[key]?.url ?? key; // if `key` not found, it contains tiles URL
@@ -65,4 +67,5 @@ export const useUpdateStyle = createMapEffectHook((map: Map, activeLayers) => {
   });
 
   map.setStyle(style, { diff: true });
+  setUpHover(map, layersWithOsmId(style));
 });

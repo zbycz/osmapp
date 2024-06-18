@@ -25,7 +25,7 @@ export const LoginIconButton = ({ anchorRef, onClick }) => {
   return (
     <StyledIconButton ref={anchorRef} color="secondary" onClick={onClick}>
       {osmUser ? (
-        <StyledUserImg src={userImage} alt={osmUser} onClick={onClick} />
+        <StyledUserImg src={userImage} alt={osmUser} />
       ) : (
         <AccountCircleIcon />
       )}

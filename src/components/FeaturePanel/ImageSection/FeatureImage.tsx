@@ -10,13 +10,13 @@ import { t } from '../../../services/intl';
 import { nl2br } from '../../utils/nl2br';
 import { Photo } from './Photo';
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ $uncertainImage: boolean }>`
   position: relative;
   background: #ddd;
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
-  ${({ uncertainImage }) =>
-    uncertainImage
+  ${({ $uncertainImage }) =>
+    $uncertainImage
       ? 'box-shadow: inset 0 0 100px rgba(255,255,255,0.3); filter: contrast(0.6) brightness(1.2);'
       : ''}
 `;
@@ -62,7 +62,7 @@ const IconWrapper = styled.div`
   }
 `;
 
-const AttributionLink = styled.a`
+const AttributionLink = styled.a<{ $portrait: boolean }>`
   position: absolute;
   right: 1px;
   top: 1px;
@@ -72,7 +72,7 @@ const AttributionLink = styled.a`
   text-shadow: 1px 1px 4px rgba(0, 0, 0, 1);
   color: #fff;
   text-decoration: none;
-  opacity: ${({ portrait }) => (portrait ? 1 : 0.8)};
+  opacity: ${({ $portrait }) => ($portrait ? 1 : 0.8)};
 
   &:hover {
     opacity: 1;
@@ -112,7 +112,7 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
   const attribution = `${source}${username ? ` / ${username}` : ''}`;
 
   return (
-    <Wrapper uncertainImage={uncertainImage}>
+    <Wrapper $uncertainImage={uncertainImage}>
       {image && image !== LOADING && (
         <Photo image={image} isCertain={!uncertainImage} />
       )}
@@ -128,7 +128,7 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
             href={link}
             target="_blank"
             rel="noopener"
-            portrait={portrait}
+            $portrait={portrait}
           >
             {attribution}
           </AttributionLink>

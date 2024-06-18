@@ -47,7 +47,7 @@ export const Overlays = ({
           );
 
         return (
-          <ListItem button onClick={toggleOverlayLayer}>
+          <ListItem button onClick={toggleOverlayLayer} key={key}>
             <LayerIcon Icon={Icon} />
             <ListItemText primary={dotToOptionalBr(name)} />
             <ListItemSecondaryAction>

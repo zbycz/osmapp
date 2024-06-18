@@ -7,12 +7,12 @@ type Props = {
   onClick: (e: any) => void;
 };
 
-const Container = styled.div<{ isCurrentPhoto: boolean }>`
+const Container = styled.div<{ $isCurrentPhoto: boolean }>`
   display: block;
-  background: ${({ isCurrentPhoto, theme }) =>
-    isCurrentPhoto ? theme.palette.action.selected : 'transparent'};
-  color: ${({ isCurrentPhoto, theme }) =>
-    isCurrentPhoto ? theme.palette.text.primary : theme.palette.text.hint};
+  background: ${({ $isCurrentPhoto, theme }) =>
+    $isCurrentPhoto ? theme.palette.action.selected : 'transparent'};
+  color: ${({ $isCurrentPhoto, theme }) =>
+    $isCurrentPhoto ? theme.palette.text.primary : theme.palette.text.hint};
   border-radius: 6px;
   padding: 2px 8px;
   font-size: 12px;
@@ -20,7 +20,7 @@ const Container = styled.div<{ isCurrentPhoto: boolean }>`
 `;
 
 export const PhotoLink = ({ children, isCurrentPhoto, onClick }: Props) => (
-  <Container isCurrentPhoto={isCurrentPhoto} onClick={onClick}>
+  <Container $isCurrentPhoto={isCurrentPhoto} onClick={onClick}>
     {children}
   </Container>
 );

@@ -4,28 +4,27 @@ import styled from 'styled-components';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteFloatingMenu } from './RouteFloatingMenu';
-import { Position, ZoomState } from '../types';
 import { RouteMarks } from './RouteMarks';
 
 type RouteRenders = { route: React.ReactNode; marks: React.ReactNode };
 
 const Svg = styled.svg<{
-  hasEditableCursor: boolean;
-  imageSize: { width: number; height: number };
-  isVisible: boolean;
-  photoZoom: ZoomState;
-  transformOrigin: any;
+  $hasEditableCursor: boolean;
+  $imageSize: { width: number; height: number };
+  $isVisible: boolean;
+  $transformOrigin: any;
 }>`
   position: absolute;
   top: 0;
   bottom: 0;
   margin: auto;
-  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  transition: ${({ isVisible }) => (isVisible ? 'opacity 0.1s ease' : 'none')};
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+  transition: ${({ $isVisible }) =>
+    $isVisible ? 'opacity 0.1s ease' : 'none'};
   transform-origin: 0 0;
-  ${({ hasEditableCursor }) =>
-    `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};
-  ${({ imageSize: { width, height } }) =>
+  ${({ $hasEditableCursor }) =>
+    `cursor: ${$hasEditableCursor ? 'crosshair' : 'auto'}`};
+  ${({ $imageSize: { width, height } }) =>
     `width: ${width}px;
     height:${height}px;
     /*height: 100%;*/
@@ -35,10 +34,10 @@ const Svg = styled.svg<{
     `}
 `;
 
-const RouteFloatingMenuContainer = styled.div<{ position: Position }>`
+const RouteFloatingMenuContainer = styled.div<{ $x: number; $y: number }>`
   position: absolute;
-  left: ${({ position }) => position.x}px;
-  top: ${({ position }) => position.y}px;
+  left: ${({ $x }) => $x}px;
+  top: ${({ $y }) => $y}px;
   z-index: 10000;
 `;
 type Props = {
@@ -169,7 +168,7 @@ export const RoutesLayer = ({
   return (
     <>
       <Svg
-        hasEditableCursor={machine.currentStateName === 'extendRoute'}
+        $hasEditableCursor={machine.currentStateName === 'extendRoute'}
         onClick={(e) => {
           onClick(e);
         }}
@@ -177,9 +176,9 @@ export const RoutesLayer = ({
         onMouseMove={onEditorMouseMove}
         onTouchMove={onEditorTouchMove}
         onPointerMove={onEditorTouchMove}
-        imageSize={imageSize}
-        isVisible={isVisible}
-        transformOrigin={transformOrigin}
+        $imageSize={imageSize}
+        $isVisible={isVisible}
+        $transformOrigin={transformOrigin}
       >
         {sortedRoutes.rest.map((item) => item.route)}
         {sortedRoutes.rest.map((item) => item.marks)}
@@ -191,14 +190,10 @@ export const RoutesLayer = ({
 
       {routeFloatingMenuPosition && (
         <RouteFloatingMenuContainer
-          position={{
-            x:
-              routeFloatingMenuPosition.x +
-              editorPosition.x +
-              scrollOffset.x +
-              30,
-            y: routeFloatingMenuPosition.y + scrollOffset.y - 15,
-          }}
+          $x={
+            routeFloatingMenuPosition.x + editorPosition.x + scrollOffset.x + 30
+          }
+          $y={routeFloatingMenuPosition.y + scrollOffset.y - 15}
         >
           <RouteFloatingMenu />
         </RouteFloatingMenuContainer>

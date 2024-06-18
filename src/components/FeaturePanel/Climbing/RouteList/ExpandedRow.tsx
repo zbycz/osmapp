@@ -34,8 +34,8 @@ const Flex = styled.div`
   align-items: flex-start;
 `;
 
-const ExpandedRowContainer = styled.div<{ isExpanded?: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded === false ? 0 : 'auto')};
+const ExpandedRowContainer = styled.div<{ $isExpanded?: boolean }>`
+  height: ${({ $isExpanded }) => ($isExpanded === false ? 0 : 'auto')};
   transition: all 0.1s ease-in-out;
   min-height: 0;
   overflow: hidden;
@@ -70,7 +70,7 @@ export const ExpandedRow = ({
 
   return (
     <>
-      <ExpandedRowContainer isExpanded={isExpanded}>
+      <ExpandedRowContainer $isExpanded={isExpanded}>
         <Flex>
           <Left>
             <List>

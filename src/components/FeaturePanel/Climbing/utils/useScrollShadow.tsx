@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import styled, { CSSObject, css } from 'styled-components';
+import React, { CSSProperties, useEffect, useRef, useState } from 'react';
+import styled, { css } from 'styled-components';
 import { convertHexToRgba } from '../../../utils/colorUtils';
 
 const DEFAULT_GRADIENT_PERCENTAGE = 3;
@@ -130,7 +130,7 @@ export const useScrollShadow = (deps = []) => {
   };
   type ShadowProps = {
     backgroundColor: string;
-    style?: CSSObject;
+    style?: CSSProperties;
     gradientPercentage?: number;
     opacity?: number;
   };

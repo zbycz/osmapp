@@ -8,9 +8,9 @@ type PanelLabelProps = {
   border?: boolean;
 };
 
-export const Container = styled.div<{ border: boolean }>`
-  ${({ border, theme }) =>
-    border ? `border-bottom: solid 1px ${theme.palette.divider};` : ''}
+export const Container = styled.div<{ $border: boolean }>`
+  ${({ $border, theme }) =>
+    $border ? `border-bottom: solid 1px ${theme.palette.divider};` : ''}
 
   padding: 20px 10px 4px;
 `;
@@ -32,7 +32,7 @@ export const PanelLabel = ({
   addition,
   border = true,
 }: PanelLabelProps) => (
-  <Container border={border}>
+  <Container $border={border}>
     <ContentContainer>
       <InnerContainer>
         <Title>{children}</Title>

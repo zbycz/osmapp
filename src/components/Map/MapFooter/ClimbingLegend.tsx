@@ -7,9 +7,9 @@ import { COLORS } from '../styles/layers/climbingLayers';
 import { useIsClient } from '../../helpers';
 import { convertHexToRgba } from '../../utils/colorUtils';
 
-const HideableContainer = styled.div<{ isVisible: boolean }>`
+const HideableContainer = styled.div<{ $isVisible: boolean }>`
   transition: max-height 0.15s ease-out;
-  max-height: ${({ isVisible }) => (isVisible ? 500 : 0)}px;
+  max-height: ${({ $isVisible }) => ($isVisible ? 500 : 0)}px;
   overflow: hidden;
 `;
 
@@ -61,7 +61,7 @@ export const ClimbingLegend = ({ isLegendVisible, setIsLegendVisible }) => {
 
   const isVisible = isLegendVisible && isClimbingLayerVisible && isClient;
   return (
-    <HideableContainer isVisible={isVisible}>
+    <HideableContainer $isVisible={isVisible}>
       <Container>
         <HeadingRow>
           <Heading>Climbing legend</Heading>

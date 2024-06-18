@@ -6,21 +6,21 @@ import { useRouteNumberColors } from './utils/useRouteNumberColors';
 import { isTicked } from '../../../services/ticks';
 
 const Container = styled.div<{
-  colors: Record<string, string>;
+  $colors: Record<string, string>;
 }>`
   width: 20px;
   height: 20px;
   line-height: 20px;
   border-radius: 50%;
-  background: ${({ colors }) => colors.background};
-  color: ${({ colors }) => colors.text};
+  background: ${({ $colors }) => $colors.background};
+  color: ${({ $colors }) => $colors.text};
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 12px;
   font-weight: 600;
 
-  border: ${({ colors }) => colors.border};
+  border: ${({ $colors }) => $colors.border};
 `;
 
 export const RouteNumber = ({
@@ -62,7 +62,7 @@ export const RouteNumber = ({
 
   return (
     <Tooltip arrow title={getTitle()}>
-      <Container colors={colors}>{children}</Container>
+      <Container $colors={colors}>{children}</Container>
     </Tooltip>
   );
 };
