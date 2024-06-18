@@ -1,7 +1,6 @@
 import { OsmApiId } from '../../services/helpers';
-import { basicStyle } from './styles/basicStyle';
-import { climbingLayers } from './styles/layers/climbingLayers';
 import { isBrowser } from '../helpers';
+import { getGlobalMap } from '../../services/mapStorage';
 
 const isOsmLayer = (id) => {
   if (id.startsWith('place-country-')) return false; // https://github.com/zbycz/osmapp/issues/35
@@ -11,10 +10,10 @@ const isOsmLayer = (id) => {
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
 
-export const layersWithOsmId = basicStyle.layers // TODO make it custom for basic/outdoor + revert place_
-  .map((x) => x.id)
-  .filter((id) => isOsmLayer(id))
-  .concat(climbingLayers.map((x) => x.id));
+export const layersWithOsmId = (style) =>
+  style.layers // TODO make it custom for basic/outdoor + revert place_
+    .map((x) => x.id)
+    .filter((id) => isOsmLayer(id));
 
 export const getIsOsmObject = ({ id, layer }) => {
   // these layers with id <= ~10000 are broken
@@ -31,7 +30,7 @@ export const getIsOsmObject = ({ id, layer }) => {
     return true;
   }
 
-  return layersWithOsmId.includes(layer.id);
+  return layersWithOsmId(getGlobalMap().getStyle()).includes(layer.id);
 };
 
 export const convertMapIdToOsmId = (feature) => {

@@ -16,10 +16,12 @@ const PREVIEW_MARKER = {
 };
 
 const setPoiIconVisibility = (map, feature, hideIcon) => {
-  if (!feature) return;
+  const style = map.getStyle();
+
+  if (!feature || !style) return;
 
   const results = map.queryRenderedFeatures(undefined, {
-    layers: layersWithOsmId,
+    layers: layersWithOsmId(style),
     filter: ['==', ['id'], convertOsmIdToMapId(feature.osmMeta)],
     validate: false,
   });
