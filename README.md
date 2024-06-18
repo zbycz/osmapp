@@ -9,7 +9,7 @@ Let's create a universal OpenStreetMap app for broad public. It should be as eas
 
 Open climbing maps and topos — photos are uploaded to _Wikimedia Commons_ and route data stored in _OpenStreetMap_ ([spec](https://wiki.openstreetmap.org/wiki/Key:wikimedia_commons:path)).
 
-This is the same app deployed to another domain – only difference is branding and default layers.
+This is the same app served on another domain – only difference is branding and default layers.
 
 - master branch: https://openclimbing.org
 - examples: [Prokopské údolí](https://openclimbing.org/relation/17262674),
@@ -25,9 +25,9 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 3. iterate 🔁
 
 > If you are a JS dev, you may also `git clone` / `yarn` / `yarn dev` \
-> Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) or Github Codespaces - full dev environment in your browser. \
+> Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) or Github Codespaces – full dev environment in your browser. \
 > If Vercel build fails, please run `yarn build` locally to debug it. \
-> Some architecture [DOCS here](./DOCS.md)
+> Some architecture [DOCS here](./DOCS.md).
 
 ## Features 🗺 📱 🖥
 
@@ -58,10 +58,12 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 
 ### Changelog
 
-OsmAPP is updated continuously with every commit, versioning just for reference:
+OsmAPP is updated continuously with every commit. Versioning is used only for summarizing the changes once in a while:
 
-- **v1.4.0** (added until 6/2024)
+- **v1.4.0** (6/2024)
+
   - FeaturePanel
+
     - 🎉 use iD Tagging scheme for properties ([PR](https://github.com/zbycz/osmapp/pull/131), [2](https://github.com/zbycz/osmapp/pull/197))
     - 🖼 add panellum Panorama viewer for Mapillary (@Dlurak, [PR](https://github.com/zbycz/osmapp/pull/234))
     - ⭐️ add Stars (favorites) to every element ([PR](https://github.com/zbycz/osmapp/pull/229))
@@ -70,9 +72,11 @@ OsmAPP is updated continuously with every commit, versioning just for reference:
     - add geoUri to coordinates dropdown ([PR](https://github.com/zbycz/osmapp/pull/153))
 
   - Search
+
     - 🔎 add search by categories + by overpass query ([PR](https://github.com/zbycz/osmapp/pull/186), [2](https://github.com/zbycz/osmapp/pull/192), [3](https://github.com/zbycz/osmapp/pull/213))
 
   - Layers:
+
     - 🏔️ add 3D terrain when user tilts ([PR](https://github.com/zbycz/osmapp/pull/184), [2](https://github.com/zbycz/osmapp/pull/193))
     - ❄️ add overlays support + Snow overlay ([PR](https://github.com/zbycz/osmapp/pull/244))
     - 🏞️ add cliffs to outdoor style ([PR](https://github.com/zbycz/osmapp/pull/264))
@@ -83,6 +87,7 @@ OsmAPP is updated continuously with every commit, versioning just for reference:
     - add ČÚZK Ortophoto in CZ bbox ([PR](https://github.com/zbycz/osmapp/pull/245))
 
   - misc
+
     - 🕸️ add url shortener for every feature ([PR](https://github.com/zbycz/osmapp/pull/290))
     - hackish fix of corrupted id from Maptiler ([PR](https://github.com/zbycz/osmapp/pull/230))
     - use OAuth 2.0, login button ([PR](https://github.com/zbycz/osmapp/pull/235), [2](https://github.com/zbycz/osmapp/pull/316), [3](https://github.com/zbycz/osmapp/pull/355))
@@ -96,6 +101,7 @@ OsmAPP is updated continuously with every commit, versioning just for reference:
     - add branding for openclimbing.org domain ([PR](https://github.com/zbycz/osmapp/pull/263))
 
 - **v1.3.0** (3/2023)
+
   - 💡 added dark mode UI ([PR](https://github.com/zbycz/osmapp/pull/137))
   - 🖼 updated to Mapillary v4 (@kudlav, [PR](https://github.com/zbycz/osmapp/pull/113))
   - added Spanish (@kresp0, [PR](https://github.com/zbycz/osmapp/pull/115))
@@ -103,6 +109,7 @@ OsmAPP is updated continuously with every commit, versioning just for reference:
   - added French (@le-jun, [PR](https://github.com/zbycz/osmapp/pull/101))
 
 - **v1.2.0** (2/2022)
+
   - 🔎 changed search to Photon API (@kudlav, [PR](https://github.com/zbycz/osmapp/pull/84))
   - added Amharic (@amenk, [PR](https://github.com/zbycz/osmapp/pull/89))
   - added German (@amenk, [PR](https://github.com/zbycz/osmapp/pull/88))
@@ -117,14 +124,14 @@ GNU GPL
 
 ## Related projects
 
-Both via [#217](https://github.com/zbycz/osmapp/issues/217)
+We may reuse it in osmapp in the future. Both via [#217](https://github.com/zbycz/osmapp/issues/217) - thanks to [@leam](https://github.com/laem).
 
 - **Qwant Maps** (sadly not developed anymore)
 
-  - great tech stack: [BE in Python](https://github.com/Qwant/idunn), geocoding, directions, maplibre gl
-  - https://github.com/Qwant/qwantmaps (may be recycled for osmapp in future)
-  - eg. https://qwant.com/maps/place/osm:node:1369322781 - super fast (offline as of 6/24)
+  - great tech stack: [BE in Python](https://github.com/Qwant/idunn), geocoding, directions, MaplibreGL
+  - https://github.com/Qwant/qwantmaps
+  - eg. https://qwant.com/maps/place/osm:node:1369322781 – super fast
 
-- Future.eco Voyage
+- **Future.eco Voyage**
   - Universal osm app by [@leam](https://github.com/laem)
   - https://futur.eco/voyage ([github](https://github.com/laem/futureco/tree/master/app/voyage))
