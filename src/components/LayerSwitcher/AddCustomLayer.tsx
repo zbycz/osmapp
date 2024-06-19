@@ -4,29 +4,10 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
-import { loadLayers } from '@dlurak/editor-layer-index';
 import { Autocomplete } from '@material-ui/lab';
 import { useAddLayerContext } from './helpers/AddLayerContext';
-
-type SuccessLayerDataInputProps = {
-  index: any[];
-  onSelect: (layer: any | undefined) => void;
-};
-
-const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
-  index,
-  onSelect,
-}) => (
-  <Autocomplete
-    options={index.map((l) => l.name)}
-    onChange={(_, val) => {
-      const newLayer = index.find((l) => l.name === val);
-      onSelect(newLayer);
-    }}
-    // eslint-disable-next-line react/jsx-props-no-spreading
-    renderInput={(params) => <TextField {...params} label="Layer" />}
-  />
-);
+import { LayerIndex, loadLayer } from './helpers/loadLayers';
+import { SuccessLayerInput } from './SuccessLayerInput';
 
 const LoadingLayerInput = () => (
   <div
@@ -62,7 +43,7 @@ const LayerDataInput: React.FC<{ onSelect: (layer: any) => void }> = ({
     React.useState<'success' | 'loading' | 'error'>('loading');
 
   React.useEffect(() => {
-    loadLayers()
+    loadLayer()
       .then((result) => {
         setLayerIndex(result);
         setLayerIndexState('success');
@@ -88,13 +69,13 @@ const LayerDataInput: React.FC<{ onSelect: (layer: any) => void }> = ({
 const dynamicPartsRegex = /{((?!y|x|zoom)[a-zA-Z:,]+)}/g;
 
 interface Detailsprops {
-  layer: any;
+  layer: LayerIndex;
   onChange: (values: Record<string, string>) => void;
   onValidation: (ok: boolean) => void;
 }
 
 const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
-  const url = layer.url as string;
+  const { url } = layer;
 
   const dynamicParts =
     url.match(dynamicPartsRegex)?.map((part) => {
@@ -137,7 +118,7 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
         <h3>{layer.name}</h3>
       </span>
       {layer.description && <p>{layer.description}</p>}
-      {layer.category && <p>{layer.category}</p>}
+      {layer.category && <p>Category: {layer.category}</p>}
       <span
         style={{
           display: 'flex',
