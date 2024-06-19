@@ -7,16 +7,22 @@ import { isServer } from '../helpers';
 import { getCoordsFeature } from '../../services/getCoordsFeature';
 import { getApiId, getOsmappLink } from '../../services/helpers';
 import { Feature } from '../../services/types';
+import { captureException } from "../../helpers/sentry";
 
 const DEFAULT_VIEW = [4, 50, 14];
 
 const isLocalhost = (ip) => ['127.0.0.1', '::1'].includes(ip);
 
-const getViewFromIp = async (ip) => {
+const getIpFromRequest = (req) =>
+  isLocalhost(req.connection.remoteAddress)
+    ? (req.headers['x-forwarded-for'] || '').split(',')[0].trim()
+    : req.connection.remoteAddress;
+
+const getViewFromIp = async (ip: string | null) => {
   try {
     // TODO Currently we dont do rate limiting on our side #83
     // 45 requests per minute from an IP address https://ip-api.com/docs/api:json
-    const url = `http://ip-api.com/json/${ip}?fields=status,lat,lon`;
+    const url = `http://ip-api.com/json/${ip ?? ''}?fields=status,lat,lon`;
     const { status, lat, lon } = await fetchJson(url);
 
     if (status === 'success') {
@@ -25,23 +31,22 @@ const getViewFromIp = async (ip) => {
 
     return null;
   } catch (e) {
+    captureException(e);
     // eslint-disable-next-line no-console
     console.warn('getViewFromIp', e.message ?? e);
     return null;
   }
 };
 
-export const getViewFromRequest = async (req) => {
-  const remoteIp = req.connection.remoteAddress;
-  const fwdIp = (req.headers['x-forwarded-for'] || '').split(',')[0].trim(); // ngnix: proxy_set_header X-Forwarded-For $remote_addr;
-  const ip = !isLocalhost(remoteIp) ? remoteIp : fwdIp;
-  const view = ip ? await getViewFromIp(ip) : null;
+export const getView = async (ctx) => {
+  const ip = isServer() ? getIpFromRequest(ctx.req) : null;
+  const view = await getViewFromIp(ip);
   return view ?? DEFAULT_VIEW;
 };
 
 export const getInitialMapView = async (ctx) => {
   const { mapView } = nextCookies(ctx);
-  return mapView ? mapView.split('/') : getViewFromRequest(ctx.req);
+  return mapView ? mapView.split('/') : await getView(ctx);
 };
 
 const timeout = (time) =>
