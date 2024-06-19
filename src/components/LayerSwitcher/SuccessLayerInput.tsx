@@ -13,6 +13,12 @@ type SuccessLayerDataInputProps = {
   onSelect: (layer: LayerIndex | undefined) => void;
 };
 
+const getLayerLabel = ({ name, country_code }: LayerIndex) => {
+  if (country_code) return `${country_code} - ${name}`;
+
+  return `Global - ${name}`;
+};
+
 export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
   index,
   onSelect,
@@ -57,13 +63,15 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
                 ind.permission_osm === 'implicit'
               : true,
           )
-          .map(({ name }) => name)}
+          .sort((a, b) => getLayerLabel(a).localeCompare(getLayerLabel(b)))}
         onChange={(_, val) => {
-          const newLayer = index.find((l) => l.name === val);
+          const newLayer =
+            typeof val === 'string' ? index.find((l) => l.name === val) : val;
           onSelect(newLayer);
         }}
         // eslint-disable-next-line react/jsx-props-no-spreading
         renderInput={(params) => <TextField {...params} label="Layer" />}
+        getOptionLabel={getLayerLabel}
       />
     </div>
   );
