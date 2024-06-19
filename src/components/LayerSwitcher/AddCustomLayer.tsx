@@ -35,12 +35,14 @@ const ErrorLayerInput = () => (
   </div>
 );
 
+type FetchingState = 'success' | 'loading' | 'error';
+
 const LayerDataInput: React.FC<{ onSelect: (layer: any) => void }> = ({
   onSelect,
 }) => {
   const [layerIndex, setLayerIndex] = React.useState([]);
   const [layerIndexState, setLayerIndexState] =
-    React.useState<'success' | 'loading' | 'error'>('loading');
+    React.useState<FetchingState>('loading');
 
   React.useEffect(() => {
     loadLayer()
@@ -189,15 +191,14 @@ interface AddDialogProps {
 export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
   const { opened, close } = useAddLayerContext();
   const [isSaveDisabled, setDisableSave] = React.useState(true);
-  const [page, setPage] = React.useState(0);
 
-  const [layer, setLayer] = React.useState<any | null>(null);
+  const [layer, setLayer] = React.useState<LayerIndex | null>(null);
   const [layerUrl, setLayerUrl] = React.useState<string | null>(null);
 
   const onReset = () => {
     close();
-    setPage(0);
     setLayer(null);
+    setDisableSave(true);
   };
 
   const onSave = () => {
@@ -212,15 +213,13 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
       </DialogTitle>
 
       <DialogContent>
-        {page === 0 && (
-          <LayerDataInput
-            onSelect={(newLayer) => {
-              setLayer(newLayer);
-              setDisableSave(!newLayer);
-            }}
-          />
-        )}
-        {page === 1 && (
+        <LayerDataInput
+          onSelect={(newLayer) => {
+            setLayer(newLayer);
+            setDisableSave(!newLayer);
+          }}
+        />
+        {layer && (
           <Details
             layer={layer}
             onChange={(vals) => {
@@ -243,19 +242,12 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
           </Button>
 
           <Button
-            onClick={() => {
-              if (page === 0) {
-                setPage((prev) => prev + 1);
-                return;
-              }
-
-              onSave();
-            }}
+            onClick={onSave}
             color="primary"
             variant="contained"
             disabled={isSaveDisabled}
           >
-            {page === 0 ? 'Next' : 'Save'}
+            Save
           </Button>
         </DialogActions>
       </DialogContent>

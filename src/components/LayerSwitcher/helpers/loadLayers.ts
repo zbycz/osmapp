@@ -135,6 +135,7 @@ export async function loadLayer() {
     'https://osmlab.github.io/editor-layer-index/imagery.geojson',
   );
 
+  console.log(response);
   return response.features
     .map(({ properties }) => properties)
     .filter(({ type }) => type === 'tms') as LayerIndex[];
