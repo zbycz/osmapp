@@ -20,6 +20,9 @@ const getIpFromRequest = (req) =>
 
 const getViewFromIp = async (ip: string | null) => {
   try {
+    throw new Error('Sentry test error');
+
+
     // TODO Currently we dont do rate limiting on our side #83
     // 45 requests per minute from an IP address https://ip-api.com/docs/api:json
     const url = `http://ip-api.com/json/${ip ?? ''}?fields=status,lat,lon`;
