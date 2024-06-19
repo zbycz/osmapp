@@ -7,7 +7,7 @@ import { isServer } from '../helpers';
 import { getCoordsFeature } from '../../services/getCoordsFeature';
 import { getApiId, getOsmappLink } from '../../services/helpers';
 import { Feature } from '../../services/types';
-import { captureException } from "../../helpers/sentry";
+import { captureException } from '../../helpers/sentry';
 
 const DEFAULT_VIEW = [4, 50, 14];
 
@@ -21,7 +21,6 @@ const getIpFromRequest = (req) =>
 const getViewFromIp = async (ip: string | null) => {
   try {
     throw new Error('Sentry test error');
-
 
     // TODO Currently we dont do rate limiting on our side #83
     // 45 requests per minute from an IP address https://ip-api.com/docs/api:json
@@ -49,7 +48,7 @@ export const getView = async (ctx) => {
 
 export const getInitialMapView = async (ctx) => {
   const { mapView } = nextCookies(ctx);
-  return mapView ? mapView.split('/') : await getView(ctx);
+  return mapView ? mapView.split('/') : getView(ctx);
 };
 
 const timeout = (time) =>
