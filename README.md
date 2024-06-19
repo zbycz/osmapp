@@ -64,20 +64,20 @@ OsmAPP is updated continuously with every commit. Versioning is used only for su
 
   - FeaturePanel
 
-    - 🎉 use iD Tagging scheme for properties ([PR](https://github.com/zbycz/osmapp/pull/131), [2](https://github.com/zbycz/osmapp/pull/197))
+    - 🎉 use iD Tagging scheme for properties ([PR1](https://github.com/zbycz/osmapp/pull/131), [2](https://github.com/zbycz/osmapp/pull/197))
     - 🖼 add panellum Panorama viewer for Mapillary (@Dlurak, [PR](https://github.com/zbycz/osmapp/pull/234))
     - ⭐️ add Stars (favorites) to every element ([PR](https://github.com/zbycz/osmapp/pull/229))
-    - 🚌 add public transport labels (@Dlurak, [PR](https://github.com/zbycz/osmapp/pull/175), [2](https://github.com/zbycz/osmapp/pull/187))
+    - 🚌 add public transport labels (@Dlurak, [PR1](https://github.com/zbycz/osmapp/pull/175), [2](https://github.com/zbycz/osmapp/pull/187))
     - add Food hygiene rating scheme (@Dlurak, [PR](https://github.com/zbycz/osmapp/pull/179))
-    - add geoUri to coordinates dropdown ([PR](https://github.com/zbycz/osmapp/pull/153))
+    - add geoUri to coordinates dropdown on mobile ([PR](https://github.com/zbycz/osmapp/pull/153))
 
   - Search
 
-    - 🔎 add search by categories + by overpass query ([PR](https://github.com/zbycz/osmapp/pull/186), [2](https://github.com/zbycz/osmapp/pull/192), [3](https://github.com/zbycz/osmapp/pull/213))
+    - 🔎 add search by categories + by overpass query ([PR1](https://github.com/zbycz/osmapp/pull/186), [2](https://github.com/zbycz/osmapp/pull/192), [3](https://github.com/zbycz/osmapp/pull/213))
 
   - Layers:
 
-    - 🏔️ add 3D terrain when user tilts ([PR](https://github.com/zbycz/osmapp/pull/184), [2](https://github.com/zbycz/osmapp/pull/193))
+    - 🏔️ add 3D terrain when user tilts ([PR1](https://github.com/zbycz/osmapp/pull/184), [2](https://github.com/zbycz/osmapp/pull/193))
     - ❄️ add overlays support + Snow overlay ([PR](https://github.com/zbycz/osmapp/pull/244))
     - 🏞️ add cliffs to outdoor style ([PR](https://github.com/zbycz/osmapp/pull/264))
     - add attribution to layers ([PR](https://github.com/zbycz/osmapp/pull/154))
@@ -91,13 +91,13 @@ OsmAPP is updated continuously with every commit. Versioning is used only for su
     - 🕸️ add url shortener for every feature ([PR](https://github.com/zbycz/osmapp/pull/290))
     - hackish fix of corrupted id from Maptiler ([PR](https://github.com/zbycz/osmapp/pull/230))
     - use OAuth 2.0, login button ([PR](https://github.com/zbycz/osmapp/pull/235), [2](https://github.com/zbycz/osmapp/pull/316), [3](https://github.com/zbycz/osmapp/pull/355))
-    - add disclaimer to homepage - not an official app ([PR](https://github.com/zbycz/osmapp/pull/233))
-    - optimize homepage because of [hackernews mention](https://news.ycombinator.com/item?id=38795559) 😵 ([PR](https://github.com/zbycz/osmapp/pull/219))
+    - add disclaimer to homepage – not an official app ([PR](https://github.com/zbycz/osmapp/pull/233))
+    - optimize homepage because of [hackernews mention](https://news.ycombinator.com/item?id=38795559) 🥰 ([PR](https://github.com/zbycz/osmapp/pull/219))
     - support language prefixes for all URLs for SEO ([PR](https://github.com/zbycz/osmapp/pull/141))
 
   - climbing features
-    - 🧗 topo viewer and editor (@jvaclavik, many PRs starting with `climbing:`)
-    - 🗺️ add climbing overlay ([PR](https://github.com/zbycz/osmapp/pull/295), [2](https://github.com/zbycz/osmapp/pull/294), [3](https://github.com/zbycz/osmapp/pull/293), [4](https://github.com/zbycz/osmapp/pull/292), [5](https://github.com/zbycz/osmapp/pull/344))
+    - 🧗 topo viewer and editor (@jvaclavik, many PRs)
+    - 🗺️ add climbing overlay ([PR1](https://github.com/zbycz/osmapp/pull/295), [2](https://github.com/zbycz/osmapp/pull/294), [3](https://github.com/zbycz/osmapp/pull/293), [4](https://github.com/zbycz/osmapp/pull/292), [5](https://github.com/zbycz/osmapp/pull/344))
     - add branding for openclimbing.org domain ([PR](https://github.com/zbycz/osmapp/pull/263))
 
 - **v1.3.0** (3/2023)
