@@ -5,7 +5,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import List from '@material-ui/core/List';
 import styled from 'styled-components';
-import { useMapStateContext } from '../utils/MapStateContext';
+import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
 import { useAddLayerContext } from './helpers/AddLayerContext';
 import { AddCustomDialog } from './AddCustomLayer';
@@ -24,14 +24,22 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
 
       <AddCustomDialog
         save={(layer) => {
-          const { url, name } = layer;
+          const { url, name, max_zoom: maxzoom, attribution } = layer;
 
           setUserLayers((current) => {
             const userLayersOmitSame = current.filter(
               (item) => item.url !== url,
             );
 
-            return [...userLayersOmitSame, { name, url }];
+            const newLayer: Layer = {
+              type: 'user',
+              maxzoom,
+              name,
+              url,
+              attribution,
+            };
+
+            return [...userLayersOmitSame, newLayer];
           });
           setActiveLayers([url]); // if this not found in osmappLayers, value is used as tiles URL
         }}
@@ -42,7 +50,7 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
 
 export const RemoveUserLayerAction = ({ url, setUserLayers }) => {
   const { activeLayers, setActiveLayers } = useMapStateContext();
-  const onClick = (e) => {
+  const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setUserLayers((current) => {
       if (activeLayers.includes(url)) {

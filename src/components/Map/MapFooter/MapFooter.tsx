@@ -7,8 +7,10 @@ import { t, Translation } from '../../../services/intl';
 import GithubIcon from '../../../assets/GithubIcon';
 import { MoreMenu } from './MoreMenu';
 import { LangSwitcher } from './LangSwitcher';
-import { useMapStateContext } from '../../utils/MapStateContext';
+import { Layer, useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
+import { usePersistedState } from '../../utils/usePersistedState';
+import { LayerIndexAttribution } from '../../LayerSwitcher/helpers/loadLayers';
 
 const {
   publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
@@ -66,44 +68,75 @@ const Attribution = ({ label, link, title }) => (
   </>
 );
 
+const createAttributionInnerHtml = ({
+  html,
+  text,
+  url,
+}: LayerIndexAttribution) => {
+  if (html) return html;
+
+  if (text && url) return `© <a href="${url}">${text}}</a>`;
+  if (text) return `© ${text}}`;
+
+  return null;
+};
+
 const MapDataLink = () => {
+  const [userLayers] = usePersistedState<Layer[]>('userLayers', []);
   const short = useMediaQuery('(max-width: 500px)');
   const { activeLayers } = useMapStateContext();
   const attributions = uniq(
-    activeLayers.flatMap((layer) =>
-      osmappLayers[layer]
-        ? osmappLayers[layer].attribution
-        : decodeURI(new URL(layer)?.hostname),
-    ),
+    activeLayers.flatMap((layer) => {
+      if (osmappLayers[layer]) return osmappLayers[layer].attribution;
+
+      return (
+        (Array.isArray(userLayers) &&
+          userLayers.find(({ url }) => url === layer).attribution) ||
+        decodeURI(new URL(layer)?.hostname)
+      );
+    }),
   );
 
-  const nodes = attributions.map((attribution) => {
-    if (attribution === 'maptiler')
-      return (
-        <Attribution
-          key={attribution}
-          label="MapTiler"
-          link="https://www.maptiler.com/"
-          title={<Translation id="map.maptiler_copyright_tooltip" />}
-        />
-      );
-    if (attribution === 'osm')
-      return (
-        <Attribution
-          key={attribution}
-          label={short ? 'OSM' : 'OpenStreetMap'}
-          link="https://www.openstreetmap.org/"
-          title={<Translation id="map.osm_copyright_tooltip" />}
-        />
-      );
+  const nodes = attributions.map(
+    (attribution: string | LayerIndexAttribution) => {
+      if (attribution === 'maptiler')
+        return (
+          <Attribution
+            key={attribution}
+            label="MapTiler"
+            link="https://www.maptiler.com/"
+            title={<Translation id="map.maptiler_copyright_tooltip" />}
+          />
+        );
+      if (attribution === 'osm')
+        return (
+          <Attribution
+            key={attribution}
+            label={short ? 'OSM' : 'OpenStreetMap'}
+            link="https://www.openstreetmap.org/"
+            title={<Translation id="map.osm_copyright_tooltip" />}
+          />
+        );
 
-    return (
-      <span
-        key={attribution}
-        dangerouslySetInnerHTML={{ __html: attribution }} // eslint-disable-line react/no-danger
-      />
-    );
-  });
+      if (typeof attribution === 'string')
+        return (
+          <span
+            key={attribution}
+            dangerouslySetInnerHTML={{ __html: attribution }} // eslint-disable-line react/no-danger
+          />
+        );
+
+      const { url, text } = attribution;
+      const innerHtml = createAttributionInnerHtml(attribution);
+
+      return (
+        <span
+          key={text || url}
+          dangerouslySetInnerHTML={{ __html: innerHtml }} // eslint-disable-line react/no-danger
+        />
+      );
+    },
+  );
 
   // place a space between attributions
   for (let i = 1; i < nodes.length; i += 2) {

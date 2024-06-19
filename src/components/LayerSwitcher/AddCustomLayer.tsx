@@ -185,7 +185,7 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
 };
 
 interface AddDialogProps {
-  save: (layer: any) => void;
+  save: (layer: LayerIndex) => void;
 }
 
 export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {

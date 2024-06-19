@@ -4,6 +4,7 @@ import { Alert } from '@material-ui/lab';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config';
 import { PROJECT_ID } from '../../services/project';
+import { LayerIndexAttribution } from '../LayerSwitcher/helpers/loadLayers';
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
@@ -11,7 +12,7 @@ export interface Layer {
   url?: string;
   key?: string;
   Icon?: React.FC<any>;
-  attribution?: string[]; // missing in spacer TODO refactor ugly
+  attribution?: string[] | LayerIndexAttribution; // missing in spacer TODO refactor ugly
   maxzoom?: number;
   bbox?: number[];
 }

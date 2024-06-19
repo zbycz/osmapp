@@ -10,6 +10,13 @@ type Category =
   | 'elevation'
   | 'other';
 
+export interface LayerIndexAttribution {
+  url?: string;
+  text?: string;
+  html?: string;
+  required?: boolean;
+}
+
 export interface LayerIndex {
   /**
    * A unique identifier for the source; used in imagery_used changeset tag
@@ -79,12 +86,7 @@ export interface LayerIndex {
    */
   overlay?: boolean;
   available_projections?: string[];
-  attribution?: {
-    url?: string;
-    text?: string;
-    html?: string;
-    required?: boolean;
-  };
+  attribution?: LayerIndexAttribution;
   /**
    * A URL for an image, that can be displayed in the list of imagery layers next to the name
    */
@@ -135,7 +137,6 @@ export async function loadLayer() {
     'https://osmlab.github.io/editor-layer-index/imagery.geojson',
   );
 
-  console.log(response);
   return response.features
     .map(({ properties }) => properties)
     .filter(({ type }) => type === 'tms') as LayerIndex[];
