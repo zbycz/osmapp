@@ -7,6 +7,9 @@ import {
 } from '@material-ui/core';
 import * as React from 'react';
 import { LayerIndex } from './helpers/loadLayers';
+// eslint-disable-next-line import/no-cycle
+import { isViewInsideBbox } from './LayerSwitcherContent';
+import { useMapStateContext } from '../utils/MapStateContext';
 
 type SuccessLayerDataInputProps = {
   index: LayerIndex[];
@@ -23,8 +26,9 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
   index,
   onSelect,
 }) => {
-  const [showOnlyWorldwide, setShowOnlyWorldwide] = React.useState(true);
   const [showAllowedForOsm, setShowAllowedForOsm] = React.useState(true);
+  const [currentlyVisible, setCurrentlyVisible] = React.useState(true);
+  const { view } = useMapStateContext();
 
   return (
     <div>
@@ -43,26 +47,31 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
         <FormControlLabel
           control={
             <Checkbox
-              checked={showOnlyWorldwide}
+              checked={currentlyVisible}
               onChange={({ target: { checked } }) =>
-                setShowOnlyWorldwide(checked)
+                setCurrentlyVisible(checked)
               }
             />
           }
-          label="Show only worldwide available"
+          label="Only currently visible layers"
         />
       </FormGroup>
 
       <Autocomplete
         options={index
           .filter(({ overlay }) => !overlay)
-          .filter((ind) => (showOnlyWorldwide ? ind.default : true))
           .filter((ind) =>
             showAllowedForOsm
               ? ind.permission_osm === 'explicit' ||
                 ind.permission_osm === 'implicit'
               : true,
           )
+          .filter(({ bbox }) => {
+            if (!currentlyVisible) return true;
+            if (!bbox) return true;
+
+            return bbox.some((b) => isViewInsideBbox(view, b));
+          })
           .sort((a, b) => getLayerLabel(a).localeCompare(getLayerLabel(b)))}
         onChange={(_, val) => {
           const newLayer =

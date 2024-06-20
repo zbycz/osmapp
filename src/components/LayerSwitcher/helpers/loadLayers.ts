@@ -22,6 +22,7 @@ export interface LayerIndex {
    * A unique identifier for the source; used in imagery_used changeset tag
    */
   id: string;
+  bbox: number[][];
   type: 'tms';
   /**
    * A URL template for imagery tilesA URL template for imagery tiles
@@ -132,12 +133,29 @@ export interface LayerIndex {
   };
 }
 
+type Coordinate = [number, number];
+
+const getBoundingBox = (coords: Coordinate[]) => [
+  Math.min(...coords.map(([x]) => x)),
+  Math.min(...coords.map(([, x]) => x)),
+  Math.max(...coords.map(([x]) => x)),
+  Math.max(...coords.map(([, x]) => x)),
+];
+
 export async function loadLayer() {
   const response = await fetchJson(
     'https://osmlab.github.io/editor-layer-index/imagery.geojson',
   );
 
   return response.features
-    .map(({ properties }) => properties)
+    .map(({ properties, geometry }) => {
+      const coordinates = (
+        geometry && geometry.coordinates ? geometry.coordinates : undefined
+      ) as Coordinate[][] | undefined;
+
+      const boxes = coordinates?.map(getBoundingBox);
+
+      return { ...properties, bbox: boxes };
+    })
     .filter(({ type }) => type === 'tms') as LayerIndex[];
 }

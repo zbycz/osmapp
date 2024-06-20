@@ -4,6 +4,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
 import { ListItemSecondaryAction } from '@material-ui/core';
 import { dotToOptionalBr } from '../helpers';
+// eslint-disable-next-line import/no-cycle
 import {
   AddUserLayerButton,
   LayerIcon,
@@ -15,6 +16,7 @@ import {
 import { osmappLayers } from './osmappLayers';
 import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
 import { usePersistedState } from '../utils/usePersistedState';
+// eslint-disable-next-line import/no-cycle
 import { Overlays } from './Overlays';
 
 export const isViewInsideBbox = ([, lat, lon]: View, bbox?: number[]) =>
@@ -32,7 +34,8 @@ type AllLayers = {
 const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
   const spacer: Layer = { type: 'spacer' as const, key: 'userSpacer' };
   const toLayer = ([key, layer]) => ({ ...layer, key });
-  const filterByBBox = ([, layer]) => isViewInsideBbox(view, layer.bbox); // needs suppressHydrationWarning
+  const filterByBBox = ([, layer]: [unknown, Layer]) =>
+    isViewInsideBbox(view, layer.bbox as number[]); // needs suppressHydrationWarning
 
   const entries = Object.entries(osmappLayers).filter(filterByBBox);
   const basemaps = entries.filter(([, v]) => v.type === 'basemap');
@@ -41,12 +44,16 @@ const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
   const basemapLayers = [
     ...basemaps.map(toLayer),
     ...(userLayers.length ? [spacer] : []),
-    ...userLayers.map((layer) => ({
-      ...layer,
-      key: layer.url,
-      Icon: PersonAddIcon,
-      type: 'user' as const,
-    })),
+    ...userLayers
+      .filter(({ bbox }) => {
+        if (!bbox) return true;
+        return (bbox as number[][]).some((b) => isViewInsideBbox(view, b));
+      })
+      .map((layer) => ({
+        ...layer,
+        key: layer.url,
+        Icon: PersonAddIcon,
+      })),
   ];
 
   return {

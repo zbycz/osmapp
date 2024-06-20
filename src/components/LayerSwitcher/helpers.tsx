@@ -8,6 +8,7 @@ import styled from 'styled-components';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
 import { useAddLayerContext } from './helpers/AddLayerContext';
+// eslint-disable-next-line import/no-cycle
 import { AddCustomDialog } from './AddCustomLayer';
 
 export const AddUserLayerButton = ({ setUserLayers }) => {
@@ -24,7 +25,7 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
 
       <AddCustomDialog
         save={(layer) => {
-          const { url, name, max_zoom: maxzoom, attribution } = layer;
+          const { url, name, max_zoom: maxzoom, attribution, bbox } = layer;
 
           setUserLayers((current) => {
             const userLayersOmitSame = current.filter(
@@ -37,6 +38,7 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
               name,
               url,
               attribution,
+              bbox,
             };
 
             return [...userLayersOmitSame, newLayer];
