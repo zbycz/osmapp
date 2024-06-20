@@ -5,8 +5,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import { LayerIndex, loadLayer } from './helpers/loadLayers';
+import {
+  Category as CategoryType,
+  LayerIndex,
+  loadLayer,
+} from './helpers/loadLayers';
 import { SuccessLayerInput } from './SuccessLayerInput';
+import { t } from '../../services/intl';
 
 const LoadingLayerInput = () => (
   <div
@@ -67,13 +72,29 @@ const LayerDataInput: React.FC<{ onSelect: (layer: any) => void }> = ({
   }
 };
 
-const dynamicPartsRegex = /{((?!y|x|zoom)[a-zA-Z:,]+)}/g;
+const dynamicPartsRegex = /{((?!y|x|zoom)[a-zA-Z:,0-9]+)}/g;
 
 interface Detailsprops {
   layer: LayerIndex;
   onChange: (values: Record<string, string>) => void;
   onValidation: (ok: boolean) => void;
 }
+
+const Category = ({ category }: { category: CategoryType }) => {
+  const start = t('layerswitcher.category');
+
+  const categoryMap: Partial<Record<CategoryType, string>> = {
+    photo: t('layerswitcher.category_photo'),
+    osmbasedmap: t('layerswitcher.category_osmbasedmap'),
+  };
+  const categoryType = categoryMap[category] || category;
+
+  return (
+    <p>
+      {start}: {categoryType}
+    </p>
+  );
+};
 
 const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
   const { url } = layer;
@@ -82,7 +103,7 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
     url.match(dynamicPartsRegex)?.map((part) => {
       const [baseTitle, baseOptions] = part.split(':');
       const options = baseOptions
-        ? baseOptions.split(',').map((o) => o.match(/[a-z]+/)[0])
+        ? baseOptions.split(',').map((o) => o.match(/[a-zA-Z0-9]+/)[0])
         : null;
 
       const title = baseTitle.match(/[a-z]+/)[0];
@@ -119,7 +140,8 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
         <h3>{layer.name}</h3>
       </span>
       {layer.description && <p>{layer.description}</p>}
-      {layer.category && <p>Category: {layer.category}</p>}
+      {/*  TODO: show a pretty category name instead of the raw one Maybe even translated */}
+      <Category category={layer.category} />
       <span
         style={{
           display: 'flex',
@@ -127,10 +149,15 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
           alignItems: 'center',
         }}
       >
-        {layer.license_url && <a href={layer.license_url}>License</a>}
-        {layer.privacy_policy_url && (
-          <a href={layer.privacy_policy_url}>Privacy policy</a>
+        {layer.license_url && (
+          <a href={layer.license_url}>{t('layerswitcher.license')}</a>
         )}
+        {layer.privacy_policy_url && (
+          <a href={layer.privacy_policy_url}>
+            {t('layerswitcher.privacy_policy')}
+          </a>
+        )}
+        <p>{t('layerswitcher.notAllWork')}</p>
       </span>
 
       <hr
@@ -228,7 +255,7 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
             layer={layer}
             onChange={(vals) => {
               const baseUrl = Object.keys(vals).reduce((acc, key) => {
-                const keyPattern = new RegExp(`{${key}(:[a-z,]+)?}`);
+                const keyPattern = new RegExp(`{${key}(:[a-z,A-Z,0-9]+)?}`);
                 return acc.replace(keyPattern, vals[key]);
               }, layer.url.replace('{zoom}', '{z}'));
 

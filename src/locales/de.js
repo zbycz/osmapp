@@ -146,6 +146,12 @@ export default {
   'layerswitcher.intro': 'Dank der Tatsache, dass OpenStreetMap Quelldaten anbietet, kann jeder verschiedene Varianten der Karte erstellen.',
   'layerswitcher.add_layer_button': 'Eigene Ebene hinzufügen',
   'layerswitcher.add_layer_prompt': 'Eigene TMS Ebene hinzufügen – benötigt entsprechende CORS Header:\n(Beta)',
+  'layerswitcher.notAllWork': 'Bitte beachte, dass zwar die meisten Kartenebenen, jedoch nicht alle, funktionieren.',
+  'layerswitcher.license': 'Lizenz',
+  'layerswitcher.privacy_policy': 'Datenschutzerklärung',
+  'layerswitcher.category': 'Kategorie',
+  'layerswitcher.category_photo': 'Luftbilder',
+  'layerswitcher.category_osmbasedmap': 'Normale Ebene',
 
   'layers.basic': 'Standard',
   'layers.outdoor': 'Outdoor',

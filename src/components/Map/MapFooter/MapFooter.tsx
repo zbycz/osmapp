@@ -89,11 +89,13 @@ const MapDataLink = () => {
     activeLayers.flatMap((layer) => {
       if (osmappLayers[layer]) return osmappLayers[layer].attribution;
 
-      return (
-        (Array.isArray(userLayers) &&
-          userLayers.find(({ url }) => url === layer).attribution) ||
-        decodeURI(new URL(layer)?.hostname)
-      );
+      const uri = decodeURI(new URL(layer)?.hostname);
+
+      try {
+        return userLayers.find(({ url }) => url === layer).attribution || uri;
+      } catch {
+        return uri;
+      }
     }),
   );
 

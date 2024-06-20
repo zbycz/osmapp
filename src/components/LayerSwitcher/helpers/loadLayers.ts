@@ -1,6 +1,6 @@
 import { fetchJson } from '../../../services/fetch';
 
-type Category =
+export type Category =
   | 'photo'
   | 'map'
   | 'historicmap'

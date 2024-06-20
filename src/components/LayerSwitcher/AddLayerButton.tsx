@@ -23,19 +23,19 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
         save={(layer) => {
           const { url, name, max_zoom: maxzoom, attribution, bbox } = layer;
 
+          const newLayer: Layer = {
+            type: 'user',
+            maxzoom,
+            name,
+            url,
+            attribution,
+            bbox,
+          };
+
           setUserLayers((current) => {
             const userLayersOmitSame = current.filter(
               (item) => item.url !== url,
             );
-
-            const newLayer: Layer = {
-              type: 'user',
-              maxzoom,
-              name,
-              url,
-              attribution,
-              bbox,
-            };
 
             return [...userLayersOmitSame, newLayer];
           });

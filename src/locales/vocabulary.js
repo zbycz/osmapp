@@ -169,6 +169,12 @@ export default {
   'layerswitcher.add_layer_button': 'Add custom layer',
   'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
   'layerswitcher.overlays': 'Overlays',
+  'layerswitcher.notAllWork': 'Please note that not most layers but not all work with osmapp',
+  'layerswitcher.license': 'License',
+  'layerswitcher.privacy_policy': 'Privacy policy',
+  'layerswitcher.category': 'Category',
+  'layerswitcher.category_photo': 'Aerial imagery',
+  'layerswitcher.category_osmbasedmap': 'Normal layer',
 
   'layers.basic': 'Basic',
   'layers.makina_africa': 'OpenPlaceGuide Africa',
