@@ -3,22 +3,23 @@ import { Box } from '@material-ui/core';
 import Button from '@material-ui/core/Button';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
-import { useAddLayerContext } from './helpers/AddLayerContext';
 import { AddCustomDialog } from './AddCustomLayer';
 
 export const AddUserLayerButton = ({ setUserLayers }) => {
   const { setActiveLayers } = useMapStateContext();
-  const { open } = useAddLayerContext();
+  const [isOpen, setOpen] = React.useState(false);
 
   return (
     <>
       <Box m={2} mt={6}>
-        <Button size="small" color="secondary" onClick={open}>
+        <Button size="small" color="secondary" onClick={() => setOpen(true)}>
           {t('layerswitcher.add_layer_button')}
         </Button>
       </Box>
 
       <AddCustomDialog
+        onClose={() => setOpen(false)}
+        isOpen={isOpen}
         save={(layer) => {
           const { url, name, max_zoom: maxzoom, attribution, bbox } = layer;
 

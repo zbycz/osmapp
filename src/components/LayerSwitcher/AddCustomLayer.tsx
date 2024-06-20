@@ -5,7 +5,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
-import { useAddLayerContext } from './helpers/AddLayerContext';
 import { LayerIndex, loadLayer } from './helpers/loadLayers';
 import { SuccessLayerInput } from './SuccessLayerInput';
 
@@ -186,17 +185,22 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
 
 interface AddDialogProps {
   save: (layer: LayerIndex) => void;
+  onClose: () => void;
+  isOpen: boolean;
 }
 
-export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
-  const { opened, close } = useAddLayerContext();
+export const AddCustomDialog: React.FC<AddDialogProps> = ({
+  save,
+  isOpen,
+  onClose,
+}) => {
   const [isSaveDisabled, setDisableSave] = React.useState(true);
 
   const [layer, setLayer] = React.useState<LayerIndex | null>(null);
   const [layerUrl, setLayerUrl] = React.useState<string | null>(null);
 
   const onReset = () => {
-    close();
+    onClose();
     setLayer(null);
     setDisableSave(true);
   };
@@ -207,7 +211,7 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({ save }) => {
   };
 
   return (
-    <Dialog open={opened} maxWidth="sm" fullWidth>
+    <Dialog open={isOpen} maxWidth="sm" fullWidth>
       <DialogTitle>
         <p>Add a layer</p>
       </DialogTitle>
