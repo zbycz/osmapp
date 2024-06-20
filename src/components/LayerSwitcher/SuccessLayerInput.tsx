@@ -1,11 +1,13 @@
 import { Autocomplete } from '@material-ui/lab';
 import {
+  Box,
   Checkbox,
   FormControlLabel,
   FormGroup,
   TextField,
 } from '@material-ui/core';
 import * as React from 'react';
+import { Star } from '@material-ui/icons';
 import { LayerIndex } from './helpers/loadLayers';
 import { isViewInsideBbox } from './helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
@@ -80,6 +82,21 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
         // eslint-disable-next-line react/jsx-props-no-spreading
         renderInput={(params) => <TextField {...params} label="Layer" />}
         getOptionLabel={getLayerLabel}
+        renderOption={(props) => (
+          // eslint-disable-next-line react/jsx-props-no-spreading
+          <Box component="li" {...props}>
+            <span
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.25rem',
+              }}
+            >
+              {props.best && <Star />}
+              {getLayerLabel(props)}
+            </span>
+          </Box>
+        )}
       />
     </div>
   );
