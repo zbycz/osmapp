@@ -4,27 +4,19 @@ import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
 import { ListItemSecondaryAction } from '@material-ui/core';
 import { dotToOptionalBr } from '../helpers';
-// eslint-disable-next-line import/no-cycle
 import {
-  AddUserLayerButton,
   LayerIcon,
   LayersHeader,
   RemoveUserLayerAction,
   Spacer,
   StyledList,
+  isViewInsideBbox,
 } from './helpers';
 import { osmappLayers } from './osmappLayers';
 import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
 import { usePersistedState } from '../utils/usePersistedState';
-// eslint-disable-next-line import/no-cycle
 import { Overlays } from './Overlays';
-
-export const isViewInsideBbox = ([, lat, lon]: View, bbox?: number[]) =>
-  !bbox ||
-  (parseFloat(lat) > bbox[1] &&
-    parseFloat(lat) < bbox[3] &&
-    parseFloat(lon) > bbox[0] &&
-    parseFloat(lon) < bbox[2]);
+import { AddUserLayerButton } from './AddLayerButton';
 
 type AllLayers = {
   basemapLayers: Layer[];

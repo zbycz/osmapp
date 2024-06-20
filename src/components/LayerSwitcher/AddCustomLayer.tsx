@@ -7,7 +7,6 @@ import { Button, CircularProgress, TextField } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { useAddLayerContext } from './helpers/AddLayerContext';
 import { LayerIndex, loadLayer } from './helpers/loadLayers';
-// eslint-disable-next-line import/no-cycle
 import { SuccessLayerInput } from './SuccessLayerInput';
 
 const LoadingLayerInput = () => (

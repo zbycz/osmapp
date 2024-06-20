@@ -6,7 +6,6 @@ import {
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import React from 'react';
-// eslint-disable-next-line import/no-cycle
 import { LayerIcon, Spacer, StyledList } from './helpers';
 import { Layer } from '../utils/MapStateContext';
 import { dotToOptionalBr } from '../helpers';

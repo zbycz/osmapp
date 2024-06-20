@@ -7,8 +7,7 @@ import {
 } from '@material-ui/core';
 import * as React from 'react';
 import { LayerIndex } from './helpers/loadLayers';
-// eslint-disable-next-line import/no-cycle
-import { isViewInsideBbox } from './LayerSwitcherContent';
+import { isViewInsideBbox } from './helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
 
 type SuccessLayerDataInputProps = {
