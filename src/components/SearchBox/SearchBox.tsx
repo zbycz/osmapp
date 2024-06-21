@@ -83,13 +83,14 @@ const useInputValueState = () => {
 const getGeocoderOptions = debounce(
   async (inputValue, view, setOptions, nameMatches = [], rest = []) => {
     try {
-      if (inputValue !== currentInput) {
-        return;
-      }
-
       const searchResponse = await fetchJson(getApiUrl(inputValue, view), {
         abortableQueueName: GEOCODER_ABORTABLE_QUEUE,
       });
+
+      // This blocks rendering of old result, when user already changed input
+      if (inputValue !== currentInput) {
+        return;
+      }
 
       const options = searchResponse.features;
 
@@ -98,8 +99,9 @@ const getGeocoderOptions = debounce(
 
       setOptions([...before, ...(options || []), ...after]);
     } catch (e) {
-      // eslint-disable-next-line no-console
-      console.log('search aborted', e);
+      if (!(e instanceof DOMException && e.name === 'AbortError')) {
+        throw e;
+      }
     }
   },
   400,

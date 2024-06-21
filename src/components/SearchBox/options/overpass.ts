@@ -1,4 +1,5 @@
 import type { OverpassOption } from '../types';
+import { t } from '../../../services/intl';
 
 export const getOverpassOptions = (
   inputValue: string,
@@ -8,7 +9,7 @@ export const getOverpassOptions = (
       {
         overpass: {
           query: inputValue.replace(/^(op|overpass):/, ''),
-          label: `custom query in this area`,
+          label: t('searchbox.overpass_custom_query'),
           inputValue,
         },
       },

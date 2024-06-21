@@ -67,6 +67,7 @@ export default {
   'searchbox.category': 'category',
   'searchbox.overpass_success': 'Results found: __count__',
   'searchbox.overpass_error': 'Error fetching results. __message__',
+  'searchbox.overpass_custom_query': 'custom query',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
