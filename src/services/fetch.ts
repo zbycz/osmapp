@@ -8,6 +8,7 @@ const abortableQueues: Record<string, AbortController> = {};
 
 export const abortFetch = (abortableQueueName: string) => {
   abortableQueues[abortableQueueName]?.abort();
+  delete abortableQueues[abortableQueueName];
 };
 
 interface FetchOpts extends RequestInit {

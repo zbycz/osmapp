@@ -1,23 +1,12 @@
-import { LonLat, Position } from '../../services/types';
-//
-// loading: true,
-//   skeleton: true,
-//   nonOsmObject: false,
-//   osmMeta: { type, id },
-// center: [parseFloat(lon), parseFloat(lat)],
-//   tags: { name },
-// properties: { class: option.class },
-
-export type OptionGeocoder = {
-  geocoder: {
-    geometry: { coordinates: LonLat };
-    properties: {
-      osm_id: number;
-      osm_type: string;
-      name: string;
-    };
-  };
-};
+// TODO export type OptionGeocoder = {
+//   loading: true;
+//   skeleton: true;
+//   nonOsmObject: true;
+//   osmMeta: { type: string; id: number };
+//   center: LonLat;
+//   tags: Record<string, string>;
+//   properties: { class: string }; // ?? is really used
+// };
 
 export type OverpassOption = {
   overpass: {
