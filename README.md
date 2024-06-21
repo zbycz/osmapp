@@ -34,7 +34,9 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or 
 - **clickable map** – poi, cities, localities, ponds (more coming soon)
 - **info panel** – presets and fields from iD, images from Wikipedia, Mapillary or Fody, line numbers on public transport stops
 - **editing** – with osm login. For anonymous users a note is inserted.
-- **search engine** – try for example "Tesco, London" (powered by Photon). Also category search from iD editor presets.
+- **search engine** – try for example "Tesco, London" (powered by Photon). 
+  Category search from [iD editor presets](https://github.com/openstreetmap/id-tagging-schema) 
+  or pure overpass search (eg. `amenity=*` or `op:<query>`)
 - **vector maps** – with the possibility of tilting to 3D (drag the compass, or do two fingers drag)
 - **3D terrain** – turned on when tilted (use terrain icon to toggle off)
 - **tourist map** – from MapTiler: vector, including marked routes
