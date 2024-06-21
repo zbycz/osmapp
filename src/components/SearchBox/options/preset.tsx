@@ -9,9 +9,8 @@ import {
 } from '../../../services/tagging/translations';
 import { presets } from '../../../services/tagging/data';
 import { PresetOption } from '../types';
-import { highlightText } from '../highlightText';
 import { t } from '../../../services/intl';
-import { IconPart } from '../utils';
+import { highlightText, IconPart } from '../utils';
 
 let presetsForSearch;
 const getPresetsForSearch = async () => {

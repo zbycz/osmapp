@@ -1,11 +1,10 @@
+import { Grid, Typography } from '@mui/material';
+import React, { useCallback, useState } from 'react';
+import debounce from 'lodash/debounce';
 import { join } from '../../../utils';
-import { getDistance, IconPart, useMapCenter } from '../utils';
+import { getDistance, highlightText, IconPart, useMapCenter } from '../utils';
 import { getPoiClass } from '../../../services/getPoiClass';
 import Maki from '../../utils/Maki';
-import { Grid, Typography } from '@mui/material';
-import { highlightText } from '../highlightText';
-import React from 'react';
-import debounce from 'lodash/debounce';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
 
@@ -21,7 +20,17 @@ const getApiUrl = (inputValue, view) => {
 
 export const GEOCODER_ABORTABLE_QUEUE = 'search';
 
-export let currentInput = '';
+let currentInput = '';
+export const useInputValueState = () => {
+  const [inputValue, setInputValue] = useState('');
+  return {
+    inputValue,
+    setInputValue: useCallback((value) => {
+      currentInput = value;
+      setInputValue(value);
+    }, []),
+  };
+};
 
 export const getGeocoderOptions = debounce(
   async (inputValue, view, setOptions, before, after) => {

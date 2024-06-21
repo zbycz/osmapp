@@ -1,25 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
 import Router from 'next/router';
-import { abortFetch } from '../../services/fetch';
-import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { isDesktop, useMobileMode } from '../helpers';
 import { SEARCH_BOX_HEIGHT } from './consts';
-import { useStarsContext } from '../utils/StarsContext';
-import { getOverpassOptions } from './options/overpass';
-import { getPresetOptions } from './options/preset';
-import { getStarsOptions } from './options/stars';
-import {
-  currentInput,
-  GEOCODER_ABORTABLE_QUEUE,
-  getGeocoderOptions,
-} from './options/geocoder';
+import { useInputValueState } from './options/geocoder';
+import { useOptions } from './useOptions';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -60,44 +51,6 @@ const OverpassCircularProgress = styled(CircularProgress)`
 `;
 
 // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
-
-const useInputValueState = () => {
-  const [inputValue, setInputValue] = useState('');
-  return {
-    inputValue,
-    setInputValue: useCallback((value) => {
-      currentInput = value;
-      setInputValue(value);
-    }, []),
-  };
-};
-
-const useOptions = (inputValue: string, setOptions) => {
-  const { view } = useMapStateContext();
-  const { stars } = useStarsContext();
-
-  useEffect(() => {
-    (async () => {
-      abortFetch(GEOCODER_ABORTABLE_QUEUE);
-
-      if (inputValue === '') {
-        setOptions(getStarsOptions(stars, inputValue));
-        return;
-      }
-
-      const overpassOptions = getOverpassOptions(inputValue);
-      if (overpassOptions.length) {
-        setOptions(overpassOptions);
-        return;
-      }
-
-      const { before, after } = await getPresetOptions(inputValue);
-      setOptions([...before, { loader: true }]);
-
-      getGeocoderOptions(inputValue, view, setOptions, before, after);
-    })();
-  }, [inputValue, stars]);
-};
 
 const useOnClosePanel = () => {
   const { feature, setFeature, setPreview } = useFeatureContext();
