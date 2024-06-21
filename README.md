@@ -1,20 +1,22 @@
 # OsmAPP
 
-Let's create a universal OpenStreetMap app for broad public. It should be as easy to use as Google Maps, including clickable POIs and editing capabilites. See also [SotM 2021 talk](https://github.com/zbycz/osmapp-talk)
+Let's create a universal app for OpenStreetMap ecosystem.
+It should be as easy to use as Google Maps, including clickable POIs and editing capabilites.
+Built with React, Next.js and Maplibre GL.
+See also [SotM 2021 talk](https://github.com/zbycz/osmapp-talk).
 
 - master branch: https://osmapp.org
 - examples: [Empire State Building](https://osmapp.org/way/34633854#17.00/40.7483/-73.9864), [Prague Castle](https://osmapp.org/relation/3312247#17.00/50.0900/14.4000) or click just anything
 
 ### project OpenClimbing.org (beta)
 
-Open climbing maps and topos — photos are uploaded to _Wikimedia Commons_ and route data stored in _OpenStreetMap_ ([spec](https://wiki.openstreetmap.org/wiki/Key:wikimedia_commons:path)).
-
-This is the same app served on another domain – only difference is branding and default layers.
+Open climbing maps and topos. Photos are uploaded to _Wikimedia Commons_ and route data stored in _OpenStreetMap_ ([spec](https://wiki.openstreetmap.org/wiki/Key:wikimedia_commons:path)).
 
 - master branch: https://openclimbing.org
 - examples: [Prokopské údolí](https://openclimbing.org/relation/17262674),
   [Roviště](https://openclimbing.org/relation/17130100),
   [Lomy nad Velkou](https://openclimbing.org/relation/17089246) or click just anything.
+- This is the same app served on another domain – only difference is branding and default layers.
 
 ## How to contribute 🐱‍💻
 
@@ -126,7 +128,7 @@ GNU GPL
 
 ## Related projects
 
-We may reuse it in osmapp in the future. Both via [#217](https://github.com/zbycz/osmapp/issues/217) - thanks to [@leam](https://github.com/laem).
+We may reuse it in osmapp in the future. First two via [#217](https://github.com/zbycz/osmapp/issues/217) – thanks to @leam.
 
 - **Qwant Maps** (sadly not developed anymore)
 
@@ -135,5 +137,10 @@ We may reuse it in osmapp in the future. Both via [#217](https://github.com/zbyc
   - eg. https://qwant.com/maps/place/osm:node:1369322781 – super fast
 
 - **Future.eco Voyage**
+
   - Universal osm app by [@leam](https://github.com/laem)
   - https://futur.eco/voyage ([GitHub](https://github.com/laem/futureco/tree/master/app/voyage))
+
+- **OpenStreetMap-NG**
+  - We support this project! 🤞
+  - https://github.com/Zaczero/openstreetmap-ng/blob/main/ANNOUNCEMENT.md
