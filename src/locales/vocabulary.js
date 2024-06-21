@@ -49,7 +49,7 @@ export default {
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
      including editing options. <br/>Currently it includes various map layers, POI editing and a basic search engine.
      Features such as navigation or favorite places are planned.`,
-  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
+  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
   'homepage.special_thanks': `<ul>
         <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,

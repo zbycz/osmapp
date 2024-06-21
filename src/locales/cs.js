@@ -41,7 +41,7 @@ export default {
   'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
     včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
     V plánu jsou funkce jako navigace či oblíbená místa.`,
-  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
+  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.special_thanks': `<ul>
         <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
