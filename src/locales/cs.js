@@ -59,6 +59,7 @@ export default {
   'searchbox.category': 'kategorie',
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
   'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
+  'searchbox.overpass_custom_query': 'vlastní dotaz',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',

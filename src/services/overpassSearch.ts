@@ -4,23 +4,19 @@ import { getCenter } from './getCenter';
 import { OsmApiId } from './helpers';
 import { fetchJson } from './fetch';
 
-const overpassQuery = (bbox, tags) => {
-  const query = tags
+const getQueryFromTags = (tags) => {
+  const selector = tags
     .map(([k, v]) => (v === '*' ? `["${k}"]` : `["${k}"="${v}"]`))
     .join('');
-
-  return `[out:json][timeout:25];
-  (
-    node${query}(${bbox});
-    way${query}(${bbox});
-    relation${query}(${bbox});
-  );
-  out geom qt;`; // "out geom;>;out geom qt;" to get all full subitems as well
+  return `nwr${selector}`;
 };
 
-const getOverpassUrl = ([a, b, c, d], tags) =>
+const getOverpassQuery = ([a, b, c, d], query) =>
+  `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
+
+const getOverpassUrl = (fullQuery) =>
   `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-    overpassQuery([d, a, b, c], tags),
+    fullQuery,
   )}`;
 
 const GEOMETRY = {
@@ -70,10 +66,16 @@ export const overpassGeomToGeojson = (response: any): Feature[] =>
 
 export const performOverpassSearch = async (
   bbox,
-  tags: Record<string, string>,
+  tagsOrQuery: Record<string, string> | string,
 ) => {
-  console.log('seaching overpass for tags: ', tags); // eslint-disable-line no-console
-  const overpass = await fetchJson(getOverpassUrl(bbox, Object.entries(tags)));
+  const body =
+    typeof tagsOrQuery === 'string'
+      ? tagsOrQuery
+      : getQueryFromTags(Object.entries(tagsOrQuery));
+  const query = getOverpassQuery(bbox, body);
+
+  console.log('seaching overpass for query: ', query); // eslint-disable-line no-console
+  const overpass = await fetchJson(getOverpassUrl(query));
   console.log('overpass result:', overpass); // eslint-disable-line no-console
 
   const features = overpassGeomToGeojson(overpass);

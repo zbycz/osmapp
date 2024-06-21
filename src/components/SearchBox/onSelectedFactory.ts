@@ -36,9 +36,9 @@ const getSkeleton = (option) => {
   };
 };
 
-export const onHighlightFactory = (setPreview) => (e, location) => {
-  if (!location?.lat) return;
-  setPreview({ ...getSkeleton(location), noPreviewButton: true });
+export const onHighlightFactory = (setPreview) => (e, option) => {
+  if (!option?.geometry?.coordinates) return;
+  setPreview({ ...getSkeleton(option), noPreviewButton: true });
 };
 
 const fitBounds = (option, panelShown = false) => {
@@ -61,18 +61,20 @@ export const onSelectedFactory =
     if (option.star) {
       const apiId = getApiId(option.star.shortId);
       Router.push(`/${getUrlOsmId(apiId)}`);
-      // Router.push(`/${getUrlOsmId(apiId)}${window.location.hash}`); ????
       return;
     }
 
     if (option.overpass || option.preset) {
-      const tags = option.overpass || option.preset.presetForSearch.tags;
+      const tagsOrQuery =
+        option.preset?.presetForSearch.tags ??
+        option.overpass.tags ??
+        option.overpass.query;
 
       const timeout = setTimeout(() => {
         setOverpassLoading(true);
       }, 300);
 
-      performOverpassSearch(bbox, tags)
+      performOverpassSearch(bbox, tagsOrQuery)
         .then((geojson) => {
           const count = geojson.features.length;
           const content = t('searchbox.overpass_success', { count });

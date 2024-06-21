@@ -129,14 +129,9 @@ export const renderOptionFactory =
             <SearchIcon />
           </IconPart>
           <Grid item xs>
-            <span style={{ fontWeight: 700 }}>
-              {Object.entries(overpass)
-                .map(([k, v]) => `${k} = ${v}`)
-                .join(' ')}
-            </span>
+            <span style={{ fontWeight: 700 }}>{overpass.label}</span>
             <Typography variant="body2" color="textSecondary">
               overpass search
-              {/* {t('searchbox.category')} */}
             </Typography>
           </Grid>
         </>
