@@ -15,6 +15,7 @@ import { SEARCH_BOX_HEIGHT } from './consts';
 import { useStarsContext } from '../utils/StarsContext';
 import { getOverpassOptions } from './options/overpass';
 import { getPresetOptions } from './options/preset';
+import { getStarsOptions } from './options/stars';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -113,10 +114,7 @@ const useOptions = (inputValue: string, setOptions) => {
       abortFetch(GEOCODER_ABORTABLE_QUEUE);
 
       if (inputValue === '') {
-        const options = stars.map(({ shortId, poiType, label }) => ({
-          star: { shortId, poiType, label },
-        }));
-        setOptions(options);
+        setOptions(getStarsOptions(stars, inputValue));
         return;
       }
 

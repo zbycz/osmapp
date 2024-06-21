@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { getPoiType } from '../../../helpers/featureLabel';
+import { getHumanPoiType } from '../../../helpers/featureLabel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import Maki from '../../utils/Maki';
 import { useUserThemeContext } from '../../../helpers/theme';
@@ -25,7 +25,7 @@ const PoiType = styled.div<{ $isSkeleton: Boolean; $forceWhite?: Boolean }>`
 export const PoiDescriptionDark = () => {
   const { feature } = useFeatureContext();
   const { properties } = feature;
-  const poiType = getPoiType(feature);
+  const poiType = getHumanPoiType(feature);
 
   return (
     <PoiType $isSkeleton={feature.skeleton} $forceWhite>
@@ -39,7 +39,7 @@ export const PoiDescription = () => {
   const { currentTheme } = useUserThemeContext();
   const { feature } = useFeatureContext();
   const { properties } = feature;
-  const poiType = getPoiType(feature);
+  const poiType = getHumanPoiType(feature);
 
   return (
     <PoiType $isSkeleton={feature.skeleton}>
