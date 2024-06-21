@@ -9,6 +9,7 @@ import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
 import { buildPhotonAddress } from './options/geocoder';
+import { useMapCenter } from './utils';
 
 const useFocusOnSlash = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -65,6 +66,7 @@ export const AutocompleteInput = ({
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
   const { bbox, showToast } = useMapStateContext();
+  const mapCenter = useMapCenter();
   const mobileMode = useMobileMode();
   const { currentTheme } = useUserThemeContext();
   return (
@@ -106,7 +108,7 @@ export const AutocompleteInput = ({
           autocompleteRef={autocompleteRef}
         />
       )}
-      renderOption={renderOptionFactory(inputValue, currentTheme)}
+      renderOption={renderOptionFactory(inputValue, currentTheme, mapCenter)}
     />
   );
 };
