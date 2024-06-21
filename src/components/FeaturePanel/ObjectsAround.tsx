@@ -7,7 +7,7 @@ import { Feature } from '../../services/types';
 import { FetchError, getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
-import { trimText, useMobileMode } from '../helpers';
+import { DotLoader, trimText, useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { useUserThemeContext } from '../../helpers/theme';
 
@@ -114,9 +114,7 @@ export const ObjectsAround = ({ advanced }) => {
       {loading && (
         <Typography color="secondary" paragraph>
           {t('loading')}
-          <span className="dotloader">.</span>
-          <span className="dotloader">.</span>
-          <span className="dotloader">.</span>
+          <DotLoader />
         </Typography>
       )}
 

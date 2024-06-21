@@ -15,6 +15,7 @@ const Wrapper = styled.div`
   }
 `;
 
+// TODO this shows only for next.js page load, but doesnt wait for getInitialProps
 export const Loading = () => {
   const [loading, start, stop] = useBoolState(false);
 
