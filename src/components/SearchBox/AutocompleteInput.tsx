@@ -1,12 +1,14 @@
 import React, { useEffect } from 'react';
 import { Autocomplete, InputBase } from '@mui/material';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { renderOptionFactory, buildPhotonAddress } from './renderOptionFactory';
+import { renderOptionFactory } from './renderOptionFactory';
 import { t } from '../../services/intl';
-import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
+import { onSelectedFactory } from './onSelectedFactory';
 import { useMobileMode } from '../helpers';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { onHighlightFactory } from './onHighlightFactory';
+import { buildPhotonAddress } from './options/geocoder';
 
 const useFocusOnSlash = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -104,13 +106,7 @@ export const AutocompleteInput = ({
           autocompleteRef={autocompleteRef}
         />
       )}
-      // renderOption={renderOptionFactory(inputValue, currentTheme)}
-      renderOption={(props, option) => (
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        <li {...props}>
-          {renderOptionFactory(inputValue, currentTheme)(props, option)}
-        </li>
-      )}
+      renderOption={renderOptionFactory(inputValue, currentTheme)}
     />
   );
 };

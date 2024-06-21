@@ -1,4 +1,7 @@
 import match from 'autosuggest-highlight/match';
+import FolderIcon from '@mui/icons-material/Folder';
+import { Grid, Typography } from '@mui/material';
+import React from 'react';
 import {
   fetchSchemaTranslations,
   getPresetTermsTranslation,
@@ -6,6 +9,8 @@ import {
 } from '../../../services/tagging/translations';
 import { presets } from '../../../services/tagging/data';
 import { PresetOption } from '../types';
+import { t } from '../../../services/intl';
+import { highlightText, IconPart } from '../utils';
 
 let presetsForSearch;
 const getPresetsForSearch = async () => {
@@ -75,4 +80,28 @@ export const getPresetOptions = async (inputValue): PresetOptions => {
   const after = allResults.slice(2);
 
   return { before, after };
+};
+
+export const renderPreset = (preset, inputValue) => {
+  const { name } = preset.presetForSearch;
+  const additionalText =
+    preset.name === 0
+      ? ` (${preset.presetForSearch.texts.find(
+          (_, idx) => preset.textsByOne[idx] > 0,
+        )}…)`
+      : '';
+
+  return (
+    <>
+      <IconPart>
+        <FolderIcon />
+      </IconPart>
+      <Grid item xs>
+        {highlightText(`${name}${additionalText}`, inputValue)}
+        <Typography variant="body2" color="textSecondary">
+          {t('searchbox.category')}
+        </Typography>
+      </Grid>
+    </>
+  );
 };

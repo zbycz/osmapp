@@ -1,5 +1,9 @@
+import React from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import { Grid, Typography } from '@mui/material';
 import type { OverpassOption } from '../types';
 import { t } from '../../../services/intl';
+import { IconPart } from '../utils';
 
 export const getOverpassOptions = (
   inputValue: string,
@@ -31,3 +35,17 @@ export const getOverpassOptions = (
 
   return [];
 };
+
+export const renderOverpass = (overpass) => (
+  <>
+    <IconPart>
+      <SearchIcon />
+    </IconPart>
+    <Grid item xs>
+      <span style={{ fontWeight: 700 }}>{overpass.label}</span>
+      <Typography variant="body2" color="textSecondary">
+        overpass search
+      </Typography>
+    </Grid>
+  </>
+);
