@@ -32,7 +32,7 @@ export const useInputValueState = () => {
   };
 };
 
-export const getGeocoderOptions = debounce(
+export const fetchGeocoderOptions = debounce(
   async (inputValue, view, setOptions, before, after) => {
     try {
       const searchResponse = await fetchJson(getApiUrl(inputValue, view), {

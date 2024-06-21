@@ -4,9 +4,9 @@ import React from 'react';
 import { IconPart } from '../utils';
 import type { Star } from '../../utils/StarsContext';
 
-export const getStarsOptions = (stars: Star[], inputValue: string) =>
-  // TODO filter by inputValue
-  inputValue === '' ? stars.map((star) => ({ star })) : [];
+// TODO filter stars by inputValue
+export const getStarsOptions = (stars: Star[]) =>
+  stars.map((star) => ({ star }));
 
 export const renderStar = (star) => (
   <>

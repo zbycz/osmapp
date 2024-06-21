@@ -4,7 +4,7 @@ import { useStarsContext } from '../utils/StarsContext';
 import { abortFetch } from '../../services/fetch';
 import {
   GEOCODER_ABORTABLE_QUEUE,
-  getGeocoderOptions,
+  fetchGeocoderOptions,
 } from './options/geocoder';
 import { getStarsOptions } from './options/stars';
 import { getOverpassOptions } from './options/overpass';
@@ -19,7 +19,7 @@ export const useOptions = (inputValue: string, setOptions) => {
       abortFetch(GEOCODER_ABORTABLE_QUEUE);
 
       if (inputValue === '') {
-        setOptions(getStarsOptions(stars, inputValue));
+        setOptions(getStarsOptions(stars));
         return;
       }
 
@@ -32,7 +32,7 @@ export const useOptions = (inputValue: string, setOptions) => {
       const { before, after } = await getPresetOptions(inputValue);
       setOptions([...before, { loader: true }]);
 
-      getGeocoderOptions(inputValue, view, setOptions, before, after);
+      fetchGeocoderOptions(inputValue, view, setOptions, before, after);
     })();
   }, [inputValue, stars]);
 };
