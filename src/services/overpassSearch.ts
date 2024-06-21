@@ -11,12 +11,12 @@ const getQueryFromTags = (tags) => {
   return `nwr${selector}`;
 };
 
-const getOverpassQuery = (bbox, query) =>
-  `[out:json][timeout:25][bbox:${bbox}];(${query};);out geom qt;`;
+const getOverpassQuery = ([a, b, c, d], query) =>
+  `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
 
-const getOverpassUrl = ([a, b, c, d], query) =>
+const getOverpassUrl = (fullQuery) =>
   `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-    getOverpassQuery([d, a, b, c], query),
+    fullQuery,
   )}`;
 
 const GEOMETRY = {
@@ -68,13 +68,14 @@ export const performOverpassSearch = async (
   bbox,
   tagsOrQuery: Record<string, string> | string,
 ) => {
-  const query =
+  const body =
     typeof tagsOrQuery === 'string'
       ? tagsOrQuery
       : getQueryFromTags(Object.entries(tagsOrQuery));
+  const query = getOverpassQuery(bbox, body);
 
   console.log('seaching overpass for query: ', query); // eslint-disable-line no-console
-  const overpass = await fetchJson(getOverpassUrl(bbox, query));
+  const overpass = await fetchJson(getOverpassUrl(query));
   console.log('overpass result:', overpass); // eslint-disable-line no-console
 
   const features = overpassGeomToGeojson(overpass);
