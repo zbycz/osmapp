@@ -18,14 +18,14 @@ This is the same app served on another domain – only difference is branding an
 
 ## How to contribute 🐱‍💻
 
-You may [add issues](https://github.com/zbycz/osmapp/issues) here on github, or try to update the code in three simple steps:
+You may [add issues](https://github.com/zbycz/osmapp/issues) here on GitHub, or try to update the code in three simple steps:
 
 1. edit code online with pencil icon (this opens a pull-request) ✏️
 2. wait few minutes for a preview URL 💬
 3. iterate 🔁
 
 > If you are a JS dev, you may also `git clone` / `yarn` / `yarn dev` \
-> Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) or Github Codespaces – full dev environment in your browser. \
+> Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) or GitHub Codespaces – full dev environment in your browser. \
 > If Vercel build fails, please run `yarn build` locally to debug it. \
 > Some architecture [DOCS here](./DOCS.md).
 
@@ -136,4 +136,4 @@ We may reuse it in osmapp in the future. Both via [#217](https://github.com/zbyc
 
 - **Future.eco Voyage**
   - Universal osm app by [@leam](https://github.com/laem)
-  - https://futur.eco/voyage ([github](https://github.com/laem/futureco/tree/master/app/voyage))
+  - https://futur.eco/voyage ([GitHub](https://github.com/laem/futureco/tree/master/app/voyage))
