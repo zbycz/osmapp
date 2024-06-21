@@ -1,13 +1,14 @@
 import React, { useEffect } from 'react';
 import { Autocomplete, InputBase } from '@mui/material';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { renderOptionFactory, buildPhotonAddress } from './renderOptionFactory';
+import { renderOptionFactory } from './renderOptionFactory';
 import { t } from '../../services/intl';
 import { onSelectedFactory } from './onSelectedFactory';
 import { useMobileMode } from '../helpers';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
+import { buildPhotonAddress } from './options/geocoder';
 
 const useFocusOnSlash = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
