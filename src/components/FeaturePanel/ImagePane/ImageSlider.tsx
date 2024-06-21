@@ -63,15 +63,13 @@ export const ImageSlider = () => {
   }
 
   return (
-    <div>
-      <Slider>
-        {feature.imageTags.map((imageTag) => (
-          <Image key={imageTag.k} imageTag={imageTag} />
-        ))}
-        {/* Fody */}
-        {/* Mapillary */}
-        {/* Upload new */}
-      </Slider>
-    </div>
+    <Slider>
+      {feature.imageTags.map((imageTag) => (
+        <Image key={imageTag.k} imageTag={imageTag} />
+      ))}
+      {/* Fody */}
+      {/* Mapillary */}
+      {/* Upload new */}
+    </Slider>
   );
 };

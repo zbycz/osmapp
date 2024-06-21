@@ -106,11 +106,10 @@ export const getInitialFeature = async (ctx) => {
 
   const t3 = new Date().getTime();
   const imageRequest = t3 - t2;
+  const ssr = isServer() ? `+ ${imageRequest}ms [ssr img]` : '';
 
   // eslint-disable-next-line no-console
-  console.log(
-    `getInititalFeature(${shortId}): ${osmRequest}ms [osm] + ${imageRequest}ms [ssr img]`,
-  );
+  console.log(`getInititalFeature(${shortId}): ${osmRequest}ms [osm]${ssr}`);
 
   return initialFeature;
 };

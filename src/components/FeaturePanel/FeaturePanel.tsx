@@ -107,11 +107,11 @@ export const FeaturePanel = () => {
             <OsmError />
           </PanelSidePadding>
 
-          {!skeleton && (
-            <>
-              <ImageSlider />
+          <Flex>
+            {!skeleton && (
+              <>
+                <ImageSlider />
 
-              <Flex>
                 <PanelSidePadding>
                   <Properties
                     showTags={showTagsTable}
@@ -127,9 +127,9 @@ export const FeaturePanel = () => {
 
                   {point && <ObjectsAround advanced={advanced} />}
                 </PanelSidePadding>
-              </Flex>
-            </>
-          )}
+              </>
+            )}
+          </Flex>
 
           <PanelSidePadding>{footer}</PanelSidePadding>
         </PanelContent>
