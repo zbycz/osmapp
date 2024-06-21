@@ -36,9 +36,9 @@ const getSkeleton = (option) => {
   };
 };
 
-export const onHighlightFactory = (setPreview) => (e, location) => {
-  if (!location?.lat) return;
-  setPreview({ ...getSkeleton(location), noPreviewButton: true });
+export const onHighlightFactory = (setPreview) => (e, option) => {
+  if (!option?.geometry?.coordinates) return;
+  setPreview({ ...getSkeleton(option), noPreviewButton: true });
 };
 
 const fitBounds = (option, panelShown = false) => {

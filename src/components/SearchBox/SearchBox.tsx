@@ -81,7 +81,7 @@ const useInputValueState = () => {
 };
 
 const getGeocoderOptions = debounce(
-  async (inputValue, view, setOptions, nameMatches = [], rest = []) => {
+  async (inputValue, view, setOptions, before, after) => {
     try {
       const searchResponse = await fetchJson(getApiUrl(inputValue, view), {
         abortableQueueName: GEOCODER_ABORTABLE_QUEUE,
@@ -92,12 +92,9 @@ const getGeocoderOptions = debounce(
         return;
       }
 
-      const options = searchResponse.features;
+      const options = searchResponse?.features || [];
 
-      const before = nameMatches.slice(0, 2);
-      const after = [...nameMatches.slice(2), ...rest];
-
-      setOptions([...before, ...(options || []), ...after]);
+      setOptions([...before, ...options, ...after]);
     } catch (e) {
       if (!(e instanceof DOMException && e.name === 'AbortError')) {
         throw e;
@@ -130,10 +127,10 @@ const useOptions = (inputValue: string, setOptions) => {
         return;
       }
 
-      const { nameMatches, rest } = await getPresetOptions(inputValue);
-      setOptions([...nameMatches.slice(0, 2), { loader: true }]);
+      const { before, after } = await getPresetOptions(inputValue);
+      setOptions([...before, { loader: true }]);
 
-      getGeocoderOptions(inputValue, view, setOptions, nameMatches, rest);
+      getGeocoderOptions(inputValue, view, setOptions, before, after);
     })();
   }, [inputValue, stars]);
 };

@@ -46,13 +46,13 @@ const num = (text, inputValue) =>
   }).length;
 
 type PresetOptions = Promise<{
-  nameMatches: PresetOption[];
-  rest: PresetOption[];
+  before: PresetOption[];
+  after: PresetOption[];
 }>;
 
 export const getPresetOptions = async (inputValue): PresetOptions => {
   if (inputValue.length <= 2) {
-    return { nameMatches: [], rest: [] };
+    return { before: [], after: [] };
   }
 
   const results = (await getPresetsForSearch()).map((preset) => {
@@ -70,7 +70,9 @@ export const getPresetOptions = async (inputValue): PresetOptions => {
     .filter((result) => result.name === 0 && result.sum > 0)
     .map((result) => ({ preset: result }));
 
-  return nameMatches.length
-    ? { nameMatches, rest }
-    : { nameMatches: rest, rest: [] };
+  const allResults = [...nameMatches, ...rest];
+  const before = allResults.slice(0, 2);
+  const after = allResults.slice(2);
+
+  return { before, after };
 };
