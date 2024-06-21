@@ -250,10 +250,25 @@ const getAroundUrl = ([lat, lon]: Position) =>
         relation[~"."~"."](around:50,${lon},${lat});
         way[~"."~"."](around:50,${lon},${lat});
         node[~"."~"."](around:50,${lon},${lat});
-      );out 20 body qt center;`, // some will be filtered out
+      );out 400 body qt center;`, // some will be filtered out
   )}`;
+
+// intentionaly wrong distance, but faster
+const getDist = (center: Position, point: Position) =>
+  Math.sqrt(
+    Math.pow(center[0] - point[0], 2) + Math.pow(center[1] - point[1], 2),
+  );
 
 export const fetchAroundFeature = async (point: Position) => {
   const response = await fetchJson(getAroundUrl(point));
-  return overpassAroundToSkeletons(response);
+  const features = overpassAroundToSkeletons(response);
+  return features.sort((a, b) => {
+    if (a.center === undefined || b.center === undefined) {
+      return 100;
+    }
+    if (b.properties.class === 'home') {
+      return -1;
+    }
+    return getDist(a.center, point) - getDist(b.center, point);
+  });
 };
