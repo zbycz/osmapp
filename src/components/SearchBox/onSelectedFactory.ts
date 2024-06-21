@@ -61,18 +61,20 @@ export const onSelectedFactory =
     if (option.star) {
       const apiId = getApiId(option.star.shortId);
       Router.push(`/${getUrlOsmId(apiId)}`);
-      // Router.push(`/${getUrlOsmId(apiId)}${window.location.hash}`); ????
       return;
     }
 
     if (option.overpass || option.preset) {
-      const tags = option.overpass || option.preset.presetForSearch.tags;
+      const tagsOrQuery =
+        option.preset?.presetForSearch.tags ??
+        option.overpass.tags ??
+        option.overpass.query;
 
       const timeout = setTimeout(() => {
         setOverpassLoading(true);
       }, 300);
 
-      performOverpassSearch(bbox, tags)
+      performOverpassSearch(bbox, tagsOrQuery)
         .then((geojson) => {
           const count = geojson.features.length;
           const content = t('searchbox.overpass_success', { count });

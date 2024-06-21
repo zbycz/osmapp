@@ -75,13 +75,11 @@ export const AutocompleteInput = ({
       getOptionLabel={(option) =>
         option.properties?.name ||
         option.preset?.presetForSearch?.name ||
-        (option.overpass &&
-          Object.entries(option.overpass)
-            ?.map(([k, v]) => `${k}=${v}`)
-            .join(' ')) ||
+        option.overpass?.inputValue ||
         (option.star && option.star.label) ||
         (option.loader ? '' : buildPhotonAddress(option.properties))
       }
+      getOptionKey={(option) => JSON.stringify(option)}
       onChange={onSelectedFactory(
         setFeature,
         setPreview,
