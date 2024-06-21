@@ -117,7 +117,6 @@ const useOptions = (inputValue: string, setOptions) => {
           star: { shortId, poiType, label },
         }));
         setOptions(options);
-        setTimeout(() => setOptions(options));
         return;
       }
 
