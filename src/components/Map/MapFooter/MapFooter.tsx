@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
-import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
-import uniq from 'lodash/uniq';
+import { IconButton, Tooltip } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { Translation } from '../../../services/intl';
+import { usePersistedState } from '../../utils/usePersistedState';
+import { ClimbingLegend } from './ClimbingLegend';
+import { convertHexToRgba } from '../../utils/colorUtils';
+import { AttributionLinks } from './AttributionLinks';
 import { useMapStateContext } from '../../utils/MapStateContext';
-import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
+import { useIsClient } from '../../helpers';
 
 const IconContainer = styled.div`
   width: 20px;
@@ -17,8 +19,21 @@ const StyledIconButton = styled(IconButton)`
   top: -5px;
 `;
 
+const FooterContainer = styled.div<{ $hasShadow: boolean }>`
+  margin: 0 4px 4px 4px;
+  pointer-events: all;
+  border-radius: 8px;
+  padding: 6px;
+  color: ${({ theme }) => theme.palette.text.primary};
+  background-color: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.paper, 0.5)};
+  backdrop-filter: blur(10px);
+  ${({ $hasShadow }) =>
+    $hasShadow ? 'box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);' : ''}
+`;
+
 const Wrapper = styled.div`
-  padding: 0 2px;
+  padding: 0 4px;
   font-size: 12px;
   color: ${({ theme }) => theme.palette.text.primary};
   font-weight: 400;
@@ -34,92 +49,55 @@ const Wrapper = styled.div`
   }
 `;
 
-export const Attribution = ({ label, link, title }) => (
-  <>
-    ©{' '}
-    <Tooltip arrow title={title}>
-      <a href={link} target="_blank" rel="noopener">
-        {label}
-      </a>
-    </Tooltip>
-  </>
+const LegendExpandButton = ({ isVisible, setLegendShown }) => (
+  <IconContainer>
+    {isVisible && (
+      <Tooltip title="Show climbing legend" enterDelay={1000}>
+        <StyledIconButton
+          size="small"
+          edge="end"
+          onClick={() => {
+            setLegendShown(true);
+          }}
+        >
+          <KeyboardArrowUpIcon fontSize="small" />
+        </StyledIconButton>
+      </Tooltip>
+    )}
+  </IconContainer>
 );
 
-const MapDataLink = () => {
-  const short = useMediaQuery('(max-width: 500px)');
+export const MapFooter = () => {
   const { activeLayers } = useMapStateContext();
-  const attributions = uniq(
-    activeLayers.flatMap((layer) =>
-      osmappLayers[layer]
-        ? osmappLayers[layer].attribution
-        : decodeURI(new URL(layer)?.hostname),
-    ),
+  const hasClimbingLayer = activeLayers.includes('climbing');
+  const [legendShown, setLegendShown] = usePersistedState<boolean>(
+    'isLegendVisible',
+    true,
   );
+  const isClient = useIsClient();
 
-  const nodes = attributions.map((attribution) => {
-    if (attribution === 'maptiler')
-      return (
-        <Attribution
-          key={attribution}
-          label="MapTiler"
-          link="https://www.maptiler.com/"
-          title={<Translation id="map.maptiler_copyright_tooltip" />}
-        />
-      );
-    if (attribution === 'osm')
-      return (
-        <Attribution
-          key={attribution}
-          label={short ? 'OSM' : 'OpenStreetMap'}
-          link="https://www.openstreetmap.org/"
-          title={<Translation id="map.osm_copyright_tooltip" />}
-        />
-      );
-
-    return (
-      <span
-        key={attribution}
-        dangerouslySetInnerHTML={{ __html: attribution }} // eslint-disable-line react/no-danger
-      />
-    );
-  });
-
-  // place a space between attributions
-  for (let i = 1; i < nodes.length; i += 2) {
-    nodes.splice(i, 0, ' ');
+  if (!isClient) {
+    // TODO find a way how to render this in SSR (keep layer in cookies?)
+    return null;
   }
 
-  return nodes;
-};
-
-const ClientOnly = ({ children }) => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted ? children : null;
-};
-
-export const MapFooter = ({ isLegendVisible, setIsLegendVisible }) => (
-  // TODO find a way how to render this in SSR (keep layer in cookies?)
-  <ClientOnly>
-    <Wrapper>
-      <div>
-        <MapDataLink />
-      </div>
-      <IconContainer>
-        {!isLegendVisible && (
-          <Tooltip title="Show climbing legend" enterDelay={1000}>
-            <StyledIconButton
-              size="small"
-              edge="end"
-              onClick={() => {
-                setIsLegendVisible(true);
-              }}
-            >
-              <KeyboardArrowUpIcon fontSize="small" />
-            </StyledIconButton>
-          </Tooltip>
+  return (
+    <FooterContainer $hasShadow={hasClimbingLayer && legendShown}>
+      {hasClimbingLayer && (
+        <ClimbingLegend
+          isVisible={legendShown}
+          setLegendShown={setLegendShown}
+        />
+      )}
+      <Wrapper>
+        <AttributionLinks />
+        {hasClimbingLayer && (
+          <LegendExpandButton
+            isVisible={!legendShown}
+            setLegendShown={setLegendShown}
+          />
         )}
-      </IconContainer>
-    </Wrapper>
-  </ClientOnly>
-);
+      </Wrapper>
+    </FooterContainer>
+  );
+};
