@@ -8,7 +8,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { getGlobalMap } from '../../services/mapStorage';
 import { LonLat } from '../../services/types';
-import { DotLoader, isImperial } from "../helpers";
+import { DotLoader, isImperial } from '../helpers';
 
 export const IconPart = styled.div`
   width: 50px;
