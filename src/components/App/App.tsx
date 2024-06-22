@@ -35,6 +35,7 @@ export const getMapViewFromHash = () => {
     .substr(1)
     .split('/')
     .map(parseFloat)
+    .filter((num) => !Number.isNaN(num))
     .map((num) => num.toString());
   return view?.length === 3 ? view : undefined;
 };
