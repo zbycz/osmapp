@@ -7,6 +7,7 @@ import parse from 'autosuggest-highlight/parse';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { getGlobalMap } from '../../services/mapStorage';
+import { LonLat } from '../../services/types';
 
 export const IconPart = styled.div`
   width: 50px;
@@ -34,6 +35,12 @@ export const getDistance = (point1, point2) => {
       ),
     )
   );
+};
+
+export const getKmDistance = (mapCenter, [lon, lat]: LonLat) => {
+  const dist = getDistance(mapCenter, { lon, lat }) / 1000;
+  // TODO save imperial to mapState and multiply by 0.621371192
+  return dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist);
 };
 
 export const useMapCenter = () => {

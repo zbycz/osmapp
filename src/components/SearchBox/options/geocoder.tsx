@@ -2,7 +2,7 @@ import { Grid, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { join } from '../../../utils';
-import { getDistance, highlightText, IconPart, useMapCenter } from '../utils';
+import { getKmDistance, highlightText, IconPart } from '../utils';
 import { getPoiClass } from '../../../services/getPoiClass';
 import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
@@ -123,15 +123,11 @@ export const buildPhotonAddress = ({
   },
  ];
  */
-export const renderGeocoder = (option, currentTheme, inputValue) => {
+export const renderGeocoder = (option, currentTheme, inputValue, mapCenter) => {
   const { geometry, properties } = option;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 
-  const [lon, lat] = geometry.coordinates;
-  const mapCenter = useMapCenter();
-  const dist = getDistance(mapCenter, { lon, lat }) / 1000;
-  const distKm = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist); // TODO save imperial to mapState and multiply 0.621371192
-
+  const distKm = getKmDistance(mapCenter, geometry.coordinates);
   const text = name || buildPhotonAddress(properties);
   const additionalText = getAdditionalText(properties);
   const poiClass = getPoiClass({ [tagKey]: tagValue });
