@@ -1,6 +1,6 @@
 const urlRegExp = /^https?:\/\/.+/;
 
-export const getUrlForTag = (k, v) => {
+export const getUrlForTag = (k: string, v: string) => {
   if (k.match(/:?wikipedia$/)) {
     if (v.match(/:/)) {
       const [lang, article] = v.split(':');
@@ -40,6 +40,40 @@ export const getUrlForTag = (k, v) => {
   }
   if (v.match(urlRegExp)) {
     return v;
+  }
+
+  if (k === 'contact:facebook') {
+    return `https://facebook.com/${v}`;
+  }
+  if (k === 'contact:youtube') {
+    return v.startsWith('@')
+      ? `https://youtube.com/${v}`
+      : `https://youtube.com/@${v}`;
+  }
+  if (k === 'contact:instagram') {
+    return `https://instagram.com/${v}`;
+  }
+  if (k === 'contact:vk') {
+    return `https://vk.com/${v}`;
+  }
+  if (k === 'contact:twitter') {
+    return `https://twitter.com/${v}`;
+  }
+  if (k === 'contact:matrix') {
+    return `https://matrix.to/#/${v}`;
+  }
+  if (k === 'contact:mastodon') {
+    return v.startsWith('@')
+      ? `https://mastodon.social/${v}`
+      : `https://mastodon.social/@${v}`;
+  }
+  if (k === 'contact:pinterest') {
+    return `https://pinterest.com/${v}`;
+  }
+  if (k === 'contact:tiktok') {
+    return v.startsWith('@')
+      ? `https://tiktok.com/${v}`
+      : `https://tiktok.com/@${v}`;
   }
 
   return null;
