@@ -9,6 +9,7 @@ export const getStarsOptions = (stars: Star[]) =>
   stars.map((star) => ({ star }));
 
 export const renderStar = (star, mapCenter) => {
+  // Note: for compatibility, `center` is optional
   const distKm = star.center ? getKmDistance(mapCenter, star.center) : null;
 
   return (
