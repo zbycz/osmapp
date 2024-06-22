@@ -5,11 +5,12 @@ export const WebsiteRenderer = ({ v }) => (
   <>
     <LocalPhone fontSize="small" />
     <span>
-      {v.split(';').map((v2, index) => (
-        <>
+      {v.split(';').map((number, index) => (
+        // eslint-disable-next-line react/no-array-index-key
+        <React.Fragment key={`${index}${number}`}>
           {index === 0 ? '' : ', '}
-          <a href={`tel:${v2}`}>{v2}</a>
-        </>
+          <a href={`tel:${number}`}>{number}</a>
+        </React.Fragment>
       ))}
     </span>
   </>

@@ -31,9 +31,8 @@ export const captureException = (err, errorInfo) => {
       scope.setTag('ssr', true);
     }
 
-    if (errorInfo) {
-      scope.setExtra('componentStack', errorInfo.componentStack);
-    }
+    scope.setExtra('componentStack', errorInfo?.componentStack);
+    scope.setExtra('extra', errorInfo?.extra);
   });
 
   Sentry.captureException(err);

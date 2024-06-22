@@ -105,6 +105,14 @@ export const useIsClient = () => {
   return isClient;
 };
 
+export const DotLoader = () => (
+  <>
+    <span className="dotloader">.</span>
+    <span className="dotloader">.</span>
+    <span className="dotloader">.</span>
+  </>
+);
+
 export const ClientOnly = ({ children }) => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);
