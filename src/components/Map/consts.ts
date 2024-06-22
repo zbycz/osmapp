@@ -23,11 +23,6 @@ export const OSMAPP_SOURCES = {
     type: 'vector' as const,
     url: `https://api.maptiler.com/tiles/contours/tiles.json?key=${apiKey}`,
   },
-  'terrain-rgb': {
-    url: `https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=${apiKey}`,
-    type: 'raster-dem' as const,
-    tileSize: 256,
-  },
   terrain: {
     url: `https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=${apiKey}`,
     type: 'raster-dem' as const,
