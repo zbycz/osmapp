@@ -1,4 +1,7 @@
-// https://cloud.maptiler.com/account
+import type {
+  GeoJSONSourceSpecification,
+  SourceSpecification,
+} from '@maplibre/maplibre-gl-style-spec';
 
 const apiKey = '7dlhLl3hiXQ1gsth0kGu';
 
@@ -6,15 +9,15 @@ export const OSMAPP_SPRITE = `${window.location.protocol}//${window.location.hos
 
 export const GLYPHS = `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${apiKey}`;
 
-export const EMPTY_GEOJSON_SOURCE = {
+export const EMPTY_GEOJSON_SOURCE: GeoJSONSourceSpecification = {
   type: 'geojson' as const,
   data: {
-    type: 'FeatureCollection',
+    type: 'FeatureCollection' as const,
     features: [],
   },
 };
 
-export const OSMAPP_SOURCES = {
+export const OSMAPP_SOURCES: Record<string, SourceSpecification> = {
   maptiler_planet: {
     type: 'vector' as const,
     url: `https://api.maptiler.com/tiles/v3/tiles.json?key=${apiKey}`,
