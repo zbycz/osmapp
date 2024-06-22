@@ -8,6 +8,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { getGlobalMap } from '../../services/mapStorage';
 import { LonLat } from '../../services/types';
+import { isImperial } from '../helpers';
 
 export const IconPart = styled.div`
   width: 50px;
@@ -37,10 +38,11 @@ export const getDistance = (point1, point2) => {
   );
 };
 
-export const getKmDistance = (mapCenter, [lon, lat]: LonLat) => {
-  const dist = getDistance(mapCenter, { lon, lat }) / 1000;
-  // TODO save imperial to mapState and multiply by 0.621371192
-  return dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist);
+export const getHumanDistance = (mapCenter, [lon, lat]: LonLat) => {
+  const distKm = getDistance(mapCenter, { lon, lat }) / 1000;
+  const dist = isImperial() ? distKm * 0.621371192 : distKm;
+  const rounded = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist);
+  return isImperial() ? `${rounded} mi` : `${rounded} km`;
 };
 
 export const useMapCenter = () => {

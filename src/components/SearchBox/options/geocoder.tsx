@@ -2,7 +2,7 @@ import { Grid, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { join } from '../../../utils';
-import { getKmDistance, highlightText, IconPart } from '../utils';
+import { getHumanDistance, highlightText, IconPart } from '../utils';
 import { getPoiClass } from '../../../services/getPoiClass';
 import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
@@ -127,7 +127,7 @@ export const renderGeocoder = (option, currentTheme, inputValue, mapCenter) => {
   const { geometry, properties } = option;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 
-  const distKm = getKmDistance(mapCenter, geometry.coordinates);
+  const distance = getHumanDistance(mapCenter, geometry.coordinates);
   const text = name || buildPhotonAddress(properties);
   const additionalText = getAdditionalText(properties);
   const poiClass = getPoiClass({ [tagKey]: tagValue });
@@ -141,7 +141,7 @@ export const renderGeocoder = (option, currentTheme, inputValue, mapCenter) => {
           title={`${tagKey}=${tagValue}`}
           invert={currentTheme === 'dark'}
         />
-        <div>{distKm} km</div>
+        <div>{distance}</div>
       </IconPart>
       <Grid item xs>
         {highlightText(text, inputValue)}

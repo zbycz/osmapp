@@ -104,3 +104,10 @@ export const useIsClient = () => {
   }, []);
   return isClient;
 };
+
+export const isImperial = () =>
+  window.localStorage.getItem('imperial') === 'yes';
+
+export const toggleImperial = () => {
+  localStorage.setItem('imperial', isImperial() ? '' : 'yes');
+};
