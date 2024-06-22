@@ -105,6 +105,12 @@ export const useIsClient = () => {
   return isClient;
 };
 
+export const ClientOnly = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? children : null;
+};
+
 export const isImperial = () =>
   window.localStorage.getItem('imperial') === 'yes';
 

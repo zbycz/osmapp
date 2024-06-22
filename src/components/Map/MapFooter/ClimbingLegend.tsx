@@ -2,9 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Tooltip, IconButton } from '@mui/material';
-import { useMapStateContext } from '../../utils/MapStateContext';
 import { COLORS } from '../styles/layers/climbingLayers';
-import { useIsClient } from '../../helpers';
 import { convertHexToRgba } from '../../utils/colorUtils';
 
 const HideableContainer = styled.div<{ $isVisible: boolean }>`
@@ -49,17 +47,11 @@ const Heading = styled.div`
   font-weight: bold;
 `;
 
-export const ClimbingLegend = ({ isLegendVisible, setIsLegendVisible }) => {
-  const isClient = useIsClient();
-  const { activeLayers } = useMapStateContext();
-
-  const isClimbingLayerVisible = activeLayers.includes('climbing');
-
+export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
   const onLegendClose = () => {
-    setIsLegendVisible(false);
+    setLegendShown(false);
   };
 
-  const isVisible = isLegendVisible && isClimbingLayerVisible && isClient;
   return (
     <HideableContainer $isVisible={isVisible}>
       <Container>

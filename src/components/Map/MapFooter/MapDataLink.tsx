@@ -4,7 +4,7 @@ import uniq from 'lodash/uniq';
 import { Translation } from '../../../services/intl';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
-import { Attribution } from './MapFooter';
+import { Attribution } from './AttributionLinks';
 
 export const MapDataLink = () => {
   const short = useMediaQuery('(max-width: 500px)');
