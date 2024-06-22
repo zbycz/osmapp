@@ -81,7 +81,13 @@ export const MapStateProvider = ({ children, initialMapView }) => {
   return (
     <MapStateContext.Provider value={mapState}>
       {children}
-      <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+      <Snackbar
+        // TODO: replace by SnackbarContext
+        open={open}
+        autoHideDuration={10000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={handleClose}
+      >
         <Alert onClose={handleClose} severity={msg?.type} variant="filled">
           {msg?.content}
         </Alert>
