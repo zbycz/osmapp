@@ -1,29 +1,12 @@
 import React from 'react';
-import { SimpleOpeningHours } from 'simple-opening-hours';
 import styled from 'styled-components';
 import AccessTime from '@mui/icons-material/AccessTime';
 import { useToggleState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { ToggleButton } from '../helpers/ToggleButton';
-
-interface SimpleOpeningHoursTable {
-  su: string[];
-  mo: string[];
-  tu: string[];
-  we: string[];
-  th: string[];
-  fr: string[];
-  sa: string[];
-  ph: string[];
-}
-
-const parseOpeningHours = (value) => {
-  const sanitized = value.match(/^[0-9:]+-[0-9:]+$/) ? `Mo-Su ${value}` : value;
-  const opening = new SimpleOpeningHours(sanitized);
-  const daysTable = opening.getTable() as SimpleOpeningHoursTable;
-  const isOpen = opening.isOpenNow();
-  return { daysTable, isOpen };
-};
+import { parseOpeningHours } from './openingHours';
+import { SimpleOpeningHoursTable } from './openingHours/types';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const Table = styled.table`
   margin: 1em;
@@ -39,7 +22,7 @@ const Table = styled.table`
 // const weekDays = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
 const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 
-const formatTimes = (times) =>
+const formatTimes = (times: string[]) =>
   times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-';
 
 const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
@@ -60,7 +43,16 @@ const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
 
 const OpeningHoursRenderer = ({ v }) => {
   const [isExpanded, toggle] = useToggleState(false);
-  const { daysTable, isOpen } = parseOpeningHours(v);
+
+  const { countryCode, center } = useFeatureContext().feature;
+
+  const openingHours = parseOpeningHours(v, center, {
+    country_code: countryCode,
+    state: '',
+  });
+  if (!openingHours) return null;
+  const { daysTable, isOpen } = openingHours;
+
   const { ph, ...days } = daysTable;
   const timesByDay = Object.values(days).map((times, idx) => ({
     times,
