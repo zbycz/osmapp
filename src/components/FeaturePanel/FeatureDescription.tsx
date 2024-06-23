@@ -1,19 +1,15 @@
-import IconButton from '@material-ui/core/IconButton';
 import React from 'react';
 import styled from 'styled-components';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import CloseIcon from '@material-ui/icons/Close';
-import { Box, Tooltip } from '@material-ui/core';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import { capitalize, useToggleState } from '../helpers';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import CloseIcon from '@mui/icons-material/Close';
+import { IconButton, Box, Tooltip, Grid, Typography } from '@mui/material';
+import { capitalize, isMobileDevice, useToggleState } from '../helpers';
 import { t, Translation } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';
 
 const StyledIconButton = styled(IconButton)`
   position: absolute !important; /* TODO mui styles takes precendence, why? */
-  margin-top: -10px !important;
-  margin-left: -8px !important;
+  margin-top: -5px !important;
 
   svg {
     font-size: 17px;
@@ -57,10 +53,11 @@ const Urls = () => {
 const FromOsm = () => (
   <Box m={1}>
     <Grid
+      component="div"
       container
       direction="row"
-      justify="flex-start"
       alignItems="flex-start"
+      justifyContent="flex-start"
     >
       <Grid item xs={3}>
         <Box mt={2}>
@@ -84,21 +81,23 @@ const FromOsm = () => (
   </Box>
 );
 
-export const FeatureDescription = ({ setAdvanced }) => {
+export const FeatureDescription = ({ advanced, setAdvanced }) => {
   const {
     feature: { osmMeta, nonOsmObject, point },
   } = useFeatureContext();
   const { type } = osmMeta;
 
-  const [isShown, toggle] = useToggleState(false);
+  const isMobile = isMobileDevice();
+  const [mobileTooltipShown, toggleMobileTooltip] = useToggleState(false);
 
   const onClick = (e) => {
-    if (!isShown) {
-      if (e.shiftKey && e.altKey) setAdvanced(true);
-    } else {
-      setAdvanced(false);
+    // Alt+Shift+click to enable FeaturePanel advanced mode
+    if (e.shiftKey && e.altKey) {
+      setAdvanced((v) => !v);
     }
-    toggle();
+    if (isMobile) {
+      toggleMobileTooltip();
+    }
   };
 
   if (point) {
@@ -110,19 +109,25 @@ export const FeatureDescription = ({ setAdvanced }) => {
 
   return (
     <div>
-      {!isShown &&
+      {!advanced &&
         t('featurepanel.feature_description_osm', {
           type: capitalize(type),
         })}
-      {isShown && <Urls />}
+      {advanced && <Urls />}
 
-      <Tooltip interactive arrow title={<FromOsm />} placement="top">
-        <StyledIconButton
-          title="Alt+Shift+click to enable advanced mode (show-all-tags, show-members, around-show-all)"
-          onClick={onClick}
-        >
-          {!isShown && <InfoOutlinedIcon fontSize="small" color="secondary" />}
-          {isShown && <CloseIcon fontSize="small" color="disabled" />}
+      <Tooltip
+        arrow
+        title={<FromOsm />}
+        placement="top"
+        open={isMobile ? mobileTooltipShown : undefined}
+      >
+        <StyledIconButton onClick={onClick}>
+          {!mobileTooltipShown && (
+            <InfoOutlinedIcon fontSize="small" color="secondary" />
+          )}
+          {mobileTooltipShown && (
+            <CloseIcon fontSize="small" color="disabled" />
+          )}
         </StyledIconButton>
       </Tooltip>
     </div>

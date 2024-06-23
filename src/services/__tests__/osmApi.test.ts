@@ -15,7 +15,7 @@ import * as idTaggingScheme from '../tagging/idTaggingScheme';
 import { requestLines } from '../../components/FeaturePanel/PublicTransport/requestRoutes';
 
 const osm = (item) => ({ elements: [item] });
-const overpass = {
+const OVERPASS_CENTER_RESPONSE = {
   elements: [{ center: { lat: 50, lon: 14 } }],
 };
 
@@ -52,7 +52,9 @@ describe('fetchFeature', () => {
     const fetchJson = jest
       .spyOn(fetch, 'fetchJson')
       .mockImplementation((url) =>
-        Promise.resolve(url.match(/overpass/) ? overpass : osm(way)),
+        Promise.resolve(
+          url.match(/overpass/) ? OVERPASS_CENTER_RESPONSE : osm(way),
+        ),
       );
 
     const feature = await fetchFeature('w51050330');
@@ -60,11 +62,23 @@ describe('fetchFeature', () => {
     expect(feature).toEqual(wayFeature);
   });
 
+  const OVERPASS_GEOM_RESPONSE = {
+    elements: [
+      {
+        geometry: {
+          coordinates: [15, 51],
+        },
+      },
+    ],
+  };
+
   it('should work for relation', async () => {
     const fetchJson = jest
       .spyOn(fetch, 'fetchJson')
       .mockImplementation((url) =>
-        Promise.resolve(url.match(/overpass/) ? overpass : osm(relation)),
+        Promise.resolve(
+          url.match(/overpass/) ? OVERPASS_GEOM_RESPONSE : osm(relation),
+        ),
       );
 
     const feature = await fetchFeature('r1234');
@@ -95,7 +109,9 @@ describe('fetchFeature', () => {
     const fetchJson = jest
       .spyOn(fetch, 'fetchJson')
       .mockImplementation((url) =>
-        Promise.resolve(url.match(/overpass/) ? overpass : osm(way)),
+        Promise.resolve(
+          url.match(/overpass/) ? OVERPASS_CENTER_RESPONSE : osm(way),
+        ),
       );
 
     const feature = await fetchFeature('w51050330');

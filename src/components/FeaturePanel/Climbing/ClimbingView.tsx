@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import SplitPane from 'react-split-pane';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { CircularProgress, IconButton, useTheme } from '@material-ui/core';
-
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { CircularProgress, IconButton, useTheme } from '@mui/material';
 import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
@@ -12,8 +11,10 @@ import { RoutesEditor } from './Editor/RoutesEditor';
 import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
-import { useScrollShadow } from './utils/useScrollShadow';
+import { useFeatureContext } from '../../utils/FeatureContext';
 import { RouteDistribution } from './RouteDistribution';
+import { getWikimediaCommonsKeys, removeFilePrefix } from './utils/photo';
+import { useScrollShadow } from './utils/useScrollShadow';
 
 const Container = styled.div`
   position: relative;
@@ -97,14 +98,14 @@ const ArrowExpanderContainer = styled.div`
   top: -6px;
 `;
 
-const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
+const ArrowExpanderButton = styled.div<{ $arrowOnTop?: boolean }>`
   background: ${({ theme }) => theme.palette.background.default};
   width: 30px;
   height: 30px;
   margin: auto;
   border-radius: 50%;
-  ${({ arrowOnTop }) =>
-    arrowOnTop
+  ${({ $arrowOnTop }) =>
+    $arrowOnTop
       ? undefined
       : `
   bottom: 0;
@@ -114,24 +115,24 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   display: flex;
 `;
 
-const BlurContainer = styled.div<{ isVisible: boolean }>`
+const BlurContainer = styled.div<{ $isVisible: boolean }>`
   -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
-  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
+  visibility: ${({ $isVisible }) => ($isVisible ? 'visible' : 'hidden')};
   height: 100%;
 `;
 
 const BackgroundContainer = styled.div<{
-  imageHeight: number;
-  imageUrl: string;
-  isVisible: boolean;
+  $imageHeight: number;
+  $imageUrl: string;
+  $isVisible: boolean;
 }>`
   transition: 0.3s all;
 
   background: #111
-    ${({ isVisible, imageUrl }) =>
-      isVisible ? `url(${imageUrl}) no-repeat` : ''};
+    ${({ $isVisible, $imageUrl }) =>
+      $isVisible ? `url(${$imageUrl}) no-repeat` : ''};
   background-size: cover;
   background-position: center;
   object-fit: cover;
@@ -147,7 +148,7 @@ const MainContent = () => (
   </>
 );
 
-export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
+export const ClimbingView = ({ photo }: { photo?: string }) => {
   const {
     imageSize,
     routeSelectedIndex,
@@ -165,6 +166,7 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
     setPhotoZoom,
     preparePhotosAndSet,
   } = useClimbingContext();
+  const { feature } = useFeatureContext();
 
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
@@ -213,7 +215,10 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
   };
   const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
 
-  preparePhotosAndSet(photoIndex);
+  const cragPhotos = getWikimediaCommonsKeys(feature.tags)
+    .map((key) => feature.tags[key])
+    .map(removeFilePrefix);
+  preparePhotosAndSet(cragPhotos, photo);
 
   useEffect(() => {
     setIsPhotoLoaded(false);
@@ -245,7 +250,7 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (
         <ArrowExpanderContainer>
-          <ArrowExpanderButton arrowOnTop={showArrowOnTop}>
+          <ArrowExpanderButton $arrowOnTop={showArrowOnTop}>
             <IconButton
               onClick={onSplitPaneHeightReset}
               color="primary"
@@ -271,9 +276,9 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
           pane1Style={{ maxHeight: '90%' }}
         >
           <BackgroundContainer
-            imageHeight={imageSize.height}
-            imageUrl={imageUrl}
-            isVisible={isPhotoLoaded}
+            $imageHeight={imageSize.height}
+            $imageUrl={imageUrl}
+            $isVisible={isPhotoLoaded}
           >
             <>
               {!isPhotoLoaded && (
@@ -281,7 +286,7 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
                   <CircularProgress color="primary" />
                 </LoadingContainer>
               )}
-              <BlurContainer isVisible={isPhotoLoaded}>
+              <BlurContainer $isVisible={isPhotoLoaded}>
                 <TransformWrapper
                   doubleClick={{
                     disabled: true,

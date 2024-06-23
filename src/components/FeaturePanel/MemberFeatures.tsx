@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Box, useTheme } from '@material-ui/core';
+import { Box, useTheme } from '@mui/material';
 import Router from 'next/router';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
@@ -13,6 +13,7 @@ import Maki from '../utils/Maki';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { getCommonsImageUrl } from '../../services/images/getWikiImage';
 import { useScrollShadow } from './Climbing/utils/useScrollShadow';
+import { getWikimediaCommonsKeys } from './Climbing/utils/photo';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -130,9 +131,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   const handleHover = () =>
     feature.center && setPreview({ ...feature, noPreviewButton: true });
 
-  const cragPhotoTags = Object.keys(feature.tags).filter((k) =>
-    k.startsWith('wikimedia_commons'),
-  );
+  const cragPhotoKeys = getWikimediaCommonsKeys(feature.tags);
 
   const {
     scrollElementRef,
@@ -158,14 +157,14 @@ const CragItem = ({ feature }: { feature: Feature }) => {
                   {feature.members.length} routes{' '}
                 </NumberOfRoutes>
               )}
-              {cragPhotoTags.length > 0 && (
-                <NumberOfRoutes>{cragPhotoTags.length} photos </NumberOfRoutes>
+              {cragPhotoKeys.length > 0 && (
+                <NumberOfRoutes>{cragPhotoKeys.length} photos </NumberOfRoutes>
               )}
             </Attributes>
           </Content>
           <ArrowIcon color="primary" />
         </HeadingRow>
-        {cragPhotoTags.length > 0 && (
+        {cragPhotoKeys.length > 0 && (
           <ShadowContainer>
             <ShadowLeft
               backgroundColor={theme.palette.background.elevation}
@@ -173,10 +172,10 @@ const CragItem = ({ feature }: { feature: Feature }) => {
               opacity={0.9}
             />
             <Gallery onScroll={onScroll} ref={scrollElementRef}>
-              {cragPhotoTags.map((cragPhotoTag) => {
+              {cragPhotoKeys.map((cragPhotoTag) => {
                 const photoPath = feature.tags[cragPhotoTag];
                 const url = getCommonsImageUrl(photoPath, 400);
-                return <Image src={url} />;
+                return <Image src={url} key={cragPhotoTag} />;
               })}
             </Gallery>
             <ShadowRight

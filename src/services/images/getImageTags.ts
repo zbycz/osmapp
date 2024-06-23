@@ -1,12 +1,12 @@
 import { getCommonsImageUrl } from './getWikiImage';
-import { FeatureTags, ImageTag, imageTagRegexp } from '../types';
+import { Feature, FeatureTags, ImageTag, imageTagRegexp } from '../types';
 
 const getSuffix = (y: string) => {
   const matches = y.match(/([^.0-9].*)$/);
   return matches ? matches[1] : '';
 };
 
-const parsePathString = (pathString?: string) =>
+const parsePathTag = (pathString?: string) =>
   pathString
     ?.split('|')
     .map((coords) => coords.split(',', 2))
@@ -29,15 +29,36 @@ const getImageUrl = (type: ImageTag['type'], v: string): string | null => {
   return null; // API call needed
 };
 
-export const getImageTags = (tags: FeatureTags): ImageTag[] =>
+const getPaths = (pathTag: string, shortId: string) => {
+  const path = parsePathTag(pathTag);
+  return path.length ? [{ path, shortId }] : [];
+};
+
+export const getImageTags = (tags: FeatureTags, shortId: string): ImageTag[] =>
   Object.keys(tags)
     .filter((k) => k.match(imageTagRegexp))
     .map((k) => {
       const type = k.match(imageTagRegexp)?.[1] as ImageTag['type']; // TODO wikipedia:xx
       const v = tags[k];
       const imageUrl = getImageUrl(type, v);
-      const path = tags[`${k}:path`];
-      const points = parsePathString(path);
-      return { type, k, v, imageUrl, path, points };
-    })
-    .sort((a, b) => b.points.length - a.points.length);
+      const pathTag = tags[`${k}:path`];
+      const paths = getPaths(pathTag, shortId);
+      return { type, k, v, imageUrl, pathTag, paths };
+    });
+
+export const mergeMemberImages = (
+  feature: Feature,
+  memberFeatures: Feature[],
+) => {
+  memberFeatures
+    .map((member) => member.imageTags)
+    .flat()
+    .forEach((imageTag) => {
+      const match = feature.imageTags.find((tag) => tag.v === imageTag.v);
+      if (match) {
+        match.paths.push(...imageTag.paths);
+      } else {
+        feature.imageTags.push(imageTag);
+      }
+    });
+};

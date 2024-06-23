@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import Router from 'next/router';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
@@ -50,7 +50,7 @@ export const FeaturePreview = () => {
       <ClosePanelButton
         onClick={onClose}
         right
-        style={{ margin: '-6px -36px 0 0' }}
+        style={{ margin: '-1px -36px 0 0' }}
       />
     </Wrapper>
   );

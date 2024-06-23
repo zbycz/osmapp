@@ -9,7 +9,7 @@ export default {
   show_more: 'Zobrazit více',
   show_less: 'Zobrazit méně',
 
-  'user.login': 'Přihlásit se',
+  'user.login_register': 'Přihlásit se / Registrovat',
   'user.logout': 'Odhlásit se',
 
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
@@ -41,7 +41,7 @@ export default {
   'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
     včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
     V plánu jsou funkce jako navigace či oblíbená místa.`,
-  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
+  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.special_thanks': `<ul>
         <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
@@ -59,6 +59,7 @@ export default {
   'searchbox.category': 'kategorie',
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
   'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
+  'searchbox.overpass_custom_query': 'vlastní dotaz',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',
@@ -91,7 +92,7 @@ export default {
   'opening_hours.today_closed': 'Dnes zavřeno',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'neděle|pondělí|úterý|středa|čtvrtek|pátek|sobota',
 
-  'map.github_title': 'GitHub',
+  'map.github_title': 'GitHub repozitář',
   'map.language_title': 'Změnit jazyk',
   'map.osm_copyright_tooltip': '(c) přispěvatelé OpenStreetMap.org<br> – svobodná mapová data světa 👌',
   'map.maptiler_copyright_tooltip':
@@ -100,6 +101,7 @@ export default {
   'map.more_button_title': 'Další možnosti…',
   'map.edit_link': 'Otevřít mapu v editoru iD',
   'map.about_link': 'O aplikaci',
+  'map.compass_tooltip': 'Potáhnutí (drag) kompasu spustí 3D. Pro reset klikněte.',
 
   'editdialog.add_heading': 'Přidat do OpenStreetMap',
   'editdialog.undelete_heading': 'Znovu přidat do OpenStreetMap',

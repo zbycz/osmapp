@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { LineInformation, requestLines } from './requestRoutes';
 import { PublicTransportWrapper } from './PublicTransportWrapper';
 import { FeatureTags } from '../../../services/types';
 import { LineNumber } from './LineNumber';
+import { DotLoader } from '../../helpers';
 
 interface PublicTransportProps {
   tags: FeatureTags;
@@ -56,11 +57,7 @@ const PublicTransportInner = () => {
   return (
     <div>
       {loading ? (
-        <>
-          <span className="dotloader">.</span>
-          <span className="dotloader">.</span>
-          <span className="dotloader">.</span>
-        </>
+        <DotLoader />
       ) : (
         <PublicTransportWrapper>
           {routes.map((line) => (

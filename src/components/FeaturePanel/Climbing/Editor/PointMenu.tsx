@@ -1,17 +1,18 @@
 import React from 'react';
+
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CloseIcon from '@mui/icons-material/Close';
+import CheckIcon from '@mui/icons-material/Check';
+import DeleteIcon from '@mui/icons-material/Delete';
 import {
-  DialogTitle,
-  Divider,
-  ListItemIcon,
-  MenuItem,
-  MenuList,
   Popover,
+  DialogTitle,
+  MenuList,
+  MenuItem,
+  ListItemIcon,
   Typography,
-} from '@material-ui/core';
-import RemoveCircleIcon from '@material-ui/icons/RemoveCircle';
-import CloseIcon from '@material-ui/icons/Close';
-import CheckIcon from '@material-ui/icons/Check';
-import DeleteIcon from '@material-ui/icons/Delete';
+  Divider,
+} from '@mui/material';
 import { PointType } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 

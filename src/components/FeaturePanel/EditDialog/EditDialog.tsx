@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import Button from '@material-ui/core/Button';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import useTheme from '@material-ui/core/styles/useTheme';
-import DialogContent from '@material-ui/core/DialogContent';
-import { CircularProgress } from '@material-ui/core';
+import {
+  Button,
+  CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  useMediaQuery,
+  useTheme,
+} from '@mui/material';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useToggleState } from '../../helpers';

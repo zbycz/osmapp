@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 import React, { useEffect, useState } from 'react';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
 
@@ -54,13 +54,13 @@ const RowContent = styled.div`
   display: flex;
   align-items: center;
 `;
-const HighlightedDropzone = styled.div<{ isActive: boolean }>`
+const HighlightedDropzone = styled.div<{ $isActive: boolean }>`
   position: absolute;
   width: 100%;
   margin-top: -2px;
   height: 4px;
-  background: ${({ isActive, theme }) =>
-    isActive ? theme.palette.climbing.active : 'transparent'};
+  background: ${({ $isActive, theme }) =>
+    $isActive ? theme.palette.climbing.active : 'transparent'};
   z-index: 1000000;
 `;
 const TableHeader = styled.div`
@@ -214,7 +214,7 @@ export const RouteListDndContent = ({ isEditable }) => {
         return (
           <React.Fragment key={item.id}>
             {draggedItem?.id > index && (
-              <HighlightedDropzone isActive={draggedOverIndex === index} />
+              <HighlightedDropzone $isActive={draggedOverIndex === index} />
             )}
             <RowWithDragHandler
               isDraggedOver={index === draggedOverIndex}
@@ -248,7 +248,7 @@ export const RouteListDndContent = ({ isEditable }) => {
               </MaxWidthContainer>
             </RowWithDragHandler>
             {draggedItem?.id <= index && (
-              <HighlightedDropzone isActive={draggedOverIndex === index} />
+              <HighlightedDropzone $isActive={draggedOverIndex === index} />
             )}
           </React.Fragment>
         );

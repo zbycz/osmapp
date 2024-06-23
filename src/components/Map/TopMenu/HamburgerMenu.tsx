@@ -1,24 +1,27 @@
-import BrightnessAutoIcon from '@material-ui/icons/BrightnessAuto';
-import Brightness4Icon from '@material-ui/icons/Brightness4';
-import BrightnessHighIcon from '@material-ui/icons/BrightnessHigh';
-import React, { forwardRef, useEffect, useState } from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
-import CreateIcon from '@material-ui/icons/Create';
-import HelpIcon from '@material-ui/icons/Help';
+import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
+import React, { useEffect, useState } from 'react';
+import { Menu, MenuItem } from '@mui/material';
+import CreateIcon from '@mui/icons-material/Create';
+import HelpIcon from '@mui/icons-material/Help';
 import styled from 'styled-components';
-import GetAppIcon from '@material-ui/icons/GetApp';
+import GetAppIcon from '@mui/icons-material/GetApp';
 import Router from 'next/router';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { useBoolState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { getIdEditorLink } from '../../../utils';
-import { useUserThemeContext } from '../../../helpers/theme';
-import { useOsmAuthContext } from '../../utils/OsmAuthContext';
-import { LoginIcon } from './LoginIcon';
+import { UserTheme, useUserThemeContext } from '../../../helpers/theme';
+import GithubIcon from '../../../assets/GithubIcon';
+import { LangSwitcher } from './LangSwitcher';
+import { HamburgerIconButton } from './HamburgerIconButton';
+
+const StyledGithubIcon = styled(GithubIcon)`
+  filter: ${({ theme }) => theme.palette.invertFilter};
+  margin: -2px 8px 0 0;
+`;
 
 const PencilIcon = styled(CreateIcon)`
   color: ${({ theme }) => theme.palette.action.active};
@@ -51,12 +54,6 @@ const StyledBrightness4Icon = styled(Brightness4Icon)`
 `;
 
 const StyledBrightnessHighIcon = styled(BrightnessHighIcon)`
-  color: ${({ theme }) => theme.palette.action.active};
-  margin: -2px 6px 0 0;
-  font-size: 17px !important;
-`;
-
-const StyledAccountCircleIcon = styled(AccountCircleIcon)`
   color: ${({ theme }) => theme.palette.action.active};
   margin: -2px 6px 0 0;
   font-size: 17px !important;
@@ -108,6 +105,17 @@ const AboutLink = ({ closeMenu }) => {
     </MenuItem>
   );
 };
+const GithubLink = ({ closeMenu }) => (
+  <MenuItem
+    href="https://github.com/zbycz/osmapp"
+    component="a"
+    target="_blank"
+    onClick={closeMenu}
+  >
+    <StyledGithubIcon width={14} height={14} />
+    {t('map.github_title')}
+  </MenuItem>
+);
 
 const InstallLink = ({ closeMenu }) => {
   const handleClick = () => {
@@ -126,17 +134,17 @@ const themeOptions = {
   system: {
     icon: StyledBrightnessAutoIcon,
     label: t('darkmode_auto'),
-    next: 'dark' as const,
+    next: 'dark' as UserTheme,
   },
   dark: {
     icon: StyledBrightness4Icon,
     label: t('darkmode_on'),
-    next: 'light' as const,
+    next: 'light' as UserTheme,
   },
   light: {
     icon: StyledBrightnessHighIcon,
     label: t('darkmode_off'),
-    next: 'system' as const,
+    next: 'system' as UserTheme,
   },
 };
 
@@ -153,45 +161,6 @@ const ThemeSelection = () => {
     </MenuItem>
   );
 };
-
-const UserLogin = forwardRef<HTMLLIElement, any>(({ closeMenu }, ref) => {
-  const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
-  const login = () => {
-    closeMenu();
-    handleLogin();
-  };
-  const logout = () => {
-    closeMenu();
-    setTimeout(() => {
-      handleLogout();
-    }, 100);
-  };
-
-  if (!osmUser) {
-    return (
-      <MenuItem ref={ref} onClick={login}>
-        <StyledAccountCircleIcon />
-        {t('user.login')}
-      </MenuItem>
-    );
-  }
-
-  return (
-    <>
-      <MenuItem
-        component="a"
-        href={`https://www.openstreetmap.org/user/${osmUser}`}
-        target="_blank"
-        rel="noopener"
-        onClick={closeMenu}
-      >
-        <StyledAccountCircleIcon ref={ref} />
-        <strong>{osmUser}</strong>
-      </MenuItem>
-      <MenuItem onClick={logout}>{t('user.logout')}</MenuItem>
-    </>
-  );
-});
 
 // TODO custom Item components are not keyboard accesible
 // seems like a bug in material-ui
@@ -211,28 +180,19 @@ export const HamburgerMenu = () => {
           vertical: 'bottom',
           horizontal: 'right',
         }}
-        getContentAnchorEl={null}
         open={opened}
         onClose={close}
       >
-        <UserLogin closeMenu={close} />
-        <StyledDivider />
         <ThemeSelection />
         <EditLink closeMenu={close} />
+        <StyledDivider />
         <InstallLink closeMenu={close} />
         <AboutLink closeMenu={close} />
+        <GithubLink closeMenu={close} />
+        <StyledDivider />
+        <LangSwitcher />
       </Menu>
-      <LoginIcon onClick={open} />
-      <IconButton
-        ref={anchorRef}
-        aria-controls="hamburger-menu"
-        aria-haspopup="true"
-        title={t('map.more_button_title')}
-        color="secondary"
-        onClick={open}
-      >
-        <MenuIcon />
-      </IconButton>
+      <HamburgerIconButton anchorRef={anchorRef} onClick={open} />
     </>
   );
 };

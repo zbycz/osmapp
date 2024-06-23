@@ -1,13 +1,15 @@
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect } from 'react';
-import InputBase from '@material-ui/core/InputBase';
+import { Autocomplete, InputBase } from '@mui/material';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { renderOptionFactory, buildPhotonAddress } from './renderOptionFactory';
+import { renderOptionFactory } from './renderOptionFactory';
 import { t } from '../../services/intl';
-import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
+import { onSelectedFactory } from './onSelectedFactory';
 import { useMobileMode } from '../helpers';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { onHighlightFactory } from './onHighlightFactory';
+import { buildPhotonAddress } from './options/geocoder';
+import { useMapCenter } from './utils';
 
 const useFocusOnSlash = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -44,6 +46,9 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   return (
     <InputBase
       {...restParams} // eslint-disable-line react/jsx-props-no-spreading
+      sx={{
+        height: '47px',
+      }}
       inputRef={inputRef}
       placeholder={t('searchbox.placeholder')}
       onChange={onChange}
@@ -61,6 +66,7 @@ export const AutocompleteInput = ({
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
   const { bbox, showToast } = useMapStateContext();
+  const mapCenter = useMapCenter();
   const mobileMode = useMobileMode();
   const { currentTheme } = useUserThemeContext();
   return (
@@ -73,13 +79,13 @@ export const AutocompleteInput = ({
       getOptionLabel={(option) =>
         option.properties?.name ||
         option.preset?.presetForSearch?.name ||
-        (option.overpass &&
-          Object.entries(option.overpass)
-            ?.map(([k, v]) => `${k}=${v}`)
-            .join(' ')) ||
+        option.overpass?.inputValue ||
         (option.star && option.star.label) ||
-        (option.loader ? '' : buildPhotonAddress(option.properties))
+        (option.loader && '') ||
+        (option.properties && buildPhotonAddress(option.properties)) ||
+        ''
       }
+      getOptionKey={(option) => JSON.stringify(option)}
       onChange={onSelectedFactory(
         setFeature,
         setPreview,
@@ -104,7 +110,7 @@ export const AutocompleteInput = ({
           autocompleteRef={autocompleteRef}
         />
       )}
-      renderOption={renderOptionFactory(inputValue, currentTheme)}
+      renderOption={renderOptionFactory(inputValue, currentTheme, mapCenter)}
     />
   );
 };

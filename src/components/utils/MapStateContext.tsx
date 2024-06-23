@@ -1,6 +1,5 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { Snackbar } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
+import { Snackbar, Alert } from '@mui/material';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config';
 import { PROJECT_ID } from '../../services/project';
@@ -82,7 +81,13 @@ export const MapStateProvider = ({ children, initialMapView }) => {
   return (
     <MapStateContext.Provider value={mapState}>
       {children}
-      <Snackbar open={open} autoHideDuration={10000} onClose={handleClose}>
+      <Snackbar
+        // TODO: replace by SnackbarContext
+        open={open}
+        autoHideDuration={10000}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        onClose={handleClose}
+      >
         <Alert onClose={handleClose} severity={msg?.type} variant="filled">
           {msg?.content}
         </Alert>

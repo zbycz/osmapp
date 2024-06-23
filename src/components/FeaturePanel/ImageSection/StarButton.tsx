@@ -1,19 +1,12 @@
-import Star from '@material-ui/icons/Star';
-import StarBorder from '@material-ui/icons/StarBorder';
-import React, { useEffect, useState } from 'react';
-import { Tooltip } from '@material-ui/core';
+import Star from '@mui/icons-material/Star';
+import StarBorder from '@mui/icons-material/StarBorder';
+import React from 'react';
+import { Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
 import { useStarsContext } from '../../utils/StarsContext';
 import { StyledActionButton } from './utils';
 import { useUserThemeContext } from '../../../helpers/theme';
-
-const useIsClient = () => {
-  const [isClient, setIsClient] = useState(false);
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-  return isClient;
-};
+import { useIsClient } from '../../helpers';
 
 const StarButtonDarkPure = ({ isStarred, toggleStar }) => (
   <StyledActionButton onClick={toggleStar}>
@@ -49,7 +42,7 @@ const StarButtonPure = ({ isStarred, toggleStar }) => {
   const color = currentTheme === 'dark' ? '#fff' : '#000';
 
   return (
-    <StyledActionButton onClick={toggleStar} color={color}>
+    <StyledActionButton onClick={toggleStar} $color={color}>
       {isStarred ? (
         <Tooltip arrow title={t('featurepanel.favorites_unsave_button')}>
           <Star htmlColor={color} />

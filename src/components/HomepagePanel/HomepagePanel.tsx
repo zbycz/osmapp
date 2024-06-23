@@ -1,11 +1,9 @@
 import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import Link from 'next/link';
-import { Button } from '@material-ui/core';
-import GetAppIcon from '@material-ui/icons/GetApp';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Typography, Grid, Button } from '@mui/material';
 import {
   PanelFooter,
   PanelScrollbars,
@@ -56,11 +54,11 @@ const StyledLogoOsmapp = styled(LogoOsmapp)`
   margin-top: 3em;
 `;
 
-const Center = styled.div`
+const Center = styled.div<{ $mb?: boolean; $mb4?: boolean; $mt?: boolean }>`
   text-align: center;
-  ${({ mb }) => mb && 'margin-bottom: 2em;'}
-  ${({ mb4 }) => mb4 && 'margin-bottom: 4em;'}
-  ${({ mt }) => mt && 'margin-top: 2em;'}
+  ${({ $mb }) => $mb && 'margin-bottom: 2em;'}
+  ${({ $mb4 }) => $mb4 && 'margin-bottom: 4em;'}
+  ${({ $mt }) => $mt && 'margin-top: 2em;'}
 `;
 
 const Spacer = styled.div`
@@ -106,7 +104,7 @@ export const HomepagePanel = () => {
         <ClosePanelButton right onClick={persistHideHomepage} />
         <Content>
           <div>
-            <Center mb>
+            <Center $mb>
               {isClimbing ? (
                 <LogoOpenClimbing
                   width={100}
@@ -141,7 +139,7 @@ export const HomepagePanel = () => {
             </Typography>
 
             {isMobileMode && (
-              <Center mt mb4>
+              <Center $mt $mb4>
                 <Button
                   variant="contained"
                   color="primary"
@@ -153,7 +151,7 @@ export const HomepagePanel = () => {
               </Center>
             )}
 
-            <Center mb>
+            <Center $mb>
               <img
                 src={
                   isClimbing
@@ -175,8 +173,8 @@ export const HomepagePanel = () => {
             <Grid
               container
               direction="row"
-              justify="flex-start"
               alignItems="flex-start"
+              justifyContent="flex-start"
             >
               <Grid item xs={4}>
                 <img
@@ -217,7 +215,7 @@ export const HomepagePanel = () => {
               <Translation id="homepage.github_link" />
             </Typography>
 
-            <Center mb mt>
+            <Center $mb $mt>
               <Button
                 variant="outlined"
                 startIcon={<GetAppIcon />}

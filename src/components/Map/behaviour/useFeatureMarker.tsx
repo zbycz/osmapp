@@ -16,10 +16,12 @@ const PREVIEW_MARKER = {
 };
 
 const setPoiIconVisibility = (map, feature, hideIcon) => {
-  if (!feature) return;
+  const style = map.getStyle();
+
+  if (!feature || !style) return;
 
   const results = map.queryRenderedFeatures(undefined, {
-    layers: layersWithOsmId,
+    layers: layersWithOsmId(style),
     filter: ['==', ['id'], convertOsmIdToMapId(feature.osmMeta)],
     validate: false,
   });
@@ -59,7 +61,7 @@ export const useFeatureMarker = (map) => {
   useUpdateFeatureMarker(map, feature);
   useUpdatePreviewMarker(map, preview);
 
-  // hide the icon when tiles are fetched TODO sometimes broken (zoom problem) (also maybe causes webgl blackout)
+  // hide the icon when tiles are fetched TODO sometimes broken (zoom problem)
   useEffect(() => {
     if (map) {
       const handle = setInterval(() => {

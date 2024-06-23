@@ -14,7 +14,7 @@ export default {
   show_more: 'Show more',
   show_less: 'Show less',
 
-  'user.login': 'Login',
+  'user.login_register': 'Login / register',
   'user.logout': 'Logout',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',
@@ -49,7 +49,7 @@ export default {
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
      including editing options. <br/>Currently it includes various map layers, POI editing and a basic search engine.
      Features such as navigation or favorite places are planned.`,
-  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
+  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
   'homepage.special_thanks': `<ul>
         <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
@@ -67,6 +67,7 @@ export default {
   'searchbox.category': 'category',
   'searchbox.overpass_success': 'Results found: __count__',
   'searchbox.overpass_error': 'Error fetching results. __message__',
+  'searchbox.overpass_custom_query': 'custom query',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
@@ -100,7 +101,7 @@ export default {
   'opening_hours.today_closed': 'Closed today',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',
 
-  'map.github_title': 'GitHub',
+  'map.github_title': 'GitHub repository',
   'map.language_title': 'Change language',
   'map.osm_copyright_tooltip': '(c) OpenStreetMap.org contributors<br> – free map data of the Earth 👌',
   'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> – vector tiles, hosting, outdoor map<br>Big thanks for supporting this project! 🙂 ',
@@ -108,6 +109,7 @@ export default {
   'map.more_button_title': 'More options…',
   'map.edit_link': 'Edit this area in iD editor',
   'map.about_link': 'About this app',
+  'map.compass_tooltip': 'Drag to enter 3D. Click to reset.',
 
   'editdialog.add_heading': 'Add to OpenStreetMap',
   'editdialog.undelete_heading': 'Add again to OpenStreetMap',

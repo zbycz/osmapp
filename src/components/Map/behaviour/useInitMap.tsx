@@ -2,9 +2,8 @@ import React from 'react';
 import maplibregl from 'maplibre-gl';
 import { basicStyle } from '../styles/basicStyle';
 import { PersistedScaleControl } from './PersistedScaleControl';
-import { setUpHover } from './featureHover';
-import { layersWithOsmId } from '../helpers';
 import { setGlobalMap } from '../../../services/mapStorage';
+import { COMPASS_TOOLTIP } from '../useAddTopRightControls';
 
 export const useInitMap = () => {
   const mapRef = React.useRef(null);
@@ -18,12 +17,14 @@ export const useInitMap = () => {
       style: basicStyle,
       attributionControl: false,
       refreshExpiredTiles: false,
+      locale: {
+        'NavigationControl.ResetBearing': COMPASS_TOOLTIP,
+      },
     });
     setGlobalMap(map);
     setMapInState(map);
 
     map.addControl(PersistedScaleControl as any);
-    setUpHover(map, layersWithOsmId);
 
     map.scrollZoom.setWheelZoomRate(1 / 200); // 1/450 is default, bigger value = faster
 

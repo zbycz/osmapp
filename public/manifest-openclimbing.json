@@ -1,7 +1,16 @@
 {
-  "name": "openclimbing.org",
-  "short_name": "openclimbing",
-  "description": "A universal open-source climbing app",
+  "name": "OpenClimbing.org",
+  "short_name": "OpenClimbing",
+  "description": "Free wiki climbing map",
+  "theme_color": "#eb5757",
+  "background_color": "#f8f4f0",
+  "start_url": "/start",
+  "display": "standalone",
+  "url_handlers": [
+    {
+      "origin": "https://openclimbing.org"
+    }
+  ],
   "icons": [
     {
       "src": "/openclimbing/logo/pwa/maskable_x48.png",
@@ -74,16 +83,6 @@
       "sizes": "1024x1024",
       "type": "image/png",
       "purpose": "any"
-    }
-  ],
-  "theme_color": "#eb5757",
-  "background_color": "#f8f4f0",
-  "start_url": "/last-url",
-  "display": "standalone",
-  "orientation": "any",
-  "url_handlers": [
-    {
-      "origin": "https://openclimbing.org"
     }
   ]
 }

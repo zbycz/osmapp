@@ -20,6 +20,7 @@ import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
 import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
+import { SnackbarProvider } from '../utils/SnackbarContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -34,6 +35,7 @@ export const getMapViewFromHash = () => {
     .substr(1)
     .split('/')
     .map(parseFloat)
+    .filter((num) => !Number.isNaN(num))
     .map((num) => num.toString());
   return view?.length === 3 ? view : undefined;
 };
@@ -73,7 +75,7 @@ const IndexWithProviders = () => {
   // TODO add correct error boundaries
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
-  const photoIndex = Number(router.query.all?.[3]);
+  const photo = router.query.all?.[3];
   return (
     <>
       <SearchBox />
@@ -81,7 +83,7 @@ const IndexWithProviders = () => {
       {featureShown && <FeaturePanel />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
-          <ClimbingDialog photoIndex={photoIndex} />
+          <ClimbingDialog photo={photo} />
         </ClimbingContextProvider>
       )}
 
@@ -97,17 +99,19 @@ const IndexWithProviders = () => {
 const App = ({ featureFromRouter, initialMapView, cookies }) => {
   const mapView = getMapViewFromHash() || initialMapView;
   return (
-    <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>
-      <MapStateProvider initialMapView={mapView}>
-        <OsmAuthProvider cookies={cookies}>
-          <StarsProvider>
-            <EditDialogProvider /* TODO supply router.query */>
-              <IndexWithProviders />
-            </EditDialogProvider>
-          </StarsProvider>
-        </OsmAuthProvider>
-      </MapStateProvider>
-    </FeatureProvider>
+    <SnackbarProvider>
+      <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>
+        <MapStateProvider initialMapView={mapView}>
+          <OsmAuthProvider cookies={cookies}>
+            <StarsProvider>
+              <EditDialogProvider /* TODO supply router.query */>
+                <IndexWithProviders />
+              </EditDialogProvider>
+            </StarsProvider>
+          </OsmAuthProvider>
+        </MapStateProvider>
+      </FeatureProvider>
+    </SnackbarProvider>
   );
 };
 App.getInitialProps = async (ctx) => {

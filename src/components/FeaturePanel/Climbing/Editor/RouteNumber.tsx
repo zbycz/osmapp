@@ -12,9 +12,9 @@ type Props = {
   osmId: string;
 };
 
-const Text = styled.text<{ scale: number }>`
+const Text = styled.text<{ $scale: number }>`
   user-select: none;
-  font-size: ${({ scale }) => 12 / scale}px;
+  font-size: ${({ $scale }) => 12 / $scale}px;
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
 `;

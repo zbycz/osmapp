@@ -1,6 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 
 export const useToggleState = (
   initialState: boolean,
@@ -96,3 +96,32 @@ export const isDesktop = '(min-width: 500px)';
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>
   isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error
+
+export const useIsClient = () => {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  return isClient;
+};
+
+export const DotLoader = () => (
+  <>
+    <span className="dotloader">.</span>
+    <span className="dotloader">.</span>
+    <span className="dotloader">.</span>
+  </>
+);
+
+export const ClientOnly = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? children : null;
+};
+
+export const isImperial = () =>
+  window.localStorage.getItem('imperial') === 'yes';
+
+export const toggleImperial = () => {
+  localStorage.setItem('imperial', isImperial() ? '' : 'yes');
+};

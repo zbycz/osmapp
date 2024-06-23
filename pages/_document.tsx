@@ -6,9 +6,9 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document';
-import { ServerStyleSheets } from '@material-ui/core/styles';
 import { ServerStyleSheet } from 'styled-components';
 import type { DocumentContext } from 'next/dist/shared/lib/utils';
+import { ServerStyleSheets } from '@mui/styles';
 import { getServerIntl } from '../src/services/intlServer';
 import { InjectIntl, setIntl } from '../src/services/intl';
 import { FaviconsOsmapp } from '../src/helpers/FaviconsOsmapp';

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Tooltip, Typography } from '@material-ui/core';
-import RestaurantIcon from '@material-ui/icons/Restaurant';
+import { Tooltip, Typography } from '@mui/material';
+import RestaurantIcon from '@mui/icons-material/Restaurant';
 import styled from 'styled-components';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
+import { DotLoader } from '../../helpers';
 
 const useLoadingState = () => {
   const [rating, setRating] = useState<number>();
@@ -66,13 +67,7 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
   }, []);
 
   if (loading) {
-    return (
-      <>
-        <span className="dotloader" />
-        <span className="dotloader" />
-        <span className="dotloader" />
-      </>
-    );
+    return <DotLoader />;
   }
 
   return (
@@ -81,7 +76,6 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
       <Wrapper>
         <Tooltip
           arrow
-          interactive
           title="Food Hygiene Rating Scheme (only in UK)"
           placement="bottom-end"
         >

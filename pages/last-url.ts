@@ -1,13 +1,6 @@
-const LastUrl = () => null;
+// Remove this file after 9/2024
+// superseded by pages/start.ts
 
-export const getServerSideProps = async ({ req, res }) => {
-  res.setHeader('Location', req.cookies['last-url'] ?? '/');
-  res.statusCode = 302;
-  res.end();
+export { getServerSideProps } from './start';
 
-  return {
-    props: {},
-  };
-};
-
-export default LastUrl;
+export default () => null;

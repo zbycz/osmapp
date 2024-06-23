@@ -20,13 +20,14 @@ export type Image = ImageUrls | LoadingImage | NoImage;
 export const imageTagRegexp =
   /^(image|wikimedia_commons|wikidata|wikipedia|wikipedia:[a-z+]|website)(:?\d*)$/;
 
+export type ImagePath = { x: number; y: number; suffix: string }[];
 export type ImageTag = {
   type: 'image' | 'wikimedia_commons' | 'wikidata' | 'wikipedia' | 'website';
   k: string;
   v: string;
   imageUrl: string | null; // null = API call needed
-  path: string;
-  points: { x: number; y: number; suffix: string }[];
+  pathTag: string | undefined;
+  paths: { path: ImagePath; shortId: string }[];
 };
 
 // coordinates in geojson format: [lon, lat] = [x,y]

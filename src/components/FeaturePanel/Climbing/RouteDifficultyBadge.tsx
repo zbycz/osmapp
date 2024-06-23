@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Tooltip } from '@material-ui/core';
+import { Tooltip } from '@mui/material';
 import { GradeSystem, RouteDifficulty } from './types';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import {
@@ -9,14 +9,14 @@ import {
   getGradeSystemName,
 } from './utils/routeGrade';
 
-const Container = styled.div<{ color: string }>`
+const Container = styled.div<{ $color: string }>`
   border-radius: 12px;
   padding: 2px 8px;
-  background-color: ${({ color }) => color};
+  background-color: ${({ $color }) => $color};
   display: inline-block;
   font-size: 13px;
   font-weight: 900;
-  color: ${({ theme, color }) => theme.palette.getContrastText(color)};
+  color: ${({ theme, $color }) => theme.palette.getContrastText($color)};
   font-family: monospace;
 `;
 
@@ -53,7 +53,7 @@ export const RouteDifficultyBadge = ({
       title={`${gradeValue} according to ${gradeSystemName ?? '?'}`}
       enterDelay={1500}
     >
-      <Container color={colorByDifficulty}>{gradeValue}</Container>
+      <Container $color={colorByDifficulty}>{gradeValue}</Container>
     </Tooltip>
   );
 };

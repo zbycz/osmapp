@@ -2,10 +2,11 @@ import React from 'react';
 import styled from 'styled-components';
 import { icons } from '../../assets/icons';
 
-const MakiImg = styled.img`
+const MakiImg = styled.img<{ $invert: boolean }>`
   line-height: 14px;
   margin-right: 6px;
-  ${({ invert }) => invert && 'filter: invert(100%);'}
+  user-select: none;
+  ${({ $invert }) => $invert && 'filter: invert(100%);'}
 `;
 const Maki = ({
   ico,
@@ -22,7 +23,7 @@ const Maki = ({
       src={`/icons/${icon}_11.svg`}
       alt={ico}
       title={title ?? ico}
-      invert={invert}
+      $invert={invert}
       style={{ ...style, verticalAlign: middle ? 'middle' : undefined }}
       width={size}
       height={size}

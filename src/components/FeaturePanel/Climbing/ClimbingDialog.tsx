@@ -1,13 +1,8 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-} from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon from '@mui/icons-material/Add';
 import Router from 'next/router';
+import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
 import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingDialogHeader } from './ClimbingDialogHeader';
@@ -21,7 +16,7 @@ const Flex = styled.div`
   width: 100%;
 `;
 
-export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
+export const ClimbingDialog = ({ photo }: { photo?: string }) => {
   const contentRef = useRef(null);
 
   const {
@@ -34,7 +29,7 @@ export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
   } = useClimbingContext();
   const { feature } = useFeatureContext();
   const handleSave = useGetHandleSave(setIsEditMode);
-
+  // const { routes } = useClimbingContext();
   const machine = getMachine();
 
   const onScroll = (e) => {
@@ -46,6 +41,16 @@ export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
   };
 
   const handleClose = () => {
+    // @TODO update saved data first
+    // const isDataChanged = getChanges(routes).length > 0;
+    // if (
+    //   isDataChanged &&
+    //   window.confirm(
+    //     'Are you sure you want to discard changes without saving?',
+    //   ) === false
+    // ) {
+    //   return;
+    // }
     Router.push(`${getOsmappLink(feature)}${window.location.hash}`);
   };
   const handleCancel = () => {
@@ -69,34 +74,31 @@ export const ClimbingDialog = ({ photoIndex }: { photoIndex?: number }) => {
         ref={contentRef}
         onScroll={onScroll}
       >
-        <ClimbingView photoIndex={photoIndex} />
+        <ClimbingView photo={photo} />
       </DialogContent>
 
       {isEditMode && (
         <DialogActions>
           <Flex>
-            {isEditMode && (
-              <Button
-                onClick={onNewRouteCreate}
-                color="primary"
-                startIcon={<AddIcon />}
-              >
-                Add new route
-              </Button>
-            )}
+            <div>
+              {isEditMode && showDebugMenu && (
+                <Button
+                  onClick={onNewRouteCreate}
+                  color="primary"
+                  startIcon={<AddIcon />}
+                >
+                  Add new route
+                </Button>
+              )}
+            </div>
             <div>
               <Button autoFocus onClick={handleCancel}>
                 Cancel
               </Button>
-              {showDebugMenu && (
-                <Button
-                  onClick={handleSave}
-                  variant="contained"
-                  color="primary"
-                >
-                  Save
-                </Button>
-              )}
+
+              <Button onClick={handleSave} variant="contained" color="primary">
+                Save
+              </Button>
             </div>
           </Flex>
         </DialogActions>

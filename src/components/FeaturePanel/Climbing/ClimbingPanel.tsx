@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Button, CircularProgress } from '@material-ui/core';
 import Router from 'next/router';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
+import { Button, CircularProgress } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RoutesLayer } from './Editor/RoutesLayer';
@@ -16,9 +16,12 @@ import { StarButton } from '../ImageSection/StarButton';
 import { OsmError } from '../OsmError';
 import { Properties } from '../Properties/Properties';
 import { PoiDescription } from '../ImageSection/PoiDescription';
+import { ImageSlider } from '../ImagePane/ImageSlider';
+import { ClimbingParentLink } from '../ParentLink';
 import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
-import { ClimbingParentLink } from '../ParentLink';
+import { getWikimediaCommonsKeys, removeFilePrefix } from './utils/photo';
+import { SuggestEdit } from '../SuggestEdit';
 
 const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
@@ -53,10 +56,10 @@ const Heading = styled.div`
   line-height: 0.98;
 `;
 
-const Thumbnail = styled.img<{ isLoading: boolean }>`
+const Thumbnail = styled.img<{ $isLoading: boolean }>`
   width: 100%;
   position: absolute;
-  visibility: ${({ isLoading }) => (isLoading ? 'hidden' : 'visible')};
+  visibility: ${({ $isLoading }) => ($isLoading ? 'hidden' : 'visible')};
 `;
 
 const LoadingContainer = styled.div`
@@ -85,8 +88,10 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const onFullScreenClick = () => {
     Router.push(`${getOsmappLink(feature)}/climbing${window.location.hash}`);
   };
-
-  preparePhotosAndSet();
+  const cragPhotos = getWikimediaCommonsKeys(feature.tags)
+    .map((key) => feature.tags[key])
+    .map(removeFilePrefix);
+  preparePhotosAndSet(cragPhotos);
 
   const imageUrl = getCommonsImageUrl(`File:${photoPath}`, 500);
 
@@ -113,7 +118,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
                 src={imageUrl}
                 ref={photoRef}
                 onLoad={onPhotoLoad}
-                isLoading={isPhotoLoading}
+                $isLoading={isPhotoLoading}
               />
 
               {!isPhotoLoading && <RoutesLayer onClick={() => null} />}
@@ -135,10 +140,13 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
 
           <RouteDistribution />
           <RouteList />
+          <ImageSlider />
 
           <div style={{ padding: '35px 15px 5px' }}>
             <Properties showTags={showTagsTable} />
           </div>
+
+          <SuggestEdit />
 
           {/* @TODO unite with parent panel */}
           <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>

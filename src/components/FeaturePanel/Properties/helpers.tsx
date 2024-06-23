@@ -1,7 +1,7 @@
 import styled from 'styled-components';
-import Button from '@material-ui/core/Button';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import { Button } from '@mui/material';
+import ChevronRight from '@mui/icons-material/ChevronRight';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import React from 'react';
 import { t } from '../../../services/intl';
 

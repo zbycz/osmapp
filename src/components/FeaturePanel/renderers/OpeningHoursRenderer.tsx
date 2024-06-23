@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import AccessTime from '@material-ui/icons/AccessTime';
+import AccessTime from '@mui/icons-material/AccessTime';
 import { useToggleState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { ToggleButton } from '../helpers/ToggleButton';

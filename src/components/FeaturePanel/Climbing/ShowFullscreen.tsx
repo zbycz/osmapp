@@ -1,8 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import ZoomInIcon from '@material-ui/icons/ZoomIn';
-
-import { Size } from './types';
+import ZoomInIcon from '@mui/icons-material/ZoomIn';
 
 export const FullscreenIconContainer = styled.div`
   position: absolute;
@@ -12,7 +10,7 @@ export const FullscreenIconContainer = styled.div`
   visibility: hidden;
 `;
 
-const CenteredContainer = styled.div<{ imageSize: Size }>`
+const CenteredContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,11 +1,11 @@
+import React from 'react';
 import {
   Checkbox,
+  ListItem,
   ListItemSecondaryAction,
+  ListItemText,
   Typography,
-} from '@material-ui/core';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import React from 'react';
+} from '@mui/material';
 import { LayerIcon, Spacer, StyledList } from './helpers';
 import { Layer } from '../utils/MapStateContext';
 import { dotToOptionalBr } from '../helpers';
@@ -47,7 +47,7 @@ export const Overlays = ({
           );
 
         return (
-          <ListItem button onClick={toggleOverlayLayer}>
+          <ListItem button onClick={toggleOverlayLayer} key={key}>
             <LayerIcon Icon={Icon} />
             <ListItemText primary={dotToOptionalBr(name)} />
             <ListItemSecondaryAction>

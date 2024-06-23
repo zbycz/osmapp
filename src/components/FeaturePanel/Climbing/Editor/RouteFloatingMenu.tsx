@@ -1,23 +1,24 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import CheckIcon from '@material-ui/icons/Check';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
-import DeleteIcon from '@material-ui/icons/Delete';
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import CheckIcon from '@mui/icons-material/Check';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+
 import {
-  Button,
-  ButtonGroup,
   Dialog,
-  DialogActions,
+  DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogTitle,
-} from '@material-ui/core';
+  DialogActions,
+  Button,
+  ButtonGroup,
+} from '@mui/material';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PointType } from '../types';
 
-const ScaleContainer = styled.div<{ scale: number }>`
-  transform: scale(${({ scale }) => 1 / scale});
+const ScaleContainer = styled.div<{ $scale: number }>`
+  transform: scale(${({ $scale }) => 1 / $scale});
 `;
 
 export const RouteFloatingMenu = () => {
@@ -119,7 +120,7 @@ export const RouteFloatingMenu = () => {
       </Dialog>
 
       {showTypeMenu ? (
-        <ScaleContainer scale={photoZoom.scale}>
+        <ScaleContainer $scale={photoZoom.scale}>
           <ButtonGroup variant="contained" size="small" color="primary">
             <Button
               onClick={() => {
@@ -172,7 +173,7 @@ export const RouteFloatingMenu = () => {
           </ButtonGroup>
         </ScaleContainer>
       ) : (
-        <ScaleContainer scale={photoZoom.scale}>
+        <ScaleContainer $scale={photoZoom.scale}>
           <ButtonGroup variant="contained" size="small" color="primary">
             {machine.currentStateName === 'pointMenu' &&
               routes[routeSelectedIndex] &&

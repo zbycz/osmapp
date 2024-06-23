@@ -32,7 +32,7 @@ export const RouteInDifferentPhotos = ({
     stopPropagation(e);
   };
 
-  const photos = Object.keys(route.paths);
+  const photos = route.paths ? Object.keys(route.paths) : [];
   return photos.length > 0 ? (
     <Container>
       <Label>Available in photos:</Label>

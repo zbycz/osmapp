@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
-import { IconButton, TextField, Tooltip } from '@material-ui/core';
 import { debounce } from 'lodash';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import CheckIcon from '@material-ui/icons/Check';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import CheckIcon from '@mui/icons-material/Check';
+import { TextField, Tooltip, IconButton } from '@mui/material';
 import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { emptyRoute } from '../utils/emptyRoute';
@@ -22,9 +22,8 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
-  width: ${({ width }) => width}px;
-  text-align: ${({ align }) => align};
+const Cell = styled.div<{ $width?: number }>`
+  ${({ $width }) => ($width ? `width: ${$width}px;` : '')}
 `;
 const NameCell = styled(Cell)`
   flex: 1;
@@ -39,15 +38,15 @@ const RouteNumberCell = styled(Cell)`
   color: #999;
   margin-left: 8px;
 `;
-const ExpandIcon = styled(ExpandMoreIcon)<{ isExpanded: boolean }>`
-  transform: rotate(${({ isExpanded }) => (isExpanded ? 180 : 0)}deg);
+const ExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean }>`
+  transform: rotate(${({ $isExpanded }) => ($isExpanded ? 180 : 0)}deg);
   transition: all 0.3s ease !important;
 `;
 
-const Row = styled.div<{ isExpanded?: boolean }>`
+const Row = styled.div<{ $isExpanded?: boolean }>`
   min-height: 40px;
-  background-color: ${({ isExpanded, theme }) =>
-    isExpanded ? theme.palette.action.selected : 'none'};
+  background-color: ${({ $isExpanded, theme }) =>
+    $isExpanded ? theme.palette.action.selected : 'none'};
   overflow: hidden;
 
   width: 100%;
@@ -91,7 +90,9 @@ export const RenderListRow = ({
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [routeSelectedIndex]);
-  const osmId = getShortId(route.feature?.osmMeta) ?? null;
+  const osmId = route.feature?.osmMeta
+    ? getShortId(route.feature.osmMeta)
+    : null;
   const isSelected = isRouteSelected(index);
   const photoInfoForRoute = getPhotoInfoForRoute(index);
 
@@ -131,7 +132,7 @@ export const RenderListRow = ({
   return (
     <Container ref={ref}>
       <Row style={{ cursor: 'pointer' }}>
-        <RouteNumberCell component="th" scope="row" width={30}>
+        <RouteNumberCell $width={30}>
           <RouteNumber
             isSelected={isSelected}
             photoInfoForRoute={photoInfoForRoute}
@@ -159,14 +160,14 @@ export const RenderListRow = ({
             </Tooltip>
           )}
         </NameCell>
-        <DifficultyCell width={50}>
+        <DifficultyCell $width={50}>
           <RouteDifficultyBadge
             routeDifficulty={tempRoute.difficulty}
             selectedRouteSystem={selectedRouteSystem}
           />
         </DifficultyCell>
 
-        <Cell width={50}>
+        <Cell $width={50}>
           <IconButton
             onClick={(e) => {
               setRoutesExpanded(toggleElementInArray(routesExpanded, index));
@@ -175,7 +176,7 @@ export const RenderListRow = ({
             size="small"
             title="Toggle"
           >
-            <ExpandIcon isExpanded={isExpanded} />
+            <ExpandIcon $isExpanded={isExpanded} />
           </IconButton>
         </Cell>
       </Row>

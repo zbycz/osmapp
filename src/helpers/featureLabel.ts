@@ -15,7 +15,7 @@ const getName = ({ tags }: Feature) => tags.name; // TODO choose a name accordin
 
 export const hasName = (feature: Feature) => feature.point || getName(feature); // we dont want to show "No name" for point
 
-export const getPoiType = (feature: Feature) =>
+export const getHumanPoiType = (feature: Feature) =>
   hasName(feature) ? getSubclass(feature) : t('featurepanel.no_name');
 
 export const getLabel = (feature: Feature) => {

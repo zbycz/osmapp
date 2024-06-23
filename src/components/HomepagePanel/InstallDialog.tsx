@@ -1,17 +1,23 @@
 import React, { useEffect } from 'react';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import { DialogContent, Paper, Tab, Tabs, Typography } from '@material-ui/core';
 import Router from 'next/router';
-import { TabContext, TabPanel } from '@material-ui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 
-import AppleIcon from '@material-ui/icons/Apple';
-import AndroidIcon from '@material-ui/icons/Android';
-import DesktopMacIcon from '@material-ui/icons/DesktopMac';
+import AppleIcon from '@mui/icons-material/Apple';
+import AndroidIcon from '@mui/icons-material/Android';
+import DesktopMacIcon from '@mui/icons-material/DesktopMac';
 import styled from 'styled-components';
 
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AddToHomeScreenIcon from '@material-ui/icons/AddToHomeScreen';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';
+import {
+  Dialog,
+  Paper,
+  DialogTitle,
+  Tabs,
+  Tab,
+  DialogContent,
+  Typography,
+} from '@mui/material';
 import { t, Translation } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { useFeatureContext } from '../utils/FeatureContext';

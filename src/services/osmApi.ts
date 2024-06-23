@@ -8,13 +8,16 @@ import {
   prod,
 } from './helpers';
 import { fetchJson } from './fetch';
-import { Feature, Position } from './types';
+import { Feature, LonLat, Position } from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { isBrowser } from '../components/helpers';
 import { addSchemaToFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
 import { osmToFeature } from './osmToFeature';
+import { mergeMemberImages } from './images/getImageTags';
+import { captureException } from '../helpers/sentry';
+import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -24,17 +27,6 @@ const getOsmParentUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/relations.json`;
 const getOsmHistoryUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
-
-// Overpass API is used only for getting cetroids of ways and relations
-const getOverpassUrl = ({ type, id }) => {
-  const queries = {
-    way: (wId) => `[out:json][timeout:1];way(${wId});out 1 ids qt center;`,
-    relation: (rId) => `[out:json][timeout:1];rel(${rId});out 1 ids qt center;`,
-  };
-  return `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-    queries[type](id),
-  )}`;
-};
 
 const getOsmPromise = async (apiId) => {
   try {
@@ -69,17 +61,15 @@ export const addFeatureCenterToCache = (shortId, center) => {
   featureCenterCache[shortId] = center;
 };
 
-const getCenterPromise = async (apiId) => {
+const getCenterPromise = async (apiId): Promise<LonLat | false> => {
   if (apiId.type === 'node') return false;
 
   if (isBrowser() && featureCenterCache[getShortId(apiId)]) {
-    return featureCenterCache[getShortId(apiId)];
+    return featureCenterCache[getShortId(apiId)]; // just use the coordinate where user clicked
   }
 
   try {
-    const overpass = await fetchJson(getOverpassUrl(apiId));
-    const { lat, lon } = overpass?.elements?.[0]?.center ?? {};
-    return lon && lat ? [lon, lat] : false; // for some relations there are no coordinates
+    return await fetchOverpassCenter(apiId);
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('getCenterPromise()', e); // eg. 529 too many requests
@@ -96,15 +86,22 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   const [element, center] = await Promise.all([
     getOsmPromise(apiId),
     getCenterPromise(apiId),
-    fetchSchemaTranslations(), // TODO this should be mocked in test??? could be moved to setIntl or something
+    fetchSchemaTranslations(),
   ]);
 
   const feature = osmToFeature(element);
-  if (center) {
+  if (!feature.center && center) {
     feature.center = center;
   }
 
-  feature.countryCode = await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
+  if (feature.center) {
+    try {
+      feature.countryCode = await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
+    } catch (e) {
+      console.warn('countryCode left empty – resolveCountryCode():', e); // eslint-disable-line no-console
+      captureException(e, { extra: { feature } });
+    }
+  }
 
   return addSchemaToFeature(feature);
 };
@@ -168,6 +165,8 @@ export const addMembersAndParents = async (
     fetchParentFeatures(feature.osmMeta),
     fetchMemberFeatures(feature.osmMeta),
   ]);
+
+  mergeMemberImages(feature, memberFeatures); // TODO test
 
   return { ...feature, memberFeatures, parentFeatures };
 };

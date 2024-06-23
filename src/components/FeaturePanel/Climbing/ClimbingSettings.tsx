@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -7,8 +8,7 @@ import {
   ListItemText,
   Switch,
   Slider,
-} from '@material-ui/core';
-import React from 'react';
+} from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { GradeSystemSelect } from './GradeSystemSelect';
 

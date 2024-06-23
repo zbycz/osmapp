@@ -120,7 +120,7 @@ type ClimbingContextType = {
   filterDifficulty: Array<string>;
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
   photoRef: React.MutableRefObject<any>;
-  getAllRoutesPhotos: () => void;
+  getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
   isDifficultyHeatmapEnabled: boolean;
   setIsDifficultyHeatmapEnabled: (isDifficultyHeatmapEnabled: boolean) => void;
   showDebugMenu: boolean;
@@ -129,7 +129,7 @@ type ClimbingContextType = {
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
   gradeTable: GradeTable;
   setGradeTable: (gradeTable: GradeTable) => void;
-  preparePhotosAndSet: (photoIndex?: number) => void;
+  preparePhotosAndSet: (cragPhotos: Array<string>, photo?: string) => void;
 };
 
 // @TODO generate?
@@ -304,19 +304,20 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     );
   };
 
-  const getAllRoutesPhotos = () => {
+  const getAllRoutesPhotos = (cragPhotos: Array<string>) => {
     const photos = routes.reduce((acc, route) => {
       if (!route.paths) return [];
       const routePhotos = Object.keys(route.paths);
-      return [...new Set([...acc, ...routePhotos])];
+      return [...new Set([...acc, ...cragPhotos, ...routePhotos])];
     }, []);
 
-    setPhotoPaths(photos.sort());
+    setPhotoPaths(photos);
   };
-  const preparePhotosAndSet = (photoIndex?: number) => {
-    if (photoPaths === null) getAllRoutesPhotos();
+
+  const preparePhotosAndSet = (cragPhotos: Array<string>, photo?: string) => {
+    if (photoPaths === null) getAllRoutesPhotos(cragPhotos);
     if (!photoPath && photoPaths?.length > 0)
-      setPhotoPath(photoPaths[photoIndex || 0]);
+      setPhotoPath(photo || photoPaths[0]);
   };
 
   const loadPhotoRelatedData = () => {

@@ -1,13 +1,13 @@
 import Cookies from 'js-cookie';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { grey, red } from '@material-ui/core/colors';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { grey, red } from '@mui/material/colors';
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
 // @TODO: Fix theme types according to https://mui.com/material-ui/customization/theming/#typescript
 
-const lightTheme = createMuiTheme({
+const lightTheme = createTheme({
   palette: {
     primary: {
       main: '#556cd6',
@@ -37,16 +37,16 @@ const lightTheme = createMuiTheme({
 
       // @TODO: following colors should be deleted in the future
       active: '#00854dff',
-      inactive: '#f6f6f6ff',
+      inactive: '#f6f6f6',
       border: '#555555ff',
       selected: '#000000',
     },
-  } as unknown,
+  },
 });
 
-const darkTheme = createMuiTheme({
+const darkTheme = createTheme({
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: {
       main: '#ffb74d',
     },
@@ -80,10 +80,15 @@ const darkTheme = createMuiTheme({
       border: '#ffffffff',
       selected: '#ffffff',
     },
-  } as unknown,
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: { root: { backgroundImage: 'unset' } },
+    },
+  },
 });
 
-type UserTheme = 'system' | 'light' | 'dark';
+export type UserTheme = 'system' | 'light' | 'dark';
 
 type UserThemeContextType = {
   userTheme: UserTheme;

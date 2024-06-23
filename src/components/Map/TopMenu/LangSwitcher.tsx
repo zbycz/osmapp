@@ -1,9 +1,17 @@
 import getConfig from 'next/config';
 import React from 'react';
-import { Menu, MenuItem } from '@material-ui/core';
+import { Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
+import LanguageIcon from '@mui/icons-material/Language';
+import styled from 'styled-components';
 import { useBoolState } from '../../helpers';
 import { changeLang, intl, t } from '../../../services/intl';
+
+const StyledLanguageIcon = styled(LanguageIcon)`
+  color: ${({ theme }) => theme.palette.action.active};
+  margin: -2px 6px 0 0;
+  font-size: 17px !important;
+`;
 
 export const LangSwitcher = () => {
   const {
@@ -39,17 +47,16 @@ export const LangSwitcher = () => {
           </MenuItem>
         ))}
       </Menu>
-      <button
-        type="button"
-        className="linkLikeButton"
+      <MenuItem
         aria-controls="language-switcher"
         aria-haspopup="true"
         onClick={open}
         ref={anchorRef}
         title={t('map.language_title')}
       >
+        <StyledLanguageIcon />
         {languages[intl.lang]}
-      </button>
+      </MenuItem>
     </>
   );
 };
