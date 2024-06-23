@@ -148,21 +148,27 @@ export const isClimbingRelation = (feature: Feature) =>
 export const addMembersAndParents = async (
   feature: Feature,
 ): Promise<Feature> => {
-  if (isClimbingRelation(feature)) {
-    const [parentFeatures, memberFeatures] = await Promise.all([
-      fetchParentFeatures(feature.osmMeta),
-      fetchMemberFeatures(feature.osmMeta),
-    ]);
-    mergeMemberImages(feature, memberFeatures);
-    return { ...feature, memberFeatures, parentFeatures };
+  if (feature.tags.climbing?.includes('route')) {
+    const parentFeatures = await fetchParentFeatures(feature.osmMeta);
+
+    return {
+      ...feature,
+      parentFeatures,
+    };
   }
 
-  const parentFeatures = await fetchParentFeatures(feature.osmMeta);
+  if (!isClimbingRelation(feature)) {
+    return feature;
+  }
 
-  return {
-    ...feature,
-    parentFeatures,
-  };
+  const [parentFeatures, memberFeatures] = await Promise.all([
+    fetchParentFeatures(feature.osmMeta),
+    fetchMemberFeatures(feature.osmMeta),
+  ]);
+
+  mergeMemberImages(feature, memberFeatures); // TODO test
+
+  return { ...feature, memberFeatures, parentFeatures };
 };
 
 export const fetchFeature = async (shortId): Promise<Feature> => {
