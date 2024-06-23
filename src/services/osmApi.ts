@@ -17,6 +17,7 @@ import { fetchSchemaTranslations } from './tagging/translations';
 import { osmToFeature } from './osmToFeature';
 import { mergeMemberImages } from './images/getImageTags';
 import { captureException } from '../helpers/sentry';
+import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -26,16 +27,6 @@ const getOsmParentUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/relations.json`;
 const getOsmHistoryUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
-
-const getOverpassCenterUrl = ({ type, id }) => {
-  const queries = {
-    way: (wId) => `[out:json][timeout:1];way(${wId});out 1 ids qt center;`,
-    relation: (rId) => `[out:json][timeout:1];rel(${rId});out 1 ids qt center;`,
-  };
-  return `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-    queries[type](id),
-  )}`;
-};
 
 const getOsmPromise = async (apiId) => {
   try {
@@ -78,9 +69,7 @@ const getCenterPromise = async (apiId): Promise<LonLat | false> => {
   }
 
   try {
-    const response = await fetchJson(getOverpassCenterUrl(apiId));
-    const { lat, lon } = response?.elements?.[0]?.center ?? {};
-    return lon && lat ? [lon, lat] : false; // there are no coordinates for relation of relations
+    return await fetchOverpassCenter(apiId);
   } catch (e) {
     // eslint-disable-next-line no-console
     console.warn('getCenterPromise()', e); // eg. 529 too many requests
@@ -97,7 +86,7 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   const [element, center] = await Promise.all([
     getOsmPromise(apiId),
     getCenterPromise(apiId),
-    fetchSchemaTranslations(), // TODO this should be mocked in test??? could be moved to setIntl or something
+    fetchSchemaTranslations(),
   ]);
 
   const feature = osmToFeature(element);
@@ -105,7 +94,6 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
     feature.center = center;
   }
 
-  // center point is missing for relation of relations (overpass in getCenterPromise returns false)
   if (feature.center) {
     try {
       feature.countryCode = await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
@@ -160,27 +148,21 @@ export const isClimbingRelation = (feature: Feature) =>
 export const addMembersAndParents = async (
   feature: Feature,
 ): Promise<Feature> => {
-  if (feature.tags.climbing?.includes('route')) {
-    const parentFeatures = await fetchParentFeatures(feature.osmMeta);
-
-    return {
-      ...feature,
-      parentFeatures,
-    };
+  if (isClimbingRelation(feature)) {
+    const [parentFeatures, memberFeatures] = await Promise.all([
+      fetchParentFeatures(feature.osmMeta),
+      fetchMemberFeatures(feature.osmMeta),
+    ]);
+    mergeMemberImages(feature, memberFeatures);
+    return { ...feature, memberFeatures, parentFeatures };
   }
 
-  if (!isClimbingRelation(feature)) {
-    return feature;
-  }
+  const parentFeatures = await fetchParentFeatures(feature.osmMeta);
 
-  const [parentFeatures, memberFeatures] = await Promise.all([
-    fetchParentFeatures(feature.osmMeta),
-    fetchMemberFeatures(feature.osmMeta),
-  ]);
-
-  mergeMemberImages(feature, memberFeatures); // TODO test
-
-  return { ...feature, memberFeatures, parentFeatures };
+  return {
+    ...feature,
+    parentFeatures,
+  };
 };
 
 export const fetchFeature = async (shortId): Promise<Feature> => {
