@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "next",
     "test": "jest",
-    "lint": "eslint . --report-unused-disable-directives",
+    "lint": "eslint ./src ./pages --report-unused-disable-directives --max-warnings=0",
     "lintfix": "prettier . --write && eslint ./src ./pages --report-unused-disable-directives --fix",
     "prettify": "prettier . --write",
     "build": "next build",

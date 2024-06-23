@@ -73,7 +73,7 @@ export const maptilerFix = async (mapFeature, skeleton, mapId) => {
   ];
 
   const promises = variants.map((osmMeta) => quickFetchFeature(osmMeta));
-  console.group(`maptilerFix(id=${mapId}):`);
+  console.group(`maptilerFix(id=${mapId}):`); // eslint-disable-line no-console
   console.warn('maptilerFix(): fetching possible id variants:', variants); // eslint-disable-line no-console
   const possibleFeatures = await Promise.all(promises);
   const existingFeatures = possibleFeatures.filter(
@@ -89,7 +89,7 @@ export const maptilerFix = async (mapFeature, skeleton, mapId) => {
       oldMapId: mapId,
       newOsmId: getShortId(nameHit.osmMeta),
     });
-    console.groupEnd();
+    console.groupEnd(); // eslint-disable-line no-console
     return nameHit;
   }
 
@@ -100,11 +100,11 @@ export const maptilerFix = async (mapFeature, skeleton, mapId) => {
       oldMapId: mapId,
       newOsmId: getShortId(closeHit.osmMeta),
     });
-    console.groupEnd();
+    console.groupEnd(); // eslint-disable-line no-console
     return closeHit;
   }
 
   console.warn('maptilerFix(): no correct id found', { existingFeatures }); // eslint-disable-line no-console
-  console.groupEnd();
+  console.groupEnd(); // eslint-disable-line no-console
   return skeleton;
 };
