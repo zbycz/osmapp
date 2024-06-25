@@ -1,4 +1,4 @@
-import { gradeSystem } from './utils/gradeData';
+import { GradeSystem } from './utils/grades/gradeData';
 import { Feature } from '../../../services/types';
 
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling' | 'unfinished';
@@ -49,9 +49,6 @@ export type ZoomState = {
   positionX: number;
   positionY: number;
 };
-
-export type GradeSystem = typeof gradeSystem[number]['key'];
-export type GradeTable = Record<GradeSystem, Array<string>>;
 
 export type TickStyle =
   | 'OS'

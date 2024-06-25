@@ -1,4 +1,5 @@
-export const gradeSystem = [
+// The order of this array must be the same as in CSV below
+export const GRADE_SYSTEMS = [
   { key: 'uiaa', name: 'UIAA' },
   { key: 'uktech', name: 'UK tech' },
   { key: 'ukaajd', name: 'UKA adj' },
@@ -12,17 +13,13 @@ export const gradeSystem = [
   { key: 'mixed', name: 'Mixed' },
 ];
 
-// UIAA|Germany,
-//       UK Tech,
-//              UK ADJ,
-//                      FB|French British,
-//                               French,
-//                                       Saxon|Swiss,
-//                                                     Nordic|Scandinavian,
-//                                                              YDS|YDS_class,
-//                                                                      V Grade,
-//                                                                               WI,
-//                                                                                      Mixed
+export type GradeSystem = typeof GRADE_SYSTEMS[number]['key'];
+export type GradeTable = Record<GradeSystem, Array<string>>;
+
+// Source of this table is: https://wiki.openstreetmap.org/wiki/Climbing#Grading
+// UIAA|Germany         FB|French British              Nordic|Scandinavian       WI
+//       UK Tech                 French                         YDS|YDS_class           Mixed
+//              UK ADJ                   Saxon|Swiss                    V Grade
 export const gradeTableString = `UIAA|Germany, UK Tech, UK ADJ, FB|French British, French, Saxon|Swiss, Nordic|Scandinavian, YDS|YDS_class, V Grade, WI, Mixed
 "System used by the International Climbing and Mountaineering Federation.", "The British grading system for traditional climbs.", "The Adjectival English Scale or the overall assessment scale.", "Sport climbing in Britain and Ireland uses the French grading system.", "The French numerical system rates a climb according to the overall technical difficulty and strenuousness of the route.", "The Saxon grading system was developed in the beginning of the 20th century for the formidable Saxon Switzerland climbing region.", "The Nordic grading system.", "The Yosemite Decimal System of grading routes of hikes and climbs developed for the Sierra Nevada range.", "V scale grading system, created by John Sherman, which is the most widely used system in North America.", "Waterfall ice rating system as used in the Canadian Rockies.", "Mixed climbing has its own grading scale that roughly follows the WI rating system."
 1-,      1,     M,      1,       1,      I,            1,       5,      VB-,     WI2,   M2
@@ -161,3 +158,32 @@ export const gradeColors = {
   '14-': { light: '#9C0101', dark: '#690000' },
   '14': { light: '#9C0101', dark: '#690000' },
 };
+
+export const csvToArray = (csv: string) => {
+  const rows = csv.split('\n');
+  const data = rows.slice(2);
+  return data.map((dataRow) => {
+    const rowDifficulties = dataRow.split(',');
+    return rowDifficulties.map((difficulty) => difficulty.trimStart().trim());
+  });
+};
+
+export const transposeArrays = (t: Array<Array<any>>) =>
+  t[0].map((_, colIndex) => t.map((row) => row[colIndex]));
+
+export const getCsvGradeData = (): GradeTable => {
+  const transposedTable = transposeArrays(csvToArray(gradeTableString));
+
+  return transposedTable.reduce(
+    (acc, row, index) =>
+      GRADE_SYSTEMS[index]
+        ? {
+            ...acc,
+            [GRADE_SYSTEMS[index].key]: row,
+          }
+        : acc,
+    {},
+  );
+};
+
+export const GRADE_TABLE: GradeTable = getCsvGradeData();

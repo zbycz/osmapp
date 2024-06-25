@@ -7,8 +7,6 @@ import React, {
 } from 'react';
 import {
   ClimbingRoute,
-  GradeSystem,
-  GradeTable,
   PathPoint,
   PathPoints,
   Position,
@@ -32,6 +30,7 @@ import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
 import { getContainedSizeImage } from '../utils/image';
+import { GradeSystem } from '../utils/grades/gradeData';
 
 type ImageSize = {
   width: number;
@@ -127,8 +126,6 @@ type ClimbingContextType = {
   setShowDebugMenu: (showDebugMenu: boolean) => void;
   arePointerEventsDisabled: boolean; // @TODO do we need it?
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
-  gradeTable: GradeTable;
-  setGradeTable: (gradeTable: GradeTable) => void;
   preparePhotosAndSet: (cragPhotos: Array<string>, photo?: string) => void;
 };
 
@@ -144,7 +141,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const initialRoutes = osmToClimbingRoutes(feature);
   publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);
-  const [gradeTable, setGradeTable] = useState<GradeTable>(null);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);
@@ -411,8 +407,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setShowDebugMenu,
     arePointerEventsDisabled,
     setArePointerEventsDisabled,
-    gradeTable,
-    setGradeTable,
     preparePhotosAndSet,
     imageContainerSize,
     setImageContainerSize,

@@ -1,13 +1,9 @@
 import { Feature, FeatureTags } from '../../../../services/types';
-import {
-  ClimbingRoute,
-  GradeSystem,
-  PathPoints,
-  RouteDifficulty,
-} from '../types';
+import { ClimbingRoute, PathPoints, RouteDifficulty } from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
 import { boltCodeMap } from '../utils/boltCodes';
 import { removeFilePrefix } from '../utils/photo';
+import { GradeSystem } from '../utils/grades/gradeData';
 
 const parsePathString = (pathString?: string): PathPoints =>
   pathString
