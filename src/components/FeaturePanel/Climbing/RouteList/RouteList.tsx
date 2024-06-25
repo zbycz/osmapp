@@ -6,7 +6,6 @@ import { Button, ButtonGroup } from '@mui/material';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
 import { addElementToArray, deleteFromArray } from '../utils/array';
-import { getCsvGradeData } from '../utils/routeGrade';
 import { invertedBoltCodeMap } from '../utils/boltCodes';
 import { PanelLabel } from '../PanelLabel';
 import { ContentContainer } from '../ContentContainer';
@@ -29,16 +28,10 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     setIsEditMode,
     routesExpanded,
     setRoutesExpanded,
-    gradeTable,
-    setGradeTable,
     showDebugMenu,
   } = useClimbingContext();
 
   if (routes.length === 0) return null;
-
-  React.useEffect(() => {
-    if (!gradeTable) setGradeTable(getCsvGradeData());
-  }, []);
 
   React.useEffect(() => {
     const downHandler = (e) => {

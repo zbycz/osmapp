@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useTheme } from '@mui/material';
 import { useConfig } from '../config';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { getDifficultyColor } from '../utils/routeGrade';
+import { getDifficultyColor } from '../utils/grades/routeGrade';
 
 const RouteLine = styled.path`
   pointer-events: all;
@@ -21,11 +21,11 @@ export const PathWithBorder = ({
   ...props
 }) => {
   const config = useConfig();
-  const { isDifficultyHeatmapEnabled, gradeTable, routeIndexHovered } =
+  const { isDifficultyHeatmapEnabled, routeIndexHovered } =
     useClimbingContext();
 
   const strokeColor = isDifficultyHeatmapEnabled
-    ? getDifficultyColor(gradeTable, route.difficulty)
+    ? getDifficultyColor(route.difficulty)
     : config.pathStrokeColor;
 
   const getPathColor = () => {

@@ -1,13 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Tooltip } from '@mui/material';
-import { GradeSystem, RouteDifficulty } from './types';
-import { useClimbingContext } from './contexts/ClimbingContext';
+import { RouteDifficulty } from './types';
 import {
   convertGrade,
   getDifficultyColor,
   getGradeSystemName,
-} from './utils/routeGrade';
+} from './utils/grades/routeGrade';
+import { GradeSystem } from './utils/grades/gradeData';
 
 const Container = styled.div<{ $color: string }>`
   border-radius: 12px;
@@ -29,11 +29,8 @@ export const RouteDifficultyBadge = ({
   routeDifficulty,
   selectedRouteSystem,
 }: Props) => {
-  const { gradeTable } = useClimbingContext();
-
   const convertedGrade = selectedRouteSystem
     ? convertGrade(
-        gradeTable,
         routeDifficulty?.gradeSystem,
         selectedRouteSystem,
         routeDifficulty?.grade,
@@ -46,7 +43,7 @@ export const RouteDifficultyBadge = ({
     convertedGrade ? selectedRouteSystem : routeDifficulty?.gradeSystem,
   );
 
-  const colorByDifficulty = getDifficultyColor(gradeTable, routeDifficulty);
+  const colorByDifficulty = getDifficultyColor(routeDifficulty);
 
   return (
     <Tooltip

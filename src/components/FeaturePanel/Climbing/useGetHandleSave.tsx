@@ -4,7 +4,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
-import { getOsmTagFromGradeSystem } from './utils/routeGrade';
+import { getOsmTagFromGradeSystem } from './utils/grades/routeGrade';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
   getNewWikimediaCommonsIndex,

@@ -5,12 +5,13 @@ import {
   convertGrade,
   getDifficultyColor,
   getGradeSystemName,
-} from './utils/routeGrade';
+} from './utils/grades/routeGrade';
 import { PanelLabel } from './PanelLabel';
 import { ContentContainer } from './ContentContainer';
+import { GRADE_TABLE } from './utils/grades/gradeData';
 
 const MAX_HEIGHT = 100;
-const GRADE_SYSTEM = 'uiaa';
+const DISTRIBUTION_GRADE_SYSTEM = 'uiaa';
 
 const Container = styled.div`
   margin: 16px 12px 12px;
@@ -47,11 +48,11 @@ const Chart = styled.div<{ $ratio: number; $color: string }>`
 const getGroupingLabel = (label: string) => String(parseFloat(label));
 
 export const RouteDistribution = () => {
-  const { routes, gradeTable } = useClimbingContext();
+  const { routes } = useClimbingContext();
   if (routes.length === 0) return null;
 
   const prepareOccurrenceStructure = () =>
-    gradeTable?.[GRADE_SYSTEM].reduce<{ [grade: string]: number }>(
+    GRADE_TABLE[DISTRIBUTION_GRADE_SYSTEM].reduce<{ [grade: string]: number }>(
       (acc, grade) => ({
         ...acc,
         [getGroupingLabel(grade)]: 0,
@@ -64,9 +65,8 @@ export const RouteDistribution = () => {
     return routes.reduce((acc, route) => {
       if (!route.difficulty) return acc;
       const convertedGrade = convertGrade(
-        gradeTable,
         route.difficulty.gradeSystem,
-        GRADE_SYSTEM,
+        DISTRIBUTION_GRADE_SYSTEM,
         route.difficulty.grade,
       );
       const newGrade = getGroupingLabel(convertedGrade);
@@ -91,14 +91,14 @@ export const RouteDistribution = () => {
 
   return (
     <>
-      <PanelLabel addition={getGradeSystemName(GRADE_SYSTEM)}>
+      <PanelLabel addition={getGradeSystemName(DISTRIBUTION_GRADE_SYSTEM)}>
         Routes distribution
       </PanelLabel>
       <Container>
         <ContentContainer>
           <Items>
             {heightsRatios.map((heightRatioItem) => {
-              const color = getDifficultyColor(gradeTable, {
+              const color = getDifficultyColor({
                 gradeSystem: 'uiaa',
                 grade: heightRatioItem.grade,
               });

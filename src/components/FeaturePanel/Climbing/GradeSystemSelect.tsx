@@ -1,8 +1,7 @@
 import React from 'react';
 
 import { Select, MenuItem } from '@mui/material';
-import { GradeSystem } from './types';
-import { gradeSystem } from './utils/gradeData';
+import { GRADE_SYSTEMS, GradeSystem } from './utils/grades/gradeData';
 
 type Props = {
   selectedGradeSystem: GradeSystem;
@@ -23,7 +22,7 @@ export const GradeSystemSelect = ({
       setGradeSystem(event.target.value);
     }}
   >
-    {gradeSystem.map(({ key, name }) => (
+    {GRADE_SYSTEMS.map(({ key, name }) => (
       <MenuItem value={key}>{name}</MenuItem>
     ))}
   </Select>
