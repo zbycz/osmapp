@@ -1,13 +1,14 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Tooltip } from '@mui/material';
-import { RouteDifficulty } from './types';
+import { Tooltip, useTheme } from '@mui/material';
 import {
   convertGrade,
+  getDifficulty,
   getDifficultyColor,
   getGradeSystemName,
 } from './utils/grades/routeGrade';
 import { GradeSystem } from './utils/grades/gradeData';
+import { Feature } from '../../../services/types';
 
 const Container = styled.div<{ $color: string }>`
   border-radius: 12px;
@@ -21,14 +22,17 @@ const Container = styled.div<{ $color: string }>`
 `;
 
 type Props = {
-  routeDifficulty: RouteDifficulty;
+  routeFeature: Feature;
   selectedRouteSystem?: GradeSystem;
 };
 
 export const RouteDifficultyBadge = ({
-  routeDifficulty,
+  routeFeature,
   selectedRouteSystem,
 }: Props) => {
+  const theme = useTheme();
+  const routeDifficulty = getDifficulty(routeFeature?.tags);
+
   const convertedGrade = selectedRouteSystem
     ? convertGrade(
         routeDifficulty?.gradeSystem,
@@ -43,7 +47,7 @@ export const RouteDifficultyBadge = ({
     convertedGrade ? selectedRouteSystem : routeDifficulty?.gradeSystem,
   );
 
-  const colorByDifficulty = getDifficultyColor(routeDifficulty);
+  const colorByDifficulty = getDifficultyColor(routeFeature?.tags, theme);
 
   return (
     <Tooltip
