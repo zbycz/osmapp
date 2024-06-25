@@ -1,9 +1,10 @@
 import { Feature, FeatureTags } from '../../../../services/types';
-import { ClimbingRoute, PathPoints, RouteDifficulty } from '../types';
+import { ClimbingRoute, PathPoints } from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
 import { boltCodeMap } from '../utils/boltCodes';
 import { removeFilePrefix } from '../utils/photo';
-import { GradeSystem } from '../utils/grades/gradeData';
+import { getDifficulty } from '../utils/grades/routeGrade';
+import { publishDbgObject } from '../../../../utils';
 
 const parsePathString = (pathString?: string): PathPoints =>
   pathString
@@ -37,24 +38,6 @@ const getPathsByImage = (tags: FeatureTags) => {
   return { photoToKeyMap, paths };
 };
 
-const getDifficulty = (tags: FeatureTags): RouteDifficulty | undefined => {
-  const gradeKeys = Object.keys(tags).filter((key) =>
-    key.startsWith('climbing:grade'),
-  );
-
-  if (gradeKeys.length) {
-    const key = gradeKeys[0]; // @TODO store all found grades
-    const system = key.split(':', 3)[2];
-
-    return {
-      gradeSystem: (system ?? 'uiaa') as GradeSystem, // @TODO `gradeSystem` type should be `string`
-      grade: tags[key],
-    };
-  }
-
-  return undefined;
-};
-
 export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
   if (!feature.memberFeatures) {
     return [];
@@ -62,7 +45,7 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
 
   const routes = feature.memberFeatures;
 
-  return routes.map((route) => {
+  const climbingRoutes = routes.map((route) => {
     const { paths, photoToKeyMap } = getPathsByImage(route.tags);
     return {
       id: getUrlOsmId(route.osmMeta),
@@ -75,4 +58,8 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
       feature: route,
     };
   });
+
+  publishDbgObject('climbingRoutes', climbingRoutes);
+
+  return climbingRoutes;
 };

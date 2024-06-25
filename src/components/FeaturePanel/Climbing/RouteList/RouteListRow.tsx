@@ -162,7 +162,7 @@ export const RenderListRow = ({
         </NameCell>
         <DifficultyCell $width={50}>
           <RouteDifficultyBadge
-            routeDifficulty={tempRoute.difficulty}
+            routeFeature={tempRoute.feature}
             selectedRouteSystem={selectedRouteSystem}
           />
         </DifficultyCell>

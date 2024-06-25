@@ -1,13 +1,13 @@
-import { useTheme } from '@mui/material';
 import { RouteDifficulty } from '../../types';
 import {
   csvToArray,
+  GRADE_SYSTEMS,
   GRADE_TABLE,
   gradeColors,
-  GRADE_SYSTEMS,
-  gradeTableString,
   GradeSystem,
+  gradeTableString,
 } from './gradeData';
+import { FeatureTags } from '../../../../../services/types';
 
 export const exportGradeDataToWikiTable = () => {
   const csvArray = csvToArray(gradeTableString);
@@ -28,10 +28,38 @@ export const convertGrade = (
   }
   return null;
 };
-export const getDifficultyColor = (difficulty: RouteDifficulty) => {
+
+export const getDifficulty = (
+  tags: FeatureTags,
+): RouteDifficulty | undefined => {
+  if (!tags) {
+    return undefined;
+  }
+
+  const gradeKeys = Object.keys(tags).filter((key) =>
+    key.startsWith('climbing:grade'),
+  );
+
+  if (gradeKeys.length) {
+    const key = gradeKeys[0]; // @TODO store all found grades
+    const system = key.split(':', 3)[2];
+
+    return {
+      gradeSystem: (system ?? 'uiaa') as GradeSystem, // @TODO `gradeSystem` type should be `string`
+      grade: tags[key],
+    };
+  }
+
+  return undefined;
+};
+
+export const getDifficultyColor = (tags: FeatureTags, theme) => {
+  const difficulty = getDifficulty(tags);
+
   const DEFAULT_COLOR = '#555';
-  if (!difficulty) return DEFAULT_COLOR;
-  const theme = useTheme();
+  if (!difficulty) {
+    return DEFAULT_COLOR;
+  }
   const { mode } = theme.palette;
   const uiaaGrade =
     difficulty.gradeSystem !== 'uiaa'

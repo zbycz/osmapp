@@ -23,9 +23,10 @@ export const PathWithBorder = ({
   const config = useConfig();
   const { isDifficultyHeatmapEnabled, routeIndexHovered } =
     useClimbingContext();
+  const theme = useTheme();
 
   const strokeColor = isDifficultyHeatmapEnabled
-    ? getDifficultyColor(route.difficulty)
+    ? getDifficultyColor(route.feature.tags, theme)
     : config.pathStrokeColor;
 
   const getPathColor = () => {
@@ -36,7 +37,6 @@ export const PathWithBorder = ({
     return strokeColor;
   };
 
-  const theme = useTheme();
   const contrastColor = theme.palette.getContrastText(
     isSelected ? config.pathStrokeColorSelected : strokeColor,
   );

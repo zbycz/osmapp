@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled, { useTheme } from 'styled-components';
 import React from 'react';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import {
@@ -48,6 +48,7 @@ const Chart = styled.div<{ $ratio: number; $color: string }>`
 const getGroupingLabel = (label: string) => String(parseFloat(label));
 
 export const RouteDistribution = () => {
+  const theme = useTheme();
   const { routes } = useClimbingContext();
   if (routes.length === 0) return null;
 
@@ -98,10 +99,12 @@ export const RouteDistribution = () => {
         <ContentContainer>
           <Items>
             {heightsRatios.map((heightRatioItem) => {
-              const color = getDifficultyColor({
-                gradeSystem: 'uiaa',
-                grade: heightRatioItem.grade,
-              });
+              const color = getDifficultyColor(
+                {
+                  'climbing:grade:uiaa': heightRatioItem.grade,
+                },
+                theme,
+              );
               const numberOfRoutesKey = Object.keys(routeOccurrences).find(
                 (key) => key === heightRatioItem.grade,
               );
