@@ -1,6 +1,7 @@
 import React from 'react';
-import styled from 'styled-components';
-import { ImagePath } from '../../../services/types';
+import styled, { useTheme } from 'styled-components';
+import { Feature, ImagePath } from '../../../services/types';
+import { getDifficultyColor } from '../Climbing/utils/grades/routeGrade';
 
 const WIDTH = 100;
 const HEIGHT = 100;
@@ -16,24 +17,28 @@ const Svg = styled.svg`
 `;
 
 const PathBorder = styled.path`
-  stroke-width: 2%;
+  stroke-width: 0.8%;
   stroke: ${({ theme }) => theme.palette.climbing.border};
 `;
 
-const PathLine = styled.path`
-  stroke-width: 1%;
-  stroke: ${({ theme }) => theme.palette.climbing.inactive};
+const PathLine = styled.path<{ color: string }>`
+  stroke-width: 0.6%;
+  stroke: ${({ color }) => color};
 `;
 
-export const Path = ({ path }: { path: ImagePath }) => {
-  const d = path
+type Props = { imagePath: ImagePath };
+export const Path = ({ imagePath }: Props) => {
+  const theme = useTheme();
+  const d = imagePath.path
     .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * WIDTH} ${y * HEIGHT}`)
     .join(',');
+
+  const color = getDifficultyColor(imagePath.member.tags, theme);
 
   return (
     <>
       <PathBorder d={d} />
-      <PathLine d={d} />
+      <PathLine d={d} color={color} />
     </>
   );
 };

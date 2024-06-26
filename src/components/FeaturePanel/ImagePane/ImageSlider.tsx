@@ -5,7 +5,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { Path, PathSvg } from './Path';
 import { Slider } from './Slider';
 import { ImageTag } from '../../../services/types';
-import { getOsmappLink } from '../../../services/helpers';
+import { getKey, getOsmappLink } from '../../../services/helpers';
 import { removeFilePrefix } from '../Climbing/utils/photo';
 
 const ImageWrapper = styled.div`
@@ -50,8 +50,8 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
     <ImageWrapper onClick={onClick}>
       <img src={imageTag.imageUrl} height={270} alt={imageTag.v} />
       <PathSvg>
-        {imageTag.paths.map(({ shortId, path }) => (
-          <Path key={shortId} path={path} />
+        {imageTag.paths.map((imagePath) => (
+          <Path key={getKey(imagePath.member)} imagePath={imagePath} />
         ))}
       </PathSvg>
     </ImageWrapper>

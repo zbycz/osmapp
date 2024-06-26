@@ -42,6 +42,11 @@ export const getShortId = (apiId: OsmApiId): string =>
 export const getUrlOsmId = (apiId: OsmApiId): string =>
   `${apiId.type}/${apiId.id}`;
 
+export const getKey = (feature: Feature) =>
+  feature.point
+    ? feature.center.join(',')
+    : getUrlOsmId(feature.osmMeta) + feature.osmMeta.version;
+
 export const getApiId = (value): OsmApiId => {
   if (value.type && value.id) {
     return value;

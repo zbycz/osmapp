@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
-import { getFullOsmappLink, getUrlOsmId } from '../../services/helpers';
+import { getFullOsmappLink, getKey } from '../../services/helpers';
 import {
   PanelContent,
   PanelFooter,
@@ -40,7 +40,7 @@ export const FeaturePanel = () => {
   const [showAround, toggleShowAround] = useToggleState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
 
-  const { point, tags, osmMeta, skeleton, deleted } = feature;
+  const { point, tags, skeleton, deleted } = feature;
   const editEnabled = !skeleton;
   const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
 
@@ -76,16 +76,17 @@ export const FeaturePanel = () => {
     </PanelFooter>
   );
 
+  if (!feature) {
+    return null;
+  }
+
   if (
     isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
     feature.tags.climbing === 'crag' &&
     !advanced
   ) {
     return (
-      <ClimbingContextProvider
-        feature={feature}
-        key={getUrlOsmId(osmMeta) + (deleted && 'del')} // TODO: hack to reset state
-      >
+      <ClimbingContextProvider feature={feature} key={getKey(feature)}>
         <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
       </ClimbingContextProvider>
     );
@@ -113,10 +114,7 @@ export const FeaturePanel = () => {
                 <ImageSlider />
 
                 <PanelSidePadding>
-                  <Properties
-                    showTags={showTagsTable}
-                    key={getUrlOsmId(osmMeta) + (deleted && 'del')}
-                  />
+                  <Properties showTags={showTagsTable} key={getKey(feature)} />
 
                   <MemberFeatures />
                   {advanced && <Members />}
