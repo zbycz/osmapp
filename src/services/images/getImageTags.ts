@@ -1,5 +1,11 @@
 import { getCommonsImageUrl } from './getWikiImage';
-import { Feature, FeatureTags, ImageTag, imageTagRegexp } from '../types';
+import {
+  Feature,
+  FeatureTags,
+  ImagePath,
+  ImageTag,
+  imageTagRegexp,
+} from '../types';
 
 const getSuffix = (y: string) => {
   const matches = y.match(/([^.0-9].*)$/);
@@ -29,12 +35,12 @@ const getImageUrl = (type: ImageTag['type'], v: string): string | null => {
   return null; // API call needed
 };
 
-const getPaths = (pathTag: string, shortId: string) => {
+const getPaths = (pathTag: string): ImageTag['paths'] => {
   const path = parsePathTag(pathTag);
-  return path.length ? [{ path, shortId }] : [];
+  return path.length ? [{ path }] : [];
 };
 
-export const getImageTags = (tags: FeatureTags, shortId: string): ImageTag[] =>
+export const getImageTags = (tags: FeatureTags): ImageTag[] =>
   Object.keys(tags)
     .filter((k) => k.match(imageTagRegexp))
     .map((k) => {
@@ -42,7 +48,7 @@ export const getImageTags = (tags: FeatureTags, shortId: string): ImageTag[] =>
       const v = tags[k];
       const imageUrl = getImageUrl(type, v);
       const pathTag = tags[`${k}:path`];
-      const paths = getPaths(pathTag, shortId);
+      const paths = getPaths(pathTag);
       return { type, k, v, imageUrl, pathTag, paths };
     });
 
@@ -50,15 +56,26 @@ export const mergeMemberImages = (
   feature: Feature,
   memberFeatures: Feature[],
 ) => {
+  const destination = feature.imageTags;
+
   memberFeatures
-    .map((member) => member.imageTags)
+    .map(
+      (member) =>
+        member?.imageTags?.map<ImageTag>((imageTag) => ({
+          ...imageTag,
+          paths: imageTag.paths.map<ImagePath>((path) => ({
+            path: path.path,
+            member,
+          })),
+        })) ?? [],
+    )
     .flat()
     .forEach((imageTag) => {
-      const match = feature.imageTags.find((tag) => tag.v === imageTag.v);
+      const match = destination.find((dest) => dest.v === imageTag.v);
       if (match) {
         match.paths.push(...imageTag.paths);
       } else {
-        feature.imageTags.push(imageTag);
+        destination.push(imageTag);
       }
     });
 };

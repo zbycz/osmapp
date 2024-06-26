@@ -16,6 +16,7 @@ declare module '@mui/material/styles' {
       active: string;
       inactive: string;
       border: string;
+      borderSlider: string;
       selected: string;
     };
   }
@@ -31,6 +32,7 @@ declare module '@mui/material/styles' {
       active: string;
       inactive: string;
       border: string;
+      borderSlider: string;
       selected: string;
     };
   }
