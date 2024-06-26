@@ -32,9 +32,10 @@ export const RouteMarks = ({
     setPointSelectedIndex,
     setIsPointMoving,
     setIsPointClicked,
+    isOtherRouteSelected,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
-
+  const isOtherSelected = isOtherRouteSelected(routeNumber);
   return (
     <>
       {getPathForRoute(route).map(({ x, y, type }, index) => {
@@ -52,11 +53,13 @@ export const RouteMarks = ({
           }
         };
 
-        const isBoltVisible = type === 'bolt';
-        const isAnchorVisible = type === 'anchor';
-        const isSlingVisible = type === 'sling';
-        const isPitonVisible = type === 'piton';
-        const isUnfinishedPointVisible = type === 'unfinished';
+        const isBoltVisible = !isOtherSelected && type === 'bolt';
+        const isAnchorVisible = !isOtherSelected && type === 'anchor';
+        const isSlingVisible = !isOtherSelected && type === 'sling';
+        const isPitonVisible = !isOtherSelected && type === 'piton';
+        const isUnfinishedPointVisible =
+          !isOtherSelected && type === 'unfinished';
+
         const position = getPixelPosition({ x, y, units: 'percentage' });
         const isActualPointSelected = isSelected && isPointSelected(index);
         const pointerEvents = isSelected ? 'auto' : 'none';
