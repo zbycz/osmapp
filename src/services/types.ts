@@ -20,8 +20,9 @@ export type Image = ImageUrls | LoadingImage | NoImage;
 export const imageTagRegexp =
   /^(image|wikimedia_commons|wikidata|wikipedia|wikipedia:[a-z+]|website)(:?\d*)$/;
 
+export type PathType = { x: number; y: number; suffix: string }[];
 export type ImagePath = {
-  path: { x: number; y: number; suffix: string }[];
+  path: PathType;
   member?: Feature;
 };
 export type ImageTag = {
@@ -30,7 +31,8 @@ export type ImageTag = {
   v: string;
   imageUrl: string | null; // null = API call needed
   pathTag: string | undefined;
-  paths: ImagePath[];
+  path?: PathType;
+  memberPaths?: ImagePath[];
 };
 
 // coordinates in geojson format: [lon, lat] = [x,y]

@@ -3,11 +3,11 @@ import styled from 'styled-components';
 import Router from 'next/router';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Path, PathSvg } from './Path';
-import { Slider } from './Slider';
 import { ImageTag } from '../../../services/types';
 import { getKey, getOsmappLink } from '../../../services/helpers';
 import { removeFilePrefix } from '../Climbing/utils/photo';
 import { Size } from './types';
+import { Slider } from './Slider';
 
 const HEIGHT = 270;
 const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
@@ -56,6 +56,7 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
       }
     : undefined;
 
+  const hasPaths = imageTag.path?.length || imageTag.memberPaths?.length;
   return (
     <ImageWrapper onClick={onClick}>
       <img
@@ -63,15 +64,14 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
         height={HEIGHT}
         alt={imageTag.v}
         onLoad={onPhotoLoad}
-        className={imageTag.paths.length ? 'hasPaths' : ''}
+        className={hasPaths ? 'hasPaths' : ''}
       />
       <PathSvg size={size}>
-        {imageTag.paths.map((imagePath) => (
-          <Path
-            key={getKey(imagePath.member)}
-            imagePath={imagePath}
-            size={size}
-          />
+        {imageTag.path && (
+          <Path path={imageTag.path} feature={feature} size={size} />
+        )}
+        {imageTag.memberPaths?.map(({ path, member }) => (
+          <Path key={getKey(member)} path={path} feature={member} size={size} />
         ))}
       </PathSvg>
     </ImageWrapper>
@@ -82,7 +82,11 @@ export const ImageSlider = () => {
   const { feature } = useFeatureContext();
 
   // temporary - until ImageSlider is finished
-  if (!feature.imageTags?.some(({ paths }) => paths.length)) {
+  if (
+    !feature.imageTags?.some(
+      ({ path, memberPaths }) => path?.length || memberPaths?.length,
+    )
+  ) {
     return null;
   }
 

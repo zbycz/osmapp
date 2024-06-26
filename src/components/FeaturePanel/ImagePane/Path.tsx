@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
-import { ImagePath } from '../../../services/types';
+import { Feature, PathType } from '../../../services/types';
 import { getDifficultyColor } from '../Climbing/utils/grades/routeGrade';
 import { Size } from './types';
 
@@ -24,17 +24,21 @@ const PathLine = styled.path<{ color: string }>`
   stroke: ${({ color }) => color};
 `;
 
-type Props = { imagePath: ImagePath; size: Size };
-export const Path = ({ imagePath, size }: Props) => {
+type Props = {
+  path: PathType;
+  feature: Feature;
+  size: Size;
+};
+export const Path = ({ path, feature, size }: Props) => {
   const theme = useTheme();
-  const d = imagePath.path
+  const d = path
     .map(
       ({ x, y }, idx) =>
         `${!idx ? 'M' : 'L'}${x * size.width} ${y * size.height}`,
     )
     .join(',');
 
-  const color = getDifficultyColor(imagePath.member.tags, theme);
+  const color = getDifficultyColor(feature.tags, theme);
 
   return (
     <>
