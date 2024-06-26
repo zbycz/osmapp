@@ -27,7 +27,7 @@ const ThumbnailContainer = styled.div<{ height: number }>`
   width: 100%;
   height: ${({ height }) => height}px;
   position: relative;
-  :hover ${FullscreenIconContainer} {
+  &:hover ${FullscreenIconContainer} {
     visibility: visible;
     -webkit-backdrop-filter: blur(3px);
     backdrop-filter: blur(3px);

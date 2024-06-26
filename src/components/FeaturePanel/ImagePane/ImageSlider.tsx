@@ -12,6 +12,10 @@ const ImageWrapper = styled.div`
   position: relative;
   display: flex;
   height: 100%;
+  &:hover {
+    cursor: pointer;
+    opacity: 0.8;
+  }
 
   img,
   svg {
