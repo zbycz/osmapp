@@ -43,15 +43,10 @@ const geojson = {
         'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Lomy_nad_Velkou_-_Borová_věž.jpg/400px-Lomy_nad_Velkou_-_Borová_věž.jpg',
       k: 'wikimedia_commons',
       pathTag: '0.32,0.902|0.371,0.537B|0.406,0.173A',
-      paths: [
-        {
-          path: [
-            { suffix: '', x: 0.32, y: 0.902 },
-            { suffix: 'B', x: 0.371, y: 0.537 },
-            { suffix: 'A', x: 0.406, y: 0.173 },
-          ],
-          shortId: 'n6',
-        },
+      path: [
+        { suffix: '', x: 0.32, y: 0.902 },
+        { suffix: 'B', x: 0.371, y: 0.537 },
+        { suffix: 'A', x: 0.406, y: 0.173 },
       ],
       type: 'wikimedia_commons',
       v: 'File:Lomy nad Velkou - Borová věž.jpg',
@@ -61,15 +56,10 @@ const geojson = {
         'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Lomy_nad_Velkou_-_Borová_věž3.jpg/400px-Lomy_nad_Velkou_-_Borová_věž3.jpg',
       k: 'wikimedia_commons:2',
       pathTag: '0.924,0.797|0.773,0.428B|0.562,0.056A',
-      paths: [
-        {
-          path: [
-            { suffix: '', x: 0.924, y: 0.797 },
-            { suffix: 'B', x: 0.773, y: 0.428 },
-            { suffix: 'A', x: 0.562, y: 0.056 },
-          ],
-          shortId: 'n6',
-        },
+      path: [
+        { suffix: '', x: 0.924, y: 0.797 },
+        { suffix: 'B', x: 0.773, y: 0.428 },
+        { suffix: 'A', x: 0.562, y: 0.056 },
       ],
       type: 'wikimedia_commons',
       v: 'File:Lomy nad Velkou - Borová věž3.jpg',
