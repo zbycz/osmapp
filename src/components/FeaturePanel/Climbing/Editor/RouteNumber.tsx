@@ -130,7 +130,7 @@ export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
       <Text
         x={newX}
         y={newY + TEXT_Y_SHIFT}
-        scale={photoZoom.scale}
+        $scale={photoZoom.scale}
         fill={colors.text}
         textAnchor="middle"
         {...commonProps}

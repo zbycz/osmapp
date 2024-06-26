@@ -15,6 +15,7 @@ export const PanelWrapper = styled.div`
   top: 72px; // TopPanel
   bottom: 0;
   background: ${({ theme }) => theme.palette.background.paper};
+  color: ${({ theme }) => theme.palette.text.primary};
   overflow: hidden;
   z-index: 1100;
   box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
