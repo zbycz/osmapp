@@ -12,20 +12,26 @@ import { Slider } from './Slider';
 const HEIGHT = 270;
 const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
 
+const Img = styled.img`
+  border-radius: 12px;
+  &.hasPaths {
+    opacity: 0.9; // let the paths be more prominent
+  }
+`;
 const ImageWrapper = styled.div`
   position: relative;
   display: flex;
   height: 100%;
-  ${({ onClick }) => onClick && 'cursor: pointer;&:hover{opacity: 0.8;}'}
+  border-radius: 12px;
 
-  img,
-  svg {
-    border-radius: 8px;
-  }
-
-  img.hasPaths {
-    opacity: 0.9; // let the paths be more prominent
-  }
+  /* overflow: hidden; */
+  ${({ onClick, theme }) =>
+    onClick &&
+    `
+      cursor: pointer;
+      &:hover {
+        box-shadow: 0 0 10px ${theme.palette.secondary.main};
+      }`}
 
   svg {
     position: absolute;
@@ -59,7 +65,7 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
   const hasPaths = imageTag.path?.length || imageTag.memberPaths?.length;
   return (
     <ImageWrapper onClick={onClick}>
-      <img
+      <Img
         src={imageTag.imageUrl}
         height={HEIGHT}
         alt={imageTag.v}
