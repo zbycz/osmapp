@@ -14,14 +14,14 @@ const Svg = styled.svg`
   }
 `;
 
-const PathBorder = styled.path`
-  stroke-width: 0.8%;
-  stroke: ${({ theme }) => theme.palette.climbing.borderSlider};
+const PathBorder = styled.path<{ $color: string }>`
+  stroke-width: 1.3%;
+  stroke: ${({ $color }) => $color};
 `;
 
-const PathLine = styled.path<{ color: string }>`
-  stroke-width: 0.6%;
-  stroke: ${({ color }) => color};
+const PathLine = styled.path<{ $color: string }>`
+  stroke-width: 1%;
+  stroke: ${({ $color }) => $color};
 `;
 
 type Props = {
@@ -31,6 +31,7 @@ type Props = {
 };
 export const Path = ({ path, feature, size }: Props) => {
   const theme = useTheme();
+
   const d = path
     .map(
       ({ x, y }, idx) =>
@@ -39,11 +40,12 @@ export const Path = ({ path, feature, size }: Props) => {
     .join(',');
 
   const color = getDifficultyColor(feature.tags, theme);
+  const contrastColor = theme.palette.getContrastText(color);
 
   return (
     <>
-      <PathBorder d={d} />
-      <PathLine d={d} color={color} />
+      <PathBorder d={d} $color={contrastColor} />
+      <PathLine d={d} $color={color} />
     </>
   );
 };
