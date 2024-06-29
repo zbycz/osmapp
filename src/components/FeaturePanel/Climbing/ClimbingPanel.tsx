@@ -4,7 +4,6 @@ import Router from 'next/router';
 import ZoomInIcon from '@mui/icons-material/ZoomIn';
 import { Button } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { PanelScrollbars, PanelWrapper } from '../../utils/PanelHelpers';
 import { RouteList } from './RouteList/RouteList';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
@@ -19,6 +18,7 @@ import { RouteDistribution } from './RouteDistribution';
 import { YellowedBadge } from './YellowedBadge';
 import { getWikimediaCommonsKeys, removeFilePrefix } from './utils/photo';
 import { SuggestEdit } from '../SuggestEdit';
+import { PanelContent } from '../../utils/PanelHelpers';
 
 const HeadingContainer = styled.div`
   display: flex;
@@ -55,7 +55,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
   preparePhotosAndSet(cragPhotos);
 
   return (
-    <>
+    <PanelContent>
       {/* <PanelWrapper>
         <PanelScrollbars> */}
       <ClimbingParentLink />
@@ -78,7 +78,6 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
       </div>
 
       <SuggestEdit />
-
       {/* @TODO unite with parent panel */}
       <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
       {/* </PanelScrollbars> */}
@@ -95,6 +94,6 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
         </Button>
       </DetailButtonContainer>
       {/* </PanelWrapper> */}
-    </>
+    </PanelContent>
   );
 };

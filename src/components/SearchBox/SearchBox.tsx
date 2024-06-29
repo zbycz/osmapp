@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
 import Router from 'next/router';
@@ -12,15 +12,20 @@ import { SEARCH_BOX_HEIGHT } from './consts';
 import { useInputValueState } from './options/geocoder';
 import { useOptions } from './useOptions';
 
-const TopPanel = styled.div`
+const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;
   height: ${SEARCH_BOX_HEIGHT}px;
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-  background-color: ${({ theme }) => theme.palette.background.searchBox};
+  ${({ $isMobileMode }) =>
+    !$isMobileMode &&
+    css`
+      box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
+      background-color: ${({ theme }) => theme.palette.background.searchBox};
+    `}
+
   padding: 10px;
   box-sizing: border-box;
 
-  z-index: 1201;
+  z-index: 1;
 
   width: 100%;
   @media ${isDesktop} {
@@ -32,6 +37,9 @@ const StyledPaper = styled(Paper)`
   padding: 2px 4px;
   display: flex;
   align-items: center;
+  background-color: ${({ theme }) => theme.palette.background.searchInput};
+  -webkit-backdrop-filter: blur(35px);
+  backdrop-filter: blur(35px);
 
   .MuiAutocomplete-root {
     flex: 1;
@@ -77,7 +85,7 @@ const SearchBox = () => {
   useOptions(inputValue, setOptions);
 
   return (
-    <TopPanel>
+    <TopPanel $isMobileMode={isMobileMode}>
       <StyledPaper elevation={1} ref={autocompleteRef}>
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />

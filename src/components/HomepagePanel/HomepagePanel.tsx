@@ -24,7 +24,7 @@ import {
 import { useMobileMode } from '../helpers';
 
 export const Content = styled.div`
-  height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
+  height: calc(100% - 72px); // 100% - TopPanel - FeatureImage
   padding: 20px 2em 0 2em;
 
   a.maptiler {

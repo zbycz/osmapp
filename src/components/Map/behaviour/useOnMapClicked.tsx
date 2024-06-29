@@ -39,7 +39,7 @@ const getCoordsPreview = (coords, zoom) => {
 };
 
 export const useOnMapClicked = createMapEventHook(
-  (map, setFeature, setPreview, mobileMode) => ({
+  (map, setFeature, setPreview) => ({
     eventType: 'click',
     eventHandler: async ({ point }) => {
       const coords = map.unproject(point).toArray();

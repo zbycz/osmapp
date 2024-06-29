@@ -39,6 +39,7 @@ declare module '@mui/material/styles' {
     elevation?: string;
     hover?: string;
     searchBox?: string;
+    searchInput?: string;
   }
 
   interface Theme {

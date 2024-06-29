@@ -48,7 +48,7 @@ const BrowserMap = ({ onMapLoaded }) => {
   const { setFeature, setPreview } = useFeatureContext();
   const [map, mapRef] = useInitMap();
   useAddTopRightControls(map, mobileMode);
-  useOnMapClicked(map, setFeature, setPreview, mobileMode);
+  useOnMapClicked(map, setFeature, setPreview);
   useOnMapLongPressed(map, setPreview);
   useOnMapLoaded(map, onMapLoaded);
   useFeatureMarker(map);

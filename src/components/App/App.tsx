@@ -22,7 +22,6 @@ import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
 import { useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
-import { PanelWrapper } from '../utils/PanelHelpers';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -81,13 +80,9 @@ const IndexWithProviders = () => {
   const photo = router.query.all?.[3];
   return (
     <>
-      <SearchBox />
       <Loading />
-      {featureShown && !isMobileMode && (
-        <PanelWrapper>
-          <FeaturePanel />
-        </PanelWrapper>
-      )}
+      <SearchBox />
+      {featureShown && !isMobileMode && <FeaturePanel />}
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>

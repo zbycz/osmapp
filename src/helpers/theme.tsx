@@ -27,6 +27,7 @@ const lightTheme = createTheme({
       paper: '#fafafa',
       hover: '#f2f3f2',
       searchBox: '#eb5757',
+      searchInput: 'rgba(255,255,255,0.7)',
     },
     invertFilter: 'invert(0)',
     climbing: {
@@ -66,6 +67,7 @@ const darkTheme = createTheme({
       paper: '#424242',
       hover: grey['700'],
       searchBox: '#963838',
+      searchInput: 'rgba(0,0,0,0.6)',
     },
     invertFilter: 'invert(1)',
     climbing: {

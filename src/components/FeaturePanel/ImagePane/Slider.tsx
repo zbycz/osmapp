@@ -7,7 +7,7 @@ import { useScrollShadow } from '../Climbing/utils/useScrollShadow';
 const Wrapper = styled.div`
   width: 100%;
   text-align: center;
-  overflow: hidden;
+  /* overflow: hidden; */
   margin-bottom: 1rem;
   position: relative;
 
