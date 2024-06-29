@@ -9,7 +9,7 @@ import { removeFilePrefix } from '../Climbing/utils/photo';
 import { Size } from './types';
 import { Slider } from './Slider';
 
-const HEIGHT = 270;
+const HEIGHT = 245;
 const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
 
 const Img = styled.img`
