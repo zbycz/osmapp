@@ -4,76 +4,47 @@ import { Button, TextField, Typography } from '@mui/material';
 
 import { t } from '../../../services/intl';
 import {
-  getNewWikimediaCommonsIndex,
+  getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
-  isWikimediaCommons,
 } from '../Climbing/utils/photo';
-import { useFeatureContext } from '../../utils/FeatureContext';
 
 export const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
 
-const getPhotoOffset = (activeMajorKeys: Array<string>) =>
-  activeMajorKeys.reduce((acc, tagKey) => {
-    if (isWikimediaCommons(tagKey)) return acc + 1;
-    return acc;
-  }, 0);
-
-const getData = (newIndex: number = 0, offset: number) => {
-  const numberOfNewItems = offset + 1;
-  const wikimediaCommonKeys = Array(numberOfNewItems)
+const getData = (numberOfWikimediaItems) => {
+  const wikimediaCommonTags = Array(numberOfWikimediaItems)
     .fill('')
-    .map((_, currentOffset) =>
-      getWikimediaCommonsKey(newIndex + currentOffset),
-    );
-
-  const wikimediaCommonNames = Array(numberOfNewItems)
-    .fill('')
-    .reduce(
-      (acc, _, currentOffset) => ({
-        ...acc,
-        [getWikimediaCommonsKey(
-          newIndex + currentOffset,
-        )]: `Wikimedia commons photo (${currentOffset + newIndex})`,
-      }),
-      {},
-    );
+    .reduce((acc, _, index) => {
+      const key = getWikimediaCommonsKey(index);
+      const value = `Wikimedia commons photo (${index})`;
+      return { ...acc, [key]: value };
+    }, {});
 
   return {
-    keys: [...majorKeys, ...wikimediaCommonKeys],
+    keys: [...majorKeys, ...Object.keys(wikimediaCommonTags)],
     names: {
       name: t('tags.name'),
       website: t('tags.website'),
       phone: t('tags.phone'),
       opening_hours: t('tags.opening_hours'),
-      ...wikimediaCommonNames,
+      ...wikimediaCommonTags,
     },
   };
 };
 
 export const MajorKeysEditor = ({ tags, setTag, focusTag }) => {
-  const [photoOffset, setPhotoOffset] = React.useState(0);
-
-  // TODO this code needs refactoring, probably will be nuked when implementing id presets fields
-  const { feature } = useFeatureContext();
-  const newPhotoIndex = getNewWikimediaCommonsIndex(feature);
-
-  const data = getData(newPhotoIndex, photoOffset);
-
-  const getInitialMajorKeys = (majorKeyTags) =>
-    data.keys.filter((k) => !!majorKeyTags[k]);
+  // TODO this code will be replaced when implementing id presets fields
+  const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
+  const data = getData(nextWikimediaCommonsIndex + 1);
 
   const [activeMajorKeys, setActiveMajorKeys] = React.useState(
-    getInitialMajorKeys(tags),
+    data.keys.filter((k) => !!tags[k]),
   );
+
   const inactiveMajorKeys = data.keys.filter(
     (k) =>
       !activeMajorKeys.includes(k) ||
-      k === getWikimediaCommonsKey(newPhotoIndex + photoOffset),
+      k === getWikimediaCommonsKey(nextWikimediaCommonsIndex + 1),
   );
-
-  useEffect(() => {
-    setPhotoOffset(getPhotoOffset(activeMajorKeys));
-  }, [activeMajorKeys]);
 
   useEffect(() => {
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {

@@ -7,7 +7,7 @@ import { invertedBoltCodeMap } from './utils/boltCodes';
 import { getOsmTagFromGradeSystem } from './utils/grades/routeGrade';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
-  getNewWikimediaCommonsIndex,
+  getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from './utils/photo';
 
@@ -46,7 +46,7 @@ const getUpdatedBasicTags = (route: ClimbingRoute) => {
 
 const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   const updatedTags = {};
-  const newIndex = getNewWikimediaCommonsIndex(route.feature);
+  const newIndex = getNextWikimediaCommonsIndex(route.feature.tags);
 
   let offset = 0;
   Object.entries(route.paths).forEach(([photoName, points]) => {
