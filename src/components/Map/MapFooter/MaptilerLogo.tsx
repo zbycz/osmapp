@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
+import { useIsClient } from '../../helpers';
 
 const Link = styled.a`
   pointer-events: all;
@@ -9,12 +10,13 @@ const Link = styled.a`
 `;
 
 export const MaptilerLogo = () => {
+  const isClient = useIsClient();
   const { activeLayers } = useMapStateContext();
   const hasMaptiler = activeLayers.some((layer) =>
     osmappLayers[layer]?.attribution?.includes('maptiler'),
   );
 
-  if (!hasMaptiler) {
+  if (!isClient || !hasMaptiler) {
     return null;
   }
 
