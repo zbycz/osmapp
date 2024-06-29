@@ -10,6 +10,7 @@ const Wrapper = styled.div<{ $deleted: boolean }>`
   padding-bottom: 30px;
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
 
+  padding: 25px 20px;
   &:hover .show-on-hover {
     display: block !important;
   }

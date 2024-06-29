@@ -20,7 +20,7 @@ const TopPanel = styled.div`
   padding: 10px;
   box-sizing: border-box;
 
-  z-index: 1200;
+  z-index: 1201;
 
   width: 100%;
   @media ${isDesktop} {
@@ -66,6 +66,7 @@ const useOnClosePanel = () => {
 };
 
 const SearchBox = () => {
+  const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const { inputValue, setInputValue } = useInputValueState();
   const [options, setOptions] = useState([]);
@@ -90,7 +91,9 @@ const SearchBox = () => {
           setOverpassLoading={setOverpassLoading}
         />
 
-        {featureShown && <ClosePanelButton onClick={onClosePanel} />}
+        {featureShown && !isMobileMode && (
+          <ClosePanelButton onClick={onClosePanel} />
+        )}
         {overpassLoading && <OverpassCircularProgress />}
       </StyledPaper>
     </TopPanel>

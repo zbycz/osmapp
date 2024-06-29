@@ -93,45 +93,47 @@ export const FeaturePanel = () => {
   }
 
   return (
-    <PanelWrapper>
-      <PanelScrollbars>
-        <ImageSection />
-        <PanelContent>
-          <PanelSidePadding>
-            <ParentLink />
-            <FeatureHeading
-              deleted={deleted}
-              title={label}
-              editEnabled={editEnabled && !point}
-            />
+    <>
+      {/* <PanelWrapper>
+      <PanelScrollbars> */}
+      <ImageSection />
+      <PanelContent>
+        <PanelSidePadding>
+          <ParentLink />
+          <FeatureHeading
+            deleted={deleted}
+            title={label}
+            editEnabled={editEnabled && !point}
+          />
 
-            <OsmError />
-          </PanelSidePadding>
+          <OsmError />
+        </PanelSidePadding>
 
-          <Flex>
-            {!skeleton && (
-              <>
-                <ImageSlider />
+        <Flex>
+          {!skeleton && (
+            <>
+              <ImageSlider />
 
-                <PanelSidePadding>
-                  <Properties showTags={showTagsTable} key={getKey(feature)} />
+              <PanelSidePadding>
+                <Properties showTags={showTagsTable} key={getKey(feature)} />
 
-                  <MemberFeatures />
-                  {advanced && <Members />}
+                <MemberFeatures />
+                {advanced && <Members />}
 
-                  <PublicTransport tags={tags} />
+                <PublicTransport tags={tags} />
 
-                  {editEnabled && <SuggestEdit />}
+                {editEnabled && <SuggestEdit />}
 
-                  {point && <ObjectsAround advanced={advanced} />}
-                </PanelSidePadding>
-              </>
-            )}
-          </Flex>
+                {point && <ObjectsAround advanced={advanced} />}
+              </PanelSidePadding>
+            </>
+          )}
+        </Flex>
 
-          <PanelSidePadding>{footer}</PanelSidePadding>
-        </PanelContent>
-      </PanelScrollbars>
-    </PanelWrapper>
+        <PanelSidePadding>{footer}</PanelSidePadding>
+      </PanelContent>
+      {/* </PanelScrollbars>
+    </PanelWrapper> */}
+    </>
   );
 };

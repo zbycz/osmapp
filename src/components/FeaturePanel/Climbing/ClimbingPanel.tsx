@@ -56,45 +56,45 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
 
   return (
     <>
-      <PanelWrapper>
-        <PanelScrollbars>
-          <ClimbingParentLink />
+      {/* <PanelWrapper>
+        <PanelScrollbars> */}
+      <ClimbingParentLink />
 
-          <HeadingContainer>
-            <Heading>{label}</Heading>
-            <YellowedBadge />
-            <StarButton />
-          </HeadingContainer>
-          <PoiDescription />
+      <HeadingContainer>
+        <Heading>{label}</Heading>
+        <YellowedBadge />
+        <StarButton />
+      </HeadingContainer>
+      <PoiDescription />
 
-          <ImageSlider />
-          <OsmError />
+      <ImageSlider />
+      <OsmError />
 
-          <RouteDistribution />
-          <RouteList />
+      <RouteDistribution />
+      <RouteList />
 
-          <div style={{ padding: '35px 15px 5px' }}>
-            <Properties showTags={showTagsTable} />
-          </div>
+      <div style={{ padding: '35px 15px 5px' }}>
+        <Properties showTags={showTagsTable} />
+      </div>
 
-          <SuggestEdit />
+      <SuggestEdit />
 
-          {/* @TODO unite with parent panel */}
-          <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
-        </PanelScrollbars>
-        <DetailButtonContainer>
-          <Button
-            color="primary"
-            size="large"
-            startIcon={<ZoomInIcon fontSize="inherit" />}
-            onClick={onFullScreenClick}
-            fullWidth
-            variant="contained"
-          >
-            Show crag detail
-          </Button>
-        </DetailButtonContainer>
-      </PanelWrapper>
+      {/* @TODO unite with parent panel */}
+      <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
+      {/* </PanelScrollbars> */}
+      <DetailButtonContainer>
+        <Button
+          color="primary"
+          size="large"
+          startIcon={<ZoomInIcon fontSize="inherit" />}
+          onClick={onFullScreenClick}
+          fullWidth
+          variant="contained"
+        >
+          Show crag detail
+        </Button>
+      </DetailButtonContainer>
+      {/* </PanelWrapper> */}
     </>
   );
 };

@@ -12,7 +12,6 @@ import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
-import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
@@ -21,6 +20,9 @@ import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
+import { useMobileMode } from '../helpers';
+import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
+import { PanelWrapper } from '../utils/PanelHelpers';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -66,7 +68,8 @@ const useUpdateViewFromHash = () => {
 };
 
 const IndexWithProviders = () => {
-  const { feature, featureShown, preview } = useFeatureContext();
+  const isMobileMode = useMobileMode();
+  const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
   useUpdateViewFromFeature();
   usePersistMapView();
@@ -80,7 +83,12 @@ const IndexWithProviders = () => {
     <>
       <SearchBox />
       <Loading />
-      {featureShown && <FeaturePanel />}
+      {featureShown && !isMobileMode && (
+        <PanelWrapper>
+          <FeaturePanel />
+        </PanelWrapper>
+      )}
+      {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
           <ClimbingDialog photo={photo} />
@@ -90,7 +98,6 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
-      {preview && <FeaturePreview />}
       <TitleAndMetaTags />
     </>
   );

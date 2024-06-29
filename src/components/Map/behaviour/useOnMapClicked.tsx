@@ -58,11 +58,6 @@ export const useOnMapClicked = createMapEventHook(
         return;
       }
 
-      if (mobileMode) {
-        setPreview(skeleton);
-        return;
-      }
-
       // router wouldnt overwrite the skeleton if same url is already loaded
       setFeature((feature) =>
         isSameOsmId(feature, skeleton) ? feature : skeleton,
