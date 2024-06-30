@@ -61,7 +61,6 @@ export const useOnMapClicked = createMapEventHook((map, setFeature) => ({
     setFeature((feature) =>
       isSameOsmId(feature, skeleton) ? feature : skeleton,
     );
-    setFeature(null);
 
     const result = await maptilerFix(features[0], skeleton, features[0].id);
     addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API

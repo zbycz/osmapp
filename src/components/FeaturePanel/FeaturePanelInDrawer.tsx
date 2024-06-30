@@ -5,6 +5,13 @@ import styled from 'styled-components';
 import { grey } from '@mui/material/colors';
 import { FeaturePanelInner } from './FeaturePanelInner';
 
+const StyledSwipeableDrawer = styled(SwipeableDrawer)`
+  .MuiDrawer-root > .MuiPaper-root {
+    height: calc(100% - 86px - 8px);
+    overflow: visible;
+  }
+`;
+
 const Container = styled.div`
   position: relative;
   background: ${({ theme }) => theme.palette.background.paper};
@@ -40,7 +47,7 @@ export const FeaturePanelInDrawer = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <SwipeableDrawer
+    <StyledSwipeableDrawer
       anchor="bottom"
       open={open}
       onClose={() => setOpen(false)}
@@ -52,6 +59,7 @@ export const FeaturePanelInDrawer = () => {
       ModalProps={{
         keepMounted: true,
       }}
+      className="featurePanelInDrawer"
     >
       <Container>
         <Puller />
@@ -59,6 +67,6 @@ export const FeaturePanelInDrawer = () => {
           <FeaturePanelInner />
         </ListContainer>
       </Container>
-    </SwipeableDrawer>
+    </StyledSwipeableDrawer>
   );
 };

@@ -37,6 +37,5 @@ export const onHighlightFactory = (setPreview) => (e, option) => {
 
   if (option?.geometry?.coordinates) {
     setPreview(getSkeleton(option));
-    
   }
 };
