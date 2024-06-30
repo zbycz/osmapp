@@ -83,14 +83,14 @@ const ExamplesClimbing = () => (
 );
 
 export const HomepagePanel = () => {
-  const { feature, preview, homepageShown, hideHomepage, persistHideHomepage } =
+  const { feature, homepageShown, hideHomepage, persistHideHomepage } =
     useFeatureContext();
   const isMobileMode = useMobileMode();
 
-  // hide after first shown feature or preview
+  // hide after first shown feature
   useEffect(() => {
-    if (feature || preview) hideHomepage();
-  }, [feature, preview]);
+    if (feature) hideHomepage();
+  }, [feature]);
 
   if (!homepageShown) {
     return null;

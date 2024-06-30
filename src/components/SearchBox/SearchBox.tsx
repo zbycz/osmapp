@@ -63,13 +63,9 @@ const OverpassCircularProgress = styled(CircularProgress)`
 // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
 
 const useOnClosePanel = () => {
-  const { feature, setFeature, setPreview } = useFeatureContext();
-  const mobileMode = useMobileMode();
+  const { setFeature } = useFeatureContext();
 
   return () => {
-    if (mobileMode) {
-      setPreview(feature);
-    }
     setFeature(null);
     Router.push(`/${window.location.hash}`);
   };

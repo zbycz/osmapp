@@ -64,7 +64,7 @@ const emulatedLongPressListeners = (map, eventHandler) => {
 //   return () => map.off('contextmenu', eventHandler);
 // };
 
-export const useOnMapLongPressed = (map, setPreview) => {
+export const useOnMapLongPressed = (map, setFeature) => {
   useEffect(() => {
     if (!map) {
       return undefined;
@@ -77,9 +77,9 @@ export const useOnMapLongPressed = (map, setPreview) => {
     const showCoords = ({ point }) => {
       const coords = map.unproject(point).toArray();
       const roundedPosition = getRoundedPosition(coords, map.getZoom());
-      setPreview(getCoordsFeature(roundedPosition));
+      setFeature(getCoordsFeature(roundedPosition));
     };
 
     return emulatedLongPressListeners(map, showCoords);
-  }, [map, setPreview]);
+  }, [map, setFeature]);
 };

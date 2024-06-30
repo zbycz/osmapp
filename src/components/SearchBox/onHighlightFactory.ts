@@ -31,10 +31,12 @@ export const getSkeleton = (option) => {
 export const onHighlightFactory = (setPreview) => (e, option) => {
   if (option?.star?.center) {
     const { center } = option.star;
-    setPreview({ center, noPreviewButton: true });
+    setPreview({ center });
     return;
   }
 
-  if (!option?.geometry?.coordinates) return;
-  setPreview({ ...getSkeleton(option), noPreviewButton: true });
+  if (option?.geometry?.coordinates) {
+    setPreview(getSkeleton(option));
+    
+  }
 };
