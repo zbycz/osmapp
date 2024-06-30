@@ -11,6 +11,8 @@ import { isDesktop, useMobileMode } from '../helpers';
 import { SEARCH_BOX_HEIGHT } from './consts';
 import { useInputValueState } from './options/geocoder';
 import { useOptions } from './useOptions';
+import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
+import { LoginMenu } from '../Map/TopMenu/LoginMenu';
 
 const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;
@@ -101,6 +103,12 @@ const SearchBox = () => {
 
         {featureShown && !isMobileMode && (
           <ClosePanelButton onClick={onClosePanel} />
+        )}
+        {isMobileMode && (
+          <>
+            <LoginMenu />
+            <HamburgerMenu />
+          </>
         )}
         {overpassLoading && <OverpassCircularProgress />}
       </StyledPaper>
