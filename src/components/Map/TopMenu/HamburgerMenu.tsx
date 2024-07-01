@@ -176,7 +176,6 @@ export const HamburgerMenu = () => {
       <Menu
         id="hamburger-menu"
         anchorEl={anchorRef.current}
-        hideBackdrop
         anchorOrigin={{
           vertical: 'bottom',
           horizontal: 'right',

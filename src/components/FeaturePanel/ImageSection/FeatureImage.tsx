@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React from 'react';
 
 import styled from 'styled-components';
 
@@ -19,33 +19,6 @@ const Wrapper = styled.div<{ $uncertainImage: boolean }>`
     $uncertainImage
       ? 'box-shadow: inset 0 0 100px rgba(255,255,255,0.3); filter: contrast(0.6) brightness(1.2);'
       : ''}
-`;
-
-const GradientCover = styled.div`
-  pointer-events: none;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  opacity: 0.6;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0) 70%,
-    rgba(0, 0, 0, 0.15) 76%,
-    #000000
-  );
-`;
-
-const Bottom = styled.div`
-  position: absolute;
-  bottom: 0;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  height: 44px;
 `;
 
 const IconWrapper = styled.div`
@@ -83,10 +56,9 @@ const AttributionLink = styled.a<{ $portrait: boolean }>`
 interface Props {
   feature: Feature;
   ico: string;
-  children: ReactNode;
 }
 
-export const FeatureImage = ({ feature, ico, children }: Props) => {
+export const FeatureImage = ({ feature, ico }: Props) => {
   const [image, setImage] = React.useState(feature.ssrFeatureImage ?? LOADING);
 
   React.useEffect(() => {
@@ -116,7 +88,6 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
       {image && image !== LOADING && (
         <Photo image={image} isCertain={!uncertainImage} />
       )}
-      <GradientCover />
       {(image === undefined || image === LOADING) && (
         <IconWrapper>
           <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
@@ -135,7 +106,6 @@ export const FeatureImage = ({ feature, ico, children }: Props) => {
         </Tooltip>
       )}
       {!feature.skeleton && image === LOADING && <InlineSpinner />}
-      <Bottom>{children}</Bottom>
     </Wrapper>
   );
 };

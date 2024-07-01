@@ -95,12 +95,8 @@ export const FeaturePanelInner = () => {
     <>
       <PanelContent>
         <PanelSidePadding>
+          <FeatureHeading />
           <ParentLink />
-          <FeatureHeading
-            deleted={deleted}
-            title={label}
-            editEnabled={editEnabled && !point}
-          />
 
           <OsmError />
         </PanelSidePadding>

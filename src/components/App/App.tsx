@@ -100,6 +100,7 @@ const IndexWithProviders = () => {
 
 const App = ({ featureFromRouter, initialMapView, cookies }) => {
   const mapView = getMapViewFromHash() || initialMapView;
+
   return (
     <SnackbarProvider>
       <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>

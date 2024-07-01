@@ -1,5 +1,9 @@
 import { createGlobalStyle } from 'styled-components';
-import { isDesktop } from '../components/helpers';
+import {
+  DRAWER_PREVIEW_HEIGHT,
+  DRAWER_TOP_OFFSET,
+  isDesktop,
+} from '../components/helpers';
 
 export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
@@ -105,7 +109,10 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .featurePanelInDrawer.MuiDrawer-root > .MuiPaper-root {
-    height: calc(100% - 86px - 8px);
+    height: calc(100% - ${DRAWER_PREVIEW_HEIGHT}px - ${DRAWER_TOP_OFFSET}px);
     overflow: visible;
+  }
+  .PrivateSwipeArea-root {
+    cursor: pointer;
   }
 `;

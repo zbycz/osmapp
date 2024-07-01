@@ -21,6 +21,9 @@ const Wrapper = styled.div`
 
     padding-left: 16px;
     padding-right: 16px;
+
+    padding-top: 16px;
+    padding-bottom: 16px;
   }
 
   .slides > div {
@@ -29,8 +32,6 @@ const Wrapper = styled.div`
     align-items: center;
 
     position: relative;
-    margin-top: 16px;
-    margin-bottom: 16px;
   }
 `;
 
