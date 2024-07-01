@@ -3,12 +3,20 @@ import React from 'react';
 import styled from 'styled-components';
 import { IconButton } from '@mui/material';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
+import { isMobileMode } from '../../helpers';
 
 const StyledIconButton = styled(IconButton)`
   padding: 12px;
 
   svg {
     filter: drop-shadow(0 0 2px #ffffff);
+  }
+
+  @media ${isMobileMode} {
+    svg {
+      filter: none;
+      filter: invert(100%);
+    }
   }
 `;
 

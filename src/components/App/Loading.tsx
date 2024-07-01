@@ -6,7 +6,7 @@ import { isDesktop, useBoolState } from '../helpers';
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 72px;
+  top: 0;
   z-index: 1200;
 
   width: 100%;

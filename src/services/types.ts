@@ -125,9 +125,6 @@ export interface Feature {
   state?: { hover: boolean };
   skeleton?: boolean;
   nonOsmObject?: boolean;
-
-  // preview
-  noPreviewButton?: boolean;
 }
 
 export type MessagesType = typeof Vocabulary;

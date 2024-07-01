@@ -45,7 +45,7 @@ const starOptionSelected = (option) => {
   Router.push(`/${getUrlOsmId(apiId)}`);
 };
 
-const geocoderOptionSelected = (option, mobileMode, setPreview, setFeature) => {
+const geocoderOptionSelected = (option, setFeature) => {
   if (!option?.geometry.coordinates) return;
 
   const skeleton = getSkeleton(option);
@@ -53,21 +53,15 @@ const geocoderOptionSelected = (option, mobileMode, setPreview, setFeature) => {
 
   addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
-  if (mobileMode) {
-    setPreview(skeleton);
-    fitBounds(option);
-    return;
-  }
-
   setFeature(skeleton);
   fitBounds(option, true);
   Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };
 
 export const onSelectedFactory =
-  (setFeature, setPreview, mobileMode, bbox, showToast, setOverpassLoading) =>
+  (setFeature, setPreview, bbox, showToast, setOverpassLoading) =>
   (_, option) => {
-    setPreview(null);
+    setPreview(null); // it could be stuck from onHighlight
 
     if (option.star) {
       starOptionSelected(option);
@@ -79,5 +73,5 @@ export const onSelectedFactory =
       return;
     }
 
-    geocoderOptionSelected(option, mobileMode, setPreview, setFeature);
+    geocoderOptionSelected(option, setFeature);
   };
