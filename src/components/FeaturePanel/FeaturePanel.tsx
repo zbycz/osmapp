@@ -17,6 +17,7 @@ import { FeatureDescription } from './FeatureDescription';
 import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
+import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { getLabel } from '../../helpers/featureLabel';
 import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
@@ -120,6 +121,8 @@ export const FeaturePanel = () => {
                   {advanced && <Members />}
 
                   <PublicTransport tags={tags} />
+
+                  <FeatureOpenPlaceGuideLink />
 
                   {editEnabled && <SuggestEdit />}
 
