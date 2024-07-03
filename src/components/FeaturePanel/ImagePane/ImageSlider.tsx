@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Router from 'next/router';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Path, PathSvg } from './Path';
@@ -13,7 +13,6 @@ const HEIGHT = 245;
 const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
 
 const Img = styled.img`
-  border-radius: 12px;
   &.hasPaths {
     opacity: 0.9; // let the paths be more prominent
   }
@@ -22,26 +21,27 @@ const ImageWrapper = styled.div`
   position: relative;
   display: flex;
   height: 100%;
-  border-radius: 12px;
 
-  /* overflow: hidden; */
-  ${({ onClick, theme }) =>
+  ${({ onClick }) =>
     onClick &&
-    `
+    css`
       cursor: pointer;
-      &:hover {
-        box-shadow: 0 0 10px ${theme.palette.secondary.main};
-      }`}
+    `}
 
   svg {
     position: absolute;
     height: 100%;
     width: 100%;
-    border-radius: 8px;
   }
 `;
 
-const Image = ({ imageTag }: { imageTag: ImageTag }) => {
+const Image = ({
+  imageTag,
+  onlyOneImage,
+}: {
+  imageTag: ImageTag;
+  onlyOneImage: boolean;
+}) => {
   const [size, setSize] = React.useState<Size>(initialSize);
   const { feature } = useFeatureContext();
   const isCrag = feature.tags.climbing === 'crag';
@@ -67,7 +67,8 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
     <ImageWrapper onClick={onClick}>
       <Img
         src={imageTag.imageUrl}
-        height={HEIGHT}
+        width={onlyOneImage ? '100%' : undefined}
+        height={onlyOneImage ? undefined : HEIGHT}
         alt={imageTag.v}
         onLoad={onPhotoLoad}
         className={hasPaths ? 'hasPaths' : ''}
@@ -99,7 +100,11 @@ export const ImageSlider = () => {
   return (
     <Slider>
       {feature.imageTags.map((imageTag) => (
-        <Image key={imageTag.k} imageTag={imageTag} />
+        <Image
+          key={imageTag.k}
+          imageTag={imageTag}
+          onlyOneImage={feature.imageTags.length === 1}
+        />
       ))}
       {/* Fody */}
       {/* Mapillary */}

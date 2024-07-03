@@ -62,7 +62,7 @@ export const GlobalStyle = createGlobalStyle`
 
   .maplibregl-ctrl-group {
     background-color: ${({ theme }) =>
-      convertHexToRgba(theme.palette.background.paper, 0.5)} !important;
+      convertHexToRgba(theme.palette.background.paper, 0.7)} !important;
     backdrop-filter: blur(10px);
 
     .maplibregl-ctrl-icon {

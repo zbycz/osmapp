@@ -24,7 +24,7 @@ const StyledLayerSwitcher = styled.button<{ isMobileMode: boolean }>`
   border: 0;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
   background-color: ${({ theme }) =>
-    convertHexToRgba(theme.palette.background.paper, 0.5)};
+    convertHexToRgba(theme.palette.background.paper, 0.7)};
   backdrop-filter: blur(15px);
   font-size: 12px;
   color: ${({ theme }) => theme.palette.text.primary};
@@ -33,7 +33,8 @@ const StyledLayerSwitcher = styled.button<{ isMobileMode: boolean }>`
 
   &:hover,
   &:focus {
-    background-color: ${({ theme }) => theme.palette.background.hover};
+    background-color: ${({ theme }) =>
+      convertHexToRgba(theme.palette.background.paper, 0.75)};
   }
 
   svg {

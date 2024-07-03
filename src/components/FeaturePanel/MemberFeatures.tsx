@@ -172,7 +172,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
             <Gallery onScroll={onScroll} ref={scrollElementRef}>
               {cragPhotoKeys.map((cragPhotoTag) => {
                 const photoPath = feature.tags[cragPhotoTag];
-                const url = getCommonsImageUrl(photoPath, 400);
+                const url = getCommonsImageUrl(photoPath, 410);
                 return <Image src={url} key={cragPhotoTag} />;
               })}
             </Gallery>
