@@ -15,7 +15,7 @@ import { isBrowser } from '../components/helpers';
 import { addSchemaToFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
 import { osmToFeature } from './osmToFeature';
-import { mergeMemberImageTags } from './images/getImageTags';
+import { mergeMemberImageDefs } from './images/getImageDefs';
 import { captureException } from '../helpers/sentry';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
 
@@ -166,7 +166,7 @@ export const addMembersAndParents = async (
     fetchMemberFeatures(feature.osmMeta),
   ]);
 
-  mergeMemberImageTags(feature, memberFeatures); // TODO test + only for crag
+  mergeMemberImageDefs(feature, memberFeatures); // TODO test + only for crag
 
   return { ...feature, memberFeatures, parentFeatures };
 };

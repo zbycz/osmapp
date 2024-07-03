@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { Box } from '@mui/material';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
@@ -17,7 +16,6 @@ import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { getLabel } from '../../helpers/featureLabel';
-import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
@@ -105,12 +103,6 @@ export const FeaturePanelInner = () => {
           <OsmError />
           <CragsInArea />
         </PanelSidePadding>
-
-        {tags.climbing !== 'area' && (
-          <Box pb={4}>
-            <ImageSection />
-          </Box>
-        )}
 
         <Flex>
           {!skeleton && (

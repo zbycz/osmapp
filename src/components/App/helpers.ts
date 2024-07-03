@@ -1,6 +1,5 @@
 import nextCookies from 'next-cookies';
 import Cookies from 'js-cookie';
-import { getFeatureImage } from '../../services/images';
 import { clearFeatureCache, fetchFeature } from '../../services/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
@@ -43,9 +42,6 @@ export const getInitialMapView = async (ctx) => {
   const { mapView } = nextCookies(ctx);
   return mapView ? mapView.split('/') : getViewFromRequest(ctx.req);
 };
-
-const timeout = (time) =>
-  new Promise((resolve) => setTimeout(resolve, time)) as Promise<undefined>;
 
 const saveLastUrl = (feature: Feature, ctx?) => {
   const url = getOsmappLink(feature);
@@ -96,13 +92,13 @@ export const getInitialFeature = async (ctx) => {
   const osmRequest = t2 - t1;
 
   // for SSR try to add image in time limit
-  if (initialFeature && isServer() && osmRequest < 1600) {
-    const timeoutIn2Secs = 2000 - osmRequest;
-    initialFeature.ssrFeatureImage = await Promise.race([
-      timeout(timeoutIn2Secs),
-      getFeatureImage(initialFeature).catch(() => undefined),
-    ]);
-  }
+  // if (initialFeature && isServer() && osmRequest < 1600) {
+  //   const timeoutIn2Secs = 2000 - osmRequest;
+  //   initialFeature.ssrFeatureImage = await Promise.race([
+  //     timeout(timeoutIn2Secs),
+  //     getFeatureImage(initialFeature).catch(() => undefined),
+  //   ]);
+  // }
 
   const t3 = new Date().getTime();
   const imageRequest = t3 - t2;

@@ -1,7 +1,8 @@
 import maplibregl from 'maplibre-gl';
 import { fetchJson } from '../fetch';
-import { Image, Position } from '../types';
+import { Position } from '../types';
 import { getGlobalMap } from '../mapStorage';
+import { ImageType2 } from './getImageDefs';
 
 const subtractAngle = (a: number, b: number): number =>
   Math.min(Math.abs(a - b), a - b + 360);
@@ -30,11 +31,12 @@ const debugOutput = (sorted) => {
   }
 };
 
-const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
+export const getMapillaryImage = async (
+  poiCoords: Position,
+): Promise<ImageType2 | null> => {
   // https://www.mapillary.com/developer/api-documentation/#image
-  // left, bottom, right, top (or minLon, minLat, maxLon, maxLat)
   const bbox = [
-    poiCoords[0] - 0.0004,
+    poiCoords[0] - 0.0004, // left, bottom, right, top (or minLon, minLat, maxLon, maxLat)
     poiCoords[1] - 0.0004,
     poiCoords[0] + 0.0004,
     poiCoords[1] + 0.0004,
@@ -44,7 +46,7 @@ const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
   const { data } = await fetchJson(url);
 
   if (!data.length) {
-    return undefined;
+    return null;
   }
 
   const photos = data.map((item) => {
@@ -66,21 +68,15 @@ const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
   debugOutput(sorted);
 
   const imageToUse = sorted[0]; // it is save to assume that it has at least one element
-  return {
-    source: 'Mapillary',
-    link: `https://www.mapillary.com/app/?focus=photo&pKey=${sorted[0].id}`,
-    thumb: imageToUse.thumb_1024_url,
-    sharp: imageToUse.thumb_original_url,
-    timestamp: new Date(imageToUse.captured_at).toLocaleString(),
-    isPano: imageToUse.is_pano,
-  };
-};
+  const timestamp = new Date(imageToUse.captured_at).toLocaleString();
+  // const isPano = imageToUse.is_pano;
+  // sharp: imageToUse.thumb_original_url,
 
-export const getMapillaryImage = async (center: Position): Promise<Image> => {
-  try {
-    return await getMapillaryImageRaw(center);
-  } catch (e) {
-    console.warn(e); // eslint-disable-line no-console
-    return undefined;
-  }
+  return {
+    imageUrl: imageToUse.thumb_1024_url,
+    description: `Mapillary image from ${timestamp}`,
+    linkUrl: `https://www.mapillary.com/app/?focus=photo&pKey=${sorted[0].id}`,
+    link: sorted[0].id,
+    uncertainImage: true,
+  };
 };

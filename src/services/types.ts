@@ -11,29 +11,37 @@ export interface ImageUrls {
   timestamp?: string;
   isPano?: boolean;
 }
-
 export type LoadingImage = null;
 export type NoImage = undefined;
-
 export type Image = ImageUrls | LoadingImage | NoImage;
 
 export const imageTagRegexp =
-  /^(image|wikimedia_commons|wikidata|wikipedia|wikipedia:[a-z+]|website)(:?\d*)$/;
-
+  /^(image|wikimedia_commons|wikidata|wikipedia)(\d*|:(?!path)[^:]+)$/;
 export type PathType = { x: number; y: number; suffix: string }[];
-export type ImagePath = {
+export type MemberPath = {
   path: PathType;
-  member?: Feature;
+  member: Feature;
 };
-export type ImageTag = {
-  type: 'image' | 'wikimedia_commons' | 'wikidata' | 'wikipedia' | 'website';
+export type ImageFromTag = {
+  type: 'tag';
   k: string;
   v: string;
-  imageUrl: string | null; // null = API call needed
-  pathTag: string | undefined;
+  instant: boolean; // true = no API call needed
   path?: PathType;
-  memberPaths?: ImagePath[];
+  memberPaths?: MemberPath[];
 };
+export type ImageFromCenter = {
+  type: 'center';
+  service: 'mapillary' | 'fody';
+  center: LonLat;
+};
+export type ImageDef = ImageFromTag | ImageFromCenter;
+export const isCenter = (def: ImageDef): def is ImageFromCenter =>
+  def?.type === 'center';
+export const isTag = (def: ImageDef): def is ImageFromTag =>
+  def?.type === 'tag';
+export const isInstant = (def: ImageDef): def is ImageFromTag =>
+  isTag(def) && def.instant;
 
 // coordinates in geojson format: [lon, lat] = [x,y]
 export type LonLat = number[];
@@ -100,7 +108,7 @@ export interface Feature {
   members?: RelationMember[];
   memberFeatures?: Feature[];
   parentFeatures?: Feature[];
-  imageTags?: ImageTag[];
+  imageDefs?: ImageDef[];
   properties: {
     class: string;
     subclass: string;
