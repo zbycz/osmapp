@@ -1,13 +1,20 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
-import { Feature, PathType } from '../../../services/types';
+import { Feature, ImageFromTag, PathType } from '../../../services/types';
 import {
   getDifficulty,
   getDifficultyColor,
 } from '../Climbing/utils/grades/routeGrade';
 import { Size } from './types';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { getKey } from '../../../services/helpers';
 
-const Svg = styled.svg`
+const StyledSvg = styled.svg`
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 100%;
   pointer-events: none;
 
   path {
@@ -16,6 +23,15 @@ const Svg = styled.svg`
     fill: none;
   }
 `;
+
+const PathSvg = ({ children, size }) => (
+  <StyledSvg
+    viewBox={`0 0 ${size.width} ${size.height}`}
+    preserveAspectRatio="none"
+  >
+    {children}
+  </StyledSvg>
+);
 
 const PathBorder = styled.path<{ $color: string }>`
   stroke-width: 1.3%;
@@ -27,12 +43,12 @@ const PathLine = styled.path<{ $color: string }>`
   stroke: ${({ $color }) => $color};
 `;
 
-type Props = {
+type PathProps = {
   path: PathType;
   feature: Feature;
   size: Size;
 };
-export const Path = ({ path, feature, size }: Props) => {
+const Path = ({ path, feature, size }: PathProps) => {
   const theme = useTheme();
 
   const d = path
@@ -53,8 +69,19 @@ export const Path = ({ path, feature, size }: Props) => {
   );
 };
 
-export const PathSvg = ({ children, size }) => (
-  <Svg viewBox={`0 0 ${size.width} ${size.height}`} preserveAspectRatio="none">
-    {children}
-  </Svg>
-);
+type PathsProps = {
+  def: ImageFromTag;
+  size: Size;
+};
+
+export const Paths = ({ def, size }: PathsProps) => {
+  const { feature } = useFeatureContext();
+  return (
+    <PathSvg size={size}>
+      {def.path && <Path path={def.path} feature={feature} size={size} />}
+      {def.memberPaths?.map(({ path, member }) => (
+        <Path key={getKey(member)} path={path} feature={member} size={size} />
+      ))}
+    </PathSvg>
+  );
+};

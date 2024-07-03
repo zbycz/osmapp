@@ -5,20 +5,16 @@ import styled from 'styled-components';
 import { Tooltip } from '@mui/material';
 import { getFeatureImage, LOADING } from '../../../services/images';
 import { Feature } from '../../../services/types';
-import { InlineSpinner } from './InlineSpinner';
+import { InlineSpinner } from '../ImagePane/InlineSpinner';
 import { t } from '../../../services/intl';
 import { nl2br } from '../../utils/nl2br';
 import { Photo } from './Photo';
 
-const Wrapper = styled.div<{ $uncertainImage: boolean }>`
+const Wrapper = styled.div`
   position: relative;
   background: #ddd;
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
-  ${({ $uncertainImage }) =>
-    $uncertainImage
-      ? 'box-shadow: inset 0 0 100px rgba(255,255,255,0.3); filter: contrast(0.6) brightness(1.2);'
-      : ''}
 `;
 
 const IconWrapper = styled.div`
@@ -84,7 +80,7 @@ export const FeatureImage = ({ feature, ico }: Props) => {
   const attribution = `${source}${username ? ` / ${username}` : ''}`;
 
   return (
-    <Wrapper $uncertainImage={uncertainImage}>
+    <Wrapper>
       {image && image !== LOADING && (
         <Photo image={image} isCertain={!uncertainImage} />
       )}

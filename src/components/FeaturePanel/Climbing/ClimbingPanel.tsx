@@ -4,7 +4,7 @@ import { RouteList } from './RouteList/RouteList';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { OsmError } from '../OsmError';
 import { Properties } from '../Properties/Properties';
-import { ImageSlider } from '../ImagePane/ImageSlider';
+import { FeatureImages } from '../ImagePane/FeatureImages';
 import { RouteDistribution } from './RouteDistribution';
 import { getWikimediaCommonsKeys, removeFilePrefix } from './utils/photo';
 import { PanelContent, PanelSidePadding } from '../../utils/PanelHelpers';
@@ -31,7 +31,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
         <ParentLink />
         <ClimbingRestriction />
       </PanelSidePadding>
-      <ImageSlider />
+      <FeatureImages />
       <OsmError />
       <RouteDistribution />
       <RouteList />

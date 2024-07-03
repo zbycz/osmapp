@@ -2,6 +2,7 @@
 import { md5 } from 'js-md5';
 import { fetchJson } from '../fetch';
 import { Image } from '../types';
+import { encodeUrl } from '../../helpers/utils';
 
 const getCommonsApiUrl = (title) =>
   `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${encodeURIComponent(
@@ -125,5 +126,5 @@ export const getCommonsImageUrl = (
   const hash = md5(fileName);
   const part1 = hash[0];
   const part2 = hash.substring(0, 2);
-  return `https://upload.wikimedia.org/wikipedia/commons/thumb/${part1}/${part2}/${fileName}/${width}px-${fileName}`;
+  return encodeUrl`https://upload.wikimedia.org/wikipedia/commons/thumb/${part1}/${part2}/${fileName}/${width}px-${fileName}`;
 };

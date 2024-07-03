@@ -46,7 +46,7 @@ const starOptionSelected = (option) => {
 };
 
 const geocoderOptionSelected = (option, setFeature) => {
-  if (!option?.geometry.coordinates) return;
+  if (!option?.geometry?.coordinates) return;
 
   const skeleton = getSkeleton(option);
   console.log('Search item selected:', { location: option, skeleton }); // eslint-disable-line no-console

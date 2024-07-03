@@ -66,3 +66,8 @@ export const publishDbgObject = (key, value) => {
     window.d[key] = value;
   }
 };
+
+export const not =
+  <T>(predicate: (item: T) => boolean) =>
+  (item: T) =>
+    !predicate(item);
