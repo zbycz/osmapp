@@ -2,8 +2,11 @@ import { createGlobalStyle } from 'styled-components';
 import {
   DRAWER_PREVIEW_HEIGHT,
   DRAWER_TOP_OFFSET,
-  isDesktop,
+  isDesktopResolution,
+  isMobileMode,
+  isTabletResolution,
 } from '../components/helpers';
+import { convertHexToRgba } from '../components/utils/colorUtils';
 
 export const GlobalStyle = createGlobalStyle`
   html, body, #__next {
@@ -58,23 +61,38 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .maplibregl-ctrl-group {
-    background: ${({ theme }) => theme.palette.background.paper} !important;
+    background-color: ${({ theme }) =>
+      convertHexToRgba(theme.palette.background.paper, 0.5)} !important;
+    backdrop-filter: blur(10px);
 
     .maplibregl-ctrl-icon {
       filter: ${({ theme }) => theme.palette.invertFilter};
     }
 
+    @media ${isMobileMode} {
+      border-radius: 50%;
+
+      button {
+        width: 44px;
+        height: 44px;
+      }
+    }
     button + button {
       border-top: 1px solid ${({ theme }) => theme.palette.divider};
     }
   }
 
   .maplibregl-ctrl-top-right {
-    top: ${83 + 72}px !important;
+    top: 114px !important;
 
-    @media ${isDesktop} {
+    @media ${isTabletResolution} {
+      top: 54px !important;
+    }
+
+    @media ${isDesktopResolution} {
       top: 83px !important;
     }
+
   }
 
   .maplibregl-canvas:not(:focus) {
@@ -104,7 +122,7 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   /* Hide compass by default */
-  .hidden-compass .maplibregl-ctrl-compass {
+  .hidden-compass .maplibregl-ctrl:has(> .maplibregl-ctrl-compass) {
     display: none;
   }
 

@@ -97,6 +97,10 @@ export const useMobileMode = () => useMediaQuery(isMobileMode);
 // (>= mobile size) SearchBox stops growing
 export const isDesktop = '(min-width: 500px)';
 
+export const isMobileResolution = '(max-width: 500px)';
+export const isTabletResolution = '(min-width: 501px) and (max-width: 700px)';
+export const isDesktopResolution = '(min-width: 701px)';
+
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>
   isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error
