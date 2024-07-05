@@ -12,7 +12,9 @@ import { Slider } from './Slider';
 const HEIGHT = 245;
 const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
 
-const Img = styled.img`
+const Img = styled.img<{ $onlyOneImage: boolean }>`
+  max-height: 300px;
+
   &.hasPaths {
     opacity: 0.9; // let the paths be more prominent
   }
@@ -21,6 +23,7 @@ const ImageWrapper = styled.div`
   position: relative;
   display: flex;
   height: 100%;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
   ${({ onClick }) =>
     onClick &&
@@ -69,6 +72,7 @@ const Image = ({
         src={imageTag.imageUrl}
         width={onlyOneImage ? '100%' : undefined}
         height={onlyOneImage ? undefined : HEIGHT}
+        $onlyOneImage={onlyOneImage}
         alt={imageTag.v}
         onLoad={onPhotoLoad}
         className={hasPaths ? 'hasPaths' : ''}
@@ -88,22 +92,17 @@ const Image = ({
 export const ImageSlider = () => {
   const { feature } = useFeatureContext();
 
-  // temporary - until ImageSlider is finished
-  if (
-    !feature.imageTags?.some(
-      ({ path, memberPaths }) => path?.length || memberPaths?.length,
-    )
-  ) {
-    return null;
-  }
+  const onlyOneImage =
+    (feature.imageTags?.filter((imageTag) => imageTag.imageUrl) ?? [])
+      .length === 1;
 
   return (
-    <Slider>
+    <Slider onlyOneImage={onlyOneImage}>
       {feature.imageTags.map((imageTag) => (
         <Image
           key={imageTag.k}
           imageTag={imageTag}
-          onlyOneImage={feature.imageTags.length === 1}
+          onlyOneImage={onlyOneImage}
         />
       ))}
       {/* Fody */}

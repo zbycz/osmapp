@@ -24,7 +24,7 @@ const TopPanel = styled.div<{ $isMobileMode: boolean }>`
       background-color: ${({ theme }) => theme.palette.background.searchBox};
     `}
 
-  padding: 10px;
+  padding: 8px;
   box-sizing: border-box;
 
   z-index: 1;

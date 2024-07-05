@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 // from https://css-tricks.com/css-only-carousel/
-const Wrapper = styled.div<{ onlyOneImage: boolean }>`
+const Wrapper = styled.div<{ $onlyOneImage: boolean }>`
   width: 100%;
   text-align: center;
   /* overflow: hidden; */
@@ -11,13 +11,14 @@ const Wrapper = styled.div<{ onlyOneImage: boolean }>`
 
   .slides {
     display: flex;
-    gap: 12px;
+    gap: 8px;
+    ${({ $onlyOneImage }) => $onlyOneImage && `justify-content: center;`}
     align-items: center;
     overflow-x: auto;
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
 
-    padding: ${({ onlyOneImage }) => (onlyOneImage ? '12px 0' : '12px 16px')};
+    padding: ${({ $onlyOneImage }) => ($onlyOneImage ? '12px 0' : '12px 16px')};
   }
 
   .slides > div {
@@ -28,8 +29,8 @@ const Wrapper = styled.div<{ onlyOneImage: boolean }>`
   }
 `;
 
-export const Slider = ({ children }) => (
-  <Wrapper onlyOneImage={React.Children.count(children) === 1}>
+export const Slider = ({ children, onlyOneImage }) => (
+  <Wrapper $onlyOneImage={onlyOneImage}>
     <div className="slides">{children}</div>
   </Wrapper>
 );
