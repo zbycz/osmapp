@@ -62,6 +62,7 @@ export const GlobalStyle = createGlobalStyle`
     background-color: ${({ theme }) =>
       convertHexToRgba(theme.palette.background.paper, 0.7)} !important;
     backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
 
     .maplibregl-ctrl-icon {
       filter: ${({ theme }) => theme.palette.invertFilter};

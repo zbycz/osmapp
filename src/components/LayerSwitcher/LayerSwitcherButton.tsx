@@ -26,6 +26,7 @@ const StyledLayerSwitcher = styled.button<{ isMobileMode: boolean }>`
   background-color: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.7)};
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   font-size: 12px;
   color: ${({ theme }) => theme.palette.text.primary};
   outline: 0;

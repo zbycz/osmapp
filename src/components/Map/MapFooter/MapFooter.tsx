@@ -28,8 +28,8 @@ const FooterContainer = styled.div<{ $hasShadow: boolean }>`
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.5)};
-  -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   ${({ $hasShadow }) =>
     $hasShadow ? 'box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);' : ''}
 `;
