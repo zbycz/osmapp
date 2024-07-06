@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { SwipeableDrawer } from '@mui/material';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { grey } from '@mui/material/colors';
 import { FeaturePanelInner } from './FeaturePanelInner';
 import {
@@ -35,18 +35,15 @@ const Container = styled.div`
 const PULLER_WIDTH = 30;
 const PULLER_HIP_SLOP = 10;
 
-const Puller = styled.div<{ isHovered: boolean }>`
+const Puller = styled.div`
   width: ${PULLER_WIDTH}px;
   height: 6px;
   background-color: ${({ theme }) =>
     theme.palette.mode === 'light' ? grey[300] : grey[900]};
   border-radius: 3px;
-
-  ${({ isHovered, theme }) =>
-    isHovered && `background-color: ${theme.palette.primary.main};`};
 `;
 
-const PullerContainer = styled.div`
+const PullerContainer = styled.div<{ $isHovered: boolean }>`
   position: absolute;
   z-index: 1;
   top: 0px;
@@ -54,8 +51,14 @@ const PullerContainer = styled.div`
   padding: ${PULLER_HIP_SLOP}px;
   cursor: pointer;
 
+  ${({ $isHovered }) =>
+    $isHovered &&
+    css`
+      opacity: 0.5;
+    `}
+
   &:hover ${Puller} {
-    background-color: ${({ theme }) => theme.palette.primary.main};
+    opacity: 0.5;
   }
 `;
 
@@ -124,8 +127,8 @@ export const FeaturePanelInDrawer = () => {
       className="featurePanelInDrawer"
     >
       <Container>
-        <PullerContainer>
-          <Puller isHovered={isHovered} onClick={handleOnClose} />
+        <PullerContainer $isHovered={isHovered}>
+          <Puller onClick={handleOnClose} />
         </PullerContainer>
         <ListContainer>
           <FeaturePanelInner />
