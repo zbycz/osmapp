@@ -20,7 +20,6 @@ const LayerSwitcher = () => {
         variant={panelFixed ? 'persistent' : 'temporary'}
         disableBackdropTransition
         disableSwipeToOpen
-        swipeAreaWidth={100}
       >
         <div role="presentation" style={{ width: '280px', height: '100%' }}>
           <ClosePanelButton right onClick={close} style={{ top: 13 }} />
