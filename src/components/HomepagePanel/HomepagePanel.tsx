@@ -22,9 +22,10 @@ import {
   PROJECT_NAME,
 } from '../../services/project';
 import { useMobileMode } from '../helpers';
+import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 
 export const Content = styled.div`
-  height: calc(100vh - 72px); // 100% - TopPanel - FeatureImage
+  height: calc(100% - ${SEARCH_BOX_HEIGHT}px);
   padding: 20px 2em 0 2em;
 
   a.maptiler {
@@ -83,14 +84,14 @@ const ExamplesClimbing = () => (
 );
 
 export const HomepagePanel = () => {
-  const { feature, preview, homepageShown, hideHomepage, persistHideHomepage } =
+  const { feature, homepageShown, hideHomepage, persistHideHomepage } =
     useFeatureContext();
   const isMobileMode = useMobileMode();
 
-  // hide after first shown feature or preview
+  // hide after first shown feature
   useEffect(() => {
-    if (feature || preview) hideHomepage();
-  }, [feature, preview]);
+    if (feature) hideHomepage();
+  }, [feature]);
 
   if (!homepageShown) {
     return null;

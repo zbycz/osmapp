@@ -3,6 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import React from 'react';
 import styled from 'styled-components';
 import { t } from '../../../services/intl';
+import { isMobileMode } from '../../helpers';
 
 const StyledIconButton = styled(IconButton)`
   padding: 12px;
@@ -10,6 +11,9 @@ const StyledIconButton = styled(IconButton)`
 
   svg {
     filter: drop-shadow(0 0 2px #ffffff);
+    @media ${isMobileMode} {
+      filter: invert(100%);
+    }
   }
 `;
 

@@ -12,7 +12,6 @@ import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
-import { FeaturePreview } from '../FeaturePreview/FeaturePreview';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
@@ -21,6 +20,8 @@ import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
+import { useMobileMode } from '../helpers';
+import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -66,7 +67,8 @@ const useUpdateViewFromHash = () => {
 };
 
 const IndexWithProviders = () => {
-  const { feature, featureShown, preview } = useFeatureContext();
+  const isMobileMode = useMobileMode();
+  const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
   useUpdateViewFromFeature();
   usePersistMapView();
@@ -78,9 +80,10 @@ const IndexWithProviders = () => {
   const photo = router.query.all?.[3];
   return (
     <>
-      <SearchBox />
       <Loading />
-      {featureShown && <FeaturePanel />}
+      <SearchBox />
+      {featureShown && !isMobileMode && <FeaturePanel />}
+      {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
           <ClimbingDialog photo={photo} />
@@ -90,7 +93,6 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
-      {preview && <FeaturePreview />}
       <TitleAndMetaTags />
     </>
   );
@@ -98,6 +100,7 @@ const IndexWithProviders = () => {
 
 const App = ({ featureFromRouter, initialMapView, cookies }) => {
   const mapView = getMapViewFromHash() || initialMapView;
+
   return (
     <SnackbarProvider>
       <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>

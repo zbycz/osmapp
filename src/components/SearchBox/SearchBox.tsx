@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
 import Router from 'next/router';
@@ -11,16 +11,23 @@ import { isDesktop, useMobileMode } from '../helpers';
 import { SEARCH_BOX_HEIGHT } from './consts';
 import { useInputValueState } from './options/geocoder';
 import { useOptions } from './useOptions';
+import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
+import { LoginMenu } from '../Map/TopMenu/LoginMenu';
 
-const TopPanel = styled.div`
+const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;
   height: ${SEARCH_BOX_HEIGHT}px;
-  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-  background-color: ${({ theme }) => theme.palette.background.searchBox};
-  padding: 10px;
+  ${({ $isMobileMode }) =>
+    !$isMobileMode &&
+    css`
+      box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
+      background-color: ${({ theme }) => theme.palette.background.searchBox};
+    `}
+
+  padding: 8px;
   box-sizing: border-box;
 
-  z-index: 1200;
+  z-index: 1;
 
   width: 100%;
   @media ${isDesktop} {
@@ -32,6 +39,9 @@ const StyledPaper = styled(Paper)`
   padding: 2px 4px;
   display: flex;
   align-items: center;
+  background-color: ${({ theme }) => theme.palette.background.searchInput};
+  -webkit-backdrop-filter: blur(35px);
+  backdrop-filter: blur(35px);
 
   .MuiAutocomplete-root {
     flex: 1;
@@ -53,19 +63,16 @@ const OverpassCircularProgress = styled(CircularProgress)`
 // https://docs.mapbox.com/help/troubleshooting/working-with-large-geojson-data/
 
 const useOnClosePanel = () => {
-  const { feature, setFeature, setPreview } = useFeatureContext();
-  const mobileMode = useMobileMode();
+  const { setFeature } = useFeatureContext();
 
   return () => {
-    if (mobileMode) {
-      setPreview(feature);
-    }
     setFeature(null);
     Router.push(`/${window.location.hash}`);
   };
 };
 
 const SearchBox = () => {
+  const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const { inputValue, setInputValue } = useInputValueState();
   const [options, setOptions] = useState([]);
@@ -76,7 +83,7 @@ const SearchBox = () => {
   useOptions(inputValue, setOptions);
 
   return (
-    <TopPanel>
+    <TopPanel $isMobileMode={isMobileMode}>
       <StyledPaper elevation={1} ref={autocompleteRef}>
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
@@ -90,7 +97,15 @@ const SearchBox = () => {
           setOverpassLoading={setOverpassLoading}
         />
 
-        {featureShown && <ClosePanelButton onClick={onClosePanel} />}
+        {featureShown && !isMobileMode && (
+          <ClosePanelButton onClick={onClosePanel} />
+        )}
+        {isMobileMode && (
+          <>
+            <LoginMenu />
+            <HamburgerMenu />
+          </>
+        )}
         {overpassLoading && <OverpassCircularProgress />}
       </StyledPaper>
     </TopPanel>

@@ -5,35 +5,22 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import Maki from '../../utils/Maki';
 import { useUserThemeContext } from '../../../helpers/theme';
 
-const PoiType = styled.div<{ $isSkeleton: Boolean; $forceWhite?: Boolean }>`
-  color: ${({ $forceWhite, theme }) =>
-    $forceWhite ? '#fff' : theme.palette.secondary.main};
-  margin: 0 auto 0 15px;
+const PoiType = styled.div<{ $isSkeleton: Boolean }>`
+  color: ${({ theme }) => theme.palette.secondary.main};
+
   font-size: 13px;
   position: relative;
-  ${({ $forceWhite }) => $forceWhite && 'flex: 1;'}
 
-  svg {
-    vertical-align: bottom;
+  img {
+    position: relative;
+    top: -1px;
+    left: 1px;
   }
 
   span {
     ${({ $isSkeleton }) => $isSkeleton && 'opacity: 0.4;'}
   }
 `;
-
-export const PoiDescriptionDark = () => {
-  const { feature } = useFeatureContext();
-  const { properties } = feature;
-  const poiType = getHumanPoiType(feature);
-
-  return (
-    <PoiType $isSkeleton={feature.skeleton} $forceWhite>
-      <Maki ico={properties.class} invert middle />
-      <span>{poiType}</span>
-    </PoiType>
-  );
-};
 
 export const PoiDescription = () => {
   const { currentTheme } = useUserThemeContext();

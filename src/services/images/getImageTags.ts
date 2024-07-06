@@ -28,11 +28,11 @@ const parsePathTag = (pathString?: string): PathType | undefined => {
 
 const getImageUrl = (type: ImageTag['type'], v: string): string | null => {
   if (type === 'image') {
-    return v.match(/^File:/) ? getCommonsImageUrl(v, 400) : v;
+    return v.match(/^File:/) ? getCommonsImageUrl(v, 410) : v;
   }
 
   if (type === 'wikimedia_commons') {
-    return getCommonsImageUrl(v, 400);
+    return getCommonsImageUrl(v, 410);
   }
 
   return null; // API call needed

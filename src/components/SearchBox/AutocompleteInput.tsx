@@ -4,7 +4,6 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { renderOptionFactory } from './renderOptionFactory';
 import { t } from '../../services/intl';
 import { onSelectedFactory } from './onSelectedFactory';
-import { useMobileMode } from '../helpers';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
@@ -67,7 +66,6 @@ export const AutocompleteInput = ({
   const { setFeature, setPreview } = useFeatureContext();
   const { bbox, showToast } = useMapStateContext();
   const mapCenter = useMapCenter();
-  const mobileMode = useMobileMode();
   const { currentTheme } = useUserThemeContext();
   return (
     <Autocomplete
@@ -89,7 +87,6 @@ export const AutocompleteInput = ({
       onChange={onSelectedFactory(
         setFeature,
         setPreview,
-        mobileMode,
         bbox,
         showToast,
         setOverpassLoading,

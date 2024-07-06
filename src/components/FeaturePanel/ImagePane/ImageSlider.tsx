@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Router from 'next/router';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Path, PathSvg } from './Path';
@@ -12,8 +12,9 @@ import { Slider } from './Slider';
 const HEIGHT = 245;
 const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
 
-const Img = styled.img`
-  border-radius: 12px;
+const Img = styled.img<{ $onlyOneImage: boolean }>`
+  max-height: 300px;
+
   &.hasPaths {
     opacity: 0.9; // let the paths be more prominent
   }
@@ -22,26 +23,28 @@ const ImageWrapper = styled.div`
   position: relative;
   display: flex;
   height: 100%;
-  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
 
-  /* overflow: hidden; */
-  ${({ onClick, theme }) =>
+  ${({ onClick }) =>
     onClick &&
-    `
+    css`
       cursor: pointer;
-      &:hover {
-        box-shadow: 0 0 10px ${theme.palette.secondary.main};
-      }`}
+    `}
 
   svg {
     position: absolute;
     height: 100%;
     width: 100%;
-    border-radius: 8px;
   }
 `;
 
-const Image = ({ imageTag }: { imageTag: ImageTag }) => {
+const Image = ({
+  imageTag,
+  onlyOneImage,
+}: {
+  imageTag: ImageTag;
+  onlyOneImage: boolean;
+}) => {
   const [size, setSize] = React.useState<Size>(initialSize);
   const { feature } = useFeatureContext();
   const isCrag = feature.tags.climbing === 'crag';
@@ -67,7 +70,9 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
     <ImageWrapper onClick={onClick}>
       <Img
         src={imageTag.imageUrl}
-        height={HEIGHT}
+        width={onlyOneImage ? '100%' : undefined}
+        height={onlyOneImage ? undefined : HEIGHT}
+        $onlyOneImage={onlyOneImage}
         alt={imageTag.v}
         onLoad={onPhotoLoad}
         className={hasPaths ? 'hasPaths' : ''}
@@ -87,19 +92,18 @@ const Image = ({ imageTag }: { imageTag: ImageTag }) => {
 export const ImageSlider = () => {
   const { feature } = useFeatureContext();
 
-  // temporary - until ImageSlider is finished
-  if (
-    !feature.imageTags?.some(
-      ({ path, memberPaths }) => path?.length || memberPaths?.length,
-    )
-  ) {
-    return null;
-  }
+  const onlyOneImage =
+    (feature.imageTags?.filter((imageTag) => imageTag.imageUrl) ?? [])
+      .length === 1;
 
   return (
-    <Slider>
-      {feature.imageTags.map((imageTag) => (
-        <Image key={imageTag.k} imageTag={imageTag} />
+    <Slider onlyOneImage={onlyOneImage}>
+      {feature.imageTags?.map((imageTag) => (
+        <Image
+          key={imageTag.k}
+          imageTag={imageTag}
+          onlyOneImage={onlyOneImage}
+        />
       ))}
       {/* Fody */}
       {/* Mapillary */}

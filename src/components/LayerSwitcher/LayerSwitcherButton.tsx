@@ -1,17 +1,31 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import LayersIcon from './LayersIcon';
 import { t } from '../../services/intl';
+import { useMobileMode } from '../helpers';
+import { convertHexToRgba } from '../utils/colorUtils';
 
-const StyledLayerSwitcher = styled.button`
+const StyledLayerSwitcher = styled.button<{ isMobileMode: boolean }>`
   margin: 0;
   padding: 0;
-  width: 52px;
-  height: 69px;
-  border-radius: 5px;
+  ${({ isMobileMode }) =>
+    isMobileMode
+      ? css`
+          width: 44px;
+          height: 44px;
+          border-radius: 50%;
+        `
+      : css`
+          width: 52px;
+          height: 69px;
+          border-radius: 5px;
+        `}
+
   border: 0;
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1);
-  background-color: ${({ theme }) => theme.palette.background.paper};
+  background-color: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.paper, 0.7)};
+  backdrop-filter: blur(15px);
   font-size: 12px;
   color: ${({ theme }) => theme.palette.text.primary};
   outline: 0;
@@ -19,7 +33,8 @@ const StyledLayerSwitcher = styled.button`
 
   &:hover,
   &:focus {
-    background-color: ${({ theme }) => theme.palette.background.hover};
+    background-color: ${({ theme }) =>
+      convertHexToRgba(theme.palette.background.paper, 0.75)};
   }
 
   svg {
@@ -27,9 +42,12 @@ const StyledLayerSwitcher = styled.button`
   }
 `;
 
-export const LayerSwitcherButton = ({ onClick }: { onClick?: any }) => (
-  <StyledLayerSwitcher onClick={onClick}>
-    <LayersIcon />
-    {t('layerswitcher.button')}
-  </StyledLayerSwitcher>
-);
+export const LayerSwitcherButton = ({ onClick }: { onClick?: any }) => {
+  const isMobileMode = useMobileMode();
+  return (
+    <StyledLayerSwitcher onClick={onClick} isMobileMode={isMobileMode}>
+      <LayersIcon />
+      {!isMobileMode && t('layerswitcher.button')}
+    </StyledLayerSwitcher>
+  );
+};

@@ -87,11 +87,16 @@ export const dotToOptionalBr = (url = '') =>
 export const trimText = (text, limit) =>
   text?.length > limit ? `${text?.substring(0, limit)}…` : text;
 
-// (<= tablet size) MobileMode shows preview instead of panel
-export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
+// (<= tablet size) MobileMode shows FeaturePanel in Drawer (instead of side)
+export const isMobileMode = '(max-width: 700px)';
+export const useMobileMode = () => useMediaQuery(isMobileMode);
 
-// (>= mobile size) This changes just the app layout
+// (>= mobile size) SearchBox stops growing
 export const isDesktop = '(min-width: 500px)';
+
+// TODO refactor breakpoints later
+export const isTabletResolution = '(min-width: 501px)';
+export const isDesktopResolution = '(min-width: 701px)';
 
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>
@@ -113,6 +118,7 @@ export const DotLoader = () => (
   </>
 );
 
+// TODO import { NoSsr } from '@mui/base';
 export const ClientOnly = ({ children }) => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

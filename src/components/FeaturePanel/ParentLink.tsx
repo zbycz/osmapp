@@ -19,25 +19,7 @@ const Row = styled.div`
 
 const IconWrapper = styled.div`
   position: relative;
-  top: 1px;
-`;
-
-const ClimbingParentItem = styled.div`
-  margin: 12px 8px -4px 8px;
-
-  a {
-    color: ${({ theme }) => theme.palette.secondary.main};
-    font-size: 13px;
-    display: block;
-    &:hover {
-      text-decoration: none;
-      color: ${({ theme }) => theme.palette.text.secondary};
-    }
-    &:hover svg {
-      fill: ${({ theme }) => theme.palette.text.secondary};
-      transition: none;
-    }
-  }
+  top: 2px;
 `;
 
 const ParentItem = styled.div`
@@ -47,6 +29,14 @@ const ParentItem = styled.div`
     color: ${({ theme }) => theme.palette.secondary.main};
     font-size: 13px;
     display: block;
+    text-decoration: none;
+    &:hover {
+      color: ${({ theme }) => theme.palette.text.secondary};
+    }
+    &:hover svg {
+      fill: ${({ theme }) => theme.palette.text.secondary};
+      transition: none;
+    }
   }
 `;
 
@@ -86,14 +76,15 @@ export const ParentLinkContent = () => {
   );
 };
 
-export const ParentLink = () => (
-  <ParentItem>
-    <ParentLinkContent />
-  </ParentItem>
-);
+export const ParentLink = () => {
+  const { feature } = useFeatureContext();
+  const hasParentLink = feature.parentFeatures?.length;
 
-export const ClimbingParentLink = () => (
-  <ClimbingParentItem>
-    <ParentLinkContent />
-  </ClimbingParentItem>
-);
+  if (!hasParentLink) return null;
+
+  return (
+    <ParentItem>
+      <ParentLinkContent />
+    </ParentItem>
+  );
+};

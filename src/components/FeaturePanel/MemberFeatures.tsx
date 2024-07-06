@@ -93,8 +93,7 @@ const Item = ({ feature }: { feature: Feature }) => {
     setPreview(null);
     Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
   };
-  const handleHover = () =>
-    feature.center && setPreview({ ...feature, noPreviewButton: true });
+  const handleHover = () => feature.center && setPreview(feature);
 
   return (
     <li>
@@ -128,8 +127,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
     setPreview(null);
     Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
   };
-  const handleHover = () =>
-    feature.center && setPreview({ ...feature, noPreviewButton: true });
+  const handleHover = () => feature.center && setPreview(feature);
 
   const cragPhotoKeys = getWikimediaCommonsKeys(feature.tags);
 
@@ -174,7 +172,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
             <Gallery onScroll={onScroll} ref={scrollElementRef}>
               {cragPhotoKeys.map((cragPhotoTag) => {
                 const photoPath = feature.tags[cragPhotoTag];
-                const url = getCommonsImageUrl(photoPath, 400);
+                const url = getCommonsImageUrl(photoPath, 410);
                 return <Image src={url} key={cragPhotoTag} />;
               })}
             </Gallery>

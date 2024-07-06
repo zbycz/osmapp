@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { isDesktop } from '../../helpers';
+import { isDesktop, useMobileMode } from '../../helpers';
 import { HamburgerMenu } from './HamburgerMenu';
 import { LoginMenu } from './LoginMenu';
 
@@ -15,9 +15,15 @@ const Wrapper = styled.span`
   }
 `;
 
-export const TopMenu = () => (
-  <Wrapper>
-    <LoginMenu />
-    <HamburgerMenu />
-  </Wrapper>
-);
+export const TopMenu = () => {
+  const isMobileMode = useMobileMode();
+
+  if (isMobileMode) return null;
+
+  return (
+    <Wrapper>
+      <LoginMenu />
+      <HamburgerMenu />
+    </Wrapper>
+  );
+};

@@ -7,7 +7,8 @@ import { ClimbingLegend } from './ClimbingLegend';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { AttributionLinks } from './AttributionLinks';
 import { useMapStateContext } from '../../utils/MapStateContext';
-import { useIsClient } from '../../helpers';
+import { useIsClient, useMobileMode } from '../../helpers';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const IconContainer = styled.div`
   width: 20px;
@@ -27,8 +28,8 @@ const FooterContainer = styled.div<{ $hasShadow: boolean }>`
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.5)};
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   ${({ $hasShadow }) =>
     $hasShadow ? 'box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);' : ''}
 `;
@@ -70,7 +71,10 @@ const LegendExpandButton = ({ isVisible, setLegendShown }) => (
 
 export const MapFooter = () => {
   const { activeLayers } = useMapStateContext();
+  const isMobileMode = useMobileMode();
+  const { featureShown } = useFeatureContext();
   const hasClimbingLayer = activeLayers.includes('climbing');
+  const hasLegend = isMobileMode && featureShown ? false : hasClimbingLayer;
   const [legendShown, setLegendShown] = usePersistedState<boolean>(
     'isLegendVisible',
     true,
@@ -83,8 +87,8 @@ export const MapFooter = () => {
   }
 
   return (
-    <FooterContainer $hasShadow={hasClimbingLayer && legendShown}>
-      {hasClimbingLayer && (
+    <FooterContainer $hasShadow={hasLegend && legendShown}>
+      {hasLegend && (
         <ClimbingLegend
           isVisible={legendShown}
           setLegendShown={setLegendShown}
@@ -92,7 +96,7 @@ export const MapFooter = () => {
       )}
       <Wrapper>
         <AttributionLinks />
-        {hasClimbingLayer && (
+        {hasLegend && (
           <LegendExpandButton
             isVisible={!legendShown}
             setLegendShown={setLegendShown}

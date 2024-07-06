@@ -116,8 +116,8 @@ const ArrowExpanderButton = styled.div<{ $arrowOnTop?: boolean }>`
 `;
 
 const BlurContainer = styled.div<{ $isVisible: boolean }>`
-  -webkit-backdrop-filter: blur(15px);
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
   visibility: ${({ $isVisible }) => ($isVisible ? 'visible' : 'hidden')};
   height: 100%;

@@ -12,7 +12,7 @@ import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 export const PanelWrapper = styled.div`
   position: absolute;
   left: 0;
-  top: 72px; // TopPanel
+  top: ${SEARCH_BOX_HEIGHT}px;
   bottom: 0;
   background: ${({ theme }) => theme.palette.background.paper};
   color: ${({ theme }) => theme.palette.text.primary};
@@ -68,10 +68,7 @@ export const PanelScrollbars = ({ children }) => {
 export const PanelContent = styled.div`
   display: flex;
   flex-direction: column;
-  height: calc(
-    100vh - ${SEARCH_BOX_HEIGHT}px - 238px
-  ); // 100% - TopPanel - FeatureImage
-  padding: 20px 0 0 0;
+  height: 100%;
 `;
 
 export const PanelFooter = styled.div`
@@ -83,5 +80,5 @@ export const PanelFooter = styled.div`
 `;
 
 export const PanelSidePadding = styled.div`
-  padding: 0 15px;
+  padding: 0 12px;
 `;

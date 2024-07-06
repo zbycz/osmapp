@@ -36,7 +36,7 @@ const TopRight = styled.div`
   z-index: 1000;
   padding: 10px;
   right: 0;
-  top: 72px;
+  top: 62px;
 
   @media ${isDesktop} {
     top: 0;
