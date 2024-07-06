@@ -11,10 +11,7 @@ const StyledIconButton = styled(IconButton)`
 
   svg {
     filter: drop-shadow(0 0 2px #ffffff);
-  }
-  @media ${isMobileMode} {
-    svg {
-      filter: none;
+    @media ${isMobileMode} {
       filter: invert(100%);
     }
   }

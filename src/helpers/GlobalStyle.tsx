@@ -120,7 +120,7 @@ export const GlobalStyle = createGlobalStyle`
     background-color: rgba(0, 0, 0, 0.2) !important;
   }
 
-  /* Hide compass by default */
+  /* Hide compass by default - selects .maplibregl-ctrl which holds [+,-,compass] */
   .hidden-compass .maplibregl-ctrl:has(> .maplibregl-ctrl-compass) {
     display: none;
   }
