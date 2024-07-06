@@ -2,9 +2,6 @@ import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
 import { useMediaQuery } from '@mui/material';
 
-export const DRAWER_PREVIEW_HEIGHT = 86;
-export const DRAWER_TOP_OFFSET = 8;
-
 export const useToggleState = (
   initialState: boolean,
 ): [boolean, () => void] => {
@@ -121,6 +118,7 @@ export const DotLoader = () => (
   </>
 );
 
+// TODO import { NoSsr } from '@mui/base';
 export const ClientOnly = ({ children }) => {
   const [mounted, setMounted] = useState(false);
   useEffect(() => setMounted(true), []);

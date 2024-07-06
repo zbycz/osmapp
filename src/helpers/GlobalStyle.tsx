@@ -1,7 +1,5 @@
 import { createGlobalStyle } from 'styled-components';
 import {
-  DRAWER_PREVIEW_HEIGHT,
-  DRAWER_TOP_OFFSET,
   isDesktopResolution,
   isMobileMode,
   isTabletResolution,
@@ -126,11 +124,4 @@ export const GlobalStyle = createGlobalStyle`
     display: none;
   }
 
-  .featurePanelInDrawer.MuiDrawer-root > .MuiPaper-root {
-    height: calc(100% - ${DRAWER_PREVIEW_HEIGHT}px - ${DRAWER_TOP_OFFSET}px);
-    overflow: visible;
-  }
-  .PrivateSwipeArea-root {
-    cursor: pointer;
-  }
 `;

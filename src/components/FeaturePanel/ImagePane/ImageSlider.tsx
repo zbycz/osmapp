@@ -98,7 +98,7 @@ export const ImageSlider = () => {
 
   return (
     <Slider onlyOneImage={onlyOneImage}>
-      {feature.imageTags.map((imageTag) => (
+      {feature.imageTags?.map((imageTag) => (
         <Image
           key={imageTag.k}
           imageTag={imageTag}
