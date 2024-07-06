@@ -58,6 +58,11 @@ export const GlobalStyle = createGlobalStyle`
     margin-top: 0;
   }
 
+  .maplibregl-map {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
   .maplibregl-ctrl-group {
     background-color: ${({ theme }) =>
       convertHexToRgba(theme.palette.background.paper, 0.7)} !important;
@@ -69,15 +74,15 @@ export const GlobalStyle = createGlobalStyle`
     }
 
     @media ${isMobileMode} {
-      border-radius: 50%;
+      border-radius: 50% !important;
 
       button {
-        width: 44px;
-        height: 44px;
+        width: 44px !important;
+        height: 44px !important;
       }
     }
     button + button {
-      border-top: 1px solid ${({ theme }) => theme.palette.divider};
+      border-top: 1px solid ${({ theme }) => theme.palette.divider} !important;
     }
   }
 
