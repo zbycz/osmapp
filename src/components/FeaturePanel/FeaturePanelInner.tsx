@@ -28,6 +28,7 @@ import { ParentLink } from './ParentLink';
 import { ImageSlider } from './ImagePane/ImageSlider';
 import { SuggestEdit } from './SuggestEdit';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
+import { CragsInArea } from './CragsInArea';
 
 const Flex = styled.div`
   flex: 1;
@@ -100,7 +101,9 @@ export const FeaturePanelInner = () => {
           <ParentLink />
 
           <OsmError />
+          <CragsInArea />
         </PanelSidePadding>
+
         {tags.climbing !== 'area' && (
           <Box pb={4}>
             <ImageSection />
