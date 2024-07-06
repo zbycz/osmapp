@@ -27,6 +27,7 @@ import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
 import { ImageSlider } from './ImagePane/ImageSlider';
 import { SuggestEdit } from './SuggestEdit';
+import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 
 const Flex = styled.div`
   flex: 1;
@@ -118,6 +119,8 @@ export const FeaturePanelInner = () => {
                 {advanced && <Members />}
 
                 <PublicTransport tags={tags} />
+
+                <FeatureOpenPlaceGuideLink />
 
                 {editEnabled && <SuggestEdit />}
 

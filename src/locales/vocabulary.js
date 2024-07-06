@@ -95,6 +95,7 @@ export default {
   'featurepanel.uncertain_image': 'This is the closest street view image from Mapillary. It may be inaccurate.',
   'featurepanel.inline_edit_title': 'Edit',
   'featurepanel.objects_around': 'Nearby objects',
+  'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
 
   'opening_hours.open': 'Open: __todayTime__',
   'opening_hours.now_closed_but_today': 'Closed now - Open __todayTime__',
