@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import { LineInformation, requestLines } from './requestRoutes';
-import { PublicTransportWrapper } from './PublicTransportWrapper';
+import { PublicTransportCategory } from './PublicTransportWrapper';
 import { FeatureTags } from '../../../services/types';
-import { LineNumber } from './LineNumber';
 import { DotLoader } from '../../helpers';
+import { sortBy } from './helpers';
 
 interface PublicTransportProps {
   tags: FeatureTags;
@@ -35,6 +36,39 @@ const useLoadingState = () => {
   return { routes, error, loading, startRoutes, finishRoutes, failRoutes };
 };
 
+const categories = [
+  'tourism',
+  'commuter',
+  'regional',
+  'long_distance',
+  'high_speed',
+  'night',
+  'car',
+  'car_shuttle',
+  'unknown',
+];
+
+const PublicTransportDisplay = ({ routes }) => {
+  const grouped = _.groupBy(routes, ({ service }) => {
+    const base = service?.split(';')[0];
+    return categories.includes(base) ? base : 'unknown';
+  });
+  const entries = Object.entries(grouped) as [string, LineInformation[]][];
+  const sorted = sortBy(entries, categories, ([category]) => category);
+
+  return (
+    <>
+      {sorted.map(([category, lines]) => (
+        <PublicTransportCategory
+          category={category}
+          lines={lines}
+          amountOfCategories={entries.length}
+        />
+      ))}
+    </>
+  );
+};
+
 const PublicTransportInner = () => {
   const router = useRouter();
 
@@ -56,15 +90,7 @@ const PublicTransportInner = () => {
 
   return (
     <div>
-      {loading ? (
-        <DotLoader />
-      ) : (
-        <PublicTransportWrapper>
-          {routes.map((line) => (
-            <LineNumber name={line.ref} color={line.colour} />
-          ))}
-        </PublicTransportWrapper>
-      )}
+      {loading ? <DotLoader /> : <PublicTransportDisplay routes={routes} />}
       {error && (
         <Typography color="secondary" paragraph>
           Error: {error}
