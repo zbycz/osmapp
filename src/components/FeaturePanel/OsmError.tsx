@@ -30,7 +30,7 @@ export const OsmError = () => {
 
   if (code === 'unknown') {
     return (
-      <Alert variant="outlined" severity="warning">
+      <Alert variant="outlined" severity="warning" sx={{ mb: 2 }}>
         {t('featurepanel.error_unknown')}
       </Alert>
     );
@@ -38,7 +38,7 @@ export const OsmError = () => {
 
   if (code === 'network') {
     return (
-      <Alert variant="outlined" severity="warning">
+      <Alert variant="outlined" severity="warning" sx={{ mb: 2 }}>
         {t('featurepanel.error_network')}
       </Alert>
     );
@@ -46,7 +46,7 @@ export const OsmError = () => {
 
   if (code) {
     return (
-      <Alert variant="outlined" severity="warning">
+      <Alert variant="outlined" severity="warning" sx={{ mb: 2 }}>
         {t('featurepanel.error', { code })}
       </Alert>
     );
@@ -54,7 +54,7 @@ export const OsmError = () => {
 
   if (Object.keys(feature.tags).length === 0 && !feature.point) {
     return (
-      <Alert variant="outlined" severity="info">
+      <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
         {t('featurepanel.info_no_tags')}
       </Alert>
     );

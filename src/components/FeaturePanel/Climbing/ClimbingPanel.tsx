@@ -11,6 +11,7 @@ import { SuggestEdit } from '../SuggestEdit';
 import { PanelContent, PanelSidePadding } from '../../utils/PanelHelpers';
 import { FeatureHeading } from '../FeatureHeading';
 import { ParentLink } from '../ParentLink';
+import { ClimbingRestriction } from './ClimbingRestriction';
 
 export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const { feature } = useFeatureContext();
@@ -27,6 +28,7 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
       <PanelSidePadding>
         <FeatureHeading />
         <ParentLink />
+        <ClimbingRestriction />
       </PanelSidePadding>
       <ImageSlider />
       <OsmError />

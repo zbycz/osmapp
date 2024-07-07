@@ -86,6 +86,7 @@ export default {
   'featurepanel.uncertain_image': 'Je zobrazena nejbližší fotka uliční úrovně. Může ukazovat jiný objekt.',
   'featurepanel.inline_edit_title': 'Upravit',
   'featurepanel.objects_around': 'Objekty v okolí',
+  'featurepanel.climbing_restriction': 'Lezecké omezení',
 
   'opening_hours.open': 'Otevřeno: __todayTime__',
   'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',

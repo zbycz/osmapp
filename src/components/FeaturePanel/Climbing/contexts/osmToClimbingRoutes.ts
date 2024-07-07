@@ -55,6 +55,7 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
       difficulty: getDifficulty(route.tags),
       paths,
       photoToKeyMap,
+      author: route.tags.author,
       feature: route,
     };
   });
