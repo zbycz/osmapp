@@ -155,4 +155,14 @@ export default {
   'layers.maptilerSat': 'Maptiler Satellit (z<14)',
   'layers.bingSat': 'Bing Satellit',
   'layers.bike': 'Fahrrad',
+
+  'publictransport.tourism': 'Touristische Züge',
+  'publictransport.night': 'Nachtzüge',
+  'publictransport.car_shuttle': 'Autoshuttlezüge',
+  'publictransport.car': 'Auto Züge',
+  'publictransport.commuter': 'Pendlerzüge',
+  'publictransport.regional': 'Regionalzüge',
+  'publictransport.long_distance': 'Fernzüge',
+  'publictransport.high_speed': 'Hochgeschwindigkeitszüge',
+  'publictransport.unknown': 'Unbekannter Typ',
 };

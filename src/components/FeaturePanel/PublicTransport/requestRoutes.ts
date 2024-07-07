@@ -3,6 +3,7 @@ import { fetchText } from '../../../services/fetch';
 export interface LineInformation {
   ref: string;
   colour: string | undefined;
+  service: string | undefined;
 }
 
 export async function requestLines(
@@ -10,14 +11,13 @@ export async function requestLines(
   id: number,
 ) {
   // use the overpass api to request the lines in
-  const overpassQuery = `[out:csv(ref, colour; false; ';')];
+  const overpassQuery = `[out:csv(service, colour, ref; false; ';;')];
   ${featureType}(${id});
   rel(bn)["public_transport"="stop_area"];
-node(r: "stop") -> .stops;
+  node(r: "stop") -> .stops;
     rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
     out;`;
 
-  // send the request
   const response: string = await fetchText(
     `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
       overpassQuery,
@@ -26,13 +26,15 @@ node(r: "stop") -> .stops;
 
   const resData = response
     .split('\n')
+    .slice(0, -1)
     .map((line) => {
-      const ref = line.split(';').slice(0, -1).join(';');
-      let colour = line.split(';')[line.split(';').length - 1];
+      const [service, colour, ref] = line.split(';;');
 
-      // set colour to undefined if it is empty
-      if (colour === '') colour = undefined;
-      return { ref, colour } as LineInformation;
+      return {
+        ref,
+        colour: colour || undefined,
+        service: service || undefined,
+      } as LineInformation;
     })
     .sort((a, b) => a.ref.localeCompare(b.ref, undefined, { numeric: true }))
     .filter(({ ref }) => ref !== '');

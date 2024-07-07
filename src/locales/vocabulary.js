@@ -195,4 +195,14 @@ export default {
   'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
   'climbingpanel.create_first_node': 'Click on the beginning of the route',
   'climbingpanel.create_next_node': 'Follow direction of the route',
+
+  'publictransport.tourism': 'Touristic trains',
+  'publictransport.night': 'Night trains',
+  'publictransport.car_shuttle': 'Car shuttles',
+  'publictransport.car': 'Car trains',
+  'publictransport.commuter': 'Commuter trains',
+  'publictransport.regional': 'Regional trains',
+  'publictransport.long_distance': 'Long distance trains',
+  'publictransport.high_speed': 'High speed trains',
+  'publictransport.unknown': 'Unknown type',
 };
