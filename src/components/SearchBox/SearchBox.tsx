@@ -97,7 +97,8 @@ const SearchBox = () => {
           setOverpassLoading={setOverpassLoading}
         />
 
-        {featureShown && !isMobileMode && (
+        {overpassLoading && <OverpassCircularProgress />}
+        {!isMobileMode && featureShown && (
           <ClosePanelButton onClick={onClosePanel} />
         )}
         {isMobileMode && (
@@ -106,7 +107,6 @@ const SearchBox = () => {
             <HamburgerMenu />
           </>
         )}
-        {overpassLoading && <OverpassCircularProgress />}
       </StyledPaper>
     </TopPanel>
   );
