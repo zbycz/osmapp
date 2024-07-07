@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
-import { getRoundedPosition } from '../../../utils';
-import { getCoordsFeature } from '../../../services/getCoordsFeature';
 import { isMobileDevice } from '../../helpers';
+import { createCoordsFeature, pushFeatureToRouter } from './utils';
 
+// https://stackoverflow.com/questions/43459539/mapbox-gl-js-long-tap-press
 const emulatedLongPressListeners = (map, eventHandler) => {
   let timeout = null;
   const clearIosTimeout = () => {
@@ -42,28 +42,6 @@ const emulatedLongPressListeners = (map, eventHandler) => {
   };
 };
 
-// const isIOS = () =>
-//   [
-//     'iPad Simulator',
-//     'iPhone Simulator',
-//     'iPod Simulator',
-//     'iPad',
-//     'iPhone',
-//     'iPod',
-//   ].includes(navigator.platform) ||
-//   // iPad on iOS 13 detection
-//   (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
-//
-// // https://stackoverflow.com/questions/43459539/mapbox-gl-js-long-tap-press
-// const longPressListeners = (map, eventHandler) => {
-//   if (isIOS()) {
-//     return emulatedLongPressListeners(map, eventHandler);
-//   }
-//
-//   map.on('contextmenu', eventHandler);
-//   return () => map.off('contextmenu', eventHandler);
-// };
-
 export const useOnMapLongPressed = (map, setFeature) => {
   useEffect(() => {
     if (!map) {
@@ -76,8 +54,9 @@ export const useOnMapLongPressed = (map, setFeature) => {
 
     const showCoords = ({ point }) => {
       const coords = map.unproject(point).toArray();
-      const roundedPosition = getRoundedPosition(coords, map.getZoom());
-      setFeature(getCoordsFeature(roundedPosition));
+      const coordsFeature = createCoordsFeature(coords, map);
+      setFeature(coordsFeature);
+      pushFeatureToRouter(coordsFeature);
     };
 
     return emulatedLongPressListeners(map, showCoords);
