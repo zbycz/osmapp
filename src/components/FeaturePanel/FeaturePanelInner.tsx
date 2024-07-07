@@ -68,12 +68,11 @@ export const FeaturePanelInner = () => {
         <input
           type="checkbox"
           onChange={toggleShowAround}
-          checked={point || showAround}
-          disabled={point}
+          checked={showAround}
         />{' '}
         {t('featurepanel.show_objects_around')}
       </label>
-      {!point && showAround && <ObjectsAround advanced={advanced} />}
+      {showAround && <ObjectsAround advanced={advanced} />}
     </PanelFooter>
   );
 
@@ -126,8 +125,6 @@ export const FeaturePanelInner = () => {
                 <FeatureOpenPlaceGuideLink />
 
                 {editEnabled && <SuggestEdit />}
-
-                {point && <ObjectsAround advanced={advanced} />}
               </PanelSidePadding>
             </>
           )}
