@@ -39,7 +39,7 @@ const parsePathTag = (pathString?: string): PathType | undefined => {
 };
 
 export const getInstantImage = (k, v): ImageType2 | null => {
-  if (k.match(/$(wikimedia_commons|image)/) && v.match(/^File:/)) {
+  if (k.match(/^(wikimedia_commons|image)/) && v.match(/^File:/)) {
     return {
       imageUrl: getCommonsImageUrl(v, 410),
       description: `Wikimedia Commons image`,

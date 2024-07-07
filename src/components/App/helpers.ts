@@ -64,7 +64,7 @@ export const getInitialFeature = async (ctx) => {
     const [lat, lon] = all[0].split(',');
     const coordsFeature = getCoordsFeature([lon, lat]);
     saveLastUrl(coordsFeature, ctx);
-    return coordsFeature; // TODO ssr image ?
+    return coordsFeature;
   }
 
   const [osmtype, osmid] = all;
