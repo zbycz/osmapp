@@ -29,6 +29,7 @@ import { ImageSlider } from './ImagePane/ImageSlider';
 import { SuggestEdit } from './SuggestEdit';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { CragsInArea } from './CragsInArea';
+import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
 
 const Flex = styled.div`
   flex: 1;
@@ -98,6 +99,8 @@ export const FeaturePanelInner = () => {
         <PanelSidePadding>
           <FeatureHeading />
           <ParentLink />
+
+          <ClimbingRestriction />
 
           <OsmError />
           <CragsInArea />
