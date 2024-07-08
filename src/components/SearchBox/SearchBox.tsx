@@ -40,8 +40,8 @@ const StyledPaper = styled(Paper)`
   display: flex;
   align-items: center;
   background-color: ${({ theme }) => theme.palette.background.searchInput};
-  -webkit-backdrop-filter: blur(35px);
-  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px) !important;
+  backdrop-filter: blur(35px) !important;
 
   .MuiAutocomplete-root {
     flex: 1;
