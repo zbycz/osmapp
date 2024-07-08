@@ -1,16 +1,15 @@
-import Router from 'next/router';
 import { createMapEventHook, isMobileDevice } from '../../helpers';
 import { addFeatureCenterToCache } from '../../../services/osmApi';
-import {
-  getShortId,
-  getUrlOsmId,
-  isSameOsmId,
-} from '../../../services/helpers';
-import { getRoundedPosition, publishDbgObject } from '../../../utils';
+import { getOsmappLink, getShortId } from '../../../services/helpers';
+import { publishDbgObject } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
 import { convertMapIdToOsmId, getIsOsmObject } from '../helpers';
-import { getCoordsFeature } from '../../../services/getCoordsFeature';
 import { maptilerFix } from './maptilerFix';
+import { Feature, LonLat } from '../../../services/types';
+import { createCoordsFeature, pushFeatureToRouter } from './utils';
+
+const isSameOsmId = (feature: Feature, skeleton: Feature) =>
+  feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
 
 export const getSkeleton = (feature, clickCoords) => {
   const isOsmObject = getIsOsmObject(feature);
@@ -29,13 +28,22 @@ export const getSkeleton = (feature, clickCoords) => {
   };
 };
 
-const coordsFeatureSetter = (coords, zoom) => {
+const coordsClicked = (map, coords: LonLat, setFeature) => {
   if (isMobileDevice()) {
-    return null; // handled by useOnMapLongPressed
+    setFeature(null); // handled by useOnMapLongPressed
+    pushFeatureToRouter(null);
+    return;
   }
 
-  return (previousFeature) =>
-    previousFeature ? null : getCoordsFeature(getRoundedPosition(coords, zoom));
+  setFeature((previousFeature) => {
+    if (previousFeature) {
+      pushFeatureToRouter(null);
+      return null;
+    }
+    const coordsFeature = createCoordsFeature(coords, map);
+    pushFeatureToRouter(coordsFeature);
+    return coordsFeature;
+  });
 };
 
 export const useOnMapClicked = createMapEventHook((map, setFeature) => ({
@@ -44,7 +52,7 @@ export const useOnMapClicked = createMapEventHook((map, setFeature) => ({
     const coords = map.unproject(point).toArray();
     const features = map.queryRenderedFeatures(point);
     if (!features.length) {
-      setFeature(coordsFeatureSetter(coords, map.getZoom()));
+      coordsClicked(map, coords, setFeature);
       return;
     }
 
@@ -53,7 +61,7 @@ export const useOnMapClicked = createMapEventHook((map, setFeature) => ({
     publishDbgObject('last skeleton', skeleton);
 
     if (skeleton.nonOsmObject) {
-      setFeature(coordsFeatureSetter(coords, map.getZoom()));
+      coordsClicked(map, coords, setFeature);
       return;
     }
 
@@ -65,7 +73,6 @@ export const useOnMapClicked = createMapEventHook((map, setFeature) => ({
     const result = await maptilerFix(features[0], skeleton, features[0].id);
     addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
     addFeatureCenterToCache(getShortId(result.osmMeta), skeleton.center);
-    const url = `/${getUrlOsmId(result.osmMeta)}${window.location.hash}`;
-    Router.push(url, undefined, { locale: 'default' });
+    pushFeatureToRouter(result);
   },
 }));

@@ -58,14 +58,14 @@ export const getApiId = (value): OsmApiId => {
   return { type, id };
 };
 
-export const getOsmappLink = (feature: Feature) => {
+export const getOsmappLink = (feature: Feature | null) => {
   if (!feature.point && feature?.osmMeta?.id)
     return `/${getUrlOsmId(feature.osmMeta)}`;
 
   if (feature?.roundedCenter)
     return `/${roundedToDegUrl(feature.roundedCenter)}`;
 
-  return '';
+  return '/';
 };
 
 export const getFullOsmappLink = (feature: Feature) =>
@@ -75,9 +75,6 @@ export const getShortLink = (feature: Feature) => {
   const slug = getShortenerSlug(feature.osmMeta);
   return slug === null ? null : `${PROJECT_URL}/${slug}`;
 };
-
-export const isSameOsmId = (feature, skeleton) =>
-  feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
 
 export const prod = process.env.NODE_ENV === 'production';
 
