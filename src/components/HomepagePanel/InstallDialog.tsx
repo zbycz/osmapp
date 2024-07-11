@@ -21,27 +21,7 @@ import {
 import { t, Translation } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { useFeatureContext } from '../utils/FeatureContext';
-
-const isIOS = () =>
-  [
-    'iPad Simulator',
-    'iPhone Simulator',
-    'iPod Simulator',
-    'iPad',
-    'iPhone',
-    'iPod',
-  ].includes(navigator.platform) ||
-  // iPad on iOS 13 detection
-  (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
-
-const isAndroid = () =>
-  navigator.userAgent.toLowerCase().indexOf('android') > -1;
-
-const getPlatform = () => {
-  if (isIOS()) return 'ios';
-  if (isAndroid()) return 'android';
-  return 'desktop';
-};
+import { getPlatform } from '../../helpers/platforms';
 
 const StyledDialog = styled(Dialog)`
   .MuiDialog-container.MuiDialog-scrollPaper {

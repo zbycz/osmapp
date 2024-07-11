@@ -122,10 +122,9 @@ export const RoutesEditor = ({
   };
 
   const onPhotoLoad = () => {
-    // setIsPhotoLoaded(true);
     setLoadedPhotos({
       ...loadedPhotos,
-      [photoPath]: { ...loadedPhotos.photoPath, [photoResolution]: true },
+      [photoPath]: { ...loadedPhotos[photoPath], [photoResolution]: true },
     });
     loadPhotoRelatedData();
   };

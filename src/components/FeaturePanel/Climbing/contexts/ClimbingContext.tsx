@@ -140,6 +140,12 @@ type Props = {
   feature: Feature;
 };
 
+export const initialPhotoZoom = {
+  scale: 1,
+  positionX: 0,
+  positionY: 0,
+};
+
 export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const initialRoutes = osmToClimbingRoutes(feature);
   publishDbgObject('climbingRoutes', initialRoutes);
@@ -175,11 +181,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     y: 0,
     units: 'px',
   });
-  const [photoZoom, setPhotoZoom] = useState<ZoomState>({
-    scale: 1,
-    positionX: 0,
-    positionY: 0,
-  });
+  const [photoZoom, setPhotoZoom] = useState<ZoomState>(initialPhotoZoom);
   const [viewportSize, setViewportSize] = useState<Size>({
     width: 0,
     height: 0,
