@@ -38,7 +38,7 @@ const ImageElement = styled.img<{ zoom?: number }>`
 
 export const RoutesEditor = ({
   isRoutesLayerVisible = true,
-  setIsPhotoLoaded,
+  photoResolution,
   imageUrl,
 }) => {
   const {
@@ -55,7 +55,10 @@ export const RoutesEditor = ({
     isPointClicked,
     routeIndexHovered,
     loadPhotoRelatedData,
+    loadedPhotos,
     photoRef,
+    photoPath,
+    setLoadedPhotos,
   } = useClimbingContext();
   const machine = getMachine();
   const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
@@ -119,7 +122,10 @@ export const RoutesEditor = ({
   };
 
   const onPhotoLoad = () => {
-    setIsPhotoLoaded(true);
+    setLoadedPhotos({
+      ...loadedPhotos,
+      [photoPath]: { ...loadedPhotos[photoPath], [photoResolution]: true },
+    });
     loadPhotoRelatedData();
   };
 
