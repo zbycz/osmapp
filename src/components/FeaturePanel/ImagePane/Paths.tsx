@@ -51,14 +51,18 @@ const Path = ({ path, feature, size }: PathProps) => {
 
   return (
     <>
-      <PathBorder d={d} $color={contrastColor} />
-      <PathLine d={d} $color={color} />
+      <path d={d} stroke={contrastColor} strokeWidth="4" />
+      <path d={d} stroke={color} strokeWidth="1" />
     </>
   );
 };
 
-export const PathSvg = ({ children, size }) => (
-  <Svg viewBox={`0 0 ${size.width} ${size.height}`} preserveAspectRatio="none">
+export const PathSvg = ({ children, size, xmlns }) => (
+  <Svg
+    viewBox={`0 0 ${size.width} ${size.height}`}
+    preserveAspectRatio="none"
+    xmlns={xmlns}
+  >
     {children}
   </Svg>
 );

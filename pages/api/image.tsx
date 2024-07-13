@@ -3,37 +3,20 @@ import { fetchFeature } from '../../src/services/osmApi';
 import { getInstantImage } from '../../src/services/images/getImageDefs';
 import { isInstant } from '../../src/services/types';
 import {
-  Paths,
   PathsSvgInner,
-  PathSvg,
 } from '../../src/components/FeaturePanel/ImagePane/Paths';
-import * as url from 'node:url';
-import * as https from 'node:https';
 import sizeOf from 'image-size';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { UserThemeProvider } from '../../src/helpers/theme';
+import fetch from 'isomorphic-unfetch';
 
 const getImageSizeServer = async (imageUrl: string) => {
-  return new Promise((resolve, reject) => {
-    const options = url.parse(imageUrl);
-    options.path = encodeURI(options.path);
-
-    https.get(options, function (response) {
-      const chunks = [];
-      response
-        .on('data', function (chunk) {
-          chunks.push(chunk);
-        })
-        .on('end', function () {
-          const buffer = Buffer.concat(chunks);
-          resolve(sizeOf(buffer));
-        })
-        .on('error', reject);
-    });
-  });
+  const response = await fetch(imageUrl);
+  const arrayBuffer = await response.arrayBuffer();
+  const buffer = new Uint8Array(arrayBuffer);
+  return sizeOf(buffer);
 };
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { id } = req.query;
@@ -49,15 +32,29 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const Root = () => (
       <UserThemeProvider userThemeCookie={undefined}>
-        <PathSvg size={size}>
+        <svg
+          viewBox={`0 0 ${size.width} ${size.height}`}
+          width={size.width}
+          height={size.height}
+          preserveAspectRatio="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
           <image href={image.imageUrl} width="100%" height="100%" />
           <PathsSvgInner def={def} feature={feature} size={size} />
-        </PathSvg>
+        </svg>
       </UserThemeProvider>
     );
     const html = renderToString(<Root />);
 
-    res.status(200).setHeader('Content-Type', 'image/svg').send(html);
+    res
+      .status(200)
+      .setHeader('X-Clacks-Overhead', 'GNU Terry Pratchett')
+      .setHeader('Content-Type', 'image/svg+xml')
+      .setHeader(
+        'Content-Disposition',
+        `inline; filename="your-image-name.svg"`,
+      )
+      .send(html);
   } catch (err) {
     console.error(err); // eslint-disable-line no-console
     res.status(err.code ?? 400).send(String(err));
