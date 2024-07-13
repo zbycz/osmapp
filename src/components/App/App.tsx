@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
@@ -100,6 +101,7 @@ const IndexWithProviders = () => {
 
 const App = ({ featureFromRouter, initialMapView, cookies }) => {
   const mapView = getMapViewFromHash() || initialMapView;
+  const queryClient = new QueryClient();
 
   return (
     <SnackbarProvider>
@@ -108,7 +110,9 @@ const App = ({ featureFromRouter, initialMapView, cookies }) => {
           <OsmAuthProvider cookies={cookies}>
             <StarsProvider>
               <EditDialogProvider /* TODO supply router.query */>
-                <IndexWithProviders />
+                <QueryClientProvider client={queryClient}>
+                  <IndexWithProviders />
+                </QueryClientProvider>
               </EditDialogProvider>
             </StarsProvider>
           </OsmAuthProvider>

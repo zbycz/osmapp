@@ -1,4 +1,5 @@
-import { fetchText } from '../../../services/fetch';
+import { fetchJson } from '../../../services/fetch';
+import { overpassGeomToGeojson } from '../../../services/overpassSearch';
 
 export interface LineInformation {
   ref: string;
@@ -6,40 +7,35 @@ export interface LineInformation {
   service: string | undefined;
 }
 
-export async function requestLines(
-  featureType: 'node' | 'way' | 'relation',
-  id: number,
-) {
-  // use the overpass api to request the lines in
-  const overpassQuery = `[out:csv(service, colour, ref; false; ';;')];
+export async function requestLines(featureType: string, id: number) {
+  const overpassQueryJson = `[out:json];
   ${featureType}(${id});
   rel(bn)["public_transport"="stop_area"];
   node(r: "stop") -> .stops;
     rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
-    out;`;
+    out geom qt;`;
 
-  const response: string = await fetchText(
+  const geoJson = await fetchJson(
     `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-      overpassQuery,
+      overpassQueryJson,
     )}`,
-  );
+  ).then(overpassGeomToGeojson);
 
-  const resData = response
-    .split('\n')
-    .slice(0, -1)
-    .map((line) => {
-      const [service, colour, ref] = line.split(';;');
-
-      return {
-        ref,
-        colour: colour || undefined,
-        service: service || undefined,
-      } as LineInformation;
-    })
+  const resData = geoJson
+    .map(
+      ({ properties }): LineInformation => ({
+        ref: `${properties.ref || properties.name}`,
+        colour: properties.colour?.toString() || undefined,
+        service: properties.service?.toString() || undefined,
+      }),
+    )
     .sort((a, b) => a.ref.localeCompare(b.ref, undefined, { numeric: true }))
     .filter(({ ref }) => ref !== '');
 
-  return resData.filter(
-    (line, index) => resData.findIndex((l) => l.ref === line.ref) === index,
-  );
+  return {
+    geoJson: { type: 'FeatureCollection', features: geoJson },
+    routes: resData.filter(
+      (line, index) => resData.findIndex((l) => l.ref === line.ref) === index,
+    ),
+  };
 }

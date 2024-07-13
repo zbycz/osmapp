@@ -59,6 +59,7 @@
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^18.2.0",
     "react-jss": "^10.6.0",
+    "react-query": "^3.39.3",
     "react-split-pane": "^0.1.92",
     "react-zoom-pan-pinch": "^3.3.0",
     "styled-components": "^6.1.11",

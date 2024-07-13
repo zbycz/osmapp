@@ -1,40 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import _ from 'lodash';
-import { useRouter } from 'next/router';
+import { useQuery } from 'react-query';
 import { Typography } from '@mui/material';
 import { LineInformation, requestLines } from './requestRoutes';
 import { PublicTransportCategory } from './PublicTransportWrapper';
 import { FeatureTags } from '../../../services/types';
 import { DotLoader } from '../../helpers';
 import { sortBy } from './helpers';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { getGlobalMap } from '../../../services/mapStorage';
 
 interface PublicTransportProps {
   tags: FeatureTags;
 }
-
-const useLoadingState = () => {
-  const [routes, setRoutes] = useState<LineInformation[]>([]);
-  const [error, setError] = useState<string>();
-  const [loading, setLoading] = useState(true);
-
-  const finishRoutes = (payload) => {
-    setLoading(false);
-    setRoutes(payload);
-  };
-
-  const startRoutes = () => {
-    setLoading(true);
-    setRoutes([]);
-    setError(undefined);
-  };
-
-  const failRoutes = () => {
-    setError('Could not load routes');
-    setLoading(false);
-  };
-
-  return { routes, error, loading, startRoutes, finishRoutes, failRoutes };
-};
 
 const categories = [
   'tourism',
@@ -70,30 +48,26 @@ const PublicTransportDisplay = ({ routes }) => {
 };
 
 const PublicTransportInner = () => {
-  const router = useRouter();
+  const { feature } = useFeatureContext();
+  const { id, type } = feature.osmMeta;
 
-  const { routes, error, loading, startRoutes, finishRoutes, failRoutes } =
-    useLoadingState();
+  const { data, status } = useQuery('publictransport', () =>
+    requestLines(type, Number(id)),
+  );
 
   useEffect(() => {
-    const loadData = async () => {
-      startRoutes();
-      const lines = await requestLines(
-        router.query.all[0] as any,
-        Number(router.query.all[1]),
-      ).catch(failRoutes);
-      finishRoutes(lines);
-    };
+    if (!data) return;
 
-    loadData();
-  }, []);
+    getGlobalMap()?.getSource('overpass')?.setData(data.geoJson);
+  }, [data]);
 
   return (
     <div>
-      {loading ? <DotLoader /> : <PublicTransportDisplay routes={routes} />}
-      {error && (
+      {status === 'loading' || (status === 'idle' && <DotLoader />)}
+      {status === 'success' && <PublicTransportDisplay routes={data.routes} />}
+      {status === 'error' && (
         <Typography color="secondary" paragraph>
-          Error: {error}
+          Error
         </Typography>
       )}
     </div>
