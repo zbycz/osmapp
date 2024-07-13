@@ -16,6 +16,7 @@ export type ImageType2 = {
   description: string;
   linkUrl: string;
   link: string;
+  sameImageResolvedAlsoFrom?: string[];
   uncertainImage?: true;
 };
 
@@ -42,7 +43,7 @@ export const getInstantImage = (k, v): ImageType2 | null => {
   if (k.match(/^(wikimedia_commons|image)/) && v.match(/^File:/)) {
     return {
       imageUrl: getCommonsImageUrl(v, 410),
-      description: `Wikimedia Commons image`,
+      description: `Wikimedia Commons image (${k}=*)`,
       linkUrl: `https://commons.wikimedia.org/wiki/${v}`,
       link: v,
     };
@@ -52,7 +53,7 @@ export const getInstantImage = (k, v): ImageType2 | null => {
     const url = v.match(/https?:/) ? v : `https://${v}`;
     return {
       imageUrl: url,
-      description: `Image link (image=*)`,
+      description: `Image link (${k}=*)`,
       linkUrl: url,
       link: v,
     };

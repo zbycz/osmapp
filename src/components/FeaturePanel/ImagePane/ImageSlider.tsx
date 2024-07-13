@@ -84,17 +84,7 @@ const InfoButtonWrapper = styled.div`
 
 const InfoButton = ({ image }: { image: ImageType2 }) => (
   <InfoButtonWrapper>
-    <InfoTooltip
-      tooltip={
-        <>
-          {image.description}
-          <br />
-          <a href={image.linkUrl} target="_blank">
-            {image.link}
-          </a>
-        </>
-      }
-    />
+    <InfoTooltip tooltip={image.description} />
   </InfoButtonWrapper>
 );
 

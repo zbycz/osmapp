@@ -11,7 +11,7 @@ const getCommonsApiUrl = (title) =>
     title,
   )}&origin=*`;
 
-const fetchWikimediaCommons = async (title): Promise<ImageType2 | null> => {
+const fetchWikimediaCommons = async (k, title): Promise<ImageType2 | null> => {
   const data = await fetchJson(getCommonsApiUrl(title));
   const page = Object.values(data.query.pages)[0] as any;
   if (!page.imageinfo?.length) {
@@ -20,7 +20,7 @@ const fetchWikimediaCommons = async (title): Promise<ImageType2 | null> => {
   const images = page.imageinfo;
   return {
     imageUrl: images[0].thumburl,
-    description: 'Wikimedia Commons (wikimedia_commons=*)',
+    description: `Wikimedia Commons (${k}=*)`,
     link: page.title,
     linkUrl: images[0].descriptionshorturl,
     // portrait: images[0].thumbwidth < images[0].thumbheight,
@@ -104,7 +104,7 @@ export const getImageFromApiRaw = async (
   if (isTag(def)) {
     const { k, v } = def;
     if (k.startsWith('image') && v.match(/^File:/)) {
-      return fetchWikimediaCommons(v);
+      return fetchWikimediaCommons(k, v);
     }
     if (k.startsWith('wikidata')) {
       return fetchWikidata(v);
