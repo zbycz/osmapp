@@ -3,7 +3,7 @@ import Head from 'next/head';
 import { getUtfStrikethrough, join } from '../utils';
 import { Feature } from '../services/types';
 import { useFeatureContext } from '../components/utils/FeatureContext';
-import { getFullOsmappLink } from '../services/helpers';
+import { getFullOsmappLink, getShortId } from '../services/helpers';
 import { getLabel, getParentLabel } from './featureLabel';
 import {
   PROJECT_DECRIPTION,
@@ -14,12 +14,12 @@ import {
 } from '../services/project';
 import { t } from '../services/intl';
 
-const OpenGraphTags = ({ title, url, image }) => (
+const OpenGraphTags = ({ title, url, ogImage }) => (
   <>
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
-    <meta property="og:image" content={image} />
+    <meta property="og:image" content={ogImage} />
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="og:description" content={t(PROJECT_DECRIPTION)} />
     <meta property="description" content={t(PROJECT_SERP_DESCRIPTION)} />
@@ -42,7 +42,7 @@ export const TitleAndMetaTags = () => {
         <OpenGraphTags
           title={PROJECT_NAME}
           url={PROJECT_URL}
-          image={PROJECT_OG_IMAGE}
+          ogImage={PROJECT_OG_IMAGE}
         />
       </Head>
     );
@@ -52,14 +52,13 @@ export const TitleAndMetaTags = () => {
   const titleLabel = getTitleLabel(feature);
   const title = `${titleLabel} · ${PROJECT_NAME}`;
 
+  const ogImage = feature.imageDefs?.length
+    ? `${PROJECT_URL}/api/image?id=${getShortId(feature.osmMeta)}`
+    : undefined;
   return (
     <Head>
       <title>{title}</title>
-      <OpenGraphTags
-        title={title}
-        url={osmappLink}
-        image={PROJECT_OG_IMAGE} // TODO followup
-      />
+      <OpenGraphTags title={title} url={osmappLink} ogImage={ogImage} />
     </Head>
   );
 };

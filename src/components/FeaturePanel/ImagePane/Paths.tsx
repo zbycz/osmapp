@@ -5,6 +5,7 @@ import {
   getDifficulty,
   getDifficultyColor,
 } from '../Climbing/utils/grades/routeGrade';
+
 import { Size } from './types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getKey } from '../../../services/helpers';
@@ -56,7 +57,7 @@ const Path = ({ path, feature, size }: PathProps) => {
       ({ x, y }, idx) =>
         `${!idx ? 'M' : 'L'}${x * size.width} ${y * size.height}`,
     )
-    .join(',');
+    .join('');
 
   const color = getDifficultyColor(getDifficulty(feature.tags), theme);
   const contrastColor = theme.palette.getContrastText(color);
@@ -69,6 +70,23 @@ const Path = ({ path, feature, size }: PathProps) => {
   );
 };
 
+export const PathsSvgInner = ({
+  def,
+  feature,
+  size,
+}: {
+  def: ImageDefFromTag;
+  feature: Feature;
+  size: Size;
+}) => (
+  <>
+    {def.path && <Path path={def.path} feature={feature} size={size} />}
+    {def.memberPaths?.map(({ path, member }) => (
+      <Path key={getKey(member)} path={path} feature={member} size={size} />
+    ))}
+  </>
+);
+
 type PathsProps = {
   def: ImageDefFromTag;
   size: Size;
@@ -78,10 +96,7 @@ export const Paths = ({ def, size }: PathsProps) => {
   const { feature } = useFeatureContext();
   return (
     <PathSvg size={size}>
-      {def.path && <Path path={def.path} feature={feature} size={size} />}
-      {def.memberPaths?.map(({ path, member }) => (
-        <Path key={getKey(member)} path={path} feature={member} size={size} />
-      ))}
+      <PathsSvgInner def={def} feature={feature} size={size} />
     </PathSvg>
   );
 };
