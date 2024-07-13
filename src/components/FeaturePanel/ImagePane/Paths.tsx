@@ -1,6 +1,11 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
-import { Feature, ImageFromTag, PathType } from '../../../services/types';
+import {
+  Feature,
+  ImageDef,
+  ImageFromTag,
+  PathType,
+} from '../../../services/types';
 import { getDifficultyColor } from '../Climbing/utils/grades/routeGrade';
 import { Size } from './types';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -52,7 +57,7 @@ const Path = ({ path, feature, size }: PathProps) => {
   );
 };
 
-const PathSvg = ({ children, size }) => (
+export const PathSvg = ({ children, size }) => (
   <Svg viewBox={`0 0 ${size.width} ${size.height}`} preserveAspectRatio="none">
     {children}
   </Svg>
@@ -63,14 +68,28 @@ type PathsProps = {
   size: Size;
 };
 
+export const PathsSvgInner = ({
+  def,
+  feature,
+  size,
+}: {
+  def: ImageDef;
+  feature: Feature;
+  size: Size;
+}) => (
+  <>
+    {def.path && <Path path={def.path} feature={feature} size={size} />}
+    {def.memberPaths?.map(({ path, member }) => (
+      <Path key={getKey(member)} path={path} feature={member} size={size} />
+    ))}
+  </>
+);
+
 export const Paths = ({ def, size }: PathsProps) => {
   const { feature } = useFeatureContext();
   return (
     <PathSvg size={size}>
-      {def.path && <Path path={def.path} feature={feature} size={size} />}
-      {def.memberPaths?.map(({ path, member }) => (
-        <Path key={getKey(member)} path={path} feature={member} size={size} />
-      ))}
+      <PathsSvgInner def={def} feature={feature} size={size} />
     </PathSvg>
   );
 };
