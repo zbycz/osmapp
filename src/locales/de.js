@@ -155,4 +155,9 @@ export default {
   'layers.maptilerSat': 'Maptiler Satellit (z<14)',
   'layers.bingSat': 'Bing Satellit',
   'layers.bike': 'Fahrrad',
+
+  'runway.information': 'Landebahninformationen',
+  'runway.runway': 'Landebahn',
+  'runway.size': 'Länge - Breite',
+  'runway.surface': 'Oberfläche',
 };

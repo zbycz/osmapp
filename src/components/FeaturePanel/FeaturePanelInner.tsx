@@ -30,6 +30,7 @@ import { SuggestEdit } from './SuggestEdit';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { CragsInArea } from './CragsInArea';
 import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
+import { Runways } from './Runways/Runways';
 
 const Flex = styled.div`
   flex: 1;
@@ -124,6 +125,7 @@ export const FeaturePanelInner = () => {
                 {advanced && <Members />}
 
                 <PublicTransport tags={tags} />
+                <Runways />
 
                 <FeatureOpenPlaceGuideLink />
 
