@@ -1,6 +1,7 @@
 import React from 'react';
 import { TransformWrapper as Wrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
+import { ZoomState } from './types';
 
 export const TransformWrapper = ({ children }) => {
   const { setArePointerEventsDisabled, setPhotoZoom } = useClimbingContext();
@@ -28,14 +29,7 @@ export const TransformWrapper = ({ children }) => {
       disablePadding
       wheel={{ step: 100 }}
       centerOnInit
-      onTransformed={(
-        _ref,
-        state: {
-          scale: number;
-          positionX: number;
-          positionY: number;
-        },
-      ) => {
+      onTransformed={(_ref, state: ZoomState) => {
         setPhotoZoom(state);
       }}
     >

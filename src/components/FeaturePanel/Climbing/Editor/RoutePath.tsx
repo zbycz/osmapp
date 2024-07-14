@@ -5,6 +5,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PositionPx } from '../types';
 import { PathWithBorder } from './PathWithBorder';
 import { MouseTrackingLine } from './MouseTrackingLine';
+import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
 
 const InteractiveArea = styled.line`
   pointer-events: all;
@@ -16,17 +17,20 @@ const AddNewPoint = styled.circle`
 
 export const RoutePath = ({ route, routeNumber }) => {
   const [tempPointPosition, setTempPointPosition] =
-    useState<(PositionPx & { lineIndex: number }) | null>(null);
+    useState<PositionPx | null>(null);
+  const [tempPointSegmentIndex, setTempPointSegmentIndex] =
+    useState<number | null>(null);
   const {
     isPointMoving,
     isRouteSelected,
     getPixelPosition,
     getMachine,
     isEditMode,
-    addOffsets,
     routeIndexHovered,
     setRouteIndexHovered,
     getPathForRoute,
+    photoRef,
+    photoZoom,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
@@ -38,23 +42,26 @@ export const RoutePath = ({ route, routeNumber }) => {
     return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
   });
 
-  const onMouseMove = (e, lineIndex: number) => {
+  const onMouseMove = (e, segmentIndex: number) => {
     if (
       machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute'
     ) {
       if (!routeIndexHovered) setRouteIndexHovered(routeNumber);
 
-      const position = addOffsets(['editorPosition', 'imageContainer'], {
+      const mousePosition: PositionPx = {
         x: e.clientX,
         y: e.clientY,
         units: 'px',
-      });
+      };
+      const positionInImage = getPositionInImageFromMouse(
+        photoRef,
+        mousePosition,
+        photoZoom,
+      );
 
-      setTempPointPosition({
-        ...position,
-        lineIndex,
-      });
+      setTempPointPosition(positionInImage);
+      setTempPointSegmentIndex(segmentIndex);
     }
   };
 
@@ -66,19 +73,11 @@ export const RoutePath = ({ route, routeNumber }) => {
     setRouteIndexHovered(null);
   };
 
-  const hoveredPosition = tempPointPosition
-    ? addOffsets(['scrollOffset'], {
-        x: tempPointPosition.x,
-        y: tempPointPosition.y,
-        units: 'px',
-      })
-    : null;
-
   const onPointAdd = () => {
     if (tempPointPosition) {
       machine.execute('addPointInBetween', {
-        hoveredPosition,
-        tempPointPosition,
+        hoveredPosition: tempPointPosition,
+        hoveredSegmentIndex: tempPointSegmentIndex,
       });
     }
   };
@@ -155,8 +154,8 @@ export const RoutePath = ({ route, routeNumber }) => {
         })}
       {isEditableSelectedRouteHovered && tempPointPosition && (
         <AddNewPoint
-          cx={hoveredPosition.x}
-          cy={hoveredPosition.y}
+          cx={tempPointPosition.x}
+          cy={tempPointPosition.y}
           fill="white"
           stroke="rgba(0,0,0,0.3)"
           r={5}

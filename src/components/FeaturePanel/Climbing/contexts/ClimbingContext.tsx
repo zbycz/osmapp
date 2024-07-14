@@ -22,10 +22,7 @@ import {
   State,
   StateAction,
 } from '../utils/getMachineFactory';
-import {
-  CountPositionEntity,
-  positionUtilsFactory,
-} from '../utils/positionUtilsFactory';
+import { positionUtilsFactory } from '../utils/positionUtilsFactory';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
@@ -82,10 +79,6 @@ type ClimbingContextType = {
   getPathForRoute: (route: ClimbingRoute) => PathPoints;
   getCurrentPath: () => PathPoints;
   getPercentagePosition: (position: PositionPx) => Position;
-  addOffsets: (
-    entities: Array<CountPositionEntity>,
-    position: PositionPx,
-  ) => PositionPx;
   addZoom: (position: PositionPx) => PositionPx;
   getMachine: () => {
     currentState: Partial<Record<StateAction, ActionWithCallback>>;
@@ -249,12 +242,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     getPathForRoute,
   });
 
-  const { getPixelPosition, getPercentagePosition, addOffsets, addZoom } =
+  const { getPixelPosition, getPercentagePosition, addZoom } =
     positionUtilsFactory({
       editorPosition,
-      scrollOffset,
       imageSize,
-      imageContainerSize,
       photoZoom,
     });
 
@@ -271,8 +262,9 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     routes,
     updateRouteOnIndex,
     getPercentagePosition,
-    addOffsets,
     findCloserPoint,
+    photoRef,
+    photoZoom,
   });
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
@@ -383,7 +375,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     pointElement,
     setPointElement,
     moveRoute,
-    addOffsets,
     isEditMode,
     setIsEditMode,
     viewportSize,

@@ -5,7 +5,9 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteFloatingMenu } from './RouteFloatingMenu';
 import { RouteMarks } from './RouteMarks';
+import { getMouseFromPositionInImage } from '../utils/mousePositionUtils';
 
+const DIALOG_TOP_BAR_HEIGHT = 56;
 type RouteRenders = { route: React.ReactNode; marks: React.ReactNode };
 
 const Svg = styled.svg<{
@@ -63,14 +65,14 @@ export const RoutesLayer = ({
     isRouteSelected,
     isRouteHovered,
     getPixelPosition,
-    editorPosition,
-    scrollOffset,
     isPointMoving,
     setIsPointClicked,
     setIsPointMoving,
     setPointSelectedIndex,
     getCurrentPath,
     routes,
+    photoRef,
+    photoZoom,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -103,7 +105,7 @@ export const RoutesLayer = ({
     hovered: Array<RouteRenders>;
   }>(
     (acc, route, index) => {
-      const RenderRoute = () => (
+      const RouteInner = () => (
         <RouteWithLabel
           route={route}
           routeNumber={index}
@@ -123,7 +125,7 @@ export const RoutesLayer = ({
           ...acc,
           selected: [
             ...acc.selected,
-            { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+            { route: <RouteInner />, marks: <RenderRouteMarks /> },
           ],
         };
       }
@@ -132,7 +134,7 @@ export const RoutesLayer = ({
           ...acc,
           hovered: [
             ...acc.hovered,
-            { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+            { route: <RouteInner />, marks: <RenderRouteMarks /> },
           ],
         };
       }
@@ -140,7 +142,7 @@ export const RoutesLayer = ({
         ...acc,
         rest: [
           ...acc.rest,
-          { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+          { route: <RouteInner />, marks: <RenderRouteMarks /> },
         ],
       };
     },
@@ -165,6 +167,13 @@ export const RoutesLayer = ({
       ? selectedPointOfSelectedRoute
       : lastPointOfSelectedRoute;
 
+  // TODO this position doesnt work well when zoomed
+  const absolutePositionFromScreen = getMouseFromPositionInImage(
+    photoRef,
+    routeFloatingMenuPosition,
+    photoZoom,
+  );
+
   return (
     <>
       <Svg
@@ -188,12 +197,10 @@ export const RoutesLayer = ({
         {sortedRoutes.hovered.map((item) => item.marks)}
       </Svg>
 
-      {routeFloatingMenuPosition && (
+      {absolutePositionFromScreen && (
         <RouteFloatingMenuContainer
-          $x={
-            routeFloatingMenuPosition.x + editorPosition.x + scrollOffset.x + 30
-          }
-          $y={routeFloatingMenuPosition.y + scrollOffset.y - 15}
+          $x={absolutePositionFromScreen.x + 20}
+          $y={absolutePositionFromScreen.y - DIALOG_TOP_BAR_HEIGHT - 15}
         >
           <RouteFloatingMenu />
         </RouteFloatingMenuContainer>
