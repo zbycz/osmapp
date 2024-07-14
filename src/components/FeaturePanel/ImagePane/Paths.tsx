@@ -44,22 +44,24 @@ const Path = ({ path, feature, size }: PathProps) => {
       ({ x, y }, idx) =>
         `${!idx ? 'M' : 'L'}${x * size.width} ${y * size.height}`,
     )
-    .join(',');
+    .join('');
 
   const color = getDifficultyColor(feature.tags, theme);
   const contrastColor = theme.palette.getContrastText(color);
 
   return (
     <>
-      <path d={d} stroke={contrastColor} strokeWidth="4" />
-      <path d={d} stroke={color} strokeWidth="1" />
+      <PathBorder d={d} $color={contrastColor} />
+      <PathLine d={d} $color={color} />
     </>
   );
 };
 
-export const PathSvg = ({ children, size, xmlns }) => (
+export const PathSvg = ({ children, size, xmlns = null }) => (
   <Svg
     viewBox={`0 0 ${size.width} ${size.height}`}
+    width={size.width}
+    height={size.height}
     preserveAspectRatio="none"
     xmlns={xmlns}
   >

@@ -1,9 +1,9 @@
 import { fetchJson } from '../fetch';
 import { getCommonsImageUrl } from './getWikiImage';
-import { ImageDef, isCenter, isTag } from '../types';
+import { ImageDef, isCenter, isInstant, isTag } from '../types';
 import { getMapillaryImage } from './getMapillaryImage';
 import { getFodyImage } from './getFodyImage';
-import { ImageType2 } from './getImageDefs';
+import { getInstantImage, ImageType2 } from './getImageDefs';
 import { encodeUrl } from '../../helpers/utils';
 
 const WIDTH = 410;
@@ -122,6 +122,10 @@ export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
 
 export const getImageFromApi = async (def: ImageDef): ImagePromise => {
   try {
+    if (isInstant(def)) {
+      return getInstantImage(def.k, def.v);
+    }
+
     return await getImageFromApiRaw(def);
   } catch (e) {
     console.warn(e); // eslint-disable-line no-console
