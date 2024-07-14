@@ -8,6 +8,7 @@ import { EditIconButton } from './helpers/EditIconButton';
 import { FoodHygieneRatingSchemeRenderer } from './renderers/FoodHygieneRatingScheme';
 import { WikipediaRenderer } from './renderers/WikipediaRenderer';
 import { WikidataRenderer } from './renderers/WikidataRenderer';
+import { isDesktopResolution } from '../helpers';
 
 const Wrapper = styled.div`
   position: relative;
@@ -16,8 +17,11 @@ const Wrapper = styled.div`
   & .show-on-hover {
     display: none !important;
   }
-  &:hover .show-on-hover {
-    display: block !important;
+
+  @media ${isDesktopResolution} {
+    &:hover .show-on-hover {
+      display: block !important;
+    }
   }
 `;
 

@@ -8,6 +8,7 @@ import { StarButton } from './ImageSection/StarButton';
 import { getLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
+import { isDesktopResolution } from '../helpers';
 
 const StyledEditButton = styled(IconButton)`
   visibility: hidden;
@@ -30,8 +31,10 @@ const HeadingContainer = styled.div`
   align-items: flex-start;
   position: relative;
 
-  &:hover ${StyledEditButton} {
-    visibility: visible;
+  @media ${isDesktopResolution} {
+    &:hover ${StyledEditButton} {
+      visibility: visible;
+    }
   }
 `;
 
