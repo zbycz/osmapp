@@ -58,7 +58,7 @@
     "react-jss": "^10.6.0",
     "react-query": "^3.39.3",
     "react-split-pane": "^0.1.92",
-    "react-zoom-pan-pinch": "^3.5.0"
+    "react-zoom-pan-pinch": "^3.6.1"
   },
   "devDependencies": {
     "@types/autosuggest-highlight": "^3.2.3",
