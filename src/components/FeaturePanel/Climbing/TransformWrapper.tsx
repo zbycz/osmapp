@@ -3,7 +3,8 @@ import { TransformWrapper as Wrapper } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 
 export const TransformWrapper = ({ children }) => {
-  const { setArePointerEventsDisabled, setPhotoZoom } = useClimbingContext();
+  const { setArePointerEventsDisabled, setPhotoZoom, isEditMode } =
+    useClimbingContext();
 
   const startPointerEvents = () => {
     setArePointerEventsDisabled(false);
@@ -15,7 +16,10 @@ export const TransformWrapper = ({ children }) => {
   return (
     <Wrapper
       doubleClick={{
-        disabled: true,
+        disabled: isEditMode,
+        mode: 'toggle',
+        step: 1,
+        animationTime: 150,
       }}
       onWheelStart={stopPointerEvents}
       onWheelStop={startPointerEvents}
