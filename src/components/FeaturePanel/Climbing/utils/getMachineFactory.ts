@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { PositionPx } from '../types';
 import { emptyRoute } from './emptyRoute';
+import { getPositionInImageFromMouse } from './mousePositionUtils';
 
 export type State =
   | 'editRoute'
@@ -47,8 +48,9 @@ export const getMachineFactory = ({
   routes,
   updateRouteOnIndex,
   getPercentagePosition,
-  addOffsets,
   findCloserPoint,
+  photoRef,
+  photoZoom,
 }) => {
   const [currentState, setCurrentState] = useState<State>('init');
 
@@ -117,26 +119,25 @@ export const getMachineFactory = ({
     );
   };
 
-  const addPointInBetween = ({ hoveredPosition, tempPointPosition }) => {
+  const addPointInBetween = ({ hoveredPosition, hoveredSegmentIndex }) => {
     const position = getPercentagePosition(hoveredPosition);
 
     updatePathOnRouteIndex(routeSelectedIndex, (path) => [
-      ...path.slice(0, tempPointPosition.lineIndex + 1),
+      ...path.slice(0, hoveredSegmentIndex + 1),
       position,
-      ...path.slice(tempPointPosition.lineIndex + 1),
+      ...path.slice(hoveredSegmentIndex + 1),
     ]);
   };
 
   const addPointToEnd = (props: { position: PositionPx }) => {
     if (!props) return;
-    const { x, y } = props.position;
-    const newCoordinate = getPercentagePosition(
-      addOffsets(['scrollOffset', 'editorPosition', 'imageContainer'], {
-        x,
-        y,
-        units: 'px',
-      }),
+    const positionInImage = getPositionInImageFromMouse(
+      photoRef,
+      props.position,
+      photoZoom,
     );
+
+    const newCoordinate = getPercentagePosition(positionInImage);
 
     const closestPoint = findCloserPoint(newCoordinate);
 
