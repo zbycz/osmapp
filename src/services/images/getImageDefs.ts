@@ -16,8 +16,8 @@ export type ImageType2 = {
   description: string;
   linkUrl: string;
   link: string;
-  sameImageResolvedAlsoFrom?: ImageFromTag[];
   uncertainImage?: true;
+  sameImageResolvedAlsoFrom?: ImageType2[];
 };
 
 const getSuffix = (y: string) => {
@@ -39,7 +39,8 @@ const parsePathTag = (pathString?: string): PathType | undefined => {
   return points?.length ? points : undefined;
 };
 
-export const getInstantImage = (k, v): ImageType2 | null => {
+type KeyValue = { k: string; v: string };
+export const getInstantImage = ({ k, v }: KeyValue): ImageType2 | null => {
   if (k.match(/^(wikimedia_commons|image)/) && v.match(/^File:/)) {
     return {
       imageUrl: getCommonsImageUrl(v, 410),
@@ -67,7 +68,7 @@ const getImagesFromTags = (tags: FeatureTags) =>
     .filter((k) => k.match(imageTagRegexp))
     .map((k) => {
       const v = tags[k];
-      const instant = !!getInstantImage(k, v);
+      const instant = !!getInstantImage({ k, v });
       const path = parsePathTag(tags[`${k}:path`]);
       return { type: 'tag', k, v, instant, path } as ImageFromTag;
     })
@@ -94,8 +95,7 @@ export const mergeMemberImageDefs = (
 ) => {
   const destinationDefs = feature.imageDefs;
   if (!destinationDefs) {
-    // eg. skeleton
-    return;
+    return; // eg. skeleton
   }
 
   memberFeatures.forEach((member) => {
