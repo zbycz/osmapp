@@ -54,12 +54,6 @@ const imageDefs: ImageDef[] = [
     instant: false,
   },
   {
-    type: 'tag',
-    k: 'website',
-    v: 'https://site-may-have-og-image',
-    instant: false,
-  },
-  {
     type: 'center',
     service: 'mapillary',
     center: [14, 50],

@@ -5,14 +5,21 @@ import { getMapillaryImage } from './getMapillaryImage';
 import { getFodyImage } from './getFodyImage';
 import { ImageType2 } from './getImageDefs';
 
-// TODO can we get image out of category ?
-const getCommonsApiUrl = (title) =>
-  `https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${encodeURIComponent(
-    title,
-  )}&origin=*`;
+type ImagePromise = Promise<ImageType2 | null>;
 
-const fetchWikimediaCommons = async (k, title): Promise<ImageType2 | null> => {
-  const data = await fetchJson(getCommonsApiUrl(title));
+const encode = (strings: TemplateStringsArray, ...values: string[]) =>
+  strings.reduce((result, string, i) => {
+    const value = values[i];
+    return result + string + (value ? encodeURIComponent(value) : '');
+  }, '');
+
+// TODO can we get image out of category ?
+const getCommonsApiUrl = (title: string) =>
+  encode`https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${title}&origin=*`;
+
+const fetchCommons = async (k: string, v: string): ImagePromise => {
+  const url = getCommonsApiUrl(v);
+  const data = await fetchJson(url);
   const page = Object.values(data.query.pages)[0] as any;
   if (!page.imageinfo?.length) {
     return null;
@@ -27,13 +34,12 @@ const fetchWikimediaCommons = async (k, title): Promise<ImageType2 | null> => {
   };
 };
 
-const getWikidataApiUrl = (entity) =>
-  `https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${encodeURIComponent(
-    entity,
-  )}&origin=*`;
+const getWikidataApiUrl = (entity: string) =>
+  encode`https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${entity}&origin=*`;
 
-const fetchWikidata = async (entity: string): Promise<ImageType2 | null> => {
-  const data = await fetchJson(getWikidataApiUrl(entity));
+const fetchWikidata = async (entity: string): ImagePromise => {
+  const url = getWikidataApiUrl(entity);
+  const data = await fetchJson(url);
 
   if (!data.claims?.P18) {
     return null;
@@ -54,7 +60,7 @@ const fetchWikidata = async (entity: string): Promise<ImageType2 | null> => {
   };
 };
 
-const parseWikipedia = (k, v) => {
+const parseWikipedia = (k: string, v: string) => {
   if (v.includes(':')) {
     const parts = v.split(':', 2);
     return { country: parts[0], title: parts[1] };
@@ -66,30 +72,27 @@ const parseWikipedia = (k, v) => {
   return { country: 'en', title: v };
 };
 
-const getWikipediaApiUrl = (k, v) => {
-  const { country, title } = parseWikipedia(k, v);
-  const titles = encodeURIComponent(title);
-  return `https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=640&format=json&titles=${titles}&origin=*`;
-};
+const getWikipediaApiUrl = (country: string, title: string) =>
+  encode`https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=640&format=json&titles=${title}&origin=*`;
 
-const fetchWikipedia = async (k, v): Promise<ImageType2 | null> => {
-  const data = await fetchJson(getWikipediaApiUrl(k, v));
+const fetchWikipedia = async (k: string, v: string): ImagePromise => {
+  const { country, title } = parseWikipedia(k, v);
+  const url = getWikipediaApiUrl(country, title);
+  const data = await fetchJson(url);
   const page = Object.values(data.query.pages)[0] as any;
   if (!page.pageimage) {
     return null;
   }
   return {
     imageUrl: page.thumbnail.source,
-    description: `Wikipedia (${k})`,
+    description: `Wikipedia (${k}=*)`,
     linkUrl: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
     link: `File:${page.pageimage}`,
     // portrait: page.thumbnail.width < page.thumbnail.height,
   };
 };
 
-export const getImageFromApiRaw = async (
-  def: ImageDef,
-): Promise<ImageType2 | null> => {
+export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
   if (isCenter(def)) {
     const { service, center } = def;
     if (service === 'mapillary') {
@@ -104,25 +107,23 @@ export const getImageFromApiRaw = async (
   if (isTag(def)) {
     const { k, v } = def;
     if (k.startsWith('image') && v.match(/^File:/)) {
-      return fetchWikimediaCommons(k, v);
+      return fetchCommons(k, v);
     }
     if (k.startsWith('wikidata')) {
       return fetchWikidata(v);
     }
     if (k.startsWith('wikimedia_commons')) {
-      return fetchWikimediaCommons(v);
+      return fetchCommons(k, v);
     }
     if (k.startsWith('wikipedia')) {
       return fetchWikipedia(k, v);
     }
   }
 
-  throw new Error(`No match getImageFromApi(${JSON.stringify(def)})`);
+  throw new Error(`No match in getImageFromApi(${JSON.stringify(def)})`);
 };
 
-export const getImageFromApi = async (
-  def: ImageDef,
-): Promise<ImageType2 | null> => {
+export const getImageFromApi = async (def: ImageDef): ImagePromise => {
   try {
     return await getImageFromApiRaw(def);
   } catch (e) {

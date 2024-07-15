@@ -16,7 +16,7 @@ export type ImageType2 = {
   description: string;
   linkUrl: string;
   link: string;
-  sameImageResolvedAlsoFrom?: string[];
+  sameImageResolvedAlsoFrom?: ImageFromTag[];
   uncertainImage?: true;
 };
 
