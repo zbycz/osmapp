@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { ImageDef, isInstant } from '../../../services/types';
 import { Slider } from './Slider';
@@ -6,10 +7,10 @@ import {
   getInstantImage,
   ImageType2,
 } from '../../../services/images/getImageDefs';
-import { DotLoader } from '../../helpers';
 import { getImageFromApi } from '../../../services/images/getImageFromApi';
 import { not } from '../../../utils';
 import { Image } from './Image';
+import { InlineSpinner } from './InlineSpinner';
 
 type ImagesType = { def: ImageDef; image: ImageType2 }[];
 
@@ -39,6 +40,38 @@ const useLoadImages = (defs: ImageDef[]) => {
   return { loading, images };
 };
 
+const Wrapper = styled.div`
+  position: relative;
+  background: #ddd;
+  height: 238px;
+  min-height: 238px; /* otherwise it shrinks b/c of flex*/
+`;
+
+const IconWrapper = styled.div`
+  padding-top: 40px;
+  text-align: center;
+  svg,
+  img {
+    width: 100px;
+    height: 100px;
+    color: #eee;
+  }
+  img {
+    opacity: 0.15;
+  }
+`;
+
+const Icon = () => {
+  const { feature } = useFeatureContext();
+  const { properties } = feature;
+  const ico = properties.class;
+  return (
+    <IconWrapper>
+      <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
+    </IconWrapper>
+  );
+};
+
 export const ImageSlider = () => {
   const { feature } = useFeatureContext();
   const defs = feature.imageDefs;
@@ -52,11 +85,10 @@ export const ImageSlider = () => {
 
   return (
     <Slider onlyOneImage={onlyOneImage}>
-      {loading && (
-        <div>
-          <DotLoader />
-        </div>
-      )}
+      <Wrapper>
+        <Icon />
+        {loading && <InlineSpinner />}
+      </Wrapper>
       {images.map((image) =>
         image.image ? (
           <Image
