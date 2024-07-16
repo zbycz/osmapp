@@ -8,28 +8,43 @@ import {
   ImageType2,
 } from '../../../services/images/getImageDefs';
 import { getImageFromApi } from '../../../services/images/getImageFromApi';
-import { not } from '../../../utils';
+import { not, publishDbgObject } from '../../../utils';
 import { Image } from './Image';
 import { InlineSpinner } from './InlineSpinner';
 
 type ImagesType = { def: ImageDef; image: ImageType2 }[];
 
-const useLoadImages = (defs: ImageDef[]) => {
-  const instants = defs?.filter(isInstant) ?? [];
-  const rest = defs?.filter(not(isInstant)) ?? [];
+const mergeResultFn = (def: ImageDef, image: ImageType2) => (prevImages: ImagesType) => {
+    if (image == null) {
+      return [...prevImages, { def, image }];
+    }
 
-  const [loading, setLoading] = useState(rest.length > 0);
+    const found = prevImages.find(
+      (item) => item.image?.linkUrl === image.linkUrl,
+    );
+    if (found) {
+      (found.image.sameImageResolvedAlsoFrom ??= []).push(image);
+      return [...prevImages];
+    }
+
+    return [...prevImages, { def, image }];
+  };
+const useLoadImages = (defs: ImageDef[]) => {
+  const instantDefs = defs?.filter(isInstant) ?? [];
+  const apiDefs = defs?.filter(not(isInstant)) ?? [];
+
+  const [loading, setLoading] = useState(apiDefs.length > 0);
   const [images, setImages] = useState<ImagesType>(
-    instants.map((def) => ({
+    instantDefs.map((def) => ({
       def,
       image: getInstantImage(def),
     })),
   );
 
   useEffect(() => {
-    const promises = defs.filter(not(isInstant)).map(async (def) => {
+    const promises = apiDefs.map(async (def) => {
       const image = await getImageFromApi(def);
-      setImages((prev) => [...prev, { def, image }]);
+      setImages(mergeResultFn(def, image));
     });
 
     Promise.all(promises).then(() => {
@@ -37,6 +52,7 @@ const useLoadImages = (defs: ImageDef[]) => {
     });
   }, [defs]);
 
+  publishDbgObject('last images', images);
   return { loading, images };
 };
 
@@ -83,22 +99,22 @@ export const ImageSlider = () => {
 
   const onlyOneImage = defs.length === 1;
 
+  const imagesNotNull = images.filter((item) => item.image != null);
+
   return (
     <Slider onlyOneImage={onlyOneImage}>
       <Wrapper>
         <Icon />
         {loading && <InlineSpinner />}
       </Wrapper>
-      {images.map((image) =>
-        image.image ? (
-          <Image
-            key={JSON.stringify(image)}
-            def={image.def}
-            image={image.image}
-            onlyOneImage={onlyOneImage}
-          />
-        ) : null,
-      )}
+      {imagesNotNull.map((item) => (
+        <Image
+          key={item.image.imageUrl}
+          def={item.def}
+          image={item.image}
+          onlyOneImage={onlyOneImage}
+        />
+      ))}
 
       {/* Upload new */}
     </Slider>

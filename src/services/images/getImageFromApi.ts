@@ -55,8 +55,8 @@ const fetchWikidata = async (entity: string): ImagePromise => {
   return {
     imageUrl: getCommonsImageUrl(file, 410),
     description: 'Wikidata image (wikidata=*)',
-    linkUrl: `https://www.wikidata.org/wiki/${entity}`,
     link: entity,
+    linkUrl: `https://www.wikidata.org/wiki/${entity}`,
   };
 };
 
@@ -86,8 +86,8 @@ const fetchWikipedia = async (k: string, v: string): ImagePromise => {
   return {
     imageUrl: page.thumbnail.source,
     description: `Wikipedia (${k}=*)`,
-    linkUrl: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
     link: `File:${page.pageimage}`,
+    linkUrl: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
     // portrait: page.thumbnail.width < page.thumbnail.height,
   };
 };
