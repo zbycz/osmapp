@@ -4,18 +4,15 @@ import { ImageDef, isCenter, isTag } from '../types';
 import { getMapillaryImage } from './getMapillaryImage';
 import { getFodyImage } from './getFodyImage';
 import { ImageType2 } from './getImageDefs';
+import { encodeUrl } from '../../helpers/utils';
+
+const WIDTH = 410;
 
 type ImagePromise = Promise<ImageType2 | null>;
 
-const encode = (strings: TemplateStringsArray, ...values: string[]) =>
-  strings.reduce((result, string, i) => {
-    const value = values[i];
-    return result + string + (value ? encodeURIComponent(value) : '');
-  }, '');
-
 // TODO can we get image out of category ?
 const getCommonsApiUrl = (title: string) =>
-  encode`https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=640&format=json&titles=${title}&origin=*`;
+  encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=${WIDTH}&format=json&titles=${title}&origin=*`;
 
 const fetchCommons = async (k: string, v: string): ImagePromise => {
   const url = getCommonsApiUrl(v);
@@ -35,7 +32,7 @@ const fetchCommons = async (k: string, v: string): ImagePromise => {
 };
 
 const getWikidataApiUrl = (entity: string) =>
-  encode`https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${entity}&origin=*`;
+  encodeUrl`https://www.wikidata.org/w/api.php?action=wbgetclaims&property=P18&format=json&entity=${entity}&origin=*`;
 
 const fetchWikidata = async (entity: string): ImagePromise => {
   const url = getWikidataApiUrl(entity);
@@ -73,7 +70,7 @@ const parseWikipedia = (k: string, v: string) => {
 };
 
 const getWikipediaApiUrl = (country: string, title: string) =>
-  encode`https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=640&format=json&titles=${title}&origin=*`;
+  encodeUrl`https://${country}.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=${WIDTH}&format=json&titles=${title}&origin=*`;
 
 const fetchWikipedia = async (k: string, v: string): ImagePromise => {
   const { country, title } = parseWikipedia(k, v);

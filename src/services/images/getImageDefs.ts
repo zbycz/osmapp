@@ -51,11 +51,11 @@ export const getInstantImage = ({ k, v }: KeyValue): ImageType2 | null => {
   }
 
   if (k.startsWith('image')) {
-    const url = v.match(/https?:/) ? v : `https://${v}`;
+    const imageUrl = v.match(/https?:/) ? v : `https://${v}`;
     return {
-      imageUrl: url,
+      imageUrl,
       description: `Image link (${k}=*)`,
-      linkUrl: url,
+      linkUrl: imageUrl,
       link: v,
     };
   }
@@ -122,3 +122,6 @@ export const mergeMemberImageDefs = (
 
 export const getImageDefId = (def: ImageDef) =>
   isTag(def) ? `tag-${def.k}` : def.service;
+
+export const getWikiImageFilename = (imageUrl: string) =>
+  imageUrl.match(/\/(\d+px-[^/]+\.[a-z]{3,5})$/i)?.[1] ?? imageUrl;

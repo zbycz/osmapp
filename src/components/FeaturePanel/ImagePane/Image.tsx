@@ -1,6 +1,7 @@
 import Router from 'next/router';
 import React, { useEffect, useRef } from 'react';
 import styled, { css } from 'styled-components';
+import { Box } from '@mui/material';
 import { ImageDef, isTag } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getOsmappLink } from '../../../services/helpers';
@@ -78,16 +79,27 @@ const InfoButtonWrapper = styled.div`
   }
 `;
 
+const TooltipContent = ({ image }: { image: ImageType2 }) => (
+  <>
+    {image.description}
+    <br />
+    <a href={image.linkUrl} target="_blank">
+      {image.link}
+    </a>
+  </>
+);
+
 const InfoButton = ({ image }: { image: ImageType2 }) => (
   <InfoButtonWrapper>
     <InfoTooltip
       tooltip={
         <>
-          {image.description}
-          <br />
-          <a href={image.linkUrl} target="_blank">
-            {image.link}
-          </a>
+          <TooltipContent image={image} />
+          {image?.sameImageResolvedAlsoFrom.map((otherImage) => (
+            <Box key={otherImage.imageUrl} mt={1}>
+              <TooltipContent key={otherImage.imageUrl} image={otherImage} />
+            </Box>
+          ))}
         </>
       }
     />

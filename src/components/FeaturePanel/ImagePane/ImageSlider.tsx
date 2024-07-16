@@ -14,13 +14,14 @@ import { InlineSpinner } from './InlineSpinner';
 
 type ImagesType = { def: ImageDef; image: ImageType2 }[];
 
-const mergeResultFn = (def: ImageDef, image: ImageType2) => (prevImages: ImagesType) => {
+const mergeResultFn =
+  (def: ImageDef, image: ImageType2) => (prevImages: ImagesType) => {
     if (image == null) {
-      return [...prevImages, { def, image }];
+      return [...prevImages];
     }
 
     const found = prevImages.find(
-      (item) => item.image?.linkUrl === image.linkUrl,
+      (item) => item.image?.imageUrl === image.imageUrl,
     );
     if (found) {
       (found.image.sameImageResolvedAlsoFrom ??= []).push(image);
@@ -29,6 +30,7 @@ const mergeResultFn = (def: ImageDef, image: ImageType2) => (prevImages: ImagesT
 
     return [...prevImages, { def, image }];
   };
+
 const useLoadImages = (defs: ImageDef[]) => {
   const instantDefs = defs?.filter(isInstant) ?? [];
   const apiDefs = defs?.filter(not(isInstant)) ?? [];
@@ -42,6 +44,7 @@ const useLoadImages = (defs: ImageDef[]) => {
   );
 
   useEffect(() => {
+    setImages([]);
     const promises = apiDefs.map(async (def) => {
       const image = await getImageFromApi(def);
       setImages(mergeResultFn(def, image));
@@ -56,11 +59,12 @@ const useLoadImages = (defs: ImageDef[]) => {
   return { loading, images };
 };
 
-const Wrapper = styled.div`
+const NoImageWrapper = styled.div`
   position: relative;
   background: #ddd;
   height: 238px;
   min-height: 238px; /* otherwise it shrinks b/c of flex*/
+  width: calc(410px - 20px);
 `;
 
 const IconWrapper = styled.div`
@@ -103,10 +107,10 @@ export const ImageSlider = () => {
 
   return (
     <Slider onlyOneImage={onlyOneImage}>
-      <Wrapper>
+      <NoImageWrapper>
         <Icon />
         {loading && <InlineSpinner />}
-      </Wrapper>
+      </NoImageWrapper>
       {imagesNotNull.map((item) => (
         <Image
           key={item.image.imageUrl}
