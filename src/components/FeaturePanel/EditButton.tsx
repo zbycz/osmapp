@@ -5,7 +5,7 @@ import React from 'react';
 import { t } from '../../services/intl';
 import { useOsmAuthContext } from '../utils/OsmAuthContext';
 import { useEditDialogContext } from './helpers/EditDialogContext';
-import { useFeatureContext } from '../utils/FeatureContext';
+import { useEditDialogFeature } from './EditDialog/utils';
 
 const getLabel = (
   loggedIn: boolean,
@@ -19,9 +19,7 @@ const getLabel = (
 };
 
 export const EditButton = () => {
-  const { feature } = useFeatureContext();
-  const { point: isAddPlace, deleted: isUndelete } = feature;
-
+  const { isAddPlace, isUndelete } = useEditDialogFeature();
   const { loggedIn } = useOsmAuthContext();
   const { open } = useEditDialogContext();
 

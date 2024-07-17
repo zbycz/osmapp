@@ -5,7 +5,6 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogTitle,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
@@ -29,12 +28,10 @@ import { SuccessContent } from './SuccessContent';
 import { addOsmFeature, editOsmFeature } from '../../../services/osmApiAuth';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { t } from '../../../services/intl';
-import Maki from '../../utils/Maki';
 import { FeatureTypeSelect } from './FeatureTypeSelect';
-import { getLabel } from '../../../helpers/featureLabel';
-import { useUserThemeContext } from '../../../helpers/theme';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
-import { useFeatureContext } from '../../utils/FeatureContext';
+import { EditDialogTitle } from './EditDialogTitle';
+import { useEditDialogFeature } from './utils';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -47,15 +44,6 @@ const useTagsState = (
   const [tags, setTags] = useState(initialTags);
   const setTag = (k, v) => setTags((state) => ({ ...state, [k]: v }));
   return [tags, setTag];
-};
-
-const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
-  const { loggedIn } = useOsmAuthContext();
-  if (isAddPlace) return t('editdialog.add_heading');
-  if (isUndelete) return t('editdialog.undelete_heading');
-  if (!loggedIn)
-    return `${t('editdialog.suggest_heading')} ${getLabel(feature)}`;
-  return `${t('editdialog.edit_heading')} ${getLabel(feature)}`;
 };
 
 const StyledDialog = styled(Dialog)`
@@ -115,11 +103,9 @@ const saveDialog = ({
 };
 
 export const EditDialog = () => {
-  const { feature } = useFeatureContext();
-  const { point: isAddPlace, deleted: isUndelete } = feature;
+  const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
 
   const router = useRouter();
-  const { currentTheme } = useUserThemeContext();
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { opened, close, focusTag } = useEditDialogContext();
 
@@ -156,8 +142,6 @@ export const EditDialog = () => {
       handleLogout,
     });
 
-  const dialogTitle = useGetDialogTitle(isAddPlace, isUndelete, feature);
-
   return (
     <StyledDialog
       fullScreen={fullScreen}
@@ -165,14 +149,7 @@ export const EditDialog = () => {
       onClose={onClose}
       aria-labelledby="edit-dialog-title"
     >
-      <DialogTitle id="edit-dialog-title">
-        <Maki
-          ico={feature.properties.class}
-          size={16}
-          invert={currentTheme === 'dark'}
-        />{' '}
-        {dialogTitle}
-      </DialogTitle>
+      <EditDialogTitle />
       {successInfo ? (
         <SuccessContent successInfo={successInfo} handleClose={onClose} />
       ) : (
