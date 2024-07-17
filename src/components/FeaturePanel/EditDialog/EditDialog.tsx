@@ -61,7 +61,7 @@ const saveDialog = ({
   location,
   comment,
   loggedIn,
-  setLoading,
+  setIsSaving,
   setSuccessInfo,
   isUndelete,
   handleLogout,
@@ -84,7 +84,7 @@ const saveDialog = ({
     return;
   }
 
-  setLoading(true);
+  setIsSaving(true);
   const promise = loggedIn
     ? feature.point
       ? addOsmFeature(feature, comment, allTags)
@@ -98,25 +98,27 @@ const saveDialog = ({
     } else {
       console.error(err); // eslint-disable-line no-console
     }
-    setTimeout(() => setLoading(false), 500);
+    setTimeout(() => setIsSaving(false), 500);
   });
 };
 
 export const EditDialog = () => {
-  const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
-
-  const router = useRouter();
   const { loggedIn, handleLogout } = useOsmAuthContext();
+  const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
   const { opened, close, focusTag } = useEditDialogContext();
 
+  const router = useRouter();
+
   const fullScreen = useIsFullScreen();
+
+  const [isSaving, setIsSaving] = useState(false);
+
   const [typeTag, setTypeTag] = useState('');
   const [tags, setTag] = useTagsState(feature.tags); // TODO all these should go into `values`, consider Formik
   const [tmpNewTag, setTmpNewTag] = useState({});
   const [cancelled, toggleCancelled] = useToggleState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
-  const [loading, setLoading] = useState(false);
   const [successInfo, setSuccessInfo] = useState<any>(false);
 
   const onClose = () => {
@@ -136,7 +138,7 @@ export const EditDialog = () => {
       location,
       comment,
       loggedIn,
-      setLoading,
+      setIsSaving,
       setSuccessInfo,
       isUndelete,
       handleLogout,
@@ -192,7 +194,7 @@ export const EditDialog = () => {
             </form>
           </DialogContent>
           <DialogActions>
-            {loading && <CircularProgress size={20} />}
+            {isSaving && <CircularProgress size={20} />}
             <Button onClick={onClose} color="primary">
               {t('editdialog.cancel_button')}
             </Button>

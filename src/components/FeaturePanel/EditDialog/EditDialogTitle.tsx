@@ -18,9 +18,10 @@ const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
 
 export const EditDialogTitle = () => {
   const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
-
   const { currentTheme } = useUserThemeContext();
+
   const dialogTitle = useGetDialogTitle(isAddPlace, isUndelete, feature);
+
   return (
     <DialogTitle id="edit-dialog-title">
       <Maki
