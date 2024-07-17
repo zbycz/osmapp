@@ -12,7 +12,7 @@ import {
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
 import { useToggleState } from '../../helpers';
-import { Feature, FeatureTags } from '../../../services/types';
+import { FeatureTags } from '../../../services/types';
 import { createNoteText } from './createNoteText';
 import { insertOsmNote } from '../../../services/osmApi';
 import { MajorKeysEditor } from './MajorKeysEditor';
@@ -34,6 +34,7 @@ import { FeatureTypeSelect } from './FeatureTypeSelect';
 import { getLabel } from '../../../helpers/featureLabel';
 import { useUserThemeContext } from '../../../helpers/theme';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -62,12 +63,6 @@ const StyledDialog = styled(Dialog)`
     align-items: start;
   }
 `;
-
-interface Props {
-  feature: Feature;
-  isAddPlace: boolean;
-  isUndelete: boolean;
-}
 
 const saveDialog = ({
   feature,
@@ -119,9 +114,12 @@ const saveDialog = ({
   });
 };
 
-export const EditDialog = ({ feature, isAddPlace, isUndelete }: Props) => {
-  const { currentTheme } = useUserThemeContext();
+export const EditDialog = () => {
+  const { feature } = useFeatureContext();
+  const { point: isAddPlace, deleted: isUndelete } = feature;
+
   const router = useRouter();
+  const { currentTheme } = useUserThemeContext();
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { opened, close, focusTag } = useEditDialogContext();
 
@@ -181,9 +179,7 @@ export const EditDialog = ({ feature, isAddPlace, isUndelete }: Props) => {
         <>
           <DialogContent dividers>
             <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
-              {false && (
-                <FeatureTypeSelect type={typeTag} setType={setTypeTag} />
-              )}
+              <FeatureTypeSelect type={typeTag} setType={setTypeTag} />
               <MajorKeysEditor
                 tags={tags}
                 setTag={setTag}
