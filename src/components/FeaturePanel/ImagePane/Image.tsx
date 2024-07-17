@@ -148,7 +148,7 @@ export const Image = ({ def, image, onlyOneImage }: Props) => {
         ref={imgRef}
       />
       {hasPaths && <Paths def={def} size={size} />}
-      <InfoButton image={image} />
+      {size !== initialSize && <InfoButton image={image} />}
       {image.uncertainImage && <UncertainCover />}
     </ImageWrapper>
   );
