@@ -2,28 +2,29 @@ import React, { createContext, useContext, useState } from 'react';
 import Router from 'next/router';
 import { isBrowser } from '../../helpers';
 
-interface EditDialogType {
+type Tag = string;
+
+type EditDialogType = {
   opened: boolean;
-  focusTag: string | boolean;
+  focusTag: boolean | Tag;
   open: () => void;
   close: () => void;
-  openWithTag: (tag: string) => void;
-}
+  openWithTag: (tag: Tag) => void;
+};
 
-export const EditDialogContext = createContext<EditDialogType>(undefined);
+const EditDialogContext = createContext<EditDialogType>(undefined);
 
 // lives in App.tsx because it needs ctx in SSR
 export const EditDialogProvider = ({ children }) => {
   const initialState = isBrowser() ? Router.query.all?.[2] === 'edit' : false; // TODO supply router.query in SSR
-  const [openedWithTag, setOpenedWithTag] =
-    useState<boolean | string>(initialState);
+  const [opened, setOpened] = useState<boolean | Tag>(initialState);
 
-  const value = {
-    opened: !!openedWithTag,
-    focusTag: openedWithTag,
-    open: () => setOpenedWithTag(true),
-    close: () => setOpenedWithTag(false),
-    openWithTag: setOpenedWithTag,
+  const value: EditDialogType = {
+    opened: !!opened,
+    focusTag: opened,
+    open: () => setOpened(true),
+    close: () => setOpened(false),
+    openWithTag: (tag: Tag) => setOpened(tag),
   };
 
   return (
