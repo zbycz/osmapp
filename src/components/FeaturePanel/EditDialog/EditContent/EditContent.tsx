@@ -13,7 +13,7 @@ export const EditContent = () => (
   <>
     <DialogContent dividers>
       <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
-        {!false && <FeatureTypeSelect />}
+        {false && <FeatureTypeSelect />}
         <MajorKeysEditor />
         <OptionsEditor />
         <ContributionInfoBox />
