@@ -8,7 +8,7 @@ import {
   prod,
 } from './helpers';
 import { fetchJson } from './fetch';
-import { Feature, LonLat, Position } from './types';
+import { Feature, LonLat, Position, SuccessInfo } from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { isBrowser } from '../components/helpers';
@@ -214,7 +214,10 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
   }
 };
 
-export const insertOsmNote = async (point: Position, text: string) => {
+export const insertOsmNote = async (
+  point: Position,
+  text: string,
+): Promise<SuccessInfo> => {
   const [lon, lat] = point;
 
   const body = new URLSearchParams();

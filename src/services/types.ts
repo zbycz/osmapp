@@ -129,3 +129,10 @@ export interface Feature {
 
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;
+
+export type SuccessInfo = {
+  type: 'note' | 'edit';
+  text: string;
+  url: string;
+  redirect?: string;
+};

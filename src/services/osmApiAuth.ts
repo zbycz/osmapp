@@ -2,7 +2,7 @@ import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
 import getConfig from 'next/config';
 import { osmAuth } from 'osm-auth';
-import { Feature, FeatureTags, Position } from './types';
+import { Feature, FeatureTags, Position, SuccessInfo } from './types';
 import {
   buildXmlString,
   getFullOsmappLink,
@@ -225,7 +225,7 @@ export const editOsmFeature = async (
   comment: string,
   newTags: FeatureTags,
   isCancelled: boolean,
-) => {
+): Promise<SuccessInfo> => {
   const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
   const changesetComment = getChangesetComment(comment, isCancelled, feature);
   const changesetXml = getChangesetXml({ changesetComment, feature });
@@ -273,7 +273,7 @@ export const addOsmFeature = async (
   feature: Feature,
   comment: string,
   newTags: FeatureTags,
-) => {
+): Promise<SuccessInfo> => {
   const typeTag = Object.entries(newTags)[0]?.join('=');
   const changesetComment = join(comment, ' • ', `Added ${typeTag} #osmapp`);
   const changesetXml = getChangesetXml({ feature, changesetComment });
