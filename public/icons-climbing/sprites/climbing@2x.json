@@ -1,0 +1,58 @@
+{
+  "area-blue": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 0,
+    "y": 0
+  },
+  "area-blue-hover": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 64,
+    "y": 0
+  },
+  "area-gray": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 0,
+    "y": 64
+  },
+  "area-gray-hover": {
+    "height": 64,
+    "pixelRatio": 2,
+    "width": 64,
+    "x": 64,
+    "y": 64
+  },
+  "crag-gray": {
+    "height": 48,
+    "pixelRatio": 2,
+    "width": 48,
+    "x": 128,
+    "y": 0
+  },
+  "crag-gray-hover": {
+    "height": 48,
+    "pixelRatio": 2,
+    "width": 48,
+    "x": 176,
+    "y": 0
+  },
+  "crag-red": {
+    "height": 48,
+    "pixelRatio": 2,
+    "width": 48,
+    "x": 128,
+    "y": 64
+  },
+  "crag-red-hove": {
+    "height": 48,
+    "pixelRatio": 2,
+    "width": 48,
+    "x": 176,
+    "y": 64
+  }
+}

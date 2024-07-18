@@ -147,7 +147,10 @@ const crags: LayerSpecification = {
     'text-padding': 2,
     'text-font': ['Noto Sans Bold'],
     'text-anchor': 'top',
-    'icon-image': 'circle2_11',
+    'icon-image': 'climbing:crag-red',
+    'icon-optional': false,
+    'icon-ignore-placement': false,
+    'icon-allow-overlap': false,
     'text-field': '{osmappLabel}',
     'text-offset': [
       'step',
@@ -158,9 +161,6 @@ const crags: LayerSpecification = {
     ],
     'text-size': linear(15, 12, 21, 18),
     'text-max-width': 9,
-    'icon-optional': false,
-    'icon-ignore-placement': false,
-    'icon-allow-overlap': false,
     'text-ignore-placement': false,
     'text-allow-overlap': false,
     'text-optional': true,
@@ -185,36 +185,6 @@ const crags: LayerSpecification = {
 
 const areas: LayerSpecification[] = [
   {
-    id: 'climbing-area-circle',
-    type: 'circle',
-    source: 'climbing',
-    maxzoom: 16,
-    filter: [
-      'all',
-      ['==', 'osmappType', 'relationPoint'],
-      ['==', 'climbing', 'area'],
-    ],
-    layout: {
-      'circle-sort-key': sortKey,
-    },
-    paint: {
-      'circle-radius': linearByRouteCount(0, 3, 400, 12),
-      'circle-stroke-width': 2,
-      'circle-stroke-color': 'white',
-      'circle-opacity': linearFadeOut(14, 16),
-
-      'circle-color': [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        ifHasImages(COLORS.AREA.HAS_IMAGES.HOVER, COLORS.AREA.NO_IMAGES.HOVER),
-        ifHasImages(
-          COLORS.AREA.HAS_IMAGES.DEFAULT,
-          COLORS.AREA.NO_IMAGES.DEFAULT,
-        ),
-      ],
-    },
-  },
-  {
     id: 'climbing-1-areas',
     type: 'symbol',
     source: 'climbing',
@@ -232,9 +202,10 @@ const areas: LayerSpecification[] = [
       'text-offset': [0, 0.6],
       'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
       'text-max-width': 9,
+      'icon-image': 'climbing:area-blue',
       'icon-optional': false,
       'icon-ignore-placement': false,
-      'icon-allow-overlap': true,
+      'icon-allow-overlap': false,
       'text-ignore-placement': false,
       'text-allow-overlap': false,
       'text-optional': true,

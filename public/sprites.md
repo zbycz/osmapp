@@ -47,7 +47,7 @@ cd ..
 # finalize icons folder (bright-style needs these renames, iD understands without them)
 cd icons
 cp toilet_11.svg toilets_11.svg
-cp waste_11.svg waste_basket_11.svg
+cp waste_11.svg waste_basket_11.svg[readme.md](icons2%2Freadme.md)
 cp meat_11.svg butcher_11.svg
 cp doctor_11.svg doctors_11.svg
 cp bicycle_11.svg bicycle_parking_11.svg
