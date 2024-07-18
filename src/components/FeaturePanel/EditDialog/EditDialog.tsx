@@ -1,49 +1,17 @@
-import React, { useState } from 'react';
-import {
-  Button,
-  CircularProgress,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
+import React from 'react';
+import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
-import { useToggleState } from '../../helpers';
-import { FeatureTags } from '../../../services/types';
-import { createNoteText } from './createNoteText';
-import { insertOsmNote } from '../../../services/osmApi';
-import { MajorKeysEditor } from './MajorKeysEditor';
-import {
-  ChangeLocationEditor,
-  CommentField,
-  ContributionInfoBox,
-  DialogHeading,
-  OsmLogin,
-  PlaceCancelledToggle,
-} from './components';
-import { OtherTagsEditor } from './OtherTagsEditor';
 import { SuccessContent } from './SuccessContent';
-import { addOsmFeature, editOsmFeature } from '../../../services/osmApiAuth';
-import { useOsmAuthContext } from '../../utils/OsmAuthContext';
-import { t } from '../../../services/intl';
-import { FeatureTypeSelect } from './FeatureTypeSelect';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { EditDialogTitle } from './EditDialogTitle';
 import { useEditDialogFeature } from './utils';
+import { EditContextProvider, useEditContext } from './EditContext';
+import { useGetOnClose } from './useGetOnClose';
+import { EditContent } from './EditContent/EditContent';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
   return useMediaQuery(theme.breakpoints.down('sm'));
-};
-
-const useTagsState = (
-  initialTags: FeatureTags,
-): [FeatureTags, (k: string, v: string) => void] => {
-  const [tags, setTags] = useState(initialTags);
-  const setTag = (k, v) => setTags((state) => ({ ...state, [k]: v }));
-  return [tags, setTag];
 };
 
 const StyledDialog = styled(Dialog)`
@@ -52,97 +20,11 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
-const saveDialog = ({
-  feature,
-  typeTag,
-  tags,
-  tmpNewTag,
-  cancelled,
-  location,
-  comment,
-  loggedIn,
-  setIsSaving,
-  setSuccessInfo,
-  isUndelete,
-  handleLogout,
-}) => {
-  const tagsWithType = typeTag
-    ? { [typeTag.key]: typeTag.value, ...tags }
-    : tags;
-  const allTags = { ...tagsWithType, ...tmpNewTag }; // we need to send also unsubmitted new tag
-  const noteText = createNoteText(
-    feature,
-    allTags,
-    cancelled,
-    location,
-    comment,
-    isUndelete,
-  );
-  if (noteText == null) {
-    // TODO we need better check that this ... formik?
-    alert(t('editdialog.changes_needed')); // eslint-disable-line no-alert
-    return;
-  }
-
-  setIsSaving(true);
-  const promise = loggedIn
-    ? feature.point
-      ? addOsmFeature(feature, comment, allTags)
-      : editOsmFeature(feature, comment, allTags, cancelled)
-    : insertOsmNote(feature.center, noteText);
-
-  promise.then(setSuccessInfo, (err) => {
-    if (err?.status === 401) {
-      alert(t('editdialog.osm_session_expired')); // eslint-disable-line no-alert
-      handleLogout();
-    } else {
-      console.error(err); // eslint-disable-line no-console
-    }
-    setTimeout(() => setIsSaving(false), 500);
-  });
-};
-
-export const EditDialog = () => {
-  const { loggedIn, handleLogout } = useOsmAuthContext();
-  const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
-  const { opened, close, focusTag } = useEditDialogContext();
-
-  const router = useRouter();
-
+const EditDialogInner = () => {
+  const { opened } = useEditDialogContext();
+  const { successInfo } = useEditContext();
   const fullScreen = useIsFullScreen();
-
-  const [isSaving, setIsSaving] = useState(false);
-
-  const [typeTag, setTypeTag] = useState('');
-  const [tags, setTag] = useTagsState(feature.tags); // TODO all these should go into `values`, consider Formik
-  const [tmpNewTag, setTmpNewTag] = useState({});
-  const [cancelled, toggleCancelled] = useToggleState(false);
-  const [location, setLocation] = useState('');
-  const [comment, setComment] = useState('');
-  const [successInfo, setSuccessInfo] = useState<any>(false);
-
-  const onClose = () => {
-    close();
-    if (successInfo.redirect) {
-      router.replace(successInfo.redirect); // only useRouter reloads the panel client-side
-    }
-  };
-
-  const handleSave = () =>
-    saveDialog({
-      feature,
-      typeTag,
-      tags,
-      tmpNewTag,
-      cancelled,
-      location,
-      comment,
-      loggedIn,
-      setIsSaving,
-      setSuccessInfo,
-      isUndelete,
-      handleLogout,
-    });
+  const onClose = useGetOnClose();
 
   return (
     <StyledDialog
@@ -152,62 +34,17 @@ export const EditDialog = () => {
       aria-labelledby="edit-dialog-title"
     >
       <EditDialogTitle />
-      {successInfo ? (
-        <SuccessContent successInfo={successInfo} handleClose={onClose} />
-      ) : (
-        <>
-          <DialogContent dividers>
-            <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
-              <FeatureTypeSelect type={typeTag} setType={setTypeTag} />
-              <MajorKeysEditor
-                tags={tags}
-                setTag={setTag}
-                focusTag={focusTag}
-              />
-
-              {!isAddPlace && !isUndelete && (
-                <>
-                  <DialogHeading>
-                    {t('editdialog.options_heading')}
-                  </DialogHeading>
-                  <PlaceCancelledToggle
-                    cancelled={cancelled}
-                    toggle={toggleCancelled}
-                  />
-                  <ChangeLocationEditor
-                    location={location}
-                    setLocation={setLocation}
-                    feature={feature}
-                  />
-                </>
-              )}
-              <ContributionInfoBox />
-              <CommentField comment={comment} setComment={setComment} />
-              <OtherTagsEditor
-                tags={tags}
-                setTag={setTag}
-                focusTag={focusTag}
-                setTmpNewTag={setTmpNewTag}
-              />
-
-              <OsmLogin />
-            </form>
-          </DialogContent>
-          <DialogActions>
-            {isSaving && <CircularProgress size={20} />}
-            <Button onClick={onClose} color="primary">
-              {t('editdialog.cancel_button')}
-            </Button>
-            <Button onClick={handleSave} color="primary" variant="contained">
-              {loggedIn
-                ? cancelled
-                  ? t('editdialog.save_button_delete')
-                  : t('editdialog.save_button_edit')
-                : t('editdialog.save_button_note')}
-            </Button>
-          </DialogActions>
-        </>
-      )}
+      {successInfo ? <SuccessContent /> : <EditContent />}
     </StyledDialog>
+  );
+};
+
+export const EditDialog = () => {
+  const { feature } = useEditDialogFeature();
+
+  return (
+    <EditContextProvider feature={feature}>
+      <EditDialogInner />
+    </EditContextProvider>
   );
 };
