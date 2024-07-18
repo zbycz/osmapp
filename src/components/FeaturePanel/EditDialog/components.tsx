@@ -11,6 +11,7 @@ import { useToggleState } from '../../helpers';
 import { t, Translation } from '../../../services/intl';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { getIdEditorLink } from '../../../utils';
+import { useEditContext } from './EditContext';
 
 export const DialogHeading = ({ children }) => (
   <Typography variant="overline" display="block" color="textSecondary">
@@ -85,26 +86,29 @@ export const ContributionInfoBox = () => {
   );
 };
 
-export const CommentField = ({ comment, setComment }) => (
-  <>
-    <TextField
-      label={t('editdialog.comment')}
-      placeholder={t('editdialog.comment_placeholder')}
-      InputLabelProps={{
-        shrink: true,
-      }}
-      multiline
-      fullWidth
-      rows={2}
-      variant="outlined"
-      value={comment}
-      onChange={(e) => setComment(e.target.value)}
-    />
-    <br />
-    <br />
-    <br />
-  </>
-);
+export const CommentField = () => {
+  const { comment, setComment } = useEditContext();
+  return (
+    <>
+      <TextField
+        label={t('editdialog.comment')}
+        placeholder={t('editdialog.comment_placeholder')}
+        InputLabelProps={{
+          shrink: true,
+        }}
+        multiline
+        fullWidth
+        rows={2}
+        variant="outlined"
+        value={comment}
+        onChange={(e) => setComment(e.target.value)}
+      />
+      <br />
+      <br />
+      <br />
+    </>
+  );
+};
 
 export const OsmLogin = () => {
   const { loggedIn, osmUser, handleLogin, handleLogout } = useOsmAuthContext();

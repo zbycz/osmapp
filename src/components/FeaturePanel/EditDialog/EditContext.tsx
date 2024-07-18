@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags, SuccessInfo } from '../../../services/types';
 
-type TypeTag = { key: string; value: string };
+export type TypeTag = { key: string; value: string } | undefined;
 type EditContextType = {
   successInfo: undefined | SuccessInfo;
   setSuccessInfo: (info: undefined | SuccessInfo) => void;
@@ -45,7 +45,7 @@ export const EditContextProvider = ({ feature, children }: Props) => {
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
 
-  const [typeTag, setTypeTag] = useState('');
+  const [typeTag, setTypeTag] = useState<TypeTag>();
   const [tags, setTag] = useTagsState(feature.tags);
   const [tmpNewTag, setTmpNewTag] = useState({});
   const [cancelled, toggleCancelled] = useToggleState(false);
