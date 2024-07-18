@@ -26,10 +26,11 @@ import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
 import { ImageSlider } from './ImagePane/ImageSlider';
-import { SuggestEdit } from './SuggestEdit';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { CragsInArea } from './CragsInArea';
 import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
+import { EditButton } from './EditButton';
+import { EditDialog } from './EditDialog/EditDialog';
 
 const Flex = styled.div`
   flex: 1;
@@ -127,7 +128,8 @@ export const FeaturePanelInner = () => {
 
                 <FeatureOpenPlaceGuideLink />
 
-                {editEnabled && <SuggestEdit />}
+                {editEnabled && <EditButton />}
+                <EditDialog />
               </PanelSidePadding>
             </>
           )}

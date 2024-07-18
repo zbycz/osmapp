@@ -2,11 +2,13 @@ import React, { useEffect } from 'react';
 
 import { Button, TextField, Typography } from '@mui/material';
 
-import { t } from '../../../services/intl';
+import { t } from '../../../../services/intl';
 import {
   getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
-} from '../Climbing/utils/photo';
+} from '../../Climbing/utils/photo';
+import { useEditDialogContext } from '../../helpers/EditDialogContext';
+import { useEditContext } from '../EditContext';
 
 export const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
 
@@ -31,7 +33,12 @@ const getData = (numberOfWikimediaItems) => {
   };
 };
 
-export const MajorKeysEditor = ({ tags, setTag, focusTag }) => {
+export const MajorKeysEditor = () => {
+  const { focusTag } = useEditDialogContext();
+  const {
+    tags: { tags, setTag },
+  } = useEditContext();
+
   // TODO this code will be replaced when implementing id presets fields
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
   const data = getData(nextWikimediaCommonsIndex + 1);

@@ -7,11 +7,12 @@ import { Properties } from '../Properties/Properties';
 import { ImageSlider } from '../ImagePane/ImageSlider';
 import { RouteDistribution } from './RouteDistribution';
 import { getWikimediaCommonsKeys, removeFilePrefix } from './utils/photo';
-import { SuggestEdit } from '../SuggestEdit';
 import { PanelContent, PanelSidePadding } from '../../utils/PanelHelpers';
 import { FeatureHeading } from '../FeatureHeading';
 import { ParentLink } from '../ParentLink';
 import { ClimbingRestriction } from './ClimbingRestriction';
+import { EditButton } from '../EditButton';
+import { EditDialog } from '../EditDialog/EditDialog';
 
 export const ClimbingPanel = ({ footer, showTagsTable }) => {
   const { feature } = useFeatureContext();
@@ -39,7 +40,9 @@ export const ClimbingPanel = ({ footer, showTagsTable }) => {
         <Properties showTags={showTagsTable} />
       </div>
 
-      <SuggestEdit />
+      <EditButton />
+      <EditDialog />
+
       {/* @TODO unite with parent panel */}
       <div style={{ padding: '20px 15px 0 15px' }}>{footer}</div>
     </PanelContent>

@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { Box, MenuItem, TextField, Typography } from '@mui/material';
-import Maki from '../../utils/Maki';
-import { fetchJson } from '../../../services/fetch';
-import { intl, t } from '../../../services/intl';
-import { getPoiClass } from '../../../services/getPoiClass';
-import { trimText } from '../../helpers';
+import Maki from '../../../utils/Maki';
+import { fetchJson } from '../../../../services/fetch';
+import { intl, t } from '../../../../services/intl';
+import { getPoiClass } from '../../../../services/getPoiClass';
+import { trimText } from '../../../helpers';
+import { useEditContext } from '../EditContext';
 
 /*
 https://taginfo.openstreetmap.org/taginfo/apidoc#api_4_key_values
@@ -40,21 +41,17 @@ const renderValue = (value) => (
   </>
 );
 
-export const FeatureTypeSelect = ({ type, setType }) => {
-  // const { feature } = useFeatureContext();
+export const FeatureTypeSelect = () => {
+  const {
+    tags: { typeTag, setTypeTag },
+  } = useEditContext();
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
     getData().then(setOptions);
   }, []);
 
-  // useEffect(() => {
-  //   if (options && feature.tags?.amenity) {
-  //     setType(options.find((x) => x.value === feature.tags.amenity));
-  //   }
-  // }, [options, feature]);
-
-  const onChange = (event) => setType(event.target.value);
+  const onChange = (event) => setTypeTag(event.target.value);
 
   return (
     <Box mb={3}>
@@ -62,7 +59,7 @@ export const FeatureTypeSelect = ({ type, setType }) => {
         variant="outlined"
         select
         fullWidth
-        value={type}
+        value={typeTag}
         SelectProps={{ renderValue, onChange }}
         label={t('editdialog.feature_type_select')}
       >

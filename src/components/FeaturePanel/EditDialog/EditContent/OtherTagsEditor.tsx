@@ -4,8 +4,10 @@ import { Box, Button, TextField, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from './MajorKeysEditor';
-import { isString } from '../../helpers';
-import { t, Translation } from '../../../services/intl';
+import { isString } from '../../../helpers';
+import { t, Translation } from '../../../../services/intl';
+import { useEditContext } from '../EditContext';
+import { useEditDialogContext } from '../../helpers/EditDialogContext';
 
 const Table = styled.table`
   width: calc(100% - 20px);
@@ -143,7 +145,12 @@ const KeyValueRow = ({ k, v, setTag, focusTag }) => (
   </tr>
 );
 
-export const OtherTagsEditor = ({ tags, setTag, focusTag, setTmpNewTag }) => {
+export const OtherTagsEditor = () => {
+  const { focusTag } = useEditDialogContext();
+  const {
+    tags: { tags, setTag, setTmpNewTag },
+  } = useEditContext();
+
   const focusThisEditor =
     isString(focusTag) && !majorKeys.includes(focusTag as string);
 
