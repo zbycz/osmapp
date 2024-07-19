@@ -1,6 +1,7 @@
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 import { overpassLayers } from './layers/overpassLayers';
+import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 
 const getSource = (url) => {
   if (url.match('{bingSubdomains}')) {
@@ -22,7 +23,7 @@ const getSource = (url) => {
   };
 };
 
-export const rasterStyle = (id, url): StyleSpecification => {
+const rasterStyle = (id: string, url: string): StyleSpecification => {
   const source = getSource(url);
   return {
     version: 8,
@@ -50,4 +51,9 @@ export const rasterStyle = (id, url): StyleSpecification => {
       },
     },
   };
+};
+
+export const getRasterStyle = (key: string): StyleSpecification => {
+  const url = osmappLayers[key]?.url ?? key; // if `key` not found, it contains tiles URL
+  return rasterStyle(key, url);
 };
