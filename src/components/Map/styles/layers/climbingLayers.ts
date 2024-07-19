@@ -6,25 +6,49 @@ import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
 
 export const CRAG_VISIBLE_FROM_ZOOM = 13;
 
-export const COLORS = {
+export const SETTINGS = {
   AREA: {
     HAS_IMAGES: {
-      HOVER: 'rgba(0, 59, 210, 0.7)',
-      DEFAULT: 'rgba(0, 59, 210, 1)',
+      HOVER: {
+        IMAGE: 'climbing:area-blue-hover',
+        COLOR: 'rgba(0, 59, 210, 0.7)',
+      },
+      DEFAULT: {
+        IMAGE: 'climbing:area-blue',
+        COLOR: 'rgba(0, 59, 210, 1)',
+      },
     },
     NO_IMAGES: {
-      HOVER: 'black',
-      DEFAULT: '#666',
+      HOVER: {
+        IMAGE: 'climbing:area-gray',
+        COLOR: 'black',
+      },
+      DEFAULT: {
+        IMAGE: 'climbing:area-gray-hover',
+        COLOR: '#666',
+      },
     },
   },
   CRAG: {
     HAS_IMAGES: {
-      HOVER: 'rgba(234, 85, 64, 0.7)',
-      DEFAULT: '#ea5540',
+      HOVER: {
+        IMAGE: 'climbing:crag-red',
+        COLOR: 'rgba(234, 85, 64, 0.7)',
+      },
+      DEFAULT: {
+        IMAGE: 'climbing:crag-red-hove',
+        COLOR: '#ea5540',
+      },
     },
     NO_IMAGES: {
-      HOVER: 'black',
-      DEFAULT: '#666',
+      HOVER: {
+        IMAGE: 'climbing:crag-gray-hover',
+        COLOR: 'black',
+      },
+      DEFAULT: {
+        IMAGE: 'climbing:crag-gray',
+        COLOR: '#666',
+      },
     },
   },
 };
@@ -147,7 +171,12 @@ const crags: LayerSpecification = {
     'text-padding': 2,
     'text-font': ['Noto Sans Bold'],
     'text-anchor': 'top',
-    'icon-image': 'climbing:crag-red',
+
+    'icon-image': ifHasImages(
+      SETTINGS.CRAG.HAS_IMAGES.DEFAULT.IMAGE,
+      SETTINGS.CRAG.NO_IMAGES.DEFAULT.IMAGE,
+    ),
+
     'icon-optional': false,
     'icon-ignore-placement': false,
     'icon-allow-overlap': false,
@@ -164,20 +193,29 @@ const crags: LayerSpecification = {
     'text-ignore-placement': false,
     'text-allow-overlap': false,
     'text-optional': true,
-    'icon-size': linear(15, 0.5, 21, 2),
+    'icon-size': linearByRouteCount(0, 0.5, 50, 1),
     'symbol-sort-key': sortKey,
   },
   paint: {
+    'icon-opacity': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      0.6,
+      1,
+    ],
     'text-halo-blur': 0.5,
     'text-halo-width': 1.5,
     'text-halo-color': '#ffffff',
     'text-color': [
       'case',
       ['boolean', ['feature-state', 'hover'], false],
-      ifHasImages(COLORS.CRAG.HAS_IMAGES.HOVER, COLORS.CRAG.NO_IMAGES.HOVER),
       ifHasImages(
-        COLORS.CRAG.HAS_IMAGES.DEFAULT,
-        COLORS.CRAG.NO_IMAGES.DEFAULT,
+        SETTINGS.CRAG.HAS_IMAGES.HOVER.COLOR,
+        SETTINGS.CRAG.NO_IMAGES.HOVER.COLOR,
+      ),
+      ifHasImages(
+        SETTINGS.CRAG.HAS_IMAGES.DEFAULT.COLOR,
+        SETTINGS.CRAG.NO_IMAGES.DEFAULT.COLOR,
       ),
     ],
   },
@@ -202,7 +240,11 @@ const areas: LayerSpecification[] = [
       'text-offset': [0, 0.6],
       'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
       'text-max-width': 9,
-      'icon-image': 'climbing:area-blue',
+      'icon-size': linearByRouteCount(0, 0.4, 400, 1),
+      'icon-image': ifHasImages(
+        SETTINGS.AREA.HAS_IMAGES.DEFAULT.IMAGE,
+        SETTINGS.AREA.NO_IMAGES.DEFAULT.IMAGE,
+      ),
       'icon-optional': false,
       'icon-ignore-placement': false,
       'icon-allow-overlap': false,
@@ -212,14 +254,23 @@ const areas: LayerSpecification[] = [
       'symbol-sort-key': sortKey,
     },
     paint: {
+      'icon-opacity': [
+        'case',
+        ['boolean', ['feature-state', 'hover'], false],
+        0.6,
+        1,
+      ],
       'text-opacity': linearFadeOut(14, 16),
       'text-color': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
-        ifHasImages(COLORS.AREA.HAS_IMAGES.HOVER, COLORS.AREA.NO_IMAGES.HOVER),
         ifHasImages(
-          COLORS.AREA.HAS_IMAGES.DEFAULT,
-          COLORS.AREA.NO_IMAGES.DEFAULT,
+          SETTINGS.AREA.HAS_IMAGES.HOVER.COLOR,
+          SETTINGS.AREA.NO_IMAGES.HOVER.COLOR,
+        ),
+        ifHasImages(
+          SETTINGS.AREA.HAS_IMAGES.DEFAULT.COLOR,
+          SETTINGS.AREA.NO_IMAGES.DEFAULT.COLOR,
         ),
       ],
       'text-halo-color': 'rgba(250, 250, 250, 1)',

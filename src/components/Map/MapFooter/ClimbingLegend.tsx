@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { Tooltip, IconButton } from '@mui/material';
-import { COLORS } from '../styles/layers/climbingLayers';
+import { SETTINGS } from '../styles/layers/climbingLayers';
 import { convertHexToRgba } from '../../utils/colorUtils';
 
 const HideableContainer = styled.div<{ $isVisible: boolean }>`
@@ -69,15 +69,15 @@ export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
           </Tooltip>
         </HeadingRow>
         <Item>
-          <Dot color={COLORS.AREA.HAS_IMAGES.DEFAULT} />
+          <Dot color={SETTINGS.AREA.HAS_IMAGES.DEFAULT.COLOR} />
           Area with photos
         </Item>
         <Item>
-          <Dot color={COLORS.CRAG.HAS_IMAGES.DEFAULT} />
+          <Dot color={SETTINGS.CRAG.HAS_IMAGES.DEFAULT.COLOR} />
           Crag with photos
         </Item>
         <Item>
-          <Dot color={COLORS.AREA.NO_IMAGES.DEFAULT} />
+          <Dot color={SETTINGS.AREA.NO_IMAGES.DEFAULT.COLOR} />
           Area/crag without photos
         </Item>
       </Container>
