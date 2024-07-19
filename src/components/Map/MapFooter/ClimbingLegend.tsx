@@ -3,6 +3,10 @@ import styled from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { IconButton, Tooltip } from '@mui/material';
 import { convertHexToRgba } from '../../utils/colorUtils';
+import AreaBlue from '../../../../public/icons-climbing/icons/area-blue.svg';
+import CragRed from '../../../../public/icons-climbing/icons/crag-red.svg';
+import AreaGray from '../../../../public/icons-climbing/icons/area-gray.svg';
+import CragGray from '../../../../public/icons-climbing/icons/crag-gray.svg';
 
 export const CLIMBING_LEGEND = {
   AREA: {
@@ -57,6 +61,10 @@ const HideableContainer = styled.div<{ $isVisible: boolean }>`
   overflow: hidden;
 `;
 
+const Icon = styled.img`
+  height: 18px;
+`;
+
 const Container = styled.div`
   border-bottom: solid 1px
     ${({ theme }) => convertHexToRgba(theme.palette.text.primary, 0.4)};
@@ -67,18 +75,10 @@ const Container = styled.div`
   gap: 8px;
 `;
 
-const Dot = styled.div<{ color: string }>`
-  border-radius: 50%;
-  width: 15px;
-  height: 15px;
-  border: solid 2px white;
-  background: ${({ color }) => color};
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-`;
 const Item = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   font-size: 12px;
 `;
 
@@ -115,16 +115,20 @@ export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
           </Tooltip>
         </HeadingRow>
         <Item>
-          <Dot color={CLIMBING_LEGEND.AREA.HAS_IMAGES.DEFAULT.COLOR} />
+          <Icon src={AreaBlue.src} alt="Climbing area with photos icon" />
           Area with photos
         </Item>
         <Item>
-          <Dot color={CLIMBING_LEGEND.CRAG.HAS_IMAGES.DEFAULT.COLOR} />
+          <Icon src={AreaGray.src} alt="Climbing area without photos icon" />
+          Area without photos
+        </Item>
+        <Item>
+          <Icon src={CragRed.src} alt="Climbing crag with photos icon" />
           Crag with photos
         </Item>
         <Item>
-          <Dot color={CLIMBING_LEGEND.AREA.NO_IMAGES.DEFAULT.COLOR} />
-          Area/crag without photos
+          <Icon src={CragGray.src} alt="Climbing crag without photos icon" />
+          Crag without photos
         </Item>
       </Container>
     </HideableContainer>
