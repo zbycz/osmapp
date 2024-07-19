@@ -1,5 +1,8 @@
 
-Run in icons-climbing folder
+Run docker.app first.
+
+Then run this in `icons-climbing` folder.
+
 ```bash
 
 rm -r sprites

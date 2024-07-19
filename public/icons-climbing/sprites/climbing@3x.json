@@ -6,53 +6,25 @@
     "x": 0,
     "y": 0
   },
-  "area-blue-hover": {
+  "area-gray": {
     "height": 96,
     "pixelRatio": 3,
     "width": 96,
     "x": 96,
     "y": 0
-  },
-  "area-gray": {
-    "height": 96,
-    "pixelRatio": 3,
-    "width": 96,
-    "x": 0,
-    "y": 96
-  },
-  "area-gray-hover": {
-    "height": 96,
-    "pixelRatio": 3,
-    "width": 96,
-    "x": 96,
-    "y": 96
   },
   "crag-gray": {
     "height": 72,
     "pixelRatio": 3,
     "width": 72,
-    "x": 192,
-    "y": 0
-  },
-  "crag-gray-hover": {
-    "height": 72,
-    "pixelRatio": 3,
-    "width": 72,
-    "x": 264,
-    "y": 0
+    "x": 0,
+    "y": 96
   },
   "crag-red": {
     "height": 72,
     "pixelRatio": 3,
     "width": 72,
-    "x": 192,
-    "y": 96
-  },
-  "crag-red-hove": {
-    "height": 72,
-    "pixelRatio": 3,
-    "width": 72,
-    "x": 264,
+    "x": 72,
     "y": 96
   }
 }
