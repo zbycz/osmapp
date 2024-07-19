@@ -1,9 +1,55 @@
 import React from 'react';
 import styled from 'styled-components';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Tooltip, IconButton } from '@mui/material';
-import { SETTINGS } from '../styles/layers/climbingLayers';
+import { IconButton, Tooltip } from '@mui/material';
 import { convertHexToRgba } from '../../utils/colorUtils';
+
+export const CLIMBING_LEGEND = {
+  AREA: {
+    HAS_IMAGES: {
+      HOVER: {
+        IMAGE: 'climbing:area-blue',
+        COLOR: 'rgba(0, 59, 210, 0.7)',
+      },
+      DEFAULT: {
+        IMAGE: 'climbing:area-blue',
+        COLOR: 'rgba(0, 59, 210, 1)',
+      },
+    },
+    NO_IMAGES: {
+      HOVER: {
+        IMAGE: 'climbing:area-gray',
+        COLOR: 'black',
+      },
+      DEFAULT: {
+        IMAGE: 'climbing:area-gray',
+        COLOR: '#666',
+      },
+    },
+  },
+  CRAG: {
+    HAS_IMAGES: {
+      HOVER: {
+        IMAGE: 'climbing:crag-red',
+        COLOR: 'rgba(234, 85, 64, 0.7)',
+      },
+      DEFAULT: {
+        IMAGE: 'climbing:crag-red',
+        COLOR: '#ea5540',
+      },
+    },
+    NO_IMAGES: {
+      HOVER: {
+        IMAGE: 'climbing:crag-gray',
+        COLOR: 'black',
+      },
+      DEFAULT: {
+        IMAGE: 'climbing:crag-gray',
+        COLOR: '#666',
+      },
+    },
+  },
+};
 
 const HideableContainer = styled.div<{ $isVisible: boolean }>`
   transition: max-height 0.15s ease-out;
@@ -69,15 +115,15 @@ export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
           </Tooltip>
         </HeadingRow>
         <Item>
-          <Dot color={SETTINGS.AREA.HAS_IMAGES.DEFAULT.COLOR} />
+          <Dot color={CLIMBING_LEGEND.AREA.HAS_IMAGES.DEFAULT.COLOR} />
           Area with photos
         </Item>
         <Item>
-          <Dot color={SETTINGS.CRAG.HAS_IMAGES.DEFAULT.COLOR} />
+          <Dot color={CLIMBING_LEGEND.CRAG.HAS_IMAGES.DEFAULT.COLOR} />
           Crag with photos
         </Item>
         <Item>
-          <Dot color={SETTINGS.AREA.NO_IMAGES.DEFAULT.COLOR} />
+          <Dot color={CLIMBING_LEGEND.AREA.NO_IMAGES.DEFAULT.COLOR} />
           Area/crag without photos
         </Item>
       </Container>

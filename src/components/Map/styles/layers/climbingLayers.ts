@@ -3,6 +3,7 @@ import type {
   LayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
+import { CLIMBING_LEGEND } from '../../MapFooter/ClimbingLegend';
 
 export const CLIMBING_SPRITE = {
   id: 'climbing',
@@ -10,53 +11,6 @@ export const CLIMBING_SPRITE = {
 };
 
 export const CRAG_VISIBLE_FROM_ZOOM = 13;
-
-export const SETTINGS = {
-  AREA: {
-    HAS_IMAGES: {
-      HOVER: {
-        IMAGE: 'climbing:area-blue',
-        COLOR: 'rgba(0, 59, 210, 0.7)',
-      },
-      DEFAULT: {
-        IMAGE: 'climbing:area-blue',
-        COLOR: 'rgba(0, 59, 210, 1)',
-      },
-    },
-    NO_IMAGES: {
-      HOVER: {
-        IMAGE: 'climbing:area-gray',
-        COLOR: 'black',
-      },
-      DEFAULT: {
-        IMAGE: 'climbing:area-gray',
-        COLOR: '#666',
-      },
-    },
-  },
-  CRAG: {
-    HAS_IMAGES: {
-      HOVER: {
-        IMAGE: 'climbing:crag-red',
-        COLOR: 'rgba(234, 85, 64, 0.7)',
-      },
-      DEFAULT: {
-        IMAGE: 'climbing:crag-red',
-        COLOR: '#ea5540',
-      },
-    },
-    NO_IMAGES: {
-      HOVER: {
-        IMAGE: 'climbing:crag-gray',
-        COLOR: 'black',
-      },
-      DEFAULT: {
-        IMAGE: 'climbing:crag-gray',
-        COLOR: '#666',
-      },
-    },
-  },
-};
 
 const linear = (
   from: number,
@@ -178,8 +132,8 @@ const crags: LayerSpecification = {
     'text-anchor': 'top',
 
     'icon-image': ifHasImages(
-      SETTINGS.CRAG.HAS_IMAGES.DEFAULT.IMAGE,
-      SETTINGS.CRAG.NO_IMAGES.DEFAULT.IMAGE,
+      CLIMBING_LEGEND.CRAG.HAS_IMAGES.DEFAULT.IMAGE,
+      CLIMBING_LEGEND.CRAG.NO_IMAGES.DEFAULT.IMAGE,
     ),
 
     'icon-optional': false,
@@ -215,12 +169,12 @@ const crags: LayerSpecification = {
       'case',
       ['boolean', ['feature-state', 'hover'], false],
       ifHasImages(
-        SETTINGS.CRAG.HAS_IMAGES.HOVER.COLOR,
-        SETTINGS.CRAG.NO_IMAGES.HOVER.COLOR,
+        CLIMBING_LEGEND.CRAG.HAS_IMAGES.HOVER.COLOR,
+        CLIMBING_LEGEND.CRAG.NO_IMAGES.HOVER.COLOR,
       ),
       ifHasImages(
-        SETTINGS.CRAG.HAS_IMAGES.DEFAULT.COLOR,
-        SETTINGS.CRAG.NO_IMAGES.DEFAULT.COLOR,
+        CLIMBING_LEGEND.CRAG.HAS_IMAGES.DEFAULT.COLOR,
+        CLIMBING_LEGEND.CRAG.NO_IMAGES.DEFAULT.COLOR,
       ),
     ],
   },
@@ -246,8 +200,8 @@ const areas: LayerSpecification = {
     'text-max-width': 9,
     'icon-size': linearByRouteCount(0, 0.4, 400, 1),
     'icon-image': ifHasImages(
-      SETTINGS.AREA.HAS_IMAGES.DEFAULT.IMAGE,
-      SETTINGS.AREA.NO_IMAGES.DEFAULT.IMAGE,
+      CLIMBING_LEGEND.AREA.HAS_IMAGES.DEFAULT.IMAGE,
+      CLIMBING_LEGEND.AREA.NO_IMAGES.DEFAULT.IMAGE,
     ),
     'icon-optional': false,
     'icon-ignore-placement': false,
@@ -269,12 +223,12 @@ const areas: LayerSpecification = {
       'case',
       ['boolean', ['feature-state', 'hover'], false],
       ifHasImages(
-        SETTINGS.AREA.HAS_IMAGES.HOVER.COLOR,
-        SETTINGS.AREA.NO_IMAGES.HOVER.COLOR,
+        CLIMBING_LEGEND.AREA.HAS_IMAGES.HOVER.COLOR,
+        CLIMBING_LEGEND.AREA.NO_IMAGES.HOVER.COLOR,
       ),
       ifHasImages(
-        SETTINGS.AREA.HAS_IMAGES.DEFAULT.COLOR,
-        SETTINGS.AREA.NO_IMAGES.DEFAULT.COLOR,
+        CLIMBING_LEGEND.AREA.HAS_IMAGES.DEFAULT.COLOR,
+        CLIMBING_LEGEND.AREA.NO_IMAGES.DEFAULT.COLOR,
       ),
     ],
     'text-halo-color': 'rgba(250, 250, 250, 1)',
