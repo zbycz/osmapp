@@ -4,13 +4,18 @@ import type {
 } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
 
+export const CLIMBING_SPRITE = {
+  id: 'climbing',
+  url: `${window.location.protocol}//${window.location.host}/icons-climbing/sprites/climbing`,
+};
+
 export const CRAG_VISIBLE_FROM_ZOOM = 13;
 
 export const SETTINGS = {
   AREA: {
     HAS_IMAGES: {
       HOVER: {
-        IMAGE: 'climbing:area-blue-hover',
+        IMAGE: 'climbing:area-blue',
         COLOR: 'rgba(0, 59, 210, 0.7)',
       },
       DEFAULT: {
@@ -24,7 +29,7 @@ export const SETTINGS = {
         COLOR: 'black',
       },
       DEFAULT: {
-        IMAGE: 'climbing:area-gray-hover',
+        IMAGE: 'climbing:area-gray',
         COLOR: '#666',
       },
     },
@@ -36,13 +41,13 @@ export const SETTINGS = {
         COLOR: 'rgba(234, 85, 64, 0.7)',
       },
       DEFAULT: {
-        IMAGE: 'climbing:crag-red-hove',
+        IMAGE: 'climbing:crag-red',
         COLOR: '#ea5540',
       },
     },
     NO_IMAGES: {
       HOVER: {
-        IMAGE: 'climbing:crag-gray-hover',
+        IMAGE: 'climbing:crag-gray',
         COLOR: 'black',
       },
       DEFAULT: {
