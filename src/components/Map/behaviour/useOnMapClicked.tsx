@@ -24,6 +24,7 @@ export const getSkeleton = (feature, clickCoords) => {
     osmMeta,
     tags: { name: feature.properties?.name },
     skeleton: true,
+    loading: true,
     nonOsmObject: !isOsmObject,
   };
 };

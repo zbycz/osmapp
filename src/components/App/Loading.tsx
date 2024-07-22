@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Router from 'next/router';
 import { LinearProgress } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const Wrapper = styled.div`
   position: absolute;
@@ -17,7 +18,9 @@ const Wrapper = styled.div`
 
 // TODO this shows only for next.js page load, but doesnt wait for getInitialProps
 export const Loading = () => {
-  const [loading, start, stop] = useBoolState(false);
+  const [isLoadingNext, start, stop] = useBoolState(false);
+  const { feature } = useFeatureContext();
+  const loading = isLoadingNext || feature.loading;
 
   useEffect(() => {
     Router.events.on('routeChangeStart', start);
