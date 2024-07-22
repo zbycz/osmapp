@@ -57,9 +57,9 @@ export default {
 
   'climbing_renderer.climbing_grade': 'climbing grade ',
 
-  'project.osmapp.description': 'A universal app for OpenStreetMap',
+  'project.osmapp.description': 'Interactive City Guide of Addis Ababa in Ethiopia',
   'project.osmapp.serpDescription':
-    'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
+    'An open-source map of Addis Ababa in Ethiopia based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more! Based on OsmAPP and OpenPlaceGuide.',
 
   'climbing.guideinfo.title': 'free climbing guides',
   'climbing.guideinfo.description':
@@ -71,32 +71,39 @@ export default {
 
   'install.button': 'Install app',
   'install.tabs_aria_label': 'Choose your platform',
-  'install.ios_intro': 'Open osmapp.org in the <strong>Safari browser</strong>',
+  'install.ios_intro': 'Open map.et in the <strong>Safari browser</strong>',
   'install.ios_share': 'Tap <strong>Share icon</strong>',
   'install.ios_add': 'Tap <strong>Add to Home Screen</strong>',
-  'install.android_intro': 'Open osmapp.org in the <strong>Chrome or Firefox browser</strong>',
+  'install.android_intro': 'Open map.et in the <strong>Chrome or Firefox browser</strong>',
   'install.android_share': 'Tap the <strong>three dots menu</strong>',
   'install.android_add': 'Tap <strong>Install app</strong>',
-  'install.desktop_intro': 'Open osmapp.org in <strong>Chrome</strong>, <strong>FirefoxOS</strong> or <strong>Opera</strong>',
+  'install.desktop_intro': 'Open map.et in <strong>Chrome</strong>, <strong>FirefoxOS</strong> or <strong>Opera</strong>',
   'install.desktop_install': 'Click the <strong>install button</strong>',
-  'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
+  'install.outro': 'Thats all! Look for map.et at your home screen.',
   'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
 
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.go_to_map_button': 'Go to map',
   'homepage.examples.eg': 'eg.',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
-  'homepage.screenshot_alt': 'Screenshot of OsmAPP',
+  'homepage.screenshot_alt': 'Screenshot of map.et',
   'homepage.about_osm': `All map data is from
       <a href="https://osm.org">OpenStreetMap</a>, a map created by
       millions of contributors — similar to Wikipedia. You can find
-      <em>Edit</em> button on each map feature.`,
-  'homepage.heading_about_osmapp': 'About OsmAPP',
-  'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
-     including editing options. <br/>Currently it includes various map layers, POI editing and a basic search engine.
-     Features such as navigation or favorite places are planned.`,
-  'homepage.github_link': `Repository is open-source. You may suggest new features on <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
+      <em>Edit</em> button on each map feature. The data is enriched by
+      business and place information from <a href="https://openplaceguide.org">OpenPlaceGuide</a>`,
+  'homepage.heading_about_osmapp': 'About map.et',
+  'homepage.about_osmapp': `This is a city guide of Addis Ababa in Ethiopia by <a href="https://map.et/bandira" target="_blank">BAME PLC</a>. This product is in <strong>beta</strong> phase.`,
+  'homepage.github_link': `You can add information about your own places in the <a href="https://github.com/OpenPlaceGuide/data" target="_blank">data repository</a> or use the link on the specific detail page. You may suggest new features, report bugs and ask questions on <a href="https://github.com/AddisMap/map.et/issues" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
+  'homepage.special_thanks': `<ul>
+        <li><a href="https://www.osmapp.org/" rel='noopener' target='_blank'>OsmAPP</a> – for the dynamic map application
+        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – for the best world map 🌎
+        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – for images 🖼
+      </ul>
+  `,
   'homepage.for_images': 'for images 🖼',
   'homepage.for_osm': 'for the best world map 🌎',
   'homepage.maptiler': 'for awesome vector maps and for supporting this project  ❤️ ',
@@ -105,6 +112,7 @@ export default {
   'homepage.disclaimer': `OpenStreetMap and OSM are a trademark of the OpenStreetMap Foundation. This project is not endorsed by or affiliated with the <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vector maps ("Basic" and "Outdoor") contain some place names from the Wikidata project, more <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>here</a>.`,
 
+  'searchbox.placeholder': 'Search map.et',
   'homepage.important_links': `Important links`,
   'homepage.add_new_climbing_area': `Add crag`,
   'homepage.our_story': `Our story`,
@@ -263,8 +271,8 @@ export default {
   'editsuccess.note.textLabel': 'Note text',
   'editsuccess.edit.heading': 'Thank you for your edit!',
   'editsuccess.edit.subheading': 'Your change is starting to appear on maps around the world.',
-  'editsuccess.edit.body': `Your change will appear in the OSM database immediately, it will be visible in the "OSM Carto" layer in a few minutes!
-         OsmAPP map and other applications are refreshed about once a month.
+  'editsuccess.edit.body': `Your change will appear in the OSM database immediately, it will be visible in the "Africa Tiles" layer in a few minutes!
+         Other applications are refreshed about once a month.
           <br/><br/>If this is a mistake, you can manually revert the values and save it again.`,
   'editsuccess.edit.urlLabel': `Your changes:`,
   'editsuccess.edit.textLabel': 'Comment',
@@ -292,7 +300,7 @@ export default {
   'layerswitcher.intro': 'Thanks to the fact that OpenStreetMap offers source data, anyone can produce different variants of the map.',
   'layerswitcher.add_layer_button': 'Add custom layer',
   'layerswitcher.overlays': 'Overlays',
-  'layerswitcher.not_all_work': 'Please note that some layers may not work in OsmAPP.',
+  'layerswitcher.not_all_work': 'Please note that some layers may not work in map.et',
   'layerswitcher.license': 'License',
   'layerswitcher.privacy_policy': 'Privacy policy',
   'layerswitcher.category': 'Category',

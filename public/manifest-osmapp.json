@@ -1,14 +1,14 @@
 {
-  "name": "OsmAPP maps",
-  "short_name": "OsmAPP",
-  "description": "A universal app for OpenStreetMap",
+  "name": "map.et",
+  "short_name": "map.et",
+  "description": "A city guide for Ethiopia/Addis Ababa",
   "theme_color": "#eb5757",
   "background_color": "#f8f4f0",
   "start_url": "/start",
   "display": "standalone",
   "url_handlers": [
     {
-      "origin": "https://osmapp.org"
+      "origin": "https://map.et"
     }
   ],
   "icons": [

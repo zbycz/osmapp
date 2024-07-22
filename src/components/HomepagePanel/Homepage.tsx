@@ -43,13 +43,7 @@ const Spacer = styled.div`
 const Examples = () => (
   <>
     {t('homepage.examples.eg')}{' '}
-    <Link href="/way/34633854" locale={intl.lang}>
-      Empire State Building
-    </Link>{' '}
-    •{' '}
-    <Link href="/way/119016167" locale={intl.lang}>
-      {t('homepage.examples.charles_bridge_statues')}
-    </Link>
+    <Link href="/way/151431279" locale={intl.lang}>Meskel Square</Link>
   </>
 );
 
@@ -162,53 +156,8 @@ export function Homepage({
             <Typography variant="overline" color="textSecondary" component="h2">
               {t('homepage.special_thanks_heading')}
             </Typography>
-            <ul style={{ paddingLeft: '1.6em' }}>
-              <li>
-                <a href="https://www.mapillary.com/" target="_blank">
-                  Mapillary
-                </a>
-                {', '}
-                <a href="https://openstreetmap.cz/fody" target="_blank">
-                  Fody
-                </a>
-                {', '}
-                <a href="https://www.wikipedia.org/" target="_blank">
-                  Wikipedia
-                </a>
-                {` – ${t('homepage.for_images')}`}
-              </li>
-              <li>
-                <a href="https://www.openstreetmap.org/" target="_blank">
-                  OpenStreetMap
-                </a>
-                {` – ${t('homepage.for_osm')}`}
-              </li>
-              <li>
-                <a href="https://www.maptiler.com" target="_blank">
-                  Maptiler
-                </a>
-                {` – ${t('homepage.maptiler')}`}
-              </li>
-              <li>
-                <a
-                  href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss"
-                  target="_blank"
-                >
-                  Vercel
-                </a>
-                {` – ${t('homepage.vercel')}`}
-              </li>
-            </ul>
-            <a href="https://www.maptiler.com" target="_blank">
-              <LogoMaptiler width={200} height={52} />
-            </a>
-            <br />
-            <a
-              href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss"
-              target="_blank"
-            >
-              <img src="/vercel.svg" alt="Vercel" width="200" height="41" />
-            </a>
+
+            <Translation id="homepage.special_thanks" />
 
             <Spacer />
             <Spacer />

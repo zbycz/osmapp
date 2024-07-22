@@ -16,16 +16,16 @@ type Project = {
 
 const osmapp: Project = {
   id: 'osmapp',
-  name: 'OsmAPP',
-  url: 'https://osmapp.org',
-  ogImage: 'https://osmapp.org/screens/karlstejn2.png',
+  name: 'map.et (beta)',
+  url: 'https://map.et',
+  ogImage: 'https://map.et/osmapp-screenshot.png',
   description: 'project.osmapp.description',
   serpDescription: 'project.osmapp.serpDescription',
 };
 
 const osmappDev: Project = {
   ...osmapp,
-  name: 'OsmAPP-DEV',
+  name: 'map.et (beta) DEV',
 };
 
 const openclimbing: Project = {
@@ -38,7 +38,7 @@ const openclimbing: Project = {
 };
 
 const domains: Record<string, Project> = {
-  'osmapp.org': osmapp,
+  'map.et': osmapp,
   'openclimbing.org': openclimbing,
   '127.0.0.1:3000': openclimbing,
 };
