@@ -39,14 +39,14 @@ const ofrBasicStyle = {
 
 const getBaseStyle = (key: string, currentTheme: Theme): StyleSpecification => {
   if (key === 'basic') {
-    return basicStyle;
+    return makinaAfricaStyle;
   }
   if (key === 'basicOfr') {
     return ofrBasicStyle;
   }
-  if (key === 'makinaAfrica') {
-    return makinaAfricaStyle;
-  }
+  // if (key === 'makinaAfrica') {
+  //   return makinaAfricaStyle;
+  // }
   if (key === 'outdoor') {
     return outdoorStyle;
   }

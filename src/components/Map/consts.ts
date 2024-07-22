@@ -12,7 +12,7 @@ export const OSMAPP_SPRITE = [
   },
 ];
 
-export const GLYPHS = `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${apiKey}`;
+export const GLYPHS = `https://africa.tiles.openplaceguide.org/fonts/{fontstack}/{range}.pbf`;
 
 export const EMPTY_GEOJSON_SOURCE: GeoJSONSourceSpecification = {
   type: 'geojson' as const,
@@ -25,7 +25,7 @@ export const EMPTY_GEOJSON_SOURCE: GeoJSONSourceSpecification = {
 export const OSMAPP_SOURCES: Record<string, SourceSpecification> = {
   maptiler_planet: {
     type: 'vector' as const,
-    url: `https://api.maptiler.com/tiles/v3/tiles.json?key=${apiKey}`,
+    url: `https://africa.tiles.openplaceguide.org/data/v3.json`,
   },
   ofr_planet: {
     type: 'vector' as const,

@@ -48,11 +48,15 @@ const czBbox: Bbox = [
 
 export const osmappLayers: Layers = {
   basic: {
-    name: `${t('layers.basic')} Maptiler`,
-    description: 'maptiler.com',
+    name: t('layers.makina_africa'),
+    description: 'OpenPlaceGuide.org',
     type: 'basemap',
     Icon: ExploreIcon,
-    attribution: ['maptiler', 'osm'],
+    attribution: [
+      '<a href="https://openplaceguide.org/">OPG</a> © <a href="https://openmaptiles.org/">OpenMapTiles</a>',
+      'osm',
+    ],
+    bboxes: [africaBbox],
   },
   basicOfr: {
     name: `${t('layers.basic')} OpenFreeMap (beta)`,
@@ -63,17 +67,6 @@ export const osmappLayers: Layers = {
       '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a>',
       'osm',
     ],
-  },
-  makinaAfrica: {
-    name: t('layers.makina_africa'),
-    description: 'OpenPlaceGuide.org',
-    type: 'basemap',
-    Icon: ExploreIcon,
-    attribution: [
-      '<a href="https://openplaceguide.org/">OPG</a> © <a href="https://openmaptiles.org/">OpenMapTiles</a>',
-      'osm',
-    ],
-    bboxes: [africaBbox],
   },
   outdoor: {
     name: t('layers.outdoor'),
