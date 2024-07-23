@@ -60,9 +60,12 @@ export const getInitialMapView = async (
 ): Promise<View> => {
   const cookies = nextCookies(ctx);
   const viewCookie = cookies.mapView;
+
+  const addisAbabaView = ['12', '9', '38.75'];
+
   return viewCookie
     ? (viewCookie.split('/') as View)
-    : getViewFromRequest(ctx.req);
+    : (addisAbabaView as View);
 };
 
 const saveLastUrl = (feature: Feature, ctx?: NextPageContext) => {
