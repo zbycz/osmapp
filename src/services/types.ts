@@ -123,7 +123,7 @@ export interface Feature {
   source?: string;
   sourceLayer?: string;
   state?: { hover: boolean };
-  skeleton?: boolean;
+  skeleton?: boolean; // that means loading is in progress
   nonOsmObject?: boolean;
 }
 
