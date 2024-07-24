@@ -110,7 +110,8 @@ export const RouteDistribution = () => {
             {heightsRatios.map((heightRatioItem) => {
               const color = getDifficultyColor(
                 {
-                  'climbing:grade:uiaa': heightRatioItem.grade,
+                  gradeSystem: 'uiaa',
+                  grade: heightRatioItem.grade,
                 },
                 theme,
               );

@@ -23,6 +23,7 @@ import { SnackbarProvider } from '../utils/SnackbarContext';
 import { useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
+import { MyTicksPage } from '../FeaturePanel/Climbing/MyTicksPage';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -79,6 +80,7 @@ const IndexWithProviders = () => {
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   const photo = router.query.all?.[3];
+
   return (
     <>
       <Loading />
@@ -90,8 +92,8 @@ const IndexWithProviders = () => {
           <ClimbingDialog photo={photo} />
         </ClimbingContextProvider>
       )}
-
       <HomepagePanel />
+      {router.query.all?.[0] === 'my-ticks' && <MyTicksPage />}
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
       <TitleAndMetaTags />

@@ -3,12 +3,11 @@ import styled from 'styled-components';
 import { Tooltip, useTheme } from '@mui/material';
 import {
   convertGrade,
-  getDifficulty,
   getDifficultyColor,
   getGradeSystemName,
 } from './utils/grades/routeGrade';
-import { GradeSystem } from './utils/grades/gradeData';
-import { Feature } from '../../../services/types';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { RouteDifficulty } from './types';
 
 const Container = styled.div<{ $color: string }>`
   border-radius: 12px;
@@ -22,17 +21,13 @@ const Container = styled.div<{ $color: string }>`
 `;
 
 type Props = {
-  routeFeature: Feature;
-  selectedRouteSystem?: GradeSystem;
+  routeDifficulty?: RouteDifficulty;
 };
 
-export const RouteDifficultyBadge = ({
-  routeFeature,
-  selectedRouteSystem,
-}: Props) => {
+export const RouteDifficultyBadge = ({ routeDifficulty }: Props) => {
   const theme = useTheme();
-  const routeDifficulty = getDifficulty(routeFeature?.tags);
-
+  const { userSettings } = useUserSettingsContext();
+  const selectedRouteSystem = userSettings['climbing.gradeSystem'];
   const convertedGrade = selectedRouteSystem
     ? convertGrade(
         routeDifficulty?.gradeSystem,
@@ -47,7 +42,7 @@ export const RouteDifficultyBadge = ({
     convertedGrade ? selectedRouteSystem : routeDifficulty?.gradeSystem,
   );
 
-  const colorByDifficulty = getDifficultyColor(routeFeature?.tags, theme);
+  const colorByDifficulty = getDifficultyColor(routeDifficulty, theme);
 
   return (
     <Tooltip

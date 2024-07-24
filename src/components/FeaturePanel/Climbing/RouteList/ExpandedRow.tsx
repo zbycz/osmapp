@@ -21,7 +21,7 @@ import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
 import { onTickAdd } from '../../../../services/ticks';
-import { MyTicks } from './MyTicks';
+import { MyRouteTicks } from './MyRouteTicks';
 
 const Left = styled.div`
   flex: 1;
@@ -203,7 +203,7 @@ export const ExpandedRow = ({
             </List>
           </Right>
         </Flex>
-        <MyTicks osmId={osmId} />
+        <MyRouteTicks osmId={osmId} />
       </ExpandedRowContainer>
       <Dialog
         open={routeToDelete !== null}

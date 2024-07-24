@@ -1,7 +1,10 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
 import { Feature, PathType } from '../../../services/types';
-import { getDifficultyColor } from '../Climbing/utils/grades/routeGrade';
+import {
+  getDifficulty,
+  getDifficultyColor,
+} from '../Climbing/utils/grades/routeGrade';
 import { Size } from './types';
 
 const Svg = styled.svg`
@@ -39,7 +42,7 @@ export const Path = ({ path, feature, size }: Props) => {
     )
     .join(',');
 
-  const color = getDifficultyColor(feature.tags, theme);
+  const color = getDifficultyColor(getDifficulty(feature.tags), theme);
   const contrastColor = theme.palette.getContrastText(color);
 
   return (
