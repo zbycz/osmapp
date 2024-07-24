@@ -22,6 +22,7 @@ import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
 import { useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
+import { UserSettingsProvider } from '../utils/UserSettingsContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -103,17 +104,22 @@ const App = ({ featureFromRouter, initialMapView, cookies }) => {
 
   return (
     <SnackbarProvider>
-      <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>
-        <MapStateProvider initialMapView={mapView}>
-          <OsmAuthProvider cookies={cookies}>
-            <StarsProvider>
-              <EditDialogProvider /* TODO supply router.query */>
-                <IndexWithProviders />
-              </EditDialogProvider>
-            </StarsProvider>
-          </OsmAuthProvider>
-        </MapStateProvider>
-      </FeatureProvider>
+      <UserSettingsProvider>
+        <FeatureProvider
+          featureFromRouter={featureFromRouter}
+          cookies={cookies}
+        >
+          <MapStateProvider initialMapView={mapView}>
+            <OsmAuthProvider cookies={cookies}>
+              <StarsProvider>
+                <EditDialogProvider /* TODO supply router.query */>
+                  <IndexWithProviders />
+                </EditDialogProvider>
+              </StarsProvider>
+            </OsmAuthProvider>
+          </MapStateProvider>
+        </FeatureProvider>
+      </UserSettingsProvider>
     </SnackbarProvider>
   );
 };

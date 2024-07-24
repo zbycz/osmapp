@@ -16,7 +16,8 @@ export const GradeSystemSelect = ({
 }: Props) => (
   <Select
     value={selectedGradeSystem}
-    label="Grade system"
+    size="small"
+    variant="standard"
     onClick={onClick}
     onChange={(event: any) => {
       setGradeSystem(event.target.value);

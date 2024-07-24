@@ -11,16 +11,16 @@ import {
 } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { GradeSystemSelect } from './GradeSystemSelect';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 
 export const ClimbingSettings = ({ isSettingsOpened, setIsSettingsOpened }) => {
   const {
     areRoutesVisible,
     setAreRoutesVisible,
-    setSelectedRouteSystem,
-    selectedRouteSystem,
     isDifficultyHeatmapEnabled,
     setIsDifficultyHeatmapEnabled,
   } = useClimbingContext();
+  const { setUserSetting, userSettings } = useUserSettingsContext();
 
   return (
     <Dialog
@@ -59,8 +59,10 @@ export const ClimbingSettings = ({ isSettingsOpened, setIsSettingsOpened }) => {
           <ListItem>
             <ListItemText>Default grade system</ListItemText>
             <GradeSystemSelect
-              setGradeSystem={setSelectedRouteSystem}
-              selectedGradeSystem={selectedRouteSystem}
+              setGradeSystem={(gradeSystem) => {
+                setUserSetting('climbing.gradeSystem', gradeSystem);
+              }}
+              selectedGradeSystem={userSettings['climbing.gradeSystem']}
             />
           </ListItem>
           <ListItem>
