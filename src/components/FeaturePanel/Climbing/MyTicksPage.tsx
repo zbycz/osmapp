@@ -24,10 +24,10 @@ import {
   PanelContent,
   PanelScrollbars,
   PanelSidePadding,
-  PanelWrapper,
 } from '../../utils/PanelHelpers';
 import { ClientOnly } from '../../helpers';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { MobilePageDrawer } from '../../utils/MobilePageDrawer';
 
 export const MyTicksPage = () => {
   const [myTicksData, setMyTicksData] = useState({});
@@ -67,7 +67,7 @@ export const MyTicksPage = () => {
 
   return (
     <ClientOnly>
-      <PanelWrapper>
+      <MobilePageDrawer className="my-ticks-drawer">
         <PanelContent>
           <PanelScrollbars>
             <ClosePanelButton right onClick={handleClose} />
@@ -111,7 +111,7 @@ export const MyTicksPage = () => {
             </TableContainer>
           </PanelScrollbars>
         </PanelContent>
-      </PanelWrapper>
+      </MobilePageDrawer>
     </ClientOnly>
   );
 };
