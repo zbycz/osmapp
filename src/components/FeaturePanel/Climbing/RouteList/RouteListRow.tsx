@@ -14,6 +14,7 @@ import { ExpandedRow } from './ExpandedRow';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import { getShortId } from '../../../../services/helpers';
 import { isTicked } from '../../../../services/ticks';
+import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -79,11 +80,11 @@ export const RenderListRow = ({
     isRouteSelected,
     isEditMode,
     routeSelectedIndex,
-    selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
     getPhotoInfoForRoute,
   } = useClimbingContext();
+  const { userSettings } = useUserSettingsContext();
 
   useEffect(() => {
     if (routeSelectedIndex === index) {
@@ -163,7 +164,7 @@ export const RenderListRow = ({
         <DifficultyCell $width={50}>
           <RouteDifficultyBadge
             routeFeature={tempRoute.feature}
-            selectedRouteSystem={selectedRouteSystem}
+            selectedRouteSystem={userSettings['climbing.gradeSystem']}
           />
         </DifficultyCell>
 

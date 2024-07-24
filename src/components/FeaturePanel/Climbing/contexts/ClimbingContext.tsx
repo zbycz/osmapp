@@ -27,7 +27,6 @@ import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
 import { getContainedSizeImage } from '../utils/image';
-import { GradeSystem } from '../utils/grades/gradeData';
 
 type LoadedPhotos = Record<string, Record<number, boolean>>;
 type ImageSize = {
@@ -105,8 +104,6 @@ type ClimbingContextType = {
   setViewportSize: (size: Size) => void;
   routeIndexHovered: number;
   setRouteIndexHovered: (routeIndexHovered: number) => void;
-  selectedRouteSystem: GradeSystem;
-  setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
   routesExpanded: Array<number>;
   setRoutesExpanded: (routesExpanded: Array<number>) => void;
   loadedPhotos: LoadedPhotos;
@@ -167,8 +164,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
   const [filterDifficulty, setFilterDifficulty] = useState<Array<string>>([]);
   const [routesExpanded, setRoutesExpanded] = useState<Array<number>>([]);
-  const [selectedRouteSystem, setSelectedRouteSystem] =
-    useState<GradeSystem>('uiaa'); // @TODO move to config
   const [editorPosition, setEditorPosition] = useState<PositionPx>({
     x: 0,
     y: 0,
@@ -384,8 +379,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     photoPath,
     photoPaths,
     setPhotoPath,
-    setSelectedRouteSystem,
-    selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
     loadPhotoRelatedData,
