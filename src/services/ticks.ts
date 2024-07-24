@@ -66,9 +66,11 @@ export const setLocalStorageItem = (key: string, value: Array<Tick>) => {
   window?.localStorage.setItem(key, JSON.stringify(value));
 };
 
+export const getAllTicks = (): Array<Tick> => getLocalStorageItem(KEY);
+
 export const onTickAdd = ({ osmId }) => {
   if (!osmId) return;
-  const ticks = getLocalStorageItem(KEY);
+  const ticks = getAllTicks();
   setLocalStorageItem(KEY, [
     ...ticks,
     { osmId, date: new Date().toISOString(), style: null },
@@ -98,7 +100,7 @@ export const getStorageIndex = (
 };
 
 export const findTicks = (osmId: string): Array<Tick> => {
-  const ticks = getLocalStorageItem(KEY);
+  const ticks = getAllTicks();
 
   return ticks?.filter((tick) => osmId === tick.osmId) ?? null;
 };
@@ -112,7 +114,7 @@ export const onTickUpdate = ({
   index: number;
   updatedObject: Partial<Tick>;
 }) => {
-  const ticks = getLocalStorageItem(KEY);
+  const ticks = getAllTicks();
   const storageIndex = getStorageIndex(ticks, osmId, index);
   const updatedArray = updateElementOnIndex<Tick>(
     ticks,
@@ -129,7 +131,7 @@ export const onTickDelete = ({
   osmId: string;
   index: number;
 }) => {
-  const ticks = getLocalStorageItem(KEY);
+  const ticks = getAllTicks();
 
   const newArray = ticks.reduce(
     (acc, tick) => {

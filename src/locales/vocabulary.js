@@ -16,6 +16,14 @@ export default {
 
   'user.login_register': 'Login / register',
   'user.logout': 'Logout',
+  'user.my_ticks': 'My ticks',
+  'user.user_settings': 'Settings',
+
+  'my_ticks.title': 'My ticks',
+  'my_ticks.route_name': 'Name',
+  'my_ticks.route_grade': 'Grade',
+  'my_ticks.route_style': 'Style',
+  'my_ticks.route_date': 'Date',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':

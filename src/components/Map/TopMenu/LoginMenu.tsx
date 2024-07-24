@@ -1,11 +1,14 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import React, { forwardRef } from 'react';
-import { Menu, MenuItem } from '@mui/material';
+import React, { forwardRef, useState } from 'react';
+import { Divider, Menu, MenuItem } from '@mui/material';
 import styled from 'styled-components';
+import Router from 'next/router';
 import { useBoolState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { LoginIconButton } from './LoginIconButton';
+import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
+import { useMapStateContext } from '../../utils/MapStateContext';
 
 const StyledAccountCircleIcon = styled(AccountCircleIcon)`
   color: ${({ theme }) => theme.palette.action.active};
@@ -13,48 +16,93 @@ const StyledAccountCircleIcon = styled(AccountCircleIcon)`
   font-size: 17px !important;
 `;
 
-type Props = {
+type UserLoginProps = {
+  closeMenu: () => void;
+  children?: React.ReactNode;
+};
+
+type MyTicksMenuItemProps = {
   closeMenu: () => void;
 };
 
-const UserLogin = forwardRef<SVGSVGElement, Props>(({ closeMenu }, ref) => {
-  const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
-  const login = () => {
+const MyTicksMenuItem = ({ closeMenu }: MyTicksMenuItemProps) => {
+  const openMyTicks = () => {
+    Router.push(`/my-ticks`);
     closeMenu();
-    handleLogin();
-  };
-  const logout = () => {
-    closeMenu();
-    setTimeout(() => {
-      handleLogout();
-    }, 100);
   };
 
-  if (!osmUser) {
-    return (
-      <MenuItem onClick={login}>
-        <StyledAccountCircleIcon ref={ref} />
-        {t('user.login_register')}
-      </MenuItem>
-    );
-  }
+  return <MenuItem onClick={openMyTicks}>{t('user.my_ticks')}</MenuItem>;
+};
+const UserSettingsItem = ({ closeMenu }) => {
+  const [isUserSettingsOpened, setIsUserSettingsOpened] =
+    useState<boolean>(false);
+
+  const openUserSettings = () => {
+    setIsUserSettingsOpened(true);
+  };
+
+  const closeUserSettings = () => {
+    setIsUserSettingsOpened(false);
+    closeMenu();
+  };
 
   return (
     <>
-      <MenuItem
-        component="a"
-        href={`https://www.openstreetmap.org/user/${osmUser}`}
-        target="_blank"
-        rel="noopener"
-        onClick={closeMenu}
-      >
-        <StyledAccountCircleIcon ref={ref} />
-        <strong>{osmUser}</strong>
-      </MenuItem>
-      <MenuItem onClick={logout}>{t('user.logout')}</MenuItem>
+      <UserSettingsDialog
+        isOpened={isUserSettingsOpened}
+        onClose={closeUserSettings}
+      />
+      <MenuItem onClick={openUserSettings}>{t('user.user_settings')}</MenuItem>
     </>
   );
-});
+};
+
+const UserLogin = forwardRef<SVGSVGElement, UserLoginProps>(
+  ({ closeMenu, children }, ref) => {
+    const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
+    const login = () => {
+      closeMenu();
+      handleLogin();
+    };
+    const logout = () => {
+      closeMenu();
+      setTimeout(() => {
+        handleLogout();
+      }, 100);
+    };
+
+    if (!osmUser) {
+      return (
+        <>
+          <MenuItem onClick={login}>
+            <StyledAccountCircleIcon ref={ref} />
+            {t('user.login_register')}
+          </MenuItem>
+          <Divider />
+          {children}
+        </>
+      );
+    }
+
+    return (
+      <>
+        <MenuItem
+          component="a"
+          href={`https://www.openstreetmap.org/user/${osmUser}`}
+          target="_blank"
+          rel="noopener"
+          onClick={closeMenu}
+        >
+          <StyledAccountCircleIcon ref={ref} />
+          <strong>{osmUser}</strong>
+        </MenuItem>
+        {children}
+        <Divider />
+        <MenuItem onClick={logout}>{t('user.logout')}</MenuItem>
+      </>
+    );
+  },
+);
 
 // TODO custom Item components are not keyboard accesible
 // seems like a bug in material-ui
@@ -64,7 +112,8 @@ const UserLogin = forwardRef<SVGSVGElement, Props>(({ closeMenu }, ref) => {
 export const LoginMenu = () => {
   const anchorRef = React.useRef();
   const [opened, open, close] = useBoolState(false);
-
+  const { activeLayers } = useMapStateContext();
+  const hasClimbingLayer = activeLayers.includes('climbing');
   return (
     <>
       <Menu
@@ -77,7 +126,10 @@ export const LoginMenu = () => {
         open={opened}
         onClose={close}
       >
-        <UserLogin closeMenu={close} />
+        <UserLogin closeMenu={close}>
+          {hasClimbingLayer && <MyTicksMenuItem closeMenu={close} />}
+          <UserSettingsItem closeMenu={close} />
+        </UserLogin>
       </Menu>
       <LoginIconButton anchorRef={anchorRef} onClick={open} />
     </>

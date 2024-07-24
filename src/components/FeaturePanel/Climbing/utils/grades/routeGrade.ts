@@ -53,18 +53,16 @@ export const getDifficulty = (
   return undefined;
 };
 
-export const getDifficultyColor = (tags: FeatureTags, theme) => {
-  const difficulty = getDifficulty(tags);
-
+export const getDifficultyColor = (routeDifficulty, theme) => {
   const DEFAULT_COLOR = '#555';
-  if (!difficulty) {
+  if (!routeDifficulty) {
     return DEFAULT_COLOR;
   }
   const { mode } = theme.palette;
   const uiaaGrade =
-    difficulty.gradeSystem !== 'uiaa'
-      ? convertGrade(difficulty.gradeSystem, 'uiaa', difficulty.grade)
-      : difficulty.grade;
+    routeDifficulty.gradeSystem !== 'uiaa'
+      ? convertGrade(routeDifficulty.gradeSystem, 'uiaa', routeDifficulty.grade)
+      : routeDifficulty.grade;
   return gradeColors[uiaaGrade]?.[mode] || DEFAULT_COLOR;
 };
 
@@ -72,6 +70,7 @@ export const getRouteGrade = (
   grades: Partial<{ [key in `climbing:grade:${GradeSystem}`]: string }>,
   convertTo: GradeSystem,
 ) => {
+  if (!grades) return null;
   const availableGrades = Object.keys(grades);
   return availableGrades.reduce((convertedGrade, availableGrade) => {
     const convertFrom = availableGrade.split(':').pop();
