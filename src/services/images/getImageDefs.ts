@@ -13,13 +13,13 @@ import { getCommonsImageUrl } from './getCommonsImageUrl';
 
 export const WIDTH = 410;
 
-export type ImageType2 = {
+export type ImageType = {
   imageUrl: string;
   description: string;
   linkUrl: string;
   link: string;
   uncertainImage?: true;
-  sameImageResolvedAlsoFrom?: ImageType2[];
+  sameUrlResolvedAlsoFrom?: ImageType[]; // only 1 level
   panoramaUrl?: string; // only for Mapillary (ImageDefFromCenter)
 };
 
@@ -43,7 +43,7 @@ const parsePathTag = (pathString?: string): PathType | undefined => {
 };
 
 type KeyValue = { k: string; v: string };
-export const getInstantImage = ({ k, v }: KeyValue): ImageType2 | null => {
+export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
   if (k.match(/^(wikimedia_commons|image)/) && v.match(/^File:/)) {
     return {
       imageUrl: decodeURI(getCommonsImageUrl(v, WIDTH)),

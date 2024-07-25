@@ -2,7 +2,7 @@ import maplibregl from 'maplibre-gl';
 import { fetchJson } from '../fetch';
 import { Position } from '../types';
 import { getGlobalMap } from '../mapStorage';
-import { ImageType2 } from './getImageDefs';
+import { ImageType } from './getImageDefs';
 
 const subtractAngle = (a: number, b: number): number =>
   Math.min(Math.abs(a - b), a - b + 360);
@@ -33,7 +33,7 @@ const debugOutput = (sorted) => {
 
 export const getMapillaryImage = async (
   poiCoords: Position,
-): Promise<ImageType2 | null> => {
+): Promise<ImageType | null> => {
   // https://www.mapillary.com/developer/api-documentation/#image
   const bbox = [
     poiCoords[0] - 0.0004, // left, bottom, right, top (or minLon, minLat, maxLon, maxLat)

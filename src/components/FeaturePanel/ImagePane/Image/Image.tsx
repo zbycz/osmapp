@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import {
   getImageDefId,
-  ImageType2,
+  ImageType,
 } from '../../../../services/images/getImageDefs';
 import { Paths } from '../Paths';
 
@@ -36,7 +36,7 @@ const ImageWrapper = styled.div`
 
 type Props = {
   def: ImageDef;
-  image: ImageType2;
+  image: ImageType;
 };
 
 export const Image = ({ def, image }: Props) => {

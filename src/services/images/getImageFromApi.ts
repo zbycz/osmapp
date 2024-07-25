@@ -1,12 +1,12 @@
 import { fetchJson } from '../fetch';
 import { getMapillaryImage } from './getMapillaryImage';
 import { getFodyImage } from './getFodyImage';
-import { ImageType2, WIDTH } from './getImageDefs';
+import { ImageType, WIDTH } from './getImageDefs';
 import { encodeUrl } from '../../helpers/utils';
 import { getCommonsImageUrl } from './getCommonsImageUrl';
 import { ImageDef, isCenter, isTag } from '../types';
 
-type ImagePromise = Promise<ImageType2 | null>;
+type ImagePromise = Promise<ImageType | null>;
 
 const getCommonsApiUrl = (title: string) =>
   encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=${WIDTH}&format=json&titles=${title}&origin=*`;

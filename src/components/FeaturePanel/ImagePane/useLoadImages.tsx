@@ -1,18 +1,18 @@
 import { useEffect, useState } from 'react';
 import {
   getInstantImage,
-  ImageType2,
+  ImageType,
 } from '../../../services/images/getImageDefs';
 import { not, publishDbgObject } from '../../../utils';
 import { getImageFromApi } from '../../../services/images/getImageFromApi';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { ImageDef, isCenter, isInstant } from '../../../services/types';
 
-export type ImagesType = { def: ImageDef; image: ImageType2 }[];
+export type ImagesType = { def: ImageDef; image: ImageType }[];
 
 // TODO test this fn
 const mergeResultFn =
-  (def: ImageDef, image: ImageType2) => (prevImages: ImagesType) => {
+  (def: ImageDef, image: ImageType) => (prevImages: ImagesType) => {
     if (image == null) {
       return prevImages;
     }
@@ -21,7 +21,7 @@ const mergeResultFn =
       (item) => item.image?.imageUrl === image.imageUrl,
     );
     if (found) {
-      (found.image.sameImageResolvedAlsoFrom ??= []).push(image);
+      (found.image.sameUrlResolvedAlsoFrom ??= []).push(image);
       return [...prevImages];
     }
 

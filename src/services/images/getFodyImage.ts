@@ -1,10 +1,10 @@
 import { fetchJson } from '../fetch';
 import type { Position } from '../types';
-import type { ImageType2 } from './getImageDefs';
+import type { ImageType } from './getImageDefs';
 
 export const getFodyImage = async (
   center: Position,
-): Promise<ImageType2 | null> => {
+): Promise<ImageType | null> => {
   const url = `https://osm.fit.vutbr.cz/fody/api/close?lat=${center[1]}&lon=${center[0]}&limit=1&distance=50`;
   const { features } = await fetchJson(url);
   if (!features.length) {

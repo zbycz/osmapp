@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import { Box } from '@mui/material';
-import { ImageType2 } from '../../../../services/images/getImageDefs';
+import { ImageType } from '../../../../services/images/getImageDefs';
 import { t } from '../../../../services/intl';
 import { TooltipButton } from '../../../utils/TooltipButton';
 
-const TooltipContent = ({ image }: { image: ImageType2 }) => (
+const TooltipContent = ({ image }: { image: ImageType }) => (
   <>
     {image.description}
     <br />
@@ -34,13 +34,13 @@ const InfoButtonWrapper = styled.div`
   }
 `;
 
-export const InfoButton = ({ image }: { image: ImageType2 }) => (
+export const InfoButton = ({ image }: { image: ImageType }) => (
   <InfoButtonWrapper>
     <TooltipButton
       tooltip={
         <>
           <TooltipContent image={image} />
-          {image.sameImageResolvedAlsoFrom?.map((item) => (
+          {image.sameUrlResolvedAlsoFrom?.map((item) => (
             <Box key={item.imageUrl} mt={1}>
               <TooltipContent image={item} />
             </Box>
