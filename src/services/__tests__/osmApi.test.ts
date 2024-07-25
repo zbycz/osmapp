@@ -100,6 +100,10 @@ describe('fetchFeature', () => {
 
     const feature = await fetchFeature('w51050330');
     expect(fetchJson).toHaveBeenCalledTimes(1);
-    expect(feature).toMatchObject({ ...wayFeature, center: [123, 456] });
+    expect(feature).toMatchObject({
+      ...wayFeature,
+      center: [123, 456],
+      imageDefs: [{ type: 'center', service: 'mapillary', center: [123, 456] }],
+    });
   });
 });

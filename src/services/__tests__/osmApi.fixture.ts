@@ -62,7 +62,7 @@ export const wayFeature = {
   },
   properties: { class: 'school', subclass: 'school' },
   tags: { amenity: 'school' },
-  imageDefs: [],
+  imageDefs: [{ type: 'center', service: 'mapillary', center: [14, 50] }],
 };
 export const relation = {
   type: 'relation',
@@ -122,5 +122,5 @@ export const relationFeature = {
     amenity: 'university',
     type: 'multipolygon',
   },
-  imageDefs: [],
+  imageDefs: [{ type: 'center', service: 'mapillary', center: [15, 51] }],
 };

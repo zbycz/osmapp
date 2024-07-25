@@ -29,6 +29,8 @@ test('ImageFromCenter - mapillary', async () => {
     link: '321151246189360',
     linkUrl: 'https://www.mapillary.com/app/?focus=photo&pKey=321151246189360',
     uncertainImage: true,
+    panoramaUrl:
+      'https://z-p3-scontent.fprg5-1.fna.fbcdn.net/m1/v/t6/An9_ZPkbARt980mz9eWfhxjyaydvZqGcdmnZurAOOznSqNbGX-nyG9In2hsJKZeZkMTk8N60SG-yQ3ax2vui0T4Uq6aRNP6m1HfCrLysAfarumjlm9S8I50Jx9K7tDHzB47T90Of_FioWreMPECyVQ?ccb=10-5&oh=00_AYDM9oZiCMEX2vGV8-evdXSYvvQPiPpFp387wIouF-5D9A&oe=66ACE703&_nc_sid=201bca&_nc_zt=28',
   });
 });
 
@@ -96,7 +98,7 @@ test('wikimedia_commons=File:', async () => {
   ).toEqual({
     description: 'Wikimedia Commons (wikimedia_commons=*)',
     imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Hlubo%C4%8Depsk%C3%A9_plotny_-_Prav%C3%A1_plotna.jpg/410px-Hlubo%C4%8Depsk%C3%A9_plotny_-_Prav%C3%A1_plotna.jpg',
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Hlubočepské_plotny_-_Pravá_plotna.jpg/410px-Hlubočepské_plotny_-_Pravá_plotna.jpg',
     link: 'File:Hlubočepské plotny - Pravá plotna.jpg',
     linkUrl: 'https://commons.wikimedia.org/w/index.php?curid=145779916',
   });
