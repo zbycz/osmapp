@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { grey } from '@mui/material/colors';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { ImageDef, isCenter, isInstant } from '../../../services/types';
 import {
@@ -73,7 +74,8 @@ const GrayImageWrapper = styled.div`
   position: relative;
   width: 100%;
   height: ${HEIGHT}px;
-  background: #f4f4f4;
+  background: ${({ theme }) =>
+    theme.palette.mode === 'dark' ? grey['700'] : grey['100']};
 
   display: flex;
   justify-content: center;
@@ -140,10 +142,12 @@ const ImageSkeleton = styled.div`
 
   @keyframes skeleton-loading {
     0% {
-      background-color: hsl(0, 0%, 95%);
+      background: ${({ theme }) =>
+        theme.palette.mode === 'dark' ? 'hsl(0,0%,40%)' : 'hsl(0, 0%, 95%)'};
     }
     100% {
-      background-color: hsl(0, 0%, 87%);
+      background: ${({ theme }) =>
+        theme.palette.mode === 'dark' ? 'hsl(0, 0%,32%)' : 'hsl(0, 0%, 87%)'};
     }
   }
 `;
