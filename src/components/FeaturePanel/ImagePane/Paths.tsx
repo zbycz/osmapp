@@ -1,6 +1,6 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
-import { Feature, ImageFromTag, PathType } from '../../../services/types';
+import { Feature, ImageDefFromTag, PathType } from '../../../services/types';
 import {
   getDifficulty,
   getDifficultyColor,
@@ -70,7 +70,7 @@ const Path = ({ path, feature, size }: PathProps) => {
 };
 
 type PathsProps = {
-  def: ImageFromTag;
+  def: ImageDefFromTag;
   size: Size;
 };
 

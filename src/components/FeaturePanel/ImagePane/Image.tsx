@@ -16,7 +16,8 @@ import { TooltipButton } from '../../utils/TooltipButton';
 import { encodeUrl } from '../../../helpers/utils';
 import { t } from '../../../services/intl';
 
-export const HEIGHT = 238;
+import { HEIGHT } from './helpers';
+
 const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
 
 const Img = styled.img<{ $hasPaths: boolean }>`

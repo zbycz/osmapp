@@ -22,7 +22,7 @@ export type MemberPath = {
   path: PathType;
   member: Feature;
 };
-export type ImageFromTag = {
+export type ImageDefFromTag = {
   type: 'tag';
   k: string;
   v: string;
@@ -30,17 +30,17 @@ export type ImageFromTag = {
   path?: PathType;
   memberPaths?: MemberPath[];
 };
-export type ImageFromCenter = {
+export type ImageDefFromCenter = {
   type: 'center';
   service: 'mapillary' | 'fody';
   center: LonLat;
 };
-export type ImageDef = ImageFromTag | ImageFromCenter;
-export const isCenter = (def: ImageDef): def is ImageFromCenter =>
+export type ImageDef = ImageDefFromTag | ImageDefFromCenter;
+export const isCenter = (def: ImageDef): def is ImageDefFromCenter =>
   def?.type === 'center';
-export const isTag = (def: ImageDef): def is ImageFromTag =>
+export const isTag = (def: ImageDef): def is ImageDefFromTag =>
   def?.type === 'tag';
-export const isInstant = (def: ImageDef): def is ImageFromTag =>
+export const isInstant = (def: ImageDef): def is ImageDefFromTag =>
   isTag(def) && def.instant;
 
 // coordinates in geojson format: [lon, lat] = [x,y]

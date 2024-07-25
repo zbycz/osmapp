@@ -3,8 +3,8 @@ import {
   Feature,
   FeatureTags,
   ImageDef,
-  ImageFromCenter,
-  ImageFromTag,
+  ImageDefFromCenter,
+  ImageDefFromTag,
   imageTagRegexp,
   isTag,
   LonLat,
@@ -73,7 +73,7 @@ const getImagesFromTags = (tags: FeatureTags) =>
       const v = tags[k];
       const instant = !!getInstantImage({ k, v });
       const path = parsePathTag(tags[`${k}:path`]);
-      return { type: 'tag', k, v, instant, path } as ImageFromTag;
+      return { type: 'tag', k, v, instant, path } as ImageDefFromTag;
     })
     .sort((a, b) => +b.instant - +a.instant);
 
@@ -82,9 +82,9 @@ const getImagesFromCenter = (tags: FeatureTags, center?: LonLat): ImageDef[] =>
     ? []
     : [
         ...(tags.information
-          ? [{ type: 'center', service: 'fody', center } as ImageFromCenter]
+          ? [{ type: 'center', service: 'fody', center } as ImageDefFromCenter]
           : []),
-        { type: 'center', service: 'mapillary', center } as ImageFromCenter,
+        { type: 'center', service: 'mapillary', center } as ImageDefFromCenter,
       ];
 
 export const getImageDefs = (tags: FeatureTags, center?: LonLat) => [
@@ -109,7 +109,9 @@ export const mergeMemberImageDefs = (
 
       const { v, path } = memberDef;
       const equalValueAsMemberDef = (def) => def.v === v;
-      const match = destinationDefs.find(equalValueAsMemberDef) as ImageFromTag;
+      const match = destinationDefs.find(
+        equalValueAsMemberDef,
+      ) as ImageDefFromTag;
       if (match) {
         match.memberPaths ??= [];
         match.memberPaths.push({ path, member });
@@ -117,7 +119,7 @@ export const mergeMemberImageDefs = (
         destinationDefs.push({
           ...memberDef,
           memberPaths: [{ path, member }],
-        } as ImageFromTag);
+        } as ImageDefFromTag);
       }
     });
   });
