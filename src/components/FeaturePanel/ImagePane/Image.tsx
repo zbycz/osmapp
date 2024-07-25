@@ -14,6 +14,7 @@ import { Paths } from './Paths';
 import { Size } from './types';
 import { TooltipButton } from '../../utils/TooltipButton';
 import { encodeUrl } from '../../../helpers/utils';
+import { t } from '../../../services/intl';
 
 export const HEIGHT = 238;
 const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
@@ -85,6 +86,13 @@ const TooltipContent = ({ image }: { image: ImageType2 }) => (
     <a href={image.linkUrl} target="_blank">
       {image.link}
     </a>
+    {image.uncertainImage && (
+      <>
+        <br />
+        <br />
+        {t('featurepanel.uncertain_image')}
+      </>
+    )}
   </>
 );
 
@@ -141,7 +149,6 @@ type Props = {
 export const Image = ({ def, image }: Props) => {
   const { imgRef, size, onPhotoLoad } = useImgSizeOnload();
   const onClick = useGetOnClick(def);
-
   const hasPaths =
     isTag(def) && !!(def.path?.length || def.memberPaths?.length);
 
