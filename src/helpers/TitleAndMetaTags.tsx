@@ -58,7 +58,7 @@ export const TitleAndMetaTags = () => {
       <OpenGraphTags
         title={title}
         url={osmappLink}
-        image={feature.ssrFeatureImage?.thumb}
+        image={PROJECT_OG_IMAGE} // TODO followup
       />
     </Head>
   );

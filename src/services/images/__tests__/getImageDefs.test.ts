@@ -1,4 +1,5 @@
 import { getImageDefs } from '../getImageDefs';
+
 import { ImageDef } from '../../types';
 
 const center = [14, 50];

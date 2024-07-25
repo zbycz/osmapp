@@ -1,20 +1,6 @@
 import type Vocabulary from '../locales/vocabulary';
 import type { getSchemaForFeature } from './tagging/idTaggingScheme';
 
-export interface ImageUrls {
-  source?: string;
-  link: string;
-  thumb: string;
-  sharp?: string;
-  username?: string;
-  portrait?: boolean;
-  timestamp?: string;
-  isPano?: boolean;
-}
-export type LoadingImage = null;
-export type NoImage = undefined;
-export type Image = ImageUrls | LoadingImage | NoImage;
-
 export const imageTagRegexp =
   /^(image|wikimedia_commons|wikidata|wikipedia)(\d*|:(?!path)[^:]+)$/;
 export type PathType = { x: number; y: number; suffix: string }[];
@@ -28,7 +14,7 @@ export type ImageDefFromTag = {
   v: string;
   instant: boolean; // true = no API call needed
   path?: PathType;
-  memberPaths?: MemberPath[];
+  memberPaths?: MemberPath[]; // merged on relation
 };
 export type ImageDefFromCenter = {
   type: 'center';
@@ -121,7 +107,6 @@ export interface Feature {
   center: Position;
   countryCode?: string; // ISO3166-1 code, undefined = no country
   roundedCenter?: LonLatRounded;
-  ssrFeatureImage?: Image;
   error?: 'network' | 'unknown' | '404' | '500'; // etc.
   deleted?: boolean;
   schema?: ReturnType<typeof getSchemaForFeature>; // undefined means error

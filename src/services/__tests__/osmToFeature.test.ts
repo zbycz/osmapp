@@ -1,5 +1,6 @@
 import { osmToFeature } from '../osmToFeature';
-import type { ImageDef } from '../types';
+
+import { ImageDef } from '../types';
 
 const nodeResponse = {
   type: 'node',

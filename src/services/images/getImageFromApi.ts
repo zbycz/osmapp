@@ -1,10 +1,10 @@
 import { fetchJson } from '../fetch';
-import { getCommonsImageUrl } from './getWikiImage';
-import { ImageDef, isCenter, isTag } from '../types';
 import { getMapillaryImage } from './getMapillaryImage';
 import { getFodyImage } from './getFodyImage';
 import { ImageType2, WIDTH } from './getImageDefs';
 import { encodeUrl } from '../../helpers/utils';
+import { getCommonsImageUrl } from './getCommonsImageUrl';
+import { ImageDef, isCenter, isTag } from '../types';
 
 type ImagePromise = Promise<ImageType2 | null>;
 

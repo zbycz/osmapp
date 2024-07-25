@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { ImageDef, isCenter, isInstant } from '../../../services/types';
 import {
   getInstantImage,
   ImageType2,
@@ -7,6 +6,7 @@ import {
 import { not, publishDbgObject } from '../../../utils';
 import { getImageFromApi } from '../../../services/images/getImageFromApi';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { ImageDef, isCenter, isInstant } from '../../../services/types';
 
 export type ImagesType = { def: ImageDef; image: ImageType2 }[];
 

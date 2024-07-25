@@ -1,4 +1,3 @@
-import { getCommonsImageUrl } from './getWikiImage';
 import {
   Feature,
   FeatureTags,
@@ -10,6 +9,7 @@ import {
   LonLat,
   PathType,
 } from '../types';
+import { getCommonsImageUrl } from './getCommonsImageUrl';
 
 export const WIDTH = 410;
 

@@ -1,6 +1,5 @@
 import React from 'react';
 import styled from 'styled-components';
-import { ImageDef, isTag } from '../../../../services/types';
 import {
   getImageDefId,
   ImageType2,
@@ -16,6 +15,7 @@ import {
 } from './helpers';
 import { PanoramaImg } from './PanoramaImg';
 import { InfoButton } from './InfoButton';
+import { ImageDef, isTag } from '../../../../services/types';
 
 const Img = styled.img<{ $hasPaths: boolean }>`
   ${({ $hasPaths }) => $hasPaths && `opacity: 0.9;`}

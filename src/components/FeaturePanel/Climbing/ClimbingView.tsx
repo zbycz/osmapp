@@ -8,7 +8,6 @@ import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
 import { RoutesEditor } from './Editor/RoutesEditor';
-import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -21,6 +20,7 @@ import {
 import { useScrollShadow } from './utils/useScrollShadow';
 import { TransformWrapper } from './TransformWrapper';
 import { convertHexToRgba } from '../../utils/colorUtils';
+import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl';
 
 const Container = styled.div`
   position: relative;
