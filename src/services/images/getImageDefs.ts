@@ -20,7 +20,7 @@ export type ImageType2 = {
   link: string;
   uncertainImage?: true;
   sameImageResolvedAlsoFrom?: ImageType2[];
-  panoramaUrl?: string;
+  panoramaUrl?: string; // only for Mapillary (ImageDefFromCenter)
 };
 
 const getSuffix = (y: string) => {
