@@ -1,15 +1,15 @@
 import React from 'react';
+import { Box, Grid, Typography } from '@mui/material';
 import styled from 'styled-components';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import CloseIcon from '@mui/icons-material/Close';
-import { IconButton, Box, Tooltip, Grid, Typography } from '@mui/material';
-import { capitalize, isMobileDevice, useToggleState } from '../helpers';
+import { capitalize } from '../helpers';
 import { t, Translation } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { TooltipButton } from '../utils/TooltipButton';
 
-const StyledIconButton = styled(IconButton)`
-  position: absolute !important; /* TODO mui styles takes precendence, why? */
-  margin-top: -5px !important;
+const InfoTooltipWrapper = styled.span`
+  position: relative;
+  top: -3px;
+  left: -3px;
 
   svg {
     font-size: 17px;
@@ -87,16 +87,10 @@ export const FeatureDescription = ({ advanced, setAdvanced }) => {
   } = useFeatureContext();
   const { type } = osmMeta;
 
-  const isMobile = isMobileDevice();
-  const [mobileTooltipShown, toggleMobileTooltip] = useToggleState(false);
-
-  const onClick = (e) => {
+  const onClick = (e: React.MouseEvent) => {
     // Alt+Shift+click to enable FeaturePanel advanced mode
     if (e.shiftKey && e.altKey) {
       setAdvanced((v) => !v);
-    }
-    if (isMobile) {
-      toggleMobileTooltip();
     }
   };
 
@@ -114,22 +108,13 @@ export const FeatureDescription = ({ advanced, setAdvanced }) => {
           type: capitalize(type),
         })}
       {advanced && <Urls />}
-
-      <Tooltip
-        arrow
-        title={<FromOsm />}
-        placement="top"
-        open={isMobile ? mobileTooltipShown : undefined}
-      >
-        <StyledIconButton onClick={onClick}>
-          {!mobileTooltipShown && (
-            <InfoOutlinedIcon fontSize="small" color="secondary" />
-          )}
-          {mobileTooltipShown && (
-            <CloseIcon fontSize="small" color="disabled" />
-          )}
-        </StyledIconButton>
-      </Tooltip>
+      <InfoTooltipWrapper>
+        <TooltipButton
+          tooltip={<FromOsm />}
+          onClick={onClick}
+          color="secondary"
+        />
+      </InfoTooltipWrapper>
     </div>
   );
 };

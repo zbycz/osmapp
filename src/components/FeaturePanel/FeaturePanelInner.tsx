@@ -17,7 +17,6 @@ import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { getLabel } from '../../helpers/featureLabel';
-import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
@@ -25,7 +24,7 @@ import { ClimbingPanel } from './Climbing/ClimbingPanel';
 import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
-import { ImageSlider } from './ImagePane/ImageSlider';
+import { FeatureImages } from './ImagePane/FeatureImages';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { CragsInArea } from './CragsInArea';
 import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
@@ -107,16 +106,12 @@ export const FeaturePanelInner = () => {
           <CragsInArea />
         </PanelSidePadding>
 
-        {tags.climbing !== 'area' && (
-          <Box pb={4}>
-            <ImageSection />
-          </Box>
-        )}
-
         <Flex>
           {!skeleton && (
             <>
-              <ImageSlider />
+              <Box component="div" mb={2}>
+                <FeatureImages />
+              </Box>
 
               <PanelSidePadding>
                 <Properties showTags={showTagsTable} key={getKey(feature)} />
