@@ -10,9 +10,9 @@ export async function requestLines(
   featureType: 'node' | 'way' | 'relation',
   id: number,
 ) {
-  // use the overpass api to request the lines in
   const overpassQuery = `[out:csv(ref, colour; false; ';')];
-  ${featureType}(${id})-> .specific_feature;
+    ${featureType}(${id})-> .specific_feature;
+
     // Try to find stop_area relations containing the specific node and get their stops
     rel(bn.specific_feature)["public_transport"="stop_area"] -> .stop_areas;
     node(r.stop_areas: "stop") -> .stops;
@@ -23,7 +23,6 @@ export async function requestLines(
     );
     out;`;
 
-  // send the request
   const response: string = await fetchText(
     encodeUrl`https://overpass-api.de/api/interpreter?data=${overpassQuery}`,
   );
