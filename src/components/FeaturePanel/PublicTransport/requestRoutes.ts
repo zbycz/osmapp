@@ -1,4 +1,5 @@
 import { fetchText } from '../../../services/fetch';
+import { encodeUrl } from '../../../helpers/utils';
 
 export interface LineInformation {
   ref: string;
@@ -24,9 +25,7 @@ export async function requestLines(
 
   // send the request
   const response: string = await fetchText(
-    `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-      overpassQuery,
-    )}`,
+    encodeUrl`https://overpass-api.de/api/interpreter?data=${overpassQuery}`,
   );
 
   const resData = response

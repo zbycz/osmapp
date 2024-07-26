@@ -54,7 +54,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     }
     return text;
   } catch (e) {
-    if (e instanceof DOMException && e.name === 'AbortError') {
+    if (isBrowser() && e instanceof DOMException && e.name === 'AbortError') {
       throw e;
     }
 
