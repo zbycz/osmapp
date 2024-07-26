@@ -1,11 +1,20 @@
 import { getImageFromApiRaw } from '../getImageFromApi';
 import * as fetchModule from '../../fetch';
-import { apiMocks } from './apiMocks.fixture';
+import {
+  ApiMock,
+  COMMONS_CATEGORY,
+  COMMONS_FILE,
+  FODY,
+  MAPILLARY,
+  WIKIDATA,
+  WIKIPEDIA,
+  WIKIPEDIA_CS,
+} from './apiMocks.fixture';
 
-const mockApi = (key) => {
+const mockApi = (mock: ApiMock) => {
   jest.spyOn(fetchModule, 'fetchJson').mockImplementation((url) => {
-    expect(url).toEqual(apiMocks[key].url);
-    return Promise.resolve(apiMocks[key].response);
+    expect(url).toEqual(mock.url);
+    return Promise.resolve(mock.response);
   });
 };
 
@@ -15,7 +24,7 @@ beforeEach(() => {
 });
 
 test('ImageFromCenter - mapillary', async () => {
-  mockApi('mapillary');
+  mockApi(MAPILLARY);
   expect(
     await getImageFromApiRaw({
       type: 'center',
@@ -23,19 +32,17 @@ test('ImageFromCenter - mapillary', async () => {
       center: [14.4212535, 50.0874654],
     }),
   ).toEqual({
-    description: 'Mapillary image from 3/13/2020, 12:46:50 PM',
-    imageUrl:
-      'https://z-p3-scontent.fprg5-1.fna.fbcdn.net/m1/v/t6/An9_ZPkbARt980mz9eWfhxjyaydvZqGcdmnZurAOOznSqNbGX-nyG9In2hsJKZeZkMTk8N60SG-yQ3ax2vui0T4Uq6aRNP6m1HfCrLysAfarumjlm9S8I50Jx9K7tDHzB47T90Of_FioWreMPECyVQ?stp=s1024x512&ccb=10-5&oh=00_AYBlBDx5gSiTqwPuXV-oPmhXbQm7d9wysegzusC6BNXQzw&oe=66ACE703&_nc_sid=201bca&_nc_zt=28',
+    description: 'Mapillary image from 3/13/2020, 11:46:50 AM',
+    imageUrl: 'mapillary_url_1024',
     link: '321151246189360',
     linkUrl: 'https://www.mapillary.com/app/?focus=photo&pKey=321151246189360',
     uncertainImage: true,
-    panoramaUrl:
-      'https://z-p3-scontent.fprg5-1.fna.fbcdn.net/m1/v/t6/An9_ZPkbARt980mz9eWfhxjyaydvZqGcdmnZurAOOznSqNbGX-nyG9In2hsJKZeZkMTk8N60SG-yQ3ax2vui0T4Uq6aRNP6m1HfCrLysAfarumjlm9S8I50Jx9K7tDHzB47T90Of_FioWreMPECyVQ?ccb=10-5&oh=00_AYDM9oZiCMEX2vGV8-evdXSYvvQPiPpFp387wIouF-5D9A&oe=66ACE703&_nc_sid=201bca&_nc_zt=28',
+    panoramaUrl: 'mapillary_url_original',
   });
 });
 
 test('ImageFromCenter - fody', async () => {
-  mockApi('fody');
+  mockApi(FODY);
   expect(
     await getImageFromApiRaw({
       type: 'center',
@@ -51,7 +58,7 @@ test('ImageFromCenter - fody', async () => {
 });
 
 test('wikidata=*', async () => {
-  mockApi('wikidata');
+  mockApi(WIKIDATA);
   expect(
     await getImageFromApiRaw({
       type: 'tag',
@@ -69,7 +76,7 @@ test('wikidata=*', async () => {
 });
 
 test('image=File:', async () => {
-  mockApi('commonsFile');
+  mockApi(COMMONS_FILE);
   expect(
     await getImageFromApiRaw({
       type: 'tag',
@@ -87,7 +94,7 @@ test('image=File:', async () => {
 });
 
 test('wikimedia_commons=File:', async () => {
-  mockApi('commonsFile');
+  mockApi(COMMONS_FILE);
   expect(
     await getImageFromApiRaw({
       type: 'tag',
@@ -105,7 +112,7 @@ test('wikimedia_commons=File:', async () => {
 });
 
 test('wikimedia_commons=Category:', async () => {
-  mockApi('commonsCategory');
+  mockApi(COMMONS_CATEGORY);
   expect(
     await getImageFromApiRaw({
       type: 'tag',
@@ -117,7 +124,7 @@ test('wikimedia_commons=Category:', async () => {
 });
 
 test('wikipedia=*', async () => {
-  mockApi('wikipedia');
+  mockApi(WIKIPEDIA);
   expect(
     await getImageFromApiRaw({
       type: 'tag',
@@ -136,7 +143,7 @@ test('wikipedia=*', async () => {
 });
 
 test('wikipedia=* with lang prefix in value', async () => {
-  mockApi('wikipediaCs');
+  mockApi(WIKIPEDIA_CS);
   expect(
     await getImageFromApiRaw({
       type: 'tag',
@@ -155,7 +162,7 @@ test('wikipedia=* with lang prefix in value', async () => {
 });
 
 test('wikipedia:cs=* with lang prefix in key', async () => {
-  mockApi('wikipediaCs');
+  mockApi(WIKIPEDIA_CS);
   expect(
     await getImageFromApiRaw({
       type: 'tag',

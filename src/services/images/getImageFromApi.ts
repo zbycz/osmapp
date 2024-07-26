@@ -110,13 +110,7 @@ export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
       return fetchCommons(k, v);
     }
     if (k.startsWith('wikipedia')) {
-      return new Promise((resolve) => {
-        setTimeout(() => {
-          fetchWikipedia(k, v).then((image) => {
-            resolve(image);
-          });
-        }, 4000);
-      });
+      return fetchWikipedia(k, v);
     }
   }
 
