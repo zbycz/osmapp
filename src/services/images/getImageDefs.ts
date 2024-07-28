@@ -98,7 +98,7 @@ export const mergeMemberImageDefs = (feature: Feature) => {
     return; // eg. skeleton
   }
 
-  feature?.memberFeatures.forEach((member) => {
+  feature.memberFeatures?.forEach((member) => {
     member.imageDefs?.forEach((memberDef) => {
       if (!(isTag(memberDef) && memberDef.path)) {
         return;

@@ -1,24 +1,7 @@
 import { Feature } from '../../../services/types';
 import { FetchError, getShortId, OsmApiId } from '../../../services/helpers';
-import { fetchJson } from '../../../services/fetch';
 import { osmToFeature } from '../../../services/osmToFeature';
-
-const getQuickOsmPromise = async (apiId: OsmApiId) => {
-  const getOsmUrl = ({ type, id }) =>
-    `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
-  const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
-  return elements?.[0];
-};
-export const quickFetchFeature = async (apiId: OsmApiId) => {
-  try {
-    const element = await getQuickOsmPromise(apiId);
-    return osmToFeature(element);
-  } catch (e) {
-    return {
-      error: e instanceof FetchError ? e.code : 'unknown',
-    } as unknown as Feature;
-  }
-};
+import { fetchJson } from '../../../services/fetch';
 
 const isFarAway = (feature, skeleton) =>
   feature.center &&
@@ -40,6 +23,24 @@ const isMaptilerCorruptedId = (feature: Feature, skeleton: Feature) => {
   }
 
   return false;
+};
+
+const getQuickOsmPromise = async (apiId: OsmApiId) => {
+  const getOsmUrl = ({ type, id }) =>
+    `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
+  const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+  return elements?.[0];
+};
+
+const quickFetchFeature = async (apiId: OsmApiId) => {
+  try {
+    const element = await getQuickOsmPromise(apiId);
+    return osmToFeature(element);
+  } catch (e) {
+    return {
+      error: e instanceof FetchError ? e.code : 'unknown',
+    } as unknown as Feature;
+  }
 };
 
 // Maptiler is not encoding IDs correctly, sometimes type encoding is missing, sometimes the type is just wrong
