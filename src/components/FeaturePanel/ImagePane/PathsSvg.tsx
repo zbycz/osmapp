@@ -19,10 +19,10 @@ const StyledSvg = styled.svg`
   pointer-events: none;
 `;
 
-const PathSvg = ({ children, size }) => (
+const Svg = ({ children, size }) => (
   <StyledSvg
     viewBox={`0 0 ${size.width} ${size.height}`}
-    preserveAspectRatio="none"
+    preserveAspectRatio="none" // when we load image we overlay and stretch the svg
   >
     {children}
   </StyledSvg>
@@ -49,19 +49,13 @@ type PathProps = {
   feature: Feature;
   size: Size;
 };
-const Path = ({ path, feature, size }: PathProps) => {
+const Path = ({ path, feature, size: { height, width } }: PathProps) => {
   const theme = useTheme();
-
-  const d = path
-    .map(
-      ({ x, y }, idx) =>
-        `${!idx ? 'M' : 'L'}${x * size.width} ${y * size.height}`,
-    )
-    .join('');
-
   const color = getDifficultyColor(getDifficulty(feature.tags), theme);
   const contrastColor = theme.palette.getContrastText(color);
-
+  const d = path
+    .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * width} ${y * height}`)
+    .join('');
   return (
     <>
       <PathBorder d={d} $color={contrastColor} />
@@ -70,33 +64,29 @@ const Path = ({ path, feature, size }: PathProps) => {
   );
 };
 
-export const PathsSvgInner = ({
-  def,
-  feature,
-  size,
-}: {
+type PathsProps = {
   def: ImageDefFromTag;
   feature: Feature;
   size: Size;
-}) => (
+};
+export const Paths = ({ def, feature, size }: PathsProps) => (
   <>
     {def.path && <Path path={def.path} feature={feature} size={size} />}
     {def.memberPaths?.map(({ path, member }) => (
       <Path key={getKey(member)} path={path} feature={member} size={size} />
     ))}
-  </>
+  </> // careful: used also in image generation, eg. /api/image?id=r6
 );
 
-type PathsProps = {
+type PathsSvgProps = {
   def: ImageDefFromTag;
   size: Size;
 };
-
-export const Paths = ({ def, size }: PathsProps) => {
+export const PathsSvg = ({ def, size }: PathsSvgProps) => {
   const { feature } = useFeatureContext();
   return (
-    <PathSvg size={size}>
-      <PathsSvgInner def={def} feature={feature} size={size} />
-    </PathSvg>
+    <Svg size={size}>
+      <Paths def={def} feature={feature} size={size} />
+    </Svg>
   );
 };
