@@ -34,22 +34,35 @@ const Svg = ({ children, size }) => (
   </UserThemeProvider>
 );
 
+const OG_SIZE = { width: 1200, height: 630 };
+
 const renderSvg = async (
   feature: Feature,
   def: ImageDefFromTag | ImageDefFromCenter,
   image: ImageType,
 ) => {
   const { size, dataUrl } = await fetchImage(image.imageUrl);
-  const logo = getLogo(size, !!feature.tags.climbing);
+  const logo = getLogo(OG_SIZE, !!feature.tags.climbing);
+
+  const scale = Math.min(
+    OG_SIZE.width / size.width,
+    OG_SIZE.height / size.height,
+  );
+  const move = `${(OG_SIZE.width - size.width * scale) / 2},${
+    (OG_SIZE.height - size.height * scale) / 2
+  }`;
+  const transform = `scale(${scale}) translate(${move})`;
 
   const Root = () => (
-    <Svg size={size}>
-      __PLACEHOLDER_FOR_STYLE__
-      <image href={dataUrl} width="100%" height="100%" />
-      <Paths def={def} feature={feature} size={size} />
-      <ProjectLogo logo={logo} />
-    </Svg>
-  );
+      <Svg size={OG_SIZE}>
+        __PLACEHOLDER_FOR_STYLE__
+        <g transform={transform}>
+          <image href={dataUrl} width={size.width} height={size.height} />
+          <Paths def={def} feature={feature} size={size} />
+        </g>
+        <ProjectLogo logo={logo} />
+      </Svg>
+    );
 
   const sheet = new ServerStyleSheet();
   const html = renderToString(sheet.collectStyles(<Root />));
@@ -57,7 +70,6 @@ const renderSvg = async (
   return html.replace('__PLACEHOLDER_FOR_STYLE__', styleTags);
 };
 
-// on M1 Pro this function takes ~100ms + network
 // on vercel node ~800ms in total
 // - api/image: 838ms; fetchFeature: 496ms, getImage: 102ms, renderSvg: 38ms, svg2png: 202ms
 // - api/image: 953ms; fetchFeature: 765ms, getImage: 0ms, renderSvg: 23ms, svg2png: 165ms
