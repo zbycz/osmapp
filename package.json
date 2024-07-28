@@ -38,9 +38,11 @@
     "@openstreetmap/id-tagging-schema": "^6.1.0",
     "@sentry/browser": "^6.5.1",
     "@sentry/node": "^6.5.1",
+    "@xmldom/xmldom": "^0.8.10",
     "accept-language-parser": "^1.5.0",
     "autosuggest-highlight": "^3.1.1",
-    "canvas": "^2.8.0",
+    "canvas": "^2.11.2",
+    "canvg": "^4.0.2",
     "date-fns": "^3.6.0",
     "image-size": "^1.1.1",
     "isomorphic-unfetch": "^3.1.0",
@@ -64,8 +66,7 @@
     "react-split-pane": "^0.1.92",
     "react-zoom-pan-pinch": "^3.3.0",
     "styled-components": "^6.1.11",
-    "styled-jsx": "^3.4.4",
-    "svg-png-converter": "^0.0.9"
+    "styled-jsx": "^3.4.4"
   },
   "devDependencies": {
     "@types/autosuggest-highlight": "^3.2.0",

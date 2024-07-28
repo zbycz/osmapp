@@ -2,7 +2,6 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
 import { ServerStyleSheet } from 'styled-components';
-import { svg2png } from 'svg-png-converter';
 import { UserThemeProvider } from '../../src/helpers/theme';
 import { Paths } from '../../src/components/FeaturePanel/ImagePane/PathsSvg';
 import {
@@ -20,6 +19,7 @@ import {
   sendImageResponse,
   SVG_TYPE,
 } from '../../src/server/images/sendImageResponse';
+import { svg2png } from '../../src/server/images/svg2png';
 
 const Svg = ({ children, size }) => (
   <UserThemeProvider userThemeCookie={undefined}>
@@ -57,7 +57,8 @@ const renderSvg = async (
   return html.replace('__PLACEHOLDER_FOR_STYLE__', styleTags);
 };
 
-// this function takes ~100ms + network
+// on M1 Pro this function takes ~100ms + network
+// on vercel node eg ~1456ms in total (fetchFeature: 553ms, getImage: 199ms, renderSvg: 79ms, svg2png: 625ms)
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const t1 = Date.now();
   try {
@@ -83,18 +84,15 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     }
 
     const t4 = Date.now();
-    const png = await svg2png({
-      input: svg,
-      encoding: 'buffer',
-      format: 'png',
-    });
+    const png = await svg2png(svg);
 
     const t5 = Date.now();
+    // eslint-disable-next-line no-console
     console.log(
       `api/image: ${t5 - t1}ms; fetchFeature: ${t2 - t1}ms, getImage: ${
         t3 - t2
       }ms, renderSvg: ${t4 - t3}ms, svg2png: ${t5 - t4}ms`,
-    ); // eslint-disable-line no-console
+    );
 
     sendImageResponse(res, feature, png, PNG_TYPE);
     return;
