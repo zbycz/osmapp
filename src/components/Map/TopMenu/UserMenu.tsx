@@ -9,6 +9,7 @@ import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { LoginIconButton } from './LoginIconButton';
 import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
 import { useMapStateContext } from '../../utils/MapStateContext';
+import { PROJECT_ID } from '../../../services/project';
 
 const StyledAccountCircleIcon = styled(AccountCircleIcon)`
   color: ${({ theme }) => theme.palette.action.active};
@@ -109,7 +110,7 @@ const UserLogin = forwardRef<SVGSVGElement, UserLoginProps>(
 // https://github.com/mui-org/material-ui/issues/22912
 // https://github.com/mui-org/material-ui/issues?q=is%3Aissue+is%3Aopen+menuitem+keyboard
 
-export const LoginMenu = () => {
+export const UserMenu = () => {
   const anchorRef = React.useRef();
   const [opened, open, close] = useBoolState(false);
   const { activeLayers } = useMapStateContext();
@@ -127,7 +128,9 @@ export const LoginMenu = () => {
         onClose={close}
       >
         <UserLogin closeMenu={close}>
-          {hasClimbingLayer && <MyTicksMenuItem closeMenu={close} />}
+          {(hasClimbingLayer || PROJECT_ID === 'openclimbing') && (
+            <MyTicksMenuItem closeMenu={close} />
+          )}
           <UserSettingsItem closeMenu={close} />
         </UserLogin>
       </Menu>

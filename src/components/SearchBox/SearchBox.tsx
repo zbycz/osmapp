@@ -12,7 +12,7 @@ import { SEARCH_BOX_HEIGHT } from './consts';
 import { useInputValueState } from './options/geocoder';
 import { useOptions } from './useOptions';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
-import { LoginMenu } from '../Map/TopMenu/LoginMenu';
+import { UserMenu } from '../Map/TopMenu/UserMenu';
 
 const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;
@@ -103,7 +103,7 @@ const SearchBox = () => {
         )}
         {isMobileMode && (
           <>
-            <LoginMenu />
+            <UserMenu />
             <HamburgerMenu />
           </>
         )}
