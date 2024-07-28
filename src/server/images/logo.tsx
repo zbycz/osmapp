@@ -17,8 +17,8 @@ const osmappLogo = `
 `;
 
 const moveLogo = (climbing: boolean, { height, width }: Size) => {
-  const target = climbing ? 40 : 53;
-  const offset = climbing ? 50 : 55;
+  const target = climbing ? 120 : 160;
+  const offset = climbing ? 150 : 180;
   const top = width - offset;
   const left = height - offset;
   return `translate(${top},${left}) scale(${target / 256})`;

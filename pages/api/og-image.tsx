@@ -9,7 +9,7 @@ import {
   ImageDefFromCenter,
   ImageDefFromTag,
 } from '../../src/services/types';
-import { fetchFeature } from '../../src/services/osmApi';
+import { quickFetchFeature } from '../../src/services/osmApi';
 import { getImageFromApi } from '../../src/services/images/getImageFromApi';
 import { getLogo, ProjectLogo } from '../../src/server/images/logo';
 import { ImageType } from '../../src/services/images/getImageDefs';
@@ -21,6 +21,7 @@ import {
 } from '../../src/server/images/sendImageResponse';
 import { svg2png } from '../../src/server/images/svg2png';
 import { Size } from '../../src/components/FeaturePanel/ImagePane/types';
+import { getApiId } from '../../src/services/helpers';
 
 const Svg = ({ children, size }) => (
   <UserThemeProvider userThemeCookie={undefined}>
@@ -77,8 +78,8 @@ const renderSvg = async (
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const t1 = Date.now();
   try {
-    const { id } = req.query;
-    const feature = await fetchFeature(id);
+    const shortId = getApiId(req.query.id);
+    const feature = await quickFetchFeature(shortId);
     const def = feature.imageDefs?.[0]; // TODO iterate when first not found
     if (!def) {
       throw new Error('No image definition found');

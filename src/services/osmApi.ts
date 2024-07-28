@@ -19,6 +19,23 @@ import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
 import { captureException } from '../helpers/sentry';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
 
+const getQuickOsmPromise = async (apiId: OsmApiId) => {
+  const getOsmUrl = ({ type, id }) =>
+    `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
+  const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+  return elements?.[0];
+};
+export const quickFetchFeature = async (apiId: OsmApiId) => {
+  try {
+    const element = await getQuickOsmPromise(apiId);
+    return osmToFeature(element);
+  } catch (e) {
+    return {
+      error: e instanceof FetchError ? e.code : 'unknown',
+    } as unknown as Feature;
+  }
+};
+
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
 const getOsmFullUrl = ({ type, id }) =>
