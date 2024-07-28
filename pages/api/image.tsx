@@ -58,6 +58,8 @@ const renderSvg = async (
   const styleTags = sheet.getStyleTags();
   return html.replace('__PLACEHOLDER_FOR_STYLE__', styleTags);
 };
+
+// this function takes ~100ms + network
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { id } = req.query;
@@ -83,6 +85,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       encoding: 'buffer',
       format: 'png',
     });
+
     sendImageResponse(res, feature, png, PNG_TYPE);
     return;
   } catch (err) {
