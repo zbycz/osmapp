@@ -59,6 +59,7 @@ const renderSvg = async (
 
 // this function takes ~100ms + network
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const t1 = Date.now();
   try {
     const { id } = req.query;
     const feature = await fetchFeature(id);
@@ -67,10 +68,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       throw new Error('No image definition found');
     }
 
+    const t2 = Date.now();
     const image = await getImageFromApi(def);
     if (!image) {
       throw new Error(`Image failed to load from API: ${JSON.stringify(def)}`);
     }
+
+    const t3 = Date.now();
     const svg = await renderSvg(feature, def, image);
 
     if (req.query.svg) {
@@ -78,11 +82,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       return;
     }
 
+    const t4 = Date.now();
     const png = await svg2png({
       input: svg,
       encoding: 'buffer',
       format: 'png',
     });
+
+    const t5 = Date.now();
+    console.log(
+      `api/image: ${t5 - t1}ms; fetchFeature: ${t2 - t1}ms, getImage: ${
+        t3 - t2
+      }ms, renderSvg: ${t4 - t3}ms, svg2png: ${t5 - t4}ms`,
+    ); // eslint-disable-line no-console
 
     sendImageResponse(res, feature, png, PNG_TYPE);
     return;
