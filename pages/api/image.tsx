@@ -9,18 +9,18 @@ import {
   Feature,
   ImageDefFromCenter,
   ImageDefFromTag,
-  isTag,
 } from '../../src/services/types';
 import { fetchFeature } from '../../src/services/osmApi';
 import { getImageFromApi } from '../../src/services/images/getImageFromApi';
-import { Size } from '../../src/components/FeaturePanel/ImagePane/types';
 import {
   fetchImage,
   getLogo,
   PNG_TYPE,
+  ProjectLogo,
   sendImageResponse,
   SVG_TYPE,
 } from '../../src/services/serverUtils';
+import { ImageType } from '../../src/services/images/getImageDefs';
 
 const Svg = ({ children, size }) => (
   <UserThemeProvider userThemeCookie={undefined}>
@@ -36,22 +36,20 @@ const Svg = ({ children, size }) => (
   </UserThemeProvider>
 );
 
-const renderSvg = (
-  size: Size,
-  imageUrlBase64: string,
-  def: ImageDefFromTag | ImageDefFromCenter,
+const renderSvg = async (
   feature: Feature,
-  logo,
+  def: ImageDefFromTag | ImageDefFromCenter,
+  image: ImageType,
 ) => {
+  const { size, dataUrl } = await fetchImage(image.imageUrl);
+  const logo = await getLogo(size, !!feature.tags.climbing);
+
   const Root = () => (
     <Svg size={size}>
       __PLACEHOLDER_FOR_STYLE__
-      <image href={imageUrlBase64} width="100%" height="100%" />
-      {isTag(def) && <Paths def={def} feature={feature} size={size} />}
-      <g
-        transform={logo.transform}
-        dangerouslySetInnerHTML={{ __html: logo.svg }} // eslint-disable-line react/no-danger
-      />
+      <image href={dataUrl} width="100%" height="100%" />
+      <Paths def={def} feature={feature} size={size} />
+      <ProjectLogo logo={logo} />
     </Svg>
   );
 
@@ -60,7 +58,6 @@ const renderSvg = (
   const styleTags = sheet.getStyleTags();
   return html.replace('__PLACEHOLDER_FOR_STYLE__', styleTags);
 };
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { id } = req.query;
@@ -74,10 +71,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     if (!image) {
       throw new Error(`Image failed to load from API: ${JSON.stringify(def)}`);
     }
-
-    const { size, imageUrlBase64 } = await fetchImage(image.imageUrl);
-    const logo = await getLogo(!feature.tags.climbing, size);
-    const svg = renderSvg(size, imageUrlBase64, def, feature, logo);
+    const svg = await renderSvg(feature, def, image);
 
     if (req.query.svg) {
       sendImageResponse(res, feature, svg, SVG_TYPE);

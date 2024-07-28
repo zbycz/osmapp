@@ -1,6 +1,12 @@
 import React from 'react';
 import styled, { useTheme } from 'styled-components';
-import { Feature, ImageDefFromTag, PathType } from '../../../services/types';
+import {
+  Feature,
+  ImageDef,
+  ImageDefFromTag,
+  isTag,
+  PathType,
+} from '../../../services/types';
 import {
   getDifficulty,
   getDifficultyColor,
@@ -65,18 +71,19 @@ const Path = ({ path, feature, size: { height, width } }: PathProps) => {
 };
 
 type PathsProps = {
-  def: ImageDefFromTag;
+  def: ImageDef;
   feature: Feature;
   size: Size;
 };
-export const Paths = ({ def, feature, size }: PathsProps) => (
-  <>
-    {def.path && <Path path={def.path} feature={feature} size={size} />}
-    {def.memberPaths?.map(({ path, member }) => (
-      <Path key={getKey(member)} path={path} feature={member} size={size} />
-    ))}
-  </> // careful: used also in image generation, eg. /api/image?id=r6
-);
+export const Paths = ({ def, feature, size }: PathsProps) =>
+  isTag(def) && (
+    <>
+      {def.path && <Path path={def.path} feature={feature} size={size} />}
+      {def.memberPaths?.map(({ path, member }) => (
+        <Path key={getKey(member)} path={path} feature={member} size={size} />
+      ))}
+    </>
+  ); // Careful: used also in image generation, eg. /api/image?id=r6
 
 type PathsSvgProps = {
   def: ImageDefFromTag;

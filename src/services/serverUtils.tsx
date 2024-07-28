@@ -2,6 +2,7 @@ import fetch from 'isomorphic-unfetch';
 import sizeOf from 'image-size';
 import type { NextApiResponse } from 'next';
 import fs from 'fs/promises';
+import React from 'react';
 import { Size } from '../components/FeaturePanel/ImagePane/types';
 import { Feature } from './types';
 import { getShortId } from './helpers';
@@ -13,8 +14,8 @@ export const fetchImage = async (imageUrl: string) => {
   const size = sizeOf(buffer) as Size;
 
   const base64String = Buffer.from(buffer).toString('base64');
-  const imageUrlBase64 = `data:image/jpeg;base64,${base64String}`;
-  return { size, imageUrlBase64 };
+  const dataUrl = `data:image/jpeg;base64,${base64String}`;
+  return { size, dataUrl };
 };
 
 export const PNG_TYPE = {
@@ -47,7 +48,7 @@ const moveLogo = (climbing: boolean, { height, width }: Size) => {
   const left = height - offset;
   return `translate(${top},${left}) scale(${target / 256})`;
 };
-export const getLogo = async (climbing: boolean, canvas: Size) => {
+export const getLogo = async (canvas: Size, climbing: boolean) => {
   const path = climbing
     ? 'public/openclimbing/logo/openclimbing.svg'
     : 'public/osmapp/logo/osmapp.svg';
@@ -56,3 +57,12 @@ export const getLogo = async (climbing: boolean, canvas: Size) => {
   const transform = moveLogo(climbing, canvas);
   return { svg, transform };
 };
+type ProjectLogoProps = {
+  logo: { transform: string; svg: string };
+};
+export const ProjectLogo = ({ logo }: ProjectLogoProps) => (
+  <g
+    transform={logo.transform}
+    dangerouslySetInnerHTML={{ __html: logo.svg }} // eslint-disable-line react/no-danger
+  />
+);
