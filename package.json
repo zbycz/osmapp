@@ -2,7 +2,7 @@
   "name": "osmapp",
   "version": "1.4.0",
   "engines": {
-    "node": "^18"
+    "node": "^20"
   },
   "scripts": {
     "dev": "next",
@@ -40,8 +40,8 @@
     "@sentry/node": "^6.5.1",
     "accept-language-parser": "^1.5.0",
     "autosuggest-highlight": "^3.1.1",
+    "canvas": "^2.8.0",
     "date-fns": "^3.6.0",
-    "fabric": "^5.3.0",
     "image-size": "^1.1.1",
     "isomorphic-unfetch": "^3.1.0",
     "isomorphic-xml2js": "^0.1.3",
