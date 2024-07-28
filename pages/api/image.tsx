@@ -12,15 +12,14 @@ import {
 } from '../../src/services/types';
 import { fetchFeature } from '../../src/services/osmApi';
 import { getImageFromApi } from '../../src/services/images/getImageFromApi';
+import { getLogo, ProjectLogo } from '../../src/server/images/logo';
+import { ImageType } from '../../src/services/images/getImageDefs';
+import { fetchImage } from '../../src/server/images/fetchImage';
 import {
-  fetchImage,
-  getLogo,
   PNG_TYPE,
-  ProjectLogo,
   sendImageResponse,
   SVG_TYPE,
-} from '../../src/services/serverUtils';
-import { ImageType } from '../../src/services/images/getImageDefs';
+} from '../../src/server/images/sendImageResponse';
 
 const Svg = ({ children, size }) => (
   <UserThemeProvider userThemeCookie={undefined}>
@@ -28,7 +27,6 @@ const Svg = ({ children, size }) => (
       viewBox={`0 0 ${size.width} ${size.height}`}
       width={size.width}
       height={size.height}
-      preserveAspectRatio="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       {children}
@@ -42,7 +40,7 @@ const renderSvg = async (
   image: ImageType,
 ) => {
   const { size, dataUrl } = await fetchImage(image.imageUrl);
-  const logo = await getLogo(size, !!feature.tags.climbing);
+  const logo = getLogo(size, !!feature.tags.climbing);
 
   const Root = () => (
     <Svg size={size}>
