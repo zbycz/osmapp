@@ -19,7 +19,7 @@ const OpenGraphTags = ({ title, url, ogImage }) => (
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
-    <meta property="og:image" content={ogImage} />
+    {ogImage && <meta property="og:image" content={ogImage} />}
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="og:description" content={t(PROJECT_DECRIPTION)} />
     <meta property="description" content={t(PROJECT_SERP_DESCRIPTION)} />
@@ -53,7 +53,7 @@ export const TitleAndMetaTags = () => {
   const title = `${titleLabel} · ${PROJECT_NAME}`;
 
   const ogImage = feature.imageDefs?.length
-    ? `${PROJECT_URL}/api/og-image?id=${getShortId(feature.osmMeta)}`
+    ? `/api/og-image?id=${getShortId(feature.osmMeta)}`
     : undefined;
   return (
     <Head>
