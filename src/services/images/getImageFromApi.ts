@@ -1,10 +1,10 @@
 import { fetchJson } from '../fetch';
+import { isInstant, ImageDef, isCenter, isTag } from '../types';
 import { getMapillaryImage } from './getMapillaryImage';
 import { getFodyImage } from './getFodyImage';
-import { ImageType, WIDTH } from './getImageDefs';
+import { getInstantImage, WIDTH, ImageType } from './getImageDefs';
 import { encodeUrl } from '../../helpers/utils';
 import { getCommonsImageUrl } from './getCommonsImageUrl';
-import { ImageDef, isCenter, isTag } from '../types';
 
 type ImagePromise = Promise<ImageType | null>;
 
@@ -119,6 +119,10 @@ export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
 
 export const getImageFromApi = async (def: ImageDef): ImagePromise => {
   try {
+    if (isInstant(def)) {
+      return getInstantImage(def);
+    }
+
     return await getImageFromApiRaw(def);
   } catch (e) {
     console.warn(e); // eslint-disable-line no-console

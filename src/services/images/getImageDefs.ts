@@ -92,16 +92,13 @@ export const getImageDefs = (tags: FeatureTags, center?: LonLat) => [
   ...getImagesFromCenter(tags, center),
 ];
 
-export const mergeMemberImageDefs = (
-  feature: Feature,
-  memberFeatures: Feature[],
-) => {
+export const mergeMemberImageDefs = (feature: Feature) => {
   const destinationDefs = feature.imageDefs;
   if (!destinationDefs) {
     return; // eg. skeleton
   }
 
-  memberFeatures.forEach((member) => {
+  feature.memberFeatures?.forEach((member) => {
     member.imageDefs?.forEach((memberDef) => {
       if (!(isTag(memberDef) && memberDef.path)) {
         return;

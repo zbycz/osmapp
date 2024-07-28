@@ -4,7 +4,7 @@ import {
   getImageDefId,
   ImageType,
 } from '../../../../services/images/getImageDefs';
-import { Paths } from '../Paths';
+import { PathsSvg } from '../PathsSvg';
 
 import { HEIGHT } from '../helpers';
 import {
@@ -61,7 +61,7 @@ export const Image = ({ def, image }: Props) => {
           ref={imgRef}
         />
       )}
-      {hasPaths && <Paths def={def} size={size} />}
+      {hasPaths && <PathsSvg def={def} size={size} />}
       {showInfo && <InfoButton image={image} />}
       {image.uncertainImage && !image.panoramaUrl && <UncertainCover />}
     </ImageWrapper>
