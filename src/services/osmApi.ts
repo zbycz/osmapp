@@ -122,20 +122,27 @@ const getItemsMap = (elements) => {
 
 export const fetchWithMemberFeatures = async (apiId: OsmApiId) => {
   // TODO we can compute geometry using cragsToGeojson() and display it in the map
-  const full = await fetchJson(getOsmFullUrl(apiId));
+  const url =
+    apiId.type === 'relation' ? getOsmFullUrl(apiId) : getOsmUrl(apiId);
+  const full = await fetchJson(url);
   const map = getItemsMap(full.elements);
   const mainFeature = map[apiId.type][apiId.id];
 
-  const memberFeatures = mainFeature.members.map(({ type, ref, role }) => {
-    const element = map[type][ref];
-    if (!element) {
-      return null;
-    }
+  if (apiId.type !== 'relation') {
+    return addSchemaToFeature(osmToFeature(mainFeature));
+  }
 
-    const feature = addSchemaToFeature(osmToFeature(element));
-    feature.osmMeta.role = role;
-    return feature;
-  });
+  const memberFeatures =
+    mainFeature.members.map(({ type, ref, role }) => {
+      const element = map[type][ref];
+      if (!element) {
+        return null;
+      }
+
+      const feature = addSchemaToFeature(osmToFeature(element));
+      feature.osmMeta.role = role;
+      return feature;
+    }) ?? [];
 
   const featureWithMemberFeatures = {
     ...addSchemaToFeature(osmToFeature(mainFeature)),
