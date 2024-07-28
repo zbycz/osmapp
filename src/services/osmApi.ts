@@ -19,23 +19,6 @@ import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
 import { captureException } from '../helpers/sentry';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
 
-const getQuickOsmPromise = async (apiId: OsmApiId) => {
-  const getOsmUrl = ({ type, id }) =>
-    `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
-  const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
-  return elements?.[0];
-};
-export const quickFetchFeature = async (apiId: OsmApiId) => {
-  try {
-    const element = await getQuickOsmPromise(apiId);
-    return osmToFeature(element);
-  } catch (e) {
-    return {
-      error: e instanceof FetchError ? e.code : 'unknown',
-    } as unknown as Feature;
-  }
-};
-
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
 const getOsmFullUrl = ({ type, id }) =>
@@ -137,13 +120,13 @@ const getItemsMap = (elements) => {
   return map;
 };
 
-const fetchMemberFeatures = async (apiId: OsmApiId) => {
+export const fetchWithMemberFeatures = async (apiId: OsmApiId) => {
   // TODO we can compute geometry using cragsToGeojson() and display it in the map
   const full = await fetchJson(getOsmFullUrl(apiId));
   const map = getItemsMap(full.elements);
   const mainFeature = map[apiId.type][apiId.id];
 
-  return mainFeature.members.map(({ type, ref, role }) => {
+  const memberFeatures = mainFeature.members.map(({ type, ref, role }) => {
     const element = map[type][ref];
     if (!element) {
       return null;
@@ -153,6 +136,14 @@ const fetchMemberFeatures = async (apiId: OsmApiId) => {
     feature.osmMeta.role = role;
     return feature;
   });
+
+  const featureWithMemberFeatures = {
+    ...addSchemaToFeature(osmToFeature(mainFeature)),
+    memberFeatures: memberFeatures.filter(Boolean),
+  };
+  mergeMemberImageDefs(featureWithMemberFeatures); // TODO test + only for crag
+
+  return featureWithMemberFeatures;
 };
 
 export const isClimbingRelation = (feature: Feature) =>
@@ -179,14 +170,12 @@ export const addMembersAndParents = async (
     return feature;
   }
 
-  const [parentFeatures, memberFeatures] = await Promise.all([
+  const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
     fetchParentFeatures(feature.osmMeta),
-    fetchMemberFeatures(feature.osmMeta),
+    fetchWithMemberFeatures(feature.osmMeta),
   ]);
 
-  mergeMemberImageDefs(feature, memberFeatures); // TODO test + only for crag
-
-  return { ...feature, memberFeatures, parentFeatures };
+  return { ...featureWithMemberFeatures, parentFeatures };
 };
 
 export const fetchFeature = async (shortId): Promise<Feature> => {

@@ -9,7 +9,7 @@ import {
   ImageDefFromCenter,
   ImageDefFromTag,
 } from '../../src/services/types';
-import { quickFetchFeature } from '../../src/services/osmApi';
+import { fetchWithMemberFeatures } from '../../src/services/osmApi';
 import { getImageFromApi } from '../../src/services/images/getImageFromApi';
 import { getLogo, ProjectLogo } from '../../src/server/images/logo';
 import { ImageType } from '../../src/services/images/getImageDefs';
@@ -79,7 +79,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const t1 = Date.now();
   try {
     const shortId = getApiId(req.query.id);
-    const feature = await quickFetchFeature(shortId);
+    const feature = await fetchWithMemberFeatures(shortId);
     const def = feature.imageDefs?.[0]; // TODO iterate when first not found
     if (!def) {
       throw new Error('No image definition found');

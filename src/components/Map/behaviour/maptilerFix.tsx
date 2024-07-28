@@ -1,6 +1,24 @@
 import { Feature } from '../../../services/types';
-import { getShortId } from '../../../services/helpers';
-import { quickFetchFeature } from '../../../services/osmApi';
+import { FetchError, getShortId, OsmApiId } from '../../../services/helpers';
+import { fetchJson } from '../../../services/fetch';
+import { osmToFeature } from '../../../services/osmToFeature';
+
+const getQuickOsmPromise = async (apiId: OsmApiId) => {
+  const getOsmUrl = ({ type, id }) =>
+    `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
+  const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+  return elements?.[0];
+};
+export const quickFetchFeature = async (apiId: OsmApiId) => {
+  try {
+    const element = await getQuickOsmPromise(apiId);
+    return osmToFeature(element);
+  } catch (e) {
+    return {
+      error: e instanceof FetchError ? e.code : 'unknown',
+    } as unknown as Feature;
+  }
+};
 
 const isFarAway = (feature, skeleton) =>
   feature.center &&
