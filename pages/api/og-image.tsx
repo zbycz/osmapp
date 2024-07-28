@@ -58,7 +58,7 @@ const renderSvg = async (
 };
 
 // on M1 Pro this function takes ~100ms + network
-// on vercel node eg ~800ms in total
+// on vercel node ~800ms in total
 // - api/image: 838ms; fetchFeature: 496ms, getImage: 102ms, renderSvg: 38ms, svg2png: 202ms
 // - api/image: 953ms; fetchFeature: 765ms, getImage: 0ms, renderSvg: 23ms, svg2png: 165ms
 export default async (req: NextApiRequest, res: NextApiResponse) => {
