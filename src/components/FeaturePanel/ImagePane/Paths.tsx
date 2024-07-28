@@ -17,12 +17,6 @@ const StyledSvg = styled.svg`
   height: 100%;
   width: 100%;
   pointer-events: none;
-
-  path {
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    fill: none;
-  }
 `;
 
 const PathSvg = ({ children, size }) => (
@@ -37,11 +31,17 @@ const PathSvg = ({ children, size }) => (
 const PathBorder = styled.path<{ $color: string }>`
   stroke-width: 1.3%;
   stroke: ${({ $color }) => $color};
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 `;
 
 const PathLine = styled.path<{ $color: string }>`
   stroke-width: 1%;
   stroke: ${({ $color }) => $color};
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
 `;
 
 type PathProps = {
