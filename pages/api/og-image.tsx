@@ -20,6 +20,7 @@ import {
   SVG_TYPE,
 } from '../../src/server/images/sendImageResponse';
 import { svg2png } from '../../src/server/images/svg2png';
+import { Size } from '../../src/components/FeaturePanel/ImagePane/types';
 
 const Svg = ({ children, size }) => (
   <UserThemeProvider userThemeCookie={undefined}>
@@ -36,6 +37,15 @@ const Svg = ({ children, size }) => (
 
 const OG_SIZE = { width: 1200, height: 630 };
 
+const centerInOgSize = (size: Size) => {
+  const scale = Math.min(
+    OG_SIZE.width / size.width,
+    OG_SIZE.height / size.height,
+  );
+  const left = (OG_SIZE.width - size.width * scale) / 2;
+  const top = (OG_SIZE.height - size.height * scale) / 2;
+  return `scale(${scale}) translate(${left},${top})`;
+};
 const renderSvg = async (
   feature: Feature,
   def: ImageDefFromTag | ImageDefFromCenter,
@@ -44,25 +54,16 @@ const renderSvg = async (
   const { size, dataUrl } = await fetchImage(image.imageUrl);
   const logo = getLogo(OG_SIZE, !!feature.tags.climbing);
 
-  const scale = Math.min(
-    OG_SIZE.width / size.width,
-    OG_SIZE.height / size.height,
-  );
-  const move = `${(OG_SIZE.width - size.width * scale) / 2},${
-    (OG_SIZE.height - size.height * scale) / 2
-  }`;
-  const transform = `scale(${scale}) translate(${move})`;
-
   const Root = () => (
-      <Svg size={OG_SIZE}>
-        __PLACEHOLDER_FOR_STYLE__
-        <g transform={transform}>
-          <image href={dataUrl} width={size.width} height={size.height} />
-          <Paths def={def} feature={feature} size={size} />
-        </g>
-        <ProjectLogo logo={logo} />
-      </Svg>
-    );
+    <Svg size={OG_SIZE}>
+      __PLACEHOLDER_FOR_STYLE__
+      <g transform={centerInOgSize(size)}>
+        <image href={dataUrl} width={size.width} height={size.height} />
+        <Paths def={def} feature={feature} size={size} />
+      </g>
+      <ProjectLogo logo={logo} />
+    </Svg>
+  );
 
   const sheet = new ServerStyleSheet();
   const html = renderToString(sheet.collectStyles(<Root />));
