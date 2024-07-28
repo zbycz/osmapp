@@ -64,7 +64,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { id } = req.query;
     const feature = await fetchFeature(id);
-    const def = feature.imageDefs[0]; // TODO iterate when first not found
+    const def = feature.imageDefs?.[0]; // TODO iterate when first not found
     if (!def) {
       throw new Error('No image definition found');
     }

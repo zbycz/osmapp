@@ -52,7 +52,7 @@ export const getLogo = async (canvas: Size, climbing: boolean) => {
   const path = climbing
     ? 'public/openclimbing/logo/openclimbing.svg'
     : 'public/osmapp/logo/osmapp.svg';
-  const logo = await fs.readFile(path);
+  const logo = await fs.readFile(`${process.env.PWD}/${path}`);
   const svg = logo.toString('utf-8');
   const transform = moveLogo(climbing, canvas);
   return { svg, transform };
