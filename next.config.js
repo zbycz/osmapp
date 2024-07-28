@@ -4,6 +4,20 @@ const withPWA = require('next-pwa')({
   dest: 'public',
 });
 
+// Solves "version ZLIB_1.2.9 not found" on vercel
+// Used by svg-png-converter, eg. /api/image?id=n6
+if (
+  process.env.LD_LIBRARY_PATH == null ||
+  !process.env.LD_LIBRARY_PATH.includes(
+    `${process.env.PWD}/node_modules/canvas/build/Release:`,
+  )
+) {
+  const pwd = process.env.PWD;
+  process.env.LD_LIBRARY_PATH = `${pwd}/node_modules/canvas/build/Release:${
+    process.env.LD_LIBRARY_PATH || ''
+  }`;
+}
+
 const languages = {
   de: 'Deutsch',
   cs: 'Česky',
