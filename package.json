@@ -64,8 +64,7 @@
     "react-zoom-pan-pinch": "^3.3.0",
     "styled-components": "^6.1.11",
     "styled-jsx": "^3.4.4",
-    "svg-png-converter": "^0.0.9",
-    "svg2img": "^1.0.0-beta.2"
+    "svg-png-converter": "^0.0.9"
   },
   "devDependencies": {
     "@types/autosuggest-highlight": "^3.2.0",
