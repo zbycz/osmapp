@@ -105,9 +105,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const t5 = Date.now();
     // eslint-disable-next-line no-console
     console.log(
-      `api/image: ${t5 - t1}ms; fetchFeature: ${t2 - t1}ms, getImage: ${
+      `api/og-image: ${t5 - t1}ms; fetchFeature: ${t2 - t1}ms, getImageUrl: ${
         t3 - t2
-      }ms, renderSvg: ${t4 - t3}ms, svg2png: ${t5 - t4}ms`,
+      }ms, fetchImage+renderSvg: ${t4 - t3}ms, svg2png: ${t5 - t4}ms`,
     );
 
     sendImageResponse(res, feature, png, PNG_TYPE);
