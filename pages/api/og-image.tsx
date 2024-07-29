@@ -45,7 +45,7 @@ const centerInOgSize = (size: Size) => {
   );
   const left = (OG_SIZE.width - size.width * scale) / 2;
   const top = (OG_SIZE.height - size.height * scale) / 2;
-  return `scale(${scale}) translate(${left},${top})`;
+  return `translate(${left},${top}) scale(${scale})`;
 };
 const renderSvg = async (
   feature: Feature,
