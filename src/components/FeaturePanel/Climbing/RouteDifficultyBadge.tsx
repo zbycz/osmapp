@@ -18,6 +18,7 @@ const Container = styled.div<{ $color: string }>`
   font-weight: 900;
   color: ${({ theme, $color }) => theme.palette.getContrastText($color)};
   font-family: monospace;
+  cursor: help;
 `;
 
 type Props = {
@@ -46,8 +47,14 @@ export const RouteDifficultyBadge = ({ routeDifficulty }: Props) => {
 
   return (
     <Tooltip
-      title={`${gradeValue} according to ${gradeSystemName ?? '?'}`}
-      enterDelay={1500}
+      title={
+        <div>
+          <strong>{gradeValue}</strong> according to{' '}
+          <strong>{gradeSystemName ?? '?'}</strong>
+        </div>
+      }
+      enterDelay={1000}
+      arrow
     >
       <Container $color={colorByDifficulty}>{gradeValue}</Container>
     </Tooltip>
