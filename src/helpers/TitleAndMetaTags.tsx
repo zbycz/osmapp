@@ -53,7 +53,7 @@ export const TitleAndMetaTags = () => {
   const title = `${titleLabel} · ${PROJECT_NAME}`;
 
   const ogImage = feature.imageDefs?.length
-    ? `/api/og-image?id=${getShortId(feature.osmMeta)}`
+    ? `${PROJECT_URL}/api/og-image?id=${getShortId(feature.osmMeta)}`
     : undefined;
   return (
     <Head>
