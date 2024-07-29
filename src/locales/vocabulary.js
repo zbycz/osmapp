@@ -24,6 +24,8 @@ export default {
   'my_ticks.route_grade': 'Grade',
   'my_ticks.route_style': 'Style',
   'my_ticks.route_date': 'Date',
+  'my_ticks.no_ticks_paragraph1': 'You have no ticks so far…',
+  'my_ticks.no_ticks_paragraph2': 'Try to add one on the crag',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':

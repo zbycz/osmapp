@@ -10,7 +10,6 @@ import {
   Paper,
   Typography,
 } from '@mui/material';
-import maplibregl from 'maplibre-gl';
 import { t } from '../../../services/intl';
 import { getAllTicks } from '../../../services/ticks';
 import { TickRow } from './TickRow';
@@ -20,11 +19,7 @@ import {
   overpassGeomToGeojson,
 } from '../../../services/overpassSearch';
 import { getApiId, getShortId } from '../../../services/helpers';
-import {
-  // getDifficulty,
-  // getDifficultyColor,
-  getRouteGrade,
-} from './utils/grades/routeGrade';
+import { getRouteGrade } from './utils/grades/routeGrade';
 import { ClosePanelButton } from '../../utils/ClosePanelButton';
 import {
   PanelContent,
@@ -34,40 +29,30 @@ import {
 import { ClientOnly } from '../../helpers';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { MobilePageDrawer } from '../../utils/MobilePageDrawer';
-import { Feature } from '../../../services/types';
 import { getGlobalMap } from '../../../services/mapStorage';
 
-type Marker = {
-  ref: maplibregl.Marker;
-  feature: Feature;
-};
-
 export const MyTicksPage = () => {
-  // const theme = useTheme();
   const [myTicksData, setMyTicksData] = useState({});
   const [heatmapData, setHeatmapData] = useState(null);
-  const [featureMarkers, setFeatureMarkers] = useState<Array<Marker>>([]);
   const allTicks = getAllTicks();
   const { userSettings } = useUserSettingsContext();
   const map = getGlobalMap();
 
-  const generateGeojson = (features) => {
-    const geojson = {
-      type: 'FeatureCollection',
-      features: features.map((feature) => ({
-        type: 'Feature',
-        geometry: {
-          type: 'Point',
-          coordinates: feature.center,
-        },
-        properties: {
-          title: feature.tags.name,
-          description: feature.tags.description,
-        },
-      })),
-    };
-    return geojson;
-  };
+  const generateGeojsonForPoints = (features) => ({
+    type: 'FeatureCollection',
+    features: features.map((feature) => ({
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: feature.center,
+      },
+      properties: {
+        title: feature.tags.name,
+        description: feature.tags.description,
+      },
+    })),
+  });
+
   const getOverpassData = async () => {
     const queryTicks = allTicks
       .map(({ osmId }) => {
@@ -89,138 +74,75 @@ export const MyTicksPage = () => {
       };
     }, {});
     setMyTicksData(data);
-
-    setHeatmapData(generateGeojson(features));
+    setHeatmapData(generateGeojsonForPoints(features));
   };
 
-  const deleteMarkers = () => {
-    featureMarkers.forEach((marker) => {
-      marker.ref?.remove();
+  const enableHeatmap = () => {
+    map.addSource('myticks', {
+      type: 'geojson',
+      data: heatmapData,
     });
+
+    map.addLayer({
+      id: 'myticks-heatmap',
+      type: 'heatmap',
+      source: 'myticks',
+      paint: {
+        'heatmap-weight': [
+          'interpolate',
+          ['linear'],
+          ['get', 'mag'],
+          0,
+          0,
+          6,
+          1,
+        ],
+        'heatmap-color': [
+          'interpolate',
+          ['linear'],
+          ['heatmap-density'],
+          0,
+          'rgba(33,102,172,0)',
+          0.2,
+          'rgb(103,169,207)',
+          0.4,
+          'rgb(209,229,240)',
+          0.6,
+          'rgb(253,219,199)',
+          0.8,
+          'rgb(239,138,98)',
+          1,
+          'rgb(178,24,43)',
+        ],
+        'heatmap-intensity': ['interpolate', ['linear'], ['zoom'], 0, 1, 9, 3],
+        'heatmap-radius': ['interpolate', ['linear'], ['zoom'], 0, 2, 9, 15],
+      },
+    });
+  };
+
+  const removeHeatmap = () => {
+    map.removeLayer('myticks-heatmap');
+    map.removeSource('myticks');
+  };
+
+  const handleClose = () => {
+    Router.push(`/`);
   };
 
   useEffect(() => {
     getOverpassData();
-
-    return () => {
-      deleteMarkers();
-      setFeatureMarkers([]); // Reset markers
-    };
   }, []);
 
   useEffect(() => {
-    // const showMarkers = () => {
-    //   const newMarkers = allTicks
-    //     .map((tick) => {
-    //       const tickFeature = myTicksData[tick.osmId];
-    //       const routeDifficulty = getDifficulty(tickFeature?.tags);
-    //       const colorByDifficulty = getDifficultyColor(routeDifficulty, theme);
-    //       const featureMarker = {
-    //         color: colorByDifficulty,
-    //         draggable: false,
-    //       };
-    //
-    //       if (map && myTicksData[tick.osmId]?.center) {
-    //         const markerRef = new maplibregl.Marker(featureMarker)
-    //           .setLngLat(tickFeature.center)
-    //           .addTo(map);
-    //
-    //         return { ref: markerRef, feature: tickFeature };
-    //       }
-    //       return null;
-    //     })
-    //     .filter((marker) => marker !== null);
-    //
-    //   setFeatureMarkers(newMarkers);
-    // };
-
-    // showMarkers();
-
-    const enableHeatmap = () => {
-      map.on('load', () => {
-        map.addSource('earthquakes', {
-          type: 'geojson',
-          data: heatmapData,
-        });
-
-        map.addLayer({
-          id: 'earthquakes-heat',
-          type: 'heatmap',
-          source: 'earthquakes',
-          paint: {
-            // Zvýraznění heatmapy podle intenzity
-            'heatmap-weight': [
-              'interpolate',
-              ['linear'],
-              ['get', 'mag'],
-              0,
-              0,
-              6,
-              1,
-            ],
-            // Nastavení barevné škály heatmapy
-            'heatmap-color': [
-              'interpolate',
-              ['linear'],
-              ['heatmap-density'],
-              0,
-              'rgba(33,102,172,0)',
-              0.2,
-              'rgb(103,169,207)',
-              0.4,
-              'rgb(209,229,240)',
-              0.6,
-              'rgb(253,219,199)',
-              0.8,
-              'rgb(239,138,98)',
-              1,
-              'rgb(178,24,43)',
-            ],
-            // Nastavení intenzity heatmapy
-            'heatmap-intensity': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              0,
-              1,
-              9,
-              3,
-            ],
-            // Nastavení poloměru heatmapových bodů
-            'heatmap-radius': [
-              'interpolate',
-              ['linear'],
-              ['zoom'],
-              0,
-              2,
-              9,
-              15,
-            ],
-            // Snížení opacity heatmapy ve vyšších zoomech
-            // 'heatmap-opacity': 0.8,
-            // 'heatmap-opacity': [
-            //   'interpolate',
-            //   ['linear'],
-            //   ['zoom'],
-            //   13,
-            //   1,
-            //   15,
-            //   0,
-            // ],
-          },
-        });
-      });
-    };
-
     if (map && heatmapData) {
       enableHeatmap();
     }
+    return () => {
+      if (map && heatmapData) {
+        removeHeatmap();
+      }
+    };
   }, [myTicksData, map]);
-
-  const handleClose = () => {
-    deleteMarkers();
-    Router.push(`/`);
-  };
 
   return (
     <ClientOnly>
@@ -234,7 +156,7 @@ export const MyTicksPage = () => {
             {allTicks.length === 0 ? (
               <PanelSidePadding>
                 <Typography variant="body1" gutterBottom>
-                  You have no ticks so far…
+                  {t('my_ticks.no_ticks_paragraph1')}
                 </Typography>
 
                 <Typography
@@ -243,7 +165,7 @@ export const MyTicksPage = () => {
                   gutterBottom
                   color="secondary"
                 >
-                  Try to add one on the crag
+                  {t('my_ticks.no_ticks_paragraph2')}
                 </Typography>
               </PanelSidePadding>
             ) : (
