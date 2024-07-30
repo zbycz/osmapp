@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
 import Router from 'next/router';
@@ -7,7 +7,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
-import { isDesktop, useMobileMode } from '../helpers';
+import { isDesktop, isDesktopResolution, useMobileMode } from '../helpers';
 import { SEARCH_BOX_HEIGHT } from './consts';
 import { useInputValueState } from './options/geocoder';
 import { useOptions } from './useOptions';
@@ -17,17 +17,14 @@ import { UserMenu } from '../Map/TopMenu/UserMenu';
 const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;
   height: ${SEARCH_BOX_HEIGHT}px;
-  ${({ $isMobileMode }) =>
-    !$isMobileMode &&
-    css`
-      box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-      background-color: ${({ theme }) => theme.palette.background.searchBox};
-    `}
-
   padding: 8px;
   box-sizing: border-box;
 
-  z-index: 1;
+  top: 0;
+  z-index: 10;
+  @media ${isDesktopResolution} {
+    z-index: 1100;
+  }
 
   width: 100%;
   @media ${isDesktop} {
@@ -35,13 +32,21 @@ const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   }
 `;
 
-const StyledPaper = styled(Paper)`
+const StyledPaper = styled(Paper)<{ $isSearchInPanelVisible: boolean }>`
   padding: 2px 4px;
   display: flex;
   align-items: center;
-  background-color: ${({ theme }) => theme.palette.background.searchInput};
+  background-color: ${({ $isSearchInPanelVisible, theme }) =>
+    $isSearchInPanelVisible
+      ? theme.palette.background.searchInput
+      : theme.palette.background.searchInputPanel};
   -webkit-backdrop-filter: blur(35px);
   backdrop-filter: blur(35px);
+  transition: box-shadow 0s !important;
+  box-shadow: ${({ $isSearchInPanelVisible }) =>
+    $isSearchInPanelVisible
+      ? '0 0 20px rgba(0, 0, 0, 0.4)'
+      : 'none'} !important;
 
   .MuiAutocomplete-root {
     flex: 1;
@@ -71,7 +76,7 @@ const useOnClosePanel = () => {
   };
 };
 
-const SearchBox = () => {
+const SearchBox = ({ isSearchInPanelVisible = false }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const { inputValue, setInputValue } = useInputValueState();
@@ -84,7 +89,11 @@ const SearchBox = () => {
 
   return (
     <TopPanel $isMobileMode={isMobileMode}>
-      <StyledPaper elevation={1} ref={autocompleteRef}>
+      <StyledPaper
+        $isSearchInPanelVisible={isSearchInPanelVisible}
+        elevation={1}
+        ref={autocompleteRef}
+      >
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
         </SearchIconButton>
