@@ -103,11 +103,13 @@ export const FeatureDescription = ({ advanced, setAdvanced }) => {
 
   return (
     <div>
-      {!advanced &&
+      {advanced ? (
+        <Urls />
+      ) : (
         t('featurepanel.feature_description_osm', {
           type: capitalize(type),
-        })}
-      {advanced && <Urls />}
+        })
+      )}
       <InfoTooltipWrapper>
         <TooltipButton
           tooltip={<FromOsm />}
