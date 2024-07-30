@@ -7,9 +7,9 @@ export const GRADE_SYSTEMS = [
   { key: 'french', name: 'French' },
   { key: 'saxon', name: 'Saxon' },
   { key: 'nordic', name: 'Nordic' },
-  { key: 'yds', name: 'YDS' },
-  { key: 'vgrade', name: 'V grade' },
-  { key: 'wi', name: 'WI' },
+  { key: 'yds_class', name: 'YDS' },
+  { key: 'hueco', name: 'V grade' },
+  { key: 'ice', name: 'WI' },
   { key: 'mixed', name: 'Mixed' },
 ];
 
