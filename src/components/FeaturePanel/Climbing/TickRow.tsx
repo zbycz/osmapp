@@ -15,18 +15,14 @@ import {
   tickStyles,
 } from '../../../services/ticks';
 import { DEFAULT_DATA_FORMAT } from '../../../config';
-import { RouteDifficultyBadge } from './RouteDifficultyBadge';
 import { Tick } from './types';
-import { GradeSystem } from './utils/grades/gradeData';
 
 type TickRowProps = {
-  grade?: GradeSystem;
-  gradeSystem?: string;
   tick: Tick;
   index: number;
 };
 
-export const TickRow = ({ grade, gradeSystem, tick, index }: TickRowProps) => {
+export const TickRow = ({ tick, index }: TickRowProps) => {
   const deleteTick = (deteledIndex) => {
     onTickDelete({ osmId: tick.osmId, index: deteledIndex });
   };
@@ -41,18 +37,8 @@ export const TickRow = ({ grade, gradeSystem, tick, index }: TickRowProps) => {
 
   const formattedDate = tick.date ? format(tick.date, DEFAULT_DATA_FORMAT) : '';
 
-  const routeDifficulty = {
-    grade,
-    gradeSystem,
-  };
-
   return (
     <TableRow>
-      {grade && gradeSystem && (
-        <TableCell>
-          <RouteDifficultyBadge routeDifficulty={routeDifficulty} />
-        </TableCell>
-      )}
       <TableCell>
         <FormControl size="small">
           <Select

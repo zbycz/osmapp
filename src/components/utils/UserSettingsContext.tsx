@@ -13,7 +13,7 @@ type UserSettingsContextType = {
 };
 
 const initialUserSettings: UserSettingsType = {
-  'climbing.gradeSystem': 'uiaa',
+  'climbing.gradeSystem': null,
 };
 
 export const UserSettingsContext =

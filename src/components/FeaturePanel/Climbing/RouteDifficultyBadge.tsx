@@ -2,12 +2,27 @@ import React from 'react';
 import styled from 'styled-components';
 import { Tooltip, useTheme } from '@mui/material';
 import {
-  convertGrade,
+  findOrConvertRouteGrade,
   getDifficultyColor,
   getGradeSystemName,
 } from './utils/grades/routeGrade';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { RouteDifficulty } from './types';
+
+const TooltipGradeItemContainer = styled.div`
+  white-space: nowrap;
+`;
+
+const GradeValue = styled.span`
+  font-family: monospace;
+  font-weight: bold;
+`;
+
+const WarningText = styled.span`
+  color: ${({ theme }) => theme.palette.primary.main};
+  font-weight: bold;
+  font-style: italic;
+`;
 
 const Container = styled.div<{ $color: string }>`
   border-radius: 12px;
@@ -21,26 +36,31 @@ const Container = styled.div<{ $color: string }>`
   cursor: help;
 `;
 
+const TooltipGradeItem = ({
+  difficulty,
+  isConverted = false,
+}: {
+  difficulty: RouteDifficulty;
+  isConverted?: boolean;
+}) => (
+  <TooltipGradeItemContainer>
+    <GradeValue>{difficulty.grade}</GradeValue> according to{' '}
+    <strong>{getGradeSystemName(difficulty.gradeSystem)}</strong>{' '}
+    {isConverted && <WarningText>(converted)</WarningText>}
+  </TooltipGradeItemContainer>
+);
+
 type Props = {
-  routeDifficulty?: RouteDifficulty;
+  routeDifficulties?: RouteDifficulty[];
 };
 
-export const RouteDifficultyBadge = ({ routeDifficulty }: Props) => {
+export const RouteDifficultyBadge = ({ routeDifficulties }: Props) => {
   const theme = useTheme();
   const { userSettings } = useUserSettingsContext();
   const selectedRouteSystem = userSettings['climbing.gradeSystem'];
-  const convertedGrade = selectedRouteSystem
-    ? convertGrade(
-        routeDifficulty?.gradeSystem,
-        selectedRouteSystem,
-        routeDifficulty?.grade,
-      )
-    : routeDifficulty.grade;
-
-  const gradeValue = convertedGrade ?? routeDifficulty?.grade ?? '?';
-
-  const gradeSystemName = getGradeSystemName(
-    convertedGrade ? selectedRouteSystem : routeDifficulty?.gradeSystem,
+  const { isConverted, routeDifficulty } = findOrConvertRouteGrade(
+    routeDifficulties,
+    selectedRouteSystem,
   );
 
   const colorByDifficulty = getDifficultyColor(routeDifficulty, theme);
@@ -48,15 +68,26 @@ export const RouteDifficultyBadge = ({ routeDifficulty }: Props) => {
   return (
     <Tooltip
       title={
-        <div>
-          <strong>{gradeValue}</strong> according to{' '}
-          <strong>{gradeSystemName ?? '?'}</strong>
-        </div>
+        <>
+          <TooltipGradeItem
+            difficulty={routeDifficulty}
+            isConverted={isConverted}
+          />
+          {routeDifficulties &&
+            routeDifficulties
+              .filter(
+                (difficulty) =>
+                  difficulty.gradeSystem !== routeDifficulty?.gradeSystem,
+              )
+              .map((difficulty) => (
+                <TooltipGradeItem difficulty={difficulty} />
+              ))}
+        </>
       }
       enterDelay={1000}
       arrow
     >
-      <Container $color={colorByDifficulty}>{gradeValue}</Container>
+      <Container $color={colorByDifficulty}>{routeDifficulty.grade}</Container>
     </Tooltip>
   );
 };

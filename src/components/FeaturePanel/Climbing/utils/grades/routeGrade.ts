@@ -53,6 +53,21 @@ export const getDifficulty = (
   return undefined;
 };
 
+export const getDifficulties = (tags: FeatureTags): RouteDifficulty[] => {
+  if (!tags) {
+    return undefined;
+  }
+
+  const gradeKeys = Object.keys(tags).filter((key) =>
+    key.startsWith('climbing:grade'),
+  );
+
+  return gradeKeys.map((gradeKey) => ({
+    grade: tags[gradeKey],
+    gradeSystem: gradeKey.split(':', 3)[2] ?? '?',
+  }));
+};
+
 export const getDifficultyColor = (routeDifficulty, theme) => {
   const DEFAULT_COLOR = '#555';
   if (!routeDifficulty) {
@@ -66,23 +81,32 @@ export const getDifficultyColor = (routeDifficulty, theme) => {
   return gradeColors[uiaaGrade]?.[mode] || DEFAULT_COLOR;
 };
 
-export const getRouteGrade = (
-  grades: Partial<{ [key in `climbing:grade:${GradeSystem}`]: string }>,
-  convertTo: GradeSystem,
-) => {
-  if (!grades) return null;
-  const availableGrades = Object.keys(grades);
-  return availableGrades.reduce((convertedGrade, availableGrade) => {
-    const convertFrom = availableGrade.split(':').pop();
-    const value = grades[availableGrade];
-    const grade = convertGrade(convertFrom, convertTo, value);
-    if (grade) return grade;
-    return convertedGrade;
-  }, null);
-};
-
 export const getGradeSystemName = (gradeSystemKey: GradeSystem) =>
   GRADE_SYSTEMS.find((item) => item.key === gradeSystemKey)?.name;
 
 export const getOsmTagFromGradeSystem = (gradeSystemKey: GradeSystem) =>
   `climbing:grade:${gradeSystemKey}`;
+
+export const findOrConvertRouteGrade = (
+  routeDifficulties: RouteDifficulty[],
+  selectedRouteSystem: string,
+) => {
+  const difficultyDiscoveredFromTag = routeDifficulties?.find(
+    (routeDifficulty) =>
+      routeDifficulty?.gradeSystem === selectedRouteSystem ||
+      !selectedRouteSystem,
+  );
+  const routeDifficulty = difficultyDiscoveredFromTag || {
+    grade:
+      convertGrade(
+        routeDifficulties?.[0]?.gradeSystem,
+        selectedRouteSystem,
+        routeDifficulties?.[0]?.grade,
+      ) ?? '?',
+    gradeSystem: selectedRouteSystem,
+  };
+  return {
+    isConverted: difficultyDiscoveredFromTag === undefined,
+    routeDifficulty,
+  };
+};

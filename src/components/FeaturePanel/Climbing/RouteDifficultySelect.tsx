@@ -74,6 +74,7 @@ export const RouteDifficultySelect = ({
         setGradeSystem={setTempGradeSystem}
         selectedGradeSystem={tempGradeSystem}
         onClick={onClick}
+        allowUnsetValue={false}
       />
     </Flex>
   );

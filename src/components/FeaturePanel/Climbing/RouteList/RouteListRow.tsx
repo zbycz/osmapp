@@ -14,7 +14,7 @@ import { ExpandedRow } from './ExpandedRow';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import { getShortId } from '../../../../services/helpers';
 import { isTicked } from '../../../../services/ticks';
-import { getDifficulty } from '../utils/grades/routeGrade';
+import { getDifficulties } from '../utils/grades/routeGrade';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -128,7 +128,7 @@ export const RenderListRow = ({
     isExpanded,
     osmId,
   };
-  const routeDifficulty = getDifficulty(tempRoute.feature?.tags);
+  const routeDifficulties = getDifficulties(tempRoute.feature?.tags);
 
   return (
     <Container ref={ref}>
@@ -162,7 +162,7 @@ export const RenderListRow = ({
           )}
         </NameCell>
         <DifficultyCell $width={50}>
-          <RouteDifficultyBadge routeDifficulty={routeDifficulty} />
+          <RouteDifficultyBadge routeDifficulties={routeDifficulties} />
         </DifficultyCell>
 
         <Cell $width={50}>
