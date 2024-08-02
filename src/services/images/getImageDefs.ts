@@ -124,6 +124,3 @@ export const mergeMemberImageDefs = (feature: Feature) => {
 
 export const getImageDefId = (def: ImageDef) =>
   isTag(def) ? `tag-${def.k}` : def.service;
-
-export const getWikiImageFilename = (imageUrl: string) =>
-  imageUrl.match(/\/(\d+px-[^/]+\.[a-z]{3,5})$/i)?.[1] ?? imageUrl;
