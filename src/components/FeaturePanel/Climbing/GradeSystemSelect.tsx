@@ -9,6 +9,7 @@ type Props = {
   selectedGradeSystem: GradeSystem;
   setGradeSystem: (GradeSystem: GradeSystem) => void;
   onClick?: (e: any) => void;
+  allowUnsetValue?: boolean;
 };
 
 const Row = styled.div`
@@ -26,6 +27,7 @@ export const GradeSystemSelect = ({
   selectedGradeSystem,
   setGradeSystem,
   onClick,
+  allowUnsetValue = true,
 }: Props) => (
   <Select
     value={selectedGradeSystem}
@@ -36,6 +38,7 @@ export const GradeSystemSelect = ({
       setGradeSystem(event.target.value);
     }}
   >
+    {allowUnsetValue && <MenuItem value={null}>Original grade</MenuItem>}
     {GRADE_SYSTEMS.map(({ key, name, description }) => (
       <MenuItem value={key}>
         <Row>
