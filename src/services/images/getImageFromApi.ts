@@ -8,22 +8,43 @@ import { getCommonsImageUrl } from './getCommonsImageUrl';
 
 type ImagePromise = Promise<ImageType | null>;
 
-const getCommonsApiUrl = (title: string) =>
+const getCommonsFileApiUrl = (title: string) =>
   encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=${WIDTH}&format=json&titles=${title}&origin=*`;
 
-const fetchCommons = async (k: string, v: string): ImagePromise => {
-  const url = getCommonsApiUrl(v);
+const fetchCommonsFile = async (k: string, v: string): ImagePromise => {
+  const url = getCommonsFileApiUrl(v);
   const data = await fetchJson(url);
   const page = Object.values(data.query.pages)[0] as any;
   if (!page.imageinfo?.length) {
     return null;
   }
-  const images = page.imageinfo;
+  const image = page.imageinfo[0];
   return {
-    imageUrl: decodeURI(images[0].thumburl),
+    imageUrl: decodeURI(image.thumburl),
     description: `Wikimedia Commons (${k}=*)`,
     link: page.title,
-    linkUrl: images[0].descriptionshorturl,
+    linkUrl: image.descriptionshorturl,
+    // portrait: images[0].thumbwidth < images[0].thumbheight,
+  };
+};
+
+// TODO perhaps fetch more images, or create a collage of first few images
+const getCommonsCategoryApiUrl = (title: string) =>
+  encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${title}&gcmlimit=1&gcmtype=file&prop=imageinfo&&iiprop=url&iiurlwidth=${WIDTH}&format=json&origin=*`;
+
+const fetchCommonsCategory = async (k: string, v: string): ImagePromise => {
+  const url = getCommonsCategoryApiUrl(v);
+  const data = await fetchJson(url);
+  const page = Object.values(data.query.pages)[0] as any;
+  if (!page.imageinfo?.length) {
+    return null;
+  }
+  const image = page.imageinfo[0];
+  return {
+    imageUrl: decodeURI(image.thumburl),
+    description: `Wikimedia Commons category (${k}=*)`,
+    link: v,
+    linkUrl: `https://commons.wikimedia.org/wiki/${v}`,
     // portrait: images[0].thumbwidth < images[0].thumbheight,
   };
 };
@@ -100,14 +121,17 @@ export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
 
   if (isTag(def)) {
     const { k, v } = def;
-    if (k.startsWith('image') && v.match(/^File:/)) {
-      return fetchCommons(k, v);
+    if (k.startsWith('image') && v.startsWith('File:')) {
+      return fetchCommonsFile(k, v);
     }
     if (k.startsWith('wikidata')) {
       return fetchWikidata(v);
     }
-    if (k.startsWith('wikimedia_commons')) {
-      return fetchCommons(k, v);
+    if (k.startsWith('wikimedia_commons') && v.startsWith('File:')) {
+      return fetchCommonsFile(k, v);
+    }
+    if (k.startsWith('wikimedia_commons') && v.startsWith('Category:')) {
+      return fetchCommonsCategory(k, v);
     }
     if (k.startsWith('wikipedia')) {
       return fetchWikipedia(k, v);

@@ -29,15 +29,40 @@ export const WIKIDATA: ApiMock = {
 };
 
 export const COMMONS_CATEGORY: ApiMock = {
-  url: 'https://commons.wikimedia.org/w/api.php?action=query&prop=imageinfo&iiprop=url&iiurlwidth=410&format=json&titles=Category%3AYosemite%20National%20Park&origin=*',
+  url: 'https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category%3AYosemite%20National%20Park&gcmlimit=1&gcmtype=file&prop=imageinfo&&iiprop=url&iiurlwidth=410&format=json&origin=*',
   response: {
     batchcomplete: '',
+    continue: {
+      gcmcontinue:
+        'file|3139313620594f53454d4954452042592047454f52474520535445524c494e472046524f4e5420434f5645522e504e47|149319876',
+      continue: 'gcmcontinue||',
+    },
     query: {
       pages: {
-        '51519': {
-          pageid: 51519,
-          ns: 14,
-          title: 'Category:Yosemite National Park',
+        '148361232': {
+          pageid: 148361232,
+          ns: 6,
+          title:
+            'File:1912 Indian Motorcycle. This two-cylinder motorcycle is thought to have been the first motorcycle in Yosemite. The driver was (ca6a33cc-1dd8-b71b-0b83-9551ada5207f).jpg',
+          imagerepository: 'local',
+          imageinfo: [
+            {
+              thumburl:
+                'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_%28ca6a33cc-1dd8-b71b-0b83-9551ada5207f%29.jpg/410px-thumbnail.jpg',
+              thumbwidth: 410,
+              thumbheight: 273,
+              responsiveUrls: {
+                '1.5':
+                  'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_%28ca6a33cc-1dd8-b71b-0b83-9551ada5207f%29.jpg/615px-thumbnail.jpg',
+                '2': 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_%28ca6a33cc-1dd8-b71b-0b83-9551ada5207f%29.jpg/820px-thumbnail.jpg',
+              },
+              url: 'https://upload.wikimedia.org/wikipedia/commons/0/0c/1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_%28ca6a33cc-1dd8-b71b-0b83-9551ada5207f%29.jpg',
+              descriptionurl:
+                'https://commons.wikimedia.org/wiki/File:1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_(ca6a33cc-1dd8-b71b-0b83-9551ada5207f).jpg',
+              descriptionshorturl:
+                'https://commons.wikimedia.org/w/index.php?curid=148361232',
+            },
+          ],
         },
       },
     },
