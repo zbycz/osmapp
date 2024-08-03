@@ -8,6 +8,7 @@ export const initSentry = () => {
 
   Sentry.init({
     dsn: 'https://79cd9dbaeb0f4d0f868e2d4574f8b7e2@sentry.io/1858591',
+    environment: process.env.VERCEL_ENV || 'development',
     release: `${osmappVersion}-${commitHash}-${commitMessage.substr(0, 10)}`,
     maxBreadcrumbs: 50,
     attachStacktrace: true,
@@ -16,7 +17,7 @@ export const initSentry = () => {
   });
 };
 
-export const captureException = (err, errorInfo) => {
+export const captureException = (err, errorInfo?) => {
   Sentry.configureScope((scope) => {
     if (err.message) {
       // De-duplication currently doesn't work correctly for SSR / browser errors
