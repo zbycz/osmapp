@@ -7,6 +7,8 @@ import { StartPoint } from './StartPoint';
 import { getShiftForStartPoint } from '../utils/startPoint';
 import { RoutePath } from './RoutePath';
 import { getShortId } from '../../../../services/helpers';
+import { RouteDifficulty } from './RouteDifficulty';
+import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 
 type Props = {
   route: ClimbingRoute;
@@ -21,6 +23,7 @@ export const RouteWithLabel = ({
 }: Props) => {
   const { getPixelPosition, getPathForRoute, routes, photoPath, photoZoom } =
     useClimbingContext();
+  const { userSettings } = useUserSettingsContext();
   const path = getPathForRoute(route);
   if (!route || !path || path?.length === 0) return null;
 
@@ -83,6 +86,9 @@ export const RouteWithLabel = ({
       <RouteNumber x={x + shift} y={y} osmId={osmId}>
         {routeNumber}
       </RouteNumber>
+      {userSettings['climbing.isGradesOnPhotosVisible'] && (
+        <RouteDifficulty x={x + shift} y={y + 40} route={route} />
+      )}
     </>
   );
 };

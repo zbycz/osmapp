@@ -5,6 +5,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  Switch,
 } from '@mui/material';
 import React from 'react';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
@@ -30,6 +31,20 @@ export const UserSettingsDialog = ({ onClose, isOpened }) => {
                 setUserSetting('climbing.gradeSystem', gradeSystem);
               }}
               selectedGradeSystem={userSettings['climbing.gradeSystem']}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText>Show grades in pictures</ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              onChange={(e) => {
+                setUserSetting(
+                  'climbing.isGradesOnPhotosVisible',
+                  e.target.checked,
+                );
+              }}
+              checked={userSettings['climbing.isGradesOnPhotosVisible']}
             />
           </ListItem>
         </List>

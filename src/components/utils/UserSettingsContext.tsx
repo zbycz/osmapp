@@ -4,16 +4,18 @@ import { GradeSystem } from '../FeaturePanel/Climbing/utils/grades/gradeData';
 
 type UserSettingsType = {
   'climbing.gradeSystem': GradeSystem;
+  'climbing.isGradesOnPhotosVisible': boolean;
 };
 
 type UserSettingsContextType = {
   userSettings: UserSettingsType;
   setUserSettings: (userSettings: UserSettingsType) => void;
-  setUserSetting: (key: string, value: string) => void;
+  setUserSetting: (key: string, value: string | number | boolean) => void;
 };
 
 const initialUserSettings: UserSettingsType = {
   'climbing.gradeSystem': null,
+  'climbing.isGradesOnPhotosVisible': true,
 };
 
 export const UserSettingsContext =
