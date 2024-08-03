@@ -136,6 +136,8 @@ export const RoutePath = ({ route, routeNumber }) => {
             });
             return (
               <InteractiveArea
+                // eslint-disable-next-line react/no-array-index-key
+                key={`${routeNumber}-${index}-${x}-${y}`}
                 stroke="transparent"
                 strokeWidth={15}
                 x1={position1.x}
