@@ -10,6 +10,8 @@ import { Wrapper } from './Wrapper';
 import { Table } from './Table';
 import { getUrlOsmId } from '../../../services/helpers';
 import { captureException } from '../../../helpers/sentry';
+import { RouteDifficultyBadge } from '../Climbing/RouteDifficultyBadge';
+import { getDifficulties } from '../Climbing/utils/grades/routeGrade';
 
 class ErrorBoundary extends React.Component<
   { fallback: React.ReactNode },
@@ -75,14 +77,22 @@ const OnlyTagsTable = () => {
   );
 };
 
+export const RouteInfo = () => {
+  const { feature } = useFeatureContext();
+  const routeDifficulties = getDifficulties(feature?.tags);
+
+  return <RouteDifficultyBadge routeDifficulties={routeDifficulties} />;
+};
+
 export const Properties = ({ showTags }) => {
   const { feature } = useFeatureContext();
-
   const key = feature && getUrlOsmId(feature.osmMeta);
+  const isClimbingRoute = feature.tags.climbing === 'route_bottom';
 
   return (
     <>
       {showTags && <OnlyTagsTable />}
+      {isClimbingRoute && <RouteInfo />}
       {!showTags && (
         <ErrorBoundary key={key} fallback={<OnlyTagsTable />}>
           <FeaturedTags featuredTags={feature.schema?.featuredTags} />

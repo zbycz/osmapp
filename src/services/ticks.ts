@@ -1,5 +1,8 @@
 import { Tick, TickStyle } from '../components/FeaturePanel/Climbing/types';
-import { updateElementOnIndex } from '../components/FeaturePanel/Climbing/utils/array';
+import {
+  deleteFromArray,
+  updateElementOnIndex,
+} from '../components/FeaturePanel/Climbing/utils/array';
 
 const KEY = 'ticks';
 
@@ -77,86 +80,39 @@ export const onTickAdd = ({ osmId }) => {
   ]);
 };
 
-export const getStorageIndex = (
-  ticks: Array<Tick>,
-  osmId: string,
-  routeIndex: number,
-): number | null => {
-  const found = ticks?.reduce(
-    (acc, tick, storageIndex) => {
-      if (osmId === tick.osmId) {
-        const newRouteIndex = acc.routeIndex + 1;
-        return {
-          storageIndex:
-            newRouteIndex === routeIndex ? storageIndex : acc.storageIndex,
-          routeIndex: newRouteIndex,
-        };
-      }
-      return acc;
-    },
-    { routeIndex: -1, storageIndex: null },
-  );
-  return found.storageIndex;
-};
-
 export const findTicks = (osmId: string): Array<Tick> => {
   const ticks = getAllTicks();
 
   return ticks?.filter((tick) => osmId === tick.osmId) ?? null;
 };
 
+export const getTickKey = (tick) => `${tick.osmId}-${tick.date}`;
+
+const getTickIndexByKey = (ticks, key) =>
+  ticks.findIndex((tick) => getTickKey(tick) === key);
+
 export const onTickUpdate = ({
-  osmId,
-  index,
+  tickKey,
   updatedObject,
 }: {
-  osmId: string;
-  index: number;
+  tickKey: string;
   updatedObject: Partial<Tick>;
 }) => {
   const ticks = getAllTicks();
-  const storageIndex = getStorageIndex(ticks, osmId, index);
+  const tickIndexToUpdate = getTickIndexByKey(ticks, tickKey);
   const updatedArray = updateElementOnIndex<Tick>(
     ticks,
-    storageIndex,
+    tickIndexToUpdate,
     (item) => ({ ...item, ...updatedObject }),
   );
   setLocalStorageItem(KEY, updatedArray);
 };
 
-export const onTickDelete = ({
-  osmId,
-  index,
-}: {
-  osmId: string;
-  index: number;
-}) => {
+export const onTickDelete = (tickKey: string) => {
   const ticks = getAllTicks();
 
-  const newArray = ticks.reduce(
-    (acc, tick) => {
-      if (osmId === tick.osmId) {
-        const newIndex = acc.index + 1;
-        if (acc.index === index) {
-          return {
-            ticks: acc.ticks,
-            index: newIndex,
-          };
-        }
-        return {
-          ticks: [...acc.ticks, tick],
-          index: newIndex,
-        };
-      }
-
-      return {
-        ticks: [...acc.ticks, tick],
-        index: acc.index,
-      };
-    },
-    { index: 0, ticks: [] },
-  ).ticks;
-
+  const tickIndexToDelete = getTickIndexByKey(ticks, tickKey);
+  const newArray = deleteFromArray(ticks, tickIndexToDelete);
   setLocalStorageItem(KEY, newArray);
 };
 

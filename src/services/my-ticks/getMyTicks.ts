@@ -1,7 +1,7 @@
 import { getApiId, getShortId, OsmApiId } from '../helpers';
 import { fetchJson } from '../fetch';
 import { getOverpassUrl, overpassGeomToGeojson } from '../overpassSearch';
-import { getAllTicks } from '../ticks';
+import { getAllTicks, getTickKey } from '../ticks';
 import { Tick, TickStyle } from '../../components/FeaturePanel/Climbing/types';
 import {
   findOrConvertRouteGrade,
@@ -52,7 +52,7 @@ export const getMyTicks = async (userSettings): Promise<TickRowType[]> => {
     );
 
     return {
-      key: `${tick.osmId}-${tick.date}`,
+      key: getTickKey(tick),
       name: feature?.tags?.name,
       grade: routeDifficulty.grade,
       center: feature?.center,

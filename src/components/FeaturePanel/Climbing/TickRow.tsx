@@ -10,6 +10,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
+  getTickKey,
   onTickDelete,
   onTickUpdate,
   tickStyles,
@@ -19,23 +20,22 @@ import { Tick } from './types';
 
 type TickRowProps = {
   tick: Tick;
-  index: number;
 };
 
-export const TickRow = ({ tick, index }: TickRowProps) => {
-  const deleteTick = (deteledIndex) => {
-    onTickDelete({ osmId: tick.osmId, index: deteledIndex });
+export const TickRow = ({ tick }: TickRowProps) => {
+  const deleteTick = (key) => {
+    onTickDelete(key);
   };
 
-  const onTickStyleChange = (event, changedIndex) => {
+  const onTickStyleChange = (event, key) => {
     onTickUpdate({
-      osmId: tick.osmId,
-      index: changedIndex,
+      tickKey: key,
       updatedObject: { style: event.target.value },
     });
   };
 
   const formattedDate = tick.date ? format(tick.date, DEFAULT_DATA_FORMAT) : '';
+  const tickKey = getTickKey(tick);
 
   return (
     <TableRow>
@@ -45,7 +45,7 @@ export const TickRow = ({ tick, index }: TickRowProps) => {
             value={tick.style}
             size="small"
             variant="standard"
-            onChange={(e) => onTickStyleChange(e, index)}
+            onChange={(e) => onTickStyleChange(e, tickKey)}
           >
             {tickStyles.map((tickStyle) => (
               <MenuItem value={tickStyle.key}>{tickStyle.name}</MenuItem>
@@ -55,7 +55,7 @@ export const TickRow = ({ tick, index }: TickRowProps) => {
       </TableCell>
       <TableCell>{formattedDate}</TableCell>
       <TableCell>
-        <IconButton size="small" onClick={() => deleteTick(index)}>
+        <IconButton size="small" onClick={() => deleteTick(tickKey)}>
           <DeleteIcon />
         </IconButton>
       </TableCell>
