@@ -21,13 +21,13 @@ export const PathWithBorder = ({
   ...props
 }) => {
   const config = useConfig();
-  const { isDifficultyHeatmapEnabled, routeIndexHovered } =
-    useClimbingContext();
+  const { routeIndexHovered } = useClimbingContext();
   const theme = useTheme();
 
-  const strokeColor = isDifficultyHeatmapEnabled
-    ? getDifficultyColor(getDifficulty(route.feature.tags), theme)
-    : config.pathStrokeColor;
+  const strokeColor = getDifficultyColor(
+    getDifficulty(route.feature.tags),
+    theme,
+  );
 
   const getPathColor = () => {
     if (isSelected) {

@@ -3,13 +3,19 @@ import Router from 'next/router';
 import styled from 'styled-components';
 import CloseIcon from '@mui/icons-material/Close';
 import TuneIcon from '@mui/icons-material/Tune';
-import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Tooltip,
+} from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { ClimbingSettings } from './ClimbingSettings';
 import { PhotoLink } from './PhotoLink';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
 import { getOsmappLink } from '../../../services/helpers';
+import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
 
 const Title = styled.div`
   flex: 1;
@@ -32,10 +38,10 @@ const PhotoLinks = styled.div`
 `;
 
 export const ClimbingDialogHeader = ({ onClose }) => {
-  const [isSettingsOpened, setIsSettingsOpened] = useState<boolean>(false);
+  const [isUserSettingsOpened, setIsUserSettingsOpened] =
+    useState<boolean>(false);
   const [clickCounter, setClickCounter] = useState<number>(0);
   const {
-    areRoutesVisible,
     setPhotoPath,
     photoPath,
     loadPhotoRelatedData,
@@ -98,24 +104,27 @@ export const ClimbingDialogHeader = ({ onClose }) => {
           )}
         </Title>
 
-        <IconButton
-          color="primary"
-          edge="end"
-          title={areRoutesVisible ? 'Hide routes' : 'Show routes'}
-          onClick={() => {
-            setIsSettingsOpened(!isSettingsOpened);
-          }}
-        >
-          <TuneIcon fontSize="small" />
-        </IconButton>
+        <Tooltip title="Show settings">
+          <IconButton
+            color="primary"
+            edge="end"
+            onClick={() => {
+              setIsUserSettingsOpened(!isUserSettingsOpened);
+            }}
+          >
+            <TuneIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
 
-        <IconButton color="primary" edge="end" onClick={onClose}>
-          <CloseIcon fontSize="small" />
-        </IconButton>
+        <Tooltip title="Close crag detail">
+          <IconButton color="primary" edge="end" onClick={onClose}>
+            <CloseIcon fontSize="small" />
+          </IconButton>
+        </Tooltip>
       </Toolbar>
-      <ClimbingSettings
-        isSettingsOpened={isSettingsOpened}
-        setIsSettingsOpened={setIsSettingsOpened}
+      <UserSettingsDialog
+        isOpened={isUserSettingsOpened}
+        onClose={() => setIsUserSettingsOpened(false)}
       />
     </AppBar>
   );
