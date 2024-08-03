@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { findTicks } from '../../../../services/ticks';
+import { findTicks, getTickKey } from '../../../../services/ticks';
 import { PanelLabel } from '../PanelLabel';
 import { TickRow } from '../TickRow';
 
@@ -15,9 +15,10 @@ export const MyRouteTicks = ({ osmId }) => {
   return (
     <Container>
       <PanelLabel>Ticks:</PanelLabel>
-      {ticks.map((tick, index) => (
-        <TickRow tick={tick} index={index} />
-      ))}
+      {ticks.map((tick) => {
+        const tickKey = getTickKey(tick);
+        return <TickRow tick={tick} key={tickKey} />;
+      })}
     </Container>
   );
 };
