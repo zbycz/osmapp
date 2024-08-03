@@ -31,7 +31,7 @@ export const Bolt = ({
       transform={`translate(${dx} ${dy}) rotate(45) scale(${
         1 / photoZoom.scale
       })`}
-      cursor={!isEditMode && 'help'}
+      cursor={isEditMode ? undefined : 'help'}
       onClick={onClick}
     >
       <rect

@@ -80,7 +80,10 @@ export const RouteDifficultyBadge = ({ routeDifficulties }: Props) => {
                   difficulty.gradeSystem !== routeDifficulty?.gradeSystem,
               )
               .map((difficulty) => (
-                <TooltipGradeItem difficulty={difficulty} />
+                <TooltipGradeItem
+                  difficulty={difficulty}
+                  key={`${difficulty.grade}-${difficulty.gradeSystem}`}
+                />
               ))}
         </>
       }
