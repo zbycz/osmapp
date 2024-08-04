@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Select, MenuItem, Tooltip } from '@mui/material';
+import { Select, MenuItem, Tooltip, FormControl } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import styled from 'styled-components';
 import { GRADE_SYSTEMS, GradeSystem } from './utils/grades/gradeData';
@@ -29,25 +29,25 @@ export const GradeSystemSelect = ({
   onClick,
   allowUnsetValue = true,
 }: Props) => (
-  <Select
-    value={selectedGradeSystem}
-    size="small"
-    variant="standard"
-    onClick={onClick}
-    onChange={(event: any) => {
-      setGradeSystem(event.target.value);
-    }}
-  >
-    {allowUnsetValue && <MenuItem value={null}>Original grade</MenuItem>}
-    {GRADE_SYSTEMS.map(({ key, name, description }) => (
-      <MenuItem value={key}>
-        <Row>
-          <div>{name}</div>
-          <Tooltip arrow title={description} placement="right">
-            <StyledInfoOutlinedIcon fontSize="small" color="secondary" />
-          </Tooltip>
-        </Row>
-      </MenuItem>
-    ))}
-  </Select>
+  <FormControl size="small">
+    <Select
+      value={selectedGradeSystem}
+      onClick={onClick}
+      onChange={(event: any) => {
+        setGradeSystem(event.target.value);
+      }}
+    >
+      {allowUnsetValue && <MenuItem value={null}>Original grade</MenuItem>}
+      {GRADE_SYSTEMS.map(({ key, name, description }) => (
+        <MenuItem value={key}>
+          <Row>
+            <div>{name}</div>
+            <Tooltip arrow title={description} placement="right">
+              <StyledInfoOutlinedIcon fontSize="small" color="secondary" />
+            </Tooltip>
+          </Row>
+        </MenuItem>
+      ))}
+    </Select>
+  </FormControl>
 );

@@ -3,9 +3,9 @@ import {
   deleteFromArray,
   updateElementOnIndex,
 } from '../components/FeaturePanel/Climbing/utils/array';
+import { t } from './intl';
 
 const KEY = 'ticks';
-
 export const tickStyles: Array<{
   key: TickStyle;
   name: string;
@@ -14,38 +14,47 @@ export const tickStyles: Array<{
   {
     key: null,
     name: 'Not selected',
+    description: t('tick.style_description_not_selected'),
   },
   {
     key: 'OS',
     name: 'On sight',
+    description: t('tick.style_description_OS'),
   },
   {
     key: 'FL',
     name: 'Flash',
+    description: t('tick.style_description_FL'),
   },
   {
     key: 'RP',
     name: 'Red point',
+    description: t('tick.style_description_RP'),
   },
   {
     key: 'PP',
     name: 'Pink point',
+    description: t('tick.style_description_PP'),
   },
   {
     key: 'RK',
     name: 'Red cross',
+    description: t('tick.style_description_RK'),
   },
   {
     key: 'AF',
     name: 'All free',
+    description: t('tick.style_description_AF'),
   },
   {
     key: 'TR',
     name: 'Top rope',
+    description: t('tick.style_description_TR'),
   },
   {
     key: 'FS',
     name: 'Free solo',
+    description: t('tick.style_description_FS'),
   },
 ];
 
@@ -71,12 +80,18 @@ export const setLocalStorageItem = (key: string, value: Array<Tick>) => {
 
 export const getAllTicks = (): Array<Tick> => getLocalStorageItem(KEY);
 
-export const onTickAdd = ({ osmId }) => {
+export const onTickAdd = ({
+  osmId,
+  style,
+}: {
+  osmId: string;
+  style: TickStyle;
+}) => {
   if (!osmId) return;
   const ticks = getAllTicks();
   setLocalStorageItem(KEY, [
     ...ticks,
-    { osmId, date: new Date().toISOString(), style: null },
+    { osmId, date: new Date().toISOString(), style },
   ]);
 };
 

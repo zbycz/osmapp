@@ -37,7 +37,7 @@ const PhotoLinks = styled.div`
   margin-bottom: 2px;
 `;
 
-export const ClimbingDialogHeader = ({ onClose }) => {
+export const ClimbingCragDialogHeader = ({ onClose }) => {
   const [isUserSettingsOpened, setIsUserSettingsOpened] =
     useState<boolean>(false);
   const [clickCounter, setClickCounter] = useState<number>(0);

@@ -14,7 +14,7 @@ import { ClimbingRestriction } from './ClimbingRestriction';
 import { EditButton } from '../EditButton';
 import { EditDialog } from '../EditDialog/EditDialog';
 
-export const ClimbingPanel = ({ footer, showTagsTable }) => {
+export const ClimbingCragPanel = ({ footer, showTagsTable }) => {
   const { feature } = useFeatureContext();
 
   const { preparePhotosAndSet } = useClimbingContext();

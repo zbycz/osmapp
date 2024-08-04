@@ -12,6 +12,7 @@ import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { PanelLabel } from '../FeaturePanel/Climbing/PanelLabel';
 import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
 
 export const UserSettingsDialog = ({ onClose, isOpened }) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
@@ -45,6 +46,15 @@ export const UserSettingsDialog = ({ onClose, isOpened }) => {
                 );
               }}
               checked={userSettings['climbing.isGradesOnPhotosVisible']}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText>Default climbing style</ListItemText>
+            <TickStyleSelect
+              value={userSettings['climbing.defaultClimbingStyle']}
+              onChange={(e) => {
+                setUserSetting('climbing.defaultClimbingStyle', e.target.value);
+              }}
             />
           </ListItem>
         </List>

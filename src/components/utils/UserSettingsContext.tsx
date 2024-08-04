@@ -1,10 +1,12 @@
 import React, { createContext, useContext } from 'react';
 import { usePersistedState } from './usePersistedState';
 import { GradeSystem } from '../FeaturePanel/Climbing/utils/grades/gradeData';
+import { TickStyle } from '../FeaturePanel/Climbing/types';
 
 type UserSettingsType = {
   'climbing.gradeSystem': GradeSystem;
   'climbing.isGradesOnPhotosVisible': boolean;
+  'climbing.defaultClimbingStyle': TickStyle;
 };
 
 type UserSettingsContextType = {
@@ -16,6 +18,7 @@ type UserSettingsContextType = {
 const initialUserSettings: UserSettingsType = {
   'climbing.gradeSystem': null,
   'climbing.isGradesOnPhotosVisible': true,
+  'climbing.defaultClimbingStyle': 'OS',
 };
 
 export const UserSettingsContext =
