@@ -10,9 +10,8 @@ import { Wrapper } from './Wrapper';
 import { Table } from './Table';
 import { getShortId, getUrlOsmId } from '../../../services/helpers';
 import { captureException } from '../../../helpers/sentry';
-import { RouteDifficultyBadge } from '../Climbing/RouteDifficultyBadge';
-import { getDifficulties } from '../Climbing/utils/grades/routeGrade';
 import { MyRouteTicks } from '../Climbing/Ticks/MyRouteTicks';
+import { getIsClimbingRoute } from '../../utils/openClimbingUtils';
 
 class ErrorBoundary extends React.Component<
   { fallback: React.ReactNode },
@@ -78,24 +77,11 @@ const OnlyTagsTable = () => {
   );
 };
 
-export const RouteInfo = () => {
-  const { feature } = useFeatureContext();
-  const routeDifficulties = getDifficulties(feature?.tags);
-  const shortOsmId = getShortId(feature?.osmMeta);
-  return (
-    <>
-      <RouteDifficultyBadge routeDifficulties={routeDifficulties} />
-      <MyRouteTicks shortOsmId={shortOsmId} />
-    </>
-  );
-};
-
 export const Properties = ({ showTags }) => {
   const { feature } = useFeatureContext();
   const key = feature && getUrlOsmId(feature.osmMeta);
-  const isClimbingRoute = ['route_bottom', 'route_top'].includes(
-    feature.tags.climbing,
-  );
+  const isClimbingRoute = getIsClimbingRoute(feature?.tags);
+  const shortOsmId = getShortId(feature?.osmMeta);
 
   return (
     <>
@@ -107,7 +93,7 @@ export const Properties = ({ showTags }) => {
           <IdSchemaFields />
         </ErrorBoundary>
       )}
-      {isClimbingRoute && <RouteInfo />}
+      {isClimbingRoute && <MyRouteTicks shortOsmId={shortOsmId} />}
     </>
   );
 };

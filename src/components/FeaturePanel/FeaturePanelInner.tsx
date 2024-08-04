@@ -30,6 +30,9 @@ import { CragsInArea } from './CragsInArea';
 import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
+import { getIsClimbingRoute } from '../utils/openClimbingUtils';
+import { ConvertedRouteDifficultyBadge } from './Climbing/ConvertedRouteDifficultyBadge';
+import { getDifficulties } from './Climbing/utils/grades/routeGrade';
 
 const Flex = styled.div`
   flex: 1;
@@ -92,12 +95,19 @@ export const FeaturePanelInner = () => {
       </ClimbingContextProvider>
     );
   }
+  const isClimbingRoute = getIsClimbingRoute(feature?.tags);
+  const routeDifficulties = getDifficulties(feature?.tags);
 
   return (
     <>
       <PanelContent>
         <PanelSidePadding>
           <FeatureHeading />
+          {isClimbingRoute && (
+            <ConvertedRouteDifficultyBadge
+              routeDifficulties={routeDifficulties}
+            />
+          )}
           <ParentLink />
 
           <ClimbingRestriction />
