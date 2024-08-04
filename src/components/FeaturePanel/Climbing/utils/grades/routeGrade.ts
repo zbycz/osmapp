@@ -52,6 +52,11 @@ export const getDifficulty = (
 
   return undefined;
 };
+export const getOsmTagFromGradeSystem = (gradeSystemKey: GradeSystem) =>
+  `climbing:grade:${gradeSystemKey}`;
+
+export const getGradeSystemFromOsmTag = (osmTagKey: string) =>
+  osmTagKey.split(':', 3)[2];
 
 export const getDifficulties = (tags: FeatureTags): RouteDifficulty[] => {
   if (!tags) {
@@ -64,7 +69,7 @@ export const getDifficulties = (tags: FeatureTags): RouteDifficulty[] => {
 
   return gradeKeys.map((gradeKey) => ({
     grade: tags[gradeKey],
-    gradeSystem: gradeKey.split(':', 3)[2] ?? '?',
+    gradeSystem: getGradeSystemFromOsmTag(gradeKey) ?? '?',
   }));
 };
 
@@ -83,9 +88,6 @@ export const getDifficultyColor = (routeDifficulty, theme) => {
 
 export const getGradeSystemName = (gradeSystemKey: GradeSystem) =>
   GRADE_SYSTEMS.find((item) => item.key === gradeSystemKey)?.name;
-
-export const getOsmTagFromGradeSystem = (gradeSystemKey: GradeSystem) =>
-  `climbing:grade:${gradeSystemKey}`;
 
 export const findOrConvertRouteGrade = (
   routeDifficulties: RouteDifficulty[],

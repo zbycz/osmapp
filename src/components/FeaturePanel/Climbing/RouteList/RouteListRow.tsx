@@ -10,7 +10,7 @@ import { emptyRoute } from '../utils/emptyRoute';
 import { RouteNumber } from '../RouteNumber';
 import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
-import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
+import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
 import { getShortId } from '../../../../services/helpers';
 import { getDifficulties } from '../utils/grades/routeGrade';
 import { TickedRouteCheck } from '../Ticks/TickedRouteCheck';
@@ -157,7 +157,9 @@ export const RenderListRow = ({
           <TickedRouteCheck osmId={osmId} />
         </NameCell>
         <DifficultyCell $width={50}>
-          <RouteDifficultyBadge routeDifficulties={routeDifficulties} />
+          <ConvertedRouteDifficultyBadge
+            routeDifficulties={routeDifficulties}
+          />
         </DifficultyCell>
 
         <Cell $width={50}>

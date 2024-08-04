@@ -37,6 +37,8 @@ export default {
   'tick.style_description_TR': 'Climbing the route with a rope already anchored at the top.',
   'tick.style_description_FS': 'Climbing the route without any protective gear or ropes.',
 
+  'climbing_renderer.climbing_grade': 'climbing grade ',
+
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
