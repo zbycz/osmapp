@@ -5,6 +5,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
+import { GalleryControls } from './GalleryControls';
 
 const EditorContainer = styled.div<{ imageHeight: number }>`
   display: flex;
@@ -144,6 +145,7 @@ export const RoutesEditor = ({
         onEditorTouchMove={onTouchMove}
         transformOrigin={transformOrigin}
       />
+      <GalleryControls />
     </EditorContainer>
   );
 };
