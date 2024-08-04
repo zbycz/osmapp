@@ -4,6 +4,7 @@ import { ClimbingRoute } from '../types';
 import { Label } from './Label';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PhotoLink } from '../PhotoLink';
+import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
 
 const Container = styled.div`
   display: flex;
@@ -33,21 +34,23 @@ export const RouteInDifferentPhotos = ({
   };
 
   const photos = route.paths ? Object.keys(route.paths) : [];
+
   return photos.length > 0 ? (
     <Container>
       <Label>Available in photos:</Label>
       <Row>
-        {photos.map((photo, index) => (
-          <PhotoLink
-            isCurrentPhoto={photoPath === photo}
-            onClick={(e) => onPhotoChange(e, photo)}
-          >
-            {index}
-          </PhotoLink>
-        ))}
+        {photos.map((photo) => {
+          const url = getCommonsImageUrl(`File:${photo}`, 160);
+          return (
+            <PhotoLink
+              isCurrentPhoto={photoPath === photo}
+              onClick={(e) => onPhotoChange(e, photo)}
+            >
+              <img src={url} height={80} alt="Preview" />
+            </PhotoLink>
+          );
+        })}
       </Row>
     </Container>
-  ) : (
-    <Label>Route is not marked in any photo</Label>
-  );
+  ) : null;
 };

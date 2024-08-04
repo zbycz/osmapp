@@ -218,4 +218,5 @@ export default {
   'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
   'climbingpanel.create_first_node': 'Click on the beginning of the route',
   'climbingpanel.create_next_node': 'Follow direction of the route',
+  'climbingpanel.draw_route': 'Draw route',
 };
