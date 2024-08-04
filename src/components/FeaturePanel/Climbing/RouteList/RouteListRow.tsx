@@ -3,8 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { debounce } from 'lodash';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import CheckIcon from '@mui/icons-material/Check';
-import { TextField, Tooltip, IconButton } from '@mui/material';
+import { IconButton, TextField } from '@mui/material';
 import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { emptyRoute } from '../utils/emptyRoute';
@@ -13,8 +12,8 @@ import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import { getShortId } from '../../../../services/helpers';
-import { isTicked } from '../../../../services/ticks';
 import { getDifficulties } from '../utils/grades/routeGrade';
+import { TickedRouteCheck } from '../Ticks/TickedRouteCheck';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -109,7 +108,7 @@ export const RenderListRow = ({
     setTempRoute({ ...tempRoute, [propName]: e.target.value });
     debouncedValueChange(e, propName);
   };
-  const ticked = isTicked(osmId);
+
   const isExpanded = routesExpanded.indexOf(index) > -1;
 
   const isReadOnly =
@@ -155,11 +154,7 @@ export const RenderListRow = ({
               fullWidth
             />
           )}
-          {ticked && (
-            <Tooltip title="You ticked this route">
-              <CheckIcon color="primary" style={{ marginRight: 20 }} />
-            </Tooltip>
-          )}
+          <TickedRouteCheck osmId={osmId} />
         </NameCell>
         <DifficultyCell $width={50}>
           <RouteDifficultyBadge routeDifficulties={routeDifficulties} />

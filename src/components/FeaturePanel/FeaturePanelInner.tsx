@@ -20,7 +20,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
-import { ClimbingPanel } from './Climbing/ClimbingPanel';
+import { ClimbingCragPanel } from './Climbing/ClimbingCragPanel';
 import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
@@ -88,7 +88,7 @@ export const FeaturePanelInner = () => {
   ) {
     return (
       <ClimbingContextProvider feature={feature} key={getKey(feature)}>
-        <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
+        <ClimbingCragPanel footer={footer} showTagsTable={showTagsTable} />
       </ClimbingContextProvider>
     );
   }

@@ -1,28 +1,24 @@
 import { format } from 'date-fns';
 import React from 'react';
-import {
-  FormControl,
-  IconButton,
-  MenuItem,
-  Select,
-  TableCell,
-  TableRow,
-} from '@mui/material';
+import { FormControl, IconButton, TableCell, TableRow } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
   getTickKey,
   onTickDelete,
   onTickUpdate,
-  tickStyles,
 } from '../../../services/ticks';
 import { DEFAULT_DATA_FORMAT } from '../../../config';
 import { Tick } from './types';
+import { TickStyleSelect } from './Ticks/TickStyleSelect';
+import { useSnackbar } from '../../utils/SnackbarContext';
 
 type TickRowProps = {
   tick: Tick;
 };
 
 export const TickRow = ({ tick }: TickRowProps) => {
+  const tickKey = getTickKey(tick);
+  const showSnackbar = useSnackbar();
   const deleteTick = (key) => {
     onTickDelete(key);
   };
@@ -34,28 +30,25 @@ export const TickRow = ({ tick }: TickRowProps) => {
     });
   };
 
+  const handleTickDelete = () => {
+    deleteTick(tickKey);
+    showSnackbar('Tick was deleted', 'success');
+  };
   const formattedDate = tick.date ? format(tick.date, DEFAULT_DATA_FORMAT) : '';
-  const tickKey = getTickKey(tick);
 
   return (
     <TableRow>
       <TableCell>
         <FormControl size="small">
-          <Select
+          <TickStyleSelect
             value={tick.style}
-            size="small"
-            variant="standard"
             onChange={(e) => onTickStyleChange(e, tickKey)}
-          >
-            {tickStyles.map((tickStyle) => (
-              <MenuItem value={tickStyle.key}>{tickStyle.name}</MenuItem>
-            ))}
-          </Select>
+          />
         </FormControl>
       </TableCell>
       <TableCell>{formattedDate}</TableCell>
       <TableCell>
-        <IconButton size="small" onClick={() => deleteTick(tickKey)}>
+        <IconButton size="small" onClick={handleTickDelete}>
           <DeleteIcon />
         </IconButton>
       </TableCell>

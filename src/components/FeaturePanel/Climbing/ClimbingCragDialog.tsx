@@ -5,7 +5,7 @@ import Router from 'next/router';
 import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
 import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { ClimbingDialogHeader } from './ClimbingDialogHeader';
+import { ClimbingCragDialogHeader } from './ClimbingCragDialogHeader';
 import { getOsmappLink } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useGetHandleSave } from './useGetHandleSave';
@@ -16,7 +16,7 @@ const Flex = styled.div`
   width: 100%;
 `;
 
-export const ClimbingDialog = ({ photo }: { photo?: string }) => {
+export const ClimbingCragDialog = ({ photo }: { photo?: string }) => {
   const contentRef = useRef(null);
 
   const {
@@ -63,7 +63,7 @@ export const ClimbingDialog = ({ photo }: { photo?: string }) => {
 
   return (
     <Dialog fullScreen open onClose={handleClose}>
-      <ClimbingDialogHeader onClose={handleClose} />
+      <ClimbingCragDialogHeader onClose={handleClose} />
 
       <DialogContent
         dividers

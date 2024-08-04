@@ -3,7 +3,6 @@ import styled from 'styled-components';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import AddIcon from '@mui/icons-material/Add';
 import {
   List,
   ListItem,
@@ -20,8 +19,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
-import { onTickAdd } from '../../../../services/ticks';
-import { MyRouteTicks } from './MyRouteTicks';
+import { MyRouteTicks } from '../Ticks/MyRouteTicks';
 
 const Left = styled.div`
   flex: 1;
@@ -186,24 +184,10 @@ export const ExpandedRow = ({
                   </Button>
                 ) : null}
               </ListItem>
-              <ListItem>
-                <Button
-                  onClick={() => {
-                    onTickAdd({ osmId });
-                    // stopPropagation(e);
-                  }}
-                  color="secondary"
-                  size="small"
-                  variant="text"
-                  endIcon={<AddIcon />}
-                >
-                  Add tick
-                </Button>
-              </ListItem>
             </List>
           </Right>
         </Flex>
-        <MyRouteTicks osmId={osmId} />
+        <MyRouteTicks shortOsmId={osmId} />
       </ExpandedRowContainer>
       <Dialog
         open={routeToDelete !== null}
