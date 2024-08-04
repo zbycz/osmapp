@@ -1,56 +1,59 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
-import { Button, Snackbar, Alert } from '@mui/material';
+import { Button } from '@mui/material';
 import { t } from '../../../services/intl';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteNumber } from './RouteNumber';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { useSnackbar } from '../../utils/SnackbarContext';
 
 const DrawRouteButton = styled(Button)`
   align-items: baseline;
 `;
+const Container = styled.div`
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+`;
 
 export const Guide = () => {
-  const [isGuideClosed, setIsGuideClosed] = useState(false);
   const { routeSelectedIndex, getMachine, getCurrentPath } =
     useClimbingContext();
   const machine = getMachine();
   const path = getCurrentPath();
+  const showSnackbar = useSnackbar();
 
-  const handleClose = () => {
-    setIsGuideClosed(true);
-  };
   const onDrawRouteClick = () => {
+    showSnackbar(
+      path.length === 0
+        ? t('climbingpanel.create_first_node')
+        : t('climbingpanel.create_next_node'),
+      'info',
+    );
     machine.execute('extendRoute', { routeNumber: routeSelectedIndex });
   };
   const isInSchema = path.length > 0;
   const showDrawButton =
-    !isInSchema && machine.currentStateName !== 'extendRoute';
+    routeSelectedIndex !== null &&
+    !isInSchema &&
+    machine.currentStateName !== 'extendRoute';
 
   const {
     feature: {
       osmMeta: { id },
     },
   } = useFeatureContext();
+
   return (
-    <Snackbar
-      open={
-        (machine.currentStateName === 'extendRoute' && !isGuideClosed) ||
-        (routeSelectedIndex !== null && !isInSchema)
-      }
-      anchorOrigin={{
-        vertical: showDrawButton ? 'bottom' : 'top',
-        horizontal: showDrawButton ? 'left' : 'center',
-      }}
-    >
-      {showDrawButton ? (
+    <Container>
+      {showDrawButton && (
         <DrawRouteButton
           variant="contained"
           size="small"
           onClick={onDrawRouteClick}
         >
-          Zakreslit cestu &nbsp;
+          {t('climbingpanel.draw_route')} &nbsp;
           <RouteNumber
             isSelected
             photoInfoForRoute="hasPathOnThisPhoto"
@@ -59,13 +62,7 @@ export const Guide = () => {
             {routeSelectedIndex + 1}
           </RouteNumber>
         </DrawRouteButton>
-      ) : (
-        <Alert onClose={handleClose} severity="info" variant="filled">
-          {path.length === 0
-            ? t('climbingpanel.create_first_node')
-            : t('climbingpanel.create_next_node')}
-        </Alert>
       )}
-    </Snackbar>
+    </Container>
   );
 };

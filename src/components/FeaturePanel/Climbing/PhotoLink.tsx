@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Tooltip } from '@mui/material';
 
 type Props = {
-  children: string | number;
+  children: React.ReactNode;
   isCurrentPhoto: boolean;
   onClick: (e: any) => void;
 };

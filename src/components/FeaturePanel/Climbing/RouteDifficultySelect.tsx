@@ -9,6 +9,7 @@ import { GradeSystem } from './utils/grades/gradeData';
 
 const Flex = styled.div`
   display: flex;
+  gap: 8px;
 `;
 
 type Props = {

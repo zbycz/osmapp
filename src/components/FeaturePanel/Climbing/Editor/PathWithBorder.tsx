@@ -25,7 +25,7 @@ export const PathWithBorder = ({
   const theme = useTheme();
 
   const strokeColor = getDifficultyColor(
-    getDifficulty(route.feature.tags),
+    getDifficulty(route?.feature.tags),
     theme,
   );
 
