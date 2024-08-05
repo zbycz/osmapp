@@ -9,6 +9,8 @@ import { FoodHygieneRatingSchemeRenderer } from './renderers/FoodHygieneRatingSc
 import { WikipediaRenderer } from './renderers/WikipediaRenderer';
 import { WikidataRenderer } from './renderers/WikidataRenderer';
 import { isDesktopResolution } from '../helpers';
+import { ClimbingRenderer } from './renderers/ClimbingRenderer';
+import { gradeSystemKeys } from './Climbing/utils/grades/gradeSystem';
 
 const Wrapper = styled.div`
   position: relative;
@@ -45,8 +47,17 @@ type Renderers = {
 };
 
 const DefaultRenderer = ({ v }) => v;
+
+const climbingRenderers = gradeSystemKeys.reduce(
+  (acc, gradeSystemKey) => ({
+    ...acc,
+    [gradeSystemKey]: ClimbingRenderer,
+  }),
+  {},
+);
+
 const renderers: Renderers = {
-  // also updatd in schema – getFeaturedTags()
+  // also update in schema – getFeaturedTags()
   website: WebsiteRenderer,
   'website:2': WebsiteRenderer,
   'contact:website': WebsiteRenderer,
@@ -58,6 +69,7 @@ const renderers: Renderers = {
   'fhrs:id': FoodHygieneRatingSchemeRenderer,
   wikipedia: WikipediaRenderer,
   wikidata: WikidataRenderer,
+  ...climbingRenderers,
 };
 
 export const FeaturedTag = ({ k, v }) => {

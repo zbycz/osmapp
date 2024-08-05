@@ -18,6 +18,7 @@ export const Container = styled.div<{ $border: boolean }>`
 export const InnerContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 export const Title = styled.div`
   font-weight: bold;

@@ -20,7 +20,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
-import { ClimbingPanel } from './Climbing/ClimbingPanel';
+import { ClimbingCragPanel } from './Climbing/ClimbingCragPanel';
 import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
@@ -30,6 +30,9 @@ import { CragsInArea } from './CragsInArea';
 import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
+import { getIsClimbingRoute } from '../utils/openClimbingUtils';
+import { ConvertedRouteDifficultyBadge } from './Climbing/ConvertedRouteDifficultyBadge';
+import { getDifficulties } from './Climbing/utils/grades/routeGrade';
 
 const Flex = styled.div`
   flex: 1;
@@ -88,16 +91,23 @@ export const FeaturePanelInner = () => {
   ) {
     return (
       <ClimbingContextProvider feature={feature} key={getKey(feature)}>
-        <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
+        <ClimbingCragPanel footer={footer} showTagsTable={showTagsTable} />
       </ClimbingContextProvider>
     );
   }
+  const isClimbingRoute = getIsClimbingRoute(feature?.tags);
+  const routeDifficulties = getDifficulties(feature?.tags);
 
   return (
     <>
       <PanelContent>
         <PanelSidePadding>
           <FeatureHeading />
+          {isClimbingRoute && (
+            <ConvertedRouteDifficultyBadge
+              routeDifficulties={routeDifficulties}
+            />
+          )}
           <ParentLink />
 
           <ClimbingRestriction />

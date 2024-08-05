@@ -46,7 +46,7 @@ const getGroupingLabel = (label: string) => String(parseFloat(label));
 
 export const RouteDistribution = () => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
-  const gradeSystem = userSettings['climbing.gradeSystem'];
+  const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   const theme = useTheme();
   const { routes } = useClimbingContext();

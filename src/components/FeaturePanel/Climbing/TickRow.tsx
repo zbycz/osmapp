@@ -1,75 +1,54 @@
 import { format } from 'date-fns';
 import React from 'react';
-import {
-  FormControl,
-  IconButton,
-  MenuItem,
-  Select,
-  TableCell,
-  TableRow,
-} from '@mui/material';
+import { FormControl, IconButton, TableCell, TableRow } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {
+  getTickKey,
   onTickDelete,
   onTickUpdate,
-  tickStyles,
 } from '../../../services/ticks';
 import { DEFAULT_DATA_FORMAT } from '../../../config';
-import { RouteDifficultyBadge } from './RouteDifficultyBadge';
 import { Tick } from './types';
-import { GradeSystem } from './utils/grades/gradeData';
+import { TickStyleSelect } from './Ticks/TickStyleSelect';
+import { useSnackbar } from '../../utils/SnackbarContext';
 
 type TickRowProps = {
-  grade?: GradeSystem;
-  gradeSystem?: string;
   tick: Tick;
-  index: number;
 };
 
-export const TickRow = ({ grade, gradeSystem, tick, index }: TickRowProps) => {
-  const deleteTick = (deteledIndex) => {
-    onTickDelete({ osmId: tick.osmId, index: deteledIndex });
+export const TickRow = ({ tick }: TickRowProps) => {
+  const tickKey = getTickKey(tick);
+  const showSnackbar = useSnackbar();
+  const deleteTick = (key) => {
+    onTickDelete(key);
   };
 
-  const onTickStyleChange = (event, changedIndex) => {
+  const onTickStyleChange = (event, key) => {
     onTickUpdate({
-      osmId: tick.osmId,
-      index: changedIndex,
+      tickKey: key,
       updatedObject: { style: event.target.value },
     });
   };
 
-  const formattedDate = tick.date ? format(tick.date, DEFAULT_DATA_FORMAT) : '';
-
-  const routeDifficulty = {
-    grade,
-    gradeSystem,
+  const handleTickDelete = () => {
+    deleteTick(tickKey);
+    showSnackbar('Tick was deleted', 'success');
   };
+  const formattedDate = tick.date ? format(tick.date, DEFAULT_DATA_FORMAT) : '';
 
   return (
     <TableRow>
-      {grade && gradeSystem && (
-        <TableCell>
-          <RouteDifficultyBadge routeDifficulty={routeDifficulty} />
-        </TableCell>
-      )}
       <TableCell>
         <FormControl size="small">
-          <Select
+          <TickStyleSelect
             value={tick.style}
-            size="small"
-            variant="standard"
-            onChange={(e) => onTickStyleChange(e, index)}
-          >
-            {tickStyles.map((tickStyle) => (
-              <MenuItem value={tickStyle.key}>{tickStyle.name}</MenuItem>
-            ))}
-          </Select>
+            onChange={(e) => onTickStyleChange(e, tickKey)}
+          />
         </FormControl>
       </TableCell>
       <TableCell>{formattedDate}</TableCell>
       <TableCell>
-        <IconButton size="small" onClick={() => deleteTick(index)}>
+        <IconButton size="small" onClick={handleTickDelete}>
           <DeleteIcon />
         </IconButton>
       </TableCell>

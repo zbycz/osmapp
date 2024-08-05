@@ -8,8 +8,10 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { Subheading } from '../helpers/Subheading';
 import { Wrapper } from './Wrapper';
 import { Table } from './Table';
-import { getUrlOsmId } from '../../../services/helpers';
+import { getShortId, getUrlOsmId } from '../../../services/helpers';
 import { captureException } from '../../../helpers/sentry';
+import { MyRouteTicks } from '../Climbing/Ticks/MyRouteTicks';
+import { getIsClimbingRoute } from '../../utils/openClimbingUtils';
 
 class ErrorBoundary extends React.Component<
   { fallback: React.ReactNode },
@@ -77,18 +79,21 @@ const OnlyTagsTable = () => {
 
 export const Properties = ({ showTags }) => {
   const { feature } = useFeatureContext();
-
   const key = feature && getUrlOsmId(feature.osmMeta);
+  const isClimbingRoute = getIsClimbingRoute(feature?.tags);
+  const shortOsmId = getShortId(feature?.osmMeta);
 
   return (
     <>
       {showTags && <OnlyTagsTable />}
+
       {!showTags && (
         <ErrorBoundary key={key} fallback={<OnlyTagsTable />}>
           <FeaturedTags featuredTags={feature.schema?.featuredTags} />
           <IdSchemaFields />
         </ErrorBoundary>
       )}
+      {isClimbingRoute && <MyRouteTicks shortOsmId={shortOsmId} />}
     </>
   );
 };

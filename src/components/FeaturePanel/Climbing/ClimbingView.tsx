@@ -186,7 +186,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     getMachine,
     splitPaneHeight,
     setSplitPaneHeight,
-    areRoutesVisible,
     isEditMode,
     viewportSize,
     editorPosition,
@@ -354,9 +353,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     <>
                       <RoutesEditor
                         isRoutesLayerVisible={
-                          !isSplitViewDragging &&
-                          areRoutesVisible &&
-                          !areRoutesLoading
+                          !isSplitViewDragging && !areRoutesLoading
                         }
                         imageUrl={imageUrl}
                         photoResolution={photoResolution}
@@ -364,7 +361,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     </>
                   </TransformComponent>
                 </TransformWrapper>
-                {isEditMode && areRoutesVisible && (
+                {isEditMode && (
                   <>
                     <ControlPanel />
                     <Guide />

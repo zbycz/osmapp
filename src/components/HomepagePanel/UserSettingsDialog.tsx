@@ -5,12 +5,14 @@ import {
   List,
   ListItem,
   ListItemText,
+  Switch,
 } from '@mui/material';
 import React from 'react';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { PanelLabel } from '../FeaturePanel/Climbing/PanelLabel';
 import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
 
 export const UserSettingsDialog = ({ onClose, isOpened }) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
@@ -30,6 +32,29 @@ export const UserSettingsDialog = ({ onClose, isOpened }) => {
                 setUserSetting('climbing.gradeSystem', gradeSystem);
               }}
               selectedGradeSystem={userSettings['climbing.gradeSystem']}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText>Show grades in pictures</ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              onChange={(e) => {
+                setUserSetting(
+                  'climbing.isGradesOnPhotosVisible',
+                  e.target.checked,
+                );
+              }}
+              checked={userSettings['climbing.isGradesOnPhotosVisible']}
+            />
+          </ListItem>
+          <ListItem>
+            <ListItemText>Default climbing style</ListItemText>
+            <TickStyleSelect
+              value={userSettings['climbing.defaultClimbingStyle']}
+              onChange={(e) => {
+                setUserSetting('climbing.defaultClimbingStyle', e.target.value);
+              }}
             />
           </ListItem>
         </List>

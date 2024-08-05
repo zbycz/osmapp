@@ -3,16 +3,16 @@ import Link from 'next/link';
 import { format } from 'date-fns';
 import React from 'react';
 import { TickRowType } from '../../services/my-ticks/getMyTicks';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { getUrlOsmId } from '../../services/helpers';
-import { RouteDifficultyBadge } from '../FeaturePanel/Climbing/RouteDifficultyBadge';
+import { ConvertedRouteDifficultyBadge } from '../FeaturePanel/Climbing/ConvertedRouteDifficultyBadge';
 import { DEFAULT_DATA_FORMAT } from '../../config';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { getDifficulties } from '../FeaturePanel/Climbing/utils/grades/routeGrade';
 
 export const MyTicksRow = ({ tickRow }: { tickRow: TickRowType }) => {
-  const { userSettings } = useUserSettingsContext();
+  const routeDifficulties = getDifficulties(tickRow.tags);
   const { view } = useMapStateContext();
-  const { name, grade, style, date, apiId } = tickRow;
+  const { name, style, date, apiId } = tickRow;
 
   return (
     <TableRow>
@@ -20,12 +20,7 @@ export const MyTicksRow = ({ tickRow }: { tickRow: TickRowType }) => {
         <Link href={`/${getUrlOsmId(apiId)}#${view.join('/')}`}>{name}</Link>
       </TableCell>
       <TableCell>
-        <RouteDifficultyBadge
-          routeDifficulty={{
-            grade,
-            gradeSystem: userSettings['climbing.gradeSystem'],
-          }}
-        />
+        <ConvertedRouteDifficultyBadge routeDifficulties={routeDifficulties} />
       </TableCell>
       <TableCell>{style}</TableCell>
       <TableCell>{format(date, DEFAULT_DATA_FORMAT)}</TableCell>

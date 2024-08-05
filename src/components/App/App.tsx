@@ -16,7 +16,7 @@ import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
-import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
+import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
@@ -89,7 +89,7 @@ const IndexWithProviders = () => {
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
-          <ClimbingDialog photo={photo} />
+          <ClimbingCragDialog photo={photo} />
         </ClimbingContextProvider>
       )}
       <HomepagePanel />
