@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import WebsiteRenderer from './renderers/WebsiteRenderer';
 import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
 import PhoneRenderer from './renderers/PhoneRenderer';
-import { EditIconButton } from './helpers/EditIconButton';
+import { InlineEditButton } from './helpers/InlineEditButton';
 import { FoodHygieneRatingSchemeRenderer } from './renderers/FoodHygieneRatingScheme';
 import { WikipediaRenderer } from './renderers/WikipediaRenderer';
 import { WikidataRenderer } from './renderers/WikidataRenderer';
@@ -72,12 +72,12 @@ const renderers: Renderers = {
   ...climbingRenderers,
 };
 
-export const FeaturedTag = ({ k, v, onEdit }) => {
+export const FeaturedTag = ({ k, v }) => {
   const Renderer = renderers[k] || DefaultRenderer;
 
   return (
     <Wrapper>
-      <EditIconButton onClick={() => onEdit(k)} />
+      <InlineEditButton k={k} />
 
       <Value>
         <Renderer k={k} v={v} />
