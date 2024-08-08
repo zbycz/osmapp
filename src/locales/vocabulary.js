@@ -16,6 +16,28 @@ export default {
 
   'user.login_register': 'Login / register',
   'user.logout': 'Logout',
+  'user.my_ticks': 'My ticks',
+  'user.user_settings': 'Settings',
+
+  'my_ticks.title': 'My ticks',
+  'my_ticks.route_name': 'Name',
+  'my_ticks.route_grade': 'Grade',
+  'my_ticks.route_style': 'Style',
+  'my_ticks.route_date': 'Date',
+  'my_ticks.no_ticks_paragraph1': 'You have no ticks so far…',
+  'my_ticks.no_ticks_paragraph2': 'Try to add one on the crag',
+
+  'tick.style_description_not_selected': 'No climbing style selected.',
+  'tick.style_description_OS': 'Climbing the route on the first try without any prior knowledge or practice.',
+  'tick.style_description_FL': 'Climbing the route on the first try with some prior knowledge or beta.',
+  'tick.style_description_RP': 'Successfully climbing the route after practicing it beforehand.',
+  'tick.style_description_PP': 'Successfully climbing the route with pre-placed protection after practicing it.',
+  'tick.style_description_RK': 'Climbing the route using a mix of free climbing and aid climbing.',
+  'tick.style_description_AF': 'Climbing the route entirely free without using aid.',
+  'tick.style_description_TR': 'Climbing the route with a rope already anchored at the top.',
+  'tick.style_description_FS': 'Climbing the route without any protective gear or ropes.',
+
+  'climbing_renderer.climbing_grade': 'climbing grade ',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':

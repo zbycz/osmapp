@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import { Tooltip } from '@mui/material';
 
 type Props = {
   children: string | number;
@@ -20,7 +21,9 @@ const Container = styled.div<{ $isCurrentPhoto: boolean }>`
 `;
 
 export const PhotoLink = ({ children, isCurrentPhoto, onClick }: Props) => (
-  <Container $isCurrentPhoto={isCurrentPhoto} onClick={onClick}>
-    {children}
-  </Container>
+  <Tooltip title={`Show photo ${children}`}>
+    <Container $isCurrentPhoto={isCurrentPhoto} onClick={onClick}>
+      {children}
+    </Container>
+  </Tooltip>
 );

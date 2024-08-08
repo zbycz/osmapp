@@ -5,7 +5,12 @@ import type {
 
 const apiKey = '7dlhLl3hiXQ1gsth0kGu';
 
-export const OSMAPP_SPRITE = `${window.location.protocol}//${window.location.host}/sprites/osmapp`;
+export const OSMAPP_SPRITE = [
+  {
+    id: 'default',
+    url: `${window.location.protocol}//${window.location.host}/sprites/osmapp`,
+  },
+];
 
 export const GLYPHS = `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${apiKey}`;
 

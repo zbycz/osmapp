@@ -12,7 +12,6 @@ import {
 import { intl } from '../intl';
 import * as tagging from '../tagging/translations';
 import * as idTaggingScheme from '../tagging/idTaggingScheme';
-import { requestLines } from '../../components/FeaturePanel/PublicTransport/requestRoutes';
 
 const osm = (item) => ({ elements: [item] });
 const OVERPASS_CENTER_RESPONSE = {
@@ -86,21 +85,6 @@ describe('fetchFeature', () => {
     expect(feature).toEqual(relationFeature);
   });
 
-  it('should return some fetched routes', async () => {
-    // TODO refactor this to separate file + mock overpass request
-    const features = await requestLines('node', 3862767512);
-
-    features.forEach((feature) => {
-      expect(feature).toHaveProperty('ref');
-      expect(feature.ref).not.toBe('');
-      expect(feature.ref).toEqual(expect.any(String));
-      expect(feature).toHaveProperty('colour');
-      expect(
-        typeof feature.colour === 'string' || feature.colour === undefined,
-      ).toBeTruthy();
-    });
-  });
-
   it('should return cached center for a way in BROWSER', async () => {
     isBrowser.mockReturnValue(true);
     isServer.mockReturnValue(false);
@@ -116,6 +100,10 @@ describe('fetchFeature', () => {
 
     const feature = await fetchFeature('w51050330');
     expect(fetchJson).toHaveBeenCalledTimes(1);
-    expect(feature).toMatchObject({ ...wayFeature, center: [123, 456] });
+    expect(feature).toMatchObject({
+      ...wayFeature,
+      center: [123, 456],
+      imageDefs: [{ type: 'center', service: 'mapillary', center: [123, 456] }],
+    });
   });
 });

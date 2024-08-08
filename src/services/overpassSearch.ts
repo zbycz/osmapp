@@ -14,7 +14,7 @@ const getQueryFromTags = (tags) => {
 const getOverpassQuery = ([a, b, c, d], query) =>
   `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
 
-const getOverpassUrl = (fullQuery) =>
+export const getOverpassUrl = (fullQuery) =>
   `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
     fullQuery,
   )}`;

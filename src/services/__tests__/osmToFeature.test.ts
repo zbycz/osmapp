@@ -1,5 +1,7 @@
 import { osmToFeature } from '../osmToFeature';
 
+import { ImageDef } from '../types';
+
 const nodeResponse = {
   type: 'node',
   id: 6,
@@ -23,7 +25,37 @@ const nodeResponse = {
   },
 };
 
-const geojson = {
+const imageDefs: ImageDef[] = [
+  {
+    type: 'tag',
+    k: 'wikimedia_commons',
+    v: 'File:Lomy nad Velkou - Borová věž.jpg',
+    instant: true,
+    path: [
+      { suffix: '', x: 0.32, y: 0.902 },
+      { suffix: 'B', x: 0.371, y: 0.537 },
+      { suffix: 'A', x: 0.406, y: 0.173 },
+    ],
+  },
+  {
+    type: 'tag',
+    k: 'wikimedia_commons:2',
+    v: 'File:Lomy nad Velkou - Borová věž3.jpg',
+    instant: true,
+    path: [
+      { suffix: '', x: 0.924, y: 0.797 },
+      { suffix: 'B', x: 0.773, y: 0.428 },
+      { suffix: 'A', x: 0.562, y: 0.056 },
+    ],
+  },
+  {
+    type: 'center',
+    service: 'mapillary',
+    center: [14.2523716, 49.6541269],
+  },
+];
+
+const feature = {
   type: 'Feature',
   center: [14.2523716, 49.6541269],
   osmMeta: {
@@ -37,37 +69,9 @@ const geojson = {
   },
   properties: { class: 'climbing', subclass: 'climbing' },
   tags: nodeResponse.tags,
-  imageTags: [
-    {
-      imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/6/63/Lomy_nad_Velkou_-_Borová_věž.jpg/410px-Lomy_nad_Velkou_-_Borová_věž.jpg',
-      k: 'wikimedia_commons',
-      pathTag: '0.32,0.902|0.371,0.537B|0.406,0.173A',
-      path: [
-        { suffix: '', x: 0.32, y: 0.902 },
-        { suffix: 'B', x: 0.371, y: 0.537 },
-        { suffix: 'A', x: 0.406, y: 0.173 },
-      ],
-      type: 'wikimedia_commons',
-      v: 'File:Lomy nad Velkou - Borová věž.jpg',
-    },
-    {
-      imageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4f/Lomy_nad_Velkou_-_Borová_věž3.jpg/410px-Lomy_nad_Velkou_-_Borová_věž3.jpg',
-      k: 'wikimedia_commons:2',
-      pathTag: '0.924,0.797|0.773,0.428B|0.562,0.056A',
-      path: [
-        { suffix: '', x: 0.924, y: 0.797 },
-        { suffix: 'B', x: 0.773, y: 0.428 },
-        { suffix: 'A', x: 0.562, y: 0.056 },
-      ],
-      type: 'wikimedia_commons',
-      v: 'File:Lomy nad Velkou - Borová věž3.jpg',
-    },
-  ],
+  imageDefs,
 };
 
-test('node conversion with imageTags', () => {
-  // imageTags are not tested in osmApi.test.ts
-  expect(osmToFeature(nodeResponse)).toEqual(geojson);
+test('node conversion with imageDefs', () => {
+  expect(osmToFeature(nodeResponse)).toEqual(feature);
 });

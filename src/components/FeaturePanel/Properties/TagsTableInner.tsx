@@ -2,11 +2,10 @@ import React from 'react';
 import truncate from 'lodash/truncate';
 
 import { useToggleState } from '../../helpers';
-import { EditIconButton } from '../helpers/EditIconButton';
+import { InlineEditButton } from '../helpers/InlineEditButton';
 import { buildAddress } from '../../../services/helpers';
 import { ToggleButton } from '../helpers/ToggleButton';
 import { renderValue } from './renderValue';
-import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k) => k.match(/^name(:|$)/);
@@ -21,7 +20,7 @@ const isBrand = (k) => k.match(/^brand/);
 const isOperator = (k) => k.match(/^operator/);
 const isPayment = (k) => k.match(/^payment/);
 
-const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
+const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
   const [isShown, toggle] = useToggleState(false);
 
   if (!tags.length) {
@@ -33,7 +32,7 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
       <tr>
         <th>{label}</th>
         <td>
-          <EditIconButton onClick={() => onEdit(tags[0][0])} />
+          <InlineEditButton k={tags[0][0]} />
           {value || tags[0]?.[1]}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
@@ -61,8 +60,6 @@ const TagsGroup = ({ tags, label, value, hideArrow = false, onEdit }) => {
 // TODO make it dynamic - count how many "first parts before :" are there, and group all >= 2
 
 export const TagsTableInner = ({ tags, center, except = [] }) => {
-  const { openWithTag: onEdit } = useEditDialogContext();
-
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
   const addrs = tagsEntries.filter(([k]) => isAddr(k));
@@ -98,21 +95,18 @@ export const TagsTableInner = ({ tags, center, except = [] }) => {
         label={names.length === 1 ? names[0][0] : 'name:*'}
         value={truncate(tags.name, { length: 25 })}
         hideArrow={names.length === 1}
-        onEdit={onEdit}
       />
       <TagsGroup
         tags={shortNames}
         label={shortNames.length === 1 ? shortNames[0][0] : 'short_name:*'}
         value={shortNames[0]?.[1]}
         hideArrow={shortNames.length === 1}
-        onEdit={onEdit}
       />
       <TagsGroup
         tags={altNames}
         label={altNames.length === 1 ? altNames[0][0] : 'alt_name:*'}
         value={altNames[0]?.[1]}
         hideArrow={altNames.length === 1}
-        onEdit={onEdit}
       />
       <TagsGroup
         tags={officialNames}
@@ -121,60 +115,32 @@ export const TagsTableInner = ({ tags, center, except = [] }) => {
         }
         value={officialNames[0]?.[1]}
         hideArrow={officialNames.length === 1}
-        onEdit={onEdit}
       />
       <TagsGroup
         tags={oldNames}
         label={oldNames.length === 1 ? oldNames[0][0] : 'old_name:*'}
         value={oldNames[0]?.[1]}
         hideArrow={oldNames.length === 1}
-        onEdit={onEdit}
       />
       <TagsGroup
         tags={addrs}
         label="addr:*"
         value={buildAddress(Object.fromEntries(addrs) as any, center)}
-        onEdit={onEdit}
       />
       {rest.map(([k, v]) => (
         <tr key={k}>
           <th>{k}</th>
           <td>
-            <EditIconButton onClick={() => onEdit(k)} />
+            <InlineEditButton k={k} />
             {renderValue(k, v)}
           </td>
         </tr>
       ))}
-      <TagsGroup
-        tags={brands}
-        label="brand:*"
-        value={tags.brand}
-        onEdit={onEdit}
-      />
-      <TagsGroup
-        tags={buildings}
-        label="building:*"
-        value={tags.building}
-        onEdit={onEdit}
-      />
-      <TagsGroup
-        tags={networks}
-        label="network:*"
-        value={tags.network}
-        onEdit={onEdit}
-      />
-      <TagsGroup
-        tags={operator}
-        label="operator:*"
-        value={tags.operator}
-        onEdit={onEdit}
-      />
-      <TagsGroup
-        tags={payments}
-        label="payment:*"
-        value={tags.payment}
-        onEdit={onEdit}
-      />
+      <TagsGroup tags={brands} label="brand:*" value={tags.brand} />
+      <TagsGroup tags={buildings} label="building:*" value={tags.building} />
+      <TagsGroup tags={networks} label="network:*" value={tags.network} />
+      <TagsGroup tags={operator} label="operator:*" value={tags.operator} />
+      <TagsGroup tags={payments} label="payment:*" value={tags.payment} />
     </>
   );
 };

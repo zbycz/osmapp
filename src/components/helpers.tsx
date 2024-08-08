@@ -9,7 +9,9 @@ export const useToggleState = (
   return [value, () => set(!value)];
 };
 
-export const useBoolState = (initialState) => {
+export const useBoolState = (
+  initialState: boolean,
+): [boolean, () => void, () => void] => {
   const [value, set] = useState(initialState);
   const setTrue = useCallback(() => set(true), []);
   const setFalse = useCallback(() => set(false), []);

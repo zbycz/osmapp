@@ -1,17 +1,14 @@
 import styled, { useTheme } from 'styled-components';
 import React from 'react';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import {
-  convertGrade,
-  getDifficultyColor,
-  getGradeSystemName,
-} from './utils/grades/routeGrade';
+import { convertGrade, getDifficultyColor } from './utils/grades/routeGrade';
 import { PanelLabel } from './PanelLabel';
 import { ContentContainer } from './ContentContainer';
 import { GRADE_TABLE } from './utils/grades/gradeData';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { GradeSystemSelect } from './GradeSystemSelect';
 
 const MAX_HEIGHT = 100;
-const DISTRIBUTION_GRADE_SYSTEM = 'uiaa';
 
 const Container = styled.div`
   margin: 16px 12px 12px;
@@ -48,12 +45,15 @@ const Chart = styled.div<{ $ratio: number; $color: string }>`
 const getGroupingLabel = (label: string) => String(parseFloat(label));
 
 export const RouteDistribution = () => {
+  const { userSettings, setUserSetting } = useUserSettingsContext();
+  const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
+
   const theme = useTheme();
   const { routes } = useClimbingContext();
   if (routes.length === 0) return null;
 
   const prepareOccurrenceStructure = () =>
-    GRADE_TABLE[DISTRIBUTION_GRADE_SYSTEM].reduce<{ [grade: string]: number }>(
+    GRADE_TABLE[gradeSystem].reduce<{ [grade: string]: number }>(
       (acc, grade) => ({
         ...acc,
         [getGroupingLabel(grade)]: 0,
@@ -67,7 +67,7 @@ export const RouteDistribution = () => {
       if (!route.difficulty) return acc;
       const convertedGrade = convertGrade(
         route.difficulty.gradeSystem,
-        DISTRIBUTION_GRADE_SYSTEM,
+        gradeSystem,
         route.difficulty.grade,
       );
       const newGrade = getGroupingLabel(convertedGrade);
@@ -92,7 +92,16 @@ export const RouteDistribution = () => {
 
   return (
     <>
-      <PanelLabel addition={getGradeSystemName(DISTRIBUTION_GRADE_SYSTEM)}>
+      <PanelLabel
+        addition={
+          <GradeSystemSelect
+            setGradeSystem={(system) => {
+              setUserSetting('climbing.gradeSystem', system);
+            }}
+            selectedGradeSystem={userSettings['climbing.gradeSystem']}
+          />
+        }
+      >
         Routes distribution
       </PanelLabel>
       <Container>
@@ -101,7 +110,8 @@ export const RouteDistribution = () => {
             {heightsRatios.map((heightRatioItem) => {
               const color = getDifficultyColor(
                 {
-                  'climbing:grade:uiaa': heightRatioItem.grade,
+                  gradeSystem: 'uiaa',
+                  grade: heightRatioItem.grade,
                 },
                 theme,
               );

@@ -1,6 +1,6 @@
 import { Feature } from './types';
 import { getPoiClass } from './getPoiClass';
-import { getImageTags } from './images/getImageTags';
+import { getImageDefs } from './images/getImageDefs';
 
 export const osmToFeature = (element): Feature => {
   const {
@@ -12,14 +12,15 @@ export const osmToFeature = (element): Feature => {
     osmappDeletedMarker,
     ...osmMeta
   } = element;
+  const center = lat ? [lon, lat] : undefined;
   return {
     type: 'Feature' as const,
     geometry: undefined,
-    center: lat ? [lon, lat] : undefined,
+    center,
     osmMeta,
     tags,
     members,
-    imageTags: getImageTags(tags),
+    imageDefs: getImageDefs(tags, center),
     properties: { ...getPoiClass(tags) },
     deleted: osmappDeletedMarker,
   };

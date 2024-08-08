@@ -1,10 +1,12 @@
 import React from 'react';
 import { FeaturePanelInner } from './FeaturePanelInner';
 import { Drawer } from '../utils/Drawer';
+import {
+  DRAWER_PREVIEW_HEIGHT,
+  DRAWER_TOP_OFFSET,
+} from '../utils/MobilePageDrawer';
 
 const DRAWER_CLASSNAME = 'featurePanelInDrawer';
-const DRAWER_PREVIEW_HEIGHT = 86;
-const DRAWER_TOP_OFFSET = 8;
 
 export const FeaturePanelInDrawer = () => (
   <Drawer

@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import EditIcon from '@mui/icons-material/Edit';
 import { IconButton } from '@mui/material';
 import { useEditDialogContext } from './helpers/EditDialogContext';
-import { PoiDescription } from './ImageSection/PoiDescription';
-import { StarButton } from './ImageSection/StarButton';
+import { PoiDescription } from './helpers/PoiDescription';
+import { StarButton } from './helpers/StarButton';
 import { getLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
+import { isMobileDevice } from '../helpers';
 
 const StyledEditButton = styled(IconButton)`
   visibility: hidden;
@@ -18,6 +19,26 @@ const NameWithEdit = styled.div`
   display: flex;
   gap: 8px;
 `;
+
+const EditNameButton = () => {
+  const { openWithTag } = useEditDialogContext();
+  const { feature } = useFeatureContext();
+  if (feature?.skeleton || isMobileDevice()) {
+    return null;
+  }
+
+  return (
+    <div>
+      <StyledEditButton onClick={() => openWithTag('name')} size="small">
+        <EditIcon
+          fontSize="small"
+          titleAccess={t('featurepanel.inline_edit_title')}
+        />
+      </StyledEditButton>
+    </div>
+  );
+};
+
 const Container = styled.div`
   margin: 12px 0 20px 0;
 `;
@@ -43,32 +64,17 @@ const Heading = styled.h1<{ $deleted: boolean }>`
 `;
 
 export const FeatureHeading = () => {
-  const { openWithTag } = useEditDialogContext();
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
-  const { skeleton, deleted } = feature;
-  const editEnabled = !skeleton;
 
   return (
     <Container>
       <PoiDescription />
       <HeadingContainer>
         <NameWithEdit>
-          <Heading $deleted={deleted}>{label}</Heading>
+          <Heading $deleted={feature?.deleted}>{label}</Heading>
           {/* <YellowedBadge /> */}
-          {editEnabled && (
-            <div>
-              <StyledEditButton
-                onClick={() => openWithTag('name')}
-                size="small"
-              >
-                <EditIcon
-                  fontSize="small"
-                  titleAccess={t('featurepanel.inline_edit_title')}
-                />
-              </StyledEditButton>
-            </div>
-          )}
+          <EditNameButton />
         </NameWithEdit>
         <StarButton />
       </HeadingContainer>

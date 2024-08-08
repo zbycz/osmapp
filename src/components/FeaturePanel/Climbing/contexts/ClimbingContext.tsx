@@ -22,15 +22,11 @@ import {
   State,
   StateAction,
 } from '../utils/getMachineFactory';
-import {
-  CountPositionEntity,
-  positionUtilsFactory,
-} from '../utils/positionUtilsFactory';
+import { positionUtilsFactory } from '../utils/positionUtilsFactory';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
 import { getContainedSizeImage } from '../utils/image';
-import { GradeSystem } from '../utils/grades/gradeData';
 
 type LoadedPhotos = Record<string, Record<number, boolean>>;
 type ImageSize = {
@@ -82,10 +78,6 @@ type ClimbingContextType = {
   getPathForRoute: (route: ClimbingRoute) => PathPoints;
   getCurrentPath: () => PathPoints;
   getPercentagePosition: (position: PositionPx) => Position;
-  addOffsets: (
-    entities: Array<CountPositionEntity>,
-    position: PositionPx,
-  ) => PositionPx;
   addZoom: (position: PositionPx) => PositionPx;
   getMachine: () => {
     currentState: Partial<Record<StateAction, ActionWithCallback>>;
@@ -97,8 +89,6 @@ type ClimbingContextType = {
   findCloserPoint: (position: Position) => PathPoint | null;
   photoZoom: ZoomState;
   setPhotoZoom: (photoZoom: ZoomState) => void;
-  areRoutesVisible: boolean;
-  setAreRoutesVisible: (areRoutesVisible: boolean) => void;
   areRoutesLoading: boolean;
   setAreRoutesLoading: (areRoutesLoading: boolean) => void;
   mousePosition: PositionPx;
@@ -112,8 +102,6 @@ type ClimbingContextType = {
   setViewportSize: (size: Size) => void;
   routeIndexHovered: number;
   setRouteIndexHovered: (routeIndexHovered: number) => void;
-  selectedRouteSystem: GradeSystem;
-  setSelectedRouteSystem: (selectedRouteSystem: GradeSystem) => void;
   routesExpanded: Array<number>;
   setRoutesExpanded: (routesExpanded: Array<number>) => void;
   loadedPhotos: LoadedPhotos;
@@ -123,8 +111,6 @@ type ClimbingContextType = {
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
   photoRef: React.MutableRefObject<any>;
   getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
-  isDifficultyHeatmapEnabled: boolean;
-  setIsDifficultyHeatmapEnabled: (isDifficultyHeatmapEnabled: boolean) => void;
   showDebugMenu: boolean;
   setShowDebugMenu: (showDebugMenu: boolean) => void;
   arePointerEventsDisabled: boolean; // @TODO do we need it?
@@ -164,9 +150,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
-  const [isDifficultyHeatmapEnabled, setIsDifficultyHeatmapEnabled] =
-    useState<boolean>(true);
-  const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
   const [arePointerEventsDisabled, setArePointerEventsDisabled] =
     useState<boolean>(false);
@@ -174,8 +157,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
   const [filterDifficulty, setFilterDifficulty] = useState<Array<string>>([]);
   const [routesExpanded, setRoutesExpanded] = useState<Array<number>>([]);
-  const [selectedRouteSystem, setSelectedRouteSystem] =
-    useState<GradeSystem>('uiaa'); // @TODO move to config
   const [editorPosition, setEditorPosition] = useState<PositionPx>({
     x: 0,
     y: 0,
@@ -249,12 +230,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     getPathForRoute,
   });
 
-  const { getPixelPosition, getPercentagePosition, addOffsets, addZoom } =
+  const { getPixelPosition, getPercentagePosition, addZoom } =
     positionUtilsFactory({
       editorPosition,
-      scrollOffset,
       imageSize,
-      imageContainerSize,
       photoZoom,
     });
 
@@ -271,8 +250,9 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     routes,
     updateRouteOnIndex,
     getPercentagePosition,
-    addOffsets,
     findCloserPoint,
+    photoRef,
+    photoZoom,
   });
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
@@ -341,7 +321,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
         height: window?.innerHeight,
       });
     }
-    setAreRoutesVisible(true);
     setAreRoutesLoading(false);
   };
 
@@ -376,14 +355,11 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     findCloserPoint,
     splitPaneHeight,
     setSplitPaneHeight,
-    areRoutesVisible, // @TODO move to some settings object
-    setAreRoutesVisible,
     mousePosition,
     setMousePosition,
     pointElement,
     setPointElement,
     moveRoute,
-    addOffsets,
     isEditMode,
     setIsEditMode,
     viewportSize,
@@ -393,8 +369,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     photoPath,
     photoPaths,
     setPhotoPath,
-    setSelectedRouteSystem,
-    selectedRouteSystem,
     routesExpanded,
     setRoutesExpanded,
     loadPhotoRelatedData,
@@ -407,8 +381,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setPhotoZoom,
     addZoom,
     getAllRoutesPhotos,
-    isDifficultyHeatmapEnabled, // @TODO move to some settings object
-    setIsDifficultyHeatmapEnabled,
     showDebugMenu,
     setShowDebugMenu,
     arePointerEventsDisabled,

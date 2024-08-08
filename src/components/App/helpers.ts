@@ -1,6 +1,5 @@
 import nextCookies from 'next-cookies';
 import Cookies from 'js-cookie';
-import { getFeatureImage } from '../../services/images';
 import { clearFeatureCache, fetchFeature } from '../../services/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
@@ -44,9 +43,6 @@ export const getInitialMapView = async (ctx) => {
   return mapView ? mapView.split('/') : getViewFromRequest(ctx.req);
 };
 
-const timeout = (time) =>
-  new Promise((resolve) => setTimeout(resolve, time)) as Promise<undefined>;
-
 const saveLastUrl = (feature: Feature, ctx?) => {
   const url = getOsmappLink(feature);
   if (ctx?.res) {
@@ -68,7 +64,7 @@ export const getInitialFeature = async (ctx) => {
     const [lat, lon] = all[0].split(',');
     const coordsFeature = getCoordsFeature([lon, lat]);
     saveLastUrl(coordsFeature, ctx);
-    return coordsFeature; // TODO ssr image ?
+    return coordsFeature;
   }
 
   const [osmtype, osmid] = all;
@@ -84,32 +80,18 @@ export const getInitialFeature = async (ctx) => {
 
   if (isServer()) {
     // we need always fresh OSM element, b/c user can edit a feature and refresh the page
-    // (other stuff like image or overpass is cached)
+    // (other requests like overpass may be cached)
     clearFeatureCache(getApiId(shortId));
   }
 
   const t1 = new Date().getTime();
+
   const initialFeature = await fetchFeature(shortId);
   saveLastUrl(initialFeature, ctx);
 
   const t2 = new Date().getTime();
-  const osmRequest = t2 - t1;
-
-  // for SSR try to add image in time limit
-  if (initialFeature && isServer() && osmRequest < 1600) {
-    const timeoutIn2Secs = 2000 - osmRequest;
-    initialFeature.ssrFeatureImage = await Promise.race([
-      timeout(timeoutIn2Secs),
-      getFeatureImage(initialFeature).catch(() => undefined),
-    ]);
-  }
-
-  const t3 = new Date().getTime();
-  const imageRequest = t3 - t2;
-  const ssr = isServer() ? `+ ${imageRequest}ms [ssr img]` : '';
-
-  // eslint-disable-next-line no-console
-  console.log(`getInititalFeature(${shortId}): ${osmRequest}ms [osm]${ssr}`);
+  const time = t2 - t1;
+  console.log(`getInititalFeature(${shortId}): ${time}ms`); // eslint-disable-line no-console
 
   return initialFeature;
 };

@@ -3,31 +3,14 @@ import type {
   LayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
+import { CLIMBING_LEGEND } from '../../MapFooter/ClimbingLegend';
+
+export const CLIMBING_SPRITE = {
+  id: 'climbing',
+  url: `${window.location.protocol}//${window.location.host}/icons-climbing/sprites/climbing`,
+};
 
 export const CRAG_VISIBLE_FROM_ZOOM = 13;
-
-export const COLORS = {
-  AREA: {
-    HAS_IMAGES: {
-      HOVER: 'rgba(0, 59, 210, 0.7)',
-      DEFAULT: 'rgba(0, 59, 210, 1)',
-    },
-    NO_IMAGES: {
-      HOVER: 'black',
-      DEFAULT: '#666',
-    },
-  },
-  CRAG: {
-    HAS_IMAGES: {
-      HOVER: 'rgba(234, 85, 64, 0.7)',
-      DEFAULT: '#ea5540',
-    },
-    NO_IMAGES: {
-      HOVER: 'black',
-      DEFAULT: '#666',
-    },
-  },
-};
 
 const linear = (
   from: number,
@@ -147,7 +130,15 @@ const crags: LayerSpecification = {
     'text-padding': 2,
     'text-font': ['Noto Sans Bold'],
     'text-anchor': 'top',
-    'icon-image': 'circle2_11',
+
+    'icon-image': ifHasImages(
+      CLIMBING_LEGEND.CRAG.HAS_IMAGES.DEFAULT.IMAGE,
+      CLIMBING_LEGEND.CRAG.NO_IMAGES.DEFAULT.IMAGE,
+    ),
+
+    'icon-optional': false,
+    'icon-ignore-placement': false,
+    'icon-allow-overlap': false,
     'text-field': '{osmappLabel}',
     'text-offset': [
       'step',
@@ -158,107 +149,91 @@ const crags: LayerSpecification = {
     ],
     'text-size': linear(15, 12, 21, 18),
     'text-max-width': 9,
-    'icon-optional': false,
-    'icon-ignore-placement': false,
-    'icon-allow-overlap': false,
     'text-ignore-placement': false,
     'text-allow-overlap': false,
     'text-optional': true,
-    'icon-size': linear(15, 0.5, 21, 2),
+    'icon-size': linearByRouteCount(0, 0.5, 50, 1),
     'symbol-sort-key': sortKey,
   },
   paint: {
+    'icon-opacity': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      0.6,
+      1,
+    ],
     'text-halo-blur': 0.5,
     'text-halo-width': 1.5,
     'text-halo-color': '#ffffff',
     'text-color': [
       'case',
       ['boolean', ['feature-state', 'hover'], false],
-      ifHasImages(COLORS.CRAG.HAS_IMAGES.HOVER, COLORS.CRAG.NO_IMAGES.HOVER),
       ifHasImages(
-        COLORS.CRAG.HAS_IMAGES.DEFAULT,
-        COLORS.CRAG.NO_IMAGES.DEFAULT,
+        CLIMBING_LEGEND.CRAG.HAS_IMAGES.HOVER.COLOR,
+        CLIMBING_LEGEND.CRAG.NO_IMAGES.HOVER.COLOR,
+      ),
+      ifHasImages(
+        CLIMBING_LEGEND.CRAG.HAS_IMAGES.DEFAULT.COLOR,
+        CLIMBING_LEGEND.CRAG.NO_IMAGES.DEFAULT.COLOR,
       ),
     ],
   },
 };
 
-const areas: LayerSpecification[] = [
-  {
-    id: 'climbing-area-circle',
-    type: 'circle',
-    source: 'climbing',
-    maxzoom: 16,
-    filter: [
-      'all',
-      ['==', 'osmappType', 'relationPoint'],
-      ['==', 'climbing', 'area'],
-    ],
-    layout: {
-      'circle-sort-key': sortKey,
-    },
-    paint: {
-      'circle-radius': linearByRouteCount(0, 3, 400, 12),
-      'circle-stroke-width': 2,
-      'circle-stroke-color': 'white',
-      'circle-opacity': linearFadeOut(14, 16),
-
-      'circle-color': [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        ifHasImages(COLORS.AREA.HAS_IMAGES.HOVER, COLORS.AREA.NO_IMAGES.HOVER),
-        ifHasImages(
-          COLORS.AREA.HAS_IMAGES.DEFAULT,
-          COLORS.AREA.NO_IMAGES.DEFAULT,
-        ),
-      ],
-    },
+const areas: LayerSpecification = {
+  id: 'climbing-1-areas',
+  type: 'symbol',
+  source: 'climbing',
+  maxzoom: 16,
+  filter: [
+    'all',
+    ['==', 'osmappType', 'relationPoint'],
+    ['==', 'climbing', 'area'],
+  ],
+  layout: {
+    'text-padding': 2,
+    'text-font': ['Noto Sans Bold'],
+    'text-anchor': 'top',
+    'text-field': '{osmappLabel}',
+    'text-offset': [0, 0.6],
+    'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
+    'text-max-width': 9,
+    'icon-size': linearByRouteCount(0, 0.4, 400, 1),
+    'icon-image': ifHasImages(
+      CLIMBING_LEGEND.AREA.HAS_IMAGES.DEFAULT.IMAGE,
+      CLIMBING_LEGEND.AREA.NO_IMAGES.DEFAULT.IMAGE,
+    ),
+    'icon-optional': false,
+    'icon-ignore-placement': false,
+    'icon-allow-overlap': false,
+    'text-ignore-placement': false,
+    'text-allow-overlap': false,
+    'text-optional': true,
+    'symbol-sort-key': sortKey,
   },
-  {
-    id: 'climbing-1-areas',
-    type: 'symbol',
-    source: 'climbing',
-    maxzoom: 16,
-    filter: [
-      'all',
-      ['==', 'osmappType', 'relationPoint'],
-      ['==', 'climbing', 'area'],
+  paint: {
+    'icon-opacity': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      0.6,
+      1,
     ],
-    layout: {
-      'text-padding': 2,
-      'text-font': ['Noto Sans Bold'],
-      'text-anchor': 'top',
-      'text-field': '{osmappLabel}',
-      'text-offset': [0, 0.6],
-      'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
-      'text-max-width': 9,
-      'icon-optional': false,
-      'icon-ignore-placement': false,
-      'icon-allow-overlap': true,
-      'text-ignore-placement': false,
-      'text-allow-overlap': false,
-      'text-optional': true,
-      'symbol-sort-key': sortKey,
-    },
-    paint: {
-      'text-opacity': linearFadeOut(14, 16),
-      'text-color': [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        ifHasImages(COLORS.AREA.HAS_IMAGES.HOVER, COLORS.AREA.NO_IMAGES.HOVER),
-        ifHasImages(
-          COLORS.AREA.HAS_IMAGES.DEFAULT,
-          COLORS.AREA.NO_IMAGES.DEFAULT,
-        ),
-      ],
-      'text-halo-color': 'rgba(250, 250, 250, 1)',
-      'text-halo-width': 2,
-    },
+    'text-opacity': linearFadeOut(14, 16),
+    'text-color': [
+      'case',
+      ['boolean', ['feature-state', 'hover'], false],
+      ifHasImages(
+        CLIMBING_LEGEND.AREA.HAS_IMAGES.HOVER.COLOR,
+        CLIMBING_LEGEND.AREA.NO_IMAGES.HOVER.COLOR,
+      ),
+      ifHasImages(
+        CLIMBING_LEGEND.AREA.HAS_IMAGES.DEFAULT.COLOR,
+        CLIMBING_LEGEND.AREA.NO_IMAGES.DEFAULT.COLOR,
+      ),
+    ],
+    'text-halo-color': 'rgba(250, 250, 250, 1)',
+    'text-halo-width': 2,
   },
-];
+};
 
-export const climbingLayers: LayerSpecification[] = [
-  ...routes,
-  crags,
-  ...areas,
-];
+export const climbingLayers: LayerSpecification[] = [...routes, crags, areas];

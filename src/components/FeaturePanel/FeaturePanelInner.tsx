@@ -17,20 +17,23 @@ import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { getLabel } from '../../helpers/featureLabel';
-import { ImageSection } from './ImageSection/ImageSection';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
-import { ClimbingPanel } from './Climbing/ClimbingPanel';
+import { ClimbingCragPanel } from './Climbing/ClimbingCragPanel';
 import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { isClimbingRelation } from '../../services/osmApi';
 import { ParentLink } from './ParentLink';
-import { ImageSlider } from './ImagePane/ImageSlider';
-import { SuggestEdit } from './SuggestEdit';
+import { FeatureImages } from './ImagePane/FeatureImages';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { CragsInArea } from './CragsInArea';
 import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
 import { Runways } from './Runways/Runways';
+import { EditButton } from './EditButton';
+import { EditDialog } from './EditDialog/EditDialog';
+import { getIsClimbingRoute } from '../utils/openClimbingUtils';
+import { ConvertedRouteDifficultyBadge } from './Climbing/ConvertedRouteDifficultyBadge';
+import { getDifficulties } from './Climbing/utils/grades/routeGrade';
 
 const Flex = styled.div`
   flex: 1;
@@ -89,16 +92,23 @@ export const FeaturePanelInner = () => {
   ) {
     return (
       <ClimbingContextProvider feature={feature} key={getKey(feature)}>
-        <ClimbingPanel footer={footer} showTagsTable={showTagsTable} />
+        <ClimbingCragPanel footer={footer} showTagsTable={showTagsTable} />
       </ClimbingContextProvider>
     );
   }
+  const isClimbingRoute = getIsClimbingRoute(feature?.tags);
+  const routeDifficulties = getDifficulties(feature?.tags);
 
   return (
     <>
       <PanelContent>
         <PanelSidePadding>
           <FeatureHeading />
+          {isClimbingRoute && (
+            <ConvertedRouteDifficultyBadge
+              routeDifficulties={routeDifficulties}
+            />
+          )}
           <ParentLink />
 
           <ClimbingRestriction />
@@ -107,16 +117,12 @@ export const FeaturePanelInner = () => {
           <CragsInArea />
         </PanelSidePadding>
 
-        {tags.climbing !== 'area' && (
-          <Box pb={4}>
-            <ImageSection />
-          </Box>
-        )}
-
         <Flex>
           {!skeleton && (
             <>
-              <ImageSlider />
+              <Box component="div" mb={2}>
+                <FeatureImages />
+              </Box>
 
               <PanelSidePadding>
                 <Properties showTags={showTagsTable} key={getKey(feature)} />
@@ -129,7 +135,8 @@ export const FeaturePanelInner = () => {
 
                 <FeatureOpenPlaceGuideLink />
 
-                {editEnabled && <SuggestEdit />}
+                {editEnabled && <EditButton />}
+                <EditDialog />
               </PanelSidePadding>
             </>
           )}

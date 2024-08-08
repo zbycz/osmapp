@@ -10,7 +10,8 @@ import { useMobileMode } from '../helpers';
 import { getWikimediaCommonsKeys } from './Climbing/utils/photo';
 import { useScrollShadow } from './Climbing/utils/useScrollShadow';
 import { getLabel } from '../../helpers/featureLabel';
-import { getCommonsImageUrl } from '../../services/images/getWikiImage';
+
+import { getCommonsImageUrl } from '../../services/images/getCommonsImageUrl';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;

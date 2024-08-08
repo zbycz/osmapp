@@ -17,12 +17,14 @@ import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
-import { ClimbingDialog } from '../FeaturePanel/Climbing/ClimbingDialog';
+import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
 import { useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
+import { UserSettingsProvider } from '../utils/UserSettingsContext';
+import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -79,6 +81,7 @@ const IndexWithProviders = () => {
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   const photo = router.query.all?.[3];
+
   return (
     <>
       <Loading />
@@ -87,11 +90,11 @@ const IndexWithProviders = () => {
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
-          <ClimbingDialog photo={photo} />
+          <ClimbingCragDialog photo={photo} />
         </ClimbingContextProvider>
       )}
-
       <HomepagePanel />
+      {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
       <Map />
       <TitleAndMetaTags />
@@ -105,19 +108,24 @@ const App = ({ featureFromRouter, initialMapView, cookies }) => {
 
   return (
     <SnackbarProvider>
-      <FeatureProvider featureFromRouter={featureFromRouter} cookies={cookies}>
-        <MapStateProvider initialMapView={mapView}>
-          <OsmAuthProvider cookies={cookies}>
-            <StarsProvider>
-              <EditDialogProvider /* TODO supply router.query */>
-                <QueryClientProvider client={queryClient}>
-                  <IndexWithProviders />
-                </QueryClientProvider>
-              </EditDialogProvider>
-            </StarsProvider>
-          </OsmAuthProvider>
-        </MapStateProvider>
-      </FeatureProvider>
+      <UserSettingsProvider>
+        <FeatureProvider
+          featureFromRouter={featureFromRouter}
+          cookies={cookies}
+        >
+          <MapStateProvider initialMapView={mapView}>
+            <OsmAuthProvider cookies={cookies}>
+              <StarsProvider>
+                <EditDialogProvider /* TODO supply router.query */>
+                  <QueryClientProvider client={queryClient}>
+                    <IndexWithProviders />
+                  </QueryClientProvider>
+                </EditDialogProvider>
+              </StarsProvider>
+            </OsmAuthProvider>
+          </MapStateProvider>
+        </FeatureProvider>
+      </UserSettingsProvider>
     </SnackbarProvider>
   );
 };

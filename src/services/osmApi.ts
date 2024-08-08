@@ -8,14 +8,14 @@ import {
   prod,
 } from './helpers';
 import { fetchJson } from './fetch';
-import { Feature, LonLat, Position } from './types';
+import { Feature, LonLat, Position, SuccessInfo } from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { isBrowser } from '../components/helpers';
 import { addSchemaToFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
 import { osmToFeature } from './osmToFeature';
-import { mergeMemberImageTags } from './images/getImageTags';
+import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
 import { captureException } from '../helpers/sentry';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
 
@@ -92,6 +92,7 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   const feature = osmToFeature(element);
   if (!feature.center && center) {
     feature.center = center;
+    feature.imageDefs = getImageDefs(feature.tags, center);
   }
 
   if (feature.center) {
@@ -119,22 +120,37 @@ const getItemsMap = (elements) => {
   return map;
 };
 
-const fetchMemberFeatures = async (apiId: OsmApiId) => {
+export const fetchWithMemberFeatures = async (apiId: OsmApiId) => {
   // TODO we can compute geometry using cragsToGeojson() and display it in the map
-  const full = await fetchJson(getOsmFullUrl(apiId));
+  const url =
+    apiId.type === 'relation' ? getOsmFullUrl(apiId) : getOsmUrl(apiId);
+  const full = await fetchJson(url);
   const map = getItemsMap(full.elements);
   const mainFeature = map[apiId.type][apiId.id];
 
-  return mainFeature.members.map(({ type, ref, role }) => {
-    const element = map[type][ref];
-    if (!element) {
-      return null;
-    }
+  if (apiId.type !== 'relation') {
+    return addSchemaToFeature(osmToFeature(mainFeature));
+  }
 
-    const feature = addSchemaToFeature(osmToFeature(element));
-    feature.osmMeta.role = role;
-    return feature;
-  });
+  const memberFeatures =
+    mainFeature.members.map(({ type, ref, role }) => {
+      const element = map[type][ref];
+      if (!element) {
+        return null;
+      }
+
+      const feature = addSchemaToFeature(osmToFeature(element));
+      feature.osmMeta.role = role;
+      return feature;
+    }) ?? [];
+
+  const featureWithMemberFeatures = {
+    ...addSchemaToFeature(osmToFeature(mainFeature)),
+    memberFeatures: memberFeatures.filter(Boolean),
+  };
+  mergeMemberImageDefs(featureWithMemberFeatures); // TODO test + only for crag
+
+  return featureWithMemberFeatures;
 };
 
 export const isClimbingRelation = (feature: Feature) =>
@@ -161,14 +177,12 @@ export const addMembersAndParents = async (
     return feature;
   }
 
-  const [parentFeatures, memberFeatures] = await Promise.all([
+  const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
     fetchParentFeatures(feature.osmMeta),
-    fetchMemberFeatures(feature.osmMeta),
+    fetchWithMemberFeatures(feature.osmMeta),
   ]);
 
-  mergeMemberImageTags(feature, memberFeatures); // TODO test + only for crag
-
-  return { ...feature, memberFeatures, parentFeatures };
+  return { ...featureWithMemberFeatures, parentFeatures };
 };
 
 export const fetchFeature = async (shortId): Promise<Feature> => {
@@ -214,7 +228,10 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
   }
 };
 
-export const insertOsmNote = async (point: Position, text: string) => {
+export const insertOsmNote = async (
+  point: Position,
+  text: string,
+): Promise<SuccessInfo> => {
   const [lon, lat] = point;
 
   const body = new URLSearchParams();

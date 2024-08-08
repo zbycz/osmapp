@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { isDesktop, useMobileMode } from '../../helpers';
 import { HamburgerMenu } from './HamburgerMenu';
-import { LoginMenu } from './LoginMenu';
+import { UserMenu } from './UserMenu';
 
 const Wrapper = styled.span`
   vertical-align: top;
@@ -22,7 +22,7 @@ export const TopMenu = () => {
 
   return (
     <Wrapper>
-      <LoginMenu />
+      <UserMenu />
       <HamburgerMenu />
     </Wrapper>
   );

@@ -4,10 +4,13 @@ import styled from 'styled-components';
 import WebsiteRenderer from './renderers/WebsiteRenderer';
 import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
 import PhoneRenderer from './renderers/PhoneRenderer';
-import { EditIconButton } from './helpers/EditIconButton';
+import { InlineEditButton } from './helpers/InlineEditButton';
 import { FoodHygieneRatingSchemeRenderer } from './renderers/FoodHygieneRatingScheme';
 import { WikipediaRenderer } from './renderers/WikipediaRenderer';
 import { WikidataRenderer } from './renderers/WikidataRenderer';
+import { isDesktopResolution } from '../helpers';
+import { ClimbingRenderer } from './renderers/ClimbingRenderer';
+import { gradeSystemKeys } from './Climbing/utils/grades/gradeSystem';
 
 const Wrapper = styled.div`
   position: relative;
@@ -16,8 +19,11 @@ const Wrapper = styled.div`
   & .show-on-hover {
     display: none !important;
   }
-  &:hover .show-on-hover {
-    display: block !important;
+
+  @media ${isDesktopResolution} {
+    &:hover .show-on-hover {
+      display: block !important;
+    }
   }
 `;
 
@@ -41,8 +47,17 @@ type Renderers = {
 };
 
 const DefaultRenderer = ({ v }) => v;
+
+const climbingRenderers = gradeSystemKeys.reduce(
+  (acc, gradeSystemKey) => ({
+    ...acc,
+    [gradeSystemKey]: ClimbingRenderer,
+  }),
+  {},
+);
+
 const renderers: Renderers = {
-  // also updatd in schema – getFeaturedTags()
+  // also update in schema – getFeaturedTags()
   website: WebsiteRenderer,
   'website:2': WebsiteRenderer,
   'contact:website': WebsiteRenderer,
@@ -54,14 +69,15 @@ const renderers: Renderers = {
   'fhrs:id': FoodHygieneRatingSchemeRenderer,
   wikipedia: WikipediaRenderer,
   wikidata: WikidataRenderer,
+  ...climbingRenderers,
 };
 
-export const FeaturedTag = ({ k, v, onEdit }) => {
+export const FeaturedTag = ({ k, v }) => {
   const Renderer = renderers[k] || DefaultRenderer;
 
   return (
     <Wrapper>
-      <EditIconButton onClick={() => onEdit(k)} />
+      <InlineEditButton k={k} />
 
       <Value>
         <Renderer k={k} v={v} />

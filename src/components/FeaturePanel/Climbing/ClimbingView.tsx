@@ -8,7 +8,6 @@ import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
 import { RoutesEditor } from './Editor/RoutesEditor';
-import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -21,6 +20,7 @@ import {
 import { useScrollShadow } from './utils/useScrollShadow';
 import { TransformWrapper } from './TransformWrapper';
 import { convertHexToRgba } from '../../utils/colorUtils';
+import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl';
 
 const Container = styled.div`
   position: relative;
@@ -186,7 +186,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     getMachine,
     splitPaneHeight,
     setSplitPaneHeight,
-    areRoutesVisible,
     isEditMode,
     viewportSize,
     editorPosition,
@@ -354,9 +353,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     <>
                       <RoutesEditor
                         isRoutesLayerVisible={
-                          !isSplitViewDragging &&
-                          areRoutesVisible &&
-                          !areRoutesLoading
+                          !isSplitViewDragging && !areRoutesLoading
                         }
                         imageUrl={imageUrl}
                         photoResolution={photoResolution}
@@ -364,7 +361,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     </>
                   </TransformComponent>
                 </TransformWrapper>
-                {isEditMode && areRoutesVisible && (
+                {isEditMode && (
                   <>
                     <ControlPanel />
                     <Guide />

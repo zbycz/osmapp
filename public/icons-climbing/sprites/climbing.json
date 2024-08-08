@@ -1,0 +1,30 @@
+{
+  "area-blue": {
+    "height": 32,
+    "pixelRatio": 1,
+    "width": 32,
+    "x": 0,
+    "y": 0
+  },
+  "area-gray": {
+    "height": 32,
+    "pixelRatio": 1,
+    "width": 32,
+    "x": 32,
+    "y": 0
+  },
+  "crag-gray": {
+    "height": 24,
+    "pixelRatio": 1,
+    "width": 24,
+    "x": 0,
+    "y": 32
+  },
+  "crag-red": {
+    "height": 24,
+    "pixelRatio": 1,
+    "width": 24,
+    "x": 24,
+    "y": 32
+  }
+}
