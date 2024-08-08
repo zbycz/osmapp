@@ -199,6 +199,6 @@ export default {
 
   'runway.information': 'Runway information',
   'runway.runway': 'Runway',
-  'runway.size': 'Length - Width',
+  'runway.size': 'Length (m) - Width (m)',
   'runway.surface': 'Surface',
 };

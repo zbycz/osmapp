@@ -8,9 +8,10 @@ import { DotLoader } from '../../helpers';
 
 const RunwaysInner = () => {
   const { feature } = useFeatureContext();
-  const { id } = feature.osmMeta;
 
-  const { data, status } = useQuery('airport-runways', () => loadRunways(id));
+  const { data, status } = useQuery('airport-runways', () =>
+    loadRunways(feature.osmMeta),
+  );
 
   switch (status) {
     case 'success':

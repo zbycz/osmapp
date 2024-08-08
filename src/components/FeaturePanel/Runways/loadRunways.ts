@@ -1,4 +1,5 @@
 import { fetchText } from '../../../services/fetch';
+import { OsmApiId } from '../../../services/helpers';
 
 export type Runway = {
   id: string;
@@ -9,14 +10,24 @@ export type Runway = {
   surface?: string;
 };
 
-export async function loadRunways(id: string) {
-  const query = `[out:csv(::id, ::type, ref, width, length, surface; false; '||')];
-  wr(${id});
+export async function loadRunways({ id, type }: OsmApiId) {
+  const isNode = type === 'node';
+
+  const nodeQuery = `[out:csv(::id, ::type, ref, width, length, surface; false; '||')];
+  node(${id}) -> .airport;
+  way
+    [aeroway=runway]
+    (around.airport:100);
+  out;`;
+  const relationWayQuery = `[out:csv(::id, ::type, ref, width, length, surface; false; '||')];
+  ${type}(${id});
   map_to_area;
   way
     [aeroway=runway]
     (area);
   out;`;
+
+  const query = isNode ? nodeQuery : relationWayQuery;
 
   const response: string = await fetchText(
     `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(query)}`,
@@ -26,11 +37,12 @@ export async function loadRunways(id: string) {
     .split('\n')
     .slice(0, -1)
     .map((line): Runway => {
-      const [localId, type, ref, width, length, surface] = line.split('||');
+      const [localId, localType, ref, width, length, surface] =
+        line.split('||');
 
       return {
         id: localId,
-        type,
+        type: localType,
         ref: ref || undefined,
         width: width || undefined,
         length: length || undefined,

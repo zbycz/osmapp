@@ -158,6 +158,6 @@ export default {
 
   'runway.information': 'Landebahninformationen',
   'runway.runway': 'Landebahn',
-  'runway.size': 'Länge - Breite',
+  'runway.size': 'Länge (m) - Breite (m)',
   'runway.surface': 'Oberfläche',
 };

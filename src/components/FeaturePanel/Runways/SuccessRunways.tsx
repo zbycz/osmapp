@@ -11,8 +11,8 @@ import React from 'react';
 import { Runway as RunwayType } from './loadRunways';
 import { t } from '../../../services/intl';
 
-const fmtRunwaySize = (runway: RunwayType) =>
-  `${runway.length || '?'} - ${runway.width || '?'}`;
+const fmtRunwaySize = ({ length, width }: RunwayType) =>
+  `${length || '?'} - ${width || '?'}`;
 
 const Runway: React.FC<{ runway: RunwayType; showSize: boolean }> = ({
   runway,
@@ -32,12 +32,12 @@ const Runway: React.FC<{ runway: RunwayType; showSize: boolean }> = ({
   </TableRow>
 );
 
-interface RunwayProps {
+type RunwayProps = {
   runways: RunwayType[];
-}
+};
 
 export const SuccessRunways: React.FC<RunwayProps> = ({ runways }) => {
-  const showSize = runways.every(({ length, width }) => length || width);
+  const showSizeCol = runways.some(({ length, width }) => length || width);
 
   return (
     <>
@@ -48,14 +48,14 @@ export const SuccessRunways: React.FC<RunwayProps> = ({ runways }) => {
           <TableHead>
             <TableRow>
               <TableCell>{t('runway.runway')}</TableCell>
-              {showSize && <TableCell>{t('runway.size')}</TableCell>}
+              {showSizeCol && <TableCell>{t('runway.size')}</TableCell>}
               <TableCell>{t('runway.surface')}</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {runways.map((runway) => (
-              <Runway runway={runway} showSize={showSize} key={runway.id} />
+              <Runway runway={runway} showSize={showSizeCol} key={runway.id} />
             ))}
           </TableBody>
         </Table>
