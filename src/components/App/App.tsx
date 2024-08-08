@@ -70,7 +70,7 @@ const useUpdateViewFromHash = () => {
 
 const IndexWithProviders = () => {
   const isMobileMode = useMobileMode();
-  const { feature, featureShown } = useFeatureContext();
+  const { feature, featureShown, homepageShown } = useFeatureContext();
   const router = useRouter();
   useUpdateViewFromFeature();
   usePersistMapView();
@@ -81,10 +81,20 @@ const IndexWithProviders = () => {
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   const photo = router.query.all?.[3];
 
+  const isMyTicksVisible = router.pathname === '/my-ticks';
+  const isInstallVisible = router.pathname === '/install';
+
+  const isSearchInPanelVisible =
+    (!featureShown &&
+      !isMyTicksVisible &&
+      !isInstallVisible &&
+      !homepageShown) ||
+    isMobileMode;
+
   return (
     <>
       <Loading />
-      <SearchBox />
+
       {featureShown && !isMobileMode && <FeaturePanel />}
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
@@ -93,10 +103,11 @@ const IndexWithProviders = () => {
         </ClimbingContextProvider>
       )}
       <HomepagePanel />
-      {router.pathname === '/my-ticks' && <MyTicksPanel />}
-      {router.pathname === '/install' && <InstallDialog />}
+      {isMyTicksVisible && <MyTicksPanel />}
+      {isInstallVisible && <InstallDialog />}
       <Map />
       <TitleAndMetaTags />
+      <SearchBox isSearchInPanelVisible={isSearchInPanelVisible} />
     </>
   );
 };

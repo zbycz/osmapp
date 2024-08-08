@@ -40,6 +40,7 @@ declare module '@mui/material/styles' {
     hover?: string;
     searchBox?: string;
     searchInput?: string;
+    searchInputPanel?: string;
   }
 
   interface Theme {
