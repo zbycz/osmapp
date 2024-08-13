@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -49,7 +49,7 @@ const Container = styled.div`
       text-align: center;
       line-height: 0px;
       font-size: 20px;
-      color: ${({ theme }) => theme.palette.primary.text};
+      color: ${({ theme }) => theme.palette.primary.main};
       letter-spacing: 1px;
     }
 

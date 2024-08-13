@@ -2,7 +2,7 @@ import React from 'react';
 
 import { Select, MenuItem, Tooltip, FormControl } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { GRADE_SYSTEMS, GradeSystem } from './utils/grades/gradeData';
 
 type Props = {

@@ -2,7 +2,7 @@
   "presets": ["next/babel"],
   "plugins": [
     [
-      "styled-components",
+      "@emotion",
       {
         "ssr": true,
         "displayName": true,

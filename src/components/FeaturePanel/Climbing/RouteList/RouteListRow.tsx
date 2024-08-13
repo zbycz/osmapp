@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { debounce } from 'lodash';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton, TextField } from '@mui/material';

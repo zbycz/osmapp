@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Router from 'next/router';
 import { LinearProgress } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';

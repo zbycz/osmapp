@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@mui/material';
 import { isDesktop } from '../helpers';

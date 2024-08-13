@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import CheckIcon from '@mui/icons-material/Check';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
 import DeleteIcon from '@mui/icons-material/Delete';

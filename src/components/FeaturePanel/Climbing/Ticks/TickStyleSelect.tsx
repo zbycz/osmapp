@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControl, MenuItem, Select, Tooltip } from '@mui/material';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { TickStyle } from '../types';
 import { tickStyles } from '../../../../services/ticks';

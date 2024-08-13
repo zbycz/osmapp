@@ -2,7 +2,7 @@ import { Button, Grid, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Link from 'next/link';
 import {
   PanelContent,

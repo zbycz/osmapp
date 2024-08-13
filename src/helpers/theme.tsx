@@ -3,7 +3,6 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useMediaQuery } from '@mui/material';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 
 // @TODO: Fix theme types according to https://mui.com/material-ui/customization/theming/#typescript
 
@@ -133,9 +132,7 @@ export const UserThemeProvider = ({ children, userThemeCookie }) => {
         theme,
       }}
     >
-      <ThemeProvider theme={theme}>
-        <StyledThemeProvider theme={theme}>{children}</StyledThemeProvider>
-      </ThemeProvider>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </UserThemeContext.Provider>
   );
 };

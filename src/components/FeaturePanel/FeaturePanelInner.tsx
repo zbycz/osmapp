@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Box } from '@mui/material';
 import { FeatureHeading } from './FeatureHeading';
 import Coordinates from './Coordinates';

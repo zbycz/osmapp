@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import dynamic from 'next/dynamic';
 import BugReport from '@mui/icons-material/BugReport';
 import { Button, CircularProgress } from '@mui/material';

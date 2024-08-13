@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import AddIcon from '@mui/icons-material/Add';
 import Router from 'next/router';
 import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';

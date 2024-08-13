@@ -5,7 +5,7 @@ import { TabContext, TabPanel } from '@mui/lab';
 import AppleIcon from '@mui/icons-material/Apple';
 import AndroidIcon from '@mui/icons-material/Android';
 import DesktopMacIcon from '@mui/icons-material/DesktopMac';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';

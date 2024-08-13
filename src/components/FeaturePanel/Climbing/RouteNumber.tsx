@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { Tooltip } from '@mui/material';
 import { useRouteNumberColors } from './utils/useRouteNumberColors';

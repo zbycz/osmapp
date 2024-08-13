@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
@@ -67,7 +67,7 @@ const TableHeader = styled.div`
   display: flex;
   justify-content: center;
   font-weight: 700;
-  color: ${({ theme }) => theme.palette.text.hint};
+  color: ${({ theme }) => theme.palette.text.secondary};
   font-size: 11px;
   padding-top: 12px;
   padding-bottom: 4px;

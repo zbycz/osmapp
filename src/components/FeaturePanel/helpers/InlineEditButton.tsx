@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { IconButton } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import React from 'react';

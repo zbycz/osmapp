@@ -1,4 +1,5 @@
-import styled, { useTheme } from 'styled-components';
+import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
 import React from 'react';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { convertGrade, getDifficultyColor } from './utils/grades/routeGrade';

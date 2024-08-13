@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, useMediaQuery, useTheme } from '@mui/material';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { SuccessContent } from './SuccessContent';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { EditDialogTitle } from './EditDialogTitle';
