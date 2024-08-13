@@ -7,8 +7,8 @@
   "scripts": {
     "dev": "next",
     "test": "jest",
-    "lint": "eslint ./src ./pages --report-unused-disable-directives --max-warnings=0",
-    "lintfix": "prettier . --write && eslint ./src ./pages --report-unused-disable-directives --fix",
+    "lint": "next lint --max-warnings=0",
+    "lintfix": "prettier . --write && next lint --fix",
     "prettify": "prettier . --write",
     "build": "next build",
     "start": "next start",
@@ -18,15 +18,6 @@
     "hooks": {
       "pre-commit": "lint-staged --no-stash -v"
     }
-  },
-  "lint-staged": {
-    "*.{ts,tsx,js}": [
-      "prettier --write",
-      "eslint --fix"
-    ],
-    "*.{json,css,md}": [
-      "prettier --write"
-    ]
   },
   "dependencies": {
     "@emotion/react": "^11.11.3",
@@ -72,19 +63,15 @@
     "@types/autosuggest-highlight": "^3.2.0",
     "@types/jest": "^26.0.23",
     "@types/react-dom": "^18.3.0",
-    "@typescript-eslint/eslint-plugin": "^4.26.0",
+    "@typescript-eslint/typescript-estree": "^8.1.0",
     "babel-eslint": "^10.1.0",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
     "babel-plugin-styled-components": "^1.12.0",
-    "eslint": "^7.27.0",
-    "eslint-config-airbnb-typescript": "^12.3.1",
-    "eslint-config-prettier": "^8.3.0",
-    "eslint-plugin-import": "^2.23.4",
-    "eslint-plugin-jsx-a11y": "^6.3.1",
-    "eslint-plugin-react": "^7.24.0",
-    "eslint-plugin-react-hooks": "^4.0.8",
+    "eslint-config-prettier": "^9.1.0",
     "husky": "^4",
-    "lint-staged": "^11.0.0",
-    "prettier": "^2.3.0",
+    "lint-staged": "^15.2.9",
+    "prettier": "^3.3.3",
     "typescript": "^5.0.4"
   }
 }
