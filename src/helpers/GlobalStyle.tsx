@@ -1,4 +1,5 @@
-import { createGlobalStyle } from 'styled-components';
+import React from 'react';
+import { Global, css, Theme } from '@emotion/react';
 import {
   isDesktopResolution,
   isMobileMode,
@@ -6,14 +7,16 @@ import {
 } from '../components/helpers';
 import { convertHexToRgba } from '../components/utils/colorUtils';
 
-export const GlobalStyle = createGlobalStyle`
-  html, body, #__next {
+const globalStyle = (theme: Theme) => css`
+  html,
+  body,
+  #__next {
     margin: 0;
     padding: 0;
     height: 100%;
     border: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: ${({ theme }) => theme.palette.background.default};
+    background-color: ${theme.palette.background.default};
 
     // disable pulling the page around on mobile
     overscroll-behavior: none;
@@ -27,8 +30,9 @@ export const GlobalStyle = createGlobalStyle`
     left: 0;
   }
 
-  a, .linkLikeButton {
-    color: ${({ theme }) => theme.palette.tertiary.main};
+  a,
+  .linkLikeButton {
+    color: ${theme.palette.tertiary.main};
     text-decoration: none;
     border: 0;
     padding: 0;
@@ -64,13 +68,15 @@ export const GlobalStyle = createGlobalStyle`
   }
 
   .maplibregl-ctrl-group {
-    background-color: ${({ theme }) =>
-      convertHexToRgba(theme.palette.background.paper, 0.7)} !important;
+    background-color: ${convertHexToRgba(
+      theme.palette.background.paper,
+      0.7,
+    )} !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 
     .maplibregl-ctrl-icon {
-      filter: ${({ theme }) => theme.palette.invertFilter};
+      filter: ${theme.palette.invertFilter};
     }
 
     @media ${isMobileMode} {
@@ -82,7 +88,7 @@ export const GlobalStyle = createGlobalStyle`
       }
     }
     button + button {
-      border-top: 1px solid ${({ theme }) => theme.palette.divider} !important;
+      border-top: 1px solid ${theme.palette.divider} !important;
     }
   }
 
@@ -96,7 +102,6 @@ export const GlobalStyle = createGlobalStyle`
     @media ${isDesktopResolution} {
       top: 83px !important;
     }
-
   }
 
   .maplibregl-canvas:not(:focus) {
@@ -105,20 +110,20 @@ export const GlobalStyle = createGlobalStyle`
 
   @keyframes blink {
     50% {
-      color: transparent
+      color: transparent;
     }
   }
 
   .dotloader {
-    animation: 1s blink infinite
+    animation: 1s blink infinite;
   }
 
   .dotloader:nth-child(2) {
-    animation-delay: 250ms
+    animation-delay: 250ms;
   }
 
   .dotloader:nth-child(3) {
-    animation-delay: 500ms
+    animation-delay: 500ms;
   }
 
   .MuiBackdrop-root {
@@ -129,5 +134,6 @@ export const GlobalStyle = createGlobalStyle`
   .hidden-compass .maplibregl-ctrl:has(> .maplibregl-ctrl-compass) {
     display: none;
   }
-
 `;
+
+export const GlobalStyle = () => <Global styles={globalStyle} />;

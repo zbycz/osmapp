@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import AccessTime from '@mui/icons-material/AccessTime';
 import { useToggleState } from '../../helpers';
 import { t } from '../../../services/intl';

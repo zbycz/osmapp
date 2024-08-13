@@ -1,5 +1,6 @@
 import React, { CSSProperties, useEffect, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { convertHexToRgba } from '../../../utils/colorUtils';
 
 const DEFAULT_GRADIENT_PERCENTAGE = 3;
@@ -19,18 +20,18 @@ interface GradientProps {
   $opacity?: number;
 }
 
-const gradientBase = css<GradientProps>`
+const gradientBase = ({ $isVisible }) => css`
   width: 100%;
   height: 100%;
   z-index: 1;
   position: absolute;
   pointer-events: none;
-  visibility: ${({ $isVisible }) => ($isVisible ? 'visible' : 'hidden')};
+  visibility: ${$isVisible ? 'visible' : 'hidden'};
   transition: all 2s;
 `;
 
 const GradientBefore = styled.div<GradientProps>`
-  ${gradientBase}
+  ${gradientBase};
   top: 0;
   background: linear-gradient(
     to top,
@@ -43,7 +44,7 @@ const GradientBefore = styled.div<GradientProps>`
 `;
 
 const GradientAfter = styled.div<GradientProps>`
-  ${gradientBase}
+  ${gradientBase};
   bottom: 0;
   background: linear-gradient(
     to bottom,
@@ -56,7 +57,7 @@ const GradientAfter = styled.div<GradientProps>`
 `;
 
 const GradientLeft = styled.div<GradientProps>`
-  ${gradientBase}
+  ${gradientBase};
   left: 0;
   height: 100%;
   background: linear-gradient(
@@ -70,7 +71,7 @@ const GradientLeft = styled.div<GradientProps>`
 `;
 
 const GradientRight = styled.div<GradientProps>`
-  ${gradientBase}
+  ${gradientBase};
   right: 0;
   height: 100%;
   background: linear-gradient(

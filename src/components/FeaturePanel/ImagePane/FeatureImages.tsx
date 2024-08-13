@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { Image } from './Image/Image';
 import { useLoadImages } from './useLoadImages';

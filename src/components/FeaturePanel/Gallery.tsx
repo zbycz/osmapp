@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { useTheme } from '@mui/material';
 import { useScrollShadow } from './Climbing/utils/useScrollShadow';
 

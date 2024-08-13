@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { grey } from '@mui/material/colors';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { HEIGHT } from './helpers';

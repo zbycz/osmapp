@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { ClimbingRoute } from '../types';
 import { Label } from './Label';
 import { useClimbingContext } from '../contexts/ClimbingContext';

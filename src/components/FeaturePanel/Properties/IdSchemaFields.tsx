@@ -1,5 +1,5 @@
 import React, { ReactNode } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Field } from '../../../services/tagging/types/Fields';
 import { useToggleState } from '../../helpers';
 import { buildAddress } from '../../../services/helpers';

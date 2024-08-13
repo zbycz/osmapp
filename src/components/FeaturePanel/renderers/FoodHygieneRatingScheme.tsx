@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tooltip, Typography } from '@mui/material';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
 import { DotLoader } from '../../helpers';
 

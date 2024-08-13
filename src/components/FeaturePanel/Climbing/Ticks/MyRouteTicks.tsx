@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Table } from '@mui/material';
 import { findTicks, getTickKey } from '../../../../services/ticks';
 import { PanelLabel } from '../PanelLabel';

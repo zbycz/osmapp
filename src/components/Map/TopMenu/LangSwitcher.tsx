@@ -3,7 +3,7 @@ import React from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
 import LanguageIcon from '@mui/icons-material/Language';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { useBoolState } from '../../helpers';
 import { changeLang, intl, t } from '../../../services/intl';
 

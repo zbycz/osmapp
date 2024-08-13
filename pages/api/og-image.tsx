@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import React from 'react';
 import { renderToString } from 'react-dom/server';
-import { ServerStyleSheet } from 'styled-components';
 import { UserThemeProvider } from '../../src/helpers/theme';
 import { Paths } from '../../src/components/FeaturePanel/ImagePane/PathsSvg';
 import {
@@ -57,7 +56,6 @@ const renderSvg = async (
 
   const Root = () => (
     <Svg size={OG_SIZE}>
-      __PLACEHOLDER_FOR_STYLE__
       <g transform={centerInOgSize(size)}>
         <image href={dataUrl} width={size.width} height={size.height} />
         <Paths def={def} feature={feature} size={size} />
@@ -66,10 +64,7 @@ const renderSvg = async (
     </Svg>
   );
 
-  const sheet = new ServerStyleSheet();
-  const html = renderToString(sheet.collectStyles(<Root />));
-  const styleTags = sheet.getStyleTags();
-  return html.replace('__PLACEHOLDER_FOR_STYLE__', styleTags);
+  return renderToString(<Root />);
 };
 
 // on vercel node ~800ms in total

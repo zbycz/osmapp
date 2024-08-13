@@ -20,11 +20,15 @@
     }
   },
   "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
+    "@emotion/babel-plugin": "^11.12.0",
+    "@emotion/cache": "^11.13.1",
+    "@emotion/react": "^11.13.0",
+    "@emotion/server": "^11.11.0",
+    "@emotion/styled": "^11.13.0",
     "@mui/icons-material": "^5.15.2",
     "@mui/lab": "^5.0.0-alpha.158",
     "@mui/material": "^5.15.2",
+    "@mui/material-nextjs": "^5.16.6",
     "@mui/styles": "^5.15.2",
     "@openstreetmap/id-tagging-schema": "^6.1.0",
     "@sentry/browser": "^6.5.1",
@@ -56,7 +60,6 @@
     "react-jss": "^10.6.0",
     "react-split-pane": "^0.1.92",
     "react-zoom-pan-pinch": "^3.3.0",
-    "styled-components": "^6.1.11",
     "styled-jsx": "^3.4.4"
   },
   "devDependencies": {
