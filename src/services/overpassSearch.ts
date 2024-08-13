@@ -35,8 +35,8 @@ const GEOMETRY = {
           el.type === 'node'
             ? GEOMETRY.node(el)
             : el.type === 'way'
-            ? GEOMETRY.way(el)
-            : null,
+              ? GEOMETRY.way(el)
+              : null,
         )
         .filter(Boolean) ?? [],
   }),

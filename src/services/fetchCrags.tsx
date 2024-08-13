@@ -49,8 +49,8 @@ const convert = (
   const center = getCenter(geometry) ?? undefined;
   const osmappRouteCount =
     element.tags.climbing === 'crag'
-      ? element.members?.length ??
-        parseInt(element.tags['climbing:sport'] ?? 0, 10)
+      ? (element.members?.length ??
+        parseInt(element.tags['climbing:sport'] ?? 0, 10))
       : undefined;
   const properties = {
     ...getPoiClass(tags),
@@ -103,8 +103,8 @@ function getRelationGeomFn(lookup) {
           geometries,
         }
       : center
-      ? { type: 'Point', coordinates: [center.lon, center.lat] }
-      : undefined;
+        ? { type: 'Point', coordinates: [center.lon, center.lat] }
+        : undefined;
   };
 }
 

@@ -16,7 +16,7 @@ export interface Preset {
    */
   geometry?: [
     'point' | 'vertex' | 'line' | 'area' | 'relation',
-    ...('point' | 'vertex' | 'line' | 'area' | 'relation')[]
+    ...('point' | 'vertex' | 'line' | 'area' | 'relation')[],
   ];
   /**
    * Tags that must be present for the preset to match

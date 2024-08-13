@@ -175,8 +175,9 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
 
-  const [pointElement, setPointElement] =
-    React.useState<null | HTMLElement>(null);
+  const [pointElement, setPointElement] = React.useState<null | HTMLElement>(
+    null,
+  );
 
   const getPathOnIndex = (index: number) =>
     routes[index]?.paths?.[photoPath] || [];
