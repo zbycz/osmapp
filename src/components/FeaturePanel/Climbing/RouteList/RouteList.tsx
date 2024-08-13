@@ -96,7 +96,6 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     const getImage = (name: string) => `File:${name}`;
 
     const object = routes
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .map((route, _idx) => {
         const photos = Object.entries(route.paths);
 

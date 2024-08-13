@@ -16,10 +16,12 @@ const AddNewPoint = styled.circle`
 `;
 
 export const RoutePath = ({ route, routeNumber }) => {
-  const [tempPointPosition, setTempPointPosition] =
-    useState<PositionPx | null>(null);
-  const [tempPointSegmentIndex, setTempPointSegmentIndex] =
-    useState<number | null>(null);
+  const [tempPointPosition, setTempPointPosition] = useState<PositionPx | null>(
+    null,
+  );
+  const [tempPointSegmentIndex, setTempPointSegmentIndex] = useState<
+    number | null
+  >(null);
   const {
     isPointMoving,
     isRouteSelected,

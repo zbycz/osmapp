@@ -82,7 +82,7 @@ export type Field = {
    */
   geometry?: [
     'point' | 'vertex' | 'line' | 'area' | 'relation', // minimal one entry
-    ...('point' | 'vertex' | 'line' | 'area' | 'relation')[]
+    ...('point' | 'vertex' | 'line' | 'area' | 'relation')[],
   ];
   /**
    * The default value for this field

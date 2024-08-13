@@ -27,10 +27,9 @@ const renderOption = (inputValue, currentTheme, mapCenter, option) => {
 };
 
 export const renderOptionFactory =
-  (inputValue, currentTheme, mapCenter) => (props, option) =>
-    (
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      <li {...props}>
-        {renderOption(inputValue, currentTheme, mapCenter, option)}
-      </li>
-    );
+  (inputValue, currentTheme, mapCenter) => (props, option) => (
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <li {...props}>
+      {renderOption(inputValue, currentTheme, mapCenter, option)}
+    </li>
+  );
