@@ -67,7 +67,7 @@ const TableHeader = styled.div`
   display: flex;
   justify-content: center;
   font-weight: 700;
-  color: ${({ theme }) => theme.palette.text.hint};
+  color: ${({ theme }) => theme.palette.text.secondary};
   font-size: 11px;
   padding-top: 12px;
   padding-bottom: 4px;
