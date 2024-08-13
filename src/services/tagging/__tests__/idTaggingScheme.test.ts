@@ -7,10 +7,6 @@ import { computeAllFieldKeys } from '../fields';
 
 intl.lang = 'en';
 
-jest.mock('next/config', () => () => ({
-  publicRuntimeConfig: { languages: ['en'] },
-}));
-
 describe('idTaggingScheme', () => {
   beforeEach(() => {
     mockSchemaTranslations(translations);
@@ -99,7 +95,9 @@ describe('idTaggingScheme', () => {
       'capacity',
       'charge_fee',
       'fee',
+      'fhrs/id-GB',
       'gnis/feature_id-US',
+      'ref/edubase-GB',
       'level',
       'polling_station',
       'wheelchair',

@@ -1,4 +1,3 @@
-import getConfig from 'next/config';
 import React from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -6,6 +5,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import styled from '@emotion/styled';
 import { useBoolState } from '../../helpers';
 import { changeLang, intl, t } from '../../../services/intl';
+import { LANGUAGES } from '../../../config';
 
 const StyledLanguageIcon = styled(LanguageIcon)`
   color: ${({ theme }) => theme.palette.action.active};
@@ -14,9 +14,6 @@ const StyledLanguageIcon = styled(LanguageIcon)`
 `;
 
 export const LangSwitcher = () => {
-  const {
-    publicRuntimeConfig: { languages },
-  } = getConfig();
   const { asPath } = useRouter();
   const anchorRef = React.useRef();
   const [opened, open, close] = useBoolState(false);
@@ -36,7 +33,7 @@ export const LangSwitcher = () => {
         open={opened}
         onClose={close}
       >
-        {Object.entries(languages).map(([lang, name]) => (
+        {Object.entries(LANGUAGES).map(([lang, name]) => (
           <MenuItem
             key={lang}
             component="a"
@@ -55,7 +52,7 @@ export const LangSwitcher = () => {
         title={t('map.language_title')}
       >
         <StyledLanguageIcon />
-        {languages[intl.lang]}
+        {LANGUAGES[intl.lang]}
       </MenuItem>
     </>
   );

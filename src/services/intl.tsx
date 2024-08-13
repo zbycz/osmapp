@@ -18,10 +18,10 @@ export const intl: Intl = {
   messages: {},
 };
 
-const VARIABLE_REGEX = /__(?<name>[a-zA-Z_]+)__/g;
+const VARIABLE_REGEX = /__([a-zA-Z_]+)__/g;
 
 const replaceValues = (text: string, values: Values) =>
-  text.replace(VARIABLE_REGEX, (match, variableName) => {
+  text.replace(VARIABLE_REGEX, (_, variableName) => {
     const value = values && values[variableName];
     return value != null ? `${value}` : '?';
   });

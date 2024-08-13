@@ -18,6 +18,7 @@ import { InjectIntl, setIntl } from '../src/services/intl';
 import { FaviconsOsmapp } from '../src/helpers/FaviconsOsmapp';
 import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
 import { FaviconsOpenClimbing } from '../src/helpers/FaviconsOpenClimbing';
+import { LANGUAGES } from '../src/config';
 
 type Props = DocumentInitialProps &
   DocumentProps &
@@ -47,7 +48,7 @@ export default class MyDocument extends Document<Props> {
           <link rel="preconnect" href="https://www.wikidata.org" />
           <link rel="preconnect" href="https://en.wikipedia.org" />
           {/* only for bots - we dont need to change this after SSR: */}
-          {Object.keys(serverIntl.languages).map((lang) => (
+          {Object.keys(LANGUAGES).map((lang) => (
             <link
               key={lang}
               rel="alternate"
