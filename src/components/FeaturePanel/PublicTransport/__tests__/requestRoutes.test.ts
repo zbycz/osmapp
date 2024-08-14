@@ -1,6 +1,10 @@
 import * as fetchModule from '../../../../services/fetch';
 import { requestLines } from '../requestRoutes';
 
+jest.mock('../../../../services/fetch', () => ({
+  fetchText: jest.fn(),
+}));
+
 test('conversion', async () => {
   jest
     .spyOn(fetchModule, 'fetchText')

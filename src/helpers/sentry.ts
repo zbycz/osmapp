@@ -1,10 +1,10 @@
-import * as Sentry from '@sentry/node'; // in browser aliased to @sentry/browser (next.config.js)
-import getConfig from 'next/config';
+import * as Sentry from '@sentry/browser';
+// TODO in browser aliased to @sentry/browser (next.config.js)
 
 export const initSentry = () => {
-  const {
-    publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
-  } = getConfig();
+  const osmappVersion = process.env.osmappVersion;
+  const commitHash = process.env.commitHash;
+  const commitMessage = process.env.commitMessage;
 
   Sentry.init({
     dsn: 'https://79cd9dbaeb0f4d0f868e2d4574f8b7e2@sentry.io/1858591',

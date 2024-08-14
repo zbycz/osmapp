@@ -11,6 +11,11 @@ import {
   WIKIPEDIA_CS,
 } from './apiMocks.fixture';
 
+jest.mock('../../fetch', () => ({
+  fetchJson: jest.fn(),
+}));
+jest.mock('maplibre-gl', () => ({}));
+
 const mockApi = (mock: ApiMock) => {
   jest.spyOn(fetchModule, 'fetchJson').mockImplementation((url) => {
     expect(url).toEqual(mock.url);

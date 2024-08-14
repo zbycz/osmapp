@@ -7,7 +7,7 @@ import { basicStyle } from '../styles/basicStyle';
 import { outdoorStyle } from '../styles/outdoorStyle';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { getRasterStyle } from '../styles/rasterStyle';
-import { DEFAULT_MAP } from '../../../config';
+import { DEFAULT_MAP } from '../../../config.mjs';
 import { makinaAfricaStyle } from '../styles/makinaAfricaStyle';
 import {
   CLIMBING_SPRITE,

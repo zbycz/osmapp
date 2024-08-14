@@ -91,7 +91,7 @@ export const getInitialFeature = async (ctx) => {
 
   const t2 = new Date().getTime();
   const time = t2 - t1;
-  console.log(`getInititalFeature(${shortId}): ${time}ms`); // eslint-disable-line no-console
+  console.log(`getInitialFeature(${shortId}): ${time}ms`); // eslint-disable-line no-console
 
   return initialFeature;
 };
