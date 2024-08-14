@@ -55,8 +55,7 @@
     "react-dom": "^18.3.1",
     "react-jss": "^10.6.0",
     "react-split-pane": "^0.1.92",
-    "react-zoom-pan-pinch": "^3.5.0",
-    "wrap-ansi": "^7"
+    "react-zoom-pan-pinch": "^3.5.0"
   },
   "devDependencies": {
     "@types/autosuggest-highlight": "^3.2.3",
@@ -73,5 +72,8 @@
     "lint-staged": "^15.2.9",
     "prettier": "^3.3.3",
     "typescript": "^5.5.2"
+  },
+  "resolutions": {
+    "wrap-ansi": "npm:wrap-ansi-cjs@^8"
   }
 }
