@@ -18,7 +18,7 @@ import { InjectIntl, setIntl } from '../src/services/intl';
 import { FaviconsOsmapp } from '../src/helpers/FaviconsOsmapp';
 import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
 import { FaviconsOpenClimbing } from '../src/helpers/FaviconsOpenClimbing';
-import { LANGUAGES } from '../src/config';
+import { LANGUAGES } from '../src/config.mjs';
 
 type Props = DocumentInitialProps &
   DocumentProps &

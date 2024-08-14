@@ -1,6 +1,6 @@
 import acceptLanguageParser from 'accept-language-parser';
 import nextCookies from 'next-cookies';
-import { LANGUAGES } from '../config';
+import { LANGUAGES } from '../config.mjs';
 
 // the files are not imported in main bundle
 const getMessages = async (lang) =>

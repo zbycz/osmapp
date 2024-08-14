@@ -5,7 +5,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 import styled from '@emotion/styled';
 import { useBoolState } from '../../helpers';
 import { changeLang, intl, t } from '../../../services/intl';
-import { LANGUAGES } from '../../../config';
+import { LANGUAGES } from '../../../config.mjs';
 
 const StyledLanguageIcon = styled(LanguageIcon)`
   color: ${({ theme }) => theme.palette.action.active};
