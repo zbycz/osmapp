@@ -16,15 +16,21 @@ import {
 import { PanoramaImg } from './PanoramaImg';
 import { InfoButton } from './InfoButton';
 import { ImageDef, isTag } from '../../../../services/types';
+import { isDesktop, isMobileMode } from '../../../helpers';
+import { css } from '@emotion/react';
 
 const Img = styled.img<{ $hasPaths: boolean }>`
   ${({ $hasPaths }) => $hasPaths && `opacity: 0.9;`}
+
+  margin-left: 50%;
+  transform: translateX(-50%);
 `;
 
-const ImageWrapper = styled.div`
+const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
   display: inline-block;
   position: relative;
   height: 238px;
+  vertical-align: top;
 
   margin-right: 8px;
   &:first-child {
@@ -32,6 +38,16 @@ const ImageWrapper = styled.div`
   }
 
   ${({ onClick }) => onClick && `cursor: pointer;`}
+
+  ${({ $hasPaths }) =>
+    !$hasPaths &&
+    css`
+      overflow: hidden;
+      max-width: calc(410px - 2 * 8px);
+      @media ${isMobileMode} {
+        max-width: calc(100% - 2 * 8px);
+      }
+    `}
 `;
 
 type Props = {
@@ -48,7 +64,7 @@ export const Image = ({ def, image }: Props) => {
   const isImageLoaded = size !== initialSize;
   const showInfo = image.panoramaUrl || isImageLoaded;
   return (
-    <ImageWrapper onClick={onClick}>
+    <ImageWrapper $hasPaths={hasPaths} onClick={onClick}>
       {image.panoramaUrl ? (
         <PanoramaImg url={image.panoramaUrl} />
       ) : (

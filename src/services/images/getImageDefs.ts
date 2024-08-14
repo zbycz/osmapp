@@ -44,7 +44,25 @@ const parsePathTag = (pathString?: string): PathType | undefined => {
 
 type KeyValue = { k: string; v: string };
 export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
-  if (k.match(/^(wikimedia_commons|image)/) && v.match(/^File:/)) {
+  if (
+    k.startsWith('image') &&
+    v.startsWith('https://commons.wikimedia.org/wiki/File')
+  ) {
+    return {
+      imageUrl: getCommonsImageUrl(
+        v.replace(
+          /^https:\/\/commons.wikimedia.org\/wiki\/File(:|%3A|%3a)/,
+          'File:',
+        ),
+        WIDTH,
+      ),
+      description: `Wikimedia Commons image (${k}=*)`,
+      linkUrl: v,
+      link: v,
+    };
+  }
+
+  if (k.match(/^(wikimedia_commons|image)/) && v.startsWith('File:')) {
     return {
       imageUrl: decodeURI(getCommonsImageUrl(v, WIDTH)),
       description: `Wikimedia Commons image (${k}=*)`,
@@ -66,9 +84,23 @@ export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
   return null; // API call needed
 };
 
-const getImagesFromTags = (tags: FeatureTags) =>
-  Object.keys(tags)
-    .filter((k) => k.match(imageTagRegexp))
+const wikipedia = ([k, _]) => k.match(/^wikipedia(\d*|[^:]+)$/);
+const wikidata = ([k, _]) => k.match(/^wikidata(\d*|[^:]+)$/);
+const image = ([k, _]) => k.match(/^image(\d*|:(?!path).*)$/);
+const commons = (k) => k.match(/^wikimedia_commons(\d*|:(?!path).*)$/);
+const commonsFile = ([k, v]) => commons(k) && v.startsWith('File:');
+const commonsCategory = ([k, v]) => commons(k) && v.startsWith('Category:');
+
+const getImagesFromTags = (tags: FeatureTags) => {
+  const keys = [
+    ...Object.entries(tags).filter(commonsFile),
+    ...Object.entries(tags).filter(image),
+    ...Object.entries(tags).filter(wikipedia),
+    ...Object.entries(tags).filter(wikidata),
+    ...Object.entries(tags).filter(commonsCategory),
+  ].map(([k]) => k);
+
+  return keys
     .map((k) => {
       const v = tags[k];
       const instant = !!getInstantImage({ k, v });
@@ -76,6 +108,7 @@ const getImagesFromTags = (tags: FeatureTags) =>
       return { type: 'tag', k, v, instant, path } as ImageDefFromTag;
     })
     .sort((a, b) => +b.instant - +a.instant);
+};
 
 const getImagesFromCenter = (tags: FeatureTags, center?: LonLat): ImageDef[] =>
   !center

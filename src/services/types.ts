@@ -1,8 +1,6 @@
 import type Vocabulary from '../locales/vocabulary';
 import type { getSchemaForFeature } from './tagging/idTaggingScheme';
 
-export const imageTagRegexp =
-  /^(image|wikimedia_commons|wikidata|wikipedia)(\d*|:(?!path)[^:]+)$/;
 export type PathType = { x: number; y: number; suffix: string }[];
 export type MemberPath = {
   path: PathType;
