@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   getInstantImage,
   ImageType,
@@ -40,16 +40,18 @@ const mergeResultFn =
     return [...prevImages, { def, image }];
   };
 
-export const useLoadImages = () => {
-  const { feature } = useFeatureContext();
-  const defs = feature?.imageDefs;
-  const instantDefs = defs?.filter(isInstant) ?? [];
-  const apiDefs = defs?.filter(not(isInstant)) ?? [];
-
-  const initialState = instantDefs.map((def) => ({
+const getInitialState = (defs: ImageDef[]) =>
+  defs?.filter(isInstant)?.map((def) => ({
     def,
     image: getInstantImage(def),
   }));
+
+export const useLoadImages = () => {
+  const { feature } = useFeatureContext();
+  const defs = feature?.imageDefs;
+  const apiDefs = useMemo(() => defs?.filter(not(isInstant)) ?? [], [defs]);
+
+  const initialState = useMemo(() => getInitialState(defs), [defs]);
   const [loading, setLoading] = useState(apiDefs.length > 0);
   const [images, setImages] = useState<ImagesType>(initialState);
 
@@ -63,7 +65,7 @@ export const useLoadImages = () => {
     Promise.all(promises).then(() => {
       setLoading(false);
     });
-  }, [defs]);
+  }, [apiDefs, defs, initialState]);
 
   publishDbgObject('last images', images);
   return { loading, images: images.filter((item) => item.image != null) };

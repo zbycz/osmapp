@@ -34,7 +34,7 @@ export const RouteDifficultySelect = ({
       setTempGrade(difficulty.grade);
       setTempGradeSystem(difficulty.gradeSystem);
     }
-  }, [difficulty]);
+  }, [difficulty, tempGrade, tempGradeSystem]);
 
   useEffect(() => {
     if (tempGrade && tempGradeSystem) {
@@ -47,7 +47,7 @@ export const RouteDifficultySelect = ({
 
       onDifficultyChanged({ grade: tempGrade, gradeSystem: tempGradeSystem });
     }
-  }, [tempGradeSystem]);
+  }, [difficulty.gradeSystem, onDifficultyChanged, tempGrade, tempGradeSystem]);
 
   const handleGradeChange = (e: any) => {
     const newGrade = e.target.value;

@@ -34,5 +34,5 @@ export const useOptions = (inputValue: string, setOptions) => {
 
       fetchGeocoderOptions(inputValue, view, setOptions, before, after);
     })();
-  }, [inputValue, stars]);
+  }, [inputValue, stars, setOptions, view]);
 };

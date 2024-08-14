@@ -36,14 +36,9 @@ const NotSupportedMessage = () => (
   </span>
 );
 
-// TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
+// TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
-  if (!webglSupported) {
-    onMapLoaded();
-    return <NotSupportedMessage />;
-  }
-
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
   const [map, mapRef] = useInitMap();
@@ -63,4 +58,13 @@ const BrowserMap = ({ onMapLoaded }) => {
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
 
-export default BrowserMap;
+const BrowserMapCheck = ({ onMapLoaded }) => {
+  if (!webglSupported) {
+    onMapLoaded();
+    return <NotSupportedMessage />;
+  }
+
+  return <BrowserMap onMapLoaded={onMapLoaded} />;
+};
+
+export default BrowserMapCheck; // dynamic import

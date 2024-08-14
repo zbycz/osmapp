@@ -49,10 +49,9 @@ export const GalleryControls = () => {
     loadPhotoRelatedData,
     isEditMode,
   } = useClimbingContext();
+  const { feature } = useFeatureContext();
 
   if (isEditMode) return null;
-
-  const { feature } = useFeatureContext();
 
   const photoIndex = photoPaths.indexOf(photoPath);
 

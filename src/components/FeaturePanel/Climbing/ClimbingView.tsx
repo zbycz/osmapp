@@ -212,15 +212,15 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     if (!isEditMode && machine.currentStateName === 'editRoute') {
       machine.execute('routeSelect', { routeNumber: routeSelectedIndex });
     }
-  }, [isEditMode]);
+  }, [isEditMode, machine, routeSelectedIndex]);
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, [splitPaneHeight]);
+  }, [loadPhotoRelatedData, splitPaneHeight]);
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, []);
+  }, [loadPhotoRelatedData]);
 
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(null);
@@ -236,7 +236,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
         loadPhotoRelatedData(),
       );
     };
-  }, []);
+  }, [loadPhotoRelatedData]);
 
   const onDragStarted = () => {
     setIsSplitViewDragging(true);
@@ -277,7 +277,14 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     if (!backgroundImageUrl) {
       setBackgroundImageUrl(url);
     }
-  }, [photoPath, photoZoom.scale, windowDimensions]);
+  }, [
+    backgroundImageUrl,
+    loadedPhotos,
+    photoPath,
+    photoZoom,
+    photoZoom.scale,
+    windowDimensions,
+  ]);
 
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =

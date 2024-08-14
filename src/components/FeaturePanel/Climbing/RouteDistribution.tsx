@@ -122,7 +122,7 @@ export const RouteDistribution = () => {
               const numberOfRoutes = routeOccurrences[numberOfRoutesKey];
               const isColumnActive = numberOfRoutes > 0;
               return (
-                <Column>
+                <Column key={heightRatioItem.grade}>
                   {numberOfRoutes > 0 && (
                     <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
                   )}

@@ -104,6 +104,7 @@ const UserLogin = forwardRef<SVGSVGElement, UserLoginProps>(
     );
   },
 );
+UserLogin.displayName = 'UserLogin';
 
 // TODO custom Item components are not keyboard accesible
 // seems like a bug in material-ui

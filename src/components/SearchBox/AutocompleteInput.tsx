@@ -37,7 +37,7 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   useEffect(() => {
     // @ts-ignore
     params.InputProps.ref(autocompleteRef.current);
-  }, []);
+  }, [params.InputProps, autocompleteRef]);
 
   const onChange = (e) => setInputValue(e.target.value);
   const onFocus = (e) => e.target.select();

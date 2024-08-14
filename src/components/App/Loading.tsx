@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import styled from '@emotion/styled';
 import Router from 'next/router';
 import { LinearProgress } from '@mui/material';
@@ -21,16 +21,16 @@ const useStateWithTimeout = () => {
   const timeout = React.useRef<NodeJS.Timeout>();
   return {
     loading,
-    start: () => {
+    start: useCallback(() => {
       timeout.current = setTimeout(start, 300);
-    },
-    stop: () => {
+    }, [start]),
+    stop: useCallback(() => {
       if (timeout.current) {
         clearTimeout(timeout.current);
         timeout.current = undefined;
       }
       stop();
-    },
+    }, [stop]),
   };
 };
 
@@ -46,7 +46,7 @@ const useIsLoadingNext = () => {
       Router.events.off('routeChangeComplete', stop);
       Router.events.off('routeChangeError', stop);
     };
-  }, []);
+  }, [start, stop]);
   return loading;
 };
 
@@ -60,7 +60,7 @@ const useIsLoadingFeature = () => {
     } else {
       stop();
     }
-  }, [feature]);
+  }, [feature, start, stop]);
   return loading;
 };
 

@@ -57,7 +57,7 @@ export const MajorKeysEditor = () => {
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
       setActiveMajorKeys((arr) => [...arr, 'name']);
     }
-  }, [focusTag]);
+  }, [activeMajorKeys, focusTag]);
 
   return (
     <>

@@ -31,10 +31,10 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     showDebugMenu,
   } = useClimbingContext();
 
-  if (routes.length === 0) return null;
-
   React.useEffect(() => {
     const downHandler = (e) => {
+      if (routes.length === 0) return;
+
       if (e.key === 'ArrowDown') {
         const nextRoute = routes[routeSelectedIndex + 1];
         if (nextRoute) {
@@ -73,7 +73,13 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     return () => {
       window.removeEventListener('keydown', downHandler);
     };
-  }, [routeSelectedIndex, routes, routesExpanded]);
+  }, [
+    routeSelectedIndex,
+    routes,
+    routesExpanded,
+    setRouteSelectedIndex,
+    setRoutesExpanded,
+  ]);
 
   const handleEdit = () => {
     setIsEditMode(true);

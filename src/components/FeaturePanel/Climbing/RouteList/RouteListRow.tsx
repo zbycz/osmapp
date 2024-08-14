@@ -88,7 +88,7 @@ export const RenderListRow = ({
     if (routeSelectedIndex === index) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [routeSelectedIndex]);
+  }, [index, routeSelectedIndex]);
   const osmId = route.feature?.osmMeta
     ? getShortId(route.feature.osmMeta)
     : null;

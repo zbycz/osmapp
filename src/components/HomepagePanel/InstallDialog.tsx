@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 import { TabContext, TabPanel } from '@mui/lab';
 
@@ -81,13 +81,13 @@ const PaperImg = ({ src, width }) => (
 );
 
 export function InstallDialog() {
-  const [value, setValue] = React.useState('ios');
+  const [value, setValue] = useState('ios');
   const { showHomepage } = useFeatureContext();
 
   useEffect(() => {
     showHomepage();
     setValue(getPlatform());
-  }, []);
+  }, [showHomepage, setValue]);
 
   const handleClose = () => Router.push('/');
   const handleChange = (event, newValue) => {

@@ -42,17 +42,15 @@ const PublicTransportInner = () => {
     useLoadingState();
 
   useEffect(() => {
-    const loadData = async () => {
+    (async () => {
       startRoutes();
       const lines = await requestLines(
         router.query.all[0] as any,
         Number(router.query.all[1]),
       ).catch(failRoutes);
       finishRoutes(lines);
-    };
-
-    loadData();
-  }, []);
+    })();
+  }, [failRoutes, finishRoutes, router.query.all, startRoutes]);
 
   return (
     <div>
@@ -61,7 +59,7 @@ const PublicTransportInner = () => {
       ) : (
         <PublicTransportWrapper>
           {routes.map((line) => (
-            <LineNumber name={line.ref} color={line.colour} />
+            <LineNumber key={line.ref} name={line.ref} color={line.colour} />
           ))}
         </PublicTransportWrapper>
       )}

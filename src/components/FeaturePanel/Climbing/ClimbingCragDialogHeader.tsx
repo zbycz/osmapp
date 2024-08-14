@@ -93,6 +93,7 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
               <PhotoLinks>
                 {photoPaths.map((photo, index) => (
                   <PhotoLink
+                    key={photo}
                     onClick={() => onPhotoChange(photo)}
                     isCurrentPhoto={photo === photoPath}
                   >

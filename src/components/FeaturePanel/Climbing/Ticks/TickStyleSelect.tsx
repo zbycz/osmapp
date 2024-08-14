@@ -27,7 +27,7 @@ export const TickStyleSelect = ({
   <FormControl size="small">
     <Select value={value} onChange={onChange}>
       {tickStyles.map((tickStyle) => (
-        <MenuItem value={tickStyle.key}>
+        <MenuItem key={tickStyle.key} value={tickStyle.key}>
           <Row>
             <div>{tickStyle.name}</div>
             <Tooltip arrow title={tickStyle.description} placement="right">

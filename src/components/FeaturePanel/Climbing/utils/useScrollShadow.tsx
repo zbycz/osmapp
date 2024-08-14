@@ -113,7 +113,7 @@ export const useScrollShadow = (deps = []) => {
 
   useEffect(() => {
     setShadows();
-  }, deps);
+  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const handleShadows = () => setShadows();
