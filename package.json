@@ -74,6 +74,6 @@
     "typescript": "^5.5.2"
   },
   "resolutions": {
-    "wrap-ansi": "npm:wrap-ansi-cjs@^8"
+    "wrap-ansi": "npm:wrap-ansi@^7"
   }
 }
