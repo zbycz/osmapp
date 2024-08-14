@@ -16,7 +16,7 @@ import { addSchemaToFeature } from './tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from './tagging/translations';
 import { osmToFeature } from './osmToFeature';
 import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
-import { captureException } from '../helpers/sentry';
+import * as Sentry from '@sentry/nextjs';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
 
 const getOsmUrl = ({ type, id }) =>
@@ -100,7 +100,7 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
       feature.countryCode = await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
     } catch (e) {
       console.warn('countryCode left empty – resolveCountryCode():', e); // eslint-disable-line no-console
-      captureException(e, { extra: { feature } });
+      Sentry.captureException(e, { extra: { feature } });
     }
   }
 
