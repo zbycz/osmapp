@@ -35,7 +35,7 @@ export type Machine = {
   [key in State]: Partial<Record<StateAction, ActionWithCallback>>;
 };
 
-export const getMachineFactory = ({
+export const useGetMachineFactory = ({
   setRouteSelectedIndex,
   setPointSelectedIndex,
   updatePathOnRouteIndex,

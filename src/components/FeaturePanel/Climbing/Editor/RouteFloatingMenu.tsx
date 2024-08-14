@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import styled from '@emotion/styled';
 import CheckIcon from '@mui/icons-material/Check';
 import AddLocationIcon from '@mui/icons-material/AddLocation';
@@ -52,11 +52,14 @@ export const RouteFloatingMenu = () => {
     setIsDeletePointDialogVisible(!isDeletePointDialogVisible);
   };
 
-  const onPointTypeChange = (type: PointType) => {
-    machine.execute('changePointType', { type });
+  const onPointTypeChange = useCallback(
+    (type: PointType) => {
+      machine.execute('changePointType', { type });
 
-    setShowTypeMenu(false);
-  };
+      setShowTypeMenu(false);
+    },
+    [machine],
+  );
 
   const onMouseEnter = () => {
     setRouteIndexHovered(routeSelectedIndex);

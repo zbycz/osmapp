@@ -52,7 +52,7 @@ const useUpdateViewFromFeature = () => {
       const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
       setView(['17.00', lat, lon]);
     }
-  }, [feature]);
+  }, [feature, setView]);
 };
 
 const useUpdateViewFromHash = () => {
@@ -65,7 +65,7 @@ const useUpdateViewFromHash = () => {
       }
       return true; // let nextjs handle the route change as well
     });
-  }, []);
+  }, [setView]);
 };
 
 const IndexWithProviders = () => {
@@ -80,6 +80,8 @@ const IndexWithProviders = () => {
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   const photo = router.query.all?.[3];
+
+  console.log(router.query.all);
 
   return (
     <>

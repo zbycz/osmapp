@@ -75,7 +75,7 @@ export const ObjectsAround = ({ advanced }) => {
     if (feature.center) {
       fetchAroundFeature(feature.center).then(finishAround, failAround); // TODO fix op on unmounted tree (react-query?)
     }
-  }, [getOsmappLink(feature)]);
+  }, [failAround, feature.center, finishAround, startAround]);
 
   if (!feature.center) {
     return null;

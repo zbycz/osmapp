@@ -212,15 +212,15 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     if (!isEditMode && machine.currentStateName === 'editRoute') {
       machine.execute('routeSelect', { routeNumber: routeSelectedIndex });
     }
-  }, [isEditMode]);
+  }, [isEditMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, [splitPaneHeight]);
+  }, [splitPaneHeight]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(null);
@@ -236,7 +236,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
         loadPhotoRelatedData(),
       );
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onDragStarted = () => {
     setIsSplitViewDragging(true);
@@ -277,7 +277,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     if (!backgroundImageUrl) {
       setBackgroundImageUrl(url);
     }
-  }, [photoPath, photoZoom.scale, windowDimensions]);
+  }, [photoPath, photoZoom.scale, windowDimensions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =

@@ -54,17 +54,15 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
     useLoadingState();
 
   useEffect(() => {
-    const loadData = async () => {
+    (async () => {
       startRating();
       const ratingValue = await getEstablishmentRatingValue(v);
       if (Number.isNaN(rating)) {
         failRating();
       }
       finishRating(ratingValue);
-    };
-
-    loadData();
-  }, []);
+    })();
+  }, [failRating, finishRating, rating, startRating, v]);
 
   if (loading) {
     return <DotLoader />;

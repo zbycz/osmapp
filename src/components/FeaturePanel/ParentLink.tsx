@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import React from 'react';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { getOsmappLink } from '../../services/helpers';
+import { getKey, getOsmappLink } from '../../services/helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
 
@@ -67,7 +67,11 @@ export const ParentLinkContent = () => {
         </Arrow>
       ) : (
         feature.parentFeatures?.map((parentFeature) => (
-          <Link href={getOsmappLink(parentFeature)} color="secondary">
+          <Link
+            key={getKey(parentFeature)}
+            href={getOsmappLink(parentFeature)}
+            color="secondary"
+          >
             <Arrow>{getLabel(parentFeature)}</Arrow>
           </Link>
         ))

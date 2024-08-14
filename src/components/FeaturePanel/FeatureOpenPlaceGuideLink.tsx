@@ -19,21 +19,14 @@ const getData = async (center, osmId) => {
   return body;
 };
 
-export const FeatureOpenPlaceGuideLink = () => {
-  const supportedCountries = ['et']; // refer to the list of countries here: https://github.com/OpenPlaceGuide/discover-cf-worker/blob/main/index.js#L43
-
+const OpenPlaceGuideLink = () => {
+  const [instances, setInstances] = useState([]);
   const { feature } = useFeatureContext();
   const osmId = getUrlOsmId(feature.osmMeta);
 
-  if (!supportedCountries.includes(feature.countryCode)) {
-    return null;
-  }
-
-  const [instances, setInstances] = useState([]);
-
   useEffect(() => {
     getData(feature.center, osmId).then(setInstances);
-  }, [osmId]);
+  }, [feature.center, osmId]);
 
   if (instances.length === 0) {
     return null;
@@ -53,4 +46,15 @@ export const FeatureOpenPlaceGuideLink = () => {
       ))}
     </>
   );
+};
+
+const supportedCountries = ['et']; // refer to the list of countries here: https://github.com/OpenPlaceGuide/discover-cf-worker/blob/main/index.js#L43
+
+export const FeatureOpenPlaceGuideLink = () => {
+  const { feature } = useFeatureContext();
+  if (!supportedCountries.includes(feature.countryCode)) {
+    return null;
+  }
+
+  return <OpenPlaceGuideLink />;
 };

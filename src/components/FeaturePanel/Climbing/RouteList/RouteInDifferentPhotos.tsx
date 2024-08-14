@@ -39,6 +39,7 @@ export const RouteInDifferentPhotos = ({
       <Row>
         {photos.map((photo, index) => (
           <PhotoLink
+            key={photo}
             isCurrentPhoto={photoPath === photo}
             onClick={(e) => onPhotoChange(e, photo)}
           >

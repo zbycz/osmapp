@@ -88,7 +88,7 @@ export const RenderListRow = ({
     if (routeSelectedIndex === index) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [routeSelectedIndex]);
+  }, [routeSelectedIndex]); // eslint-disable-line react-hooks/exhaustive-deps
   const osmId = route.feature?.osmMeta
     ? getShortId(route.feature.osmMeta)
     : null;

@@ -39,7 +39,7 @@ export const GradeSystemSelect = ({
     >
       {allowUnsetValue && <MenuItem value={null}>Original grade</MenuItem>}
       {GRADE_SYSTEMS.map(({ key, name, description }) => (
-        <MenuItem value={key}>
+        <MenuItem key={key} value={key}>
           <Row>
             <div>{name}</div>
             <Tooltip arrow title={description} placement="right">

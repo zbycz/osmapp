@@ -44,6 +44,7 @@ export const ToggleButton = forwardRef<any, any>(
     </StyledToggleButton>
   ),
 );
+ToggleButton.displayName = 'ToggleButton';
 
 const CopyTextItem = ({ text }: { text: string | null }) =>
   text === null ? null : (
