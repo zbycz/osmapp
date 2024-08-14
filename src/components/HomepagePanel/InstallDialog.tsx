@@ -87,7 +87,7 @@ export function InstallDialog() {
   useEffect(() => {
     showHomepage();
     setValue(getPlatform());
-  }, [showHomepage, setValue]);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = () => Router.push('/');
   const handleChange = (event, newValue) => {

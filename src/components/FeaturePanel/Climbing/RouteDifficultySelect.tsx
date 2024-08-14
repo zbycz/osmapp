@@ -34,7 +34,7 @@ export const RouteDifficultySelect = ({
       setTempGrade(difficulty.grade);
       setTempGradeSystem(difficulty.gradeSystem);
     }
-  }, [difficulty, tempGrade, tempGradeSystem]);
+  }, [difficulty]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (tempGrade && tempGradeSystem) {
@@ -47,7 +47,7 @@ export const RouteDifficultySelect = ({
 
       onDifficultyChanged({ grade: tempGrade, gradeSystem: tempGradeSystem });
     }
-  }, [difficulty.gradeSystem, onDifficultyChanged, tempGrade, tempGradeSystem]);
+  }, [tempGradeSystem]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleGradeChange = (e: any) => {
     const newGrade = e.target.value;

@@ -73,13 +73,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     return () => {
       window.removeEventListener('keydown', downHandler);
     };
-  }, [
-    routeSelectedIndex,
-    routes,
-    routesExpanded,
-    setRouteSelectedIndex,
-    setRoutesExpanded,
-  ]);
+  }, [routeSelectedIndex, routes, routesExpanded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = () => {
     setIsEditMode(true);

@@ -57,7 +57,7 @@ export const MajorKeysEditor = () => {
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
       setActiveMajorKeys((arr) => [...arr, 'name']);
     }
-  }, [activeMajorKeys, focusTag]);
+  }, [focusTag]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
