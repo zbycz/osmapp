@@ -73,7 +73,7 @@ export default class MyDocument extends Document<Props> {
 type InitialProps = DocumentInitialProps &
   DocumentHeadTagsProps & {
     serverIntl: Awaited<ReturnType<typeof getServerIntl>>;
-    asPath: string;
+    asPath: string | undefined;
   };
 
 MyDocument.getInitialProps = async (

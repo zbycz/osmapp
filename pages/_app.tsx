@@ -9,13 +9,8 @@ import {
 } from '@mui/material-nextjs/v13-pagesRouter';
 import { UserThemeProvider } from '../src/helpers/theme';
 import { GlobalStyle } from '../src/helpers/GlobalStyle';
-import { captureException, initSentry } from '../src/helpers/sentry';
-import { prod, doShortenerRedirect } from '../src/services/helpers';
+import { doShortenerRedirect } from '../src/services/helpers';
 import { PROJECT_NAME } from '../src/services/project';
-
-if (prod) {
-  initSentry();
-}
 
 type Props = AppProps & EmotionCacheProviderProps;
 
@@ -27,11 +22,6 @@ export default class MyApp extends App<Props> {
     //   Router.prefetch('/'); // works only in PROD
     //   Router.prefetch('/[osmtype]/[osmid]');
     // }, 500);
-  }
-
-  componentDidCatch(error, errorInfo) {
-    captureException(error, errorInfo);
-    super.componentDidCatch(error, errorInfo);
   }
 
   render() {
