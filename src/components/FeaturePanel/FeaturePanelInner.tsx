@@ -28,6 +28,7 @@ import { FeatureImages } from './ImagePane/FeatureImages';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { CragsInArea } from './CragsInArea';
 import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
+import { Runways } from './Runways/Runways';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
 import { getIsClimbingRoute } from '../utils/openClimbingUtils';
@@ -130,6 +131,7 @@ export const FeaturePanelInner = () => {
                 {advanced && <Members />}
 
                 <PublicTransport tags={tags} />
+                <Runways />
 
                 <FeatureOpenPlaceGuideLink />
 
