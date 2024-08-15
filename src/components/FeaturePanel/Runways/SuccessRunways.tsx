@@ -14,9 +14,9 @@ import { t } from '../../../services/intl';
 const fmtRunwaySize = ({ length, width }: RunwayType) =>
   `${length || '?'} - ${width || '?'}`;
 
-const Runway: React.FC<{ runway: RunwayType; showSize: boolean }> = ({
+const Runway: React.FC<{ runway: RunwayType; showSizeColumn: boolean }> = ({
   runway,
-  showSize,
+  showSizeColumn,
 }) => (
   <TableRow>
     <TableCell>
@@ -24,7 +24,7 @@ const Runway: React.FC<{ runway: RunwayType; showSize: boolean }> = ({
         {runway.ref || 'Unknown'}
       </Link>
     </TableCell>
-    {showSize && <TableCell>{fmtRunwaySize(runway)}</TableCell>}
+    {showSizeColumn && <TableCell>{fmtRunwaySize(runway)}</TableCell>}
     {/* TODO: Use id tagging presets to show the surface in the users language */}
     <TableCell style={{ textTransform: 'capitalize' }}>
       {runway.surface || 'Unknown'}
@@ -37,7 +37,7 @@ type RunwayProps = {
 };
 
 export const SuccessRunways: React.FC<RunwayProps> = ({ runways }) => {
-  const showSizeCol = runways.some(({ length, width }) => length || width);
+  const showSizeColumn = runways.some(({ length, width }) => length || width);
 
   return (
     <>
@@ -48,14 +48,18 @@ export const SuccessRunways: React.FC<RunwayProps> = ({ runways }) => {
           <TableHead>
             <TableRow>
               <TableCell>{t('runway.runway')}</TableCell>
-              {showSizeCol && <TableCell>{t('runway.size')}</TableCell>}
+              {showSizeColumn && <TableCell>{t('runway.size')}</TableCell>}
               <TableCell>{t('runway.surface')}</TableCell>
             </TableRow>
           </TableHead>
 
           <TableBody>
             {runways.map((runway) => (
-              <Runway runway={runway} showSize={showSizeCol} key={runway.id} />
+              <Runway
+                runway={runway}
+                showSizeColumn={showSizeColumn}
+                key={runway.id}
+              />
             ))}
           </TableBody>
         </Table>
