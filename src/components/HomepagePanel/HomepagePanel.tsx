@@ -13,7 +13,7 @@ export const HomepagePanel = () => {
   // hide after first shown feature
   useEffect(() => {
     if (feature) hideHomepage();
-  }, [feature]);
+  }, [feature, hideHomepage]);
 
   if (!homepageShown) {
     return null;

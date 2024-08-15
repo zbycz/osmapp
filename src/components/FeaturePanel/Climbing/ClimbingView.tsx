@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
@@ -49,7 +49,7 @@ const Container = styled.div`
       text-align: center;
       line-height: 0px;
       font-size: 20px;
-      color: ${({ theme }) => theme.palette.primary.text};
+      color: ${({ theme }) => theme.palette.primary.main};
       letter-spacing: 1px;
     }
 
@@ -212,15 +212,15 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     if (!isEditMode && machine.currentStateName === 'editRoute') {
       machine.execute('routeSelect', { routeNumber: routeSelectedIndex });
     }
-  }, [isEditMode]);
+  }, [isEditMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, [splitPaneHeight]);
+  }, [splitPaneHeight]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(null);
@@ -236,7 +236,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
         loadPhotoRelatedData(),
       );
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onDragStarted = () => {
     setIsSplitViewDragging(true);
@@ -277,7 +277,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     if (!backgroundImageUrl) {
       setBackgroundImageUrl(url);
     }
-  }, [photoPath, photoZoom.scale, windowDimensions]);
+  }, [photoPath, photoZoom.scale, windowDimensions]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =

@@ -1,6 +1,6 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { IconButton } from '@mui/material';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { isMobileMode } from '../../helpers';

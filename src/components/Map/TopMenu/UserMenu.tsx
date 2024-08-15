@@ -1,7 +1,7 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import React, { forwardRef, useState } from 'react';
 import { Divider, Menu, MenuItem } from '@mui/material';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Router from 'next/router';
 import { useBoolState } from '../../helpers';
 import { t } from '../../../services/intl';
@@ -104,6 +104,7 @@ const UserLogin = forwardRef<SVGSVGElement, UserLoginProps>(
     );
   },
 );
+UserLogin.displayName = 'UserLogin';
 
 // TODO custom Item components are not keyboard accesible
 // seems like a bug in material-ui

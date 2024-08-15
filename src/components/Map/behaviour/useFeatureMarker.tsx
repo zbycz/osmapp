@@ -71,5 +71,7 @@ export const useFeatureMarker = (map) => {
         }
       }, 200);
     }
+    // We want to run it only on Init
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 };

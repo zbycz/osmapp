@@ -7,7 +7,7 @@ import {
   onTickDelete,
   onTickUpdate,
 } from '../../../services/ticks';
-import { DEFAULT_DATA_FORMAT } from '../../../config';
+import { DEFAULT_DATA_FORMAT } from '../../../config.mjs';
 import { Tick } from './types';
 import { TickStyleSelect } from './Ticks/TickStyleSelect';
 import { useSnackbar } from '../../utils/SnackbarContext';

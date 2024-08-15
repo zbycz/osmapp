@@ -1,17 +1,18 @@
 import React, { useEffect } from 'react';
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import dynamic from 'next/dynamic';
 import BugReport from '@mui/icons-material/BugReport';
 import { Button, CircularProgress } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
-import { SHOW_PROTOTYPE_UI } from '../../config';
+import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
+import { webglSupported } from './helpers';
 
-const BrowserMap = dynamic(() => import('./BrowserMap'), {
+const BrowserMapDynamic = dynamic(() => import('./BrowserMap'), {
   ssr: false,
   loading: () => <div />,
 });
@@ -70,11 +71,11 @@ const NoscriptMessage = () => (
 
 const Map = () => {
   const [mapLoaded, setLoaded, setNotLoaded] = useBoolState(true);
-  useEffect(setNotLoaded, []);
+  useEffect(setNotLoaded, [setNotLoaded]);
 
   return (
     <>
-      <BrowserMap onMapLoaded={setLoaded} />
+      <BrowserMapDynamic onMapLoaded={setLoaded} />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
       <TopRight>

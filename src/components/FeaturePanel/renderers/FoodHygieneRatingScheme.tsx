@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Tooltip, Typography } from '@mui/material';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
 import { DotLoader } from '../../helpers';
 
@@ -54,17 +54,15 @@ export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
     useLoadingState();
 
   useEffect(() => {
-    const loadData = async () => {
+    (async () => {
       startRating();
       const ratingValue = await getEstablishmentRatingValue(v);
       if (Number.isNaN(rating)) {
         failRating();
       }
       finishRating(ratingValue);
-    };
-
-    loadData();
-  }, []);
+    })();
+  }, [failRating, finishRating, rating, startRating, v]);
 
   if (loading) {
     return <DotLoader />;

@@ -18,10 +18,10 @@ import { updateElementOnIndex } from '../utils/array';
 import { findCloserPointFactory } from '../utils/findCloserPoint';
 import {
   ActionWithCallback,
-  getMachineFactory,
+  useGetMachineFactory,
   State,
   StateAction,
-} from '../utils/getMachineFactory';
+} from '../utils/useGetMachineFactory';
 import { positionUtilsFactory } from '../utils/positionUtilsFactory';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
@@ -175,8 +175,9 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
 
-  const [pointElement, setPointElement] =
-    React.useState<null | HTMLElement>(null);
+  const [pointElement, setPointElement] = React.useState<null | HTMLElement>(
+    null,
+  );
 
   const getPathOnIndex = (index: number) =>
     routes[index]?.paths?.[photoPath] || [];
@@ -237,7 +238,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       photoZoom,
     });
 
-  const getMachine = getMachineFactory({
+  const getMachine = useGetMachineFactory({
     setRouteSelectedIndex,
     setPointSelectedIndex,
     updatePathOnRouteIndex,

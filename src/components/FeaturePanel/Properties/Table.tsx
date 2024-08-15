@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { isDesktopResolution } from '../../helpers';
 
 export const Table = styled.table`

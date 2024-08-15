@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { isDesktop, useMobileMode } from '../../helpers';
 import { HamburgerMenu } from './HamburgerMenu';
 import { UserMenu } from './UserMenu';

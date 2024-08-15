@@ -26,11 +26,11 @@ const renderOption = (inputValue, currentTheme, mapCenter, option) => {
   return renderGeocoder(option, currentTheme, inputValue, mapCenter);
 };
 
-export const renderOptionFactory =
-  (inputValue, currentTheme, mapCenter) => (props, option) =>
-    (
-      // eslint-disable-next-line react/jsx-props-no-spreading
-      <li {...props}>
-        {renderOption(inputValue, currentTheme, mapCenter, option)}
-      </li>
-    );
+export const renderOptionFactory = (inputValue, currentTheme, mapCenter) => {
+  const Option = (props, option) => (
+    <li {...props}>
+      {renderOption(inputValue, currentTheme, mapCenter, option)}
+    </li>
+  );
+  return Option;
+};

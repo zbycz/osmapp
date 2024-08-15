@@ -35,7 +35,7 @@ export const createMapEffectHook =
       if (map) {
         mapEffectFn(map, ...rest);
       }
-    }, [map, ...rest]);
+    }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 type EventDefintionFn = (
   map: Map,
@@ -54,7 +54,7 @@ export const createMapEventHook =
         };
       }
       return undefined;
-    }, [map, ...rest]);
+    }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 export const isString = (value) => typeof value === 'string';
 

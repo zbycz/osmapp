@@ -1,6 +1,5 @@
 import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
-import getConfig from 'next/config';
 import { osmAuth } from 'osm-auth';
 import { Feature, FeatureTags, Position, SuccessInfo } from './types';
 import {
@@ -17,10 +16,6 @@ import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
 import { isBrowser } from '../components/helpers';
 import { getLabel } from '../helpers/featureLabel';
-
-const {
-  publicRuntimeConfig: { osmappVersion },
-} = getConfig();
 
 const PROD_CLIENT_ID = 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68';
 
@@ -93,7 +88,7 @@ export const osmLogout = async () => {
 
 const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [
-    ['created_by', `OsmAPP ${osmappVersion}`],
+    ['created_by', `OsmAPP ${process.env.osmappVersion}`],
     ['comment', changesetComment],
     ['submitted_from', getFullOsmappLink(feature)],
     // ...(needsReview ? [['review_requested', 'yes']] : []),

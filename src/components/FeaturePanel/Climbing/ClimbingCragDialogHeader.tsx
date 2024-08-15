@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Router from 'next/router';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import CloseIcon from '@mui/icons-material/Close';
 import TuneIcon from '@mui/icons-material/Tune';
 import {
@@ -27,7 +27,7 @@ const PhotosContainer = styled.div`
   gap: 4px;
 `;
 const PhotosTitle = styled.div`
-  color: ${({ theme }) => theme.palette.text.hint};
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 const PhotoLinks = styled.div`
   display: flex;
@@ -93,6 +93,7 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
               <PhotoLinks>
                 {photoPaths.map((photo, index) => (
                   <PhotoLink
+                    key={photo}
                     onClick={() => onPhotoChange(photo)}
                     isCurrentPhoto={photo === photoPath}
                   >

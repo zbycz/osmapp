@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import styled, { createGlobalStyle, css } from 'styled-components';
+import styled from '@emotion/styled';
+import { Global, css } from '@emotion/react';
 import React, { useState } from 'react';
 import { SwipeableDrawer } from '@mui/material';
 import { Puller } from '../FeaturePanel/helpers/Puller';
@@ -9,19 +10,12 @@ type SettingsProps = {
   $topOffset: number;
 };
 
-const GlobalStyleForDrawer = createGlobalStyle<
-  SettingsProps & {
-    className: string;
+const getPaperStyle = (className: string, offset: number) => css`
+  .${className}.MuiDrawer-root > .MuiPaper-root {
+    height: calc(100% - ${offset}px);
+    overflow: visible;
+    background-color: transparent;
   }
->`
-  ${({ className, $collapsedHeight, $topOffset }) => css`
-    .${className}.MuiDrawer-root > .MuiPaper-root {
-      height: calc(100% - ${$collapsedHeight}px - ${$topOffset}px);
-      overflow: visible;
-      background-color: transparent;
-    }
-  `}
-
 `;
 
 const Container = styled.div<SettingsProps>`
@@ -68,13 +62,9 @@ export const Drawer = ({
   const handleOnOpen = () => setOpen(true);
   const handleOnClose = () => setOpen(false);
 
-  const commonProps = {
-    $collapsedHeight: collapsedHeight,
-    $topOffset: topOffset,
-  };
   return (
     <>
-      <GlobalStyleForDrawer {...commonProps} className={className} />
+      <Global styles={getPaperStyle(className, collapsedHeight + topOffset)} />
       <SwipeableDrawer
         anchor="bottom"
         open={open}
@@ -90,7 +80,7 @@ export const Drawer = ({
           onTransitionEnd?.(e, open);
         }}
       >
-        <Container {...commonProps}>
+        <Container $collapsedHeight={collapsedHeight} $topOffset={topOffset}>
           <Puller setOpen={setOpen} open={open} />
           <ListContainer>{children}</ListContainer>
         </Container>

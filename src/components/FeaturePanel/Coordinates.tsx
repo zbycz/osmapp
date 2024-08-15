@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { MenuItem, IconButton, Menu, Divider } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -44,6 +44,7 @@ export const ToggleButton = forwardRef<any, any>(
     </StyledToggleButton>
   ),
 );
+ToggleButton.displayName = 'ToggleButton';
 
 const CopyTextItem = ({ text }: { text: string | null }) =>
   text === null ? null : (

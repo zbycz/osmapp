@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PositionPx } from '../types';
 import { PathWithBorder } from './PathWithBorder';
@@ -16,10 +16,12 @@ const AddNewPoint = styled.circle`
 `;
 
 export const RoutePath = ({ route, routeNumber }) => {
-  const [tempPointPosition, setTempPointPosition] =
-    useState<PositionPx | null>(null);
-  const [tempPointSegmentIndex, setTempPointSegmentIndex] =
-    useState<number | null>(null);
+  const [tempPointPosition, setTempPointPosition] = useState<PositionPx | null>(
+    null,
+  );
+  const [tempPointSegmentIndex, setTempPointSegmentIndex] = useState<
+    number | null
+  >(null);
   const {
     isPointMoving,
     isRouteSelected,

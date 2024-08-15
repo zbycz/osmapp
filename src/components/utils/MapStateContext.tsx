@@ -1,7 +1,7 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
 import { Snackbar, Alert } from '@mui/material';
 import { usePersistedState } from './usePersistedState';
-import { DEFAULT_MAP } from '../../config';
+import { DEFAULT_MAP } from '../../config.mjs';
 import { PROJECT_ID } from '../../services/project';
 
 export interface Layer {

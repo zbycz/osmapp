@@ -9,7 +9,7 @@ import { Subheading } from '../helpers/Subheading';
 import { Wrapper } from './Wrapper';
 import { Table } from './Table';
 import { getShortId, getUrlOsmId } from '../../../services/helpers';
-import { captureException } from '../../../helpers/sentry';
+import * as Sentry from '@sentry/nextjs';
 import { MyRouteTicks } from '../Climbing/Ticks/MyRouteTicks';
 import { getIsClimbingRoute } from '../../utils/openClimbingUtils';
 
@@ -27,8 +27,7 @@ class ErrorBoundary extends React.Component<
   }
 
   componentDidCatch(error, errorInfo) {
-    captureException(error, errorInfo);
-
+    Sentry.captureException(error, errorInfo);
     console.error({ error, errorInfo }); // eslint-disable-line no-console
   }
 

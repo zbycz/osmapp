@@ -61,7 +61,7 @@ export const GRADE_SYSTEMS = [
   },
 ];
 
-export type GradeSystem = typeof GRADE_SYSTEMS[number]['key'];
+export type GradeSystem = (typeof GRADE_SYSTEMS)[number]['key'];
 export type GradeTable = Record<GradeSystem, Array<string>>;
 
 // Source of this table is: https://wiki.openstreetmap.org/wiki/Climbing#Grading

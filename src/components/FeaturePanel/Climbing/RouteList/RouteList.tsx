@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, ButtonGroup } from '@mui/material';
@@ -31,10 +31,10 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     showDebugMenu,
   } = useClimbingContext();
 
-  if (routes.length === 0) return null;
-
   React.useEffect(() => {
     const downHandler = (e) => {
+      if (routes.length === 0) return;
+
       if (e.key === 'ArrowDown') {
         const nextRoute = routes[routeSelectedIndex + 1];
         if (nextRoute) {
@@ -73,7 +73,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     return () => {
       window.removeEventListener('keydown', downHandler);
     };
-  }, [routeSelectedIndex, routes, routesExpanded]);
+  }, [routeSelectedIndex, routes, routesExpanded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = () => {
     setIsEditMode(true);
@@ -96,7 +96,6 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     const getImage = (name: string) => `File:${name}`;
 
     const object = routes
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .map((route, _idx) => {
         const photos = Object.entries(route.paths);
 

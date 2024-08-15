@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { icons } from '../../assets/icons';
 
 const MakiImg = styled.img<{ $invert: boolean }>`

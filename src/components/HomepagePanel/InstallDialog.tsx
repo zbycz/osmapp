@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 import { TabContext, TabPanel } from '@mui/lab';
 
 import AppleIcon from '@mui/icons-material/Apple';
 import AndroidIcon from '@mui/icons-material/Android';
 import DesktopMacIcon from '@mui/icons-material/DesktopMac';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';
@@ -81,13 +81,13 @@ const PaperImg = ({ src, width }) => (
 );
 
 export function InstallDialog() {
-  const [value, setValue] = React.useState('ios');
+  const [value, setValue] = useState('ios');
   const { showHomepage } = useFeatureContext();
 
   useEffect(() => {
     showHomepage();
     setValue(getPlatform());
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = () => Router.push('/');
   const handleChange = (event, newValue) => {

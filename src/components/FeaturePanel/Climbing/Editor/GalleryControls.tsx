@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { ArrowBack, ArrowForward } from '@mui/icons-material';
 import Router from 'next/router';
 import { useClimbingContext } from '../contexts/ClimbingContext';
@@ -49,10 +49,9 @@ export const GalleryControls = () => {
     loadPhotoRelatedData,
     isEditMode,
   } = useClimbingContext();
+  const { feature } = useFeatureContext();
 
   if (isEditMode) return null;
-
-  const { feature } = useFeatureContext();
 
   const photoIndex = photoPaths.indexOf(photoPath);
 

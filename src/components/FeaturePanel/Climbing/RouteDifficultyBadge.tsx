@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Tooltip, useTheme } from '@mui/material';
 import { getDifficultyColor } from './utils/grades/routeGrade';
 import { RouteDifficulty } from './types';
