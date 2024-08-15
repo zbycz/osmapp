@@ -45,7 +45,7 @@ const linearByRouteCount = (
 const linearFadeOut = (from: number, to: number): ExpressionSpecification =>
   linear(from, 1, to, 0.3);
 
-const routes: LayerSpecification[] = [
+export const routes: LayerSpecification[] = [
   {
     id: 'climbing-3-routes-circle',
     type: 'circle',
