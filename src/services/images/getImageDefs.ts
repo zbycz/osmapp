@@ -4,7 +4,6 @@ import {
   ImageDef,
   ImageDefFromCenter,
   ImageDefFromTag,
-  imageTagRegexp,
   isTag,
   LonLat,
   PathType,
@@ -84,25 +83,26 @@ export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
   return null; // API call needed
 };
 
-const wikipedia = ([k, _]) => k.match(/^wikipedia(\d*|[^:]+)$/);
-const wikidata = ([k, _]) => k.match(/^wikidata(\d*|[^:]+)$/);
+const wikipedia = ([k, _]) => k.match(/^wikipedia(\d*|:.*)$/);
+const wikidata = ([k, _]) => k.match(/^wikidata(\d*|:.*)$/);
 const image = ([k, _]) => k.match(/^image(\d*|:(?!path).*)$/);
-const commons = (k) => k.match(/^wikimedia_commons(\d*|:(?!path).*)$/);
+
+const commons = (k: string) => k.match(/^wikimedia_commons(\d*|:(?!path).*)$/);
 const commonsFile = ([k, v]) => commons(k) && v.startsWith('File:');
 const commonsCategory = ([k, v]) => commons(k) && v.startsWith('Category:');
 
 const getImagesFromTags = (tags: FeatureTags) => {
-  const keys = [
-    ...Object.entries(tags).filter(commonsFile),
-    ...Object.entries(tags).filter(image),
-    ...Object.entries(tags).filter(wikipedia),
-    ...Object.entries(tags).filter(wikidata),
-    ...Object.entries(tags).filter(commonsCategory),
-  ].map(([k]) => k);
+  const entries = Object.entries(tags);
+  const imageTags = [
+    ...entries.filter(commonsFile),
+    ...entries.filter(image),
+    ...entries.filter(wikipedia),
+    ...entries.filter(wikidata),
+    ...entries.filter(commonsCategory),
+  ];
 
-  return keys
-    .map((k) => {
-      const v = tags[k];
+  return imageTags
+    .map(([k, v]) => {
       const instant = !!getInstantImage({ k, v });
       const path = parsePathTag(tags[`${k}:path`]);
       return { type: 'tag', k, v, instant, path } as ImageDefFromTag;
@@ -138,7 +138,7 @@ export const mergeMemberImageDefs = (feature: Feature) => {
       }
 
       const { v, path } = memberDef;
-      const equalValueAsMemberDef = (def) => def.v === v;
+      const equalValueAsMemberDef = (def: any) => def.v === v;
       const match = destinationDefs.find(
         equalValueAsMemberDef,
       ) as ImageDefFromTag;

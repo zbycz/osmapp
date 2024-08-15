@@ -16,7 +16,7 @@ import {
 import { PanoramaImg } from './PanoramaImg';
 import { InfoButton } from './InfoButton';
 import { ImageDef, isTag } from '../../../../services/types';
-import { isDesktop, isMobileMode } from '../../../helpers';
+import { isMobileMode } from '../../../helpers';
 import { css } from '@emotion/react';
 
 const Img = styled.img<{ $hasPaths: boolean }>`
@@ -46,6 +46,14 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
       max-width: calc(410px - 2 * 8px);
       @media ${isMobileMode} {
         max-width: calc(100% - 2 * 8px);
+      }
+
+      &:has(+ div) {
+        // indicate that there is another image on the right
+        max-width: calc(410px - 2 * 8px - 15px);
+        @media ${isMobileMode} {
+          max-width: calc(100% - 2 * 8px - 15px);
+        }
       }
     `}
 `;
