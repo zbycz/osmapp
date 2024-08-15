@@ -20,10 +20,26 @@ import { isMobileMode } from '../../../helpers';
 import { css } from '@emotion/react';
 
 const Img = styled.img<{ $hasPaths: boolean }>`
-  ${({ $hasPaths }) => $hasPaths && `opacity: 0.9;`}
-
   margin-left: 50%;
   transform: translateX(-50%);
+
+  ${({ $hasPaths }) => $hasPaths && `opacity: 0.9;`}
+`;
+
+const CROP_IMAGE_CSS = css`
+  overflow: hidden;
+  max-width: calc(410px - 2 * 8px);
+  @media ${isMobileMode} {
+    max-width: calc(100% - 2 * 8px);
+  }
+
+  &:has(+ div) {
+    // leave some space if there is another image on the right
+    max-width: calc(410px - 2 * 8px - 15px);
+    @media ${isMobileMode} {
+      max-width: calc(100% - 2 * 8px - 15px);
+    }
+  }
 `;
 
 const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
@@ -31,6 +47,7 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
   position: relative;
   height: 238px;
   vertical-align: top;
+  overflow: hidden;
 
   margin-right: 8px;
   &:first-child {
@@ -38,24 +55,7 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
   }
 
   ${({ onClick }) => onClick && `cursor: pointer;`}
-
-  ${({ $hasPaths }) =>
-    !$hasPaths &&
-    css`
-      overflow: hidden;
-      max-width: calc(410px - 2 * 8px);
-      @media ${isMobileMode} {
-        max-width: calc(100% - 2 * 8px);
-      }
-
-      &:has(+ div) {
-        // indicate that there is another image on the right
-        max-width: calc(410px - 2 * 8px - 15px);
-        @media ${isMobileMode} {
-          max-width: calc(100% - 2 * 8px - 15px);
-        }
-      }
-    `}
+  ${({ $hasPaths }) => !$hasPaths && CROP_IMAGE_CSS}
 `;
 
 type Props = {
