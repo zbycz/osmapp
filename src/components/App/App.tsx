@@ -81,8 +81,6 @@ const IndexWithProviders = () => {
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   const photo = router.query.all?.[3];
 
-  console.log(router.query.all);
-
   return (
     <>
       <Loading />
