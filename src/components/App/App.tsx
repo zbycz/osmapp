@@ -7,7 +7,11 @@ import { QueryClientProvider, QueryClient } from 'react-query';
 import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
-import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
+import {
+  MapStateProvider,
+  useMapStateContext,
+  View,
+} from '../utils/MapStateContext';
 import { getInitialMapView, getInitialFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
@@ -28,20 +32,20 @@ import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') window.location.hash = view.join('/');
+  useEffect(() => {
+    window.location.hash = view.join('/');
     Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
   }, [view]);
 };
 
-export const getMapViewFromHash = () => {
+export const getMapViewFromHash = (): View | undefined => {
   const view = global.window?.location.hash
-    .substr(1)
+    .substring(1)
     .split('/')
-    .map(parseFloat)
+    .map(parseFloat) //we want to parse numbers, then serialize back in usePersistMapView()
     .filter((num) => !Number.isNaN(num))
     .map((num) => num.toString());
-  return view?.length === 3 ? view : undefined;
+  return view?.length === 3 ? (view as View) : undefined;
 };
 
 const useUpdateViewFromFeature = () => {
