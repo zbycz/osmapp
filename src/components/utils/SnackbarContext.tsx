@@ -32,15 +32,14 @@ export const SnackbarProvider = ({ children }) => {
     setOpen(false);
   };
 
-  const value = useMemo(
-    () =>
-      ({
-        showToast: (message: string, severity?: Severity) => {
-          setMessage(message);
-          setSeverity(severity);
-          setOpen(true);
-        },
-      }) as SnackbarContextType,
+  const value: SnackbarContextType = useMemo(
+    () => ({
+      showToast: (message: string, severity?: Severity) => {
+        setMessage(message);
+        setSeverity(severity);
+        setOpen(true);
+      },
+    }),
     [],
   );
 

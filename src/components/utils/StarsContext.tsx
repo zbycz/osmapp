@@ -12,13 +12,13 @@ export type Star = {
   center: LonLat;
 };
 
-interface StarsType {
+type StarsContextType = {
   stars: Star[];
   isStarred: boolean;
   toggleStar: () => void;
-}
+};
 
-export const StarsContext = createContext<StarsType>(undefined);
+export const StarsContext = createContext<StarsContextType>(undefined);
 
 const hasStar = (stars: Star[], shortId: string) =>
   !!stars.find((star) => star.shortId === shortId);
@@ -47,7 +47,7 @@ export const StarsProvider = ({ children }) => {
     );
   };
 
-  const value = { stars, isStarred, toggleStar };
+  const value: StarsContextType = { stars, isStarred, toggleStar };
 
   return (
     <StarsContext.Provider value={value}>{children}</StarsContext.Provider>
