@@ -11,7 +11,7 @@ import { Feature } from '../../services/types';
 import { useBoolState } from '../helpers';
 import { publishDbgObject } from '../../utils';
 
-export interface FeatureContextType {
+export type FeatureContextType = {
   feature: Feature | null;
   featureShown: boolean;
   setFeature: (feature: Feature | null) => void; // setFeature - used only for skeletons (otherwise it gets loaded by router)
@@ -22,7 +22,7 @@ export interface FeatureContextType {
   persistShowHomepage: () => void;
   preview: Feature | null;
   setPreview: (feature: Feature | null) => void;
-}
+};
 
 export const FeatureContext = createContext<FeatureContextType>(undefined);
 
@@ -63,7 +63,7 @@ export const FeatureProvider = ({
     Cookies.set('hideHomepage', 'yes', { expires: 30, path: '/' });
   };
 
-  const value = {
+  const value: FeatureContextType = {
     feature,
     featureShown,
     setFeature,

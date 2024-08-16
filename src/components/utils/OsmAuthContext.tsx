@@ -6,13 +6,13 @@ import {
 } from '../../services/osmApiAuth';
 import { useSnackbar } from './SnackbarContext';
 
-interface OsmAuthType {
+type OsmAuthType = {
   loggedIn: boolean;
   osmUser: string;
   userImage: string;
   handleLogin: () => void;
   handleLogout: () => void;
-}
+};
 
 const useOsmUserState = (cookies) => {
   const initialState = cookies.osmUserForSSR;
@@ -34,7 +34,7 @@ export const OsmAuthProvider = ({ children, cookies }) => {
   const handleLogin = () => loginAndfetchOsmUser().then(successfulLogin);
   const handleLogout = () => osmLogout().then(() => setOsmUser(undefined));
 
-  const value = {
+  const value: OsmAuthType = {
     loggedIn: !!osmUser,
     osmUser: osmUser?.name || '', // TODO rename
     userImage: osmUser?.imageUrl || '',

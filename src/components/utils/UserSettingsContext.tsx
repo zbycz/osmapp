@@ -34,7 +34,11 @@ export const UserSettingsProvider = ({ children }) => {
     setUserSettings({ ...userSettings, [key]: value });
   };
 
-  const value = { userSettings, setUserSetting, setUserSettings };
+  const value: UserSettingsContextType = {
+    userSettings,
+    setUserSetting,
+    setUserSettings,
+  };
   return (
     <UserSettingsContext.Provider value={value}>
       {children}
