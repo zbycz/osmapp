@@ -6,7 +6,7 @@ import { useSnackbar } from '../../../utils/SnackbarContext';
 import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 
 export const AddTickButton = ({ shortOsmId }) => {
-  const showSnackbar = useSnackbar();
+  const { showToast } = useSnackbar();
   const { userSettings } = useUserSettingsContext();
   const ticked = isTicked(shortOsmId);
 
@@ -17,7 +17,7 @@ export const AddTickButton = ({ shortOsmId }) => {
           osmId: shortOsmId,
           style: userSettings['climbing.defaultClimbingStyle'],
         });
-        showSnackbar('Tick added!', 'success');
+        showToast('Tick added!', 'success');
       }}
       color="secondary"
       size="small"

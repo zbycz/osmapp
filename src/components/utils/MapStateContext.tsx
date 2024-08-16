@@ -1,5 +1,4 @@
 import React, { createContext, useCallback, useContext, useState } from 'react';
-import { Snackbar, Alert } from '@mui/material';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config.mjs';
 import { PROJECT_ID } from '../../services/project';
@@ -30,7 +29,6 @@ type MapStateContextType = {
   setViewFromMap: (view: View) => void;
   activeLayers: string[];
   setActiveLayers: (layers: string[] | ((prev: string[]) => string[])) => void;
-  showToast: (message: { type: 'success' | 'error'; content: string }) => void;
 };
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
@@ -52,22 +50,6 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewForMap(newView);
   }, []);
 
-  const [open, setOpen] = React.useState(false);
-  const [msg, setMsg] = React.useState(undefined);
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const showToast = (message) => {
-    setMsg(message);
-    setOpen(true);
-  };
-
   const mapState: MapStateContextType = {
     bbox,
     setBbox,
@@ -77,23 +59,11 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewFromMap: setView,
     activeLayers,
     setActiveLayers,
-    showToast,
   };
 
   return (
     <MapStateContext.Provider value={mapState}>
       {children}
-      <Snackbar
-        // TODO: replace by SnackbarContext
-        open={open}
-        autoHideDuration={10000}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity={msg?.type} variant="filled">
-          {msg?.content}
-        </Alert>
-      </Snackbar>
     </MapStateContext.Provider>
   );
 };
