@@ -1,11 +1,12 @@
 import Router from 'next/router';
 import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
-import { getGlobalMap } from '../../services/mapStorage';
+import { getGlobalMap, getOverpassSource } from '../../services/mapStorage';
 import { performOverpassSearch } from '../../services/overpassSearch';
 import { t } from '../../services/intl';
 import { fitBounds } from './utils';
 import { getSkeleton } from './onHighlightFactory';
+import { GeoJSONSource } from 'maplibre-gl';
 
 const overpassOptionSelected = (
   option,
@@ -27,7 +28,7 @@ const overpassOptionSelected = (
       const count = geojson.features.length;
       const content = t('searchbox.overpass_success', { count });
       showToast({ content });
-      getGlobalMap().getSource('overpass')?.setData(geojson);
+      getOverpassSource()?.setData(geojson);
     })
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
