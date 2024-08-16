@@ -1,9 +1,14 @@
 import { useEffect } from 'react';
 import { getGlobalMap } from '../../services/mapStorage';
 import { TickRowType } from '../../services/my-ticks/getMyTicks';
+import { FeatureCollection } from 'geojson';
+import type { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 
-const LAYER = {
-  id: 'myticks-heatmap',
+const LAYER_ID = 'myticks-heatmap';
+const SOURCE_ID = 'myticks';
+
+const LAYER: LayerSpecification = {
+  id: LAYER_ID,
   type: 'heatmap',
   source: 'myticks',
   paint: {
@@ -30,14 +35,12 @@ const LAYER = {
   },
 };
 
-const generateGeojsonForPoints = (tickRows: TickRowType[]) => ({
+const generateGeojson = (tickRows: TickRowType[]): FeatureCollection => ({
   type: 'FeatureCollection',
   features: tickRows.map((tickRow) => ({
     type: 'Feature',
-    geometry: {
-      type: 'Point',
-      coordinates: tickRow.center,
-    },
+    geometry: { type: 'Point', coordinates: tickRow.center },
+    properties: null,
   })),
 });
 
@@ -46,19 +49,18 @@ export const useAddHeatmap = (tickRows: TickRowType[]) => {
     const map = getGlobalMap();
 
     if (map && tickRows) {
-      map.addSource('myticks', {
+      map.addSource(SOURCE_ID, {
         type: 'geojson',
-        data: generateGeojsonForPoints(tickRows),
+        data: generateGeojson(tickRows),
       });
-
       map.addLayer(LAYER);
     }
 
     return () => {
       if (map) {
-        map.removeLayer('myticks-heatmap');
-        if (map.getSource('myticks')) {
-          map.removeSource('myticks');
+        map.removeLayer(LAYER_ID);
+        if (map.getSource(SOURCE_ID)) {
+          map.removeSource(SOURCE_ID);
         }
       }
     };
