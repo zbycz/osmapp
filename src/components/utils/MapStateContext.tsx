@@ -15,23 +15,25 @@ export interface Layer {
   bbox?: number[];
 }
 
-// // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
-// export type BBox = [number, number, number, number];
-//
-// // [z, lat, lon]
+// [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
+export type Bbox = [number, number, number, number];
+
+// [z, lat, lon] - string because we use RoundedPosition
 export type View = [string, string, string];
-//
-// interface MapStateContextType {
-//   bbox: BBox;
-//   setBbox: (bbox: BBox) => void;
-//   view: View;
-//   setView: (view: View) => void;
-//   viewForMap: View;
-//   setViewFromMap: (view: View) => void;
-// }
-//
-// export const MapStateContext = createContext<MapStateContextType>(undefined);
-export const MapStateContext = createContext(undefined);
+
+type MapStateContextType = {
+  bbox: Bbox;
+  setBbox: (bbox: Bbox) => void;
+  view: View;
+  setView: (view: View) => void;
+  viewForMap: View;
+  setViewFromMap: (view: View) => void;
+  activeLayers: string[];
+  setActiveLayers: (layers: string[] | ((prev: string[]) => string[])) => void;
+  showToast: (message: { type: 'success' | 'error'; content: string }) => void;
+};
+
+export const MapStateContext = createContext<MapStateContextType>(undefined);
 
 const useActiveLayersState = () => {
   const isClimbing = PROJECT_ID === 'openclimbing';
@@ -41,7 +43,7 @@ const useActiveLayersState = () => {
 
 export const MapStateProvider = ({ children, initialMapView }) => {
   const [activeLayers, setActiveLayers] = useActiveLayersState();
-  const [bbox, setBbox] = useState();
+  const [bbox, setBbox] = useState<Bbox>();
   const [view, setView] = useState(initialMapView);
   const [viewForMap, setViewForMap] = useState(initialMapView);
 
@@ -66,7 +68,7 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setOpen(true);
   };
 
-  const mapState = {
+  const mapState: MapStateContextType = {
     bbox,
     setBbox,
     view, // always up-to-date (for use in react)
