@@ -9,6 +9,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
 import { buildPhotonAddress } from './options/geocoder';
 import { useMapCenter } from './utils';
+import { useSnackbar } from '../utils/SnackbarContext';
 
 const useFocusOnSlash = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -64,7 +65,8 @@ export const AutocompleteInput = ({
   setOverpassLoading,
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
-  const { bbox, showToast } = useMapStateContext();
+  const { bbox } = useMapStateContext();
+  const { showToast } = useSnackbar();
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
   return (
