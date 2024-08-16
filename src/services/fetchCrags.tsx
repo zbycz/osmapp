@@ -5,20 +5,20 @@ import {
   FeatureTags,
   LineString,
   Point,
+  OsmId,
 } from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
-import { OsmApiId } from './helpers';
 import { join, publishDbgObject } from '../utils';
 
 // inspired by overpassSearch - but this computes all geometries (doesnt fetch them by 'geom' modifier)
 
-const convertOsmIdToMapId = (apiId: OsmApiId) => {
+const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-function getItems(elements) {
+const getItems = (elements) => {
   const nodes = [];
   const ways = [];
   const relations = [];
@@ -32,7 +32,7 @@ function getItems(elements) {
     }
   });
   return { nodes, ways, relations };
-}
+};
 
 const numberToSuperScript = (number?: number) =>
   number?.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]);

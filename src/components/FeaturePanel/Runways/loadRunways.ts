@@ -1,5 +1,5 @@
 import { fetchText } from '../../../services/fetch';
-import { OsmApiId } from '../../../services/helpers';
+import { OsmId } from '../../../services/types';
 import { encodeUrl } from '../../../helpers/utils';
 
 export type Runway = {
@@ -11,7 +11,7 @@ export type Runway = {
   surface?: string;
 };
 
-const getNodeQuery = ({ id }: OsmApiId) =>
+const getNodeQuery = ({ id }: OsmId) =>
   `[out:csv(::id, ::type, ref, width, length, surface; false; '||')];
     node(${id}) -> .airport;
     way
@@ -19,7 +19,7 @@ const getNodeQuery = ({ id }: OsmApiId) =>
       (around.airport:100);
     out;`;
 
-const getWayOrRelationQuery = ({ id, type }: OsmApiId) =>
+const getWayOrRelationQuery = ({ id, type }: OsmId) =>
   `[out:csv(::id, ::type, ref, width, length, surface; false; '||')];
     ${type}(${id});
     map_to_area;
@@ -28,7 +28,7 @@ const getWayOrRelationQuery = ({ id, type }: OsmApiId) =>
       (area);
     out;`;
 
-export async function loadRunways(apiId: OsmApiId) {
+export async function loadRunways(apiId: OsmId) {
   const isNode = apiId.type === 'node';
   const query = isNode ? getNodeQuery(apiId) : getWayOrRelationQuery(apiId);
   const url = encodeUrl`https://overpass-api.de/api/interpreter?data=${query}`;

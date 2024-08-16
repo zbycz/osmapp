@@ -1,14 +1,7 @@
 import { resolveCountryCode } from 'next-codegrid';
-import {
-  FetchError,
-  getApiId,
-  getShortId,
-  getUrlOsmId,
-  OsmApiId,
-  prod,
-} from './helpers';
+import { FetchError, getApiId, getShortId, getUrlOsmId, prod } from './helpers';
 import { fetchJson } from './fetch';
-import { Feature, LonLat, Position, SuccessInfo } from './types';
+import { Feature, LonLat, OsmId, Position, SuccessInfo } from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { isBrowser } from '../components/helpers';
@@ -82,7 +75,7 @@ export const clearFeatureCache = (apiId) => {
   removeFetchCache(getOsmHistoryUrl(apiId));
 };
 
-const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
+const fetchFeatureWithCenter = async (apiId: OsmId) => {
   const [element, center] = await Promise.all([
     getOsmPromise(apiId),
     getCenterPromise(apiId),
@@ -107,7 +100,7 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   return addSchemaToFeature(feature);
 };
 
-const fetchParentFeatures = async (apiId: OsmApiId) => {
+const fetchParentFeatures = async (apiId: OsmId) => {
   const { elements } = await getOsmParentPromise(apiId);
   return elements.map((element) => addSchemaToFeature(osmToFeature(element)));
 };
@@ -120,7 +113,7 @@ const getItemsMap = (elements) => {
   return map;
 };
 
-export const fetchWithMemberFeatures = async (apiId: OsmApiId) => {
+export const fetchWithMemberFeatures = async (apiId: OsmId) => {
   // TODO we can compute geometry using cragsToGeojson() and display it in the map
   const url =
     apiId.type === 'relation' ? getOsmFullUrl(apiId) : getOsmUrl(apiId);
@@ -193,12 +186,12 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
   try {
     const apiId = getApiId(shortId);
 
-    if (apiId.type === 'relation' && apiId.id === '6') {
+    if (apiId.type === 'relation' && apiId.id === 6) {
       await fetchSchemaTranslations();
       const osmApiTestItems = await import('./osmApiTestItems');
       return osmApiTestItems.TEST_CRAG;
     }
-    if (apiId.type === 'node' && apiId.id === '6') {
+    if (apiId.type === 'node' && apiId.id === 6) {
       await fetchSchemaTranslations();
       const osmApiTestItems = await import('./osmApiTestItems');
       return osmApiTestItems.TEST_NODE;
