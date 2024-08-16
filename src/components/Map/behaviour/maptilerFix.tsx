@@ -1,5 +1,5 @@
-import { Feature } from '../../../services/types';
-import { FetchError, getShortId, OsmApiId } from '../../../services/helpers';
+import { Feature, OsmId } from '../../../services/types';
+import { FetchError, getShortId } from '../../../services/helpers';
 import { osmToFeature } from '../../../services/osmToFeature';
 import { fetchJson } from '../../../services/fetch';
 
@@ -25,14 +25,14 @@ const isMaptilerCorruptedId = (feature: Feature, skeleton: Feature) => {
   return false;
 };
 
-const getQuickOsmPromise = async (apiId: OsmApiId) => {
+const getQuickOsmPromise = async (apiId: OsmId) => {
   const getOsmUrl = ({ type, id }) =>
     `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
   const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
   return elements?.[0];
 };
 
-const quickFetchFeature = async (apiId: OsmApiId) => {
+const quickFetchFeature = async (apiId: OsmId) => {
   try {
     const element = await getQuickOsmPromise(apiId);
     return osmToFeature(element);
@@ -47,7 +47,7 @@ const quickFetchFeature = async (apiId: OsmApiId) => {
 // This function tries to fix the ID by fetching possible variants and comparing them by name and distance
 // more in: https://github.com/openmaptiles/openmaptiles/issues/1587
 
-export const maptilerFix = async (mapFeature, skeleton, mapId) => {
+export const maptilerFix = async (mapFeature, skeleton: Feature, mapId) => {
   const { source, id: mapFeatureId } = mapFeature;
   if (source !== 'maptiler_planet') {
     return skeleton;
@@ -61,11 +61,11 @@ export const maptilerFix = async (mapFeature, skeleton, mapId) => {
 
   const { type, id } = skeleton.osmMeta;
 
-  const variants = [
+  const variants: OsmId[] = [
     // same id, but different type
-    ...(type !== 'node' ? [{ type: 'node', id }] : []),
-    ...(type !== 'way' ? [{ type: 'way', id }] : []),
-    ...(type !== 'relation' ? [{ type: 'relation', id }] : []),
+    ...(type !== 'node' ? [{ type: 'node' as const, id }] : []),
+    ...(type !== 'way' ? [{ type: 'way' as const, id }] : []),
+    ...(type !== 'relation' ? [{ type: 'relation' as const, id }] : []),
     // raw id, without recognized type
     { type: 'node', id: mapFeatureId },
     { type: 'way', id: mapFeatureId },

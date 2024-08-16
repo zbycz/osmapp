@@ -1,4 +1,4 @@
-import { getApiId, getShortId, OsmApiId } from '../helpers';
+import { getApiId, getShortId } from '../helpers';
 import { fetchJson } from '../fetch';
 import { getOverpassUrl, overpassGeomToGeojson } from '../overpassSearch';
 import { getAllTicks, getTickKey } from '../ticks';
@@ -7,7 +7,7 @@ import {
   findOrConvertRouteGrade,
   getDifficulties,
 } from '../../components/FeaturePanel/Climbing/utils/grades/routeGrade';
-import { FeatureTags } from '../types';
+import { FeatureTags, OsmId } from '../types';
 
 export type TickRowType = {
   key: string;
@@ -17,7 +17,7 @@ export type TickRowType = {
   index: number;
   date: string;
   style: TickStyle;
-  apiId: OsmApiId;
+  apiId: OsmId;
   tags: FeatureTags;
 };
 

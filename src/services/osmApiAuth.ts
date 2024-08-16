@@ -1,13 +1,12 @@
 import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
 import { osmAuth } from 'osm-auth';
-import { Feature, FeatureTags, Position, SuccessInfo } from './types';
+import { Feature, FeatureTags, OsmId, Position, SuccessInfo } from './types';
 import {
   buildXmlString,
   getFullOsmappLink,
   getOsmappLink,
   getUrlOsmId,
-  OsmApiId,
   parseXmlString,
   prod,
   stringifyDomXml,
@@ -22,7 +21,7 @@ const PROD_CLIENT_ID = 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68';
 // testable on http://127.0.0.1:3000
 const TEST_CLIENT_ID = 'a_f_aB7ADY_kdwe4YHpmCSBtNtDZ-BitW8m5I6ijDwI';
 const TEST_SERVER = 'https://master.apis.dev.openstreetmap.org';
-const TEST_OSM_ID = { type: 'node', id: '967531' }; // every edit goes here, https://master.apis.dev.openstreetmap.org/node/967531
+const TEST_OSM_ID: OsmId = { type: 'node', id: 967531 }; // every edit goes here, https://master.apis.dev.openstreetmap.org/node/967531
 
 // TS file in osm-auth is probably broken (new is required)
 // @ts-ignore
@@ -114,19 +113,19 @@ const putChangesetClose = (changesetId: string) =>
     path: `/api/0.6/changeset/${changesetId}/close`,
   });
 
-const getItem = (apiId: OsmApiId) =>
+const getItem = (apiId: OsmId) =>
   authFetch({
     method: 'GET',
     path: `/api/0.6/${getUrlOsmId(apiId)}`,
   });
 
-const getItemHistory = (apiId: OsmApiId) =>
+const getItemHistory = (apiId: OsmId) =>
   authFetch({
     method: 'GET',
     path: `/api/0.6/${getUrlOsmId(apiId)}/history`,
   });
 
-const putItem = (apiId: OsmApiId, content: string) =>
+const putItem = (apiId: OsmId, content: string) =>
   authFetch({
     method: 'PUT',
     path: `/api/0.6/${getUrlOsmId(apiId)}`,
@@ -134,7 +133,7 @@ const putItem = (apiId: OsmApiId, content: string) =>
     content,
   });
 
-const deleteItem = (apiId: OsmApiId, content: string) =>
+const deleteItem = (apiId: OsmId, content: string) =>
   authFetch({
     method: 'DELETE',
     path: `/api/0.6/${getUrlOsmId(apiId)}`,
@@ -152,7 +151,7 @@ const createItem = (content: string) =>
 
 const putOrDeleteItem = async (
   isDelete: boolean,
-  apiId: OsmApiId,
+  apiId: OsmId,
   newItem: string,
 ) => {
   if (isDelete) {
@@ -162,7 +161,7 @@ const putOrDeleteItem = async (
   }
 };
 
-const getItemOrLastHistoric = async (apiId: OsmApiId) => {
+const getItemOrLastHistoric = async (apiId: OsmId) => {
   try {
     return await getItem(apiId);
   } catch (e) {
@@ -207,7 +206,7 @@ const getXmlTags = (newTags: FeatureTags) =>
 
 const updateItemXml = async (
   item,
-  apiId: OsmApiId,
+  apiId: OsmId,
   changesetId: string,
   tags: FeatureTags,
   isDelete: boolean,
@@ -283,7 +282,7 @@ export const addOsmFeature = async (
   const newNodeId = await createItem(content);
   await putChangesetClose(changesetId);
 
-  const apiId = { type: 'node', id: newNodeId };
+  const apiId: OsmId = { type: 'node', id: parseInt(newNodeId, 10) };
   return {
     type: 'edit',
     text: changesetComment,

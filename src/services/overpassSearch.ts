@@ -1,7 +1,6 @@
-import { GeometryCollection, LineString, Point } from './types';
+import { GeometryCollection, LineString, Point, OsmId } from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
-import { OsmApiId } from './helpers';
 import { fetchJson } from './fetch';
 import { Feature, FeatureCollection } from 'geojson';
 
@@ -43,7 +42,7 @@ const GEOMETRY = {
   }),
 };
 
-const convertOsmIdToMapId = (apiId: OsmApiId) => {
+const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };

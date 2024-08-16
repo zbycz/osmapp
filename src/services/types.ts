@@ -1,6 +1,12 @@
 import type Vocabulary from '../locales/vocabulary';
 import type { getSchemaForFeature } from './tagging/idTaggingScheme';
 
+export type OsmType = 'node' | 'way' | 'relation';
+export type OsmId = {
+  type: OsmType;
+  id: number;
+};
+
 export type PathType = { x: number; y: number; suffix: string }[];
 export type MemberPath = {
   path: PathType;
@@ -59,15 +65,15 @@ export const isGeometryCollection = (
   geometry: FeatureGeometry,
 ): geometry is GeometryCollection => geometry?.type === 'GeometryCollection';
 
-export interface FeatureTags {
+export type FeatureTags = {
   [key: string]: string;
-}
+};
 
-interface RelationMember {
-  ref: string;
+type RelationMember = {
+  type: OsmType;
+  ref: number;
   role: string;
-  type: string;
-}
+};
 
 // TODO split in two types /extend/
 export interface Feature {
@@ -76,14 +82,14 @@ export interface Feature {
   id?: number; // for map hover effect
   geometry?: FeatureGeometry;
   osmMeta: {
-    type: string;
-    id: string;
+    type: OsmType;
+    id: number;
     visible?: string;
-    version?: string;
-    changeset?: string;
+    version?: number;
+    changeset?: number;
     timestamp?: string;
     user?: string;
-    uid?: string;
+    uid?: number;
     lat?: string;
     lon?: string;
     role?: string; // only for memberFeatures

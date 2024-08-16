@@ -30,7 +30,7 @@ export function isServer() {
 
 export const createMapEffectHook =
   (mapEffectFn) =>
-  (map, ...rest) =>
+  (map: Map, ...rest) =>
     useEffect(() => {
       if (map) {
         mapEffectFn(map, ...rest);
