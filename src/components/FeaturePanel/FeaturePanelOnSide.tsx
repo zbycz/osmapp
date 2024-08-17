@@ -1,13 +1,13 @@
 import React from 'react';
 
 import { PanelScrollbars, PanelWrapper } from '../utils/PanelHelpers';
-import { FeaturePanelInner } from './FeaturePanelInner';
+import { FeaturePanel } from './FeaturePanel';
 
 export const FeaturePanelOnSide = () => (
   <>
     <PanelWrapper>
       <PanelScrollbars>
-        <FeaturePanelInner />
+        <FeaturePanel />
       </PanelScrollbars>
     </PanelWrapper>
   </>

@@ -11,6 +11,7 @@ import { osmToFeature } from './osmToFeature';
 import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
 import * as Sentry from '@sentry/nextjs';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
+import { isClimbingRelation } from '../utils';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -145,10 +146,6 @@ export const fetchWithMemberFeatures = async (apiId: OsmId) => {
 
   return featureWithMemberFeatures;
 };
-
-export const isClimbingRelation = (feature: Feature) =>
-  feature.osmMeta.type === 'relation' &&
-  (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
 
 // TODO parent should be probably fetched for every feaure in fetchFeatureWithCenter()
 //  - wait until UI is prepared
