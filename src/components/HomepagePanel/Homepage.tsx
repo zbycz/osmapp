@@ -6,7 +6,7 @@ import styled from '@emotion/styled';
 import Link from 'next/link';
 import {
   PanelContent,
-  PanelFooter,
+  PanelFooterWrapper,
   PanelScrollbars,
 } from '../utils/PanelHelpers';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
@@ -249,7 +249,7 @@ export function Homepage({
 
             <Spacer />
           </div>
-          <PanelFooter />
+          <PanelFooterWrapper />
         </Content>
       </PanelScrollbars>
     </PanelContent>
