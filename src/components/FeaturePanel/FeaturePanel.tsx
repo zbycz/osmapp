@@ -1,26 +1,15 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
-import { Box } from '@mui/material';
 import { FeatureHeading } from './FeatureHeading';
-import Coordinates from './Coordinates';
 import { useToggleState } from '../helpers';
-import { getFullOsmappLink, getKey } from '../../services/helpers';
-import {
-  PanelContent,
-  PanelFooter,
-  PanelSidePadding,
-} from '../utils/PanelHelpers';
+import { getKey } from '../../services/helpers';
+import { PanelContent, PanelSidePadding } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { t } from '../../services/intl';
-import { FeatureDescription } from './FeatureDescription';
-import { ObjectsAround } from './ObjectsAround';
 import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures';
-import { ClimbingCragPanel } from './Climbing/ClimbingCragPanel';
-import { ClimbingContextProvider } from './Climbing/contexts/ClimbingContext';
 import { ParentLink } from './ParentLink';
 import { FeatureImages } from './ImagePane/FeatureImages';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
@@ -29,9 +18,10 @@ import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
 import { Runways } from './Runways/Runways';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
-import { ConvertedRouteDifficultyBadge } from './Climbing/ConvertedRouteDifficultyBadge';
-import { getDifficulties } from './Climbing/utils/grades/routeGrade';
-import { isClimbingRoute, isClimbingRelation } from '../../utils';
+import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
+import { RouteListInPanel } from './Climbing/RouteList/RouteList';
+import { FeaturePanelFooter } from './FeaturePanelFooter';
+import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 
 const Flex = styled.div`
   flex: 1;
@@ -39,86 +29,41 @@ const Flex = styled.div`
 
 export const FeaturePanel = () => {
   const { feature } = useFeatureContext();
-
   const [advanced, setAdvanced] = useState(false);
-  const [showAround, toggleShowAround] = useToggleState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
 
-  const { point, tags, skeleton, deleted } = feature;
-  const editEnabled = !skeleton;
+  const { tags, skeleton, deleted } = feature;
   const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
-
-  const osmappLink = getFullOsmappLink(feature);
-
-  const footer = (
-    <PanelFooter>
-      <FeatureDescription advanced={advanced} setAdvanced={setAdvanced} />
-      <Coordinates />
-      <br />
-      <a href={osmappLink}>{osmappLink}</a>
-      <br />
-      <label>
-        <input
-          type="checkbox"
-          onChange={toggleShowTags}
-          checked={showTagsTable}
-          disabled={point || deleted || (!skeleton && !feature.schema)}
-        />{' '}
-        {t('featurepanel.show_tags')}
-      </label>{' '}
-      <label>
-        <input
-          type="checkbox"
-          onChange={toggleShowAround}
-          checked={showAround}
-        />{' '}
-        {t('featurepanel.show_objects_around')}
-      </label>
-      {showAround && <ObjectsAround advanced={advanced} />}
-    </PanelFooter>
-  );
 
   if (!feature) {
     return null;
   }
 
-  if (
-    isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
-    feature.tags.climbing === 'crag' &&
-    !advanced
-  ) {
-    return (
-      <ClimbingContextProvider feature={feature} key={getKey(feature)}>
-        <ClimbingCragPanel footer={footer} showTagsTable={showTagsTable} />
-      </ClimbingContextProvider>
-    );
-  }
-  const routeDifficulties = getDifficulties(feature?.tags);
-
+  // Different components are shown for different types of features
+  // Conditional components should have if(feature.tags.xxx) check at the beggining
+  // All components should have margin-bottoms to accomodate missing parts
   return (
     <>
       <PanelContent>
         <PanelSidePadding>
           <FeatureHeading />
-          {isClimbingRoute(feature) && (
-            <ConvertedRouteDifficultyBadge
-              routeDifficulties={routeDifficulties}
-            />
-          )}
+          <ClimbingRouteGrade />
           <ParentLink />
-
           <ClimbingRestriction />
 
           <OsmError />
-          <CragsInArea />
         </PanelSidePadding>
 
         <Flex>
           {!skeleton && (
             <>
-              <Box component="div" mb={2}>
-                <FeatureImages />
-              </Box>
+              <PanelSidePadding>
+                <CragsInArea />
+              </PanelSidePadding>
+
+              <FeatureImages />
+              <RouteDistributionInPanel />
+              <RouteListInPanel />
 
               <PanelSidePadding>
                 <Properties showTags={showTagsTable} key={getKey(feature)} />
@@ -131,14 +76,19 @@ export const FeaturePanel = () => {
 
                 <FeatureOpenPlaceGuideLink />
 
-                {editEnabled && <EditButton />}
+                <EditButton />
                 <EditDialog />
               </PanelSidePadding>
             </>
           )}
         </Flex>
 
-        <PanelSidePadding>{footer}</PanelSidePadding>
+        <FeaturePanelFooter
+          advanced={advanced}
+          setAdvanced={setAdvanced}
+          showTagsTable={showTagsTable}
+          toggleShowTags={toggleShowTags}
+        />
       </PanelContent>
     </>
   );
