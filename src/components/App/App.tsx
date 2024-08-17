@@ -4,7 +4,7 @@ import Cookies from 'js-cookie';
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
 import { QueryClientProvider, QueryClient } from 'react-query';
-import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
+import { FeaturePanelOnSide } from '../FeaturePanel/FeaturePanelOnSide';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
 import {
@@ -90,7 +90,7 @@ const IndexWithProviders = () => {
     <>
       <Loading />
       <SearchBox />
-      {featureShown && !isMobileMode && <FeaturePanel />}
+      {featureShown && !isMobileMode && <FeaturePanelOnSide />}
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
