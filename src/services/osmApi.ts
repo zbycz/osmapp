@@ -11,7 +11,7 @@ import { osmToFeature } from './osmToFeature';
 import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
 import * as Sentry from '@sentry/nextjs';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
-import { isClimbingRelation } from '../utils';
+import { isClimbingRelation, isClimbingRoute } from '../utils';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -55,7 +55,7 @@ export const addFeatureCenterToCache = (shortId, center) => {
   featureCenterCache[shortId] = center;
 };
 
-const getCenterPromise = async (apiId): Promise<LonLat | false> => {
+const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
   if (apiId.type === 'node') return false;
 
   if (isBrowser() && featureCenterCache[getShortId(apiId)]) {
@@ -154,25 +154,24 @@ export const fetchWithMemberFeatures = async (apiId: OsmId) => {
 export const addMembersAndParents = async (
   feature: Feature,
 ): Promise<Feature> => {
-  if (feature.tags.climbing?.includes('route')) {
+  if (isClimbingRoute(feature)) {
     const parentFeatures = await fetchParentFeatures(feature.osmMeta);
+    return { ...feature, parentFeatures };
+  }
 
+  if (isClimbingRelation(feature)) {
+    const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
+      fetchParentFeatures(feature.osmMeta),
+      fetchWithMemberFeatures(feature.osmMeta),
+    ]);
     return {
-      ...feature,
+      ...featureWithMemberFeatures,
+      center: feature.center, // feature contains correct center from centerCache or overpass
       parentFeatures,
     };
   }
 
-  if (!isClimbingRelation(feature)) {
-    return feature;
-  }
-
-  const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
-    fetchParentFeatures(feature.osmMeta),
-    fetchWithMemberFeatures(feature.osmMeta),
-  ]);
-
-  return { ...featureWithMemberFeatures, parentFeatures };
+  return feature;
 };
 
 export const fetchFeature = async (shortId): Promise<Feature> => {
