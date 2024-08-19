@@ -30,8 +30,8 @@ export default {
   'tick.style_description_not_selected': 'Nessun stile di arrampicata selezionato.',
   'tick.style_description_OS': 'Arrampicata per la prima volta senza nessuna conoscenza o pratica.',
   'tick.style_description_FL': 'Arrampicata per la prima volta con qualche conoscenza.',
-  'tick.style_description_RP': 'Arrampicata dopo aver fatto un po\' di pratica.',
-  'tick.style_description_PP': 'Arrampicata dopo aver usato delle protezioni e dopo un po\' di pratica.',
+  'tick.style_description_RP': "Arrampicata dopo aver fatto un po' di pratica.",
+  'tick.style_description_PP': "Arrampicata dopo aver usato delle protezioni e dopo un po' di pratica.",
   'tick.style_description_RK': 'Arrampicata libera o con strumenti di ausilio.',
   'tick.style_description_AF': 'Arrampicata interamente libera senza alcuno strumento di ausilio.',
   'tick.style_description_TR': 'Arrampicata con una corda già ancorata sopra.',
@@ -43,8 +43,10 @@ export default {
   'project.osmapp.serpDescription':
     'Una mappa del mondo open-source basata sul database di OpenStreetMap. Ricerche, punti di interesse cliccabili, modifiche da app e molto altro!',
 
-  'project.openclimbing.description': 'Una mappa di arrampicata open-source basata su wiki con topografia. Basata sui progetti OpenStreetMap e Wikipedia.',
-  'project.openclimbing.serpDescription': 'Una mappa open-source sull\'arrampicata basata su wiki con topografia. Basata sui progetti di OpenStreetMap e Wikipedia.',
+  'project.openclimbing.description':
+    'Una mappa di arrampicata open-source basata su wiki con topografia. Basata sui progetti OpenStreetMap e Wikipedia.',
+  'project.openclimbing.serpDescription':
+    "Una mappa open-source sull'arrampicata basata su wiki con topografia. Basata sui progetti di OpenStreetMap e Wikipedia.",
 
   'install.button': 'Installa app',
   'install.tabs_aria_label': 'Scegli la tua piattaforma',
@@ -118,7 +120,7 @@ export default {
   'featurepanel.inline_edit_title': 'Modifica',
   'featurepanel.objects_around': 'Oggetti vicini',
   'featurepanel.more_in_openplaceguide': 'Maggiori informazioni su __instanceName__',
-  'featurepanel.climbing_restriction': 'Restrizioni sull\'arrampicata',
+  'featurepanel.climbing_restriction': "Restrizioni sull'arrampicata",
 
   'opening_hours.open': 'Apertura: __todayTime__',
   'opening_hours.now_closed_but_today': 'Ora chiuso, apertura: __todayTime__',
@@ -128,7 +130,8 @@ export default {
   'map.github_title': 'GitHub',
   'map.language_title': 'Cambia lingua',
   'map.osm_copyright_tooltip': '(c) OpenStreetMap.org contributori<br> (la mappa libera della Terra 👌)',
-  'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> (tasselli vettoriali, hosting, mappa esterna<br>Grazie infinite per il supporto a questo progetto! 🙂 ',
+  'map.maptiler_copyright_tooltip':
+    '(c) MapTiler.com ❤️ <br> (tasselli vettoriali, hosting, mappa esterna<br>Grazie infinite per il supporto a questo progetto! 🙂 ',
   'map.more_button': 'altro',
   'map.more_button_title': 'Altre opzioni…',
   'map.edit_link': 'Modifica quest’area con iD editor',
@@ -162,8 +165,7 @@ export default {
   'editdialog.info_edit': `La tua modifica verrà immediatamente salvata su OpenStreetMap. Inserisci
 solo informazioni che hai verificato di persona o che provengono da fonti attendibili.
          È proibita la copia di dati protetti da copyright (ad es. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/IT:How_We_Map">Ulteriori informazioni</a>`,
-  'editdialog.info_note':
-`Il tuo suggerimento verrà valutato dai volontari di OpenStreetMap. Qui puoi aggiungere un’ulteriore nota oppure descrivere la posizione precisa, ecc. Sarebbe anche appropriato supportare il tuo contributo con un collegamento a una fonte (sito web, foto, etc.).`,
+  'editdialog.info_note': `Il tuo suggerimento verrà valutato dai volontari di OpenStreetMap. Qui puoi aggiungere un’ulteriore nota oppure descrivere la posizione precisa, ecc. Sarebbe anche appropriato supportare il tuo contributo con un collegamento a una fonte (sito web, foto, etc.).`,
   'editdialog.other_tags_heading': 'Altri tag',
   'editdialog.other_tags': 'Modifica tag',
   'editdialog.other_tags.new_key': 'nuova chiave',
@@ -216,7 +218,7 @@ solo informazioni che hai verificato di persona o che provengono da fonti attend
   'climbingpanel.finish_climbing_route': 'Termina percorso',
   'climbingpanel.cancel_climbing_route': 'Annulla',
   'climbingpanel.delete_climbing_route': 'Elimina percorso __route__ nello schema',
-  'climbingpanel.create_first_node': 'Clicca sull\'inizio del percorso',
+  'climbingpanel.create_first_node': "Clicca sull'inizio del percorso",
   'climbingpanel.create_next_node': 'Segui la direzione del percorso',
 
   'runway.information': 'Informazioni su Runway',
