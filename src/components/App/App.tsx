@@ -156,9 +156,9 @@ App.getInitialProps = async (ctx: NextPageContext) => {
   const cookies = nextCookies(ctx);
   const featureFromRouter = await getInitialFeature(ctx);
   if (ctx.res) {
-    if (featureFromRouter === '404' || featureFromRouter.error === '404') {
+    if (featureFromRouter === '404' || featureFromRouter?.error === '404') {
       ctx.res.statusCode = 404;
-    } else if (featureFromRouter.error) {
+    } else if (featureFromRouter?.error) {
       ctx.res.statusCode = 500;
     }
   }
