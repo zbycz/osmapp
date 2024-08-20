@@ -102,8 +102,8 @@ type ClimbingContextType = {
   setViewportSize: (size: Size) => void;
   routeIndexHovered: number;
   setRouteIndexHovered: (routeIndexHovered: number) => void;
-  routesExpanded: Array<number>;
-  setRoutesExpanded: (routesExpanded: Array<number>) => void;
+  routeIndexExpanded: number | null;
+  setRouteIndexExpanded: (routeIndexHovered: number | null) => void;
   loadedPhotos: LoadedPhotos;
   setLoadedPhotos: (loadedPhotos: LoadedPhotos) => void;
   loadPhotoRelatedData: () => void;
@@ -156,7 +156,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [routeIndexHovered, setRouteIndexHovered] = useState<number>(null);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
   const [filterDifficulty, setFilterDifficulty] = useState<Array<string>>([]);
-  const [routesExpanded, setRoutesExpanded] = useState<Array<number>>([]);
+  const [routeIndexExpanded, setRouteIndexExpanded] = useState<number>(null);
   const [editorPosition, setEditorPosition] = useState<PositionPx>({
     x: 0,
     y: 0,
@@ -370,8 +370,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     photoPath,
     photoPaths,
     setPhotoPath,
-    routesExpanded,
-    setRoutesExpanded,
+    routeIndexExpanded,
+    setRouteIndexExpanded,
     loadPhotoRelatedData,
     filterDifficulty,
     setFilterDifficulty,
