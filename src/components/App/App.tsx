@@ -29,6 +29,9 @@ import { useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
+import { NextPage, NextPageContext } from 'next';
+import { Feature } from '../../services/types';
+import Error from 'next/error';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -106,9 +109,23 @@ const IndexWithProviders = () => {
   );
 };
 
-const App = ({ featureFromRouter, initialMapView, cookies }) => {
+type Props = {
+  featureFromRouter: Feature | '404' | null;
+  initialMapView: View;
+  cookies: Record<string, string>;
+};
+
+const App: NextPage<Props> = ({
+  featureFromRouter,
+  initialMapView,
+  cookies,
+}) => {
   const mapView = getMapViewFromHash() || initialMapView;
   const queryClient = new QueryClient();
+
+  if (featureFromRouter === '404') {
+    return <Error statusCode={404} />;
+  }
 
   return (
     <SnackbarProvider>
@@ -133,11 +150,19 @@ const App = ({ featureFromRouter, initialMapView, cookies }) => {
     </SnackbarProvider>
   );
 };
-App.getInitialProps = async (ctx) => {
+App.getInitialProps = async (ctx: NextPageContext) => {
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
   const cookies = nextCookies(ctx);
   const featureFromRouter = await getInitialFeature(ctx);
+  if (ctx.res) {
+    if (featureFromRouter === '404' || featureFromRouter.error === '404') {
+      ctx.res.statusCode = 404;
+    } else if (featureFromRouter.error) {
+      ctx.res.statusCode = 500;
+    }
+  }
+
   const initialMapView = await getInitialMapView(ctx);
   return { featureFromRouter, initialMapView, cookies };
 };

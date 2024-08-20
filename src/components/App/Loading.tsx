@@ -54,8 +54,7 @@ const useIsLoadingFeature = () => {
   const { loading, start, stop } = useStateWithTimeout();
   const { feature } = useFeatureContext();
   useEffect(() => {
-    if (!feature) return;
-    if (feature.skeleton) {
+    if (feature?.skeleton && !feature.error) {
       start();
     } else {
       stop();

@@ -174,14 +174,8 @@ export const addMembersAndParents = async (
   return feature;
 };
 
-export const fetchFeature = async (shortId): Promise<Feature> => {
-  if (!shortId) {
-    return null;
-  }
-
+export const fetchFeature = async (apiId: OsmId): Promise<Feature> => {
   try {
-    const apiId = getApiId(shortId);
-
     if (apiId.type === 'relation' && apiId.id === 6) {
       await fetchSchemaTranslations();
       const osmApiTestItems = await import('./osmApiTestItems');
@@ -198,7 +192,7 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
     return finalFeature;
   } catch (e) {
-    console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
+    console.error(`fetchFeature(${getShortId(apiId)}):`, e); // eslint-disable-line no-console
 
     const error = (
       e instanceof FetchError ? e.code : 'unknown'
@@ -208,9 +202,9 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
       type: 'Feature',
       skeleton: true,
       nonOsmObject: false,
-      osmMeta: getApiId(shortId),
+      osmMeta: apiId,
       center: undefined,
-      tags: { name: getUrlOsmId(getApiId(shortId)) },
+      tags: { name: getUrlOsmId(apiId) },
       properties: { class: '', subclass: '' },
       error,
     };
