@@ -7,12 +7,13 @@ import { t } from '../../services/intl';
 import { fitBounds } from './utils';
 import { getSkeleton } from './onHighlightFactory';
 import { GeoJSONSource } from 'maplibre-gl';
+import { SnackbarContextType } from '../utils/SnackbarContext';
 
 const overpassOptionSelected = (
   option,
   setOverpassLoading,
   bbox,
-  showToast,
+  showToast: SnackbarContextType['showToast'],
 ) => {
   const tagsOrQuery =
     option.preset?.presetForSearch.tags ??
@@ -27,13 +28,13 @@ const overpassOptionSelected = (
     .then((geojson) => {
       const count = geojson.features.length;
       const content = t('searchbox.overpass_success', { count });
-      showToast({ content });
+      showToast(content);
       getOverpassSource()?.setData(geojson);
     })
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
       const content = t('searchbox.overpass_error', { message });
-      showToast({ content, type: 'error' });
+      showToast(content, 'error');
     })
     .finally(() => {
       clearTimeout(timeout);

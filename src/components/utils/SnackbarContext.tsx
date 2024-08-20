@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
-type SnackbarContextType = {
+export type SnackbarContextType = {
   showToast: (message: string, severity?: Severity) => void;
 };
 

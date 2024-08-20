@@ -27,8 +27,8 @@ const renderOption = (inputValue, currentTheme, mapCenter, option) => {
 };
 
 export const renderOptionFactory = (inputValue, currentTheme, mapCenter) => {
-  const Option = (props, option) => (
-    <li {...props}>
+  const Option = ({ key, ...props }, option) => (
+    <li key={key} {...props}>
       {renderOption(inputValue, currentTheme, mapCenter, option)}
     </li>
   );
