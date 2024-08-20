@@ -65,16 +65,26 @@ export const renderLoader = () => (
 );
 
 export const fitBounds = (option, panelShown = false) => {
-  if (!option.properties.extent) {
-    const coords = option.geometry.coordinates;
-    getGlobalMap()?.flyTo({ center: coords, zoom: 17 });
-  } else {
+  // this condition is maybe not used in current API photon
+  if (option.properties.extent) {
     const [w, s, e, n] = option.properties.extent;
     const bbox = new maplibregl.LngLatBounds([w, s], [e, n]);
     const panelWidth = panelShown ? 410 : 0;
     getGlobalMap()?.fitBounds(bbox, {
       padding: { top: 5, bottom: 5, right: 5, left: panelWidth + 5 },
     });
+    return;
+  }
+
+  const coords = option.geometry.coordinates;
+  if (coords.length === 2 && coords.every((num) => !Number.isNaN(num))) {
+    getGlobalMap()?.flyTo({ center: coords, zoom: 17 });
+  } else {
+    // eslint-disable-next-line no-console
+    console.warn(
+      'fitBounds(): option has no extent or coordinates',
+      JSON.stringify(option),
+    );
   }
 };
 
