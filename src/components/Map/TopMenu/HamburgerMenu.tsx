@@ -99,7 +99,11 @@ const AboutLink = ({ closeMenu }) => {
     closeMenu();
   };
   return (
-    <MenuItem disabled={homepageShown} onClick={handleClick}>
+    <MenuItem
+      disabled={homepageShown}
+      onClick={handleClick}
+      title={process.env.sentryRelease}
+    >
       <HomeIcon />
       {t('map.about_link')}
     </MenuItem>

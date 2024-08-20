@@ -2,7 +2,7 @@
 import { withSentryConfig } from '@sentry/nextjs';
 import { LANGUAGES } from './src/config.mjs';
 
-const osmappVersion = process.env.osmappVersion;
+const osmappVersion = process.env.npm_package_version;
 const commitHash = (process.env.VERCEL_GIT_COMMIT_SHA || '').substring(0, 7);
 const commitMessage = process.env.VERCEL_GIT_COMMIT_MESSAGE || 'dev';
 const sentryRelease = `${osmappVersion}-${commitHash}-${commitMessage.substring(0, 10)}`;
