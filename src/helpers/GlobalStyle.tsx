@@ -118,11 +118,11 @@ const globalStyle = (theme: Theme) => css`
     animation: 1s blink infinite;
   }
 
-  .dotloader:nth-child(2) {
+  .dotloader:nth-of-type(2) {
     animation-delay: 250ms;
   }
 
-  .dotloader:nth-child(3) {
+  .dotloader:nth-of-type(3) {
     animation-delay: 500ms;
   }
 
