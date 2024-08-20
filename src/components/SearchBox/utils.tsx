@@ -64,12 +64,12 @@ export const renderLoader = () => (
   </>
 );
 
-export const fitBounds = (option, panelShown = false) => {
+export const fitBounds = (option) => {
   // this condition is maybe not used in current API photon
   if (option.properties.extent) {
     const [w, s, e, n] = option.properties.extent;
     const bbox = new maplibregl.LngLatBounds([w, s], [e, n]);
-    const panelWidth = panelShown ? 410 : 0;
+    const panelWidth = window.innerWidth > 700 ? 410 : 0;
     getGlobalMap()?.fitBounds(bbox, {
       padding: { top: 5, bottom: 5, right: 5, left: panelWidth + 5 },
     });
