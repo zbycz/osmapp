@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-unfetch';
-import { FetchError } from './helpers';
+import { FetchError } from '../services/helpers';
 
 interface OsmAuthFetchOpts extends RequestInit {
   osmAccessToken: string;

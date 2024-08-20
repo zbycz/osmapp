@@ -17,7 +17,6 @@ export const hasName = (feature: Feature) => feature.point || getName(feature); 
 
 export const getHumanPoiType = (feature: Feature) =>
   hasName(feature) ? getTypeLabel(feature) : t('featurepanel.no_name');
-export const getPoiType = getHumanPoiType;
 
 export const getLabel = (feature: Feature) => {
   const { point, roundedCenter } = feature;

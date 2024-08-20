@@ -62,8 +62,12 @@ export const FeaturePanel = () => {
                 <CragsInArea />
               </PanelSidePadding>
 
-              <UploadDialog />
               <FeatureImages />
+
+              <PanelSidePadding>
+                <UploadDialog />
+              </PanelSidePadding>
+
               <RouteDistributionInPanel />
               <RouteListInPanel />
 

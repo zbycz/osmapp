@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { serverFetchOsmUser } from '../../src/services/osmApiAuthServer';
+import { serverFetchOsmUser } from '../../src/server/osmApiAuthServer';
 
 // TODO upgrade Nextjs and use export async function POST(request: NextRequest) {
 export default async (req: NextApiRequest, res: NextApiResponse) => {

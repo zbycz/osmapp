@@ -1,10 +1,10 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Button } from '@material-ui/core';
+import { Button } from '@mui/material';
 import { fetchText } from '../../../services/fetch';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getShortId } from '../../../services/helpers';
 import { loginAndfetchOsmUser } from '../../../services/osmApiAuth';
-import { intl } from "../../../services/intl";
+import { intl } from '../../../services/intl';
 
 const WIKIPEDIA_LIMIT = 100 * 1024 * 1024;
 
@@ -75,7 +75,7 @@ const UploadButton = () => {
         variant="contained"
         color="primary"
         // startIcon={<UploadFileIcon />}
-        style={{ margin: '1rem' }}
+        style={{ marginBottom: '1rem' }}
         disabled={uploading}
         key={resetKey}
         // endIcon={uploading ? <CircularProgress /> : undefined}
@@ -101,8 +101,8 @@ export const UploadDialog = () => {
     <>
       {editEnabled && (
         <>
-          <br />
           <UploadButton />
+          <br />
         </>
       )}
     </>
