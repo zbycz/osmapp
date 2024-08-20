@@ -12,8 +12,7 @@ const getQueryFromTags = (tags) => {
 };
 
 const getOverpassQuery = ([a, b, c, d], query) =>
-  `[out:json][timeout:25][bbox:40.74646,-73.99195,40.75074,-73.98165];(nwr["amenity"="restaurant"]["cuisine"="vietnamese"];);out geom qt;`;
-// `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
+  `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
 
 export const getOverpassUrl = (fullQuery) =>
   `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
