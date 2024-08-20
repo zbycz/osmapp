@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/nextjs';
 import nextCookies from 'next-cookies';
 import Cookies from 'js-cookie';
 import { clearFeatureCache, fetchFeature } from '../../services/osmApi';
@@ -91,7 +92,11 @@ export const getInitialFeature = async (ctx) => {
 
   const t2 = new Date().getTime();
   const time = t2 - t1;
-  console.log(`getInitialFeature(${shortId}): ${time}ms`); // eslint-disable-line no-console
+  console.log(`getInitialFeature()`, shortId, `${time}ms`); // eslint-disable-line no-console
+  Sentry.metrics.distribution('getInitialFeature', time, {
+    tags: { osmtype, osmid, ssr: isServer() },
+    unit: 'millisecond',
+  });
 
   return initialFeature;
 };
