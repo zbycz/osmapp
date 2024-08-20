@@ -79,8 +79,8 @@ export const RenderListRow = ({
     isRouteSelected,
     isEditMode,
     routeSelectedIndex,
-    routesExpanded,
-    setRoutesExpanded,
+    routeIndexExpanded,
+    setRouteIndexExpanded,
     getPhotoInfoForRoute,
   } = useClimbingContext();
 
@@ -109,7 +109,7 @@ export const RenderListRow = ({
     debouncedValueChange(e, propName);
   };
 
-  const isExpanded = routesExpanded.indexOf(index) > -1;
+  const isExpanded = routeIndexExpanded === index;
 
   const isReadOnly =
     !isEditMode ||
@@ -165,7 +165,7 @@ export const RenderListRow = ({
         <Cell $width={50}>
           <IconButton
             onClick={(e) => {
-              setRoutesExpanded(toggleElementInArray(routesExpanded, index));
+              setRouteIndexExpanded(index);
               stopPropagation(e);
             }}
             size="small"
