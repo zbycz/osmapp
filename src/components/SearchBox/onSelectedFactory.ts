@@ -56,7 +56,7 @@ const geocoderOptionSelected = (option, setFeature) => {
   addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
   setFeature(skeleton);
-  fitBounds(option, true);
+  fitBounds(option);
   Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };
 
