@@ -71,7 +71,7 @@ export const PanelContent = styled.div`
   height: 100%;
 `;
 
-export const PanelFooter = styled.div`
+export const PanelFooterWrapper = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
   margin-top: auto;
   padding-bottom: 15px;

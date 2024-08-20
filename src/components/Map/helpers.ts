@@ -1,4 +1,4 @@
-import { OsmApiId } from '../../services/helpers';
+import { OsmId } from '../../services/types';
 import { isBrowser } from '../helpers';
 import { getGlobalMap } from '../../services/mapStorage';
 
@@ -44,7 +44,7 @@ export const convertMapIdToOsmId = (feature) => {
   return { id, type: mapTypeToOsm[numType] ?? `type${numType}` };
 };
 
-export const convertOsmIdToMapId = (apiId: OsmApiId) => {
+export const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };

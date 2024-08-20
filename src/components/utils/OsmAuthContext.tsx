@@ -4,15 +4,15 @@ import {
   osmLogout,
   OsmUser,
 } from '../../services/osmApiAuth';
-import { useMapStateContext } from './MapStateContext';
+import { useSnackbar } from './SnackbarContext';
 
-interface OsmAuthType {
+type OsmAuthType = {
   loggedIn: boolean;
   osmUser: string;
   userImage: string;
   handleLogin: () => void;
   handleLogout: () => void;
-}
+};
 
 const useOsmUserState = (cookies) => {
   const initialState = cookies.osmUserForSSR;
@@ -22,21 +22,19 @@ const useOsmUserState = (cookies) => {
 export const OsmAuthContext = createContext<OsmAuthType>(undefined);
 
 export const OsmAuthProvider = ({ children, cookies }) => {
-  const mapStateContext = useMapStateContext();
+  const { showToast } = useSnackbar();
+
   const [osmUser, setOsmUser] = useOsmUserState(cookies);
 
   const successfulLogin = (user: OsmUser) => {
     setOsmUser(user);
-    mapStateContext.showToast({
-      content: `Logged in as ${user.name}`,
-      type: 'success',
-    });
+    showToast(`Logged in as ${user.name}`, 'success');
   };
 
   const handleLogin = () => loginAndfetchOsmUser().then(successfulLogin);
   const handleLogout = () => osmLogout().then(() => setOsmUser(undefined));
 
-  const value = {
+  const value: OsmAuthType = {
     loggedIn: !!osmUser,
     osmUser: osmUser?.name || '', // TODO rename
     userImage: osmUser?.imageUrl || '',

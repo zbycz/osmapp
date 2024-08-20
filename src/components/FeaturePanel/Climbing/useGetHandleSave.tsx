@@ -99,7 +99,7 @@ export const useGetHandleSave = (
 ) => {
   const { feature: crag } = useFeatureContext();
   const { routes } = useClimbingContext();
-  const showSnackbar = useSnackbar();
+  const { showToast } = useSnackbar();
 
   return async () => {
     // eslint-disable-next-line no-alert
@@ -112,7 +112,7 @@ export const useGetHandleSave = (
     const result = await editCrag(crag, comment, changes);
 
     console.log('All routes saved', result); // eslint-disable-line no-console
-    showSnackbar('Data saved successfully!', 'success');
+    showToast('Data saved successfully!', 'success');
     setIsEditMode(false);
   };
 };

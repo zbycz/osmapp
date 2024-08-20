@@ -50,7 +50,7 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
   overflow: hidden;
 
   margin-right: 8px;
-  &:first-child {
+  &:first-of-type {
     margin-left: 8px;
   }
 

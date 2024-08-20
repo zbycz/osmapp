@@ -1,5 +1,5 @@
 import React from 'react';
-import { FeaturePanelInner } from './FeaturePanelInner';
+import { FeaturePanel } from './FeaturePanel';
 import { Drawer } from '../utils/Drawer';
 import {
   DRAWER_PREVIEW_HEIGHT,
@@ -14,6 +14,6 @@ export const FeaturePanelInDrawer = () => (
     className={DRAWER_CLASSNAME}
     collapsedHeight={DRAWER_PREVIEW_HEIGHT}
   >
-    <FeaturePanelInner />
+    <FeaturePanel />
   </Drawer>
 );

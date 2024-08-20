@@ -1,13 +1,19 @@
 import styled from '@emotion/styled';
 import { useTheme } from '@emotion/react';
 import React from 'react';
-import { useClimbingContext } from './contexts/ClimbingContext';
+import {
+  ClimbingContextProvider,
+  useClimbingContext,
+} from './contexts/ClimbingContext';
 import { convertGrade, getDifficultyColor } from './utils/grades/routeGrade';
 import { PanelLabel } from './PanelLabel';
 import { ContentContainer } from './ContentContainer';
 import { GRADE_TABLE } from './utils/grades/gradeData';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { GradeSystemSelect } from './GradeSystemSelect';
+import { isClimbingRelation } from '../../../utils';
+import { getKey } from '../../../services/helpers';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const MAX_HEIGHT = 100;
 
@@ -139,4 +145,21 @@ export const RouteDistribution = () => {
       </Container>
     </>
   );
+};
+
+export const RouteDistributionInPanel = () => {
+  const { feature } = useFeatureContext();
+
+  if (
+    isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
+    feature.tags.climbing === 'crag'
+  ) {
+    return (
+      <ClimbingContextProvider feature={feature} key={getKey(feature)}>
+        <RouteDistribution />
+      </ClimbingContextProvider>
+    );
+  }
+
+  return null;
 };

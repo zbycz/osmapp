@@ -77,7 +77,7 @@ const EditLink = ({ closeMenu }) => {
   const browser = useIsBrowser();
   const { view } = useMapStateContext();
   const { feature } = useFeatureContext();
-  const href = getIdEditorLink(feature, browser ? view : []);
+  const href = getIdEditorLink(feature, browser ? view : undefined);
   return (
     <MenuItem
       component="a"
@@ -99,7 +99,11 @@ const AboutLink = ({ closeMenu }) => {
     closeMenu();
   };
   return (
-    <MenuItem disabled={homepageShown} onClick={handleClick}>
+    <MenuItem
+      disabled={homepageShown}
+      onClick={handleClick}
+      title={process.env.sentryRelease}
+    >
       <HomeIcon />
       {t('map.about_link')}
     </MenuItem>

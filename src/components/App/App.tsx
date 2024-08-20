@@ -4,10 +4,14 @@ import Cookies from 'js-cookie';
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
 import { QueryClientProvider, QueryClient } from 'react-query';
-import { FeaturePanel } from '../FeaturePanel/FeaturePanel';
+import { FeaturePanelOnSide } from '../FeaturePanel/FeaturePanelOnSide';
 import Map from '../Map/Map';
 import SearchBox from '../SearchBox/SearchBox';
-import { MapStateProvider, useMapStateContext } from '../utils/MapStateContext';
+import {
+  MapStateProvider,
+  useMapStateContext,
+  View,
+} from '../utils/MapStateContext';
 import { getInitialMapView, getInitialFeature } from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
@@ -25,23 +29,26 @@ import { useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
+import { NextPage, NextPageContext } from 'next';
+import { Feature } from '../../services/types';
+import Error from 'next/error';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
-  React.useEffect(() => {
-    if (typeof window !== 'undefined') window.location.hash = view.join('/');
+  useEffect(() => {
+    window.location.hash = view.join('/');
     Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
   }, [view]);
 };
 
-export const getMapViewFromHash = () => {
+export const getMapViewFromHash = (): View | undefined => {
   const view = global.window?.location.hash
-    .substr(1)
+    .substring(1)
     .split('/')
-    .map(parseFloat)
+    .map(parseFloat) //we want to parse numbers, then serialize back in usePersistMapView()
     .filter((num) => !Number.isNaN(num))
     .map((num) => num.toString());
-  return view?.length === 3 ? view : undefined;
+  return view?.length === 3 ? (view as View) : undefined;
 };
 
 const useUpdateViewFromFeature = () => {
@@ -86,7 +93,7 @@ const IndexWithProviders = () => {
     <>
       <Loading />
       <SearchBox />
-      {featureShown && !isMobileMode && <FeaturePanel />}
+      {featureShown && !isMobileMode && <FeaturePanelOnSide />}
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
@@ -102,9 +109,23 @@ const IndexWithProviders = () => {
   );
 };
 
-const App = ({ featureFromRouter, initialMapView, cookies }) => {
+type Props = {
+  featureFromRouter: Feature | '404' | null;
+  initialMapView: View;
+  cookies: Record<string, string>;
+};
+
+const App: NextPage<Props> = ({
+  featureFromRouter,
+  initialMapView,
+  cookies,
+}) => {
   const mapView = getMapViewFromHash() || initialMapView;
   const queryClient = new QueryClient();
+
+  if (featureFromRouter === '404') {
+    return <Error statusCode={404} />;
+  }
 
   return (
     <SnackbarProvider>
@@ -129,11 +150,19 @@ const App = ({ featureFromRouter, initialMapView, cookies }) => {
     </SnackbarProvider>
   );
 };
-App.getInitialProps = async (ctx) => {
+App.getInitialProps = async (ctx: NextPageContext) => {
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
   const cookies = nextCookies(ctx);
   const featureFromRouter = await getInitialFeature(ctx);
+  if (ctx.res) {
+    if (featureFromRouter === '404' || featureFromRouter?.error === '404') {
+      ctx.res.statusCode = 404;
+    } else if (featureFromRouter?.error) {
+      ctx.res.statusCode = 500;
+    }
+  }
+
   const initialMapView = await getInitialMapView(ctx);
   return { featureFromRouter, initialMapView, cookies };
 };

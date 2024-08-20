@@ -8,10 +8,11 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { Subheading } from '../helpers/Subheading';
 import { Wrapper } from './Wrapper';
 import { Table } from './Table';
-import { getShortId, getUrlOsmId } from '../../../services/helpers';
+import { getKey, getShortId } from '../../../services/helpers';
 import * as Sentry from '@sentry/nextjs';
 import { MyRouteTicks } from '../Climbing/Ticks/MyRouteTicks';
-import { getIsClimbingRoute } from '../../utils/openClimbingUtils';
+
+import { isClimbingRoute } from '../../../utils';
 
 class ErrorBoundary extends React.Component<
   { fallback: React.ReactNode },
@@ -78,8 +79,6 @@ const OnlyTagsTable = () => {
 
 export const Properties = ({ showTags }) => {
   const { feature } = useFeatureContext();
-  const key = feature && getUrlOsmId(feature.osmMeta);
-  const isClimbingRoute = getIsClimbingRoute(feature?.tags);
   const shortOsmId = getShortId(feature?.osmMeta);
 
   return (
@@ -87,12 +86,13 @@ export const Properties = ({ showTags }) => {
       {showTags && <OnlyTagsTable />}
 
       {!showTags && (
-        <ErrorBoundary key={key} fallback={<OnlyTagsTable />}>
+        <ErrorBoundary key={getKey(feature)} fallback={<OnlyTagsTable />}>
           <FeaturedTags featuredTags={feature.schema?.featuredTags} />
           <IdSchemaFields />
         </ErrorBoundary>
       )}
-      {isClimbingRoute && <MyRouteTicks shortOsmId={shortOsmId} />}
+
+      {isClimbingRoute(feature) && <MyRouteTicks shortOsmId={shortOsmId} />}
     </>
   );
 };

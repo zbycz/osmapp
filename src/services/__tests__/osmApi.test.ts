@@ -46,7 +46,7 @@ describe('fetchFeature', () => {
   it('should work for node', async () => {
     const fetchJson = jest.spyOn(fetch, 'fetchJson').mockResolvedValue(NODE);
 
-    const feature = await fetchFeature('n123');
+    const feature = await fetchFeature({ type: 'node', id: 123 });
     expect(fetchJson).toHaveBeenCalledTimes(1);
     expect(feature).toEqual(NODE_FEATURE);
   });
@@ -62,7 +62,7 @@ describe('fetchFeature', () => {
         Promise.resolve(url.match(/overpass/) ? OVERPASS_CENTER_RESPONSE : WAY),
       );
 
-    const feature = await fetchFeature('w51050330');
+    const feature = await fetchFeature({ type: 'way', id: 51050330 });
     expect(fetchJson).toHaveBeenCalledTimes(2);
     expect(feature).toEqual(WAY_FEATURE);
   });
@@ -80,7 +80,7 @@ describe('fetchFeature', () => {
         ),
       );
 
-    const feature = await fetchFeature('r1234');
+    const feature = await fetchFeature({ type: 'relation', id: 1234 });
     expect(fetchJson).toHaveBeenCalledTimes(2);
     expect(feature).toEqual(RELATION_FEATURE);
   });
@@ -92,7 +92,7 @@ describe('fetchFeature', () => {
 
     const fetchJson = jest.spyOn(fetch, 'fetchJson').mockResolvedValue(WAY);
 
-    const feature = await fetchFeature('w51050330');
+    const feature = await fetchFeature({ type: 'way', id: 51050330 });
     expect(fetchJson).toHaveBeenCalledTimes(1);
     expect(feature).toMatchObject({
       ...WAY_FEATURE,

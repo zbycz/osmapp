@@ -325,7 +325,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setAreRoutesLoading(false);
   };
 
-  const climbingState = {
+  const climbingState: ClimbingContextType = {
     editorPosition,
     getPercentagePosition,
     getPixelPosition,

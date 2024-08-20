@@ -17,8 +17,9 @@ type TickRowProps = {
 };
 
 export const TickRow = ({ tick }: TickRowProps) => {
+  const { showToast } = useSnackbar();
+
   const tickKey = getTickKey(tick);
-  const showSnackbar = useSnackbar();
   const deleteTick = (key) => {
     onTickDelete(key);
   };
@@ -32,7 +33,7 @@ export const TickRow = ({ tick }: TickRowProps) => {
 
   const handleTickDelete = () => {
     deleteTick(tickKey);
-    showSnackbar('Tick was deleted', 'success');
+    showToast('Tick was deleted', 'success');
   };
   const formattedDate = tick.date ? format(tick.date, DEFAULT_DATA_FORMAT) : '';
 
