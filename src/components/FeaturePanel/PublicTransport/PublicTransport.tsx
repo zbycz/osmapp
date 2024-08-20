@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { Typography } from '@mui/material';
 import { LineInformation, requestLines } from './requestRoutes';
@@ -16,21 +16,21 @@ const useLoadingState = () => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
 
-  const finishRoutes = (payload) => {
+  const finishRoutes = useCallback((payload) => {
     setLoading(false);
     setRoutes(payload);
-  };
+  }, []);
 
-  const startRoutes = () => {
+  const startRoutes = useCallback(() => {
     setLoading(true);
     setRoutes([]);
     setError(undefined);
-  };
+  }, []);
 
-  const failRoutes = () => {
+  const failRoutes = useCallback(() => {
     setError('Could not load routes');
     setLoading(false);
-  };
+  }, []);
 
   return { routes, error, loading, startRoutes, finishRoutes, failRoutes };
 };

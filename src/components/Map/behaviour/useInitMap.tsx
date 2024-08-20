@@ -28,6 +28,21 @@ export const useInitMap = () => {
 
     map.scrollZoom.setWheelZoomRate(1 / 200); // 1/450 is default, bigger value = faster
 
+    map.on('styleimagemissing', (e) => {
+      const width = 12;
+      const data = new Uint8Array(width * width * 4);
+      for (let x = 0; x < width; x++) {
+        for (let y = 0; y < width; y++) {
+          const offset = (y * width + x) * 4;
+          data[offset + 0] = 255;
+          data[offset + 1] = 0;
+          data[offset + 2] = 0;
+          data[offset + 3] = 255; // alpha
+        }
+      }
+      map.addImage(e.id, { width, height: width, data });
+    });
+
     return () => {
       setGlobalMap(null);
       map.remove();
