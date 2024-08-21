@@ -22,7 +22,7 @@ export const uploadToWikimediaCommons = async (
   const suffix = await findFreeSuffix(feature, file);
   const data = getUploadData(user, feature, file, lang, suffix);
 
-  console.log(data.filepath, data.filename);
+  console.log("uploadToWikimediaCommons", data.filepath, data.filename);
 
   const uploadResult = await session.upload(
     data.filepath,
@@ -30,8 +30,9 @@ export const uploadToWikimediaCommons = async (
     data.text,
   );
 
-  // const pageId = '147484063';
+  console.log({uploadResult});
 
+  // const pageId = '147484063';
   // const claims = [
   //   claimsHelpers.createDate(data.date),
   //   claimsHelpers.createPlaceLocation(data.placeLocation),

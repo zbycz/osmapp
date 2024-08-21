@@ -1,19 +1,21 @@
-export const WIKI_URL = 'https://test.wikidata.org/w/api.php';
+// import { FormData } from 'formdata-node';
 
-export const getUploadBody = (params: Record<string, string | Blob>) => {
+import { ReadStream } from 'node:fs';
+
+export const WIKI_URL = 'https://test.wikipedia.org/w/api.php';
+export const FORMAT = { format: 'json', formatversion: '2' };
+
+export type UploadParams = Record<string, string | ReadStream>;
+
+export const getUploadBody = (params: UploadParams) => {
   const formData = new FormData();
   Object.entries(params).forEach(([k, v]) => {
-    formData.append(k, v);
+    formData.append(k, v as unknown as any);
   });
   return formData;
 };
 
-export const getBody = (params: Record<string, string | Blob>) =>
-  params.action === 'upload'
-    ? getUploadBody(params)
-    : new URLSearchParams(params);
-
-export function parseCookies(response: Response) {
+export const parseCookies = (response: Response) => {
   const headers = new Headers(response.headers);
   const setCookies = headers.getSetCookie();
 
@@ -23,4 +25,4 @@ export function parseCookies(response: Response) {
       return `${name.trim()}=${value.trim()}`;
     })
     .join('; ');
-}
+};

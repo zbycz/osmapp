@@ -23,7 +23,7 @@ const file: File = {
   });
 
   const session = getMediaWikiSession();
-  await session.login('OsmappBot@osmapp-upload', password);
+  console.log(await session.login('OsmappBot@osmapp-upload', password));
 
   console.log(await session.getCsrfToken());
 
