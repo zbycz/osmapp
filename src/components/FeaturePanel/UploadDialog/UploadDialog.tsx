@@ -7,6 +7,7 @@ import { loginAndfetchOsmUser } from '../../../services/osmApiAuth';
 import { intl } from '../../../services/intl';
 
 const WIKIPEDIA_LIMIT = 100 * 1024 * 1024;
+const VERCEL_LIMIT = 4 * 1024 * 1024;
 
 const performUpload = async (file, feature) => {
   const formData = new FormData();

@@ -1,16 +1,14 @@
 // import { FormData } from 'formdata-node';
 
-import { ReadStream } from 'node:fs';
-
 export const WIKI_URL = 'https://test.wikipedia.org/w/api.php';
 export const FORMAT = { format: 'json', formatversion: '2' };
 
-export type UploadParams = Record<string, string | ReadStream>;
+export type UploadParams = Record<string, string | Blob>;
 
 export const getUploadBody = (params: UploadParams) => {
   const formData = new FormData();
   Object.entries(params).forEach(([k, v]) => {
-    formData.append(k, v as unknown as any);
+    formData.append(k, v);
   });
   return formData;
 };

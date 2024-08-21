@@ -7,7 +7,7 @@ import {
   UploadParams,
   WIKI_URL,
 } from './utils';
-import { createReadStream } from 'node:fs';
+import { readFile } from 'node:fs/promises';
 
 type Params = Record<string, string>;
 
@@ -35,7 +35,7 @@ export const getMediaWikiSession = () => {
   };
 
   const UPLOAD = async (action: string, params: UploadParams) => {
-    const response = await fetch(WIKI_URL, {
+    const response = await fetch('http://httpbin.org/post', {
       method: 'POST',
       headers: { Cookie: sessionCookie },
       body: getUploadBody({ action, ...params, ...FORMAT }),
@@ -62,9 +62,11 @@ export const getMediaWikiSession = () => {
 
   const upload = async (filepath: string, filename: string, text: string) => {
     const token = await getCsrfToken();
-    const file = createReadStream(filepath);
+    const file = await readFile(filepath);
+    const blob = new Blob([file], { type: 'application/octet-stream' });
+
     const data = await UPLOAD('upload', {
-      file,
+      file: blob,
       filename,
       text,
       comment: 'Initial upload from OsmAPP.org',
