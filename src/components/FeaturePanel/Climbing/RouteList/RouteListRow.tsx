@@ -165,7 +165,9 @@ export const RenderListRow = ({
         <Cell $width={50}>
           <IconButton
             onClick={(e) => {
-              setRouteIndexExpanded(index);
+              setRouteIndexExpanded(
+                routeIndexExpanded === index ? null : index,
+              );
               stopPropagation(e);
             }}
             size="small"
