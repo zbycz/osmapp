@@ -4,6 +4,8 @@ import { basicStyle } from '../styles/basicStyle';
 import { PersistedScaleControl } from './PersistedScaleControl';
 import { setGlobalMap } from '../../../services/mapStorage';
 import { COMPASS_TOOLTIP } from '../useAddTopRightControls';
+import IndoorEqual from 'maplibre-gl-indoorequal';
+import 'mapbox-gl-indoorequal/mapbox-gl-indoorequal.css';
 
 // There are plenty of errors like this:
 //   Image "office_11" could not be loaded. Please make sure you have added the image with map.addImage() or a "sprite" property in your style. You can provide missing images by listening for the "styleimagemissing" map event.
@@ -61,6 +63,11 @@ export const useInitMap = () => {
     });
     setGlobalMap(map);
     setMapInState(map);
+
+    const indoorEqual = new IndoorEqual(map, {
+      apiKey: 'iek_yRGaKXYLOv8Qz4tJMzQBj326n2Xa',
+    });
+    map.addControl(indoorEqual);
 
     map.addControl(PersistedScaleControl as any);
 
