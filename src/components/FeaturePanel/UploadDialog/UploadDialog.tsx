@@ -7,30 +7,29 @@ import { loginAndfetchOsmUser } from '../../../services/osmApiAuth';
 import { intl } from '../../../services/intl';
 
 const WIKIPEDIA_LIMIT = 100 * 1024 * 1024;
-const VERCEL_LIMIT = 4 * 1024 * 1024;
 
-const performUpload = async (file, feature) => {
-  const formData = new FormData();
-  formData.append('filename', file.name);
-  formData.append('file', file);
-  formData.append('osmShortId', getShortId(feature.osmMeta));
-  formData.append('lang', intl.lang);
+// const performUploadToAws = async (file, feature) => {
+//   const formData = new FormData();
+//   formData.append('filename', file.name);
+//   formData.append('file', file);
+//   formData.append('osmShortId', getShortId(feature.osmMeta));
+//   formData.append('lang', intl.lang);
+//
+//   const uploadResponse = await fetchText('/api/upload/step1', {
+//     method: 'POST',
+//     body: formData,
+//   });
+//
+//   console.log('uploadResponse', uploadResponse);
+// };
 
-  const uploadResponse = await fetchText('/api/upload', {
-    method: 'POST',
-    body: formData,
-  });
-
-  console.log('uploadResponse', uploadResponse);
-};
-
-const performUploadWithLogin = async (file, feature) => {
+const performActionWithLogin = async (action) => {
   try {
-    await performUpload(file, feature);
+    await action();
   } catch (e) {
     if (e.code === '401') {
       await loginAndfetchOsmUser();
-      await performUpload(file, feature);
+      await action();
     }
   }
 };
@@ -51,7 +50,31 @@ const getHandleFileUpload =
 
     try {
       setUploading(true);
-      await performUploadWithLogin(file, feature);
+      await performActionWithLogin(async () => {
+        const response = await fetch(
+          process.env.NEXT_PUBLIC_BASE_URL + '/api/upload',
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              filename: file.name,
+              contentType: file.type,
+            }),
+          },
+        );
+
+        if (response.ok) {
+          const { url, fields } = await response.json();
+        }
+
+
+        xxxx tady xxx !!! - - - - - -
+
+
+
+      });
     } finally {
       setUploading(false);
       setResetKey((key) => key + 1);
