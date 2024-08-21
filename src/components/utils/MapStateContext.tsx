@@ -19,7 +19,7 @@ export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 export type Bbox = [number, number, number, number];
 
 export interface Layer {
-  type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
+  type: 'basemap' | 'overlay' | 'user' | 'spacer';
   name?: string;
   description?: string;
   url?: string;
@@ -28,6 +28,7 @@ export interface Layer {
   Icon?: LayerIcon;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
+  minzoom?: number;
   minzoom?: number;
   bboxes?: Bbox[];
 }
@@ -60,7 +61,9 @@ export const MapStateContext = createContext<MapStateContextType>(undefined);
 
 const useActiveLayersState = () => {
   const isClimbing = PROJECT_ID === 'openclimbing';
-  const initLayers = isClimbing ? ['outdoor', 'climbing'] : [DEFAULT_MAP];
+  const initLayers = isClimbing
+    ? ['outdoor', 'climbing']
+    : [DEFAULT_MAP, 'indoor'];
   return usePersistedState('activeLayers', initLayers);
 };
 

@@ -268,6 +268,7 @@ export default {
   'layers.bike': 'Bike',
   'layers.transport': 'Transport',
   'layers.climbing': 'Climbing',
+  'layers.indoor': 'Indoor',
 
   'climbingpanel.create_climbing_route': 'Draw new route in schema',
   'climbingpanel.edit_climbing_route': 'Edit route in schema',

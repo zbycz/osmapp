@@ -17,4 +17,6 @@ yarn-error.log*
 /public/workbox-*.js
 /public/workbox-*.js.map
 /.vercel
+.env.local
 .env.sentry-build-plugin
+/public/icons-indoor

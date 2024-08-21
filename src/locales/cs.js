@@ -213,6 +213,7 @@ export default {
   'layers.bike': 'Cyklo',
   'layers.transport': 'Dopravní',
   'layers.climbing': 'Sportovní lezení',
+  'layers.indoor': 'Vnitřky budov',
 
   'climbingareas.link': 'Seznam všech lezeckých oblastí',
   'climbingareas.title': 'Lezecké oblasti',

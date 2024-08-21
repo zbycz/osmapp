@@ -78,11 +78,19 @@ const globalStyle = (theme: Theme) => css`
     }
 
     @media ${isMobileMode} {
-      border-radius: 50% !important;
+      border-radius: 22px !important;
 
       button {
         width: 44px !important;
         height: 44px !important;
+
+        // indoor level control has multiple buttions
+        &:first-of-type {
+          border-radius: 22px 22px 0 0 !important;
+        }
+        &:last-of-type {
+          border-radius: 0 0 22px 22px !important;
+        }
       }
     }
     button + button {
