@@ -1,9 +1,8 @@
 import fetch from 'isomorphic-unfetch';
-// import { fileFromPath } from 'formdata-node/file-from-path';
 import {
   FORMAT,
   getUploadBody,
-  parseCookies,
+  cookieJar,
   UploadParams,
   WIKI_URL,
 } from './utils';
@@ -19,7 +18,7 @@ export const getMediaWikiSession = () => {
     const response = await fetch(`${WIKI_URL}?${query}`, {
       headers: { Cookie: sessionCookie },
     });
-    sessionCookie = parseCookies(response);
+    sessionCookie = cookieJar(sessionCookie, response);
     return response.json();
   };
 
@@ -30,17 +29,17 @@ export const getMediaWikiSession = () => {
       headers: { Cookie: sessionCookie },
       body: query,
     });
-    sessionCookie = parseCookies(response);
+    sessionCookie = cookieJar(sessionCookie, response);
     return response.json();
   };
 
   const UPLOAD = async (action: string, params: UploadParams) => {
-    const response = await fetch('http://httpbin.org/post', {
+    const response = await fetch(WIKI_URL, {
       method: 'POST',
       headers: { Cookie: sessionCookie },
       body: getUploadBody({ action, ...params, ...FORMAT }),
     });
-    sessionCookie = parseCookies(response);
+    sessionCookie = cookieJar(sessionCookie, response);
     return response.json();
   };
 
@@ -57,6 +56,7 @@ export const getMediaWikiSession = () => {
 
   const getCsrfToken = async () => {
     const data = await GET('query', { meta: 'tokens', type: 'csrf' });
+    console.log('getCsrfToken', data.query.tokens.csrftoken);
     return data.query.tokens.csrftoken;
   };
 

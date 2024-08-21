@@ -1,5 +1,3 @@
-// import { FormData } from 'formdata-node';
-
 export const WIKI_URL = 'https://test.wikipedia.org/w/api.php';
 export const FORMAT = { format: 'json', formatversion: '2' };
 
@@ -13,14 +11,22 @@ export const getUploadBody = (params: UploadParams) => {
   return formData;
 };
 
-export const parseCookies = (response: Response) => {
-  const headers = new Headers(response.headers);
-  const setCookies = headers.getSetCookie();
+export const cookieJar = (cookies: string, response: Response) => {
+  const oldCookies: Record<string, string> =
+    cookies?.split(';').reduce((acc, c) => {
+      const [name, value] = c.split('=');
+      return { ...acc, [name.trim()]: value.trim() };
+    }, {}) ?? {};
 
-  return setCookies
-    .map((cookie) => {
-      const [name, value] = cookie.split(';')[0].split('=');
-      return `${name.trim()}=${value.trim()}`;
-    })
+  const headers = new Headers(response.headers);
+  headers.getSetCookie().forEach((cookie) => {
+    const [name, value] = cookie.split(';')[0].split('=');
+    oldCookies[name] = value;
+  });
+
+  const out = Object.entries(oldCookies)
+    .map(([name, value]) => `${name}=${value}`)
     .join('; ');
+
+  return out;
 };
