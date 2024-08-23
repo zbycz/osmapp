@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Tooltip, Typography } from '@mui/material';
 import RestaurantIcon from '@mui/icons-material/Restaurant';
 import styled from '@emotion/styled';
@@ -10,21 +10,21 @@ const useLoadingState = () => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
 
-  const finishRating = (payload) => {
+  const finishRating = useCallback((payload) => {
     setLoading(false);
     setRating(payload);
-  };
+  }, []);
 
-  const startRating = () => {
+  const startRating = useCallback(() => {
     setLoading(true);
     setRating(undefined);
     setError(undefined);
-  };
+  }, []);
 
-  const failRating = () => {
+  const failRating = useCallback(() => {
     setError('Could not load rating');
     setLoading(false);
-  };
+  }, []);
 
   return { rating, error, loading, startRating, finishRating, failRating };
 };

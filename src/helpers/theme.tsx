@@ -4,8 +4,6 @@ import { grey, red } from '@mui/material/colors';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useMediaQuery } from '@mui/material';
 
-// @TODO: Fix theme types according to https://mui.com/material-ui/customization/theming/#typescript
-
 const lightTheme = createTheme({
   palette: {
     primary: {
@@ -123,15 +121,14 @@ export const UserThemeProvider = ({ children, userThemeCookie }) => {
     Cookies.set('userTheme', choice, { expires: 30 * 12 * 10, path: '/' });
   };
 
+  const value: UserThemeContextType = {
+    userTheme,
+    setUserTheme,
+    currentTheme,
+    theme,
+  };
   return (
-    <UserThemeContext.Provider
-      value={{
-        userTheme,
-        setUserTheme,
-        currentTheme,
-        theme,
-      }}
-    >
+    <UserThemeContext.Provider value={value}>
       <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </UserThemeContext.Provider>
   );

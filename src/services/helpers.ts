@@ -1,7 +1,7 @@
 import * as xml2js from 'isomorphic-xml2js';
 import fetch from 'isomorphic-unfetch';
 import { isServer, isString } from '../components/helpers';
-import { Feature, Position } from './types';
+import { Feature, OsmId, Position } from './types';
 import { join, roundedToDegUrl } from '../utils';
 import { PROJECT_URL } from './project';
 import { getIdFromShortener, getShortenerSlug } from './shortener';
@@ -29,25 +29,15 @@ export const buildXmlString = (xml) => {
   return builder.buildObject(xml);
 };
 
-export interface OsmApiId {
-  // type: 'node' | 'way' | 'relation';
-  type: string;
-  id: string;
-}
-
-// apiId.replace(/([a-z])[a-z]+\/([0-9]+)/, '$1$2');
-export const getShortId = (apiId: OsmApiId): string =>
-  `${apiId.type[0]}${apiId.id}`;
-
-export const getUrlOsmId = (apiId: OsmApiId): string =>
-  `${apiId.type}/${apiId.id}`;
+export const getShortId = ({ id, type }: OsmId): string => `${type[0]}${id}`;
+export const getUrlOsmId = ({ id, type }: OsmId): string => `${type}/${id}`;
 
 export const getKey = (feature: Feature) =>
   feature.point
     ? feature.center.join(',')
     : getUrlOsmId(feature.osmMeta) + feature.osmMeta.version;
 
-export const getApiId = (value): OsmApiId => {
+export const getApiId = (value): OsmId => {
   if (value.type && value.id) {
     return value;
   }

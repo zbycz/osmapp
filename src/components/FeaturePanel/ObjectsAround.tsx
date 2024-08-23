@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import Router from 'next/router';
 import { fetchAroundFeature } from '../../services/osmApi';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
-import { FetchError, getOsmappLink, getUrlOsmId } from '../../services/helpers';
+import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 import { DotLoader, trimText, useMobileMode } from '../helpers';
@@ -13,21 +13,25 @@ import { useUserThemeContext } from '../../helpers/theme';
 
 const useLoadingState = () => {
   const [around, setAround] = useState<Feature[]>([]);
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
-  const finishAround = (payload) => {
+
+  const finishAround = useCallback((payload) => {
     setLoading(false);
     setAround(payload);
-  };
-  const startAround = () => {
+  }, []);
+
+  const startAround = useCallback(() => {
     setLoading(true);
     setAround([]);
     setError(undefined);
-  };
-  const failAround = (err) => {
-    setError(err instanceof FetchError ? err.message : err);
+  }, []);
+
+  const failAround = useCallback(() => {
+    setError('Could not load routes');
     setLoading(false);
-  };
+  }, []);
+
   return { around, error, loading, startAround, finishAround, failAround };
 };
 
@@ -64,7 +68,6 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
-// TODO make SSR ?
 export const ObjectsAround = ({ advanced }) => {
   const { feature } = useFeatureContext();
   const { around, loading, error, startAround, finishAround, failAround } =

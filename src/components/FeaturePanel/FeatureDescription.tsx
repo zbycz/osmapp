@@ -5,6 +5,7 @@ import { capitalize } from '../helpers';
 import { t, Translation } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { TooltipButton } from '../utils/TooltipButton';
+import { Feature } from '../../services/types';
 
 const InfoTooltipWrapper = styled.span`
   position: relative;
@@ -25,7 +26,7 @@ const A = ({ href, children }) =>
     children
   );
 
-const getUrls = ({ type, id, changeset = '', user = '' }) => ({
+const getUrls = ({ type, id, changeset, user }: Feature['osmMeta']) => ({
   itemUrl: `https://openstreetmap.org/${type}/${id}`,
   historyUrl: `https://openstreetmap.org/${type}/${id}/history`,
   changesetUrl: changeset && `https://openstreetmap.org/changeset/${changeset}`, // prettier-ignore

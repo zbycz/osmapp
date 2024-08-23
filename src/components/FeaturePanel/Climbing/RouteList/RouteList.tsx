@@ -3,12 +3,17 @@ import styled from '@emotion/styled';
 
 import EditIcon from '@mui/icons-material/Edit';
 import { Button, ButtonGroup } from '@mui/material';
-import { useClimbingContext } from '../contexts/ClimbingContext';
+import {
+  ClimbingContextProvider,
+  useClimbingContext,
+} from '../contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
-import { addElementToArray, deleteFromArray } from '../utils/array';
 import { invertedBoltCodeMap } from '../utils/boltCodes';
 import { PanelLabel } from '../PanelLabel';
 import { ContentContainer } from '../ContentContainer';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { isClimbingRelation } from '../../../../utils';
+import { getKey } from '../../../../services/helpers';
 
 const Container = styled.div`
   padding-bottom: 20px;
@@ -26,8 +31,8 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     setRouteSelectedIndex,
     routeSelectedIndex,
     setIsEditMode,
-    routesExpanded,
-    setRoutesExpanded,
+    routeIndexExpanded,
+    setRouteIndexExpanded,
     showDebugMenu,
   } = useClimbingContext();
 
@@ -50,17 +55,14 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
         }
       }
       if (e.key === 'ArrowLeft') {
-        const index = routesExpanded.indexOf(routeSelectedIndex);
-        if (index > -1) {
-          setRoutesExpanded(deleteFromArray(routesExpanded, index));
+        if (routeSelectedIndex > -1) {
+          setRouteIndexExpanded(routeSelectedIndex);
           e.preventDefault();
         }
       }
       if (e.key === 'ArrowRight') {
-        if (routesExpanded.indexOf(routeSelectedIndex) === -1) {
-          setRoutesExpanded(
-            addElementToArray(routesExpanded, routeSelectedIndex),
-          );
+        if (routeSelectedIndex) {
+          setRouteIndexExpanded(routeSelectedIndex);
           // @TODO: scroll to expanded container:
           // ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           e.preventDefault();
@@ -73,7 +75,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     return () => {
       window.removeEventListener('keydown', downHandler);
     };
-  }, [routeSelectedIndex, routes, routesExpanded]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [routeSelectedIndex, routes, routeIndexExpanded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = () => {
     setIsEditMode(true);
@@ -151,4 +153,21 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
       </ContentContainer>
     </Container>
   );
+};
+
+export const RouteListInPanel = () => {
+  const { feature } = useFeatureContext();
+
+  if (
+    isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
+    feature.tags.climbing === 'crag'
+  ) {
+    return (
+      <ClimbingContextProvider feature={feature} key={getKey(feature)}>
+        <RouteList />
+      </ClimbingContextProvider>
+    );
+  }
+
+  return null;
 };

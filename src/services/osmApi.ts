@@ -1,14 +1,7 @@
 import { resolveCountryCode } from 'next-codegrid';
-import {
-  FetchError,
-  getApiId,
-  getShortId,
-  getUrlOsmId,
-  OsmApiId,
-  prod,
-} from './helpers';
+import { FetchError, getApiId, getShortId, getUrlOsmId, prod } from './helpers';
 import { fetchJson } from './fetch';
-import { Feature, LonLat, Position, SuccessInfo } from './types';
+import { Feature, LonLat, OsmId, Position, SuccessInfo } from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { isBrowser } from '../components/helpers';
@@ -18,6 +11,7 @@ import { osmToFeature } from './osmToFeature';
 import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
 import * as Sentry from '@sentry/nextjs';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
+import { isClimbingRelation, isClimbingRoute } from '../utils';
 
 const getOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -61,7 +55,7 @@ export const addFeatureCenterToCache = (shortId, center) => {
   featureCenterCache[shortId] = center;
 };
 
-const getCenterPromise = async (apiId): Promise<LonLat | false> => {
+const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
   if (apiId.type === 'node') return false;
 
   if (isBrowser() && featureCenterCache[getShortId(apiId)]) {
@@ -82,7 +76,7 @@ export const clearFeatureCache = (apiId) => {
   removeFetchCache(getOsmHistoryUrl(apiId));
 };
 
-const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
+const fetchFeatureWithCenter = async (apiId: OsmId) => {
   const [element, center] = await Promise.all([
     getOsmPromise(apiId),
     getCenterPromise(apiId),
@@ -107,7 +101,7 @@ const fetchFeatureWithCenter = async (apiId: OsmApiId) => {
   return addSchemaToFeature(feature);
 };
 
-const fetchParentFeatures = async (apiId: OsmApiId) => {
+const fetchParentFeatures = async (apiId: OsmId) => {
   const { elements } = await getOsmParentPromise(apiId);
   return elements.map((element) => addSchemaToFeature(osmToFeature(element)));
 };
@@ -120,7 +114,7 @@ const getItemsMap = (elements) => {
   return map;
 };
 
-export const fetchWithMemberFeatures = async (apiId: OsmApiId) => {
+export const fetchWithMemberFeatures = async (apiId: OsmId) => {
   // TODO we can compute geometry using cragsToGeojson() and display it in the map
   const url =
     apiId.type === 'relation' ? getOsmFullUrl(apiId) : getOsmUrl(apiId);
@@ -153,10 +147,6 @@ export const fetchWithMemberFeatures = async (apiId: OsmApiId) => {
   return featureWithMemberFeatures;
 };
 
-export const isClimbingRelation = (feature: Feature) =>
-  feature.osmMeta.type === 'relation' &&
-  (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
-
 // TODO parent should be probably fetched for every feaure in fetchFeatureWithCenter()
 //  - wait until UI is prepared
 //  - maybe this can be merged in fetchFeatureWithCenter()
@@ -164,41 +154,34 @@ export const isClimbingRelation = (feature: Feature) =>
 export const addMembersAndParents = async (
   feature: Feature,
 ): Promise<Feature> => {
-  if (feature.tags.climbing?.includes('route')) {
+  if (isClimbingRoute(feature)) {
     const parentFeatures = await fetchParentFeatures(feature.osmMeta);
+    return { ...feature, parentFeatures };
+  }
 
+  if (isClimbingRelation(feature)) {
+    const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
+      fetchParentFeatures(feature.osmMeta),
+      fetchWithMemberFeatures(feature.osmMeta),
+    ]);
     return {
-      ...feature,
+      ...featureWithMemberFeatures,
+      center: feature.center, // feature contains correct center from centerCache or overpass
       parentFeatures,
     };
   }
 
-  if (!isClimbingRelation(feature)) {
-    return feature;
-  }
-
-  const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
-    fetchParentFeatures(feature.osmMeta),
-    fetchWithMemberFeatures(feature.osmMeta),
-  ]);
-
-  return { ...featureWithMemberFeatures, parentFeatures };
+  return feature;
 };
 
-export const fetchFeature = async (shortId): Promise<Feature> => {
-  if (!shortId) {
-    return null;
-  }
-
+export const fetchFeature = async (apiId: OsmId): Promise<Feature> => {
   try {
-    const apiId = getApiId(shortId);
-
-    if (apiId.type === 'relation' && apiId.id === '6') {
+    if (apiId.type === 'relation' && apiId.id === 6) {
       await fetchSchemaTranslations();
       const osmApiTestItems = await import('./osmApiTestItems');
       return osmApiTestItems.TEST_CRAG;
     }
-    if (apiId.type === 'node' && apiId.id === '6') {
+    if (apiId.type === 'node' && apiId.id === 6) {
       await fetchSchemaTranslations();
       const osmApiTestItems = await import('./osmApiTestItems');
       return osmApiTestItems.TEST_NODE;
@@ -209,7 +192,7 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
 
     return finalFeature;
   } catch (e) {
-    console.error(`fetchFeature(${shortId}):`, e); // eslint-disable-line no-console
+    console.error(`fetchFeature(${getShortId(apiId)}):`, e); // eslint-disable-line no-console
 
     const error = (
       e instanceof FetchError ? e.code : 'unknown'
@@ -219,9 +202,9 @@ export const fetchFeature = async (shortId): Promise<Feature> => {
       type: 'Feature',
       skeleton: true,
       nonOsmObject: false,
-      osmMeta: getApiId(shortId),
+      osmMeta: apiId,
       center: undefined,
-      tags: { name: getUrlOsmId(getApiId(shortId)) },
+      tags: { name: getUrlOsmId(apiId) },
       properties: { class: '', subclass: '' },
       error,
     };

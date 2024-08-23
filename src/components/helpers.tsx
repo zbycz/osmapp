@@ -6,7 +6,8 @@ export const useToggleState = (
   initialState: boolean,
 ): [boolean, () => void] => {
   const [value, set] = useState<boolean>(initialState);
-  return [value, () => set(!value)];
+  const toggle = useCallback(() => set((prevValue) => !prevValue), []);
+  return [value, toggle];
 };
 
 export const useBoolState = (
@@ -30,7 +31,7 @@ export function isServer() {
 
 export const createMapEffectHook =
   (mapEffectFn) =>
-  (map, ...rest) =>
+  (map: Map, ...rest) =>
     useEffect(() => {
       if (map) {
         mapEffectFn(map, ...rest);
@@ -102,7 +103,7 @@ export const isDesktopResolution = '(min-width: 701px)';
 
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>
-  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error
+  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO lets make it isomorphic. Otherwise we have hydration error
 
 export const useIsClient = () => {
   const [isClient, setIsClient] = useState(false);

@@ -37,7 +37,7 @@ const getInitialState = (defs: ImageDef[]) =>
   defs?.filter(isInstant)?.map((def) => ({
     def,
     image: getInstantImage(def),
-  }));
+  })) ?? [];
 
 export const useLoadImages = () => {
   const { feature } = useFeatureContext();

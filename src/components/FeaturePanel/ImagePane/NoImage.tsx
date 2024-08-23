@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { grey } from '@mui/material/colors';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { HEIGHT } from './helpers';
+import { icons } from '../../../assets/icons';
 
 const Wrapper = styled.div`
   position: relative;
@@ -27,9 +28,11 @@ export const NoImage = () => {
   const { feature } = useFeatureContext();
   const { properties } = feature;
   const ico = properties.class;
+  const icon = icons.includes(ico) ? ico : 'information';
+
   return (
     <Wrapper>
-      <img src={`/icons/${ico}_11.svg`} alt={ico} title={ico} />
+      <img src={`/icons/${icon}_11.svg`} alt={ico} title={ico} />
     </Wrapper>
   );
 };
