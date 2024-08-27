@@ -45,7 +45,7 @@
     "jss": "^10.10.0",
     "lodash": "^4.17.21",
     "maplibre-gl": "^4.5.2",
-    "next": "^14.2.4",
+    "next": "^14.2.6",
     "next-codegrid": "^1.0.3",
     "next-cookies": "^2.0.3",
     "opening_hours": "^3.8.0",
