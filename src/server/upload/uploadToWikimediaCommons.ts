@@ -17,12 +17,11 @@ export const uploadToWikimediaCommons = async (
   }
 
   const session = getMediaWikiSession();
-  await session.login('OsmappBot@osmapp-upload', password);
+  await session.login('OsmappBot@osmapp-upload', password); // https://www.mediawiki.org/wiki/Special:BotPasswords
+  // TODO use oauth bearer + no cookie jar
 
   const suffix = await findFreeSuffix(feature, file);
   const data = getUploadData(user, feature, file, lang, suffix);
-
-  console.log("uploadToWikimediaCommons", data.filepath, data.filename);
 
   const uploadResult = await session.upload(
     data.filepath,
@@ -30,9 +29,14 @@ export const uploadToWikimediaCommons = async (
     data.text,
   );
 
-  console.log({uploadResult});
+  if (uploadResult.result !== 'Success') {
+    throw new Error(`Upload failed: ${uploadResult.result}`);
+  }
 
-  // const pageId = '147484063';
+  // TODO here
+
+  // TODO get pageid from file page title
+  const pageId = '147484063';
   // const claims = [
   //   claimsHelpers.createDate(data.date),
   //   claimsHelpers.createPlaceLocation(data.placeLocation),
@@ -42,10 +46,12 @@ export const uploadToWikimediaCommons = async (
   // const claimsResult = await session.editClaims(`M${pageId}`, claims);
 
   // TODO check duplicate by sha1 before upload
+
   return {
     uploadResult,
     //claimsResult,
-    filename: data.filename,
+    filename: uploadResult.filename,
   };
+
   // MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
 };

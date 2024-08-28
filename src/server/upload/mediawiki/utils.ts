@@ -1,4 +1,4 @@
-export const WIKI_URL = 'https://test.wikipedia.org/w/api.php';
+export const WIKI_URL = 'https://commons.wikimedia.org/w/api.php';
 export const FORMAT = { format: 'json', formatversion: '2' };
 
 export type UploadParams = Record<string, string | Blob>;

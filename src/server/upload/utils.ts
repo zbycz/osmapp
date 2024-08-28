@@ -16,7 +16,7 @@ export const getTitle = (feature: Feature, file: File) => {
 export const getFilename = (feature: Feature, file: File, suffix: string) => {
   const title = getTitle(feature, file);
 
-  const extension = file.name.split('.').pop();
+  const extension = file.filename.split('.').pop();
   return `${title} - OsmAPP${suffix}.${extension}`;
 };
 
@@ -30,5 +30,5 @@ export async function findFreeSuffix(feature: Feature, file: File) {
     }
   }
 
-  throw new Error(`Could not find 20 free suffixes for ${file.name}`);
+  throw new Error(`Could not find 20 free suffixes for ${file.filename}`);
 }

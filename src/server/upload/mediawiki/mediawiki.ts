@@ -1,8 +1,8 @@
 import fetch from 'isomorphic-unfetch';
 import {
+  cookieJar,
   FORMAT,
   getUploadBody,
-  cookieJar,
   UploadParams,
   WIKI_URL,
 } from './utils';

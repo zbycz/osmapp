@@ -5,6 +5,7 @@ import { MessagesType, TranslationId } from './types';
 import { isBrowser, isServer } from '../components/helpers';
 import { getServerIntl } from './intlServer';
 import { publishDbgObject } from '../utils';
+import { LANGUAGES } from '../config.mjs';
 
 type Values = { [variable: string]: string | number };
 
@@ -62,6 +63,9 @@ export const changeLang = (langId: string) => {
 
 export const setIntl = (initialIntl: Intl) => {
   if (initialIntl) {
+    if (!LANGUAGES[initialIntl.lang]) {
+      throw new Error(`Invalid language: ${initialIntl.lang}`); // TODO error message without variable
+    }
     intl.lang = initialIntl.lang;
     intl.messages = initialIntl.messages;
     publishDbgObject('intl', intl);

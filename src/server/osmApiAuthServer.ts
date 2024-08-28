@@ -1,27 +1,21 @@
 import fetch from 'isomorphic-unfetch';
 import { FetchError } from '../services/helpers';
 
-interface OsmAuthFetchOpts extends RequestInit {
-  osmAccessToken: string;
-}
+const API_URL = `https://api.openstreetmap.org`;
 
-const osmAuthFetch = async <T = any>(
+const authFetch = async <T = any>(
   endpoint: string,
-  options: OsmAuthFetchOpts,
+  token: string,
 ): Promise<T> => {
-  const { osmAccessToken, ...restOptions } = options;
-  if (!osmAccessToken) throw new FetchError('No access token', '401');
+  if (!token) {
+    throw new FetchError('No OSM access token', '401');
+  }
 
-  const url = `https://api.openstreetmap.org${endpoint}`;
-  const headers = {
-    'User-Agent': 'osmapp (SSR; https://osmapp.org/)',
-    'Content-Type': 'application/x-www-form-urlencoded',
-    Authorization: `Bearer ${osmAccessToken}`,
-  };
-
-  const response = await fetch(url, {
-    ...restOptions,
-    headers,
+  const response = await fetch(`${API_URL}${endpoint}`, {
+    headers: {
+      'User-Agent': `osmapp ${process.env.osmappVersion} (SSR; https://osmapp.org/)`,
+      Authorization: `Bearer ${token}`,
+    },
   });
 
   if (!response.ok || response.status < 200 || response.status >= 300) {
@@ -38,12 +32,10 @@ const osmAuthFetch = async <T = any>(
 
 export type ServerOsmUser = { id: number; username: string };
 
-export const serverFetchOsmUser = async (req): Promise<ServerOsmUser> => {
-  const { osmAccessToken } = req.cookies;
-  const options = { osmAccessToken };
-  const { user } = await osmAuthFetch('/api/0.6/user/details.json', options);
+export const serverFetchOsmUser = async (token: string) => {
+  const { user } = await authFetch('/api/0.6/user/details.json', token);
   return {
     id: user.id,
     username: user.display_name,
-  };
+  } as ServerOsmUser;
 };

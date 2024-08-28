@@ -1,36 +1,48 @@
 import React, { ChangeEvent, useState } from 'react';
 import { Button } from '@mui/material';
-import { fetchText } from '../../../services/fetch';
+import { fetchJson, fetchText } from '../../../services/fetch';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getShortId } from '../../../services/helpers';
 import { loginAndfetchOsmUser } from '../../../services/osmApiAuth';
 import { intl } from '../../../services/intl';
+import { Feature } from '../../../services/types';
 
 const WIKIPEDIA_LIMIT = 100 * 1024 * 1024;
-const VERCEL_LIMIT = 4 * 1024 * 1024;
+const BUCKET_URL = 'https://osmapp-upload-tmp.s3.amazonaws.com/';
 
-const performUpload = async (file, feature) => {
-  const formData = new FormData();
-  formData.append('filename', file.name);
-  formData.append('file', file);
-  formData.append('osmShortId', getShortId(feature.osmMeta));
-  formData.append('lang', intl.lang);
+// Vercel has limit 4.5 MB on payload size, so we have to upload to S3 first
+const uploadToS3 = async (file: File) => {
+  const key = `${Math.random()}/${file.name}`;
 
-  const uploadResponse = await fetchText('/api/upload', {
-    method: 'POST',
-    body: formData,
-  });
+  const body = new FormData();
+  body.append('key', key);
+  body.append('file', file);
 
-  console.log('uploadResponse', uploadResponse);
+  await fetchText(BUCKET_URL, { method: 'POST', body });
+
+  return `${BUCKET_URL}${key}`;
 };
 
-const performUploadWithLogin = async (file, feature) => {
+const submitToWikimediaCommons = async (
+  url: string,
+  filename: string,
+  feature: Feature,
+) => {
+  const shortId = getShortId(feature.osmMeta);
+
+  const response = await fetchJson('/api/upload', {
+    method: 'POST',
+    body: JSON.stringify({ url, filename, shortId, lang: intl.lang }),
+  });
+};
+
+const performUploadWithLogin = async (url, filename, feature) => {
   try {
-    await performUpload(file, feature);
+    await submitToWikimediaCommons(url, filename, feature);
   } catch (e) {
     if (e.code === '401') {
       await loginAndfetchOsmUser();
-      await performUpload(file, feature);
+      await submitToWikimediaCommons(url, filename, feature);
     }
   }
 };
@@ -39,19 +51,23 @@ const getHandleFileUpload =
   (feature, setUploading, setResetKey) =>
   async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
+    const filename = file.name;
 
     if (!file) {
       return;
     }
 
     if (file.size > WIKIPEDIA_LIMIT) {
-      alert('Maximum file size is 100 MB.'); // eslint-disable-line no-alert
+      alert('Maximum file size for Wikipedia is 100 MB.'); // eslint-disable-line no-alert
       return;
     }
 
     try {
       setUploading(true);
-      await performUploadWithLogin(file, feature);
+      const url = await uploadToS3(file);
+      const response = await submitToWikimediaCommons(url, filename, feature);
+
+      console.log('response', response);
     } finally {
       setUploading(false);
       setResetKey((key) => key + 1);

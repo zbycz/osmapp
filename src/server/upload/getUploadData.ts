@@ -50,7 +50,10 @@ export const getUploadData = (
     =={{int:license-header}}==
     {{Self|cc-by-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
     {{FoP-Czech_Republic}}
-  `;
+  `
+    .split('\n')
+    .map((x) => x.trim())
+    .join('\n');
   // TODO choose correct FOP based on country: https://commons.wikimedia.org/wiki/Category:FoP_templates
   // TODO https://commons.wikimedia.org/wiki/Template:Geograph_from_structured_data
 

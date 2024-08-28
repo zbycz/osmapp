@@ -82,7 +82,7 @@ MyDocument.getInitialProps = async (
   // server intl is not available in App, only in this file (because we don't want to sent messages over and over again)
   const serverIntl = await getServerIntl(ctx);
   setIntl(serverIntl); // for ssr
-  setProjectForSSR(ctx);
+  setProjectForSSR(ctx.req);
 
   const initialProps = await documentGetInitialProps(ctx);
 
