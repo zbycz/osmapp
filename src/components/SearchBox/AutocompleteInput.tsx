@@ -92,7 +92,6 @@ export const AutocompleteInput = ({
         bbox,
         showToast,
         setOverpassLoading,
-        setInputValue,
       )}
       onHighlightChange={onHighlightFactory(setPreview)}
       getOptionDisabled={(o) => o.loader}
