@@ -1,13 +1,13 @@
 import Router from 'next/router';
 import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
-import { getGlobalMap, getOverpassSource } from '../../services/mapStorage';
+import { getOverpassSource } from '../../services/mapStorage';
 import { performOverpassSearch } from '../../services/overpassSearch';
 import { t } from '../../services/intl';
 import { fitBounds } from './utils';
 import { getSkeleton } from './onHighlightFactory';
-import { GeoJSONSource } from 'maplibre-gl';
 import { SnackbarContextType } from '../utils/SnackbarContext';
+import { addOverpassQueryHistory } from './options/overpass';
 
 const overpassOptionSelected = (
   option,
@@ -30,6 +30,10 @@ const overpassOptionSelected = (
       const content = t('searchbox.overpass_success', { count });
       showToast(content);
       getOverpassSource()?.setData(geojson);
+
+      if (option.overpass.query) {
+        addOverpassQueryHistory(option.overpass.query);
+      }
     })
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
