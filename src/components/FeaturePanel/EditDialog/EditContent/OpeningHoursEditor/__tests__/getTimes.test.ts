@@ -12,7 +12,12 @@ test('conversion', () => {
 });
 
 test('24/7', () => {
-  const original = '24/7';
+  expect(buildString(getDaysTable('24/7'))).toEqual('24/7');
+  expect(buildString(getDaysTable('Mo-Su 0:00-24:00'))).toEqual('24/7');
+});
+
+test('empty', () => {
+  const original = '';
   expect(buildString(getDaysTable(original))).toEqual(original);
 });
 

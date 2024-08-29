@@ -12,6 +12,7 @@ import { Day, DaysTable } from './common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import cloneDeep from 'lodash/cloneDeep';
 import { encodeUrl } from '../../../../../helpers/utils';
+import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -169,8 +170,9 @@ export const OpeningHoursEditor = () => {
     tags: { tags, setTag },
   } = useEditContext();
   const { feature } = useFeatureContext();
+  const { focusTag } = useEditDialogContext();
 
-  const daysInit = getDaysTable(feature.tags.opening_hours ?? '');
+  const daysInit = getDaysTable(feature.tags.opening_hours);
   const [days, setDays] = useState<DaysTable>(daysInit);
   const { onBlur, onFocus } = useGetBlurValidation(setDays);
 
@@ -180,23 +182,36 @@ export const OpeningHoursEditor = () => {
 
   const builtInit = buildString(daysInit);
   const sanitized = feature.tags.opening_hours?.replace(/;([^ ])/g, '; $1');
-  if (builtInit !== feature.tags.opening_hours && builtInit !== sanitized) {
+  if (
+    feature.tags.opening_hours &&
+    builtInit !== feature.tags.opening_hours &&
+    builtInit !== sanitized
+  ) {
     return (
-      <Wrapper>
-        <AccessTime fontSize="small" />
-        <div>
-          This opening hours is too complex for this editor. Please use the{' '}
-          <a
-            href={encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`}
-            title={tags['opening_hours']}
-          >
-            YoHours tool
-          </a>
-          .
-          <br />
-          <code>{feature.tags.opening_hours}</code>
-        </div>
-      </Wrapper>
+      <>
+        <TextField
+          label={t('tags.opening_hours')}
+          value={tags.opening_hours}
+          InputLabelProps={{ shrink: true }}
+          variant="outlined"
+          margin="normal"
+          onChange={(e) => setTag('opening_hours', e.target.value)}
+          fullWidth
+          autoFocus={focusTag === 'opening_hours'}
+          helperText={
+            <>
+              This opening hours is too complex for this editor. Please use the{' '}
+              <a
+                href={encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`}
+                title={tags['opening_hours']}
+              >
+                YoHours tool
+              </a>
+              .
+            </>
+          }
+        />
+      </>
     );
   }
 

@@ -10,25 +10,28 @@ const getTimeSlots = (timePart: string) =>
 export const parseDaysPart = (daysPart: string): string[] => {
   const daysBitmap = new Array(7).fill(false);
 
-  const dayOrInterval = daysPart.toLowerCase().split(',');
-  dayOrInterval.forEach((s) => {
-    const interval = s.split('-');
-    if (interval.length === 1) {
-      const idx = OSM_DAYS.indexOf(interval[0]);
-      if (idx !== -1) {
-        daysBitmap[idx] = true;
-      }
-    } else {
-      const start = OSM_DAYS.indexOf(interval[0]);
-      const end = OSM_DAYS.indexOf(interval[1]);
-      if (start !== -1 && end !== -1) {
-        const endBigger = end < start ? end + 7 : end;
-        for (let i = start; i <= endBigger; i++) {
-          daysBitmap[i % 7] = true;
+  daysPart
+    .toLowerCase()
+    .split(',')
+    .forEach((dayOrInterval) => {
+      const interval = dayOrInterval.split('-');
+
+      if (interval.length === 1) {
+        const idx = OSM_DAYS.indexOf(interval[0]);
+        if (idx !== -1) {
+          daysBitmap[idx] = true;
+        }
+      } else {
+        const start = OSM_DAYS.indexOf(interval[0]);
+        const end = OSM_DAYS.indexOf(interval[1]);
+        if (start !== -1 && end !== -1) {
+          const endBigger = end < start ? end + 7 : end;
+          for (let i = start; i <= endBigger; i++) {
+            daysBitmap[i % 7] = true;
+          }
         }
       }
-    }
-  });
+    });
 
   return OSM_DAYS.filter((_, i) => daysBitmap[i]);
 };
@@ -54,8 +57,8 @@ const getDaysMap = (value: string) => {
   return daysMap;
 };
 
-export const getDaysTable = (value: string): DaysTable => {
-  const daysMap = getDaysMap(value);
+export const getDaysTable = (value: string | undefined): DaysTable => {
+  const daysMap = getDaysMap(value ?? '');
 
   const timesByDay = OSM_DAYS.map(
     (osmDay) =>

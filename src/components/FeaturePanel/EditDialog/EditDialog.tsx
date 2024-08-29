@@ -8,6 +8,7 @@ import { useEditDialogFeature } from './utils';
 import { EditContextProvider, useEditContext } from './EditContext';
 import { useGetOnClose } from './useGetOnClose';
 import { EditContent } from './EditContent/EditContent';
+import { getKey } from '../../../services/helpers';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -43,7 +44,7 @@ export const EditDialog = () => {
   const { feature } = useEditDialogFeature();
 
   return (
-    <EditContextProvider feature={feature}>
+    <EditContextProvider feature={feature} key={getKey(feature)}>
       <EditDialogInner />
     </EditContextProvider>
   );

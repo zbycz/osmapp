@@ -36,6 +36,12 @@ const isValidTime = (from: string) =>
 export const isValid = (slot: Slot) =>
   isValidTime(slot.from) && isValidTime(slot.to);
 
+const isNonstop = (daysByTimepart: Record<string, string[]>) => {
+  const count1 = daysByTimepart['00:00-24:00']?.length ?? 0;
+  const count2 = daysByTimepart['0:00-24:00']?.length ?? 0;
+  return count1 + count2 >= 7;
+};
+
 export const buildString = (daysTable: DaysTable) => {
   const daysByTimepart = {} as Record<string, string[]>;
   daysTable.forEach(({ day, timeSlots }) => {
@@ -48,7 +54,7 @@ export const buildString = (daysTable: DaysTable) => {
     }
   });
 
-  if (daysByTimepart['00:00-24:00']?.length === 7) {
+  if (isNonstop(daysByTimepart)) {
     return '24/7';
   }
 
