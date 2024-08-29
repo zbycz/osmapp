@@ -36,7 +36,9 @@ describe('canEditorHandle', () => {
     { input: 'Mo 08:00-12:00, Tu 13:00-17:00', output: false },
     { input: 'Sep-Jan 08:00-12:00', output: false },
     { input: '1:00', output: false },
-    { input: '1:00-2:00', output: true },
+    { input: '1:00-2:0', output: false },
+    { input: 'Mo-We 1:00-2:00; Fr 1:00-2:00', output: false }, // we cant merge days yet, TODO update sanitize ?
+    { input: 'Mo', output: false },
   ])('$input', ({ input, output }) => {
     expect(canItHandle(input)).toBe(output);
   });

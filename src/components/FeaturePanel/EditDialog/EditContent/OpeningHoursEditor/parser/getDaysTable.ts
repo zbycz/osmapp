@@ -22,9 +22,9 @@ export const getEmptyValue = () =>
     })),
   );
 
-const getTimeSlots = (timePart: string) =>
+const getTimeSlots = (timePart: string | undefined) =>
   timePart.split(',').map((time: string, slot: number) => {
-    const [from, to] = time.split('-');
+    const [from, to = ''] = time.split('-');
     return { slotIdx: slot, from, to } as Slot;
   });
 
@@ -58,7 +58,7 @@ export const parseDaysPart = (daysPart: string): string[] => {
 };
 
 const INTERVAL_REGEXP =
-  /^(2[0-4]|[01]?[0-9]):[0-5][0-9]-(2[0-4]|[01]?[0-9]):[0-5][0-9]$/;
+  /^(2[0-4]|[01]?[0-9]):[0-5][0-9]-(2[0-4]|[01]?[0-9]):[0-5][0-9]/;
 
 const getDaysMap = (value: string) => {
   const daysMap = {} as Record<string, Slot[]>;
@@ -78,7 +78,7 @@ const getDaysMap = (value: string) => {
   }
 
   value.split(/ *; */).forEach((part) => {
-    const [daysPart, timePart] = part.split(' ', 2);
+    const [daysPart, timePart = ''] = part.split(' ', 2);
     const days = parseDaysPart(daysPart);
     days.forEach((day) => {
       daysMap[day] = getTimeSlots(timePart);

@@ -52,11 +52,11 @@ export const TimeSlot = ({
 }: Props) => {
   const { slotIdx, from, to, error } = timeSlot;
 
-  const setTime = (key: 'from' | 'to', value: string) => {
+  const setTime = (which: 'from' | 'to', value: string) => {
     setDaysAndTag((prev) => {
       const newDays = [...prev];
       const slot = newDays[dayIdx].timeSlots[slotIdx];
-      slot[key] = value;
+      slot[which] = value;
       if (slot.error) {
         slot.error = !isValid(slot); // if error, revalidate instantly
       }

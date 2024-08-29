@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { getDaysTable, getEmptyValue } from './parser/getDaysTable';
 import { buildString } from './parser/buildString';
 import { t } from '../../../../../services/intl';
-import { DaysTable } from './parser/types';
+import { Day, DaysTable } from './parser/types';
 import { publishDbgObject } from '../../../../../utils';
 import { canItHandle } from './parser/canItHandle';
 import { OpeningHoursInput } from './OpeningHoursInput';
@@ -40,28 +40,25 @@ const Table = styled.table`
   }
 `;
 
-const useUpdateState = (setDays: SetDaysFn) => {
+const useUpdateState = (days: Day[], setDays: SetDaysFn) => {
   const valueSetHere = useRef<string | undefined>(undefined);
   const { tags, setTag } = useEditContext().tags;
 
-  const setStringValue = (value: string) => {
-    setTag('opening_hours', value);
-    valueSetHere.current = value;
-  };
-
+  const tag = tags.opening_hours ?? '';
   useEffect(() => {
-    if (!tags.opening_hours || tags.opening_hours !== valueSetHere.current) {
-      valueSetHere.current = tags.opening_hours;
-      setDays(getDaysTable(tags.opening_hours));
+    if (tag !== valueSetHere.current) {
+      valueSetHere.current = tag;
+      setDays(getDaysTable(tag));
     }
-  }, [tags.opening_hours, setDays]);
+  }, [tag, setDays]);
 
-  const setDaysAndTag: SetDaysAndTagFn = (setter) => {
-    setDays((prev) => {
-      const newDays = setter(prev);
-      setStringValue(buildString(newDays));
-      return newDays;
-    });
+  const setDaysAndTag: SetDaysAndTagFn = (transform) => {
+    const newDays = transform(days);
+    setDays(newDays);
+
+    const built = buildString(newDays);
+    setTag('opening_hours', built);
+    valueSetHere.current = built;
   };
 
   return { setDaysAndTag };
@@ -70,7 +67,7 @@ const useUpdateState = (setDays: SetDaysFn) => {
 // TODO Move useState, setStringValue and BlurValidation inside a context
 const EditorTable = () => {
   const [days, setDays] = useState<DaysTable>(getEmptyValue());
-  const { setDaysAndTag } = useUpdateState(setDays);
+  const { setDaysAndTag } = useUpdateState(days, setDays);
 
   const { onBlur, onFocus } = useGetBlurValidation(setDays);
   publishDbgObject('last daysTable', days);
