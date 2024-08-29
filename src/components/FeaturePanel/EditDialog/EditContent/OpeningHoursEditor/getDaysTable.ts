@@ -46,6 +46,13 @@ const getDaysMap = (value: string) => {
     return daysMap;
   }
 
+  if (value.match(/^[-0-9:, ]+$/)) {
+    OSM_DAYS.forEach((day) => {
+      daysMap[day] = getTimeSlots(value);
+    });
+    return daysMap;
+  }
+
   value.split(/ *; */).forEach((part) => {
     const [daysPart, timePart] = part.split(' ', 2);
     const days = parseDaysPart(daysPart);

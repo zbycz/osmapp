@@ -13,6 +13,7 @@ import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import cloneDeep from 'lodash/cloneDeep';
 import { encodeUrl } from '../../../../../helpers/utils';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
+import { publishDbgObject } from '../../../../../utils';
 
 const Wrapper = styled.div`
   display: flex;
@@ -191,16 +192,26 @@ const useUpdateState = (
   return { setStringValue };
 };
 
-const canEditorHandle = (value: string | undefined) => {
-  const built = buildString(getDaysTable(value));
-  const sanitized = (value ?? '')
+const sanitizeDaysParts = (value: string) => {
+  return (value ?? '')
     .split(/ *; */)
     .map((part) => {
-      const [daysPart, timePart] = part.split(' ', 2);
-      const sanitizedDays = buildDaysPart(parseDaysPart(daysPart));
-      return `${sanitizedDays} ${timePart}`;
+      if (part.match(/^((Mo|Tu|We|Th|Fr|Sa|Su)[-, ]*)+/)) {
+        const [daysPart, timePart] = part.split(' ', 2);
+        const sanitizedDays = buildDaysPart(parseDaysPart(daysPart));
+        return (
+          (sanitizedDays === 'Mo-Su' ? '' : `${sanitizedDays} `) + `${timePart}`
+        );
+      }
+      return part;
     })
     .join('; ');
+};
+
+const canEditorHandle = (value: string | undefined) => {
+  const built = buildString(getDaysTable(value));
+  const sanitized = sanitizeDaysParts(value);
+  publishDbgObject('canEditorHandle', { built, sanitized });
 
   return built === sanitized;
 };
@@ -220,6 +231,7 @@ export const OpeningHoursEditor = () => {
   const copyFromAbove = useGetCopyFromAbove(setDays, setStringValue);
 
   const addTimeSlot = getAddTimeSlot(setDays);
+  publishDbgObject('last daysTable', days);
 
   if (tags.opening_hours && !canEditorHandle(tags.opening_hours)) {
     return (
@@ -235,7 +247,7 @@ export const OpeningHoursEditor = () => {
           autoFocus={focusTag === 'opening_hours'}
           helperText={
             <>
-              This opening hours is too complex for this editor. Please use the{' '}
+              This opening hours can&apos;t be edited here. Please use the{' '}
               <a
                 href={encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`}
                 title={tags['opening_hours']}

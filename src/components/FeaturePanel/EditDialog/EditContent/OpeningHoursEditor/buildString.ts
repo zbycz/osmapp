@@ -42,6 +42,11 @@ const isNonstop = (daysByTimepart: Record<string, string[]>) => {
   return count1 + count2 >= 7;
 };
 
+const isFullWeek = (daysByTimepart: Record<string, string[]>) => {
+  const values = Object.values(daysByTimepart);
+  return values.length === 1 && values[0].length === 7;
+};
+
 export const buildString = (daysTable: DaysTable) => {
   const daysByTimepart = {} as Record<string, string[]>;
   daysTable.forEach(({ day, timeSlots }) => {
@@ -56,6 +61,10 @@ export const buildString = (daysTable: DaysTable) => {
 
   if (isNonstop(daysByTimepart)) {
     return '24/7';
+  }
+
+  if (isFullWeek(daysByTimepart)) {
+    return Object.keys(daysByTimepart)[0];
   }
 
   return Object.entries(daysByTimepart)

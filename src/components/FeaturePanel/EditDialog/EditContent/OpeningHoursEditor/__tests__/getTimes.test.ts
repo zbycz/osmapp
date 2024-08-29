@@ -21,6 +21,11 @@ test('empty', () => {
   expect(buildString(getDaysTable(original))).toEqual(original);
 });
 
+test('without days', () => {
+  const original = '8:00-12:00,13:00-17:00';
+  expect(buildString(getDaysTable(original))).toEqual(original);
+});
+
 describe('daysPart conversion', () => {
   test.each([
     { input: 'Mo,Th' },
