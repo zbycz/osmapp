@@ -1,20 +1,15 @@
-import { intl, t } from '../../../../../../services/intl';
+import { t } from '../../../../../../services/intl';
 import { Day, DaysTable, Slot } from './types';
 
 const OSM_DAYS = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
 const WEEK_DAYS = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 
-const reorderAccordingToLocale = (timesByDay: Day[]) => {
-  const locale = new Intl.Locale(intl.lang) as unknown as any;
-  const firstDayIdx = (locale.weekInfo?.firstDay ?? 7) % 7;
-  return [
-    ...timesByDay.slice(firstDayIdx),
-    ...timesByDay.slice(0, firstDayIdx),
-  ];
+const reorderFromMonday = (timesByDay: Day[]) => {
+  return [...timesByDay.slice(1), timesByDay[0]];
 };
 
 export const getEmptyValue = () =>
-  reorderAccordingToLocale(
+  reorderFromMonday(
     OSM_DAYS.map((day, idx) => ({
       day,
       dayLabel: WEEK_DAYS[idx],
@@ -100,5 +95,5 @@ export const getDaysTable = (value: string | undefined): DaysTable => {
       }) as Day,
   );
 
-  return reorderAccordingToLocale(timesByDay);
+  return reorderFromMonday(timesByDay);
 };

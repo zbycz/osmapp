@@ -11,7 +11,7 @@ export const YoHoursLink = () => {
   return (
     <Typography variant="body2" color="textSecondary">
       <Translation
-        id="opening_hours.editor.visualize_in"
+        id="opening_hours.editor.create_advanced"
         tags={{
           link: `a href="${url}" target="_blank"`,
         }}
