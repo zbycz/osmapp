@@ -1,6 +1,6 @@
 import { getDaysTable, parseDaysPart } from '../getDaysTable';
 import { buildDaysPart, buildString } from '../buildString';
-import { canEditorHandle } from '../utils';
+import { canItHandle } from '../canItHandle';
 
 jest.mock('../../../../../../../services/intl', () => ({
   intl: { lang: 'en' },
@@ -9,25 +9,25 @@ jest.mock('../../../../../../../services/intl', () => ({
 
 test('conversion', () => {
   const original = 'Mo-Fr 08:00-12:00,13:00-17:00; Sa 08:00-12:00';
-  expect(canEditorHandle(original)).toBe(true);
+  expect(canItHandle(original)).toBe(true);
   expect(buildString(getDaysTable(original))).toEqual(original);
 });
 
 test('24/7', () => {
-  expect(canEditorHandle('24/7')).toBe(true);
+  expect(canItHandle('24/7')).toBe(true);
   expect(buildString(getDaysTable('24/7'))).toEqual('24/7');
   expect(buildString(getDaysTable('Mo-Su 0:00-24:00'))).toEqual('24/7');
 });
 
 test('empty', () => {
   const original = '';
-  expect(canEditorHandle(original)).toBe(true);
+  expect(canItHandle(original)).toBe(true);
   expect(buildString(getDaysTable(original))).toEqual(original);
 });
 
 test('without days', () => {
   const original = '8:00-12:00,13:00-17:00';
-  expect(canEditorHandle(original)).toBe(true);
+  expect(canItHandle(original)).toBe(true);
   expect(buildString(getDaysTable(original))).toEqual(original);
 });
 
@@ -35,8 +35,10 @@ describe('canEditorHandle', () => {
   test.each([
     { input: 'Mo 08:00-12:00, Tu 13:00-17:00', output: false },
     { input: 'Sep-Jan 08:00-12:00', output: false },
+    { input: '1:00', output: false },
+    { input: '1:00-2:00', output: true },
   ])('$input', ({ input, output }) => {
-    expect(canEditorHandle(input)).toBe(output);
+    expect(canItHandle(input)).toBe(output);
   });
 });
 

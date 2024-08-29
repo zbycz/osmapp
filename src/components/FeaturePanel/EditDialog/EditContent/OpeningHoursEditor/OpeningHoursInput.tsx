@@ -4,7 +4,7 @@ import { TextField } from '@mui/material';
 import { t, Translation } from '../../../../../services/intl';
 import { encodeUrl } from '../../../../../helpers/utils';
 import React from 'react';
-import { canEditorHandle } from './parser/utils';
+import { canItHandle } from './parser/canItHandle';
 
 const CantEditText = () => {
   const {
@@ -32,7 +32,7 @@ export const OpeningHoursInput = ({ cantEdit }: { cantEdit?: boolean }) => {
   return (
     <TextField
       label={t('tags.opening_hours')}
-      value={tags.opening_hours}
+      value={tags.opening_hours ?? ''}
       InputLabelProps={{ shrink: true }}
       variant="outlined"
       margin="normal"

@@ -18,10 +18,10 @@ const sanitizeDaysParts = (value: string) => {
     .join('; ');
 };
 
-export const canEditorHandle = (value: string | undefined) => {
-  const built = buildString(getDaysTable(value));
-  const sanitized = sanitizeDaysParts(value);
-  publishDbgObject('canEditorHandle', { built, sanitized });
+export const canItHandle = (value: string | undefined) => {
+  const built = buildString(getDaysTable(value ?? ''));
+  const sanitized = sanitizeDaysParts(value ?? '');
+  publishDbgObject('last canItHandle', { built, sanitized });
 
   return built === sanitized;
 };

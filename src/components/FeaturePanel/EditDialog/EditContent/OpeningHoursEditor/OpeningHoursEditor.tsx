@@ -7,7 +7,7 @@ import { buildString } from './parser/buildString';
 import { t } from '../../../../../services/intl';
 import { DaysTable } from './parser/types';
 import { publishDbgObject } from '../../../../../utils';
-import { canEditorHandle } from './parser/utils';
+import { canItHandle } from './parser/canItHandle';
 import { OpeningHoursInput } from './OpeningHoursInput';
 import { YoHoursLink } from './YoHoursLink';
 import { AddSlotButton } from './AddSlotButton';
@@ -56,9 +56,9 @@ const useUpdateState = (setDays: SetDaysFn) => {
     }
   }, [tags.opening_hours, setDays]);
 
-  const setDaysAndTag: SetDaysAndTagFn = (callback) => {
+  const setDaysAndTag: SetDaysAndTagFn = (setter) => {
     setDays((prev) => {
-      const newDays = callback(prev);
+      const newDays = setter(prev);
       setStringValue(buildString(newDays));
       return newDays;
     });
@@ -117,7 +117,7 @@ const EditorTable = () => {
 export const OpeningHoursEditor = () => {
   const { tags } = useEditContext().tags;
 
-  if (tags.opening_hours && !canEditorHandle(tags.opening_hours)) {
+  if (tags.opening_hours && !canItHandle(tags.opening_hours)) {
     return <OpeningHoursInput cantEdit />;
   }
 

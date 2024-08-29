@@ -28,7 +28,7 @@ export const AddSlotButton = ({ dayIdx, timeSlots, setDays }: Props) => {
   return (
     <IconButton
       onClick={onClick}
-      disabled={timeSlots.length && !isValid(timeSlots[timeSlots.length - 1])}
+      disabled={!!timeSlots.length && !isValid(timeSlots[timeSlots.length - 1])}
     >
       <AddIcon sx={{ fontSize: '13px' }} />
     </IconButton>

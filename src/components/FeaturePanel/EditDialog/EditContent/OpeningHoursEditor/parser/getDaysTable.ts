@@ -57,6 +57,9 @@ export const parseDaysPart = (daysPart: string): string[] => {
   return OSM_DAYS.filter((_, i) => daysBitmap[i]);
 };
 
+const INTERVAL_REGEXP =
+  /^(2[0-4]|[01]?[0-9]):[0-5][0-9]-(2[0-4]|[01]?[0-9]):[0-5][0-9]$/;
+
 const getDaysMap = (value: string) => {
   const daysMap = {} as Record<string, Slot[]>;
 
@@ -67,7 +70,7 @@ const getDaysMap = (value: string) => {
     return daysMap;
   }
 
-  if (value.match(/^[-0-9:, ]+$/)) {
+  if (value.match(INTERVAL_REGEXP)) {
     OSM_DAYS.forEach((day) => {
       daysMap[day] = getTimeSlots(value);
     });
