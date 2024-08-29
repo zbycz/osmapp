@@ -1,10 +1,9 @@
 import { useEditContext } from '../../EditContext';
-import { useFeatureContext } from '../../../../utils/FeatureContext';
 import AccessTime from '@mui/icons-material/AccessTime';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { IconButton, TextField } from '@mui/material';
-import { getDaysTable, INIT } from './parser/getDaysTable';
+import { IconButton } from '@mui/material';
+import { getDaysTable, getEmptyValue } from './parser/getDaysTable';
 import { buildString, isValid } from './parser/buildString';
 import { t } from '../../../../../services/intl';
 import { Day, DaysTable, Slot } from './parser/types';
@@ -15,23 +14,15 @@ import { canEditorHandle } from './parser/utils';
 import { OpeningHoursInput } from './OpeningHoursInput';
 import { YoHoursLink } from './YoHoursLink';
 import { AddSlotButton } from './AddSlotButton';
+import { TimeSlot } from './TimeSlot';
 
 const Wrapper = styled.div`
   display: flex;
   align-items: start;
-  margin: 1em 0;
+  margin-bottom: 1em;
 
   & > svg {
-    margin: 0.6em 1em 0 0;
-  }
-`;
-
-const TimeSlot = styled.span`
-  white-space: nowrap;
-  padding-right: 1em;
-
-  &:last-of-type {
-    padding-right: 0;
+    margin: 0.6em 1em 0 0.3em;
   }
 `;
 
@@ -48,27 +39,6 @@ const Table = styled.table`
     line-height: 2.5em;
   }
 `;
-
-type TimeInputProps = {
-  value: string;
-  onChange: (e) => void;
-  onBlur: (e) => void;
-  onFocus: (e) => void;
-  error?: boolean;
-};
-const TimeInput = (props: TimeInputProps) => (
-  <TextField
-    value={props.value}
-    variant="outlined"
-    margin="none"
-    size="small"
-    onChange={props.onChange}
-    onBlur={props.onBlur}
-    onFocus={props.onFocus}
-    sx={{ width: '70px' }}
-    error={props.error}
-  />
-);
 
 const useGetBlurValidation = (
   setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
@@ -209,7 +179,7 @@ export const OpeningHoursEditor = () => {
     tags: { tags, setTag },
   } = useEditContext();
 
-  const [days, setDays] = useState<DaysTable>(INIT);
+  const [days, setDays] = useState<DaysTable>(getEmptyValue());
   const { setStringValue } = useUpdateState(setDays);
 
   const { onBlur, onFocus } = useGetBlurValidation(setDays);
@@ -220,63 +190,54 @@ export const OpeningHoursEditor = () => {
   publishDbgObject('last daysTable', days);
 
   if (tags.opening_hours && !canEditorHandle(tags.opening_hours)) {
-    return <OpeningHoursInput />;
+    return <OpeningHoursInput cantEdit />;
   }
 
   return (
-    <Wrapper>
-      <AccessTime fontSize="small" />
-      <div>
-        <Table>
-          <tbody>
-            {days.map(({ day, dayLabel, timeSlots }, dayIdx) => (
-              <tr key={day}>
-                <th>{dayLabel}</th>
-                <td>
-                  {timeSlots.length === 0 && t('opening_hours.editor.closed')}
-                  {timeSlots.map(({ slot, from, to, error }) => (
-                    <TimeSlot key={slot}>
-                      <TimeInput
-                        value={from}
-                        onChange={(e) =>
-                          setTime(dayIdx, slot, 'from', e.target.value)
-                        }
+    <>
+      <OpeningHoursInput />
+      <Wrapper>
+        <AccessTime fontSize="small" />
+        <div>
+          <Table>
+            <tbody>
+              {days.map(({ day, dayLabel, timeSlots }, dayIdx) => (
+                <tr key={day}>
+                  <th>{dayLabel}</th>
+                  <td>
+                    {timeSlots.length === 0 && t('opening_hours.editor.closed')}
+
+                    {timeSlots.map((timeSlot) => (
+                      <TimeSlot
+                        key={timeSlot.slot}
+                        dayIdx={dayIdx}
+                        timeSlot={timeSlot}
+                        setTime={setTime}
                         onBlur={onBlur}
                         onFocus={onFocus}
-                        error={error}
                       />
-                      &nbsp;–&nbsp;
-                      <TimeInput
-                        value={to}
-                        onChange={(e) =>
-                          setTime(dayIdx, slot, 'to', e.target.value)
-                        }
-                        onBlur={onBlur}
-                        onFocus={onFocus}
-                        error={error}
-                      />
-                    </TimeSlot>
-                  ))}
+                    ))}
 
-                  <AddSlotButton
-                    dayIdx={dayIdx}
-                    timeSlots={timeSlots}
-                    setDays={setDays}
-                  />
+                    <AddSlotButton
+                      dayIdx={dayIdx}
+                      timeSlots={timeSlots}
+                      setDays={setDays}
+                    />
 
-                  <CopyFromAboveButton
-                    prevDay={dayIdx > 0 ? days[dayIdx - 1] : null}
-                    timeSlots={timeSlots}
-                    onClick={() => copyFromAbove(dayIdx)}
-                  />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
+                    <CopyFromAboveButton
+                      prevDay={dayIdx > 0 ? days[dayIdx - 1] : null}
+                      timeSlots={timeSlots}
+                      onClick={() => copyFromAbove(dayIdx)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
 
-        <YoHoursLink />
-      </div>
-    </Wrapper>
+          <YoHoursLink />
+        </div>
+      </Wrapper>
+    </>
   );
 };

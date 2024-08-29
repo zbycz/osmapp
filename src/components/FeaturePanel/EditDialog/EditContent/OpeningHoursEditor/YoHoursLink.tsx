@@ -2,23 +2,23 @@ import { useEditContext } from '../../EditContext';
 import { Typography } from '@mui/material';
 import { encodeUrl } from '../../../../../helpers/utils';
 import React from 'react';
-import { t } from '../../../../../services/intl';
+import { t, Translation } from '../../../../../services/intl';
 
 export const YoHoursLink = () => {
   const {
     tags: { tags },
   } = useEditContext();
 
+  const url = encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`;
+
   return (
     <Typography variant="body2" color="textSecondary">
-      {t('opening_hours.editor.visualize_in')}{' '}
-      <a
-        href={encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`}
-        title={tags['opening_hours']}
-      >
-        {t('opening_hours.editor.yohours_tool')}
-      </a>
-      .
+      <Translation
+        id="opening_hours.editor.visualize_in"
+        tags={{
+          link: `a href="${url}" target="_blank"`,
+        }}
+      />
     </Typography>
   );
 };
