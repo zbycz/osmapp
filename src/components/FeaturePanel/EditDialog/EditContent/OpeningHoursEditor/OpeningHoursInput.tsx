@@ -7,10 +7,7 @@ import React from 'react';
 import { canItHandle } from './parser/canItHandle';
 
 const CantEditText = () => {
-  const {
-    tags: { tags, setTag },
-  } = useEditContext();
-
+  const { tags } = useEditContext().tags;
   const url = encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`;
 
   return (
@@ -25,9 +22,7 @@ const CantEditText = () => {
 
 export const OpeningHoursInput = ({ cantEdit }: { cantEdit?: boolean }) => {
   const { focusTag } = useEditDialogContext();
-  const {
-    tags: { tags, setTag },
-  } = useEditContext();
+  const { tags, setTag } = useEditContext().tags;
 
   return (
     <TextField

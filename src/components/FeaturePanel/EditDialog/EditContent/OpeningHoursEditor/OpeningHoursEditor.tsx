@@ -64,7 +64,7 @@ const useUpdateState = (days: Day[], setDays: SetDaysFn) => {
   return { setDaysAndTag };
 };
 
-// TODO Move useState, setStringValue and BlurValidation inside a context
+// TODO Move some values inside a context (eg.blur,days,etc.)
 const EditorTable = () => {
   const [days, setDays] = useState<DaysTable>(getEmptyValue());
   const { setDaysAndTag } = useUpdateState(days, setDays);

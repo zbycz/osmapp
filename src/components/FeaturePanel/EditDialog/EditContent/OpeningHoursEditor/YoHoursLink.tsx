@@ -5,10 +5,7 @@ import React from 'react';
 import { t, Translation } from '../../../../../services/intl';
 
 export const YoHoursLink = () => {
-  const {
-    tags: { tags },
-  } = useEditContext();
-
+  const { tags } = useEditContext().tags;
   const url = encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`;
 
   return (

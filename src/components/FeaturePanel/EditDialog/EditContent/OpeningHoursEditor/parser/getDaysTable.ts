@@ -22,7 +22,7 @@ export const getEmptyValue = () =>
     })),
   );
 
-const getTimeSlots = (timePart: string | undefined) =>
+const getTimeSlots = (timePart: string) =>
   timePart.split(',').map((time: string, slot: number) => {
     const [from, to = ''] = time.split('-');
     return { slotIdx: slot, from, to } as Slot;
