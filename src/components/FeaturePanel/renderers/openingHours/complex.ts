@@ -4,7 +4,7 @@ import { Address, SimpleOpeningHoursTable } from './types';
 import { LonLat } from '../../../../services/types';
 
 type Weekday = keyof SimpleOpeningHoursTable;
-const weekdays: Weekday[] = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'ph'];
+const WEEKDAYS: Weekday[] = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa', 'ph'];
 const weekdayMappings: Record<string, Weekday> = {
   Sun: 'su',
   Mon: 'mo',
@@ -36,7 +36,7 @@ export const parseComplexOpeningHours = (
   oneWeekLater.setDate(oneWeekLater.getDate() + 7);
 
   const intervals = oh.getOpenIntervals(today, oneWeekLater);
-  const grouped = weekdays.map((w) => {
+  const grouped = WEEKDAYS.map((w) => {
     const daysIntervals = intervals.filter(
       ([from]) =>
         w === weekdayMappings[from.toLocaleString('en', { weekday: 'short' })],
