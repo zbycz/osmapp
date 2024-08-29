@@ -1,12 +1,12 @@
 import { useEditContext } from '../../EditContext';
 import { useFeatureContext } from '../../../../utils/FeatureContext';
 import AccessTime from '@mui/icons-material/AccessTime';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { IconButton, TextField } from '@mui/material';
+import { IconButton, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import { getDaysTable } from './getDaysTable';
-import { buildString, isValid } from './buildString';
+import { getDaysTable, parseDaysPart } from './getDaysTable';
+import { buildDaysPart, buildString, isValid } from './buildString';
 import { t } from '../../../../../services/intl';
 import { Day, DaysTable } from './common';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -107,8 +107,23 @@ const useGetBlurValidation = (
   return { onBlur, onFocus };
 };
 
+const getAddTimeSlot =
+  (setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void) =>
+  (dayIdx: number) => {
+    setDays((prev) => {
+      const newDays = [...prev];
+      newDays[dayIdx].timeSlots.push({
+        from: '',
+        to: '',
+        slot: newDays[dayIdx].timeSlots.length,
+      });
+      return newDays;
+    });
+  };
+
 const useGetSetTime = (
   setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
+  setStringValue: (value: string) => void,
 ) => {
   const {
     tags: { setTag },
@@ -127,28 +142,16 @@ const useGetSetTime = (
       if (slot.error) {
         slot.error = !isValid(slot);
       }
-      setTag('opening_hours', buildString(newDays));
+
+      setStringValue(buildString(newDays));
       return newDays;
     });
   };
 };
 
-const getAddTimeSlot =
-  (setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void) =>
-  (dayIdx: number) => {
-    setDays((prev) => {
-      const newDays = [...prev];
-      newDays[dayIdx].timeSlots.push({
-        from: '',
-        to: '',
-        slot: newDays[dayIdx].timeSlots.length,
-      });
-      return newDays;
-    });
-  };
-
 const useGetCopyFromAbove = (
   setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
+  setStringValue: (value: string) => void,
 ) => {
   const {
     tags: { setTag },
@@ -159,10 +162,47 @@ const useGetCopyFromAbove = (
       const newDays = [...prev];
       newDays[dayIdx].timeSlots = cloneDeep(newDays[dayIdx - 1].timeSlots);
 
-      setTag('opening_hours', buildString(newDays));
+      setStringValue(buildString(newDays));
       return newDays;
     });
   };
+};
+
+const useUpdateState = (
+  setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
+) => {
+  const valueSetHere = useRef<string | undefined>(undefined);
+  const {
+    tags: { tags, setTag },
+  } = useEditContext();
+
+  const setStringValue = (value: string) => {
+    setTag('opening_hours', value);
+    valueSetHere.current = value;
+  };
+
+  useEffect(() => {
+    if (tags.opening_hours !== valueSetHere.current) {
+      valueSetHere.current = tags.opening_hours;
+      setDays(getDaysTable(tags.opening_hours));
+    }
+  }, [tags.opening_hours, setDays]);
+
+  return { setStringValue };
+};
+
+const canEditorHandle = (value: string | undefined) => {
+  const built = buildString(getDaysTable(value));
+  const sanitized = (value ?? '')
+    .split(/ *; */)
+    .map((part) => {
+      const [daysPart, timePart] = part.split(' ', 2);
+      const sanitizedDays = buildDaysPart(parseDaysPart(daysPart));
+      return `${sanitizedDays} ${timePart}`;
+    })
+    .join('; ');
+
+  return built === sanitized;
 };
 
 export const OpeningHoursEditor = () => {
@@ -172,21 +212,16 @@ export const OpeningHoursEditor = () => {
   const { feature } = useFeatureContext();
   const { focusTag } = useEditDialogContext();
 
-  const daysInit = getDaysTable(feature.tags.opening_hours);
-  const [days, setDays] = useState<DaysTable>(daysInit);
+  const [days, setDays] = useState<DaysTable>([]);
   const { onBlur, onFocus } = useGetBlurValidation(setDays);
 
-  const setTime = useGetSetTime(setDays);
-  const addTimeSlot = getAddTimeSlot(setDays);
-  const copyFromAbove = useGetCopyFromAbove(setDays);
+  const { setStringValue } = useUpdateState(setDays);
+  const setTime = useGetSetTime(setDays, setStringValue);
+  const copyFromAbove = useGetCopyFromAbove(setDays, setStringValue);
 
-  const builtInit = buildString(daysInit);
-  const sanitized = feature.tags.opening_hours?.replace(/;([^ ])/g, '; $1');
-  if (
-    feature.tags.opening_hours &&
-    builtInit !== feature.tags.opening_hours &&
-    builtInit !== sanitized
-  ) {
+  const addTimeSlot = getAddTimeSlot(setDays);
+
+  if (tags.opening_hours && !canEditorHandle(tags.opening_hours)) {
     return (
       <>
         <TextField
@@ -277,14 +312,17 @@ export const OpeningHoursEditor = () => {
             ))}
           </tbody>
         </Table>
-        Visualize this opening hours in{' '}
-        <a
-          href={encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`}
-          title={tags['opening_hours']}
-        >
-          YoHours tool
-        </a>
-        .
+
+        <Typography variant="body2" color="textSecondary">
+          Visualize this opening hours in{' '}
+          <a
+            href={encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`}
+            title={tags['opening_hours']}
+          >
+            YoHours tool
+          </a>
+          .
+        </Typography>
       </div>
     </Wrapper>
   );
