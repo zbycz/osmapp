@@ -1,5 +1,13 @@
-import { intl } from '../../../../../services/intl';
-import { Day, DaysTable, OSM_DAYS, Slot, WEEK_DAYS } from './common';
+import { intl, t } from '../../../../../../services/intl';
+import { Day, DaysTable, Slot } from './types';
+
+const OSM_DAYS = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
+const WEEK_DAYS = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
+export const INIT = OSM_DAYS.map((day, idx) => ({
+  day,
+  dayLabel: WEEK_DAYS[idx],
+  timeSlots: [],
+}));
 
 const getTimeSlots = (timePart: string) =>
   timePart.split(',').map((time: string, slot: number) => {

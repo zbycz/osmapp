@@ -92,6 +92,10 @@ export default {
   'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',
   'opening_hours.today_closed': 'Dnes zavřeno',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'neděle|pondělí|úterý|středa|čtvrtek|pátek|sobota',
+  'opening_hours.editor.closed': 'zavřeno',
+  'opening_hours.editor.visualize_in': 'Zobrazte si tuto otvírací dobu v',
+  'opening_hours.editor.cant_edit_here': 'Tuto otvírací dobu zde nelze editovat. Prosím, použijte',
+  'opening_hours.editor.yohours_tool': 'nástroj YoHours',
 
   'map.github_title': 'GitHub repozitář',
   'map.language_title': 'Změnit jazyk',

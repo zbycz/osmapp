@@ -1,4 +1,4 @@
-import { DaysTable, Slot } from './common';
+import { DaysTable, Slot } from './types';
 
 const ucFirst = (str: string) => str.charAt(0).toUpperCase() + str.slice(1);
 

@@ -3,17 +3,18 @@ import { useFeatureContext } from '../../../../utils/FeatureContext';
 import AccessTime from '@mui/icons-material/AccessTime';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { IconButton, TextField, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
-import { getDaysTable, parseDaysPart } from './getDaysTable';
-import { buildDaysPart, buildString, isValid } from './buildString';
+import { IconButton, TextField } from '@mui/material';
+import { getDaysTable, INIT } from './parser/getDaysTable';
+import { buildString, isValid } from './parser/buildString';
 import { t } from '../../../../../services/intl';
-import { Day, DaysTable } from './common';
+import { Day, DaysTable, Slot } from './parser/types';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import cloneDeep from 'lodash/cloneDeep';
-import { encodeUrl } from '../../../../../helpers/utils';
-import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { publishDbgObject } from '../../../../../utils';
+import { canEditorHandle } from './parser/utils';
+import { OpeningHoursInput } from './OpeningHoursInput';
+import { YoHoursLink } from './YoHoursLink';
+import { AddSlotButton } from './AddSlotButton';
 
 const Wrapper = styled.div`
   display: flex;
@@ -108,20 +109,6 @@ const useGetBlurValidation = (
   return { onBlur, onFocus };
 };
 
-const getAddTimeSlot =
-  (setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void) =>
-  (dayIdx: number) => {
-    setDays((prev) => {
-      const newDays = [...prev];
-      newDays[dayIdx].timeSlots.push({
-        from: '',
-        to: '',
-        slot: newDays[dayIdx].timeSlots.length,
-      });
-      return newDays;
-    });
-  };
-
 const useGetSetTime = (
   setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
   setStringValue: (value: string) => void,
@@ -183,7 +170,7 @@ const useUpdateState = (
   };
 
   useEffect(() => {
-    if (tags.opening_hours !== valueSetHere.current) {
+    if (!tags.opening_hours || tags.opening_hours !== valueSetHere.current) {
       valueSetHere.current = tags.opening_hours;
       setDays(getDaysTable(tags.opening_hours));
     }
@@ -192,74 +179,48 @@ const useUpdateState = (
   return { setStringValue };
 };
 
-const sanitizeDaysParts = (value: string) => {
-  return (value ?? '')
-    .split(/ *; */)
-    .map((part) => {
-      if (part.match(/^((Mo|Tu|We|Th|Fr|Sa|Su)[-, ]*)+/)) {
-        const [daysPart, timePart] = part.split(' ', 2);
-        const sanitizedDays = buildDaysPart(parseDaysPart(daysPart));
-        return (
-          (sanitizedDays === 'Mo-Su' ? '' : `${sanitizedDays} `) + `${timePart}`
-        );
-      }
-      return part;
-    })
-    .join('; ');
+type Props = {
+  prevDay: Day | null;
+  timeSlots: Slot[];
+  onClick: () => void;
 };
 
-const canEditorHandle = (value: string | undefined) => {
-  const built = buildString(getDaysTable(value));
-  const sanitized = sanitizeDaysParts(value);
-  publishDbgObject('canEditorHandle', { built, sanitized });
+const CopyFromAboveButton = ({ prevDay, onClick, timeSlots }: Props) => {
+  if (!prevDay?.timeSlots || !prevDay.timeSlots.every(isValid)) {
+    return null;
+  }
 
-  return built === sanitized;
+  if (
+    timeSlots.length > 0 ||
+    JSON.stringify(prevDay.timeSlots) === JSON.stringify(timeSlots)
+  ) {
+    return null;
+  }
+
+  return (
+    <IconButton onClick={onClick}>
+      <ContentCopyIcon sx={{ fontSize: '13px' }} />
+    </IconButton>
+  );
 };
 
 export const OpeningHoursEditor = () => {
   const {
     tags: { tags, setTag },
   } = useEditContext();
-  const { feature } = useFeatureContext();
-  const { focusTag } = useEditDialogContext();
 
-  const [days, setDays] = useState<DaysTable>([]);
+  const [days, setDays] = useState<DaysTable>(INIT);
+  const { setStringValue } = useUpdateState(setDays);
+
   const { onBlur, onFocus } = useGetBlurValidation(setDays);
 
-  const { setStringValue } = useUpdateState(setDays);
   const setTime = useGetSetTime(setDays, setStringValue);
   const copyFromAbove = useGetCopyFromAbove(setDays, setStringValue);
 
-  const addTimeSlot = getAddTimeSlot(setDays);
   publishDbgObject('last daysTable', days);
 
   if (tags.opening_hours && !canEditorHandle(tags.opening_hours)) {
-    return (
-      <>
-        <TextField
-          label={t('tags.opening_hours')}
-          value={tags.opening_hours}
-          InputLabelProps={{ shrink: true }}
-          variant="outlined"
-          margin="normal"
-          onChange={(e) => setTag('opening_hours', e.target.value)}
-          fullWidth
-          autoFocus={focusTag === 'opening_hours'}
-          helperText={
-            <>
-              This opening hours can&apos;t be edited here. Please use the{' '}
-              <a
-                href={encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`}
-                title={tags['opening_hours']}
-              >
-                YoHours tool
-              </a>
-              .
-            </>
-          }
-        />
-      </>
-    );
+    return <OpeningHoursInput />;
   }
 
   return (
@@ -272,7 +233,7 @@ export const OpeningHoursEditor = () => {
               <tr key={day}>
                 <th>{dayLabel}</th>
                 <td>
-                  {timeSlots.length === 0 && t('opening_hours.today_closed')}
+                  {timeSlots.length === 0 && t('opening_hours.editor.closed')}
                   {timeSlots.map(({ slot, from, to, error }) => (
                     <TimeSlot key={slot}>
                       <TimeInput
@@ -297,44 +258,24 @@ export const OpeningHoursEditor = () => {
                     </TimeSlot>
                   ))}
 
-                  <IconButton
-                    onClick={() => addTimeSlot(dayIdx)}
-                    disabled={
-                      !(
-                        !timeSlots.length ||
-                        isValid(timeSlots[timeSlots.length - 1])
-                      )
-                    }
-                  >
-                    <AddIcon sx={{ fontSize: '13px' }} />
-                  </IconButton>
+                  <AddSlotButton
+                    dayIdx={dayIdx}
+                    timeSlots={timeSlots}
+                    setDays={setDays}
+                  />
 
-                  {dayIdx > 0 &&
-                    days[dayIdx - 1].timeSlots.length > 0 &&
-                    days[dayIdx - 1].timeSlots.every(isValid) &&
-                    timeSlots.length === 0 &&
-                    JSON.stringify(days[dayIdx - 1].timeSlots) !==
-                      JSON.stringify(timeSlots) && (
-                      <IconButton onClick={() => copyFromAbove(dayIdx)}>
-                        <ContentCopyIcon sx={{ fontSize: '13px' }} />
-                      </IconButton>
-                    )}
+                  <CopyFromAboveButton
+                    prevDay={dayIdx > 0 ? days[dayIdx - 1] : null}
+                    timeSlots={timeSlots}
+                    onClick={() => copyFromAbove(dayIdx)}
+                  />
                 </td>
               </tr>
             ))}
           </tbody>
         </Table>
 
-        <Typography variant="body2" color="textSecondary">
-          Visualize this opening hours in{' '}
-          <a
-            href={encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`}
-            title={tags['opening_hours']}
-          >
-            YoHours tool
-          </a>
-          .
-        </Typography>
+        <YoHoursLink />
       </div>
     </Wrapper>
   );
