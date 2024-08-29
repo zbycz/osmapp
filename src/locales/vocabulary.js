@@ -125,7 +125,7 @@ export default {
   'opening_hours.today_closed': 'Closed today',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',
   'opening_hours.editor.closed': 'closed',
-  'opening_hours.editor.visualize_in': 'Visualize this opening hours in <link>YoHours tool</link>.',
+  'opening_hours.editor.visualize_in': 'You may set advanced opening hours in <link>YoHours tool</link>.',
   'opening_hours.editor.cant_edit_here': "This opening hours can't be edited here. Please use the <link>YoHours tool</link>.",
 
   'map.github_title': 'GitHub repository',
