@@ -18,7 +18,7 @@ export const AddSlotButton = ({ dayIdx, timeSlots, setDays }: Props) => {
       newDays[dayIdx].timeSlots.push({
         from: '',
         to: '',
-        slot: newDays[dayIdx].timeSlots.length,
+        slotIdx: newDays[dayIdx].timeSlots.length,
       });
 
       return newDays;

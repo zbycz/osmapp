@@ -1,7 +1,8 @@
 import styled from '@emotion/styled';
 import { TextField } from '@mui/material';
 import React from 'react';
-import { Slot } from './parser/types';
+import { Day, Slot } from './parser/types';
+import { isValid } from './parser/buildString';
 
 const Wrapper = styled.span`
   white-space: nowrap;
@@ -39,12 +40,7 @@ type Props = {
   timeSlot: Slot;
   onFocus: (e) => void;
   onBlur: (e) => void;
-  setTime: (
-    dayIdx: number,
-    slot: number,
-    key: 'from' | 'to',
-    value: string,
-  ) => void;
+  setDaysAndTag: (callback: (prev: Day[]) => Day[]) => void;
 };
 
 export const TimeSlot = ({
@@ -52,14 +48,27 @@ export const TimeSlot = ({
   timeSlot,
   onBlur,
   onFocus,
-  setTime,
+  setDaysAndTag,
 }: Props) => {
-  const { slot, from, to, error } = timeSlot;
+  const { slotIdx, from, to, error } = timeSlot;
+
+  const setTime = (key: 'from' | 'to', value: string) => {
+    setDaysAndTag((prev) => {
+      const newDays = [...prev];
+      const slot = newDays[dayIdx].timeSlots[slotIdx];
+      slot[key] = value;
+      if (slot.error) {
+        slot.error = !isValid(slot); // if error, revalidate instantly
+      }
+      return newDays;
+    });
+  };
+
   return (
     <Wrapper>
       <TimeInput
         value={from}
-        onChange={(e) => setTime(dayIdx, slot, 'from', e.target.value)}
+        onChange={(e) => setTime('from', e.target.value)}
         onBlur={onBlur}
         onFocus={onFocus}
         error={error}
@@ -67,7 +76,7 @@ export const TimeSlot = ({
       &nbsp;–&nbsp;
       <TimeInput
         value={to}
-        onChange={(e) => setTime(dayIdx, slot, 'to', e.target.value)}
+        onChange={(e) => setTime('to', e.target.value)}
         onBlur={onBlur}
         onFocus={onFocus}
         error={error}

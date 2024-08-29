@@ -25,7 +25,7 @@ export const getEmptyValue = () =>
 const getTimeSlots = (timePart: string) =>
   timePart.split(',').map((time: string, slot: number) => {
     const [from, to] = time.split('-');
-    return { slot, from, to } as Slot;
+    return { slotIdx: slot, from, to } as Slot;
   });
 
 export const parseDaysPart = (daysPart: string): string[] => {
@@ -62,7 +62,7 @@ const getDaysMap = (value: string) => {
 
   if (value === '24/7') {
     OSM_DAYS.forEach((day) => {
-      daysMap[day] = [{ slot: 0, from: '00:00', to: '24:00' }];
+      daysMap[day] = [{ slotIdx: 0, from: '00:00', to: '24:00' }];
     });
     return daysMap;
   }

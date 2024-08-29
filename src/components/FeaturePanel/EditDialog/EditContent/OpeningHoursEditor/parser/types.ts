@@ -1,5 +1,5 @@
 export type Slot = {
-  slot: number;
+  slotIdx: number;
   from: string;
   to: string;
   error?: boolean;

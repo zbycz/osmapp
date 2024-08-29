@@ -2,19 +2,19 @@ import { useEditContext } from '../../EditContext';
 import AccessTime from '@mui/icons-material/AccessTime';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { IconButton } from '@mui/material';
 import { getDaysTable, getEmptyValue } from './parser/getDaysTable';
-import { buildString, isValid } from './parser/buildString';
+import { buildString } from './parser/buildString';
 import { t } from '../../../../../services/intl';
-import { Day, DaysTable, Slot } from './parser/types';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import cloneDeep from 'lodash/cloneDeep';
+import { DaysTable } from './parser/types';
 import { publishDbgObject } from '../../../../../utils';
 import { canEditorHandle } from './parser/utils';
 import { OpeningHoursInput } from './OpeningHoursInput';
 import { YoHoursLink } from './YoHoursLink';
 import { AddSlotButton } from './AddSlotButton';
 import { TimeSlot } from './TimeSlot';
+import { CopyFromAboveButton } from './CopyFromAboveButton';
+import { useGetBlurValidation } from './useGetBlurValidation';
+import { SetDaysAndTagFn, SetDaysFn } from './types';
 
 const Wrapper = styled.div`
   display: flex;
@@ -40,99 +40,9 @@ const Table = styled.table`
   }
 `;
 
-const useGetBlurValidation = (
-  setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
-) => {
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
-
-  const onBlur = (e) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    timerRef.current = setTimeout(() => {
-      console.log('validate');
-      setDays((prevDays) =>
-        prevDays.map((day) => {
-          const timeSlots = day.timeSlots.map((slot) => ({
-            ...slot,
-            error: !isValid(slot),
-          }));
-
-          for (let i = timeSlots.length - 1; i >= 0; i--) {
-            if (timeSlots[i].from === '' && timeSlots[i].to === '') {
-              timeSlots.pop();
-            } else {
-              break;
-            }
-          }
-
-          return { ...day, timeSlots };
-        }),
-      );
-    }, 1000);
-  };
-  const onFocus = (e) => {
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-  };
-  return { onBlur, onFocus };
-};
-
-const useGetSetTime = (
-  setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
-  setStringValue: (value: string) => void,
-) => {
-  const {
-    tags: { setTag },
-  } = useEditContext();
-
-  return (
-    dayIdx: number,
-    slotIdx: number,
-    key: 'from' | 'to',
-    value: string,
-  ) => {
-    setDays((prev) => {
-      const newDays = [...prev];
-      const slot = newDays[dayIdx].timeSlots[slotIdx];
-      slot[key] = value;
-      if (slot.error) {
-        slot.error = !isValid(slot);
-      }
-
-      setStringValue(buildString(newDays));
-      return newDays;
-    });
-  };
-};
-
-const useGetCopyFromAbove = (
-  setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
-  setStringValue: (value: string) => void,
-) => {
-  const {
-    tags: { setTag },
-  } = useEditContext();
-
-  return (dayIdx: number) => {
-    setDays((prev) => {
-      const newDays = [...prev];
-      newDays[dayIdx].timeSlots = cloneDeep(newDays[dayIdx - 1].timeSlots);
-
-      setStringValue(buildString(newDays));
-      return newDays;
-    });
-  };
-};
-
-const useUpdateState = (
-  setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
-) => {
+const useUpdateState = (setDays: SetDaysFn) => {
   const valueSetHere = useRef<string | undefined>(undefined);
-  const {
-    tags: { tags, setTag },
-  } = useEditContext();
+  const { tags, setTag } = useEditContext().tags;
 
   const setStringValue = (value: string) => {
     setTag('opening_hours', value);
@@ -146,48 +56,66 @@ const useUpdateState = (
     }
   }, [tags.opening_hours, setDays]);
 
-  return { setStringValue };
+  const setDaysAndTag: SetDaysAndTagFn = (callback) => {
+    setDays((prev) => {
+      const newDays = callback(prev);
+      setStringValue(buildString(newDays));
+      return newDays;
+    });
+  };
+
+  return { setDaysAndTag };
 };
 
-type Props = {
-  prevDay: Day | null;
-  timeSlots: Slot[];
-  onClick: () => void;
-};
+// TODO Move useState, setStringValue and BlurValidation inside a context
+const EditorTable = () => {
+  const [days, setDays] = useState<DaysTable>(getEmptyValue());
+  const { setDaysAndTag } = useUpdateState(setDays);
 
-const CopyFromAboveButton = ({ prevDay, onClick, timeSlots }: Props) => {
-  if (!prevDay?.timeSlots || !prevDay.timeSlots.every(isValid)) {
-    return null;
-  }
-
-  if (
-    timeSlots.length > 0 ||
-    JSON.stringify(prevDay.timeSlots) === JSON.stringify(timeSlots)
-  ) {
-    return null;
-  }
+  const { onBlur, onFocus } = useGetBlurValidation(setDays);
+  publishDbgObject('last daysTable', days);
 
   return (
-    <IconButton onClick={onClick}>
-      <ContentCopyIcon sx={{ fontSize: '13px' }} />
-    </IconButton>
+    <Table>
+      <tbody>
+        {days.map(({ day, dayLabel, timeSlots }, dayIdx) => (
+          <tr key={day}>
+            <th>{dayLabel}</th>
+            <td>
+              {timeSlots.length === 0 && t('opening_hours.editor.closed')}
+
+              {timeSlots.map((timeSlot) => (
+                <TimeSlot
+                  key={timeSlot.slotIdx}
+                  dayIdx={dayIdx}
+                  timeSlot={timeSlot}
+                  setDaysAndTag={setDaysAndTag}
+                  onBlur={onBlur}
+                  onFocus={onFocus}
+                />
+              ))}
+
+              <AddSlotButton
+                dayIdx={dayIdx}
+                timeSlots={timeSlots}
+                setDays={setDays}
+              />
+
+              <CopyFromAboveButton
+                dayIdx={dayIdx}
+                days={days}
+                setDaysAndTag={setDaysAndTag}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </Table>
   );
 };
 
 export const OpeningHoursEditor = () => {
-  const {
-    tags: { tags, setTag },
-  } = useEditContext();
-
-  const [days, setDays] = useState<DaysTable>(getEmptyValue());
-  const { setStringValue } = useUpdateState(setDays);
-
-  const { onBlur, onFocus } = useGetBlurValidation(setDays);
-
-  const setTime = useGetSetTime(setDays, setStringValue);
-  const copyFromAbove = useGetCopyFromAbove(setDays, setStringValue);
-
-  publishDbgObject('last daysTable', days);
+  const { tags } = useEditContext().tags;
 
   if (tags.opening_hours && !canEditorHandle(tags.opening_hours)) {
     return <OpeningHoursInput cantEdit />;
@@ -199,42 +127,7 @@ export const OpeningHoursEditor = () => {
       <Wrapper>
         <AccessTime fontSize="small" />
         <div>
-          <Table>
-            <tbody>
-              {days.map(({ day, dayLabel, timeSlots }, dayIdx) => (
-                <tr key={day}>
-                  <th>{dayLabel}</th>
-                  <td>
-                    {timeSlots.length === 0 && t('opening_hours.editor.closed')}
-
-                    {timeSlots.map((timeSlot) => (
-                      <TimeSlot
-                        key={timeSlot.slot}
-                        dayIdx={dayIdx}
-                        timeSlot={timeSlot}
-                        setTime={setTime}
-                        onBlur={onBlur}
-                        onFocus={onFocus}
-                      />
-                    ))}
-
-                    <AddSlotButton
-                      dayIdx={dayIdx}
-                      timeSlots={timeSlots}
-                      setDays={setDays}
-                    />
-
-                    <CopyFromAboveButton
-                      prevDay={dayIdx > 0 ? days[dayIdx - 1] : null}
-                      timeSlots={timeSlots}
-                      onClick={() => copyFromAbove(dayIdx)}
-                    />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-
+          <EditorTable />
           <YoHoursLink />
         </div>
       </Wrapper>
