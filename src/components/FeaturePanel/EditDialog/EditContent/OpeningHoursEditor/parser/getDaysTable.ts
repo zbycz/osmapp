@@ -8,6 +8,11 @@ const reorderFromMonday = (timesByDay: Day[]) => {
   return [...timesByDay.slice(1), timesByDay[0]];
 };
 
+const splitByFirstSpace = (str: string) => {
+  const index = str.indexOf(' ');
+  return [str.slice(0, index), str.slice(index + 1)];
+};
+
 export const getEmptyValue = () =>
   reorderFromMonday(
     OSM_DAYS.map((day, idx) => ({
@@ -18,7 +23,7 @@ export const getEmptyValue = () =>
   );
 
 const getTimeSlots = (timePart: string) =>
-  timePart.split(',').map((time: string, slot: number) => {
+  timePart.split(/ *, */).map((time: string, slot: number) => {
     const [from, to = ''] = time.split('-');
     return { slotIdx: slot, from, to } as Slot;
   });
@@ -79,7 +84,7 @@ const getDaysMap = (value: string) => {
   }
 
   value.split(/ *; */).forEach((part) => {
-    const [daysPart, timePart = ''] = part.split(' ', 2);
+    const [daysPart, timePart] = splitByFirstSpace(part);
     const days = parseDaysPart(daysPart);
     days.forEach((day) => {
       daysMap[day] = getTimeSlots(timePart);

@@ -2,12 +2,17 @@ import { buildDaysPart, buildString } from './buildString';
 import { getDaysTable, parseDaysPart } from './getDaysTable';
 import { publishDbgObject } from '../../../../../../utils';
 
+const splitByFirstSpace = (str: string) => {
+  const index = str.indexOf(' ');
+  return [str.slice(0, index), str.slice(index + 1)];
+};
+
 const sanitizeDaysParts = (value: string) => {
   return (value ?? '')
     .split(/ *; */)
     .map((part) => {
       if (part.match(/^((Mo|Tu|We|Th|Fr|Sa|Su)[-, ]*)+/)) {
-        const [daysPart, timePart] = part.split(' ', 2);
+        const [daysPart, timePart] = splitByFirstSpace(part);
         const days = parseDaysPart(daysPart);
         const sanitizedDays = buildDaysPart(days);
         return (
@@ -17,6 +22,7 @@ const sanitizeDaysParts = (value: string) => {
       return part;
     })
     .join('; ')
+    .replace(/ *, */g, ',')
     .trim();
 };
 
