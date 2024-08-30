@@ -81,7 +81,9 @@ export const useUpdateStyle = createMapEffectHook(
 
     const style = cloneDeep(getBaseStyle(key));
     addOverlaysToStyle(map, style, overlays);
-    map.setStyle(style, { diff: true });
+    console.log('style', map.loaded(), map.getStyle()); // eslint-disable-line no-console
+    map.setStyle(style, { diff: map.loaded() });
+    console.log('style2', map.loaded(), map.getStyle()); // eslint-disable-line no-console
 
     setUpHover(map, layersWithOsmId(style));
   },
