@@ -1,6 +1,6 @@
-import type { Feature } from '../types';
+import type { Feature } from '../../../services/types';
 
-import { getUploadData } from '../../server/upload/getUploadData';
+import { getUploadData } from '../getUploadData';
 
 jest.mock('next/config', () => () => ({
   publicRuntimeConfig: { languages: ['en'] },

@@ -1,5 +1,5 @@
 import fetch from 'isomorphic-unfetch';
-import { getBody, WIKI_URL } from './utils';
+import { WIKI_URL } from './utils';
 
 type PageInfo = {
   ns: number;
@@ -19,18 +19,16 @@ type Revision = {
 };
 
 export const getPageRevisions = async (titles: string[]) => {
-  const response = await fetch(WIKI_URL, {
-    method: 'POST',
-    body: getBody({
-      action: 'query',
-      prop: 'revisions',
-      titles: titles.join('|'),
-      rvprop: 'ids|content',
-      rvslots: '*',
-      formatversion: '2',
-      format: 'json',
-    }),
+  const queryString = new URLSearchParams({
+    action: 'query',
+    prop: 'revisions',
+    titles: titles.join('|'),
+    rvprop: 'ids|content',
+    rvslots: '*',
+    formatversion: '2',
+    format: 'json',
   });
+  const response = await fetch(`${WIKI_URL}?${queryString}`);
   const data = await response.json();
   return data.query.pages as PageInfo[];
 };

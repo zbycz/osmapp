@@ -56,14 +56,13 @@ export const getMediaWikiSession = () => {
 
   const getCsrfToken = async () => {
     const data = await GET('query', { meta: 'tokens', type: 'csrf' });
-    console.log('getCsrfToken', data.query.tokens.csrftoken);
     return data.query.tokens.csrftoken;
   };
 
   const upload = async (filepath: string, filename: string, text: string) => {
     const token = await getCsrfToken();
     const file = await readFile(filepath);
-    const blob = new Blob([file], { type: 'application/octet-stream' });
+    const blob = new Blob([file], { type: 'application/octet-stream' }); // TODO make it stream (?)
 
     const data = await UPLOAD('upload', {
       file: blob,
@@ -78,12 +77,12 @@ export const getMediaWikiSession = () => {
   // https://github.com/multichill/toollabs/blob/master/bot/commons/geograph_uploader.py#L132
   const editClaims = async (pageId: string, claims) => {
     const token = await getCsrfToken();
-    const response = await POST('wbeditentity', {
+    const data = await POST('wbeditentity', {
       id: pageId,
       data: JSON.stringify({ claims }),
       token,
     });
-    return await response.json();
+    return data;
   };
 
   return {

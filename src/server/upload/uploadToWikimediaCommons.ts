@@ -4,6 +4,8 @@ import { File } from './types';
 import { getMediaWikiSession } from './mediawiki/mediawiki';
 import { findFreeSuffix } from './utils';
 import { getUploadData } from './getUploadData';
+import { getPageId } from './mediawiki/getPageId';
+import { claimsHelpers } from './mediawiki/claimsHelpers';
 
 export const uploadToWikimediaCommons = async (
   user: ServerOsmUser,
@@ -22,34 +24,37 @@ export const uploadToWikimediaCommons = async (
 
   const suffix = await findFreeSuffix(feature, file);
   const data = getUploadData(user, feature, file, lang, suffix);
+  return data;
 
-  const uploadResult = await session.upload(
-    data.filepath,
-    data.filename,
-    data.text,
-  );
+  // const uploadResult = await session.upload(
+  //   data.filepath,
+  //   data.filename,
+  //   data.text,
+  // );
+  //
+  // if (uploadResult.result !== 'Success') {
+  //   throw new Error(`Upload failed: ${uploadResult.result}`);
+  // }
+  const uploadResult = {
+    result: 'Success',
+    filename: 'Patník_N.73_(Boundary_Stone)_-_OsmAPP.jpg',
+  };
 
-  if (uploadResult.result !== 'Success') {
-    throw new Error(`Upload failed: ${uploadResult.result}`);
-  }
+  const pageId = await getPageId(`File:${uploadResult.filename}`);
+  const claims = [
+    claimsHelpers.createDate(data.date),
+    claimsHelpers.createPlaceLocation(data.placeLocation),
+    claimsHelpers.createPhotoLocation(data.photoLocation),
+  ];
+  const claimsResult = await session.editClaims(`M${pageId}`, claims);
 
-  // TODO here
-
-  // TODO get pageid from file page title
-  const pageId = '147484063';
-  // const claims = [
-  //   claimsHelpers.createDate(data.date),
-  //   claimsHelpers.createPlaceLocation(data.placeLocation),
-  //   claimsHelpers.createPhotoLocation(data.photoLocation),
-  // ];
-  // console.log(JSON.stringify(claims, null, 2));
-  // const claimsResult = await session.editClaims(`M${pageId}`, claims);
+  console.log('claimsResult', JSON.stringify(claimsResult, null, 2));
 
   // TODO check duplicate by sha1 before upload
 
   return {
     uploadResult,
-    //claimsResult,
+    claimsResult,
     filename: uploadResult.filename,
   };
 
