@@ -31,17 +31,30 @@ test('without days', () => {
   expect(canItHandle(original)).toBe(true);
 });
 
-describe('canEditorHandle', () => {
+describe('space after comma', () => {
   test.each([
-    { input: 'Mo 08:00-12:00, Tu 13:00-17:00', output: false },
-    { input: 'Sep-Jan 08:00-12:00', output: false },
-    { input: '1:00', output: false },
-    { input: '1:00-2:0', output: false },
-    { input: 'Mo-We 1:00-2:00; Fr 1:00-2:00', output: false }, // we cant merge days yet, TODO update sanitize ?
-    { input: 'Mo', output: false },
-    { input: 'Mo,PH 08:00-12:00', output: false },
+    { input: '1:00-2:00, 5:00-7:00', output: '1:00-2:00,5:00-7:00' },
+    {
+      input: 'Tu-Su 11:00-15:00, 18:00-23:00',
+      output: 'Tu-Su 11:00-15:00,18:00-23:00',
+    },
   ])('$input', ({ input, output }) => {
-    expect(canItHandle(input)).toBe(output);
+    expect(buildString(getDaysTable(input))).toEqual(output);
+    expect(canItHandle(input)).toBe(true);
+  });
+});
+
+describe('canEditorHandle() === false', () => {
+  test.each([
+    { input: 'Mo 08:00-12:00, Tu 13:00-17:00' },
+    { input: 'Sep-Jan 08:00-12:00' },
+    { input: '1:00' },
+    { input: '1:00-2:0' },
+    { input: 'Mo-We 1:00-2:00; Fr 1:00-2:00' }, // we cant merge days yet, TODO update sanitize ?
+    { input: 'Mo' },
+    { input: 'Mo,PH 08:00-12:00' },
+  ])('$input', ({ input }) => {
+    expect(canItHandle(input)).toBe(false);
   });
 });
 
