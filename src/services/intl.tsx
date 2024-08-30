@@ -26,15 +26,17 @@ const replaceValues = (text: string, values: Values) =>
     return value != null ? `${value}` : '?';
   });
 
-const replaceTags = (text: string, tags: Values) =>
-  text.replace(/<(\/?)([a-zA-Z_]+)>/g, (_, end, tagName) => {
-    const tag = `${tags?.[tagName]}`;
-    if (end) {
-      const endTag = tag.split(' ')[0];
-      return tag ? `</${endTag}>` : '?';
-    }
-    return tag ? `<${tag}>` : '?';
-  });
+const replaceTags = (text: string, tags?: Values) =>
+  tags
+    ? text.replace(/<(\/?)([a-zA-Z_]+)>/g, (_, end, tagName) => {
+        const tag = `${tags[tagName]}`;
+        if (end) {
+          const endTag = tag.split(' ')[0];
+          return tag ? `</${endTag}>` : '?';
+        }
+        return tag ? `<${tag}>` : '?';
+      })
+    : text;
 
 export const t = (id: TranslationId, values?: Values) => {
   const translation = intl.messages[id] ?? id;
