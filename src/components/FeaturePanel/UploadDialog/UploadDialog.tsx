@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState } from 'react';
-import { Button } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import { fetchJson, fetchText } from '../../../services/fetch';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getShortId } from '../../../services/helpers';
@@ -95,9 +95,9 @@ const UploadButton = () => {
         style={{ marginBottom: '1rem' }}
         disabled={uploading}
         key={resetKey}
-        // endIcon={uploading ? <CircularProgress /> : undefined}
+        endIcon={uploading ? <CircularProgress /> : undefined}
       >
-        Nahrát obrázek
+        Upload image
         <input
           type="file"
           // accept="image/*"

@@ -64,9 +64,11 @@ export const FeaturePanel = () => {
 
               <FeatureImages />
 
-              <PanelSidePadding>
-                <UploadDialog />
-              </PanelSidePadding>
+              {advanced && (
+                <PanelSidePadding>
+                  <UploadDialog />
+                </PanelSidePadding>
+              )}
 
               <RouteDistributionInPanel />
               <RouteListInPanel />
