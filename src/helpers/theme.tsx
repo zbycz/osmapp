@@ -13,7 +13,7 @@ const lightTheme = createTheme({
       main: '#737373',
     },
     tertiary: {
-      main: '#00b6ff', // links
+      main: '#0078a8', // links
     },
     error: {
       main: red.A400,
@@ -52,7 +52,7 @@ const darkTheme = createTheme({
       main: '#737373',
     },
     tertiary: {
-      main: '#0fbbff', // links
+      main: '#00b6ff', // links
     },
     error: {
       main: red.A400,

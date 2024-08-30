@@ -8,14 +8,16 @@ const sanitizeDaysParts = (value: string) => {
     .map((part) => {
       if (part.match(/^((Mo|Tu|We|Th|Fr|Sa|Su)[-, ]*)+/)) {
         const [daysPart, timePart] = part.split(' ', 2);
-        const sanitizedDays = buildDaysPart(parseDaysPart(daysPart));
+        const days = parseDaysPart(daysPart);
+        const sanitizedDays = buildDaysPart(days);
         return (
           (sanitizedDays === 'Mo-Su' ? '' : `${sanitizedDays} `) + `${timePart}`
         );
       }
       return part;
     })
-    .join('; ');
+    .join('; ')
+    .trim();
 };
 
 export const canItHandle = (value: string | undefined) => {

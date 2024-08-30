@@ -24,18 +24,22 @@ const getTimeSlots = (timePart: string) =>
   });
 
 export const parseDaysPart = (daysPart: string): string[] => {
+  const otherDays = [];
   const daysBitmap = new Array(7).fill(false);
 
   daysPart
     .toLowerCase()
     .split(',')
     .forEach((dayOrInterval) => {
-      const interval = dayOrInterval.split('-');
+      const interval = dayOrInterval.split('-', 2);
 
       if (interval.length === 1) {
-        const idx = OSM_DAYS.indexOf(interval[0]);
+        const day = interval[0];
+        const idx = OSM_DAYS.indexOf(day);
         if (idx !== -1) {
           daysBitmap[idx] = true;
+        } else {
+          otherDays.push(day);
         }
       } else {
         const start = OSM_DAYS.indexOf(interval[0]);
@@ -45,11 +49,13 @@ export const parseDaysPart = (daysPart: string): string[] => {
           for (let i = start; i <= endBigger; i++) {
             daysBitmap[i % 7] = true;
           }
+        } else {
+          otherDays.push(dayOrInterval);
         }
       }
     });
 
-  return OSM_DAYS.filter((_, i) => daysBitmap[i]);
+  return OSM_DAYS.filter((_, i) => daysBitmap[i]).concat(otherDays);
 };
 
 const INTERVAL_REGEXP =
@@ -84,7 +90,7 @@ const getDaysMap = (value: string) => {
 };
 
 export const getDaysTable = (value: string | undefined): DaysTable => {
-  const daysMap = getDaysMap(value ?? '');
+  const daysMap = getDaysMap(value?.trim() ?? '');
 
   const timesByDay = OSM_DAYS.map(
     (osmDay) =>

@@ -11,6 +11,7 @@ const getInterval = (start: number, end: number) => {
 };
 
 export const buildDaysPart = (days: string[]) => {
+  const otherDays = days.filter((day) => !DAYS_ORDER.includes(day));
   const daysBitmap = DAYS_ORDER.map((day) => days.includes(day));
 
   const result = [];
@@ -27,7 +28,7 @@ export const buildDaysPart = (days: string[]) => {
     result.push(getInterval(start, 6));
   }
 
-  return result.join(',');
+  return [...result, ...otherDays].join(',');
 };
 
 const isValidTime = (from: string) =>

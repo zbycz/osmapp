@@ -8,27 +8,27 @@ jest.mock('../../../../../../../services/intl', () => ({
 }));
 
 test('conversion', () => {
-  const original = 'Mo-Fr 08:00-12:00,13:00-17:00; Sa 08:00-12:00';
+  const original = ' Mo-Fr 08:00-12:00,13:00-17:00; Sa 08:00-12:00 ';
+  expect(buildString(getDaysTable(original))).toEqual(original.trim());
   expect(canItHandle(original)).toBe(true);
-  expect(buildString(getDaysTable(original))).toEqual(original);
 });
 
 test('24/7', () => {
-  expect(canItHandle('24/7')).toBe(true);
   expect(buildString(getDaysTable('24/7'))).toEqual('24/7');
   expect(buildString(getDaysTable('Mo-Su 0:00-24:00'))).toEqual('24/7');
+  expect(canItHandle('24/7')).toBe(true);
 });
 
 test('empty', () => {
   const original = '';
-  expect(canItHandle(original)).toBe(true);
   expect(buildString(getDaysTable(original))).toEqual(original);
+  expect(canItHandle(original)).toBe(true);
 });
 
 test('without days', () => {
   const original = '8:00-12:00,13:00-17:00';
-  expect(canItHandle(original)).toBe(true);
   expect(buildString(getDaysTable(original))).toEqual(original);
+  expect(canItHandle(original)).toBe(true);
 });
 
 describe('canEditorHandle', () => {
@@ -39,6 +39,7 @@ describe('canEditorHandle', () => {
     { input: '1:00-2:0', output: false },
     { input: 'Mo-We 1:00-2:00; Fr 1:00-2:00', output: false }, // we cant merge days yet, TODO update sanitize ?
     { input: 'Mo', output: false },
+    { input: 'Mo,PH 08:00-12:00', output: false },
   ])('$input', ({ input, output }) => {
     expect(canItHandle(input)).toBe(output);
   });
@@ -55,6 +56,7 @@ describe('daysPart conversion', () => {
     { input: 'We-Mo', output: 'Mo,We-Su' },
     { input: 'Su,Mo,We,Fr', output: 'Mo,We,Fr,Su' },
     { input: 'Su,Mo,We,Fr', output: 'Mo,We,Fr,Su' },
+    { input: 'Sa,PH,Su,WhateveR', output: 'Sa-Su,ph,whatever' },
   ])('$input', ({ input, output }) => {
     const result = buildDaysPart(parseDaysPart(input));
     expect(result).toBe(output ?? input);
