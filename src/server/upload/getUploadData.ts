@@ -10,14 +10,15 @@ import {
 } from '../../services/helpers';
 import { PROJECT_ID } from '../../services/project';
 
-const getOsmappUrls = (feature: Feature) => {
+const getOsmUrls = (feature: Feature) => {
+  const osmUrl = `https://www.openstreetmap.org/${getUrlOsmId(feature.osmMeta)}`;
+  const osmappUrl = `https://osmapp.org${getOsmappLink(feature)}`;
   const projectUrl = getFullOsmappLink(feature);
 
   if (PROJECT_ID === 'osmapp') {
-    return projectUrl;
+    return `${osmUrl}<br>${osmappUrl}`;
   } else {
-    const osmappUrl = `https://osmapp.org${getOsmappLink(feature)}`;
-    return `${osmappUrl}<br>${projectUrl}`;
+    return `${osmUrl}<br>${osmappUrl}<br>${projectUrl}`;
   }
 };
 
@@ -34,8 +35,7 @@ export const getUploadData = (
   const filename = getFilename(feature, file, suffix);
   const osmUserUrl = `https://www.openstreetmap.org/user/${user.username}#id=${user.id}`;
   const date = file.date.toISOString().replace(/\.\d+Z$/, 'Z');
-  const osmUrl = `https://www.openstreetmap.org/${getUrlOsmId(feature.osmMeta)}`;
-  const osmappUrls = getOsmappUrls(feature);
+  const osmUrls = getOsmUrls(feature);
 
   // TODO construct description (categories)
   // TODO  each file must belong to at least one category that describes its content or function
@@ -49,15 +49,19 @@ export const getUploadData = (
     |date           = ${date}
     |source         = {{Own photo}}
     |author         = OpenStreetMap user [${osmUserUrl} ${user.username}]
-    |other_fields_1 = {{Information field
-        |name  = {{Label|P180|link=-|capitalization=ucfirst}}
-        |value = {{#property:P180|from=M{{PAGEID}} }}&nbsp;[[File:OOjs UI icon edit-ltr-progressive.svg |frameless |text-top |10px |link={{fullurl:{{FULLPAGENAME}}}}#P180|alt=Edit this on Structured Data on Commons|Edit this on Structured Data on Commons]]
+    |other_fields =
+        {{Information field
+          |name  = {{Label|P1259|link=-|capitalization=ucfirst}}
+          |value = {{#property:P1259|from=M{{PAGEID}} }}&nbsp;[[File:OOjs UI icon edit-ltr-progressive.svg |frameless |text-top |10px |link={{fullurl:{{FULLPAGENAME}}}}#P1259|alt=Edit this on Structured Data on Commons|Edit this on Structured Data on Commons]]
         }}
-    |other_fields = {{Information field
-        |name  = {{ucfirst: {{I18n/location|made}} }}
-        |value = {{#invoke:Information|SDC_Location|icon=true}} {{#if:{{#property:P1259|from=M{{PAGEID}} }}|(<small>{{#invoke:PropertyChain|PropertyChain|qID={{#invoke:WikidataIB|followQid|props=P1259}}|pID=P131|endpID=P17}}</small>)}}
+        {{Information field
+          |name  = {{Label|P9149|link=-|capitalization=ucfirst}}
+          |value = {{#property:P9149|from=M{{PAGEID}} }}&nbsp;[[File:OOjs UI icon edit-ltr-progressive.svg |frameless |text-top |10px |link={{fullurl:{{FULLPAGENAME}}}}#P9149|alt=Edit this on Structured Data on Commons|Edit this on Structured Data on Commons]]
         }}
-        {{Information field |name= OpenStreetMap |value= ${osmUrl}<br>${osmappUrls} }}
+        {{Information field
+          |name= OpenStreetMap
+          |value= ${osmUrls}
+        }}
     }}
 
 =={{int:license-header}}==

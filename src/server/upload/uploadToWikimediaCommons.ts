@@ -24,39 +24,34 @@ export const uploadToWikimediaCommons = async (
 
   const suffix = await findFreeSuffix(feature, file);
   const data = getUploadData(user, feature, file, lang, suffix);
-  return data;
 
-  // const uploadResult = await session.upload(
-  //   data.filepath,
-  //   data.filename,
-  //   data.text,
-  // );
-  //
-  // if (uploadResult.result !== 'Success') {
-  //   throw new Error(`Upload failed: ${uploadResult.result}`);
-  // }
-  const uploadResult = {
-    result: 'Success',
-    filename: 'Patník_N.73_(Boundary_Stone)_-_OsmAPP.jpg',
-  };
+  const uploadResult = await session.upload(
+    data.filepath,
+    data.filename,
+    data.text,
+  );
+  if (uploadResult.result !== 'Success') {
+    throw new Error(`Upload failed: ${uploadResult}`);
+  }
 
-  const pageId = await getPageId(`File:${uploadResult.filename}`);
+  const title = `File:${uploadResult.filename}`;
+  const pageId = await getPageId(title);
   const claims = [
     claimsHelpers.createDate(data.date),
     claimsHelpers.createPlaceLocation(data.placeLocation),
     claimsHelpers.createPhotoLocation(data.photoLocation),
   ];
   const claimsResult = await session.editClaims(`M${pageId}`, claims);
-
-  console.log('claimsResult', JSON.stringify(claimsResult, null, 2));
-
-  // TODO check duplicate by sha1 before upload
+  if (claimsResult.success !== 1) {
+    throw new Error(`Claims failed: ${claimsResult}`);
+  }
 
   return {
+    title,
     uploadResult,
     claimsResult,
-    filename: uploadResult.filename,
   };
 
+  // TODO check duplicate by sha1 before upload
   // MD5 hash wikidata https://commons.wikimedia.org/w/index.php?title=File%3AArea_needs_fixing-Syria_map.png&diff=801153548&oldid=607140167
 };
