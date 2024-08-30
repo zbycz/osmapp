@@ -9,6 +9,7 @@ import {
 } from '../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import { useEditContext } from '../EditContext';
+import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 
 export const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
 
@@ -63,17 +64,21 @@ export const MajorKeysEditor = () => {
     <>
       {activeMajorKeys.map((k) => (
         <div key={k}>
-          <TextField
-            label={data.names[k]}
-            value={tags[k]}
-            InputLabelProps={{ shrink: true }}
-            variant="outlined"
-            margin="normal"
-            name={k}
-            onChange={(e) => setTag(e.target.name, e.target.value)}
-            fullWidth
-            autoFocus={focusTag === k}
-          />
+          {k === 'opening_hours' ? (
+            <OpeningHoursEditor />
+          ) : (
+            <TextField
+              label={data.names[k]}
+              value={tags[k]}
+              InputLabelProps={{ shrink: true }}
+              variant="outlined"
+              margin="normal"
+              name={k}
+              onChange={(e) => setTag(e.target.name, e.target.value)}
+              fullWidth
+              autoFocus={focusTag === k}
+            />
+          )}
         </div>
       ))}
       {!!inactiveMajorKeys.length && (

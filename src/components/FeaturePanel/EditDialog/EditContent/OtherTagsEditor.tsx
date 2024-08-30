@@ -162,8 +162,6 @@ export const OtherTagsEditor = () => {
     }
   }, [focusThisEditor]);
 
-  const rows = Object.entries(tags).filter(([k]) => !majorKeys.includes(k));
-
   return (
     <Box mb={4}>
       {!visible && <OtherTagsButton setVisible={setVisible} />}
@@ -172,7 +170,7 @@ export const OtherTagsEditor = () => {
           <OtherTagsHeading />
           <Table>
             <tbody>
-              {rows.map(([k, v]) => (
+              {Object.entries(tags).map(([k, v]) => (
                 <KeyValueRow
                   key={k}
                   k={k}

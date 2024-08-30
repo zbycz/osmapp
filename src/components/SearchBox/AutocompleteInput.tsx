@@ -32,7 +32,7 @@ const useFocusOnSlash = () => {
 };
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
-  const inputRef = useFocusOnSlash();
+  // const inputRef = useFocusOnSlash();
   const { InputLabelProps, InputProps, ...restParams } = params;
 
   useEffect(() => {
@@ -49,7 +49,7 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
       sx={{
         height: '47px',
       }}
-      inputRef={inputRef}
+      // inputRef={inputRef}
       placeholder={t('searchbox.placeholder')}
       onChange={onChange}
       onFocus={onFocus}
