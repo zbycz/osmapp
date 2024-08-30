@@ -41,7 +41,7 @@ export const getUploadData = (
   // TODO  each file must belong to at least one category that describes its content or function
   // TODO  get category based on location eg
 
-  // language=html
+  // TODO add some overpass link https://www.wikidata.org/w/index.php?title=Template:Overpasslink&action=edit
   const text = `
 =={{int:filedesc}}==
 {{Information
@@ -66,7 +66,7 @@ export const getUploadData = (
 
 =={{int:license-header}}==
 {{Self|cc-by-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
-{{FoP-Czech_Republic}}
+${feature.countryCode === 'CZ' ? '{{FoP-Czech_Republic}}' : ''}
 `;
 
   // TODO choose correct FOP based on country: https://commons.wikimedia.org/wiki/Category:FoP_templates

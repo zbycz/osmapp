@@ -20,6 +20,7 @@ const feature: Feature = {
     class: 'place_of_worship',
     subclass: 'place_of_worship',
   },
+  countryCode: 'CZ',
   schema: {
     presetKey: 'amenity/place_of_worship/christian',
     label: 'Christian Church',
