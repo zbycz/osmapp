@@ -41,13 +41,13 @@ export default {
   'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
     včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
     V plánu jsou funkce jako navigace či oblíbená místa.`,
-  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – za obrázky 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – za nejlepší mapu Země 🌎
+        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – za obrázky 🖼
+        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – za nejlepší mapu Země 🌎
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – za skvělé vektorové mapy <br>a za podporu tohoto projektu  ❤️ ',

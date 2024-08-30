@@ -33,13 +33,13 @@ export default {
   'homepage.about_osmapp': `Esta aplicación debería ofrecer una interfaz conveniente para usar <i>OpenStreetMap</i>
      incluyendo opciones para editar. <br/>Actualmente incluye varias capas del mapa, Puntos de Interés y un buscador básico.
      Funciones como navegación o lugares favoritos están planificadas.`,
-  'homepage.github_link': `Puedes sugerir nuevas funcionalidades en el <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Puedes sugerir nuevas funcionalidades en el <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Gracias en especial a:`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – por las imágenes 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – por el mejor mapa del mundo 🌎
+        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – por las imágenes 🖼
+        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – por el mejor mapa del mundo 🌎
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – por los increíbles mapas vectoriales <br>y por apoyar este proyecto  ❤️ ',
