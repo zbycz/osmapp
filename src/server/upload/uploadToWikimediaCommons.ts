@@ -31,7 +31,7 @@ export const uploadToWikimediaCommons = async (
     data.text,
   );
   if (uploadResult.result !== 'Success') {
-    throw new Error(`Upload failed: ${uploadResult}`);
+    throw new Error(`Upload failed: ${JSON.stringify(uploadResult)}`);
   }
 
   const title = `File:${uploadResult.filename}`;
