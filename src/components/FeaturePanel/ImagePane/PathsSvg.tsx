@@ -16,7 +16,7 @@ import {
 
 import { Size } from './types';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { getKey } from '../../../services/helpers';
+import { getKey, getShortId } from '../../../services/helpers';
 
 const StyledSvg = styled.svg`
   position: absolute;
@@ -56,10 +56,18 @@ type PathProps = {
   path: PathType;
   feature: Feature;
   size: Size;
+  isHighlighted?: boolean;
 };
-const Path = ({ path, feature, size: { height, width } }: PathProps) => {
+const Path = ({
+  path,
+  feature,
+  size: { height, width },
+  isHighlighted = false,
+}: PathProps) => {
   const theme = useTheme();
-  const color = getDifficultyColor(getDifficulty(feature.tags), theme);
+  const color = isHighlighted
+    ? theme.palette.climbing.selected
+    : getDifficultyColor(getDifficulty(feature.tags), theme);
   const contrastColor = theme.palette.getContrastText(color);
   const d = path
     .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * width} ${y * height}`)
@@ -77,15 +85,26 @@ type PathsProps = {
   feature: Feature;
   size: Size;
 };
-export const Paths = ({ def, feature, size }: PathsProps) =>
-  isTag(def) && (
-    <>
-      {def.path && <Path path={def.path} feature={feature} size={size} />}
-      {def.memberPaths?.map(({ path, member }) => (
-        <Path key={getKey(member)} path={path} feature={member} size={size} />
-      ))}
-    </>
-  ); // Careful: used also in image generation, eg. /api/image?id=r6
+export const Paths = ({ def, feature, size }: PathsProps) => {
+  const { preview } = useFeatureContext();
+
+  return (
+    isTag(def) && (
+      <>
+        {def.path && <Path path={def.path} feature={feature} size={size} />}
+        {def.memberPaths?.map(({ path, member }) => (
+          <Path
+            key={getKey(member)}
+            path={path}
+            feature={member}
+            size={size}
+            isHighlighted={preview === member}
+          />
+        ))}
+      </>
+    )
+  );
+}; // Careful: used also in image generation, eg. /api/image?id=r6
 
 type PathsSvgProps = {
   def: ImageDefFromTag;
