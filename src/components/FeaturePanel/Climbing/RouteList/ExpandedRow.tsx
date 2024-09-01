@@ -20,7 +20,7 @@ import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
 import { MyRouteTicks } from '../Ticks/MyRouteTicks';
-
+import Link from 'next/link';
 const Left = styled.div`
   flex: 1;
 `;
@@ -170,18 +170,20 @@ export const ExpandedRow = ({
               </ListItem>
               <ListItem>
                 {tempRoute.feature ? (
-                  <Button
-                    color="secondary"
-                    size="small"
-                    variant="text"
-                    endIcon={<ArrowForwardIcon />}
+                  <Link
                     href={`${getOsmappLink(tempRoute.feature)}${
                       window.location.hash
                     }`}
-                    component="a"
                   >
-                    Show route detail
-                  </Button>
+                    <Button
+                      color="primary"
+                      size="small"
+                      variant="outlined"
+                      endIcon={<ArrowForwardIcon />}
+                    >
+                      Detail
+                    </Button>
+                  </Link>
                 ) : null}
               </ListItem>
             </List>

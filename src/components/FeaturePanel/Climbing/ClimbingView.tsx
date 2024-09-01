@@ -192,7 +192,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     photoPath,
     loadPhotoRelatedData,
     areRoutesLoading,
-    preparePhotosAndSet,
+    preparePhotos,
     photoZoom,
     loadedPhotos,
   } = useClimbingContext();
@@ -252,7 +252,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const cragPhotos = getWikimediaCommonsKeys(feature.tags)
     .map((key) => feature.tags[key])
     .map(removeFilePrefix);
-  preparePhotosAndSet(cragPhotos, photo);
+  preparePhotos(cragPhotos);
 
   useEffect(() => {
     const handleResize = () => {

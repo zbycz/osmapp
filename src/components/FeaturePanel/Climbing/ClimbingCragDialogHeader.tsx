@@ -54,7 +54,7 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
 
   const onPhotoChange = (photo: string) => {
     Router.push(
-      `${getOsmappLink(feature)}/climbing/${photo}${window.location.hash}`,
+      `${getOsmappLink(feature)}/climbing/photo/${photo}${window.location.hash}`,
     );
 
     setAreRoutesLoading(true);
