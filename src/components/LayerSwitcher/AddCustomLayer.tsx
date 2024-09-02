@@ -157,7 +157,7 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
             {t('layerswitcher.privacy_policy')}
           </a>
         )}
-        <p>{t('layerswitcher.notAllWork')}</p>
+        <p>{t('layerswitcher.not_all_work')}</p>
       </span>
 
       <hr
@@ -238,7 +238,7 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
   };
 
   return (
-    <Dialog open={isOpen} maxWidth="sm" fullWidth>
+    <Dialog open={isOpen} maxWidth="md">
       <DialogTitle>
         <p>Add a layer</p>
       </DialogTitle>
