@@ -86,7 +86,7 @@ type PathsProps = {
   size: Size;
 };
 export const Paths = ({ def, feature, size }: PathsProps) => {
-  const { preview } = useFeatureContext();
+  const { preview } = useFeatureContext() ?? {};
 
   return (
     isTag(def) && (
