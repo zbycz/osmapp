@@ -137,7 +137,8 @@ const getMemberFeatures = (members: Feature['members'], map) => {
 
 export const fetchWithMemberFeatures = async (apiId: OsmId) => {
   if (apiId.type !== 'relation') {
-    const wayOrNode = await fetchJson(getOsmUrl(apiId));
+    const wayOrNodeResponse = await fetchJson(getOsmUrl(apiId));
+    const wayOrNode = wayOrNodeResponse.elements[0];
     return addSchemaToFeature(osmToFeature(wayOrNode));
   }
 
