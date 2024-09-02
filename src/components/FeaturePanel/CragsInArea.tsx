@@ -1,17 +1,17 @@
 import styled from '@emotion/styled';
-import { Box, useTheme } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
-import { Feature } from '../../services/types';
+import { Feature, isInstant, OsmId } from '../../services/types';
 import { useMobileMode } from '../helpers';
-import { getWikimediaCommonsKeys } from './Climbing/utils/photo';
-import { useScrollShadow } from './Climbing/utils/useScrollShadow';
 import { getLabel } from '../../helpers/featureLabel';
 
-import { getCommonsImageUrl } from '../../services/images/getCommonsImageUrl';
+import { Slider, Wrapper } from './ImagePane/FeatureImages';
+import { Image } from './ImagePane/Image/Image';
+import { getInstantImage } from '../../services/images/getImageDefs';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -21,6 +21,7 @@ const HeadingRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
+  padding: 0 12px;
 `;
 const Container = styled.div`
   overflow: auto;
@@ -30,7 +31,7 @@ const Container = styled.div`
   justify-content: space-between;
   cursor: pointer;
   border-radius: 8px;
-  padding: 12px;
+  padding: 12px 0;
   background-color: ${({ theme }) => theme.palette.background.elevation};
   &:hover {
     ${ArrowIcon} {
@@ -44,12 +45,13 @@ const CragList = styled.div`
   flex-direction: column;
   gap: 12px;
 `;
-const Anchor = styled.a`
+const Link = styled.a`
   text-decoration: none !important;
 `;
 const Content = styled.div`
   flex: 1;
 `;
+
 const CragName = styled.div`
   padding: 0;
   font-weight: 900;
@@ -64,108 +66,92 @@ const NumberOfRoutes = styled.div`
   font-size: 13px;
   color: ${({ theme }) => theme.palette.secondary.main};
 `;
-const Gallery = styled.div`
-  display: flex;
-  gap: 8px;
-  border-radius: 8px;
-  overflow: auto;
-  margin-top: 12px;
-`;
-const Image = styled.img`
-  border-radius: 8px;
-  height: 200px;
-  flex: 1;
-  object-fit: cover;
-`;
-const CragItem = ({ feature }: { feature: Feature }) => {
-  const theme: any = useTheme();
+const Header = ({
+  imagesCount,
+  label,
+  routesCount,
+}: {
+  label: string;
+  routesCount: number;
+  imagesCount: number;
+}) => (
+  <HeadingRow>
+    <Content>
+      <CragName>{label}</CragName>{' '}
+      <Attributes>
+        {routesCount > 0 && (
+          <NumberOfRoutes>{routesCount} routes </NumberOfRoutes>
+        )}
+        {imagesCount > 0 && (
+          <NumberOfRoutes>{imagesCount} photos</NumberOfRoutes>
+        )}
+      </Attributes>
+    </Content>
+    <ArrowIcon color="primary" />
+  </HeadingRow>
+);
 
+const Gallery = ({ images }) => {
+  return (
+    <Wrapper>
+      <Slider>
+        {images.map((item) => (
+          <Image key={item.image.imageUrl} def={item.def} image={item.image} />
+        ))}
+      </Slider>
+    </Wrapper>
+  );
+};
+
+const getOnClickWithHash = (apiId: OsmId) => (e) => {
+  e.preventDefault();
+  Router.push(`/${getUrlOsmId(apiId)}${window.location.hash}`);
+};
+
+const CragItem = ({ feature }: { feature: Feature }) => {
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
-  const { osmMeta } = feature;
-  const handleClick = (e) => {
-    e.preventDefault();
-    setPreview(null);
-    Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
-  };
   const handleHover = () => feature.center && setPreview(feature);
 
-  const cragPhotoKeys = getWikimediaCommonsKeys(feature.tags);
+  const images =
+    feature?.imageDefs?.filter(isInstant)?.map((def) => ({
+      def,
+      image: getInstantImage(def),
+    })) ?? [];
 
-  const {
-    scrollElementRef,
-    onScroll,
-    ShadowContainer,
-    ShadowLeft,
-    ShadowRight,
-  } = useScrollShadow();
   return (
-    <Anchor
-      href={`/${getUrlOsmId(osmMeta)}`}
-      onClick={handleClick}
+    <Link
+      href={`/${getUrlOsmId(feature.osmMeta)}`}
+      onClick={getOnClickWithHash(feature.osmMeta)}
       onMouseEnter={mobileMode ? undefined : handleHover}
       onMouseLeave={() => setPreview(null)}
     >
       <Container>
-        <HeadingRow>
-          <Content>
-            <CragName>{getLabel(feature)}</CragName>{' '}
-            <Attributes>
-              {feature.members?.length > 0 && (
-                <NumberOfRoutes>
-                  {feature.members.length} routes{' '}
-                </NumberOfRoutes>
-              )}
-              {cragPhotoKeys.length > 0 && (
-                <NumberOfRoutes>{cragPhotoKeys.length} photos </NumberOfRoutes>
-              )}
-            </Attributes>
-          </Content>
-          <ArrowIcon color="primary" />
-        </HeadingRow>
-        {cragPhotoKeys.length > 0 && (
-          <ShadowContainer>
-            <ShadowLeft
-              backgroundColor={theme.palette.background.elevation}
-              gradientPercentage={7}
-              opacity={0.9}
-            />
-            <Gallery onScroll={onScroll} ref={scrollElementRef}>
-              {cragPhotoKeys.map((cragPhotoTag) => {
-                const photoPath = feature.tags[cragPhotoTag];
-                const url = getCommonsImageUrl(photoPath, 410);
-                return <Image src={url} key={cragPhotoTag} />;
-              })}
-            </Gallery>
-            <ShadowRight
-              backgroundColor={theme.palette.background.elevation}
-              gradientPercentage={7}
-              opacity={0.9}
-            />
-          </ShadowContainer>
-        )}
+        <Header
+          label={getLabel(feature)}
+          routesCount={feature.members?.length}
+          imagesCount={images.length}
+        />
+        {images.length ? <Gallery images={images} /> : null}
       </Container>
-    </Anchor>
+    </Link>
   );
 };
-export const CragsInArea = () => {
-  const {
-    feature: { memberFeatures, tags },
-  } = useFeatureContext();
 
-  if (!memberFeatures?.length) {
+export const CragsInArea = () => {
+  const { feature } = useFeatureContext();
+
+  if (!feature.memberFeatures?.length) {
     return null;
   }
-
-  const isClimbingArea = tags.climbing === 'area';
-  if (!isClimbingArea) {
+  if (feature.tags.climbing !== 'area') {
     return null;
   }
 
   return (
     <Box mt={4}>
       <CragList>
-        {memberFeatures.map((item) => (
+        {feature.memberFeatures.map((item) => (
           <CragItem key={getOsmappLink(item)} feature={item} />
         ))}
       </CragList>

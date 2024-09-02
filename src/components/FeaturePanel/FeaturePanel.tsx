@@ -22,6 +22,7 @@ import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
 import { RouteListInPanel } from './Climbing/RouteList/RouteList';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
+import { Box } from '@mui/material';
 
 const Flex = styled.div`
   flex: 1;
@@ -61,7 +62,9 @@ export const FeaturePanel = () => {
                 <CragsInArea />
               </PanelSidePadding>
 
-              <FeatureImages />
+              <Box mb={2}>
+                <FeatureImages />
+              </Box>
               <RouteDistributionInPanel />
               <RouteListInPanel />
 
