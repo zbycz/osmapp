@@ -1,6 +1,6 @@
 import maplibregl from 'maplibre-gl';
 import { useEffect } from 'react';
-import { useMapEffect } from '../../helpers';
+import { createMapEffectHook } from '../../helpers';
 import { convertOsmIdToMapId, layersWithOsmId } from '../helpers';
 import { Feature } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -16,10 +16,12 @@ const PREVIEW_MARKER = {
 };
 
 const setPoiIconVisibility = (map, feature, hideIcon) => {
-  if (!feature) return;
+  const style = map.getStyle();
+
+  if (!feature || !style) return;
 
   const results = map.queryRenderedFeatures(undefined, {
-    layers: layersWithOsmId,
+    layers: layersWithOsmId(style),
     filter: ['==', ['id'], convertOsmIdToMapId(feature.osmMeta)],
     validate: false,
   });
@@ -30,7 +32,7 @@ const setPoiIconVisibility = (map, feature, hideIcon) => {
 };
 
 const featureMarker = {} as { ref: maplibregl.Marker; feature: Feature };
-const useUpdateFeatureMarker = useMapEffect((map, feature) => {
+const useUpdateFeatureMarker = createMapEffectHook((map, feature) => {
   if (featureMarker.ref) {
     featureMarker.ref.remove();
     setPoiIconVisibility(map, featureMarker.feature, false);
@@ -47,7 +49,7 @@ const useUpdateFeatureMarker = useMapEffect((map, feature) => {
 });
 
 let previewMarker: maplibregl.Marker;
-const useUpdatePreviewMarker = useMapEffect((map, feature) => {
+const useUpdatePreviewMarker = createMapEffectHook((map, feature) => {
   previewMarker?.remove();
   previewMarker = feature?.center
     ? new maplibregl.Marker(PREVIEW_MARKER).setLngLat(feature.center).addTo(map)
@@ -59,7 +61,7 @@ export const useFeatureMarker = (map) => {
   useUpdateFeatureMarker(map, feature);
   useUpdatePreviewMarker(map, preview);
 
-  // hide the icon when tiles are fetched TODO sometimes broken (zoom problem) (also maybe causes webgl blackout)
+  // hide the icon when tiles are fetched TODO sometimes broken (zoom problem)
   useEffect(() => {
     if (map) {
       const handle = setInterval(() => {
@@ -69,5 +71,7 @@ export const useFeatureMarker = (map) => {
         }
       }, 200);
     }
+    // We want to run it only on Init
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [map]);
 };

@@ -1,170 +1,108 @@
-import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
-import getConfig from 'next/config';
-import { Tooltip, useMediaQuery } from '@material-ui/core';
-import uniq from 'lodash/uniq';
-import { t, Translation } from '../../../services/intl';
-import GithubIcon from '../../../assets/GithubIcon';
-import { MoreMenu } from './MoreMenu';
-import { LangSwitcher } from './LangSwitcher';
-import { Layer, useMapStateContext } from '../../utils/MapStateContext';
-import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
+import React from 'react';
+import { useMapStateContext } from '../../utils/MapStateContext';
 import { usePersistedState } from '../../utils/usePersistedState';
-import { LayerIndexAttribution } from '../../LayerSwitcher/helpers/loadLayers';
+import styled from '@emotion/styled';
+import { IconButton, Tooltip } from '@mui/material';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import { ClimbingLegend } from './ClimbingLegend';
+import { convertHexToRgba } from '../../utils/colorUtils';
+import { AttributionLinks } from './AttributionLinks';
+import { useIsClient, useMobileMode } from '../../helpers';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
-const {
-  publicRuntimeConfig: { osmappVersion, commitHash, commitMessage },
-} = getConfig();
+const IconContainer = styled.div`
+  width: 20px;
+  height: 20px;
+`;
 
-const StyledGithubIcon = styled(GithubIcon)`
-  filter: ${({ theme }) => theme.palette.invertFilter};
+const StyledIconButton = styled(IconButton)`
+  position: relative;
+  top: -5px;
+`;
+
+const FooterContainer = styled.div<{ $hasShadow: boolean }>`
+  margin: 0 4px 4px 4px;
+  pointer-events: all;
+  border-radius: 8px;
+  padding: 6px;
+  color: ${({ theme }) => theme.palette.text.primary};
+  background-color: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.paper, 0.5)};
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  ${({ $hasShadow }) =>
+    $hasShadow ? 'box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);' : ''}
 `;
 
 const Wrapper = styled.div`
-  margin-top: 10px;
-  padding: 0 2px;
+  padding: 0 4px;
   font-size: 12px;
-  line-height: normal;
   color: ${({ theme }) => theme.palette.text.primary};
-  background-color: ${({ theme }) => theme.palette.background.paper};
-  letter-spacing: normal;
   font-weight: 400;
-  margin-left: 30px;
+  text-align: left;
+  display: flex;
+  gap: 2px;
+  align-items: center;
+  justify-content: space-between;
 
-  svg {
-    vertical-align: -2px;
-    margin-right: 4px;
-  }
-
-  a,
-  button {
-    padding: 2px 0;
+  a {
+    color: ${({ theme }) => theme.palette.text.primary};
+    text-decoration: underline;
   }
 `;
 
-const OsmappLink = () => (
-  <>
-    <a
-      href="https://github.com/zbycz/osmapp"
-      target="_blank"
-      rel="noopener"
-      title={t('map.github_title')}
-    >
-      <StyledGithubIcon width="12" height="12" />
-      osmapp
-    </a>{' '}
-    <span title={`${commitHash} ${commitMessage}`}>{osmappVersion}</span>
-  </>
+const LegendExpandButton = ({ isVisible, setLegendShown }) => (
+  <IconContainer>
+    {isVisible && (
+      <Tooltip title="Show climbing legend" enterDelay={1000}>
+        <StyledIconButton
+          size="small"
+          edge="end"
+          onClick={() => {
+            setLegendShown(true);
+          }}
+        >
+          <KeyboardArrowUpIcon fontSize="small" />
+        </StyledIconButton>
+      </Tooltip>
+    )}
+  </IconContainer>
 );
 
-const Attribution = ({ label, link, title }) => (
-  <>
-    ©{' '}
-    <Tooltip arrow title={title}>
-      <a href={link} target="_blank" rel="noopener">
-        {label}
-      </a>
-    </Tooltip>
-  </>
-);
-
-const createAttributionInnerHtml = ({
-  html,
-  text,
-  url,
-}: LayerIndexAttribution) => {
-  if (html) return html;
-
-  if (text && url) return `© <a href="${url}">${text}}</a>`;
-  if (text) return `© ${text}}`;
-
-  return null;
-};
-
-const MapDataLink = () => {
-  const [userLayers] = usePersistedState<Layer[]>('userLayers', []);
-  const short = useMediaQuery('(max-width: 500px)');
+export const MapFooter = () => {
   const { activeLayers } = useMapStateContext();
-  const attributions = uniq(
-    activeLayers.flatMap((layer) => {
-      if (osmappLayers[layer]) return osmappLayers[layer].attribution;
-
-      const uri = decodeURI(new URL(layer)?.hostname);
-
-      try {
-        return userLayers.find(({ url }) => url === layer).attribution || uri;
-      } catch {
-        return uri;
-      }
-    }),
+  const isMobileMode = useMobileMode();
+  const { featureShown } = useFeatureContext();
+  const hasClimbingLayer = activeLayers.includes('climbing');
+  const hasLegend = isMobileMode && featureShown ? false : hasClimbingLayer;
+  const [legendShown, setLegendShown] = usePersistedState<boolean>(
+    'isLegendVisible',
+    true,
   );
+  const isClient = useIsClient();
 
-  const nodes = attributions.map(
-    (attribution: string | LayerIndexAttribution) => {
-      if (attribution === 'maptiler')
-        return (
-          <Attribution
-            key={attribution}
-            label="MapTiler"
-            link="https://www.maptiler.com/"
-            title={<Translation id="map.maptiler_copyright_tooltip" />}
-          />
-        );
-      if (attribution === 'osm')
-        return (
-          <Attribution
-            key={attribution}
-            label={short ? 'OSM' : 'OpenStreetMap'}
-            link="https://www.openstreetmap.org/"
-            title={<Translation id="map.osm_copyright_tooltip" />}
-          />
-        );
-
-      if (typeof attribution === 'string')
-        return (
-          <span
-            key={attribution}
-            dangerouslySetInnerHTML={{ __html: attribution }} // eslint-disable-line react/no-danger
-          />
-        );
-
-      const { url, text } = attribution;
-      const innerHtml = createAttributionInnerHtml(attribution);
-
-      return (
-        <span
-          key={text || url}
-          dangerouslySetInnerHTML={{ __html: innerHtml }} // eslint-disable-line react/no-danger
-        />
-      );
-    },
-  );
-
-  // place a space between attributions
-  for (let i = 1; i < nodes.length; i += 2) {
-    nodes.splice(i, 0, ' ');
+  if (!isClient) {
+    // TODO find a way how to render this in SSR (keep layer in cookies?)
+    return null;
   }
 
-  return nodes;
+  return (
+    <FooterContainer $hasShadow={hasLegend && legendShown}>
+      {hasLegend && (
+        <ClimbingLegend
+          isVisible={legendShown}
+          setLegendShown={setLegendShown}
+        />
+      )}
+      <Wrapper>
+        <AttributionLinks />
+        {hasLegend && (
+          <LegendExpandButton
+            isVisible={!legendShown}
+            setLegendShown={setLegendShown}
+          />
+        )}
+      </Wrapper>
+    </FooterContainer>
+  );
 };
-
-const ClientOnly = ({ children }) => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted ? children : null;
-};
-
-export const MapFooter = () => (
-  // TODO find a way how to render this in SSR (keep layer in cookies?)
-  <ClientOnly>
-    <Wrapper>
-      <OsmappLink />
-      {' | '}
-      <LangSwitcher />
-      {' | '}
-      <MapDataLink />
-      {' | '}
-      <MoreMenu />
-    </Wrapper>
-  </ClientOnly>
-);

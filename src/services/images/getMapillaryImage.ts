@@ -1,7 +1,8 @@
 import maplibregl from 'maplibre-gl';
 import { fetchJson } from '../fetch';
-import { Image, Position } from '../types';
+import { Position } from '../types';
 import { getGlobalMap } from '../mapStorage';
+import { ImageType } from './getImageDefs';
 
 const subtractAngle = (a: number, b: number): number =>
   Math.min(Math.abs(a - b), a - b + 360);
@@ -30,21 +31,22 @@ const debugOutput = (sorted) => {
   }
 };
 
-const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
+export const getMapillaryImage = async (
+  poiCoords: Position,
+): Promise<ImageType | null> => {
   // https://www.mapillary.com/developer/api-documentation/#image
-  // left, bottom, right, top (or minLon, minLat, maxLon, maxLat)
   const bbox = [
-    poiCoords[0] - 0.0004,
+    poiCoords[0] - 0.0004, // left, bottom, right, top (or minLon, minLat, maxLon, maxLat)
     poiCoords[1] - 0.0004,
     poiCoords[0] + 0.0004,
     poiCoords[1] + 0.0004,
   ];
   // consider computed_compass_angle - but it is zero for many images, so we would have to fallback to compass_angle
-  const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,geometry,captured_at,thumb_1024_url&bbox=${bbox}`;
+  const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,geometry,captured_at,thumb_1024_url,thumb_original_url,is_pano&bbox=${bbox}`;
   const { data } = await fetchJson(url);
 
   if (!data.length) {
-    return undefined;
+    return null;
   }
 
   const photos = data.map((item) => {
@@ -58,25 +60,23 @@ const getMapillaryImageRaw = async (poiCoords: Position): Promise<Image> => {
     return { ...item, angleFromPhotoToPoi, deviationFromStraightSight };
   });
 
-  const sorted = photos.sort(
+  const panos = photos.filter((pic) => pic.is_pano);
+  const sorted = (panos.length ? panos : photos).sort(
     (a, b) => a.deviationFromStraightSight - b.deviationFromStraightSight,
   );
 
   debugOutput(sorted);
 
-  return {
-    source: 'Mapillary',
-    link: `https://www.mapillary.com/app/?focus=photo&pKey=${sorted[0].id}`,
-    thumb: sorted[0].thumb_1024_url,
-    timestamp: new Date(sorted[0].captured_at).toLocaleString(),
-  };
-};
+  const imageToUse = sorted[0]; // it is save to assume that it has at least one element
+  const timestamp = new Date(imageToUse.captured_at).toLocaleString();
+  const isPano = imageToUse.is_pano;
 
-export const getMapillaryImage = async (center: Position): Promise<Image> => {
-  try {
-    return await getMapillaryImageRaw(center);
-  } catch (e) {
-    console.warn(e); // eslint-disable-line no-console
-    return undefined;
-  }
+  return {
+    imageUrl: imageToUse.thumb_1024_url,
+    description: `Mapillary image from ${timestamp}`,
+    linkUrl: `https://www.mapillary.com/app/?focus=photo&pKey=${sorted[0].id}`,
+    link: sorted[0].id,
+    uncertainImage: true,
+    panoramaUrl: isPano ? imageToUse.thumb_original_url : undefined,
+  };
 };

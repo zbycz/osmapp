@@ -1,23 +1,25 @@
+/* eslint-disable no-param-reassign */
 import type { GeoJSONSource, Map } from 'maplibre-gl';
 import cloneDeep from 'lodash/cloneDeep';
-import { useMapEffect } from '../../helpers';
+import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
+import { createMapEffectHook } from '../../helpers';
 import { basicStyle } from '../styles/basicStyle';
 import { outdoorStyle } from '../styles/outdoorStyle';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
-import { rasterStyle } from '../styles/rasterStyle';
-import { DEFAULT_MAP } from '../../../config';
+import { getRasterStyle } from '../styles/rasterStyle';
+import { DEFAULT_MAP } from '../../../config.mjs';
 import { makinaAfricaStyle } from '../styles/makinaAfricaStyle';
-import { climbingLayers } from '../styles/layers/climbingLayers';
-import { EMPTY_GEOJSON_SOURCE } from '../consts';
+import {
+  CLIMBING_SPRITE,
+  climbingLayers,
+} from '../styles/layers/climbingLayers';
+import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { fetchCrags } from '../../../services/fetchCrags';
 import { Layer } from '../../utils/MapStateContext';
+import { setUpHover } from './featureHover';
+import { layersWithOsmId } from '../helpers';
 
-export const getRasterStyle = (key) => {
-  const url = osmappLayers[key]?.url ?? key; // if `key` not found, it contains tiles URL
-  return rasterStyle(key, url);
-};
-
-const getBaseStyle = (key) => {
+const getBaseStyle = (key: string): StyleSpecification => {
   if (key === 'basic') {
     return basicStyle;
   }
@@ -31,10 +33,50 @@ const getBaseStyle = (key) => {
   return getRasterStyle(key);
 };
 
-export const useUpdateStyle = useMapEffect(
-  (map: Map, activeLayers, userLayers: Layer[]) => {
-    const [basemap, ...overlays] = activeLayers;
+const addRasterOverlay = (style: StyleSpecification, overlayKey: string) => {
+  const raster = getRasterStyle(overlayKey);
+  style.sources[overlayKey] = raster.sources[overlayKey];
+  style.layers.push(raster.layers[0]);
+  // TODO maxzoom 19 only for snow overlay
+};
 
+const addClimbingOverlay = (style: StyleSpecification, map: Map) => {
+  style.sources.climbing = EMPTY_GEOJSON_SOURCE;
+  style.layers.push(...climbingLayers); // must be also in `layersWithOsmId` because of hover effect
+  style.sprite = [...OSMAPP_SPRITE, CLIMBING_SPRITE];
+
+  fetchCrags().then(
+    (geojson) => {
+      const geojsonSource = map.getSource('climbing') as GeoJSONSource;
+      geojsonSource?.setData(geojson); // TODO can be undefined at first map render
+    },
+    (error) => {
+      console.warn('Climbing Layer failed to fetch.', error); // eslint-disable-line no-console
+    },
+  );
+};
+
+const addOverlaysToStyle = (
+  map: Map,
+  style: StyleSpecification,
+  overlays: string[],
+) => {
+  overlays.forEach((overlayKey: string) => {
+    const overlay = osmappLayers[overlayKey];
+
+    if (overlay?.type === 'overlay') {
+      addRasterOverlay(style, overlayKey);
+    }
+
+    if (overlay?.type === 'overlayClimbing') {
+      addClimbingOverlay(style, map);
+    }
+  });
+};
+
+export const useUpdateStyle = createMapEffectHook(
+  (map: Map, activeLayers: string[], userLayers: Layer[]) => {
+    const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
 
     const osmappLayerMaxZoom = osmappLayers[key]?.maxzoom;
@@ -43,32 +85,11 @@ export const useUpdateStyle = useMapEffect(
     map.setMaxZoom(osmappLayerMaxZoom ?? userLayerMaxZoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
 
     const style = cloneDeep(getBaseStyle(key));
-    overlays.forEach((overlayKey) => {
-      const overlay = osmappLayers[overlayKey];
+    addOverlaysToStyle(map, style, overlays);
+    console.log('style', map.loaded(), map.getStyle()); // eslint-disable-line no-console
+    map.setStyle(style, { diff: map.loaded() });
+    console.log('style2', map.loaded(), map.getStyle()); // eslint-disable-line no-console
 
-      if (overlay?.type === 'overlay') {
-        const raster = getRasterStyle(overlayKey);
-        style.sources[overlayKey] = raster.sources[overlayKey];
-        style.layers.push(raster.layers[0]);
-
-        // TODO maxzoom 19 only for snow overlay
-      }
-
-      if (overlay?.type === 'overlayClimbing') {
-        style.sources.climbing = EMPTY_GEOJSON_SOURCE;
-        style.layers.push(...climbingLayers); // must be also in `layersWithOsmId` because of hover effect
-        fetchCrags().then(
-          (geojson) => {
-            const geojsonSource = map.getSource('climbing') as GeoJSONSource;
-            geojsonSource?.setData(geojson); // TODO can be undefined at first map render
-          },
-          (error) => {
-            console.warn('Climbing Layer failed to fetch.', error); // eslint-disable-line no-console
-          },
-        );
-      }
-    });
-
-    map.setStyle(style, { diff: true });
+    setUpHover(map, layersWithOsmId(style));
   },
 );

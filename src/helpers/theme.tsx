@@ -1,13 +1,10 @@
 import Cookies from 'js-cookie';
-import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
-import { grey, red } from '@material-ui/core/colors';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { grey, red } from '@mui/material/colors';
 import React, { createContext, useContext, useMemo, useState } from 'react';
-import { useMediaQuery } from '@material-ui/core';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components';
+import { useMediaQuery } from '@mui/material';
 
-// @TODO: Fix theme types according to https://mui.com/material-ui/customization/theming/#typescript
-
-const lightTheme = createMuiTheme({
+const lightTheme = createTheme({
   palette: {
     primary: {
       main: '#556cd6',
@@ -16,36 +13,38 @@ const lightTheme = createMuiTheme({
       main: '#737373',
     },
     tertiary: {
-      main: '#0078a8',
+      main: '#0078a8', // links
     },
     error: {
       main: red.A400,
     },
     background: {
       default: '#f6f6f6ff',
+      elevation: '#ddd',
       paper: '#fafafa',
       hover: '#f2f3f2',
       searchBox: '#eb5757',
+      searchInput: 'rgba(255,255,255,0.7)',
     },
     invertFilter: 'invert(0)',
     climbing: {
       primary: '#D1D1D1',
       secondary: '#202020',
       tertiary: '#666',
-      ascent: '#F2EFCB',
+      tick: '#F2EFCB',
 
       // @TODO: following colors should be deleted in the future
       active: '#00854dff',
-      inactive: '#f6f6f6ff',
+      inactive: '#f6f6f6',
       border: '#555555ff',
       selected: '#000000',
     },
-  } as unknown,
+  },
 });
 
-const darkTheme = createMuiTheme({
+const darkTheme = createTheme({
   palette: {
-    type: 'dark',
+    mode: 'dark',
     primary: {
       main: '#ffb74d',
     },
@@ -53,7 +52,7 @@ const darkTheme = createMuiTheme({
       main: '#737373',
     },
     tertiary: {
-      main: '#0fbbff',
+      main: '#00b6ff', // links
     },
     error: {
       main: red.A400,
@@ -61,16 +60,18 @@ const darkTheme = createMuiTheme({
 
     background: {
       default: '#303030',
+      elevation: '#333333',
       paper: '#424242',
       hover: grey['700'],
       searchBox: '#963838',
+      searchInput: 'rgba(0,0,0,0.6)',
     },
     invertFilter: 'invert(1)',
     climbing: {
       primary: '#000000',
       secondary: '#fff',
       tertiary: '#666',
-      ascent: '#5B5C50',
+      tick: '#5B5C50',
 
       // @TODO: following colors should be deleted in the future
       active: '#2fbc81ff',
@@ -78,10 +79,15 @@ const darkTheme = createMuiTheme({
       border: '#ffffffff',
       selected: '#ffffff',
     },
-  } as unknown,
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: { root: { backgroundImage: 'unset' } },
+    },
+  },
 });
 
-type UserTheme = 'system' | 'light' | 'dark';
+export type UserTheme = 'system' | 'light' | 'dark';
 
 type UserThemeContextType = {
   userTheme: UserTheme;
@@ -115,18 +121,15 @@ export const UserThemeProvider = ({ children, userThemeCookie }) => {
     Cookies.set('userTheme', choice, { expires: 30 * 12 * 10, path: '/' });
   };
 
+  const value: UserThemeContextType = {
+    userTheme,
+    setUserTheme,
+    currentTheme,
+    theme,
+  };
   return (
-    <UserThemeContext.Provider
-      value={{
-        userTheme,
-        setUserTheme,
-        currentTheme,
-        theme,
-      }}
-    >
-      <ThemeProvider theme={theme}>
-        <StyledThemeProvider theme={theme}>{children}</StyledThemeProvider>
-      </ThemeProvider>
+    <UserThemeContext.Provider value={value}>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </UserThemeContext.Provider>
   );
 };

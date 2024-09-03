@@ -33,13 +33,13 @@ export default {
   'homepage.about_osmapp': `Diese App soll eine komfortable Oberfläche für die tägliche Nutzung von <i>OpenStreetMap</i>,
      samt Bearbeitungsfunktionen, bieten. <br/> Derzeit umfasst sie verschiedene Kartenebenen, POI-Bearbeitung und eine einfache Suchmaschine.
      Funktionen wie Navigation und das Speichern von Favoriten sind in Planung`,
-  'homepage.github_link': `Du kannst neue Features auf <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>vorschlagen</a>.`,
+  'homepage.github_link': `Du kannst neue Features auf <a href="https://github.com/zbycz/osmapp" target='_blank'>vorschlagen</a>.`,
   'homepage.special_thanks_heading': `Danke an`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – für die Bilder 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – für die beste Weltkarte 🌎
+        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – für die Bilder 🖼
+        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – für die beste Weltkarte 🌎
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – für die großartigen Vektor Karten <br>und die Unterstützung dieses Projekts  ❤️ ',
@@ -163,4 +163,9 @@ export default {
   'layers.maptilerSat': 'Maptiler Satellit (z<14)',
   'layers.bingSat': 'Bing Satellit',
   'layers.bike': 'Fahrrad',
+
+  'runway.information': 'Landebahninformationen',
+  'runway.runway': 'Landebahn',
+  'runway.size': 'Länge (m) - Breite (m)',
+  'runway.surface': 'Oberfläche',
 };

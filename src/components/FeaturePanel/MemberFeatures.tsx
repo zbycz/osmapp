@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Typography } from '@material-ui/core';
+import { Box } from '@mui/material';
 import Router from 'next/router';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -8,6 +8,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMobileMode } from '../helpers';
 import Maki from '../utils/Maki';
+import { PanelLabel } from './Climbing/PanelLabel';
 
 const Item = ({ feature }: { feature: Feature }) => {
   const { currentTheme } = useUserThemeContext();
@@ -19,8 +20,7 @@ const Item = ({ feature }: { feature: Feature }) => {
     setPreview(null);
     Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
   };
-  const handleHover = () =>
-    feature.center && setPreview({ ...feature, noPreviewButton: true });
+  const handleHover = () => feature.center && setPreview(feature);
 
   return (
     <li>
@@ -52,17 +52,17 @@ export const MemberFeatures = () => {
     return null;
   }
 
-  const heading =
-    tags.climbing === 'crag'
-      ? 'Routes'
-      : tags.climbing === 'area'
-      ? 'Crags'
-      : 'Subitems';
+  const isClimbingArea = tags.climbing === 'area';
+  if (isClimbingArea) {
+    return null;
+  }
+
+  const isClimbingCrag = tags.climbing === 'crag';
+  const heading = isClimbingCrag ? 'Routes' : 'Subitems';
+
   return (
     <Box mt={4}>
-      <Typography variant="overline" display="block" color="textSecondary">
-        {heading}
-      </Typography>
+      <PanelLabel>{heading}</PanelLabel>
       <ul>
         {memberFeatures.map((item) => (
           <Item key={getOsmappLink(item)} feature={item} />

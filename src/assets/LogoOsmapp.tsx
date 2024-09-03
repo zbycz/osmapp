@@ -6,10 +6,10 @@ import React, { Component } from 'react';
 interface Props {
   width: number;
   height: number;
-  className: string;
+  className?: string;
 }
-export default class LogoOsmapp extends Component<Props> {
-  static muiName = 'SvgIcon';
+export default class LogoOsmapp extends Component<Props, never> {
+  static muiName = 'LogoOsmapp';
 
   shouldComponentUpdate() {
     return false;

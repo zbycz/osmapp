@@ -1,12 +1,12 @@
-import IconButton from '@material-ui/core/IconButton';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import ExpandLessIcon from '@material-ui/icons/ExpandLess';
+import { IconButton } from '@mui/material';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const StyledToggleButton = styled(IconButton)`
   position: absolute !important;
-  margin: -11px 0 0 0 !important;
+  margin: -5px 0 0 0 !important;
 `;
 
 export const ToggleButton = ({ onClick, isShown }) => (

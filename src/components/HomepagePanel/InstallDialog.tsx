@@ -1,41 +1,27 @@
-import React, { useEffect } from 'react';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import Dialog from '@material-ui/core/Dialog';
-import { DialogContent, Paper, Tab, Tabs, Typography } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
-import { TabContext, TabPanel } from '@material-ui/lab';
+import { TabContext, TabPanel } from '@mui/lab';
 
-import AppleIcon from '@material-ui/icons/Apple';
-import AndroidIcon from '@material-ui/icons/Android';
-import DesktopMacIcon from '@material-ui/icons/DesktopMac';
-import styled from 'styled-components';
+import AppleIcon from '@mui/icons-material/Apple';
+import AndroidIcon from '@mui/icons-material/Android';
+import DesktopMacIcon from '@mui/icons-material/DesktopMac';
+import styled from '@emotion/styled';
 
-import MoreVertIcon from '@material-ui/icons/MoreVert';
-import AddToHomeScreenIcon from '@material-ui/icons/AddToHomeScreen';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';
+import {
+  Dialog,
+  Paper,
+  DialogTitle,
+  Tabs,
+  Tab,
+  DialogContent,
+  Typography,
+} from '@mui/material';
 import { t, Translation } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { useFeatureContext } from '../utils/FeatureContext';
-
-const isIOS = () =>
-  [
-    'iPad Simulator',
-    'iPhone Simulator',
-    'iPod Simulator',
-    'iPad',
-    'iPhone',
-    'iPod',
-  ].includes(navigator.platform) ||
-  // iPad on iOS 13 detection
-  (navigator.userAgent.includes('Mac') && 'ontouchend' in document);
-
-const isAndroid = () =>
-  navigator.userAgent.toLowerCase().indexOf('android') > -1;
-
-const getPlatform = () => {
-  if (isIOS()) return 'ios';
-  if (isAndroid()) return 'android';
-  return 'desktop';
-};
+import { getPlatform } from '../../helpers/platforms';
 
 const StyledDialog = styled(Dialog)`
   .MuiDialog-container.MuiDialog-scrollPaper {
@@ -95,13 +81,13 @@ const PaperImg = ({ src, width }) => (
 );
 
 export function InstallDialog() {
-  const [value, setValue] = React.useState('ios');
+  const [value, setValue] = useState('ios');
   const { showHomepage } = useFeatureContext();
 
   useEffect(() => {
     showHomepage();
     setValue(getPlatform());
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = () => Router.push('/');
   const handleChange = (event, newValue) => {

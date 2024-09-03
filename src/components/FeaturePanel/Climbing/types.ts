@@ -1,12 +1,5 @@
-import { gradeSystem } from './utils/gradeData';
+import { GradeSystem } from './utils/grades/gradeData';
 import { Feature } from '../../../services/types';
-
-export type JSONValue =
-  | string
-  | number
-  | boolean
-  | { [x: string]: JSONValue }
-  | Array<JSONValue>;
 
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling' | 'unfinished';
 
@@ -35,6 +28,8 @@ export type PathPoints = Array<PathPoint>;
 export type RouteDifficulty = {
   gradeSystem: GradeSystem;
   grade: string;
+  gradeMin?: string;
+  gradeMax?: string;
 };
 
 export type ClimbingRoute = {
@@ -55,5 +50,18 @@ export type ZoomState = {
   positionY: number;
 };
 
-export type GradeSystem = typeof gradeSystem[number]['key'];
-export type GradeTable = Record<GradeSystem, Array<string>>;
+export type TickStyle =
+  | 'OS'
+  | 'FL'
+  | 'RP'
+  | 'PP'
+  | 'RK'
+  | 'AF'
+  | 'TR'
+  | 'FS'
+  | null;
+export type Tick = {
+  osmId: string;
+  style: TickStyle;
+  date: string;
+};

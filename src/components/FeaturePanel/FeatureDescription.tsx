@@ -1,16 +1,16 @@
-import IconButton from '@material-ui/core/IconButton';
 import React from 'react';
-import styled from 'styled-components';
-import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import CloseIcon from '@material-ui/icons/Close';
-import { capitalize, useToggleState } from '../helpers';
-import { t } from '../../services/intl';
+import { Box, Grid, Typography } from '@mui/material';
+import styled from '@emotion/styled';
+import { capitalize } from '../helpers';
+import { t, Translation } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { TooltipButton } from '../utils/TooltipButton';
+import { Feature } from '../../services/types';
 
-const StyledIconButton = styled(IconButton)`
-  position: absolute !important; /* TODO mui styles takes precendence, why? */
-  margin-top: -10px !important;
-  margin-left: -8px !important;
+const InfoTooltipWrapper = styled.span`
+  position: relative;
+  top: -3px;
+  left: -3px;
 
   svg {
     font-size: 17px;
@@ -26,31 +26,73 @@ const A = ({ href, children }) =>
     children
   );
 
-const getUrls = ({ type, id, changeset = '', user = '' }) => ({
+const getUrls = ({ type, id, changeset, user }: Feature['osmMeta']) => ({
   itemUrl: `https://openstreetmap.org/${type}/${id}`,
   historyUrl: `https://openstreetmap.org/${type}/${id}/history`,
   changesetUrl: changeset && `https://openstreetmap.org/changeset/${changeset}`, // prettier-ignore
   userUrl: user && `https://openstreetmap.org/user/${user}`,
 });
 
-export const FeatureDescription = ({ setAdvanced }) => {
+const Urls = () => {
   const {
-    feature: { osmMeta, nonOsmObject, point },
+    feature: { osmMeta },
   } = useFeatureContext();
-
-  const [isShown, toggle] = useToggleState(false);
 
   const { timestamp = '2001-00-00', type, user, version = '?' } = osmMeta;
   const { itemUrl, historyUrl, changesetUrl, userUrl } = getUrls(osmMeta);
   const date = timestamp?.split('T')[0];
 
-  const onClick = (e) => {
-    if (!isShown) {
-      if (e.shiftKey && e.altKey) setAdvanced(true);
-    } else {
-      setAdvanced(false);
+  return (
+    <>
+      <A href={itemUrl}>{capitalize(type)}</A> •{' '}
+      <A href={historyUrl}>version {version}</A> •{' '}
+      <A href={changesetUrl}>{date}</A> • <A href={userUrl}>{user || 'n/a'}</A>
+    </>
+  );
+};
+
+const FromOsm = () => (
+  <Box m={1}>
+    <Grid
+      component="div"
+      container
+      direction="row"
+      alignItems="flex-start"
+      justifyContent="flex-start"
+    >
+      <Grid item xs={3}>
+        <Box mt={2}>
+          <img
+            src="/logo-osm.svg"
+            alt="OpenStreetMap logo"
+            width={50}
+            height={50}
+          />
+        </Box>
+      </Grid>
+      <Grid item xs={9} md={7}>
+        <Box my={1}>
+          <Typography variant="body2">
+            <Translation id="homepage.about_osm" />
+          </Typography>
+        </Box>
+      </Grid>
+    </Grid>
+    <Urls />
+  </Box>
+);
+
+export const FeatureDescription = ({ advanced, setAdvanced }) => {
+  const {
+    feature: { osmMeta, nonOsmObject, point },
+  } = useFeatureContext();
+  const { type } = osmMeta;
+
+  const onClick = (e: React.MouseEvent) => {
+    // Alt+Shift+click to enable FeaturePanel advanced mode
+    if (e.shiftKey && e.altKey) {
+      setAdvanced((v) => !v);
     }
-    toggle();
   };
 
   if (point) {
@@ -62,26 +104,20 @@ export const FeatureDescription = ({ setAdvanced }) => {
 
   return (
     <div>
-      {!isShown &&
+      {advanced ? (
+        <Urls />
+      ) : (
         t('featurepanel.feature_description_osm', {
           type: capitalize(type),
-        })}
-      {isShown && (
-        <>
-          <A href={itemUrl}>{capitalize(type)}</A> •{' '}
-          <A href={historyUrl}>version {version}</A> •{' '}
-          <A href={changesetUrl}>{date}</A> •{' '}
-          <A href={userUrl}>{user || 'n/a'}</A>
-        </>
+        })
       )}
-
-      <StyledIconButton
-        title="Alt+Shift+click to enable advanced mode (show-all-tags, show-members, around-show-all)"
-        onClick={onClick}
-      >
-        {!isShown && <InfoOutlinedIcon fontSize="small" color="secondary" />}
-        {isShown && <CloseIcon fontSize="small" color="disabled" />}
-      </StyledIconButton>
+      <InfoTooltipWrapper>
+        <TooltipButton
+          tooltip={<FromOsm />}
+          onClick={onClick}
+          color="secondary"
+        />
+      </InfoTooltipWrapper>
     </div>
   );
 };

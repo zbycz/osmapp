@@ -9,6 +9,9 @@ export default {
   show_more: 'Zobrazit více',
   show_less: 'Zobrazit méně',
 
+  'user.login_register': 'Přihlásit se / Registrovat',
+  'user.logout': 'Odhlásit se',
+
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
 
@@ -28,6 +31,7 @@ export default {
   'install.outro': 'To je vše! Aplikaci najdete na své domovské obrazovce.',
   'install.note': 'Poznámka: Používáme technologii PWA – rychlá instalace bez nutnosti Google Play či App Storu.',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
+  'homepage.go_to_map_button': 'Přejít do mapy',
   'homepage.examples.eg': 'např.',
   'homepage.examples.charles_bridge_statues': 'Sochy na Karlově mostě',
   'homepage.about_osm': `Mapová data pochází z projektu <a href="https://osm.org">OpenStreetMap</a>, tvoří ho
@@ -37,13 +41,13 @@ export default {
   'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
     včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
     V plánu jsou funkce jako navigace či oblíbená místa.`,
-  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
+  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – za obrázky 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – za nejlepší mapu Země 🌎
+        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – za obrázky 🖼
+        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – za nejlepší mapu Země 🌎
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – za skvělé vektorové mapy <br>a za podporu tohoto projektu  ❤️ ',
@@ -55,6 +59,7 @@ export default {
   'searchbox.category': 'kategorie',
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
   'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
+  'searchbox.overpass_custom_query': 'vlastní dotaz',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',
@@ -81,21 +86,26 @@ export default {
   'featurepanel.uncertain_image': 'Je zobrazena nejbližší fotka uliční úrovně. Může ukazovat jiný objekt.',
   'featurepanel.inline_edit_title': 'Upravit',
   'featurepanel.objects_around': 'Objekty v okolí',
+  'featurepanel.climbing_restriction': 'Lezecké omezení',
 
   'opening_hours.open': 'Otevřeno: __todayTime__',
   'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',
   'opening_hours.today_closed': 'Dnes zavřeno',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'neděle|pondělí|úterý|středa|čtvrtek|pátek|sobota',
+  'opening_hours.editor.closed': 'zavřeno',
+  'opening_hours.editor.create_advanced': 'Podrobnější otvírací dobu můžete vytvořit v <link>nástroji YoHours</link>.',
+  'opening_hours.editor.cant_edit_here': 'Tuto otvírací dobu zde nelze editovat. Prosím, použijte <link>nástroj YoHours</link>.',
 
-  'map.github_title': 'GitHub',
+  'map.github_title': 'GitHub repozitář',
   'map.language_title': 'Změnit jazyk',
   'map.osm_copyright_tooltip': '(c) přispěvatelé OpenStreetMap.org<br> – svobodná mapová data světa 👌',
   'map.maptiler_copyright_tooltip':
     '(c) MapTiler.com ❤️ <br> – vektorové dlaždice, hosting, turistická mapa<br>Velký dík za podporu tohoto projektu! 🙂 ',
   'map.more_button': 'více',
   'map.more_button_title': 'Další možnosti…',
-  'map.edit_link': 'Otevřít oblast v editoru iD',
+  'map.edit_link': 'Otevřít mapu v editoru iD',
   'map.about_link': 'O aplikaci',
+  'map.compass_tooltip': 'Potáhnutí (drag) kompasu spustí 3D. Pro reset klikněte.',
 
   'editdialog.add_heading': 'Přidat do OpenStreetMap',
   'editdialog.undelete_heading': 'Znovu přidat do OpenStreetMap',

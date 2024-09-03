@@ -1,10 +1,14 @@
 import * as React from 'react';
-import Dialog from '@material-ui/core/Dialog';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import { Button, CircularProgress, TextField } from '@material-ui/core';
-import { Autocomplete } from '@material-ui/lab';
+import {
+  Dialog,
+  DialogTitle,
+  DialogActions,
+  DialogContent,
+  Button,
+  CircularProgress,
+  TextField,
+  Autocomplete,
+} from '@mui/material';
 import {
   Category as CategoryType,
   LayerIndex,
@@ -119,7 +123,7 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
     const valuesLength = Object.keys(values).length;
     const desiredLength = dynamicParts.length;
     onValidation(desiredLength === valuesLength);
-  }, [values]);
+  }, [values, dynamicParts.length, onChange, onValidation]);
 
   return (
     <div
@@ -254,10 +258,13 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
           <Details
             layer={layer}
             onChange={(vals) => {
-              const baseUrl = Object.keys(vals).reduce((acc, key) => {
-                const keyPattern = new RegExp(`{${key}(:[a-z,A-Z,0-9]+)?}`);
-                return acc.replace(keyPattern, vals[key]);
-              }, layer.url.replace('{zoom}', '{z}'));
+              const baseUrl = Object.keys(vals).reduce(
+                (acc, key) => {
+                  const keyPattern = new RegExp(`{${key}(:[a-z,A-Z,0-9]+)?}`);
+                  return acc.replace(keyPattern, vals[key]);
+                },
+                layer.url.replace('{zoom}', '{z}'),
+              );
 
               setLayerUrl(baseUrl);
             }}

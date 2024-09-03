@@ -1,5 +1,5 @@
 import React from 'react';
-import Language from '@material-ui/icons/Language';
+import Language from '@mui/icons-material/Language';
 
 const protocol = /^\w+:\/\//;
 const fixHttp = (url) => (url.match(protocol) ? url : `http://${url}`);

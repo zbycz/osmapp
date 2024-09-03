@@ -35,7 +35,7 @@ export const usePersistedState = <T>(
     document.addEventListener(eventName, listener);
 
     return () => document.removeEventListener(eventName, listener);
-  }, []);
+  }, [eventName, getVal]);
 
   return [value, setValue];
 };

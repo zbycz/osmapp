@@ -39,7 +39,7 @@ const openclimbing: Project = {
 const domains: Record<string, Project> = {
   'osmapp.org': osmapp,
   'openclimbing.org': openclimbing,
-  '127.0.0.1:3000': openclimbing,
+  '127.0.0.1:3000': osmapp,
 };
 const prUrl = (host: string) =>
   /^osmapp-git(.*)climbing(.*)vercel.app$/.test(host) ? openclimbing : null;

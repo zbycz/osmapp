@@ -1,9 +1,9 @@
 /* eslint-disable  no-underscore-dangle */
 import maplibregl from 'maplibre-gl';
-import { useAddMapEvent } from '../../helpers';
+import { createMapEventHook } from '../../helpers';
 
 const TERRAIN = {
-  source: 'terrain',
+  source: 'terrain3d',
   exaggeration: 1,
 };
 
@@ -32,7 +32,7 @@ const terrainControl = new OsmappTerrainControl(TERRAIN);
 
 let added = false;
 
-export const useToggleTerrainControl = useAddMapEvent((map) => ({
+export const useToggleTerrainControl = createMapEventHook((map) => ({
   eventType: 'move',
   eventHandler: () => {
     if (map.getPitch() > 0 && !added) {

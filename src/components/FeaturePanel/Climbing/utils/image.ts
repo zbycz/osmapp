@@ -1,5 +1,6 @@
 export const getContainedSizeImage = (image) => {
-  const ratio = image.naturalWidth / image.naturalHeight;
+  const ratio =
+    image.naturalHeight === 0 ? 0 : image.naturalWidth / image.naturalHeight;
   let width = image.height * ratio;
   let { height } = image;
 

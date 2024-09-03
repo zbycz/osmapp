@@ -23,7 +23,7 @@ const anotherNode = {
   id: 123,
   lat: 55,
   lon: 10,
-  tags: {},
+  tags: { climbing: 'crag', 'climbing:sport': '30' },
 };
 const areaRelation = {
   type: 'relation',
@@ -45,7 +45,11 @@ const cragRelation = {
   id: 17089246,
   center: { lat: 49.6540645, lon: 14.2524021 },
   members: [{ type: 'node', ref: 11557711620, role: '' }],
-  tags: { climbing: 'crag', name: 'Borová věž' },
+  tags: {
+    climbing: 'crag',
+    name: 'Borová věž',
+    'wikimedia_commons:2': 'File:123.jpg',
+  },
 };
 const response = {
   elements: [routeNode, anotherNode, someWay, areaRelation, cragRelation],
@@ -62,7 +66,9 @@ const geojson = [
       subclass: 'route_bottom',
       climbing: 'route_bottom',
       name: 'Detonátor',
+      osmappLabel: 'Detonátor',
       osmappType: 'node',
+      osmappHasImages: false,
     },
     tags: { climbing: 'route_bottom', name: 'Detonátor' },
     type: 'Feature',
@@ -72,8 +78,20 @@ const geojson = [
     geometry: { coordinates: [10, 55], type: 'Point' },
     id: 1230,
     osmMeta: { id: 123, type: 'node' },
-    properties: { class: 'information', osmappType: 'node' },
-    tags: {},
+    properties: {
+      class: 'climbing',
+      climbing: 'crag',
+      'climbing:sport': '30',
+      osmappRouteCount: 30,
+      osmappHasImages: false,
+      osmappType: 'node',
+      subclass: 'crag',
+      osmappLabel: '³⁰',
+    },
+    tags: {
+      climbing: 'crag',
+      'climbing:sport': '30',
+    },
     type: 'Feature',
   },
   {
@@ -87,7 +105,12 @@ const geojson = [
     },
     id: 2221,
     osmMeta: { id: 222, type: 'way' },
-    properties: { class: 'information', osmappType: 'way' },
+    properties: {
+      class: 'information',
+      osmappType: 'way',
+      osmappHasImages: false,
+      osmappLabel: '',
+    },
     tags: {},
     type: 'Feature',
   },
@@ -110,10 +133,17 @@ const geojson = [
       subclass: 'area',
       climbing: 'area',
       name: 'Lomy nad Velkou',
+      osmappLabel: 'Lomy nad Velkou\n³¹',
       osmappType: 'relation',
+      osmappRouteCount: 31,
+      osmappHasImages: true,
     },
     tags: { climbing: 'area', name: 'Lomy nad Velkou' },
     type: 'Feature',
+    members: [
+      { type: 'relation', ref: 17089246, role: '' },
+      { type: 'node', ref: 123, role: '' },
+    ],
   },
   {
     center: [14.25, 49.65],
@@ -128,14 +158,23 @@ const geojson = [
       subclass: 'crag',
       climbing: 'crag',
       name: 'Borová věž',
+      osmappLabel: 'Borová věž\n¹',
       osmappType: 'relation',
+      osmappRouteCount: 1,
+      osmappHasImages: true,
+      'wikimedia_commons:2': 'File:123.jpg',
     },
-    tags: { climbing: 'crag', name: 'Borová věž' },
+    tags: {
+      climbing: 'crag',
+      name: 'Borová věž',
+      'wikimedia_commons:2': 'File:123.jpg',
+    },
     type: 'Feature',
+    members: [{ type: 'node', ref: 11557711620, role: '' }],
   },
 ];
 
-test('conversion', () => {
+test('basic conversion', () => {
   expect(cragsToGeojson(response)).toEqual(geojson);
 });
 
@@ -152,28 +191,40 @@ const crag2 = {
   members: [],
   tags: {},
 };
-test('conversion with centers', () => {
+test('conversion with centers instead of geometries', () => {
   expect(cragsToGeojson({ elements: [area2, crag2] })).toEqual([
     {
+      type: 'Feature',
+      osmMeta: { id: 555, type: 'relation' },
+      id: 5554,
       center: [14, 51],
       geometry: {
         geometries: [{ coordinates: [14, 51], type: 'Point' }],
         type: 'GeometryCollection',
       },
-      id: 5554,
-      osmMeta: { id: 555, type: 'relation' },
-      properties: { class: 'information', osmappType: 'relation' },
+      properties: {
+        class: 'information',
+        osmappType: 'relation',
+        osmappHasImages: false,
+        osmappLabel: '',
+      },
       tags: {},
-      type: 'Feature',
+      members: [{ type: 'relation', ref: 17089246, role: '' }],
     },
     {
+      type: 'Feature',
+      osmMeta: { id: 17089246, type: 'relation' },
+      id: 170892464,
       center: [14, 51],
       geometry: { coordinates: [14, 51], type: 'Point' },
-      id: 170892464,
-      osmMeta: { id: 17089246, type: 'relation' },
-      properties: { class: 'information', osmappType: 'relation' },
+      properties: {
+        class: 'information',
+        osmappType: 'relation',
+        osmappHasImages: false,
+        osmappLabel: '',
+      },
       tags: {},
-      type: 'Feature',
+      members: [],
     },
   ]);
 });

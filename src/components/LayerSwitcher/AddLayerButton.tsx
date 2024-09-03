@@ -1,6 +1,5 @@
 import React from 'react';
-import { Box } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import { Box, Button } from '@mui/material';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { AddCustomDialog } from './AddCustomLayer';
@@ -28,8 +27,12 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
             maxzoom,
             name,
             url,
-            attribution,
             bbox,
+            ...(attribution && {
+              attribution: [
+                attribution.text || attribution.url || attribution.html,
+              ],
+            }),
           };
 
           setUserLayers((current) => {

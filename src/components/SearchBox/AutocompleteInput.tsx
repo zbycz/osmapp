@@ -1,13 +1,15 @@
-import Autocomplete from '@material-ui/lab/Autocomplete';
 import React, { useEffect } from 'react';
-import InputBase from '@material-ui/core/InputBase';
+import { Autocomplete, InputBase } from '@mui/material';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { renderOptionFactory, buildPhotonAddress } from './renderOptionFactory';
+import { renderOptionFactory } from './renderOptionFactory';
 import { t } from '../../services/intl';
-import { onHighlightFactory, onSelectedFactory } from './onSelectedFactory';
-import { useMobileMode } from '../helpers';
+import { onSelectedFactory } from './onSelectedFactory';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { onHighlightFactory } from './onHighlightFactory';
+import { buildPhotonAddress } from './options/geocoder';
+import { useMapCenter } from './utils';
+import { useSnackbar } from '../utils/SnackbarContext';
 
 const useFocusOnSlash = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -30,13 +32,13 @@ const useFocusOnSlash = () => {
 };
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
-  const inputRef = useFocusOnSlash();
+  // const inputRef = useFocusOnSlash();
   const { InputLabelProps, InputProps, ...restParams } = params;
 
   useEffect(() => {
     // @ts-ignore
     params.InputProps.ref(autocompleteRef.current);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onChange = (e) => setInputValue(e.target.value);
   const onFocus = (e) => e.target.select();
@@ -44,7 +46,10 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   return (
     <InputBase
       {...restParams} // eslint-disable-line react/jsx-props-no-spreading
-      inputRef={inputRef}
+      sx={{
+        height: '47px',
+      }}
+      // inputRef={inputRef}
       placeholder={t('searchbox.placeholder')}
       onChange={onChange}
       onFocus={onFocus}
@@ -60,8 +65,9 @@ export const AutocompleteInput = ({
   setOverpassLoading,
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
-  const { bbox, showToast } = useMapStateContext();
-  const mobileMode = useMobileMode();
+  const { bbox } = useMapStateContext();
+  const { showToast } = useSnackbar();
+  const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
   return (
     <Autocomplete
@@ -73,17 +79,16 @@ export const AutocompleteInput = ({
       getOptionLabel={(option) =>
         option.properties?.name ||
         option.preset?.presetForSearch?.name ||
-        (option.overpass &&
-          Object.entries(option.overpass)
-            ?.map(([k, v]) => `${k}=${v}`)
-            .join(' ')) ||
+        option.overpass?.inputValue ||
         (option.star && option.star.label) ||
-        (option.loader ? '' : buildPhotonAddress(option.properties))
+        (option.loader && '') ||
+        (option.properties && buildPhotonAddress(option.properties)) ||
+        ''
       }
+      getOptionKey={(option) => JSON.stringify(option)}
       onChange={onSelectedFactory(
         setFeature,
         setPreview,
-        mobileMode,
         bbox,
         showToast,
         setOverpassLoading,
@@ -104,7 +109,7 @@ export const AutocompleteInput = ({
           autocompleteRef={autocompleteRef}
         />
       )}
-      renderOption={renderOptionFactory(inputValue, currentTheme)}
+      renderOption={renderOptionFactory(inputValue, currentTheme, mapCenter)}
     />
   );
 };

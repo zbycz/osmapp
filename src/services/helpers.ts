@@ -1,7 +1,7 @@
 import * as xml2js from 'isomorphic-xml2js';
 import fetch from 'isomorphic-unfetch';
 import { isServer, isString } from '../components/helpers';
-import { Feature, Position } from './types';
+import { Feature, OsmId, Position } from './types';
 import { join, roundedToDegUrl } from '../utils';
 import { PROJECT_URL } from './project';
 import { getIdFromShortener, getShortenerSlug } from './shortener';
@@ -29,20 +29,15 @@ export const buildXmlString = (xml) => {
   return builder.buildObject(xml);
 };
 
-export interface OsmApiId {
-  // type: 'node' | 'way' | 'relation';
-  type: string;
-  id: string;
-}
+export const getShortId = ({ id, type }: OsmId): string => `${type[0]}${id}`;
+export const getUrlOsmId = ({ id, type }: OsmId): string => `${type}/${id}`;
 
-// apiId.replace(/([a-z])[a-z]+\/([0-9]+)/, '$1$2');
-export const getShortId = (apiId: OsmApiId): string =>
-  `${apiId.type[0]}${apiId.id}`;
+export const getKey = (feature: Feature) =>
+  feature.point
+    ? feature.center.join(',')
+    : getUrlOsmId(feature.osmMeta) + feature.osmMeta.version;
 
-export const getUrlOsmId = (apiId: OsmApiId): string =>
-  `${apiId.type}/${apiId.id}`;
-
-export const getApiId = (value): OsmApiId => {
+export const getApiId = (value): OsmId => {
   if (value.type && value.id) {
     return value;
   }
@@ -53,14 +48,14 @@ export const getApiId = (value): OsmApiId => {
   return { type, id };
 };
 
-export const getOsmappLink = (feature: Feature) => {
+export const getOsmappLink = (feature: Feature | null) => {
   if (!feature.point && feature?.osmMeta?.id)
     return `/${getUrlOsmId(feature.osmMeta)}`;
 
   if (feature?.roundedCenter)
     return `/${roundedToDegUrl(feature.roundedCenter)}`;
 
-  return '';
+  return '/';
 };
 
 export const getFullOsmappLink = (feature: Feature) =>
@@ -70,9 +65,6 @@ export const getShortLink = (feature: Feature) => {
   const slug = getShortenerSlug(feature.osmMeta);
   return slug === null ? null : `${PROJECT_URL}/${slug}`;
 };
-
-export const isSameOsmId = (feature, skeleton) =>
-  feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
 
 export const prod = process.env.NODE_ENV === 'production';
 
@@ -91,6 +83,17 @@ export const isValidImage = (url): Promise<boolean> => {
     imgElement.src = url;
   });
 };
+
+export type ImageSize = { width: number; height: number } | null;
+
+export const getImageSize = (url): Promise<ImageSize> =>
+  new Promise((resolve) => {
+    const imgElement = new Image();
+    imgElement.onload = () =>
+      resolve({ width: imgElement.width, height: imgElement.height });
+    imgElement.onerror = () => resolve(null);
+    imgElement.src = url;
+  });
 
 export const stringifyDomXml = (itemXml) =>
   isString(itemXml) ? itemXml : new XMLSerializer().serializeToString(itemXml);
@@ -154,3 +157,18 @@ export const doShortenerRedirect = (ctx) => {
 
   return false;
 };
+
+export class FetchError extends Error {
+  constructor(
+    public message: string = '',
+    public code: string,
+    public data: string,
+  ) {
+    super();
+  }
+
+  toString() {
+    const suffix = this.data && ` Data: ${this.data.substring(0, 1000)}`;
+    return `Fetch: ${this.message}${suffix}`;
+  }
+}

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Typography } from '@material-ui/core';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Box, Typography } from '@mui/material';
 import Router from 'next/router';
 import { fetchAroundFeature } from '../../services/osmApi';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -7,28 +7,31 @@ import { Feature } from '../../services/types';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
-import { FetchError } from '../../services/fetch';
-import { trimText, useMobileMode } from '../helpers';
+import { DotLoader, trimText, useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { useUserThemeContext } from '../../helpers/theme';
 
 const useLoadingState = () => {
   const [around, setAround] = useState<Feature[]>([]);
-  const [error, setError] = useState();
+  const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
-  const finishAround = (payload) => {
+
+  const finishAround = useCallback((payload) => {
     setLoading(false);
     setAround(payload);
-  };
-  const startAround = () => {
+  }, []);
+
+  const startAround = useCallback(() => {
     setLoading(true);
     setAround([]);
     setError(undefined);
-  };
-  const failAround = (err) => {
-    setError(err instanceof FetchError ? err.message : err);
+  }, []);
+
+  const failAround = useCallback(() => {
+    setError('Could not load routes');
     setLoading(false);
-  };
+  }, []);
+
   return { around, error, loading, startAround, finishAround, failAround };
 };
 
@@ -42,8 +45,7 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
     setPreview(null);
     Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
   };
-  const handleHover = () =>
-    feature.center && setPreview({ ...feature, noPreviewButton: true });
+  const handleHover = () => feature.center && setPreview(feature);
 
   return (
     <li>
@@ -66,7 +68,6 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
-// TODO make SSR ?
 export const ObjectsAround = ({ advanced }) => {
   const { feature } = useFeatureContext();
   const { around, loading, error, startAround, finishAround, failAround } =
@@ -77,7 +78,7 @@ export const ObjectsAround = ({ advanced }) => {
     if (feature.center) {
       fetchAroundFeature(feature.center).then(finishAround, failAround); // TODO fix op on unmounted tree (react-query?)
     }
-  }, [getOsmappLink(feature)]);
+  }, [failAround, feature.center, finishAround, startAround]);
 
   if (!feature.center) {
     return null;
@@ -115,9 +116,7 @@ export const ObjectsAround = ({ advanced }) => {
       {loading && (
         <Typography color="secondary" paragraph>
           {t('loading')}
-          <span className="dotloader">.</span>
-          <span className="dotloader">.</span>
-          <span className="dotloader">.</span>
+          <DotLoader />
         </Typography>
       )}
 

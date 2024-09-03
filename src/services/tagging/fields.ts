@@ -61,6 +61,7 @@ export const computeAllFieldKeys = (preset: Preset) => {
   return [...new Set(allFieldKeys)];
 };
 
+// TODO check - 1) field.options 2) strings.options
 export const getValueForField = (
   field,
   fieldTranslation,

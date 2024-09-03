@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
-import { Typography } from '@material-ui/core';
+import { Typography } from '@mui/material';
 import { LineInformation, requestLines } from './requestRoutes';
 import { PublicTransportWrapper } from './PublicTransportWrapper';
 import { FeatureTags } from '../../../services/types';
 import { LineNumber } from './LineNumber';
+import { DotLoader } from '../../helpers';
 
 interface PublicTransportProps {
   tags: FeatureTags;
@@ -15,21 +16,21 @@ const useLoadingState = () => {
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
 
-  const finishRoutes = (payload) => {
+  const finishRoutes = useCallback((payload) => {
     setLoading(false);
     setRoutes(payload);
-  };
+  }, []);
 
-  const startRoutes = () => {
+  const startRoutes = useCallback(() => {
     setLoading(true);
     setRoutes([]);
     setError(undefined);
-  };
+  }, []);
 
-  const failRoutes = () => {
+  const failRoutes = useCallback(() => {
     setError('Could not load routes');
     setLoading(false);
-  };
+  }, []);
 
   return { routes, error, loading, startRoutes, finishRoutes, failRoutes };
 };
@@ -41,30 +42,24 @@ const PublicTransportInner = () => {
     useLoadingState();
 
   useEffect(() => {
-    const loadData = async () => {
+    (async () => {
       startRoutes();
       const lines = await requestLines(
         router.query.all[0] as any,
         Number(router.query.all[1]),
       ).catch(failRoutes);
       finishRoutes(lines);
-    };
-
-    loadData();
-  }, []);
+    })();
+  }, [failRoutes, finishRoutes, router.query.all, startRoutes]);
 
   return (
     <div>
       {loading ? (
-        <>
-          <span className="dotloader">.</span>
-          <span className="dotloader">.</span>
-          <span className="dotloader">.</span>
-        </>
+        <DotLoader />
       ) : (
         <PublicTransportWrapper>
           {routes.map((line) => (
-            <LineNumber name={line.ref} color={line.colour} />
+            <LineNumber key={line.ref} name={line.ref} color={line.colour} />
           ))}
         </PublicTransportWrapper>
       )}

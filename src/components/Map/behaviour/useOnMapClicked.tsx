@@ -1,16 +1,15 @@
-import Router from 'next/router';
-import { useAddMapEvent } from '../../helpers';
+import { createMapEventHook, isMobileDevice } from '../../helpers';
 import { addFeatureCenterToCache } from '../../../services/osmApi';
-import {
-  getShortId,
-  getUrlOsmId,
-  isSameOsmId,
-} from '../../../services/helpers';
-import { getRoundedPosition, publishDbgObject } from '../../../utils';
+import { getOsmappLink, getShortId } from '../../../services/helpers';
+import { publishDbgObject } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
 import { convertMapIdToOsmId, getIsOsmObject } from '../helpers';
-import { getCoordsFeature } from '../../../services/getCoordsFeature';
 import { maptilerFix } from './maptilerFix';
+import { Feature, LonLat } from '../../../services/types';
+import { createCoordsFeature, pushFeatureToRouter } from './utils';
+
+const isSameOsmId = (feature: Feature, skeleton: Feature) =>
+  feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
 
 export const getSkeleton = (feature, clickCoords) => {
   const isOsmObject = getIsOsmObject(feature);
@@ -29,44 +28,51 @@ export const getSkeleton = (feature, clickCoords) => {
   };
 };
 
-export const useOnMapClicked = useAddMapEvent(
-  (map, setFeature, setPreview, mobileMode) => ({
-    eventType: 'click',
-    eventHandler: async ({ point }) => {
-      const coords = map.unproject(point).toArray();
-      const features = map.queryRenderedFeatures(point);
-      if (!features.length) {
-        const roundedPosition = getRoundedPosition(coords, map.getZoom());
-        setPreview(getCoordsFeature(roundedPosition));
-        return;
-      }
+const coordsClicked = (map, coords: LonLat, setFeature) => {
+  if (isMobileDevice()) {
+    setFeature(null); // handled by useOnMapLongPressed
+    pushFeatureToRouter(null);
+    return;
+  }
 
-      const skeleton = getSkeleton(features[0], coords);
-      console.log(`clicked map feature (id=${features[0].id}): `, features[0]); // eslint-disable-line no-console
-      publishDbgObject('last skeleton', skeleton);
+  setFeature((previousFeature) => {
+    if (previousFeature) {
+      pushFeatureToRouter(null);
+      return null;
+    }
+    const coordsFeature = createCoordsFeature(coords, map);
+    pushFeatureToRouter(coordsFeature);
+    return coordsFeature;
+  });
+};
 
-      if (skeleton.nonOsmObject) {
-        const roundedPosition = getRoundedPosition(coords, map.getZoom());
-        setPreview(getCoordsFeature(roundedPosition));
-        return;
-      }
+export const useOnMapClicked = createMapEventHook((map, setFeature) => ({
+  eventType: 'click',
+  eventHandler: async ({ point }) => {
+    const coords = map.unproject(point).toArray();
+    const features = map.queryRenderedFeatures(point);
+    if (!features.length) {
+      coordsClicked(map, coords, setFeature);
+      return;
+    }
 
-      if (mobileMode) {
-        setPreview(skeleton);
-        return;
-      }
+    const skeleton = getSkeleton(features[0], coords);
+    console.log(`clicked map feature (id=${features[0].id}): `, features[0]); // eslint-disable-line no-console
+    publishDbgObject('last skeleton', skeleton);
 
-      // router wouldnt overwrite the skeleton if same url is already loaded
-      setFeature((feature) =>
-        isSameOsmId(feature, skeleton) ? feature : skeleton,
-      );
-      setPreview(null);
+    if (skeleton.nonOsmObject) {
+      coordsClicked(map, coords, setFeature);
+      return;
+    }
 
-      const result = await maptilerFix(features[0].id, skeleton);
-      addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
-      addFeatureCenterToCache(getShortId(result.osmMeta), skeleton.center);
-      const url = `/${getUrlOsmId(result.osmMeta)}${window.location.hash}`;
-      Router.push(url, undefined, { locale: 'default' });
-    },
-  }),
-);
+    // router wouldnt overwrite the skeleton if same url is already loaded
+    setFeature((feature) =>
+      isSameOsmId(feature, skeleton) ? feature : skeleton,
+    );
+
+    const result = await maptilerFix(features[0], skeleton, features[0].id);
+    addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center); // for ways/relations we dont receive center from OSM API
+    addFeatureCenterToCache(getShortId(result.osmMeta), skeleton.center);
+    pushFeatureToRouter(result);
+  },
+}));

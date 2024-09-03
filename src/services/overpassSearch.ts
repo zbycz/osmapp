@@ -1,26 +1,22 @@
-import { Feature, GeometryCollection, LineString, Point } from './types';
+import { GeometryCollection, LineString, Point, OsmId } from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
-import { OsmApiId } from './helpers';
 import { fetchJson } from './fetch';
+import { Feature, FeatureCollection } from 'geojson';
 
-const overpassQuery = (bbox, tags) => {
-  const query = tags
+const getQueryFromTags = (tags) => {
+  const selector = tags
     .map(([k, v]) => (v === '*' ? `["${k}"]` : `["${k}"="${v}"]`))
     .join('');
-
-  return `[out:json][timeout:25];
-  (
-    node${query}(${bbox});
-    way${query}(${bbox});
-    relation${query}(${bbox});
-  );
-  out geom qt;`; // "out geom;>;out geom qt;" to get all full subitems as well
+  return `nwr${selector}`;
 };
 
-const getOverpassUrl = ([a, b, c, d], tags) =>
+const getOverpassQuery = ([a, b, c, d], query) =>
+  `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
+
+export const getOverpassUrl = (fullQuery) =>
   `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-    overpassQuery([d, a, b, c], tags),
+    fullQuery,
   )}`;
 
 const GEOMETRY = {
@@ -39,20 +35,19 @@ const GEOMETRY = {
           el.type === 'node'
             ? GEOMETRY.node(el)
             : el.type === 'way'
-            ? GEOMETRY.way(el)
-            : null,
+              ? GEOMETRY.way(el)
+              : null,
         )
         .filter(Boolean) ?? [],
   }),
 };
 
-const convertOsmIdToMapId = (apiId: OsmApiId) => {
+const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-// maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
-
+// TODO use our own implementaion from fetchCrags, which handles recursive geometries
 export const overpassGeomToGeojson = (response: any): Feature[] =>
   response.elements.map((element) => {
     const { type, id, tags = {} } = element;
@@ -70,10 +65,16 @@ export const overpassGeomToGeojson = (response: any): Feature[] =>
 
 export const performOverpassSearch = async (
   bbox,
-  tags: Record<string, string>,
-) => {
-  console.log('seaching overpass for tags: ', tags); // eslint-disable-line no-console
-  const overpass = await fetchJson(getOverpassUrl(bbox, Object.entries(tags)));
+  tagsOrQuery: Record<string, string> | string,
+): Promise<FeatureCollection> => {
+  const body =
+    typeof tagsOrQuery === 'string'
+      ? tagsOrQuery
+      : getQueryFromTags(Object.entries(tagsOrQuery));
+  const query = getOverpassQuery(bbox, body);
+
+  console.log('seaching overpass for query: ', query); // eslint-disable-line no-console
+  const overpass = await fetchJson(getOverpassUrl(query));
   console.log('overpass result:', overpass); // eslint-disable-line no-console
 
   const features = overpassGeomToGeojson(overpass);

@@ -4,6 +4,12 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
+import { getOsmTagFromGradeSystem } from './utils/grades/routeGrade';
+import { useSnackbar } from '../../utils/SnackbarContext';
+import {
+  getNextWikimediaCommonsIndex,
+  getWikimediaCommonsKey,
+} from './utils/photo';
 
 const getPathString = (path) =>
   path.length === 0
@@ -15,14 +21,45 @@ const getPathString = (path) =>
         )
         .join('|');
 
-const getUpdatedTags = (route: ClimbingRoute) => {
+const getUpdatedBasicTags = (route: ClimbingRoute) => {
+  const checkedTags = ['name', 'description', 'author'];
   const updatedTags = {};
-  Object.entries(route.paths).forEach(([photoName, points]) => {
-    const photoTagKey = route.photoToKeyMap[photoName];
-    if (!photoTagKey) {
-      updatedTags[photoTagKey] = `File:${photoName}`;
+  checkedTags.forEach((tagToCheck) => {
+    if (route[tagToCheck] !== route.feature.tags[tagToCheck]) {
+      updatedTags[tagToCheck] = route[tagToCheck];
     }
-    updatedTags[`${photoTagKey}:path`] = getPathString(points);
+  });
+
+  const newGradeSystem = route.difficulty?.gradeSystem;
+  const gradeSystemKey = getOsmTagFromGradeSystem(newGradeSystem);
+  const featureDifficulty = route.feature.tags[gradeSystemKey];
+
+  const isGradeUpdated = route.difficulty?.grade !== featureDifficulty;
+
+  if (newGradeSystem && isGradeUpdated) {
+    updatedTags[gradeSystemKey] = route.difficulty.grade;
+    // @TODO: delete previous grade? if(!featureDifficulty)
+  }
+
+  return updatedTags;
+};
+
+const getUpdatedPhotoTags = (route: ClimbingRoute) => {
+  const updatedTags = {};
+  const newIndex = getNextWikimediaCommonsIndex(route.feature.tags);
+
+  let offset = 0;
+  Object.entries(route.paths).forEach(([photoName, points]) => {
+    const photoKey = route.photoToKeyMap[photoName];
+
+    if (photoKey) {
+      updatedTags[`${photoKey}:path`] = getPathString(points);
+    } else {
+      const newKey = getWikimediaCommonsKey(newIndex + offset); // TODO this offset looks broken
+      updatedTags[newKey] = `File:${photoName}`;
+      updatedTags[`${newKey}:path`] = getPathString(points);
+      offset += 1;
+    }
   });
   return updatedTags;
 };
@@ -34,12 +71,15 @@ const isSameTags = (updatedTags: {}, origTags: FeatureTags) => {
   return isSame;
 };
 
-const getChanges = (routes: ClimbingRoute[]): Change[] => {
+export const getChanges = (routes: ClimbingRoute[]): Change[] => {
   const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
 
   return existingRoutes
     .map((route) => {
-      const updatedTags = getUpdatedTags(route);
+      const updatedTags = {
+        ...getUpdatedBasicTags(route),
+        ...getUpdatedPhotoTags(route),
+      };
       const isSame = isSameTags(updatedTags, route.feature.tags);
       return isSame
         ? undefined
@@ -59,6 +99,7 @@ export const useGetHandleSave = (
 ) => {
   const { feature: crag } = useFeatureContext();
   const { routes } = useClimbingContext();
+  const { showToast } = useSnackbar();
 
   return async () => {
     // eslint-disable-next-line no-alert
@@ -71,6 +112,7 @@ export const useGetHandleSave = (
     const result = await editCrag(crag, comment, changes);
 
     console.log('All routes saved', result); // eslint-disable-line no-console
+    showToast('Data saved successfully!', 'success');
     setIsEditMode(false);
   };
 };

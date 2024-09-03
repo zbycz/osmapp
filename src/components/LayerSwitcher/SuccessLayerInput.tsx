@@ -1,13 +1,13 @@
-import { Autocomplete } from '@material-ui/lab';
+import * as React from 'react';
 import {
   Box,
   Checkbox,
   FormControlLabel,
   FormGroup,
   TextField,
-} from '@material-ui/core';
-import * as React from 'react';
-import { Star } from '@material-ui/icons';
+  Autocomplete,
+} from '@mui/material';
+import { Star } from '@mui/icons-material';
 import { LayerIndex } from './helpers/loadLayers';
 import { isViewInsideBbox } from './helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
@@ -47,7 +47,6 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
           .filter(({ bbox }) => {
             if (!currentlyVisible) return true;
             if (!bbox) return true;
-
             return bbox.some((b) => isViewInsideBbox(view, b));
           })
           .sort((a, b) => getLayerLabel(a).localeCompare(getLayerLabel(b)))}
@@ -56,11 +55,9 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
             typeof val === 'string' ? index.find((l) => l.name === val) : val;
           onSelect(newLayer);
         }}
-        // eslint-disable-next-line react/jsx-props-no-spreading
         renderInput={(params) => <TextField {...params} label="Layer" />}
         getOptionLabel={getLayerLabel}
-        renderOption={(props) => (
-          // eslint-disable-next-line react/jsx-props-no-spreading
+        renderOption={(props, option) => (
           <Box component="li" {...props}>
             <span
               style={{
@@ -69,8 +66,8 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
                 gap: '0.25rem',
               }}
             >
-              {props.best && <Star />}
-              {getLayerLabel(props)}
+              {option.best && <Star />}
+              {getLayerLabel(option)}
             </span>
           </Box>
         )}

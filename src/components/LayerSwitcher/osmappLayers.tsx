@@ -1,14 +1,15 @@
 import React from 'react';
-import ExploreIcon from '@material-ui/icons/Explore';
-import FilterHdrIcon from '@material-ui/icons/FilterHdr';
-import MapIcon from '@material-ui/icons/Map';
-import SatelliteIcon from '@material-ui/icons/Satellite';
-import DirectionsBikeIcon from '@material-ui/icons/DirectionsBike';
-import AcUnitIcon from '@material-ui/icons/AcUnit';
+import AcUnitIcon from '@mui/icons-material/AcUnit';
+import ExploreIcon from '@mui/icons-material/Explore';
+import FilterHdrIcon from '@mui/icons-material/FilterHdr';
+import MapIcon from '@mui/icons-material/Map';
+import SatelliteIcon from '@mui/icons-material/Satellite';
+import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import { Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
 import Maki from '../utils/Maki';
+import { useUserThemeContext } from '../../helpers/theme';
 
 interface Layers {
   [key: string]: Layer;
@@ -17,9 +18,17 @@ interface Layers {
 const retina =
   ((isBrowser() && window.devicePixelRatio) || 1) >= 2 ? '@2x' : '';
 
-const ClimbingIcon = () => (
-  <Maki ico="climbing" size={16} style={{ opacity: 0.3, marginLeft: '3px' }} />
-);
+const ClimbingIcon = () => {
+  const { currentTheme } = useUserThemeContext();
+  return (
+    <Maki
+      ico="climbing"
+      size={16}
+      style={{ opacity: 0.3, marginLeft: '3px' }}
+      invert={currentTheme === 'dark'}
+    />
+  );
+};
 
 const africaBbox = [
   -20, // west
@@ -119,6 +128,5 @@ export const osmappLayers: Layers = {
     type: 'overlayClimbing',
     Icon: ClimbingIcon,
     attribution: ['osm'],
-    bbox: czBbox,
   },
 };

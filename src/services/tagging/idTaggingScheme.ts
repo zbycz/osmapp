@@ -7,9 +7,11 @@ import { Preset, UiField } from './types/Presets';
 import { publishDbgObject } from '../../utils';
 import { getShortId } from '../helpers';
 import { Field } from './types/Fields';
+import { DEBUG_ID_SCHEMA } from '../../config.mjs';
+import { gradeSystemKeys } from '../../components/FeaturePanel/Climbing/utils/grades/gradeSystem';
 
 const logMoreMatchingFields = (matchingFields: Field[], key: string) => {
-  if (matchingFields.length > 1) {
+  if (DEBUG_ID_SCHEMA && matchingFields.length > 1) {
     // eslint-disable-next-line no-console
     console.debug(
       `More fields matching key ${key}: ${matchingFields.map(
@@ -158,6 +160,7 @@ const getFeaturedTags = (feature: Feature) => {
     'website',
     'website:2',
     'contact:website',
+    'url',
     'phone',
     'contact:phone',
     'contact:mobile',
@@ -165,6 +168,7 @@ const getFeaturedTags = (feature: Feature) => {
     ...(tags.wikipedia ? ['wikipedia'] : tags.wikidata ? ['wikidata'] : []),
     'fhrs:id',
     'description',
+    ...gradeSystemKeys,
   ];
 
   return keys.reduce(

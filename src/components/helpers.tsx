@@ -1,15 +1,18 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
-import { useMediaQuery } from '@material-ui/core';
+import { useMediaQuery } from '@mui/material';
 
 export const useToggleState = (
   initialState: boolean,
 ): [boolean, () => void] => {
   const [value, set] = useState<boolean>(initialState);
-  return [value, () => set(!value)];
+  const toggle = useCallback(() => set((prevValue) => !prevValue), []);
+  return [value, toggle];
 };
 
-export const useBoolState = (initialState) => {
+export const useBoolState = (
+  initialState: boolean,
+): [boolean, () => void, () => void] => {
   const [value, set] = useState(initialState);
   const setTrue = useCallback(() => set(true), []);
   const setFalse = useCallback(() => set(false), []);
@@ -26,21 +29,21 @@ export function isServer() {
   return typeof window === 'undefined';
 }
 
-export const useMapEffect =
+export const createMapEffectHook =
   (mapEffectFn) =>
-  (map, ...rest) =>
+  (map: Map, ...rest) =>
     useEffect(() => {
       if (map) {
         mapEffectFn(map, ...rest);
       }
-    }, [map, ...rest]);
+    }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 type EventDefintionFn = (
   map: Map,
   ...rest: any
 ) => { eventType: keyof MapEventType; eventHandler: any };
 
-export const useAddMapEvent =
+export const createMapEventHook =
   (getEventDefinition: EventDefintionFn) =>
   (map, ...rest) =>
     useEffect(() => {
@@ -52,7 +55,7 @@ export const useAddMapEvent =
         };
       }
       return undefined;
-    }, [map, ...rest]);
+    }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 export const isString = (value) => typeof value === 'string';
 
@@ -87,8 +90,47 @@ export const dotToOptionalBr = (url = '') =>
 export const trimText = (text, limit) =>
   text?.length > limit ? `${text?.substring(0, limit)}…` : text;
 
-// (<= tablet size) MobileMode shows preview instead of panel
-export const useMobileMode = () => useMediaQuery('(max-width: 700px)');
+// (<= tablet size) MobileMode shows FeaturePanel in Drawer (instead of side)
+export const isMobileMode = '(max-width: 700px)';
+export const useMobileMode = () => useMediaQuery(isMobileMode);
 
-// (>= mobile size) This changes just the app layout
+// (>= mobile size) SearchBox stops growing
 export const isDesktop = '(min-width: 500px)';
+
+// TODO refactor breakpoints later
+export const isTabletResolution = '(min-width: 501px)';
+export const isDesktopResolution = '(min-width: 701px)';
+
+// is mobile device - specific behaviour like longpress or geouri
+export const isMobileDevice = () =>
+  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO lets make it isomorphic. Otherwise we have hydration error
+
+export const useIsClient = () => {
+  const [isClient, setIsClient] = useState(false);
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+  return isClient;
+};
+
+export const DotLoader = () => (
+  <>
+    <span className="dotloader">.</span>
+    <span className="dotloader">.</span>
+    <span className="dotloader">.</span>
+  </>
+);
+
+// TODO import { NoSsr } from '@mui/base';
+export const ClientOnly = ({ children }) => {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+  return mounted ? children : null;
+};
+
+export const isImperial = () =>
+  window.localStorage.getItem('imperial') === 'yes';
+
+export const toggleImperial = () => {
+  localStorage.setItem('imperial', isImperial() ? '' : 'yes');
+};

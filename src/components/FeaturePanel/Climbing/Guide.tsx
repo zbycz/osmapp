@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
-import { Alert } from '@material-ui/lab';
-import { Button, Snackbar } from '@material-ui/core';
+import styled from '@emotion/styled';
+
+import { Button, Snackbar, Alert } from '@mui/material';
 import { t } from '../../../services/intl';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteNumber } from './RouteNumber';

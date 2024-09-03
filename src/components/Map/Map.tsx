@@ -1,25 +1,29 @@
 import React, { useEffect } from 'react';
 
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import dynamic from 'next/dynamic';
-import BugReport from '@material-ui/icons/BugReport';
-import Button from '@material-ui/core/Button';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { useBoolState } from '../helpers';
+import BugReport from '@mui/icons-material/BugReport';
+import { Button, CircularProgress } from '@mui/material';
+import { isDesktop, useBoolState } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
-import { SHOW_PROTOTYPE_UI } from '../../config';
+import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
+import { TopMenu } from './TopMenu/TopMenu';
+import { webglSupported } from './helpers';
 
-const BrowserMap = dynamic(() => import('./BrowserMap'), {
+const BrowserMapDynamic = dynamic(() => import('./BrowserMap'), {
   ssr: false,
   loading: () => <div />,
 });
 
-const LayerSwitcher = dynamic(() => import('../LayerSwitcher/LayerSwitcher'), {
-  ssr: false,
-  loading: () => <LayerSwitcherButton />,
-});
+const LayerSwitcherDynamic = dynamic(
+  () => import('../LayerSwitcher/LayerSwitcher'),
+  {
+    ssr: false,
+    loading: () => <LayerSwitcherButton />,
+  },
+);
 
 const Spinner = styled(CircularProgress)`
   position: absolute;
@@ -28,12 +32,26 @@ const Spinner = styled(CircularProgress)`
   margin: -20px 0 0 -20px;
 `;
 
+const TopRight = styled.div`
+  position: absolute;
+  z-index: 1000;
+  padding: 10px;
+  right: 0;
+  top: 62px;
+
+  @media ${isDesktop} {
+    top: 0;
+  }
+`;
+
 const BottomRight = styled.div`
   position: absolute;
   right: 0;
   bottom: 0;
   z-index: 1000;
   text-align: right;
+  pointer-events: none;
+  z-index: 999;
 `;
 
 const BugReportButton = () => (
@@ -53,19 +71,22 @@ const NoscriptMessage = () => (
 
 const Map = () => {
   const [mapLoaded, setLoaded, setNotLoaded] = useBoolState(true);
-  useEffect(setNotLoaded, []);
+  useEffect(setNotLoaded, [setNotLoaded]);
 
   return (
     <>
-      <BrowserMap onMapLoaded={setLoaded} />
+      <BrowserMapDynamic onMapLoaded={setLoaded} />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
-      <LayerSwitcher />
+      <TopRight>
+        <TopMenu />
+        <LayerSwitcherDynamic />
+      </TopRight>
       <BottomRight>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
+        <MaptilerLogo />
         <MapFooter />
       </BottomRight>
-      <MaptilerLogo />
     </>
   );
 };

@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useRouteNumberColors } from '../utils/useRouteNumberColors';
-import { isAscent } from '../utils/ascents';
+import { isTicked } from '../../../../services/ticks';
 
 type Props = {
   children: number;
@@ -12,9 +12,9 @@ type Props = {
   osmId: string;
 };
 
-const Text = styled.text<{ scale: number }>`
+const Text = styled.text<{ $scale: number }>`
   user-select: none;
-  font-size: ${({ scale }) => 12 / scale}px;
+  font-size: ${({ $scale }) => 12 / $scale}px;
   font-family: 'Roboto', sans-serif;
   font-weight: 600;
 `;
@@ -94,7 +94,7 @@ export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
   const colors = useRouteNumberColors({
     isSelected: isSelected || routeIndexHovered === routeNumber,
     hasPathOnThisPhoto: true,
-    isAscent: isAscent(osmId),
+    isTicked: isTicked(osmId),
   });
 
   return (
@@ -130,7 +130,7 @@ export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
       <Text
         x={newX}
         y={newY + TEXT_Y_SHIFT}
-        scale={photoZoom.scale}
+        $scale={photoZoom.scale}
         fill={colors.text}
         textAnchor="middle"
         {...commonProps}

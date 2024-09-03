@@ -31,13 +31,13 @@ export default {
   'homepage.about_osmapp': `የዚህ አፕሊኬሽን ገፅታ እለት ተእለት በ<i>OpenStreetMap</i> የምንጠቀመውን እርማቶች ማድረግን ጨምሮ ግልጋሎቱን ቀላል ያደርገዋል።
      <br/>በዚህ እትም የተለያዩ የካርታ ክፍሎችን፣ እንዲሁም ተፈላጊ የቦታ ነጥቦችን, ማሻሻልና ማረምን ጨምሮ መሰረታዊ የመፈለጊያ አገልግሎት አካትቷል።
      እንደ ጉዞ ጠቋሚ እና የምወዳቸው ቦታዎች የሚሉ አገልግሎቶች በቀጣዩ የአፕሊኬሽን ማሻሻያ ውስጥ ይካተታሉ`,
-  'homepage.github_link': `አዳዲስ እና ተጨማሪ መገልገያዎችን በ <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a> ተጠቅመው ጥቆማ መስጠት ይችላሉ።`,
+  'homepage.github_link': `አዳዲስ እና ተጨማሪ መገልገያዎችን በ <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a> ተጠቅመው ጥቆማ መስጠት ይችላሉ።`,
   'homepage.special_thanks_heading': `ልዩ ምስጋና ለ`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – for images 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – የዓለማችን ምርጡ ካርታ 🌎
+        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – for images 🖼
+        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – የዓለማችን ምርጡ ካርታ 🌎
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – ምርጥ ለሆኑ የቬክተር ካርታዎች <br> እንዲሁም ይህንን ፕሮጀክት ለመደገፍ ❤️ ',

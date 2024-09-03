@@ -1,15 +1,19 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
-import { Button, ButtonGroup } from '@material-ui/core';
-import EditIcon from '@material-ui/icons/Edit';
-import { useClimbingContext } from '../contexts/ClimbingContext';
+import EditIcon from '@mui/icons-material/Edit';
+import { Button, ButtonGroup } from '@mui/material';
+import {
+  ClimbingContextProvider,
+  useClimbingContext,
+} from '../contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
-import { addElementToArray, deleteFromArray } from '../utils/array';
-import { getCsvGradeData } from '../utils/routeGrade';
 import { invertedBoltCodeMap } from '../utils/boltCodes';
 import { PanelLabel } from '../PanelLabel';
 import { ContentContainer } from '../ContentContainer';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { isClimbingRelation } from '../../../../utils';
+import { getKey } from '../../../../services/helpers';
 
 const Container = styled.div`
   padding-bottom: 20px;
@@ -27,21 +31,15 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     setRouteSelectedIndex,
     routeSelectedIndex,
     setIsEditMode,
-    routesExpanded,
-    setRoutesExpanded,
-    gradeTable,
-    setGradeTable,
+    routeIndexExpanded,
+    setRouteIndexExpanded,
     showDebugMenu,
   } = useClimbingContext();
 
-  if (routes.length === 0) return null;
-
-  React.useEffect(() => {
-    if (!gradeTable) setGradeTable(getCsvGradeData());
-  }, []);
-
   React.useEffect(() => {
     const downHandler = (e) => {
+      if (routes.length === 0) return;
+
       if (e.key === 'ArrowDown') {
         const nextRoute = routes[routeSelectedIndex + 1];
         if (nextRoute) {
@@ -57,17 +55,14 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
         }
       }
       if (e.key === 'ArrowLeft') {
-        const index = routesExpanded.indexOf(routeSelectedIndex);
-        if (index > -1) {
-          setRoutesExpanded(deleteFromArray(routesExpanded, index));
+        if (routeSelectedIndex > -1) {
+          setRouteIndexExpanded(routeSelectedIndex);
           e.preventDefault();
         }
       }
       if (e.key === 'ArrowRight') {
-        if (routesExpanded.indexOf(routeSelectedIndex) === -1) {
-          setRoutesExpanded(
-            addElementToArray(routesExpanded, routeSelectedIndex),
-          );
+        if (routeSelectedIndex) {
+          setRouteIndexExpanded(routeSelectedIndex);
           // @TODO: scroll to expanded container:
           // ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
           e.preventDefault();
@@ -80,7 +75,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     return () => {
       window.removeEventListener('keydown', downHandler);
     };
-  }, [routeSelectedIndex, routes, routesExpanded]);
+  }, [routeSelectedIndex, routes, routeIndexExpanded]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleEdit = () => {
     setIsEditMode(true);
@@ -103,7 +98,6 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     const getImage = (name: string) => `File:${name}`;
 
     const object = routes
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       .map((route, _idx) => {
         const photos = Object.entries(route.paths);
 
@@ -159,4 +153,21 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
       </ContentContainer>
     </Container>
   );
+};
+
+export const RouteListInPanel = () => {
+  const { feature } = useFeatureContext();
+
+  if (
+    isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
+    feature.tags.climbing === 'crag'
+  ) {
+    return (
+      <ClimbingContextProvider feature={feature} key={getKey(feature)}>
+        <RouteList />
+      </ClimbingContextProvider>
+    );
+  }
+
+  return null;
 };

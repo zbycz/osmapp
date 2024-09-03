@@ -68,7 +68,8 @@ export const RouteMarks = ({
           isSelected;
 
         return (
-          <>
+          // eslint-disable-next-line react/no-array-index-key
+          <React.Fragment key={`${routeNumber}-${index}-${x}-${y}`}>
             {isThisRouteEditOrExtendMode && <PulsedPoint x={x} y={y} />}
             {isBoltVisible && (
               <Bolt
@@ -125,7 +126,7 @@ export const RouteMarks = ({
                 routeNumber={routeNumber}
               />
             )}
-          </>
+          </React.Fragment>
         );
       })}
     </>

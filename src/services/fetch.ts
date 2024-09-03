@@ -1,24 +1,17 @@
 import fetch from 'isomorphic-unfetch';
 import { getCache, getKey, writeCacheSafe } from './fetchCache';
 import { isBrowser } from '../components/helpers';
-
-export class FetchError extends Error {
-  constructor(
-    public message: string = '',
-    public code: string,
-    public data: string,
-  ) {
-    super();
-  }
-
-  toString() {
-    const suffix = this.data && ` Data: ${this.data.substring(0, 1000)}`;
-    return `Fetch: ${this.message}${suffix}`;
-  }
-}
+import { FetchError } from './helpers';
 
 // TODO cancel request in map.on('click', ...)
 const abortableQueues: Record<string, AbortController> = {};
+
+export const abortFetch = (queueName: string) => {
+  abortableQueues[queueName]?.abort(
+    new DOMException(`Aborted by abortFetch(${queueName})`, 'AbortError'),
+  );
+  delete abortableQueues[queueName];
+};
 
 interface FetchOpts extends RequestInit {
   abortableQueueName?: string;
@@ -30,20 +23,20 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
   const item = getCache(key);
   if (item) return item;
 
-  const name = isBrowser() ? opts?.abortableQueueName : undefined;
-  if (name) {
-    abortableQueues[name]?.abort();
-    abortableQueues[name] = new AbortController();
+  const queueName = isBrowser() ? opts?.abortableQueueName : undefined;
+  if (queueName) {
+    abortableQueues[queueName]?.abort();
+    abortableQueues[queueName] = new AbortController();
   }
 
   try {
     const res = await fetch(url, {
       ...opts,
-      signal: abortableQueues[name]?.signal,
+      signal: abortableQueues[queueName]?.signal,
     });
 
-    if (name) {
-      delete abortableQueues[name];
+    if (queueName) {
+      delete abortableQueues[queueName];
     }
 
     if (!res.ok || res.status < 200 || res.status >= 300) {
@@ -61,7 +54,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     }
     return text;
   } catch (e) {
-    if (e instanceof DOMException && e.name === 'AbortError') {
+    if (isBrowser() && e instanceof DOMException && e.name === 'AbortError') {
       throw e;
     }
 
@@ -74,10 +67,8 @@ export const fetchJson = async (url: string, opts: FetchOpts = {}) => {
   try {
     return JSON.parse(text);
   } catch (e) {
-    if (e instanceof DOMException && e.name === 'AbortError') {
-      throw e;
-    }
-
-    throw new Error(`fetchJson: ${e.message}, in "${text?.substr(0, 30)}..."`);
+    throw new Error(
+      `fetchJson: parse error: ${e.message}, in "${text?.substr(0, 30)}..."`,
+    );
   }
 };

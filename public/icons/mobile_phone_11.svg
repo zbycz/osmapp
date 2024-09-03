@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<svg id="mobile-phone-11" xmlns="http://www.w3.org/2000/svg" width="11" height="11" viewBox="0 0 11 11">
-  <path d="M7,2V1.5a.5.5,0,0,0-1,0V2H4A1,1,0,0,0,3,3V9a1,1,0,0,0,1,1H7A1,1,0,0,0,8,9V3A1,1,0,0,0,7,2ZM5,9H4V8H5ZM5,7H4V6H5ZM7,9H6V8H7ZM7,7H6V6H7ZM7,5H4V3H7Z"/>
+<svg id="mobile-phone" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15">
+  <path d="M10,2h0V1.5a.5.5,0,0,0-1,0V2H5A1,1,0,0,0,4,3V13a1,1,0,0,0,1,1h5a1,1,0,0,0,1-1V3A1,1,0,0,0,10,2ZM6,13H5V12H6Zm0-2H5V10H6ZM6,9H5V8H6Zm2,4H7V12H8Zm0-2H7V10H8ZM8,9H7V8H8Zm2,4H9V12h1Zm0-2H9V10h1Zm0-2H9V8h1Zm0-2.5a.5.5,0,0,1-.5.5h-4A.5.5,0,0,1,5,6.5v-3A.5.5,0,0,1,5.5,3h4a.5.5,0,0,1,.5.5Z"/>
 </svg>

@@ -1,14 +1,22 @@
-import { createGlobalStyle } from 'styled-components';
-import { isDesktop } from '../components/helpers';
+import React from 'react';
+import { Global, css, Theme } from '@emotion/react';
+import {
+  isDesktopResolution,
+  isMobileMode,
+  isTabletResolution,
+} from '../components/helpers';
+import { convertHexToRgba } from '../components/utils/colorUtils';
 
-export const GlobalStyle = createGlobalStyle`
-  html, body, #__next {
+const globalStyle = (theme: Theme) => css`
+  html,
+  body,
+  #__next {
     margin: 0;
     padding: 0;
     height: 100%;
     border: 0;
     font-family: 'Roboto', sans-serif;
-    background-color: ${({ theme }) => theme.palette.background.default};
+    background-color: ${theme.palette.background.default};
 
     // disable pulling the page around on mobile
     overscroll-behavior: none;
@@ -22,8 +30,9 @@ export const GlobalStyle = createGlobalStyle`
     left: 0;
   }
 
-  a, .linkLikeButton {
-    color: ${({ theme }) => theme.palette.tertiary.main};
+  a,
+  .linkLikeButton {
+    color: ${theme.palette.tertiary.main};
     text-decoration: none;
     border: 0;
     padding: 0;
@@ -43,26 +52,54 @@ export const GlobalStyle = createGlobalStyle`
     &:focus {
       text-decoration: underline;
     }
+
+    .MuiTooltip-tooltip & {
+      color: #82dcff;
+    }
   }
 
   ul {
     margin-top: 0;
   }
 
+  .maplibregl-map {
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
   .maplibregl-ctrl-group {
-    background: ${({ theme }) => theme.palette.background.paper} !important;
+    background-color: ${convertHexToRgba(
+      theme.palette.background.paper,
+      0.7,
+    )} !important;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+
     .maplibregl-ctrl-icon {
-      filter: ${({ theme }) => theme.palette.invertFilter};
+      filter: ${theme.palette.invertFilter};
     }
-    button+button {
-      border-top: 1px solid ${({ theme }) => theme.palette.divider};
+
+    @media ${isMobileMode} {
+      border-radius: 50% !important;
+
+      button {
+        width: 44px !important;
+        height: 44px !important;
+      }
+    }
+    button + button {
+      border-top: 1px solid ${theme.palette.divider} !important;
     }
   }
 
   .maplibregl-ctrl-top-right {
-    top: ${83 + 72}px  !important;
+    top: 114px !important;
 
-    @media ${isDesktop} {
+    @media ${isTabletResolution} {
+      top: 54px !important;
+    }
+
+    @media ${isDesktopResolution} {
       top: 83px !important;
     }
   }
@@ -73,23 +110,30 @@ export const GlobalStyle = createGlobalStyle`
 
   @keyframes blink {
     50% {
-      color: transparent
+      color: transparent;
     }
   }
 
   .dotloader {
-    animation: 1s blink infinite
+    animation: 1s blink infinite;
   }
 
-  .dotloader:nth-child(2) {
-    animation-delay: 250ms
+  .dotloader:nth-of-type(2) {
+    animation-delay: 250ms;
   }
 
-  .dotloader:nth-child(3) {
-    animation-delay: 500ms
+  .dotloader:nth-of-type(3) {
+    animation-delay: 500ms;
   }
 
   .MuiBackdrop-root {
     background-color: rgba(0, 0, 0, 0.2) !important;
   }
+
+  /* Hide compass by default - selects .maplibregl-ctrl which holds [+,-,compass] */
+  .hidden-compass .maplibregl-ctrl:has(> .maplibregl-ctrl-compass) {
+    display: none;
+  }
 `;
+
+export const GlobalStyle = () => <Global styles={globalStyle} />;

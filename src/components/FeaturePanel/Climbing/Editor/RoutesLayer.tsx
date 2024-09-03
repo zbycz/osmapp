@@ -1,31 +1,32 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteFloatingMenu } from './RouteFloatingMenu';
-import { Position, ZoomState } from '../types';
 import { RouteMarks } from './RouteMarks';
+import { getMouseFromPositionInImage } from '../utils/mousePositionUtils';
 
+const DIALOG_TOP_BAR_HEIGHT = 56;
 type RouteRenders = { route: React.ReactNode; marks: React.ReactNode };
 
 const Svg = styled.svg<{
-  hasEditableCursor: boolean;
-  imageSize: { width: number; height: number };
-  isVisible: boolean;
-  photoZoom: ZoomState;
-  transformOrigin: any;
+  $hasEditableCursor: boolean;
+  $imageSize: { width: number; height: number };
+  $isVisible: boolean;
+  $transformOrigin: any;
 }>`
   position: absolute;
   top: 0;
   bottom: 0;
   margin: auto;
-  opacity: ${({ isVisible }) => (isVisible ? 1 : 0)};
-  transition: ${({ isVisible }) => (isVisible ? 'opacity 0.1s ease' : 'none')};
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0)};
+  transition: ${({ $isVisible }) =>
+    $isVisible ? 'opacity 0.1s ease' : 'none'};
   transform-origin: 0 0;
-  ${({ hasEditableCursor }) =>
-    `cursor: ${hasEditableCursor ? 'crosshair' : 'auto'}`};
-  ${({ imageSize: { width, height } }) =>
+  ${({ $hasEditableCursor }) =>
+    `cursor: ${$hasEditableCursor ? 'crosshair' : 'auto'}`};
+  ${({ $imageSize: { width, height } }) =>
     `width: ${width}px;
     height:${height}px;
     /*height: 100%;*/
@@ -35,10 +36,10 @@ const Svg = styled.svg<{
     `}
 `;
 
-const RouteFloatingMenuContainer = styled.div<{ position: Position }>`
+const RouteFloatingMenuContainer = styled.div<{ $x: number; $y: number }>`
   position: absolute;
-  left: ${({ position }) => position.x}px;
-  top: ${({ position }) => position.y}px;
+  left: ${({ $x }) => $x}px;
+  top: ${({ $y }) => $y}px;
   z-index: 10000;
 `;
 type Props = {
@@ -64,14 +65,14 @@ export const RoutesLayer = ({
     isRouteSelected,
     isRouteHovered,
     getPixelPosition,
-    editorPosition,
-    scrollOffset,
     isPointMoving,
     setIsPointClicked,
     setIsPointMoving,
     setPointSelectedIndex,
     getCurrentPath,
     routes,
+    photoRef,
+    photoZoom,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -104,7 +105,7 @@ export const RoutesLayer = ({
     hovered: Array<RouteRenders>;
   }>(
     (acc, route, index) => {
-      const RenderRoute = () => (
+      const RouteInner = () => (
         <RouteWithLabel
           route={route}
           routeNumber={index}
@@ -124,7 +125,7 @@ export const RoutesLayer = ({
           ...acc,
           selected: [
             ...acc.selected,
-            { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+            { route: <RouteInner />, marks: <RenderRouteMarks /> },
           ],
         };
       }
@@ -133,7 +134,7 @@ export const RoutesLayer = ({
           ...acc,
           hovered: [
             ...acc.hovered,
-            { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+            { route: <RouteInner />, marks: <RenderRouteMarks /> },
           ],
         };
       }
@@ -141,7 +142,7 @@ export const RoutesLayer = ({
         ...acc,
         rest: [
           ...acc.rest,
-          { route: <RenderRoute />, marks: <RenderRouteMarks /> },
+          { route: <RouteInner />, marks: <RenderRouteMarks /> },
         ],
       };
     },
@@ -166,10 +167,17 @@ export const RoutesLayer = ({
       ? selectedPointOfSelectedRoute
       : lastPointOfSelectedRoute;
 
+  // TODO this position doesnt work well when zoomed
+  const absolutePositionFromScreen = getMouseFromPositionInImage(
+    photoRef,
+    routeFloatingMenuPosition,
+    photoZoom,
+  );
+
   return (
     <>
       <Svg
-        hasEditableCursor={machine.currentStateName === 'extendRoute'}
+        $hasEditableCursor={machine.currentStateName === 'extendRoute'}
         onClick={(e) => {
           onClick(e);
         }}
@@ -177,9 +185,9 @@ export const RoutesLayer = ({
         onMouseMove={onEditorMouseMove}
         onTouchMove={onEditorTouchMove}
         onPointerMove={onEditorTouchMove}
-        imageSize={imageSize}
-        isVisible={isVisible}
-        transformOrigin={transformOrigin}
+        $imageSize={imageSize}
+        $isVisible={isVisible}
+        $transformOrigin={transformOrigin}
       >
         {sortedRoutes.rest.map((item) => item.route)}
         {sortedRoutes.rest.map((item) => item.marks)}
@@ -189,16 +197,10 @@ export const RoutesLayer = ({
         {sortedRoutes.hovered.map((item) => item.marks)}
       </Svg>
 
-      {routeFloatingMenuPosition && (
+      {absolutePositionFromScreen && (
         <RouteFloatingMenuContainer
-          position={{
-            x:
-              routeFloatingMenuPosition.x +
-              editorPosition.x +
-              scrollOffset.x +
-              30,
-            y: routeFloatingMenuPosition.y + scrollOffset.y - 15,
-          }}
+          $x={absolutePositionFromScreen.x + 20}
+          $y={absolutePositionFromScreen.y - DIALOG_TOP_BAR_HEIGHT - 15}
         >
           <RouteFloatingMenu />
         </RouteFloatingMenuContainer>

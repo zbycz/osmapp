@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import styled from 'styled-components';
-import { useTheme } from '@material-ui/core';
+import styled from '@emotion/styled';
+import { useTheme } from '@mui/material';
 import { useConfig } from '../config';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { getDifficultyColor } from '../utils/routeGrade';
+import { getDifficulty, getDifficultyColor } from '../utils/grades/routeGrade';
 
 const RouteLine = styled.path`
   pointer-events: all;
@@ -21,12 +21,13 @@ export const PathWithBorder = ({
   ...props
 }) => {
   const config = useConfig();
-  const { isDifficultyHeatmapEnabled, gradeTable, routeIndexHovered } =
-    useClimbingContext();
+  const { routeIndexHovered } = useClimbingContext();
+  const theme = useTheme();
 
-  const strokeColor = isDifficultyHeatmapEnabled
-    ? getDifficultyColor(gradeTable, route.difficulty)
-    : config.pathStrokeColor;
+  const strokeColor = getDifficultyColor(
+    getDifficulty(route.feature.tags),
+    theme,
+  );
 
   const getPathColor = () => {
     if (isSelected) {
@@ -36,7 +37,6 @@ export const PathWithBorder = ({
     return strokeColor;
   };
 
-  const theme = useTheme();
   const contrastColor = theme.palette.getContrastText(
     isSelected ? config.pathStrokeColorSelected : strokeColor,
   );

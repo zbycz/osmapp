@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import ArrowUpwardIcon from '@material-ui/icons/ArrowUpward';
-import { CircularProgress, IconButton, useTheme } from '@material-ui/core';
-
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { CircularProgress, IconButton, useTheme } from '@mui/material';
+import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteList } from './RouteList/RouteList';
 import { RoutesEditor } from './Editor/RoutesEditor';
-import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
-import { useScrollShadow } from './utils/useScrollShadow';
+import { useFeatureContext } from '../../utils/FeatureContext';
 import { RouteDistribution } from './RouteDistribution';
+import {
+  getResolution,
+  getWikimediaCommonsKeys,
+  removeFilePrefix,
+} from './utils/photo';
+import { useScrollShadow } from './utils/useScrollShadow';
+import { TransformWrapper } from './TransformWrapper';
+import { convertHexToRgba } from '../../utils/colorUtils';
+import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl';
 
 const Container = styled.div`
   position: relative;
@@ -42,7 +49,7 @@ const Container = styled.div`
       text-align: center;
       line-height: 0px;
       font-size: 20px;
-      color: ${({ theme }) => theme.palette.primary.text};
+      color: ${({ theme }) => theme.palette.primary.main};
       letter-spacing: 1px;
     }
 
@@ -79,14 +86,36 @@ const BottomPanel = styled.div`
   overflow: auto;
 `;
 
-const LoadingContainer = styled.div`
+const MiniLoadingContainer = styled.div`
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  z-index: 1;
+  background: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.default, 0.3)};
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const FullLoadingContainer = styled.div`
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 1;
+  background: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.default, 0.7)};
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100px;
+  height: 100%;
   align-items: center;
 `;
 
@@ -97,14 +126,14 @@ const ArrowExpanderContainer = styled.div`
   top: -6px;
 `;
 
-const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
+const ArrowExpanderButton = styled.div<{ $arrowOnTop?: boolean }>`
   background: ${({ theme }) => theme.palette.background.default};
   width: 30px;
   height: 30px;
   margin: auto;
   border-radius: 50%;
-  ${({ arrowOnTop }) =>
-    arrowOnTop
+  ${({ $arrowOnTop }) =>
+    $arrowOnTop
       ? undefined
       : `
   bottom: 0;
@@ -114,24 +143,19 @@ const ArrowExpanderButton = styled.div<{ arrowOnTop?: boolean }>`
   display: flex;
 `;
 
-const BlurContainer = styled.div<{ isVisible: boolean }>`
-  -webkit-backdrop-filter: blur(15px);
+const BlurContainer = styled.div`
   backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
-  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
   height: 100%;
 `;
 
 const BackgroundContainer = styled.div<{
-  imageHeight: number;
-  imageUrl: string;
-  isVisible: boolean;
+  $imageHeight: number;
+  $imageUrl: string;
 }>`
   transition: 0.3s all;
-
-  background: #111
-    ${({ isVisible, imageUrl }) =>
-      isVisible ? `url(${imageUrl}) no-repeat` : ''};
+  background: #111 ${({ $imageUrl }) => `url(${$imageUrl}) no-repeat`};
   background-size: cover;
   background-position: center;
   object-fit: cover;
@@ -147,27 +171,37 @@ const MainContent = () => (
   </>
 );
 
-export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
+const getWindowDimensions = () => {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+};
+
+export const ClimbingView = ({ photo }: { photo?: string }) => {
   const {
     imageSize,
     routeSelectedIndex,
     getMachine,
     splitPaneHeight,
     setSplitPaneHeight,
-    areRoutesVisible,
     isEditMode,
     viewportSize,
     editorPosition,
     photoPath,
     loadPhotoRelatedData,
     areRoutesLoading,
-    setArePointerEventsDisabled,
-    setPhotoZoom,
     preparePhotosAndSet,
+    photoZoom,
+    loadedPhotos,
   } = useClimbingContext();
+  const { feature } = useFeatureContext();
 
+  const [photoResolution, setPhotoResolution] = useState(200);
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [backgroundImageUrl, setBackgroundImageUrl] = useState(null);
   const machine = getMachine();
 
   useEffect(() => {
@@ -178,15 +212,15 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
     if (!isEditMode && machine.currentStateName === 'editRoute') {
       machine.execute('routeSelect', { routeNumber: routeSelectedIndex });
     }
-  }, [isEditMode]);
+  }, [isEditMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, [splitPaneHeight]);
+  }, [splitPaneHeight]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(null);
@@ -202,7 +236,7 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
         loadPhotoRelatedData(),
       );
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onDragStarted = () => {
     setIsSplitViewDragging(true);
@@ -211,26 +245,51 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
     setSplitPaneHeight(splitHeight);
     setIsSplitViewDragging(false);
   };
-  const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions(),
+  );
 
-  preparePhotosAndSet(photoIndex);
+  const cragPhotos = getWikimediaCommonsKeys(feature.tags)
+    .map((key) => feature.tags[key])
+    .map(removeFilePrefix);
+  preparePhotosAndSet(cragPhotos, photo);
 
   useEffect(() => {
-    setIsPhotoLoaded(false);
-    const url = getCommonsImageUrl(`File:${photoPath}`, 1500);
+    const handleResize = () => {
+      setWindowDimensions(getWindowDimensions());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const resolution = getResolution({
+      windowDimensions,
+      photoPath,
+      photoZoom,
+      loadedPhotos,
+    });
+    setPhotoResolution(resolution);
+
+    const url = getCommonsImageUrl(`File:${photoPath}`, resolution);
+
     setImageUrl(url);
-  }, [photoPath]);
+    if (!backgroundImageUrl && photoPath) {
+      setBackgroundImageUrl(url);
+    }
+  }, [
+    backgroundImageUrl,
+    loadedPhotos,
+    photoPath,
+    photoZoom,
+    photoZoom.scale,
+    windowDimensions,
+  ]);
 
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
     splitPaneHeight === viewportSize.height - editorPosition.y;
-
-  const startPointerEvents = () => {
-    setArePointerEventsDisabled(false);
-  };
-  const stopPointerEvents = () => {
-    setArePointerEventsDisabled(true);
-  };
 
   const {
     scrollElementRef,
@@ -241,11 +300,19 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
   } = useScrollShadow([areRoutesLoading]);
   const theme = useTheme();
 
+  const isResolutionLoaded =
+    loadedPhotos?.[photoPath]?.[photoResolution] || false;
+  const resolutions = loadedPhotos?.[photoPath];
+  const isFirstPhotoLoaded =
+    resolutions &&
+    Object.keys(resolutions).filter((key) => resolutions[key] === true).length >
+      0;
+
   return (
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (
         <ArrowExpanderContainer>
-          <ArrowExpanderButton arrowOnTop={showArrowOnTop}>
+          <ArrowExpanderButton $arrowOnTop={showArrowOnTop}>
             <IconButton
               onClick={onSplitPaneHeightReset}
               color="primary"
@@ -271,42 +338,22 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
           pane1Style={{ maxHeight: '90%' }}
         >
           <BackgroundContainer
-            imageHeight={imageSize.height}
-            imageUrl={imageUrl}
-            isVisible={isPhotoLoaded}
+            $imageHeight={imageSize.height}
+            $imageUrl={backgroundImageUrl}
           >
             <>
-              {!isPhotoLoaded && (
-                <LoadingContainer>
-                  <CircularProgress color="primary" />
-                </LoadingContainer>
+              {!isResolutionLoaded && (
+                <MiniLoadingContainer>
+                  <CircularProgress color="primary" size={14} thickness={6} />
+                </MiniLoadingContainer>
               )}
-              <BlurContainer isVisible={isPhotoLoaded}>
-                <TransformWrapper
-                  doubleClick={{
-                    disabled: true,
-                  }}
-                  onWheelStart={stopPointerEvents}
-                  onWheelStop={startPointerEvents}
-                  onPinchingStart={stopPointerEvents}
-                  onPinchingStop={startPointerEvents}
-                  onZoomStart={stopPointerEvents}
-                  onZoomStop={startPointerEvents}
-                  onPanningStart={startPointerEvents}
-                  onPanningStop={startPointerEvents}
-                  wheel={{ step: 100 }}
-                  centerOnInit
-                  onTransformed={(
-                    _ref,
-                    state: {
-                      scale: number;
-                      positionX: number;
-                      positionY: number;
-                    },
-                  ) => {
-                    setPhotoZoom(state);
-                  }}
-                >
+              {!isFirstPhotoLoaded && (
+                <FullLoadingContainer>
+                  <CircularProgress color="primary" />
+                </FullLoadingContainer>
+              )}
+              <BlurContainer>
+                <TransformWrapper>
                   <TransformComponent
                     wrapperStyle={{ height: '100%', width: '100%' }}
                     contentStyle={{ height: '100%', width: '100%' }}
@@ -314,17 +361,15 @@ export const ClimbingView = ({ photoIndex }: { photoIndex?: number }) => {
                     <>
                       <RoutesEditor
                         isRoutesLayerVisible={
-                          !isSplitViewDragging &&
-                          areRoutesVisible &&
-                          !areRoutesLoading
+                          !isSplitViewDragging && !areRoutesLoading
                         }
                         imageUrl={imageUrl}
-                        setIsPhotoLoaded={setIsPhotoLoaded}
+                        photoResolution={photoResolution}
                       />
                     </>
                   </TransformComponent>
                 </TransformWrapper>
-                {isEditMode && areRoutesVisible && (
+                {isEditMode && (
                   <>
                     <ControlPanel />
                     <Guide />

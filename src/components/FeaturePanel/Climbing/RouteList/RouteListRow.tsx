@@ -1,17 +1,19 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef, useState } from 'react';
-import styled from 'styled-components';
-import { IconButton, TextField } from '@material-ui/core';
+import styled from '@emotion/styled';
 import { debounce } from 'lodash';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { IconButton, TextField } from '@mui/material';
 import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { emptyRoute } from '../utils/emptyRoute';
 import { RouteNumber } from '../RouteNumber';
-
 import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
-import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
+import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
+import { getShortId } from '../../../../services/helpers';
+import { getDifficulties } from '../utils/grades/routeGrade';
+import { TickedRouteCheck } from '../Ticks/TickedRouteCheck';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -20,12 +22,14 @@ const Container = styled.div`
   flex: 1;
 `;
 
-const Cell = styled.div<{ width: number; align: 'center' | 'left' | 'right' }>`
-  width: ${({ width }) => width}px;
-  text-align: ${({ align }) => align};
+const Cell = styled.div<{ $width?: number }>`
+  ${({ $width }) => ($width ? `width: ${$width}px;` : '')}
 `;
 const NameCell = styled(Cell)`
   flex: 1;
+  display: flex;
+  gap: 8px;
+  justify-content: space-between;
 `;
 const DifficultyCell = styled(Cell)`
   margin-right: 8px;
@@ -34,15 +38,15 @@ const RouteNumberCell = styled(Cell)`
   color: #999;
   margin-left: 8px;
 `;
-const ExpandIcon = styled(ExpandMoreIcon)<{ isExpanded: boolean }>`
-  transform: rotate(${({ isExpanded }) => (isExpanded ? 180 : 0)}deg);
+const ExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean }>`
+  transform: rotate(${({ $isExpanded }) => ($isExpanded ? 180 : 0)}deg);
   transition: all 0.3s ease !important;
 `;
 
-const Row = styled.div<{ isExpanded?: boolean }>`
+const Row = styled.div<{ $isExpanded?: boolean }>`
   min-height: 40px;
-  background-color: ${({ isExpanded, theme }) =>
-    isExpanded ? theme.palette.action.selected : 'none'};
+  background-color: ${({ $isExpanded, theme }) =>
+    $isExpanded ? theme.palette.action.selected : 'none'};
   overflow: hidden;
 
   width: 100%;
@@ -75,9 +79,8 @@ export const RenderListRow = ({
     isRouteSelected,
     isEditMode,
     routeSelectedIndex,
-    selectedRouteSystem,
-    routesExpanded,
-    setRoutesExpanded,
+    routeIndexExpanded,
+    setRouteIndexExpanded,
     getPhotoInfoForRoute,
   } = useClimbingContext();
 
@@ -85,8 +88,10 @@ export const RenderListRow = ({
     if (routeSelectedIndex === index) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [routeSelectedIndex]);
-  const osmId = route.feature?.osmMeta.id ?? null;
+  }, [routeSelectedIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+  const osmId = route.feature?.osmMeta
+    ? getShortId(route.feature.osmMeta)
+    : null;
   const isSelected = isRouteSelected(index);
   const photoInfoForRoute = getPhotoInfoForRoute(index);
 
@@ -104,7 +109,7 @@ export const RenderListRow = ({
     debouncedValueChange(e, propName);
   };
 
-  const isExpanded = routesExpanded.indexOf(index) > -1;
+  const isExpanded = routeIndexExpanded === index;
 
   const isReadOnly =
     !isEditMode ||
@@ -122,11 +127,12 @@ export const RenderListRow = ({
     isExpanded,
     osmId,
   };
+  const routeDifficulties = getDifficulties(tempRoute.feature?.tags);
 
   return (
     <Container ref={ref}>
       <Row style={{ cursor: 'pointer' }}>
-        <RouteNumberCell component="th" scope="row" width={30}>
+        <RouteNumberCell $width={30}>
           <RouteNumber
             isSelected={isSelected}
             photoInfoForRoute={photoInfoForRoute}
@@ -148,24 +154,26 @@ export const RenderListRow = ({
               fullWidth
             />
           )}
+          <TickedRouteCheck osmId={osmId} />
         </NameCell>
-        <DifficultyCell width={50}>
-          <RouteDifficultyBadge
-            routeDifficulty={tempRoute.difficulty}
-            selectedRouteSystem={selectedRouteSystem}
+        <DifficultyCell $width={50}>
+          <ConvertedRouteDifficultyBadge
+            routeDifficulties={routeDifficulties}
           />
         </DifficultyCell>
 
-        <Cell width={50}>
+        <Cell $width={50}>
           <IconButton
             onClick={(e) => {
-              setRoutesExpanded(toggleElementInArray(routesExpanded, index));
+              setRouteIndexExpanded(
+                routeIndexExpanded === index ? null : index,
+              );
               stopPropagation(e);
             }}
             size="small"
             title="Toggle"
           >
-            <ExpandIcon isExpanded={isExpanded} />
+            <ExpandIcon $isExpanded={isExpanded} />
           </IconButton>
         </Cell>
       </Row>

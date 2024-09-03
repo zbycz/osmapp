@@ -1,9 +1,7 @@
 import React from 'react';
-import { Box, IconButton, Typography } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import List from '@material-ui/core/List';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
+import { Box, IconButton, Typography, List, ListItemIcon } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 import { View, useMapStateContext } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
 
@@ -52,7 +50,7 @@ export const StyledList = styled(List)`
     min-width: 45px;
 
     svg {
-      color: ${({ theme }) => theme.palette.action.disabled}};
+      color: ${({ theme }) => theme.palette.action.disabled};
     }
   }
 

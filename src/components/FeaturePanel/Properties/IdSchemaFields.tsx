@@ -1,13 +1,12 @@
 import React, { ReactNode } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Field } from '../../../services/tagging/types/Fields';
 import { useToggleState } from '../../helpers';
 import { buildAddress } from '../../../services/helpers';
 import { Feature } from '../../../services/types';
 import { t } from '../../../services/intl';
 import { TagsTableInner } from './TagsTableInner';
-import { EditIconButton } from '../helpers/EditIconButton';
-import { useEditDialogContext } from '../helpers/EditDialogContext';
+import { InlineEditButton } from '../helpers/InlineEditButton';
 import { renderValue } from './renderValue';
 import { Table } from './Table';
 import { ShowMoreButton } from './helpers';
@@ -89,7 +88,6 @@ const getTooltip = (field: Field, key: string) =>
   })`;
 
 const UiFields = ({ fields }: { fields: UiField[] }) => {
-  const { openWithTag } = useEditDialogContext();
   const { feature } = useFeatureContext();
 
   return (
@@ -100,9 +98,7 @@ const UiFields = ({ fields }: { fields: UiField[] }) => {
           <tr key={key}>
             <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
             <td>
-              <EditIconButton
-                onClick={() => openWithTag(tagsForField?.[0]?.key ?? key)}
-              />
+              <InlineEditButton k={tagsForField?.[0]?.key ?? key} />
               {addUnits(label, render(uiField, feature))}
             </td>
           </tr>

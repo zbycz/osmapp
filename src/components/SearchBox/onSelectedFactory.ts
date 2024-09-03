@@ -1,110 +1,83 @@
 import Router from 'next/router';
-import maplibregl from 'maplibre-gl';
 import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
-import { getGlobalMap } from '../../services/mapStorage';
+import { getOverpassSource } from '../../services/mapStorage';
 import { performOverpassSearch } from '../../services/overpassSearch';
 import { t } from '../../services/intl';
+import { fitBounds } from './utils';
+import { getSkeleton } from './onHighlightFactory';
+import { SnackbarContextType } from '../utils/SnackbarContext';
+import { addOverpassQueryHistory } from './options/overpass';
 
-const getElementType = (osmType) => {
-  switch (osmType) {
-    case 'R':
-      return 'relation';
-    case 'W':
-      return 'way';
-    case 'N':
-      return 'node';
-    default:
-      throw new Error(`Geocoder osm_id is invalid: ${osmType}`);
-  }
-};
+const overpassOptionSelected = (
+  option,
+  setOverpassLoading,
+  bbox,
+  showToast: SnackbarContextType['showToast'],
+) => {
+  const tagsOrQuery =
+    option.preset?.presetForSearch.tags ??
+    option.overpass.tags ??
+    option.overpass.query;
 
-const getSkeleton = (option) => {
-  const center = option.geometry.coordinates;
-  const { osm_id: id, osm_type: osmType, name } = option.properties;
-  const type = getElementType(osmType);
-  const [lon, lat] = center;
+  const timeout = setTimeout(() => {
+    setOverpassLoading(true);
+  }, 300);
 
-  return {
-    loading: true,
-    skeleton: true,
-    nonOsmObject: false,
-    osmMeta: { type, id },
-    center: [parseFloat(lon), parseFloat(lat)],
-    tags: { name },
-    properties: { class: option.class },
-  };
-};
+  performOverpassSearch(bbox, tagsOrQuery)
+    .then((geojson) => {
+      const count = geojson.features.length;
+      const content = t('searchbox.overpass_success', { count });
+      showToast(content);
+      getOverpassSource()?.setData(geojson);
 
-export const onHighlightFactory = (setPreview) => (e, location) => {
-  if (!location?.lat) return;
-  setPreview({ ...getSkeleton(location), noPreviewButton: true });
-};
-
-const fitBounds = (option, panelShown = false) => {
-  if (!option.properties.extent) {
-    const coords = option.geometry.coordinates;
-    getGlobalMap()?.flyTo({ center: coords, zoom: 17 });
-  } else {
-    const [w, s, e, n] = option.properties.extent;
-    const bbox = new maplibregl.LngLatBounds([w, s], [e, n]);
-    const panelWidth = panelShown ? 410 : 0;
-    getGlobalMap()?.fitBounds(bbox, {
-      padding: { top: 5, bottom: 5, right: 5, left: panelWidth + 5 },
+      if (option.overpass.query) {
+        addOverpassQueryHistory(option.overpass.query);
+      }
+    })
+    .catch((e) => {
+      const message = `${e}`.substring(0, 100);
+      const content = t('searchbox.overpass_error', { message });
+      showToast(content, 'error');
+    })
+    .finally(() => {
+      clearTimeout(timeout);
+      setOverpassLoading(false);
     });
-  }
+};
+
+const starOptionSelected = (option) => {
+  const apiId = getApiId(option.star.shortId);
+  Router.push(`/${getUrlOsmId(apiId)}`);
+};
+
+const geocoderOptionSelected = (option, setFeature) => {
+  if (!option?.geometry?.coordinates) return;
+
+  const skeleton = getSkeleton(option);
+  console.log('Search item selected:', { location: option, skeleton }); // eslint-disable-line no-console
+
+  addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
+
+  setFeature(skeleton);
+  fitBounds(option);
+  Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };
 
 export const onSelectedFactory =
-  (setFeature, setPreview, mobileMode, bbox, showToast, setOverpassLoading) =>
+  (setFeature, setPreview, bbox, showToast, setOverpassLoading) =>
   (_, option) => {
+    setPreview(null); // it could be stuck from onHighlight
+
     if (option.star) {
-      const apiId = getApiId(option.star.shortId);
-      Router.push(`/${getUrlOsmId(apiId)}`);
-      // Router.push(`/${getUrlOsmId(apiId)}${window.location.hash}`); ????
+      starOptionSelected(option);
       return;
     }
 
     if (option.overpass || option.preset) {
-      const tags = option.overpass || option.preset.presetForSearch.tags;
-
-      const timeout = setTimeout(() => {
-        setOverpassLoading(true);
-      }, 300);
-
-      performOverpassSearch(bbox, tags)
-        .then((geojson) => {
-          const count = geojson.features.length;
-          const content = t('searchbox.overpass_success', { count });
-          showToast({ content });
-          getGlobalMap().getSource('overpass')?.setData(geojson);
-        })
-        .catch((e) => {
-          const message = `${e}`.substring(0, 100);
-          const content = t('searchbox.overpass_error', { message });
-          showToast({ content, type: 'error' });
-        })
-        .finally(() => {
-          clearTimeout(timeout);
-          setOverpassLoading(false);
-        });
-      return;
-    }
-    if (!option?.geometry.coordinates) return;
-
-    const skeleton = getSkeleton(option);
-    console.log('Search item selected:', { location: option, skeleton }); // eslint-disable-line no-console
-
-    addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
-
-    if (mobileMode) {
-      setPreview(skeleton);
-      fitBounds(option);
+      overpassOptionSelected(option, setOverpassLoading, bbox, showToast);
       return;
     }
 
-    setPreview(null);
-    setFeature(skeleton);
-    fitBounds(option, true);
-    Router.push(`/${getUrlOsmId(skeleton.osmMeta)}${window.location.hash}`);
+    geocoderOptionSelected(option, setFeature);
   };

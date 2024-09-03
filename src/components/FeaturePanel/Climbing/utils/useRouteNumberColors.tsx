@@ -1,4 +1,4 @@
-import { useTheme } from '@material-ui/core';
+import { useTheme } from '@mui/material';
 
 type RouteNumberColorsParams = {
   isSelected?: boolean;
@@ -6,7 +6,7 @@ type RouteNumberColorsParams = {
   isOnThisPhoto?: boolean;
   hasPathInDifferentPhoto?: boolean;
   isOnDifferentPhoto?: boolean;
-  isAscent?: boolean;
+  isTicked?: boolean;
 };
 
 export const useRouteNumberColors = ({
@@ -15,7 +15,7 @@ export const useRouteNumberColors = ({
   isOnThisPhoto,
   hasPathInDifferentPhoto,
   isOnDifferentPhoto,
-  isAscent,
+  isTicked,
 }: RouteNumberColorsParams) => {
   const theme: any = useTheme();
   const { climbing } = theme.palette;
@@ -27,10 +27,10 @@ export const useRouteNumberColors = ({
       border: `solid 1px ${climbing.secondary}`,
     };
   }
-  if (hasPathOnThisPhoto && isAscent) {
+  if (hasPathOnThisPhoto && isTicked) {
     return {
       background: climbing.primary,
-      text: climbing.ascent,
+      text: climbing.tick,
       border: `solid 1px ${climbing.primary}`,
     };
   }

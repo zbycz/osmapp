@@ -1,6 +1,7 @@
 import { presets } from './data';
 import { Feature } from '../types';
 import { Preset } from './types/Presets';
+import { DEBUG_ID_SCHEMA } from '../../config.mjs';
 
 // taken from iD codebase https://github.com/openstreetmap/iD/blob/dd30a39d7487e1084396712ce861f4b6c5a07849/modules/presets/preset.js#L61
 // added code for addr:* matching
@@ -99,7 +100,7 @@ export const getPresetForFeature = (feature: Feature): Preset => {
   const winner = sortedByScore[0];
 
   const winners = sortedByScore.filter((c) => c.score === winner.score);
-  if (winners.length > 1) {
+  if (DEBUG_ID_SCHEMA && winners.length > 1) {
     // eslint-disable-next-line no-console
     console.debug('This feature matches more presets by same score:', winners);
   }

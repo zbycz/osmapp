@@ -1,9 +1,8 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
-import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
+import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
-import { isAscent } from '../utils/ascents';
 
 type Item = {
   id: number;
@@ -26,7 +25,7 @@ const MaxWidthContainer = styled.div`
 
 const RowWithDragHandler = styled.div<{
   isDraggedOver: boolean;
-  isAscent: boolean;
+  isSelected: boolean;
 }>`
   cursor: pointer;
   display: flex;
@@ -34,12 +33,8 @@ const RowWithDragHandler = styled.div<{
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
   /* background-color: ${({ isSelected }) =>
     isSelected ? '#ccc' : 'transparent'}; */
-  background: ${({ isSelected, theme, isAscented }) =>
-    isSelected
-      ? theme.palette.action.selected
-      : isAscented
-      ? theme.palette.climbing.ascent
-      : 'transparent'};
+  background: ${({ isSelected, theme }) =>
+    isSelected ? theme.palette.action.selected : 'transparent'};
   position: relative;
   font-size: 16px;
   border-top: dotted 1px ${({ theme }) => theme.palette.divider};
@@ -59,20 +54,20 @@ const RowContent = styled.div`
   display: flex;
   align-items: center;
 `;
-const HighlightedDropzone = styled.div<{ isActive: boolean }>`
+const HighlightedDropzone = styled.div<{ $isActive: boolean }>`
   position: absolute;
   width: 100%;
   margin-top: -2px;
   height: 4px;
-  background: ${({ isActive, theme }) =>
-    isActive ? theme.palette.climbing.active : 'transparent'};
+  background: ${({ $isActive, theme }) =>
+    $isActive ? theme.palette.climbing.active : 'transparent'};
   z-index: 1000000;
 `;
 const TableHeader = styled.div`
   display: flex;
   justify-content: center;
   font-weight: 700;
-  color: ${({ theme }) => theme.palette.text.hint};
+  color: ${({ theme }) => theme.palette.text.secondary};
   font-size: 11px;
   padding-top: 12px;
   padding-bottom: 4px;
@@ -215,13 +210,11 @@ export const RouteListDndContent = ({ isEditable }) => {
         </MaxWidthContainer>
       </TableHeader>
       {items.map((item, index) => {
-        const osmId = item.route.feature?.osmMeta.id ?? null;
         const isSelected = isRouteSelected(index);
-
         return (
           <React.Fragment key={item.id}>
             {draggedItem?.id > index && (
-              <HighlightedDropzone isActive={draggedOverIndex === index} />
+              <HighlightedDropzone $isActive={draggedOverIndex === index} />
             )}
             <RowWithDragHandler
               isDraggedOver={index === draggedOverIndex}
@@ -230,7 +223,6 @@ export const RouteListDndContent = ({ isEditable }) => {
               onDragOver={(e) => handleDragOver(e, index)}
               onDragEnd={handleDragEnd}
               isSelected={isSelected}
-              isAscented={isAscent(osmId)}
               onClick={() => {
                 onRowClick(index);
               }}
@@ -256,7 +248,7 @@ export const RouteListDndContent = ({ isEditable }) => {
               </MaxWidthContainer>
             </RowWithDragHandler>
             {draggedItem?.id <= index && (
-              <HighlightedDropzone isActive={draggedOverIndex === index} />
+              <HighlightedDropzone $isActive={draggedOverIndex === index} />
             )}
           </React.Fragment>
         );

@@ -1,7 +1,11 @@
 import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { useAddMapEvent, useMapEffect, useMobileMode } from '../helpers';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
+import {
+  createMapEffectHook,
+  createMapEventHook,
+  useMobileMode,
+} from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './behaviour/useFeatureMarker';
 import { useOnMapClicked } from './behaviour/useOnMapClicked';
@@ -10,15 +14,17 @@ import { useUpdateStyle } from './behaviour/useUpdateStyle';
 import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
-import { isWebglSupported } from './helpers';
 import { usePersistedState } from '../utils/usePersistedState';
+import { webglSupported } from './helpers';
+import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
+import { useAddTopRightControls } from './useAddTopRightControls';
 
-const useOnMapLoaded = useAddMapEvent((map, onMapLoaded) => ({
+const useOnMapLoaded = createMapEventHook((map, onMapLoaded) => ({
   eventType: 'load',
   eventHandler: onMapLoaded,
 }));
 
-const useUpdateMap = useMapEffect((map, viewForMap) => {
+const useUpdateMap = createMapEffectHook((map, viewForMap) => {
   const center = [viewForMap[2], viewForMap[1]];
   map.jumpTo({ center, zoom: viewForMap[0] });
 });
@@ -31,19 +37,17 @@ const NotSupportedMessage = () => (
   </span>
 );
 
-// TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
+// TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
   const [userLayers] = usePersistedState<Layer[]>('userLayers', []);
+  const mobileMode = useMobileMode();
+  const { setFeature } = useFeatureContext();
 
-  if (!isWebglSupported()) {
-    onMapLoaded();
-    return <NotSupportedMessage />;
-  }
-
-  const { setFeature, setPreview } = useFeatureContext();
   const [map, mapRef] = useInitMap();
-  useOnMapClicked(map, setFeature, setPreview, useMobileMode());
+  useAddTopRightControls(map, mobileMode);
+  useOnMapClicked(map, setFeature);
+  useOnMapLongPressed(map, setFeature);
   useOnMapLoaded(map, onMapLoaded);
   useFeatureMarker(map);
 
@@ -57,4 +61,13 @@ const BrowserMap = ({ onMapLoaded }) => {
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
 
-export default BrowserMap;
+const BrowserMapCheck = ({ onMapLoaded }) => {
+  if (!webglSupported) {
+    onMapLoaded();
+    return <NotSupportedMessage />;
+  }
+
+  return <BrowserMap onMapLoaded={onMapLoaded} />;
+};
+
+export default BrowserMapCheck; // dynamic import

@@ -14,6 +14,31 @@ export default {
   show_more: 'Show more',
   show_less: 'Show less',
 
+  'user.login_register': 'Login / register',
+  'user.logout': 'Logout',
+  'user.my_ticks': 'My ticks',
+  'user.user_settings': 'Settings',
+
+  'my_ticks.title': 'My ticks',
+  'my_ticks.route_name': 'Name',
+  'my_ticks.route_grade': 'Grade',
+  'my_ticks.route_style': 'Style',
+  'my_ticks.route_date': 'Date',
+  'my_ticks.no_ticks_paragraph1': 'You have no ticks so far…',
+  'my_ticks.no_ticks_paragraph2': 'Try to add one on the crag',
+
+  'tick.style_description_not_selected': 'No climbing style selected.',
+  'tick.style_description_OS': 'Climbing the route on the first try without any prior knowledge or practice.',
+  'tick.style_description_FL': 'Climbing the route on the first try with some prior knowledge or beta.',
+  'tick.style_description_RP': 'Successfully climbing the route after practicing it beforehand.',
+  'tick.style_description_PP': 'Successfully climbing the route with pre-placed protection after practicing it.',
+  'tick.style_description_RK': 'Climbing the route using a mix of free climbing and aid climbing.',
+  'tick.style_description_AF': 'Climbing the route entirely free without using aid.',
+  'tick.style_description_TR': 'Climbing the route with a rope already anchored at the top.',
+  'tick.style_description_FS': 'Climbing the route without any protective gear or ropes.',
+
+  'climbing_renderer.climbing_grade': 'climbing grade ',
+
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
@@ -34,6 +59,7 @@ export default {
   'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
   'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
+  'homepage.go_to_map_button': 'Go to map',
   'homepage.examples.eg': 'eg.',
   'homepage.examples.charles_bridge_statues': 'Statues of Charles bridge',
   'homepage.screenshot_alt': 'Screenshot of OsmAPP',
@@ -45,13 +71,13 @@ export default {
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
      including editing options. <br/>Currently it includes various map layers, POI editing and a basic search engine.
      Features such as navigation or favorite places are planned.`,
-  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>Github</a>.`,
+  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
   'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – for images 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – for the best world map 🌎
+        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
+              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
+              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – for images 🖼
+        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – for the best world map 🌎
       </ul>
   `,
   'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
@@ -63,6 +89,7 @@ export default {
   'searchbox.category': 'category',
   'searchbox.overpass_success': 'Results found: __count__',
   'searchbox.overpass_error': 'Error fetching results. __message__',
+  'searchbox.overpass_custom_query': 'custom query',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
@@ -90,13 +117,18 @@ export default {
   'featurepanel.uncertain_image': 'This is the closest street view image from Mapillary. It may be inaccurate.',
   'featurepanel.inline_edit_title': 'Edit',
   'featurepanel.objects_around': 'Nearby objects',
+  'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
+  'featurepanel.climbing_restriction': 'Climbing restriction',
 
   'opening_hours.open': 'Open: __todayTime__',
   'opening_hours.now_closed_but_today': 'Closed now - Open __todayTime__',
   'opening_hours.today_closed': 'Closed today',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',
+  'opening_hours.editor.closed': 'closed',
+  'opening_hours.editor.create_advanced': 'You may create more detailed opening hours in <link>YoHours tool</link>.',
+  'opening_hours.editor.cant_edit_here': "This opening hours can't be edited here. Please use the <link>YoHours tool</link>.",
 
-  'map.github_title': 'GitHub',
+  'map.github_title': 'GitHub repository',
   'map.language_title': 'Change language',
   'map.osm_copyright_tooltip': '(c) OpenStreetMap.org contributors<br> – free map data of the Earth 👌',
   'map.maptiler_copyright_tooltip': '(c) MapTiler.com ❤️ <br> – vector tiles, hosting, outdoor map<br>Big thanks for supporting this project! 🙂 ',
@@ -104,6 +136,7 @@ export default {
   'map.more_button_title': 'More options…',
   'map.edit_link': 'Edit this area in iD editor',
   'map.about_link': 'About this app',
+  'map.compass_tooltip': 'Drag to enter 3D. Click to reset.',
 
   'editdialog.add_heading': 'Add to OpenStreetMap',
   'editdialog.undelete_heading': 'Add again to OpenStreetMap',
@@ -196,4 +229,9 @@ export default {
   'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
   'climbingpanel.create_first_node': 'Click on the beginning of the route',
   'climbingpanel.create_next_node': 'Follow direction of the route',
+
+  'runway.information': 'Runway information',
+  'runway.runway': 'Runway',
+  'runway.size': 'Length (m) - Width (m)',
+  'runway.surface': 'Surface',
 };

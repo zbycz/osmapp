@@ -1,28 +1,25 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
+
+import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
   List,
   ListItem,
   TextField,
-} from '@material-ui/core';
-
-import DeleteIcon from '@material-ui/icons/Delete';
-import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
-import AddIcon from '@material-ui/icons/Add';
-import Router from 'next/router';
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+} from '@mui/material';
 import { RouteDifficultySelect } from '../RouteDifficultySelect';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
-import { onAscentAdd } from '../utils/ascents';
-import { MyAscents } from './MyAscents';
+import { MyRouteTicks } from '../Ticks/MyRouteTicks';
 
 const Left = styled.div`
   flex: 1;
@@ -35,8 +32,8 @@ const Flex = styled.div`
   align-items: flex-start;
 `;
 
-const ExpandedRowContainer = styled.div<{ isExpanded?: boolean }>`
-  height: ${({ isExpanded }) => (isExpanded === false ? 0 : 'auto')};
+const ExpandedRowContainer = styled.div<{ $isExpanded?: boolean }>`
+  height: ${({ $isExpanded }) => ($isExpanded === false ? 0 : 'auto')};
   transition: all 0.1s ease-in-out;
   min-height: 0;
   overflow: hidden;
@@ -68,38 +65,35 @@ export const ExpandedRow = ({
     machine.execute('deleteRoute', { routeNumber });
     hideDeleteDialog();
   };
-  const onNodeDetailClick = () => {
-    Router.push(`${getOsmappLink(tempRoute.feature)}${window.location.hash}`);
-  };
 
   return (
     <>
-      <ExpandedRowContainer isExpanded={isExpanded}>
+      <ExpandedRowContainer $isExpanded={isExpanded}>
         <Flex>
           <Left>
             <List>
-              {tempRoute.description && (
-                <ListItem>
-                  {isReadOnly ? (
-                    <div>
-                      <Label>Description</Label>
-                      <Value>{getText(tempRoute.description)}</Value>
-                    </div>
-                  ) : (
-                    <TextField
-                      size="small"
-                      value={tempRoute.description}
-                      onChange={(e) => onTempRouteChange(e, 'description')}
-                      onClick={stopPropagation}
-                      style={{ marginTop: 10 }}
-                      variant="outlined"
-                      label="Description"
-                      fullWidth
-                      multiline
-                    />
-                  )}
-                </ListItem>
-              )}
+              <ListItem>
+                {isReadOnly && tempRoute.description && (
+                  <div>
+                    <Label>Description</Label>
+                    <Value>{getText(tempRoute.description)}</Value>
+                  </div>
+                )}
+                {isEditMode && (
+                  <TextField
+                    size="small"
+                    value={tempRoute.description}
+                    onChange={(e) => onTempRouteChange(e, 'description')}
+                    onClick={stopPropagation}
+                    style={{ marginTop: 10 }}
+                    variant="outlined"
+                    label="Description"
+                    fullWidth
+                    multiline
+                  />
+                )}
+              </ListItem>
+
               <ListItem>
                 <RouteInDifferentPhotos
                   route={tempRoute}
@@ -154,55 +148,46 @@ export const ExpandedRow = ({
                   )}
                 </ListItem>
               )}
-              {tempRoute.author && (
-                <ListItem>
-                  {isReadOnly ? (
-                    <div>
-                      <Label>Author</Label>
-                      <Value>{getText(tempRoute.author)}</Value>
-                    </div>
-                  ) : (
-                    <TextField
-                      size="small"
-                      value={tempRoute.author}
-                      onChange={(e) => onTempRouteChange(e, 'author')}
-                      onClick={stopPropagation}
-                      style={{ marginTop: 10 }}
-                      variant="outlined"
-                      label="Author"
-                    />
-                  )}
-                </ListItem>
-              )}
+
               <ListItem>
-                <Button
-                  onClick={onNodeDetailClick}
-                  color="secondary"
-                  size="small"
-                  variant="text"
-                  endIcon={<ArrowForwardIcon />}
-                >
-                  Show route detail
-                </Button>
+                {isReadOnly && tempRoute.author && (
+                  <div>
+                    <Label>Author</Label>
+                    <Value>{getText(tempRoute.author)}</Value>
+                  </div>
+                )}
+                {isEditMode && (
+                  <TextField
+                    size="small"
+                    value={tempRoute.author}
+                    onChange={(e) => onTempRouteChange(e, 'author')}
+                    onClick={stopPropagation}
+                    style={{ marginTop: 10 }}
+                    variant="outlined"
+                    label="Author"
+                  />
+                )}
               </ListItem>
               <ListItem>
-                <Button
-                  onClick={() => {
-                    onAscentAdd({ osmId });
-                    // stopPropagation(e);
-                  }}
-                  color="secondary"
-                  size="small"
-                  variant="text"
-                  endIcon={<AddIcon />}
-                >
-                  Mark ascent
-                </Button>
+                {tempRoute.feature ? (
+                  <Button
+                    color="secondary"
+                    size="small"
+                    variant="text"
+                    endIcon={<ArrowForwardIcon />}
+                    href={`${getOsmappLink(tempRoute.feature)}${
+                      window.location.hash
+                    }`}
+                    component="a"
+                  >
+                    Show route detail
+                  </Button>
+                ) : null}
               </ListItem>
             </List>
           </Right>
         </Flex>
-        <MyAscents osmId={osmId} />
+        <MyRouteTicks shortOsmId={osmId} />
       </ExpandedRowContainer>
       <Dialog
         open={routeToDelete !== null}

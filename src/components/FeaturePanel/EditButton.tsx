@@ -1,25 +1,30 @@
-import Button from '@material-ui/core/Button';
-import EditIcon from '@material-ui/icons/Edit';
-import AddLocationIcon from '@material-ui/icons/AddLocation';
+import { Box, Button } from '@mui/material';
+import EditIcon from '@mui/icons-material/Edit';
+import AddLocationIcon from '@mui/icons-material/AddLocation';
 import React from 'react';
-import { Box } from '@material-ui/core';
 import { t } from '../../services/intl';
 import { useOsmAuthContext } from '../utils/OsmAuthContext';
 import { useEditDialogContext } from './helpers/EditDialogContext';
+import { useEditDialogFeature } from './EditDialog/utils';
 
-const getLabel = (loggedIn, isAddPlace, isUndelete) => {
+const getLabel = (
+  loggedIn: boolean,
+  isAddPlace: boolean,
+  isUndelete: boolean,
+) => {
   if (isAddPlace) return t('featurepanel.add_place_button');
   if (isUndelete) return t('featurepanel.undelete_button');
   if (loggedIn) return t('featurepanel.edit_button');
   return t('featurepanel.note_button');
 };
 
-export const EditButton = ({ isAddPlace, isUndelete }) => {
+export const EditButton = () => {
+  const { isAddPlace, isUndelete } = useEditDialogFeature();
   const { loggedIn } = useOsmAuthContext();
   const { open } = useEditDialogContext();
 
   return (
-    <Box mt={3} mb={3} mx="auto" clone>
+    <Box mt={3} mb={3} mx="auto" sx={{ textAlign: 'center' }}>
       <Button
         size="large"
         startIcon={

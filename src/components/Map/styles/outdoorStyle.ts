@@ -255,14 +255,14 @@ export const outdoorStyle = addHoverPaint({
         'hillshade-exaggeration': {
           stops: [
             [6, 0.45],
-            [14, 0.25],
+            [14, 0.55],
           ],
         },
         'hillshade-shadow-color': 'rgba(107, 101, 100, 1)',
         'hillshade-highlight-color': 'rgba(183, 169, 162, 1)',
       },
       layout: { visibility: 'visible' },
-      source: 'terrain-rgb',
+      source: 'terrainHillshade',
       minzoom: 3,
     },
     {

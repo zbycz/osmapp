@@ -1,15 +1,19 @@
-import DialogContent from '@material-ui/core/DialogContent';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
-import DialogActions from '@material-ui/core/DialogActions';
-import InfoIcon from '@material-ui/icons/Info';
-import Button from '@material-ui/core/Button';
 import React from 'react';
-import styled from 'styled-components';
-import Typography from '@material-ui/core/Typography';
-import { Box, Tooltip } from '@material-ui/core';
-import IconButton from '@material-ui/core/IconButton';
-import { nl2br } from '../../utils/nl2br';
+import styled from '@emotion/styled';
+
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import {
+  Box,
+  DialogContent,
+  Typography,
+  DialogActions,
+  Button,
+} from '@mui/material';
 import { t, Translation } from '../../../services/intl';
+import { nl2br } from '../../utils/nl2br';
+import { SuccessInfo } from '../../../services/types';
+import { useEditContext } from './EditContext';
+import { useGetOnClose } from './useGetOnClose';
 
 const StyledCheckCircleIcon = styled(CheckCircleIcon)`
   color: #4b912e;
@@ -30,44 +34,27 @@ const GrayBox = styled(Box)`
   padding: 1em;
 `;
 
-const Wrapper = styled.span`
-  display: inline-block;
-  margin: -15px -15px -15px -8px;
-  vertical-align: text-top;
+const getTexts = (successInfo: SuccessInfo) =>
+  successInfo.type === 'note'
+    ? {
+        heading: t('editsuccess.note.heading'),
+        subheading: t('editsuccess.note.subheading'),
+        body: <Translation id="editsuccess.note.body" />,
+        urlLabel: t('editsuccess.note.urlLabel'),
+        textLabel: t('editsuccess.note.textLabel'),
+      }
+    : {
+        heading: t('editsuccess.edit.heading'),
+        subheading: t('editsuccess.edit.subheading'),
+        body: <Translation id="editsuccess.edit.body" />,
+        urlLabel: t('editsuccess.edit.urlLabel'),
+        textLabel: t('editsuccess.edit.textLabel'),
+      };
 
-  svg {
-    font-size: 16px;
-    color: #ccc;
-  }
-`;
-
-export const InfoButton = ({ title }) => (
-  <Wrapper>
-    <Tooltip arrow interactive title={nl2br(title)} placement="bottom-end">
-      <IconButton>
-        <InfoIcon />
-      </IconButton>
-    </Tooltip>
-  </Wrapper>
-);
-
-export const SuccessContent = ({ successInfo, handleClose }) => {
-  const texts =
-    successInfo.type === 'note'
-      ? {
-          heading: t('editsuccess.note.heading'),
-          subheading: t('editsuccess.note.subheading'),
-          body: <Translation id="editsuccess.note.body" />,
-          urlLabel: t('editsuccess.note.urlLabel'),
-          textLabel: t('editsuccess.note.textLabel'),
-        }
-      : {
-          heading: t('editsuccess.edit.heading'),
-          subheading: t('editsuccess.edit.subheading'),
-          body: <Translation id="editsuccess.edit.body" />,
-          urlLabel: t('editsuccess.edit.urlLabel'),
-          textLabel: t('editsuccess.edit.textLabel'),
-        };
+export const SuccessContent = () => {
+  const onClose = useGetOnClose();
+  const { successInfo } = useEditContext();
+  const texts = getTexts(successInfo);
 
   return (
     <>
@@ -103,7 +90,7 @@ export const SuccessContent = ({ successInfo, handleClose }) => {
         </GrayBox>
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="primary">
+        <Button onClick={onClose} color="primary">
           {t('editsuccess.close_button')}
         </Button>
       </DialogActions>
