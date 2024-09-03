@@ -35,7 +35,8 @@ export const usePersistedState = <T>(
     document.addEventListener(eventName, listener);
 
     return () => document.removeEventListener(eventName, listener);
-  }, [eventName, getVal]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return [value, setValue];
 };

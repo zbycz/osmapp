@@ -25,26 +25,25 @@ type AllLayers = {
 const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
   const spacer: Layer = { type: 'spacer' as const, key: 'userSpacer' };
   const toLayer = ([key, layer]) => ({ ...layer, key });
-  const filterByBBox = ([, layer]: [unknown, Layer]) =>
-    isViewInsideBbox(view, layer.bbox as number[]); // needs suppressHydrationWarning
+  const filterByBBox = (layer: Layer) => {
+    if (!layer.bboxes) return true;
+    return layer.bboxes.some((b) => isViewInsideBbox(view, b));
+  };
 
-  const entries = Object.entries(osmappLayers).filter(filterByBBox);
+  const entries = Object.entries(osmappLayers).filter(([_, layer]) =>
+    filterByBBox(layer),
+  );
   const basemaps = entries.filter(([, v]) => v.type === 'basemap');
   const overlays = entries.filter(([, v]) => v.type.startsWith('overlay'));
 
   const basemapLayers = [
     ...basemaps.map(toLayer),
     ...(userLayers.length ? [spacer] : []),
-    ...userLayers
-      .filter(({ bbox }) => {
-        if (!bbox) return true;
-        return (bbox as number[][]).some((b) => isViewInsideBbox(view, b));
-      })
-      .map((layer) => ({
-        ...layer,
-        key: layer.url,
-        Icon: PersonAddIcon,
-      })),
+    ...userLayers.filter(filterByBBox).map((layer) => ({
+      ...layer,
+      key: layer.url,
+      Icon: PersonAddIcon,
+    })),
   ];
 
   return {

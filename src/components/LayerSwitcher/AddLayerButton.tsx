@@ -3,6 +3,13 @@ import { Box, Button } from '@mui/material';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { AddCustomDialog } from './AddCustomLayer';
+import { LayerIndexAttribution } from './helpers/loadLayers';
+
+const fmtAttributionHtml = ({ url, html, text }: LayerIndexAttribution) => {
+  if (html) return html;
+  if (text && url) return `<a href="${url}">${text}</a>`;
+  return text || url;
+};
 
 export const AddUserLayerButton = ({ setUserLayers }) => {
   const { setActiveLayers } = useMapStateContext();
@@ -20,18 +27,22 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
         onClose={() => setOpen(false)}
         isOpen={isOpen}
         save={(layer) => {
-          const { url, name, max_zoom: maxzoom, attribution, bbox } = layer;
+          const {
+            url,
+            name,
+            max_zoom: maxzoom,
+            attribution,
+            bbox: bboxes,
+          } = layer;
 
           const newLayer: Layer = {
             type: 'user',
             maxzoom,
             name,
             url,
-            bbox,
+            bboxes,
             ...(attribution && {
-              attribution: [
-                attribution.text || attribution.url || attribution.html,
-              ],
+              attribution: [fmtAttributionHtml(attribution)],
             }),
           };
 

@@ -11,7 +11,7 @@ export interface Layer {
   Icon?: React.FC<any>;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
-  bbox?: number[] | number[][];
+  bboxes?: number[][];
 }
 
 // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]

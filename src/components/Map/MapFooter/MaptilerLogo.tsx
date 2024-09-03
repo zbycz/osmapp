@@ -13,9 +13,9 @@ export const MaptilerLogo = () => {
   const isClient = useIsClient();
   const { activeLayers } = useMapStateContext();
   const hasMaptiler = activeLayers.some((layer) => {
-    const attribution = osmappLayers[layer]?.attribution;
+    const attribution = osmappLayers[layer]?.attribution || [];
 
-    return Array.isArray(attribution) && attribution.includes('maptiler');
+    return attribution.includes('maptiler');
   });
 
   if (!isClient || !hasMaptiler) {

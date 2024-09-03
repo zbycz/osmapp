@@ -10,7 +10,7 @@ export type Category =
   | 'elevation'
   | 'other';
 
-interface LayerIndexAttribution {
+export interface LayerIndexAttribution {
   url?: string;
   text?: string;
   html?: string;
