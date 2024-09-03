@@ -22,7 +22,7 @@ export interface LayerIndex {
    * A unique identifier for the source; used in imagery_used changeset tag
    */
   id: string;
-  bbox: number[][];
+  bbox?: number[][];
   type: 'tms';
   /**
    * A URL template for imagery tilesA URL template for imagery tiles
@@ -127,7 +127,7 @@ export interface LayerIndex {
   /**
    * HTTP headers to be sent to server. It has two attributes header-name and header-value. May be specified multiple times.
    */
-  'custom-http-headers': {
+  'custom-http-headers'?: {
     'header-name'?: string;
     'header-value'?: string;
   };

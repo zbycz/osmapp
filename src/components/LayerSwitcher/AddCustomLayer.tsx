@@ -14,7 +14,10 @@ import {
   LayerIndex,
   loadLayer,
 } from './helpers/loadLayers';
-import { SuccessLayerInput } from './SuccessLayerInput';
+import {
+  AutocompleteOption as LayerAutocompleteOption,
+  SuccessLayerInput,
+} from './SuccessLayerInput';
 import { t } from '../../services/intl';
 
 const LoadingLayerInput = () => (
@@ -45,9 +48,9 @@ const ErrorLayerInput = () => (
 
 type FetchingState = 'success' | 'loading' | 'error';
 
-const LayerDataInput: React.FC<{ onSelect: (layer: any) => void }> = ({
-  onSelect,
-}) => {
+const LayerDataInput: React.FC<{
+  onSelect: (layer: LayerAutocompleteOption | null) => void;
+}> = ({ onSelect }) => {
   const [layerIndex, setLayerIndex] = React.useState([]);
   const [layerIndexState, setLayerIndexState] =
     React.useState<FetchingState>('loading');
@@ -144,7 +147,6 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
         <h3>{layer.name}</h3>
       </span>
       {layer.description && <p>{layer.description}</p>}
-      {/*  TODO: show a pretty category name instead of the raw one Maybe even translated */}
       <Category category={layer.category} />
       <span
         style={{
@@ -214,6 +216,73 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
   );
 };
 
+const CustomChoose: React.FC<{
+  onValidation: (isOk: boolean) => void;
+  onChange: (layer: LayerIndex) => void;
+}> = ({ onValidation, onChange }) => {
+  const [url, setUrl] = React.useState('');
+  const [isValid, setIsValid] = React.useState(false);
+
+  React.useEffect(() => {
+    onValidation(isValid);
+  }, [isValid]);
+
+  React.useEffect(() => {
+    try {
+      const sanitizedUrl = url.replace('{zoom}', '{z}');
+
+      setIsValid(
+        sanitizedUrl.includes('{x}') &&
+          sanitizedUrl.includes('{y}') &&
+          sanitizedUrl.includes('{z}'),
+      );
+
+      // throws if the url is invalid
+      new URL(sanitizedUrl);
+    } catch {
+      setIsValid(false);
+    }
+  }, [url]);
+
+  React.useEffect(() => {
+    const sanitizedUrl = url.replace('{zoom}', '{z}');
+
+    try {
+      onChange({
+        url: sanitizedUrl,
+        id: `custom-${sanitizedUrl}`,
+        name: new URL(sanitizedUrl).hostname,
+        type: 'tms',
+      });
+    } catch {
+      onChange({
+        url: sanitizedUrl,
+        id: `custom-${sanitizedUrl}`,
+        name: sanitizedUrl,
+        type: 'tms',
+      });
+    }
+  }, [url, isValid]);
+
+  return (
+    <div
+      style={{
+        paddingTop: '2rem',
+      }}
+    >
+      <TextField
+        label="URL"
+        fullWidth
+        value={url}
+        onChange={(val) => {
+          setUrl(val.target.value);
+        }}
+        error={!isValid && !!url}
+      />
+    </div>
+  );
+};
+
 interface AddDialogProps {
   save: (layer: LayerIndex) => void;
   onClose: () => void;
@@ -229,11 +298,13 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
 
   const [layer, setLayer] = React.useState<LayerIndex | null>(null);
   const [layerUrl, setLayerUrl] = React.useState<string | null>(null);
+  const [choosingCustom, setChoosingCustom] = React.useState(false);
 
   const onReset = () => {
     onClose();
     setLayer(null);
     setDisableSave(true);
+    setChoosingCustom(false);
   };
 
   const onSave = () => {
@@ -250,11 +321,23 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
       <DialogContent>
         <LayerDataInput
           onSelect={(newLayer) => {
-            setLayer(newLayer);
-            setDisableSave(!newLayer);
+            if (!newLayer) {
+              setLayer(null);
+              setDisableSave(true);
+              setChoosingCustom(false);
+              return;
+            }
+            if (newLayer.type === 'layerIndex') {
+              setLayer(newLayer.layer);
+              setDisableSave(false);
+              setChoosingCustom(false);
+              return;
+            }
+
+            setChoosingCustom(true);
           }}
         />
-        {layer && (
+        {layer && !choosingCustom && (
           <Details
             layer={layer}
             onChange={(vals) => {
@@ -267,6 +350,17 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
               );
 
               setLayerUrl(baseUrl);
+            }}
+            onValidation={(isOk) => {
+              setDisableSave(!isOk);
+            }}
+          />
+        )}
+        {choosingCustom && (
+          <CustomChoose
+            onChange={(layer) => {
+              setLayerUrl(layer.url);
+              setLayer(layer);
             }}
             onValidation={(isOk) => {
               setDisableSave(!isOk);
