@@ -1,7 +1,11 @@
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import React from 'react';
-
-import { ListItem, ListItemText, ListItemSecondaryAction } from '@mui/material';
+import { PersonAdd, WrongLocation } from '@mui/icons-material';
+import {
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  Tooltip,
+} from '@mui/material';
 import { dotToOptionalBr } from '../helpers';
 import {
   LayerIcon,
@@ -25,24 +29,21 @@ type AllLayers = {
 const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
   const spacer: Layer = { type: 'spacer' as const, key: 'userSpacer' };
   const toLayer = ([key, layer]) => ({ ...layer, key });
-  const filterByBBox = (layer: Layer) => {
+
+  const entries = Object.entries(osmappLayers).filter(([_, layer]) => {
     if (!layer.bboxes) return true;
     return layer.bboxes.some((b) => isViewInsideBbox(view, b));
-  };
-
-  const entries = Object.entries(osmappLayers).filter(([_, layer]) =>
-    filterByBBox(layer),
-  );
+  });
   const basemaps = entries.filter(([, v]) => v.type === 'basemap');
   const overlays = entries.filter(([, v]) => v.type.startsWith('overlay'));
 
   const basemapLayers = [
     ...basemaps.map(toLayer),
     ...(userLayers.length ? [spacer] : []),
-    ...userLayers.filter(filterByBBox).map((layer) => ({
+    ...userLayers.map((layer) => ({
       ...layer,
       key: layer.url,
-      Icon: PersonAddIcon,
+      Icon: PersonAdd,
     })),
   ];
 
@@ -66,12 +67,14 @@ export const LayerSwitcherContent = () => {
         aria-labelledby="layerSwitcher-heading"
         suppressHydrationWarning
       >
-        {basemapLayers.map(({ key, name, type, url, Icon }) => {
+        {basemapLayers.map(({ key, name, type, url, Icon, bboxes }) => {
           if (type === 'spacer') {
             return <Spacer key={key} />;
           }
           const setActiveBaseMap = () =>
             setActiveLayers((prev) => [key, ...prev.slice(1)]);
+          const isOutsideOfView =
+            bboxes && !bboxes.some((b) => isViewInsideBbox(view, b));
           return (
             <ListItem
               button
@@ -81,6 +84,17 @@ export const LayerSwitcherContent = () => {
             >
               <LayerIcon Icon={Icon} />
               <ListItemText primary={dotToOptionalBr(name)} />
+
+              {isOutsideOfView && (
+                <Tooltip
+                  title="Not visible currently"
+                  arrow
+                  placement="top-end"
+                >
+                  <WrongLocation fontSize="small" color="secondary" />
+                </Tooltip>
+              )}
+
               <ListItemSecondaryAction>
                 {type === 'user' && (
                   <RemoveUserLayerAction
