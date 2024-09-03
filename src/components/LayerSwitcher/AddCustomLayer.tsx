@@ -225,7 +225,7 @@ const CustomChoose: React.FC<{
 
   React.useEffect(() => {
     onValidation(isValid);
-  }, [isValid]);
+  }, [isValid, onValidation]);
 
   React.useEffect(() => {
     try {
@@ -262,7 +262,7 @@ const CustomChoose: React.FC<{
         type: 'tms',
       });
     }
-  }, [url, isValid]);
+  }, [url, isValid, onChange]);
 
   return (
     <div
