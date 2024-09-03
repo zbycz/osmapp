@@ -29,6 +29,8 @@ type MapStateContextType = {
   setViewFromMap: (view: View) => void;
   activeLayers: string[];
   setActiveLayers: (layers: string[] | ((prev: string[]) => string[])) => void;
+  userLayers: Layer[];
+  setUserLayers: (param: Layer[] | ((current: Layer[]) => Layer[])) => void;
 };
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
@@ -44,6 +46,10 @@ export const MapStateProvider = ({ children, initialMapView }) => {
   const [bbox, setBbox] = useState<Bbox>();
   const [view, setView] = useState(initialMapView);
   const [viewForMap, setViewForMap] = useState(initialMapView);
+  const [userLayers, setUserLayers] = usePersistedState<Layer[]>(
+    'userLayers',
+    [],
+  );
 
   const setBothViews = useCallback((newView) => {
     setView(newView);
@@ -59,6 +65,8 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewFromMap: setView,
     activeLayers,
     setActiveLayers,
+    userLayers,
+    setUserLayers,
   };
 
   return (

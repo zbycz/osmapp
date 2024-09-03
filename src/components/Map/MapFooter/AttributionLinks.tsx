@@ -38,8 +38,7 @@ const OsmAttribution = () => {
 };
 
 export const AttributionLinks = () => {
-  const { activeLayers } = useMapStateContext();
-  const [userLayers] = usePersistedState<Layer[]>('userLayers', []);
+  const { activeLayers, userLayers } = useMapStateContext();
 
   const attributions: string[] = uniq(
     activeLayers.flatMap((layerUrl) => {

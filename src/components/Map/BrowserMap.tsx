@@ -40,7 +40,7 @@ const NotSupportedMessage = () => (
 // TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = ({ onMapLoaded }) => {
-  const [userLayers] = usePersistedState<Layer[]>('userLayers', []);
+  const { userLayers } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
 

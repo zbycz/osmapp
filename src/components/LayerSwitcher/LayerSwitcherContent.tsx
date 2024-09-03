@@ -54,8 +54,8 @@ const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
 };
 
 export const LayerSwitcherContent = () => {
-  const { view, activeLayers, setActiveLayers } = useMapStateContext();
-  const [userLayers, setUserLayers] = usePersistedState('userLayers', []);
+  const { view, activeLayers, setActiveLayers, userLayers, setUserLayers } =
+    useMapStateContext();
   const { basemapLayers, overlayLayers } = getAllLayers(userLayers, view);
 
   return (

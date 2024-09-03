@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export const usePersistedState = <T>(
   storageKey: string,
@@ -7,13 +7,10 @@ export const usePersistedState = <T>(
   const persist = (value) =>
     window?.localStorage.setItem(storageKey, JSON.stringify(value));
 
-  const getVal = () =>
+  const [value, setStateValue] = useState(
     JSON.parse(global?.window?.localStorage.getItem(storageKey) ?? 'null') ??
-    init;
-
-  const eventName = `localStorage-${storageKey}`;
-
-  const [value, setStateValue] = useState(getVal());
+      init,
+  );
 
   const setValue = (param) => {
     if (typeof param === 'function') {
@@ -26,17 +23,6 @@ export const usePersistedState = <T>(
       persist(param);
       setStateValue(param);
     }
-
-    if (document) document.dispatchEvent(new Event(eventName));
   };
-
-  useEffect(() => {
-    const listener = () => setStateValue(getVal());
-    document.addEventListener(eventName, listener);
-
-    return () => document.removeEventListener(eventName, listener);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   return [value, setValue];
 };
