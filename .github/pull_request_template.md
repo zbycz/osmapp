@@ -1,19 +1,13 @@
 ### Description
 
-<!-- Describe the changes here -->
+<!-- Describe the changes here, add screenshots if possible -->
 
-### Example links
-
-<!-- Please always add links to features which demonstrate the issue or enhancement -->
-
-- [Example link 1](https://osmapp.org/relation/949871)
-
-### Screenshots
+<!-- If applicable, please add links to features which demonstrate the issue or enhancement -->
 
 ### Checklist
 
-- [ ] Checked dark mode / light mode
-- [ ] Checked mobile / desktop
-- [ ] Checked server-side-rendering (SSR)
+- [ ] checked dark mode / light mode
+- [ ] checked mobile / desktop
+- [ ] checked server-side-rendering (SSR)
 - [ ] code style is consistent with the rest of the project
-- [ ] new dependencies are explained in PR comments
+- [ ] new dependencies are reasoned about in PR comments
