@@ -14,6 +14,7 @@ const filterConsoleLog = () => {
   // eslint-disable-next-line no-console
   console.warn = (message, ...optionalParams) => {
     if (
+      typeof message === 'string' &&
       !message.includes(
         'Please make sure you have added the image with map.addImage',
       )

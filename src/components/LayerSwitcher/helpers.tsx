@@ -1,57 +1,13 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import {
-  Button,
-  Box,
-  IconButton,
-  Typography,
-  List,
-  ListItemIcon,
-} from '@mui/material';
+import { Box, IconButton, Typography, List, ListItemIcon } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { useMapStateContext } from '../utils/MapStateContext';
+import { View, useMapStateContext } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
-
-let counter = 0;
-const TMS_EXAMPLES = [
-  'https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',
-  'https://stamen-tiles.a.ssl.fastly.net/watercolor/{z}/{x}/{y}.jpg',
-];
-
-export const AddUserLayerButton = ({ setUserLayers }) => {
-  const { setActiveLayers } = useMapStateContext();
-  const onClick = () => {
-    const TMS_EXAMPLE = TMS_EXAMPLES[counter % TMS_EXAMPLES.length];
-    counter += 1;
-    const url = prompt(t('layerswitcher.add_layer_prompt'), TMS_EXAMPLE); // eslint-disable-line no-alert
-    if (!url) {
-      return;
-    }
-    setUserLayers((current) => {
-      const userLayersOmitSame = current.filter((item) => item.url !== url);
-      return [
-        ...userLayersOmitSame,
-        {
-          name: url.replace(/^https?:\/\/([^/]+).*$/, '$1'),
-          url,
-        },
-      ];
-    });
-    setActiveLayers([url]); // if this not found in osmappLayers, value is used as tiles URL
-  };
-
-  return (
-    <Box m={2} mt={6}>
-      <Button size="small" color="secondary" onClick={onClick}>
-        {t('layerswitcher.add_layer_button')}
-      </Button>
-    </Box>
-  );
-};
 
 export const RemoveUserLayerAction = ({ url, setUserLayers }) => {
   const { activeLayers, setActiveLayers } = useMapStateContext();
-  const onClick = (e) => {
+  const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setUserLayers((current) => {
       if (activeLayers.includes(url)) {
@@ -108,3 +64,30 @@ export const StyledList = styled(List)`
 export const Spacer = styled.div`
   padding-bottom: 1.5em;
 `;
+
+export const isViewInsideBbox = ([, lat, lon]: View, bbox?: number[]) =>
+  !bbox ||
+  (parseFloat(lat) > bbox[1] &&
+    parseFloat(lat) < bbox[3] &&
+    parseFloat(lon) > bbox[0] &&
+    parseFloat(lon) < bbox[2]);
+
+/**
+ * Is a string a valid url for a layer
+ * It must be a valid url and include all of `{x}`, `{y}` and `{zoom}` or `{z}`
+ */
+export const isValidLayerUrl = (url: string) => {
+  try {
+    new URL(url);
+  } catch {
+    return false;
+  }
+
+  const sanitizedUrl = url.replace('{zoom}', '{z}');
+
+  return (
+    sanitizedUrl.includes('{x}') &&
+    sanitizedUrl.includes('{y}') &&
+    sanitizedUrl.includes('{z}')
+  );
+};

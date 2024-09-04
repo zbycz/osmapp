@@ -73,14 +73,10 @@ export default {
      Features such as navigation or favorite places are planned.`,
   'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – for images 🖼
-        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – for the best world map 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
+  'homepage.for_images': 'for images 🖼',
+  'homepage.for_osm': 'for the best world map 🌎',
+  'homepage.maptiler': 'for awesome vector maps and for supporting this project  ❤️ ',
+  'homepage.vercel': 'for a great app hosting platform',
   'homepage.disclaimer_heading': 'Disclaimer',
   'homepage.disclaimer': `OpenStreetMap and OSM are a trademark of the OpenStreetMap Foundation. This project is not endorsed by or affiliated with the <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vector maps ("Basic" and "Outdoor") contain some place names from the Wikidata project, more <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>here</a>.`,
@@ -202,6 +198,14 @@ export default {
   'layerswitcher.add_layer_button': 'Add custom layer',
   'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
   'layerswitcher.overlays': 'Overlays',
+  'layerswitcher.not_all_work': 'Please note that some layers may not work in OsmAPP.',
+  'layerswitcher.license': 'License',
+  'layerswitcher.privacy_policy': 'Privacy policy',
+  'layerswitcher.category': 'Category',
+  'layerswitcher.category_photo': 'Aerial imagery',
+  'layerswitcher.category_osmbasedmap': 'Normal layer',
+  'layerswitcher.compatible_license': 'License compatible for editing OpenStreetMap',
+  'layerswitcher.layers_in_area': 'Filter layers in this area',
 
   'layers.basic': 'Basic',
   'layers.makina_africa': 'OpenPlaceGuide Africa',

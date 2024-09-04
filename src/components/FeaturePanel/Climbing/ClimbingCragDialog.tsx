@@ -41,16 +41,15 @@ export const ClimbingCragDialog = ({ photo }: { photo?: string }) => {
   };
 
   const handleClose = () => {
-    // @TODO update saved data first
-    // const isDataChanged = getChanges(routes).length > 0;
-    // if (
-    //   isDataChanged &&
-    //   window.confirm(
-    //     'Are you sure you want to discard changes without saving?',
-    //   ) === false
-    // ) {
-    //   return;
-    // }
+    if (
+      isEditMode &&
+      window.confirm(
+        'Are you sure you want to close this window? You might loose your changes.',
+      ) === false
+    ) {
+      return;
+    }
+
     Router.push(`${getOsmappLink(feature)}${window.location.hash}`);
   };
   const handleCancel = () => {
