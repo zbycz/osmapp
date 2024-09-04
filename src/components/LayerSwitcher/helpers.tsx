@@ -71,3 +71,23 @@ export const isViewInsideBbox = ([, lat, lon]: View, bbox?: number[]) =>
     parseFloat(lat) < bbox[3] &&
     parseFloat(lon) > bbox[0] &&
     parseFloat(lon) < bbox[2]);
+
+/**
+ * Is a string a valid url for a layer
+ * It must be a valid url and include all of `{x}`, `{y}` and `{zoom}` or `{z}`
+ */
+export const isValidLayerUrl = (url: string) => {
+  try {
+    new URL(url);
+  } catch {
+    return false;
+  }
+
+  const sanitizedUrl = url.replace('{zoom}', '{z}');
+
+  return (
+    sanitizedUrl.includes('{x}') &&
+    sanitizedUrl.includes('{y}') &&
+    sanitizedUrl.includes('{z}')
+  );
+};

@@ -47,7 +47,7 @@ export const MapStateProvider = ({ children, initialMapView }) => {
   const [view, setView] = useState(initialMapView);
   const [viewForMap, setViewForMap] = useState(initialMapView);
   const [userLayers, setUserLayers] = usePersistedState<Layer[]>(
-    'userLayers',
+    'userLayerIndex',
     [],
   );
 

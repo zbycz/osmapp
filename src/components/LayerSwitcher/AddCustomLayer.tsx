@@ -19,6 +19,7 @@ import {
   SuccessLayerInput,
 } from './SuccessLayerInput';
 import { t } from '../../services/intl';
+import { isValidLayerUrl } from './helpers';
 
 const LoadingLayerInput = () => (
   <div
@@ -58,7 +59,8 @@ const LayerDataInput: React.FC<{
   React.useEffect(() => {
     loadLayer()
       .then((result) => {
-        setLayerIndex(result);
+        const validLayers = result.filter(({ url }) => isValidLayerUrl(url));
+        setLayerIndex(validLayers);
         setLayerIndexState('success');
       })
       .catch(() => {
@@ -228,20 +230,7 @@ const CustomChoose: React.FC<{
   }, [isValid, onValidation]);
 
   React.useEffect(() => {
-    try {
-      const sanitizedUrl = url.replace('{zoom}', '{z}');
-
-      setIsValid(
-        sanitizedUrl.includes('{x}') &&
-          sanitizedUrl.includes('{y}') &&
-          sanitizedUrl.includes('{z}'),
-      );
-
-      // throws if the url is invalid
-      new URL(sanitizedUrl);
-    } catch {
-      setIsValid(false);
-    }
+    setIsValid(isValidLayerUrl(url));
   }, [url]);
 
   React.useEffect(() => {
