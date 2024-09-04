@@ -35,14 +35,9 @@ export default {
      Funktionen wie Navigation und das Speichern von Favoriten sind in Planung`,
   'homepage.github_link': `Du kannst neue Features auf <a href="https://github.com/zbycz/osmapp" target='_blank'>vorschlagen</a>.`,
   'homepage.special_thanks_heading': `Danke an`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – für die Bilder 🖼
-        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – für die beste Weltkarte 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – für die großartigen Vektor Karten <br>und die Unterstützung dieses Projekts  ❤️ ',
+  'homepage.for_images': 'für die Bilder 🖼',
+  'homepage.for_osm': 'für die beste Weltkarte 🌎',
+  'homepage.maptiler': 'für die großartigen Vektor Karten und die Unterstützung dieses Projekts  ❤️ ',
 
   'searchbox.placeholder': 'Durchsuche OpenStreetMap',
 

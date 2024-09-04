@@ -43,14 +43,10 @@ export default {
     V plánu jsou funkce jako navigace či oblíbená místa.`,
   'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – za obrázky 🖼
-        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – za nejlepší mapu Země 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – za skvělé vektorové mapy <br>a za podporu tohoto projektu  ❤️ ',
+  'homepage.for_images': 'za obrázky 🖼',
+  'homepage.for_osm': 'za nejlepší mapu Země 🌎',
+  'homepage.maptiler': 'za skvělé vektorové mapy a za podporu tohoto projektu  ❤️ ',
+  'homepage.vercel': 'za skvělou hostingovou platformu',
   'homepage.disclaimer_heading': 'Poznámka',
   'homepage.disclaimer': `OpenStreetMap a OSM jsou ochranné známky nadace OpenStreetMap. Tento projekt není schválen ani spojen s nadací <a href="https://osmfoundation.org/">OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vektorové mapy ("Základní" a "Outdoorová") obsahují některé názvy míst z projektu Wikidata,  více <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>zde</a>.`,

@@ -56,7 +56,7 @@ const CopyTextItem = ({ text }: { text: string | null }) =>
   );
 
 const LinkItem = ({ href, label }) => (
-  <StyledMenuItem component="a" href={href} target="_blank" rel="noopener">
+  <StyledMenuItem component="a" href={href} target="_blank">
     {label} <OpenInNewIcon />
   </StyledMenuItem>
 );
