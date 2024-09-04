@@ -32,6 +32,7 @@ import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
 import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
 import Error from 'next/error';
+import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -103,6 +104,7 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
+      {router.pathname === '/climbing-areas' && <ClimbingAreasPanel />}
       <Map />
       <TitleAndMetaTags />
     </>

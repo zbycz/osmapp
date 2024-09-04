@@ -17,6 +17,7 @@ import { UserTheme, useUserThemeContext } from '../../../helpers/theme';
 import GithubIcon from '../../../assets/GithubIcon';
 import { LangSwitcher } from './LangSwitcher';
 import { HamburgerIconButton } from './HamburgerIconButton';
+import { PROJECT_ID } from '../../../services/project';
 
 const StyledGithubIcon = styled(GithubIcon)`
   filter: ${({ theme }) => theme.palette.invertFilter};
@@ -120,6 +121,11 @@ const GithubLink = ({ closeMenu }) => (
     {t('map.github_title')}
   </MenuItem>
 );
+const ClimbingAreasLink = ({ closeMenu }) => (
+  <MenuItem href="/climbing-areas" component="a" onClick={closeMenu}>
+    {t('climbingareas.title')}
+  </MenuItem>
+);
 
 const InstallLink = ({ closeMenu }) => {
   const handleClick = () => {
@@ -174,6 +180,7 @@ const ThemeSelection = () => {
 export const HamburgerMenu = () => {
   const anchorRef = React.useRef();
   const [opened, open, close] = useBoolState(false);
+  const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
   return (
     <>
@@ -193,6 +200,7 @@ export const HamburgerMenu = () => {
         <InstallLink closeMenu={close} />
         <AboutLink closeMenu={close} />
         <GithubLink closeMenu={close} />
+        {isOpenClimbing && <ClimbingAreasLink closeMenu={close} />}
         <StyledDivider />
         <LangSwitcher />
       </Menu>

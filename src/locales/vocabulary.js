@@ -226,4 +226,6 @@ export default {
   'runway.runway': 'Runway',
   'runway.size': 'Length (m) - Width (m)',
   'runway.surface': 'Surface',
+
+  'climbingareas.title': 'Climbing areas',
 };
