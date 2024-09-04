@@ -10,7 +10,7 @@ export const CLIMBING_SPRITE = {
   url: `${window.location.protocol}//${window.location.host}/icons-climbing/sprites/climbing`,
 };
 
-export const CRAG_VISIBLE_FROM_ZOOM = 13;
+export const CRAG_VISIBLE_FROM_ZOOM = 9;
 
 const linear = (
   from: number,
@@ -138,7 +138,7 @@ const crags: LayerSpecification = {
 
     'icon-optional': false,
     'icon-ignore-placement': false,
-    'icon-allow-overlap': false,
+    'icon-allow-overlap': true,
     'text-field': '{osmappLabel}',
     'text-offset': [
       'step',
@@ -184,7 +184,7 @@ const areas: LayerSpecification = {
   id: 'climbing-1-areas',
   type: 'symbol',
   source: 'climbing',
-  maxzoom: 16,
+  maxzoom: 18,
   filter: [
     'all',
     ['==', 'osmappType', 'relationPoint'],
@@ -218,7 +218,7 @@ const areas: LayerSpecification = {
       0.6,
       1,
     ],
-    'text-opacity': linearFadeOut(14, 16),
+    'text-opacity': linearFadeOut(14, 18),
     'text-color': [
       'case',
       ['boolean', ['feature-state', 'hover'], false],
