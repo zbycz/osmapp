@@ -202,7 +202,7 @@ export default {
   'layerswitcher.add_layer_button': 'Add custom layer',
   'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
   'layerswitcher.overlays': 'Overlays',
-  'layerswitcher.not_all_work': 'Please note that not most layers but not all work with osmapp',
+  'layerswitcher.not_all_work': 'Please note that some layers may not work in OsmAPP.',
   'layerswitcher.license': 'License',
   'layerswitcher.privacy_policy': 'Privacy policy',
   'layerswitcher.category': 'Category',
