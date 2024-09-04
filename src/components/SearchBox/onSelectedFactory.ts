@@ -31,7 +31,7 @@ const overpassOptionSelected = (
       showToast(content);
       getOverpassSource()?.setData(geojson);
 
-      if (option.overpass.query) {
+      if (option.overpass?.query) {
         addOverpassQueryHistory(option.overpass.query);
       }
     })

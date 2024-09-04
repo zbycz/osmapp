@@ -33,14 +33,9 @@ export default {
      እንደ ጉዞ ጠቋሚ እና የምወዳቸው ቦታዎች የሚሉ አገልግሎቶች በቀጣዩ የአፕሊኬሽን ማሻሻያ ውስጥ ይካተታሉ`,
   'homepage.github_link': `አዳዲስ እና ተጨማሪ መገልገያዎችን በ <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a> ተጠቅመው ጥቆማ መስጠት ይችላሉ።`,
   'homepage.special_thanks_heading': `ልዩ ምስጋና ለ`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – for images 🖼
-        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – የዓለማችን ምርጡ ካርታ 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – ምርጥ ለሆኑ የቬክተር ካርታዎች <br> እንዲሁም ይህንን ፕሮጀክት ለመደገፍ ❤️ ',
+  'homepage.for_images': 'for images 🖼',
+  'homepage.for_osm': 'የዓለማችን ምርጡ ካርታ 🌎',
+  'homepage.maptiler': 'ምርጥ ለሆኑ የቬክተር ካርታዎች እንዲሁም ይህንን ፕሮጀክት ለመደገፍ ❤️ ',
 
   'searchbox.placeholder': 'በOpenStreetMap ላይ ይፈልጉ',
 
