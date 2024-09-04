@@ -40,6 +40,10 @@ export default {
   'homepage.maptiler': 'für die großartigen Vektor Karten und die Unterstützung dieses Projekts  ❤️ ',
 
   'searchbox.placeholder': 'Durchsuche OpenStreetMap',
+  'searchbox.category': 'Kategorie',
+  'searchbox.overpass_success': 'Ergebnisse gefunden: __count__',
+  'searchbox.overpass_error': 'Fehler beim Laden. __message__',
+  'searchbox.overpass_custom_query': 'Eigene Query',
 
   'featurepanel.no_name': 'Kein Name',
   'featurepanel.share_button': 'Teilen',
