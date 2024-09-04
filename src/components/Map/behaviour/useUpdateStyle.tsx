@@ -15,6 +15,7 @@ import {
 } from '../styles/layers/climbingLayers';
 import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { fetchCrags } from '../../../services/fetchCrags';
+import { Layer } from '../../utils/MapStateContext';
 import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
 
@@ -74,10 +75,14 @@ const addOverlaysToStyle = (
 };
 
 export const useUpdateStyle = createMapEffectHook(
-  (map: Map, activeLayers: string[]) => {
+  (map: Map, activeLayers: string[], userLayers: Layer[]) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
-    map.setMaxZoom(osmappLayers[key]?.maxzoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
+
+    const osmappLayerMaxZoom = osmappLayers[key]?.maxzoom;
+    const userLayerMaxZoom = userLayers.find(({ url }) => url === key)?.maxzoom;
+
+    map.setMaxZoom(osmappLayerMaxZoom ?? userLayerMaxZoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
 
     const style = cloneDeep(getBaseStyle(key));
     addOverlaysToStyle(map, style, overlays);
