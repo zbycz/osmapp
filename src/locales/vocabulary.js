@@ -87,6 +87,9 @@ export default {
   'searchbox.overpass_error': 'Error fetching results. __message__',
   'searchbox.overpass_custom_query': 'custom query',
 
+  'directions.from': 'From',
+  'directions.to': 'To',
+
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
   'featurepanel.favorites_save_button': 'Save to favorites',
