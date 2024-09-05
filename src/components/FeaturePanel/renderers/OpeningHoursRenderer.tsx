@@ -7,6 +7,7 @@ import { ToggleButton } from '../helpers/ToggleButton';
 import { parseOpeningHours } from './openingHours';
 import { SimpleOpeningHoursTable } from './openingHours/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { Status } from './openingHours/complex';
 
 const Table = styled.table`
   margin: 1em;
@@ -25,20 +26,27 @@ const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 const formatTimes = (times: string[]) =>
   times.length ? times.map((x) => x.replace(/:00/g, '')).join(', ') : '-';
 
-const formatDescription = (isOpen: boolean, days: SimpleOpeningHoursTable) => {
+const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
   const timesByDay = Object.values(days);
   const day = new Date().getDay();
   const today = timesByDay[day];
   const todayTime = formatTimes(today);
-
-  if (isOpen) {
-    return t('opening_hours.open', { todayTime });
-  }
-
   const isOpenedToday = today.length;
-  return isOpenedToday
-    ? t('opening_hours.now_closed_but_today', { todayTime })
-    : t('opening_hours.today_closed');
+
+  switch (status) {
+    case 'opened':
+      return t('opening_hours.open', { todayTime });
+    case 'closed':
+      return isOpenedToday
+        ? t('opening_hours.now_closed_but_today', { todayTime })
+        : t('opening_hours.today_closed');
+    case 'opens soon':
+      return isOpenedToday
+        ? t('opening_hours.opens_soon_today', { todayTime })
+        : t('opening_hours.opens_soon');
+    case 'closes soon':
+      return t('opening_hours.closes_soon');
+  }
 };
 
 const OpeningHoursRenderer = ({ v }) => {
@@ -51,7 +59,7 @@ const OpeningHoursRenderer = ({ v }) => {
     state: '',
   });
   if (!openingHours) return null;
-  const { daysTable, isOpen } = openingHours;
+  const { daysTable, status } = openingHours;
 
   const { ph, ...days } = daysTable;
   const timesByDay = Object.values(days).map((times, idx) => ({
@@ -69,7 +77,7 @@ const OpeningHoursRenderer = ({ v }) => {
     <>
       <AccessTime fontSize="small" />
       <div suppressHydrationWarning>
-        {formatDescription(isOpen, daysTable)}
+        {formatDescription(status, daysTable)}
         <ToggleButton onClick={toggle} isShown={isExpanded} />
         {isExpanded && (
           <Table>

@@ -70,6 +70,9 @@ export default {
   'opening_hours.open': 'Geöffnet: __todayTime__',
   'opening_hours.now_closed_but_today': 'Geschlossen, heute: __todayTime__',
   'opening_hours.today_closed': 'Heute geschlossen',
+  'opening_hours.opens_soon': 'Öfnet bald',
+  'opening_hours.opens_soon_today': 'Öffnet bald: __todayTime__',
+  'opening_hours.closes_soon': 'Schließt bald',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sonntag|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag',
 
   'map.github_title': 'GitHub',
