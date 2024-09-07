@@ -6,6 +6,7 @@ import { useMediaQuery } from '@mui/material';
 
 const lightTheme = createTheme({
   palette: {
+    divider: 'rgba(0, 0, 0, 0.04)',
     primary: {
       main: '#556cd6',
     },
@@ -45,6 +46,7 @@ const lightTheme = createTheme({
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    divider: 'rgba(255, 255, 255, 0.04)',
     primary: {
       main: '#ffb74d',
     },

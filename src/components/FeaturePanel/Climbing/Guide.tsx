@@ -6,6 +6,9 @@ import { t } from '../../../services/intl';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteNumber } from './RouteNumber';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { isTicked } from '../../../services/ticks';
+import { getWikimediaCommonsPhotoKeys } from './utils/photo';
+import { getShortId } from '../../../services/helpers';
 
 const DrawRouteButton = styled(Button)`
   align-items: baseline;
@@ -17,6 +20,7 @@ export const Guide = () => {
     useClimbingContext();
   const machine = getMachine();
   const path = getCurrentPath();
+  const { feature } = useFeatureContext();
 
   const handleClose = () => {
     setIsGuideClosed(true);
@@ -29,10 +33,11 @@ export const Guide = () => {
     !isInSchema && machine.currentStateName !== 'extendRoute';
 
   const {
-    feature: {
-      osmMeta: { id },
-    },
+    feature: { osmMeta },
   } = useFeatureContext();
+  const photosCount = getWikimediaCommonsPhotoKeys(feature.tags).length;
+  const hasTick = isTicked(getShortId(osmMeta));
+
   return (
     <Snackbar
       open={
@@ -50,11 +55,11 @@ export const Guide = () => {
           size="small"
           onClick={onDrawRouteClick}
         >
-          Zakreslit cestu &nbsp;
+          {t('climbingpanel.draw_route')} &nbsp;
           <RouteNumber
-            isSelected
-            photoInfoForRoute="hasPathOnThisPhoto"
-            osmId={id}
+            hasCircle={photosCount > 0}
+            hasTick={hasTick}
+            hasTooltip={false}
           >
             {routeSelectedIndex + 1}
           </RouteNumber>

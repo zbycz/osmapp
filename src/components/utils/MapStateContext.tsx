@@ -1,7 +1,14 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config.mjs';
 import { PROJECT_ID } from '../../services/project';
+import { useBoolState } from '../helpers';
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
@@ -31,6 +38,8 @@ type MapStateContextType = {
   setActiveLayers: (layers: string[] | ((prev: string[]) => string[])) => void;
   userLayers: Layer[];
   setUserLayers: (param: Layer[] | ((current: Layer[]) => Layer[])) => void;
+  mapLoaded: boolean;
+  setMapLoaded: () => void;
 };
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
@@ -51,6 +60,9 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     [],
   );
 
+  const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
+  useEffect(setNotLoaded, [setNotLoaded]);
+
   const setBothViews = useCallback((newView) => {
     setView(newView);
     setViewForMap(newView);
@@ -67,6 +79,8 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setActiveLayers,
     userLayers,
     setUserLayers,
+    mapLoaded,
+    setMapLoaded,
   };
 
   return (
