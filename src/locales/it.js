@@ -194,7 +194,6 @@ solo informazioni che hai verificato di persona o che provengono da fonti attend
   'layerswitcher.heading': 'Livelli della mappa',
   'layerswitcher.intro': 'Grazie al fatto che OpenStreetMap offre i dati, chiunque può produrre differenti versioni della mappa.',
   'layerswitcher.add_layer_button': 'Aggiungi livello personalizzato',
-  'layerswitcher.add_layer_prompt': 'Aggiungi livello TMS personalizzato (richiede correzione CORS:\n(funzionalità in beta))',
   'layerswitcher.overlays': 'Sovrapposizioni',
 
   'layers.basic': 'Base',

@@ -166,7 +166,6 @@ export default {
   'layerswitcher.heading': 'Mapové vrstvy',
   'layerswitcher.intro': 'Díky tomu, že OpenStreetMap nabízí zdrojová data, tak kdokoliv může vyrobit různé varianty mapy.',
   'layerswitcher.add_layer_button': 'Přidat vlastní vrstvu',
-  'layerswitcher.add_layer_prompt': 'Přidat vlastní TMS vrstvu – CORS musí být nastaveno:\n(beta funkcionalita)',
   'layerswitcher.overlays': 'Překryvné vrstvy',
 
   'layers.basic': 'Základní',

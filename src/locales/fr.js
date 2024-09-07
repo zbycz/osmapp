@@ -143,7 +143,6 @@ export default {
   'layerswitcher.heading': 'Fonds de carte',
   'layerswitcher.intro': 'Merci à OpenStreetMap pour ses données permettant de produires différentes cartes.',
   'layerswitcher.add_layer_button': 'Ajouter une couche personnalisée',
-  'layerswitcher.add_layer_prompt': 'Ajouter une couche TMS personnalisée – requiert CORS :\n(fonctionnalité beta)',
 
   'layers.basic': 'Basique',
   'layers.outdoor': 'Plein Air',

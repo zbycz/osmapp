@@ -142,7 +142,6 @@ export default {
   'layerswitcher.heading': 'Warstwy mapy',
   'layerswitcher.intro': 'Dzięki temu, że OpenStreetMap oferuje dane źródłowe, każdy może stworzyć różne warianty mapy.',
   'layerswitcher.add_layer_button': 'Dodaj własną warstwę',
-  'layerswitcher.add_layer_prompt': 'Dodaj własną warstwę TMS – wymaga poprawnych CORS:\n(funkcja beta)',
 
   'layers.basic': 'Podstawowa',
   'layers.outdoor': 'Na zewnątrz',
