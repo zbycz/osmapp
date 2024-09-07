@@ -39,16 +39,17 @@ const NotSupportedMessage = () => (
 
 // TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
-const BrowserMap = ({ onMapLoaded }) => {
+const BrowserMap = () => {
   const { userLayers } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
+  const { mapLoaded, setMapLoaded } = useMapStateContext();
 
   const [map, mapRef] = useInitMap();
   useAddTopRightControls(map, mobileMode);
   useOnMapClicked(map, setFeature);
   useOnMapLongPressed(map, setFeature);
-  useOnMapLoaded(map, onMapLoaded);
+  useOnMapLoaded(map, setMapLoaded);
   useFeatureMarker(map);
 
   const { viewForMap, setViewFromMap, setBbox, activeLayers } =
@@ -56,18 +57,20 @@ const BrowserMap = ({ onMapLoaded }) => {
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
-  useUpdateStyle(map, activeLayers, userLayers);
+  useUpdateStyle(map, activeLayers, userLayers, mapLoaded);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
 
-const BrowserMapCheck = ({ onMapLoaded }) => {
+const BrowserMapCheck = () => {
+  const { setMapLoaded } = useMapStateContext();
+
   if (!webglSupported) {
-    onMapLoaded();
+    setMapLoaded();
     return <NotSupportedMessage />;
   }
 
-  return <BrowserMap onMapLoaded={onMapLoaded} />;
+  return <BrowserMap />;
 };
 
 export default BrowserMapCheck; // dynamic import
