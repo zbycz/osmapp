@@ -14,6 +14,8 @@ import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge'
 import { getShortId } from '../../../../services/helpers';
 import { getDifficulties } from '../utils/grades/routeGrade';
 import { TickedRouteCheck } from '../Ticks/TickedRouteCheck';
+import { isTicked } from '../../../../services/ticks';
+import { getWikimediaCommonsPhotoKeys } from '../utils/photo';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -37,6 +39,7 @@ const DifficultyCell = styled(Cell)`
 const RouteNumberCell = styled(Cell)`
   color: #999;
   margin-left: 8px;
+  margin-right: 8px;
 `;
 const ExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean }>`
   transform: rotate(${({ $isExpanded }) => ($isExpanded ? 180 : 0)}deg);
@@ -76,12 +79,10 @@ export const RenderListRow = ({
 
   const {
     getMachine,
-    isRouteSelected,
     isEditMode,
     routeSelectedIndex,
     routeIndexExpanded,
     setRouteIndexExpanded,
-    getPhotoInfoForRoute,
   } = useClimbingContext();
 
   useEffect(() => {
@@ -92,8 +93,6 @@ export const RenderListRow = ({
   const osmId = route.feature?.osmMeta
     ? getShortId(route.feature.osmMeta)
     : null;
-  const isSelected = isRouteSelected(index);
-  const photoInfoForRoute = getPhotoInfoForRoute(index);
 
   const machine = getMachine();
 
@@ -128,16 +127,16 @@ export const RenderListRow = ({
     osmId,
   };
   const routeDifficulties = getDifficulties(tempRoute.feature?.tags);
+  const hasTick = isTicked(osmId);
+  const photosCount = getWikimediaCommonsPhotoKeys(
+    tempRoute.feature?.tags || {},
+  ).length;
 
   return (
     <Container ref={ref}>
       <Row style={{ cursor: 'pointer' }}>
-        <RouteNumberCell $width={30}>
-          <RouteNumber
-            isSelected={isSelected}
-            photoInfoForRoute={photoInfoForRoute}
-            osmId={osmId}
-          >
+        <RouteNumberCell>
+          <RouteNumber hasCircle={photosCount > 0} hasTick={hasTick}>
             {index + 1}
           </RouteNumber>
         </RouteNumberCell>

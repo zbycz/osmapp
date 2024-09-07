@@ -98,52 +98,38 @@ export const RouteDistribution = () => {
   }));
 
   return (
-    <>
-      <PanelLabel
-        addition={
-          <GradeSystemSelect
-            setGradeSystem={(system) => {
-              setUserSetting('climbing.gradeSystem', system);
-            }}
-            selectedGradeSystem={userSettings['climbing.gradeSystem']}
-          />
-        }
-      >
-        Routes distribution
-      </PanelLabel>
-      <Container>
-        <ContentContainer>
-          <Items>
-            {heightsRatios.map((heightRatioItem) => {
-              const color = getDifficultyColor(
-                {
-                  gradeSystem: 'uiaa',
-                  grade: heightRatioItem.grade,
-                },
-                theme,
-              );
-              const numberOfRoutesKey = Object.keys(routeOccurrences).find(
-                (key) => key === heightRatioItem.grade,
-              );
-              const numberOfRoutes = routeOccurrences[numberOfRoutesKey];
-              const isColumnActive = numberOfRoutes > 0;
-              return (
-                <Column key={heightRatioItem.grade}>
-                  {numberOfRoutes > 0 && (
-                    <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
-                  )}
-                  <Chart $color={color} $ratio={heightRatioItem.ratio} />
+    <Container>
+      <ContentContainer>
+        <Items>
+          {heightsRatios.map((heightRatioItem) => {
+            const color = getDifficultyColor(
+              {
+                gradeSystem: 'uiaa',
+                grade: heightRatioItem.grade,
+              },
+              theme,
+            );
+            const numberOfRoutesKey = Object.keys(routeOccurrences).find(
+              (key) => key === heightRatioItem.grade,
+            );
+            const numberOfRoutes = routeOccurrences[numberOfRoutesKey];
+            const isColumnActive = numberOfRoutes > 0;
+            return (
+              <Column key={heightRatioItem.grade}>
+                {numberOfRoutes > 0 && (
+                  <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
+                )}
+                <Chart $color={color} $ratio={heightRatioItem.ratio} />
 
-                  <DifficultyLevel $color={color} $isActive={isColumnActive}>
-                    {heightRatioItem.grade}
-                  </DifficultyLevel>
-                </Column>
-              );
-            })}
-          </Items>
-        </ContentContainer>
-      </Container>
-    </>
+                <DifficultyLevel $color={color} $isActive={isColumnActive}>
+                  {heightRatioItem.grade}
+                </DifficultyLevel>
+              </Column>
+            );
+          })}
+        </Items>
+      </ContentContainer>
+    </Container>
   );
 };
 

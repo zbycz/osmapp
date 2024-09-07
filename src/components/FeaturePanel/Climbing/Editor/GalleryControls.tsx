@@ -61,7 +61,7 @@ export const GalleryControls = () => {
     photoIndex === photoPaths.length - 1 ? null : photoIndex + 1;
   const onPhotoChange = (photo: string) => {
     Router.push(
-      `${getOsmappLink(feature)}/climbing/${photo}${window.location.hash}`,
+      `${getOsmappLink(feature)}/climbing/photo/${photo}${window.location.hash}`,
     );
 
     setAreRoutesLoading(true);
