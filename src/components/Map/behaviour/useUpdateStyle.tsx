@@ -75,7 +75,12 @@ const addOverlaysToStyle = (
 };
 
 export const useUpdateStyle = createMapEffectHook(
-  (map: Map, activeLayers: string[], userLayers: Layer[]) => {
+  (
+    map: Map,
+    activeLayers: string[],
+    userLayers: Layer[],
+    mapLoaded: boolean,
+  ) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
 
@@ -86,7 +91,7 @@ export const useUpdateStyle = createMapEffectHook(
 
     const style = cloneDeep(getBaseStyle(key));
     addOverlaysToStyle(map, style, overlays);
-    map.setStyle(style, { diff: true });
+    map.setStyle(style, { diff: mapLoaded });
 
     setUpHover(map, layersWithOsmId(style));
   },
