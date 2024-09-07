@@ -9,13 +9,7 @@ export const DEBUG_ID_SCHEMA = false;
 export const DEFAULT_DATA_FORMAT = 'd.M.yyyy';
 
 export const LANGUAGES = {
-  de: 'Deutsch',
-  cs: 'Česky',
   en: 'English',
-  es: 'Español',
-  fr: 'Français',
-  it: 'Italiano',
-  pl: 'Polski',
   am: 'አማርኛ',
   ja: '日本語',
 };
