@@ -40,11 +40,11 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
       return isOpenedToday
         ? t('opening_hours.now_closed_but_today', { todayTime })
         : t('opening_hours.today_closed');
-    case 'opens soon':
+    case 'opens-soon':
       return isOpenedToday
         ? t('opening_hours.opens_soon_today', { todayTime })
         : t('opening_hours.opens_soon');
-    case 'closes soon':
+    case 'closes-soon':
       return t('opening_hours.closes_soon');
   }
 };

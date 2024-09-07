@@ -19,16 +19,16 @@ const weekdayMappings: Record<string, Weekday> = {
 const fmtDate = (d: Date) =>
   d.toLocaleTimeString(intl.lang, { hour: 'numeric', minute: 'numeric' });
 
-export type Status = 'opens soon' | 'closes soon' | 'opened' | 'closed';
+export type Status = 'opens-soon' | 'closes-soon' | 'opened' | 'closed';
 
 const getStatus = (opensInMins: number, closesInMins: number): Status => {
   const isOpened = opensInMins <= 0 && closesInMins >= 0;
 
   if (!isOpened && opensInMins <= 15) {
-    return 'opens soon';
+    return 'opens-soon';
   }
   if (isOpened && closesInMins <= 15) {
-    return 'closes soon';
+    return 'closes-soon';
   }
   if (isOpened) {
     return 'opened';
