@@ -1,11 +1,12 @@
 import React from 'react';
-import { Global, css, Theme } from '@emotion/react';
+import { Global, css, Theme, useTheme } from '@emotion/react';
 import {
   isDesktopResolution,
   isMobileMode,
   isTabletResolution,
 } from '../components/helpers';
 import { convertHexToRgba } from '../components/utils/colorUtils';
+import { useUserThemeContext } from './theme';
 
 const globalStyle = (theme: Theme) => css`
   html,
@@ -32,7 +33,8 @@ const globalStyle = (theme: Theme) => css`
 
   a,
   .linkLikeButton {
-    color: ${theme.palette.tertiary.main};
+    color: ${theme.palette.tertiary
+      .main}; // CAREFUL: Emotion doesn't apply Dark style in dev mode
     text-decoration: none;
     border: 0;
     padding: 0;
@@ -136,4 +138,5 @@ const globalStyle = (theme: Theme) => css`
   }
 `;
 
+// CAREFUL: Emotion doesn't apply Dark style in dev mode
 export const GlobalStyle = () => <Global styles={globalStyle} />;

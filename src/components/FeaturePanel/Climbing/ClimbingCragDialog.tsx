@@ -1,7 +1,7 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import AddIcon from '@mui/icons-material/Add';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
 import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
@@ -9,6 +9,7 @@ import { ClimbingCragDialogHeader } from './ClimbingCragDialogHeader';
 import { getOsmappLink } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useGetHandleSave } from './useGetHandleSave';
+import { getWikimediaCommonsPhotoKeys, removeFilePrefix } from './utils/photo';
 
 const Flex = styled.div`
   display: flex;
@@ -16,7 +17,13 @@ const Flex = styled.div`
   width: 100%;
 `;
 
-export const ClimbingCragDialog = ({ photo }: { photo?: string }) => {
+export const ClimbingCragDialog = ({
+  photo,
+  routeNumber,
+}: {
+  photo?: string;
+  routeNumber?: number;
+}) => {
   const contentRef = useRef(null);
 
   const {
@@ -26,11 +33,45 @@ export const ClimbingCragDialog = ({ photo }: { photo?: string }) => {
     isEditMode,
     getMachine,
     showDebugMenu,
+    setRouteSelectedIndex,
+    routes,
+    setPhotoPath,
+    photoPath,
+    photoPaths,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
   const handleSave = useGetHandleSave(setIsEditMode);
-  // const { routes } = useClimbingContext();
   const machine = getMachine();
+  const router = useRouter();
+  const featureLink = getOsmappLink(feature);
+
+  useEffect(() => {
+    const tags = routes[routeNumber]?.feature?.tags || {};
+    const photos = getWikimediaCommonsPhotoKeys(tags);
+
+    if (routeNumber !== undefined && photos?.[0]) {
+      setRouteSelectedIndex(routeNumber);
+      const firstPhoto = tags[photos[0]];
+      const newPhotoPath = removeFilePrefix(firstPhoto);
+      router.replace(`${featureLink}/climbing/photo/${newPhotoPath}`);
+      setPhotoPath(newPhotoPath);
+    } else if (photo) {
+      setPhotoPath(photo);
+    } else if (!photoPath && photoPaths?.length > 0) {
+      setPhotoPath(photoPaths[0]);
+      if (routeNumber !== undefined) setRouteSelectedIndex(routeNumber);
+    }
+  }, [
+    featureLink,
+    photo,
+    photoPath,
+    photoPaths,
+    routeNumber,
+    router,
+    routes,
+    setPhotoPath,
+    setRouteSelectedIndex,
+  ]);
 
   const onScroll = (e) => {
     setScrollOffset({
@@ -41,16 +82,15 @@ export const ClimbingCragDialog = ({ photo }: { photo?: string }) => {
   };
 
   const handleClose = () => {
-    // @TODO update saved data first
-    // const isDataChanged = getChanges(routes).length > 0;
-    // if (
-    //   isDataChanged &&
-    //   window.confirm(
-    //     'Are you sure you want to discard changes without saving?',
-    //   ) === false
-    // ) {
-    //   return;
-    // }
+    if (
+      isEditMode &&
+      window.confirm(
+        'Are you sure you want to close this window? You might loose your changes.',
+      ) === false
+    ) {
+      return;
+    }
+
     Router.push(`${getOsmappLink(feature)}${window.location.hash}`);
   };
   const handleCancel = () => {

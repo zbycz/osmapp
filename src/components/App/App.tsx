@@ -88,7 +88,10 @@ const IndexWithProviders = () => {
   // TODO add correct error boundaries
 
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
-  const photo = router.query.all?.[3];
+  const photo =
+    router.query.all?.[3] === 'photo' ? router.query.all?.[4] : undefined;
+  const routeNumber =
+    router.query.all?.[3] === 'route' ? router.query.all?.[4] : undefined;
 
   return (
     <>
@@ -98,7 +101,10 @@ const IndexWithProviders = () => {
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
-          <ClimbingCragDialog photo={photo} />
+          <ClimbingCragDialog
+            photo={photo}
+            routeNumber={routeNumber ? parseFloat(routeNumber) : undefined}
+          />
         </ClimbingContextProvider>
       )}
       <HomepagePanel />

@@ -31,13 +31,14 @@ const overpassOptionSelected = (
       showToast(content);
       getOverpassSource()?.setData(geojson);
 
-      if (option.overpass.query) {
+      if (option.overpass?.query) {
         addOverpassQueryHistory(option.overpass.query);
       }
     })
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
       const content = t('searchbox.overpass_error', { message });
+      console.error(e); // eslint-disable-line no-console
       showToast(content, 'error');
     })
     .finally(() => {

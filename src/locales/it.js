@@ -75,14 +75,9 @@ export default {
      Si prevede di aggiungere in futuro alcune funzionalità come la navigazione e i preferiti.`,
   'homepage.github_link': `Puoi suggerire nuove funzionalità su <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Si ringraziano in special modo`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> (per le immagini 🖼)
-        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> (per la mappa più bella del mondo 🌎)
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> (per le fantastiche mappe vettoriali <br>e per il supporto a questo progetto  ❤️ ',
+  'homepage.for_images': 'per le immagini 🖼',
+  'homepage.for_osm': 'per la mappa più bella del mondo 🌎',
+  'homepage.maptiler': 'per le fantastiche mappe vettoriali e per il supporto a questo progetto  ❤️',
   'homepage.disclaimer_heading': 'Responsabilità',
   'homepage.disclaimer': `OpenStreetMap e OSM sono marchi registrati della Fondazione  OpenStreetMap. Questo progetto non è approvato o affiliato con la <a href="https://osmfoundation.org/" target='_blank'>Fondazione OpenStreetMap</a>.`,
   'homepage.disclaimer_maptiler': `Le mappe vettoriali ("Base" e "Esterna") contengono alcuni nomi di luogi dal progetto Wikidata, maggiori informazioni <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>qui</a>.`,

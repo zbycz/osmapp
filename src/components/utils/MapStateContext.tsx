@@ -1,7 +1,14 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config.mjs';
 import { PROJECT_ID } from '../../services/project';
+import { useBoolState } from '../helpers';
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
@@ -11,7 +18,7 @@ export interface Layer {
   Icon?: React.FC<any>;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
-  bbox?: number[];
+  bboxes?: number[][];
 }
 
 // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
@@ -29,6 +36,10 @@ type MapStateContextType = {
   setViewFromMap: (view: View) => void;
   activeLayers: string[];
   setActiveLayers: (layers: string[] | ((prev: string[]) => string[])) => void;
+  userLayers: Layer[];
+  setUserLayers: (param: Layer[] | ((current: Layer[]) => Layer[])) => void;
+  mapLoaded: boolean;
+  setMapLoaded: () => void;
 };
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
@@ -44,6 +55,13 @@ export const MapStateProvider = ({ children, initialMapView }) => {
   const [bbox, setBbox] = useState<Bbox>();
   const [view, setView] = useState(initialMapView);
   const [viewForMap, setViewForMap] = useState(initialMapView);
+  const [userLayers, setUserLayers] = usePersistedState<Layer[]>(
+    'userLayerIndex',
+    [],
+  );
+
+  const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
+  useEffect(setNotLoaded, [setNotLoaded]);
 
   const setBothViews = useCallback((newView) => {
     setView(newView);
@@ -59,6 +77,10 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewFromMap: setView,
     activeLayers,
     setActiveLayers,
+    userLayers,
+    setUserLayers,
+    mapLoaded,
+    setMapLoaded,
   };
 
   return (

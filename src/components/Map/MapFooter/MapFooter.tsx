@@ -1,12 +1,12 @@
 import React from 'react';
+import { useMapStateContext } from '../../utils/MapStateContext';
+import { usePersistedState } from '../../utils/usePersistedState';
 import styled from '@emotion/styled';
 import { IconButton, Tooltip } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { usePersistedState } from '../../utils/usePersistedState';
 import { ClimbingLegend } from './ClimbingLegend';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { AttributionLinks } from './AttributionLinks';
-import { useMapStateContext } from '../../utils/MapStateContext';
 import { useIsClient, useMobileMode } from '../../helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 

@@ -9,7 +9,7 @@ import { OsmError } from './OsmError';
 import { Members } from './Members';
 import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
-import { MemberFeatures } from './MemberFeatures';
+import { MemberFeatures } from './MemberFeatures/MemberFeatures';
 import { ParentLink } from './ParentLink';
 import { FeatureImages } from './ImagePane/FeatureImages';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
@@ -22,6 +22,7 @@ import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
 import { RouteListInPanel } from './Climbing/RouteList/RouteList';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
+import { Box } from '@mui/material';
 
 const Flex = styled.div`
   flex: 1;
@@ -42,6 +43,11 @@ export const FeaturePanel = () => {
   // Different components are shown for different types of features
   // Conditional components should have if(feature.tags.xxx) check at the beggining
   // All components should have margin-bottoms to accomodate missing parts
+  const isClimbingCrag = tags.climbing === 'crag';
+
+  const PropertiesComponent = () => (
+    <Properties showTags={showTagsTable} key={getKey(feature)} />
+  );
   return (
     <>
       <PanelContent>
@@ -61,15 +67,16 @@ export const FeaturePanel = () => {
                 <CragsInArea />
               </PanelSidePadding>
 
-              <FeatureImages />
-              <RouteDistributionInPanel />
-              <RouteListInPanel />
+              <Box mb={2}>
+                <FeatureImages />
+              </Box>
 
               <PanelSidePadding>
-                <Properties showTags={showTagsTable} key={getKey(feature)} />
-
+                {!isClimbingCrag && <PropertiesComponent />}
+                <RouteDistributionInPanel />
                 <MemberFeatures />
                 {advanced && <Members />}
+                {isClimbingCrag && <PropertiesComponent />}
 
                 <PublicTransport tags={tags} />
                 <Runways />

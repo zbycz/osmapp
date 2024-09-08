@@ -80,13 +80,7 @@ const EditLink = ({ closeMenu }) => {
   const { feature } = useFeatureContext();
   const href = getIdEditorLink(feature, browser ? view : undefined);
   return (
-    <MenuItem
-      component="a"
-      href={href}
-      target="_blank"
-      rel="noopener"
-      onClick={closeMenu}
-    >
+    <MenuItem component="a" href={href} target="_blank" onClick={closeMenu}>
       <PencilIcon />
       {t('map.edit_link')}
     </MenuItem>

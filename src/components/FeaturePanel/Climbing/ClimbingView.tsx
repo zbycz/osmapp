@@ -192,7 +192,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     photoPath,
     loadPhotoRelatedData,
     areRoutesLoading,
-    preparePhotosAndSet,
+    preparePhotos,
     photoZoom,
     loadedPhotos,
   } = useClimbingContext();
@@ -252,7 +252,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const cragPhotos = getWikimediaCommonsKeys(feature.tags)
     .map((key) => feature.tags[key])
     .map(removeFilePrefix);
-  preparePhotosAndSet(cragPhotos, photo);
+  preparePhotos(cragPhotos);
 
   useEffect(() => {
     const handleResize = () => {
@@ -273,11 +273,19 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     setPhotoResolution(resolution);
 
     const url = getCommonsImageUrl(`File:${photoPath}`, resolution);
+
     setImageUrl(url);
-    if (!backgroundImageUrl) {
+    if (!backgroundImageUrl && photoPath) {
       setBackgroundImageUrl(url);
     }
-  }, [photoPath, photoZoom.scale, windowDimensions]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [
+    backgroundImageUrl,
+    loadedPhotos,
+    photoPath,
+    photoZoom,
+    photoZoom.scale,
+    windowDimensions,
+  ]);
 
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =

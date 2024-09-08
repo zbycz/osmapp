@@ -15,6 +15,7 @@ const GalleryButton = styled.div`
   align-items: center;
   -webkit-backdrop-filter: blur(40px);
   backdrop-filter: blur(40px);
+  color: white;
 
   width: ${BUTTON_SIZE_VW}vw;
   height: ${BUTTON_SIZE_VW}vw;
@@ -60,7 +61,7 @@ export const GalleryControls = () => {
     photoIndex === photoPaths.length - 1 ? null : photoIndex + 1;
   const onPhotoChange = (photo: string) => {
     Router.push(
-      `${getOsmappLink(feature)}/climbing/${photo}${window.location.hash}`,
+      `${getOsmappLink(feature)}/climbing/photo/${photo}${window.location.hash}`,
     );
 
     setAreRoutesLoading(true);
@@ -75,12 +76,12 @@ export const GalleryControls = () => {
     <>
       {prevIndex !== null && (
         <PreviousImage onClick={() => onPhotoChange(photoPaths[prevIndex])}>
-          <ArrowBack />
+          <ArrowBack color="inherit" />
         </PreviousImage>
       )}
       {nextIndex !== null && (
         <NextImage onClick={() => onPhotoChange(photoPaths[nextIndex])}>
-          <ArrowForward />
+          <ArrowForward color="inherit" />
         </NextImage>
       )}
     </>
