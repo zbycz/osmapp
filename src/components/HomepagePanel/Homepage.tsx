@@ -11,7 +11,11 @@ import {
 } from '../utils/PanelHelpers';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { LogoOpenClimbing } from '../../assets/LogoOpenClimbing';
-import { PROJECT_DECRIPTION, PROJECT_NAME } from '../../services/project';
+import {
+  PROJECT_DECRIPTION,
+  PROJECT_ID,
+  PROJECT_NAME,
+} from '../../services/project';
 import { t, Translation } from '../../services/intl';
 import { nl2br } from '../utils/nl2br';
 import GithubIcon from '../../assets/GithubIcon';
@@ -39,6 +43,7 @@ const Spacer = styled.div`
 `;
 const Examples = () => (
   <>
+    {t('homepage.examples.eg')}{' '}
     <Link href="/way/34633854">Empire State Building</Link> •{' '}
     <Link href="/way/119016167">
       {t('homepage.examples.charles_bridge_statues')}
@@ -47,21 +52,24 @@ const Examples = () => (
 );
 const ExamplesClimbing = () => (
   <>
-    <Link href="/relation/17262674">Prokopské údolí</Link> •{' '}
-    <Link href="/relation/17130100">Roviště</Link> •{' '}
-    <Link href="/relation/17089246">Lomy nad Velkou</Link>
+    <Link href="/climbing-areas">{t('climbingareas.link')}</Link>,{' '}
+    {t('homepage.examples.eg')} <Link href="/relation/17262675">Hlubočepy</Link>{' '}
+    • <Link href="/relation/17130099">Roviště</Link> •{' '}
+    <Link href="/relation/17142287">Lomy nad Velkou</Link> •{' '}
+    <Link href="/relation/17400318">Lom Kobyla</Link> •{' '}
+    <Link href="/relation/17222859">Prokopák</Link>
   </>
 );
 
 export function Homepage({
-  climbing,
   mobileMode,
   onClick,
 }: {
   onClick: () => void;
-  climbing: boolean;
   mobileMode: boolean;
 }) {
+  const isClimbing = PROJECT_ID === 'openclimbing';
+
   return (
     <PanelContent>
       <PanelScrollbars>
@@ -69,7 +77,7 @@ export function Homepage({
         <Content>
           <div>
             <Center $mb>
-              {climbing ? (
+              {isClimbing ? (
                 <LogoOpenClimbing
                   width={100}
                   style={{
@@ -84,7 +92,7 @@ export function Homepage({
                 variant="h4"
                 component="h1"
                 color="inherit"
-                style={{ fontWeight: climbing ? 900 : undefined }}
+                style={{ fontWeight: isClimbing ? 900 : undefined }}
               >
                 {PROJECT_NAME}
               </Typography>
@@ -96,8 +104,7 @@ export function Homepage({
               {nl2br(t('homepage.how_to_start'))}
             </Typography>
             <Typography variant="body2" paragraph>
-              {t('homepage.examples.eg')}{' '}
-              {climbing ? <ExamplesClimbing /> : <Examples />}
+              {isClimbing ? <ExamplesClimbing /> : <Examples />}
             </Typography>
             {mobileMode && (
               <Center $mt $mb4>
@@ -114,12 +121,12 @@ export function Homepage({
             <Center $mb>
               <img
                 src={
-                  climbing
+                  isClimbing
                     ? '/openclimbing/openclimbing-screenshot-300px.png'
                     : '/osmapp/osmapp-screenshot-300px.png'
                 }
                 srcSet={
-                  climbing
+                  isClimbing
                     ? '/openclimbing/openclimbing-screenshot-300px@2x.png 2x'
                     : '/osmapp/osmapp-screenshot-300px@2x.png 2x'
                 }

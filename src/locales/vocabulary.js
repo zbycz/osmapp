@@ -239,5 +239,6 @@ export default {
   'runway.size': 'Length (m) - Width (m)',
   'runway.surface': 'Surface',
 
+  'climbingareas.link': 'List of all Climbing areas',
   'climbingareas.title': 'Climbing areas',
 };

@@ -34,11 +34,7 @@ export const HomepagePanel = () => {
       collapsedHeight={0}
       topOffset={180}
     >
-      <Homepage
-        onClick={persistHideHomepage}
-        climbing={isClimbing}
-        mobileMode={isMobileMode}
-      />
+      <Homepage onClick={persistHideHomepage} mobileMode={isMobileMode} />
     </MobilePageDrawer>
   );
 };
