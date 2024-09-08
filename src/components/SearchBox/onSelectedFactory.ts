@@ -38,6 +38,7 @@ const overpassOptionSelected = (
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
       const content = t('searchbox.overpass_error', { message });
+      console.error(e); // eslint-disable-line no-console
       showToast(content, 'error');
     })
     .finally(() => {
