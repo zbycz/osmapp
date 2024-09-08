@@ -25,7 +25,7 @@ const fmtDateRange = ([start, end]: DateRange) => {
     return t('opening_hours.all_day');
   }
 
-  return `${fmtDate(start)}-${isMidnight(end) ? t('opening_hours.midnight') : fmtDate(end)}`;
+  return `${fmtDate(start)}-${fmtDate(end)}`;
 };
 
 export type Status = 'opens-soon' | 'closes-soon' | 'opened' | 'closed';

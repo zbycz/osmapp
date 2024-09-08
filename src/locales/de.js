@@ -68,7 +68,6 @@ export default {
   'featurepanel.objects_around': 'Orte in der Nähe',
 
   'opening_hours.all_day': '24 Stunden',
-  'opening_hours.midnight': '24',
   'opening_hours.open': 'Geöffnet: __todayTime__',
   'opening_hours.now_closed_but_today': 'Geschlossen, heute: __todayTime__',
   'opening_hours.today_closed': 'Heute geschlossen',
