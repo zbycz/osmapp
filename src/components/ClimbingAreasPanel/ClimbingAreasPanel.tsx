@@ -45,9 +45,11 @@ export const ClimbingAreasPanel = () => {
           <TableContainer component={Paper}>
             <Table size="small">
               <TableHead>
-                <TableCell></TableCell>
-                <TableCell>Climbing area</TableCell>
-                <TableCell>Crags</TableCell>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell>Climbing area</TableCell>
+                  <TableCell>Crags</TableCell>
+                </TableRow>
               </TableHead>
               <TableBody>
                 {areas.map((climbingArea, index) => (
@@ -55,7 +57,8 @@ export const ClimbingAreasPanel = () => {
                     <TableCell>{index + 1}.</TableCell>
                     <TableCell>
                       <Link href={`/relation/${climbingArea.id}`}>
-                        {climbingArea.tags.name}
+                        {climbingArea.tags.name ||
+                          `N/A – relation/${climbingArea.id}`}
                       </Link>
                     </TableCell>
                     <TableCell>{climbingArea.members.length}</TableCell>
