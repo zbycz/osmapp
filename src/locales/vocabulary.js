@@ -116,6 +116,8 @@ export default {
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
   'featurepanel.climbing_restriction': 'Climbing restriction',
 
+  'opening_hours.all_day': '24 hours',
+  'opening_hours.midnight': '12 AM',
   'opening_hours.open': 'Open: __todayTime__',
   'opening_hours.now_closed_but_today': 'Closed now - Open __todayTime__',
   'opening_hours.today_closed': 'Closed today',
