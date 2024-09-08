@@ -116,9 +116,13 @@ export default {
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
   'featurepanel.climbing_restriction': 'Climbing restriction',
 
+  'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
   'opening_hours.now_closed_but_today': 'Closed now - Open __todayTime__',
   'opening_hours.today_closed': 'Closed today',
+  'opening_hours.opens_soon': 'Opens soon',
+  'opening_hours.opens_soon_today': 'Opens soon: __todayTime__',
+  'opening_hours.closes_soon': 'Closes soon',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',
   'opening_hours.editor.closed': 'closed',
   'opening_hours.editor.create_advanced': 'You may create more detailed opening hours in <link>YoHours tool</link>.',
