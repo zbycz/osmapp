@@ -48,6 +48,7 @@ export const UserSettingsDialog = ({ onClose, isOpened }) => {
               checked={userSettings['climbing.isGradesOnPhotosVisible']}
             />
           </ListItem>
+
           <ListItem>
             <ListItemText>Default climbing style</ListItemText>
             <TickStyleSelect
@@ -55,6 +56,21 @@ export const UserSettingsDialog = ({ onClose, isOpened }) => {
               onChange={(e) => {
                 setUserSetting('climbing.defaultClimbingStyle', e.target.value);
               }}
+            />
+          </ListItem>
+
+          <ListItem>
+            <ListItemText>Select climbing routes by scrolling</ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              onChange={(e) => {
+                setUserSetting(
+                  'climbing.selectRoutesByScrolling',
+                  e.target.checked,
+                );
+              }}
+              checked={userSettings['climbing.selectRoutesByScrolling']}
             />
           </ListItem>
         </List>

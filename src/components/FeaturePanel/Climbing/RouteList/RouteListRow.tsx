@@ -8,7 +8,6 @@ import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { emptyRoute } from '../utils/emptyRoute';
 import { RouteNumber } from '../RouteNumber';
-import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
 import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
 import { getShortId } from '../../../../services/helpers';
@@ -16,6 +15,8 @@ import { getDifficulties } from '../utils/grades/routeGrade';
 import { TickedRouteCheck } from '../Ticks/TickedRouteCheck';
 import { isTicked } from '../../../../services/ticks';
 import { getWikimediaCommonsPhotoKeys } from '../utils/photo';
+import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { CLIMBING_ROUTE_ROW_HEIGHT } from '../config';
 
 const DEBOUNCE_TIME = 1000;
 const Container = styled.div`
@@ -47,7 +48,7 @@ const ExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean }>`
 `;
 
 const Row = styled.div<{ $isExpanded?: boolean }>`
-  min-height: 40px;
+  min-height: ${CLIMBING_ROUTE_ROW_HEIGHT}px;
   background-color: ${({ $isExpanded, theme }) =>
     $isExpanded ? theme.palette.action.selected : 'none'};
   overflow: hidden;
@@ -67,9 +68,11 @@ export const RenderListRow = ({
   index,
   onRouteChange,
   stopPropagation,
+  parentRef,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   const [tempRoute, setTempRoute] = useState<ClimbingRoute>(emptyRoute);
+  const { userSettings } = useUserSettingsContext();
 
   const getText = (text: string) => text || <EmptyValue>?</EmptyValue>;
 
@@ -83,13 +86,38 @@ export const RenderListRow = ({
     routeSelectedIndex,
     routeIndexExpanded,
     setRouteIndexExpanded,
+    setRouteListTopOffset,
   } = useClimbingContext();
 
   useEffect(() => {
-    if (routeSelectedIndex === index) {
+    if (
+      userSettings['climbing.selectRoutesByScrolling'] &&
+      ref.current &&
+      parentRef.current
+    ) {
+      const elementRect = ref.current.getBoundingClientRect();
+      const parentRect = parentRef.current.getBoundingClientRect();
+      const relativeTop = elementRect.top - parentRect.top;
+
+      setRouteListTopOffset(index, relativeTop);
+    }
+  }, [
+    index,
+    parentRef,
+    setRouteListTopOffset,
+    routeIndexExpanded,
+    userSettings,
+  ]);
+
+  useEffect(() => {
+    if (
+      !userSettings['climbing.selectRoutesByScrolling'] &&
+      routeSelectedIndex === index
+    ) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [routeSelectedIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const osmId = route.feature?.osmMeta
     ? getShortId(route.feature.osmMeta)
     : null;

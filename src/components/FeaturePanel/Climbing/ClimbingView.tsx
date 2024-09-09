@@ -6,12 +6,10 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import { CircularProgress, IconButton, useTheme } from '@mui/material';
 import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { RouteList } from './RouteList/RouteList';
 import { RoutesEditor } from './Editor/RoutesEditor';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { RouteDistribution } from './RouteDistribution';
 import {
   getResolution,
   getWikimediaCommonsKeys,
@@ -21,6 +19,9 @@ import { useScrollShadow } from './utils/useScrollShadow';
 import { TransformWrapper } from './TransformWrapper';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { CLIMBING_ROUTE_ROW_HEIGHT, SPLIT_PANE_DEFAULT_HEIGHT } from './config';
+import { ClimbingViewContent } from './ClimbingViewContent';
 
 const Container = styled.div`
   position: relative;
@@ -164,13 +165,6 @@ const BackgroundContainer = styled.div<{
   height: 100%;
 `;
 
-const MainContent = () => (
-  <>
-    <RouteList isEditable />
-    <RouteDistribution />
-  </>
-);
-
 const getWindowDimensions = () => {
   const { innerWidth: width, innerHeight: height } = window;
   return {
@@ -195,6 +189,8 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     preparePhotos,
     photoZoom,
     loadedPhotos,
+    routeListTopOffsets,
+    setRouteSelectedIndex,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
 
@@ -299,6 +295,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     ShadowBottom,
   } = useScrollShadow([areRoutesLoading]);
   const theme = useTheme();
+  const { userSettings } = useUserSettingsContext();
 
   const isResolutionLoaded =
     loadedPhotos?.[photoPath]?.[photoResolution] || false;
@@ -307,6 +304,26 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     resolutions &&
     Object.keys(resolutions).filter((key) => resolutions[key] === true).length >
       0;
+
+  const selectRouteByScroll = (e) => {
+    const { scrollTop } = e.target;
+    const scrollTopWithOffset = scrollTop + 20 + CLIMBING_ROUTE_ROW_HEIGHT;
+
+    const selectedIndex = routeListTopOffsets.findIndex(
+      (offset) =>
+        offset <= scrollTopWithOffset &&
+        offset + CLIMBING_ROUTE_ROW_HEIGHT >= scrollTopWithOffset,
+    );
+
+    if (selectedIndex !== -1) setRouteSelectedIndex(selectedIndex);
+  };
+
+  const handleOnScroll = (e) => {
+    onScroll();
+    if (userSettings['climbing.selectRoutesByScrolling']) {
+      selectRouteByScroll(e);
+    }
+  };
 
   return (
     <Container>
@@ -332,7 +349,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
           split="horizontal"
           minSize={0}
           maxSize="100%"
-          size={splitPaneHeight ?? '60vh'}
+          size={splitPaneHeight ?? SPLIT_PANE_DEFAULT_HEIGHT}
           onDragStarted={onDragStarted}
           onDragFinished={onDragFinished}
           pane1Style={{ maxHeight: '90%' }}
@@ -381,14 +398,14 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
 
           <ShadowContainer>
             <ShadowTop backgroundColor={theme.palette.background.paper} />
-            <BottomPanel onScroll={onScroll} ref={scrollElementRef}>
-              <MainContent />
+            <BottomPanel onScroll={handleOnScroll} ref={scrollElementRef}>
+              <ClimbingViewContent />
             </BottomPanel>
             <ShadowBottom backgroundColor={theme.palette.background.paper} />
           </ShadowContainer>
         </SplitPane>
       ) : (
-        <MainContent />
+        <ClimbingViewContent />
       )}
     </Container>
   );
