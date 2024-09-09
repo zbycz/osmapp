@@ -1,6 +1,7 @@
 import React, {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useRef,
   useState,
@@ -115,6 +116,11 @@ type ClimbingContextType = {
   arePointerEventsDisabled: boolean; // @TODO do we need it?
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
   preparePhotos: (cragPhotos: Array<string>) => void;
+  routeListTopOffsets: Array<number>;
+  setRouteListTopOffset: (
+    routeIndex: number,
+    routeListTopOffset: number,
+  ) => void;
 };
 
 // @TODO generate?
@@ -177,6 +183,17 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [pointElement, setPointElement] = React.useState<null | HTMLElement>(
     null,
   );
+  const [routeListTopOffsets, setRouteListTopOffsets] = React.useState<
+    Array<number>
+  >([]);
+
+  const setRouteListTopOffset = useCallback((index: number, offset: number) => {
+    setRouteListTopOffsets((prevPositions) => {
+      const newPositions = [...prevPositions];
+      newPositions[index] = offset;
+      return newPositions;
+    });
+  }, []);
 
   const getPathOnIndex = (index: number) =>
     routes[index]?.paths?.[photoPath] || [];
@@ -360,6 +377,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setImageContainerSize,
     loadedPhotos,
     setLoadedPhotos,
+    routeListTopOffsets,
+    setRouteListTopOffset,
   };
 
   return (
