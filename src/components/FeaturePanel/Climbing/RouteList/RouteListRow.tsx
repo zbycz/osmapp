@@ -71,6 +71,7 @@ export const RenderListRow = ({ routeId, parentRef, feature }: Props) => {
       ref={ref}
       isSelected={isSelected}
       onDeselectRoute={handleDeselectRoute}
+      isHrefLinkVisible={false}
     />
   );
 };
