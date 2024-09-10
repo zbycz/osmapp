@@ -4,7 +4,10 @@ import styled from '@emotion/styled';
 import { ConvertedRouteDifficultyBadge } from '../Climbing/ConvertedRouteDifficultyBadge';
 import { getDifficulties } from '../Climbing/utils/grades/routeGrade';
 import CheckIcon from '@mui/icons-material/Check';
-import { getWikimediaCommonsPhotoKeys } from '../Climbing/utils/photo';
+import {
+  getWikimediaCommonsPhotoKeys,
+  getWikimediaCommonsPhotoPathKeys,
+} from '../Climbing/utils/photo';
 import { RouteNumber } from '../Climbing/RouteNumber';
 import { isTicked, onTickAdd } from '../../../services/ticks';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -22,8 +25,9 @@ const RoutePhoto = styled.div`
   width: 20px;
 `;
 
-const RouteName = styled.div`
+const RouteName = styled.div<{ opacity: number }>`
   flex: 1;
+  opacity: ${({ opacity }) => opacity};
 `;
 
 const RouteGrade = styled.div``;
@@ -95,7 +99,7 @@ export const ClimbingItem = ({
   if (!feature) return null;
   const shortOsmId = getShortId(feature.osmMeta);
   const routeDifficulties = getDifficulties(feature.tags);
-  const photosCount = getWikimediaCommonsPhotoKeys(feature.tags).length;
+  const photoPathsCount = getWikimediaCommonsPhotoPathKeys(feature.tags).length;
   const shortId = getShortId(feature.osmMeta);
   const hasTick = isTicked(shortId);
 
@@ -133,11 +137,13 @@ export const ClimbingItem = ({
       onMouseLeave={() => setPreview(null)}
     >
       <RoutePhoto>
-        <RouteNumber hasCircle={photosCount > 0} hasTick={hasTick}>
+        <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
           {routeNumber}
         </RouteNumber>
       </RoutePhoto>
-      <RouteName>{feature.tags?.name}</RouteName>
+      <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
+        {feature.tags?.name}
+      </RouteName>
       <RouteGrade>
         <ConvertedRouteDifficultyBadge routeDifficulties={routeDifficulties} />
       </RouteGrade>
