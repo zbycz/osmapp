@@ -19,6 +19,7 @@ const nextConfig = {
     defaultLocale: 'default',
     localeDetection: false,
   },
+  transpilePackages: ['@mui/material', '@mui/icons-material'],
 };
 
 export default withSentryConfig(nextConfig, {

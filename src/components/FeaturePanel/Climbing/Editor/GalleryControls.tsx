@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { ArrowBack, ArrowForward } from '@mui/icons-material';
+import ArrowBack from '@mui/icons-material/ArrowBack';
+import ArrowForward from '@mui/icons-material/ArrowForward';
 import Router from 'next/router';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { getOsmappLink } from '../../../../services/helpers';
