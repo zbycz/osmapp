@@ -20,6 +20,14 @@ export const isWikimediaCommonsPhoto = (tag: string) => {
 export const getWikimediaCommonsPhotoKeys = (tags: FeatureTags) =>
   Object.keys(tags).filter(isWikimediaCommonsPhoto);
 
+export const isWikimediaCommonsPhotoPath = (tag: string) => {
+  const re = /^wikimedia_commons(:\d+)*:path$/;
+  return re.test(tag);
+};
+
+export const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
+  Object.keys(tags).filter(isWikimediaCommonsPhotoPath);
+
 export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
   Object.keys(tags).filter(isWikimediaCommons); // TODO this returns also :path keys, not sure if intended
 

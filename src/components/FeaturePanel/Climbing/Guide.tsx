@@ -7,7 +7,7 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { RouteNumber } from './RouteNumber';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { isTicked } from '../../../services/ticks';
-import { getWikimediaCommonsPhotoKeys } from './utils/photo';
+import { getWikimediaCommonsPhotoPathKeys } from './utils/photo';
 import { getShortId } from '../../../services/helpers';
 
 const DrawRouteButton = styled(Button)`
@@ -35,7 +35,7 @@ export const Guide = () => {
   const {
     feature: { osmMeta },
   } = useFeatureContext();
-  const photosCount = getWikimediaCommonsPhotoKeys(feature.tags).length;
+  const photoPathsCount = getWikimediaCommonsPhotoPathKeys(feature.tags).length;
   const hasTick = isTicked(getShortId(osmMeta));
 
   return (
@@ -57,7 +57,7 @@ export const Guide = () => {
         >
           {t('climbingpanel.draw_route')} &nbsp;
           <RouteNumber
-            hasCircle={photosCount > 0}
+            hasCircle={photoPathsCount > 0}
             hasTick={hasTick}
             hasTooltip={false}
           >

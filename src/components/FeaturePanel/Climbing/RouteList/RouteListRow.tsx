@@ -12,9 +12,8 @@ import { ExpandedRow } from './ExpandedRow';
 import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
 import { getShortId } from '../../../../services/helpers';
 import { getDifficulties } from '../utils/grades/routeGrade';
-import { TickedRouteCheck } from '../Ticks/TickedRouteCheck';
 import { isTicked } from '../../../../services/ticks';
-import { getWikimediaCommonsPhotoKeys } from '../utils/photo';
+import { getWikimediaCommonsPhotoPathKeys } from '../utils/photo';
 import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 import { CLIMBING_ROUTE_ROW_HEIGHT } from '../config';
 
@@ -33,6 +32,9 @@ const NameCell = styled(Cell)`
   display: flex;
   gap: 8px;
   justify-content: space-between;
+`;
+const Opacity = styled.div<{ opacity: number }>`
+  opacity: ${({ opacity }) => opacity};
 `;
 const DifficultyCell = styled(Cell)`
   margin-right: 8px;
@@ -156,21 +158,24 @@ export const RenderListRow = ({
   };
   const routeDifficulties = getDifficulties(tempRoute.feature?.tags);
   const hasTick = isTicked(osmId);
-  const photosCount = getWikimediaCommonsPhotoKeys(
-    tempRoute.feature?.tags || {},
+
+  const photoPathsCount = getWikimediaCommonsPhotoPathKeys(
+    tempRoute?.feature?.tags || {},
   ).length;
 
   return (
     <Container ref={ref}>
       <Row style={{ cursor: 'pointer' }}>
         <RouteNumberCell>
-          <RouteNumber hasCircle={photosCount > 0} hasTick={hasTick}>
+          <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
             {index + 1}
           </RouteNumber>
         </RouteNumberCell>
         <NameCell>
           {isReadOnly ? (
-            getText(tempRoute.name)
+            <Opacity opacity={photoPathsCount === 0 ? 0.5 : 1}>
+              {getText(tempRoute.name)}
+            </Opacity>
           ) : (
             <TextField
               size="small"
@@ -181,7 +186,6 @@ export const RenderListRow = ({
               fullWidth
             />
           )}
-          <TickedRouteCheck osmId={osmId} />
         </NameCell>
         <DifficultyCell $width={50}>
           <ConvertedRouteDifficultyBadge

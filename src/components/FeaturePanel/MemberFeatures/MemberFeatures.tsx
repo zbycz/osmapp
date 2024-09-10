@@ -33,8 +33,6 @@ export const MemberFeatures = () => {
   const isClimbingCrag = tags.climbing === 'crag';
   const heading = isClimbingCrag ? 'Climbing routes' : 'Subitems';
 
-  const ItemComponent = isClimbingCrag ? ClimbingItem : Item;
-
   return (
     <Box mt={1}>
       <PanelLabel
