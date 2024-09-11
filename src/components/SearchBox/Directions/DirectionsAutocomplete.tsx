@@ -20,6 +20,7 @@ import { useMapCenter } from '../utils';
 import { useUserThemeContext } from '../../../helpers/theme';
 import { renderOptionFactory } from '../renderOptionFactory';
 import PlaceIcon from '@mui/icons-material/Place';
+import { SearchOption } from '../types';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -27,7 +28,7 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-const DirectionsInput = ({ params, setInputValue, autocompleteRef, label }) => {
+const DirectionsInput = ({ params, setInputValue, autocompleteRef, label, onBlur }) => {
   const { InputLabelProps, InputProps, ...restParams } = params;
 
   useEffect(() => {
@@ -54,6 +55,7 @@ const DirectionsInput = ({ params, setInputValue, autocompleteRef, label }) => {
       placeholder={label}
       onChange={onChange}
       onFocus={onFocus}
+      onBlur={onBlur}
     />
   );
 };
@@ -77,7 +79,23 @@ const useOptions = (inputValue: string, setOptions) => {
 const Row = styled.div`
   width: 100%;
 `;
-export const DirectionsAutocomplete = ({ label }: { label: string }) => {
+
+const getOptionLabel = (option) =>
+  option.properties?.name ||
+  (option.star && option.star.label) ||
+  (option.properties && buildPhotonAddress(option.properties)) ||
+  '';
+
+const getOptionCoords = (option) => {
+  const lonLat = (option.star && option.star.center) || option.geometry.coordinates;
+  return lonLat.join(',');
+}
+
+type Props = {
+  label: string;
+  setValue: (value: string) => void;
+};
+export const DirectionsAutocomplete = ({ label, setValue }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
   const [options, setOptions] = useState([]);
@@ -86,11 +104,13 @@ export const DirectionsAutocomplete = ({ label }: { label: string }) => {
 
   useOptions(inputValue, setOptions);
 
-  const getOptionLabel = (option) =>
-    option.properties?.name ||
-    (option.star && option.star.label) ||
-    (option.properties && buildPhotonAddress(option.properties)) ||
-    '';
+  const onBlur = () => {
+    if (options.length > 0) {
+      setInputValue(getOptionLabel(options[0]));
+      setValue(getOptionCoords(options[0]));
+    }
+  }
+
   return (
     <Row ref={autocompleteRef}>
       <Autocomplete
@@ -100,21 +120,22 @@ export const DirectionsAutocomplete = ({ label }: { label: string }) => {
         filterOptions={(x) => x}
         getOptionLabel={getOptionLabel}
         getOptionKey={(option) => JSON.stringify(option)}
-        onChange={(event, option) => {
+        onChange={(_, option) => {
           console.log('selected', option);
           setInputValue(getOptionLabel(option));
+          setValue(getOptionCoords(option));
         }}
         autoComplete
         disableClearable
         autoHighlight
         clearOnEscape
-        // freeSolo
         renderInput={(params) => (
           <DirectionsInput
             params={params}
             setInputValue={setInputValue}
             autocompleteRef={autocompleteRef}
             label={label}
+            onBlur={onBlur}
           />
         )}
         renderOption={renderOptionFactory(inputValue, currentTheme, mapCenter)}

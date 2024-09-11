@@ -5,6 +5,7 @@ import { renderLoader } from './utils';
 import { renderStar } from './options/stars';
 import { renderGeocoder } from './options/geocoder';
 
+// TODO refactor to use components, so they can use hooks
 const renderOption = (inputValue, currentTheme, mapCenter, option) => {
   const { preset, overpass, star, loader } = option;
   if (overpass) {
