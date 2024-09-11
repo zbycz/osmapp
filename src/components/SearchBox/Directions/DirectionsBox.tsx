@@ -1,210 +1,120 @@
-import { StyledPaper, TopPanel } from '../helpers';
-import { useMobileMode } from '../../helpers';
-import {
-  Autocomplete,
-  Button,
-  IconButton,
-  InputBase,
-  ToggleButtonGroup,
-} from '@mui/material';
-import { t } from '../../../services/intl';
-import CloseIcon from '@mui/icons-material/Close';
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  buildPhotonAddress,
-  fetchGeocoderOptions,
-  GEOCODER_ABORTABLE_QUEUE,
-  renderGeocoder,
-  useInputValueState,
-} from '../options/geocoder';
-import { useMapCenter } from '../utils';
-import { useUserThemeContext } from '../../../helpers/theme';
-import { useMapStateContext } from '../../utils/MapStateContext';
-import { useStarsContext } from '../../utils/StarsContext';
-import { abortFetch } from '../../../services/fetch';
-import { getStarsOptions } from '../options/stars';
-import { renderOptionFactory } from '../renderOptionFactory';
 import styled from '@emotion/styled';
+import { DirectionsAutocomplete } from './DirectionsAutocomplete';
+import React from 'react';
+import {
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  ToggleButtonGroup,
+  ToggleButton,
+  IconButton,
+  toggleButtonGroupClasses,
+  InputAdornment,
+  Paper,
+  Stack,
+} from '@mui/material';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { css } from '@emotion/react';
+import PlaceIcon from '@mui/icons-material/Place';
+import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
+import { convertHexToRgba } from '../../utils/colorUtils';
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }) => ({
+  [`& .${toggleButtonGroupClasses.grouped}`]: {
+    margin: theme.spacing(0.5),
+    marginRight: 10,
+    border: 0,
+    borderRadius: theme.shape.borderRadius,
+    [`&.${toggleButtonGroupClasses.disabled}`]: {
+      border: 0,
+    },
+  },
+  [`& .${toggleButtonGroupClasses.middleButton},& .${toggleButtonGroupClasses.lastButton}`]:
+    {
+      marginLeft: -1,
+      borderLeft: '1px solid transparent',
+    },
+  button: {
+    margin: 6,
+  },
+  svg: {
+    fontSize: '18px',
+  },
+}));
+
+const StyledPaper = styled(Paper)`
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 10;
+  padding: ${({ theme }) => theme.spacing(2)};
+  width: 340px;
+  backdrop-filter: blur(10px);
+  background: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.paper, 0.9)};
+`;
 
 type Props = {
   toggleDirections: () => void;
 };
 
-const CloseButton = (props: { onClick: () => void }) => (
-  <div>
-    <IconButton aria-label={t('close_panel')} onClick={props.onClick}>
-      <CloseIcon />
-    </IconButton>
-  </div>
-);
-
-const DirectionsInput = ({ params, setInputValue, autocompleteRef, label }) => {
-  const { InputLabelProps, InputProps, ...restParams } = params;
-
-  useEffect(() => {
-    // @ts-ignore
-    params.InputProps.ref(autocompleteRef.current);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  const onChange = (e) => setInputValue(e.target.value);
-  const onFocus = (e) => e.target.select();
-
-  return (
-    <InputBase
-      {...restParams} // eslint-disable-line react/jsx-props-no-spreading
-      sx={{
-        height: '40px',
-        padding: '0 10px',
-      }}
-      placeholder={label}
-      onChange={onChange}
-      onFocus={onFocus}
-    />
-  );
-};
-
-const useOptions = (inputValue: string, setOptions) => {
-  const { view } = useMapStateContext();
-  const { stars } = useStarsContext();
-
-  useEffect(() => {
-    (async () => {
-      abortFetch(GEOCODER_ABORTABLE_QUEUE);
-
-      if (inputValue === '') {
-        setOptions(getStarsOptions(stars));
-        return;
-      }
-
-      fetchGeocoderOptions(inputValue, view, setOptions, [], []);
-    })();
-  }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
-};
-
-const Row = styled.div`
-  width: 100%;
-`;
-
-const DirectionsAutocomplete = ({ label }: { label: string }) => {
-  const autocompleteRef = useRef();
-  const { inputValue, setInputValue } = useInputValueState();
-  const [options, setOptions] = useState([]);
-  const mapCenter = useMapCenter();
-  const { currentTheme } = useUserThemeContext();
-
-  useOptions(inputValue, setOptions);
-
-  const getOptionLabel = (option) =>
-    option.properties?.name ||
-    (option.star && option.star.label) ||
-    (option.properties && buildPhotonAddress(option.properties)) ||
-    '';
-  return (
-    <Row ref={autocompleteRef}>
-      <Autocomplete
-        inputValue={inputValue}
-        options={options}
-        value={null}
-        filterOptions={(x) => x}
-        getOptionLabel={getOptionLabel}
-        getOptionKey={(option) => JSON.stringify(option)}
-        onChange={(event, option) => {
-          console.log('selected', option);
-          setInputValue(getOptionLabel(option));
-        }}
-        autoComplete
-        disableClearable
-        autoHighlight
-        clearOnEscape
-        // freeSolo
-        renderInput={(params) => (
-          <DirectionsInput
-            params={params}
-            setInputValue={setInputValue}
-            autocompleteRef={autocompleteRef}
-            label={label}
-          />
-        )}
-        renderOption={renderOptionFactory(inputValue, currentTheme, mapCenter)}
-      />
-    </Row>
-  );
-};
-
-const Divider = styled.div`
-  width: 100%;
-  border-bottom: 1px #ceabab solid;
-`;
-
-const FlexRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-`;
-
-const StyledIconButton = styled(IconButton, {
-  shouldForwardProp: (prop) => prop !== '$selected',
-})<{ $selected: boolean }>`
-  color: ${({ $selected, theme }) =>
-    $selected ? '#fff' : theme.palette.text.secondary};
-`;
-
-const SearchButton = styled(Button)`
-  color: #fff;
-`;
+// generated by https://v0.dev/chat/3MwraSQEqCc
 
 export const DirectionsBox = ({ toggleDirections }: Props) => {
-  const isMobileMode = useMobileMode();
+  const [transportMode, setTransportMode] = React.useState<string>('car');
 
-  const [mode, setMode] = useState<string>('walk');
+  const handleTransportModeChange = (
+    event: React.MouseEvent<HTMLElement>,
+    newMode: string | null,
+  ) => {
+    if (newMode !== null) {
+      setTransportMode(newMode);
+    }
+  };
 
   return (
-    <TopPanel $isMobileMode={false}>
-      <FlexRow>
-        <StyledPaper $column elevation={1}>
-          <DirectionsAutocomplete label={t('directions.from')} />
-          <Divider />
-          <DirectionsAutocomplete label={t('directions.to')} />
-        </StyledPaper>
-        <CloseButton onClick={toggleDirections} />
-      </FlexRow>
-      <div style={{ height: 8 }} />
-      <FlexRow>
-        <StyledIconButton
-          $selected={mode === 'bike'}
-          onClick={() => setMode('bike')}
+    <StyledPaper elevation={3}>
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 16,
+        }}
+      >
+        <StyledToggleButtonGroup
+          value={transportMode}
+          exclusive
+          onChange={handleTransportModeChange}
+          aria-label="transport mode"
+          size="small"
         >
-          <DirectionsBikeIcon />
-        </StyledIconButton>
-        <StyledIconButton
-          $selected={mode === 'walk'}
-          onClick={() => setMode('walk')}
-        >
-          <DirectionsWalkIcon />
-        </StyledIconButton>
-        <StyledIconButton
-          $selected={mode === 'car'}
-          onClick={() => setMode('car')}
-        >
-          <DirectionsCarIcon />
-        </StyledIconButton>
+          <ToggleButton value="car" aria-label="car">
+            <DirectionsCarIcon />
+          </ToggleButton>
+          <ToggleButton value="bike" aria-label="bike">
+            <DirectionsBikeIcon />
+          </ToggleButton>
+          <ToggleButton value="walk" aria-label="walk">
+            <DirectionsWalkIcon />
+          </ToggleButton>
+        </StyledToggleButtonGroup>
+        <IconButton onClick={toggleDirections} size="small" aria-label="close">
+          <CloseIcon fontSize="small" />
+        </IconButton>
+      </div>
 
-        <div style={{ flex: 1 }} />
+      <Stack spacing={1} mb={3}>
+        <DirectionsAutocomplete label="Starting point" />
+        <DirectionsAutocomplete label="Destination" />
+      </Stack>
 
-        <SearchButton
-          variant="text"
-          startIcon={<SearchIcon />}
-          color="secondary"
-        >
-          Search directions
-        </SearchButton>
-      </FlexRow>
-    </TopPanel>
+      <Button variant="contained" fullWidth startIcon={<SearchIcon />}>
+        Get Directions
+      </Button>
+    </StyledPaper>
   );
 };
