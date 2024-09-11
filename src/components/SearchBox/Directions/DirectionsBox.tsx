@@ -1,6 +1,12 @@
 import { StyledPaper, TopPanel } from '../helpers';
 import { useMobileMode } from '../../helpers';
-import { Autocomplete, IconButton, InputBase } from '@mui/material';
+import {
+  Autocomplete,
+  Button,
+  IconButton,
+  InputBase,
+  ToggleButtonGroup,
+} from '@mui/material';
 import { t } from '../../../services/intl';
 import CloseIcon from '@mui/icons-material/Close';
 import React, { useEffect, useRef, useState } from 'react';
@@ -19,6 +25,12 @@ import { abortFetch } from '../../../services/fetch';
 import { getStarsOptions } from '../options/stars';
 import { renderOptionFactory } from '../renderOptionFactory';
 import styled from '@emotion/styled';
+import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
+import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
+import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import { css } from '@emotion/react';
+import SearchIcon from '@mui/icons-material/Search';
 
 type Props = {
   toggleDirections: () => void;
@@ -130,17 +142,69 @@ const Divider = styled.div`
   border-bottom: 1px #ceabab solid;
 `;
 
-export function DirectionsBox({ toggleDirections }: Props) {
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+`;
+
+const StyledIconButton = styled(IconButton, {
+  shouldForwardProp: (prop) => prop !== '$selected',
+})<{ $selected: boolean }>`
+  color: ${({ $selected, theme }) =>
+    $selected ? '#fff' : theme.palette.text.secondary};
+`;
+
+const SearchButton = styled(Button)`
+  color: #fff;
+`;
+
+export const DirectionsBox = ({ toggleDirections }: Props) => {
   const isMobileMode = useMobileMode();
 
+  const [mode, setMode] = useState<string>('walk');
+
   return (
-    <TopPanel $isMobileMode={isMobileMode}>
-      <StyledPaper $column elevation={1}>
-        <DirectionsAutocomplete label={t('directions.from')} />
-        <Divider />
-        <DirectionsAutocomplete label={t('directions.to')} />
-      </StyledPaper>
-      <CloseButton onClick={toggleDirections} />
+    <TopPanel $isMobileMode={false}>
+      <FlexRow>
+        <StyledPaper $column elevation={1}>
+          <DirectionsAutocomplete label={t('directions.from')} />
+          <Divider />
+          <DirectionsAutocomplete label={t('directions.to')} />
+        </StyledPaper>
+        <CloseButton onClick={toggleDirections} />
+      </FlexRow>
+      <div style={{ height: 8 }} />
+      <FlexRow>
+        <StyledIconButton
+          $selected={mode === 'bike'}
+          onClick={() => setMode('bike')}
+        >
+          <DirectionsBikeIcon />
+        </StyledIconButton>
+        <StyledIconButton
+          $selected={mode === 'walk'}
+          onClick={() => setMode('walk')}
+        >
+          <DirectionsWalkIcon />
+        </StyledIconButton>
+        <StyledIconButton
+          $selected={mode === 'car'}
+          onClick={() => setMode('car')}
+        >
+          <DirectionsCarIcon />
+        </StyledIconButton>
+
+        <div style={{ flex: 1 }} />
+
+        <SearchButton
+          variant="text"
+          startIcon={<SearchIcon />}
+          color="secondary"
+        >
+          Search directions
+        </SearchButton>
+      </FlexRow>
     </TopPanel>
   );
-}
+};

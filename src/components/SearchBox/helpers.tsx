@@ -17,6 +17,7 @@ export const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   padding: 8px;
   box-sizing: border-box;
   display: flex;
+  flex-direction: column;
 
   z-index: 1;
 
@@ -26,7 +27,9 @@ export const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   }
 `;
 
-export const StyledPaper = styled(Paper)<{ $column?: boolean }>`
+export const StyledPaper = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== '$column',
+})<{ $column?: boolean }>`
   width: 100%;
   padding: 2px 4px;
   display: flex;
