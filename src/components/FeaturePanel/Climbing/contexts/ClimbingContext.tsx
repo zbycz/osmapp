@@ -19,9 +19,9 @@ import { updateElementOnIndex } from '../utils/array';
 import { findCloserPointFactory } from '../utils/findCloserPoint';
 import {
   ActionWithCallback,
-  useGetMachineFactory,
   State,
   StateAction,
+  useGetMachineFactory,
 } from '../utils/useGetMachineFactory';
 import { positionUtilsFactory } from '../utils/positionUtilsFactory';
 import { Feature } from '../../../../services/types';
@@ -208,12 +208,13 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
   ) => {
-    const updatedArray = updateElementOnIndex<ClimbingRoute>(
-      routes,
-      routeIndex,
-      callback,
-    );
-    setRoutes(updatedArray);
+    setRoutes((prevRoutes) => {
+      return updateElementOnIndex<ClimbingRoute>(
+        prevRoutes,
+        routeIndex,
+        callback,
+      );
+    });
   };
 
   const updatePathOnRouteIndex = (

@@ -21,6 +21,8 @@ import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
 import { MyRouteTicks } from '../Ticks/MyRouteTicks';
 import Link from 'next/link';
+import { EmptyValue } from './EmptyValue';
+import { ClimbingRoute } from '../types';
 const Left = styled.div`
   flex: 1;
 `;
@@ -44,16 +46,15 @@ const Value = styled.div``;
 
 export const ExpandedRow = ({
   tempRoute,
-  getText,
   onTempRouteChange,
-  setTempRoute,
   stopPropagation,
   isReadOnly,
   index,
   isExpanded,
   osmId,
 }) => {
-  const { isEditMode, getMachine } = useClimbingContext();
+  const { isEditMode, getMachine, updateRouteOnIndex } = useClimbingContext();
+
   const machine = getMachine();
   const [routeToDelete, setRouteToDelete] = useState<number | null>(null);
 
@@ -73,17 +74,21 @@ export const ExpandedRow = ({
           <Left>
             <List>
               <ListItem>
-                {isReadOnly && tempRoute.description && (
+                {tempRoute.updatedTags.description && (
                   <div>
                     <Label>Description</Label>
-                    <Value>{getText(tempRoute.description)}</Value>
+                    <Value>
+                      {tempRoute.updatedTags.description || <EmptyValue />}
+                    </Value>
                   </div>
                 )}
                 {isEditMode && (
                   <TextField
                     size="small"
-                    value={tempRoute.description}
-                    onChange={(e) => onTempRouteChange(e, 'description')}
+                    value={tempRoute.updatedTags.description}
+                    onChange={(e) => {
+                      onTempRouteChange(e, 'description');
+                    }}
                     onClick={stopPropagation}
                     style={{ marginTop: 10 }}
                     variant="outlined"
@@ -122,7 +127,8 @@ export const ExpandedRow = ({
                     onClick={stopPropagation}
                     difficulty={tempRoute.difficulty}
                     onDifficultyChanged={(difficulty) => {
-                      setTempRoute({ ...tempRoute, difficulty });
+                      // setTempRoute({ ...tempRoute, difficulty });
+                      // onTempRouteChange
                     }}
                     routeNumber={index}
                   />
@@ -133,7 +139,7 @@ export const ExpandedRow = ({
                   {isReadOnly ? (
                     <div>
                       <Label>Length</Label>
-                      <Value>{getText(tempRoute.length)}</Value>
+                      <Value>{tempRoute.length || <EmptyValue />}</Value>
                     </div>
                   ) : (
                     <TextField
@@ -153,7 +159,7 @@ export const ExpandedRow = ({
                 {isReadOnly && tempRoute.author && (
                   <div>
                     <Label>Author</Label>
-                    <Value>{getText(tempRoute.author)}</Value>
+                    <Value>{tempRoute.author || <EmptyValue />}</Value>
                   </div>
                 )}
                 {isEditMode && (
