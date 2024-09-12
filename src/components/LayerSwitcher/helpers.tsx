@@ -85,9 +85,10 @@ export const isValidLayerUrl = (url: string) => {
 
   const sanitizedUrl = url.replace('{zoom}', '{z}');
 
-  return (
+  const includesxyz =
     sanitizedUrl.includes('{x}') &&
     sanitizedUrl.includes('{y}') &&
-    sanitizedUrl.includes('{z}')
-  );
+    sanitizedUrl.includes('{z}');
+
+  return includesxyz || sanitizedUrl.includes('{bbox-epsg-3857}');
 };

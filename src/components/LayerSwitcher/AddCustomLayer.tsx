@@ -218,28 +218,6 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
   );
 };
 
-const humanJoin = (arr: string[]) => {
-  if (arr.length === 0) return '';
-  if (arr.length === 1) return arr[0];
-  if (arr.length === 2) return arr.join(' and ');
-
-  return arr.slice(0, -1).join(', ') + ' and ' + arr[arr.length - 1];
-};
-
-const MissingParts = ({ x, y, z }) => {
-  const missingParts = [
-    ...(!x ? ['{x}'] : []),
-    ...(!y ? ['{y}'] : []),
-    ...(!z ? ['{z}'] : []),
-  ];
-
-  if (!missingParts.length) {
-    return null;
-  }
-
-  return <p>Insert {humanJoin(missingParts)}</p>;
-};
-
 const CustomChoose: React.FC<{
   onValidation: (isOk: boolean) => void;
   onChange: (layer: LayerIndex) => void;
@@ -281,12 +259,6 @@ const CustomChoose: React.FC<{
         paddingTop: '2rem',
       }}
     >
-      <MissingParts
-        x={url.includes('{x}')}
-        y={url.includes('{y}')}
-        z={url.includes('{z}')}
-      />
-
       <TextField
         label="URL"
         fullWidth
@@ -295,6 +267,7 @@ const CustomChoose: React.FC<{
           setUrl(val.target.value);
         }}
         error={!isValid && !!url}
+        helperText={<p>{t('layerswitcher.explaination')}</p>}
       />
     </div>
   );
