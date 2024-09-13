@@ -85,6 +85,11 @@ const paints = (geojson) => ({
   },
 });
 
+const ROUND_LINE = {
+  'line-join': 'round',
+  'line-cap': 'round',
+} as const;
+
 export const profiles = {
   car: 'car-fast',
   bike: 'trekking',
@@ -108,15 +113,19 @@ export const handleRouting = async (mode, from, to) => {
   console.log('Searched for', from, to, mode, geojson);
 
   const map = await loadedMapPromise;
+
+  destroyRouting();
   map.addSource(SOURCE, {
     type: 'geojson',
     data: geojson,
     lineMetrics: true,
   });
+
   map.addLayer({
     id: `${SOURCE}-line-casing`,
     type: 'line',
     source: SOURCE,
+    layout: ROUND_LINE,
     paint: {
       'line-color': 'white',
       'line-width': 8,
@@ -126,6 +135,7 @@ export const handleRouting = async (mode, from, to) => {
     id: `${SOURCE}-line`,
     type: 'line',
     source: SOURCE,
+    layout: ROUND_LINE,
     paint: paints(geojson)[mode],
   });
   const { w, s, e, n } = getBbox(geojson.features[0].geometry.coordinates);

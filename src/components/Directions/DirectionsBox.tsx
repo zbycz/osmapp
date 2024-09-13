@@ -5,14 +5,12 @@ import {
   getOptionLabel,
 } from './DirectionsAutocomplete';
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, IconButton, Paper, Stack, Typography } from '@mui/material';
+import { Button, IconButton, Stack } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
-import { convertHexToRgba } from '../utils/colorUtils';
 import { t } from '../../services/intl';
 import { ModeToggler } from './ModeToggler';
 import Router, { useRouter } from 'next/router';
-import { usePersistedState } from '../utils/usePersistedState';
 import {
   destroyRouting,
   getLastMode,
@@ -20,9 +18,9 @@ import {
   splitByFirstTilda,
 } from './utils';
 import { encodeUrl } from '../../helpers/utils';
-import { isImperial } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { getLastFeature } from '../../services/lastFeatureStorage';
+import { Result, StyledPaper } from './Result';
 
 const Wrapper = styled(Stack)`
   position: absolute;
@@ -30,13 +28,6 @@ const Wrapper = styled(Stack)`
   left: 8px;
   z-index: 10;
   width: 340px;
-`;
-
-const StyledPaper = styled(Paper)`
-  backdrop-filter: blur(10px);
-  background: ${({ theme }) =>
-    convertHexToRgba(theme.palette.background.paper, 0.9)};
-  padding: ${({ theme }) => theme.spacing(2)};
 `;
 
 const useReactToUrl = (
@@ -158,61 +149,12 @@ export const DirectionsForm = ({ setResult }) => {
   );
 };
 
-const getHumanMetric = (meters) => {
-  if (meters < 1000) {
-    return `${meters} m`;
-  }
-  return `${(meters / 1000).toFixed(1)} km`;
-};
-const getHumanImperial = (meters) => {
-  const miles = meters * 0.000621371192;
-  if (miles < 1) {
-    return `${Math.round(miles * 5280)} ft`;
-  }
-  return `${miles.toFixed(1)} mi`;
-};
-const toHumanDistance = (meters) =>
-  isImperial() ? getHumanImperial(meters) : getHumanMetric(meters);
-
-const toHumanTime = (seconds) => {
-  const hours = Math.floor(seconds / 3600);
-  const minutes = Math.floor((seconds % 3600) / 60);
-  const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
-  return hours > 0 ? `${hours}:${minutesStr} h` : `${minutes} min`;
-};
-
 export const DirectionsBox = () => {
   const [result, setResult] = useState(null);
   return (
     <Wrapper spacing={1}>
       <DirectionsForm setResult={setResult} />
-      {result && (
-        <StyledPaper elevation={3}>
-          Time:{' '}
-          <strong>
-            {toHumanTime(result.features[0].properties['total-time'])}
-          </strong>
-          <br />
-          Distance:{' '}
-          <strong>
-            {toHumanDistance(result.features[0].properties['track-length'])}
-          </strong>
-          <br />
-          Ascent:{' '}
-          <strong>
-            {toHumanDistance(result.features[0].properties['filtered ascend'])}
-          </strong>
-          <br />
-          <br />
-          <Typography variant="caption">
-            Search proudly powered by{' '}
-            <a href="https://www.brouter.de/brouter-web/">
-              {result.features[0].properties.creator}
-            </a>
-            .
-          </Typography>
-        </StyledPaper>
-      )}
+      {result && <Result result={result} />}
     </Wrapper>
   );
 };

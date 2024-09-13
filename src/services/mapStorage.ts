@@ -9,7 +9,7 @@ let map: maplibregl.Map;
 export const setGlobalMap = (newMap: maplibregl.Map) => {
   map = newMap;
 
-  map.on('load', () => {
+  map?.on('idle', () => {
     resolveCallback(newMap);
   });
 };
