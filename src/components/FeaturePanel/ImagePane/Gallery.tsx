@@ -6,6 +6,19 @@ import {
 } from '../../../services/images/getImageDefs';
 import styled from '@emotion/styled';
 import { PanoramaImg } from './Image/PanoramaImg';
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  ImageList,
+  ImageListItem,
+  useTheme,
+  useMediaQuery,
+} from '@mui/material';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { getLabel } from '../../../helpers/featureLabel';
 
 type GalleryProps = {
   def: ImageDef;
@@ -78,10 +91,13 @@ const Image: React.FC<ImageProps> = ({ image, def, high, wide }) => (
 
 type SeeMoreProps = {
   image: ImageType;
+  more: number;
+  onClick: () => void;
 };
 
-const SeeMoreButton: React.FC<SeeMoreProps> = ({ image }) => (
+const SeeMoreButton: React.FC<SeeMoreProps> = ({ image, more, onClick }) => (
   <button
+    onClick={onClick}
     style={{
       width: '100%',
       height: '100%',
@@ -104,46 +120,111 @@ const SeeMoreButton: React.FC<SeeMoreProps> = ({ image }) => (
         borderRadius: '0.125rem',
       }}
     >
-      See More
+      See {more} More
     </span>
   </button>
 );
 
+type GalleryDialogProps = {
+  images: ImageType[];
+  def: ImageDef;
+  opened: boolean;
+  onClose: () => void;
+};
+
+const GalleryDialog: React.FC<GalleryDialogProps> = ({
+  images,
+  def,
+  opened,
+  onClose,
+}) => {
+  const { feature } = useFeatureContext();
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const cols = useMediaQuery(theme.breakpoints.up('md')) ? 3 : 2;
+
+  if (images.length <= 4) {
+    return null;
+  }
+
+  return (
+    <Dialog open={opened} fullScreen={fullScreen} maxWidth="md">
+      <DialogTitle>Images for {getLabel(feature)}</DialogTitle>
+      <DialogContent>
+        <ImageList variant="masonry" cols={cols} gap={4}>
+          {images.map((img) => (
+            <ImageListItem key={img.imageUrl}>
+              <img src={img.imageUrl} alt={getImageDefId(def)} loading="lazy" />
+            </ImageListItem>
+          ))}
+        </ImageList>
+      </DialogContent>
+      <DialogActions>
+        <Button autoFocus onClick={onClose}>
+          Close
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
+};
+
 const GalleryInner: React.FC<GalleryProps> = ({ def, images }) => {
+  const [opened, setOpened] = React.useState(false);
+
   const panorama = images.find(({ panoramaUrl }) => panoramaUrl);
   if (panorama) {
     return <PanoramaImg url={panorama.panoramaUrl} />;
   }
 
   return (
-    <div
-      style={{
-        display: 'grid',
-        gridTemplateRows: '1fr 1fr',
-        gridTemplateColumns: '1fr 1fr',
-        height: '100%',
-        width: '100%',
-      }}
-    >
-      {images.slice(0, 4).map((image, i) => {
-        const isLastImg = images.length - 1 === i;
-        const isBlurredButton = !isLastImg && images.length > 4 && i === 3;
+    <>
+      <GalleryDialog
+        images={images}
+        def={def}
+        opened={opened}
+        onClose={() => {
+          setOpened(false);
+        }}
+      />
 
-        if (isBlurredButton) {
-          return <SeeMoreButton key={image.imageUrl} image={image} />;
-        }
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateRows: '1fr 1fr',
+          gridTemplateColumns: '1fr 1fr',
+          height: '100%',
+          width: '100%',
+        }}
+      >
+        {images.slice(0, 4).map((image, i) => {
+          const isLastImg = images.length - 1 === i;
+          const isBlurredButton = !isLastImg && images.length > 4 && i === 3;
 
-        return (
-          <Image
-            key={image.imageUrl}
-            image={image}
-            def={def}
-            high={images.length <= 2 || (images.length === 3 && i === 1)}
-            wide={images.length === 1}
-          />
-        );
-      })}
-    </div>
+          if (isBlurredButton) {
+            return (
+              <SeeMoreButton
+                key={image.imageUrl}
+                image={image}
+                more={images.length - 3}
+                onClick={() => {
+                  setOpened(true);
+                }}
+              />
+            );
+          }
+
+          return (
+            <Image
+              key={image.imageUrl}
+              image={image}
+              def={def}
+              high={images.length <= 2 || (images.length === 3 && i === 1)}
+              wide={images.length === 1}
+            />
+          );
+        })}
+      </div>
+    </>
   );
 };
 

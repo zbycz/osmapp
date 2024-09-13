@@ -39,7 +39,7 @@ const isAudioUrl = (url: string) =>
 const getCommonsCategoryApiUrl = (title: string) =>
   encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${
     title
-  }&gcmlimit=6&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=${
+  }&gcmlimit=10&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=${
     WIDTH
   }&format=json&origin=*`;
 
