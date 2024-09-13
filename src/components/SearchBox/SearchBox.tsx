@@ -14,6 +14,7 @@ import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
 import { DirectionsButton } from '../Directions/DirectionsButton';
 import { StyledPaper, TopPanel } from './helpers';
+import { setLastFeature } from '../../services/lastFeatureStorage';
 
 const SearchIconButton = styled(IconButton)`
   svg {
@@ -35,6 +36,7 @@ const useOnClosePanel = () => {
   return () => {
     setFeature(null);
     Router.push(`/${window.location.hash}`);
+    setLastFeature(null);
   };
 };
 

@@ -21,6 +21,8 @@ import {
 } from './utils';
 import { encodeUrl } from '../../helpers/utils';
 import { isImperial } from '../helpers';
+import { getLabel } from '../../helpers/featureLabel';
+import { getLastFeature } from '../../services/lastFeatureStorage';
 
 const Wrapper = styled(Stack)`
   position: absolute;
@@ -43,7 +45,7 @@ const useReactToUrl = (
   setTo: (value: any) => void,
   setResult,
 ) => {
-  const lastModeSetRef = useRef(false);
+  const lastModeWasSetRef = useRef(false);
 
   const router = useRouter();
   const [, mode, from, to] = router.query.all;
@@ -66,9 +68,19 @@ const useReactToUrl = (
         },
       });
       handleRouting(mode, fromCoords, toCoords).then(setResult);
-    } else if (lastModeSetRef.current === false && getLastMode()) {
-      setMode(getLastMode());
-      lastModeSetRef.current = true;
+    } else {
+      if (lastModeWasSetRef.current === false && getLastMode()) {
+        setMode(getLastMode());
+        lastModeWasSetRef.current = true;
+      }
+      if (getLastFeature()) {
+        setTo({
+          star: {
+            center: getLastFeature().center,
+            label: getLabel(getLastFeature()),
+          },
+        });
+      }
     }
 
     return () => {
@@ -166,7 +178,7 @@ const toHumanTime = (seconds) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
-  return hours > 0 ? `${hours}:${minutesStr} h` : `${minutesStr} min`;
+  return hours > 0 ? `${hours}:${minutesStr} h` : `${minutes} min`;
 };
 
 export const DirectionsBox = () => {
