@@ -4,7 +4,7 @@ import {
   getOptionCoords,
   getOptionLabel,
 } from './DirectionsAutocomplete';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Button, IconButton, Paper, Stack, Typography } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SearchIcon from '@mui/icons-material/Search';
@@ -13,7 +13,12 @@ import { t } from '../../services/intl';
 import { ModeToggler } from './ModeToggler';
 import Router, { useRouter } from 'next/router';
 import { usePersistedState } from '../utils/usePersistedState';
-import { destroyRouting, handleRouting, splitByFirstTilda } from './utils';
+import {
+  destroyRouting,
+  getLastMode,
+  handleRouting,
+  splitByFirstTilda,
+} from './utils';
 import { encodeUrl } from '../../helpers/utils';
 import { isImperial } from '../helpers';
 
@@ -38,6 +43,8 @@ const useReactToUrl = (
   setTo: (value: any) => void,
   setResult,
 ) => {
+  const lastModeSetRef = useRef(false);
+
   const router = useRouter();
   const [, mode, from, to] = router.query.all;
   useEffect(() => {
@@ -59,12 +66,15 @@ const useReactToUrl = (
         },
       });
       handleRouting(mode, fromCoords, toCoords).then(setResult);
+    } else if (lastModeSetRef.current === false && getLastMode()) {
+      setMode(getLastMode());
+      lastModeSetRef.current = true;
     }
 
     return () => {
       destroyRouting();
     };
-  }, [mode, from, to, setMode, setFrom, setTo]);
+  }, [mode, from, to, setMode, setFrom, setTo, setResult]);
 };
 
 type Option = any;

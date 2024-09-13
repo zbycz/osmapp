@@ -91,7 +91,9 @@ export const profiles = {
   walk: 'hiking-mountain',
 };
 
-export const MODE_LOCAL_STORAGE_KEY = 'last-directions-mode';
+const MODE_LOCAL_STORAGE_KEY = 'last-directions-mode';
+export const getLastMode = () =>
+  window.localStorage?.getItem(MODE_LOCAL_STORAGE_KEY);
 
 const SOURCE = 'routing';
 export const handleRouting = async (mode, from, to) => {
