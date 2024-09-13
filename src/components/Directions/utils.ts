@@ -4,6 +4,8 @@ import { fetchJson } from '../../services/fetch';
 import { getBbox } from '../../services/getCenter';
 import maplibregl from 'maplibre-gl';
 
+// taken from or inspired by cartes.app, LGPL
+
 const slopeColor = (slope) => {
   if (slope < 0) return '#8f53c1'; // give another color for negative slopes ?
   if (slope < 3) return '#8f53c1';
@@ -13,7 +15,7 @@ const slopeColor = (slope) => {
   return 'crimson';
 };
 
-export function computeSlopeGradient(geojson) {
+const computeSlopeGradient = (geojson) => {
   const coordinates = geojson.features[0].geometry.coordinates;
   const distanceColors = coordinates
     .slice(0, -1)
@@ -60,7 +62,7 @@ export function computeSlopeGradient(geojson) {
   return averaged
     .map((slope, i) => [(i * chunkSize) / totalDistance, slopeColor(slope)])
     .flat();
-}
+};
 
 const paints = (geojson) => ({
   walk: {
@@ -82,13 +84,13 @@ const paints = (geojson) => ({
     ],
   },
 });
-const profiles = {
+
+export const profiles = {
   car: 'car-fast',
   bike: 'trekking',
   walk: 'hiking-mountain',
-  rail: 'rail',
-  river: 'river',
 };
+
 const SOURCE = 'routing';
 export const handleRouting = async (mode, from, to) => {
   if (!mode || !from || !to) {
@@ -134,8 +136,11 @@ export const destroyRouting = () => {
   const map = getGlobalMap();
   if (map.getLayer(`${SOURCE}-line`)) {
     map.removeLayer(`${SOURCE}-line`);
-    if (map?.getSource(SOURCE)) {
-      map.removeSource(SOURCE);
-    }
+  }
+  if (map.getLayer(`${SOURCE}-line-casing`)) {
+    map.removeLayer(`${SOURCE}-line-casing`);
+  }
+  if (map?.getSource(SOURCE)) {
+    map.removeSource(SOURCE);
   }
 };

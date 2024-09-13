@@ -33,6 +33,10 @@ export const DirectionsForm = () => {
   const [to, setTo] = useState<string>('');
 
   const handleSearch = () => {
+    if (!from || !to) {
+      return;
+    }
+
     const url = `/directions/${mode}/${from}/${to}`;
     Router.push(url);
     if (url === Router.asPath) {

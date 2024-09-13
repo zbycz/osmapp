@@ -1,27 +1,31 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export const usePersistedState = <T>(
   storageKey: string,
-  init: T,
+  init: T | (() => T),
 ): [T, (param: T | ((current: T) => T)) => void] => {
   const persist = (value) =>
     window?.localStorage.setItem(storageKey, JSON.stringify(value));
 
-  const [value, setStateValue] = useState(
-    JSON.parse(global?.window?.localStorage.getItem(storageKey) ?? 'null') ??
-      init,
-  );
+  const [value, setStateValue] = useState(init);
 
-  const setValue = (param) => {
-    if (typeof param === 'function') {
+  useEffect(() => {
+    const storedValue = window?.localStorage.getItem(storageKey);
+    if (storedValue !== null) {
+      setStateValue(JSON.parse(storedValue));
+    }
+  }, [storageKey]);
+
+  const setValue = (setterOrValue) => {
+    if (typeof setterOrValue === 'function') {
       setStateValue((current) => {
-        const newValue = param(current);
+        const newValue = setterOrValue(current);
         persist(newValue);
         return newValue;
       });
     } else {
-      persist(param);
-      setStateValue(param);
+      persist(setterOrValue);
+      setStateValue(setterOrValue);
     }
   };
   return [value, setValue];
