@@ -8,35 +8,57 @@ import { getImageFromApi } from '../../../services/images/getImageFromApi';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { ImageDef, isInstant } from '../../../services/types';
 
-export type ImagesType = { def: ImageDef; image: ImageType }[];
+export type ImageGroup = { def: ImageDef; images: ImageType[] }[];
 
 export const mergeResultFn =
-  (def: ImageDef, image: ImageType, defs: ImageDef[]) =>
-  (prevImages: ImagesType) => {
-    if (image == null) {
+  (def: ImageDef, images: ImageType[], defs: ImageDef[]) =>
+  (prevImages: ImageGroup): ImageGroup => {
+    if (images.length === 0) {
       return prevImages;
     }
 
-    const found = prevImages.find(
-      (item) => item.image?.imageUrl === image.imageUrl,
+    const imageUrls = images.map(({ imageUrl }) => imageUrl);
+
+    const found = prevImages.find((group) =>
+      group.images.some((img) => imageUrls.includes(img.imageUrl)),
     );
+
     if (found) {
-      (found.image.sameUrlResolvedAlsoFrom ??= []).push(image);
-      return [...prevImages];
+      // Update existing group
+      const updatedGroup = {
+        ...found,
+        images: found.images.map((img) => {
+          if (!imageUrls.includes(img.imageUrl)) return img;
+
+          return {
+            ...img,
+            sameUrlResolvedAlsoFrom: [
+              ...(img.sameUrlResolvedAlsoFrom ?? []),
+              ...images,
+            ],
+          };
+        }),
+      };
+
+      return prevImages.map((group) =>
+        group.def === found.def ? updatedGroup : group,
+      );
     }
 
-    const sorted = [...prevImages, { def, image }].sort((a, b) => {
+    // Add new group
+    const sorted = [...prevImages, { def, images }].sort((a, b) => {
       const aIndex = defs.findIndex((item) => item === a.def);
       const bIndex = defs.findIndex((item) => item === b.def);
       return aIndex - bIndex;
     });
+
     return sorted;
   };
 
-const getInitialState = (defs: ImageDef[]) =>
+const getInitialState = (defs: ImageDef[]): ImageGroup =>
   defs?.filter(isInstant)?.map((def) => ({
     def,
-    image: getInstantImage(def),
+    images: getInstantImage(def) ? [getInstantImage(def)] : [],
   })) ?? [];
 
 export const useLoadImages = () => {
@@ -46,13 +68,13 @@ export const useLoadImages = () => {
 
   const initialState = useMemo(() => getInitialState(defs), [defs]);
   const [loading, setLoading] = useState(apiDefs.length > 0);
-  const [images, setImages] = useState<ImagesType>(initialState);
+  const [groups, setGroups] = useState<ImageGroup>(initialState);
 
   useEffect(() => {
-    setImages(initialState);
+    setGroups(initialState);
     const promises = apiDefs.map(async (def) => {
-      const image = await getImageFromApi(def);
-      setImages(mergeResultFn(def, image, defs));
+      const images = await getImageFromApi(def);
+      setGroups(mergeResultFn(def, images, defs));
     });
 
     Promise.all(promises).then(() => {
@@ -60,6 +82,6 @@ export const useLoadImages = () => {
     });
   }, [apiDefs, defs, initialState]);
 
-  publishDbgObject('last images', images);
-  return { loading, images: images.filter((item) => item.image != null) };
+  publishDbgObject('last images', groups);
+  return { loading, groups: groups.filter((group) => group.images.length > 0) };
 };

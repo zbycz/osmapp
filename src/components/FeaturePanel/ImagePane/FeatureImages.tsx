@@ -1,46 +1,53 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Scrollbars } from 'react-custom-scrollbars';
-import { Image } from './Image/Image';
 import { useLoadImages } from './useLoadImages';
 import { NoImage } from './NoImage';
 import { HEIGHT, ImageSkeleton } from './helpers';
+import { Gallery } from './Gallery';
 
 export const Wrapper = styled.div`
-  width: 100%;
   height: calc(${HEIGHT}px + 10px); // 10px for scrollbar
   min-height: calc(${HEIGHT}px + 10px); // otherwise it shrinks b/c of flex
+  width: 100%;
 `;
 
-const StyledScrollbars = styled(Scrollbars)`
+const StyledScrollbars = styled.div`
   width: 100%;
   height: 100%;
+
   white-space: nowrap;
   text-align: center; // one image centering
 
-  overflow-y: hidden;
+  display: flex;
+  gap: 3px;
+  overflow: hidden;
   overflow-x: auto;
+  scroll-snap-type: x mandatory;
+
   scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
 `;
+
 export const Slider = ({ children }) => (
-  <StyledScrollbars universal autoHide>
-    {children}
-  </StyledScrollbars>
+  <StyledScrollbars>{children}</StyledScrollbars>
 );
 
 export const FeatureImages = () => {
-  const { loading, images } = useLoadImages();
+  const { loading, groups } = useLoadImages();
 
-  if (images.length === 0) {
+  if (groups.length === 0) {
     return <Wrapper>{loading ? <ImageSkeleton /> : <NoImage />}</Wrapper>;
   }
 
   return (
     <Wrapper>
       <Slider>
-        {images.map((item) => (
-          <Image key={item.image.imageUrl} def={item.def} image={item.image} />
+        {groups.map((group, i) => (
+          <Gallery
+            key={group.images[0].imageUrl}
+            def={group.def}
+            images={group.images}
+            isFirst={i === 0}
+          />
         ))}
       </Slider>
     </Wrapper>
