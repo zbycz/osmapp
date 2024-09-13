@@ -43,7 +43,7 @@ export const FeatureImages = () => {
       <Slider>
         {groups.map((group, i) => (
           <Gallery
-            key={group.images[0].imageUrl}
+            key={i}
             def={group.def}
             images={group.images}
             isFirst={i === 0}

@@ -11,8 +11,9 @@ import { ImageDef, isInstant } from '../../../services/types';
 export type ImageGroup = { def: ImageDef; images: ImageType[] }[];
 
 export const mergeResultFn =
-  (def: ImageDef, images: ImageType[], defs: ImageDef[]) =>
+  (def: ImageDef, imgs: (ImageType | null)[], defs: ImageDef[]) =>
   (prevImages: ImageGroup): ImageGroup => {
+    const images = imgs.filter((x) => x);
     if (images.length === 0) {
       return prevImages;
     }
