@@ -21,6 +21,8 @@ import { useUserThemeContext } from '../../helpers/theme';
 import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
 import PlaceIcon from '@mui/icons-material/Place';
 import { SearchOption } from '../SearchBox/types';
+import { useRouter } from 'next/router';
+import { destroyRouting, splitByFirstTilda } from './utils';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -86,13 +88,15 @@ const Row = styled.div`
   width: 100%;
 `;
 
-const getOptionLabel = (option) =>
-  option.properties?.name ||
-  (option.star && option.star.label) ||
-  (option.properties && buildPhotonAddress(option.properties)) ||
-  '';
+export const getOptionLabel = (option) =>
+  option == null
+    ? ''
+    : option.properties?.name ||
+      (option.star && option.star.label) ||
+      (option.properties && buildPhotonAddress(option.properties)) ||
+      '';
 
-const getOptionCoords = (option) => {
+export const getOptionCoords = (option) => {
   const lonLat =
     (option.star && option.star.center) || option.geometry.coordinates;
   return lonLat.join(',');
@@ -106,7 +110,7 @@ type Props = {
 export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
-  const selectedOptionInputValue = useRef('');
+  const selectedOptionInputValue = useRef(null);
   const [options, setOptions] = useState([]);
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
@@ -114,9 +118,9 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   useOptions(inputValue, setOptions);
 
   const onChange = (_, option) => {
-    console.log('selected', option);
+    console.log('selected', option); // eslint-disable-line no-console
     setInputValue(getOptionLabel(option));
-    setValue(getOptionCoords(option));
+    setValue(option);
     selectedOptionInputValue.current = getOptionLabel(option);
   };
 
@@ -125,10 +129,18 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
       if (options.length > 0 && inputValue) {
         onChange(null, options[0]);
       } else {
-        setValue('');
+        setValue(null);
       }
     }
   };
+
+  // react to external value changes
+  useEffect(() => {
+    if (getOptionLabel(value) !== selectedOptionInputValue.current) {
+      setInputValue(getOptionLabel(value));
+      selectedOptionInputValue.current = getOptionLabel(value);
+    }
+  }, [value]);
 
   return (
     <Row ref={autocompleteRef}>

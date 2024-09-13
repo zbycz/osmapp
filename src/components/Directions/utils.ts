@@ -9,7 +9,7 @@ import maplibregl from 'maplibre-gl';
 const slopeColor = (slope) => {
   if (slope < 0) return '#8f53c1'; // give another color for negative slopes ?
   if (slope < 3) return '#8f53c1';
-  if (slope < 5) return 'yellow';
+  // if (slope < 5) return 'yellow';
   if (slope < 7.5) return 'orange';
   if (slope < 12) return 'OrangeRed';
   return 'crimson';
@@ -50,7 +50,7 @@ const computeSlopeGradient = (geojson) => {
     )
     .flat();
 
-  const chunkSize = 20;
+  const chunkSize = 30;
   const averaged = [];
   for (let i = 0; i < littles.length; i += chunkSize) {
     const chunk = littles.slice(i, i + chunkSize);
@@ -91,11 +91,14 @@ export const profiles = {
   walk: 'hiking-mountain',
 };
 
+export const MODE_LOCAL_STORAGE_KEY = 'last-directions-mode';
+
 const SOURCE = 'routing';
 export const handleRouting = async (mode, from, to) => {
   if (!mode || !from || !to) {
     return;
   }
+  window.localStorage?.setItem(MODE_LOCAL_STORAGE_KEY, mode);
 
   const profile = profiles[mode];
   const url = `https://brouter.de/brouter?lonlats=${from}|${to}&profile=${profile}&alternativeidx=0&format=geojson`;
@@ -131,7 +134,10 @@ export const handleRouting = async (mode, from, to) => {
       ? { left: width / 4, right: width / 4, bottom: 50, top: 50 }
       : { left: 50, right: 50, top: 50, bottom: 50 };
   map.fitBounds(bbox, { padding });
+
+  return geojson;
 };
+
 export const destroyRouting = () => {
   const map = getGlobalMap();
   if (map.getLayer(`${SOURCE}-line`)) {
@@ -143,4 +149,15 @@ export const destroyRouting = () => {
   if (map?.getSource(SOURCE)) {
     map.removeSource(SOURCE);
   }
+};
+
+export const splitByFirstTilda = (str: string) => {
+  if (!str) {
+    return [undefined, undefined];
+  }
+  const index = str.indexOf('~');
+  if (index === -1) {
+    return [str, undefined];
+  }
+  return [str.slice(0, index), str.slice(index + 1)];
 };
