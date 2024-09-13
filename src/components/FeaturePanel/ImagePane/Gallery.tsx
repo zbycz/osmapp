@@ -6,19 +6,7 @@ import {
 } from '../../../services/images/getImageDefs';
 import styled from '@emotion/styled';
 import { PanoramaImg } from './Image/PanoramaImg';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  ImageList,
-  ImageListItem,
-  useTheme,
-  useMediaQuery,
-} from '@mui/material';
-import { useFeatureContext } from '../../utils/FeatureContext';
-import { getLabel } from '../../../helpers/featureLabel';
+import { GalleryDialog } from './GalleryDialog';
 
 type GalleryProps = {
   def: ImageDef;
@@ -125,49 +113,6 @@ const SeeMoreButton: React.FC<SeeMoreProps> = ({ image, more, onClick }) => (
   </button>
 );
 
-type GalleryDialogProps = {
-  images: ImageType[];
-  def: ImageDef;
-  opened: boolean;
-  onClose: () => void;
-};
-
-const GalleryDialog: React.FC<GalleryDialogProps> = ({
-  images,
-  def,
-  opened,
-  onClose,
-}) => {
-  const { feature } = useFeatureContext();
-  const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const cols = useMediaQuery(theme.breakpoints.up('md')) ? 3 : 2;
-
-  if (images.length <= 4) {
-    return null;
-  }
-
-  return (
-    <Dialog open={opened} fullScreen={fullScreen} maxWidth="md">
-      <DialogTitle>Images for {getLabel(feature)}</DialogTitle>
-      <DialogContent>
-        <ImageList variant="masonry" cols={cols} gap={4}>
-          {images.map((img) => (
-            <ImageListItem key={img.imageUrl}>
-              <img src={img.imageUrl} alt={getImageDefId(def)} loading="lazy" />
-            </ImageListItem>
-          ))}
-        </ImageList>
-      </DialogContent>
-      <DialogActions>
-        <Button autoFocus onClick={onClose}>
-          Close
-        </Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
-
 const GalleryInner: React.FC<GalleryProps> = ({ def, images }) => {
   const [opened, setOpened] = React.useState(false);
 
@@ -228,8 +173,12 @@ const GalleryInner: React.FC<GalleryProps> = ({ def, images }) => {
   );
 };
 
-export const Gallery: React.FC<GalleryProps> = ({ def, images, isFirst }) => (
-  <GalleryWrapper>
-    <GalleryInner def={def} images={images} isFirst={isFirst} />
-  </GalleryWrapper>
+export const Gallery = React.forwardRef<HTMLDivElement, GalleryProps>(
+  ({ def, images, isFirst }, ref) => (
+    <GalleryWrapper ref={ref}>
+      <GalleryInner def={def} images={images} isFirst={isFirst} />
+    </GalleryWrapper>
+  ),
 );
+
+Gallery.displayName = 'Gallery';
