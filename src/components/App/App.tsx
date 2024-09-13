@@ -33,6 +33,7 @@ import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
 import Error from 'next/error';
 import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
+import { DirectionsBox } from '../Directions/DirectionsBox';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -93,10 +94,13 @@ const IndexWithProviders = () => {
   const routeNumber =
     router.query.all?.[3] === 'route' ? router.query.all?.[4] : undefined;
 
+  const directions = router.query.all?.[0] === 'directions' && !featureShown;
+
   return (
     <>
       <Loading />
-      <SearchBox />
+      {!directions && <SearchBox />}
+      {directions && <DirectionsBox />}
       {featureShown && !isMobileMode && <FeaturePanelOnSide />}
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
@@ -162,7 +166,8 @@ App.getInitialProps = async (ctx: NextPageContext) => {
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
   const cookies = nextCookies(ctx);
-  const featureFromRouter = await getInitialFeature(ctx);
+  const featureFromRouter =
+    ctx.query.all?.[0] === 'directions' ? null : await getInitialFeature(ctx);
   if (ctx.res) {
     if (featureFromRouter === '404' || featureFromRouter?.error === '404') {
       ctx.res.statusCode = 404;

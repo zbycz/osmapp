@@ -12,8 +12,7 @@ import { useInputValueState } from './options/geocoder';
 import { useOptions } from './useOptions';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
-import { DirectionsButton } from './Directions/DirectionsButton';
-import { DirectionsBox } from './Directions/DirectionsBox';
+import { DirectionsButton } from '../Directions/DirectionsButton';
 import { StyledPaper, TopPanel } from './helpers';
 
 const SearchIconButton = styled(IconButton)`
@@ -40,8 +39,6 @@ const useOnClosePanel = () => {
 };
 
 const SearchBox = () => {
-  const [isDirections, toggleDirections] = useToggleState(false);
-
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const { inputValue, setInputValue } = useInputValueState();
@@ -51,10 +48,6 @@ const SearchBox = () => {
   const onClosePanel = useOnClosePanel();
 
   useOptions(inputValue, setOptions);
-
-  if (isDirections) {
-    return <DirectionsBox toggleDirections={toggleDirections} />;
-  }
 
   return (
     <TopPanel $isMobileMode={isMobileMode}>
@@ -82,7 +75,7 @@ const SearchBox = () => {
           </>
         )}
 
-        <DirectionsButton onClick={toggleDirections} />
+        <DirectionsButton />
       </StyledPaper>
     </TopPanel>
   );

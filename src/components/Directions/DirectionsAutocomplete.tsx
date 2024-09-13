@@ -1,14 +1,14 @@
-import { useMapStateContext } from '../../utils/MapStateContext';
-import { useStarsContext } from '../../utils/StarsContext';
+import { useMapStateContext } from '../utils/MapStateContext';
+import { useStarsContext } from '../utils/StarsContext';
 import React, { useEffect, useRef, useState } from 'react';
-import { abortFetch } from '../../../services/fetch';
+import { abortFetch } from '../../services/fetch';
 import {
   buildPhotonAddress,
   fetchGeocoderOptions,
   GEOCODER_ABORTABLE_QUEUE,
   useInputValueState,
-} from '../options/geocoder';
-import { getStarsOptions } from '../options/stars';
+} from '../SearchBox/options/geocoder';
+import { getStarsOptions } from '../SearchBox/options/stars';
 import styled from '@emotion/styled';
 import {
   Autocomplete,
@@ -16,11 +16,11 @@ import {
   InputBase,
   TextField,
 } from '@mui/material';
-import { useMapCenter } from '../utils';
-import { useUserThemeContext } from '../../../helpers/theme';
-import { renderOptionFactory } from '../renderOptionFactory';
+import { useMapCenter } from '../SearchBox/utils';
+import { useUserThemeContext } from '../../helpers/theme';
+import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
 import PlaceIcon from '@mui/icons-material/Place';
-import { SearchOption } from '../types';
+import { SearchOption } from '../SearchBox/types';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -28,7 +28,13 @@ const StyledTextField = styled(TextField)`
   }
 `;
 
-const DirectionsInput = ({ params, setInputValue, autocompleteRef, label, onBlur }) => {
+const DirectionsInput = ({
+  params,
+  setInputValue,
+  autocompleteRef,
+  label,
+  onBlur,
+}) => {
   const { InputLabelProps, InputProps, ...restParams } = params;
 
   useEffect(() => {
@@ -87,29 +93,42 @@ const getOptionLabel = (option) =>
   '';
 
 const getOptionCoords = (option) => {
-  const lonLat = (option.star && option.star.center) || option.geometry.coordinates;
+  const lonLat =
+    (option.star && option.star.center) || option.geometry.coordinates;
   return lonLat.join(',');
-}
+};
 
 type Props = {
   label: string;
+  value: string;
   setValue: (value: string) => void;
 };
-export const DirectionsAutocomplete = ({ label, setValue }: Props) => {
+export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
+  const selectedOptionInputValue = useRef('');
   const [options, setOptions] = useState([]);
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
 
   useOptions(inputValue, setOptions);
 
+  const onChange = (_, option) => {
+    console.log('selected', option);
+    setInputValue(getOptionLabel(option));
+    setValue(getOptionCoords(option));
+    selectedOptionInputValue.current = getOptionLabel(option);
+  };
+
   const onBlur = () => {
-    if (options.length > 0) {
-      setInputValue(getOptionLabel(options[0]));
-      setValue(getOptionCoords(options[0]));
+    if (selectedOptionInputValue.current !== inputValue) {
+      if (options.length > 0 && inputValue) {
+        onChange(null, options[0]);
+      } else {
+        setValue('');
+      }
     }
-  }
+  };
 
   return (
     <Row ref={autocompleteRef}>
@@ -120,11 +139,7 @@ export const DirectionsAutocomplete = ({ label, setValue }: Props) => {
         filterOptions={(x) => x}
         getOptionLabel={getOptionLabel}
         getOptionKey={(option) => JSON.stringify(option)}
-        onChange={(_, option) => {
-          console.log('selected', option);
-          setInputValue(getOptionLabel(option));
-          setValue(getOptionCoords(option));
-        }}
+        onChange={onChange}
         autoComplete
         disableClearable
         autoHighlight

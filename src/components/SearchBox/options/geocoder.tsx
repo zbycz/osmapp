@@ -7,6 +7,7 @@ import { getPoiClass } from '../../../services/getPoiClass';
 import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
+import { LonLat } from '../../../services/types';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 
@@ -123,7 +124,12 @@ export const buildPhotonAddress = ({
   },
  ];
  */
-export const renderGeocoder = (option, currentTheme, inputValue, mapCenter) => {
+export const renderGeocoder = (
+  option,
+  currentTheme,
+  inputValue,
+  mapCenter: LonLat,
+) => {
   const { geometry, properties } = option;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 

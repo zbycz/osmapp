@@ -89,7 +89,7 @@ export default {
 
   'directions.get_directions': 'Get Directions',
   'directions.form.starting_point': 'Starting point',
-  'directions.form.destination': 'To',
+  'directions.form.destination': 'Destination',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
