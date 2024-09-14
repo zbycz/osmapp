@@ -107,28 +107,43 @@ const parseWikipedia = (k: string, v: string) => {
 const getWikipediaApiUrl = (country: string, title: string) =>
   encodeUrl`https://${
     country
-  }.wikipedia.org/w/api.php?action=query&prop=pageimages&pithumbsize=${
-    WIDTH
-  }&format=json&titles=${title}&origin=*`;
+  }.wikipedia.org/w/api.php?action=query&prop=images&titles=${title}&format=json&origin=*`;
 
 const fetchWikipedia = async (k: string, v: string): ImagePromise => {
   const { country, title } = parseWikipedia(k, v);
   const url = getWikipediaApiUrl(country, title);
   const data = await fetchJson(url);
   const page = Object.values(data.query.pages)[0] as any;
-  if (!page.pageimage) {
-    return [];
-  }
-  return [
-    {
-      imageUrl: decodeURI(page.thumbnail.source), // it has to be decoded, because wikipedia
-      // encodes brackets (), but encodeURI doesnt
+  const imagesTitles = (page.images as { title: string }[]).map(({ title }) => {
+    const [_, name] = title.split(':', 2);
+    return `File:${name}`;
+  });
+
+  const promiseImages = imagesTitles.slice(0, 6).map(async (title) => {
+    const url = getCommonsFileApiUrl(title);
+    const data = await fetchJson(url);
+    const page = Object.values(data.query.pages)[0] as any;
+    if (!page.imageinfo?.length) {
+      return null;
+    }
+    const image = page.imageinfo[0];
+    return {
+      imageUrl: decodeURI(image.thumburl),
+      link: page.title,
+      linkUrl: image.descriptionshorturl,
+    };
+  });
+
+  const images = await Promise.all(promiseImages);
+
+  return images
+    .filter((img) => img)
+    .map(({ imageUrl, link, linkUrl }) => ({
+      imageUrl,
+      link,
+      linkUrl,
       description: `Wikipedia (${k}=*)`,
-      link: `File:${page.pageimage}`,
-      linkUrl: `https://commons.wikimedia.org/wiki/File:${page.pageimage}`,
-      // portrait: page.thumbnail.width < page.thumbnail.height,
-    },
-  ];
+    }));
 };
 
 export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {

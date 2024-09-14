@@ -1,15 +1,14 @@
 import React from 'react';
 import { ImageDef, isTag } from '../../../services/types';
-import {
-  getImageDefId,
-  ImageType,
-} from '../../../services/images/getImageDefs';
+import { ImageType } from '../../../services/images/getImageDefs';
 import styled from '@emotion/styled';
 import { PanoramaImg } from './Image/PanoramaImg';
 import { GalleryDialog } from './GalleryDialog';
 import { UncertainCover } from './Image/UncertainCover';
 import { InfoButton } from './Image/InfoButton';
 import { PathsSvg } from './PathsSvg';
+import { Image } from './Image';
+import { SeeMoreButton } from './SeeMore';
 
 type GalleryProps = {
   def: ImageDef;
@@ -24,119 +23,6 @@ const GalleryWrapper = styled.div`
   position: relative;
   overflow: hidden;
 `;
-
-const BgImg = ({ url }: { url: string }) => (
-  <img
-    src={url}
-    style={{
-      inset: '0px',
-      objectFit: 'cover',
-      width: '100%',
-      height: '100%',
-      position: 'absolute',
-      display: 'inline-block',
-      filter: 'blur(4px)',
-    }}
-    loading="lazy"
-  />
-);
-
-const MainImg = React.forwardRef<
-  HTMLImageElement,
-  { url: string; alt: string; children?: React.ReactNode }
->(({ url, alt, children }, ref) => (
-  <div
-    style={{
-      position: 'absolute',
-      inset: '0',
-      height: '100%',
-      width: '100%',
-      display: 'flex',
-      justifyContent: 'center',
-    }}
-  >
-    <img
-      ref={ref}
-      src={url}
-      alt={alt}
-      style={{
-        objectFit: 'contain',
-        height: '100%',
-        width: 'auto',
-        display: 'inline-block',
-      }}
-      loading="lazy"
-    />
-    {children}
-  </div>
-));
-
-MainImg.displayName = 'MainImg';
-
-type ImageProps = {
-  image: ImageType;
-  def: ImageDef;
-  high: boolean;
-  wide: boolean;
-  children?: React.ReactNode;
-};
-
-const Image = React.forwardRef<HTMLImageElement, ImageProps>(
-  ({ image, def, high, wide, children }, ref) => (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        ...(high ? { gridRow: 'span 2' } : {}),
-        ...(wide ? { gridColumn: 'span 2' } : {}),
-      }}
-    >
-      <BgImg url={image.imageUrl} />
-      <MainImg url={image.imageUrl} alt={getImageDefId(def)} ref={ref}>
-        {children}
-      </MainImg>
-    </div>
-  ),
-);
-
-Image.displayName = 'Image';
-
-type SeeMoreProps = {
-  image: ImageType;
-  more: number;
-  onClick: () => void;
-};
-
-const SeeMoreButton: React.FC<SeeMoreProps> = ({ image, more, onClick }) => (
-  <button
-    onClick={onClick}
-    style={{
-      width: '100%',
-      height: '100%',
-      position: 'relative',
-      border: 'none',
-      padding: 0,
-      background: 'transparent',
-      cursor: 'pointer',
-    }}
-  >
-    <BgImg url={image.imageUrl} />
-    <span
-      style={{
-        position: 'relative',
-        zIndex: 2,
-        color: '#000',
-        fontSize: '1rem',
-        backgroundColor: 'rgba(212, 212, 216, 0.5)',
-        padding: '0.125rem 0.25rem',
-        borderRadius: '0.125rem',
-      }}
-    >
-      See {more} More
-    </span>
-  </button>
-);
 
 type GallerySlotProps = {
   images: ImageType[];

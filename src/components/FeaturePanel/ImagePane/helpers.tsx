@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 export const HEIGHT = 238;
 
 export const ImageSkeleton = styled.div`
-  width: 200px;
+  width: 100%;
   height: ${HEIGHT}px;
   margin: 0 auto;
   animation: skeleton-loading 1s linear infinite alternate;
