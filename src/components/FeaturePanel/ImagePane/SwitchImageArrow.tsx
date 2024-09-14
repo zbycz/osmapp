@@ -29,6 +29,11 @@ const FloatingButton = styled.button<{ position: 'right' | 'left' }>`
   z-index: 3;
   border: none;
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #000;
+
   ${({ position }) =>
     position === 'right' ? 'right: 0.5rem;' : 'left: 0.5rem;'}
 `;
