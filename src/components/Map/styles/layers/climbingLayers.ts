@@ -28,17 +28,17 @@ const linear = (
 
 const linearByRouteCount = (
   from: number,
-  num1: number,
+  a: number | ExpressionSpecification,
   to: number,
-  num2: number,
+  b: number | ExpressionSpecification,
 ): ExpressionSpecification => [
   'interpolate',
   ['linear'],
   ['get', 'osmappRouteCount'],
   from,
-  num1,
+  a,
   to,
-  num2,
+  b,
 ];
 
 const ifHasImages = (
@@ -56,6 +56,16 @@ const byHasImages = (
   property: 'IMAGE' | 'COLOR',
 ): ExpressionSpecification =>
   ifHasImages(spec.HAS_IMAGES[property], spec.NO_IMAGES[property]);
+
+const ifCrag = (
+  value: ExpressionSpecification | number,
+  elseValue: ExpressionSpecification | number,
+): ExpressionSpecification => [
+  'case',
+  ['==', ['get', 'climbing'], 'crag'],
+  value,
+  elseValue,
+];
 
 const sortKey = [
   '*',
@@ -161,7 +171,7 @@ const crags: LayerSpecification = {
   id: 'climbing-2-crags',
   type: 'symbol',
   source: 'climbing',
-  minzoom: 10,
+  minzoom: 18,
   maxzoom: 20,
   filter: [
     'all',
@@ -187,7 +197,7 @@ const areas: LayerSpecification = {
   id: 'climbing-1-areas',
   type: 'symbol',
   source: 'climbing',
-  maxzoom: 18,
+  maxzoom: 9,
   filter: [
     'all',
     ['==', 'osmappType', 'relationPoint'],
@@ -208,4 +218,48 @@ const areas: LayerSpecification = {
   },
 };
 
-export const climbingLayers: LayerSpecification[] = [...routes, crags, areas];
+const areaSize = linearByRouteCount(0, 0.4, 400, 1);
+const cragSize = linearByRouteCount(0, 0.5, 50, 1);
+
+const mixed: LayerSpecification = {
+  id: 'climbing-1-mixed',
+  type: 'symbol',
+  source: 'climbing',
+  maxzoom: 20,
+  filter: [
+    'all',
+    ['==', 'osmappType', 'relationPoint'],
+    ['in', 'climbing', 'area', 'crag'],
+  ],
+  layout: {
+    'icon-image': ifCrag(
+      byHasImages(CRAG, 'IMAGE'),
+      byHasImages(AREA, 'IMAGE'),
+    ),
+    'icon-size': linear(
+      15,
+      ifCrag(cragSize, areaSize),
+      21,
+      ifCrag(cragSize, areaSize),
+    ),
+    'text-size': linear(15, ifCrag(12, 14), 21, ifCrag(20, 14)),
+    'text-offset': [0, 0.6],
+    ...COMMON_LAYOUT,
+  },
+  paint: {
+    'icon-opacity': hover(1, 0.6),
+    'text-opacity': hover(1, 0.6),
+    'text-color': ifCrag(
+      byHasImages(CRAG, 'COLOR'),
+      byHasImages(AREA, 'COLOR'),
+    ),
+    ...COMMON_PAINT,
+  },
+};
+
+export const climbingLayers: LayerSpecification[] = [
+  ...routes,
+  // crags,
+  // areas,
+  mixed,
+];
