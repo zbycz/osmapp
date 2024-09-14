@@ -1,30 +1,29 @@
-import type {
+import {
   ExpressionSpecification,
   LayerSpecification,
+  SymbolLayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
-import { CLIMBING_LEGEND } from '../../MapFooter/ClimbingLegend';
+import { AREA, CRAG } from '../../MapFooter/ClimbingLegend';
 
 export const CLIMBING_SPRITE = {
   id: 'climbing',
   url: `${window.location.protocol}//${window.location.host}/icons-climbing/sprites/climbing`,
 };
 
-export const CRAG_VISIBLE_FROM_ZOOM = 9;
-
 const linear = (
   from: number,
-  num1: number,
+  a: number | ExpressionSpecification,
   to: number,
-  num2: number,
+  b: number | ExpressionSpecification,
 ): ExpressionSpecification => [
   'interpolate',
   ['linear'],
   ['zoom'],
   from,
-  num1,
+  a,
   to,
-  num2,
+  b,
 ];
 
 const linearByRouteCount = (
@@ -42,8 +41,49 @@ const linearByRouteCount = (
   num2,
 ];
 
-const linearFadeOut = (from: number, to: number): ExpressionSpecification =>
-  linear(from, 1, to, 0.3);
+const ifHasImages = (
+  value: string,
+  elseValue: string,
+): ExpressionSpecification => [
+  'case',
+  ['get', 'osmappHasImages'],
+  value,
+  elseValue,
+];
+
+const byHasImages = (
+  spec: typeof AREA | typeof CRAG,
+  property: 'IMAGE' | 'COLOR',
+): ExpressionSpecification =>
+  ifHasImages(spec.HAS_IMAGES[property], spec.NO_IMAGES[property]);
+
+const sortKey = [
+  '*',
+  -1,
+  [
+    '+',
+    ['get', 'osmappRouteCount'],
+    ['case', ['get', 'osmappHasImages'], 99999, 0], // preference for items with images
+  ],
+] as DataDrivenPropertyValueSpecification<number>;
+
+const hover = (basic: number, hovered: number): ExpressionSpecification => [
+  'case',
+  ['boolean', ['feature-state', 'hover'], false],
+  hovered,
+  basic,
+];
+const step = (
+  a: unknown,
+  from: number,
+  b: unknown,
+): ExpressionSpecification => [
+  'step',
+  ['zoom'],
+  ['literal', a],
+  from,
+  ['literal', b],
+];
 
 const routes: LayerSpecification[] = [
   {
@@ -97,29 +137,31 @@ const routes: LayerSpecification[] = [
   },
 ];
 
-const ifHasImages = <T>(value: T, elseValue: T) =>
-  [
-    'case',
-    ['get', 'osmappHasImages'],
-    value,
-    elseValue,
-  ] as ExpressionSpecification;
+const COMMON_LAYOUT: SymbolLayerSpecification['layout'] = {
+  'icon-optional': false,
+  'icon-ignore-placement': false,
+  'icon-allow-overlap': false,
+  'text-field': '{osmappLabel}',
+  'text-padding': 2,
+  'text-font': ['Noto Sans Bold'],
+  'text-anchor': 'top',
+  'text-max-width': 9,
+  'text-ignore-placement': false,
+  'text-allow-overlap': false,
+  'text-optional': true,
+  'symbol-sort-key': sortKey,
+};
 
-const sortKey = [
-  '*',
-  -1,
-  [
-    '+',
-    ['get', 'osmappRouteCount'],
-    ['case', ['get', 'osmappHasImages'], 99999, 0], // preference for items with images
-  ],
-] as DataDrivenPropertyValueSpecification<number>;
+const COMMON_PAINT: SymbolLayerSpecification['paint'] = {
+  'text-halo-color': '#ffffff',
+  'text-halo-width': 2,
+};
 
 const crags: LayerSpecification = {
   id: 'climbing-2-crags',
   type: 'symbol',
   source: 'climbing',
-  minzoom: CRAG_VISIBLE_FROM_ZOOM,
+  minzoom: 10,
   maxzoom: 20,
   filter: [
     'all',
@@ -127,56 +169,17 @@ const crags: LayerSpecification = {
     ['==', 'climbing', 'crag'],
   ],
   layout: {
-    'text-padding': 2,
-    'text-font': ['Noto Sans Bold'],
-    'text-anchor': 'top',
-
-    'icon-image': ifHasImages(
-      CLIMBING_LEGEND.CRAG.HAS_IMAGES.DEFAULT.IMAGE,
-      CLIMBING_LEGEND.CRAG.NO_IMAGES.DEFAULT.IMAGE,
-    ),
-
-    'icon-optional': false,
-    'icon-ignore-placement': false,
-    'icon-allow-overlap': true,
-    'text-field': '{osmappLabel}',
-    'text-offset': [
-      'step',
-      ['zoom'],
-      ['literal', [0, 0.6]],
-      18.5,
-      ['literal', [0, 0.8]],
-    ],
-    'text-size': linear(15, 12, 21, 18),
-    'text-max-width': 9,
-    'text-ignore-placement': false,
-    'text-allow-overlap': false,
-    'text-optional': true,
+    'icon-image': byHasImages(CRAG, 'IMAGE'),
     'icon-size': linearByRouteCount(0, 0.5, 50, 1),
-    'symbol-sort-key': sortKey,
+    'text-size': linear(15, 12, 21, 18),
+    'text-offset': step([0, 0.6], 18.5, [0, 0.8]),
+    ...COMMON_LAYOUT,
   },
   paint: {
-    'icon-opacity': [
-      'case',
-      ['boolean', ['feature-state', 'hover'], false],
-      0.6,
-      1,
-    ],
-    'text-halo-blur': 0.5,
-    'text-halo-width': 1.5,
-    'text-halo-color': '#ffffff',
-    'text-color': [
-      'case',
-      ['boolean', ['feature-state', 'hover'], false],
-      ifHasImages(
-        CLIMBING_LEGEND.CRAG.HAS_IMAGES.HOVER.COLOR,
-        CLIMBING_LEGEND.CRAG.NO_IMAGES.HOVER.COLOR,
-      ),
-      ifHasImages(
-        CLIMBING_LEGEND.CRAG.HAS_IMAGES.DEFAULT.COLOR,
-        CLIMBING_LEGEND.CRAG.NO_IMAGES.DEFAULT.COLOR,
-      ),
-    ],
+    'icon-opacity': hover(1, 0.6),
+    'text-opacity': hover(1, 0.6),
+    'text-color': byHasImages(CRAG, 'COLOR'),
+    ...COMMON_PAINT,
   },
 };
 
@@ -191,48 +194,17 @@ const areas: LayerSpecification = {
     ['==', 'climbing', 'area'],
   ],
   layout: {
-    'text-padding': 2,
-    'text-font': ['Noto Sans Bold'],
-    'text-anchor': 'top',
-    'text-field': '{osmappLabel}',
-    'text-offset': [0, 0.6],
-    'text-size': ['interpolate', ['linear'], ['zoom'], 11.5, 14],
-    'text-max-width': 9,
+    'icon-image': byHasImages(AREA, 'IMAGE'),
     'icon-size': linearByRouteCount(0, 0.4, 400, 1),
-    'icon-image': ifHasImages(
-      CLIMBING_LEGEND.AREA.HAS_IMAGES.DEFAULT.IMAGE,
-      CLIMBING_LEGEND.AREA.NO_IMAGES.DEFAULT.IMAGE,
-    ),
-    'icon-optional': false,
-    'icon-ignore-placement': false,
-    'icon-allow-overlap': false,
-    'text-ignore-placement': false,
-    'text-allow-overlap': false,
-    'text-optional': true,
-    'symbol-sort-key': sortKey,
+    'text-size': 14,
+    'text-offset': [0, 0.6],
+    ...COMMON_LAYOUT,
   },
   paint: {
-    'icon-opacity': [
-      'case',
-      ['boolean', ['feature-state', 'hover'], false],
-      0.6,
-      1,
-    ],
-    'text-opacity': linearFadeOut(14, 18),
-    'text-color': [
-      'case',
-      ['boolean', ['feature-state', 'hover'], false],
-      ifHasImages(
-        CLIMBING_LEGEND.AREA.HAS_IMAGES.HOVER.COLOR,
-        CLIMBING_LEGEND.AREA.NO_IMAGES.HOVER.COLOR,
-      ),
-      ifHasImages(
-        CLIMBING_LEGEND.AREA.HAS_IMAGES.DEFAULT.COLOR,
-        CLIMBING_LEGEND.AREA.NO_IMAGES.DEFAULT.COLOR,
-      ),
-    ],
-    'text-halo-color': 'rgba(250, 250, 250, 1)',
-    'text-halo-width': 2,
+    'icon-opacity': linear(17, hover(1, 0.6), 18, hover(0.3, 0.1)),
+    'text-opacity': linear(17, hover(1, 0.6), 18, hover(0.3, 0.1)),
+    'text-color': byHasImages(AREA, 'COLOR'),
+    ...COMMON_PAINT,
   },
 };
 
