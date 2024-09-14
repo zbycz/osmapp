@@ -14,30 +14,32 @@ const image2b = { imageUrl: '2.jpg', link: 'different source' } as ImageType;
 describe('mergeResultFn', () => {
   it('should merge to sameUrlResolvedAlsoFrom', () => {
     const prevImages = [
-      { def: def1, image: image1 },
-      { def: def2, image: image2 },
+      { def: def1, images: [image1] },
+      { def: def2, images: [image2] },
     ];
-    const result = mergeResultFn(def3, image2b, [])(prevImages);
+    const result = mergeResultFn(def3, [image2b], [])(prevImages);
     expect(result).toEqual([
-      { def: def1, image: image1 },
+      { def: def1, images: [image1] },
       {
         def: def2,
-        image: {
-          ...image2,
-          sameUrlResolvedAlsoFrom: [image2b],
-        },
+        images: [
+          {
+            ...image2,
+            sameUrlResolvedAlsoFrom: [image2b],
+          },
+        ],
       },
     ]);
   });
 
   it('should sort images', () => {
     const defs = [def1, def2, def3];
-    const prevImages = [{ def: def2, image: image2 }];
+    const prevImages = [{ def: def2, images: [image2] }];
 
-    const result = mergeResultFn(def1, image1, defs)(prevImages);
+    const result = mergeResultFn(def1, [image1], defs)(prevImages);
     expect(result).toEqual([
-      { def: def1, image: image1 },
-      { def: def2, image: image2 },
+      { def: def1, images: [image1] },
+      { def: def2, images: [image2] },
     ]);
   });
 });

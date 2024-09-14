@@ -26,9 +26,12 @@ const TooltipContent = ({ images }: TooltipProps) => {
         </>
       ))}
       {links.map(([linkUrl, link]) => (
-        <a href={linkUrl} target="_blank" key={linkUrl}>
-          {link}
-        </a>
+        <>
+          <a href={linkUrl} target="_blank" key={linkUrl}>
+            {link}
+          </a>
+          <br />
+        </>
       ))}
       {isUncertain && (
         <>
