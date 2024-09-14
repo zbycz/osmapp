@@ -5,6 +5,8 @@ import { NoImage } from './NoImage';
 import { HEIGHT, ImageSkeleton, isElementVisible } from './helpers';
 import { Gallery } from './Gallery';
 import { SwitchImageArrows } from './SwitchImageArrow';
+import { ImageDef } from '../../../services/types';
+import { ImageType } from '../../../services/images/getImageDefs';
 
 export const Wrapper = styled.div`
   height: calc(${HEIGHT}px + 10px); // 10px for scrollbar
@@ -29,23 +31,36 @@ const StyledScrollbars = styled.div`
   scroll-behavior: smooth;
 `;
 
-export const Slider = ({ children, onScroll }) => (
-  <StyledScrollbars onScroll={onScroll}>{children}</StyledScrollbars>
+export const Slider = ({
+  children,
+  onScroll,
+}: {
+  children: React.ReactNode;
+  onScroll?: () => void;
+}) => (
+  <StyledScrollbars
+    onScroll={() => {
+      if (onScroll) onScroll();
+    }}
+  >
+    {children}
+  </StyledScrollbars>
 );
 
-export const FeatureImages = () => {
-  const { loading, groups } = useLoadImages();
+type FeatureImagesUi = {
+  groups: {
+    def: ImageDef;
+    images: ImageType[];
+  }[];
+};
+
+export const FeatureImagesUi: React.FC<FeatureImagesUi> = ({ groups }) => {
   const [rightBouncing, setRightBouncing] = React.useState(true);
   const [visibleIndex, setVisibleIndex] = React.useState(0);
-
   const galleryRefs = React.useRef<React.RefObject<HTMLDivElement>[]>([]);
   galleryRefs.current = groups.map(
     (_, i) => galleryRefs.current[i] ?? React.createRef(),
   );
-
-  if (groups.length === 0) {
-    return <Wrapper>{loading ? <ImageSkeleton /> : <NoImage />}</Wrapper>;
-  }
 
   return (
     <Wrapper>
@@ -82,10 +97,19 @@ export const FeatureImages = () => {
             ref={galleryRefs.current[i]}
             def={group.def}
             images={group.images}
-            isFirst={i === 0}
           />
         ))}
       </Slider>
     </Wrapper>
   );
+};
+
+export const FeatureImages = () => {
+  const { loading, groups } = useLoadImages();
+
+  if (groups.length === 0) {
+    return <Wrapper>{loading ? <ImageSkeleton /> : <NoImage />}</Wrapper>;
+  }
+
+  return <FeatureImagesUi groups={groups} />;
 };

@@ -9,9 +9,9 @@ import { Feature, isInstant, OsmId } from '../../services/types';
 import { useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 
-import { Slider, Wrapper } from './ImagePane/FeatureImages';
-import { Image } from './ImagePane/Image/Image';
+import { FeatureImagesUi, Slider, Wrapper } from './ImagePane/FeatureImages';
 import { getInstantImage } from '../../services/images/getImageDefs';
+import { Gallery } from './ImagePane/Gallery';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -91,6 +91,7 @@ const Header = ({
   </HeadingRow>
 );
 
+/*
 const Gallery = ({ images }) => {
   return (
     <Wrapper>
@@ -102,6 +103,7 @@ const Gallery = ({ images }) => {
     </Wrapper>
   );
 };
+*/
 
 const getOnClickWithHash = (apiId: OsmId) => (e) => {
   e.preventDefault();
@@ -132,7 +134,14 @@ const CragItem = ({ feature }: { feature: Feature }) => {
           routesCount={feature.members?.length}
           imagesCount={images.length}
         />
-        {images.length ? <Gallery images={images} /> : null}
+        {images.length ? (
+          <FeatureImagesUi
+            groups={images.map(({ def, image }) => ({
+              def,
+              images: [image],
+            }))}
+          />
+        ) : null}
       </Container>
     </Link>
   );

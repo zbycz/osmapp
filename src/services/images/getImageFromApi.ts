@@ -34,7 +34,7 @@ const fetchCommonsFile = async (k: string, v: string): ImagePromise => {
 };
 
 const isAudioUrl = (url: string) =>
-  url.endsWith('.ogg') || url.endsWith('.mp3');
+  url.endsWith('.ogg') || url.endsWith('.mp3') || url.endsWith('.wav');
 
 const getCommonsCategoryApiUrl = (title: string) =>
   encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${
