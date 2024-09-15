@@ -14,16 +14,19 @@ export const CLIMBING_SPRITE = {
 const linear = (
   from: number,
   a: number | ExpressionSpecification,
-  to: number,
+  mid: number,
   b: number | ExpressionSpecification,
+  to?: number,
+  c?: number | ExpressionSpecification,
 ): ExpressionSpecification => [
   'interpolate',
   ['linear'],
   ['zoom'],
   from,
   a,
-  to,
+  mid,
   b,
+  ...(to && c ? [to, c] : []),
 ];
 
 const linearByRouteCount = (
@@ -167,59 +170,9 @@ const COMMON_PAINT: SymbolLayerSpecification['paint'] = {
   'text-halo-width': 2,
 };
 
-const crags: LayerSpecification = {
-  id: 'climbing-2-crags',
-  type: 'symbol',
-  source: 'climbing',
-  minzoom: 18,
-  maxzoom: 20,
-  filter: [
-    'all',
-    ['==', 'osmappType', 'relationPoint'],
-    ['==', 'climbing', 'crag'],
-  ],
-  layout: {
-    'icon-image': byHasImages(CRAG, 'IMAGE'),
-    'icon-size': linearByRouteCount(0, 0.5, 50, 1),
-    'text-size': linear(15, 12, 21, 18),
-    'text-offset': step([0, 0.6], 18.5, [0, 0.8]),
-    ...COMMON_LAYOUT,
-  },
-  paint: {
-    'icon-opacity': hover(1, 0.6),
-    'text-opacity': hover(1, 0.6),
-    'text-color': byHasImages(CRAG, 'COLOR'),
-    ...COMMON_PAINT,
-  },
-};
-
-const areas: LayerSpecification = {
-  id: 'climbing-1-areas',
-  type: 'symbol',
-  source: 'climbing',
-  maxzoom: 9,
-  filter: [
-    'all',
-    ['==', 'osmappType', 'relationPoint'],
-    ['==', 'climbing', 'area'],
-  ],
-  layout: {
-    'icon-image': byHasImages(AREA, 'IMAGE'),
-    'icon-size': linearByRouteCount(0, 0.4, 400, 1),
-    'text-size': 14,
-    'text-offset': [0, 0.6],
-    ...COMMON_LAYOUT,
-  },
-  paint: {
-    'icon-opacity': linear(17, hover(1, 0.6), 18, hover(0.3, 0.1)),
-    'text-opacity': linear(17, hover(1, 0.6), 18, hover(0.3, 0.1)),
-    'text-color': byHasImages(AREA, 'COLOR'),
-    ...COMMON_PAINT,
-  },
-};
-
 const areaSize = linearByRouteCount(0, 0.4, 400, 1);
-const cragSize = linearByRouteCount(0, 0.5, 50, 1);
+const cragSize = linearByRouteCount(0, 0.4, 50, 0.7);
+const cragSizeBig = 1;
 
 const mixed: LayerSpecification = {
   id: 'climbing-1-mixed',
@@ -237,12 +190,21 @@ const mixed: LayerSpecification = {
       byHasImages(AREA, 'IMAGE'),
     ),
     'icon-size': linear(
-      15,
+      6,
+      0.4,
+      8,
       ifCrag(cragSize, areaSize),
       21,
-      ifCrag(cragSize, areaSize),
+      ifCrag(cragSizeBig, areaSize),
     ),
-    'text-size': linear(15, ifCrag(12, 14), 21, ifCrag(20, 14)),
+    'text-size': linear(
+      5,
+      ifCrag(12, 12),
+      15,
+      ifCrag(12, 14),
+      21,
+      ifCrag(20, 14),
+    ),
     'text-offset': [0, 0.6],
     ...COMMON_LAYOUT,
   },
@@ -257,9 +219,4 @@ const mixed: LayerSpecification = {
   },
 };
 
-export const climbingLayers: LayerSpecification[] = [
-  ...routes,
-  // crags,
-  // areas,
-  mixed,
-];
+export const climbingLayers: LayerSpecification[] = [...routes, mixed];
