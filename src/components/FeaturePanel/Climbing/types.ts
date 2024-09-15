@@ -35,9 +35,6 @@ export type RouteDifficulty = {
 export type ClimbingRoute = {
   id: string;
   difficulty?: RouteDifficulty; // @TODO RouteDifficulty[]
-  length?: string;
-  author?: string;
-  name?: string;
   paths: { [photoUrl: string]: PathPoints };
   feature: Feature;
   updatedTags: FeatureTags;

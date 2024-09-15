@@ -18,7 +18,7 @@ import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 import { CLIMBING_ROUTE_ROW_HEIGHT } from '../config';
 import { EmptyValue } from './EmptyValue';
 
-const DEBOUNCE_TIME = 1000;
+const DEBOUNCE_TIME = 5000;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -62,15 +62,13 @@ const Row = styled.div<{ $isExpanded?: boolean }>`
   gap: 4px;
 `;
 
-const useTempState = (route, index) => {
-  const { routeSelectedIndex, updateRouteOnIndex } = useClimbingContext();
-  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(getEmptyRoute());
-
-  useEffect(() => {
-    setTempRoute(route);
-  }, [route]);
+const useTempState = (routeId: string) => {
+  const { routes, updateRouteOnIndex } = useClimbingContext();
+  const route = routes.find((route) => route.id === routeId);
+  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(route);
 
   const onValueChange = (e, propName: keyof ClimbingRoute) => {
+    const index = routes.findIndex((route) => route.id === routeId);
     updateRouteOnIndex(index, (route) => ({
       ...route,
       updatedTags: {
@@ -83,31 +81,38 @@ const useTempState = (route, index) => {
   const debouncedValueChange = (e, propName) =>
     debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)(e);
 
-  const onTempRouteChange = (e, propName: keyof ClimbingRoute) => {
-    setTempRoute({
-      ...tempRoute,
+  const onTempRouteChange = (e, propName: string) => {
+    setTempRoute((prevValue) => ({
+      ...prevValue,
       updatedTags: {
-        ...tempRoute.updatedTags,
+        ...prevValue.updatedTags,
         [propName]: e.target.value,
       },
-    });
+    }));
     debouncedValueChange(e, propName);
   };
 
-  // const setTempRoute2 = (key: string, value: string )=> {
-  //   setTempRoute({ ...tempRoute, [key]: value });
-  // }
-
-  return { tempRoute, setTempRoute, onTempRouteChange };
+  return { tempRoute, onTempRouteChange };
 };
 
-export const RenderListRow = ({ route, index, stopPropagation, parentRef }) => {
+type Props = {
+  routeId: string;
+  stopPropagation: (e: React.MouseEvent) => void;
+  parentRef: React.RefObject<HTMLDivElement>;
+};
+
+export const RenderListRow = ({
+  routeId,
+  stopPropagation,
+  parentRef,
+}: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const { userSettings } = useUserSettingsContext();
 
-  const { tempRoute, onTempRouteChange } = useTempState(route, index);
+  const { tempRoute, onTempRouteChange } = useTempState(routeId);
 
   const {
+    routes,
     getMachine,
     isEditMode,
     routeSelectedIndex,
@@ -115,6 +120,9 @@ export const RenderListRow = ({ route, index, stopPropagation, parentRef }) => {
     setRouteIndexExpanded,
     setRouteListTopOffset,
   } = useClimbingContext();
+
+  const index = routes.findIndex((route) => route.id === routeId);
+  const route = routes[index];
 
   useEffect(() => {
     if (
@@ -176,12 +184,12 @@ export const RenderListRow = ({ route, index, stopPropagation, parentRef }) => {
         <NameCell>
           {isReadOnly ? (
             <Opacity opacity={photoPathsCount === 0 ? 0.5 : 1}>
-              {tempRoute.name || <EmptyValue />}
+              {tempRoute.updatedTags.name || <EmptyValue />}
             </Opacity>
           ) : (
             <TextField
               size="small"
-              value={tempRoute.name}
+              value={tempRoute.updatedTags.name}
               placeholder="No name"
               onChange={(e) => onTempRouteChange(e, 'name')}
               onClick={stopPropagation}

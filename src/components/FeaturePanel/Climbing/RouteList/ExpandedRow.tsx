@@ -44,6 +44,16 @@ const ExpandedRowContainer = styled.div<{ $isExpanded?: boolean }>`
 
 const Value = styled.div``;
 
+type Props = {
+  tempRoute: ClimbingRoute;
+  onTempRouteChange: (e: any, key: string) => void;
+  stopPropagation: (e: React.MouseEvent) => void;
+  isReadOnly: boolean;
+  index: number;
+  isExpanded: boolean;
+  osmId: string;
+};
+
 export const ExpandedRow = ({
   tempRoute,
   onTempRouteChange,
@@ -52,7 +62,7 @@ export const ExpandedRow = ({
   index,
   isExpanded,
   osmId,
-}) => {
+}: Props) => {
   const { isEditMode, getMachine, updateRouteOnIndex } = useClimbingContext();
 
   const machine = getMachine();
@@ -74,7 +84,7 @@ export const ExpandedRow = ({
           <Left>
             <List>
               <ListItem>
-                {tempRoute.updatedTags.description && (
+                {!isEditMode && tempRoute.updatedTags.description && (
                   <div>
                     <Label>Description</Label>
                     <Value>
@@ -134,17 +144,19 @@ export const ExpandedRow = ({
                   />
                 </ListItem>
               )}
-              {tempRoute.length && (
+              {tempRoute.updatedTags.length && (
                 <ListItem>
                   {isReadOnly ? (
                     <div>
                       <Label>Length</Label>
-                      <Value>{tempRoute.length || <EmptyValue />}</Value>
+                      <Value>
+                        {tempRoute.updatedTags.length || <EmptyValue />}
+                      </Value>
                     </div>
                   ) : (
                     <TextField
                       size="small"
-                      value={tempRoute.length}
+                      value={tempRoute.updatedTags.length}
                       onChange={(e) => onTempRouteChange(e, 'length')}
                       onClick={stopPropagation}
                       style={{ marginTop: 10 }}
@@ -156,16 +168,18 @@ export const ExpandedRow = ({
               )}
 
               <ListItem>
-                {isReadOnly && tempRoute.author && (
+                {isReadOnly && tempRoute.updatedTags.author && (
                   <div>
                     <Label>Author</Label>
-                    <Value>{tempRoute.author || <EmptyValue />}</Value>
+                    <Value>
+                      {tempRoute.updatedTags.author || <EmptyValue />}
+                    </Value>
                   </div>
                 )}
                 {isEditMode && (
                   <TextField
                     size="small"
-                    value={tempRoute.author}
+                    value={tempRoute.updatedTags.author}
                     onChange={(e) => onTempRouteChange(e, 'author')}
                     onClick={stopPropagation}
                     style={{ marginTop: 10 }}

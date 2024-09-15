@@ -9,10 +9,7 @@ export const getEmptyRoute = (): ClimbingRoute => {
   const tags = { climbing: 'route_bottom', sport: 'climbing' };
   return {
     id: '',
-    name: '',
-    author: '',
     difficulty: { grade: '', gradeSystem: 'uiaa' },
-    length: '',
     paths: {},
     updatedTags: { ...tags },
     feature: {
