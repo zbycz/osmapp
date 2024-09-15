@@ -42,7 +42,7 @@ const MainImg = React.forwardRef<
       style={{
         objectFit: 'contain',
         height: '100%',
-        width: 'auto',
+        width: '100%',
         display: 'inline-block',
       }}
       loading="lazy"

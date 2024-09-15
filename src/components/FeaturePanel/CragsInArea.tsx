@@ -9,9 +9,8 @@ import { Feature, isInstant, OsmId } from '../../services/types';
 import { useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 
-import { FeatureImagesUi, Slider, Wrapper } from './ImagePane/FeatureImages';
+import { FeatureImagesUi } from './ImagePane/FeatureImages';
 import { getInstantImage } from '../../services/images/getImageDefs';
-import { Gallery } from './ImagePane/Gallery';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -90,20 +89,6 @@ const Header = ({
     <ArrowIcon color="primary" />
   </HeadingRow>
 );
-
-/*
-const Gallery = ({ images }) => {
-  return (
-    <Wrapper>
-      <Slider>
-        {images.map((item) => (
-          <Image key={item.image.imageUrl} def={item.def} image={item.image} />
-        ))}
-      </Slider>
-    </Wrapper>
-  );
-};
-*/
 
 const getOnClickWithHash = (apiId: OsmId) => (e) => {
   e.preventDefault();

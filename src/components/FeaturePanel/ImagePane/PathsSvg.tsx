@@ -18,29 +18,18 @@ import { Size } from './types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getKey } from '../../../services/helpers';
 
-const StyledSvg = styled.svg`
+const StyledSvg = styled.svg<{ size: Size }>`
   position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
   pointer-events: none;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: ${({ size }) => `${size.width}px`};
+  height: ${({ size }) => `${size.height}px`};
 `;
 
 const Svg = ({ children, size }) => (
-  <StyledSvg
-    viewBox={`0 0 ${size.width} ${size.height}`}
-    preserveAspectRatio="none" // when we load image we overlay and stretch the svg
-    style={{
-      display: 'absolute',
-      top: 0,
-      bottom: 0,
-      left: '50%',
-      transform: 'translateX(-50%)',
-      width: `${size.width}px`,
-      height: `${size.height}px`,
-    }}
-  >
+  <StyledSvg size={size} viewBox={`0 0 ${size.width} ${size.height}`}>
     {children}
   </StyledSvg>
 );

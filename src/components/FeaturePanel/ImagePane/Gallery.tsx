@@ -9,6 +9,7 @@ import { InfoButton } from './Image/InfoButton';
 import { PathsSvg } from './PathsSvg';
 import { Image } from './Image';
 import { SeeMoreButton } from './SeeMore';
+import { calculateImageSize } from './helpers';
 
 type GalleryProps = {
   def: ImageDef;
@@ -68,13 +69,7 @@ const GallerySlot: React.FC<GallerySlotProps> = ({
       ref={imgRef}
     >
       {hasPaths && imgRef.current && (
-        <PathsSvg
-          def={def}
-          size={{
-            width: imgRef.current.width,
-            height: imgRef.current.height,
-          }}
-        />
+        <PathsSvg def={def} size={calculateImageSize(imgRef.current)} />
       )}
     </Image>
   );

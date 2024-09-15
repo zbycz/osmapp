@@ -30,3 +30,26 @@ export const isElementVisible = (element: HTMLElement) => {
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 };
+
+/**
+ * Calculates the displayed size of an image while maintaining its aspect ratio,
+ * based on the container's dimensions. This is useful when using `object-fit: cover`.
+ */
+export function calculateImageSize(img: HTMLImageElement) {
+  const { naturalWidth, naturalHeight, clientWidth, clientHeight } = img;
+
+  const imageAspectRatio = naturalWidth / naturalHeight;
+  const containerAspectRatio = clientWidth / clientHeight;
+
+  if (containerAspectRatio > imageAspectRatio) {
+    return {
+      width: clientHeight * imageAspectRatio,
+      height: clientHeight,
+    };
+  }
+
+  return {
+    width: clientWidth,
+    height: clientWidth / imageAspectRatio,
+  };
+}
