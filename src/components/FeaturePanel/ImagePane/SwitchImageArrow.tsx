@@ -79,29 +79,27 @@ export const SwitchImageArrows: React.FC<SwitchImageArrowsProps> = ({
   rightBouncing,
   showLeft = true,
   showRight = true,
-}) => {
-  return (
-    <>
-      {showLeft && (
-        <ArrowButton
-          rightBouncing={false}
-          position="left"
-          onClick={() => {
-            if (onLeft) onLeft();
-            if (onClick) onClick('left');
-          }}
-        />
-      )}
-      {showRight && (
-        <ArrowButton
-          rightBouncing={rightBouncing}
-          position="right"
-          onClick={() => {
-            if (onRight) onRight();
-            if (onClick) onClick('right');
-          }}
-        />
-      )}
-    </>
-  );
-};
+}) => (
+  <>
+    {showLeft && (
+      <ArrowButton
+        rightBouncing={false}
+        position="left"
+        onClick={() => {
+          if (onLeft) onLeft();
+          if (onClick) onClick('left');
+        }}
+      />
+    )}
+    {showRight && (
+      <ArrowButton
+        rightBouncing={rightBouncing}
+        position="right"
+        onClick={() => {
+          if (onRight) onRight();
+          if (onClick) onClick('right');
+        }}
+      />
+    )}
+  </>
+);

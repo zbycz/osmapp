@@ -104,6 +104,26 @@ const parseWikipedia = (k: string, v: string) => {
   return { country: 'en', title: v };
 };
 
+const isAllowedWikipedia = (title: string) => {
+  const forbiddenPatterns = [
+    /File:Commons-logo\.svg/,
+    /File:Compass rose pale\.svg/,
+    /File:Arrleft\.svg/,
+    /File:Arrright\.svg/,
+    /File:Info Simple\.svg/,
+    /File:Blue pencil\.svg/,
+    /File:Fairytale warning\.png/,
+    /File:([A-Z][a-z]*)( transit icons -)? (S|U)\d{1,2}(-20\d{2})?\.svg/,
+    /File:BSicon (.*)?\.svg/,
+    /File:Deutsche Bahn AG-Logo\.svg/,
+    /File:S-Bahn-Logo\.svg/,
+    /File:Airplane silhouette\.svg/,
+    /File:(.*) Audiologo\.ogg/,
+    /File:Bundes(straße|autobahn) \d+ number\.svg/,
+  ];
+  return !forbiddenPatterns.some((pattern) => pattern.test(title));
+};
+
 const getWikipediaApiUrl = (country: string, title: string) =>
   encodeUrl`https://${
     country
@@ -119,21 +139,23 @@ const fetchWikipedia = async (k: string, v: string): ImagePromise => {
     return `File:${name}`;
   });
 
-  const promiseImages = imagesTitles.slice(0, 6).map(async (title) => {
-    const url = getCommonsFileApiUrl(title);
-    const data = await fetchJson(url);
-    const page = Object.values(data.query.pages)[0] as any;
-    if (!page.imageinfo?.length) {
-      return null;
-    }
-    const image = page.imageinfo[0];
-    return {
-      imageUrl: decodeURI(image.thumburl),
-      link: page.title,
-      linkUrl: image.descriptionshorturl,
-    };
-  });
-
+  const promiseImages = imagesTitles
+    .filter(isAllowedWikipedia)
+    .slice(0, 10)
+    .map(async (title) => {
+      const url = getCommonsFileApiUrl(title);
+      const data = await fetchJson(url);
+      const page = Object.values(data.query.pages)[0] as any;
+      if (!page.imageinfo?.length) {
+        return null;
+      }
+      const image = page.imageinfo[0];
+      return {
+        imageUrl: decodeURI(image.thumburl),
+        link: page.title,
+        linkUrl: image.descriptionshorturl,
+      };
+    });
   const images = await Promise.all(promiseImages);
 
   return images
@@ -187,7 +209,8 @@ export const getImageFromApi = async (def: ImageDef): ImagePromise => {
       return img ? [img] : [];
     }
 
-    return await getImageFromApiRaw(def);
+    const images = await getImageFromApiRaw(def);
+    return images.filter((img) => img);
   } catch (e) {
     console.warn(e); // eslint-disable-line no-console
     return [];

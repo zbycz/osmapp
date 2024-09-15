@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { useLoadImages } from './useLoadImages';
+import { ImageGroup, useLoadImages } from './useLoadImages';
 import { NoImage } from './NoImage';
 import { HEIGHT, ImageSkeleton, isElementVisible } from './helpers';
 import { Gallery } from './Gallery';
@@ -47,14 +47,9 @@ export const Slider = ({
   </StyledScrollbars>
 );
 
-type FeatureImagesUi = {
-  groups: {
-    def: ImageDef;
-    images: ImageType[];
-  }[];
-};
-
-export const FeatureImagesUi: React.FC<FeatureImagesUi> = ({ groups }) => {
+export const FeatureImagesUi: React.FC<{ groups: ImageGroup[] }> = ({
+  groups,
+}) => {
   const [rightBouncing, setRightBouncing] = React.useState(true);
   const [visibleIndex, setVisibleIndex] = React.useState(0);
   const galleryRefs = React.useRef<React.RefObject<HTMLDivElement>[]>([]);
@@ -89,15 +84,18 @@ export const FeatureImagesUi: React.FC<FeatureImagesUi> = ({ groups }) => {
             ({ current: el }) => isElementVisible(el),
           );
           setVisibleIndex(currentIndex);
+          setRightBouncing(false);
         }}
       >
         {groups.map((group, i) => (
-          <Gallery
-            key={i}
-            ref={galleryRefs.current[i]}
-            def={group.def}
-            images={group.images}
-          />
+          <>
+            <Gallery
+              key={i}
+              ref={galleryRefs.current[i]}
+              def={group.def}
+              images={group.images}
+            />
+          </>
         ))}
       </Slider>
     </Wrapper>

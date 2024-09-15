@@ -8,55 +8,9 @@ import { getImageFromApi } from '../../../services/images/getImageFromApi';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { ImageDef, isInstant } from '../../../services/types';
 
-export type ImageGroup = { def: ImageDef; images: ImageType[] }[];
+export type ImageGroup = { def: ImageDef; images: ImageType[] };
 
-export const mergeResultFn =
-  (def: ImageDef, imgs: (ImageType | null)[], defs: ImageDef[]) =>
-  (prevImages: ImageGroup): ImageGroup => {
-    const images = imgs.filter((x) => x);
-    if (images.length === 0) {
-      return prevImages;
-    }
-
-    const imageUrls = images.map(({ imageUrl }) => imageUrl);
-
-    const found = prevImages.find((group) =>
-      group.images.some((img) => imageUrls.includes(img.imageUrl)),
-    );
-
-    if (found) {
-      // Update existing group
-      const updatedGroup = {
-        ...found,
-        images: found.images.map((img) => {
-          if (!imageUrls.includes(img.imageUrl)) return img;
-
-          return {
-            ...img,
-            sameUrlResolvedAlsoFrom: [
-              ...(img.sameUrlResolvedAlsoFrom ?? []),
-              ...images,
-            ],
-          };
-        }),
-      };
-
-      return prevImages.map((group) =>
-        group.def === found.def ? updatedGroup : group,
-      );
-    }
-
-    // Add new group
-    const sorted = [...prevImages, { def, images }].sort((a, b) => {
-      const aIndex = defs.findIndex((item) => item === a.def);
-      const bIndex = defs.findIndex((item) => item === b.def);
-      return aIndex - bIndex;
-    });
-
-    return sorted;
-  };
-
-const getInitialState = (defs: ImageDef[]): ImageGroup =>
+const getInitialState = (defs: ImageDef[]): ImageGroup[] =>
   defs?.filter(isInstant)?.map((def) => ({
     def,
     images: getInstantImage(def) ? [getInstantImage(def)] : [],
@@ -69,13 +23,19 @@ export const useLoadImages = () => {
 
   const initialState = useMemo(() => getInitialState(defs), [defs]);
   const [loading, setLoading] = useState(apiDefs.length > 0);
-  const [groups, setGroups] = useState<ImageGroup>(initialState);
+  const [groups, setGroups] = useState<ImageGroup[]>(initialState);
 
   useEffect(() => {
     setGroups(initialState);
     const promises = apiDefs.map(async (def) => {
       const images = await getImageFromApi(def);
-      setGroups(mergeResultFn(def, images, defs));
+      setGroups((prev) =>
+        [...prev, { def, images }].sort((a, b) => {
+          const aIndex = defs.findIndex((item) => item === a.def);
+          const bIndex = defs.findIndex((item) => item === b.def);
+          return aIndex - bIndex;
+        }),
+      );
     });
 
     Promise.all(promises).then(() => {
