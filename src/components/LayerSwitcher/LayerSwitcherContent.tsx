@@ -1,10 +1,11 @@
 import React from 'react';
-import { PersonAdd, WrongLocation } from '@mui/icons-material';
+import PersonAdd from '@mui/icons-material/PersonAdd';
+import WrongLocation from '@mui/icons-material/WrongLocation';
 import {
-  ListItem,
   ListItemText,
   ListItemSecondaryAction,
   Tooltip,
+  ListItemButton,
 } from '@mui/material';
 import { dotToOptionalBr } from '../helpers';
 import {
@@ -17,7 +18,6 @@ import {
 } from './helpers';
 import { osmappLayers } from './osmappLayers';
 import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
-import { usePersistedState } from '../utils/usePersistedState';
 import { Overlays } from './Overlays';
 import { AddUserLayerButton } from './AddLayerButton';
 
@@ -76,8 +76,7 @@ export const LayerSwitcherContent = () => {
           const isOutsideOfView =
             bboxes && !bboxes.some((b) => isViewInsideBbox(view, b));
           return (
-            <ListItem
-              button
+            <ListItemButton
               key={key}
               selected={activeLayers.includes(key)}
               onClick={setActiveBaseMap}
@@ -103,7 +102,7 @@ export const LayerSwitcherContent = () => {
                   />
                 )}
               </ListItemSecondaryAction>
-            </ListItem>
+            </ListItemButton>
           );
         })}
       </StyledList>

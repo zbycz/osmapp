@@ -7,7 +7,7 @@ import {
   TextField,
   Autocomplete,
 } from '@mui/material';
-import { Star } from '@mui/icons-material';
+import StarIcon from '@mui/icons-material/Star';
 import { LayerIndex } from './helpers/loadLayers';
 import { isViewInsideBbox } from './helpers';
 import { useMapStateContext } from '../utils/MapStateContext';
@@ -90,7 +90,7 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
             >
               {opt.type === 'layerIndex' ? (
                 <>
-                  {opt.layer.best && <Star />}
+                  {opt.layer.best && <StarIcon />}
                   {getLayerLabel(opt.layer)}
                 </>
               ) : (
