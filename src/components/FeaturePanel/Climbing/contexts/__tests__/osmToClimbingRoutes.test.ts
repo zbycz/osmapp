@@ -88,6 +88,7 @@ const climbingRoutes = [
     paths: {},
     photoToKeyMap: {},
     feature: feature.memberFeatures[0],
+    updatedTags: feature.memberFeatures[0].tags,
   },
   {
     difficulty: {
@@ -133,6 +134,7 @@ const climbingRoutes = [
       'jickovice3.jpg': 'wikimedia_commons3',
     },
     feature: feature.memberFeatures[1],
+    updatedTags: feature.memberFeatures[1].tags,
   },
 ];
 
