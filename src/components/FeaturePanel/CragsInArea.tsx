@@ -90,7 +90,7 @@ const Header = ({
   </HeadingRow>
 );
 
-const getOnClickWithHash = (apiId: OsmId) => (e) => {
+const getOnClickWithHash = (apiId: OsmId) => (e: React.MouseEvent) => {
   e.preventDefault();
   Router.push(`/${getUrlOsmId(apiId)}${window.location.hash}`);
 };
@@ -107,28 +107,28 @@ const CragItem = ({ feature }: { feature: Feature }) => {
     })) ?? [];
 
   return (
-    <Link
-      href={`/${getUrlOsmId(feature.osmMeta)}`}
-      onClick={getOnClickWithHash(feature.osmMeta)}
-      onMouseEnter={mobileMode ? undefined : handleHover}
-      onMouseLeave={() => setPreview(null)}
-    >
-      <Container>
+    <Container>
+      <Link
+        href={`/${getUrlOsmId(feature.osmMeta)}`}
+        onClick={getOnClickWithHash(feature.osmMeta)}
+        onMouseEnter={mobileMode ? undefined : handleHover}
+        onMouseLeave={() => setPreview(null)}
+      >
         <Header
           label={getLabel(feature)}
           routesCount={feature.members?.length}
           imagesCount={images.length}
         />
-        {images.length ? (
-          <FeatureImagesUi
-            groups={images.map(({ def, image }) => ({
-              def,
-              images: [image],
-            }))}
-          />
-        ) : null}
-      </Container>
-    </Link>
+      </Link>
+      {!!images.length && (
+        <FeatureImagesUi
+          groups={images.map(({ def, image }) => ({
+            def,
+            images: [image],
+          }))}
+        />
+      )}
+    </Container>
   );
 };
 
