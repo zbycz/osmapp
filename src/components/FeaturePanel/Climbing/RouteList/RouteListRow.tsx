@@ -6,7 +6,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton, TextField } from '@mui/material';
 import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { emptyRoute } from '../utils/emptyRoute';
+import { getEmptyRoute } from '../utils/getEmptyRoute';
 import { RouteNumber } from '../RouteNumber';
 import { ExpandedRow } from './ExpandedRow';
 import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
@@ -16,8 +16,9 @@ import { isTicked } from '../../../../services/ticks';
 import { getWikimediaCommonsPhotoPathKeys } from '../utils/photo';
 import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 import { CLIMBING_ROUTE_ROW_HEIGHT } from '../config';
+import { EmptyValue } from './EmptyValue';
 
-const DEBOUNCE_TIME = 1000;
+const DEBOUNCE_TIME = 5000;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -61,28 +62,57 @@ const Row = styled.div<{ $isExpanded?: boolean }>`
   gap: 4px;
 `;
 
-const EmptyValue = styled.div`
-  color: #666;
-`;
+const useTempState = (routeId: string) => {
+  const { routes, updateRouteOnIndex } = useClimbingContext();
+  const route = routes.find((route) => route.id === routeId);
+  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(route);
+
+  const onValueChange = (e, propName: keyof ClimbingRoute) => {
+    const index = routes.findIndex((route) => route.id === routeId);
+    updateRouteOnIndex(index, (route) => ({
+      ...route,
+      updatedTags: {
+        ...route.updatedTags,
+        [propName]: e.target.value,
+      },
+    }));
+  };
+
+  const debouncedValueChange = (e, propName) =>
+    debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)(e);
+
+  const onTempRouteChange = (e, propName: string) => {
+    setTempRoute((prevValue) => ({
+      ...prevValue,
+      updatedTags: {
+        ...prevValue.updatedTags,
+        [propName]: e.target.value,
+      },
+    }));
+    debouncedValueChange(e, propName);
+  };
+
+  return { tempRoute, onTempRouteChange };
+};
+
+type Props = {
+  routeId: string;
+  stopPropagation: (e: React.MouseEvent) => void;
+  parentRef: React.RefObject<HTMLDivElement>;
+};
 
 export const RenderListRow = ({
-  route,
-  index,
-  onRouteChange,
+  routeId,
   stopPropagation,
   parentRef,
-}) => {
+}: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(emptyRoute);
   const { userSettings } = useUserSettingsContext();
 
-  const getText = (text: string) => text || <EmptyValue>?</EmptyValue>;
-
-  useEffect(() => {
-    setTempRoute(route);
-  }, [route]);
+  const { tempRoute, onTempRouteChange } = useTempState(routeId);
 
   const {
+    routes,
     getMachine,
     isEditMode,
     routeSelectedIndex,
@@ -90,6 +120,9 @@ export const RenderListRow = ({
     setRouteIndexExpanded,
     setRouteListTopOffset,
   } = useClimbingContext();
+
+  const index = routes.findIndex((route) => route.id === routeId);
+  const route = routes[index];
 
   useEffect(() => {
     if (
@@ -126,18 +159,6 @@ export const RenderListRow = ({
 
   const machine = getMachine();
 
-  const onValueChange = (e, propName: keyof ClimbingRoute) => {
-    onRouteChange(e, index, propName);
-  };
-
-  const debouncedValueChange = (e, propName) =>
-    debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)(e);
-
-  const onTempRouteChange = (e, propName: keyof ClimbingRoute) => {
-    setTempRoute({ ...tempRoute, [propName]: e.target.value });
-    debouncedValueChange(e, propName);
-  };
-
   const isExpanded = routeIndexExpanded === index;
 
   const isReadOnly =
@@ -145,17 +166,6 @@ export const RenderListRow = ({
     (machine.currentStateName !== 'editRoute' &&
       machine.currentStateName !== 'extendRoute') ||
     !isExpanded;
-  const expandedRowProps = {
-    tempRoute,
-    getText,
-    onTempRouteChange,
-    setTempRoute,
-    stopPropagation,
-    isReadOnly,
-    index,
-    isExpanded,
-    osmId,
-  };
   const routeDifficulties = getDifficulties(tempRoute.feature?.tags);
   const hasTick = isTicked(osmId);
 
@@ -174,12 +184,12 @@ export const RenderListRow = ({
         <NameCell>
           {isReadOnly ? (
             <Opacity opacity={photoPathsCount === 0 ? 0.5 : 1}>
-              {getText(tempRoute.name)}
+              {tempRoute.updatedTags.name || <EmptyValue />}
             </Opacity>
           ) : (
             <TextField
               size="small"
-              value={tempRoute.name}
+              value={tempRoute.updatedTags.name}
               placeholder="No name"
               onChange={(e) => onTempRouteChange(e, 'name')}
               onClick={stopPropagation}
@@ -209,7 +219,17 @@ export const RenderListRow = ({
         </Cell>
       </Row>
 
-      <ExpandedRow {...expandedRowProps} />
+      <ExpandedRow
+        {...{
+          tempRoute,
+          onTempRouteChange,
+          stopPropagation,
+          isReadOnly,
+          index,
+          isExpanded,
+          osmId,
+        }}
+      />
     </Container>
   );
 };

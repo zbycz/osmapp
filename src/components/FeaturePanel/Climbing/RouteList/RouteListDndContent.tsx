@@ -241,9 +241,8 @@ export const RouteListDndContent = ({ isEditable }) => {
                 )}
                 <RowContent>
                   <RenderListRow
-                    route={item.route}
-                    onRouteChange={onRouteChange}
-                    index={index}
+                    key={item.route.id}
+                    routeId={item.route.id}
                     stopPropagation={stopPropagation}
                     parentRef={parentRef}
                   />
