@@ -1,6 +1,11 @@
 import { Feature } from '../services/types';
 import { roundedToDeg } from '../utils';
 import { intl, t } from '../services/intl';
+import { buildAddress } from '../services/helpers';
+
+const getBuiltAddress = (feature: Feature) => {
+  return buildAddress(feature.tags, feature.center);
+};
 
 export const getSubclass = ({ layer, osmMeta, properties, schema }: Feature) =>
   schema?.label ||
@@ -13,7 +18,8 @@ const getRefLabel = (feature: Feature) =>
 
 const getName = ({ tags }: Feature) => tags[`name:${intl.lang}`] || tags.name;
 
-export const hasName = (feature: Feature) => feature.point || getName(feature); // we dont want to show "No name" for point
+export const hasName = (feature: Feature) =>
+  feature.point || getName(feature) || getBuiltAddress(feature); // we dont want to show "No name" for point
 
 export const getHumanPoiType = (feature: Feature) =>
   hasName(feature) ? getSubclass(feature) : t('featurepanel.no_name');
@@ -24,7 +30,12 @@ export const getLabel = (feature: Feature) => {
     return roundedToDeg(roundedCenter);
   }
 
-  return getName(feature) || getRefLabel(feature) || getSubclass(feature);
+  return (
+    getName(feature) ||
+    getRefLabel(feature) ||
+    getBuiltAddress(feature) ||
+    getSubclass(feature) // generic label like "Recycling point"
+  );
 };
 
 export const getParentLabel = (feature: Feature) => {
