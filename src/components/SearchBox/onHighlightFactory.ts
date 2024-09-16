@@ -1,6 +1,7 @@
 import { Feature } from '../../services/types';
+import { GeocoderOption, Option } from './types';
 
-const getElementType = (osmType) => {
+const getElementType = (osmType: string) => {
   switch (osmType) {
     case 'R':
       return 'relation';
@@ -13,9 +14,9 @@ const getElementType = (osmType) => {
   }
 };
 
-export const getSkeleton = (option): Feature => {
-  const center = option.geometry.coordinates;
-  const { osm_id: id, osm_type: osmType, name } = option.properties;
+export const getSkeleton = ({ geocoder }: GeocoderOption): Feature => {
+  const center = geocoder.geometry.coordinates;
+  const { osm_id: id, osm_type: osmType, name } = geocoder.properties;
   const type = getElementType(osmType);
   const [lon, lat] = center;
 
@@ -24,20 +25,22 @@ export const getSkeleton = (option): Feature => {
     skeleton: true,
     nonOsmObject: false,
     osmMeta: { type, id: parseInt(id, 10) },
-    center: [parseFloat(lon), parseFloat(lat)],
+    center: [parseFloat(`${lon}`), parseFloat(`${lat}`)],
     tags: { name },
-    properties: { class: option.class, subclass: '' },
+    properties: { class: geocoder.properties.class, subclass: '' },
   };
 };
 
-export const onHighlightFactory = (setPreview) => (e, option) => {
-  if (option?.star?.center) {
-    const { center } = option.star;
-    setPreview({ center });
-    return;
-  }
+export const onHighlightFactory =
+  (setPreview: (feature: unknown) => void) => (_: never, option: Option) => {
+    if (!option) return;
+    if (option.type === 'star' && option.star.center) {
+      const { center } = option.star;
+      setPreview({ center });
+      return;
+    }
 
-  if (option?.geometry?.coordinates) {
-    setPreview(getSkeleton(option));
-  }
-};
+    if (option.type === 'geocoder' && option.geocoder.geometry?.coordinates) {
+      setPreview(getSkeleton(option));
+    }
+  };

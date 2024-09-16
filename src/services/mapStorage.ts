@@ -1,6 +1,6 @@
 import maplibregl, { GeoJSONSource } from 'maplibre-gl';
 
-let map: maplibregl.Map;
+let map: maplibregl.Map | undefined = undefined;
 export const setGlobalMap = (newMap: maplibregl.Map) => {
   map = newMap;
 };

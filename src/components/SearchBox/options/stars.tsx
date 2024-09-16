@@ -3,12 +3,13 @@ import { Grid, Typography } from '@mui/material';
 import React from 'react';
 import { getHumanDistance, IconPart } from '../utils';
 import type { Star } from '../../utils/StarsContext';
+import { StarOption } from '../types';
 
 // TODO filter stars by inputValue
-export const getStarsOptions = (stars: Star[]) =>
-  stars.map((star) => ({ star }));
+export const getStarsOptions = (stars: Star[]): StarOption[] =>
+  stars.map((star) => ({ type: 'star', star }));
 
-export const renderStar = (star, mapCenter) => {
+export const renderStar = ({ star }: StarOption, mapCenter) => {
   // Note: for compatibility, `center` is optional
   const distance = star.center
     ? getHumanDistance(mapCenter, star.center)

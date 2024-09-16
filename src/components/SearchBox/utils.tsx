@@ -7,8 +7,10 @@ import parse from 'autosuggest-highlight/parse';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { getGlobalMap } from '../../services/mapStorage';
-import { LonLat } from '../../services/types';
+import { LonLat, MapCenter } from '../../services/types';
 import { DotLoader, isImperial } from '../helpers';
+import { GeocoderOption, Option } from './types';
+import { buildPhotonAddress } from './options/geocoder';
 
 export const IconPart = styled.div`
   width: 50px;
@@ -18,11 +20,11 @@ export const IconPart = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-export const getDistance = (point1, point2) => {
-  const lat1 = (parseFloat(point1.lat) * Math.PI) / 180;
-  const lng1 = (parseFloat(point1.lon) * Math.PI) / 180;
-  const lat2 = (parseFloat(point2.lat) * Math.PI) / 180;
-  const lng2 = (parseFloat(point2.lon) * Math.PI) / 180;
+export const getDistance = (point1: MapCenter, point2: MapCenter) => {
+  const lat1 = (parseFloat(`${point1.lat}`) * Math.PI) / 180;
+  const lng1 = (parseFloat(`${point1.lon}`) * Math.PI) / 180;
+  const lat2 = (parseFloat(`${point2.lat}`) * Math.PI) / 180;
+  const lng2 = (parseFloat(`${point2.lon}`) * Math.PI) / 180;
   const latdiff = lat2 - lat1;
   const lngdiff = lng2 - lng1;
 
@@ -38,14 +40,14 @@ export const getDistance = (point1, point2) => {
   );
 };
 
-export const getHumanDistance = (mapCenter, [lon, lat]: LonLat) => {
+export const getHumanDistance = (mapCenter: MapCenter, [lon, lat]: LonLat) => {
   const distKm = getDistance(mapCenter, { lon, lat }) / 1000;
   const dist = isImperial() ? distKm * 0.621371192 : distKm;
   const rounded = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist);
   return isImperial() ? `${rounded} mi` : `${rounded} km`;
 };
 
-export const useMapCenter = () => {
+export const useMapCenter = (): MapCenter => {
   const {
     view: [, lat, lon],
   } = useMapStateContext();
@@ -64,10 +66,11 @@ export const renderLoader = () => (
   </>
 );
 
-export const fitBounds = (option) => {
+export const fitBounds = ({ geocoder }: GeocoderOption) => {
   // this condition is maybe not used in current API photon
-  if (option.properties.extent) {
-    const [w, s, e, n] = option.properties.extent;
+  const { properties } = geocoder;
+  if (properties.extent) {
+    const [w, s, e, n] = properties.extent;
     const bbox = new maplibregl.LngLatBounds([w, s], [e, n]);
     const panelWidth = window.innerWidth > 700 ? 410 : 0;
     getGlobalMap()?.fitBounds(bbox, {
@@ -76,19 +79,19 @@ export const fitBounds = (option) => {
     return;
   }
 
-  const coords = option.geometry.coordinates;
+  const coords = geocoder.geometry.coordinates;
   if (coords.length === 2 && coords.every((num) => !Number.isNaN(num))) {
     getGlobalMap()?.flyTo({ center: coords, zoom: 17 });
   } else {
     // eslint-disable-next-line no-console
     console.warn(
       'fitBounds(): option has no extent or coordinates',
-      JSON.stringify(option),
+      JSON.stringify(geocoder),
     );
   }
 };
 
-export const highlightText = (resultText, inputValue) => {
+export const highlightText = (resultText: string, inputValue: string) => {
   const matches = match(resultText, inputValue, {
     insideWords: true,
     findAllOccurrences: true,
@@ -100,4 +103,18 @@ export const highlightText = (resultText, inputValue) => {
       {part.text}
     </span>
   ));
+};
+
+export const getOptionLabel = (option: Option) => {
+  return (
+    (option.type === 'geocoder' && option.geocoder.properties?.name) ||
+    (option.type === 'preset' && option.preset?.presetForSearch?.name) ||
+    (option.type === 'overpass' && option.overpass?.inputValue) ||
+    (option.type === 'star' && option.star.label) ||
+    (option.type === 'loader' && '') ||
+    (option.type === 'geocoder' &&
+      option.geocoder.properties &&
+      buildPhotonAddress(option.geocoder.properties)) ||
+    ''
+  );
 };

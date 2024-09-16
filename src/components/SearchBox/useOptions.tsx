@@ -9,8 +9,12 @@ import {
 import { getStarsOptions } from './options/stars';
 import { getOverpassOptions } from './options/overpass';
 import { getPresetOptions } from './options/preset';
+import { Option } from './types';
 
-export const useOptions = (inputValue: string, setOptions) => {
+export const useOptions = (
+  inputValue: string,
+  setOptions: React.Dispatch<React.SetStateAction<Option[]>>,
+) => {
   const { view } = useMapStateContext();
   const { stars } = useStarsContext();
 
@@ -30,7 +34,7 @@ export const useOptions = (inputValue: string, setOptions) => {
       }
 
       const { before, after } = await getPresetOptions(inputValue);
-      setOptions([...before, { loader: true }]);
+      setOptions([...before, { type: 'loader' }]);
 
       fetchGeocoderOptions(inputValue, view, setOptions, before, after);
     })();

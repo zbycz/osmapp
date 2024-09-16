@@ -14,6 +14,7 @@ import { useInputValueState } from './options/geocoder';
 import { useOptions } from './useOptions';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
+import { Option } from './types';
 
 const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;
@@ -76,7 +77,7 @@ const SearchBox = () => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const { inputValue, setInputValue } = useInputValueState();
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<Option[]>([]);
   const [overpassLoading, setOverpassLoading] = useState(false);
   const autocompleteRef = useRef();
   const onClosePanel = useOnClosePanel();

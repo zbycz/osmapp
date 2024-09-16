@@ -89,13 +89,14 @@ const darkTheme = createTheme({
   },
 });
 
-export type UserTheme = 'system' | 'light' | 'dark';
+export type Theme = 'light' | 'dark';
+export type UserTheme = 'system' | Theme;
 
 type UserThemeContextType = {
   userTheme: UserTheme;
   setUserTheme: (choice: UserTheme) => void;
   theme: typeof lightTheme | typeof darkTheme;
-  currentTheme: 'light' | 'dark';
+  currentTheme: Theme;
 };
 
 export const UserThemeContext = createContext<UserThemeContextType>(undefined);
