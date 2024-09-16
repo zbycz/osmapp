@@ -59,8 +59,7 @@ const LayerDataInput: React.FC<{
   React.useEffect(() => {
     loadLayer()
       .then((result) => {
-        const validLayers = result.filter(({ url }) => isValidLayerUrl(url));
-        setLayerIndex(validLayers);
+        setLayerIndex(result);
         setLayerIndexState('success');
       })
       .catch(() => {
@@ -230,7 +229,7 @@ const CustomChoose: React.FC<{
   }, [isValid, onValidation]);
 
   React.useEffect(() => {
-    setIsValid(isValidLayerUrl(url));
+    setIsValid(isValidLayerUrl(url, true));
   }, [url]);
 
   React.useEffect(() => {
