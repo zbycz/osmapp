@@ -10,7 +10,8 @@ import {
 import { UserThemeProvider } from '../src/helpers/theme';
 import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { doShortenerRedirect } from '../src/services/helpers';
-import { PROJECT_NAME } from '../src/services/project';
+import { PROJECT_ID, PROJECT_NAME } from '../src/services/project';
+import { GoogleAnalytics } from './api/google-analytics';
 
 type Props = AppProps & EmotionCacheProviderProps;
 
@@ -27,6 +28,7 @@ export default class MyApp extends App<Props> {
   render() {
     const { Component, pageProps, emotionCache } = this.props as any;
     const { userThemeCookie } = pageProps;
+    const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
     return (
       <>
@@ -46,6 +48,7 @@ export default class MyApp extends App<Props> {
             <GlobalStyle />
           </UserThemeProvider>
         </AppCacheProvider>
+        {isOpenClimbing && <GoogleAnalytics />}
       </>
     );
   }
