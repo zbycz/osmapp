@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, DependencyList } from 'react';
 
 /**
  * Custom hook to listen for a specific keyDownEvent and trigger a callback.

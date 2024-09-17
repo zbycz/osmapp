@@ -77,12 +77,11 @@ const SearchBox = () => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const { inputValue, setInputValue } = useInputValueState();
-  const [options, setOptions] = useState<Option[]>([]);
   const [overpassLoading, setOverpassLoading] = useState(false);
   const autocompleteRef = useRef();
   const onClosePanel = useOnClosePanel();
 
-  useOptions(inputValue, setOptions);
+  const options = useOptions(inputValue);
 
   return (
     <TopPanel $isMobileMode={isMobileMode}>
