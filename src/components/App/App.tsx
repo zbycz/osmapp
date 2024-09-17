@@ -33,6 +33,7 @@ import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
 import Error from 'next/error';
 import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
+import { useIsMounted } from '../../helpers/hooks';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -81,6 +82,7 @@ const IndexWithProviders = () => {
   const isMobileMode = useMobileMode();
   const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
+  const isMounted = useIsMounted();
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
@@ -97,7 +99,7 @@ const IndexWithProviders = () => {
     <>
       <Loading />
       <SearchBox />
-      {featureShown && !isMobileMode && <FeaturePanelOnSide />}
+      {featureShown && !isMobileMode && isMounted && <FeaturePanelOnSide />}
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
