@@ -7,7 +7,6 @@ import Document, {
   Main,
   NextScript,
 } from 'next/document';
-import { GoogleAnalytics } from '@next/third-parties/google';
 import type { DocumentContext } from 'next/dist/shared/lib/utils';
 import {
   DocumentHeadTags,
@@ -65,7 +64,6 @@ export default class MyDocument extends Document<Props> {
           <Main />
           <InjectIntl intl={serverIntl} />
           <NextScript />
-          {isOpenClimbing && <GoogleAnalytics gaId="G-XCHYKP28FT" />}
         </body>
       </Html>
     );
