@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton } from '@mui/material';
+import { IconButton, useMediaQuery } from '@mui/material';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 import { PoiDescription } from './helpers/PoiDescription';
 import { StarButton } from './helpers/StarButton';
@@ -39,8 +39,9 @@ const EditNameButton = () => {
   );
 };
 
-const Container = styled.div`
+const Container = styled.div<{ isStandalone: boolean }>`
   margin: 12px 0 20px 0;
+  ${({ isStandalone }) => isStandalone && 'padding-bottom: 8px;'}
 `;
 
 const HeadingContainer = styled.div`
@@ -63,12 +64,15 @@ const Heading = styled.h1<{ $deleted: boolean }>`
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
 `;
 
-export const FeatureHeading = () => {
+export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
 
+  // thw pwa needs space at the bottom
+  const isStandalone = useMediaQuery('(display-mode: standalone)');
+
   return (
-    <Container>
+    <Container ref={ref} isStandalone={isStandalone}>
       <PoiDescription />
       <HeadingContainer>
         <NameWithEdit>
@@ -80,4 +84,5 @@ export const FeatureHeading = () => {
       </HeadingContainer>
     </Container>
   );
-};
+});
+FeatureHeading.displayName = 'FeatureHeading';

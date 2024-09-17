@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { FeatureHeading } from './FeatureHeading';
 import { useToggleState } from '../helpers';
@@ -28,10 +28,30 @@ const Flex = styled.div`
   flex: 1;
 `;
 
-export const FeaturePanel = () => {
+type FeaturePanelProps = {
+  onHeadingHeightChange?: (height: number) => void;
+};
+
+export const FeaturePanel = ({ onHeadingHeightChange }: FeaturePanelProps) => {
   const { feature } = useFeatureContext();
   const [advanced, setAdvanced] = useState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
+  const headingRef = useRef<HTMLDivElement>();
+
+  useEffect(() => {
+    const headingDiv = headingRef.current;
+    if (!headingDiv) return;
+
+    const listener = () => {
+      onHeadingHeightChange?.(headingDiv.clientHeight);
+    };
+    listener();
+
+    window.addEventListener('resize', listener);
+    return () => {
+      window.removeEventListener('resize', listener);
+    };
+  }, [headingRef, feature, onHeadingHeightChange]);
 
   const { tags, skeleton, deleted } = feature;
   const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
@@ -52,7 +72,7 @@ export const FeaturePanel = () => {
     <>
       <PanelContent>
         <PanelSidePadding>
-          <FeatureHeading />
+          <FeatureHeading ref={headingRef} />
           <ClimbingRouteGrade />
           <ParentLink />
           <ClimbingRestriction />
