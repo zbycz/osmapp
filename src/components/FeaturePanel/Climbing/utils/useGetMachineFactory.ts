@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PositionPx } from '../types';
-import { emptyRoute } from './emptyRoute';
+import { getEmptyRoute } from './getEmptyRoute';
 import { getPositionInImageFromMouse } from './mousePositionUtils';
 
 export type State =
@@ -95,7 +95,7 @@ export const useGetMachineFactory = ({
     const newIndex = routes.length;
     setRouteSelectedIndex(newIndex);
     setPointSelectedIndex(null);
-    setRoutes([...routes, emptyRoute]);
+    setRoutes([...routes, getEmptyRoute()]);
   };
 
   const deleteRoute = ({ routeNumber }: { routeNumber?: number }) => {

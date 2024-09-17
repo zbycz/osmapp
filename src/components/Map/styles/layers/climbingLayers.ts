@@ -98,7 +98,7 @@ const step = (
   ['literal', b],
 ];
 
-const routes: LayerSpecification[] = [
+export const routes: LayerSpecification[] = [
   {
     id: 'climbing-3-routes-circle',
     type: 'circle',

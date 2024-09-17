@@ -22,6 +22,9 @@ import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl'
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { CLIMBING_ROUTE_ROW_HEIGHT, SPLIT_PANE_DEFAULT_HEIGHT } from './config';
 import { ClimbingViewContent } from './ClimbingViewContent';
+import { getOsmappLink } from '../../../services/helpers';
+import { useRouter } from 'next/router';
+import { GalleryControls } from './Editor/GalleryControls';
 
 const Container = styled.div`
   position: relative;
@@ -191,6 +194,8 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     loadedPhotos,
     routeListTopOffsets,
     setRouteSelectedIndex,
+    routes,
+    setPhotoPath,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
 
@@ -295,6 +300,9 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     ShadowBottom,
   } = useScrollShadow([areRoutesLoading]);
   const theme = useTheme();
+  const router = useRouter();
+  const [isPhotoLoading, setIsPhotoLoading] = useState(false);
+
   const { userSettings } = useUserSettingsContext();
 
   const isResolutionLoaded =
@@ -304,6 +312,16 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     resolutions &&
     Object.keys(resolutions).filter((key) => resolutions[key] === true).length >
       0;
+
+  const replacePhotoIfNeeded = (photos: string[], selectedIndex: number) => {
+    if (!photos.includes(photoPath) && selectedIndex > -1 && !isPhotoLoading) {
+      if (photos.length > 0) {
+        const featureLink = getOsmappLink(feature);
+        router.replace(`${featureLink}/climbing/photo/${photos[0]}`);
+        setIsPhotoLoading(true);
+      }
+    }
+  };
 
   const selectRouteByScroll = (e) => {
     const { scrollTop } = e.target;
@@ -315,6 +333,10 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
         offset + CLIMBING_ROUTE_ROW_HEIGHT >= scrollTopWithOffset,
     );
 
+    const selectedRoute = routes[selectedIndex];
+    const photos = selectedRoute?.paths ? Object.keys(selectedRoute.paths) : [];
+
+    replacePhotoIfNeeded(photos, selectedIndex);
     if (selectedIndex !== -1) setRouteSelectedIndex(selectedIndex);
   };
 
@@ -359,7 +381,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
             $imageUrl={backgroundImageUrl}
           >
             <>
-              {!isResolutionLoaded && (
+              {(!isResolutionLoaded || isPhotoLoading) && (
                 <MiniLoadingContainer>
                   <CircularProgress color="primary" size={14} thickness={6} />
                 </MiniLoadingContainer>
@@ -377,6 +399,8 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                   >
                     <>
                       <RoutesEditor
+                        setIsPhotoLoading={setIsPhotoLoading}
+                        isPhotoLoading={isPhotoLoading}
                         isRoutesLayerVisible={
                           !isSplitViewDragging && !areRoutesLoading
                         }
@@ -385,6 +409,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                       />
                     </>
                   </TransformComponent>
+                  {photoZoom.scale < 1.2 && <GalleryControls />}
                 </TransformWrapper>
                 {isEditMode && (
                   <>
