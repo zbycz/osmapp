@@ -207,7 +207,10 @@ export const fetchCrags = async () => {
       ...element,
       geometry: {
         type: 'Point',
-        coordinates: element.center,
+        coordinates:
+          element.properties.climbing === 'area'
+            ? element.center.map((c) => c + 0.00007) // area with single crag displaced ~10m
+            : element.center,
       },
       properties: {
         ...element.properties,
