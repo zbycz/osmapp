@@ -210,6 +210,7 @@ export default {
   'layerswitcher.category_osmbasedmap': 'Normal layer',
   'layerswitcher.compatible_license': 'License compatible for editing OpenStreetMap',
   'layerswitcher.layers_in_area': 'Filter layers in this area',
+  'layerswitcher.explaination': 'Please insert {z},{x},{y} tokens or {bbox-epsg-3857}',
 
   'layers.basic': 'Basic',
   'layers.makina_africa': 'OpenPlaceGuide Africa',
