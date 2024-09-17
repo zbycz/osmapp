@@ -31,7 +31,7 @@
     "@mui/material-nextjs": "^5.16.6",
     "@openstreetmap/id-tagging-schema": "^6.7.3",
     "@sentry/nextjs": "^8",
-    "@xmldom/xmldom": "^0.8.10",
+    "@xmldom/xmldom": "^0.9.2",
     "accept-language-parser": "^1.5.0",
     "autosuggest-highlight": "^3.3.4",
     "canvas": "^2.11.2",
