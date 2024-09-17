@@ -79,7 +79,7 @@ const useTempState = (routeId: string) => {
   };
 
   const debouncedValueChange = (e, propName) =>
-    debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)(e);
+    debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)();
 
   const onTempRouteChange = (e, propName: string) => {
     setTempRoute((prevValue) => ({
