@@ -22,13 +22,7 @@ const getPathString = (path) =>
         .join('|');
 
 const getUpdatedBasicTags = (route: ClimbingRoute) => {
-  const checkedTags = ['name', 'description', 'author'];
-  const updatedTags = {};
-  checkedTags.forEach((tagToCheck) => {
-    if (route[tagToCheck] !== route.feature.tags[tagToCheck]) {
-      updatedTags[tagToCheck] = route[tagToCheck];
-    }
-  });
+  const updatedTags = { ...route.updatedTags };
 
   const newGradeSystem = route.difficulty?.gradeSystem;
   const gradeSystemKey = getOsmTagFromGradeSystem(newGradeSystem);
@@ -109,9 +103,9 @@ export const useGetHandleSave = (
 
     const changes = getChanges(routes);
     const comment = `${changes.length} routes`;
-    const result = await editCrag(crag, comment, changes);
+    //const result = await editCrag(crag, comment, changes);
 
-    console.log('All routes saved', result); // eslint-disable-line no-console
+    console.log('All routes saved', changes); // eslint-disable-line no-console
     showToast('Data saved successfully!', 'success');
     setIsEditMode(false);
   };
