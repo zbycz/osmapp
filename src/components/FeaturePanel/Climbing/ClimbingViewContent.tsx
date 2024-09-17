@@ -8,10 +8,16 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { RouteList } from './RouteList/RouteList';
 import { ContentContainer } from './ContentContainer';
-import { Button, ButtonGroup } from '@mui/material';
+import { Box, Button, ButtonGroup, Tab, Tabs } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import { RouteDistribution } from './RouteDistribution';
-import React from 'react';
+import React, { useState } from 'react';
+import dynamic from 'next/dynamic';
+
+const CragMapDynamic = dynamic(() => import('./CragMap'), {
+  ssr: false,
+  loading: () => <div />,
+});
 
 const ContentBelowRouteList = styled.div<{ $splitPaneHeight: number }>`
   min-height: calc(
@@ -30,6 +36,7 @@ const ButtonContainer = styled.div`
 export const ClimbingViewContent = () => {
   const { splitPaneHeight, showDebugMenu, isEditMode, routes, setIsEditMode } =
     useClimbingContext();
+  const [activeTabIndex, setActiveTabIndex] = useState(0);
 
   const getRoutesCsv = () => {
     const getPathString = (path) =>
@@ -60,34 +67,48 @@ export const ClimbingViewContent = () => {
 
   return (
     <>
-      <RouteList isEditable />
-      <ContentBelowRouteList $splitPaneHeight={splitPaneHeight}>
-        <ContentContainer>
-          {!isEditMode && (
-            <ButtonContainer>
-              <Button
-                onClick={handleEdit}
-                color="primary"
-                variant="contained"
-                endIcon={<EditIcon />}
-              >
-                Edit routes
-              </Button>
-            </ButtonContainer>
-          )}
-          {showDebugMenu && (
-            <>
-              <br />
-              <ButtonGroup variant="contained" size="small" color="primary">
-                <Button size="small" onClick={getRoutesCsv}>
-                  export OSM
-                </Button>
-              </ButtonGroup>
-            </>
-          )}
-        </ContentContainer>
-        <RouteDistribution />
-      </ContentBelowRouteList>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs
+          value={activeTabIndex}
+          onChange={(_e, value) => setActiveTabIndex(value)}
+        >
+          <Tab label="General" />
+          <Tab label="Map" />
+        </Tabs>
+      </Box>
+      {activeTabIndex === 0 && (
+        <>
+          <RouteList isEditable />
+          <ContentBelowRouteList $splitPaneHeight={splitPaneHeight}>
+            <ContentContainer>
+              {!isEditMode && (
+                <ButtonContainer>
+                  <Button
+                    onClick={handleEdit}
+                    color="primary"
+                    variant="contained"
+                    endIcon={<EditIcon />}
+                  >
+                    Edit routes
+                  </Button>
+                </ButtonContainer>
+              )}
+              {showDebugMenu && (
+                <>
+                  <br />
+                  <ButtonGroup variant="contained" size="small" color="primary">
+                    <Button size="small" onClick={getRoutesCsv}>
+                      export OSM
+                    </Button>
+                  </ButtonGroup>
+                </>
+              )}
+            </ContentContainer>
+            <RouteDistribution />
+          </ContentBelowRouteList>
+        </>
+      )}
+      {activeTabIndex === 1 && <CragMapDynamic />}
     </>
   );
 };
