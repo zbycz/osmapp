@@ -15,8 +15,12 @@ export default {
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
 
-  'project.openclimbing.description': 'Otevřená lezecká wiki-mapa',
-  'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
+  'project.openclimbing.description': 'Otevřený lezecký průvodce',
+  'project.openclimbing.serpDescription': 'Otevřený lezecký průvodce s vyznačením cest. Postaveno na projektech OpenStreetMap a Wikipedie.',
+
+  'climbing.guideinfo.title': 'Otevřený lezecký průvodce openclimbing.org',
+  'climbing.guideinfo.description':
+    'OpenClimbing.org je otevřená platforma pro lezecké průvodce a mapy. Vyznačené cesty a fotky se ukládají do projektů OpenStreetMap a Wikipedie, takže je může kdykoliv editovat.',
 
   'install.button': 'Stáhnout aplikaci',
   'install.tabs_aria_label': 'Vyberte si svou platformu',
