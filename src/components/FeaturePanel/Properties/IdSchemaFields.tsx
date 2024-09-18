@@ -30,11 +30,6 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return renderValue('wikidata', feature.tags.wikidata);
   }
 
-  // combo with options
-  if (fieldTranslation?.options?.[v]) {
-    return renderValue(k, fieldTranslation.options[v]?.title);
-  }
-
   // multicombo ?
   if (fieldTranslation?.types && fieldTranslation?.options) {
     return tagsForField.map(({ key, value: value2 }) => (
