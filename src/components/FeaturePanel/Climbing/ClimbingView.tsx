@@ -3,7 +3,13 @@ import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { CircularProgress, IconButton, useTheme } from '@mui/material';
+import {
+  CircularProgress,
+  Fab,
+  IconButton,
+  Tooltip,
+  useTheme,
+} from '@mui/material';
 import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RoutesEditor } from './Editor/RoutesEditor';
@@ -24,8 +30,15 @@ import { CLIMBING_ROUTE_ROW_HEIGHT, SPLIT_PANE_DEFAULT_HEIGHT } from './config';
 import { ClimbingViewContent } from './ClimbingViewContent';
 import { getOsmappLink } from '../../../services/helpers';
 import { useRouter } from 'next/router';
-import { GalleryControls } from './Editor/GalleryControls';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import MapIcon from '@mui/icons-material/Map';
 
+const FabContainer = styled.div`
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  z-index: 1000;
+`;
 const Container = styled.div`
   position: relative;
   display: flex;
@@ -302,6 +315,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const theme = useTheme();
   const router = useRouter();
   const [isPhotoLoading, setIsPhotoLoading] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(false);
 
   const { userSettings } = useUserSettingsContext();
 
@@ -342,10 +356,32 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
 
   const handleOnScroll = (e) => {
     onScroll();
-    if (userSettings['climbing.selectRoutesByScrolling']) {
+    if (
+      userSettings['climbing.selectRoutesByScrolling'] &&
+      routeSelectedIndex !== null
+    ) {
       selectRouteByScroll(e);
     }
   };
+
+  const FabComponent = () => (
+    <FabContainer>
+      <Tooltip
+        title={`Show ${isMapVisible ? 'route list' : 'map'}`}
+        enterDelay={1500}
+        arrow
+      >
+        <Fab
+          size="small"
+          color="secondary"
+          aria-label="add"
+          onClick={() => setIsMapVisible(!isMapVisible)}
+        >
+          {isMapVisible ? <FormatListNumberedIcon /> : <MapIcon />}
+        </Fab>
+      </Tooltip>
+    </FabContainer>
+  );
 
   return (
     <Container>
@@ -409,7 +445,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                       />
                     </>
                   </TransformComponent>
-                  {photoZoom.scale < 1.2 && <GalleryControls />}
                 </TransformWrapper>
                 {isEditMode && (
                   <>
@@ -422,15 +457,19 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
           </BackgroundContainer>
 
           <ShadowContainer>
+            <FabComponent />
             <ShadowTop backgroundColor={theme.palette.background.paper} />
             <BottomPanel onScroll={handleOnScroll} ref={scrollElementRef}>
-              <ClimbingViewContent />
+              <ClimbingViewContent isMapVisible={isMapVisible} />
             </BottomPanel>
             <ShadowBottom backgroundColor={theme.palette.background.paper} />
           </ShadowContainer>
         </SplitPane>
       ) : (
-        <ClimbingViewContent />
+        <>
+          <FabComponent />
+          <ClimbingViewContent isMapVisible={isMapVisible} />
+        </>
       )}
     </Container>
   );
