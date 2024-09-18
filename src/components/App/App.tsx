@@ -33,6 +33,10 @@ import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
 import Error from 'next/error';
 import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
+import {
+  ClimbingArea,
+  getClimbingAreas,
+} from '../../services/climbing-areas/getClimbingAreas';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -77,7 +81,11 @@ const useUpdateViewFromHash = () => {
   }, [setView]);
 };
 
-const IndexWithProviders = () => {
+type IndexWithProvidersProps = {
+  climbingAreas: Array<ClimbingArea>;
+};
+
+const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMobileMode = useMobileMode();
   const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
@@ -110,7 +118,7 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
-      {router.pathname === '/climbing-areas' && <ClimbingAreasPanel />}
+      {climbingAreas && <ClimbingAreasPanel areas={climbingAreas} />}
       <Map />
       <TitleAndMetaTags />
     </>
@@ -121,12 +129,14 @@ type Props = {
   featureFromRouter: Feature | '404' | null;
   initialMapView: View;
   cookies: Record<string, string>;
+  climbingAreas: Array<ClimbingArea>;
 };
 
 const App: NextPage<Props> = ({
   featureFromRouter,
   initialMapView,
   cookies,
+  climbingAreas,
 }) => {
   const mapView = getMapViewFromHash() || initialMapView;
   const queryClient = new QueryClient();
@@ -147,7 +157,7 @@ const App: NextPage<Props> = ({
               <StarsProvider>
                 <EditDialogProvider /* TODO supply router.query */>
                   <QueryClientProvider client={queryClient}>
-                    <IndexWithProviders />
+                    <IndexWithProviders climbingAreas={climbingAreas} />
                   </QueryClientProvider>
                 </EditDialogProvider>
               </StarsProvider>
@@ -161,6 +171,11 @@ const App: NextPage<Props> = ({
 App.getInitialProps = async (ctx: NextPageContext) => {
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
+  let climbingAreas = null;
+  if (ctx.pathname === '/climbing-areas') {
+    climbingAreas = await getClimbingAreas();
+  }
+
   const cookies = nextCookies(ctx);
   const featureFromRouter = await getInitialFeature(ctx);
   if (ctx.res) {
@@ -172,7 +187,7 @@ App.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const initialMapView = await getInitialMapView(ctx);
-  return { featureFromRouter, initialMapView, cookies };
+  return { featureFromRouter, initialMapView, cookies, climbingAreas };
 };
 
 export default App;
