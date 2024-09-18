@@ -1,5 +1,5 @@
 // links like {shop}, are recursively resolved to their fields
-import { FieldTranslation, Preset } from './types/Presets';
+import { Preset } from './types/Presets';
 import { fields, presets } from './data';
 import { Field } from './types/Fields';
 
@@ -65,7 +65,7 @@ export const computeAllFieldKeys = (preset: Preset) => {
 // TODO check - 1) field.options 2) strings.options
 export const getValueForField = (
   field: Field,
-  fieldTranslation: FieldTranslation,
+  fieldTranslation,
   value: string,
   tagsForField: { key: string; value: string }[] = [],
 ) => {
