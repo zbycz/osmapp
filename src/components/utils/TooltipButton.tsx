@@ -4,12 +4,17 @@ import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CloseIcon from '@mui/icons-material/Close';
 import { SvgIconOwnProps } from '@mui/material/SvgIcon/SvgIcon';
 import { isMobileDevice, useToggleState } from '../helpers';
+import styled from '@emotion/styled';
 
 type Props = {
   tooltip: React.ReactNode;
   onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   color?: SvgIconOwnProps['color'];
 };
+
+const StyledIconButton = styled(IconButton)`
+  font-size: inherit;
+`;
 
 export const TooltipButton = ({ tooltip, onClick, color }: Props) => {
   const isMobile = isMobileDevice();
@@ -30,12 +35,12 @@ export const TooltipButton = ({ tooltip, onClick, color }: Props) => {
       placement="top"
       open={isMobile ? mobileTooltipShown : undefined}
     >
-      <IconButton onClick={handleClick}>
+      <StyledIconButton onClick={handleClick}>
         {!mobileTooltipShown && (
-          <InfoOutlinedIcon fontSize="small" color={color} />
+          <InfoOutlinedIcon fontSize="inherit" color={color} />
         )}
-        {mobileTooltipShown && <CloseIcon fontSize="small" color={color} />}
-      </IconButton>
+        {mobileTooltipShown && <CloseIcon fontSize="inherit" color={color} />}
+      </StyledIconButton>
     </Tooltip>
   );
 };

@@ -76,18 +76,21 @@ export const isViewInsideBbox = ([, lat, lon]: View, bbox?: number[]) =>
  * Is a string a valid url for a layer
  * It must be a valid url and include all of `{x}`, `{y}` and `{zoom}` or `{z}`
  */
-export const isValidLayerUrl = (url: string) => {
-  try {
-    new URL(url);
-  } catch {
-    return false;
+export const isValidLayerUrl = (url: string, isFinal: boolean) => {
+  if (isFinal) {
+    try {
+      new URL(url);
+    } catch {
+      return false;
+    }
   }
 
   const sanitizedUrl = url.replace('{zoom}', '{z}');
 
-  return (
+  const includesxyz =
     sanitizedUrl.includes('{x}') &&
     sanitizedUrl.includes('{y}') &&
-    sanitizedUrl.includes('{z}')
-  );
+    sanitizedUrl.includes('{z}');
+
+  return includesxyz || sanitizedUrl.includes('{bbox-epsg-3857}');
 };

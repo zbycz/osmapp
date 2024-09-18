@@ -136,7 +136,7 @@ const getMemberFeatures = (members: Feature['members'], map) => {
         feature.osmMeta.role = role;
         feature.center = element.center
           ? [element.center.lon, element.center.lat] // from overpass "out center"
-          : undefined;
+          : feature.center;
         return feature;
       })
       .filter(Boolean) ?? []
