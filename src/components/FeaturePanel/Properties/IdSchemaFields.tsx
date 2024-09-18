@@ -30,11 +30,6 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return renderValue('wikidata', feature.tags.wikidata);
   }
 
-  // combo with options
-  if (fieldTranslation?.options?.[v]) {
-    return renderValue(k, fieldTranslation.options[v]?.title);
-  }
-
   // multicombo ?
   if (fieldTranslation?.types && fieldTranslation?.options) {
     return tagsForField.map(({ key, value: value2 }) => (
@@ -54,7 +49,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     ));
   }
 
-  if (tagsForField?.length >= 1) {
+  if (tagsForField?.length > 1) {
     return (
       <>
         {tagsForField.map(({ key, value: value2 }) => (
@@ -74,7 +69,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
 // TODO some fields eg. oneway/bicycle doesnt have units in brackets
 const unitRegExp = / \((.+)\)$/i;
 const removeUnits = (label) => label.replace(unitRegExp, '');
-const addUnits = (label, value: string | ReactNode) => {
+const addUnits = (label: string, value: string | ReactNode) => {
   if (typeof value !== 'string') return value;
   const unit = label.match(unitRegExp);
   if (!unit) return value;
