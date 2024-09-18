@@ -17,21 +17,17 @@ import {
   PanelSidePadding,
 } from '../utils/PanelHelpers';
 import { MobilePageDrawer } from '../utils/MobilePageDrawer';
-import { getClimbingAreas } from '../../services/climbing-areas/getClimbingAreas';
+import { ClimbingArea } from '../../services/climbing-areas/getClimbingAreas';
 import Link from 'next/link';
 
-export const ClimbingAreasPanel = () => {
-  const [areas, setAreas] = useState<any>([]);
+type ClimbingAreasPanelProps = {
+  areas: ClimbingArea[];
+};
 
+export const ClimbingAreasPanel = ({ areas }: ClimbingAreasPanelProps) => {
   const handleClose = () => {
     Router.push(`/`);
   };
-
-  useEffect(() => {
-    getClimbingAreas().then((newAreas) => {
-      setAreas(newAreas);
-    });
-  }, []);
 
   return (
     <MobilePageDrawer className="climbing-areas-drawer">
