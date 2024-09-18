@@ -43,6 +43,10 @@ export default {
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
 
+  'climbing.guideinfo.title': 'A free climbing guide openclimbing.org',
+  'climbing.guideinfo.description':
+    'OpenClimbing.org is an open platform for climbing guides and maps. Topos and photos are stored in OpenStreetMap and Wikipedia projects, so they can be edited by anyone.',
+
   'project.openclimbing.description': 'Free wiki climbing map',
   'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
 
@@ -210,6 +214,7 @@ export default {
   'layerswitcher.category_osmbasedmap': 'Normal layer',
   'layerswitcher.compatible_license': 'License compatible for editing OpenStreetMap',
   'layerswitcher.layers_in_area': 'Filter layers in this area',
+  'layerswitcher.explaination': 'Please insert {z},{x},{y} tokens or {bbox-epsg-3857}',
 
   'layers.basic': 'Basic',
   'layers.makina_africa': 'OpenPlaceGuide Africa',

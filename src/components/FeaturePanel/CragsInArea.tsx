@@ -39,7 +39,6 @@ const Container = styled.div`
   }
 `;
 const CragList = styled.div`
-  margin: 12px 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -143,7 +142,7 @@ export const CragsInArea = () => {
   }
 
   return (
-    <Box mt={4}>
+    <Box mb={2}>
       <CragList>
         {feature.memberFeatures.map((item) => (
           <CragItem key={getOsmappLink(item)} feature={item} />

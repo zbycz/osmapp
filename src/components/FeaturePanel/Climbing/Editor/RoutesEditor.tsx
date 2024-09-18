@@ -5,7 +5,6 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
-import { GalleryControls } from './GalleryControls';
 import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
 
 const EditorContainer = styled.div<{ imageHeight: number }>`
@@ -43,6 +42,8 @@ export const RoutesEditor = ({
   isRoutesLayerVisible = true,
   photoResolution,
   imageUrl,
+  isPhotoLoading,
+  setIsPhotoLoading,
 }) => {
   const {
     imageSize,
@@ -154,6 +155,7 @@ export const RoutesEditor = ({
     });
     loadPhotoRelatedData();
     preloadOtherPhotos();
+    setIsPhotoLoading(false);
   };
 
   return (
@@ -161,14 +163,15 @@ export const RoutesEditor = ({
       <ImageContainer>
         <ImageElement src={imageUrl} onLoad={onPhotoLoad} ref={photoRef} />
       </ImageContainer>
-      <RoutesLayer
-        isVisible={isRoutesLayerVisible}
-        onClick={onCanvasClick}
-        onEditorMouseMove={onMouseMove}
-        onEditorTouchMove={onTouchMove}
-        transformOrigin={transformOrigin}
-      />
-      <GalleryControls />
+      {!isPhotoLoading && (
+        <RoutesLayer
+          isVisible={isRoutesLayerVisible}
+          onClick={onCanvasClick}
+          onEditorMouseMove={onMouseMove}
+          onEditorTouchMove={onTouchMove}
+          transformOrigin={transformOrigin}
+        />
+      )}
     </EditorContainer>
   );
 };
