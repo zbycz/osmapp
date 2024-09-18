@@ -66,7 +66,7 @@ export const getValueForField = (
   field,
   fieldTranslation,
   value: string,
-  tagsForField = [],
+  tagsForField: { key: string; value: string }[] = [],
 ) => {
   if (field.type === 'semiCombo') {
     return value
