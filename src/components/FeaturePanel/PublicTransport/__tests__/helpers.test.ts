@@ -1,11 +1,11 @@
-import { sortBy } from '../helpers';
+import { sortByReference } from '../helpers';
 
 describe('sortBy', () => {
   it('sorts correctly based on reference array', () => {
     const unsorted = ['apple', 'banana', 'cherry'];
     const reference = ['banana', 'cherry', 'apple'];
 
-    const result = sortBy(unsorted, reference, (item) => item);
+    const result = sortByReference(unsorted, reference, (item) => item);
 
     expect(result).toEqual(['banana', 'cherry', 'apple']);
   });
@@ -18,7 +18,7 @@ describe('sortBy', () => {
     ];
     const reference = ['banana', 'cherry', 'apple'];
 
-    const result = sortBy(unsorted, reference, (item) => item.name);
+    const result = sortByReference(unsorted, reference, (item) => item.name);
 
     expect(result).toEqual([
       { name: 'banana' },
@@ -31,7 +31,7 @@ describe('sortBy', () => {
     const unsorted = ['apple', 'banana', 'cherry', 'date', '#2date'];
     const reference = ['banana', 'cherry', 'apple'];
 
-    const result = sortBy(unsorted, reference, (item) => item);
+    const result = sortByReference(unsorted, reference, (item) => item);
 
     expect(result).toEqual(['banana', 'cherry', 'apple', 'date', '#2date']);
   });
@@ -40,7 +40,7 @@ describe('sortBy', () => {
     const unsorted: string[] = [];
     const reference = ['banana', 'cherry', 'apple'];
 
-    const result = sortBy(unsorted, reference, (item) => item);
+    const result = sortByReference(unsorted, reference, (item) => item);
 
     expect(result).toEqual([]);
   });
@@ -49,7 +49,7 @@ describe('sortBy', () => {
     const unsorted = ['apple', 'banana', 'cherry'];
     const reference: string[] = [];
 
-    const result = sortBy(unsorted, reference, (item) => item);
+    const result = sortByReference(unsorted, reference, (item) => item);
 
     expect(result).toEqual(['apple', 'banana', 'cherry']);
   });
@@ -58,7 +58,7 @@ describe('sortBy', () => {
     const unsorted: string[] = [];
     const reference: string[] = [];
 
-    const result = sortBy(unsorted, reference, (item) => item);
+    const result = sortByReference(unsorted, reference, (item) => item);
 
     expect(result).toEqual([]);
   });

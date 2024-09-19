@@ -9,6 +9,8 @@ export interface LineInformation {
   ref: string;
   colour: string | undefined;
   service: string | undefined;
+  osmType: string;
+  osmId: string;
 }
 
 export async function requestLines(featureType: string, id: number) {
@@ -33,12 +35,14 @@ export async function requestLines(featureType: string, id: number) {
     features: geoJsonFeatures,
   };
 
-  const resData = geoJsonFeatures
+  const allRoutes = geoJsonFeatures
     .map(
-      ({ properties }): LineInformation => ({
+      ({ properties, osmMeta }): LineInformation => ({
         ref: `${properties.ref || properties.name}`,
         colour: properties.colour?.toString() || undefined,
         service: properties.service?.toString() || undefined,
+        osmId: `${osmMeta.id}`,
+        osmType: osmMeta.type,
       }),
     )
     .sort((a, b) => a.ref.localeCompare(b.ref, undefined, { numeric: true }))
@@ -46,6 +50,6 @@ export async function requestLines(featureType: string, id: number) {
 
   return {
     geoJson,
-    routes: uniqBy(resData, ({ ref }) => ref),
+    routes: uniqBy(allRoutes, ({ ref }) => ref),
   };
 }

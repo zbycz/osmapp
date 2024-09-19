@@ -43,19 +43,25 @@ const fmtCategory = (category: string) => {
 interface CategoryProps {
   category: string;
   lines: LineInformation[];
-  amountOfCategories: number;
+  showHeading: boolean;
 }
 
 export const PublicTransportCategory: React.FC<CategoryProps> = ({
   category,
   lines,
-  amountOfCategories,
+  showHeading,
 }) => (
   <>
-    {amountOfCategories > 1 && <h4>{fmtCategory(category)}</h4>}
+    {showHeading && <h4>{fmtCategory(category)}</h4>}
     <PublicTransportWrapper>
       {lines.map((line) => (
-        <LineNumber key={line.ref} name={line.ref} color={line.colour} />
+        <LineNumber
+          key={line.ref}
+          name={line.ref}
+          color={line.colour}
+          osmType={line.osmType}
+          osmId={line.osmId}
+        />
       ))}
     </PublicTransportWrapper>
   </>

@@ -10,14 +10,14 @@
  *
  * @example
  * ```typescript
- * sortBy(
+ * sortByReference(
  * 	[{ name: "cherry" }, { name: "apple" }, { name: "banana" }, { name: "date" }],
  * 	["apple", "banana", "cherry"],
  * 	(item) => item.name
  * );
  * ```
  */
-export function sortBy<TInput, TRef>(
+export function sortByReference<TInput, TRef>(
   unsorted: TInput[],
   reference: TRef[],
   functor: (item: TInput) => TRef,
