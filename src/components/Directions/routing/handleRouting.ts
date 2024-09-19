@@ -1,5 +1,5 @@
 import { getDistance } from '../../SearchBox/utils';
-import { getGlobalMap, loadedMapPromise } from '../../../services/mapStorage';
+import { getGlobalMap, mapIdlePromise } from '../../../services/mapStorage';
 import maplibregl from 'maplibre-gl';
 import { LonLat } from '../../../services/types';
 import { Profile, RoutingResult } from './types';
@@ -160,7 +160,7 @@ export const handleRouting = async (
     return null;
   }
 
-  const map = await loadedMapPromise;
+  const map = await mapIdlePromise;
   renderOnMap(map, result, mode);
 
   const { w, s, e, n } = result.bbox;
