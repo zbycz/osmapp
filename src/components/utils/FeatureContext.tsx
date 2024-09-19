@@ -10,6 +10,7 @@ import Cookies from 'js-cookie';
 import { Feature } from '../../services/types';
 import { useBoolState } from '../helpers';
 import { publishDbgObject } from '../../utils';
+import { setLastFeature } from '../../services/lastFeatureStorage';
 
 export type FeatureContextType = {
   feature: Feature | null;
@@ -62,6 +63,10 @@ export const FeatureProvider = ({
     hideHomepage();
     Cookies.set('hideHomepage', 'yes', { expires: 30, path: '/' });
   };
+
+  if (feature) {
+    setLastFeature(feature); // cleared only in onClosePanel
+  }
 
   const value: FeatureContextType = {
     feature,
