@@ -65,6 +65,10 @@ export default {
   'directions.form.starting_point': 'Začátek trasy',
   'directions.form.destination': 'Cíl',
   'directions.edit_destinations': 'Upravit zadání',
+  'directions.powered_by': 'Vyhledávání tras dodává systém __link__.',
+  'directions.result.time': 'Čas',
+  'directions.result.distance': 'Vzdálenost',
+  'directions.result.ascent': 'Stoupání',
   'directions.error.too_far': 'Cíl je příliš daleko od silniční sítě. Prosím, zvolte jiný cíl.',
 
   'featurepanel.no_name': 'beze jména',

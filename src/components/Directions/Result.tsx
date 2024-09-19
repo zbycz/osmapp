@@ -5,7 +5,7 @@ import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
 import { RoutingResult } from './routing/types';
-import { t } from '../../services/intl';
+import { t, Translation } from '../../services/intl';
 import { CloseButton } from './helpers';
 
 export const StyledPaper = styled(Paper)`
@@ -32,7 +32,7 @@ const CloseContainer = styled.div`
 
 const getHumanMetric = (meters) => {
   if (meters < 1000) {
-    return `${meters} m`;
+    return `${Math.round(meters)} m`;
   }
   return `${(meters / 1000).toFixed(1)} km`;
 };
@@ -57,7 +57,10 @@ const toHumanTime = (seconds) => {
 
 const PoweredBy = ({ result }: { result: RoutingResult }) => (
   <Typography variant="caption" component="div">
-    Search powered by <a href={result.link}>{result.router}</a>.
+    <Translation
+      id="directions.powered_by"
+      values={{ link: `<a href=${result.link}>${result.router}</a>` }}
+    />
   </Typography>
 );
 
@@ -94,11 +97,11 @@ export const Result = ({ result, revealForm }: Props) => {
 
   return (
     <StyledPaper elevation={3}>
-      Time: <strong>{time}</strong>
+      {t('directions.result.time')}: <strong>{time}</strong>
       <br />
-      Distance: <strong>{distance}</strong>
+      {t('directions.result.distance')}: <strong>{distance}</strong>
       <br />
-      Ascent: <strong>{ascent}</strong>
+      {t('directions.result.ascent')}: <strong>{ascent}</strong>
       <br />
       <br />
       <PoweredBy result={result} />

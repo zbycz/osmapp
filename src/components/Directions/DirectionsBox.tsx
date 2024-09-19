@@ -51,6 +51,7 @@ const getOnrejected = (
     } else {
       Sentry.captureException(error);
       showToast(`${t('error')} – ${error}`, 'error');
+      throw error;
     }
   };
 };
