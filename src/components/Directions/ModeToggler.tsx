@@ -8,7 +8,8 @@ import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import React from 'react';
 import styled from '@emotion/styled';
-import { profiles } from './utils';
+
+import { brouterProfiles } from './routing/getBrouterResults';
 
 const StyledToggleButton = styled(ToggleButton)`
   padding: 8px;

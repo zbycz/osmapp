@@ -4,6 +4,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
+import { RoutingResult } from './routing/types';
+import { NamedBbox } from '../../services/getCenter';
 
 export const StyledPaper = styled(Paper)`
   backdrop-filter: blur(10px);
@@ -46,33 +48,27 @@ const toHumanTime = (seconds) => {
   return hours > 0 ? `${hours}:${minutesStr} h` : `${minutes} min`;
 };
 
-function PoweredBy(props: { brouter: any }) {
-  return (
-    <Typography variant="caption" component="div">
-      Search proudly powered by{' '}
-      <a href="https://www.brouter.de/brouter-web/">{props.brouter}</a>.
-    </Typography>
-  );
-}
+type Props = { result: RoutingResult };
 
-export const Result = (props: { result: any }) => {
+const PoweredBy = ({ result }: Props) => (
+  <Typography variant="caption" component="div">
+    Search proudly powered by <a href={result.link}>{result.router}</a>.
+  </Typography>
+);
+
+export const Result = ({ result }: Props) => {
   const isMobileMode = useMobileMode();
 
-  const time = toHumanTime(props.result.features[0].properties['total-time']);
-  const distance = toHumanDistance(
-    props.result.features[0].properties['track-length'],
-  );
-  const ascent = toHumanDistance(
-    props.result.features[0].properties['filtered ascend'],
-  );
-  const brouter = props.result.features[0].properties.creator;
+  const time = toHumanTime(result.time);
+  const distance = toHumanDistance(result.distance);
+  const ascent = toHumanDistance(result.totalAscent);
 
   if (isMobileMode) {
     return (
       <StyledPaperMobile elevation={3}>
         <strong>{distance}</strong> • <strong>{time}</strong> • ↑{ascent}
         <TooltipButton
-          tooltip={<PoweredBy brouter={brouter} />}
+          tooltip={<PoweredBy result={result} />}
           color="secondary"
         />
       </StyledPaperMobile>
@@ -88,7 +84,7 @@ export const Result = (props: { result: any }) => {
       Ascent: <strong>{ascent}</strong>
       <br />
       <br />
-      <PoweredBy brouter={brouter} />
+      <PoweredBy result={result} />
     </StyledPaper>
   );
 };

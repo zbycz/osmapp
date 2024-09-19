@@ -22,7 +22,9 @@ import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
 import PlaceIcon from '@mui/icons-material/Place';
 import { SearchOption } from '../SearchBox/types';
 import { useRouter } from 'next/router';
-import { destroyRouting, splitByFirstTilda } from './utils';
+import { destroyRouting } from './routing/handleRouting';
+import { splitByFirstTilda } from './utils';
+import { LonLat } from '../../services/types';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -96,10 +98,10 @@ export const getOptionLabel = (option) =>
       (option.properties && buildPhotonAddress(option.properties)) ||
       '';
 
-export const getOptionCoords = (option) => {
+export const getOptionToLonLat = (option) => {
   const lonLat =
     (option.star && option.star.center) || option.geometry.coordinates;
-  return lonLat.join(',');
+  return lonLat as LonLat;
 };
 
 type Props = {
