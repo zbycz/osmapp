@@ -1,4 +1,3 @@
-import { uniqBy } from 'lodash';
 import { fetchJson } from '../../../services/fetch';
 import {
   getOverpassUrl,
@@ -24,7 +23,9 @@ export async function requestLines(featureType: string, id: number) {
       rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
       // If no stop_area, find routes that directly include the specific node
       rel(bn.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
-    );
+    ) -> .routes;
+    // Get the master relation
+    rel(br.routes);
     out geom qt;`;
 
   const overpassGeom = await fetchJson(getOverpassUrl(overpassQuery));
@@ -50,6 +51,6 @@ export async function requestLines(featureType: string, id: number) {
 
   return {
     geoJson,
-    routes: uniqBy(allRoutes, ({ ref }) => ref),
+    routes: allRoutes,
   };
 }
