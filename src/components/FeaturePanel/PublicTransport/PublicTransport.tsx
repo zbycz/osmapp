@@ -8,7 +8,7 @@ import { FeatureTags } from '../../../services/types';
 import { DotLoader } from '../../helpers';
 import { sortBy } from './helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { getGlobalMap, getOverpassSource } from '../../../services/mapStorage';
+import { getOverpassSource } from '../../../services/mapStorage';
 
 interface PublicTransportProps {
   tags: FeatureTags;
@@ -62,7 +62,7 @@ const PublicTransportInner = () => {
     }
 
     const source = getOverpassSource();
-    source?.setData(data.geoJson as GeoJSON.GeoJSON);
+    source?.setData(data.geoJson);
   }, [data]);
 
   return (
@@ -88,5 +88,5 @@ export const PublicTransport: React.FC<PublicTransportProps> = ({ tags }) => {
     return null;
   }
 
-  return PublicTransportInner();
+  return <PublicTransportInner />;
 };

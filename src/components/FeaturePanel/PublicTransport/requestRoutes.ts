@@ -1,5 +1,9 @@
+import { uniqBy } from 'lodash';
 import { fetchJson } from '../../../services/fetch';
-import { overpassGeomToGeojson } from '../../../services/overpassSearch';
+import {
+  getOverpassUrl,
+  overpassGeomToGeojson,
+} from '../../../services/overpassSearch';
 
 export interface LineInformation {
   ref: string;
@@ -19,15 +23,17 @@ export async function requestLines(featureType: string, id: number) {
       // If no stop_area, find routes that directly include the specific node
       rel(bn.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
     );
-    out;`;
+    out geom qt;`;
 
-  const geoJson = await fetchJson(
-    `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-      overpassQuery,
-    )}`,
-  ).then(overpassGeomToGeojson);
+  const overpassGeom = await fetchJson(getOverpassUrl(overpassQuery));
+  const geoJsonFeatures = overpassGeomToGeojson(overpassGeom);
 
-  const resData = geoJson
+  const geoJson: GeoJSON.GeoJSON = {
+    type: 'FeatureCollection',
+    features: geoJsonFeatures,
+  };
+
+  const resData = geoJsonFeatures
     .map(
       ({ properties }): LineInformation => ({
         ref: `${properties.ref || properties.name}`,
@@ -39,9 +45,7 @@ export async function requestLines(featureType: string, id: number) {
     .filter(({ ref }) => ref !== '');
 
   return {
-    geoJson: { type: 'FeatureCollection', features: geoJson },
-    routes: resData.filter(
-      (line, index) => resData.findIndex((l) => l.ref === line.ref) === index,
-    ),
+    geoJson,
+    routes: uniqBy(resData, ({ ref }) => ref),
   };
 }
