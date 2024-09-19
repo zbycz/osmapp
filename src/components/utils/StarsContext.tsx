@@ -30,6 +30,12 @@ export const StarsProvider = ({ children }) => {
   const [stars, setStars] = usePersistedState<Star[]>('stars', []);
   const isStarred = hasStar(stars, shortId);
 
+  // between 2024-02 and 2024-06 stars were saved without center, lets remove them now, as Directions will not work without center
+  const starsWithCenter = stars.filter((star) => star.center);
+  if (stars.length !== starsWithCenter.length) {
+    setStars(starsWithCenter);
+  }
+
   const toggleStar = () => {
     if (!shortId) {
       return;
