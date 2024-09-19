@@ -4,16 +4,20 @@ import { PROJECT_ID } from '../../services/project';
 import { useMobileMode } from '../helpers';
 import { Homepage } from './Homepage';
 import { MobilePageDrawer } from '../utils/MobilePageDrawer';
+import { useRouter } from 'next/router';
 
 export const HomepagePanel = () => {
   const { feature, homepageShown, hideHomepage, persistHideHomepage } =
     useFeatureContext();
   const isMobileMode = useMobileMode();
 
-  // hide after first shown feature
+  const router = useRouter();
+  const directions = router.query.all?.[0] === 'directions';
+
+  // hide after first shown feature or directions box
   useEffect(() => {
-    if (feature) hideHomepage();
-  }, [feature, hideHomepage]);
+    if (feature || directions) hideHomepage();
+  }, [feature, directions, hideHomepage]);
 
   if (!homepageShown) {
     return null;

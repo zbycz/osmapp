@@ -1,5 +1,8 @@
 // identifier should be in the form: foldername.messageid.
 
+import { t } from '../services/intl';
+import React from 'react';
+
 export default {
   loading: 'Loading',
   error: 'Error',
@@ -90,6 +93,16 @@ export default {
   'searchbox.overpass_success': 'Results found: __count__',
   'searchbox.overpass_error': 'Error fetching results. __message__',
   'searchbox.overpass_custom_query': 'custom query',
+
+  'directions.get_directions': 'Get Directions',
+  'directions.form.starting_point': 'Starting point',
+  'directions.form.destination': 'Destination',
+  'directions.edit_destinations': 'Edit destinations',
+  'directions.powered_by': 'Directions powered by __link__.',
+  'directions.result.time': 'Time',
+  'directions.result.distance': 'Distance',
+  'directions.result.ascent': 'Ascent',
+  'directions.error.too_far': 'The destination is too far from the road network. Please, choose a closer destination.',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
