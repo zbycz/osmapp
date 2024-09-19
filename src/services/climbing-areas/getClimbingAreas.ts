@@ -11,7 +11,16 @@ which doesn't hold a center point in overpass:
   out body;
 */
 
-export const getClimbingAreas = async () => {
+export type ClimbingArea = {
+  id: number;
+  type: string;
+  tags: {
+    name: string;
+  };
+  members: any[];
+};
+
+export const getClimbingAreas = async (): Promise<Array<ClimbingArea>> => {
   const query = `[out:json][timeout:300]; rel["climbing"="area"]; out body;`;
 
   const areas = await fetchJson(getOverpassUrl(query));

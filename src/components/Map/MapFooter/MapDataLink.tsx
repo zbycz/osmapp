@@ -17,7 +17,7 @@ export const MapDataLink = () => {
     ),
   );
 
-  const nodes = attributions.map((attribution) => {
+  const nodes: React.ReactNode[] = attributions.map((attribution) => {
     if (attribution === 'maptiler')
       return (
         <Attribution

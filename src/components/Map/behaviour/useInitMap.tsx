@@ -68,7 +68,7 @@ export const useInitMap = () => {
 
     return () => {
       setGlobalMap(null);
-      map.remove();
+      map?.remove();
     };
   }, [mapRef]);
 

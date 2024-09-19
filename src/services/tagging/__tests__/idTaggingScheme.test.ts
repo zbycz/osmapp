@@ -43,7 +43,7 @@ describe('idTaggingScheme', () => {
       result.matchedFields.map(({ label, value }) => ({ label, value })),
     ).toMatchObject([
       { label: 'Road Number', value: 'I 84' },
-      { label: 'One Way', value: 'Yes' },
+      { label: 'One Way', value: 'yes' },
       { label: 'Speed Limit', value: '55 mph' },
       { label: 'Lanes', value: '2' },
       { label: 'Surface', value: 'Asphalt' },
