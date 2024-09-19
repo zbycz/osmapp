@@ -19,9 +19,12 @@ import { getLabel } from '../../helpers/featureLabel';
 import { getLastFeature } from '../../services/lastFeatureStorage';
 import { Result, StyledPaper } from './Result';
 import { buildUrl, getStarOption, Option, parseUrlParts } from './utils';
-import { Profile, RoutingResult } from './routing/types';
+import { PointsTooFarError, Profile, RoutingResult } from './routing/types';
 import { useBoolState, useMobileMode } from '../helpers';
 import { LoadingButton } from '@mui/lab';
+import { type Severity, useSnackbar } from '../utils/SnackbarContext';
+import { FetchError } from '../../services/helpers';
+import * as Sentry from '@sentry/nextjs';
 
 const Wrapper = styled(Stack)`
   position: absolute;
@@ -31,12 +34,29 @@ const Wrapper = styled(Stack)`
   width: 340px;
 `;
 
+const getOnrejected = (
+  showToast: (message: string, severity?: Severity) => void,
+) => {
+  return (error) => {
+    if (error instanceof PointsTooFarError) {
+      showToast(t('directions.error.too_far'), 'warning');
+    } else if (error instanceof FetchError) {
+      Sentry.captureException(error);
+      showToast(`${t('error')} code ${error.code}`, 'error');
+    } else {
+      Sentry.captureException(error);
+      showToast(`${t('error')} – ${error}`, 'error');
+    }
+  };
+};
+
 const useReactToUrl = (
   setMode: (param: ((current: string) => string) | string) => void,
   setFrom: (value: Option) => void,
   setTo: (value: Option) => void,
   setResult: (result: RoutingResult) => void,
 ) => {
+  const { showToast } = useSnackbar();
   const initialModeWasSet = useRef(false);
   const router = useRouter();
   const urlParts = router.query.all;
@@ -49,7 +69,9 @@ const useReactToUrl = (
       setMode(mode);
       setFrom(options[0]);
       setTo(options[1]);
-      handleRouting(mode, options.map(getOptionToLonLat)).then(setResult);
+      handleRouting(mode, options.map(getOptionToLonLat))
+        .then(setResult)
+        .catch(getOnrejected(showToast));
     } else {
       if (initialModeWasSet.current === false && getLastMode()) {
         setMode(getLastMode());
@@ -65,7 +87,7 @@ const useReactToUrl = (
     return () => {
       destroyRouting();
     };
-  }, [urlParts, setMode, setFrom, setTo, setResult]);
+  }, [urlParts, setMode, setFrom, setTo, setResult, showToast]);
 };
 
 const useGetOnSubmit = (
@@ -75,6 +97,8 @@ const useGetOnSubmit = (
   setResult: (result: RoutingResult) => void,
   setLoading: (value: ((prevState: boolean) => boolean) | boolean) => void,
 ) => {
+  const { showToast } = useSnackbar();
+
   return () => {
     if (!from || !to) {
       return;
@@ -85,6 +109,7 @@ const useGetOnSubmit = (
       setLoading(true);
       handleRouting(mode, points.map(getOptionToLonLat))
         .then(setResult)
+        .catch(getOnrejected(showToast))
         .finally(() => setLoading(false));
     } else {
       Router.push(url);

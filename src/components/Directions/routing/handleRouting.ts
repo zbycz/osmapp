@@ -155,6 +155,9 @@ export const handleRouting = async (
   window.localStorage?.setItem(LAST_MODE_STORAGE_KEY, mode);
 
   const result = await getBrouterResults(mode, points);
+  if (result == null) {
+    return null;
+  }
 
   const map = await loadedMapPromise;
   renderOnMap(map, result, mode);

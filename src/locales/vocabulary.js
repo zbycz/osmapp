@@ -90,6 +90,8 @@ export default {
   'directions.get_directions': 'Get Directions',
   'directions.form.starting_point': 'Starting point',
   'directions.form.destination': 'Destination',
+  'directions.edit_destinations': 'Edit destinations',
+  'directions.error.too_far': 'The destination is too far from the road network. Please, choose a closer destination.',
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',

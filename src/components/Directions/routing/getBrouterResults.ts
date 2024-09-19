@@ -1,7 +1,8 @@
-import { Profile, RoutingResult } from './types';
+import { PointsTooFarError, Profile, RoutingResult } from './types';
 import { LonLat } from '../../../services/types';
 import { fetchJson } from '../../../services/fetch';
 import { getBbox } from '../../../services/getCenter';
+import { FetchError } from '../../../services/helpers';
 
 export const brouterProfiles: Record<Profile, string> = {
   car: 'car-fast',
@@ -17,17 +18,27 @@ export const getBrouterResults = async (
   const from = points[0].join(',');
   const to = points[1].join(',');
   const url = `https://brouter.de/brouter?lonlats=${from}|${to}&profile=${profile}&alternativeidx=0&format=geojson`;
-  const geojson = await fetchJson(url);
 
-  return {
-    time: geojson.features[0].properties['total-time'],
-    distance: geojson.features[0].properties['track-length'],
-    totalAscent: geojson.features[0].properties['filtered ascend'],
-    router: geojson.features[0].properties.creator,
-    link: 'https://www.brouter.de/brouter-web/',
-    bbox: getBbox(geojson.features[0].geometry.coordinates),
-    geojson,
-  };
+  try {
+    const geojson = await fetchJson(url);
+
+    return {
+      time: geojson.features[0].properties['total-time'],
+      distance: geojson.features[0].properties['track-length'],
+      totalAscent: geojson.features[0].properties['filtered ascend'],
+      router: geojson.features[0].properties.creator,
+      link: 'https://www.brouter.de/brouter-web/',
+      bbox: getBbox(geojson.features[0].geometry.coordinates),
+      geojson,
+    };
+  } catch (error) {
+    if (error instanceof FetchError) {
+      if (error.data.includes('to-position not mapped in existing datafile')) {
+        throw new PointsTooFarError();
+      }
+      throw error;
+    }
+  }
 };
 
 // f189b841-6529-46c6-8a91-51f17477dcda

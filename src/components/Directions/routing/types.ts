@@ -11,3 +11,9 @@ export type RoutingResult = {
   bbox: NamedBbox;
   geojson: GeoJSON.GeoJSON;
 };
+
+export class PointsTooFarError extends Error {
+  constructor() {
+    super('Points are too far from road network');
+  }
+}

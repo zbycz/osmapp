@@ -5,6 +5,7 @@ import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
 import { RoutingResult } from './routing/types';
+import { t } from '../../services/intl';
 
 export const StyledPaper = styled(Paper)`
   backdrop-filter: blur(10px);
@@ -72,7 +73,7 @@ export const Result = ({ result, revealForm }: Props) => {
         />
         {revealForm && (
           <Button size="small" onClick={revealForm}>
-            Edit destinations
+            {t('directions.edit_destinations')}
           </Button>
         )}
       </StyledPaperMobile>
