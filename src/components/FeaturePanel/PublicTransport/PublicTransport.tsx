@@ -23,6 +23,7 @@ const categories = [
   'night',
   'car',
   'car_shuttle',
+  'bus',
   'unknown',
 ];
 

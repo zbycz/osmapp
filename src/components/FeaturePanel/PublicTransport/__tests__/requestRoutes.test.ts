@@ -7,24 +7,38 @@ jest.mock('../../../../services/fetch', () => ({
 
 test('conversion', async () => {
   jest.spyOn(fetchModule, 'fetchJson').mockResolvedValue({
-    version: 0.6,
-    generator: 'Overpass API 0.7.62.1 084b4234',
-    osm3s: {
-      timestamp_osm_base: '2024-09-19T11:02:24Z',
-      copyright:
-        'The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.',
-    },
     elements: [
       {
         type: 'relation',
-        id: 1871120,
-        members: [
-          { type: 'relation', ref: 945619, role: '' },
-          { type: 'relation', ref: 6090, role: '' },
-        ],
+        id: 6818857,
+        members: [],
         tags: {
-          ref: '16',
-          colour: 'red',
+          colour: '#880088',
+          ref: '89',
+          route_master: 'bus',
+          type: 'route_master',
+        },
+      },
+      {
+        type: 'relation',
+        id: 68352,
+        bounds: {},
+        members: [],
+        tags: {
+          ref: '89',
+          route: 'bus',
+          type: 'route',
+        },
+      },
+      {
+        type: 'relation',
+        id: 4673219,
+        bounds: {},
+        members: [],
+        tags: {
+          ref: '89',
+          route: 'bus',
+          type: 'route',
         },
       },
     ],
@@ -34,34 +48,65 @@ test('conversion', async () => {
 
   expect(features.routes).toEqual([
     {
-      ref: '16',
-      colour: 'red',
-      service: undefined,
-      osmId: '1871120',
+      colour: '#880088',
+      osmId: '6818857',
       osmType: 'relation',
+      ref: '89',
+      service: 'bus',
     },
   ]);
   expect(features.geoJson.features).toEqual([
     {
-      type: 'Feature',
-      id: 18711204,
-      osmMeta: { type: 'relation', id: 1871120 },
-      tags: {
-        colour: 'red',
-        ref: '16',
-      },
-      properties: {
-        class: 'information',
-        colour: 'red',
-        osmappType: 'relation',
-        ref: '16',
-        subclass: undefined,
-      },
+      center: undefined,
       geometry: {
         geometries: [],
         type: 'GeometryCollection',
       },
+      id: 683524,
+      osmMeta: {
+        id: 68352,
+        type: 'relation',
+      },
+      properties: {
+        class: 'bus',
+        osmappType: 'relation',
+        ref: '89',
+        route: 'bus',
+        subclass: 'bus',
+        type: 'route',
+      },
+      tags: {
+        ref: '89',
+        route: 'bus',
+        type: 'route',
+      },
+      type: 'Feature',
+    },
+    {
       center: undefined,
+      geometry: {
+        geometries: [],
+        type: 'GeometryCollection',
+      },
+      id: 46732194,
+      osmMeta: {
+        id: 4673219,
+        type: 'relation',
+      },
+      properties: {
+        class: 'bus',
+        osmappType: 'relation',
+        ref: '89',
+        route: 'bus',
+        subclass: 'bus',
+        type: 'route',
+      },
+      tags: {
+        ref: '89',
+        route: 'bus',
+        type: 'route',
+      },
+      type: 'Feature',
     },
   ]);
 });

@@ -35,8 +35,12 @@ const fmtCategory = (category: string) => {
       return t('publictransport.long_distance');
     case 'high_speed':
       return t('publictransport.high_speed');
-    default:
+    case 'bus':
+      return t('publictransport.bus');
+    case 'unknown':
       return t('publictransport.unknown');
+    default:
+      return category;
   }
 };
 

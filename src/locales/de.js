@@ -176,6 +176,7 @@ export default {
   'publictransport.regional': 'Regionalzüge',
   'publictransport.long_distance': 'Fernzüge',
   'publictransport.high_speed': 'Hochgeschwindigkeitszüge',
+  'publictransport.bus': 'Bus',
   'publictransport.unknown': 'Unbekannter Typ',
 
   'runway.information': 'Landebahninformationen',

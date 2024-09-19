@@ -68,11 +68,13 @@ export async function requestLines(featureType: string, id: number) {
   const allRoutes = routeMasters
     .map(({ type, id, tags }) => {
       const directionRouteTags = filterRoutesByRef(routes, tags.ref);
+      const getVal = (key: string) =>
+        getTagValue(key, tags, directionRouteTags);
 
       return {
         ref: `${tags.ref || tags.name}`,
-        colour: getTagValue('colour', tags, directionRouteTags),
-        service: getTagValue('service', tags, directionRouteTags),
+        colour: getVal('colour'),
+        service: getVal('service') || getVal('route') || getVal('route_master'),
         osmId: `${id}`,
         osmType: type,
       };
