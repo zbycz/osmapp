@@ -6,6 +6,7 @@ import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
 import { RoutingResult } from './routing/types';
 import { t } from '../../services/intl';
+import { CloseButton } from './helpers';
 
 export const StyledPaper = styled(Paper)`
   backdrop-filter: blur(10px);
@@ -21,6 +22,12 @@ export const StyledPaperMobile = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)}
     ${({ theme }) => theme.spacing(0.5)} ${({ theme }) => theme.spacing(2)};
   text-align: center;
+`;
+
+const CloseContainer = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
 `;
 
 const getHumanMetric = (meters) => {
@@ -66,6 +73,11 @@ export const Result = ({ result, revealForm }: Props) => {
   if (isMobileMode) {
     return (
       <StyledPaperMobile elevation={3}>
+        {revealForm && (
+          <CloseContainer>
+            <CloseButton />
+          </CloseContainer>
+        )}
         <strong>{distance}</strong> • <strong>{time}</strong> • ↑{ascent}
         <TooltipButton
           tooltip={<PoweredBy result={result} />}

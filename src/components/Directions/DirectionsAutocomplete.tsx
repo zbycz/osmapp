@@ -23,7 +23,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { SearchOption } from '../SearchBox/types';
 import { useRouter } from 'next/router';
 import { destroyRouting } from './routing/handleRouting';
-import { Option, splitByFirstTilda } from './utils';
+import { Option, splitByFirstTilda } from './helpers';
 import { LonLat } from '../../services/types';
 
 const StyledTextField = styled(TextField)`

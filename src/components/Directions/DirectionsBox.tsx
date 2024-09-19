@@ -4,8 +4,7 @@ import {
   getOptionToLonLat,
 } from './DirectionsAutocomplete';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Button, IconButton, Stack } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { t } from '../../services/intl';
 import { ModeToggler } from './ModeToggler';
@@ -18,7 +17,13 @@ import {
 import { getLabel } from '../../helpers/featureLabel';
 import { getLastFeature } from '../../services/lastFeatureStorage';
 import { Result, StyledPaper } from './Result';
-import { buildUrl, getStarOption, Option, parseUrlParts } from './utils';
+import {
+  buildUrl,
+  CloseButton,
+  getStarOption,
+  Option,
+  parseUrlParts,
+} from './helpers';
 import { PointsTooFarError, Profile, RoutingResult } from './routing/types';
 import { useBoolState, useMobileMode } from '../helpers';
 import { LoadingButton } from '@mui/lab';
@@ -132,10 +137,6 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
   useReactToUrl(setMode, setFrom, setTo, setResult);
   const onSubmit = useGetOnSubmit(from, to, mode, setResult, setLoading);
 
-  const close = () => {
-    Router.push('/');
-  };
-
   if (hideForm) {
     return null;
   }
@@ -146,9 +147,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         <ModeToggler value={mode} setMode={setMode} />
         <div style={{ flex: 1 }} />
         <div>
-          <IconButton onClick={close} size="small" aria-label="close">
-            <CloseIcon fontSize="small" />
-          </IconButton>
+          <CloseButton />
         </div>
       </Stack>
 

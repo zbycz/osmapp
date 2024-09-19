@@ -1,6 +1,10 @@
 import { LonLat } from '../../services/types';
 import { encodeUrl } from '../../helpers/utils';
 import { getOptionLabel, getOptionToLonLat } from './DirectionsAutocomplete';
+import Router from 'next/router';
+import { IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import React from 'react';
 
 export const splitByFirstTilda = (str: string) => {
   if (!str) {
@@ -40,3 +44,12 @@ export const parseUrlParts = (urlParts: string[]): Option[] =>
     const [coords, label] = splitByFirstTilda(urlPart);
     return getStarOption(urlCoordsToLonLat(coords), label);
   });
+
+const close = () => {
+  Router.push('/');
+};
+export const CloseButton = () => (
+  <IconButton onClick={close} size="small" aria-label="close">
+    <CloseIcon fontSize="small" />
+  </IconButton>
+);
