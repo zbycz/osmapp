@@ -76,8 +76,10 @@ export const FaviconsOpenClimbing = () => (
     {/* HACK: second theme-color is ignored on desktop/mobile, but: makes Android PWA to take the color only from manifest */}
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />{' '}
-    {/* TODO try black-translucent again + set body bgcolor */}
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />{' '}
     <meta name="msapplication-TileColor" content="#9f00a7" />
     <meta
       name="msapplication-config"
