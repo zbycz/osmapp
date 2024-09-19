@@ -23,7 +23,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { SearchOption } from '../SearchBox/types';
 import { useRouter } from 'next/router';
 import { destroyRouting } from './routing/handleRouting';
-import { splitByFirstTilda } from './utils';
+import { Option, splitByFirstTilda } from './utils';
 import { LonLat } from '../../services/types';
 
 const StyledTextField = styled(TextField)`
@@ -106,20 +106,20 @@ export const getOptionToLonLat = (option) => {
 
 type Props = {
   label: string;
-  value: string;
-  setValue: (value: string) => void;
+  value: Option;
+  setValue: (value: Option) => void;
 };
 export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
   const selectedOptionInputValue = useRef(null);
-  const [options, setOptions] = useState([]);
+  const [options, setOptions] = useState<Option[]>([]);
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
 
   useOptions(inputValue, setOptions);
 
-  const onChange = (_, option) => {
+  const onChange = (_, option: Option) => {
     console.log('selected', option); // eslint-disable-line no-console
     setInputValue(getOptionLabel(option));
     setValue(option);
@@ -142,7 +142,7 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
       setInputValue(getOptionLabel(value));
       selectedOptionInputValue.current = getOptionLabel(value);
     }
-  }, [value]);
+  }, [setInputValue, value]);
 
   return (
     <Row ref={autocompleteRef}>

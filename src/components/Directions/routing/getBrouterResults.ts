@@ -29,3 +29,8 @@ export const getBrouterResults = async (
     geojson,
   };
 };
+
+// f189b841-6529-46c6-8a91-51f17477dcda
+// https://graphhopper.com/api/1/route?point=49.932707,11.588051&point=50.3404,11.64705&vehicle=car&debug=true&key=f189b841-6529-46c6-8a91-51f17477dcda&type=json&points_encoded=false
+// https://graphhopper.com/api/1/route?point=49.932707,11.588051&point=50.3404,11.64705&vehicle=car&debug=true&key=f189b841-6529-46c6-8a91-51f17477dcda&type=json&calc_points=false&instructions=false
+// https://graphhopper.com/api/1/route?point=49.932707,11.588051&point=50.3404,11.64705&vehicle=car&debug=true&key=f189b841-6529-46c6-8a91-51f17477dcda&optimize=true

@@ -1,11 +1,10 @@
 import { isImperial, useMobileMode } from '../helpers';
-import { Paper, Typography } from '@mui/material';
+import { Button, Paper, Typography } from '@mui/material';
 import React from 'react';
 import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
 import { RoutingResult } from './routing/types';
-import { NamedBbox } from '../../services/getCenter';
 
 export const StyledPaper = styled(Paper)`
   backdrop-filter: blur(10px);
@@ -48,15 +47,15 @@ const toHumanTime = (seconds) => {
   return hours > 0 ? `${hours}:${minutesStr} h` : `${minutes} min`;
 };
 
-type Props = { result: RoutingResult };
-
-const PoweredBy = ({ result }: Props) => (
+const PoweredBy = ({ result }: { result: RoutingResult }) => (
   <Typography variant="caption" component="div">
-    Search proudly powered by <a href={result.link}>{result.router}</a>.
+    Search powered by <a href={result.link}>{result.router}</a>.
   </Typography>
 );
 
-export const Result = ({ result }: Props) => {
+type Props = { result: RoutingResult; revealForm: false | (() => void) };
+
+export const Result = ({ result, revealForm }: Props) => {
   const isMobileMode = useMobileMode();
 
   const time = toHumanTime(result.time);
@@ -71,6 +70,11 @@ export const Result = ({ result }: Props) => {
           tooltip={<PoweredBy result={result} />}
           color="secondary"
         />
+        {revealForm && (
+          <Button size="small" onClick={revealForm}>
+            Edit destinations
+          </Button>
+        )}
       </StyledPaperMobile>
     );
   }
