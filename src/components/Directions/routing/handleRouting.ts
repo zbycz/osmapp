@@ -3,7 +3,7 @@ import { getGlobalMap, mapIdlePromise } from '../../../services/mapStorage';
 import maplibregl from 'maplibre-gl';
 import { LonLat } from '../../../services/types';
 import { Profile, RoutingResult } from './types';
-import { getBrouterResults } from './getBrouterResults';
+import { getGraphhopperResults } from './getGraphhopperResults';
 import { LineLayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { type GeoJSON } from 'geojson';
 import { isMobileModeVanilla } from '../../helpers';
@@ -68,27 +68,44 @@ const computeSlopeGradient = (geojson) => {
     .flat();
 };
 
-const paints = (geojson: GeoJSON.GeoJSON) =>
-  ({
-    walk: {
+const getPaint = (
+  mode: Profile,
+  result: RoutingResult,
+): LineLayerSpecification['paint'] => {
+  if (mode === 'walk') {
+    return {
       'line-color': '#8f53c1',
       'line-width': 5,
-    },
-    car: {
+    };
+  }
+
+  if (mode === 'car') {
+    return {
       'line-width': 5,
       'line-color': 'IndianRed',
-    },
-    bike: {
+    };
+  }
+
+  if (mode === 'bike' && result.router.startsWith('BRouter')) {
+    return {
       'line-color': '#57bff5',
       'line-width': 5,
       'line-gradient': [
         'interpolate',
         ['linear'],
         ['line-progress'],
-        ...computeSlopeGradient(geojson),
+        ...computeSlopeGradient(result.geojson),
       ],
-    },
-  }) as Record<Profile, LineLayerSpecification['paint']>;
+    };
+  }
+
+  if (mode === 'bike') {
+    return {
+      'line-color': '#57bff5',
+      'line-width': 5,
+    };
+  }
+};
 
 const ROUND_LINE = {
   'line-join': 'round',
@@ -120,12 +137,13 @@ const renderOnMap = (
       'line-width': 8,
     },
   });
+
   map.addLayer({
     id: `${SOURCE}-line`,
     type: 'line',
     source: SOURCE,
     layout: ROUND_LINE,
-    paint: paints(result.geojson)[mode],
+    paint: getPaint(mode, result),
   });
 };
 
@@ -155,7 +173,7 @@ export const handleRouting = async (
   }
   window.localStorage?.setItem(LAST_MODE_STORAGE_KEY, mode);
 
-  const result = await getBrouterResults(mode, points);
+  const result = await getGraphhopperResults(mode, points);
   if (result == null) {
     return null;
   }
