@@ -18,7 +18,7 @@
   },
   "include": [
     "next-env.d.ts",
-    ".eslintrc.js",
+    ".eslintrc.json",
     "**/*.js",
     "**/*.ts",
     "**/*.tsx"

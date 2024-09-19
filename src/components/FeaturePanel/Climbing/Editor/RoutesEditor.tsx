@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { RoutesLayer } from './RoutesLayer';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
+import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
+import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
 
 const EditorContainer = styled.div<{ imageHeight: number }>`
   display: flex;
@@ -38,13 +40,14 @@ const ImageElement = styled.img<{ zoom?: number }>`
 
 export const RoutesEditor = ({
   isRoutesLayerVisible = true,
-  setIsPhotoLoaded,
+  photoResolution,
   imageUrl,
+  isPhotoLoading,
+  setIsPhotoLoading,
 }) => {
   const {
     imageSize,
     getMachine,
-    addOffsets,
     setMousePosition,
     setIsPointMoving,
     getPercentagePosition,
@@ -55,7 +58,12 @@ export const RoutesEditor = ({
     isPointClicked,
     routeIndexHovered,
     loadPhotoRelatedData,
+    loadedPhotos,
     photoRef,
+    photoPath,
+    setLoadedPhotos,
+    photoZoom,
+    photoPaths,
   } = useClimbingContext();
   const machine = getMachine();
   const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
@@ -80,12 +88,9 @@ export const RoutesEditor = ({
     if (isPointClicked) {
       setMousePosition(null);
       machine.execute('dragPoint', { position });
-
       setIsPointMoving(true);
-      const newCoordinate = getPercentagePosition(
-        addOffsets(['editorPosition', 'imageContainer'], position),
-      );
 
+      const newCoordinate = getPercentagePosition(position);
       const closestPoint = findCloserPoint(newCoordinate);
 
       const updatedPoint = closestPoint ?? newCoordinate;
@@ -109,18 +114,48 @@ export const RoutesEditor = ({
   };
 
   const onMouseMove = (e) => {
-    onMove(
-      addOffsets(['scrollOffset'], {
-        x: e.clientX,
-        y: e.clientY,
-        units: 'px',
-      }),
+    const mousePosition: PositionPx = {
+      x: e.clientX,
+      y: e.clientY,
+      units: 'px',
+    };
+    const positionInImage = getPositionInImageFromMouse(
+      photoRef,
+      mousePosition,
+      photoZoom,
     );
+
+    onMove(positionInImage);
+  };
+
+  const preloadOtherPhotos = () => {
+    const photosToLoad = photoPaths.filter((path) => !loadedPhotos[path]);
+
+    const tempLoadedPhotos = photosToLoad.reduce((acc, otherPhotoPath) => {
+      const img = new Image();
+      const url = getCommonsImageUrl(`File:${otherPhotoPath}`, photoResolution);
+      img.src = url;
+
+      return {
+        ...acc,
+        [otherPhotoPath]: {
+          ...acc[otherPhotoPath],
+          [photoResolution]: true,
+        },
+      };
+    }, loadedPhotos);
+
+    setLoadedPhotos(tempLoadedPhotos);
   };
 
   const onPhotoLoad = () => {
-    setIsPhotoLoaded(true);
+    setLoadedPhotos({
+      ...loadedPhotos,
+      [photoPath]: { ...loadedPhotos[photoPath], [photoResolution]: true },
+    });
     loadPhotoRelatedData();
+    preloadOtherPhotos();
+    setIsPhotoLoading(false);
   };
 
   return (
@@ -128,13 +163,15 @@ export const RoutesEditor = ({
       <ImageContainer>
         <ImageElement src={imageUrl} onLoad={onPhotoLoad} ref={photoRef} />
       </ImageContainer>
-      <RoutesLayer
-        isVisible={isRoutesLayerVisible}
-        onClick={onCanvasClick}
-        onEditorMouseMove={onMouseMove}
-        onEditorTouchMove={onTouchMove}
-        transformOrigin={transformOrigin}
-      />
+      {!isPhotoLoading && (
+        <RoutesLayer
+          isVisible={isRoutesLayerVisible}
+          onClick={onCanvasClick}
+          onEditorMouseMove={onMouseMove}
+          onEditorTouchMove={onTouchMove}
+          transformOrigin={transformOrigin}
+        />
+      )}
     </EditorContainer>
   );
 };

@@ -22,13 +22,7 @@ const getPathString = (path) =>
         .join('|');
 
 const getUpdatedBasicTags = (route: ClimbingRoute) => {
-  const checkedTags = ['name', 'description', 'author'];
-  const updatedTags = {};
-  checkedTags.forEach((tagToCheck) => {
-    if (route[tagToCheck] !== route.feature.tags[tagToCheck]) {
-      updatedTags[tagToCheck] = route[tagToCheck];
-    }
-  });
+  const updatedTags = { ...route.updatedTags };
 
   const newGradeSystem = route.difficulty?.gradeSystem;
   const gradeSystemKey = getOsmTagFromGradeSystem(newGradeSystem);
@@ -99,7 +93,7 @@ export const useGetHandleSave = (
 ) => {
   const { feature: crag } = useFeatureContext();
   const { routes } = useClimbingContext();
-  const showSnackbar = useSnackbar();
+  const { showToast } = useSnackbar();
 
   return async () => {
     // eslint-disable-next-line no-alert
@@ -109,10 +103,10 @@ export const useGetHandleSave = (
 
     const changes = getChanges(routes);
     const comment = `${changes.length} routes`;
-    const result = await editCrag(crag, comment, changes);
+    //const result = await editCrag(crag, comment, changes);
 
-    console.log('All routes saved', result); // eslint-disable-line no-console
-    showSnackbar('Data saved successfully!', 'success');
+    console.log('All routes saved', changes); // eslint-disable-line no-console
+    showToast('Data saved successfully!', 'success');
     setIsEditMode(false);
   };
 };

@@ -5,20 +5,20 @@ import {
   FeatureTags,
   LineString,
   Point,
+  OsmId,
 } from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
-import { OsmApiId } from './helpers';
 import { join, publishDbgObject } from '../utils';
 
 // inspired by overpassSearch - but this computes all geometries (doesnt fetch them by 'geom' modifier)
 
-const convertOsmIdToMapId = (apiId: OsmApiId) => {
+const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-function getItems(elements) {
+const getItems = (elements) => {
   const nodes = [];
   const ways = [];
   const relations = [];
@@ -32,7 +32,7 @@ function getItems(elements) {
     }
   });
   return { nodes, ways, relations };
-}
+};
 
 const numberToSuperScript = (number?: number) =>
   number?.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]);
@@ -49,8 +49,8 @@ const convert = (
   const center = getCenter(geometry) ?? undefined;
   const osmappRouteCount =
     element.tags.climbing === 'crag'
-      ? element.members?.length ??
-        parseInt(element.tags['climbing:sport'] ?? 0, 10)
+      ? (element.members?.length ??
+        parseInt(element.tags['climbing:sport'] ?? 0, 10))
       : undefined;
   const properties = {
     ...getPoiClass(tags),
@@ -103,8 +103,8 @@ function getRelationGeomFn(lookup) {
           geometries,
         }
       : center
-      ? { type: 'Point', coordinates: [center.lon, center.lat] }
-      : undefined;
+        ? { type: 'Point', coordinates: [center.lon, center.lat] }
+        : undefined;
   };
 }
 
@@ -145,35 +145,6 @@ const getRelationWithAreaCount = (
     return relation;
   });
 
-const getFakeAreas = (relationsOut3: Feature[]) => {
-  const cragsWithArea = { node: {}, way: {}, relation: {} };
-  relationsOut3.forEach((relation) => {
-    if (relation.tags.climbing === 'area') {
-      relation.members.forEach(({ type, ref }) => {
-        cragsWithArea[type][ref] = true;
-      });
-    }
-  });
-
-  const fakeAreas = [];
-  relationsOut3.forEach((relation) => {
-    if (
-      relation.tags.climbing === 'crag' &&
-      !cragsWithArea.relation[relation.osmMeta.id]
-    ) {
-      fakeAreas.push({
-        ...relation,
-        properties: {
-          ...relation.properties,
-          name: relation.tags.name,
-          climbing: 'area',
-        },
-      });
-    }
-  });
-  return fakeAreas;
-};
-
 export const cragsToGeojson = (response: any): Feature[] => {
   const { nodes, ways, relations } = getItems(response.elements);
 
@@ -206,9 +177,8 @@ export const cragsToGeojson = (response: any): Feature[] => {
   );
 
   const relationsOut3 = getRelationWithAreaCount(relationsOut2, lookup);
-  const fakeAreas = getFakeAreas(relationsOut3);
 
-  return [...nodesOut, ...waysOut, ...relationsOut3, ...fakeAreas];
+  return [...nodesOut, ...waysOut, ...relationsOut3];
 };
 
 // on CZ 48,11,51,19 makes 12 MB   (only crags is 700kB)
@@ -237,7 +207,10 @@ export const fetchCrags = async () => {
       ...element,
       geometry: {
         type: 'Point',
-        coordinates: element.center,
+        coordinates:
+          element.properties.climbing === 'area'
+            ? element.center.map((c) => c + 0.00007) // area with single crag displaced ~10m
+            : element.center,
       },
       properties: {
         ...element.properties,

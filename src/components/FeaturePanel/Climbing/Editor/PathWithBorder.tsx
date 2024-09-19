@@ -1,10 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { useTheme } from '@mui/material';
 import { useConfig } from '../config';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { getDifficultyColor } from '../utils/grades/routeGrade';
+import { getDifficulty, getDifficultyColor } from '../utils/grades/routeGrade';
 
 const RouteLine = styled.path`
   pointer-events: all;
@@ -21,46 +21,40 @@ export const PathWithBorder = ({
   ...props
 }) => {
   const config = useConfig();
-  const { isDifficultyHeatmapEnabled, routeIndexHovered } =
-    useClimbingContext();
   const theme = useTheme();
+  const { routeIndexHovered, isOtherRouteSelected } = useClimbingContext();
 
-  const strokeColor = isDifficultyHeatmapEnabled
-    ? getDifficultyColor(route.feature.tags, theme)
-    : config.pathStrokeColor;
-
-  const getPathColor = () => {
-    if (isSelected) {
-      return config.pathStrokeColorSelected;
-    }
-
-    return strokeColor;
-  };
+  const strokeColor = getDifficultyColor(
+    getDifficulty(route.feature.tags),
+    theme,
+  );
 
   const contrastColor = theme.palette.getContrastText(
     isSelected ? config.pathStrokeColorSelected : strokeColor,
   );
+  const isOtherSelected = isOtherRouteSelected(routeNumber);
 
   return (
     <>
       <RouteBorder
         d={d}
-        strokeWidth={config.pathBorderWidth}
+        strokeWidth={isOtherSelected ? 2 : config.pathBorderWidth}
         stroke={contrastColor}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity={config.pathBorderOpacity}
+        opacity={isOtherSelected ? 0 : 1}
         // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
       />
       <RouteLine
         d={d}
-        strokeWidth={config.pathStrokeWidth}
-        stroke={getPathColor()}
+        strokeWidth={isOtherSelected ? 1 : config.pathStrokeWidth}
+        stroke={isOtherSelected ? 'white' : strokeColor}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
+        opacity={isOtherSelected ? 0.6 : 1}
         // markerMid="url(#triangle)"
         // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}

@@ -1,14 +1,43 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { Tooltip, IconButton } from '@mui/material';
-import { COLORS } from '../styles/layers/climbingLayers';
+import { IconButton, Tooltip } from '@mui/material';
 import { convertHexToRgba } from '../../utils/colorUtils';
+import AreaBlue from '../../../../public/icons-climbing/icons/area-blue.svg';
+import CragRed from '../../../../public/icons-climbing/icons/crag-red.svg';
+import AreaGray from '../../../../public/icons-climbing/icons/area-gray.svg';
+import CragGray from '../../../../public/icons-climbing/icons/crag-gray.svg';
+
+export const AREA = {
+  HAS_IMAGES: {
+    IMAGE: 'climbing:area-blue',
+    COLOR: 'rgba(0, 59, 210, 1)',
+  },
+  NO_IMAGES: {
+    IMAGE: 'climbing:area-gray',
+    COLOR: '#666',
+  },
+};
+
+export const CRAG = {
+  HAS_IMAGES: {
+    IMAGE: 'climbing:crag-red',
+    COLOR: '#ea5540',
+  },
+  NO_IMAGES: {
+    IMAGE: 'climbing:crag-gray',
+    COLOR: '#666',
+  },
+};
 
 const HideableContainer = styled.div<{ $isVisible: boolean }>`
   transition: max-height 0.15s ease-out;
   max-height: ${({ $isVisible }) => ($isVisible ? 500 : 0)}px;
   overflow: hidden;
+`;
+
+const Icon = styled.img`
+  height: 18px;
 `;
 
 const Container = styled.div`
@@ -21,18 +50,10 @@ const Container = styled.div`
   gap: 8px;
 `;
 
-const Dot = styled.div<{ color: string }>`
-  border-radius: 50%;
-  width: 15px;
-  height: 15px;
-  border: solid 2px white;
-  background: ${({ color }) => color};
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
-`;
 const Item = styled.div`
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 10px;
   font-size: 12px;
 `;
 
@@ -69,16 +90,20 @@ export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
           </Tooltip>
         </HeadingRow>
         <Item>
-          <Dot color={COLORS.AREA.HAS_IMAGES.DEFAULT} />
+          <Icon src={AreaBlue.src} alt="Climbing area with photos icon" />
           Area with photos
         </Item>
         <Item>
-          <Dot color={COLORS.CRAG.HAS_IMAGES.DEFAULT} />
+          <Icon src={AreaGray.src} alt="Climbing area without photos icon" />
+          Area without photos
+        </Item>
+        <Item>
+          <Icon src={CragRed.src} alt="Climbing crag with photos icon" />
           Crag with photos
         </Item>
         <Item>
-          <Dot color={COLORS.AREA.NO_IMAGES.DEFAULT} />
-          Area/crag without photos
+          <Icon src={CragGray.src} alt="Climbing crag without photos icon" />
+          Crag without photos
         </Item>
       </Container>
     </HideableContainer>

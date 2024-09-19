@@ -1,17 +1,19 @@
 import Router from 'next/router';
 import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
-import { getGlobalMap } from '../../services/mapStorage';
+import { getOverpassSource } from '../../services/mapStorage';
 import { performOverpassSearch } from '../../services/overpassSearch';
 import { t } from '../../services/intl';
 import { fitBounds } from './utils';
 import { getSkeleton } from './onHighlightFactory';
+import { SnackbarContextType } from '../utils/SnackbarContext';
+import { addOverpassQueryHistory } from './options/overpass';
 
 const overpassOptionSelected = (
   option,
   setOverpassLoading,
   bbox,
-  showToast,
+  showToast: SnackbarContextType['showToast'],
 ) => {
   const tagsOrQuery =
     option.preset?.presetForSearch.tags ??
@@ -26,13 +28,18 @@ const overpassOptionSelected = (
     .then((geojson) => {
       const count = geojson.features.length;
       const content = t('searchbox.overpass_success', { count });
-      showToast({ content });
-      getGlobalMap().getSource('overpass')?.setData(geojson);
+      showToast(content);
+      getOverpassSource()?.setData(geojson);
+
+      if (option.overpass?.query) {
+        addOverpassQueryHistory(option.overpass.query);
+      }
     })
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
       const content = t('searchbox.overpass_error', { message });
-      showToast({ content, type: 'error' });
+      console.error(e); // eslint-disable-line no-console
+      showToast(content, 'error');
     })
     .finally(() => {
       clearTimeout(timeout);
@@ -46,7 +53,7 @@ const starOptionSelected = (option) => {
 };
 
 const geocoderOptionSelected = (option, setFeature) => {
-  if (!option?.geometry.coordinates) return;
+  if (!option?.geometry?.coordinates) return;
 
   const skeleton = getSkeleton(option);
   console.log('Search item selected:', { location: option, skeleton }); // eslint-disable-line no-console
@@ -54,7 +61,7 @@ const geocoderOptionSelected = (option, setFeature) => {
   addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
   setFeature(skeleton);
-  fitBounds(option, true);
+  fitBounds(option);
   Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };
 

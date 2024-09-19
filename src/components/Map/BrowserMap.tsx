@@ -1,11 +1,11 @@
 import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
+import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import {
   createMapEffectHook,
   createMapEventHook,
   useMobileMode,
 } from '../helpers';
-import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { useFeatureMarker } from './behaviour/useFeatureMarker';
 import { useOnMapClicked } from './behaviour/useOnMapClicked';
@@ -14,6 +14,7 @@ import { useUpdateStyle } from './behaviour/useUpdateStyle';
 import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
+import { usePersistedState } from '../utils/usePersistedState';
 import { webglSupported } from './helpers';
 import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 import { useAddTopRightControls } from './useAddTopRightControls';
@@ -36,21 +37,19 @@ const NotSupportedMessage = () => (
   </span>
 );
 
-// TODO https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
+// TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
-const BrowserMap = ({ onMapLoaded }) => {
-  if (!webglSupported) {
-    onMapLoaded();
-    return <NotSupportedMessage />;
-  }
-
+const BrowserMap = () => {
+  const { userLayers } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
+  const { mapLoaded, setMapLoaded } = useMapStateContext();
+
   const [map, mapRef] = useInitMap();
   useAddTopRightControls(map, mobileMode);
   useOnMapClicked(map, setFeature);
   useOnMapLongPressed(map, setFeature);
-  useOnMapLoaded(map, onMapLoaded);
+  useOnMapLoaded(map, setMapLoaded);
   useFeatureMarker(map);
 
   const { viewForMap, setViewFromMap, setBbox, activeLayers } =
@@ -58,9 +57,20 @@ const BrowserMap = ({ onMapLoaded }) => {
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
-  useUpdateStyle(map, activeLayers);
+  useUpdateStyle(map, activeLayers, userLayers, mapLoaded);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
 
-export default BrowserMap;
+const BrowserMapCheck = () => {
+  const { setMapLoaded } = useMapStateContext();
+
+  if (!webglSupported) {
+    setMapLoaded();
+    return <NotSupportedMessage />;
+  }
+
+  return <BrowserMap />;
+};
+
+export default BrowserMapCheck; // dynamic import

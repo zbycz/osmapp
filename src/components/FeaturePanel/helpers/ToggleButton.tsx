@@ -2,7 +2,7 @@ import { IconButton } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 const StyledToggleButton = styled(IconButton)`
   position: absolute !important;

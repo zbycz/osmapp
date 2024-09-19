@@ -1,68 +1,64 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { Tooltip } from '@mui/material';
 import { useRouteNumberColors } from './utils/useRouteNumberColors';
 import { isTicked } from '../../../services/ticks';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
-const Container = styled.div<{
-  $colors: Record<string, string>;
+const Container = styled.div`
+  position: relative;
+`;
+const TickCheckContainer = styled.div`
+  position: absolute;
+  top: -5px;
+  right: -5px;
+  font-size: 12px;
+`;
+
+const Circle = styled.div<{
+  $hasCircle: boolean;
 }>`
   width: 20px;
   height: 20px;
   line-height: 20px;
   border-radius: 50%;
-  background: ${({ $colors }) => $colors.background};
-  color: ${({ $colors }) => $colors.text};
+  background: ${({ theme, $hasCircle }) =>
+    $hasCircle ? theme.palette.climbing.primary : undefined};
+  color: ${({ theme, $hasCircle }) =>
+    $hasCircle ? theme.palette.climbing.secondary : '#999'};
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: 12px;
-  font-weight: 600;
-
-  border: ${({ $colors }) => $colors.border};
 `;
 
 export const RouteNumber = ({
   children,
-  isSelected,
-  photoInfoForRoute,
-  osmId,
+  hasCircle = false,
+  hasTick = false,
+  hasTooltip = true,
 }) => {
-  const hasPathOnThisPhoto = photoInfoForRoute === 'hasPathOnThisPhoto';
-  const isOnThisPhoto = photoInfoForRoute === 'isOnThisPhoto';
-  const hasPathInDifferentPhoto =
-    photoInfoForRoute === 'hasPathInDifferentPhoto';
-  const isOnDifferentPhoto = photoInfoForRoute === 'isOnDifferentPhoto';
-
-  const colors = useRouteNumberColors({
-    isSelected,
-    hasPathOnThisPhoto,
-    isOnThisPhoto,
-    hasPathInDifferentPhoto,
-    isOnDifferentPhoto,
-    isTicked: isTicked(osmId),
-  });
-
   const getTitle = () => {
-    if (hasPathOnThisPhoto) {
-      return 'Route has path on this photo';
+    if (hasTick) {
+      return 'You ticked this route';
     }
-    if (isOnThisPhoto) {
-      return 'Route is on this photo';
+    if (hasCircle) {
+      return 'Route has marked path';
     }
-    if (hasPathInDifferentPhoto) {
-      return 'Route has path available on different photo';
-    }
-    if (isOnDifferentPhoto) {
-      return 'Route is available on different photo';
-    }
-    return 'Route is not marked yet';
+    return 'Route has no marked path';
   };
 
   return (
-    <Tooltip arrow title={getTitle()}>
-      <Container $colors={colors}>{children}</Container>
+    <Tooltip arrow title={hasTooltip ? getTitle() : null}>
+      <Container>
+        <Circle $hasCircle={hasCircle}>{children}</Circle>
+        {hasTick && (
+          <TickCheckContainer>
+            <CheckCircleIcon color="success" fontSize="inherit" />
+          </TickCheckContainer>
+        )}
+      </Container>
     </Tooltip>
   );
 };

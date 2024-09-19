@@ -1,39 +1,37 @@
 import type Vocabulary from '../locales/vocabulary';
 import type { getSchemaForFeature } from './tagging/idTaggingScheme';
 
-export interface ImageUrls {
-  source?: string;
-  link: string;
-  thumb: string;
-  sharp?: string;
-  username?: string;
-  portrait?: boolean;
-  timestamp?: string;
-  isPano?: boolean;
-}
-
-export type LoadingImage = null;
-export type NoImage = undefined;
-
-export type Image = ImageUrls | LoadingImage | NoImage;
-
-export const imageTagRegexp =
-  /^(image|wikimedia_commons|wikidata|wikipedia|wikipedia:[a-z+]|website)(:?\d*)$/;
+export type OsmType = 'node' | 'way' | 'relation';
+export type OsmId = {
+  type: OsmType;
+  id: number;
+};
 
 export type PathType = { x: number; y: number; suffix: string }[];
-export type ImagePath = {
+export type MemberPath = {
   path: PathType;
-  member?: Feature;
+  member: Feature;
 };
-export type ImageTag = {
-  type: 'image' | 'wikimedia_commons' | 'wikidata' | 'wikipedia' | 'website';
+export type ImageDefFromTag = {
+  type: 'tag';
   k: string;
   v: string;
-  imageUrl: string | null; // null = API call needed
-  pathTag: string | undefined;
+  instant: boolean; // true = no API call needed
   path?: PathType;
-  memberPaths?: ImagePath[];
+  memberPaths?: MemberPath[]; // merged on relation
 };
+export type ImageDefFromCenter = {
+  type: 'center';
+  service: 'mapillary' | 'fody';
+  center: LonLat;
+};
+export type ImageDef = ImageDefFromTag | ImageDefFromCenter;
+export const isCenter = (def: ImageDef): def is ImageDefFromCenter =>
+  def?.type === 'center';
+export const isTag = (def: ImageDef): def is ImageDefFromTag =>
+  def?.type === 'tag';
+export const isInstant = (def: ImageDef): def is ImageDefFromTag =>
+  isTag(def) && def.instant;
 
 // coordinates in geojson format: [lon, lat] = [x,y]
 export type LonLat = number[];
@@ -67,15 +65,15 @@ export const isGeometryCollection = (
   geometry: FeatureGeometry,
 ): geometry is GeometryCollection => geometry?.type === 'GeometryCollection';
 
-export interface FeatureTags {
+export type FeatureTags = {
   [key: string]: string;
-}
+};
 
-interface RelationMember {
-  ref: string;
+type RelationMember = {
+  type: OsmType;
+  ref: number;
   role: string;
-  type: string;
-}
+};
 
 // TODO split in two types /extend/
 export interface Feature {
@@ -84,14 +82,14 @@ export interface Feature {
   id?: number; // for map hover effect
   geometry?: FeatureGeometry;
   osmMeta: {
-    type: string;
-    id: string;
+    type: OsmType;
+    id: number;
     visible?: string;
-    version?: string;
-    changeset?: string;
+    version?: number;
+    changeset?: number;
     timestamp?: string;
     user?: string;
-    uid?: string;
+    uid?: number;
     lat?: string;
     lon?: string;
     role?: string; // only for memberFeatures
@@ -100,7 +98,7 @@ export interface Feature {
   members?: RelationMember[];
   memberFeatures?: Feature[];
   parentFeatures?: Feature[];
-  imageTags?: ImageTag[];
+  imageDefs?: ImageDef[];
   properties: {
     class: string;
     subclass: string;
@@ -113,7 +111,6 @@ export interface Feature {
   center: Position;
   countryCode?: string; // ISO3166-1 code, undefined = no country
   roundedCenter?: LonLatRounded;
-  ssrFeatureImage?: Image;
   error?: 'network' | 'unknown' | '404' | '500'; // etc.
   deleted?: boolean;
   schema?: ReturnType<typeof getSchemaForFeature>; // undefined means error
@@ -123,9 +120,16 @@ export interface Feature {
   source?: string;
   sourceLayer?: string;
   state?: { hover: boolean };
-  skeleton?: boolean;
+  skeleton?: boolean; // that means loading is in progress
   nonOsmObject?: boolean;
 }
 
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;
+
+export type SuccessInfo = {
+  type: 'note' | 'edit';
+  text: string;
+  url: string;
+  redirect?: string;
+};

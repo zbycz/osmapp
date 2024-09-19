@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { ContentContainer } from './ContentContainer';
 
 type PanelLabelProps = {
@@ -9,15 +9,13 @@ type PanelLabelProps = {
 };
 
 export const Container = styled.div<{ $border: boolean }>`
-  ${({ $border, theme }) =>
-    $border ? `border-bottom: solid 1px ${theme.palette.divider};` : ''}
-
   padding: 20px 10px 4px;
 `;
 
 export const InnerContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 export const Title = styled.div`
   font-weight: bold;

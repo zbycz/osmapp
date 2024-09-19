@@ -16,10 +16,36 @@ export default {
 
   'user.login_register': 'Login / register',
   'user.logout': 'Logout',
+  'user.my_ticks': 'My ticks',
+  'user.user_settings': 'Settings',
+
+  'my_ticks.title': 'My ticks',
+  'my_ticks.route_name': 'Name',
+  'my_ticks.route_grade': 'Grade',
+  'my_ticks.route_style': 'Style',
+  'my_ticks.route_date': 'Date',
+  'my_ticks.no_ticks_paragraph1': 'You have no ticks so far…',
+  'my_ticks.no_ticks_paragraph2': 'Try to add one on the crag',
+
+  'tick.style_description_not_selected': 'No climbing style selected.',
+  'tick.style_description_OS': 'Climbing the route on the first try without any prior knowledge or practice.',
+  'tick.style_description_FL': 'Climbing the route on the first try with some prior knowledge or beta.',
+  'tick.style_description_RP': 'Successfully climbing the route after practicing it beforehand.',
+  'tick.style_description_PP': 'Successfully climbing the route with pre-placed protection after practicing it.',
+  'tick.style_description_RK': 'Climbing the route using a mix of free climbing and aid climbing.',
+  'tick.style_description_AF': 'Climbing the route entirely free without using aid.',
+  'tick.style_description_TR': 'Climbing the route with a rope already anchored at the top.',
+  'tick.style_description_FS': 'Climbing the route without any protective gear or ropes.',
+
+  'climbing_renderer.climbing_grade': 'climbing grade ',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
+
+  'climbing.guideinfo.title': 'A free climbing guide openclimbing.org',
+  'climbing.guideinfo.description':
+    'OpenClimbing.org is an open platform for climbing guides and maps. Topos and photos are stored in OpenStreetMap and Wikipedia projects, so they can be edited by anyone.',
 
   'project.openclimbing.description': 'Free wiki climbing map',
   'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
@@ -49,16 +75,12 @@ export default {
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
      including editing options. <br/>Currently it includes various map layers, POI editing and a basic search engine.
      Features such as navigation or favorite places are planned.`,
-  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – for images 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – for the best world map 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – for awesome vector maps <br>and for supporting this project  ❤️ ',
+  'homepage.for_images': 'for images 🖼',
+  'homepage.for_osm': 'for the best world map 🌎',
+  'homepage.maptiler': 'for awesome vector maps and for supporting this project  ❤️ ',
+  'homepage.vercel': 'for a great app hosting platform',
   'homepage.disclaimer_heading': 'Disclaimer',
   'homepage.disclaimer': `OpenStreetMap and OSM are a trademark of the OpenStreetMap Foundation. This project is not endorsed by or affiliated with the <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vector maps ("Basic" and "Outdoor") contain some place names from the Wikidata project, more <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>here</a>.`,
@@ -96,11 +118,19 @@ export default {
   'featurepanel.inline_edit_title': 'Edit',
   'featurepanel.objects_around': 'Nearby objects',
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
+  'featurepanel.climbing_restriction': 'Climbing restriction',
 
+  'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
   'opening_hours.now_closed_but_today': 'Closed now - Open __todayTime__',
   'opening_hours.today_closed': 'Closed today',
+  'opening_hours.opens_soon': 'Opens soon',
+  'opening_hours.opens_soon_today': 'Opens soon: __todayTime__',
+  'opening_hours.closes_soon': 'Closes soon',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',
+  'opening_hours.editor.closed': 'closed',
+  'opening_hours.editor.create_advanced': 'You may create more detailed opening hours in <link>YoHours tool</link>.',
+  'opening_hours.editor.cant_edit_here': "This opening hours can't be edited here. Please use the <link>YoHours tool</link>.",
 
   'map.github_title': 'GitHub repository',
   'map.language_title': 'Change language',
@@ -176,6 +206,15 @@ export default {
   'layerswitcher.add_layer_button': 'Add custom layer',
   'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
   'layerswitcher.overlays': 'Overlays',
+  'layerswitcher.not_all_work': 'Please note that some layers may not work in OsmAPP.',
+  'layerswitcher.license': 'License',
+  'layerswitcher.privacy_policy': 'Privacy policy',
+  'layerswitcher.category': 'Category',
+  'layerswitcher.category_photo': 'Aerial imagery',
+  'layerswitcher.category_osmbasedmap': 'Normal layer',
+  'layerswitcher.compatible_license': 'License compatible for editing OpenStreetMap',
+  'layerswitcher.layers_in_area': 'Filter layers in this area',
+  'layerswitcher.explaination': 'Please insert {z},{x},{y} tokens or {bbox-epsg-3857}',
 
   'layers.basic': 'Basic',
   'layers.makina_africa': 'OpenPlaceGuide Africa',
@@ -205,4 +244,17 @@ export default {
   'publictransport.long_distance': 'Long distance trains',
   'publictransport.high_speed': 'High speed trains',
   'publictransport.unknown': 'Unknown type',
+
+  'climbingpanel.draw_route': 'Draw route',
+
+  'climbingpanel.show_route_detail': 'Show route detail',
+  'climbingpanel.add_tick': 'Add tick',
+
+  'runway.information': 'Runway information',
+  'runway.runway': 'Runway',
+  'runway.size': 'Length (m) - Width (m)',
+  'runway.surface': 'Surface',
+
+  'climbingareas.link': 'List of all Climbing areas',
+  'climbingareas.title': 'Climbing areas',
 };

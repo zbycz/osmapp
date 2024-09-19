@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@mui/material';
 import { isDesktop } from '../helpers';
@@ -71,7 +71,7 @@ export const PanelContent = styled.div`
   height: 100%;
 `;
 
-export const PanelFooter = styled.div`
+export const PanelFooterWrapper = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
   margin-top: auto;
   padding-bottom: 15px;

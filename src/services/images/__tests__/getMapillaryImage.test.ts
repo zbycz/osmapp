@@ -1,6 +1,8 @@
 import { Position } from '../../types';
 import { getBearing } from '../getMapillaryImage';
 
+jest.mock('maplibre-gl', () => ({}));
+
 const point: Position = [0, 0];
 const pointAbove: Position = [0, 1];
 const point45: Position = [1, 1];
@@ -22,7 +24,7 @@ describe('getBearing', () => {
     expect(getBearing(point, pointAbove)).toEqual(0);
     expect(getBearing(point, point45)).toEqual(45);
     expect(getBearing(point, pointRight)).toEqual(90);
-    expect(getBearing(point, pointBelow)).toEqual(180); // 180
+    expect(getBearing(point, pointBelow)).toEqual(180);
     expect(getBearing(point, point225)).toEqual(225);
     expect(getBearing(point, pointLeft)).toEqual(270);
 

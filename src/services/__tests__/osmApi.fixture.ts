@@ -1,19 +1,23 @@
-export const node = {
-  type: 'node',
-  id: 2904943126,
-  lat: 50.103985,
-  lon: 14.3904481,
-  timestamp: '2019-03-12T18:43:45Z',
-  version: 5,
-  changeset: 68073678,
-  user: 'b-jazz-bot',
-  uid: 9451067,
-  tags: {
-    amenity: 'library',
-  },
+export const NODE = {
+  elements: [
+    {
+      type: 'node',
+      id: 2904943126,
+      lat: 50.103985,
+      lon: 14.3904481,
+      timestamp: '2019-03-12T18:43:45Z',
+      version: 5,
+      changeset: 68073678,
+      user: 'b-jazz-bot',
+      uid: 9451067,
+      tags: {
+        amenity: 'library',
+      },
+    },
+  ],
 };
 
-export const nodeFeature = {
+export const NODE_FEATURE = {
   type: 'Feature',
   center: [14.3904481, 50.103985],
   osmMeta: {
@@ -32,21 +36,27 @@ export const nodeFeature = {
   tags: {
     amenity: 'library',
   },
-  imageTags: [],
+  imageDefs: [
+    { type: 'center', service: 'mapillary', center: [14.3904481, 50.103985] },
+  ],
 };
 
-export const way = {
-  type: 'way',
-  id: 51050330,
-  timestamp: '2021-05-05T06:30:57Z',
-  version: 7,
-  changeset: 104162807,
-  user: 'zby-cz',
-  uid: 162287,
-  nodes: [1, 2],
-  tags: { amenity: 'school' },
+export const WAY = {
+  elements: [
+    {
+      type: 'way',
+      id: 51050330,
+      timestamp: '2021-05-05T06:30:57Z',
+      version: 7,
+      changeset: 104162807,
+      user: 'zby-cz',
+      uid: 162287,
+      nodes: [1, 2],
+      tags: { amenity: 'school' },
+    },
+  ],
 };
-export const wayFeature = {
+export const WAY_FEATURE = {
   type: 'Feature',
   center: [14, 50],
   osmMeta: {
@@ -60,35 +70,39 @@ export const wayFeature = {
   },
   properties: { class: 'school', subclass: 'school' },
   tags: { amenity: 'school' },
-  imageTags: [],
+  imageDefs: [{ type: 'center', service: 'mapillary', center: [14, 50] }],
 };
-export const relation = {
-  type: 'relation',
-  id: 3727192,
-  timestamp: '2014-05-08T20:45:55Z',
-  version: 1,
-  changeset: 22218722,
-  user: 'Salamandr',
-  uid: 1708065,
-  members: [
+export const RELATION = {
+  elements: [
     {
-      type: 'way',
-      ref: 8166328,
-      role: 'outer',
-    },
-    {
-      type: 'way',
-      ref: 8166329,
-      role: 'inner',
+      type: 'relation',
+      id: 3727192,
+      timestamp: '2014-05-08T20:45:55Z',
+      version: 1,
+      changeset: 22218722,
+      user: 'Salamandr',
+      uid: 1708065,
+      members: [
+        {
+          type: 'way',
+          ref: 8166328,
+          role: 'outer',
+        },
+        {
+          type: 'way',
+          ref: 8166329,
+          role: 'inner',
+        },
+      ],
+      tags: {
+        type: 'multipolygon',
+        amenity: 'university',
+      },
     },
   ],
-  tags: {
-    type: 'multipolygon',
-    amenity: 'university',
-  },
 };
 
-export const relationFeature = {
+export const RELATION_FEATURE = {
   type: 'Feature',
   center: [15, 51],
   members: [
@@ -120,5 +134,5 @@ export const relationFeature = {
     amenity: 'university',
     type: 'multipolygon',
   },
-  imageTags: [],
+  imageDefs: [{ type: 'center', service: 'mapillary', center: [15, 51] }],
 };

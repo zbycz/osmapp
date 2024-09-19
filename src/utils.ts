@@ -66,3 +66,16 @@ export const publishDbgObject = (key, value) => {
     window.d[key] = value;
   }
 };
+
+export const not =
+  <T>(predicate: (item: T) => boolean) =>
+  (item: T) =>
+    !predicate(item);
+
+// decides whether to fetch memberFeatures
+export const isClimbingRelation = (feature: Feature) =>
+  feature.osmMeta.type === 'relation' &&
+  (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
+
+export const isClimbingRoute = (feature: Feature) =>
+  ['route_bottom', 'route_top', 'route'].includes(feature?.tags.climbing);

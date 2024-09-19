@@ -1,8 +1,14 @@
-import React, { createContext, useCallback, useContext, useState } from 'react';
-import { Snackbar, Alert } from '@mui/material';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { usePersistedState } from './usePersistedState';
-import { DEFAULT_MAP } from '../../config';
+import { DEFAULT_MAP } from '../../config.mjs';
 import { PROJECT_ID } from '../../services/project';
+import { useBoolState } from '../helpers';
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
@@ -12,26 +18,31 @@ export interface Layer {
   Icon?: React.FC<any>;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
-  bbox?: number[];
+  bboxes?: number[][];
 }
 
-// // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
-// export type BBox = [number, number, number, number];
-//
-// // [z, lat, lon]
+// [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
+export type Bbox = [number, number, number, number];
+
+// [z, lat, lon] - string because we use RoundedPosition
 export type View = [string, string, string];
-//
-// interface MapStateContextType {
-//   bbox: BBox;
-//   setBbox: (bbox: BBox) => void;
-//   view: View;
-//   setView: (view: View) => void;
-//   viewForMap: View;
-//   setViewFromMap: (view: View) => void;
-// }
-//
-// export const MapStateContext = createContext<MapStateContextType>(undefined);
-export const MapStateContext = createContext(undefined);
+
+type MapStateContextType = {
+  bbox: Bbox;
+  setBbox: (bbox: Bbox) => void;
+  view: View;
+  setView: (view: View) => void;
+  viewForMap: View;
+  setViewFromMap: (view: View) => void;
+  activeLayers: string[];
+  setActiveLayers: (layers: string[] | ((prev: string[]) => string[])) => void;
+  userLayers: Layer[];
+  setUserLayers: (param: Layer[] | ((current: Layer[]) => Layer[])) => void;
+  mapLoaded: boolean;
+  setMapLoaded: () => void;
+};
+
+export const MapStateContext = createContext<MapStateContextType>(undefined);
 
 const useActiveLayersState = () => {
   const isClimbing = PROJECT_ID === 'openclimbing';
@@ -41,32 +52,23 @@ const useActiveLayersState = () => {
 
 export const MapStateProvider = ({ children, initialMapView }) => {
   const [activeLayers, setActiveLayers] = useActiveLayersState();
-  const [bbox, setBbox] = useState();
+  const [bbox, setBbox] = useState<Bbox>();
   const [view, setView] = useState(initialMapView);
   const [viewForMap, setViewForMap] = useState(initialMapView);
+  const [userLayers, setUserLayers] = usePersistedState<Layer[]>(
+    'userLayerIndex',
+    [],
+  );
+
+  const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
+  useEffect(setNotLoaded, [setNotLoaded]);
 
   const setBothViews = useCallback((newView) => {
     setView(newView);
     setViewForMap(newView);
   }, []);
 
-  const [open, setOpen] = React.useState(false);
-  const [msg, setMsg] = React.useState(undefined);
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const showToast = (message) => {
-    setMsg(message);
-    setOpen(true);
-  };
-
-  const mapState = {
+  const mapState: MapStateContextType = {
     bbox,
     setBbox,
     view, // always up-to-date (for use in react)
@@ -75,23 +77,15 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setViewFromMap: setView,
     activeLayers,
     setActiveLayers,
-    showToast,
+    userLayers,
+    setUserLayers,
+    mapLoaded,
+    setMapLoaded,
   };
 
   return (
     <MapStateContext.Provider value={mapState}>
       {children}
-      <Snackbar
-        // TODO: replace by SnackbarContext
-        open={open}
-        autoHideDuration={10000}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        onClose={handleClose}
-      >
-        <Alert onClose={handleClose} severity={msg?.type} variant="filled">
-          {msg?.content}
-        </Alert>
-      </Snackbar>
     </MapStateContext.Provider>
   );
 };

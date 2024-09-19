@@ -54,7 +54,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
     }
     return text;
   } catch (e) {
-    if (e instanceof DOMException && e.name === 'AbortError') {
+    if (isBrowser() && e instanceof DOMException && e.name === 'AbortError') {
       throw e;
     }
 
@@ -62,7 +62,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
   }
 };
 
-export const fetchJson = async (url, opts: FetchOpts = {}) => {
+export const fetchJson = async (url: string, opts: FetchOpts = {}) => {
   const text = await fetchText(url, opts);
   try {
     return JSON.parse(text);

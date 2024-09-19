@@ -1,16 +1,10 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Tooltip, useTheme } from '@mui/material';
-import {
-  convertGrade,
-  getDifficulty,
-  getDifficultyColor,
-  getGradeSystemName,
-} from './utils/grades/routeGrade';
-import { GradeSystem } from './utils/grades/gradeData';
-import { Feature } from '../../../services/types';
+import { getDifficultyColor } from './utils/grades/routeGrade';
+import { RouteDifficulty } from './types';
 
-const Container = styled.div<{ $color: string }>`
+const Container = styled.div<{ $color: string; $isTooltipActive: boolean }>`
   border-radius: 12px;
   padding: 2px 8px;
   background-color: ${({ $color }) => $color};
@@ -19,42 +13,24 @@ const Container = styled.div<{ $color: string }>`
   font-weight: 900;
   color: ${({ theme, $color }) => theme.palette.getContrastText($color)};
   font-family: monospace;
+  cursor: ${({ $isTooltipActive }) => ($isTooltipActive ? 'help' : undefined)};
 `;
 
 type Props = {
-  routeFeature: Feature;
-  selectedRouteSystem?: GradeSystem;
+  routeDifficulty: RouteDifficulty;
+  tooltip?: React.ReactNode;
 };
 
-export const RouteDifficultyBadge = ({
-  routeFeature,
-  selectedRouteSystem,
-}: Props) => {
+export const RouteDifficultyBadge = ({ routeDifficulty, tooltip }: Props) => {
   const theme = useTheme();
-  const routeDifficulty = getDifficulty(routeFeature?.tags);
 
-  const convertedGrade = selectedRouteSystem
-    ? convertGrade(
-        routeDifficulty?.gradeSystem,
-        selectedRouteSystem,
-        routeDifficulty?.grade,
-      )
-    : routeDifficulty.grade;
-
-  const gradeValue = convertedGrade ?? routeDifficulty?.grade ?? '?';
-
-  const gradeSystemName = getGradeSystemName(
-    convertedGrade ? selectedRouteSystem : routeDifficulty?.gradeSystem,
-  );
-
-  const colorByDifficulty = getDifficultyColor(routeFeature?.tags, theme);
+  const colorByDifficulty = getDifficultyColor(routeDifficulty, theme);
 
   return (
-    <Tooltip
-      title={`${gradeValue} according to ${gradeSystemName ?? '?'}`}
-      enterDelay={1500}
-    >
-      <Container $color={colorByDifficulty}>{gradeValue}</Container>
+    <Tooltip title={tooltip} enterDelay={1000} arrow>
+      <Container $color={colorByDifficulty} $isTooltipActive={Boolean(tooltip)}>
+        {routeDifficulty.grade}
+      </Container>
     </Tooltip>
   );
 };

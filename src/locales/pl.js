@@ -33,16 +33,11 @@ export default {
   'homepage.about_osmapp': `Ta aplikacja powinna oferować wygodny interfejs do codziennego korzystania z <i>OpenStreetMap</i>,
      włączając w to możliwości edycji. <br/>Obecnie zawiera różne warstwy mapy, edycję POI oraz podstawową wyszukiwarkę.
      Funkcje takie jak nawigacja czy ulubione miejsca - są na etapie planów.`,
-  'homepage.github_link': `Możesz zasugerować nowe możliwości poprzez <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Możesz zasugerować nowe możliwości poprzez <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specjalne podziękowania dla`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – za zdjęcia 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – za najlepsze na świecie mapy 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – za niesamowite mapy wektorowe <br>i za wsparcie dla tego projektu ❤️ ',
+  'homepage.for_images': 'za zdjęcia 🖼',
+  'homepage.for_osm': 'za najlepsze na świecie mapy 🌎',
+  'homepage.maptiler': 'za niesamowite mapy wektorowe i za wsparcie dla tego projektu ❤️ ',
 
   'searchbox.placeholder': 'Przeszukaj OpenStreetMap',
 

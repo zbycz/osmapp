@@ -1,5 +1,6 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
+import { Tooltip } from '@mui/material';
 
 type Props = {
   children: string | number;
@@ -12,7 +13,9 @@ const Container = styled.div<{ $isCurrentPhoto: boolean }>`
   background: ${({ $isCurrentPhoto, theme }) =>
     $isCurrentPhoto ? theme.palette.action.selected : 'transparent'};
   color: ${({ $isCurrentPhoto, theme }) =>
-    $isCurrentPhoto ? theme.palette.text.primary : theme.palette.text.hint};
+    $isCurrentPhoto
+      ? theme.palette.text.primary
+      : theme.palette.text.secondary};
   border-radius: 6px;
   padding: 2px 8px;
   font-size: 12px;
@@ -20,7 +23,9 @@ const Container = styled.div<{ $isCurrentPhoto: boolean }>`
 `;
 
 export const PhotoLink = ({ children, isCurrentPhoto, onClick }: Props) => (
-  <Container $isCurrentPhoto={isCurrentPhoto} onClick={onClick}>
-    {children}
-  </Container>
+  <Tooltip title={`Show photo ${children}`}>
+    <Container $isCurrentPhoto={isCurrentPhoto} onClick={onClick}>
+      {children}
+    </Container>
+  </Tooltip>
 );

@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import AddIcon from '@mui/icons-material/Add';
 import {
   List,
   ListItem,
@@ -20,9 +19,10 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteInDifferentPhotos } from './RouteInDifferentPhotos';
 import { Label } from './Label';
 import { getOsmappLink } from '../../../../services/helpers';
-import { onTickAdd } from '../../../../services/ticks';
-import { MyTicks } from './MyTicks';
-
+import { MyRouteTicks } from '../Ticks/MyRouteTicks';
+import Link from 'next/link';
+import { EmptyValue } from './EmptyValue';
+import { ClimbingRoute } from '../types';
 const Left = styled.div`
   flex: 1;
 `;
@@ -44,18 +44,27 @@ const ExpandedRowContainer = styled.div<{ $isExpanded?: boolean }>`
 
 const Value = styled.div``;
 
+type Props = {
+  tempRoute: ClimbingRoute;
+  onTempRouteChange: (e: any, key: string) => void;
+  stopPropagation: (e: React.MouseEvent) => void;
+  isReadOnly: boolean;
+  index: number;
+  isExpanded: boolean;
+  osmId: string;
+};
+
 export const ExpandedRow = ({
   tempRoute,
-  getText,
   onTempRouteChange,
-  setTempRoute,
   stopPropagation,
   isReadOnly,
   index,
   isExpanded,
   osmId,
-}) => {
-  const { isEditMode, getMachine } = useClimbingContext();
+}: Props) => {
+  const { isEditMode, getMachine, updateRouteOnIndex } = useClimbingContext();
+
   const machine = getMachine();
   const [routeToDelete, setRouteToDelete] = useState<number | null>(null);
 
@@ -75,17 +84,21 @@ export const ExpandedRow = ({
           <Left>
             <List>
               <ListItem>
-                {isReadOnly && tempRoute.description && (
+                {!isEditMode && tempRoute.updatedTags.description && (
                   <div>
                     <Label>Description</Label>
-                    <Value>{getText(tempRoute.description)}</Value>
+                    <Value>
+                      {tempRoute.updatedTags.description || <EmptyValue />}
+                    </Value>
                   </div>
                 )}
                 {isEditMode && (
                   <TextField
                     size="small"
-                    value={tempRoute.description}
-                    onChange={(e) => onTempRouteChange(e, 'description')}
+                    value={tempRoute.updatedTags.description}
+                    onChange={(e) => {
+                      onTempRouteChange(e, 'description');
+                    }}
                     onClick={stopPropagation}
                     style={{ marginTop: 10 }}
                     variant="outlined"
@@ -124,23 +137,26 @@ export const ExpandedRow = ({
                     onClick={stopPropagation}
                     difficulty={tempRoute.difficulty}
                     onDifficultyChanged={(difficulty) => {
-                      setTempRoute({ ...tempRoute, difficulty });
+                      // setTempRoute({ ...tempRoute, difficulty });
+                      // onTempRouteChange
                     }}
                     routeNumber={index}
                   />
                 </ListItem>
               )}
-              {tempRoute.length && (
+              {tempRoute.updatedTags.length && (
                 <ListItem>
                   {isReadOnly ? (
                     <div>
                       <Label>Length</Label>
-                      <Value>{getText(tempRoute.length)}</Value>
+                      <Value>
+                        {tempRoute.updatedTags.length || <EmptyValue />}
+                      </Value>
                     </div>
                   ) : (
                     <TextField
                       size="small"
-                      value={tempRoute.length}
+                      value={tempRoute.updatedTags.length}
                       onChange={(e) => onTempRouteChange(e, 'length')}
                       onClick={stopPropagation}
                       style={{ marginTop: 10 }}
@@ -152,16 +168,18 @@ export const ExpandedRow = ({
               )}
 
               <ListItem>
-                {isReadOnly && tempRoute.author && (
+                {isReadOnly && tempRoute.updatedTags.author && (
                   <div>
                     <Label>Author</Label>
-                    <Value>{getText(tempRoute.author)}</Value>
+                    <Value>
+                      {tempRoute.updatedTags.author || <EmptyValue />}
+                    </Value>
                   </div>
                 )}
                 {isEditMode && (
                   <TextField
                     size="small"
-                    value={tempRoute.author}
+                    value={tempRoute.updatedTags.author}
                     onChange={(e) => onTempRouteChange(e, 'author')}
                     onClick={stopPropagation}
                     style={{ marginTop: 10 }}
@@ -172,38 +190,26 @@ export const ExpandedRow = ({
               </ListItem>
               <ListItem>
                 {tempRoute.feature ? (
-                  <Button
-                    color="secondary"
-                    size="small"
-                    variant="text"
-                    endIcon={<ArrowForwardIcon />}
+                  <Link
                     href={`${getOsmappLink(tempRoute.feature)}${
                       window.location.hash
                     }`}
-                    component="a"
                   >
-                    Show route detail
-                  </Button>
+                    <Button
+                      color="primary"
+                      size="small"
+                      variant="outlined"
+                      endIcon={<ArrowForwardIcon />}
+                    >
+                      Detail
+                    </Button>
+                  </Link>
                 ) : null}
-              </ListItem>
-              <ListItem>
-                <Button
-                  onClick={() => {
-                    onTickAdd({ osmId });
-                    // stopPropagation(e);
-                  }}
-                  color="secondary"
-                  size="small"
-                  variant="text"
-                  endIcon={<AddIcon />}
-                >
-                  Add tick
-                </Button>
               </ListItem>
             </List>
           </Right>
         </Flex>
-        <MyTicks osmId={osmId} />
+        <MyRouteTicks shortOsmId={osmId} />
       </ExpandedRowContainer>
       <Dialog
         open={routeToDelete !== null}

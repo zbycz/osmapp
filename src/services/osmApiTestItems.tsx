@@ -19,16 +19,6 @@ const nodeResponse = {
     name: 'Test item for images',
     description: 'Originally Detonátor route',
     sport: 'climbing',
-    /*
-    wikimedia_commons: 'File:Lomy nad Velkou - Borová věž.jpg',
-    'wikimedia_commons:2': 'File:Lomy nad Velkou - Borová věž3.jpg',
-    'wikimedia_commons:2:path':
-      '0.924,0.797|0.773,0.428B|0.708,0.307B|0.636,0.174B|0.581,0.086B|0.562,0.056A',
-    'wikimedia_commons:3': 'File:Lomy nad Velkou - Borová věž4.jpg',
-    'wikimedia_commons:3:path': '0.933,0.757|0.729,0.286|0.637,0.136',
-    'wikimedia_commons:path':
-      '0.32,0.902|0.371,0.537B|0.372,0.433B|0.388,0.298B|0.4,0.206B|0.406,0.173A',
-    */
     image: 'http://localhost:3000/images/Lomy_nad_Velkou_-_Borová_věž.jpg',
     'image:path':
       '0.32,0.902|0.371,0.537B|0.372,0.433B|0.388,0.298B|0.4,0.206B|0.406,0.173A',
@@ -93,6 +83,58 @@ export const TEST_CRAG: Feature = {
     sport: 'climbing',
     type: 'site',
   },
+  imageDefs: [
+    {
+      instant: true,
+      k: 'image',
+      path: [
+        { suffix: '', x: 0.32, y: 0.902 },
+        { suffix: 'B', x: 0.371, y: 0.537 },
+        { suffix: 'B', x: 0.372, y: 0.433 },
+        { suffix: 'B', x: 0.388, y: 0.298 },
+        { suffix: 'B', x: 0.4, y: 0.206 },
+        { suffix: 'A', x: 0.406, y: 0.173 },
+      ],
+      type: 'tag',
+      v: 'http://localhost:3000/images/Lomy_nad_Velkou_-_Borová_věž.jpg',
+    },
+    {
+      instant: true,
+      k: 'image:2',
+      path: [
+        { suffix: '', x: 0.924, y: 0.797 },
+        { suffix: 'B', x: 0.773, y: 0.428 },
+        { suffix: 'B', x: 0.708, y: 0.307 },
+        { suffix: 'B', x: 0.636, y: 0.174 },
+        { suffix: 'B', x: 0.581, y: 0.086 },
+        { suffix: 'A', x: 0.562, y: 0.056 },
+      ],
+      type: 'tag',
+      v: 'http://localhost:3000/images/Lomy_nad_Velkou_-_Borová_věž3.jpg',
+    },
+    {
+      instant: true,
+      k: 'image:3',
+      path: [
+        { suffix: '', x: 0.933, y: 0.757 },
+        { suffix: '', x: 0.729, y: 0.286 },
+        { suffix: '', x: 0.637, y: 0.136 },
+      ],
+      type: 'tag',
+      v: 'http://localhost:3000/images/Lomy_nad_Velkou_-_Borová_věž4.jpg',
+    },
+    {
+      instant: false,
+      k: 'wikidata',
+      type: 'tag',
+      v: 'Q11878531',
+    },
+    {
+      center: [14, 50],
+      service: 'mapillary',
+      type: 'center',
+    },
+  ],
   properties: {
     class: 'climbing',
     subclass: 'climbing',

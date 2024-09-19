@@ -2,45 +2,30 @@ import { Button, Grid, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import Link from 'next/link';
 import {
   PanelContent,
-  PanelFooter,
+  PanelFooterWrapper,
   PanelScrollbars,
 } from '../utils/PanelHelpers';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { LogoOpenClimbing } from '../../assets/LogoOpenClimbing';
-import { PROJECT_DECRIPTION, PROJECT_NAME } from '../../services/project';
+import {
+  PROJECT_DECRIPTION,
+  PROJECT_ID,
+  PROJECT_NAME,
+} from '../../services/project';
 import { t, Translation } from '../../services/intl';
 import { nl2br } from '../utils/nl2br';
 import GithubIcon from '../../assets/GithubIcon';
 import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 import LogoOsmapp from '../../assets/LogoOsmapp';
+import { LogoMaptiler } from '../../assets/LogoMaptiler';
 
 export const Content = styled.div`
   height: calc(100% - ${SEARCH_BOX_HEIGHT}px);
   padding: 20px 2em 0 2em;
-
-  a.maptiler {
-    display: block;
-    color: inherit;
-    text-align: center;
-    margin: 1em 0;
-
-    strong {
-      color: ${({ theme }) => theme.palette.primary.main};
-      font-weight: normal;
-    }
-
-    &:hover {
-      text-decoration: none;
-
-      & strong {
-        text-decoration: underline;
-      }
-    }
-  }
 `;
 const StyledLogoOsmapp = styled(LogoOsmapp)`
   width: 41%;
@@ -58,6 +43,7 @@ const Spacer = styled.div`
 `;
 const Examples = () => (
   <>
+    {t('homepage.examples.eg')}{' '}
     <Link href="/way/34633854">Empire State Building</Link> •{' '}
     <Link href="/way/119016167">
       {t('homepage.examples.charles_bridge_statues')}
@@ -66,21 +52,24 @@ const Examples = () => (
 );
 const ExamplesClimbing = () => (
   <>
-    <Link href="/relation/17262674">Prokopské údolí</Link> •{' '}
-    <Link href="/relation/17130100">Roviště</Link> •{' '}
-    <Link href="/relation/17089246">Lomy nad Velkou</Link>
+    <Link href="/climbing-areas">{t('climbingareas.link')}</Link>,{' '}
+    {t('homepage.examples.eg')} <Link href="/relation/17262675">Hlubočepy</Link>{' '}
+    • <Link href="/relation/17130099">Roviště</Link> •{' '}
+    <Link href="/relation/17142287">Lomy nad Velkou</Link> •{' '}
+    <Link href="/relation/17400318">Lom Kobyla</Link> •{' '}
+    <Link href="/relation/17222859">Prokopák</Link>
   </>
 );
 
 export function Homepage({
-  climbing,
   mobileMode,
   onClick,
 }: {
   onClick: () => void;
-  climbing: boolean;
   mobileMode: boolean;
 }) {
+  const isClimbing = PROJECT_ID === 'openclimbing';
+
   return (
     <PanelContent>
       <PanelScrollbars>
@@ -88,7 +77,7 @@ export function Homepage({
         <Content>
           <div>
             <Center $mb>
-              {climbing ? (
+              {isClimbing ? (
                 <LogoOpenClimbing
                   width={100}
                   style={{
@@ -103,7 +92,7 @@ export function Homepage({
                 variant="h4"
                 component="h1"
                 color="inherit"
-                style={{ fontWeight: climbing ? 900 : undefined }}
+                style={{ fontWeight: isClimbing ? 900 : undefined }}
               >
                 {PROJECT_NAME}
               </Typography>
@@ -111,16 +100,12 @@ export function Homepage({
                 {t(PROJECT_DECRIPTION)}
               </Typography>
             </Center>
-
             <Typography variant="body1" paragraph>
               {nl2br(t('homepage.how_to_start'))}
             </Typography>
-
             <Typography variant="body2" paragraph>
-              {t('homepage.examples.eg')}{' '}
-              {climbing ? <ExamplesClimbing /> : <Examples />}
+              {isClimbing ? <ExamplesClimbing /> : <Examples />}
             </Typography>
-
             {mobileMode && (
               <Center $mt $mb4>
                 <Button
@@ -133,16 +118,15 @@ export function Homepage({
                 </Button>
               </Center>
             )}
-
             <Center $mb>
               <img
                 src={
-                  climbing
+                  isClimbing
                     ? '/openclimbing/openclimbing-screenshot-300px.png'
                     : '/osmapp/osmapp-screenshot-300px.png'
                 }
                 srcSet={
-                  climbing
+                  isClimbing
                     ? '/openclimbing/openclimbing-screenshot-300px@2x.png 2x'
                     : '/osmapp/osmapp-screenshot-300px@2x.png 2x'
                 }
@@ -150,9 +134,7 @@ export function Homepage({
                 width={300}
               />
             </Center>
-
             <Spacer />
-
             <Grid
               container
               direction="row"
@@ -173,9 +155,7 @@ export function Homepage({
                 </Typography>
               </Grid>
             </Grid>
-
             <Spacer />
-
             <Typography
               variant="overline"
               display="block"
@@ -184,11 +164,9 @@ export function Homepage({
             >
               {t('homepage.heading_about_osmapp')}
             </Typography>
-
             <Typography variant="body2" paragraph>
               <Translation id="homepage.about_osmapp" />
             </Typography>
-
             <Typography variant="body2" paragraph>
               <GithubIcon
                 width="32"
@@ -197,7 +175,6 @@ export function Homepage({
               />{' '}
               <Translation id="homepage.github_link" />
             </Typography>
-
             <Center $mb $mt>
               <Button
                 variant="outlined"
@@ -208,48 +185,64 @@ export function Homepage({
                 {t('install.button')}
               </Button>
             </Center>
-
             <Spacer />
-
             <Typography variant="overline" color="textSecondary" component="h2">
               {t('homepage.special_thanks_heading')}
             </Typography>
-
-            <Translation id="homepage.special_thanks" />
-
-            <Spacer />
-
-            <a
-              href="https://www.maptiler.com"
-              rel="noopener"
-              target="_blank"
-              className="maptiler"
-            >
-              <img
-                src="/maptiler.svg"
-                alt="MapTiler logo"
-                width={200}
-                height={52}
-              />
-              <br />
-              <Translation id="homepage.maptiler" />
+            <ul style={{ paddingLeft: '1.6em' }}>
+              <li>
+                <a href="https://www.mapillary.com/" target="_blank">
+                  Mapillary
+                </a>
+                {', '}
+                <a href="https://openstreetmap.cz/fody" target="_blank">
+                  Fody
+                </a>
+                {', '}
+                <a href="https://www.wikipedia.org/" target="_blank">
+                  Wikipedia
+                </a>
+                {` – ${t('homepage.for_images')}`}
+              </li>
+              <li>
+                <a href="https://www.openstreetmap.org/" target="_blank">
+                  OpenStreetMap
+                </a>
+                {` – ${t('homepage.for_osm')}`}
+              </li>
+              <li>
+                <a href="https://www.maptiler.com" target="_blank">
+                  Maptiler
+                </a>
+                {` – ${t('homepage.maptiler')}`}
+              </li>
+              <li>
+                <a href="https://vercel.com" target="_blank">
+                  Vercel
+                </a>
+                {` – ${t('homepage.vercel')}`}
+              </li>
+            </ul>
+            <a href="https://www.maptiler.com" target="_blank">
+              <LogoMaptiler width={200} height={52} />
+            </a>
+            <br />
+            <a href="https://vercel.com" target="_blank">
+              <img src="/vercel.svg" alt="Vercel" width="200" height="41" />
             </a>
 
             <Spacer />
             <Spacer />
-
             <Typography variant="overline" color="textSecondary" component="h2">
               {t('homepage.disclaimer_heading')}
             </Typography>
-
             <Translation id="homepage.disclaimer" />
             <br />
             <br />
             <Translation id="homepage.disclaimer_maptiler" />
-
             <Spacer />
           </div>
-          <PanelFooter />
+          <PanelFooterWrapper />
         </Content>
       </PanelScrollbars>
     </PanelContent>

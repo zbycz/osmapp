@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useRouteNumberColors } from '../utils/useRouteNumberColors';
 import { isTicked } from '../../../../services/ticks';

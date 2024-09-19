@@ -9,6 +9,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
 import { buildPhotonAddress } from './options/geocoder';
 import { useMapCenter } from './utils';
+import { useSnackbar } from '../utils/SnackbarContext';
 
 const useFocusOnSlash = () => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -31,13 +32,13 @@ const useFocusOnSlash = () => {
 };
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
-  const inputRef = useFocusOnSlash();
+  // const inputRef = useFocusOnSlash();
   const { InputLabelProps, InputProps, ...restParams } = params;
 
   useEffect(() => {
     // @ts-ignore
     params.InputProps.ref(autocompleteRef.current);
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onChange = (e) => setInputValue(e.target.value);
   const onFocus = (e) => e.target.select();
@@ -48,7 +49,7 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
       sx={{
         height: '47px',
       }}
-      inputRef={inputRef}
+      // inputRef={inputRef}
       placeholder={t('searchbox.placeholder')}
       onChange={onChange}
       onFocus={onFocus}
@@ -64,7 +65,8 @@ export const AutocompleteInput = ({
   setOverpassLoading,
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
-  const { bbox, showToast } = useMapStateContext();
+  const { bbox } = useMapStateContext();
+  const { showToast } = useSnackbar();
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
   return (

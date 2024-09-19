@@ -51,12 +51,13 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
       id: getUrlOsmId(route.osmMeta),
       length: route.tags['climbing:length'],
       name: route.tags.name,
-      description: route.tags.description,
       difficulty: getDifficulty(route.tags),
       paths,
       photoToKeyMap,
+      author: route.tags.author,
+      updatedTags: { ...route.tags },
       feature: route,
-    };
+    } as ClimbingRoute;
   });
 
   publishDbgObject('climbingRoutes', climbingRoutes);

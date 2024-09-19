@@ -8,16 +8,22 @@ export interface LineInformation {
 }
 
 export async function requestLines(featureType: string, id: number) {
-  const overpassQueryJson = `[out:json];
-  ${featureType}(${id});
-  rel(bn)["public_transport"="stop_area"];
-  node(r: "stop") -> .stops;
-    rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
-    out geom qt;`;
+  const overpassQuery = `[out:json];
+    ${featureType}(${id})-> .specific_feature;
+
+    // Try to find stop_area relations containing the specific node and get their stops
+    rel(bn.specific_feature)["public_transport"="stop_area"] -> .stop_areas;
+    node(r.stop_areas: "stop") -> .stops;
+    (
+      rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
+      // If no stop_area, find routes that directly include the specific node
+      rel(bn.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
+    );
+    out;`;
 
   const geoJson = await fetchJson(
     `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
-      overpassQueryJson,
+      overpassQuery,
     )}`,
   ).then(overpassGeomToGeojson);
 

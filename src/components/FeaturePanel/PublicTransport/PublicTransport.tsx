@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
 import _ from 'lodash';
 import { useQuery } from 'react-query';
+import React from 'react';
 import { Typography } from '@mui/material';
 import { LineInformation, requestLines } from './requestRoutes';
 import { PublicTransportCategory } from './PublicTransportWrapper';
@@ -8,7 +8,7 @@ import { FeatureTags } from '../../../services/types';
 import { DotLoader } from '../../helpers';
 import { sortBy } from './helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { getGlobalMap } from '../../../services/mapStorage';
+import { getGlobalMap, getOverpassSource } from '../../../services/mapStorage';
 
 interface PublicTransportProps {
   tags: FeatureTags;
@@ -38,6 +38,7 @@ const PublicTransportDisplay = ({ routes }) => {
     <>
       {sorted.map(([category, lines]) => (
         <PublicTransportCategory
+          key={category}
           category={category}
           lines={lines}
           amountOfCategories={entries.length}
@@ -55,15 +56,18 @@ const PublicTransportInner = () => {
     requestLines(type, Number(id)),
   );
 
-  useEffect(() => {
-    if (!data) return;
+  React.useEffect(() => {
+    if (!data) {
+      return;
+    }
 
-    getGlobalMap()?.getSource('overpass')?.setData(data.geoJson);
+    const source = getOverpassSource();
+    source?.setData(data.geoJson as GeoJSON.GeoJSON);
   }, [data]);
 
   return (
     <div>
-      {status === 'loading' || (status === 'idle' && <DotLoader />)}
+      {(status === 'loading' || status === 'idle') && <DotLoader />}
       {status === 'success' && <PublicTransportDisplay routes={data.routes} />}
       {status === 'error' && (
         <Typography color="secondary" paragraph>

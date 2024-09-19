@@ -18,7 +18,7 @@ export const Members = () => {
         {members.map((item) => {
           const urlOsmId = getUrlOsmId({ type: item.type, id: item.ref });
           return (
-            <li>
+            <li key={urlOsmId + item.role}>
               <Link href={`/${urlOsmId}`}>
                 {item.role ? `${item.role} – ${urlOsmId}` : urlOsmId}
               </Link>

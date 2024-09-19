@@ -1,38 +1,60 @@
 import { Alert, Snackbar } from '@mui/material';
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useMemo,
+} from 'react';
 
-const SnackbarContext = createContext(null);
+type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
+export type SnackbarContextType = {
+  showToast: (message: string, severity?: Severity) => void;
+};
+
+const SnackbarContext = createContext<SnackbarContextType>({
+  showToast: () => undefined,
+});
 
 export const useSnackbar = () => useContext(SnackbarContext);
 
+// TODO maybe allow more messages ?
+// TODO maybe similar code is already in Mui?  but useSnackbar is configuration only
 export const SnackbarProvider = ({ children }) => {
-  const [snackbar, setSnackbar] = useState({
-    open: false,
-    message: '',
-    severity: 'info',
-  });
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState<string>('');
+  const [severity, setSeverity] = useState<Severity>();
 
-  const showSnackbar = useCallback((message, severity = 'info') => {
-    setSnackbar({ open: true, message, severity });
-  }, []);
-
-  const handleClose = (event, reason) => {
+  const handleClose = (_event: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
       return;
     }
-    setSnackbar((prev) => ({ ...prev, open: false }));
+    setOpen(false);
   };
 
+  const value: SnackbarContextType = useMemo(
+    () => ({
+      showToast: (message: string, severity?: Severity) => {
+        setMessage(message);
+        setSeverity(severity);
+        setOpen(true);
+      },
+    }),
+    [],
+  );
+
   return (
-    <SnackbarContext.Provider value={showSnackbar}>
+    <SnackbarContext.Provider value={value}>
       {children}
       <Snackbar
-        open={snackbar.open}
-        autoHideDuration={4000}
+        open={open}
+        autoHideDuration={10000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         onClose={handleClose}
       >
-        <Alert>{snackbar.message}</Alert>
+        <Alert onClose={handleClose} severity={severity} variant="filled">
+          {message}
+        </Alert>
       </Snackbar>
     </SnackbarContext.Provider>
   );

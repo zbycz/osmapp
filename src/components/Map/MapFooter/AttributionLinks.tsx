@@ -1,9 +1,10 @@
 import { Tooltip, useMediaQuery } from '@mui/material';
 import React from 'react';
 import uniq from 'lodash/uniq';
-import { useMapStateContext } from '../../utils/MapStateContext';
+import { Layer, useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { Translation } from '../../../services/intl';
+import { usePersistedState } from '../../utils/usePersistedState';
 
 export const Attribution = ({ label, link, title }) => (
   <>
@@ -37,16 +38,19 @@ const OsmAttribution = () => {
 };
 
 export const AttributionLinks = () => {
-  const { activeLayers } = useMapStateContext();
+  const { activeLayers, userLayers } = useMapStateContext();
+
   const attributions = uniq(
-    activeLayers.flatMap((layer) =>
-      osmappLayers[layer]
-        ? osmappLayers[layer].attribution
-        : decodeURI(new URL(layer)?.hostname),
-    ),
+    activeLayers.flatMap((layerUrl) => {
+      const osmappLayer = osmappLayers[layerUrl];
+      if (osmappLayer) return osmappLayer.attribution;
+
+      const userLayer = userLayers.find(({ url }) => url === layerUrl);
+      return userLayer?.attribution || decodeURI(new URL(layerUrl)?.hostname);
+    }),
   );
 
-  const nodes = attributions.map((attribution) => {
+  const nodes: React.ReactNode[] = attributions.map((attribution) => {
     if (attribution === 'maptiler') {
       return <MaptilerAttribution key="maptiler" />;
     }

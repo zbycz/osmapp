@@ -16,6 +16,7 @@ const PublicTransportWrapper = ({ children }) => {
   return <div style={divStyle}>{children}</div>;
 };
 
+// TODO: Do this using the id-tagging-presets
 const fmtCategory = (category: string) => {
   switch (category) {
     case 'tourism':
@@ -54,7 +55,7 @@ export const PublicTransportCategory: React.FC<CategoryProps> = ({
     {amountOfCategories > 1 && <h4>{fmtCategory(category)}</h4>}
     <PublicTransportWrapper>
       {lines.map((line) => (
-        <LineNumber name={line.ref} color={line.colour} />
+        <LineNumber key={line.ref} name={line.ref} color={line.colour} />
       ))}
     </PublicTransportWrapper>
   </>

@@ -1,4 +1,5 @@
 import { FeatureTags } from '../../../../services/types';
+import { isIOS } from '../../../../helpers/platforms';
 
 // @TODO move file outside of climbing
 
@@ -9,6 +10,23 @@ export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 
 export const isWikimediaCommons = (tag: string) =>
   tag.startsWith('wikimedia_commons');
+
+export const isWikimediaCommonsPhoto = (tag: string) => {
+  // regexp to match wikimedia_commons, wikimedia_commons:2, etc. but not  wikimedia_commons:path, wikimedia_commons:whatever
+  const re = /^wikimedia_commons(:\d+)?$/;
+  return re.test(tag);
+};
+
+export const getWikimediaCommonsPhotoKeys = (tags: FeatureTags) =>
+  Object.keys(tags).filter(isWikimediaCommonsPhoto);
+
+export const isWikimediaCommonsPhotoPath = (tag: string) => {
+  const re = /^wikimedia_commons(:\d+)*:path$/;
+  return re.test(tag);
+};
+
+export const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
+  Object.keys(tags).filter(isWikimediaCommonsPhotoPath);
 
 export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
   Object.keys(tags).filter(isWikimediaCommons); // TODO this returns also :path keys, not sure if intended
@@ -30,4 +48,62 @@ export const getNextWikimediaCommonsIndex = (tags: FeatureTags) => {
   }, 0);
 
   return maxKey + 1;
+};
+
+const getHighestCachedResolution = ({ loadedPhotos, photoPath }) => {
+  if (!loadedPhotos || !loadedPhotos?.[photoPath]) return null;
+
+  return Object.keys(loadedPhotos[photoPath])
+    .map((key) => Number(key))
+    .reduce<number | null>((maxResolution, resolution) => {
+      const isLoaded = loadedPhotos[photoPath][resolution];
+      if (!maxResolution || (resolution > maxResolution && isLoaded)) {
+        return resolution;
+      }
+      return maxResolution;
+    }, null);
+};
+
+const getResolutionAccordingZoom = ({ windowDimensions, photoZoom }) => {
+  const retinaMultiplier = isIOS() ? 2 : 1;
+  const AVERAGE_IMAGE_PERCENTAGE_FILL = 0.7;
+  const ROUND_SIZES_TO = 200;
+  const MEDIUM_ZOOM_MULTIPLIER = 2.5;
+  const LARGE_ZOOM_MULTIPLIER = 4;
+
+  const width =
+    Math.ceil(
+      (windowDimensions.width * AVERAGE_IMAGE_PERCENTAGE_FILL) / ROUND_SIZES_TO,
+    ) *
+    ROUND_SIZES_TO *
+    retinaMultiplier;
+
+  if (photoZoom.scale >= 4.5) return width * LARGE_ZOOM_MULTIPLIER;
+  if (photoZoom.scale > 2.3) return width * MEDIUM_ZOOM_MULTIPLIER;
+  return width;
+};
+
+export const getResolution = ({
+  windowDimensions,
+  photoPath,
+  photoZoom,
+  loadedPhotos,
+}) => {
+  const newResolution = getResolutionAccordingZoom({
+    windowDimensions,
+    photoZoom,
+  });
+
+  const highestCachedResolution = getHighestCachedResolution({
+    loadedPhotos,
+    photoPath,
+  });
+  if (
+    highestCachedResolution !== null &&
+    newResolution < highestCachedResolution
+  ) {
+    return highestCachedResolution;
+  }
+
+  return newResolution;
 };

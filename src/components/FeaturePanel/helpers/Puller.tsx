@@ -1,6 +1,7 @@
-import styled, { css } from 'styled-components';
+import styled from '@emotion/styled';
 import { grey } from '@mui/material/colors';
 import React from 'react';
+import { css } from '@emotion/react';
 import { isMobileDevice } from '../../helpers';
 
 const HANDLE_WIDTH = 30;

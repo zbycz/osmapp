@@ -6,10 +6,13 @@ export const useToggleState = (
   initialState: boolean,
 ): [boolean, () => void] => {
   const [value, set] = useState<boolean>(initialState);
-  return [value, () => set(!value)];
+  const toggle = useCallback(() => set((prevValue) => !prevValue), []);
+  return [value, toggle];
 };
 
-export const useBoolState = (initialState) => {
+export const useBoolState = (
+  initialState: boolean,
+): [boolean, () => void, () => void] => {
   const [value, set] = useState(initialState);
   const setTrue = useCallback(() => set(true), []);
   const setFalse = useCallback(() => set(false), []);
@@ -28,12 +31,12 @@ export function isServer() {
 
 export const createMapEffectHook =
   (mapEffectFn) =>
-  (map, ...rest) =>
+  (map: Map, ...rest) =>
     useEffect(() => {
       if (map) {
         mapEffectFn(map, ...rest);
       }
-    }, [map, ...rest]);
+    }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 type EventDefintionFn = (
   map: Map,
@@ -52,7 +55,7 @@ export const createMapEventHook =
         };
       }
       return undefined;
-    }, [map, ...rest]);
+    }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 export const isString = (value) => typeof value === 'string';
 
@@ -100,7 +103,7 @@ export const isDesktopResolution = '(min-width: 701px)';
 
 // is mobile device - specific behaviour like longpress or geouri
 export const isMobileDevice = () =>
-  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO this can be isomorphic ? otherwise we have hydration error
+  isBrowser() && /iPhone|iPad|iPod|Android/i.test(navigator.userAgent); // TODO lets make it isomorphic. Otherwise we have hydration error
 
 export const useIsClient = () => {
   const [isClient, setIsClient] = useState(false);

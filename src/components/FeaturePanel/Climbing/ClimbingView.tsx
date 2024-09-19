@@ -1,21 +1,44 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import { CircularProgress, IconButton, useTheme } from '@mui/material';
-import { TransformComponent, TransformWrapper } from 'react-zoom-pan-pinch';
+import {
+  CircularProgress,
+  Fab,
+  IconButton,
+  Tooltip,
+  useTheme,
+} from '@mui/material';
+import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { RouteList } from './RouteList/RouteList';
 import { RoutesEditor } from './Editor/RoutesEditor';
-import { getCommonsImageUrl } from '../../../services/images/getWikiImage';
 import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { RouteDistribution } from './RouteDistribution';
-import { getWikimediaCommonsKeys, removeFilePrefix } from './utils/photo';
+import {
+  getResolution,
+  getWikimediaCommonsKeys,
+  removeFilePrefix,
+} from './utils/photo';
 import { useScrollShadow } from './utils/useScrollShadow';
+import { TransformWrapper } from './TransformWrapper';
+import { convertHexToRgba } from '../../utils/colorUtils';
+import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { CLIMBING_ROUTE_ROW_HEIGHT, SPLIT_PANE_DEFAULT_HEIGHT } from './config';
+import { ClimbingViewContent } from './ClimbingViewContent';
+import { getOsmappLink } from '../../../services/helpers';
+import { useRouter } from 'next/router';
+import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
+import MapIcon from '@mui/icons-material/Map';
 
+const FabContainer = styled.div`
+  position: fixed;
+  bottom: 12px;
+  right: 12px;
+  z-index: 1000;
+`;
 const Container = styled.div`
   position: relative;
   display: flex;
@@ -43,7 +66,7 @@ const Container = styled.div`
       text-align: center;
       line-height: 0px;
       font-size: 20px;
-      color: ${({ theme }) => theme.palette.primary.text};
+      color: ${({ theme }) => theme.palette.primary.main};
       letter-spacing: 1px;
     }
 
@@ -80,14 +103,36 @@ const BottomPanel = styled.div`
   overflow: auto;
 `;
 
-const LoadingContainer = styled.div`
+const MiniLoadingContainer = styled.div`
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 22px;
+  height: 22px;
+  z-index: 1;
+  background: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.default, 0.3)};
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
+const FullLoadingContainer = styled.div`
   position: absolute;
   left: 0;
   top: 0;
+  z-index: 1;
+  background: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.default, 0.7)};
+  -webkit-backdrop-filter: blur(40px);
+  backdrop-filter: blur(40px);
   display: flex;
   justify-content: center;
   width: 100%;
-  height: 100px;
+  height: 100%;
   align-items: center;
 `;
 
@@ -115,24 +160,19 @@ const ArrowExpanderButton = styled.div<{ $arrowOnTop?: boolean }>`
   display: flex;
 `;
 
-const BlurContainer = styled.div<{ $isVisible: boolean }>`
+const BlurContainer = styled.div`
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
   background-color: rgba(0, 0, 0, 0.6);
-  visibility: ${({ $isVisible }) => ($isVisible ? 'visible' : 'hidden')};
   height: 100%;
 `;
 
 const BackgroundContainer = styled.div<{
   $imageHeight: number;
   $imageUrl: string;
-  $isVisible: boolean;
 }>`
   transition: 0.3s all;
-
-  background: #111
-    ${({ $isVisible, $imageUrl }) =>
-      $isVisible ? `url(${$imageUrl}) no-repeat` : ''};
+  background: #111 ${({ $imageUrl }) => `url(${$imageUrl}) no-repeat`};
   background-size: cover;
   background-position: center;
   object-fit: cover;
@@ -141,12 +181,13 @@ const BackgroundContainer = styled.div<{
   height: 100%;
 `;
 
-const MainContent = () => (
-  <>
-    <RouteList isEditable />
-    <RouteDistribution />
-  </>
-);
+const getWindowDimensions = () => {
+  const { innerWidth: width, innerHeight: height } = window;
+  return {
+    width,
+    height,
+  };
+};
 
 export const ClimbingView = ({ photo }: { photo?: string }) => {
   const {
@@ -155,21 +196,26 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     getMachine,
     splitPaneHeight,
     setSplitPaneHeight,
-    areRoutesVisible,
     isEditMode,
     viewportSize,
     editorPosition,
     photoPath,
     loadPhotoRelatedData,
     areRoutesLoading,
-    setArePointerEventsDisabled,
-    setPhotoZoom,
-    preparePhotosAndSet,
+    preparePhotos,
+    photoZoom,
+    loadedPhotos,
+    routeListTopOffsets,
+    setRouteSelectedIndex,
+    routes,
+    setPhotoPath,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
 
+  const [photoResolution, setPhotoResolution] = useState(200);
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
+  const [backgroundImageUrl, setBackgroundImageUrl] = useState(null);
   const machine = getMachine();
 
   useEffect(() => {
@@ -180,15 +226,15 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     if (!isEditMode && machine.currentStateName === 'editRoute') {
       machine.execute('routeSelect', { routeNumber: routeSelectedIndex });
     }
-  }, [isEditMode]);
+  }, [isEditMode]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, [splitPaneHeight]);
+  }, [splitPaneHeight]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSplitPaneHeightReset = () => {
     setSplitPaneHeight(null);
@@ -204,7 +250,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
         loadPhotoRelatedData(),
       );
     };
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onDragStarted = () => {
     setIsSplitViewDragging(true);
@@ -213,29 +259,51 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     setSplitPaneHeight(splitHeight);
     setIsSplitViewDragging(false);
   };
-  const [isPhotoLoaded, setIsPhotoLoaded] = useState(false);
+  const [windowDimensions, setWindowDimensions] = useState(
+    getWindowDimensions(),
+  );
 
   const cragPhotos = getWikimediaCommonsKeys(feature.tags)
     .map((key) => feature.tags[key])
     .map(removeFilePrefix);
-  preparePhotosAndSet(cragPhotos, photo);
+  preparePhotos(cragPhotos);
 
   useEffect(() => {
-    setIsPhotoLoaded(false);
-    const url = getCommonsImageUrl(`File:${photoPath}`, 1500);
+    const handleResize = () => {
+      setWindowDimensions(getWindowDimensions());
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    const resolution = getResolution({
+      windowDimensions,
+      photoPath,
+      photoZoom,
+      loadedPhotos,
+    });
+    setPhotoResolution(resolution);
+
+    const url = getCommonsImageUrl(`File:${photoPath}`, resolution);
+
     setImageUrl(url);
-  }, [photoPath]);
+    if (!backgroundImageUrl && photoPath) {
+      setBackgroundImageUrl(url);
+    }
+  }, [
+    backgroundImageUrl,
+    loadedPhotos,
+    photoPath,
+    photoZoom,
+    photoZoom.scale,
+    windowDimensions,
+  ]);
 
   const showArrowOnTop = splitPaneHeight === 0;
   const showArrowOnBottom =
     splitPaneHeight === viewportSize.height - editorPosition.y;
-
-  const startPointerEvents = () => {
-    setArePointerEventsDisabled(false);
-  };
-  const stopPointerEvents = () => {
-    setArePointerEventsDisabled(true);
-  };
 
   const {
     scrollElementRef,
@@ -245,6 +313,75 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     ShadowBottom,
   } = useScrollShadow([areRoutesLoading]);
   const theme = useTheme();
+  const router = useRouter();
+  const [isPhotoLoading, setIsPhotoLoading] = useState(false);
+  const [isMapVisible, setIsMapVisible] = useState(false);
+
+  const { userSettings } = useUserSettingsContext();
+
+  const isResolutionLoaded =
+    loadedPhotos?.[photoPath]?.[photoResolution] || false;
+  const resolutions = loadedPhotos?.[photoPath];
+  const isFirstPhotoLoaded =
+    resolutions &&
+    Object.keys(resolutions).filter((key) => resolutions[key] === true).length >
+      0;
+
+  const replacePhotoIfNeeded = (photos: string[], selectedIndex: number) => {
+    if (!photos.includes(photoPath) && selectedIndex > -1 && !isPhotoLoading) {
+      if (photos.length > 0) {
+        const featureLink = getOsmappLink(feature);
+        router.replace(`${featureLink}/climbing/photo/${photos[0]}`);
+        setIsPhotoLoading(true);
+      }
+    }
+  };
+
+  const selectRouteByScroll = (e) => {
+    const { scrollTop } = e.target;
+    const scrollTopWithOffset = scrollTop + 20 + CLIMBING_ROUTE_ROW_HEIGHT;
+
+    const selectedIndex = routeListTopOffsets.findIndex(
+      (offset) =>
+        offset <= scrollTopWithOffset &&
+        offset + CLIMBING_ROUTE_ROW_HEIGHT >= scrollTopWithOffset,
+    );
+
+    const selectedRoute = routes[selectedIndex];
+    const photos = selectedRoute?.paths ? Object.keys(selectedRoute.paths) : [];
+
+    replacePhotoIfNeeded(photos, selectedIndex);
+    if (selectedIndex !== -1) setRouteSelectedIndex(selectedIndex);
+  };
+
+  const handleOnScroll = (e) => {
+    onScroll();
+    if (
+      userSettings['climbing.selectRoutesByScrolling'] &&
+      routeSelectedIndex !== null
+    ) {
+      selectRouteByScroll(e);
+    }
+  };
+
+  const FabComponent = () => (
+    <FabContainer>
+      <Tooltip
+        title={`Show ${isMapVisible ? 'route list' : 'map'}`}
+        enterDelay={1500}
+        arrow
+      >
+        <Fab
+          size="small"
+          color="secondary"
+          aria-label="add"
+          onClick={() => setIsMapVisible(!isMapVisible)}
+        >
+          {isMapVisible ? <FormatListNumberedIcon /> : <MapIcon />}
+        </Fab>
+      </Tooltip>
+    </FabContainer>
+  );
 
   return (
     <Container>
@@ -270,66 +407,46 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
           split="horizontal"
           minSize={0}
           maxSize="100%"
-          size={splitPaneHeight ?? '60vh'}
+          size={splitPaneHeight ?? SPLIT_PANE_DEFAULT_HEIGHT}
           onDragStarted={onDragStarted}
           onDragFinished={onDragFinished}
           pane1Style={{ maxHeight: '90%' }}
         >
           <BackgroundContainer
             $imageHeight={imageSize.height}
-            $imageUrl={imageUrl}
-            $isVisible={isPhotoLoaded}
+            $imageUrl={backgroundImageUrl}
           >
             <>
-              {!isPhotoLoaded && (
-                <LoadingContainer>
-                  <CircularProgress color="primary" />
-                </LoadingContainer>
+              {(!isResolutionLoaded || isPhotoLoading) && (
+                <MiniLoadingContainer>
+                  <CircularProgress color="primary" size={14} thickness={6} />
+                </MiniLoadingContainer>
               )}
-              <BlurContainer $isVisible={isPhotoLoaded}>
-                <TransformWrapper
-                  doubleClick={{
-                    disabled: true,
-                  }}
-                  onWheelStart={stopPointerEvents}
-                  onWheelStop={startPointerEvents}
-                  onPinchingStart={stopPointerEvents}
-                  onPinchingStop={startPointerEvents}
-                  onZoomStart={stopPointerEvents}
-                  onZoomStop={startPointerEvents}
-                  onPanningStart={startPointerEvents}
-                  onPanningStop={startPointerEvents}
-                  wheel={{ step: 100 }}
-                  centerOnInit
-                  onTransformed={(
-                    _ref,
-                    state: {
-                      scale: number;
-                      positionX: number;
-                      positionY: number;
-                    },
-                  ) => {
-                    setPhotoZoom(state);
-                  }}
-                >
+              {!isFirstPhotoLoaded && (
+                <FullLoadingContainer>
+                  <CircularProgress color="primary" />
+                </FullLoadingContainer>
+              )}
+              <BlurContainer>
+                <TransformWrapper>
                   <TransformComponent
                     wrapperStyle={{ height: '100%', width: '100%' }}
                     contentStyle={{ height: '100%', width: '100%' }}
                   >
                     <>
                       <RoutesEditor
+                        setIsPhotoLoading={setIsPhotoLoading}
+                        isPhotoLoading={isPhotoLoading}
                         isRoutesLayerVisible={
-                          !isSplitViewDragging &&
-                          areRoutesVisible &&
-                          !areRoutesLoading
+                          !isSplitViewDragging && !areRoutesLoading
                         }
                         imageUrl={imageUrl}
-                        setIsPhotoLoaded={setIsPhotoLoaded}
+                        photoResolution={photoResolution}
                       />
                     </>
                   </TransformComponent>
                 </TransformWrapper>
-                {isEditMode && areRoutesVisible && (
+                {isEditMode && (
                   <>
                     <ControlPanel />
                     <Guide />
@@ -340,15 +457,19 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
           </BackgroundContainer>
 
           <ShadowContainer>
+            <FabComponent />
             <ShadowTop backgroundColor={theme.palette.background.paper} />
-            <BottomPanel onScroll={onScroll} ref={scrollElementRef}>
-              <MainContent />
+            <BottomPanel onScroll={handleOnScroll} ref={scrollElementRef}>
+              <ClimbingViewContent isMapVisible={isMapVisible} />
             </BottomPanel>
             <ShadowBottom backgroundColor={theme.palette.background.paper} />
           </ShadowContainer>
         </SplitPane>
       ) : (
-        <MainContent />
+        <>
+          <FabComponent />
+          <ClimbingViewContent isMapVisible={isMapVisible} />
+        </>
       )}
     </Container>
   );

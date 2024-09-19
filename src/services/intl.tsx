@@ -18,13 +18,25 @@ export const intl: Intl = {
   messages: {},
 };
 
-const VARIABLE_REGEX = /__(?<name>[a-zA-Z_]+)__/g;
+const VARIABLE_REGEX = /__([a-zA-Z_]+)__/g;
 
 const replaceValues = (text: string, values: Values) =>
-  text.replace(VARIABLE_REGEX, (match, variableName) => {
+  text.replace(VARIABLE_REGEX, (_, variableName) => {
     const value = values && values[variableName];
     return value != null ? `${value}` : '?';
   });
+
+const replaceTags = (text: string, tags?: Values) =>
+  tags
+    ? text.replace(/<(\/?)([a-zA-Z_]+)>/g, (_, end, tagName) => {
+        const tag = `${tags[tagName]}`;
+        if (end) {
+          const endTag = tag.split(' ')[0];
+          return tag ? `</${endTag}>` : '?';
+        }
+        return tag ? `<${tag}>` : '?';
+      })
+    : text;
 
 export const t = (id: TranslationId, values?: Values) => {
   const translation = intl.messages[id] ?? id;
@@ -34,10 +46,11 @@ export const t = (id: TranslationId, values?: Values) => {
 interface Props {
   id: TranslationId;
   values?: Values;
+  tags?: Values;
 }
 
-export const Translation = ({ id, values }: Props) => {
-  const html = t(id, values);
+export const Translation = ({ id, values, tags }: Props) => {
+  const html = replaceTags(t(id, values), tags);
   return <span data-id={id} dangerouslySetInnerHTML={{ __html: html }} />; // eslint-disable-line react/no-danger
 };
 

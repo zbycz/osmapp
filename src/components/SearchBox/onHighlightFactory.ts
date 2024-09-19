@@ -1,3 +1,5 @@
+import { Feature } from '../../services/types';
+
 const getElementType = (osmType) => {
   switch (osmType) {
     case 'R':
@@ -11,20 +13,20 @@ const getElementType = (osmType) => {
   }
 };
 
-export const getSkeleton = (option) => {
+export const getSkeleton = (option): Feature => {
   const center = option.geometry.coordinates;
   const { osm_id: id, osm_type: osmType, name } = option.properties;
   const type = getElementType(osmType);
   const [lon, lat] = center;
 
   return {
-    loading: true,
+    type: 'Feature',
     skeleton: true,
     nonOsmObject: false,
-    osmMeta: { type, id },
+    osmMeta: { type, id: parseInt(id, 10) },
     center: [parseFloat(lon), parseFloat(lat)],
     tags: { name },
-    properties: { class: option.class },
+    properties: { class: option.class, subclass: '' },
   };
 };
 

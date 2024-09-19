@@ -59,7 +59,7 @@ export const osmappLayers: Layers = {
       '<a href="https://openplaceguide.org/">OPG</a> © <a href="https://openmaptiles.org/">OpenMapTiles</a>',
       'osm',
     ],
-    bbox: africaBbox,
+    bboxes: [africaBbox],
   },
   outdoor: {
     name: t('layers.outdoor'),
@@ -96,7 +96,7 @@ export const osmappLayers: Layers = {
     url: 'https://geoportal.cuzk.cz/WMS_ORTOFOTO_PUB/service.svc/get?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.3.0&SERVICE=WMS&REQUEST=GetMap&LAYERS=GR_ORTFOTORGB&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}',
     Icon: SatelliteIcon,
     attribution: ['&copy; <a href="https://geoportal.cuzk.cz">ČÚZK</a>'],
-    bbox: czBbox,
+    bboxes: [czBbox],
   },
   // mtb: {
   //   name: t('layers.mtb'),

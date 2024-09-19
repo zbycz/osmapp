@@ -1,8 +1,9 @@
 import React, { useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
+import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
 import Router from 'next/router';
+import { css } from '@emotion/react';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
@@ -12,16 +13,16 @@ import { SEARCH_BOX_HEIGHT } from './consts';
 import { useInputValueState } from './options/geocoder';
 import { useOptions } from './useOptions';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
-import { LoginMenu } from '../Map/TopMenu/LoginMenu';
+import { UserMenu } from '../Map/TopMenu/UserMenu';
 
 const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;
   height: ${SEARCH_BOX_HEIGHT}px;
-  ${({ $isMobileMode }) =>
+  ${({ $isMobileMode, theme }) =>
     !$isMobileMode &&
     css`
       box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
-      background-color: ${({ theme }) => theme.palette.background.searchBox};
+      background-color: ${theme.palette.background.searchBox};
     `}
 
   padding: 8px;
@@ -103,7 +104,7 @@ const SearchBox = () => {
         )}
         {isMobileMode && (
           <>
-            <LoginMenu />
+            <UserMenu />
             <HamburgerMenu />
           </>
         )}

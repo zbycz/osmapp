@@ -1,15 +1,17 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+
 import LayersIcon from './LayersIcon';
 import { t } from '../../services/intl';
 import { useMobileMode } from '../helpers';
 import { convertHexToRgba } from '../utils/colorUtils';
 
-const StyledLayerSwitcher = styled.button<{ isMobileMode: boolean }>`
+const StyledLayerSwitcher = styled.button<{ $isMobileMode: boolean }>`
   margin: 0;
   padding: 0;
-  ${({ isMobileMode }) =>
-    isMobileMode
+  ${({ $isMobileMode }) =>
+    $isMobileMode
       ? css`
           width: 44px;
           height: 44px;
@@ -45,7 +47,7 @@ const StyledLayerSwitcher = styled.button<{ isMobileMode: boolean }>`
 export const LayerSwitcherButton = ({ onClick }: { onClick?: any }) => {
   const isMobileMode = useMobileMode();
   return (
-    <StyledLayerSwitcher onClick={onClick} isMobileMode={isMobileMode}>
+    <StyledLayerSwitcher onClick={onClick} $isMobileMode={isMobileMode}>
       <LayersIcon />
       {!isMobileMode && t('layerswitcher.button')}
     </StyledLayerSwitcher>

@@ -2,9 +2,8 @@ import React, { useEffect } from 'react';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { PROJECT_ID } from '../../services/project';
 import { useMobileMode } from '../helpers';
-import { Drawer } from '../utils/Drawer';
 import { Homepage } from './Homepage';
-import { PanelWrapper } from '../utils/PanelHelpers';
+import { MobilePageDrawer } from '../utils/MobilePageDrawer';
 
 export const HomepagePanel = () => {
   const { feature, homepageShown, hideHomepage, persistHideHomepage } =
@@ -14,7 +13,7 @@ export const HomepagePanel = () => {
   // hide after first shown feature
   useEffect(() => {
     if (feature) hideHomepage();
-  }, [feature]);
+  }, [feature, hideHomepage]);
 
   if (!homepageShown) {
     return null;
@@ -28,27 +27,14 @@ export const HomepagePanel = () => {
     }
   };
 
-  return isMobileMode ? (
-    <Drawer
-      topOffset={180}
+  return (
+    <MobilePageDrawer
+      onClose={onClose}
       className="homepage-drawer"
       collapsedHeight={0}
-      onTransitionEnd={onClose}
-      defaultOpen
+      topOffset={180}
     >
-      <Homepage
-        onClick={persistHideHomepage}
-        climbing={isClimbing}
-        mobileMode={isMobileMode}
-      />
-    </Drawer>
-  ) : (
-    <PanelWrapper>
-      <Homepage
-        onClick={persistHideHomepage}
-        climbing={isClimbing}
-        mobileMode={isMobileMode}
-      />
-    </PanelWrapper>
+      <Homepage onClick={persistHideHomepage} mobileMode={isMobileMode} />
+    </MobilePageDrawer>
   );
 };

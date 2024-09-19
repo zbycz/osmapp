@@ -7,10 +7,6 @@ import { computeAllFieldKeys } from '../fields';
 
 intl.lang = 'en';
 
-jest.mock('next/config', () => () => ({
-  publicRuntimeConfig: { languages: ['en'] },
-}));
-
 describe('idTaggingScheme', () => {
   beforeEach(() => {
     mockSchemaTranslations(translations);
@@ -47,7 +43,7 @@ describe('idTaggingScheme', () => {
       result.matchedFields.map(({ label, value }) => ({ label, value })),
     ).toMatchObject([
       { label: 'Road Number', value: 'I 84' },
-      { label: 'One Way', value: 'Yes' },
+      { label: 'One Way', value: 'yes' },
       { label: 'Speed Limit', value: '55 mph' },
       { label: 'Lanes', value: '2' },
       { label: 'Surface', value: 'Asphalt' },
@@ -99,7 +95,9 @@ describe('idTaggingScheme', () => {
       'capacity',
       'charge_fee',
       'fee',
+      'fhrs/id-GB',
       'gnis/feature_id-US',
+      'ref/edubase-GB',
       'level',
       'polling_station',
       'wheelchair',

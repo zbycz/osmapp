@@ -1,4 +1,5 @@
-import styled from 'styled-components';
+import styled from '@emotion/styled';
+import { isDesktopResolution } from '../../helpers';
 
 export const Table = styled.table`
   font-size: 1rem;
@@ -11,8 +12,10 @@ export const Table = styled.table`
     vertical-align: baseline;
     word-break: break-all;
 
-    &:hover .show-on-hover {
-      display: block !important;
+    @media ${isDesktopResolution} {
+      &:hover .show-on-hover {
+        display: block !important;
+      }
     }
   }
 
