@@ -6,6 +6,7 @@ import { Profile, RoutingResult } from './types';
 import { getBrouterResults } from './getBrouterResults';
 import { LineLayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { type GeoJSON } from 'geojson';
+import { isMobileModeVanilla } from '../../helpers';
 
 // taken from or inspired by cartes.app, LGPL
 
@@ -164,11 +165,9 @@ export const handleRouting = async (
 
   const { w, s, e, n } = result.bbox;
   const bbox = new maplibregl.LngLatBounds([w, s], [e, n]);
-  const width = window.innerWidth;
-  const padding =
-    width > 1000
-      ? { left: width / 4, right: width / 4, bottom: 50, top: 50 }
-      : { left: 50, right: 50, top: 50, bottom: 50 };
+  const padding = isMobileModeVanilla()
+    ? { left: 30, right: 30, bottom: 30, top: 120 }
+    : { left: 390, right: 50, top: 50, bottom: 50 };
   map.fitBounds(bbox, { padding });
 
   return result;
