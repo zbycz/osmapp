@@ -28,8 +28,7 @@ const StyledMenuItem = styled(MenuItem)`
 ` as unknown as any; // <Menu> expects "li", but it as "a"
 
 const StyledToggleButton = styled(IconButton)`
-  position: absolute !important;
-  margin: -5px 0 0 0 !important;
+  margin: -10px 0 -5px 0 !important;
 
   svg {
     font-size: 17px;
