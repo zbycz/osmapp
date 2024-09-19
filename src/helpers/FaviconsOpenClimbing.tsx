@@ -85,53 +85,103 @@ export const FaviconsOpenClimbing = () => (
     />
     {/* splash screens for iOS https://appsco.pe/developer/splash-screens (from osmapp_256.png) */}
     <link
-      href="/openclimbing/logo/openclimbing/splash/iphone5_splash.png"
-      media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+      href="/openclimbing/logo/splash/light/iphone5_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/iphone6_splash.png"
-      media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
+      href="/openclimbing/logo/splash/light/iphone6_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/iphoneplus_splash.png"
-      media="(device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)"
+      href="/openclimbing/logo/splash/light/iphoneplus_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/iphonex_splash.png"
-      media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
+      href="/openclimbing/logo/splash/light/iphonex_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/iphonexr_splash.png"
-      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)"
+      href="/openclimbing/logo/splash/light/iphonexr_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/iphonexsmax_splash.png"
-      media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
+      href="/openclimbing/logo/splash/light/iphonexsmax_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/ipad_splash.png"
-      media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)"
+      href="/openclimbing/logo/splash/light/ipad_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/ipadpro1_splash.png"
-      media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)"
+      href="/openclimbing/logo/splash/light/ipadpro1_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/ipadpro3_splash.png"
-      media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)"
+      href="/openclimbing/logo/splash/light/ipadpro3_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)"
       rel="apple-touch-startup-image"
     />
     <link
-      href="/openclimbing/logo/splash/ipadpro2_splash.png"
-      media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
+      href="/openclimbing/logo/splash/light/ipadpro2_splash.png"
+      media="(prefers-color-scheme: light) and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/iphone5_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/iphone6_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/iphoneplus_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 621px) and (device-height: 1104px) and (-webkit-device-pixel-ratio: 3)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/iphonex_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/iphonexr_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/iphonexsmax_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/ipad_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/ipadpro1_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/ipadpro3_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)"
+      rel="apple-touch-startup-image"
+    />
+    <link
+      href="/openclimbing/logo/splash/dark/ipadpro2_splash.png"
+      media="(prefers-color-scheme: dark) and (device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)"
       rel="apple-touch-startup-image"
     />
   </>
