@@ -37,7 +37,13 @@ export const useGetOptions = (inputValue: string) => {
       const beforeWithStars = [...starOptions, ...before];
       setOptions([...beforeWithStars, { type: 'loader' }]);
 
-      fetchGeocoderOptions(inputValue, view, setOptions, beforeWithStars, after);
+      fetchGeocoderOptions(
+        inputValue,
+        view,
+        setOptions, // TODO refactor to await options instead of setOptions
+        beforeWithStars,
+        after,
+      );
     })();
   }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
   return options;
