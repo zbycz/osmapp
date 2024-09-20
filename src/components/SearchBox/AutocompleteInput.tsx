@@ -17,6 +17,11 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   useKeyDown('/', (e) => {
+    const isInput = e.target instanceof HTMLInputElement;
+    const isTextarea = e.target instanceof HTMLTextAreaElement;
+    if (isInput || isTextarea) {
+      return;
+    }
     e.preventDefault();
     inputRef.current?.focus();
   });

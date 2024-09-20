@@ -18,14 +18,13 @@ export const getSkeleton = ({ geocoder }: GeocoderOption): Feature => {
   const center = geocoder.geometry.coordinates;
   const { osm_id: id, osm_type: osmType, name } = geocoder.properties;
   const type = getElementType(osmType);
-  const [lon, lat] = center;
 
   return {
+    center,
     type: 'Feature',
     skeleton: true,
     nonOsmObject: false,
     osmMeta: { type, id: parseInt(id, 10) },
-    center: [parseFloat(`${lon}`), parseFloat(`${lat}`)],
     tags: { name },
     properties: { class: geocoder.properties.class, subclass: '' },
   };

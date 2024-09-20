@@ -11,7 +11,7 @@ import { getOverpassOptions } from './options/overpass';
 import { getPresetOptions } from './options/preset';
 import { Option } from './types';
 
-export const useOptions = (inputValue: string) => {
+export const useGetOptions = (inputValue: string) => {
   const { view } = useMapStateContext();
   const { stars } = useStarsContext();
   const [options, setOptions] = useState<Option[]>([]);

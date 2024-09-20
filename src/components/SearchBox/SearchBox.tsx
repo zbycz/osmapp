@@ -7,9 +7,9 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
-import { useMobileMode, useToggleState } from '../helpers';
+import { useMobileMode } from '../helpers';
 import { useInputValueState } from './options/geocoder';
-import { useOptions } from './useOptions';
+import { useGetOptions } from './useGetOptions';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
 import { DirectionsButton } from '../Directions/DirectionsButton';
@@ -48,7 +48,7 @@ const SearchBox = () => {
   const autocompleteRef = useRef();
   const onClosePanel = useOnClosePanel();
 
-  const options = useOptions(inputValue);
+  const options = useGetOptions(inputValue);
 
   return (
     <TopPanel $isMobileMode={isMobileMode}>
