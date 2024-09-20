@@ -11,14 +11,16 @@ import { Theme } from '../../../helpers/theme';
 import { GeocoderOption, Option, PresetOption } from '../types';
 import { MapCenter } from '../../../services/types';
 import { View } from '../../utils/MapStateContext';
+import { LonLat } from '../../../services/types';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
+const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
 
 const getApiUrl = (inputValue: string, view: View) => {
   const [zoom, lat, lon] = view;
   const lvl = Math.max(0, Math.min(16, Math.round(parseFloat(zoom))));
   const q = encodeURIComponent(inputValue);
-  const lang = intl.lang in PHOTON_SUPPORTED_LANGS ? intl.lang : 'default';
+  const lang = intl.lang in PHOTON_SUPPORTED_LANGS ? intl.lang : DEFAULT;
   return `https://photon.komoot.io/api/?q=${q}&lon=${lon}&lat=${lat}&zoom=${lvl}&lang=${lang}`;
 };
 
@@ -144,7 +146,7 @@ export const renderGeocoder = (
   { geocoder }: GeocoderOption,
   currentTheme: Theme,
   inputValue: string,
-  mapCenter: MapCenter,
+  mapCenter: LonLat,
 ) => {
   const { geometry, properties } = geocoder;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;

@@ -34,7 +34,7 @@ export const MemberFeatures = () => {
   const heading = isClimbingCrag ? 'Climbing routes' : 'Subitems';
 
   return (
-    <Box mt={1}>
+    <Box mb={1}>
       <PanelLabel
         addition={
           <GradeSystemSelect

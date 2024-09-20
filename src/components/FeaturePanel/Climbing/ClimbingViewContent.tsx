@@ -8,10 +8,16 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { RouteList } from './RouteList/RouteList';
 import { ContentContainer } from './ContentContainer';
-import { Button, ButtonGroup } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
+import { Box, Button, ButtonGroup } from '@mui/material';
+
 import { RouteDistribution } from './RouteDistribution';
 import React from 'react';
+import dynamic from 'next/dynamic';
+
+const CragMapDynamic = dynamic(() => import('./CragMap'), {
+  ssr: false,
+  loading: () => <div />,
+});
 
 const ContentBelowRouteList = styled.div<{ $splitPaneHeight: number }>`
   min-height: calc(
@@ -23,13 +29,9 @@ const ContentBelowRouteList = styled.div<{ $splitPaneHeight: number }>`
       ${DIALOG_TOP_BAR_HEIGHT + CLIMBING_ROUTE_ROW_HEIGHT + 40}px
   );
 `;
-const ButtonContainer = styled.div`
-  margin-bottom: 40px;
-  margin-left: 40px;
-`;
-export const ClimbingViewContent = () => {
-  const { splitPaneHeight, showDebugMenu, isEditMode, routes, setIsEditMode } =
-    useClimbingContext();
+
+export const ClimbingViewContent = ({ isMapVisible }) => {
+  const { splitPaneHeight, showDebugMenu, routes } = useClimbingContext();
 
   const getRoutesCsv = () => {
     const getPathString = (path) =>
@@ -54,27 +56,14 @@ export const ClimbingViewContent = () => {
     // eslint-disable-next-line no-console
     console.table(object);
   };
-  const handleEdit = () => {
-    setIsEditMode(true);
-  };
 
-  return (
+  return isMapVisible ? (
+    <CragMapDynamic />
+  ) : (
     <>
       <RouteList isEditable />
       <ContentBelowRouteList $splitPaneHeight={splitPaneHeight}>
         <ContentContainer>
-          {!isEditMode && (
-            <ButtonContainer>
-              <Button
-                onClick={handleEdit}
-                color="primary"
-                variant="contained"
-                endIcon={<EditIcon />}
-              >
-                Edit routes
-              </Button>
-            </ButtonContainer>
-          )}
           {showDebugMenu && (
             <>
               <br />

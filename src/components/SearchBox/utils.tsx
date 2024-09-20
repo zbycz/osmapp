@@ -20,11 +20,11 @@ export const IconPart = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-export const getDistance = (point1: MapCenter, point2: MapCenter) => {
-  const lat1 = (parseFloat(`${point1.lat}`) * Math.PI) / 180;
-  const lng1 = (parseFloat(`${point1.lon}`) * Math.PI) / 180;
-  const lat2 = (parseFloat(`${point2.lat}`) * Math.PI) / 180;
-  const lng2 = (parseFloat(`${point2.lon}`) * Math.PI) / 180;
+export const getDistance = (point1: LonLat, point2: LonLat) => {
+  const lng1 = (point1[0] * Math.PI) / 180;
+  const lat1 = (point1[1] * Math.PI) / 180;
+  const lng2 = (point2[0] * Math.PI) / 180;
+  const lat2 = (point2[1] * Math.PI) / 180;
   const latdiff = lat2 - lat1;
   const lngdiff = lng2 - lng1;
 
@@ -40,18 +40,18 @@ export const getDistance = (point1: MapCenter, point2: MapCenter) => {
   );
 };
 
-export const getHumanDistance = (mapCenter: MapCenter, [lon, lat]: LonLat) => {
-  const distKm = getDistance(mapCenter, { lon, lat }) / 1000;
+export const getHumanDistance = (mapCenter: LonLat, point: LonLat) => {
+  const distKm = getDistance(mapCenter, point) / 1000;
   const dist = isImperial() ? distKm * 0.621371192 : distKm;
   const rounded = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist);
   return isImperial() ? `${rounded} mi` : `${rounded} km`;
 };
 
-export const useMapCenter = (): MapCenter => {
+export const useMapCenter = (): LonLat => {
   const {
     view: [, lat, lon],
   } = useMapStateContext();
-  return { lon, lat };
+  return [parseFloat(lon), parseFloat(lat)];
 };
 
 export const renderLoader = () => (

@@ -6,12 +6,12 @@ import { renderStar } from './options/stars';
 import { renderGeocoder } from './options/geocoder';
 import { Option } from './types';
 import { Theme } from '../../helpers/theme';
-import { MapCenter } from '../../services/types';
+import { LonLat } from '../../services/types';
 
 const renderOption = (
   inputValue: string,
   currentTheme: Theme,
-  mapCenter: MapCenter,
+  mapCenter: LonLat,
   option: Option,
 ) => {
   switch (option.type) {
@@ -31,7 +31,7 @@ const renderOption = (
 export const renderOptionFactory = (
   inputValue: string,
   currentTheme: Theme,
-  mapCenter: MapCenter,
+  mapCenter: LonLat,
 ) => {
   const Option = ({ key, ...props }, option: Option) => (
     <li key={key} {...props}>

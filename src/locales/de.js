@@ -157,6 +157,7 @@ export default {
   'layerswitcher.category_osmbasedmap': 'Normale Ebene',
   'layerswitcher.compatible_license': 'Lizenz kompatibel für die Bearbeitung von OpenStreetMap',
   'layerswitcher.layers_in_area': 'Für Ebenen in diesem Bereich filtern',
+  'layerswitcher.explaination': 'Bitte fügen Sie {z}, {x}, {y} oder {bbox-epsg-3857} ein',
 
   'layers.basic': 'Standard',
   'layers.outdoor': 'Outdoor',
