@@ -1,3 +1,4 @@
+import { AutocompleteHighlightChangeReason } from '@mui/material';
 import { Feature } from '../../services/types';
 import { GeocoderOption, Option } from './types';
 
@@ -31,7 +32,9 @@ export const getSkeleton = ({ geocoder }: GeocoderOption): Feature => {
 };
 
 export const onHighlightFactory =
-  (setPreview: (feature: unknown) => void) => (_: never, option: Option) => {
+  (setPreview: (feature: unknown) => void) =>
+  (_: never, option: Option, reason: AutocompleteHighlightChangeReason) => {
+    if (reason === 'touch') return;
     if (!option) return;
     if (option.type === 'star' && option.star.center) {
       const { center } = option.star;
