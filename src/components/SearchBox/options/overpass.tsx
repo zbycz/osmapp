@@ -22,6 +22,7 @@ export const getOverpassOptions = (inputValue: string): OverpassOption[] => {
   if (inputValue.match(/^(op|overpass):/)) {
     return [
       {
+        type: 'overpass',
         overpass: {
           query: inputValue.replace(/^(op|overpass):/, ''),
           label: t('searchbox.overpass_custom_query'),
@@ -29,6 +30,7 @@ export const getOverpassOptions = (inputValue: string): OverpassOption[] => {
         },
       },
       ...getOverpassQueryHistory().map((query) => ({
+        type: 'overpass' as const,
         overpass: {
           query,
           label: query,
@@ -42,6 +44,7 @@ export const getOverpassOptions = (inputValue: string): OverpassOption[] => {
     const [key, value] = inputValue.split('=', 2);
     return [
       {
+        type: 'overpass',
         overpass: {
           tags: { [key]: value || '*' },
           label: `${key}=${value || '*'}`,
@@ -54,7 +57,7 @@ export const getOverpassOptions = (inputValue: string): OverpassOption[] => {
   return [];
 };
 
-export const renderOverpass = (overpass) => (
+export const renderOverpass = ({ overpass }: OverpassOption) => (
   <>
     <IconPart>
       <SearchIcon />
