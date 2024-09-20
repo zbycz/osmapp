@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { FeatureHeading } from './FeatureHeading';
 import { useToggleState } from '../helpers';
@@ -19,7 +19,6 @@ import { Runways } from './Runways/Runways';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
 import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
-import { RouteListInPanel } from './Climbing/RouteList/RouteList';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box } from '@mui/material';
@@ -28,30 +27,10 @@ const Flex = styled.div`
   flex: 1;
 `;
 
-type FeaturePanelProps = {
-  onHeadingHeightChange?: (height: number) => void;
-};
-
-export const FeaturePanel = ({ onHeadingHeightChange }: FeaturePanelProps) => {
+export const FeaturePanel = forwardRef<HTMLDivElement>((_, ref) => {
   const { feature } = useFeatureContext();
   const [advanced, setAdvanced] = useState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
-  const headingRef = useRef<HTMLDivElement>();
-
-  useEffect(() => {
-    const headingDiv = headingRef.current;
-    if (!headingDiv) return;
-
-    const listener = () => {
-      onHeadingHeightChange?.(headingDiv.clientHeight);
-    };
-    listener();
-
-    window.addEventListener('resize', listener);
-    return () => {
-      window.removeEventListener('resize', listener);
-    };
-  }, [headingRef, feature, onHeadingHeightChange]);
 
   const { tags, skeleton, deleted } = feature;
   const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
@@ -72,7 +51,7 @@ export const FeaturePanel = ({ onHeadingHeightChange }: FeaturePanelProps) => {
     <>
       <PanelContent>
         <PanelSidePadding>
-          <FeatureHeading ref={headingRef} />
+          <FeatureHeading ref={ref} />
           <ClimbingRouteGrade />
           <ParentLink />
           <ClimbingRestriction />
@@ -119,4 +98,6 @@ export const FeaturePanel = ({ onHeadingHeightChange }: FeaturePanelProps) => {
       </PanelContent>
     </>
   );
-};
+});
+
+FeaturePanel.displayName = 'FeaturePanel';

@@ -1,12 +1,30 @@
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
-/**
- * Custom hook to determine if the component is mounted.
- */
-export const useIsMounted = () => {
-  const [isMounted, setIsMounted] = useState(false);
+export const useScreensize = () => {
+  const [screenSize, setScreenSize] = useState({
+    width: 0,
+    height: 0,
+  });
+
   useEffect(() => {
-    setIsMounted(true);
+    setScreenSize({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
+
+    const handleResize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, []);
-  return isMounted;
+
+  return screenSize;
 };

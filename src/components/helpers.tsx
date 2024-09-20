@@ -1,7 +1,6 @@
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Map, MapEventType } from 'maplibre-gl';
 import { useMediaQuery } from '@mui/material';
-import { useIsMounted } from '../helpers/hooks';
 
 export const useToggleState = (
   initialState: boolean,
@@ -124,8 +123,8 @@ export const DotLoader = () => (
 
 // TODO import { NoSsr } from '@mui/base';
 export const ClientOnly = ({ children }) => {
-  const mounted = useIsMounted();
-  return mounted ? children : null;
+  const isClient = useIsClient();
+  return isClient ? children : null;
 };
 
 export const isImperial = () =>

@@ -6,23 +6,37 @@ import {
   DRAWER_PREVIEW_PADDING,
   DRAWER_TOP_OFFSET,
 } from '../utils/MobilePageDrawer';
+import { useScreensize } from '../../helpers/hooks';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const DRAWER_CLASSNAME = 'featurePanelInDrawer';
 
 export const FeaturePanelInDrawer = () => {
-  const [height, setHeight] = React.useState(DRAWER_PREVIEW_HEIGHT);
+  const { feature } = useFeatureContext();
+  const [collapsedHeight, setCollapsedHeight] = React.useState<number>(
+    DRAWER_PREVIEW_HEIGHT,
+  );
+  const { height: windowHeight } = useScreensize();
+  const maxCollapsedHeight = windowHeight / 3;
+
+  const headingRef = React.useRef<HTMLDivElement>();
+
+  React.useEffect(() => {
+    const headingDiv = headingRef.current;
+    if (!headingDiv) return;
+
+    const baseHeight = Math.min(headingDiv.clientHeight, maxCollapsedHeight);
+    setCollapsedHeight(baseHeight + DRAWER_PREVIEW_PADDING);
+  }, [headingRef, feature]);
+
   return (
     <Drawer
-      key={`drawer-${height}px`}
+      key={`drawer-${collapsedHeight}px`}
       topOffset={DRAWER_TOP_OFFSET}
       className={DRAWER_CLASSNAME}
-      collapsedHeight={height}
+      collapsedHeight={collapsedHeight}
     >
-      <FeaturePanel
-        onHeadingHeightChange={(height) => {
-          setHeight(height + DRAWER_PREVIEW_PADDING);
-        }}
-      />
+      <FeaturePanel ref={headingRef} />
     </Drawer>
   );
 };

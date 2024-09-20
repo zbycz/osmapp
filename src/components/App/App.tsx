@@ -25,7 +25,7 @@ import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog'
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
-import { useMobileMode } from '../helpers';
+import { useIsClient, useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
@@ -33,7 +33,6 @@ import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
 import Error from 'next/error';
 import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
-import { useIsMounted } from '../../helpers/hooks';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -82,7 +81,7 @@ const IndexWithProviders = () => {
   const isMobileMode = useMobileMode();
   const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
-  const isMounted = useIsMounted();
+  const isMounted = useIsClient();
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
