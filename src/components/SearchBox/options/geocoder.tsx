@@ -10,12 +10,13 @@ import { intl } from '../../../services/intl';
 import { LonLat } from '../../../services/types';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
+const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
 
 const getApiUrl = (inputValue, view) => {
   const [zoom, lat, lon] = view;
   const lvl = Math.max(0, Math.min(16, Math.round(zoom)));
   const q = encodeURIComponent(inputValue);
-  const lang = intl.lang in PHOTON_SUPPORTED_LANGS ? intl.lang : 'default';
+  const lang = intl.lang in PHOTON_SUPPORTED_LANGS ? intl.lang : DEFAULT;
   return `https://photon.komoot.io/api/?q=${q}&lon=${lon}&lat=${lat}&zoom=${lvl}&lang=${lang}`;
 };
 
