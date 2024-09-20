@@ -93,6 +93,7 @@ export const trimText = (text, limit) =>
 // (<= tablet size) MobileMode shows FeaturePanel in Drawer (instead of side)
 export const isMobileMode = '(max-width: 700px)';
 export const useMobileMode = () => useMediaQuery(isMobileMode);
+export const isMobileModeVanilla = () => window.innerWidth <= 700;
 
 // (>= mobile size) SearchBox stops growing
 export const isDesktop = '(min-width: 500px)';

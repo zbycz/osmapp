@@ -19,6 +19,16 @@ import { FaviconsOsmapp } from '../src/helpers/FaviconsOsmapp';
 import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
 import { FaviconsOpenClimbing } from '../src/helpers/FaviconsOpenClimbing';
 import { LANGUAGES } from '../src/config.mjs';
+import styled from '@emotion/styled';
+
+const Body = styled.body`
+  @media (prefers-color-scheme: light) {
+    background-color: #f6f6f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    background-color: #303030;
+  }
+`;
 
 type Props = DocumentInitialProps &
   DocumentProps &
@@ -60,11 +70,11 @@ export default class MyDocument extends Document<Props> {
           {isOpenClimbing ? <FaviconsOpenClimbing /> : <FaviconsOsmapp />}
           {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
         </Head>
-        <body>
+        <Body>
           <Main />
           <InjectIntl intl={serverIntl} />
           <NextScript />
-        </body>
+        </Body>
       </Html>
     );
   }

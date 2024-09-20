@@ -7,12 +7,12 @@ import {
   Position,
 } from './types';
 
-interface NamedBbox {
+export type NamedBbox = {
   w: number;
   s: number;
   e: number;
   n: number;
-}
+};
 
 export const getBbox = (coordinates: Position[]): NamedBbox => {
   const [firstX, firstY] = coordinates[0];

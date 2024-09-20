@@ -37,6 +37,7 @@ import {
   ClimbingArea,
   getClimbingAreas,
 } from '../../services/climbing-areas/getClimbingAreas';
+import { DirectionsBox } from '../Directions/DirectionsBox';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -101,10 +102,13 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const routeNumber =
     router.query.all?.[3] === 'route' ? router.query.all?.[4] : undefined;
 
+  const directions = router.query.all?.[0] === 'directions' && !featureShown;
+
   return (
     <>
       <Loading />
-      <SearchBox />
+      {!directions && <SearchBox />}
+      {directions && <DirectionsBox />}
       {featureShown && !isMobileMode && <FeaturePanelOnSide />}
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
@@ -177,7 +181,8 @@ App.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const cookies = nextCookies(ctx);
-  const featureFromRouter = await getInitialFeature(ctx);
+  const featureFromRouter =
+    ctx.query.all?.[0] === 'directions' ? null : await getInitialFeature(ctx);
   if (ctx.res) {
     if (featureFromRouter === '404' || featureFromRouter?.error === '404') {
       ctx.res.statusCode = 404;
