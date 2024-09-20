@@ -2,7 +2,14 @@ import React, { useEffect, useRef } from 'react';
 import styled from '@emotion/styled';
 import AddIcon from '@mui/icons-material/Add';
 import Router, { useRouter } from 'next/router';
-import { Dialog, DialogContent, DialogActions, Button } from '@mui/material';
+import {
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Button,
+  Box,
+  Stack,
+} from '@mui/material';
 import { ClimbingView } from './ClimbingView';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingCragDialogHeader } from './ClimbingCragDialogHeader';
@@ -132,13 +139,19 @@ export const ClimbingCragDialog = ({
               )}
             </div>
             <div>
-              <Button autoFocus onClick={handleCancel}>
-                Cancel
-              </Button>
+              <Stack spacing={2} direction="row">
+                <Button autoFocus onClick={handleCancel}>
+                  Cancel
+                </Button>
 
-              <Button onClick={handleSave} variant="contained" color="primary">
-                Save
-              </Button>
+                <Button
+                  onClick={handleSave}
+                  variant="contained"
+                  color="primary"
+                >
+                  Save
+                </Button>
+              </Stack>
             </div>
           </Flex>
         </DialogActions>

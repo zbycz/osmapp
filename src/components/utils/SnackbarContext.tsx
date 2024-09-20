@@ -7,7 +7,7 @@ import React, {
   useMemo,
 } from 'react';
 
-type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
+export type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
 export type SnackbarContextType = {
   showToast: (message: string, severity?: Severity) => void;
 };

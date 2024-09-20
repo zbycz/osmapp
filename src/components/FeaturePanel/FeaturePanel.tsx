@@ -22,6 +22,7 @@ import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box } from '@mui/material';
+import { ClimbingGuideInfo } from './Climbing/ClimbingGuideInfo';
 
 const Flex = styled.div`
   flex: 1;
@@ -40,8 +41,8 @@ export const FeaturePanel = forwardRef<HTMLDivElement>((_, ref) => {
   }
 
   // Different components are shown for different types of features
-  // Conditional components should have if(feature.tags.xxx) check at the beggining
-  // All components should have margin-bottoms to accomodate missing parts
+  // Conditional components should have if(feature.tags.xxx) check at the beginning
+  // All components should have margin-bottoms to accommodate missing parts
   const isClimbingCrag = tags.climbing === 'crag';
 
   const PropertiesComponent = () => (
@@ -53,6 +54,7 @@ export const FeaturePanel = forwardRef<HTMLDivElement>((_, ref) => {
         <PanelSidePadding>
           <FeatureHeading ref={ref} />
           <ClimbingRouteGrade />
+          <ClimbingGuideInfo />
           <ParentLink />
           <ClimbingRestriction />
 

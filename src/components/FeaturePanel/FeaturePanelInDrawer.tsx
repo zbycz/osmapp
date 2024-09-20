@@ -27,7 +27,7 @@ export const FeaturePanelInDrawer = () => {
 
     const baseHeight = Math.min(headingDiv.clientHeight, maxCollapsedHeight);
     setCollapsedHeight(baseHeight + DRAWER_PREVIEW_PADDING);
-  }, [headingRef, feature]);
+  }, [headingRef, feature, maxCollapsedHeight]);
 
   return (
     <Drawer
