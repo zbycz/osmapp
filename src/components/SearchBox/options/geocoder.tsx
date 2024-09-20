@@ -9,7 +9,6 @@ import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
 import { Theme } from '../../../helpers/theme';
 import { GeocoderOption, Option, PresetOption } from '../types';
-import { MapCenter } from '../../../services/types';
 import { View } from '../../utils/MapStateContext';
 import { LonLat } from '../../../services/types';
 

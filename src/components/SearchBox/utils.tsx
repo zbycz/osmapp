@@ -1,16 +1,15 @@
 import styled from '@emotion/styled';
 import { Grid, Typography } from '@mui/material';
 import React from 'react';
-import maplibregl from 'maplibre-gl';
+import maplibregl, { LngLatLike } from 'maplibre-gl';
 import match from 'autosuggest-highlight/match';
 import parse from 'autosuggest-highlight/parse';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { getGlobalMap } from '../../services/mapStorage';
-import { LonLat, MapCenter } from '../../services/types';
+import { LonLat } from '../../services/types';
 import { DotLoader, isImperial } from '../helpers';
-import { GeocoderOption, Option } from './types';
-import { buildPhotonAddress } from './options/geocoder';
+import { GeocoderOption } from './types';
 
 export const IconPart = styled.div`
   width: 50px;
@@ -81,7 +80,7 @@ export const fitBounds = ({ geocoder }: GeocoderOption) => {
 
   const coords = geocoder.geometry.coordinates;
   if (coords.length === 2 && coords.every((num) => !Number.isNaN(num))) {
-    getGlobalMap()?.flyTo({ center: coords, zoom: 17 });
+    getGlobalMap()?.flyTo({ center: coords as LngLatLike, zoom: 17 });
   } else {
     // eslint-disable-next-line no-console
     console.warn(
@@ -103,18 +102,4 @@ export const highlightText = (resultText: string, inputValue: string) => {
       {part.text}
     </span>
   ));
-};
-
-export const getOptionLabel = (option: Option) => {
-  return (
-    (option.type === 'geocoder' && option.geocoder.properties?.name) ||
-    (option.type === 'preset' && option.preset?.presetForSearch?.name) ||
-    (option.type === 'overpass' && option.overpass?.inputValue) ||
-    (option.type === 'star' && option.star.label) ||
-    (option.type === 'loader' && '') ||
-    (option.type === 'geocoder' &&
-      option.geocoder.properties &&
-      buildPhotonAddress(option.geocoder.properties)) ||
-    ''
-  );
 };

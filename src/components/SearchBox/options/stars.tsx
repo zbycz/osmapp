@@ -6,7 +6,7 @@ import { getHumanDistance, IconPart } from '../utils';
 import type { Star } from '../../utils/StarsContext';
 import { StarOption } from '../types';
 import match from 'autosuggest-highlight/match';
-import { MapCenter } from '../../../services/types';
+import { LonLat } from '../../../services/types';
 
 export const getStarsOptions = (
   stars: Star[],
@@ -32,7 +32,7 @@ export const getStarsOptions = (
   return ratedStars.map(({ star }) => ({ type: 'star', star }));
 };
 
-export const renderStar = ({ star }: StarOption, mapCenter: MapCenter) => {
+export const renderStar = ({ star }: StarOption, mapCenter: LonLat) => {
   // Note: for compatibility, `center` is optional
   const distance = star.center
     ? getHumanDistance(mapCenter, star.center)

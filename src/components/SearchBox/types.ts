@@ -30,7 +30,7 @@ export type GeocoderOption = GenericOption<
       extent: any;
     };
     geometry: {
-      coordinates: [number, number];
+      coordinates: LonLat;
     };
   }
 >;
@@ -65,11 +65,17 @@ export type StarOption = GenericOption<'star', Star>;
 
 type LoaderOption = GenericOption<'loader', null>;
 
+export type CoordsOption = GenericOption<
+  'coords',
+  { center: LonLat; label: string }
+>;
+
 /*
  * A option for the searchbox
  */
 export type Option =
   | StarOption
+  | CoordsOption
   | OverpassOption
   | PresetOption
   | LoaderOption

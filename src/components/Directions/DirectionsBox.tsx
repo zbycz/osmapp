@@ -1,8 +1,5 @@
 import styled from '@emotion/styled';
-import {
-  DirectionsAutocomplete,
-  getOptionToLonLat,
-} from './DirectionsAutocomplete';
+import { DirectionsAutocomplete } from './DirectionsAutocomplete';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
@@ -17,19 +14,16 @@ import {
 import { getLabel } from '../../helpers/featureLabel';
 import { getLastFeature } from '../../services/lastFeatureStorage';
 import { Result, StyledPaper } from './Result';
-import {
-  buildUrl,
-  CloseButton,
-  getStarOption,
-  Option,
-  parseUrlParts,
-} from './helpers';
+import { buildUrl, CloseButton, parseUrlParts } from './helpers';
 import { PointsTooFarError, Profile, RoutingResult } from './routing/types';
 import { useBoolState, useMobileMode } from '../helpers';
 import { LoadingButton } from '@mui/lab';
 import { type Severity, useSnackbar } from '../utils/SnackbarContext';
 import { FetchError } from '../../services/helpers';
 import * as Sentry from '@sentry/nextjs';
+import { Option } from '../SearchBox/types';
+import { getCoordsOption } from '../SearchBox/options/coords';
+import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
 
 const Wrapper = styled(Stack)`
   position: absolute;
@@ -86,7 +80,7 @@ const useReactToUrl = (
 
       const lastFeature = getLastFeature();
       if (lastFeature) {
-        setTo(getStarOption(lastFeature.center, getLabel(lastFeature)));
+        setTo(getCoordsOption(lastFeature.center, getLabel(lastFeature)));
       }
     }
 

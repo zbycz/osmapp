@@ -7,10 +7,11 @@ import { onSelectedFactory } from './onSelectedFactory';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
-import { getOptionLabel, useMapCenter } from './utils';
+import { useMapCenter } from './utils';
 import { useSnackbar } from '../utils/SnackbarContext';
 import { useKeyDown } from '../../helpers/hooks';
 import { Option } from './types';
+import { getOptionLabel } from './getOptionLabel';
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   const inputRef = React.useRef<HTMLInputElement>(null);

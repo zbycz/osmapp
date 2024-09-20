@@ -133,8 +133,3 @@ export type SuccessInfo = {
   url: string;
   redirect?: string;
 };
-
-export type MapCenter = {
-  lon: string | number;
-  lat: string | number;
-};
