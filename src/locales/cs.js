@@ -195,4 +195,6 @@ export default {
 
   'climbingareas.link': 'Seznam všech lezeckých oblastí',
   'climbingareas.title': 'Lezecké oblasti',
+  'climbingareas.area': 'Oblast',
+  'climbingareas.num_of_crags': 'Počet skal',
 };

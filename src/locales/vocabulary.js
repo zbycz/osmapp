@@ -271,4 +271,6 @@ export default {
 
   'climbingareas.link': 'List of all Climbing areas',
   'climbingareas.title': 'Climbing areas',
+  'climbingareas.area': 'Area',
+  'climbingareas.num_of_crags': 'Number of crags',
 };
