@@ -3,28 +3,19 @@ import { useStarsContext } from '../utils/StarsContext';
 import React, { useEffect, useRef, useState } from 'react';
 import { abortFetch } from '../../services/fetch';
 import {
-  buildPhotonAddress,
   fetchGeocoderOptions,
   GEOCODER_ABORTABLE_QUEUE,
   useInputValueState,
 } from '../SearchBox/options/geocoder';
 import { getStarsOptions } from '../SearchBox/options/stars';
 import styled from '@emotion/styled';
-import {
-  Autocomplete,
-  InputAdornment,
-  InputBase,
-  TextField,
-} from '@mui/material';
+import { Autocomplete, InputAdornment, TextField } from '@mui/material';
 import { useMapCenter } from '../SearchBox/utils';
 import { useUserThemeContext } from '../../helpers/theme';
 import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
 import PlaceIcon from '@mui/icons-material/Place';
-import { SearchOption } from '../SearchBox/types';
-import { useRouter } from 'next/router';
-import { destroyRouting } from './routing/handleRouting';
-import { Option, splitByFirstTilda } from './helpers';
-import { LonLat } from '../../services/types';
+import { Option } from '../SearchBox/types';
+import { getOptionLabel } from '../SearchBox/getOptionLabel';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -78,31 +69,17 @@ const useOptions = (inputValue: string, setOptions) => {
       abortFetch(GEOCODER_ABORTABLE_QUEUE);
 
       if (inputValue === '') {
-        setOptions(getStarsOptions(stars));
+        setOptions(getStarsOptions(stars, inputValue));
         return;
       }
 
-      fetchGeocoderOptions(inputValue, view, setOptions, [], []);
+      await fetchGeocoderOptions(inputValue, view, setOptions, [], []);
     })();
   }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
 };
 const Row = styled.div`
   width: 100%;
 `;
-
-export const getOptionLabel = (option) =>
-  option == null
-    ? ''
-    : option.properties?.name ||
-      (option.star && option.star.label) ||
-      (option.properties && buildPhotonAddress(option.properties)) ||
-      '';
-
-export const getOptionToLonLat = (option) => {
-  const lonLat =
-    (option.star && option.star.center) || option.geometry.coordinates;
-  return lonLat as LonLat;
-};
 
 type Props = {
   label: string;

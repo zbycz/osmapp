@@ -19,7 +19,6 @@ import { Runways } from './Runways/Runways';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
 import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
-import { RouteListInPanel } from './Climbing/RouteList/RouteList';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box } from '@mui/material';
@@ -29,7 +28,11 @@ const Flex = styled.div`
   flex: 1;
 `;
 
-export const FeaturePanel = () => {
+type FeaturePanelProps = {
+  headingRef?: React.Ref<HTMLDivElement>;
+};
+
+export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   const { feature } = useFeatureContext();
   const [advanced, setAdvanced] = useState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
@@ -53,7 +56,7 @@ export const FeaturePanel = () => {
     <>
       <PanelContent>
         <PanelSidePadding>
-          <FeatureHeading />
+          <FeatureHeading ref={headingRef} />
           <ClimbingRouteGrade />
           <ClimbingGuideInfo />
           <ParentLink />

@@ -1,24 +1,53 @@
-// TODO export type OptionGeocoder = {
-//   loading: true;
-//   skeleton: true;
-//   nonOsmObject: true;
-//   osmMeta: { type: string; id: number };
-//   center: LonLat;
-//   tags: Record<string, string>;
-//   properties: { class: string }; // ?? is really used
-// };
+import { LonLat } from '../../services/types';
+import { Star } from '../utils/StarsContext';
 
-export type OverpassOption = {
-  overpass: {
+type GenericOption<T extends string, U extends Object | null> = {
+  type: T;
+} & (U extends null ? {} : Record<T, U>);
+
+export type GeocoderOption = GenericOption<
+  'geocoder',
+  {
+    loading: true;
+    skeleton: true;
+    nonOsmObject: true;
+    osmMeta: { type: string; id: number };
+    center: LonLat;
+    tags: Record<string, string>;
+    properties?: {
+      class: string | null;
+      place: string | null | undefined;
+      street: string | null | undefined;
+      city: string | null | undefined;
+      housenumber: string | null | undefined;
+      streetnumber: string | null | undefined;
+      osm_key: string;
+      osm_value: string;
+      osm_type: string;
+      osm_id: string;
+      name: string;
+      /** Either a string or an array */
+      extent: any;
+    };
+    geometry: {
+      coordinates: LonLat;
+    };
+  }
+>;
+
+export type OverpassOption = GenericOption<
+  'overpass',
+  {
     query?: string;
     tags?: Record<string, string>;
     inputValue: string;
     label: string;
-  };
-};
+  }
+>;
 
-export type PresetOption = {
-  preset: {
+export type PresetOption = GenericOption<
+  'preset',
+  {
     name: number;
     textsByOne: number[];
     sum: number;
@@ -29,8 +58,25 @@ export type PresetOption = {
       tagsAsOneString: string;
       texts: string[];
     };
-  };
-};
+  }
+>;
 
-// TODO not used anywhere yet, typescript cant identify options by the key (overpass, preset, loader)
-export type SearchOption = OverpassOption | PresetOption;
+export type StarOption = GenericOption<'star', Star>;
+
+type LoaderOption = GenericOption<'loader', null>;
+
+export type CoordsOption = GenericOption<
+  'coords',
+  { center: LonLat; label: string }
+>;
+
+/*
+ * A option for the searchbox
+ */
+export type Option =
+  | StarOption
+  | CoordsOption
+  | OverpassOption
+  | PresetOption
+  | LoaderOption
+  | GeocoderOption;

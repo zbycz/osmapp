@@ -124,9 +124,8 @@ export const DotLoader = () => (
 
 // TODO import { NoSsr } from '@mui/base';
 export const ClientOnly = ({ children }) => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted ? children : null;
+  const isClient = useIsClient();
+  return isClient ? children : null;
 };
 
 export const isImperial = () =>

@@ -1,10 +1,13 @@
 import { LonLat } from '../../services/types';
 import { encodeUrl } from '../../helpers/utils';
-import { getOptionLabel, getOptionToLonLat } from './DirectionsAutocomplete';
 import Router from 'next/router';
 import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
+import { Option } from '../SearchBox/types';
+import { getCoordsOption } from '../SearchBox/options/coords';
+import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
+import { getOptionLabel } from '../SearchBox/getOptionLabel';
 
 export const splitByFirstTilda = (str: string) => {
   if (!str) {
@@ -16,15 +19,6 @@ export const splitByFirstTilda = (str: string) => {
   }
   return [str.slice(0, index), str.slice(index + 1)];
 };
-
-export type Option = Record<string, any>; // TODO once we have types in SearchBox
-
-export const getStarOption = (center: LonLat, label?: string): Option => ({
-  star: {
-    center,
-    label: label || center,
-  },
-});
 
 const getOptionToUrl = (point: Option) => {
   const lonLat = getOptionToLonLat(point);
@@ -42,7 +36,7 @@ const urlCoordsToLonLat = (coords: string): LonLat =>
 export const parseUrlParts = (urlParts: string[]): Option[] =>
   urlParts.map((urlPart) => {
     const [coords, label] = splitByFirstTilda(urlPart);
-    return getStarOption(urlCoordsToLonLat(coords), label);
+    return getCoordsOption(urlCoordsToLonLat(coords), label);
   });
 
 const close = () => {
