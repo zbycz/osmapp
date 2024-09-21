@@ -42,8 +42,8 @@ export const fetchGeocoderOptions = debounce(
     inputValue: string,
     view: View,
     setOptions: React.Dispatch<React.SetStateAction<Option[]>>,
-    before: PresetOption[],
-    after: PresetOption[],
+    before: Option[],
+    after: Option[],
   ) => {
     try {
       const searchResponse = (await fetchJson(getApiUrl(inputValue, view), {
