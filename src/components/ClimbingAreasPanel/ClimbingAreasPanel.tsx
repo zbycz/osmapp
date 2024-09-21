@@ -8,8 +8,9 @@ import {
   TableContainer,
   TableHead,
   TableRow,
+  Typography,
 } from '@mui/material';
-import { t } from '../../services/intl';
+import { intl, t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import {
   PanelContent,
@@ -19,6 +20,7 @@ import {
 import { MobilePageDrawer } from '../utils/MobilePageDrawer';
 import { ClimbingArea } from '../../services/climbing-areas/getClimbingAreas';
 import Link from 'next/link';
+import { TooltipButton } from '../utils/TooltipButton';
 
 type ClimbingAreasPanelProps = {
   areas: ClimbingArea[];
@@ -36,6 +38,11 @@ export const ClimbingAreasPanel = ({ areas }: ClimbingAreasPanelProps) => {
           <ClosePanelButton right onClick={handleClose} />
           <PanelSidePadding>
             <h1>{t('climbingareas.title')}</h1>
+
+            <Typography variant="body2">
+              {t('climbing.guideinfo.title')}{' '}
+              <TooltipButton tooltip={t('climbing.guideinfo.description')} />
+            </Typography>
           </PanelSidePadding>
 
           <TableContainer component={Paper}>
@@ -43,8 +50,8 @@ export const ClimbingAreasPanel = ({ areas }: ClimbingAreasPanelProps) => {
               <TableHead>
                 <TableRow>
                   <TableCell></TableCell>
-                  <TableCell>Climbing area</TableCell>
-                  <TableCell>Crags</TableCell>
+                  <TableCell>{t('climbingareas.area')}</TableCell>
+                  <TableCell>{t('climbingareas.num_of_crags')}</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -52,7 +59,10 @@ export const ClimbingAreasPanel = ({ areas }: ClimbingAreasPanelProps) => {
                   <TableRow key={`climbing-area-${climbingArea.id}`}>
                     <TableCell>{index + 1}.</TableCell>
                     <TableCell>
-                      <Link href={`/relation/${climbingArea.id}`}>
+                      <Link
+                        href={`/relation/${climbingArea.id}`}
+                        locale={intl.lang}
+                      >
                         {climbingArea.tags.name ||
                           `N/A – relation/${climbingArea.id}`}
                       </Link>
