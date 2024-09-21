@@ -13,4 +13,4 @@ export const setGlobalMap = (newMap: maplibregl.Map) => {
 export const getGlobalMap = () => map;
 
 export const getOverpassSource = () =>
-  getGlobalMap().getSource('overpass') as GeoJSONSource | undefined;
+  getGlobalMap()?.getSource('overpass') as GeoJSONSource | undefined;

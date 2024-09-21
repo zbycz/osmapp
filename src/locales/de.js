@@ -168,6 +168,17 @@ export default {
   'layers.bingSat': 'Bing Satellit',
   'layers.bike': 'Fahrrad',
 
+  'publictransport.tourism': 'Touristische Züge',
+  'publictransport.night': 'Nachtzüge',
+  'publictransport.car_shuttle': 'Autoshuttlezüge',
+  'publictransport.car': 'Auto Züge',
+  'publictransport.commuter': 'Pendlerzüge',
+  'publictransport.regional': 'Regionalzüge',
+  'publictransport.long_distance': 'Fernzüge',
+  'publictransport.high_speed': 'Hochgeschwindigkeitszüge',
+  'publictransport.bus': 'Bus',
+  'publictransport.unknown': 'Unbekannter Typ',
+
   'runway.information': 'Landebahninformationen',
   'runway.runway': 'Landebahn',
   'runway.size': 'Länge (m) - Breite (m)',

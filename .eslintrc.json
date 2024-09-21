@@ -4,6 +4,13 @@
     "import/no-anonymous-default-export": "off",
     "@next/next/no-img-element": "off",
     "jsx-a11y/alt-text": "off",
-    "no-console": "warn"
+    "no-console": "warn",
+    "no-restricted-syntax": [
+      "warn",
+      {
+        "message": "Please don't use `useLog`.",
+        "selector": "Identifier[name=\"useLog\"]"
+      }
+    ]
   }
 }
