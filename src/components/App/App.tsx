@@ -177,6 +177,11 @@ const App: NextPage<Props> = ({
 App.getInitialProps = async (ctx: NextPageContext) => {
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
+  // TODO this code will have to be refactored. The idea is, that inner part of
+  //  IndexWithProviders will be moved to _app.tsx and we will use proper
+  //  next.js routing for each page.
+  //  Catchall route will be used only for /mode* /way* /relation*
+  //  This will allow us to use getServerSideProps eg for /climbing-areas
   let climbingAreas = null;
   if (ctx.pathname === '/climbing-areas') {
     climbingAreas = await getClimbingAreas();
