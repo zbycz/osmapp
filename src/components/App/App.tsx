@@ -25,7 +25,7 @@ import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog'
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
-import { useMobileMode } from '../helpers';
+import { useIsClient, useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
@@ -90,6 +90,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMobileMode = useMobileMode();
   const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
+  const isMounted = useIsClient();
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
@@ -109,7 +110,8 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
       <Loading />
       {!directions && <SearchBox />}
       {directions && <DirectionsBox />}
-      {featureShown && !isMobileMode && <FeaturePanelOnSide />}
+      {featureShown && !isMobileMode && isMounted && <FeaturePanelOnSide />}
+
       {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
