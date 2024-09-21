@@ -47,17 +47,10 @@ const convertOsmIdToMapId = (apiId: OsmId) => {
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-type OverpassGeoJson = Feature & {
-  osmMeta: {
-    type: string;
-    id: number;
-  };
-};
-
 // TODO use our own implementaion from fetchCrags, which handles recursive geometries
 export const overpassGeomToGeojson = (response: {
   elements: any[];
-}): OverpassGeoJson[] =>
+}): Feature[] =>
   response.elements.map((element) => {
     const { type, id, tags = {} } = element;
     const geometry = GEOMETRY[type]?.(element);
