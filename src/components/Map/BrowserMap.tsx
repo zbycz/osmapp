@@ -1,9 +1,10 @@
 import React from 'react';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import { Layer, useMapStateContext } from '../utils/MapStateContext';
+import { useMapStateContext, View } from '../utils/MapStateContext';
 import {
   createMapEffectHook,
   createMapEventHook,
+  MapEventHandler,
   useMobileMode,
 } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -14,19 +15,23 @@ import { useUpdateStyle } from './behaviour/useUpdateStyle';
 import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
-import { usePersistedState } from '../utils/usePersistedState';
 import { webglSupported } from './helpers';
 import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 import { useAddTopRightControls } from './useAddTopRightControls';
 
-const useOnMapLoaded = createMapEventHook((map, onMapLoaded) => ({
-  eventType: 'load',
-  eventHandler: onMapLoaded,
-}));
+const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
+  (_, onMapLoaded) => ({
+    eventType: 'load',
+    eventHandler: onMapLoaded,
+  }),
+);
 
-const useUpdateMap = createMapEffectHook((map, viewForMap) => {
-  const center = [viewForMap[2], viewForMap[1]];
-  map.jumpTo({ center, zoom: viewForMap[0] });
+const useUpdateMap = createMapEffectHook<[View]>((map, viewForMap) => {
+  const center: [number, number] = [
+    parseFloat(viewForMap[2]),
+    parseFloat(viewForMap[1]),
+  ];
+  map.jumpTo({ center, zoom: parseFloat(viewForMap[0]) });
 });
 
 const NotSupportedMessage = () => (

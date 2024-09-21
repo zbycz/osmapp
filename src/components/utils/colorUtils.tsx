@@ -1,4 +1,4 @@
-export const convertHexToRgba = (hexCode, opacity = 1) => {
+export const convertHexToRgba = (hexCode: string, opacity = 1) => {
   let hex = hexCode.replace('#', '');
 
   if (hex.length === 3) {
