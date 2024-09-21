@@ -1,4 +1,4 @@
-import React, { forwardRef, useState } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { FeatureHeading } from './FeatureHeading';
 import { useToggleState } from '../helpers';
@@ -28,7 +28,11 @@ const Flex = styled.div`
   flex: 1;
 `;
 
-export const FeaturePanel = forwardRef<HTMLDivElement>((_, ref) => {
+type FeaturePanelProps = {
+  headingRef?: React.Ref<HTMLDivElement>;
+};
+
+export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   const { feature } = useFeatureContext();
   const [advanced, setAdvanced] = useState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
@@ -52,7 +56,7 @@ export const FeaturePanel = forwardRef<HTMLDivElement>((_, ref) => {
     <>
       <PanelContent>
         <PanelSidePadding>
-          <FeatureHeading ref={ref} />
+          <FeatureHeading ref={headingRef} />
           <ClimbingRouteGrade />
           <ClimbingGuideInfo />
           <ParentLink />
@@ -100,6 +104,4 @@ export const FeaturePanel = forwardRef<HTMLDivElement>((_, ref) => {
       </PanelContent>
     </>
   );
-});
-
-FeaturePanel.displayName = 'FeaturePanel';
+};

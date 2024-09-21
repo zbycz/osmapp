@@ -36,7 +36,7 @@ export const FeaturePanelInDrawer = () => {
       className={DRAWER_CLASSNAME}
       collapsedHeight={collapsedHeight}
     >
-      <FeaturePanel ref={headingRef} />
+      <FeaturePanel headingRef={headingRef} />
     </Drawer>
   );
 };
