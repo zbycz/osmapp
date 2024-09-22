@@ -15,7 +15,7 @@ const getEllipsisHumanUrl = (humanUrl) => {
   });
 };
 
-const getHumanValue = (k: string, v: string, featured: boolean) => {
+const getHumanValue = (k, v, featured: boolean) => {
   const humanValue = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
 
   if (v.startsWith('https://commons.wikimedia.org/wiki/')) {
@@ -42,7 +42,7 @@ const getHumanValue = (k: string, v: string, featured: boolean) => {
   return humanValue;
 };
 
-export const renderValue = (k: string, v: string, featured = false) => {
+export const renderValue = (k, v, featured = false) => {
   const url = getUrlForTag(k, v);
   const humanValue = getHumanValue(k, v, featured);
 
