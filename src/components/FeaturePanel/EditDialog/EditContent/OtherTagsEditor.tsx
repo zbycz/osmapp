@@ -95,7 +95,7 @@ const NewTagRow = ({ setTag, setTmpNewTag }) => {
             variant="outlined"
             size="small"
             placeholder={t('editdialog.other_tags.new_key')}
-            inputProps={{ autocapitalize: 'none' }}
+            inputProps={{ autocapitalize: 'none', maxLength: 255 }}
           />
         </th>
         <td>
@@ -105,7 +105,7 @@ const NewTagRow = ({ setTag, setTmpNewTag }) => {
             fullWidth
             variant="outlined"
             size="small"
-            inputProps={{ autocapitalize: 'none' }}
+            inputProps={{ autocapitalize: 'none', maxLength: 255 }}
           />
         </td>
       </tr>
@@ -137,7 +137,7 @@ const KeyValueRow = ({ k, v, setTag, focusTag }) => (
         fullWidth
         variant="outlined"
         size="small"
-        inputProps={{ autocapitalize: 'none' }}
+        inputProps={{ autocapitalize: 'none', maxLength: 255 }}
         autoFocus={focusTag === k}
         placeholder={t('editdialog.other_tags.will_be_deleted')}
       />

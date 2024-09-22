@@ -14,7 +14,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { getOsmappLink, getShortId } from '../../../services/helpers';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { intl, t } from '../../../services/intl';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { IconButton, Menu, MenuItem, Stack } from '@mui/material';
 import Router from 'next/router';
 import { useMobileMode } from '../../helpers';
 import { useSnackbar } from '../../utils/SnackbarContext';
@@ -28,6 +28,11 @@ const RoutePhoto = styled.div`
 const RouteName = styled.div<{ opacity: number }>`
   flex: 1;
   opacity: ${({ opacity }) => opacity};
+`;
+const RouteDescription = styled.div<{ opacity: number }>`
+  font-size: 10px;
+  opacity: ${({ opacity }) => opacity};
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const RouteGrade = styled.div``;
@@ -143,9 +148,16 @@ export const ClimbingItem = ({
           {routeNumber}
         </RouteNumber>
       </RoutePhoto>
-      <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
-        {feature.tags?.name}
-      </RouteName>
+      <Stack justifyContent="stretch" flex={1}>
+        <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
+          {feature.tags?.name}
+        </RouteName>
+        {feature.tags?.description && (
+          <RouteDescription opacity={photoPathsCount === 0 ? 0.5 : 1}>
+            {feature.tags?.description}
+          </RouteDescription>
+        )}
+      </Stack>
       <RouteGrade>
         <ConvertedRouteDifficultyBadge routeDifficulties={routeDifficulties} />
       </RouteGrade>
