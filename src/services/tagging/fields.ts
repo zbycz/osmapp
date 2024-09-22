@@ -1,6 +1,7 @@
 // links like {shop}, are recursively resolved to their fields
 import { Preset } from './types/Presets';
 import { fields, presets } from './data';
+import { Field } from './types/Fields';
 
 const getResolvedFields = (fieldKeys: string[]): string[] =>
   fieldKeys.flatMap((key) => {
@@ -63,9 +64,9 @@ export const computeAllFieldKeys = (preset: Preset) => {
 
 // TODO check - 1) field.options 2) strings.options
 export const getValueForField = (
-  field,
+  field: Field,
   fieldTranslation,
-  value: string,
+  value: string | undefined,
   tagsForField = [],
 ) => {
   if (field.type === 'semiCombo') {
