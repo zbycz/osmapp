@@ -13,7 +13,7 @@ import { isTicked, onTickAdd } from '../../../services/ticks';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getOsmappLink, getShortId } from '../../../services/helpers';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { t } from '../../../services/intl';
+import { intl, t } from '../../../services/intl';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import Router from 'next/router';
 import { useMobileMode } from '../../helpers';
@@ -32,7 +32,7 @@ const RouteName = styled.div<{ opacity: number }>`
 
 const RouteGrade = styled.div``;
 
-const Container = styled.a`
+const Container = styled(Link)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -106,6 +106,7 @@ export const ClimbingItem = ({
   const routeDetailUrl = `${getOsmappLink(feature)}${typeof window !== 'undefined' ? window.location.hash : ''}`;
 
   const handleClickItem = (event) => {
+    if (event.ctrlKey || event.metaKey) return;
     event.preventDefault();
     event.stopPropagation();
     const cragFeatureLink = getOsmappLink(cragFeature);
@@ -131,8 +132,9 @@ export const ClimbingItem = ({
 
   return (
     <Container
-      onClick={handleClickItem}
+      locale={intl.lang}
       href={routeDetailUrl}
+      onClick={handleClickItem}
       onMouseEnter={mobileMode ? undefined : handleHover}
       onMouseLeave={() => setPreview(null)}
     >
@@ -161,6 +163,7 @@ export const ClimbingItem = ({
         <MenuItem
           component={Link}
           href={routeDetailUrl}
+          locale={intl.lang}
           onClick={handleShowRouteDetail}
         >
           {t('climbingpanel.show_route_detail')}
