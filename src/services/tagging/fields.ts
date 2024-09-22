@@ -1,7 +1,6 @@
 // links like {shop}, are recursively resolved to their fields
 import { Preset } from './types/Presets';
 import { fields, presets } from './data';
-import { Field } from './types/Fields';
 
 const getResolvedFields = (fieldKeys: string[]): string[] =>
   fieldKeys.flatMap((key) => {
@@ -64,16 +63,11 @@ export const computeAllFieldKeys = (preset: Preset) => {
 
 // TODO check - 1) field.options 2) strings.options
 export const getValueForField = (
-  field: Field,
+  field,
   fieldTranslation,
   value: string,
-  tagsForField: { key: string; value: string }[] = [],
+  tagsForField = [],
 ) => {
-  // Are rendered using `✓` and `✗`  in `getHumanValue()`
-  if (value === 'yes' || value === 'no') {
-    return value;
-  }
-
   if (field.type === 'semiCombo') {
     return value
       .split(';')
