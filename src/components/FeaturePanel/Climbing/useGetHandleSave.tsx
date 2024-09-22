@@ -103,9 +103,9 @@ export const useGetHandleSave = (
 
     const changes = getChanges(routes);
     const comment = `${changes.length} routes`;
-    //const result = await editCrag(crag, comment, changes);
+    const result = await editCrag(crag, comment, changes);
 
-    console.log('All routes saved', changes); // eslint-disable-line no-console
+    console.log('All routes saved', changes, result); // eslint-disable-line no-console
     showToast('Data saved successfully!', 'success');
     setIsEditMode(false);
   };
