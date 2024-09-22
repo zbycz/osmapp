@@ -15,7 +15,7 @@ export interface Layer {
   name?: string;
   url?: string;
   key?: string;
-  Icon?: React.FC<any>;
+  Icon?: React.ReactNode;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
   bboxes?: number[][];

@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import styled from '@emotion/styled';
 import { Global, css } from '@emotion/react';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { SwipeableDrawer } from '@mui/material';
 import { Puller } from '../FeaturePanel/helpers/Puller';
 
@@ -41,7 +41,10 @@ const ListContainer = styled.div`
 `;
 
 type Props = {
-  onTransitionEnd?: (e: any, open: boolean) => void;
+  onTransitionEnd?: (
+    e: React.TransitionEvent<HTMLDivElement>,
+    open: boolean,
+  ) => void;
   children: React.ReactNode;
   topOffset: number;
   collapsedHeight: number;

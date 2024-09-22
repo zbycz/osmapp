@@ -27,7 +27,7 @@ const initialUserSettings: UserSettingsType = {
 export const UserSettingsContext =
   createContext<UserSettingsContextType>(undefined);
 
-export const UserSettingsProvider = ({ children }) => {
+export const UserSettingsProvider: React.FC = ({ children }) => {
   const [userSettings, setUserSettings] = usePersistedState<UserSettingsType>(
     'userSettings',
     initialUserSettings,

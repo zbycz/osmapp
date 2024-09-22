@@ -9,7 +9,7 @@ export const DRAWER_TOP_OFFSET = 8;
 
 type MobilePageDrawerProps = {
   children: React.ReactNode;
-  onClose?: (e: any, open: boolean) => void;
+  onClose?: (e: React.TransitionEvent<HTMLDivElement>, open: boolean) => void;
   className: string;
   collapsedHeight?: number;
   topOffset?: number;

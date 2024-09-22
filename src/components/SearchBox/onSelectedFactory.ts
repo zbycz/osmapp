@@ -6,7 +6,7 @@ import { performOverpassSearch } from '../../services/overpassSearch';
 import { t } from '../../services/intl';
 import { fitBounds } from './utils';
 import { getSkeleton } from './onHighlightFactory';
-import { Severity } from '../utils/SnackbarContext';
+import { ShowToast } from '../utils/SnackbarContext';
 import { addOverpassQueryHistory } from './options/overpass';
 import { Feature } from '../../services/types';
 import { Bbox } from '../utils/MapStateContext';
@@ -22,7 +22,7 @@ const overpassOptionSelected = (
   option: OverpassOption | PresetOption,
   setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>,
   bbox: Bbox,
-  showToast: (message: string, severity?: Severity) => void,
+  showToast: ShowToast,
 ) => {
   const tagsOrQuery =
     option.type === 'preset'
@@ -84,7 +84,7 @@ export const onSelectedFactory =
     setFeature: SetFeature,
     setPreview: SetFeature,
     bbox: Bbox,
-    showToast: (message: string, severity?: Severity) => void,
+    showToast: ShowToast,
     setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>,
   ) =>
   (_: never, option: Option) => {
