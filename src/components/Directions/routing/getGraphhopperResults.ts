@@ -4,6 +4,8 @@ import { fetchJson } from '../../../services/fetch';
 import { getBbox } from '../../../services/getCenter';
 import { FetchError } from '../../../services/helpers';
 
+const API_KEY = `f189b841-6529-46c6-8a91-51f17477dcda`;
+
 export const profiles: Record<Profile, string> = {
   car: 'car',
   bike: 'bike',
@@ -17,7 +19,7 @@ export const getGraphhopperResults = async (
   const profile = profiles[mode];
   const from = points[0].toReversed().join(','); // lon,lat!
   const to = points[1].toReversed().join(',');
-  const url = `https://graphhopper.com/api/1/route?point=${from}&point=${to}&vehicle=${profile}&key=f189b841-6529-46c6-8a91-51f17477dcda&type=json&points_encoded=false&instructions=false`;
+  const url = `https://graphhopper.com/api/1/route?point=${from}&point=${to}&vehicle=${profile}&key=${API_KEY}&type=json&points_encoded=false&instructions=false&snap_prevention=ferry`;
 
   const data = await fetchJson(url);
 
