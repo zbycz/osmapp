@@ -38,6 +38,9 @@ export const getUrlForTag = (k: string, v: string) => {
   if (k === 'website') {
     return v.match(urlRegExp) ? v : `http://${v}`;
   }
+  if (k.match(/^(contact:)?email$/)) {
+    return `mailto:${v}`;
+  }
   if (v.match(urlRegExp)) {
     return v;
   }
