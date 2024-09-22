@@ -12,6 +12,8 @@ import { getLabel } from '../../helpers/featureLabel';
 import { Slider, Wrapper } from './ImagePane/FeatureImages';
 import { Image } from './ImagePane/Image/Image';
 import { getInstantImage } from '../../services/images/getImageDefs';
+import { intl } from '../../services/intl';
+import Link from 'next/link';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -44,7 +46,7 @@ const CragList = styled.div`
   flex-direction: column;
   gap: 12px;
 `;
-const Link = styled.a`
+const StyledLink = styled(Link)`
   text-decoration: none !important;
 `;
 const Content = styled.div`
@@ -119,8 +121,9 @@ const CragItem = ({ feature }: { feature: Feature }) => {
     })) ?? [];
 
   return (
-    <Link
+    <StyledLink
       href={`/${getUrlOsmId(feature.osmMeta)}`}
+      locale={intl.lang}
       onClick={getOnClickWithHash(feature.osmMeta)}
       onMouseEnter={mobileMode ? undefined : handleHover}
       onMouseLeave={() => setPreview(null)}
@@ -133,7 +136,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
         />
         {images.length ? <Gallery images={images} /> : null}
       </Container>
-    </Link>
+    </StyledLink>
   );
 };
 

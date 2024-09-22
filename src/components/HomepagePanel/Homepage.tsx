@@ -16,7 +16,7 @@ import {
   PROJECT_ID,
   PROJECT_NAME,
 } from '../../services/project';
-import { t, Translation } from '../../services/intl';
+import { intl, t, Translation } from '../../services/intl';
 import { nl2br } from '../utils/nl2br';
 import GithubIcon from '../../assets/GithubIcon';
 import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
@@ -44,20 +44,40 @@ const Spacer = styled.div`
 const Examples = () => (
   <>
     {t('homepage.examples.eg')}{' '}
-    <Link href="/way/34633854">Empire State Building</Link> •{' '}
-    <Link href="/way/119016167">
+    <Link href="/way/34633854" locale={intl.lang}>
+      Empire State Building
+    </Link>{' '}
+    •{' '}
+    <Link href="/way/119016167" locale={intl.lang}>
       {t('homepage.examples.charles_bridge_statues')}
     </Link>
   </>
 );
 const ExamplesClimbing = () => (
   <>
-    <Link href="/climbing-areas">{t('climbingareas.link')}</Link>,{' '}
-    {t('homepage.examples.eg')} <Link href="/relation/17262675">Hlubočepy</Link>{' '}
-    • <Link href="/relation/17130099">Roviště</Link> •{' '}
-    <Link href="/relation/17142287">Lomy nad Velkou</Link> •{' '}
-    <Link href="/relation/17400318">Lom Kobyla</Link> •{' '}
-    <Link href="/relation/17222859">Prokopák</Link>
+    <Link href="/climbing-areas" locale={intl.lang}>
+      {t('climbingareas.link')}
+    </Link>
+    , {t('homepage.examples.eg')}{' '}
+    <Link href="/relation/17262675" locale={intl.lang}>
+      Hlubočepy
+    </Link>{' '}
+    •{' '}
+    <Link href="/relation/17130099" locale={intl.lang}>
+      Roviště
+    </Link>{' '}
+    •{' '}
+    <Link href="/relation/17142287" locale={intl.lang}>
+      Lomy nad Velkou
+    </Link>{' '}
+    •{' '}
+    <Link href="/relation/17400318" locale={intl.lang}>
+      Lom Kobyla
+    </Link>{' '}
+    •{' '}
+    <Link href="/relation/17222859" locale={intl.lang}>
+      Prokopák
+    </Link>
   </>
 );
 
