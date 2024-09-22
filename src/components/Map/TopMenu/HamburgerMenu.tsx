@@ -17,6 +17,7 @@ import { UserTheme, useUserThemeContext } from '../../../helpers/theme';
 import GithubIcon from '../../../assets/GithubIcon';
 import { LangSwitcher } from './LangSwitcher';
 import { HamburgerIconButton } from './HamburgerIconButton';
+import { PROJECT_ID } from '../../../services/project';
 
 const StyledGithubIcon = styled(GithubIcon)`
   filter: ${({ theme }) => theme.palette.invertFilter};
@@ -79,13 +80,7 @@ const EditLink = ({ closeMenu }) => {
   const { feature } = useFeatureContext();
   const href = getIdEditorLink(feature, browser ? view : undefined);
   return (
-    <MenuItem
-      component="a"
-      href={href}
-      target="_blank"
-      rel="noopener"
-      onClick={closeMenu}
-    >
+    <MenuItem component="a" href={href} target="_blank" onClick={closeMenu}>
       <PencilIcon />
       {t('map.edit_link')}
     </MenuItem>
@@ -118,6 +113,11 @@ const GithubLink = ({ closeMenu }) => (
   >
     <StyledGithubIcon width={14} height={14} />
     {t('map.github_title')}
+  </MenuItem>
+);
+const ClimbingAreasLink = ({ closeMenu }) => (
+  <MenuItem href="/climbing-areas" component="a" onClick={closeMenu}>
+    {t('climbingareas.title')}
   </MenuItem>
 );
 
@@ -174,6 +174,7 @@ const ThemeSelection = () => {
 export const HamburgerMenu = () => {
   const anchorRef = React.useRef();
   const [opened, open, close] = useBoolState(false);
+  const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
   return (
     <>
@@ -193,6 +194,7 @@ export const HamburgerMenu = () => {
         <InstallLink closeMenu={close} />
         <AboutLink closeMenu={close} />
         <GithubLink closeMenu={close} />
+        {isOpenClimbing && <ClimbingAreasLink closeMenu={close} />}
         <StyledDivider />
         <LangSwitcher />
       </Menu>

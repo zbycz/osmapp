@@ -9,6 +9,7 @@ import {
   Typography,
   IconButton,
   Tooltip,
+  Box,
 } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PhotoLink } from './PhotoLink';
@@ -16,6 +17,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
 import { getOsmappLink } from '../../../services/helpers';
 import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
+import EditIcon from '@mui/icons-material/Edit';
 
 const Title = styled.div`
   flex: 1;
@@ -42,27 +44,21 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
     useState<boolean>(false);
   const [clickCounter, setClickCounter] = useState<number>(0);
   const {
-    setPhotoPath,
     photoPath,
-    loadPhotoRelatedData,
     setAreRoutesLoading,
     photoPaths,
     setShowDebugMenu,
+    setIsEditMode,
+    isEditMode,
   } = useClimbingContext();
 
   const { feature } = useFeatureContext();
 
   const onPhotoChange = (photo: string) => {
     Router.push(
-      `${getOsmappLink(feature)}/climbing/${photo}${window.location.hash}`,
+      `${getOsmappLink(feature)}/climbing/photo/${photo}${window.location.hash}`,
     );
-
     setAreRoutesLoading(true);
-    setPhotoPath(photo);
-    setTimeout(() => {
-      // @TODO fix it without timeout
-      loadPhotoRelatedData();
-    }, 100);
   };
 
   const label = getLabel(feature);
@@ -105,18 +101,34 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
           )}
         </Title>
 
-        <Tooltip title="Show settings">
-          <IconButton
-            color="primary"
-            edge="end"
-            onClick={() => {
-              setIsUserSettingsOpened(!isUserSettingsOpened);
-            }}
-          >
-            <TuneIcon fontSize="small" />
-          </IconButton>
-        </Tooltip>
-
+        <Box mr={1}>
+          {!isEditMode && (
+            <Tooltip title="Edit crag">
+              <IconButton
+                color="primary"
+                edge="end"
+                onClick={() => {
+                  setIsEditMode(true);
+                }}
+              >
+                <EditIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
+        </Box>
+        <Box mr={2}>
+          <Tooltip title="Show settings">
+            <IconButton
+              color="primary"
+              edge="end"
+              onClick={() => {
+                setIsUserSettingsOpened(!isUserSettingsOpened);
+              }}
+            >
+              <TuneIcon fontSize="small" />
+            </IconButton>
+          </Tooltip>
+        </Box>
         <Tooltip title="Close crag detail">
           <IconButton color="primary" edge="end" onClick={onClose}>
             <CloseIcon fontSize="small" />

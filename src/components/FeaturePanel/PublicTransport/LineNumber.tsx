@@ -1,10 +1,6 @@
 import React from 'react';
 import { useUserThemeContext } from '../../../helpers/theme';
-
-interface LineNumberProps {
-  name: string;
-  color: string;
-}
+import styled from '@emotion/styled';
 
 /**
  * A function to map a color name to hex. When a color is not found, it is returned as is, the same goes for hex colors.
@@ -57,7 +53,7 @@ function mapColorToHex(color: string) {
  * @param hexBgColor The background color in hex format, e.g. #ff0000
  * @returns 'black' or 'white' depending on the brightness of the background color
  */
-function whiteOrBlackText(hexBgColor) {
+function whiteOrBlackText(hexBgColor: string) {
   const r = parseInt(hexBgColor.slice(1, 3), 16);
   const g = parseInt(hexBgColor.slice(3, 5), 16);
   const b = parseInt(hexBgColor.slice(5, 7), 16);
@@ -65,23 +61,47 @@ function whiteOrBlackText(hexBgColor) {
   return brightness > 125 ? 'black' : 'white';
 }
 
-export const LineNumber: React.FC<LineNumberProps> = ({ name, color }) => {
+const getBgColor = (color: string | undefined, darkmode: boolean) => {
+  if (color) return mapColorToHex(color);
+
+  return darkmode ? '#898989' : '#dddddd';
+};
+
+const LineNumberWrapper = styled.a<{
+  color: string | undefined;
+  darkmode: boolean;
+}>`
+  background-color: ${({ color, darkmode }) => getBgColor(color, darkmode)};
+  color: ${({ color, darkmode }) =>
+    whiteOrBlackText(getBgColor(color, darkmode))};
+  padding: 0.2rem 0.4rem;
+  borderradius: 0.125rem;
+  display: inline;
+`;
+
+interface LineNumberProps {
+  name: string;
+  color: string;
+  osmType: string;
+  osmId: string | number;
+}
+
+export const LineNumber: React.FC<LineNumberProps> = ({
+  name,
+  color,
+  osmType,
+  osmId,
+}) => {
   const { currentTheme } = useUserThemeContext();
   const darkmode = currentTheme === 'dark';
 
-  let bgcolor: string;
-  if (!color) bgcolor = darkmode ? '#898989' : '#dddddd';
-  // set the default color
-  else bgcolor = mapColorToHex(color);
-
-  const divStyle: React.CSSProperties = {
-    backgroundColor: bgcolor,
-    paddingBlock: '0.2rem',
-    paddingInline: '0.4rem',
-    borderRadius: '0.125rem',
-    display: 'inline',
-    color: whiteOrBlackText(bgcolor),
-  };
-
-  return <div style={divStyle}>{name}</div>;
+  return (
+    <LineNumberWrapper
+      href={`/${osmType}/${osmId}`}
+      color={color}
+      darkmode={darkmode}
+    >
+      {name}
+    </LineNumberWrapper>
+  );
 };

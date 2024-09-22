@@ -19,7 +19,7 @@ const InfoTooltipWrapper = styled.span`
 
 const A = ({ href, children }) =>
   href ? (
-    <a href={href} target="_blank" rel="noopener" className="colorInherit">
+    <a href={href} target="_blank" className="colorInherit">
       {children}
     </a>
   ) : (

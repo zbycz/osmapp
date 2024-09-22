@@ -41,7 +41,7 @@ const getUiField = (
     ...(field.keys ?? []),
     ...(field.key ? [field.key] : []),
   ]);
-  const tagsForField = [];
+  const tagsForField: { key: string; value: string }[] = [];
   keysInField.forEach((k) => {
     if (feature.tags[k]) {
       tagsForField.push({ key: k, value: feature.tags[k] });

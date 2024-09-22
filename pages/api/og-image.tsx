@@ -76,8 +76,8 @@ const renderSvg = async (
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const t1 = Date.now();
   try {
-    const shortId = getApiId(req.query.id);
-    const feature = await fetchWithMemberFeatures(shortId);
+    const osmId = getApiId(req.query.id);
+    const feature = await fetchWithMemberFeatures(osmId);
     const def = feature.imageDefs?.[0]; // TODO iterate when first not found
     if (!def) {
       throw new Error('No image definition found');

@@ -125,13 +125,13 @@ export const buildAddress = (
     'addr:state': state,
     'addr:postcode': postcode,
   }: Record<string, string>,
-  loc?: Position,
+  position?: Position,
 ) => {
   const number = hnum ?? join(cnum, '/', snum);
   const streetPlace = street ?? place;
 
   return join(
-    isNumberFirst(loc)
+    isNumberFirst(position)
       ? join(number, ' ', streetPlace)
       : join(streetPlace, ' ', number),
     ', ',

@@ -93,6 +93,7 @@ export const trimText = (text, limit) =>
 // (<= tablet size) MobileMode shows FeaturePanel in Drawer (instead of side)
 export const isMobileMode = '(max-width: 700px)';
 export const useMobileMode = () => useMediaQuery(isMobileMode);
+export const isMobileModeVanilla = () => window.innerWidth <= 700;
 
 // (>= mobile size) SearchBox stops growing
 export const isDesktop = '(min-width: 500px)';
@@ -123,9 +124,8 @@ export const DotLoader = () => (
 
 // TODO import { NoSsr } from '@mui/base';
 export const ClientOnly = ({ children }) => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => setMounted(true), []);
-  return mounted ? children : null;
+  const isClient = useIsClient();
+  return isClient ? children : null;
 };
 
 export const isImperial = () =>

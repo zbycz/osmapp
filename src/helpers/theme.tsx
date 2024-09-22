@@ -6,6 +6,7 @@ import { useMediaQuery } from '@mui/material';
 
 const lightTheme = createTheme({
   palette: {
+    divider: 'rgba(0, 0, 0, 0.04)',
     primary: {
       main: '#556cd6',
     },
@@ -45,6 +46,7 @@ const lightTheme = createTheme({
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    divider: 'rgba(255, 255, 255, 0.04)',
     primary: {
       main: '#ffb74d',
     },
@@ -87,13 +89,14 @@ const darkTheme = createTheme({
   },
 });
 
-export type UserTheme = 'system' | 'light' | 'dark';
+export type Theme = 'light' | 'dark';
+export type UserTheme = 'system' | Theme;
 
 type UserThemeContextType = {
   userTheme: UserTheme;
   setUserTheme: (choice: UserTheme) => void;
   theme: typeof lightTheme | typeof darkTheme;
-  currentTheme: 'light' | 'dark';
+  currentTheme: Theme;
 };
 
 export const UserThemeContext = createContext<UserThemeContextType>(undefined);

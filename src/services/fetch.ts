@@ -55,7 +55,6 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
       writeCacheSafe(key, text);
     }
     return text;
-
   } catch (e) {
     if (isBrowser() && e instanceof DOMException && e.name === 'AbortError') {
       throw e;
@@ -65,7 +64,7 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
   }
 };
 
-export const fetchJson = async (url, opts: FetchOpts = {}) => {
+export const fetchJson = async (url: string, opts: FetchOpts = {}) => {
   const text = await fetchText(url, opts);
   try {
     return JSON.parse(text);

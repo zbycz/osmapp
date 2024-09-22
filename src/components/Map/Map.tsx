@@ -10,7 +10,7 @@ import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
-import { webglSupported } from './helpers';
+import { useMapStateContext } from '../utils/MapStateContext';
 
 const BrowserMapDynamic = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -70,12 +70,11 @@ const NoscriptMessage = () => (
 );
 
 const Map = () => {
-  const [mapLoaded, setLoaded, setNotLoaded] = useBoolState(true);
-  useEffect(setNotLoaded, [setNotLoaded]);
+  const { mapLoaded } = useMapStateContext();
 
   return (
     <>
-      <BrowserMapDynamic onMapLoaded={setLoaded} />
+      <BrowserMapDynamic />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
       <TopRight>

@@ -45,7 +45,7 @@ export const useGetOnClick = (def: ImageDef) => {
     return () => {
       const featureLink = getOsmappLink(feature);
       const photoLink = removeFilePrefix(def.v);
-      Router.push(`${featureLink}/climbing/${photoLink}`);
+      Router.push(`${featureLink}/climbing/photo/${photoLink}`);
     };
   }
 

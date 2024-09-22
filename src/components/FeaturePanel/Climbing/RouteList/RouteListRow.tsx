@@ -6,16 +6,19 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { IconButton, TextField } from '@mui/material';
 import { ClimbingRoute } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { emptyRoute } from '../utils/emptyRoute';
+import { getEmptyRoute } from '../utils/getEmptyRoute';
 import { RouteNumber } from '../RouteNumber';
-import { toggleElementInArray } from '../utils/array';
 import { ExpandedRow } from './ExpandedRow';
 import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
 import { getShortId } from '../../../../services/helpers';
 import { getDifficulties } from '../utils/grades/routeGrade';
-import { TickedRouteCheck } from '../Ticks/TickedRouteCheck';
+import { isTicked } from '../../../../services/ticks';
+import { getWikimediaCommonsPhotoPathKeys } from '../utils/photo';
+import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { CLIMBING_ROUTE_ROW_HEIGHT } from '../config';
+import { EmptyValue } from './EmptyValue';
 
-const DEBOUNCE_TIME = 1000;
+const DEBOUNCE_TIME = 5000;
 const Container = styled.div`
   display: flex;
   flex-direction: column;
@@ -31,12 +34,16 @@ const NameCell = styled(Cell)`
   gap: 8px;
   justify-content: space-between;
 `;
+const Opacity = styled.div<{ opacity: number }>`
+  opacity: ${({ opacity }) => opacity};
+`;
 const DifficultyCell = styled(Cell)`
   margin-right: 8px;
 `;
 const RouteNumberCell = styled(Cell)`
   color: #999;
   margin-left: 8px;
+  margin-right: 8px;
 `;
 const ExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean }>`
   transform: rotate(${({ $isExpanded }) => ($isExpanded ? 180 : 0)}deg);
@@ -44,7 +51,7 @@ const ExpandIcon = styled(ExpandMoreIcon)<{ $isExpanded: boolean }>`
 `;
 
 const Row = styled.div<{ $isExpanded?: boolean }>`
-  min-height: 40px;
+  min-height: ${CLIMBING_ROUTE_ROW_HEIGHT}px;
   background-color: ${({ $isExpanded, theme }) =>
     $isExpanded ? theme.palette.action.selected : 'none'};
   overflow: hidden;
@@ -55,59 +62,102 @@ const Row = styled.div<{ $isExpanded?: boolean }>`
   gap: 4px;
 `;
 
-const EmptyValue = styled.div`
-  color: #666;
-`;
+const useTempState = (routeId: string) => {
+  const { routes, updateRouteOnIndex } = useClimbingContext();
+  const route = routes.find((route) => route.id === routeId);
+  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(route);
+
+  const onValueChange = (e, propName: keyof ClimbingRoute) => {
+    const index = routes.findIndex((route) => route.id === routeId);
+    updateRouteOnIndex(index, (route) => ({
+      ...route,
+      updatedTags: {
+        ...route.updatedTags,
+        [propName]: e.target.value,
+      },
+    }));
+  };
+
+  const debouncedValueChange = (e, propName) =>
+    debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)();
+
+  const onTempRouteChange = (e, propName: string) => {
+    setTempRoute((prevValue) => ({
+      ...prevValue,
+      updatedTags: {
+        ...prevValue.updatedTags,
+        [propName]: e.target.value,
+      },
+    }));
+    debouncedValueChange(e, propName);
+  };
+
+  return { tempRoute, onTempRouteChange };
+};
+
+type Props = {
+  routeId: string;
+  stopPropagation: (e: React.MouseEvent) => void;
+  parentRef: React.RefObject<HTMLDivElement>;
+};
 
 export const RenderListRow = ({
-  route,
-  index,
-  onRouteChange,
+  routeId,
   stopPropagation,
-}) => {
+  parentRef,
+}: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [tempRoute, setTempRoute] = useState<ClimbingRoute>(emptyRoute);
+  const { userSettings } = useUserSettingsContext();
 
-  const getText = (text: string) => text || <EmptyValue>?</EmptyValue>;
-
-  useEffect(() => {
-    setTempRoute(route);
-  }, [route]);
+  const { tempRoute, onTempRouteChange } = useTempState(routeId);
 
   const {
+    routes,
     getMachine,
-    isRouteSelected,
     isEditMode,
     routeSelectedIndex,
     routeIndexExpanded,
     setRouteIndexExpanded,
-    getPhotoInfoForRoute,
+    setRouteListTopOffset,
   } = useClimbingContext();
 
+  const index = routes.findIndex((route) => route.id === routeId);
+  const route = routes[index];
+
   useEffect(() => {
-    if (routeSelectedIndex === index) {
+    if (
+      userSettings['climbing.selectRoutesByScrolling'] &&
+      ref.current &&
+      parentRef.current
+    ) {
+      const elementRect = ref.current.getBoundingClientRect();
+      const parentRect = parentRef.current.getBoundingClientRect();
+      const relativeTop = elementRect.top - parentRect.top;
+
+      setRouteListTopOffset(index, relativeTop);
+    }
+  }, [
+    index,
+    parentRef,
+    setRouteListTopOffset,
+    routeIndexExpanded,
+    userSettings,
+  ]);
+
+  useEffect(() => {
+    if (
+      !userSettings['climbing.selectRoutesByScrolling'] &&
+      routeSelectedIndex === index
+    ) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }, [routeSelectedIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const osmId = route.feature?.osmMeta
     ? getShortId(route.feature.osmMeta)
     : null;
-  const isSelected = isRouteSelected(index);
-  const photoInfoForRoute = getPhotoInfoForRoute(index);
 
   const machine = getMachine();
-
-  const onValueChange = (e, propName: keyof ClimbingRoute) => {
-    onRouteChange(e, index, propName);
-  };
-
-  const debouncedValueChange = (e, propName) =>
-    debounce(() => onValueChange(e, propName), DEBOUNCE_TIME)(e);
-
-  const onTempRouteChange = (e, propName: keyof ClimbingRoute) => {
-    setTempRoute({ ...tempRoute, [propName]: e.target.value });
-    debouncedValueChange(e, propName);
-  };
 
   const isExpanded = routeIndexExpanded === index;
 
@@ -116,45 +166,36 @@ export const RenderListRow = ({
     (machine.currentStateName !== 'editRoute' &&
       machine.currentStateName !== 'extendRoute') ||
     !isExpanded;
-  const expandedRowProps = {
-    tempRoute,
-    getText,
-    onTempRouteChange,
-    setTempRoute,
-    stopPropagation,
-    isReadOnly,
-    index,
-    isExpanded,
-    osmId,
-  };
   const routeDifficulties = getDifficulties(tempRoute.feature?.tags);
+  const hasTick = isTicked(osmId);
+
+  const photoPathsCount = getWikimediaCommonsPhotoPathKeys(
+    tempRoute?.feature?.tags || {},
+  ).length;
 
   return (
     <Container ref={ref}>
       <Row style={{ cursor: 'pointer' }}>
-        <RouteNumberCell $width={30}>
-          <RouteNumber
-            isSelected={isSelected}
-            photoInfoForRoute={photoInfoForRoute}
-            osmId={osmId}
-          >
+        <RouteNumberCell>
+          <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
             {index + 1}
           </RouteNumber>
         </RouteNumberCell>
         <NameCell>
           {isReadOnly ? (
-            getText(tempRoute.name)
+            <Opacity opacity={photoPathsCount === 0 ? 0.5 : 1}>
+              {tempRoute.updatedTags.name || <EmptyValue />}
+            </Opacity>
           ) : (
             <TextField
               size="small"
-              value={tempRoute.name}
+              value={tempRoute.updatedTags.name}
               placeholder="No name"
               onChange={(e) => onTempRouteChange(e, 'name')}
               onClick={stopPropagation}
               fullWidth
             />
           )}
-          <TickedRouteCheck osmId={osmId} />
         </NameCell>
         <DifficultyCell $width={50}>
           <ConvertedRouteDifficultyBadge
@@ -178,7 +219,17 @@ export const RenderListRow = ({
         </Cell>
       </Row>
 
-      <ExpandedRow {...expandedRowProps} />
+      <ExpandedRow
+        {...{
+          tempRoute,
+          onTempRouteChange,
+          stopPropagation,
+          isReadOnly,
+          index,
+          isExpanded,
+          osmId,
+        }}
+      />
     </Container>
   );
 };

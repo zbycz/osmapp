@@ -35,16 +35,15 @@ export default {
      Funktionen wie Navigation und das Speichern von Favoriten sind in Planung`,
   'homepage.github_link': `Du kannst neue Features auf <a href="https://github.com/zbycz/osmapp" target='_blank'>vorschlagen</a>.`,
   'homepage.special_thanks_heading': `Danke an`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" target='_blank'>Wikipedia</a> – für die Bilder 🖼
-        <li><a href="https://www.openstreetmap.org/" target='_blank'>OpenStreetMap</a> – für die beste Weltkarte 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – für die großartigen Vektor Karten <br>und die Unterstützung dieses Projekts  ❤️ ',
+  'homepage.for_images': 'für die Bilder 🖼',
+  'homepage.for_osm': 'für die beste Weltkarte 🌎',
+  'homepage.maptiler': 'für die großartigen Vektor Karten und die Unterstützung dieses Projekts  ❤️ ',
 
   'searchbox.placeholder': 'Durchsuche OpenStreetMap',
+  'searchbox.category': 'Kategorie',
+  'searchbox.overpass_success': 'Ergebnisse gefunden: __count__',
+  'searchbox.overpass_error': 'Fehler beim Laden. __message__',
+  'searchbox.overpass_custom_query': 'Eigene Query',
 
   'featurepanel.no_name': 'Kein Name',
   'featurepanel.share_button': 'Teilen',
@@ -68,9 +67,13 @@ export default {
   'featurepanel.inline_edit_title': 'Bearbeiten',
   'featurepanel.objects_around': 'Orte in der Nähe',
 
+  'opening_hours.all_day': '24 Stunden',
   'opening_hours.open': 'Geöffnet: __todayTime__',
   'opening_hours.now_closed_but_today': 'Geschlossen, heute: __todayTime__',
   'opening_hours.today_closed': 'Heute geschlossen',
+  'opening_hours.opens_soon': 'Öfnet bald',
+  'opening_hours.opens_soon_today': 'Öffnet bald: __todayTime__',
+  'opening_hours.closes_soon': 'Schließt bald',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sonntag|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag',
 
   'map.github_title': 'GitHub',
@@ -146,6 +149,15 @@ export default {
   'layerswitcher.intro': 'Dank der Tatsache, dass OpenStreetMap Quelldaten anbietet, kann jeder verschiedene Varianten der Karte erstellen.',
   'layerswitcher.add_layer_button': 'Eigene Ebene hinzufügen',
   'layerswitcher.add_layer_prompt': 'Eigene TMS Ebene hinzufügen – benötigt entsprechende CORS Header:\n(Beta)',
+  'layerswitcher.not_all_work': 'Bitte beachte, dass zwar die meisten Kartenebenen, jedoch nicht alle, funktionieren.',
+  'layerswitcher.license': 'Lizenz',
+  'layerswitcher.privacy_policy': 'Datenschutzerklärung',
+  'layerswitcher.category': 'Kategorie',
+  'layerswitcher.category_photo': 'Luftbilder',
+  'layerswitcher.category_osmbasedmap': 'Normale Ebene',
+  'layerswitcher.compatible_license': 'Lizenz kompatibel für die Bearbeitung von OpenStreetMap',
+  'layerswitcher.layers_in_area': 'Für Ebenen in diesem Bereich filtern',
+  'layerswitcher.explaination': 'Bitte fügen Sie {z}, {x}, {y} oder {bbox-epsg-3857} ein',
 
   'layers.basic': 'Standard',
   'layers.outdoor': 'Outdoor',
@@ -155,6 +167,17 @@ export default {
   'layers.maptilerSat': 'Maptiler Satellit (z<14)',
   'layers.bingSat': 'Bing Satellit',
   'layers.bike': 'Fahrrad',
+
+  'publictransport.tourism': 'Touristische Züge',
+  'publictransport.night': 'Nachtzüge',
+  'publictransport.car_shuttle': 'Autoshuttlezüge',
+  'publictransport.car': 'Auto Züge',
+  'publictransport.commuter': 'Pendlerzüge',
+  'publictransport.regional': 'Regionalzüge',
+  'publictransport.long_distance': 'Fernzüge',
+  'publictransport.high_speed': 'Hochgeschwindigkeitszüge',
+  'publictransport.bus': 'Bus',
+  'publictransport.unknown': 'Unbekannter Typ',
 
   'runway.information': 'Landebahninformationen',
   'runway.runway': 'Landebahn',

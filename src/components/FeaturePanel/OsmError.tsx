@@ -18,7 +18,6 @@ export const OsmError = () => {
               feature.osmMeta,
             )}/history`}
             target="_blank"
-            rel="noopener"
           >
             {t('featurepanel.history_button')}
           </a>

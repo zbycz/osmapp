@@ -11,6 +11,23 @@ export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 export const isWikimediaCommons = (tag: string) =>
   tag.startsWith('wikimedia_commons');
 
+export const isWikimediaCommonsPhoto = (tag: string) => {
+  // regexp to match wikimedia_commons, wikimedia_commons:2, etc. but not  wikimedia_commons:path, wikimedia_commons:whatever
+  const re = /^wikimedia_commons(:\d+)?$/;
+  return re.test(tag);
+};
+
+export const getWikimediaCommonsPhotoKeys = (tags: FeatureTags) =>
+  Object.keys(tags).filter(isWikimediaCommonsPhoto);
+
+export const isWikimediaCommonsPhotoPath = (tag: string) => {
+  const re = /^wikimedia_commons(:\d+)*:path$/;
+  return re.test(tag);
+};
+
+export const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
+  Object.keys(tags).filter(isWikimediaCommonsPhotoPath);
+
 export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
   Object.keys(tags).filter(isWikimediaCommons); // TODO this returns also :path keys, not sure if intended
 

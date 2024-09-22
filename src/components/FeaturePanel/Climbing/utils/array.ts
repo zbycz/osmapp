@@ -1,7 +1,7 @@
 export const updateElementOnIndex = <T>(
   array: Array<T>,
   index: number,
-  callback?: (route: T) => T,
+  callback?: (oldValue: T) => T,
 ): Array<T> => {
   const updatedItem = callback ? callback(array[index]) : null;
   return [
