@@ -4,7 +4,7 @@ import {
   fetchFeatureWithCenter,
   fetchParentFeatures,
 } from '../../src/services/osmApi';
-import { setIntl } from '../../src/services/intl';
+import { intl, setIntl } from '../../src/services/intl';
 import { getExifData } from '../../src/server/upload/getExifData';
 import { uploadToWikimediaCommons } from '../../src/server/upload/uploadToWikimediaCommons';
 import { getApiId } from '../../src/services/helpers';
@@ -36,6 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const apiId = getApiId(shortId);
     const feature = await getFeature(apiId);
+    console.log('intl', intl); // eslint-disable-line no-console
     const user = await serverFetchOsmUser(req.cookies.osmAccessToken);
 
     const filepath = await fetchToFile(url);
