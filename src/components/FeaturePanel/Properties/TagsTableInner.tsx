@@ -6,6 +6,7 @@ import { InlineEditButton } from '../helpers/InlineEditButton';
 import { buildAddress } from '../../../services/helpers';
 import { ToggleButton } from '../helpers/ToggleButton';
 import { renderValue } from './renderValue';
+import { Position } from '../../../services/types';
 
 const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k) => k.match(/^name(:|$)/);
@@ -59,7 +60,17 @@ const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
 
 // TODO make it dynamic - count how many "first parts before :" are there, and group all >= 2
 
-export const TagsTableInner = ({ tags, center, except = [] }) => {
+type TagsTableInnerProps = {
+  tags: Record<string, string>;
+  center: Position;
+  except?: string[];
+};
+
+export const TagsTableInner = ({
+  tags,
+  center,
+  except = [],
+}: TagsTableInnerProps) => {
   const tagsEntries = Object.entries(tags).filter(([k]) => !except.includes(k));
 
   const addrs = tagsEntries.filter(([k]) => isAddr(k));
