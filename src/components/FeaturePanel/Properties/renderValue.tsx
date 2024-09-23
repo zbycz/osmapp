@@ -48,11 +48,7 @@ export const renderValue = (k, v, featured = false) => {
   const humanValue = getHumanValue(k, v, featured);
 
   if (k === 'direction') {
-    return (
-      <React.Suspense fallback={humanValue}>
-        <DirectionValue v={v}>{humanValue}</DirectionValue>
-      </React.Suspense>
-    );
+    return <DirectionValue v={v}>{humanValue}</DirectionValue>;
   }
 
   return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : humanValue;

@@ -74,18 +74,22 @@ const AnimatedArrow = styled(ArrowUpward)<{
 `;
 
 export const DirectionValue: React.FC<{ v: string }> = ({ children, v }) => {
-  const [start, end] = v.split('-', 2).map(parseCardinal);
+  try {
+    const [start, end] = v.split('-', 2).map(parseCardinal);
 
-  return (
-    <span
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '0.2rem',
-      }}
-    >
-      <AnimatedArrow start={start} end={end ?? start} />
-      {children}
-    </span>
-  );
+    return (
+      <span
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.2rem',
+        }}
+      >
+        <AnimatedArrow start={start} end={end ?? start} />
+        {children}
+      </span>
+    );
+  } catch {
+    return <>{children}</>;
+  }
 };
