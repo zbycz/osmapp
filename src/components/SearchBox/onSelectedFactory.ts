@@ -1,4 +1,4 @@
-import Router from 'next/router';
+import Router, { NextRouter } from 'next/router';
 import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { getOverpassSource } from '../../services/mapStorage';
@@ -17,6 +17,7 @@ import {
   PresetOption,
   StarOption,
 } from './types';
+import { osmOptionSelected } from './options/openstreetmap';
 
 const overpassOptionSelected = (
   option: OverpassOption | PresetOption,
@@ -79,14 +80,24 @@ const geocoderOptionSelected = (
   Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };
 
+type OnSelectedFactoryProps = {
+  setFeature: SetFeature;
+  setPreview: SetFeature;
+  bbox: Bbox;
+  showToast: ShowToast;
+  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  router: NextRouter;
+};
+
 export const onSelectedFactory =
-  (
-    setFeature: SetFeature,
-    setPreview: SetFeature,
-    bbox: Bbox,
-    showToast: ShowToast,
-    setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  ) =>
+  ({
+    setFeature,
+    setPreview,
+    bbox,
+    showToast,
+    setOverpassLoading,
+    router,
+  }: OnSelectedFactoryProps) =>
   (_: never, option: Option) => {
     setPreview(null); // it could be stuck from onHighlight
 
@@ -100,5 +111,9 @@ export const onSelectedFactory =
         break;
       case 'geocoder':
         geocoderOptionSelected(option, setFeature);
+        break;
+      case 'osm':
+        osmOptionSelected(option, router);
+        break;
     }
   };

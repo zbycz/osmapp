@@ -10,8 +10,10 @@ import { onHighlightFactory } from './onHighlightFactory';
 import { useMapCenter } from './utils';
 import { useSnackbar } from '../utils/SnackbarContext';
 import { useKeyDown } from '../../helpers/hooks';
-import { Option } from './types';
 import { getOptionLabel } from './getOptionLabel';
+import { useGetOptions } from './useGetOptions';
+import { useInputValueState } from './options/geocoder';
+import { useRouter } from 'next/router';
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -48,17 +50,11 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
 };
 
 type AutocompleteInputProps = {
-  inputValue: string;
-  setInputValue: (value: string) => void;
-  options: Option[];
   autocompleteRef: React.MutableRefObject<undefined>;
   setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
-  inputValue,
-  setInputValue,
-  options,
   autocompleteRef,
   setOverpassLoading,
 }) => {
@@ -67,6 +63,10 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const { showToast } = useSnackbar();
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
+  const { inputValue, setInputValue } = useInputValueState();
+  const options = useGetOptions(inputValue);
+  const router = useRouter();
+
   return (
     <Autocomplete
       inputValue={inputValue}
@@ -76,13 +76,14 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       filterOptions={(o) => o}
       getOptionLabel={getOptionLabel}
       getOptionKey={(option) => JSON.stringify(option)}
-      onChange={onSelectedFactory(
+      onChange={onSelectedFactory({
         setFeature,
         setPreview,
         bbox,
         showToast,
         setOverpassLoading,
-      )}
+        router,
+      })}
       onHighlightChange={onHighlightFactory(setPreview)}
       getOptionDisabled={(o) => o.type === 'loader'}
       autoComplete

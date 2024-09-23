@@ -70,6 +70,14 @@ export type CoordsOption = GenericOption<
   { center: LonLat; label: string }
 >;
 
+export type OsmOption = GenericOption<
+  'osm',
+  {
+    type: string;
+    id: number;
+  }
+>;
+
 /*
  * A option for the searchbox
  */
@@ -79,4 +87,5 @@ export type Option =
   | OverpassOption
   | PresetOption
   | LoaderOption
-  | GeocoderOption;
+  | GeocoderOption
+  | OsmOption;
