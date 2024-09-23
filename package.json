@@ -28,7 +28,7 @@
     "@mui/icons-material": "^5.15.20",
     "@mui/lab": "^5.0.0-alpha.170",
     "@mui/material": "^5.15.20",
-    "@mui/material-nextjs": "^5.16.6",
+    "@mui/material-nextjs": "^6.1.1",
     "@openstreetmap/id-tagging-schema": "^6.7.3",
     "@sentry/nextjs": "^8",
     "@xmldom/xmldom": "^0.8.10",
