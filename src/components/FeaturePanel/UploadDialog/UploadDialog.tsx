@@ -15,7 +15,7 @@ import {
   getWikimediaCommonsKey,
 } from '../Climbing/utils/photo';
 import { useSnackbar } from '../../utils/SnackbarContext';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 const WIKIPEDIA_LIMIT = 100 * 1024 * 1024;
 const BUCKET_URL = 'https://osmapp-upload-tmp.s3.amazonaws.com/';
@@ -107,8 +107,7 @@ const useGetHandleFileUpload = (
       const osmResponse = await submitToOsm(feature, wikiResponse.title);
 
       showToast('Image uploaded successfully', 'success');
-      console.log('response', wikiResponse, osmResponse);
-      await router.replace(router.asPath);
+      router.refresh();
     } finally {
       setUploading(false);
       setResetKey((key) => key + 1);

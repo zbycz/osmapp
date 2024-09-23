@@ -7,5 +7,5 @@ import { readFile } from 'node:fs/promises';
     .split('=')[1];
 
   const session = getMediaWikiSession();
-  console.log(await session.login('OsmappBot@osmapp-upload', password));
+  console.log(await session.login('OsmappBot@osmapp-upload', password)); // eslint-disable-line no-console
 })();
