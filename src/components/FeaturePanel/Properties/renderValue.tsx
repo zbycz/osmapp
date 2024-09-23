@@ -1,6 +1,7 @@
 import React from 'react';
 import { getUrlForTag } from './getUrlForTag';
 import { slashToOptionalBr } from '../../helpers';
+import { DirectionValue } from './Direction';
 
 const getEllipsisHumanUrl = (humanUrl) => {
   const MAX_LENGTH = 40;
@@ -45,6 +46,14 @@ const getHumanValue = (k, v, featured: boolean) => {
 export const renderValue = (k, v, featured = false) => {
   const url = getUrlForTag(k, v);
   const humanValue = getHumanValue(k, v, featured);
+
+  if (k === 'direction') {
+    return (
+      <React.Suspense fallback={humanValue}>
+        <DirectionValue v={v}>{humanValue}</DirectionValue>
+      </React.Suspense>
+    );
+  }
 
   return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : humanValue;
 };
