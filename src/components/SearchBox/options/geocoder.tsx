@@ -40,13 +40,19 @@ export const useInputValueState = () => {
 type FetchGeocoderOptionsProps = {
   inputValue: string;
   view: View;
+  setOptions: React.Dispatch<React.SetStateAction<Option[]>>;
+  before: Option[];
+  after: Option[];
 };
 
 export const fetchGeocoderOptions = debounce(
   async ({
     inputValue,
     view,
-  }: FetchGeocoderOptionsProps): Promise<Option[] | undefined> => {
+    setOptions,
+    before,
+    after,
+  }: FetchGeocoderOptionsProps) => {
     try {
       const searchResponse = (await fetchJson(getApiUrl(inputValue, view), {
         abortableQueueName: GEOCODER_ABORTABLE_QUEUE,
@@ -57,13 +63,18 @@ export const fetchGeocoderOptions = debounce(
         return;
       }
 
-      return searchResponse?.features?.map((feature) => ({
-        type: 'geocoder' as const,
-        geocoder: feature,
-      }));
+      const options = searchResponse?.features || [];
+
+      setOptions([
+        ...before,
+        ...options.map((feature) => ({
+          type: 'geocoder' as const,
+          geocoder: feature,
+        })),
+        ...after,
+      ]);
     } catch (e) {
-      const isIgnored = e instanceof DOMException && e.name === 'AbortError';
-      if (!isIgnored) {
+      if (!(e instanceof DOMException && e.name === 'AbortError')) {
         throw e;
       }
     }
