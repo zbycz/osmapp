@@ -30,7 +30,7 @@ export const uploadToWikimediaCommons = async (
     data.filename,
     data.text,
   );
-  if (uploadResult?.upload?.result !== 'Success') {
+  if (uploadResult?.result !== 'Success') {
     throw new Error(`Upload failed: ${JSON.stringify(uploadResult)}`);
   }
 
@@ -38,6 +38,11 @@ export const uploadToWikimediaCommons = async (
 
   const title = `File:${uploadResult.filename}`;
   const pageId = await getPageId(title);
+  if (!pageId) {
+    throw new Error(
+      `Page not found: ${title}, uploadResult: ${JSON.stringify(uploadResult)}`,
+    );
+  }
 
   console.log('pageId', pageId); // eslint-disable-line no-console
   const claims = [
