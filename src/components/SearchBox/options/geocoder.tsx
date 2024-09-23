@@ -8,7 +8,7 @@ import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
 import { Theme } from '../../../helpers/theme';
-import { GeocoderOption, Option, PresetOption } from '../types';
+import { GeocoderOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { LonLat } from '../../../services/types';
 
@@ -37,14 +37,16 @@ export const useInputValueState = () => {
   };
 };
 
+type FetchGeocoderOptionsProps = {
+  inputValue: string;
+  view: View;
+};
+
 export const fetchGeocoderOptions = debounce(
-  async (
-    inputValue: string,
-    view: View,
-    setOptions: React.Dispatch<React.SetStateAction<Option[]>>,
-    before: Option[],
-    after: Option[],
-  ) => {
+  async ({
+    inputValue,
+    view,
+  }: FetchGeocoderOptionsProps): Promise<Option[] | undefined> => {
     try {
       const searchResponse = (await fetchJson(getApiUrl(inputValue, view), {
         abortableQueueName: GEOCODER_ABORTABLE_QUEUE,
@@ -55,18 +57,13 @@ export const fetchGeocoderOptions = debounce(
         return;
       }
 
-      const options = searchResponse?.features || [];
-
-      setOptions([
-        ...before,
-        ...options.map((feature) => ({
-          type: 'geocoder' as const,
-          geocoder: feature,
-        })),
-        ...after,
-      ]);
+      return searchResponse?.features?.map((feature) => ({
+        type: 'geocoder' as const,
+        geocoder: feature,
+      }));
     } catch (e) {
-      if (!(e instanceof DOMException && e.name === 'AbortError')) {
+      const isIgnored = e instanceof DOMException && e.name === 'AbortError';
+      if (!isIgnored) {
         throw e;
       }
     }

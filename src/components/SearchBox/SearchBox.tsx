@@ -8,8 +8,6 @@ import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { useMobileMode } from '../helpers';
-import { useInputValueState } from './options/geocoder';
-import { useGetOptions } from './useGetOptions';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
 import { DirectionsButton } from '../Directions/DirectionsButton';
@@ -43,12 +41,9 @@ const useOnClosePanel = () => {
 const SearchBox = () => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
-  const { inputValue, setInputValue } = useInputValueState();
   const [overpassLoading, setOverpassLoading] = useState(false);
   const autocompleteRef = useRef();
   const onClosePanel = useOnClosePanel();
-
-  const options = useGetOptions(inputValue);
 
   return (
     <TopPanel $isMobileMode={isMobileMode}>
@@ -58,9 +53,6 @@ const SearchBox = () => {
         </SearchIconButton>
 
         <AutocompleteInput
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          options={options}
           autocompleteRef={autocompleteRef}
           setOverpassLoading={setOverpassLoading}
         />

@@ -73,7 +73,8 @@ const useOptions = (inputValue: string, setOptions) => {
         return;
       }
 
-      await fetchGeocoderOptions(inputValue, view, setOptions, [], []);
+      const geocoderOptions = await fetchGeocoderOptions({ inputValue, view });
+      setOptions(geocoderOptions);
     })();
   }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
 };
