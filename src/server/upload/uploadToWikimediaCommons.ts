@@ -30,20 +30,24 @@ export const uploadToWikimediaCommons = async (
     data.filename,
     data.text,
   );
-  if (uploadResult.result !== 'Success') {
+  if (uploadResult?.upload?.result !== 'Success') {
     throw new Error(`Upload failed: ${JSON.stringify(uploadResult)}`);
   }
+
+  console.log('uploadResult.filename', uploadResult.filename); // eslint-disable-line no-console
 
   const title = `File:${uploadResult.filename}`;
   const pageId = await getPageId(title);
   const claims = [
+    claimsHelpers.createCopyrightLicense(),
+    claimsHelpers.createCopyrightStatus(),
     claimsHelpers.createDate(data.date),
     claimsHelpers.createPlaceLocation(data.placeLocation),
     claimsHelpers.createPhotoLocation(data.photoLocation),
   ];
   const claimsResult = await session.editClaims(`M${pageId}`, claims);
   if (claimsResult.success !== 1) {
-    throw new Error(`Claims failed: ${claimsResult}`);
+    throw new Error(`Claims failed: ${JSON.stringify(claimsResult)}`);
   }
 
   return {

@@ -23,10 +23,14 @@ const getOsmParentUrl = ({ type, id }) =>
 const getOsmHistoryUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
-const getOsmPromise = async (apiId) => {
+export const getOsmElement = async (apiId: OsmId) => {
+  const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+  return elements?.[0];
+};
+
+const getOsmPromise = async (apiId: OsmId) => {
   try {
-    const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
-    return elements?.[0];
+    return await getOsmElement(apiId);
   } catch (e) {
     if (e instanceof FetchError && e.code === '410') {
       const { elements } = await fetchJson(getOsmHistoryUrl(apiId)); // TODO use multi fetch instead of history: https://wiki.openstreetmap.org/wiki/API_v0.6#Multi_fetch:_GET_/api/0.6/[nodes|ways|relations]?#parameters
@@ -42,7 +46,7 @@ const getOsmPromise = async (apiId) => {
   }
 };
 
-const getOsmParentPromise = async (apiId) => {
+const getOsmParentPromise = async (apiId: OsmId) => {
   const { elements } = await fetchJson(getOsmParentUrl(apiId));
   return { elements };
 };
@@ -51,8 +55,8 @@ const getOsmParentPromise = async (apiId) => {
  * This holds coords of clicked ways/relations (from vector map), these are often different than those computed by us
  * TODO: we should probably store just the last one, but this cant get too big, right?
  */
-const featureCenterCache = {};
-export const addFeatureCenterToCache = (shortId, center) => {
+const featureCenterCache: Record<string, LonLat> = {};
+export const addFeatureCenterToCache = (shortId: string, center: LonLat) => {
   featureCenterCache[shortId] = center;
 };
 
@@ -110,7 +114,7 @@ export const fetchFeatureWithCenter = async (apiId: OsmId) => {
   return addSchemaToFeature(feature);
 };
 
-const fetchParentFeatures = async (apiId: OsmId) => {
+export const fetchParentFeatures = async (apiId: OsmId) => {
   const { elements } = await getOsmParentPromise(apiId);
   return elements.map((element) => addSchemaToFeature(osmToFeature(element)));
 };
@@ -163,7 +167,7 @@ export const fetchWithMemberFeatures = async (apiId: OsmId) => {
 };
 
 const addMemberFeaturesToArea = async (relation: Feature) => {
-  const { tags, osmMeta } = relation;
+  const { osmMeta } = relation;
   const url = getOverpassUrl(`[out:json];rel(${osmMeta.id});>>;out center qt;`);
   const overpass = await fetchJson(url);
   const itemsMap = getItemsMap(overpass.elements);

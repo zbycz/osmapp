@@ -65,7 +65,7 @@ export const getUploadData = (
     }}
 
 =={{int:license-header}}==
-{{Self|cc-by-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
+{{Self|cc-by-sa-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
 ${feature.countryCode === 'CZ' ? '{{FoP-Czech_Republic}}' : ''}
 `;
 

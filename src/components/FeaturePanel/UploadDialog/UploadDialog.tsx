@@ -3,9 +3,19 @@ import { Button, CircularProgress } from '@mui/material';
 import { fetchJson, fetchText } from '../../../services/fetch';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getShortId } from '../../../services/helpers';
-import { loginAndfetchOsmUser } from '../../../services/osmApiAuth';
+import {
+  editOsmFeature,
+  loginAndfetchOsmUser,
+} from '../../../services/osmApiAuth';
 import { intl } from '../../../services/intl';
 import { Feature } from '../../../services/types';
+import { getOsmElement } from '../../../services/osmApi';
+import {
+  getNextWikimediaCommonsIndex,
+  getWikimediaCommonsKey,
+} from '../Climbing/utils/photo';
+import { useSnackbar } from '../../utils/SnackbarContext';
+import { useRouter } from 'next/router';
 
 const WIKIPEDIA_LIMIT = 100 * 1024 * 1024;
 const BUCKET_URL = 'https://osmapp-upload-tmp.s3.amazonaws.com/';
@@ -30,26 +40,51 @@ const submitToWikimediaCommons = async (
 ) => {
   const shortId = getShortId(feature.osmMeta);
 
-  const response = await fetchJson('/api/upload', {
+  return await fetchJson('/api/upload', {
     method: 'POST',
     body: JSON.stringify({ url, filename, shortId, lang: intl.lang }),
   });
 };
 
-const performUploadWithLogin = async (url, filename, feature) => {
+const performUploadWithLogin = async (
+  url: string,
+  filename: string,
+  feature: Feature,
+) => {
   try {
-    await submitToWikimediaCommons(url, filename, feature);
+    return await submitToWikimediaCommons(url, filename, feature);
   } catch (e) {
     if (e.code === '401') {
       await loginAndfetchOsmUser();
-      await submitToWikimediaCommons(url, filename, feature);
+      return await submitToWikimediaCommons(url, filename, feature);
     }
+    throw e;
   }
 };
 
-const getHandleFileUpload =
-  (feature, setUploading, setResetKey) =>
-  async (e: ChangeEvent<HTMLInputElement>) => {
+const submitToOsm = async (feature: Feature, fileTitle: string) => {
+  const freshFeature = await getOsmElement(feature.osmMeta);
+  const newPhotoIndex = getNextWikimediaCommonsIndex(freshFeature.tags);
+  return await editOsmFeature(
+    freshFeature,
+    `Upload image ${fileTitle}`,
+    {
+      ...freshFeature.tags,
+      [getWikimediaCommonsKey(newPhotoIndex)]: fileTitle,
+    },
+    false,
+  );
+};
+
+const useGetHandleFileUpload = (
+  feature: Feature,
+  setUploading: React.Dispatch<React.SetStateAction<boolean>>,
+  setResetKey: React.Dispatch<React.SetStateAction<number>>,
+) => {
+  const { showToast } = useSnackbar();
+  const router = useRouter();
+
+  return async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     const filename = file.name;
 
@@ -65,21 +100,25 @@ const getHandleFileUpload =
     try {
       setUploading(true);
       const url = await uploadToS3(file);
-      const response = await submitToWikimediaCommons(url, filename, feature);
+      const wikiResponse = await performUploadWithLogin(url, filename, feature);
+      const osmResponse = await submitToOsm(feature, wikiResponse.title);
 
-      console.log('response', response);
+      showToast('Image uploaded successfully', 'success');
+      console.log('response', wikiResponse, osmResponse);
+      await router.replace(router.asPath);
     } finally {
       setUploading(false);
       setResetKey((key) => key + 1);
     }
   };
+};
 
 const UploadButton = () => {
   const { feature } = useFeatureContext();
-  const [uploading, setUploading] = useState(false);
-  const [resetKey, setResetKey] = useState(0);
+  const [uploading, setUploading] = useState<boolean>(false);
+  const [resetKey, setResetKey] = useState<number>(0);
 
-  const handleFileUpload = getHandleFileUpload(
+  const handleFileUpload = useGetHandleFileUpload(
     feature,
     setUploading,
     setResetKey,

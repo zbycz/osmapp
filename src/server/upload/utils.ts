@@ -1,11 +1,22 @@
-import { getName, getTypeLabel } from '../../helpers/featureLabel';
+import {
+  getLabel,
+  getLabelWithoutFallback,
+  getName,
+  getParentLabel,
+  getTypeLabel,
+} from '../../helpers/featureLabel';
 import type { Feature } from '../../services/types';
 import { File } from './types';
 
 import { isTitleAvailable } from './mediawiki/isTitleAvailable';
+import { join } from '../../utils';
 
 export const getTitle = (feature: Feature, file: File) => {
-  const name = getName(feature);
+  const name = join(
+    getParentLabel(feature), // fetched only for climbing route
+    ', ',
+    getLabelWithoutFallback(feature),
+  );
   const presetName = getTypeLabel(feature);
   const location = file.location ?? feature.center;
   return name

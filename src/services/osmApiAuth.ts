@@ -116,7 +116,7 @@ const putChangesetClose = (changesetId: string) =>
 const getItem = (apiId: OsmId) =>
   authFetch({
     method: 'GET',
-    path: `/api/0.6/${getUrlOsmId(apiId)}`,
+    path: `/api/0.6/${getUrlOsmId(apiId)}`, // xml !
   });
 
 const getItemHistory = (apiId: OsmId) =>

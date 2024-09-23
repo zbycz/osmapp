@@ -25,6 +25,14 @@ const feature: Feature = {
     presetKey: 'amenity/place_of_worship/christian',
     label: 'Christian Church',
   } as unknown as Feature['schema'],
+  parentFeatures: [
+    {
+      tags: {
+        climbing: 'whatever',
+        name: 'ClimbingCragName',
+      },
+    } as unknown as Feature,
+  ],
 };
 
 const file: File = {
@@ -40,7 +48,7 @@ const lang = 'en';
 
 const out = {
   date: '2024-03-16T11:35:56Z',
-  filename: 'svatý Mikuláš (Christian Church) - OsmAPP.jpg',
+  filename: 'ClimbingCragName, svatý Mikuláš (Christian Church) - OsmAPP.jpg',
   filepath: '/tmp/cda0f39b9e13dc5cd1ea4cb07',
   photoLocation: [14.525191666666668, 50.577450000000006],
   placeLocation: [14.5255208, 50.5776264],
@@ -71,7 +79,7 @@ const outDescription = `
     }}
 
 =={{int:license-header}}==
-{{Self|cc-by-4.0|author=OpenStreetMap user [https://www.openstreetmap.org/user/zby-cz#id=162287 zby-cz]}}
+{{Self|cc-by-sa-4.0|author=OpenStreetMap user [https://www.openstreetmap.org/user/zby-cz#id=162287 zby-cz]}}
 {{FoP-Czech_Republic}}
 `;
 

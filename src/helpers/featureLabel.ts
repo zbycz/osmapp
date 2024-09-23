@@ -24,24 +24,22 @@ export const hasName = (feature: Feature) =>
 export const getHumanPoiType = (feature: Feature) =>
   hasName(feature) ? getTypeLabel(feature) : t('featurepanel.no_name');
 
-export const getLabel = (feature: Feature) => {
+export const getLabelWithoutFallback = (feature: Feature) => {
   const { point, roundedCenter } = feature;
   if (point) {
     return roundedToDeg(roundedCenter);
   }
 
-  return getName(feature) || getRefLabel(feature) || getTypeLabel(feature);
-  return (
-    getName(feature) ||
-    getRefLabel(feature) ||
-    getBuiltAddress(feature) ||
-    getTypeLabel(feature) // generic label like "Recycling point"
-  );
+  return getName(feature) || getRefLabel(feature) || getBuiltAddress(feature);
 };
 
-export const getParentLabel = (feature: Feature) => {
-  const firstParentWithName = feature.parentFeatures?.find(hasName);
-  const parent = firstParentWithName ?? feature.parentFeatures?.[0];
+export const getLabel = (feature: Feature) =>
+  getLabelWithoutFallback(feature) || getTypeLabel(feature); // generic label like "Recycling point"
 
-  return parent ? getLabel(parent) : '';
+export const getParentLabel = (feature: Feature) => {
+  const parentWithName = feature.parentFeatures?.find(
+    (parent) => getName(parent) && parent.tags.climbing,
+  );
+
+  return parentWithName ? getLabel(parentWithName) : '';
 };

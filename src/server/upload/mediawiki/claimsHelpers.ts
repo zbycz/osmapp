@@ -38,7 +38,47 @@ const createDate = (time: string) => ({
   },
 });
 
+const createCopyrightLicense = () => ({
+  type: 'statement',
+  mainsnak: {
+    snaktype: 'value',
+    property: 'P275',
+    datavalue: {
+      type: 'wikibase-entityid',
+      value: {
+        'entity-type': 'item',
+        id: 'Q18199165', // CC BY-SA 4.0
+      },
+    },
+  },
+});
+
+const createCopyrightStatus = () => ({
+  type: 'statement',
+  mainsnak: {
+    snaktype: 'value',
+    property: 'P6216',
+    datavalue: {
+      type: 'wikibase-entityid',
+      value: {
+        'entity-type': 'item',
+        id: 'Q50423863', // copyrighted
+      },
+    },
+  },
+});
+
+// Entity-statement-claim-property-value (+qualifiers)
+// Statement usually has one claim. Property is eg P275.
+// SNAK (some notation about knowledge) is basicly a claim
+// https://www.mediawiki.org/wiki/Wikibase/API, https://www.mediawiki.org/wiki/Wikibase/DataModel#Snaks
 export const claimsHelpers = {
+  /** https://www.wikidata.org/wiki/Property:P275 copyright license */
+  createCopyrightLicense,
+
+  /** https://www.wikidata.org/wiki/Property:P6216 copyright status */
+  createCopyrightStatus,
+
   /** https://www.wikidata.org/wiki/Property:P571 inception */
   createDate,
 
