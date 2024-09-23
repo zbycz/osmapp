@@ -59,7 +59,7 @@ const out = {
 const outDescription = `
 =={{int:filedesc}}==
 {{Information
-    |description    = {{en|1=svatý Mikuláš (Christian Church)}}
+    |description    = {{en|1=ClimbingCragName, svatý Mikuláš (Christian Church)}}
     |date           = 2024-03-16T11:35:56Z
     |source         = {{Own photo}}
     |author         = OpenStreetMap user [https://www.openstreetmap.org/user/zby-cz#id=162287 zby-cz]

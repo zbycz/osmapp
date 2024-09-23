@@ -9,7 +9,7 @@ import {
 } from '../../../services/osmApiAuth';
 import { intl } from '../../../services/intl';
 import { Feature } from '../../../services/types';
-import { getOsmElement } from '../../../services/osmApi';
+import { clearFeatureCache, quickFetchFeature } from '../../../services/osmApi';
 import {
   getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
@@ -63,9 +63,10 @@ const performUploadWithLogin = async (
 };
 
 const submitToOsm = async (feature: Feature, fileTitle: string) => {
-  const freshFeature = await getOsmElement(feature.osmMeta);
+  clearFeatureCache(feature.osmMeta);
+  const freshFeature = await quickFetchFeature(feature.osmMeta);
   const newPhotoIndex = getNextWikimediaCommonsIndex(freshFeature.tags);
-  return await editOsmFeature(
+  await editOsmFeature(
     freshFeature,
     `Upload image ${fileTitle}`,
     {
@@ -74,6 +75,8 @@ const submitToOsm = async (feature: Feature, fileTitle: string) => {
     },
     false,
   );
+
+  clearFeatureCache(feature.osmMeta);
 };
 
 const useGetHandleFileUpload = (

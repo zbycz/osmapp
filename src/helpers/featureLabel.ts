@@ -1,7 +1,7 @@
 import { Feature } from '../services/types';
 import { roundedToDeg } from '../utils';
 import { t } from '../services/intl';
-import { buildAddress } from '../services/helpers';
+import { buildAddress, getUrlOsmId } from '../services/helpers';
 
 const getBuiltAddress = (feature: Feature) => {
   return buildAddress(feature.tags, feature.center);
@@ -34,7 +34,9 @@ export const getLabelWithoutFallback = (feature: Feature) => {
 };
 
 export const getLabel = (feature: Feature) =>
-  getLabelWithoutFallback(feature) || getTypeLabel(feature); // generic label like "Recycling point"
+  getLabelWithoutFallback(feature) ||
+  getTypeLabel(feature) || // generic label like "Recycling point"
+  getUrlOsmId(feature.osmMeta);
 
 export const getParentLabel = (feature: Feature) => {
   const parentWithName = feature.parentFeatures?.find(

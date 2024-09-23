@@ -23,9 +23,20 @@ const getOsmParentUrl = ({ type, id }) =>
 const getOsmHistoryUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
-export const getOsmElement = async (apiId: OsmId) => {
+const getOsmElement = async (apiId: OsmId) => {
   const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
   return elements?.[0];
+};
+
+export const quickFetchFeature = async (apiId: OsmId) => {
+  try {
+    const element = await getOsmElement(apiId);
+    return osmToFeature(element);
+  } catch (e) {
+    return {
+      error: e instanceof FetchError ? e.code : 'unknown',
+    } as unknown as Feature;
+  }
 };
 
 const getOsmPromise = async (apiId: OsmId) => {

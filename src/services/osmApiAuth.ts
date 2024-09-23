@@ -182,11 +182,10 @@ const getItemOrLastHistoric = async (apiId: OsmId) => {
   }
 };
 
-const getDescription = (isCancelled, feature) => {
+const getDescription = (isCancelled: boolean, feature: Feature) => {
   const undelete = feature.deleted;
   const action = undelete ? 'Undeleted' : isCancelled ? 'Deleted' : 'Edited';
-  const { subclass } = feature.properties;
-  const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
+  const name = getLabel(feature) || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
 };
 

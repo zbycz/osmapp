@@ -47,6 +47,7 @@ const createCopyrightLicense = () => ({
       type: 'wikibase-entityid',
       value: {
         'entity-type': 'item',
+        'numeric-id': 18199165,
         id: 'Q18199165', // CC BY-SA 4.0
       },
     },
@@ -62,6 +63,7 @@ const createCopyrightStatus = () => ({
       type: 'wikibase-entityid',
       value: {
         'entity-type': 'item',
+        'numeric-id': 50423863,
         id: 'Q50423863', // copyrighted
       },
     },

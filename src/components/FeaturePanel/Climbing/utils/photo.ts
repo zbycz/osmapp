@@ -45,7 +45,7 @@ export const getNextWikimediaCommonsIndex = (tags: FeatureTags) => {
       }
     }
     return max;
-  }, 0);
+  }, -1 /* so it will be 0 for the first tag*/);
 
   return maxKey + 1;
 };

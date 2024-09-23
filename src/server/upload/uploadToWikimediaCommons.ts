@@ -38,6 +38,8 @@ export const uploadToWikimediaCommons = async (
 
   const title = `File:${uploadResult.filename}`;
   const pageId = await getPageId(title);
+
+  console.log('pageId', pageId); // eslint-disable-line no-console
   const claims = [
     claimsHelpers.createCopyrightLicense(),
     claimsHelpers.createCopyrightStatus(),
