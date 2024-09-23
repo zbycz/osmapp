@@ -73,7 +73,7 @@ export type CoordsOption = GenericOption<
 export type OsmOption = GenericOption<
   'osm',
   {
-    type: 'node' | 'way' | 'relation';
+    type: string;
     id: number;
   }
 >;

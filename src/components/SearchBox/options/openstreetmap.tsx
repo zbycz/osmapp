@@ -4,6 +4,7 @@ import MapIcon from '@mui/icons-material/Map';
 import { Grid, Typography } from '@mui/material';
 import { IconPart } from '../utils';
 import { NextRouter } from 'next/router';
+import { isUrl } from '../../../helpers/utils';
 
 const parseType = (rawType: string) => {
   if (rawType === 'node' || rawType === 'n') {
@@ -19,15 +20,39 @@ const parseType = (rawType: string) => {
 
 const osmIdRegex = /\d{1,19}/;
 
-const getOsmIdOptions = (id: number): OsmOption[] => {
-  const types = ['node', 'way', 'relation'] as const;
-  return types.map((type) => ({
+const getOsmIdOptions = (id: number): OsmOption[] =>
+  ['node', 'way', 'relation'].map((type) => ({
     type: 'osm',
     osm: { type, id },
   }));
+
+const getOsmWebsiteOptions = (inputValue: string): OsmOption | undefined => {
+  if (!isUrl(inputValue)) {
+    return undefined;
+  }
+  const { pathname } = new URL(inputValue);
+
+  const typeMatches = pathname.match(/node|way|relation|rel/);
+  const idMatches = pathname.match(osmIdRegex);
+
+  if (!typeMatches || !idMatches) {
+    return undefined;
+  }
+
+  return {
+    type: 'osm',
+    osm: {
+      type: parseType(typeMatches[0]),
+      id: parseInt(idMatches[0]),
+    },
+  };
 };
 
 export const getOsmOptions = (inputValue: string): OsmOption[] => {
+  const urlOption = getOsmWebsiteOptions(inputValue);
+  if (urlOption) {
+    return [urlOption];
+  }
   const splitted = inputValue.split(/[/\s,]/);
 
   if (splitted.length === 1 && splitted[0].match(osmIdRegex)) {
