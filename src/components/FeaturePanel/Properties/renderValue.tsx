@@ -41,12 +41,6 @@ const getHumanValue = (k, v, featured: boolean) => {
     return '✗';
   }
 
-  if (k === 'colour' && !v.startsWith('#')) {
-    // undocumented values result in no hex code
-    const hex = osmColorToHex(v);
-    return hex.startsWith('#') ? `${v} (${hex})` : v;
-  }
-
   return humanValue;
 };
 
