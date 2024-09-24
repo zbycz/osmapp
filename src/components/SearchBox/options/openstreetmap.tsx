@@ -63,7 +63,7 @@ export const getOsmOptions = (inputValue: string): OsmOption[] => {
   const idString = splitted[1];
   const id = parseInt(idString);
 
-  if (!type || (!idString.match(osmIdRegex) && !Number.isNaN(id))) {
+  if (!type || !(!!idString?.match(osmIdRegex) && !Number.isNaN(id))) {
     return [];
   }
 
