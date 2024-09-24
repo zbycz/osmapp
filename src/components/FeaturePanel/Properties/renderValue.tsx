@@ -1,6 +1,7 @@
 import React from 'react';
 import { getUrlForTag } from './getUrlForTag';
 import { slashToOptionalBr } from '../../helpers';
+import { DirectionValue } from './Direction';
 import { osmColorToHex, whiteOrBlackText } from '../helpers/color';
 import styled from '@emotion/styled';
 
@@ -56,6 +57,9 @@ export const renderValue = (k: string, v: string, featured = false) => {
   const url = getUrlForTag(k, v);
   const humanValue = getHumanValue(k, v, featured);
 
+  if (k === 'direction') {
+    return <DirectionValue v={v}>{humanValue}</DirectionValue>;
+  }
   if (k === 'colour') {
     return <ColorValue v={v}>{humanValue}</ColorValue>;
   }
