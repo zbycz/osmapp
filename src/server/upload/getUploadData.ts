@@ -13,12 +13,12 @@ import { PROJECT_ID } from '../../services/project';
 const getOsmUrls = (feature: Feature) => {
   const osmUrl = `https://www.openstreetmap.org/${getUrlOsmId(feature.osmMeta)}`;
   const osmappUrl = `https://osmapp.org${getOsmappLink(feature)}`;
-  const projectUrl = getFullOsmappLink(feature);
+  const openclimbingUrl = `https://openclimbing.org${getOsmappLink(feature)}`;
 
-  if (PROJECT_ID === 'osmapp') {
-    return `${osmUrl}<br>${osmappUrl}`;
+  if (feature.tags.climbing) {
+    return `${osmUrl}<br>${osmappUrl}<br>${openclimbingUrl}`;
   } else {
-    return `${osmUrl}<br>${osmappUrl}<br>${projectUrl}`;
+    return `${osmUrl}<br>${osmappUrl}`;
   }
 };
 
