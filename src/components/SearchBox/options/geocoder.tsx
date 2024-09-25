@@ -8,7 +8,7 @@ import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
 import { Theme } from '../../../helpers/theme';
-import { GeocoderOption, Option, PresetOption } from '../types';
+import { GeocoderOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { LonLat } from '../../../services/types';
 
@@ -37,14 +37,22 @@ export const useInputValueState = () => {
   };
 };
 
+type FetchGeocoderOptionsProps = {
+  inputValue: string;
+  view: View;
+  setOptions: React.Dispatch<React.SetStateAction<Option[]>>;
+  before: Option[];
+  after: Option[];
+};
+
 export const fetchGeocoderOptions = debounce(
-  async (
-    inputValue: string,
-    view: View,
-    setOptions: React.Dispatch<React.SetStateAction<Option[]>>,
-    before: Option[],
-    after: Option[],
-  ) => {
+  async ({
+    inputValue,
+    view,
+    setOptions,
+    before,
+    after,
+  }: FetchGeocoderOptionsProps) => {
     try {
       const searchResponse = (await fetchJson(getApiUrl(inputValue, view), {
         abortableQueueName: GEOCODER_ABORTABLE_QUEUE,

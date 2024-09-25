@@ -18,7 +18,7 @@ import { buildUrl, CloseButton, parseUrlParts } from './helpers';
 import { PointsTooFarError, Profile, RoutingResult } from './routing/types';
 import { useBoolState, useMobileMode } from '../helpers';
 import { LoadingButton } from '@mui/lab';
-import { type Severity, useSnackbar } from '../utils/SnackbarContext';
+import { type ShowToast, useSnackbar } from '../utils/SnackbarContext';
 import { FetchError } from '../../services/helpers';
 import * as Sentry from '@sentry/nextjs';
 import { Option } from '../SearchBox/types';
@@ -33,9 +33,7 @@ const Wrapper = styled(Stack)`
   width: 340px;
 `;
 
-const getOnrejected = (
-  showToast: (message: string, severity?: Severity) => void,
-) => {
+const getOnrejected = (showToast: ShowToast) => {
   return (error) => {
     if (error instanceof PointsTooFarError) {
       showToast(t('directions.error.too_far'), 'warning');

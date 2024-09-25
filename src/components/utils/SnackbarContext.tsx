@@ -1,15 +1,10 @@
 import { Alert, Snackbar } from '@mui/material';
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useCallback,
-  useMemo,
-} from 'react';
+import React, { createContext, useContext, useState, useMemo } from 'react';
 
-export type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
+type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
+export type ShowToast = (message: string, severity?: Severity) => void;
 export type SnackbarContextType = {
-  showToast: (message: string, severity?: Severity) => void;
+  showToast: ShowToast;
 };
 
 const SnackbarContext = createContext<SnackbarContextType>({
@@ -20,7 +15,7 @@ export const useSnackbar = () => useContext(SnackbarContext);
 
 // TODO maybe allow more messages ?
 // TODO maybe similar code is already in Mui?  but useSnackbar is configuration only
-export const SnackbarProvider = ({ children }) => {
+export const SnackbarProvider: React.FC = ({ children }) => {
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState<string>('');
   const [severity, setSeverity] = useState<Severity>();

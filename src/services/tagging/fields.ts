@@ -66,14 +66,9 @@ export const computeAllFieldKeys = (preset: Preset) => {
 export const getValueForField = (
   field: Field,
   fieldTranslation,
-  value: string,
-  tagsForField: { key: string; value: string }[] = [],
+  value: string | undefined,
+  tagsForField = [],
 ) => {
-  // Are rendered using `✓` and `✗`  in `getHumanValue()`
-  if (value === 'yes' || value === 'no') {
-    return value;
-  }
-
   if (field.type === 'semiCombo') {
     return value
       .split(';')

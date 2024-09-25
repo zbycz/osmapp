@@ -15,7 +15,8 @@ import { setLastFeature } from '../../services/lastFeatureStorage';
 export type FeatureContextType = {
   feature: Feature | null;
   featureShown: boolean;
-  setFeature: (feature: Feature | null) => void; // setFeature - used only for skeletons (otherwise it gets loaded by router)
+  /** Used only for skeletons (otherwise it gets loaded by router) */
+  setFeature: (feature: Feature | null) => void;
   homepageShown: boolean;
   showHomepage: () => void;
   hideHomepage: () => void;
@@ -86,3 +87,5 @@ export const FeatureProvider = ({
 };
 
 export const useFeatureContext = () => useContext(FeatureContext);
+
+export type SetFeature = React.Dispatch<React.SetStateAction<Feature>>;

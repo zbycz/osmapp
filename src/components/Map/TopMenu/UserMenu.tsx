@@ -17,11 +17,6 @@ const StyledAccountCircleIcon = styled(AccountCircleIcon)`
   font-size: 17px !important;
 `;
 
-type UserLoginProps = {
-  closeMenu: () => void;
-  children?: React.ReactNode;
-};
-
 type MyTicksMenuItemProps = {
   closeMenu: () => void;
 };
@@ -56,6 +51,11 @@ const UserSettingsItem = ({ closeMenu }) => {
       <MenuItem onClick={openUserSettings}>{t('user.user_settings')}</MenuItem>
     </>
   );
+};
+
+type UserLoginProps = {
+  closeMenu: () => void;
+  children?: React.ReactNode; // TODO refactor, children is not a good pattern
 };
 
 const UserLogin = forwardRef<SVGSVGElement, UserLoginProps>(

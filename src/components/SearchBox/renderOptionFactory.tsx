@@ -7,6 +7,7 @@ import { renderGeocoder } from './options/geocoder';
 import { Option } from './types';
 import { Theme } from '../../helpers/theme';
 import { LonLat } from '../../services/types';
+import { renderOsm } from './options/openstreetmap';
 
 const renderOption = (
   inputValue: string,
@@ -25,6 +26,8 @@ const renderOption = (
       return renderPreset(option, inputValue);
     case 'geocoder':
       return renderGeocoder(option, currentTheme, inputValue, mapCenter);
+    case 'osm':
+      return renderOsm(option);
   }
 };
 
