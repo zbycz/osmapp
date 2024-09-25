@@ -28,7 +28,8 @@ export const getFilename = (feature: Feature, file: File, suffix: string) => {
   const title = getTitle(feature, file);
 
   const extension = file.filename.split('.').pop();
-  return `${title} - OsmAPP${suffix}.${extension}`;
+  const fixedExtension = extension.toLowerCase() === 'heic' ? 'jpg' : extension;
+  return `${title} - OsmAPP${suffix}.${fixedExtension}`;
 };
 
 export async function findFreeSuffix(feature: Feature, file: File) {

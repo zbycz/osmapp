@@ -41,6 +41,14 @@ export const getUploadData = (
   // TODO  each file must belong to at least one category that describes its content or function
   // TODO  get category based on location eg
 
+  // TODO get from list https://commons.wikimedia.org/wiki/Commons:Freedom_of_panorama#Summary_table
+  const fop =
+    feature.countryCode === 'cz'
+      ? '{{FoP-Czech_Republic}}'
+      : feature.countryCode === 'de'
+        ? '{{FoP-Germany}}'
+        : '';
+
   // TODO add some overpass link https://www.wikidata.org/w/index.php?title=Template:Overpasslink&action=edit
   const text = `
 =={{int:filedesc}}==
@@ -66,7 +74,7 @@ export const getUploadData = (
 
 =={{int:license-header}}==
 {{Self|cc-by-sa-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
-${feature.countryCode === 'cz' ? '{{FoP-Czech_Republic}}' : ''}
+${fop}
 `;
 
   // TODO choose correct FOP based on country: https://commons.wikimedia.org/wiki/Category:FoP_templates

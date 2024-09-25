@@ -30,17 +30,11 @@ export const uploadToWikimediaCommons = async (
     data.filename,
     data.text,
   );
-  if (uploadResult?.result !== 'Success') {
+  if (uploadResult?.upload?.result !== 'Success') {
     throw new Error(`Upload failed: ${JSON.stringify(uploadResult)}`);
   }
 
-  // eslint-disable-next-line no-console
-  console.log(
-    `feature countryCode:'${feature.countryCode}', center: '${feature.center.join(',')}'`,
-  );
-  console.log('uploadResult.filename', uploadResult.filename); // eslint-disable-line no-console
-
-  const title = `File:${uploadResult.filename}`;
+  const title = `File:${uploadResult?.upload.filename}`;
   const pageId = await getPageId(title);
   if (!pageId) {
     throw new Error(

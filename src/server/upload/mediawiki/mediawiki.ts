@@ -71,7 +71,7 @@ export const getMediaWikiSession = () => {
       comment: 'Initial upload from OsmAPP.org',
       token,
     });
-    return data?.upload;
+    return data;
   };
 
   // https://github.com/multichill/toollabs/blob/master/bot/commons/geograph_uploader.py#L132
