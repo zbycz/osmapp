@@ -34,6 +34,10 @@ export const uploadToWikimediaCommons = async (
     throw new Error(`Upload failed: ${JSON.stringify(uploadResult)}`);
   }
 
+  // eslint-disable-next-line no-console
+  console.log(
+    `feature countryCode:'${feature.countryCode}', center: '${feature.center.join(',')}'`,
+  );
   console.log('uploadResult.filename', uploadResult.filename); // eslint-disable-line no-console
 
   const title = `File:${uploadResult.filename}`;
