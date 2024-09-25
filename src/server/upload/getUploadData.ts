@@ -66,7 +66,7 @@ export const getUploadData = (
 
 =={{int:license-header}}==
 {{Self|cc-by-sa-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
-${feature.countryCode === 'CZ' ? '{{FoP-Czech_Republic}}' : ''}
+${feature.countryCode === 'cz' ? '{{FoP-Czech_Republic}}' : ''}
 `;
 
   // TODO choose correct FOP based on country: https://commons.wikimedia.org/wiki/Category:FoP_templates
