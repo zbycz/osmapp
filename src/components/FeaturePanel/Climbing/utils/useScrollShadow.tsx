@@ -1,4 +1,10 @@
-import React, { CSSProperties, useEffect, useRef, useState } from 'react';
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import styled from '@emotion/styled';
 import { css } from '@emotion/react';
 import { convertHexToRgba } from '../../../utils/colorUtils';
@@ -84,14 +90,16 @@ const GradientRight = styled.div<GradientProps>`
   );
 `;
 
-export const useScrollShadow = (deps = []) => {
-  const scrollElementRef = useRef<HTMLDivElement>(null);
+export const useScrollShadow = (deps = [], ref = undefined) => {
+  const tempRef = useRef<HTMLDivElement>(null);
+  const scrollElementRef = ref || tempRef;
+
   const [isScrolledToTop, setIsScrolledToTop] = useState(true);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isScrolledToLeft, setIsScrolledToLeft] = useState(true);
   const [isScrolledToRight, setIsScrolledToRight] = useState(true);
 
-  const setShadows = () => {
+  const setShadows = useCallback(() => {
     if (scrollElementRef?.current) {
       const {
         scrollTop,
@@ -109,7 +117,7 @@ export const useScrollShadow = (deps = []) => {
       setIsScrolledToLeft(scrollLeft <= 0);
       setIsScrolledToRight(Math.ceil(scrollLeft + clientWidth) >= scrollWidth);
     }
-  };
+  }, [scrollElementRef]);
 
   useEffect(() => {
     setShadows();
@@ -124,7 +132,7 @@ export const useScrollShadow = (deps = []) => {
       window.removeEventListener('resize', handleShadows);
       window.removeEventListener('orientationchange', handleShadows);
     };
-  }, []);
+  }, [setShadows]);
 
   const onScroll = () => {
     setShadows();

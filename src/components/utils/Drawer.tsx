@@ -1,9 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import styled from '@emotion/styled';
 import { Global, css } from '@emotion/react';
-import React, { useState } from 'react';
+import React, { LegacyRef, useState } from 'react';
 import { SwipeableDrawer } from '@mui/material';
 import { Puller } from '../FeaturePanel/helpers/Puller';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 type SettingsProps = {
   $collapsedHeight: number;
@@ -35,11 +36,6 @@ const Container = styled.div<SettingsProps>`
   overflow: hidden;
 `;
 
-const ListContainer = styled.div`
-  height: 100%;
-  overflow: auto;
-`;
-
 type Props = {
   onTransitionEnd?: (
     e: React.TransitionEvent<HTMLDivElement>,
@@ -50,6 +46,7 @@ type Props = {
   collapsedHeight: number;
   className: string;
   defaultOpen?: boolean;
+  scrollRef?: LegacyRef<Scrollbars>;
 };
 
 export const Drawer = ({
@@ -59,7 +56,10 @@ export const Drawer = ({
   className,
   onTransitionEnd,
   defaultOpen = false,
+  scrollRef,
 }: Props) => {
+  const newRef = React.useRef<Scrollbars>(null);
+  const ref = scrollRef || newRef;
   const [open, setOpen] = useState(defaultOpen);
 
   const handleOnOpen = () => setOpen(true);
@@ -85,7 +85,9 @@ export const Drawer = ({
       >
         <Container $collapsedHeight={collapsedHeight} $topOffset={topOffset}>
           <Puller setOpen={setOpen} open={open} />
-          <ListContainer>{children}</ListContainer>
+          <Scrollbars universal autoHide style={{ height: '100%' }} ref={ref}>
+            {children}
+          </Scrollbars>
         </Container>
       </SwipeableDrawer>
     </>
