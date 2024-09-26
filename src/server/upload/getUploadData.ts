@@ -10,15 +10,14 @@ import {
 } from '../../services/helpers';
 import { PROJECT_ID } from '../../services/project';
 
-const getOsmUrls = (feature: Feature) => {
-  const osmUrl = `https://www.openstreetmap.org/${getUrlOsmId(feature.osmMeta)}`;
+const getOsmappUrls = (feature: Feature) => {
   const osmappUrl = `https://osmapp.org${getOsmappLink(feature)}`;
   const openclimbingUrl = `https://openclimbing.org${getOsmappLink(feature)}`;
 
   if (feature.tags.climbing) {
-    return `${osmUrl}<br>${osmappUrl}<br>${openclimbingUrl}`;
+    return `${osmappUrl}<br>${openclimbingUrl}`;
   } else {
-    return `${osmUrl}<br>${osmappUrl}`;
+    return `${osmappUrl}`;
   }
 };
 
@@ -35,7 +34,7 @@ export const getUploadData = (
   const filename = getFilename(feature, file, suffix);
   const osmUserUrl = `https://www.openstreetmap.org/user/${user.username}#id=${user.id}`;
   const date = file.date.toISOString().replace(/\.\d+Z$/, 'Z');
-  const osmUrls = getOsmUrls(feature);
+  const osmappUrls = getOsmappUrls(feature);
 
   // TODO construct description (categories)
   // TODO  each file must belong to at least one category that describes its content or function
@@ -66,10 +65,8 @@ export const getUploadData = (
           |name  = {{Label|P9149|link=-|capitalization=ucfirst}}
           |value = {{#property:P9149|from=M{{PAGEID}} }}&nbsp;[[File:OOjs UI icon edit-ltr-progressive.svg |frameless |text-top |10px |link={{fullurl:{{FULLPAGENAME}}}}#P9149|alt=Edit this on Structured Data on Commons|Edit this on Structured Data on Commons]]
         }}
-        {{Information field
-          |name= OpenStreetMap
-          |value= ${osmUrls}
-        }}
+        {{OSMLink |type=${feature.osmMeta.type} |OSM_ID=${feature.osmMeta.id} }}
+        {{Information field |name= OsmAPP |value= ${osmappUrls} }}
     }}
 
 =={{int:license-header}}==

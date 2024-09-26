@@ -72,10 +72,8 @@ const outDescription = `
           |name  = {{Label|P9149|link=-|capitalization=ucfirst}}
           |value = {{#property:P9149|from=M{{PAGEID}} }}&nbsp;[[File:OOjs UI icon edit-ltr-progressive.svg |frameless |text-top |10px |link={{fullurl:{{FULLPAGENAME}}}}#P9149|alt=Edit this on Structured Data on Commons|Edit this on Structured Data on Commons]]
         }}
-        {{Information field
-          |name= OpenStreetMap
-          |value= https://www.openstreetmap.org/way/255654888<br>https://osmapp.org/way/255654888
-        }}
+        {{OSMLink |type=way |OSM_ID=255654888 }}
+        {{Information field |name= OsmAPP |value= https://osmapp.org/way/255654888 }}
     }}
 
 =={{int:license-header}}==
