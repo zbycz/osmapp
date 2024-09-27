@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
@@ -38,7 +38,6 @@ import {
   getClimbingAreas,
 } from '../../services/climbing-areas/getClimbingAreas';
 import { DirectionsBox } from '../Directions/DirectionsBox';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -87,32 +86,11 @@ type IndexWithProvidersProps = {
   climbingAreas: Array<ClimbingArea>;
 };
 
-const useScrollToTopWhenRouteChanged = () => {
-  const scrollRef = useRef<Scrollbars>(null);
-  const router = useRouter();
-
-  useEffect(() => {
-    const routeChangeComplete = () => {
-      if (scrollRef?.current) {
-        scrollRef.current.scrollToTop();
-      }
-    };
-    router.events.on('routeChangeComplete', routeChangeComplete);
-
-    return () => {
-      router.events.off('routeChangeComplete', routeChangeComplete);
-    };
-  }, [router.events]);
-
-  return scrollRef;
-};
-
 const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMobileMode = useMobileMode();
   const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
   const isMounted = useIsClient();
-  const scrollRef = useScrollToTopWhenRouteChanged();
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
@@ -132,12 +110,9 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
       <Loading />
       {!directions && <SearchBox />}
       {directions && <DirectionsBox />}
-      {featureShown && !isMobileMode && isMounted && (
-        <FeaturePanelOnSide scrollRef={scrollRef} />
-      )}
-      {featureShown && isMobileMode && (
-        <FeaturePanelInDrawer scrollRef={scrollRef} />
-      )}
+      {featureShown && !isMobileMode && isMounted && <FeaturePanelOnSide />}
+
+      {featureShown && isMobileMode && <FeaturePanelInDrawer />}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
           <ClimbingCragDialog

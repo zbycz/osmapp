@@ -1962,13 +1962,6 @@
   resolved "https://registry.yarnpkg.com/@types/raf/-/raf-3.4.3.tgz#85f1d1d17569b28b8db45e16e996407a56b0ab04"
   integrity sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==
 
-"@types/react-custom-scrollbars@^4.0.13":
-  version "4.0.13"
-  resolved "https://registry.yarnpkg.com/@types/react-custom-scrollbars/-/react-custom-scrollbars-4.0.13.tgz#38f11b0922503a433374b005c7e32b5279d739d8"
-  integrity sha512-t+15reWgAE1jXlrhaZoxjuH/SQf+EG0rzAzSCzTIkSiP5CDT7KhoExNPwIa6uUxtPkjc3gdW/ry7GetLEwCfGA==
-  dependencies:
-    "@types/react" "*"
-
 "@types/react-dom@^18.3.0":
   version "18.3.0"
   resolved "https://registry.yarnpkg.com/@types/react-dom/-/react-dom-18.3.0.tgz#0cbc818755d87066ab6ca74fbedb2547d74a82b0"

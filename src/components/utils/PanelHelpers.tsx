@@ -1,4 +1,4 @@
-import React, { LegacyRef, useRef } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@mui/material';
@@ -36,28 +36,17 @@ export const PanelWrapper = styled.div`
   }
 `;
 
-type PanelScrollbarsProps = {
-  children: React.ReactNode;
-  scrollRef?: LegacyRef<Scrollbars>;
-};
-
-export const PanelScrollbars = ({
-  children,
-  scrollRef,
-}: PanelScrollbarsProps) => {
-  const newRef = useRef<Scrollbars>(null);
-  const ref = scrollRef || newRef;
+export const PanelScrollbars = ({ children }) => {
   const theme = useTheme();
 
   // @TODO refresh on panel height first update
-
   const {
     scrollElementRef,
     onScroll,
     ShadowContainer,
     ShadowTop,
     ShadowBottom,
-  } = useScrollShadow(undefined, ref);
+  } = useScrollShadow();
 
   return (
     <ShadowContainer>

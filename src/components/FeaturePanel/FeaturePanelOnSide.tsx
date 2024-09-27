@@ -1,19 +1,14 @@
-import React, { LegacyRef } from 'react';
+import React from 'react';
 
 import { PanelScrollbars, PanelWrapper } from '../utils/PanelHelpers';
 import { FeaturePanel } from './FeaturePanel';
-import { Scrollbars } from 'react-custom-scrollbars';
 
-type FeaturePanelOnSideProps = {
-  scrollRef: LegacyRef<Scrollbars>;
-};
-
-export const FeaturePanelOnSide = ({ scrollRef }: FeaturePanelOnSideProps) => {
-  return (
+export const FeaturePanelOnSide = () => (
+  <>
     <PanelWrapper>
-      <PanelScrollbars scrollRef={scrollRef}>
+      <PanelScrollbars>
         <FeaturePanel />
       </PanelScrollbars>
     </PanelWrapper>
-  );
-};
+  </>
+);
