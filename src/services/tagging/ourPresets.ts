@@ -1,5 +1,7 @@
 import { RawPresets } from './types/Presets';
 
+// until https://github.com/openstreetmap/id-tagging-schema/pull/1113 is merged
+
 export const ourFields = {
   'climbing/summit_log': {
     key: 'climbing:summit_log',
@@ -143,19 +145,22 @@ export const getOurTranslations = (lang) => ({
     presets: {
       presets: {
         'climbing/route_bottom': {
-          name: 'Climbing route (start)',
+          name:
+            lang === 'cs'
+              ? 'Lezecká cesta (začátek)'
+              : 'Climbing Route (start)',
           terms: 'rock climbing,climbing',
         },
         'climbing/route': {
-          name: 'Climbing route',
+          name: lang === 'cs' ? 'Lezecká cesta' : 'Climbing Route',
           terms: 'rock climbing,climbing',
         },
         'climbing/crag': {
-          name: 'Climbing crag',
+          name: lang === 'cs' ? 'Lezecký sektor (skála, věž)' : 'Climbing Crag',
           terms: 'rock climbing,climbing',
         },
         'climbing/area': {
-          name: 'Climbing area',
+          name: lang === 'cs' ? 'Lezecká oblast' : 'Climbing Area',
           terms: 'rock climbing,climbing',
         },
       },

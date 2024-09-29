@@ -1,16 +1,41 @@
-import { fetchText } from '../../../services/fetch';
-import { encodeUrl } from '../../../helpers/utils';
+import groupBy from 'lodash/groupBy';
+import { fetchJson } from '../../../services/fetch';
+import {
+  getOverpassUrl,
+  overpassGeomToGeojson,
+} from '../../../services/overpassSearch';
+import { intl } from '../../../services/intl';
 
 export interface LineInformation {
   ref: string;
   colour: string | undefined;
+  service: string | undefined;
+  osmType: string;
+  osmId: string;
 }
 
-export async function requestLines(
-  featureType: 'node' | 'way' | 'relation',
-  id: number,
-) {
-  const overpassQuery = `[out:csv(ref, colour; false; ';')];
+type WithTags = { tags: Record<string, string> };
+
+const filterRoutesByRef = (routes: WithTags[], ref: string) =>
+  routes.filter(({ tags }) => tags.ref === ref);
+
+const getTagValue = (
+  key: string,
+  tags: Record<string, string>,
+  routes: WithTags[],
+) => {
+  if (tags[key]) {
+    return tags[key];
+  }
+  const altElement = routes.find(({ tags }) => tags[key]);
+  if (altElement) {
+    return altElement[key];
+  }
+  return undefined;
+};
+
+export async function requestLines(featureType: string, id: number) {
+  const overpassQuery = `[out:json];
     ${featureType}(${id})-> .specific_feature;
 
     // Try to find stop_area relations containing the specific node and get their stops
@@ -20,27 +45,44 @@ export async function requestLines(
       rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
       // If no stop_area, find routes that directly include the specific node
       rel(bn.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
+    ) -> .routes;
+    // Get the master relation
+    (
+      .routes;
+      rel(br.routes);
     );
-    out;`;
+    out geom qt;`;
 
-  const response: string = await fetchText(
-    encodeUrl`https://overpass-api.de/api/interpreter?data=${overpassQuery}`,
-  );
+  const overpassGeom = await fetchJson(getOverpassUrl(overpassQuery));
+  const grouped = groupBy(overpassGeom.elements, ({ tags }) => tags.type);
+  const routeMasters = grouped.route_master || [];
+  const routes = grouped.route || [];
 
-  const resData = response
-    .split('\n')
-    .map((line) => {
-      const ref = line.split(';').slice(0, -1).join(';');
-      let colour = line.split(';')[line.split(';').length - 1];
+  const geoJsonFeatures = overpassGeomToGeojson({ elements: routes });
 
-      // set colour to undefined if it is empty
-      if (colour === '') colour = undefined;
-      return { ref, colour } as LineInformation;
+  const geoJson: GeoJSON.GeoJSON = {
+    type: 'FeatureCollection',
+    features: geoJsonFeatures,
+  };
+
+  const allRoutes = routeMasters
+    .map(({ type, id, tags }) => {
+      const directionRouteTags = filterRoutesByRef(routes, tags.ref);
+      const getVal = (key: string) =>
+        getTagValue(key, tags, directionRouteTags);
+
+      return {
+        ref: `${tags.ref || tags.name}`,
+        colour: getVal('colour'),
+        service: getVal('service') || getVal('route') || getVal('route_master'),
+        osmId: `${id}`,
+        osmType: type,
+      };
     })
-    .sort((a, b) => a.ref.localeCompare(b.ref, undefined, { numeric: true }))
-    .filter(({ ref }) => ref !== '');
+    .sort((a, b) => a.ref.localeCompare(b.ref, intl.lang, { numeric: true }));
 
-  return resData.filter(
-    (line, index) => resData.findIndex((l) => l.ref === line.ref) === index,
-  );
+  return {
+    geoJson,
+    routes: allRoutes,
+  };
 }

@@ -5,24 +5,28 @@ import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
-import { Feature, isInstant, OsmId } from '../../services/types';
+import { Feature, isInstant } from '../../services/types';
 import { useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 
 import { Slider, Wrapper } from './ImagePane/FeatureImages';
 import { Image } from './ImagePane/Image/Image';
 import { getInstantImage } from '../../services/images/getImageDefs';
+import { intl } from '../../services/intl';
+import Link from 'next/link';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
   margin-left: 12px;
 `;
+
 const HeadingRow = styled.div`
   display: flex;
   flex-direction: row;
   align-items: center;
   padding: 0 12px;
 `;
+
 const Container = styled.div`
   overflow: auto;
   flex-direction: column;
@@ -39,15 +43,17 @@ const Container = styled.div`
     }
   }
 `;
+
 const CragList = styled.div`
-  margin: 12px 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
 `;
-const Link = styled.a`
+
+const StyledLink = styled(Link)`
   text-decoration: none !important;
 `;
+
 const Content = styled.div`
   flex: 1;
 `;
@@ -58,14 +64,17 @@ const CragName = styled.div`
   font-size: 20px;
   color: ${({ theme }) => theme.palette.primary.main};
 `;
+
 const Attributes = styled.div`
   display: flex;
   gap: 8px;
 `;
+
 const NumberOfRoutes = styled.div`
   font-size: 13px;
   color: ${({ theme }) => theme.palette.secondary.main};
 `;
+
 const Header = ({
   imagesCount,
   label,
@@ -103,11 +112,6 @@ const Gallery = ({ images }) => {
   );
 };
 
-const getOnClickWithHash = (apiId: OsmId) => (e) => {
-  e.preventDefault();
-  Router.push(`/${getUrlOsmId(apiId)}${window.location.hash}`);
-};
-
 const CragItem = ({ feature }: { feature: Feature }) => {
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
@@ -119,10 +123,16 @@ const CragItem = ({ feature }: { feature: Feature }) => {
       image: getInstantImage(def),
     })) ?? [];
 
+  const getOnClickWithHash = (e) => {
+    e.preventDefault();
+    Router.push(`/${getUrlOsmId(feature.osmMeta)}${window.location.hash}`);
+  };
+
   return (
-    <Link
+    <StyledLink
       href={`/${getUrlOsmId(feature.osmMeta)}`}
-      onClick={getOnClickWithHash(feature.osmMeta)}
+      locale={intl.lang}
+      onClick={getOnClickWithHash}
       onMouseEnter={mobileMode ? undefined : handleHover}
       onMouseLeave={() => setPreview(null)}
     >
@@ -134,7 +144,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
         />
         {images.length ? <Gallery images={images} /> : null}
       </Container>
-    </Link>
+    </StyledLink>
   );
 };
 
@@ -149,7 +159,7 @@ export const CragsInArea = () => {
   }
 
   return (
-    <Box mt={4}>
+    <Box mb={2}>
       <CragList>
         {feature.memberFeatures.map((item) => (
           <CragItem key={getOsmappLink(item)} feature={item} />

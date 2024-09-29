@@ -1,71 +1,78 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/router';
+import groupBy from 'lodash/groupBy';
+import { useQuery } from 'react-query';
+import React from 'react';
 import { Typography } from '@mui/material';
 import { LineInformation, requestLines } from './requestRoutes';
-import { PublicTransportWrapper } from './PublicTransportWrapper';
+import { PublicTransportCategory } from './PublicTransportWrapper';
 import { FeatureTags } from '../../../services/types';
-import { LineNumber } from './LineNumber';
 import { DotLoader } from '../../helpers';
+import { sortByReference } from './helpers';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { getOverpassSource } from '../../../services/mapStorage';
 
 interface PublicTransportProps {
   tags: FeatureTags;
 }
 
-const useLoadingState = () => {
-  const [routes, setRoutes] = useState<LineInformation[]>([]);
-  const [error, setError] = useState<string>();
-  const [loading, setLoading] = useState(true);
+const categories = [
+  'tourism',
+  'commuter',
+  'regional',
+  'long_distance',
+  'high_speed',
+  'night',
+  'car',
+  'car_shuttle',
+  'bus',
+  'unknown',
+];
 
-  const finishRoutes = useCallback((payload) => {
-    setLoading(false);
-    setRoutes(payload);
-  }, []);
+const PublicTransportDisplay = ({ routes }) => {
+  const grouped = groupBy(routes, ({ service }) => {
+    const base = service?.split(';')[0];
+    return categories.includes(base) ? base : 'unknown';
+  });
+  const entries = Object.entries(grouped) as [string, LineInformation[]][];
+  const sorted = sortByReference(entries, categories, ([category]) => category);
 
-  const startRoutes = useCallback(() => {
-    setLoading(true);
-    setRoutes([]);
-    setError(undefined);
-  }, []);
-
-  const failRoutes = useCallback(() => {
-    setError('Could not load routes');
-    setLoading(false);
-  }, []);
-
-  return { routes, error, loading, startRoutes, finishRoutes, failRoutes };
+  return (
+    <>
+      {sorted.map(([category, lines]) => (
+        <PublicTransportCategory
+          key={category}
+          category={category}
+          lines={lines}
+          showHeading={entries.length > 1}
+        />
+      ))}
+    </>
+  );
 };
 
 const PublicTransportInner = () => {
-  const router = useRouter();
+  const { feature } = useFeatureContext();
+  const { id, type } = feature.osmMeta;
 
-  const { routes, error, loading, startRoutes, finishRoutes, failRoutes } =
-    useLoadingState();
+  const { data, status } = useQuery('publictransport', () =>
+    requestLines(type, Number(id)),
+  );
 
-  useEffect(() => {
-    (async () => {
-      startRoutes();
-      const lines = await requestLines(
-        router.query.all[0] as any,
-        Number(router.query.all[1]),
-      ).catch(failRoutes);
-      finishRoutes(lines);
-    })();
-  }, [failRoutes, finishRoutes, router.query.all, startRoutes]);
+  React.useEffect(() => {
+    if (!data) {
+      return;
+    }
+
+    const source = getOverpassSource();
+    source?.setData(data.geoJson);
+  }, [data]);
 
   return (
     <div>
-      {loading ? (
-        <DotLoader />
-      ) : (
-        <PublicTransportWrapper>
-          {routes.map((line) => (
-            <LineNumber key={line.ref} name={line.ref} color={line.colour} />
-          ))}
-        </PublicTransportWrapper>
-      )}
-      {error && (
+      {(status === 'loading' || status === 'idle') && <DotLoader />}
+      {status === 'success' && <PublicTransportDisplay routes={data.routes} />}
+      {status === 'error' && (
         <Typography color="secondary" paragraph>
-          Error: {error}
+          Error
         </Typography>
       )}
     </div>
@@ -82,5 +89,5 @@ export const PublicTransport: React.FC<PublicTransportProps> = ({ tags }) => {
     return null;
   }
 
-  return PublicTransportInner();
+  return <PublicTransportInner />;
 };

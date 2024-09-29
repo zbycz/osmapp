@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
@@ -25,13 +25,20 @@ import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog'
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
-import { useMobileMode } from '../helpers';
+import { useIsClient, useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
 import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
 import Error from 'next/error';
+import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
+import {
+  ClimbingArea,
+  getClimbingAreas,
+} from '../../services/climbing-areas/getClimbingAreas';
+import { DirectionsBox } from '../Directions/DirectionsBox';
+import { Scrollbars } from 'react-custom-scrollbars';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -76,10 +83,36 @@ const useUpdateViewFromHash = () => {
   }, [setView]);
 };
 
-const IndexWithProviders = () => {
+type IndexWithProvidersProps = {
+  climbingAreas: Array<ClimbingArea>;
+};
+
+const useScrollToTopWhenRouteChanged = () => {
+  const scrollRef = useRef<Scrollbars>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const routeChangeComplete = () => {
+      if (scrollRef?.current) {
+        scrollRef.current.scrollToTop();
+      }
+    };
+    router.events.on('routeChangeComplete', routeChangeComplete);
+
+    return () => {
+      router.events.off('routeChangeComplete', routeChangeComplete);
+    };
+  }, [router.events]);
+
+  return scrollRef;
+};
+
+const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMobileMode = useMobileMode();
   const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
+  const isMounted = useIsClient();
+  const scrollRef = useScrollToTopWhenRouteChanged();
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
@@ -92,12 +125,19 @@ const IndexWithProviders = () => {
   const routeNumber =
     router.query.all?.[3] === 'route' ? router.query.all?.[4] : undefined;
 
+  const directions = router.query.all?.[0] === 'directions' && !featureShown;
+
   return (
     <>
       <Loading />
-      <SearchBox />
-      {featureShown && !isMobileMode && <FeaturePanelOnSide />}
-      {featureShown && isMobileMode && <FeaturePanelInDrawer />}
+      {!directions && <SearchBox />}
+      {directions && <DirectionsBox />}
+      {featureShown && !isMobileMode && isMounted && (
+        <FeaturePanelOnSide scrollRef={scrollRef} />
+      )}
+      {featureShown && isMobileMode && (
+        <FeaturePanelInDrawer scrollRef={scrollRef} />
+      )}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
           <ClimbingCragDialog
@@ -109,6 +149,7 @@ const IndexWithProviders = () => {
       <HomepagePanel />
       {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
+      {climbingAreas && <ClimbingAreasPanel areas={climbingAreas} />}
       <Map />
       <TitleAndMetaTags />
     </>
@@ -119,12 +160,14 @@ type Props = {
   featureFromRouter: Feature | '404' | null;
   initialMapView: View;
   cookies: Record<string, string>;
+  climbingAreas: Array<ClimbingArea>;
 };
 
 const App: NextPage<Props> = ({
   featureFromRouter,
   initialMapView,
   cookies,
+  climbingAreas,
 }) => {
   const mapView = getMapViewFromHash() || initialMapView;
   const queryClient = new QueryClient();
@@ -145,7 +188,7 @@ const App: NextPage<Props> = ({
               <StarsProvider>
                 <EditDialogProvider /* TODO supply router.query */>
                   <QueryClientProvider client={queryClient}>
-                    <IndexWithProviders />
+                    <IndexWithProviders climbingAreas={climbingAreas} />
                   </QueryClientProvider>
                 </EditDialogProvider>
               </StarsProvider>
@@ -159,8 +202,19 @@ const App: NextPage<Props> = ({
 App.getInitialProps = async (ctx: NextPageContext) => {
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
 
+  // TODO this code will have to be refactored. The idea is, that inner part of
+  //  IndexWithProviders will be moved to _app.tsx and we will use proper
+  //  next.js routing for each page.
+  //  Catchall route will be used only for /mode* /way* /relation*
+  //  This will allow us to use getServerSideProps eg for /climbing-areas
+  let climbingAreas = null;
+  if (ctx.pathname === '/climbing-areas') {
+    climbingAreas = await getClimbingAreas();
+  }
+
   const cookies = nextCookies(ctx);
-  const featureFromRouter = await getInitialFeature(ctx);
+  const featureFromRouter =
+    ctx.query.all?.[0] === 'directions' ? null : await getInitialFeature(ctx);
   if (ctx.res) {
     if (featureFromRouter === '404' || featureFromRouter?.error === '404') {
       ctx.res.statusCode = 404;
@@ -170,7 +224,7 @@ App.getInitialProps = async (ctx: NextPageContext) => {
   }
 
   const initialMapView = await getInitialMapView(ctx);
-  return { featureFromRouter, initialMapView, cookies };
+  return { featureFromRouter, initialMapView, cookies, climbingAreas };
 };
 
 export default App;

@@ -2,11 +2,13 @@ import React, { createContext, useContext } from 'react';
 import { usePersistedState } from './usePersistedState';
 import { GradeSystem } from '../FeaturePanel/Climbing/utils/grades/gradeData';
 import { TickStyle } from '../FeaturePanel/Climbing/types';
+import { isMobileDevice } from '../helpers';
 
 type UserSettingsType = {
   'climbing.gradeSystem': GradeSystem;
   'climbing.isGradesOnPhotosVisible': boolean;
   'climbing.defaultClimbingStyle': TickStyle;
+  'climbing.selectRoutesByScrolling': boolean;
 };
 
 type UserSettingsContextType = {
@@ -19,12 +21,13 @@ const initialUserSettings: UserSettingsType = {
   'climbing.gradeSystem': null,
   'climbing.isGradesOnPhotosVisible': true,
   'climbing.defaultClimbingStyle': 'OS',
+  'climbing.selectRoutesByScrolling': isMobileDevice(),
 };
 
 export const UserSettingsContext =
   createContext<UserSettingsContextType>(undefined);
 
-export const UserSettingsProvider = ({ children }) => {
+export const UserSettingsProvider: React.FC = ({ children }) => {
   const [userSettings, setUserSettings] = usePersistedState<UserSettingsType>(
     'userSettings',
     initialUserSettings,

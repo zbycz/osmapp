@@ -77,6 +77,16 @@ export const clearFeatureCache = (apiId) => {
   removeFetchCache(getOsmHistoryUrl(apiId));
 };
 
+const getCountryCode = async (feature: Feature): Promise<string | null> => {
+  try {
+    return await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
+  } catch (e) {
+    console.warn('countryCode left empty – resolveCountryCode():', e); // eslint-disable-line no-console
+    Sentry.captureException(e, { extra: { feature } });
+  }
+  return null;
+};
+
 const fetchFeatureWithCenter = async (apiId: OsmId) => {
   const [element, center] = await Promise.all([
     getOsmPromise(apiId),
@@ -91,11 +101,9 @@ const fetchFeatureWithCenter = async (apiId: OsmId) => {
   }
 
   if (feature.center) {
-    try {
-      feature.countryCode = await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
-    } catch (e) {
-      console.warn('countryCode left empty – resolveCountryCode():', e); // eslint-disable-line no-console
-      Sentry.captureException(e, { extra: { feature } });
+    const countryCode = await getCountryCode(feature);
+    if (countryCode) {
+      feature.countryCode = countryCode;
     }
   }
 
@@ -128,7 +136,7 @@ const getMemberFeatures = (members: Feature['members'], map) => {
         feature.osmMeta.role = role;
         feature.center = element.center
           ? [element.center.lon, element.center.lat] // from overpass "out center"
-          : undefined;
+          : feature.center;
         return feature;
       })
       .filter(Boolean) ?? []
@@ -169,6 +177,14 @@ const addMemberFeaturesToArea = async (relation: Feature) => {
       return crag;
     },
   );
+
+  // TODO merge this with osmToFeature()
+  if (relation.center) {
+    const countryCode = await getCountryCode(relation);
+    if (countryCode) {
+      relation.countryCode = countryCode;
+    }
+  }
 
   return { ...relation, memberFeatures };
 };

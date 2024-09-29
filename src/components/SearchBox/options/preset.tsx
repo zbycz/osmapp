@@ -12,7 +12,13 @@ import { PresetOption } from '../types';
 import { t } from '../../../services/intl';
 import { highlightText, IconPart } from '../utils';
 
-let presetsForSearch;
+let presetsForSearch: {
+  key: string;
+  name: string;
+  tags: Record<string, string>;
+  tagsAsOneString: string;
+  texts: string[];
+}[];
 const getPresetsForSearch = async () => {
   if (presetsForSearch) {
     return presetsForSearch;
@@ -43,7 +49,7 @@ const getPresetsForSearch = async () => {
   return presetsForSearch;
 };
 
-const num = (text, inputValue) =>
+const num = (text: string, inputValue: string) =>
   // TODO match function not always good - consider text.toLowerCase().includes(inputValue.toLowerCase());
   match(text, inputValue, {
     insideWords: true,
@@ -55,7 +61,7 @@ type PresetOptions = Promise<{
   after: PresetOption[];
 }>;
 
-export const getPresetOptions = async (inputValue): PresetOptions => {
+export const getPresetOptions = async (inputValue: string): PresetOptions => {
   if (inputValue.length <= 2) {
     return { before: [], after: [] };
   }
@@ -69,11 +75,17 @@ export const getPresetOptions = async (inputValue): PresetOptions => {
 
   const nameMatches = results
     .filter((result) => result.name > 0)
-    .map((result) => ({ preset: result }));
+    .map((result) => ({
+      type: 'preset' as const,
+      preset: result,
+    }));
 
   const rest = results
     .filter((result) => result.name === 0 && result.sum > 0)
-    .map((result) => ({ preset: result }));
+    .map((result) => ({
+      type: 'preset' as const,
+      preset: result,
+    }));
 
   const allResults = [...nameMatches, ...rest];
   const before = allResults.slice(0, 2);
@@ -82,7 +94,7 @@ export const getPresetOptions = async (inputValue): PresetOptions => {
   return { before, after };
 };
 
-export const renderPreset = (preset, inputValue) => {
+export const renderPreset = ({ preset }: PresetOption, inputValue: string) => {
   const { name } = preset.presetForSearch;
   const additionalText =
     preset.name === 0

@@ -75,12 +75,7 @@ const addOverlaysToStyle = (
 };
 
 export const useUpdateStyle = createMapEffectHook(
-  (
-    map: Map,
-    activeLayers: string[],
-    userLayers: Layer[],
-    mapLoaded: boolean,
-  ) => {
+  (map, activeLayers: string[], userLayers: Layer[], mapLoaded: boolean) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
 

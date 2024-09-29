@@ -1,4 +1,5 @@
 import { fetchJson } from '../../../services/fetch';
+import { isValidLayerUrl } from '../helpers';
 
 export type Category =
   | 'photo'
@@ -157,5 +158,6 @@ export async function loadLayer() {
 
       return { ...properties, bbox: boxes };
     })
-    .filter(({ type }) => type === 'tms') as LayerIndex[];
+    .filter(({ type }) => type === 'tms')
+    .filter(({ url }) => isValidLayerUrl(url, false)) as LayerIndex[];
 }

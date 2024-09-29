@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-export const nl2br = (text) =>
+export const nl2br = (text: string) =>
   text.split('\n').map((line, idx) => (
     // eslint-disable-next-line react/no-array-index-key
     <Fragment key={idx}>

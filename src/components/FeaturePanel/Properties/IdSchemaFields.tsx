@@ -54,7 +54,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     ));
   }
 
-  if (tagsForField?.length >= 1) {
+  if (tagsForField?.length > 1 || (!v && tagsForField.length >= 1)) {
     return (
       <>
         {tagsForField.map(({ key, value: value2 }) => (
@@ -68,13 +68,14 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return renderValue(tagsForField[0].key, tagsForField[0].value);
   }
 
-  return renderValue(k, v);
+  // `v` should not be undefined but maybe there is a bug
+  return renderValue(k, v ?? 'Value could not be determined.');
 };
 
 // TODO some fields eg. oneway/bicycle doesnt have units in brackets
 const unitRegExp = / \((.+)\)$/i;
-const removeUnits = (label) => label.replace(unitRegExp, '');
-const addUnits = (label, value: string | ReactNode) => {
+const removeUnits = (label: string) => label.replace(unitRegExp, '');
+const addUnits = (label: string, value: string | ReactNode) => {
   if (typeof value !== 'string') return value;
   const unit = label.match(unitRegExp);
   if (!unit) return value;

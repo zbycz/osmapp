@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import { FeatureHeading } from './FeatureHeading';
 import { useToggleState } from '../helpers';
@@ -19,16 +19,20 @@ import { Runways } from './Runways/Runways';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
 import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
-import { RouteListInPanel } from './Climbing/RouteList/RouteList';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box } from '@mui/material';
+import { ClimbingGuideInfo } from './Climbing/ClimbingGuideInfo';
 
 const Flex = styled.div`
   flex: 1;
 `;
 
-export const FeaturePanel = () => {
+type FeaturePanelProps = {
+  headingRef?: React.Ref<HTMLDivElement>;
+};
+
+export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   const { feature } = useFeatureContext();
   const [advanced, setAdvanced] = useState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
@@ -41,8 +45,8 @@ export const FeaturePanel = () => {
   }
 
   // Different components are shown for different types of features
-  // Conditional components should have if(feature.tags.xxx) check at the beggining
-  // All components should have margin-bottoms to accomodate missing parts
+  // Conditional components should have if(feature.tags.xxx) check at the beginning
+  // All components should have margin-bottoms to accommodate missing parts
   const isClimbingCrag = tags.climbing === 'crag';
 
   const PropertiesComponent = () => (
@@ -52,8 +56,9 @@ export const FeaturePanel = () => {
     <>
       <PanelContent>
         <PanelSidePadding>
-          <FeatureHeading />
+          <FeatureHeading ref={headingRef} />
           <ClimbingRouteGrade />
+          <ClimbingGuideInfo />
           <ParentLink />
           <ClimbingRestriction />
 

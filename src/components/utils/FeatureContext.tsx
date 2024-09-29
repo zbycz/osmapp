@@ -10,11 +10,13 @@ import Cookies from 'js-cookie';
 import { Feature } from '../../services/types';
 import { useBoolState } from '../helpers';
 import { publishDbgObject } from '../../utils';
+import { setLastFeature } from '../../services/lastFeatureStorage';
 
 export type FeatureContextType = {
   feature: Feature | null;
   featureShown: boolean;
-  setFeature: (feature: Feature | null) => void; // setFeature - used only for skeletons (otherwise it gets loaded by router)
+  /** Used only for skeletons (otherwise it gets loaded by router) */
+  setFeature: (feature: Feature | null) => void;
   homepageShown: boolean;
   showHomepage: () => void;
   hideHomepage: () => void;
@@ -63,6 +65,10 @@ export const FeatureProvider = ({
     Cookies.set('hideHomepage', 'yes', { expires: 30, path: '/' });
   };
 
+  if (feature) {
+    setLastFeature(feature); // cleared only in onClosePanel
+  }
+
   const value: FeatureContextType = {
     feature,
     featureShown,
@@ -81,3 +87,5 @@ export const FeatureProvider = ({
 };
 
 export const useFeatureContext = () => useContext(FeatureContext);
+
+export type SetFeature = React.Dispatch<React.SetStateAction<Feature>>;

@@ -1,5 +1,8 @@
 // identifier should be in the form: foldername.messageid.
 
+import { t } from '../services/intl';
+import React from 'react';
+
 export default {
   loading: 'Loading',
   error: 'Error',
@@ -42,6 +45,10 @@ export default {
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
+
+  'climbing.guideinfo.title': 'A free climbing guide openclimbing.org',
+  'climbing.guideinfo.description':
+    'OpenClimbing.org is an open platform for climbing guides and maps. Topos and photos are stored in OpenStreetMap and Wikipedia projects, so they can be edited by anyone.',
 
   'project.openclimbing.description': 'Free wiki climbing map',
   'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
@@ -88,6 +95,16 @@ export default {
   'searchbox.overpass_error': 'Error fetching results. __message__',
   'searchbox.overpass_custom_query': 'custom query',
 
+  'directions.get_directions': 'Get Directions',
+  'directions.form.starting_point': 'Starting point',
+  'directions.form.destination': 'Destination',
+  'directions.edit_destinations': 'Edit destinations',
+  'directions.powered_by': 'Directions powered by __link__.',
+  'directions.result.time': 'Time',
+  'directions.result.distance': 'Distance',
+  'directions.result.ascent': 'Ascent',
+  'directions.error.too_far': 'The destination is too far from the road network. Please, choose a closer destination.',
+
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
   'featurepanel.favorites_save_button': 'Save to favorites',
@@ -117,9 +134,13 @@ export default {
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
   'featurepanel.climbing_restriction': 'Climbing restriction',
 
+  'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
   'opening_hours.now_closed_but_today': 'Closed now - Open __todayTime__',
   'opening_hours.today_closed': 'Closed today',
+  'opening_hours.opens_soon': 'Opens soon',
+  'opening_hours.opens_soon_today': 'Opens soon: __todayTime__',
+  'opening_hours.closes_soon': 'Closes soon',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',
   'opening_hours.editor.closed': 'closed',
   'opening_hours.editor.create_advanced': 'You may create more detailed opening hours in <link>YoHours tool</link>.',
@@ -206,6 +227,7 @@ export default {
   'layerswitcher.category_osmbasedmap': 'Normal layer',
   'layerswitcher.compatible_license': 'License compatible for editing OpenStreetMap',
   'layerswitcher.layers_in_area': 'Filter layers in this area',
+  'layerswitcher.explaination': 'Please insert {z},{x},{y} tokens or {bbox-epsg-3857}',
 
   'layers.basic': 'Basic',
   'layers.makina_africa': 'OpenPlaceGuide Africa',
@@ -225,6 +247,18 @@ export default {
   'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
   'climbingpanel.create_first_node': 'Click on the beginning of the route',
   'climbingpanel.create_next_node': 'Follow direction of the route',
+
+  'publictransport.tourism': 'Touristic trains',
+  'publictransport.night': 'Night trains',
+  'publictransport.car_shuttle': 'Car shuttles',
+  'publictransport.car': 'Car trains',
+  'publictransport.commuter': 'Commuter trains',
+  'publictransport.regional': 'Regional trains',
+  'publictransport.long_distance': 'Long distance trains',
+  'publictransport.high_speed': 'High speed trains',
+  'publictransport.bus': 'Bus',
+  'publictransport.unknown': 'Unknown type',
+
   'climbingpanel.draw_route': 'Draw route',
 
   'climbingpanel.show_route_detail': 'Show route detail',
@@ -234,4 +268,9 @@ export default {
   'runway.runway': 'Runway',
   'runway.size': 'Length (m) - Width (m)',
   'runway.surface': 'Surface',
+
+  'climbingareas.link': 'List of all Climbing areas',
+  'climbingareas.title': 'Climbing areas',
+  'climbingareas.area': 'Area',
+  'climbingareas.num_of_crags': 'Number of crags',
 };

@@ -1,5 +1,5 @@
 import { GradeSystem } from './utils/grades/gradeData';
-import { Feature } from '../../../services/types';
+import { Feature, FeatureTags } from '../../../services/types';
 
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling' | 'unfinished';
 
@@ -35,12 +35,9 @@ export type RouteDifficulty = {
 export type ClimbingRoute = {
   id: string;
   difficulty?: RouteDifficulty; // @TODO RouteDifficulty[]
-  length?: string;
-  author?: string;
-  name?: string;
-  description?: string;
   paths: { [photoUrl: string]: PathPoints };
-  feature?: Feature;
+  feature: Feature;
+  updatedTags: FeatureTags;
   photoToKeyMap?: Record<string, string>;
 };
 

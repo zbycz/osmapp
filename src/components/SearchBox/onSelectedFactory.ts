@@ -1,4 +1,4 @@
-import Router from 'next/router';
+import Router, { NextRouter } from 'next/router';
 import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
 import { addFeatureCenterToCache } from '../../services/osmApi';
 import { getOverpassSource } from '../../services/mapStorage';
@@ -6,19 +6,29 @@ import { performOverpassSearch } from '../../services/overpassSearch';
 import { t } from '../../services/intl';
 import { fitBounds } from './utils';
 import { getSkeleton } from './onHighlightFactory';
-import { SnackbarContextType } from '../utils/SnackbarContext';
+import { ShowToast } from '../utils/SnackbarContext';
 import { addOverpassQueryHistory } from './options/overpass';
+import { Feature } from '../../services/types';
+import { Bbox } from '../utils/MapStateContext';
+import {
+  GeocoderOption,
+  Option,
+  OverpassOption,
+  PresetOption,
+  StarOption,
+} from './types';
+import { osmOptionSelected } from './options/openstreetmap';
 
 const overpassOptionSelected = (
-  option,
-  setOverpassLoading,
-  bbox,
-  showToast: SnackbarContextType['showToast'],
+  option: OverpassOption | PresetOption,
+  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  bbox: Bbox,
+  showToast: ShowToast,
 ) => {
   const tagsOrQuery =
-    option.preset?.presetForSearch.tags ??
-    option.overpass.tags ??
-    option.overpass.query;
+    option.type === 'preset'
+      ? option.preset?.presetForSearch.tags
+      : (option.overpass.tags ?? option.overpass.query);
 
   const timeout = setTimeout(() => {
     setOverpassLoading(true);
@@ -31,13 +41,14 @@ const overpassOptionSelected = (
       showToast(content);
       getOverpassSource()?.setData(geojson);
 
-      if (option.overpass?.query) {
+      if (option.type === 'overpass') {
         addOverpassQueryHistory(option.overpass.query);
       }
     })
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
       const content = t('searchbox.overpass_error', { message });
+      console.error(e); // eslint-disable-line no-console
       showToast(content, 'error');
     })
     .finally(() => {
@@ -46,13 +57,18 @@ const overpassOptionSelected = (
     });
 };
 
-const starOptionSelected = (option) => {
-  const apiId = getApiId(option.star.shortId);
+const starOptionSelected = ({ star }: StarOption) => {
+  const apiId = getApiId(star.shortId);
   Router.push(`/${getUrlOsmId(apiId)}`);
 };
 
-const geocoderOptionSelected = (option, setFeature) => {
-  if (!option?.geometry?.coordinates) return;
+type SetFeature = (feature: Feature | null) => void;
+
+const geocoderOptionSelected = (
+  option: GeocoderOption,
+  setFeature: SetFeature,
+) => {
+  if (!option?.geocoder.geometry?.coordinates) return;
 
   const skeleton = getSkeleton(option);
   console.log('Search item selected:', { location: option, skeleton }); // eslint-disable-line no-console
@@ -64,20 +80,40 @@ const geocoderOptionSelected = (option, setFeature) => {
   Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };
 
+type OnSelectedFactoryProps = {
+  setFeature: SetFeature;
+  setPreview: SetFeature;
+  bbox: Bbox;
+  showToast: ShowToast;
+  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  router: NextRouter;
+};
+
 export const onSelectedFactory =
-  (setFeature, setPreview, bbox, showToast, setOverpassLoading) =>
-  (_, option) => {
+  ({
+    setFeature,
+    setPreview,
+    bbox,
+    showToast,
+    setOverpassLoading,
+    router,
+  }: OnSelectedFactoryProps) =>
+  (_: never, option: Option) => {
     setPreview(null); // it could be stuck from onHighlight
 
-    if (option.star) {
-      starOptionSelected(option);
-      return;
+    switch (option.type) {
+      case 'star':
+        starOptionSelected(option);
+        break;
+      case 'overpass':
+      case 'preset':
+        overpassOptionSelected(option, setOverpassLoading, bbox, showToast);
+        break;
+      case 'geocoder':
+        geocoderOptionSelected(option, setFeature);
+        break;
+      case 'osm':
+        osmOptionSelected(option, router);
+        break;
     }
-
-    if (option.overpass || option.preset) {
-      overpassOptionSelected(option, setOverpassLoading, bbox, showToast);
-      return;
-    }
-
-    geocoderOptionSelected(option, setFeature);
   };

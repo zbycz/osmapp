@@ -7,14 +7,19 @@ import { getPoiClass } from '../../../services/getPoiClass';
 import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
+import { Theme } from '../../../helpers/theme';
+import { GeocoderOption, Option } from '../types';
+import { View } from '../../utils/MapStateContext';
+import { LonLat } from '../../../services/types';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
+const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
 
-const getApiUrl = (inputValue, view) => {
+const getApiUrl = (inputValue: string, view: View) => {
   const [zoom, lat, lon] = view;
-  const lvl = Math.max(0, Math.min(16, Math.round(zoom)));
+  const lvl = Math.max(0, Math.min(16, Math.round(parseFloat(zoom))));
   const q = encodeURIComponent(inputValue);
-  const lang = intl.lang in PHOTON_SUPPORTED_LANGS ? intl.lang : 'default';
+  const lang = intl.lang in PHOTON_SUPPORTED_LANGS ? intl.lang : DEFAULT;
   return `https://photon.komoot.io/api/?q=${q}&lon=${lon}&lat=${lat}&zoom=${lvl}&lang=${lang}`;
 };
 
@@ -25,19 +30,33 @@ export const useInputValueState = () => {
   const [inputValue, setInputValue] = useState('');
   return {
     inputValue,
-    setInputValue: useCallback((value) => {
+    setInputValue: useCallback((value: string) => {
       currentInput = value;
       setInputValue(value);
     }, []),
   };
 };
 
+type FetchGeocoderOptionsProps = {
+  inputValue: string;
+  view: View;
+  setOptions: React.Dispatch<React.SetStateAction<Option[]>>;
+  before: Option[];
+  after: Option[];
+};
+
 export const fetchGeocoderOptions = debounce(
-  async (inputValue, view, setOptions, before, after) => {
+  async ({
+    inputValue,
+    view,
+    setOptions,
+    before,
+    after,
+  }: FetchGeocoderOptionsProps) => {
     try {
-      const searchResponse = await fetchJson(getApiUrl(inputValue, view), {
+      const searchResponse = (await fetchJson(getApiUrl(inputValue, view), {
         abortableQueueName: GEOCODER_ABORTABLE_QUEUE,
-      });
+      })) as { features: GeocoderOption['geocoder'][] };
 
       // This blocks rendering of old result, when user already changed input
       if (inputValue !== currentInput) {
@@ -46,7 +65,14 @@ export const fetchGeocoderOptions = debounce(
 
       const options = searchResponse?.features || [];
 
-      setOptions([...before, ...options, ...after]);
+      setOptions([
+        ...before,
+        ...options.map((feature) => ({
+          type: 'geocoder' as const,
+          geocoder: feature,
+        })),
+        ...after,
+      ]);
     } catch (e) {
       if (!(e instanceof DOMException && e.name === 'AbortError')) {
         throw e;
@@ -123,8 +149,13 @@ export const buildPhotonAddress = ({
   },
  ];
  */
-export const renderGeocoder = (option, currentTheme, inputValue, mapCenter) => {
-  const { geometry, properties } = option;
+export const renderGeocoder = (
+  { geocoder }: GeocoderOption,
+  currentTheme: Theme,
+  inputValue: string,
+  mapCenter: LonLat,
+) => {
+  const { geometry, properties } = geocoder;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 
   const distance = getHumanDistance(mapCenter, geometry.coordinates);

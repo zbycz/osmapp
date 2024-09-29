@@ -15,8 +15,12 @@ export default {
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
 
-  'project.openclimbing.description': 'Otevřená lezecká wiki-mapa',
-  'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
+  'project.openclimbing.description': 'Otevřený lezecký průvodce',
+  'project.openclimbing.serpDescription': 'Otevřený lezecký průvodce s vyznačením cest. Postaveno na projektech OpenStreetMap a Wikipedie.',
+
+  'climbing.guideinfo.title': 'Otevřený lezecký průvodce openclimbing.org',
+  'climbing.guideinfo.description':
+    'OpenClimbing.org je otevřená platforma pro lezecké průvodce a mapy. Vyznačené cesty a fotky se ukládají do projektů OpenStreetMap a Wikipedie, takže je může kdykoliv editovat.',
 
   'install.button': 'Stáhnout aplikaci',
   'install.tabs_aria_label': 'Vyberte si svou platformu',
@@ -56,6 +60,16 @@ export default {
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
   'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
   'searchbox.overpass_custom_query': 'vlastní dotaz',
+
+  'directions.get_directions': 'Vyhledat trasu',
+  'directions.form.starting_point': 'Začátek trasy',
+  'directions.form.destination': 'Cíl',
+  'directions.edit_destinations': 'Upravit zadání',
+  'directions.powered_by': 'Vyhledávání tras dodává systém __link__.',
+  'directions.result.time': 'Čas',
+  'directions.result.distance': 'Vzdálenost',
+  'directions.result.ascent': 'Stoupání',
+  'directions.error.too_far': 'Cíl je příliš daleko od silniční sítě. Prosím, zvolte jiný cíl.',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',
@@ -177,4 +191,9 @@ export default {
   'layers.bingSat': 'Letecká Bing',
   'layers.bike': 'Cyklo',
   'layers.climbing': 'Sportovní lezení',
+
+  'climbingareas.link': 'Seznam všech lezeckých oblastí',
+  'climbingareas.title': 'Lezecké oblasti',
+  'climbingareas.area': 'Oblast',
+  'climbingareas.num_of_crags': 'Počet skal',
 };

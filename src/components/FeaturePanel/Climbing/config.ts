@@ -26,3 +26,7 @@ export const useConfig = () => {
     pathStrokeWidth: 3.5 / photoZoom.scale,
   };
 };
+
+export const CLIMBING_ROUTE_ROW_HEIGHT = 50;
+export const DIALOG_TOP_BAR_HEIGHT = 56;
+export const SPLIT_PANE_DEFAULT_HEIGHT = '60vh';

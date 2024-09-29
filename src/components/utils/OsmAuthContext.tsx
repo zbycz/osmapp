@@ -10,6 +10,7 @@ type OsmAuthType = {
   loggedIn: boolean;
   osmUser: string;
   userImage: string;
+  loading: boolean;
   handleLogin: () => void;
   handleLogout: () => void;
 };
@@ -22,22 +23,28 @@ const useOsmUserState = (cookies) => {
 export const OsmAuthContext = createContext<OsmAuthType>(undefined);
 
 export const OsmAuthProvider = ({ children, cookies }) => {
-  const { showToast } = useSnackbar();
-
+  const [loading, setLoading] = useState(false);
   const [osmUser, setOsmUser] = useOsmUserState(cookies);
+
+  const { showToast } = useSnackbar();
 
   const successfulLogin = (user: OsmUser) => {
     setOsmUser(user);
     showToast(`Logged in as ${user.name}`, 'success');
+    setLoading(false);
   };
 
-  const handleLogin = () => loginAndfetchOsmUser().then(successfulLogin);
+  const handleLogin = () => {
+    setLoading(true);
+    loginAndfetchOsmUser().then(successfulLogin);
+  };
   const handleLogout = () => osmLogout().then(() => setOsmUser(undefined));
 
   const value: OsmAuthType = {
     loggedIn: !!osmUser,
     osmUser: osmUser?.name || '', // TODO rename
     userImage: osmUser?.imageUrl || '',
+    loading,
     handleLogin,
     handleLogout,
   };

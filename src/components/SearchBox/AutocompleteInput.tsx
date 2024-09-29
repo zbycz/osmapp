@@ -7,32 +7,27 @@ import { onSelectedFactory } from './onSelectedFactory';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
-import { buildPhotonAddress } from './options/geocoder';
 import { useMapCenter } from './utils';
 import { useSnackbar } from '../utils/SnackbarContext';
-
-const useFocusOnSlash = () => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    const onKeydown = (e) => {
-      if (e.key === '/') {
-        e.preventDefault();
-        inputRef.current?.focus();
-      }
-    };
-    window.addEventListener('keydown', onKeydown);
-
-    return () => {
-      window.removeEventListener('keydown', onKeydown);
-    };
-  }, []);
-
-  return inputRef;
-};
+import { useKeyDown } from '../../helpers/hooks';
+import { getOptionLabel } from './getOptionLabel';
+import { useGetOptions } from './useGetOptions';
+import { useInputValueState } from './options/geocoder';
+import { useRouter } from 'next/router';
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
-  // const inputRef = useFocusOnSlash();
+  const inputRef = React.useRef<HTMLInputElement>(null);
+
+  useKeyDown('/', (e) => {
+    const isInput = e.target instanceof HTMLInputElement;
+    const isTextarea = e.target instanceof HTMLTextAreaElement;
+    if (isInput || isTextarea) {
+      return;
+    }
+    e.preventDefault();
+    inputRef.current?.focus();
+  });
+
   const { InputLabelProps, InputProps, ...restParams } = params;
 
   useEffect(() => {
@@ -40,27 +35,26 @@ const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
     params.InputProps.ref(autocompleteRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onChange = (e) => setInputValue(e.target.value);
-  const onFocus = (e) => e.target.select();
-
   return (
     <InputBase
       {...restParams} // eslint-disable-line react/jsx-props-no-spreading
       sx={{
         height: '47px',
       }}
-      // inputRef={inputRef}
+      inputRef={inputRef}
       placeholder={t('searchbox.placeholder')}
-      onChange={onChange}
-      onFocus={onFocus}
+      onChange={({ target }) => setInputValue(target.value)}
+      onFocus={({ target }) => target.select()}
     />
   );
 };
 
-export const AutocompleteInput = ({
-  inputValue,
-  setInputValue,
-  options,
+type AutocompleteInputProps = {
+  autocompleteRef: React.MutableRefObject<undefined>;
+  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
+};
+
+export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   autocompleteRef,
   setOverpassLoading,
 }) => {
@@ -69,32 +63,29 @@ export const AutocompleteInput = ({
   const { showToast } = useSnackbar();
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
+  const { inputValue, setInputValue } = useInputValueState();
+  const options = useGetOptions(inputValue);
+  const router = useRouter();
+
   return (
     <Autocomplete
       inputValue={inputValue}
       options={options}
       // we need null to be able to select the same again (eg. category search)
       value={null}
-      filterOptions={(x) => x}
-      getOptionLabel={(option) =>
-        option.properties?.name ||
-        option.preset?.presetForSearch?.name ||
-        option.overpass?.inputValue ||
-        (option.star && option.star.label) ||
-        (option.loader && '') ||
-        (option.properties && buildPhotonAddress(option.properties)) ||
-        ''
-      }
+      filterOptions={(o) => o}
+      getOptionLabel={getOptionLabel}
       getOptionKey={(option) => JSON.stringify(option)}
-      onChange={onSelectedFactory(
+      onChange={onSelectedFactory({
         setFeature,
         setPreview,
         bbox,
         showToast,
         setOverpassLoading,
-      )}
+        router,
+      })}
       onHighlightChange={onHighlightFactory(setPreview)}
-      getOptionDisabled={(o) => o.loader}
+      getOptionDisabled={(o) => o.type === 'loader'}
       autoComplete
       disableClearable
       autoHighlight

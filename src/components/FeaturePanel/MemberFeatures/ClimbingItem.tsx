@@ -4,14 +4,17 @@ import styled from '@emotion/styled';
 import { ConvertedRouteDifficultyBadge } from '../Climbing/ConvertedRouteDifficultyBadge';
 import { getDifficulties } from '../Climbing/utils/grades/routeGrade';
 import CheckIcon from '@mui/icons-material/Check';
-import { getWikimediaCommonsPhotoKeys } from '../Climbing/utils/photo';
+import {
+  getWikimediaCommonsPhotoKeys,
+  getWikimediaCommonsPhotoPathKeys,
+} from '../Climbing/utils/photo';
 import { RouteNumber } from '../Climbing/RouteNumber';
 import { isTicked, onTickAdd } from '../../../services/ticks';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getOsmappLink, getShortId } from '../../../services/helpers';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { t } from '../../../services/intl';
-import { IconButton, Menu, MenuItem } from '@mui/material';
+import { intl, t } from '../../../services/intl';
+import { IconButton, Menu, MenuItem, Stack } from '@mui/material';
 import Router from 'next/router';
 import { useMobileMode } from '../../helpers';
 import { useSnackbar } from '../../utils/SnackbarContext';
@@ -22,13 +25,19 @@ const RoutePhoto = styled.div`
   width: 20px;
 `;
 
-const RouteName = styled.div`
+const RouteName = styled.div<{ opacity: number }>`
   flex: 1;
+  opacity: ${({ opacity }) => opacity};
+`;
+const RouteDescription = styled.div<{ opacity: number }>`
+  font-size: 10px;
+  opacity: ${({ opacity }) => opacity};
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
 const RouteGrade = styled.div``;
 
-const Container = styled.a`
+const Container = styled(Link)`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -95,13 +104,14 @@ export const ClimbingItem = ({
   if (!feature) return null;
   const shortOsmId = getShortId(feature.osmMeta);
   const routeDifficulties = getDifficulties(feature.tags);
-  const photosCount = getWikimediaCommonsPhotoKeys(feature.tags).length;
+  const photoPathsCount = getWikimediaCommonsPhotoPathKeys(feature.tags).length;
   const shortId = getShortId(feature.osmMeta);
   const hasTick = isTicked(shortId);
 
   const routeDetailUrl = `${getOsmappLink(feature)}${typeof window !== 'undefined' ? window.location.hash : ''}`;
 
   const handleClickItem = (event) => {
+    if (event.ctrlKey || event.metaKey) return;
     event.preventDefault();
     event.stopPropagation();
     const cragFeatureLink = getOsmappLink(cragFeature);
@@ -127,17 +137,27 @@ export const ClimbingItem = ({
 
   return (
     <Container
-      onClick={handleClickItem}
+      locale={intl.lang}
       href={routeDetailUrl}
+      onClick={handleClickItem}
       onMouseEnter={mobileMode ? undefined : handleHover}
       onMouseLeave={() => setPreview(null)}
     >
       <RoutePhoto>
-        <RouteNumber hasCircle={photosCount > 0} hasTick={hasTick}>
+        <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
           {routeNumber}
         </RouteNumber>
       </RoutePhoto>
-      <RouteName>{feature.tags?.name}</RouteName>
+      <Stack justifyContent="stretch" flex={1}>
+        <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
+          {feature.tags?.name}
+        </RouteName>
+        {feature.tags?.description && (
+          <RouteDescription opacity={photoPathsCount === 0 ? 0.5 : 1}>
+            {feature.tags?.description}
+          </RouteDescription>
+        )}
+      </Stack>
       <RouteGrade>
         <ConvertedRouteDifficultyBadge routeDifficulties={routeDifficulties} />
       </RouteGrade>
@@ -155,6 +175,7 @@ export const ClimbingItem = ({
         <MenuItem
           component={Link}
           href={routeDetailUrl}
+          locale={intl.lang}
           onClick={handleShowRouteDetail}
         >
           {t('climbingpanel.show_route_detail')}
