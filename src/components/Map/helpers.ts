@@ -17,7 +17,7 @@ const isOsmLayer = (id: string) => {
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
 
-export const layersWithOsmId = (style) =>
+export const layersWithOsmId = (style: maplibregl.StyleSpecification) =>
   style.layers // TODO make it custom for basic/outdoor + revert place_
     .map((x) => x.id)
     .filter((id) => isOsmLayer(id));

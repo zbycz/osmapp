@@ -12,7 +12,7 @@ import { NextPageContext } from 'next';
 
 const DEFAULT_VIEW: View = ['4', '50', '14'];
 
-const isLocalhostOrNgnix = (ip) => ['127.0.0.1', '::1'].includes(ip);
+const isLocalhostOrNgnix = (ip: string) => ['127.0.0.1', '::1'].includes(ip);
 
 const getViewFromIp = async (ip: string): Promise<View> => {
   try {
@@ -36,7 +36,7 @@ const getViewFromIp = async (ip: string): Promise<View> => {
 export const getViewFromRequest = async (
   req: NextPageContext['req'],
 ): Promise<View> => {
-  const remoteIp = req.connection.remoteAddress;
+  const remoteIp = req.socket.remoteAddress;
   const fwdIp = ((req.headers['x-forwarded-for'] as string) || '') // ngnix: proxy_set_header X-Forwarded-For $remote_addr;
     .split(',')[0]
     .trim();

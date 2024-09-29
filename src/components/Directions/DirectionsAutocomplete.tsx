@@ -37,8 +37,12 @@ const DirectionsInput = ({
     params.InputProps.ref(autocompleteRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onChange = (e) => setInputValue(e.target.value);
-  const onFocus = (e) => e.target.select();
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+  const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  };
 
   return (
     <StyledTextField
@@ -60,9 +64,12 @@ const DirectionsInput = ({
     />
   );
 };
-const useOptions = (inputValue: string, setOptions) => {
+
+// TODO: merge with useGetOptions
+const useOptions = (inputValue: string) => {
   const { view } = useMapStateContext();
   const { stars } = useStarsContext();
+  const [options, setOptions] = useState<Option[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -82,6 +89,8 @@ const useOptions = (inputValue: string, setOptions) => {
       });
     })();
   }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  return options;
 };
 const Row = styled.div`
   width: 100%;
@@ -96,13 +105,12 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
   const selectedOptionInputValue = useRef(null);
-  const [options, setOptions] = useState<Option[]>([]);
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
 
-  useOptions(inputValue, setOptions);
+  const options = useOptions(inputValue);
 
-  const onChange = (_, option: Option) => {
+  const onChange = (_: any, option: Option) => {
     console.log('selected', option); // eslint-disable-line no-console
     setInputValue(getOptionLabel(option));
     setValue(option);

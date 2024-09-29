@@ -11,8 +11,8 @@ const fmtAttributionHtml = ({ url, html, text }: LayerIndexAttribution) => {
   return text || url;
 };
 
-export const AddUserLayerButton = ({ setUserLayers }) => {
-  const { setActiveLayers } = useMapStateContext();
+export const AddUserLayerButton = () => {
+  const { setActiveLayers, setUserLayers } = useMapStateContext();
   const [isOpen, setOpen] = React.useState(false);
 
   return (

@@ -13,7 +13,7 @@ import { Map } from 'maplibre-gl';
 const isSameOsmId = (feature: Feature, skeleton: Feature) =>
   feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
 
-export const getSkeleton = (feature, clickCoords) => {
+export const getSkeleton = (feature, clickCoords: [number, number]) => {
   const isOsmObject = getIsOsmObject(feature);
   const osmMeta = isOsmObject
     ? convertMapIdToOsmId(feature)
