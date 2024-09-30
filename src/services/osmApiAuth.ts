@@ -76,8 +76,6 @@ export const loginAndfetchOsmUser = async (): Promise<OsmUser> => {
   Cookies.set('osmAccessToken', osmAccessToken, { path: '/', expires: 365 });
   Cookies.set('osmUserForSSR', osmUserForSSR, { path: '/', expires: 365 });
 
-  await fetch('/api/token-login');
-
   return osmUser;
 };
 
@@ -118,7 +116,7 @@ const putChangesetClose = (changesetId: string) =>
 const getItem = (apiId: OsmId) =>
   authFetch({
     method: 'GET',
-    path: `/api/0.6/${getUrlOsmId(apiId)}`,
+    path: `/api/0.6/${getUrlOsmId(apiId)}`, // xml !
   });
 
 const getItemHistory = (apiId: OsmId) =>
@@ -184,11 +182,10 @@ const getItemOrLastHistoric = async (apiId: OsmId) => {
   }
 };
 
-const getDescription = (isCancelled, feature) => {
+const getDescription = (isCancelled: boolean, feature: Feature) => {
   const undelete = feature.deleted;
   const action = undelete ? 'Undeleted' : isCancelled ? 'Deleted' : 'Edited';
-  const { subclass } = feature.properties;
-  const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
+  const name = getLabel(feature) || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
 };
 

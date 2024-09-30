@@ -23,6 +23,7 @@ import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box } from '@mui/material';
 import { ClimbingGuideInfo } from './Climbing/ClimbingGuideInfo';
+import { UploadDialog } from './UploadDialog/UploadDialog';
 
 const Flex = styled.div`
   flex: 1;
@@ -73,6 +74,12 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
               </PanelSidePadding>
 
               <Box mb={2}>
+                {advanced && (
+                  <PanelSidePadding>
+                    <UploadDialog />
+                  </PanelSidePadding>
+                )}
+
                 <FeatureImages />
               </Box>
 

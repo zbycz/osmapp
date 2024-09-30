@@ -109,7 +109,7 @@ export interface Feature {
     osmappLabel?: string;
   };
   center: Position;
-  countryCode?: string; // ISO3166-1 code, undefined = no country
+  countryCode?: string; // ISO3166-1 code lowercase, undefined = no country
   roundedCenter?: LonLatRounded;
   error?: 'network' | 'unknown' | '404' | '500'; // etc.
   deleted?: boolean;

@@ -19,3 +19,4 @@ yarn-error.log*
 /public/workbox-*.js.map
 /.vercel
 .env.sentry-build-plugin
+/.env.local

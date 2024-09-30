@@ -1,46 +1,47 @@
 import { Feature } from '../services/types';
 import { roundedToDeg } from '../utils';
 import { t } from '../services/intl';
-import { buildAddress } from '../services/helpers';
+import { buildAddress, getUrlOsmId } from '../services/helpers';
 
 const getBuiltAddress = (feature: Feature) => {
   return buildAddress(feature.tags, feature.center);
 };
 
-export const getSubclass = ({ layer, osmMeta, properties, schema }: Feature) =>
+export const getTypeLabel = ({ layer, osmMeta, properties, schema }: Feature) =>
   schema?.label ||
   properties.subclass?.replace(/_/g, ' ') ||
   (layer && layer.id) || // layer.id specified only when maplibre-gl skeleton displayed
   osmMeta.type;
 
 const getRefLabel = (feature: Feature) =>
-  feature.tags.ref ? `${getSubclass(feature)} ${feature.tags.ref}` : '';
+  feature.tags.ref ? `${getTypeLabel(feature)} ${feature.tags.ref}` : '';
 
-const getName = ({ tags }: Feature) => tags.name; // TODO choose a name according to locale
+export const getName = ({ tags }: Feature) => tags.name; // TODO choose a name according to locale
 
 export const hasName = (feature: Feature) =>
   feature.point || getName(feature) || getBuiltAddress(feature); // we dont want to show "No name" for point
 
 export const getHumanPoiType = (feature: Feature) =>
-  hasName(feature) ? getSubclass(feature) : t('featurepanel.no_name');
+  hasName(feature) ? getTypeLabel(feature) : t('featurepanel.no_name');
 
-export const getLabel = (feature: Feature) => {
+export const getLabelWithoutFallback = (feature: Feature) => {
   const { point, roundedCenter } = feature;
   if (point) {
     return roundedToDeg(roundedCenter);
   }
 
-  return (
-    getName(feature) ||
-    getRefLabel(feature) ||
-    getBuiltAddress(feature) ||
-    getSubclass(feature) // generic label like "Recycling point"
-  );
+  return getName(feature) || getRefLabel(feature) || getBuiltAddress(feature);
 };
 
-export const getParentLabel = (feature: Feature) => {
-  const firstParentWithName = feature.parentFeatures?.find(hasName);
-  const parent = firstParentWithName ?? feature.parentFeatures?.[0];
+export const getLabel = (feature: Feature) =>
+  getLabelWithoutFallback(feature) ||
+  getTypeLabel(feature) || // generic label like "Recycling point"
+  getUrlOsmId(feature.osmMeta);
 
-  return parent ? getLabel(parent) : '';
+export const getParentLabel = (feature: Feature) => {
+  const parentWithName = feature.parentFeatures?.find(
+    (parent) => getName(parent) && parent.tags.climbing,
+  );
+
+  return parentWithName ? getLabel(parentWithName) : '';
 };
