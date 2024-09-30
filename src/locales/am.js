@@ -131,7 +131,6 @@ export default {
   'layerswitcher.heading': 'የካርታ ክፍሎች',
   'layerswitcher.intro': 'እውነታው በOpenStreetMap የመረጃ አቅራቢነት እና ምንጭነት ማንኛውም ሰው ካርታውን  በተለያየ ንድፍ አቀናብሮ ማውጣት ይችላል',
   'layerswitcher.add_layer_button': 'በተየለ መልኩ የተዘጋጀ ክፍል አስቀምጥ',
-  'layerswitcher.add_layer_prompt': ' በተየለ መልኩ የተዘጋጀ TMS ክፍል አስቀምጥ – ትክክለኛው CORS:\n(beta feature) ያስፈልገዋል',
 
   'layers.basic': 'መሰረታዊ',
   'layers.outdoor': 'ከቤት ውጭ',
