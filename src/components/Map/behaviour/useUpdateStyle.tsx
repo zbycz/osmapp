@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import type { GeoJSONSource, Map } from 'maplibre-gl';
+import { OpenMapTilesLanguage } from '@teritorio/openmaptiles-gl-language';
 import cloneDeep from 'lodash/cloneDeep';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { createMapEffectHook } from '../../helpers';
@@ -15,6 +16,7 @@ import {
 } from '../styles/layers/climbingLayers';
 import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { fetchCrags } from '../../../services/fetchCrags';
+import { intl } from '../../../services/intl';
 import { Layer } from '../../utils/MapStateContext';
 import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
@@ -87,6 +89,11 @@ export const useUpdateStyle = createMapEffectHook(
     const style = cloneDeep(getBaseStyle(key));
     addOverlaysToStyle(map, style, overlays);
     map.setStyle(style, { diff: mapLoaded });
+
+    const languageControl = new OpenMapTilesLanguage({
+      defaultLanguage: intl.lang,
+    });
+    map.addControl(languageControl);
 
     setUpHover(map, layersWithOsmId(style));
   },
