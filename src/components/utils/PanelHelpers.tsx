@@ -2,7 +2,7 @@ import React, { LegacyRef, useRef } from 'react';
 import styled from '@emotion/styled';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@mui/material';
-import { isDesktop } from '../helpers';
+import { isDesktop, isMobileMode } from '../helpers';
 import { useScrollShadow } from '../FeaturePanel/Climbing/utils/useScrollShadow';
 import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 
@@ -41,6 +41,11 @@ type PanelScrollbarsProps = {
   scrollRef?: LegacyRef<Scrollbars>;
 };
 
+const MobileScrollbars = styled.div`
+  height: 100%;
+  overflow: auto;
+`;
+
 export const PanelScrollbars = ({
   children,
   scrollRef,
@@ -62,15 +67,22 @@ export const PanelScrollbars = ({
   return (
     <ShadowContainer>
       <ShadowTop backgroundColor={theme.palette.background.paper} />
-      <Scrollbars
-        universal
-        autoHide
-        style={{ height: '100%' }}
-        onScroll={onScroll}
-        ref={scrollElementRef}
-      >
-        {children}
-      </Scrollbars>
+      {isMobileMode ? (
+        <MobileScrollbars onScroll={onScroll} ref={scrollElementRef}>
+          {children}
+        </MobileScrollbars>
+      ) : (
+        <Scrollbars
+          universal
+          autoHide
+          style={{ height: '100%' }}
+          onScroll={onScroll}
+          ref={scrollElementRef}
+        >
+          {children}
+        </Scrollbars>
+      )}
+
       <ShadowBottom backgroundColor={theme.palette.background.paper} />
     </ShadowContainer>
   );
