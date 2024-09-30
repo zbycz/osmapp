@@ -31,6 +31,25 @@ const debugOutput = (sorted) => {
   }
 };
 
+type MapillaryResponse = {
+  data: {
+    compass_angle: number;
+    computed_geometry: {
+      type: string;
+      coordinates: number[];
+    };
+    geometry: {
+      type: string;
+      coordinates: number[];
+    };
+    captured_at: number;
+    thumb_1024_url: string;
+    thumb_original_url: string;
+    is_pano: boolean;
+    id: string;
+  }[];
+};
+
 export const getMapillaryImage = async (
   poiCoords: Position,
 ): Promise<ImageType | null> => {
@@ -43,7 +62,7 @@ export const getMapillaryImage = async (
   ];
   // consider computed_compass_angle - but it is zero for many images, so we would have to fallback to compass_angle
   const url = `https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,geometry,captured_at,thumb_1024_url,thumb_original_url,is_pano&bbox=${bbox}`;
-  const { data } = await fetchJson(url);
+  const { data } = await fetchJson<MapillaryResponse>(url);
 
   if (!data.length) {
     return null;

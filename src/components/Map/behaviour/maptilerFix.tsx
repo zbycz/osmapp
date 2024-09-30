@@ -26,10 +26,25 @@ const isMaptilerCorruptedId = (feature: Feature, skeleton: Feature) => {
   return false;
 };
 
+type OsmResponse = {
+  elements?: {
+    type: 'node' | 'way' | 'relation';
+    id: number;
+    lat: number;
+    lon: number;
+    timestamp: string;
+    version: number;
+    changeset: number;
+    user: string;
+    uid: number;
+    tags: Record<string, string>;
+  }[];
+};
+
 const getQuickOsmPromise = async (apiId: OsmId) => {
   const getOsmUrl = ({ type, id }) =>
     `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
-  const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+  const { elements } = await fetchJson<OsmResponse>(getOsmUrl(apiId)); // TODO 504 gateway busy
   return elements?.[0];
 };
 
