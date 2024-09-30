@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { Ref, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
@@ -89,13 +89,20 @@ type IndexWithProvidersProps = {
 };
 
 const useScrollToTopWhenRouteChanged = () => {
-  const scrollRef = useRef<Scrollbars>(null);
+  const isMobileMode = useMobileMode();
+  const desktopScrollRef = useRef<Scrollbars>(null);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = isMobileMode ? mobileScrollRef : desktopScrollRef;
   const router = useRouter();
 
   useEffect(() => {
     const routeChangeComplete = () => {
       if (scrollRef?.current) {
-        scrollRef.current.scrollToTop();
+        if (isMobileMode) {
+          (scrollRef as any).current.scrollTo(0, 0);
+        } else {
+          (scrollRef as any).current.scrollToTop();
+        }
       }
     };
     router.events.on('routeChangeComplete', routeChangeComplete);
@@ -103,7 +110,7 @@ const useScrollToTopWhenRouteChanged = () => {
     return () => {
       router.events.off('routeChangeComplete', routeChangeComplete);
     };
-  }, [router.events]);
+  }, [isMobileMode, router.events, scrollRef]);
 
   return scrollRef;
 };
@@ -113,7 +120,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
   const isMounted = useIsClient();
-  const scrollRef = useScrollToTopWhenRouteChanged();
+  const scrollRef = useScrollToTopWhenRouteChanged() as any;
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
