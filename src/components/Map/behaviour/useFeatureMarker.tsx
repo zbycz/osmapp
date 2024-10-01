@@ -59,13 +59,14 @@ let previewMarker: maplibregl.Marker;
 const useUpdatePreviewMarker = createMapEffectHook<[Feature]>(
   (map, feature) => {
     previewMarker?.remove();
+    previewMarker = undefined;
+
     if (feature?.center) {
       const [lng, lat] = feature.center;
       previewMarker = new maplibregl.Marker(PREVIEW_MARKER)
         .setLngLat([lng, lat])
         .addTo(map);
     }
-    previewMarker = undefined;
   },
 );
 
