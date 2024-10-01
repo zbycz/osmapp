@@ -98,9 +98,9 @@ const useScrollToTopWhenRouteChanged = () => {
     const routeChangeComplete = () => {
       if (scrollRef?.current) {
         if (isMobileMode) {
-          (scrollRef as any).current.scrollTo(0, 0);
+          (scrollRef as any).current?.scrollTo?.(0, 0);
         } else {
-          (scrollRef as any).current.scrollToTop();
+          (scrollRef as any).current?.scrollToTop?.();
         }
       }
     };
