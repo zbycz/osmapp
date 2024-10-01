@@ -29,6 +29,7 @@ const EditDialogInner = () => {
 
   return (
     <StyledDialog
+      maxWidth="md"
       fullScreen={fullScreen}
       open={opened}
       onClose={onClose}
