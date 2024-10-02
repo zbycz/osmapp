@@ -110,7 +110,7 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
 
   const options = useOptions(inputValue);
 
-  const onChange = (_: any, option: Option) => {
+  const onChange = (_: unknown, option: Option) => {
     console.log('selected', option); // eslint-disable-line no-console
     setInputValue(getOptionLabel(option));
     setValue(option);
