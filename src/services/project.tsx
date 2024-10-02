@@ -39,7 +39,6 @@ const openclimbing: Project = {
 const domains: Record<string, Project> = {
   'osmapp.org': osmapp,
   'openclimbing.org': openclimbing,
-  '127.0.0.1:3000': openclimbing,
 };
 const prUrl = (host: string) =>
   /^osmapp-git(.*)climbing(.*)vercel.app$/.test(host) ? openclimbing : null;
@@ -52,7 +51,7 @@ export let PROJECT_OG_IMAGE = 'error: PROJECT not set';
 export let PROJECT_DECRIPTION = 'error: PROJECT not set' as TranslationId;
 export let PROJECT_SERP_DESCRIPTION = 'error: PROJECT not set' as TranslationId;
 
-const setProject = (host) => {
+const setProject = (host: string) => {
   const project = domains[host] ?? prUrl(host) ?? osmappDev;
   PROJECT_ID = project.id;
   PROJECT_NAME = project.name;
@@ -64,13 +63,13 @@ const setProject = (host) => {
   publishDbgObject('project', project);
 };
 
-// server - run in document getInitalProps
+// server - runs in document getInitialProps()
 export const setProjectForSSR = (ctx: DocumentContext) => {
   const { host } = ctx.req.headers;
   setProject(host);
 };
 
-// browser - run here
+// browser - runs here
 if (isBrowser()) {
   const { host } = window.location;
   setProject(host);
