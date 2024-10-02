@@ -20,8 +20,25 @@ https://taginfo.openstreetmap.org/taginfo/apidoc#api_4_key_values
 },
 */
 
+type TagInfoResponse = {
+  url: string;
+  data_until: string;
+  page: number;
+  rp: number;
+  total: number;
+  data: {
+    value: string;
+    count: number;
+    fraction: number;
+    in_wiki: boolean;
+    description?: string;
+    desclang: string;
+    descdir: string;
+  }[];
+};
+
 const getData = async () => {
-  const body = await fetchJson(
+  const body = await fetchJson<TagInfoResponse>(
     `https://taginfo.openstreetmap.org/api/4/key/values?key=amenity&filter=all&lang=${intl.lang}&sortname=count_all&sortorder=desc&page=1&rp=200&qtype=value`, // &format=json_pretty
   );
   const key = 'amenity';

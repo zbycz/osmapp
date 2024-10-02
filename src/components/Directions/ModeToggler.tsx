@@ -1,15 +1,9 @@
-import {
-  ToggleButton,
-  ToggleButtonGroup,
-  toggleButtonGroupClasses,
-} from '@mui/material';
+import { ToggleButton } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import React from 'react';
 import styled from '@emotion/styled';
-
-import { brouterProfiles } from './routing/getBrouterResults';
 
 const StyledToggleButton = styled(ToggleButton)`
   padding: 8px;
@@ -32,7 +26,7 @@ type Props = {
 };
 
 export const ModeToggler = ({ value, setMode }: Props) => {
-  const onChange = (_, newMode) => {
+  const onChange = (_: unknown, newMode: string | null) => {
     if (newMode !== null) {
       setMode(newMode);
     }

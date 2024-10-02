@@ -9,13 +9,16 @@ import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config.mjs';
 import { PROJECT_ID } from '../../services/project';
 import { useBoolState } from '../helpers';
+import { Setter } from '../../types';
+
+export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
   name?: string;
   url?: string;
   key?: string;
-  Icon?: React.ReactNode;
+  Icon?: LayerIcon;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
   bboxes?: number[][];
@@ -29,15 +32,15 @@ export type View = [string, string, string];
 
 type MapStateContextType = {
   bbox: Bbox;
-  setBbox: (bbox: Bbox) => void;
+  setBbox: Setter<Bbox>;
   view: View;
-  setView: (view: View) => void;
+  setView: Setter<View>;
   viewForMap: View;
-  setViewFromMap: (view: View) => void;
+  setViewFromMap: Setter<View>;
   activeLayers: string[];
-  setActiveLayers: (layers: string[] | ((prev: string[]) => string[])) => void;
+  setActiveLayers: Setter<string[]>;
   userLayers: Layer[];
-  setUserLayers: (param: Layer[] | ((current: Layer[]) => Layer[])) => void;
+  setUserLayers: Setter<Layer[]>;
   mapLoaded: boolean;
   setMapLoaded: () => void;
 };
@@ -50,7 +53,10 @@ const useActiveLayersState = () => {
   return usePersistedState('activeLayers', initLayers);
 };
 
-export const MapStateProvider = ({ children, initialMapView }) => {
+export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
+  children,
+  initialMapView,
+}) => {
   const [activeLayers, setActiveLayers] = useActiveLayersState();
   const [bbox, setBbox] = useState<Bbox>();
   const [view, setView] = useState(initialMapView);
@@ -63,7 +69,7 @@ export const MapStateProvider = ({ children, initialMapView }) => {
   const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
   useEffect(setNotLoaded, [setNotLoaded]);
 
-  const setBothViews = useCallback((newView) => {
+  const setBothViews: Setter<View> = useCallback((newView) => {
     setView(newView);
     setViewForMap(newView);
   }, []);

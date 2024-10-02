@@ -20,9 +20,13 @@ export type ClimbingArea = {
   members: any[];
 };
 
+type OverpassResponse = {
+  elements: Array<ClimbingArea>;
+};
+
 export const getClimbingAreas = async (): Promise<Array<ClimbingArea>> => {
   const query = `[out:json][timeout:300]; rel["climbing"="area"]; out body;`;
 
-  const areas = await fetchJson(getOverpassUrl(query));
+  const areas = await fetchJson<OverpassResponse>(getOverpassUrl(query));
   return areas?.elements;
 };

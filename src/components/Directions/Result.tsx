@@ -30,14 +30,14 @@ const CloseContainer = styled.div`
   right: 0;
 `;
 
-const getHumanMetric = (meters) => {
+const getHumanMetric = (meters: number) => {
   if (meters < 1000) {
     return `${Math.round(meters)} m`;
   }
   return `${(meters / 1000).toFixed(1)} km`;
 };
 
-const getHumanImperial = (meters) => {
+const getHumanImperial = (meters: number) => {
   const miles = meters * 0.000621371192;
   if (miles < 1) {
     return `${Math.round(miles * 5280)} ft`;
@@ -45,10 +45,10 @@ const getHumanImperial = (meters) => {
   return `${miles.toFixed(1)} mi`;
 };
 
-const toHumanDistance = (meters) =>
+const toHumanDistance = (meters: number) =>
   isImperial() ? getHumanImperial(meters) : getHumanMetric(meters);
 
-const toHumanTime = (seconds) => {
+const toHumanTime = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
   const minutes = Math.floor((seconds % 3600) / 60);
   const minutesStr = minutes < 10 ? `0${minutes}` : minutes;
