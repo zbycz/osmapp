@@ -99,9 +99,9 @@ const useScrollToTopWhenRouteChanged = () => {
     const routeChangeComplete = () => {
       if (scrollRef?.current) {
         if (isMobileMode) {
-          (scrollRef as any).current.scrollTo(0, 0);
+          (scrollRef as any).current?.scrollTo?.(0, 0);
         } else {
-          (scrollRef as any).current.scrollToTop();
+          (scrollRef as any).current?.scrollToTop?.();
         }
       }
     };
@@ -164,6 +164,8 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   );
 };
 
+const reactQueryClient = new QueryClient();
+
 type Props = {
   featureFromRouter: Feature | '404' | null;
   initialMapView: View;
@@ -178,7 +180,6 @@ const App: NextPage<Props> = ({
   climbingAreas,
 }) => {
   const mapView = getMapViewFromHash() || initialMapView;
-  const queryClient = new QueryClient();
 
   if (featureFromRouter === '404') {
     return <Error statusCode={404} />;
@@ -195,7 +196,7 @@ const App: NextPage<Props> = ({
             <OsmAuthProvider cookies={cookies}>
               <StarsProvider>
                 <EditDialogProvider /* TODO supply router.query */>
-                  <QueryClientProvider client={queryClient}>
+                  <QueryClientProvider client={reactQueryClient}>
                     <IndexWithProviders climbingAreas={climbingAreas} />
                   </QueryClientProvider>
                 </EditDialogProvider>

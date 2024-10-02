@@ -207,6 +207,7 @@ export default {
   'editsuccess.edit.textLabel': 'Comment',
 
   'tags.name': 'Name',
+  'tags.description': 'Description',
   'tags.website': 'Website',
   'tags.phone': 'Phone',
   'tags.opening_hours': 'Hours',
