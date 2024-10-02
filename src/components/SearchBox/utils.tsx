@@ -19,6 +19,8 @@ export const IconPart = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
+const EARTH_RADIUS = 6372795;
+
 const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
 export const getDistance = (point1: LonLat, point2: LonLat) => {
@@ -27,7 +29,8 @@ export const getDistance = (point1: LonLat, point2: LonLat) => {
 
   // harvesine formula
   return (
-    12745590 *
+    EARTH_RADIUS *
+    2 *
     Math.asin(
       Math.sqrt(
         Math.sin(latdiff / 2) ** 2 +
