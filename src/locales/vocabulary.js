@@ -22,6 +22,9 @@ export default {
   'user.my_ticks': 'My ticks',
   'user.user_settings': 'Settings',
 
+  'user_settings.general': 'General',
+  'user_settings.delete_search_history': 'Delete search history',
+
   'my_ticks.title': 'My ticks',
   'my_ticks.route_name': 'Name',
   'my_ticks.route_grade': 'Grade',

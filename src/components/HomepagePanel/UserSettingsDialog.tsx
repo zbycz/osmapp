@@ -8,6 +8,7 @@ import {
   ListItemText,
   Switch,
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import React from 'react';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { PanelLabel } from '../FeaturePanel/Climbing/PanelLabel';
@@ -15,20 +16,26 @@ import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
 import { useHistoryContext } from '../SearchBox/options/historyContext';
+import { t } from '../../services/intl';
 
 export const UserSettingsDialog = ({ onClose, isOpened }) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
-  const { clearOptions: clearSearchHistory } = useHistoryContext();
+  const { clearOptions: clearSearchHistory, options } = useHistoryContext();
 
   return (
     <Dialog onClose={onClose} open={isOpened} maxWidth="sm" fullWidth>
-      <DialogTitle>Settings</DialogTitle>
+      <DialogTitle>{t('user.user_settings')}</DialogTitle>
 
       <ClosePanelButton right onClick={onClose} />
       <DialogContent>
-        <PanelLabel>General</PanelLabel>
-        <Button variant="outlined" onClick={clearSearchHistory}>
-          Delete search history
+        <PanelLabel>{t('user_settings.general')}</PanelLabel>
+        <Button
+          variant="outlined"
+          disabled={options.length === 0}
+          onClick={clearSearchHistory}
+          startIcon={<DeleteIcon />}
+        >
+          {t('user_settings.delete_search_history')}
         </Button>
 
         <PanelLabel>Climbing</PanelLabel>
