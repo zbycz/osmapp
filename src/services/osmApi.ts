@@ -14,12 +14,7 @@ import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
 import { isClimbingRelation, isClimbingRoute } from '../utils';
 import { getOverpassUrl } from './overpassSearch';
 
-type OsmObject = {
-  type: string;
-  id: number;
-};
-
-type GetOsmUrl = (object: OsmObject) => string;
+type GetOsmUrl = (object: OsmId) => string;
 
 const getOsmUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
@@ -30,7 +25,7 @@ const getOsmParentUrl: GetOsmUrl = ({ type, id }) =>
 const getOsmHistoryUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
-const getOsmPromise = async (apiId: OsmObject) => {
+const getOsmPromise = async (apiId: OsmId) => {
   try {
     const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
     return elements?.[0];
