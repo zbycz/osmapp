@@ -34,7 +34,7 @@ const Wrapper = styled(Stack)`
 `;
 
 const getOnrejected = (showToast: ShowToast) => {
-  return (error) => {
+  return (error: unknown) => {
     if (error instanceof PointsTooFarError) {
       showToast(t('directions.error.too_far'), 'warning');
     } else if (error instanceof FetchError) {

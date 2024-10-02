@@ -45,6 +45,10 @@ type FetchGeocoderOptionsProps = {
   after: Option[];
 };
 
+type PhotonResponse = {
+  features: GeocoderOption['geocoder'][];
+};
+
 export const fetchGeocoderOptions = debounce(
   async ({
     inputValue,
@@ -54,9 +58,10 @@ export const fetchGeocoderOptions = debounce(
     after,
   }: FetchGeocoderOptionsProps) => {
     try {
-      const searchResponse = (await fetchJson(getApiUrl(inputValue, view), {
-        abortableQueueName: GEOCODER_ABORTABLE_QUEUE,
-      })) as { features: GeocoderOption['geocoder'][] };
+      const searchResponse = await fetchJson<PhotonResponse>(
+        getApiUrl(inputValue, view),
+        { abortableQueueName: GEOCODER_ABORTABLE_QUEUE },
+      );
 
       // This blocks rendering of old result, when user already changed input
       if (inputValue !== currentInput) {

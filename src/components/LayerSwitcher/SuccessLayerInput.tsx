@@ -20,15 +20,15 @@ export type AutocompleteOption =
     }
   | { type: 'custom' };
 
-type SuccessLayerDataInputProps = {
-  index: LayerIndex[];
-  onSelect: (layer: AutocompleteOption) => void;
-};
-
 const getLayerLabel = ({ name, country_code }: LayerIndex) => {
   if (country_code) return `${country_code} - ${name}`;
 
   return `Global - ${name}`;
+};
+
+type SuccessLayerDataInputProps = {
+  index: LayerIndex[];
+  onSelect: (layer: AutocompleteOption) => void;
 };
 
 export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({

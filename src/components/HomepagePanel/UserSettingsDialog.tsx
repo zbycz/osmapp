@@ -18,7 +18,12 @@ import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect'
 import { useHistoryContext } from '../SearchBox/options/historyContext';
 import { t } from '../../services/intl';
 
-export const UserSettingsDialog = ({ onClose, isOpened }) => {
+type Props = {
+  onClose: (event: unknown) => void;
+  isOpened: boolean;
+};
+
+export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
   const { clearOptions: clearSearchHistory, options } = useHistoryContext();
 

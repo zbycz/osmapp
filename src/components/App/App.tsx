@@ -64,10 +64,11 @@ const useUpdateViewFromFeature = () => {
   const { setView } = useMapStateContext();
 
   React.useEffect(() => {
-    if (feature?.center && !getMapViewFromHash()) {
-      const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
-      setView(['17.00', lat, lon]);
-    }
+    if (!feature?.center) return;
+    if (getMapViewFromHash()) return;
+
+    const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
+    setView(['17.00', lat, lon]);
   }, [feature, setView]);
 };
 

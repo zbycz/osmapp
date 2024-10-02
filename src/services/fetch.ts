@@ -62,10 +62,10 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
   }
 };
 
-export const fetchJson = async (url: string, opts: FetchOpts = {}) => {
+export const fetchJson = async <T = any>(url: string, opts: FetchOpts = {}) => {
   const text = await fetchText(url, opts);
   try {
-    return JSON.parse(text);
+    return JSON.parse(text) as T;
   } catch (e) {
     throw new Error(
       `fetchJson: parse error: ${e.message}, in "${text?.substr(0, 30)}..."`,

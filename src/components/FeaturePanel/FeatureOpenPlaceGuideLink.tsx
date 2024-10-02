@@ -4,28 +4,34 @@ import { t } from '../../services/intl';
 import { fetchJson } from '../../services/fetch';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { getUrlOsmId } from '../../services/helpers';
+import { LonLat } from '../../services/types';
 
 const Spacer = styled.div`
   padding-bottom: 10px;
 `;
 
-const getData = async (center, osmId) => {
+type Instance = {
+  url: string;
+  name: string;
+};
+
+const getData = async (center: LonLat, osmId: string) => {
   if (center === undefined || !center.length) {
     return null;
   }
-  const body = await fetchJson(
+  const body = await fetchJson<Instance[]>(
     `https://discover.openplaceguide.org/v2/discover?lat=${center[1]}&lon=${center[0]}&osmId=${osmId}`,
   );
   return body;
 };
 
 const OpenPlaceGuideLink = () => {
-  const [instances, setInstances] = useState([]);
+  const [instances, setInstances] = useState<Instance[]>([]);
   const { feature } = useFeatureContext();
   const osmId = getUrlOsmId(feature.osmMeta);
 
   useEffect(() => {
-    getData(feature.center, osmId).then(setInstances);
+    getData(feature.center, osmId).then((data) => setInstances(data ?? []));
   }, [feature.center, osmId]);
 
   if (instances.length === 0) {
