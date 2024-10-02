@@ -1,13 +1,15 @@
+<!-- Please, remove any section which is not applicable/useful. -->
+
 ### Description
 
-<!-- Describe the changes here, add screenshots if possible -->
+### Example links
 
-<!-- If applicable, please add links to features which demonstrate the issue or enhancement -->
+### Screenshots
+
+<!-- consider using smaller images, eg. <img src="url" width="300" /> instead of ![](url) -->
 
 ### Checklist
 
-- [ ] checked dark mode / light mode
-- [ ] checked mobile / desktop
-- [ ] checked server-side-rendering (SSR)
-- [ ] code style is consistent with the rest of the project
-- [ ] new dependencies are reasoned about in PR comments
+- [ ] dark mode / light mode
+- [ ] mobile / desktop
+- [ ] server-side-rendering (SSR)
