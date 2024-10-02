@@ -6,7 +6,7 @@
 
 ### Screenshots
 
-<!-- consider using smaller images, eg. <img src="url" width="300" /> instead of ![](url) -->
+<!-- consider using smaller images, eg. <img src="url" width="500"> instead of ![](url) -->
 
 ### Checklist
 
