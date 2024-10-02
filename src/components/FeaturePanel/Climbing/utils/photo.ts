@@ -11,14 +11,16 @@ export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 export const isWikimediaCommons = (tag: string) =>
   tag.startsWith('wikimedia_commons');
 
-export const isWikimediaCommonsPhoto = (tag: string) => {
+export const isWikimediaCommonsPhoto = ([key, value]: [string, string]) => {
   // regexp to match wikimedia_commons, wikimedia_commons:2, etc. but not  wikimedia_commons:path, wikimedia_commons:whatever
   const re = /^wikimedia_commons(:\d+)?$/;
-  return re.test(tag);
+  return re.test(key) && value.startsWith('File:');
 };
 
 export const getWikimediaCommonsPhotoKeys = (tags: FeatureTags) =>
-  Object.keys(tags).filter(isWikimediaCommonsPhoto);
+  Object.entries(tags)
+    .filter(isWikimediaCommonsPhoto)
+    .map(([tagKey, _tagValue]) => tagKey);
 
 export const isWikimediaCommonsPhotoPath = (tag: string) => {
   const re = /^wikimedia_commons(:\d+)*:path$/;

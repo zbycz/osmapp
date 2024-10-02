@@ -65,6 +65,7 @@ export default {
   'install.desktop_install': 'Click the <strong>install button</strong>',
   'install.outro': 'Thats all! Look for OsmAPP at your home screen.',
   'install.note': 'Note: This app uses PWA technology – featuring quick installation and no need for Google Play or App Store.',
+
   'homepage.how_to_start': 'Start by typing your query into the searchbox.\nOr click any item on the map.',
   'homepage.go_to_map_button': 'Go to map',
   'homepage.examples.eg': 'eg.',
@@ -206,6 +207,7 @@ export default {
   'editsuccess.edit.textLabel': 'Comment',
 
   'tags.name': 'Name',
+  'tags.description': 'Description',
   'tags.website': 'Website',
   'tags.phone': 'Phone',
   'tags.opening_hours': 'Hours',
@@ -217,7 +219,6 @@ export default {
   'layerswitcher.heading': 'Map layers',
   'layerswitcher.intro': 'Thanks to the fact that OpenStreetMap offers source data, anyone can produce different variants of the map.',
   'layerswitcher.add_layer_button': 'Add custom layer',
-  'layerswitcher.add_layer_prompt': 'Add custom TMS layer – needs correct CORS:\n(beta feature)',
   'layerswitcher.overlays': 'Overlays',
   'layerswitcher.not_all_work': 'Please note that some layers may not work in OsmAPP.',
   'layerswitcher.license': 'License',

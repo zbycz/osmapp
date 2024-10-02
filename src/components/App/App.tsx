@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { Ref, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
@@ -63,10 +63,11 @@ const useUpdateViewFromFeature = () => {
   const { setView } = useMapStateContext();
 
   React.useEffect(() => {
-    if (feature?.center && !getMapViewFromHash()) {
-      const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
-      setView(['17.00', lat, lon]);
-    }
+    if (!feature?.center) return;
+    if (getMapViewFromHash()) return;
+
+    const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
+    setView(['17.00', lat, lon]);
   }, [feature, setView]);
 };
 
@@ -88,13 +89,20 @@ type IndexWithProvidersProps = {
 };
 
 const useScrollToTopWhenRouteChanged = () => {
-  const scrollRef = useRef<Scrollbars>(null);
+  const isMobileMode = useMobileMode();
+  const desktopScrollRef = useRef<Scrollbars>(null);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = isMobileMode ? mobileScrollRef : desktopScrollRef;
   const router = useRouter();
 
   useEffect(() => {
     const routeChangeComplete = () => {
       if (scrollRef?.current) {
-        scrollRef.current.scrollToTop();
+        if (isMobileMode) {
+          (scrollRef as any).current?.scrollTo?.(0, 0);
+        } else {
+          (scrollRef as any).current?.scrollToTop?.();
+        }
       }
     };
     router.events.on('routeChangeComplete', routeChangeComplete);
@@ -102,7 +110,7 @@ const useScrollToTopWhenRouteChanged = () => {
     return () => {
       router.events.off('routeChangeComplete', routeChangeComplete);
     };
-  }, [router.events]);
+  }, [isMobileMode, router.events, scrollRef]);
 
   return scrollRef;
 };
@@ -112,7 +120,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const { feature, featureShown } = useFeatureContext();
   const router = useRouter();
   const isMounted = useIsClient();
-  const scrollRef = useScrollToTopWhenRouteChanged();
+  const scrollRef = useScrollToTopWhenRouteChanged() as any;
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
@@ -156,6 +164,8 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   );
 };
 
+const reactQueryClient = new QueryClient();
+
 type Props = {
   featureFromRouter: Feature | '404' | null;
   initialMapView: View;
@@ -170,7 +180,6 @@ const App: NextPage<Props> = ({
   climbingAreas,
 }) => {
   const mapView = getMapViewFromHash() || initialMapView;
-  const queryClient = new QueryClient();
 
   if (featureFromRouter === '404') {
     return <Error statusCode={404} />;
@@ -187,7 +196,7 @@ const App: NextPage<Props> = ({
             <OsmAuthProvider cookies={cookies}>
               <StarsProvider>
                 <EditDialogProvider /* TODO supply router.query */>
-                  <QueryClientProvider client={queryClient}>
+                  <QueryClientProvider client={reactQueryClient}>
                     <IndexWithProviders climbingAreas={climbingAreas} />
                   </QueryClientProvider>
                 </EditDialogProvider>

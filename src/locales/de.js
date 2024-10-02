@@ -5,8 +5,44 @@ export default {
   error: 'Fehler',
   close_panel: 'Panel schließen',
   webgl_error: `Ups. Diese Karte setzt die WebGL Technologie voraus.<br /><br />Wenn Du ein kompatibles Gerät hast, versuche die letzte Version des Chrome Browsers zu verwenden.`,
+  darkmode_auto: 'Dunkles Design: Auto',
+  darkmode_on: 'Dunkles Design: An',
+  darkmode_off: 'Dunkles Design: Aus',
+  show_more: 'Mehr anzeigen',
+  show_less: 'Weniger anzeigen',
+
+  'user.login_register': 'Einloggen / Registrieren',
+  'user.logout': 'Ausloggen',
+  'user.my_ticks': 'Meine Begehungen',
+  'user.user_settings': 'Einstellungen',
+
+  'my_ticks.title': 'Meine Begehungen',
+  'my_ticks.route_name': 'Name',
+  'my_ticks.route_grade': 'Schweregrad',
+  'my_ticks.route_style': 'Style',
+  'my_ticks.route_date': 'Datum',
+  'my_ticks.no_ticks_paragraph1': 'Du hast bislang keine Begehungen',
+  'my_ticks.no_ticks_paragraph2': 'Probiere eine am Felsen hinzuzufügen',
+
+  'tick.style_description_not_selected': 'Kein Kletterstil ausgewählt.',
+  'tick.style_description_OS': 'Die Route beim ersten Versuch ohne vorherige Kenntnisse oder Übung klettern.',
+  'tick.style_description_FL': 'Die Route beim ersten Versuch mit einigen Vorkenntnissen oder Beta klettern.',
+  'tick.style_description_RP': 'Die Route erfolgreich nach vorherigem Üben klettern.',
+  'tick.style_description_PP': 'Die Route erfolgreich mit vorher platzierten Sicherungen nach Übung klettern.',
+  'tick.style_description_RK': 'Die Route mit einer Mischung aus Freiklettern und technischer Hilfe klettern.',
+  'tick.style_description_AF': 'Die Route vollständig frei ohne technische Hilfsmittel klettern.',
+  'tick.style_description_TR': 'Die Route mit einem bereits oben verankerten Seil klettern.',
+  'tick.style_description_FS': 'Die Route ohne jegliche Sicherung oder Seile klettern.',
+
+  'climbing_renderer.climbing_grade': 'Schwierigkeitsgrad',
 
   'project.osmapp.description': 'Eine universelle App für OpenStreetMap',
+  'project.osmapp.serpDescription':
+    'Eine Open-Source-Weltkarte basierend auf der OpenStreetMap-Datenbank. Verfügt über eine Suchfunktion, anklickbare Points of Interest, In-App-Kartenbearbeitungen und mehr!',
+
+  'project.openclimbing.description': 'Kostenlose Wiki-Kletterkarte',
+  'project.openclimbing.serpDescription':
+    'Eine wiki-basierte Open-Source-Kletterkarte mit Topos. Basierend auf den OpenStreetMap- und Wikipedia-Projekten.',
 
   'install.button': 'App installieren',
   'install.tabs_aria_label': 'Platform wählen',
@@ -21,7 +57,8 @@ export default {
   'install.outro': "Das war's! OsmAPP sollte auf deinem Startbildschirm erscheinen.",
   'install.note': 'Hinweis: Diese App verwendet die PWA Technologie und erlaubt eine schnelle Installation ohne Google Play oder App Store.',
 
-  'homepage.how_to_start': 'Tippe einen Begriff in das Suchfeld.\nOder klicke auf einen Ort auf der Karte.',
+  'homepage.how_to_start': 'Tippe einen Begriff in das Suchfeld ein.\nOder klicke auf einen Ort auf der Karte.',
+  'homepage.go_to_map_button': 'Gehe zur Karte',
   'homepage.examples.eg': 'z.B.',
   'homepage.examples.charles_bridge_statues': 'Statuen auf der Karlsbrücke',
   'homepage.screenshot_alt': 'Screenshot der OsmAPP',
@@ -31,13 +68,17 @@ export default {
       <em>Bearbeiten</em> bei jedem Kartenelement.`,
   'homepage.heading_about_osmapp': 'Über OsmAPP',
   'homepage.about_osmapp': `Diese App soll eine komfortable Oberfläche für die tägliche Nutzung von <i>OpenStreetMap</i>,
-     samt Bearbeitungsfunktionen, bieten. <br/> Derzeit umfasst sie verschiedene Kartenebenen, POI-Bearbeitung und eine einfache Suchmaschine.
-     Funktionen wie Navigation und das Speichern von Favoriten sind in Planung`,
+     samt Bearbeitungsfunktionen, bieten. <br/> Derzeit umfasst sie verschiedene Kartenebenen, POI-Bearbeitung, das Speichern von Favoriten und eine einfache Suchmaschine.
+     Funktionen wie Navigation sind in Planung`,
   'homepage.github_link': `Du kannst neue Features auf <a href="https://github.com/zbycz/osmapp" target='_blank'>vorschlagen</a>.`,
   'homepage.special_thanks_heading': `Danke an`,
   'homepage.for_images': 'für die Bilder 🖼',
   'homepage.for_osm': 'für die beste Weltkarte 🌎',
   'homepage.maptiler': 'für die großartigen Vektor Karten und die Unterstützung dieses Projekts  ❤️ ',
+  'homepage.vercel': 'für eine großartige App-Hosting-Plattform',
+  'homepage.disclaimer_heading': 'Disclaimer',
+  'homepage.disclaimer': `OpenStreetMap und OSM sind Marken der OpenStreetMap Foundation. Dieses Projekt wird nicht von der <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a> unterstützt oder ist mit ihr verbunden.`,
+  'homepage.disclaimer_maptiler': `Vektorkarten ("Standard" und "Outdoor") enthalten einige Ortsnamen aus dem Wikidata-Projekt, mehr <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>hier</a>.`,
 
   'searchbox.placeholder': 'Durchsuche OpenStreetMap',
   'searchbox.category': 'Kategorie',
@@ -47,25 +88,31 @@ export default {
 
   'featurepanel.no_name': 'Kein Name',
   'featurepanel.share_button': 'Teilen',
-  'featurepanel.save_button': 'Zu Favoriten hinzufügen',
-  'featurepanel.directions_button': 'Navigation',
+  'featurepanel.favorites_save_button': 'Zu Favoriten hinzufügen',
+  'featurepanel.favorites_unsave_button': 'Von den Favoriten entfernen',
+  'featurepanel.directions_button': 'Navigation', // Not used anywhere 07.09.2024
   'featurepanel.error': 'Fehler __code__ während des Abrufs des Objekts von OpenStreetMap',
   'featurepanel.error_unknown': 'Unbekannter Fehler beim Abruf des Objekts von OpenStreetMap.',
   'featurepanel.error_network': 'Kann das Objekt nicht abrufen, bitte überprüfe die Netzwerkverbindung.',
   'featurepanel.error_deleted': 'Das Objekt wurde in OpenStreetMap als gelöscht markiert.',
   'featurepanel.history_button': 'Versionsverlauf »',
   'featurepanel.details_heading': 'Weitere Informationen',
+  'featurepanel.all_tags_heading': 'Alle Tags',
   'featurepanel.edit_button_title': 'In OpenStreetMap Datenbank bearbeiten',
+  'featurepanel.note_button': 'Schlage eine Änderung vor.',
   'featurepanel.edit_button': 'Ort bearbeiten',
   'featurepanel.add_place_button': 'Ort hinzufügen',
   'featurepanel.undelete_button': 'Löschen rückgängig machen',
   'featurepanel.feature_description_nonosm': 'Kartenobjekt __type__',
   'featurepanel.feature_description_osm': '__type__ in der OpenStreetMap Datenbank',
   'featurepanel.feature_description_point': 'Karten Koordinaten',
-  'featurepanel.show_objects_around': 'Zeige Orte in der Nähe',
-  'featurepanel.uncertain_image': 'Dies ist das nächste Street View Bild. Es kann ein anders Objekt zeigen.',
+  'featurepanel.show_tags': 'Zeige Tags an',
+  'featurepanel.show_objects_around': 'Zeige Orte in der Nähe an',
+  'featurepanel.uncertain_image': 'Dies ist das nächste Street View Bild von Mapillary. Es kann ein anders Objekt zeigen.',
   'featurepanel.inline_edit_title': 'Bearbeiten',
   'featurepanel.objects_around': 'Orte in der Nähe',
+  'featurepanel.more_in_openplaceguide': 'Weitere Information auf __instanceName__',
+  'featurepanel.climbing_restriction': 'Kletter Einschränkungen',
 
   'opening_hours.all_day': '24 Stunden',
   'opening_hours.open': 'Geöffnet: __todayTime__',
@@ -75,6 +122,9 @@ export default {
   'opening_hours.opens_soon_today': 'Öffnet bald: __todayTime__',
   'opening_hours.closes_soon': 'Schließt bald',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'Sonntag|Montag|Dienstag|Mittwoch|Donnerstag|Freitag|Samstag',
+  'opening_hours.editor.closed': 'Geschlossen',
+  'opening_hours.editor.create_advanced': 'Du kannst detailliertere Öffnungszeiten im <link>YoHours-Tool</link> erstellen.',
+  'opening_hours.editor.cant_edit_here': 'Diese Öffnungszeiten können hier nicht bearbeitet werden. Bitte benutze das <link>YoHours-Tool</link>.',
 
   'map.github_title': 'GitHub',
   'map.language_title': 'Sprache wechseln',
@@ -85,6 +135,7 @@ export default {
   'map.more_button_title': 'Mehr Optionen…',
   'map.edit_link': 'Diesen Bereich im iD Editor bearbeiten',
   'map.about_link': 'Über diese App',
+  'map.compass_tooltip': 'Ziehe, um in den 3D-Modus zu wechseln. Zum Zurücksetzen klicken.',
 
   'editdialog.add_heading': 'Zu OpenStreetMap hinzufügen',
   'editdialog.undelete_heading': 'Wieder zu OpenStreetMap hinzufügen',
@@ -97,6 +148,7 @@ export default {
   'editdialog.save_button_delete': 'Löschen',
   'editdialog.save_button_note': 'Notiz hinzufügen',
   'editdialog.changes_needed': 'Bitte nimm ein paar Änderungen vor.',
+  'editdialog.osm_session_expired': 'Deine OpenStreetMap-Sitzung ist abgelaufen. Bitte melde Dich erneut an.',
   'editdialog.loggedInMessage': 'Du bist als <b>__osmUser__</b> eingeloggt, Änderungen werden sofort gespeichert.',
   'editdialog.logout': 'logout',
   'editdialog.anonymousMessage1': 'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt.<br />Wenn du dich',
@@ -111,19 +163,19 @@ export default {
   'editdialog.comment': 'Kommentar (optional)',
   'editdialog.comment_placeholder': 'Link zur Quelle der Informationen usw.',
   'editdialog.info_edit': `Deine Änderungen werden direkt in OpenStreetMap gespeichert. Bitte füge nur Informationen
-         von deinen eigenen oder geprüften Quellen hinzu. Es ist nicht erlaubt, urheberrechtlich geschützte Informationen
-         (z.B. von Google Maps) zu kopieren. <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">weitere Informationen</a>`,
+  von deinen eigenen oder geprüften Quellen hinzu. Es ist nicht erlaubt, urheberrechtlich geschützte Informationen
+  (z.B. von Google Maps) zu kopieren. <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">weitere Informationen</a>`,
   'editdialog.info_note': `Dein Vorschlag wird von Freiwilligen des OpenStreetMap Projektes bearbeitet. Hier
-         kannst du weitere Hinweise oder Beschreibungen der neuen Position usw. hinzufügen.
-         Es ist auch in Ordnung, deinen Beitrag mit einem Link zur Quelle (web,
-         Foto, etc.) zu versehen.`,
-  'editdialog.other_tags': 'Weitere Eigenschaften – Tags',
+  kannst du weitere Hinweise oder Beschreibungen der neuen Position usw. hinzufügen.
+  Es ist auch in Ordnung, deinen Beitrag mit einem Link zur Quelle (web,
+    Foto, etc.) zu versehen.`,
+  'editdialog.other_tags_heading': 'Weitere Eigenschaften – Tags',
+  'editdialog.other_tags': 'Tags bearbeiten',
   'editdialog.other_tags.new_key': 'Neuer Schlüssel',
-  'editdialog.other_tags.add': 'Weiterer Tag',
   'editdialog.other_tags.will_be_deleted': 'wird gelöscht',
   'editdialog.other_tags.info': `Ein Tag beschreibt Eigenschaften
-        eines Ortes auf der Karte in einem einheitlichen Format. Hier findest du die
-        <a href="https://wiki.openstreetmap.org/wiki/Map_Features">komplette Übersicht aller Tags in OpenStreetMap</a>.`,
+  eines Ortes auf der Karte in einem einheitlichen Format. Hier findest du die
+  <a href="https://wiki.openstreetmap.org/wiki/Map_Features">komplette Übersicht aller Tags in OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Schließen',
   'editsuccess.note.heading': 'Danke für deinen Hinweis!',
@@ -134,22 +186,25 @@ export default {
   'editsuccess.edit.heading': 'Danke für deine Bearbeitung!',
   'editsuccess.edit.subheading': 'Deine Änderung erscheint auf Karten auf der ganzen Welt.',
   'editsuccess.edit.body': `Die Änderung ist bereits in der OSM Datenbank gespeichert. Du wirst diese auf der "OSM Carto" Karte in wenigen Minuten sehen können.
-         Die OsmAPP Karte und verschiedene anderen Karten werden ca. einmal im Monat aktualisiert.
-          <br/><br/>Wenn dies ein Versehen war, kannst du die Werte manuell rückgängig machen und erneut speichern.`,
+  Die OsmAPP Karte und verschiedene anderen Karten werden ca. einmal im Monat aktualisiert.
+  <br/><br/>Wenn dies ein Versehen war, kannst du die Werte manuell rückgängig machen und erneut speichern.`,
   'editsuccess.edit.urlLabel': `Deine Änderungen:`,
   'editsuccess.edit.textLabel': 'Kommentar',
 
   'tags.name': 'Name',
-  'tags.website': 'Web',
+  'tags.website': 'Website',
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Öffnungszeiten',
+
+  'coordinates.geo_uri': 'GeoURI (Handy Karten-App)',
+  'coordinates.copy_value': 'Kopiere __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Karten',
   'layerswitcher.heading': 'Kartenebenen',
   'layerswitcher.intro': 'Dank der Tatsache, dass OpenStreetMap Quelldaten anbietet, kann jeder verschiedene Varianten der Karte erstellen.',
   'layerswitcher.add_layer_button': 'Eigene Ebene hinzufügen',
-  'layerswitcher.add_layer_prompt': 'Eigene TMS Ebene hinzufügen – benötigt entsprechende CORS Header:\n(Beta)',
-  'layerswitcher.not_all_work': 'Bitte beachte, dass zwar die meisten Kartenebenen, jedoch nicht alle, funktionieren.',
+  'layerswitcher.overlays': 'Überlagerungen',
+  'layerswitcher.not_all_work': 'Bitte beachte, dass einige Ebenen in OsmAPP nicht funktionieren könnten.',
   'layerswitcher.license': 'Lizenz',
   'layerswitcher.privacy_policy': 'Datenschutzerklärung',
   'layerswitcher.category': 'Kategorie',
@@ -160,6 +215,7 @@ export default {
   'layerswitcher.explaination': 'Bitte fügen Sie {z}, {x}, {y} oder {bbox-epsg-3857} ein',
 
   'layers.basic': 'Standard',
+  'layers.makina_africa': 'OpenPlaceGuide Afrika',
   'layers.outdoor': 'Outdoor',
   'layers.mtb': 'MTB',
   'layers.snow': 'Schnee',
@@ -167,6 +223,16 @@ export default {
   'layers.maptilerSat': 'Maptiler Satellit (z<14)',
   'layers.bingSat': 'Bing Satellit',
   'layers.bike': 'Fahrrad',
+  'layers.climbing': 'Klettern',
+
+  // Not used anywhere
+  'climbingpanel.create_climbing_route': 'Neue Route im Schema zeichnen',
+  'climbingpanel.edit_climbing_route': 'Route im Schema bearbeiten',
+  'climbingpanel.finish_climbing_route': 'Route abschließen',
+  'climbingpanel.cancel_climbing_route': 'Abbrechen',
+  'climbingpanel.delete_climbing_route': 'Route __route__ im Schema löschen',
+  'climbingpanel.create_first_node': 'Klicke auf den Beginn der Route',
+  'climbingpanel.create_next_node': 'Richtung der Route folgen',
 
   'publictransport.tourism': 'Touristische Züge',
   'publictransport.night': 'Nachtzüge',

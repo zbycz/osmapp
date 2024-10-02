@@ -14,7 +14,12 @@ import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
 
-export const UserSettingsDialog = ({ onClose, isOpened }) => {
+type Props = {
+  onClose: (event: unknown) => void;
+  isOpened: boolean;
+};
+
+export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
 
   return (

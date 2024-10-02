@@ -17,7 +17,6 @@ import {
 } from './helpers';
 import { osmappLayers } from './osmappLayers';
 import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
-import { usePersistedState } from '../utils/usePersistedState';
 import { Overlays } from './Overlays';
 import { AddUserLayerButton } from './AddLayerButton';
 
@@ -114,7 +113,7 @@ export const LayerSwitcherContent = () => {
         setActiveLayers={setActiveLayers}
       />
 
-      <AddUserLayerButton setUserLayers={setUserLayers} />
+      <AddUserLayerButton />
     </>
   );
 };

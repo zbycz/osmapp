@@ -1,8 +1,6 @@
-import { PointsTooFarError, Profile, RoutingResult } from './types';
+import { Profile, RoutingResult } from './types';
 import { LonLat } from '../../../services/types';
 import { fetchJson } from '../../../services/fetch';
-import { getBbox } from '../../../services/getCenter';
-import { FetchError } from '../../../services/helpers';
 
 const API_KEY = `f189b841-6529-46c6-8a91-51f17477dcda`;
 
