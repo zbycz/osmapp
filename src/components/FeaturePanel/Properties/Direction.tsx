@@ -1,6 +1,7 @@
 import React from 'react';
 import { useUserThemeContext } from '../../../helpers/theme';
 import { use2dContext } from './helpers';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
 
 const cardinalMiddle = (angle1: number, angle2: number) => {
   // Add 360 on big difference like NW
@@ -109,13 +110,7 @@ const drawRay = ({
   ctx.stroke();
 };
 
-const DirectionIndicator = ({
-  start,
-  end,
-}: {
-  start: number;
-  end: number | undefined;
-}) => {
+const DirectionIndicator = ({ start, end }: { start: number; end: number }) => {
   const canvas = React.useRef<HTMLCanvasElement>();
   const [color, setColor] = React.useState('#000');
   const { currentTheme } = useUserThemeContext();
@@ -157,11 +152,6 @@ const DirectionIndicator = ({
         return (angle + rangeStep) % 360;
       };
 
-      if (end === undefined) {
-        ray(start);
-        return;
-      }
-
       for (
         let angle = start;
         angle !== end;
@@ -181,6 +171,17 @@ export const DirectionValue: React.FC<{ v: string }> = ({ children, v }) => {
   try {
     const [start, end] = v.split('-', 2).map(parseCardinal);
 
+    const indicator =
+      end === undefined ? (
+        <ArrowUpward
+          style={{
+            transform: `rotate(${start}deg)`,
+          }}
+        />
+      ) : (
+        <DirectionIndicator start={start} end={end} />
+      );
+
     return (
       <span
         style={{
@@ -189,7 +190,7 @@ export const DirectionValue: React.FC<{ v: string }> = ({ children, v }) => {
           gap: '0.5rem',
         }}
       >
-        <DirectionIndicator start={start} end={end} />
+        {indicator}
         {children}
       </span>
     );

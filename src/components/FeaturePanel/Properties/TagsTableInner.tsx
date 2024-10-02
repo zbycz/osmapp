@@ -140,7 +140,7 @@ export const TagsTableInner = ({
       />
       {rest.map(([k, v]) => (
         <tr key={k}>
-          <th>{k}</th>
+          <th style={{ verticalAlign: 'middle' }}>{k}</th>
           <td>
             <InlineEditButton k={k} />
             {renderValue(k, v)}

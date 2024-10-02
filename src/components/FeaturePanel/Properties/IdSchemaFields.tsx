@@ -97,7 +97,12 @@ const UiFields = ({ fields }: { fields: UiField[] }) => {
         const { key, label, field, tagsForField } = uiField;
         return (
           <tr key={key}>
-            <th title={getTooltip(field, key)}>{removeUnits(label)}</th>
+            <th
+              title={getTooltip(field, key)}
+              style={{ verticalAlign: 'middle' }}
+            >
+              {removeUnits(label)}
+            </th>
             <td>
               <InlineEditButton k={tagsForField?.[0]?.key ?? key} />
               {addUnits(label, render(uiField, feature))}
