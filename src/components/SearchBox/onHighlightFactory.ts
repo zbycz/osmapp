@@ -1,6 +1,6 @@
 import { AutocompleteHighlightChangeReason } from '@mui/material';
 import { Feature } from '../../services/types';
-import { GeocoderOption, Option } from './types';
+import { GeocoderOption, HistoryOption, Option } from './types';
 
 const getElementType = (osmType: string) => {
   switch (osmType) {
@@ -15,7 +15,23 @@ const getElementType = (osmType: string) => {
   }
 };
 
-export const getSkeleton = ({ geocoder }: GeocoderOption): Feature => {
+export const getSkeleton = (
+  option: GeocoderOption | HistoryOption,
+): Feature => {
+  if (option.type === 'history') {
+    const { history } = option;
+    return {
+      center: history.geometry.coordinates,
+      type: 'Feature',
+      skeleton: true,
+      nonOsmObject: false,
+      osmMeta: history.osmMeta,
+      tags: { name: history.label },
+      properties: { class: '', subclass: '' },
+    };
+  }
+
+  const { geocoder } = option;
   const center = geocoder.geometry.coordinates;
   const { osm_id: id, osm_type: osmType, name } = geocoder.properties;
   const type = getElementType(osmType);
@@ -43,6 +59,9 @@ export const onHighlightFactory =
     }
 
     if (option.type === 'geocoder' && option.geocoder.geometry?.coordinates) {
+      setPreview(getSkeleton(option));
+    }
+    if (option.type === 'history') {
       setPreview(getSkeleton(option));
     }
   };

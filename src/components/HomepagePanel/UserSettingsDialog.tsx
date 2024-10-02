@@ -1,4 +1,5 @@
 import {
+  Button,
   Dialog,
   DialogContent,
   DialogTitle,
@@ -13,9 +14,11 @@ import { PanelLabel } from '../FeaturePanel/Climbing/PanelLabel';
 import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
+import { useHistoryContext } from '../SearchBox/options/historyContext';
 
 export const UserSettingsDialog = ({ onClose, isOpened }) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
+  const { clearOptions: clearSearchHistory } = useHistoryContext();
 
   return (
     <Dialog onClose={onClose} open={isOpened} maxWidth="sm" fullWidth>
@@ -23,6 +26,11 @@ export const UserSettingsDialog = ({ onClose, isOpened }) => {
 
       <ClosePanelButton right onClick={onClose} />
       <DialogContent>
+        <PanelLabel>General</PanelLabel>
+        <Button variant="outlined" onClick={clearSearchHistory}>
+          Delete search history
+        </Button>
+
         <PanelLabel>Climbing</PanelLabel>
         <List>
           <ListItem>

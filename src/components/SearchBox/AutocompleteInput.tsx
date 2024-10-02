@@ -14,6 +14,7 @@ import { getOptionLabel } from './getOptionLabel';
 import { useGetOptions } from './useGetOptions';
 import { useInputValueState } from './options/geocoder';
 import { useRouter } from 'next/router';
+import { useHistoryContext } from './options/historyContext';
 
 const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
@@ -66,6 +67,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const { inputValue, setInputValue } = useInputValueState();
   const options = useGetOptions(inputValue);
   const router = useRouter();
+  const { addOption } = useHistoryContext();
 
   return (
     <Autocomplete
@@ -83,6 +85,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         showToast,
         setOverpassLoading,
         router,
+        addToHistoryOption: addOption,
       })}
       onHighlightChange={onHighlightFactory(setPreview)}
       getOptionDisabled={(o) => o.type === 'loader'}
