@@ -19,12 +19,17 @@ export const StationsList: React.FC = ({ children }) => {
 };
 
 type ItemProps = {
-  stop: Feature;
   isFirst: boolean;
   isLast: boolean;
+  hold?: boolean;
 };
 
-export const StationItem = ({ stop, isFirst, isLast }: ItemProps) => {
+export const StationItem: React.FC<ItemProps> = ({
+  children,
+  isFirst,
+  isLast,
+  hold = true,
+}) => {
   const { feature } = useFeatureContext();
   const { currentTheme } = useUserThemeContext();
   const color = getBgColor(feature.tags.colour, currentTheme === 'dark');
@@ -35,15 +40,13 @@ export const StationItem = ({ stop, isFirst, isLast }: ItemProps) => {
         gap: '0.5rem',
       }}
     >
-      <Halt color={color} isFirst={isFirst} isLast={isLast} />
+      <Halt color={color} isFirst={isFirst} isLast={isLast} hold={hold} />
       <div
         style={{
           padding: '0.5rem 0',
         }}
       >
-        <Link href={`${stop.osmMeta.type}/${stop.osmMeta.id}`}>
-          {stop.tags.name}
-        </Link>
+        {children}
       </div>
     </li>
   );

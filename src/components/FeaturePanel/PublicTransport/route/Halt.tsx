@@ -6,9 +6,10 @@ type Props = {
   color: string;
   isFirst: boolean;
   isLast: boolean;
+  hold?: boolean;
 };
 
-export const Halt = ({ color, isFirst, isLast }: Props) => (
+export const Halt = ({ color, isFirst, isLast, hold = true }: Props) => (
   <div
     style={{
       width: '1rem',
@@ -25,13 +26,15 @@ export const Halt = ({ color, isFirst, isLast }: Props) => (
         background: isFirst ? 'transparent' : color,
       }}
     />
-    <TripOriginIcon
-      style={{
-        color: color,
-        width: '100%',
-        margin: '-6px',
-      }}
-    />
+    {hold && (
+      <TripOriginIcon
+        style={{
+          color: color,
+          width: '100%',
+          margin: '-6px',
+        }}
+      />
+    )}
     <div
       style={{
         width: '4px',

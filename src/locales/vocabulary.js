@@ -260,6 +260,10 @@ export default {
   'publictransport.bus': 'Bus',
   'publictransport.unknown': 'Unknown type',
 
+  'publictransport.route': 'Route',
+  'publictransport.show_complete_route': 'Show the complete route',
+  'publictransport.hidden_stops': '__amount__ more stops',
+
   'climbingpanel.draw_route': 'Draw route',
 
   'climbingpanel.show_route_detail': 'Show route detail',

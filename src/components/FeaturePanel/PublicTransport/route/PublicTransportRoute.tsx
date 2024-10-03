@@ -1,9 +1,10 @@
-import Link from 'next/link';
 import { useFeatureContext } from '../../../utils/FeatureContext';
-import { StationItem, StationsList } from './helpers';
-import { Feature, OsmId } from '../../../../services/types';
-
-const getUrl = (osmMeta: OsmId) => `${osmMeta.type}/${osmMeta.id}`;
+import { Feature } from '../../../../services/types';
+import React from 'react';
+import { Checkbox, FormControlLabel } from '@mui/material';
+import { t } from '../../../../services/intl';
+import { getUrlOsmId } from '../../../../services/helpers';
+import { Stops } from './Stops';
 
 export const PublicTransportRoute = () => {
   const { feature } = useFeatureContext();
@@ -13,9 +14,9 @@ export const PublicTransportRoute = () => {
 
   const stopIds = feature.members
     .filter(({ role }) => role === 'stop')
-    .map(({ ref, type }) => getUrl({ id: ref, type }));
+    .map(({ ref, type }) => getUrlOsmId({ id: ref, type }));
   const stops = feature.memberFeatures.filter(({ osmMeta }) =>
-    stopIds.includes(getUrl(osmMeta)),
+    stopIds.includes(getUrlOsmId(osmMeta)),
   );
 
   if (stops.length === 0) {
@@ -26,16 +27,43 @@ export const PublicTransportRoute = () => {
 };
 
 const StopList = ({ stops }: { stops: Feature[] }) => {
+  const [minimized, setMinimized] = React.useState(stops.length > 7);
+  const getStops = () => {
+    if (minimized) {
+      return [stops[0], 'hidden' as const, stops[stops.length - 1]];
+    }
+    return stops;
+  };
+  const [renderedStops, setRenderedStops] = React.useState(getStops());
+
+  React.useEffect(() => {
+    setRenderedStops(getStops());
+  }, [minimized]);
+
   return (
-    <StationsList>
-      {stops.map((stop, i) => (
-        <StationItem
-          key={getUrl(stop.osmMeta)}
-          isFirst={i === 0}
-          isLast={i === stops.length - 1}
-          stop={stop}
+    <>
+      <h3>{t('publictransport.route')}</h3>
+      <div>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={!minimized}
+              onChange={() => {
+                setMinimized((b) => !b);
+              }}
+            />
+          }
+          label={t('publictransport.show_complete_route')}
+          labelPlacement="start"
         />
-      ))}
-    </StationsList>
+      </div>
+      <Stops
+        stops={renderedStops}
+        stopCount={stops.length}
+        onExpand={() => {
+          setMinimized(false);
+        }}
+      />
+    </>
   );
 };

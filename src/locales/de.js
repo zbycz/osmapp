@@ -245,6 +245,10 @@ export default {
   'publictransport.bus': 'Bus',
   'publictransport.unknown': 'Unbekannter Typ',
 
+  'publictransport.route': 'Streckenverlauf',
+  'publictransport.show_complete_route': 'Komplette Strecke anzeigen',
+  'publictransport.hidden_stops': '__amount__ weitere Haltestellen',
+
   'runway.information': 'Landebahninformationen',
   'runway.runway': 'Landebahn',
   'runway.size': 'Länge (m) - Breite (m)',
