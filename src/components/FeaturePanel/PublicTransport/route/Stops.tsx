@@ -10,10 +10,12 @@ const StationInner = ({
   stop,
   stopCount,
   onExpand,
+  onCollapse,
 }: {
-  stop: Feature | 'hidden';
+  stop: Feature | 'hidden' | 'show-more';
   stopCount: number;
   onExpand: () => void;
+  onCollapse: () => void;
 }) => {
   if (stop === 'hidden') {
     return (
@@ -32,31 +34,51 @@ const StationInner = ({
       </Typography>
     );
   }
+  if (stop === 'show-more') {
+    return (
+      <Typography variant="body2" color="textSecondary">
+        <IconButton
+          aria-label="expand"
+          onClick={() => {
+            onCollapse();
+          }}
+        >
+          <TurnLeftIcon style={{ transform: 'rotate(90deg) scaleY(-1)' }} />
+        </IconButton>
+        {t('publictransport.visible_stops', {
+          amount: stopCount - 2,
+        })}
+      </Typography>
+    );
+  }
 
   return <Link href={getUrlOsmId(stop.osmMeta)}>{stop.tags.name}</Link>;
 };
 
 type Props = {
-  stops: (Feature | 'hidden')[];
+  stops: (Feature | 'hidden' | 'show-more')[];
   stopCount: number;
   onExpand: () => void;
+  onCollapse: () => void;
 };
 
-export const Stops = ({ stops, stopCount, onExpand }: Props) => {
+export const Stops = ({ stops, stopCount, onExpand, onCollapse }: Props) => {
   return (
     <StationsList>
       {stops.map((stop, i) => {
         return (
           <StationItem
-            hold={stop !== 'hidden'}
-            key={stop === 'hidden' ? stop : getUrlOsmId(stop.osmMeta)}
+            hold={typeof stop === 'object'}
+            key={typeof stop === 'string' ? stop : getUrlOsmId(stop.osmMeta)}
             isFirst={i === 0}
             isLast={i === stops.length - 1}
+            small={stop === 'show-more'}
           >
             <StationInner
               stop={stop}
               stopCount={stopCount}
               onExpand={onExpand}
+              onCollapse={onCollapse}
             />
           </StationItem>
         );

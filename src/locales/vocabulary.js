@@ -261,8 +261,8 @@ export default {
   'publictransport.unknown': 'Unknown type',
 
   'publictransport.route': 'Route',
-  'publictransport.show_complete_route': 'Show the complete route',
   'publictransport.hidden_stops': '__amount__ more stops',
+  'publictransport.visible_stops': 'Hide __amount__ stops',
 
   'climbingpanel.draw_route': 'Draw route',
 

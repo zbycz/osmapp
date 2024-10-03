@@ -1,7 +1,6 @@
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { Feature } from '../../../../services/types';
 import React from 'react';
-import { Checkbox, FormControlLabel } from '@mui/material';
 import { t } from '../../../../services/intl';
 import { getUrlOsmId } from '../../../../services/helpers';
 import { Stops } from './Stops';
@@ -32,7 +31,7 @@ const StopList = ({ stops }: { stops: Feature[] }) => {
     if (minimized) {
       return [stops[0], 'hidden' as const, stops[stops.length - 1]];
     }
-    return stops;
+    return [stops[0], 'show-more' as const, ...stops.slice(1)];
   }, [minimized, stops]);
   const [renderedStops, setRenderedStops] = React.useState(getStops());
 
@@ -43,25 +42,14 @@ const StopList = ({ stops }: { stops: Feature[] }) => {
   return (
     <>
       <h3>{t('publictransport.route')}</h3>
-      <div>
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={!minimized}
-              onChange={() => {
-                setMinimized((b) => !b);
-              }}
-            />
-          }
-          label={t('publictransport.show_complete_route')}
-          labelPlacement="start"
-        />
-      </div>
       <Stops
         stops={renderedStops}
         stopCount={stops.length}
         onExpand={() => {
           setMinimized(false);
+        }}
+        onCollapse={() => {
+          setMinimized(true);
         }}
       />
     </>

@@ -246,8 +246,8 @@ export default {
   'publictransport.unknown': 'Unbekannter Typ',
 
   'publictransport.route': 'Streckenverlauf',
-  'publictransport.show_complete_route': 'Komplette Strecke anzeigen',
   'publictransport.hidden_stops': '__amount__ weitere Haltestellen',
+  'publictransport.visible_stops': 'Blende __amount__ Haltestellen aus',
 
   'runway.information': 'Landebahninformationen',
   'runway.runway': 'Landebahn',

@@ -22,6 +22,7 @@ type ItemProps = {
   isFirst: boolean;
   isLast: boolean;
   hold?: boolean;
+  small?: boolean;
 };
 
 export const StationItem: React.FC<ItemProps> = ({
@@ -29,6 +30,7 @@ export const StationItem: React.FC<ItemProps> = ({
   isFirst,
   isLast,
   hold = true,
+  small = false,
 }) => {
   const { feature } = useFeatureContext();
   const { currentTheme } = useUserThemeContext();
@@ -43,7 +45,7 @@ export const StationItem: React.FC<ItemProps> = ({
       <Halt color={color} isFirst={isFirst} isLast={isLast} hold={hold} />
       <div
         style={{
-          padding: '0.5rem 0',
+          padding: small ? '0' : '0.5rem 0',
         }}
       >
         {children}
