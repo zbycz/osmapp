@@ -53,7 +53,7 @@ const PublicTransportInner = () => {
   const { feature } = useFeatureContext();
   const { id, type } = feature.osmMeta;
 
-  const { data, status } = useQuery('publictransport', () =>
+  const { data, status } = useQuery([id, type], () =>
     requestLines(type, Number(id)),
   );
 
