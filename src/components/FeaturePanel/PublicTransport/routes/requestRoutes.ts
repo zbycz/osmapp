@@ -1,10 +1,10 @@
 import groupBy from 'lodash/groupBy';
-import { fetchJson } from '../../../services/fetch';
+import { fetchJson } from '../../../../services/fetch';
 import {
   getOverpassUrl,
   overpassGeomToGeojson,
-} from '../../../services/overpassSearch';
-import { intl } from '../../../services/intl';
+} from '../../../../services/overpassSearch';
+import { intl } from '../../../../services/intl';
 
 export interface LineInformation {
   ref: string;

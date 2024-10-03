@@ -1,4 +1,4 @@
-import * as fetchModule from '../../../../services/fetch';
+import * as fetchModule from '../../../../../services/fetch';
 import { requestLines } from '../requestRoutes';
 
 jest.mock('../../../../services/fetch', () => ({

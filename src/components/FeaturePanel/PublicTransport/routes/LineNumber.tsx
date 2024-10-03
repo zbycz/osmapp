@@ -1,9 +1,9 @@
 import React from 'react';
-import { useUserThemeContext } from '../../../helpers/theme';
+import { useUserThemeContext } from '../../../../helpers/theme';
 import styled from '@emotion/styled';
-import { osmColorToHex, whiteOrBlackText } from '../helpers/color';
+import { osmColorToHex, whiteOrBlackText } from '../../helpers/color';
 
-const getBgColor = (color: string | undefined, darkmode: boolean) => {
+export const getBgColor = (color: string | undefined, darkmode: boolean) => {
   if (color) return osmColorToHex(color);
 
   return darkmode ? '#898989' : '#dddddd';
