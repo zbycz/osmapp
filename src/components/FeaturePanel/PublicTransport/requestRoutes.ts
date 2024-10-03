@@ -29,9 +29,24 @@ const getTagValue = (
   }
   const altElement = routes.find(({ tags }) => tags[key]);
   if (altElement) {
-    return altElement[key];
+    return altElement.tags[key];
   }
   return undefined;
+};
+
+const getService = (tags: Record<string, string>, routes: WithTags[]) => {
+  const getVal = (key: string) => getTagValue(key, tags, routes);
+  const serviceTagValue = getTagValue('service', tags, routes);
+  const serviceTag =
+    serviceTagValue === 'highspeed' ? 'high_speed' : serviceTagValue;
+  const isHighspeed = getVal('highspeed') === 'yes';
+
+  return (
+    serviceTag ||
+    (isHighspeed && 'high_speed') ||
+    getVal('route') ||
+    getVal('route_master')
+  );
 };
 
 export async function requestLines(featureType: string, id: number) {
@@ -74,7 +89,7 @@ export async function requestLines(featureType: string, id: number) {
       return {
         ref: `${tags.ref || tags.name}`,
         colour: getVal('colour'),
-        service: getVal('service') || getVal('route') || getVal('route_master'),
+        service: getService(tags, directionRouteTags),
         osmId: `${id}`,
         osmType: type,
       };
