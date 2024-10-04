@@ -74,7 +74,7 @@ export const Image = ({ def, image }: Props) => {
   return (
     <ImageWrapper $hasPaths={hasPaths} onClick={onClick}>
       {image.panoramaUrl ? (
-        <PanoramaImg url={image.panoramaUrl} />
+        <PanoramaImg small={image.imageUrl} large={image.panoramaUrl} />
       ) : (
         <Img
           src={image.imageUrl}
