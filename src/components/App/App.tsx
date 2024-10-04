@@ -117,7 +117,7 @@ const useScrollToTopWhenRouteChanged = () => {
 
 const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMobileMode = useMobileMode();
-  const { feature, featureShown } = useFeatureContext();
+  const { feature, featureShown, homepageShown } = useFeatureContext();
   const router = useRouter();
   const isMounted = useIsClient();
   const scrollRef = useScrollToTopWhenRouteChanged() as any;
@@ -135,13 +135,25 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
 
   const directions = router.query.all?.[0] === 'directions' && !featureShown;
 
+  const isMyTicksVisible = router.pathname === '/my-ticks';
+  const isInstallVisible = router.pathname === '/install';
+
+  const isSearchInPanelVisible =
+    (!featureShown &&
+      !isMyTicksVisible &&
+      !isInstallVisible &&
+      !homepageShown) ||
+    isMobileMode;
+
   return (
     <>
       <Loading />
-      {!directions && <SearchBox />}
-      {directions && <DirectionsBox />}
       {featureShown && !isMobileMode && isMounted && (
         <FeaturePanelOnSide scrollRef={scrollRef} />
+      )}
+      {directions && <DirectionsBox />}
+      {!directions && (
+        <SearchBox isSearchInPanelVisible={isSearchInPanelVisible} />
       )}
       {featureShown && isMobileMode && (
         <FeaturePanelInDrawer scrollRef={scrollRef} />
