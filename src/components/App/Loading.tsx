@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import styled from 'styled-components';
+import React, { useCallback, useEffect } from 'react';
+import styled from '@emotion/styled';
 import Router from 'next/router';
 import { LinearProgress } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
@@ -21,16 +21,16 @@ const useStateWithTimeout = () => {
   const timeout = React.useRef<NodeJS.Timeout>();
   return {
     loading,
-    start: () => {
+    start: useCallback(() => {
       timeout.current = setTimeout(start, 300);
-    },
-    stop: () => {
+    }, [start]),
+    stop: useCallback(() => {
       if (timeout.current) {
         clearTimeout(timeout.current);
         timeout.current = undefined;
       }
       stop();
-    },
+    }, [stop]),
   };
 };
 
@@ -46,7 +46,7 @@ const useIsLoadingNext = () => {
       Router.events.off('routeChangeComplete', stop);
       Router.events.off('routeChangeError', stop);
     };
-  }, []);
+  }, [start, stop]);
   return loading;
 };
 
@@ -54,13 +54,12 @@ const useIsLoadingFeature = () => {
   const { loading, start, stop } = useStateWithTimeout();
   const { feature } = useFeatureContext();
   useEffect(() => {
-    if (!feature) return;
-    if (feature.skeleton) {
+    if (feature?.skeleton && !feature.error) {
       start();
     } else {
       stop();
     }
-  }, [feature]);
+  }, [feature, start, stop]);
   return loading;
 };
 

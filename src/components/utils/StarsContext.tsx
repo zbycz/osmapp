@@ -12,23 +12,29 @@ export type Star = {
   center: LonLat;
 };
 
-interface StarsType {
+type StarsContextType = {
   stars: Star[];
   isStarred: boolean;
   toggleStar: () => void;
-}
+};
 
-export const StarsContext = createContext<StarsType>(undefined);
+export const StarsContext = createContext<StarsContextType>(undefined);
 
 const hasStar = (stars: Star[], shortId: string) =>
   !!stars.find((star) => star.shortId === shortId);
 
-export const StarsProvider = ({ children }) => {
+export const StarsProvider: React.FC = ({ children }) => {
   const { feature } = useFeatureContext();
   const shortId = feature ? getShortId(feature.osmMeta) : undefined;
 
   const [stars, setStars] = usePersistedState<Star[]>('stars', []);
   const isStarred = hasStar(stars, shortId);
+
+  // between 2024-02 and 2024-06 stars were saved without center, lets remove them now, as Directions will not work without center
+  const starsWithCenter = stars.filter((star) => star.center);
+  if (stars.length !== starsWithCenter.length) {
+    setStars(starsWithCenter);
+  }
 
   const toggleStar = () => {
     if (!shortId) {
@@ -47,7 +53,7 @@ export const StarsProvider = ({ children }) => {
     );
   };
 
-  const value = { stars, isStarred, toggleStar };
+  const value: StarsContextType = { stars, isStarred, toggleStar };
 
   return (
     <StarsContext.Provider value={value}>{children}</StarsContext.Provider>

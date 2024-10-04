@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { MenuItem, IconButton, Menu, Divider } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -28,8 +28,7 @@ const StyledMenuItem = styled(MenuItem)`
 ` as unknown as any; // <Menu> expects "li", but it as "a"
 
 const StyledToggleButton = styled(IconButton)`
-  position: absolute !important;
-  margin: -5px 0 0 0 !important;
+  margin: -10px 0 -5px 0 !important;
 
   svg {
     font-size: 17px;
@@ -44,6 +43,7 @@ export const ToggleButton = forwardRef<any, any>(
     </StyledToggleButton>
   ),
 );
+ToggleButton.displayName = 'ToggleButton';
 
 const CopyTextItem = ({ text }: { text: string | null }) =>
   text === null ? null : (
@@ -55,7 +55,7 @@ const CopyTextItem = ({ text }: { text: string | null }) =>
   );
 
 const LinkItem = ({ href, label }) => (
-  <StyledMenuItem component="a" href={href} target="_blank" rel="noopener">
+  <StyledMenuItem component="a" href={href} target="_blank">
     {label} <OpenInNewIcon />
   </StyledMenuItem>
 );

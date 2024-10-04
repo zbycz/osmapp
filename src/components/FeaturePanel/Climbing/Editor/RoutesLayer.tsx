@@ -1,13 +1,13 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteFloatingMenu } from './RouteFloatingMenu';
 import { RouteMarks } from './RouteMarks';
 import { getMouseFromPositionInImage } from '../utils/mousePositionUtils';
+import { DIALOG_TOP_BAR_HEIGHT } from '../config';
 
-const DIALOG_TOP_BAR_HEIGHT = 56;
 type RouteRenders = { route: React.ReactNode; marks: React.ReactNode };
 
 const Svg = styled.svg<{

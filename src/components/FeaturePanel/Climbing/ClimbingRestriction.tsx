@@ -21,7 +21,7 @@ export const ClimbingRestriction = () => {
   return (
     <Alert
       severity={restriction === 'yes' ? 'error' : 'warning'}
-      sx={{ mt: 2 }}
+      sx={{ mb: 2 }}
     >
       <AlertTitle>{t('featurepanel.climbing_restriction')}</AlertTitle>
       {restrictionTimeDescription}

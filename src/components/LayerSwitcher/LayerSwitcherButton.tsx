@@ -1,5 +1,7 @@
 import React from 'react';
-import styled, { css } from 'styled-components';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
+
 import LayersIcon from './LayersIcon';
 import { t } from '../../services/intl';
 import { useMobileMode } from '../helpers';
@@ -42,7 +44,11 @@ const StyledLayerSwitcher = styled.button<{ $isMobileMode: boolean }>`
   }
 `;
 
-export const LayerSwitcherButton = ({ onClick }: { onClick?: any }) => {
+export const LayerSwitcherButton = ({
+  onClick,
+}: {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}) => {
   const isMobileMode = useMobileMode();
   return (
     <StyledLayerSwitcher onClick={onClick} $isMobileMode={isMobileMode}>

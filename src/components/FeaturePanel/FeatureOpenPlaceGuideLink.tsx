@@ -1,39 +1,38 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { t } from '../../services/intl';
 import { fetchJson } from '../../services/fetch';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { getUrlOsmId } from '../../services/helpers';
+import { LonLat } from '../../services/types';
 
 const Spacer = styled.div`
   padding-bottom: 10px;
 `;
 
-const getData = async (center, osmId) => {
+type Instance = {
+  url: string;
+  name: string;
+};
+
+const getData = async (center: LonLat, osmId: string) => {
   if (center === undefined || !center.length) {
     return null;
   }
-  const body = await fetchJson(
+  const body = await fetchJson<Instance[]>(
     `https://discover.openplaceguide.org/v2/discover?lat=${center[1]}&lon=${center[0]}&osmId=${osmId}`,
   );
   return body;
 };
 
-export const FeatureOpenPlaceGuideLink = () => {
-  const supportedCountries = ['et']; // refer to the list of countries here: https://github.com/OpenPlaceGuide/discover-cf-worker/blob/main/index.js#L43
-
+const OpenPlaceGuideLink = () => {
+  const [instances, setInstances] = useState<Instance[]>([]);
   const { feature } = useFeatureContext();
   const osmId = getUrlOsmId(feature.osmMeta);
 
-  if (!supportedCountries.includes(feature.countryCode)) {
-    return null;
-  }
-
-  const [instances, setInstances] = useState([]);
-
   useEffect(() => {
-    getData(feature.center, osmId).then(setInstances);
-  }, [osmId]);
+    getData(feature.center, osmId).then((data) => setInstances(data ?? []));
+  }, [feature.center, osmId]);
 
   if (instances.length === 0) {
     return null;
@@ -53,4 +52,15 @@ export const FeatureOpenPlaceGuideLink = () => {
       ))}
     </>
   );
+};
+
+const supportedCountries = ['et']; // refer to the list of countries here: https://github.com/OpenPlaceGuide/discover-cf-worker/blob/main/index.js#L43
+
+export const FeatureOpenPlaceGuideLink = () => {
+  const { feature } = useFeatureContext();
+  if (!supportedCountries.includes(feature.countryCode)) {
+    return null;
+  }
+
+  return <OpenPlaceGuideLink />;
 };

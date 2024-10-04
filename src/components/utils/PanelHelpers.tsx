@@ -1,8 +1,8 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { LegacyRef, useRef } from 'react';
+import styled from '@emotion/styled';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@mui/material';
-import { isDesktop } from '../helpers';
+import { isDesktop, isMobileMode, useMobileMode } from '../helpers';
 import { useScrollShadow } from '../FeaturePanel/Climbing/utils/useScrollShadow';
 import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 
@@ -51,30 +51,54 @@ export const PanelWrapper = ({ children }) => (
   </Container>
 );
 
-export const PanelScrollbars = ({ children }) => {
+type PanelScrollbarsProps = {
+  children: React.ReactNode;
+  scrollRef?: LegacyRef<Scrollbars>;
+};
+
+const MobileScrollbars = styled.div`
+  height: 100%;
+  overflow: auto;
+`;
+
+export const PanelScrollbars = ({
+  children,
+  scrollRef,
+}: PanelScrollbarsProps) => {
+  const isMobileMode = useMobileMode();
+  const newRef = useRef<Scrollbars>(null);
+  const ref = scrollRef || newRef;
   const theme = useTheme();
 
   // @TODO refresh on panel height first update
+
   const {
     scrollElementRef,
     onScroll,
     ShadowContainer,
     ShadowTop,
     ShadowBottom,
-  } = useScrollShadow();
+  } = useScrollShadow(undefined, ref);
 
   return (
     <ShadowContainer>
       <ShadowTop backgroundColor={theme.palette.background.paper} />
-      <Scrollbars
-        universal
-        autoHide
-        style={{ height: '100%' }}
-        onScroll={onScroll}
-        ref={scrollElementRef}
-      >
-        {children}
-      </Scrollbars>
+      {isMobileMode ? (
+        <MobileScrollbars onScroll={onScroll} ref={scrollElementRef}>
+          {children}
+        </MobileScrollbars>
+      ) : (
+        <Scrollbars
+          universal
+          autoHide
+          style={{ height: '100%' }}
+          onScroll={onScroll}
+          ref={scrollElementRef}
+        >
+          {children}
+        </Scrollbars>
+      )}
+
       <ShadowBottom backgroundColor={theme.palette.background.paper} />
     </ShadowContainer>
   );
@@ -86,7 +110,7 @@ export const PanelContent = styled.div`
   height: 100%;
 `;
 
-export const PanelFooter = styled.div`
+export const PanelFooterWrapper = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
   margin-top: auto;
   padding-bottom: 15px;

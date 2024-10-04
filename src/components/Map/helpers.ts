@@ -1,16 +1,23 @@
-import { OsmApiId } from '../../services/helpers';
+import { OsmId } from '../../services/types';
 import { isBrowser } from '../helpers';
 import { getGlobalMap } from '../../services/mapStorage';
 
-const isOsmLayer = (id) => {
+const isOsmLayer = (id: string) => {
   if (id.startsWith('place-country-')) return false; // https://github.com/zbycz/osmapp/issues/35
   if (id === 'place-continent') return false;
   if (id === 'water-name-ocean') return false;
-  const prefixes = ['water-name-', 'poi-', 'place-', 'overpass-', 'climbing-'];
+  const prefixes = [
+    'water-name-',
+    'poi-',
+    'place-',
+    'overpass-',
+    'climbing-',
+    'airport-',
+  ];
   return prefixes.some((prefix) => id.startsWith(prefix));
 };
 
-export const layersWithOsmId = (style) =>
+export const layersWithOsmId = (style: maplibregl.StyleSpecification) =>
   style.layers // TODO make it custom for basic/outdoor + revert place_
     .map((x) => x.id)
     .filter((id) => isOsmLayer(id));
@@ -44,7 +51,7 @@ export const convertMapIdToOsmId = (feature) => {
   return { id, type: mapTypeToOsm[numType] ?? `type${numType}` };
 };
 
-export const convertOsmIdToMapId = (apiId: OsmApiId) => {
+export const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };

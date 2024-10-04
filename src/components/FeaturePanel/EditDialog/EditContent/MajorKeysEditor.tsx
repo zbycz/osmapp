@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Button, TextField, Typography } from '@mui/material';
+import { Box, Button, Stack, TextField, Typography } from '@mui/material';
 
 import { t } from '../../../../services/intl';
 import {
@@ -9,8 +9,18 @@ import {
 } from '../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import { useEditContext } from '../EditContext';
+import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
+import styled from '@emotion/styled';
 
-export const majorKeys = ['name', 'website', 'phone', 'opening_hours'];
+export const majorKeys = [
+  'name',
+  'description',
+  'website',
+  'phone',
+  'opening_hours',
+];
+
+const MAX_INPUT_LENGTH = 255;
 
 const getData = (numberOfWikimediaItems) => {
   const wikimediaCommonTags = Array(numberOfWikimediaItems)
@@ -25,12 +35,76 @@ const getData = (numberOfWikimediaItems) => {
     keys: [...majorKeys, ...Object.keys(wikimediaCommonTags)],
     names: {
       name: t('tags.name'),
+      description: t('tags.description'),
       website: t('tags.website'),
       phone: t('tags.phone'),
       opening_hours: t('tags.opening_hours'),
       ...wikimediaCommonTags,
     },
   };
+};
+
+const InputContainer = styled.div`
+  position: relative;
+`;
+const CharacterCountContainer = styled.div`
+  position: absolute;
+  right: 0;
+`;
+
+const CharacterCount = ({
+  count = 0,
+  max,
+  isVisible,
+}: {
+  count?: number;
+  max: number;
+  isVisible: boolean;
+}) => (
+  <CharacterCountContainer>
+    {isVisible && (
+      <Stack direction="row" justifyContent={'flex-end'} whiteSpace="nowrap">
+        <Box color={count >= max ? 'error.main' : undefined}>
+          {count} / {max}
+        </Box>
+      </Stack>
+    )}
+  </CharacterCountContainer>
+);
+
+const TextFieldWithCharacterCount = ({
+  k,
+  label,
+  autoFocus,
+  onChange,
+  value,
+}) => {
+  const [isCharacterCountVisible, setIsCharacterCountVisible] = useState(false);
+  return (
+    <InputContainer>
+      <TextField
+        label={label}
+        value={value}
+        InputLabelProps={{ shrink: true }}
+        variant="outlined"
+        margin="normal"
+        name={k}
+        onChange={onChange}
+        fullWidth
+        autoFocus={autoFocus}
+        inputProps={{ maxLength: MAX_INPUT_LENGTH }}
+        onFocus={() => setIsCharacterCountVisible(true)}
+        onBlur={() => setIsCharacterCountVisible(false)}
+        helperText={
+          <CharacterCount
+            count={value?.length}
+            max={MAX_INPUT_LENGTH}
+            isVisible={isCharacterCountVisible}
+          />
+        }
+      />
+    </InputContainer>
+  );
 };
 
 export const MajorKeysEditor = () => {
@@ -57,23 +131,25 @@ export const MajorKeysEditor = () => {
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
       setActiveMajorKeys((arr) => [...arr, 'name']);
     }
-  }, [focusTag]);
+  }, [focusTag]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <>
       {activeMajorKeys.map((k) => (
         <div key={k}>
-          <TextField
-            label={data.names[k]}
-            value={tags[k]}
-            InputLabelProps={{ shrink: true }}
-            variant="outlined"
-            margin="normal"
-            name={k}
-            onChange={(e) => setTag(e.target.name, e.target.value)}
-            fullWidth
-            autoFocus={focusTag === k}
-          />
+          {k === 'opening_hours' ? (
+            <OpeningHoursEditor />
+          ) : (
+            <TextFieldWithCharacterCount
+              label={data.names[k]}
+              k={k}
+              autoFocus={focusTag === k}
+              onChange={(e) => {
+                setTag(e.target.name, e.target.value);
+              }}
+              value={tags[k]}
+            />
+          )}
         </div>
       ))}
       {!!inactiveMajorKeys.length && (

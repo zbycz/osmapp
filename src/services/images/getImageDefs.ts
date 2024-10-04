@@ -4,7 +4,6 @@ import {
   ImageDef,
   ImageDefFromCenter,
   ImageDefFromTag,
-  imageTagRegexp,
   isTag,
   LonLat,
   PathType,
@@ -44,7 +43,25 @@ const parsePathTag = (pathString?: string): PathType | undefined => {
 
 type KeyValue = { k: string; v: string };
 export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
-  if (k.match(/^(wikimedia_commons|image)/) && v.match(/^File:/)) {
+  if (
+    k.startsWith('image') &&
+    v.startsWith('https://commons.wikimedia.org/wiki/File')
+  ) {
+    return {
+      imageUrl: getCommonsImageUrl(
+        v.replace(
+          /^https:\/\/commons.wikimedia.org\/wiki\/File(:|%3A|%3a)/,
+          'File:',
+        ),
+        WIDTH,
+      ),
+      description: `Wikimedia Commons image (${k}=*)`,
+      linkUrl: v,
+      link: v,
+    };
+  }
+
+  if (k.match(/^(wikimedia_commons|image)/) && v.startsWith('File:')) {
     return {
       imageUrl: decodeURI(getCommonsImageUrl(v, WIDTH)),
       description: `Wikimedia Commons image (${k}=*)`,
@@ -66,16 +83,32 @@ export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
   return null; // API call needed
 };
 
-const getImagesFromTags = (tags: FeatureTags) =>
-  Object.keys(tags)
-    .filter((k) => k.match(imageTagRegexp))
-    .map((k) => {
-      const v = tags[k];
+const wikipedia = ([k, _]) => k.match(/^wikipedia(\d*|:.*)$/);
+const wikidata = ([k, _]) => k.match(/^wikidata(\d*|:.*)$/);
+const image = ([k, _]) => k.match(/^image(\d*|:(?!path).*)$/);
+
+const commons = (k: string) => k.match(/^wikimedia_commons(\d*|:(?!path).*)$/);
+const commonsFile = ([k, v]) => commons(k) && v.startsWith('File:');
+const commonsCategory = ([k, v]) => commons(k) && v.startsWith('Category:');
+
+const getImagesFromTags = (tags: FeatureTags) => {
+  const entries = Object.entries(tags);
+  const imageTags = [
+    ...entries.filter(commonsFile),
+    ...entries.filter(image),
+    ...entries.filter(wikipedia),
+    ...entries.filter(wikidata),
+    ...entries.filter(commonsCategory),
+  ];
+
+  return imageTags
+    .map(([k, v]) => {
       const instant = !!getInstantImage({ k, v });
       const path = parsePathTag(tags[`${k}:path`]);
       return { type: 'tag', k, v, instant, path } as ImageDefFromTag;
     })
     .sort((a, b) => +b.instant - +a.instant);
+};
 
 const getImagesFromCenter = (tags: FeatureTags, center?: LonLat): ImageDef[] =>
   !center
@@ -105,7 +138,7 @@ export const mergeMemberImageDefs = (feature: Feature) => {
       }
 
       const { v, path } = memberDef;
-      const equalValueAsMemberDef = (def) => def.v === v;
+      const equalValueAsMemberDef = (def: any) => def.v === v;
       const match = destinationDefs.find(
         equalValueAsMemberDef,
       ) as ImageDefFromTag;
@@ -124,6 +157,3 @@ export const mergeMemberImageDefs = (feature: Feature) => {
 
 export const getImageDefId = (def: ImageDef) =>
   isTag(def) ? `tag-${def.k}` : def.service;
-
-export const getWikiImageFilename = (imageUrl: string) =>
-  imageUrl.match(/\/(\d+px-[^/]+\.[a-z]{3,5})$/i)?.[1] ?? imageUrl;

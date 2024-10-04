@@ -75,7 +75,7 @@ export const MyTicksPanel = () => {
                   {tableHeader}
                   <TableBody>
                     {visibleRows.map((tickRow) => (
-                      <MyTicksRow tickRow={tickRow} />
+                      <MyTicksRow tickRow={tickRow} key={tickRow.key} />
                     ))}
                   </TableBody>
                 </Table>

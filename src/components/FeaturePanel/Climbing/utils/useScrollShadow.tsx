@@ -1,5 +1,12 @@
-import React, { CSSProperties, useEffect, useRef, useState } from 'react';
-import styled, { css } from 'styled-components';
+import React, {
+  CSSProperties,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+import styled from '@emotion/styled';
+import { css } from '@emotion/react';
 import { convertHexToRgba } from '../../../utils/colorUtils';
 
 const DEFAULT_GRADIENT_PERCENTAGE = 3;
@@ -19,18 +26,18 @@ interface GradientProps {
   $opacity?: number;
 }
 
-const gradientBase = css<GradientProps>`
+const gradientBase = ({ $isVisible }) => css`
   width: 100%;
   height: 100%;
   z-index: 1;
   position: absolute;
   pointer-events: none;
-  visibility: ${({ $isVisible }) => ($isVisible ? 'visible' : 'hidden')};
+  visibility: ${$isVisible ? 'visible' : 'hidden'};
   transition: all 2s;
 `;
 
 const GradientBefore = styled.div<GradientProps>`
-  ${gradientBase}
+  ${gradientBase};
   top: 0;
   background: linear-gradient(
     to top,
@@ -43,7 +50,7 @@ const GradientBefore = styled.div<GradientProps>`
 `;
 
 const GradientAfter = styled.div<GradientProps>`
-  ${gradientBase}
+  ${gradientBase};
   bottom: 0;
   background: linear-gradient(
     to bottom,
@@ -56,7 +63,7 @@ const GradientAfter = styled.div<GradientProps>`
 `;
 
 const GradientLeft = styled.div<GradientProps>`
-  ${gradientBase}
+  ${gradientBase};
   left: 0;
   height: 100%;
   background: linear-gradient(
@@ -70,7 +77,7 @@ const GradientLeft = styled.div<GradientProps>`
 `;
 
 const GradientRight = styled.div<GradientProps>`
-  ${gradientBase}
+  ${gradientBase};
   right: 0;
   height: 100%;
   background: linear-gradient(
@@ -83,14 +90,16 @@ const GradientRight = styled.div<GradientProps>`
   );
 `;
 
-export const useScrollShadow = (deps = []) => {
-  const scrollElementRef = useRef<HTMLDivElement>(null);
+export const useScrollShadow = (deps = [], ref = undefined) => {
+  const tempRef = useRef<HTMLDivElement>(null);
+  const scrollElementRef = ref || tempRef;
+
   const [isScrolledToTop, setIsScrolledToTop] = useState(true);
   const [isScrolledToBottom, setIsScrolledToBottom] = useState(true);
   const [isScrolledToLeft, setIsScrolledToLeft] = useState(true);
   const [isScrolledToRight, setIsScrolledToRight] = useState(true);
 
-  const setShadows = () => {
+  const setShadows = useCallback(() => {
     if (scrollElementRef?.current) {
       const {
         scrollTop,
@@ -108,11 +117,11 @@ export const useScrollShadow = (deps = []) => {
       setIsScrolledToLeft(scrollLeft <= 0);
       setIsScrolledToRight(Math.ceil(scrollLeft + clientWidth) >= scrollWidth);
     }
-  };
+  }, [scrollElementRef]);
 
   useEffect(() => {
     setShadows();
-  }, deps);
+  }, deps); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     const handleShadows = () => setShadows();
@@ -123,7 +132,7 @@ export const useScrollShadow = (deps = []) => {
       window.removeEventListener('resize', handleShadows);
       window.removeEventListener('orientationchange', handleShadows);
     };
-  }, []);
+  }, [setShadows]);
 
   const onScroll = () => {
     setShadows();

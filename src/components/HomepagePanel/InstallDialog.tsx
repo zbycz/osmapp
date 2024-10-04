@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 import { TabContext, TabPanel } from '@mui/lab';
 
 import AppleIcon from '@mui/icons-material/Apple';
 import AndroidIcon from '@mui/icons-material/Android';
 import DesktopMacIcon from '@mui/icons-material/DesktopMac';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AddToHomeScreenIcon from '@mui/icons-material/AddToHomeScreen';
@@ -69,11 +69,11 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
-const PaperImg = ({ src, width }) => (
+type PaperImgProps = { src: string; width: string | number };
+const PaperImg = ({ src, width }: PaperImgProps) => (
   <Paper
     variant="outlined"
     component="img"
-    // @ts-ignore
     src={src}
     width={width}
     style={{ maxWidth: '100%' }}
@@ -81,16 +81,16 @@ const PaperImg = ({ src, width }) => (
 );
 
 export function InstallDialog() {
-  const [value, setValue] = React.useState('ios');
+  const [value, setValue] = useState('ios');
   const { showHomepage } = useFeatureContext();
 
   useEffect(() => {
     showHomepage();
     setValue(getPlatform());
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = () => Router.push('/');
-  const handleChange = (event, newValue) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
@@ -100,9 +100,7 @@ export function InstallDialog() {
       onClose={handleClose}
       aria-label={t('install.button')}
       disablePortal // for ssr
-      BackdropProps={{
-        appear: false,
-      }}
+      slotProps={{ backdrop: { appear: false } }}
     >
       <TabContext value={value}>
         <DialogTitle>

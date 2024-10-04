@@ -11,6 +11,11 @@ import {
   WIKIPEDIA_CS,
 } from './apiMocks.fixture';
 
+jest.mock('../../fetch', () => ({
+  fetchJson: jest.fn(),
+}));
+jest.mock('maplibre-gl', () => ({}));
+
 const mockApi = (mock: ApiMock) => {
   jest.spyOn(fetchModule, 'fetchJson').mockImplementation((url) => {
     expect(url).toEqual(mock.url);
@@ -120,7 +125,14 @@ test('wikimedia_commons=Category:', async () => {
       v: 'Category:Yosemite National Park',
       instant: false,
     }),
-  ).toEqual(null);
+  ).toEqual({
+    description: 'Wikimedia Commons category (wikimedia_commons:2=*)',
+    imageUrl:
+      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_(ca6a33cc-1dd8-b71b-0b83-9551ada5207f).jpg/410px-thumbnail.jpg',
+    link: 'Category:Yosemite National Park',
+    linkUrl:
+      'https://commons.wikimedia.org/wiki/Category:Yosemite National Park',
+  });
 });
 
 test('wikipedia=*', async () => {

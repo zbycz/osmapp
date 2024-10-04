@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   getInstantImage,
   ImageType,
@@ -6,13 +6,13 @@ import {
 import { not, publishDbgObject } from '../../../utils';
 import { getImageFromApi } from '../../../services/images/getImageFromApi';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { ImageDef, isCenter, isInstant } from '../../../services/types';
+import { ImageDef, isInstant } from '../../../services/types';
 
 export type ImagesType = { def: ImageDef; image: ImageType }[];
 
-// TODO test this fn
-const mergeResultFn =
-  (def: ImageDef, image: ImageType) => (prevImages: ImagesType) => {
+export const mergeResultFn =
+  (def: ImageDef, image: ImageType, defs: ImageDef[]) =>
+  (prevImages: ImagesType) => {
     if (image == null) {
       return prevImages;
     }
@@ -25,31 +25,26 @@ const mergeResultFn =
       return [...prevImages];
     }
 
-    if (!isCenter(def)) {
-      // leave center images in the end
-      const centerIndex = prevImages.findIndex((item) => isCenter(item.def));
-      if (centerIndex >= 0) {
-        return [
-          ...prevImages.slice(0, centerIndex),
-          { def, image },
-          ...prevImages.slice(centerIndex),
-        ];
-      }
-    }
-
-    return [...prevImages, { def, image }];
+    const sorted = [...prevImages, { def, image }].sort((a, b) => {
+      const aIndex = defs.findIndex((item) => item === a.def);
+      const bIndex = defs.findIndex((item) => item === b.def);
+      return aIndex - bIndex;
+    });
+    return sorted;
   };
+
+const getInitialState = (defs: ImageDef[]) =>
+  defs?.filter(isInstant)?.map((def) => ({
+    def,
+    image: getInstantImage(def),
+  })) ?? [];
 
 export const useLoadImages = () => {
   const { feature } = useFeatureContext();
   const defs = feature?.imageDefs;
-  const instantDefs = defs?.filter(isInstant) ?? [];
-  const apiDefs = defs?.filter(not(isInstant)) ?? [];
+  const apiDefs = useMemo(() => defs?.filter(not(isInstant)) ?? [], [defs]);
 
-  const initialState = instantDefs.map((def) => ({
-    def,
-    image: getInstantImage(def),
-  }));
+  const initialState = useMemo(() => getInitialState(defs), [defs]);
   const [loading, setLoading] = useState(apiDefs.length > 0);
   const [images, setImages] = useState<ImagesType>(initialState);
 
@@ -57,13 +52,13 @@ export const useLoadImages = () => {
     setImages(initialState);
     const promises = apiDefs.map(async (def) => {
       const image = await getImageFromApi(def);
-      setImages(mergeResultFn(def, image));
+      setImages(mergeResultFn(def, image, defs));
     });
 
     Promise.all(promises).then(() => {
       setLoading(false);
     });
-  }, [defs]);
+  }, [apiDefs, defs, initialState]);
 
   publishDbgObject('last images', images);
   return { loading, images: images.filter((item) => item.image != null) };

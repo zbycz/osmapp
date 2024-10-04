@@ -1,12 +1,19 @@
-import styled, { useTheme } from 'styled-components';
+import styled from '@emotion/styled';
+import { useTheme } from '@emotion/react';
 import React from 'react';
-import { useClimbingContext } from './contexts/ClimbingContext';
+import {
+  ClimbingContextProvider,
+  useClimbingContext,
+} from './contexts/ClimbingContext';
 import { convertGrade, getDifficultyColor } from './utils/grades/routeGrade';
 import { PanelLabel } from './PanelLabel';
 import { ContentContainer } from './ContentContainer';
 import { GRADE_TABLE } from './utils/grades/gradeData';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { GradeSystemSelect } from './GradeSystemSelect';
+import { isClimbingRelation } from '../../../utils';
+import { getKey } from '../../../services/helpers';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const MAX_HEIGHT = 100;
 
@@ -46,7 +53,7 @@ const getGroupingLabel = (label: string) => String(parseFloat(label));
 
 export const RouteDistribution = () => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
-  const gradeSystem = userSettings['climbing.gradeSystem'];
+  const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   const theme = useTheme();
   const { routes } = useClimbingContext();
@@ -91,51 +98,54 @@ export const RouteDistribution = () => {
   }));
 
   return (
-    <>
-      <PanelLabel
-        addition={
-          <GradeSystemSelect
-            setGradeSystem={(system) => {
-              setUserSetting('climbing.gradeSystem', system);
-            }}
-            selectedGradeSystem={userSettings['climbing.gradeSystem']}
-          />
-        }
-      >
-        Routes distribution
-      </PanelLabel>
-      <Container>
-        <ContentContainer>
-          <Items>
-            {heightsRatios.map((heightRatioItem) => {
-              const color = getDifficultyColor(
-                {
-                  gradeSystem: 'uiaa',
-                  grade: heightRatioItem.grade,
-                },
-                theme,
-              );
-              const numberOfRoutesKey = Object.keys(routeOccurrences).find(
-                (key) => key === heightRatioItem.grade,
-              );
-              const numberOfRoutes = routeOccurrences[numberOfRoutesKey];
-              const isColumnActive = numberOfRoutes > 0;
-              return (
-                <Column>
-                  {numberOfRoutes > 0 && (
-                    <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
-                  )}
-                  <Chart $color={color} $ratio={heightRatioItem.ratio} />
+    <Container>
+      <ContentContainer>
+        <Items>
+          {heightsRatios.map((heightRatioItem) => {
+            const color = getDifficultyColor(
+              {
+                gradeSystem: 'uiaa',
+                grade: heightRatioItem.grade,
+              },
+              theme,
+            );
+            const numberOfRoutesKey = Object.keys(routeOccurrences).find(
+              (key) => key === heightRatioItem.grade,
+            );
+            const numberOfRoutes = routeOccurrences[numberOfRoutesKey];
+            const isColumnActive = numberOfRoutes > 0;
+            return (
+              <Column key={heightRatioItem.grade}>
+                {numberOfRoutes > 0 && (
+                  <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
+                )}
+                <Chart $color={color} $ratio={heightRatioItem.ratio} />
 
-                  <DifficultyLevel $color={color} $isActive={isColumnActive}>
-                    {heightRatioItem.grade}
-                  </DifficultyLevel>
-                </Column>
-              );
-            })}
-          </Items>
-        </ContentContainer>
-      </Container>
-    </>
+                <DifficultyLevel $color={color} $isActive={isColumnActive}>
+                  {heightRatioItem.grade}
+                </DifficultyLevel>
+              </Column>
+            );
+          })}
+        </Items>
+      </ContentContainer>
+    </Container>
   );
+};
+
+export const RouteDistributionInPanel = () => {
+  const { feature } = useFeatureContext();
+
+  if (
+    isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
+    feature.tags.climbing === 'crag'
+  ) {
+    return (
+      <ClimbingContextProvider feature={feature} key={getKey(feature)}>
+        <RouteDistribution />
+      </ClimbingContextProvider>
+    );
+  }
+
+  return null;
 };

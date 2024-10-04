@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { Box, Button, TextField, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
@@ -95,7 +95,7 @@ const NewTagRow = ({ setTag, setTmpNewTag }) => {
             variant="outlined"
             size="small"
             placeholder={t('editdialog.other_tags.new_key')}
-            inputProps={{ autocapitalize: 'none' }}
+            inputProps={{ autocapitalize: 'none', maxLength: 255 }}
           />
         </th>
         <td>
@@ -105,7 +105,7 @@ const NewTagRow = ({ setTag, setTmpNewTag }) => {
             fullWidth
             variant="outlined"
             size="small"
-            inputProps={{ autocapitalize: 'none' }}
+            inputProps={{ autocapitalize: 'none', maxLength: 255 }}
           />
         </td>
       </tr>
@@ -137,7 +137,7 @@ const KeyValueRow = ({ k, v, setTag, focusTag }) => (
         fullWidth
         variant="outlined"
         size="small"
-        inputProps={{ autocapitalize: 'none' }}
+        inputProps={{ autocapitalize: 'none', maxLength: 255 }}
         autoFocus={focusTag === k}
         placeholder={t('editdialog.other_tags.will_be_deleted')}
       />
@@ -162,8 +162,6 @@ export const OtherTagsEditor = () => {
     }
   }, [focusThisEditor]);
 
-  const rows = Object.entries(tags).filter(([k]) => !majorKeys.includes(k));
-
   return (
     <Box mb={4}>
       {!visible && <OtherTagsButton setVisible={setVisible} />}
@@ -172,7 +170,7 @@ export const OtherTagsEditor = () => {
           <OtherTagsHeading />
           <Table>
             <tbody>
-              {rows.map(([k, v]) => (
+              {Object.entries(tags).map(([k, v]) => (
                 <KeyValueRow
                   key={k}
                   k={k}

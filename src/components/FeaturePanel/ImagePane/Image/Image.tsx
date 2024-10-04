@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import {
   getImageDefId,
   ImageType,
@@ -16,22 +16,46 @@ import {
 import { PanoramaImg } from './PanoramaImg';
 import { InfoButton } from './InfoButton';
 import { ImageDef, isTag } from '../../../../services/types';
+import { isMobileMode } from '../../../helpers';
+import { css } from '@emotion/react';
 
 const Img = styled.img<{ $hasPaths: boolean }>`
+  margin-left: 50%;
+  transform: translateX(-50%);
+
   ${({ $hasPaths }) => $hasPaths && `opacity: 0.9;`}
 `;
 
-const ImageWrapper = styled.div`
+const CROP_IMAGE_CSS = css`
+  overflow: hidden;
+  max-width: calc(410px - 2 * 8px);
+  @media ${isMobileMode} {
+    max-width: calc(100% - 2 * 8px);
+  }
+
+  &:has(+ div) {
+    // leave some space if there is another image on the right
+    max-width: calc(410px - 2 * 8px - 15px);
+    @media ${isMobileMode} {
+      max-width: calc(100% - 2 * 8px - 15px);
+    }
+  }
+`;
+
+const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
   display: inline-block;
   position: relative;
   height: 238px;
+  vertical-align: top;
+  overflow: hidden;
 
   margin-right: 8px;
-  &:first-child {
+  &:first-of-type {
     margin-left: 8px;
   }
 
   ${({ onClick }) => onClick && `cursor: pointer;`}
+  ${({ $hasPaths }) => !$hasPaths && CROP_IMAGE_CSS}
 `;
 
 type Props = {
@@ -48,7 +72,7 @@ export const Image = ({ def, image }: Props) => {
   const isImageLoaded = size !== initialSize;
   const showInfo = image.panoramaUrl || isImageLoaded;
   return (
-    <ImageWrapper onClick={onClick}>
+    <ImageWrapper $hasPaths={hasPaths} onClick={onClick}>
       {image.panoramaUrl ? (
         <PanoramaImg url={image.panoramaUrl} />
       ) : (

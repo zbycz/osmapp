@@ -1,7 +1,7 @@
 import { presets } from './data';
 import { Feature } from '../types';
 import { Preset } from './types/Presets';
-import { DEBUG_ID_SCHEMA } from '../../config';
+import { DEBUG_ID_SCHEMA } from '../../config.mjs';
 
 // taken from iD codebase https://github.com/openstreetmap/iD/blob/dd30a39d7487e1084396712ce861f4b6c5a07849/modules/presets/preset.js#L61
 // added code for addr:* matching

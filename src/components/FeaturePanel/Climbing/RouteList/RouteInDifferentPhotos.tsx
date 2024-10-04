@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { ClimbingRoute } from '../types';
 import { Label } from './Label';
 import { useClimbingContext } from '../contexts/ClimbingContext';
@@ -39,6 +39,7 @@ export const RouteInDifferentPhotos = ({
       <Row>
         {photos.map((photo, index) => (
           <PhotoLink
+            key={photo}
             isCurrentPhoto={photoPath === photo}
             onClick={(e) => onPhotoChange(e, photo)}
           >

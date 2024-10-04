@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import React from 'react';
-import { renderToString } from 'react-dom/server';
-import { ServerStyleSheet } from 'styled-components';
 import { UserThemeProvider } from '../../src/helpers/theme';
 import { Paths } from '../../src/components/FeaturePanel/ImagePane/PathsSvg';
 import {
@@ -22,6 +20,7 @@ import {
 import { svg2png } from '../../src/server/images/svg2png';
 import { Size } from '../../src/components/FeaturePanel/ImagePane/types';
 import { getApiId } from '../../src/services/helpers';
+import { renderStyledHtml } from '../../src/server/images/renderStyledHtml';
 
 const Svg = ({ children, size }) => (
   <UserThemeProvider userThemeCookie={undefined}>
@@ -47,6 +46,7 @@ const centerInOgSize = (size: Size) => {
   const top = (OG_SIZE.height - size.height * scale) / 2;
   return `translate(${left},${top}) scale(${scale})`;
 };
+
 const renderSvg = async (
   feature: Feature,
   def: ImageDefFromTag | ImageDefFromCenter,
@@ -66,9 +66,7 @@ const renderSvg = async (
     </Svg>
   );
 
-  const sheet = new ServerStyleSheet();
-  const html = renderToString(sheet.collectStyles(<Root />));
-  const styleTags = sheet.getStyleTags();
+  const { html, styleTags } = renderStyledHtml(<Root />);
   return html.replace('__PLACEHOLDER_FOR_STYLE__', styleTags);
 };
 
@@ -78,8 +76,8 @@ const renderSvg = async (
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const t1 = Date.now();
   try {
-    const shortId = getApiId(req.query.id);
-    const feature = await fetchWithMemberFeatures(shortId);
+    const osmId = getApiId(req.query.id);
+    const feature = await fetchWithMemberFeatures(osmId);
     const def = feature.imageDefs?.[0]; // TODO iterate when first not found
     if (!def) {
       throw new Error('No image definition found');

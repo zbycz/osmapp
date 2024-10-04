@@ -3,12 +3,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useMediaQuery } from '@mui/material';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-
-// @TODO: Fix theme types according to https://mui.com/material-ui/customization/theming/#typescript
 
 const lightTheme = createTheme({
   palette: {
+    divider: 'rgba(0, 0, 0, 0.04)',
     primary: {
       main: '#556cd6',
     },
@@ -49,6 +47,7 @@ const lightTheme = createTheme({
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    divider: 'rgba(255, 255, 255, 0.04)',
     primary: {
       main: '#ffb74d',
     },
@@ -56,7 +55,7 @@ const darkTheme = createTheme({
       main: '#737373',
     },
     tertiary: {
-      main: '#0fbbff', // links
+      main: '#00b6ff', // links
     },
     error: {
       main: red.A400,
@@ -92,13 +91,14 @@ const darkTheme = createTheme({
   },
 });
 
-export type UserTheme = 'system' | 'light' | 'dark';
+export type Theme = 'light' | 'dark';
+export type UserTheme = 'system' | Theme;
 
 type UserThemeContextType = {
   userTheme: UserTheme;
   setUserTheme: (choice: UserTheme) => void;
   theme: typeof lightTheme | typeof darkTheme;
-  currentTheme: 'light' | 'dark';
+  currentTheme: Theme;
 };
 
 export const UserThemeContext = createContext<UserThemeContextType>(undefined);
@@ -126,18 +126,15 @@ export const UserThemeProvider = ({ children, userThemeCookie }) => {
     Cookies.set('userTheme', choice, { expires: 30 * 12 * 10, path: '/' });
   };
 
+  const value: UserThemeContextType = {
+    userTheme,
+    setUserTheme,
+    currentTheme,
+    theme,
+  };
   return (
-    <UserThemeContext.Provider
-      value={{
-        userTheme,
-        setUserTheme,
-        currentTheme,
-        theme,
-      }}
-    >
-      <ThemeProvider theme={theme}>
-        <StyledThemeProvider theme={theme}>{children}</StyledThemeProvider>
-      </ThemeProvider>
+    <UserThemeContext.Provider value={value}>
+      <ThemeProvider theme={theme}>{children}</ThemeProvider>
     </UserThemeContext.Provider>
   );
 };

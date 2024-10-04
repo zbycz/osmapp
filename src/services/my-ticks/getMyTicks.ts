@@ -1,9 +1,13 @@
-import { getApiId, getShortId, OsmApiId } from '../helpers';
+import { getApiId, getShortId } from '../helpers';
 import { fetchJson } from '../fetch';
 import { getOverpassUrl, overpassGeomToGeojson } from '../overpassSearch';
-import { getAllTicks } from '../ticks';
+import { getAllTicks, getTickKey } from '../ticks';
 import { Tick, TickStyle } from '../../components/FeaturePanel/Climbing/types';
-import { getRouteGrade } from '../../components/FeaturePanel/Climbing/utils/grades/routeGrade';
+import {
+  findOrConvertRouteGrade,
+  getDifficulties,
+} from '../../components/FeaturePanel/Climbing/utils/grades/routeGrade';
+import { FeatureTags, OsmId } from '../types';
 
 export type TickRowType = {
   key: string;
@@ -13,7 +17,8 @@ export type TickRowType = {
   index: number;
   date: string;
   style: TickStyle;
-  apiId: OsmApiId;
+  apiId: OsmId;
+  tags: FeatureTags;
 };
 
 export const getMyTicks = async (userSettings): Promise<TickRowType[]> => {
@@ -40,15 +45,22 @@ export const getMyTicks = async (userSettings): Promise<TickRowType[]> => {
 
   return allTicks.map((tick: Tick, index) => {
     const feature = featureMap[tick.osmId];
+    const difficulties = getDifficulties(feature?.tags);
+    const { routeDifficulty } = findOrConvertRouteGrade(
+      difficulties,
+      userSettings['climbing.gradeSystem'],
+    );
+
     return {
-      key: `${tick.osmId}-${tick.date}`,
+      key: getTickKey(tick),
       name: feature?.tags?.name,
-      grade: getRouteGrade(feature?.tags, userSettings['climbing.gradeSystem']),
+      grade: routeDifficulty.grade,
       center: feature?.center,
       index,
       date: tick.date,
       style: tick.style,
       apiId: getApiId(tick.osmId),
+      tags: feature?.tags,
     };
   });
 };

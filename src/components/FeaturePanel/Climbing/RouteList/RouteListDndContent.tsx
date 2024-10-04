@@ -1,8 +1,9 @@
-import styled from 'styled-components';
-import React, { useEffect, useState } from 'react';
+import styled from '@emotion/styled';
+import React, { useCallback, useEffect, useState } from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
+import { positions } from '@mui/system';
 
 type Item = {
   id: number;
@@ -67,7 +68,7 @@ const TableHeader = styled.div`
   display: flex;
   justify-content: center;
   font-weight: 700;
-  color: ${({ theme }) => theme.palette.text.hint};
+  color: ${({ theme }) => theme.palette.text.secondary};
   font-size: 11px;
   padding-top: 12px;
   padding-bottom: 4px;
@@ -100,6 +101,7 @@ export const RouteListDndContent = ({ isEditable }) => {
     }));
     setItems(content);
   }, [routes]);
+  const parentRef = React.useRef<HTMLDivElement>(null);
 
   const [draggedItem, setDraggedItem] = useState<Item | null>(null);
   const [draggedOverIndex, setDraggedOverIndex] = useState<number | null>(null);
@@ -202,7 +204,7 @@ export const RouteListDndContent = ({ isEditable }) => {
   };
 
   return (
-    <Container>
+    <Container ref={parentRef}>
       <TableHeader>
         <MaxWidthContainer>
           <NameHeader>Name</NameHeader>
@@ -239,10 +241,10 @@ export const RouteListDndContent = ({ isEditable }) => {
                 )}
                 <RowContent>
                   <RenderListRow
-                    route={item.route}
-                    onRouteChange={onRouteChange}
-                    index={index}
+                    key={item.route.id}
+                    routeId={item.route.id}
                     stopPropagation={stopPropagation}
+                    parentRef={parentRef}
                   />
                 </RowContent>
               </MaxWidthContainer>

@@ -33,16 +33,11 @@ export default {
   'homepage.about_osmapp': `Esta aplicación debería ofrecer una interfaz conveniente para usar <i>OpenStreetMap</i>
      incluyendo opciones para editar. <br/>Actualmente incluye varias capas del mapa, Puntos de Interés y un buscador básico.
      Funciones como navegación o lugares favoritos están planificadas.`,
-  'homepage.github_link': `Puedes sugerir nuevas funcionalidades en el <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Puedes sugerir nuevas funcionalidades en el <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Gracias en especial a:`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – por las imágenes 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – por el mejor mapa del mundo 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – por los increíbles mapas vectoriales <br>y por apoyar este proyecto  ❤️ ',
+  'homepage.for_images': 'por las imágenes 🖼',
+  'homepage.for_osm': 'por el mejor mapa del mundo 🌎',
+  'homepage.maptiler': 'por los increíbles mapas vectoriales y por apoyar este proyecto  ❤️ ',
 
   'searchbox.placeholder': 'Buscar en OpenStreetMap',
 
@@ -145,7 +140,6 @@ export default {
   'layerswitcher.heading': 'Capas del Mapa',
   'layerswitcher.intro': 'Gracias a que OpenStreetMap ofrece datos, cualquiera puede producir diferentes variantes del mapa.',
   'layerswitcher.add_layer_button': 'Añadir capa personalizada',
-  'layerswitcher.add_layer_prompt': 'Añadir capa TMS personalizada – necesita el CORS correcto:\n(funcionalidad beta)',
 
   'layers.basic': 'Básico',
   'layers.outdoor': 'Exteriores',

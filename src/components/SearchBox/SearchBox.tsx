@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
 import Router from 'next/router';
@@ -9,10 +9,10 @@ import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { isDesktop, isDesktopResolution, useMobileMode } from '../helpers';
 import { SEARCH_BOX_HEIGHT } from './consts';
-import { useInputValueState } from './options/geocoder';
-import { useOptions } from './useOptions';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
+import { DirectionsButton } from '../Directions/DirectionsButton';
+import { setLastFeature } from '../../services/lastFeatureStorage';
 
 const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;
@@ -73,19 +73,16 @@ const useOnClosePanel = () => {
   return () => {
     setFeature(null);
     Router.push(`/${window.location.hash}`);
+    setLastFeature(null);
   };
 };
 
 const SearchBox = ({ isSearchInPanelVisible = false }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
-  const { inputValue, setInputValue } = useInputValueState();
-  const [options, setOptions] = useState([]);
   const [overpassLoading, setOverpassLoading] = useState(false);
   const autocompleteRef = useRef();
   const onClosePanel = useOnClosePanel();
-
-  useOptions(inputValue, setOptions);
 
   return (
     <TopPanel $isMobileMode={isMobileMode}>
@@ -99,9 +96,6 @@ const SearchBox = ({ isSearchInPanelVisible = false }) => {
         </SearchIconButton>
 
         <AutocompleteInput
-          inputValue={inputValue}
-          setInputValue={setInputValue}
-          options={options}
           autocompleteRef={autocompleteRef}
           setOverpassLoading={setOverpassLoading}
         />
@@ -116,6 +110,8 @@ const SearchBox = ({ isSearchInPanelVisible = false }) => {
             <HamburgerMenu />
           </>
         )}
+
+        <DirectionsButton />
       </StyledPaper>
     </TopPanel>
   );

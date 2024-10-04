@@ -7,7 +7,8 @@ import { Preset, UiField } from './types/Presets';
 import { publishDbgObject } from '../../utils';
 import { getShortId } from '../helpers';
 import { Field } from './types/Fields';
-import { DEBUG_ID_SCHEMA } from '../../config';
+import { DEBUG_ID_SCHEMA } from '../../config.mjs';
+import { gradeSystemKeys } from '../../components/FeaturePanel/Climbing/utils/grades/gradeSystem';
 
 const logMoreMatchingFields = (matchingFields: Field[], key: string) => {
   if (DEBUG_ID_SCHEMA && matchingFields.length > 1) {
@@ -167,6 +168,7 @@ const getFeaturedTags = (feature: Feature) => {
     ...(tags.wikipedia ? ['wikipedia'] : tags.wikidata ? ['wikidata'] : []),
     'fhrs:id',
     'description',
+    ...gradeSystemKeys,
   ];
 
   return keys.reduce(

@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { IconButton, Tooltip } from '@mui/material';
 import { convertHexToRgba } from '../../utils/colorUtils';
@@ -8,50 +8,25 @@ import CragRed from '../../../../public/icons-climbing/icons/crag-red.svg';
 import AreaGray from '../../../../public/icons-climbing/icons/area-gray.svg';
 import CragGray from '../../../../public/icons-climbing/icons/crag-gray.svg';
 
-export const CLIMBING_LEGEND = {
-  AREA: {
-    HAS_IMAGES: {
-      HOVER: {
-        IMAGE: 'climbing:area-blue',
-        COLOR: 'rgba(0, 59, 210, 0.7)',
-      },
-      DEFAULT: {
-        IMAGE: 'climbing:area-blue',
-        COLOR: 'rgba(0, 59, 210, 1)',
-      },
-    },
-    NO_IMAGES: {
-      HOVER: {
-        IMAGE: 'climbing:area-gray',
-        COLOR: 'black',
-      },
-      DEFAULT: {
-        IMAGE: 'climbing:area-gray',
-        COLOR: '#666',
-      },
-    },
+export const AREA = {
+  HAS_IMAGES: {
+    IMAGE: 'climbing:area-blue',
+    COLOR: 'rgba(0, 59, 210, 1)',
   },
-  CRAG: {
-    HAS_IMAGES: {
-      HOVER: {
-        IMAGE: 'climbing:crag-red',
-        COLOR: 'rgba(234, 85, 64, 0.7)',
-      },
-      DEFAULT: {
-        IMAGE: 'climbing:crag-red',
-        COLOR: '#ea5540',
-      },
-    },
-    NO_IMAGES: {
-      HOVER: {
-        IMAGE: 'climbing:crag-gray',
-        COLOR: 'black',
-      },
-      DEFAULT: {
-        IMAGE: 'climbing:crag-gray',
-        COLOR: '#666',
-      },
-    },
+  NO_IMAGES: {
+    IMAGE: 'climbing:area-gray',
+    COLOR: '#666',
+  },
+};
+
+export const CRAG = {
+  HAS_IMAGES: {
+    IMAGE: 'climbing:crag-red',
+    COLOR: '#ea5540',
+  },
+  NO_IMAGES: {
+    IMAGE: 'climbing:crag-gray',
+    COLOR: '#666',
   },
 };
 

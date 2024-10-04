@@ -1,27 +1,74 @@
 // The order of this array must be the same as in CSV below
 export const GRADE_SYSTEMS = [
-  { key: 'uiaa', name: 'UIAA' },
-  { key: 'uktech', name: 'UK tech' },
-  { key: 'ukaajd', name: 'UKA adj' },
-  { key: 'fb', name: 'French British' },
-  { key: 'french', name: 'French' },
-  { key: 'saxon', name: 'Saxon' },
-  { key: 'nordic', name: 'Nordic' },
-  { key: 'yds_class', name: 'YDS' },
-  { key: 'hueco', name: 'V grade' },
-  { key: 'ice', name: 'WI' },
-  { key: 'mixed', name: 'Mixed' },
+  {
+    key: 'uiaa',
+    name: 'UIAA',
+    description:
+      'Grade system used by the International Climbing and Mountaineering Federation.',
+  },
+  {
+    key: 'british_traditional',
+    name: 'British technical',
+    description: 'The British grading system for traditional climbs.',
+  },
+  {
+    key: 'british_adjectival',
+    name: 'British Adjectival',
+    description:
+      'The Adjectival British Scale or the overall assessment scale.',
+  },
+  {
+    key: 'french_british',
+    name: 'French British',
+    description:
+      'Sport climbing in Britain and Ireland uses the French grading system.',
+  },
+  {
+    key: 'french',
+    name: 'French',
+    description:
+      'The French numerical system (Fontainebleau scale) rates a climb according to the overall technical difficulty and strenuousness of the route.',
+  },
+  {
+    key: 'saxon',
+    name: 'Saxon',
+    description:
+      'The Saxon grading system was developed in the beginning of the 20th century for the formidable Saxon Switzerland climbing region.',
+  },
+  { key: 'nordic', name: 'Nordic', description: 'The Nordic grading system.' },
+  {
+    key: 'yds_class',
+    name: 'YDS',
+    description:
+      'The Yosemite Decimal System of grading routes of hikes and climbs developed for the Sierra Nevada range.',
+  },
+  {
+    key: 'hueco',
+    name: 'V grade',
+    description:
+      'V scale grading system, created by John Sherman, which is the most widely used system in North America.',
+  },
+  {
+    key: 'ice',
+    name: 'WI',
+    description: 'Waterfall ice rating system as used in the Canadian Rockies.',
+  },
+  {
+    key: 'mixed',
+    name: 'Mixed',
+    description:
+      'Mixed climbing has its own grading scale that roughly follows the WI rating system.',
+  },
 ];
 
-export type GradeSystem = typeof GRADE_SYSTEMS[number]['key'];
+export type GradeSystem = (typeof GRADE_SYSTEMS)[number]['key'];
 export type GradeTable = Record<GradeSystem, Array<string>>;
 
 // Source of this table is: https://wiki.openstreetmap.org/wiki/Climbing#Grading
-// UIAA|Germany         FB|French British              Nordic|Scandinavian       WI
+// UIAA                 French/British                 Nordic                    WI
 //       UK Tech                 French                         YDS|YDS_class           Mixed
-//              UK ADJ                   Saxon|Swiss                    V Grade
+//              UK ADJ                   Saxon                    V Grade
 export const gradeTableString = `UIAA|Germany, UK Tech, UK ADJ, FB|French British, French, Saxon|Swiss, Nordic|Scandinavian, YDS|YDS_class, V Grade, WI, Mixed
-"System used by the International Climbing and Mountaineering Federation.", "The British grading system for traditional climbs.", "The Adjectival English Scale or the overall assessment scale.", "Sport climbing in Britain and Ireland uses the French grading system.", "The French numerical system rates a climb according to the overall technical difficulty and strenuousness of the route.", "The Saxon grading system was developed in the beginning of the 20th century for the formidable Saxon Switzerland climbing region.", "The Nordic grading system.", "The Yosemite Decimal System of grading routes of hikes and climbs developed for the Sierra Nevada range.", "V scale grading system, created by John Sherman, which is the most widely used system in North America.", "Waterfall ice rating system as used in the Canadian Rockies.", "Mixed climbing has its own grading scale that roughly follows the WI rating system."
 1-,      1,     M,      1,       1,      I,            1,       5,      VB-,     WI2,   M2
 1,       1,     M,      1,       1,      I,            1,       5,      VB-,     WI2,   M2
 1+,      1,     M,      1,       1,      I,            1,       5,      VB-,     WI2,   M2
@@ -161,7 +208,7 @@ export const gradeColors = {
 
 export const csvToArray = (csv: string) => {
   const rows = csv.split('\n');
-  const data = rows.slice(2);
+  const data = rows.slice(1);
   return data.map((dataRow) => {
     const rowDifficulties = dataRow.split(',');
     return rowDifficulties.map((difficulty) => difficulty.trimStart().trim());

@@ -1,8 +1,8 @@
-import { Feature, GeometryCollection, LineString, Point } from './types';
+import { GeometryCollection, LineString, Point, OsmId } from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
-import { OsmApiId } from './helpers';
 import { fetchJson } from './fetch';
+import { Feature, FeatureCollection } from 'geojson';
 
 const getQueryFromTags = (tags) => {
   const selector = tags
@@ -35,21 +35,22 @@ const GEOMETRY = {
           el.type === 'node'
             ? GEOMETRY.node(el)
             : el.type === 'way'
-            ? GEOMETRY.way(el)
-            : null,
+              ? GEOMETRY.way(el)
+              : null,
         )
         .filter(Boolean) ?? [],
   }),
 };
 
-const convertOsmIdToMapId = (apiId: OsmApiId) => {
+const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-// maybe take inspiration from https://github.com/tyrasd/osmtogeojson/blob/gh-pages/index.js
-
-export const overpassGeomToGeojson = (response: any): Feature[] =>
+// TODO use our own implementaion from fetchCrags, which handles recursive geometries
+export const overpassGeomToGeojson = (response: {
+  elements: any[];
+}): Feature[] =>
   response.elements.map((element) => {
     const { type, id, tags = {} } = element;
     const geometry = GEOMETRY[type]?.(element);
@@ -67,7 +68,7 @@ export const overpassGeomToGeojson = (response: any): Feature[] =>
 export const performOverpassSearch = async (
   bbox,
   tagsOrQuery: Record<string, string> | string,
-) => {
+): Promise<FeatureCollection> => {
   const body =
     typeof tagsOrQuery === 'string'
       ? tagsOrQuery

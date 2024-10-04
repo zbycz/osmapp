@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, useMediaQuery, useTheme } from '@mui/material';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { SuccessContent } from './SuccessContent';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { EditDialogTitle } from './EditDialogTitle';
@@ -8,6 +8,7 @@ import { useEditDialogFeature } from './utils';
 import { EditContextProvider, useEditContext } from './EditContext';
 import { useGetOnClose } from './useGetOnClose';
 import { EditContent } from './EditContent/EditContent';
+import { getKey } from '../../../services/helpers';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -28,6 +29,7 @@ const EditDialogInner = () => {
 
   return (
     <StyledDialog
+      maxWidth="md"
       fullScreen={fullScreen}
       open={opened}
       onClose={onClose}
@@ -43,7 +45,7 @@ export const EditDialog = () => {
   const { feature } = useEditDialogFeature();
 
   return (
-    <EditContextProvider feature={feature}>
+    <EditContextProvider feature={feature} key={getKey(feature)}>
       <EditDialogInner />
     </EditContextProvider>
   );

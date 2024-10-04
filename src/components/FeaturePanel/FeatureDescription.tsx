@@ -1,10 +1,11 @@
 import React from 'react';
 import { Box, Grid, Typography } from '@mui/material';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { capitalize } from '../helpers';
 import { t, Translation } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { TooltipButton } from '../utils/TooltipButton';
+import { Feature } from '../../services/types';
 
 const InfoTooltipWrapper = styled.span`
   position: relative;
@@ -18,14 +19,14 @@ const InfoTooltipWrapper = styled.span`
 
 const A = ({ href, children }) =>
   href ? (
-    <a href={href} target="_blank" rel="noopener" className="colorInherit">
+    <a href={href} target="_blank" className="colorInherit">
       {children}
     </a>
   ) : (
     children
   );
 
-const getUrls = ({ type, id, changeset = '', user = '' }) => ({
+const getUrls = ({ type, id, changeset, user }: Feature['osmMeta']) => ({
   itemUrl: `https://openstreetmap.org/${type}/${id}`,
   historyUrl: `https://openstreetmap.org/${type}/${id}/history`,
   changesetUrl: changeset && `https://openstreetmap.org/changeset/${changeset}`, // prettier-ignore
@@ -103,11 +104,13 @@ export const FeatureDescription = ({ advanced, setAdvanced }) => {
 
   return (
     <div>
-      {!advanced &&
+      {advanced ? (
+        <Urls />
+      ) : (
         t('featurepanel.feature_description_osm', {
           type: capitalize(type),
-        })}
-      {advanced && <Urls />}
+        })
+      )}
       <InfoTooltipWrapper>
         <TooltipButton
           tooltip={<FromOsm />}

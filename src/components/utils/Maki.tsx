@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { icons } from '../../assets/icons';
 
 const MakiImg = styled.img<{ $invert: boolean }>`
@@ -8,6 +8,16 @@ const MakiImg = styled.img<{ $invert: boolean }>`
   user-select: none;
   ${({ $invert }) => $invert && 'filter: invert(100%);'}
 `;
+
+type MakiProps = {
+  ico: string;
+  invert?: boolean;
+  title?: string | undefined;
+  style?: React.CSSProperties | undefined;
+  size?: number;
+  middle?: boolean | undefined;
+};
+
 const Maki = ({
   ico,
   invert = false,
@@ -15,7 +25,7 @@ const Maki = ({
   style = undefined,
   size = 11,
   middle = undefined,
-}) => {
+}: MakiProps) => {
   const icon = icons.includes(ico) ? ico : 'information';
   // console.log(icon, ' was: ',ico)
   return (

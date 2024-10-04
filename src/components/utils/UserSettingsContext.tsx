@@ -1,25 +1,33 @@
 import React, { createContext, useContext } from 'react';
 import { usePersistedState } from './usePersistedState';
 import { GradeSystem } from '../FeaturePanel/Climbing/utils/grades/gradeData';
+import { TickStyle } from '../FeaturePanel/Climbing/types';
+import { isMobileDevice } from '../helpers';
 
 type UserSettingsType = {
   'climbing.gradeSystem': GradeSystem;
+  'climbing.isGradesOnPhotosVisible': boolean;
+  'climbing.defaultClimbingStyle': TickStyle;
+  'climbing.selectRoutesByScrolling': boolean;
 };
 
 type UserSettingsContextType = {
   userSettings: UserSettingsType;
   setUserSettings: (userSettings: UserSettingsType) => void;
-  setUserSetting: (key: string, value: string) => void;
+  setUserSetting: (key: string, value: string | number | boolean) => void;
 };
 
 const initialUserSettings: UserSettingsType = {
-  'climbing.gradeSystem': 'uiaa',
+  'climbing.gradeSystem': null,
+  'climbing.isGradesOnPhotosVisible': true,
+  'climbing.defaultClimbingStyle': 'OS',
+  'climbing.selectRoutesByScrolling': isMobileDevice(),
 };
 
 export const UserSettingsContext =
   createContext<UserSettingsContextType>(undefined);
 
-export const UserSettingsProvider = ({ children }) => {
+export const UserSettingsProvider: React.FC = ({ children }) => {
   const [userSettings, setUserSettings] = usePersistedState<UserSettingsType>(
     'userSettings',
     initialUserSettings,
@@ -29,7 +37,11 @@ export const UserSettingsProvider = ({ children }) => {
     setUserSettings({ ...userSettings, [key]: value });
   };
 
-  const value = { userSettings, setUserSetting, setUserSettings };
+  const value: UserSettingsContextType = {
+    userSettings,
+    setUserSetting,
+    setUserSettings,
+  };
   return (
     <UserSettingsContext.Provider value={value}>
       {children}

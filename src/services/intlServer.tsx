@@ -1,38 +1,36 @@
-import getConfig from 'next/config';
 import acceptLanguageParser from 'accept-language-parser';
 import nextCookies from 'next-cookies';
+import { LANGUAGES } from '../config.mjs';
 
 // the files are not imported in main bundle
 const getMessages = async (lang) =>
   (await import(`../locales/${lang}.js`)).default;
 
-const getLangFromAcceptHeader = (ctx, languages) => {
+const getLangFromAcceptHeader = (ctx) => {
   const header = ctx.req.headers['accept-language'];
-  return acceptLanguageParser.pick(languages, header, { loose: true });
+  return acceptLanguageParser.pick(Object.keys(LANGUAGES), header, {
+    loose: true,
+  });
 };
 
 const DEFAULT_LANG = 'en';
-
-const {
-  publicRuntimeConfig: { languages },
-} = getConfig();
 
 const resolveCurrentLang = (ctx) => {
   const langInUrl = ctx.locale;
 
   // language is forced by URL prefix
-  if (languages[langInUrl]) {
+  if (LANGUAGES[langInUrl]) {
     ctx.res.setHeader('set-cookie', `lang=${langInUrl}; Path=/`);
     return langInUrl;
   }
 
   // app is usually used without lang prefix (cookie or accept-language)
   const { lang } = nextCookies(ctx);
-  if (lang && languages[lang]) {
+  if (lang && LANGUAGES[lang]) {
     return lang;
   }
 
-  return getLangFromAcceptHeader(ctx, Object.keys(languages)) ?? DEFAULT_LANG;
+  return getLangFromAcceptHeader(ctx) ?? DEFAULT_LANG;
 };
 
 export const getServerIntl = async (ctx) => {
@@ -42,7 +40,6 @@ export const getServerIntl = async (ctx) => {
 
   return {
     lang,
-    languages,
     messages: { ...vocabulary, ...messages },
   };
 };

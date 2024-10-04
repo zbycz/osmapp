@@ -1,6 +1,7 @@
 import React, {
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useRef,
   useState,
@@ -18,10 +19,10 @@ import { updateElementOnIndex } from '../utils/array';
 import { findCloserPointFactory } from '../utils/findCloserPoint';
 import {
   ActionWithCallback,
-  getMachineFactory,
   State,
   StateAction,
-} from '../utils/getMachineFactory';
+  useGetMachineFactory,
+} from '../utils/useGetMachineFactory';
 import { positionUtilsFactory } from '../utils/positionUtilsFactory';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
@@ -46,9 +47,9 @@ type ClimbingContextType = {
   imageContainerSize: ImageSize;
   isPointMoving: boolean;
   isRouteSelected: (routeNumber: number) => boolean;
+  isOtherRouteSelected: (routeNumber: number) => boolean;
   isRouteHovered: (routeNumber: number) => boolean;
   isPointSelected: (pointNumber: number) => boolean;
-  getPhotoInfoForRoute: (routeNumber: number) => PhotoInfo;
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number;
@@ -89,8 +90,6 @@ type ClimbingContextType = {
   findCloserPoint: (position: Position) => PathPoint | null;
   photoZoom: ZoomState;
   setPhotoZoom: (photoZoom: ZoomState) => void;
-  areRoutesVisible: boolean;
-  setAreRoutesVisible: (areRoutesVisible: boolean) => void;
   areRoutesLoading: boolean;
   setAreRoutesLoading: (areRoutesLoading: boolean) => void;
   mousePosition: PositionPx;
@@ -104,8 +103,8 @@ type ClimbingContextType = {
   setViewportSize: (size: Size) => void;
   routeIndexHovered: number;
   setRouteIndexHovered: (routeIndexHovered: number) => void;
-  routesExpanded: Array<number>;
-  setRoutesExpanded: (routesExpanded: Array<number>) => void;
+  routeIndexExpanded: number | null;
+  setRouteIndexExpanded: (routeIndexHovered: number | null) => void;
   loadedPhotos: LoadedPhotos;
   setLoadedPhotos: (loadedPhotos: LoadedPhotos) => void;
   loadPhotoRelatedData: () => void;
@@ -113,13 +112,16 @@ type ClimbingContextType = {
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
   photoRef: React.MutableRefObject<any>;
   getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
-  isDifficultyHeatmapEnabled: boolean;
-  setIsDifficultyHeatmapEnabled: (isDifficultyHeatmapEnabled: boolean) => void;
   showDebugMenu: boolean;
   setShowDebugMenu: (showDebugMenu: boolean) => void;
   arePointerEventsDisabled: boolean; // @TODO do we need it?
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
-  preparePhotosAndSet: (cragPhotos: Array<string>, photo?: string) => void;
+  preparePhotos: (cragPhotos: Array<string>) => void;
+  routeListTopOffsets: Array<number>;
+  setRouteListTopOffset: (
+    routeIndex: number,
+    routeListTopOffset: number,
+  ) => void;
 };
 
 // @TODO generate?
@@ -154,16 +156,13 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
-  const [isDifficultyHeatmapEnabled, setIsDifficultyHeatmapEnabled] =
-    useState<boolean>(true);
-  const [areRoutesVisible, setAreRoutesVisible] = useState<boolean>(true);
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
   const [arePointerEventsDisabled, setArePointerEventsDisabled] =
     useState<boolean>(false);
   const [routeIndexHovered, setRouteIndexHovered] = useState<number>(null);
   const [mousePosition, setMousePosition] = useState<PositionPx | null>(null);
   const [filterDifficulty, setFilterDifficulty] = useState<Array<string>>([]);
-  const [routesExpanded, setRoutesExpanded] = useState<Array<number>>([]);
+  const [routeIndexExpanded, setRouteIndexExpanded] = useState<number>(null);
   const [editorPosition, setEditorPosition] = useState<PositionPx>({
     x: 0,
     y: 0,
@@ -182,8 +181,20 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
 
-  const [pointElement, setPointElement] =
-    React.useState<null | HTMLElement>(null);
+  const [pointElement, setPointElement] = React.useState<null | HTMLElement>(
+    null,
+  );
+  const [routeListTopOffsets, setRouteListTopOffsets] = React.useState<
+    Array<number>
+  >([]);
+
+  const setRouteListTopOffset = useCallback((index: number, offset: number) => {
+    setRouteListTopOffsets((prevPositions) => {
+      const newPositions = [...prevPositions];
+      newPositions[index] = offset;
+      return newPositions;
+    });
+  }, []);
 
   const getPathOnIndex = (index: number) =>
     routes[index]?.paths?.[photoPath] || [];
@@ -197,12 +208,13 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
   ) => {
-    const updatedArray = updateElementOnIndex<ClimbingRoute>(
-      routes,
-      routeIndex,
-      callback,
-    );
-    setRoutes(updatedArray);
+    setRoutes((prevRoutes) => {
+      return updateElementOnIndex<ClimbingRoute>(
+        prevRoutes,
+        routeIndex,
+        callback,
+      );
+    });
   };
 
   const updatePathOnRouteIndex = (
@@ -244,7 +256,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       photoZoom,
     });
 
-  const getMachine = getMachineFactory({
+  const getMachine = useGetMachineFactory({
     setRouteSelectedIndex,
     setPointSelectedIndex,
     updatePathOnRouteIndex,
@@ -263,35 +275,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   });
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
+  const isOtherRouteSelected = (index: number) =>
+    routeSelectedIndex !== null && isRouteSelected(index) === false;
   const isRouteHovered = (index: number) => routeIndexHovered === index;
   const isPointSelected = (index: number) => pointSelectedIndex === index;
-  const getPhotoInfoForRoute = (index: number): PhotoInfo => {
-    const checkedPaths = routes[index]?.paths;
-    if (!checkedPaths) return null;
-    const availablePhotos = Object.keys(checkedPaths);
-
-    return availablePhotos.reduce<PhotoInfo>(
-      (photoInfo, availablePhotoPath) => {
-        if (
-          !checkedPaths[availablePhotoPath] ||
-          photoInfo === 'hasPathOnThisPhoto' ||
-          photoInfo === 'isOnThisPhoto'
-        )
-          return photoInfo;
-
-        if (availablePhotoPath === photoPath) {
-          if (checkedPaths[availablePhotoPath].length > 0)
-            return 'hasPathOnThisPhoto';
-          return 'isOnThisPhoto';
-        }
-
-        if (checkedPaths[availablePhotoPath].length > 0)
-          return 'hasPathInDifferentPhoto';
-        return 'isOnDifferentPhoto';
-      },
-      null,
-    );
-  };
 
   const getAllRoutesPhotos = (cragPhotos: Array<string>) => {
     const photos = routes.reduce((acc, route) => {
@@ -303,10 +290,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setPhotoPaths(photos);
   };
 
-  const preparePhotosAndSet = (cragPhotos: Array<string>, photo?: string) => {
+  const preparePhotos = (cragPhotos: Array<string>) => {
     if (photoPaths === null) getAllRoutesPhotos(cragPhotos);
-    if (!photoPath && photoPaths?.length > 0)
-      setPhotoPath(photo || photoPaths[0]);
   };
 
   const loadPhotoRelatedData = () => {
@@ -328,11 +313,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
         height: window?.innerHeight,
       });
     }
-    setAreRoutesVisible(true);
     setAreRoutesLoading(false);
   };
 
-  const climbingState = {
+  const climbingState: ClimbingContextType = {
     editorPosition,
     getPercentagePosition,
     getPixelPosition,
@@ -340,9 +324,9 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     isPointClicked,
     isPointMoving,
     isRouteSelected,
+    isOtherRouteSelected,
     isRouteHovered,
     isPointSelected,
-    getPhotoInfoForRoute,
     pointSelectedIndex,
     routes,
     routeSelectedIndex,
@@ -363,8 +347,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     findCloserPoint,
     splitPaneHeight,
     setSplitPaneHeight,
-    areRoutesVisible, // @TODO move to some settings object
-    setAreRoutesVisible,
     mousePosition,
     setMousePosition,
     pointElement,
@@ -379,8 +361,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     photoPath,
     photoPaths,
     setPhotoPath,
-    routesExpanded,
-    setRoutesExpanded,
+    routeIndexExpanded,
+    setRouteIndexExpanded,
     loadPhotoRelatedData,
     filterDifficulty,
     setFilterDifficulty,
@@ -391,17 +373,17 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setPhotoZoom,
     addZoom,
     getAllRoutesPhotos,
-    isDifficultyHeatmapEnabled, // @TODO move to some settings object
-    setIsDifficultyHeatmapEnabled,
     showDebugMenu,
     setShowDebugMenu,
     arePointerEventsDisabled,
     setArePointerEventsDisabled,
-    preparePhotosAndSet,
+    preparePhotos,
     imageContainerSize,
     setImageContainerSize,
     loadedPhotos,
     setLoadedPhotos,
+    routeListTopOffsets,
+    setRouteListTopOffset,
   };
 
   return (

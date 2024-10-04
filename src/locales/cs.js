@@ -15,8 +15,12 @@ export default {
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
 
-  'project.openclimbing.description': 'Otevřená lezecká wiki-mapa',
-  'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
+  'project.openclimbing.description': 'Otevřený lezecký průvodce',
+  'project.openclimbing.serpDescription': 'Otevřený lezecký průvodce s vyznačením cest. Postaveno na projektech OpenStreetMap a Wikipedie.',
+
+  'climbing.guideinfo.title': 'Otevřený lezecký průvodce openclimbing.org',
+  'climbing.guideinfo.description':
+    'OpenClimbing.org je otevřená platforma pro lezecké průvodce a mapy. Vyznačené cesty a fotky se ukládají do projektů OpenStreetMap a Wikipedie, takže je může kdykoliv editovat.',
 
   'install.button': 'Stáhnout aplikaci',
   'install.tabs_aria_label': 'Vyberte si svou platformu',
@@ -41,16 +45,12 @@ export default {
   'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
     včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
     V plánu jsou funkce jako navigace či oblíbená místa.`,
-  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – za obrázky 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – za nejlepší mapu Země 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – za skvělé vektorové mapy <br>a za podporu tohoto projektu  ❤️ ',
+  'homepage.for_images': 'za obrázky 🖼',
+  'homepage.for_osm': 'za nejlepší mapu Země 🌎',
+  'homepage.maptiler': 'za skvělé vektorové mapy a za podporu tohoto projektu  ❤️ ',
+  'homepage.vercel': 'za skvělou hostingovou platformu',
   'homepage.disclaimer_heading': 'Poznámka',
   'homepage.disclaimer': `OpenStreetMap a OSM jsou ochranné známky nadace OpenStreetMap. Tento projekt není schválen ani spojen s nadací <a href="https://osmfoundation.org/">OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vektorové mapy ("Základní" a "Outdoorová") obsahují některé názvy míst z projektu Wikidata,  více <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>zde</a>.`,
@@ -60,6 +60,16 @@ export default {
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
   'searchbox.overpass_error': 'Chyba při načítání výsledků. __message__',
   'searchbox.overpass_custom_query': 'vlastní dotaz',
+
+  'directions.get_directions': 'Vyhledat trasu',
+  'directions.form.starting_point': 'Začátek trasy',
+  'directions.form.destination': 'Cíl',
+  'directions.edit_destinations': 'Upravit zadání',
+  'directions.powered_by': 'Vyhledávání tras dodává systém __link__.',
+  'directions.result.time': 'Čas',
+  'directions.result.distance': 'Vzdálenost',
+  'directions.result.ascent': 'Stoupání',
+  'directions.error.too_far': 'Cíl je příliš daleko od silniční sítě. Prosím, zvolte jiný cíl.',
 
   'featurepanel.no_name': 'beze jména',
   'featurepanel.share_button': 'Sdílet',
@@ -92,6 +102,9 @@ export default {
   'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',
   'opening_hours.today_closed': 'Dnes zavřeno',
   'opening_hours.days_su_mo_tu_we_th_fr_sa': 'neděle|pondělí|úterý|středa|čtvrtek|pátek|sobota',
+  'opening_hours.editor.closed': 'zavřeno',
+  'opening_hours.editor.create_advanced': 'Podrobnější otvírací dobu můžete vytvořit v <link>nástroji YoHours</link>.',
+  'opening_hours.editor.cant_edit_here': 'Tuto otvírací dobu zde nelze editovat. Prosím, použijte <link>nástroj YoHours</link>.',
 
   'map.github_title': 'GitHub repozitář',
   'map.language_title': 'Změnit jazyk',
@@ -167,7 +180,6 @@ export default {
   'layerswitcher.heading': 'Mapové vrstvy',
   'layerswitcher.intro': 'Díky tomu, že OpenStreetMap nabízí zdrojová data, tak kdokoliv může vyrobit různé varianty mapy.',
   'layerswitcher.add_layer_button': 'Přidat vlastní vrstvu',
-  'layerswitcher.add_layer_prompt': 'Přidat vlastní TMS vrstvu – CORS musí být nastaveno:\n(beta funkcionalita)',
   'layerswitcher.overlays': 'Překryvné vrstvy',
 
   'layers.basic': 'Základní',
@@ -179,4 +191,9 @@ export default {
   'layers.bingSat': 'Letecká Bing',
   'layers.bike': 'Cyklo',
   'layers.climbing': 'Sportovní lezení',
+
+  'climbingareas.link': 'Seznam všech lezeckých oblastí',
+  'climbingareas.title': 'Lezecké oblasti',
+  'climbingareas.area': 'Oblast',
+  'climbingareas.num_of_crags': 'Počet skal',
 };

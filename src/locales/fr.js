@@ -40,16 +40,11 @@ export default {
   'homepage.about_osmapp': `Cette application se veut être une interface pratique pour un usage au quotidien d’<i>OpenStreetMap</i>
      comprenant des fonctions de modifications. <br/>Elle propose actuellement plusieurs couches de carte, un moteur de recherche basique ainsi que des fonctions de modification.
      Des fonctions telles que la navigation ou les favoris sont prévues.`,
-  'homepage.github_link': `Vous pouvez proposer de nouvelles fonctionnalités sur <a href="https://github.com/zbycz/osmapp" rel='noopener' target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Vous pouvez proposer de nouvelles fonctionnalités sur <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Remerciements à`,
-  'homepage.special_thanks': `<ul>
-        <li><a href="https://www.mapillary.com/" rel='noopener' target='_blank'>Mapillary</a>,
-              <a href="https://openstreetmap.cz/fody" rel='noopener' target='_blank'>Fody</a>,
-              <a href="https://www.wikipedia.org/" rel='noopener' target='_blank'>Wikipedia</a> – pour les images 🖼
-        <li><a href="https://www.openstreetmap.org/" rel='noopener' target='_blank'>OpenStreetMap</a> – pour être la meilleure carte au monde 🌎
-      </ul>
-  `,
-  'homepage.maptiler': '<strong>MapTiler</strong> – pour de superbes cartes vectorielles<br>et son support pour ce projet ❤️',
+  'homepage.for_images': 'pour les images 🖼',
+  'homepage.for_osm': 'pour être la meilleure carte au monde 🌎',
+  'homepage.maptiler': 'pour de superbes cartes vectorielles et son support pour ce projet ❤️',
 
   'searchbox.placeholder': 'Recherche OpenStreetMap',
 
@@ -148,7 +143,6 @@ export default {
   'layerswitcher.heading': 'Fonds de carte',
   'layerswitcher.intro': 'Merci à OpenStreetMap pour ses données permettant de produires différentes cartes.',
   'layerswitcher.add_layer_button': 'Ajouter une couche personnalisée',
-  'layerswitcher.add_layer_prompt': 'Ajouter une couche TMS personnalisée – requiert CORS :\n(fonctionnalité beta)',
 
   'layers.basic': 'Basique',
   'layers.outdoor': 'Plein Air',

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { RoutesLayer } from './RoutesLayer';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
+import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
 
 const EditorContainer = styled.div<{ imageHeight: number }>`
   display: flex;
@@ -41,6 +42,8 @@ export const RoutesEditor = ({
   isRoutesLayerVisible = true,
   photoResolution,
   imageUrl,
+  isPhotoLoading,
+  setIsPhotoLoading,
 }) => {
   const {
     imageSize,
@@ -60,6 +63,7 @@ export const RoutesEditor = ({
     photoPath,
     setLoadedPhotos,
     photoZoom,
+    photoPaths,
   } = useClimbingContext();
   const machine = getMachine();
   const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
@@ -124,12 +128,34 @@ export const RoutesEditor = ({
     onMove(positionInImage);
   };
 
+  const preloadOtherPhotos = () => {
+    const photosToLoad = photoPaths.filter((path) => !loadedPhotos[path]);
+
+    const tempLoadedPhotos = photosToLoad.reduce((acc, otherPhotoPath) => {
+      const img = new Image();
+      const url = getCommonsImageUrl(`File:${otherPhotoPath}`, photoResolution);
+      img.src = url;
+
+      return {
+        ...acc,
+        [otherPhotoPath]: {
+          ...acc[otherPhotoPath],
+          [photoResolution]: true,
+        },
+      };
+    }, loadedPhotos);
+
+    setLoadedPhotos(tempLoadedPhotos);
+  };
+
   const onPhotoLoad = () => {
     setLoadedPhotos({
       ...loadedPhotos,
       [photoPath]: { ...loadedPhotos[photoPath], [photoResolution]: true },
     });
     loadPhotoRelatedData();
+    preloadOtherPhotos();
+    setIsPhotoLoading(false);
   };
 
   return (
@@ -137,13 +163,15 @@ export const RoutesEditor = ({
       <ImageContainer>
         <ImageElement src={imageUrl} onLoad={onPhotoLoad} ref={photoRef} />
       </ImageContainer>
-      <RoutesLayer
-        isVisible={isRoutesLayerVisible}
-        onClick={onCanvasClick}
-        onEditorMouseMove={onMouseMove}
-        onEditorTouchMove={onTouchMove}
-        transformOrigin={transformOrigin}
-      />
+      {!isPhotoLoading && (
+        <RoutesLayer
+          isVisible={isRoutesLayerVisible}
+          onClick={onCanvasClick}
+          onEditorMouseMove={onMouseMove}
+          onEditorTouchMove={onTouchMove}
+          transformOrigin={transformOrigin}
+        />
+      )}
     </EditorContainer>
   );
 };

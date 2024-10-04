@@ -1,5 +1,5 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { useIsClient } from '../../helpers';
@@ -12,9 +12,11 @@ const Link = styled.a`
 export const MaptilerLogo = () => {
   const isClient = useIsClient();
   const { activeLayers } = useMapStateContext();
-  const hasMaptiler = activeLayers.some((layer) =>
-    osmappLayers[layer]?.attribution?.includes('maptiler'),
-  );
+  const hasMaptiler = activeLayers.some((layer) => {
+    const attribution = osmappLayers[layer]?.attribution || [];
+
+    return attribution.includes('maptiler');
+  });
 
   if (!isClient || !hasMaptiler) {
     return null;

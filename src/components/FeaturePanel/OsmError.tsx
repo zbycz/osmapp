@@ -1,6 +1,5 @@
 import React from 'react';
-import { Alert } from '@mui/lab';
-import { Box } from '@mui/material';
+import { Box, Alert } from '@mui/material';
 import { t } from '../../services/intl';
 import { getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -19,7 +18,6 @@ export const OsmError = () => {
               feature.osmMeta,
             )}/history`}
             target="_blank"
-            rel="noopener"
           >
             {t('featurepanel.history_button')}
           </a>

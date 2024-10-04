@@ -1,14 +1,14 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton } from '@mui/material';
+import { IconButton, useMediaQuery } from '@mui/material';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 import { PoiDescription } from './helpers/PoiDescription';
 import { StarButton } from './helpers/StarButton';
 import { getLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
-import { isDesktopResolution } from '../helpers';
+import { isMobileDevice } from '../helpers';
 
 const StyledEditButton = styled(IconButton)`
   visibility: hidden;
@@ -19,8 +19,29 @@ const NameWithEdit = styled.div`
   display: flex;
   gap: 8px;
 `;
-const Container = styled.div`
+
+const EditNameButton = () => {
+  const { openWithTag } = useEditDialogContext();
+  const { feature } = useFeatureContext();
+  if (feature?.skeleton || isMobileDevice()) {
+    return null;
+  }
+
+  return (
+    <div>
+      <StyledEditButton onClick={() => openWithTag('name')} size="small">
+        <EditIcon
+          fontSize="small"
+          titleAccess={t('featurepanel.inline_edit_title')}
+        />
+      </StyledEditButton>
+    </div>
+  );
+};
+
+const Container = styled.div<{ isStandalone: boolean }>`
   margin: 12px 0 20px 0;
+  ${({ isStandalone }) => isStandalone && 'padding-bottom: 8px;'}
 `;
 
 const HeadingContainer = styled.div`
@@ -31,10 +52,8 @@ const HeadingContainer = styled.div`
   align-items: flex-start;
   position: relative;
 
-  @media ${isDesktopResolution} {
-    &:hover ${StyledEditButton} {
-      visibility: visible;
-    }
+  &:hover ${StyledEditButton} {
+    visibility: visible;
   }
 `;
 
@@ -45,36 +64,25 @@ const Heading = styled.h1<{ $deleted: boolean }>`
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
 `;
 
-export const FeatureHeading = () => {
-  const { openWithTag } = useEditDialogContext();
+export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
-  const { skeleton, deleted } = feature;
-  const editEnabled = !skeleton;
+
+  // thw pwa needs space at the bottom
+  const isStandalone = useMediaQuery('(display-mode: standalone)');
 
   return (
-    <Container>
+    <Container ref={ref} isStandalone={isStandalone}>
       <PoiDescription />
       <HeadingContainer>
         <NameWithEdit>
-          <Heading $deleted={deleted}>{label}</Heading>
+          <Heading $deleted={feature?.deleted}>{label}</Heading>
           {/* <YellowedBadge /> */}
-          {editEnabled && (
-            <div>
-              <StyledEditButton
-                onClick={() => openWithTag('name')}
-                size="small"
-              >
-                <EditIcon
-                  fontSize="small"
-                  titleAccess={t('featurepanel.inline_edit_title')}
-                />
-              </StyledEditButton>
-            </div>
-          )}
+          <EditNameButton />
         </NameWithEdit>
         <StarButton />
       </HeadingContainer>
     </Container>
   );
-};
+});
+FeatureHeading.displayName = 'FeatureHeading';

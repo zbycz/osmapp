@@ -262,7 +262,7 @@ export const outdoorStyle = addHoverPaint({
         'hillshade-highlight-color': 'rgba(183, 169, 162, 1)',
       },
       layout: { visibility: 'visible' },
-      source: 'terrain',
+      source: 'terrainHillshade',
       minzoom: 3,
     },
     {

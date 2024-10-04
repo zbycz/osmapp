@@ -4,15 +4,16 @@ import {
   osmLogout,
   OsmUser,
 } from '../../services/osmApiAuth';
-import { useMapStateContext } from './MapStateContext';
+import { useSnackbar } from './SnackbarContext';
 
-interface OsmAuthType {
+type OsmAuthType = {
   loggedIn: boolean;
   osmUser: string;
   userImage: string;
+  loading: boolean;
   handleLogin: () => void;
   handleLogout: () => void;
-}
+};
 
 const useOsmUserState = (cookies) => {
   const initialState = cookies.osmUserForSSR;
@@ -22,24 +23,28 @@ const useOsmUserState = (cookies) => {
 export const OsmAuthContext = createContext<OsmAuthType>(undefined);
 
 export const OsmAuthProvider = ({ children, cookies }) => {
-  const mapStateContext = useMapStateContext();
+  const [loading, setLoading] = useState(false);
   const [osmUser, setOsmUser] = useOsmUserState(cookies);
+
+  const { showToast } = useSnackbar();
 
   const successfulLogin = (user: OsmUser) => {
     setOsmUser(user);
-    mapStateContext.showToast({
-      content: `Logged in as ${user.name}`,
-      type: 'success',
-    });
+    showToast(`Logged in as ${user.name}`, 'success');
+    setLoading(false);
   };
 
-  const handleLogin = () => loginAndfetchOsmUser().then(successfulLogin);
+  const handleLogin = () => {
+    setLoading(true);
+    loginAndfetchOsmUser().then(successfulLogin);
+  };
   const handleLogout = () => osmLogout().then(() => setOsmUser(undefined));
 
-  const value = {
+  const value: OsmAuthType = {
     loggedIn: !!osmUser,
     osmUser: osmUser?.name || '', // TODO rename
     userImage: osmUser?.imageUrl || '',
+    loading,
     handleLogin,
     handleLogout,
   };

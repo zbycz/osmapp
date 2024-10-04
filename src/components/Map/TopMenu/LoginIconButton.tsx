@@ -1,9 +1,9 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import React from 'react';
-import styled from 'styled-components';
+import styled from '@emotion/styled';
 import { IconButton } from '@mui/material';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
-import { isMobileMode } from '../../helpers';
+import { DotLoader, isMobileMode } from '../../helpers';
 
 const StyledIconButton = styled(IconButton)`
   padding: 12px;
@@ -25,12 +25,16 @@ const StyledUserImg = styled.img`
 `;
 
 export const LoginIconButton = ({ anchorRef, onClick }) => {
-  const { osmUser, userImage } = useOsmAuthContext();
+  const { osmUser, loading, userImage } = useOsmAuthContext();
 
   return (
     <StyledIconButton ref={anchorRef} color="secondary" onClick={onClick}>
       {osmUser ? (
         <StyledUserImg src={userImage} alt={osmUser} />
+      ) : loading ? (
+        <div>
+          <DotLoader />
+        </div>
       ) : (
         <AccountCircleIcon />
       )}
