@@ -138,7 +138,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMyTicksVisible = router.pathname === '/my-ticks';
   const isInstallVisible = router.pathname === '/install';
 
-  const isSearchInPanelVisible =
+  const isSearchInPanel =
     (!featureShown &&
       !isMyTicksVisible &&
       !isInstallVisible &&
@@ -152,9 +152,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
         <FeaturePanelOnSide scrollRef={scrollRef} />
       )}
       {directions && <DirectionsBox />}
-      {!directions && (
-        <SearchBox isSearchInPanelVisible={isSearchInPanelVisible} />
-      )}
+      {!directions && <SearchBox isSearchInPanel={isSearchInPanel} />}
       {featureShown && isMobileMode && (
         <FeaturePanelInDrawer scrollRef={scrollRef} />
       )}
