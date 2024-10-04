@@ -26,20 +26,3 @@ export const TopPanel = styled.div<{ $isMobileMode: boolean }>`
     width: 410px;
   }
 `;
-
-export const StyledPaper = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== '$column',
-})<{ $column?: boolean }>`
-  width: 100%;
-  padding: 2px 4px;
-  display: flex;
-  flex-direction: ${({ $column }) => ($column ? 'column' : 'row')};
-  align-items: center;
-  background-color: ${({ theme }) => theme.palette.background.searchInput};
-  -webkit-backdrop-filter: blur(35px);
-  backdrop-filter: blur(35px);
-
-  .MuiAutocomplete-root {
-    flex: 1;
-  }
-`;

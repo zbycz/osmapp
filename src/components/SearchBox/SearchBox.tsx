@@ -14,7 +14,7 @@ import { UserMenu } from '../Map/TopMenu/UserMenu';
 import { DirectionsButton } from '../Directions/DirectionsButton';
 import { setLastFeature } from '../../services/lastFeatureStorage';
 
-const TopPanel = styled.div<{ $isMobileMode: boolean }>`
+const TopPanel = styled.div`
   position: absolute;
   height: ${SEARCH_BOX_HEIGHT}px;
   padding: 8px;
@@ -23,7 +23,7 @@ const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   top: 0;
   z-index: 10;
   @media ${isDesktopResolution} {
-    z-index: 1100;
+    z-index: 1200; // 1100 is PanelWrapper
   }
 
   width: 100%;
@@ -32,21 +32,19 @@ const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   }
 `;
 
-const StyledPaper = styled(Paper)<{ $isSearchInPanelVisible: boolean }>`
+const StyledPaper = styled(Paper)<{ $isSearchInPanel: boolean }>`
   padding: 2px 4px;
   display: flex;
   align-items: center;
-  background-color: ${({ $isSearchInPanelVisible, theme }) =>
-    $isSearchInPanelVisible
+  background-color: ${({ $isSearchInPanel, theme }) =>
+    $isSearchInPanel
       ? theme.palette.background.searchInput
       : theme.palette.background.searchInputPanel};
   -webkit-backdrop-filter: blur(35px);
   backdrop-filter: blur(35px);
   transition: box-shadow 0s !important;
-  box-shadow: ${({ $isSearchInPanelVisible }) =>
-    $isSearchInPanelVisible
-      ? '0 0 20px rgba(0, 0, 0, 0.4)'
-      : 'none'} !important;
+  box-shadow: ${({ $isSearchInPanel }) =>
+    $isSearchInPanel ? '0 0 20px rgba(0, 0, 0, 0.4)' : 'none'} !important;
 
   .MuiAutocomplete-root {
     flex: 1;
@@ -77,7 +75,7 @@ const useOnClosePanel = () => {
   };
 };
 
-const SearchBox = ({ isSearchInPanelVisible = false }) => {
+const SearchBox = ({ isSearchInPanel = false }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const [overpassLoading, setOverpassLoading] = useState(false);
@@ -85,9 +83,9 @@ const SearchBox = ({ isSearchInPanelVisible = false }) => {
   const onClosePanel = useOnClosePanel();
 
   return (
-    <TopPanel $isMobileMode={isMobileMode}>
+    <TopPanel>
       <StyledPaper
-        $isSearchInPanelVisible={isSearchInPanelVisible}
+        $isSearchInPanel={isSearchInPanel}
         elevation={1}
         ref={autocompleteRef}
       >
