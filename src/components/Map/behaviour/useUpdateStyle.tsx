@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import type { GeoJSONSource, Map } from 'maplibre-gl';
+import { GeoJSONSource, Map } from 'maplibre-gl';
 import cloneDeep from 'lodash/cloneDeep';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { createMapEffectHook } from '../../helpers';
@@ -18,6 +18,7 @@ import { fetchCrags } from '../../../services/fetchCrags';
 import { Layer } from '../../utils/MapStateContext';
 import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
+import { addIndoorEqual, removeIndoorEqual } from './indoor';
 
 const getBaseStyle = (key: string): StyleSpecification => {
   if (key === 'basic') {
@@ -61,15 +62,18 @@ const addOverlaysToStyle = (
   style: StyleSpecification,
   overlays: string[],
 ) => {
-  overlays.forEach((overlayKey: string) => {
-    const overlay = osmappLayers[overlayKey];
-
-    if (overlay?.type === 'overlay') {
-      addRasterOverlay(style, overlayKey);
+  overlays.forEach((key: string) => {
+    const overlay = osmappLayers[key];
+    if (overlay?.type !== 'overlay') {
+      return;
     }
 
-    if (overlay?.type === 'overlayClimbing') {
+    if (key === 'climbing') {
       addClimbingOverlay(style, map);
+    } else if (key === 'indoor') {
+      return; // indoorEqual must be added after setStyle()
+    } else {
+      addRasterOverlay(style, key);
     }
   });
 };
@@ -84,10 +88,16 @@ export const useUpdateStyle = createMapEffectHook(
 
     map.setMaxZoom(osmappLayerMaxZoom ?? userLayerMaxZoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
 
+    removeIndoorEqual(map);
+
     const style = cloneDeep(getBaseStyle(key));
     addOverlaysToStyle(map, style, overlays);
-    map.setStyle(style, { diff: mapLoaded });
+    map.setStyle(style, { diff: mapLoaded }); // until mapLoaded diffing not allowed
 
     setUpHover(map, layersWithOsmId(style));
+
+    if (overlays.includes('indoor')) {
+      addIndoorEqual(map);
+    }
   },
 );

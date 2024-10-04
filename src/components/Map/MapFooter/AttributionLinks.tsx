@@ -1,7 +1,7 @@
 import { Tooltip, useMediaQuery } from '@mui/material';
 import React from 'react';
 import uniq from 'lodash/uniq';
-import { Layer, useMapStateContext } from '../../utils/MapStateContext';
+import { Layer, useMapStateContext, View } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { Translation } from '../../../services/intl';
 import { usePersistedState } from '../../utils/usePersistedState';
@@ -37,13 +37,20 @@ const OsmAttribution = () => {
   );
 };
 
+const minZoomSatisfied = (osmappLayer: Layer, view: View) =>
+  !osmappLayer.minzoom || parseFloat(view[0]) >= osmappLayer.minzoom;
+
 export const AttributionLinks = () => {
-  const { activeLayers, userLayers } = useMapStateContext();
+  const { activeLayers, userLayers, view } = useMapStateContext();
 
   const attributions = uniq(
     activeLayers.flatMap((layerUrl) => {
       const osmappLayer = osmappLayers[layerUrl];
-      if (osmappLayer) return osmappLayer.attribution;
+      if (osmappLayer) {
+        return minZoomSatisfied(osmappLayer, view)
+          ? osmappLayer.attribution
+          : [];
+      }
 
       const userLayer = userLayers.find(({ url }) => url === layerUrl);
       return userLayer?.attribution || decodeURI(new URL(layerUrl)?.hostname);
