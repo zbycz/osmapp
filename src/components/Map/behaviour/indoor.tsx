@@ -9,7 +9,7 @@ export const addIndoorEqual = (map: maplibregl.Map) => {
     throw new Error('Missing API key for IndoorEqual');
   }
 
-  console.log('Adding IndoorEqual'); // eslint-disable-line no-console
+  console.log('Adding IndoorEqual');
   indoorEqual = new IndoorEqual(map, {
     apiKey: process.env.NEXT_PUBLIC_API_KEY_INDOOREQUAL,
     heatmap: false,

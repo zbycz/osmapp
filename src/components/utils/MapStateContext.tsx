@@ -50,7 +50,9 @@ export const MapStateContext = createContext<MapStateContextType>(undefined);
 
 const useActiveLayersState = () => {
   const isClimbing = PROJECT_ID === 'openclimbing';
-  const initLayers = isClimbing ? ['outdoor', 'climbing'] : [DEFAULT_MAP];
+  const initLayers = isClimbing
+    ? ['outdoor', 'climbing']
+    : [DEFAULT_MAP, 'indoor'];
   return usePersistedState('activeLayers', initLayers);
 };
 
