@@ -5,7 +5,7 @@ import { publishDbgObject } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
 import { convertMapIdToOsmId, getIsOsmObject } from '../helpers';
 import { maptilerFix } from './maptilerFix';
-import { Feature, LonLat } from '../../../services/types';
+import { Feature, LonLat, OsmId } from '../../../services/types';
 import { createCoordsFeature, pushFeatureToRouter } from './utils';
 import { SetFeature } from '../../utils/FeatureContext';
 import { Map } from 'maplibre-gl';
@@ -13,12 +13,29 @@ import { Map } from 'maplibre-gl';
 const isSameOsmId = (feature: Feature, skeleton: Feature) =>
   feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
 
-export const getSkeleton = (feature, clickCoords: LonLat) => {
+const getIndoorEqualId = (feature: Feature): OsmId | null => {
+  if (feature.layer.id?.startsWith('indoor-') && feature.properties.id) {
+    const [type, id] = `${feature.properties.id}`.split(':');
+    return { type, id: parseInt(id, 10) } as OsmId;
+  }
+  return null;
+};
+
+const getId = (feature) => {
+  const indoorId = getIndoorEqualId(feature);
+  if (indoorId) {
+    return { isOsmObject: true, osmMeta: indoorId };
+  }
+
   const isOsmObject = getIsOsmObject(feature);
   const osmMeta = isOsmObject
     ? convertMapIdToOsmId(feature)
     : { type: feature.layer.id, id: feature.id };
+  return { isOsmObject, osmMeta };
+};
 
+export const getSkeleton = (feature, clickCoords: LonLat) => {
+  const { isOsmObject, osmMeta } = getId(feature);
   return {
     ...feature,
     geometry: feature.geometry,

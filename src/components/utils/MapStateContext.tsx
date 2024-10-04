@@ -14,13 +14,14 @@ import { Setter } from '../../types';
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
 export interface Layer {
-  type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
+  type: 'basemap' | 'overlay' | 'user' | 'spacer';
   name?: string;
   url?: string;
   key?: string;
   Icon?: LayerIcon;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
+  minzoom?: number;
   bboxes?: number[][];
 }
 

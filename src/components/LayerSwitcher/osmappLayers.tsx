@@ -10,6 +10,7 @@ import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
 import Maki from '../utils/Maki';
 import { useUserThemeContext } from '../../helpers/theme';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 
 interface Layers {
   [key: string]: Layer;
@@ -113,6 +114,20 @@ export const osmappLayers: Layers = {
       'osm',
     ],
   },
+  ...(process.env.NEXT_PUBLIC_API_KEY_INDOOREQUAL
+    ? {
+        indoor: {
+          name: t('layers.indoor'),
+          type: 'overlay',
+          Icon: MapsHomeWorkIcon,
+          attribution: [
+            '&copy; <a href="https://indoorequal.com/">indoor=</a>',
+            'osm',
+          ],
+          minzoom: 16,
+        },
+      }
+    : {}),
   snow: {
     name: t('layers.snow'),
     type: 'overlay',
@@ -125,7 +140,7 @@ export const osmappLayers: Layers = {
   },
   climbing: {
     name: t('layers.climbing'),
-    type: 'overlayClimbing',
+    type: 'overlay',
     Icon: ClimbingIcon,
     attribution: ['osm'],
   },
