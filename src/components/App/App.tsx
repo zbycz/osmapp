@@ -148,10 +148,12 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   return (
     <>
       <Loading />
-      {!directions && <SearchBox />}
-      {directions && <DirectionsBox />}
       {featureShown && !isMobileMode && isMounted && (
         <FeaturePanelOnSide scrollRef={scrollRef} />
+      )}
+      {directions && <DirectionsBox />}
+      {!directions && (
+        <SearchBox isSearchInPanelVisible={isSearchInPanelVisible} />
       )}
       {featureShown && isMobileMode && (
         <FeaturePanelInDrawer scrollRef={scrollRef} />
@@ -170,7 +172,6 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
       {climbingAreas && <ClimbingAreasPanel areas={climbingAreas} />}
       <Map />
       <TitleAndMetaTags />
-      <SearchBox isSearchInPanelVisible={isSearchInPanelVisible} />
     </>
   );
 };
