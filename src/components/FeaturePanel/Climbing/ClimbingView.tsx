@@ -34,7 +34,7 @@ import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import MapIcon from '@mui/icons-material/Map';
 
 const FabContainer = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 12px;
   right: 12px;
   z-index: 1000;

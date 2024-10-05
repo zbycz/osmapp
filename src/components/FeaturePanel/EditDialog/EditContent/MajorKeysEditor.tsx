@@ -84,6 +84,7 @@ const TextFieldWithCharacterCount = ({
     <InputContainer>
       <TextField
         label={label}
+        multiline
         value={value}
         InputLabelProps={{ shrink: true }}
         variant="outlined"
