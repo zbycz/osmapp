@@ -1,9 +1,13 @@
 import React from 'react';
 import { encodeUrl } from '../../../../helpers/utils';
 
-export const PanoramaImg = ({ url }: { url: string }) => {
-  const configUrl = `${window.location.protocol}//${window.location.host}/pannellum-config.json`;
-  const pannellumUrl = encodeUrl`https://cdn.pannellum.org/2.5/pannellum.htm#panorama=${url}&config=${configUrl}`;
+type Props = {
+  small: string;
+  large: string;
+};
+
+export const PanoramaImg = ({ small, large }: Props) => {
+  const pannellumUrl = encodeUrl`/pannellum/pannellum.html#small=${small}&large=${large}`;
 
   return (
     <iframe

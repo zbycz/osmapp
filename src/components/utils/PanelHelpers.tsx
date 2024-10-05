@@ -9,19 +9,27 @@ import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
 // maybe https://github.com/malte-wessel/react-custom-scrollbars (larger)
-export const PanelWrapper = styled.div`
+const Columns = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
+
+const SearchBoxBackground = styled.div`
+  height: ${SEARCH_BOX_HEIGHT}px;
+  background-color: ${({ theme }) => theme.palette.background.searchBox};
+  position: relative;
+  z-index: 1;
+`;
+const Container = styled.div`
   position: absolute;
   left: 0;
-  top: ${SEARCH_BOX_HEIGHT}px;
+  top: 0;
   bottom: 0;
   background: ${({ theme }) => theme.palette.background.paper};
   color: ${({ theme }) => theme.palette.text.primary};
   overflow: hidden;
   z-index: 1100;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
-
-  display: flex;
-  flex-direction: column;
 
   width: 100%;
   @media ${isDesktop} {
@@ -35,6 +43,13 @@ export const PanelWrapper = styled.div`
     overscroll-behavior-y: auto;
   }
 `;
+
+export const PanelWrapper = ({ children }) => (
+  <Container>
+    <SearchBoxBackground />
+    <Columns>{children}</Columns>
+  </Container>
+);
 
 type PanelScrollbarsProps = {
   children: React.ReactNode;
