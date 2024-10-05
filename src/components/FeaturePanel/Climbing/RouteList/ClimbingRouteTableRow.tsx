@@ -49,7 +49,6 @@ const Row = styled(Link)<{ $isHoverHighlighted: boolean }>`
   color: ${({ theme }) => theme.palette.text.primary};
   cursor: pointer;
   padding: 8px 20px;
-  margin: 0px -12px;
   transition: all 0.1s;
   *,
   &:focus {
