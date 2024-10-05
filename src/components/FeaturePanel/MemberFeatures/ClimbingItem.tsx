@@ -5,6 +5,11 @@ import { getOsmappLink } from '../../../services/helpers';
 import Router from 'next/router';
 import { useMobileMode } from '../../helpers';
 import { ClimbingRouteTableRow } from '../Climbing/RouteList/ClimbingRouteTableRow';
+import styled from '@emotion/styled';
+
+const Container = styled.div`
+  margin: 0px -12px;
+`;
 
 export const ClimbingItem = ({
   feature,
@@ -31,13 +36,15 @@ export const ClimbingItem = ({
   };
 
   return (
-    <ClimbingRouteTableRow
-      feature={feature}
-      index={index}
-      onClick={handleClickItem}
-      onMouseEnter={mobileMode ? undefined : handleHover}
-      onMouseLeave={() => setPreview(null)}
-      isHoverHighlighted
-    />
+    <Container>
+      <ClimbingRouteTableRow
+        feature={feature}
+        index={index}
+        onClick={handleClickItem}
+        onMouseEnter={mobileMode ? undefined : handleHover}
+        onMouseLeave={() => setPreview(null)}
+        isHoverHighlighted
+      />
+    </Container>
   );
 };
