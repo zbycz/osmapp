@@ -1,9 +1,8 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
-import { positions } from '@mui/system';
 
 type Item = {
   id: number;
@@ -13,6 +12,12 @@ type Item = {
 const Container = styled.div`
   width: 100%;
   margin: 0 auto;
+`;
+const Row = styled.div`
+  &:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.1);
+  }
 `;
 
 const MaxWidthContainer = styled.div`
@@ -32,8 +37,6 @@ const RowWithDragHandler = styled.div<{
   display: flex;
   justify-content: center;
   -webkit-tap-highlight-color: rgba(255, 255, 255, 0.1);
-  /* background-color: ${({ isSelected }) =>
-    isSelected ? '#ccc' : 'transparent'}; */
   background: ${({ isSelected, theme }) =>
     isSelected ? theme.palette.action.selected : 'transparent'};
   position: relative;
@@ -43,7 +46,7 @@ const RowWithDragHandler = styled.div<{
 `;
 const DragHandler = styled.div`
   width: 30px;
-  padding-top: 7px;
+  padding-top: 16px;
   cursor: move;
   align-items: center;
   display: flex;
@@ -105,13 +108,6 @@ export const RouteListDndContent = ({ isEditable }) => {
 
   const [draggedItem, setDraggedItem] = useState<Item | null>(null);
   const [draggedOverIndex, setDraggedOverIndex] = useState<number | null>(null);
-
-  const onRouteChange = (e, index, updatedField) => {
-    updateRouteOnIndex(routeSelectedIndex, (route) => ({
-      ...route,
-      [updatedField]: e.target.value,
-    }));
-  };
 
   const onRowClick = (index: number) => {
     const routeNumber = routeSelectedIndex === index ? null : index;
@@ -214,7 +210,7 @@ export const RouteListDndContent = ({ isEditable }) => {
       {items.map((item, index) => {
         const isSelected = isRouteSelected(index);
         return (
-          <React.Fragment key={item.id}>
+          <Row key={item.id}>
             {draggedItem?.id > index && (
               <HighlightedDropzone $isActive={draggedOverIndex === index} />
             )}
@@ -245,6 +241,7 @@ export const RouteListDndContent = ({ isEditable }) => {
                     routeId={item.route.id}
                     stopPropagation={stopPropagation}
                     parentRef={parentRef}
+                    feature={item.route.feature}
                   />
                 </RowContent>
               </MaxWidthContainer>
@@ -252,7 +249,7 @@ export const RouteListDndContent = ({ isEditable }) => {
             {draggedItem?.id <= index && (
               <HighlightedDropzone $isActive={draggedOverIndex === index} />
             )}
-          </React.Fragment>
+          </Row>
         );
       })}
     </Container>

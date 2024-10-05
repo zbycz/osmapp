@@ -264,6 +264,7 @@ export default {
 
   'climbingpanel.show_route_detail': 'Show route detail',
   'climbingpanel.add_tick': 'Add tick',
+  'climbingpanel.edit_route': 'Edit route',
 
   'runway.information': 'Runway information',
   'runway.runway': 'Runway',
