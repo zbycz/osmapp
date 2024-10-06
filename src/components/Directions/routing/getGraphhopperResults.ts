@@ -15,9 +15,11 @@ export const getGraphhopperResults = async (
   points: LonLat[],
 ): Promise<RoutingResult> => {
   const profile = profiles[mode];
-  const from = points[0].toReversed().join(','); // lon,lat!
-  const to = points[1].toReversed().join(',');
-  const url = `https://graphhopper.com/api/1/route?point=${from}&point=${to}&vehicle=${profile}&key=${API_KEY}&type=json&points_encoded=false&instructions=false&snap_prevention=ferry`;
+  const graphhopperPoints = points.map((point) => point.toReversed().join(','));
+  const urlPoints = graphhopperPoints
+    .map((point) => `point=${point}&`)
+    .join('');
+  const url = `https://graphhopper.com/api/1/route?${urlPoints}vehicle=${profile}&key=${API_KEY}&type=json&points_encoded=false&instructions=false&snap_prevention=ferry`;
 
   const data = await fetchJson(url);
 

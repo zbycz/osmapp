@@ -1,4 +1,5 @@
 import { LonLat } from '../../services/types';
+import * as Sentry from '@sentry/nextjs';
 import { encodeUrl } from '../../helpers/utils';
 import Router from 'next/router';
 import { IconButton } from '@mui/material';
@@ -8,6 +9,10 @@ import { Option } from '../SearchBox/types';
 import { getCoordsOption } from '../SearchBox/options/coords';
 import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
+import { t } from '../../services/intl';
+import { ShowToast } from '../utils/SnackbarContext';
+import { PointsTooFarError } from './routing/types';
+import { FetchError } from '../../services/helpers';
 
 export const splitByFirstTilda = (str: string) => {
   if (!str) {
@@ -27,7 +32,7 @@ const getOptionToUrl = (point: Option) => {
 
 export const buildUrl = (mode: 'car' | 'bike' | 'walk', points: Option[]) => {
   const urlParts = points.map(getOptionToUrl);
-  return encodeUrl`/directions/${mode}/${urlParts[0]}/${urlParts[1]}`;
+  return encodeUrl`/directions/${mode}/${urlParts.join('/')}`;
 };
 
 const urlCoordsToLonLat = (coords: string): LonLat =>
@@ -47,3 +52,28 @@ export const CloseButton = () => (
     <CloseIcon fontSize="small" />
   </IconButton>
 );
+
+export const getAutocompletelabel = (isFirst: boolean, isLast: boolean) => {
+  if (isFirst) {
+    return t('directions.form.starting_point');
+  }
+  if (isLast) {
+    return t('directions.form.destination');
+  }
+  return 'middle';
+};
+
+export const getOnrejected = (showToast: ShowToast) => {
+  return (error: unknown) => {
+    if (error instanceof PointsTooFarError) {
+      showToast(t('directions.error.too_far'), 'warning');
+    } else if (error instanceof FetchError) {
+      Sentry.captureException(error);
+      showToast(`${t('error')} code ${error.code}`, 'error');
+    } else {
+      Sentry.captureException(error);
+      showToast(`${t('error')} – ${error}`, 'error');
+      throw error;
+    }
+  };
+};
