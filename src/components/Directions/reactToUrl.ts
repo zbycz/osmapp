@@ -1,19 +1,22 @@
+import { uniqBy } from 'lodash';
+import { useRouter } from 'next/router';
 import { useEffect, useRef } from 'react';
+
+import { getLabel } from '../../helpers/featureLabel';
+import { getLastFeature } from '../../services/lastFeatureStorage';
 import { Setter } from '../../types';
+import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
+import { getCoordsOption } from '../SearchBox/options/coords';
 import { Option } from '../SearchBox/types';
 import { useSnackbar } from '../utils/SnackbarContext';
-import { Profile, RoutingResult } from './routing/types';
-import { useRouter } from 'next/router';
+
 import { getOnrejected, parseUrlParts } from './helpers';
 import {
   destroyRouting,
   getLastMode,
   handleRouting,
 } from './routing/handleRouting';
-import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
-import { getLastFeature } from '../../services/lastFeatureStorage';
-import { getCoordsOption } from '../SearchBox/options/coords';
-import { getLabel } from '../../helpers/featureLabel';
+import { Profile, RoutingResult } from './routing/types';
 
 export const useReactToUrl = (
   setMode: Setter<string>,
@@ -48,7 +51,16 @@ export const useReactToUrl = (
           lastFeature.center,
           getLabel(lastFeature),
         );
-        setPoints((prev) => [...prev, option]);
+        setPoints((prev) => {
+          const noDoubledUndefined = prev.reduce<Option[]>(
+            (acc, cur, index, array) =>
+              cur === undefined && cur === array[index - 1]
+                ? acc
+                : [...acc, cur],
+            [],
+          );
+          return [...noDoubledUndefined, option];
+        });
       }
     }
 
