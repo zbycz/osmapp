@@ -42,10 +42,12 @@ const getService = (tags: Record<string, string>, routes: WithTags[]) => {
   const serviceTag =
     serviceTagValue === 'highspeed' ? 'high_speed' : serviceTagValue;
   const isHighspeed = getVal('highspeed') === 'yes';
+  const isSubway = getVal('subway') === 'yes';
 
   return (
     serviceTag ||
     (isHighspeed && 'high_speed') ||
+    (isSubway && 'subway') ||
     getVal('route') ||
     getVal('route_master')
   );
