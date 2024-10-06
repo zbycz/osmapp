@@ -16,6 +16,7 @@ interface PublicTransportProps {
 
 const categories = [
   'tourism',
+  'subway',
   'commuter',
   'regional',
   'long_distance',

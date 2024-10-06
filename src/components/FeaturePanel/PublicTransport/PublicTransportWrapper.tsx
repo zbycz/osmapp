@@ -37,6 +37,8 @@ const fmtCategory = (category: string) => {
       return t('publictransport.high_speed');
     case 'bus':
       return t('publictransport.bus');
+    case 'subway':
+      return t('publictransport.subway');
     case 'unknown':
       return t('publictransport.unknown');
     default:
