@@ -8,20 +8,33 @@ import { ToggleButton } from '../helpers/ToggleButton';
 import { renderValue } from './renderValue';
 import { Position } from '../../../services/types';
 
-const isAddr = (k) => k.match(/^addr:|uir_adr|:addr/);
-const isName = (k) => k.match(/^name(:|$)/);
-const isShortName = (k) => k.match(/^short_name(:|$)/);
-const isAltName = (k) => k.match(/^alt_name(:|$)/);
-const isOfficialName = (k) => k.match(/^official_name(:|$)/);
-const isOldName = (k) => k.match(/^old_name(:|$)/);
-const isBuilding = (k) =>
+const isAddr = (k: string) => k.match(/^addr:|uir_adr|:addr/);
+const isName = (k: string) => k.match(/^name(:|$)/);
+const isShortName = (k: string) => k.match(/^short_name(:|$)/);
+const isAltName = (k: string) => k.match(/^alt_name(:|$)/);
+const isOfficialName = (k: string) => k.match(/^official_name(:|$)/);
+const isOldName = (k: string) => k.match(/^old_name(:|$)/);
+const isBuilding = (k: string) =>
   k.match(/building|roof|^min_level|^max_level|height$/);
-const isNetwork = (k) => k.match(/network/);
-const isBrand = (k) => k.match(/^brand/);
-const isOperator = (k) => k.match(/^operator/);
-const isPayment = (k) => k.match(/^payment/);
+const isNetwork = (k: string) => k.match(/network/);
+const isBrand = (k: string) => k.match(/^brand/);
+const isOperator = (k: string) => k.match(/^operator/);
+const isPayment = (k: string) => k.match(/^payment/);
+const isDiet = (k: string) => k.match(/^diet/);
 
-const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
+type TagsGroupProps = {
+  tags: [string, string][];
+  label: string;
+  value: string;
+  hideArrow?: boolean;
+};
+
+const TagsGroup = ({
+  tags,
+  label,
+  value,
+  hideArrow = false,
+}: TagsGroupProps) => {
   const [isShown, toggle] = useToggleState(false);
 
   if (!tags.length) {
@@ -58,6 +71,31 @@ const TagsGroup = ({ tags, label, value, hideArrow = false }) => {
   );
 };
 
+const join = (values: string[], maxElements = 3) => {
+  if (values.length > maxElements) {
+    return values.slice(0, maxElements).join(', ') + ', ...';
+  }
+  return values.join(', ');
+};
+
+const previewYesNoGroup = (
+  tags: [string, string][],
+  preffered: 'yes' | 'no' = 'yes',
+) => {
+  const yesKeys = tags
+    .filter(([_, value]) => value === 'yes')
+    .map(([key]) => key.split(':', 2)[1]);
+  const noKeys = tags
+    .filter(([_, value]) => value === 'no')
+    .map(([key]) => `No ${key.split(':', 2)[1]}`);
+
+  const joined =
+    preffered === 'yes'
+      ? join(yesKeys) || join(noKeys)
+      : join(noKeys) || join(yesKeys);
+  return joined || tags[0]?.[1] || '';
+};
+
 // TODO make it dynamic - count how many "first parts before :" are there, and group all >= 2
 
 type TagsTableInnerProps = {
@@ -84,6 +122,7 @@ export const TagsTableInner = ({
   const brands = tagsEntries.filter(([k]) => isBrand(k));
   const operator = tagsEntries.filter(([k]) => isOperator(k));
   const payments = tagsEntries.filter(([k]) => isPayment(k));
+  const diets = tagsEntries.filter(([k]) => isDiet(k));
   const rest = tagsEntries.filter(
     ([k]) =>
       !isName(k) &&
@@ -96,6 +135,7 @@ export const TagsTableInner = ({
       !isNetwork(k) &&
       !isOperator(k) &&
       !isPayment(k) &&
+      !isDiet(k) &&
       !isBrand(k),
   );
 
@@ -151,7 +191,12 @@ export const TagsTableInner = ({
       <TagsGroup tags={buildings} label="building:*" value={tags.building} />
       <TagsGroup tags={networks} label="network:*" value={tags.network} />
       <TagsGroup tags={operator} label="operator:*" value={tags.operator} />
-      <TagsGroup tags={payments} label="payment:*" value={tags.payment} />
+      <TagsGroup
+        tags={payments}
+        label="payment:*"
+        value={previewYesNoGroup(payments)}
+      />
+      <TagsGroup tags={diets} label="diet:*" value={previewYesNoGroup(diets)} />
     </>
   );
 };

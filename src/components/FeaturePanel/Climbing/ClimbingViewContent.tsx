@@ -47,7 +47,7 @@ export const ClimbingViewContent = ({ isMapVisible }) => {
         const photos = Object.entries(route.paths);
 
         return photos.map((photoName) => [
-          route.updatedTags.name,
+          route.feature.tags.name,
           `File:${photoName?.[0]}`,
           getPathString(photoName?.[1]),
         ]);
