@@ -1,4 +1,5 @@
 import { createMapEventHook, isMobileDevice } from '../../helpers';
+import pickBy from 'lodash/pickBy';
 import { addFeatureCenterToCache } from '../../../services/osmApi';
 import { getOsmappLink, getShortId } from '../../../services/helpers';
 import { publishDbgObject } from '../../../utils';
@@ -19,10 +20,8 @@ export const getSkeleton = (feature, clickCoords: LonLat) => {
     ? convertMapIdToOsmId(feature)
     : { type: feature.layer.id, id: feature.id };
 
-  const nameTags = Object.entries(feature.properties).reduce(
-    (prev, [key, value]) =>
-      key.startsWith('name') ? { ...prev, [key]: value } : prev,
-    {},
+  const nameTags = pickBy(feature.properties, (_, key) =>
+    key.startsWith('name'),
   );
   return {
     ...feature,
