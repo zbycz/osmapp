@@ -15,7 +15,17 @@ import { useGetOptions } from './useGetOptions';
 import { useInputValueState } from './options/geocoder';
 import { useRouter } from 'next/router';
 
-const SearchBoxInput = ({ params, setInputValue, autocompleteRef }) => {
+type SearchBoxInputProps = {
+  params: any;
+  setInputValue: (value: string) => void;
+  autocompleteRef: React.MutableRefObject<undefined>;
+};
+
+const SearchBoxInput = ({
+  params,
+  setInputValue,
+  autocompleteRef,
+}: SearchBoxInputProps) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
 
   useKeyDown('/', (e) => {

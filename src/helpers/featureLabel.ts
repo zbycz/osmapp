@@ -1,6 +1,6 @@
 import { Feature } from '../services/types';
 import { roundedToDeg } from '../utils';
-import { t } from '../services/intl';
+import { intl, t } from '../services/intl';
 import { buildAddress } from '../services/helpers';
 
 const getBuiltAddress = (feature: Feature) => {
@@ -16,7 +16,7 @@ export const getSubclass = ({ layer, osmMeta, properties, schema }: Feature) =>
 const getRefLabel = (feature: Feature) =>
   feature.tags.ref ? `${getSubclass(feature)} ${feature.tags.ref}` : '';
 
-const getName = ({ tags }: Feature) => tags.name; // TODO choose a name according to locale
+const getName = ({ tags }: Feature) => tags[`name:${intl.lang}`] || tags.name;
 
 export const hasName = (feature: Feature) =>
   feature.point || getName(feature) || getBuiltAddress(feature); // we dont want to show "No name" for point
@@ -36,6 +36,16 @@ export const getLabel = (feature: Feature) => {
     getBuiltAddress(feature) ||
     getSubclass(feature) // generic label like "Recycling point"
   );
+};
+
+export const getSecondaryLabel = (feature: Feature) => {
+  const { point, tags } = feature;
+  if (point) {
+    return undefined;
+  }
+
+  const { name } = tags;
+  return name === getLabel(feature) ? undefined : name;
 };
 
 export const getParentLabel = (feature: Feature) => {
