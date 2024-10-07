@@ -87,7 +87,7 @@ export const fetchGeocoderOptions = debounce(
   400,
 );
 
-const getAdditionalText = (props) => {
+export const getAdditionalText = (props) => {
   const address = [
     props.street,
     props.district,

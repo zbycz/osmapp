@@ -11,10 +11,13 @@ import { getOverpassOptions } from './options/overpass';
 import { getPresetOptions } from './options/preset';
 import { Option } from './types';
 import { getOsmOptions } from './options/openstreetmap';
+import { getHistory } from './options/history';
+import { useHistoryContext } from './options/historyContext';
 
 export const useGetOptions = (inputValue: string) => {
   const { view } = useMapStateContext();
   const { stars } = useStarsContext();
+  const { options: allHistoryOptions } = useHistoryContext();
   const [options, setOptions] = useState<Option[]>([]);
 
   useEffect(() => {
@@ -22,9 +25,11 @@ export const useGetOptions = (inputValue: string) => {
       abortFetch(GEOCODER_ABORTABLE_QUEUE);
 
       const starOptions = getStarsOptions(stars, inputValue);
+      const historyOptions = getHistory(allHistoryOptions, inputValue);
+      const staticBefore = [...starOptions, ...historyOptions];
 
       if (inputValue === '') {
-        setOptions(starOptions);
+        setOptions(staticBefore);
         return;
       }
 
@@ -41,14 +46,14 @@ export const useGetOptions = (inputValue: string) => {
       }
 
       const { before, after } = await getPresetOptions(inputValue);
-      const beforeWithStars = [...starOptions, ...before];
-      setOptions([...beforeWithStars, { type: 'loader' }]);
+      const beforeWithStatics = [...staticBefore, ...before];
+      setOptions([...beforeWithStatics, { type: 'loader' }]);
 
       fetchGeocoderOptions({
         inputValue,
         view,
         setOptions, // TODO refactor to await options instead of setOptions
-        before: beforeWithStars,
+        before: beforeWithStatics,
         after,
       });
     })();

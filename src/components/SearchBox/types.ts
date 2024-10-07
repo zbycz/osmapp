@@ -1,4 +1,4 @@
-import { LonLat } from '../../services/types';
+import { LonLat, OsmId } from '../../services/types';
 import { Star } from '../utils/StarsContext';
 
 type GenericOption<T extends string, U extends Object | null> = {
@@ -78,6 +78,17 @@ export type OsmOption = GenericOption<
   }
 >;
 
+export type HistoryOption = GenericOption<
+  'history',
+  {
+    osmMeta: OsmId;
+    geometry: { coordinates: LonLat };
+    poiClass: string;
+    label: string;
+    additionalText: string;
+  }
+>;
+
 /*
  * A option for the searchbox
  */
@@ -88,4 +99,5 @@ export type Option =
   | PresetOption
   | LoaderOption
   | GeocoderOption
-  | OsmOption;
+  | OsmOption
+  | HistoryOption;

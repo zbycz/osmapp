@@ -39,6 +39,7 @@ import {
 } from '../../services/climbing-areas/getClimbingAreas';
 import { DirectionsBox } from '../Directions/DirectionsBox';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { HistoryProvider } from '../SearchBox/options/historyContext';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -207,7 +208,9 @@ const App: NextPage<Props> = ({
               <StarsProvider>
                 <EditDialogProvider /* TODO supply router.query */>
                   <QueryClientProvider client={reactQueryClient}>
-                    <IndexWithProviders climbingAreas={climbingAreas} />
+                    <HistoryProvider>
+                      <IndexWithProviders climbingAreas={climbingAreas} />
+                    </HistoryProvider>
                   </QueryClientProvider>
                 </EditDialogProvider>
               </StarsProvider>

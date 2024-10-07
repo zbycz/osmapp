@@ -10,6 +10,8 @@ import { getGlobalMap } from '../../services/mapStorage';
 import { LonLat } from '../../services/types';
 import { DotLoader, isImperial } from '../helpers';
 import { GeocoderOption } from './types';
+import { diceCoefficient } from 'dice-coefficient';
+import orderBy from 'lodash/orderBy';
 
 export const IconPart = styled.div`
   width: 50px;
@@ -105,4 +107,23 @@ export const highlightText = (resultText: string, inputValue: string) => {
       {part.text}
     </span>
   ));
+};
+
+export const diceCoefficientSort = <T extends unknown>(
+  options: T[],
+  getLabel: (opt: T) => string,
+  inputValue: string,
+  threshold = 0.3,
+) => {
+  const optionsWithDiceCoefficient = options.map((opt) => ({
+    opt,
+    matching: diceCoefficient(getLabel(opt), inputValue),
+  }));
+
+  const filtered = optionsWithDiceCoefficient.filter(
+    ({ matching }) => matching > threshold,
+  );
+  return orderBy(filtered, ({ matching }) => matching, 'desc').map(
+    ({ opt }) => opt,
+  );
 };

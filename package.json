@@ -38,6 +38,7 @@
     "canvas": "^2.11.2",
     "canvg": "^4.0.2",
     "date-fns": "^3.6.0",
+    "dice-coefficient": "^2.1.1",
     "image-size": "^1.1.1",
     "isomorphic-unfetch": "^4.0.2",
     "isomorphic-xml2js": "^0.1.3",

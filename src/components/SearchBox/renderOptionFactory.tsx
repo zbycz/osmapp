@@ -8,6 +8,7 @@ import { Option } from './types';
 import { Theme } from '../../helpers/theme';
 import { LonLat } from '../../services/types';
 import { renderOsm } from './options/openstreetmap';
+import { renderHistory } from './options/history';
 
 const renderOption = (
   inputValue: string,
@@ -19,7 +20,7 @@ const renderOption = (
     case 'overpass':
       return renderOverpass(option);
     case 'star':
-      return renderStar(option, mapCenter);
+      return renderStar(option, inputValue, mapCenter);
     case 'loader':
       return renderLoader();
     case 'preset':
@@ -28,6 +29,8 @@ const renderOption = (
       return renderGeocoder(option, currentTheme, inputValue, mapCenter);
     case 'osm':
       return renderOsm(option);
+    case 'history':
+      return renderHistory(option, currentTheme, inputValue, mapCenter);
   }
 };
 

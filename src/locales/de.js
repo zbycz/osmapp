@@ -16,6 +16,9 @@ export default {
   'user.my_ticks': 'Meine Begehungen',
   'user.user_settings': 'Einstellungen',
 
+  'user_settings.general': 'Allgemein',
+  'user_settings.delete_search_history': 'Suchverlauf löschen',
+
   'my_ticks.title': 'Meine Begehungen',
   'my_ticks.route_name': 'Name',
   'my_ticks.route_grade': 'Schweregrad',
