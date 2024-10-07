@@ -19,12 +19,17 @@ export const getSkeleton = (feature, clickCoords: LonLat) => {
     ? convertMapIdToOsmId(feature)
     : { type: feature.layer.id, id: feature.id };
 
+  const nameTags = Object.entries(feature.properties).reduce(
+    (prev, [key, value]) =>
+      key.startsWith('name') ? { ...prev, [key]: value } : prev,
+    {},
+  );
   return {
     ...feature,
     geometry: feature.geometry,
     center: getCenter(feature.geometry) || clickCoords,
     osmMeta,
-    tags: { name: feature.properties?.name },
+    tags: nameTags,
     skeleton: true,
     nonOsmObject: !isOsmObject,
   };
