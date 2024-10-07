@@ -17,15 +17,15 @@ export const StationsList: React.FC = ({ children }) => {
 };
 
 type ItemProps = {
-  isFirst: boolean;
-  isLast: boolean;
+  isFirst?: boolean;
+  isLast?: boolean;
   showCircle?: boolean;
 };
 
 export const StationItem: React.FC<ItemProps> = ({
   children,
-  isFirst,
-  isLast,
+  isFirst = false,
+  isLast = false,
   showCircle = true,
 }) => {
   const { feature } = useFeatureContext();

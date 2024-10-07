@@ -6,6 +6,36 @@ import { t } from '../../../../services/intl';
 import { getUrlOsmId } from '../../../../services/helpers';
 import TurnLeftIcon from '@mui/icons-material/TurnLeft';
 
+type ShowMoreLessButtonProps = {
+  type: 'collapse' | 'expand';
+  stopCount: number;
+  onClick?: (e: unknown) => void;
+};
+
+const ShowMoreLessButton = ({
+  type,
+  onClick,
+  stopCount,
+}: ShowMoreLessButtonProps) => (
+  <Typography variant="body2" color="textSecondary">
+    <IconButton aria-label={type} onClick={onClick}>
+      <TurnLeftIcon
+        style={{
+          transform:
+            type === 'collapse' ? 'rotate(90deg) scaleY(-1)' : 'rotate(-90deg)',
+        }}
+      />
+    </IconButton>
+    {type === 'collapse'
+      ? t('publictransport.visible_stops', {
+          amount: stopCount - 2,
+        })
+      : t('publictransport.hidden_stops', {
+          amount: stopCount - 2,
+        })}
+  </Typography>
+);
+
 const StationInner = ({
   stop,
   stopCount,
@@ -19,7 +49,7 @@ const StationInner = ({
 }) => {
   if (stop === 'expand') {
     return (
-      <Typography variant="body1" color="textSecondary">
+      <Typography variant="body2" color="textSecondary">
         <IconButton
           aria-label="expand"
           onClick={() => {
@@ -42,9 +72,7 @@ const StationInner = ({
           onClick={() => {
             onCollapse();
           }}
-        >
-          <TurnLeftIcon style={{ transform: 'rotate(90deg) scaleY(-1)' }} />
-        </IconButton>
+        ></IconButton>
         {t('publictransport.visible_stops', {
           amount: stopCount - 2,
         })}
@@ -64,21 +92,11 @@ type Props = {
 
 export const Stops = ({ stops, stopCount, onExpand, onCollapse }: Props) => {
   const hasFullLength = stops.length === stopCount;
-  const stopsWithButton = [
-    stops[0],
-    hasFullLength ? ('collapse' as const) : ('expand' as const),
-    ...stops.slice(1),
-  ];
   return (
     <StationsList>
-      {stopsWithButton.map((stop, i) => {
-        return (
-          <StationItem
-            showCircle={typeof stop === 'object'}
-            key={typeof stop === 'string' ? stop : getUrlOsmId(stop.osmMeta)}
-            isFirst={i === 0}
-            isLast={i === stopsWithButton.length - 1}
-          >
+      {stops.map((stop, i) => (
+        <>
+          <StationItem isFirst={i === 0} isLast={i === stops.length - 1}>
             <StationInner
               stop={stop}
               stopCount={stopCount}
@@ -86,8 +104,17 @@ export const Stops = ({ stops, stopCount, onExpand, onCollapse }: Props) => {
               onCollapse={onCollapse}
             />
           </StationItem>
-        );
-      })}
+          {i === 0 && (
+            <StationItem showCircle={false}>
+              <ShowMoreLessButton
+                type={hasFullLength ? 'collapse' : 'expand'}
+                stopCount={stopCount}
+                onClick={hasFullLength ? onCollapse : onExpand}
+              />
+            </StationItem>
+          )}
+        </>
+      ))}
     </StationsList>
   );
 };
