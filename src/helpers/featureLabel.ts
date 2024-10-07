@@ -16,7 +16,7 @@ export const getSubclass = ({ layer, osmMeta, properties, schema }: Feature) =>
 const getRefLabel = (feature: Feature) =>
   feature.tags.ref ? `${getSubclass(feature)} ${feature.tags.ref}` : '';
 
-const getName = ({ tags }: Feature) => tags[`name:${intl.lang}`] || tags.name; // TODO choose a name according to locale
+const getName = ({ tags }: Feature) => tags[`name:${intl.lang}`] || tags.name;
 
 export const hasName = (feature: Feature) =>
   feature.point || getName(feature) || getBuiltAddress(feature); // we dont want to show "No name" for point
