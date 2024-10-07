@@ -23,10 +23,12 @@ export const getEmptyValue = () =>
   );
 
 const getTimeSlots = (timePart: string) =>
-  timePart.split(/ *, */).map((time: string, slot: number) => {
-    const [from, to = ''] = time.split('-');
-    return { slotIdx: slot, from, to } as Slot;
-  });
+  timePart.trim() === 'off'
+    ? []
+    : timePart.split(/ *, */).map((time: string, slot: number) => {
+        const [from, to = ''] = time.split('-');
+        return { slotIdx: slot, from, to } as Slot;
+      });
 
 export const parseDaysPart = (daysPart: string): string[] => {
   const otherDays = [];

@@ -60,6 +60,9 @@ export const PublicTransportInner = () => {
 
     const source = getOverpassSource();
     source?.setData(data.geoJson);
+    return () => {
+      source?.setData({ type: 'FeatureCollection', features: [] });
+    };
   }, [data]);
 
   return (

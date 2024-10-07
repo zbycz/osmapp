@@ -11,6 +11,9 @@ const sanitizeDaysParts = (value: string) => {
   return (value ?? '')
     .split(/ *; */)
     .map((part) => {
+      if (part.match(/^(Mo|Tu|We|Th|Fr|Sa|Su) off$/)) {
+        return false;
+      }
       if (part.match(/^((Mo|Tu|We|Th|Fr|Sa|Su)[-, ]*)+/)) {
         const [daysPart, timePart] = splitByFirstSpace(part);
         const days = parseDaysPart(daysPart);
@@ -21,6 +24,7 @@ const sanitizeDaysParts = (value: string) => {
       }
       return part;
     })
+    .filter(Boolean)
     .join('; ')
     .replace(/ *, */g, ',')
     .trim();
