@@ -25,12 +25,13 @@ const LineNumberWrapper = styled(Link)<{
 `;
 
 type Tags = Record<string, string>;
-const formatTooltip = (tags: Tags, routes: { tags: Tags }[]) => {
-  const formatTags = (tags: Tags) => {
-    const parts = [tags.from, ...(tags.via ? [tags.via] : []), tags.to];
-    return parts.flatMap((str) => str.split(';')).join(' - ');
-  };
 
+const formatTags = (tags: Tags) => {
+  const parts = [tags.from, ...(tags.via ? [tags.via] : []), tags.to];
+  return parts.flatMap((str) => str.split(';')).join(' - ');
+};
+
+const formatTooltip = (tags: Tags, routes: { tags: Tags }[]) => {
   if (tags.from && tags.to) {
     return formatTags(tags);
   }
