@@ -2,12 +2,12 @@ import React from 'react';
 import { PublicTransportInner } from './routes/Routes';
 import { PublicTransportRoute } from './route/PublicTransportRoute';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { isPublictransportHalt, isPublictransportRoute } from '../../../utils';
+import { isPublictransportStop, isPublictransportRoute } from '../../../utils';
 
 export const PublicTransport = () => {
   const { feature } = useFeatureContext();
 
-  if (isPublictransportHalt(feature)) {
+  if (isPublictransportStop(feature)) {
     return <PublicTransportInner />;
   }
 

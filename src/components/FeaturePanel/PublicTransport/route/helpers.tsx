@@ -1,11 +1,9 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { Halt, HaltSection } from './Halt';
+import { Stop } from './Stop';
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { useUserThemeContext } from '../../../../helpers/theme';
 import { getBgColor } from '../routes/LineNumber';
-import { Feature } from '../../../../services/types';
-import Link from 'next/link';
 
 const StationsListWrapper = styled.ul`
   list-style-type: none;
@@ -21,16 +19,14 @@ export const StationsList: React.FC = ({ children }) => {
 type ItemProps = {
   isFirst: boolean;
   isLast: boolean;
-  hold?: boolean;
-  small?: boolean;
+  showCircle?: boolean;
 };
 
 export const StationItem: React.FC<ItemProps> = ({
   children,
   isFirst,
   isLast,
-  hold = true,
-  small = false,
+  showCircle = true,
 }) => {
   const { feature } = useFeatureContext();
   const { currentTheme } = useUserThemeContext();
@@ -42,10 +38,15 @@ export const StationItem: React.FC<ItemProps> = ({
         gap: '0.5rem',
       }}
     >
-      <Halt color={color} isFirst={isFirst} isLast={isLast} hold={hold} />
+      <Stop
+        color={color}
+        isFirst={isFirst}
+        isLast={isLast}
+        showCircle={showCircle}
+      />
       <div
         style={{
-          padding: small ? '0' : '0.5rem 0',
+          padding: '0.5rem 0',
         }}
       >
         {children}

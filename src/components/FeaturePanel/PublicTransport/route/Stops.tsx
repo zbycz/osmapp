@@ -12,12 +12,12 @@ const StationInner = ({
   onExpand,
   onCollapse,
 }: {
-  stop: Feature | 'hidden' | 'show-more';
+  stop: Feature | 'collapse' | 'expand';
   stopCount: number;
   onExpand: () => void;
   onCollapse: () => void;
 }) => {
-  if (stop === 'hidden') {
+  if (stop === 'expand') {
     return (
       <Typography variant="body1" color="textSecondary">
         <IconButton
@@ -34,7 +34,7 @@ const StationInner = ({
       </Typography>
     );
   }
-  if (stop === 'show-more') {
+  if (stop === 'collapse') {
     return (
       <Typography variant="body2" color="textSecondary">
         <IconButton
@@ -56,23 +56,28 @@ const StationInner = ({
 };
 
 type Props = {
-  stops: (Feature | 'hidden' | 'show-more')[];
+  stops: Feature[];
   stopCount: number;
   onExpand: () => void;
   onCollapse: () => void;
 };
 
 export const Stops = ({ stops, stopCount, onExpand, onCollapse }: Props) => {
+  const hasFullLength = stops.length === stopCount;
+  const stopsWithButton = [
+    stops[0],
+    hasFullLength ? ('collapse' as const) : ('expand' as const),
+    ...stops.slice(1),
+  ];
   return (
     <StationsList>
-      {stops.map((stop, i) => {
+      {stopsWithButton.map((stop, i) => {
         return (
           <StationItem
-            hold={typeof stop === 'object'}
+            showCircle={typeof stop === 'object'}
             key={typeof stop === 'string' ? stop : getUrlOsmId(stop.osmMeta)}
             isFirst={i === 0}
-            isLast={i === stops.length - 1}
-            small={stop === 'show-more'}
+            isLast={i === stopsWithButton.length - 1}
           >
             <StationInner
               stop={stop}

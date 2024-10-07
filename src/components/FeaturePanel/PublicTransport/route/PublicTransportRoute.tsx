@@ -27,12 +27,10 @@ export const PublicTransportRoute = () => {
 
 const StopList = ({ stops }: { stops: Feature[] }) => {
   const [minimized, setMinimized] = React.useState(stops.length > 7);
-  const getStops = React.useCallback(() => {
-    if (minimized) {
-      return [stops[0], 'hidden' as const, stops[stops.length - 1]];
-    }
-    return [stops[0], 'show-more' as const, ...stops.slice(1)];
-  }, [minimized, stops]);
+  const getStops = React.useCallback(
+    () => (minimized ? [stops[0], stops[stops.length - 1]] : stops),
+    [minimized, stops],
+  );
   const [renderedStops, setRenderedStops] = React.useState(getStops());
 
   React.useEffect(() => {

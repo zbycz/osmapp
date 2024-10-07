@@ -1,15 +1,15 @@
 import TripOriginIcon from '@mui/icons-material/TripOrigin';
 
-export type HaltSection = 'start' | 'middle' | 'end';
+export type StopSection = 'start' | 'middle' | 'end';
 
 type Props = {
   color: string;
   isFirst: boolean;
   isLast: boolean;
-  hold?: boolean;
+  showCircle?: boolean;
 };
 
-export const Halt = ({ color, isFirst, isLast, hold = true }: Props) => (
+export const Stop = ({ color, isFirst, isLast, showCircle = true }: Props) => (
   <div
     style={{
       width: '1rem',
@@ -26,7 +26,7 @@ export const Halt = ({ color, isFirst, isLast, hold = true }: Props) => (
         background: isFirst ? 'transparent' : color,
       }}
     />
-    {hold && (
+    {showCircle && (
       <TripOriginIcon
         style={{
           color: color,
