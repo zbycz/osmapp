@@ -68,7 +68,7 @@ const PublicTransportInner = () => {
     source?.setData(data.geoJson);
 
     return () => {
-      source?.setData(EMPTY_GEOJSON_SOURCE.data);
+      source?.setData({ type: 'FeatureCollection', features: [] });
     };
   }, [data]);
 
