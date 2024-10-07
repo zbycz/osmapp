@@ -12,7 +12,7 @@ const filterConsoleLog = () => {
   const original = console.warn; // eslint-disable-line no-console
 
   // eslint-disable-next-line no-console
-  console.warn = (message, ...optionalParams) => {
+  console.warn = (message: any, ...optionalParams: any[]) => {
     if (
       typeof message === 'string' &&
       !message.includes(

@@ -9,6 +9,7 @@ import { DotLoader } from '../../helpers';
 import { sortByReference } from './helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getOverpassSource } from '../../../services/mapStorage';
+import { EMPTY_GEOJSON_SOURCE } from '../../Map/consts';
 
 interface PublicTransportProps {
   tags: FeatureTags;
@@ -16,6 +17,7 @@ interface PublicTransportProps {
 
 const categories = [
   'tourism',
+  'subway',
   'commuter',
   'regional',
   'long_distance',
@@ -53,7 +55,7 @@ const PublicTransportInner = () => {
   const { feature } = useFeatureContext();
   const { id, type } = feature.osmMeta;
 
-  const { data, status } = useQuery('publictransport', () =>
+  const { data, status } = useQuery([id, type], () =>
     requestLines(type, Number(id)),
   );
 
@@ -64,6 +66,10 @@ const PublicTransportInner = () => {
 
     const source = getOverpassSource();
     source?.setData(data.geoJson);
+
+    return () => {
+      source?.setData({ type: 'FeatureCollection', features: [] });
+    };
   }, [data]);
 
   return (

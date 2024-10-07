@@ -1,4 +1,5 @@
 import { createMapEventHook, isMobileDevice } from '../../helpers';
+import pickBy from 'lodash/pickBy';
 import { addFeatureCenterToCache } from '../../../services/osmApi';
 import { getOsmappLink, getShortId } from '../../../services/helpers';
 import { publishDbgObject } from '../../../utils';
@@ -13,18 +14,21 @@ import { Map } from 'maplibre-gl';
 const isSameOsmId = (feature: Feature, skeleton: Feature) =>
   feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
 
-export const getSkeleton = (feature, clickCoords) => {
+export const getSkeleton = (feature, clickCoords: LonLat) => {
   const isOsmObject = getIsOsmObject(feature);
   const osmMeta = isOsmObject
     ? convertMapIdToOsmId(feature)
     : { type: feature.layer.id, id: feature.id };
 
+  const nameTags = pickBy(feature.properties, (_, key) =>
+    key.startsWith('name'),
+  );
   return {
     ...feature,
     geometry: feature.geometry,
     center: getCenter(feature.geometry) || clickCoords,
     osmMeta,
-    tags: { name: feature.properties?.name },
+    tags: nameTags,
     skeleton: true,
     nonOsmObject: !isOsmObject,
   };

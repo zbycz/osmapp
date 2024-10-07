@@ -1,4 +1,4 @@
-import React, { LegacyRef } from 'react';
+import React, { Ref } from 'react';
 import { FeaturePanel } from './FeaturePanel';
 import { Drawer } from '../utils/Drawer';
 import {
@@ -8,12 +8,11 @@ import {
 } from '../utils/MobilePageDrawer';
 import { useScreensize } from '../../helpers/hooks';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 const DRAWER_CLASSNAME = 'featurePanelInDrawer';
 
 type FeaturePanelInDrawerProps = {
-  scrollRef: LegacyRef<Scrollbars>;
+  scrollRef: Ref<HTMLDivElement>;
 };
 
 export const FeaturePanelInDrawer = ({

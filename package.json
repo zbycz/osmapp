@@ -31,6 +31,7 @@
     "@mui/material-nextjs": "^5.16.6",
     "@openstreetmap/id-tagging-schema": "^6.7.3",
     "@sentry/nextjs": "^8",
+    "@teritorio/openmaptiles-gl-language": "^1.5.4",
     "@xmldom/xmldom": "^0.8.10",
     "accept-language-parser": "^1.5.0",
     "autosuggest-highlight": "^3.3.4",
@@ -62,6 +63,7 @@
   "devDependencies": {
     "@types/autosuggest-highlight": "^3.2.3",
     "@types/jest": "^29.5.12",
+    "@types/js-cookie": "^3.0.6",
     "@types/lodash": "^4.17.7",
     "@types/react-custom-scrollbars": "^4.0.13",
     "@types/react-dom": "^18.3.0",

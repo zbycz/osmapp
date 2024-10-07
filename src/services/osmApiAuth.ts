@@ -8,15 +8,13 @@ import {
   getOsmappLink,
   getUrlOsmId,
   parseXmlString,
-  // prod,
+  prod,
   stringifyDomXml,
 } from './helpers';
 import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
 import { isBrowser } from '../components/helpers';
 import { getLabel } from '../helpers/featureLabel';
-
-const prod = true;
 
 const PROD_CLIENT_ID = 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68';
 
@@ -230,7 +228,6 @@ export const editOsmFeature = async (
   const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
   const changesetComment = getChangesetComment(comment, isCancelled, feature);
   const changesetXml = getChangesetXml({ changesetComment, feature });
-
   const changesetId = await putChangeset(changesetXml);
   const item = await getItemOrLastHistoric(apiId);
 

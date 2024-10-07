@@ -140,7 +140,6 @@ export default {
   'layerswitcher.heading': 'Capas del Mapa',
   'layerswitcher.intro': 'Gracias a que OpenStreetMap ofrece datos, cualquiera puede producir diferentes variantes del mapa.',
   'layerswitcher.add_layer_button': 'Añadir capa personalizada',
-  'layerswitcher.add_layer_prompt': 'Añadir capa TMS personalizada – necesita el CORS correcto:\n(funcionalidad beta)',
 
   'layers.basic': 'Básico',
   'layers.outdoor': 'Exteriores',

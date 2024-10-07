@@ -6,7 +6,6 @@ type RouteNumberColorsParams = {
   isOnThisPhoto?: boolean;
   hasPathInDifferentPhoto?: boolean;
   isOnDifferentPhoto?: boolean;
-  isTicked?: boolean;
 };
 
 export const useRouteNumberColors = ({
@@ -15,7 +14,6 @@ export const useRouteNumberColors = ({
   isOnThisPhoto,
   hasPathInDifferentPhoto,
   isOnDifferentPhoto,
-  isTicked,
 }: RouteNumberColorsParams) => {
   const theme: any = useTheme();
   const { climbing } = theme.palette;
@@ -25,13 +23,6 @@ export const useRouteNumberColors = ({
       background: climbing.secondary,
       text: climbing.primary,
       border: `solid 1px ${climbing.secondary}`,
-    };
-  }
-  if (hasPathOnThisPhoto && isTicked) {
-    return {
-      background: climbing.primary,
-      text: climbing.tick,
-      border: `solid 1px ${climbing.primary}`,
     };
   }
   if (hasPathOnThisPhoto) {

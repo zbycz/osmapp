@@ -1,7 +1,7 @@
-import { keyframes } from '@emotion/react';
-import styled from '@emotion/styled';
-import ArrowUpward from '@mui/icons-material/ArrowUpward';
 import React from 'react';
+import { useUserThemeContext } from '../../../helpers/theme';
+import { use2dContext } from './helpers';
+import ArrowUpward from '@mui/icons-material/ArrowUpward';
 
 const cardinalMiddle = (angle1: number, angle2: number) => {
   // Add 360 on big difference like NW
@@ -52,40 +52,145 @@ const parseCardinal = (cardinal: string): number => {
   );
 };
 
-const rotateAnimation = (start: number, end: number) => {
-  const finalEnd = start > end ? end + 360 : end;
+function findMaxRangeStep(
+  start: number,
+  end: number | undefined,
+  max = 30,
+): number {
+  if (end === undefined) {
+    return 0;
+  }
+  const isFullCircle = start % 360 === end % 360;
+  const rangeLength = isFullCircle ? 360 : (end + 360 - start) % 360;
 
-  return keyframes`
-    0% {
-      transform: rotate(${start}deg);
+  // Checking for divisors from max down to 1
+  for (let i = Math.min(max, rangeLength); i >= 1; i--) {
+    if (rangeLength % i === 0) {
+      return i;
     }
-    100% {
-      transform: rotate(${finalEnd}deg);
-    }
-  `;
+  }
+
+  return 0;
+}
+
+const degreeToRadian = (degrees: number) => degrees * (Math.PI / 180);
+
+type RayProps = {
+  centerX: number;
+  centerY: number;
+  degrees: number;
+  ctx: CanvasRenderingContext2D;
+  rayLength: number;
+  gap: number;
+  color: string;
 };
 
-const AnimatedArrow = styled(ArrowUpward)<{
-  start: number;
-  end: number;
-}>`
-  animation: ${({ start, end }) => rotateAnimation(start, end)} 4s linear
-    infinite alternate;
-`;
+const drawRay = ({
+  centerX,
+  centerY,
+  degrees,
+  ctx,
+  rayLength,
+  gap,
+  color,
+}: RayProps) => {
+  const rayWidth = Math.PI / 10;
+
+  const startAngle = degreeToRadian(degrees - 90);
+  ctx.beginPath();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = rayLength;
+  ctx.arc(
+    centerX,
+    centerY,
+    gap + rayLength / 2,
+    startAngle - rayWidth / 2,
+    startAngle + rayWidth / 2,
+  );
+  ctx.stroke();
+};
+
+const DirectionIndicator = ({ start, end }: { start: number; end: number }) => {
+  const canvas = React.useRef<HTMLCanvasElement>();
+  const [color, setColor] = React.useState('#000');
+  const { currentTheme } = useUserThemeContext();
+  React.useEffect(() => {
+    setColor(currentTheme === 'light' ? '#000' : '#fff');
+  }, [currentTheme]);
+
+  use2dContext(
+    canvas,
+    (ctx, { width: canvasWidth, height: canvasHeight }) => {
+      const centerX = canvasWidth / 2;
+      const centerY = canvasHeight / 2;
+      const radius = canvasHeight / 10;
+      const gap = canvasHeight / 10;
+      const rayLength = (canvasWidth / 20) * 7;
+
+      const ray = (angle: number) =>
+        drawRay({
+          degrees: angle,
+          rayLength,
+          centerX,
+          centerY,
+          ctx,
+          color,
+          gap: radius / 2 + gap,
+        });
+
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      const rangeStep = findMaxRangeStep(start, end);
+      const isFullcircle = start % 360 === end % 360;
+      const angleInrease = (angle: number, rangeStep: number) => {
+        if (isFullcircle) {
+          return angle + rangeStep;
+        }
+        return (angle + rangeStep) % 360;
+      };
+
+      for (
+        let angle = start;
+        angle !== end;
+        angle = angleInrease(angle, rangeStep)
+      ) {
+        ray(angle);
+      }
+      ray(end);
+    },
+    [start, end, color],
+  );
+
+  return <canvas ref={canvas} width="30" height="30" />;
+};
 
 export const DirectionValue: React.FC<{ v: string }> = ({ children, v }) => {
   try {
     const [start, end] = v.split('-', 2).map(parseCardinal);
+
+    const indicator =
+      end === undefined ? (
+        <ArrowUpward
+          style={{
+            transform: `rotate(${start}deg)`,
+          }}
+        />
+      ) : (
+        <DirectionIndicator start={start} end={end} />
+      );
 
     return (
       <span
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '0.2rem',
+          gap: '0.5rem',
         }}
       >
-        <AnimatedArrow start={start} end={end ?? start} />
+        {indicator}
         {children}
       </span>
     );

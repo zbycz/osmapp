@@ -3,9 +3,12 @@ import { NamedBbox } from '../../../services/getCenter';
 export type Profile = 'car' | 'bike' | 'walk';
 
 export type RoutingResult = {
-  time: number; // minutes
-  distance: number; // meters
-  totalAscent: number; // meters
+  /** minutes */
+  time: number;
+  /** meters */
+  distance: number;
+  /** meters */
+  totalAscent: number;
   router: string;
   link: string;
   bbox: NamedBbox;

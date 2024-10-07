@@ -69,11 +69,11 @@ const StyledDialog = styled(Dialog)`
   }
 `;
 
-const PaperImg = ({ src, width }) => (
+type PaperImgProps = { src: string; width: string | number };
+const PaperImg = ({ src, width }: PaperImgProps) => (
   <Paper
     variant="outlined"
     component="img"
-    // @ts-ignore
     src={src}
     width={width}
     style={{ maxWidth: '100%' }}
@@ -90,7 +90,7 @@ export function InstallDialog() {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleClose = () => Router.push('/');
-  const handleChange = (event, newValue) => {
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
@@ -100,9 +100,7 @@ export function InstallDialog() {
       onClose={handleClose}
       aria-label={t('install.button')}
       disablePortal // for ssr
-      BackdropProps={{
-        appear: false,
-      }}
+      slotProps={{ backdrop: { appear: false } }}
     >
       <TabContext value={value}>
         <DialogTitle>

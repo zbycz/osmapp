@@ -21,23 +21,6 @@ const getPathString = (path) =>
         )
         .join('|');
 
-const getUpdatedBasicTags = (route: ClimbingRoute) => {
-  const updatedTags = { ...route.updatedTags };
-
-  const newGradeSystem = route.difficulty?.gradeSystem;
-  const gradeSystemKey = getOsmTagFromGradeSystem(newGradeSystem);
-  const featureDifficulty = route.feature.tags[gradeSystemKey];
-
-  const isGradeUpdated = route.difficulty?.grade !== featureDifficulty;
-
-  if (newGradeSystem && isGradeUpdated) {
-    updatedTags[gradeSystemKey] = route.difficulty.grade;
-    // @TODO: delete previous grade? if(!featureDifficulty)
-  }
-
-  return updatedTags;
-};
-
 const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   const updatedTags = {};
   const newIndex = getNextWikimediaCommonsIndex(route.feature.tags);
@@ -71,7 +54,6 @@ export const getChanges = (routes: ClimbingRoute[]): Change[] => {
   return existingRoutes
     .map((route) => {
       const updatedTags = {
-        ...getUpdatedBasicTags(route),
         ...getUpdatedPhotoTags(route),
       };
       const isSame = isSameTags(updatedTags, route.feature.tags);
