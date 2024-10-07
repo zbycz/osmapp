@@ -46,15 +46,20 @@ test('conversion', async () => {
 
   const features = await requestLines('node', 3862767512);
 
-  expect(features.routes).toEqual([
-    {
-      colour: '#880088',
-      osmId: '6818857',
-      osmType: 'relation',
-      ref: '89',
-      service: 'bus',
-    },
-  ]);
+  expect(features.routes.length).toBe(1);
+  expect(features.routes[0].colour).toBe('#880088');
+  expect(features.routes[0].osmId).toBe('6818857');
+  expect(features.routes[0].osmType).toBe('relation');
+  expect(features.routes[0].ref).toBe('89');
+  expect(features.routes[0].service).toBe('bus');
+  expect(features.routes[0].tags).toEqual({
+    colour: '#880088',
+    ref: '89',
+    route_master: 'bus',
+    type: 'route_master',
+  });
+  expect(Array.isArray(features.routes[0].routes)).toBe(true);
+
   expect(features.geoJson.features).toEqual([
     {
       center: undefined,

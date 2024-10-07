@@ -6,15 +6,17 @@ import {
 } from '../../../../services/overpassSearch';
 import { intl } from '../../../../services/intl';
 
+type WithTags = { tags: Record<string, string> };
+
 export interface LineInformation {
+  tags: Record<string, string>;
+  routes: WithTags[];
   ref: string;
   colour: string | undefined;
   service: string | undefined;
   osmType: string;
   osmId: string;
 }
-
-type WithTags = { tags: Record<string, string> };
 
 const filterRoutesByRef = (routes: WithTags[], ref: string) =>
   routes.filter(({ tags }) => tags.ref === ref);
@@ -40,10 +42,12 @@ const getService = (tags: Record<string, string>, routes: WithTags[]) => {
   const serviceTag =
     serviceTagValue === 'highspeed' ? 'high_speed' : serviceTagValue;
   const isHighspeed = getVal('highspeed') === 'yes';
+  const isSubway = getVal('subway') === 'yes';
 
   return (
     serviceTag ||
     (isHighspeed && 'high_speed') ||
+    (isSubway && 'subway') ||
     getVal('route') ||
     getVal('route_master')
   );
@@ -87,6 +91,8 @@ export async function requestLines(featureType: string, id: number) {
         getTagValue(key, tags, directionRouteTags);
 
       return {
+        tags,
+        routes: directionRouteTags,
         ref: `${tags.ref || tags.name}`,
         colour: getVal('colour'),
         service: getService(tags, directionRouteTags),

@@ -37,6 +37,8 @@ const fmtCategory = (category: string) => {
       return t('publictransport.high_speed');
     case 'bus':
       return t('publictransport.bus');
+    case 'subway':
+      return t('publictransport.subway');
     case 'unknown':
       return t('publictransport.unknown');
     default:
@@ -59,13 +61,7 @@ export const PublicTransportCategory: React.FC<CategoryProps> = ({
     {showHeading && <h4>{fmtCategory(category)}</h4>}
     <PublicTransportWrapper>
       {lines.map((line) => (
-        <LineNumber
-          key={line.ref}
-          name={line.ref}
-          color={line.colour}
-          osmType={line.osmType}
-          osmId={line.osmId}
-        />
+        <LineNumber key={line.ref} line={line} />
       ))}
     </PublicTransportWrapper>
   </>

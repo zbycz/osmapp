@@ -2,6 +2,9 @@ import React from 'react';
 import { useUserThemeContext } from '../../../../helpers/theme';
 import styled from '@emotion/styled';
 import { osmColorToHex, whiteOrBlackText } from '../../helpers/color';
+import { Tooltip } from '@mui/material';
+import Link from 'next/link';
+import { LineInformation } from './requestRoutes';
 
 export const getBgColor = (color: string | undefined, darkmode: boolean) => {
   if (color) return osmColorToHex(color);
@@ -9,7 +12,7 @@ export const getBgColor = (color: string | undefined, darkmode: boolean) => {
   return darkmode ? '#898989' : '#dddddd';
 };
 
-const LineNumberWrapper = styled.a<{
+const LineNumberWrapper = styled(Link)<{
   color: string | undefined;
   darkmode: boolean;
 }>`
@@ -21,29 +24,44 @@ const LineNumberWrapper = styled.a<{
   display: inline;
 `;
 
-interface LineNumberProps {
-  name: string;
-  color: string;
-  osmType: string;
-  osmId: string | number;
-}
+type Tags = Record<string, string>;
+const formatTooltip = (tags: Tags, routes: { tags: Tags }[]) => {
+  const formatTags = (tags: Tags) => {
+    const parts = [tags.from, ...(tags.via ? [tags.via] : []), tags.to];
+    return parts.flatMap((str) => str.split(';')).join(' - ');
+  };
 
-export const LineNumber: React.FC<LineNumberProps> = ({
-  name,
-  color,
-  osmType,
-  osmId,
-}) => {
+  if (tags.from && tags.to) {
+    return formatTags(tags);
+  }
+
+  const relevantRoute =
+    routes.find(({ tags }) => tags.from && tags.via && tags.to) ||
+    routes.find(({ tags }) => tags.from && tags.to);
+  if (!relevantRoute) {
+    return undefined;
+  }
+
+  return formatTags(relevantRoute.tags);
+};
+
+export const LineNumber = ({ line }: { line: LineInformation }) => {
   const { currentTheme } = useUserThemeContext();
   const darkmode = currentTheme === 'dark';
 
   return (
-    <LineNumberWrapper
-      href={`/${osmType}/${osmId}`}
-      color={color}
-      darkmode={darkmode}
+    <Tooltip
+      title={formatTooltip(line.tags, line.routes)}
+      arrow
+      placement="top"
     >
-      {name}
-    </LineNumberWrapper>
+      <LineNumberWrapper
+        href={`/${line.osmType}/${line.osmId}`}
+        color={line.colour}
+        darkmode={darkmode}
+      >
+        {line.ref}
+      </LineNumberWrapper>
+    </Tooltip>
   );
 };

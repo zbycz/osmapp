@@ -258,6 +258,7 @@ export default {
   'publictransport.long_distance': 'Long distance trains',
   'publictransport.high_speed': 'High speed trains',
   'publictransport.bus': 'Bus',
+  'publictransport.subway': 'Subway',
   'publictransport.unknown': 'Unknown type',
 
   'publictransport.route': 'Route',

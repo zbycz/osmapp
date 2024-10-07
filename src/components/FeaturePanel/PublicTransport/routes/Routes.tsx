@@ -11,6 +11,7 @@ import { Typography } from '@mui/material';
 
 const categories = [
   'tourism',
+  'subway',
   'commuter',
   'regional',
   'long_distance',

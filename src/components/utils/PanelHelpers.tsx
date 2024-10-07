@@ -12,7 +12,7 @@ import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 const Columns = styled.div`
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: calc(100% - ${SEARCH_BOX_HEIGHT}px);
 `;
 
 const SearchBoxBackground = styled.div`
