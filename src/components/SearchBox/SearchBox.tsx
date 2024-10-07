@@ -1,18 +1,55 @@
 import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
-import { CircularProgress, IconButton } from '@mui/material';
+import { CircularProgress, IconButton, Paper } from '@mui/material';
 import Router from 'next/router';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
-import { useMobileMode } from '../helpers';
+import { isDesktop, isDesktopResolution, useMobileMode } from '../helpers';
+import { SEARCH_BOX_HEIGHT } from './consts';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
 import { DirectionsButton } from '../Directions/DirectionsButton';
-import { StyledPaper, TopPanel } from './helpers';
 import { setLastFeature } from '../../services/lastFeatureStorage';
+
+const TopPanel = styled.div`
+  position: absolute;
+  height: ${SEARCH_BOX_HEIGHT}px;
+  padding: 8px;
+  box-sizing: border-box;
+
+  top: 0;
+  z-index: 10;
+  @media ${isDesktopResolution} {
+    z-index: 1200; // 1100 is PanelWrapper
+  }
+
+  width: 100%;
+  @media ${isDesktop} {
+    width: 410px;
+  }
+`;
+
+const StyledPaper = styled(Paper)<{ $isSearchInPanel: boolean }>`
+  padding: 2px 4px;
+  display: flex;
+  align-items: center;
+  background-color: ${({ $isSearchInPanel, theme }) =>
+    $isSearchInPanel
+      ? theme.palette.background.searchInput
+      : theme.palette.background.searchInputPanel};
+  -webkit-backdrop-filter: blur(35px);
+  backdrop-filter: blur(35px);
+  transition: box-shadow 0s !important;
+  box-shadow: ${({ $isSearchInPanel }) =>
+    $isSearchInPanel ? '0 0 20px rgba(0, 0, 0, 0.4)' : 'none'} !important;
+
+  .MuiAutocomplete-root {
+    flex: 1;
+  }
+`;
 
 const SearchIconButton = styled(IconButton)`
   svg {
@@ -38,7 +75,7 @@ const useOnClosePanel = () => {
   };
 };
 
-const SearchBox = () => {
+const SearchBox = ({ isSearchInPanel = false }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const [overpassLoading, setOverpassLoading] = useState(false);
@@ -46,8 +83,12 @@ const SearchBox = () => {
   const onClosePanel = useOnClosePanel();
 
   return (
-    <TopPanel $isMobileMode={isMobileMode}>
-      <StyledPaper elevation={1} ref={autocompleteRef}>
+    <TopPanel>
+      <StyledPaper
+        $isSearchInPanel={isSearchInPanel}
+        elevation={1}
+        ref={autocompleteRef}
+      >
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
         </SearchIconButton>

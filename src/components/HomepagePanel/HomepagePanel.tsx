@@ -25,7 +25,7 @@ export const HomepagePanel = () => {
 
   const isClimbing = PROJECT_ID === 'openclimbing';
 
-  const onClose = (_, open) => {
+  const onClose = (_: React.TransitionEvent<HTMLDivElement>, open: boolean) => {
     if (!open) {
       persistHideHomepage();
     }

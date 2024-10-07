@@ -77,7 +77,7 @@ export const MapFooter = () => {
   const hasLegend = isMobileMode && featureShown ? false : hasClimbingLayer;
   const [legendShown, setLegendShown] = usePersistedState<boolean>(
     'isLegendVisible',
-    true,
+    false,
   );
   const isClient = useIsClient();
 

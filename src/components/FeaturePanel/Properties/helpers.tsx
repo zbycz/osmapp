@@ -25,3 +25,23 @@ export const ShowMoreButton = ({ onClick, isShown }) => (
     )}
   </StyledToggleButton>
 );
+
+export function use2dContext(
+  ref: React.RefObject<HTMLCanvasElement>,
+  handler: (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void,
+  deps: React.DependencyList = [],
+) {
+  React.useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    handler(ctx, canvas);
+
+    return () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ref, ...deps]);
+}

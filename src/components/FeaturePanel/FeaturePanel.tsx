@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { FeatureHeading } from './FeatureHeading';
 import { useToggleState } from '../helpers';
@@ -23,6 +23,7 @@ import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box } from '@mui/material';
 import { ClimbingGuideInfo } from './Climbing/ClimbingGuideInfo';
+import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
 
 const Flex = styled.div`
   flex: 1;
@@ -102,6 +103,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
           toggleShowTags={toggleShowTags}
         />
       </PanelContent>
+      <ClimbingStructuredData />
     </>
   );
 };

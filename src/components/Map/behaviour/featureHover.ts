@@ -1,4 +1,12 @@
-export const addHoverPaint = (origStyle) => {
+import {
+  FeatureIdentifier,
+  Map,
+  MapGeoJSONFeature,
+  MapMouseEvent,
+  StyleSpecification,
+} from 'maplibre-gl';
+
+export const addHoverPaint = (origStyle): StyleSpecification => {
   const hoverExpr = ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 1]; // prettier-ignore
   const iconOpacity = ['case', ['boolean', ['feature-state', 'hideIcon'], false], 0, hoverExpr]; // prettier-ignore
 
@@ -13,15 +21,19 @@ export const addHoverPaint = (origStyle) => {
   return origStyle;
 };
 
-export const setUpHover = (map, layersWithOsmId) => {
+export const setUpHover = (map: Map, layersWithOsmId: string[]) => {
   let lastHover = null;
 
-  const setHoverOn = (feature) =>
+  const setHoverOn = (feature: FeatureIdentifier | null) =>
     feature && map.setFeatureState(feature, { hover: true });
-  const setHoverOff = (feature) =>
+  const setHoverOff = (feature: FeatureIdentifier | null) =>
     feature && map.setFeatureState(feature, { hover: false });
 
-  const onMouseMove = (e) => {
+  const onMouseMove = (
+    e: MapMouseEvent & {
+      features?: MapGeoJSONFeature[];
+    } & Object,
+  ) => {
     if (e.features && e.features.length > 0) {
       const feature = e.features[0];
       if (feature !== lastHover) {

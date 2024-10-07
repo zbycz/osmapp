@@ -2,8 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Tooltip } from '@mui/material';
-import { useRouteNumberColors } from './utils/useRouteNumberColors';
-import { isTicked } from '../../../services/ticks';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const Container = styled.div`

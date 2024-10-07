@@ -207,6 +207,7 @@ export default {
   'editsuccess.edit.textLabel': 'Comment',
 
   'tags.name': 'Name',
+  'tags.description': 'Description',
   'tags.website': 'Website',
   'tags.phone': 'Phone',
   'tags.opening_hours': 'Hours',
@@ -257,12 +258,14 @@ export default {
   'publictransport.long_distance': 'Long distance trains',
   'publictransport.high_speed': 'High speed trains',
   'publictransport.bus': 'Bus',
+  'publictransport.subway': 'Subway',
   'publictransport.unknown': 'Unknown type',
 
   'climbingpanel.draw_route': 'Draw route',
 
   'climbingpanel.show_route_detail': 'Show route detail',
   'climbingpanel.add_tick': 'Add tick',
+  'climbingpanel.edit_route': 'Edit route',
 
   'runway.information': 'Runway information',
   'runway.runway': 'Runway',
