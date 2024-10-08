@@ -1,8 +1,8 @@
-name: Server-side rendering check
+name: Vercel deployed
 on:
   deployment_status:
 jobs:
-  run-e2es:
+  check-ssr:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
