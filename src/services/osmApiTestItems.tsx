@@ -17,7 +17,7 @@ const nodeResponse = {
     climbing: 'route_bottom',
     'climbing:grade:uiaa': '5',
     name: 'Test item for images',
-    description: 'Originally Detonátor route',
+    description: 'Originally Detonátor route (this message used for SSR check)',
     sport: 'climbing',
     image: 'http://localhost:3000/images/Lomy_nad_Velkou_-_Borová_věž.jpg',
     'image:path':
