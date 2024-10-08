@@ -1,5 +1,9 @@
-name: Vercel deployed
+name: Check server-side rendering
 on:
+  push:
+    branches: ['master']
+  pull_request:
+    branches: ['master']
   deployment_status:
 jobs:
   check-ssr:
@@ -10,7 +14,7 @@ jobs:
         run: |
           URL=$(echo ${{ github.event.deployment_status.environment_url }})/node/6
           echo "Fetch the URL: $URL"
-          curl -s $URL | grep -q "Test item for images"
+          curl -s $URL | grep -q "Originally Detonátor route (this message used for SSR check) "
           if [ $? -eq 0 ]; then
               echo "Server-side rendering is working"
           else
