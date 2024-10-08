@@ -276,4 +276,8 @@ export default {
   'climbingareas.title': 'Climbing areas',
   'climbingareas.area': 'Area',
   'climbingareas.num_of_crags': 'Number of crags',
+
+  'member_features.subitems': 'Subitems',
+  'member_features.climbing': 'Climbing routes',
+  'member_features.routes': 'Routes',
 };

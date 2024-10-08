@@ -10,37 +10,32 @@ import { GradeSystemSelect } from '../Climbing/GradeSystemSelect';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { Feature } from '../../../services/types';
 import { isRouteMaster } from '../../../utils';
-import { GradeSystem } from '../Climbing/utils/grades/gradeData';
+import { t } from '../../../services/intl';
 
 const getHeading = (feature: Feature) => {
   if (feature.tags.climbing === 'crag') {
-    return 'Climbing routes';
+    return t('member_features.climbing');
   }
   if (isRouteMaster(feature)) {
-    return 'Routes';
+    return t('member_features.routes');
   }
-  return 'Subitems';
+  return t('member_features.subitems');
 };
 
-type PanelAdditionProps = {
-  feature: Feature;
-  gradeSystem: string;
-  onSetGradeSystem: (GradeSystem: GradeSystem) => void;
-};
+const PanelAddition = () => {
+  const { feature } = useFeatureContext();
+  const { userSettings, setUserSetting } = useUserSettingsContext();
 
-const PanelAddition = ({
-  onSetGradeSystem,
-  gradeSystem,
-  feature: { tags },
-}: PanelAdditionProps) => {
-  if (tags.climbing !== 'crag') {
+  if (feature.tags.climbing !== 'crag') {
     return null;
   }
 
   return (
     <GradeSystemSelect
-      setGradeSystem={onSetGradeSystem}
-      selectedGradeSystem={gradeSystem}
+      setGradeSystem={(system) => {
+        setUserSetting('climbing.gradeSystem', system);
+      }}
+      selectedGradeSystem={userSettings['climbing.gradeSystem']}
     />
   );
 };
@@ -53,8 +48,6 @@ const Ul = styled.ul`
 export const MemberFeatures = () => {
   const { feature } = useFeatureContext();
   const { memberFeatures, tags } = feature;
-
-  const { userSettings, setUserSetting } = useUserSettingsContext();
 
   if (!memberFeatures?.length) {
     return null;
@@ -69,17 +62,7 @@ export const MemberFeatures = () => {
 
   return (
     <Box mb={1}>
-      <PanelLabel
-        addition={
-          <PanelAddition
-            feature={feature}
-            gradeSystem={userSettings['climbing.gradeSystem']}
-            onSetGradeSystem={(system) => {
-              setUserSetting('climbing.gradeSystem', system);
-            }}
-          />
-        }
-      >
+      <PanelLabel addition={<PanelAddition />}>
         {getHeading(feature)} ({memberFeatures.length})
       </PanelLabel>
       <Ul>
