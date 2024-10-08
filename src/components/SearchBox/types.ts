@@ -48,8 +48,8 @@ export type OverpassOption = GenericOption<
 export type PresetOption = GenericOption<
   'preset',
   {
-    name: number;
-    textsByOne: number[];
+    nameSimilarity: number;
+    textsByOneSimilarity: number[];
     sum: number;
     presetForSearch: {
       key: string;

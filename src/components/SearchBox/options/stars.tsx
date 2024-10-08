@@ -5,8 +5,8 @@ import React from 'react';
 import { getHumanDistance, IconPart } from '../utils';
 import type { Star } from '../../utils/StarsContext';
 import { StarOption } from '../types';
-import match from 'autosuggest-highlight/match';
 import { LonLat } from '../../../services/types';
+import { diceCoefficient } from 'dice-coefficient';
 
 export const getStarsOptions = (
   stars: Star[],
@@ -14,19 +14,17 @@ export const getStarsOptions = (
 ): StarOption[] => {
   const ratedStars = sortBy(
     stars
-      .map((star) => ({
-        star,
-        // TODO matching is not optimal, maybe Sørensen–Dice coefficient
-        // https://www.npmjs.com/package/dice-coefficient
-        matching:
-          inputValue === ''
-            ? Infinity
-            : match(star.label, inputValue, {
-                insideWords: true,
-                findAllOccurrences: true,
-              }).length,
-      }))
-      .filter(({ matching }) => matching > 0),
+      .map((star) => {
+        if (inputValue === '') {
+          return { star, matching: Infinity };
+        }
+        const matching = diceCoefficient(star.label, inputValue);
+        return {
+          star,
+          matching,
+        };
+      })
+      .filter(({ matching }) => matching > 0.2),
     ({ matching }) => matching,
   );
   return ratedStars.map(({ star }) => ({ type: 'star', star }));
