@@ -21,10 +21,7 @@ const TopPanel = styled.div`
   box-sizing: border-box;
 
   top: 0;
-  z-index: 10;
-  @media ${isDesktopResolution} {
-    z-index: 1200; // 1100 is PanelWrapper
-  }
+  z-index: 1200; // 1100 is PanelWrapper
 
   width: 100%;
   @media ${isDesktop} {
