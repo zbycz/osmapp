@@ -15,6 +15,7 @@ import {
   isClimbingRelation,
   isClimbingRoute,
   isPublictransportRoute,
+  isRouteMaster,
 } from '../utils';
 import { getOverpassUrl } from './overpassSearch';
 
@@ -228,7 +229,11 @@ export const addMembersAndParents = async (
     return { ...feature, parentFeatures };
   }
 
-  if (isClimbingRelation(feature) || isPublictransportRoute(feature)) {
+  if (
+    isClimbingRelation(feature) ||
+    isPublictransportRoute(feature) ||
+    isRouteMaster(feature)
+  ) {
     const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
       fetchParentFeatures(feature.osmMeta),
       addMemberFeaturesToRelation(feature),

@@ -254,4 +254,8 @@ export default {
   'runway.runway': 'Landebahn',
   'runway.size': 'Länge (m) - Breite (m)',
   'runway.surface': 'Oberfläche',
+
+  'member_features.subitems': 'Subelemente',
+  'member_features.climbing': 'Kletter Strecken',
+  'member_features.routes': 'Strecken',
 };
