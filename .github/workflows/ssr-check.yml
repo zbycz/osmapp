@@ -1,0 +1,19 @@
+name: Server-side rendering check
+on:
+  deployment_status:
+jobs:
+  run-e2es:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check if node/6 is ssr rendered
+        run: |
+          URL=$(echo ${{ github.event.deployment_status.environment_url }})/node/6
+          echo "Fetch the URL: $URL"
+          curl -s $URL | grep -q "Test item for images"
+          if [ $? -eq 0 ]; then
+              echo "Server-side rendering is working"
+          else
+              echo "Server-side rendering broken"
+              exit 1
+          fi
