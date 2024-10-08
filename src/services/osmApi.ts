@@ -11,7 +11,12 @@ import { osmToFeature } from './osmToFeature';
 import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
 import * as Sentry from '@sentry/nextjs';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
-import { isClimbingRelation, isClimbingRoute, isRouteMaster } from '../utils';
+import {
+  isClimbingRelation,
+  isClimbingRoute,
+  isPublictransportRoute,
+  isRouteMaster,
+} from '../utils';
 import { getOverpassUrl } from './overpassSearch';
 
 type GetOsmUrl = (object: OsmId) => string;
@@ -224,7 +229,11 @@ export const addMembersAndParents = async (
     return { ...feature, parentFeatures };
   }
 
-  if (isRouteMaster(feature) || isClimbingRelation(feature)) {
+  if (
+    isClimbingRelation(feature) ||
+    isPublictransportRoute(feature) ||
+    isRouteMaster(feature)
+  ) {
     const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
       fetchParentFeatures(feature.osmMeta),
       addMemberFeaturesToRelation(feature),

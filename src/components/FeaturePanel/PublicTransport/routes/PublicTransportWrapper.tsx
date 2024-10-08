@@ -1,7 +1,7 @@
 import React from 'react';
 import { LineInformation } from './requestRoutes';
 import { LineNumber } from './LineNumber';
-import { t } from '../../../services/intl';
+import { t } from '../../../../services/intl';
 
 const PublicTransportWrapper = ({ children }) => {
   const divStyle: React.CSSProperties = {

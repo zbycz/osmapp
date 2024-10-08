@@ -82,3 +82,11 @@ export const isClimbingRoute = (feature: Feature) =>
 
 export const isRouteMaster = ({ tags, osmMeta }: Feature) =>
   tags.type === 'route_master' && osmMeta.type === 'relation';
+
+export const isPublictransportStop = ({ tags }: Feature) =>
+  Object.keys(tags).includes('public_transport') ||
+  tags.railway === 'station' ||
+  tags.railway === 'halt';
+
+export const isPublictransportRoute = ({ tags }: Feature) =>
+  tags.type === 'route';

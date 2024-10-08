@@ -246,6 +246,10 @@ export default {
   'publictransport.subway': 'U-Bahn',
   'publictransport.unknown': 'Unbekannter Typ',
 
+  'publictransport.route': 'Streckenverlauf',
+  'publictransport.hidden_stops': '__amount__ weitere Haltestellen',
+  'publictransport.visible_stops': 'Blende __amount__ Haltestellen aus',
+
   'runway.information': 'Landebahninformationen',
   'runway.runway': 'Landebahn',
   'runway.size': 'Länge (m) - Breite (m)',
