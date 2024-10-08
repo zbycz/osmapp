@@ -7,13 +7,10 @@ on:
   deployment_status:
 jobs:
   check-ssr:
+    if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
     steps:
-      - name: Skip SSR check
-        if: github.event_name != 'deployment_status' || github.event.deployment_status.state != 'success'
-        run: echo "Waiting for deployment to complete"
       - name: Check if node/6 is ssr rendered
-        if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
         run: |
           URL=$(echo ${{ github.event.deployment_status.environment_url }})/node/6
           echo "Fetch the URL: $URL"
