@@ -67,16 +67,12 @@ describe('fetchFeature', () => {
     expect(feature).toEqual(WAY_FEATURE);
   });
 
-  const OVERPASS_GEOM_RESPONSE = {
-    elements: [{ geometry: { coordinates: [15, 51] } }],
-  };
-
   it('should work for relation', async () => {
     const fetchJson = jest
       .spyOn(fetch, 'fetchJson')
       .mockImplementation((url) =>
         Promise.resolve(
-          url.match(/overpass/) ? OVERPASS_GEOM_RESPONSE : RELATION,
+          url.match(/overpass/) ? OVERPASS_CENTER_RESPONSE : RELATION,
         ),
       );
 
