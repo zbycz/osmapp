@@ -94,10 +94,38 @@ const getCountryCode = async (feature: Feature): Promise<string | null> => {
   return null;
 };
 
+const getElementsAndCenter = async (
+  apiId: OsmId,
+): Promise<{ element: any; center: false | LonLat }> => {
+  const elementPromise = getOsmPromise(apiId);
+  switch (apiId.type) {
+    case 'node':
+      const elementNode = await elementPromise;
+      return { element: elementNode, center: false as const };
+    case 'way':
+      const [elementWay, centerWay] = await Promise.all([
+        elementPromise,
+        getCenterPromise(apiId),
+      ]);
+      return { element: elementWay, center: centerWay };
+    case 'relation':
+      const elementRel = await elementPromise;
+      const [firstMember] = elementRel.members;
+      const centerRel = await fetchOverpassCenter({
+        id: firstMember.ref,
+        type: firstMember.type,
+      });
+
+      return {
+        element: elementRel,
+        center: centerRel,
+      };
+  }
+};
+
 const fetchFeatureWithCenter = async (apiId: OsmId) => {
-  const [element, center] = await Promise.all([
-    getOsmPromise(apiId),
-    getCenterPromise(apiId),
+  const [{ element, center }] = await Promise.all([
+    getElementsAndCenter(apiId),
     fetchSchemaTranslations(),
   ]);
 
