@@ -6,6 +6,12 @@ on:
     branches: ['master']
   deployment_status:
 jobs:
+  fail-until-deployed:
+    if: github.event_name != 'deployment_status' || github.event.deployment_status.state != 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Fail until deployment is successful
+        run: exit 1
   check-ssr:
     if: github.event_name == 'deployment_status' && github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
