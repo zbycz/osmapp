@@ -1,4 +1,8 @@
 import match from 'autosuggest-highlight/match';
+import sum from 'lodash/sum';
+import orderBy from 'lodash/orderBy';
+import groupBy from 'lodash/groupBy';
+import { diceCoefficient } from 'dice-coefficient';
 import FolderIcon from '@mui/icons-material/Folder';
 import { Grid, Typography } from '@mui/material';
 import React from 'react';
@@ -61,47 +65,66 @@ type PresetOptions = Promise<{
   after: PresetOption[];
 }>;
 
-export const getPresetOptions = async (inputValue: string): PresetOptions => {
+export const getPresetOptions = async (
+  inputValue: string,
+  threshold = 0.3,
+): PresetOptions => {
   if (inputValue.length <= 2) {
     return { before: [], after: [] };
   }
 
-  const results = (await getPresetsForSearch()).map((preset) => {
-    const name = num(preset.name, inputValue) * 10;
-    const textsByOne = preset.texts.map((term) => num(term, inputValue));
-    const sum = name + textsByOne.reduce((a, b) => a + b, 0);
-    return { name, textsByOne, sum, presetForSearch: preset };
+  const presets = await getPresetsForSearch();
+  const rawResults = presets.map((preset) => {
+    const nameSimilarity = diceCoefficient(preset.name, inputValue);
+    const textsByOneSimilarity = preset.texts.map((term) =>
+      diceCoefficient(term, inputValue),
+    );
+    return {
+      nameSimilarity,
+      textsByOneSimilarity,
+      sum: nameSimilarity * 10 + sum(textsByOneSimilarity),
+      presetForSearch: preset,
+    };
+  });
+  const grouped = groupBy(rawResults, ({ sum, nameSimilarity }) => {
+    if (nameSimilarity > threshold) {
+      return 'name';
+    }
+    if (nameSimilarity === 0 && sum > threshold) {
+      return 'rest';
+    }
   });
 
-  const nameMatches = results
-    .filter((result) => result.name > 0)
-    .map((result) => ({
-      type: 'preset' as const,
-      preset: result,
-    }));
-
-  const rest = results
-    .filter((result) => result.name === 0 && result.sum > 0)
-    .map((result) => ({
-      type: 'preset' as const,
-      preset: result,
-    }));
-
-  const allResults = [...nameMatches, ...rest];
+  const allResults = [
+    ...orderBy(grouped.name, ({ sum }) => sum, 'desc'),
+    ...orderBy(grouped.rest, ({ sum }) => sum, 'desc'),
+  ].map((result) => ({
+    type: 'preset' as const,
+    preset: result,
+  }));
   const before = allResults.slice(0, 2);
   const after = allResults.slice(2);
 
   return { before, after };
 };
 
+const getAdditionalText = (preset: PresetOption['preset']) => {
+  const { textsByOneSimilarity } = preset;
+  const highestMatching = Math.max(...textsByOneSimilarity);
+
+  if (preset.nameSimilarity >= highestMatching) {
+    return '';
+  }
+
+  const { texts } = preset.presetForSearch;
+  const matchingIndex = textsByOneSimilarity.indexOf(highestMatching);
+  const matchingText = texts[matchingIndex];
+  return ` (${matchingText}…)`;
+};
+
 export const renderPreset = ({ preset }: PresetOption, inputValue: string) => {
   const { name } = preset.presetForSearch;
-  const additionalText =
-    preset.name === 0
-      ? ` (${preset.presetForSearch.texts.find(
-          (_, idx) => preset.textsByOne[idx] > 0,
-        )}…)`
-      : '';
+  const additionalText = getAdditionalText(preset);
 
   return (
     <>
