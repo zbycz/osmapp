@@ -1,55 +1,50 @@
-// links like {shop}, are recursively resolved to their fields
 import { Preset } from './types/Presets';
-import { fields, presets } from './data';
+import { allFields, allPresets } from './data';
+import { deduplicate } from './utils';
 import { Field } from './types/Fields';
+import { getFieldTranslation } from './translations';
 
-const getResolvedFields = (fieldKeys: string[]): string[] =>
+type FieldType = 'fields' | 'moreFields';
+
+// links like {shop}, are recursively resolved to their fields
+const resolveLinks = (fieldKeys: string[], type: FieldType): string[] =>
   fieldKeys.flatMap((key) => {
     if (key.match(/^{.*}$/)) {
       const presetKey = key.substr(1, key.length - 2);
-      return getResolvedFields(presets[presetKey].fields);
+      const linkedFields = allPresets[presetKey][type];
+      return resolveLinks(linkedFields, type);
     }
     return key;
   });
 
-const getResolvedMoreFields = (fieldKeys: string[]): string[] =>
-  fieldKeys.flatMap((key) => {
-    if (key.match(/^{.*}$/)) {
-      const presetKey = key.substr(1, key.length - 2);
-      return getResolvedMoreFields(presets[presetKey].moreFields);
-    }
-    return key;
-  });
-
-const getResolvedFieldsWithParents = (
-  preset: Preset,
-  fieldType: 'fields' | 'moreFields',
-): string[] => {
+const resolveParents = (preset: Preset, type: FieldType): string[] => {
   const parts = preset.presetKey.split('/');
 
   if (parts.length > 1) {
     const parentKey = parts.slice(0, parts.length - 1).join('/');
-    const parentPreset = presets[parentKey];
+    const parentPreset = allPresets[parentKey];
     if (parentPreset) {
-      return [
-        ...getResolvedFieldsWithParents(parentPreset, fieldType),
-        ...(preset[fieldType] ?? []),
-      ];
+      return [...resolveParents(parentPreset, type), ...(preset[type] ?? [])];
     }
   }
 
-  return preset[fieldType] ?? [];
+  return preset[type] ?? [];
 };
 
-export const computeAllFieldKeys = (preset: Preset) => {
+const resolveFieldKeys = (preset: Preset, fieldType: FieldType) =>
+  resolveLinks(resolveParents(preset, fieldType), fieldType);
+
+const resolveFields = (preset: Preset, fieldType: FieldType): Field[] =>
+  resolveFieldKeys(preset, fieldType).map((key) => allFields[key]);
+
+const getUniversalFields = (): Field[] =>
+  Object.values(allFields).filter((f) => f.universal);
+
+export const getFieldKeys = (preset: Preset): string[] => {
   const allFieldKeys = [
-    ...getResolvedFields(getResolvedFieldsWithParents(preset, 'fields')),
-    ...getResolvedMoreFields(
-      getResolvedFieldsWithParents(preset, 'moreFields'),
-    ),
-    ...Object.values(fields)
-      .filter((f) => f.universal)
-      .map((f) => f.fieldKey),
+    ...resolveFieldKeys(preset, 'fields'),
+    ...resolveFieldKeys(preset, 'moreFields'),
+    ...getUniversalFields().map((f) => f.fieldKey),
     'operator',
     'architect',
     'address',
@@ -58,8 +53,32 @@ export const computeAllFieldKeys = (preset: Preset) => {
     .filter((f) => f !== 'image') // already covered in feature image
     .filter((f) => f !== 'source' && f !== 'check_date'); // lets leave these to tagsWithFields
 
-  // @ts-ignore
-  return [...new Set(allFieldKeys)];
+  return deduplicate(allFieldKeys);
+};
+
+const translateFields = (fields: Field[]): Field[] =>
+  fields.map((field) => {
+    const fieldTranslation = getFieldTranslation(field);
+    return {
+      ...field,
+      fieldTranslation: { label: `[${field.fieldKey}]`, ...fieldTranslation },
+    };
+  });
+
+const eatPreset = (preset: Preset, fields: Field[]) => {
+  return fields.filter((field) => !preset.tags[field.key]);
+};
+
+export const getFields = (preset: Preset) => {
+  const fields = resolveFields(preset, 'fields');
+  const moreFields = resolveFields(preset, 'moreFields');
+  const universalFields = getUniversalFields();
+
+  return {
+    fields: eatPreset(preset, translateFields(fields)),
+    moreFields: translateFields(moreFields),
+    universalFields: translateFields(universalFields),
+  };
 };
 
 // TODO check - 1) field.options 2) strings.options

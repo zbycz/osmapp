@@ -1,4 +1,4 @@
-import { presets } from './data';
+import { allPresets } from './data';
 import { Feature } from '../types';
 import { Preset } from './types/Presets';
 import { DEBUG_ID_SCHEMA } from '../../config.mjs';
@@ -54,7 +54,7 @@ const index = {
 };
 
 // build an index by geometry type
-Object.values(presets).forEach((preset) => {
+Object.values(allPresets).forEach((preset) => {
   const { geometry } = preset;
 
   geometry.forEach((geometryType) => {

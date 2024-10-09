@@ -1,99 +1,112 @@
 import React, { useEffect, useState } from 'react';
-import { Box, MenuItem, TextField, Typography } from '@mui/material';
-import Maki from '../../../utils/Maki';
-import { fetchJson } from '../../../../services/fetch';
-import { intl, t } from '../../../../services/intl';
+import { Box, Typography } from '@mui/material';
+import styled from '@emotion/styled';
 import { getPoiClass } from '../../../../services/getPoiClass';
-import { trimText } from '../../../helpers';
+import { allPresets } from '../../../../services/tagging/data';
+import {
+  fetchSchemaTranslations,
+  getPresetTermsTranslation,
+  getPresetTranslation,
+} from '../../../../services/tagging/translations';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { ComboSearchBox } from './ComboSearchBox';
 import { useEditContext } from '../EditContext';
+import { Preset } from '../../../../services/tagging/types/Presets';
 
-/*
-https://taginfo.openstreetmap.org/taginfo/apidoc#api_4_key_values
-{
-  "value": "parking",
-  "count": 3897865,
-  "fraction": 0.208,
-  "in_wiki": true,
-  "description": "Parkoviště pro auta",
-  "desclang": "cs",
-  "descdir": "ltr"
-},
-*/
-
-type TagInfoResponse = {
-  url: string;
-  data_until: string;
-  page: number;
-  rp: number;
-  total: number;
-  data: {
-    value: string;
-    count: number;
-    fraction: number;
-    in_wiki: boolean;
-    description?: string;
-    desclang: string;
-    descdir: string;
-  }[];
+export type TranslatedPreset = Preset & {
+  name: string;
+  icon: string;
 };
 
-const getData = async () => {
-  const body = await fetchJson<TagInfoResponse>(
-    `https://taginfo.openstreetmap.org/api/4/key/values?key=amenity&filter=all&lang=${intl.lang}&sortname=count_all&sortorder=desc&page=1&rp=200&qtype=value`, // &format=json_pretty
-  );
-  const key = 'amenity';
-  return body.data
-    .map((item) => ({
-      ...item,
-      key,
-      tag: `${key}=${item.value}`,
-      ...getPoiClass({ [key]: item.value }),
-    }))
-    .sort((a, b) => a.subclass.localeCompare(b.subclass));
+type PresetCacheItem = Preset & { name: string; icon: string; terms: string[] };
+type PresetsCache = PresetCacheItem[];
+
+let presetsCache: PresetsCache | null = null;
+const getPresets = async (): Promise<PresetsCache> => {
+  if (presetsCache) {
+    return presetsCache;
+  }
+
+  await fetchSchemaTranslations();
+
+  // resolve symlinks to {landuse...} etc
+  presetsCache = Object.values(allPresets)
+    .filter(({ searchable }) => searchable === undefined || searchable)
+    .filter(({ geometry }) => geometry.includes('point'))
+    .filter(({ locationSet }) => !locationSet?.include)
+    .filter(({ tags }) => Object.keys(tags).length > 0)
+    // .map(({ name, presetKey, tags, terms }) => {
+    //   const tagsAsStrings = Object.entries(tags).map(([k, v]) => `${k}=${v}`);
+    //   return {
+    //     key: presetKey,
+    //     name: getPresetTranslation(presetKey) ?? name ?? 'x',
+    //     tags,
+    //     tagsAsOneString: tagsAsStrings.join(', '),
+    //     texts: [
+    //       ...(getPresetTermsTranslation(presetKey) ?? terms ?? 'x').split(','),
+    //       ...tagsAsStrings,
+    //       presetKey,
+    //     ],
+    //     icon: getPoiClass(tags).class,
+    //   };
+    // });
+    .map((preset) => {
+      return {
+        ...preset,
+        name: getPresetTranslation(preset.presetKey) ?? preset.presetKey,
+        icon: getPoiClass(preset.tags).class,
+        terms: getPresetTermsTranslation(preset.presetKey) ?? preset.terms,
+      };
+    });
+
+  return presetsCache;
 };
 
-const renderValue = (value) => (
-  <>
-    <Maki ico={value.class} size={16} middle /> {value.tag}
-  </>
-);
+const Row = styled(Box)`
+  display: flex;
+  align-items: center;
+
+  //first child
+  & > *:first-child {
+    min-width: 44px;
+    margin-right: 1em;
+  }
+  // second child
+  & > *:nth-child(2) {
+    width: 100%;
+  }
+`;
 
 export const FeatureTypeSelect = () => {
-  const {
-    tags: { typeTag, setTypeTag },
-  } = useEditContext();
+  const { preset, setPreset } = useEditContext();
   const [options, setOptions] = useState([]);
 
-  useEffect(() => {
-    getData().then(setOptions);
-  }, []);
+  const { feature } = useFeatureContext();
 
-  const onChange = (event) => setTypeTag(event.target.value);
+  useEffect(() => {
+    (async () => {
+      const presets = await getPresets();
+      setOptions(presets);
+      setPreset(
+        presets.find(
+          (option: PresetCacheItem) =>
+            option.presetKey === feature.schema?.presetKey,
+        ),
+      );
+    })();
+  }, [feature.schema?.presetKey, setPreset]);
+
+  if (options.length === 0) {
+    return null;
+  }
 
   return (
-    <Box mb={3}>
-      <TextField
-        variant="outlined"
-        select
-        fullWidth
-        value={typeTag}
-        SelectProps={{ renderValue, onChange }}
-        label={t('editdialog.feature_type_select')}
-      >
-        <MenuItem value="">–</MenuItem>
-        {options.map((item) => (
-          <MenuItem key={item.tag} value={item}>
-            <Box>
-              <Maki ico={item.class} />
-              {item.subclass}
-              <br />
-              <Typography variant="caption">
-                {trimText(item.description, 100)}
-              </Typography>
-            </Box>
-          </MenuItem>
-        ))}
-      </TextField>
-    </Box>
+    <Row mb={3}>
+      <Typography variant="body1" component="span" color="textSecondary">
+        Typ:
+      </Typography>
+
+      <ComboSearchBox value={preset} setValue={setPreset} options={options} />
+    </Row>
   );
 };
