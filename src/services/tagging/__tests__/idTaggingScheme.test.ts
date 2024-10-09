@@ -3,7 +3,7 @@ import { getSchemaForFeature } from '../idTaggingScheme';
 import { Feature } from '../../types';
 import { mockSchemaTranslations } from '../translations';
 import { intl } from '../../intl';
-import { computeAllFieldKeys } from '../fields';
+import { getFieldKeys } from '../fields';
 
 intl.lang = 'en';
 
@@ -72,7 +72,7 @@ describe('idTaggingScheme', () => {
     } as unknown as Feature;
 
     const schema = getSchemaForFeature(featureWithTemplate);
-    const computedAllFieldKeys = computeAllFieldKeys(schema.preset);
+    const computedAllFieldKeys = getFieldKeys(schema.preset);
 
     expect(computedAllFieldKeys).toEqual([
       'amenity',

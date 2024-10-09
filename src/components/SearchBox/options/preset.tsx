@@ -8,7 +8,7 @@ import {
   getPresetTermsTranslation,
   getPresetTranslation,
 } from '../../../services/tagging/translations';
-import { presets } from '../../../services/tagging/data';
+import { allPresets } from '../../../services/tagging/data';
 import { PresetOption } from '../types';
 import { t } from '../../../services/intl';
 import { highlightText, IconPart } from '../utils';
@@ -29,7 +29,7 @@ const getPresetsForSearch = async () => {
   await fetchSchemaTranslations();
 
   // resolve symlinks to {landuse...} etc
-  presetsForSearch = Object.values(presets)
+  presetsForSearch = Object.values(allPresets)
     .filter(({ searchable }) => searchable === undefined || searchable)
     .filter(({ locationSet }) => !locationSet?.include)
     .filter(({ tags }) => Object.keys(tags).length > 0)

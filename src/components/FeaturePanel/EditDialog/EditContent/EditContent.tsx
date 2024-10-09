@@ -14,6 +14,7 @@ export const EditContent = () => (
     <DialogContent dividers>
       <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
         <OsmUserLoggedOut />
+        <FeatureTypeSelect />
         <MajorKeysEditor />
         <OptionsEditor />
         <ContributionInfoBox />
