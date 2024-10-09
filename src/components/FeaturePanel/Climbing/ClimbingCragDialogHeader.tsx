@@ -42,14 +42,8 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
   const [isUserSettingsOpened, setIsUserSettingsOpened] =
     useState<boolean>(false);
   const [clickCounter, setClickCounter] = useState<number>(0);
-  const {
-    photoPath,
-    setAreRoutesLoading,
-    photoPaths,
-    setShowDebugMenu,
-    setIsEditMode,
-    isEditMode,
-  } = useClimbingContext();
+  const { photoPath, setAreRoutesLoading, photoPaths, setShowDebugMenu } =
+    useClimbingContext();
 
   const { feature } = useFeatureContext();
 

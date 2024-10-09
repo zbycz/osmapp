@@ -114,8 +114,6 @@ export const ClimbingCragDialog = ({
     machine.execute('createRoute');
   };
 
-  const isMobileMode = useMobileMode();
-
   return (
     <Dialog fullScreen open onClose={handleClose}>
       <ClimbingCragDialogHeader onClose={handleClose} />
@@ -136,22 +134,18 @@ export const ClimbingCragDialog = ({
         <DialogActions>
           <Flex>
             <LeftActions>
-              {!isMobileMode && (
-                <>
-                  {showDebugMenu && (
-                    <Button
-                      onClick={onNewRouteCreate}
-                      color="primary"
-                      startIcon={<AddIcon />}
-                    >
-                      Add new route
-                    </Button>
-                  )}
-                  <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <ClimbingEditorHelperText />
-                  </div>
-                </>
+              {showDebugMenu && (
+                <Button
+                  onClick={onNewRouteCreate}
+                  color="primary"
+                  startIcon={<AddIcon />}
+                >
+                  Add new route
+                </Button>
               )}
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <ClimbingEditorHelperText />
+              </div>
             </LeftActions>
             <div>
               <Stack spacing={2} direction="row">
