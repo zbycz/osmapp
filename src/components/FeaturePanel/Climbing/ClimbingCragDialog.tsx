@@ -17,7 +17,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { useGetHandleSave } from './useGetHandleSave';
 import { getWikimediaCommonsPhotoKeys, removeFilePrefix } from './utils/photo';
 import { useMobileMode } from '../../helpers';
-import { Guide } from './Guide';
+import { ClimbingEditorHelperText } from './ClimbingEditorHelperText';
 
 const Flex = styled.div`
   display: flex;
@@ -147,7 +147,9 @@ export const ClimbingCragDialog = ({
                       Add new route
                     </Button>
                   )}
-                  <Guide />
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    <ClimbingEditorHelperText />
+                  </div>
                 </>
               )}
             </LeftActions>
