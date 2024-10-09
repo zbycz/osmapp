@@ -22,6 +22,7 @@ export const RenderListRow = ({ routeId, parentRef, feature }: Props) => {
     routeIndexExpanded,
     setRouteIndexExpanded,
     setRouteListTopOffset,
+    setRouteSelectedIndex,
   } = useClimbingContext();
 
   const index = routes.findIndex((route) => route.id === routeId);
@@ -45,25 +46,31 @@ export const RenderListRow = ({ routeId, parentRef, feature }: Props) => {
     routeIndexExpanded,
     userSettings,
   ]);
+  const isSelected = routeSelectedIndex === index;
 
   useEffect(() => {
-    if (
-      !userSettings['climbing.selectRoutesByScrolling'] &&
-      routeSelectedIndex === index
-    ) {
+    if (!userSettings['climbing.selectRoutesByScrolling'] && isSelected) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [routeSelectedIndex]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [isSelected, userSettings]);
 
   const handleClick = () => {
     setRouteIndexExpanded(routeIndexExpanded === index ? null : index);
   };
+
+  const handleDeselectRoute = (e) => {
+    setRouteSelectedIndex(null);
+    e.preventDefault();
+  };
+
   return (
     <ClimbingRouteTableRow
       feature={feature}
       index={index}
       onClick={handleClick}
       ref={ref}
+      isSelected={isSelected}
+      onDeselectRoute={handleDeselectRoute}
     />
   );
 };

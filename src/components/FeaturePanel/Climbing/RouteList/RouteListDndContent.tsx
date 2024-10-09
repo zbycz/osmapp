@@ -90,10 +90,10 @@ export const RouteListDndContent = ({ isEditable }) => {
     moveRoute,
     setRouteSelectedIndex,
     routeSelectedIndex,
-    updateRouteOnIndex,
     isRouteSelected,
     isEditMode,
     getMachine,
+    showDebugMenu,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
   const machine = getMachine();
@@ -226,7 +226,7 @@ export const RouteListDndContent = ({ isEditable }) => {
               }}
             >
               <MaxWidthContainer>
-                {isEditMode && isEditable && (
+                {showDebugMenu && isEditMode && isEditable && (
                   <DragHandler
                     draggable
                     onDragStart={(e) => handleControlDragStart(e, item)}
