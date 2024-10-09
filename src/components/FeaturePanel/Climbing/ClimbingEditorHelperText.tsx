@@ -11,7 +11,7 @@ const InlineBlockContainer = styled.div`
   display: inline-block;
 `;
 
-export const Guide = () => {
+export const ClimbingEditorHelperText = () => {
   const { routeSelectedIndex, getCurrentPath, getMachine } =
     useClimbingContext();
   const { feature } = useFeatureContext();
@@ -31,7 +31,7 @@ export const Guide = () => {
     <>
       {routeSelectedIndex === null && (
         <Alert severity="info">
-          Select route you want to draw from the list
+          Select route you want to draw from the list.
         </Alert>
       )}
 
@@ -83,7 +83,7 @@ export const Guide = () => {
               </Button>
             }
           >
-            This route is not drawn yet
+            This route is not drawn yet.
           </Alert>
         )}
     </>
