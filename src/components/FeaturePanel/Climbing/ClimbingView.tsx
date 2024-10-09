@@ -13,7 +13,6 @@ import {
 import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RoutesEditor } from './Editor/RoutesEditor';
-import { Guide } from './Guide';
 import { ControlPanel } from './Editor/ControlPanel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import {
@@ -32,6 +31,7 @@ import { getOsmappLink } from '../../../services/helpers';
 import { useRouter } from 'next/router';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import MapIcon from '@mui/icons-material/Map';
+import EditIcon from '@mui/icons-material/Edit';
 
 const FabContainer = styled.div`
   position: absolute;
@@ -208,7 +208,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     routeListTopOffsets,
     setRouteSelectedIndex,
     routes,
-    setPhotoPath,
+    setIsEditMode,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
 
@@ -417,6 +417,21 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
             $imageUrl={backgroundImageUrl}
           >
             <>
+              {!isEditMode && (
+                <FabContainer>
+                  <Tooltip title="Draw routes" enterDelay={1500} arrow>
+                    <Fab
+                      size="small"
+                      color="secondary"
+                      aria-label="add"
+                      onClick={() => setIsEditMode(true)}
+                    >
+                      <EditIcon />
+                    </Fab>
+                  </Tooltip>
+                </FabContainer>
+              )}
+
               {(!isResolutionLoaded || isPhotoLoading) && (
                 <MiniLoadingContainer>
                   <CircularProgress color="primary" size={14} thickness={6} />
@@ -446,12 +461,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     </>
                   </TransformComponent>
                 </TransformWrapper>
-                {isEditMode && (
-                  <>
-                    <ControlPanel />
-                    <Guide />
-                  </>
-                )}
+                {isEditMode && <ControlPanel />}
               </BlurContainer>
             </>
           </BackgroundContainer>

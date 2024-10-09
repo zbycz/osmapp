@@ -246,8 +246,8 @@ export default {
   'climbingpanel.finish_climbing_route': 'Finish route',
   'climbingpanel.cancel_climbing_route': 'Cancel',
   'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
-  'climbingpanel.create_first_node': 'Click on the beginning of the route',
-  'climbingpanel.create_next_node': 'Follow direction of the route',
+  'climbingpanel.create_first_node': 'Click on the beginning of the route and continue in the direction of the route',
+  'climbingpanel.create_next_node': 'Follow direction of the route and click "Done" when finished',
 
   'publictransport.tourism': 'Touristic trains',
   'publictransport.night': 'Night trains',

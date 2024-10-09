@@ -10,7 +10,14 @@ import { isTicked, onTickAdd } from '../../../../services/ticks';
 import { getOsmappLink, getShortId } from '../../../../services/helpers';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { intl, t } from '../../../../services/intl';
-import { Chip, IconButton, Menu, MenuItem, Stack } from '@mui/material';
+import {
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  Tooltip,
+} from '@mui/material';
 import Router from 'next/router';
 import { useSnackbar } from '../../../utils/SnackbarContext';
 import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
@@ -43,7 +50,7 @@ const RouteDescription = styled.div<{ opacity: number }>`
 
 const RouteGrade = styled.div``;
 
-const Row = styled(Link)<{ $isHoverHighlighted: boolean }>`
+const Row = styled.div<{ $isHoverHighlighted: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -100,6 +107,7 @@ type ClimbingTableRowProps = {
   onDeselectRoute?: (e: any) => void;
   isHoverHighlighted?: boolean;
   isSelected?: boolean;
+  isHrefLinkVisible?: boolean;
 };
 
 export const ClimbingRouteTableRow = forwardRef<
@@ -116,6 +124,7 @@ export const ClimbingRouteTableRow = forwardRef<
       onDeselectRoute,
       isHoverHighlighted = false,
       isSelected = false,
+      isHrefLinkVisible = true,
     },
     ref,
   ) => {
@@ -151,12 +160,14 @@ export const ClimbingRouteTableRow = forwardRef<
       handleCloseMore(event);
       event.stopPropagation();
     };
+    const linkProps = {
+      href: routeDetailUrl,
+      locale: intl.lang,
+    };
 
     return (
       <Container ref={ref}>
         <Row
-          locale={intl.lang}
-          href={routeDetailUrl}
           onClick={(e) => {
             onClick(e);
             e.preventDefault();
@@ -164,6 +175,8 @@ export const ClimbingRouteTableRow = forwardRef<
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           $isHoverHighlighted={isHoverHighlighted}
+          as={isHrefLinkVisible ? Link : 'div'}
+          {...(isHrefLinkVisible ? linkProps : {})}
         >
           <RoutePhoto>
             <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
@@ -174,14 +187,16 @@ export const ClimbingRouteTableRow = forwardRef<
             <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
               {feature.tags?.name}
               {!isMobileMode && isSelected && (
-                <Chip
-                  label="highlighted"
-                  onDelete={onDeselectRoute}
-                  size="small"
-                  deleteIcon={<CloseIcon />}
-                  color="primary"
-                  variant="outlined"
-                />
+                <Tooltip title="Deselect route">
+                  <Chip
+                    label="selected"
+                    onDelete={onDeselectRoute}
+                    size="small"
+                    deleteIcon={<CloseIcon />}
+                    color="primary"
+                    variant="outlined"
+                  />
+                </Tooltip>
               )}
             </RouteName>
 

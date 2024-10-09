@@ -17,7 +17,6 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
 import { getOsmappLink } from '../../../services/helpers';
 import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
-import EditIcon from '@mui/icons-material/Edit';
 
 const Title = styled.div`
   flex: 1;
@@ -101,21 +100,6 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
           )}
         </Title>
 
-        <Box mr={1}>
-          {!isEditMode && (
-            <Tooltip title="Edit crag">
-              <IconButton
-                color="primary"
-                edge="end"
-                onClick={() => {
-                  setIsEditMode(true);
-                }}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Box>
         <Box mr={2}>
           <Tooltip title="Show settings">
             <IconButton
