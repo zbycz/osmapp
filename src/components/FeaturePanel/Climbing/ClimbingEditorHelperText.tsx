@@ -6,6 +6,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { getWikimediaCommonsPhotoPathKeys } from './utils/photo';
 import { RouteNumber } from './RouteNumber';
 import { t } from '../../../services/intl';
+import { useMobileMode } from '../../helpers';
 
 const InlineBlockContainer = styled.div`
   display: inline-block;
@@ -26,50 +27,40 @@ export const ClimbingEditorHelperText = () => {
   };
   const path = getCurrentPath();
   const isInSchema = path.length > 0;
+  const isMobileMode = useMobileMode();
+
+  const DrawButton = () => (
+    <Button
+      color="info"
+      variant="contained"
+      size="small"
+      onClick={onDrawRouteClick}
+      endIcon={
+        <RouteNumber hasCircle={true} hasTick={false} hasTooltip={false}>
+          {routeSelectedIndex + 1}
+        </RouteNumber>
+      }
+    >
+      {t('climbingpanel.draw_route')}
+    </Button>
+  );
 
   return (
     <>
-      {routeSelectedIndex === null && (
-        <Alert severity="info">
-          Select route you want to draw from the list.
-        </Alert>
-      )}
+      {!isMobileMode && (
+        <>
+          {routeSelectedIndex === null && (
+            <Alert severity="info">
+              Select route you want to draw from the list.
+            </Alert>
+          )}
 
-      {machine.currentStateName !== 'extendRoute' &&
-        routeSelectedIndex !== null &&
-        routePhotoPathsCount > 0 && (
-          <Alert severity="info">
-            Route{' '}
-            <InlineBlockContainer>
-              <RouteNumber hasCircle={true} hasTick={false} hasTooltip={false}>
-                {routeSelectedIndex + 1}
-              </RouteNumber>
-            </InlineBlockContainer>{' '}
-            is already drawn, but you can update it. Just drag the points or add
-            a new one.
-          </Alert>
-        )}
-
-      {machine.currentStateName === 'extendRoute' && !isInSchema && (
-        <Alert severity="info">{t('climbingpanel.create_first_node')}</Alert>
-      )}
-      {machine.currentStateName === 'extendRoute' && isInSchema && (
-        <Alert severity="info">{t('climbingpanel.create_next_node')}</Alert>
-      )}
-
-      {machine.currentStateName !== 'extendRoute' &&
-        !isInSchema &&
-        routeSelectedIndex !== null &&
-        routePhotoPathsCount === 0 && (
-          <Alert
-            severity="info"
-            action={
-              <Button
-                color="info"
-                variant="contained"
-                size="small"
-                onClick={onDrawRouteClick}
-                endIcon={
+          {machine.currentStateName !== 'extendRoute' &&
+            routeSelectedIndex !== null &&
+            routePhotoPathsCount > 0 && (
+              <Alert severity="info">
+                Route{' '}
+                <InlineBlockContainer>
                   <RouteNumber
                     hasCircle={true}
                     hasTick={false}
@@ -77,14 +68,36 @@ export const ClimbingEditorHelperText = () => {
                   >
                     {routeSelectedIndex + 1}
                   </RouteNumber>
-                }
-              >
-                {t('climbingpanel.draw_route')}
-              </Button>
-            }
-          >
-            This route is not drawn yet.
-          </Alert>
+                </InlineBlockContainer>{' '}
+                is already drawn, but you can update it. Just drag the points or
+                add a new one.
+              </Alert>
+            )}
+
+          {machine.currentStateName === 'extendRoute' && !isInSchema && (
+            <Alert severity="info">
+              {t('climbingpanel.create_first_node')}
+            </Alert>
+          )}
+          {machine.currentStateName === 'extendRoute' && isInSchema && (
+            <Alert severity="info">{t('climbingpanel.create_next_node')}</Alert>
+          )}
+        </>
+      )}
+
+      {machine.currentStateName !== 'extendRoute' &&
+        !isInSchema &&
+        routeSelectedIndex !== null &&
+        routePhotoPathsCount === 0 && (
+          <>
+            {isMobileMode ? (
+              <DrawButton />
+            ) : (
+              <Alert severity="info" action={<DrawButton />}>
+                This route is not drawn yet.
+              </Alert>
+            )}
+          </>
         )}
     </>
   );
