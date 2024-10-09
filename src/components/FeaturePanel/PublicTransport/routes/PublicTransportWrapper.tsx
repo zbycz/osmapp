@@ -2,6 +2,7 @@ import React from 'react';
 import { LineInformation } from './requestRoutes';
 import { LineNumber } from './LineNumber';
 import { t } from '../../../../services/intl';
+import { Checkbox, Stack } from '@mui/material';
 
 const PublicTransportWrapper = ({ children }) => {
   const divStyle: React.CSSProperties = {
@@ -50,15 +51,29 @@ interface CategoryProps {
   category: string;
   lines: LineInformation[];
   showHeading: boolean;
+  onChange?: (visible: boolean) => void;
+  shown?: boolean;
 }
 
 export const PublicTransportCategory: React.FC<CategoryProps> = ({
   category,
   lines,
   showHeading,
+  onChange,
+  shown = true,
 }) => (
   <>
-    {showHeading && <h4>{fmtCategory(category)}</h4>}
+    {showHeading && (
+      <Stack direction="row" alignItems="center">
+        <h4>{fmtCategory(category)}</h4>
+        <Checkbox
+          onChange={({ target: { checked } }) => {
+            onChange?.(checked);
+          }}
+          checked={shown}
+        />
+      </Stack>
+    )}
     <PublicTransportWrapper>
       {lines.map((line) => (
         <LineNumber key={line.ref} line={line} />

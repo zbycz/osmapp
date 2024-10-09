@@ -13,6 +13,7 @@ import { PanelLabel } from '../FeaturePanel/Climbing/PanelLabel';
 import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
+import { toggleImperial, useImperial } from '../helpers';
 
 type Props = {
   onClose: (event: unknown) => void;
@@ -28,6 +29,20 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
 
       <ClosePanelButton right onClick={onClose} />
       <DialogContent>
+        <PanelLabel>General</PanelLabel>
+        <List>
+          <ListItem>
+            <ListItemText>Use imperial system</ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              checked={userSettings['imperial']}
+              onChange={({ target: { checked } }) => {
+                setUserSetting('climbing.imperial', checked);
+              }}
+            />
+          </ListItem>
+        </List>
         <PanelLabel>Climbing</PanelLabel>
         <List>
           <ListItem>

@@ -79,8 +79,8 @@ export async function requestLines(featureType: string, id: number) {
 
   const geoJsonFeatures = overpassGeomToGeojson({ elements: routes });
 
-  const geoJson: GeoJSON.GeoJSON = {
-    type: 'FeatureCollection',
+  const geoJson = {
+    type: 'FeatureCollection' as const,
     features: geoJsonFeatures,
   };
 
@@ -103,7 +103,16 @@ export async function requestLines(featureType: string, id: number) {
     .sort((a, b) => a.ref.localeCompare(b.ref, intl.lang, { numeric: true }));
 
   return {
-    geoJson,
+    geoJson: {
+      ...geoJson,
+      features: geoJson.features.map((feature) => ({
+        ...feature,
+        properties: {
+          ...feature.properties,
+          service: getService(feature.tags, []),
+        },
+      })),
+    },
     routes: allRoutes,
   };
 }
