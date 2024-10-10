@@ -57,6 +57,7 @@ export const ClimbingEditorHelperText = () => {
 
           {machine.currentStateName !== 'extendRoute' &&
             routeSelectedIndex !== null &&
+            isInSchema &&
             routePhotoPathsCount > 0 && (
               <Alert severity="info">
                 Route{' '}
@@ -86,9 +87,8 @@ export const ClimbingEditorHelperText = () => {
       )}
 
       {machine.currentStateName !== 'extendRoute' &&
-        !isInSchema &&
         routeSelectedIndex !== null &&
-        routePhotoPathsCount === 0 && (
+        !isInSchema && (
           <>
             {isMobileMode ? (
               <DrawButton />

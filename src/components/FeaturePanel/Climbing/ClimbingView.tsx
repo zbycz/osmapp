@@ -358,7 +358,8 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     onScroll();
     if (
       userSettings['climbing.selectRoutesByScrolling'] &&
-      routeSelectedIndex !== null
+      routeSelectedIndex !== null &&
+      !isEditMode
     ) {
       selectRouteByScroll(e);
     }
