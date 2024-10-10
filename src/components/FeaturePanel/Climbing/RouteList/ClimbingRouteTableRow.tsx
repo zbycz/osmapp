@@ -10,14 +10,22 @@ import { isTicked, onTickAdd } from '../../../../services/ticks';
 import { getOsmappLink, getShortId } from '../../../../services/helpers';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { intl, t } from '../../../../services/intl';
-import { IconButton, Menu, MenuItem, Stack } from '@mui/material';
+import {
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Stack,
+  Tooltip,
+} from '@mui/material';
 import Router from 'next/router';
 import { useSnackbar } from '../../../utils/SnackbarContext';
 import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 import Link from 'next/link';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import EditIcon from '@mui/icons-material/Edit';
-import { css } from '@emotion/react';
+import CloseIcon from '@mui/icons-material/Close';
+import { useMobileMode } from '../../../helpers';
 
 const Container = styled.div`
   width: 100%;
@@ -29,7 +37,11 @@ const RoutePhoto = styled.div`
 const RouteName = styled.div<{ opacity: number }>`
   flex: 1;
   opacity: ${({ opacity }) => opacity};
+  display: flex;
+  gap: 4px;
+  justify-content: space-between;
 `;
+
 const RouteDescription = styled.div<{ opacity: number }>`
   font-size: 10px;
   opacity: ${({ opacity }) => opacity};
@@ -38,7 +50,7 @@ const RouteDescription = styled.div<{ opacity: number }>`
 
 const RouteGrade = styled.div``;
 
-const Row = styled(Link)<{ $isHoverHighlighted: boolean }>`
+const Row = styled.div<{ $isHoverHighlighted: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -92,7 +104,10 @@ type ClimbingTableRowProps = {
   onClick: (e: any) => void;
   onMouseEnter?: (e: any) => void;
   onMouseLeave?: (e: any) => void;
+  onDeselectRoute?: (e: any) => void;
   isHoverHighlighted?: boolean;
+  isSelected?: boolean;
+  isHrefLinkVisible?: boolean;
 };
 
 export const ClimbingRouteTableRow = forwardRef<
@@ -106,7 +121,10 @@ export const ClimbingRouteTableRow = forwardRef<
       onClick,
       onMouseEnter,
       onMouseLeave,
+      onDeselectRoute,
       isHoverHighlighted = false,
+      isSelected = false,
+      isHrefLinkVisible = true,
     },
     ref,
   ) => {
@@ -115,6 +133,7 @@ export const ClimbingRouteTableRow = forwardRef<
     const { userSettings } = useUserSettingsContext();
     const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
     const { open: openEditDialog } = useEditDialogContext();
+    const isMobileMode = useMobileMode();
 
     if (!feature) return null;
     const shortOsmId = getShortId(feature.osmMeta);
@@ -141,12 +160,14 @@ export const ClimbingRouteTableRow = forwardRef<
       handleCloseMore(event);
       event.stopPropagation();
     };
+    const linkProps = {
+      href: routeDetailUrl,
+      locale: intl.lang,
+    };
 
     return (
       <Container ref={ref}>
         <Row
-          locale={intl.lang}
-          href={routeDetailUrl}
           onClick={(e) => {
             onClick(e);
             e.preventDefault();
@@ -154,6 +175,8 @@ export const ClimbingRouteTableRow = forwardRef<
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           $isHoverHighlighted={isHoverHighlighted}
+          as={isHrefLinkVisible ? Link : 'div'}
+          {...(isHrefLinkVisible ? linkProps : {})}
         >
           <RoutePhoto>
             <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
@@ -163,7 +186,20 @@ export const ClimbingRouteTableRow = forwardRef<
           <Stack justifyContent="stretch" flex={1}>
             <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
               {feature.tags?.name}
+              {!isMobileMode && isSelected && (
+                <Tooltip title="Deselect route">
+                  <Chip
+                    label="selected"
+                    onDelete={onDeselectRoute}
+                    size="small"
+                    deleteIcon={<CloseIcon />}
+                    color="primary"
+                    variant="outlined"
+                  />
+                </Tooltip>
+              )}
             </RouteName>
+
             {feature.tags?.description && (
               <RouteDescription opacity={photoPathsCount === 0 ? 0.5 : 1}>
                 {feature.tags?.description}

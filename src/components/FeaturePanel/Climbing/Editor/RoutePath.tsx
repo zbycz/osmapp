@@ -38,11 +38,13 @@ export const RoutePath = ({ route, routeNumber }) => {
   const machine = getMachine();
   const path = getPathForRoute(route);
   if (!path) return null;
-  const pointsInString = path.map(({ x, y }, index) => {
-    const position = getPixelPosition({ x, y, units: 'percentage' });
+  const pointsInString = path
+    .map(({ x, y }, index) => {
+      const position = getPixelPosition({ x, y, units: 'percentage' });
 
-    return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
-  });
+      return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
+    })
+    .join('');
 
   const onMouseMove = (e, segmentIndex: number) => {
     if (
