@@ -23,6 +23,7 @@ export const RenderListRow = ({ routeId, parentRef, feature }: Props) => {
     setRouteIndexExpanded,
     setRouteListTopOffset,
     setRouteSelectedIndex,
+    isEditMode,
   } = useClimbingContext();
 
   const index = routes.findIndex((route) => route.id === routeId);
@@ -49,10 +50,13 @@ export const RenderListRow = ({ routeId, parentRef, feature }: Props) => {
   const isSelected = routeSelectedIndex === index;
 
   useEffect(() => {
-    if (!userSettings['climbing.selectRoutesByScrolling'] && isSelected) {
+    if (
+      (!userSettings['climbing.selectRoutesByScrolling'] && isSelected) ||
+      isEditMode
+    ) {
       ref.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
-  }, [isSelected, userSettings]);
+  }, [isEditMode, isSelected, userSettings]);
 
   const handleClick = () => {
     setRouteIndexExpanded(routeIndexExpanded === index ? null : index);
