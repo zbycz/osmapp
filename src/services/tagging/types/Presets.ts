@@ -104,12 +104,12 @@ export type RawPresets = {
 
 export type FieldTranslation = {
   label: string;
-  placeholder: string;
-  terms: string;
-  options: {
+  placeholder?: string;
+  terms?: string;
+  options?: {
     [key: string]: { title: string; description: string };
   };
-  types: {
+  types?: {
     [key: string]: string;
   };
 };

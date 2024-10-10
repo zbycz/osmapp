@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags, SuccessInfo } from '../../../services/types';
+import { Preset } from '../../../services/tagging/types/Presets';
 
 export type TypeTag = { key: string; value: string } | undefined;
 type EditContextType = {
@@ -12,6 +13,8 @@ type EditContextType = {
   setLocation: (s: string) => void;
   comment: string;
   setComment: (s: string) => void;
+  preset: Preset | undefined;
+  setPreset: (p: Preset | undefined) => void;
   tags: {
     typeTag: TypeTag;
     setTypeTag: (typeTag: TypeTag) => void;
@@ -45,6 +48,8 @@ export const EditContextProvider = ({ feature, children }: Props) => {
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
 
+  const [preset, setPreset] = useState<undefined | Preset>();
+
   const [typeTag, setTypeTag] = useState<TypeTag>();
   const [tags, setTag] = useTagsState(feature.tags);
   const [tmpNewTag, setTmpNewTag] = useState({});
@@ -59,6 +64,8 @@ export const EditContextProvider = ({ feature, children }: Props) => {
     setLocation,
     comment,
     setComment,
+    preset,
+    setPreset,
     tags: {
       typeTag,
       setTypeTag,

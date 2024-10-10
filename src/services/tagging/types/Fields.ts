@@ -1,5 +1,7 @@
 // https://github.com/ideditor/schema-builder/blob/main/schemas/field.json
 
+import type { FieldTranslation } from './Presets';
+
 type FieldType =
   | 'access'
   | 'address'
@@ -38,6 +40,7 @@ type FieldType =
 export type Field = {
   // added by osmapp (not in schema)
   fieldKey: string;
+  fieldTranslation?: FieldTranslation;
 
   /**
    * Tag key whose value is to be displayed
@@ -80,10 +83,7 @@ export type Field = {
   /**
    * If specified, only show the field for these kinds of geometry
    */
-  geometry?: [
-    'point' | 'vertex' | 'line' | 'area' | 'relation', // minimal one entry
-    ...('point' | 'vertex' | 'line' | 'area' | 'relation')[],
-  ];
+  geometry?: ('point' | 'vertex' | 'line' | 'area' | 'relation')[]; // minimal one entry
   /**
    * The default value for this field
    */
@@ -222,4 +222,8 @@ export type Field = {
 
 export type Fields = {
   [fieldKey: string]: Field;
+};
+
+export type RawFields = {
+  [fieldKey: string]: Omit<Field, 'fieldKey'>;
 };
