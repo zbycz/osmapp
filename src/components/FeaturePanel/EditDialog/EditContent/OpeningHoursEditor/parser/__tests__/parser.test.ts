@@ -69,6 +69,16 @@ describe('Mo off', () => {
   });
 });
 
+describe('24/7', () => {
+  test.each([{ input: 'Mo-Su 0:00-24:00' }, { input: 'Mo-Su 00:00-24:00' }])(
+    `$input`,
+    ({ input }) => {
+      expect(buildString(getDaysTable(input))).toEqual('24/7');
+      expect(canItHandle(input)).toBe(true);
+    },
+  );
+});
+
 describe('daysPart conversion', () => {
   test.each([
     { input: 'Mo,Th' },
