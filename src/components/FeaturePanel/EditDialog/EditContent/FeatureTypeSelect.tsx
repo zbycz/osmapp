@@ -12,6 +12,7 @@ import { useFeatureContext } from '../../../utils/FeatureContext';
 import { ComboSearchBox } from './ComboSearchBox';
 import { useEditContext } from '../EditContext';
 import { Preset } from '../../../../services/tagging/types/Presets';
+import { getPresetForFeature } from '../../../../services/tagging/presets';
 
 export type TranslatedPreset = Preset & {
   name: string;
@@ -22,7 +23,7 @@ type PresetCacheItem = Preset & { name: string; icon: string; terms: string[] };
 type PresetsCache = PresetCacheItem[];
 
 let presetsCache: PresetsCache | null = null;
-const getPresets = async (): Promise<PresetsCache> => {
+const getPresetsCache = async (): Promise<PresetsCache> => {
   if (presetsCache) {
     return presetsCache;
   }
@@ -78,23 +79,27 @@ const Row = styled(Box)`
 `;
 
 export const FeatureTypeSelect = () => {
-  const { preset, setPreset } = useEditContext();
-  const [options, setOptions] = useState([]);
+  const {
+    tags: { tags },
+  } = useEditContext();
 
+  const [preset, setPreset] = useState<null | Preset>(null);
+  const [options, setOptions] = useState<PresetsCache>([]);
   const { feature } = useFeatureContext();
 
   useEffect(() => {
+    getPresetsCache().then((presets) => setOptions(presets));
+  }, []);
+
+  useEffect(() => {
     (async () => {
-      const presets = await getPresets();
-      setOptions(presets);
-      setPreset(
-        presets.find(
-          (option: PresetCacheItem) =>
-            option.presetKey === feature.schema?.presetKey,
-        ),
+      const preset = getPresetForFeature({ ...feature, tags }); // takes ~ 1 ms
+      const p = (await getPresetsCache()).find(
+        (option) => option.presetKey === preset.presetKey,
       );
+      setPreset(p);
     })();
-  }, [feature.schema?.presetKey, setPreset]);
+  }, [tags, setPreset, feature]);
 
   if (options.length === 0) {
     return null;
