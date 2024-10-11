@@ -47,7 +47,7 @@ type Renderers = {
   [key: string]: React.FC<{ k: string; v: string }>;
 };
 
-const DefaultRenderer = ({ v }) => nl2br(v);
+const DefaultRenderer = ({ v }) => <>{nl2br(v)}</>;
 
 const climbingRenderers = gradeSystemKeys.reduce(
   (acc, gradeSystemKey) => ({
