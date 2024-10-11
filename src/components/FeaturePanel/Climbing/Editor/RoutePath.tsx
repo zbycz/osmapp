@@ -6,6 +6,7 @@ import { PositionPx } from '../types';
 import { PathWithBorder } from './PathWithBorder';
 import { MouseTrackingLine } from './MouseTrackingLine';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
+import { useMobileMode } from '../../../helpers';
 
 const InteractiveArea = styled.line`
   pointer-events: all;
@@ -37,6 +38,8 @@ export const RoutePath = ({ route, routeNumber }) => {
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
   const path = getPathForRoute(route);
+  const isMobileMode = useMobileMode();
+
   if (!path) return null;
   const pointsInString = path
     .map(({ x, y }, index) => {
@@ -138,6 +141,11 @@ export const RoutePath = ({ route, routeNumber }) => {
               ...path[index + 1],
               units: 'percentage',
             });
+
+            const desktopProps = {
+              onMouseEnter: onMouseEnter,
+              onMouseLeave: onMouseLeave,
+            };
             return (
               <InteractiveArea
                 // eslint-disable-next-line react/no-array-index-key
@@ -148,8 +156,7 @@ export const RoutePath = ({ route, routeNumber }) => {
                 y1={position1.y}
                 x2={position2.x}
                 y2={position2.y}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
+                {...(isMobileMode ? {} : desktopProps)}
                 onMouseMove={(e) => onMouseMove(e, index)}
                 onClick={onMouseDown}
                 {...commonProps}

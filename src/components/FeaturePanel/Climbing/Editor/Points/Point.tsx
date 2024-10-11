@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
+import { useMobileMode } from '../../../../helpers';
 
 const ClickableArea = styled.circle``;
 
@@ -62,7 +63,7 @@ export const Point = ({
     photoZoom,
     getCurrentPath,
   } = useClimbingContext();
-
+  const isMobileMode = useMobileMode();
   const isPointSelected =
     routeSelectedIndex === routeNumber && pointSelectedIndex === index;
   const onClick = (e) => {
@@ -110,8 +111,7 @@ export const Point = ({
   const commonProps = {
     onClick,
     cursor: 'pointer',
-    onMouseEnter,
-    onMouseLeave,
+    ...(isMobileMode ? {} : { onMouseEnter, onMouseLeave }),
     onMouseDown,
     onTouchMove,
     onPointerMove: onTouchMove,
