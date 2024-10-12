@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Checkbox,
-  ListItem,
+  ListItemButton,
   ListItemSecondaryAction,
   ListItemText,
   Typography,
@@ -47,7 +47,7 @@ export const Overlays = ({
           );
 
         return (
-          <ListItem button onClick={toggleOverlayLayer} key={key}>
+          <ListItemButton onClick={toggleOverlayLayer} key={key}>
             <LayerIcon Icon={Icon} />
             <ListItemText primary={dotToOptionalBr(name)} />
             <ListItemSecondaryAction>
@@ -57,7 +57,7 @@ export const Overlays = ({
                 onClick={toggleOverlayLayer}
               />
             </ListItemSecondaryAction>
-          </ListItem>
+          </ListItemButton>
         );
       })}
     </StyledList>
