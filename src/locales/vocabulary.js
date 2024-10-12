@@ -188,6 +188,7 @@ export default {
   'editdialog.other_tags.new_key': 'new key',
   'editdialog.other_tags.will_be_deleted': 'will be deleted',
   'editdialog.other_tags.info': `Tags contain the data used to display objects on the map!<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features">a reference for all tags on the OpenStreetMap Wiki</a>!`,
+  'editdialog.login_in_progress': `Logging in...`,
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',
