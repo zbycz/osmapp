@@ -27,9 +27,7 @@ export const OsmUserLoggedOut = () => {
       <Alert
         severity="warning"
         action={
-          <Button sx={{ whiteSpace: 'nowrap' }} onClick={handleLogin}>
-            {t('user.login_register')}
-          </Button>
+          <Button onClick={handleLogin}>{t('featurepanel.login')}</Button>
         }
       >
         <Translation id="editdialog.anonymousMessage" />
