@@ -91,9 +91,8 @@ export default {
   'editdialog.changes_needed': 'Proszę, dokonajcie pewnych zmian.',
   'editdialog.loggedInMessage': 'Jesteś zalogowany jako <b>__osmUser__</b>, zmiany zostaną zapisane natychmiastowo.',
   'editdialog.logout': 'wyloguj',
-  'editdialog.anonymousMessage1': 'Do mapy zostanie dodana <b>anonimowa</b> uwaga.<br />Jeśli',
-  'editdialog.anonymousMessage2_login': 'zalogujesz się do OpenStreetMap,',
-  'editdialog.anonymousMessage3': 'Twoje zmiany będą widoczne natychmiastowo.',
+  'editdialog.anonymousMessage':
+    'Do mapy zostanie dodana <b>anonimowa</b> uwaga. Jeśli zalogujesz się do OpenStreetMap, twoje zmiany będą widoczne natychmiastowo.',
   'editdialog.add_major_tag': 'Dodaj',
   'editdialog.location_checkbox': 'Zmień położenie',
   'editdialog.location_placeholder': 'np. przez ulicę',

@@ -147,9 +147,8 @@ export default {
   'editdialog.osm_session_expired': 'La tua sessione di OpenStreetMap è scaduta. Accedi nuovamente',
   'editdialog.loggedInMessage': 'Hai effettuato l’accesso come <b>__osmUser__</b>, le modifiche verranno salvata immediatamente.',
   'editdialog.logout': 'esci',
-  'editdialog.anonymousMessage1': 'Verrà aggiunta alla mappa una nota <b>anonima</b>.<br /> Se accedi',
-  'editdialog.anonymousMessage2_login': 'accedi a OpenStreetMap',
-  'editdialog.anonymousMessage3': ', le tue modifiche saranno immediate.',
+  'editdialog.anonymousMessage':
+    'Verrà aggiunta alla mappa una nota <b>anonima</b>. Se accedi accedi a OpenStreetMap, le tue modifiche saranno immediate.',
   'editdialog.add_major_tag': 'Aggiungi',
   'editdialog.location_checkbox': 'Cambia posizione',
   'editdialog.location_placeholder': 'ad es. dall’altra parte della strada',
