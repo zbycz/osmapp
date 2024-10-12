@@ -13,6 +13,8 @@ import { Box, Button, ButtonGroup } from '@mui/material';
 import { RouteDistribution } from './RouteDistribution';
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { EditButton } from '../EditButton';
+import { EditDialog } from '../EditDialog/EditDialog';
 
 const CragMapDynamic = dynamic(() => import('./CragMap'), {
   ssr: false,
@@ -76,6 +78,8 @@ export const ClimbingViewContent = ({ isMapVisible }) => {
           )}
         </ContentContainer>
         <RouteDistribution />
+        <EditButton />
+        <EditDialog />
       </ContentBelowRouteList>
     </>
   );
