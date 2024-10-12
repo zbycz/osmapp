@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
+import { useDragItems } from '../../../utils/useDragItems';
 
 type Item = {
   id: number;
@@ -58,15 +59,7 @@ const RowContent = styled.div`
   display: flex;
   align-items: center;
 `;
-const HighlightedDropzone = styled.div<{ $isActive: boolean }>`
-  position: absolute;
-  width: 100%;
-  margin-top: -2px;
-  height: 4px;
-  background: ${({ $isActive, theme }) =>
-    $isActive ? theme.palette.climbing.active : 'transparent'};
-  z-index: 1000000;
-`;
+
 const TableHeader = styled.div`
   display: flex;
   justify-content: center;
@@ -106,9 +99,6 @@ export const RouteListDndContent = ({ isEditable }) => {
   }, [routes]);
   const parentRef = React.useRef<HTMLDivElement>(null);
 
-  const [draggedItem, setDraggedItem] = useState<Item | null>(null);
-  const [draggedOverIndex, setDraggedOverIndex] = useState<number | null>(null);
-
   const onRowClick = (index: number) => {
     const routeNumber = routeSelectedIndex === index ? null : index;
     if (isEditMode) {
@@ -116,69 +106,6 @@ export const RouteListDndContent = ({ isEditable }) => {
     } else {
       machine.execute('routeSelect', { routeNumber });
     }
-  };
-
-  const handleDragStart = (
-    e: React.DragEvent<HTMLDivElement>,
-    dragged: Item,
-  ) => {
-    e.stopPropagation();
-    e.preventDefault();
-    e.dataTransfer.setData('text/plain', JSON.stringify(dragged));
-    setDraggedItem(dragged);
-  };
-
-  const handleDragOver = (
-    e: React.DragEvent<HTMLDivElement>,
-    index: number,
-  ) => {
-    e.preventDefault();
-    let newIndex = index;
-
-    if (draggedItem) {
-      const target = e.target as HTMLDivElement;
-      const targetRect = target.getBoundingClientRect();
-      const offsetY = e.clientY - targetRect.top;
-
-      if (offsetY < targetRect.height / 2) {
-        newIndex = index; // up
-      } else if (
-        index === items.length - 1 &&
-        offsetY > targetRect.height / 2
-      ) {
-        newIndex = items.length; // last
-      } else {
-        newIndex = index; // down
-      }
-    }
-
-    if (newIndex !== draggedOverIndex) {
-      setDraggedOverIndex(newIndex);
-    }
-  };
-
-  const handleDragEnd = () => {
-    if (draggedOverIndex !== null && draggedItem) {
-      const newItems = [...items];
-      const oldIndex = items.findIndex((item) => item.id === draggedItem.id);
-      newItems.splice(oldIndex, 1);
-
-      let newIndex = draggedOverIndex;
-      if (
-        draggedOverIndex === items.length ||
-        draggedOverIndex === items.length - 1
-      ) {
-        newIndex = items.length;
-      }
-
-      newItems.splice(newIndex, 0, draggedItem);
-      setItems(newItems);
-      moveRoute(oldIndex, newIndex);
-      if (routeSelectedIndex === oldIndex) setRouteSelectedIndex(newIndex);
-      if (routeSelectedIndex === newIndex) setRouteSelectedIndex(oldIndex);
-    }
-    setDraggedItem(null);
-    setDraggedOverIndex(null);
   };
 
   const handleControlDragStart = (
@@ -199,6 +126,27 @@ export const RouteListDndContent = ({ isEditable }) => {
     e.stopPropagation();
   };
 
+  const {
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    HighlightedDropzone,
+    setDraggedItem,
+    setDraggedOverIndex,
+    draggedItem,
+    draggedOverIndex,
+  } = useDragItems<React.ReactNode>({
+    initialItems: routes,
+    moveItems: (oldIndex, newIndex) => {
+      moveRoute(oldIndex, newIndex);
+
+      // maybe move to moveRoute?
+      if (routeSelectedIndex === oldIndex) setRouteSelectedIndex(newIndex);
+      if (routeSelectedIndex === newIndex) setRouteSelectedIndex(oldIndex);
+    },
+    direction: 'vertical',
+  });
+
   return (
     <Container ref={parentRef}>
       <TableHeader>
@@ -211,9 +159,7 @@ export const RouteListDndContent = ({ isEditable }) => {
         const isSelected = isRouteSelected(index);
         return (
           <Row key={item.id}>
-            {draggedItem?.id > index && (
-              <HighlightedDropzone $isActive={draggedOverIndex === index} />
-            )}
+            {draggedItem?.id > index && <HighlightedDropzone index={index} />}
             <RowWithDragHandler
               isDraggedOver={index === draggedOverIndex}
               draggable
@@ -246,9 +192,7 @@ export const RouteListDndContent = ({ isEditable }) => {
                 </RowContent>
               </MaxWidthContainer>
             </RowWithDragHandler>
-            {draggedItem?.id <= index && (
-              <HighlightedDropzone $isActive={draggedOverIndex === index} />
-            )}
+            {draggedItem?.id <= index && <HighlightedDropzone index={index} />}
           </Row>
         );
       })}
