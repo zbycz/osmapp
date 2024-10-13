@@ -62,7 +62,7 @@ const getOsmParentPromise = async (apiId) => {
 const featureCenterCache: Record<string, LonLat> = {};
 export const addFeatureCenterToCache = (shortId: string, center: LonLat) => {
   featureCenterCache[shortId] = center;
-  publishDbgObject("featureCenterCache", featureCenterCache)
+  publishDbgObject('featureCenterCache', featureCenterCache);
 };
 
 const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
