@@ -4,7 +4,6 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
-import { getOsmTagFromGradeSystem } from './utils/grades/routeGrade';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
   getNextWikimediaCommonsIndex,
@@ -48,7 +47,7 @@ const isSameTags = (updatedTags: {}, origTags: FeatureTags) => {
   return isSame;
 };
 
-export const getChanges = (routes: ClimbingRoute[]): Change[] => {
+export const getClimbingRouteChanges = (routes: ClimbingRoute[]): Change[] => {
   const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
 
   return existingRoutes
@@ -83,7 +82,7 @@ export const useGetHandleSave = (
       return;
     }
 
-    const changes = getChanges(routes);
+    const changes = getClimbingRouteChanges(routes);
     const comment = `${changes.length} routes`;
     const result = await editCrag(crag, comment, changes);
 
