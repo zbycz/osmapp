@@ -104,7 +104,7 @@ export const RELATION = {
 
 export const RELATION_FEATURE = {
   type: 'Feature',
-  center: [14, 50],
+  center: [15, 51],
   members: [
     {
       ref: 8166328,
@@ -134,7 +134,5 @@ export const RELATION_FEATURE = {
     amenity: 'university',
     type: 'multipolygon',
   },
-  deleted: undefined,
-  geometry: undefined,
-  imageDefs: [{ type: 'center', service: 'mapillary', center: [14, 50] }],
+  imageDefs: [{ type: 'center', service: 'mapillary', center: [15, 51] }],
 };
