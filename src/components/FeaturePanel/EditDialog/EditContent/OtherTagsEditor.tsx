@@ -147,28 +147,29 @@ const ValueInput = ({ index }: { index: number }) => {
 const KeyValueRow = ({ index }) => {
   const { focusTag } = useEditDialogContext();
   const { tagsEntries, setTagsEntries } = useEditContext().tags;
+
+  const [error, setError] = useState(false);
   const [tmpKey, setTmpKey] = useState(() => tagsEntries[index][0]);
   useEffect(() => {
     setTmpKey(tagsEntries[index][0]);
   }, [index, tagsEntries]);
 
   const handleBlur = () => {
-    setTagsEntries((state) => {
-      if (tmpKey === tagsEntries[index][0]) {
-        return state;
-      }
+    if (tmpKey === tagsEntries[index][0]) {
+      return;
+    }
 
+    const isDuplicateKey = tagsEntries.some(
+      ([key], idx) => key === tmpKey && index !== idx,
+    );
+    setError(isDuplicateKey);
+
+    setTagsEntries((state) => {
       if (tmpKey === '' && index !== state.length - 1) {
         return state.toSpliced(index, 1);
       }
-
-      const duplicateKey = state.some(
-        ([key], idx) => key === tmpKey && index !== idx,
-      );
-      const cleanKey = duplicateKey ? `${tmpKey}_1` : tmpKey;
-
       return state.map(([key, value], idx) =>
-        idx === index ? [cleanKey, value] : [key, value],
+        idx === index ? [tmpKey, value] : [key, value],
       );
     });
   };
@@ -188,6 +189,7 @@ const KeyValueRow = ({ index }) => {
             htmlInput: { autoCapitalize: 'none', maxLength: 255 },
           }}
           autoFocus={focusTag === tmpKey}
+          error={error}
         />
       </th>
       <td>
