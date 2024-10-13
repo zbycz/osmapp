@@ -1,7 +1,4 @@
-import match from 'autosuggest-highlight/match';
-import sum from 'lodash/sum';
 import orderBy from 'lodash/orderBy';
-import groupBy from 'lodash/groupBy';
 import { diceCoefficient } from 'dice-coefficient';
 import FolderIcon from '@mui/icons-material/Folder';
 import { Grid, Typography } from '@mui/material';
@@ -15,6 +12,7 @@ import { presets } from '../../../services/tagging/data';
 import { PresetOption } from '../types';
 import { t } from '../../../services/intl';
 import { highlightText, IconPart } from '../utils';
+import { SEARCH_THRESHOLD } from '../consts';
 
 let presetsForSearch: {
   key: string;
@@ -53,13 +51,6 @@ const getPresetsForSearch = async () => {
   return presetsForSearch;
 };
 
-const num = (text: string, inputValue: string) =>
-  // TODO match function not always good - consider text.toLowerCase().includes(inputValue.toLowerCase());
-  match(text, inputValue, {
-    insideWords: true,
-    findAllOccurrences: true,
-  }).length;
-
 type PresetOptions = Promise<{
   before: PresetOption[];
   after: PresetOption[];
@@ -67,7 +58,7 @@ type PresetOptions = Promise<{
 
 export const getPresetOptions = async (
   inputValue: string,
-  threshold = 0.3,
+  threshold = SEARCH_THRESHOLD,
 ): PresetOptions => {
   if (inputValue.length <= 2) {
     return { before: [], after: [] };
@@ -82,26 +73,28 @@ export const getPresetOptions = async (
     return {
       nameSimilarity,
       textsByOneSimilarity,
-      sum: nameSimilarity * 10 + sum(textsByOneSimilarity),
+      bestMatch: Math.max(...textsByOneSimilarity),
       presetForSearch: preset,
     };
   });
-  const grouped = groupBy(rawResults, ({ sum, nameSimilarity }) => {
-    if (nameSimilarity > threshold) {
-      return 'name';
-    }
-    if (nameSimilarity === 0 && sum > threshold) {
-      return 'rest';
-    }
-  });
-
-  const allResults = [
-    ...orderBy(grouped.name, ({ sum }) => sum, 'desc'),
-    ...orderBy(grouped.rest, ({ sum }) => sum, 'desc'),
-  ].map((result) => ({
+  const filtered = rawResults.filter(
+    ({ nameSimilarity, bestMatch }) =>
+      nameSimilarity > threshold || bestMatch > threshold,
+  );
+  const allResults = orderBy(
+    filtered,
+    [
+      // some bestMatches are the same for many items, then sort by name. Try out *dog*
+      ({ nameSimilarity, bestMatch }) => Math.max(nameSimilarity, bestMatch),
+      ({ nameSimilarity }) => nameSimilarity,
+      ({ bestMatch }) => bestMatch,
+    ],
+    'desc',
+  ).map((result) => ({
     type: 'preset' as const,
     preset: result,
   }));
+
   const before = allResults.slice(0, 2);
   const after = allResults.slice(2);
 
