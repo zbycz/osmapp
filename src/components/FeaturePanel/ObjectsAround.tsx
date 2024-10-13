@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Typography } from '@mui/material';
 import Router from 'next/router';
 import { fetchAroundFeature } from '../../services/osmApi';
@@ -7,40 +7,18 @@ import { Feature } from '../../services/types';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
-import { DotLoader, trimText, useMobileMode } from '../helpers';
+import { DotLoader, useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { useUserThemeContext } from '../../helpers/theme';
-
-const useLoadingState = () => {
-  const [around, setAround] = useState<Feature[]>([]);
-  const [error, setError] = useState<string>();
-  const [loading, setLoading] = useState(true);
-
-  const finishAround = useCallback((payload) => {
-    setLoading(false);
-    setAround(payload);
-  }, []);
-
-  const startAround = useCallback(() => {
-    setLoading(true);
-    setAround([]);
-    setError(undefined);
-  }, []);
-
-  const failAround = useCallback(() => {
-    setError('Could not load routes');
-    setLoading(false);
-  }, []);
-
-  return { around, error, loading, startAround, finishAround, failAround };
-};
+import { useQuery } from 'react-query';
+import { getImportance } from './helpers/importance';
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
   const { currentTheme } = useUserThemeContext();
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
   const { properties, tags, osmMeta } = feature;
-  const handleClick = (e) => {
+  const handleClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
     setPreview(null);
     Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
@@ -68,38 +46,45 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
+const getFeatures = (
+  around: Feature[],
+  advanced: boolean,
+  feature: Feature,
+) => {
+  const sorted = around.sort(
+    (a, b) => getImportance(b.tags) - getImportance(a.tags),
+  );
+  if (advanced) {
+    return sorted;
+  }
+
+  return sorted
+    .filter((item) => {
+      if (getOsmappLink(item) === getOsmappLink(feature)) return false;
+      if (!item.properties.subclass && Object.keys(item.tags).length <= 2)
+        return false;
+      if (item.properties.subclass === 'building:part') return false;
+      return true;
+    })
+    .slice(0, 15);
+};
+
 export const ObjectsAround = ({ advanced }) => {
   const { feature } = useFeatureContext();
-  const { around, loading, error, startAround, finishAround, failAround } =
-    useLoadingState();
 
-  useEffect(() => {
-    startAround();
-    if (feature.center) {
-      fetchAroundFeature(feature.center).then(finishAround, failAround); // TODO fix op on unmounted tree (react-query?)
-    }
-  }, [failAround, feature.center, finishAround, startAround]);
+  const {
+    data: around,
+    error,
+    isFetching,
+  } = useQuery([feature], () => fetchAroundFeature(feature.center), {
+    initialData: [],
+  });
 
   if (!feature.center) {
     return null;
   }
 
-  const features = advanced
-    ? around
-    : around
-        .filter((item: Feature) => {
-          if (getOsmappLink(item) === getOsmappLink(feature)) return false;
-          if (!item.properties.subclass && Object.keys(item.tags).length <= 2)
-            return false;
-          if (item.properties.subclass === 'building:part') return false;
-          return true;
-        })
-        .sort(
-          (a, b) =>
-            (b.properties.class === 'home' ? -5 : Object.keys(b.tags).length) - // leave address points at the bottom
-            Object.keys(a.tags).length,
-        )
-        .slice(0, 10);
+  const features = getFeatures(around, advanced, feature);
 
   return (
     <Box mt={4} mb={4}>
@@ -109,18 +94,18 @@ export const ObjectsAround = ({ advanced }) => {
 
       {error && (
         <Typography color="secondary" paragraph>
-          {t('error')}: {trimText(error, 50)}
+          Could not load nearby objects
         </Typography>
       )}
 
-      {loading && (
+      {isFetching && !features.length && (
         <Typography color="secondary" paragraph>
           {t('loading')}
           <DotLoader />
         </Typography>
       )}
 
-      {!loading && !error && !features.length && (
+      {!isFetching && !error && !features.length && (
         <Typography color="secondary" paragraph>
           N/A
         </Typography>

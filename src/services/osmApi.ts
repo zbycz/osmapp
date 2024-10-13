@@ -362,13 +362,13 @@ export const insertOsmNote = async (
 };
 
 const getAroundUrl = ([lat, lon]: Position) =>
-  `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+  getOverpassUrl(
     `[timeout:5][out:json];(
         relation[~"."~"."](around:50,${lon},${lat});
         way[~"."~"."](around:50,${lon},${lat});
         node[~"."~"."](around:50,${lon},${lat});
-      );out 20 body qt center;`, // some will be filtered out
-  )}`;
+      );out body qt center;`,
+  );
 
 export const fetchAroundFeature = async (point: Position) => {
   const response = await fetchJson(getAroundUrl(point));
