@@ -1,17 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
-import { Box, Button, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  IconButton,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from './MajorKeysEditor';
 import { isString } from '../../../helpers';
 import { t, Translation } from '../../../../services/intl';
-import { useEditContext } from '../EditContext';
+import { TagsEntries, useEditContext } from '../EditContext';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 const Table = styled.table`
-  width: calc(100% - 20px);
-  margin-left: 20px;
+  width: calc(100% - 8px);
+  margin-left: 8px;
 
   th {
     color: ${({ theme }) => theme.palette.text.secondary};
@@ -19,7 +27,8 @@ const Table = styled.table`
     font-weight: normal;
     vertical-align: center;
     font-size: 13px;
-    max-width: 25vw;
+    width: 38.2%; // golden ratio
+    max-width: 38.2%;
     text-overflow: ellipsis;
     overflow: hidden;
   }
@@ -65,90 +74,127 @@ const OtherTagsInfo = () => (
   </tr>
 );
 
-const NewTagRow = ({ setTag, setTmpNewTag }) => {
-  const [newKey, setNewKey] = useState('');
-  const [newValue, setNewValue] = useState('');
+const useInputFocused = () => {
+  const [valueFocused, setValueFocused] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+  const deleteButtonRef = useRef<HTMLButtonElement>(null);
 
-  const handleAdd = () => {
-    if (newKey && newValue) {
-      setTag(newKey, newValue);
-      setNewKey('');
-      setNewValue('');
-    }
-  };
+  useEffect(() => {
+    // blur event would fire before DeleteButton can be clicked
+    const listener = ({ target }: Event) => {
+      if (target !== inputRef.current && target !== deleteButtonRef.current) {
+        setValueFocused(false);
+      }
+    };
+    document.addEventListener('click', listener);
+    return () => document.removeEventListener('click', listener);
+  }, []);
 
-  const handleKeyChange = ({ target: { value } }) => {
-    setNewKey(value);
-    setTmpNewTag({ [value]: newValue });
-  };
-  const handleValueChange = ({ target: { value } }) => {
-    setNewValue(value);
-    setTmpNewTag({ [newKey]: value });
-  };
-  return (
-    <>
-      <tr>
-        <th style={{ verticalAlign: 'baseline' }}>
-          <TextField
-            value={newKey}
-            onChange={handleKeyChange}
-            variant="outlined"
-            size="small"
-            placeholder={t('editdialog.other_tags.new_key')}
-            inputProps={{ autocapitalize: 'none', maxLength: 255 }}
-          />
-        </th>
-        <td>
-          <TextField
-            value={newValue}
-            onChange={handleValueChange}
-            fullWidth
-            variant="outlined"
-            size="small"
-            inputProps={{ autocapitalize: 'none', maxLength: 255 }}
-          />
-        </td>
-      </tr>
-      <tr>
-        <td />
-        <td>
-          <Button
-            variant="contained"
-            disableElevation
-            onClick={handleAdd}
-            disabled={!newKey || !newValue}
-          >
-            <AddIcon />
-          </Button>
-        </td>
-      </tr>
-    </>
-  );
+  return { valueFocused, setValueFocused, inputRef, deleteButtonRef };
 };
 
-const KeyValueRow = ({ k, v, setTag, focusTag }) => (
-  <tr>
-    <th>{k}</th>
-    <td>
+const ValueInput = ({ index }: { index: number }) => {
+  const { focusTag } = useEditDialogContext();
+  const {
+    tags: { tagsEntries, setTagsEntries },
+  } = useEditContext();
+
+  const { valueFocused, setValueFocused, inputRef, deleteButtonRef } =
+    useInputFocused();
+
+  const handleDelete = () => {
+    setTagsEntries((state) => state.toSpliced(index, 1));
+  };
+
+  const handleValueChange = (e) => {
+    setTagsEntries((state) =>
+      state.map(([key, value], idx) =>
+        idx === index ? [key, e.target.value] : [key, value],
+      ),
+    );
+  };
+
+  const [k, v] = tagsEntries[index];
+
+  return (
+    <Stack direction="row" spacing={1} alignItems="center">
       <TextField
         name={k}
         value={v}
-        onChange={(e) => setTag(e.target.name, e.target.value)}
+        onChange={handleValueChange}
         fullWidth
         variant="outlined"
         size="small"
-        inputProps={{ autocapitalize: 'none', maxLength: 255 }}
+        slotProps={{
+          htmlInput: {
+            autoCapitalize: 'none',
+            maxLength: 255,
+            ref: inputRef,
+          },
+        }}
         autoFocus={focusTag === k}
-        placeholder={t('editdialog.other_tags.will_be_deleted')}
+        onFocus={() => setValueFocused(true)}
       />
-    </td>
-  </tr>
-);
+      {valueFocused && (
+        <IconButton size="small" onClick={handleDelete} ref={deleteButtonRef}>
+          <DeleteIcon fontSize="small" />
+        </IconButton>
+      )}
+    </Stack>
+  );
+};
+
+const KeyValueRow = ({ index }) => {
+  const { tagsEntries, setTagsEntries } = useEditContext().tags;
+  const { focusTag } = useEditDialogContext();
+
+  const handleKeyChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    setTagsEntries((state) =>
+      state.map(([key, value], idx) =>
+        idx === index ? [target.value, value] : [key, value],
+      ),
+    );
+  };
+
+  const [k, v] = tagsEntries[index];
+
+  const handleDuplicateKey = () => {
+    // if (tagsEntries.some(([key], idx) => index !== idx && key === k)) {
+    //   setTagsEntries((state) => state.toSpliced(index, 1));
+    // }
+  };
+  return (
+    <tr>
+      <th>
+        <TextField
+          name={'key'}
+          value={k}
+          onChange={handleKeyChange}
+          fullWidth
+          variant="outlined"
+          size="small"
+          slotProps={{
+            htmlInput: { autoCapitalize: 'none', maxLength: 255 },
+          }}
+          autoFocus={focusTag === k}
+          onBlur={handleDuplicateKey}
+        />
+      </th>
+      <td>
+        <ValueInput index={index} />
+      </td>
+    </tr>
+  );
+};
+
+const showAddButton = (tagsEntries: TagsEntries) => {
+  return tagsEntries.length === 0 || tagsEntries[tagsEntries.length - 1][0];
+};
 
 export const OtherTagsEditor = () => {
   const { focusTag } = useEditDialogContext();
   const {
-    tags: { tags, setTag, setTmpNewTag },
+    tags: { tagsEntries, setTag },
   } = useEditContext();
 
   const focusThisEditor =
@@ -170,16 +216,22 @@ export const OtherTagsEditor = () => {
           <OtherTagsHeading />
           <Table>
             <tbody>
-              {Object.entries(tags).map(([k, v]) => (
-                <KeyValueRow
-                  key={k}
-                  k={k}
-                  v={v}
-                  setTag={setTag}
-                  focusTag={focusTag}
-                />
+              {tagsEntries.map((_, idx) => (
+                <KeyValueRow key={idx} index={idx} />
               ))}
-              <NewTagRow setTag={setTag} setTmpNewTag={setTmpNewTag} />
+              <tr>
+                <td />
+                <td>
+                  <Button
+                    variant="contained"
+                    disableElevation
+                    onClick={() => setTag('', '')}
+                    disabled={!showAddButton(tagsEntries)}
+                  >
+                    <AddIcon />
+                  </Button>
+                </td>
+              </tr>
               <OtherTagsInfo />
             </tbody>
           </Table>

@@ -1,6 +1,5 @@
 import { DialogContent } from '@mui/material';
 import React from 'react';
-import { FeatureTypeSelect } from './FeatureTypeSelect';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import { OtherTagsEditor } from './OtherTagsEditor';
 import { EditDialogActions } from './EditDialogActions';
@@ -15,7 +14,6 @@ export const EditContent = () => (
     <DialogContent dividers>
       <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
         <OsmUserLoggedOut />
-        {false && <FeatureTypeSelect />}
         <MajorKeysEditor />
         <OptionsEditor />
         <ContributionInfoBox />
