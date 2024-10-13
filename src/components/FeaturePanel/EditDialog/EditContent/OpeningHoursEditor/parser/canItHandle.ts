@@ -8,7 +8,7 @@ const splitByFirstSpace = (str: string) => {
 };
 
 const sanitizeDaysParts = (value: string) => {
-  return (value ?? '')
+  return value
     .split(/ *; */)
     .map((part) => {
       if (part.match(/^(Mo|Tu|We|Th|Fr|Sa|Su) off$/)) {
@@ -18,9 +18,14 @@ const sanitizeDaysParts = (value: string) => {
         const [daysPart, timePart] = splitByFirstSpace(part);
         const days = parseDaysPart(daysPart);
         const sanitizedDays = buildDaysPart(days);
-        return (
-          (sanitizedDays === 'Mo-Su' ? '' : `${sanitizedDays} `) + `${timePart}`
-        );
+
+        if (sanitizedDays === 'Mo-Su' && timePart.match(/^0?0:00-24:00$/)) {
+          return '24/7';
+        }
+        if (sanitizedDays === 'Mo-Su') {
+          return timePart;
+        }
+        return `${sanitizedDays} ${timePart}`;
       }
       return part;
     })

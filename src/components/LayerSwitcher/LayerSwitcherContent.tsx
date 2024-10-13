@@ -5,6 +5,7 @@ import {
   ListItemText,
   ListItemSecondaryAction,
   Tooltip,
+  ListItemButton,
 } from '@mui/material';
 import { dotToOptionalBr } from '../helpers';
 import {
@@ -75,8 +76,7 @@ export const LayerSwitcherContent = () => {
           const isOutsideOfView =
             bboxes && !bboxes.some((b) => isViewInsideBbox(view, b));
           return (
-            <ListItem
-              button
+            <ListItemButton
               key={key}
               selected={activeLayers.includes(key)}
               onClick={setActiveBaseMap}
@@ -102,7 +102,7 @@ export const LayerSwitcherContent = () => {
                   />
                 )}
               </ListItemSecondaryAction>
-            </ListItem>
+            </ListItemButton>
           );
         })}
       </StyledList>

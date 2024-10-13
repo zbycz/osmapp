@@ -151,9 +151,8 @@ export default {
   'editdialog.osm_session_expired': 'Deine OpenStreetMap-Sitzung ist abgelaufen. Bitte melde Dich erneut an.',
   'editdialog.loggedInMessage': 'Du bist als <b>__osmUser__</b> eingeloggt, Änderungen werden sofort gespeichert.',
   'editdialog.logout': 'logout',
-  'editdialog.anonymousMessage1': 'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt.<br />Wenn du dich',
-  'editdialog.anonymousMessage2_login': 'auf OpenStreetMap einloggst',
-  'editdialog.anonymousMessage3': ', werden deine Änderungen direkt gespeichert.',
+  'editdialog.anonymousMessage':
+    'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt. Wenn du dich auf OpenStreetMap einloggst, werden deine Änderungen direkt gespeichert.',
   'editdialog.add_major_tag': 'Hinzufügen',
   'editdialog.location_checkbox': 'Position ändern',
   'editdialog.location_placeholder': 'z.B. gegenüber auf der Straße',

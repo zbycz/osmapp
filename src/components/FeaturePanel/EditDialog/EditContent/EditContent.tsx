@@ -6,20 +6,22 @@ import { OtherTagsEditor } from './OtherTagsEditor';
 import { EditDialogActions } from './EditDialogActions';
 import { OptionsEditor } from './OptionsEditor';
 import { CommentField } from './CommentField';
-import { OsmLogin } from './OsmLogin';
+import { OsmUserLogged } from './OsmUserLogged';
 import { ContributionInfoBox } from './ContributionInfoBox';
+import { OsmUserLoggedOut } from './OsmUserLoggedOut';
 
 export const EditContent = () => (
   <>
     <DialogContent dividers>
       <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+        <OsmUserLoggedOut />
         {false && <FeatureTypeSelect />}
         <MajorKeysEditor />
         <OptionsEditor />
         <ContributionInfoBox />
         <CommentField />
         <OtherTagsEditor />
-        <OsmLogin />
+        <OsmUserLogged />
       </form>
     </DialogContent>
     <EditDialogActions />

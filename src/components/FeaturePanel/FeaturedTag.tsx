@@ -11,6 +11,7 @@ import { WikidataRenderer } from './renderers/WikidataRenderer';
 import { isDesktopResolution } from '../helpers';
 import { ClimbingRenderer } from './renderers/ClimbingRenderer';
 import { gradeSystemKeys } from './Climbing/utils/grades/gradeSystem';
+import { nl2br } from '../utils/nl2br';
 
 const Wrapper = styled.div`
   position: relative;
@@ -46,7 +47,7 @@ type Renderers = {
   [key: string]: React.FC<{ k: string; v: string }>;
 };
 
-const DefaultRenderer = ({ v }) => v;
+const DefaultRenderer = ({ v }) => <>{nl2br(v)}</>;
 
 const climbingRenderers = gradeSystemKeys.reduce(
   (acc, gradeSystemKey) => ({

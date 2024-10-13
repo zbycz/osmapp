@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
-
+import { Button, TextField, Typography } from '@mui/material';
 import { t } from '../../../../services/intl';
 import {
   getNextWikimediaCommonsIndex,
@@ -11,6 +9,7 @@ import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import { useEditContext } from '../EditContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import styled from '@emotion/styled';
+import { CharacterCount } from './helpers';
 
 export const majorKeys = [
   'name',
@@ -47,30 +46,6 @@ const getData = (numberOfWikimediaItems) => {
 const InputContainer = styled.div`
   position: relative;
 `;
-const CharacterCountContainer = styled.div`
-  position: absolute;
-  right: 0;
-`;
-
-const CharacterCount = ({
-  count = 0,
-  max,
-  isVisible,
-}: {
-  count?: number;
-  max: number;
-  isVisible: boolean;
-}) => (
-  <CharacterCountContainer>
-    {isVisible && (
-      <Stack direction="row" justifyContent={'flex-end'} whiteSpace="nowrap">
-        <Box color={count >= max ? 'error.main' : undefined}>
-          {count} / {max}
-        </Box>
-      </Stack>
-    )}
-  </CharacterCountContainer>
-);
 
 const TextFieldWithCharacterCount = ({
   k,
@@ -79,7 +54,7 @@ const TextFieldWithCharacterCount = ({
   onChange,
   value,
 }) => {
-  const [isCharacterCountVisible, setIsCharacterCountVisible] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   return (
     <InputContainer>
       <TextField
@@ -94,13 +69,13 @@ const TextFieldWithCharacterCount = ({
         fullWidth
         autoFocus={autoFocus}
         inputProps={{ maxLength: MAX_INPUT_LENGTH }}
-        onFocus={() => setIsCharacterCountVisible(true)}
-        onBlur={() => setIsCharacterCountVisible(false)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         helperText={
           <CharacterCount
             count={value?.length}
             max={MAX_INPUT_LENGTH}
-            isVisible={isCharacterCountVisible}
+            isInputFocused={isFocused}
           />
         }
       />

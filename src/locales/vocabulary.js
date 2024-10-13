@@ -133,6 +133,7 @@ export default {
   'featurepanel.objects_around': 'Nearby objects',
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
   'featurepanel.climbing_restriction': 'Climbing restriction',
+  'featurepanel.login': 'Login',
 
   'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
@@ -170,9 +171,7 @@ export default {
   'editdialog.osm_session_expired': 'Your OpenStreetMap session has expired. Please, log in again.',
   'editdialog.loggedInMessage': 'You are logged in as <b>__osmUser__</b>, changes will be saved immediately.',
   'editdialog.logout': 'logout',
-  'editdialog.anonymousMessage1': 'An <b>anonymous</b> note will be added to the map.<br />If you',
-  'editdialog.anonymousMessage2_login': 'log in to OpenStreetMap',
-  'editdialog.anonymousMessage3': ', your changes will be immediate.',
+  'editdialog.anonymousMessage': 'An <b>anonymous</b> note will be added to the map. If you log in to OpenStreetMap, your changes will be immediate.',
   'editdialog.add_major_tag': 'Add',
   'editdialog.location_checkbox': 'New location',
   'editdialog.location_placeholder': 'eg. across the street',
@@ -190,6 +189,7 @@ export default {
   'editdialog.other_tags.new_key': 'new key',
   'editdialog.other_tags.will_be_deleted': 'will be deleted',
   'editdialog.other_tags.info': `Tags contain the data used to display objects on the map!<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features">a reference for all tags on the OpenStreetMap Wiki</a>!`,
+  'editdialog.login_in_progress': `Logging in...`,
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',

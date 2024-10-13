@@ -6,6 +6,7 @@ import { t } from '../../services/intl';
 import { useOsmAuthContext } from '../utils/OsmAuthContext';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 import { useEditDialogFeature } from './EditDialog/utils';
+import CommentIcon from '@mui/icons-material/Comment';
 
 const getLabel = (
   loggedIn: boolean,
@@ -28,7 +29,13 @@ export const EditButton = () => {
       <Button
         size="large"
         startIcon={
-          isAddPlace || isUndelete ? <AddLocationIcon /> : <EditIcon />
+          isAddPlace || isUndelete ? (
+            <AddLocationIcon />
+          ) : loggedIn ? (
+            <EditIcon />
+          ) : (
+            <CommentIcon />
+          )
         }
         variant="outlined"
         color="primary"

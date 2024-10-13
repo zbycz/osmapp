@@ -7,12 +7,18 @@ import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { useGetHandleSave } from '../useGetHandleSave';
 
 const SaveButton = () => {
-  const { loggedIn } = useOsmAuthContext();
+  const { loggedIn, loading } = useOsmAuthContext();
   const { tags } = useEditContext();
   const handleSave = useGetHandleSave();
 
   return (
-    <Button onClick={handleSave} color="primary" variant="contained">
+    <Button
+      onClick={handleSave}
+      color="primary"
+      variant="contained"
+      startIcon={loading && <CircularProgress size={20} color={'secondary'} />}
+      disabled={loading}
+    >
       {loggedIn
         ? tags.cancelled
           ? t('editdialog.save_button_delete')
