@@ -19,7 +19,7 @@ const renderOption = (
     case 'overpass':
       return renderOverpass(option);
     case 'star':
-      return renderStar(option, mapCenter);
+      return renderStar(option, inputValue, mapCenter);
     case 'loader':
       return renderLoader();
     case 'preset':

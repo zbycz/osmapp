@@ -50,7 +50,7 @@ export type PresetOption = GenericOption<
   {
     nameSimilarity: number;
     textsByOneSimilarity: number[];
-    sum: number;
+    bestMatch: number;
     presetForSearch: {
       key: string;
       name: string;
