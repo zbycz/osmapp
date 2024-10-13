@@ -1,4 +1,10 @@
-import React, { ChangeEvent, useEffect, useRef, useState } from 'react';
+import React, {
+  ChangeEvent,
+  FocusEvent,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 import styled from '@emotion/styled';
 import {
   Box,
@@ -76,39 +82,31 @@ const OtherTagsInfo = () => (
   </tr>
 );
 
-const useInputFocused = () => {
-  const [valueFocused, setValueFocused] = useState(false);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const deleteButtonRef = useRef<HTMLButtonElement>(null);
+const useHidableDeleteButton = () => {
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const [buttonShown, setButtonShown] = useState(false);
+  const onInputFocus = () => setButtonShown(true);
+  const onInputBlur = (e: FocusEvent<HTMLInputElement>) => {
+    if (e.relatedTarget !== buttonRef.current) {
+      setButtonShown(false);
+    }
+  };
+  const onButtonBlur = () => setButtonShown(false);
 
-  useEffect(() => {
-    // blur event would fire before DeleteButton can be clicked
-    const listener = ({ target }: Event) => {
-      if (target !== inputRef.current && target !== deleteButtonRef.current) {
-        setValueFocused(false);
-      }
-    };
-    document.addEventListener('click', listener);
-    return () => document.removeEventListener('click', listener);
-  }, []);
-
-  return { valueFocused, setValueFocused, inputRef, deleteButtonRef };
+  return { buttonShown, onInputFocus, onInputBlur, onButtonBlur, buttonRef };
 };
 
 const ValueInput = ({ index }: { index: number }) => {
   const { focusTag } = useEditDialogContext();
-  const {
-    tags: { tagsEntries, setTagsEntries },
-  } = useEditContext();
-
-  const { valueFocused, setValueFocused, inputRef, deleteButtonRef } =
-    useInputFocused();
+  const { tagsEntries, setTagsEntries } = useEditContext().tags;
+  const { buttonShown, onInputBlur, onInputFocus, onButtonBlur, buttonRef } =
+    useHidableDeleteButton();
 
   const handleDelete = () => {
     setTagsEntries((state) => state.toSpliced(index, 1));
   };
 
-  const handleValueChange = (e) => {
+  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTagsEntries((state) =>
       state.map(([key, value], idx) =>
         idx === index ? [key, e.target.value] : [key, value],
@@ -116,29 +114,29 @@ const ValueInput = ({ index }: { index: number }) => {
     );
   };
 
-  const [k, v] = tagsEntries[index];
-
+  const [key, value] = tagsEntries[index];
   return (
     <Stack direction="row" spacing={1} alignItems="center">
       <TextField
-        name={k}
-        value={v}
+        value={value}
         onChange={handleValueChange}
         fullWidth
         variant="outlined"
         size="small"
         slotProps={{
-          htmlInput: {
-            autoCapitalize: 'none',
-            maxLength: 255,
-            ref: inputRef,
-          },
+          htmlInput: { autoCapitalize: 'none', maxLength: 255 },
         }}
-        autoFocus={focusTag === k}
-        onFocus={() => setValueFocused(true)}
+        autoFocus={focusTag === key}
+        onFocus={onInputFocus}
+        onBlur={onInputBlur}
       />
-      {valueFocused && (
-        <IconButton size="small" onClick={handleDelete} ref={deleteButtonRef}>
+      {buttonShown && (
+        <IconButton
+          size="small"
+          onClick={handleDelete}
+          onBlur={onButtonBlur}
+          ref={buttonRef}
+        >
           <DeleteIcon fontSize="small" />
         </IconButton>
       )}
