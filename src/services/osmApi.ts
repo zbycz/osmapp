@@ -16,6 +16,7 @@ import {
   isClimbingRoute,
   isPublictransportRoute,
   isRouteMaster,
+  publishDbgObject,
 } from '../utils';
 import { getOverpassUrl } from './overpassSearch';
 
@@ -58,9 +59,10 @@ const getOsmParentPromise = async (apiId) => {
  * This holds coords of clicked ways/relations (from vector map), these are often different than those computed by us
  * TODO: we should probably store just the last one, but this cant get too big, right?
  */
-const featureCenterCache = {};
-export const addFeatureCenterToCache = (shortId, center) => {
+const featureCenterCache: Record<string, LonLat> = {};
+export const addFeatureCenterToCache = (shortId: string, center: LonLat) => {
   featureCenterCache[shortId] = center;
+  publishDbgObject('featureCenterCache', featureCenterCache);
 };
 
 const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
@@ -94,10 +96,52 @@ const getCountryCode = async (feature: Feature): Promise<string | null> => {
   return null;
 };
 
+const getRelationElementsAndCenter = async (apiId: OsmId) => {
+  const element = await getOsmPromise(apiId);
+  const getPositionOfFirstItem =
+    isPublictransportRoute({ tags: element.tags }) ||
+    isRouteMaster({
+      tags: element.tags,
+      osmMeta: apiId,
+    });
+  const center = getPositionOfFirstItem
+    ? await fetchOverpassCenter({
+        id: element.members[0].ref,
+        type: element.members[0].type,
+      })
+    : await fetchOverpassCenter(apiId);
+
+  return { element, center };
+};
+
+const getElementsAndCenter = async (apiId: OsmId) => {
+  const cachedCenter = featureCenterCache[getShortId(apiId)];
+  if (isBrowser() && cachedCenter) {
+    return {
+      center: cachedCenter,
+      element: await getOsmPromise(apiId),
+    };
+  }
+  switch (apiId.type) {
+    case 'node':
+      return {
+        element: await getOsmPromise(apiId),
+        center: false as const,
+      };
+    case 'way':
+      const [elementWay, center] = await Promise.all([
+        getOsmPromise(apiId),
+        getCenterPromise(apiId),
+      ]);
+      return { element: elementWay, center };
+    case 'relation':
+      return getRelationElementsAndCenter(apiId);
+  }
+};
+
 const fetchFeatureWithCenter = async (apiId: OsmId) => {
-  const [element, center] = await Promise.all([
-    getOsmPromise(apiId),
-    getCenterPromise(apiId),
+  const [{ element, center }] = await Promise.all([
+    getElementsAndCenter(apiId),
     fetchSchemaTranslations(),
   ]);
 
@@ -251,6 +295,7 @@ export const addMembersAndParents = async (
 
 export const fetchFeature = async (apiId: OsmId): Promise<Feature> => {
   try {
+    // offline features for testing
     if (apiId.type === 'relation' && apiId.id === 6) {
       await fetchSchemaTranslations();
       const osmApiTestItems = await import('./osmApiTestItems');
