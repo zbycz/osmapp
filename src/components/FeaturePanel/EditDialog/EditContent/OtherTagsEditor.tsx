@@ -148,8 +148,7 @@ const KeyValueRow = ({ index }) => {
   const { focusTag } = useEditDialogContext();
   const { tagsEntries, setTagsEntries } = useEditContext().tags;
 
-  const [error, setError] = useState(false);
-  const [tmpKey, setTmpKey] = useState(() => tagsEntries[index][0]);
+  const [tmpKey, setTmpKey] = useState(tagsEntries[index][0]);
   useEffect(() => {
     setTmpKey(tagsEntries[index][0]);
   }, [index, tagsEntries]);
@@ -158,11 +157,6 @@ const KeyValueRow = ({ index }) => {
     if (tmpKey === tagsEntries[index][0]) {
       return;
     }
-
-    const isDuplicateKey = tagsEntries.some(
-      ([key], idx) => key === tmpKey && index !== idx,
-    );
-    setError(isDuplicateKey);
 
     setTagsEntries((state) => {
       if (tmpKey === '' && index !== state.length - 1) {
@@ -173,6 +167,10 @@ const KeyValueRow = ({ index }) => {
       );
     });
   };
+
+  const isDuplicateKey = tagsEntries.some(
+    ([key], idx) => key === tagsEntries[index][0] && index !== idx,
+  );
 
   return (
     <tr>
@@ -189,7 +187,7 @@ const KeyValueRow = ({ index }) => {
             htmlInput: { autoCapitalize: 'none', maxLength: 255 },
           }}
           autoFocus={focusTag === tmpKey}
-          error={error}
+          error={isDuplicateKey}
         />
       </th>
       <td>
