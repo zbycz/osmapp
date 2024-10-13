@@ -80,13 +80,20 @@ export const isClimbingRelation = (feature: Feature) =>
 export const isClimbingRoute = (feature: Feature) =>
   ['route_bottom', 'route_top', 'route'].includes(feature?.tags.climbing);
 
-export const isRouteMaster = ({ tags, osmMeta }: Feature) =>
+export const isRouteMaster = ({
+  tags,
+  osmMeta,
+}: WithTags & { osmMeta: { type: string } }) =>
   tags.type === 'route_master' && osmMeta.type === 'relation';
 
-export const isPublictransportStop = ({ tags }: Feature) =>
+type WithTags = {
+  tags: Feature['tags'];
+};
+
+export const isPublictransportStop = ({ tags }: WithTags) =>
   Object.keys(tags).includes('public_transport') ||
   tags.railway === 'station' ||
   tags.railway === 'halt';
 
-export const isPublictransportRoute = ({ tags }: Feature) =>
+export const isPublictransportRoute = ({ tags }: WithTags) =>
   tags.type === 'route';

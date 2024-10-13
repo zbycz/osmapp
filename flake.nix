@@ -30,6 +30,7 @@
           nodejs
           yarn
           nodePackages.typescript-language-server
+          prettierd
         ];
         shellHook = ''
           if [ ! -d node_modules ]; then

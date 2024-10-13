@@ -1,8 +1,11 @@
 import { fetchJson } from '../fetch';
 import { getOverpassUrl } from '../overpassSearch';
-import { OsmId } from '../types';
+import { LonLat, OsmId } from '../types';
 
-export const fetchOverpassCenter = async ({ type, id }: OsmId) => {
+export const fetchOverpassCenter = async ({
+  type,
+  id,
+}: OsmId): Promise<LonLat | false> => {
   if (type === 'relation') {
     const query = `[out:json][timeout:1];(rel(${id});rel(r););nw(r);make stat ::geom=center(hull(gcat(geom())));out geom;`; // gets center also for relation of relations, https://github.com/drolbr/Overpass-API/issues/733
     const response = await fetchJson(getOverpassUrl(query));
