@@ -86,12 +86,11 @@ const importantKeys: Record<
 };
 
 export const getImportance = (tags: Record<string, string>) => {
-  const keyImportance = sumBy(Object.entries(tags), ([key, val]) => {
-    const value = importantKeys[key] ?? 0;
-    if (typeof value === 'number') {
-      return value;
+  return sumBy(Object.entries(tags), ([key, val]) => {
+    const importance = importantKeys[key] ?? 0;
+    if (typeof importance === 'number') {
+      return importance;
     }
-    return value(val, tags);
+    return importance(val, tags);
   });
-  return keyImportance;
 };
