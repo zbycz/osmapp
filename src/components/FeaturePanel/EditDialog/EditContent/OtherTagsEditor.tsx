@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   IconButton,
+  InputAdornment,
   Stack,
   TextField,
   Typography,
@@ -16,6 +17,7 @@ import { t, Translation } from '../../../../services/intl';
 import { TagsEntries, useEditContext } from '../EditContext';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import DeleteIcon from '@mui/icons-material/Delete';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const Table = styled.table`
   width: calc(100% - 8px);
@@ -185,6 +187,13 @@ const KeyValueRow = ({ index }) => {
           size="small"
           slotProps={{
             htmlInput: { autoCapitalize: 'none', maxLength: 255 },
+            input: {
+              endAdornment: isDuplicateKey ? (
+                <InputAdornment position="end">
+                  <WarningIcon color="error" />
+                </InputAdornment>
+              ) : undefined,
+            },
           }}
           autoFocus={focusTag === tmpKey}
           error={isDuplicateKey}
@@ -196,7 +205,6 @@ const KeyValueRow = ({ index }) => {
     </tr>
   );
 };
-
 const showAddButton = (tagsEntries: TagsEntries) => {
   return tagsEntries.length === 0 || tagsEntries[tagsEntries.length - 1][0];
 };
