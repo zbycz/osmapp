@@ -108,7 +108,6 @@ export const MajorKeysEditor = () => {
     }
   }, [focusTag]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  console.log(tags);
   return (
     <>
       {activeMajorKeys.map((k) => (

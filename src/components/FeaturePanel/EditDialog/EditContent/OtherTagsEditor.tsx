@@ -145,39 +145,49 @@ const ValueInput = ({ index }: { index: number }) => {
 };
 
 const KeyValueRow = ({ index }) => {
-  const { tagsEntries, setTagsEntries } = useEditContext().tags;
   const { focusTag } = useEditDialogContext();
+  const { tagsEntries, setTagsEntries } = useEditContext().tags;
+  const [tmpKey, setTmpKey] = useState(() => tagsEntries[index][0]);
+  useEffect(() => {
+    setTmpKey(tagsEntries[index][0]);
+  }, [index, tagsEntries]);
 
-  const handleKeyChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setTagsEntries((state) =>
-      state.map(([key, value], idx) =>
-        idx === index ? [target.value, value] : [key, value],
-      ),
-    );
+  const handleBlur = () => {
+    setTagsEntries((state) => {
+      if (tmpKey === tagsEntries[index][0]) {
+        return state;
+      }
+
+      if (tmpKey === '' && index !== state.length - 1) {
+        return state.toSpliced(index, 1);
+      }
+
+      const duplicateKey = state.some(
+        ([key], idx) => key === tmpKey && index !== idx,
+      );
+      const cleanKey = duplicateKey ? `${tmpKey}_1` : tmpKey;
+
+      return state.map(([key, value], idx) =>
+        idx === index ? [cleanKey, value] : [key, value],
+      );
+    });
   };
 
-  const [k, v] = tagsEntries[index];
-
-  const handleDuplicateKey = () => {
-    // if (tagsEntries.some(([key], idx) => index !== idx && key === k)) {
-    //   setTagsEntries((state) => state.toSpliced(index, 1));
-    // }
-  };
   return (
     <tr>
       <th>
         <TextField
           name={'key'}
-          value={k}
-          onChange={handleKeyChange}
+          value={tmpKey}
+          onChange={({ target }) => setTmpKey(target.value)}
+          onBlur={handleBlur}
           fullWidth
           variant="outlined"
           size="small"
           slotProps={{
             htmlInput: { autoCapitalize: 'none', maxLength: 255 },
           }}
-          autoFocus={focusTag === k}
-          onBlur={handleDuplicateKey}
+          autoFocus={focusTag === tmpKey}
         />
       </th>
       <td>

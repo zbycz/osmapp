@@ -29,7 +29,7 @@ const useTagsState = (initialTags: FeatureTags): EditContextType['tags'] => {
     Object.entries(initialTags),
   );
   const tags = useMemo(() => {
-    console.log('tagsEntries', Object.fromEntries(tagsEntries));
+    console.log('tagsEntries', tagsEntries, Object.fromEntries(tagsEntries));
     return Object.fromEntries(tagsEntries);
   }, [tagsEntries]);
 
