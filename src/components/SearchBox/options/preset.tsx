@@ -1,5 +1,4 @@
 import orderBy from 'lodash/orderBy';
-import groupBy from 'lodash/groupBy';
 import { diceCoefficient } from 'dice-coefficient';
 import FolderIcon from '@mui/icons-material/Folder';
 import { Grid, Typography } from '@mui/material';
@@ -78,30 +77,24 @@ export const getPresetOptions = async (
       presetForSearch: preset,
     };
   });
-  const grouped = groupBy(rawResults, ({ bestMatch, nameSimilarity }) => {
-    if (nameSimilarity > threshold) {
-      return 'name';
-    }
-    if (nameSimilarity < threshold && bestMatch > threshold) {
-      return 'rest';
-    }
-  });
-
-  const allResults = [
-    ...orderBy(
-      grouped.name,
-      [({ nameSimilarity }) => nameSimilarity, ({ bestMatch }) => bestMatch],
-      'desc',
-    ),
-    ...orderBy(
-      grouped.rest,
-      [({ nameSimilarity }) => nameSimilarity, ({ bestMatch }) => bestMatch],
-      'desc',
-    ),
-  ].map((result) => ({
+  const filtered = rawResults.filter(
+    ({ nameSimilarity, bestMatch }) =>
+      nameSimilarity > threshold || bestMatch > threshold,
+  );
+  const allResults = orderBy(
+    filtered,
+    [
+      // some bestMatches are the same for many items, then sort by name. Try out *dog*
+      ({ nameSimilarity, bestMatch }) => Math.max(nameSimilarity, bestMatch),
+      ({ nameSimilarity }) => nameSimilarity,
+      ({ bestMatch }) => bestMatch,
+    ],
+    'desc',
+  ).map((result) => ({
     type: 'preset' as const,
     preset: result,
   }));
+
   const before = allResults.slice(0, 2);
   const after = allResults.slice(2);
 
