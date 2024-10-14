@@ -5,8 +5,10 @@ import { createNoteText } from './createNoteText';
 import { t } from '../../../services/intl';
 import { addOsmFeature, editOsmFeature } from '../../../services/osmApiAuth';
 import { insertOsmNote } from '../../../services/osmApi';
+import { useSnackbar } from '../../utils/SnackbarContext';
 
 export const useGetHandleSave = () => {
+  const { showToast } = useSnackbar();
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { feature, isUndelete } = useEditDialogFeature();
   const {
@@ -27,8 +29,7 @@ export const useGetHandleSave = () => {
       isUndelete,
     );
     if (noteText == null) {
-      // TODO we need better check that this ... formik?
-      alert(t('editdialog.changes_needed')); // eslint-disable-line no-alert
+      showToast(t('editdialog.changes_needed'), 'warning');
       return;
     }
 
@@ -41,7 +42,7 @@ export const useGetHandleSave = () => {
 
     promise.then(setSuccessInfo, (err) => {
       if (err?.status === 401) {
-        alert(t('editdialog.osm_session_expired')); // eslint-disable-line no-alert
+        showToast(t('editdialog.osm_session_expired'), 'error');
         handleLogout();
       } else {
         console.error(err); // eslint-disable-line no-console
