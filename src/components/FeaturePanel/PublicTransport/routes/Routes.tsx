@@ -55,18 +55,10 @@ const PublicTransportDisplay = ({
           key={category}
           category={category}
           lines={lines}
-          showHeading={entries.length > 1}
-          shown={shownCategories.includes(category)}
-          onShow={() => {
-            setShownCategories((prev) => [...prev, category]);
-          }}
-          onHide={() => {
-            setShownCategories((prev) =>
-              prev.filter((cat) => cat !== category),
-            );
-          }}
-          onExclusiveShow={() => {
-            setShownCategories([category]);
+          showHeading={sorted.length > 1}
+          shownCategories={shownCategories}
+          onChange={(categories) => {
+            setShownCategories(categories);
           }}
         />
       ))}

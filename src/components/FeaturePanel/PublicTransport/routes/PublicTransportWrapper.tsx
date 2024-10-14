@@ -18,31 +18,25 @@ const PublicTransportWrapper = ({ children }) => {
 
 interface CategoryProps {
   category: string;
+  shownCategories: string[];
   lines: LineInformation[];
   showHeading: boolean;
-  onShow: () => void;
-  onHide: () => void;
-  onExclusiveShow: () => void;
-  shown?: boolean;
+  onChange: (categories: string[]) => void;
 }
 
 export const PublicTransportCategory: React.FC<CategoryProps> = ({
   category,
   lines,
+  shownCategories,
   showHeading,
-  onShow,
-  onHide,
-  onExclusiveShow,
-  shown = true,
+  onChange,
 }) => (
   <>
     {showHeading && (
       <CategoryHeading
         category={category}
-        shown={shown}
-        onShow={onShow}
-        onHide={onHide}
-        onExclusiveShow={onExclusiveShow}
+        shownCategories={shownCategories}
+        onChange={onChange}
       />
     )}
     <PublicTransportWrapper>

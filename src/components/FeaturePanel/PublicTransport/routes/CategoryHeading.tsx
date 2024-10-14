@@ -63,22 +63,19 @@ const ToggleCategory = ({
 
 type Props = {
   category: string;
-  onShow: () => void;
-  onHide: () => void;
-  onExclusiveShow: () => void;
-  shown?: boolean;
+  shownCategories: string[];
+  onChange: (categories: string[]) => void;
 };
 
 export const CategoryHeading = ({
   category,
-  onShow,
-  onHide,
-  onExclusiveShow,
-  shown = true,
+  shownCategories,
+  onChange,
 }: Props) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLButtonElement>(
     null,
   );
+  const isShownOnMap = shownCategories.includes(category);
 
   return (
     <>
@@ -103,21 +100,21 @@ export const CategoryHeading = ({
         }}
       >
         <ToggleCategory
-          shown={shown}
+          shown={isShownOnMap}
           onClick={() => {
-            if (shown) {
-              onHide();
-            } else {
-              onShow();
-            }
+            const newCategories = isShownOnMap
+              ? shownCategories.filter((cat) => cat !== category)
+              : shownCategories.concat(category);
+            onChange(newCategories);
             setAnchorEl(null);
           }}
         />
         <MenuItem
           onClick={() => {
-            onExclusiveShow();
+            onChange([category]);
             setAnchorEl(null);
           }}
+          disabled={isShownOnMap && shownCategories.length === 1}
         >
           <ListItemIcon>
             <Search fontSize="small" />
