@@ -12,13 +12,7 @@ const SaveButton = () => {
   const handleSave = useGetHandleSave();
 
   return (
-    <Button
-      onClick={handleSave}
-      color="primary"
-      variant="contained"
-      startIcon={loading && <CircularProgress size={20} color={'secondary'} />}
-      disabled={loading}
-    >
+    <Button onClick={handleSave} color="primary" variant="contained">
       {loggedIn
         ? tags.cancelled
           ? t('editdialog.save_button_delete')

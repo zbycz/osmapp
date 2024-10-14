@@ -2,6 +2,7 @@ import React from 'react';
 import { Alert, Box, Button, CircularProgress, Stack } from '@mui/material';
 import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { t, Translation } from '../../../../services/intl';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 
 export const OsmUserLoggedOut = () => {
   const { loggedIn, handleLogin, loading } = useOsmAuthContext();
@@ -26,6 +27,7 @@ export const OsmUserLoggedOut = () => {
     <Box sx={{ marginBottom: 2 }}>
       <Alert
         severity="warning"
+        icon={<LightbulbIcon />}
         action={
           <Button onClick={handleLogin}>{t('featurepanel.login')}</Button>
         }
