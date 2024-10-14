@@ -95,6 +95,7 @@ const SecondaryHeading = styled.h2<{ $deleted: boolean }>`
 export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
   // thw pwa needs space at the bottom
   const isStandalone = useMediaQuery('(display-mode: standalone)');
+  const { feature } = useFeatureContext();
 
   return (
     <Container ref={ref} isStandalone={isStandalone}>
@@ -105,7 +106,7 @@ export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
           {/* <YellowedBadge /> */}
           <EditNameButton />
         </NameWithEdit>
-        <StarButton />
+        {!feature.point && <StarButton />}
       </HeadingContainer>
     </Container>
   );

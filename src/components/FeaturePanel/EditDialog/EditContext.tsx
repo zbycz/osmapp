@@ -1,8 +1,10 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useToggleState } from '../../helpers';
 import { Feature, FeatureTags, SuccessInfo } from '../../../services/types';
+import { Setter } from '../../../types';
 
-export type TypeTag = { key: string; value: string } | undefined;
+export type TagsEntries = [string, string][];
+
 type EditContextType = {
   successInfo: undefined | SuccessInfo;
   setSuccessInfo: (info: undefined | SuccessInfo) => void;
@@ -13,23 +15,41 @@ type EditContextType = {
   comment: string;
   setComment: (s: string) => void;
   tags: {
-    typeTag: TypeTag;
-    setTypeTag: (typeTag: TypeTag) => void;
+    tagsEntries: TagsEntries;
+    setTagsEntries: Setter<TagsEntries>;
     tags: FeatureTags;
     setTag: (k: string, v: string) => void;
-    tmpNewTag: {};
-    setTmpNewTag: (obj: {}) => void;
     cancelled: boolean;
     toggleCancelled: () => void;
   };
 };
 
-const useTagsState = (
-  initialTags: FeatureTags,
-): [FeatureTags, (k: string, v: string) => void] => {
-  const [tags, setTags] = useState(initialTags);
-  const setTag = (k, v) => setTags((state) => ({ ...state, [k]: v }));
-  return [tags, setTag];
+const useTagsState = (initialTags: FeatureTags): EditContextType['tags'] => {
+  const [tagsEntries, setTagsEntries] = useState<TagsEntries>(() =>
+    Object.entries(initialTags),
+  );
+  const tags = useMemo(() => Object.fromEntries(tagsEntries), [tagsEntries]);
+
+  const setTag = (k: string, v: string) => {
+    setTagsEntries((state) => {
+      const position = state.findIndex(([key]) => key === k);
+      if (position === -1) {
+        return [...state, [k, v]];
+      }
+      return state.map((entry, index) => (index === position ? [k, v] : entry));
+    });
+  };
+
+  const [cancelled, toggleCancelled] = useToggleState(false);
+
+  return {
+    tagsEntries,
+    setTagsEntries,
+    tags,
+    setTag,
+    cancelled,
+    toggleCancelled,
+  };
 };
 
 const EditContext = createContext<EditContextType>(undefined);
@@ -44,11 +64,7 @@ export const EditContextProvider = ({ feature, children }: Props) => {
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
-
-  const [typeTag, setTypeTag] = useState<TypeTag>();
-  const [tags, setTag] = useTagsState(feature.tags);
-  const [tmpNewTag, setTmpNewTag] = useState({});
-  const [cancelled, toggleCancelled] = useToggleState(false);
+  const tags = useTagsState(feature.tags);
 
   const value: EditContextType = {
     successInfo,
@@ -59,16 +75,7 @@ export const EditContextProvider = ({ feature, children }: Props) => {
     setLocation,
     comment,
     setComment,
-    tags: {
-      typeTag,
-      setTypeTag,
-      tags,
-      setTag,
-      tmpNewTag,
-      setTmpNewTag,
-      cancelled,
-      toggleCancelled,
-    },
+    tags,
   };
 
   return <EditContext.Provider value={value}>{children}</EditContext.Provider>;

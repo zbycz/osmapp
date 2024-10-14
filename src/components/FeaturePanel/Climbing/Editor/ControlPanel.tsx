@@ -1,14 +1,12 @@
 import UndoIcon from '@mui/icons-material/Undo';
 import React from 'react';
 import styled from '@emotion/styled';
-import { IconButton } from '@mui/material';
+import { IconButton, useTheme } from '@mui/material';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 const Container = styled.div`
-  background: ${({ theme }) => theme.palette.background.default};
-  border-radius: 8px;
   position: absolute;
-  width: 44px;
+  width: 36px;
   top: 5px;
   left: 5px;
   z-index: 1;
@@ -23,6 +21,7 @@ export const ControlPanel = () => {
   };
 
   const path = getCurrentPath();
+  const theme = useTheme();
 
   return (
     <Container>
@@ -32,6 +31,12 @@ export const ControlPanel = () => {
           edge="end"
           onClick={onUndoClick}
           title="Undo last segment"
+          sx={{
+            backgroundColor: theme.palette.background.default,
+            '&:hover': {
+              backgroundColor: theme.palette.background.paper,
+            },
+          }}
         >
           <UndoIcon fontSize="small" />
         </IconButton>

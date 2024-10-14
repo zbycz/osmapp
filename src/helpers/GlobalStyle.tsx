@@ -42,19 +42,15 @@ const globalStyle = (theme: Theme) => css`
     background: transparent;
     outline: 0;
     cursor: pointer;
-
     &.colorInherit {
       color: inherit;
     }
-
     &:hover {
       text-decoration: underline;
     }
-
     &:focus {
       text-decoration: underline;
     }
-
     .MuiTooltip-tooltip & {
       color: #82dcff;
     }

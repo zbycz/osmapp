@@ -151,9 +151,8 @@ export default {
   'editdialog.osm_session_expired': 'Deine OpenStreetMap-Sitzung ist abgelaufen. Bitte melde Dich erneut an.',
   'editdialog.loggedInMessage': 'Du bist als <b>__osmUser__</b> eingeloggt, Änderungen werden sofort gespeichert.',
   'editdialog.logout': 'logout',
-  'editdialog.anonymousMessage1': 'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt.<br />Wenn du dich',
-  'editdialog.anonymousMessage2_login': 'auf OpenStreetMap einloggst',
-  'editdialog.anonymousMessage3': ', werden deine Änderungen direkt gespeichert.',
+  'editdialog.anonymousMessage':
+    'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt. Wenn du dich auf OpenStreetMap einloggst, werden deine Änderungen direkt gespeichert.',
   'editdialog.add_major_tag': 'Hinzufügen',
   'editdialog.location_checkbox': 'Position ändern',
   'editdialog.location_placeholder': 'z.B. gegenüber auf der Straße',
@@ -170,12 +169,10 @@ export default {
   Es ist auch in Ordnung, deinen Beitrag mit einem Link zur Quelle (web,
     Foto, etc.) zu versehen.`,
   'editdialog.other_tags_heading': 'Weitere Eigenschaften – Tags',
-  'editdialog.other_tags': 'Tags bearbeiten',
-  'editdialog.other_tags.new_key': 'Neuer Schlüssel',
-  'editdialog.other_tags.will_be_deleted': 'wird gelöscht',
-  'editdialog.other_tags.info': `Ein Tag beschreibt Eigenschaften
+  'editdialog.tags_editor': 'Alle Eigenschaften – Tags',
+  'editdialog.tags_editor_info': `Ein Tag beschreibt Eigenschaften
   eines Ortes auf der Karte in einem einheitlichen Format. Hier findest du die
-  <a href="https://wiki.openstreetmap.org/wiki/Map_Features">komplette Übersicht aller Tags in OpenStreetMap</a>.`,
+  <a href="https://wiki.openstreetmap.org/wiki/DE:Map_Features" target="_blank">komplette Übersicht aller Tags in OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Schließen',
   'editsuccess.note.heading': 'Danke für deinen Hinweis!',

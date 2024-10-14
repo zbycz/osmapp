@@ -7,7 +7,6 @@ import {
   DialogContent,
   DialogActions,
   Button,
-  Box,
   Stack,
 } from '@mui/material';
 import { ClimbingView } from './ClimbingView';
@@ -17,11 +16,18 @@ import { getOsmappLink } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useGetHandleSave } from './useGetHandleSave';
 import { getWikimediaCommonsPhotoKeys, removeFilePrefix } from './utils/photo';
+import { useMobileMode } from '../../helpers';
+import { ClimbingEditorHelperText } from './ClimbingEditorHelperText';
 
 const Flex = styled.div`
   display: flex;
   justify-content: space-between;
   width: 100%;
+  align-items: center;
+  gap: 16px;
+`;
+const LeftActions = styled.div`
+  flex: 1;
 `;
 
 export const ClimbingCragDialog = ({
@@ -127,8 +133,8 @@ export const ClimbingCragDialog = ({
       {isEditMode && (
         <DialogActions>
           <Flex>
-            <div>
-              {isEditMode && showDebugMenu && (
+            <LeftActions>
+              {showDebugMenu && (
                 <Button
                   onClick={onNewRouteCreate}
                   color="primary"
@@ -137,7 +143,10 @@ export const ClimbingCragDialog = ({
                   Add new route
                 </Button>
               )}
-            </div>
+              <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <ClimbingEditorHelperText />
+              </div>
+            </LeftActions>
             <div>
               <Stack spacing={2} direction="row">
                 <Button autoFocus onClick={handleCancel}>
