@@ -28,10 +28,7 @@ const useTagsState = (initialTags: FeatureTags): EditContextType['tags'] => {
   const [tagsEntries, setTagsEntries] = useState<TagsEntries>(() =>
     Object.entries(initialTags),
   );
-  const tags = useMemo(() => {
-    console.log('tagsEntries', tagsEntries, Object.fromEntries(tagsEntries));
-    return Object.fromEntries(tagsEntries);
-  }, [tagsEntries]);
+  const tags = useMemo(() => Object.fromEntries(tagsEntries), [tagsEntries]);
 
   const setTag = (k: string, v: string) => {
     setTagsEntries((state) => {

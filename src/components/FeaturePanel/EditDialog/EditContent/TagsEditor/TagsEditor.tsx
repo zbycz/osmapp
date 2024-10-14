@@ -57,7 +57,7 @@ const TagsEditorHeading = () => (
     color="textSecondary"
     style={{ position: 'relative' }}
   >
-    {t('editdialog.other_tags')}
+    {t('editdialog.tags_editor')}
   </Typography>
 );
 
@@ -67,7 +67,7 @@ const TagsEditorButton = ({ setVisible }) => (
     disableElevation
     onClick={() => setVisible((currentState) => !currentState)}
   >
-    {t('editdialog.other_tags')}
+    {t('editdialog.tags_editor')}
     <ExpandMoreIcon fontSize="small" />
   </Button>
 );
@@ -76,7 +76,7 @@ const TagsEditorInfo = () => (
   <tr>
     <td colSpan={2}>
       <Typography color="textSecondary" style={{ paddingTop: '1em' }}>
-        <Translation id="editdialog.other_tags.info" />
+        <Translation id="editdialog.tags_editor_info" />
       </Typography>
     </td>
   </tr>

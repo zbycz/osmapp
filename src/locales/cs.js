@@ -146,13 +146,9 @@ export default {
   'editdialog.info_note': `Váš návrh budou zpracovávat dobrovolníci OpenStreetMap, zde pro ně
         můžete přidat doplňující poznámku. Vhodné je podložit váš příspěvek odkazem na zdroj
         informace (web, foto atd.).`,
-  'editdialog.other_tags': 'Další vlastnosti – tagy',
-  'editdialog.other_tags.new_key': 'nový klíč',
-  'editdialog.other_tags.add': 'Přidat další tag',
-  'editdialog.other_tags.will_be_deleted': 'bude smazáno',
-  'editdialog.other_tags.info': `Tagy popisují vlastnosti
-        mapového prvku v dohodnutém formátu. Zde naleznete úplný
-        <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features">přehled všech tagů v OpenStreetMap</a>.`,
+  'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
+  'editdialog.tags_editor_info': `Tagy popisují vlastnosti mapového prvku v dohodnutém formátu. Zde naleznete úplný
+        <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Zavřít',
   'editsuccess.note.heading': 'Děkujeme za Váš návrh!',

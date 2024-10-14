@@ -106,13 +106,10 @@ export default {
          puedes añadir una nota adicional o describir un ajuste de la posición, etc
         También es apropiado apoyar tu contribución con un enlace a la fuente de la información (web,
          foto, etc.).`,
-  'editdialog.other_tags': 'Otras propiedades – etiquetas',
-  'editdialog.other_tags.new_key': 'nueva clave',
-  'editdialog.other_tags.add': 'Añadir otra etiqueta',
-  'editdialog.other_tags.will_be_deleted': 'será borrado',
-  'editdialog.other_tags.info': `Las Etiquetas describen las propiedades
+  'editdialog.tags_editor': 'Todas las propiedades – etiquetas',
+  'editdialog.tags_editor_info': `Las Etiquetas describen las propiedades
         de cada elemento del mapa en un formato acordado. Aquí puedes encontrar una
-        <a href="https://wiki.openstreetmap.org/wiki/ES:Objetos_del_mapa">descripción general de todas las etiquetas en OpenStreetMap</a>.`,
+        <a href="https://wiki.openstreetmap.org/wiki/ES:Objetos_del_mapa" target="_blank">descripción general de todas las etiquetas en OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Cerrar',
   'editsuccess.note.heading': '¡Gracias por tu sugerencia!',
