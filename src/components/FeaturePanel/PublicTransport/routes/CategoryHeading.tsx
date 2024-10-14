@@ -57,7 +57,11 @@ const ToggleCategory = ({
       {shown && <VisibilityOff fontSize="small" />}
       {!shown && <Visibility fontSize="small" />}
     </ListItemIcon>
-    <ListItemText>{shown ? 'Hide' : 'Show'} this category</ListItemText>
+    <ListItemText>
+      {shown
+        ? t('publictransport.hide_this_category')
+        : t('publictransport.show_this_category')}
+    </ListItemText>
   </MenuItem>
 );
 
@@ -79,7 +83,7 @@ export const CategoryHeading = ({
 
   return (
     <>
-      <Stack direction="row" spacing={2} alignItems="center">
+      <Stack direction="row" spacing={2} alignItems="center" mb={1}>
         <h4>{fmtCategory(category)}</h4>
         <IconButton
           onClick={({ currentTarget }) => {
@@ -95,9 +99,7 @@ export const CategoryHeading = ({
         onClose={() => {
           setAnchorEl(null);
         }}
-        MenuListProps={{
-          'aria-labelledby': 'basic-button',
-        }}
+        MenuListProps={{ 'aria-labelledby': 'basic-button' }}
       >
         <ToggleCategory
           shown={isShownOnMap}
@@ -119,7 +121,7 @@ export const CategoryHeading = ({
           <ListItemIcon>
             <Search fontSize="small" />
           </ListItemIcon>
-          <ListItemText>Show only this category</ListItemText>
+          <ListItemText>{t('publictransport.only_this_category')}</ListItemText>
         </MenuItem>
       </Menu>
     </>

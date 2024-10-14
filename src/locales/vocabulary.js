@@ -258,6 +258,10 @@ export default {
   'publictransport.subway': 'Subway',
   'publictransport.unknown': 'Unknown type',
 
+  'publictransport.show_this_category': 'Show this category',
+  'publictransport.hide_this_category': 'Hide this category',
+  'publictransport.only_this_category': 'Show only this category',
+
   'publictransport.route': 'Route',
   'publictransport.hidden_stops': '__amount__ more stops',
   'publictransport.visible_stops': 'Hide __amount__ stops',
