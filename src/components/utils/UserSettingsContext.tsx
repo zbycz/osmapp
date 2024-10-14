@@ -5,7 +5,6 @@ import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
 
 type UserSettingsType = {
-  'general.imperial': boolean;
   'climbing.gradeSystem': GradeSystem;
   'climbing.isGradesOnPhotosVisible': boolean;
   'climbing.defaultClimbingStyle': TickStyle;
@@ -19,7 +18,6 @@ type UserSettingsContextType = {
 };
 
 const initialUserSettings: UserSettingsType = {
-  'general.imperial': false,
   'climbing.gradeSystem': null,
   'climbing.isGradesOnPhotosVisible': true,
   'climbing.defaultClimbingStyle': 'OS',
