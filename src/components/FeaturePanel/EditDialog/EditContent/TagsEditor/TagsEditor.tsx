@@ -1,20 +1,6 @@
-import React, {
-  ChangeEvent,
-  FocusEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import {
-  Box,
-  Button,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from '../MajorKeysEditor';
@@ -22,8 +8,8 @@ import { isString } from '../../../../helpers';
 import { t, Translation } from '../../../../../services/intl';
 import { useEditContext } from '../../EditContext';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
-import DeleteIcon from '@mui/icons-material/Delete';
-import WarningIcon from '@mui/icons-material/Warning';
+import { KeyInput } from './KeyInput';
+import { ValueInput } from './ValueInput';
 
 const Table = styled.table`
   width: calc(100% - 8px);
@@ -82,130 +68,6 @@ const TagsEditorInfo = () => (
   </tr>
 );
 
-const useHidableDeleteButton = () => {
-  const buttonRef = useRef<HTMLButtonElement>(null);
-  const [buttonShown, setButtonShown] = useState(false);
-  const onInputFocus = () => setButtonShown(true);
-  const onInputBlur = (e: FocusEvent<HTMLInputElement>) => {
-    if (e.relatedTarget !== buttonRef.current) {
-      setButtonShown(false);
-    }
-  };
-  const onButtonBlur = () => setButtonShown(false);
-
-  return { buttonShown, onInputFocus, onInputBlur, onButtonBlur, buttonRef };
-};
-
-const ValueInput = ({ index }: { index: number }) => {
-  const { focusTag } = useEditDialogContext();
-  const { tagsEntries, setTagsEntries } = useEditContext().tags;
-  const { buttonShown, onInputBlur, onInputFocus, onButtonBlur, buttonRef } =
-    useHidableDeleteButton();
-
-  const handleDelete = () => {
-    setTagsEntries((state) => state.toSpliced(index, 1));
-  };
-
-  const handleValueChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTagsEntries((state) =>
-      state.map(([key, value], idx) =>
-        idx === index ? [key, e.target.value] : [key, value],
-      ),
-    );
-  };
-
-  const [key, value] = tagsEntries[index];
-  return (
-    <Stack direction="row" spacing={1} alignItems="center">
-      <TextField
-        value={value}
-        onChange={handleValueChange}
-        fullWidth
-        variant="outlined"
-        size="small"
-        slotProps={{
-          htmlInput: { autoCapitalize: 'none', maxLength: 255 },
-        }}
-        autoFocus={focusTag === key}
-        onFocus={onInputFocus}
-        onBlur={onInputBlur}
-      />
-      {buttonShown && (
-        <IconButton
-          size="small"
-          onClick={handleDelete}
-          onBlur={onButtonBlur}
-          ref={buttonRef}
-        >
-          <DeleteIcon fontSize="small" />
-        </IconButton>
-      )}
-    </Stack>
-  );
-};
-
-const KeyValueRow = ({ index }: { index: number }) => {
-  const { focusTag } = useEditDialogContext();
-  const { tagsEntries, setTagsEntries } = useEditContext().tags;
-
-  const [currentKey, currentValue] = tagsEntries[index];
-
-  const [tmpKey, setTmpKey] = useState(currentKey);
-  useEffect(() => {
-    setTmpKey(currentKey);
-  }, [currentKey, tagsEntries]);
-
-  const handleBlur = () => {
-    if (tmpKey === currentKey) {
-      return;
-    }
-    setTagsEntries((state) =>
-      state.map(([key, value], idx) =>
-        idx === index ? [tmpKey, value] : [key, value],
-      ),
-    );
-  };
-
-  const isDuplicateKey = tagsEntries.some(
-    ([key], idx) => key && key === currentKey && index !== idx,
-  );
-  const isLastIndex = index === tagsEntries.length - 1;
-  const emptyKeyCondition = isLastIndex
-    ? !currentKey && !!currentValue
-    : !currentKey;
-  const isError = emptyKeyCondition || isDuplicateKey;
-
-  return (
-    <tr>
-      <th>
-        <TextField
-          value={tmpKey}
-          onChange={({ target }) => setTmpKey(target.value)}
-          onBlur={handleBlur}
-          autoFocus={focusTag === tmpKey}
-          fullWidth
-          variant="outlined"
-          size="small"
-          error={isError}
-          slotProps={{
-            htmlInput: { autoCapitalize: 'none', maxLength: 255 },
-            input: {
-              endAdornment: isError ? (
-                <InputAdornment position="end">
-                  <WarningIcon color="error" />
-                </InputAdornment>
-              ) : undefined,
-            },
-          }}
-        />
-      </th>
-      <td>
-        <ValueInput index={index} />
-      </td>
-    </tr>
-  );
-};
-
 const AddButton = () => {
   const { tagsEntries, setTagsEntries } = useEditContext().tags;
   const [lastKey, lastValue] = tagsEntries[tagsEntries.length - 1];
@@ -235,8 +97,15 @@ const TagsEditorInner = () => {
       <TagsEditorHeading />
       <Table>
         <tbody>
-          {tagsEntries.map((_, idx) => (
-            <KeyValueRow key={idx} index={idx} />
+          {tagsEntries.map((_, index) => (
+            <tr key={index}>
+              <th>
+                <KeyInput index={index} />
+              </th>
+              <td>
+                <ValueInput index={index} />
+              </td>
+            </tr>
           ))}
           <AddButton />
           <TagsEditorInfo />
