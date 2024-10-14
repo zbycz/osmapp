@@ -14,17 +14,13 @@ export const useGetHandleSave = () => {
     setIsSaving,
     location,
     comment,
-    tags: { tags, typeTag, tmpNewTag, cancelled },
+    tags: { tags, cancelled },
   } = useEditContext();
 
   return () => {
-    const tagsWithType = typeTag
-      ? { [typeTag.key]: typeTag.value, ...tags }
-      : tags;
-    const allTags = { ...tagsWithType, ...tmpNewTag }; // we need to send also unsubmitted new tag
     const noteText = createNoteText(
       feature,
-      allTags,
+      tags,
       cancelled,
       location,
       comment,
@@ -39,8 +35,8 @@ export const useGetHandleSave = () => {
     setIsSaving(true);
     const promise = loggedIn
       ? feature.point
-        ? addOsmFeature(feature, comment, allTags)
-        : editOsmFeature(feature, comment, allTags, cancelled)
+        ? addOsmFeature(feature, comment, tags)
+        : editOsmFeature(feature, comment, tags, cancelled)
       : insertOsmNote(feature.center, noteText);
 
     promise.then(setSuccessInfo, (err) => {
