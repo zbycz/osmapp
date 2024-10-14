@@ -17,11 +17,11 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
-import { majorKeys } from './MajorKeysEditor';
-import { isString } from '../../../helpers';
-import { t, Translation } from '../../../../services/intl';
-import { TagsEntries, useEditContext } from '../EditContext';
-import { useEditDialogContext } from '../../helpers/EditDialogContext';
+import { majorKeys } from '../MajorKeysEditor';
+import { isString } from '../../../../helpers';
+import { t, Translation } from '../../../../../services/intl';
+import { useEditContext } from '../../EditContext';
+import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import DeleteIcon from '@mui/icons-material/Delete';
 import WarningIcon from '@mui/icons-material/Warning';
 
@@ -42,7 +42,7 @@ const Table = styled.table`
   }
 
   td {
-    padding-left: 20px;
+    padding-left: 2px;
   }
 
   .MuiInputBase-root {
@@ -50,7 +50,7 @@ const Table = styled.table`
   }
 `;
 
-const OtherTagsHeading = () => (
+const TagsEditorHeading = () => (
   <Typography
     variant="overline"
     component="h3"
@@ -61,7 +61,7 @@ const OtherTagsHeading = () => (
   </Typography>
 );
 
-const OtherTagsButton = ({ setVisible }) => (
+const TagsEditorButton = ({ setVisible }) => (
   <Button
     variant="outlined"
     disableElevation
@@ -72,7 +72,7 @@ const OtherTagsButton = ({ setVisible }) => (
   </Button>
 );
 
-const OtherTagsInfo = () => (
+const TagsEditorInfo = () => (
   <tr>
     <td colSpan={2}>
       <Typography color="textSecondary" style={{ paddingTop: '1em' }}>
@@ -144,57 +144,59 @@ const ValueInput = ({ index }: { index: number }) => {
   );
 };
 
-const KeyValueRow = ({ index }) => {
+const KeyValueRow = ({ index }: { index: number }) => {
   const { focusTag } = useEditDialogContext();
   const { tagsEntries, setTagsEntries } = useEditContext().tags;
 
-  const [tmpKey, setTmpKey] = useState(tagsEntries[index][0]);
+  const [currentKey, currentValue] = tagsEntries[index];
+
+  const [tmpKey, setTmpKey] = useState(currentKey);
   useEffect(() => {
-    setTmpKey(tagsEntries[index][0]);
-  }, [index, tagsEntries]);
+    setTmpKey(currentKey);
+  }, [currentKey, tagsEntries]);
 
   const handleBlur = () => {
-    if (tmpKey === tagsEntries[index][0]) {
+    if (tmpKey === currentKey) {
       return;
     }
-
-    setTagsEntries((state) => {
-      if (tmpKey === '' && index !== state.length - 1) {
-        return state.toSpliced(index, 1);
-      }
-      return state.map(([key, value], idx) =>
+    setTagsEntries((state) =>
+      state.map(([key, value], idx) =>
         idx === index ? [tmpKey, value] : [key, value],
-      );
-    });
+      ),
+    );
   };
 
   const isDuplicateKey = tagsEntries.some(
-    ([key], idx) => key === tagsEntries[index][0] && index !== idx,
+    ([key], idx) => key && key === currentKey && index !== idx,
   );
+  const isLastIndex = index === tagsEntries.length - 1;
+  const emptyKeyCondition = isLastIndex
+    ? !currentKey && !!currentValue
+    : !currentKey;
+  const isError = emptyKeyCondition || isDuplicateKey;
 
   return (
     <tr>
       <th>
         <TextField
-          name={'key'}
           value={tmpKey}
           onChange={({ target }) => setTmpKey(target.value)}
           onBlur={handleBlur}
+          autoFocus={focusTag === tmpKey}
           fullWidth
           variant="outlined"
           size="small"
+          error={isError}
           slotProps={{
             htmlInput: { autoCapitalize: 'none', maxLength: 255 },
             input: {
-              endAdornment: isDuplicateKey ? (
+              endAdornment: isError ? (
                 <InputAdornment position="end">
                   <WarningIcon color="error" />
                 </InputAdornment>
               ) : undefined,
             },
           }}
-          autoFocus={focusTag === tmpKey}
-          error={isDuplicateKey}
         />
       </th>
       <td>
@@ -203,19 +205,50 @@ const KeyValueRow = ({ index }) => {
     </tr>
   );
 };
-const showAddButton = (tagsEntries: TagsEntries) => {
-  return tagsEntries.length === 0 || tagsEntries[tagsEntries.length - 1][0];
+
+const AddButton = () => {
+  const { tagsEntries, setTagsEntries } = useEditContext().tags;
+  const [lastKey, lastValue] = tagsEntries[tagsEntries.length - 1];
+  const active = tagsEntries.length === 0 || (lastKey && lastValue);
+
+  return (
+    <tr>
+      <td />
+      <td>
+        <Button
+          variant="contained"
+          disableElevation
+          onClick={() => setTagsEntries((state) => [...state, ['', '']])}
+          disabled={!active}
+        >
+          <AddIcon />
+        </Button>
+      </td>
+    </tr>
+  );
 };
 
-export const OtherTagsEditor = () => {
+const TagsEditorInner = () => {
+  const { tagsEntries } = useEditContext().tags;
+  return (
+    <>
+      <TagsEditorHeading />
+      <Table>
+        <tbody>
+          {tagsEntries.map((_, idx) => (
+            <KeyValueRow key={idx} index={idx} />
+          ))}
+          <AddButton />
+          <TagsEditorInfo />
+        </tbody>
+      </Table>
+    </>
+  );
+};
+
+export const TagsEditor = () => {
   const { focusTag } = useEditDialogContext();
-  const {
-    tags: { tagsEntries, setTag },
-  } = useEditContext();
-
-  const focusThisEditor =
-    isString(focusTag) && !majorKeys.includes(focusTag as string);
-
+  const focusThisEditor = isString(focusTag) && !majorKeys.includes(focusTag);
   const [visible, setVisible] = useState(focusThisEditor);
 
   useEffect(() => {
@@ -226,32 +259,10 @@ export const OtherTagsEditor = () => {
 
   return (
     <Box mb={4}>
-      {!visible && <OtherTagsButton setVisible={setVisible} />}
-      {visible && (
-        <>
-          <OtherTagsHeading />
-          <Table>
-            <tbody>
-              {tagsEntries.map((_, idx) => (
-                <KeyValueRow key={idx} index={idx} />
-              ))}
-              <tr>
-                <td />
-                <td>
-                  <Button
-                    variant="contained"
-                    disableElevation
-                    onClick={() => setTag('', '')}
-                    disabled={!showAddButton(tagsEntries)}
-                  >
-                    <AddIcon />
-                  </Button>
-                </td>
-              </tr>
-              <OtherTagsInfo />
-            </tbody>
-          </Table>
-        </>
+      {visible ? (
+        <TagsEditorInner />
+      ) : (
+        <TagsEditorButton setVisible={setVisible} />
       )}
     </Box>
   );

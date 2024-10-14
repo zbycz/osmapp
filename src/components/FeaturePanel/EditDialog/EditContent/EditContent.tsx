@@ -1,7 +1,7 @@
 import { DialogContent } from '@mui/material';
 import React from 'react';
 import { MajorKeysEditor } from './MajorKeysEditor';
-import { OtherTagsEditor } from './OtherTagsEditor';
+import { TagsEditor } from './TagsEditor/TagsEditor';
 import { EditDialogActions } from './EditDialogActions';
 import { OptionsEditor } from './OptionsEditor';
 import { CommentField } from './CommentField';
@@ -18,7 +18,7 @@ export const EditContent = () => (
         <OptionsEditor />
         <ContributionInfoBox />
         <CommentField />
-        <OtherTagsEditor />
+        <TagsEditor />
         <OsmUserLogged />
       </form>
     </DialogContent>
