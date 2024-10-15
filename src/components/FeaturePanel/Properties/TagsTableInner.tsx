@@ -21,6 +21,7 @@ const isBrand = (k: string) => k.match(/^brand/);
 const isOperator = (k: string) => k.match(/^operator/);
 const isPayment = (k: string) => k.match(/^payment/);
 const isDiet = (k: string) => k.match(/^diet/);
+const isCurrency = (k: string) => k.match(/^currency/);
 
 type TagsGroupProps = {
   tags: [string, string][];
@@ -123,6 +124,7 @@ export const TagsTableInner = ({
   const operator = tagsEntries.filter(([k]) => isOperator(k));
   const payments = tagsEntries.filter(([k]) => isPayment(k));
   const diets = tagsEntries.filter(([k]) => isDiet(k));
+  const currencies = tagsEntries.filter(([k]) => isCurrency(k));
   const rest = tagsEntries.filter(
     ([k]) =>
       !isName(k) &&
@@ -135,7 +137,7 @@ export const TagsTableInner = ({
       !isNetwork(k) &&
       !isOperator(k) &&
       !isPayment(k) &&
-      !isDiet(k) &&
+      !isCurrency(k) &&
       !isBrand(k),
   );
 
@@ -195,6 +197,11 @@ export const TagsTableInner = ({
         tags={payments}
         label="payment:*"
         value={previewYesNoGroup(payments)}
+      />
+      <TagsGroup
+        tags={currencies}
+        label="currency:*"
+        value={previewYesNoGroup(currencies)}
       />
       <TagsGroup tags={diets} label="diet:*" value={previewYesNoGroup(diets)} />
     </>
