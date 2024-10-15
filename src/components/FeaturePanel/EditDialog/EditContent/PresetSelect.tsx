@@ -13,6 +13,9 @@ import { ComboSearchBox } from './ComboSearchBox';
 import { useEditContext } from '../EditContext';
 import { Preset } from '../../../../services/tagging/types/Presets';
 import { getPresetForFeature } from '../../../../services/tagging/presets';
+import { Feature, FeatureTags } from '../../../../services/types';
+import { t } from '../../../../services/intl';
+import { Setter } from '../../../../types';
 
 export type TranslatedPreset = Preset & {
   name: string;
@@ -36,21 +39,6 @@ const getPresetsCache = async (): Promise<PresetsCache> => {
     .filter(({ geometry }) => geometry.includes('point'))
     .filter(({ locationSet }) => !locationSet?.include)
     .filter(({ tags }) => Object.keys(tags).length > 0)
-    // .map(({ name, presetKey, tags, terms }) => {
-    //   const tagsAsStrings = Object.entries(tags).map(([k, v]) => `${k}=${v}`);
-    //   return {
-    //     key: presetKey,
-    //     name: getPresetTranslation(presetKey) ?? name ?? 'x',
-    //     tags,
-    //     tagsAsOneString: tagsAsStrings.join(', '),
-    //     texts: [
-    //       ...(getPresetTermsTranslation(presetKey) ?? terms ?? 'x').split(','),
-    //       ...tagsAsStrings,
-    //       presetKey,
-    //     ],
-    //     icon: getPoiClass(tags).class,
-    //   };
-    // });
     .map((preset) => {
       return {
         ...preset,
@@ -66,40 +54,49 @@ const getPresetsCache = async (): Promise<PresetsCache> => {
 const Row = styled(Box)`
   display: flex;
   align-items: center;
-
-  //first child
-  & > *:first-child {
-    min-width: 44px;
-    margin-right: 1em;
-  }
-  // second child
-  & > *:nth-child(2) {
-    width: 100%;
-  }
 `;
 
-export const FeatureTypeSelect = () => {
-  const {
-    tags: { tags },
-  } = useEditContext();
+const LabelWrapper = styled.div`
+  min-width: 44px;
+  margin-right: 1em;
+`;
 
-  const [preset, setPreset] = useState<null | Preset>(null);
-  const [options, setOptions] = useState<PresetsCache>([]);
-  const { feature } = useFeatureContext();
-
-  useEffect(() => {
-    getPresetsCache().then((presets) => setOptions(presets));
-  }, []);
-
+const useMatchTags = (
+  feature: Feature,
+  tags: FeatureTags,
+  setPreset: Setter<Preset>,
+) => {
   useEffect(() => {
     (async () => {
-      const preset = getPresetForFeature({ ...feature, tags }); // takes ~ 1 ms
+      const updatedFeature: Feature = {
+        ...feature,
+        ...(feature.point ? { osmMeta: { type: 'node', id: -1 } } : {}),
+        tags,
+      };
+      const preset = getPresetForFeature(updatedFeature); // takes ~ 1 ms
       const p = (await getPresetsCache()).find(
         (option) => option.presetKey === preset.presetKey,
       );
       setPreset(p);
+      console.log('preset', preset, p);
     })();
-  }, [tags, setPreset, feature]);
+  }, [tags, feature, setPreset]);
+};
+
+const useOptions = () => {
+  const [options, setOptions] = useState<PresetsCache>([]);
+  useEffect(() => {
+    getPresetsCache().then((presets) => setOptions(presets));
+  }, []);
+  return options;
+};
+
+export const PresetSelect = () => {
+  const { tags } = useEditContext().tags;
+  const [preset, setPreset] = useState<null | Preset>(null);
+  const { feature } = useFeatureContext();
+  const options = useOptions();
+  useMatchTags(feature, tags, setPreset);
 
   if (options.length === 0) {
     return null;
@@ -107,9 +104,11 @@ export const FeatureTypeSelect = () => {
 
   return (
     <Row mb={3}>
-      <Typography variant="body1" component="span" color="textSecondary">
-        Typ:
-      </Typography>
+      <LabelWrapper>
+        <Typography variant="body1" component="span" color="textSecondary">
+          {t('editdialog.preset_select.label')}
+        </Typography>
+      </LabelWrapper>
 
       <ComboSearchBox value={preset} setValue={setPreset} options={options} />
     </Row>

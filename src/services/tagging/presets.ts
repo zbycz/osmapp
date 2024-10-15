@@ -44,7 +44,6 @@ const matchScore = (_this, entityTags) => {
   }
 
   return score;
-  /* eslint-enable no-restricted-syntax,guard-for-in */
 };
 
 const index = {

@@ -3,7 +3,7 @@ import { InputBase, ListSubheader, MenuItem, Select } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
 import Maki from '../../../utils/Maki';
-import { TranslatedPreset } from './FeatureTypeSelect';
+import { TranslatedPreset } from './PresetSelect';
 import { Setter } from '../../../../types';
 import { Preset } from '../../../../services/tagging/types/Presets';
 
@@ -17,8 +17,8 @@ const StyledListSubheader = styled(ListSubheader)`
   align-items: center;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   padding: 6px 13px;
-  & :first-child {
-    margin-right: 11px;
+  & > svg:first-of-type {
+    margin-right: 8px;
   }
 `;
 
@@ -36,13 +36,19 @@ const emptyOptions = [
   // 'climbing/area',
 ];
 
-const renderOption = (option) =>
-  option && (
+const Placeholder = styled.span`
+  color: rgba(0, 0, 0, 0.54);
+`;
+
+const renderOption = (option: TranslatedPreset | null) =>
+  option ? (
     <>
       <Maki ico={option.icon} size={16} middle themed />
       <span style={{ paddingLeft: 5 }} />
       {option.name}
     </>
+  ) : (
+    <Placeholder>Select the type</Placeholder>
   );
 
 export const ComboSearchBox = ({
@@ -76,6 +82,9 @@ export const ComboSearchBox = ({
       onClose={() => setSearchText('')}
       renderValue={() => renderOption(value)}
       size="small"
+      variant="outlined"
+      fullWidth
+      displayEmpty
     >
       <StyledListSubheader>
         <SearchIcon fontSize="small" />
@@ -93,12 +102,8 @@ export const ComboSearchBox = ({
         />
       </StyledListSubheader>
       {displayedOptions.map((option) => (
-        <MenuItem
-          key={option.presetKey}
-          component="li"
-          // @ts-ignore https://github.com/mui/material-ui/issues/14286
-          value={option}
-        >
+        // @ts-ignore https://github.com/mui/material-ui/issues/14286
+        <MenuItem key={option.presetKey} component="li" value={option}>
           {renderOption(option)}
         </MenuItem>
       ))}

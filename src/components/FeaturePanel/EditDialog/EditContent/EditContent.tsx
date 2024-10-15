@@ -8,13 +8,14 @@ import { CommentField } from './CommentField';
 import { OsmUserLogged } from './OsmUserLogged';
 import { ContributionInfoBox } from './ContributionInfoBox';
 import { OsmUserLoggedOut } from './OsmUserLoggedOut';
+import { PresetSelect } from './PresetSelect';
 
 export const EditContent = () => (
   <>
     <DialogContent dividers>
       <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
         <OsmUserLoggedOut />
-        <FeatureTypeSelect />
+        <PresetSelect />
         <MajorKeysEditor />
         <OptionsEditor />
         <ContributionInfoBox />

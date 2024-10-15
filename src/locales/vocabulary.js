@@ -202,6 +202,7 @@ export default {
           <br/><br/>If this is a mistake, you can manually revert the values and save it again.`,
   'editsuccess.edit.urlLabel': `Your changes:`,
   'editsuccess.edit.textLabel': 'Comment',
+  'editdialog.preset_select.label': 'Type:',
 
   'tags.name': 'Name',
   'tags.description': 'Description',
