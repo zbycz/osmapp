@@ -203,6 +203,8 @@ export default {
   'editsuccess.edit.urlLabel': `Your changes:`,
   'editsuccess.edit.textLabel': 'Comment',
   'editdialog.preset_select.label': 'Type:',
+  'editdialog.preset_select.placeholder': 'Select the type',
+  'editdialog.preset_select.search_placeholder': 'Type to search...',
 
   'tags.name': 'Name',
   'tags.description': 'Description',

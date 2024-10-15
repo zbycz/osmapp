@@ -26,7 +26,7 @@ type PresetCacheItem = Preset & { name: string; icon: string; terms: string[] };
 type PresetsCache = PresetCacheItem[];
 
 let presetsCache: PresetsCache | null = null;
-const getPresetsCache = async (): Promise<PresetsCache> => {
+const getTranslatedPresets = async (): Promise<PresetsCache> => {
   if (presetsCache) {
     return presetsCache;
   }
@@ -64,7 +64,7 @@ const LabelWrapper = styled.div`
 const useMatchTags = (
   feature: Feature,
   tags: FeatureTags,
-  setPreset: Setter<Preset>,
+  setPreset: Setter<TranslatedPreset | ''>,
 ) => {
   useEffect(() => {
     (async () => {
@@ -74,11 +74,10 @@ const useMatchTags = (
         tags,
       };
       const preset = getPresetForFeature(updatedFeature); // takes ~ 1 ms
-      const p = (await getPresetsCache()).find(
+      const translatedPreset = (await getTranslatedPresets()).find(
         (option) => option.presetKey === preset.presetKey,
       );
-      setPreset(p);
-      console.log('preset', preset, p);
+      setPreset(translatedPreset ?? '');
     })();
   }, [tags, feature, setPreset]);
 };
@@ -86,14 +85,14 @@ const useMatchTags = (
 const useOptions = () => {
   const [options, setOptions] = useState<PresetsCache>([]);
   useEffect(() => {
-    getPresetsCache().then((presets) => setOptions(presets));
+    getTranslatedPresets().then((presets) => setOptions(presets));
   }, []);
   return options;
 };
 
 export const PresetSelect = () => {
   const { tags } = useEditContext().tags;
-  const [preset, setPreset] = useState<null | Preset>(null);
+  const [preset, setPreset] = useState<TranslatedPreset | ''>('');
   const { feature } = useFeatureContext();
   const options = useOptions();
   useMatchTags(feature, tags, setPreset);

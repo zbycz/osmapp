@@ -6,10 +6,13 @@ import Maki from '../../../utils/Maki';
 import { TranslatedPreset } from './PresetSelect';
 import { Setter } from '../../../../types';
 import { Preset } from '../../../../services/tagging/types/Presets';
+import { t } from '../../../../services/intl';
+import { SelectInputProps } from '@mui/material/Select/SelectInput';
+import { useEditContext } from '../EditContext';
 
 // https://stackoverflow.com/a/70918883/671880
 
-const containsText = (text, searchText) =>
+const containsText = (text: string, searchText: string) =>
   text.toLowerCase().indexOf(searchText.toLowerCase()) > -1;
 
 const StyledListSubheader = styled(ListSubheader)`
@@ -37,31 +40,22 @@ const emptyOptions = [
 ];
 
 const Placeholder = styled.span`
-  color: rgba(0, 0, 0, 0.54);
+  color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-const renderOption = (option: TranslatedPreset | null) =>
-  option ? (
+const renderOption = (option: TranslatedPreset | '') =>
+  !option ? (
+    <Placeholder>{t('editdialog.preset_select.placeholder')}</Placeholder>
+  ) : (
     <>
       <Maki ico={option.icon} size={16} middle themed />
       <span style={{ paddingLeft: 5 }} />
       {option.name}
     </>
-  ) : (
-    <Placeholder>Select the type</Placeholder>
   );
 
-export const ComboSearchBox = ({
-  value,
-  setValue,
-  options,
-}: {
-  value: Preset;
-  setValue: Setter<Preset>;
-  options: TranslatedPreset[];
-}) => {
-  const [searchText, setSearchText] = useState('');
-  const displayedOptions = useMemo<TranslatedPreset[]>(
+const useDisplayedOptions = (searchText: string, options: TranslatedPreset[]) =>
+  useMemo<TranslatedPreset[]>(
     () =>
       searchText.length
         ? options.filter((option) => containsText(option.name, searchText))
@@ -71,13 +65,70 @@ export const ComboSearchBox = ({
     [options, searchText],
   );
 
+const SearchRow = ({
+  onChange,
+}: {
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) => (
+  <StyledListSubheader>
+    <SearchIcon fontSize="small" />
+    <InputBase
+      size="small"
+      autoFocus
+      placeholder={t('editdialog.preset_select.search_placeholder')}
+      fullWidth
+      onChange={onChange}
+      onKeyDown={(e) => {
+        if (e.key !== 'Escape') {
+          e.stopPropagation();
+        }
+      }}
+    />
+  </StyledListSubheader>
+);
+
+export const ComboSearchBox = ({
+  value,
+  setValue,
+  options,
+}: {
+  value: TranslatedPreset | '';
+  setValue: Setter<TranslatedPreset>;
+  options: TranslatedPreset[];
+}) => {
+  const { tags, setTagsEntries } = useEditContext().tags;
+
+  const [searchText, setSearchText] = useState('');
+  const displayedOptions = useDisplayedOptions(searchText, options);
+
+  console.log('value', value);
+
   return (
     <Select
       MenuProps={{ autoFocus: false }}
       value={value}
       onChange={(e) => {
-        // @ts-ignore https://github.com/mui/material-ui/issues/14286
-        setValue(e.target.value);
+        const oldValue = value;
+        if (oldValue) {
+          Object.entries(oldValue.addTags ?? oldValue.tags ?? {}).forEach(
+            (tag) => {
+              setTagsEntries((state) =>
+                state.filter(
+                  ([key, value]) => key !== tag[0] && value !== tag[1],
+                ),
+              );
+            },
+          );
+        }
+
+        const newValue = e.target.value as unknown as TranslatedPreset; // https://github.com/mui/material-ui/issues/14286
+        if (newValue) {
+          const newTags = Object.entries(
+            newValue.addTags ?? newValue.tags ?? {},
+          );
+          setTagsEntries((state) => [...newTags, ...state]);
+        }
+        setValue(newValue);
       }}
       onClose={() => setSearchText('')}
       renderValue={() => renderOption(value)}
@@ -86,21 +137,7 @@ export const ComboSearchBox = ({
       fullWidth
       displayEmpty
     >
-      <StyledListSubheader>
-        <SearchIcon fontSize="small" />
-        <InputBase
-          size="small"
-          autoFocus
-          placeholder="Type to search..."
-          fullWidth
-          onChange={(e) => setSearchText(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key !== 'Escape') {
-              e.stopPropagation();
-            }
-          }}
-        />
-      </StyledListSubheader>
+      <SearchRow onChange={(e) => setSearchText(e.target.value)} />
       {displayedOptions.map((option) => (
         // @ts-ignore https://github.com/mui/material-ui/issues/14286
         <MenuItem key={option.presetKey} component="li" value={option}>
