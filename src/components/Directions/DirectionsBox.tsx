@@ -1,29 +1,21 @@
 import styled from '@emotion/styled';
-import { DirectionsAutocomplete } from './DirectionsAutocomplete';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Stack } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { t } from '../../services/intl';
 import { ModeToggler } from './ModeToggler';
-import Router, { useRouter } from 'next/router';
-import {
-  destroyRouting,
-  getLastMode,
-  handleRouting,
-} from './routing/handleRouting';
-import { getLabel } from '../../helpers/featureLabel';
-import { getLastFeature } from '../../services/lastFeatureStorage';
+import Router from 'next/router';
+import { handleRouting } from './routing/handleRouting';
 import { Result, StyledPaper } from './Result';
-import { buildUrl, CloseButton, parseUrlParts } from './helpers';
-import { PointsTooFarError, Profile, RoutingResult } from './routing/types';
+import { buildUrl, CloseButton, getOnrejected } from './helpers';
+import { Profile, RoutingResult } from './routing/types';
 import { useBoolState, useMobileMode } from '../helpers';
 import { LoadingButton } from '@mui/lab';
-import { type ShowToast, useSnackbar } from '../utils/SnackbarContext';
-import { FetchError } from '../../services/helpers';
-import * as Sentry from '@sentry/nextjs';
+import { useSnackbar } from '../utils/SnackbarContext';
 import { Option } from '../SearchBox/types';
-import { getCoordsOption } from '../SearchBox/options/coords';
 import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
+import { StopList } from './StopList';
+import { useReactToUrl } from './reactToUrl';
 
 const Wrapper = styled(Stack)`
   position: absolute;
@@ -33,64 +25,8 @@ const Wrapper = styled(Stack)`
   width: 340px;
 `;
 
-const getOnrejected = (showToast: ShowToast) => {
-  return (error: unknown) => {
-    if (error instanceof PointsTooFarError) {
-      showToast(t('directions.error.too_far'), 'warning');
-    } else if (error instanceof FetchError) {
-      Sentry.captureException(error);
-      showToast(`${t('error')} code ${error.code}`, 'error');
-    } else {
-      Sentry.captureException(error);
-      showToast(`${t('error')} – ${error}`, 'error');
-      throw error;
-    }
-  };
-};
-
-const useReactToUrl = (
-  setMode: (param: ((current: string) => string) | string) => void,
-  setFrom: (value: Option) => void,
-  setTo: (value: Option) => void,
-  setResult: (result: RoutingResult) => void,
-) => {
-  const { showToast } = useSnackbar();
-  const initialModeWasSet = useRef(false);
-  const router = useRouter();
-  const urlParts = router.query.all;
-
-  useEffect(() => {
-    const [, mode, ...points] = urlParts as [string, Profile, ...string[]];
-    const options = parseUrlParts(points);
-
-    if (mode && options.length === 2) {
-      setMode(mode);
-      setFrom(options[0]);
-      setTo(options[1]);
-      handleRouting(mode, options.map(getOptionToLonLat))
-        .then(setResult)
-        .catch(getOnrejected(showToast));
-    } else {
-      if (initialModeWasSet.current === false && getLastMode()) {
-        setMode(getLastMode());
-        initialModeWasSet.current = true;
-      }
-
-      const lastFeature = getLastFeature();
-      if (lastFeature) {
-        setTo(getCoordsOption(lastFeature.center, getLabel(lastFeature)));
-      }
-    }
-
-    return () => {
-      destroyRouting();
-    };
-  }, [urlParts, setMode, setFrom, setTo, setResult, showToast]);
-};
-
 const useGetOnSubmit = (
-  from: Option,
-  to: Option,
+  points: Option[],
   mode: Profile,
   setResult: (result: RoutingResult) => void,
   setLoading: (value: ((prevState: boolean) => boolean) | boolean) => void,
@@ -98,14 +34,11 @@ const useGetOnSubmit = (
   const { showToast } = useSnackbar();
 
   return () => {
-    if (!from || !to) {
-      return;
-    }
-    const points = [from, to];
-    const url = buildUrl(mode, points);
+    const filteredPoints = points.filter(Boolean);
+    const url = buildUrl(mode, filteredPoints);
     if (url === Router.asPath) {
       setLoading(true);
-      handleRouting(mode, points.map(getOptionToLonLat))
+      handleRouting(mode, filteredPoints.map(getOptionToLonLat))
         .then(setResult)
         .catch(getOnrejected(showToast))
         .finally(() => setLoading(false));
@@ -124,11 +57,10 @@ type Props = {
 export const DirectionsForm = ({ setResult, hideForm }: Props) => {
   const [loading, setLoading] = useState(false);
   const [mode, setMode] = useState<Profile>('car');
-  const [from, setFrom] = useState<Option>();
-  const [to, setTo] = useState<Option>();
+  const [points, setPoints] = useState<Option[]>([undefined, undefined]);
 
-  useReactToUrl(setMode, setFrom, setTo, setResult);
-  const onSubmit = useGetOnSubmit(from, to, mode, setResult, setLoading);
+  useReactToUrl(setMode, setPoints, setResult);
+  const onSubmit = useGetOnSubmit(points, mode, setResult, setLoading);
 
   if (hideForm) {
     return null;
@@ -144,18 +76,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         </div>
       </Stack>
 
-      <Stack spacing={1} mb={3}>
-        <DirectionsAutocomplete
-          value={from}
-          setValue={setFrom}
-          label={t('directions.form.starting_point')}
-        />
-        <DirectionsAutocomplete
-          value={to}
-          setValue={setTo}
-          label={t('directions.form.destination')}
-        />
-      </Stack>
+      <StopList points={points} setPoints={setPoints} />
 
       <LoadingButton
         loading={loading}
