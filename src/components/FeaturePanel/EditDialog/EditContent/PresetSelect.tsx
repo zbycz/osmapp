@@ -35,8 +35,6 @@ const getTranslatedPresets = async (): Promise<PresetsCache> => {
 
   // resolve symlinks to {landuse...} etc
   presetsCache = Object.values(allPresets)
-    .filter(({ searchable }) => searchable === undefined || searchable)
-    .filter(({ geometry }) => geometry.includes('point'))
     .filter(({ locationSet }) => !locationSet?.include)
     .filter(({ tags }) => Object.keys(tags).length > 0)
     .map((preset) => {
@@ -74,9 +72,9 @@ const useMatchTags = (
         ...(feature.point ? { osmMeta: { type: 'node', id: -1 } } : {}),
         tags,
       };
-      const preset = getPresetForFeature(updatedFeature); // takes ~ 1 ms
+      const foundPreset = getPresetForFeature(updatedFeature); // takes ~ 1 ms
       const translatedPreset = (await getTranslatedPresets()).find(
-        (option) => option.presetKey === preset.presetKey,
+        (option) => option.presetKey === foundPreset.presetKey,
       );
       setPreset(translatedPreset ?? '');
     })();

@@ -19,6 +19,8 @@ import { useBoolState } from '../../../helpers';
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { PROJECT_ID } from '../../../../services/project';
 import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
+import { OsmType } from '../../../../services/types';
+import { geometryMatchesOsmType } from '../../../../services/tagging/presets';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -71,10 +73,12 @@ const renderOption = (option: TranslatedPreset | '') =>
 const getFilteredOptions = (
   options: TranslatedPreset[],
   searchText: string,
+  osmType: OsmType | undefined,
 ) => {
-  const filteredOptions = options.filter((option) =>
-    containsText(option.name, searchText),
-  );
+  const filteredOptions = options
+    .filter(({ geometry }) => geometryMatchesOsmType(geometry, osmType))
+    .filter(({ searchable }) => searchable === undefined || searchable)
+    .filter((option) => containsText(option.name, searchText));
 
   if (searchText.length <= 2) {
     return filteredOptions.splice(0, 50); // too many rows in select are slow
@@ -83,16 +87,21 @@ const getFilteredOptions = (
   return filteredOptions;
 };
 
-const useDisplayedOptions = (searchText: string, options: TranslatedPreset[]) =>
-  useMemo<TranslatedPreset[]>(
+const useDisplayedOptions = (
+  searchText: string,
+  options: TranslatedPreset[],
+) => {
+  const { feature } = useFeatureContext();
+  return useMemo<TranslatedPreset[]>(
     () =>
       searchText.length
-        ? getFilteredOptions(options, searchText)
+        ? getFilteredOptions(options, searchText, feature.osmMeta?.type)
         : emptyOptions.map((presetKey) =>
             options.find((preset) => preset.presetKey === presetKey),
           ),
     [options, searchText],
   );
+};
 
 const SearchRow = ({
   onChange,
