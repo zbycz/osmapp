@@ -141,6 +141,21 @@ const useGetOnChange = (
   };
 };
 
+const getPaperMaxHeight = (
+  selectRef: React.MutableRefObject<HTMLDivElement>,
+) => {
+  if (!selectRef.current) {
+    return undefined;
+  }
+  const BOTTOM_PADDING = 50;
+  const rect = selectRef.current.getBoundingClientRect();
+  const height = window.innerHeight - (rect.top + rect.height) - BOTTOM_PADDING;
+  return {
+    style: {
+      maxHeight: height,
+    },
+  };
+};
 export const ComboSearchBox = ({
   value,
   setValue,
@@ -150,6 +165,7 @@ export const ComboSearchBox = ({
   setValue: Setter<TranslatedPreset | ''>;
   options: TranslatedPreset[];
 }) => {
+  const selectRef = React.useRef<HTMLDivElement>(null);
   const { feature } = useFeatureContext();
   const { loggedIn } = useOsmAuthContext();
   const [enabled, enable] = useBoolState(feature.point || !loggedIn);
@@ -159,11 +175,17 @@ export const ComboSearchBox = ({
 
   const onChange = useGetOnChange(value, setValue);
 
+  // console.log(selectRef.current.getBoundingClientRect());
   return (
     <>
       <Select
         disabled={!enabled}
-        MenuProps={{ autoFocus: false }}
+        MenuProps={{
+          autoFocus: false,
+          slotProps: {
+            paper: getPaperMaxHeight(selectRef),
+          },
+        }}
         value={value}
         onChange={onChange}
         onClose={() => setSearchText('')}
@@ -172,6 +194,7 @@ export const ComboSearchBox = ({
         variant="outlined"
         fullWidth
         displayEmpty
+        ref={selectRef}
       >
         <SearchRow onChange={(e) => setSearchText(e.target.value)} />
         {displayedOptions.map((option) => (

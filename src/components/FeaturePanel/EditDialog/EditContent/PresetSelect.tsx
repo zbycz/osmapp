@@ -47,6 +47,7 @@ const getTranslatedPresets = async (): Promise<PresetsCache> => {
         terms: getPresetTermsTranslation(preset.presetKey) ?? preset.terms,
       };
     });
+  // .sort((a, b) => a.name.localeCompare(b.name)); TODO once we have better match fn
 
   return presetsCache;
 };
