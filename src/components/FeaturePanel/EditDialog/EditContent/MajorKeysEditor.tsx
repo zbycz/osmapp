@@ -9,7 +9,7 @@ import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import { useEditContext } from '../EditContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import styled from '@emotion/styled';
-import { CharacterCount, getInputTypeForKey } from './helpers';
+import { CharacterCount } from './helpers';
 
 export const majorKeys = [
   'name',
@@ -21,7 +21,7 @@ export const majorKeys = [
 
 const MAX_INPUT_LENGTH = 255;
 
-const getData = (numberOfWikimediaItems: number) => {
+const getData = (numberOfWikimediaItems) => {
   const wikimediaCommonTags = Array(numberOfWikimediaItems)
     .fill('')
     .reduce((acc, _, index) => {
@@ -47,30 +47,19 @@ const InputContainer = styled.div`
   position: relative;
 `;
 
-type TextFieldProps = {
-  k: string;
-  label: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-  value?: string;
-  autoFocus?: boolean;
-};
-
 const TextFieldWithCharacterCount = ({
   k,
   label,
   autoFocus,
   onChange,
   value,
-}: TextFieldProps) => {
+}) => {
   const [isFocused, setIsFocused] = useState(false);
-  const inputType = getInputTypeForKey(k);
-
   return (
     <InputContainer>
       <TextField
         label={label}
-        type={inputType}
-        multiline={inputType === 'text'}
+        multiline
         value={value}
         InputLabelProps={{ shrink: true }}
         variant="outlined"

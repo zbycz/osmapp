@@ -3,7 +3,6 @@ import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { useEditContext } from '../../EditContext';
 import { IconButton, Stack, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getInputTypeForKey } from '../helpers';
 
 const useHidableDeleteButton = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -35,10 +34,7 @@ const DeleteButton = ({ deleteButton, index }: DeleteButtonProps) => {
     setTagsEntries((state) => state.toSpliced(index, 1));
   };
 
-  if (!deleteButton.shown) {
-    return null;
-  }
-  return (
+  return deleteButton.shown ? (
     <IconButton
       size="small"
       onClick={onClick}
@@ -47,7 +43,7 @@ const DeleteButton = ({ deleteButton, index }: DeleteButtonProps) => {
     >
       <DeleteIcon fontSize="small" />
     </IconButton>
-  );
+  ) : null;
 };
 
 type Props = { index: number };
@@ -69,7 +65,6 @@ export const ValueInput = ({ index }: Props) => {
   return (
     <Stack direction="row" spacing={1} alignItems="center">
       <TextField
-        type={getInputTypeForKey(currentKey)}
         value={currentValue}
         onChange={handleChange}
         fullWidth
