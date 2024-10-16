@@ -156,7 +156,7 @@ const getPaperMaxHeight = (
     },
   };
 };
-export const ComboSearchBox = ({
+export const PresetSearchBox = ({
   value,
   setValue,
   options,
@@ -175,16 +175,13 @@ export const ComboSearchBox = ({
 
   const onChange = useGetOnChange(value, setValue);
 
-  // console.log(selectRef.current.getBoundingClientRect());
   return (
     <>
       <Select
         disabled={!enabled}
         MenuProps={{
           autoFocus: false,
-          slotProps: {
-            paper: getPaperMaxHeight(selectRef),
-          },
+          slotProps: { paper: getPaperMaxHeight(selectRef) },
         }}
         value={value}
         onChange={onChange}
@@ -205,9 +202,10 @@ export const ComboSearchBox = ({
         ))}
       </Select>
       {!enabled && (
+        // TODO we may warn users that this is not usual operation, if this becomes an issue
         <Box ml={1}>
           <Button color="secondary" onClick={enable}>
-            Edit
+            {t('editdialog.preset_select.edit_button')}
           </Button>
         </Box>
       )}

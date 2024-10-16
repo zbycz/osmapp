@@ -205,6 +205,7 @@ export default {
   'editdialog.preset_select.label': 'Type:',
   'editdialog.preset_select.placeholder': 'Select the type',
   'editdialog.preset_select.search_placeholder': 'Type to search...',
+  'editdialog.preset_select.edit_button': 'Edit',
 
   'tags.name': 'Name',
   'tags.description': 'Description',

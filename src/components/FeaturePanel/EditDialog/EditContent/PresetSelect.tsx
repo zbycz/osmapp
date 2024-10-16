@@ -9,7 +9,7 @@ import {
   getPresetTranslation,
 } from '../../../../services/tagging/translations';
 import { useFeatureContext } from '../../../utils/FeatureContext';
-import { ComboSearchBox } from './ComboSearchBox';
+import { PresetSearchBox } from './PresetSearchBox';
 import { useEditContext } from '../EditContext';
 import { Preset } from '../../../../services/tagging/types/Presets';
 import { getPresetForFeature } from '../../../../services/tagging/presets';
@@ -110,7 +110,7 @@ export const PresetSelect = () => {
         </Typography>
       </LabelWrapper>
 
-      <ComboSearchBox value={preset} setValue={setPreset} options={options} />
+      <PresetSearchBox value={preset} setValue={setPreset} options={options} />
     </Row>
   );
 };
