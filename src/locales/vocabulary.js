@@ -202,6 +202,10 @@ export default {
           <br/><br/>If this is a mistake, you can manually revert the values and save it again.`,
   'editsuccess.edit.urlLabel': `Your changes:`,
   'editsuccess.edit.textLabel': 'Comment',
+  'editdialog.preset_select.label': 'Type:',
+  'editdialog.preset_select.placeholder': 'Select the type',
+  'editdialog.preset_select.search_placeholder': 'Type to search...',
+  'editdialog.preset_select.edit_button': 'Edit',
 
   'tags.name': 'Name',
   'tags.description': 'Description',
