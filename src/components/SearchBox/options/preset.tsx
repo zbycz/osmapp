@@ -84,12 +84,12 @@ export const getPresetOptions = async (
   const allResults = orderBy(
     filtered,
     [
-      // some bestMatches are the same for many items, then sort by name. Try out *dog*
+      // some bestMatches are the same for many items, then sort by name. Try out *restaurant*
       ({ nameSimilarity, bestMatch }) => Math.max(nameSimilarity, bestMatch),
       ({ nameSimilarity }) => nameSimilarity,
       ({ bestMatch }) => bestMatch,
     ],
-    'desc',
+    ['desc', 'desc', 'desc'],
   ).map((result) => ({
     type: 'preset' as const,
     preset: result,
