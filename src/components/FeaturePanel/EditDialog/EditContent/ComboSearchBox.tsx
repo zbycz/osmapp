@@ -1,5 +1,12 @@
 import React, { useMemo, useState } from 'react';
-import { InputBase, ListSubheader, MenuItem, Select } from '@mui/material';
+import {
+  Box,
+  Button,
+  InputBase,
+  ListSubheader,
+  MenuItem,
+  Select,
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
 import Maki from '../../../utils/Maki';
@@ -7,8 +14,15 @@ import { TranslatedPreset } from './PresetSelect';
 import { Setter } from '../../../../types';
 import { Preset } from '../../../../services/tagging/types/Presets';
 import { t } from '../../../../services/intl';
-import { SelectInputProps } from '@mui/material/Select/SelectInput';
+import {
+  SelectChangeEvent,
+  SelectInputProps,
+} from '@mui/material/Select/SelectInput';
 import { useEditContext } from '../EditContext';
+import { useBoolState } from '../../../helpers';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { PROJECT_ID } from '../../../../services/project';
+import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -33,10 +47,14 @@ const emptyOptions = [
   'shop',
   'leisure/park',
   'amenity/place_of_worship',
-  'climbing/route_bottom',
-  'climbing/route',
-  'climbing/crag',
-  // 'climbing/area',
+  ...(PROJECT_ID === 'openclimbing'
+    ? [
+        'climbing/route_bottom',
+        'climbing/route',
+        'climbing/crag',
+        // 'climbing/area',
+      ]
+    : []),
 ];
 
 const Placeholder = styled.span`
@@ -87,63 +105,78 @@ const SearchRow = ({
   </StyledListSubheader>
 );
 
+const useGetOnChange = (
+  value: TranslatedPreset | '',
+  setValue: (value: Setter<TranslatedPreset | ''>) => void,
+) => {
+  const { setTagsEntries } = useEditContext().tags;
+
+  return (e: SelectChangeEvent<TranslatedPreset | ''>) => {
+    const oldValue = value;
+    if (oldValue) {
+      Object.entries(oldValue.addTags ?? oldValue.tags ?? {}).forEach((tag) => {
+        setTagsEntries((state) =>
+          state.filter(([key, value]) => key !== tag[0] && value !== tag[1]),
+        );
+      });
+    }
+
+    const newValue = e.target.value as unknown as TranslatedPreset; // https://github.com/mui/material-ui/issues/14286
+    if (newValue) {
+      const newTags = Object.entries(newValue.addTags ?? newValue.tags ?? {});
+      setTagsEntries((state) => [...newTags, ...state]);
+    }
+    setValue(newValue);
+  };
+};
+
 export const ComboSearchBox = ({
   value,
   setValue,
   options,
 }: {
   value: TranslatedPreset | '';
-  setValue: Setter<TranslatedPreset>;
+  setValue: Setter<TranslatedPreset | ''>;
   options: TranslatedPreset[];
 }) => {
-  const { tags, setTagsEntries } = useEditContext().tags;
+  const { feature } = useFeatureContext();
+  const { loggedIn } = useOsmAuthContext();
+  const [enabled, enable] = useBoolState(feature.point || !loggedIn);
 
   const [searchText, setSearchText] = useState('');
   const displayedOptions = useDisplayedOptions(searchText, options);
 
-  console.log('value', value);
+  const onChange = useGetOnChange(value, setValue);
 
   return (
-    <Select
-      MenuProps={{ autoFocus: false }}
-      value={value}
-      onChange={(e) => {
-        const oldValue = value;
-        if (oldValue) {
-          Object.entries(oldValue.addTags ?? oldValue.tags ?? {}).forEach(
-            (tag) => {
-              setTagsEntries((state) =>
-                state.filter(
-                  ([key, value]) => key !== tag[0] && value !== tag[1],
-                ),
-              );
-            },
-          );
-        }
-
-        const newValue = e.target.value as unknown as TranslatedPreset; // https://github.com/mui/material-ui/issues/14286
-        if (newValue) {
-          const newTags = Object.entries(
-            newValue.addTags ?? newValue.tags ?? {},
-          );
-          setTagsEntries((state) => [...newTags, ...state]);
-        }
-        setValue(newValue);
-      }}
-      onClose={() => setSearchText('')}
-      renderValue={() => renderOption(value)}
-      size="small"
-      variant="outlined"
-      fullWidth
-      displayEmpty
-    >
-      <SearchRow onChange={(e) => setSearchText(e.target.value)} />
-      {displayedOptions.map((option) => (
-        // @ts-ignore https://github.com/mui/material-ui/issues/14286
-        <MenuItem key={option.presetKey} component="li" value={option}>
-          {renderOption(option)}
-        </MenuItem>
-      ))}
-    </Select>
+    <>
+      <Select
+        disabled={!enabled}
+        MenuProps={{ autoFocus: false }}
+        value={value}
+        onChange={onChange}
+        onClose={() => setSearchText('')}
+        renderValue={() => renderOption(value)}
+        size="small"
+        variant="outlined"
+        fullWidth
+        displayEmpty
+      >
+        <SearchRow onChange={(e) => setSearchText(e.target.value)} />
+        {displayedOptions.map((option) => (
+          // @ts-ignore https://github.com/mui/material-ui/issues/14286
+          <MenuItem key={option.presetKey} component="li" value={option}>
+            {renderOption(option)}
+          </MenuItem>
+        ))}
+      </Select>
+      {!enabled && (
+        <Box ml={1}>
+          <Button color="secondary" onClick={enable}>
+            Edit
+          </Button>
+        </Box>
+      )}
+    </>
   );
 };
