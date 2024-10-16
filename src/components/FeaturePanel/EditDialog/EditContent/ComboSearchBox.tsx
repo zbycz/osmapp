@@ -12,12 +12,8 @@ import styled from '@emotion/styled';
 import Maki from '../../../utils/Maki';
 import { TranslatedPreset } from './PresetSelect';
 import { Setter } from '../../../../types';
-import { Preset } from '../../../../services/tagging/types/Presets';
 import { t } from '../../../../services/intl';
-import {
-  SelectChangeEvent,
-  SelectInputProps,
-} from '@mui/material/Select/SelectInput';
+import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
 import { useEditContext } from '../EditContext';
 import { useBoolState } from '../../../helpers';
 import { useFeatureContext } from '../../../utils/FeatureContext';
@@ -72,11 +68,26 @@ const renderOption = (option: TranslatedPreset | '') =>
     </>
   );
 
+const getFilteredOptions = (
+  options: TranslatedPreset[],
+  searchText: string,
+) => {
+  const filteredOptions = options.filter((option) =>
+    containsText(option.name, searchText),
+  );
+
+  if (searchText.length <= 2) {
+    return filteredOptions.splice(0, 50); // too many rows in select are slow
+  }
+
+  return filteredOptions;
+};
+
 const useDisplayedOptions = (searchText: string, options: TranslatedPreset[]) =>
   useMemo<TranslatedPreset[]>(
     () =>
       searchText.length
-        ? options.filter((option) => containsText(option.name, searchText))
+        ? getFilteredOptions(options, searchText)
         : emptyOptions.map((presetKey) =>
             options.find((preset) => preset.presetKey === presetKey),
           ),
@@ -107,7 +118,7 @@ const SearchRow = ({
 
 const useGetOnChange = (
   value: TranslatedPreset | '',
-  setValue: (value: Setter<TranslatedPreset | ''>) => void,
+  setValue: Setter<TranslatedPreset | ''>,
 ) => {
   const { setTagsEntries } = useEditContext().tags;
 
