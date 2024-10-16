@@ -133,6 +133,7 @@ describe('idTaggingScheme', () => {
         water: 'fountain',
         wikidata: 'Q94435643',
         wikimedia_commons: 'Category:Fountain (metro Malostranská)',
+        non_existing123: 'xxxx',
       },
     } as unknown as Feature;
 
@@ -144,10 +145,11 @@ describe('idTaggingScheme', () => {
       'wikimedia_commons',
     ]);
     expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
+      'natural',
       'source',
       'water',
     ]);
-    expect(schema.keysTodo).toEqual(['natural']);
+    expect(schema.keysTodo).toEqual(['non_existing123']);
   });
 
   it('should remove from keysTodo if address is in restTags', () => {
@@ -172,6 +174,7 @@ describe('idTaggingScheme', () => {
     expect(schema.presetKey).toEqual('historic/city_gate');
     expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
       'source',
+      'tourism',
     ]);
   });
 });
