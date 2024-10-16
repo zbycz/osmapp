@@ -2,11 +2,7 @@ import { Feature, FeatureTags } from '../types';
 import { getFieldTranslation, getPresetTranslation } from './translations';
 import { getPresetForFeature } from './presets';
 import { allFields } from './data';
-import {
-  getFieldKeys,
-  getAllFieldsFeaturePanel,
-  getValueForField,
-} from './fields';
+import { getFieldKeys, getValueForField } from './fields';
 import { Preset, UiField } from './types/Presets';
 import { publishDbgObject } from '../../utils';
 import { getShortId } from '../helpers';
