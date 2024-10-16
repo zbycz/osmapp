@@ -44,8 +44,8 @@ const getTranslatedPresets = async (): Promise<PresetsCache> => {
         icon: getPoiClass(preset.tags).class,
         terms: getPresetTermsTranslation(preset.presetKey) ?? preset.terms,
       };
-    });
-  // .sort((a, b) => a.name.localeCompare(b.name)); TODO once we have better match fn
+    })
+    .sort((a, b) => a.name.localeCompare(b.name));
 
   return presetsCache;
 };
@@ -63,7 +63,7 @@ const LabelWrapper = styled.div`
 const useMatchTags = (
   feature: Feature,
   tags: FeatureTags,
-  setPreset: Setter<TranslatedPreset | ''>,
+  setPreset: Setter<string>,
 ) => {
   useEffect(() => {
     (async () => {
@@ -76,7 +76,7 @@ const useMatchTags = (
       const translatedPreset = (await getTranslatedPresets()).find(
         (option) => option.presetKey === foundPreset.presetKey,
       );
-      setPreset(translatedPreset ?? '');
+      setPreset(translatedPreset?.presetKey ?? '');
     })();
   }, [tags, feature, setPreset]);
 };
@@ -91,7 +91,7 @@ const useOptions = () => {
 
 export const PresetSelect = () => {
   const { tags } = useEditContext().tags;
-  const [preset, setPreset] = useState<TranslatedPreset | ''>('');
+  const [preset, setPreset] = useState('');
   const { feature } = useFeatureContext();
   const options = useOptions();
   useMatchTags(feature, tags, setPreset);

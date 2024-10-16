@@ -59,7 +59,7 @@ const Placeholder = styled.span`
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-const renderOption = (option: TranslatedPreset | '') =>
+const renderOption = (option: TranslatedPreset) =>
   !option ? (
     <Placeholder>{t('editdialog.preset_select.placeholder')}</Placeholder>
   ) : (
@@ -78,7 +78,8 @@ const getFilteredOptions = (
   const filteredOptions = options
     .filter(({ geometry }) => geometryMatchesOsmType(geometry, osmType))
     .filter(({ searchable }) => searchable === undefined || searchable)
-    .filter((option) => containsText(option.name, searchText));
+    .filter((option) => containsText(option.name, searchText))
+    .map((option) => option.presetKey);
 
   if (searchText.length <= 2) {
     return filteredOptions.splice(0, 50); // too many rows in select are slow
@@ -90,16 +91,14 @@ const getFilteredOptions = (
 const useDisplayedOptions = (
   searchText: string,
   options: TranslatedPreset[],
-) => {
+): string[] => {
   const { feature } = useFeatureContext();
-  return useMemo<TranslatedPreset[]>(
+  return useMemo<string[]>(
     () =>
       searchText.length
         ? getFilteredOptions(options, searchText, feature.osmMeta?.type)
-        : emptyOptions.map((presetKey) =>
-            options.find((preset) => preset.presetKey === presetKey),
-          ),
-    [options, searchText],
+        : emptyOptions,
+    [feature.osmMeta?.type, options, searchText],
   );
 };
 
@@ -126,27 +125,30 @@ const SearchRow = ({
 );
 
 const useGetOnChange = (
-  value: TranslatedPreset | '',
-  setValue: Setter<TranslatedPreset | ''>,
+  options: TranslatedPreset[],
+  value: string,
+  setValue: Setter<string>,
 ) => {
   const { setTagsEntries } = useEditContext().tags;
 
-  return (e: SelectChangeEvent<TranslatedPreset | ''>) => {
-    const oldValue = value;
-    if (oldValue) {
-      Object.entries(oldValue.addTags ?? oldValue.tags ?? {}).forEach((tag) => {
-        setTagsEntries((state) =>
-          state.filter(([key, value]) => key !== tag[0] && value !== tag[1]),
-        );
-      });
+  return (e: SelectChangeEvent<string>) => {
+    const oldPreset = options.find((o) => o.presetKey === value);
+    if (oldPreset) {
+      Object.entries(oldPreset.addTags ?? oldPreset.tags ?? {}).forEach(
+        (tag) => {
+          setTagsEntries((state) =>
+            state.filter(([key, value]) => key !== tag[0] && value !== tag[1]),
+          );
+        },
+      );
     }
 
-    const newValue = e.target.value as unknown as TranslatedPreset; // https://github.com/mui/material-ui/issues/14286
-    if (newValue) {
-      const newTags = Object.entries(newValue.addTags ?? newValue.tags ?? {});
+    const newPreset = options.find((o) => o.presetKey === e.target.value);
+    if (newPreset) {
+      const newTags = Object.entries(newPreset.addTags ?? newPreset.tags ?? {});
       setTagsEntries((state) => [...newTags, ...state]);
     }
-    setValue(newValue);
+    setValue(newPreset.presetKey);
   };
 };
 
@@ -165,15 +167,13 @@ const getPaperMaxHeight = (
     },
   };
 };
-export const PresetSearchBox = ({
-  value,
-  setValue,
-  options,
-}: {
-  value: TranslatedPreset | '';
-  setValue: Setter<TranslatedPreset | ''>;
+
+type Props = {
+  value: string;
+  setValue: Setter<string>;
   options: TranslatedPreset[];
-}) => {
+};
+export const PresetSearchBox = ({ value, setValue, options }: Props) => {
   const selectRef = React.useRef<HTMLDivElement>(null);
   const { feature } = useFeatureContext();
   const { loggedIn } = useOsmAuthContext();
@@ -182,7 +182,7 @@ export const PresetSearchBox = ({
   const [searchText, setSearchText] = useState('');
   const displayedOptions = useDisplayedOptions(searchText, options);
 
-  const onChange = useGetOnChange(value, setValue);
+  const onChange = useGetOnChange(options, value, setValue);
 
   return (
     <>
@@ -195,7 +195,9 @@ export const PresetSearchBox = ({
         value={value}
         onChange={onChange}
         onClose={() => setSearchText('')}
-        renderValue={() => renderOption(value)}
+        renderValue={() =>
+          renderOption(options.find((o) => o.presetKey === value))
+        }
         size="small"
         variant="outlined"
         fullWidth
@@ -204,9 +206,8 @@ export const PresetSearchBox = ({
       >
         <SearchRow onChange={(e) => setSearchText(e.target.value)} />
         {displayedOptions.map((option) => (
-          // @ts-ignore https://github.com/mui/material-ui/issues/14286
-          <MenuItem key={option.presetKey} component="li" value={option}>
-            {renderOption(option)}
+          <MenuItem key={option} component="li" value={option}>
+            {renderOption(options.find((o) => o.presetKey === option))}
           </MenuItem>
         ))}
       </Select>
