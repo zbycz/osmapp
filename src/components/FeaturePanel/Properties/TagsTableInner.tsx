@@ -46,7 +46,7 @@ const TagsGroup = ({
     <>
       <tr>
         <th>{label}</th>
-        <td>
+        <td style={{ overflow: 'visible' }}>
           <InlineEditButton k={tags[0][0]} />
           {value || tags[0]?.[1]}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
