@@ -6,7 +6,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from '../MajorKeysEditor';
 import { isString } from '../../../../helpers';
 import { t, Translation } from '../../../../../services/intl';
-import { useEditContext } from '../../EditContext';
+import { TagsEntries, useEditContext } from '../../EditContext';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
@@ -68,10 +68,14 @@ const TagsEditorInfo = () => (
   </tr>
 );
 
+const lastKeyAndValueSet = (tagsEntries: TagsEntries) => {
+  const [lastKey, lastValue] = tagsEntries[tagsEntries.length - 1];
+  return lastKey && lastValue;
+};
+
 const AddButton = () => {
   const { tagsEntries, setTagsEntries } = useEditContext().tags;
-  const [lastKey, lastValue] = tagsEntries[tagsEntries.length - 1];
-  const active = tagsEntries.length === 0 || (lastKey && lastValue);
+  const active = tagsEntries.length === 0 || lastKeyAndValueSet(tagsEntries);
 
   return (
     <tr>

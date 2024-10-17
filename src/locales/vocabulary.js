@@ -187,6 +187,7 @@ export default {
   'editdialog.tags_editor': 'All properties – Tags',
   'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
   'editdialog.login_in_progress': `Logging in...`,
+  'editdialog.save_refused': 'Unable to save your changes.',
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',
@@ -202,6 +203,10 @@ export default {
           <br/><br/>If this is a mistake, you can manually revert the values and save it again.`,
   'editsuccess.edit.urlLabel': `Your changes:`,
   'editsuccess.edit.textLabel': 'Comment',
+  'editdialog.preset_select.label': 'Type:',
+  'editdialog.preset_select.placeholder': 'Select the type',
+  'editdialog.preset_select.search_placeholder': 'Type to search...',
+  'editdialog.preset_select.edit_button': 'Edit',
 
   'tags.name': 'Name',
   'tags.description': 'Description',

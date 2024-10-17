@@ -149,6 +149,7 @@ export default {
   'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
   'editdialog.tags_editor_info': `Tagy popisují vlastnosti mapového prvku v dohodnutém formátu. Zde naleznete úplný
         <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
+  'editdialog.save_refused': 'Změny se nepodařilo uložit.',
 
   'editsuccess.close_button': 'Zavřít',
   'editsuccess.note.heading': 'Děkujeme za Váš návrh!',
