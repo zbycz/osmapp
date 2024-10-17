@@ -18,9 +18,13 @@ export const getStarsOptions = (
   if (inputValue === '') {
     return stars.map((star) => ({ type: 'star', star }));
   }
-  return diceCoefficientSort(stars, ({ label }) => label, inputValue).map(
-    (star) => ({ type: 'star', star }),
+  const sorted = diceCoefficientSort(
+    stars,
+    ({ label }) => label,
+    inputValue,
+    0.25,
   );
+  return sorted.map((star) => ({ type: 'star', star }));
 };
 
 export const renderStar = (

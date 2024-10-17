@@ -184,11 +184,8 @@ export default {
          to copy copyrighted data (e.g. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">More info</a>`,
   'editdialog.info_note':
     'Your suggestion will be reviewed by OpenStreetMap volunteers. You can add additional information such as a link to a photo or a link to source material for them below!',
-  'editdialog.other_tags_heading': 'Other tags',
-  'editdialog.other_tags': 'Edit Tags',
-  'editdialog.other_tags.new_key': 'new key',
-  'editdialog.other_tags.will_be_deleted': 'will be deleted',
-  'editdialog.other_tags.info': `Tags contain the data used to display objects on the map!<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features">a reference for all tags on the OpenStreetMap Wiki</a>!`,
+  'editdialog.tags_editor': 'All properties – Tags',
+  'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
   'editdialog.login_in_progress': `Logging in...`,
 
   'editsuccess.close_button': 'Done',
@@ -205,6 +202,10 @@ export default {
           <br/><br/>If this is a mistake, you can manually revert the values and save it again.`,
   'editsuccess.edit.urlLabel': `Your changes:`,
   'editsuccess.edit.textLabel': 'Comment',
+  'editdialog.preset_select.label': 'Type:',
+  'editdialog.preset_select.placeholder': 'Select the type',
+  'editdialog.preset_select.search_placeholder': 'Type to search...',
+  'editdialog.preset_select.edit_button': 'Edit',
 
   'tags.name': 'Name',
   'tags.description': 'Description',

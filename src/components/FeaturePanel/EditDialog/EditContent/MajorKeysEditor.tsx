@@ -85,15 +85,13 @@ const TextFieldWithCharacterCount = ({
 
 export const MajorKeysEditor = () => {
   const { focusTag } = useEditDialogContext();
-  const {
-    tags: { tags, setTag },
-  } = useEditContext();
+  const { tags, setTag } = useEditContext().tags;
 
   // TODO this code will be replaced when implementing id presets fields
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
   const data = getData(nextWikimediaCommonsIndex + 1);
 
-  const [activeMajorKeys, setActiveMajorKeys] = React.useState(
+  const [activeMajorKeys, setActiveMajorKeys] = useState(() =>
     data.keys.filter((k) => !!tags[k]),
   );
 
@@ -104,6 +102,7 @@ export const MajorKeysEditor = () => {
   );
 
   useEffect(() => {
+    // name can be clicked even though it was built from preset name
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
       setActiveMajorKeys((arr) => [...arr, 'name']);
     }
@@ -123,7 +122,7 @@ export const MajorKeysEditor = () => {
               onChange={(e) => {
                 setTag(e.target.name, e.target.value);
               }}
-              value={tags[k]}
+              value={tags[k] ?? ''}
             />
           )}
         </div>

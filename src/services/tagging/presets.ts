@@ -1,5 +1,5 @@
-import { presets } from './data';
-import { Feature } from '../types';
+import { allPresets } from './data';
+import { Feature, OsmType } from '../types';
 import { Preset } from './types/Presets';
 import { DEBUG_ID_SCHEMA } from '../../config.mjs';
 
@@ -44,7 +44,6 @@ const matchScore = (_this, entityTags) => {
   }
 
   return score;
-  /* eslint-enable no-restricted-syntax,guard-for-in */
 };
 
 const index = {
@@ -53,8 +52,28 @@ const index = {
   relation: [],
 };
 
+const osmTypeToGeometries = (osmType: string): Preset['geometry'] => {
+  if (osmType === 'node') {
+    return ['point'];
+  } else if (osmType === 'way') {
+    return ['line', 'area'];
+  } else if (osmType === 'relation') {
+    return ['relation'];
+  }
+
+  return ['point'];
+};
+
+export const geometryMatchesOsmType = (
+  presetGeometry: Preset['geometry'],
+  osmType: OsmType,
+) =>
+  osmTypeToGeometries(osmType).some((geometry) =>
+    presetGeometry.includes(geometry),
+  );
+
 // build an index by geometry type
-Object.values(presets).forEach((preset) => {
+Object.values(allPresets).forEach((preset) => {
   const { geometry } = preset;
 
   geometry.forEach((geometryType) => {

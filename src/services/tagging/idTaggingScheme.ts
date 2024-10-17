@@ -1,14 +1,15 @@
 import { Feature, FeatureTags } from '../types';
 import { getFieldTranslation, getPresetTranslation } from './translations';
 import { getPresetForFeature } from './presets';
-import { fields } from './data';
-import { computeAllFieldKeys, getValueForField } from './fields';
+import { allFields } from './data';
+import { getFieldKeys, getValueForField } from './fields';
 import { Preset, UiField } from './types/Presets';
 import { publishDbgObject } from '../../utils';
 import { getShortId } from '../helpers';
 import { Field } from './types/Fields';
 import { DEBUG_ID_SCHEMA } from '../../config.mjs';
 import { gradeSystemKeys } from '../../components/FeaturePanel/Climbing/utils/grades/gradeSystem';
+import { deduplicate } from './utils';
 
 const logMoreMatchingFields = (matchingFields: Field[], key: string) => {
   if (DEBUG_ID_SCHEMA && matchingFields.length > 1) {
@@ -21,20 +22,12 @@ const logMoreMatchingFields = (matchingFields: Field[], key: string) => {
   }
 };
 
-const deduplicate = (strings: string[]) => Array.from(new Set(strings));
-
 const getUiField = (
   field: Field,
   keysTodo: KeysTodo,
   feature: Feature,
   key: string,
 ): UiField => {
-  // TODO this should be removed now the parsing works ok (+run tests)
-  if (field.type === 'typeCombo') {
-    keysTodo.remove(field.key); // ignores eg. railway=tram_stop on public_transport=stop_position
-    return undefined;
-  }
-
   const value = feature.tags[key];
 
   const keysInField = deduplicate([
@@ -66,12 +59,12 @@ const matchFieldsFromPreset = (
   keysTodo: any,
   feature: Feature,
 ): UiField[] => {
-  const computedAllFieldKeys = computeAllFieldKeys(preset);
-  publishDbgObject('computedAllFieldKeys', computedAllFieldKeys);
+  const fieldKeys = getFieldKeys(preset);
+  publishDbgObject('all fieldKeys', fieldKeys);
 
-  return computedAllFieldKeys
+  return fieldKeys
     .map((fieldKey: string) => {
-      const field = fields[fieldKey];
+      const field = allFields[fieldKey];
       const key = field?.key;
       const keys = field?.keys;
       const includeThisField = keysTodo.has(key) || keysTodo.hasAny(keys);
@@ -87,7 +80,7 @@ const matchFieldsFromPreset = (
 
 const matchRestToFields = (keysTodo: KeysTodo, feature: Feature): UiField[] =>
   keysTodo.mapOrSkip((key) => {
-    const matchingFields = Object.values(fields).filter(
+    const matchingFields = Object.values(allFields).filter(
       (f) => f.key === key || f.keys?.includes(key), // todo cache this
     );
     logMoreMatchingFields(matchingFields, key);

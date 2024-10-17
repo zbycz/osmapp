@@ -8,7 +8,7 @@ import {
   getPresetTermsTranslation,
   getPresetTranslation,
 } from '../../../services/tagging/translations';
-import { presets } from '../../../services/tagging/data';
+import { allPresets } from '../../../services/tagging/data';
 import { PresetOption } from '../types';
 import { t } from '../../../services/intl';
 import { highlightText, IconPart } from '../utils';
@@ -29,7 +29,7 @@ const getPresetsForSearch = async () => {
   await fetchSchemaTranslations();
 
   // resolve symlinks to {landuse...} etc
-  presetsForSearch = Object.values(presets)
+  presetsForSearch = Object.values(allPresets)
     .filter(({ searchable }) => searchable === undefined || searchable)
     .filter(({ locationSet }) => !locationSet?.include)
     .filter(({ tags }) => Object.keys(tags).length > 0)
@@ -84,12 +84,12 @@ export const getPresetOptions = async (
   const allResults = orderBy(
     filtered,
     [
-      // some bestMatches are the same for many items, then sort by name. Try out *dog*
+      // some bestMatches are the same for many items, then sort by name. Try out *restaurant*
       ({ nameSimilarity, bestMatch }) => Math.max(nameSimilarity, bestMatch),
       ({ nameSimilarity }) => nameSimilarity,
       ({ bestMatch }) => bestMatch,
     ],
-    'desc',
+    ['desc', 'desc', 'desc'],
   ).map((result) => ({
     type: 'preset' as const,
     preset: result,
