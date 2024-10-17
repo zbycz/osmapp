@@ -26,13 +26,20 @@ const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   }),
 );
 
-const useUpdateMap = createMapEffectHook<[View]>((map, viewForMap) => {
-  const center: [number, number] = [
-    parseFloat(viewForMap[2]),
-    parseFloat(viewForMap[1]),
-  ];
-  map.jumpTo({ center, zoom: parseFloat(viewForMap[0]) });
-});
+const useUpdateMap = createMapEffectHook<[View, number, number]>(
+  (map, viewForMap, pitch, bearing) => {
+    const center: [number, number] = [
+      parseFloat(viewForMap[2]),
+      parseFloat(viewForMap[1]),
+    ];
+    map.jumpTo({
+      center,
+      zoom: parseFloat(viewForMap[0]),
+      ...(pitch ? { pitch } : {}),
+      ...(bearing ? { bearing } : {}),
+    });
+  },
+);
 
 const NotSupportedMessage = () => (
   <span
@@ -57,11 +64,17 @@ const BrowserMap = () => {
   useOnMapLoaded(map, setMapLoaded);
   useFeatureMarker(map);
 
-  const { viewForMap, setViewFromMap, setBbox, activeLayers } =
-    useMapStateContext();
+  const {
+    viewForMap,
+    setViewFromMap,
+    setBbox,
+    activeLayers,
+    landmarkPitch,
+    landmarkBearing,
+  } = useMapStateContext();
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
-  useUpdateMap(map, viewForMap);
+  useUpdateMap(map, viewForMap, landmarkPitch, landmarkBearing);
   useUpdateStyle(map, activeLayers, userLayers, mapLoaded);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;

@@ -60,15 +60,23 @@ export const getMapViewFromHash = (): View | undefined => {
 
 const useUpdateViewFromFeature = () => {
   const { feature } = useFeatureContext();
-  const { setView } = useMapStateContext();
+  const { setView, setLandmarkPitch, setLandmarkBearing } =
+    useMapStateContext();
 
   React.useEffect(() => {
-    if (!feature?.center) return;
-    if (getMapViewFromHash()) return;
+    if (!feature) return;
+    const { landmarkView, center } = feature;
 
-    const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
-    setView(['17.00', lat, lon]);
-  }, [feature, setView]);
+    if (!center) return;
+    if (getMapViewFromHash() && !landmarkView) return;
+
+    const [lon, lat] = center.map((deg) => deg.toFixed(4));
+    const zoom = landmarkView?.zoom ?? 17;
+    setView([`${zoom}`, lat, lon]);
+
+    setLandmarkBearing(landmarkView?.bearing);
+    setLandmarkPitch(landmarkView?.pitch);
+  }, [feature, setView, setLandmarkBearing, setLandmarkPitch]);
 };
 
 const useUpdateViewFromHash = () => {

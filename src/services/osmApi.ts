@@ -19,6 +19,7 @@ import {
   publishDbgObject,
 } from '../utils';
 import { getOverpassUrl } from './overpassSearch';
+import { addLandmarkView } from './landmarks/addLandmarkView';
 
 type GetOsmUrl = (object: OsmId) => string;
 
@@ -308,7 +309,8 @@ export const fetchFeature = async (apiId: OsmId): Promise<Feature> => {
     }
 
     const feature = await fetchFeatureWithCenter(apiId);
-    const finalFeature = await addMembersAndParents(feature);
+    const featureWithLandmarkView = await addLandmarkView(feature);
+    const finalFeature = await addMembersAndParents(featureWithLandmarkView);
 
     return finalFeature;
   } catch (e) {
