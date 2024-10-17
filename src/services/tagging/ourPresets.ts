@@ -1,8 +1,9 @@
 import { RawPresets } from './types/Presets';
+import type { RawFields } from './types/Fields';
 
 // until https://github.com/openstreetmap/id-tagging-schema/pull/1113 is merged
 
-export const ourFields = {
+export const ourFields: RawFields = {
   'climbing/summit_log': {
     key: 'climbing:summit_log',
     type: 'check',

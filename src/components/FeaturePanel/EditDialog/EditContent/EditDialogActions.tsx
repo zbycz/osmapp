@@ -7,7 +7,7 @@ import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { useGetHandleSave } from '../useGetHandleSave';
 
 const SaveButton = () => {
-  const { loggedIn, loading } = useOsmAuthContext();
+  const { loggedIn } = useOsmAuthContext();
   const { tags } = useEditContext();
   const handleSave = useGetHandleSave();
 
