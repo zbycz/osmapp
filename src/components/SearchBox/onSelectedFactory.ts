@@ -18,6 +18,7 @@ import {
   StarOption,
 } from './types';
 import { osmOptionSelected } from './options/openstreetmap';
+import { AccessMethod } from '../utils/FeatureContext';
 
 const overpassOptionSelected = (
   option: OverpassOption | PresetOption,
@@ -67,6 +68,7 @@ type SetFeature = (feature: Feature | null) => void;
 const geocoderOptionSelected = (
   option: GeocoderOption,
   setFeature: SetFeature,
+  setAccessMethod: (accessMethod: AccessMethod) => void,
 ) => {
   if (!option?.geocoder.geometry?.coordinates) return;
 
@@ -75,6 +77,7 @@ const geocoderOptionSelected = (
 
   addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
 
+  setAccessMethod('search');
   setFeature(skeleton);
   fitBounds(option);
   Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
@@ -87,6 +90,7 @@ type OnSelectedFactoryProps = {
   showToast: ShowToast;
   setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
   router: NextRouter;
+  setAccessMethod: (accessMethod: AccessMethod) => void;
 };
 
 export const onSelectedFactory =
@@ -97,6 +101,7 @@ export const onSelectedFactory =
     showToast,
     setOverpassLoading,
     router,
+    setAccessMethod,
   }: OnSelectedFactoryProps) =>
   (_: never, option: Option) => {
     setPreview(null); // it could be stuck from onHighlight
@@ -110,7 +115,7 @@ export const onSelectedFactory =
         overpassOptionSelected(option, setOverpassLoading, bbox, showToast);
         break;
       case 'geocoder':
-        geocoderOptionSelected(option, setFeature);
+        geocoderOptionSelected(option, setFeature, setAccessMethod);
         break;
       case 'osm':
         osmOptionSelected(option, router);

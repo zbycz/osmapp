@@ -1,4 +1,4 @@
-import React, { Ref, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
@@ -59,16 +59,17 @@ export const getMapViewFromHash = (): View | undefined => {
 };
 
 const useUpdateViewFromFeature = () => {
-  const { feature } = useFeatureContext();
+  const { feature, accessMethod } = useFeatureContext();
   const { setView, setLandmarkPitch, setLandmarkBearing } =
     useMapStateContext();
 
   React.useEffect(() => {
     if (!feature) return;
-    const { landmarkView, center } = feature;
+    if (!feature.center) return;
+    if (getMapViewFromHash()) return;
+    if (accessMethod === 'click') return;
 
-    if (!center) return;
-    if (getMapViewFromHash() && !landmarkView) return;
+    const { landmarkView, center } = feature;
 
     const [lon, lat] = center.map((deg) => deg.toFixed(4));
     const zoom = landmarkView?.zoom ?? 17;
@@ -76,7 +77,7 @@ const useUpdateViewFromFeature = () => {
 
     setLandmarkBearing(landmarkView?.bearing);
     setLandmarkPitch(landmarkView?.pitch);
-  }, [feature, setView, setLandmarkBearing, setLandmarkPitch]);
+  }, [feature, setView, setLandmarkBearing, setLandmarkPitch, accessMethod]);
 };
 
 const useUpdateViewFromHash = () => {

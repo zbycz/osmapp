@@ -12,6 +12,8 @@ import { useBoolState } from '../helpers';
 import { publishDbgObject } from '../../utils';
 import { setLastFeature } from '../../services/lastFeatureStorage';
 
+export type AccessMethod = 'click' | 'search' | 'link';
+
 export type FeatureContextType = {
   feature: Feature | null;
   featureShown: boolean;
@@ -24,6 +26,8 @@ export type FeatureContextType = {
   persistShowHomepage: () => void;
   preview: Feature | null;
   setPreview: (feature: Feature | null) => void;
+  accessMethod: AccessMethod | null;
+  setAccessMethod: (method: AccessMethod | null) => void;
 };
 
 export const FeatureContext = createContext<FeatureContextType>(undefined);
@@ -41,6 +45,7 @@ export const FeatureProvider = ({
 }: Props) => {
   const [preview, setPreview] = useState<Feature>(null);
   const [feature, setFeature] = useState<Feature>(featureFromRouter);
+  const [accessMethod, setAccessMethod] = useState<AccessMethod | null>(null);
   const featureShown = feature != null;
 
   useEffect(() => {
@@ -72,7 +77,12 @@ export const FeatureProvider = ({
   const value: FeatureContextType = {
     feature,
     featureShown,
-    setFeature,
+    setFeature: (feature) => {
+      if (!feature) {
+        setAccessMethod(null);
+      }
+      return setFeature(feature);
+    },
     homepageShown,
     showHomepage,
     hideHomepage,
@@ -80,6 +90,8 @@ export const FeatureProvider = ({
     persistHideHomepage,
     preview,
     setPreview,
+    accessMethod,
+    setAccessMethod,
   };
   return (
     <FeatureContext.Provider value={value}>{children}</FeatureContext.Provider>
