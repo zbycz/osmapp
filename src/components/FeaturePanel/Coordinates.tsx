@@ -7,10 +7,12 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { isMobileDevice, useBoolState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { getIdEditorLink, positionToDeg, positionToDM } from '../../utils';
+import { positionToDeg, positionToDM } from '../../utils';
 import { PositionBoth } from '../../services/types';
 import { getFullOsmappLink, getShortLink } from '../../services/helpers';
 import { t } from '../../services/intl';
+import { isIOS } from '../../helpers/platforms';
+import { getAppleMapsLink, getIdEditorLink } from './helpers/externalLinks';
 
 const StyledMenuItem = styled(MenuItem)`
   svg {
@@ -64,10 +66,16 @@ const LinkItem = ({ href, label }) => (
 // https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
 const MAPLIBREGL_ZOOM_DIFFERENCE = 1;
 
-const useGetItems = ([lon, lat]: PositionBoth) => {
+type ExternalMapLink = {
+  label: string;
+  href: string;
+};
+
+const useGetItems = (position: PositionBoth): ExternalMapLink[] => {
   const { feature } = useFeatureContext();
-  const { view } = useMapStateContext();
+  const { view, activeLayers } = useMapStateContext();
   const [ourZoom] = view;
+  const [lon, lat] = position;
 
   const zoom = parseFloat(ourZoom) + MAPLIBREGL_ZOOM_DIFFERENCE;
   const zoomInt = Math.round(zoom);
@@ -96,6 +104,14 @@ const useGetItems = ([lon, lat]: PositionBoth) => {
       label: 'iD editor',
       href: getIdEditorLink(feature, view), // TODO coordsFeature has random id which gets forwarded LOL
     },
+    ...(isIOS()
+      ? [
+          {
+            label: 'Apple maps',
+            href: getAppleMapsLink(feature, position, activeLayers),
+          },
+        ]
+      : []),
     ...(isMobileDevice()
       ? [
           {
