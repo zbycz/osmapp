@@ -18,6 +18,7 @@ import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
 import { webglSupported } from './helpers';
 import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 import { useAddTopRightControls } from './useAddTopRightControls';
+import isNumber from 'lodash/isNumber';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
@@ -35,8 +36,8 @@ const useUpdateMap = createMapEffectHook<[View, number, number]>(
     map.jumpTo({
       center,
       zoom: parseFloat(viewForMap[0]),
-      ...(pitch ? { pitch } : {}),
-      ...(bearing ? { bearing } : {}),
+      ...(isNumber(pitch) ? { pitch } : {}),
+      ...(isNumber(bearing) ? { bearing } : {}),
     });
   },
 );

@@ -64,7 +64,13 @@ export const useOnMapClicked = createMapEventHook<'click', [SetFeature]>(
       }
 
       const skeleton = getSkeleton(features[0], coords);
-      console.log(`clicked map feature (id=${features[0].id}): `, features[0]); // eslint-disable-line no-console
+      // eslint-disable-next-line no-console
+      console.log(
+        `clicked map feature (id=${features[0].id}): `,
+        features[0],
+        'shortId:',
+        getShortId(skeleton.osmMeta),
+      ); // eslint-disable-line no-console
       publishDbgObject('last skeleton', skeleton);
 
       if (skeleton.nonOsmObject) {
