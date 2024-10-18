@@ -244,6 +244,10 @@ export default {
   'publictransport.subway': 'U-Bahn',
   'publictransport.unknown': 'Unbekannter Typ',
 
+  'publictransport.show_this_category': 'Zeige diese Kategorie an',
+  'publictransport.hide_this_category': 'Blende diese Kategorie aus',
+  'publictransport.only_this_category': 'Zeige nur diese Kategorie an',
+
   'publictransport.route': 'Streckenverlauf',
   'publictransport.hidden_stops': '__amount__ weitere Haltestellen',
   'publictransport.visible_stops': 'Blende __amount__ Haltestellen aus',
