@@ -187,6 +187,7 @@ export default {
   'editdialog.tags_editor': 'All properties – Tags',
   'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
   'editdialog.login_in_progress': `Logging in...`,
+  'editdialog.save_refused': 'Unable to save your changes.',
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',
@@ -261,6 +262,10 @@ export default {
   'publictransport.bus': 'Bus',
   'publictransport.subway': 'Subway',
   'publictransport.unknown': 'Unknown type',
+
+  'publictransport.show_this_category': 'Show this category',
+  'publictransport.hide_this_category': 'Hide this category',
+  'publictransport.only_this_category': 'Show only this category',
 
   'publictransport.route': 'Route',
   'publictransport.hidden_stops': '__amount__ more stops',
