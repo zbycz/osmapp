@@ -134,6 +134,7 @@ export default {
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
   'featurepanel.climbing_restriction': 'Climbing restriction',
   'featurepanel.login': 'Login',
+  'featurepanel.recommended_view': 'Go to recommended view',
 
   'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
