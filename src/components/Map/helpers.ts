@@ -80,3 +80,6 @@ const isWebglSupported = () => {
 };
 
 export const webglSupported = isBrowser() ? isWebglSupported() : true;
+
+export const supports3d = (activeLayers: string[]) =>
+  activeLayers.includes('basic') || activeLayers.includes('outdoor');

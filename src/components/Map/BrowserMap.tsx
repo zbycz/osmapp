@@ -15,7 +15,7 @@ import { useUpdateStyle } from './behaviour/useUpdateStyle';
 import { useInitMap } from './behaviour/useInitMap';
 import { Translation } from '../../services/intl';
 import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
-import { webglSupported } from './helpers';
+import { supports3d, webglSupported } from './helpers';
 import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 import { useAddTopRightControls } from './useAddTopRightControls';
 import isNumber from 'lodash/isNumber';
@@ -27,17 +27,19 @@ const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   }),
 );
 
-const useUpdateMap = createMapEffectHook<[View, number, number]>(
-  (map, viewForMap, pitch, bearing) => {
+const useUpdateMap = createMapEffectHook<[View, number, number, string[]]>(
+  (map, viewForMap, pitch, bearing, activeLayers) => {
     const center: [number, number] = [
       parseFloat(viewForMap[2]),
       parseFloat(viewForMap[1]),
     ];
+
+    // flyTo makes the map unusable
     map.jumpTo({
       center,
       zoom: parseFloat(viewForMap[0]),
-      ...(isNumber(pitch) ? { pitch } : {}),
-      ...(isNumber(bearing) ? { bearing } : {}),
+      ...(supports3d(activeLayers) && isNumber(pitch) ? { pitch } : {}),
+      ...(supports3d(activeLayers) && isNumber(bearing) ? { bearing } : {}),
     });
   },
 );
@@ -75,7 +77,7 @@ const BrowserMap = () => {
   } = useMapStateContext();
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
-  useUpdateMap(map, viewForMap, landmarkPitch, landmarkBearing);
+  useUpdateMap(map, viewForMap, landmarkPitch, landmarkBearing, activeLayers);
   useUpdateStyle(map, activeLayers, userLayers, mapLoaded);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
