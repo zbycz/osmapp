@@ -20,7 +20,7 @@ export const views: Record<string, LandmarkView> = {
   //// GERMANY ///
   ////////////////
   // Elbe Philharmonic Hall
-  w24981343: { bearing: 45, pitch: 50, zoom: 17.25 },
+  w24981342: { bearing: 45, pitch: 50, zoom: 17.25 },
   // Cologne Cathedral
   w4532022: { bearing: 90, pitch: 55, zoom: 17.1 },
   // Brandenburg gate

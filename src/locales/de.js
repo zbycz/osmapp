@@ -113,6 +113,7 @@ export default {
   'featurepanel.objects_around': 'Orte in der Nähe',
   'featurepanel.more_in_openplaceguide': 'Weitere Information auf __instanceName__',
   'featurepanel.climbing_restriction': 'Kletter Einschränkungen',
+  'featurepanel.recommended_view': 'Empfohlnene Ansicht ansehen',
 
   'opening_hours.all_day': '24 Stunden',
   'opening_hours.open': 'Geöffnet: __todayTime__',
