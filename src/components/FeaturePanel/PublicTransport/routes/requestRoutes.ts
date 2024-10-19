@@ -58,7 +58,10 @@ export async function requestLines(featureType: string, id: number) {
     ${featureType}(${id})-> .specific_feature;
 
     // Try to find stop_area relations containing the specific node and get their stops
-    rel(bn.specific_feature)["public_transport"="stop_area"] -> .stop_areas;
+    (
+      rel(bn.specific_feature)["public_transport"="stop_area"];
+      rel(r._)["public_transport"="stop_area"] -> .stop_areas;
+    ) -> .stop_areas;
     node(r.stop_areas: "stop") -> .stops;
     (
       rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
@@ -79,8 +82,8 @@ export async function requestLines(featureType: string, id: number) {
 
   const geoJsonFeatures = overpassGeomToGeojson({ elements: routes });
 
-  const geoJson: GeoJSON.GeoJSON = {
-    type: 'FeatureCollection',
+  const geoJson = {
+    type: 'FeatureCollection' as const,
     features: geoJsonFeatures,
   };
 
@@ -103,7 +106,16 @@ export async function requestLines(featureType: string, id: number) {
     .sort((a, b) => a.ref.localeCompare(b.ref, intl.lang, { numeric: true }));
 
   return {
-    geoJson,
+    geoJson: {
+      ...geoJson,
+      features: geoJson.features.map((feature) => ({
+        ...feature,
+        properties: {
+          ...feature.properties,
+          service: getService(feature.tags, []),
+        },
+      })),
+    },
     routes: allRoutes,
   };
 }
