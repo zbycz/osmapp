@@ -1,4 +1,5 @@
 import type Vocabulary from '../locales/vocabulary';
+import { LandmarkView } from './landmarks/views';
 import type { getSchemaForFeature } from './tagging/idTaggingScheme';
 
 export type OsmType = 'node' | 'way' | 'relation';
@@ -114,6 +115,7 @@ export interface Feature {
   error?: 'network' | 'unknown' | '404' | '500'; // etc.
   deleted?: boolean;
   schema?: ReturnType<typeof getSchemaForFeature>; // undefined means error
+  landmarkView?: LandmarkView | null;
 
   // skeleton
   layer?: { id: string };

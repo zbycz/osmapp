@@ -7,6 +7,7 @@ import Coordinates from './Coordinates';
 import { t } from '../../services/intl';
 import { ObjectsAround } from './ObjectsAround';
 import React from 'react';
+import { RecommendedView } from './RecommendedView';
 
 type Props = {
   advanced: boolean;
@@ -31,6 +32,12 @@ export const FeaturePanelFooter = ({
       <PanelSidePadding>
         <FeatureDescription advanced={advanced} setAdvanced={setAdvanced} />
         <Coordinates />
+        {feature.landmarkView && (
+          <>
+            <br />
+            <RecommendedView />
+          </>
+        )}
         <br />
         <a href={osmappLink}>{osmappLink}</a>
         <br />
