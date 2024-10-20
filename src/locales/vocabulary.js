@@ -128,7 +128,7 @@ export default {
   'featurepanel.feature_description_point': 'Map coordinates',
   'featurepanel.show_tags': 'Show tags',
   'featurepanel.show_objects_around': 'Show nearby objects',
-  'featurepanel.uncertain_image': 'This is the closest street view image from Mapillary. It may be inaccurate.',
+  'featurepanel.uncertain_image': 'This is the closest street view image from __from__. It may be inaccurate.',
   'featurepanel.inline_edit_title': 'Edit',
   'featurepanel.objects_around': 'Nearby objects',
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
