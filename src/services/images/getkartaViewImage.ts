@@ -27,7 +27,7 @@ type KartaViewImage = {
   match_lng: string;
   way_id: string;
   shot_date: string;
-  heading: string;
+  heading: string | null;
   headers: any;
   gps_accuracy: any;
   projection: string;
@@ -43,8 +43,9 @@ export const getKartaViewImage = getImageFromCenterFactory('KartaView', {
       top: poiCoords[1] + 0.0004,
     };
 
-    const apiImages = await fetchJson<KartaViewResponse>(
-      `${KARTAVIEW_BASE}/1.0/list/nearby-photos/`,
+    const apiResponse = await fetchJson<KartaViewResponse>(
+      // bbox in url to prevent nextjs caching
+      `${KARTAVIEW_BASE}/1.0/list/nearby-photos/?bbox=${bbox.left},${bbox.top}`,
       {
         method: 'POST',
         body: new URLSearchParams({
@@ -55,12 +56,15 @@ export const getKartaViewImage = getImageFromCenterFactory('KartaView', {
         }),
       },
     );
-    return apiImages.currentPageItems;
+    return apiResponse.currentPageItems;
   },
   getImageCoords: ({ lng, lat }) => [parseInt(lng), parseInt(lat)],
-  getImageAngle: ({ heading }) => parseInt(heading),
+  getImageAngle: ({ heading }) => (heading ? parseInt(heading) : undefined),
   isPano: () => false,
-  getImageUrl: ({ name }) => `${KARTAVIEW_BASE}/${name}`,
+  getImageUrl: ({ lth_name }) => {
+    const [storage, uri] = lth_name.split(/\/(.*)/);
+    return `https://${storage}.openstreetcam.org/${uri}`;
+  },
   getImageDate: ({ timestamp }) => new Date(parseInt(timestamp) * 1000),
   getImageLink: ({ id }) => id,
   getImageLinkUrl: ({ sequence_id, sequence_index }) =>

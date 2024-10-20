@@ -12,7 +12,7 @@ const subtractAngle = (a: number, b: number): number =>
 type ImageProvider<T> = {
   getImages: (pos: Position) => Promise<T[]>;
   getImageCoords: (img: T) => Position;
-  getImageAngle: (img: T) => number;
+  getImageAngle: (img: T) => number | undefined;
   isPano: (img: T) => boolean;
   getImageUrl: (img: T) => string;
   getImageDate: (img: T) => Date;
@@ -44,13 +44,14 @@ export const getImageFromCenterFactory =
 
     const photos = apiImages.map((pic) => {
       const photoCoords = getImageCoords(pic);
+      const angle = getImageAngle(pic);
       return {
         ...pic,
         angleFromPhotoToPoi: getBearing(photoCoords, poiCoords),
-        deviationFromStraightSight: subtractAngle(
-          getBearing(photoCoords, poiCoords),
-          getImageAngle(pic),
-        ),
+        deviationFromStraightSight:
+          angle === undefined
+            ? Infinity
+            : subtractAngle(getBearing(photoCoords, poiCoords), angle),
       };
     });
 
