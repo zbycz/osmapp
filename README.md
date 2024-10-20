@@ -35,7 +35,7 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on GitHub, or 
 
 - **clickable map** – poi, cities, localities, ponds (more coming soon)
 - **feature panel** – presets and fields from iD editor
-  - Display multiple images from Wikipedia, Wikidata, Commons, Mapillary, KartaView or Fody
+  - Display multiple images from Wikipedia, Wikidata, Commons, Mapillary, KartaView, Panoramax or Fody
   - Line numbers on public transport stops
   - Runway table on airports
 - **editing** – Save changes with osm login. Insert note for anonymous users.
