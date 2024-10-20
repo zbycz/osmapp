@@ -1,5 +1,5 @@
 import { fetchJson } from '../fetch';
-import { getImageFromCenterFactory } from './getImageFromCenter';
+import { getImageFromCenterFactory } from './getImageFromCenterFactory';
 
 type PanoramaxImage = {
   id: string;

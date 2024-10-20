@@ -1,5 +1,5 @@
 import { fetchJson } from '../fetch';
-import { getImageFromCenterFactory } from './getImageFromCenter';
+import { getImageFromCenterFactory } from './getImageFromCenterFactory';
 
 type MapillaryImage = {
   compass_angle: number;

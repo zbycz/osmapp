@@ -1,7 +1,7 @@
 import { Position } from '../types';
 import { ImageType } from './getImageDefs';
 
-const getBearing = ([aX, aY]: Position, [bX, bY]: Position): number => {
+export const getBearing = ([aX, aY]: Position, [bX, bY]: Position): number => {
   const angle = (Math.atan2(bX - aX, bY - aY) * 180) / Math.PI;
   return angle < 0 ? angle + 360 : angle;
 };

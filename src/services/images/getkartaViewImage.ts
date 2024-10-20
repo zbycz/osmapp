@@ -1,6 +1,6 @@
 import { parseInt } from 'lodash';
 import { fetchJson } from '../fetch';
-import { getImageFromCenterFactory } from './getImageFromCenter';
+import { getImageFromCenterFactory } from './getImageFromCenterFactory';
 
 const KARTAVIEW_BASE = 'https://kartaview.org';
 
