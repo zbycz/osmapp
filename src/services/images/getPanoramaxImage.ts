@@ -11,6 +11,9 @@ type PanoramaxImage = {
   properties: {
     datetime: string;
     'view:azimuth': number;
+    'pers:interior_orientation': {
+      field_of_view: number;
+    };
   };
 };
 
@@ -27,7 +30,8 @@ export const getPanoramaxImage = getImageFromCenterFactory('Panoramax', {
   },
   getImageCoords: ({ geometry }) => geometry.coordinates,
   getImageAngle: ({ properties }) => properties['view:azimuth'],
-  isPano: () => false,
+  isPano: ({ properties }) =>
+    properties['pers:interior_orientation'].field_of_view === 360,
   getImageUrl: ({ assets }) => assets.sd.href,
   getImageDate: ({ properties }) => new Date(properties.datetime),
   getImageLink: ({ id }) => id,
