@@ -111,7 +111,7 @@ const getImagesFromTags = (tags: FeatureTags) => {
     .sort((a, b) => +b.instant - +a.instant);
 };
 
-const getImagesFromCenter = (
+export const getImagesFromCenter = (
   tags: FeatureTags,
   center?: LonLat,
 ): ImageDef[] => {
