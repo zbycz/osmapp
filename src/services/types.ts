@@ -22,7 +22,7 @@ export type ImageDefFromTag = {
 };
 export type ImageDefFromCenter = {
   type: 'center';
-  service: 'mapillary' | 'fody' | 'kartaview';
+  service: 'mapillary' | 'fody' | 'kartaview' | 'panoramax';
   center: LonLat;
 };
 export type ImageDef = ImageDefFromTag | ImageDefFromCenter;

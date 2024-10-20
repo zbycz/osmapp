@@ -6,6 +6,7 @@ import { getInstantImage, WIDTH, ImageType } from './getImageDefs';
 import { encodeUrl } from '../../helpers/utils';
 import { getCommonsImageUrl } from './getCommonsImageUrl';
 import { getKartaViewImage } from './getkartaViewImage';
+import { getPanoramaxImage } from './getPanoramaxImage';
 
 type ImagePromise = Promise<ImageType | null>;
 
@@ -116,6 +117,9 @@ export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
     }
     if (service === 'kartaview') {
       return getKartaViewImage(center);
+    }
+    if (service === 'panoramax') {
+      return getPanoramaxImage(center);
     }
 
     if (service === 'fody') {

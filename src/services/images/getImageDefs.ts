@@ -122,6 +122,7 @@ const getImagesFromCenter = (
     ...(tags.information
       ? [{ type: 'center', service: 'fody', center } as ImageDefFromCenter]
       : []),
+    { type: 'center', service: 'panoramax', center } as ImageDefFromCenter,
     { type: 'center', service: 'kartaview', center } as ImageDefFromCenter,
     // it is annoying to scroll past a pano image - so we put it last
     { type: 'center', service: 'mapillary', center } as ImageDefFromCenter,
