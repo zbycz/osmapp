@@ -5,6 +5,7 @@ import { getFodyImage } from './getFodyImage';
 import { getInstantImage, WIDTH, ImageType } from './getImageDefs';
 import { encodeUrl } from '../../helpers/utils';
 import { getCommonsImageUrl } from './getCommonsImageUrl';
+import { getKartaViewImage } from './getkartaViewImage';
 
 type ImagePromise = Promise<ImageType | null>;
 
@@ -112,6 +113,9 @@ export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
     const { service, center } = def;
     if (service === 'mapillary') {
       return getMapillaryImage(center);
+    }
+    if (service === 'kartaview') {
+      return getKartaViewImage(center);
     }
 
     if (service === 'fody') {
