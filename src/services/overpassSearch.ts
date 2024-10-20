@@ -14,7 +14,7 @@ const getQueryFromTags = (tags) => {
 const getOverpassQuery = ([a, b, c, d], query) =>
   `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
 
-export const getOverpassUrl = (fullQuery) =>
+export const getOverpassUrl = (fullQuery: string) =>
   `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
     fullQuery,
   )}`;
@@ -47,10 +47,14 @@ const convertOsmIdToMapId = (apiId: OsmId) => {
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
+type OverpassFeature = Feature & {
+  tags: Record<string, string>;
+};
+
 // TODO use our own implementaion from fetchCrags, which handles recursive geometries
 export const overpassGeomToGeojson = (response: {
   elements: any[];
-}): Feature[] =>
+}): OverpassFeature[] =>
   response.elements.map((element) => {
     const { type, id, tags = {} } = element;
     const geometry = GEOMETRY[type]?.(element);

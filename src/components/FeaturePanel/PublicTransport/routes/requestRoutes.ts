@@ -1,10 +1,10 @@
 import groupBy from 'lodash/groupBy';
-import { fetchJson } from '../../../services/fetch';
+import { fetchJson } from '../../../../services/fetch';
 import {
   getOverpassUrl,
   overpassGeomToGeojson,
-} from '../../../services/overpassSearch';
-import { intl } from '../../../services/intl';
+} from '../../../../services/overpassSearch';
+import { intl } from '../../../../services/intl';
 
 type WithTags = { tags: Record<string, string> };
 
@@ -42,10 +42,12 @@ const getService = (tags: Record<string, string>, routes: WithTags[]) => {
   const serviceTag =
     serviceTagValue === 'highspeed' ? 'high_speed' : serviceTagValue;
   const isHighspeed = getVal('highspeed') === 'yes';
+  const isSubway = getVal('subway') === 'yes';
 
   return (
     serviceTag ||
     (isHighspeed && 'high_speed') ||
+    (isSubway && 'subway') ||
     getVal('route') ||
     getVal('route_master')
   );
@@ -56,7 +58,10 @@ export async function requestLines(featureType: string, id: number) {
     ${featureType}(${id})-> .specific_feature;
 
     // Try to find stop_area relations containing the specific node and get their stops
-    rel(bn.specific_feature)["public_transport"="stop_area"] -> .stop_areas;
+    (
+      rel(bn.specific_feature)["public_transport"="stop_area"];
+      rel(r._)["public_transport"="stop_area"] -> .stop_areas;
+    ) -> .stop_areas;
     node(r.stop_areas: "stop") -> .stops;
     (
       rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
@@ -77,8 +82,8 @@ export async function requestLines(featureType: string, id: number) {
 
   const geoJsonFeatures = overpassGeomToGeojson({ elements: routes });
 
-  const geoJson: GeoJSON.GeoJSON = {
-    type: 'FeatureCollection',
+  const geoJson = {
+    type: 'FeatureCollection' as const,
     features: geoJsonFeatures,
   };
 
@@ -101,7 +106,16 @@ export async function requestLines(featureType: string, id: number) {
     .sort((a, b) => a.ref.localeCompare(b.ref, intl.lang, { numeric: true }));
 
   return {
-    geoJson,
+    geoJson: {
+      ...geoJson,
+      features: geoJson.features.map((feature) => ({
+        ...feature,
+        properties: {
+          ...feature.properties,
+          service: getService(feature.tags, []),
+        },
+      })),
+    },
     routes: allRoutes,
   };
 }

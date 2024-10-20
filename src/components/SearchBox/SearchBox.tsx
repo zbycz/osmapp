@@ -21,10 +21,7 @@ const TopPanel = styled.div`
   box-sizing: border-box;
 
   top: 0;
-  z-index: 10;
-  @media ${isDesktopResolution} {
-    z-index: 1200; // 1100 is PanelWrapper
-  }
+  z-index: 1200; // 1100 is PanelWrapper
 
   width: 100%;
   @media ${isDesktop} {
@@ -32,19 +29,21 @@ const TopPanel = styled.div`
   }
 `;
 
-const StyledPaper = styled(Paper)<{ $isSearchInPanel: boolean }>`
+const StyledPaper = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== '$withShadow',
+})<{ $withShadow: boolean }>`
   padding: 2px 4px;
   display: flex;
   align-items: center;
-  background-color: ${({ $isSearchInPanel, theme }) =>
-    $isSearchInPanel
+  background-color: ${({ $withShadow, theme }) =>
+    $withShadow
       ? theme.palette.background.searchInput
       : theme.palette.background.searchInputPanel};
   -webkit-backdrop-filter: blur(35px);
   backdrop-filter: blur(35px);
   transition: box-shadow 0s !important;
-  box-shadow: ${({ $isSearchInPanel }) =>
-    $isSearchInPanel ? '0 0 20px rgba(0, 0, 0, 0.4)' : 'none'} !important;
+  box-shadow: ${({ $withShadow }) =>
+    $withShadow ? '0 0 20px rgba(0, 0, 0, 0.4)' : 'none'} !important;
 
   .MuiAutocomplete-root {
     flex: 1;
@@ -75,7 +74,7 @@ const useOnClosePanel = () => {
   };
 };
 
-const SearchBox = ({ isSearchInPanel = false }) => {
+const SearchBox = ({ withShadow = false }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const [overpassLoading, setOverpassLoading] = useState(false);
@@ -84,11 +83,7 @@ const SearchBox = ({ isSearchInPanel = false }) => {
 
   return (
     <TopPanel>
-      <StyledPaper
-        $isSearchInPanel={isSearchInPanel}
-        elevation={1}
-        ref={autocompleteRef}
-      >
+      <StyledPaper $withShadow={withShadow} elevation={1} ref={autocompleteRef}>
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
         </SearchIconButton>

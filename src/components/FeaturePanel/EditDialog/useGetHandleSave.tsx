@@ -5,8 +5,10 @@ import { createNoteText } from './createNoteText';
 import { t } from '../../../services/intl';
 import { addOsmFeature, editOsmFeature } from '../../../services/osmApiAuth';
 import { insertOsmNote } from '../../../services/osmApi';
+import { useSnackbar } from '../../utils/SnackbarContext';
 
 export const useGetHandleSave = () => {
+  const { showToast } = useSnackbar();
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { feature, isUndelete } = useEditDialogFeature();
   const {
@@ -14,40 +16,39 @@ export const useGetHandleSave = () => {
     setIsSaving,
     location,
     comment,
-    tags: { tags, typeTag, tmpNewTag, cancelled },
+    tags: { tags, cancelled },
   } = useEditContext();
 
   return () => {
-    const tagsWithType = typeTag
-      ? { [typeTag.key]: typeTag.value, ...tags }
-      : tags;
-    const allTags = { ...tagsWithType, ...tmpNewTag }; // we need to send also unsubmitted new tag
     const noteText = createNoteText(
       feature,
-      allTags,
+      tags,
       cancelled,
       location,
       comment,
       isUndelete,
     );
     if (noteText == null) {
-      // TODO we need better check that this ... formik?
-      alert(t('editdialog.changes_needed')); // eslint-disable-line no-alert
+      showToast(t('editdialog.changes_needed'), 'warning');
       return;
     }
 
     setIsSaving(true);
     const promise = loggedIn
       ? feature.point
-        ? addOsmFeature(feature, comment, allTags)
-        : editOsmFeature(feature, comment, allTags, cancelled)
+        ? addOsmFeature(feature, comment, tags)
+        : editOsmFeature(feature, comment, tags, cancelled)
       : insertOsmNote(feature.center, noteText);
 
     promise.then(setSuccessInfo, (err) => {
       if (err?.status === 401) {
-        alert(t('editdialog.osm_session_expired')); // eslint-disable-line no-alert
+        showToast(t('editdialog.osm_session_expired'), 'error');
         handleLogout();
       } else {
+        showToast(
+          `${t('editdialog.save_refused')} ${err.responseText}`,
+          'error',
+        );
         console.error(err); // eslint-disable-line no-console
       }
       setTimeout(() => setIsSaving(false), 500);

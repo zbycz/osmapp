@@ -131,9 +131,7 @@ export default {
   'editdialog.osm_session_expired': 'Vaše přihlášení do OpenStreetMap vypršelo. Prosím, přihlašte se znovu.',
   'editdialog.loggedInMessage': 'Jste přihlášeni jako <b>__osmUser__</b>, změny se ihned projeví v mapě.',
   'editdialog.logout': 'odhlásit',
-  'editdialog.anonymousMessage1': 'Vkládáte <b>anonymní</b> poznámku do mapy.<br />Pokud se',
-  'editdialog.anonymousMessage2_login': 'přihlásíte do OpenStreetMap',
-  'editdialog.anonymousMessage3': ', změny se ihned projeví v mapě.',
+  'editdialog.anonymousMessage': 'Vkládáte <b>anonymní</b> poznámku do mapy. Pokud se přihlásíte do OpenStreetMap, změny se ihned projeví v mapě.',
   'editdialog.add_major_tag': 'Přidat',
   'editdialog.location_checkbox': 'Zadat novou polohu',
   'editdialog.location_placeholder': 'např. naproti přes ulici',
@@ -148,13 +146,10 @@ export default {
   'editdialog.info_note': `Váš návrh budou zpracovávat dobrovolníci OpenStreetMap, zde pro ně
         můžete přidat doplňující poznámku. Vhodné je podložit váš příspěvek odkazem na zdroj
         informace (web, foto atd.).`,
-  'editdialog.other_tags': 'Další vlastnosti – tagy',
-  'editdialog.other_tags.new_key': 'nový klíč',
-  'editdialog.other_tags.add': 'Přidat další tag',
-  'editdialog.other_tags.will_be_deleted': 'bude smazáno',
-  'editdialog.other_tags.info': `Tagy popisují vlastnosti
-        mapového prvku v dohodnutém formátu. Zde naleznete úplný
-        <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features">přehled všech tagů v OpenStreetMap</a>.`,
+  'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
+  'editdialog.tags_editor_info': `Tagy popisují vlastnosti mapového prvku v dohodnutém formátu. Zde naleznete úplný
+        <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
+  'editdialog.save_refused': 'Změny se nepodařilo uložit.',
 
   'editsuccess.close_button': 'Zavřít',
   'editsuccess.note.heading': 'Děkujeme za Váš návrh!',

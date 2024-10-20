@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-
-import { Box, Button, Stack, TextField, Typography } from '@mui/material';
-
+import { Button, TextField, Typography } from '@mui/material';
 import { t } from '../../../../services/intl';
 import {
   getNextWikimediaCommonsIndex,
@@ -11,6 +9,7 @@ import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import { useEditContext } from '../EditContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import styled from '@emotion/styled';
+import { CharacterCount, getInputTypeForKey } from './helpers';
 
 export const majorKeys = [
   'name',
@@ -22,7 +21,7 @@ export const majorKeys = [
 
 const MAX_INPUT_LENGTH = 255;
 
-const getData = (numberOfWikimediaItems) => {
+const getData = (numberOfWikimediaItems: number) => {
   const wikimediaCommonTags = Array(numberOfWikimediaItems)
     .fill('')
     .reduce((acc, _, index) => {
@@ -47,30 +46,14 @@ const getData = (numberOfWikimediaItems) => {
 const InputContainer = styled.div`
   position: relative;
 `;
-const CharacterCountContainer = styled.div`
-  position: absolute;
-  right: 0;
-`;
 
-const CharacterCount = ({
-  count = 0,
-  max,
-  isVisible,
-}: {
-  count?: number;
-  max: number;
-  isVisible: boolean;
-}) => (
-  <CharacterCountContainer>
-    {isVisible && (
-      <Stack direction="row" justifyContent={'flex-end'} whiteSpace="nowrap">
-        <Box color={count >= max ? 'error.main' : undefined}>
-          {count} / {max}
-        </Box>
-      </Stack>
-    )}
-  </CharacterCountContainer>
-);
+type TextFieldProps = {
+  k: string;
+  label: string;
+  onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
+  value?: string;
+  autoFocus?: boolean;
+};
 
 const TextFieldWithCharacterCount = ({
   k,
@@ -78,13 +61,16 @@ const TextFieldWithCharacterCount = ({
   autoFocus,
   onChange,
   value,
-}) => {
-  const [isCharacterCountVisible, setIsCharacterCountVisible] = useState(false);
+}: TextFieldProps) => {
+  const [isFocused, setIsFocused] = useState(false);
+  const inputType = getInputTypeForKey(k);
+
   return (
     <InputContainer>
       <TextField
         label={label}
-        multiline
+        type={inputType}
+        multiline={inputType === 'text'}
         value={value}
         InputLabelProps={{ shrink: true }}
         variant="outlined"
@@ -94,13 +80,13 @@ const TextFieldWithCharacterCount = ({
         fullWidth
         autoFocus={autoFocus}
         inputProps={{ maxLength: MAX_INPUT_LENGTH }}
-        onFocus={() => setIsCharacterCountVisible(true)}
-        onBlur={() => setIsCharacterCountVisible(false)}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
         helperText={
           <CharacterCount
             count={value?.length}
             max={MAX_INPUT_LENGTH}
-            isVisible={isCharacterCountVisible}
+            isInputFocused={isFocused}
           />
         }
       />
@@ -110,15 +96,13 @@ const TextFieldWithCharacterCount = ({
 
 export const MajorKeysEditor = () => {
   const { focusTag } = useEditDialogContext();
-  const {
-    tags: { tags, setTag },
-  } = useEditContext();
+  const { tags, setTag } = useEditContext().tags;
 
   // TODO this code will be replaced when implementing id presets fields
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
   const data = getData(nextWikimediaCommonsIndex + 1);
 
-  const [activeMajorKeys, setActiveMajorKeys] = React.useState(
+  const [activeMajorKeys, setActiveMajorKeys] = useState(() =>
     data.keys.filter((k) => !!tags[k]),
   );
 
@@ -129,6 +113,7 @@ export const MajorKeysEditor = () => {
   );
 
   useEffect(() => {
+    // name can be clicked even though it was built from preset name
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
       setActiveMajorKeys((arr) => [...arr, 'name']);
     }
@@ -148,7 +133,7 @@ export const MajorKeysEditor = () => {
               onChange={(e) => {
                 setTag(e.target.name, e.target.value);
               }}
-              value={tags[k]}
+              value={tags[k] ?? ''}
             />
           )}
         </div>

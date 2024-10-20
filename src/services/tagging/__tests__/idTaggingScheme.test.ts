@@ -3,7 +3,7 @@ import { getSchemaForFeature } from '../idTaggingScheme';
 import { Feature } from '../../types';
 import { mockSchemaTranslations } from '../translations';
 import { intl } from '../../intl';
-import { computeAllFieldKeys } from '../fields';
+import { getFieldKeys } from '../fields';
 
 intl.lang = 'en';
 
@@ -72,7 +72,7 @@ describe('idTaggingScheme', () => {
     } as unknown as Feature;
 
     const schema = getSchemaForFeature(featureWithTemplate);
-    const computedAllFieldKeys = computeAllFieldKeys(schema.preset);
+    const computedAllFieldKeys = getFieldKeys(schema.preset);
 
     expect(computedAllFieldKeys).toEqual([
       'amenity',
@@ -104,11 +104,17 @@ describe('idTaggingScheme', () => {
       'wikimedia_commons',
       'wikidata',
       'start_date',
+      'short_name',
+      'reg_name',
+      'official_name',
       'note',
+      'nat_name',
       'mapillary',
+      'loc_name',
       'fixme',
       'ele_node',
       'description',
+      'alt_name',
       'ref/linz/place_id-NZ',
       'architect',
     ]);
@@ -127,6 +133,7 @@ describe('idTaggingScheme', () => {
         water: 'fountain',
         wikidata: 'Q94435643',
         wikimedia_commons: 'Category:Fountain (metro Malostranská)',
+        non_existing123: 'xxxx',
       },
     } as unknown as Feature;
 
@@ -138,10 +145,11 @@ describe('idTaggingScheme', () => {
       'wikimedia_commons',
     ]);
     expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
+      'natural',
       'source',
       'water',
     ]);
-    expect(schema.keysTodo).toEqual(['natural']);
+    expect(schema.keysTodo).toEqual(['non_existing123']);
   });
 
   it('should remove from keysTodo if address is in restTags', () => {
@@ -166,6 +174,7 @@ describe('idTaggingScheme', () => {
     expect(schema.presetKey).toEqual('historic/city_gate');
     expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
       'source',
+      'tourism',
     ]);
   });
 });

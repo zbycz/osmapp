@@ -358,9 +358,7 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
         )}
 
         <DialogActions>
-          <Button onClick={onReset} color="secondary" variant="outlined">
-            Cancel
-          </Button>
+          <Button onClick={onReset}>Cancel</Button>
 
           <Button
             onClick={onSave}

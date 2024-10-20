@@ -1,7 +1,7 @@
-import * as fetchModule from '../../../../services/fetch';
+import * as fetchModule from '../../../../../services/fetch';
 import { requestLines } from '../requestRoutes';
 
-jest.mock('../../../../services/fetch', () => ({
+jest.mock('../../../../../services/fetch', () => ({
   fetchJson: jest.fn(),
 }));
 
@@ -77,6 +77,7 @@ test('conversion', async () => {
         osmappType: 'relation',
         ref: '89',
         route: 'bus',
+        service: 'bus',
         subclass: 'bus',
         type: 'route',
       },
@@ -103,6 +104,7 @@ test('conversion', async () => {
         osmappType: 'relation',
         ref: '89',
         route: 'bus',
+        service: 'bus',
         subclass: 'bus',
         type: 'route',
       },

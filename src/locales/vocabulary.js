@@ -128,11 +128,12 @@ export default {
   'featurepanel.feature_description_point': 'Map coordinates',
   'featurepanel.show_tags': 'Show tags',
   'featurepanel.show_objects_around': 'Show nearby objects',
-  'featurepanel.uncertain_image': 'This is the closest street view image from Mapillary. It may be inaccurate.',
+  'featurepanel.uncertain_image': 'This is the closest street view image from __from__. It may be inaccurate.',
   'featurepanel.inline_edit_title': 'Edit',
   'featurepanel.objects_around': 'Nearby objects',
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
   'featurepanel.climbing_restriction': 'Climbing restriction',
+  'featurepanel.login': 'Login',
 
   'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
@@ -170,9 +171,7 @@ export default {
   'editdialog.osm_session_expired': 'Your OpenStreetMap session has expired. Please, log in again.',
   'editdialog.loggedInMessage': 'You are logged in as <b>__osmUser__</b>, changes will be saved immediately.',
   'editdialog.logout': 'logout',
-  'editdialog.anonymousMessage1': 'An <b>anonymous</b> note will be added to the map.<br />If you',
-  'editdialog.anonymousMessage2_login': 'log in to OpenStreetMap',
-  'editdialog.anonymousMessage3': ', your changes will be immediate.',
+  'editdialog.anonymousMessage': 'An <b>anonymous</b> note will be added to the map. If you log in to OpenStreetMap, your changes will be immediate.',
   'editdialog.add_major_tag': 'Add',
   'editdialog.location_checkbox': 'New location',
   'editdialog.location_placeholder': 'eg. across the street',
@@ -185,11 +184,10 @@ export default {
          to copy copyrighted data (e.g. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">More info</a>`,
   'editdialog.info_note':
     'Your suggestion will be reviewed by OpenStreetMap volunteers. You can add additional information such as a link to a photo or a link to source material for them below!',
-  'editdialog.other_tags_heading': 'Other tags',
-  'editdialog.other_tags': 'Edit Tags',
-  'editdialog.other_tags.new_key': 'new key',
-  'editdialog.other_tags.will_be_deleted': 'will be deleted',
-  'editdialog.other_tags.info': `Tags contain the data used to display objects on the map!<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features">a reference for all tags on the OpenStreetMap Wiki</a>!`,
+  'editdialog.tags_editor': 'All properties – Tags',
+  'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
+  'editdialog.login_in_progress': `Logging in...`,
+  'editdialog.save_refused': 'Unable to save your changes.',
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',
@@ -205,6 +203,10 @@ export default {
           <br/><br/>If this is a mistake, you can manually revert the values and save it again.`,
   'editsuccess.edit.urlLabel': `Your changes:`,
   'editsuccess.edit.textLabel': 'Comment',
+  'editdialog.preset_select.label': 'Type:',
+  'editdialog.preset_select.placeholder': 'Select the type',
+  'editdialog.preset_select.search_placeholder': 'Type to search...',
+  'editdialog.preset_select.edit_button': 'Edit',
 
   'tags.name': 'Name',
   'tags.description': 'Description',
@@ -246,8 +248,8 @@ export default {
   'climbingpanel.finish_climbing_route': 'Finish route',
   'climbingpanel.cancel_climbing_route': 'Cancel',
   'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
-  'climbingpanel.create_first_node': 'Click on the beginning of the route',
-  'climbingpanel.create_next_node': 'Follow direction of the route',
+  'climbingpanel.create_first_node': 'Click on the beginning of the route and continue in the direction of the route',
+  'climbingpanel.create_next_node': 'Follow direction of the route and click "Done" when finished',
 
   'publictransport.tourism': 'Touristic trains',
   'publictransport.night': 'Night trains',
@@ -258,7 +260,16 @@ export default {
   'publictransport.long_distance': 'Long distance trains',
   'publictransport.high_speed': 'High speed trains',
   'publictransport.bus': 'Bus',
+  'publictransport.subway': 'Subway',
   'publictransport.unknown': 'Unknown type',
+
+  'publictransport.show_this_category': 'Show this category',
+  'publictransport.hide_this_category': 'Hide this category',
+  'publictransport.only_this_category': 'Show only this category',
+
+  'publictransport.route': 'Route',
+  'publictransport.hidden_stops': '__amount__ more stops',
+  'publictransport.visible_stops': 'Hide __amount__ stops',
 
   'climbingpanel.draw_route': 'Draw route',
 
@@ -275,4 +286,8 @@ export default {
   'climbingareas.title': 'Climbing areas',
   'climbingareas.area': 'Area',
   'climbingareas.num_of_crags': 'Number of crags',
+
+  'member_features.subitems': 'Subitems',
+  'member_features.climbing': 'Climbing routes',
+  'member_features.routes': 'Routes',
 };

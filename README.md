@@ -29,13 +29,13 @@ You may [add issues](https://github.com/zbycz/osmapp/issues) here on GitHub, or 
 > If you are a JS dev, you may also `git clone` / `yarn` / `yarn dev` \
 > Or [open OsmAPP in gitpod](https://gitpod.io/#https://github.com/zbycz/osmapp) or GitHub Codespaces – full dev environment in your browser. \
 > If Vercel build fails, please run `yarn build` locally to debug it. \
-> [Architecture DOCS here](./DOCS.md).
+> [Architecture DOCS here](https://github.com/zbycz/osmapp/wiki/Architecture).
 
 ## Features 🗺 📱 🖥
 
 - **clickable map** – poi, cities, localities, ponds (more coming soon)
 - **feature panel** – presets and fields from iD editor
-  - Display multiple images from Wikipedia, Wikidata, Commons, Mapillary or Fody
+  - Display multiple images from Wikipedia, Wikidata, Commons, Mapillary, KartaView, Panoramax or Fody
   - Line numbers on public transport stops
   - Runway table on airports
 - **editing** – Save changes with osm login. Insert note for anonymous users.

@@ -1,12 +1,12 @@
 import React from 'react';
-import { useUserThemeContext } from '../../../helpers/theme';
+import { useUserThemeContext } from '../../../../helpers/theme';
 import styled from '@emotion/styled';
-import { osmColorToHex, whiteOrBlackText } from '../helpers/color';
+import { osmColorToHex, whiteOrBlackText } from '../../helpers/color';
 import { Tooltip } from '@mui/material';
 import Link from 'next/link';
 import { LineInformation } from './requestRoutes';
 
-const getBgColor = (color: string | undefined, darkmode: boolean) => {
+export const getBgColor = (color: string | undefined, darkmode: boolean) => {
   if (color) return osmColorToHex(color);
 
   return darkmode ? '#898989' : '#dddddd';
@@ -25,12 +25,13 @@ const LineNumberWrapper = styled(Link)<{
 `;
 
 type Tags = Record<string, string>;
-const formatTooltip = (tags: Tags, routes: { tags: Tags }[]) => {
-  const formatTags = (tags: Tags) => {
-    const parts = [tags.from, ...(tags.via ? [tags.via] : []), tags.to];
-    return parts.flatMap((str) => str.split(';')).join(' - ');
-  };
 
+const formatTags = (tags: Tags) => {
+  const parts = [tags.from, ...(tags.via ? [tags.via] : []), tags.to];
+  return parts.flatMap((str) => str.split(';')).join(' - ');
+};
+
+const formatTooltip = (tags: Tags, routes: { tags: Tags }[]) => {
   if (tags.from && tags.to) {
     return formatTags(tags);
   }

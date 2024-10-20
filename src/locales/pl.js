@@ -91,9 +91,8 @@ export default {
   'editdialog.changes_needed': 'Proszę, dokonajcie pewnych zmian.',
   'editdialog.loggedInMessage': 'Jesteś zalogowany jako <b>__osmUser__</b>, zmiany zostaną zapisane natychmiastowo.',
   'editdialog.logout': 'wyloguj',
-  'editdialog.anonymousMessage1': 'Do mapy zostanie dodana <b>anonimowa</b> uwaga.<br />Jeśli',
-  'editdialog.anonymousMessage2_login': 'zalogujesz się do OpenStreetMap,',
-  'editdialog.anonymousMessage3': 'Twoje zmiany będą widoczne natychmiastowo.',
+  'editdialog.anonymousMessage':
+    'Do mapy zostanie dodana <b>anonimowa</b> uwaga. Jeśli zalogujesz się do OpenStreetMap, twoje zmiany będą widoczne natychmiastowo.',
   'editdialog.add_major_tag': 'Dodaj',
   'editdialog.location_checkbox': 'Zmień położenie',
   'editdialog.location_placeholder': 'np. przez ulicę',
@@ -108,13 +107,10 @@ export default {
   'editdialog.info_note': `Twoja sugestia zostanie przepracowana przez wolontariuszy OpenStreetMap. Tutaj
          możesz dodać dodatkową notatkę lub opisać ustawienie położenia itp.
          Warto również wesprzeć swój wkład odnośnikiem do źródła informacji (sieć, zdjęcia itp.).`,
-  'editdialog.other_tags': 'Inne właściwości - znaczniki',
-  'editdialog.other_tags.new_key': 'nowy klucz',
-  'editdialog.other_tags.add': 'Dodaj inny znacznik',
-  'editdialog.other_tags.will_be_deleted': 'zostanie usunięte',
-  'editdialog.other_tags.info': `Znaczniki opisują właściwości
+  'editdialog.tags_editor': 'Wszystkie właściwości - Tagi',
+  'editdialog.tags_editor_info': `Znaczniki opisują właściwości
         każdego obiektu mapy w uzgodnionym formacie. Tutaj znajdziesz kompletny
-        <a href="https://wiki.openstreetmap.org/wiki/Map_Features">przegląd wszystkich znaczników w OpenStreetMap</a>.`,
+        <a href="https://wiki.openstreetmap.org/wiki/Pl:Map_Features" target="_blank">przegląd wszystkich znaczników w OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Zamknij',
   'editsuccess.note.heading': 'Dziękujemy za Twoją sugestię!',

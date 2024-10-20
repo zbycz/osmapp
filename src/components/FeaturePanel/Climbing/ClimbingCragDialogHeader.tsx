@@ -5,11 +5,11 @@ import CloseIcon from '@mui/icons-material/Close';
 import TuneIcon from '@mui/icons-material/Tune';
 import {
   AppBar,
-  Toolbar,
-  Typography,
-  IconButton,
-  Tooltip,
   Box,
+  IconButton,
+  Toolbar,
+  Tooltip,
+  Typography,
 } from '@mui/material';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { PhotoLink } from './PhotoLink';
@@ -17,7 +17,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
 import { getOsmappLink } from '../../../services/helpers';
 import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
-import EditIcon from '@mui/icons-material/Edit';
+import { useDragItems } from '../../utils/useDragItems';
 
 const Title = styled.div`
   flex: 1;
@@ -48,8 +48,8 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
     setAreRoutesLoading,
     photoPaths,
     setShowDebugMenu,
-    setIsEditMode,
     isEditMode,
+    showDebugMenu,
   } = useClimbingContext();
 
   const { feature } = useFeatureContext();
@@ -71,6 +71,22 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
     }
   };
 
+  const movePhotos = (_oldIndex, _newIndex) => {
+    // @TODO: Implement moving photos
+  };
+
+  const {
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    HighlightedDropzone,
+    ItemContainer,
+  } = useDragItems<string>({
+    initialItems: photoPaths,
+    moveItems: movePhotos,
+    direction: 'horizontal',
+  });
+
   return (
     <AppBar position="static" color="transparent">
       <Toolbar variant="dense">
@@ -88,34 +104,34 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
               <PhotosTitle>Photos:</PhotosTitle>
               <PhotoLinks>
                 {photoPaths.map((photo, index) => (
-                  <PhotoLink
-                    key={photo}
-                    onClick={() => onPhotoChange(photo)}
-                    isCurrentPhoto={photo === photoPath}
-                  >
-                    {index}
-                  </PhotoLink>
+                  <ItemContainer key={photo}>
+                    <PhotoLink
+                      key={photo}
+                      onClick={() => onPhotoChange(photo)}
+                      isCurrentPhoto={photo === photoPath}
+                      {...(showDebugMenu && isEditMode
+                        ? {
+                            draggable: true,
+                            onDragStart: (e) =>
+                              handleDragStart(e, {
+                                id: index,
+                                content: photo,
+                              }),
+                            onDragOver: (e) => handleDragOver(e, index),
+                            onDragEnd: handleDragEnd,
+                          }
+                        : {})}
+                    >
+                      {index}
+                    </PhotoLink>
+                    <HighlightedDropzone index={index} />
+                  </ItemContainer>
                 ))}
               </PhotoLinks>
             </PhotosContainer>
           )}
         </Title>
 
-        <Box mr={1}>
-          {!isEditMode && (
-            <Tooltip title="Edit crag">
-              <IconButton
-                color="primary"
-                edge="end"
-                onClick={() => {
-                  setIsEditMode(true);
-                }}
-              >
-                <EditIcon fontSize="small" />
-              </IconButton>
-            </Tooltip>
-          )}
-        </Box>
         <Box mr={2}>
           <Tooltip title="Show settings">
             <IconButton

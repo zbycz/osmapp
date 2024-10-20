@@ -108,7 +108,7 @@ export default {
   'featurepanel.feature_description_point': 'Karten Koordinaten',
   'featurepanel.show_tags': 'Zeige Tags an',
   'featurepanel.show_objects_around': 'Zeige Orte in der Nähe an',
-  'featurepanel.uncertain_image': 'Dies ist das nächste Street View Bild von Mapillary. Es kann ein anders Objekt zeigen.',
+  'featurepanel.uncertain_image': 'Dies ist das nächste Street View Bild von __from__. Es kann ein anders Objekt zeigen.',
   'featurepanel.inline_edit_title': 'Bearbeiten',
   'featurepanel.objects_around': 'Orte in der Nähe',
   'featurepanel.more_in_openplaceguide': 'Weitere Information auf __instanceName__',
@@ -151,9 +151,8 @@ export default {
   'editdialog.osm_session_expired': 'Deine OpenStreetMap-Sitzung ist abgelaufen. Bitte melde Dich erneut an.',
   'editdialog.loggedInMessage': 'Du bist als <b>__osmUser__</b> eingeloggt, Änderungen werden sofort gespeichert.',
   'editdialog.logout': 'logout',
-  'editdialog.anonymousMessage1': 'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt.<br />Wenn du dich',
-  'editdialog.anonymousMessage2_login': 'auf OpenStreetMap einloggst',
-  'editdialog.anonymousMessage3': ', werden deine Änderungen direkt gespeichert.',
+  'editdialog.anonymousMessage':
+    'Ein <b>anonyme</b> Notiz wird der Karte hinzugefügt. Wenn du dich auf OpenStreetMap einloggst, werden deine Änderungen direkt gespeichert.',
   'editdialog.add_major_tag': 'Hinzufügen',
   'editdialog.location_checkbox': 'Position ändern',
   'editdialog.location_placeholder': 'z.B. gegenüber auf der Straße',
@@ -170,12 +169,10 @@ export default {
   Es ist auch in Ordnung, deinen Beitrag mit einem Link zur Quelle (web,
     Foto, etc.) zu versehen.`,
   'editdialog.other_tags_heading': 'Weitere Eigenschaften – Tags',
-  'editdialog.other_tags': 'Tags bearbeiten',
-  'editdialog.other_tags.new_key': 'Neuer Schlüssel',
-  'editdialog.other_tags.will_be_deleted': 'wird gelöscht',
-  'editdialog.other_tags.info': `Ein Tag beschreibt Eigenschaften
+  'editdialog.tags_editor': 'Alle Eigenschaften – Tags',
+  'editdialog.tags_editor_info': `Ein Tag beschreibt Eigenschaften
   eines Ortes auf der Karte in einem einheitlichen Format. Hier findest du die
-  <a href="https://wiki.openstreetmap.org/wiki/Map_Features">komplette Übersicht aller Tags in OpenStreetMap</a>.`,
+  <a href="https://wiki.openstreetmap.org/wiki/DE:Map_Features" target="_blank">komplette Übersicht aller Tags in OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Schließen',
   'editsuccess.note.heading': 'Danke für deinen Hinweis!',
@@ -243,10 +240,23 @@ export default {
   'publictransport.long_distance': 'Fernzüge',
   'publictransport.high_speed': 'Hochgeschwindigkeitszüge',
   'publictransport.bus': 'Bus',
+  'publictransport.subway': 'U-Bahn',
   'publictransport.unknown': 'Unbekannter Typ',
+
+  'publictransport.show_this_category': 'Zeige diese Kategorie an',
+  'publictransport.hide_this_category': 'Blende diese Kategorie aus',
+  'publictransport.only_this_category': 'Zeige nur diese Kategorie an',
+
+  'publictransport.route': 'Streckenverlauf',
+  'publictransport.hidden_stops': '__amount__ weitere Haltestellen',
+  'publictransport.visible_stops': 'Blende __amount__ Haltestellen aus',
 
   'runway.information': 'Landebahninformationen',
   'runway.runway': 'Landebahn',
   'runway.size': 'Länge (m) - Breite (m)',
   'runway.surface': 'Oberfläche',
+
+  'member_features.subitems': 'Subelemente',
+  'member_features.climbing': 'Kletter Strecken',
+  'member_features.routes': 'Strecken',
 };

@@ -6,6 +6,7 @@ import { PositionPx } from '../types';
 import { PathWithBorder } from './PathWithBorder';
 import { MouseTrackingLine } from './MouseTrackingLine';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
+import { useMobileMode } from '../../../helpers';
 
 const InteractiveArea = styled.line`
   pointer-events: all;
@@ -37,12 +38,16 @@ export const RoutePath = ({ route, routeNumber }) => {
   const isSelected = isRouteSelected(routeNumber);
   const machine = getMachine();
   const path = getPathForRoute(route);
-  if (!path) return null;
-  const pointsInString = path.map(({ x, y }, index) => {
-    const position = getPixelPosition({ x, y, units: 'percentage' });
+  const isMobileMode = useMobileMode();
 
-    return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
-  });
+  if (!path) return null;
+  const pointsInString = path
+    .map(({ x, y }, index) => {
+      const position = getPixelPosition({ x, y, units: 'percentage' });
+
+      return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
+    })
+    .join('');
 
   const onMouseMove = (e, segmentIndex: number) => {
     if (
@@ -136,6 +141,11 @@ export const RoutePath = ({ route, routeNumber }) => {
               ...path[index + 1],
               units: 'percentage',
             });
+
+            const desktopProps = {
+              onMouseEnter: onMouseEnter,
+              onMouseLeave: onMouseLeave,
+            };
             return (
               <InteractiveArea
                 // eslint-disable-next-line react/no-array-index-key
@@ -146,8 +156,7 @@ export const RoutePath = ({ route, routeNumber }) => {
                 y1={position1.y}
                 x2={position2.x}
                 y2={position2.y}
-                onMouseEnter={onMouseEnter}
-                onMouseLeave={onMouseLeave}
+                {...(isMobileMode ? {} : desktopProps)}
                 onMouseMove={(e) => onMouseMove(e, index)}
                 onClick={onMouseDown}
                 {...commonProps}

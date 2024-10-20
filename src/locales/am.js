@@ -88,9 +88,7 @@ export default {
   'editdialog.changes_needed': 'እባክዎ, የተወሰኑ ማሻሻያዎች ያድርጉ',
   'editdialog.loggedInMessage': '<b>__osmUser__</b> በተሰኘው መለያ ገብተዋል, ለውጦች በፍጥነት ይቀመጣሉ',
   'editdialog.logout': 'ውጣ',
-  'editdialog.anonymousMessage1': '<b>መለያ የሌለው</b> ማስታወሻ በካርታው ላይ ይቀመጣል.<br />',
-  'editdialog.anonymousMessage2_login': 'OpenStreetMap ላይ ማህደር አስቀም',
-  'editdialog.anonymousMessage3': ', ያከናወኑት ለውጦች በፍጥነት ይታያሉ',
+  'editdialog.anonymousMessage': '<b>መለያ የሌለው</b> ማስታወሻ በካርታው ላይ ይቀመጣል. OpenStreetMap ላይ ማህደር አስቀም, ያከናወኑት ለውጦች በፍጥነት ይታያሉ',
   'editdialog.add_major_tag': 'ጨምር',
   'editdialog.location_checkbox': 'መገኛ ይቀይሩ',
   'editdialog.location_placeholder': 'ለምሳሌ፦ ከመንገዱ ተምሻግሮ',
@@ -101,12 +99,9 @@ export default {
   'editdialog.info_edit': `እርትእዎ በፍጥነት OpenStreetMap ላይ ይቀመጣል። እባክዎ የሚያስገቡት መረጃ የርስዎ ወይም ከአስተማማኝ ምንጭ የተገኘ መሆኑን እርግጠኛ ይሁኑ። በህግ የሚጠበቁ ሌሎች ምንጮች መጠቀም ፈፅሞ የተከለከለ ነው። (ለምሳሌ፦ Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">ተጨማሪ መረጃ</a>`,
   'editdialog.info_note': `ጥቆማዎ በOpenStreetMap በጎ-ፈቃደኞች ይስተናገዳል። እዚህ ጋር ተጨማሪ ማስታወሻዎችን ወይንም የቦታ ማሻሻያ መግለጫዎች የመሳሰሉትን ማስቀመጥ ይችላሉ።
 ያደረጉትን ማሻሻያ (ለውጥ) ምንጩን በማስቀመጥ ማጠናከር ተገቢ ነው። (ድረ-ገፅ፣ ፎቶ ወዘ).`,
-  'editdialog.other_tags': 'ሌሎች መገለጫዎች  – መለያዎች',
-  'editdialog.other_tags.new_key': 'አዲስ ቁልፍ',
-  'editdialog.other_tags.add': 'ሌላ መለያ ጨምር',
-  'editdialog.other_tags.will_be_deleted': 'ይሰረዛል',
-  'editdialog.other_tags.info': `መለያዎቹ የእያንዳንዱን ካርታ ክፍሎች አስማሚ በሆኑ መንገዶች የሚገልፁ ናቸው። እዚህ ጋር ሁሉንም
-        <a href="https://wiki.openstreetmap.org/wiki/Map_Features">የOpenStreetMap መለያዎች</a> ያገኛሉ`,
+  'editdialog.tags_editor': 'ሁሉም ንብረቶች - መለያዎች',
+  'editdialog.tags_editor_info': `መለያዎቹ የእያንዳንዱን ካርታ ክፍሎች አስማሚ በሆኑ መንገዶች የሚገልፁ ናቸው። እዚህ ጋር ሁሉንም
+        <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">የOpenStreetMap መለያዎች</a> ያገኛሉ`,
 
   'editsuccess.close_button': 'ዝጋ',
   'editsuccess.note.heading': 'ስለጥቆማዎ እናመሰግናለን!',

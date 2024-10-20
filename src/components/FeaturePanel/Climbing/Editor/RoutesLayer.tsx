@@ -188,6 +188,7 @@ export const RoutesLayer = ({
         $imageSize={imageSize}
         $isVisible={isVisible}
         $transformOrigin={transformOrigin}
+        xmlns="http://www.w3.org/2000/svg"
       >
         {sortedRoutes.rest.map((item) => item.route)}
         {sortedRoutes.rest.map((item) => item.marks)}
