@@ -16,7 +16,7 @@ type KartaViewImage = {
   orgCode: string;
   lat: string;
   lng: string;
-  field_of_view: any;
+  field_of_view: string | null;
   name: string;
   lth_name: string;
   th_name: string;
@@ -60,7 +60,7 @@ export const getKartaViewImage = getImageFromCenterFactory('KartaView', {
   },
   getImageCoords: ({ lng, lat }) => [parseInt(lng), parseInt(lat)],
   getImageAngle: ({ heading }) => (heading ? parseInt(heading) : undefined),
-  isPano: () => false,
+  isPano: ({ field_of_view }) => field_of_view === '360',
   getImageUrl: ({ lth_name }) => {
     const [storage, uri] = lth_name.split(/\/(.*)/);
     return `https://${storage}.openstreetcam.org/${uri}`;
@@ -69,5 +69,8 @@ export const getKartaViewImage = getImageFromCenterFactory('KartaView', {
   getImageLink: ({ id }) => id,
   getImageLinkUrl: ({ sequence_id, sequence_index }) =>
     `https://kartaview.org/details/${sequence_id}/${sequence_index}`,
-  getPanoUrl: () => '',
+  getPanoUrl: ({ name }) => {
+    const [storage, uri] = name.split(/\/(.*)/);
+    return `https://${storage}.openstreetcam.org/${uri}`;
+  },
 });
