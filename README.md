@@ -12,6 +12,7 @@ See also [SotM 2021 talk](https://github.com/zbycz/osmapp-talk).
 
 Open climbing maps and topos. Photos are uploaded to _Wikimedia Commons_ and route data stored in _OpenStreetMap_ ([spec](https://wiki.openstreetmap.org/wiki/Key:wikimedia_commons:path)).
 
+- **[Story behind openclimbing.org](https://medium.com/@jvaclavik/story-behind-openclimbing-org-ab448939c6ac)**
 - master branch: https://openclimbing.org
 - examples: [Prokopské údolí](https://openclimbing.org/relation/17262674),
   [Roviště](https://openclimbing.org/relation/17130100),
