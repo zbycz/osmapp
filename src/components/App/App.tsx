@@ -174,7 +174,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
 const reactQueryClient = new QueryClient();
 
 type Props = {
-  featureFromRouter: Feature | '404' | null;
+  featureFromRouter: Feature | null;
   initialMapView: View;
   cookies: Record<string, string>;
   climbingAreas: Array<ClimbingArea>;
@@ -187,10 +187,6 @@ const App: NextPage<Props> = ({
   climbingAreas,
 }) => {
   const mapView = getMapViewFromHash() || initialMapView;
-
-  if (featureFromRouter === '404') {
-    return <Error statusCode={404} />;
-  }
 
   return (
     <SnackbarProvider>
@@ -232,7 +228,7 @@ App.getInitialProps = async (ctx: NextPageContext) => {
   const featureFromRouter =
     ctx.query.all?.[0] === 'directions' ? null : await getInitialFeature(ctx);
   if (ctx.res) {
-    if (featureFromRouter === '404' || featureFromRouter?.error === '404') {
+    if (featureFromRouter?.error === '404') {
       ctx.res.statusCode = 404;
     } else if (featureFromRouter?.error) {
       ctx.res.statusCode = 500;
