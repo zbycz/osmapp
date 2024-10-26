@@ -20,6 +20,7 @@ export type ImageType = {
   uncertainImage?: true;
   sameUrlResolvedAlsoFrom?: ImageType[]; // only 1 level
   panoramaUrl?: string; // only for Mapillary (ImageDefFromCenter)
+  provider?: string;
 };
 
 const getSuffix = (y: string) => {
@@ -110,15 +111,23 @@ const getImagesFromTags = (tags: FeatureTags) => {
     .sort((a, b) => +b.instant - +a.instant);
 };
 
-const getImagesFromCenter = (tags: FeatureTags, center?: LonLat): ImageDef[] =>
-  !center
-    ? []
-    : [
-        ...(tags.information
-          ? [{ type: 'center', service: 'fody', center } as ImageDefFromCenter]
-          : []),
-        { type: 'center', service: 'mapillary', center } as ImageDefFromCenter,
-      ];
+export const getImagesFromCenter = (
+  tags: FeatureTags,
+  center?: LonLat,
+): ImageDef[] => {
+  if (!center) {
+    return [];
+  }
+  return [
+    ...(tags.information
+      ? [{ type: 'center', service: 'fody', center } as ImageDefFromCenter]
+      : []),
+    { type: 'center', service: 'panoramax', center } as ImageDefFromCenter,
+    { type: 'center', service: 'kartaview', center } as ImageDefFromCenter,
+    // it is annoying to scroll past a pano image - so we put it last
+    { type: 'center', service: 'mapillary', center } as ImageDefFromCenter,
+  ];
+};
 
 export const getImageDefs = (tags: FeatureTags, center?: LonLat) => [
   ...getImagesFromTags(tags),
