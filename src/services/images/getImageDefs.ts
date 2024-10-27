@@ -92,6 +92,8 @@ const commons = (k: string) => k.match(/^wikimedia_commons(\d*|:(?!path).*)$/);
 const commonsFile = ([k, v]) => commons(k) && v.startsWith('File:');
 const commonsCategory = ([k, v]) => commons(k) && v.startsWith('Category:');
 
+const mapillary = ([k, v]) => k === 'mapillary' && v.match(/^\d+$/);
+
 const getImagesFromTags = (tags: FeatureTags) => {
   const entries = Object.entries(tags);
   const imageTags = [
@@ -100,6 +102,7 @@ const getImagesFromTags = (tags: FeatureTags) => {
     ...entries.filter(wikipedia),
     ...entries.filter(wikidata),
     ...entries.filter(commonsCategory),
+    ...entries.filter(mapillary),
   ];
 
   return imageTags
