@@ -81,6 +81,18 @@ export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
     };
   }
 
+  if (k.startsWith('panoramax')) {
+    const imageUrl = `https://api.panoramax.xyz/api/pictures/${v}/hd.jpg`;
+    const linkUrl = `https://panoramax.xyz/#focus=pic&pic=${v}`;
+
+    return {
+      imageUrl,
+      linkUrl,
+      description: `Panoramax (${k}=*)`,
+      link: 'Panoramax',
+    };
+  }
+
   return null; // API call needed
 };
 
@@ -93,6 +105,7 @@ const commonsFile = ([k, v]) => commons(k) && v.startsWith('File:');
 const commonsCategory = ([k, v]) => commons(k) && v.startsWith('Category:');
 
 const mapillary = ([k, v]) => k === 'mapillary' && v.match(/^\d+$/);
+const panoramax = ([k, _]) => k === 'panoramax';
 
 const getImagesFromTags = (tags: FeatureTags) => {
   const entries = Object.entries(tags);
@@ -103,6 +116,7 @@ const getImagesFromTags = (tags: FeatureTags) => {
     ...entries.filter(wikidata),
     ...entries.filter(commonsCategory),
     ...entries.filter(mapillary),
+    ...entries.filter(panoramax),
   ];
 
   return imageTags
