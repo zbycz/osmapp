@@ -60,7 +60,7 @@ export function tokenize(inputValue: string) {
     }
   });
 
-  if (!validateMatches(matches, inputValue).valid) {
+  if (!validateMatches(matches, trimmedInputValue).valid) {
     throw new Error('Invalid token encountered');
   }
 

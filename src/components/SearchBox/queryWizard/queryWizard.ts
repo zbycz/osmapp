@@ -2,8 +2,6 @@ import { ASTNode, generateAst } from './ast';
 import { isSpecialComparisonValue } from './isAst';
 import { tokenize } from './tokens';
 
-const FALLBACK_LABEL = 'Query Wizard';
-
 export const getAST = (inputValue: string) => {
   const tokens = tokenize(inputValue);
   return generateAst(tokens);
@@ -26,7 +24,7 @@ export const queryWizardLabel = (ast: ASTNode): string => {
         return `${queryWizardLabel(ast.expressions[0])} ${ast.operator} ${remaining} ${remaining > 1 ? 'others' : 'other'}`;
       }
       return `${ast.expressions.length} with ${ast.operator} combined expressions`;
+    case 'group':
+      return queryWizardLabel(ast.expression);
   }
-
-  return FALLBACK_LABEL;
 };
