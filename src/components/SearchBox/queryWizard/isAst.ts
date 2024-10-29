@@ -6,7 +6,7 @@ import type {
   SpecialValue,
 } from './ast';
 
-const isSpecialComparisonValue = (obj: any): obj is SpecialValue => {
+export const isSpecialComparisonValue = (obj: any): obj is SpecialValue => {
   try {
     const { type } = obj;
     return type === 'anything';

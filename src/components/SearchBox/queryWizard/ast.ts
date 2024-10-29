@@ -21,7 +21,7 @@ export type ASTNodeExpression = {
 
 export type ASTNode = ASTNodeExpression | ASTNodeComparison | ASTNodeGroup;
 
-const parseString = (tokens: Token[]) => {
+const parseString = (tokens: Token[]): [ASTNodeComparison, number] => {
   const [keyToken, operatorToken, valueToken] = tokens;
 
   if (keyToken?.type !== 'string') {
@@ -43,7 +43,7 @@ const parseString = (tokens: Token[]) => {
       operator: operatorToken.value,
     },
     3,
-  ] as const;
+  ];
 };
 
 const parseTokens = (
@@ -98,6 +98,11 @@ const parseTokens = (
       default:
         throw new Error(`Unexpected token type: ${token.type}`);
     }
+  }
+
+  if (operator && expressions.length <= 1) {
+    const msg = `${operator} needs at least two expressions but only ${expressions.length} were provided`;
+    throw new Error(msg);
   }
 
   return [
