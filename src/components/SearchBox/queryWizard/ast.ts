@@ -1,9 +1,13 @@
 import { Token, Operator } from './tokens';
 
+// When adding a ASTNode or SpecialValue also add it to `isAst`
+
+export type SpecialValue = { type: 'anything' };
+
 export type ASTNodeComparison = {
   type: 'comparison';
   key: string;
-  value: string;
+  value: SpecialValue | string;
   operator: '=';
 };
 
@@ -20,10 +24,13 @@ export type ASTNode = ASTNodeExpression | ASTNodeComparison | ASTNodeGroup;
 const parseString = (tokens: Token[]) => {
   const [keyToken, operatorToken, valueToken] = tokens;
 
+  if (keyToken?.type !== 'string') {
+    throw new Error('Expected an operator (like `=`) after key');
+  }
   if (operatorToken?.type !== 'operator') {
     throw new Error('Expected an operator (like `=`) after key');
   }
-  if (valueToken?.type !== 'string') {
+  if (!(valueToken.type === 'string' || valueToken.type === 'anything')) {
     throw new Error('Expected a value after "="');
   }
 
@@ -31,7 +38,8 @@ const parseString = (tokens: Token[]) => {
     {
       type: 'comparison',
       key: keyToken.value,
-      value: valueToken.value,
+      value:
+        valueToken.type === 'string' ? valueToken.value : { type: 'anything' },
       operator: operatorToken.value,
     },
     3,

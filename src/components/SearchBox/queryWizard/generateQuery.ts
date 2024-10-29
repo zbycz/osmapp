@@ -15,7 +15,8 @@ const generateComparison = ({ key, value, operator }: ASTNodeComparison) => {
   // Using switch to simplify adding more operators in the future
   switch (operator) {
     case '=':
-      return `["${key}"="${value}"]`;
+      // Only { type=anything } isn't a string
+      return typeof value === 'string' ? `["${key}"="${value}"]` : `["${key}"]`;
   }
 };
 

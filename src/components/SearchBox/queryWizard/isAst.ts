@@ -1,9 +1,19 @@
-import {
+import type {
   ASTNode,
   ASTNodeComparison,
   ASTNodeExpression,
   ASTNodeGroup,
+  SpecialValue,
 } from './ast';
+
+const isSpecialComparisonValue = (obj: any): obj is SpecialValue => {
+  try {
+    const { type } = obj;
+    return type === 'anything';
+  } catch {
+    return false;
+  }
+};
 
 const isComparisonAstNode = (obj: any): obj is ASTNodeComparison => {
   try {
@@ -11,7 +21,7 @@ const isComparisonAstNode = (obj: any): obj is ASTNodeComparison => {
     return (
       type === 'comparison' &&
       typeof key === 'string' &&
-      typeof value === 'string' &&
+      (typeof value === 'string' || isSpecialComparisonValue(value)) &&
       operator === '='
     );
   } catch {
