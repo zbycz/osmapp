@@ -8,10 +8,36 @@ export type Token =
 
 const tokenRegex = /\s+and\s+|\s+or\s+|\*|=|\(|\)|[\w:]+|"[^"]*"/g;
 
-// TODO: Throw when the string contains something that isn't parsed, currently it is just ignored
+const validateMatches = (matches: RegExpExecArray[], inputValue: string) => {
+  const [lastMatchedIndex, onlyWhitespaceGaps] = matches.reduce<
+    [number, boolean]
+  >(
+    ([prevEndPosition, stillValid], match) => {
+      const matchStart = match.index;
+      const matchEnd = matchStart + match[0].length;
+
+      if (!stillValid) {
+        return [matchEnd, false];
+      }
+
+      const prevUnmatchedString = inputValue.slice(prevEndPosition, matchStart);
+      const isOnlyWhitespace = /^\s*$/.test(prevUnmatchedString);
+
+      return [matchEnd, isOnlyWhitespace];
+    },
+    [0, true],
+  );
+
+  return {
+    onlyWhitespaceGaps,
+    lastMatchedIndex,
+    valid: lastMatchedIndex === inputValue.length && onlyWhitespaceGaps,
+  };
+};
 
 export function tokenize(inputValue: string) {
-  const matches = Array.from(inputValue.matchAll(tokenRegex));
+  const trimmedInputValue = inputValue.trim();
+  const matches = Array.from(trimmedInputValue.matchAll(tokenRegex));
 
   const tokens: Token[] = matches.map(([match]) => {
     const value = match.trim();
@@ -33,6 +59,10 @@ export function tokenize(inputValue: string) {
         return { type: 'string', value: string };
     }
   });
+
+  if (!validateMatches(matches, inputValue).valid) {
+    throw new Error('Invalid token encountered');
+  }
 
   return tokens;
 }
