@@ -3,13 +3,10 @@ import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { fetchJson } from './fetch';
 import { Feature, FeatureCollection } from 'geojson';
-
-const getQueryFromTags = (tags) => {
-  const selector = tags
-    .map(([k, v]) => (v === '*' ? `["${k}"]` : `["${k}"="${v}"]`))
-    .join('');
-  return `nwr${selector}`;
-};
+import { ASTNode } from '../components/SearchBox/queryWizard/ast';
+import { Bbox } from '../components/utils/MapStateContext';
+import { generateQuery } from '../components/SearchBox/queryWizard/generateQuery';
+import { isAstNode } from '../components/SearchBox/queryWizard/isAst';
 
 const getOverpassQuery = ([a, b, c, d], query) =>
   `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
@@ -69,14 +66,29 @@ export const overpassGeomToGeojson = (response: {
     };
   });
 
+const getQueryBody = (
+  astOrTagsOrQuery: ASTNode | Record<string, string> | string,
+) => {
+  if (typeof astOrTagsOrQuery === 'string') {
+    return astOrTagsOrQuery;
+  }
+
+  if (!isAstNode(astOrTagsOrQuery)) {
+    const tags = Object.entries(astOrTagsOrQuery);
+    const selector = tags
+      .map(([k, v]) => (v === '*' ? `["${k}"]` : `["${k}"="${v}"]`))
+      .join('');
+    return `nwr${selector}`;
+  }
+
+  return generateQuery(astOrTagsOrQuery);
+};
+
 export const performOverpassSearch = async (
-  bbox,
-  tagsOrQuery: Record<string, string> | string,
+  bbox: Bbox,
+  astOrTagsOrQuery: ASTNode | Record<string, string> | string,
 ): Promise<FeatureCollection> => {
-  const body =
-    typeof tagsOrQuery === 'string'
-      ? tagsOrQuery
-      : getQueryFromTags(Object.entries(tagsOrQuery));
+  const body = getQueryBody(astOrTagsOrQuery);
   const query = getOverpassQuery(bbox, body);
 
   console.log('seaching overpass for query: ', query); // eslint-disable-line no-console
