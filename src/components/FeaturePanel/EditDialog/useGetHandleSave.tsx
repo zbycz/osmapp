@@ -46,7 +46,7 @@ export const useGetHandleSave = () => {
         handleLogout();
       } else {
         showToast(
-          `${t('editdialog.save_refused')} ${err.responseText}`,
+          `${t('editdialog.save_refused')} ${err.responseText ?? err.message}`,
           'error',
         );
         console.error(err); // eslint-disable-line no-console
