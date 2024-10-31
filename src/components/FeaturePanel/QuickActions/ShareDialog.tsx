@@ -111,7 +111,7 @@ type Props = {
 export const ShareDialog = ({ open, onClose }: Props) => {
   const { feature } = useFeatureContext();
   const { center, roundedCenter = undefined } = feature;
-  const { primaryItems, items, shareItems, imageAttributions } = useGetItems(
+  const { primaryItems, items, shareItems } = useGetItems(
     roundedCenter ?? center,
   );
   const [focusedTab, setFocusedTab] = useState<'link' | 'share'>('link');
