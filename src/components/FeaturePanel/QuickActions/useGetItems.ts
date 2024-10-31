@@ -63,10 +63,13 @@ export const useGetItems = (position: PositionBoth) => {
         image: '/osmapp/logo/osmapp_logo_square.svg',
         label: 'OsmAPP',
         onClick: () => {
+          const url = getShortLink(feature);
+
           if (navigator.share) {
-            return navigator.share({ url: getShortLink(feature) });
+            navigator.share({ title: 'OsmAPP', url }).catch(() => {});
+            return;
           }
-          navigator.clipboard.writeText(getShortLink(feature));
+          navigator.clipboard.writeText(url);
           showToast('Copied link to clipboard');
         },
       },
@@ -78,7 +81,7 @@ export const useGetItems = (position: PositionBoth) => {
                 dark: true,
                 light: false,
               },
-              label: 'iD editor',
+              label: 'iD',
               href: getIdEditorLink(feature, view), // TODO coordsFeature has random id which gets forwarded LOL
             },
           ]

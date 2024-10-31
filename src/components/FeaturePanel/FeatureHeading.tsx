@@ -8,7 +8,7 @@ import { getLabel, getSecondaryLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
 import { isMobileDevice } from '../helpers';
-import { QuickActions } from './QucikActions/QuickActions';
+import { QuickActions } from './QuickActions/QuickActions';
 
 const StyledEditButton = styled(IconButton)`
   visibility: hidden;

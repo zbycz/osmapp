@@ -4,7 +4,7 @@ import { useUserThemeContext } from '../../../helpers/theme';
 import ShareIcon from '@mui/icons-material/Share';
 import { Stack } from '@mui/material';
 
-type PrimaryShareButtonProps = {
+type ButtonProps = {
   label: string;
   image: string;
   onClick?: () => void;
@@ -15,10 +15,10 @@ type PrimaryShareButtonProps = {
   };
 };
 
-const Container = styled.div`
+const ButtonContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.75rem;
   padding: 0.5rem;
   border-radius: 0.25rem;
   align-items: center;
@@ -28,17 +28,17 @@ const Container = styled.div`
   }
 `;
 
-const PrimaryShareButtonInner = ({
+const ButtonInner = ({
   image,
   label,
   href,
   onClick,
   invertImage,
-}: PrimaryShareButtonProps) => {
+}: ButtonProps) => {
   const { currentTheme } = useUserThemeContext();
 
   return (
-    <Container>
+    <ButtonContainer>
       <img
         src={image}
         style={{
@@ -52,19 +52,19 @@ const PrimaryShareButtonInner = ({
         {onClick && <ShareIcon fontSize="small" />}
         <span>{label}</span>
       </Stack>
-    </Container>
+    </ButtonContainer>
   );
 };
 
-const PrimaryShareButton = ({
+const ShareButton = ({
   image,
   label,
   href,
   onClick,
   invertImage,
-}: PrimaryShareButtonProps) => {
+}: ButtonProps) => {
   const inner = (
-    <PrimaryShareButtonInner
+    <ButtonInner
       image={image}
       label={label}
       href={href}
@@ -72,37 +72,30 @@ const PrimaryShareButton = ({
       invertImage={invertImage}
     />
   );
+  const style: React.CSSProperties = {
+    color: 'inherit',
+    textDecoration: 'inherit',
+    background: 'transparent',
+    border: 'none',
+    width: '100%',
+  };
 
   if (href) {
     return (
-      <a
-        href={href}
-        target="_blank"
-        style={{
-          color: 'inherit',
-          textDecoration: 'inherit',
-        }}
-      >
+      <a href={href} target="_blank" style={style}>
         {inner}
       </a>
     );
   }
 
   return (
-    <button
-      style={{
-        background: 'transparent',
-        color: 'inherit',
-        border: 'none',
-      }}
-      onClick={onClick}
-    >
+    <button style={style} onClick={onClick}>
       {inner}
     </button>
   );
 };
 
-const PrimaryButtonsWrapper = styled.div`
+const ButtonsWrapper = styled.div`
   display: flex;
   justify-content: space-evenly;
   gap: 0.5rem;
@@ -114,12 +107,12 @@ const PrimaryButtonsWrapper = styled.div`
 export const PrimaryShareButtons = ({
   buttons,
 }: {
-  buttons: PrimaryShareButtonProps[];
+  buttons: ButtonProps[];
 }) => {
   return (
-    <PrimaryButtonsWrapper>
+    <ButtonsWrapper>
       {buttons.map(({ label, href, image, invertImage, onClick }) => (
-        <PrimaryShareButton
+        <ShareButton
           key={label}
           label={label}
           href={href}
@@ -128,6 +121,6 @@ export const PrimaryShareButtons = ({
           invertImage={invertImage}
         />
       ))}
-    </PrimaryButtonsWrapper>
+    </ButtonsWrapper>
   );
 };
