@@ -216,7 +216,6 @@ export default {
   'tags.opening_hours': 'Hours',
 
   'coordinates.geo_uri': 'GeoURI (phone map app)',
-  'coordinates.copy_value': 'Copy __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Layers',
   'layerswitcher.heading': 'Map layers',

@@ -1,7 +1,8 @@
 import { isIOS } from '../../../helpers/platforms';
-import { getShortLink } from '../../../services/helpers';
+import { getFullOsmappLink, getShortLink } from '../../../services/helpers';
 import { t } from '../../../services/intl';
 import { PositionBoth } from '../../../services/types';
+import { positionToDeg, positionToDM } from '../../../utils';
 import { isMobileDevice } from '../../helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
@@ -21,6 +22,7 @@ export const useGetItems = (position: PositionBoth) => {
   const { feature } = useFeatureContext();
   const { view, activeLayers } = useMapStateContext();
   const { showToast } = useSnackbar();
+  const { center, roundedCenter = undefined } = feature;
   const [ourZoom] = view;
   const [lon, lat] = position;
 
@@ -31,7 +33,30 @@ export const useGetItems = (position: PositionBoth) => {
     : `?mlat=${lat}&mlon=${lon}&zoom=${zoomInt}`;
 
   return {
-    imageAttributions: [],
+    imageAttributions: [
+      {
+        href: 'https://commons.wikimedia.org/wiki/File:Azimutalprojektion-schief_kl-cropped.png',
+        label: 'Wikimedia Commons (GeoURI)',
+      },
+      {
+        href: 'https://commons.wikimedia.org/wiki/File:Openstreetmap_logo.svg',
+        label: 'Wikimedia Commons (OpenStreetMap)',
+      },
+      {
+        href: 'https://wiki.openstreetmap.org/wiki/File:ID.svg',
+        label: 'OpenStreetMap Wiki (iD)',
+      },
+      {
+        href: 'https://commons.wikimedia.org/wiki/File:AppleMaps_logo.svg',
+        label: 'wikimedia Commons (Apple)',
+      },
+    ],
+    shareItems: [
+      getShortLink(feature),
+      getFullOsmappLink(feature),
+      positionToDeg(roundedCenter ?? center),
+      positionToDM(roundedCenter ?? center),
+    ],
     primaryItems: [
       ...(isMobileDevice() && !isIOS()
         ? [

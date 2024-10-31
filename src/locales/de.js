@@ -195,7 +195,6 @@ export default {
   'tags.opening_hours': 'Öffnungszeiten',
 
   'coordinates.geo_uri': 'GeoURI (Handy Karten-App)',
-  'coordinates.copy_value': 'Kopiere __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Karten',
   'layerswitcher.heading': 'Kartenebenen',
