@@ -20,6 +20,7 @@ const ButtonContainer = styled.div`
   flex-direction: column;
   gap: 0.75rem;
   padding: 0.5rem;
+  width: 5rem;
   border-radius: 0.25rem;
   align-items: center;
 
@@ -77,7 +78,7 @@ const ShareButton = ({
     textDecoration: 'inherit',
     background: 'transparent',
     border: 'none',
-    width: '100%',
+    padding: 0,
   };
 
   if (href) {
