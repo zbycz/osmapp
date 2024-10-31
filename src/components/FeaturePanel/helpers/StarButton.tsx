@@ -13,6 +13,8 @@ const StyledActionButton = styled(IconButton)<{ $color?: string }>`
     height: 20px;
     color: ${({ theme }) => (theme.palette.mode === 'dark' ? '#fff' : '#000')};
   }
+  /* Used to overwrite pointer-events: none from the collapsed featurepanel drawer */
+  pointer-events: all;
 `;
 
 const StarButtonPure = ({ isStarred, toggleStar }) => (
