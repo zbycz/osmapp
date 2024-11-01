@@ -110,7 +110,6 @@ export default {
   'featurepanel.favorites_save_button': 'Save to favorites',
   'featurepanel.favorites_unsave_button': 'Remove from favorites',
   'featurepanel.directions_button': 'Directions',
-  'featurepanel.share_button': 'Share',
   'featurepanel.error': 'Error __code__ while fetching feature from OpenStreetMap',
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',
   'featurepanel.error_network': "Can't get the feature, check your network cable.",
@@ -290,4 +289,9 @@ export default {
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
   'member_features.routes': 'Routes',
+
+  'sharedialog.share_tab': 'Share link',
+  'sharedialog.copy_tab': 'Copy link',
+  'sharedialog.openin_tab': 'Open in',
+  'sharedialog.image_attribution': 'Image attributions',
 };

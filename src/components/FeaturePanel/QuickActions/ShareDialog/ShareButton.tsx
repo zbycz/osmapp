@@ -1,5 +1,5 @@
 import { QuickActionButton } from '../QuickActionButton';
-import ShareIcon from '@mui/icons-material/Share';
+import { ShareIcon } from './helpers';
 import React from 'react';
 import { useBoolState } from '../../../helpers';
 import { t } from '../../../../services/intl';

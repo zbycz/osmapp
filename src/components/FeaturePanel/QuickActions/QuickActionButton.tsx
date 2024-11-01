@@ -1,20 +1,5 @@
-import styled from '@emotion/styled';
 import { forwardRef, MouseEventHandler } from 'react';
-import { useUserThemeContext } from '../../../helpers/theme';
-
-const StyledQuickActionButton = styled.button<{ $outlineColor: string }>`
-  border-radius: 100vmax;
-  background: transparent;
-  border: 1px solid ${({ $outlineColor }) => $outlineColor};
-  color: inherit;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-  /* Used to overwrite pointer-events: none from the collapsed featurepanel drawer */
-  pointer-events: all;
-`;
+import { Chip } from '@mui/material';
 
 type Props = {
   icon: React.FC<{ fontSize: 'small' }>;
@@ -23,19 +8,15 @@ type Props = {
 };
 
 export const QuickActionButton = forwardRef<HTMLButtonElement, Props>(
-  ({ icon: Icon, label, onClick }, ref) => {
-    const { currentTheme } = useUserThemeContext();
-
-    return (
-      <StyledQuickActionButton
-        ref={ref}
-        onClick={onClick}
-        $outlineColor={currentTheme === 'dark' ? '#71717a' : '#d4d4d8'}
-      >
-        <Icon fontSize="small" />
-        {label}
-      </StyledQuickActionButton>
-    );
-  },
+  ({ icon: Icon, label, onClick }, ref) => (
+    <Chip
+      ref={ref}
+      component="button"
+      label={label}
+      icon={<Icon fontSize="small" />}
+      onClick={onClick}
+      variant="outlined"
+    />
+  ),
 );
 QuickActionButton.displayName = 'QuickActionButton';

@@ -259,4 +259,9 @@ export default {
   'member_features.subitems': 'Subelemente',
   'member_features.climbing': 'Kletter Strecken',
   'member_features.routes': 'Strecken',
+
+  'sharedialog.share_tab': 'Link teilen',
+  'sharedialog.copy_tab': 'Link kopieren',
+  'sharedialog.openin_tab': 'Öffnen mit',
+  'sharedialog.image_attribution': 'Bildnachweise',
 };

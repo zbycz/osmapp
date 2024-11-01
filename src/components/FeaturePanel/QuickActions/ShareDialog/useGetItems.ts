@@ -72,16 +72,6 @@ export const useGetItems = (position: PositionBoth) => {
             },
           ]
         : []),
-      ...(isIOS()
-        ? [
-            {
-              image:
-                'https://upload.wikimedia.org/wikipedia/commons/1/17/AppleMaps_logo.svg',
-              label: 'Apple',
-              href: getAppleMapsLink(feature, position, activeLayers),
-            },
-          ]
-        : []),
       {
         image:
           'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b0/Openstreetmap_logo.svg/256px-Openstreetmap_logo.svg.png?20220919103849',
@@ -108,6 +98,16 @@ export const useGetItems = (position: PositionBoth) => {
         label: 'Google',
         href: `https://google.com/maps/search/${lat}%C2%B0%20${lon}%C2%B0/@${lat},${lon},${zoomInt}z`,
       },
+      ...(isIOS()
+        ? [
+            {
+              image:
+                'https://upload.wikimedia.org/wikipedia/commons/1/17/AppleMaps_logo.svg',
+              label: 'Apple',
+              href: getAppleMapsLink(feature, position, activeLayers),
+            },
+          ]
+        : []),
       {
         image:
           'https://www.ranklogos.com/wp-content/uploads/2016/09/Mapy-cz-Logo.png',

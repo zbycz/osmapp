@@ -3,11 +3,9 @@ import {
   DialogContent,
   DialogTitle,
   Divider,
-  IconButton,
   List,
   ListItem,
   ListItemButton,
-  Stack,
   Tab,
 } from '@mui/material';
 import React, { useState } from 'react';
@@ -18,8 +16,10 @@ import styled from '@emotion/styled';
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { PrimaryShareButtons } from './PrimaryShareButton';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import ExpandLessIcon from '@mui/icons-material/ExpandLess';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import OpenInNew from '@mui/icons-material/OpenInNew';
+import ContentCopy from '@mui/icons-material/ContentCopy';
+import { ShareIcon, supportsSharing } from './helpers';
+import { ImageAttribution } from './ImageAttribution';
 
 const StyledMenuItem = styled(ListItem)`
   svg {
@@ -37,9 +37,6 @@ const StyledMenuItem = styled(ListItem)`
 
   color: inherit;
 ` as any;
-
-const supportsSharing = () =>
-  typeof navigator !== 'undefined' && !!navigator.share;
 
 type ShareTextItemProps = {
   label: string | null;
@@ -76,33 +73,6 @@ const LinkItem = ({ href, label }) => (
   </StyledMenuItem>
 );
 
-const ImageAttribution = () => {
-  const { feature } = useFeatureContext();
-  const { center, roundedCenter = undefined } = feature;
-  const { imageAttributions } = useGetItems(roundedCenter ?? center);
-  const [expanded, setExpanded] = useState(false);
-
-  return (
-    <>
-      <Stack direction="row" alignItems="center" spacing={1}>
-        <h4>Image attribution</h4>
-        <IconButton onClick={() => setExpanded((x) => !x)} size="small">
-          {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-        </IconButton>
-      </Stack>
-      {expanded && (
-        <ul>
-          {imageAttributions.map(({ label, href }) => (
-            <li key={label}>
-              <a href={href}>{label}</a>
-            </li>
-          ))}
-        </ul>
-      )}
-    </>
-  );
-};
-
 type Props = {
   open: boolean;
   onClose: (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => void;
@@ -114,7 +84,9 @@ export const ShareDialog = ({ open, onClose }: Props) => {
   const { primaryItems, items, shareItems } = useGetItems(
     roundedCenter ?? center,
   );
-  const [focusedTab, setFocusedTab] = useState<'link' | 'share'>('link');
+  const [focusedTab, setFocusedTab] = useState<'link' | 'share'>(
+    supportsSharing() ? 'share' : 'link',
+  );
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="xs">
@@ -128,8 +100,22 @@ export const ShareDialog = ({ open, onClose }: Props) => {
             onChange={(_, newValue) => setFocusedTab(newValue)}
             variant="fullWidth"
           >
-            <Tab value="link" label="Links" />
-            <Tab value="share" label={supportsSharing() ? 'Share' : 'Copy'} />
+            <Tab
+              value="share"
+              label={
+                supportsSharing()
+                  ? t('sharedialog.share_tab')
+                  : t('sharedialog.copy_tab')
+              }
+              iconPosition="start"
+              icon={supportsSharing() ? <ShareIcon /> : <ContentCopy />}
+            />
+            <Tab
+              value="link"
+              label={t('sharedialog.openin_tab')}
+              icon={<OpenInNew />}
+              iconPosition="start"
+            />
           </TabList>
           <TabPanel value="link" style={{ padding: 0 }}>
             <List>

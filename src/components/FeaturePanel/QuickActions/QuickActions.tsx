@@ -13,6 +13,9 @@ const Wrapper = styled.div`
   overflow-x: auto;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+
+  /* Used to overwrite pointer-events: none from the collapsed featurepanel drawer */
+  pointer-events: all;
 `;
 
 const Container = styled.div`

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
-import { useUserThemeContext } from '../../../../helpers/theme';
-import ShareIcon from '@mui/icons-material/Share';
+import { ShareIcon, supportsSharing } from './helpers';
 import { Stack } from '@mui/material';
+import { ContentCopy } from '@mui/icons-material';
 
 type ButtonProps = {
   label: string;
@@ -23,6 +23,11 @@ const ButtonContainer = styled.div`
   &:hover {
     background: ${({ theme }) => theme.palette.background.default};
   }
+
+  svg {
+    font-size: 12px;
+    color: #bbb;
+  }
 `;
 
 const ButtonInner = ({ image, label, href, onClick }: ButtonProps) => (
@@ -35,9 +40,10 @@ const ButtonInner = ({ image, label, href, onClick }: ButtonProps) => (
       }}
     />
     <Stack direction="row" alignItems="center" spacing={0.5}>
-      {href && <OpenInNewIcon fontSize="small" />}
-      {onClick && <ShareIcon fontSize="small" />}
       <span>{label}</span>
+      {href && <OpenInNewIcon />}
+      {onClick && supportsSharing() && <ShareIcon />}
+      {onClick && !supportsSharing() && <ContentCopy />}
     </Stack>
   </ButtonContainer>
 );
