@@ -1,13 +1,13 @@
-import { isIOS } from '../../../helpers/platforms';
-import { getFullOsmappLink, getShortLink } from '../../../services/helpers';
-import { t } from '../../../services/intl';
-import { PositionBoth } from '../../../services/types';
-import { positionToDeg, positionToDM } from '../../../utils';
-import { isMobileDevice } from '../../helpers';
-import { useFeatureContext } from '../../utils/FeatureContext';
-import { useMapStateContext } from '../../utils/MapStateContext';
-import { useSnackbar } from '../../utils/SnackbarContext';
-import { getAppleMapsLink, getIdEditorLink } from '../helpers/externalLinks';
+import { isIOS } from '../../../../helpers/platforms';
+import { getFullOsmappLink, getShortLink } from '../../../../services/helpers';
+import { t } from '../../../../services/intl';
+import { PositionBoth } from '../../../../services/types';
+import { positionToDeg, positionToDM } from '../../../../utils';
+import { isMobileDevice } from '../../../helpers';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { useMapStateContext } from '../../../utils/MapStateContext';
+import { useSnackbar } from '../../../utils/SnackbarContext';
+import { getAppleMapsLink, getIdEditorLink } from '../../helpers/externalLinks';
 
 // Our map uses 512 tiles, so our zoom is "one less"
 // https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
@@ -43,12 +43,16 @@ export const useGetItems = (position: PositionBoth) => {
         label: 'Wikimedia Commons (OpenStreetMap)',
       },
       {
-        href: 'https://wiki.openstreetmap.org/wiki/File:ID.svg',
-        label: 'OpenStreetMap Wiki (iD)',
-      },
-      {
         href: 'https://commons.wikimedia.org/wiki/File:AppleMaps_logo.svg',
         label: 'wikimedia Commons (Apple)',
+      },
+      {
+        href: 'https://commons.wikimedia.org/wiki/File:Google_Maps_icon_(2020).svg',
+        label: 'wikimedia Commons (Google)',
+      },
+      {
+        href: 'https://www.ranklogos.com/websites-logos/mapy-cz-logo/',
+        label: 'Mapy.cz',
       },
     ],
     shareItems: [
@@ -58,7 +62,7 @@ export const useGetItems = (position: PositionBoth) => {
       positionToDM(roundedCenter ?? center),
     ],
     primaryItems: [
-      ...(isMobileDevice() && !isIOS()
+      ...(isMobileDevice()
         ? [
             {
               image:
@@ -98,19 +102,18 @@ export const useGetItems = (position: PositionBoth) => {
           showToast('Copied link to clipboard');
         },
       },
-      ...(!isMobileDevice()
-        ? [
-            {
-              image: 'https://wiki.openstreetmap.org/w/images/3/34/ID.svg',
-              invertImage: {
-                dark: true,
-                light: false,
-              },
-              label: 'iD',
-              href: getIdEditorLink(feature, view), // TODO coordsFeature has random id which gets forwarded LOL
-            },
-          ]
-        : []),
+      {
+        image:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/a/aa/Google_Maps_icon_%282020%29.svg/418px-Google_Maps_icon_%282020%29.svg.png?20200218211225',
+        label: 'Google',
+        href: `https://google.com/maps/search/${lat}%C2%B0%20${lon}%C2%B0/@${lat},${lon},${zoomInt}z`,
+      },
+      {
+        image:
+          'https://www.ranklogos.com/wp-content/uploads/2016/09/Mapy-cz-Logo.png',
+        label: 'Mapy.cz',
+        href: `https://mapy.cz/zakladni?q=${lat}%C2%B0%20${lon}%C2%B0`,
+      },
     ],
     items: [
       {

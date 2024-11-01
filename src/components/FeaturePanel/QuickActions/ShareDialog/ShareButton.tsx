@@ -1,8 +1,8 @@
-import { QuickActionButton } from './QuickActionButton';
+import { QuickActionButton } from '../QuickActionButton';
 import ShareIcon from '@mui/icons-material/Share';
 import React from 'react';
-import { useBoolState } from '../../helpers';
-import { t } from '../../../services/intl';
+import { useBoolState } from '../../../helpers';
+import { t } from '../../../../services/intl';
 import { ShareDialog } from './ShareDialog';
 
 export const ShareButton = () => {

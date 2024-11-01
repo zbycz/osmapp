@@ -11,11 +11,11 @@ import {
   Tab,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { t } from '../../../services/intl';
+import { t } from '../../../../services/intl';
 import { useGetItems } from './useGetItems';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import styled from '@emotion/styled';
-import { useFeatureContext } from '../../utils/FeatureContext';
+import { useFeatureContext } from '../../../utils/FeatureContext';
 import { PrimaryShareButtons } from './PrimaryShareButton';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';

@@ -3,7 +3,7 @@ import DirectionsIcon from '@mui/icons-material/Directions';
 import { QuickActionButton } from './QuickActionButton';
 import { StarButton } from './StarButton';
 import Router from 'next/router';
-import { ShareButton } from './ShareButton';
+import { ShareButton } from './ShareDialog/ShareButton';
 import { t } from '../../../services/intl';
 
 const Wrapper = styled.div`
