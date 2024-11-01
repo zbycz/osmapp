@@ -7,7 +7,7 @@ import { ContentCopy } from '@mui/icons-material';
 type ButtonProps = {
   label: string;
   image: string;
-  onClick?: () => void;
+  shareUrl?: string;
   href?: string;
 };
 
@@ -30,7 +30,7 @@ const ButtonContainer = styled.div`
   }
 `;
 
-const ButtonInner = ({ image, label, href, onClick }: ButtonProps) => (
+const ButtonInner = ({ image, label, href, shareUrl }: ButtonProps) => (
   <ButtonContainer>
     <img
       src={image}
@@ -42,15 +42,15 @@ const ButtonInner = ({ image, label, href, onClick }: ButtonProps) => (
     <Stack direction="row" alignItems="center" spacing={0.5}>
       <span>{label}</span>
       {href && <OpenInNewIcon />}
-      {onClick && supportsSharing() && <ShareIcon />}
-      {onClick && !supportsSharing() && <ContentCopy />}
+      {shareUrl && supportsSharing() && <ShareIcon />}
+      {shareUrl && !supportsSharing() && <ContentCopy />}
     </Stack>
   </ButtonContainer>
 );
 
-const ShareButton = ({ image, label, href, onClick }: ButtonProps) => {
+const ShareButton = ({ image, label, href, shareUrl }: ButtonProps) => {
   const inner = (
-    <ButtonInner image={image} label={label} href={href} onClick={onClick} />
+    <ButtonInner image={image} label={label} href={href} shareUrl={shareUrl} />
   );
   const style: React.CSSProperties = {
     color: 'inherit',
@@ -69,7 +69,16 @@ const ShareButton = ({ image, label, href, onClick }: ButtonProps) => {
   }
 
   return (
-    <button style={style} onClick={onClick}>
+    <button
+      style={style}
+      onClick={() => {
+        if (navigator.share) {
+          navigator.share({ title: 'OsmAPP', url: shareUrl }).catch(() => {});
+          return;
+        }
+        navigator.clipboard.writeText(shareUrl);
+      }}
+    >
       {inner}
     </button>
   );
@@ -97,13 +106,13 @@ export const PrimaryShareButtons = ({
   return (
     <ScrollWrapper>
       <ButtonsWrapper>
-        {buttons.map(({ label, href, image, onClick }) => (
+        {buttons.map(({ label, href, image, shareUrl }) => (
           <ShareButton
             key={label}
             label={label}
             href={href}
             image={image}
-            onClick={onClick}
+            shareUrl={shareUrl}
           />
         ))}
       </ButtonsWrapper>

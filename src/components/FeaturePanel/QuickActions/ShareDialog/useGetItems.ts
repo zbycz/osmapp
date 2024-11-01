@@ -60,7 +60,7 @@ export const useGetItems = (position: PositionBoth) => {
       getFullOsmappLink(feature),
       positionToDeg(roundedCenter ?? center),
       positionToDM(roundedCenter ?? center),
-    ],
+    ].filter((s) => s),
     primaryItems: [
       ...(isMobileDevice()
         ? [
@@ -81,16 +81,7 @@ export const useGetItems = (position: PositionBoth) => {
       {
         image: '/osmapp/logo/osmapp_logo_square.svg',
         label: 'OsmAPP',
-        onClick: () => {
-          const url = getShortLink(feature);
-
-          if (navigator.share) {
-            navigator.share({ title: 'OsmAPP', url }).catch(() => {});
-            return;
-          }
-          navigator.clipboard.writeText(url);
-          showToast('Copied link to clipboard');
-        },
+        shareUrl: getShortLink(feature) ?? getFullOsmappLink(feature),
       },
       {
         image:
