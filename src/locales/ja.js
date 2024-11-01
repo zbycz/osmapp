@@ -175,7 +175,7 @@ show_less: '簡易表示',
 'editdialog.place_cancelled': '完全に閉鎖 (削除)',
 'editdialog.comment': 'コメント (任意)',
 'editdialog.comment_placeholder': 'メモ、情報源へのリンクなど',
-'editdialog.info_edit': `編集内容はすぐに OpenStreetMap に保存されます。自分自身または検証済みの情報源からの情報のみを入力してください。著作権で保護されたデータ（Google マップなど）をコピーすることは禁止されています。 <a href="https://wiki.openstreetmap.org/wiki/JA:%E8%91%97%E4%BD%9C%E6%A8%A9">詳細</​​a>`、
+'editdialog.info_edit': `編集内容はすぐに OpenStreetMap に保存されます。自分自身または検証済みの情報源からの情報のみを入力してください。著作権で保護されたデータ（Google マップなど）をコピーすることは禁止されています。 <a href="https://wiki.openstreetmap.org/wiki/JA:%E8%91%97%E4%BD%9C%E6%A8%A9">詳細</​​a>`,
 'editdialog.info_note':
 'あなたの提案は OpenStreetMap のボランティアによってレビューされます。写真へのリンクやソース素材へのリンクなどの追加情報を以下に追加できます。',
 'editdialog.tags_editor': 'すべてのプロパティ – タグ',
