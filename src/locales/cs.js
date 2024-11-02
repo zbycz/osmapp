@@ -169,7 +169,6 @@ export default {
   'tags.opening_hours': 'Otevírací doba',
 
   'coordinates.geo_uri': 'GeoURI (mapová appka v telefonu)',
-  'coordinates.copy_value': 'Copy __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Mapy',
   'layerswitcher.heading': 'Mapové vrstvy',

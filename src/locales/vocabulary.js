@@ -128,7 +128,7 @@ export default {
   'featurepanel.feature_description_point': 'Map coordinates',
   'featurepanel.show_tags': 'Show tags',
   'featurepanel.show_objects_around': 'Show nearby objects',
-  'featurepanel.uncertain_image': 'This is the closest street view image from Mapillary. It may be inaccurate.',
+  'featurepanel.uncertain_image': 'This is the closest street view image from __from__. It may be inaccurate.',
   'featurepanel.inline_edit_title': 'Edit',
   'featurepanel.objects_around': 'Nearby objects',
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
@@ -215,7 +215,6 @@ export default {
   'tags.opening_hours': 'Hours',
 
   'coordinates.geo_uri': 'GeoURI (phone map app)',
-  'coordinates.copy_value': 'Copy __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Layers',
   'layerswitcher.heading': 'Map layers',
@@ -290,4 +289,9 @@ export default {
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
   'member_features.routes': 'Routes',
+
+  'sharedialog.link': 'Link',
+  'sharedialog.coordinates': 'Coordinates',
+  'sharedialog.openin': 'Open in',
+  'sharedialog.image_attribution': 'Image attributions',
 };
