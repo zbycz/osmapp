@@ -260,8 +260,8 @@ export default {
   'member_features.climbing': 'Kletter Strecken',
   'member_features.routes': 'Strecken',
 
-  'sharedialog.share_tab': 'Link teilen',
-  'sharedialog.copy_tab': 'Link kopieren',
-  'sharedialog.openin_tab': 'Öffnen mit',
+  'sharedialog.link': 'Link',
+  'sharedialog.coordinates': 'Koordinaten',
+  'sharedialog.openin': 'Öffnen mit',
   'sharedialog.image_attribution': 'Bildnachweise',
 };

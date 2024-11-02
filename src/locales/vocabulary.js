@@ -290,8 +290,8 @@ export default {
   'member_features.climbing': 'Climbing routes',
   'member_features.routes': 'Routes',
 
-  'sharedialog.share_tab': 'Share link',
-  'sharedialog.copy_tab': 'Copy link',
-  'sharedialog.openin_tab': 'Open in',
+  'sharedialog.link': 'Link',
+  'sharedialog.coordinates': 'Coordinates',
+  'sharedialog.openin': 'Open in',
   'sharedialog.image_attribution': 'Image attributions',
 };

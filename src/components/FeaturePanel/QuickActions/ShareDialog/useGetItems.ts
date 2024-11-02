@@ -1,4 +1,3 @@
-import { PositionBoth } from '../../../../services/types';
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { useMapStateContext } from '../../../utils/MapStateContext';
 import { getAppleMapsLink, getIdEditorLink } from '../../helpers/externalLinks';
@@ -8,8 +7,11 @@ import { imageAttributions, items, primaryItems, shareItems } from './items';
 // https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
 const MAPLIBREGL_ZOOM_DIFFERENCE = 1;
 
-export const useGetItems = (position: PositionBoth) => {
+export const useGetItems = () => {
   const { feature } = useFeatureContext();
+  const { center, roundedCenter = undefined } = feature;
+  const position = roundedCenter ?? center;
+
   const { view, activeLayers } = useMapStateContext();
   const [lon, lat] = position;
 
@@ -23,14 +25,6 @@ export const useGetItems = (position: PositionBoth) => {
 
   return {
     imageAttributions,
-    shareItems: shareItems(feature, feature.roundedCenter ?? feature.center),
-    primaryItems: primaryItems({
-      feature,
-      osmQuery,
-      zoomInt,
-      position,
-      appleMaps: getAppleMapsLink(feature, position, activeLayers),
-    }),
     items: items({
       position,
       osmQuery,

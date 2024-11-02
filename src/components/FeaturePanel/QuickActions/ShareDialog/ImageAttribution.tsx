@@ -26,9 +26,7 @@ const Heading = styled.h4`
 
 export const ImageAttribution = () => {
   const { currentTheme } = useUserThemeContext();
-  const { feature } = useFeatureContext();
-  const { center, roundedCenter = undefined } = feature;
-  const { imageAttributions } = useGetItems(roundedCenter ?? center);
+  const { imageAttributions } = useGetItems();
   const [expanded, setExpanded] = useState(false);
 
   return (
