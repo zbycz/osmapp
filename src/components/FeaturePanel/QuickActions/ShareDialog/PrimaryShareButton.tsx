@@ -3,15 +3,17 @@ import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 import { ShareIcon, supportsSharing } from './helpers';
 import { Stack } from '@mui/material';
 import { ContentCopy } from '@mui/icons-material';
+import { Theme, useUserThemeContext } from '../../../../helpers/theme';
 
 type ButtonProps = {
   label: string;
   image: string;
   shareUrl?: string;
   href?: string;
+  invert?: Theme;
 };
 
-const ButtonContainer = styled.div`
+const ButtonContainer = styled.div<{ $invert: boolean }>`
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
@@ -28,30 +30,38 @@ const ButtonContainer = styled.div`
     font-size: 12px;
     color: #bbb;
   }
+
+  img {
+    ${({ $invert }) => ($invert ? 'filter: invert(1);' : '')}
+    max-width: 50px;
+    max-height: 50px;
+  }
 `;
 
-const ButtonInner = ({ image, label, href, shareUrl }: ButtonProps) => (
-  <ButtonContainer>
-    <img
-      src={image}
-      style={{
-        maxWidth: '50px',
-        maxHeight: '50px',
-      }}
-    />
-    <Stack direction="row" alignItems="center" spacing={0.5}>
-      <span>{label}</span>
-      {href && <OpenInNewIcon />}
-      {shareUrl && supportsSharing() && <ShareIcon />}
-      {shareUrl && !supportsSharing() && <ContentCopy />}
-    </Stack>
-  </ButtonContainer>
-);
-
-const ShareButton = ({ image, label, href, shareUrl }: ButtonProps) => {
-  const inner = (
-    <ButtonInner image={image} label={label} href={href} shareUrl={shareUrl} />
+const ButtonInner = ({
+  image,
+  label,
+  href,
+  shareUrl,
+  invert: invertableTheme,
+}: ButtonProps) => {
+  const { currentTheme } = useUserThemeContext();
+  return (
+    <ButtonContainer $invert={invertableTheme === currentTheme}>
+      <img src={image} />
+      <Stack direction="row" alignItems="center" spacing={0.3}>
+        <span>{label}</span>
+        {href && <OpenInNewIcon />}
+        {shareUrl && supportsSharing() && <ShareIcon />}
+        {shareUrl && !supportsSharing() && <ContentCopy />}
+      </Stack>
+    </ButtonContainer>
   );
+};
+
+const ShareButton = (props: ButtonProps) => {
+  const { href, shareUrl } = props;
+  const inner = <ButtonInner {...props} />;
   const style: React.CSSProperties = {
     color: 'inherit',
     textDecoration: 'inherit',
@@ -106,14 +116,8 @@ export const PrimaryShareButtons = ({
   return (
     <ScrollWrapper>
       <ButtonsWrapper>
-        {buttons.map(({ label, href, image, shareUrl }) => (
-          <ShareButton
-            key={label}
-            label={label}
-            href={href}
-            image={image}
-            shareUrl={shareUrl}
-          />
+        {buttons.map((props) => (
+          <ShareButton key={props.label} {...props} />
         ))}
       </ButtonsWrapper>
     </ScrollWrapper>

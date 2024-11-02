@@ -1,4 +1,5 @@
 import { isIOS } from '../../../../helpers/platforms';
+import { Theme } from '../../../../helpers/theme';
 import { getFullOsmappLink, getShortLink } from '../../../../services/helpers';
 import { t } from '../../../../services/intl';
 import {
@@ -17,8 +18,8 @@ type ImageAttribution = {
 
 export const imageAttributions: ImageAttribution[] = [
   {
-    href: 'https://commons.wikimedia.org/wiki/File:Azimutalprojektion-schief_kl-cropped.png',
-    label: 'Wikimedia Commons (GeoURI)',
+    href: 'https://thenounproject.com/icon/mapping-4733828/',
+    label: 'WEBTECHSHOPS from Noun Project (GeoURI)',
   },
   {
     href: 'https://commons.wikimedia.org/wiki/File:Openstreetmap_logo.svg',
@@ -52,6 +53,7 @@ export const shareItems = (
 type PrimaryItem = {
   image: string;
   label: string;
+  invert?: Theme;
 } & ({ href: string } | { shareUrl: string });
 
 export const primaryItems = ({
@@ -70,9 +72,9 @@ export const primaryItems = ({
   ...(isMobileDevice()
     ? [
         {
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/4/4c/Azimutalprojektion-schief_kl-cropped.png',
-          label: 'GeoURI',
+          image: '/geouri.svg',
+          invert: 'dark' as const,
+          label: 'Map App',
           href: `geo:${lat},${lon}`,
         },
       ]
