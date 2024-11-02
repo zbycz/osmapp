@@ -17,6 +17,7 @@ const useCoords = () => {
 };
 
 const StyledSelect = styled(Select<string>)`
+  height: 3.5rem;
   width: 100%;
   background-color: ${(props) => props.theme.palette.action.hover};
   font-family: monospace;

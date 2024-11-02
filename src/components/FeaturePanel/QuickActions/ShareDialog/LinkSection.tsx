@@ -21,6 +21,7 @@ const useLink = (short: boolean) => {
 
 const StyledTextField = styled(TextField)`
   .MuiOutlinedInput-root {
+    height: 3.5rem;
     background-color: ${(props) => props.theme.palette.action.hover};
     font-family: monospace;
     &:hover {
