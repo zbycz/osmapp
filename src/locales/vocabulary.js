@@ -215,7 +215,6 @@ export default {
   'tags.opening_hours': 'Hours',
 
   'coordinates.geo_uri': 'GeoURI (phone map app)',
-  'coordinates.copy_value': 'Copy __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Layers',
   'layerswitcher.heading': 'Map layers',
@@ -290,4 +289,9 @@ export default {
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
   'member_features.routes': 'Routes',
+
+  'sharedialog.link': 'Link',
+  'sharedialog.coordinates': 'Coordinates',
+  'sharedialog.openin': 'Open in',
+  'sharedialog.image_attribution': 'Image attributions',
 };

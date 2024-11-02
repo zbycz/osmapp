@@ -88,9 +88,10 @@ export default {
 
   'featurepanel.no_name': 'Kein Name',
   'featurepanel.share_button': 'Teilen',
-  'featurepanel.favorites_save_button': 'Zu Favoriten hinzufügen',
-  'featurepanel.favorites_unsave_button': 'Von den Favoriten entfernen',
-  'featurepanel.directions_button': 'Navigation', // Not used anywhere 07.09.2024
+  'featurepanel.favorites_save_button': 'Favorisieren',
+  'featurepanel.favorites_unsave_button': 'Entfavorisieren',
+  'featurepanel.directions_button': 'Route',
+  'featurepanel.share_button': 'Teilen',
   'featurepanel.error': 'Fehler __code__ während des Abrufs des Objekts von OpenStreetMap',
   'featurepanel.error_unknown': 'Unbekannter Fehler beim Abruf des Objekts von OpenStreetMap.',
   'featurepanel.error_network': 'Kann das Objekt nicht abrufen, bitte überprüfe die Netzwerkverbindung.',
@@ -194,7 +195,6 @@ export default {
   'tags.opening_hours': 'Öffnungszeiten',
 
   'coordinates.geo_uri': 'GeoURI (Handy Karten-App)',
-  'coordinates.copy_value': 'Kopiere __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Karten',
   'layerswitcher.heading': 'Kartenebenen',
@@ -259,4 +259,9 @@ export default {
   'member_features.subitems': 'Subelemente',
   'member_features.climbing': 'Kletter Strecken',
   'member_features.routes': 'Strecken',
+
+  'sharedialog.link': 'Link',
+  'sharedialog.coordinates': 'Koordinaten',
+  'sharedialog.openin': 'Öffnen mit',
+  'sharedialog.image_attribution': 'Bildnachweise',
 };
