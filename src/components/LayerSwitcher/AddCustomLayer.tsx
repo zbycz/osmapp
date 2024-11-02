@@ -62,7 +62,8 @@ const LayerDataInput: React.FC<{
         setLayerIndex(result);
         setLayerIndexState('success');
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err); // eslint-disable-line no-console
         setLayerIndex([]);
         setLayerIndexState('error');
       });
