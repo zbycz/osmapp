@@ -1,7 +1,7 @@
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { useMapStateContext } from '../../../utils/MapStateContext';
 import { getAppleMapsLink, getIdEditorLink } from '../../helpers/externalLinks';
-import { imageAttributions, items, primaryItems, shareItems } from './items';
+import { imageAttributions, items } from './items';
 
 // Our map uses 512 tiles, so our zoom is "one less"
 // https://wiki.openstreetmap.org/wiki/Zoom_levels#Mapbox_GL
