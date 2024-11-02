@@ -7,8 +7,9 @@ import { ShareButton } from './ShareDialog/ShareButton';
 import { t } from '../../../services/intl';
 
 const Wrapper = styled.div`
-  width: 100%;
-  height: 100%;
+  max-width: 100%;
+  width: fit-content;
+  margin-top: 0.75rem;
 
   overflow-x: auto;
   scroll-behavior: smooth;
@@ -22,7 +23,6 @@ const Container = styled.div`
   width: max-content;
   display: flex;
   gap: 6px;
-  margin-top: 0.75rem;
 `;
 
 export const QuickActions = () => (
