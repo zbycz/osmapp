@@ -7,8 +7,9 @@ import { celsiusToFahrenheit, CenteredText, useClickOutside } from './helpers';
 import React from 'react';
 
 const StyledImg = styled.img`
-  max-width: 35px;
-  max-height: 35px;
+  max-width: 30px;
+  max-height: 30px;
+  margin: -8px 0 -8px -8px;
 `;
 
 const TooltipContent = ({ content }: { content: string }) => (
@@ -91,7 +92,7 @@ export const WeatherInner = ({ response }: Props) => {
       placement="top"
       ref={tooltipRef}
     >
-      <Stack alignItems="center">
+      <Stack alignItems="center" direction="row">
         <StyledImg
           src={icon[isDay ? 'day' : 'night'].image}
           alt={iconDescription}
