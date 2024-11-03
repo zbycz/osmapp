@@ -19,10 +19,6 @@ const WeatherWrapper = styled.div`
   border-radius: 8px;
   font-size: 0.85rem;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-
   pointer-events: all;
 `;
 
@@ -44,7 +40,7 @@ const useLoadWeather = ({ lat, lon }: WeatherProps) => {
       onSuccess: () => {
         lastFetchedLocation.current = [lon, lat];
       },
-      keepPreviousData: true
+      keepPreviousData: true,
     },
   );
 
@@ -67,9 +63,7 @@ export const WeatherLoader = (props: WeatherProps) => {
     case 'loading':
       return (
         <WeatherWrapper>
-          <span>
-            <DotLoader />
-          </span>
+          <DotLoader />
         </WeatherWrapper>
       );
   }
