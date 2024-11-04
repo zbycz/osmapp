@@ -1,9 +1,10 @@
 import React from 'react';
 import maplibregl from 'maplibre-gl';
 import { basicStyle } from '../styles/basicStyle';
-import { PersistedScaleControl } from './PersistedScaleControl';
+import { usePersistedScaleControl } from './PersistedScaleControl';
 import { setGlobalMap } from '../../../services/mapStorage';
 import { COMPASS_TOOLTIP } from '../useAddTopRightControls';
+import { useMapStateContext } from '../../utils/MapStateContext';
 
 // There are plenty of errors like this:
 //   Image "office_11" could not be loaded. Please make sure you have added the image with map.addImage() or a "sprite" property in your style. You can provide missing images by listening for the "styleimagemissing" map event.
@@ -62,7 +63,7 @@ export const useInitMap = () => {
     setGlobalMap(map);
     setMapInState(map);
 
-    map.addControl(PersistedScaleControl as any);
+    //map.addControl(PersistedScaleControl as any);
 
     map.scrollZoom.setWheelZoomRate(1 / 200); // 1/450 is default, bigger value = faster
 

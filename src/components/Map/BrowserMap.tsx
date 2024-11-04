@@ -18,6 +18,7 @@ import { useToggleTerrainControl } from './behaviour/useToggleTerrainControl';
 import { webglSupported } from './helpers';
 import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 import { useAddTopRightControls } from './useAddTopRightControls';
+import { usePersistedScaleControl } from './behaviour/PersistedScaleControl';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
@@ -63,6 +64,7 @@ const BrowserMap = () => {
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
   useUpdateStyle(map, activeLayers, userLayers, mapLoaded);
+  usePersistedScaleControl(map);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };

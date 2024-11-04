@@ -2,9 +2,9 @@ import styled from '@emotion/styled';
 import { WeatherResponse } from './loadWeather';
 import { icons } from './icons';
 import { Stack, Tooltip } from '@mui/material';
-import { isImperial } from '../../helpers';
 import { celsiusToFahrenheit, CenteredText, useClickOutside } from './helpers';
 import React from 'react';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 
 const StyledImg = styled.img`
   max-width: 30px;
@@ -75,12 +75,13 @@ const useTooltipState = () => {
 
 export const WeatherInner = ({ response }: Props) => {
   const { tooltipState, tooltipRef } = useTooltipState();
+  const { userSettings } = useUserSettingsContext();
 
   const isDay = response.is_day === 1;
   const icon = icons[response.weather_code];
   const iconDescription =
     icon.description ?? icon[response.is_day ? 'day' : 'night'].description;
-  const temperature = isImperial()
+  const temperature = userSettings.isImperial
     ? celsiusToFahrenheit(response.temperature_2m)
     : response.temperature_2m;
 
@@ -97,7 +98,7 @@ export const WeatherInner = ({ response }: Props) => {
           src={icon[isDay ? 'day' : 'night'].image}
           alt={iconDescription}
         />
-        {Math.round(temperature)} {isImperial() ? '°F' : '°C'}
+        {Math.round(temperature)} {userSettings.isImperial ? '°F' : '°C'}
       </Stack>
     </Tooltip>
   );
