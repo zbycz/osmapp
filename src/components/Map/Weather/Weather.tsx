@@ -3,7 +3,7 @@ import { useMapStateContext } from '../../utils/MapStateContext';
 import styled from '@emotion/styled';
 import { DotLoader } from '../../helpers';
 import { convertHexToRgba } from '../../utils/colorUtils';
-import { loadWeather } from './loadWeather';
+import { loadCurrentWeather } from './loadWeather';
 import { WeatherInner } from './WeatherInner';
 import { LonLat } from '../../../services/types';
 import React from 'react';
@@ -12,9 +12,10 @@ import { getDistance } from '../../SearchBox/utils';
 const WeatherWrapper = styled.div`
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) =>
-    convertHexToRgba(theme.palette.background.paper, 0.7)};
+    convertHexToRgba(theme.palette.background.paper, 0.5)};
   backdrop-filter: blur(15px);
-  padding: 0.5rem 1rem;
+  -webkit-backdrop-filter: blur(15px);
+  padding: 0.25rem 0.5rem;
   width: fit-content;
   border-radius: 8px;
   font-size: 0.85rem;
@@ -32,7 +33,7 @@ const useLoadWeather = ({ lat, lon }: WeatherProps) => {
 
   const { status, data, error } = useQuery(
     ['weather', lat, lon],
-    () => loadWeather({ lat, lon }),
+    () => loadCurrentWeather({ lat, lon }),
     {
       enabled:
         lastFetchedLocation.current === null ||
@@ -55,17 +56,16 @@ export const WeatherLoader = (props: WeatherProps) => {
     case 'idle':
       return (
         <WeatherWrapper>
-          <WeatherInner response={data.current} />
+          <WeatherInner
+            response={data.current}
+            lng={props.lon}
+            lat={props.lat}
+          />
         </WeatherWrapper>
       );
     case 'error':
-      return <WeatherWrapper>An error occured</WeatherWrapper>;
     case 'loading':
-      return (
-        <WeatherWrapper>
-          <DotLoader />
-        </WeatherWrapper>
-      );
+      return null;
   }
 };
 
