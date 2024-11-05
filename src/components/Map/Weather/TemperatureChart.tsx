@@ -97,14 +97,21 @@ export const TemperatureChart = ({
   const temperatures = weatherConditions.map(({ temperature }) => temperature);
   const pathWidth = containerWidth - 34;
   const height = 80;
-  const usedHeightPercentage = 0.7;
+  const usedHeightPercentage = 0.6;
   const fontHeight = 12;
   const verticalBars = 4;
+  const horizontalBars = 5;
+
+  const minTemp = Math.min(...temperatures);
+  const maxTemp = Math.max(...temperatures);
+  const deltaTemp = maxTemp - minTemp;
+
+  const verticalPadding = height * (1 - usedHeightPercentage) * 0.5;
+  const temperatureHeight = height * usedHeightPercentage;
+  const tempPerPixel = deltaTemp / temperatureHeight;
 
   const xScale = pathWidth / (weatherConditions.length - 1);
-  const yScale =
-    (height * usedHeightPercentage) /
-    (Math.max(...temperatures) - Math.min(...temperatures));
+  const yScale = (height * usedHeightPercentage) / deltaTemp;
   const yOffset = height * ((1 - usedHeightPercentage) / 2);
 
   const points: Point[] = temperatures.map((temp, i) => ({
@@ -169,31 +176,32 @@ export const TemperatureChart = ({
             </text>
           </>
         ))}
-        {Array.from({ length: 6 }, (_, i) => (i + 1) * (height / 7)).map(
-          (y) => (
-            <>
-              <line
-                key={y}
-                x1="0"
-                y1={y}
-                x2={pathWidth}
-                y2={y}
-                stroke="rgba(163, 163, 163, 0.25)"
-                strokeWidth="1"
+        {Array.from(
+          { length: horizontalBars },
+          (_, i) => (i + 1) * (height / (horizontalBars + 1)),
+        ).map((y) => (
+          <>
+            <line
+              key={y}
+              x1="0"
+              y1={y}
+              x2={pathWidth}
+              y2={y}
+              stroke="rgba(163, 163, 163, 0.25)"
+              strokeWidth="1"
+            />
+            <text
+              x={pathWidth + 4}
+              y={y + fontHeight / 2}
+              fontSize={fontHeight}
+              fill="rgb(163, 163, 163)"
+            >
+              <Temperature
+                celsius={maxTemp - tempPerPixel * (y - verticalPadding)}
               />
-              <text
-                x={pathWidth + 4}
-                y={y + fontHeight / 2}
-                fontSize={fontHeight}
-                fill="rgb(163, 163, 163)"
-              >
-                <Temperature
-                  celsius={(height - y) / yScale + Math.min(...temperatures)}
-                />
-              </text>
-            </>
-          ),
-        )}
+            </text>
+          </>
+        ))}
 
         <path d={fillPath} fill={FILL_COLOR} />
         <path d={linePath} fill="none" stroke={STROKE_COLOR} strokeWidth={2} />

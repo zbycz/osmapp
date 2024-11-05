@@ -51,7 +51,7 @@ const DetailedWeatherDisplay = ({
           ? focusedWeather.time.toLocaleTimeString(intl.lang, {
               hour: 'numeric',
               minute: 'numeric',
-            })
+            }) + ` ${focusedWeather.temperature}`
           : 'Daily Weather'}
         <TemperatureChart
           weatherConditions={response[focusedWeekday]}
