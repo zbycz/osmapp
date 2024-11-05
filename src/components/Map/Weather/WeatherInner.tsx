@@ -6,6 +6,7 @@ import { Temperature } from './helpers';
 import React from 'react';
 import { DetailedWeather } from './DetailedWeather';
 import { t } from '../../../services/intl';
+import { ClosePanelButton } from '../../utils/ClosePanelButton';
 
 const StyledImg = styled.img`
   max-width: 30px;
@@ -51,6 +52,12 @@ export const WeatherInner = ({ response, lat, lng }: Props) => {
         }}
       >
         <DialogTitle>{t('weather')}</DialogTitle>
+        <ClosePanelButton
+          right
+          onClick={() => {
+            setShowWeatherDialog(false);
+          }}
+        />
         <DialogContent>
           <DetailedWeather lng={lng} lat={lat} />
           <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>

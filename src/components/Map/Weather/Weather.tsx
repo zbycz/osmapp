@@ -8,6 +8,7 @@ import { WeatherInner } from './WeatherInner';
 import { LonLat } from '../../../services/types';
 import React from 'react';
 import { getDistance } from '../../SearchBox/utils';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 
 const WeatherWrapper = styled.div`
   color: ${({ theme }) => theme.palette.text.primary};
@@ -71,8 +72,12 @@ export const WeatherLoader = (props: WeatherProps) => {
 
 export const Weather = () => {
   const { view } = useMapStateContext();
+  const { userSettings } = useUserSettingsContext();
   const [zoom, lat, lon] = view;
 
+  if (!userSettings['weather.enabled']) {
+    return null;
+  }
   if (parseFloat(zoom) < 13) {
     return null;
   }

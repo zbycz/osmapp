@@ -6,6 +6,7 @@ import { isMobileDevice } from '../helpers';
 
 type UserSettingsType = {
   isImperial: boolean;
+  'weather.enabled': boolean;
   'climbing.gradeSystem': GradeSystem;
   'climbing.isGradesOnPhotosVisible': boolean;
   'climbing.defaultClimbingStyle': TickStyle;
@@ -21,6 +22,7 @@ type UserSettingsContextType = {
 
 const initialUserSettings: UserSettingsType = {
   isImperial: false,
+  'weather.enabled': true,
   'climbing.gradeSystem': null,
   'climbing.isGradesOnPhotosVisible': true,
   'climbing.defaultClimbingStyle': 'OS',
