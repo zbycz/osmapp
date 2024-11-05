@@ -294,4 +294,6 @@ export default {
   'sharedialog.coordinates': 'Coordinates',
   'sharedialog.openin': 'Open in',
   'sharedialog.image_attribution': 'Image attributions',
+
+  weather: 'Weather',
 };

@@ -5,6 +5,7 @@ import { Stack, Dialog, DialogTitle, DialogContent } from '@mui/material';
 import { Temperature } from './helpers';
 import React from 'react';
 import { DetailedWeather } from './DetailedWeather';
+import { t } from '../../../services/intl';
 
 const StyledImg = styled.img`
   max-width: 30px;
@@ -35,6 +36,7 @@ export const WeatherInner = ({ response, lat, lng }: Props) => {
         onClick={() => {
           setShowWeatherDialog(true);
         }}
+        style={{ cursor: 'copy' }}
       >
         <StyledImg
           src={icon[isDay ? 'day' : 'night'].image}
@@ -48,7 +50,7 @@ export const WeatherInner = ({ response, lat, lng }: Props) => {
           setShowWeatherDialog(false);
         }}
       >
-        <DialogTitle>{iconDescription} Weather</DialogTitle>
+        <DialogTitle>{t('weather')}</DialogTitle>
         <DialogContent>
           <DetailedWeather lng={lng} lat={lat} />
           <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>

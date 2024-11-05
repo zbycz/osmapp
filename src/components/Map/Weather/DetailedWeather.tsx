@@ -6,8 +6,9 @@ import {
 import { DotLoader } from '../../helpers';
 import React from 'react';
 import { TemperatureChart } from './TemperatureChart';
-import { intl } from '../../../services/intl';
-import { Temperature } from './helpers';
+import { DaySelector } from './DaySelector';
+import { FocusedWeather } from './FocusedWeather';
+import { Stack } from '@mui/material';
 
 const DetailedWeatherDisplay = ({
   response,
@@ -20,45 +21,17 @@ const DetailedWeatherDisplay = ({
     React.useState<DetailedWeatherType | null>(null);
 
   return (
-    <>
-      <div style={{ display: 'flex', marginBottom: '1rem' }}>
-        {entries.map(([weekdayIndex, data]) => {
-          const temps = data.map(({ temperature }) => temperature);
-          const maxTemp = Math.max(...temps);
-          const minTemp = Math.min(...temps);
-          return (
-            <span
-              key={weekdayIndex}
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-                width: '100%',
-              }}
-            >
-              <span>
-                <Temperature celsius={maxTemp} precision={1} />
-              </span>
-              <span>
-                <Temperature celsius={minTemp} precision={1} />
-              </span>
-            </span>
-          );
-        })}
-      </div>
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
-        {focusedWeather
-          ? focusedWeather.time.toLocaleTimeString(intl.lang, {
-              hour: 'numeric',
-              minute: 'numeric',
-            }) + ` ${focusedWeather.temperature}`
-          : 'Daily Weather'}
-        <TemperatureChart
-          weatherConditions={response[focusedWeekday]}
-          onMouseChange={setFocusedWeather}
-        />
-      </div>
-    </>
+    <Stack spacing={1}>
+      <DaySelector data={response} onSelect={setFocusedWeekday} />
+      <FocusedWeather
+        dayWeather={response[focusedWeekday]}
+        weather={focusedWeather}
+      />
+      <TemperatureChart
+        weatherConditions={response[focusedWeekday]}
+        onMouseChange={setFocusedWeather}
+      />
+    </Stack>
   );
 };
 

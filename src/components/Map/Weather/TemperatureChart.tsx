@@ -95,7 +95,7 @@ export const TemperatureChart = ({
   const [containerRef, containerWidth] = useContainerWidth(500, 500);
 
   const temperatures = weatherConditions.map(({ temperature }) => temperature);
-  const pathWidth = containerWidth - 34;
+  const chartWidth = containerWidth - 34;
   const height = 80;
   const usedHeightPercentage = 0.6;
   const fontHeight = 12;
@@ -110,7 +110,7 @@ export const TemperatureChart = ({
   const temperatureHeight = height * usedHeightPercentage;
   const tempPerPixel = deltaTemp / temperatureHeight;
 
-  const xScale = pathWidth / (weatherConditions.length - 1);
+  const xScale = chartWidth / (weatherConditions.length - 1);
   const yScale = (height * usedHeightPercentage) / deltaTemp;
   const yOffset = height * ((1 - usedHeightPercentage) / 2);
 
@@ -122,7 +122,16 @@ export const TemperatureChart = ({
   const linePath = generateSmoothPath(points);
   const fillPath = `${linePath} L ${points[points.length - 1].x} ${height} L ${points[0].x} ${height} Z`;
 
+  const handleMouseLeave = () => {
+    setMouseX(null);
+    onMouseChange?.(null);
+  };
+
   const handleMouseMove = (x: number) => {
+    if (x > chartWidth) {
+      handleMouseLeave();
+      return;
+    }
     setMouseX(x);
     const weather = weatherConditions[Math.round(x / xScale)];
     onMouseChange?.(weather);
@@ -138,33 +147,27 @@ export const TemperatureChart = ({
             e.clientX - e.currentTarget.getBoundingClientRect().left,
           )
         }
-        onMouseLeave={() => {
-          setMouseX(null);
-          onMouseChange?.(null);
-        }}
         onTouchMove={(e) =>
           handleMouseMove(
             e.touches[0].clientX - e.currentTarget.getBoundingClientRect().left,
           )
         }
-        onTouchEnd={() => {
-          setMouseX(null);
-          onMouseChange?.(null);
-        }}
+        onMouseLeave={handleMouseLeave}
+        onTouchEnd={handleMouseLeave}
       >
         {sampleEvenly(weatherConditions, verticalBars).map(({ time }, i) => (
           <>
             <line
               key={time.getTime()}
-              x1={i * (pathWidth / verticalBars)}
-              x2={i * (pathWidth / verticalBars)}
+              x1={i * (chartWidth / verticalBars)}
+              x2={i * (chartWidth / verticalBars)}
               y1="0"
               y2={height + fontHeight}
               stroke="rgba(163, 163, 163, 0.25)"
               strokeWidth="1"
             />
             <text
-              x={i * (pathWidth / verticalBars) + 4}
+              x={i * (chartWidth / verticalBars) + 4}
               y={height + fontHeight}
               fontSize={fontHeight}
               fill="rgb(163, 163, 163)"
@@ -185,13 +188,13 @@ export const TemperatureChart = ({
               key={y}
               x1="0"
               y1={y}
-              x2={pathWidth}
+              x2={chartWidth}
               y2={y}
               stroke="rgba(163, 163, 163, 0.25)"
               strokeWidth="1"
             />
             <text
-              x={pathWidth + 4}
+              x={chartWidth + 4}
               y={y + fontHeight / 2}
               fontSize={fontHeight}
               fill="rgb(163, 163, 163)"
