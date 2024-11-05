@@ -237,7 +237,7 @@ export function Homepage({
                 {` – ${t('homepage.maptiler')}`}
               </li>
               <li>
-                <a href="https://vercel.com" target="_blank">
+                <a href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss" target="_blank">
                   Vercel
                 </a>
                 {` – ${t('homepage.vercel')}`}
