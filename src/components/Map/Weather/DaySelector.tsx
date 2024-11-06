@@ -4,6 +4,7 @@ import { wmoCodeForDay } from './wmoCodeForDay';
 import { icons } from './icons';
 import { Temperature } from './helpers';
 import { intl } from '../../../services/intl';
+import { useUserThemeContext } from '../../../helpers/theme';
 
 type ButtonProps = {
   weatherConditions: DetailedWeather[];
@@ -12,10 +13,12 @@ type ButtonProps = {
 };
 
 const DayButton = ({ onClick, weatherConditions, sx }: ButtonProps) => {
+  const { currentTheme } = useUserThemeContext();
   const temps = weatherConditions.map(({ temperature }) => temperature);
   const maxTemp = Math.max(...temps);
   const minTemp = Math.min(...temps);
   const wmoCode = wmoCodeForDay(weatherConditions);
+  const icon = icons[wmoCode];
 
   return (
     <Button
@@ -34,11 +37,12 @@ const DayButton = ({ onClick, weatherConditions, sx }: ButtonProps) => {
     >
       <Stack direction={{ xs: 'column', sm: 'row' }} spacing={0.5}>
         <img
-          src={icons[wmoCode].day.image}
-          alt={icons[wmoCode].description ?? icons[wmoCode].day.description}
+          src={icon.day.image}
+          alt={icon.description ?? icon.day.description}
           style={{
             width: 50,
             margin: -5,
+            filter: icon.day.filter?.[currentTheme],
           }}
         />
         <Stack alignItems="center">

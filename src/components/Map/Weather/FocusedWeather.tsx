@@ -6,6 +6,7 @@ import { intl } from '../../../services/intl';
 import Thermostat from '@mui/icons-material/Thermostat';
 import Rain from '@mui/icons-material/WaterDrop';
 import { Temperature } from './helpers';
+import { useUserThemeContext } from '../../../helpers/theme';
 
 const InformationRow: React.FC = ({ children }) => (
   <Stack direction="row" alignItems="center" spacing={0.25}>
@@ -19,6 +20,8 @@ type Props = {
 };
 
 export const FocusedWeather = ({ weather, dayWeather }: Props) => {
+  const { currentTheme } = useUserThemeContext();
+
   const temperaturese = dayWeather.map(({ temperature }) => temperature);
   const heading = weather
     ? weather.time.toLocaleTimeString(intl.lang, {
@@ -43,7 +46,12 @@ export const FocusedWeather = ({ weather, dayWeather }: Props) => {
       <Stack alignItems="center" justifyContent="space-evenly">
         <img
           src={icon[isDay ? 'day' : 'night'].image}
-          style={{ width: 75, height: 75, margin: '-20%' }}
+          style={{
+            width: 75,
+            height: 75,
+            margin: '-20%',
+            filter: icon[isDay ? 'day' : 'night'].filter?.[currentTheme],
+          }}
         />
         {icon.description ?? icon[isDay ? 'day' : 'night'].description}
       </Stack>
@@ -55,22 +63,22 @@ export const FocusedWeather = ({ weather, dayWeather }: Props) => {
             <Temperature precision={1} celsius={weather.temperature} />
           )}
           {!weather && (
-            <>
-              <span>
+            <Stack direction={{ xs: 'column', sm: 'row' }} spacing={0.25}>
+              <span style={{ whiteSpace: 'nowrap' }}>
                 <b>Lowest: </b>
                 <Temperature
                   precision={1}
                   celsius={Math.min(...temperaturese)}
                 />
               </span>
-              <span>
+              <span style={{ whiteSpace: 'nowrap' }}>
                 <b>Highest: </b>
                 <Temperature
                   precision={1}
                   celsius={Math.max(...temperaturese)}
                 />
               </span>
-            </>
+            </Stack>
           )}
         </InformationRow>
         <InformationRow>

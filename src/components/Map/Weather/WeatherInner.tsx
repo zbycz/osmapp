@@ -7,11 +7,13 @@ import React from 'react';
 import { DetailedWeather } from './DetailedWeather';
 import { t } from '../../../services/intl';
 import { ClosePanelButton } from '../../utils/ClosePanelButton';
+import { useUserThemeContext } from '../../../helpers/theme';
 
-const StyledImg = styled.img`
+const StyledImg = styled.img<{ $filter?: string }>`
   max-width: 30px;
   max-height: 30px;
   margin: -8px 0 -8px -8px;
+  filter: ${({ $filter }) => $filter};
 `;
 
 type Props = {
@@ -21,6 +23,7 @@ type Props = {
 };
 
 export const WeatherInner = ({ response, lat, lng }: Props) => {
+  const { currentTheme } = useUserThemeContext();
   const [showWeatherDialog, setShowWeatherDialog] = React.useState(false);
 
   const isDay = response.is_day === 1;
@@ -37,11 +40,12 @@ export const WeatherInner = ({ response, lat, lng }: Props) => {
         onClick={() => {
           setShowWeatherDialog(true);
         }}
-        style={{ cursor: 'copy' }}
+        style={{ cursor: 'pointer' }}
       >
         <StyledImg
           src={icon[isDay ? 'day' : 'night'].image}
           alt={iconDescription}
+          $filter={icon[isDay ? 'day' : 'night'].filter?.[currentTheme]}
         />
         <Temperature celsius={temperature} />
       </Stack>
