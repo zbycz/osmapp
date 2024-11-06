@@ -68,7 +68,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   autocompleteRef,
   setOverpassLoading,
 }) => {
-  const { setFeature, setPreview } = useFeatureContext();
+  const { setFeature, setPreview, setAccessMethod } = useFeatureContext();
   const { bbox } = useMapStateContext();
   const { showToast } = useSnackbar();
   const mapCenter = useMapCenter();
@@ -93,6 +93,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         showToast,
         setOverpassLoading,
         router,
+        setAccessMethod,
       })}
       onHighlightChange={onHighlightFactory(setPreview)}
       getOptionDisabled={(o) => o.type === 'loader'}

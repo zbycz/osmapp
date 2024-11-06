@@ -44,6 +44,10 @@ type MapStateContextType = {
   setUserLayers: Setter<Layer[]>;
   mapLoaded: boolean;
   setMapLoaded: () => void;
+  landmarkPitch: number | undefined;
+  setLandmarkPitch: Setter<number | undefined>;
+  landmarkBearing: number | undefined;
+  setLandmarkBearing: Setter<number | undefined>;
 };
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
@@ -65,6 +69,12 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
   const [userLayers, setUserLayers] = usePersistedState<Layer[]>(
     'userLayerIndex',
     [],
+  );
+  const [landmarkBearing, setLandmarkBearing] = useState<number | undefined>(
+    undefined,
+  );
+  const [landmarkPitch, setLandmarkPitch] = useState<number | undefined>(
+    undefined,
   );
 
   const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
@@ -88,6 +98,10 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     setUserLayers,
     mapLoaded,
     setMapLoaded,
+    landmarkBearing,
+    setLandmarkBearing,
+    landmarkPitch,
+    setLandmarkPitch,
   };
 
   return (
