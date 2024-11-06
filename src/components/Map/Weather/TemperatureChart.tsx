@@ -3,6 +3,8 @@ import { DetailedWeather } from './loadWeather';
 import zip from 'lodash/zip';
 import { sampleEvenly, Temperature } from './helpers';
 import { intl } from '../../../services/intl';
+import { useUserThemeContext } from '../../../helpers/theme';
+import { CoordinateSystem } from './CoordinateSystem';
 
 const FILL_COLOR = 'rgba(250, 204, 21, 0.2)';
 const STROKE_COLOR = '#facc15';
@@ -93,22 +95,17 @@ export const TemperatureChart = ({
 }: Props) => {
   const [mouseX, setMouseX] = useState<number | null>(null);
   const [containerRef, containerWidth] = useContainerWidth(500, 500);
+  const { currentTheme } = useUserThemeContext();
 
   const temperatures = weatherConditions.map(({ temperature }) => temperature);
   const chartWidth = containerWidth - 34;
   const height = 80;
   const usedHeightPercentage = 0.6;
   const fontHeight = 12;
-  const verticalBars = 4;
-  const horizontalBars = 5;
 
   const minTemp = Math.min(...temperatures);
   const maxTemp = Math.max(...temperatures);
   const deltaTemp = maxTemp - minTemp;
-
-  const verticalPadding = height * (1 - usedHeightPercentage) * 0.5;
-  const temperatureHeight = height * usedHeightPercentage;
-  const tempPerPixel = deltaTemp / temperatureHeight;
 
   const xScale = chartWidth / (weatherConditions.length - 1);
   const yScale = (height * usedHeightPercentage) / deltaTemp;
@@ -155,56 +152,13 @@ export const TemperatureChart = ({
         onMouseLeave={handleMouseLeave}
         onTouchEnd={handleMouseLeave}
       >
-        {sampleEvenly(weatherConditions, verticalBars).map(({ time }, i) => (
-          <>
-            <line
-              key={time.getTime()}
-              x1={i * (chartWidth / verticalBars)}
-              x2={i * (chartWidth / verticalBars)}
-              y1="0"
-              y2={height + fontHeight}
-              stroke="rgba(163, 163, 163, 0.25)"
-              strokeWidth="1"
-            />
-            <text
-              x={i * (chartWidth / verticalBars) + 4}
-              y={height + fontHeight}
-              fontSize={fontHeight}
-              fill="rgb(163, 163, 163)"
-            >
-              {time.toLocaleTimeString(intl.lang, {
-                hour: 'numeric',
-                minute: 'numeric',
-              })}
-            </text>
-          </>
-        ))}
-        {Array.from(
-          { length: horizontalBars },
-          (_, i) => (i + 1) * (height / (horizontalBars + 1)),
-        ).map((y) => (
-          <>
-            <line
-              key={y}
-              x1="0"
-              y1={y}
-              x2={chartWidth}
-              y2={y}
-              stroke="rgba(163, 163, 163, 0.25)"
-              strokeWidth="1"
-            />
-            <text
-              x={chartWidth + 4}
-              y={y + fontHeight / 2}
-              fontSize={fontHeight}
-              fill="rgb(163, 163, 163)"
-            >
-              <Temperature
-                celsius={maxTemp - tempPerPixel * (y - verticalPadding)}
-              />
-            </text>
-          </>
-        ))}
+        <CoordinateSystem
+          weatherConditions={weatherConditions}
+          chartWidth={chartWidth}
+          usedHeightPercentage={usedHeightPercentage}
+          height={height}
+          fontHeight={fontHeight}
+        />
 
         <path d={fillPath} fill={FILL_COLOR} />
         <path d={linePath} fill="none" stroke={STROKE_COLOR} strokeWidth={2} />
@@ -215,14 +169,14 @@ export const TemperatureChart = ({
               cx={mouseX}
               cy={getBezierHeightForX(points, mouseX)}
               r="5"
-              fill="white"
+              fill={currentTheme === 'dark' ? 'white' : 'black'}
             />
             <line
               x1={mouseX}
               y1="0"
               x2={mouseX}
               y2={height}
-              stroke="white"
+              stroke={currentTheme === 'dark' ? 'white' : 'black'}
               strokeWidth="2"
             />
           </>

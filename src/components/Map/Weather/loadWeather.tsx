@@ -1,6 +1,6 @@
 import { fetchJson } from '../../../services/fetch';
 import { format, addDays, startOfDay } from 'date-fns';
-import { transformObject } from './helpers';
+import { arrayValuesToObjectArray } from './helpers';
 import groupBy from 'lodash/groupBy';
 
 export type CurrentWeatherResponse = {
@@ -67,7 +67,7 @@ export const loadDetailedWeather = async ({ lat, lon }: Props) => {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&start_date=${startDate}&end_date=${endDate}&hourly=${fields.join(',')}`;
   const { hourly } = await fetchJson<FutureResponse>(url);
 
-  const transformed = transformObject(hourly).map(
+  const transformed = arrayValuesToObjectArray(hourly).map(
     ({
       is_day,
       precipitation_probability,
