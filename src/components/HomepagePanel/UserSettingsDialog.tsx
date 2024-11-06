@@ -28,6 +28,20 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
 
       <ClosePanelButton right onClick={onClose} />
       <DialogContent>
+        <PanelLabel>General</PanelLabel>
+        <List>
+          <ListItem>
+            <ListItemText>Show the weather widget</ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              onChange={(e) => {
+                setUserSetting('weather.enabled', e.target.checked);
+              }}
+              checked={userSettings['weather.enabled']}
+            />
+          </ListItem>
+        </List>
         <PanelLabel>Climbing</PanelLabel>
         <List>
           <ListItem>

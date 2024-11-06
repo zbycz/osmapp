@@ -1,4 +1,4 @@
-import { isImperial, useMobileMode } from '../helpers';
+import { useMobileMode } from '../helpers';
 import { Button, Paper, Typography } from '@mui/material';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -7,6 +7,7 @@ import { TooltipButton } from '../utils/TooltipButton';
 import { RoutingResult } from './routing/types';
 import { t, Translation } from '../../services/intl';
 import { CloseButton } from './helpers';
+import { useUserSettingsContext } from '../utils/UserSettingsContext';
 
 export const StyledPaper = styled(Paper)`
   backdrop-filter: blur(10px);
@@ -45,8 +46,8 @@ const getHumanImperial = (meters: number) => {
   return `${miles.toFixed(1)} mi`;
 };
 
-const toHumanDistance = (meters: number) =>
-  isImperial() ? getHumanImperial(meters) : getHumanMetric(meters);
+const toHumanDistance = (isImperial: boolean, meters: number) =>
+  isImperial ? getHumanImperial(meters) : getHumanMetric(meters);
 
 const toHumanTime = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
@@ -68,10 +69,12 @@ type Props = { result: RoutingResult; revealForm: false | (() => void) };
 
 export const Result = ({ result, revealForm }: Props) => {
   const isMobileMode = useMobileMode();
+  const { userSettings } = useUserSettingsContext();
+  const { isImperial } = userSettings;
 
   const time = toHumanTime(result.time);
-  const distance = toHumanDistance(result.distance);
-  const ascent = toHumanDistance(result.totalAscent);
+  const distance = toHumanDistance(isImperial, result.distance);
+  const ascent = toHumanDistance(isImperial, result.totalAscent);
 
   if (isMobileMode) {
     return (

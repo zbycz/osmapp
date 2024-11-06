@@ -9,7 +9,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { getGlobalMap } from '../../services/mapStorage';
 import { LonLat } from '../../services/types';
-import { DotLoader, isImperial } from '../helpers';
+import { DotLoader } from '../helpers';
 import { GeocoderOption } from './types';
 import { diceCoefficient } from 'dice-coefficient';
 import { SEARCH_THRESHOLD } from './consts';
@@ -26,6 +26,7 @@ const EARTH_RADIUS = 6372795;
 
 const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
+/** Returns the distance between two points in meters */
 export const getDistance = (point1: LonLat, point2: LonLat) => {
   const latdiff = degreesToRadians(point2[1]) - degreesToRadians(point1[1]);
   const lngdiff = degreesToRadians(point2[0]) - degreesToRadians(point1[0]);
@@ -45,11 +46,15 @@ export const getDistance = (point1: LonLat, point2: LonLat) => {
   );
 };
 
-export const getHumanDistance = (mapCenter: LonLat, point: LonLat) => {
+export const getHumanDistance = (
+  isImperial: boolean,
+  mapCenter: LonLat,
+  point: LonLat,
+) => {
   const distKm = getDistance(mapCenter, point) / 1000;
-  const dist = isImperial() ? distKm * 0.621371192 : distKm;
+  const dist = isImperial ? distKm * 0.621371192 : distKm;
   const rounded = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist);
-  return isImperial() ? `${rounded} mi` : `${rounded} km`;
+  return isImperial ? `${rounded} mi` : `${rounded} km`;
 };
 
 export const useMapCenter = (): LonLat => {

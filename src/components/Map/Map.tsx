@@ -11,6 +11,7 @@ import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { Weather } from './Weather/Weather';
 
 const BrowserMapDynamic = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -52,6 +53,12 @@ const BottomRight = styled.div`
   text-align: right;
   pointer-events: none;
   z-index: 999;
+
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  align-items: end;
+  padding: 0 4px 4px 4px;
 `;
 
 const BugReportButton = () => (
@@ -84,6 +91,7 @@ const Map = () => {
       <BottomRight>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
+        <Weather />
         <MapFooter />
       </BottomRight>
     </>

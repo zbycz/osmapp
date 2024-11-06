@@ -5,6 +5,8 @@ import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
 
 type UserSettingsType = {
+  isImperial: boolean;
+  'weather.enabled': boolean;
   'climbing.gradeSystem': GradeSystem;
   'climbing.isGradesOnPhotosVisible': boolean;
   'climbing.defaultClimbingStyle': TickStyle;
@@ -14,10 +16,13 @@ type UserSettingsType = {
 type UserSettingsContextType = {
   userSettings: UserSettingsType;
   setUserSettings: (userSettings: UserSettingsType) => void;
+  // TODO: Real generic typesafety
   setUserSetting: (key: string, value: string | number | boolean) => void;
 };
 
 const initialUserSettings: UserSettingsType = {
+  isImperial: false,
+  'weather.enabled': true,
   'climbing.gradeSystem': null,
   'climbing.isGradesOnPhotosVisible': true,
   'climbing.defaultClimbingStyle': 'OS',

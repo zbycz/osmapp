@@ -16,6 +16,7 @@ import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
 import PlaceIcon from '@mui/icons-material/Place';
 import { Option } from '../SearchBox/types';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
+import { useUserSettingsContext } from '../utils/UserSettingsContext';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -107,6 +108,8 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const selectedOptionInputValue = useRef(null);
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
+  const { userSettings } = useUserSettingsContext();
+  const { isImperial } = userSettings;
 
   const options = useOptions(inputValue);
 
@@ -158,7 +161,12 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
             onBlur={onBlur}
           />
         )}
-        renderOption={renderOptionFactory(inputValue, currentTheme, mapCenter)}
+        renderOption={renderOptionFactory(
+          inputValue,
+          currentTheme,
+          mapCenter,
+          isImperial,
+        )}
       />
     </Row>
   );

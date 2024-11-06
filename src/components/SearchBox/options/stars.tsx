@@ -10,6 +10,10 @@ import {
 import type { Star } from '../../utils/StarsContext';
 import { StarOption } from '../types';
 import { LonLat } from '../../../services/types';
+import {
+  UserSettingsContext,
+  useUserSettingsContext,
+} from '../../utils/UserSettingsContext';
 
 export const getStarsOptions = (
   stars: Star[],
@@ -31,10 +35,11 @@ export const renderStar = (
   { star }: StarOption,
   inputValue: string,
   mapCenter: LonLat,
+  isImperial: boolean,
 ) => {
   // Note: for compatibility, `center` is optional
   const distance = star.center
-    ? getHumanDistance(mapCenter, star.center)
+    ? getHumanDistance(isImperial, mapCenter, star.center)
     : null;
 
   return (
