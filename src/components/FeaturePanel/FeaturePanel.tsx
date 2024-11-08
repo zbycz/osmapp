@@ -25,6 +25,7 @@ import { Box } from '@mui/material';
 import { ClimbingGuideInfo } from './Climbing/ClimbingGuideInfo';
 import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
 import { isPublictransportRoute } from '../../utils';
+import { Sockets } from './Sockets/Sockets';
 
 const Flex = styled.div`
   flex: 1;
@@ -84,12 +85,10 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
                 {!isPublictransportRoute(feature) && <MemberFeatures />}
                 {advanced && <Members />}
                 {isClimbingCrag && <PropertiesComponent />}
-
                 <PublicTransport />
                 <Runways />
-
+                <Sockets />
                 <FeatureOpenPlaceGuideLink />
-
                 <EditButton />
                 <EditDialog />
               </PanelSidePadding>
