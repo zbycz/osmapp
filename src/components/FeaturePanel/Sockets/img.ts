@@ -1,10 +1,14 @@
+const typeToFilename = {
+  type1: 'type1',
+  type1_cable: 'type1',
+  type2: 'type2',
+  type2_cable: 'type2',
+  schuko: 'schuko',
+};
+
 export const getImageSrc = (type: string) => {
-  switch (type) {
-    case 'type2':
-      return '/sockets/type2.svg';
-    case 'schuko':
-      return '/sockets/schuko.svg';
-    default:
-      return '/sockets/unknown.svg';
+  if (typeToFilename[type]) {
+    return `/sockets/${typeToFilename[type]}.svg`;
   }
+  return '/sockets/unknown.svg';
 };
