@@ -1,3 +1,5 @@
+import * as Sentry from '@sentry/nextjs';
+
 const typeToFilename = {
   type1: 'type1',
   type1_cable: 'type1',
@@ -10,5 +12,9 @@ export const getImageSrc = (type: string) => {
   if (typeToFilename[type]) {
     return `/sockets/${typeToFilename[type]}.svg`;
   }
+  Sentry.captureMessage('Missing Icon for EV Socket', {
+    level: 'info',
+    tags: { socketType: type },
+  });
   return '/sockets/unknown.svg';
 };
