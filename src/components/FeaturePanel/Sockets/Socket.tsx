@@ -5,7 +5,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
 } from '@mui/material';
 import { useUserThemeContext } from '../../../helpers/theme';
@@ -21,10 +20,6 @@ const Container = styled.div`
 
   th {
     text-transform: capitalize;
-  }
-
-  p {
-    margin: 4px 0;
   }
 `;
 
@@ -61,6 +56,7 @@ export const Socket = ({ type, details }: Props) => {
   // quantity exists always
   const { quantity } = details;
   const entries = Object.entries(details).filter(([key]) => key !== 'quantity');
+  const prettifiedType = type.replace(/_/, ' ');
 
   return (
     <Container>
@@ -73,11 +69,12 @@ export const Socket = ({ type, details }: Props) => {
             objectFit: 'contain',
             filter: currentTheme === 'dark' ? 'invert(1)' : '',
           }}
+          alt={`Illustration of a ${prettifiedType} socket`}
         />
         {/^\d+$/.test(quantity) && <span>{quantity} times</span>}
       </Stack>
       <div>
-        <StyledHeading>{type.replace(/_/, ' ')}</StyledHeading>
+        <StyledHeading>{prettifiedType}</StyledHeading>
         {entries.length > 0 && (
           <TableContainer>
             <Table>
