@@ -61,6 +61,8 @@ const RouteDescription = styled.div<{ opacity: number }>`
   user-select: text;
 `;
 
+const RouteAuthor = styled(RouteDescription)``;
+
 const RouteGrade = styled.div``;
 
 const Row = styled.div<{ $isHoverHighlighted: boolean }>`
@@ -220,6 +222,9 @@ export const ClimbingRouteTableRow = forwardRef<
               <RouteDescription opacity={photoPathsCount === 0 ? 0.5 : 1}>
                 {feature.tags?.description}
               </RouteDescription>
+            )}
+            {feature.tags?.author && (
+              <RouteAuthor opacity={0.5}>{feature.tags?.author}</RouteAuthor>
             )}
           </Stack>
           <RouteGrade>
