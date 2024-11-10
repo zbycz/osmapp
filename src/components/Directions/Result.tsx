@@ -6,8 +6,9 @@ import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
 import { RoutingResult } from './routing/types';
 import { t, Translation } from '../../services/intl';
-import { CloseButton } from './helpers';
+import { CloseButton, toHumanDistance } from './helpers';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { Instructions } from './Instructions';
 
 export const StyledPaper = styled(Paper)`
   backdrop-filter: blur(10px);
@@ -30,24 +31,6 @@ const CloseContainer = styled.div`
   top: 0;
   right: 0;
 `;
-
-const getHumanMetric = (meters: number) => {
-  if (meters < 1000) {
-    return `${Math.round(meters)} m`;
-  }
-  return `${(meters / 1000).toFixed(1)} km`;
-};
-
-const getHumanImperial = (meters: number) => {
-  const miles = meters * 0.000621371192;
-  if (miles < 1) {
-    return `${Math.round(miles * 5280)} ft`;
-  }
-  return `${miles.toFixed(1)} mi`;
-};
-
-const toHumanDistance = (isImperial: boolean, meters: number) =>
-  isImperial ? getHumanImperial(meters) : getHumanMetric(meters);
 
 const toHumanTime = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
@@ -107,6 +90,9 @@ export const Result = ({ result, revealForm }: Props) => {
       {t('directions.result.ascent')}: <strong>{ascent}</strong>
       <br />
       <br />
+      {result.instructions && (
+        <Instructions instructions={result.instructions} />
+      )}
       <PoweredBy result={result} />
     </StyledPaper>
   );
