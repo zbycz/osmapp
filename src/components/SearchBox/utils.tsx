@@ -22,7 +22,7 @@ export const IconPart = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-const EARTH_RADIUS = 6372795;
+export const EARTH_RADIUS = 6372795;
 
 const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
 

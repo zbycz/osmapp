@@ -12,6 +12,7 @@ import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { Weather } from './Weather/Weather';
+import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
 
 const BrowserMapDynamic = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -33,12 +34,12 @@ const Spinner = styled(CircularProgress)`
   margin: -20px 0 0 -20px;
 `;
 
-const TopRight = styled.div`
+const TopRight = styled.div<{ $bottom: boolean }>`
   position: absolute;
   z-index: 1000;
   padding: 10px;
   right: 0;
-  top: 62px;
+  ${({ $bottom }) => ($bottom ? 'bottom: 100px;' : 'top: 62px;')}
 
   @media ${isDesktop} {
     top: 0;
@@ -78,13 +79,14 @@ const NoscriptMessage = () => (
 
 const Map = () => {
   const { mapLoaded } = useMapStateContext();
+  const { routingResult } = useTurnByTurnContext();
 
   return (
     <>
       <BrowserMapDynamic />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
-      <TopRight>
+      <TopRight $bottom={!!routingResult}>
         <TopMenu />
         <LayerSwitcherDynamic />
       </TopRight>

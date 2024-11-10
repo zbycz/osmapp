@@ -1,4 +1,4 @@
-import React, { Ref, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
@@ -25,7 +25,7 @@ import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog'
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
-import { useIsClient, useMobileMode } from '../helpers';
+import { useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
@@ -39,6 +39,8 @@ import {
 } from '../../services/climbing-areas/getClimbingAreas';
 import { DirectionsBox } from '../Directions/DirectionsBox';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { TurnByTurnProvider, useTurnByTurnContext } from '../utils/TurnByTurnContext';
+import { TurnByTurnNavigation } from '../TurnByTurnNavigation/TurnByTurnNavigation';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -119,8 +121,9 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMobileMode = useMobileMode();
   const { feature, featureShown, homepageShown } = useFeatureContext();
   const router = useRouter();
-  const isMounted = useIsClient();
   const scrollRef = useScrollToTopWhenRouteChanged() as any;
+  const { routingResult } = useTurnByTurnContext()
+
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
@@ -145,8 +148,11 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   return (
     <>
       <Loading />
-      {directions && <DirectionsBox />}
-      {!directions && <SearchBox withShadow={withShadow} />}
+      {directions && !routingResult && <DirectionsBox />}
+      {!(directions || routingResult) && <SearchBox withShadow={withShadow} />}
+      {routingResult && (
+        <TurnByTurnNavigation />
+      )}
       {featureShown && !isMobileMode && (
         <FeaturePanelOnSide scrollRef={scrollRef} />
       )}
@@ -204,7 +210,9 @@ const App: NextPage<Props> = ({
               <StarsProvider>
                 <EditDialogProvider /* TODO supply router.query */>
                   <QueryClientProvider client={reactQueryClient}>
-                    <IndexWithProviders climbingAreas={climbingAreas} />
+                    <TurnByTurnProvider>
+                      <IndexWithProviders climbingAreas={climbingAreas} />
+                    </TurnByTurnProvider>
                   </QueryClientProvider>
                 </EditDialogProvider>
               </StarsProvider>

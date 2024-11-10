@@ -9,6 +9,10 @@ import { t, Translation } from '../../services/intl';
 import { CloseButton, toHumanDistance } from './helpers';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { Instructions } from './Instructions';
+import {
+  initTurnByTurnNav,
+  useInitTurnByTurnNav,
+} from '../TurnByTurnNavigation/init';
 
 export const StyledPaper = styled(Paper)<{
   $height?: string;
@@ -106,6 +110,7 @@ export const Result = ({ result, revealForm }: Props) => {
   const isMobileMode = useMobileMode();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
+  const initTurnByTurn = useInitTurnByTurnNav(result);
 
   const time = toHumanTime(result.time);
   const distance = toHumanDistance(isImperial, result.distance);
@@ -132,6 +137,13 @@ export const Result = ({ result, revealForm }: Props) => {
       {t('directions.result.ascent')}: <strong>{ascent}</strong>
       <br />
       <br />
+      <Button
+        onClick={() => {
+          initTurnByTurn();
+        }}
+      >
+        Start Navigation
+      </Button>
       {result.instructions && (
         <Instructions instructions={result.instructions} />
       )}
