@@ -1,6 +1,6 @@
 import { useUserThemeContext } from '../helpers/theme';
 
-export const LogoMaptiler = (props: { width: number; height: number }) => {
+export const LogoMaptiler = (props: { width?: number; height?: number }) => {
   const { currentTheme } = useUserThemeContext();
   const darkmode = currentTheme === 'dark';
 

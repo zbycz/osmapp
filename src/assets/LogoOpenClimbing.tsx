@@ -1,6 +1,11 @@
 import React from 'react';
 
-export const LogoOpenClimbing = ({ width, style }) => (
+type LogoOpenClimbingProps = {
+  width: number;
+  style?: React.CSSProperties;
+};
+
+export const LogoOpenClimbing = ({ width, style }: LogoOpenClimbingProps) => (
   <svg
     width={width}
     viewBox="0 0 609 609"
