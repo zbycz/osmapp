@@ -47,3 +47,21 @@ export const CloseButton = () => (
     <CloseIcon fontSize="small" />
   </IconButton>
 );
+
+const getHumanMetric = (meters: number) => {
+  if (meters < 1000) {
+    return `${Math.round(meters)} m`;
+  }
+  return `${(meters / 1000).toFixed(1)} km`;
+};
+
+const getHumanImperial = (meters: number) => {
+  const miles = meters * 0.000621371192;
+  if (miles < 1) {
+    return `${Math.round(miles * 5280)} ft`;
+  }
+  return `${miles.toFixed(1)} mi`;
+};
+
+export const toHumanDistance = (isImperial: boolean, meters: number) =>
+  isImperial ? getHumanImperial(meters) : getHumanMetric(meters);

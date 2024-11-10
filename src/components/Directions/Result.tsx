@@ -1,19 +1,25 @@
 import { useMobileMode } from '../helpers';
-import { Button, Paper, Typography } from '@mui/material';
+import { Button, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
 import { RoutingResult } from './routing/types';
 import { t, Translation } from '../../services/intl';
-import { CloseButton } from './helpers';
+import { CloseButton, toHumanDistance } from './helpers';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { Instructions } from './Instructions';
 
-export const StyledPaper = styled(Paper)`
+export const StyledPaper = styled(Paper)<{
+  $height?: string;
+  $overflow?: string;
+}>`
   backdrop-filter: blur(10px);
   background: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.9)};
   padding: ${({ theme }) => theme.spacing(2)};
+  height: ${({ $height }) => $height};
+  overflow-y: ${({ $overflow }) => $overflow};
 `;
 
 export const StyledPaperMobile = styled(Paper)`
@@ -23,6 +29,8 @@ export const StyledPaperMobile = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)}
     ${({ theme }) => theme.spacing(0.5)} ${({ theme }) => theme.spacing(2)};
   text-align: center;
+  height: 100%;
+  overflow-y: auto;
 `;
 
 const CloseContainer = styled.div`
@@ -30,24 +38,6 @@ const CloseContainer = styled.div`
   top: 0;
   right: 0;
 `;
-
-const getHumanMetric = (meters: number) => {
-  if (meters < 1000) {
-    return `${Math.round(meters)} m`;
-  }
-  return `${(meters / 1000).toFixed(1)} km`;
-};
-
-const getHumanImperial = (meters: number) => {
-  const miles = meters * 0.000621371192;
-  if (miles < 1) {
-    return `${Math.round(miles * 5280)} ft`;
-  }
-  return `${miles.toFixed(1)} mi`;
-};
-
-const toHumanDistance = (isImperial: boolean, meters: number) =>
-  isImperial ? getHumanImperial(meters) : getHumanMetric(meters);
 
 const toHumanTime = (seconds: number) => {
   const hours = Math.floor(seconds / 3600);
@@ -67,6 +57,51 @@ const PoweredBy = ({ result }: { result: RoutingResult }) => (
 
 type Props = { result: RoutingResult; revealForm: false | (() => void) };
 
+const MobileResult = ({
+  result,
+  revealForm,
+  time,
+  distance,
+  ascent,
+}: Props & Record<'time' | 'distance' | 'ascent', string>) => {
+  const [showInstructions, setShowInstructions] = React.useState(false);
+
+  return (
+    <StyledPaperMobile elevation={3}>
+      <div>
+        {revealForm && (
+          <CloseContainer>
+            <CloseButton />
+          </CloseContainer>
+        )}
+        <strong>{distance}</strong> • <strong>{time}</strong> • ↑{ascent}
+        <TooltipButton
+          tooltip={<PoweredBy result={result} />}
+          color="secondary"
+        />
+      </div>
+      <Stack>
+        {result.instructions && (
+          <Button
+            size="small"
+            onClick={() => {
+              setShowInstructions((x) => !x);
+            }}
+          >
+            {showInstructions ? 'Hide' : 'Show'} instructions
+          </Button>
+        )}
+        {revealForm && (
+          <Button size="small" onClick={revealForm}>
+            {t('directions.edit_destinations')}
+          </Button>
+        )}
+      </Stack>
+      {showInstructions && <Instructions instructions={result.instructions} />}
+    </StyledPaperMobile>
+  );
+};
+
 export const Result = ({ result, revealForm }: Props) => {
   const isMobileMode = useMobileMode();
   const { userSettings } = useUserSettingsContext();
@@ -78,28 +113,18 @@ export const Result = ({ result, revealForm }: Props) => {
 
   if (isMobileMode) {
     return (
-      <StyledPaperMobile elevation={3}>
-        {revealForm && (
-          <CloseContainer>
-            <CloseButton />
-          </CloseContainer>
-        )}
-        <strong>{distance}</strong> • <strong>{time}</strong> • ↑{ascent}
-        <TooltipButton
-          tooltip={<PoweredBy result={result} />}
-          color="secondary"
-        />
-        {revealForm && (
-          <Button size="small" onClick={revealForm}>
-            {t('directions.edit_destinations')}
-          </Button>
-        )}
-      </StyledPaperMobile>
+      <MobileResult
+        result={result}
+        revealForm={revealForm}
+        time={time}
+        distance={distance}
+        ascent={ascent}
+      />
     );
   }
 
   return (
-    <StyledPaper elevation={3}>
+    <StyledPaper elevation={3} $height="100%" $overflow="auto">
       {t('directions.result.time')}: <strong>{time}</strong>
       <br />
       {t('directions.result.distance')}: <strong>{distance}</strong>
@@ -107,6 +132,9 @@ export const Result = ({ result, revealForm }: Props) => {
       {t('directions.result.ascent')}: <strong>{ascent}</strong>
       <br />
       <br />
+      {result.instructions && (
+        <Instructions instructions={result.instructions} />
+      )}
       <PoweredBy result={result} />
     </StyledPaper>
   );

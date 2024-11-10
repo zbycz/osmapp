@@ -31,6 +31,7 @@ const Wrapper = styled(Stack)`
   left: 8px;
   z-index: 1001; // over the LayerSwitcherButton
   width: 340px;
+  max-height: calc(100vh - 16px);
 `;
 
 const getOnrejected = (showToast: ShowToast) => {
