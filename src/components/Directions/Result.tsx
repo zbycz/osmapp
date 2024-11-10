@@ -1,5 +1,5 @@
 import { useMobileMode } from '../helpers';
-import { Button, Paper, Typography } from '@mui/material';
+import { Button, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
@@ -29,6 +29,8 @@ export const StyledPaperMobile = styled(Paper)`
   padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)}
     ${({ theme }) => theme.spacing(0.5)} ${({ theme }) => theme.spacing(2)};
   text-align: center;
+  height: 100%;
+  overflow-y: auto;
 `;
 
 const CloseContainer = styled.div`
@@ -55,6 +57,51 @@ const PoweredBy = ({ result }: { result: RoutingResult }) => (
 
 type Props = { result: RoutingResult; revealForm: false | (() => void) };
 
+const MobileResult = ({
+  result,
+  revealForm,
+  time,
+  distance,
+  ascent,
+}: Props & Record<'time' | 'distance' | 'ascent', string>) => {
+  const [showInstructions, setShowInstructions] = React.useState(false);
+
+  return (
+    <StyledPaperMobile elevation={3}>
+      <div>
+        {revealForm && (
+          <CloseContainer>
+            <CloseButton />
+          </CloseContainer>
+        )}
+        <strong>{distance}</strong> • <strong>{time}</strong> • ↑{ascent}
+        <TooltipButton
+          tooltip={<PoweredBy result={result} />}
+          color="secondary"
+        />
+      </div>
+      <Stack>
+        {result.instructions && (
+          <Button
+            size="small"
+            onClick={() => {
+              setShowInstructions((x) => !x);
+            }}
+          >
+            {showInstructions ? 'Hide' : 'Show'} instructions
+          </Button>
+        )}
+        {revealForm && (
+          <Button size="small" onClick={revealForm}>
+            {t('directions.edit_destinations')}
+          </Button>
+        )}
+      </Stack>
+      {showInstructions && <Instructions instructions={result.instructions} />}
+    </StyledPaperMobile>
+  );
+};
+
 export const Result = ({ result, revealForm }: Props) => {
   const isMobileMode = useMobileMode();
   const { userSettings } = useUserSettingsContext();
@@ -66,28 +113,18 @@ export const Result = ({ result, revealForm }: Props) => {
 
   if (isMobileMode) {
     return (
-      <StyledPaperMobile elevation={3}>
-        {revealForm && (
-          <CloseContainer>
-            <CloseButton />
-          </CloseContainer>
-        )}
-        <strong>{distance}</strong> • <strong>{time}</strong> • ↑{ascent}
-        <TooltipButton
-          tooltip={<PoweredBy result={result} />}
-          color="secondary"
-        />
-        {revealForm && (
-          <Button size="small" onClick={revealForm}>
-            {t('directions.edit_destinations')}
-          </Button>
-        )}
-      </StyledPaperMobile>
+      <MobileResult
+        result={result}
+        revealForm={revealForm}
+        time={time}
+        distance={distance}
+        ascent={ascent}
+      />
     );
   }
 
   return (
-    <StyledPaper elevation={3} $height="100%" $overflow="scroll">
+    <StyledPaper elevation={3} $height="100%" $overflow="auto">
       {t('directions.result.time')}: <strong>{time}</strong>
       <br />
       {t('directions.result.distance')}: <strong>{distance}</strong>
