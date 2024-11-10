@@ -39,7 +39,10 @@ import {
 } from '../../services/climbing-areas/getClimbingAreas';
 import { DirectionsBox } from '../Directions/DirectionsBox';
 import { Scrollbars } from 'react-custom-scrollbars';
-import { TurnByTurnProvider, useTurnByTurnContext } from '../utils/TurnByTurnContext';
+import {
+  TurnByTurnProvider,
+  useTurnByTurnContext,
+} from '../utils/TurnByTurnContext';
 import { TurnByTurnNavigation } from '../TurnByTurnNavigation/TurnByTurnNavigation';
 
 const usePersistMapView = () => {
@@ -122,7 +125,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const { feature, featureShown, homepageShown } = useFeatureContext();
   const router = useRouter();
   const scrollRef = useScrollToTopWhenRouteChanged() as any;
-  const { routingResult } = useTurnByTurnContext()
+  const { routingResult } = useTurnByTurnContext();
 
   useUpdateViewFromFeature();
   usePersistMapView();
@@ -150,9 +153,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
       <Loading />
       {directions && !routingResult && <DirectionsBox />}
       {!(directions || routingResult) && <SearchBox withShadow={withShadow} />}
-      {routingResult && (
-        <TurnByTurnNavigation />
-      )}
+      {routingResult && <TurnByTurnNavigation />}
       {featureShown && !isMobileMode && (
         <FeaturePanelOnSide scrollRef={scrollRef} />
       )}

@@ -1,3 +1,4 @@
+import React from 'react';
 import { LonLat } from '../../services/types';
 import { EARTH_RADIUS, getDistance } from '../SearchBox/utils';
 
@@ -56,4 +57,66 @@ export const calcDistance = (path: LonLat[]) => {
     const prevPoint = path[index];
     return distance + getDistance(point, prevPoint);
   }, 0);
+};
+
+export const useLocation = () => {
+  const [location, setLocation] = React.useState<GeolocationPosition>(null);
+
+  React.useEffect(() => {
+    if (typeof navigator === 'undefined' || !('geolocation' in navigator)) {
+      return;
+    }
+
+    const watchId = navigator.geolocation.watchPosition(setLocation);
+    return () => navigator.geolocation.clearWatch(watchId);
+  }, []);
+
+  return location;
+};
+
+type Orientation = Record<
+  'alpha' | 'beta' | 'gamma' | 'webkitCompassHeading',
+  number
+>;
+
+export const useOrientation = () => {
+  const [orientation, setOrientation] = React.useState<Orientation>({
+    alpha: null,
+    beta: null,
+    gamma: null,
+    webkitCompassHeading: null,
+  });
+
+  React.useEffect(() => {
+    if (!window.DeviceOrientationEvent) return;
+
+    const handleOrientation = ({
+      alpha,
+      beta,
+      gamma,
+      // @ts-ignore
+      webkitCompassHeading,
+    }: DeviceOrientationEvent) => {
+      setOrientation({ alpha, beta, gamma, webkitCompassHeading });
+    };
+
+    window.addEventListener('deviceorientation', handleOrientation);
+
+    return () => {
+      window.removeEventListener('deviceorientation', handleOrientation);
+    };
+  }, []);
+
+  return orientation;
+};
+
+export const requestOrientationPermission = () => {
+  // @ts-ignore
+  if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
+    // @ts-ignore
+    return DeviceOrientationEvent.requestPermission().then(
+      (state) => state === 'granted',
+    );
+  }
+  return Promise.resolve(true);
 };

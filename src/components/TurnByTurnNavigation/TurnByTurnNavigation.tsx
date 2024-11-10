@@ -5,6 +5,8 @@ import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { calcDistance } from './helpers';
 import { Stack } from '@mui/material';
+import { useLocationImage } from './useImage';
+import { getGlobalMap } from '../../services/mapStorage';
 
 const StyledTopPanel = styled.div`
   position: absolute;
@@ -48,6 +50,7 @@ const Distance = ({ distance }: { distance: number }) => {
 
 export const TurnByTurnNavigation = () => {
   const { instructions } = useTurnByTurnContext();
+  useLocationImage(getGlobalMap());
   const currentInstruction = instructions[0];
   const nextInstruction = instructions[1] || currentInstruction;
 

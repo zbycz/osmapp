@@ -1,24 +1,27 @@
 import { zip } from 'lodash';
 import { RoutingResult } from '../Directions/routing/types';
 import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
-import { getSubPoints } from './helpers';
+import { getSubPoints, requestOrientationPermission } from './helpers';
 import { LonLat } from '../../services/types';
 import { findIndexByLowest } from '../../utils';
 import { getDistance } from '../SearchBox/utils';
+import { getSource } from './layer';
+import { getGlobalMap } from '../../services/mapStorage';
 
 export const useInitTurnByTurnNav = (routingResult: RoutingResult) => {
   const { setRoutingResult, setInstructions } = useTurnByTurnContext();
 
   return () => {
-    navigator.geolocation.getCurrentPosition(({ coords }) => {
+    requestOrientationPermission();
+    navigator.geolocation.getCurrentPosition(async ({ coords }) => {
       const { geojson } = routingResult;
-      if (geojson.type !== 'LineString') {
+      const map = getGlobalMap();
+      if (geojson.type !== 'LineString' || !map) {
         return;
       }
 
       const currentPos: LonLat = [coords.longitude, coords.latitude];
 
-      // TODO: Replace with pythagorm theorem for performance reasons
       const distanceToCurrentPos = (point: LonLat) =>
         getDistance(point, currentPos);
 
@@ -57,8 +60,24 @@ export const useInitTurnByTurnNav = (routingResult: RoutingResult) => {
         throw new Error('please be near the route to start navigation');
       }
 
+      const totalPath = instructionsFromUserPos.flatMap(({ path }) => path);
+
       setRoutingResult(routingResult);
       setInstructions(instructionsFromUserPos);
+
+      getSource(map).setData({
+        type: 'FeatureCollection',
+        features: [
+          {
+            type: 'Feature',
+            geometry: {
+              type: 'LineString',
+              coordinates: totalPath,
+            },
+            properties: { status: 'uncompleted' },
+          },
+        ],
+      });
     });
   };
 };

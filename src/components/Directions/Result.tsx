@@ -69,6 +69,7 @@ const MobileResult = ({
   ascent,
 }: Props & Record<'time' | 'distance' | 'ascent', string>) => {
   const [showInstructions, setShowInstructions] = React.useState(false);
+  const initTurnByTurn = useInitTurnByTurnNav(result);
 
   return (
     <StyledPaperMobile elevation={3}>
@@ -100,6 +101,13 @@ const MobileResult = ({
             {t('directions.edit_destinations')}
           </Button>
         )}
+        <Button
+          onClick={() => {
+            initTurnByTurn();
+          }}
+        >
+          Start Navigation
+        </Button>
       </Stack>
       {showInstructions && <Instructions instructions={result.instructions} />}
     </StyledPaperMobile>
