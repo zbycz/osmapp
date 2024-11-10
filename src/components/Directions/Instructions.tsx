@@ -51,9 +51,7 @@ const StyledList = styled.ul`
   list-style: none;
   padding: 0;
 
-  max-height: 75%;
-  height: min(350px, fit-content);
-  overflow-y: scroll;
+  max-height: 100%;
 
   display: flex;
   flex-direction: column;

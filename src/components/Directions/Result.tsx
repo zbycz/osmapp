@@ -10,11 +10,16 @@ import { CloseButton, toHumanDistance } from './helpers';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { Instructions } from './Instructions';
 
-export const StyledPaper = styled(Paper)`
+export const StyledPaper = styled(Paper)<{
+  $height?: string;
+  $overflow?: string;
+}>`
   backdrop-filter: blur(10px);
   background: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.9)};
   padding: ${({ theme }) => theme.spacing(2)};
+  height: ${({ $height }) => $height};
+  overflow-y: ${({ $overflow }) => $overflow};
 `;
 
 export const StyledPaperMobile = styled(Paper)`
@@ -82,7 +87,7 @@ export const Result = ({ result, revealForm }: Props) => {
   }
 
   return (
-    <StyledPaper elevation={3}>
+    <StyledPaper elevation={3} $height="100%" $overflow="scroll">
       {t('directions.result.time')}: <strong>{time}</strong>
       <br />
       {t('directions.result.distance')}: <strong>{distance}</strong>
