@@ -90,7 +90,7 @@ const Description = ({ isTextInfoExpanded, setIsTextInfoExpanded }) => (
           target="_blank"
         >
           Wikimedia Commons
-        </Link>
+        </Link>{' '}
         {t('homepage.expanded_description_p3')}
       </Typography>
     )}

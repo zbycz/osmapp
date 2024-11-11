@@ -62,8 +62,8 @@ export default {
   'homepage.openclimbing_description_p2': `Všechna data jsou otevřená a každý je může upravit – podobně jako na Wikipedii.`,
   'homepage.description_show_more': `zobrazit více`,
   'homepage.expanded_description_p1': `Aplikace je vyvíjena jako open-source, využívá`,
-  'homepage.expanded_description_p3': `pro ukládání lezeckých cest a obrázky jsou sdíleny prostřednictvím`,
-  'homepage.expanded_description_p5': `, což umožňuje snadné a efektivní sdílení informací.`,
+  'homepage.expanded_description_p2': `pro ukládání lezeckých cest a obrázky jsou sdíleny prostřednictvím`,
+  'homepage.expanded_description_p3': `, což umožňuje snadné a efektivní sdílení informací.`,
   'homepage.discover_more_p1': `Prozkoumat dalších`,
   'homepage.discover_more_p2': `oblastí`,
 
