@@ -75,15 +75,15 @@ const Gradient = styled.div<{ blur?: boolean }>`
   height: calc(100% - 6px);
   top: 0;
   transition: all 0.2s;
-  ${({ blur, theme }) =>
+  ${({ blur }) =>
     blur
       ? `-webkit-backdrop-filter: blur(22px);
   backdrop-filter: blur(22px);
-  background: ${convertHexToRgba(theme.palette.background.default, 0.2)};
+  background: ${convertHexToRgba('#303030', 0.2)};
   `
       : `background: linear-gradient(
     0deg,
-    ${convertHexToRgba(theme.palette.background.default, 0.7)}
+    ${convertHexToRgba('#303030', 0.7)}
       10%,
     transparent 40%
   );`}
@@ -91,11 +91,11 @@ const Gradient = styled.div<{ blur?: boolean }>`
 
 const Text = styled.div<{ center: boolean }>`
   position: absolute;
-  bottom: 16px;
+  bottom: 12px;
   text-align: center;
   width: 100%;
   font-weight: 900;
-  color: ${({ theme }) => theme.palette.text.secondary};
+  color: rgba(255, 255, 255, 0.7);
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 2px;
