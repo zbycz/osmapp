@@ -1,12 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import {
-  InputAdornment,
-  Button,
-  Tooltip,
-  IconButton,
-  Stack,
-} from '@mui/material';
+import { Button, Tooltip, IconButton } from '@mui/material';
 import { ShareIcon, supportsSharing } from './helpers';
 import ContentCopy from '@mui/icons-material/ContentCopy';
 import { t } from '../../../../services/intl';

@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useFeatureContext } from '../../../utils/FeatureContext';
 import { useGetItems } from './useGetItems';
 import { IconButton, Stack } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';

@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemIcon, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import { useGetItems } from './useGetItems';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import styled from '@emotion/styled';
