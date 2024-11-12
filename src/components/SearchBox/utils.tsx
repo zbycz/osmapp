@@ -46,6 +46,9 @@ export const getDistance = (point1: LonLat, point2: LonLat) => {
   );
 };
 
+export const getCurriedDistance = (p1: LonLat) => (p2: LonLat) =>
+  getDistance(p1, p2);
+
 export const getHumanDistance = (
   isImperial: boolean,
   mapCenter: LonLat,

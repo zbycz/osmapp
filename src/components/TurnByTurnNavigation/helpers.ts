@@ -1,6 +1,7 @@
 import React from 'react';
 import { LonLat } from '../../services/types';
 import { EARTH_RADIUS, getDistance } from '../SearchBox/utils';
+import { zip } from 'lodash';
 
 const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
 const radiansToDegrees = (radians: number) => radians * (180 / Math.PI);
@@ -119,4 +120,26 @@ export const requestOrientationPermission = () => {
     );
   }
   return Promise.resolve(true);
+};
+
+export type Pair<T> = [T, T];
+
+export const pair = <T>(arr: T[]) => zip(arr, arr.slice(1)).slice(0, -1);
+
+export const unpair = <T>(pairs: Pair<T>[]) => {
+  if (pairs.length === 0) {
+    return [];
+  }
+
+  const [[first]] = pairs;
+  const rest = pairs.map(([_, second]) => second);
+
+  return [first, ...rest];
+};
+
+export const isInBetween = (range: [number, number], middle: number) => {
+  const min = Math.min(...range);
+  const max = Math.max(...range);
+
+  return min <= middle && middle <= max;
 };

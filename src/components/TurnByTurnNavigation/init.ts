@@ -1,15 +1,14 @@
-import { zip } from 'lodash';
 import { RoutingResult } from '../Directions/routing/types';
 import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
-import { getSubPoints, requestOrientationPermission } from './helpers';
-import { LonLat } from '../../services/types';
+import { getSubPoints, pair, requestOrientationPermission } from './helpers';
 import { findIndexByLowest } from '../../utils';
-import { getDistance } from '../SearchBox/utils';
-import { getSource } from './layer';
+import { getCurriedDistance } from '../SearchBox/utils';
 import { getGlobalMap } from '../../services/mapStorage';
+import { addToMap } from './addToMap';
 
 export const useInitTurnByTurnNav = (routingResult: RoutingResult) => {
-  const { setRoutingResult, setInstructions } = useTurnByTurnContext();
+  const { setRoutingResult, setInitialInstructions, setInstructions } =
+    useTurnByTurnContext();
 
   return () => {
     requestOrientationPermission();
@@ -20,17 +19,13 @@ export const useInitTurnByTurnNav = (routingResult: RoutingResult) => {
         return;
       }
 
-      const currentPos: LonLat = [coords.longitude, coords.latitude];
+      const distanceToCurrentPos = getCurriedDistance([
+        coords.longitude,
+        coords.latitude,
+      ]);
 
-      const distanceToCurrentPos = (point: LonLat) =>
-        getDistance(point, currentPos);
-
-      const paired = zip(
-        geojson.coordinates,
-        geojson.coordinates.slice(1),
-      ).slice(0, -1);
-
-      const pathParts = paired.map((pair) => getSubPoints(pair, 10));
+      const paired = pair(geojson.coordinates);
+      const pathParts = paired.map((pair) => getSubPoints(pair, 5));
 
       const instructionsWithPaths = routingResult.instructions.map(
         (instruction) => ({
@@ -64,20 +59,9 @@ export const useInitTurnByTurnNav = (routingResult: RoutingResult) => {
 
       setRoutingResult(routingResult);
       setInstructions(instructionsFromUserPos);
+      setInitialInstructions(instructionsFromUserPos);
 
-      getSource(map).setData({
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'LineString',
-              coordinates: totalPath,
-            },
-            properties: { status: 'uncompleted' },
-          },
-        ],
-      });
+      addToMap(map, [], totalPath);
     });
   };
 };
