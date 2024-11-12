@@ -10,27 +10,50 @@ import {
 import React from 'react';
 import { Runway as RunwayType } from './loadRunways';
 import { t } from '../../../services/intl';
+import {
+  fetchSchemaTranslations,
+  getAllTranslations,
+} from '../../../services/tagging/translations';
+import { useQuery } from 'react-query';
 
 const fmtRunwaySize = ({ length, width }: RunwayType) =>
   `${length || '?'} - ${width || '?'}`;
 
+const getTranslatedSurface = async (surface: string) => {
+  if (!surface) {
+    return 'Unknown';
+  }
+
+  const translations = getAllTranslations();
+  if (!translations) {
+    await fetchSchemaTranslations();
+    return getTranslatedSurface(surface);
+  }
+
+  return translations.presets.fields.surface.options[surface];
+};
+
 const Runway: React.FC<{ runway: RunwayType; showSizeColumn: boolean }> = ({
   runway,
   showSizeColumn,
-}) => (
-  <TableRow>
-    <TableCell>
-      <Link href={`/${runway.type}/${runway.id}`}>
-        {runway.ref || 'Unknown'}
-      </Link>
-    </TableCell>
-    {showSizeColumn && <TableCell>{fmtRunwaySize(runway)}</TableCell>}
-    {/* TODO: Use id tagging presets to show the surface in the users language */}
-    <TableCell style={{ textTransform: 'capitalize' }}>
-      {runway.surface || 'Unknown'}
-    </TableCell>
-  </TableRow>
-);
+}) => {
+  const { data } = useQuery([runway.surface], () =>
+    getTranslatedSurface(runway.surface),
+  );
+  return (
+    <TableRow>
+      <TableCell>
+        <Link href={`/${runway.type}/${runway.id}`}>
+          {runway.ref || 'Unknown'}
+        </Link>
+      </TableCell>
+      {showSizeColumn && <TableCell>{fmtRunwaySize(runway)}</TableCell>}
+      <TableCell style={{ textTransform: 'capitalize' }}>
+        {data ?? runway.surface}
+      </TableCell>
+    </TableRow>
+  );
+};
 
 type RunwayProps = {
   runways: RunwayType[];
@@ -49,7 +72,11 @@ export const SuccessRunways: React.FC<RunwayProps> = ({ runways }) => {
             <TableRow>
               <TableCell>{t('runway.runway')}</TableCell>
               {showSizeColumn && <TableCell>{t('runway.size')}</TableCell>}
-              <TableCell>{t('runway.surface')}</TableCell>
+              <TableCell>
+                {getAllTranslations()
+                  ? getAllTranslations().presets.fields.surface.label
+                  : 'Surface'}
+              </TableCell>
             </TableRow>
           </TableHead>
 
