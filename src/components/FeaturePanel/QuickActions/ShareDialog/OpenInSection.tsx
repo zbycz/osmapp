@@ -1,33 +1,34 @@
-import { List, ListItem } from '@mui/material';
+import { List, ListItem, ListItemIcon, Typography } from '@mui/material';
 import { useGetItems } from './useGetItems';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import styled from '@emotion/styled';
 import { t } from '../../../../services/intl';
+import React from 'react';
 
-const StyledMenuItem = styled(ListItem)`
+const StyledUl = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+const StyledLi = styled.li`
+  line-height: 35px;
+  padding-bottom: 5px;
+
   svg {
-    font-size: 12px;
+    font-size: 10px;
     color: #bbb;
-    margin: -7px 0 0 5px;
-  }
-
-  &:focus {
-    text-decoration: none;
-    svg {
-      outline: 0;
-    }
+    position: relative;
+    top: -4px;
+    left: 5px;
   }
 
   img {
     max-width: 35px;
     max-height: 35px;
+    vertical-align: middle;
   }
-
-  color: inherit;
-
-  display: flex;
-  gap: 0.5rem;
-` as any;
+`;
 
 type LinkItemProps = {
   href: string;
@@ -35,12 +36,28 @@ type LinkItemProps = {
   image?: string;
 };
 
+const ImageWrapper = styled.div`
+  display: inline-block;
+  margin-right: 11px;
+  width: 35px;
+  text-align: center;
+  vertical-align: middle;
+`;
+
+const Image = ({ image, label }: { image: string; label: string }) => (
+  <ImageWrapper>
+    <img src={image} alt={`Logo of ${label}`} />
+  </ImageWrapper>
+);
+
 const LinkItem = ({ href, label, image }: LinkItemProps) => (
-  <StyledMenuItem component="a" href={href} target="_blank">
-    {image && <img src={image} alt={`Logo of ${label}`} />}
-    {label}
-    <OpenInNew />
-  </StyledMenuItem>
+  <StyledLi>
+    <a href={href} target="_blank">
+      {image && <Image image={image} label={label} />}
+      {label}
+      <OpenInNew />
+    </a>
+  </StyledLi>
 );
 
 export const OpenInSection = () => {
@@ -48,12 +65,12 @@ export const OpenInSection = () => {
 
   return (
     <section>
-      <h3>{t('sharedialog.openin')}</h3>
-      <List>
+      <Typography variant="overline">{t('sharedialog.openin')}</Typography>
+      <StyledUl>
         {items.map(({ label, href, image }) => (
           <LinkItem key={label} href={href} label={label} image={image} />
         ))}
-      </List>
+      </StyledUl>
     </section>
   );
 };

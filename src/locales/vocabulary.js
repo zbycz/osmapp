@@ -303,9 +303,13 @@ export default {
   'member_features.routes': 'Routes',
 
   'sharedialog.link': 'Link',
+  'sharedialog.shortened_link': 'Shortened link',
   'sharedialog.coordinates': 'Coordinates',
   'sharedialog.openin': 'Open in',
   'sharedialog.image_attribution': 'Image attributions',
+  'sharedialog.copy': 'Copy',
+  'sharedialog.copied': 'Copied!',
+  'sharedialog.share': 'Share',
 
   weather: 'Weather',
 };

@@ -2,9 +2,18 @@ import React from 'react';
 import { getFullOsmappLink, getShortLink } from '../../../../services/helpers';
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import styled from '@emotion/styled';
-import { Checkbox, FormControlLabel, Stack, TextField } from '@mui/material';
-import { Adornment } from './Adornment';
+import {
+  Box,
+  Checkbox,
+  FormControlLabel,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { ActionButtons } from './ActionButtons';
 import { t } from '../../../../services/intl';
+import { useMobileMode } from '../../../helpers';
+import { Setter } from '../../../../types';
 
 const useLink = (short: boolean) => {
   const { feature } = useFeatureContext();
@@ -21,50 +30,57 @@ const useLink = (short: boolean) => {
 
 const StyledTextField = styled(TextField)`
   .MuiOutlinedInput-root {
-    height: 3.5rem;
-    background-color: ${(props) => props.theme.palette.action.hover};
     font-family: monospace;
-    &:hover {
-      background-color: ${(props) => props.theme.palette.action.selected};
-    }
+    font-size: 0.875rem;
   }
 `;
+
+type ShortenCheckboxProps = {
+  short: boolean;
+  setShort: Setter<boolean>;
+};
+const ShortenCheckbox = ({ short, setShort }: ShortenCheckboxProps) => {
+  const handleClick = ({ target }) => {
+    setShort(target.checked);
+  };
+
+  return (
+    <FormControlLabel
+      control={<Checkbox checked={short} onChange={handleClick} size="small" />}
+      label={t('sharedialog.shortened_link')}
+      sx={{
+        paddingLeft: 1,
+        '& .MuiFormControlLabel-label': { fontSize: '0.875rem' },
+      }}
+    />
+  );
+};
 
 export const LinkSection = () => {
   const { feature } = useFeatureContext();
   const supportsShortUrl = !feature.point;
-  const [short, setShort] = React.useState(supportsShortUrl);
+  const [short, setShort] = React.useState(false);
   const link = useLink(short);
 
   return (
-    <section>
-      <h3>{t('sharedialog.link')}</h3>
-      <Stack spacing={1}>
+    <Box mb={2}>
+      <Typography variant="overline">{t('sharedialog.link')}</Typography>
+      <Stack spacing={0}>
         <StyledTextField
           fullWidth
           value={link}
           variant="outlined"
-          size="small"
-          slotProps={{
-            input: {
-              endAdornment: <Adornment payload={link} type="url" />,
-            },
-          }}
+          size={useMobileMode() ? 'small' : 'medium'}
         />
-        {supportsShortUrl && (
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={short}
-                onChange={({ target }) => {
-                  setShort(target.checked);
-                }}
-              />
-            }
-            label="Shortened Link"
-          />
-        )}
+        <Stack direction="row" alignItems="center">
+          {supportsShortUrl && (
+            <ShortenCheckbox short={short} setShort={setShort} />
+          )}
+          <div style={{ flex: 1 }} />
+
+          <ActionButtons payload={link} type="url" />
+        </Stack>
       </Stack>
-    </section>
+    </Box>
   );
 };
