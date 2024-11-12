@@ -202,4 +202,15 @@ export default {
   'climbingareas.title': 'Lezecké oblasti',
   'climbingareas.area': 'Oblast',
   'climbingareas.num_of_crags': 'Počet skal',
+
+  'sharedialog.link': 'Odkaz',
+  'sharedialog.shortened_link': 'Zkrácený odkaz',
+  'sharedialog.coordinates': 'Souřadnice',
+  'sharedialog.openin': 'Otevřít v',
+  'sharedialog.image_attribution': 'Copyright obrázků',
+  'sharedialog.copy': 'Kopírovat',
+  'sharedialog.copied': 'Zkopírováno!',
+  'sharedialog.share': 'Sdílet',
+
+  weather: 'Počasí',
 };

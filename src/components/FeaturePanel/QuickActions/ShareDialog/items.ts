@@ -11,15 +11,15 @@ type ImageAttribution = {
 export const imageAttributions: ImageAttribution[] = [
   {
     href: 'https://commons.wikimedia.org/wiki/File:Openstreetmap_logo.svg',
-    label: 'Wikimedia Commons (OpenStreetMap)',
+    label: 'Wikimedia Commons (OpenStreetMap logo)',
   },
   {
     href: 'https://commons.wikimedia.org/wiki/File:AppleMaps_logo.svg',
-    label: 'wikimedia Commons (Apple)',
+    label: 'Wikimedia Commons (Apple Maps logo)',
   },
   {
     href: 'https://commons.wikimedia.org/wiki/File:Google_Maps_icon_(2020).svg',
-    label: 'wikimedia Commons (Google)',
+    label: 'Wikimedia Commons (Google Maps logo)',
   },
 ];
 
