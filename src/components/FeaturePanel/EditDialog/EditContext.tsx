@@ -55,16 +55,16 @@ const useTagsState = (initialTags: FeatureTags): EditContextType['tags'] => {
 const EditContext = createContext<EditContextType>(undefined);
 
 type Props = {
-  feature: Feature;
+  originalFeature: Feature;
   children: React.ReactNode;
 };
 
-export const EditContextProvider = ({ feature, children }: Props) => {
+export const EditContextProvider = ({ originalFeature, children }: Props) => {
   const [successInfo, setSuccessInfo] = useState<undefined | SuccessInfo>();
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
-  const tags = useTagsState(feature.tags);
+  const tags = useTagsState(originalFeature.tags);
 
   const value: EditContextType = {
     successInfo,

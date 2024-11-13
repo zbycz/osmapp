@@ -10,7 +10,7 @@ import { useSnackbar } from '../../utils/SnackbarContext';
 export const useGetHandleSave = () => {
   const { showToast } = useSnackbar();
   const { loggedIn, handleLogout } = useOsmAuthContext();
-  const { feature, isUndelete } = useEditDialogFeature();
+  const { feature, isUndelete, isAddPlace } = useEditDialogFeature();
   const {
     setSuccessInfo,
     setIsSaving,
@@ -20,6 +20,7 @@ export const useGetHandleSave = () => {
   } = useEditContext();
 
   return () => {
+    // TODO refactor this to check for errors in the form
     const noteText = createNoteText(
       feature,
       tags,
@@ -35,7 +36,7 @@ export const useGetHandleSave = () => {
 
     setIsSaving(true);
     const promise = loggedIn
-      ? feature.point
+      ? isAddPlace
         ? addOsmFeature(feature, comment, tags)
         : editOsmFeature(feature, comment, tags, cancelled)
       : insertOsmNote(feature.center, noteText);
