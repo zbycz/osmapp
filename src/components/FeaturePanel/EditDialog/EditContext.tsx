@@ -14,7 +14,7 @@ type EditContextType = {
   setLocation: (s: string) => void;
   comment: string;
   setComment: (s: string) => void;
-  tags: {
+  data: {
     tagsEntries: TagsEntries;
     setTagsEntries: Setter<TagsEntries>;
     tags: FeatureTags;
@@ -24,9 +24,9 @@ type EditContextType = {
   };
 };
 
-const useTagsState = (initialTags: FeatureTags): EditContextType['tags'] => {
+const useDataState = (originalFeature: Feature): EditContextType['data'] => {
   const [tagsEntries, setTagsEntries] = useState<TagsEntries>(() =>
-    Object.entries(initialTags),
+    Object.entries(originalFeature.tags),
   );
   const tags = useMemo(() => Object.fromEntries(tagsEntries), [tagsEntries]);
 
@@ -64,7 +64,7 @@ export const EditContextProvider = ({ originalFeature, children }: Props) => {
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
-  const tags = useTagsState(originalFeature.tags);
+  const data = useDataState(originalFeature);
 
   const value: EditContextType = {
     successInfo,
@@ -75,7 +75,7 @@ export const EditContextProvider = ({ originalFeature, children }: Props) => {
     setLocation,
     comment,
     setComment,
-    tags,
+    data: data,
   };
 
   return <EditContext.Provider value={value}>{children}</EditContext.Provider>;

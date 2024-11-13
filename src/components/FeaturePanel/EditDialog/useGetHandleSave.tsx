@@ -16,7 +16,7 @@ export const useGetHandleSave = () => {
     setIsSaving,
     location,
     comment,
-    tags: { tags, cancelled },
+    data: { tags, cancelled },
   } = useEditContext();
 
   return () => {

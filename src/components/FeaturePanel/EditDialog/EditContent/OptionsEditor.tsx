@@ -10,7 +10,7 @@ import { getIdEditorLink } from '../../helpers/externalLinks';
 
 export const PlaceCancelledToggle = () => {
   const {
-    tags: { cancelled, toggleCancelled },
+    data: { cancelled, toggleCancelled },
   } = useEditContext();
   return (
     <>
