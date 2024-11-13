@@ -16,7 +16,7 @@ export const useGetHandleSave = () => {
     setIsSaving,
     location,
     comment,
-    data: { tags, cancelled },
+    data: { tags, toBeDeleted },
   } = useEditContext();
 
   return () => {
@@ -24,7 +24,7 @@ export const useGetHandleSave = () => {
     const noteText = createNoteText(
       feature,
       tags,
-      cancelled,
+      toBeDeleted,
       location,
       comment,
       isUndelete,
@@ -38,7 +38,7 @@ export const useGetHandleSave = () => {
     const promise = loggedIn
       ? isAddPlace
         ? addOsmFeature(feature, comment, tags)
-        : editOsmFeature(feature, comment, tags, cancelled)
+        : editOsmFeature(feature, comment, tags, toBeDeleted)
       : insertOsmNote(feature.center, noteText);
 
     promise.then(setSuccessInfo, (err) => {

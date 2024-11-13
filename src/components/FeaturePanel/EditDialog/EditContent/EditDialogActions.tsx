@@ -14,7 +14,7 @@ const SaveButton = () => {
   return (
     <Button onClick={handleSave} color="primary" variant="contained">
       {loggedIn
-        ? data.cancelled
+        ? data.toBeDeleted
           ? t('editdialog.save_button_delete')
           : t('editdialog.save_button_edit')
         : t('editdialog.save_button_note')}

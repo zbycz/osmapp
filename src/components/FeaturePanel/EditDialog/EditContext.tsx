@@ -19,8 +19,8 @@ type EditContextType = {
     setTagsEntries: Setter<TagsEntries>;
     tags: FeatureTags;
     setTag: (k: string, v: string) => void;
-    cancelled: boolean;
-    toggleCancelled: () => void;
+    toBeDeleted: boolean;
+    toggleToBeDeleted: () => void;
   };
 };
 
@@ -40,15 +40,15 @@ const useDataState = (originalFeature: Feature): EditContextType['data'] => {
     });
   };
 
-  const [cancelled, toggleCancelled] = useToggleState(false);
+  const [toBeDeleted, toggleToBeDeleted] = useToggleState(false);
 
   return {
     tagsEntries,
     setTagsEntries,
     tags,
     setTag,
-    cancelled,
-    toggleCancelled,
+    toBeDeleted,
+    toggleToBeDeleted,
   };
 };
 
