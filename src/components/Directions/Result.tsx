@@ -1,5 +1,5 @@
 import { useMobileMode } from '../helpers';
-import { Button, Paper, Stack, Typography } from '@mui/material';
+import { Button, Divider, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
@@ -126,13 +126,38 @@ export const Result = ({ result, revealForm }: Props) => {
 
   return (
     <StyledPaper elevation={3} $height="100%" $overflow="auto">
-      {t('directions.result.time')}: <strong>{time}</strong>
-      <br />
-      {t('directions.result.distance')}: <strong>{distance}</strong>
-      <br />
-      {t('directions.result.ascent')}: <strong>{ascent}</strong>
-      <br />
-      <br />
+      <Stack
+        direction="row"
+        spacing={2}
+        width="100%"
+        justifyContent="space-between"
+      >
+        <div>
+          <Typography variant="caption">
+            {t('directions.result.time')}
+          </Typography>
+          <Typography fontWeight={900} variant="h6">
+            {time}
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="caption">
+            {t('directions.result.distance')}
+          </Typography>
+          <Typography fontWeight={900} variant="h6">
+            {distance}
+          </Typography>
+        </div>
+        <div>
+          <Typography variant="caption">
+            {t('directions.result.ascent')}
+          </Typography>
+          <Typography fontWeight={900} variant="h6">
+            {ascent}
+          </Typography>
+        </div>
+      </Stack>
+      <Divider sx={{ mt: 2, mb: 3 }} />
       {result.instructions && (
         <Instructions instructions={result.instructions} />
       )}

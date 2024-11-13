@@ -3,7 +3,8 @@ import { icon, Sign } from './routing/instructions';
 import { RoutingResult } from './routing/types';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { toHumanDistance } from './helpers';
-import { Stack, Typography } from '@mui/material';
+import { Box, Divider, Grid2, Stack, Typography } from '@mui/material';
+import { useTheme } from '@emotion/react';
 
 type Instruction = RoutingResult['instructions'][number];
 
@@ -25,27 +26,37 @@ const StyledListItem = styled.li`
   gap: 0.25rem;
 `;
 
-const Instruction = ({ instruction }: { instruction: Instruction }) => (
-  <StyledListItem>
-    <Stack direction="row" alignItems="center">
-      <Icon sign={instruction.sign} />
-      {instruction.street_name || instruction.text}
-    </Stack>
-    {instruction.distance > 0 && (
-      <Stack direction="row" alignItems="center" spacing={0.5}>
-        <Typography
-          noWrap
-          color="textSecondary"
-          variant="body1"
-          style={{ overflow: 'visible' }}
-        >
-          <Distance distance={instruction.distance} />
+const Instruction = ({ instruction }: { instruction: Instruction }) => {
+  const theme = useTheme();
+
+  return (
+    <StyledListItem>
+      <Stack direction="row" alignItems="center">
+        <Box width={theme.spacing(6)}>
+          <Icon sign={instruction.sign} />
+        </Box>
+        <Typography variant="subtitle1" fontWeight={700}>
+          {instruction.street_name || instruction.text}
         </Typography>
-        <hr style={{ width: '100%' }} />
       </Stack>
-    )}
-  </StyledListItem>
-);
+      {instruction.distance > 0 && (
+        <Stack direction="row" alignItems="center" spacing={2} ml={6}>
+          <Typography
+            noWrap
+            color="textSecondary"
+            variant="body2"
+            style={{ overflow: 'visible' }}
+          >
+            <Distance distance={instruction.distance} />
+          </Typography>
+          <Stack flex={1}>
+            <Divider />
+          </Stack>
+        </Stack>
+      )}
+    </StyledListItem>
+  );
+};
 
 const StyledList = styled.ul`
   list-style: none;
