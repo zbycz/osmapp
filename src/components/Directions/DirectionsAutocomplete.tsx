@@ -17,6 +17,7 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { Option } from '../SearchBox/types';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { getCoordsOption } from '../SearchBox/options/coords';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -29,6 +30,7 @@ const DirectionsInput = ({
   setInputValue,
   autocompleteRef,
   label,
+  onFocus,
   onBlur,
 }) => {
   const { InputLabelProps, InputProps, ...restParams } = params;
@@ -41,7 +43,8 @@ const DirectionsInput = ({
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
-  const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    onFocus();
     e.target.select();
   };
 
@@ -60,7 +63,7 @@ const DirectionsInput = ({
       }}
       placeholder={label}
       onChange={onChange}
-      onFocus={onFocus}
+      onFocus={handleFocus}
       onBlur={onBlur}
     />
   );
@@ -110,6 +113,7 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const { currentTheme } = useUserThemeContext();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
+  const { mapClickOverrideRef } = useMapStateContext();
 
   const options = useOptions(inputValue);
 
@@ -120,7 +124,21 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
     selectedOptionInputValue.current = getOptionLabel(option);
   };
 
-  const onBlur = () => {
+  const onFocus = () => {
+    mapClickOverrideRef.current = (coords, label) => {
+      setValue(getCoordsOption(coords, label));
+      setInputValue(label);
+      selectedOptionInputValue.current = label;
+
+      mapClickOverrideRef.current = undefined;
+    };
+  };
+
+  const onBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if ((e.relatedTarget as any)?.className !== 'maplibregl-canvas') {
+      mapClickOverrideRef.current = undefined;
+    }
+
     if (selectedOptionInputValue.current !== inputValue) {
       if (options.length > 0 && inputValue) {
         onChange(null, options[0]);
@@ -158,6 +176,7 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
             setInputValue={setInputValue}
             autocompleteRef={autocompleteRef}
             label={label}
+            onFocus={onFocus}
             onBlur={onBlur}
           />
         )}
