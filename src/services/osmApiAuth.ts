@@ -151,11 +151,11 @@ const createItem = (content: string) =>
   });
 
 const putOrDeleteItem = async (
-  isDelete: boolean,
+  toBeDeleted: boolean,
   apiId: OsmId,
   newItem: string,
 ) => {
-  if (isDelete) {
+  if (toBeDeleted) {
     await deleteItem(apiId, newItem);
   } else {
     await putItem(apiId, newItem);
@@ -210,11 +210,11 @@ const updateItemXml = async (
   apiId: OsmId,
   changesetId: string,
   tags: FeatureTags,
-  isDelete: boolean,
+  toBeDeleted: boolean,
 ) => {
   const xml = await parseXmlString(stringifyDomXml(item));
   xml[apiId.type].$.changeset = changesetId;
-  if (!isDelete) {
+  if (!toBeDeleted) {
     xml[apiId.type].tag = getXmlTags(tags);
   }
   return buildXmlString(xml);
@@ -303,12 +303,12 @@ export const addOsmFeature = async (
 export type Change = {
   feature: Feature;
   allTags: FeatureTags;
-  isDelete?: boolean;
+  toBeDeleted?: boolean;
 };
 
 const saveChange = async (
   changesetId: any,
-  { feature, allTags, isDelete }: Change,
+  { feature, allTags, toBeDeleted }: Change,
 ) => {
   const apiId = feature.osmMeta;
   const item = await getItem(apiId);
@@ -319,10 +319,10 @@ const saveChange = async (
     apiId,
     changesetId,
     allTags,
-    isDelete,
+    toBeDeleted,
   );
 
-  await putOrDeleteItem(isDelete, apiId, newItem);
+  await putOrDeleteItem(toBeDeleted, apiId, newItem);
 };
 
 export const editCrag = async (

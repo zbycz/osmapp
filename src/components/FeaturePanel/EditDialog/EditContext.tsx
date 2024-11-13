@@ -14,19 +14,19 @@ type EditContextType = {
   setLocation: (s: string) => void;
   comment: string;
   setComment: (s: string) => void;
-  tags: {
+  data: {
     tagsEntries: TagsEntries;
     setTagsEntries: Setter<TagsEntries>;
     tags: FeatureTags;
     setTag: (k: string, v: string) => void;
-    cancelled: boolean;
-    toggleCancelled: () => void;
+    toBeDeleted: boolean;
+    toggleToBeDeleted: () => void;
   };
 };
 
-const useTagsState = (initialTags: FeatureTags): EditContextType['tags'] => {
+const useDataState = (originalFeature: Feature): EditContextType['data'] => {
   const [tagsEntries, setTagsEntries] = useState<TagsEntries>(() =>
-    Object.entries(initialTags),
+    Object.entries(originalFeature.tags),
   );
   const tags = useMemo(() => Object.fromEntries(tagsEntries), [tagsEntries]);
 
@@ -40,31 +40,31 @@ const useTagsState = (initialTags: FeatureTags): EditContextType['tags'] => {
     });
   };
 
-  const [cancelled, toggleCancelled] = useToggleState(false);
+  const [toBeDeleted, toggleToBeDeleted] = useToggleState(false);
 
   return {
     tagsEntries,
     setTagsEntries,
     tags,
     setTag,
-    cancelled,
-    toggleCancelled,
+    toBeDeleted,
+    toggleToBeDeleted,
   };
 };
 
 const EditContext = createContext<EditContextType>(undefined);
 
 type Props = {
-  feature: Feature;
+  originalFeature: Feature;
   children: React.ReactNode;
 };
 
-export const EditContextProvider = ({ feature, children }: Props) => {
+export const EditContextProvider = ({ originalFeature, children }: Props) => {
   const [successInfo, setSuccessInfo] = useState<undefined | SuccessInfo>();
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState('');
   const [comment, setComment] = useState('');
-  const tags = useTagsState(feature.tags);
+  const data = useDataState(originalFeature);
 
   const value: EditContextType = {
     successInfo,
@@ -75,7 +75,7 @@ export const EditContextProvider = ({ feature, children }: Props) => {
     setLocation,
     comment,
     setComment,
-    tags,
+    data: data,
   };
 
   return <EditContext.Provider value={value}>{children}</EditContext.Provider>;

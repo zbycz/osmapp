@@ -14,7 +14,7 @@ const useUpdatedState = (currentKey: string) => {
 };
 
 const useTmpState = (index: number) => {
-  const { tagsEntries, setTagsEntries } = useEditContext().tags;
+  const { tagsEntries, setTagsEntries } = useEditContext().data;
   const currentKey = tagsEntries[index][0];
   const { tmpKey, setTmpKey } = useUpdatedState(currentKey);
 
@@ -33,7 +33,7 @@ const useTmpState = (index: number) => {
 };
 
 const useIsError = (index: number) => {
-  const { tagsEntries } = useEditContext().tags;
+  const { tagsEntries } = useEditContext().data;
   const [currentKey, currentValue] = tagsEntries[index];
 
   const isDuplicateKey = tagsEntries.some(

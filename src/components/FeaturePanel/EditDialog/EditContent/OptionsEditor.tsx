@@ -10,12 +10,14 @@ import { getIdEditorLink } from '../../helpers/externalLinks';
 
 export const PlaceCancelledToggle = () => {
   const {
-    tags: { cancelled, toggleCancelled },
+    data: { toBeDeleted, toggleToBeDeleted },
   } = useEditContext();
   return (
     <>
       <FormControlLabel
-        control={<Checkbox checked={cancelled} onChange={toggleCancelled} />}
+        control={
+          <Checkbox checked={toBeDeleted} onChange={toggleToBeDeleted} />
+        }
         label={t('editdialog.place_cancelled')}
       />
       <br />

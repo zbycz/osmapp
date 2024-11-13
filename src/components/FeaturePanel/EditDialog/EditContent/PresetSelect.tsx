@@ -90,7 +90,7 @@ const useOptions = () => {
 };
 
 export const PresetSelect = () => {
-  const { tags } = useEditContext().tags;
+  const { tags } = useEditContext().data;
   const [preset, setPreset] = useState('');
   const { feature } = useFeatureContext();
   const options = useOptions();

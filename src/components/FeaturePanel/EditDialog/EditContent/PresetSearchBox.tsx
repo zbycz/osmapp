@@ -129,7 +129,7 @@ const useGetOnChange = (
   value: string,
   setValue: Setter<string>,
 ) => {
-  const { setTagsEntries } = useEditContext().tags;
+  const { setTagsEntries } = useEditContext().data;
 
   return (e: SelectChangeEvent<string>) => {
     const oldPreset = options.find((o) => o.presetKey === value);

@@ -45,7 +45,7 @@ export const EditDialog = () => {
   const { feature } = useEditDialogFeature();
 
   return (
-    <EditContextProvider feature={feature} key={getKey(feature)}>
+    <EditContextProvider originalFeature={feature} key={getKey(feature)}>
       <EditDialogInner />
     </EditContextProvider>
   );
