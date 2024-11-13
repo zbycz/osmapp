@@ -108,7 +108,7 @@ export default {
   'searchbox.overpass_custom_query': 'custom query',
 
   'directions.get_directions': 'Get Directions',
-  'directions.form.starting_point': 'Starting point',
+  'directions.form.start_or_click': 'Choose start or click map',
   'directions.form.destination': 'Destination',
   'directions.edit_destinations': 'Edit destinations',
   'directions.powered_by': 'Directions powered by __link__.',

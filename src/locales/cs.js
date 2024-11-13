@@ -74,7 +74,7 @@ export default {
   'searchbox.overpass_custom_query': 'vlastní dotaz',
 
   'directions.get_directions': 'Vyhledat trasu',
-  'directions.form.starting_point': 'Začátek trasy',
+  'directions.form.start_or_click': 'Zvolte začátek nebo klikněte do mapy',
   'directions.form.destination': 'Cíl',
   'directions.edit_destinations': 'Upravit zadání',
   'directions.powered_by': 'Vyhledávání tras dodává systém __link__.',

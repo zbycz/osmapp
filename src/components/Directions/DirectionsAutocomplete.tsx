@@ -1,4 +1,4 @@
-import { useMapStateContext } from '../utils/MapStateContext';
+import { MapClickOverride, useMapStateContext } from '../utils/MapStateContext';
 import { useStarsContext } from '../utils/StarsContext';
 import React, { useEffect, useRef, useState } from 'react';
 import { abortFetch } from '../../services/fetch';
@@ -17,6 +17,8 @@ import PlaceIcon from '@mui/icons-material/Place';
 import { Option } from '../SearchBox/types';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { getCoordsOption } from '../SearchBox/options/coords';
+import { LonLat } from '../../services/types';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -29,6 +31,7 @@ const DirectionsInput = ({
   setInputValue,
   autocompleteRef,
   label,
+  onFocus,
   onBlur,
 }) => {
   const { InputLabelProps, InputProps, ...restParams } = params;
@@ -41,7 +44,8 @@ const DirectionsInput = ({
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputValue(e.target.value);
   };
-  const onFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+  const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
+    onFocus();
     e.target.select();
   };
 
@@ -60,7 +64,7 @@ const DirectionsInput = ({
       }}
       placeholder={label}
       onChange={onChange}
-      onFocus={onFocus}
+      onFocus={handleFocus}
       onBlur={onBlur}
     />
   );
@@ -97,15 +101,46 @@ const Row = styled.div`
   width: 100%;
 `;
 
+const useInputMapClickOverride = (
+  setValue: (value: Option) => void,
+  setInputValue: (value: string) => void,
+  selectedOptionInputValue: React.MutableRefObject<string | null>,
+) => {
+  const { mapClickOverrideRef } = useMapStateContext();
+  const previousBehaviourRef = useRef<MapClickOverride>();
+
+  const mapClickCallback = (coords: LonLat, label: string) => {
+    setValue(getCoordsOption(coords, label));
+    setInputValue(label);
+    selectedOptionInputValue.current = label;
+
+    mapClickOverrideRef.current = previousBehaviourRef.current;
+  };
+
+  const onInputFocus = () => {
+    previousBehaviourRef.current = mapClickOverrideRef.current;
+    mapClickOverrideRef.current = mapClickCallback;
+  };
+
+  const onInputBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    if ((e.relatedTarget as any)?.className !== 'maplibregl-canvas') {
+      mapClickOverrideRef.current = previousBehaviourRef.current;
+    }
+  };
+
+  return { onInputFocus, onInputBlur };
+};
+
 type Props = {
   label: string;
   value: Option;
   setValue: (value: Option) => void;
 };
+
 export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
-  const selectedOptionInputValue = useRef(null);
+  const selectedOptionInputValue = useRef<string | null>(null);
   const mapCenter = useMapCenter();
   const { currentTheme } = useUserThemeContext();
   const { userSettings } = useUserSettingsContext();
@@ -120,7 +155,15 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
     selectedOptionInputValue.current = getOptionLabel(option);
   };
 
-  const onBlur = () => {
+  const { onInputFocus, onInputBlur } = useInputMapClickOverride(
+    setValue,
+    setInputValue,
+    selectedOptionInputValue,
+  );
+
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    onInputBlur(e);
+
     if (selectedOptionInputValue.current !== inputValue) {
       if (options.length > 0 && inputValue) {
         onChange(null, options[0]);
@@ -158,7 +201,8 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
             setInputValue={setInputValue}
             autocompleteRef={autocompleteRef}
             label={label}
-            onBlur={onBlur}
+            onFocus={onInputFocus}
+            onBlur={handleBlur}
           />
         )}
         renderOption={renderOptionFactory(
