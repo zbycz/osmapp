@@ -19,6 +19,8 @@ import { getOptionLabel } from '../SearchBox/getOptionLabel';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { getCoordsOption } from '../SearchBox/options/coords';
 import { LonLat } from '../../services/types';
+import { getGlobalMap } from '../../services/mapStorage';
+import maplibregl, { LngLatLike } from 'maplibre-gl';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -137,6 +139,11 @@ type Props = {
   setValue: (value: Option) => void;
 };
 
+const PREVIEW_MARKER = {
+  color: 'salmon',
+  draggable: false,
+};
+
 export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
@@ -145,6 +152,20 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const { currentTheme } = useUserThemeContext();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
+
+  const markerRef = useRef<maplibregl.Marker>();
+  useEffect(() => {
+    console.log('___', value);
+    const map = getGlobalMap();
+    if (value?.type === 'coords') {
+      markerRef.current = new maplibregl.Marker(PREVIEW_MARKER)
+        .setLngLat(value.coords.center as LngLatLike)
+        .addTo(map);
+    }
+    return () => {
+      markerRef.current?.remove();
+    };
+  }, [value]);
 
   const options = useOptions(inputValue);
 
