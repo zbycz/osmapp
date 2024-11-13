@@ -297,6 +297,9 @@ export default {
   'climbingareas.area': 'Area',
   'climbingareas.num_of_crags': 'Number of crags',
 
+  'climbing_grade_table.title': 'Climbing grades table',
+  'climbing_grade_table.show': 'Show',
+
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
   'member_features.routes': 'Routes',
