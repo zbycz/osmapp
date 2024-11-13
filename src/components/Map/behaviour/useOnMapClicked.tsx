@@ -37,7 +37,7 @@ const getOnlyLabel = (
     return getCoordsName();
   }
 
-  return features[0]?.properties?.name;
+  return features[0]?.properties?.name ?? getCoordsName();
 };
 
 export const getSkeleton = (

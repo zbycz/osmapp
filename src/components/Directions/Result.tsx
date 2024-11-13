@@ -80,19 +80,20 @@ const MobileResult = ({
           color="secondary"
         />
       </div>
-      <Stack>
+      <Stack direction="row" justifyContent="space-between">
         {result.instructions && (
           <Button
             size="small"
+            fullWidth
             onClick={() => {
               setShowInstructions((x) => !x);
             }}
           >
-            {showInstructions ? 'Hide' : 'Show'} instructions
+            {showInstructions ? 'Hide instructions' : 'Show instructions'}
           </Button>
         )}
         {revealForm && (
-          <Button size="small" onClick={revealForm}>
+          <Button size="small" fullWidth onClick={revealForm}>
             {t('directions.edit_destinations')}
           </Button>
         )}

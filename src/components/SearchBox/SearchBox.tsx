@@ -104,7 +104,7 @@ const SearchBox = ({ withShadow = false }) => {
           </>
         )}
 
-        {!isMobileMode && !featureShown && <DirectionsButton />}
+        {(!featureShown || isMobileMode) && <DirectionsButton />}
       </StyledPaper>
     </TopPanel>
   );
