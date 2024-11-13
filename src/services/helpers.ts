@@ -6,14 +6,16 @@ import { join, roundedToDegUrl } from '../utils';
 import { PROJECT_URL } from './project';
 import { getIdFromShortener, getShortenerSlug } from './shortener';
 
-export const parseXmlString = (xmlString) => {
+export type Xml2JsDocument = Record<string, any>; // TODO very specific api :)
+
+export const parseStringToXml2Js = (xmlString: string) => {
   const parser = new xml2js.Parser({
     explicitArray: false,
     explicitCharkey: false,
     explicitRoot: false,
   });
 
-  return new Promise<any>((resolve, reject) => {
+  return new Promise<Xml2JsDocument>((resolve, reject) => {
     parser.parseString(xmlString, (err, result) => {
       if (err) {
         reject(err);
@@ -95,8 +97,12 @@ export const getImageSize = (url): Promise<ImageSize> =>
     imgElement.src = url;
   });
 
-export const stringifyDomXml = (itemXml) =>
-  isString(itemXml) ? itemXml : new XMLSerializer().serializeToString(itemXml);
+export const stringifyDomXml = (itemXml: Node) => {
+  if (isString(itemXml)) {
+    throw new Error('String given');
+  }
+  return new XMLSerializer().serializeToString(itemXml);
+};
 
 // TODO better mexico border + add Australia, New Zealand & South Africa
 const polygonUsCan = [[-143, 36], [-117, 32], [-96, 25], [-50, 19], [-56, 71], [-175, 70], [-143, 36]]; // prettier-ignore
