@@ -165,11 +165,13 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
           value={from}
           setValue={setFrom}
           label={t('directions.form.start_or_click')}
+          pointIndex={0}
         />
         <DirectionsAutocomplete
           value={to}
           setValue={setTo}
           label={t('directions.form.destination')}
+          pointIndex={1}
         />
       </Stack>
 

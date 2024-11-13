@@ -1,6 +1,6 @@
 import { MapClickOverride, useMapStateContext } from '../utils/MapStateContext';
 import { useStarsContext } from '../utils/StarsContext';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { abortFetch } from '../../services/fetch';
 import {
   fetchGeocoderOptions,
@@ -13,14 +13,15 @@ import { Autocomplete, InputAdornment, TextField } from '@mui/material';
 import { useMapCenter } from '../SearchBox/utils';
 import { useUserThemeContext } from '../../helpers/theme';
 import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
-import PlaceIcon from '@mui/icons-material/Place';
 import { Option } from '../SearchBox/types';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { getCoordsOption } from '../SearchBox/options/coords';
 import { LonLat } from '../../services/types';
 import { getGlobalMap } from '../../services/mapStorage';
-import maplibregl, { LngLatLike } from 'maplibre-gl';
+import maplibregl, { LngLatLike, PointLike } from 'maplibre-gl';
+import ReactDOMServer from 'react-dom/server';
+import { AlphabeticalMarker } from './TextMarker';
 
 const StyledTextField = styled(TextField)`
   input::placeholder {
@@ -35,6 +36,7 @@ const DirectionsInput = ({
   label,
   onFocus,
   onBlur,
+  pointIndex,
 }) => {
   const { InputLabelProps, InputProps, ...restParams } = params;
 
@@ -59,8 +61,11 @@ const DirectionsInput = ({
       fullWidth
       InputProps={{
         startAdornment: (
-          <InputAdornment position="start">
-            <PlaceIcon fontSize="small" />
+          <InputAdornment
+            position="start"
+            sx={{ position: 'relative', top: 5, left: 5 }}
+          >
+            <AlphabeticalMarker hasPin={false} index={pointIndex} height={32} />
           </InputAdornment>
         ),
       }}
@@ -137,14 +142,15 @@ type Props = {
   label: string;
   value: Option;
   setValue: (value: Option) => void;
+  pointIndex: number;
 };
 
-const PREVIEW_MARKER = {
-  color: 'salmon',
-  draggable: false,
-};
-
-export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
+export const DirectionsAutocomplete = ({
+  label,
+  value,
+  setValue,
+  pointIndex,
+}: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
   const selectedOptionInputValue = useRef<string | null>(null);
@@ -153,19 +159,45 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
 
+  const ALPHABETICAL_MARKER = useMemo(() => {
+    let svgElement;
+    if (typeof window !== 'undefined' && typeof document !== 'undefined') {
+      svgElement = document.createElement('div');
+      svgElement.innerHTML = ReactDOMServer.renderToStaticMarkup(
+        <AlphabeticalMarker index={pointIndex} hasShadow width={27} />,
+      );
+    } else svgElement = undefined;
+
+    return {
+      color: 'salmon',
+      draggable: true,
+      element: svgElement,
+      offset: [0, -10] as PointLike,
+    };
+  }, [pointIndex]);
+
   const markerRef = useRef<maplibregl.Marker>();
+
   useEffect(() => {
-    console.log('___', value);
     const map = getGlobalMap();
     if (value?.type === 'coords') {
-      markerRef.current = new maplibregl.Marker(PREVIEW_MARKER)
+      markerRef.current = new maplibregl.Marker(ALPHABETICAL_MARKER)
         .setLngLat(value.coords.center as LngLatLike)
         .addTo(map);
     }
     return () => {
       markerRef.current?.remove();
     };
-  }, [value]);
+  }, [ALPHABETICAL_MARKER, value]);
+
+  const onDragEnd = () => {
+    const lngLat = markerRef.current?.getLngLat();
+    if (lngLat) {
+      setValue(getCoordsOption([lngLat.lng, lngLat.lat]));
+    }
+  };
+
+  markerRef.current?.on('dragend', onDragEnd);
 
   const options = useOptions(inputValue);
 
@@ -224,6 +256,7 @@ export const DirectionsAutocomplete = ({ label, value, setValue }: Props) => {
             label={label}
             onFocus={onInputFocus}
             onBlur={handleBlur}
+            pointIndex={pointIndex}
           />
         )}
         renderOption={renderOptionFactory(
