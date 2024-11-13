@@ -12,6 +12,7 @@ import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { doShortenerRedirect } from '../src/services/helpers';
 import { PROJECT_ID, PROJECT_NAME } from '../src/services/project';
 import { GoogleAnalytics } from './api/google-analytics';
+import { Umami } from './api/umami';
 
 type Props = AppProps & EmotionCacheProviderProps;
 
@@ -48,7 +49,12 @@ export default class MyApp extends App<Props> {
             <GlobalStyle />
           </UserThemeProvider>
         </AppCacheProvider>
-        {isOpenClimbing && <GoogleAnalytics />}
+        {isOpenClimbing && (
+          <>
+            <GoogleAnalytics />
+            <Umami />
+          </>
+        )}
       </>
     );
   }
