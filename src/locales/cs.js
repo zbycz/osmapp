@@ -203,6 +203,9 @@ export default {
   'climbingareas.area': 'Oblast',
   'climbingareas.num_of_crags': 'Počet skal',
 
+  'climbing_grade_table.title': 'Tabulka lezeckých obtížností',
+  'climbing_grade_table.show': 'Zobrazit',
+
   'sharedialog.link': 'Odkaz',
   'sharedialog.shortened_link': 'Zkrácený odkaz',
   'sharedialog.coordinates': 'Souřadnice',
