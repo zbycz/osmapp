@@ -62,7 +62,7 @@ type Props = {
 export const EditContextProvider = ({ originalFeature, children }: Props) => {
   const [successInfo, setSuccessInfo] = useState<undefined | SuccessInfo>();
   const [isSaving, setIsSaving] = useState(false);
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState(''); // technically is "data", but only for note
   const [comment, setComment] = useState('');
   const data = useDataState(originalFeature);
 
@@ -75,7 +75,7 @@ export const EditContextProvider = ({ originalFeature, children }: Props) => {
     setLocation,
     comment,
     setComment,
-    data: data,
+    data,
   };
 
   return <EditContext.Provider value={value}>{children}</EditContext.Provider>;
