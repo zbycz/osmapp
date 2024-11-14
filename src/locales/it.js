@@ -214,5 +214,4 @@ solo informazioni che hai verificato di persona o che provengono da fonti attend
   'runway.information': 'Informazioni su Runway',
   'runway.runway': 'Runway',
   'runway.size': 'Lunghezza (m) - Larghezza (m)',
-  'runway.surface': 'Superficie',
 };

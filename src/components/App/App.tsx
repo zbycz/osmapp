@@ -44,6 +44,7 @@ import {
   useTurnByTurnContext,
 } from '../utils/TurnByTurnContext';
 import { TurnByTurnNavigation } from '../TurnByTurnNavigation/TurnByTurnNavigation';
+import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -171,6 +172,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
       <HomepagePanel />
       {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
+      {router.pathname === '/climbing-grades' && <ClimbingGradesTable />}
       {climbingAreas && <ClimbingAreasPanel areas={climbingAreas} />}
       <Map />
       <TitleAndMetaTags />

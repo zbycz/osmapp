@@ -75,7 +75,7 @@ export const SuccessContent = () => {
         <Typography variant="body2" paragraph>
           {texts.urlLabel}
           <br />
-          <a href={successInfo.url} rel="noopener nofollow">
+          <a href={successInfo.url} target="_blank">
             {successInfo.url}
           </a>
         </Typography>

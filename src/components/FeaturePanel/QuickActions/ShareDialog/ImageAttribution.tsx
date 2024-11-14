@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useFeatureContext } from '../../../utils/FeatureContext';
 import { useGetItems } from './useGetItems';
 import { IconButton, Stack } from '@mui/material';
 import ExpandLessIcon from '@mui/icons-material/ExpandLess';
@@ -9,7 +8,7 @@ import { useUserThemeContext } from '../../../../helpers/theme';
 import { t } from '../../../../services/intl';
 
 const Wrapper = styled.div<{ $currentTheme: 'dark' | 'light' }>`
-  margin-top: 0.5rem;
+  margin-top: 1rem;
   font-size: 0.8rem;
   color: ${({ theme, $currentTheme }) =>
     theme.palette.secondary[$currentTheme === 'dark' ? 'light' : 'dark']};
@@ -31,7 +30,12 @@ export const ImageAttribution = () => {
 
   return (
     <Wrapper $currentTheme={currentTheme}>
-      <Stack direction="row" alignItems="center" spacing={1}>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="flex-end"
+        spacing={1}
+      >
         <Heading>{t('sharedialog.image_attribution')}</Heading>
         <IconButton onClick={() => setExpanded((x) => !x)} size="small">
           {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}

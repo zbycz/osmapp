@@ -46,6 +46,8 @@ export const getPresetTranslation = (key: string): string =>
 export const getPresetTermsTranslation = (key: string) =>
   translations?.[intl.lang]?.presets?.presets?.[key]?.terms;
 
+export const getAllTranslations = () => translations?.[intl.lang];
+
 export const getFieldTranslation = (field: Field): FieldTranslation => {
   if (!translations) return undefined;
 

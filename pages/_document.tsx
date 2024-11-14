@@ -47,10 +47,18 @@ export default class MyDocument extends Document<Props> {
         <Head>
           <meta charSet="utf-8" />
           <DocumentHeadTags emotionStyleTags={emotionStyleTags} />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-          />
+          {isOpenClimbing ? (
+            <link
+              href="https://fonts.googleapis.com/css2?family=Piazzolla:ital,opsz,wght@0,8..30,900;1,8..30,900&family=Roboto:wght@300;400;500;700;900&display=swap"
+              rel="stylesheet"
+            />
+          ) : (
+            <link
+              href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700;900&display=swap"
+              rel="stylesheet"
+            />
+          )}
+
           <link rel="preconnect" href="https://api.maptiler.com" />
           <link rel="preconnect" href="https://a.mapillary.com" />
           <link rel="preconnect" href="https://images.mapillary.com" />

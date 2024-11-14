@@ -74,7 +74,7 @@ const lastKeyAndValueSet = (tagsEntries: TagsEntries) => {
 };
 
 const AddButton = () => {
-  const { tagsEntries, setTagsEntries } = useEditContext().tags;
+  const { tagsEntries, setTagsEntries } = useEditContext().data;
   const active = tagsEntries.length === 0 || lastKeyAndValueSet(tagsEntries);
 
   return (
@@ -95,7 +95,7 @@ const AddButton = () => {
 };
 
 const TagsEditorInner = () => {
-  const { tagsEntries } = useEditContext().tags;
+  const { tagsEntries } = useEditContext().data;
   return (
     <>
       <TagsEditorHeading />

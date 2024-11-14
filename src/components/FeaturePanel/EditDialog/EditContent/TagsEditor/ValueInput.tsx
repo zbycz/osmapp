@@ -30,7 +30,7 @@ type DeleteButtonProps = {
   index: number;
 };
 const DeleteButton = ({ deleteButton, index }: DeleteButtonProps) => {
-  const { setTagsEntries } = useEditContext().tags;
+  const { setTagsEntries } = useEditContext().data;
   const onClick = () => {
     setTagsEntries((state) => state.toSpliced(index, 1));
   };
@@ -53,7 +53,7 @@ const DeleteButton = ({ deleteButton, index }: DeleteButtonProps) => {
 type Props = { index: number };
 export const ValueInput = ({ index }: Props) => {
   const { focusTag } = useEditDialogContext();
-  const { tagsEntries, setTagsEntries } = useEditContext().tags;
+  const { tagsEntries, setTagsEntries } = useEditContext().data;
   const [currentKey, currentValue] = tagsEntries[index];
 
   const deleteButton = useHidableDeleteButton();
