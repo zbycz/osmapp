@@ -6,16 +6,45 @@ import { join, roundedToDegUrl } from '../utils';
 import { PROJECT_URL } from './project';
 import { getIdFromShortener, getShortenerSlug } from './shortener';
 
-export type Xml2JsDocument = Record<string, any>; // TODO very specific api :)
+type Xml2JsOsmItem = {
+  tag: { $: { k: string; v: string } }[];
+  $: {
+    id: string;
+    visible: string;
+    version: string;
+    changeset: string;
+    timestamp: string;
+    user: string;
+    uid: string;
+    lat: string;
+    lon: string;
+  };
+};
 
-export const parseStringToXml2Js = (xmlString: string) => {
+export type Xml2JsSingleDoc = {
+  node: Xml2JsOsmItem; // only one of these is present, but I am lazy to type it properly
+  way: Xml2JsOsmItem;
+  relation: Xml2JsOsmItem;
+};
+
+export type Xml2JsMultiDoc = {
+  node: Xml2JsOsmItem[]; // one or more may be present
+  way: Xml2JsOsmItem[];
+  relation: Xml2JsOsmItem[];
+};
+
+export const parseToXml2Js = <
+  T extends Xml2JsSingleDoc | Xml2JsMultiDoc = Xml2JsSingleDoc,
+>(
+  xmlString: string,
+) => {
   const parser = new xml2js.Parser({
     explicitArray: false,
     explicitCharkey: false,
     explicitRoot: false,
   });
 
-  return new Promise<Xml2JsDocument>((resolve, reject) => {
+  return new Promise<T>((resolve, reject) => {
     parser.parseString(xmlString, (err, result) => {
       if (err) {
         reject(err);
@@ -26,7 +55,7 @@ export const parseStringToXml2Js = (xmlString: string) => {
   });
 };
 
-export const buildXmlString = (xml) => {
+export const buildXmlString = (xml: Xml2JsSingleDoc | Xml2JsMultiDoc) => {
   const builder = new xml2js.Builder({ rootName: 'osm' });
   return builder.buildObject(xml);
 };

@@ -7,10 +7,11 @@ import {
   getFullOsmappLink,
   getOsmappLink,
   getUrlOsmId,
-  parseStringToXml2Js,
+  parseToXml2Js,
   prod,
   stringifyDomXml,
-  Xml2JsDocument,
+  Xml2JsMultiDoc,
+  Xml2JsSingleDoc,
 } from './helpers';
 import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
@@ -114,11 +115,13 @@ const putChangesetClose = (changesetId: string) =>
     path: `/api/0.6/changeset/${changesetId}/close`,
   });
 
-const getItem = (apiId: OsmId) =>
-  authFetch<Node>({
+const getItem = async (apiId: OsmId) => {
+  const item = await authFetch<Node>({
     method: 'GET',
     path: `/api/0.6/${getUrlOsmId(apiId)}`,
   });
+  return await parseToXml2Js(stringifyDomXml(item));
+};
 
 const getItemHistory = (apiId: OsmId) =>
   authFetch<Node>({
@@ -162,10 +165,11 @@ const putOrDeleteItem = async (
   }
 };
 
-const getItemOrLastHistoric = async (apiId: OsmId): Promise<Xml2JsDocument> => {
+const getItemOrLastHistoric = async (
+  apiId: OsmId,
+): Promise<Xml2JsSingleDoc> => {
   try {
-    const item = await getItem(apiId);
-    return await parseStringToXml2Js(stringifyDomXml(item));
+    return await getItem(apiId);
   } catch (e) {
     // e is probably XMLHttpRequest
     if (e?.status !== 410) {
@@ -174,13 +178,16 @@ const getItemOrLastHistoric = async (apiId: OsmId): Promise<Xml2JsDocument> => {
 
     // For undelete we return the latest "existing" version
     const itemHistory = await getItemHistory(apiId);
-    const xml = await parseStringToXml2Js(stringifyDomXml(itemHistory));
+    const xml = await parseToXml2Js<Xml2JsMultiDoc>(
+      stringifyDomXml(itemHistory),
+    );
     const items = xml[apiId.type];
     const existingVersion = items[items.length - 2];
     const deletedVersion = items[items.length - 1];
     existingVersion.$.version = deletedVersion.$.version;
-    xml[apiId.type] = existingVersion;
-    return xml;
+    return {
+      [apiId.type]: existingVersion,
+    } as Xml2JsSingleDoc;
   }
 };
 
@@ -207,7 +214,7 @@ const getXmlTags = (newTags: FeatureTags) =>
     .map(([k, v]) => ({ $: { k, v } }));
 
 const updateItemXml = async (
-  item: Xml2JsDocument,
+  item: Xml2JsSingleDoc,
   apiId: OsmId,
   changesetId: string,
   tags: FeatureTags,
@@ -221,7 +228,7 @@ const updateItemXml = async (
 };
 
 const checkVersionUnchanged = (
-  freshItem: Xml2JsDocument,
+  freshItem: Xml2JsSingleDoc,
   apiId: OsmId,
   feature: Feature,
 ) => {
@@ -229,13 +236,13 @@ const checkVersionUnchanged = (
     return;
   }
 
-  const freshVersion = freshItem[apiId.type].$.version;
+  const freshVersion = parseInt(freshItem[apiId.type].$.version, 10);
   if (feature.osmMeta.version !== freshVersion) {
     throw new Error('The object has been updated, reload and try again');
   }
 };
 
-// TODO split to editOsmFeature and undeleteOsmFeature
+// TODO maybe split to editOsmFeature and undeleteOsmFeature? the flow is kinda unclear
 export const editOsmFeature = async (
   feature: Feature,
   comment: string,
@@ -276,10 +283,10 @@ const getNewItemXml = async (
   [lon, lat]: Position,
   newTags: FeatureTags,
 ) => {
-  const xml = await parseStringToXml2Js('<osm><node lat="x"/></osm>'); // TODO this is hackish
+  const xml = await parseToXml2Js('<osm><node lon="x"/></osm>');
   xml.node.$.changeset = changesetId;
-  xml.node.$.lon = lon;
-  xml.node.$.lat = lat;
+  xml.node.$.lon = `${lon}`;
+  xml.node.$.lat = `${lat}`;
   xml.node.tag = getXmlTags(newTags);
   return buildXmlString(xml);
 };
