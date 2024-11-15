@@ -51,6 +51,15 @@ export const osmappLayers: Layers = {
     Icon: ExploreIcon,
     attribution: ['maptiler', 'osm'],
   },
+  basicOfr: {
+    name: `${t('layers.basic')} OpenFreeMap`,
+    type: 'basemap',
+    Icon: ExploreIcon,
+    attribution: [
+      '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a>',
+      'osm',
+    ],
+  },
   makinaAfrica: {
     name: t('layers.makina_africa'),
     type: 'basemap',

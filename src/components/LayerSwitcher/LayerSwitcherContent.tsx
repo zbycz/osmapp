@@ -20,6 +20,7 @@ import { osmappLayers } from './osmappLayers';
 import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
 import { Overlays } from './Overlays';
 import { AddUserLayerButton } from './AddLayerButton';
+import WarningIcon from '@mui/icons-material/Warning';
 
 type AllLayers = {
   basemapLayers: Layer[];
@@ -90,7 +91,7 @@ export const LayerSwitcherContent = () => {
                   arrow
                   placement="top-end"
                 >
-                  <WrongLocation fontSize="small" color="secondary" />
+                  <WarningIcon fontSize="small" color="secondary" />
                 </Tooltip>
               )}
 
