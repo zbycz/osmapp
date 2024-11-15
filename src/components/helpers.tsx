@@ -139,10 +139,3 @@ export const ClientOnly = ({ children }) => {
   const isClient = useIsClient();
   return isClient ? children : null;
 };
-
-export const isImperial = () =>
-  window.localStorage.getItem('imperial') === 'yes';
-
-export const toggleImperial = () => {
-  localStorage.setItem('imperial', isImperial() ? '' : 'yes');
-};

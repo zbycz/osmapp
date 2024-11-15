@@ -35,7 +35,7 @@ export default {
   'install.outro': 'To je vše! Aplikaci najdete na své domovské obrazovce.',
   'install.note': 'Poznámka: Používáme technologii PWA – rychlá instalace bez nutnosti Google Play či App Storu.',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
-  'homepage.go_to_map_button': 'Přejít do mapy',
+  'homepage.go_to_map_button': 'Přejít na mapu',
   'homepage.examples.eg': 'např.',
   'homepage.examples.charles_bridge_statues': 'Sochy na Karlově mostě',
   'homepage.about_osm': `Mapová data pochází z projektu <a href="https://osm.org">OpenStreetMap</a>, tvoří ho
@@ -45,7 +45,7 @@ export default {
   'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
     včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
     V plánu jsou funkce jako navigace či oblíbená místa.`,
-  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Repozitář je open-source. Další nápady na vylepšení aplikace můžete přidat na <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.for_images': 'za obrázky 🖼',
   'homepage.for_osm': 'za nejlepší mapu Země 🌎',
@@ -55,6 +55,18 @@ export default {
   'homepage.disclaimer': `OpenStreetMap a OSM jsou ochranné známky nadace OpenStreetMap. Tento projekt není schválen ani spojen s nadací <a href="https://osmfoundation.org/">OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vektorové mapy ("Základní" a "Outdoorová") obsahují některé názvy míst z projektu Wikidata,  více <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>zde</a>.`,
 
+  'homepage.important_links': `Důležité odkazy`,
+  'homepage.add_new_climbing_area': `Přidat oblast`,
+  'homepage.our_story': `Náš příběh`,
+  'homepage.openclimbing_description_p1': `Aplikace pro mapování skalních oblastí a vytváření interaktivních lezeckých průvodců.`,
+  'homepage.openclimbing_description_p2': `Všechna data jsou otevřená a každý je může upravit – podobně jako na Wikipedii.`,
+  'homepage.description_show_more': `zobrazit více`,
+  'homepage.expanded_description_p1': `Aplikace je vyvíjena jako open-source, využívá`,
+  'homepage.expanded_description_p2': `pro ukládání lezeckých cest a obrázky jsou sdíleny prostřednictvím`,
+  'homepage.expanded_description_p3': `, což umožňuje snadné a efektivní sdílení informací.`,
+  'homepage.discover_more_p1': `Prozkoumat dalších`,
+  'homepage.discover_more_p2': `oblastí`,
+
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
   'searchbox.category': 'kategorie',
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
@@ -62,7 +74,7 @@ export default {
   'searchbox.overpass_custom_query': 'vlastní dotaz',
 
   'directions.get_directions': 'Vyhledat trasu',
-  'directions.form.starting_point': 'Začátek trasy',
+  'directions.form.start_or_click': 'Zvolte začátek nebo klikněte do mapy',
   'directions.form.destination': 'Cíl',
   'directions.edit_destinations': 'Upravit zadání',
   'directions.powered_by': 'Vyhledávání tras dodává systém __link__.',
@@ -190,4 +202,18 @@ export default {
   'climbingareas.title': 'Lezecké oblasti',
   'climbingareas.area': 'Oblast',
   'climbingareas.num_of_crags': 'Počet skal',
+
+  'climbing_grade_table.title': 'Tabulka lezeckých obtížností',
+  'climbing_grade_table.show': 'Zobrazit',
+
+  'sharedialog.link': 'Odkaz',
+  'sharedialog.shortened_link': 'Zkrácený odkaz',
+  'sharedialog.coordinates': 'Souřadnice',
+  'sharedialog.openin': 'Otevřít v',
+  'sharedialog.image_attribution': 'Copyright obrázků',
+  'sharedialog.copy': 'Kopírovat',
+  'sharedialog.copied': 'Zkopírováno!',
+  'sharedialog.share': 'Sdílet',
+
+  weather: 'Počasí',
 };

@@ -8,24 +8,32 @@ import { Option } from './types';
 import { Theme } from '../../helpers/theme';
 import { LonLat } from '../../services/types';
 import { renderOsm } from './options/openstreetmap';
+import { useUserSettingsContext } from '../utils/UserSettingsContext';
 
 const renderOption = (
   inputValue: string,
   currentTheme: Theme,
   mapCenter: LonLat,
   option: Option,
+  isImperial: boolean,
 ) => {
   switch (option.type) {
     case 'overpass':
       return renderOverpass(option);
     case 'star':
-      return renderStar(option, inputValue, mapCenter);
+      return renderStar(option, inputValue, mapCenter, isImperial);
     case 'loader':
       return renderLoader();
     case 'preset':
       return renderPreset(option, inputValue);
     case 'geocoder':
-      return renderGeocoder(option, currentTheme, inputValue, mapCenter);
+      return renderGeocoder(
+        option,
+        currentTheme,
+        inputValue,
+        mapCenter,
+        isImperial,
+      );
     case 'osm':
       return renderOsm(option);
   }
@@ -35,10 +43,11 @@ export const renderOptionFactory = (
   inputValue: string,
   currentTheme: Theme,
   mapCenter: LonLat,
+  isImperial: boolean,
 ) => {
   const Option = ({ key, ...props }, option: Option) => (
     <li key={key} {...props}>
-      {renderOption(inputValue, currentTheme, mapCenter, option)}
+      {renderOption(inputValue, currentTheme, mapCenter, option, isImperial)}
     </li>
   );
   return Option;

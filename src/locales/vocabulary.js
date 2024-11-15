@@ -79,7 +79,7 @@ export default {
   'homepage.about_osmapp': `This application should offer a convenient interface for everyday use of <i>OpenStreetMap</i>
      including editing options. <br/>Currently it includes various map layers, POI editing and a basic search engine.
      Features such as navigation or favorite places are planned.`,
-  'homepage.github_link': `You may suggest new features on <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Repository is open-source. You may suggest new features on <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Special thanks to`,
   'homepage.for_images': 'for images 🖼',
   'homepage.for_osm': 'for the best world map 🌎',
@@ -89,6 +89,18 @@ export default {
   'homepage.disclaimer': `OpenStreetMap and OSM are a trademark of the OpenStreetMap Foundation. This project is not endorsed by or affiliated with the <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vector maps ("Basic" and "Outdoor") contain some place names from the Wikidata project, more <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>here</a>.`,
 
+  'homepage.important_links': `Important links`,
+  'homepage.add_new_climbing_area': `Add crag`,
+  'homepage.our_story': `Our story`,
+  'homepage.openclimbing_description_p1': `Application for mapping climbing areas and creating interactive climbing guides.`,
+  'homepage.openclimbing_description_p2': `All data is open and anyone can edit it – similar to Wikipedia.`,
+  'homepage.description_show_more': `show more`,
+  'homepage.expanded_description_p1': `Application is developed as open-source, it uses`,
+  'homepage.expanded_description_p2': `for storing climbing routes and images are shared via`,
+  'homepage.expanded_description_p3': `, which allows easy and efficient sharing of information.`,
+  'homepage.discover_more_p1': `Discover other`,
+  'homepage.discover_more_p2': `areas`,
+
   'searchbox.placeholder': 'Search OpenStreetMap',
   'searchbox.category': 'category',
   'searchbox.overpass_success': 'Results found: __count__',
@@ -96,7 +108,7 @@ export default {
   'searchbox.overpass_custom_query': 'custom query',
 
   'directions.get_directions': 'Get Directions',
-  'directions.form.starting_point': 'Starting point',
+  'directions.form.start_or_click': 'Choose start or click map',
   'directions.form.destination': 'Destination',
   'directions.edit_destinations': 'Edit destinations',
   'directions.powered_by': 'Directions powered by __link__.',
@@ -279,19 +291,27 @@ export default {
   'runway.information': 'Runway information',
   'runway.runway': 'Runway',
   'runway.size': 'Length (m) - Width (m)',
-  'runway.surface': 'Surface',
 
   'climbingareas.link': 'List of all Climbing areas',
   'climbingareas.title': 'Climbing areas',
   'climbingareas.area': 'Area',
   'climbingareas.num_of_crags': 'Number of crags',
 
+  'climbing_grade_table.title': 'Climbing grades table',
+  'climbing_grade_table.show': 'Show',
+
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
   'member_features.routes': 'Routes',
 
   'sharedialog.link': 'Link',
+  'sharedialog.shortened_link': 'Shortened link',
   'sharedialog.coordinates': 'Coordinates',
   'sharedialog.openin': 'Open in',
   'sharedialog.image_attribution': 'Image attributions',
+  'sharedialog.copy': 'Copy',
+  'sharedialog.copied': 'Copied!',
+  'sharedialog.share': 'Share',
+
+  weather: 'Weather',
 };

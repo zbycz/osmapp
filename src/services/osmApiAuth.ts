@@ -1,21 +1,22 @@
 import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
-import { osmAuth } from 'osm-auth';
+import { osmAuth, OSMAuthXHROptions } from 'osm-auth';
 import { Feature, FeatureTags, OsmId, Position, SuccessInfo } from './types';
 import {
   buildXmlString,
   getFullOsmappLink,
   getOsmappLink,
   getUrlOsmId,
-  parseXmlString,
+  parseToXml2Js,
   prod,
   stringifyDomXml,
+  Xml2JsMultiDoc,
+  Xml2JsSingleDoc,
 } from './helpers';
 import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
 import { isBrowser } from '../components/helpers';
 import { getLabel } from '../helpers/featureLabel';
-import { fetchJson } from './fetch';
 
 const PROD_CLIENT_ID = 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68';
 
@@ -36,9 +37,9 @@ const auth = osmAuth({
 });
 const osmWebsite = prod ? 'https://www.openstreetmap.org' : TEST_SERVER;
 
-const authFetch = async (options) =>
-  new Promise<any>((resolve, reject) => {
-    auth.xhr(options, (err, details) => {
+const authFetch = async <T>(options: OSMAuthXHROptions): Promise<T> =>
+  new Promise<T>((resolve, reject) => {
+    auth.xhr(options, (err: any, details: T) => {
       if (err) {
         reject(err);
         return;
@@ -53,7 +54,7 @@ export type OsmUser = {
 };
 
 export const fetchOsmUser = async (): Promise<OsmUser> => {
-  const response = await authFetch({
+  const response = await authFetch<string>({
     method: 'GET',
     path: '/api/0.6/user/details.json',
   });
@@ -101,68 +102,72 @@ const getChangesetXml = ({ changesetComment, feature }) => {
 };
 
 const putChangeset = (content: string) =>
-  authFetch({
+  authFetch<string>({
     method: 'PUT',
     path: '/api/0.6/changeset/create',
-    options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
+    headers: { 'Content-Type': 'text/xml; charset=utf-8' },
     content,
   });
 
 const putChangesetClose = (changesetId: string) =>
-  authFetch({
+  authFetch<void>({
     method: 'PUT',
     path: `/api/0.6/changeset/${changesetId}/close`,
   });
 
-const getItem = (apiId: OsmId) =>
-  authFetch({
+const getItem = async (apiId: OsmId) => {
+  const item = await authFetch<Node>({
     method: 'GET',
     path: `/api/0.6/${getUrlOsmId(apiId)}`,
   });
+  return await parseToXml2Js(stringifyDomXml(item));
+};
 
 const getItemHistory = (apiId: OsmId) =>
-  authFetch({
+  authFetch<Node>({
     method: 'GET',
     path: `/api/0.6/${getUrlOsmId(apiId)}/history`,
   });
 
 const putItem = (apiId: OsmId, content: string) =>
-  authFetch({
+  authFetch<void>({
     method: 'PUT',
     path: `/api/0.6/${getUrlOsmId(apiId)}`,
-    options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
+    headers: { 'Content-Type': 'text/xml; charset=utf-8' },
     content,
   });
 
 const deleteItem = (apiId: OsmId, content: string) =>
-  authFetch({
+  authFetch<void>({
     method: 'DELETE',
     path: `/api/0.6/${getUrlOsmId(apiId)}`,
-    options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
+    headers: { 'Content-Type': 'text/xml; charset=utf-8' },
     content,
   });
 
 const createItem = (content: string) =>
-  authFetch({
+  authFetch<string>({
     method: 'PUT',
     path: `/api/0.6/node/create`,
-    options: { header: { 'Content-Type': 'text/xml; charset=utf-8' } },
+    headers: { 'Content-Type': 'text/xml; charset=utf-8' },
     content,
   });
 
 const putOrDeleteItem = async (
-  isDelete: boolean,
+  toBeDeleted: boolean,
   apiId: OsmId,
   newItem: string,
 ) => {
-  if (isDelete) {
+  if (toBeDeleted) {
     await deleteItem(apiId, newItem);
   } else {
     await putItem(apiId, newItem);
   }
 };
 
-const getItemOrLastHistoric = async (apiId: OsmId) => {
+const getItemOrLastHistoric = async (
+  apiId: OsmId,
+): Promise<Xml2JsSingleDoc> => {
   try {
     return await getItem(apiId);
   } catch (e) {
@@ -171,21 +176,24 @@ const getItemOrLastHistoric = async (apiId: OsmId) => {
       throw e;
     }
 
-    // Mind that tags are fetched during feature fetch (osmApi#getOsmPromise()) and replaced after edit
+    // For undelete we return the latest "existing" version
     const itemHistory = await getItemHistory(apiId);
-    const xml = await parseXmlString(stringifyDomXml(itemHistory));
+    const xml = await parseToXml2Js<Xml2JsMultiDoc>(
+      stringifyDomXml(itemHistory),
+    );
     const items = xml[apiId.type];
     const existingVersion = items[items.length - 2];
     const deletedVersion = items[items.length - 1];
     existingVersion.$.version = deletedVersion.$.version;
-    xml[apiId.type] = existingVersion;
-    return buildXmlString(xml);
+    return {
+      [apiId.type]: existingVersion,
+    } as Xml2JsSingleDoc;
   }
 };
 
-const getDescription = (isCancelled, feature) => {
+const getDescription = (toBeDeleted: boolean, feature: Feature) => {
   const undelete = feature.deleted;
-  const action = undelete ? 'Undeleted' : isCancelled ? 'Deleted' : 'Edited';
+  const action = undelete ? 'Undeleted' : toBeDeleted ? 'Deleted' : 'Edited';
   const { subclass } = feature.properties;
   const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
@@ -193,10 +201,10 @@ const getDescription = (isCancelled, feature) => {
 
 const getChangesetComment = (
   comment: string,
-  isCancelled: boolean,
+  toBeDeleted: boolean,
   feature: Feature,
 ) => {
-  const description = getDescription(isCancelled, feature);
+  const description = getDescription(toBeDeleted, feature);
   return join(comment, ' • ', `${description} #osmapp`);
 };
 
@@ -206,52 +214,58 @@ const getXmlTags = (newTags: FeatureTags) =>
     .map(([k, v]) => ({ $: { k, v } }));
 
 const updateItemXml = async (
-  item,
+  item: Xml2JsSingleDoc,
   apiId: OsmId,
   changesetId: string,
   tags: FeatureTags,
-  isDelete: boolean,
+  toBeDeleted: boolean,
 ) => {
-  const xml = await parseXmlString(stringifyDomXml(item));
-  xml[apiId.type].$.changeset = changesetId;
-  if (!isDelete) {
-    xml[apiId.type].tag = getXmlTags(tags);
+  item[apiId.type].$.changeset = changesetId;
+  if (!toBeDeleted) {
+    item[apiId.type].tag = getXmlTags(tags);
   }
-  return buildXmlString(xml);
+  return buildXmlString(item);
 };
 
+const checkVersionUnchanged = (
+  freshItem: Xml2JsSingleDoc,
+  apiId: OsmId,
+  feature: Feature,
+) => {
+  if (apiId === TEST_OSM_ID) {
+    return;
+  }
+
+  const freshVersion = parseInt(freshItem[apiId.type].$.version, 10);
+  if (feature.osmMeta.version !== freshVersion) {
+    throw new Error('The object has been updated, reload and try again');
+  }
+};
+
+// TODO maybe split to editOsmFeature and undeleteOsmFeature? the flow is kinda unclear
 export const editOsmFeature = async (
   feature: Feature,
   comment: string,
   newTags: FeatureTags,
-  isCancelled: boolean,
+  toBeDeleted: boolean,
 ): Promise<SuccessInfo> => {
-  const newestVersion = await fetchJson(
-    `https://api.openstreetmap.org/api/0.6/${feature.osmMeta.type}/${feature.osmMeta.id}.json`,
-  ).then(({ elements }) => elements[0].version as number);
-  const loadedVersion = feature.osmMeta.version;
-
-  if (loadedVersion !== newestVersion) {
-    throw new Error('The object has been updated, reload and try again');
-  }
-
   const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
-  const changesetComment = getChangesetComment(comment, isCancelled, feature);
+  const freshItem = await getItemOrLastHistoric(apiId);
+  checkVersionUnchanged(freshItem, apiId, feature);
+
+  const changesetComment = getChangesetComment(comment, toBeDeleted, feature);
   const changesetXml = getChangesetXml({ changesetComment, feature });
   const changesetId = await putChangeset(changesetXml);
-  const item = await getItemOrLastHistoric(apiId);
 
-  // TODO use version from `feature` (we dont want to overwrite someones changes)
-  // TODO or at least just apply tags diff (see createNoteText)
   const newItem = await updateItemXml(
-    item,
+    freshItem,
     apiId,
     changesetId,
     newTags,
-    isCancelled,
+    toBeDeleted,
   );
 
-  await putOrDeleteItem(isCancelled, apiId, newItem);
+  await putOrDeleteItem(toBeDeleted, apiId, newItem);
   await putChangesetClose(changesetId);
 
   clearFeatureCache(feature.osmMeta);
@@ -269,10 +283,10 @@ const getNewItemXml = async (
   [lon, lat]: Position,
   newTags: FeatureTags,
 ) => {
-  const xml = await parseXmlString('<osm><node lat="x"/></osm>'); // TODO this is hackish
+  const xml = await parseToXml2Js('<osm><node lon="x"/></osm>');
   xml.node.$.changeset = changesetId;
-  xml.node.$.lon = lon;
-  xml.node.$.lat = lat;
+  xml.node.$.lon = `${lon}`;
+  xml.node.$.lat = `${lat}`;
   xml.node.tag = getXmlTags(newTags);
   return buildXmlString(xml);
 };
@@ -303,12 +317,12 @@ export const addOsmFeature = async (
 export type Change = {
   feature: Feature;
   allTags: FeatureTags;
-  isDelete?: boolean;
+  toBeDeleted?: boolean;
 };
 
 const saveChange = async (
   changesetId: any,
-  { feature, allTags, isDelete }: Change,
+  { feature, allTags, toBeDeleted }: Change,
 ) => {
   const apiId = feature.osmMeta;
   const item = await getItem(apiId);
@@ -319,10 +333,10 @@ const saveChange = async (
     apiId,
     changesetId,
     allTags,
-    isDelete,
+    toBeDeleted,
   );
 
-  await putOrDeleteItem(isDelete, apiId, newItem);
+  await putOrDeleteItem(toBeDeleted, apiId, newItem);
 };
 
 export const editCrag = async (

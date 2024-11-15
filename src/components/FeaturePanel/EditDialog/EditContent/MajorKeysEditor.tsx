@@ -96,7 +96,7 @@ const TextFieldWithCharacterCount = ({
 
 export const MajorKeysEditor = () => {
   const { focusTag } = useEditDialogContext();
-  const { tags, setTag } = useEditContext().tags;
+  const { tags, setTag } = useEditContext().data;
 
   // TODO this code will be replaced when implementing id presets fields
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);

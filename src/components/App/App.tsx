@@ -39,6 +39,7 @@ import {
 } from '../../services/climbing-areas/getClimbingAreas';
 import { DirectionsBox } from '../Directions/DirectionsBox';
 import { Scrollbars } from 'react-custom-scrollbars';
+import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -164,6 +165,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
       <HomepagePanel />
       {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
+      {router.pathname === '/climbing-grades' && <ClimbingGradesTable />}
       {climbingAreas && <ClimbingAreasPanel areas={climbingAreas} />}
       <Map />
       <TitleAndMetaTags />

@@ -42,7 +42,7 @@ const Table = styled.table`
 
 const useUpdateState = (days: Day[], setDays: SetDaysFn) => {
   const valueSetHere = useRef<string | undefined>(undefined);
-  const { tags, setTag } = useEditContext().tags;
+  const { tags, setTag } = useEditContext().data;
 
   const tag = tags.opening_hours ?? '';
   useEffect(() => {
@@ -112,7 +112,7 @@ const EditorTable = () => {
 };
 
 export const OpeningHoursEditor = () => {
-  const { tags } = useEditContext().tags;
+  const { tags } = useEditContext().data;
 
   if (tags.opening_hours && !canItHandle(tags.opening_hours)) {
     return <OpeningHoursInput cantEdit />;

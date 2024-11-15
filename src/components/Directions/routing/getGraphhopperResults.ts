@@ -1,6 +1,7 @@
 import { Profile, RoutingResult } from './types';
 import { LonLat } from '../../../services/types';
 import { fetchJson } from '../../../services/fetch';
+import { intl } from '../../../services/intl';
 
 const API_KEY = `f189b841-6529-46c6-8a91-51f17477dcda`;
 
@@ -17,7 +18,7 @@ export const getGraphhopperResults = async (
   const profile = profiles[mode];
   const from = points[0].toReversed().join(','); // lon,lat!
   const to = points[1].toReversed().join(',');
-  const url = `https://graphhopper.com/api/1/route?point=${from}&point=${to}&vehicle=${profile}&key=${API_KEY}&type=json&points_encoded=false&instructions=false&snap_prevention=ferry`;
+  const url = `https://graphhopper.com/api/1/route?point=${from}&point=${to}&vehicle=${profile}&key=${API_KEY}&type=json&points_encoded=false&snap_prevention=ferry&locale=${intl.lang}`;
 
   const data = await fetchJson(url);
 
@@ -31,5 +32,6 @@ export const getGraphhopperResults = async (
     link: 'https://graphhopper.com/',
     bbox: { w, s, e, n },
     geojson: data.paths[0].points,
+    instructions: data.paths[0].instructions,
   };
 };

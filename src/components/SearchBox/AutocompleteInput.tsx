@@ -14,6 +14,7 @@ import { getOptionLabel } from './getOptionLabel';
 import { useGetOptions } from './useGetOptions';
 import { useInputValueState } from './options/geocoder';
 import { useRouter } from 'next/router';
+import { useUserSettingsContext } from '../utils/UserSettingsContext';
 
 type SearchBoxInputProps = {
   params: any;
@@ -76,6 +77,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const { inputValue, setInputValue } = useInputValueState();
   const options = useGetOptions(inputValue);
   const router = useRouter();
+  const { userSettings } = useUserSettingsContext();
+  const { isImperial } = userSettings;
 
   return (
     <Autocomplete
@@ -110,7 +113,12 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
           autocompleteRef={autocompleteRef}
         />
       )}
-      renderOption={renderOptionFactory(inputValue, currentTheme, mapCenter)}
+      renderOption={renderOptionFactory(
+        inputValue,
+        currentTheme,
+        mapCenter,
+        isImperial,
+      )}
     />
   );
 };

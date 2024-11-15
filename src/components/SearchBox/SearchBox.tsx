@@ -12,6 +12,7 @@ import { SEARCH_BOX_HEIGHT } from './consts';
 import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
 import { setLastFeature } from '../../services/lastFeatureStorage';
+import { DirectionsButton } from '../Directions/DirectionsButton';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -102,6 +103,8 @@ const SearchBox = ({ withShadow = false }) => {
             <HamburgerMenu />
           </>
         )}
+
+        {(!featureShown || isMobileMode) && <DirectionsButton />}
       </StyledPaper>
     </TopPanel>
   );

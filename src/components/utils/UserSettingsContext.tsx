@@ -1,27 +1,40 @@
 import React, { createContext, useContext } from 'react';
 import { usePersistedState } from './usePersistedState';
-import { GradeSystem } from '../FeaturePanel/Climbing/utils/grades/gradeData';
+import {
+  GRADE_SYSTEMS,
+  GradeSystem,
+} from '../FeaturePanel/Climbing/utils/grades/gradeData';
 import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
 
 type UserSettingsType = {
+  isImperial: boolean;
+  'weather.enabled': boolean;
   'climbing.gradeSystem': GradeSystem;
   'climbing.isGradesOnPhotosVisible': boolean;
   'climbing.defaultClimbingStyle': TickStyle;
   'climbing.selectRoutesByScrolling': boolean;
+  'climbing.visibleGradeSystems': Record<string, boolean>;
 };
 
 type UserSettingsContextType = {
   userSettings: UserSettingsType;
   setUserSettings: (userSettings: UserSettingsType) => void;
-  setUserSetting: (key: string, value: string | number | boolean) => void;
+  // TODO: Real generic typesafety
+  setUserSetting: (key: string, value: any) => void;
 };
 
 const initialUserSettings: UserSettingsType = {
+  isImperial: false,
+  'weather.enabled': true,
   'climbing.gradeSystem': null,
   'climbing.isGradesOnPhotosVisible': true,
   'climbing.defaultClimbingStyle': 'OS',
   'climbing.selectRoutesByScrolling': isMobileDevice(),
+  'climbing.visibleGradeSystems': GRADE_SYSTEMS.reduce(
+    (acc, { key }) => ({ ...acc, [key]: true }),
+    {},
+  ),
 };
 
 export const UserSettingsContext =

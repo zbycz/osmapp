@@ -3,6 +3,7 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { usePersistedState } from './usePersistedState';
@@ -10,26 +11,33 @@ import { DEFAULT_MAP } from '../../config.mjs';
 import { PROJECT_ID } from '../../services/project';
 import { useBoolState } from '../helpers';
 import { Setter } from '../../types';
+import { LonLat } from '../../services/types';
 
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
+
+// [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
+export type Bbox = [number, number, number, number];
 
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
   name?: string;
+  description?: string;
   url?: string;
   key?: string;
   Icon?: LayerIcon;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
   minzoom?: number;
-  bboxes?: number[][];
+  bboxes?: Bbox[];
 }
-
-// [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
-export type Bbox = [number, number, number, number];
 
 // [z, lat, lon] - string because we use RoundedPosition
 export type View = [string, string, string];
+
+export type MapClickOverride =
+  | ((coords: LonLat, label: string) => void)
+  | undefined;
+export type MapClickOverrideRef = React.MutableRefObject<MapClickOverride>;
 
 type MapStateContextType = {
   bbox: Bbox;
@@ -42,6 +50,7 @@ type MapStateContextType = {
   setActiveLayers: Setter<string[]>;
   userLayers: Layer[];
   setUserLayers: Setter<Layer[]>;
+  mapClickOverrideRef: MapClickOverrideRef;
   mapLoaded: boolean;
   setMapLoaded: () => void;
 };
@@ -66,7 +75,7 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     'userLayerIndex',
     [],
   );
-
+  const mapClickOverrideRef = useRef<MapClickOverride>();
   const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
   useEffect(setNotLoaded, [setNotLoaded]);
 
@@ -86,6 +95,7 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     setActiveLayers,
     userLayers,
     setUserLayers,
+    mapClickOverrideRef,
     mapLoaded,
     setMapLoaded,
   };
