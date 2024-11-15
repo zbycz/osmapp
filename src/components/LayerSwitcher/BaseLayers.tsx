@@ -12,12 +12,7 @@ import {
   StyledList,
 } from './helpers';
 import React from 'react';
-import {
-  ListItemButton,
-  ListItemSecondaryAction,
-  ListItemText,
-  Tooltip,
-} from '@mui/material';
+import { ListItemButton, ListItemText, Tooltip } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 
 const OutsideOfView = () => (
@@ -45,11 +40,7 @@ const BaseLayerItem = ({ layer }: { layer: Layer }) => {
         <LayerIcon Icon={Icon} />
         <ListItemText primary={name} />
         {isOutsideOfView && <OutsideOfView />}
-        {type === 'user' && (
-          <ListItemSecondaryAction>
-            <RemoveUserLayerAction url={url} />
-          </ListItemSecondaryAction>
-        )}
+        {type === 'user' && <RemoveUserLayerAction url={url} />}
       </ListItemButton>
     </>
   );
