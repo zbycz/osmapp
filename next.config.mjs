@@ -27,7 +27,7 @@ export default withSentryConfig(nextConfig, {
   silent: !process.env.CI,
   widenClientFileUpload: true, // Upload a larger set of source maps for prettier stack traces (increases build time)
   reactComponentAnnotation: { enabled: true }, // Automatically annotate React components to show their full name in breadcrumbs and session replay
-  tunnelRoute: '/monitoring',
+  // tunnelRoute: '/monitoring',
   hideSourceMaps: false,
   disableLogger: true, // Automatically tree-shake Sentry logger statements to reduce bundle size
   automaticVercelMonitors: true, // https://vercel.com/docs/cron-jobs
