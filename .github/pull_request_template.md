@@ -13,3 +13,4 @@
 - [ ] dark mode / light mode
 - [ ] mobile / desktop
 - [ ] server-side-rendering (SSR)
+- [ ] all texts are localized (in vocabulary.ts)
