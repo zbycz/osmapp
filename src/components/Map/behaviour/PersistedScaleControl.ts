@@ -1,7 +1,7 @@
 import { Map, ScaleControl } from 'maplibre-gl';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { createMapEventHook } from '../../helpers';
 import { useEffect } from 'react';
+import { useTurnByTurnContext } from '../../utils/TurnByTurnContext';
 
 // https://github.com/maplibre/maplibre-gl-js/blob/afe4377706429a6b4e708e62a3c39a795ae8f28e/src/ui/control/scale_control.js#L36-L83
 
@@ -11,7 +11,10 @@ class ClickableScaleControl extends ScaleControl {
   private getHoverText: () => string;
 
   constructor({ onClick, getHoverText, ...options }) {
-    super(options);
+    super({
+      maxWidth: 80,
+      ...options,
+    });
     this.onClick = onClick;
     this.getHoverText = getHoverText;
   }
@@ -37,14 +40,14 @@ class ClickableScaleControl extends ScaleControl {
 export const usePersistedScaleControl = (map: Map) => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const { isImperial } = userSettings;
+  const { routingResult } = useTurnByTurnContext();
 
   useEffect(() => {
-    if (!map) {
+    if (!map || routingResult) {
       return;
     }
 
     const scaleControl = new ClickableScaleControl({
-      maxWidth: 80,
       unit: isImperial ? 'imperial' : 'metric',
       onClick: () => {
         setUserSetting('isImperial', !isImperial);

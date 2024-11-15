@@ -34,12 +34,12 @@ const Spinner = styled(CircularProgress)`
   margin: -20px 0 0 -20px;
 `;
 
-const TopRight = styled.div<{ $bottom: boolean }>`
+const TopRight = styled.div`
   position: absolute;
   z-index: 1000;
   padding: 10px;
   right: 0;
-  ${({ $bottom }) => ($bottom ? 'bottom: 100px;' : 'top: 62px;')}
+  top: 62px;
 
   @media ${isDesktop} {
     top: 0;
@@ -86,16 +86,20 @@ const Map = () => {
       <BrowserMapDynamic />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
-      <TopRight $bottom={!!routingResult}>
-        <TopMenu />
-        <LayerSwitcherDynamic />
-      </TopRight>
-      <BottomRight>
-        {SHOW_PROTOTYPE_UI && <BugReportButton />}
-        <MaptilerLogo />
-        <Weather />
-        <MapFooter />
-      </BottomRight>
+      {!routingResult && (
+        <TopRight>
+          <TopMenu />
+          <LayerSwitcherDynamic />
+        </TopRight>
+      )}
+      {!routingResult && (
+        <BottomRight>
+          {SHOW_PROTOTYPE_UI && <BugReportButton />}
+          <MaptilerLogo />
+          <Weather />
+          <MapFooter />
+        </BottomRight>
+      )}
     </>
   );
 };
