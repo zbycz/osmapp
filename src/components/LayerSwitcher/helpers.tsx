@@ -13,14 +13,11 @@ import { Setter } from '../../types';
 
 type RemoveUserLayerActionProps = {
   url: string;
-  setUserLayers: Setter<Layer[]>;
 };
 
-export const RemoveUserLayerAction = ({
-  url,
-  setUserLayers,
-}: RemoveUserLayerActionProps) => {
-  const { activeLayers, setActiveLayers } = useMapStateContext();
+export const RemoveUserLayerAction = ({ url }: RemoveUserLayerActionProps) => {
+  const { activeLayers, setActiveLayers, setUserLayers } = useMapStateContext();
+
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setUserLayers((current) => {
@@ -39,10 +36,10 @@ export const RemoveUserLayerAction = ({
   );
 };
 
-export const LayersHeader = ({ headingId }: { headingId: string }) => (
+export const LayersHeader = () => (
   <>
     <Box m={2}>
-      <Typography variant="h5" color="textPrimary" id={headingId}>
+      <Typography variant="h5" color="textPrimary">
         {t('layerswitcher.heading')}
       </Typography>
     </Box>

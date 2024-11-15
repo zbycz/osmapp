@@ -47,12 +47,14 @@ const czBbox = [
 export const osmappLayers: Layers = {
   basic: {
     name: t('layers.basic'),
+    description: 'maptiler.com',
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: ['maptiler', 'osm'],
   },
   basicOfr: {
-    name: `${t('layers.basic')} OpenFreeMap`,
+    name: `${t('layers.basic')} OpenFreeMap (beta)`,
+    description: '',
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: [
@@ -62,6 +64,7 @@ export const osmappLayers: Layers = {
   },
   makinaAfrica: {
     name: t('layers.makina_africa'),
+    description: 'OpenPlaceGuide.org',
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: [
@@ -72,6 +75,8 @@ export const osmappLayers: Layers = {
   },
   outdoor: {
     name: t('layers.outdoor'),
+    description: 'Maptiler.com',
+
     type: 'basemap',
     Icon: FilterHdrIcon,
     attribution: ['maptiler', 'osm'],
@@ -79,6 +84,7 @@ export const osmappLayers: Layers = {
   s1: { type: 'spacer' },
   carto: {
     name: t('layers.carto'),
+    description: 'Default OSM.org style',
     type: 'basemap',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     Icon: MapIcon,
@@ -114,6 +120,7 @@ export const osmappLayers: Layers = {
   // },
   bike: {
     name: t('layers.bike'),
+    description: 'Thunderforest.com',
     type: 'basemap',
     url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=18c0cb31f2fd41d28ac90abe4059e359`,
     Icon: DirectionsBikeIcon,

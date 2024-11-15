@@ -15,20 +15,21 @@ import { LonLat } from '../../services/types';
 
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
+// [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
+export type Bbox = [number, number, number, number];
+
 export interface Layer {
   type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
   name?: string;
+  description?: string;
   url?: string;
   key?: string;
   Icon?: LayerIcon;
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
   minzoom?: number;
-  bboxes?: number[][];
+  bboxes?: Bbox[];
 }
-
-// [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
-export type Bbox = [number, number, number, number];
 
 // [z, lat, lon] - string because we use RoundedPosition
 export type View = [string, string, string];
