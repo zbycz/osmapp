@@ -21,9 +21,24 @@ import { Layer } from '../../utils/MapStateContext';
 import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
 
+const ofrBasicStyle = {
+  ...basicStyle,
+  layers: basicStyle.layers.map((layer) =>
+    (layer as any).source === 'maptiler_planet'
+      ? {
+          ...layer,
+          source: 'ofr_planet',
+        }
+      : layer,
+  ),
+};
+
 const getBaseStyle = (key: string): StyleSpecification => {
   if (key === 'basic') {
     return basicStyle;
+  }
+  if (key === 'basicOfr') {
+    return ofrBasicStyle;
   }
   if (key === 'makinaAfrica') {
     return makinaAfricaStyle;
