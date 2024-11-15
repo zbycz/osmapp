@@ -1,5 +1,6 @@
 import { fetchJson } from '../../../services/fetch';
 import { isValidLayerUrl } from '../helpers';
+import { Bbox } from '../../utils/MapStateContext';
 
 export type Category =
   | 'photo'
@@ -23,7 +24,7 @@ export interface LayerIndex {
    * A unique identifier for the source; used in imagery_used changeset tag
    */
   id: string;
-  bbox?: number[][];
+  bbox?: Bbox[];
   type: 'tms' | 'wms';
   /**
    * A URL template for imagery tilesA URL template for imagery tiles
