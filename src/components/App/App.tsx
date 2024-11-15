@@ -19,7 +19,7 @@ import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
-import { setIntlForSSR } from '../../services/intl';
+import { setIntlForSSR, t } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
 import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
@@ -31,7 +31,6 @@ import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
 import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
-import Error from 'next/error';
 import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
 import {
   ClimbingArea,
@@ -40,6 +39,11 @@ import {
 import { DirectionsBox } from '../Directions/DirectionsBox';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
+
+const URL_NOT_FOUND_TOAST = {
+  message: t('url_not_found_toast'),
+  severity: 'warning' as const,
+};
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -176,7 +180,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
 const reactQueryClient = new QueryClient();
 
 type Props = {
-  featureFromRouter: Feature | null;
+  featureFromRouter: Feature | '404' | null;
   initialMapView: View;
   cookies: Record<string, string>;
   climbingAreas: Array<ClimbingArea>;
@@ -189,12 +193,16 @@ const App: NextPage<Props> = ({
   climbingAreas,
 }) => {
   const mapView = getMapViewFromHash() || initialMapView;
+  const initialToast =
+    featureFromRouter === '404' ? URL_NOT_FOUND_TOAST : undefined;
 
   return (
-    <SnackbarProvider>
+    <SnackbarProvider initialToast={initialToast}>
       <UserSettingsProvider>
         <FeatureProvider
-          featureFromRouter={featureFromRouter}
+          featureFromRouter={
+            featureFromRouter === '404' ? null : featureFromRouter
+          }
           cookies={cookies}
         >
           <MapStateProvider initialMapView={mapView}>
@@ -230,7 +238,7 @@ App.getInitialProps = async (ctx: NextPageContext) => {
   const featureFromRouter =
     ctx.query.all?.[0] === 'directions' ? null : await getInitialFeature(ctx);
   if (ctx.res) {
-    if (featureFromRouter?.error === '404') {
+    if (featureFromRouter === '404' || featureFromRouter?.error === '404') {
       ctx.res.statusCode = 404;
     } else if (featureFromRouter?.error) {
       ctx.res.statusCode = 500;

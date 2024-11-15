@@ -16,6 +16,7 @@ export default {
   darkmode_off: 'Dark mode: off',
   show_more: 'Show more',
   show_less: 'Show less',
+  url_not_found_toast: 'Requested URL not found, check your address bar.',
 
   'user.login_register': 'Login / register',
   'user.logout': 'Logout',

@@ -79,7 +79,7 @@ const getValidApiId = (path: string[]): OsmId => {
 };
 export const getInitialFeature = async (
   ctx: NextPageContext,
-): Promise<Feature | null> => {
+): Promise<Feature | '404' | null> => {
   const path = ctx.query.all as string[];
 
   // url: "/"
@@ -96,7 +96,7 @@ export const getInitialFeature = async (
 
   const apiId = getValidApiId(path);
   if (!apiId) {
-    return null;
+    return '404';
   }
 
   if (isServer()) {

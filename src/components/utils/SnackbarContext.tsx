@@ -13,12 +13,19 @@ const SnackbarContext = createContext<SnackbarContextType>({
 
 export const useSnackbar = () => useContext(SnackbarContext);
 
+type Props = {
+  initialToast?: { message: string; severity?: Severity };
+};
+
 // TODO maybe allow more messages ?
 // TODO maybe similar code is already in Mui?  but useSnackbar is configuration only
-export const SnackbarProvider: React.FC = ({ children }) => {
-  const [open, setOpen] = useState(false);
-  const [message, setMessage] = useState<string>('');
-  const [severity, setSeverity] = useState<Severity>();
+export const SnackbarProvider: React.FC<Props> = ({
+  children,
+  initialToast,
+}) => {
+  const [open, setOpen] = useState(!!initialToast);
+  const [message, setMessage] = useState<string>(initialToast?.message ?? '');
+  const [severity, setSeverity] = useState<Severity>(initialToast?.severity);
 
   const handleClose = (_event: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {
