@@ -114,10 +114,14 @@ type OverpassFeature = Feature & {
   tags: Record<string, string>;
 };
 
-// TODO use our own implementaion from fetchCrags, which handles recursive geometries
-export const overpassGeomToGeojson = (response: {
+export type OverpassResponse = {
   elements: OverpassObject[];
-}): OverpassFeature[] =>
+};
+
+// TODO use our own implementaion from fetchCrags, which handles recursive geometries
+export const overpassGeomToGeojson = (
+  response: OverpassResponse,
+): OverpassFeature[] =>
   response.elements.map((element) => {
     const { type, id, tags = {} } = element;
     const geometry = GEOMETRY[type]?.(element);

@@ -5,7 +5,7 @@ import FilterHdrIcon from '@mui/icons-material/FilterHdr';
 import MapIcon from '@mui/icons-material/Map';
 import SatelliteIcon from '@mui/icons-material/Satellite';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
-import { Layer } from '../utils/MapStateContext';
+import { Bbox, Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
 import Maki from '../utils/Maki';
@@ -30,14 +30,14 @@ const ClimbingIcon = () => {
   );
 };
 
-const africaBbox = [
+const africaBbox: Bbox = [
   -20, // west
   -35, // south
   55, // east
   40, // north
 ];
 
-const czBbox = [
+const czBbox: Bbox = [
   12.09, // west
   48.55, // south
   18.87, // east

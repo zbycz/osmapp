@@ -1,4 +1,4 @@
-import { overpassGeomToGeojson } from '../overpassSearch';
+import { overpassGeomToGeojson, OverpassResponse } from '../overpassSearch';
 
 /*
 [out:json][timeout:25];
@@ -10,14 +10,7 @@ import { overpassGeomToGeojson } from '../overpassSearch';
   out body geom;
 */
 
-const response = {
-  version: 0.6,
-  generator: 'Overpass API 0.7.61.5 4133829e',
-  osm3s: {
-    timestamp_osm_base: '2023-09-28T10:25:11Z',
-    copyright:
-      'The data included in this document is from www.openstreetmap.org. The data is made available under ODbL.',
-  },
+const response: OverpassResponse = {
   elements: [
     {
       type: 'node',
