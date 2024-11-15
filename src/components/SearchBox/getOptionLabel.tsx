@@ -16,8 +16,7 @@ export const getOptionLabel = (option: Option | undefined) => {
     (option.type === 'geocoder' &&
       option.geocoder.properties &&
       buildPhotonAddress(option.geocoder.properties)) ||
-    (option.type === 'osm' &&
-      `OpenStreetMap ${option.osm.type}/${option.osm.id}`) ||
+    (option.type === 'osm' && `${option.osm.type}/${option.osm.id}`) ||
     ''
   );
 };
