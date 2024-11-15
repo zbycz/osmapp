@@ -218,11 +218,14 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
   );
 };
 
+const DEFAULT_VALUE =
+  'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg';
+
 const CustomChoose: React.FC<{
   onValidation: (isOk: boolean) => void;
   onChange: (layer: LayerIndex) => void;
 }> = ({ onValidation, onChange }) => {
-  const [url, setUrl] = React.useState('');
+  const [url, setUrl] = React.useState(DEFAULT_VALUE);
   const [isValid, setIsValid] = React.useState(false);
 
   React.useEffect(() => {
