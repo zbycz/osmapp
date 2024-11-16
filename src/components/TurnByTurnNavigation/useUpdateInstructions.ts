@@ -72,6 +72,7 @@ const groupInstructionsByState = (
 export const useUpdateInstructions = () => {
   const location = useLocation();
   const { initialInstructions, setInstructions } = useTurnByTurnContext();
+  const [pathSegment, setPathSegment] = React.useState<Pair<LonLat>>(null);
 
   React.useEffect(() => {
     if (!location) {
@@ -87,6 +88,8 @@ export const useUpdateInstructions = () => {
       getCurriedDistance([longitude, latitude]),
     );
 
+    setPathSegment(pairs[nearestIndex]);
+
     const { completedPath, uncompletedPath } = splitPath(pairs, nearestIndex);
     addToMap(getGlobalMap(), completedPath, uncompletedPath);
 
@@ -97,4 +100,6 @@ export const useUpdateInstructions = () => {
       resetMapRoute(getGlobalMap());
     };
   }, [location, initialInstructions, setInstructions]);
+
+  return pathSegment;
 };

@@ -2,7 +2,7 @@ import styled from '@emotion/styled';
 import React, { useCallback, useState } from 'react';
 import { Stack } from '@mui/material';
 import { Result } from './Result';
-import { RoutingResult } from './routing/types';
+import { Profile, RoutingResult } from './routing/types';
 import { useBoolState, useMobileMode } from '../helpers';
 import { DirectionsForm } from './DirectionsForm';
 
@@ -19,6 +19,7 @@ export const DirectionsBox = () => {
   const isMobileMode = useMobileMode();
   const [result, setResult] = useState<RoutingResult>(null);
   const [revealed, revealForm, hide] = useBoolState(false); // mobile only
+  const [mode, setMode] = useState<Profile>('car');
   const hideForm = isMobileMode && result && !revealed;
 
   const setResultAndHide = useCallback(
@@ -31,9 +32,17 @@ export const DirectionsBox = () => {
 
   return (
     <Wrapper spacing={1}>
-      <DirectionsForm setResult={setResultAndHide} hideForm={hideForm} />
+      <DirectionsForm
+        setResult={setResultAndHide}
+        hideForm={hideForm}
+        setMode={setMode}
+      />
       {result && (
-        <Result result={result} revealForm={!revealed && revealForm} />
+        <Result
+          result={result}
+          revealForm={!revealed && revealForm}
+          mode={mode}
+        />
       )}
     </Wrapper>
   );

@@ -4,6 +4,7 @@ import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import React from 'react';
 import styled from '@emotion/styled';
+import { Profile } from './routing/types';
 
 const StyledToggleButton = styled(ToggleButton)`
   padding: 8px;
@@ -22,11 +23,11 @@ const icons = [
 
 type Props = {
   value: string;
-  setMode: (value: ((prevState: string) => string) | string) => void;
+  setMode: (value: Profile) => void;
 };
 
 export const ModeToggler = ({ value, setMode }: Props) => {
-  const onChange = (_: unknown, newMode: string | null) => {
+  const onChange = (_: unknown, newMode: Profile | null) => {
     if (newMode !== null) {
       setMode(newMode);
     }

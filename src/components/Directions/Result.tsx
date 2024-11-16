@@ -4,7 +4,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
-import { RoutingResult } from './routing/types';
+import { Profile, RoutingResult } from './routing/types';
 import { t, Translation } from '../../services/intl';
 import { CloseButton, toHumanDistance } from './helpers';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
@@ -56,7 +56,11 @@ const PoweredBy = ({ result }: { result: RoutingResult }) => (
   </Typography>
 );
 
-type Props = { result: RoutingResult; revealForm: false | (() => void) };
+type Props = {
+  result: RoutingResult;
+  revealForm: false | (() => void);
+  mode: Profile;
+};
 
 const MobileResult = ({
   result,
@@ -64,9 +68,10 @@ const MobileResult = ({
   time,
   distance,
   ascent,
+  mode,
 }: Props & Record<'time' | 'distance' | 'ascent', string>) => {
   const [showInstructions, setShowInstructions] = React.useState(false);
-  const initTurnByTurn = useInitTurnByTurnNav(result);
+  const initTurnByTurn = useInitTurnByTurnNav(result, mode);
 
   return (
     <StyledPaperMobile elevation={3}>
@@ -112,11 +117,11 @@ const MobileResult = ({
   );
 };
 
-export const Result = ({ result, revealForm }: Props) => {
+export const Result = ({ result, revealForm, mode }: Props) => {
   const isMobileMode = useMobileMode();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
-  const initTurnByTurn = useInitTurnByTurnNav(result);
+  const initTurnByTurn = useInitTurnByTurnNav(result, mode);
 
   const time = toHumanTime(result.time);
   const distance = toHumanDistance(isImperial, result.distance);
@@ -130,6 +135,7 @@ export const Result = ({ result, revealForm }: Props) => {
         time={time}
         distance={distance}
         ascent={ascent}
+        mode={mode}
       />
     );
   }

@@ -4,9 +4,11 @@ import React from 'react';
 import { useUpdateInstructions } from './useUpdateInstructions';
 import { BottomPanel } from './BottomPanel';
 import { TopPanel } from './TopPanel';
+import { useUpdateMapView } from './useUpdateMapView';
 
 export const TurnByTurnNavigation = () => {
-  useUpdateInstructions();
+  const segment = useUpdateInstructions();
+  useUpdateMapView(segment);
   useLocationImage(getGlobalMap());
 
   return (

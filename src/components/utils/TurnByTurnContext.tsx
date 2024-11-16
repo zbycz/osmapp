@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { RoutingResult } from '../Directions/routing/types';
+import { Profile, RoutingResult } from '../Directions/routing/types';
 import { Setter } from '../../types';
 import { LonLat } from '../../services/types';
 import { useMapStateContext } from './MapStateContext';
@@ -14,6 +14,8 @@ type TurnByTurnContextType = {
   setInstructions: Setter<InstructionWithPath[]>;
   initialInstructions: InstructionWithPath[];
   setInitialInstructions: Setter<InstructionWithPath[]>;
+  mode: Profile;
+  setMode: Setter<Profile>;
   end: () => void;
 };
 
@@ -27,6 +29,7 @@ export const TurnByTurnProvider: React.FC = ({ children }) => {
     React.useState<InstructionWithPath[]>(null);
   const [initialInstructions, setInitialInstructions] =
     React.useState<InstructionWithPath[]>(null);
+  const [mode, setMode] = React.useState<Profile>(null);
 
   const value: TurnByTurnContextType = {
     routingResult,
@@ -35,11 +38,14 @@ export const TurnByTurnProvider: React.FC = ({ children }) => {
     setInstructions,
     initialInstructions,
     setInitialInstructions,
+    mode,
+    setMode,
     end: () => {
       setRoutingResult(null);
       setInstructions(null);
       setInitialInstructions(null);
       setMapClickDisabled(false);
+      setMode(null);
     },
   };
 

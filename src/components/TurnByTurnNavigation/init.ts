@@ -1,4 +1,4 @@
-import { RoutingResult } from '../Directions/routing/types';
+import { Profile, RoutingResult } from '../Directions/routing/types';
 import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
 import { getSubPoints, pair, requestOrientationPermission } from './helpers';
 import { findIndexByLowest } from '../../utils';
@@ -7,8 +7,11 @@ import { getGlobalMap } from '../../services/mapStorage';
 import { addToMap } from './addToMap';
 import { useMapStateContext } from '../utils/MapStateContext';
 
-export const useInitTurnByTurnNav = (routingResult: RoutingResult) => {
-  const { setRoutingResult, setInitialInstructions, setInstructions } =
+export const useInitTurnByTurnNav = (
+  routingResult: RoutingResult,
+  mode: Profile,
+) => {
+  const { setRoutingResult, setInitialInstructions, setInstructions, setMode } =
     useTurnByTurnContext();
   const { setMapClickDisabled } = useMapStateContext();
 
@@ -64,6 +67,7 @@ export const useInitTurnByTurnNav = (routingResult: RoutingResult) => {
         setRoutingResult(routingResult);
         setInstructions(instructionsFromUserPos);
         setInitialInstructions(instructionsFromUserPos);
+        setMode(mode);
 
         addToMap(map, [], totalPath);
       },
