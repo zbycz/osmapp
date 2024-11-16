@@ -1,6 +1,51 @@
-import { GeoJSONSource, Map } from 'maplibre-gl';
+import { FilterSpecification, GeoJSONSource, Map } from 'maplibre-gl';
 
 const SOURCE_NAME = 'turn-by-turn';
+const LINE_WIDTH = 8;
+const OUTLINE_WIDTH = 6;
+
+const filterStatus = (value: string): FilterSpecification => [
+  '==',
+  ['get', 'status'],
+  value,
+];
+
+type Props = {
+  status: 'completed' | 'uncompleted';
+  outlineColor: string;
+  color: string;
+};
+
+const addOutlinedLayer = (map: Map, { status, outlineColor, color }: Props) => {
+  map.addLayer({
+    id: `${status}-route-outline`,
+    type: 'line',
+    source: SOURCE_NAME,
+    filter: filterStatus(status),
+    layout: {
+      'line-cap': 'round',
+      'line-join': 'round',
+    },
+    paint: {
+      'line-color': outlineColor,
+      'line-width': LINE_WIDTH + OUTLINE_WIDTH,
+    },
+  });
+  map.addLayer({
+    id: `${status}-route`,
+    type: 'line',
+    source: SOURCE_NAME,
+    filter: filterStatus(status),
+    layout: {
+      'line-cap': 'round',
+      'line-join': 'round',
+    },
+    paint: {
+      'line-color': color,
+      'line-width': LINE_WIDTH,
+    },
+  });
+};
 
 export const createSource = (map: Map) => {
   map.addSource(SOURCE_NAME, {
@@ -11,35 +56,15 @@ export const createSource = (map: Map) => {
     },
   });
 
-  map.addLayer({
-    id: 'completed-route',
-    type: 'line',
-    source: SOURCE_NAME,
-    filter: ['==', ['get', 'status'], 'completed'],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round',
-    },
-    paint: {
-      'line-color': '#00FF00',
-      'line-width': 4,
-    },
+  addOutlinedLayer(map, {
+    status: 'completed',
+    outlineColor: '#D14D4D',
+    color: '#F5ABAB',
   });
-
-  map.addLayer({
-    id: 'uncompleted-route',
-    type: 'line',
-    source: SOURCE_NAME,
-    filter: ['==', ['get', 'status'], 'uncompleted'],
-    layout: {
-      'line-cap': 'round',
-      'line-join': 'round',
-    },
-    paint: {
-      'line-color': '#FF0000',
-      'line-width': 4,
-      'line-dasharray': [2, 2],
-    },
+  addOutlinedLayer(map, {
+    status: 'uncompleted',
+    outlineColor: '#B74343',
+    color: '#EB5757',
   });
 };
 
