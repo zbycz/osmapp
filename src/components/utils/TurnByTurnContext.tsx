@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { RoutingResult } from '../Directions/routing/types';
 import { Setter } from '../../types';
 import { LonLat } from '../../services/types';
+import { useMapStateContext } from './MapStateContext';
 
 type Instruction = RoutingResult['instructions'][number];
 export type InstructionWithPath = Instruction & { path: LonLat[] };
@@ -13,11 +14,14 @@ type TurnByTurnContextType = {
   setInstructions: Setter<InstructionWithPath[]>;
   initialInstructions: InstructionWithPath[];
   setInitialInstructions: Setter<InstructionWithPath[]>;
+  end: () => void;
 };
 
 const TurnByTurnContext = React.createContext<TurnByTurnContextType>(null);
 
 export const TurnByTurnProvider: React.FC = ({ children }) => {
+  const { setMapClickDisabled } = useMapStateContext();
+
   const [routingResult, setRoutingResult] = React.useState<RoutingResult>(null);
   const [instructions, setInstructions] =
     React.useState<InstructionWithPath[]>(null);
@@ -31,6 +35,12 @@ export const TurnByTurnProvider: React.FC = ({ children }) => {
     setInstructions,
     initialInstructions,
     setInitialInstructions,
+    end: () => {
+      setRoutingResult(null);
+      setInstructions(null);
+      setInitialInstructions(null);
+      setMapClickDisabled(false);
+    },
   };
 
   return (

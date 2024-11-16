@@ -77,7 +77,13 @@ const addOverlaysToStyle = (
 };
 
 export const useUpdateStyle = createMapEffectHook(
-  (map, activeLayers: string[], userLayers: Layer[], mapLoaded: boolean) => {
+  (
+    map,
+    activeLayers: string[],
+    userLayers: Layer[],
+    mapLoaded: boolean,
+    mapClickDisabled: boolean,
+  ) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
 
@@ -98,6 +104,8 @@ export const useUpdateStyle = createMapEffectHook(
     });
     map.addControl(languageControl);
 
-    setUpHover(map, layersWithOsmId(style));
+    if (!mapClickDisabled) {
+      return setUpHover(map, layersWithOsmId(style));
+    }
   },
 );

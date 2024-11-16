@@ -49,11 +49,12 @@ const BrowserMap = () => {
   const { userLayers } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
-  const { mapLoaded, setMapLoaded, mapClickOverrideRef } = useMapStateContext();
+  const { mapLoaded, setMapLoaded, mapClickOverrideRef, mapClickDisabled } =
+    useMapStateContext();
 
   const [map, mapRef] = useInitMap();
   useAddTopRightControls(map, mobileMode);
-  useOnMapClicked(map, setFeature, mapClickOverrideRef);
+  useOnMapClicked(map, setFeature, mapClickOverrideRef, mapClickDisabled);
   useOnMapLongPressed(map, setFeature);
   useOnMapLoaded(map, setMapLoaded);
   useFeatureMarker(map);
@@ -63,7 +64,7 @@ const BrowserMap = () => {
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
-  useUpdateStyle(map, activeLayers, userLayers, mapLoaded);
+  useUpdateStyle(map, activeLayers, userLayers, mapLoaded, mapClickDisabled);
   usePersistedScaleControl(map);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;

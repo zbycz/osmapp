@@ -23,7 +23,6 @@ import { getLastFeature } from '../../services/lastFeatureStorage';
 import { getCoordsOption } from '../SearchBox/options/coords';
 import { getLabel } from '../../helpers/featureLabel';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { getGlobalMap } from '../../services/mapStorage';
 
 const getRoutingFailed = (showToast: ShowToast) => {
   return (error: unknown) => {
@@ -34,7 +33,8 @@ const getRoutingFailed = (showToast: ShowToast) => {
       showToast(`${t('error')} code ${error.code}`, 'error');
     } else {
       Sentry.captureException(error);
-      showToast(`${t('error')} – ${error}`, 'error');
+      const errorTranslated = t('error');
+      showToast(`${errorTranslated} – ${error}`, 'error');
       throw error;
     }
   };

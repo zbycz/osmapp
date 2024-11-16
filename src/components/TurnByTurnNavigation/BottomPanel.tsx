@@ -6,9 +6,9 @@ import { useState } from 'react';
 import { renderLayerSwitcher } from './layerSwitcher';
 import LayersIcon from '@mui/icons-material/Layers';
 import SpeakerIcon from '@mui/icons-material/Speaker';
-import { useUpdateStyle } from '../Map/behaviour/useUpdateStyle';
 import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
-import { useEndTurnByTurn } from './end';
+import { MaptilerLogo } from '../Map/MapFooter/MaptilerLogo';
+import { MapFooter } from '../Map/MapFooter/MapFooter';
 
 const StyledBottomPanel = styled.div`
   position: absolute;
@@ -111,13 +111,33 @@ const Group = ({ items }: GroupProps) => {
   );
 };
 
+const BottomRight = styled.div`
+  position: absolute;
+  right: 0;
+  bottom: 100%;
+  text-align: right;
+  pointer-events: none;
+  z-index: 1;
+
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  align-items: end;
+  padding: 0 4px 4px 4px;
+`;
+
 export const BottomPanel = () => {
   const [expanded, setExpanded] = useState(false);
   const { palette } = useTheme();
-  const end = useEndTurnByTurn();
+  const { end } = useTurnByTurnContext();
 
   return (
     <StyledBottomPanel>
+      <BottomRight>
+        <MaptilerLogo />
+        {/* TODO: Show the weather in certain conditions*/}
+        <MapFooter />
+      </BottomRight>
       <Stack justifyContent="space-between" direction="row">
         <Stack
           direction="row"

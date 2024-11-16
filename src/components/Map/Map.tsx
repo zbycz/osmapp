@@ -50,7 +50,6 @@ const BottomRight = styled.div`
   position: absolute;
   right: 0;
   bottom: 0;
-  z-index: 1000;
   text-align: right;
   pointer-events: none;
   z-index: 999;
