@@ -34,6 +34,9 @@ const TooltipGradeItem = ({
     <GradeValue>{difficulty.grade}</GradeValue> according to{' '}
     <strong>{getGradeSystemName(difficulty.gradeSystem)}</strong>{' '}
     {isConverted && <WarningText>(converted)</WarningText>}
+    {difficulty.grade.includes('~') && (
+      <WarningText>(approximated)</WarningText>
+    )}
   </TooltipGradeItemContainer>
 );
 
