@@ -1,6 +1,6 @@
 import fetch from 'isomorphic-unfetch';
 import sizeOf from 'image-size';
-import { Size } from '../../components/FeaturePanel/ImagePane/types';
+import { Size } from '../../components/FeaturePanel/FeatureImages/types';
 
 export const fetchImage = async (imageUrl: string) => {
   const response = await fetch(imageUrl);
