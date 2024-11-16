@@ -5,12 +5,11 @@ import { LonLat } from '../../../services/types';
 import { Profile, RoutingResult } from './types';
 import { getGraphhopperResults } from './getGraphhopperResults';
 import { LineLayerSpecification } from '@maplibre/maplibre-gl-style-spec';
-import { type GeoJSON } from 'geojson';
 import { isMobileModeVanilla } from '../../helpers';
 
 // taken from or inspired by cartes.app, LGPL
 
-const slopeColor = (slope) => {
+const slopeColor = (slope: number) => {
   if (slope < 0) return '#8f53c1'; // give another color for negative slopes ?
   if (slope < 3) return '#8f53c1';
   // if (slope < 5) return 'yellow';
@@ -55,7 +54,7 @@ const computeSlopeGradient = (geojson) => {
     .flat();
 
   const chunkSize = 30;
-  const averaged = [];
+  const averaged: number[] = [];
   for (let i = 0; i < littles.length; i += chunkSize) {
     const chunk = littles.slice(i, i + chunkSize);
     const sum = chunk.reduce((memo, next) => memo + next, 0);
@@ -149,13 +148,17 @@ const renderOnMap = (
 
 export const destroyRouting = () => {
   const map = getGlobalMap();
+  if (!map) {
+    return;
+  }
+
   if (map.getLayer(`${SOURCE}-line`)) {
     map.removeLayer(`${SOURCE}-line`);
   }
   if (map.getLayer(`${SOURCE}-line-casing`)) {
     map.removeLayer(`${SOURCE}-line-casing`);
   }
-  if (map?.getSource(SOURCE)) {
+  if (map.getSource(SOURCE)) {
     map.removeSource(SOURCE);
   }
 };

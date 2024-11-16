@@ -116,7 +116,7 @@ export const requestOrientationPermission = () => {
   if (typeof DeviceOrientationEvent?.requestPermission === 'function') {
     // @ts-ignore
     return DeviceOrientationEvent.requestPermission().then(
-      (state) => state === 'granted',
+      (state: string) => state === 'granted',
     );
   }
   return Promise.resolve(true);

@@ -29,3 +29,10 @@ export const addToMap = (
     ],
   });
 };
+
+export const resetMapRoute = (map: Map) => {
+  getSource(map).setData({
+    type: 'FeatureCollection',
+    features: [],
+  });
+};

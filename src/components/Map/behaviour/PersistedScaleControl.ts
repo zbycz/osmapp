@@ -71,5 +71,5 @@ export const usePersistedScaleControl = (map: Map) => {
         map.removeControl(scaleControl);
       } catch {}
     };
-  }, [map, isImperial, setUserSetting]);
+  }, [map, isImperial, setUserSetting, routingResult]);
 };

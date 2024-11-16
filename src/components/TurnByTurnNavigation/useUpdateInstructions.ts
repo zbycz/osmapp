@@ -6,7 +6,7 @@ import {
   useTurnByTurnContext,
 } from '../utils/TurnByTurnContext';
 import { getCurriedDistance } from '../SearchBox/utils';
-import { addToMap } from './addToMap';
+import { addToMap, resetMapRoute } from './addToMap';
 import { getGlobalMap } from '../../services/mapStorage';
 import { sumBy } from 'lodash';
 import { LonLat } from '../../services/types';
@@ -92,5 +92,9 @@ export const useUpdateInstructions = () => {
 
     const grouped = groupInstructionsByState(initialInstructions, nearestIndex);
     setInstructions([...grouped.partial, ...grouped.uncompleted]);
+
+    return () => {
+      resetMapRoute(getGlobalMap());
+    };
   }, [location, initialInstructions, setInstructions]);
 };
