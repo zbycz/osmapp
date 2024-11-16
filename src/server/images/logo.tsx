@@ -1,5 +1,5 @@
 import React from 'react';
-import { Size } from '../../components/FeaturePanel/ImagePane/types';
+import { Size } from '../../components/FeaturePanel/FeatureImages/types';
 
 const openclimbingLogo = `
 <svg xmlns="http://www.w3.org/2000/svg" width="256" height="256">

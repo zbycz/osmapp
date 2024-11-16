@@ -11,7 +11,7 @@ import { PublicTransport } from './PublicTransport/PublicTransport';
 import { Properties } from './Properties/Properties';
 import { MemberFeatures } from './MemberFeatures/MemberFeatures';
 import { ParentLink } from './ParentLink';
-import { FeatureImages } from './ImagePane/FeatureImages';
+import { FeatureImages } from './FeatureImages/FeatureImages';
 import { FeatureOpenPlaceGuideLink } from './FeatureOpenPlaceGuideLink';
 import { CragsInArea } from './CragsInArea';
 import { ClimbingRestriction } from './Climbing/ClimbingRestriction';

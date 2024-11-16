@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import React from 'react';
 import { UserThemeProvider } from '../../src/helpers/theme';
-import { Paths } from '../../src/components/FeaturePanel/ImagePane/PathsSvg';
+import { Paths } from '../../src/components/FeaturePanel/FeatureImages/PathsSvg';
 import {
   Feature,
   ImageDefFromCenter,
@@ -18,7 +18,7 @@ import {
   SVG_TYPE,
 } from '../../src/server/images/sendImageResponse';
 import { svg2png } from '../../src/server/images/svg2png';
-import { Size } from '../../src/components/FeaturePanel/ImagePane/types';
+import { Size } from '../../src/components/FeaturePanel/FeatureImages/types';
 import { getApiId } from '../../src/services/helpers';
 import { renderStyledHtml } from '../../src/server/images/renderStyledHtml';
 

@@ -9,8 +9,8 @@ import { Feature, isInstant } from '../../services/types';
 import { useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 
-import { Slider, Wrapper } from './ImagePane/FeatureImages';
-import { Image } from './ImagePane/Image/Image';
+import { Slider, Wrapper } from './FeatureImages/FeatureImages';
+import { Image } from './FeatureImages/Image/Image';
 import { getInstantImage } from '../../services/images/getImageDefs';
 import { intl } from '../../services/intl';
 import Link from 'next/link';
