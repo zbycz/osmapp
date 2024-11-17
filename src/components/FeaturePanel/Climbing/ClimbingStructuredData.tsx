@@ -27,8 +27,8 @@ const generateScriptContent = (feature, userSettings) => {
       ${feature.tags.description ? `"description": "${feature.tags.description}",` : ''}
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "${feature.center[1]}",
-        "longitude": "${feature.center[0]}"
+        "latitude": "${feature.center?.[1]}",
+        "longitude": "${feature.center?.[0]}"
       }
     }`;
   }
@@ -43,8 +43,8 @@ const generateScriptContent = (feature, userSettings) => {
       ${feature.tags.description ? `"description": "${feature.tags.description}",` : ''}
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "${feature.center[1]}",
-        "longitude": "${feature.center[0]}"
+        "latitude": "${feature.center?.[1]}",
+        "longitude": "${feature.center?.[0]}"
       }
     }`;
   }
@@ -67,8 +67,8 @@ const generateScriptContent = (feature, userSettings) => {
       "difficulty": "${routeDifficulty.grade} (${getGradeSystemName(routeDifficulty.gradeSystem)})",
       "geo": {
         "@type": "GeoCoordinates",
-        "latitude": "${feature.center[1]}",
-        "longitude": "${feature.center[0]}"
+        "latitude": "${feature.center?.[1]}",
+        "longitude": "${feature.center?.[0]}"
       }
     }`;
   }

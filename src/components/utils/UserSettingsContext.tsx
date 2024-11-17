@@ -7,6 +7,8 @@ import {
 import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
 
+type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
+
 type UserSettingsType = {
   isImperial: boolean;
   'weather.enabled': boolean;
@@ -15,6 +17,7 @@ type UserSettingsType = {
   'climbing.defaultClimbingStyle': TickStyle;
   'climbing.selectRoutesByScrolling': boolean;
   'climbing.visibleGradeSystems': Record<string, boolean>;
+  'climbing.cragViewLayout': CragViewLayout;
 };
 
 type UserSettingsContextType = {
@@ -35,6 +38,7 @@ const initialUserSettings: UserSettingsType = {
     (acc, { key }) => ({ ...acc, [key]: true }),
     {},
   ),
+  'climbing.cragViewLayout': 'auto',
 };
 
 export const UserSettingsContext =
