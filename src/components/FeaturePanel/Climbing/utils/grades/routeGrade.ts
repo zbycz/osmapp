@@ -74,7 +74,7 @@ export const getDifficulties = (tags: FeatureTags): RouteDifficulty[] => {
 };
 
 export const sanitizeApproximationSymbol = (grade) => {
-  return grade.replace('~', '');
+  return grade?.replace('~', '');
 };
 
 export const getDifficultyColor = (routeDifficulty, theme) => {
