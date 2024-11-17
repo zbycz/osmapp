@@ -6,6 +6,8 @@ import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { calcDistance } from './helpers';
 import { Stack } from '@mui/material';
 
+export const TOP_PANEL_HEIGHT = 160;
+
 const StyledTopPanel = styled.div`
   position: absolute;
   top: 0;
@@ -13,7 +15,7 @@ const StyledTopPanel = styled.div`
   z-index: 2;
 
   width: 100%;
-  height: 160px;
+  height: ${TOP_PANEL_HEIGHT}px;
   padding: 0.25rem 0.5rem;
 
   color: white;

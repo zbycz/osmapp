@@ -9,6 +9,7 @@ import SpeakerIcon from '@mui/icons-material/Speaker';
 import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
 import { MaptilerLogo } from '../Map/MapFooter/MaptilerLogo';
 import { MapFooter } from '../Map/MapFooter/MapFooter';
+import { TOP_PANEL_HEIGHT } from './TopPanel';
 
 const StyledBottomPanel = styled.div`
   position: absolute;
@@ -17,6 +18,7 @@ const StyledBottomPanel = styled.div`
   z-index: 1;
 
   min-height: 40px;
+  max-height: calc(100dvh - ${TOP_PANEL_HEIGHT + 20}px);
   width: 100%;
   padding: 0.5rem 0.75rem;
 
@@ -90,7 +92,7 @@ const Group = ({ items }: GroupProps) => {
         <Stack key={index} spacing={1.5}>
           <ButtonBase
             onClick={() => {
-              setExpandedIndex(index);
+              setExpandedIndex((prev) => (prev === index ? null : index));
             }}
             style={{
               padding: '0.5rem 0.25rem',
@@ -163,7 +165,13 @@ export const BottomPanel = () => {
       {expanded && (
         <>
           <hr style={{ width: '100%', borderColor: palette.grey[600] }} />
-          <Stack spacing={1}>
+          <Stack
+            spacing={1}
+            style={{
+              maxHeight: '100%',
+              overflowY: 'scroll',
+            }}
+          >
             <Group
               items={[
                 {

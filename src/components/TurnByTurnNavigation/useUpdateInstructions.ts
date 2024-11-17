@@ -10,6 +10,7 @@ import { addToMap, resetMapRoute } from './addToMap';
 import { getGlobalMap } from '../../services/mapStorage';
 import { sumBy } from 'lodash';
 import { LonLat } from '../../services/types';
+import { useMapStateContext } from '../utils/MapStateContext';
 
 type InstructionState = 'completed' | 'uncompleted' | 'partial';
 
