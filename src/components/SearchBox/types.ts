@@ -39,7 +39,7 @@ export type GeocoderOption = GenericOption<
 export type OverpassOption = GenericOption<
   'overpass',
   {
-    query?: string;
+    query?: string; // TODO there should be two types for "query" and "ast"
     ast?: ASTNode;
     inputValue: string;
     label: string;

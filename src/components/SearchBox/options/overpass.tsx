@@ -10,7 +10,9 @@ const OVERPASS_HISTORY_KEY = 'overpassQueryHistory';
 
 // TODO use usePersistedState with global context triggering changes
 const getOverpassQueryHistory = (): string[] =>
-  JSON.parse(window.localStorage.getItem(OVERPASS_HISTORY_KEY) ?? '[]');
+  JSON.parse(window.localStorage.getItem(OVERPASS_HISTORY_KEY) ?? '[]').filter(
+    Boolean,
+  );
 
 export const addOverpassQueryHistory = (query: string) => {
   window.localStorage.setItem(
