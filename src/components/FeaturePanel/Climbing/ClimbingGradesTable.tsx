@@ -29,6 +29,7 @@ import Router from 'next/router';
 import { getUrlOsmId } from '../../../services/helpers';
 import { t } from '../../../services/intl';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { isMobileDevice } from '../../helpers';
 
 export const ClimbingGradesTable = () => {
   const [clickedItem, setClickedItem] = React.useState<{
@@ -176,10 +177,9 @@ export const ClimbingGradesTable = () => {
                         fontFamily: 'Courier, monospace',
                         '&:hover': {
                           cursor: 'pointer',
-                          backgroundColor: convertHexToRgba(
-                            theme.palette.primary.main,
-                            0.3,
-                          ),
+                          backgroundColor: isMobileDevice()
+                            ? undefined
+                            : convertHexToRgba(theme.palette.primary.main, 0.3),
                         },
                       }}
                     >
