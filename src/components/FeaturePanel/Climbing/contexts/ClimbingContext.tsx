@@ -58,8 +58,8 @@ type ClimbingContextType = {
   setEditorPosition: (position: PositionPx) => void;
   setImageSize: (ImageSize) => void;
   setImageContainerSize: (ImageSize) => void;
-  splitPaneHeight: number | null;
-  setSplitPaneHeight: (height: number | null) => void;
+  splitPaneSize: number | null;
+  setSplitPaneSize: (size: number | null) => void;
   photoPaths: Array<string>;
   photoPath: string;
   setPhotoPath: (path: string) => void;
@@ -153,7 +153,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   });
   const [loadedPhotos, setLoadedPhotos] = useState<LoadedPhotos>({});
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
-  const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
+  const [splitPaneSize, setSplitPaneSize] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
@@ -345,8 +345,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     scrollOffset,
     setScrollOffset,
     findCloserPoint,
-    splitPaneHeight,
-    setSplitPaneHeight,
+    splitPaneSize,
+    setSplitPaneSize,
     mousePosition,
     setMousePosition,
     pointElement,

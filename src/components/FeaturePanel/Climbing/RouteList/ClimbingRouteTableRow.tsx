@@ -31,7 +31,16 @@ const Container = styled.div`
   width: 100%;
 `;
 const RoutePhoto = styled.div`
-  width: 20px;
+  width: 22px;
+`;
+const SelectedButton = styled.div`
+  position: absolute;
+  right: 0;
+`;
+const StyledChip = styled(Chip)`
+  font-size: 11px;
+  font-weight: 600;
+  height: 18px;
 `;
 
 const RouteName = styled.div<{ opacity: number }>`
@@ -40,6 +49,7 @@ const RouteName = styled.div<{ opacity: number }>`
   display: flex;
   gap: 4px;
   justify-content: space-between;
+  position: relative;
 `;
 
 const RouteDescription = styled.div<{ opacity: number }>`
@@ -60,7 +70,7 @@ const Row = styled.div<{ $isHoverHighlighted: boolean }>`
   border-bottom: solid 1px ${({ theme }) => theme.palette.divider};
   color: ${({ theme }) => theme.palette.text.primary};
   cursor: pointer;
-  padding: 8px 20px;
+  padding: 8px;
   transition: all 0.1s;
   *,
   &:focus {
@@ -187,16 +197,18 @@ export const ClimbingRouteTableRow = forwardRef<
             <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
               {feature.tags?.name}
               {!isMobileMode && isSelected && (
-                <Tooltip title="Deselect route">
-                  <Chip
-                    label="selected"
-                    onDelete={onDeselectRoute}
-                    size="small"
-                    deleteIcon={<CloseIcon />}
-                    color="primary"
-                    variant="outlined"
-                  />
-                </Tooltip>
+                <SelectedButton>
+                  <Tooltip title="Deselect route">
+                    <StyledChip
+                      label="selected"
+                      onDelete={onDeselectRoute}
+                      size="small"
+                      deleteIcon={<CloseIcon />}
+                      color="secondary"
+                      variant="filled"
+                    />
+                  </Tooltip>
+                </SelectedButton>
               )}
             </RouteName>
 

@@ -11,6 +11,20 @@ export default {
 
   'user.login_register': 'Přihlásit se / Registrovat',
   'user.logout': 'Odhlásit se',
+  'user.my_ticks': 'Moje přelezy',
+  'user.user_settings': 'Nastavení',
+
+  'user_settings.general': 'Obecné',
+  'user_settings.show_weather_widget': 'Zobrazit widget počasí',
+  'user_settings.climbing': 'Lezení',
+  'user_settings.default_grade_system': 'Výchozí lezecká klasifikace',
+  'user_settings.show_grades_in_pictures': 'Zobrazovat obtížnosti cest na fotkách',
+  'user_settings.default_climbing_style': 'Výchozí styl přelezu',
+  'user_settings.select_climbing_routes_by_scrolling': 'Vybírat lezecké cesty scrollováním',
+  'user_settings.crag_view_layout': 'Layout stránky u lezeckých sektorů',
+  'user_settings.crag_view_layout_vertical': 'Vedle sebe',
+  'user_settings.crag_view_layout_horizontal': 'Pod sebou',
+  'user_settings.crag_view_layout_auto': 'Automaticky (podle rozlišení)',
 
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',

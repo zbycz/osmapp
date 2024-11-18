@@ -23,6 +23,18 @@ export default {
   'user.my_ticks': 'My ticks',
   'user.user_settings': 'Settings',
 
+  'user_settings.general': 'General',
+  'user_settings.show_weather_widget': 'Show the weather widget',
+  'user_settings.climbing': 'Climbing',
+  'user_settings.default_grade_system': 'Default grade system',
+  'user_settings.show_grades_in_pictures': 'Show grades in pictures',
+  'user_settings.default_climbing_style': 'Default climbing style',
+  'user_settings.select_climbing_routes_by_scrolling': 'Select climbing routes by scrolling',
+  'user_settings.crag_view_layout': 'Crag view layout',
+  'user_settings.crag_view_layout_vertical': 'Side by side',
+  'user_settings.crag_view_layout_horizontal': 'Underneath',
+  'user_settings.crag_view_layout_auto': 'Auto (according to resolution)',
+
   'my_ticks.title': 'My ticks',
   'my_ticks.route_name': 'Name',
   'my_ticks.route_grade': 'Grade',
