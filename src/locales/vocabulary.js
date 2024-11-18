@@ -30,6 +30,7 @@ export default {
   'user_settings.show_grades_in_pictures': 'Show grades in pictures',
   'user_settings.default_climbing_style': 'Default climbing style',
   'user_settings.select_climbing_routes_by_scrolling': 'Select climbing routes by scrolling',
+  'user_settings.switch_climbing_photos_by_scrolling': 'Switch photos automatically by scrolling',
   'user_settings.crag_view_layout': 'Crag view layout',
   'user_settings.crag_view_layout_vertical': 'Side by side',
   'user_settings.crag_view_layout_horizontal': 'Underneath',

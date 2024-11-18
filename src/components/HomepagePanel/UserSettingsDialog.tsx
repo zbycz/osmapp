@@ -105,6 +105,26 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
               checked={userSettings['climbing.selectRoutesByScrolling']}
             />
           </ListItem>
+
+          {userSettings['climbing.selectRoutesByScrolling'] && (
+            <ListItem sx={{ paddingLeft: 4 }}>
+              <ListItemText>
+                {t('user_settings.switch_climbing_photos_by_scrolling')}
+              </ListItemText>
+              <Switch
+                color="primary"
+                edge="end"
+                onChange={(e) => {
+                  setUserSetting(
+                    'climbing.switchPhotosByScrolling',
+                    e.target.checked,
+                  );
+                }}
+                checked={userSettings['climbing.switchPhotosByScrolling']}
+              />
+            </ListItem>
+          )}
+
           <ListItem>
             <ListItemText>{t('user_settings.crag_view_layout')}</ListItemText>
             <Select
