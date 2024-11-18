@@ -404,7 +404,8 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     const selectedRoute = routes[selectedIndex];
     const photos = selectedRoute?.paths ? Object.keys(selectedRoute.paths) : [];
 
-    replacePhotoIfNeeded(photos, selectedIndex);
+    if (userSettings['climbing.switchPhotosByScrolling'])
+      replacePhotoIfNeeded(photos, selectedIndex);
     if (selectedIndex !== -1) setRouteSelectedIndex(selectedIndex);
   };
 

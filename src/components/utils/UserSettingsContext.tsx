@@ -16,6 +16,7 @@ type UserSettingsType = {
   'climbing.isGradesOnPhotosVisible': boolean;
   'climbing.defaultClimbingStyle': TickStyle;
   'climbing.selectRoutesByScrolling': boolean;
+  'climbing.switchPhotosByScrolling': boolean;
   'climbing.visibleGradeSystems': Record<string, boolean>;
   'climbing.cragViewLayout': CragViewLayout;
 };
@@ -34,6 +35,7 @@ const initialUserSettings: UserSettingsType = {
   'climbing.isGradesOnPhotosVisible': true,
   'climbing.defaultClimbingStyle': 'OS',
   'climbing.selectRoutesByScrolling': isMobileDevice(),
+  'climbing.switchPhotosByScrolling': true,
   'climbing.visibleGradeSystems': GRADE_SYSTEMS.reduce(
     (acc, { key }) => ({ ...acc, [key]: true }),
     {},
