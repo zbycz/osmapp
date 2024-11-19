@@ -5,7 +5,6 @@
 /tsconfig.tsbuildinfo
 .next
 .DS_Store
-.env
 .idea
 .vscode
 next-env.d.ts
