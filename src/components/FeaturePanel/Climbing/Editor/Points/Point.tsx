@@ -83,9 +83,10 @@ export const Point = ({
     setRouteIndexHovered(null);
   };
 
-  const onMouseDown = () => {
+  const onMouseDown = (e) => {
     setPointSelectedIndex(index);
     setIsPointClicked(true);
+    e.preventDefault();
   };
 
   const onMouseUp = (e) => {
@@ -102,8 +103,6 @@ export const Point = ({
     }
   };
 
-  const onTouchMove = () => {};
-
   const { pointColor, pointStroke } = usePointColor(type, isHovered);
 
   const isTouchDevice = 'ontouchstart' in window;
@@ -113,8 +112,6 @@ export const Point = ({
     cursor: 'pointer',
     ...(isMobileMode ? {} : { onMouseEnter, onMouseLeave }),
     onMouseDown,
-    onTouchMove,
-    onPointerMove: onTouchMove,
     onMouseUp,
     onTouchStart: onMouseDown,
     onTouchEnd: onMouseUp,
