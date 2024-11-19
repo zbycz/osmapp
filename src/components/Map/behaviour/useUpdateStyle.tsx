@@ -20,6 +20,7 @@ import { intl } from '../../../services/intl';
 import { Layer } from '../../utils/MapStateContext';
 import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
+import { Theme } from '../../../helpers/theme';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -33,7 +34,7 @@ const ofrBasicStyle = {
   ),
 };
 
-const getBaseStyle = (key: string): StyleSpecification => {
+const getBaseStyle = (key: string, currentTheme: Theme): StyleSpecification => {
   if (key === 'basic') {
     return basicStyle;
   }
@@ -47,11 +48,15 @@ const getBaseStyle = (key: string): StyleSpecification => {
     return outdoorStyle;
   }
 
-  return getRasterStyle(key);
+  return getRasterStyle(key, currentTheme);
 };
 
-const addRasterOverlay = (style: StyleSpecification, overlayKey: string) => {
-  const raster = getRasterStyle(overlayKey);
+const addRasterOverlay = (
+  style: StyleSpecification,
+  overlayKey: string,
+  currentTheme: Theme,
+) => {
+  const raster = getRasterStyle(overlayKey, currentTheme);
   style.sources[overlayKey] = raster.sources[overlayKey];
   style.layers.push(raster.layers[0]);
   // TODO maxzoom 19 only for snow overlay
@@ -77,12 +82,13 @@ const addOverlaysToStyle = (
   map: Map,
   style: StyleSpecification,
   overlays: string[],
+  currentTheme: Theme,
 ) => {
   overlays.forEach((overlayKey: string) => {
     const overlay = osmappLayers[overlayKey];
 
     if (overlay?.type === 'overlay') {
-      addRasterOverlay(style, overlayKey);
+      addRasterOverlay(style, overlayKey, currentTheme);
     }
 
     if (overlay?.type === 'overlayClimbing') {
@@ -92,7 +98,13 @@ const addOverlaysToStyle = (
 };
 
 export const useUpdateStyle = createMapEffectHook(
-  (map, activeLayers: string[], userLayers: Layer[], mapLoaded: boolean) => {
+  (
+    map,
+    activeLayers: string[],
+    userLayers: Layer[],
+    mapLoaded: boolean,
+    currentTheme: Theme,
+  ) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
 
@@ -104,8 +116,8 @@ export const useUpdateStyle = createMapEffectHook(
     const userLayerMinZoom = userLayers.find(({ url }) => url === key)?.minzoom;
     map.setMinZoom(osmappLayerMinZoom ?? userLayerMinZoom ?? 0);
 
-    const style = cloneDeep(getBaseStyle(key));
-    addOverlaysToStyle(map, style, overlays);
+    const style = cloneDeep(getBaseStyle(key, currentTheme));
+    addOverlaysToStyle(map, style, overlays, currentTheme);
     map.setStyle(style, { diff: mapLoaded });
 
     const languageControl = new OpenMapTilesLanguage({

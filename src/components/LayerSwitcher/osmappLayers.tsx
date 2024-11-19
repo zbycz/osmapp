@@ -10,6 +10,7 @@ import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
 import Maki from '../utils/Maki';
 import { useUserThemeContext } from '../../helpers/theme';
+import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 
 interface Layers {
   [key: string]: Layer;
@@ -46,7 +47,7 @@ const czBbox: Bbox = [
 
 export const osmappLayers: Layers = {
   basic: {
-    name: t('layers.basic'),
+    name: `${t('layers.basic')} Maptiler`,
     description: 'maptiler.com',
     type: 'basemap',
     Icon: ExploreIcon,
@@ -76,7 +77,6 @@ export const osmappLayers: Layers = {
   outdoor: {
     name: t('layers.outdoor'),
     description: 'Maptiler.com',
-
     type: 'basemap',
     Icon: FilterHdrIcon,
     attribution: ['maptiler', 'osm'],
@@ -93,7 +93,7 @@ export const osmappLayers: Layers = {
   sat: {
     name: t('layers.maptilerSat'),
     type: 'basemap',
-    url: 'https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    url: `https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=${process.env.NEXT_PUBLIC_API_KEY_MAPTILER}`,
     Icon: SatelliteIcon,
     attribution: ['maptiler'],
   },
@@ -122,12 +122,20 @@ export const osmappLayers: Layers = {
     name: t('layers.bike'),
     description: 'Thunderforest.com',
     type: 'basemap',
-    url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=18c0cb31f2fd41d28ac90abe4059e359`,
+    url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
     Icon: DirectionsBikeIcon,
     attribution: [
       '&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>',
       'osm',
     ],
+  },
+  transport: {
+    name: t('layers.transport'),
+    description: 'Thunderforest.com',
+    type: 'basemap',
+    url: `https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
+    darkUrl: `https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
+    Icon: DirectionsBusIcon,
   },
   snow: {
     name: t('layers.snow'),

@@ -23,6 +23,7 @@ export interface Layer {
   name?: string;
   description?: string;
   url?: string;
+  darkUrl?: string; // optional url for dark mode
   key?: string;
   Icon?: LayerIcon;
   attribution?: string[]; // missing in spacer TODO refactor ugly

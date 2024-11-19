@@ -3,7 +3,7 @@ import type {
   SourceSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 
-const apiKey = '7dlhLl3hiXQ1gsth0kGu';
+const apiKey = process.env.NEXT_PUBLIC_API_KEY_MAPTILER;
 
 export const OSMAPP_SPRITE = [
   {

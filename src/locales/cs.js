@@ -208,9 +208,10 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'Zimní',
   'layers.carto': 'OSM Carto',
-  'layers.maptilerSat': 'Letecká Maptiler ',
+  'layers.maptilerSat': 'Letecká Maptiler',
   'layers.bingSat': 'Letecká Bing',
   'layers.bike': 'Cyklo',
+  'layers.transport': 'Dopravní',
   'layers.climbing': 'Sportovní lezení',
 
   'climbingareas.link': 'Seznam všech lezeckých oblastí',
