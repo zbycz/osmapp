@@ -6,6 +6,7 @@ import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
 import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
+import { isMobileDevice } from '../../../helpers';
 
 const EditorContainer = styled.div<{ imageHeight: number }>`
   display: flex;
@@ -109,10 +110,6 @@ export const RoutesEditor = ({
     }
   };
 
-  const onTouchMove = (e) => {
-    onMove({ x: e.clientX, y: e.clientY, units: 'px' });
-  };
-
   const onMouseMove = (e) => {
     const mousePosition: PositionPx = {
       x: e.clientX,
@@ -159,7 +156,10 @@ export const RoutesEditor = ({
   };
 
   return (
-    <EditorContainer imageHeight={imageSize.height}>
+    <EditorContainer
+      imageHeight={imageSize.height}
+      onContextMenu={isMobileDevice() ? (e) => e.preventDefault() : undefined}
+    >
       <ImageContainer>
         <ImageElement src={imageUrl} onLoad={onPhotoLoad} ref={photoRef} />
       </ImageContainer>
@@ -168,7 +168,7 @@ export const RoutesEditor = ({
           isVisible={isRoutesLayerVisible}
           onClick={onCanvasClick}
           onEditorMouseMove={onMouseMove}
-          onEditorTouchMove={onTouchMove}
+          onEditorTouchMove={onMouseMove}
           transformOrigin={transformOrigin}
         />
       )}

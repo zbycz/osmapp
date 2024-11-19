@@ -224,7 +224,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     updateRouteOnIndex(routeSelectedIndex, (route) => ({
       ...route,
       paths: {
-        ...route.paths,
+        ...(route?.paths ?? {}),
         [photoPath]: callback(getPathOnIndex(routeIndex)),
       },
     }));
