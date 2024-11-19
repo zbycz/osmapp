@@ -19,6 +19,7 @@ import { webglSupported } from './helpers';
 import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 import { useAddTopRightControls } from './useAddTopRightControls';
 import { usePersistedScaleControl } from './behaviour/PersistedScaleControl';
+import { useUserThemeContext } from '../../helpers/theme';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
@@ -50,6 +51,7 @@ const BrowserMap = () => {
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
   const { mapLoaded, setMapLoaded, mapClickOverrideRef } = useMapStateContext();
+  const { currentTheme } = useUserThemeContext();
 
   const [map, mapRef] = useInitMap();
   useAddTopRightControls(map, mobileMode);
@@ -63,7 +65,7 @@ const BrowserMap = () => {
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
-  useUpdateStyle(map, activeLayers, userLayers, mapLoaded);
+  useUpdateStyle(map, activeLayers, userLayers, mapLoaded, currentTheme);
   usePersistedScaleControl(map);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
