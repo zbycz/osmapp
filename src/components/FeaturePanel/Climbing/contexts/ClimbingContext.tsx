@@ -111,6 +111,7 @@ type ClimbingContextType = {
   filterDifficulty: Array<string>;
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
   photoRef: React.MutableRefObject<any>;
+  svgRef: React.MutableRefObject<any>;
   getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
   showDebugMenu: boolean;
   setShowDebugMenu: (showDebugMenu: boolean) => void;
@@ -142,6 +143,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const initialRoutes = osmToClimbingRoutes(feature);
   publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);
+  const svgRef = useRef(null);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);
@@ -270,7 +272,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     updateRouteOnIndex,
     getPercentagePosition,
     findCloserPoint,
-    photoRef,
+    svgRef,
     photoZoom,
   });
 
@@ -366,7 +368,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     loadPhotoRelatedData,
     filterDifficulty,
     setFilterDifficulty,
-    photoRef,
+    photoRef, // @TODO rename: technically it's not photoRef but photoContainerRef, because photo is scaled by object-fit: contain
+    svgRef,
     areRoutesLoading,
     setAreRoutesLoading,
     photoZoom,

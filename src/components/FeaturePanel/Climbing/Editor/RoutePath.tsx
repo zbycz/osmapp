@@ -32,7 +32,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     routeIndexHovered,
     setRouteIndexHovered,
     getPathForRoute,
-    photoRef,
+    svgRef,
     photoZoom,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
@@ -62,7 +62,7 @@ export const RoutePath = ({ route, routeNumber }) => {
         units: 'px',
       };
       const positionInImage = getPositionInImageFromMouse(
-        photoRef,
+        svgRef,
         mousePosition,
         photoZoom,
       );

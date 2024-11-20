@@ -33,7 +33,7 @@ const ImageContainer = styled.div`
 `;
 
 const ImageElement = styled.img<{ zoom?: number }>`
-  object-fit: contain;
+  object-fit: contain; // @TODO try to delete this
   max-width: 100%;
   transition: all 0.1s ease-in;
   height: 100%;
@@ -61,6 +61,7 @@ export const RoutesEditor = ({
     loadPhotoRelatedData,
     loadedPhotos,
     photoRef,
+    svgRef,
     photoPath,
     setLoadedPhotos,
     photoZoom,
@@ -117,7 +118,7 @@ export const RoutesEditor = ({
       units: 'px',
     };
     const positionInImage = getPositionInImageFromMouse(
-      photoRef,
+      svgRef,
       mousePosition,
       photoZoom,
     );

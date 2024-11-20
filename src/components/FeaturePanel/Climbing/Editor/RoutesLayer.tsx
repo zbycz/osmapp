@@ -71,8 +71,8 @@ export const RoutesLayer = ({
     setPointSelectedIndex,
     getCurrentPath,
     routes,
-    photoRef,
     photoZoom,
+    svgRef,
   } = useClimbingContext();
 
   const machine = getMachine();
@@ -169,7 +169,7 @@ export const RoutesLayer = ({
 
   // TODO this position doesnt work well when zoomed
   const absolutePositionFromScreen = getMouseFromPositionInImage(
-    photoRef,
+    svgRef,
     routeFloatingMenuPosition,
     photoZoom,
   );
@@ -189,6 +189,7 @@ export const RoutesLayer = ({
         $isVisible={isVisible}
         $transformOrigin={transformOrigin}
         xmlns="http://www.w3.org/2000/svg"
+        ref={svgRef}
       >
         {sortedRoutes.rest.map((item) => item.route)}
         {sortedRoutes.rest.map((item) => item.marks)}
