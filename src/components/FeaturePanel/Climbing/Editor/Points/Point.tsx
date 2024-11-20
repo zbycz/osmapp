@@ -62,6 +62,7 @@ export const Point = ({
     setRouteIndexHovered,
     photoZoom,
     getCurrentPath,
+    setIsPanningDisabled,
   } = useClimbingContext();
   const isMobileMode = useMobileMode();
   const isPointSelected =
@@ -84,6 +85,7 @@ export const Point = ({
   };
 
   const onMouseDown = (e) => {
+    setIsPanningDisabled(true);
     setPointSelectedIndex(index);
     setIsPointClicked(true);
     e.preventDefault();
@@ -93,6 +95,7 @@ export const Point = ({
     // @TODO unify with RouteMarks.tsx
     if (!isPointMoving) {
       setPointSelectedIndex(null);
+      setIsPanningDisabled(false);
       onPointInSelectedRouteClick(e);
       setPointElement(pointElement !== null ? null : e.currentTarget);
       setPointSelectedIndex(index);

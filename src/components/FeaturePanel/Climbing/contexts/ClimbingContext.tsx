@@ -46,6 +46,8 @@ type ClimbingContextType = {
   imageSize: ImageSize;
   imageContainerSize: ImageSize;
   isPointMoving: boolean;
+  isPanningDisabled: boolean;
+  setIsPanningDisabled: (isPanningDisabled: boolean) => boolean;
   isRouteSelected: (routeNumber: number) => boolean;
   isOtherRouteSelected: (routeNumber: number) => boolean;
   isRouteHovered: (routeNumber: number) => boolean;
@@ -157,6 +159,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
   const [splitPaneSize, setSplitPaneSize] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
+  const [isPanningDisabled, setIsPanningDisabled] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
   const [arePointerEventsDisabled, setArePointerEventsDisabled] =
@@ -325,6 +328,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     imageSize,
     isPointClicked,
     isPointMoving,
+    isPanningDisabled,
+    setIsPanningDisabled,
     isRouteSelected,
     isOtherRouteSelected,
     isRouteHovered,
