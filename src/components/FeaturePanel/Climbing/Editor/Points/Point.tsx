@@ -88,7 +88,7 @@ export const Point = ({
     setIsPanningDisabled(true);
     setPointSelectedIndex(index);
     setIsPointClicked(true);
-    e.preventDefault();
+    e.stopPropagation();
   };
 
   const onMouseUp = (e) => {
