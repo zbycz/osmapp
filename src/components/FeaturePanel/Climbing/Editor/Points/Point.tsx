@@ -63,15 +63,16 @@ export const Point = ({
     photoZoom,
     getCurrentPath,
     setIsPanningDisabled,
+    isPanningDisabled,
   } = useClimbingContext();
   const isMobileMode = useMobileMode();
   const isPointSelected =
     routeSelectedIndex === routeNumber && pointSelectedIndex === index;
-  const onClick = (e) => {
+  const onPointClick = (e) => {
     e.stopPropagation();
   };
 
-  const onMouseEnter = () => {
+  const onPointMouseEnter = () => {
     setIsHovered(true);
     const isLastPoint = getCurrentPath().length - 1 === index;
     if (!isLastPoint) {
@@ -79,23 +80,21 @@ export const Point = ({
     }
   };
 
-  const onMouseLeave = () => {
+  const onPointMouseLeave = () => {
     setIsHovered(false);
     setRouteIndexHovered(null);
   };
 
-  const onMouseDown = (e) => {
+  const onPointMouseDown = (e) => {
     setIsPanningDisabled(true);
     setPointSelectedIndex(index);
     setIsPointClicked(true);
     e.stopPropagation();
   };
 
-  const onMouseUp = (e) => {
+  const onPointMouseUp = (e) => {
     // @TODO unify with RouteMarks.tsx
     if (!isPointMoving) {
-      setPointSelectedIndex(null);
-      setIsPanningDisabled(false);
       onPointInSelectedRouteClick(e);
       setPointElement(pointElement !== null ? null : e.currentTarget);
       setPointSelectedIndex(index);
@@ -105,19 +104,20 @@ export const Point = ({
       e.preventDefault();
     }
   };
-
   const { pointColor, pointStroke } = usePointColor(type, isHovered);
 
   const isTouchDevice = 'ontouchstart' in window;
 
   const commonProps = {
-    onClick,
+    onClick: onPointClick,
     cursor: 'pointer',
-    ...(isMobileMode ? {} : { onMouseEnter, onMouseLeave }),
-    onMouseDown,
-    onMouseUp,
-    onTouchStart: onMouseDown,
-    onTouchEnd: onMouseUp,
+    ...(isMobileMode
+      ? {}
+      : { onMouseEnter: onPointMouseEnter, onMouseLeave: onPointMouseLeave }),
+    onMouseDown: onPointMouseDown,
+    onMouseUp: onPointMouseUp,
+    onTouchStart: onPointMouseDown,
+    onTouchEnd: onPointMouseUp,
     cx: 0,
     cy: 0,
   };

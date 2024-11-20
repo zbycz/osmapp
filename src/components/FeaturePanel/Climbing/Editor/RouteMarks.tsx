@@ -33,16 +33,16 @@ export const RouteMarks = ({
     setIsPointMoving,
     setIsPointClicked,
     isOtherRouteSelected,
+    setIsPanningDisabled,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const isOtherSelected = isOtherRouteSelected(routeNumber);
   return (
     <>
       {getPathForRoute(route).map(({ x, y, type }, index) => {
-        const handleClick = (e: any) => {
+        const onMarkedPointClick = (e: any) => {
           // @TODO unify with Point.tsx
           if (!isPointMoving) {
-            setPointSelectedIndex(null);
             onPointInSelectedRouteClick(e);
             setPointElement(pointElement !== null ? null : e.currentTarget);
             setPointSelectedIndex(index);
@@ -80,7 +80,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isPitonVisible && (
@@ -89,7 +89,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isSlingVisible && (
@@ -98,7 +98,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isAnchorVisible && (
@@ -107,7 +107,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isUnfinishedPointVisible && (
@@ -116,7 +116,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isThisRouteEditOrExtendMode && (
