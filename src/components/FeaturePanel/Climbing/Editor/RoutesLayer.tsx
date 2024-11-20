@@ -36,12 +36,6 @@ const Svg = styled.svg<{
     `}
 `;
 
-const RouteFloatingMenuContainer = styled.div<{ $x: number; $y: number }>`
-  position: absolute;
-  left: ${({ $x }) => $x}px;
-  top: ${({ $y }) => $y}px;
-  z-index: 10000;
-`;
 type Props = {
   onClick: (e: any) => void;
   onEditorMouseMove?: (e: any) => void;
@@ -167,46 +161,28 @@ export const RoutesLayer = ({
       ? selectedPointOfSelectedRoute
       : lastPointOfSelectedRoute;
 
-  // TODO this position doesnt work well when zoomed
-  const absolutePositionFromScreen = getMouseFromPositionInImage(
-    svgRef,
-    routeFloatingMenuPosition,
-    photoZoom,
-  );
-
   return (
-    <>
-      <Svg
-        $hasEditableCursor={machine.currentStateName === 'extendRoute'}
-        onClick={(e) => {
-          onClick(e);
-        }}
-        onMouseUp={handleMovingPointDrop}
-        onMouseMove={onEditorMouseMove}
-        onTouchMove={onEditorTouchMove}
-        onPointerMove={onEditorTouchMove}
-        $imageSize={imageSize}
-        $isVisible={isVisible}
-        $transformOrigin={transformOrigin}
-        xmlns="http://www.w3.org/2000/svg"
-        ref={svgRef}
-      >
-        {sortedRoutes.rest.map((item) => item.route)}
-        {sortedRoutes.rest.map((item) => item.marks)}
-        {sortedRoutes.selected.map((item) => item.route)}
-        {sortedRoutes.selected.map((item) => item.marks)}
-        {sortedRoutes.hovered.map((item) => item.route)}
-        {sortedRoutes.hovered.map((item) => item.marks)}
-      </Svg>
-
-      {absolutePositionFromScreen && (
-        <RouteFloatingMenuContainer
-          $x={absolutePositionFromScreen.x + 20}
-          $y={absolutePositionFromScreen.y - DIALOG_TOP_BAR_HEIGHT - 15}
-        >
-          <RouteFloatingMenu />
-        </RouteFloatingMenuContainer>
-      )}
-    </>
+    <Svg
+      $hasEditableCursor={machine.currentStateName === 'extendRoute'}
+      onClick={(e) => {
+        onClick(e);
+      }}
+      onMouseUp={handleMovingPointDrop}
+      onMouseMove={onEditorMouseMove}
+      onTouchMove={onEditorTouchMove}
+      onPointerMove={onEditorTouchMove}
+      $imageSize={imageSize}
+      $isVisible={isVisible}
+      $transformOrigin={transformOrigin}
+      xmlns="http://www.w3.org/2000/svg"
+      ref={svgRef}
+    >
+      {sortedRoutes.rest.map((item) => item.route)}
+      {sortedRoutes.rest.map((item) => item.marks)}
+      {sortedRoutes.selected.map((item) => item.route)}
+      {sortedRoutes.selected.map((item) => item.marks)}
+      {sortedRoutes.hovered.map((item) => item.route)}
+      {sortedRoutes.hovered.map((item) => item.marks)}
+    </Svg>
   );
 };

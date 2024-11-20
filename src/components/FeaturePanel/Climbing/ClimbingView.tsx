@@ -32,6 +32,7 @@ import MapIcon from '@mui/icons-material/Map';
 import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
+import { RouteFloatingMenu } from './Editor/RouteFloatingMenu';
 
 export const DEFAULT_CRAG_VIEW_LAYOUT = 'horizontal';
 
@@ -483,6 +484,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                 </FullLoadingContainer>
               )}
               <BlurContainer>
+                <RouteFloatingMenu />
                 <TransformWrapper>
                   <TransformComponent
                     wrapperStyle={{ height: '100%', width: '100%' }}
@@ -501,6 +503,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     </>
                   </TransformComponent>
                 </TransformWrapper>
+
                 {isEditMode && <ControlPanel />}
               </BlurContainer>
             </>
