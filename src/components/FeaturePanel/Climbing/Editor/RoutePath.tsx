@@ -32,7 +32,7 @@ export const RoutePath = ({ route, routeNumber }) => {
     routeIndexHovered,
     setRouteIndexHovered,
     getPathForRoute,
-    photoRef,
+    svgRef,
     photoZoom,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
@@ -62,7 +62,7 @@ export const RoutePath = ({ route, routeNumber }) => {
         units: 'px',
       };
       const positionInImage = getPositionInImageFromMouse(
-        photoRef,
+        svgRef,
         mousePosition,
         photoZoom,
       );
@@ -171,7 +171,8 @@ export const RoutePath = ({ route, routeNumber }) => {
           cy={tempPointPosition.y}
           fill="white"
           stroke="rgba(0,0,0,0.3)"
-          r={5}
+          r={7 / photoZoom.scale}
+          strokeWidth={1 / photoZoom.scale}
         />
       )}
       {machine.currentStateName === 'extendRoute' &&
