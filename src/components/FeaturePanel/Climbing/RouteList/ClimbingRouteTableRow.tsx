@@ -50,12 +50,14 @@ const RouteName = styled.div<{ opacity: number }>`
   gap: 4px;
   justify-content: space-between;
   position: relative;
+  user-select: text;
 `;
 
 const RouteDescription = styled.div<{ opacity: number }>`
   font-size: 10px;
   opacity: ${({ opacity }) => opacity};
   color: ${({ theme }) => theme.palette.text.secondary};
+  user-select: text;
 `;
 
 const RouteGrade = styled.div``;

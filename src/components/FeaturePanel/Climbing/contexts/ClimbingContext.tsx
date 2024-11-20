@@ -47,7 +47,7 @@ type ClimbingContextType = {
   imageContainerSize: ImageSize;
   isPointMoving: boolean;
   isPanningDisabled: boolean;
-  setIsPanningDisabled: (isPanningDisabled: boolean) => boolean;
+  setIsPanningDisabled: (isPanningDisabled: boolean) => void;
   isRouteSelected: (routeNumber: number) => boolean;
   isOtherRouteSelected: (routeNumber: number) => boolean;
   isRouteHovered: (routeNumber: number) => boolean;

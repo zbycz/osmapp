@@ -171,7 +171,7 @@ export const RoutePath = ({ route, routeNumber }) => {
           cy={tempPointPosition.y}
           fill="white"
           stroke="rgba(0,0,0,0.3)"
-          r={5 / photoZoom.scale}
+          r={7 / photoZoom.scale}
           strokeWidth={1 / photoZoom.scale}
         />
       )}

@@ -136,7 +136,7 @@ export const Point = ({
       <PointElement
         fill={pointColor}
         stroke={pointStroke}
-        r={isTouchDevice ? 5 : 3}
+        r={isTouchDevice ? 7 : 4}
         $isHovered={isHovered}
         $isPointSelected={isPointSelected}
         {...commonProps}
