@@ -115,7 +115,12 @@ export const ClimbingCragDialog = ({
   };
 
   return (
-    <Dialog fullScreen open onClose={handleClose}>
+    <Dialog
+      fullScreen
+      open
+      onClose={handleClose}
+      disableEscapeKeyDown={isEditMode}
+    >
       <ClimbingCragDialogHeader onClose={handleClose} />
 
       <DialogContent

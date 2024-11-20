@@ -65,7 +65,7 @@ export const RoutesLayer = ({
     setPointSelectedIndex,
     getCurrentPath,
     routes,
-    photoZoom,
+    setIsPanningDisabled,
     svgRef,
   } = useClimbingContext();
 
@@ -85,11 +85,12 @@ export const RoutesLayer = ({
     }
   };
 
-  const handleMovingPointDrop = () => {
+  const handleOnMovingPointDropOnCanvas = () => {
     if (isPointMoving) {
       setPointSelectedIndex(null);
       setIsPointMoving(false);
       setIsPointClicked(false);
+      setIsPanningDisabled(false);
     }
   };
 
@@ -167,7 +168,7 @@ export const RoutesLayer = ({
       onClick={(e) => {
         onClick(e);
       }}
-      onMouseUp={handleMovingPointDrop}
+      onMouseUp={handleOnMovingPointDropOnCanvas}
       onMouseMove={onEditorMouseMove}
       onTouchMove={onEditorTouchMove}
       onPointerMove={onEditorTouchMove}

@@ -12,7 +12,6 @@ import {
 import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RoutesEditor } from './Editor/RoutesEditor';
-import { ControlPanel } from './Editor/ControlPanel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import {
   getResolution,
@@ -503,8 +502,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     </>
                   </TransformComponent>
                 </TransformWrapper>
-
-                {isEditMode && <ControlPanel />}
               </BlurContainer>
             </>
           </BackgroundContainer>
