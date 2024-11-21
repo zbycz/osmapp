@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import {
+  Button,
   CircularProgress,
   Fab,
   IconButton,
@@ -32,6 +33,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
 import { RouteFloatingMenu } from './Editor/RouteFloatingMenu';
+import { useFullScreen } from './utils/useFullscreen';
 
 export const DEFAULT_CRAG_VIEW_LAYOUT = 'horizontal';
 
@@ -254,6 +256,7 @@ const FabMapSwitcher = ({ isMapVisible, setIsMapVisible }) => (
 );
 
 export const ClimbingView = ({ photo }: { photo?: string }) => {
+  const viewRef = React.useRef<HTMLDivElement>(null);
   const {
     imageSize,
     routeSelectedIndex,
@@ -283,6 +286,9 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const machine = getMachine();
   const cragViewLayout = useGetCragViewLayout();
   const { userSettings } = useUserSettingsContext();
+  const { enterFullscreen, exitFullscreen, isFullScreenActive } = useFullScreen(
+    viewRef.current,
+  );
 
   useEffect(() => {
     if (isEditMode && machine.currentStateName === 'routeSelected') {
@@ -420,7 +426,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   };
 
   return (
-    <Container>
+    <Container ref={viewRef}>
       {(showArrowOnTop || showArrowOnBottom) && (
         <ArrowExpanderContainer $cragViewLayout={cragViewLayout}>
           <ArrowExpanderButton $arrowOnTop={showArrowOnTop}>
@@ -514,6 +520,11 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
             <BottomPanel onScroll={handleOnScroll}>
               <ClimbingViewContent isMapVisible={isMapVisible} />
             </BottomPanel>
+            <Button
+              onClick={isFullScreenActive ? exitFullscreen : enterFullscreen}
+            >
+              FULL
+            </Button>
           </BottomContainer>
         </SplitPane>
       ) : (
