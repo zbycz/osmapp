@@ -65,7 +65,7 @@ export const getSkeleton = (
   feature /* TODO MapGeoJSONFeature*/,
   clickCoords: LonLat,
 ) => {
-    const { isOsmObject, osmMeta } = getId(feature);
+  const { isOsmObject, osmMeta } = getId(feature);
 
   const nameTags = pickBy(feature.properties, (_, key) =>
     key.startsWith('name'),
