@@ -1,0 +1,2 @@
+# empty file, only to route requests to a static file
+# otherwise our execution time on vercel become too high
