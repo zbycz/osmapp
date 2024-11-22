@@ -22,7 +22,9 @@ import { getGlobalMap } from '../../services/mapStorage';
 import maplibregl, { LngLatLike, PointLike } from 'maplibre-gl';
 import ReactDOMServer from 'react-dom/server';
 import { AlphabeticalMarker } from './TextMarker';
-
+import MyLocationIcon from '@mui/icons-material/MyLocation';
+import { success } from '@maplibre/maplibre-gl-style-spec/src/util/result';
+import { useIsClient } from '../helpers';
 const StyledTextField = styled(TextField)`
   input::placeholder {
     font-size: 0.9rem;
@@ -39,13 +41,14 @@ const DirectionsInput = ({
   pointIndex,
 }) => {
   const { InputLabelProps, InputProps, ...restParams } = params;
-
+  const isClient = useIsClient();
   useEffect(() => {
     // @ts-ignore
     params.InputProps.ref(autocompleteRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    console.log('___', e.target.value);
     setInputValue(e.target.value);
   };
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
@@ -53,6 +56,27 @@ const DirectionsInput = ({
     e.target.select();
   };
 
+  function success(position) {
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    // setLocation({ latitude, longitude });
+    console.log(
+      `___Latitude: ${latitude}, Longitude: ${longitude}`,
+      getCoordsOption([50.08393943467965, 14.378495989338292], 'ahoj'),
+    );
+    // setInputValue(getCoordsOption([longitude, latitude], 'ahoj'));
+    setInputValue(
+      getCoordsOption([50.08393943467965, 14.378495989338292], 'ahoj'),
+    );
+  }
+
+  const handleGetMyPosition = () => {
+    console.log('___', navigator);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(success);
+    }
+  };
+  //Object.keys(navigator.geolocation).length !== 0
   return (
     <StyledTextField
       {...restParams} // eslint-disable-line react/jsx-props-no-spreading
@@ -68,6 +92,10 @@ const DirectionsInput = ({
             <AlphabeticalMarker hasPin={false} index={pointIndex} height={32} />
           </InputAdornment>
         ),
+        endAdornment:
+          isClient && navigator?.geolocation ? (
+            <MyLocationIcon onClick={handleGetMyPosition} />
+          ) : undefined,
       }}
       placeholder={label}
       onChange={onChange}
