@@ -11,6 +11,7 @@ import { isBrowser } from '../helpers';
 import Maki from '../utils/Maki';
 import { useUserThemeContext } from '../../helpers/theme';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 
 interface Layers {
   [key: string]: Layer;
@@ -137,6 +138,20 @@ export const osmappLayers: Layers = {
     darkUrl: `https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
     Icon: DirectionsBusIcon,
   },
+  ...(process.env.NEXT_PUBLIC_API_KEY_INDOOREQUAL
+    ? {
+        indoor: {
+          name: `${t('layers.indoor')} (beta)`,
+          type: 'overlay',
+          Icon: MapsHomeWorkIcon,
+          attribution: [
+            '&copy; <a href="https://indoorequal.com/">indoor=</a>',
+            'osm',
+          ],
+          minzoom: 16,
+        },
+      }
+    : {}),
   snow: {
     name: t('layers.snow'),
     type: 'overlay',
@@ -149,7 +164,7 @@ export const osmappLayers: Layers = {
   },
   climbing: {
     name: t('layers.climbing'),
-    type: 'overlayClimbing',
+    type: 'overlay',
     Icon: ClimbingIcon,
     attribution: ['osm'],
   },

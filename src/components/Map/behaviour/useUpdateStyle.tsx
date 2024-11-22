@@ -21,6 +21,7 @@ import { Layer } from '../../utils/MapStateContext';
 import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
+import { addIndoorEqual, removeIndoorEqual } from './indoor';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -84,17 +85,22 @@ const addOverlaysToStyle = (
   overlays: string[],
   currentTheme: Theme,
 ) => {
-  overlays.forEach((overlayKey: string) => {
-    const overlay = osmappLayers[overlayKey];
+  overlays
+    .filter((key: string) => osmappLayers[key]?.type === 'overlay')
+    .forEach((key: string) => {
+      switch (key) {
+        case 'climbing':
+          addClimbingOverlay(style, map);
+          break;
 
-    if (overlay?.type === 'overlay') {
-      addRasterOverlay(style, overlayKey, currentTheme);
-    }
+        case 'indoor':
+          break; // indoorEqual must be added after setStyle()
 
-    if (overlay?.type === 'overlayClimbing') {
-      addClimbingOverlay(style, map);
-    }
-  });
+        default:
+          addRasterOverlay(style, key, currentTheme);
+          break;
+      }
+    });
 };
 
 export const useUpdateStyle = createMapEffectHook(
@@ -112,6 +118,8 @@ export const useUpdateStyle = createMapEffectHook(
     const userLayerMaxZoom = userLayers.find(({ url }) => url === key)?.maxzoom;
     map.setMaxZoom(osmappLayerMaxZoom ?? userLayerMaxZoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
 
+    removeIndoorEqual();
+
     const osmappLayerMinZoom = osmappLayers[key]?.minzoom;
     const userLayerMinZoom = userLayers.find(({ url }) => url === key)?.minzoom;
     map.setMinZoom(osmappLayerMinZoom ?? userLayerMinZoom ?? 0);
@@ -126,5 +134,9 @@ export const useUpdateStyle = createMapEffectHook(
     map.addControl(languageControl);
 
     setUpHover(map, layersWithOsmId(style));
+
+    if (mapLoaded && overlays.includes('indoor')) {
+      addIndoorEqual();
+    }
   },
 );

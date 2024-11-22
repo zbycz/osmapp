@@ -72,17 +72,30 @@ const globalStyle = (theme: Theme) => css`
     )} !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    max-height: calc(
+      100vh - 300px
+    ); // = top right controls + right bottom + safety margin (TEST also in landscape)
+    overflow-x: hidden;
+    overflow-y: auto; // especially for indoor selector at the Louvre #18/48.8610/2.3389 :)
 
     .maplibregl-ctrl-icon {
       filter: ${theme.palette.invertFilter};
     }
 
     @media ${isMobileMode} {
-      border-radius: 50% !important;
+      border-radius: 22px !important;
 
       button {
         width: 44px !important;
         height: 44px !important;
+
+        // indoor level control has multiple buttions
+        &:first-of-type {
+          border-radius: 22px 22px 0 0 !important;
+        }
+        &:last-of-type {
+          border-radius: 0 0 22px 22px !important;
+        }
       }
     }
     button + button {
