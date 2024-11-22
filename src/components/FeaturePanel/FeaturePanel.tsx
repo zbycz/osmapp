@@ -21,11 +21,12 @@ import { EditDialog } from './EditDialog/EditDialog';
 import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { ClimbingGuideInfo } from './Climbing/ClimbingGuideInfo';
 import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
 import { isPublictransportRoute } from '../../utils';
 import { Sockets } from './Sockets/Sockets';
+import { ClimbingTypeBadge } from './Climbing/ClimbingTypeBadge';
 
 const Flex = styled.div`
   flex: 1;
@@ -60,7 +61,10 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
       <PanelContent>
         <PanelSidePadding>
           <FeatureHeading ref={headingRef} />
-          <ClimbingRouteGrade />
+          <Stack spacing={1} alignItems="flex-start">
+            <ClimbingRouteGrade />
+            <ClimbingTypeBadge feature={feature} />
+          </Stack>
           <ClimbingGuideInfo />
           <ParentLink />
           <ClimbingRestriction />
