@@ -29,7 +29,6 @@ export interface Layer {
   attribution?: string[]; // missing in spacer TODO refactor ugly
   maxzoom?: number;
   minzoom?: number;
-  minzoom?: number;
   bboxes?: Bbox[];
 }
 
