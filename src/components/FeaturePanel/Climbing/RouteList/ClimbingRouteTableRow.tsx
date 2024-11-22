@@ -26,6 +26,7 @@ import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMobileMode } from '../../../helpers';
+import { ClimbingTypeBadge } from '../ClimbingTypeBadge';
 
 const Container = styled.div`
   width: 100%;
@@ -47,9 +48,9 @@ const RouteName = styled.div<{ opacity: number }>`
   flex: 1;
   opacity: ${({ opacity }) => opacity};
   display: flex;
-  gap: 4px;
-  justify-content: space-between;
+  gap: 8px;
   position: relative;
+  align-items: center;
   user-select: text;
 `;
 
@@ -176,7 +177,6 @@ export const ClimbingRouteTableRow = forwardRef<
       href: routeDetailUrl,
       locale: intl.lang,
     };
-
     return (
       <Container ref={ref}>
         <Row
@@ -198,6 +198,8 @@ export const ClimbingRouteTableRow = forwardRef<
           <Stack justifyContent="stretch" flex={1}>
             <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
               {feature.tags?.name}
+              <ClimbingTypeBadge feature={feature} />
+
               {!isMobileMode && isSelected && (
                 <SelectedButton>
                   <Tooltip title="Deselect route">
