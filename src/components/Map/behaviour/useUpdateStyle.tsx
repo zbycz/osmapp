@@ -118,7 +118,7 @@ export const useUpdateStyle = createMapEffectHook(
     const userLayerMaxZoom = userLayers.find(({ url }) => url === key)?.maxzoom;
     map.setMaxZoom(osmappLayerMaxZoom ?? userLayerMaxZoom ?? 24); // TODO find a way how to zoom bing further (now it stops at 19)
 
-    removeIndoorEqual(map);
+    removeIndoorEqual();
 
     const osmappLayerMinZoom = osmappLayers[key]?.minzoom;
     const userLayerMinZoom = userLayers.find(({ url }) => url === key)?.minzoom;
@@ -135,8 +135,8 @@ export const useUpdateStyle = createMapEffectHook(
 
     setUpHover(map, layersWithOsmId(style));
 
-    if (overlays.includes('indoor')) {
-      addIndoorEqual(map);
+    if (mapLoaded && overlays.includes('indoor')) {
+      addIndoorEqual();
     }
   },
 );

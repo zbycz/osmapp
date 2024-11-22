@@ -44,17 +44,19 @@ export const AttributionLinks = () => {
   const { activeLayers, userLayers, view } = useMapStateContext();
 
   const attributions = uniq(
-    activeLayers.flatMap((layerUrl) => {
-      const osmappLayer = osmappLayers[layerUrl];
-      if (osmappLayer) {
-        return minZoomSatisfied(osmappLayer, view)
-          ? osmappLayer.attribution
-          : [];
-      }
+    activeLayers
+      .flatMap((layerUrl) => {
+        const osmappLayer = osmappLayers[layerUrl];
+        if (osmappLayer) {
+          return minZoomSatisfied(osmappLayer, view)
+            ? osmappLayer.attribution
+            : [];
+        }
 
-      const userLayer = userLayers.find(({ url }) => url === layerUrl);
-      return userLayer?.attribution || decodeURI(new URL(layerUrl)?.hostname);
-    }),
+        const userLayer = userLayers.find(({ url }) => url === layerUrl);
+        return userLayer?.attribution || decodeURI(new URL(layerUrl)?.hostname);
+      })
+      .filter(Boolean),
   );
 
   const nodes: React.ReactNode[] = attributions.map((attribution) => {

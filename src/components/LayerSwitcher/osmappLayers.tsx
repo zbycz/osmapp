@@ -141,7 +141,7 @@ export const osmappLayers: Layers = {
   ...(process.env.NEXT_PUBLIC_API_KEY_INDOOREQUAL
     ? {
         indoor: {
-          name: t('layers.indoor'),
+          name: `${t('layers.indoor')} (beta)`,
           type: 'overlay',
           Icon: MapsHomeWorkIcon,
           attribution: [
