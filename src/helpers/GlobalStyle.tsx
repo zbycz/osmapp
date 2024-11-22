@@ -72,6 +72,11 @@ const globalStyle = (theme: Theme) => css`
     )} !important;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    max-height: calc(
+      100vh - 300px
+    ); // = top right controls + right bottom + safety margin (TEST also in landscape)
+    overflow-x: hidden;
+    overflow-y: auto; // especially for indoor selector at the Louvre #18/48.8610/2.3389 :)
 
     .maplibregl-ctrl-icon {
       filter: ${theme.palette.invertFilter};

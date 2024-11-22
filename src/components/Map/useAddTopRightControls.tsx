@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
 import { getGlobalMap } from '../../services/mapStorage';
 import { t } from '../../services/intl';
+import { isMobileDevice } from '../helpers';
 
 const navigation = {
   mobile: new maplibregl.NavigationControl({
@@ -42,7 +43,8 @@ const geolocation = new maplibregl.GeolocateControl({
 export const useAddTopRightControls = (map: any, mobileMode: boolean) => {
   useEffect(() => {
     if (map) {
-      const navControl = mobileMode ? navigation.mobile : navigation.desktop;
+      const navControl =
+        isMobileDevice() || mobileMode ? navigation.mobile : navigation.desktop;
 
       map.addControl(navControl);
       map.addControl(geolocation);
