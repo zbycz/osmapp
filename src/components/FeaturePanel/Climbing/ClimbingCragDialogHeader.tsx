@@ -18,19 +18,31 @@ import { getLabel } from '../../../helpers/featureLabel';
 import { getOsmappLink } from '../../../services/helpers';
 import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
 import { useDragItems } from '../../utils/useDragItems';
+import {
+  addElementToIndex,
+  deleteFromArray,
+  moveElementToIndex,
+  naturalSort,
+  swapItemsInArray,
+  updateElementOnIndex,
+} from './utils/array';
 
 const Title = styled.div`
   flex: 1;
   overflow: hidden;
 `;
+
 const PhotosContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 4px;
+  user-select: none;
 `;
+
 const PhotosTitle = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
+
 const PhotoLinks = styled.div`
   display: flex;
   flex-wrap: wrap;
@@ -50,6 +62,7 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
     setShowDebugMenu,
     isEditMode,
     showDebugMenu,
+    setPhotoPaths,
   } = useClimbingContext();
 
   const { feature } = useFeatureContext();
@@ -81,6 +94,8 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
     handleDragEnd,
     HighlightedDropzone,
     ItemContainer,
+    draggedItem,
+    draggedOverIndex,
   } = useDragItems<string>({
     initialItems: photoPaths,
     moveItems: movePhotos,
@@ -107,18 +122,32 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
                   <ItemContainer key={photo}>
                     <PhotoLink
                       key={photo}
+                      photo={photo}
                       onClick={() => onPhotoChange(photo)}
                       isCurrentPhoto={photo === photoPath}
                       {...(showDebugMenu && isEditMode
                         ? {
                             draggable: true,
-                            onDragStart: (e) =>
+                            onDragStart: (e) => {
                               handleDragStart(e, {
                                 id: index,
                                 content: photo,
-                              }),
-                            onDragOver: (e) => handleDragOver(e, index),
-                            onDragEnd: handleDragEnd,
+                              });
+                            },
+                            onDragOver: (e) => {
+                              handleDragOver(e, index);
+                            },
+                            onDragEnd: (e) => {
+                              handleDragEnd(e);
+
+                              const newArray = moveElementToIndex(
+                                photoPaths,
+                                draggedItem.id,
+                                draggedOverIndex,
+                              );
+
+                              setPhotoPaths(newArray);
+                            },
                           }
                         : {})}
                     >
