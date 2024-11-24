@@ -1,5 +1,5 @@
 import { ClimbingRoute } from './types';
-import { FeatureTags } from '../../../services/types';
+import { Feature, FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
@@ -48,6 +48,29 @@ const isSameTags = (updatedTags: {}, origTags: FeatureTags) => {
   return isSame;
 };
 
+export const getClimbingCragChanges = (
+  crag: Feature,
+  photoPaths: Array<string>,
+): Change[] => {
+  const newTags = {
+    ...crag.tags,
+    ...photoPaths.reduce((acc, photoPath, index) => {
+      return {
+        ...acc,
+        [`wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`]: `File:${photoPath}`,
+      };
+    }, {}),
+  };
+  const updatedCrag = {
+    ...crag,
+    tags: newTags,
+  };
+
+  const isSame = isSameTags(newTags, crag.tags);
+
+  return isSame ? [] : [{ feature: updatedCrag, allTags: newTags }];
+};
+
 export const getClimbingRouteChanges = (routes: ClimbingRoute[]): Change[] => {
   const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
 
@@ -83,22 +106,12 @@ export const useGetHandleSave = (
       return;
     }
 
-    const updatedCrag = {
-      ...crag,
-      tags: {
-        ...crag.tags,
-        ...photoPaths.reduce((acc, photoPath, index) => {
-          return {
-            ...acc,
-            [`wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`]: `File:${photoPath}`,
-          };
-        }, {}),
-      },
-    };
-
-    const changes = getClimbingRouteChanges(routes);
+    const changes = [
+      ...getClimbingRouteChanges(routes),
+      ...getClimbingCragChanges(crag, photoPaths),
+    ];
     const comment = `${changes.length} routes`;
-    const result = await editCrag(updatedCrag, comment, changes);
+    const result = await editCrag(crag, comment, changes);
 
     console.log('All routes saved', changes, result); // eslint-disable-line no-console
     showToast('Data saved successfully!', 'success');
