@@ -344,12 +344,12 @@ export const editCrag = async (
   comment: string,
   changes: Change[],
 ) => {
-  // if (!changes.length) {
-  //   return {
-  //     type: 'error',
-  //     text: 'No route has changed.',
-  //   }; // TODO this is not SuccessInfo type
-  // }
+  if (!changes.length) {
+    return {
+      type: 'error',
+      text: 'No route has changed.',
+    }; // TODO this is not SuccessInfo type
+  }
 
   const changesetComment = join(
     comment,

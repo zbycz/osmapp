@@ -18,14 +18,7 @@ import { getLabel } from '../../../helpers/featureLabel';
 import { getOsmappLink } from '../../../services/helpers';
 import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
 import { useDragItems } from '../../utils/useDragItems';
-import {
-  addElementToIndex,
-  deleteFromArray,
-  moveElementToIndex,
-  naturalSort,
-  swapItemsInArray,
-  updateElementOnIndex,
-} from './utils/array';
+import { moveElementToIndex } from './utils/array';
 
 const Title = styled.div`
   flex: 1;
@@ -36,7 +29,6 @@ const PhotosContainer = styled.div`
   display: flex;
   flex-direction: row;
   gap: 4px;
-  user-select: none;
 `;
 
 const PhotosTitle = styled.div`
