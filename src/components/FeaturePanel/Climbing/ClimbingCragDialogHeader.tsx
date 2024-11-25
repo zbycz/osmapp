@@ -117,7 +117,7 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
                       photo={photo}
                       onClick={() => onPhotoChange(photo)}
                       isCurrentPhoto={photo === photoPath}
-                      {...(isEditMode
+                      {...(showDebugMenu && isEditMode
                         ? {
                             draggable: true,
                             onDragStart: (e) => {

@@ -16,10 +16,6 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import {
   getResolution,
   getWikimediaCommonsKeys,
-  getWikimediaCommonsPhotoKeys,
-  getWikimediaCommonsPhotoTags,
-  getWikimediaCommonsPhotoTagsObject,
-  getWikimediaCommonsPhotoValues,
   removeFilePrefix,
 } from './utils/photo';
 import { TransformWrapper } from './TransformWrapper';
@@ -331,9 +327,9 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     getWindowDimensions(),
   );
 
-  const cragPhotos = getWikimediaCommonsPhotoValues(feature.tags).map(
-    removeFilePrefix,
-  );
+  const cragPhotos = getWikimediaCommonsKeys(feature.tags)
+    .map((key) => feature.tags[key])
+    .map(removeFilePrefix);
   preparePhotos(cragPhotos);
 
   useEffect(() => {
