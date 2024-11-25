@@ -15,7 +15,7 @@ import {
   Size,
   ZoomState,
 } from '../types';
-import { naturalSort, updateElementOnIndex } from '../utils/array';
+import { updateElementOnIndex } from '../utils/array';
 import { findCloserPointFactory } from '../utils/findCloserPoint';
 import {
   ActionWithCallback,
@@ -293,7 +293,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       return [...new Set([...acc, ...cragPhotos, ...routePhotos])];
     }, []);
 
-    setPhotoPaths(naturalSort(photos));
+    setPhotoPaths(photos);
   };
 
   const preparePhotos = (cragPhotos: Array<string>) => {
