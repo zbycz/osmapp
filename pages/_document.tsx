@@ -9,8 +9,8 @@ import Document, {
 } from 'next/document';
 import type { DocumentContext } from 'next/dist/shared/lib/utils';
 import {
-  DocumentHeadTags,
   documentGetInitialProps,
+  DocumentHeadTags,
   DocumentHeadTagsProps,
 } from '@mui/material-nextjs/v13-pagesRouter';
 import { getServerIntl } from '../src/services/intlServer';
@@ -20,6 +20,7 @@ import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
 import { FaviconsOpenClimbing } from '../src/helpers/FaviconsOpenClimbing';
 import { LANGUAGES } from '../src/config.mjs';
 import styled from '@emotion/styled';
+import { logRequest } from '../src/server/logRequest';
 
 const Body = styled.body`
   @media (prefers-color-scheme: light) {
@@ -103,6 +104,8 @@ MyDocument.getInitialProps = async (
   setProjectForSSR(ctx);
 
   const initialProps = await documentGetInitialProps(ctx);
+
+  logRequest(ctx, serverIntl);
 
   return {
     ...initialProps,
