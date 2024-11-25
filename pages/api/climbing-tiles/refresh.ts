@@ -2,9 +2,9 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { climbingTile } from '../../../src/server/climbing-tiles/climbing-tile';
 import { refresh } from '../../../src/server/climbing-tiles/refresh';
 
-export const config = {
-  maxDuration: 60 * 4, // 4 minutes
-};
+// export const config = {
+//   maxDuration: 60 * 4, // 4 minutes
+// };
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
