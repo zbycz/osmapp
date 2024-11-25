@@ -59,7 +59,7 @@ export const toggleElementInArray = <T>(array: Array<T>, element: T) => {
 };
 
 export const naturalCompare = (a, b) => {
-  return a.localeCompare(b, undefined, {
+  return a?.localeCompare(b, undefined, {
     numeric: true,
     sensitivity: 'base',
   });
