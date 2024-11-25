@@ -11,6 +11,7 @@ type Props = {
   onDragOver?: (e: any) => void;
   onDragEnd?: (e: any) => void;
   draggable?: boolean;
+  photo: string;
 };
 
 const Container = styled.div<{ $isCurrentPhoto: boolean; draggable?: boolean }>`
@@ -38,9 +39,10 @@ export const PhotoLink = ({
   onDragOver,
   onDragEnd,
   draggable,
+  photo,
 }: Props) => {
   return (
-    <Tooltip title={`Show photo ${children}`}>
+    <Tooltip title={`Show photo ${children} (${photo})`}>
       <Container
         $isCurrentPhoto={isCurrentPhoto}
         onClick={onClick}
