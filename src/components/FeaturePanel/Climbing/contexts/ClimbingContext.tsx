@@ -63,7 +63,6 @@ type ClimbingContextType = {
   splitPaneSize: number | null;
   setSplitPaneSize: (size: number | null) => void;
   photoPaths: Array<string>;
-  setPhotoPaths: (path: Array<string>) => void;
   photoPath: string;
   setPhotoPath: (path: string) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
@@ -368,7 +367,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setRouteIndexHovered,
     photoPath,
     photoPaths,
-    setPhotoPaths,
     setPhotoPath,
     routeIndexExpanded,
     setRouteIndexExpanded,

@@ -5,7 +5,6 @@ import { Image } from './Image/Image';
 import { useLoadImages } from './useLoadImages';
 import { NoImage } from './NoImage';
 import { HEIGHT, ImageSkeleton } from './helpers';
-import { naturalSort } from '../Climbing/utils/array';
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -32,6 +31,7 @@ export const Slider = ({ children }) => (
 
 export const FeatureImages = () => {
   const { loading, images } = useLoadImages();
+
   if (images.length === 0) {
     return <Wrapper>{loading ? <ImageSkeleton /> : <NoImage />}</Wrapper>;
   }
@@ -39,7 +39,7 @@ export const FeatureImages = () => {
   return (
     <Wrapper>
       <Slider>
-        {naturalSort(images, (item) => item.def.k).map((item) => (
+        {images.map((item) => (
           <Image key={item.image.imageUrl} def={item.def} image={item.image} />
         ))}
       </Slider>
