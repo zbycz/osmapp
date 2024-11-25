@@ -9,7 +9,6 @@ import {
   getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from './utils/photo';
-import { result } from 'lodash';
 
 const getPathString = (path) =>
   path.length === 0
@@ -74,7 +73,7 @@ export const useGetHandleSave = (
   setIsEditMode: (value: boolean | ((old: boolean) => boolean)) => void,
 ) => {
   const { feature: crag } = useFeatureContext();
-  const { routes, photoPaths } = useClimbingContext();
+  const { routes } = useClimbingContext();
   const { showToast } = useSnackbar();
 
   return async () => {
@@ -83,22 +82,9 @@ export const useGetHandleSave = (
       return;
     }
 
-    const updatedCrag = {
-      ...crag,
-      tags: {
-        ...crag.tags,
-        ...photoPaths.reduce((acc, photoPath, index) => {
-          return {
-            ...acc,
-            [`wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`]: `File:${photoPath}`,
-          };
-        }, {}),
-      },
-    };
-
     const changes = getClimbingRouteChanges(routes);
     const comment = `${changes.length} routes`;
-    const result = await editCrag(updatedCrag, comment, changes);
+    const result = await editCrag(crag, comment, changes);
 
     console.log('All routes saved', changes, result); // eslint-disable-line no-console
     showToast('Data saved successfully!', 'success');

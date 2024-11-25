@@ -14,7 +14,6 @@ import { Image } from './FeatureImages/Image/Image';
 import { getInstantImage } from '../../services/images/getImageDefs';
 import { intl } from '../../services/intl';
 import Link from 'next/link';
-import { naturalSort } from './Climbing/utils/array';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -105,7 +104,7 @@ const Gallery = ({ images }) => {
   return (
     <Wrapper>
       <Slider>
-        {naturalSort(images, (item) => item.image.link).map((item) => (
+        {images.map((item) => (
           <Image key={item.image.imageUrl} def={item.def} image={item.image} />
         ))}
       </Slider>
