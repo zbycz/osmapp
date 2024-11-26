@@ -46,6 +46,17 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
               checked={userSettings['weather.enabled']}
             />
           </ListItem>
+          <ListItem>
+            <ListItemText>{t('user_settings.is_imperial')}</ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              onChange={(e) => {
+                setUserSetting('isImperial', e.target.checked);
+              }}
+              checked={userSettings.isImperial}
+            />
+          </ListItem>
         </List>
         <PanelLabel>{t('user_settings.climbing')}</PanelLabel>
         <List>
