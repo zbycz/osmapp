@@ -26,26 +26,39 @@ import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMobileMode } from '../../../helpers';
+import { ClimbingTypeBadge } from '../ClimbingTypeBadge';
 
 const Container = styled.div`
   width: 100%;
 `;
 const RoutePhoto = styled.div`
-  width: 20px;
+  width: 22px;
+`;
+const SelectedButton = styled.div`
+  position: absolute;
+  right: 0;
+`;
+const StyledChip = styled(Chip)`
+  font-size: 11px;
+  font-weight: 600;
+  height: 18px;
 `;
 
 const RouteName = styled.div<{ opacity: number }>`
   flex: 1;
   opacity: ${({ opacity }) => opacity};
   display: flex;
-  gap: 4px;
-  justify-content: space-between;
+  gap: 8px;
+  position: relative;
+  align-items: center;
+  user-select: text;
 `;
 
 const RouteDescription = styled.div<{ opacity: number }>`
   font-size: 10px;
   opacity: ${({ opacity }) => opacity};
   color: ${({ theme }) => theme.palette.text.secondary};
+  user-select: text;
 `;
 
 const RouteGrade = styled.div``;
@@ -60,7 +73,7 @@ const Row = styled.div<{ $isHoverHighlighted: boolean }>`
   border-bottom: solid 1px ${({ theme }) => theme.palette.divider};
   color: ${({ theme }) => theme.palette.text.primary};
   cursor: pointer;
-  padding: 8px 20px;
+  padding: 8px;
   transition: all 0.1s;
   *,
   &:focus {
@@ -164,7 +177,6 @@ export const ClimbingRouteTableRow = forwardRef<
       href: routeDetailUrl,
       locale: intl.lang,
     };
-
     return (
       <Container ref={ref}>
         <Row
@@ -186,17 +198,21 @@ export const ClimbingRouteTableRow = forwardRef<
           <Stack justifyContent="stretch" flex={1}>
             <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
               {feature.tags?.name}
+              <ClimbingTypeBadge feature={feature} />
+
               {!isMobileMode && isSelected && (
-                <Tooltip title="Deselect route">
-                  <Chip
-                    label="selected"
-                    onDelete={onDeselectRoute}
-                    size="small"
-                    deleteIcon={<CloseIcon />}
-                    color="primary"
-                    variant="outlined"
-                  />
-                </Tooltip>
+                <SelectedButton>
+                  <Tooltip title="Deselect route">
+                    <StyledChip
+                      label="selected"
+                      onDelete={onDeselectRoute}
+                      size="small"
+                      deleteIcon={<CloseIcon />}
+                      color="secondary"
+                      variant="filled"
+                    />
+                  </Tooltip>
+                </SelectedButton>
               )}
             </RouteName>
 

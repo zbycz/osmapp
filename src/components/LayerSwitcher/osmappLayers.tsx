@@ -5,11 +5,13 @@ import FilterHdrIcon from '@mui/icons-material/FilterHdr';
 import MapIcon from '@mui/icons-material/Map';
 import SatelliteIcon from '@mui/icons-material/Satellite';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
-import { Layer } from '../utils/MapStateContext';
+import { Bbox, Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
 import Maki from '../utils/Maki';
 import { useUserThemeContext } from '../../helpers/theme';
+import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
+import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 
 interface Layers {
   [key: string]: Layer;
@@ -30,14 +32,14 @@ const ClimbingIcon = () => {
   );
 };
 
-const africaBbox = [
+const africaBbox: Bbox = [
   -20, // west
   -35, // south
   55, // east
   40, // north
 ];
 
-const czBbox = [
+const czBbox: Bbox = [
   12.09, // west
   48.55, // south
   18.87, // east
@@ -46,13 +48,25 @@ const czBbox = [
 
 export const osmappLayers: Layers = {
   basic: {
-    name: t('layers.basic'),
+    name: `${t('layers.basic')} Maptiler`,
+    description: 'maptiler.com',
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: ['maptiler', 'osm'],
   },
+  basicOfr: {
+    name: `${t('layers.basic')} OpenFreeMap (beta)`,
+    description: '',
+    type: 'basemap',
+    Icon: ExploreIcon,
+    attribution: [
+      '<a href="https://openfreemap.org" target="_blank">OpenFreeMap</a> © <a href="https://www.openmaptiles.org/" target="_blank">OpenMapTiles</a>',
+      'osm',
+    ],
+  },
   makinaAfrica: {
     name: t('layers.makina_africa'),
+    description: 'OpenPlaceGuide.org',
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: [
@@ -63,6 +77,7 @@ export const osmappLayers: Layers = {
   },
   outdoor: {
     name: t('layers.outdoor'),
+    description: 'Maptiler.com',
     type: 'basemap',
     Icon: FilterHdrIcon,
     attribution: ['maptiler', 'osm'],
@@ -70,6 +85,7 @@ export const osmappLayers: Layers = {
   s1: { type: 'spacer' },
   carto: {
     name: t('layers.carto'),
+    description: 'Default OSM.org style',
     type: 'basemap',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     Icon: MapIcon,
@@ -78,7 +94,7 @@ export const osmappLayers: Layers = {
   sat: {
     name: t('layers.maptilerSat'),
     type: 'basemap',
-    url: 'https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=7dlhLl3hiXQ1gsth0kGu',
+    url: `https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=${process.env.NEXT_PUBLIC_API_KEY_MAPTILER}`,
     Icon: SatelliteIcon,
     attribution: ['maptiler'],
   },
@@ -105,14 +121,37 @@ export const osmappLayers: Layers = {
   // },
   bike: {
     name: t('layers.bike'),
+    description: 'Thunderforest.com',
     type: 'basemap',
-    url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=18c0cb31f2fd41d28ac90abe4059e359`,
+    url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
     Icon: DirectionsBikeIcon,
     attribution: [
       '&copy; <a href="https://www.thunderforest.com/">Thunderforest</a>',
       'osm',
     ],
   },
+  transport: {
+    name: t('layers.transport'),
+    description: 'Thunderforest.com',
+    type: 'basemap',
+    url: `https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
+    darkUrl: `https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
+    Icon: DirectionsBusIcon,
+  },
+  ...(process.env.NEXT_PUBLIC_API_KEY_INDOOREQUAL
+    ? {
+        indoor: {
+          name: `${t('layers.indoor')} (beta)`,
+          type: 'overlay',
+          Icon: MapsHomeWorkIcon,
+          attribution: [
+            '&copy; <a href="https://indoorequal.com/">indoor=</a>',
+            'osm',
+          ],
+          minzoom: 16,
+        },
+      }
+    : {}),
   snow: {
     name: t('layers.snow'),
     type: 'overlay',
@@ -125,7 +164,7 @@ export const osmappLayers: Layers = {
   },
   climbing: {
     name: t('layers.climbing'),
-    type: 'overlayClimbing',
+    type: 'overlay',
     Icon: ClimbingIcon,
     attribution: ['osm'],
   },

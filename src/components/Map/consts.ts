@@ -3,7 +3,7 @@ import type {
   SourceSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 
-const apiKey = '7dlhLl3hiXQ1gsth0kGu';
+const apiKey = process.env.NEXT_PUBLIC_API_KEY_MAPTILER;
 
 export const OSMAPP_SPRITE = [
   {
@@ -26,6 +26,10 @@ export const OSMAPP_SOURCES: Record<string, SourceSpecification> = {
   maptiler_planet: {
     type: 'vector' as const,
     url: `https://api.maptiler.com/tiles/v3/tiles.json?key=${apiKey}`,
+  },
+  ofr_planet: {
+    type: 'vector' as const,
+    url: `https://tiles.openfreemap.org/planet`,
   },
   contours: {
     type: 'vector' as const,

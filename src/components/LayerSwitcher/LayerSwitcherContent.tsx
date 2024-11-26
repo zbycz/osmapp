@@ -1,24 +1,11 @@
 import React from 'react';
-import { PersonAdd, WrongLocation } from '@mui/icons-material';
-import {
-  ListItemText,
-  ListItemSecondaryAction,
-  Tooltip,
-  ListItemButton,
-} from '@mui/material';
-import { dotToOptionalBr } from '../helpers';
-import {
-  LayerIcon,
-  LayersHeader,
-  RemoveUserLayerAction,
-  Spacer,
-  StyledList,
-  isViewInsideBbox,
-} from './helpers';
+import { PersonAdd } from '@mui/icons-material';
+import { LayersHeader, isViewInsideBbox } from './helpers';
 import { osmappLayers } from './osmappLayers';
 import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
 import { Overlays } from './Overlays';
 import { AddUserLayerButton } from './AddLayerButton';
+import { BaseLayers } from './BaseLayers';
 
 type AllLayers = {
   basemapLayers: Layer[];
@@ -53,64 +40,14 @@ const getAllLayers = (userLayers: Layer[], view: View): AllLayers => {
 };
 
 export const LayerSwitcherContent = () => {
-  const { view, activeLayers, setActiveLayers, userLayers, setUserLayers } =
-    useMapStateContext();
+  const { view, userLayers } = useMapStateContext();
   const { basemapLayers, overlayLayers } = getAllLayers(userLayers, view);
 
   return (
     <>
-      <LayersHeader headingId="layerSwitcher-heading" />
-
-      <StyledList
-        dense
-        aria-labelledby="layerSwitcher-heading"
-        suppressHydrationWarning
-      >
-        {basemapLayers.map(({ key, name, type, url, Icon, bboxes }) => {
-          if (type === 'spacer') {
-            return <Spacer key={key} />;
-          }
-          const setActiveBaseMap = () =>
-            setActiveLayers((prev) => [key, ...prev.slice(1)]);
-          const isOutsideOfView =
-            bboxes && !bboxes.some((b) => isViewInsideBbox(view, b));
-          return (
-            <ListItemButton
-              key={key}
-              selected={activeLayers.includes(key)}
-              onClick={setActiveBaseMap}
-            >
-              <LayerIcon Icon={Icon} />
-              <ListItemText primary={dotToOptionalBr(name)} />
-
-              {isOutsideOfView && (
-                <Tooltip
-                  title="Not visible currently"
-                  arrow
-                  placement="top-end"
-                >
-                  <WrongLocation fontSize="small" color="secondary" />
-                </Tooltip>
-              )}
-
-              <ListItemSecondaryAction>
-                {type === 'user' && (
-                  <RemoveUserLayerAction
-                    url={url}
-                    setUserLayers={setUserLayers}
-                  />
-                )}
-              </ListItemSecondaryAction>
-            </ListItemButton>
-          );
-        })}
-      </StyledList>
-
-      <Overlays
-        overlayLayers={overlayLayers}
-        activeLayers={activeLayers}
-        setActiveLayers={setActiveLayers}
-      />
+      <LayersHeader />
+      <BaseLayers baseLayers={basemapLayers} />
+      <Overlays overlayLayers={overlayLayers} />
 
       <AddUserLayerButton />
     </>

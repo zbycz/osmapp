@@ -4,8 +4,12 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { ZoomState } from './types';
 
 export const TransformWrapper = ({ children }) => {
-  const { setArePointerEventsDisabled, setPhotoZoom, isEditMode } =
-    useClimbingContext();
+  const {
+    setArePointerEventsDisabled,
+    setPhotoZoom,
+    isEditMode,
+    isPanningDisabled,
+  } = useClimbingContext();
 
   const startPointerEvents = () => {
     setArePointerEventsDisabled(false);
@@ -31,6 +35,7 @@ export const TransformWrapper = ({ children }) => {
       onPanningStart={startPointerEvents}
       onPanningStop={startPointerEvents}
       disablePadding
+      panning={{ disabled: isPanningDisabled }}
       wheel={{ step: 100 }}
       centerOnInit
       onTransformed={(_ref, state: ZoomState) => {

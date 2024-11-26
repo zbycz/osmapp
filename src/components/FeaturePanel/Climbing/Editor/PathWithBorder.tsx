@@ -22,7 +22,8 @@ export const PathWithBorder = ({
 }) => {
   const config = useConfig();
   const theme = useTheme();
-  const { routeIndexHovered, isOtherRouteSelected } = useClimbingContext();
+  const { routeIndexHovered, isOtherRouteSelected, isEditMode } =
+    useClimbingContext();
 
   const strokeColor = getDifficultyColor(
     getDifficulty(route.feature.tags),
@@ -54,7 +55,7 @@ export const PathWithBorder = ({
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity={isOtherSelected ? 0.6 : 1}
+        opacity={isOtherSelected ? (isEditMode ? 1 : 0.6) : 1}
         // markerMid="url(#triangle)"
         // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}

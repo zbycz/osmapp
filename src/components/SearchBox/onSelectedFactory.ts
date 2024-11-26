@@ -28,7 +28,7 @@ const overpassOptionSelected = (
   const astOrQuery =
     option.type === 'preset'
       ? option.preset?.presetForSearch.tags
-      : (option.overpass.ast ?? option.overpass.query);
+      : (option.overpass.ast ?? option.overpass.query); // TODO there should be two types for "query" and "ast"
 
   const timeout = setTimeout(() => {
     setOverpassLoading(true);
@@ -41,7 +41,7 @@ const overpassOptionSelected = (
       showToast(content);
       getOverpassSource()?.setData(geojson);
 
-      if (option.type === 'overpass') {
+      if (option.type === 'overpass' && !option.overpass.ast) {
         addOverpassQueryHistory(option.overpass.query);
       }
     })

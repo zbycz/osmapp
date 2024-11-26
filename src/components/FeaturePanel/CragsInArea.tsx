@@ -9,11 +9,12 @@ import { Feature, isInstant } from '../../services/types';
 import { useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 
-import { Slider, Wrapper } from './ImagePane/FeatureImages';
-import { Image } from './ImagePane/Image/Image';
+import { Slider, Wrapper } from './FeatureImages/FeatureImages';
+import { Image } from './FeatureImages/Image/Image';
 import { getInstantImage } from '../../services/images/getImageDefs';
 import { intl } from '../../services/intl';
 import Link from 'next/link';
+import { naturalSort } from './Climbing/utils/array';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -104,7 +105,7 @@ const Gallery = ({ images }) => {
   return (
     <Wrapper>
       <Slider>
-        {images.map((item) => (
+        {naturalSort(images, (item) => item.def.k).map((item) => (
           <Image key={item.image.imageUrl} def={item.def} image={item.image} />
         ))}
       </Slider>

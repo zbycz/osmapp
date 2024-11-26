@@ -3,6 +3,7 @@ import maplibregl, { Map } from 'maplibre-gl';
 import { getGlobalMap } from '../../services/mapStorage';
 import { t } from '../../services/intl';
 import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
+import { isMobileDevice } from '../helpers';
 
 const navigation = {
   mobile: new maplibregl.NavigationControl({
@@ -44,7 +45,8 @@ const geolocation = new maplibregl.GeolocateControl({
 });
 
 const addControls = (map: Map, mobileMode: boolean, cleanUp: () => void) => {
-  const navControl = mobileMode ? navigation.mobile : navigation.desktop;
+  const navControl =
+    isMobileDevice() || mobileMode ? navigation.mobile : navigation.desktop;
 
   map.addControl(navControl);
   map.addControl(geolocation);

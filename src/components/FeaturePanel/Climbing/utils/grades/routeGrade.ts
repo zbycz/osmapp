@@ -73,16 +73,29 @@ export const getDifficulties = (tags: FeatureTags): RouteDifficulty[] => {
   }));
 };
 
+export const sanitizeApproximationSymbol = (grade) => {
+  return grade?.replace('~', '');
+};
+
 export const getDifficultyColor = (routeDifficulty, theme) => {
   const DEFAULT_COLOR = '#555';
   if (!routeDifficulty) {
     return DEFAULT_COLOR;
   }
+
+  const gradeWithoutApproximationCharacters = sanitizeApproximationSymbol(
+    routeDifficulty.grade,
+  );
+
   const { mode } = theme.palette;
   const uiaaGrade =
     routeDifficulty.gradeSystem !== 'uiaa'
-      ? convertGrade(routeDifficulty.gradeSystem, 'uiaa', routeDifficulty.grade)
-      : routeDifficulty.grade;
+      ? convertGrade(
+          routeDifficulty.gradeSystem,
+          'uiaa',
+          gradeWithoutApproximationCharacters,
+        )
+      : gradeWithoutApproximationCharacters;
   return gradeColors[uiaaGrade]?.[mode] || DEFAULT_COLOR;
 };
 
@@ -103,7 +116,7 @@ export const findOrConvertRouteGrade = (
       convertGrade(
         routeDifficulties?.[0]?.gradeSystem,
         selectedRouteSystem,
-        routeDifficulties?.[0]?.grade,
+        sanitizeApproximationSymbol(routeDifficulties?.[0]?.grade),
       ) ?? '?',
     gradeSystem: selectedRouteSystem,
   };

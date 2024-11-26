@@ -19,7 +19,7 @@ import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
-import { setIntlForSSR } from '../../services/intl';
+import { setIntlForSSR, t } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
 import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
@@ -31,7 +31,6 @@ import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
 import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
-import Error from 'next/error';
 import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
 import {
   ClimbingArea,
@@ -45,6 +44,11 @@ import {
 } from '../utils/TurnByTurnContext';
 import { TurnByTurnNavigation } from '../TurnByTurnNavigation/TurnByTurnNavigation';
 import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
+
+const URL_NOT_FOUND_TOAST = {
+  message: t('url_not_found_toast'),
+  severity: 'warning' as const,
+};
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -196,16 +200,16 @@ const App: NextPage<Props> = ({
   climbingAreas,
 }) => {
   const mapView = getMapViewFromHash() || initialMapView;
-
-  if (featureFromRouter === '404') {
-    return <Error statusCode={404} />;
-  }
+  const initialToast =
+    featureFromRouter === '404' ? URL_NOT_FOUND_TOAST : undefined;
 
   return (
-    <SnackbarProvider>
+    <SnackbarProvider initialToast={initialToast}>
       <UserSettingsProvider>
         <FeatureProvider
-          featureFromRouter={featureFromRouter}
+          featureFromRouter={
+            featureFromRouter === '404' ? null : featureFromRouter
+          }
           cookies={cookies}
         >
           <MapStateProvider initialMapView={mapView}>

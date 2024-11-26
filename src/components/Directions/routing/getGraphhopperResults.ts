@@ -3,7 +3,7 @@ import { LonLat } from '../../../services/types';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
 
-const API_KEY = `f189b841-6529-46c6-8a91-51f17477dcda`;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY_GRAPHHOPPER;
 
 export const profiles: Record<Profile, string> = {
   car: 'car',

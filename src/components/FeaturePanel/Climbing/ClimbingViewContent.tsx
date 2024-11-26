@@ -2,38 +2,44 @@ import styled from '@emotion/styled';
 import {
   CLIMBING_ROUTE_ROW_HEIGHT,
   DIALOG_TOP_BAR_HEIGHT,
-  SPLIT_PANE_DEFAULT_HEIGHT,
+  SPLIT_PANE_DEFAULT_SIZE,
 } from './config';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { RouteList } from './RouteList/RouteList';
 import { ContentContainer } from './ContentContainer';
-import { Box, Button, ButtonGroup } from '@mui/material';
+import { Button, ButtonGroup } from '@mui/material';
 
 import { RouteDistribution } from './RouteDistribution';
 import React from 'react';
 import dynamic from 'next/dynamic';
 import { EditButton } from '../EditButton';
 import { EditDialog } from '../EditDialog/EditDialog';
+import { useGetCragViewLayout } from './utils/useCragViewLayout';
 
 const CragMapDynamic = dynamic(() => import('./CragMap'), {
   ssr: false,
   loading: () => <div />,
 });
 
-const ContentBelowRouteList = styled.div<{ $splitPaneHeight: number }>`
-  min-height: calc(
+const ContentBelowRouteList = styled.div<{
+  $splitPaneSize: number;
+  $cragViewLayout: 'horizontal' | 'vertical';
+}>`
+  min-height: ${({ $cragViewLayout, $splitPaneSize }) =>
+    $cragViewLayout === 'horizontal'
+      ? `
+  calc(
     100vh -
-      ${({ $splitPaneHeight }) =>
-        $splitPaneHeight
-          ? `${$splitPaneHeight}px`
-          : SPLIT_PANE_DEFAULT_HEIGHT} -
+      ${$splitPaneSize ? `${$splitPaneSize}px` : SPLIT_PANE_DEFAULT_SIZE} -
       ${DIALOG_TOP_BAR_HEIGHT + CLIMBING_ROUTE_ROW_HEIGHT + 40}px
-  );
+  );`
+      : `calc(100vh - ${DIALOG_TOP_BAR_HEIGHT + CLIMBING_ROUTE_ROW_HEIGHT + 40}px);`};
 `;
 
 export const ClimbingViewContent = ({ isMapVisible }) => {
-  const { splitPaneHeight, showDebugMenu, routes } = useClimbingContext();
+  const { splitPaneSize, showDebugMenu, routes } = useClimbingContext();
+  const cragViewLayout = useGetCragViewLayout();
 
   const getRoutesCsv = () => {
     const getPathString = (path) =>
@@ -64,7 +70,10 @@ export const ClimbingViewContent = ({ isMapVisible }) => {
   ) : (
     <>
       <RouteList isEditable />
-      <ContentBelowRouteList $splitPaneHeight={splitPaneHeight}>
+      <ContentBelowRouteList
+        $splitPaneSize={splitPaneSize}
+        $cragViewLayout={cragViewLayout}
+      >
         <ContentContainer>
           {showDebugMenu && (
             <>

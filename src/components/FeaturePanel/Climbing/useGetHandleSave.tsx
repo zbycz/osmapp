@@ -1,5 +1,5 @@
 import { ClimbingRoute } from './types';
-import { FeatureTags } from '../../../services/types';
+import { Feature, FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { Change, editCrag } from '../../../services/osmApiAuth';
@@ -9,6 +9,7 @@ import {
   getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from './utils/photo';
+import { result } from 'lodash';
 
 const getPathString = (path) =>
   path.length === 0
@@ -47,6 +48,29 @@ const isSameTags = (updatedTags: {}, origTags: FeatureTags) => {
   return isSame;
 };
 
+export const getClimbingCragChanges = (
+  crag: Feature,
+  photoPaths: Array<string>,
+): Change[] => {
+  const newTags = {
+    ...crag.tags,
+    ...photoPaths.reduce((acc, photoPath, index) => {
+      return {
+        ...acc,
+        [`wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`]: `File:${photoPath}`,
+      };
+    }, {}),
+  };
+  const updatedCrag = {
+    ...crag,
+    tags: newTags,
+  };
+
+  const isSame = isSameTags(newTags, crag.tags);
+
+  return isSame ? [] : [{ feature: updatedCrag, allTags: newTags }];
+};
+
 export const getClimbingRouteChanges = (routes: ClimbingRoute[]): Change[] => {
   const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
 
@@ -73,7 +97,7 @@ export const useGetHandleSave = (
   setIsEditMode: (value: boolean | ((old: boolean) => boolean)) => void,
 ) => {
   const { feature: crag } = useFeatureContext();
-  const { routes } = useClimbingContext();
+  const { routes, photoPaths } = useClimbingContext();
   const { showToast } = useSnackbar();
 
   return async () => {
@@ -82,7 +106,10 @@ export const useGetHandleSave = (
       return;
     }
 
-    const changes = getClimbingRouteChanges(routes);
+    const changes = [
+      ...getClimbingRouteChanges(routes),
+      ...getClimbingCragChanges(crag, photoPaths),
+    ];
     const comment = `${changes.length} routes`;
     const result = await editCrag(crag, comment, changes);
 

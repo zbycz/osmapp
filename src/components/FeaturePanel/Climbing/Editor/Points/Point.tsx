@@ -17,14 +17,14 @@ const PointElement = styled.circle<{
   ${({ $isHovered, $isPointSelected }) =>
     `${
       $isHovered || $isPointSelected
-        ? 'transform: scale(1.8);'
+        ? 'transform: scale(1.5);'
         : 'transform: scale(1);'
     }`}
 `;
 
 const usePointColor = (type, isHovered) => {
   const config = useConfig();
-  const invisiblePointsForTypes = ['bolt', 'piton', 'unfinished'];
+  const invisiblePointsForTypes = [];
 
   if (invisiblePointsForTypes.includes(type))
     return { pointColor: 'transparent', pointStroke: 'transparent' };
@@ -52,8 +52,6 @@ export const Point = ({
   const [isHovered, setIsHovered] = useState(false);
   const {
     setPointSelectedIndex,
-    pointSelectedIndex,
-    routeSelectedIndex,
     setIsPointMoving,
     setIsPointClicked,
     isPointMoving,
@@ -62,15 +60,24 @@ export const Point = ({
     setRouteIndexHovered,
     photoZoom,
     getCurrentPath,
+    setIsPanningDisabled,
+    isRouteSelected,
+    isPointSelected,
+    isOtherRouteSelected,
+    isEditMode,
   } = useClimbingContext();
   const isMobileMode = useMobileMode();
-  const isPointSelected =
-    routeSelectedIndex === routeNumber && pointSelectedIndex === index;
-  const onClick = (e) => {
+  const isSelected = isRouteSelected(routeNumber);
+  const isOtherSelected = isOtherRouteSelected(routeNumber);
+  const { pointColor, pointStroke } = usePointColor(type, isHovered);
+
+  const isPointOnRouteSelected = isSelected && isPointSelected(index);
+
+  const onPointClick = (e) => {
     e.stopPropagation();
   };
 
-  const onMouseEnter = () => {
+  const onPointMouseEnter = () => {
     setIsHovered(true);
     const isLastPoint = getCurrentPath().length - 1 === index;
     if (!isLastPoint) {
@@ -78,20 +85,21 @@ export const Point = ({
     }
   };
 
-  const onMouseLeave = () => {
+  const onPointMouseLeave = () => {
     setIsHovered(false);
     setRouteIndexHovered(null);
   };
 
-  const onMouseDown = () => {
+  const onPointMouseDown = (e) => {
+    setIsPanningDisabled(true);
     setPointSelectedIndex(index);
     setIsPointClicked(true);
+    e.stopPropagation();
   };
 
-  const onMouseUp = (e) => {
+  const onPointMouseUp = (e) => {
     // @TODO unify with RouteMarks.tsx
     if (!isPointMoving) {
-      setPointSelectedIndex(null);
       onPointInSelectedRouteClick(e);
       setPointElement(pointElement !== null ? null : e.currentTarget);
       setPointSelectedIndex(index);
@@ -102,26 +110,33 @@ export const Point = ({
     }
   };
 
-  const onTouchMove = () => {};
-
-  const { pointColor, pointStroke } = usePointColor(type, isHovered);
-
   const isTouchDevice = 'ontouchstart' in window;
 
   const commonProps = {
-    onClick,
+    onMouseDown: onPointMouseDown,
+    onMouseUp: onPointMouseUp,
+    onTouchStart: onPointMouseDown,
+    onTouchEnd: onPointMouseUp,
+    onClick: onPointClick,
     cursor: 'pointer',
-    ...(isMobileMode ? {} : { onMouseEnter, onMouseLeave }),
-    onMouseDown,
-    onTouchMove,
-    onPointerMove: onTouchMove,
-    onMouseUp,
-    onTouchStart: onMouseDown,
-    onTouchEnd: onMouseUp,
+    ...(isMobileMode
+      ? {}
+      : {
+          onMouseEnter: onPointMouseEnter,
+          onMouseLeave: onPointMouseLeave,
+        }),
     cx: 0,
     cy: 0,
   };
   const title = type && <title>{type}</title>;
+
+  if (isOtherSelected && isEditMode)
+    return (
+      <g transform={`translate(${x},${y}) scale(${1 / photoZoom.scale})`}>
+        <circle cx={0} cy={0} r={2.5 * photoZoom.scale} fill="white" />
+      </g>
+    );
+  if (!isSelected || !isEditMode) return null;
 
   return (
     <g transform={`translate(${x},${y}) scale(${1 / photoZoom.scale})`}>
@@ -136,9 +151,9 @@ export const Point = ({
       <PointElement
         fill={pointColor}
         stroke={pointStroke}
-        r={isTouchDevice ? 5 : 3}
+        r={isTouchDevice ? 7 : 4}
         $isHovered={isHovered}
-        $isPointSelected={isPointSelected}
+        $isPointSelected={isPointOnRouteSelected}
         {...commonProps}
       >
         {title}

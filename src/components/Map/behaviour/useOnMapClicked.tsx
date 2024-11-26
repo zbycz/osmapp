@@ -10,7 +10,7 @@ import {
 import { getCenter } from '../../../services/getCenter';
 import { convertMapIdToOsmId, getIsOsmObject } from '../helpers';
 import { maptilerFix } from './maptilerFix';
-import { Feature, LonLat } from '../../../services/types';
+import { Feature, LonLat, OsmId } from '../../../services/types';
 import { createCoordsFeature, pushFeatureToRouter } from './utils';
 import { SetFeature } from '../../utils/FeatureContext';
 import maplibregl, { Map, MapGeoJSONFeature } from 'maplibre-gl';
@@ -18,6 +18,27 @@ import type { MapClickOverrideRef } from '../../utils/MapStateContext';
 
 const isSameOsmId = (feature: Feature, skeleton: Feature) =>
   feature && skeleton && getOsmappLink(feature) === getOsmappLink(skeleton);
+
+const getIndoorEqualId = (feature: Feature): OsmId | null => {
+  if (feature.layer.id?.startsWith('indoor-') && feature.properties.id) {
+    const [type, id] = `${feature.properties.id}`.split(':');
+    return { type, id: parseInt(id, 10) } as OsmId;
+  }
+  return null;
+};
+
+const getId = (feature) => {
+  const indoorId = getIndoorEqualId(feature);
+  if (indoorId) {
+    return { isOsmObject: true, osmMeta: indoorId };
+  }
+
+  const isOsmObject = getIsOsmObject(feature);
+  const osmMeta = isOsmObject
+    ? convertMapIdToOsmId(feature)
+    : { type: feature.layer.id, id: feature.id };
+  return { isOsmObject, osmMeta };
+};
 
 const getOnlyLabel = (
   features: MapGeoJSONFeature[],
@@ -44,10 +65,7 @@ export const getSkeleton = (
   feature /* TODO MapGeoJSONFeature*/,
   clickCoords: LonLat,
 ) => {
-  const isOsmObject = getIsOsmObject(feature);
-  const osmMeta = isOsmObject
-    ? convertMapIdToOsmId(feature)
-    : { type: feature.layer.id, id: feature.id };
+  const { isOsmObject, osmMeta } = getId(feature);
 
   const nameTags = pickBy(feature.properties, (_, key) =>
     key.startsWith('name'),
