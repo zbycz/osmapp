@@ -16,6 +16,11 @@ export default {
   'user.my_ticks': 'Meine Begehungen',
   'user.user_settings': 'Einstellungen',
 
+  'user_settings.general': 'Allgemein',
+  'user_settings.show_weather_widget': 'Zeige das Wetter an',
+  'user_settings.climbing': 'Klettern',
+  'user_settings.is_imperial': 'Nutze imperiale Einheiten',
+
   'my_ticks.title': 'Meine Begehungen',
   'my_ticks.route_name': 'Name',
   'my_ticks.route_grade': 'Schweregrad',
