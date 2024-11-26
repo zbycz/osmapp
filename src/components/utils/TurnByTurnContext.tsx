@@ -7,6 +7,8 @@ import { useMapStateContext } from './MapStateContext';
 type Instruction = RoutingResult['instructions'][number];
 export type InstructionWithPath = Instruction & { path: LonLat[] };
 
+export type RotationMode = 'user' | 'route';
+
 type TurnByTurnContextType = {
   routingResult: RoutingResult;
   setRoutingResult: Setter<RoutingResult>;
@@ -17,6 +19,8 @@ type TurnByTurnContextType = {
   mode: Profile;
   setMode: Setter<Profile>;
   end: () => void;
+  rotationMode: RotationMode;
+  setRotationMode: Setter<RotationMode>;
 };
 
 const TurnByTurnContext = React.createContext<TurnByTurnContextType>(null);
@@ -30,6 +34,7 @@ export const TurnByTurnProvider: React.FC = ({ children }) => {
   const [initialInstructions, setInitialInstructions] =
     React.useState<InstructionWithPath[]>(null);
   const [mode, setMode] = React.useState<Profile>(null);
+  const [rotationMode, setRotationMode] = React.useState<RotationMode>('user');
 
   const value: TurnByTurnContextType = {
     routingResult,
@@ -39,7 +44,15 @@ export const TurnByTurnProvider: React.FC = ({ children }) => {
     initialInstructions,
     setInitialInstructions,
     mode,
-    setMode,
+    setMode: (setter) => {
+      const newValue = typeof setter === 'function' ? setter(mode) : setter;
+
+      if (newValue === 'walk') {
+        setRotationMode('user');
+      } else {
+        setRotationMode('route');
+      }
+    },
     end: () => {
       setRoutingResult(null);
       setInstructions(null);
@@ -47,6 +60,8 @@ export const TurnByTurnProvider: React.FC = ({ children }) => {
       setMapClickDisabled(false);
       setMode(null);
     },
+    rotationMode,
+    setRotationMode,
   };
 
   return (

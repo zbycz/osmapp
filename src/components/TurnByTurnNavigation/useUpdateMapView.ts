@@ -2,7 +2,7 @@ import { degToRadians } from '../../helpers/utils';
 import { getGlobalMap } from '../../services/mapStorage';
 import { LonLat } from '../../services/types';
 import { Profile } from '../Directions/routing/types';
-import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
+import { RotationMode, useTurnByTurnContext } from '../utils/TurnByTurnContext';
 import { Pair, useLocation, useOrientation } from './helpers';
 
 type PathSegment = Pair<LonLat>;
@@ -13,11 +13,11 @@ const degPointToRadian = ([lon, lat]: LonLat) => [
 ];
 
 const bearing = (
-  mode: Profile,
+  mode: RotationMode,
   compassHeading: number,
   currentSegment: PathSegment,
 ) => {
-  if (mode === 'walk') {
+  if (mode === 'user') {
     return compassHeading;
   }
   if (!currentSegment) {
@@ -38,11 +38,11 @@ const bearing = (
 };
 
 const useBearing = (currentSegment: PathSegment) => {
-  const { mode } = useTurnByTurnContext();
+  const { rotationMode } = useTurnByTurnContext();
   const { alpha, webkitCompassHeading } = useOrientation();
   const compassHeading = webkitCompassHeading ?? alpha;
 
-  return bearing(mode, compassHeading, currentSegment);
+  return bearing(rotationMode, compassHeading, currentSegment);
 };
 
 export const useUpdateMapView = (currentSegment: PathSegment) => {

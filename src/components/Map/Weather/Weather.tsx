@@ -1,7 +1,6 @@
 import { useQuery } from 'react-query';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import styled from '@emotion/styled';
-import { DotLoader } from '../../helpers';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { loadCurrentWeather } from './loadWeather';
 import { WeatherInner } from './WeatherInner';

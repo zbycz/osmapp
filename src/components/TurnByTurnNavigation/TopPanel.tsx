@@ -5,6 +5,7 @@ import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { calcDistance } from './helpers';
 import { Stack } from '@mui/material';
+import { SwitchRotationMode } from './RotationMode';
 
 export const TOP_PANEL_HEIGHT = 160;
 
@@ -41,6 +42,16 @@ const StyledTopPanel = styled.div`
   }
 `;
 
+const StyledControllElements = styled.div`
+  right: 0;
+  position: absolute;
+  top: 100%;
+  padding: 0.3rem;
+
+  display: flex;
+  flex-direction: column;
+`;
+
 const Distance = ({ distance }: { distance: number }) => {
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
@@ -62,6 +73,9 @@ export const TopPanel = () => {
         <Distance distance={calcDistance(currentInstruction.path)} />
         <p>{nextInstruction.text}</p>
       </Stack>
+      <StyledControllElements>
+        <SwitchRotationMode />
+      </StyledControllElements>
     </StyledTopPanel>
   );
 };
