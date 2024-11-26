@@ -44,6 +44,7 @@ import {
 } from '../utils/TurnByTurnContext';
 import { TurnByTurnNavigation } from '../TurnByTurnNavigation/TurnByTurnNavigation';
 import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
+import { ConfirmationProvider } from '../utils/ConfirmationContext';
 
 const URL_NOT_FOUND_TOAST = {
   message: t('url_not_found_toast'),
@@ -218,7 +219,9 @@ const App: NextPage<Props> = ({
                 <EditDialogProvider /* TODO supply router.query */>
                   <QueryClientProvider client={reactQueryClient}>
                     <TurnByTurnProvider>
-                      <IndexWithProviders climbingAreas={climbingAreas} />
+                      <ConfirmationProvider>
+                        <IndexWithProviders climbingAreas={climbingAreas} />
+                      </ConfirmationProvider>
                     </TurnByTurnProvider>
                   </QueryClientProvider>
                 </EditDialogProvider>

@@ -1,7 +1,6 @@
 import { degToRadians } from '../../helpers/utils';
 import { getGlobalMap } from '../../services/mapStorage';
 import { LonLat } from '../../services/types';
-import { Profile } from '../Directions/routing/types';
 import { RotationMode, useTurnByTurnContext } from '../utils/TurnByTurnContext';
 import { Pair, useLocation, useOrientation } from './helpers';
 

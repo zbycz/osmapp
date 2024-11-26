@@ -1,11 +1,13 @@
 import { Profile, RoutingResult } from '../Directions/routing/types';
 import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
 import { getSubPoints, pair, requestOrientationPermission } from './helpers';
-import { findIndexByLowest } from '../../utils';
 import { getCurriedDistance } from '../SearchBox/utils';
 import { getGlobalMap } from '../../services/mapStorage';
 import { addToMap } from './addToMap';
 import { useMapStateContext } from '../utils/MapStateContext';
+import { MAX_DISTANCE } from './const';
+import { useConfirmationContext } from '../utils/ConfirmationContext';
+import { t } from '../../services/intl';
 
 export const useInitTurnByTurnNav = (
   routingResult: RoutingResult,
@@ -14,6 +16,7 @@ export const useInitTurnByTurnNav = (
   const { setRoutingResult, setInitialInstructions, setInstructions, setMode } =
     useTurnByTurnContext();
   const { setMapClickDisabled } = useMapStateContext();
+  const { confirm } = useConfirmationContext();
 
   return () => {
     requestOrientationPermission();
@@ -22,6 +25,7 @@ export const useInitTurnByTurnNav = (
       async ({ coords }) => {
         const { geojson } = routingResult;
         const map = getGlobalMap();
+
         if (geojson.type !== 'LineString' || !map) {
           return;
         }
@@ -42,31 +46,21 @@ export const useInitTurnByTurnNav = (
               .flat(),
           }),
         );
-        const index = findIndexByLowest(instructionsWithPaths, ({ path }) =>
-          Math.min(...path.map(distanceToCurrentPos)),
-        );
-        const instructionsFromUserPos = [
-          {
-            ...instructionsWithPaths[index],
-            path: instructionsWithPaths[index].path.slice(
-              findIndexByLowest(
-                instructionsWithPaths[index].path,
-                distanceToCurrentPos,
-              ),
-            ),
-          },
-          ...instructionsWithPaths.slice(index + 1),
-        ];
-        const [firstPoint] = instructionsFromUserPos[0].path;
-        if (distanceToCurrentPos(firstPoint) > 75) {
-          throw new Error('please be near the route to start navigation');
+        const [firstPoint] = instructionsWithPaths[0].path;
+        if (distanceToCurrentPos(firstPoint) > MAX_DISTANCE) {
+          confirm({
+            cancel: false,
+            description: t('turn_by_turn.too_far'),
+          });
+          setMapClickDisabled(false);
+          return;
         }
 
-        const totalPath = instructionsFromUserPos.flatMap(({ path }) => path);
+        const totalPath = instructionsWithPaths.flatMap(({ path }) => path);
 
         setRoutingResult(routingResult);
-        setInstructions(instructionsFromUserPos);
-        setInitialInstructions(instructionsFromUserPos);
+        setInstructions(instructionsWithPaths);
+        setInitialInstructions(instructionsWithPaths);
         setMode(mode);
 
         addToMap(map, [], totalPath);

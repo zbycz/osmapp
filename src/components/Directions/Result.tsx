@@ -62,6 +62,26 @@ type Props = {
   mode: Profile;
 };
 
+const StartNavigation = ({
+  result,
+  mode,
+}: {
+  result: RoutingResult;
+  mode: Profile;
+}) => {
+  const initTurnByTurn = useInitTurnByTurnNav(result, mode);
+
+  return (
+    <Button
+      onClick={() => {
+        initTurnByTurn();
+      }}
+    >
+      Start Navigation
+    </Button>
+  );
+};
+
 const MobileResult = ({
   result,
   revealForm,
@@ -71,7 +91,6 @@ const MobileResult = ({
   mode,
 }: Props & Record<'time' | 'distance' | 'ascent', string>) => {
   const [showInstructions, setShowInstructions] = React.useState(false);
-  const initTurnByTurn = useInitTurnByTurnNav(result, mode);
 
   return (
     <StyledPaperMobile elevation={3}>
@@ -104,13 +123,7 @@ const MobileResult = ({
             {t('directions.edit_destinations')}
           </Button>
         )}
-        <Button
-          onClick={() => {
-            initTurnByTurn();
-          }}
-        >
-          Start Navigation
-        </Button>
+        <StartNavigation result={result} mode={mode} />
       </Stack>
       {showInstructions && <Instructions instructions={result.instructions} />}
     </StyledPaperMobile>
@@ -121,7 +134,6 @@ export const Result = ({ result, revealForm, mode }: Props) => {
   const isMobileMode = useMobileMode();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
-  const initTurnByTurn = useInitTurnByTurnNav(result, mode);
 
   const time = toHumanTime(result.time);
   const distance = toHumanDistance(isImperial, result.distance);
@@ -174,13 +186,7 @@ export const Result = ({ result, revealForm, mode }: Props) => {
         </div>
       </Stack>
       <Divider sx={{ mt: 2, mb: 3 }} />
-      <Button
-        onClick={() => {
-          initTurnByTurn();
-        }}
-      >
-        Start Navigation
-      </Button>
+      <StartNavigation result={result} mode={mode} />
       {result.instructions && (
         <Instructions instructions={result.instructions} />
       )}

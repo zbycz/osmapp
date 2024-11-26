@@ -270,4 +270,7 @@ export default {
   'sharedialog.image_attribution': 'Bildnachweise',
 
   weather: 'Wetter',
+
+  'turn_by_turn.too_far':
+    'Du bist zu weit vom Start entfernt. Entweder musst Du dich zum Startpunkt begeben oder Deinen aktuellen Standort als Start auswählen',
 };

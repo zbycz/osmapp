@@ -331,4 +331,7 @@ export default {
   'sharedialog.share': 'Share',
 
   weather: 'Weather',
+
+  'turn_by_turn.too_far':
+    "You're too far away from your start point. Either you need to move to the desired start or select the start as your current position",
 };
