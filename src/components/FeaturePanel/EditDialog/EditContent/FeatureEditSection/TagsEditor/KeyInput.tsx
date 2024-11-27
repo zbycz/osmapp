@@ -1,8 +1,8 @@
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
-import { useEditContext } from '../../../EditContext';
 import React, { useEffect, useState } from 'react';
 import { InputAdornment, TextField } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+import { useFeatureEditData } from '../SingleFeatureEditContext';
 
 const useUpdatedState = (currentKey: string) => {
   const [tmpKey, setTmpKey] = useState(currentKey);
@@ -14,7 +14,7 @@ const useUpdatedState = (currentKey: string) => {
 };
 
 const useTmpState = (index: number) => {
-  const { tagsEntries, setTagsEntries } = useEditContext().data;
+  const { tagsEntries, setTagsEntries } = useFeatureEditData();
   const currentKey = tagsEntries[index][0];
   const { tmpKey, setTmpKey } = useUpdatedState(currentKey);
 
@@ -33,7 +33,7 @@ const useTmpState = (index: number) => {
 };
 
 const useIsError = (index: number) => {
-  const { tagsEntries } = useEditContext().data;
+  const { tagsEntries } = useFeatureEditData();
   const [currentKey, currentValue] = tagsEntries[index];
 
   const isDuplicateKey = tagsEntries.some(

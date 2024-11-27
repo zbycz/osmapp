@@ -6,10 +6,10 @@ import {
   getWikimediaCommonsKey,
 } from '../../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
-import { useEditContext } from '../../EditContext';
-import { OpeningHoursEditor } from '../OpeningHoursEditor/OpeningHoursEditor';
+import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import styled from '@emotion/styled';
 import { CharacterCount, getInputTypeForKey } from '../helpers';
+import { useFeatureEditData } from './SingleFeatureEditContext';
 
 export const majorKeys = [
   'name',
@@ -96,7 +96,7 @@ const TextFieldWithCharacterCount = ({
 
 export const MajorKeysEditor = () => {
   const { focusTag } = useEditDialogContext();
-  const { tags, setTag } = useEditContext().data;
+  const { tags, setTag } = useFeatureEditData();
 
   // TODO this code will be replaced when implementing id presets fields
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);

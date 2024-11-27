@@ -6,10 +6,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from '../MajorKeysEditor';
 import { isString } from '../../../../../helpers';
 import { t, Translation } from '../../../../../../services/intl';
-import { TagsEntries, useEditContext } from '../../../EditContext';
+import { TagsEntries } from '../../../EditContext';
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
+import { useFeatureEditData } from '../SingleFeatureEditContext';
 
 const Table = styled.table`
   width: calc(100% - 8px);
@@ -74,7 +75,7 @@ const lastKeyAndValueSet = (tagsEntries: TagsEntries) => {
 };
 
 const AddButton = () => {
-  const { tagsEntries, setTagsEntries } = useEditContext().data;
+  const { tagsEntries, setTagsEntries } = useFeatureEditData();
   const active = tagsEntries.length === 0 || lastKeyAndValueSet(tagsEntries);
 
   return (
@@ -95,7 +96,7 @@ const AddButton = () => {
 };
 
 const TagsEditorInner = () => {
-  const { tagsEntries } = useEditContext().data;
+  const { tagsEntries } = useFeatureEditData();
   return (
     <>
       <TagsEditorHeading />

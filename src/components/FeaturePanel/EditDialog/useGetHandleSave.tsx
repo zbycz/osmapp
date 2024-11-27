@@ -11,15 +11,17 @@ export const useGetHandleSave = () => {
   const { showToast } = useSnackbar();
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { feature, isUndelete, isAddPlace } = useEditDialogFeature();
-  const {
-    setSuccessInfo,
-    setIsSaving,
-    location,
-    comment,
-    data: { tags, toBeDeleted },
-  } = useEditContext();
+  const { setSuccessInfo, setIsSaving, location, comment, data } =
+    useEditContext();
 
   return () => {
+    //TODO temporary
+    const { tags, toBeDeleted } = data.find(
+      (d) =>
+        d.featureId.type === feature.osmMeta.type &&
+        d.featureId.id === feature.osmMeta.id,
+    );
+
     // TODO refactor this to check for errors in the form
     const noteText = createNoteText(
       feature,

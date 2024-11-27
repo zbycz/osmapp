@@ -2,7 +2,7 @@ import { getDaysTable, parseDaysPart } from '../getDaysTable';
 import { buildDaysPart, buildString } from '../buildString';
 import { canItHandle } from '../canItHandle';
 
-jest.mock('../../../../../../../services/intl', () => ({
+jest.mock('../../../../../../../../services/intl', () => ({
   intl: { lang: 'en' },
   t: () => 'Sunday|Monday|Tuesday|Wednesday|Thursday|Friday|Saturday',
 }));

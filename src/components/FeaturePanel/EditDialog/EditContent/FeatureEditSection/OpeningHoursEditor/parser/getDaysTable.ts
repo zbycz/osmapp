@@ -1,4 +1,4 @@
-import { t } from '../../../../../../services/intl';
+import { t } from '../../../../../../../services/intl';
 import { Day, DaysTable, Slot } from './types';
 
 const OSM_DAYS = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];

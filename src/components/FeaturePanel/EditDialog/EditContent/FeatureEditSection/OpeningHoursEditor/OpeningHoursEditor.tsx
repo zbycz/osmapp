@@ -1,12 +1,11 @@
-import { useEditContext } from '../../EditContext';
 import AccessTime from '@mui/icons-material/AccessTime';
 import React, { useEffect, useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { getDaysTable, getEmptyValue } from './parser/getDaysTable';
 import { buildString } from './parser/buildString';
-import { t } from '../../../../../services/intl';
+import { t } from '../../../../../../services/intl';
 import { Day, DaysTable } from './parser/types';
-import { publishDbgObject } from '../../../../../utils';
+import { publishDbgObject } from '../../../../../../utils';
 import { canItHandle } from './parser/canItHandle';
 import { OpeningHoursInput } from './OpeningHoursInput';
 import { YoHoursLink } from './YoHoursLink';
@@ -15,6 +14,7 @@ import { TimeSlot } from './TimeSlot';
 import { CopyFromAboveButton } from './CopyFromAboveButton';
 import { useGetBlurValidation } from './useGetBlurValidation';
 import { SetDaysAndTagFn, SetDaysFn } from './types';
+import { useFeatureEditData } from '../SingleFeatureEditContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,7 +42,7 @@ const Table = styled.table`
 
 const useUpdateState = (days: Day[], setDays: SetDaysFn) => {
   const valueSetHere = useRef<string | undefined>(undefined);
-  const { tags, setTag } = useEditContext().data;
+  const { tags, setTag } = useFeatureEditData();
 
   const tag = tags.opening_hours ?? '';
   useEffect(() => {
@@ -112,7 +112,7 @@ const EditorTable = () => {
 };
 
 export const OpeningHoursEditor = () => {
-  const { tags } = useEditContext().data;
+  const { tags } = useFeatureEditData();
 
   if (tags.opening_hours && !canItHandle(tags.opening_hours)) {
     return <OpeningHoursInput cantEdit />;

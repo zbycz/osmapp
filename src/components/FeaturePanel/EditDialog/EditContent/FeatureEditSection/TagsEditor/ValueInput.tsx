@@ -1,9 +1,9 @@
 import React, { ChangeEvent, FocusEvent, useRef, useState } from 'react';
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
-import { useEditContext } from '../../../EditContext';
 import { IconButton, Stack, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getInputTypeForKey } from '../../helpers';
+import { useFeatureEditData } from '../SingleFeatureEditContext';
 
 const useHidableDeleteButton = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -30,7 +30,7 @@ type DeleteButtonProps = {
   index: number;
 };
 const DeleteButton = ({ deleteButton, index }: DeleteButtonProps) => {
-  const { setTagsEntries } = useEditContext().data;
+  const { setTagsEntries } = useFeatureEditData();
   const onClick = () => {
     setTagsEntries((state) => state.toSpliced(index, 1));
   };
@@ -53,7 +53,7 @@ const DeleteButton = ({ deleteButton, index }: DeleteButtonProps) => {
 type Props = { index: number };
 export const ValueInput = ({ index }: Props) => {
   const { focusTag } = useEditDialogContext();
-  const { tagsEntries, setTagsEntries } = useEditContext().data;
+  const { tagsEntries, setTagsEntries } = useFeatureEditData();
   const [currentKey, currentValue] = tagsEntries[index];
 
   const deleteButton = useHidableDeleteButton();

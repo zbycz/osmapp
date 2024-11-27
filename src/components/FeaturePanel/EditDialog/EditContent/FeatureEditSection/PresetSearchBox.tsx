@@ -14,13 +14,13 @@ import { TranslatedPreset } from './PresetSelect';
 import { Setter } from '../../../../../types';
 import { t } from '../../../../../services/intl';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { useEditContext } from '../../EditContext';
 import { useBoolState } from '../../../../helpers';
 import { useFeatureContext } from '../../../../utils/FeatureContext';
 import { PROJECT_ID } from '../../../../../services/project';
 import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
+import { useFeatureEditData } from './SingleFeatureEditContext';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -129,7 +129,7 @@ const useGetOnChange = (
   value: string,
   setValue: Setter<string>,
 ) => {
-  const { setTagsEntries } = useEditContext().data;
+  const { setTagsEntries } = useFeatureEditData();
 
   return (e: SelectChangeEvent<string>) => {
     const oldPreset = options.find((o) => o.presetKey === value);

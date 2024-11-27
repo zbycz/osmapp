@@ -1,11 +1,11 @@
-import { useEditContext } from '../../EditContext';
 import { Typography } from '@mui/material';
-import { encodeUrl } from '../../../../../helpers/utils';
+import { encodeUrl } from '../../../../../../helpers/utils';
 import React from 'react';
-import { t, Translation } from '../../../../../services/intl';
+import { t, Translation } from '../../../../../../services/intl';
+import { useFeatureEditData } from '../SingleFeatureEditContext';
 
 export const YoHoursLink = () => {
-  const { tags } = useEditContext().data;
+  const { tags } = useFeatureEditData();
   const url = encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`;
 
   return (

@@ -1,6 +1,6 @@
 import { buildDaysPart, buildString } from './buildString';
 import { getDaysTable, parseDaysPart } from './getDaysTable';
-import { publishDbgObject } from '../../../../../../utils';
+import { publishDbgObject } from '../../../../../../../utils';
 
 const splitByFirstSpace = (str: string) => {
   const index = str.indexOf(' ');
