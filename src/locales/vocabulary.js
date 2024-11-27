@@ -192,7 +192,6 @@ export default {
   'editdialog.options_heading': 'Options',
   'editdialog.cancel_button': 'Cancel',
   'editdialog.save_button_edit': 'Save to OSM',
-  'editdialog.save_button_delete': 'Delete',
   'editdialog.save_button_note': 'Submit',
   'editdialog.changes_needed': 'Please, make some changes.',
   'editdialog.osm_session_expired': 'Your OpenStreetMap session has expired. Please, log in again.',
