@@ -10,12 +10,12 @@ import {
 } from '../../../../../services/tagging/translations';
 import { useFeatureContext } from '../../../../utils/FeatureContext';
 import { PresetSearchBox } from './PresetSearchBox';
-import { useEditContext } from '../../EditContext';
 import { Preset } from '../../../../../services/tagging/types/Presets';
 import { getPresetForFeature } from '../../../../../services/tagging/presets';
 import { Feature, FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import { Setter } from '../../../../../types';
+import { useFeatureEditData } from './SingleFeatureEditContext';
 
 export type TranslatedPreset = Preset & {
   name: string;
@@ -90,7 +90,7 @@ const useOptions = () => {
 };
 
 export const PresetSelect = () => {
-  const { tags } = useEditContext().data;
+  const { tags } = useFeatureEditData();
   const [preset, setPreset] = useState('');
   const { feature } = useFeatureContext();
   const options = useOptions();

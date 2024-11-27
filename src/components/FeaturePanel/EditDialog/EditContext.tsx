@@ -1,9 +1,26 @@
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useToggleState } from '../../helpers';
-import { Feature, FeatureTags, SuccessInfo } from '../../../services/types';
+import {
+  Feature,
+  FeatureTags,
+  OsmId,
+  SuccessInfo,
+} from '../../../services/types';
 import { Setter } from '../../../types';
 
 export type TagsEntries = [string, string][];
+
+export type FeatureEditData = {
+  featureId: OsmId;
+  tagsEntries: TagsEntries;
+  setTagsEntries: Setter<TagsEntries>;
+  tags: FeatureTags;
+  setTag: (k: string, v: string) => void;
+  toBeDeleted: boolean;
+  toggleToBeDeleted: () => void;
+  // TODO add members
+  // TODO add  setMembers,
+};
 
 type EditContextType = {
   successInfo: undefined | SuccessInfo;
@@ -14,14 +31,7 @@ type EditContextType = {
   setLocation: (s: string) => void;
   comment: string;
   setComment: (s: string) => void;
-  data: {
-    tagsEntries: TagsEntries;
-    setTagsEntries: Setter<TagsEntries>;
-    tags: FeatureTags;
-    setTag: (k: string, v: string) => void;
-    toBeDeleted: boolean;
-    toggleToBeDeleted: () => void;
-  };
+  data: Array<FeatureEditData>;
 };
 
 const useDataState = (originalFeature: Feature): EditContextType['data'] => {
@@ -42,14 +52,17 @@ const useDataState = (originalFeature: Feature): EditContextType['data'] => {
 
   const [toBeDeleted, toggleToBeDeleted] = useToggleState(false);
 
-  return {
-    tagsEntries,
-    setTagsEntries,
-    tags,
-    setTag,
-    toBeDeleted,
-    toggleToBeDeleted,
-  };
+  return [
+    {
+      featureId: originalFeature.osmMeta,
+      tagsEntries,
+      setTagsEntries,
+      tags,
+      setTag,
+      toBeDeleted,
+      toggleToBeDeleted,
+    },
+  ];
 };
 
 const EditContext = createContext<EditContextType>(undefined);

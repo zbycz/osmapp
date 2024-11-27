@@ -1,13 +1,12 @@
-import { useEditDialogContext } from '../../../helpers/EditDialogContext';
-import { useEditContext } from '../../EditContext';
+import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { TextField } from '@mui/material';
-import { t, Translation } from '../../../../../services/intl';
-import { encodeUrl } from '../../../../../helpers/utils';
+import { t, Translation } from '../../../../../../services/intl';
+import { encodeUrl } from '../../../../../../helpers/utils';
 import React from 'react';
-import { canItHandle } from './parser/canItHandle';
+import { useFeatureEditData } from '../SingleFeatureEditContext';
 
 const CantEditText = () => {
-  const { tags } = useEditContext().data;
+  const { tags } = useFeatureEditData();
   const url = encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`;
 
   return (
@@ -22,7 +21,7 @@ const CantEditText = () => {
 
 export const OpeningHoursInput = ({ cantEdit }: { cantEdit?: boolean }) => {
   const { focusTag } = useEditDialogContext();
-  const { tags, setTag } = useEditContext().data;
+  const { tags, setTag } = useFeatureEditData();
 
   return (
     <TextField
