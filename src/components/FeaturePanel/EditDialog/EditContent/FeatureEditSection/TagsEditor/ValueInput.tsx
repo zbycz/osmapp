@@ -1,9 +1,9 @@
 import React, { ChangeEvent, FocusEvent, useRef, useState } from 'react';
-import { useEditDialogContext } from '../../../helpers/EditDialogContext';
-import { useEditContext } from '../../EditContext';
+import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
+import { useEditContext } from '../../../EditContext';
 import { IconButton, Stack, TextField } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { getInputTypeForKey } from '../helpers';
+import { getInputTypeForKey } from '../../helpers';
 
 const useHidableDeleteButton = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);

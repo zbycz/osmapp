@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Typography } from '@mui/material';
 import styled from '@emotion/styled';
-import { getPoiClass } from '../../../../services/getPoiClass';
-import { allPresets } from '../../../../services/tagging/data';
+import { getPoiClass } from '../../../../../services/getPoiClass';
+import { allPresets } from '../../../../../services/tagging/data';
 import {
   fetchSchemaTranslations,
   getPresetTermsTranslation,
   getPresetTranslation,
-} from '../../../../services/tagging/translations';
-import { useFeatureContext } from '../../../utils/FeatureContext';
+} from '../../../../../services/tagging/translations';
+import { useFeatureContext } from '../../../../utils/FeatureContext';
 import { PresetSearchBox } from './PresetSearchBox';
-import { useEditContext } from '../EditContext';
-import { Preset } from '../../../../services/tagging/types/Presets';
-import { getPresetForFeature } from '../../../../services/tagging/presets';
-import { Feature, FeatureTags } from '../../../../services/types';
-import { t } from '../../../../services/intl';
-import { Setter } from '../../../../types';
+import { useEditContext } from '../../EditContext';
+import { Preset } from '../../../../../services/tagging/types/Presets';
+import { getPresetForFeature } from '../../../../../services/tagging/presets';
+import { Feature, FeatureTags } from '../../../../../services/types';
+import { t } from '../../../../../services/intl';
+import { Setter } from '../../../../../types';
 
 export type TranslatedPreset = Preset & {
   name: string;

@@ -1,12 +1,12 @@
 import React from 'react';
 import { Checkbox, FormControlLabel, TextField } from '@mui/material';
-import { useEditDialogFeature } from '../utils';
-import { useEditContext } from '../EditContext';
-import { DialogHeading } from '../components';
-import { t, Translation } from '../../../../services/intl';
-import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
-import { useToggleState } from '../../../helpers';
-import { getIdEditorLink } from '../../helpers/externalLinks';
+import { useEditDialogFeature } from '../../utils';
+import { useEditContext } from '../../EditContext';
+import { DialogHeading } from '../../components';
+import { t, Translation } from '../../../../../services/intl';
+import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
+import { useToggleState } from '../../../../helpers';
+import { getIdEditorLink } from '../../../helpers/externalLinks';
 
 export const PlaceCancelledToggle = () => {
   const {

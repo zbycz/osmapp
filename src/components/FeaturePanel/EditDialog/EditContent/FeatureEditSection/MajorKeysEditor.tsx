@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { Button, TextField, Typography } from '@mui/material';
-import { t } from '../../../../services/intl';
+import { t } from '../../../../../services/intl';
 import {
   getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
-} from '../../Climbing/utils/photo';
-import { useEditDialogContext } from '../../helpers/EditDialogContext';
-import { useEditContext } from '../EditContext';
-import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
+} from '../../../Climbing/utils/photo';
+import { useEditDialogContext } from '../../../helpers/EditDialogContext';
+import { useEditContext } from '../../EditContext';
+import { OpeningHoursEditor } from '../OpeningHoursEditor/OpeningHoursEditor';
 import styled from '@emotion/styled';
-import { CharacterCount, getInputTypeForKey } from './helpers';
+import { CharacterCount, getInputTypeForKey } from '../helpers';
 
 export const majorKeys = [
   'name',

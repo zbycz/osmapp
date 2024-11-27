@@ -4,10 +4,10 @@ import { Box, Button, Typography } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from '../MajorKeysEditor';
-import { isString } from '../../../../helpers';
-import { t, Translation } from '../../../../../services/intl';
-import { TagsEntries, useEditContext } from '../../EditContext';
-import { useEditDialogContext } from '../../../helpers/EditDialogContext';
+import { isString } from '../../../../../helpers';
+import { t, Translation } from '../../../../../../services/intl';
+import { TagsEntries, useEditContext } from '../../../EditContext';
+import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
 
@@ -49,7 +49,7 @@ const TagsEditorHeading = () => (
 
 const TagsEditorButton = ({ setVisible }) => (
   <Button
-    variant="outlined"
+    variant="text"
     disableElevation
     onClick={() => setVisible((currentState) => !currentState)}
   >
