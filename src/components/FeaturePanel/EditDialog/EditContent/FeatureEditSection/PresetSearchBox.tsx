@@ -9,18 +9,18 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
-import Maki from '../../../utils/Maki';
+import Maki from '../../../../utils/Maki';
 import { TranslatedPreset } from './PresetSelect';
-import { Setter } from '../../../../types';
-import { t } from '../../../../services/intl';
+import { Setter } from '../../../../../types';
+import { t } from '../../../../../services/intl';
 import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { useEditContext } from '../EditContext';
-import { useBoolState } from '../../../helpers';
-import { useFeatureContext } from '../../../utils/FeatureContext';
-import { PROJECT_ID } from '../../../../services/project';
-import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
-import { OsmType } from '../../../../services/types';
-import { geometryMatchesOsmType } from '../../../../services/tagging/presets';
+import { useEditContext } from '../../EditContext';
+import { useBoolState } from '../../../../helpers';
+import { useFeatureContext } from '../../../../utils/FeatureContext';
+import { PROJECT_ID } from '../../../../../services/project';
+import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
+import { OsmType } from '../../../../../services/types';
+import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
 
 // https://stackoverflow.com/a/70918883/671880
 

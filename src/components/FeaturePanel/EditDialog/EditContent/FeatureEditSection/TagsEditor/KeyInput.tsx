@@ -1,5 +1,5 @@
-import { useEditDialogContext } from '../../../helpers/EditDialogContext';
-import { useEditContext } from '../../EditContext';
+import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
+import { useEditContext } from '../../../EditContext';
 import React, { useEffect, useState } from 'react';
 import { InputAdornment, TextField } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
