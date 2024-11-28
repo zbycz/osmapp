@@ -13,36 +13,35 @@ import { getIp } from '../components/App/helpers';
 export const logRequest = (ctx: DocumentContext, intl: Intl) => {
   const { host, referrer } = ctx.req.headers;
   const data = {
-    event: {
+    type: 'event',
+    payload: {
+      website: process.env.UMAMI_WEBSITE_ID,
       url: ctx.asPath,
       hostname: host,
       language: intl.lang,
       referrer,
-      ip: getIp(ctx.req),
-      browser: ctx.req.headers['user-agent'],
+      screen: '1280x800',
     },
-    sourcetype: 'manual',
-    host,
-    index: 'main',
+  };
+  const headers = {
+    'X-Client-IP': getIp(ctx.req),
+    'User-Agent': ctx.req.headers['user-agent'],
   };
 
+  console.log('umami data', JSON.stringify({ data, headers }, null, 2));
+
   // Promise omitted intentionally
-  fetchJson(
-    'https://prd-p-a8gkn.splunkcloud.com:8088/services/collector/event',
-    {
-      nocache: true,
-      method: 'POST',
-      headers: {
-        authorization: 'Splunk 21a3e9e9-9f65-4eee-a18d-02e86aa6374a',
-      },
-      body: JSON.stringify(data),
-    },
-  ).then(
+  fetchJson('https://cloud.umami.is/api/send', {
+    nocache: true,
+    method: 'POST',
+    headers,
+    body: JSON.stringify(data),
+  }).then(
     (response) => {
-      console.log('logRequest response', response);
+      console.log('umami response', response);
     },
     (error) => {
-      console.error('logRequest error', error);
+      console.error('umami error', error);
     },
   );
 };
