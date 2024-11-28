@@ -12,8 +12,6 @@ import { NextPageContext } from 'next';
 
 const DEFAULT_VIEW: View = ['4', '50', '14'];
 
-const isLocalhostOrNgnix = (ip: string) => ['127.0.0.1', '::1'].includes(ip);
-
 type IpApiResponse = {
   status: string;
   lat: number;
@@ -39,14 +37,20 @@ const getViewFromIp = async (ip: string): Promise<View> => {
   }
 };
 
-export const getViewFromRequest = async (
-  req: NextPageContext['req'],
-): Promise<View> => {
+const isLocalhostOrNgnix = (ip: string) => ['127.0.0.1', '::1'].includes(ip);
+
+export const getIp = (req: NextPageContext['req']) => {
   const remoteIp = req.socket.remoteAddress;
   const fwdIp = ((req.headers['x-forwarded-for'] as string) || '') // ngnix: proxy_set_header X-Forwarded-For $remote_addr;
     .split(',')[0]
     .trim();
-  const ip = isLocalhostOrNgnix(remoteIp) ? fwdIp : remoteIp;
+  return isLocalhostOrNgnix(remoteIp) ? fwdIp : remoteIp;
+};
+
+export const getViewFromRequest = async (
+  req: NextPageContext['req'],
+): Promise<View> => {
+  const ip = getIp(req);
   const view = ip ? await getViewFromIp(ip) : null;
   return view ?? DEFAULT_VIEW;
 };

@@ -58,7 +58,9 @@ export const fetchText = async (url: string, opts: FetchOpts = {}) => {
       throw e;
     }
 
-    throw new FetchError(`${e.message} at ${url}`, e.code || 'network', e.data); // TODO how to tell network error from code exception?
+    const cause = e?.cause ? ` / cause: ${e.cause}` : '';
+    const message = `${e.message}${cause} at ${url}`;
+    throw new FetchError(message, e.code || 'network', e.data); // TODO how to tell network error from code exception?
   }
 };
 
