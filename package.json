@@ -47,7 +47,7 @@
     "js-md5": "^0.8.3",
     "jss": "^10.10.0",
     "lodash": "^4.17.21",
-    "maplibre-gl": "^4.7.1",
+    "maplibre-gl": "v5.0.0-pre.8",
     "maplibre-gl-indoorequal": "^1.2.0",
     "next": "^14.2.15",
     "next-codegrid": "^1.0.3",
