@@ -37,7 +37,7 @@ const linearByRouteCount = (
 ): ExpressionSpecification => [
   'interpolate',
   ['linear'],
-  ['get', 'osmappRouteCount'],
+  ['coalesce', ['get', 'osmappRouteCount'], 0],
   from,
   a,
   to,
@@ -75,8 +75,15 @@ const sortKey = [
   -1,
   [
     '+',
-    ['get', 'osmappRouteCount'],
+    ['coalesce', ['get', 'osmappRouteCount'], 0],
     ['case', ['get', 'osmappHasImages'], 99999, 0], // preference for items with images
+    ['case', ['get', 'name'], 2, 0], // prefer items with name
+    // [
+    //   'case',
+    //   ['all', ['>', ['zoom'], 16], ['==', ['get', 'climbing'], 'crag']],
+    //   999,
+    //   0,
+    // ], // prefer areas on low zoom
   ],
 ] as DataDrivenPropertyValueSpecification<number>;
 
@@ -100,15 +107,19 @@ const step = (
 
 export const routes: LayerSpecification[] = [
   {
+    id: 'climbing-3-routes-line',
+    type: 'line',
+    source: 'climbing',
+    minzoom: 16,
+    filter: ['all', ['==', 'type', 'route']],
+  },
+
+  {
     id: 'climbing-3-routes-circle',
     type: 'circle',
     source: 'climbing',
     minzoom: 16,
-    filter: [
-      'all',
-      ['==', 'osmappType', 'node'],
-      ['==', 'climbing', 'route_bottom'],
-    ],
+    filter: ['all', ['==', 'type', 'route']],
     paint: {
       'circle-color': [
         'case',
@@ -125,11 +136,7 @@ export const routes: LayerSpecification[] = [
     type: 'symbol',
     source: 'climbing',
     minzoom: 19,
-    filter: [
-      'all',
-      ['==', 'osmappType', 'node'],
-      ['==', 'climbing', 'route_bottom'],
-    ],
+    filter: ['all', ['==', 'type', 'route']],
     layout: {
       'text-padding': 2,
       'text-font': ['Noto Sans Medium'],
@@ -179,11 +186,7 @@ const mixed: LayerSpecification = {
   type: 'symbol',
   source: 'climbing',
   maxzoom: 20,
-  filter: [
-    'all',
-    ['==', 'osmappType', 'relationPoint'],
-    ['in', 'climbing', 'area', 'crag'],
-  ],
+  filter: ['all', ['==', 'type', 'group']],
   layout: {
     'icon-image': ifCrag(
       byHasImages(CRAG, 'IMAGE'),
