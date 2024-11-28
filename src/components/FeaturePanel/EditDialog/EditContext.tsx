@@ -7,6 +7,8 @@ import {
   SuccessInfo,
 } from '../../../services/types';
 import { Setter } from '../../../types';
+import { getShortId } from '../../../services/helpers';
+import { getLabel } from '../../../helpers/featureLabel';
 
 export type TagsEntries = [string, string][];
 
@@ -31,38 +33,97 @@ type EditContextType = {
   setLocation: (s: string) => void;
   comment: string;
   setComment: (s: string) => void;
-  data: Array<FeatureEditData>;
+  data: {
+    items: Array<FeatureEditData>;
+    addFeature: (feature: Feature) => void;
+  };
+};
+
+type DataItem = {
+  shortId: string;
+  tagsEntries: TagsEntries;
+  toBeDeleted: boolean;
+  members: {
+    shortId: string;
+    role: string;
+    label: string; // cached from other dataItems, or from originalFeature
+  }[];
+};
+
+const buildDataItem = (originalFeature: Feature): DataItem => ({
+  shortId: getShortId(originalFeature.osmMeta),
+  tagsEntries: Object.entries(originalFeature.tags),
+  toBeDeleted: false,
+  members: originalFeature.memberFeatures.map((memberFeature) => ({
+    shortId: getShortId(memberFeature.osmMeta),
+    role: memberFeature.osmMeta.role,
+    label: getLabel(memberFeature),
+  })),
+});
+
+type SetDataItem = (newData: Partial<DataItem>) => void;
+
+const setDataItemFactory =
+  (setData: Setter<DataItem[]>, shortId: string): SetDataItem =>
+  (newData: Partial<DataItem>) => {
+    setData((state) =>
+      state.map((item) =>
+        item.shortId === shortId ? { ...item, ...newData } : item,
+      ),
+    );
+  };
+
+const setTagsEntriesFactory =
+  (setDataItem: SetDataItem) => (tagsEntries: TagsEntries) =>
+    setDataItem({ tagsEntries });
+
+const setTagFactory = (setTagsEntries) => (k: string, v: string) => {
+  setTagsEntries((state) => {
+    const position = state.findIndex(([key]) => key === k);
+    if (position === -1) {
+      return [...state, [k, v]];
+    }
+    return state.map((entry, index) => (index === position ? [k, v] : entry));
+  });
+};
+
+const toggleToBeDeletedFactory = (
+  setDataItem: SetDataItem,
+  toBeDeleted: boolean,
+) => {
+  return () => setDataItem({ toBeDeleted: !toBeDeleted });
 };
 
 const useDataState = (originalFeature: Feature): EditContextType['data'] => {
-  const [tagsEntries, setTagsEntries] = useState<TagsEntries>(() =>
-    Object.entries(originalFeature.tags),
-  );
-  const tags = useMemo(() => Object.fromEntries(tagsEntries), [tagsEntries]);
+  const [data, setData] = useState<DataItem[]>(() => [
+    buildDataItem(originalFeature),
+  ]);
 
-  const setTag = (k: string, v: string) => {
-    setTagsEntries((state) => {
-      const position = state.findIndex(([key]) => key === k);
-      if (position === -1) {
-        return [...state, [k, v]];
-      }
-      return state.map((entry, index) => (index === position ? [k, v] : entry));
-    });
+  const items = useMemo(
+    () =>
+      data.map((dataItem) => {
+        const { shortId, tagsEntries, toBeDeleted, members } = dataItem;
+        const setDataItem = setDataItemFactory(setData, shortId);
+        const setTagsEntries = setTagsEntriesFactory(setDataItem);
+        return {
+          shortId,
+          tagsEntries,
+          setTagsEntries,
+          tags: Object.fromEntries(tagsEntries),
+          setTag: setTagFactory(setTagsEntries),
+          toBeDeleted,
+          toggleToBeDeleted: toggleToBeDeletedFactory(setDataItem, toBeDeleted),
+          members,
+        };
+      }),
+    [data],
+  );
+
+  const addFeature = (feature: Feature) => {
+    setData((state) => [...state, buildDataItem(feature)]);
   };
 
-  const [toBeDeleted, toggleToBeDeleted] = useToggleState(false);
-
-  return [
-    {
-      featureId: originalFeature.osmMeta,
-      tagsEntries,
-      setTagsEntries,
-      tags,
-      setTag,
-      toBeDeleted,
-      toggleToBeDeleted,
-    },
-  ];
+  return { items, addFeature };
 };
 
 const EditContext = createContext<EditContextType>(undefined);
