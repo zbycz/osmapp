@@ -39,7 +39,7 @@ export const createMapEffectHook =
         return;
       }
 
-      mapEffectFn(map, ...rest);
+      return mapEffectFn(map, ...rest);
     }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 type MapEvent = keyof MapEventType;

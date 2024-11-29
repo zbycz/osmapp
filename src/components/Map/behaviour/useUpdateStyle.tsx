@@ -109,6 +109,7 @@ export const useUpdateStyle = createMapEffectHook(
     activeLayers: string[],
     userLayers: Layer[],
     mapLoaded: boolean,
+    mapClickDisabled: boolean,
     currentTheme: Theme,
   ) => {
     const [basemap, ...overlays] = activeLayers;
@@ -133,10 +134,13 @@ export const useUpdateStyle = createMapEffectHook(
     });
     map.addControl(languageControl);
 
-    setUpHover(map, layersWithOsmId(style));
-
     if (mapLoaded && overlays.includes('indoor')) {
       addIndoorEqual();
     }
+
+    if (!mapClickDisabled) {
+      return setUpHover(map, layersWithOsmId(style));
+    }
+    setUpHover(map, layersWithOsmId(style));
   },
 );

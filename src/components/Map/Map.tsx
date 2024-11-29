@@ -12,6 +12,7 @@ import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { Weather } from './Weather/Weather';
+import { useTurnByTurnContext } from '../utils/TurnByTurnContext';
 
 const BrowserMapDynamic = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -49,7 +50,6 @@ const BottomRight = styled.div`
   position: absolute;
   right: 0;
   bottom: 0;
-  z-index: 1000;
   text-align: right;
   pointer-events: none;
   z-index: 999;
@@ -78,22 +78,27 @@ const NoscriptMessage = () => (
 
 const Map = () => {
   const { mapLoaded } = useMapStateContext();
+  const { routingResult } = useTurnByTurnContext();
 
   return (
     <>
       <BrowserMapDynamic />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
-      <TopRight>
-        <TopMenu />
-        <LayerSwitcherDynamic />
-      </TopRight>
-      <BottomRight>
-        {SHOW_PROTOTYPE_UI && <BugReportButton />}
-        <MaptilerLogo />
-        <Weather />
-        <MapFooter />
-      </BottomRight>
+      {!routingResult && (
+        <TopRight>
+          <TopMenu />
+          <LayerSwitcherDynamic />
+        </TopRight>
+      )}
+      {!routingResult && (
+        <BottomRight>
+          {SHOW_PROTOTYPE_UI && <BugReportButton />}
+          <MaptilerLogo />
+          <Weather />
+          <MapFooter />
+        </BottomRight>
+      )}
     </>
   );
 };

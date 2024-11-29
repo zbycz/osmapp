@@ -20,3 +20,5 @@ export const isUrl = (url: string) => {
     return false;
   }
 };
+
+export const degToRadians = (degrees: number) => (degrees * Math.PI) / 180;

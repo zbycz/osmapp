@@ -88,3 +88,23 @@ export const isPublictransportStop = ({ tags }: WithTags) =>
 
 export const isPublictransportRoute = ({ tags }: WithTags) =>
   tags.type === 'route';
+
+export const findIndexByLowest = <T>(
+  arr: T[],
+  predicate: (val: T) => number,
+) => {
+  const mapped = arr.map((value) => ({
+    value,
+    result: predicate(value),
+  }));
+
+  return mapped.reduce<[(typeof mapped)[number], number]>(
+    (lowest, current, index) => {
+      if (current.result < lowest[0].result) {
+        return [current, index];
+      }
+      return lowest;
+    },
+    [{ value: null, result: Infinity }, -1],
+  )[1];
+};

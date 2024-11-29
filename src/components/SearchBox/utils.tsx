@@ -22,7 +22,7 @@ export const IconPart = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-const EARTH_RADIUS = 6372795;
+export const EARTH_RADIUS = 6372795;
 
 const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
 
@@ -45,6 +45,9 @@ export const getDistance = (point1: LonLat, point2: LonLat) => {
     )
   );
 };
+
+export const getCurriedDistance = (p1: LonLat) => (p2: LonLat) =>
+  getDistance(p1, p2);
 
 export const getHumanDistance = (
   isImperial: boolean,

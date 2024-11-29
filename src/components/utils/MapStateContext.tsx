@@ -54,6 +54,8 @@ type MapStateContextType = {
   mapClickOverrideRef: MapClickOverrideRef;
   mapLoaded: boolean;
   setMapLoaded: () => void;
+  mapClickDisabled: boolean;
+  setMapClickDisabled: Setter<boolean>;
 };
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
@@ -80,6 +82,7 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
   );
   const mapClickOverrideRef = useRef<MapClickOverride>();
   const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
+  const [mapClickDisabled, setMapClickDisabled] = useState(false);
   useEffect(setNotLoaded, [setNotLoaded]);
 
   const setBothViews: Setter<View> = useCallback((newView) => {
@@ -101,6 +104,8 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     mapClickOverrideRef,
     mapLoaded,
     setMapLoaded,
+    mapClickDisabled,
+    setMapClickDisabled,
   };
 
   return (

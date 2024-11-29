@@ -101,10 +101,13 @@ const coordsClicked = (map: Map, coords: LonLat, setFeature: SetFeature) => {
 
 export const useOnMapClicked = createMapEventHook<
   'click',
-  [SetFeature, MapClickOverrideRef]
->((map, setFeature, mapClickOverrideRef) => ({
+  [SetFeature, MapClickOverrideRef, boolean]
+>((map, setFeature, mapClickOverrideRef, mapClickDisabled) => ({
   eventType: 'click',
   eventHandler: async ({ point }) => {
+    if (mapClickDisabled) {
+      return;
+    }
     const coords = map.unproject(point).toArray();
     const features = map.queryRenderedFeatures(point);
 

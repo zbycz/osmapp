@@ -4,11 +4,12 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { convertHexToRgba } from '../utils/colorUtils';
 import { TooltipButton } from '../utils/TooltipButton';
-import { RoutingResult } from './routing/types';
+import { Profile, RoutingResult } from './routing/types';
 import { t, Translation } from '../../services/intl';
 import { CloseButton, toHumanDistance } from './helpers';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { Instructions } from './Instructions';
+import { useInitTurnByTurnNav } from '../TurnByTurnNavigation/init';
 
 export const StyledPaper = styled(Paper)<{
   $height?: string;
@@ -55,7 +56,31 @@ const PoweredBy = ({ result }: { result: RoutingResult }) => (
   </Typography>
 );
 
-type Props = { result: RoutingResult; revealForm: false | (() => void) };
+type Props = {
+  result: RoutingResult;
+  revealForm: false | (() => void);
+  mode: Profile;
+};
+
+const StartNavigation = ({
+  result,
+  mode,
+}: {
+  result: RoutingResult;
+  mode: Profile;
+}) => {
+  const initTurnByTurn = useInitTurnByTurnNav(result, mode);
+
+  return (
+    <Button
+      onClick={() => {
+        initTurnByTurn();
+      }}
+    >
+      Start Navigation
+    </Button>
+  );
+};
 
 const MobileResult = ({
   result,
@@ -63,6 +88,7 @@ const MobileResult = ({
   time,
   distance,
   ascent,
+  mode,
 }: Props & Record<'time' | 'distance' | 'ascent', string>) => {
   const [showInstructions, setShowInstructions] = React.useState(false);
 
@@ -97,13 +123,14 @@ const MobileResult = ({
             {t('directions.edit_destinations')}
           </Button>
         )}
+        <StartNavigation result={result} mode={mode} />
       </Stack>
       {showInstructions && <Instructions instructions={result.instructions} />}
     </StyledPaperMobile>
   );
 };
 
-export const Result = ({ result, revealForm }: Props) => {
+export const Result = ({ result, revealForm, mode }: Props) => {
   const isMobileMode = useMobileMode();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
@@ -120,6 +147,7 @@ export const Result = ({ result, revealForm }: Props) => {
         time={time}
         distance={distance}
         ascent={ascent}
+        mode={mode}
       />
     );
   }
@@ -158,6 +186,7 @@ export const Result = ({ result, revealForm }: Props) => {
         </div>
       </Stack>
       <Divider sx={{ mt: 2, mb: 3 }} />
+      <StartNavigation result={result} mode={mode} />
       {result.instructions && (
         <Instructions instructions={result.instructions} />
       )}

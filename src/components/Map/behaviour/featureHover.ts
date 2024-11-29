@@ -56,4 +56,11 @@ export const setUpHover = (map: Map, layersWithOsmId: string[]) => {
     map.on('mousemove', layer, onMouseMove);
     map.on('mouseleave', layer, onMouseLeave);
   });
+
+  return () => {
+    layersWithOsmId.forEach((layer) => {
+      map.off('mousemove', layer, onMouseMove);
+      map.off('mouseleave', layer, onMouseLeave);
+    });
+  };
 };
