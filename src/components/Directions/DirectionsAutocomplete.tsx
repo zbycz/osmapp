@@ -9,7 +9,12 @@ import {
 } from '../SearchBox/options/geocoder';
 import { getStarsOptions } from '../SearchBox/options/stars';
 import styled from '@emotion/styled';
-import { Autocomplete, InputAdornment, TextField } from '@mui/material';
+import {
+  Autocomplete,
+  InputAdornment,
+  TextField,
+  Tooltip,
+} from '@mui/material';
 import { useMapCenter } from '../SearchBox/utils';
 import { useUserThemeContext } from '../../helpers/theme';
 import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
@@ -23,8 +28,15 @@ import maplibregl, { LngLatLike, PointLike } from 'maplibre-gl';
 import ReactDOMServer from 'react-dom/server';
 import { AlphabeticalMarker } from './TextMarker';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-import { success } from '@maplibre/maplibre-gl-style-spec/src/util/result';
-import { useIsClient } from '../helpers';
+import { DotLoader, useIsClient } from '../helpers';
+import { useSnackbar } from '../utils/SnackbarContext';
+const DotLoaderContainer = styled.div`
+  font-size: 16px;
+  right: 6px;
+  top: -4px;
+  position: relative;
+`;
+
 const StyledTextField = styled(TextField)`
   input::placeholder {
     font-size: 0.9rem;
@@ -39,44 +51,51 @@ const DirectionsInput = ({
   onFocus,
   onBlur,
   pointIndex,
+  onOptionChange,
 }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
   const { InputLabelProps, InputProps, ...restParams } = params;
   const isClient = useIsClient();
+  const { showToast } = useSnackbar();
+
   useEffect(() => {
     // @ts-ignore
     params.InputProps.ref(autocompleteRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('___', e.target.value);
     setInputValue(e.target.value);
   };
   const handleFocus = (e: React.FocusEvent<HTMLInputElement>) => {
     onFocus();
     e.target.select();
+    setIsFocused(true);
+  };
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    onBlur(e);
+    setIsFocused(false);
   };
 
-  function success(position) {
+  function handleSuccess(position) {
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
-    // setLocation({ latitude, longitude });
-    console.log(
-      `___Latitude: ${latitude}, Longitude: ${longitude}`,
-      getCoordsOption([50.08393943467965, 14.378495989338292], 'ahoj'),
-    );
-    // setInputValue(getCoordsOption([longitude, latitude], 'ahoj'));
-    setInputValue(
-      getCoordsOption([50.08393943467965, 14.378495989338292], 'ahoj'),
-    );
+
+    onOptionChange(null, getCoordsOption([longitude, latitude], 'My location'));
+    setIsLoading(false);
   }
+  const handleError = (_error) => {
+    setIsLoading(false);
+    showToast("Sorry, we couldn't find your location", 'error');
+  };
 
   const handleGetMyPosition = () => {
-    console.log('___', navigator);
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(success);
-    }
+    setIsLoading(true);
+    navigator.geolocation.getCurrentPosition(handleSuccess, handleError, {
+      timeout: 10000,
+    });
   };
-  //Object.keys(navigator.geolocation).length !== 0
+
   return (
     <StyledTextField
       {...restParams} // eslint-disable-line react/jsx-props-no-spreading
@@ -93,14 +112,27 @@ const DirectionsInput = ({
           </InputAdornment>
         ),
         endAdornment:
-          isClient && navigator?.geolocation ? (
-            <MyLocationIcon onClick={handleGetMyPosition} />
+          isClient && isFocused && navigator?.geolocation ? (
+            isLoading ? (
+              <DotLoaderContainer>
+                <DotLoader />
+              </DotLoaderContainer>
+            ) : (
+              <Tooltip title="Get my location">
+                <MyLocationIcon
+                  color="secondary"
+                  sx={{ cursor: 'pointer' }}
+                  onClick={handleGetMyPosition}
+                />
+              </Tooltip>
+            )
           ) : undefined,
+        style: { paddingRight: 12 },
       }}
       placeholder={label}
       onChange={onChange}
       onFocus={handleFocus}
-      onBlur={onBlur}
+      onBlur={handleBlur}
     />
   );
 };
@@ -285,6 +317,7 @@ export const DirectionsAutocomplete = ({
             onFocus={onInputFocus}
             onBlur={handleBlur}
             pointIndex={pointIndex}
+            onOptionChange={onChange}
           />
         )}
         renderOption={renderOptionFactory(
