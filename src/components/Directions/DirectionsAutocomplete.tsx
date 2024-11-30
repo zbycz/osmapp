@@ -253,19 +253,22 @@ export const DirectionsAutocomplete = ({
     };
   }, [ALPHABETICAL_MARKER, value]);
 
+  const handleUpdate = (coordsOption: Option) => {
+    if (pointIndex === 0) {
+      submitFactory(coordsOption, to, mode);
+    }
+    if (pointIndex === 1) {
+      submitFactory(from, coordsOption, mode);
+    }
+  };
+
   const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
   const onDragEnd = () => {
     const lngLat = markerRef.current?.getLngLat();
     if (lngLat) {
       const coordsOption = getCoordsOption([lngLat.lng, lngLat.lat]);
       setValue(coordsOption);
-
-      if (pointIndex === 0) {
-        submitFactory(coordsOption, to, mode);
-      }
-      if (pointIndex === 1) {
-        submitFactory(from, coordsOption, mode);
-      }
+      handleUpdate(coordsOption);
     }
   };
 
@@ -278,6 +281,7 @@ export const DirectionsAutocomplete = ({
     setInputValue(getOptionLabel(option));
     setValue(option);
     selectedOptionInputValue.current = getOptionLabel(option);
+    handleUpdate(option);
   };
 
   const { onInputFocus, onInputBlur } = useInputMapClickOverride(
