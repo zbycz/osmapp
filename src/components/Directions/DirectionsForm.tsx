@@ -24,21 +24,26 @@ const useGlobalMapClickOverride = (
   setFrom: (value: Option) => void,
   setTo: (value: Option) => void,
 ) => {
-  const { mapClickOverrideRef } = useMapStateContext();
+  const { setResult, setLoading, to, mode } = useDirectionsContext();
+  const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
 
+  const { mapClickOverrideRef } = useMapStateContext();
   useEffect(() => {
     mapClickOverrideRef.current = (coords, label) => {
+      const coordinates = getCoordsOption(coords, label);
       if (!from) {
-        setFrom(getCoordsOption(coords, label));
+        submitFactory(coordinates, to, mode);
+        setFrom(coordinates);
       } else {
-        setTo(getCoordsOption(coords, label));
+        submitFactory(from, coordinates, mode);
+        setTo(coordinates);
       }
     };
 
     return () => {
       mapClickOverrideRef.current = undefined;
     };
-  }, [from, mapClickOverrideRef, setFrom, setTo]);
+  }, [from, mapClickOverrideRef, mode, setFrom, setTo, submitFactory, to]);
 };
 
 export const DirectionsForm = ({ setResult, hideForm }: Props) => {
