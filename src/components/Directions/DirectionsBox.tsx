@@ -3,16 +3,20 @@ import React, { useCallback, useState } from 'react';
 import { Stack } from '@mui/material';
 import { Result } from './Result';
 import { RoutingResult } from './routing/types';
-import { useBoolState, useMobileMode } from '../helpers';
+import { isTabletResolution, useBoolState, useMobileMode } from '../helpers';
 import { DirectionsForm } from './DirectionsForm';
 
-const Wrapper = styled(Stack)`
+const Wrapper = styled(Stack)<{ $isMobileMode: boolean }>`
   position: absolute;
   top: 8px;
   left: 8px;
+  right: 8px;
   z-index: 1001; // over the LayerSwitcherButton
-  width: 340px;
   max-height: calc(100vh - 16px);
+
+  @media ${isTabletResolution} {
+    max-width: 340px;
+  }
 `;
 
 export const DirectionsBox = () => {
@@ -30,7 +34,7 @@ export const DirectionsBox = () => {
   );
 
   return (
-    <Wrapper spacing={1}>
+    <Wrapper spacing={1} $isMobileMode={isMobileMode}>
       <DirectionsForm setResult={setResultAndHide} hideForm={hideForm} />
       {result && (
         <Result result={result} revealForm={!revealed && revealForm} />
