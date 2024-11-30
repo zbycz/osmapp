@@ -6,6 +6,7 @@ import {
 } from '../FeaturePanel/Climbing/utils/grades/gradeData';
 import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
+import { SPLIT_PANE_DEFAULT_SIZE } from '../FeaturePanel/Climbing/config';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
 
@@ -19,6 +20,7 @@ type UserSettingsType = {
   'climbing.switchPhotosByScrolling': boolean;
   'climbing.visibleGradeSystems': Record<string, boolean>;
   'climbing.cragViewLayout': CragViewLayout;
+  'climbing.splitPaneSize': null | number;
 };
 
 type UserSettingsContextType = {
@@ -41,6 +43,8 @@ const initialUserSettings: UserSettingsType = {
     {},
   ),
   'climbing.cragViewLayout': 'auto',
+
+  'climbing.splitPaneSize': null,
 };
 
 export const UserSettingsContext =

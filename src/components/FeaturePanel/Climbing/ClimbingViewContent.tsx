@@ -16,6 +16,7 @@ import dynamic from 'next/dynamic';
 import { EditButton } from '../EditButton';
 import { EditDialog } from '../EditDialog/EditDialog';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 
 const CragMapDynamic = dynamic(() => import('./CragMap'), {
   ssr: false,
@@ -38,8 +39,10 @@ const ContentBelowRouteList = styled.div<{
 `;
 
 export const ClimbingViewContent = ({ isMapVisible }) => {
-  const { splitPaneSize, showDebugMenu, routes } = useClimbingContext();
+  const { showDebugMenu, routes } = useClimbingContext();
   const cragViewLayout = useGetCragViewLayout();
+  const { userSettings } = useUserSettingsContext();
+  const splitPaneSize = userSettings['climbing.splitPaneSize'];
 
   const getRoutesCsv = () => {
     const getPathString = (path) =>
