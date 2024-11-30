@@ -30,6 +30,8 @@ import { AlphabeticalMarker } from './TextMarker';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { DotLoader, useIsClient } from '../helpers';
 import { useSnackbar } from '../utils/SnackbarContext';
+import { useGetOnSubmitFactory } from './useGetOnSubmit';
+import { useDirectionsContext } from './DirectionsContext';
 const DotLoaderContainer = styled.div`
   font-size: 16px;
   right: 6px;
@@ -237,6 +239,7 @@ export const DirectionsAutocomplete = ({
   }, [pointIndex]);
 
   const markerRef = useRef<maplibregl.Marker>();
+  const { from, to, mode, setResult, setLoading } = useDirectionsContext();
 
   useEffect(() => {
     const map = getGlobalMap();
@@ -250,10 +253,19 @@ export const DirectionsAutocomplete = ({
     };
   }, [ALPHABETICAL_MARKER, value]);
 
+  const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
   const onDragEnd = () => {
     const lngLat = markerRef.current?.getLngLat();
     if (lngLat) {
-      setValue(getCoordsOption([lngLat.lng, lngLat.lat]));
+      const coordsOption = getCoordsOption([lngLat.lng, lngLat.lat]);
+      setValue(coordsOption);
+
+      if (pointIndex === 0) {
+        submitFactory(coordsOption, to, mode);
+      }
+      if (pointIndex === 1) {
+        submitFactory(from, coordsOption, mode);
+      }
     }
   };
 
