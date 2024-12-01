@@ -75,8 +75,11 @@ type Props = {
 
 export const Instructions = ({ instructions }: Props) => (
   <StyledList>
-    {instructions.map((instruction) => (
-      <Instruction key={instruction.text} instruction={instruction} />
+    {instructions.map((instruction, index) => (
+      <Instruction
+        key={`${instruction.text}-${index}`}
+        instruction={instruction}
+      />
     ))}
   </StyledList>
 );

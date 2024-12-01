@@ -1,9 +1,9 @@
 import { Option } from '../SearchBox/types';
 import { RoutingResult } from './routing/types';
 import { CloseButton } from './helpers';
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { StyledPaper } from './Result';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { ModeToggler } from './ModeToggler';
 import { DirectionsAutocomplete } from './DirectionsAutocomplete';
 import { t } from '../../services/intl';
@@ -12,46 +12,82 @@ import SearchIcon from '@mui/icons-material/Search';
 import { getCoordsOption } from '../SearchBox/options/coords';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useDirectionsContext } from './DirectionsContext';
-import { useGetOnSubmitFactory, useReactToUrl } from './useGetOnSubmit';
+import {
+  useGetOnSubmitFactory,
+  useReactToUrl,
+  useUpdatePoint,
+} from './useGetOnSubmit';
+import { useDragItems } from '../utils/useDragItems';
+import { DragHandler } from '../utils/DragHandler';
+import { moveElementToIndex } from '../FeaturePanel/Climbing/utils/array';
 
 type Props = {
   setResult: (result: RoutingResult) => void;
   hideForm: boolean;
 };
 
-const useGlobalMapClickOverride = (
-  from: Option,
-  setFrom: (value: Option) => void,
-  setTo: (value: Option) => void,
-) => {
-  const { setResult, setLoading, to, mode } = useDirectionsContext();
+const useGlobalMapClickOverride = () => {
+  const { setResult, setLoading, mode, points } = useDirectionsContext();
   const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
+  const updatePoint = useUpdatePoint();
 
   const { mapClickOverrideRef } = useMapStateContext();
   useEffect(() => {
     mapClickOverrideRef.current = (coords, label) => {
       const coordinates = getCoordsOption(coords, label);
-      if (!from) {
-        submitFactory(coordinates, to, mode);
-        setFrom(coordinates);
+
+      if (!points[0]) {
+        const newPoints = updatePoint(0, coordinates);
+        submitFactory(newPoints, mode);
       } else {
-        submitFactory(from, coordinates, mode);
-        setTo(coordinates);
+        const newPoints = updatePoint(1, coordinates);
+        submitFactory(newPoints, mode);
       }
     };
 
     return () => {
       mapClickOverrideRef.current = undefined;
     };
-  }, [from, mapClickOverrideRef, mode, setFrom, setTo, submitFactory, to]);
+  }, [mapClickOverrideRef, mode, points, submitFactory, updatePoint]);
 };
 
 export const DirectionsForm = ({ setResult, hideForm }: Props) => {
-  const { loading, setLoading, mode, setMode, from, setFrom, to, setTo } =
-    useDirectionsContext();
+  const { loading, setLoading, mode, setMode, points } = useDirectionsContext();
 
-  useGlobalMapClickOverride(from, setFrom, setTo);
-  useReactToUrl(setMode, setFrom, setTo, setResult);
+  useGlobalMapClickOverride();
+  useReactToUrl(setMode, setResult);
+
+  type InputItem = {
+    value: Option;
+    pointIndex: number;
+    label: string;
+  };
+  const [inputs, setInputs] = useState<Array<InputItem>>([
+    {
+      value: points?.[0],
+      pointIndex: 0,
+      label: t('directions.form.start_or_click'),
+    },
+    {
+      value: points?.[1],
+      pointIndex: 1,
+      label: t('directions.form.destination'),
+    },
+  ]);
+
+  const {
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    HighlightedDropzone,
+    ItemContainer,
+    draggedItem,
+    draggedOverIndex,
+  } = useDragItems<InputItem>({
+    initialItems: inputs,
+    moveItems: () => {},
+    direction: 'horizontal',
+  });
 
   const onSubmitFactory = useGetOnSubmitFactory(setResult, setLoading);
 
@@ -65,7 +101,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         <ModeToggler
           value={mode}
           setMode={setMode}
-          onChange={(newMode) => onSubmitFactory(from, to, newMode)}
+          onChange={(newMode) => onSubmitFactory(points, newMode)}
         />
         <div style={{ flex: 1 }} />
         <div>
@@ -74,18 +110,43 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
       </Stack>
 
       <Stack spacing={1} mb={3}>
-        <DirectionsAutocomplete
-          value={from}
-          setValue={setFrom}
-          label={t('directions.form.start_or_click')}
-          pointIndex={0}
-        />
-        <DirectionsAutocomplete
-          value={to}
-          setValue={setTo}
-          label={t('directions.form.destination')}
-          pointIndex={1}
-        />
+        {inputs.map((item, index) => {
+          const { value, label, pointIndex } = item;
+          return (
+            <Box sx={{ position: 'relative' }} key={`input-${pointIndex}`}>
+              <Stack direction="row" alignItems="center">
+                <DragHandler
+                  onDragStart={(e) => {
+                    handleDragStart(e, {
+                      id: index,
+                      content: item,
+                    });
+                  }}
+                  onDragOver={(e) => {
+                    handleDragOver(e, index);
+                  }}
+                  onDragEnd={(e) => {
+                    handleDragEnd(e);
+
+                    const newArray = moveElementToIndex(
+                      inputs,
+                      draggedItem.id,
+                      draggedOverIndex,
+                    );
+
+                    setInputs(newArray);
+                  }}
+                />
+                <DirectionsAutocomplete
+                  value={value}
+                  label={label}
+                  pointIndex={index}
+                />
+              </Stack>
+              <HighlightedDropzone index={index} />
+            </Box>
+          );
+        })}
       </Stack>
 
       <LoadingButton
@@ -94,7 +155,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         variant="contained"
         fullWidth
         startIcon={<SearchIcon />}
-        onClick={() => onSubmitFactory(from, to, mode)}
+        onClick={() => onSubmitFactory(points, mode)}
       >
         {t('directions.get_directions')}
       </LoadingButton>

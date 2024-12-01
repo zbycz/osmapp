@@ -16,6 +16,8 @@ import { getLabel } from '../../helpers/featureLabel';
 import { t } from '../../services/intl';
 import { FetchError } from '../../services/helpers';
 import * as Sentry from '@sentry/nextjs';
+import { useDirectionsContext } from './DirectionsContext';
+import { updateElementOnIndex } from '../FeaturePanel/Climbing/utils/array';
 
 const getRoutingFailed = (showToast: ShowToast) => {
   return (error: unknown) => {
@@ -33,10 +35,10 @@ const getRoutingFailed = (showToast: ShowToast) => {
 };
 export const useReactToUrl = (
   setMode: (param: ((current: string) => string) | string) => void,
-  setFrom: (value: Option) => void,
-  setTo: (value: Option) => void,
   setResult: (result: RoutingResult) => void,
 ) => {
+  const { points, setPoints } = useDirectionsContext();
+  const updatePoint = useUpdatePoint();
   const { showToast } = useSnackbar();
   const initialModeWasSet = useRef(false);
   const router = useRouter();
@@ -48,8 +50,8 @@ export const useReactToUrl = (
 
     if (mode && options.length === 2) {
       setMode(mode);
-      setFrom(options[0]);
-      setTo(options[1]);
+      setPoints(options);
+
       handleRouting(mode, options.map(getOptionToLonLat))
         .then(setResult)
         .catch(getRoutingFailed(showToast));
@@ -61,14 +63,27 @@ export const useReactToUrl = (
 
       const lastFeature = getLastFeature();
       if (lastFeature) {
-        setTo(getCoordsOption(lastFeature.center, getLabel(lastFeature)));
+        updatePoint(
+          1,
+          getCoordsOption(lastFeature.center, getLabel(lastFeature)),
+        );
       }
     }
 
     return () => {
       destroyRouting();
     };
-  }, [urlParts, setMode, setFrom, setTo, setResult, showToast]);
+  }, [urlParts, setMode, points, setPoints, setResult, showToast]);
+};
+
+export const useUpdatePoint = () => {
+  const { points, setPoints } = useDirectionsContext();
+
+  return (pointIndex: number, option: Option) => {
+    const newPoints = updateElementOnIndex(points, pointIndex, () => option);
+    setPoints(newPoints);
+    return newPoints;
+  };
 };
 
 export const useGetOnSubmitFactory = (
@@ -76,12 +91,7 @@ export const useGetOnSubmitFactory = (
   setLoading: (value: ((prevState: boolean) => boolean) | boolean) => void,
 ) => {
   const { showToast } = useSnackbar();
-
-  return (from: Option, to: Option, mode: Profile) => {
-    if (!from || !to) {
-      return;
-    }
-    const points = [from, to];
+  return (points: Array<Option>, mode: Profile) => {
     const url = buildUrl(mode, points);
     if (url === Router.asPath) {
       setLoading(true);

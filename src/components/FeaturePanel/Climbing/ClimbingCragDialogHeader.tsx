@@ -91,7 +91,7 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
   } = useDragItems<string>({
     initialItems: photoPaths,
     moveItems: movePhotos,
-    direction: 'horizontal',
+    direction: 'vertical',
   });
 
   return (
