@@ -23,7 +23,7 @@ const Wrapper = styled(Stack)<{ $isMobileMode: boolean }>`
 
 export const DirectionsBox = () => {
   const isMobileMode = useMobileMode();
-  const [revealed, revealForm, hide] = useBoolState(false); // mobile only
+  const [revealed, revealForm, hide] = useBoolState(true); // mobile only
   const hideForm = isMobileMode && result && !revealed;
 
   const { setResult } = useDirectionsContext();
