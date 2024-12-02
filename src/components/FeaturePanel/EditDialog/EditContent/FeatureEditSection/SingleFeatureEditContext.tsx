@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import { OsmId } from '../../../../../services/types';
-import { FeatureEditData, useEditContext } from '../../EditContext';
+import { EditDataItem, useEditContext } from '../../EditContext';
+import { getShortId } from '../../../../../services/helpers';
 
 type SingleFeatureEditContextType = {
   featureId: OsmId;
@@ -22,13 +23,9 @@ export const SingleFeatureEditContextProvider = ({ children, featureId }) => {
   );
 };
 
-export const useFeatureEditData = (): FeatureEditData => {
-  const { data } = useEditContext();
+export const useFeatureEditData = (): EditDataItem => {
+  const { items } = useEditContext();
   const { featureId } = useContext(SingleFeatureEditContext);
 
-  return data.find(
-    (item) =>
-      item.featureId.type === featureId.type &&
-      item.featureId.id === featureId.id,
-  );
+  return items.find((item) => item.shortId === getShortId(featureId));
 };

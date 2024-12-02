@@ -6,20 +6,19 @@ import { t } from '../../../services/intl';
 import { addOsmFeature, editOsmFeature } from '../../../services/osmApiAuth';
 import { insertOsmNote } from '../../../services/osmApi';
 import { useSnackbar } from '../../utils/SnackbarContext';
+import { getShortId } from '../../../services/helpers';
 
 export const useGetHandleSave = () => {
   const { showToast } = useSnackbar();
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { feature, isUndelete, isAddPlace } = useEditDialogFeature();
-  const { setSuccessInfo, setIsSaving, location, comment, data } =
+  const { setSuccessInfo, setIsSaving, location, comment, items } =
     useEditContext();
 
   return () => {
     //TODO temporary
-    const { tags, toBeDeleted } = data.find(
-      (d) =>
-        d.featureId.type === feature.osmMeta.type &&
-        d.featureId.id === feature.osmMeta.id,
+    const { tags, toBeDeleted } = items.find(
+      (item) => item.shortId === getShortId(feature.osmMeta),
     );
 
     // TODO refactor this to check for errors in the form

@@ -8,7 +8,7 @@ import { useGetHandleSave } from '../useGetHandleSave';
 
 const SaveButton = () => {
   const { loggedIn } = useOsmAuthContext();
-  const { data } = useEditContext();
+  const { items } = useEditContext();
   const handleSave = useGetHandleSave();
 
   return (
