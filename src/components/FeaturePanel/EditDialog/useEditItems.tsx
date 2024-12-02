@@ -104,7 +104,8 @@ export const useEditItems = (originalFeature: Feature) => {
   );
 
   const addFeature = (feature: Feature) => {
-    setData((state) => [...state, buildDataItem(feature)]);
+    const newItem = buildDataItem(JSON.parse(JSON.stringify(feature)));
+    setData((state) => [...state, newItem]);
   };
 
   return { items, addFeature };

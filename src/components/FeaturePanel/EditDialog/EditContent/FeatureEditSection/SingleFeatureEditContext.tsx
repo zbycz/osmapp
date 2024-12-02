@@ -5,16 +5,16 @@ import { getShortId } from '../../../../../services/helpers';
 import { EditDataItem } from '../../useEditItems';
 
 type SingleFeatureEditContextType = {
-  featureId: OsmId;
+  shortId: string;
 };
 
-// TODO rename if it contains only the featureId
+// TODO rename if it contains only the shortId
 const SingleFeatureEditContext =
   createContext<SingleFeatureEditContextType>(undefined);
 
-export const SingleFeatureEditContextProvider = ({ children, featureId }) => {
+export const SingleFeatureEditContextProvider = ({ children, shortId }) => {
   const value: SingleFeatureEditContextType = {
-    featureId,
+    shortId,
   };
 
   return (
@@ -26,7 +26,7 @@ export const SingleFeatureEditContextProvider = ({ children, featureId }) => {
 
 export const useFeatureEditData = (): EditDataItem => {
   const { items } = useEditContext();
-  const { featureId } = useContext(SingleFeatureEditContext);
+  const { shortId } = useContext(SingleFeatureEditContext);
 
-  return items.find((item) => item.shortId === getShortId(featureId));
+  return items.find((item) => item.shortId === shortId);
 };

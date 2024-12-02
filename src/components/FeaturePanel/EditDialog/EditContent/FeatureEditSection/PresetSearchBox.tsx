@@ -133,22 +133,25 @@ const useGetOnChange = (
 
   return (e: SelectChangeEvent<string>) => {
     const oldPreset = options.find((o) => o.presetKey === value);
-    if (oldPreset) {
-      Object.entries(oldPreset.addTags ?? oldPreset.tags ?? {}).forEach(
-        (tag) => {
-          setTagsEntries((state) =>
-            state.filter(([key, value]) => key !== tag[0] && value !== tag[1]),
-          );
-        },
-      );
-    }
+    const toRemove = oldPreset
+      ? (oldPreset.addTags ?? oldPreset.tags ?? {})
+      : {};
 
     const newPreset = options.find((o) => o.presetKey === e.target.value);
+    const toAdd = newPreset
+      ? Object.entries(newPreset.addTags ?? newPreset.tags ?? {})
+      : [];
+
+    setTagsEntries((prev) => [
+      ...toAdd,
+      ...prev.filter(
+        ([key, value]) => !(toRemove[key] && toRemove[key] === value),
+      ),
+    ]);
+
     if (newPreset) {
-      const newTags = Object.entries(newPreset.addTags ?? newPreset.tags ?? {});
-      setTagsEntries((state) => [...newTags, ...state]);
+      setValue(newPreset.presetKey);
     }
-    setValue(newPreset.presetKey);
   };
 };
 
