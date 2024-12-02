@@ -9,6 +9,7 @@ import { t, Translation } from '../../services/intl';
 import { CloseButton, toHumanDistance } from './helpers';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { Instructions } from './Instructions';
+import { useDirectionsContext } from './DirectionsContext';
 
 export const StyledPaper = styled(Paper)<{
   $height?: string;
@@ -55,10 +56,9 @@ const PoweredBy = ({ result }: { result: RoutingResult }) => (
   </Typography>
 );
 
-type Props = { result: RoutingResult; revealForm: false | (() => void) };
+type Props = { revealForm: false | (() => void) };
 
 const MobileResult = ({
-  result,
   revealForm,
   time,
   distance,
@@ -66,6 +66,7 @@ const MobileResult = ({
 }: Props & Record<'time' | 'distance' | 'ascent', string>) => {
   const [showInstructions, setShowInstructions] = React.useState(false);
 
+  const { result } = useDirectionsContext();
   return (
     <StyledPaperMobile elevation={3}>
       <div>
@@ -103,11 +104,13 @@ const MobileResult = ({
   );
 };
 
-export const Result = ({ result, revealForm }: Props) => {
+export const Result = ({ revealForm }: Props) => {
   const isMobileMode = useMobileMode();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
 
+  const { result } = useDirectionsContext();
+  if (!result) return null;
   const time = toHumanTime(result.time);
   const distance = toHumanDistance(isImperial, result.distance);
   const ascent = toHumanDistance(isImperial, result.totalAscent);
@@ -115,7 +118,6 @@ export const Result = ({ result, revealForm }: Props) => {
   if (isMobileMode) {
     return (
       <MobileResult
-        result={result}
         revealForm={revealForm}
         time={time}
         distance={distance}

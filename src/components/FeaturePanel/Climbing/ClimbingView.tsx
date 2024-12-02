@@ -262,8 +262,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     imageSize,
     routeSelectedIndex,
     getMachine,
-    splitPaneSize,
-    setSplitPaneSize,
     isEditMode,
     viewportSize,
     editorPosition,
@@ -286,7 +284,8 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(null);
   const machine = getMachine();
   const cragViewLayout = useGetCragViewLayout();
-  const { userSettings } = useUserSettingsContext();
+  const { userSettings, setUserSetting } = useUserSettingsContext();
+  const splitPaneSize = userSettings['climbing.splitPaneSize'];
 
   useEffect(() => {
     if (isEditMode && machine.currentStateName === 'routeSelected') {
@@ -307,7 +306,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onSplitPaneSizeReset = () => {
-    setSplitPaneSize(null);
+    setUserSetting('climbing.splitPaneSize', null);
   };
 
   React.useEffect(() => {
@@ -324,7 +323,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     setIsSplitViewDragging(true);
   };
   const onDragFinished = (splitHeight: number) => {
-    setSplitPaneSize(splitHeight);
+    setUserSetting('climbing.splitPaneSize', splitHeight);
     setIsSplitViewDragging(false);
   };
   const [windowDimensions, setWindowDimensions] = useState(

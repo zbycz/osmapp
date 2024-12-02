@@ -40,6 +40,10 @@ const filterConsoleLog = () => {
 //   });
 // };
 
+const defaultProjection = {
+  type: 'globe',
+};
+
 export const useInitMap = () => {
   const mapRef = React.useRef(null);
   const [mapInState, setMapInState] = React.useState(null);
@@ -60,6 +64,10 @@ export const useInitMap = () => {
     });
     setGlobalMap(map);
     setMapInState(map);
+
+    map.on('style.load', () => {
+      map.setProjection(defaultProjection);
+    });
 
     map.scrollZoom.setWheelZoomRate(1 / 200); // 1/450 is default, bigger value = faster
 

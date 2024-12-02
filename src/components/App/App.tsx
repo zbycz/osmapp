@@ -39,6 +39,7 @@ import {
 import { DirectionsBox } from '../Directions/DirectionsBox';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
+import { DirectionsProvider } from '../Directions/DirectionsContext';
 
 const URL_NOT_FOUND_TOAST = {
   message: t('url_not_found_toast'),
@@ -150,7 +151,11 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   return (
     <>
       <Loading />
-      {directions && <DirectionsBox />}
+      {directions && (
+        <DirectionsProvider>
+          <DirectionsBox />
+        </DirectionsProvider>
+      )}
       {!directions && <SearchBox withShadow={withShadow} />}
       {featureShown && !isMobileMode && (
         <FeaturePanelOnSide scrollRef={scrollRef} />
