@@ -63,6 +63,7 @@
     "react-zoom-pan-pinch": "^3.6.1"
   },
   "devDependencies": {
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/autosuggest-highlight": "^3.2.3",
     "@types/jest": "^29.5.13",
     "@types/js-cookie": "^3.0.6",

@@ -1,18 +1,20 @@
 import React, { createContext, useContext, useState } from 'react';
 import { OsmId } from '../../../../../services/types';
-import { FeatureEditData, useEditContext } from '../../EditContext';
+import { useEditContext } from '../../EditContext';
+import { getShortId } from '../../../../../services/helpers';
+import { EditDataItem } from '../../useEditItems';
 
 type SingleFeatureEditContextType = {
-  featureId: OsmId;
+  shortId: string;
 };
 
-// TODO rename if it contains only the featureId
+// TODO rename if it contains only the shortId
 const SingleFeatureEditContext =
   createContext<SingleFeatureEditContextType>(undefined);
 
-export const SingleFeatureEditContextProvider = ({ children, featureId }) => {
+export const SingleFeatureEditContextProvider = ({ children, shortId }) => {
   const value: SingleFeatureEditContextType = {
-    featureId,
+    shortId,
   };
 
   return (
@@ -22,13 +24,9 @@ export const SingleFeatureEditContextProvider = ({ children, featureId }) => {
   );
 };
 
-export const useFeatureEditData = (): FeatureEditData => {
-  const { data } = useEditContext();
-  const { featureId } = useContext(SingleFeatureEditContext);
+export const useFeatureEditData = (): EditDataItem => {
+  const { items } = useEditContext();
+  const { shortId } = useContext(SingleFeatureEditContext);
 
-  return data.find(
-    (item) =>
-      item.featureId.type === featureId.type &&
-      item.featureId.id === featureId.id,
-  );
+  return items.find((item) => item.shortId === shortId);
 };

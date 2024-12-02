@@ -7,16 +7,20 @@ import { ContributionInfoBox } from './ContributionInfoBox';
 import { OsmUserLoggedOut } from './OsmUserLoggedOut';
 import { FeatureEditSection } from './FeatureEditSection/FeatureEditSection';
 import { useEditDialogFeature } from '../utils';
+import { getShortId } from '../../../../services/helpers';
 
 export const EditContent = () => {
-  const { feature } = useEditDialogFeature(); //TODO temporary
+  const { feature } = useEditDialogFeature();
+
+  const current = getShortId(feature.osmMeta);
 
   return (
     <>
       <DialogContent dividers>
         <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
           <OsmUserLoggedOut />
-          <FeatureEditSection featureId={feature.osmMeta} />
+
+          <FeatureEditSection shortId={current} />
           <ContributionInfoBox />
           <CommentField />
           <OsmUserLogged />

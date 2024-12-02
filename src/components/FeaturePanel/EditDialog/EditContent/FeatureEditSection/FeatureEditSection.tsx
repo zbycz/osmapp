@@ -7,11 +7,11 @@ import { OsmId } from '../../../../../services/types';
 import { SingleFeatureEditContextProvider } from './SingleFeatureEditContext';
 
 type Props = {
-  featureId: OsmId;
+  shortId: string;
 };
 
-export const FeatureEditSection = ({ featureId }: Props) => (
-  <SingleFeatureEditContextProvider featureId={featureId}>
+export const FeatureEditSection = ({ shortId }: Props) => (
+  <SingleFeatureEditContextProvider shortId={shortId}>
     <PresetSelect />
     <MajorKeysEditor />
     <OptionsEditor />

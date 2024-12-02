@@ -70,6 +70,7 @@ export const ChangeLocationEditor = () => {
 
 export const OptionsEditor = () => {
   const { isAddPlace, isUndelete } = useEditDialogFeature();
+  const { items } = useEditContext();
 
   return (
     <>
@@ -77,7 +78,7 @@ export const OptionsEditor = () => {
         <>
           <DialogHeading>{t('editdialog.options_heading')}</DialogHeading>
           <PlaceCancelledToggle />
-          <ChangeLocationEditor />
+          {items.length >= 2 ? null : <ChangeLocationEditor />}
         </>
       )}
     </>
