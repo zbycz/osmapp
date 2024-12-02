@@ -6,11 +6,11 @@ import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from '../MajorKeysEditor';
 import { isString } from '../../../../../helpers';
 import { t, Translation } from '../../../../../../services/intl';
-import { TagsEntries } from '../../../EditContext';
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
 import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { TagsEntries } from '../../../useEditItems';
 
 const Table = styled.table`
   width: calc(100% - 8px);

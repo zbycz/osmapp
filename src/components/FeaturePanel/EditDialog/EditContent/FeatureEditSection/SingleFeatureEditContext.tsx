@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import { OsmId } from '../../../../../services/types';
-import { EditDataItem, useEditContext } from '../../EditContext';
+import { useEditContext } from '../../EditContext';
 import { getShortId } from '../../../../../services/helpers';
+import { EditDataItem } from '../../useEditItems';
 
 type SingleFeatureEditContextType = {
   featureId: OsmId;
