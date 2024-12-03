@@ -3,25 +3,27 @@ import { useEditDialogFeature } from './utils';
 import { useEditContext } from './EditContext';
 import { createNoteText } from './createNoteText';
 import { t } from '../../../services/intl';
-import { addOsmFeature, editOsmFeature } from '../../../services/osmApiAuth';
+import { saveChanges } from '../../../services/osmApiAuth';
 import { insertOsmNote } from '../../../services/osmApi';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import { getShortId } from '../../../services/helpers';
 
-export const useGetHandleSave = () => {
+const useGetSaveNote = () => {
   const { showToast } = useSnackbar();
-  const { loggedIn, handleLogout } = useOsmAuthContext();
   const { feature, isUndelete, isAddPlace } = useEditDialogFeature();
   const { setSuccessInfo, setIsSaving, location, comment, items } =
     useEditContext();
 
-  return () => {
-    //TODO temporary
+  return async () => {
+    if (items.length !== 1) {
+      showToast('Please log in to save multiple items.', 'error');
+      return;
+    }
+
     const { tags, toBeDeleted } = items.find(
       (item) => item.shortId === getShortId(feature.osmMeta),
     );
 
-    // TODO refactor this to check for errors in the form
     const noteText = createNoteText(
       feature,
       tags,
@@ -35,14 +37,31 @@ export const useGetHandleSave = () => {
       return;
     }
 
-    setIsSaving(true);
-    const promise = loggedIn
-      ? isAddPlace
-        ? addOsmFeature(feature, comment, tags)
-        : editOsmFeature(feature, comment, tags, toBeDeleted)
-      : insertOsmNote(feature.center, noteText);
+    return await insertOsmNote(feature.center, noteText);
+  };
+};
 
-    promise.then(setSuccessInfo, (err) => {
+export const useGetHandleSave = () => {
+  const { showToast } = useSnackbar();
+  const { loggedIn, handleLogout } = useOsmAuthContext();
+  const { feature } = useEditDialogFeature();
+  const { setSuccessInfo, setIsSaving, comment, items } = useEditContext();
+  const saveNote = useGetSaveNote();
+
+  return async () => {
+    try {
+      setIsSaving(true);
+
+      // TODO do not save when no changes
+
+      const successInfo = loggedIn
+        ? await saveChanges(feature, comment, items)
+        : await saveNote();
+
+      setSuccessInfo(successInfo);
+      setTimeout(() => setIsSaving(false), 500);
+    } catch (err) {
+      setIsSaving(false);
       if (err?.status === 401) {
         showToast(t('editdialog.osm_session_expired'), 'error');
         handleLogout();
@@ -53,7 +72,6 @@ export const useGetHandleSave = () => {
         );
         console.error(err); // eslint-disable-line no-console
       }
-      setTimeout(() => setIsSaving(false), 500);
-    });
+    }
   };
 };

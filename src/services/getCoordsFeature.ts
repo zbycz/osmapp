@@ -1,7 +1,11 @@
 import { getImagesFromCenter } from './images/getImageDefs';
 import { Feature, LonLatRounded, OsmType } from './types';
 
+let nextId = 0;
+
 export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
+  nextId += 1; // this is called twice: 1. onMapClicked 2. getInitialFeature
+
   const center = [lon, lat].map(parseFloat);
   return {
     type: 'Feature',
@@ -9,8 +13,8 @@ export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
     roundedCenter: [lon, lat],
     center,
     osmMeta: {
-      type: `coordsFeature-${Math.random()}` as OsmType, // used as react key for EditDialog, ObjectsAround etc. (id must be empty)
-      id: 0,
+      type: 'node',
+      id: nextId * -1, // negative id means "adding new point" in osmApiAuth#saveChanges()
     },
     tags: {},
     properties: { class: 'marker', subclass: 'point' },

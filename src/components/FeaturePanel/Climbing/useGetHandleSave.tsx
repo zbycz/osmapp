@@ -2,7 +2,7 @@ import { ClimbingRoute } from './types';
 import { Feature, FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { Change, editCrag } from '../../../services/osmApiAuth';
+import { CragChange, editCrag } from '../../../services/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
@@ -51,7 +51,7 @@ const isSameTags = (updatedTags: {}, origTags: FeatureTags) => {
 export const getClimbingCragChanges = (
   crag: Feature,
   photoPaths: Array<string>,
-): Change[] => {
+): CragChange[] => {
   const newTags = {
     ...crag.tags,
     ...photoPaths.reduce((acc, photoPath, index) => {
@@ -71,7 +71,9 @@ export const getClimbingCragChanges = (
   return isSame ? [] : [{ feature: updatedCrag, allTags: newTags }];
 };
 
-export const getClimbingRouteChanges = (routes: ClimbingRoute[]): Change[] => {
+export const getClimbingRouteChanges = (
+  routes: ClimbingRoute[],
+): CragChange[] => {
   const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
 
   return existingRoutes

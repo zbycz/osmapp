@@ -4,8 +4,10 @@ import { osmAuth, OSMAuthXHROptions } from 'osm-auth';
 import { Feature, FeatureTags, OsmId, Position, SuccessInfo } from './types';
 import {
   buildXmlString,
+  getApiId,
   getFullOsmappLink,
   getOsmappLink,
+  getShortId,
   getUrlOsmId,
   parseToXml2Js,
   prod,
@@ -17,6 +19,7 @@ import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
 import { isBrowser } from '../components/helpers';
 import { getLabel } from '../helpers/featureLabel';
+import { EditDataItem } from '../components/FeaturePanel/EditDialog/useEditItems';
 
 const PROD_CLIENT_ID = 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68';
 
@@ -230,15 +233,17 @@ const updateItemXml = async (
 const checkVersionUnchanged = (
   freshItem: Xml2JsSingleDoc,
   apiId: OsmId,
-  feature: Feature,
+  ourVersion: number,
 ) => {
   if (apiId === TEST_OSM_ID) {
     return;
   }
 
   const freshVersion = parseInt(freshItem[apiId.type].$.version, 10);
-  if (feature.osmMeta.version !== freshVersion) {
-    throw new Error('The object has been updated, reload and try again');
+  if (ourVersion !== freshVersion) {
+    throw new Error(
+      `The ${getShortId(apiId)} has been updated, please reload.`,
+    );
   }
 };
 
@@ -251,7 +256,7 @@ export const editOsmFeature = async (
 ): Promise<SuccessInfo> => {
   const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
   const freshItem = await getItemOrLastHistoric(apiId);
-  checkVersionUnchanged(freshItem, apiId, feature);
+  checkVersionUnchanged(freshItem, apiId, feature.osmMeta.version);
 
   const changesetComment = getChangesetComment(comment, toBeDeleted, feature);
   const changesetXml = getChangesetXml({ changesetComment, feature });
@@ -278,7 +283,7 @@ export const editOsmFeature = async (
   };
 };
 
-const getNewItemXml = async (
+const getNewNodeXml = async (
   changesetId: string,
   [lon, lat]: Position,
   newTags: FeatureTags,
@@ -301,7 +306,7 @@ export const addOsmFeature = async (
   const changesetXml = getChangesetXml({ feature, changesetComment });
 
   const changesetId = await putChangeset(changesetXml);
-  const content = await getNewItemXml(changesetId, feature.center, newTags);
+  const content = await getNewNodeXml(changesetId, feature.center, newTags);
   const newNodeId = await createItem(content);
   await putChangesetClose(changesetId);
 
@@ -314,15 +319,96 @@ export const addOsmFeature = async (
   };
 };
 
-export type Change = {
+const saveChange = async (
+  changesetId: string,
+  { shortId, version, tags, toBeDeleted, newNodeLonLat, members }: EditDataItem,
+): Promise<OsmId> => {
+  let apiId = getApiId(shortId);
+  if (apiId.id < 0) {
+    if (apiId.type !== 'node') {
+      throw new Error('We can only add new nodes so far.');
+    }
+    const content = await getNewNodeXml(changesetId, newNodeLonLat, tags);
+    const newNodeId = await createItem(content);
+    return { type: 'node', id: parseInt(newNodeId, 10) };
+  } else {
+    if (!prod) {
+      apiId = TEST_OSM_ID; // TODO refactor
+    }
+    const freshItem = await getItem(apiId);
+    checkVersionUnchanged(freshItem, apiId, version);
+
+    const newItem = await updateItemXml(
+      freshItem,
+      apiId,
+      changesetId,
+      tags,
+      toBeDeleted,
+    );
+    await putOrDeleteItem(toBeDeleted, apiId, newItem);
+    return apiId;
+  }
+};
+
+const getCommentMulti = (
+  original: Feature,
+  comment: string,
+  changes: EditDataItem[],
+) => {
+  const isClimbing = changes.some((change) => change.tags.climbing);
+  const suffix = isClimbing ? ' #climbing' : '';
+
+  // TODO find topmost parent in changes and use its name
+  // eg. survey • Edited Roviště (5 items) #osmapp #climbing
+
+  if (changes.length === 1 && changes[0].newNodeLonLat) {
+    const typeTag = Object.entries(changes[0].tags)[0]?.join('=');
+    return join(comment, ' • ', `Added ${typeTag} #osmapp`);
+  }
+
+  const toBeDeleted = changes.length === 1 && changes[0].toBeDeleted;
+  const changesetComment = getChangesetComment(comment, toBeDeleted, original);
+  return `${changesetComment}${suffix}`;
+};
+
+export const saveChanges = async (
+  original: Feature,
+  comment: string,
+  changes: EditDataItem[],
+): Promise<SuccessInfo> => {
+  if (!changes.length) {
+    throw new Error('No changes submitted.');
+  }
+
+  const changesetComment = getCommentMulti(original, comment, changes);
+  const changesetXml = getChangesetXml({ changesetComment, feature: original });
+  const changesetId = await putChangeset(changesetXml);
+
+  const ids = await Promise.all(
+    changes.map((change) => saveChange(changesetId, change)),
+  );
+  await putChangesetClose(changesetId);
+
+  return {
+    type: 'edit',
+    text: changesetComment,
+    url: `${osmWebsite}/changeset/${changesetId}`,
+    redirect: `/${getUrlOsmId(ids[0])}`,
+  };
+};
+
+// ---- edit crag:
+// TODO refactor to use saveChanges()
+
+export type CragChange = {
   feature: Feature;
   allTags: FeatureTags;
   toBeDeleted?: boolean;
 };
 
-const saveChange = async (
+const saveCragChange = async (
   changesetId: any,
-  { feature, allTags, toBeDeleted }: Change,
+  { feature, allTags, toBeDeleted }: CragChange,
 ) => {
   const apiId = feature.osmMeta;
   const item = await getItem(apiId);
@@ -342,7 +428,7 @@ const saveChange = async (
 export const editCrag = async (
   crag: Feature,
   comment: string,
-  changes: Change[],
+  changes: CragChange[],
 ) => {
   if (!changes.length) {
     return {
@@ -359,7 +445,9 @@ export const editCrag = async (
   const changesetXml = getChangesetXml({ changesetComment, feature: crag });
   const changesetId = await putChangeset(changesetXml);
 
-  await Promise.all(changes.map((change) => saveChange(changesetId, change)));
+  await Promise.all(
+    changes.map((change) => saveCragChange(changesetId, change)),
+  );
   await putChangesetClose(changesetId);
 
   return {
