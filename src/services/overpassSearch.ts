@@ -1,8 +1,8 @@
-import { LineString, OsmId, Point, GeometryCollection } from './types';
+import { LineString, OsmId, Point, GeometryCollection, Feature } from './types';
 import { getPoiClass } from './getPoiClass';
 import { getCenter } from './getCenter';
 import { fetchJson } from './fetch';
-import { Feature, FeatureCollection, Polygon } from 'geojson';
+import { Feature as FeatureGeojson, FeatureCollection, Polygon } from 'geojson';
 import { ASTNode } from '../components/SearchBox/queryWizard/ast';
 import { Bbox } from '../components/utils/MapStateContext';
 import { generateQuery } from '../components/SearchBox/queryWizard/generateQuery';
@@ -110,7 +110,7 @@ const isClosedWay = (element: OverpassObject) => {
   return first.lat === last.lat && first.lon === last.lon;
 };
 
-type OverpassFeature = Feature & {
+type OverpassFeature = FeatureGeojson & {
   tags: Record<string, string>;
 };
 
@@ -122,19 +122,21 @@ export type OverpassResponse = {
 export const overpassGeomToGeojson = (
   response: OverpassResponse,
 ): OverpassFeature[] =>
-  response.elements.map((element) => {
-    const { type, id, tags = {} } = element;
-    const geometry = GEOMETRY[type]?.(element);
-    return {
-      type: 'Feature',
-      id: convertOsmIdToMapId({ type, id }),
-      osmMeta: { type, id },
-      tags,
-      properties: { ...getPoiClass(tags), ...tags, osmappType: type },
-      geometry,
-      center: getCenter(geometry) ?? undefined,
-    };
-  });
+  response.elements
+    .filter((element) => !(element.type === 'node' && !element.tags))
+    .map((element) => {
+      const { type, id, tags = {} } = element;
+      const geometry = GEOMETRY[type]?.(element);
+      return {
+        type: 'Feature',
+        id: convertOsmIdToMapId({ type, id }),
+        osmMeta: { type, id },
+        tags,
+        properties: { ...getPoiClass(tags), ...tags, osmappType: type },
+        geometry,
+        center: getCenter(geometry) ?? undefined,
+      } as OverpassFeature;
+    });
 
 const getQueryBody = (
   astOrTagsOrQuery: ASTNode | Record<string, string> | string,

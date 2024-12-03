@@ -27,19 +27,21 @@ export type EditDataItem = DataItem & {
 };
 
 const buildDataItem = (feature: Feature): DataItem => {
-  if (feature.osmMeta.type === 'relation' && !feature.memberFeatures) {
-    throw new Error('To edit `relation` you must add `memberFeatures`.');
-  }
-
   return {
     shortId: getShortId(feature.osmMeta),
     tagsEntries: Object.entries(feature.tags),
     toBeDeleted: false,
-    members: feature.memberFeatures?.map((memberFeature) => ({
-      shortId: getShortId(memberFeature.osmMeta),
-      role: memberFeature.osmMeta.role,
-      label: getLabel(memberFeature), // TODO what if user updates the tags ?
-    })),
+    members:
+      feature.memberFeatures?.map((memberFeature) => ({
+        shortId: getShortId(memberFeature.osmMeta),
+        role: memberFeature.osmMeta.role,
+        label: getLabel(memberFeature), // TODO what if user updates the tags ?
+      })) ??
+      feature.members?.map((member) => ({
+        shortId: getShortId({ type: member.type, id: member.ref }),
+        role: member.role,
+        label: `${member.type} ${member.ref}`,
+      })),
   };
 };
 

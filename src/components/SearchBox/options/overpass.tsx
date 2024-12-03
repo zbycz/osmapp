@@ -15,9 +15,10 @@ const getOverpassQueryHistory = (): string[] =>
   );
 
 export const addOverpassQueryHistory = (query: string) => {
+  const oldHistory = getOverpassQueryHistory().filter((q) => q !== query);
   window.localStorage.setItem(
     OVERPASS_HISTORY_KEY,
-    JSON.stringify([query, ...getOverpassQueryHistory()]),
+    JSON.stringify([query, ...oldHistory]),
   );
 };
 
