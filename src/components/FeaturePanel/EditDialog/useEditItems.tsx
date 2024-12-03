@@ -1,8 +1,9 @@
-import { Feature, FeatureTags } from '../../../services/types';
+import { Feature, FeatureTags, LonLat } from '../../../services/types';
 import { getShortId } from '../../../services/helpers';
 import { getLabel } from '../../../helpers/featureLabel';
 import { Setter } from '../../../types';
 import { useMemo, useState } from 'react';
+import { publishDbgObject } from '../../../utils';
 
 export type TagsEntries = [string, string][];
 
@@ -16,6 +17,8 @@ type DataItem = {
     role: string;
     label: string; // cached from other dataItems, or from originalFeature
   }[];
+  version: number | undefined; // undefined for new item
+  newNodeLonLat?: LonLat;
 };
 
 export type EditDataItem = DataItem & {
@@ -27,8 +30,10 @@ export type EditDataItem = DataItem & {
 };
 
 const buildDataItem = (feature: Feature): DataItem => {
+  const apiId = feature.osmMeta;
   return {
-    shortId: getShortId(feature.osmMeta),
+    shortId: getShortId(apiId),
+    version: apiId.version,
     tagsEntries: Object.entries(feature.tags),
     toBeDeleted: false,
     members:
@@ -42,6 +47,7 @@ const buildDataItem = (feature: Feature): DataItem => {
         role: member.role,
         label: `${member.type} ${member.ref}`,
       })),
+    newNodeLonLat: apiId.id < 0 ? feature.center : null,
   };
 };
 
@@ -109,6 +115,8 @@ export const useEditItems = (originalFeature: Feature) => {
     const newItem = buildDataItem(JSON.parse(JSON.stringify(feature)));
     setData((state) => [...state, newItem]);
   };
+
+  publishDbgObject('EditContext state', data);
 
   return { items, addFeature };
 };
