@@ -76,7 +76,7 @@ const renderSvg = async (
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const t1 = Date.now();
   try {
-    const osmId = getApiId(req.query.id);
+    const osmId = getApiId(req.query.id as string);
     const feature = await fetchWithMemberFeatures(osmId);
     const def = feature.imageDefs?.[0]; // TODO iterate when first not found
     if (!def) {

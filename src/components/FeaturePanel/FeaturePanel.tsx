@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { FeatureHeading } from './FeatureHeading';
 import { useToggleState } from '../helpers';
-import { getKey } from '../../services/helpers';
+import { getReactKey } from '../../services/helpers';
 import { PanelContent, PanelSidePadding } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { OsmError } from './OsmError';
@@ -54,7 +54,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   const isClimbingCrag = tags.climbing === 'crag';
 
   const PropertiesComponent = () => (
-    <Properties showTags={showTagsTable} key={getKey(feature)} />
+    <Properties showTags={showTagsTable} key={getReactKey(feature)} />
   );
   return (
     <>

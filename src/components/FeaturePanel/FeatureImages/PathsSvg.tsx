@@ -16,7 +16,7 @@ import {
 
 import { Size } from './types';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { getKey, getShortId } from '../../../services/helpers';
+import { getReactKey, getShortId } from '../../../services/helpers';
 
 const StyledSvg = styled.svg`
   position: absolute;
@@ -94,7 +94,7 @@ export const Paths = ({ def, feature, size }: PathsProps) => {
         {def.path && <Path path={def.path} feature={feature} size={size} />}
         {def.memberPaths?.map(({ path, member }) => (
           <Path
-            key={getKey(member)}
+            key={getReactKey(member)}
             path={path}
             feature={member}
             size={size}

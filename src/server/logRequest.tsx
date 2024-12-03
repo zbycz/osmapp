@@ -11,11 +11,16 @@ import { fetchText } from '../services/fetch';
 // This function works server-side only to omit any tracking cookies.
 
 export const logRequest = (ctx: DocumentContext, intl: Intl) => {
+  const website = process.env.UMAMI_WEBSITE_ID;
+  if (!website) {
+    return;
+  }
+
   const { host, referrer } = ctx.req.headers;
   const data = {
     type: 'event',
     payload: {
-      website: process.env.UMAMI_WEBSITE_ID,
+      website,
       url: ctx.asPath,
       hostname: host.split(':')[0],
       language: intl.lang,
