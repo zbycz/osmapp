@@ -7,7 +7,7 @@ export const overpassLayers: LayerSpecification[] = [
     source: 'overpass',
     paint: {
       'line-color': '#f8f4f0',
-      'line-width': 6,
+      'line-width': 4,
     },
   } as LayerSpecification,
   {
@@ -16,7 +16,7 @@ export const overpassLayers: LayerSpecification[] = [
     source: 'overpass',
     paint: {
       'line-color': '#f00',
-      'line-width': 2,
+      'line-width': 1.5,
       'line-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
@@ -29,8 +29,9 @@ export const overpassLayers: LayerSpecification[] = [
     id: 'overpass-line-text',
     type: 'symbol',
     source: 'overpass',
+    filter: ['all', ['in', '$type', 'LineString']],
     layout: {
-      'symbol-placement': 'line',
+      'symbol-placement': 'line-center',
       'text-font': ['Noto Sans Regular'],
       'text-field': '{name}',
       'text-size': 12,
@@ -48,18 +49,43 @@ export const overpassLayers: LayerSpecification[] = [
       ],
     },
   } as LayerSpecification,
+  // -- commented out until this is fixed https://github.com/zbycz/osmapp/issues/739
+  // {
+  //   id: 'overpass-fill',
+  //   type: 'fill',
+  //   source: 'overpass',
+  //   filter: ['all', ['==', '$type', 'Polygon']],
+  //   paint: {
+  //     'fill-color': '#f00',
+  //     'fill-opacity': [
+  //       'case',
+  //       ['boolean', ['feature-state', 'hover'], false],
+  //       0.2,
+  //       0.5,
+  //     ],
+  //   },
+  // } as LayerSpecification,
   {
-    id: 'overpass-fill',
-    type: 'fill',
+    id: 'overpass-polygon-text',
+    type: 'symbol',
     source: 'overpass',
-    filter: ['all', ['==', '$type', 'Polygon']],
+    filter: ['all', ['in', '$type', 'Polygon']],
+    layout: {
+      'symbol-placement': 'point',
+      'text-font': ['Noto Sans Regular'],
+      'text-field': '{name}',
+      'text-size': 12,
+      'text-rotation-alignment': 'map',
+    },
     paint: {
-      'fill-color': '#f00',
-      'fill-opacity': [
+      'text-color': '#000000',
+      'text-halo-width': 1.5,
+      'text-halo-color': 'rgba(255,255,255,0.7)',
+      'text-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
-        0.2,
         0.5,
+        1,
       ],
     },
   } as LayerSpecification,
