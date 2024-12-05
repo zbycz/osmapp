@@ -29,11 +29,17 @@ const EditDialogInner = () => {
 
   return (
     <StyledDialog
-      maxWidth="md"
+      PaperProps={{
+        sx: {
+          height: '100%',
+        },
+      }}
+      maxWidth="xl"
       fullScreen={fullScreen}
       open={opened}
       onClose={onClose}
       aria-labelledby="edit-dialog-title"
+      sx={{ height: '100%' }}
     >
       <EditDialogTitle />
       {successInfo ? <SuccessContent /> : <EditContent />}
