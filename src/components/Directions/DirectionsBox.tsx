@@ -8,7 +8,7 @@ import { DirectionsForm } from './DirectionsForm';
 import { result } from 'lodash';
 import { useDirectionsContext } from './DirectionsContext';
 
-const Wrapper = styled(Stack)<{ $isMobileMode: boolean }>`
+const Wrapper = styled(Stack)`
   position: absolute;
   top: 8px;
   left: 8px;
@@ -37,7 +37,7 @@ export const DirectionsBox = () => {
   );
 
   return (
-    <Wrapper spacing={1} $isMobileMode={isMobileMode}>
+    <Wrapper spacing={1}>
       <DirectionsForm setResult={setResultAndHide} hideForm={hideForm} />
       {result && <Result revealForm={!revealed && revealForm} />}
     </Wrapper>

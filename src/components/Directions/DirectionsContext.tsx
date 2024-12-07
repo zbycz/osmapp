@@ -2,8 +2,6 @@ import React, { createContext, useContext, useState } from 'react';
 import { Profile, RoutingResult } from './routing/types';
 import { Option } from '../SearchBox/types';
 
-type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
-
 type DirectionsContextType = {
   loading: boolean;
   setLoading: (loading: boolean) => void;
@@ -15,6 +13,8 @@ type DirectionsContextType = {
   setTo: (to: Option) => void;
   result: RoutingResult;
   setResult: (result: RoutingResult) => void;
+  points: Array<Option>;
+  setPoints: (points: Array<Option>) => void;
 };
 
 export const DirectionsContext =
@@ -26,6 +26,7 @@ export const DirectionsProvider: React.FC = ({ children }) => {
   const [from, setFrom] = useState<Option>();
   const [to, setTo] = useState<Option>();
   const [result, setResult] = useState<RoutingResult>(null);
+  const [points, setPoints] = useState<Array<Option>>([]);
 
   const value: DirectionsContextType = {
     loading,
@@ -38,6 +39,8 @@ export const DirectionsProvider: React.FC = ({ children }) => {
     setTo,
     result,
     setResult,
+    points,
+    setPoints,
   };
   return (
     <DirectionsContext.Provider value={value}>
