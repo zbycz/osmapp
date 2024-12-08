@@ -7,13 +7,13 @@ export const ContributionInfoBox = () => {
   const { loggedIn } = useOsmAuthContext();
   return loggedIn ? (
     <Box mt={4} mb={4}>
-      <Typography variant="body1" color="textSecondary">
+      <Typography variant="body2" color="textSecondary">
         <Translation id="editdialog.info_edit" />
       </Typography>
     </Box>
   ) : (
     <Box mt={4} mb={4}>
-      <Typography variant="body1" color="textSecondary">
+      <Typography variant="body2" color="textSecondary">
         <Translation id="editdialog.info_note" />
       </Typography>
     </Box>

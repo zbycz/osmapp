@@ -8,6 +8,7 @@ export const CommentField = () => {
   return (
     <>
       <TextField
+        sx={{ mt: 6 }}
         label={t('editdialog.comment')}
         placeholder={t('editdialog.comment_placeholder')}
         InputLabelProps={{
@@ -20,9 +21,6 @@ export const CommentField = () => {
         value={comment}
         onChange={(e) => setComment(e.target.value)}
       />
-      <br />
-      <br />
-      <br />
     </>
   );
 };
