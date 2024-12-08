@@ -19,9 +19,7 @@ import { getShortId } from '../../../../services/helpers';
 import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
 
 export const EditContent = () => {
-  const { feature } = useEditDialogFeature();
-  const { items, addFeature } = useEditContext();
-  const [current, setCurrent] = React.useState(getShortId(feature.osmMeta));
+  const { items, addFeature, current, setCurrent } = useEditContext();
   const theme = useTheme();
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));

@@ -16,12 +16,12 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { fetchFeature } from '../../../../services/osmApi';
 import { OsmId } from '../../../../services/types';
-import { getApiId } from '../../../../services/helpers';
+import { getApiId, getShortId } from '../../../../services/helpers';
 import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
 import { useEditContext } from '../EditContext';
 
 export const MemberRow = ({ member }) => {
-  const { addFeature } = useEditContext();
+  const { addFeature, setCurrent } = useEditContext();
   const { label, shortId } = member;
 
   const handleClick = async () => {
@@ -29,6 +29,7 @@ export const MemberRow = ({ member }) => {
     await fetchSchemaTranslations();
     const feature = await fetchFeature(apiId);
     addFeature(feature);
+    setCurrent(getShortId(feature.osmMeta));
   };
 
   return (
