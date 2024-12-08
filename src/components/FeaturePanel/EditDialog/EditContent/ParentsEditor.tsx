@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContext';
 import {
   Accordion,
@@ -10,31 +10,31 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FeatureRow } from './FeatureRow';
-import { OsmId } from '../../../../services/types';
+import { fetchParentFeatures } from '../../../../services/osmApi';
 import { getApiId, getShortId } from '../../../../services/helpers';
 import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
-import { fetchFeature } from '../../../../services/osmApi';
 import { useEditContext } from '../EditContext';
+import { FeatureRow } from './FeatureRow';
+import { items } from '../../QuickActions/ShareDialog/items';
 import { t } from '../../../../services/intl';
 
-export const MembersEditor = () => {
-  const { members } = useFeatureEditData();
+export const ParentsEditor = () => {
+  const { shortId } = useFeatureEditData();
+  const [parents, setParents] = useState([]);
   const theme = useTheme();
-  const { addFeature, items, setCurrent } = useEditContext();
+  const { addFeature, setCurrent, items } = useEditContext();
 
-  if (!members || members.length === 0) return null;
+  useEffect(() => {
+    const fetchParents = async () => {
+      const data = await fetchParentFeatures(getApiId(shortId));
 
-  const handleClick = async (shortId) => {
-    const apiId: OsmId = getApiId(shortId);
-    await fetchSchemaTranslations();
-    const isNotInItems = !items.find((item) => item.shortId === shortId);
-    const feature = await fetchFeature(apiId);
-    if (isNotInItems) {
-      addFeature(feature);
-    }
-    setCurrent(getShortId(feature.osmMeta));
-  };
+      setParents(data);
+    };
+
+    fetchParents();
+  }, [shortId]);
+
+  if (!parents || parents.length === 0) return null;
 
   return (
     <Accordion disableGutters elevation={0} square>
@@ -45,7 +45,7 @@ export const MembersEditor = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center">
           <Typography variant="button">
-            {t('editdialog.members')} ({members.length})
+            {t('editdialog.parents')} ({parents.length})
           </Typography>
         </Stack>
       </AccordionSummary>
@@ -58,13 +58,23 @@ export const MembersEditor = () => {
             },
           }}
         >
-          {members.map((member) => {
+          {parents.map((parent) => {
+            const shortId = getShortId(parent.osmMeta);
             return (
               <FeatureRow
-                key={member.shortId}
-                shortId={member.shortId}
-                label={member.label}
-                onClick={() => handleClick(member.shortId)}
+                key={shortId}
+                shortId={shortId}
+                label={parent.tags.name}
+                onClick={() => {
+                  const isNotInItems = !items.find(
+                    (item) => item.shortId === shortId,
+                  );
+                  fetchSchemaTranslations();
+                  if (isNotInItems) {
+                    addFeature(parent);
+                  }
+                  setCurrent(shortId);
+                }}
               />
             );
           })}

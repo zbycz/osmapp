@@ -57,8 +57,8 @@ export const EditContent = () => {
             )}
             <div>
               <FeatureEditSection shortId={current} />
-              <ContributionInfoBox />
               <CommentField />
+              <ContributionInfoBox />
               <OsmUserLogged />
             </div>
           </Stack>

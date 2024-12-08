@@ -1,5 +1,15 @@
 import React from 'react';
-import { Checkbox, FormControlLabel, TextField } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Checkbox,
+  FormControlLabel,
+  List,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { useEditDialogFeature } from '../../utils';
 import { useEditContext } from '../../EditContext';
 import { DialogHeading } from '../../components';
@@ -8,6 +18,10 @@ import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { useToggleState } from '../../../../helpers';
 import { getIdEditorLink } from '../../../helpers/externalLinks';
 import { useFeatureEditData } from './SingleFeatureEditContext';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { getShortId } from '../../../../../services/helpers';
+import { FeatureRow } from '../FeatureRow';
+import { fetchSchemaTranslations } from '../../../../../services/tagging/translations';
 
 // TODO don't delete objects, but only remove their Preset tags https://github.com/zbycz/osmapp/issues/222
 export const PlaceCancelledToggle = () => {
@@ -73,14 +87,12 @@ export const OptionsEditor = () => {
   const { items } = useEditContext();
 
   return (
-    <>
-      {!isAddPlace && !isUndelete && (
-        <>
-          <DialogHeading>{t('editdialog.options_heading')}</DialogHeading>
-          <PlaceCancelledToggle />
-          {items.length >= 2 ? null : <ChangeLocationEditor />}
-        </>
-      )}
-    </>
+    !isAddPlace &&
+    !isUndelete && (
+      <>
+        <PlaceCancelledToggle />
+        {items.length >= 2 ? null : <ChangeLocationEditor />}
+      </>
+    )
   );
 };
