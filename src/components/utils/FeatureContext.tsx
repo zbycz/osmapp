@@ -81,6 +81,7 @@ export const FeatureProvider = ({
     preview,
     setPreview,
   };
+
   return (
     <FeatureContext.Provider value={value}>{children}</FeatureContext.Provider>
   );
