@@ -16,21 +16,20 @@ import { FeatureEditSection } from './FeatureEditSection/FeatureEditSection';
 import { useEditDialogFeature } from '../utils';
 import { useEditContext } from '../EditContext';
 import { getShortId } from '../../../../services/helpers';
+import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
 
 export const EditContent = () => {
   const { feature } = useEditDialogFeature();
-  const { items } = useEditContext();
+  const { items, addFeature } = useEditContext();
   const [current, setCurrent] = React.useState(getShortId(feature.osmMeta));
   const theme = useTheme();
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
-
   return (
     <>
       <DialogContent dividers>
         <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
           <OsmUserLoggedOut />
-
           <Stack direction={isSmallScreen ? 'column' : 'row'} gap={2}>
             {items.length > 1 && (
               <Tabs
