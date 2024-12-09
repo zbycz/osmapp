@@ -15,10 +15,11 @@ export const StyledPaper = styled(Paper)<{
   $height?: string;
   $overflow?: string;
 }>`
-  backdrop-filter: blur(10px);
-  background: ${({ theme }) =>
-    convertHexToRgba(theme.palette.background.paper, 0.9)};
-  padding: ${({ theme }) => theme.spacing(2)};
+  background-color: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.paper, 0.8)};
+  -webkit-backdrop-filter: blur(35px);
+  backdrop-filter: blur(35px);
+  padding: ${({ theme }) => theme.spacing(1.5)};
   height: ${({ $height }) => $height};
   overflow-y: ${({ $overflow }) => $overflow};
 `;
