@@ -8,6 +8,13 @@ export const addElementToIndex = <T>(
   return [...array.slice(0, index), newItem, ...array.slice(index)];
 };
 
+export const removeElementOnIndex = (array: Array<any>, index: number) => {
+  if (index < 0 || index >= array.length) {
+    return null;
+  }
+  return array.slice(0, index).concat(array.slice(index + 1));
+};
+
 export const moveElementToIndex = <T>(
   array: Array<T>,
   elementIndex: number,
