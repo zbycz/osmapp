@@ -1,4 +1,4 @@
-import { ToggleButton } from '@mui/material';
+import { Stack, ToggleButton } from '@mui/material';
 import DirectionsCarIcon from '@mui/icons-material/DirectionsCar';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
@@ -36,7 +36,7 @@ export const ModeToggler = ({ value, setMode, onChange }: Props) => {
   };
 
   return (
-    <>
+    <Stack direction="row" spacing={1}>
       {icons.map(([profile, Icon]) => (
         <StyledToggleButton
           key={profile}
@@ -47,6 +47,6 @@ export const ModeToggler = ({ value, setMode, onChange }: Props) => {
           <Icon />
         </StyledToggleButton>
       ))}
-    </>
+    </Stack>
   );
 };
