@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
 
-export const HighlightedDropzoneHorizontal = styled.div<{ $isActive: boolean }>`
+export const HighlightedDropzoneVertical = styled.div<{ $isActive: boolean }>`
   position: absolute;
   height: 100%;
   margin-left: -2px;
@@ -12,7 +12,7 @@ export const HighlightedDropzoneHorizontal = styled.div<{ $isActive: boolean }>`
   z-index: 1000000;
 `;
 
-export const HighlightedDropzoneVertical = styled.div<{ $isActive: boolean }>`
+export const HighlightedDropzoneHorizontal = styled.div<{ $isActive: boolean }>`
   position: absolute;
   width: 100%;
   margin-top: -2px;
