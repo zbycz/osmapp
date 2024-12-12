@@ -14,6 +14,7 @@ import {
   InputAdornment,
   TextField,
   Tooltip,
+  useTheme,
 } from '@mui/material';
 import { useMapCenter } from '../SearchBox/utils';
 import { useUserThemeContext } from '../../helpers/theme';
@@ -30,8 +31,9 @@ import { AlphabeticalMarker } from './TextMarker';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { DotLoader, useIsClient } from '../helpers';
 import { useSnackbar } from '../utils/SnackbarContext';
-import { useGetOnSubmitFactory } from './useGetOnSubmit';
+import { useGetOnSubmitFactory, useUpdatePoint } from './useGetOnSubmit';
 import { useDirectionsContext } from './DirectionsContext';
+import { removeElementOnIndex } from '../FeaturePanel/Climbing/utils/array';
 const DotLoaderContainer = styled.div`
   font-size: 16px;
   right: 6px;
@@ -60,6 +62,7 @@ const DirectionsInput = ({
   const { InputLabelProps, InputProps, ...restParams } = params;
   const isClient = useIsClient();
   const { showToast } = useSnackbar();
+  const theme = useTheme();
 
   useEffect(() => {
     // @ts-ignore
@@ -171,15 +174,16 @@ const Row = styled.div`
 `;
 
 const useInputMapClickOverride = (
-  setValue: (value: Option) => void,
+  pointIndex: number,
   setInputValue: (value: string) => void,
   selectedOptionInputValue: React.MutableRefObject<string | null>,
 ) => {
   const { mapClickOverrideRef } = useMapStateContext();
   const previousBehaviourRef = useRef<MapClickOverride>();
+  const updatePoint = useUpdatePoint();
 
   const mapClickCallback = (coords: LonLat, label: string) => {
-    setValue(getCoordsOption(coords, label));
+    updatePoint(pointIndex, getCoordsOption(coords, label));
     setInputValue(label);
     selectedOptionInputValue.current = label;
 
@@ -203,16 +207,10 @@ const useInputMapClickOverride = (
 type Props = {
   label: string;
   value: Option;
-  setValue: (value: Option) => void;
   pointIndex: number;
 };
 
-export const DirectionsAutocomplete = ({
-  label,
-  value,
-  setValue,
-  pointIndex,
-}: Props) => {
+export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
   const selectedOptionInputValue = useRef<string | null>(null);
@@ -220,6 +218,7 @@ export const DirectionsAutocomplete = ({
   const { currentTheme } = useUserThemeContext();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
+  const updatePoint = useUpdatePoint();
 
   const ALPHABETICAL_MARKER = useMemo(() => {
     let svgElement;
@@ -239,7 +238,9 @@ export const DirectionsAutocomplete = ({
   }, [pointIndex]);
 
   const markerRef = useRef<maplibregl.Marker>();
-  const { from, to, mode, setResult, setLoading } = useDirectionsContext();
+  const { points, mode, setResult, setLoading, setPoints } =
+    useDirectionsContext();
+  const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
 
   useEffect(() => {
     const map = getGlobalMap();
@@ -254,20 +255,15 @@ export const DirectionsAutocomplete = ({
   }, [ALPHABETICAL_MARKER, value]);
 
   const handleUpdate = (coordsOption: Option) => {
-    if (pointIndex === 0) {
-      submitFactory(coordsOption, to, mode);
-    }
-    if (pointIndex === 1) {
-      submitFactory(from, coordsOption, mode);
-    }
+    const newPoints = updatePoint(pointIndex, coordsOption);
+    submitFactory(newPoints, mode);
   };
 
-  const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
   const onDragEnd = () => {
     const lngLat = markerRef.current?.getLngLat();
     if (lngLat) {
       const coordsOption = getCoordsOption([lngLat.lng, lngLat.lat]);
-      setValue(coordsOption);
+      updatePoint(pointIndex, coordsOption);
       handleUpdate(coordsOption);
     }
   };
@@ -279,13 +275,14 @@ export const DirectionsAutocomplete = ({
   const onChange = (_: unknown, option: Option) => {
     console.log('selected', option); // eslint-disable-line no-console
     setInputValue(getOptionLabel(option));
-    setValue(option);
+    updatePoint(pointIndex, option);
+
     selectedOptionInputValue.current = getOptionLabel(option);
     handleUpdate(option);
   };
 
   const { onInputFocus, onInputBlur } = useInputMapClickOverride(
-    setValue,
+    pointIndex,
     setInputValue,
     selectedOptionInputValue,
   );
@@ -296,8 +293,8 @@ export const DirectionsAutocomplete = ({
     if (selectedOptionInputValue.current !== inputValue) {
       if (options.length > 0 && inputValue) {
         onChange(null, options[0]);
-      } else {
-        setValue(null);
+      } else if (points) {
+        setPoints(removeElementOnIndex(points, pointIndex));
       }
     }
   };
@@ -321,6 +318,7 @@ export const DirectionsAutocomplete = ({
         getOptionKey={(option) => JSON.stringify(option)}
         onChange={onChange}
         autoComplete
+        noOptionsText=""
         disableClearable
         autoHighlight
         clearOnEscape

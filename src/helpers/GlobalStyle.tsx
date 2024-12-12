@@ -145,6 +145,10 @@ const globalStyle = (theme: Theme) => css`
   .hidden-compass .maplibregl-ctrl:has(> .maplibregl-ctrl-compass) {
     display: none;
   }
+
+  .MuiAutocomplete-noOptions {
+    padding: 0;
+  }
 `;
 
 // CAREFUL: Emotion doesn't apply Dark style in dev mode

@@ -151,6 +151,7 @@ export const ClimbingRouteTableRow = forwardRef<
     const isMobileMode = useMobileMode();
 
     if (!feature) return null;
+
     const shortOsmId = getShortId(feature.osmMeta);
     const routeDifficulties = getDifficulties(feature.tags);
     const photoPathsCount = getWikimediaCommonsPhotoPathKeys(
