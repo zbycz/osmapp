@@ -11,6 +11,7 @@ import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { Feature } from '../../../services/types';
 import { isRouteMaster } from '../../../utils';
 import { t } from '../../../services/intl';
+import { getDividedFeaturesBySections } from '../Climbing/utils/getDividedFeaturesBySections';
 
 const getHeading = (feature: Feature) => {
   if (feature.tags.climbing === 'crag') {
@@ -58,27 +59,35 @@ export const MemberFeatures = () => {
     return null;
   }
 
-  const isClimbingCrag = tags.climbing === 'crag';
+  const dividedFeaturesBySections =
+    getDividedFeaturesBySections(memberFeatures);
+  const climbingRoutesFeatures = dividedFeaturesBySections.routes;
+  const otherFeatures = dividedFeaturesBySections.other;
 
   return (
     <Box mb={1}>
       <PanelLabel addition={<PanelAddition />}>
         {getHeading(feature)} ({memberFeatures.length})
       </PanelLabel>
-      <Ul>
-        {memberFeatures.map((item, index) =>
-          isClimbingCrag ? (
+      {climbingRoutesFeatures.length > 0 && (
+        <Ul>
+          {climbingRoutesFeatures.map((item, index) => (
             <ClimbingItem
               key={getOsmappLink(item)}
               feature={item}
               index={index}
               cragFeature={feature}
             />
-          ) : (
+          ))}
+        </Ul>
+      )}
+      {otherFeatures.length > 0 && (
+        <Ul>
+          {otherFeatures.map((item) => (
             <Item key={getOsmappLink(item)} feature={item} />
-          ),
-        )}
-      </Ul>
+          ))}
+        </Ul>
+      )}
     </Box>
   );
 };
