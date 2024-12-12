@@ -152,10 +152,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
 export const CragsInArea = () => {
   const { feature } = useFeatureContext();
 
-  if (!feature.memberFeatures?.length) {
-    return null;
-  }
-  if (feature.tags.climbing !== 'area') {
+  if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
     return null;
   }
 
