@@ -1,9 +1,9 @@
 import { Option } from '../SearchBox/types';
 import { RoutingResult } from './routing/types';
 import { CloseButton } from './helpers';
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { StyledPaper } from './Result';
-import { Stack } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { ModeToggler } from './ModeToggler';
 import { DirectionsAutocomplete } from './DirectionsAutocomplete';
 import { t } from '../../services/intl';
@@ -12,7 +12,11 @@ import SearchIcon from '@mui/icons-material/Search';
 import { getCoordsOption } from '../SearchBox/options/coords';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useDirectionsContext } from './DirectionsContext';
-import { useGetOnSubmitFactory, useReactToUrl } from './useGetOnSubmit';
+import {
+  useGetOnSubmitFactory,
+  useReactToUrl,
+  useUpdatePoint,
+} from './useGetOnSubmit';
 
 type Props = {
   setResult: (result: RoutingResult) => void;
@@ -20,38 +24,93 @@ type Props = {
 };
 
 const useGlobalMapClickOverride = (
-  from: Option,
-  setFrom: (value: Option) => void,
-  setTo: (value: Option) => void,
+  points: Array<Option>,
+  setPoints: (points: Array<Option>) => void,
 ) => {
-  const { setResult, setLoading, to, mode } = useDirectionsContext();
+  const { setResult, setLoading, mode } = useDirectionsContext();
   const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
+  const updatePoint = useUpdatePoint();
 
   const { mapClickOverrideRef } = useMapStateContext();
   useEffect(() => {
     mapClickOverrideRef.current = (coords, label) => {
-      const coordinates = getCoordsOption(coords, label);
-      if (!from) {
-        submitFactory(coordinates, to, mode);
-        setFrom(coordinates);
-      } else {
-        submitFactory(from, coordinates, mode);
-        setTo(coordinates);
+      if (points) {
+        const coordinates = getCoordsOption(coords, label);
+        if (!points[0]) {
+          const newPoints = updatePoint(0, coordinates);
+          submitFactory(newPoints, mode);
+        } else {
+          const newPoints = updatePoint(1, coordinates);
+          submitFactory(newPoints, mode);
+        }
       }
     };
 
     return () => {
       mapClickOverrideRef.current = undefined;
     };
-  }, [from, mapClickOverrideRef, mode, setFrom, setTo, submitFactory, to]);
+  }, [
+    mapClickOverrideRef,
+    mode,
+    points,
+    setPoints,
+    submitFactory,
+    updatePoint,
+  ]);
+};
+
+type InputItem = {
+  value: Option;
+  pointIndex: number;
+  label: string;
 };
 
 export const DirectionsForm = ({ setResult, hideForm }: Props) => {
-  const { loading, setLoading, mode, setMode, from, setFrom, to, setTo } =
+  const defaultFrom = {
+    value: null,
+    pointIndex: 0,
+    label: t('directions.form.start_or_click'),
+  };
+
+  const defaultTo = useMemo(
+    () => ({
+      value: null,
+      pointIndex: 1,
+      label: t('directions.form.destination'),
+    }),
+    [],
+  );
+
+  const { loading, setLoading, mode, setMode, points, setPoints } =
     useDirectionsContext();
 
-  useGlobalMapClickOverride(from, setFrom, setTo);
-  useReactToUrl(setMode, setFrom, setTo, setResult);
+  const [inputs, setInputs] = useState<Array<InputItem>>([
+    defaultFrom,
+    defaultTo,
+  ]);
+
+  useEffect(() => {
+    const newPoints =
+      points?.map((point, index) => ({
+        value: point,
+        pointIndex: index,
+        label: t(
+          index === 0
+            ? 'directions.form.start_or_click'
+            : 'directions.form.destination',
+        ),
+      })) ?? [];
+
+    if (points?.length === 1) {
+      setInputs([...newPoints, defaultTo]);
+    }
+    if (points?.length >= 2) {
+      setInputs(newPoints);
+    }
+  }, [defaultTo, points]);
+
+  useGlobalMapClickOverride(points, setPoints);
+  useReactToUrl(setMode, setPoints, setResult);
 
   const onSubmitFactory = useGetOnSubmitFactory(setResult, setLoading);
 
@@ -61,31 +120,36 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
 
   return (
     <StyledPaper elevation={3}>
-      <Stack direction="row" spacing={1} mb={2} alignItems="center">
+      <Stack
+        direction="row"
+        spacing={1}
+        mb={2}
+        alignItems="center"
+        justifyContent="space-between"
+      >
         <ModeToggler
           value={mode}
           setMode={setMode}
-          onChange={(newMode) => onSubmitFactory(from, to, newMode)}
+          onChange={(newMode) => onSubmitFactory(points, newMode)}
         />
-        <div style={{ flex: 1 }} />
-        <div>
-          <CloseButton />
-        </div>
+        <CloseButton />
       </Stack>
 
       <Stack spacing={1} mb={3}>
-        <DirectionsAutocomplete
-          value={from}
-          setValue={setFrom}
-          label={t('directions.form.start_or_click')}
-          pointIndex={0}
-        />
-        <DirectionsAutocomplete
-          value={to}
-          setValue={setTo}
-          label={t('directions.form.destination')}
-          pointIndex={1}
-        />
+        {inputs.map((item, index) => {
+          const { value, label, pointIndex } = item;
+          return (
+            <Box sx={{ position: 'relative' }} key={`input-${pointIndex}`}>
+              <Stack direction="row" alignItems="center">
+                <DirectionsAutocomplete
+                  value={value}
+                  label={label}
+                  pointIndex={index}
+                />
+              </Stack>
+            </Box>
+          );
+        })}
       </Stack>
 
       <LoadingButton
@@ -94,7 +158,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         variant="contained"
         fullWidth
         startIcon={<SearchIcon />}
-        onClick={() => onSubmitFactory(from, to, mode)}
+        onClick={() => onSubmitFactory(points, mode)}
       >
         {t('directions.get_directions')}
       </LoadingButton>

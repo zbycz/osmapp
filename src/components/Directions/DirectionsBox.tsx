@@ -15,9 +15,10 @@ const Wrapper = styled(Stack)<{ $isMobileMode: boolean }>`
   right: 8px;
   z-index: 1001; // over the LayerSwitcherButton
   max-height: calc(100vh - 16px);
+  box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
 
   @media ${isTabletResolution} {
-    max-width: 340px;
+    max-width: 394px;
   }
 `;
 

@@ -8,7 +8,6 @@ import { Option } from './types';
 import { Theme } from '../../helpers/theme';
 import { LonLat } from '../../services/types';
 import { renderOsm } from './options/openstreetmap';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
 
 const renderOption = (
   inputValue: string,
