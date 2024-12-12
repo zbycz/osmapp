@@ -263,7 +263,6 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
     const lngLat = markerRef.current?.getLngLat();
     if (lngLat) {
       const coordsOption = getCoordsOption([lngLat.lng, lngLat.lat]);
-      updatePoint(pointIndex, coordsOption);
       handleUpdate(coordsOption);
     }
   };
@@ -275,8 +274,6 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const onChange = (_: unknown, option: Option) => {
     console.log('selected', option); // eslint-disable-line no-console
     setInputValue(getOptionLabel(option));
-    updatePoint(pointIndex, option);
-
     selectedOptionInputValue.current = getOptionLabel(option);
     handleUpdate(option);
   };

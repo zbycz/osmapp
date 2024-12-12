@@ -3,7 +3,7 @@ import { RoutingResult } from './routing/types';
 import { CloseButton } from './helpers';
 import React, { useEffect, useMemo, useState } from 'react';
 import { StyledPaper } from './Result';
-import { Box, Stack } from '@mui/material';
+import { Box, Button, Stack } from '@mui/material';
 import { ModeToggler } from './ModeToggler';
 import { DirectionsAutocomplete } from './DirectionsAutocomplete';
 import { t } from '../../services/intl';
@@ -12,6 +12,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { getCoordsOption } from '../SearchBox/options/coords';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useDirectionsContext } from './DirectionsContext';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import {
   useGetOnSubmitFactory,
   useReactToUrl,
@@ -29,6 +30,7 @@ type Props = {
 const useGlobalMapClickOverride = (
   points: Array<Option>,
   setPoints: (points: Array<Option>) => void,
+  inputs: Array<InputItem>,
 ) => {
   const { setResult, setLoading, mode } = useDirectionsContext();
   const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
@@ -43,7 +45,7 @@ const useGlobalMapClickOverride = (
           const newPoints = updatePoint(0, coordinates);
           submitFactory(newPoints, mode);
         } else {
-          const newPoints = updatePoint(1, coordinates);
+          const newPoints = updatePoint(inputs.length - 1, coordinates);
           submitFactory(newPoints, mode);
         }
       }
@@ -53,6 +55,7 @@ const useGlobalMapClickOverride = (
       mapClickOverrideRef.current = undefined;
     };
   }, [
+    inputs.length,
     mapClickOverrideRef,
     mode,
     points,
@@ -97,7 +100,6 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
     handleDragOver,
     handleDragEnd,
     HighlightedDropzone,
-    ItemContainer,
     draggedItem,
     draggedOverIndex,
   } = useDragItems<InputItem>({
@@ -126,10 +128,15 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
     }
   }, [defaultTo, points]);
 
-  useGlobalMapClickOverride(points, setPoints);
+  useGlobalMapClickOverride(points, setPoints, inputs);
   useReactToUrl(setMode, setPoints, setResult);
 
   const onSubmitFactory = useGetOnSubmitFactory(setResult, setLoading);
+
+  const handleAddDestination = () => {
+    const newInputs = [...inputs, { ...defaultTo }];
+    setInputs(newInputs);
+  };
 
   if (hideForm) {
     return null;
@@ -190,6 +197,16 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
             </Box>
           );
         })}
+        <div>
+          <Button
+            variant="text"
+            startIcon={<ControlPointIcon />}
+            onClick={handleAddDestination}
+            size="small"
+          >
+            {t('directions.add_destination')}
+          </Button>
+        </div>
       </Stack>
 
       <LoadingButton

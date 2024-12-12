@@ -45,9 +45,9 @@ export const useReactToUrl = (
 
   useEffect(() => {
     const [, mode, ...points] = urlParts as [string, Profile, ...string[]];
-    const options = parseUrlParts(points);
+    const options = parseUrlParts(points.flatMap((str) => str.split('/')));
 
-    if (mode && options.length === 2) {
+    if (mode && options.length >= 2) {
       setMode(mode);
       setPoints(options);
       handleRouting(mode, options.map(getOptionToLonLat))
@@ -89,6 +89,7 @@ export const useGetOnSubmitFactory = (
       return;
     }
     const url = buildUrl(mode, points);
+
     if (url === Router.asPath) {
       setLoading(true);
       handleRouting(mode, points.map(getOptionToLonLat))

@@ -26,8 +26,8 @@ const getOptionToUrl = (point: Option) => {
 };
 
 export const buildUrl = (mode: 'car' | 'bike' | 'walk', points: Option[]) => {
-  const urlParts = points.map(getOptionToUrl);
-  return encodeUrl`/directions/${mode}/${urlParts[0]}/${urlParts[1]}`;
+  const urlParts = points.map(getOptionToUrl).join('/');
+  return encodeUrl`/directions/${mode}/${urlParts}`;
 };
 
 const urlCoordsToLonLat = (coords: string): LonLat =>
