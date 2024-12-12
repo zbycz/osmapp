@@ -17,6 +17,9 @@ import {
   useReactToUrl,
   useUpdatePoint,
 } from './useGetOnSubmit';
+import { moveElementToIndex } from '../FeaturePanel/Climbing/utils/array';
+import { useDragItems } from '../utils/useDragItems';
+import { DragHandler } from '../utils/DragHandler';
 
 type Props = {
   setResult: (result: RoutingResult) => void;
@@ -89,6 +92,20 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
     defaultTo,
   ]);
 
+  const {
+    handleDragStart,
+    handleDragOver,
+    handleDragEnd,
+    HighlightedDropzone,
+    ItemContainer,
+    draggedItem,
+    draggedOverIndex,
+  } = useDragItems<InputItem>({
+    initialItems: inputs,
+    moveItems: () => {},
+    direction: 'horizontal',
+  });
+
   useEffect(() => {
     const newPoints =
       points?.map((point, index) => ({
@@ -141,12 +158,35 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
           return (
             <Box sx={{ position: 'relative' }} key={`input-${pointIndex}`}>
               <Stack direction="row" alignItems="center">
+                <DragHandler
+                  onDragStart={(e) => {
+                    handleDragStart(e, {
+                      id: index,
+                      content: item,
+                    });
+                  }}
+                  onDragOver={(e) => {
+                    handleDragOver(e, index);
+                  }}
+                  onDragEnd={(e) => {
+                    handleDragEnd(e);
+
+                    const newArray = moveElementToIndex(
+                      inputs,
+                      draggedItem.id,
+                      draggedOverIndex,
+                    );
+
+                    setInputs(newArray);
+                  }}
+                />
                 <DirectionsAutocomplete
                   value={value}
                   label={label}
                   pointIndex={index}
                 />
               </Stack>
+              <HighlightedDropzone index={index} />
             </Box>
           );
         })}

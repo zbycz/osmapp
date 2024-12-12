@@ -4,6 +4,7 @@ import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
 import { useDragItems } from '../../../utils/useDragItems';
+import { DragHandler } from '../../../utils/DragHandler';
 
 type Item = {
   id: number;
@@ -45,14 +46,7 @@ const RowWithDragHandler = styled.div<{
   border-top: dotted 1px ${({ theme }) => theme.palette.divider};
   z-index: ${({ isSelected }) => (isSelected ? '2' : 'auto')};
 `;
-const DragHandler = styled.div`
-  width: 30px;
-  padding-top: 16px;
-  cursor: move;
-  align-items: center;
-  display: flex;
-  color: #888;
-`;
+
 const RowContent = styled.div`
   width: 100%;
   height: 100%;
@@ -174,12 +168,9 @@ export const RouteListDndContent = ({ isEditable }) => {
               <MaxWidthContainer>
                 {showDebugMenu && isEditMode && isEditable && (
                   <DragHandler
-                    draggable
                     onDragStart={(e) => handleControlDragStart(e, item)}
                     onDragEnd={handleControlDragEnd}
-                  >
-                    <DragIndicatorIcon />
-                  </DragHandler>
+                  />
                 )}
                 <RowContent>
                   <RenderListRow
