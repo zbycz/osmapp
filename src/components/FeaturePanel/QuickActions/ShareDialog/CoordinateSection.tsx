@@ -6,6 +6,7 @@ import { ActionButtons } from './ActionButtons';
 import styled from '@emotion/styled';
 import { t } from '../../../../services/intl';
 import { useMobileMode } from '../../../helpers';
+import { encode } from 'open-location-code';
 
 const useCoords = () => {
   const { feature } = useFeatureContext();
@@ -14,6 +15,7 @@ const useCoords = () => {
   return {
     deg: positionToDeg(center),
     dm: positionToDM(center),
+    olc: encode(center[1], center[0]),
   };
 };
 
@@ -23,7 +25,7 @@ const StyledSelect = styled(Select<string>)`
 `;
 
 export const CoordinateSection = () => {
-  const { deg, dm } = useCoords();
+  const { deg, dm, olc } = useCoords();
   const [selected, setSelected] = React.useState(deg);
 
   const onChange = ({ target }) => {
@@ -48,6 +50,7 @@ export const CoordinateSection = () => {
         >
           <MenuItem value={deg}>{deg}</MenuItem>
           <MenuItem value={dm}>{dm}</MenuItem>
+          <MenuItem value={olc}>{olc}</MenuItem>
         </StyledSelect>
         <ActionButtons payload={selected} type="text" />
       </Stack>
