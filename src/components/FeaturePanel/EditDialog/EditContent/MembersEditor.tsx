@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContext';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   List,
   Stack,
+  TextField,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -17,8 +19,11 @@ import { fetchSchemaTranslations } from '../../../../services/tagging/translatio
 import { fetchFeature } from '../../../../services/osmApi';
 import { useEditContext } from '../EditContext';
 import { t } from '../../../../services/intl';
+import { AutocompleteInput } from '../../../SearchBox/AutocompleteInput';
 
 export const MembersEditor = () => {
+  const [showMemberInput, setShowMemberInput] = React.useState(false);
+  const [newMember, setNewMember] = React.useState(null);
   const { members } = useFeatureEditData();
   const theme = useTheme();
   const { addFeature, items, setCurrent } = useEditContext();
@@ -34,6 +39,11 @@ export const MembersEditor = () => {
       addFeature(feature);
     }
     setCurrent(getShortId(feature.osmMeta));
+  };
+
+  const handleAddMember = (e: any) => {
+    const newGrade = e.target.value;
+    console.log('___', items);
   };
 
   return (
@@ -68,6 +78,22 @@ export const MembersEditor = () => {
               />
             );
           })}
+
+          {showMemberInput && (
+            <TextField
+              value={newMember}
+              size="small"
+              label="short id"
+              onChange={handleAddMember}
+            />
+          )}
+
+          <Button
+            onClick={() => setShowMemberInput(!showMemberInput)}
+            variant="text"
+          >
+            Add
+          </Button>
         </List>
       </AccordionDetails>
     </Accordion>
