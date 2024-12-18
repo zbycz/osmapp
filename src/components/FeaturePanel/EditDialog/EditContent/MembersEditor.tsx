@@ -13,6 +13,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FeatureRow } from './FeatureRow';
 import { t } from '../../../../services/intl';
 import { useGetHandleClick } from './helpers';
+import { AddMemberForm } from './AddMemberForm';
 
 export const MembersEditor = () => {
   const { members } = useFeatureEditData();
@@ -53,6 +54,8 @@ export const MembersEditor = () => {
               />
             );
           })}
+
+          <AddMemberForm />
         </List>
       </AccordionDetails>
     </Accordion>
