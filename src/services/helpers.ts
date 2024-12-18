@@ -8,6 +8,7 @@ import { getIdFromShortener, getShortenerSlug } from './shortener';
 
 type Xml2JsOsmItem = {
   tag: { $: { k: string; v: string } }[];
+  member?: { $: { type: string; ref: string; role: string } }[];
   $: {
     id: string;
     visible: string;
