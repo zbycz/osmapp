@@ -53,13 +53,57 @@ const buildDataItem = (feature: Feature): DataItem => {
   };
 };
 
+const getName = (d: DataItem): string | undefined =>
+  d.tagsEntries.find(([k]) => k === 'name')?.[1];
+
+const someNameHasChanged = (prevData: DataItem[], newData: DataItem[]) => {
+  const prevNames = prevData.map((d) => getName(d));
+  const newNames = newData.map((d) => getName(d));
+  return prevNames.some((name, index) => name !== newNames[index]);
+};
+
+const updateAllMemberLabels = (newData: DataItem[], shortId: string) => {
+  // TODO this code is ugly, but we would have to remove the "one state"
+  const referencingParents = new Set<string>();
+  newData.forEach((dataItem) => {
+    dataItem.members?.forEach((member) => {
+      if (member.shortId === shortId) {
+        referencingParents.add(dataItem.shortId);
+      }
+    });
+  });
+
+  const currentItem = newData.find((dataItem) => dataItem.shortId === shortId);
+
+  return newData.map((dataItem) => {
+    if (referencingParents.has(dataItem.shortId)) {
+      const clone = JSON.parse(JSON.stringify(dataItem)) as DataItem;
+      const index = clone.members.findIndex(
+        (member) => member.shortId === shortId,
+      );
+      clone.members[index].label = getName(currentItem);
+      return clone;
+    } else {
+      return dataItem;
+    }
+  });
+};
+
 type SetDataItem = (updateFn: (prevValue: DataItem) => DataItem) => void;
 const setDataItemFactory =
   (setData: Setter<DataItem[]>, shortId: string): SetDataItem =>
   (updateFn) => {
-    setData((prev) =>
-      prev.map((item) => (item.shortId === shortId ? updateFn(item) : item)),
-    );
+    setData((prevData) => {
+      const newData = prevData.map((item) =>
+        item.shortId === shortId ? updateFn(item) : item,
+      );
+
+      if (someNameHasChanged(prevData, newData)) {
+        // only current item can change, but this check is cheap
+        return updateAllMemberLabels(newData, shortId);
+      }
+      return newData;
+    });
   };
 
 type SetTagsEntries = (updateFn: (prev: TagsEntries) => TagsEntries) => void;
@@ -120,6 +164,7 @@ export const useEditItems = (originalFeature: Feature) => {
           toggleToBeDeleted: toggleToBeDeletedFactory(setDataItem),
           setMembers,
         };
+        // TODO maybe keep reference to original EditDataItem if DataItem didnt change? #performance
       }),
     [data],
   );
