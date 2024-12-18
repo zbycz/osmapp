@@ -7,16 +7,18 @@ import { publishDbgObject } from '../../../utils';
 
 export type TagsEntries = [string, string][];
 
+export type Members = Array<{
+  shortId: string;
+  role: string;
+  label: string; // cached from other dataItems, or from originalFeature
+}>;
+
 // internal type stored in the state
 type DataItem = {
   shortId: string;
   tagsEntries: TagsEntries;
   toBeDeleted: boolean;
-  members: {
-    shortId: string;
-    role: string;
-    label: string; // cached from other dataItems, or from originalFeature
-  }[];
+  members: Members;
   version: number | undefined; // undefined for new item
   newNodeLonLat?: LonLat;
 };
@@ -26,7 +28,7 @@ export type EditDataItem = DataItem & {
   tags: FeatureTags;
   setTag: (k: string, v: string) => void;
   toggleToBeDeleted: () => void;
-  // TODO add  setMembers,
+  setMembers: SetMembers;
 };
 
 const buildDataItem = (feature: Feature): DataItem => {
@@ -69,6 +71,15 @@ const setTagsEntriesFactory =
       tagsEntries: updateFn(tagsEntries),
     }));
 
+type SetMembers = (updateFn: (prev: Members) => Members) => void;
+const setMembersFactory =
+  (setDataItem: SetDataItem, members: Members): SetMembers =>
+  (updateFn) =>
+    setDataItem((prev) => ({
+      ...prev,
+      members: updateFn(members),
+    }));
+
 type SetTag = (k: string, v: string) => void;
 const setTagFactory =
   (setTagsEntries: SetTagsEntries): SetTag =>
@@ -97,15 +108,17 @@ export const useEditItems = (originalFeature: Feature) => {
   const items = useMemo<Array<EditDataItem>>(
     () =>
       data.map((dataItem) => {
-        const { shortId, tagsEntries } = dataItem;
+        const { shortId, tagsEntries, members } = dataItem;
         const setDataItem = setDataItemFactory(setData, shortId);
         const setTagsEntries = setTagsEntriesFactory(setDataItem, tagsEntries);
+        const setMembers = setMembersFactory(setDataItem, members);
         return {
           ...dataItem,
           setTagsEntries,
           tags: Object.fromEntries(tagsEntries),
           setTag: setTagFactory(setTagsEntries),
           toggleToBeDeleted: toggleToBeDeletedFactory(setDataItem),
+          setMembers,
         };
       }),
     [data],
