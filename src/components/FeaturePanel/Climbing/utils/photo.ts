@@ -7,6 +7,8 @@ import { naturalSort } from './array';
 export const getWikimediaCommonsKey = (index: number) =>
   `wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`;
 
+export const addFilePrefix = (name: string) => `File:${name}`;
+
 export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 
 export const isWikimediaCommons = (tag: string) =>

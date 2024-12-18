@@ -8,7 +8,7 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { RouteList } from './RouteList/RouteList';
 import { ContentContainer } from './ContentContainer';
-import { Button, ButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, Typography } from '@mui/material';
 
 import { RouteDistribution } from './RouteDistribution';
 import React from 'react';
@@ -17,6 +17,9 @@ import { EditButton } from '../EditButton';
 import { EditDialog } from '../EditDialog/EditDialog';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { PanelLabel } from './PanelLabel';
+import { t } from '../../../services/intl';
 
 const CragMapDynamic = dynamic(() => import('./CragMap'), {
   ssr: false,
@@ -40,6 +43,7 @@ const ContentBelowRouteList = styled.div<{
 
 export const ClimbingViewContent = ({ isMapVisible }) => {
   const { showDebugMenu, routes } = useClimbingContext();
+  const { feature } = useFeatureContext();
   const cragViewLayout = useGetCragViewLayout();
   const { userSettings } = useUserSettingsContext();
   const splitPaneSize = userSettings['climbing.splitPaneSize'];
@@ -90,6 +94,17 @@ export const ClimbingViewContent = ({ isMapVisible }) => {
           )}
         </ContentContainer>
         <RouteDistribution />
+
+        {feature.tags.description ? (
+          <>
+            <PanelLabel>{t('climbingview.description')}</PanelLabel>
+
+            <Typography ml={4.5} mr={4.5}>
+              {feature.tags.description}
+            </Typography>
+          </>
+        ) : null}
+
         <EditButton />
         <EditDialog />
       </ContentBelowRouteList>
