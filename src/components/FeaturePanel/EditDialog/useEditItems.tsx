@@ -18,7 +18,7 @@ type DataItem = {
   shortId: string;
   tagsEntries: TagsEntries;
   toBeDeleted: boolean;
-  members: Members;
+  members: Members | undefined;
   version: number | undefined; // undefined for new item
   newNodeLonLat?: LonLat;
 };

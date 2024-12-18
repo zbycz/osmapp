@@ -19,7 +19,10 @@ import { join } from '../utils';
 import { clearFeatureCache } from './osmApi';
 import { isBrowser } from '../components/helpers';
 import { getLabel } from '../helpers/featureLabel';
-import { EditDataItem } from '../components/FeaturePanel/EditDialog/useEditItems';
+import {
+  EditDataItem,
+  Members,
+} from '../components/FeaturePanel/EditDialog/useEditItems';
 
 const PROD_CLIENT_ID = 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68';
 
@@ -216,16 +219,26 @@ const getXmlTags = (newTags: FeatureTags) =>
     .filter(([k, v]) => k && v)
     .map(([k, v]) => ({ $: { k, v } }));
 
+const getXmlMembers = (members: Members) =>
+  members?.map(({ shortId, role }) => {
+    const osmId = getApiId(shortId);
+    return {
+      $: { type: osmId.type, ref: `${osmId.id}`, role },
+    };
+  });
+
 const updateItemXml = async (
   item: Xml2JsSingleDoc,
   apiId: OsmId,
   changesetId: string,
   tags: FeatureTags,
   toBeDeleted: boolean,
+  members?: Members,
 ) => {
   item[apiId.type].$.changeset = changesetId;
   if (!toBeDeleted) {
     item[apiId.type].tag = getXmlTags(tags);
+    item[apiId.type].member = getXmlMembers(members);
   }
   return buildXmlString(item);
 };
@@ -344,6 +357,7 @@ const saveChange = async (
       changesetId,
       tags,
       toBeDeleted,
+      members,
     );
     await putOrDeleteItem(toBeDeleted, apiId, newItem);
     return apiId;
@@ -380,10 +394,12 @@ export const saveChanges = async (
     throw new Error('No changes submitted.');
   }
 
+  throw new Error('xxxxx WIP TODO');
   const changesetComment = getCommentMulti(original, comment, changes);
   const changesetXml = getChangesetXml({ changesetComment, feature: original });
   const changesetId = await putChangeset(changesetXml);
 
+  // TODO
   const ids = await Promise.all(
     changes.map((change) => saveChange(changesetId, change)),
   );
