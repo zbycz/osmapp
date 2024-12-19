@@ -15,8 +15,7 @@ export const getUrlForLangLinks = (ctx: DocumentContext) => {
     return '';
   }
 
-  const matches = fixedPath.match(/^\/(node|way|relation)\/\d+$/);
-  if (matches) {
+  if (fixedPath.match(/^\/(node|way|relation)\/\d+$/)) {
     return fixedPath;
   }
 
