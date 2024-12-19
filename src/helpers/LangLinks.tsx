@@ -8,6 +8,8 @@ export const getUrlForLangLinks = (ctx: DocumentContext) => {
   // 2) sometimes it adds query like ?nxtPall=node/11580044107
   // Related issue - even though it is closed: https://github.com/vercel/next.js/issues/36275
 
+  console.log('ctx.asPath', ctx.asPath);
+
   const fixedPath = ctx.asPath
     .replace(/^\/[a-z]{2}(\/|$)/, '$1')
     .replace(/\?nxtPall=.*$/, '');
