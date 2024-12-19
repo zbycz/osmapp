@@ -11,12 +11,12 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FeatureRow } from './FeatureRow';
-import { OsmId } from '../../../../services/types';
 import { getApiId, getShortId } from '../../../../services/helpers';
 import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
 import { fetchFeature } from '../../../../services/osmApi';
 import { useEditContext } from '../EditContext';
 import { t } from '../../../../services/intl';
+import { AddMemberForm } from './AddMemberForm';
 
 export const MembersEditor = () => {
   const { members } = useFeatureEditData();
@@ -25,8 +25,13 @@ export const MembersEditor = () => {
 
   if (!members || members.length === 0) return null;
 
-  const handleClick = async (shortId) => {
-    const apiId: OsmId = getApiId(shortId);
+  const handleClick = async (shortId: string) => {
+    const apiId = getApiId(shortId);
+    if (apiId.id < 0) {
+      setCurrent(getShortId(apiId));
+      return;
+    }
+
     await fetchSchemaTranslations();
     const isNotInItems = !items.find((item) => item.shortId === shortId);
     const feature = await fetchFeature(apiId);
@@ -68,6 +73,8 @@ export const MembersEditor = () => {
               />
             );
           })}
+
+          <AddMemberForm />
         </List>
       </AccordionDetails>
     </Accordion>
