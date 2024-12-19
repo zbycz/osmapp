@@ -14,13 +14,13 @@ export const getUrlForLangLinks = (ctx: DocumentContext) => {
     .replace(/\?nxtPall=.*$/, '')
     .replace(/^\/[a-z]{2}(\/|$)/, '$1');
   console.log('fixedPath2', fixedPath);
-  if (fixedPath === '/') {
+  if (fixedPath === '/' || fixedPath === '') {
     return '';
   }
 
-  const matches = fixedPath.match(/^\/(?:node|way|relation)\/\d+$/);
+  const matches = fixedPath.match(/^\/(node|way|relation)\/\d+$/);
   console.log('matches2', matches);
-  return matches ? `${matches[0]}` : false;
+  return matches ? fixedPath : false;
 };
 
 type Props = {
