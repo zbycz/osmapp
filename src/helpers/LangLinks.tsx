@@ -3,12 +3,13 @@ import React from 'react';
 import type { DocumentContext } from 'next/dist/shared/lib/utils';
 
 export const getUrlForLangLinks = (ctx: DocumentContext) => {
-  // NOTE: only on deployed vercel, the asPath sometimes contains the lang prefix, even though it shouldn't
-  // we print LangLinks only for basic node/way/relation pages
-  const matches = ctx.asPath.match(
-    /^\/(?:[a-z]{2})?(\/(?:node|way|relation)\/\d+)$/,
+  // NOTE: there is bug in vercel deployment – the asPath contains the lang prefix, even though it shouldn't
+  // Here we make sure the lang prefix is removed.
+  const rootOrFeatureDetail = ctx.asPath.match(
+    /^(?:\/[a-z]{2})?(\/|\/(?:node|way|relation)\/\d+)?$/,
   );
-  return matches ? matches[1] : false;
+
+  return rootOrFeatureDetail ? rootOrFeatureDetail[1] : false;
 };
 
 type Props = {
