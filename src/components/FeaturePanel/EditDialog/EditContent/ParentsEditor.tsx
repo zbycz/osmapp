@@ -26,8 +26,10 @@ export const ParentsEditor = () => {
 
   useEffect(() => {
     const fetchParents = async () => {
-      const data = await fetchParentFeatures(getApiId(shortId));
+      const apiId = getApiId(shortId);
+      if (apiId.id < 0) return;
 
+      const data = await fetchParentFeatures(apiId);
       setParents(data);
     };
 
