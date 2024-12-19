@@ -57,12 +57,12 @@ export const ParentLinkContent = () => {
       {hasMoreParents ? (
         <Arrow>
           {feature.parentFeatures?.map((parentFeature, i) => (
-            <>
+            <React.Fragment key={getReactKey(parentFeature)}>
               <Link href={getOsmappLink(parentFeature)} color="secondary">
                 {getLabel(parentFeature)}
               </Link>
               {feature.parentFeatures.length > i + 1 && <Comma>,</Comma>}
-            </>
+            </React.Fragment>
           ))}
         </Arrow>
       ) : (

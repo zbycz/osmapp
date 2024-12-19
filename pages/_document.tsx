@@ -18,9 +18,9 @@ import { InjectIntl, setIntl } from '../src/services/intl';
 import { FaviconsOsmapp } from '../src/helpers/FaviconsOsmapp';
 import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
 import { FaviconsOpenClimbing } from '../src/helpers/FaviconsOpenClimbing';
-import { LANGUAGES } from '../src/config.mjs';
 import styled from '@emotion/styled';
 import { logRequest } from '../src/server/logRequest';
+import { getUrlForLangLinks, LangLinks } from '../src/helpers/LangLinks';
 
 const Body = styled.body`
   @media (prefers-color-scheme: light) {
@@ -31,17 +31,18 @@ const Body = styled.body`
   }
 `;
 
-type Props = DocumentInitialProps &
-  DocumentProps &
+type InitialProps = DocumentInitialProps &
   DocumentHeadTagsProps & {
     serverIntl: Awaited<ReturnType<typeof getServerIntl>>;
-    asPath: string;
+    urlForLangLinks: string | false;
   };
+
+type Props = DocumentProps & InitialProps;
 
 export default class MyDocument extends Document<Props> {
   render() {
     const isOpenClimbing = PROJECT_ID === 'openclimbing';
-    const { serverIntl, asPath, emotionStyleTags } = this.props;
+    const { serverIntl, urlForLangLinks, emotionStyleTags } = this.props;
 
     return (
       <Html lang={serverIntl.lang}>
@@ -66,15 +67,7 @@ export default class MyDocument extends Document<Props> {
           <link rel="preconnect" href="https://commons.wikimedia.org" />
           <link rel="preconnect" href="https://www.wikidata.org" />
           <link rel="preconnect" href="https://en.wikipedia.org" />
-          {/* only for bots - we dont need to change this after SSR: */}
-          {Object.keys(LANGUAGES).map((lang) => (
-            <link
-              key={lang}
-              rel="alternate"
-              hrefLang={lang}
-              href={`/${lang}${asPath}`}
-            />
-          ))}
+          <LangLinks urlForLangLinks={urlForLangLinks} />
 
           {isOpenClimbing ? <FaviconsOpenClimbing /> : <FaviconsOsmapp />}
           {/* <style>{`body {background-color: #eb5757;}`/* for apple PWA translucent-black status bar *!/</style> */}
@@ -88,12 +81,6 @@ export default class MyDocument extends Document<Props> {
     );
   }
 }
-
-type InitialProps = DocumentInitialProps &
-  DocumentHeadTagsProps & {
-    serverIntl: Awaited<ReturnType<typeof getServerIntl>>;
-    asPath: string | undefined;
-  };
 
 MyDocument.getInitialProps = async (
   ctx: DocumentContext,
@@ -110,6 +97,6 @@ MyDocument.getInitialProps = async (
   return {
     ...initialProps,
     serverIntl,
-    asPath: ctx.asPath,
+    urlForLangLinks: getUrlForLangLinks(ctx),
   };
 };
