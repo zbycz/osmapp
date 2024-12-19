@@ -11,8 +11,8 @@ export const getUrlForLangLinks = (ctx: DocumentContext) => {
   console.log('ctx.asPath', ctx.asPath);
 
   const fixedPath = ctx.asPath
-    .replace(/^\/[a-z]{2}(\/|$)/, '$1')
-    .replace(/\?nxtPall=.*$/, '');
+    .replace(/\?nxtPall=.*$/, '')
+    .replace(/^\/[a-z]{2}(\/|$)/, '$1');
   console.log('fixedPath2', fixedPath);
   if (fixedPath === '/') {
     return '';
