@@ -3,13 +3,17 @@ import React from 'react';
 import type { DocumentContext } from 'next/dist/shared/lib/utils';
 
 export const getUrlForLangLinks = (ctx: DocumentContext) => {
-  // NOTE: there is bug in vercel deployment – the asPath contains the lang prefix, even though it shouldn't
+  // NOTE: there is bug in vercel deployments – the asPath contains the lang prefix, even though it shouldn't
   // Here we make sure the lang prefix is removed.
-  const rootOrFeatureDetail = ctx.asPath.match(
-    /^(?:\/[a-z]{2})?(\/|\/(?:node|way|relation)\/\d+)?$/,
-  );
+  // Related issue - even though it is closed: https://github.com/vercel/next.js/issues/36275
 
-  return rootOrFeatureDetail ? rootOrFeatureDetail[1] : false;
+  const fixedPath = ctx.asPath.replace(/^\/[a-z]{2}(\/|^)/, '$1');
+  if (fixedPath === '/') {
+    return '';
+  }
+
+  const matches = fixedPath.match(/^\/(?:node|way|relation)\/\d+$/);
+  return matches ? `${matches[0]}` : false;
 };
 
 type Props = {
@@ -17,7 +21,7 @@ type Props = {
 };
 
 export const LangLinks = ({ urlForLangLinks }: Props) =>
-  urlForLangLinks ? (
+  urlForLangLinks === false ? null : (
     <>
       {/* only for bots - we dont need to change this after SSR: */}
       {Object.keys(LANGUAGES).map((lang) => (
@@ -29,4 +33,4 @@ export const LangLinks = ({ urlForLangLinks }: Props) =>
         />
       ))}
     </>
-  ) : null;
+  );
