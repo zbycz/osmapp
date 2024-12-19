@@ -8,11 +8,13 @@ export const getUrlForLangLinks = (ctx: DocumentContext) => {
   // Related issue - even though it is closed: https://github.com/vercel/next.js/issues/36275
 
   const fixedPath = ctx.asPath.replace(/^\/[a-z]{2}(\/|^)/, '$1');
+  console.log('fixedPath', fixedPath);
   if (fixedPath === '/') {
     return '';
   }
 
   const matches = fixedPath.match(/^\/(?:node|way|relation)\/\d+$/);
+  console.log('matches', matches);
   return matches ? `${matches[0]}` : false;
 };
 
