@@ -10,12 +10,13 @@ export const getAST = (inputValue: string) => {
 export const queryWizardLabel = (ast: ASTNode): string => {
   switch (ast.type) {
     case 'comparison':
+      const { operator } = ast;
       if (!isSpecialComparisonValue(ast.value)) {
-        return `${ast.key}=${ast.value}`;
+        return `${ast.key}${operator}${ast.value}`;
       }
 
       if (ast.value.type === 'anything') {
-        return `${ast.key}=*`;
+        return `${ast.key}${operator}*`;
       }
       break;
     case 'expression':

@@ -1,4 +1,5 @@
 import { ASTNode, ASTNodeComparison, ASTNodeExpression } from './ast';
+import { isSpecialComparisonValue } from './isAst';
 
 const processNode = (node: ASTNode): string[][] => {
   switch (node.type) {
@@ -12,11 +13,14 @@ const processNode = (node: ASTNode): string[][] => {
 };
 
 const generateComparison = ({ key, value, operator }: ASTNodeComparison) => {
-  // Using switch to simplify adding more operators in the future
   switch (operator) {
     case '=':
       // Only { type=anything } isn't a string
       return typeof value === 'string' ? `["${key}"="${value}"]` : `["${key}"]`;
+    case '!=':
+      return typeof value === 'string'
+        ? `["${key}"!="${value}"]`
+        : `["${key}"!~".*"]`;
   }
 };
 

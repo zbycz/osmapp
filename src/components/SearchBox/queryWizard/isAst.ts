@@ -22,7 +22,7 @@ const isComparisonAstNode = (obj: any): obj is ASTNodeComparison => {
       type === 'comparison' &&
       typeof key === 'string' &&
       (typeof value === 'string' || isSpecialComparisonValue(value)) &&
-      operator === '='
+      (operator === '=' || operator === '!=')
     );
   } catch {
     return false;

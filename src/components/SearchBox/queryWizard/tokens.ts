@@ -2,11 +2,11 @@ export type Operator = 'and' | 'or';
 export type Token =
   | { type: 'string'; value: string }
   | { type: 'logical'; value: Operator }
-  | { type: 'operator'; value: '=' }
+  | { type: 'operator'; value: '=' | '!=' }
   | { type: 'bracket'; value: 'opening' | 'closing' }
   | { type: 'anything' };
 
-const tokenRegex = /\s+and\s+|\s+or\s+|\*|=|\(|\)|[\w:]+|"[^"]*"/g;
+const tokenRegex = /\s+and\s+|\s+or\s+|\*|!=|=|\(|\)|[\w:]+|"[^"]*"/g;
 
 const validateMatches = (matches: RegExpExecArray[], inputValue: string) => {
   const [lastMatchedIndex, onlyWhitespaceGaps] = matches.reduce<
@@ -46,6 +46,8 @@ export function tokenize(inputValue: string) {
       case 'or':
         return { type: 'logical', value };
       case '=':
+        return { type: 'operator', value };
+      case '!=':
         return { type: 'operator', value };
       case '*':
         return { type: 'anything' };

@@ -8,7 +8,7 @@ export type ASTNodeComparison = {
   type: 'comparison';
   key: string;
   value: SpecialValue | string;
-  operator: '=';
+  operator: '=' | '!=';
 };
 
 export type ASTNodeGroup = { type: 'group'; expression: ASTNode };
