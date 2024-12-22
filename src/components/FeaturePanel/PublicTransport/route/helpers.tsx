@@ -4,6 +4,7 @@ import { Stop } from './Stop';
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { useUserThemeContext } from '../../../../helpers/theme';
 import { getBgColor } from '../routes/LineNumber';
+import { Feature } from '../../../../services/types';
 
 const StationsListWrapper = styled.ul`
   list-style-type: none;
@@ -19,18 +20,19 @@ export const StationsList: React.FC = ({ children }) => {
 type ItemProps = {
   isFirst?: boolean;
   isLast?: boolean;
-  showCircle?: boolean;
+  stopFeature?: Feature;
 };
 
 export const StationItem: React.FC<ItemProps> = ({
   children,
+  stopFeature,
   isFirst = false,
   isLast = false,
-  showCircle = true,
 }) => {
-  const { feature } = useFeatureContext();
+  const { feature, setPreview } = useFeatureContext();
   const { currentTheme } = useUserThemeContext();
   const color = getBgColor(feature.tags.colour, currentTheme === 'dark');
+
   return (
     <li
       style={{
@@ -42,9 +44,11 @@ export const StationItem: React.FC<ItemProps> = ({
         color={color}
         isFirst={isFirst}
         isLast={isLast}
-        showCircle={showCircle}
+        showCircle={!!stopFeature}
       />
       <div
+        onMouseEnter={() => setPreview(stopFeature)}
+        onMouseLeave={() => setPreview(null)}
         style={{
           padding: '0.5rem 0',
         }}
