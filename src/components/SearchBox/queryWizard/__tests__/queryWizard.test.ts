@@ -14,6 +14,10 @@ describe('userInput -> query works', () => {
     expect(generateQuery(getAST('   diet:vegan=no '))).toBe(
       'nwr["diet:vegan"="no"]',
     );
+    expect(generateQuery(getAST('tourism!=hotel'))).toBe(
+      'nwr["tourism"!="hotel"]',
+    );
+    expect(generateQuery(getAST('cuisine!=*'))).toBe('nwr["cousine"!~".*"]');
   });
 
   it('should work for more complex queries', () => {
@@ -32,6 +36,10 @@ describe('userInput -> query works', () => {
         getAST('amenity=restaurant or amenity = cafe or historic=*'),
       ),
     ).toBe('nwr["amenity"="restaurant"];nwr["amenity"="cafe"];nwr["historic"]');
+
+    expect(generateQuery(getAST('tourism=* and tourism!=hotel'))).toBe(
+      'nwr["tourism"]["tourisms"!="hotel"]',
+    );
   });
 
   it('should work with groups', () => {
@@ -70,6 +78,7 @@ describe('userInput -> query works', () => {
 test('userInput (ast) -> label works', () => {
   expect(queryWizardLabel(getAST('amenity=*'))).toBe('amenity=*');
   expect(queryWizardLabel(getAST('amenity=bench'))).toBe('amenity=bench');
+  expect(queryWizardLabel(getAST('amenity!=bench'))).toBe('amenity!=bench');
   expect(queryWizardLabel(getAST('amenity=bench or speed_limit=30'))).toBe(
     'amenity=bench or 1 other',
   );
