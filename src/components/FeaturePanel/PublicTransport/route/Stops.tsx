@@ -48,11 +48,15 @@ export const Stops = ({ stops, stopCount, onExpand, onCollapse }: Props) => {
     <StationsList>
       {stops.map((stop, i) => (
         <>
-          <StationItem isFirst={i === 0} isLast={i === stops.length - 1}>
+          <StationItem
+            isFirst={i === 0}
+            isLast={i === stops.length - 1}
+            stopFeature={stop}
+          >
             <Link href={getUrlOsmId(stop.osmMeta)}>{stop.tags.name}</Link>
           </StationItem>
           {i === 0 && (
-            <StationItem showCircle={false}>
+            <StationItem>
               <ShowMoreLessButton
                 type={hasFullLength ? 'collapse' : 'expand'}
                 stopCount={stopCount}
