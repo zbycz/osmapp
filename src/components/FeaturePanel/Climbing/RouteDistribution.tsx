@@ -52,7 +52,7 @@ const Chart = styled.div<{ $ratio: number; $color: string }>`
 const getGroupingLabel = (label: string) => String(parseFloat(label));
 
 export const RouteDistribution = () => {
-  const { userSettings, setUserSetting } = useUserSettingsContext();
+  const { userSettings } = useUserSettingsContext();
   const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   const theme = useTheme();

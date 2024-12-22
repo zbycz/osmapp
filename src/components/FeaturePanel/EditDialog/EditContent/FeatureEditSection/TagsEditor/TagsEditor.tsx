@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import { Box, Button, Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Button,
+  Stack,
+  Typography,
+} from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
 import { majorKeys } from '../MajorKeysEditor';
@@ -11,6 +19,7 @@ import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
 import { useFeatureEditData } from '../SingleFeatureEditContext';
 import { TagsEntries } from '../../../useEditItems';
+import { OptionsEditor } from '../OptionsEditor';
 
 const Table = styled.table`
   width: calc(100% - 8px);
@@ -46,17 +55,6 @@ const TagsEditorHeading = () => (
   >
     {t('editdialog.tags_editor')}
   </Typography>
-);
-
-const TagsEditorButton = ({ setVisible }) => (
-  <Button
-    variant="text"
-    disableElevation
-    onClick={() => setVisible((currentState) => !currentState)}
-  >
-    {t('editdialog.tags_editor')}
-    <ExpandMoreIcon fontSize="small" />
-  </Button>
 );
 
 const TagsEditorInfo = () => (
@@ -98,46 +96,60 @@ const AddButton = () => {
 const TagsEditorInner = () => {
   const { tagsEntries } = useFeatureEditData();
   return (
-    <>
-      <TagsEditorHeading />
-      <Table>
-        <tbody>
-          {tagsEntries.map((_, index) => (
-            <tr key={index}>
-              <th>
-                <KeyInput index={index} />
-              </th>
-              <td>
-                <ValueInput index={index} />
-              </td>
-            </tr>
-          ))}
-          <AddButton />
-          <TagsEditorInfo />
-        </tbody>
-      </Table>
-    </>
+    <Table>
+      <tbody>
+        {tagsEntries.map((_, index) => (
+          <tr key={index}>
+            <th>
+              <KeyInput index={index} />
+            </th>
+            <td>
+              <ValueInput index={index} />
+            </td>
+          </tr>
+        ))}
+        <AddButton />
+        <TagsEditorInfo />
+      </tbody>
+    </Table>
   );
 };
 
 export const TagsEditor = () => {
   const { focusTag } = useEditDialogContext();
   const focusThisEditor = isString(focusTag) && !majorKeys.includes(focusTag);
-  const [visible, setVisible] = useState(focusThisEditor);
+  const [expanded, setExpanded] = useState(focusThisEditor);
 
   useEffect(() => {
     if (focusThisEditor) {
-      setVisible(true);
+      setExpanded(true);
     }
   }, [focusThisEditor]);
 
   return (
-    <Box mb={4}>
-      {visible ? (
+    <Accordion
+      disableGutters
+      elevation={0}
+      square
+      expanded={expanded}
+      onChange={() => setExpanded(!expanded)}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1-content"
+        id="panel1-header"
+      >
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography variant="button">
+            {t('editdialog.tags_editor')}
+          </Typography>
+        </Stack>
+      </AccordionSummary>
+      <AccordionDetails>
         <TagsEditorInner />
-      ) : (
-        <TagsEditorButton setVisible={setVisible} />
-      )}
-    </Box>
+
+        <OptionsEditor />
+      </AccordionDetails>
+    </Accordion>
   );
 };

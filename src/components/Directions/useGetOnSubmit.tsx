@@ -16,6 +16,8 @@ import { getLabel } from '../../helpers/featureLabel';
 import { t } from '../../services/intl';
 import { FetchError } from '../../services/helpers';
 import * as Sentry from '@sentry/nextjs';
+import { useDirectionsContext } from './DirectionsContext';
+import { updateElementOnIndex } from '../FeaturePanel/Climbing/utils/array';
 
 const getRoutingFailed = (showToast: ShowToast) => {
   return (error: unknown) => {
@@ -33,8 +35,7 @@ const getRoutingFailed = (showToast: ShowToast) => {
 };
 export const useReactToUrl = (
   setMode: (param: ((current: string) => string) | string) => void,
-  setFrom: (value: Option) => void,
-  setTo: (value: Option) => void,
+  setPoints: (points: Array<Option>) => void,
   setResult: (result: RoutingResult) => void,
 ) => {
   const { showToast } = useSnackbar();
@@ -44,12 +45,11 @@ export const useReactToUrl = (
 
   useEffect(() => {
     const [, mode, ...points] = urlParts as [string, Profile, ...string[]];
-    const options = parseUrlParts(points);
+    const options = parseUrlParts(points.flatMap((str) => str.split('/')));
 
-    if (mode && options.length === 2) {
+    if (mode && options.length >= 2) {
       setMode(mode);
-      setFrom(options[0]);
-      setTo(options[1]);
+      setPoints(options);
       handleRouting(mode, options.map(getOptionToLonLat))
         .then(setResult)
         .catch(getRoutingFailed(showToast));
@@ -61,14 +61,22 @@ export const useReactToUrl = (
 
       const lastFeature = getLastFeature();
       if (lastFeature) {
-        setTo(getCoordsOption(lastFeature.center, getLabel(lastFeature)));
+        const newPoint = getCoordsOption(
+          lastFeature.center,
+          getLabel(lastFeature),
+        );
+        if (points?.length <= 2) {
+          setPoints([null, newPoint]);
+        } else {
+          setPoints([...options.slice(0, options.length - 1), newPoint]);
+        }
       }
     }
 
     return () => {
       destroyRouting();
     };
-  }, [urlParts, setMode, setFrom, setTo, setResult, showToast]);
+  }, [urlParts, setMode, setPoints, setResult, showToast]);
 };
 
 export const useGetOnSubmitFactory = (
@@ -76,13 +84,12 @@ export const useGetOnSubmitFactory = (
   setLoading: (value: ((prevState: boolean) => boolean) | boolean) => void,
 ) => {
   const { showToast } = useSnackbar();
-
-  return (from: Option, to: Option, mode: Profile) => {
-    if (!from || !to) {
+  return (points: Array<Option>, mode: Profile) => {
+    if (!points || points.length === 0) {
       return;
     }
-    const points = [from, to];
     const url = buildUrl(mode, points);
+
     if (url === Router.asPath) {
       setLoading(true);
       handleRouting(mode, points.map(getOptionToLonLat))
@@ -92,5 +99,15 @@ export const useGetOnSubmitFactory = (
     } else {
       Router.push(url);
     }
+  };
+};
+
+export const useUpdatePoint = () => {
+  const { points, setPoints } = useDirectionsContext();
+
+  return (pointIndex: number, option: Option) => {
+    const newPoints = updateElementOnIndex(points, pointIndex, () => option);
+    setPoints(newPoints);
+    return newPoints;
   };
 };

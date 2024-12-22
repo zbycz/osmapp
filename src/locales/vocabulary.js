@@ -123,6 +123,7 @@ export default {
   'searchbox.overpass_custom_query': 'custom query',
 
   'directions.get_directions': 'Get Directions',
+  'directions.add_destination': 'Add destination',
   'directions.form.start_or_click': 'Choose start or click map',
   'directions.form.destination': 'Destination',
   'directions.edit_destinations': 'Edit destinations',
@@ -215,6 +216,8 @@ export default {
   'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
   'editdialog.login_in_progress': `Logging in...`,
   'editdialog.save_refused': 'Unable to save your changes.',
+  'editdialog.parents': 'Parents',
+  'editdialog.members': 'Members',
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',
@@ -278,6 +281,7 @@ export default {
   'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
   'climbingpanel.create_first_node': 'Click on the beginning of the route and continue in the direction of the route',
   'climbingpanel.create_next_node': 'Follow direction of the route and click "Done" when finished',
+  'climbingview.description': 'Description',
 
   'publictransport.tourism': 'Touristic trains',
   'publictransport.night': 'Night trains',
