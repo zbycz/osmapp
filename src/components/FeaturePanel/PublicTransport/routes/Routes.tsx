@@ -29,35 +29,49 @@ type PublicTransportDisplayProps = {
   geoJson: GeoJSON.FeatureCollection;
 };
 
-const PublicTransportDisplay = ({
-  routes,
-  geoJson,
-}: PublicTransportDisplayProps) => {
-  const [shownCategories, setShownCategories] = useState([
-    'subway',
-    'commuter',
-    'regional',
-    'trolleybus',
-    'bus',
-  ]);
+const defaultShown = ['subway', 'commuter', 'regional', 'trolleybus', 'bus'];
 
+const categorizedRoutes = (routes: LineInformation[]) => {
   const grouped = groupBy(routes, ({ service }) => {
     const base = service?.split(';')[0];
     return categories.includes(base) ? base : 'unknown';
   });
   const entries = Object.entries(grouped) as [string, LineInformation[]][];
-  const sorted = sortByReference(entries, categories, ([category]) => category);
+  const sortedEntries = sortByReference(
+    entries,
+    categories,
+    ([category]) => category,
+  );
+
+  const availableCategories = sortedEntries.map(([category]) => category);
+  const isShownByDefault = availableCategories.some((category) =>
+    defaultShown.includes(category),
+  );
+
+  if (isShownByDefault) {
+    return { sortedEntries, initialCategories: defaultShown };
+  }
+
+  return { sortedEntries, initialCategories: availableCategories.slice(0, 1) };
+};
+
+const PublicTransportDisplay = ({
+  routes,
+  geoJson,
+}: PublicTransportDisplayProps) => {
+  const { sortedEntries, initialCategories } = categorizedRoutes(routes);
+  const [shownCategories, setShownCategories] = useState(initialCategories);
 
   useShowOnMap(geoJson, shownCategories);
 
   return (
     <>
-      {sorted.map(([category, lines]) => (
+      {sortedEntries.map(([category, lines]) => (
         <PublicTransportCategory
           key={category}
           category={category}
           lines={lines}
-          showHeading={sorted.length > 1}
+          showHeading={sortedEntries.length > 1}
           shownCategories={shownCategories}
           onChange={(categories) => {
             setShownCategories(categories);

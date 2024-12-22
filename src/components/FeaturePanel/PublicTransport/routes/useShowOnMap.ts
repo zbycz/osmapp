@@ -27,6 +27,10 @@ const getPublictransportSource = () => {
     id: `${SOURCE_NAME}-lines`,
     type: 'line',
     source: SOURCE_NAME,
+    layout: {
+      'line-join': 'round',
+      'line-cap': 'round',
+    },
     paint: {
       'line-color': ['get', COLOR_ATTRIBUTE],
       'line-width': 4,
