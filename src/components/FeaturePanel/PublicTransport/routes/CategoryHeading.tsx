@@ -15,34 +15,23 @@ import {
   VisibilityOff,
 } from '@mui/icons-material';
 
-// TODO: Do this using the id-tagging-presets
 const fmtCategory = (category: string) => {
-  switch (category) {
-    case 'tourism':
-      return t('publictransport.tourism');
-    case 'night':
-      return t('publictransport.night');
-    case 'car_shuttle':
-      return t('publictransport.car_shuttle');
-    case 'car':
-      return t('publictransport.car');
-    case 'commuter':
-      return t('publictransport.commuter');
-    case 'regional':
-      return t('publictransport.regional');
-    case 'long_distance':
-      return t('publictransport.long_distance');
-    case 'high_speed':
-      return t('publictransport.high_speed');
-    case 'bus':
-      return t('publictransport.bus');
-    case 'subway':
-      return t('publictransport.subway');
-    case 'unknown':
-      return t('publictransport.unknown');
-    default:
-      return category;
-  }
+  return (
+    {
+      tourism: t('publictransport.tourism'),
+      night: t('publictransport.night'),
+      car_shuttle: t('publictransport.car_shuttle'),
+      car: t('publictransport.car'),
+      commuter: t('publictransport.commuter'),
+      regional: t('publictransport.regional'),
+      long_distance: t('publictransport.long_distance'),
+      high_speed: t('publictransport.high_speed'),
+      bus: t('publictransport.bus'),
+      subway: t('publictransport.subway'),
+      trolleybus: t('publictransport.trolleybus'),
+      unknown: t('publictransport.unknown'),
+    }[category] || category
+  );
 };
 
 const ToggleCategory = ({

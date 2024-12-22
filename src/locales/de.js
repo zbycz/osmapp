@@ -245,6 +245,7 @@ export default {
   'publictransport.long_distance': 'Fernzüge',
   'publictransport.high_speed': 'Hochgeschwindigkeitszüge',
   'publictransport.bus': 'Bus',
+  'publictransport.trolleybus': 'Trolleybus',
   'publictransport.subway': 'U-Bahn',
   'publictransport.unknown': 'Unbekannter Typ',
 

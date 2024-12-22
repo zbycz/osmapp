@@ -20,6 +20,7 @@ const categories = [
   'car',
   'car_shuttle',
   'bus',
+  'trolleybus',
   'unknown',
 ];
 
@@ -36,6 +37,7 @@ const PublicTransportDisplay = ({
     'subway',
     'commuter',
     'regional',
+    'trolleybus',
     'bus',
   ]);
 
