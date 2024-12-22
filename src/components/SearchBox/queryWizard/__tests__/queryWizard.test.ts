@@ -17,7 +17,7 @@ describe('userInput -> query works', () => {
     expect(generateQuery(getAST('tourism!=hotel'))).toBe(
       'nwr["tourism"!="hotel"]',
     );
-    expect(generateQuery(getAST('cuisine!=*'))).toBe('nwr["cousine"!~".*"]');
+    expect(generateQuery(getAST('cuisine!=*'))).toBe('nwr["cuisine"!~".*"]');
   });
 
   it('should work for more complex queries', () => {
@@ -38,7 +38,7 @@ describe('userInput -> query works', () => {
     ).toBe('nwr["amenity"="restaurant"];nwr["amenity"="cafe"];nwr["historic"]');
 
     expect(generateQuery(getAST('tourism=* and tourism!=hotel'))).toBe(
-      'nwr["tourism"]["tourisms"!="hotel"]',
+      'nwr["tourism"]["tourism"!="hotel"]',
     );
   });
 
