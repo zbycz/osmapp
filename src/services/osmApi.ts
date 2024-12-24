@@ -22,7 +22,7 @@ import { getOverpassUrl } from './overpassSearch';
 
 type GetOsmUrl = (object: OsmId) => string;
 
-const getOsmUrl: GetOsmUrl = ({ type, id }) =>
+export const getOsmUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
 const getOsmFullUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/full.json`;
