@@ -37,15 +37,12 @@ const useIsError = (index: number) => {
   const { tagsEntries } = useFeatureEditData();
   const [currentKey, currentValue] = tagsEntries[index];
 
+  const isEmptyKey = !!currentValue && !currentKey;
   const isDuplicateKey = tagsEntries.some(
     ([key], idx) => key && key === currentKey && index !== idx,
   );
-  const isLastIndex = index === tagsEntries.length - 1;
-  const emptyKeyCondition = isLastIndex
-    ? !currentKey && !!currentValue
-    : !currentKey;
 
-  return emptyKeyCondition || isDuplicateKey;
+  return isEmptyKey || isDuplicateKey;
 };
 
 export const KeyInput = ({ index }: { index: number }) => {
@@ -62,15 +59,6 @@ export const KeyInput = ({ index }: { index: number }) => {
       autoCapitalize="none"
       maxLength={255}
       error={isError}
-      // slotProps={{
-      //   input: {
-      //     endAdornment: isError ? (
-      //       <InputAdornment position="end">
-      //         <WarningIcon color="error" />
-      //       </InputAdornment>
-      //     ) : undefined,
-      //   },
-      // }}
     />
   );
 };

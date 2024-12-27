@@ -16,17 +16,16 @@ export const FastInput = styled.input<{ error?: boolean }>`
   height: 32px;
   padding: 0 8px;
   font-size: 13px;
-
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) => theme.palette.background.paper};
-
   border: 1px solid ${({ theme }) => theme.palette.action.disabled};
-  ${({ theme, error }) => error && `border-color: ${theme.palette.error.main};`}
   border-radius: 4px;
 
-  ${({ error }) =>
+  ${({ error, theme }) =>
     error &&
-    `background: ${WarningSvgDataUrl} no-repeat right 8px center; padding-right: 35px;`}
+    `padding-right: 35px;
+    border-color: ${theme.palette.error.main};
+    background: ${WarningSvgDataUrl} no-repeat right 8px center;`}
 
   &:hover {
     border-color: ${({ theme }) => theme.palette.secondary.main};
@@ -35,6 +34,7 @@ export const FastInput = styled.input<{ error?: boolean }>`
     outline: none;
     border-color: ${({ theme }) => theme.palette.primary.main};
     border-width: 2px;
+    background-position: right 7px center;
   }
 
   transition: border-color 0.2s;
