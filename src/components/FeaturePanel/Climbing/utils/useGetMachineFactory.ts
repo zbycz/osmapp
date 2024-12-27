@@ -24,6 +24,7 @@ export type StateAction =
   | 'editRoute'
   | 'extendRoute'
   | 'mockPoints'
+  | 'addMockedPoint'
   | 'finishRoute'
   | 'routeSelect'
   | 'showPointMenu'
@@ -53,6 +54,8 @@ export const useGetMachineFactory = ({
   findCloserPoint,
   svgRef,
   photoZoom,
+  mockedPoints,
+  setMockedPoints,
   setIsPanningDisabled,
 }) => {
   const [currentState, setCurrentState] = useState<State>('init');
@@ -118,15 +121,42 @@ export const useGetMachineFactory = ({
 
   const dragPoint = () => {};
   const mockPoints = () => {};
+
+  const addMockedPoint = (props: { position: PositionPx }) => {
+    if (!props) return;
+    const positionInImage = getPositionInImageFromMouse(
+      svgRef,
+      props.position,
+      photoZoom,
+    );
+
+    const newCoordinate = getPercentagePosition(positionInImage);
+
+    const closestPoint = findCloserPoint(newCoordinate);
+
+    setMockedPoints([...mockedPoints, closestPoint ?? newCoordinate]);
+  };
+
   const finishMockPoints = () => {};
 
-  const changePointType = ({ type }) => {
-    updatePathOnRouteIndex(routeSelectedIndex, (path) =>
-      updateElementOnIndex(path, pointSelectedIndex, (point) => ({
+  const changePointType = ({
+    type,
+    routeSelectedIndex,
+    pointSelectedIndex,
+  }) => {
+    if (routeSelectedIndex) {
+      updatePathOnRouteIndex(routeSelectedIndex, (path) =>
+        updateElementOnIndex(path, pointSelectedIndex, (point) => ({
+          ...point,
+          type,
+        })),
+      );
+    } else {
+      updateElementOnIndex(mockedPoints, pointSelectedIndex, (point) => ({
         ...point,
         type,
-      })),
-    );
+      }));
+    }
   };
 
   const addPointInBetween = ({ hoveredPosition, hoveredSegmentIndex }) => {
@@ -167,6 +197,7 @@ export const useGetMachineFactory = ({
       ...commonActions,
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
       routeSelect: { nextState: 'routeSelected', callback: routeSelect },
+      mockPoints: { nextState: 'mockPoints', callback: mockPoints },
     },
     editRoute: {
       ...commonActions,
@@ -188,6 +219,8 @@ export const useGetMachineFactory = ({
     },
     mockPoints: {
       editRoute: { nextState: 'editRoute', callback: finishMockPoints },
+      addMockedPoint: { nextState: 'mockPoints', callback: addMockedPoint },
+      showPointMenu: { nextState: 'pointMenu' },
     },
     extendRoute: {
       ...commonActions,
@@ -229,7 +262,9 @@ export const useGetMachineFactory = ({
     currentState: states[currentState],
     currentStateName: currentState,
     execute: (desiredAction: StateAction, props?: unknown) => {
+      console.log('___desiredAction', currentState, desiredAction);
       if (desiredAction in states[currentState]) {
+        console.log('___desiredAction OK', desiredAction);
         const { nextState, callback } = states[currentState][desiredAction];
         setCurrentState(nextState);
         if (callback) callback(props);
