@@ -15,7 +15,6 @@ import { getApiId, getShortId } from '../../../../services/helpers';
 import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
 import { useEditContext } from '../EditContext';
 import { FeatureRow } from './FeatureRow';
-import { items } from '../../QuickActions/ShareDialog/items';
 import { t } from '../../../../services/intl';
 
 export const ParentsEditor = () => {
@@ -25,13 +24,14 @@ export const ParentsEditor = () => {
   const { addFeature, setCurrent, items } = useEditContext();
 
   useEffect(() => {
-    const fetchParents = async () => {
-      const data = await fetchParentFeatures(getApiId(shortId));
+    (async () => {
+      setParents([]);
+      if (getApiId(shortId).id < 0) {
+        return;
+      }
 
-      setParents(data);
-    };
-
-    fetchParents();
+      setParents(await fetchParentFeatures(getApiId(shortId)));
+    })();
   }, [shortId]);
 
   if (!parents || parents.length === 0) return null;
