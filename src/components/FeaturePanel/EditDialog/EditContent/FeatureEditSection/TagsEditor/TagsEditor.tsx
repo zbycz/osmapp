@@ -67,24 +67,17 @@ const TagsEditorInfo = () => (
   </tr>
 );
 
-const lastKeyAndValueSet = (tagsEntries: TagsEntries) => {
-  const [lastKey, lastValue] = tagsEntries[tagsEntries.length - 1];
-  return lastKey && lastValue;
-};
-
 const AddButton = () => {
   const { tagsEntries, setTagsEntries } = useFeatureEditData();
-  const active = tagsEntries.length === 0 || lastKeyAndValueSet(tagsEntries);
-
   return (
     <tr>
       <td />
       <td>
         <Button
           variant="contained"
+          color="secondary"
           disableElevation
           onClick={() => setTagsEntries((state) => [...state, ['', '']])}
-          disabled={!active}
         >
           <AddIcon />
         </Button>
