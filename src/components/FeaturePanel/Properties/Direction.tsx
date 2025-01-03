@@ -167,20 +167,24 @@ const DirectionIndicator = ({ start, end }: { start: number; end: number }) => {
   return <canvas ref={canvas} width="30" height="30" />;
 };
 
+type IndicatorProps = {
+  start: number;
+  end?: number;
+};
+
+const Indicator = ({ start, end }: IndicatorProps) => {
+  if (end === undefined) {
+    return <ArrowUpward style={{ transform: `rotate(${start}deg)` }} />;
+  }
+
+  return <DirectionIndicator start={start} end={end} />;
+};
+
 export const DirectionValue: React.FC<{ v: string }> = ({ children, v }) => {
   try {
-    const [start, end] = v.split('-', 2).map(parseCardinal);
-
-    const indicator =
-      end === undefined ? (
-        <ArrowUpward
-          style={{
-            transform: `rotate(${start}deg)`,
-          }}
-        />
-      ) : (
-        <DirectionIndicator start={start} end={end} />
-      );
+    const directions = v
+      .split(';')
+      .map((d) => d.split('-', 2).map(parseCardinal));
 
     return (
       <span
@@ -190,7 +194,9 @@ export const DirectionValue: React.FC<{ v: string }> = ({ children, v }) => {
           gap: '0.5rem',
         }}
       >
-        {indicator}
+        {directions.map(([start, end]) => (
+          <Indicator start={start} end={end} key={`${start}-${end}`} />
+        ))}
         {children}
       </span>
     );
