@@ -11,7 +11,9 @@ export const getCommonsImageUrl = (
     console.warn('Invalid Commons photo name without "File:":', photoName);
     return null;
   }
-  const fileName = photoName.replace(/^File:/, '').replace(/ /g, '_');
+  const fileName = decodeURI(photoName)
+    .replace(/^.*File:/, '')
+    .replace(/ /g, '_');
   const hash = md5(fileName);
   const part1 = hash[0];
   const part2 = hash.substring(0, 2);
