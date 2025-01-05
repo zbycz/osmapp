@@ -52,14 +52,14 @@ export const getUploadData = (
   const text = `
 =={{int:filedesc}}==
 {{Information
-    |description    = {{${lang}|1=${title}}}
-    |date           = ${date}
-    |source         = {{Own photo}}
-    |author         = OpenStreetMap user [${osmUserUrl} ${user.username}]
-    |other_fields =
-        {{OSMLink |type=${feature.osmMeta.type} |OSM_ID=${feature.osmMeta.id} }}
-        {{Information field |name= OsmAPP |value= ${osmappUrls} }}
-    }}
+  |description  = {{${lang}|1=${title}}}
+  |date         = ${date}
+  |source       = {{Own photo}}
+  |author       = OpenStreetMap user [${osmUserUrl} ${user.username}]
+  |other_fields =
+    {{OSMLink |type=${feature.osmMeta.type} |OSM_ID=${feature.osmMeta.id} }}
+    {{Information field |name= OsmAPP |value= ${osmappUrls} }}
+}}
 {{Location}}
 {{Object location}}
 
