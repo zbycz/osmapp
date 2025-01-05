@@ -3,6 +3,7 @@ import type { DocumentContext } from 'next/dist/shared/lib/utils';
 import { publishDbgObject } from '../utils';
 import { isBrowser } from '../components/helpers';
 import type { TranslationId } from './types';
+import { IncomingMessage } from 'node:http';
 
 type Project = {
   id: string;
@@ -64,8 +65,8 @@ const setProject = (host: string) => {
 };
 
 // server - runs in document getInitialProps()
-export const setProjectForSSR = (ctx: DocumentContext) => {
-  const { host } = ctx.req.headers;
+export const setProjectForSSR = (req: IncomingMessage) => {
+  const { host } = req.headers;
   setProject(host);
 };
 
