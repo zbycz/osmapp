@@ -57,17 +57,11 @@ export const getUploadData = (
     |source         = {{Own photo}}
     |author         = OpenStreetMap user [${osmUserUrl} ${user.username}]
     |other_fields =
-        {{Information field
-          |name  = {{Label|P1259|link=-|capitalization=ucfirst}}
-          |value = {{#property:P1259|from=M{{PAGEID}} }}&nbsp;[[File:OOjs UI icon edit-ltr-progressive.svg |frameless |text-top |10px |link={{fullurl:{{FULLPAGENAME}}}}#P1259|alt=Edit this on Structured Data on Commons|Edit this on Structured Data on Commons]]
-        }}
-        {{Information field
-          |name  = {{Label|P9149|link=-|capitalization=ucfirst}}
-          |value = {{#property:P9149|from=M{{PAGEID}} }}&nbsp;[[File:OOjs UI icon edit-ltr-progressive.svg |frameless |text-top |10px |link={{fullurl:{{FULLPAGENAME}}}}#P9149|alt=Edit this on Structured Data on Commons|Edit this on Structured Data on Commons]]
-        }}
         {{OSMLink |type=${feature.osmMeta.type} |OSM_ID=${feature.osmMeta.id} }}
         {{Information field |name= OsmAPP |value= ${osmappUrls} }}
     }}
+{{Location}}
+{{Object location}}
 
 =={{int:license-header}}==
 {{Self|cc-by-sa-4.0|author=OpenStreetMap user [${osmUserUrl} ${user.username}]}}
