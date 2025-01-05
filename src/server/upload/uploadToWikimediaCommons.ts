@@ -42,7 +42,6 @@ export const uploadToWikimediaCommons = async (
     );
   }
 
-  console.log('pageId', pageId); // eslint-disable-line no-console
   const claims = [
     claimsHelpers.createCopyrightLicense(),
     claimsHelpers.createCopyrightStatus(),

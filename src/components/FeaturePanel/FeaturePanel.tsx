@@ -81,7 +81,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
               </PanelSidePadding>
 
               <Box mb={2}>
-                {advanced && (
+                {process.env.NEXT_PUBLIC_ENABLE_UPLOAD && (
                   <PanelSidePadding>
                     <UploadDialog />
                   </PanelSidePadding>
