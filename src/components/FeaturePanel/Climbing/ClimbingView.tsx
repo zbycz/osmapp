@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import {
   CircularProgress,
   Fab,
@@ -13,28 +12,42 @@ import {
 import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RoutesEditor } from './Editor/RoutesEditor';
-import { Guide } from './Guide';
-import { ControlPanel } from './Editor/ControlPanel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import {
   getResolution,
   getWikimediaCommonsKeys,
+  getWikimediaCommonsPhotoKeys,
+  getWikimediaCommonsPhotoTags,
+  getWikimediaCommonsPhotoTagsObject,
+  getWikimediaCommonsPhotoValues,
   removeFilePrefix,
 } from './utils/photo';
-import { useScrollShadow } from './utils/useScrollShadow';
 import { TransformWrapper } from './TransformWrapper';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { CLIMBING_ROUTE_ROW_HEIGHT, SPLIT_PANE_DEFAULT_HEIGHT } from './config';
+import { CLIMBING_ROUTE_ROW_HEIGHT, SPLIT_PANE_DEFAULT_SIZE } from './config';
 import { ClimbingViewContent } from './ClimbingViewContent';
 import { getOsmappLink } from '../../../services/helpers';
 import { useRouter } from 'next/router';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import MapIcon from '@mui/icons-material/Map';
+import EditIcon from '@mui/icons-material/Edit';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useGetCragViewLayout } from './utils/useCragViewLayout';
+import { RouteFloatingMenu } from './Editor/RouteFloatingMenu';
 
+export const DEFAULT_CRAG_VIEW_LAYOUT = 'horizontal';
+
+const BottomContainer = styled.div`
+  overflow: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`;
 const FabContainer = styled.div`
-  position: fixed;
+  position: absolute;
   bottom: 12px;
   right: 12px;
   z-index: 1000;
@@ -45,19 +58,50 @@ const Container = styled.div`
   flex-direction: column;
   height: 100%;
 
-  .Resizer.horizontal {
-    height: 15px;
-    margin: -7px 0;
+  .Resizer {
+    &.horizontal {
+      cursor: row-resize;
+      height: 15px;
+      margin: -7px 0;
+      &::before {
+        width: 40px;
+        height: 12px;
+        content: '...';
+        justify-content: center;
+        align-items: unset;
+      }
+      &::after {
+        border-top: solid 1px #222;
+        width: 100%;
+        height: 1px;
+        margin-top: 1px;
+      }
+    }
+    &.vertical {
+      width: 15px;
+      cursor: col-resize;
+      margin: 0 -7px;
+      &::before {
+        width: 12px;
+        height: 40px;
+        content: '⋮';
+      }
+      &::after {
+        border-left: solid 1px #222;
+        height: 100%;
+        width: 1px;
+      }
+    }
+
     z-index: 100000;
-    cursor: row-resize;
     display: flex;
     justify-content: center;
+    align-items: center;
     &::before {
       position: absolute;
-      content: '...';
+      display: flex;
+      align-items: center;
       border-radius: 6px;
-      width: 40px;
-      height: 12px;
       background: ${({ theme }) => theme.palette.background.paper};
       margin-top: 1px;
       z-index: 1;
@@ -69,6 +113,11 @@ const Container = styled.div`
       color: ${({ theme }) => theme.palette.primary.main};
       letter-spacing: 1px;
     }
+    &::after {
+      position: absolute;
+      content: '';
+      transition: all 0.1s ease;
+    }
 
     &:hover {
       &::before {
@@ -78,20 +127,9 @@ const Container = styled.div`
       }
       &::after {
         border-color: ${({ theme }) => theme.palette.primary.main};
-        transition: all 0.5s ease-out;
         border-width: 1px;
-        margin-top: 6px;
+        transition-delay: 500ms;
       }
-    }
-    &::after {
-      position: absolute;
-      content: '';
-
-      width: 100%;
-      height: 1px;
-      margin-top: 7px;
-      border-top: solid 1px #222;
-      transition: all 0.1s ease;
     }
   }
   .Pane.horizontal.Pane2 {
@@ -105,7 +143,7 @@ const BottomPanel = styled.div`
 
 const MiniLoadingContainer = styled.div`
   position: absolute;
-  bottom: 4px;
+  top: 4px;
   right: 4px;
   width: 22px;
   height: 22px;
@@ -136,11 +174,22 @@ const FullLoadingContainer = styled.div`
   align-items: center;
 `;
 
-const ArrowExpanderContainer = styled.div`
+const ArrowExpanderContainer = styled.div<{
+  $cragViewLayout: 'horizontal' | 'vertical';
+}>`
   position: absolute;
   z-index: 1000000;
-  width: 100%;
-  top: -6px;
+
+  ${({ $cragViewLayout }) =>
+    $cragViewLayout === 'horizontal'
+      ? `
+    top: -6px;
+    width: 100%;`
+      : `
+      left: -6px;
+      height: 100%;
+      top: 50%;
+      `}
 `;
 
 const ArrowExpanderButton = styled.div<{ $arrowOnTop?: boolean }>`
@@ -189,13 +238,30 @@ const getWindowDimensions = () => {
   };
 };
 
+const FabMapSwitcher = ({ isMapVisible, setIsMapVisible }) => (
+  <FabContainer>
+    <Tooltip
+      title={`Show ${isMapVisible ? 'route list' : 'map'}`}
+      enterDelay={1500}
+      arrow
+    >
+      <Fab
+        size="small"
+        color="secondary"
+        aria-label="add"
+        onClick={() => setIsMapVisible(!isMapVisible)}
+      >
+        {isMapVisible ? <FormatListNumberedIcon /> : <MapIcon />}
+      </Fab>
+    </Tooltip>
+  </FabContainer>
+);
+
 export const ClimbingView = ({ photo }: { photo?: string }) => {
   const {
     imageSize,
     routeSelectedIndex,
     getMachine,
-    splitPaneHeight,
-    setSplitPaneHeight,
     isEditMode,
     viewportSize,
     editorPosition,
@@ -208,7 +274,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     routeListTopOffsets,
     setRouteSelectedIndex,
     routes,
-    setPhotoPath,
+    setIsEditMode,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
 
@@ -217,6 +283,9 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const [imageUrl, setImageUrl] = useState(null);
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(null);
   const machine = getMachine();
+  const cragViewLayout = useGetCragViewLayout();
+  const { userSettings, setUserSetting } = useUserSettingsContext();
+  const splitPaneSize = userSettings['climbing.splitPaneSize'];
 
   useEffect(() => {
     if (isEditMode && machine.currentStateName === 'routeSelected') {
@@ -230,42 +299,40 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
 
   useEffect(() => {
     loadPhotoRelatedData();
-  }, [splitPaneHeight]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [splitPaneSize]); // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     loadPhotoRelatedData();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const onSplitPaneHeightReset = () => {
-    setSplitPaneHeight(null);
+  const onSplitPaneSizeReset = () => {
+    setUserSetting('climbing.splitPaneSize', null);
   };
 
   React.useEffect(() => {
-    window.addEventListener('resize', () => loadPhotoRelatedData());
-    window.addEventListener('orientationchange', () => loadPhotoRelatedData());
+    window.addEventListener('resize', loadPhotoRelatedData);
+    window.addEventListener('orientationchange', loadPhotoRelatedData);
 
     return () => {
-      window.removeEventListener('resize', () => loadPhotoRelatedData());
-      window.removeEventListener('orientationchange', () =>
-        loadPhotoRelatedData(),
-      );
+      window.removeEventListener('resize', loadPhotoRelatedData);
+      window.removeEventListener('orientationchange', loadPhotoRelatedData);
     };
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const onDragStarted = () => {
     setIsSplitViewDragging(true);
   };
-  const onDragFinished = (splitHeight) => {
-    setSplitPaneHeight(splitHeight);
+  const onDragFinished = (splitHeight: number) => {
+    setUserSetting('climbing.splitPaneSize', splitHeight);
     setIsSplitViewDragging(false);
   };
   const [windowDimensions, setWindowDimensions] = useState(
     getWindowDimensions(),
   );
 
-  const cragPhotos = getWikimediaCommonsKeys(feature.tags)
-    .map((key) => feature.tags[key])
-    .map(removeFilePrefix);
+  const cragPhotos = getWikimediaCommonsPhotoValues(feature.tags).map(
+    removeFilePrefix,
+  );
   preparePhotos(cragPhotos);
 
   useEffect(() => {
@@ -301,23 +368,13 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     windowDimensions,
   ]);
 
-  const showArrowOnTop = splitPaneHeight === 0;
+  const showArrowOnTop = splitPaneSize === 0;
   const showArrowOnBottom =
-    splitPaneHeight === viewportSize.height - editorPosition.y;
+    splitPaneSize === viewportSize.height - editorPosition.y;
 
-  const {
-    scrollElementRef,
-    onScroll,
-    ShadowContainer,
-    ShadowTop,
-    ShadowBottom,
-  } = useScrollShadow([areRoutesLoading]);
-  const theme = useTheme();
   const router = useRouter();
   const [isPhotoLoading, setIsPhotoLoading] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(false);
-
-  const { userSettings } = useUserSettingsContext();
 
   const isResolutionLoaded =
     loadedPhotos?.[photoPath]?.[photoResolution] || false;
@@ -350,53 +407,35 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     const selectedRoute = routes[selectedIndex];
     const photos = selectedRoute?.paths ? Object.keys(selectedRoute.paths) : [];
 
-    replacePhotoIfNeeded(photos, selectedIndex);
+    if (userSettings['climbing.switchPhotosByScrolling'])
+      replacePhotoIfNeeded(photos, selectedIndex);
     if (selectedIndex !== -1) setRouteSelectedIndex(selectedIndex);
   };
 
   const handleOnScroll = (e) => {
-    onScroll();
     if (
       userSettings['climbing.selectRoutesByScrolling'] &&
-      routeSelectedIndex !== null
+      routeSelectedIndex !== null &&
+      !isEditMode
     ) {
       selectRouteByScroll(e);
     }
   };
 
-  const FabComponent = () => (
-    <FabContainer>
-      <Tooltip
-        title={`Show ${isMapVisible ? 'route list' : 'map'}`}
-        enterDelay={1500}
-        arrow
-      >
-        <Fab
-          size="small"
-          color="secondary"
-          aria-label="add"
-          onClick={() => setIsMapVisible(!isMapVisible)}
-        >
-          {isMapVisible ? <FormatListNumberedIcon /> : <MapIcon />}
-        </Fab>
-      </Tooltip>
-    </FabContainer>
-  );
-
   return (
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (
-        <ArrowExpanderContainer>
+        <ArrowExpanderContainer $cragViewLayout={cragViewLayout}>
           <ArrowExpanderButton $arrowOnTop={showArrowOnTop}>
             <IconButton
-              onClick={onSplitPaneHeightReset}
+              onClick={onSplitPaneSizeReset}
               color="primary"
               size="small"
             >
-              {showArrowOnTop ? (
+              {cragViewLayout === 'horizontal' ? (
                 <ArrowDownwardIcon fontSize="small" />
               ) : (
-                <ArrowUpwardIcon fontSize="small" />
+                <ArrowForwardIcon fontSize="small" />
               )}
             </IconButton>
           </ArrowExpanderButton>
@@ -404,19 +443,38 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
       )}
       {photoPath ? (
         <SplitPane
-          split="horizontal"
+          split={cragViewLayout}
           minSize={0}
           maxSize="100%"
-          size={splitPaneHeight ?? SPLIT_PANE_DEFAULT_HEIGHT}
+          size={splitPaneSize ?? SPLIT_PANE_DEFAULT_SIZE}
           onDragStarted={onDragStarted}
           onDragFinished={onDragFinished}
-          pane1Style={{ maxHeight: '90%' }}
+          pane1Style={
+            cragViewLayout === 'vertical'
+              ? { maxWidth: 'calc(100vw - 300px)' }
+              : { maxHeight: '90%' }
+          }
         >
           <BackgroundContainer
             $imageHeight={imageSize.height}
             $imageUrl={backgroundImageUrl}
           >
             <>
+              {!isEditMode && (
+                <FabContainer>
+                  <Tooltip title="Draw routes" enterDelay={1500} arrow>
+                    <Fab
+                      size="small"
+                      color="secondary"
+                      aria-label="add"
+                      onClick={() => setIsEditMode(true)}
+                    >
+                      <EditIcon />
+                    </Fab>
+                  </Tooltip>
+                </FabContainer>
+              )}
+
               {(!isResolutionLoaded || isPhotoLoading) && (
                 <MiniLoadingContainer>
                   <CircularProgress color="primary" size={14} thickness={6} />
@@ -428,6 +486,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                 </FullLoadingContainer>
               )}
               <BlurContainer>
+                <RouteFloatingMenu />
                 <TransformWrapper>
                   <TransformComponent
                     wrapperStyle={{ height: '100%', width: '100%' }}
@@ -446,28 +505,26 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     </>
                   </TransformComponent>
                 </TransformWrapper>
-                {isEditMode && (
-                  <>
-                    <ControlPanel />
-                    <Guide />
-                  </>
-                )}
               </BlurContainer>
             </>
           </BackgroundContainer>
 
-          <ShadowContainer>
-            <FabComponent />
-            <ShadowTop backgroundColor={theme.palette.background.paper} />
-            <BottomPanel onScroll={handleOnScroll} ref={scrollElementRef}>
+          <BottomContainer>
+            <FabMapSwitcher
+              isMapVisible={isMapVisible}
+              setIsMapVisible={setIsMapVisible}
+            />
+            <BottomPanel onScroll={handleOnScroll}>
               <ClimbingViewContent isMapVisible={isMapVisible} />
             </BottomPanel>
-            <ShadowBottom backgroundColor={theme.palette.background.paper} />
-          </ShadowContainer>
+          </BottomContainer>
         </SplitPane>
       ) : (
         <>
-          <FabComponent />
+          <FabMapSwitcher
+            isMapVisible={isMapVisible}
+            setIsMapVisible={setIsMapVisible}
+          />
           <ClimbingViewContent isMapVisible={isMapVisible} />
         </>
       )}

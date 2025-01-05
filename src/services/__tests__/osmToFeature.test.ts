@@ -16,7 +16,7 @@ const nodeResponse = {
     climbing: 'route_bottom',
     'climbing:grade:uiaa': '5',
     name: 'Test item for images',
-    description: 'Originally Detonátor route',
+    description: 'Originally Detonátor route (this message used for SSR check)',
     sport: 'climbing',
     wikimedia_commons: 'File:Lomy nad Velkou - Borová věž.jpg',
     'wikimedia_commons:path': '0.32,0.902|0.371,0.537B|0.406,0.173A',
@@ -47,6 +47,16 @@ const imageDefs: ImageDef[] = [
       { suffix: 'B', x: 0.773, y: 0.428 },
       { suffix: 'A', x: 0.562, y: 0.056 },
     ],
+  },
+  {
+    type: 'center',
+    service: 'panoramax',
+    center: [14.2523716, 49.6541269],
+  },
+  {
+    type: 'center',
+    service: 'kartaview',
+    center: [14.2523716, 49.6541269],
   },
   {
     type: 'center',

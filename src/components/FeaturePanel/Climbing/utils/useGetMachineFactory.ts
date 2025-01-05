@@ -49,7 +49,7 @@ export const useGetMachineFactory = ({
   updateRouteOnIndex,
   getPercentagePosition,
   findCloserPoint,
-  photoRef,
+  svgRef,
   photoZoom,
 }) => {
   const [currentState, setCurrentState] = useState<State>('init');
@@ -132,7 +132,7 @@ export const useGetMachineFactory = ({
   const addPointToEnd = (props: { position: PositionPx }) => {
     if (!props) return;
     const positionInImage = getPositionInImageFromMouse(
-      photoRef,
+      svgRef,
       props.position,
       photoZoom,
     );

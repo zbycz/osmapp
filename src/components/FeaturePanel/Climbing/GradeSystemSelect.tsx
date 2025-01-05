@@ -1,9 +1,17 @@
 import React from 'react';
-
-import { Select, MenuItem, Tooltip, FormControl } from '@mui/material';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import {
+  Select,
+  MenuItem,
+  Tooltip,
+  FormControl,
+  IconButton,
+  Stack,
+} from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import styled from '@emotion/styled';
 import { GRADE_SYSTEMS, GradeSystem } from './utils/grades/gradeData';
+import Link from 'next/link';
 
 type Props = {
   selectedGradeSystem: GradeSystem;
@@ -29,25 +37,34 @@ export const GradeSystemSelect = ({
   onClick,
   allowUnsetValue = true,
 }: Props) => (
-  <FormControl size="small">
-    <Select
-      value={selectedGradeSystem}
-      onClick={onClick}
-      onChange={(event: any) => {
-        setGradeSystem(event.target.value);
-      }}
-    >
-      {allowUnsetValue && <MenuItem value={null}>Original grade</MenuItem>}
-      {GRADE_SYSTEMS.map(({ key, name, description }) => (
-        <MenuItem key={key} value={key}>
-          <Row>
-            <div>{name}</div>
-            <Tooltip arrow title={description} placement="right">
-              <StyledInfoOutlinedIcon fontSize="small" color="secondary" />
-            </Tooltip>
-          </Row>
-        </MenuItem>
-      ))}
-    </Select>
-  </FormControl>
+  <Stack direction="row" spacing={1} alignItems="center">
+    <FormControl size="small">
+      <Select
+        value={selectedGradeSystem}
+        onClick={onClick}
+        onChange={(event: any) => {
+          setGradeSystem(event.target.value);
+        }}
+      >
+        {allowUnsetValue && <MenuItem value={null}>Original grade</MenuItem>}
+        {GRADE_SYSTEMS.map(({ key, name, description }) => (
+          <MenuItem key={key} value={key}>
+            <Row>
+              <div>{name}</div>
+              <Tooltip arrow title={description} placement="right">
+                <StyledInfoOutlinedIcon fontSize="small" color="secondary" />
+              </Tooltip>
+            </Row>
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
+    <Tooltip title="Show grades conversion table">
+      <Link href="/climbing-grades">
+        <IconButton size="small" color="secondary">
+          <ViewListIcon fontSize="small" />
+        </IconButton>
+      </Link>
+    </Tooltip>
+  </Stack>
 );

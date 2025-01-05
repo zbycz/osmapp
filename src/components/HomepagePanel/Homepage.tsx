@@ -10,7 +10,6 @@ import {
   PanelScrollbars,
 } from '../utils/PanelHelpers';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
-import { LogoOpenClimbing } from '../../assets/LogoOpenClimbing';
 import {
   PROJECT_DECRIPTION,
   PROJECT_ID,
@@ -19,12 +18,12 @@ import {
 import { intl, t, Translation } from '../../services/intl';
 import { nl2br } from '../utils/nl2br';
 import GithubIcon from '../../assets/GithubIcon';
-import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 import LogoOsmapp from '../../assets/LogoOsmapp';
 import { LogoMaptiler } from '../../assets/LogoMaptiler';
+import { HomepageOpenClimbing } from './HomepageOpenClimbing';
 
 export const Content = styled.div`
-  height: calc(100% - ${SEARCH_BOX_HEIGHT}px);
+  height: 100%;
   padding: 20px 2em 0 2em;
 `;
 const StyledLogoOsmapp = styled(LogoOsmapp)`
@@ -53,33 +52,6 @@ const Examples = () => (
     </Link>
   </>
 );
-const ExamplesClimbing = () => (
-  <>
-    <Link href="/climbing-areas" locale={intl.lang}>
-      {t('climbingareas.link')}
-    </Link>
-    , {t('homepage.examples.eg')}{' '}
-    <Link href="/relation/17262675" locale={intl.lang}>
-      Hlubočepy
-    </Link>{' '}
-    •{' '}
-    <Link href="/relation/17130099" locale={intl.lang}>
-      Roviště
-    </Link>{' '}
-    •{' '}
-    <Link href="/relation/17142287" locale={intl.lang}>
-      Lomy nad Velkou
-    </Link>{' '}
-    •{' '}
-    <Link href="/relation/17400318" locale={intl.lang}>
-      Lom Kobyla
-    </Link>{' '}
-    •{' '}
-    <Link href="/relation/17222859" locale={intl.lang}>
-      Prokopák
-    </Link>
-  </>
-);
 
 export function Homepage({
   mobileMode,
@@ -90,6 +62,10 @@ export function Homepage({
 }) {
   const isClimbing = PROJECT_ID === 'openclimbing';
 
+  if (isClimbing) {
+    return <HomepageOpenClimbing onClose={onClick} />;
+  }
+
   return (
     <PanelContent>
       <PanelScrollbars>
@@ -97,23 +73,8 @@ export function Homepage({
         <Content>
           <div>
             <Center $mb>
-              {isClimbing ? (
-                <LogoOpenClimbing
-                  width={100}
-                  style={{
-                    marginTop: 24,
-                    marginBottom: 16,
-                  }}
-                />
-              ) : (
-                <StyledLogoOsmapp width={130} height={130} />
-              )}
-              <Typography
-                variant="h4"
-                component="h1"
-                color="inherit"
-                style={{ fontWeight: isClimbing ? 900 : undefined }}
-              >
+              <StyledLogoOsmapp width={130} height={130} />
+              <Typography variant="h4" component="h1" color="inherit">
                 {PROJECT_NAME}
               </Typography>
               <Typography variant="subtitle1" color="textSecondary">
@@ -124,7 +85,7 @@ export function Homepage({
               {nl2br(t('homepage.how_to_start'))}
             </Typography>
             <Typography variant="body2" paragraph>
-              {isClimbing ? <ExamplesClimbing /> : <Examples />}
+              <Examples />
             </Typography>
             {mobileMode && (
               <Center $mt $mb4>
@@ -140,16 +101,8 @@ export function Homepage({
             )}
             <Center $mb>
               <img
-                src={
-                  isClimbing
-                    ? '/openclimbing/openclimbing-screenshot-300px.png'
-                    : '/osmapp/osmapp-screenshot-300px.png'
-                }
-                srcSet={
-                  isClimbing
-                    ? '/openclimbing/openclimbing-screenshot-300px@2x.png 2x'
-                    : '/osmapp/osmapp-screenshot-300px@2x.png 2x'
-                }
+                src={'/osmapp/osmapp-screenshot-300px.png'}
+                srcSet={'/osmapp/osmapp-screenshot-300px@2x.png 2x'}
                 alt={t('homepage.screenshot_alt')}
                 width={300}
               />
@@ -237,7 +190,10 @@ export function Homepage({
                 {` – ${t('homepage.maptiler')}`}
               </li>
               <li>
-                <a href="https://vercel.com" target="_blank">
+                <a
+                  href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss"
+                  target="_blank"
+                >
                   Vercel
                 </a>
                 {` – ${t('homepage.vercel')}`}
@@ -247,7 +203,10 @@ export function Homepage({
               <LogoMaptiler width={200} height={52} />
             </a>
             <br />
-            <a href="https://vercel.com" target="_blank">
+            <a
+              href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss"
+              target="_blank"
+            >
               <img src="/vercel.svg" alt="Vercel" width="200" height="41" />
             </a>
 

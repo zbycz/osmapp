@@ -5,6 +5,7 @@ import { boltCodeMap } from '../utils/boltCodes';
 import { removeFilePrefix } from '../utils/photo';
 import { getDifficulty } from '../utils/grades/routeGrade';
 import { publishDbgObject } from '../../../../utils';
+import { getDividedFeaturesBySections } from '../utils/getDividedFeaturesBySections';
 
 const parsePathString = (pathString?: string): PathPoints =>
   pathString
@@ -43,7 +44,7 @@ export const osmToClimbingRoutes = (feature: Feature): Array<ClimbingRoute> => {
     return [];
   }
 
-  const routes = feature.memberFeatures;
+  const routes = getDividedFeaturesBySections(feature.memberFeatures).routes;
 
   const climbingRoutes = routes.map((route) => {
     const { paths, photoToKeyMap } = getPathsByImage(route.tags);

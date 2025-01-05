@@ -8,7 +8,7 @@ import { useFeatureContext } from '../../utils/FeatureContext';
 import { Subheading } from '../helpers/Subheading';
 import { Wrapper } from './Wrapper';
 import { Table } from './Table';
-import { getKey, getShortId } from '../../../services/helpers';
+import { getReactKey, getShortId } from '../../../services/helpers';
 import * as Sentry from '@sentry/nextjs';
 import { MyRouteTicks } from '../Climbing/Ticks/MyRouteTicks';
 
@@ -86,7 +86,7 @@ export const Properties = ({ showTags }) => {
       {showTags && <OnlyTagsTable />}
 
       {!showTags && (
-        <ErrorBoundary key={getKey(feature)} fallback={<OnlyTagsTable />}>
+        <ErrorBoundary key={getReactKey(feature)} fallback={<OnlyTagsTable />}>
           <FeaturedTags featuredTags={feature.schema?.featuredTags} />
           <IdSchemaFields />
         </ErrorBoundary>

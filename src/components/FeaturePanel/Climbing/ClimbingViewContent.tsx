@@ -2,36 +2,51 @@ import styled from '@emotion/styled';
 import {
   CLIMBING_ROUTE_ROW_HEIGHT,
   DIALOG_TOP_BAR_HEIGHT,
-  SPLIT_PANE_DEFAULT_HEIGHT,
+  SPLIT_PANE_DEFAULT_SIZE,
 } from './config';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { RouteList } from './RouteList/RouteList';
 import { ContentContainer } from './ContentContainer';
-import { Box, Button, ButtonGroup } from '@mui/material';
+import { Button, ButtonGroup, Typography } from '@mui/material';
 
 import { RouteDistribution } from './RouteDistribution';
 import React from 'react';
 import dynamic from 'next/dynamic';
+import { EditButton } from '../EditButton';
+import { EditDialog } from '../EditDialog/EditDialog';
+import { useGetCragViewLayout } from './utils/useCragViewLayout';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { PanelLabel } from './PanelLabel';
+import { t } from '../../../services/intl';
 
 const CragMapDynamic = dynamic(() => import('./CragMap'), {
   ssr: false,
   loading: () => <div />,
 });
 
-const ContentBelowRouteList = styled.div<{ $splitPaneHeight: number }>`
-  min-height: calc(
+const ContentBelowRouteList = styled.div<{
+  $splitPaneSize: number;
+  $cragViewLayout: 'horizontal' | 'vertical';
+}>`
+  min-height: ${({ $cragViewLayout, $splitPaneSize }) =>
+    $cragViewLayout === 'horizontal'
+      ? `
+  calc(
     100vh -
-      ${({ $splitPaneHeight }) =>
-        $splitPaneHeight
-          ? `${$splitPaneHeight}px`
-          : SPLIT_PANE_DEFAULT_HEIGHT} -
+      ${$splitPaneSize ? `${$splitPaneSize}px` : SPLIT_PANE_DEFAULT_SIZE} -
       ${DIALOG_TOP_BAR_HEIGHT + CLIMBING_ROUTE_ROW_HEIGHT + 40}px
-  );
+  );`
+      : `calc(100vh - ${DIALOG_TOP_BAR_HEIGHT + CLIMBING_ROUTE_ROW_HEIGHT + 40}px);`};
 `;
 
 export const ClimbingViewContent = ({ isMapVisible }) => {
-  const { splitPaneHeight, showDebugMenu, routes } = useClimbingContext();
+  const { showDebugMenu, routes } = useClimbingContext();
+  const { feature } = useFeatureContext();
+  const cragViewLayout = useGetCragViewLayout();
+  const { userSettings } = useUserSettingsContext();
+  const splitPaneSize = userSettings['climbing.splitPaneSize'];
 
   const getRoutesCsv = () => {
     const getPathString = (path) =>
@@ -47,7 +62,7 @@ export const ClimbingViewContent = ({ isMapVisible }) => {
         const photos = Object.entries(route.paths);
 
         return photos.map((photoName) => [
-          route.updatedTags.name,
+          route.feature.tags.name,
           `File:${photoName?.[0]}`,
           getPathString(photoName?.[1]),
         ]);
@@ -62,7 +77,10 @@ export const ClimbingViewContent = ({ isMapVisible }) => {
   ) : (
     <>
       <RouteList isEditable />
-      <ContentBelowRouteList $splitPaneHeight={splitPaneHeight}>
+      <ContentBelowRouteList
+        $splitPaneSize={splitPaneSize}
+        $cragViewLayout={cragViewLayout}
+      >
         <ContentContainer>
           {showDebugMenu && (
             <>
@@ -76,6 +94,19 @@ export const ClimbingViewContent = ({ isMapVisible }) => {
           )}
         </ContentContainer>
         <RouteDistribution />
+
+        {feature.tags.description ? (
+          <>
+            <PanelLabel>{t('climbingview.description')}</PanelLabel>
+
+            <Typography ml={4.5} mr={4.5}>
+              {feature.tags.description}
+            </Typography>
+          </>
+        ) : null}
+
+        <EditButton />
+        <EditDialog />
       </ContentBelowRouteList>
     </>
   );

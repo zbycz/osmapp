@@ -11,8 +11,8 @@ const fmtAttributionHtml = ({ url, html, text }: LayerIndexAttribution) => {
   return text || url;
 };
 
-export const AddUserLayerButton = ({ setUserLayers }) => {
-  const { setActiveLayers } = useMapStateContext();
+export const AddUserLayerButton = () => {
+  const { setActiveLayers, setUserLayers } = useMapStateContext();
   const [isOpen, setOpen] = React.useState(false);
 
   return (
@@ -31,6 +31,7 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
             url,
             name,
             max_zoom: maxzoom,
+            min_zoom: minzoom,
             attribution,
             bbox: bboxes,
           } = layer;
@@ -38,6 +39,7 @@ export const AddUserLayerButton = ({ setUserLayers }) => {
           const newLayer: Layer = {
             type: 'user',
             maxzoom,
+            minzoom,
             name,
             url,
             bboxes,

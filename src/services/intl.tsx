@@ -9,7 +9,7 @@ import { LANGUAGES } from '../config.mjs';
 
 type Values = { [variable: string]: string | number };
 
-interface Intl {
+export interface Intl {
   lang: string;
   messages: MessagesType | {};
 }

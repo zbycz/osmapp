@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Ref } from 'react';
 import { FeaturePanel } from './FeaturePanel';
 import { Drawer } from '../utils/Drawer';
 import {
@@ -11,7 +11,13 @@ import { useFeatureContext } from '../utils/FeatureContext';
 
 const DRAWER_CLASSNAME = 'featurePanelInDrawer';
 
-export const FeaturePanelInDrawer = () => {
+type FeaturePanelInDrawerProps = {
+  scrollRef: Ref<HTMLDivElement>;
+};
+
+export const FeaturePanelInDrawer = ({
+  scrollRef,
+}: FeaturePanelInDrawerProps) => {
   const { feature } = useFeatureContext();
   const [collapsedHeight, setCollapsedHeight] = React.useState<number>(
     DRAWER_PREVIEW_HEIGHT,
@@ -35,6 +41,7 @@ export const FeaturePanelInDrawer = () => {
       topOffset={DRAWER_TOP_OFFSET}
       className={DRAWER_CLASSNAME}
       collapsedHeight={collapsedHeight}
+      scrollRef={scrollRef}
     >
       <FeaturePanel headingRef={headingRef} />
     </Drawer>

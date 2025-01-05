@@ -1,6 +1,7 @@
 import acceptLanguageParser from 'accept-language-parser';
 import nextCookies from 'next-cookies';
 import { LANGUAGES } from '../config.mjs';
+import { Intl } from './intl';
 
 // the files are not imported in main bundle
 const getMessages = async (lang) =>
@@ -33,7 +34,7 @@ const resolveCurrentLang = (ctx) => {
   return getLangFromAcceptHeader(ctx) ?? DEFAULT_LANG;
 };
 
-export const getServerIntl = async (ctx) => {
+export const getServerIntl = async (ctx): Promise<Intl> => {
   const lang = resolveCurrentLang(ctx);
   const vocabulary = await getMessages('vocabulary');
   const messages = lang === DEFAULT_LANG ? {} : await getMessages(lang);

@@ -33,16 +33,16 @@ export const RouteMarks = ({
     setIsPointMoving,
     setIsPointClicked,
     isOtherRouteSelected,
+    isEditMode,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
   const isOtherSelected = isOtherRouteSelected(routeNumber);
   return (
     <>
       {getPathForRoute(route).map(({ x, y, type }, index) => {
-        const handleClick = (e: any) => {
+        const onMarkedPointClick = (e: any) => {
           // @TODO unify with Point.tsx
           if (!isPointMoving) {
-            setPointSelectedIndex(null);
             onPointInSelectedRouteClick(e);
             setPointElement(pointElement !== null ? null : e.currentTarget);
             setPointSelectedIndex(index);
@@ -62,7 +62,7 @@ export const RouteMarks = ({
 
         const position = getPixelPosition({ x, y, units: 'percentage' });
         const isActualPointSelected = isSelected && isPointSelected(index);
-        const pointerEvents = isSelected ? 'auto' : 'none';
+        const pointerEvents = isSelected || isEditMode ? 'auto' : 'none';
         const machine = getMachine();
         const isThisRouteEditOrExtendMode =
           (machine.currentStateName === 'extendRoute' ||
@@ -70,26 +70,28 @@ export const RouteMarks = ({
             machine.currentStateName === 'editRoute') &&
           isSelected;
 
+        const xOffset = isSelected && isEditMode ? 15 : 0;
         return (
           // eslint-disable-next-line react/no-array-index-key
           <React.Fragment key={`${routeNumber}-${index}-${x}-${y}`}>
             {isThisRouteEditOrExtendMode && <PulsedPoint x={x} y={y} />}
+
             {isBoltVisible && (
               <Bolt
-                x={position.x}
+                x={position.x + xOffset}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isPitonVisible && (
               <Piton
-                x={position.x}
+                x={position.x + xOffset}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isSlingVisible && (
@@ -98,37 +100,35 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isAnchorVisible && (
               <Anchor
-                x={position.x}
+                x={position.x + xOffset}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
             {isUnfinishedPointVisible && (
               <UnfinishedPoint
-                x={position.x}
+                x={position.x + xOffset}
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={handleClick}
+                onClick={onMarkedPointClick}
               />
             )}
-            {isThisRouteEditOrExtendMode && (
-              <Point
-                x={position.x}
-                y={position.y}
-                type={type}
-                onPointInSelectedRouteClick={onPointInSelectedRouteClick}
-                index={index}
-                routeNumber={routeNumber}
-              />
-            )}
+            <Point
+              x={position.x}
+              y={position.y}
+              type={type}
+              onPointInSelectedRouteClick={onPointInSelectedRouteClick}
+              index={index}
+              routeNumber={routeNumber}
+            />
           </React.Fragment>
         );
       })}

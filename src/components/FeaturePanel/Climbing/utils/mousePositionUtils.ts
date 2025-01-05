@@ -2,15 +2,15 @@ import React from 'react';
 import { PositionPx, ZoomState } from '../types';
 
 export const getPositionInImageFromMouse = (
-  photoRef: React.MutableRefObject<any>,
+  svgRef: React.MutableRefObject<any>,
   mousePosition: PositionPx,
   photoZoom: ZoomState,
 ) => {
-  if (photoRef.current === null || !mousePosition) {
+  if (svgRef.current === null || !mousePosition) {
     return null;
   }
 
-  const imageRect = photoRef.current.getBoundingClientRect();
+  const imageRect = svgRef.current.getBoundingClientRect();
 
   const posInImage: PositionPx = {
     x: (mousePosition.x - imageRect.x) / photoZoom.scale,
@@ -21,15 +21,15 @@ export const getPositionInImageFromMouse = (
 };
 
 export const getMouseFromPositionInImage = (
-  photoRef: React.MutableRefObject<any>,
+  svgRef: React.MutableRefObject<any>,
   position: PositionPx,
   photoZoom: ZoomState,
 ) => {
-  if (photoRef.current === null || !position) {
+  if (svgRef.current === null || !position) {
     return null;
   }
 
-  const imageRect = photoRef.current.getBoundingClientRect();
+  const imageRect = svgRef.current.getBoundingClientRect();
 
   return {
     x: position.x * photoZoom.scale + imageRect.x,

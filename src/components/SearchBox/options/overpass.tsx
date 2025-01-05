@@ -4,17 +4,21 @@ import { Grid, Typography } from '@mui/material';
 import type { OverpassOption } from '../types';
 import { t } from '../../../services/intl';
 import { IconPart } from '../utils';
+import { getAST, queryWizardLabel } from '../queryWizard/queryWizard';
 
 const OVERPASS_HISTORY_KEY = 'overpassQueryHistory';
 
 // TODO use usePersistedState with global context triggering changes
 const getOverpassQueryHistory = (): string[] =>
-  JSON.parse(window.localStorage.getItem(OVERPASS_HISTORY_KEY) ?? '[]');
+  JSON.parse(window.localStorage.getItem(OVERPASS_HISTORY_KEY) ?? '[]').filter(
+    Boolean,
+  );
 
 export const addOverpassQueryHistory = (query: string) => {
+  const oldHistory = getOverpassQueryHistory().filter((q) => q !== query);
   window.localStorage.setItem(
     OVERPASS_HISTORY_KEY,
-    JSON.stringify([query, ...getOverpassQueryHistory()]),
+    JSON.stringify([query, ...oldHistory]),
   );
 };
 
@@ -40,19 +44,19 @@ export const getOverpassOptions = (inputValue: string): OverpassOption[] => {
     ];
   }
 
-  if (inputValue.match(/^[-:_a-zA-Z0-9]+=/)) {
-    const [key, value] = inputValue.split('=', 2);
+  try {
+    const ast = getAST(inputValue);
     return [
       {
         type: 'overpass',
         overpass: {
-          tags: { [key]: value || '*' },
-          label: `${key}=${value || '*'}`,
+          ast,
           inputValue,
+          label: queryWizardLabel(ast),
         },
       },
     ];
-  }
+  } catch {}
 
   return [];
 };

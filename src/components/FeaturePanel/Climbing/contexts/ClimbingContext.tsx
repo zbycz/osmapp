@@ -46,6 +46,8 @@ type ClimbingContextType = {
   imageSize: ImageSize;
   imageContainerSize: ImageSize;
   isPointMoving: boolean;
+  isPanningDisabled: boolean;
+  setIsPanningDisabled: (isPanningDisabled: boolean) => void;
   isRouteSelected: (routeNumber: number) => boolean;
   isOtherRouteSelected: (routeNumber: number) => boolean;
   isRouteHovered: (routeNumber: number) => boolean;
@@ -58,9 +60,8 @@ type ClimbingContextType = {
   setEditorPosition: (position: PositionPx) => void;
   setImageSize: (ImageSize) => void;
   setImageContainerSize: (ImageSize) => void;
-  splitPaneHeight: number | null;
-  setSplitPaneHeight: (height: number | null) => void;
   photoPaths: Array<string>;
+  setPhotoPaths: (path: Array<string>) => void;
   photoPath: string;
   setPhotoPath: (path: string) => void;
   setIsPointMoving: (isPointMoving: boolean) => void;
@@ -111,6 +112,7 @@ type ClimbingContextType = {
   filterDifficulty: Array<string>;
   setFilterDifficulty: (filterDifficulty: Array<string>) => void;
   photoRef: React.MutableRefObject<any>;
+  svgRef: React.MutableRefObject<any>;
   getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
   showDebugMenu: boolean;
   setShowDebugMenu: (showDebugMenu: boolean) => void;
@@ -142,6 +144,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const initialRoutes = osmToClimbingRoutes(feature);
   publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);
+  const svgRef = useRef(null);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);
@@ -153,8 +156,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   });
   const [loadedPhotos, setLoadedPhotos] = useState<LoadedPhotos>({});
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
-  const [splitPaneHeight, setSplitPaneHeight] = useState<number | null>(null);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
+  const [isPanningDisabled, setIsPanningDisabled] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
   const [areRoutesLoading, setAreRoutesLoading] = useState<boolean>(true);
   const [arePointerEventsDisabled, setArePointerEventsDisabled] =
@@ -224,7 +227,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     updateRouteOnIndex(routeSelectedIndex, (route) => ({
       ...route,
       paths: {
-        ...route.paths,
+        ...(route?.paths ?? {}),
         [photoPath]: callback(getPathOnIndex(routeIndex)),
       },
     }));
@@ -270,7 +273,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     updateRouteOnIndex,
     getPercentagePosition,
     findCloserPoint,
-    photoRef,
+    svgRef,
     photoZoom,
   });
 
@@ -323,6 +326,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     imageSize,
     isPointClicked,
     isPointMoving,
+    isPanningDisabled,
+    setIsPanningDisabled,
     isRouteSelected,
     isOtherRouteSelected,
     isRouteHovered,
@@ -345,8 +350,6 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     scrollOffset,
     setScrollOffset,
     findCloserPoint,
-    splitPaneHeight,
-    setSplitPaneHeight,
     mousePosition,
     setMousePosition,
     pointElement,
@@ -360,13 +363,15 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setRouteIndexHovered,
     photoPath,
     photoPaths,
+    setPhotoPaths,
     setPhotoPath,
     routeIndexExpanded,
     setRouteIndexExpanded,
     loadPhotoRelatedData,
     filterDifficulty,
     setFilterDifficulty,
-    photoRef,
+    photoRef, // @TODO rename: technically it's not photoRef but photoContainerRef, because photo is scaled by object-fit: contain
+    svgRef,
     areRoutesLoading,
     setAreRoutesLoading,
     photoZoom,

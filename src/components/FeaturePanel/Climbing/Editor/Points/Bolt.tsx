@@ -13,7 +13,7 @@ export const Bolt = ({
   const { isEditMode, photoZoom } = useClimbingContext();
   const config = useConfig();
   const size = 14;
-  const strokeWidth = 2;
+  const strokeWidth = 2.5;
   const shift = size / 2 - strokeWidth / 2;
 
   const dx = x + 0; /* TODO was 15 */

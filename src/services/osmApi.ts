@@ -11,20 +11,43 @@ import { osmToFeature } from './osmToFeature';
 import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
 import * as Sentry from '@sentry/nextjs';
 import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
-import { isClimbingRelation, isClimbingRoute } from '../utils';
+import {
+  isClimbingRelation,
+  isClimbingRoute,
+  isPublictransportRoute,
+  isRouteMaster,
+  publishDbgObject,
+} from '../utils';
 import { getOverpassUrl } from './overpassSearch';
 
-const getOsmUrl = ({ type, id }) =>
+type GetOsmUrl = (object: OsmId) => string;
+
+const getOsmUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
-const getOsmFullUrl = ({ type, id }) =>
+const getOsmFullUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/full.json`;
-const getOsmParentUrl = ({ type, id }) =>
+const getOsmParentUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/relations.json`;
-const getOsmHistoryUrl = ({ type, id }) =>
+const getOsmHistoryUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
+type OsmResponse = {
+  elements?: {
+    type: 'node' | 'way' | 'relation';
+    id: number;
+    lat: number;
+    lon: number;
+    timestamp: string;
+    version: number;
+    changeset: number;
+    user: string;
+    uid: number;
+    tags: Record<string, string>;
+  }[];
+};
+
 const getOsmElement = async (apiId: OsmId) => {
-  const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
+  const { elements } = await fetchJson<OsmResponse>(getOsmUrl(apiId)); // TODO 504 gateway busy
   return elements?.[0];
 };
 
@@ -69,6 +92,7 @@ const getOsmParentPromise = async (apiId: OsmId) => {
 const featureCenterCache: Record<string, LonLat> = {};
 export const addFeatureCenterToCache = (shortId: string, center: LonLat) => {
   featureCenterCache[shortId] = center;
+  publishDbgObject('featureCenterCache', featureCenterCache);
 };
 
 const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
@@ -102,10 +126,52 @@ const getCountryCode = async (feature: Feature): Promise<string | null> => {
   return null;
 };
 
-export const fetchFeatureWithCenter = async (apiId: OsmId) => {
-  const [element, center] = await Promise.all([
-    getOsmPromise(apiId),
-    getCenterPromise(apiId),
+export const getRelationElementsAndCenter = async (apiId: OsmId) => {
+  const element = await getOsmPromise(apiId);
+  const getPositionOfFirstItem =
+    isPublictransportRoute({ tags: element.tags }) ||
+    isRouteMaster({
+      tags: element.tags,
+      osmMeta: apiId,
+    });
+  const center = getPositionOfFirstItem
+    ? await fetchOverpassCenter({
+        id: element.members[0].ref,
+        type: element.members[0].type,
+      })
+    : await fetchOverpassCenter(apiId);
+
+  return { element, center };
+};
+
+const getElementsAndCenter = async (apiId: OsmId) => {
+  const cachedCenter = featureCenterCache[getShortId(apiId)];
+  if (isBrowser() && cachedCenter) {
+    return {
+      center: cachedCenter,
+      element: await getOsmPromise(apiId),
+    };
+  }
+  switch (apiId.type) {
+    case 'node':
+      return {
+        element: await getOsmPromise(apiId),
+        center: false as const,
+      };
+    case 'way':
+      const [elementWay, center] = await Promise.all([
+        getOsmPromise(apiId),
+        getCenterPromise(apiId),
+      ]);
+      return { element: elementWay, center };
+    case 'relation':
+      return getRelationElementsAndCenter(apiId);
+  }
+};
+
+const fetchFeatureWithCenter = async (apiId: OsmId) => {
+  const [{ element, center }] = await Promise.all([
+    getElementsAndCenter(apiId),
     fetchSchemaTranslations(),
   ]);
 
@@ -237,7 +303,11 @@ export const addMembersAndParents = async (
     return { ...feature, parentFeatures };
   }
 
-  if (isClimbingRelation(feature)) {
+  if (
+    isClimbingRelation(feature) ||
+    isPublictransportRoute(feature) ||
+    isRouteMaster(feature)
+  ) {
     const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
       fetchParentFeatures(feature.osmMeta),
       addMemberFeaturesToRelation(feature),
@@ -255,6 +325,7 @@ export const addMembersAndParents = async (
 
 export const fetchFeature = async (apiId: OsmId): Promise<Feature> => {
   try {
+    // offline features for testing
     if (apiId.type === 'relation' && apiId.id === 6) {
       await fetchSchemaTranslations();
       const osmApiTestItems = await import('./osmApiTestItems');
@@ -321,13 +392,13 @@ export const insertOsmNote = async (
 };
 
 const getAroundUrl = ([lat, lon]: Position) =>
-  `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
+  getOverpassUrl(
     `[timeout:5][out:json];(
         relation[~"."~"."](around:50,${lon},${lat});
         way[~"."~"."](around:50,${lon},${lat});
         node[~"."~"."](around:50,${lon},${lat});
-      );out 20 body qt center;`, // some will be filtered out
-  )}`;
+      );out body qt center;`,
+  );
 
 export const fetchAroundFeature = async (point: Position) => {
   const response = await fetchJson(getAroundUrl(point));

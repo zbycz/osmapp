@@ -3,41 +3,55 @@ import React, {
   useCallback,
   useContext,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { usePersistedState } from './usePersistedState';
 import { DEFAULT_MAP } from '../../config.mjs';
 import { PROJECT_ID } from '../../services/project';
 import { useBoolState } from '../helpers';
+import { Setter } from '../../types';
+import { LonLat } from '../../services/types';
 
-export interface Layer {
-  type: 'basemap' | 'overlay' | 'user' | 'spacer' | 'overlayClimbing';
-  name?: string;
-  url?: string;
-  key?: string;
-  Icon?: React.ReactNode;
-  attribution?: string[]; // missing in spacer TODO refactor ugly
-  maxzoom?: number;
-  bboxes?: number[][];
-}
+export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
 // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
 export type Bbox = [number, number, number, number];
 
+export interface Layer {
+  type: 'basemap' | 'overlay' | 'user' | 'spacer';
+  name?: string;
+  description?: string;
+  url?: string;
+  darkUrl?: string; // optional url for dark mode
+  key?: string;
+  Icon?: LayerIcon;
+  attribution?: string[]; // missing in spacer TODO refactor ugly
+  maxzoom?: number;
+  minzoom?: number;
+  bboxes?: Bbox[];
+}
+
 // [z, lat, lon] - string because we use RoundedPosition
 export type View = [string, string, string];
 
+export type MapClickOverride =
+  | ((coords: LonLat, label: string) => void)
+  | undefined;
+export type MapClickOverrideRef = React.MutableRefObject<MapClickOverride>;
+
 type MapStateContextType = {
   bbox: Bbox;
-  setBbox: (bbox: Bbox) => void;
+  setBbox: Setter<Bbox>;
   view: View;
-  setView: (view: View) => void;
+  setView: Setter<View>;
   viewForMap: View;
-  setViewFromMap: (view: View) => void;
+  setViewFromMap: Setter<View>;
   activeLayers: string[];
-  setActiveLayers: (layers: string[] | ((prev: string[]) => string[])) => void;
+  setActiveLayers: Setter<string[]>;
   userLayers: Layer[];
-  setUserLayers: (param: Layer[] | ((current: Layer[]) => Layer[])) => void;
+  setUserLayers: Setter<Layer[]>;
+  mapClickOverrideRef: MapClickOverrideRef;
   mapLoaded: boolean;
   setMapLoaded: () => void;
 };
@@ -46,11 +60,16 @@ export const MapStateContext = createContext<MapStateContextType>(undefined);
 
 const useActiveLayersState = () => {
   const isClimbing = PROJECT_ID === 'openclimbing';
-  const initLayers = isClimbing ? ['outdoor', 'climbing'] : [DEFAULT_MAP];
+  const initLayers = isClimbing
+    ? ['outdoor', 'climbing']
+    : [DEFAULT_MAP, 'indoor'];
   return usePersistedState('activeLayers', initLayers);
 };
 
-export const MapStateProvider = ({ children, initialMapView }) => {
+export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
+  children,
+  initialMapView,
+}) => {
   const [activeLayers, setActiveLayers] = useActiveLayersState();
   const [bbox, setBbox] = useState<Bbox>();
   const [view, setView] = useState(initialMapView);
@@ -59,11 +78,11 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     'userLayerIndex',
     [],
   );
-
+  const mapClickOverrideRef = useRef<MapClickOverride>();
   const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
   useEffect(setNotLoaded, [setNotLoaded]);
 
-  const setBothViews = useCallback((newView) => {
+  const setBothViews: Setter<View> = useCallback((newView) => {
     setView(newView);
     setViewForMap(newView);
   }, []);
@@ -79,6 +98,7 @@ export const MapStateProvider = ({ children, initialMapView }) => {
     setActiveLayers,
     userLayers,
     setUserLayers,
+    mapClickOverrideRef,
     mapLoaded,
     setMapLoaded,
   };

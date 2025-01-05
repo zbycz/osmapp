@@ -11,6 +11,21 @@ export default {
 
   'user.login_register': 'Přihlásit se / Registrovat',
   'user.logout': 'Odhlásit se',
+  'user.my_ticks': 'Moje přelezy',
+  'user.user_settings': 'Nastavení',
+
+  'user_settings.general': 'Obecné',
+  'user_settings.show_weather_widget': 'Zobrazit widget počasí',
+  'user_settings.climbing': 'Lezení',
+  'user_settings.default_grade_system': 'Výchozí lezecká klasifikace',
+  'user_settings.show_grades_in_pictures': 'Zobrazovat obtížnosti cest na fotkách',
+  'user_settings.default_climbing_style': 'Výchozí styl přelezu',
+  'user_settings.select_climbing_routes_by_scrolling': 'Vybírat lezecké cesty scrollováním',
+  'user_settings.switch_climbing_photos_by_scrolling': 'Přepínat automaticky fotky při scrollování',
+  'user_settings.crag_view_layout': 'Layout stránky u lezeckých sektorů',
+  'user_settings.crag_view_layout_vertical': 'Vedle sebe',
+  'user_settings.crag_view_layout_horizontal': 'Pod sebou',
+  'user_settings.crag_view_layout_auto': 'Automaticky (podle rozlišení)',
 
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
@@ -35,7 +50,7 @@ export default {
   'install.outro': 'To je vše! Aplikaci najdete na své domovské obrazovce.',
   'install.note': 'Poznámka: Používáme technologii PWA – rychlá instalace bez nutnosti Google Play či App Storu.',
   'homepage.how_to_start': 'Začněte ve vyhledávacím poli,\nnebo klikněte na libovolnou ikonku v mapě.',
-  'homepage.go_to_map_button': 'Přejít do mapy',
+  'homepage.go_to_map_button': 'Přejít na mapu',
   'homepage.examples.eg': 'např.',
   'homepage.examples.charles_bridge_statues': 'Sochy na Karlově mostě',
   'homepage.about_osm': `Mapová data pochází z projektu <a href="https://osm.org">OpenStreetMap</a>, tvoří ho
@@ -45,7 +60,7 @@ export default {
   'homepage.about_osmapp': `Tato aplikace by měla nabídnout pohodlné rozhraní pro každodenní využití <i>OpenStreetMap</i>
     včetně možnosti editace. <br/>Nyní už obsahuje rozličné mapové vrstvy, editaci POI a základní vyhledávač.
     V plánu jsou funkce jako navigace či oblíbená místa.`,
-  'homepage.github_link': `Další nápady můžete přidat na <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
+  'homepage.github_link': `Repozitář je open-source. Další nápady na vylepšení aplikace můžete přidat na <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
   'homepage.special_thanks_heading': `Specialní díky`,
   'homepage.for_images': 'za obrázky 🖼',
   'homepage.for_osm': 'za nejlepší mapu Země 🌎',
@@ -55,6 +70,18 @@ export default {
   'homepage.disclaimer': `OpenStreetMap a OSM jsou ochranné známky nadace OpenStreetMap. Tento projekt není schválen ani spojen s nadací <a href="https://osmfoundation.org/">OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vektorové mapy ("Základní" a "Outdoorová") obsahují některé názvy míst z projektu Wikidata,  více <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>zde</a>.`,
 
+  'homepage.important_links': `Důležité odkazy`,
+  'homepage.add_new_climbing_area': `Přidat oblast`,
+  'homepage.our_story': `Náš příběh`,
+  'homepage.openclimbing_description_p1': `Aplikace pro mapování skalních oblastí a vytváření interaktivních lezeckých průvodců.`,
+  'homepage.openclimbing_description_p2': `Všechna data jsou otevřená a každý je může upravit – podobně jako na Wikipedii.`,
+  'homepage.description_show_more': `zobrazit více`,
+  'homepage.expanded_description_p1': `Aplikace je vyvíjena jako open-source, využívá`,
+  'homepage.expanded_description_p2': `pro ukládání lezeckých cest a obrázky jsou sdíleny prostřednictvím`,
+  'homepage.expanded_description_p3': `, což umožňuje snadné a efektivní sdílení informací.`,
+  'homepage.discover_more_p1': `Prozkoumat dalších`,
+  'homepage.discover_more_p2': `oblastí`,
+
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
   'searchbox.category': 'kategorie',
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
@@ -62,7 +89,7 @@ export default {
   'searchbox.overpass_custom_query': 'vlastní dotaz',
 
   'directions.get_directions': 'Vyhledat trasu',
-  'directions.form.starting_point': 'Začátek trasy',
+  'directions.form.start_or_click': 'Zvolte začátek nebo klikněte do mapy',
   'directions.form.destination': 'Cíl',
   'directions.edit_destinations': 'Upravit zadání',
   'directions.powered_by': 'Vyhledávání tras dodává systém __link__.',
@@ -131,9 +158,7 @@ export default {
   'editdialog.osm_session_expired': 'Vaše přihlášení do OpenStreetMap vypršelo. Prosím, přihlašte se znovu.',
   'editdialog.loggedInMessage': 'Jste přihlášeni jako <b>__osmUser__</b>, změny se ihned projeví v mapě.',
   'editdialog.logout': 'odhlásit',
-  'editdialog.anonymousMessage1': 'Vkládáte <b>anonymní</b> poznámku do mapy.<br />Pokud se',
-  'editdialog.anonymousMessage2_login': 'přihlásíte do OpenStreetMap',
-  'editdialog.anonymousMessage3': ', změny se ihned projeví v mapě.',
+  'editdialog.anonymousMessage': 'Vkládáte <b>anonymní</b> poznámku do mapy. Pokud se přihlásíte do OpenStreetMap, změny se ihned projeví v mapě.',
   'editdialog.add_major_tag': 'Přidat',
   'editdialog.location_checkbox': 'Zadat novou polohu',
   'editdialog.location_placeholder': 'např. naproti přes ulici',
@@ -148,13 +173,10 @@ export default {
   'editdialog.info_note': `Váš návrh budou zpracovávat dobrovolníci OpenStreetMap, zde pro ně
         můžete přidat doplňující poznámku. Vhodné je podložit váš příspěvek odkazem na zdroj
         informace (web, foto atd.).`,
-  'editdialog.other_tags': 'Další vlastnosti – tagy',
-  'editdialog.other_tags.new_key': 'nový klíč',
-  'editdialog.other_tags.add': 'Přidat další tag',
-  'editdialog.other_tags.will_be_deleted': 'bude smazáno',
-  'editdialog.other_tags.info': `Tagy popisují vlastnosti
-        mapového prvku v dohodnutém formátu. Zde naleznete úplný
-        <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features">přehled všech tagů v OpenStreetMap</a>.`,
+  'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
+  'editdialog.tags_editor_info': `Tagy popisují vlastnosti mapového prvku v dohodnutém formátu. Zde naleznete úplný
+        <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
+  'editdialog.save_refused': 'Změny se nepodařilo uložit.',
 
   'editsuccess.close_button': 'Zavřít',
   'editsuccess.note.heading': 'Děkujeme za Váš návrh!',
@@ -174,13 +196,11 @@ export default {
   'tags.opening_hours': 'Otevírací doba',
 
   'coordinates.geo_uri': 'GeoURI (mapová appka v telefonu)',
-  'coordinates.copy_value': 'Copy __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Mapy',
   'layerswitcher.heading': 'Mapové vrstvy',
   'layerswitcher.intro': 'Díky tomu, že OpenStreetMap nabízí zdrojová data, tak kdokoliv může vyrobit různé varianty mapy.',
   'layerswitcher.add_layer_button': 'Přidat vlastní vrstvu',
-  'layerswitcher.add_layer_prompt': 'Přidat vlastní TMS vrstvu – CORS musí být nastaveno:\n(beta funkcionalita)',
   'layerswitcher.overlays': 'Překryvné vrstvy',
 
   'layers.basic': 'Základní',
@@ -188,13 +208,29 @@ export default {
   'layers.mtb': 'MTB',
   'layers.snow': 'Zimní',
   'layers.carto': 'OSM Carto',
-  'layers.maptilerSat': 'Letecká Maptiler ',
+  'layers.maptilerSat': 'Letecká Maptiler',
   'layers.bingSat': 'Letecká Bing',
   'layers.bike': 'Cyklo',
+  'layers.transport': 'Dopravní',
   'layers.climbing': 'Sportovní lezení',
+  'layers.indoor': 'Vnitřky budov',
 
   'climbingareas.link': 'Seznam všech lezeckých oblastí',
   'climbingareas.title': 'Lezecké oblasti',
   'climbingareas.area': 'Oblast',
   'climbingareas.num_of_crags': 'Počet skal',
+
+  'climbing_grade_table.title': 'Tabulka lezeckých obtížností',
+  'climbing_grade_table.show': 'Zobrazit',
+
+  'sharedialog.link': 'Odkaz',
+  'sharedialog.shortened_link': 'Zkrácený odkaz',
+  'sharedialog.coordinates': 'Souřadnice',
+  'sharedialog.openin': 'Otevřít v',
+  'sharedialog.image_attribution': 'Copyright obrázků',
+  'sharedialog.copy': 'Kopírovat',
+  'sharedialog.copied': 'Zkopírováno!',
+  'sharedialog.share': 'Sdílet',
+
+  weather: 'Počasí',
 };

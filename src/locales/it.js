@@ -147,9 +147,8 @@ export default {
   'editdialog.osm_session_expired': 'La tua sessione di OpenStreetMap è scaduta. Accedi nuovamente',
   'editdialog.loggedInMessage': 'Hai effettuato l’accesso come <b>__osmUser__</b>, le modifiche verranno salvata immediatamente.',
   'editdialog.logout': 'esci',
-  'editdialog.anonymousMessage1': 'Verrà aggiunta alla mappa una nota <b>anonima</b>.<br /> Se accedi',
-  'editdialog.anonymousMessage2_login': 'accedi a OpenStreetMap',
-  'editdialog.anonymousMessage3': ', le tue modifiche saranno immediate.',
+  'editdialog.anonymousMessage':
+    'Verrà aggiunta alla mappa una nota <b>anonima</b>. Se accedi accedi a OpenStreetMap, le tue modifiche saranno immediate.',
   'editdialog.add_major_tag': 'Aggiungi',
   'editdialog.location_checkbox': 'Cambia posizione',
   'editdialog.location_placeholder': 'ad es. dall’altra parte della strada',
@@ -162,10 +161,8 @@ solo informazioni che hai verificato di persona o che provengono da fonti attend
          È proibita la copia di dati protetti da copyright (ad es. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/IT:How_We_Map">Ulteriori informazioni</a>`,
   'editdialog.info_note': `Il tuo suggerimento verrà valutato dai volontari di OpenStreetMap. Qui puoi aggiungere un’ulteriore nota oppure descrivere la posizione precisa, ecc. Sarebbe anche appropriato supportare il tuo contributo con un collegamento a una fonte (sito web, foto, etc.).`,
   'editdialog.other_tags_heading': 'Altri tag',
-  'editdialog.other_tags': 'Modifica tag',
-  'editdialog.other_tags.new_key': 'nuova chiave',
-  'editdialog.other_tags.will_be_deleted': 'verrà eliminato',
-  'editdialog.other_tags.info': `Le etichette descrivono le proprietà di ogni elemento della mappa secondo un formato definito. Qui troverai la lista completa <a href="https://wiki.openstreetmap.org/wiki/Map_Features">di tutte le etichette su OpenStreetMap</a>.`,
+  'editdialog.tags_editor': 'Todas las propiedades – tag',
+  'editdialog.tags_editor_info': `Le etichette descrivono le proprietà di ogni elemento della mappa secondo un formato definito. Qui troverai la lista completa <a href="https://wiki.openstreetmap.org/wiki/IT:Map_Features" target="_blank">di tutte le etichette su OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Chiudi',
   'editsuccess.note.heading': 'Grazie per il tuo suggerimento!',
@@ -188,13 +185,11 @@ solo informazioni che hai verificato di persona o che provengono da fonti attend
   'tags.opening_hours': 'Orari di apertura',
 
   'coordinates.geo_uri': 'GeoURI (phone map app)',
-  'coordinates.copy_value': 'Copy __value__', // keep it short, don't mention clipboard
 
   'layerswitcher.button': 'Livelli',
   'layerswitcher.heading': 'Livelli della mappa',
   'layerswitcher.intro': 'Grazie al fatto che OpenStreetMap offre i dati, chiunque può produrre differenti versioni della mappa.',
   'layerswitcher.add_layer_button': 'Aggiungi livello personalizzato',
-  'layerswitcher.add_layer_prompt': 'Aggiungi livello TMS personalizzato (richiede correzione CORS:\n(funzionalità in beta))',
   'layerswitcher.overlays': 'Sovrapposizioni',
 
   'layers.basic': 'Base',
@@ -219,5 +214,4 @@ solo informazioni che hai verificato di persona o che provengono da fonti attend
   'runway.information': 'Informazioni su Runway',
   'runway.runway': 'Runway',
   'runway.size': 'Lunghezza (m) - Larghezza (m)',
-  'runway.surface': 'Superficie',
 };

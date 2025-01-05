@@ -1,8 +1,9 @@
 import React, { createContext, useContext, useState } from 'react';
-import { useToggleState } from '../../helpers';
-import { Feature, FeatureTags, SuccessInfo } from '../../../services/types';
+import { Feature, SuccessInfo } from '../../../services/types';
+import { EditDataItem, useEditItems } from './useEditItems';
+import { getShortId } from '../../../services/helpers';
+import { useEditDialogFeature } from './utils';
 
-export type TypeTag = { key: string; value: string } | undefined;
 type EditContextType = {
   successInfo: undefined | SuccessInfo;
   setSuccessInfo: (info: undefined | SuccessInfo) => void;
@@ -12,43 +13,27 @@ type EditContextType = {
   setLocation: (s: string) => void;
   comment: string;
   setComment: (s: string) => void;
-  tags: {
-    typeTag: TypeTag;
-    setTypeTag: (typeTag: TypeTag) => void;
-    tags: FeatureTags;
-    setTag: (k: string, v: string) => void;
-    tmpNewTag: {};
-    setTmpNewTag: (obj: {}) => void;
-    cancelled: boolean;
-    toggleCancelled: () => void;
-  };
-};
-
-const useTagsState = (
-  initialTags: FeatureTags,
-): [FeatureTags, (k: string, v: string) => void] => {
-  const [tags, setTags] = useState(initialTags);
-  const setTag = (k, v) => setTags((state) => ({ ...state, [k]: v }));
-  return [tags, setTag];
+  addFeature: (feature: Feature) => void;
+  items: Array<EditDataItem>;
+  current: string;
+  setCurrent: (s: string) => void;
 };
 
 const EditContext = createContext<EditContextType>(undefined);
 
 type Props = {
-  feature: Feature;
+  originalFeature: Feature;
   children: React.ReactNode;
 };
 
-export const EditContextProvider = ({ feature, children }: Props) => {
+export const EditContextProvider = ({ originalFeature, children }: Props) => {
+  const { feature } = useEditDialogFeature();
   const [successInfo, setSuccessInfo] = useState<undefined | SuccessInfo>();
   const [isSaving, setIsSaving] = useState(false);
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState(''); // technically is "data", but only for note
   const [comment, setComment] = useState('');
-
-  const [typeTag, setTypeTag] = useState<TypeTag>();
-  const [tags, setTag] = useTagsState(feature.tags);
-  const [tmpNewTag, setTmpNewTag] = useState({});
-  const [cancelled, toggleCancelled] = useToggleState(false);
+  const { items, addFeature } = useEditItems(originalFeature);
+  const [current, setCurrent] = React.useState(getShortId(feature.osmMeta));
 
   const value: EditContextType = {
     successInfo,
@@ -59,16 +44,10 @@ export const EditContextProvider = ({ feature, children }: Props) => {
     setLocation,
     comment,
     setComment,
-    tags: {
-      typeTag,
-      setTypeTag,
-      tags,
-      setTag,
-      tmpNewTag,
-      setTmpNewTag,
-      cancelled,
-      toggleCancelled,
-    },
+    addFeature,
+    items,
+    current,
+    setCurrent,
   };
 
   return <EditContext.Provider value={value}>{children}</EditContext.Provider>;

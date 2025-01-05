@@ -1,14 +1,8 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import {
-  ClimbingContextProvider,
-  useClimbingContext,
-} from '../contexts/ClimbingContext';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteListDndContent } from './RouteListDndContent';
-import { useFeatureContext } from '../../../utils/FeatureContext';
-import { isClimbingRelation } from '../../../../utils';
-import { getKey } from '../../../../services/helpers';
 
 const Container = styled.div`
   padding-bottom: 20px;
@@ -55,21 +49,4 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
       {routes.length !== 0 && <RouteListDndContent isEditable={isEditable} />}
     </Container>
   );
-};
-
-export const RouteListInPanel = () => {
-  const { feature } = useFeatureContext();
-
-  if (
-    isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
-    feature.tags.climbing === 'crag'
-  ) {
-    return (
-      <ClimbingContextProvider feature={feature} key={getKey(feature)}>
-        <RouteList />
-      </ClimbingContextProvider>
-    );
-  }
-
-  return null;
 };

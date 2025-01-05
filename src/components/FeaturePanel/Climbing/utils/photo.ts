@@ -1,24 +1,43 @@
 import { FeatureTags } from '../../../../services/types';
 import { isIOS } from '../../../../helpers/platforms';
+import { naturalSort } from './array';
 
 // @TODO move file outside of climbing
 
 export const getWikimediaCommonsKey = (index: number) =>
   `wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`;
 
+export const addFilePrefix = (name: string) => `File:${name}`;
+
 export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 
 export const isWikimediaCommons = (tag: string) =>
   tag.startsWith('wikimedia_commons');
 
-export const isWikimediaCommonsPhoto = (tag: string) => {
+export const isWikimediaCommonsPhoto = ([key, value]: [string, string]) => {
   // regexp to match wikimedia_commons, wikimedia_commons:2, etc. but not  wikimedia_commons:path, wikimedia_commons:whatever
   const re = /^wikimedia_commons(:\d+)?$/;
-  return re.test(tag);
+  return re.test(key) && value.startsWith('File:');
+};
+
+export const getWikimediaCommonsPhotoTags = (tags: FeatureTags) => {
+  return naturalSort(
+    Object.entries(tags).filter(isWikimediaCommonsPhoto),
+    (item) => item[0],
+  );
+};
+export const getWikimediaCommonsPhotoTagsObject = (tags: FeatureTags) => {
+  return getWikimediaCommonsPhotoTags(tags).reduce(
+    (acc, [tagKey, tagValue]) => ({ ...acc, [tagKey]: tagValue }),
+    {},
+  );
 };
 
 export const getWikimediaCommonsPhotoKeys = (tags: FeatureTags) =>
-  Object.keys(tags).filter(isWikimediaCommonsPhoto);
+  getWikimediaCommonsPhotoTags(tags).map(([tagKey, _tagValue]) => tagKey);
+
+export const getWikimediaCommonsPhotoValues = (tags: FeatureTags) =>
+  getWikimediaCommonsPhotoTags(tags).map(([_tagKey, tagValue]) => tagValue);
 
 export const isWikimediaCommonsPhotoPath = (tag: string) => {
   const re = /^wikimedia_commons(:\d+)*:path$/;
@@ -28,8 +47,15 @@ export const isWikimediaCommonsPhotoPath = (tag: string) => {
 export const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
   Object.keys(tags).filter(isWikimediaCommonsPhotoPath);
 
+export const getWikimediaCommonsTags = (tags: FeatureTags) => {
+  return naturalSort(
+    Object.entries(tags).filter(([key]) => isWikimediaCommons[key]),
+    (item) => item[0],
+  );
+};
+
 export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
-  Object.keys(tags).filter(isWikimediaCommons); // TODO this returns also :path keys, not sure if intended
+  getWikimediaCommonsTags(tags).map(([tagKey, _tagValue]) => tagKey); // TODO this returns also :path keys, not sure if intended
 
 export const getNextWikimediaCommonsIndex = (tags: FeatureTags) => {
   const keys = getWikimediaCommonsKeys(tags);

@@ -1,5 +1,6 @@
 import styled from '@emotion/styled';
 import { Grid, Typography } from '@mui/material';
+import orderBy from 'lodash/orderBy';
 import React from 'react';
 import maplibregl, { LngLatLike } from 'maplibre-gl';
 import match from 'autosuggest-highlight/match';
@@ -8,8 +9,10 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { getGlobalMap } from '../../services/mapStorage';
 import { LonLat } from '../../services/types';
-import { DotLoader, isImperial } from '../helpers';
+import { DotLoader } from '../helpers';
 import { GeocoderOption } from './types';
+import { diceCoefficient } from 'dice-coefficient';
+import { SEARCH_THRESHOLD } from './consts';
 
 export const IconPart = styled.div`
   width: 50px;
@@ -19,31 +22,39 @@ export const IconPart = styled.div`
   color: ${({ theme }) => theme.palette.text.secondary};
 `;
 
-export const getDistance = (point1: LonLat, point2: LonLat) => {
-  const lng1 = (point1[0] * Math.PI) / 180;
-  const lat1 = (point1[1] * Math.PI) / 180;
-  const lng2 = (point2[0] * Math.PI) / 180;
-  const lat2 = (point2[1] * Math.PI) / 180;
-  const latdiff = lat2 - lat1;
-  const lngdiff = lng2 - lng1;
+const EARTH_RADIUS = 6372795;
 
+const degreesToRadians = (degrees: number) => (degrees * Math.PI) / 180;
+
+/** Returns the distance between two points in meters */
+export const getDistance = (point1: LonLat, point2: LonLat) => {
+  const latdiff = degreesToRadians(point2[1]) - degreesToRadians(point1[1]);
+  const lngdiff = degreesToRadians(point2[0]) - degreesToRadians(point1[0]);
+
+  // harvesine formula
   return (
-    6372795 *
+    EARTH_RADIUS *
     2 *
     Math.asin(
       Math.sqrt(
         Math.sin(latdiff / 2) ** 2 +
-          Math.cos(lat1) * Math.cos(lat2) * Math.sin(lngdiff / 2) ** 2,
+          Math.cos(degreesToRadians(point1[1])) *
+            Math.cos(degreesToRadians(point2[1])) *
+            Math.sin(lngdiff / 2) ** 2,
       ),
     )
   );
 };
 
-export const getHumanDistance = (mapCenter: LonLat, point: LonLat) => {
+export const getHumanDistance = (
+  isImperial: boolean,
+  mapCenter: LonLat,
+  point: LonLat,
+) => {
   const distKm = getDistance(mapCenter, point) / 1000;
-  const dist = isImperial() ? distKm * 0.621371192 : distKm;
+  const dist = isImperial ? distKm * 0.621371192 : distKm;
   const rounded = dist < 10 ? Math.round(dist * 10) / 10 : Math.round(dist);
-  return isImperial() ? `${rounded} mi` : `${rounded} km`;
+  return isImperial ? `${rounded} mi` : `${rounded} km`;
 };
 
 export const useMapCenter = (): LonLat => {
@@ -102,4 +113,23 @@ export const highlightText = (resultText: string, inputValue: string) => {
       {part.text}
     </span>
   ));
+};
+
+export const diceCoefficientSort = <T extends unknown>(
+  options: T[],
+  getLabel: (opt: T) => string,
+  inputValue: string,
+  threshold = SEARCH_THRESHOLD,
+) => {
+  const optionsWithDiceCoefficient = options.map((opt) => ({
+    opt,
+    matching: diceCoefficient(getLabel(opt), inputValue),
+  }));
+
+  const filtered = optionsWithDiceCoefficient.filter(
+    ({ matching }) => matching > threshold,
+  );
+  return orderBy(filtered, ({ matching }) => matching, 'desc').map(
+    ({ opt }) => opt,
+  );
 };

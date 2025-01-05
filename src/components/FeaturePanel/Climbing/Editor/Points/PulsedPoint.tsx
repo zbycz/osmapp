@@ -7,29 +7,25 @@ import { useConfig } from '../../config';
 
 const pulseAnimation = keyframes`
 0% {
-  opacity: 0;
-  transform: scale(0);
-}
-
-30% {
-  opacity: 0.3;
-  transform: scale(1.5);
-}
-
-60% {
   opacity: 0.5;
-  transform: scale(3);
+  transform: scale(2);
+}
+
+
+50% {
+  opacity: 0.6;
+  transform: scale(4);
 }
 
 100% {
-  opacity: 0;
-  transform: scale(3);
+  opacity: 0.5;
+  transform: scale(2);
 }
 `;
 
 const PulsedPointElement = styled.circle`
   animation-name: ${pulseAnimation};
-  animation-duration: 3s;
+  animation-duration: 8s;
   animation-iteration-count: infinite;
 `;
 

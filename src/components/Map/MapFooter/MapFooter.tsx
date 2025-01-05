@@ -21,7 +21,6 @@ const StyledIconButton = styled(IconButton)`
 `;
 
 const FooterContainer = styled.div<{ $hasShadow: boolean }>`
-  margin: 0 4px 4px 4px;
   pointer-events: all;
   border-radius: 8px;
   padding: 6px;
@@ -77,7 +76,7 @@ export const MapFooter = () => {
   const hasLegend = isMobileMode && featureShown ? false : hasClimbingLayer;
   const [legendShown, setLegendShown] = usePersistedState<boolean>(
     'isLegendVisible',
-    true,
+    false,
   );
   const isClient = useIsClient();
 

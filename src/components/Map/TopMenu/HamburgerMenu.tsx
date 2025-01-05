@@ -1,4 +1,5 @@
 import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
+import TerrainIcon from '@mui/icons-material/Terrain';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
 import React, { useEffect, useState } from 'react';
@@ -12,12 +13,14 @@ import { useBoolState } from '../../helpers';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useMapStateContext } from '../../utils/MapStateContext';
-import { getIdEditorLink } from '../../../utils';
+import { getIdEditorLink } from '../../FeaturePanel/helpers/externalLinks';
 import { UserTheme, useUserThemeContext } from '../../../helpers/theme';
 import GithubIcon from '../../../assets/GithubIcon';
 import { LangSwitcher } from './LangSwitcher';
 import { HamburgerIconButton } from './HamburgerIconButton';
 import { PROJECT_ID } from '../../../services/project';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import Link from 'next/link';
 
 const StyledGithubIcon = styled(GithubIcon)`
   filter: ${({ theme }) => theme.palette.invertFilter};
@@ -116,8 +119,15 @@ const GithubLink = ({ closeMenu }) => (
   </MenuItem>
 );
 const ClimbingAreasLink = ({ closeMenu }) => (
-  <MenuItem href="/climbing-areas" component="a" onClick={closeMenu}>
+  <MenuItem href="/climbing-areas" component={Link} onClick={closeMenu}>
+    <TerrainIcon fontSize="inherit" sx={{ mr: 1 }} />
     {t('climbingareas.title')}
+  </MenuItem>
+);
+const ClimbingGradesTableLink = ({ closeMenu }) => (
+  <MenuItem href="/climbing-grades" component={Link} onClick={closeMenu}>
+    <ViewListIcon fontSize="small" />
+    {t('climbing_grade_table.title')}
   </MenuItem>
 );
 
@@ -194,7 +204,12 @@ export const HamburgerMenu = () => {
         <InstallLink closeMenu={close} />
         <AboutLink closeMenu={close} />
         <GithubLink closeMenu={close} />
-        {isOpenClimbing && <ClimbingAreasLink closeMenu={close} />}
+        {isOpenClimbing && (
+          <>
+            <ClimbingAreasLink closeMenu={close} />
+            <ClimbingGradesTableLink closeMenu={close} />
+          </>
+        )}
         <StyledDivider />
         <LangSwitcher />
       </Menu>

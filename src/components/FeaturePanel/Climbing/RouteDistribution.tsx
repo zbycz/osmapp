@@ -12,7 +12,7 @@ import { GRADE_TABLE } from './utils/grades/gradeData';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { GradeSystemSelect } from './GradeSystemSelect';
 import { isClimbingRelation } from '../../../utils';
-import { getKey } from '../../../services/helpers';
+import { getReactKey } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 
 const MAX_HEIGHT = 100;
@@ -52,7 +52,7 @@ const Chart = styled.div<{ $ratio: number; $color: string }>`
 const getGroupingLabel = (label: string) => String(parseFloat(label));
 
 export const RouteDistribution = () => {
-  const { userSettings, setUserSetting } = useUserSettingsContext();
+  const { userSettings } = useUserSettingsContext();
   const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   const theme = useTheme();
@@ -141,7 +141,7 @@ export const RouteDistributionInPanel = () => {
     feature.tags.climbing === 'crag'
   ) {
     return (
-      <ClimbingContextProvider feature={feature} key={getKey(feature)}>
+      <ClimbingContextProvider feature={feature} key={getReactKey(feature)}>
         <RouteDistribution />
       </ClimbingContextProvider>
     );

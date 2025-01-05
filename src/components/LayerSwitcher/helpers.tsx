@@ -2,11 +2,22 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { Box, IconButton, Typography, List, ListItemIcon } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import { View, useMapStateContext } from '../utils/MapStateContext';
+import {
+  Layer,
+  LayerIcon as LayerIconType,
+  View,
+  useMapStateContext,
+} from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
+import { Setter } from '../../types';
 
-export const RemoveUserLayerAction = ({ url, setUserLayers }) => {
-  const { activeLayers, setActiveLayers } = useMapStateContext();
+type RemoveUserLayerActionProps = {
+  url: string;
+};
+
+export const RemoveUserLayerAction = ({ url }: RemoveUserLayerActionProps) => {
+  const { activeLayers, setActiveLayers, setUserLayers } = useMapStateContext();
+
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     e.preventDefault();
     setUserLayers((current) => {
@@ -25,10 +36,10 @@ export const RemoveUserLayerAction = ({ url, setUserLayers }) => {
   );
 };
 
-export const LayersHeader = ({ headingId }) => (
+export const LayersHeader = () => (
   <>
     <Box m={2}>
-      <Typography variant="h5" color="textPrimary" id={headingId}>
+      <Typography variant="h5" color="textPrimary">
         {t('layerswitcher.heading')}
       </Typography>
     </Box>
@@ -41,7 +52,7 @@ export const LayersHeader = ({ headingId }) => (
   </>
 );
 
-export const LayerIcon = ({ Icon }) => (
+export const LayerIcon = ({ Icon }: { Icon: LayerIconType }) => (
   <ListItemIcon>{Icon && <Icon fontSize="small" />}</ListItemIcon>
 );
 

@@ -18,7 +18,7 @@ const parseType = (rawType: string) => {
   }
 };
 
-const osmIdRegex = /\d{1,19}/;
+const osmIdRegex = /^\d{1,19}$/;
 
 const getOsmIdOptions = (id: number): OsmOption[] =>
   ['node', 'way', 'relation'].map((type) => ({
@@ -32,18 +32,17 @@ const getOsmWebsiteOptions = (inputValue: string): OsmOption | undefined => {
   }
   const { pathname } = new URL(inputValue);
 
-  const typeMatches = pathname.match(/node|way|relation|rel/);
-  const idMatches = pathname.match(osmIdRegex);
+  const matches = pathname.match(/(node|way|relation|rel)\/(\d+)/);
 
-  if (!typeMatches || !idMatches) {
+  if (!matches) {
     return undefined;
   }
 
   return {
     type: 'osm',
     osm: {
-      type: parseType(typeMatches[0]),
-      id: parseInt(idMatches[0]),
+      type: parseType(matches[1]),
+      id: parseInt(matches[2]),
     },
   };
 };
@@ -53,17 +52,17 @@ export const getOsmOptions = (inputValue: string): OsmOption[] => {
   if (urlOption) {
     return [urlOption];
   }
-  const splitted = inputValue.split(/[/\s,]/);
 
-  if (splitted.length === 1 && splitted[0].match(osmIdRegex)) {
-    return getOsmIdOptions(parseInt(splitted[0]));
+  if (inputValue.match(osmIdRegex)) {
+    return getOsmIdOptions(parseInt(inputValue));
   }
 
+  const splitted = inputValue.split(/[/\s,]/);
   const type = parseType(splitted[0]);
   const idString = splitted[1];
   const id = parseInt(idString);
 
-  if (!type || !(!!idString?.match(osmIdRegex) && !Number.isNaN(id))) {
+  if (!type || !idString?.match(osmIdRegex) || Number.isNaN(id)) {
     return [];
   }
 
@@ -82,7 +81,7 @@ export const renderOsm = ({ osm }: OsmOption) => (
     </IconPart>
     <Grid item xs>
       <span style={{ fontWeight: 700 }}>
-        OpenStreetMap {osm.type}/{osm.id}
+        {osm.type}/{osm.id}
       </span>
       <Typography variant="body2" color="textSecondary">
         OpenStreetMap Object

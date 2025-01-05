@@ -1,10 +1,9 @@
-import { PointsTooFarError, Profile, RoutingResult } from './types';
+import { Profile, RoutingResult } from './types';
 import { LonLat } from '../../../services/types';
 import { fetchJson } from '../../../services/fetch';
-import { getBbox } from '../../../services/getCenter';
-import { FetchError } from '../../../services/helpers';
+import { intl } from '../../../services/intl';
 
-const API_KEY = `f189b841-6529-46c6-8a91-51f17477dcda`;
+const API_KEY = process.env.NEXT_PUBLIC_API_KEY_GRAPHHOPPER;
 
 export const profiles: Record<Profile, string> = {
   car: 'car',
@@ -17,9 +16,12 @@ export const getGraphhopperResults = async (
   points: LonLat[],
 ): Promise<RoutingResult> => {
   const profile = profiles[mode];
-  const from = points[0].toReversed().join(','); // lon,lat!
-  const to = points[1].toReversed().join(',');
-  const url = `https://graphhopper.com/api/1/route?point=${from}&point=${to}&vehicle=${profile}&key=${API_KEY}&type=json&points_encoded=false&instructions=false&snap_prevention=ferry`;
+  const graphhopperPoints = points.map((point) => point.toReversed().join(','));
+  const urlPoints = graphhopperPoints
+    .map((point) => `point=${point}&`)
+    .join('');
+
+  const url = `https://graphhopper.com/api/1/route?${urlPoints}vehicle=${profile}&key=${API_KEY}&type=json&points_encoded=false&snap_prevention=ferry`;
 
   const data = await fetchJson(url);
 
@@ -33,5 +35,6 @@ export const getGraphhopperResults = async (
     link: 'https://graphhopper.com/',
     bbox: { w, s, e, n },
     geojson: data.paths[0].points,
+    instructions: data.paths[0].instructions,
   };
 };

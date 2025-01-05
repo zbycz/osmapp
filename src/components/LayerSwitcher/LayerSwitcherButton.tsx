@@ -44,7 +44,11 @@ const StyledLayerSwitcher = styled.button<{ $isMobileMode: boolean }>`
   }
 `;
 
-export const LayerSwitcherButton = ({ onClick }: { onClick?: any }) => {
+export const LayerSwitcherButton = ({
+  onClick,
+}: {
+  onClick?: React.MouseEventHandler<HTMLButtonElement>;
+}) => {
   const isMobileMode = useMobileMode();
   return (
     <StyledLayerSwitcher onClick={onClick} $isMobileMode={isMobileMode}>

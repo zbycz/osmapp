@@ -18,7 +18,7 @@ interface FetchOpts extends RequestInit {
   nocache?: boolean;
 }
 
-export const fetchText = async (url, opts: FetchOpts = {}) => {
+export const fetchText = async (url: string, opts: FetchOpts = {}) => {
   const key = getKey(url, opts);
   const item = getCache(key);
   if (item) return item;
@@ -60,14 +60,16 @@ export const fetchText = async (url, opts: FetchOpts = {}) => {
       throw e;
     }
 
-    throw new FetchError(`${e.message} at ${url}`, e.code || 'network', e.data); // TODO how to tell network error from code exception?
+    const cause = e?.cause ? ` / cause: ${e.cause}` : '';
+    const message = `${e.message}${cause} at ${url}`;
+    throw new FetchError(message, e.code || 'network', e.data); // TODO how to tell network error from code exception?
   }
 };
 
-export const fetchJson = async (url: string, opts: FetchOpts = {}) => {
+export const fetchJson = async <T = any>(url: string, opts: FetchOpts = {}) => {
   const text = await fetchText(url, opts);
   try {
-    return JSON.parse(text);
+    return JSON.parse(text) as T;
   } catch (e) {
     throw new Error(
       `fetchJson: parse error: ${e.message}, in "${text?.substr(0, 30)}..."`,

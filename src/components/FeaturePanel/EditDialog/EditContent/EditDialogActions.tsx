@@ -8,15 +8,12 @@ import { useGetHandleSave } from '../useGetHandleSave';
 
 const SaveButton = () => {
   const { loggedIn } = useOsmAuthContext();
-  const { tags } = useEditContext();
   const handleSave = useGetHandleSave();
 
   return (
     <Button onClick={handleSave} color="primary" variant="contained">
       {loggedIn
-        ? tags.cancelled
-          ? t('editdialog.save_button_delete')
-          : t('editdialog.save_button_edit')
+        ? t('editdialog.save_button_edit')
         : t('editdialog.save_button_note')}
     </Button>
   );

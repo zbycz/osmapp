@@ -1,7 +1,6 @@
 import React from 'react';
 import maplibregl from 'maplibre-gl';
 import { basicStyle } from '../styles/basicStyle';
-import { PersistedScaleControl } from './PersistedScaleControl';
 import { setGlobalMap } from '../../../services/mapStorage';
 import { COMPASS_TOOLTIP } from '../useAddTopRightControls';
 
@@ -12,7 +11,7 @@ const filterConsoleLog = () => {
   const original = console.warn; // eslint-disable-line no-console
 
   // eslint-disable-next-line no-console
-  console.warn = (message, ...optionalParams) => {
+  console.warn = (message: any, ...optionalParams: any[]) => {
     if (
       typeof message === 'string' &&
       !message.includes(
@@ -41,6 +40,10 @@ const filterConsoleLog = () => {
 //   });
 // };
 
+const defaultProjection = {
+  type: 'globe',
+};
+
 export const useInitMap = () => {
   const mapRef = React.useRef(null);
   const [mapInState, setMapInState] = React.useState(null);
@@ -62,7 +65,9 @@ export const useInitMap = () => {
     setGlobalMap(map);
     setMapInState(map);
 
-    map.addControl(PersistedScaleControl as any);
+    map.on('style.load', () => {
+      map.setProjection(defaultProjection);
+    });
 
     map.scrollZoom.setWheelZoomRate(1 / 200); // 1/450 is default, bigger value = faster
 

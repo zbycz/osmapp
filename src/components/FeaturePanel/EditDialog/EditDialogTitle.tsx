@@ -1,35 +1,41 @@
-import { DialogTitle } from '@mui/material';
+import { DialogTitle, Stack } from '@mui/material';
 import React from 'react';
 import { useEditDialogFeature } from './utils';
-import { useUserThemeContext } from '../../../helpers/theme';
-import Maki from '../../utils/Maki';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { t } from '../../../services/intl';
 import { getLabel } from '../../../helpers/featureLabel';
+import CommentIcon from '@mui/icons-material/Comment';
+import EditIcon from '@mui/icons-material/Edit';
+import { useEditContext } from './EditContext';
 
 const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
   const { loggedIn } = useOsmAuthContext();
+  const { items } = useEditContext();
   if (isAddPlace) return t('editdialog.add_heading');
   if (isUndelete) return t('editdialog.undelete_heading');
-  if (!loggedIn)
+  if (!loggedIn) {
+    if (items.length > 1)
+      return `${t('editdialog.suggest_heading')} ${items.length} ${t('editdialog.items')}`;
     return `${t('editdialog.suggest_heading')} ${getLabel(feature)}`;
+  }
+
+  if (items.length > 1)
+    return `${t('editdialog.edit_heading')} ${items.length} ${t('editdialog.items')}`;
   return `${t('editdialog.edit_heading')} ${getLabel(feature)}`;
 };
 
 export const EditDialogTitle = () => {
+  const { loggedIn } = useOsmAuthContext();
   const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
-  const { currentTheme } = useUserThemeContext();
 
   const dialogTitle = useGetDialogTitle(isAddPlace, isUndelete, feature);
 
   return (
     <DialogTitle id="edit-dialog-title">
-      <Maki
-        ico={feature.properties.class}
-        size={16}
-        invert={currentTheme === 'dark'}
-      />{' '}
-      {dialogTitle}
+      <Stack direction="row" gap={1} alignItems="center">
+        {loggedIn ? <EditIcon /> : <CommentIcon />}
+        {dialogTitle}
+      </Stack>
     </DialogTitle>
   );
 };

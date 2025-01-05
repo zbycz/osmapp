@@ -8,7 +8,7 @@ import { useEditDialogFeature } from './utils';
 import { EditContextProvider, useEditContext } from './EditContext';
 import { useGetOnClose } from './useGetOnClose';
 import { EditContent } from './EditContent/EditContent';
-import { getKey } from '../../../services/helpers';
+import { getReactKey } from '../../../services/helpers';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -29,10 +29,17 @@ const EditDialogInner = () => {
 
   return (
     <StyledDialog
+      PaperProps={{
+        sx: {
+          height: '100%',
+        },
+      }}
+      maxWidth="xl"
       fullScreen={fullScreen}
       open={opened}
       onClose={onClose}
       aria-labelledby="edit-dialog-title"
+      sx={{ height: '100%' }}
     >
       <EditDialogTitle />
       {successInfo ? <SuccessContent /> : <EditContent />}
@@ -44,7 +51,7 @@ export const EditDialog = () => {
   const { feature } = useEditDialogFeature();
 
   return (
-    <EditContextProvider feature={feature} key={getKey(feature)}>
+    <EditContextProvider originalFeature={feature} key={getReactKey(feature)}>
       <EditDialogInner />
     </EditContextProvider>
   );

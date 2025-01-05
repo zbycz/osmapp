@@ -91,9 +91,7 @@ export default {
   'editdialog.changes_needed': 'Por favor, haz algún cambio.',
   'editdialog.loggedInMessage': 'Estás logueado como <b>__osmUser__</b>, los cambios se guardarán inmediatamente.',
   'editdialog.logout': 'desconectar',
-  'editdialog.anonymousMessage1': 'Se añadirá una nota <b>anónima</b> al mapa.<br /> Si te',
-  'editdialog.anonymousMessage2_login': 'logueas en OpenStreetMap',
-  'editdialog.anonymousMessage3': ', tus cambios serán inmediatos.',
+  'editdialog.anonymousMessage': 'Se añadirá una nota <b>anónima</b> al mapa.<br /> Si te logueas en OpenStreetMap, tus cambios serán inmediatos.',
   'editdialog.add_major_tag': 'Añadir',
   'editdialog.location_checkbox': 'Cambiar ubicación',
   'editdialog.location_placeholder': 'ej. cruzando la calle',
@@ -108,13 +106,10 @@ export default {
          puedes añadir una nota adicional o describir un ajuste de la posición, etc
         También es apropiado apoyar tu contribución con un enlace a la fuente de la información (web,
          foto, etc.).`,
-  'editdialog.other_tags': 'Otras propiedades – etiquetas',
-  'editdialog.other_tags.new_key': 'nueva clave',
-  'editdialog.other_tags.add': 'Añadir otra etiqueta',
-  'editdialog.other_tags.will_be_deleted': 'será borrado',
-  'editdialog.other_tags.info': `Las Etiquetas describen las propiedades
+  'editdialog.tags_editor': 'Todas las propiedades – etiquetas',
+  'editdialog.tags_editor_info': `Las Etiquetas describen las propiedades
         de cada elemento del mapa en un formato acordado. Aquí puedes encontrar una
-        <a href="https://wiki.openstreetmap.org/wiki/ES:Objetos_del_mapa">descripción general de todas las etiquetas en OpenStreetMap</a>.`,
+        <a href="https://wiki.openstreetmap.org/wiki/ES:Objetos_del_mapa" target="_blank">descripción general de todas las etiquetas en OpenStreetMap</a>.`,
 
   'editsuccess.close_button': 'Cerrar',
   'editsuccess.note.heading': '¡Gracias por tu sugerencia!',
@@ -140,7 +135,6 @@ export default {
   'layerswitcher.heading': 'Capas del Mapa',
   'layerswitcher.intro': 'Gracias a que OpenStreetMap ofrece datos, cualquiera puede producir diferentes variantes del mapa.',
   'layerswitcher.add_layer_button': 'Añadir capa personalizada',
-  'layerswitcher.add_layer_prompt': 'Añadir capa TMS personalizada – necesita el CORS correcto:\n(funcionalidad beta)',
 
   'layers.basic': 'Básico',
   'layers.outdoor': 'Exteriores',

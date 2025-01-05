@@ -5,8 +5,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 const StyledToggleButton = styled(IconButton)`
-  position: absolute !important;
-  margin: -5px 0 0 0 !important;
+  margin: -7px 0 -7px 10px;
 `;
 
 export const ToggleButton = ({ onClick, isShown }) => (

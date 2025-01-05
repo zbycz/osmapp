@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Ref, useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
@@ -19,7 +19,7 @@ import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
 import { OsmAuthProvider } from '../utils/OsmAuthContext';
 import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
-import { setIntlForSSR } from '../../services/intl';
+import { setIntlForSSR, t } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
 import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog';
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
@@ -31,13 +31,20 @@ import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
 import { NextPage, NextPageContext } from 'next';
 import { Feature } from '../../services/types';
-import Error from 'next/error';
 import { ClimbingAreasPanel } from '../ClimbingAreasPanel/ClimbingAreasPanel';
 import {
   ClimbingArea,
   getClimbingAreas,
 } from '../../services/climbing-areas/getClimbingAreas';
 import { DirectionsBox } from '../Directions/DirectionsBox';
+import { Scrollbars } from 'react-custom-scrollbars';
+import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
+import { DirectionsProvider } from '../Directions/DirectionsContext';
+
+const URL_NOT_FOUND_TOAST = {
+  message: t('url_not_found_toast'),
+  severity: 'warning' as const,
+};
 
 const usePersistMapView = () => {
   const { view } = useMapStateContext();
@@ -62,10 +69,11 @@ const useUpdateViewFromFeature = () => {
   const { setView } = useMapStateContext();
 
   React.useEffect(() => {
-    if (feature?.center && !getMapViewFromHash()) {
-      const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
-      setView(['17.00', lat, lon]);
-    }
+    if (!feature?.center) return;
+    if (getMapViewFromHash()) return;
+
+    const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
+    setView(['17.00', lat, lon]);
   }, [feature, setView]);
 };
 
@@ -86,11 +94,39 @@ type IndexWithProvidersProps = {
   climbingAreas: Array<ClimbingArea>;
 };
 
+const useScrollToTopWhenRouteChanged = () => {
+  const isMobileMode = useMobileMode();
+  const desktopScrollRef = useRef<Scrollbars>(null);
+  const mobileScrollRef = useRef<HTMLDivElement>(null);
+  const scrollRef = isMobileMode ? mobileScrollRef : desktopScrollRef;
+  const router = useRouter();
+
+  useEffect(() => {
+    const routeChangeComplete = () => {
+      if (scrollRef?.current) {
+        if (isMobileMode) {
+          (scrollRef as any).current?.scrollTo?.(0, 0);
+        } else {
+          (scrollRef as any).current?.scrollToTop?.();
+        }
+      }
+    };
+    router.events.on('routeChangeComplete', routeChangeComplete);
+
+    return () => {
+      router.events.off('routeChangeComplete', routeChangeComplete);
+    };
+  }, [isMobileMode, router.events, scrollRef]);
+
+  return scrollRef;
+};
+
 const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMobileMode = useMobileMode();
-  const { feature, featureShown } = useFeatureContext();
+  const { feature, featureShown, homepageShown } = useFeatureContext();
   const router = useRouter();
   const isMounted = useIsClient();
+  const scrollRef = useScrollToTopWhenRouteChanged() as any;
   useUpdateViewFromFeature();
   usePersistMapView();
   useUpdateViewFromHash();
@@ -105,14 +141,28 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
 
   const directions = router.query.all?.[0] === 'directions' && !featureShown;
 
+  const isMyTicksVisible = router.pathname === '/my-ticks';
+  const isInstallVisible = router.pathname === '/install';
+
+  const withShadow =
+    isMobileMode ||
+    (!featureShown && !isMyTicksVisible && !isInstallVisible && !homepageShown);
+
   return (
     <>
       <Loading />
-      {!directions && <SearchBox />}
-      {directions && <DirectionsBox />}
-      {featureShown && !isMobileMode && isMounted && <FeaturePanelOnSide />}
-
-      {featureShown && isMobileMode && <FeaturePanelInDrawer />}
+      {directions && (
+        <DirectionsProvider>
+          <DirectionsBox />
+        </DirectionsProvider>
+      )}
+      {!directions && <SearchBox withShadow={withShadow} />}
+      {featureShown && !isMobileMode && (
+        <FeaturePanelOnSide scrollRef={scrollRef} />
+      )}
+      {featureShown && isMobileMode && (
+        <FeaturePanelInDrawer scrollRef={scrollRef} />
+      )}
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
           <ClimbingCragDialog
@@ -124,12 +174,15 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
       <HomepagePanel />
       {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
+      {router.pathname === '/climbing-grades' && <ClimbingGradesTable />}
       {climbingAreas && <ClimbingAreasPanel areas={climbingAreas} />}
       <Map />
       <TitleAndMetaTags />
     </>
   );
 };
+
+const reactQueryClient = new QueryClient();
 
 type Props = {
   featureFromRouter: Feature | '404' | null;
@@ -145,24 +198,23 @@ const App: NextPage<Props> = ({
   climbingAreas,
 }) => {
   const mapView = getMapViewFromHash() || initialMapView;
-  const queryClient = new QueryClient();
-
-  if (featureFromRouter === '404') {
-    return <Error statusCode={404} />;
-  }
+  const initialToast =
+    featureFromRouter === '404' ? URL_NOT_FOUND_TOAST : undefined;
 
   return (
-    <SnackbarProvider>
+    <SnackbarProvider initialToast={initialToast}>
       <UserSettingsProvider>
         <FeatureProvider
-          featureFromRouter={featureFromRouter}
+          featureFromRouter={
+            featureFromRouter === '404' ? null : featureFromRouter
+          }
           cookies={cookies}
         >
           <MapStateProvider initialMapView={mapView}>
             <OsmAuthProvider cookies={cookies}>
               <StarsProvider>
                 <EditDialogProvider /* TODO supply router.query */>
-                  <QueryClientProvider client={queryClient}>
+                  <QueryClientProvider client={reactQueryClient}>
                     <IndexWithProviders climbingAreas={climbingAreas} />
                   </QueryClientProvider>
                 </EditDialogProvider>

@@ -62,7 +62,8 @@ const LayerDataInput: React.FC<{
         setLayerIndex(result);
         setLayerIndexState('success');
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error(err); // eslint-disable-line no-console
         setLayerIndex([]);
         setLayerIndexState('error');
       });
@@ -217,11 +218,14 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
   );
 };
 
+const DEFAULT_VALUE =
+  'https://tiles.stadiamaps.com/tiles/stamen_watercolor/{z}/{x}/{y}.jpg';
+
 const CustomChoose: React.FC<{
   onValidation: (isOk: boolean) => void;
   onChange: (layer: LayerIndex) => void;
 }> = ({ onValidation, onChange }) => {
-  const [url, setUrl] = React.useState('');
+  const [url, setUrl] = React.useState(DEFAULT_VALUE);
   const [isValid, setIsValid] = React.useState(false);
 
   React.useEffect(() => {
@@ -358,9 +362,7 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
         )}
 
         <DialogActions>
-          <Button onClick={onReset} color="secondary" variant="outlined">
-            Cancel
-          </Button>
+          <Button onClick={onReset}>Cancel</Button>
 
           <Button
             onClick={onSave}

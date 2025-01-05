@@ -1,5 +1,7 @@
-import { ScaleControl } from 'maplibre-gl';
-import { isImperial, toggleImperial } from '../../helpers';
+import { Map, ScaleControl } from 'maplibre-gl';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { createMapEventHook } from '../../helpers';
+import { useEffect } from 'react';
 
 // https://github.com/maplibre/maplibre-gl-js/blob/afe4377706429a6b4e708e62a3c39a795ae8f28e/src/ui/control/scale_control.js#L36-L83
 
@@ -14,7 +16,7 @@ class ClickableScaleControl extends ScaleControl {
     this.getHoverText = getHoverText;
   }
 
-  onAdd(map) {
+  onAdd(map: Map) {
     const control = super.onAdd(map);
     control.addEventListener('click', this.onClick);
     control.setAttribute('style', 'cursor: pointer');
@@ -32,12 +34,39 @@ class ClickableScaleControl extends ScaleControl {
   }
 }
 
-export const PersistedScaleControl = new ClickableScaleControl({
-  maxWidth: 80,
-  unit: isImperial() ? 'imperial' : 'metric',
-  onClick: () => {
-    PersistedScaleControl.setUnit(isImperial() ? 'metric' : 'imperial');
-    toggleImperial();
-  },
-  getHoverText: () => (isImperial() ? 'km' : 'mile'),
-});
+export const usePersistedScaleControl = (map: Map) => {
+  const { userSettings, setUserSetting } = useUserSettingsContext();
+  const { isImperial } = userSettings;
+
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    const scaleControl = new ClickableScaleControl({
+      maxWidth: 80,
+      unit: isImperial ? 'imperial' : 'metric',
+      onClick: () => {
+        setUserSetting('isImperial', !isImperial);
+      },
+      getHoverText: () => (isImperial ? 'km' : 'mile'),
+    });
+
+    const addControl = () => {
+      map.addControl(scaleControl);
+    };
+
+    if (map.loaded()) {
+      addControl();
+    } else {
+      map.on('load', addControl);
+    }
+
+    return () => {
+      map.off('load', addControl);
+      try {
+        map.removeControl(scaleControl);
+      } catch {}
+    };
+  }, [map, isImperial, setUserSetting]);
+};

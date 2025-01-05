@@ -11,6 +11,7 @@ import { Theme } from '../../../helpers/theme';
 import { GeocoderOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { LonLat } from '../../../services/types';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
@@ -45,6 +46,10 @@ type FetchGeocoderOptionsProps = {
   after: Option[];
 };
 
+type PhotonResponse = {
+  features: GeocoderOption['geocoder'][];
+};
+
 export const fetchGeocoderOptions = debounce(
   async ({
     inputValue,
@@ -54,9 +59,10 @@ export const fetchGeocoderOptions = debounce(
     after,
   }: FetchGeocoderOptionsProps) => {
     try {
-      const searchResponse = (await fetchJson(getApiUrl(inputValue, view), {
-        abortableQueueName: GEOCODER_ABORTABLE_QUEUE,
-      })) as { features: GeocoderOption['geocoder'][] };
+      const searchResponse = await fetchJson<PhotonResponse>(
+        getApiUrl(inputValue, view),
+        { abortableQueueName: GEOCODER_ABORTABLE_QUEUE },
+      );
 
       // This blocks rendering of old result, when user already changed input
       if (inputValue !== currentInput) {
@@ -154,11 +160,16 @@ export const renderGeocoder = (
   currentTheme: Theme,
   inputValue: string,
   mapCenter: LonLat,
+  isImperial: boolean,
 ) => {
   const { geometry, properties } = geocoder;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 
-  const distance = getHumanDistance(mapCenter, geometry.coordinates);
+  const distance = getHumanDistance(
+    isImperial,
+    mapCenter,
+    geometry.coordinates,
+  );
   const text = name || buildPhotonAddress(properties);
   const additionalText = getAdditionalText(properties);
   const poiClass = getPoiClass({ [tagKey]: tagValue });
