@@ -1,7 +1,6 @@
 import { Feature, OsmId } from '../../../services/types';
-import { FetchError, getShortId } from '../../../services/helpers';
-import { osmToFeature } from '../../../services/osmToFeature';
-import { fetchJson } from '../../../services/fetch';
+import { getShortId } from '../../../services/helpers';
+import { quickFetchFeature } from '../../../services/osmApi';
 import { MapGeoJSONFeature } from 'maplibre-gl';
 
 const isFarAway = (feature: Feature, skeleton: Feature) =>
@@ -24,39 +23,6 @@ const isMaptilerCorruptedId = (feature: Feature, skeleton: Feature) => {
   }
 
   return false;
-};
-
-type OsmResponse = {
-  elements?: {
-    type: 'node' | 'way' | 'relation';
-    id: number;
-    lat: number;
-    lon: number;
-    timestamp: string;
-    version: number;
-    changeset: number;
-    user: string;
-    uid: number;
-    tags: Record<string, string>;
-  }[];
-};
-
-const getQuickOsmPromise = async (apiId: OsmId) => {
-  const getOsmUrl = ({ type, id }) =>
-    `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
-  const { elements } = await fetchJson<OsmResponse>(getOsmUrl(apiId)); // TODO 504 gateway busy
-  return elements?.[0];
-};
-
-const quickFetchFeature = async (apiId: OsmId) => {
-  try {
-    const element = await getQuickOsmPromise(apiId);
-    return osmToFeature(element);
-  } catch (e) {
-    return {
-      error: e instanceof FetchError ? e.code : 'unknown',
-    } as unknown as Feature;
-  }
 };
 
 // Maptiler is not encoding IDs correctly, sometimes type encoding is missing, sometimes the type is just wrong

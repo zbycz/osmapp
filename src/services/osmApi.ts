@@ -31,10 +31,40 @@ const getOsmParentUrl: GetOsmUrl = ({ type, id }) =>
 const getOsmHistoryUrl: GetOsmUrl = ({ type, id }) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
+type OsmResponse = {
+  elements?: {
+    type: 'node' | 'way' | 'relation';
+    id: number;
+    lat: number;
+    lon: number;
+    timestamp: string;
+    version: number;
+    changeset: number;
+    user: string;
+    uid: number;
+    tags: Record<string, string>;
+  }[];
+};
+
+const getOsmElement = async (apiId: OsmId) => {
+  const { elements } = await fetchJson<OsmResponse>(getOsmUrl(apiId)); // TODO 504 gateway busy
+  return elements?.[0];
+};
+
+export const quickFetchFeature = async (apiId: OsmId) => {
+  try {
+    const element = await getOsmElement(apiId);
+    return osmToFeature(element);
+  } catch (e) {
+    return {
+      error: e instanceof FetchError ? e.code : 'unknown',
+    } as unknown as Feature;
+  }
+};
+
 const getOsmPromise = async (apiId: OsmId) => {
   try {
-    const { elements } = await fetchJson(getOsmUrl(apiId)); // TODO 504 gateway busy
-    return elements?.[0];
+    return await getOsmElement(apiId);
   } catch (e) {
     if (e instanceof FetchError && e.code === '410') {
       const { elements } = await fetchJson(getOsmHistoryUrl(apiId)); // TODO use multi fetch instead of history: https://wiki.openstreetmap.org/wiki/API_v0.6#Multi_fetch:_GET_/api/0.6/[nodes|ways|relations]?#parameters
@@ -50,7 +80,7 @@ const getOsmPromise = async (apiId: OsmId) => {
   }
 };
 
-const getOsmParentPromise = async (apiId) => {
+const getOsmParentPromise = async (apiId: OsmId) => {
   const { elements } = await fetchJson(getOsmParentUrl(apiId));
   return { elements };
 };
@@ -214,7 +244,7 @@ export const fetchWithMemberFeatures = async (apiId: OsmId) => {
 };
 
 const addMemberFeaturesToArea = async (relation: Feature) => {
-  const { tags, osmMeta } = relation;
+  const { osmMeta } = relation;
   const url = getOverpassUrl(`[out:json];rel(${osmMeta.id});>>;out center qt;`);
   const overpass = await fetchJson(url);
   const itemsMap = getItemsMap(overpass.elements);
