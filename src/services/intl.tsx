@@ -64,7 +64,7 @@ export const changeLang = (langId: string) => {
 export const setIntl = (initialIntl: Intl) => {
   if (initialIntl) {
     if (!LANGUAGES[initialIntl.lang]) {
-      throw new Error(`Invalid language: ${initialIntl.lang}`); // TODO error message without variable
+      throw new Error(`Invalid language: ${initialIntl.lang}`);
     }
     intl.lang = initialIntl.lang;
     intl.messages = initialIntl.messages;
