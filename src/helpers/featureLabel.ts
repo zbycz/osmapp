@@ -25,7 +25,7 @@ export const hasName = (feature: Feature) =>
 export const getHumanPoiType = (feature: Feature) =>
   hasName(feature) ? getTypeLabel(feature) : t('featurepanel.no_name');
 
-const getLabelWithoutFallback = (feature: Feature) => {
+export const getLabelWithoutFallback = (feature: Feature) => {
   const { point, roundedCenter } = feature;
   if (point) {
     return roundedToDeg(roundedCenter);

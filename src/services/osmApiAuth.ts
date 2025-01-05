@@ -119,7 +119,7 @@ const putChangesetClose = (changesetId: string) =>
 const getItem = async (apiId: OsmId) => {
   const item = await authFetch<Node>({
     method: 'GET',
-    path: `/api/0.6/${getUrlOsmId(apiId)}`, // xml !
+    path: `/api/0.6/${getUrlOsmId(apiId)}`,
   });
   return await parseToXml2Js(stringifyDomXml(item));
 };
