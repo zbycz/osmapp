@@ -5,7 +5,7 @@ import type { Polygon } from 'geojson';
 export type OsmType = 'node' | 'way' | 'relation';
 export type OsmId = {
   type: OsmType;
-  id: number;
+  id: number; // negative value means new feature (to be added)
 };
 
 export type PathType = { x: number; y: number; suffix: string }[];

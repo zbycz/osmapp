@@ -57,7 +57,7 @@ type OsmResponse = {
   elements: OsmElement[];
 };
 
-const getOsmElement = async (apiId: OsmId) => {
+export const getOsmElement = async (apiId: OsmId) => {
   const { elements } = await fetchJson<OsmResponse>(getOsmUrl(apiId)); // TODO 504 gateway busy
   return elements?.[0];
 };
