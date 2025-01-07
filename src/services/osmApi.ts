@@ -1,5 +1,5 @@
 import { resolveCountryCode } from 'next-codegrid';
-import { FetchError, getShortId, getUrlOsmId, prod } from './helpers';
+import { FetchError, getShortId, getUrlOsmId } from './helpers';
 import { fetchJson } from './fetch';
 import {
   Feature,
@@ -26,15 +26,16 @@ import {
   publishDbgObject,
 } from '../utils';
 import { getOverpassUrl } from './overpassSearch';
+import { API_SERVER, OSM_WEBSITE } from './osmApiConsts';
 
 const getOsmUrl = ({ type, id }: OsmId) =>
-  `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
+  `${API_SERVER}/api/0.6/${type}/${id}.json`;
 const getOsmFullUrl = ({ type, id }: OsmId) =>
-  `https://api.openstreetmap.org/api/0.6/${type}/${id}/full.json`;
+  `${API_SERVER}/api/0.6/${type}/${id}/full.json`;
 const getOsmParentUrl = ({ type, id }: OsmId) =>
-  `https://api.openstreetmap.org/api/0.6/${type}/${id}/relations.json`;
+  `${API_SERVER}/api/0.6/${type}/${id}/relations.json`;
 const getOsmHistoryUrl = ({ type, id }: OsmId) =>
-  `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
+  `${API_SERVER}/api/0.6/${type}/${id}/history.json`;
 const getOsmUrlOrFull = ({ type, id }: OsmId) =>
   type === 'node' ? getOsmUrl({ type, id }) : getOsmFullUrl({ type, id });
 
@@ -395,12 +396,8 @@ export const insertOsmNote = async (
   body.append('lon', `${lon}`);
   body.append('text', text);
 
-  const osmUrl = prod
-    ? 'https://api.openstreetmap.org'
-    : 'https://master.apis.dev.openstreetmap.org';
-
   // {"type":"Feature","geometry":{"type":"Point","coordinates":[14.3244982,50.0927863]},"properties":{"id":26569,"url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569.json","comment_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/comment.json","close_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/close.json","date_created":"2021-04-17 10:37:44 UTC","status":"open","comments":[{"date":"2021-04-17 10:37:44 UTC","action":"opened","text":"way/39695868! Place was marked permanently closed.From https://osmapp.org/way/39695868","html":"\u003cp\u003eway/39695868! Place was marked permanently closed.From \u003ca href=\"https://osmapp.org/way/39695868\" rel=\"nofollow noopener noreferrer\"\u003ehttps://osmapp.org/way/39695868\u003c/a\u003e\u003c/p\u003e"}]}}
-  const reply = await fetchJson(`${osmUrl}/api/0.6/notes.json`, {
+  const reply = await fetchJson(`${API_SERVER}/api/0.6/notes.json`, {
     nocache: true,
     method: 'POST',
     body,
@@ -410,7 +407,7 @@ export const insertOsmNote = async (
   return {
     type: 'note',
     text,
-    url: `${prod ? 'https://osm.org' : osmUrl}/note/${noteId}`,
+    url: `${OSM_WEBSITE}/note/${noteId}`,
   };
 };
 

@@ -10,7 +10,6 @@ import {
   getShortId,
   getUrlOsmId,
   parseToXml2Js,
-  prod,
   stringifyDomXml,
   Xml2JsMultiDoc,
   Xml2JsSingleDoc,
@@ -20,13 +19,15 @@ import { clearFeatureCache } from './osmApi';
 import { isBrowser } from '../components/helpers';
 import { getLabel } from '../helpers/featureLabel';
 import { EditDataItem } from '../components/FeaturePanel/EditDialog/useEditItems';
-
-const PROD_CLIENT_ID = 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68';
-
-// testable on http://127.0.0.1:3000
-const TEST_CLIENT_ID = 'a_f_aB7ADY_kdwe4YHpmCSBtNtDZ-BitW8m5I6ijDwI';
-const TEST_SERVER = 'https://master.apis.dev.openstreetmap.org';
-const TEST_OSM_ID: OsmId = { type: 'node', id: 967531 }; // every edit goes here, https://master.apis.dev.openstreetmap.org/node/967531
+import {
+  OSM_WEBSITE,
+  PROD_CLIENT_ID,
+  OSM_USER_COOKIE,
+  TEST_CLIENT_ID,
+  TEST_SERVER,
+  USE_PROD_API,
+  OSM_TOKEN_COOKIE,
+} from './osmApiConsts';
 
 // TS file in osm-auth is probably broken (new is required)
 // @ts-ignore
@@ -34,11 +35,10 @@ const auth = osmAuth({
   redirect_uri: isBrowser() && `${window.location.origin}/oauth-token.html`,
   scope: 'read_prefs write_api write_notes openid',
   auto: true,
-  client_id: prod ? PROD_CLIENT_ID : TEST_CLIENT_ID,
-  url: prod ? undefined : TEST_SERVER,
-  apiUrl: prod ? undefined : TEST_SERVER,
+  client_id: USE_PROD_API ? PROD_CLIENT_ID : TEST_CLIENT_ID,
+  url: USE_PROD_API ? undefined : TEST_SERVER,
+  apiUrl: USE_PROD_API ? undefined : TEST_SERVER,
 });
-const osmWebsite = prod ? 'https://www.openstreetmap.org' : TEST_SERVER;
 
 const authFetch = async <T>(options: OSMAuthXHROptions): Promise<T> =>
   new Promise<T>((resolve, reject) => {
@@ -74,18 +74,18 @@ export const loginAndfetchOsmUser = async (): Promise<OsmUser> => {
   const osmUser = await fetchOsmUser();
 
   const { url } = auth.options();
-  const osmAccessToken = localStorage.getItem(`${url}oauth2_access_token`);
+  const accessToken = localStorage.getItem(`${url}oauth2_access_token`);
   const osmUserForSSR = JSON.stringify(osmUser);
-  Cookies.set('osmAccessToken', osmAccessToken, { path: '/', expires: 365 });
-  Cookies.set('osmUserForSSR', osmUserForSSR, { path: '/', expires: 365 });
+  Cookies.set(OSM_TOKEN_COOKIE, accessToken, { path: '/', expires: 365 });
+  Cookies.set(OSM_USER_COOKIE, osmUserForSSR, { path: '/', expires: 365 });
 
   return osmUser;
 };
 
 export const osmLogout = async () => {
   auth.logout();
-  Cookies.remove('osmAccessToken', { path: '/' });
-  Cookies.remove('osmUserForSSR', { path: '/' });
+  Cookies.remove(OSM_TOKEN_COOKIE, { path: '/' });
+  Cookies.remove(OSM_USER_COOKIE, { path: '/' });
 };
 
 const getChangesetXml = ({ changesetComment, feature }) => {
@@ -232,10 +232,6 @@ const checkVersionUnchanged = (
   apiId: OsmId,
   ourVersion: number,
 ) => {
-  if (apiId === TEST_OSM_ID) {
-    return;
-  }
-
   const freshVersion = parseInt(freshItem[apiId.type].$.version, 10);
   if (ourVersion !== freshVersion) {
     throw new Error(
@@ -251,7 +247,7 @@ export const editOsmFeature = async (
   newTags: FeatureTags,
   toBeDeleted: boolean,
 ): Promise<SuccessInfo> => {
-  const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
+  const apiId = feature.osmMeta;
   const freshItem = await getItemOrLastHistoric(apiId);
   checkVersionUnchanged(freshItem, apiId, feature.osmMeta.version);
 
@@ -275,7 +271,7 @@ export const editOsmFeature = async (
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmWebsite}/changeset/${changesetId}`,
+    url: `${OSM_WEBSITE}/changeset/${changesetId}`,
     redirect: `${getOsmappLink(feature)}`,
   };
 };
@@ -311,7 +307,7 @@ export const addOsmFeature = async (
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmWebsite}/changeset/${changesetId}`,
+    url: `${OSM_WEBSITE}/changeset/${changesetId}`,
     redirect: `/${getUrlOsmId(apiId)}`,
   };
 };
@@ -329,9 +325,6 @@ const saveChange = async (
     const newNodeId = await createItem(content);
     return { type: 'node', id: parseInt(newNodeId, 10) };
   } else {
-    if (!prod) {
-      apiId = TEST_OSM_ID; // TODO refactor
-    }
     const freshItem = await getItem(apiId);
     checkVersionUnchanged(freshItem, apiId, version);
 
@@ -389,7 +382,7 @@ export const saveChanges = async (
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmWebsite}/changeset/${changesetId}`,
+    url: `${OSM_WEBSITE}/changeset/${changesetId}`,
     redirect: `/${getUrlOsmId(ids[0])}`,
   };
 };
@@ -450,7 +443,7 @@ export const editCrag = async (
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmWebsite}/changeset/${changesetId}`,
+    url: `${OSM_WEBSITE}/changeset/${changesetId}`,
     redirect: `${getOsmappLink(crag)}`,
   };
 };

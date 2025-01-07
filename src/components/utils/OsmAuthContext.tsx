@@ -5,6 +5,7 @@ import {
   OsmUser,
 } from '../../services/osmApiAuth';
 import { useSnackbar } from './SnackbarContext';
+import { OSM_USER_COOKIE } from '../../services/osmApiConsts';
 
 type OsmAuthType = {
   loggedIn: boolean;
@@ -16,7 +17,7 @@ type OsmAuthType = {
 };
 
 const useOsmUserState = (cookies) => {
-  const initialState = cookies.osmUserForSSR;
+  const initialState = cookies[OSM_USER_COOKIE];
   return useState<OsmUser | undefined>(initialState);
 };
 
