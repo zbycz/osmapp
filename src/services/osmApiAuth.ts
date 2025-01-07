@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
 import { osmAuth, OSMAuthXHROptions } from 'osm-auth';
+import { zipObject } from 'lodash';
 import { Feature, FeatureTags, OsmId, Position, SuccessInfo } from './types';
 import {
   buildXmlString,
@@ -302,29 +303,6 @@ const getNewNodeXml = async (
   return buildXmlString(xml);
 };
 
-export const addOsmFeature = async (
-  feature: Feature,
-  comment: string,
-  newTags: FeatureTags,
-): Promise<SuccessInfo> => {
-  const typeTag = Object.entries(newTags)[0]?.join('=');
-  const changesetComment = join(comment, ' • ', `Added ${typeTag} #osmapp`);
-  const changesetXml = getChangesetXml({ feature, changesetComment });
-
-  const changesetId = await putChangeset(changesetXml);
-  const content = await getNewNodeXml(changesetId, feature.center, newTags);
-  const newNodeId = await createItem(content);
-  await putChangesetClose(changesetId);
-
-  const apiId: OsmId = { type: 'node', id: parseInt(newNodeId, 10) };
-  return {
-    type: 'edit',
-    text: changesetComment,
-    url: `${OSM_WEBSITE}/changeset/${changesetId}`,
-    redirect: `/${getUrlOsmId(apiId)}`,
-  };
-};
-
 const saveChange = async (
   changesetId: string,
   { shortId, version, tags, toBeDeleted, newNodeLonLat, members }: EditDataItem,
@@ -337,21 +315,21 @@ const saveChange = async (
     const content = await getNewNodeXml(changesetId, newNodeLonLat, tags);
     const newNodeId = await createItem(content);
     return { type: 'node', id: parseInt(newNodeId, 10) };
-  } else {
-    const freshItem = await getItem(apiId);
-    checkVersionUnchanged(freshItem, apiId, version);
-
-    const newItem = await updateItemXml(
-      freshItem,
-      apiId,
-      changesetId,
-      tags,
-      toBeDeleted,
-      members,
-    );
-    await putOrDeleteItem(toBeDeleted, apiId, newItem);
-    return apiId;
   }
+
+  const freshItem = await getItem(apiId);
+  checkVersionUnchanged(freshItem, apiId, version);
+
+  const newItem = await updateItemXml(
+    freshItem,
+    apiId,
+    changesetId,
+    tags,
+    toBeDeleted,
+    members,
+  );
+  await putOrDeleteItem(toBeDeleted, apiId, newItem);
+  return apiId;
 };
 
 const getCommentMulti = (
@@ -384,22 +362,57 @@ export const saveChanges = async (
     throw new Error('No changes submitted.');
   }
 
-  throw new Error('xxxxx WIP TODO');
   const changesetComment = getCommentMulti(original, comment, changes);
   const changesetXml = getChangesetXml({ changesetComment, feature: original });
   const changesetId = await putChangeset(changesetXml);
 
-  // TODO
-  const ids = await Promise.all(
-    changes.map((change) => saveChange(changesetId, change)),
+  // TODO refactor below
+  const changesNodes = changes.filter(({ shortId }) => shortId[0] === 'n');
+  const savedNodesIds = await Promise.all(
+    changesNodes.map((change) => saveChange(changesetId, change)),
   );
+  const nodeShortIds = changesNodes.map(({ shortId }) => shortId);
+  const savedNodeIdsMap = zipObject(nodeShortIds, savedNodesIds);
+
+  const changesWays = changes.filter(({ shortId }) => shortId[0] === 'w');
+  const savedWaysIds = await Promise.all(
+    changesWays.map((change) => saveChange(changesetId, change)),
+  );
+
+  const changesRelations = changes.filter(({ shortId }) => shortId[0] === 'r');
+
+  const changesRelationsWithNewNodeIds = changesRelations.map((change) => {
+    return {
+      ...change,
+      members: change.members?.map<Members[0]>((member) => {
+        const shortId = member.shortId;
+        const apiId = getApiId(shortId);
+        if (apiId.type === 'node' && apiId.id < 0) {
+          const newNodeId = savedNodeIdsMap[shortId];
+          return { ...member, shortId: getShortId(newNodeId) };
+        }
+
+        return member;
+      }),
+    };
+  });
+
+  const savedRelationsIds = await Promise.all(
+    changesRelationsWithNewNodeIds.map((change) =>
+      saveChange(changesetId, change),
+    ),
+  );
+
   await putChangesetClose(changesetId);
+
+  const ids = [...savedNodesIds, ...savedWaysIds, ...savedRelationsIds];
+  const redirectId = original.point ? ids[0] : original.osmMeta;
 
   return {
     type: 'edit',
     text: changesetComment,
     url: `${OSM_WEBSITE}/changeset/${changesetId}`,
-    redirect: `/${getUrlOsmId(ids[0])}`,
+    redirect: `/${getUrlOsmId(redirectId)}`,
   };
 };
 
