@@ -48,7 +48,6 @@ export const RouteFloatingMenu = () => {
     isEditMode,
     setIsRoutesLayerVisible,
     isRoutesLayerVisible,
-    isEditMode,
   } = useClimbingContext();
   const path = getCurrentPath();
   const machine = getMachine();

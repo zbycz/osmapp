@@ -50,6 +50,7 @@ type PointType = {
   routeNumber?: number;
   isRouteSelected: boolean;
   isOtherRouteSelected: boolean;
+  isPointSelected: boolean;
 };
 
 export const Point = ({
@@ -61,6 +62,7 @@ export const Point = ({
   routeNumber,
   isRouteSelected,
   isOtherRouteSelected,
+  isPointSelected,
 }: PointType) => {
   const [isHovered, setIsHovered] = useState(false);
   const {
@@ -74,13 +76,10 @@ export const Point = ({
     photoZoom,
     getCurrentPath,
     setIsPanningDisabled,
-    isPointSelected,
     isEditMode,
   } = useClimbingContext();
   const isMobileMode = useMobileMode();
   const { pointColor, pointStroke } = usePointColor(type, isHovered);
-
-  const isPointOnRouteSelected = isRouteSelected && isPointSelected(index);
 
   const onPointClick = (e) => {
     e.stopPropagation();
@@ -162,7 +161,7 @@ export const Point = ({
         stroke={pointStroke}
         r={isTouchDevice ? 7 : 4}
         $isHovered={isHovered}
-        $isPointSelected={isPointOnRouteSelected}
+        $isPointSelected={isPointSelected}
         {...commonProps}
       >
         {title}

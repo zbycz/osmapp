@@ -128,6 +128,10 @@ type ClimbingContextType = {
   ) => void;
   mockedPoints: PathPoints;
   setMockedPoints: (mockedPoints: PathPoints) => void;
+  mockedPointSelectedIndex: number | null;
+  setMockedPointSelectedIndex: (
+    mockedPointSelectedIndex: number | null,
+  ) => void;
 };
 
 // @TODO generate?
@@ -173,6 +177,9 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [filterDifficulty, setFilterDifficulty] = useState<Array<string>>([]);
   const [routeIndexExpanded, setRouteIndexExpanded] = useState<number>(null);
   const [mockedPoints, setMockedPoints] = useState<PathPoints>([]);
+  const [mockedPointSelectedIndex, setMockedPointSelectedIndex] = useState<
+    number | null
+  >(null);
   const [editorPosition, setEditorPosition] = useState<PositionPx>({
     x: 0,
     y: 0,
@@ -284,6 +291,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     photoZoom,
     mockedPoints,
     setMockedPoints,
+    setMockedPointSelectedIndex,
     setIsPanningDisabled,
   });
 
@@ -403,6 +411,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setRouteListTopOffset,
     mockedPoints,
     setMockedPoints,
+    mockedPointSelectedIndex,
+    setMockedPointSelectedIndex,
   };
 
   return (

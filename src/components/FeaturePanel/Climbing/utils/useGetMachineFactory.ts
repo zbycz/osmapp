@@ -56,6 +56,7 @@ export const useGetMachineFactory = ({
   photoZoom,
   mockedPoints,
   setMockedPoints,
+  setMockedPointSelectedIndex,
   setIsPanningDisabled,
 }) => {
   const [currentState, setCurrentState] = useState<State>('init');
@@ -78,6 +79,7 @@ export const useGetMachineFactory = ({
   };
   const cancelPointMenu = () => {
     setPointSelectedIndex(null);
+    setMockedPointSelectedIndex(null);
   };
 
   const editRoute = ({ routeNumber }) => {

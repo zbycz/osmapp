@@ -90,6 +90,7 @@ export const PointWithType = ({
         onPointInSelectedRouteClick={onPointClick}
         index={pointIndex}
         routeNumber={routeNumber}
+        isPointSelected={isPointSelected}
       />
     </React.Fragment>
   );

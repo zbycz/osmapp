@@ -19,26 +19,31 @@ const data = [
 ];
 
 export const MockedPoints = () => {
-  const { isEditMode, getPixelPosition, mockedPoints, getMachine } =
-    useClimbingContext();
+  const {
+    isEditMode,
+    getPixelPosition,
+    mockedPoints,
+    getMachine,
+    setMockedPointSelectedIndex,
+    mockedPointSelectedIndex,
+  } = useClimbingContext();
   const machine = getMachine();
 
   console.log('___', mockedPoints);
   return (
     <>
-      {mockedPoints.map((point) => {
+      {mockedPoints.map((point, index) => {
         const position = getPixelPosition({
           x: point.x,
           y: point.y,
           units: 'percentage',
         });
-
         return (
           <PointWithType
             key={`mocked-point-${point.x}-${point.y}`}
             isOtherRouteSelected={false}
             isRouteSelected={true}
-            isPointSelected={true}
+            isPointSelected={mockedPointSelectedIndex === index}
             isWithOffset={isEditMode}
             isPulsing={false}
             onMarkedPointClick={() => {}}
@@ -48,7 +53,10 @@ export const MockedPoints = () => {
             type={point.type}
             onPointClick={() => {
               console.log('___!!');
-              machine.execute('showPointMenu');
+              if (machine.currentStateName === 'mockPoints') {
+                machine.execute('showPointMenu');
+                setMockedPointSelectedIndex(index);
+              }
             }}
             pointIndex={0}
           />
