@@ -11,30 +11,15 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FeatureRow } from './FeatureRow';
-import { OsmId } from '../../../../services/types';
-import { getApiId, getShortId } from '../../../../services/helpers';
-import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
-import { fetchFeature } from '../../../../services/osmApi';
-import { useEditContext } from '../EditContext';
 import { t } from '../../../../services/intl';
+import { useGetHandleClick } from './helpers';
 
 export const MembersEditor = () => {
   const { members } = useFeatureEditData();
   const theme = useTheme();
-  const { addFeature, items, setCurrent } = useEditContext();
+  const handleClick = useGetHandleClick();
 
   if (!members || members.length === 0) return null;
-
-  const handleClick = async (shortId) => {
-    const apiId: OsmId = getApiId(shortId);
-    await fetchSchemaTranslations();
-    const isNotInItems = !items.find((item) => item.shortId === shortId);
-    const feature = await fetchFeature(apiId);
-    if (isNotInItems) {
-      addFeature(feature);
-    }
-    setCurrent(getShortId(feature.osmMeta));
-  };
 
   return (
     <Accordion disableGutters elevation={0} square>
