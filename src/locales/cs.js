@@ -75,6 +75,7 @@ export default {
   'homepage.our_story': `Náš příběh`,
   'homepage.openclimbing_description_p1': `Aplikace pro mapování skalních oblastí a vytváření interaktivních lezeckých průvodců.`,
   'homepage.openclimbing_description_p2': `Všechna data jsou otevřená a každý je může upravit – podobně jako na Wikipedii.`,
+  'homepage.openclimbing_climbing_area': `Lezecká oblast`,
   'homepage.description_show_more': `zobrazit více`,
   'homepage.expanded_description_p1': `Aplikace je vyvíjena jako open-source, využívá`,
   'homepage.expanded_description_p2': `pro ukládání lezeckých cest a obrázky jsou sdíleny prostřednictvím`,

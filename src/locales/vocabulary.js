@@ -109,6 +109,7 @@ export default {
   'homepage.our_story': `Our story`,
   'homepage.openclimbing_description_p1': `Application for mapping climbing areas and creating interactive climbing guides.`,
   'homepage.openclimbing_description_p2': `All data is open and anyone can edit it – similar to Wikipedia.`,
+  'homepage.openclimbing_climbing_area': `Climbing area`,
   'homepage.description_show_more': `show more`,
   'homepage.expanded_description_p1': `Application is developed as open-source, it uses`,
   'homepage.expanded_description_p2': `for storing climbing routes and images are shared via`,
