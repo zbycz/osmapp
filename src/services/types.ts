@@ -72,7 +72,7 @@ export type FeatureTags = {
   [key: string]: string;
 };
 
-type RelationMember = {
+export type RelationMember = {
   type: OsmType;
   ref: number;
   role: string;

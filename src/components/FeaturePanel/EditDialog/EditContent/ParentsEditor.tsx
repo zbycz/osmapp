@@ -12,16 +12,15 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { fetchParentFeatures } from '../../../../services/osmApi';
 import { getApiId, getShortId } from '../../../../services/helpers';
-import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
-import { useEditContext } from '../EditContext';
 import { FeatureRow } from './FeatureRow';
 import { t } from '../../../../services/intl';
+import { useGetHandleClick } from './helpers';
 
 export const ParentsEditor = () => {
   const { shortId } = useFeatureEditData();
   const [parents, setParents] = useState([]);
   const theme = useTheme();
-  const { addFeature, setCurrent, items } = useEditContext();
+  const handleClick = useGetHandleClick();
 
   useEffect(() => {
     (async () => {
@@ -65,16 +64,7 @@ export const ParentsEditor = () => {
                 key={shortId}
                 shortId={shortId}
                 label={parent.tags.name}
-                onClick={() => {
-                  const isNotInItems = !items.find(
-                    (item) => item.shortId === shortId,
-                  );
-                  fetchSchemaTranslations();
-                  if (isNotInItems) {
-                    addFeature(parent);
-                  }
-                  setCurrent(shortId);
-                }}
+                onClick={() => handleClick(shortId)}
               />
             );
           })}

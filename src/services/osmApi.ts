@@ -1,7 +1,14 @@
 import { resolveCountryCode } from 'next-codegrid';
 import { FetchError, getShortId, getUrlOsmId, prod } from './helpers';
 import { fetchJson } from './fetch';
-import { Feature, LonLat, OsmId, Position, SuccessInfo } from './types';
+import {
+  Feature,
+  LonLat,
+  OsmId,
+  Position,
+  RelationMember,
+  SuccessInfo,
+} from './types';
 import { removeFetchCache } from './fetchCache';
 import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
 import { isBrowser } from '../components/helpers';
@@ -20,30 +27,31 @@ import {
 } from '../utils';
 import { getOverpassUrl } from './overpassSearch';
 
-type GetOsmUrl = (object: OsmId) => string;
-
-const getOsmUrl: GetOsmUrl = ({ type, id }) =>
+const getOsmUrl = ({ type, id }: OsmId) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}.json`;
-const getOsmFullUrl: GetOsmUrl = ({ type, id }) =>
+const getOsmFullUrl = ({ type, id }: OsmId) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/full.json`;
-const getOsmParentUrl: GetOsmUrl = ({ type, id }) =>
+const getOsmParentUrl = ({ type, id }: OsmId) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/relations.json`;
-const getOsmHistoryUrl: GetOsmUrl = ({ type, id }) =>
+const getOsmHistoryUrl = ({ type, id }: OsmId) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
 
+type OsmTypes = 'node' | 'way' | 'relation';
+type OsmElement<T extends OsmTypes = 'node' | 'way' | 'relation'> = {
+  type: T;
+  id: number;
+  lat: number;
+  lon: number;
+  timestamp: string;
+  version: number;
+  changeset: number;
+  user: string;
+  uid: number;
+  tags: Record<string, string>;
+  members?: RelationMember[];
+};
 type OsmResponse = {
-  elements?: {
-    type: 'node' | 'way' | 'relation';
-    id: number;
-    lat: number;
-    lon: number;
-    timestamp: string;
-    version: number;
-    changeset: number;
-    user: string;
-    uid: number;
-    tags: Record<string, string>;
-  }[];
+  elements: OsmElement[];
 };
 
 const getOsmElement = async (apiId: OsmId) => {
@@ -196,8 +204,12 @@ export const fetchParentFeatures = async (apiId: OsmId) => {
   return elements.map((element) => addSchemaToFeature(osmToFeature(element)));
 };
 
-const getItemsMap = (elements) => {
-  const map = { node: {}, way: {}, relation: {} };
+const getItemsMap = (elements: OsmElement[]) => {
+  const map = {
+    node: {} as Record<number, OsmElement<'node'>>,
+    way: {} as Record<number, OsmElement<'way'>>,
+    relation: {} as Record<number, OsmElement<'relation'>>,
+  };
   elements.forEach((element) => {
     map[element.type][element.id] = element;
   });
@@ -270,6 +282,17 @@ const addMemberFeaturesToArea = async (relation: Feature) => {
   return { ...relation, memberFeatures };
 };
 
+export const getFullFeatureWithMemberFeatures = async (apiId: OsmId) => {
+  await fetchSchemaTranslations();
+  const full = await fetchJson<OsmResponse>(getOsmFullUrl(apiId));
+  const map = getItemsMap(full.elements);
+  const feature = addSchemaToFeature(osmToFeature(map[apiId.type][apiId.id]));
+  return {
+    ...feature,
+    memberFeatures: getMemberFeatures(feature.members, map),
+  };
+};
+
 const addMemberFeaturesToRelation = async (relation: Feature) => {
   const { tags, osmMeta: apiId } = relation;
   if (apiId.type !== 'relation') {
@@ -280,12 +303,10 @@ const addMemberFeaturesToRelation = async (relation: Feature) => {
     return await addMemberFeaturesToArea(relation);
   }
 
-  const full = await fetchJson(getOsmFullUrl(apiId));
-  const map = getItemsMap(full.elements);
-
+  const full = await getFullFeatureWithMemberFeatures(apiId);
   const out: Feature = {
     ...relation,
-    memberFeatures: getMemberFeatures(relation.members, map),
+    memberFeatures: full.memberFeatures,
   };
   mergeMemberImageDefs(out);
   return out;
