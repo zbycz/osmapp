@@ -35,6 +35,8 @@ const getOsmParentUrl = ({ type, id }: OsmId) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/relations.json`;
 const getOsmHistoryUrl = ({ type, id }: OsmId) =>
   `https://api.openstreetmap.org/api/0.6/${type}/${id}/history.json`;
+const getOsmUrlOrFull = ({ type, id }: OsmId) =>
+  type === 'node' ? getOsmUrl({ type, id }) : getOsmFullUrl({ type, id });
 
 type OsmTypes = 'node' | 'way' | 'relation';
 type OsmElement<T extends OsmTypes = 'node' | 'way' | 'relation'> = {
@@ -284,7 +286,7 @@ const addMemberFeaturesToArea = async (relation: Feature) => {
 
 export const getFullFeatureWithMemberFeatures = async (apiId: OsmId) => {
   await fetchSchemaTranslations();
-  const full = await fetchJson<OsmResponse>(getOsmFullUrl(apiId));
+  const full = await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));
   const map = getItemsMap(full.elements);
   const feature = addSchemaToFeature(osmToFeature(map[apiId.type][apiId.id]));
   return {
