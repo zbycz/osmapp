@@ -24,7 +24,7 @@ const findItem = (items: EditDataItem[], osmId: OsmId) =>
 
 const getLastNodeLocation = async (osmId: OsmId, items: EditDataItem[]) => {
   if (osmId.id < 0) {
-    return findItem(items, osmId)?.newNodeLonLat;
+    return findItem(items, osmId)?.nodeLonLat;
   }
   const element = await getOsmElement(osmId);
   return [element.lon, element.lat];

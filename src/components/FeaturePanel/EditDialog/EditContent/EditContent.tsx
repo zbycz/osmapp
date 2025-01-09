@@ -17,6 +17,7 @@ import { useEditDialogFeature } from '../utils';
 import { useEditContext } from '../EditContext';
 import { getShortId } from '../../../../services/helpers';
 import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
+import { TestApiWarning } from '../../helpers/TestApiWarning';
 
 export const EditContent = () => {
   const { items, addFeature, current, setCurrent } = useEditContext();
@@ -60,6 +61,7 @@ export const EditContent = () => {
               <CommentField />
               <ContributionInfoBox />
               <OsmUserLogged />
+              <TestApiWarning />
             </div>
           </Stack>
         </form>

@@ -2,7 +2,14 @@ import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
 import { osmAuth, OSMAuthXHROptions } from 'osm-auth';
 import { zipObject } from 'lodash';
-import { Feature, FeatureTags, OsmId, Position, SuccessInfo } from './types';
+import {
+  Feature,
+  FeatureTags,
+  LonLat,
+  OsmId,
+  Position,
+  SuccessInfo,
+} from './types';
 import {
   buildXmlString,
   getApiId,
@@ -232,11 +239,16 @@ const updateItemXml = async (
   tags: FeatureTags,
   toBeDeleted: boolean,
   members?: Members,
+  nodeLonLat?: LonLat,
 ) => {
   item[apiId.type].$.changeset = changesetId;
   if (!toBeDeleted) {
     item[apiId.type].tag = getXmlTags(tags);
     item[apiId.type].member = getXmlMembers(members);
+    if (nodeLonLat) {
+      item[apiId.type].$.lon = `${nodeLonLat[0]}`;
+      item[apiId.type].$.lat = `${nodeLonLat[1]}`;
+    }
   }
   return buildXmlString(item);
 };
@@ -254,42 +266,6 @@ const checkVersionUnchanged = (
   }
 };
 
-// TODO maybe split to editOsmFeature and undeleteOsmFeature? the flow is kinda unclear
-export const editOsmFeature = async (
-  feature: Feature,
-  comment: string,
-  newTags: FeatureTags,
-  toBeDeleted: boolean,
-): Promise<SuccessInfo> => {
-  const apiId = feature.osmMeta;
-  const freshItem = await getItemOrLastHistoric(apiId);
-  checkVersionUnchanged(freshItem, apiId, feature.osmMeta.version);
-
-  const changesetComment = getChangesetComment(comment, toBeDeleted, feature);
-  const changesetXml = getChangesetXml({ changesetComment, feature });
-  const changesetId = await putChangeset(changesetXml);
-
-  const newItem = await updateItemXml(
-    freshItem,
-    apiId,
-    changesetId,
-    newTags,
-    toBeDeleted,
-  );
-
-  await putOrDeleteItem(toBeDeleted, apiId, newItem);
-  await putChangesetClose(changesetId);
-
-  clearFeatureCache(feature.osmMeta);
-
-  return {
-    type: 'edit',
-    text: changesetComment,
-    url: `${OSM_WEBSITE}/changeset/${changesetId}`,
-    redirect: `${getOsmappLink(feature)}`,
-  };
-};
-
 const getNewNodeXml = async (
   changesetId: string,
   [lon, lat]: Position,
@@ -305,14 +281,16 @@ const getNewNodeXml = async (
 
 const saveChange = async (
   changesetId: string,
-  { shortId, version, tags, toBeDeleted, newNodeLonLat, members }: EditDataItem,
+  { shortId, version, tags, toBeDeleted, nodeLonLat, members }: EditDataItem,
 ): Promise<OsmId> => {
+  // TODO don't save changes if no change detected
+
   let apiId = getApiId(shortId);
   if (apiId.id < 0) {
     if (apiId.type !== 'node') {
       throw new Error('We can only add new nodes so far.');
     }
-    const content = await getNewNodeXml(changesetId, newNodeLonLat, tags);
+    const content = await getNewNodeXml(changesetId, nodeLonLat, tags);
     const newNodeId = await createItem(content);
     return { type: 'node', id: parseInt(newNodeId, 10) };
   }
@@ -320,6 +298,7 @@ const saveChange = async (
   const freshItem = await getItem(apiId);
   checkVersionUnchanged(freshItem, apiId, version);
 
+  // TODO document undelete feature - the flow is kinda unclear
   const newItem = await updateItemXml(
     freshItem,
     apiId,
@@ -327,6 +306,7 @@ const saveChange = async (
     tags,
     toBeDeleted,
     members,
+    nodeLonLat,
   );
   await putOrDeleteItem(toBeDeleted, apiId, newItem);
   return apiId;
@@ -343,8 +323,8 @@ const getCommentMulti = (
   // TODO find topmost parent in changes and use its name
   // eg. survey • Edited Roviště (5 items) #osmapp #climbing
 
-  if (changes.length === 1 && changes[0].newNodeLonLat) {
-    const typeTag = Object.entries(changes[0].tags)[0]?.join('=');
+  if (changes.length === 1 && original.point) {
+    const typeTag = changes[0].tagsEntries[0]?.join('=') ?? 'node with no tags';
     return join(comment, ' • ', `Added ${typeTag} #osmapp`);
   }
 
@@ -407,6 +387,8 @@ export const saveChanges = async (
 
   const ids = [...savedNodesIds, ...savedWaysIds, ...savedRelationsIds];
   const redirectId = original.point ? ids[0] : original.osmMeta;
+
+  // TODO invalidate all changed items in browser AND server !
 
   return {
     type: 'edit',

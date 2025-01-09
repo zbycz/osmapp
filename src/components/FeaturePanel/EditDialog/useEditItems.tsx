@@ -20,7 +20,7 @@ type DataItem = {
   toBeDeleted: boolean;
   members: Members | undefined;
   version: number | undefined; // undefined for new item
-  newNodeLonLat?: LonLat;
+  nodeLonLat: LonLat | undefined; // undefined for ways and relations
 };
 
 export type EditDataItem = DataItem & {
@@ -29,6 +29,7 @@ export type EditDataItem = DataItem & {
   setTag: (k: string, v: string) => void;
   toggleToBeDeleted: () => void;
   setMembers: SetMembers;
+  setNodeLonLat: (lonLat: LonLat) => void;
 };
 
 const buildDataItem = (feature: Feature): DataItem => {
@@ -49,7 +50,7 @@ const buildDataItem = (feature: Feature): DataItem => {
         role: member.role,
         label: `${member.type} ${member.ref}`,
       })),
-    newNodeLonLat: apiId.id < 0 ? feature.center : null,
+    nodeLonLat: apiId.type === 'node' ? feature.center : undefined,
   };
 };
 
@@ -124,6 +125,15 @@ const setMembersFactory =
       members: updateFn(members),
     }));
 
+type SetNodeLonLat = (lonLat: LonLat) => void;
+const setNodeLonLatFactory =
+  (setDataItem: SetDataItem): SetNodeLonLat =>
+  (lonLat) =>
+    setDataItem((prev) => ({
+      ...prev,
+      nodeLonLat: lonLat,
+    }));
+
 type SetTag = (k: string, v: string) => void;
 const setTagFactory =
   (setTagsEntries: SetTagsEntries): SetTag =>
@@ -163,6 +173,7 @@ export const useEditItems = (originalFeature: Feature) => {
           setTag: setTagFactory(setTagsEntries),
           toggleToBeDeleted: toggleToBeDeletedFactory(setDataItem),
           setMembers,
+          setNodeLonLat: setNodeLonLatFactory(setDataItem),
         };
         // TODO maybe keep reference to original EditDataItem if DataItem didnt change? #performance
       }),
