@@ -54,17 +54,32 @@ export const TooltipButton = ({ tooltip, onClick, color }: Props) => {
 
   useClickAwayListener(tooltipRef, hide, isMobile);
 
-  return (
+  const content = (
+    <StyledIconButton onClick={handleClick}>
+      <InfoOutlinedIcon fontSize="small" color={color} />
+    </StyledIconButton>
+  );
+
+  // There is a bug in MUI, passing `open={undefined}` prop to Tooltip makes it uninteractive TODO check again eg 6/2025, or report
+  return isMobile ? (
     <Tooltip
       arrow
       title={tooltip}
       placement="top"
-      open={isMobile ? mobileTooltipShown : undefined}
+      open={mobileTooltipShown}
       ref={tooltipRef}
     >
-      <StyledIconButton onClick={handleClick}>
-        <InfoOutlinedIcon fontSize="small" color={color} />
-      </StyledIconButton>
+      {content}
+    </Tooltip>
+  ) : (
+    <Tooltip
+      arrow
+      title={tooltip}
+      placement="top"
+      //open={isMobile ? mobileTooltipShown : undefined} -- broken, see above
+      ref={tooltipRef}
+    >
+      {content}
     </Tooltip>
   );
 };
