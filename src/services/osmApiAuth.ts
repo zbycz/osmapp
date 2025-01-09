@@ -283,6 +283,8 @@ const saveChange = async (
   changesetId: string,
   { shortId, version, tags, toBeDeleted, nodeLonLat, members }: EditDataItem,
 ): Promise<OsmId> => {
+  // TODO don't save changes if no change detected
+
   let apiId = getApiId(shortId);
   if (apiId.id < 0) {
     if (apiId.type !== 'node') {
@@ -385,6 +387,8 @@ export const saveChanges = async (
 
   const ids = [...savedNodesIds, ...savedWaysIds, ...savedRelationsIds];
   const redirectId = original.point ? ids[0] : original.osmMeta;
+
+  // TODO invalidate all changed items in browser AND server !
 
   return {
     type: 'edit',
