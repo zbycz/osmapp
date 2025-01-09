@@ -321,8 +321,8 @@ const getCommentMulti = (
   // TODO find topmost parent in changes and use its name
   // eg. survey • Edited Roviště (5 items) #osmapp #climbing
 
-  if (changes.length === 1 && changes[0].nodeLonLat) {
-    const typeTag = Object.entries(changes[0].tags)[0]?.join('=');
+  if (changes.length === 1 && original.point) {
+    const typeTag = changes[0].tagsEntries[0]?.join('=') ?? 'node with no tags';
     return join(comment, ' • ', `Added ${typeTag} #osmapp`);
   }
 
