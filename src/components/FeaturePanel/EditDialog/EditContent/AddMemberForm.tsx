@@ -1,6 +1,6 @@
 import { EditDataItem, Members } from '../useEditItems';
 import { getApiId, getShortId } from '../../../../services/helpers';
-import { getOsmElement } from '../../../../services/osm/osmApi';
+import { getOsmElement } from '../../../../services/osm/quickFetchFeature';
 import { useEditContext } from '../EditContext';
 import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContext';
 import React from 'react';

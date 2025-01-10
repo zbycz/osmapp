@@ -1,76 +1,32 @@
-import { resolveCountryCode } from 'next-codegrid';
 import { FetchError, getShortId, getUrlOsmId } from '../helpers';
 import { fetchJson } from '../fetch';
-import {
-  Feature,
-  LonLat,
-  OsmId,
-  Position,
-  RelationMember,
-  SuccessInfo,
-} from '../types';
+import { Feature, LonLat, OsmId } from '../types';
 import { removeFetchCache } from '../fetchCache';
 import { isBrowser } from '../../components/helpers';
 import { addSchemaToFeature } from '../tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from '../tagging/translations';
 import { osmToFeature } from './osmToFeature';
 import { getImageDefs, mergeMemberImageDefs } from '../images/getImageDefs';
-import * as Sentry from '@sentry/nextjs';
 import { fetchOverpassCenter } from '../overpass/fetchOverpassCenter';
 import {
   isClimbingRelation,
   isClimbingRoute,
   isPublictransportRoute,
   isRouteMaster,
-  publishDbgObject,
 } from '../../utils';
 import { getOverpassUrl } from '../overpass/overpassSearch';
-import { API_SERVER, OSM_WEBSITE } from './consts';
-
-const getOsmUrl = ({ type, id }: OsmId) =>
-  `${API_SERVER}/api/0.6/${type}/${id}.json`;
-const getOsmFullUrl = ({ type, id }: OsmId) =>
-  `${API_SERVER}/api/0.6/${type}/${id}/full.json`;
-const getOsmParentUrl = ({ type, id }: OsmId) =>
-  `${API_SERVER}/api/0.6/${type}/${id}/relations.json`;
-const getOsmHistoryUrl = ({ type, id }: OsmId) =>
-  `${API_SERVER}/api/0.6/${type}/${id}/history.json`;
-const getOsmUrlOrFull = ({ type, id }: OsmId) =>
-  type === 'node' ? getOsmUrl({ type, id }) : getOsmFullUrl({ type, id });
-
-type OsmTypes = 'node' | 'way' | 'relation';
-type OsmElement<T extends OsmTypes = 'node' | 'way' | 'relation'> = {
-  type: T;
-  id: number;
-  lat: number;
-  lon: number;
-  timestamp: string;
-  version: number;
-  changeset: number;
-  user: string;
-  uid: number;
-  tags: Record<string, string>;
-  members?: RelationMember[];
-};
-type OsmResponse = {
-  elements: OsmElement[];
-};
-
-export const getOsmElement = async (apiId: OsmId) => {
-  const { elements } = await fetchJson<OsmResponse>(getOsmUrl(apiId)); // TODO 504 gateway busy
-  return elements?.[0];
-};
-
-export const quickFetchFeature = async (apiId: OsmId) => {
-  try {
-    const element = await getOsmElement(apiId);
-    return osmToFeature(element);
-  } catch (e) {
-    return {
-      error: e instanceof FetchError ? e.code : 'unknown',
-    } as unknown as Feature;
-  }
-};
+import { OsmResponse } from './types';
+import {
+  getOsmFullUrl,
+  getOsmHistoryUrl,
+  getOsmUrl,
+  getOsmUrlOrFull,
+} from './urls';
+import { getOsmElement } from './quickFetchFeature';
+import { fetchParentFeatures } from './fetchParentFeatures';
+import { featureCenterCache } from './featureCenterToCache';
+import { getCountryCode } from './getCountryCode';
+import { getItemsMap, getMemberFeatures } from './helpers';
 
 const getOsmPromise = async (apiId: OsmId) => {
   try {
@@ -88,21 +44,6 @@ const getOsmPromise = async (apiId: OsmId) => {
     }
     throw e;
   }
-};
-
-const getOsmParentPromise = async (apiId: OsmId) => {
-  const { elements } = await fetchJson(getOsmParentUrl(apiId));
-  return { elements };
-};
-
-/**
- * This holds coords of clicked ways/relations (from vector map), these are often different than those computed by us
- * TODO: we should probably store just the last one, but this cant get too big, right?
- */
-const featureCenterCache: Record<string, LonLat> = {};
-export const addFeatureCenterToCache = (shortId: string, center: LonLat) => {
-  featureCenterCache[shortId] = center;
-  publishDbgObject('featureCenterCache', featureCenterCache);
 };
 
 const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
@@ -124,16 +65,6 @@ const getCenterPromise = async (apiId: OsmId): Promise<LonLat | false> => {
 export const clearFeatureCache = (apiId) => {
   removeFetchCache(getOsmUrl(apiId)); // watch out, must be same as in getOsmPromise()
   removeFetchCache(getOsmHistoryUrl(apiId));
-};
-
-const getCountryCode = async (feature: Feature): Promise<string | null> => {
-  try {
-    return await resolveCountryCode(feature.center); // takes 0-100ms for first resolution, then instant
-  } catch (e) {
-    console.warn('countryCode left empty – resolveCountryCode():', e); // eslint-disable-line no-console
-    Sentry.captureException(e, { extra: { feature } });
-  }
-  return null;
 };
 
 const getRelationElementsAndCenter = async (apiId: OsmId) => {
@@ -201,43 +132,6 @@ const fetchFeatureWithCenter = async (apiId: OsmId) => {
   return addSchemaToFeature(feature);
 };
 
-export const fetchParentFeatures = async (apiId: OsmId) => {
-  const { elements } = await getOsmParentPromise(apiId);
-  return elements.map((element) => addSchemaToFeature(osmToFeature(element)));
-};
-
-const getItemsMap = (elements: OsmElement[]) => {
-  const map = {
-    node: {} as Record<number, OsmElement<'node'>>,
-    way: {} as Record<number, OsmElement<'way'>>,
-    relation: {} as Record<number, OsmElement<'relation'>>,
-  };
-  elements.forEach((element) => {
-    map[element.type][element.id] = element;
-  });
-  return map;
-};
-
-const getMemberFeatures = (members: Feature['members'], map) => {
-  return (
-    members
-      ?.map(({ type, ref, role }) => {
-        const element = map[type][ref];
-        if (!element) {
-          return null;
-        }
-
-        const feature = addSchemaToFeature(osmToFeature(element));
-        feature.osmMeta.role = role;
-        feature.center = element.center
-          ? [element.center.lon, element.center.lat] // from overpass "out center"
-          : feature.center;
-        return feature;
-      })
-      .filter(Boolean) ?? []
-  );
-};
-
 export const fetchWithMemberFeatures = async (apiId: OsmId) => {
   if (apiId.type !== 'relation') {
     const wayOrNodeResponse = await fetchJson(getOsmUrl(apiId));
@@ -287,11 +181,13 @@ const addMemberFeaturesToArea = async (relation: Feature) => {
 export const getFullFeatureWithMemberFeatures = async (apiId: OsmId) => {
   await fetchSchemaTranslations();
   const full = await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));
-  const map = getItemsMap(full.elements);
-  const feature = addSchemaToFeature(osmToFeature(map[apiId.type][apiId.id]));
+  const itemsMap = getItemsMap(full.elements);
+  const feature = addSchemaToFeature(
+    osmToFeature(itemsMap[apiId.type][apiId.id]),
+  );
   return {
     ...feature,
-    memberFeatures: getMemberFeatures(feature.members, map),
+    memberFeatures: getMemberFeatures(feature.members, itemsMap),
   };
 };
 
@@ -382,30 +278,4 @@ export const fetchFeature = async (apiId: OsmId): Promise<Feature> => {
       error,
     };
   }
-};
-
-export const insertOsmNote = async (
-  point: Position,
-  text: string,
-): Promise<SuccessInfo> => {
-  const [lon, lat] = point;
-
-  const body = new URLSearchParams();
-  body.append('lat', `${lat}`);
-  body.append('lon', `${lon}`);
-  body.append('text', text);
-
-  // {"type":"Feature","geometry":{"type":"Point","coordinates":[14.3244982,50.0927863]},"properties":{"id":26569,"url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569.json","comment_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/comment.json","close_url":"https://master.apis.dev.openstreetmap.org/api/0.6/notes/26569/close.json","date_created":"2021-04-17 10:37:44 UTC","status":"open","comments":[{"date":"2021-04-17 10:37:44 UTC","action":"opened","text":"way/39695868! Place was marked permanently closed.From https://osmapp.org/way/39695868","html":"\u003cp\u003eway/39695868! Place was marked permanently closed.From \u003ca href=\"https://osmapp.org/way/39695868\" rel=\"nofollow noopener noreferrer\"\u003ehttps://osmapp.org/way/39695868\u003c/a\u003e\u003c/p\u003e"}]}}
-  const reply = await fetchJson(`${API_SERVER}/api/0.6/notes.json`, {
-    nocache: true,
-    method: 'POST',
-    body,
-  });
-
-  const noteId = reply.properties.id;
-  return {
-    type: 'note',
-    text,
-    url: `${OSM_WEBSITE}/note/${noteId}`,
-  };
 };
