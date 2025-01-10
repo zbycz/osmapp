@@ -4,6 +4,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Chip,
   List,
   Stack,
   Typography,
@@ -43,9 +44,8 @@ export const ParentsEditor = () => {
         id="panel1-header"
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">
-            {t('editdialog.parents')} ({parents.length})
-          </Typography>
+          <Typography variant="button">{t('editdialog.parents')}</Typography>
+          <Chip size="small" label={parents.length} />
         </Stack>
       </AccordionSummary>
       <AccordionDetails>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box } from '@mui/material';
+import { Box, Chip } from '@mui/material';
 import { getOsmappLink } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { PanelLabel } from '../Climbing/PanelLabel';
@@ -67,7 +67,8 @@ export const MemberFeatures = () => {
   return (
     <Box mb={1}>
       <PanelLabel addition={<PanelAddition />}>
-        {getHeading(feature)} ({memberFeatures.length})
+        {getHeading(feature)}{' '}
+        <Chip size="small" label={memberFeatures.length} />
       </PanelLabel>
       {climbingRoutesFeatures.length > 0 && (
         <Ul>
