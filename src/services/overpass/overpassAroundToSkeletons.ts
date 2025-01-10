@@ -6,10 +6,10 @@ import {
   isPoint,
   isLineString,
   Position,
-} from './types';
+} from '../types';
 
-import { getPoiClass } from './getPoiClass';
-import { getBbox } from './getCenter';
+import { getPoiClass } from '../getPoiClass';
+import { getBbox } from '../getCenter';
 
 export const getCenter = (geometry: FeatureGeometry): Position => {
   if (isPoint(geometry)) {

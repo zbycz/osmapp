@@ -1,5 +1,5 @@
 import { fetchJson } from '../fetch';
-import { getOverpassUrl } from '../overpassSearch';
+import { getOverpassUrl } from './overpassSearch';
 import { LonLat, OsmId } from '../types';
 
 export const fetchOverpassCenter = async ({

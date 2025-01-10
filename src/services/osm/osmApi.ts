@@ -10,7 +10,6 @@ import {
   SuccessInfo,
 } from '../types';
 import { removeFetchCache } from '../fetchCache';
-import { overpassAroundToSkeletons } from '../overpassAroundToSkeletons';
 import { isBrowser } from '../../components/helpers';
 import { addSchemaToFeature } from '../tagging/idTaggingScheme';
 import { fetchSchemaTranslations } from '../tagging/translations';
@@ -25,7 +24,7 @@ import {
   isRouteMaster,
   publishDbgObject,
 } from '../../utils';
-import { getOverpassUrl } from '../overpassSearch';
+import { getOverpassUrl } from '../overpass/overpassSearch';
 import { API_SERVER, OSM_WEBSITE } from './consts';
 
 const getOsmUrl = ({ type, id }: OsmId) =>
@@ -409,18 +408,4 @@ export const insertOsmNote = async (
     text,
     url: `${OSM_WEBSITE}/note/${noteId}`,
   };
-};
-
-const getAroundUrl = ([lat, lon]: Position) =>
-  getOverpassUrl(
-    `[timeout:5][out:json];(
-        relation[~"."~"."](around:50,${lon},${lat});
-        way[~"."~"."](around:50,${lon},${lat});
-        node[~"."~"."](around:50,${lon},${lat});
-      );out body qt center;`,
-  );
-
-export const fetchAroundFeature = async (point: Position) => {
-  const response = await fetchJson(getAroundUrl(point));
-  return overpassAroundToSkeletons(response);
 };
