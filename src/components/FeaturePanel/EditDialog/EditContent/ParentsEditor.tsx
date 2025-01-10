@@ -10,7 +10,7 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fetchParentFeatures } from '../../../../services/osmApi';
+import { fetchParentFeatures } from '../../../../services/osm/osmApi';
 import { getApiId, getShortId } from '../../../../services/helpers';
 import { FeatureRow } from './FeatureRow';
 import { t } from '../../../../services/intl';

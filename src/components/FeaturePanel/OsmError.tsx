@@ -3,7 +3,7 @@ import { Box, Alert } from '@mui/material';
 import { t } from '../../services/intl';
 import { getUrlOsmId } from '../../services/helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { OSM_WEBSITE } from '../../services/osmApiConsts';
+import { OSM_WEBSITE } from '../../services/osm/consts';
 
 export const OsmError = () => {
   const { feature } = useFeatureContext();

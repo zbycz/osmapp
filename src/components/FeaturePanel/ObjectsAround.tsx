@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import Router from 'next/router';
-import { fetchAroundFeature } from '../../services/osmApi';
+import { fetchAroundFeature } from '../../services/osm/osmApi';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';

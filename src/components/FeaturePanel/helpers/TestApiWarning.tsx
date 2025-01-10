@@ -1,4 +1,4 @@
-import { API_SERVER, USE_PROD_API } from '../../../services/osmApiConsts';
+import { API_SERVER, USE_PROD_API } from '../../../services/osm/consts';
 import { Alert, Box } from '@mui/material';
 import Link from 'next/link';
 import React from 'react';

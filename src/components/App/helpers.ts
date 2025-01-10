@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/nextjs';
 import nextCookies from 'next-cookies';
 import Cookies from 'js-cookie';
-import { clearFeatureCache, fetchFeature } from '../../services/osmApi';
+import { clearFeatureCache, fetchFeature } from '../../services/osm/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
 import { getCoordsFeature } from '../../services/getCoordsFeature';
