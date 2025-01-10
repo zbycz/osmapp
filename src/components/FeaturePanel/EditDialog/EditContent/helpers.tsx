@@ -4,7 +4,8 @@ import React from 'react';
 import { EditDataItem } from '../useEditItems';
 import { useEditContext } from '../EditContext';
 import { getApiId, getShortId } from '../../../../services/helpers';
-import { getFullFeatureWithMemberFeatures } from '../../../../services/osm/osmApi';
+
+import { getFullFeatureWithMemberFeatures } from '../../../../services/osm/getFullFeatureWithMemberFeatures';
 
 const CharacterCountContainer = styled.div`
   position: absolute;

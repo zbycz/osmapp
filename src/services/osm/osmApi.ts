@@ -15,18 +15,13 @@ import {
   isRouteMaster,
 } from '../../utils';
 import { getOverpassUrl } from '../overpass/overpassSearch';
-import { OsmResponse } from './types';
-import {
-  getOsmFullUrl,
-  getOsmHistoryUrl,
-  getOsmUrl,
-  getOsmUrlOrFull,
-} from './urls';
+import { getOsmHistoryUrl, getOsmUrl } from './urls';
 import { getOsmElement } from './quickFetchFeature';
 import { fetchParentFeatures } from './fetchParentFeatures';
 import { featureCenterCache } from './featureCenterToCache';
 import { getCountryCode } from './getCountryCode';
 import { getItemsMap, getMemberFeatures } from './helpers';
+import { getFullFeatureWithMemberFeatures } from './getFullFeatureWithMemberFeatures';
 
 const getOsmPromise = async (apiId: OsmId) => {
   try {
@@ -132,25 +127,6 @@ const fetchFeatureWithCenter = async (apiId: OsmId) => {
   return addSchemaToFeature(feature);
 };
 
-export const fetchWithMemberFeatures = async (apiId: OsmId) => {
-  if (apiId.type !== 'relation') {
-    const wayOrNodeResponse = await fetchJson(getOsmUrl(apiId));
-    const wayOrNode = wayOrNodeResponse.elements[0];
-    return addSchemaToFeature(osmToFeature(wayOrNode));
-  }
-
-  const full = await fetchJson(getOsmFullUrl(apiId));
-  const map = getItemsMap(full.elements);
-  const relation = map.relation[apiId.id];
-
-  const out: Feature = {
-    ...addSchemaToFeature(osmToFeature(relation)),
-    memberFeatures: getMemberFeatures(relation.members, map),
-  };
-  mergeMemberImageDefs(out);
-  return out;
-};
-
 const addMemberFeaturesToArea = async (relation: Feature) => {
   const { osmMeta } = relation;
   const url = getOverpassUrl(`[out:json];rel(${osmMeta.id});>>;out center qt;`);
@@ -176,19 +152,6 @@ const addMemberFeaturesToArea = async (relation: Feature) => {
   }
 
   return { ...relation, memberFeatures };
-};
-
-export const getFullFeatureWithMemberFeatures = async (apiId: OsmId) => {
-  await fetchSchemaTranslations();
-  const full = await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));
-  const itemsMap = getItemsMap(full.elements);
-  const feature = addSchemaToFeature(
-    osmToFeature(itemsMap[apiId.type][apiId.id]),
-  );
-  return {
-    ...feature,
-    memberFeatures: getMemberFeatures(feature.members, itemsMap),
-  };
 };
 
 const addMemberFeaturesToRelation = async (relation: Feature) => {
