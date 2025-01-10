@@ -1,4 +1,7 @@
-import { overpassGeomToGeojson, OverpassResponse } from '../overpassSearch';
+import {
+  overpassGeomToGeojson,
+  OverpassResponse,
+} from '../overpass/overpassSearch';
 
 /*
 [out:json][timeout:25];

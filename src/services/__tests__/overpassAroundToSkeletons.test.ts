@@ -1,4 +1,4 @@
-import { overpassAroundToSkeletons } from '../overpassAroundToSkeletons';
+import { overpassAroundToSkeletons } from '../overpass/overpassAroundToSkeletons';
 
 /*
 [timeout:10][out:json];

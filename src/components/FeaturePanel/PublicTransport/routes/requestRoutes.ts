@@ -3,7 +3,7 @@ import { fetchJson } from '../../../../services/fetch';
 import {
   getOverpassUrl,
   overpassGeomToGeojson,
-} from '../../../../services/overpassSearch';
+} from '../../../../services/overpass/overpassSearch';
 import { intl } from '../../../../services/intl';
 
 type WithTags = { tags: Record<string, string> };

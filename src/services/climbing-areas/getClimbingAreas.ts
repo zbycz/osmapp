@@ -1,5 +1,5 @@
 import { fetchJson } from '../fetch';
-import { getOverpassUrl } from '../overpassSearch';
+import { getOverpassUrl } from '../overpass/overpassSearch';
 
 /*
 This query doesn't work, because area is usualy a relation of realtions,
