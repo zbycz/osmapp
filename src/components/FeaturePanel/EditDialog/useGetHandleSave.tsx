@@ -4,7 +4,7 @@ import { useEditContext } from './EditContext';
 import { createNoteText } from './createNoteText';
 import { t } from '../../../services/intl';
 import { saveChanges } from '../../../services/osm/osmApiAuth';
-import { insertOsmNote } from '../../../services/osm/osmApi';
+import { insertOsmNote } from '../../../services/osm/insertOsmNote';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import { getShortId } from '../../../services/helpers';
 
