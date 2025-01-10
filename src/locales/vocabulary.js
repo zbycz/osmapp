@@ -214,6 +214,7 @@ export default {
   'editdialog.info_note':
     'Your suggestion will be reviewed by OpenStreetMap volunteers. You can add additional information such as a link to a photo or a link to source material for them below!',
   'editdialog.tags_editor': 'All properties – Tags',
+  'editdialog.location': 'Location',
   'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
   'editdialog.login_in_progress': `Logging in...`,
   'editdialog.save_refused': 'Unable to save your changes.',

@@ -175,6 +175,7 @@ export default {
         můžete přidat doplňující poznámku. Vhodné je podložit váš příspěvek odkazem na zdroj
         informace (web, foto atd.).`,
   'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
+  'editdialog.location': 'Poloha',
   'editdialog.tags_editor_info': `Tagy popisují vlastnosti mapového prvku v dohodnutém formátu. Zde naleznete úplný
         <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
   'editdialog.save_refused': 'Změny se nepodařilo uložit.',
