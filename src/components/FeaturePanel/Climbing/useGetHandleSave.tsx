@@ -2,7 +2,7 @@ import { ClimbingRoute } from './types';
 import { Feature, FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { CragChange, editCrag } from '../../../services/osmApiAuth';
+import { CragChange, editCrag } from '../../../services/osm/osmApiAuth';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {

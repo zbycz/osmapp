@@ -9,7 +9,7 @@ import {
   OsmId,
   Position,
   SuccessInfo,
-} from './types';
+} from '../types';
 import {
   buildXmlString,
   getApiId,
@@ -21,15 +21,15 @@ import {
   stringifyDomXml,
   Xml2JsMultiDoc,
   Xml2JsSingleDoc,
-} from './helpers';
-import { join } from '../utils';
+} from '../helpers';
+import { join } from '../../utils';
 import { clearFeatureCache } from './osmApi';
-import { isBrowser } from '../components/helpers';
-import { getLabel } from '../helpers/featureLabel';
+import { isBrowser } from '../../components/helpers';
+import { getLabel } from '../../helpers/featureLabel';
 import {
   EditDataItem,
   Members,
-} from '../components/FeaturePanel/EditDialog/useEditItems';
+} from '../../components/FeaturePanel/EditDialog/useEditItems';
 import {
   OSM_WEBSITE,
   PROD_CLIENT_ID,
@@ -38,7 +38,7 @@ import {
   TEST_SERVER,
   USE_PROD_API,
   OSM_TOKEN_COOKIE,
-} from './osmApiConsts';
+} from './consts';
 
 // TS file in osm-auth is probably broken (new is required)
 // @ts-ignore

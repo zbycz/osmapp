@@ -1,6 +1,6 @@
 import { createMapEventHook, isMobileDevice } from '../../helpers';
 import pickBy from 'lodash/pickBy';
-import { addFeatureCenterToCache } from '../../../services/osmApi';
+import { addFeatureCenterToCache } from '../../../services/osm/osmApi';
 import { getOsmappLink, getShortId } from '../../../services/helpers';
 import {
   getRoundedPosition,

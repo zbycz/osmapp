@@ -6,7 +6,7 @@ import { t, Translation } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { TooltipButton } from '../utils/TooltipButton';
 import { Feature } from '../../services/types';
-import { OSM_WEBSITE } from '../../services/osmApiConsts';
+import { OSM_WEBSITE } from '../../services/osm/consts';
 
 const InfoTooltipWrapper = styled.span`
   position: relative;

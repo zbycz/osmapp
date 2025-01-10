@@ -7,7 +7,7 @@ import {
   ImageDefFromCenter,
   ImageDefFromTag,
 } from '../../src/services/types';
-import { fetchWithMemberFeatures } from '../../src/services/osmApi';
+import { fetchWithMemberFeatures } from '../../src/services/osm/osmApi';
 import { getImageFromApi } from '../../src/services/images/getImageFromApi';
 import { getLogo, ProjectLogo } from '../../src/server/images/logo';
 import { ImageType } from '../../src/services/images/getImageDefs';

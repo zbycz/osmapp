@@ -1,5 +1,5 @@
-import { Feature } from './types';
-import { addSchemaToFeature } from './tagging/idTaggingScheme';
+import { Feature } from '../types';
+import { addSchemaToFeature } from '../tagging/idTaggingScheme';
 import { osmToFeature } from './osmToFeature';
 
 // this is raw response from openstreetmap api

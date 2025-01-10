@@ -1,6 +1,6 @@
 import Router, { NextRouter } from 'next/router';
 import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
-import { addFeatureCenterToCache } from '../../services/osmApi';
+import { addFeatureCenterToCache } from '../../services/osm/osmApi';
 import { getOverpassSource } from '../../services/mapStorage';
 import { performOverpassSearch } from '../../services/overpassSearch';
 import { t } from '../../services/intl';

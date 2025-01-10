@@ -1,6 +1,6 @@
 import { Feature, OsmId } from '../../../services/types';
 import { getShortId } from '../../../services/helpers';
-import { quickFetchFeature } from '../../../services/osmApi';
+import { quickFetchFeature } from '../../../services/osm/osmApi';
 import { MapGeoJSONFeature } from 'maplibre-gl';
 
 const isFarAway = (feature: Feature, skeleton: Feature) =>

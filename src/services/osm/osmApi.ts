@@ -1,6 +1,6 @@
 import { resolveCountryCode } from 'next-codegrid';
-import { FetchError, getShortId, getUrlOsmId } from './helpers';
-import { fetchJson } from './fetch';
+import { FetchError, getShortId, getUrlOsmId } from '../helpers';
+import { fetchJson } from '../fetch';
 import {
   Feature,
   LonLat,
@@ -8,25 +8,25 @@ import {
   Position,
   RelationMember,
   SuccessInfo,
-} from './types';
-import { removeFetchCache } from './fetchCache';
-import { overpassAroundToSkeletons } from './overpassAroundToSkeletons';
-import { isBrowser } from '../components/helpers';
-import { addSchemaToFeature } from './tagging/idTaggingScheme';
-import { fetchSchemaTranslations } from './tagging/translations';
+} from '../types';
+import { removeFetchCache } from '../fetchCache';
+import { overpassAroundToSkeletons } from '../overpassAroundToSkeletons';
+import { isBrowser } from '../../components/helpers';
+import { addSchemaToFeature } from '../tagging/idTaggingScheme';
+import { fetchSchemaTranslations } from '../tagging/translations';
 import { osmToFeature } from './osmToFeature';
-import { getImageDefs, mergeMemberImageDefs } from './images/getImageDefs';
+import { getImageDefs, mergeMemberImageDefs } from '../images/getImageDefs';
 import * as Sentry from '@sentry/nextjs';
-import { fetchOverpassCenter } from './overpass/fetchOverpassCenter';
+import { fetchOverpassCenter } from '../overpass/fetchOverpassCenter';
 import {
   isClimbingRelation,
   isClimbingRoute,
   isPublictransportRoute,
   isRouteMaster,
   publishDbgObject,
-} from '../utils';
-import { getOverpassUrl } from './overpassSearch';
-import { API_SERVER, OSM_WEBSITE } from './osmApiConsts';
+} from '../../utils';
+import { getOverpassUrl } from '../overpassSearch';
+import { API_SERVER, OSM_WEBSITE } from './consts';
 
 const getOsmUrl = ({ type, id }: OsmId) =>
   `${API_SERVER}/api/0.6/${type}/${id}.json`;
@@ -352,12 +352,12 @@ export const fetchFeature = async (apiId: OsmId): Promise<Feature> => {
     // offline features for testing
     if (apiId.type === 'relation' && apiId.id === 6) {
       await fetchSchemaTranslations();
-      const osmApiTestItems = await import('./osmApiTestItems');
+      const osmApiTestItems = await import('./offlineItems');
       return osmApiTestItems.TEST_CRAG;
     }
     if (apiId.type === 'node' && apiId.id === 6) {
       await fetchSchemaTranslations();
-      const osmApiTestItems = await import('./osmApiTestItems');
+      const osmApiTestItems = await import('./offlineItems');
       return osmApiTestItems.TEST_NODE;
     }
 

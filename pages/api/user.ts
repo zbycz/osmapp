@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { serverFetchOsmUser } from '../../src/server/osmApiAuthServer';
-import { OSM_TOKEN_COOKIE } from '../../src/services/osmApiConsts';
+import { OSM_TOKEN_COOKIE } from '../../src/services/osm/consts';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {

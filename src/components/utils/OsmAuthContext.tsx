@@ -3,9 +3,9 @@ import {
   loginAndfetchOsmUser,
   osmLogout,
   OsmUser,
-} from '../../services/osmApiAuth';
+} from '../../services/osm/osmApiAuth';
 import { useSnackbar } from './SnackbarContext';
-import { OSM_USER_COOKIE } from '../../services/osmApiConsts';
+import { OSM_USER_COOKIE } from '../../services/osm/consts';
 
 type OsmAuthType = {
   loggedIn: boolean;
