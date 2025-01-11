@@ -50,7 +50,7 @@ export const MembersEditor = () => {
                 key={member.shortId}
                 shortId={member.shortId}
                 label={member.label}
-                onClick={() => handleClick(member.shortId)}
+                onClick={(e) => handleClick(e, member.shortId)}
               />
             );
           })}

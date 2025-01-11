@@ -61,20 +61,21 @@ const isInItems = (items: Array<EditDataItem>, shortId: string) =>
 export const useGetHandleClick = () => {
   const { addFeature, items, setCurrent } = useEditContext();
 
-  return async (shortId: string) => {
+  return async (e, shortId: string) => {
+    const isCmdClicked = e.ctrlKey || e.metaKey;
     const apiId = getApiId(shortId);
     if (apiId.id < 0) {
-      setCurrent(shortId);
+      if (!isCmdClicked) setCurrent(shortId);
       return;
     }
 
     if (isInItems(items, shortId)) {
-      setCurrent(shortId);
+      if (!isCmdClicked) setCurrent(shortId);
       return;
     }
 
     const feature = await getFullFeatureWithMemberFeatures(apiId);
     addFeature(feature);
-    setCurrent(getShortId(feature.osmMeta));
+    if (!isCmdClicked) setCurrent(getShortId(feature.osmMeta));
   };
 };
