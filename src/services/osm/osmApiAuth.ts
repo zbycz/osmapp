@@ -347,6 +347,7 @@ export const saveChanges = async (
   const changesetId = await putChangeset(changesetXml);
 
   // TODO refactor below
+  // or even better use osmChange xml https://wiki.openstreetmap.org/wiki/API_v0.6#Diff_upload:_POST_/api/0.6/changeset/#id/upload
   const changesNodes = changes.filter(({ shortId }) => shortId[0] === 'n');
   const savedNodesIds = await Promise.all(
     changesNodes.map((change) => saveChange(changesetId, change)),

@@ -16,6 +16,7 @@ import { getApiId, getShortId } from '../../../../services/helpers';
 import { FeatureRow } from './FeatureRow';
 import { t } from '../../../../services/intl';
 import { useGetHandleClick } from './helpers';
+import { fetchNodesWaysFeatures } from '../../../../services/osm/fetchNodesWaysFeatures';
 
 export const ParentsEditor = () => {
   const { shortId } = useFeatureEditData();
@@ -30,7 +31,11 @@ export const ParentsEditor = () => {
         return;
       }
 
-      setParents(await fetchParentFeatures(getApiId(shortId)));
+      const [parentFeatures, waysFeatures] = await Promise.all([
+        fetchParentFeatures(getApiId(shortId)),
+        fetchNodesWaysFeatures(getApiId(shortId)),
+      ]);
+      setParents([...parentFeatures, ...waysFeatures]);
     })();
   }, [shortId]);
 
