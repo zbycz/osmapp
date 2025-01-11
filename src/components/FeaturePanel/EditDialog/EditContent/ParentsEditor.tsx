@@ -69,7 +69,7 @@ export const ParentsEditor = () => {
                 key={shortId}
                 shortId={shortId}
                 label={parent.tags.name}
-                onClick={() => handleClick(shortId)}
+                onClick={(e) => handleClick(e, shortId)}
               />
             );
           })}
