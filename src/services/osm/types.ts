@@ -14,6 +14,6 @@ export type OsmElement<T extends OsmType = 'node' | 'way' | 'relation'> = {
   members?: RelationMember[];
 };
 
-export type OsmResponse = {
-  elements: OsmElement[];
+export type OsmResponse<T extends OsmType = 'node' | 'way' | 'relation'> = {
+  elements: OsmElement<T>[];
 };

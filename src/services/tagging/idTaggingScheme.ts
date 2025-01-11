@@ -197,7 +197,7 @@ export const getSchemaForFeature = (feature: Feature) => {
   };
 };
 
-export const addSchemaToFeature = (feature: Feature) => {
+export const addSchemaToFeature = (feature: Feature): Feature => {
   let schema;
   try {
     schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?
