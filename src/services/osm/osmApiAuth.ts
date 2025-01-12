@@ -23,7 +23,7 @@ import {
   Xml2JsSingleDoc,
 } from '../helpers';
 import { join } from '../../utils';
-import { clearFeatureCache } from './osmApi';
+import { clearFetchCache } from '../fetchCache';
 import { isBrowser } from '../../components/helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import {
@@ -389,7 +389,8 @@ export const saveChanges = async (
   const ids = [...savedNodesIds, ...savedWaysIds, ...savedRelationsIds];
   const redirectId = original.point ? ids[0] : original.osmMeta;
 
-  // TODO invalidate all changed items in browser AND server !
+  // TODO invalidate all changed also in server (?)
+  clearFetchCache();
 
   return {
     type: 'edit',
@@ -451,6 +452,8 @@ export const editCrag = async (
     changes.map((change) => saveCragChange(changesetId, change)),
   );
   await putChangesetClose(changesetId);
+
+  clearFetchCache();
 
   return {
     type: 'edit',
