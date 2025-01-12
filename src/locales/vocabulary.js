@@ -220,6 +220,7 @@ export default {
   'editdialog.save_refused': 'Unable to save your changes.',
   'editdialog.parents': 'Parents',
   'editdialog.members': 'Members',
+  'editdialog.location_change_current_item': 'Edit',
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',

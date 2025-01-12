@@ -10,10 +10,13 @@ import { MembersEditor } from '../MembersEditor';
 import { ParentsEditor } from '../ParentsEditor';
 import dynamic from 'next/dynamic';
 
-const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
-  ssr: false,
-  loading: () => <div />,
-});
+const EditFeatureMapDynamic = dynamic(
+  () => import('./EditFeatureMap/EditFeatureMap'),
+  {
+    ssr: false,
+    loading: () => <div />,
+  },
+);
 import { Stack, Typography } from '@mui/material';
 import { useEditContext } from '../../EditContext';
 

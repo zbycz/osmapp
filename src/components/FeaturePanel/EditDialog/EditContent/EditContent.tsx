@@ -30,6 +30,7 @@ export const EditContent = () => {
         direction={isSmallScreen ? 'column' : 'row'}
         gap={2}
         overflow="hidden"
+        flex={1}
       >
         {items.length > 1 && (
           <Tabs
