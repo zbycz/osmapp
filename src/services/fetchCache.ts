@@ -28,7 +28,7 @@ export const getKey = (url: string, opts: Record<string, any>) => {
   return url + JSON.stringify(opts);
 };
 
-export const getCache = (key: string) => {
+export const getCache = (key: string | false) => {
   if (key) {
     return fetchCache.get(key);
   }
@@ -44,7 +44,7 @@ export const removeFetchCache = (
   }
 };
 
-export const writeCacheSafe = (key: string, value: string) => {
+export const writeCacheSafe = (key: string | false, value: string) => {
   if (!key) return;
 
   try {
