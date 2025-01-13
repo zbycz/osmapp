@@ -117,6 +117,18 @@ export default {
   'homepage.discover_more_p1': `Discover other`,
   'homepage.discover_more_p2': `areas`,
 
+  'support_us.title': `Support us`,
+  'support_us.p1': `We're building this app in our spare time because we enjoy it and because we believe that information about climbing routes in public spaces should be freely available, just like street names.`,
+  'support_us.p2': `If this app helps you or resonates with you, we'd be thrilled if you supported us in any way.`,
+  'support_us.how_to_help': `How to help:`,
+  'support_us.share': `Share openclimbing.org with your friends or on social media`,
+  'support_us.feedback': `Send us your feedback`,
+  'support_us.add_content': `Map out the climbing routes`,
+  'support_us.develop': `Can you code? Submit a pull request to our repository.`,
+  'support_us.contribute_financially': `Contribute financially`,
+  'support_us.thanks': `Thank you!`,
+  'support_us.bitcoin_dialog_title': `Support us with Bitcoin`,
+
   'searchbox.placeholder': 'Search OpenStreetMap',
   'searchbox.category': 'category',
   'searchbox.overpass_success': 'Results found: __count__',

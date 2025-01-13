@@ -83,6 +83,18 @@ export default {
   'homepage.discover_more_p1': `Prozkoumat dalších`,
   'homepage.discover_more_p2': `oblastí`,
 
+  'support_us.title': `Podpořte nás`,
+  'support_us.p1': `Děláme tuto aplikaci ve volném čase protože nás to baví a protože věříme, že informace o lezeckých cestách ve veřejném prostoru by měly být svobodně dostupné informace podobně jako třeba názvy ulic.`,
+  'support_us.p2': `Pokud vám tato aplikace pomáhá nebo souzníte s tímto přístupem, budeme moc rádi pokud nás jakkoliv podpoříte.`,
+  'support_us.how_to_help': `Jak pomoci:`,
+  'support_us.share': `Sdílejte openclimbing.org mezi svými kamarády nebo na sociálních sítích`,
+  'support_us.feedback': `Napište nám zpětnou vazbu`,
+  'support_us.add_content': `Zakreslete lezecké cesty`,
+  'support_us.develop': `Umíte programovat? Pošlete pull request do repozitáře.`,
+  'support_us.contribute_financially': `Přispějte finančně`,
+  'support_us.thanks': `Thank you!`,
+  'support_us.bitcoin_dialog_title': `Support us with Bitcoin`,
+
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
   'searchbox.category': 'kategorie',
   'searchbox.overpass_success': 'Nalezeno výsledků: __count__',
