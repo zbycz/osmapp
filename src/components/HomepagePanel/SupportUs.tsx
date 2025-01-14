@@ -16,6 +16,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from '@emotion/styled';
+import { keyframes } from '@emotion/react';
 import { useUserThemeContext } from '../../helpers/theme';
 import { t } from '../../services/intl';
 
@@ -24,6 +25,34 @@ const AccordionStyle = {
     backgroundColor: 'transparent !important',
   },
 };
+
+// Dvojitý úder (“lub-dub”) + pauza, v 1s cyklu (což odpovídá cca 60 BPM).
+const heartbeat = keyframes`
+  0% {
+    transform: scale(1);
+  }
+  5% {
+    transform: scale(1.1);
+  }
+  10% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.1);
+  }
+  20% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+`;
+
+const Heart = styled.div`
+  font-size: 32px;
+  animation: ${heartbeat} 5s infinite;
+`;
+
 const Qr = styled.img<{ $isDark: boolean }>`
   ${({ $isDark }) => $isDark && `filter: invert(1);`}
 `;
@@ -36,6 +65,7 @@ export const SupportUs = () => {
   const onClose = () => {
     setIsBitcoinDialogOpen(false);
   };
+
   return (
     <>
       <Box mt={5}>
@@ -46,7 +76,7 @@ export const SupportUs = () => {
             id="panel1-header"
           >
             <Stack direction="row" spacing={2} alignItems="center">
-              <div style={{ fontSize: 32 }}>❤️</div>
+              <Heart>❤️</Heart>
               <Typography variant="body1" paragraph>
                 {t('support_us.title')}
               </Typography>
