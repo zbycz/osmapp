@@ -187,10 +187,18 @@ export default {
         můžete přidat doplňující poznámku. Vhodné je podložit váš příspěvek odkazem na zdroj
         informace (web, foto atd.).`,
   'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
+  'editdialog.add_tag': 'Přidat tag',
   'editdialog.location': 'Poloha',
   'editdialog.tags_editor_info': `Tagy popisují vlastnosti mapového prvku v dohodnutém formátu. Zde naleznete úplný
         <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
   'editdialog.save_refused': 'Změny se nepodařilo uložit.',
+  'editdialog.parents': 'Nadřazené relace',
+  'editdialog.members': 'Členové',
+  'editdialog.members.name': 'Název',
+  'editdialog.members.add_member': 'Přidat člena',
+  'editdialog.members.confirm': 'Potvrdit',
+  'editdialog.members.convert_description': 'Pro přidání členů, prosím, změňte uzel na relaci.',
+  'editdialog.members.convert_button': 'Změnit na relaci',
   'editdialog.location_change_current_item': 'Upravit',
 
   'editsuccess.close_button': 'Zavřít',

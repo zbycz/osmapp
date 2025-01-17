@@ -201,7 +201,6 @@ export const PresetSearchBox = ({ value, setValue, options }: Props) => {
         renderValue={() =>
           renderOption(options.find((o) => o.presetKey === value))
         }
-        size="small"
         variant="outlined"
         fullWidth
         displayEmpty

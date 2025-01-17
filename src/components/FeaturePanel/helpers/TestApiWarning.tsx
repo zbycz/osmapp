@@ -5,7 +5,7 @@ import React from 'react';
 
 export const TestApiWarning = () =>
   USE_PROD_API ? null : (
-    <Box mb={2}>
+    <Box mb={2} mt={1}>
       <Alert severity="warning">
         TEST API IN USE: {API_SERVER}
         <br />

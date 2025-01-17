@@ -15,15 +15,21 @@ import { FeatureRow } from './FeatureRow';
 import { t } from '../../../../services/intl';
 import { useGetHandleClick } from './helpers';
 import { AddMemberForm } from './AddMemberForm';
+import { useEditContext } from '../EditContext';
 
 export const MembersEditor = () => {
-  const { members } = useFeatureEditData();
+  const { members, tags, nodeLonLat } = useFeatureEditData();
+  const { current } = useEditContext();
   const theme = useTheme();
   const handleClick = useGetHandleClick();
 
-  if (!members || members.length === 0) return null;
-
-  return (
+  const AccordionComponent = ({
+    children,
+    membersLength,
+  }: {
+    children: React.ReactNode;
+    membersLength?: number;
+  }) => (
     <Accordion disableGutters elevation={0} square>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -32,7 +38,7 @@ export const MembersEditor = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center">
           <Typography variant="button">{t('editdialog.members')}</Typography>
-          <Chip size="small" label={members.length} />
+          {membersLength && <Chip size="small" label={membersLength} />}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
@@ -44,20 +50,34 @@ export const MembersEditor = () => {
             },
           }}
         >
-          {members.map((member) => {
-            return (
-              <FeatureRow
-                key={member.shortId}
-                shortId={member.shortId}
-                label={member.label}
-                onClick={(e) => handleClick(e, member.shortId)}
-              />
-            );
-          })}
-
-          <AddMemberForm />
+          {children}
         </List>
       </AccordionDetails>
     </Accordion>
+  );
+
+  const isClimbingCrag = tags.climbing === 'crag';
+  const hasNoMembers = !members || members.length === 0;
+
+  if (!isClimbingCrag && hasNoMembers) return null;
+
+  return (
+    <AccordionComponent membersLength={members?.length}>
+      {members?.map((member) => {
+        return (
+          <FeatureRow
+            key={member.shortId}
+            shortId={member.shortId}
+            label={member.label}
+            onClick={(e) => handleClick(e, member.shortId)}
+          />
+        );
+      })}
+      {isClimbingCrag && hasNoMembers ? (
+        <AddMemberForm newLonLat={nodeLonLat} />
+      ) : (
+        <AddMemberForm />
+      )}
+    </AccordionComponent>
   );
 };

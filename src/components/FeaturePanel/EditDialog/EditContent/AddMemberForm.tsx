@@ -3,13 +3,15 @@ import { getApiId, getShortId } from '../../../../services/helpers';
 import { getOsmElement } from '../../../../services/osm/quickFetchFeature';
 import { useEditContext } from '../EditContext';
 import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContext';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { getNewNode } from '../../../../services/getCoordsFeature';
-import { Button, TextField } from '@mui/material';
-import { OsmId } from '../../../../services/types';
+import { Alert, Button, TextField } from '@mui/material';
+import { LonLat, OsmId } from '../../../../services/types';
+import { t } from '../../../../services/intl';
+import AddIcon from '@mui/icons-material/Add';
 
 const hasAtLeastOneNode = (members: Members) => {
-  return members.some((member) => member.shortId.startsWith('n'));
+  return members?.some((member) => member.shortId.startsWith('n'));
 };
 
 const getLastNodeApiId = (members: Members) => {
@@ -39,26 +41,56 @@ const getNewNodeLocation = async (items: EditDataItem[], members: Members) => {
   return lonLat.map((x) => x + 0.0001);
 };
 
-export const AddMemberForm = () => {
-  const { addFeature, items } = useEditContext();
-  const { members, setMembers } = useFeatureEditData();
+export const AddMemberForm = ({ newLonLat }: { newLonLat?: LonLat }) => {
+  const { addFeature, items, setCurrent, current } = useEditContext();
+  const { members, setMembers, tags, setShortId } = useFeatureEditData();
   const [showInput, setShowInput] = React.useState(false);
   const [label, setLabel] = React.useState('');
+  const isClimbingCrag = tags.climbing === 'crag';
 
-  if (!hasAtLeastOneNode(members)) {
-    return; // TODO so far, we need a node (with coordinates) for adding a new node
-  }
-
-  const handleAddMember = async () => {
-    const lastNodeLocation = await getNewNodeLocation(items, members);
+  const handleAddMember = useCallback(async () => {
+    const lastNodeLocation =
+      newLonLat ?? (await getNewNodeLocation(items, members));
     const newNode = getNewNode(lastNodeLocation, label);
+    const newShortId = getShortId(newNode.osmMeta);
     addFeature(newNode);
     setMembers((prev) => [
-      ...prev,
-      { shortId: getShortId(newNode.osmMeta), role: '', label },
+      ...(prev ?? []),
+      { shortId: newShortId, role: '', label },
     ]);
     setShowInput(false);
     setLabel('');
+    setCurrent(newShortId);
+  }, [addFeature, items, label, members, newLonLat, setCurrent, setMembers]);
+
+  React.useEffect(() => {
+    const downHandler = (e) => {
+      if (!showInput) return;
+
+      if (e.key === 'Enter') {
+        handleAddMember();
+      }
+
+      if (e.key === 'Escape') {
+        setShowInput(false);
+      }
+    };
+
+    window.addEventListener('keydown', downHandler);
+
+    return () => {
+      window.removeEventListener('keydown', downHandler);
+    };
+  }, [handleAddMember, showInput]);
+
+  if (!hasAtLeastOneNode(members) && !newLonLat) {
+    return; // TODO so far, we need a node (with coordinates) for adding a new node
+  }
+
+  const convertToRelation = () => {
+    const newShortId = current.replace(/n/, 'r');
+    setShortId(newShortId);
+    setCurrent(newShortId);
   };
 
   return (
@@ -68,18 +100,40 @@ export const AddMemberForm = () => {
           <TextField
             value={label}
             size="small"
-            label="Name"
+            label={t('editdialog.members.name')}
             onChange={(e) => {
               setLabel(e.target.value);
             }}
           />
+
           <Button onClick={handleAddMember} variant="text">
-            Add node
+            {t('editdialog.members.confirm')}
           </Button>
         </>
+      ) : isClimbingCrag && getApiId(current).type === 'node' ? (
+        <Alert
+          severity="info"
+          icon={null}
+          action={
+            <Button
+              onClick={convertToRelation}
+              color="inherit"
+              variant="text"
+              size="small"
+            >
+              {t('editdialog.members.convert_button')}
+            </Button>
+          }
+        >
+          {t('editdialog.members.convert_description')}
+        </Alert>
       ) : (
-        <Button onClick={() => setShowInput(true)} variant="text">
-          Add
+        <Button
+          startIcon={<AddIcon />}
+          onClick={() => setShowInput(true)}
+          variant="text"
+        >
+          {t('editdialog.members.add_member')}
         </Button>
       )}
     </>

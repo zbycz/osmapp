@@ -56,16 +56,22 @@ export const EditContent = () => {
           </Tabs>
         )}
         <DialogContent dividers>
-          <form autoComplete="off" onSubmit={(e) => e.preventDefault()}>
+          <form
+            autoComplete="off"
+            onSubmit={(e) => e.preventDefault()}
+            style={{ height: '100%' }}
+          >
             <OsmUserLoggedOut />
 
-            <div>
-              <FeatureEditSection shortId={current} />
-              <CommentField />
-              <ContributionInfoBox />
+            <Stack height="100%">
+              <Stack flex={1}>
+                <FeatureEditSection shortId={current} />
+                <CommentField />
+                <ContributionInfoBox />
+              </Stack>
               <OsmUserLogged />
               <TestApiWarning />
-            </div>
+            </Stack>
           </form>
         </DialogContent>
       </Stack>
