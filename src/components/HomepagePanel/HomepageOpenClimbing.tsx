@@ -118,9 +118,14 @@ const Buttons = ({ onClose }) => (
       {t('homepage.go_to_map_button')}
     </Button>
     <Stack spacing={1} direction={'row'} mb={6}>
-      {/* <Button variant="text" fullWidth> */}
-      {/*   {t('homepage.add_new_climbing_area')} */}
-      {/* </Button> */}
+      <Button
+        variant="text"
+        fullWidth
+        href="https://medium.com/@jvaclavik/how-to-contribute-to-openclimbing-org-9a159ddd5d4c"
+        target="_blank"
+      >
+        {t('homepage.add_new_climbing_area')}
+      </Button>
       <Button
         variant="text"
         fullWidth
