@@ -178,7 +178,7 @@ export default {
   'editdialog.location_editor_to_be_added': 'Polohu zde zatím upravit nelze, můžete to provést třeba v <a href="__link__">editoru iD</a>.',
   'editdialog.place_cancelled': 'Místo zrušeno (smazat)',
   'editdialog.comment': 'Poznámka (nepovinné)',
-  'editdialog.comment_placeholder': 'odkaz na zdroj informace apod.',
+  'editdialog.comment_placeholder': 'Odkaz na zdroj informace apod.',
   'editdialog.info_edit': `Vaše úprava bude ihned uložena do databáze OpenStreetMap. Prosíme,
         vkládejte pouze informace z vlastních nebo ověřených zdrojů. Je zakázano
         kopírovat data krytá autorským zákonem (např. Google Maps).
@@ -187,10 +187,18 @@ export default {
         můžete přidat doplňující poznámku. Vhodné je podložit váš příspěvek odkazem na zdroj
         informace (web, foto atd.).`,
   'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
+  'editdialog.add_tag': 'Přidat tag',
   'editdialog.location': 'Poloha',
   'editdialog.tags_editor_info': `Tagy popisují vlastnosti mapového prvku v dohodnutém formátu. Zde naleznete úplný
         <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
   'editdialog.save_refused': 'Změny se nepodařilo uložit.',
+  'editdialog.parents': 'Nadřazené relace',
+  'editdialog.members': 'Členové',
+  'editdialog.members.name': 'Název',
+  'editdialog.members.add_member': 'Přidat člena',
+  'editdialog.members.confirm': 'Potvrdit',
+  'editdialog.members.convert_description': 'Pro přidání členů, prosím, změňte uzel na relaci.',
+  'editdialog.members.convert_button': 'Změnit na relaci',
   'editdialog.location_change_current_item': 'Upravit',
 
   'editsuccess.close_button': 'Zavřít',
@@ -204,6 +212,10 @@ export default {
   'editsuccess.edit.body': `Uložení proběhlo do primární databáze OSM. V řádu několika minut změnu uvidíte na mapě "OSM Carto". Zdejší mapa a různé jiné aplikace se obnovují cca 1x za měsíc.\n\nPokud se jedná o omyl, můžete hodnoty ručně vrátit zpět a znovu je uložit.`,
   'editsuccess.edit.urlLabel': `Vaše změny:`,
   'editsuccess.edit.textLabel': 'Poznámka ke změně',
+  'editdialog.preset_select.label': 'Typ',
+  'editdialog.preset_select.placeholder': 'Vyberte typ',
+  'editdialog.preset_select.search_placeholder': 'Zadejte hledaný výraz...',
+  'editdialog.preset_select.edit_button': 'Upravit',
 
   'tags.name': 'Název',
   'tags.website': 'Web',

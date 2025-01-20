@@ -226,12 +226,18 @@ export default {
   'editdialog.info_note':
     'Your suggestion will be reviewed by OpenStreetMap volunteers. You can add additional information such as a link to a photo or a link to source material for them below!',
   'editdialog.tags_editor': 'All properties – Tags',
+  'editdialog.add_tag': 'Add tag',
   'editdialog.location': 'Location',
   'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
   'editdialog.login_in_progress': `Logging in...`,
   'editdialog.save_refused': 'Unable to save your changes.',
   'editdialog.parents': 'Parents',
   'editdialog.members': 'Members',
+  'editdialog.members.name': 'Name',
+  'editdialog.members.add_member': 'Add member',
+  'editdialog.members.confirm': 'Confirm',
+  'editdialog.members.convert_description': 'For adding members, you need to convert node to relation.',
+  'editdialog.members.convert_button': 'Convert to relation',
   'editdialog.location_change_current_item': 'Edit',
 
   'editsuccess.close_button': 'Done',

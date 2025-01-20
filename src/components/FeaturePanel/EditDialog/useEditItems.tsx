@@ -29,6 +29,7 @@ export type EditDataItem = DataItem & {
   setTag: (k: string, v: string) => void;
   toggleToBeDeleted: () => void;
   setMembers: SetMembers;
+  setShortId: SetShortId;
   setNodeLonLat: (lonLat: LonLat) => void;
 };
 
@@ -116,6 +117,15 @@ const setTagsEntriesFactory =
       tagsEntries: updateFn(tagsEntries),
     }));
 
+type SetShortId = (shortId: string) => void;
+const setShortIdFactory =
+  (setDataItem: SetDataItem): SetShortId =>
+  (shortId) =>
+    setDataItem((prev) => ({
+      ...prev,
+      shortId: shortId,
+    }));
+
 type SetMembers = (updateFn: (prev: Members) => Members) => void;
 const setMembersFactory =
   (setDataItem: SetDataItem, members: Members): SetMembers =>
@@ -169,6 +179,7 @@ export const useEditItems = (originalFeature: Feature) => {
         return {
           ...dataItem,
           setTagsEntries,
+          setShortId: setShortIdFactory(setDataItem),
           tags: Object.fromEntries(tagsEntries),
           setTag: setTagFactory(setTagsEntries),
           toggleToBeDeleted: toggleToBeDeletedFactory(setDataItem),

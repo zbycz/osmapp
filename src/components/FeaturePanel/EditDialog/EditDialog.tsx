@@ -38,6 +38,7 @@ const EditDialogInner = () => {
       fullScreen={fullScreen}
       open={opened}
       onClose={onClose}
+      disableEscapeKeyDown
       aria-labelledby="edit-dialog-title"
       sx={{ height: '100%' }}
     >

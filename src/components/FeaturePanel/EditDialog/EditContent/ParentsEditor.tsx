@@ -17,9 +17,10 @@ import { FeatureRow } from './FeatureRow';
 import { t } from '../../../../services/intl';
 import { useGetHandleClick } from './helpers';
 import { fetchNodesWaysFeatures } from '../../../../services/osm/fetchNodesWaysFeatures';
+import { useEditContext } from '../EditContext';
 
 export const ParentsEditor = () => {
-  const { shortId } = useFeatureEditData();
+  const { current } = useEditContext();
   const [parents, setParents] = useState([]);
   const theme = useTheme();
   const handleClick = useGetHandleClick();
@@ -27,17 +28,16 @@ export const ParentsEditor = () => {
   useEffect(() => {
     (async () => {
       setParents([]);
-      if (getApiId(shortId).id < 0) {
+      if (getApiId(current).id < 0) {
         return;
       }
-
       const [parentFeatures, waysFeatures] = await Promise.all([
-        fetchParentFeatures(getApiId(shortId)),
-        fetchNodesWaysFeatures(getApiId(shortId)),
+        fetchParentFeatures(getApiId(current)),
+        fetchNodesWaysFeatures(getApiId(current)),
       ]);
       setParents([...parentFeatures, ...waysFeatures]);
     })();
-  }, [shortId]);
+  }, [current]);
 
   if (!parents || parents.length === 0) return null;
 
