@@ -157,10 +157,17 @@ const deleteItem = (apiId: OsmId, content: string) =>
     content,
   });
 
-const createItem = (content: string) =>
+const createNodeItem = (content: string) =>
   authFetch<string>({
     method: 'PUT',
     path: `/api/0.6/node/create`,
+    headers: { 'Content-Type': 'text/xml; charset=utf-8' },
+    content,
+  });
+const createRelationItem = (content: string) =>
+  authFetch<string>({
+    method: 'PUT',
+    path: `/api/0.6/relation/create`,
     headers: { 'Content-Type': 'text/xml; charset=utf-8' },
     content,
   });
@@ -279,20 +286,38 @@ const getNewNodeXml = async (
   return buildXmlString(xml);
 };
 
+const getNewRelationXml = async (
+  changesetId: string,
+  newTags: FeatureTags,
+  members: Members,
+) => {
+  const xml = await parseToXml2Js('<osm><relation visible="true" /></osm>');
+  xml.relation.$.changeset = changesetId;
+  xml.relation.tag = getXmlTags(newTags);
+  xml.relation.member = getXmlMembers(members);
+  return buildXmlString(xml);
+};
+
 const saveChange = async (
   changesetId: string,
   { shortId, version, tags, toBeDeleted, nodeLonLat, members }: EditDataItem,
 ): Promise<OsmId> => {
   // TODO don't save changes if no change detected
-
   let apiId = getApiId(shortId);
   if (apiId.id < 0) {
-    if (apiId.type !== 'node') {
-      throw new Error('We can only add new nodes so far.');
+    if (apiId.type === 'way') {
+      throw new Error('We can only add new nodes and relations so far.');
     }
-    const content = await getNewNodeXml(changesetId, nodeLonLat, tags);
-    const newNodeId = await createItem(content);
-    return { type: 'node', id: parseInt(newNodeId, 10) };
+    if (apiId.type === 'node') {
+      const content = await getNewNodeXml(changesetId, nodeLonLat, tags);
+      const newNodeId = await createNodeItem(content);
+      return { type: 'node', id: parseInt(newNodeId, 10) };
+    }
+    if (apiId.type === 'relation') {
+      const content = await getNewRelationXml(changesetId, tags, members);
+      const newRelationId = await createRelationItem(content);
+      return { type: 'relation', id: parseInt(newRelationId, 10) };
+    }
   }
 
   const freshItem = await getItem(apiId);
