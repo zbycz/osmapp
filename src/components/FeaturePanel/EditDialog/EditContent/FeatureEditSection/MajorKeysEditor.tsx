@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography, Box } from '@mui/material';
 import { t } from '../../../../../services/intl';
 import {
   getNextWikimediaCommonsIndex,
@@ -120,7 +120,7 @@ export const MajorKeysEditor = () => {
   }, [focusTag]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <>
+    <Box mb={3}>
       {activeMajorKeys.map((k) => (
         <div key={k}>
           {k === 'opening_hours' ? (
@@ -156,8 +156,6 @@ export const MajorKeysEditor = () => {
           ))}
         </>
       )}
-      <br />
-      <br />
-    </>
+    </Box>
   );
 };

@@ -4,29 +4,49 @@ const cache = {};
 
 const fetchCache = isBrowser()
   ? {
-      get: (key) => sessionStorage.getItem(key),
-      remove: (key) => sessionStorage.removeItem(key),
-      put: (key, value) => sessionStorage.setItem(key, value),
-      clear: () => sessionStorage.clear(),
+      get: (key: string) => sessionStorage.getItem(key),
+      remove: (key: string) => sessionStorage.removeItem(key),
+      put: (key: string, value: string) => sessionStorage.setItem(key, value),
+      clear: () => sessionStorage.clear(), // this is little dirty, but we use sessionStorage only for this
     }
   : {
-      get: (key) => cache[key],
-      remove: (key) => delete cache[key],
-      put: (key, value) => {
+      get: (key: string) => cache[key],
+      remove: (key: string) => delete cache[key],
+      put: (key: string, value: string) => {
         cache[key] = value;
       },
-      clear: () => {},
+      clear: () => {
+        Object.keys(cache).forEach((key) => delete cache[key]);
+      },
     };
 
-export const getKey = (url, opts) => url + JSON.stringify(opts);
+export const getKey = (url: string, opts: Record<string, any>) => {
+  if (['POST', 'PUT', 'DELETE'].includes(opts.method)) {
+    return false;
+  }
 
-export const getCache = fetchCache.get;
-
-export const removeFetchCache = (url, opts = {}) => {
-  fetchCache.remove(getKey(url, opts));
+  return url + JSON.stringify(opts);
 };
 
-export const writeCacheSafe = (key, value) => {
+export const getCache = (key: string | false) => {
+  if (key) {
+    return fetchCache.get(key);
+  }
+};
+
+export const removeFetchCache = (
+  url: string,
+  opts: Record<string, any> = {},
+) => {
+  const key = getKey(url, opts);
+  if (key) {
+    fetchCache.remove(key);
+  }
+};
+
+export const writeCacheSafe = (key: string | false, value: string) => {
+  if (!key) return;
+
   try {
     fetchCache.put(key, value);
   } catch (e) {
@@ -35,4 +55,8 @@ export const writeCacheSafe = (key, value) => {
     }
     console.warn(`Item ${key} was not saved to cache: `, e); // eslint-disable-line no-console
   }
+};
+
+export const clearFetchCache = () => {
+  fetchCache.clear();
 };

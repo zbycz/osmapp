@@ -1,6 +1,6 @@
 import React from 'react';
-import { Box } from '@mui/material';
-import { getOsmappLink } from '../../../services/helpers';
+import { Box, Chip } from '@mui/material';
+import { getOsmappLink, getReactKey } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { PanelLabel } from '../Climbing/PanelLabel';
 import { Item } from './Item';
@@ -63,17 +63,18 @@ export const MemberFeatures = () => {
     getDividedFeaturesBySections(memberFeatures);
   const climbingRoutesFeatures = dividedFeaturesBySections.routes;
   const otherFeatures = dividedFeaturesBySections.other;
+  const headingNum = climbingRoutesFeatures.length || memberFeatures.length;
 
   return (
     <Box mb={1}>
       <PanelLabel addition={<PanelAddition />}>
-        {getHeading(feature)} ({memberFeatures.length})
+        {getHeading(feature)} <Chip size="small" label={headingNum} />
       </PanelLabel>
       {climbingRoutesFeatures.length > 0 && (
         <Ul>
           {climbingRoutesFeatures.map((item, index) => (
             <ClimbingItem
-              key={getOsmappLink(item)}
+              key={getReactKey(item)}
               feature={item}
               index={index}
               cragFeature={feature}
@@ -84,7 +85,7 @@ export const MemberFeatures = () => {
       {otherFeatures.length > 0 && (
         <Ul>
           {otherFeatures.map((item) => (
-            <Item key={getOsmappLink(item)} feature={item} />
+            <Item key={getReactKey(item)} feature={item} />
           ))}
         </Ul>
       )}

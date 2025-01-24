@@ -27,6 +27,7 @@ import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
 import { isPublictransportRoute } from '../../utils';
 import { Sockets } from './Sockets/Sockets';
 import { ClimbingTypeBadge } from './Climbing/ClimbingTypeBadge';
+import { TestApiWarning } from './helpers/TestApiWarning';
 
 const Flex = styled.div`
   flex: 1;
@@ -70,6 +71,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
           <ClimbingRestriction />
 
           <OsmError />
+          <TestApiWarning />
         </PanelSidePadding>
 
         <Flex>

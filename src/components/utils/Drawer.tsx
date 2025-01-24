@@ -35,7 +35,7 @@ const Container = styled.div<SettingsProps>`
   overflow: hidden;
 `;
 
-const Content = styled.div`
+const Content = styled.main`
   height: 100%;
   overflow: auto;
 `;

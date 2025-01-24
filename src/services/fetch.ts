@@ -49,7 +49,9 @@ export const fetchText = async (url: string, opts: FetchOpts = {}) => {
     }
 
     const text = await res.text();
-    if (!opts || !opts.nocache) {
+    const noCache =
+      opts?.nocache || ['POST', 'PUT', 'DELETE'].includes(opts.method);
+    if (!noCache) {
       writeCacheSafe(key, text);
     }
     return text;

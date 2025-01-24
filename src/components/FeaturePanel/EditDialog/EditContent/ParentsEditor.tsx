@@ -4,35 +4,40 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Chip,
   List,
   Stack,
   Typography,
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fetchParentFeatures } from '../../../../services/osmApi';
+import { fetchParentFeatures } from '../../../../services/osm/fetchParentFeatures';
 import { getApiId, getShortId } from '../../../../services/helpers';
-import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
-import { useEditContext } from '../EditContext';
 import { FeatureRow } from './FeatureRow';
-import { items } from '../../QuickActions/ShareDialog/items';
 import { t } from '../../../../services/intl';
+import { useGetHandleClick } from './helpers';
+import { fetchNodesWaysFeatures } from '../../../../services/osm/fetchNodesWaysFeatures';
+import { useEditContext } from '../EditContext';
 
 export const ParentsEditor = () => {
-  const { shortId } = useFeatureEditData();
+  const { current } = useEditContext();
   const [parents, setParents] = useState([]);
   const theme = useTheme();
-  const { addFeature, setCurrent, items } = useEditContext();
+  const handleClick = useGetHandleClick();
 
   useEffect(() => {
-    const fetchParents = async () => {
-      const data = await fetchParentFeatures(getApiId(shortId));
-
-      setParents(data);
-    };
-
-    fetchParents();
-  }, [shortId]);
+    (async () => {
+      setParents([]);
+      if (getApiId(current).id < 0) {
+        return;
+      }
+      const [parentFeatures, waysFeatures] = await Promise.all([
+        fetchParentFeatures(getApiId(current)),
+        fetchNodesWaysFeatures(getApiId(current)),
+      ]);
+      setParents([...parentFeatures, ...waysFeatures]);
+    })();
+  }, [current]);
 
   if (!parents || parents.length === 0) return null;
 
@@ -44,9 +49,8 @@ export const ParentsEditor = () => {
         id="panel1-header"
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">
-            {t('editdialog.parents')} ({parents.length})
-          </Typography>
+          <Typography variant="button">{t('editdialog.parents')}</Typography>
+          <Chip size="small" label={parents.length} />
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
@@ -65,16 +69,7 @@ export const ParentsEditor = () => {
                 key={shortId}
                 shortId={shortId}
                 label={parent.tags.name}
-                onClick={() => {
-                  const isNotInItems = !items.find(
-                    (item) => item.shortId === shortId,
-                  );
-                  fetchSchemaTranslations();
-                  if (isNotInItems) {
-                    addFeature(parent);
-                  }
-                  setCurrent(shortId);
-                }}
+                onClick={(e) => handleClick(e, shortId)}
               />
             );
           })}

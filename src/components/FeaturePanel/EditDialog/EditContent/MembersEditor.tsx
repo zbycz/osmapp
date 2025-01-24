@@ -4,6 +4,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Chip,
   List,
   Stack,
   Typography,
@@ -11,32 +12,24 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FeatureRow } from './FeatureRow';
-import { OsmId } from '../../../../services/types';
-import { getApiId, getShortId } from '../../../../services/helpers';
-import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
-import { fetchFeature } from '../../../../services/osmApi';
-import { useEditContext } from '../EditContext';
 import { t } from '../../../../services/intl';
+import { useGetHandleClick } from './helpers';
+import { AddMemberForm } from './AddMemberForm';
+import { useEditContext } from '../EditContext';
 
 export const MembersEditor = () => {
-  const { members } = useFeatureEditData();
+  const { members, tags, nodeLonLat } = useFeatureEditData();
+  const { current } = useEditContext();
   const theme = useTheme();
-  const { addFeature, items, setCurrent } = useEditContext();
+  const handleClick = useGetHandleClick();
 
-  if (!members || members.length === 0) return null;
-
-  const handleClick = async (shortId) => {
-    const apiId: OsmId = getApiId(shortId);
-    await fetchSchemaTranslations();
-    const isNotInItems = !items.find((item) => item.shortId === shortId);
-    const feature = await fetchFeature(apiId);
-    if (isNotInItems) {
-      addFeature(feature);
-    }
-    setCurrent(getShortId(feature.osmMeta));
-  };
-
-  return (
+  const AccordionComponent = ({
+    children,
+    membersLength,
+  }: {
+    children: React.ReactNode;
+    membersLength?: number;
+  }) => (
     <Accordion disableGutters elevation={0} square>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
@@ -44,9 +37,8 @@ export const MembersEditor = () => {
         id="panel1-header"
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">
-            {t('editdialog.members')} ({members.length})
-          </Typography>
+          <Typography variant="button">{t('editdialog.members')}</Typography>
+          {membersLength && <Chip size="small" label={membersLength} />}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
@@ -58,18 +50,34 @@ export const MembersEditor = () => {
             },
           }}
         >
-          {members.map((member) => {
-            return (
-              <FeatureRow
-                key={member.shortId}
-                shortId={member.shortId}
-                label={member.label}
-                onClick={() => handleClick(member.shortId)}
-              />
-            );
-          })}
+          {children}
         </List>
       </AccordionDetails>
     </Accordion>
+  );
+
+  const isClimbingCrag = tags.climbing === 'crag';
+  const hasNoMembers = !members || members.length === 0;
+
+  if (!isClimbingCrag && hasNoMembers) return null;
+
+  return (
+    <AccordionComponent membersLength={members?.length}>
+      {members?.map((member) => {
+        return (
+          <FeatureRow
+            key={member.shortId}
+            shortId={member.shortId}
+            label={member.label}
+            onClick={(e) => handleClick(e, member.shortId)}
+          />
+        );
+      })}
+      {isClimbingCrag && hasNoMembers ? (
+        <AddMemberForm newLonLat={nodeLonLat} />
+      ) : (
+        <AddMemberForm />
+      )}
+    </AccordionComponent>
   );
 };

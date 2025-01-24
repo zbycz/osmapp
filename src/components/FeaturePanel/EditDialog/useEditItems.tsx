@@ -7,18 +7,20 @@ import { publishDbgObject } from '../../../utils';
 
 export type TagsEntries = [string, string][];
 
+export type Members = Array<{
+  shortId: string;
+  role: string;
+  label: string; // cached from other dataItems, or from originalFeature
+}>;
+
 // internal type stored in the state
 type DataItem = {
   shortId: string;
   tagsEntries: TagsEntries;
   toBeDeleted: boolean;
-  members: {
-    shortId: string;
-    role: string;
-    label: string; // cached from other dataItems, or from originalFeature
-  }[];
+  members: Members | undefined;
   version: number | undefined; // undefined for new item
-  newNodeLonLat?: LonLat;
+  nodeLonLat: LonLat | undefined; // undefined for ways and relations
 };
 
 export type EditDataItem = DataItem & {
@@ -26,7 +28,9 @@ export type EditDataItem = DataItem & {
   tags: FeatureTags;
   setTag: (k: string, v: string) => void;
   toggleToBeDeleted: () => void;
-  // TODO add  setMembers,
+  setMembers: SetMembers;
+  setShortId: SetShortId;
+  setNodeLonLat: (lonLat: LonLat) => void;
 };
 
 const buildDataItem = (feature: Feature): DataItem => {
@@ -47,17 +51,61 @@ const buildDataItem = (feature: Feature): DataItem => {
         role: member.role,
         label: `${member.type} ${member.ref}`,
       })),
-    newNodeLonLat: apiId.id < 0 ? feature.center : null,
+    nodeLonLat: apiId.type === 'node' ? feature.center : undefined,
   };
+};
+
+const getName = (d: DataItem): string | undefined =>
+  d.tagsEntries.find(([k]) => k === 'name')?.[1];
+
+const someNameHasChanged = (prevData: DataItem[], newData: DataItem[]) => {
+  const prevNames = prevData.map((d) => getName(d));
+  const newNames = newData.map((d) => getName(d));
+  return prevNames.some((name, index) => name !== newNames[index]);
+};
+
+const updateAllMemberLabels = (newData: DataItem[], shortId: string) => {
+  // TODO this code is ugly, but we would have to remove the "one state"
+  const referencingParents = new Set<string>();
+  newData.forEach((dataItem) => {
+    dataItem.members?.forEach((member) => {
+      if (member.shortId === shortId) {
+        referencingParents.add(dataItem.shortId);
+      }
+    });
+  });
+
+  const currentItem = newData.find((dataItem) => dataItem.shortId === shortId);
+
+  return newData.map((dataItem) => {
+    if (referencingParents.has(dataItem.shortId)) {
+      const clone = JSON.parse(JSON.stringify(dataItem)) as DataItem;
+      const index = clone.members.findIndex(
+        (member) => member.shortId === shortId,
+      );
+      clone.members[index].label = getName(currentItem);
+      return clone;
+    } else {
+      return dataItem;
+    }
+  });
 };
 
 type SetDataItem = (updateFn: (prevValue: DataItem) => DataItem) => void;
 const setDataItemFactory =
   (setData: Setter<DataItem[]>, shortId: string): SetDataItem =>
   (updateFn) => {
-    setData((prev) =>
-      prev.map((item) => (item.shortId === shortId ? updateFn(item) : item)),
-    );
+    setData((prevData) => {
+      const newData = prevData.map((item) =>
+        item.shortId === shortId ? updateFn(item) : item,
+      );
+
+      if (someNameHasChanged(prevData, newData)) {
+        // only current item can change, but this check is cheap
+        return updateAllMemberLabels(newData, shortId);
+      }
+      return newData;
+    });
   };
 
 type SetTagsEntries = (updateFn: (prev: TagsEntries) => TagsEntries) => void;
@@ -67,6 +115,33 @@ const setTagsEntriesFactory =
     setDataItem((prev) => ({
       ...prev,
       tagsEntries: updateFn(tagsEntries),
+    }));
+
+type SetShortId = (shortId: string) => void;
+const setShortIdFactory =
+  (setDataItem: SetDataItem): SetShortId =>
+  (shortId) =>
+    setDataItem((prev) => ({
+      ...prev,
+      shortId: shortId,
+    }));
+
+type SetMembers = (updateFn: (prev: Members) => Members) => void;
+const setMembersFactory =
+  (setDataItem: SetDataItem, members: Members): SetMembers =>
+  (updateFn) =>
+    setDataItem((prev) => ({
+      ...prev,
+      members: updateFn(members),
+    }));
+
+type SetNodeLonLat = (lonLat: LonLat) => void;
+const setNodeLonLatFactory =
+  (setDataItem: SetDataItem): SetNodeLonLat =>
+  (lonLat) =>
+    setDataItem((prev) => ({
+      ...prev,
+      nodeLonLat: lonLat,
     }));
 
 type SetTag = (k: string, v: string) => void;
@@ -97,16 +172,21 @@ export const useEditItems = (originalFeature: Feature) => {
   const items = useMemo<Array<EditDataItem>>(
     () =>
       data.map((dataItem) => {
-        const { shortId, tagsEntries } = dataItem;
+        const { shortId, tagsEntries, members } = dataItem;
         const setDataItem = setDataItemFactory(setData, shortId);
         const setTagsEntries = setTagsEntriesFactory(setDataItem, tagsEntries);
+        const setMembers = setMembersFactory(setDataItem, members);
         return {
           ...dataItem,
           setTagsEntries,
+          setShortId: setShortIdFactory(setDataItem),
           tags: Object.fromEntries(tagsEntries),
           setTag: setTagFactory(setTagsEntries),
           toggleToBeDeleted: toggleToBeDeletedFactory(setDataItem),
+          setMembers,
+          setNodeLonLat: setNodeLonLatFactory(setDataItem),
         };
+        // TODO maybe keep reference to original EditDataItem if DataItem didnt change? #performance
       }),
     [data],
   );

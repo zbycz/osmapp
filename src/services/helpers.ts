@@ -8,6 +8,7 @@ import { getIdFromShortener, getShortenerSlug } from './shortener';
 
 type Xml2JsOsmItem = {
   tag: { $: { k: string; v: string } }[];
+  member?: { $: { type: string; ref: string; role: string } }[];
   $: {
     id: string;
     visible: string;
@@ -191,7 +192,7 @@ export class FetchError extends Error {
   constructor(
     public message: string = '',
     public code: string,
-    public data: string,
+    public data: string = '',
   ) {
     super();
   }

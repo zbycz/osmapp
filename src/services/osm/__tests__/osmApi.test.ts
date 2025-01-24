@@ -1,6 +1,7 @@
-import { addFeatureCenterToCache, fetchFeature } from '../osmApi';
-import * as helpers from '../../components/helpers';
-import * as fetch from '../fetch';
+import { fetchFeature } from '../osmApi';
+import { addFeatureCenterToCache } from '../featureCenterToCache';
+import * as helpers from '../../../components/helpers';
+import * as fetch from '../../fetch';
 import {
   NODE,
   NODE_FEATURE,
@@ -8,25 +9,25 @@ import {
   RELATION_FEATURE,
   WAY,
   WAY_FEATURE,
-} from './osmApi.fixture';
-import { intl } from '../intl';
-import * as tagging from '../tagging/translations';
-import * as idTaggingScheme from '../tagging/idTaggingScheme';
+} from '../../__tests__/osmApi.fixture';
+import { intl } from '../../intl';
+import * as tagging from '../../tagging/translations';
+import * as idTaggingScheme from '../../tagging/idTaggingScheme';
 
-jest.mock('../../components/helpers', () => ({
+jest.mock('../../../components/helpers', () => ({
   isServer: jest.fn(),
   isBrowser: jest.fn(),
 }));
 
-jest.mock('../fetch', () => ({
+jest.mock('../../fetch', () => ({
   fetchJson: jest.fn(),
 }));
 
-jest.mock('../tagging/translations', () => ({
+jest.mock('../../tagging/translations', () => ({
   fetchSchemaTranslations: jest.fn(),
 }));
 
-jest.mock('../tagging/idTaggingScheme', () => ({
+jest.mock('../../tagging/idTaggingScheme', () => ({
   addSchemaToFeature: jest.fn(),
 }));
 

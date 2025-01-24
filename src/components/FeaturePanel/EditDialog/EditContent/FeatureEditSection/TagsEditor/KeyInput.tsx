@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { InputAdornment, TextField } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { FastInput } from './helpers';
 
 const useUpdatedState = (currentKey: string) => {
   const [tmpKey, setTmpKey] = useState(currentKey);
@@ -36,15 +37,12 @@ const useIsError = (index: number) => {
   const { tagsEntries } = useFeatureEditData();
   const [currentKey, currentValue] = tagsEntries[index];
 
+  const isEmptyKey = !!currentValue && !currentKey;
   const isDuplicateKey = tagsEntries.some(
     ([key], idx) => key && key === currentKey && index !== idx,
   );
-  const isLastIndex = index === tagsEntries.length - 1;
-  const emptyKeyCondition = isLastIndex
-    ? !currentKey && !!currentValue
-    : !currentKey;
 
-  return emptyKeyCondition || isDuplicateKey;
+  return isEmptyKey || isDuplicateKey;
 };
 
 export const KeyInput = ({ index }: { index: number }) => {
@@ -53,25 +51,14 @@ export const KeyInput = ({ index }: { index: number }) => {
   const isError = useIsError(index);
 
   return (
-    <TextField
+    <FastInput
       value={tmpKey}
       onChange={({ target }) => setTmpKey(target.value)}
       onBlur={handleBlur}
       autoFocus={focusTag === tmpKey}
-      fullWidth
-      variant="outlined"
-      size="small"
+      autoCapitalize="none"
+      maxLength={255}
       error={isError}
-      slotProps={{
-        htmlInput: { autoCapitalize: 'none', maxLength: 255 },
-        input: {
-          endAdornment: isError ? (
-            <InputAdornment position="end">
-              <WarningIcon color="error" />
-            </InputAdornment>
-          ) : undefined,
-        },
-      }}
     />
   );
 };

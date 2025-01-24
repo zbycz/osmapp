@@ -5,7 +5,7 @@ import type { Polygon } from 'geojson';
 export type OsmType = 'node' | 'way' | 'relation';
 export type OsmId = {
   type: OsmType;
-  id: number;
+  id: number; // negative value means new feature (to be added)
 };
 
 export type PathType = { x: number; y: number; suffix: string }[];
@@ -72,7 +72,7 @@ export type FeatureTags = {
   [key: string]: string;
 };
 
-type RelationMember = {
+export type RelationMember = {
   type: OsmType;
   ref: number;
   role: string;
@@ -112,7 +112,7 @@ export interface Feature {
     osmappLabel?: string;
   };
   center: Position;
-  countryCode?: string; // ISO3166-1 code, undefined = no country
+  countryCode?: string; // ISO3166-1 code lowercase, undefined = no country
   roundedCenter?: LonLatRounded;
   error?: 'network' | 'unknown' | '404' | '500'; // etc.
   deleted?: boolean;

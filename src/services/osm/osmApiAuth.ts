@@ -1,7 +1,15 @@
 import Cookies from 'js-cookie';
 import escape from 'lodash/escape';
 import { osmAuth, OSMAuthXHROptions } from 'osm-auth';
-import { Feature, FeatureTags, OsmId, Position, SuccessInfo } from './types';
+import { zipObject } from 'lodash';
+import {
+  Feature,
+  FeatureTags,
+  LonLat,
+  OsmId,
+  Position,
+  SuccessInfo,
+} from '../types';
 import {
   buildXmlString,
   getApiId,
@@ -10,23 +18,27 @@ import {
   getShortId,
   getUrlOsmId,
   parseToXml2Js,
-  prod,
   stringifyDomXml,
   Xml2JsMultiDoc,
   Xml2JsSingleDoc,
-} from './helpers';
-import { join } from '../utils';
-import { clearFeatureCache } from './osmApi';
-import { isBrowser } from '../components/helpers';
-import { getLabel } from '../helpers/featureLabel';
-import { EditDataItem } from '../components/FeaturePanel/EditDialog/useEditItems';
-
-const PROD_CLIENT_ID = 'vWUdEL3QMBCB2O9q8Vsrl3i2--tcM34rKrxSHR9Vg68';
-
-// testable on http://127.0.0.1:3000
-const TEST_CLIENT_ID = 'a_f_aB7ADY_kdwe4YHpmCSBtNtDZ-BitW8m5I6ijDwI';
-const TEST_SERVER = 'https://master.apis.dev.openstreetmap.org';
-const TEST_OSM_ID: OsmId = { type: 'node', id: 967531 }; // every edit goes here, https://master.apis.dev.openstreetmap.org/node/967531
+} from '../helpers';
+import { join } from '../../utils';
+import { clearFetchCache } from '../fetchCache';
+import { isBrowser } from '../../components/helpers';
+import { getLabel } from '../../helpers/featureLabel';
+import {
+  EditDataItem,
+  Members,
+} from '../../components/FeaturePanel/EditDialog/useEditItems';
+import {
+  OSM_WEBSITE,
+  PROD_CLIENT_ID,
+  OSM_USER_COOKIE,
+  TEST_CLIENT_ID,
+  TEST_SERVER,
+  USE_PROD_API,
+  OSM_TOKEN_COOKIE,
+} from './consts';
 
 // TS file in osm-auth is probably broken (new is required)
 // @ts-ignore
@@ -34,11 +46,10 @@ const auth = osmAuth({
   redirect_uri: isBrowser() && `${window.location.origin}/oauth-token.html`,
   scope: 'read_prefs write_api write_notes openid',
   auto: true,
-  client_id: prod ? PROD_CLIENT_ID : TEST_CLIENT_ID,
-  url: prod ? undefined : TEST_SERVER,
-  apiUrl: prod ? undefined : TEST_SERVER,
+  client_id: USE_PROD_API ? PROD_CLIENT_ID : TEST_CLIENT_ID,
+  url: USE_PROD_API ? undefined : TEST_SERVER,
+  apiUrl: USE_PROD_API ? undefined : TEST_SERVER,
 });
-const osmWebsite = prod ? 'https://www.openstreetmap.org' : TEST_SERVER;
 
 const authFetch = async <T>(options: OSMAuthXHROptions): Promise<T> =>
   new Promise<T>((resolve, reject) => {
@@ -74,20 +85,18 @@ export const loginAndfetchOsmUser = async (): Promise<OsmUser> => {
   const osmUser = await fetchOsmUser();
 
   const { url } = auth.options();
-  const osmAccessToken = localStorage.getItem(`${url}oauth2_access_token`);
+  const accessToken = localStorage.getItem(`${url}oauth2_access_token`);
   const osmUserForSSR = JSON.stringify(osmUser);
-  Cookies.set('osmAccessToken', osmAccessToken, { path: '/', expires: 365 });
-  Cookies.set('osmUserForSSR', osmUserForSSR, { path: '/', expires: 365 });
-
-  await fetch('/api/token-login');
+  Cookies.set(OSM_TOKEN_COOKIE, accessToken, { path: '/', expires: 365 });
+  Cookies.set(OSM_USER_COOKIE, osmUserForSSR, { path: '/', expires: 365 });
 
   return osmUser;
 };
 
 export const osmLogout = async () => {
   auth.logout();
-  Cookies.remove('osmAccessToken', { path: '/' });
-  Cookies.remove('osmUserForSSR', { path: '/' });
+  Cookies.remove(OSM_TOKEN_COOKIE, { path: '/' });
+  Cookies.remove(OSM_USER_COOKIE, { path: '/' });
 };
 
 const getChangesetXml = ({ changesetComment, feature }) => {
@@ -148,10 +157,17 @@ const deleteItem = (apiId: OsmId, content: string) =>
     content,
   });
 
-const createItem = (content: string) =>
+const createNodeItem = (content: string) =>
   authFetch<string>({
     method: 'PUT',
     path: `/api/0.6/node/create`,
+    headers: { 'Content-Type': 'text/xml; charset=utf-8' },
+    content,
+  });
+const createRelationItem = (content: string) =>
+  authFetch<string>({
+    method: 'PUT',
+    path: `/api/0.6/relation/create`,
     headers: { 'Content-Type': 'text/xml; charset=utf-8' },
     content,
   });
@@ -197,8 +213,7 @@ const getItemOrLastHistoric = async (
 const getDescription = (toBeDeleted: boolean, feature: Feature) => {
   const undelete = feature.deleted;
   const action = undelete ? 'Undeleted' : toBeDeleted ? 'Deleted' : 'Edited';
-  const { subclass } = feature.properties;
-  const name = feature.tags.name || subclass || getUrlOsmId(feature.osmMeta);
+  const name = getLabel(feature) || getUrlOsmId(feature.osmMeta);
   return `${action} ${name}`;
 };
 
@@ -216,16 +231,31 @@ const getXmlTags = (newTags: FeatureTags) =>
     .filter(([k, v]) => k && v)
     .map(([k, v]) => ({ $: { k, v } }));
 
+const getXmlMembers = (members: Members) =>
+  members?.map(({ shortId, role }) => {
+    const osmId = getApiId(shortId);
+    return {
+      $: { type: osmId.type, ref: `${osmId.id}`, role },
+    };
+  });
+
 const updateItemXml = async (
   item: Xml2JsSingleDoc,
   apiId: OsmId,
   changesetId: string,
   tags: FeatureTags,
   toBeDeleted: boolean,
+  members?: Members,
+  nodeLonLat?: LonLat,
 ) => {
   item[apiId.type].$.changeset = changesetId;
   if (!toBeDeleted) {
     item[apiId.type].tag = getXmlTags(tags);
+    item[apiId.type].member = getXmlMembers(members);
+    if (nodeLonLat) {
+      item[apiId.type].$.lon = `${nodeLonLat[0]}`;
+      item[apiId.type].$.lat = `${nodeLonLat[1]}`;
+    }
   }
   return buildXmlString(item);
 };
@@ -235,52 +265,12 @@ const checkVersionUnchanged = (
   apiId: OsmId,
   ourVersion: number,
 ) => {
-  if (apiId === TEST_OSM_ID) {
-    return;
-  }
-
   const freshVersion = parseInt(freshItem[apiId.type].$.version, 10);
   if (ourVersion !== freshVersion) {
     throw new Error(
       `The ${getShortId(apiId)} has been updated, please reload.`,
     );
   }
-};
-
-// TODO maybe split to editOsmFeature and undeleteOsmFeature? the flow is kinda unclear
-export const editOsmFeature = async (
-  feature: Feature,
-  comment: string,
-  newTags: FeatureTags,
-  toBeDeleted: boolean,
-): Promise<SuccessInfo> => {
-  const apiId = prod ? feature.osmMeta : TEST_OSM_ID;
-  const freshItem = await getItemOrLastHistoric(apiId);
-  checkVersionUnchanged(freshItem, apiId, feature.osmMeta.version);
-
-  const changesetComment = getChangesetComment(comment, toBeDeleted, feature);
-  const changesetXml = getChangesetXml({ changesetComment, feature });
-  const changesetId = await putChangeset(changesetXml);
-
-  const newItem = await updateItemXml(
-    freshItem,
-    apiId,
-    changesetId,
-    newTags,
-    toBeDeleted,
-  );
-
-  await putOrDeleteItem(toBeDeleted, apiId, newItem);
-  await putChangesetClose(changesetId);
-
-  clearFeatureCache(feature.osmMeta);
-
-  return {
-    type: 'edit',
-    text: changesetComment,
-    url: `${osmWebsite}/changeset/${changesetId}`,
-    redirect: `${getOsmappLink(feature)}`,
-  };
 };
 
 const getNewNodeXml = async (
@@ -296,58 +286,55 @@ const getNewNodeXml = async (
   return buildXmlString(xml);
 };
 
-export const addOsmFeature = async (
-  feature: Feature,
-  comment: string,
+const getNewRelationXml = async (
+  changesetId: string,
   newTags: FeatureTags,
-): Promise<SuccessInfo> => {
-  const typeTag = Object.entries(newTags)[0]?.join('=');
-  const changesetComment = join(comment, ' • ', `Added ${typeTag} #osmapp`);
-  const changesetXml = getChangesetXml({ feature, changesetComment });
-
-  const changesetId = await putChangeset(changesetXml);
-  const content = await getNewNodeXml(changesetId, feature.center, newTags);
-  const newNodeId = await createItem(content);
-  await putChangesetClose(changesetId);
-
-  const apiId: OsmId = { type: 'node', id: parseInt(newNodeId, 10) };
-  return {
-    type: 'edit',
-    text: changesetComment,
-    url: `${osmWebsite}/changeset/${changesetId}`,
-    redirect: `/${getUrlOsmId(apiId)}`,
-  };
+  members: Members,
+) => {
+  const xml = await parseToXml2Js('<osm><relation visible="true" /></osm>');
+  xml.relation.$.changeset = changesetId;
+  xml.relation.tag = getXmlTags(newTags);
+  xml.relation.member = getXmlMembers(members);
+  return buildXmlString(xml);
 };
 
 const saveChange = async (
   changesetId: string,
-  { shortId, version, tags, toBeDeleted, newNodeLonLat, members }: EditDataItem,
+  { shortId, version, tags, toBeDeleted, nodeLonLat, members }: EditDataItem,
 ): Promise<OsmId> => {
+  // TODO don't save changes if no change detected
   let apiId = getApiId(shortId);
   if (apiId.id < 0) {
-    if (apiId.type !== 'node') {
-      throw new Error('We can only add new nodes so far.');
+    if (apiId.type === 'way') {
+      throw new Error('We can only add new nodes and relations so far.');
     }
-    const content = await getNewNodeXml(changesetId, newNodeLonLat, tags);
-    const newNodeId = await createItem(content);
-    return { type: 'node', id: parseInt(newNodeId, 10) };
-  } else {
-    if (!prod) {
-      apiId = TEST_OSM_ID; // TODO refactor
+    if (apiId.type === 'node') {
+      const content = await getNewNodeXml(changesetId, nodeLonLat, tags);
+      const newNodeId = await createNodeItem(content);
+      return { type: 'node', id: parseInt(newNodeId, 10) };
     }
-    const freshItem = await getItem(apiId);
-    checkVersionUnchanged(freshItem, apiId, version);
-
-    const newItem = await updateItemXml(
-      freshItem,
-      apiId,
-      changesetId,
-      tags,
-      toBeDeleted,
-    );
-    await putOrDeleteItem(toBeDeleted, apiId, newItem);
-    return apiId;
+    if (apiId.type === 'relation') {
+      const content = await getNewRelationXml(changesetId, tags, members);
+      const newRelationId = await createRelationItem(content);
+      return { type: 'relation', id: parseInt(newRelationId, 10) };
+    }
   }
+
+  const freshItem = await getItem(apiId);
+  checkVersionUnchanged(freshItem, apiId, version);
+
+  // TODO document undelete feature - the flow is kinda unclear
+  const newItem = await updateItemXml(
+    freshItem,
+    apiId,
+    changesetId,
+    tags,
+    toBeDeleted,
+    members,
+    nodeLonLat,
+  );
+  await putOrDeleteItem(toBeDeleted, apiId, newItem);
+  return apiId;
 };
 
 const getCommentMulti = (
@@ -361,8 +348,8 @@ const getCommentMulti = (
   // TODO find topmost parent in changes and use its name
   // eg. survey • Edited Roviště (5 items) #osmapp #climbing
 
-  if (changes.length === 1 && changes[0].newNodeLonLat) {
-    const typeTag = Object.entries(changes[0].tags)[0]?.join('=');
+  if (changes.length === 1 && original.point) {
+    const typeTag = changes[0].tagsEntries[0]?.join('=') ?? 'node with no tags';
     return join(comment, ' • ', `Added ${typeTag} #osmapp`);
   }
 
@@ -384,16 +371,57 @@ export const saveChanges = async (
   const changesetXml = getChangesetXml({ changesetComment, feature: original });
   const changesetId = await putChangeset(changesetXml);
 
-  const ids = await Promise.all(
-    changes.map((change) => saveChange(changesetId, change)),
+  // TODO refactor below
+  // or even better use osmChange xml https://wiki.openstreetmap.org/wiki/API_v0.6#Diff_upload:_POST_/api/0.6/changeset/#id/upload
+  const changesNodes = changes.filter(({ shortId }) => shortId[0] === 'n');
+  const savedNodesIds = await Promise.all(
+    changesNodes.map((change) => saveChange(changesetId, change)),
   );
+  const nodeShortIds = changesNodes.map(({ shortId }) => shortId);
+  const savedNodeIdsMap = zipObject(nodeShortIds, savedNodesIds);
+
+  const changesWays = changes.filter(({ shortId }) => shortId[0] === 'w');
+  const savedWaysIds = await Promise.all(
+    changesWays.map((change) => saveChange(changesetId, change)),
+  );
+
+  const changesRelations = changes.filter(({ shortId }) => shortId[0] === 'r');
+
+  const changesRelationsWithNewNodeIds = changesRelations.map((change) => {
+    return {
+      ...change,
+      members: change.members?.map<Members[0]>((member) => {
+        const shortId = member.shortId;
+        const apiId = getApiId(shortId);
+        if (apiId.type === 'node' && apiId.id < 0) {
+          const newNodeId = savedNodeIdsMap[shortId];
+          return { ...member, shortId: getShortId(newNodeId) };
+        }
+
+        return member;
+      }),
+    };
+  });
+
+  const savedRelationsIds = await Promise.all(
+    changesRelationsWithNewNodeIds.map((change) =>
+      saveChange(changesetId, change),
+    ),
+  );
+
   await putChangesetClose(changesetId);
+
+  const ids = [...savedNodesIds, ...savedWaysIds, ...savedRelationsIds];
+  const redirectId = original.point ? ids[0] : original.osmMeta;
+
+  // TODO invalidate all changed also in server (?)
+  clearFetchCache();
 
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmWebsite}/changeset/${changesetId}`,
-    redirect: `/${getUrlOsmId(ids[0])}`,
+    url: `${OSM_WEBSITE}/changeset/${changesetId}`,
+    redirect: `/${getUrlOsmId(redirectId)}`,
   };
 };
 
@@ -450,10 +478,12 @@ export const editCrag = async (
   );
   await putChangesetClose(changesetId);
 
+  clearFetchCache();
+
   return {
     type: 'edit',
     text: changesetComment,
-    url: `${osmWebsite}/changeset/${changesetId}`,
+    url: `${OSM_WEBSITE}/changeset/${changesetId}`,
     redirect: `${getOsmappLink(crag)}`,
   };
 };

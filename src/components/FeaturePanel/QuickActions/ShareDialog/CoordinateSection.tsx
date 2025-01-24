@@ -6,15 +6,22 @@ import { ActionButtons } from './ActionButtons';
 import styled from '@emotion/styled';
 import { t } from '../../../../services/intl';
 import { useMobileMode } from '../../../helpers';
+import { OpenLocationCode } from 'open-location-code';
+import { usePersistedState } from '../../../utils/usePersistedState';
+
+const olc = new OpenLocationCode();
 
 const useCoords = () => {
   const { feature } = useFeatureContext();
   const center = feature.roundedCenter ?? feature.center;
 
-  return {
-    deg: positionToDeg(center),
-    dm: positionToDM(center),
-  };
+  return center
+    ? {
+        default: positionToDeg(center),
+        dm: positionToDM(center),
+        olc: olc.encode(center[1], center[0]),
+      }
+    : null;
 };
 
 const StyledSelect = styled(Select<string>)`
@@ -23,8 +30,11 @@ const StyledSelect = styled(Select<string>)`
 `;
 
 export const CoordinateSection = () => {
-  const { deg, dm } = useCoords();
-  const [selected, setSelected] = React.useState(deg);
+  const options = useCoords();
+  const [selected, setSelected] = usePersistedState(
+    'user.coords-format',
+    'default',
+  );
 
   const onChange = ({ target }) => {
     setSelected(target.value);
@@ -41,15 +51,24 @@ export const CoordinateSection = () => {
         }}
       >
         <StyledSelect
-          value={selected}
+          value={options ? selected : 'error'}
           onChange={onChange}
           fullWidth
           size={useMobileMode() ? 'small' : 'medium'}
         >
-          <MenuItem value={deg}>{deg}</MenuItem>
-          <MenuItem value={dm}>{dm}</MenuItem>
+          {options ? (
+            Object.keys(options).map((key) => (
+              <MenuItem value={key} key={key}>
+                {options[key]}
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem value="error">
+              Error: position `center` is missing, overpass broken?
+            </MenuItem>
+          )}
         </StyledSelect>
-        <ActionButtons payload={selected} type="text" />
+        <ActionButtons payload={options?.[selected]} type="text" />
       </Stack>
     </Box>
   );

@@ -60,33 +60,26 @@ const TagsEditorHeading = () => (
 const TagsEditorInfo = () => (
   <tr>
     <td colSpan={2}>
-      <Typography color="textSecondary" style={{ paddingTop: '1em' }}>
+      <Typography variant="body2" color="textSecondary" mt={2}>
         <Translation id="editdialog.tags_editor_info" />
       </Typography>
     </td>
   </tr>
 );
 
-const lastKeyAndValueSet = (tagsEntries: TagsEntries) => {
-  const [lastKey, lastValue] = tagsEntries[tagsEntries.length - 1];
-  return lastKey && lastValue;
-};
-
 const AddButton = () => {
   const { tagsEntries, setTagsEntries } = useFeatureEditData();
-  const active = tagsEntries.length === 0 || lastKeyAndValueSet(tagsEntries);
-
   return (
     <tr>
-      <td />
-      <td>
+      <td colSpan={2}>
         <Button
-          variant="contained"
+          variant="text"
+          color="primary"
           disableElevation
           onClick={() => setTagsEntries((state) => [...state, ['', '']])}
-          disabled={!active}
+          startIcon={<AddIcon />}
         >
-          <AddIcon />
+          {t('editdialog.add_tag')}
         </Button>
       </td>
     </tr>

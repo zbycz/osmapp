@@ -1,6 +1,6 @@
-import { Feature } from './types';
-import { getPoiClass } from './getPoiClass';
-import { getImageDefs } from './images/getImageDefs';
+import { Feature } from '../types';
+import { getPoiClass } from '../getPoiClass';
+import { getImageDefs } from '../images/getImageDefs';
 
 export const osmToFeature = (element): Feature => {
   const {

@@ -1,9 +1,10 @@
 import React, { ChangeEvent, FocusEvent, useRef, useState } from 'react';
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
-import { IconButton, Stack, TextField } from '@mui/material';
+import { IconButton, Stack } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getInputTypeForKey } from '../../helpers';
 import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { FastInput } from './helpers';
 
 const useHidableDeleteButton = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -68,16 +69,12 @@ export const ValueInput = ({ index }: Props) => {
 
   return (
     <Stack direction="row" spacing={1} alignItems="center">
-      <TextField
+      <FastInput
         type={getInputTypeForKey(currentKey)}
         value={currentValue}
         onChange={handleChange}
-        fullWidth
-        variant="outlined"
-        size="small"
-        slotProps={{
-          htmlInput: { autoCapitalize: 'none', maxLength: 255 },
-        }}
+        autoCapitalize="none"
+        maxLength={255}
         autoFocus={focusTag === currentKey}
         onFocus={deleteButton.onInputFocus}
         onBlur={deleteButton.onInputBlur}

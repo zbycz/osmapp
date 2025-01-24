@@ -1,11 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { serverFetchOsmUser } from '../../src/services/osmApiAuthServer';
+import { serverFetchOsmUser } from '../../src/server/osmApiAuthServer';
+import { OSM_TOKEN_COOKIE } from '../../src/services/osm/consts';
 
-// TODO upgrade Nextjs and use export async function POST(request: NextRequest) {
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    const { osmAccessToken } = req.cookies;
-    const user = await serverFetchOsmUser({ osmAccessToken });
+    const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
 
     res.status(200).json({ user });
   } catch (err) {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import Router from 'next/router';
-import { fetchAroundFeature } from '../../services/osmApi';
+import { fetchAroundFeatures } from '../../services/overpass/fetchAroundFeatures';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
@@ -76,7 +76,7 @@ export const ObjectsAround = ({ advanced }) => {
     data: around,
     error,
     isFetching,
-  } = useQuery([feature], () => fetchAroundFeature(feature.center), {
+  } = useQuery([feature], () => fetchAroundFeatures(feature.center), {
     initialData: [],
   });
 
