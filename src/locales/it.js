@@ -4,8 +4,8 @@ export default {
   loading: 'Caricamento',
   error: 'Errore',
   close_panel: 'Chiudi pannello',
-  webgl_error: `Oops. Questa mappa richiede l’uso di WebGL.<br /><br />
-     Se possiedi un dispositivo compatibile, prova a usare l’ultima versione del tuo browser o abilita WebGL:
+  webgl_error: `Oops. Questa mappa richiede l\'uso di WebGL.<br /><br />
+     Se possiedi un dispositivo compatibile, prova a usare l\'ultima versione del tuo browser o abilita WebGL:
      <ul><li>in <a href="https://otechworld.com/webgl-in-firefox/">Firefox, Librewolf</a>
      <li>in <a href="https://www.geeksforgeeks.org/how-to-enable-webgl-on-chrome/">Chrome, Chromium, Brave, Edge</a></ul>`,
   darkmode_auto: 'Modalità scura: auto',
@@ -37,7 +37,7 @@ export default {
   'tick.style_description_TR': 'Arrampicata con una corda già ancorata sopra.',
   'tick.style_description_FS': 'Arrampicata senza alcuno strumento protettivo e senza corda.',
 
-  'climbing_renderer.climbing_grade': 'grado di arrampicata ',
+  'climbing_renderer.climbing_grade': 'grado di arrampicata',
 
   'project.osmapp.description': 'Una app OpenStreetMap universale',
   'project.osmapp.serpDescription':
@@ -51,7 +51,7 @@ export default {
   'install.button': 'Installa app',
   'install.tabs_aria_label': 'Scegli la tua piattaforma',
   'install.ios_intro': 'Apri osmapp.org con <strong>Safari</strong>',
-  'install.ios_share': 'Premi l’icona <strong>Condividi</strong>',
+  'install.ios_share': 'Premi l\'icona <strong>Condividi</strong>',
   'install.ios_add': 'Premi <strong>Aggiungi alla Home</strong>',
   'install.android_intro': 'Apri osmapp.org con <strong>Chrome oppure Firefox</strong>',
   'install.android_share': 'Premi il <strong>menù con i tre puntini</strong>',
@@ -70,7 +70,7 @@ export default {
       creata da milioni di contributori. Trovi
       il pusalnte <em>Modifica</em> su ogni elemento della mappa.`,
   'homepage.heading_about_osmapp': 'Informazioni su OsmAPP',
-  'homepage.about_osmapp': `Questa applicazione dovrebbe offrire una interfaccia facile per l’uso quotidiano di <i>OpenStreetMap</i>
+  'homepage.about_osmapp': `Questa applicazione dovrebbe offrire una interfaccia facile per l\'uso quotidiano di <i>OpenStreetMap</i>
      incluse le opzioni per modificare. <br/>Attualmente include vari livelli di mappe, la modifica dei PDI e un motore di ricerca basilare.
      Si prevede di aggiungere in futuro alcune funzionalità come la navigazione e i preferiti.`,
   'homepage.github_link': `Puoi suggerire nuove funzionalità su <a href="https://github.com/zbycz/osmapp" target='_blank'>GitHub</a>.`,
@@ -95,7 +95,7 @@ export default {
   'featurepanel.directions_button': 'Indicazioni',
   'featurepanel.error': 'Errore __code__ durante il recupero di un elemento da OpenStreetMap',
   'featurepanel.error_unknown': 'Errore sconosciuto durante il recupero di un elemento da OpenStreetMap.',
-  'featurepanel.error_network': 'Impossibile recuperare l’elemento, controlla la tua connessione.',
+  'featurepanel.error_network': 'Impossibile recuperare l\'elemento, controlla la tua connessione.',
   'featurepanel.error_deleted': 'Questo oggetto è segnato come eliminato su OpenStreetMap.',
   'featurepanel.info_no_tags': 'Questo oggetto non ha tag. Solitamente significa che contiene solo geometrie o posizioni di un oggetto padre.',
   'featurepanel.history_button': 'Cronologia »',
@@ -129,7 +129,7 @@ export default {
     '(c) MapTiler.com ❤️ <br> (tasselli vettoriali, hosting, mappa esterna<br>Grazie infinite per il supporto a questo progetto! 🙂 ',
   'map.more_button': 'altro',
   'map.more_button_title': 'Altre opzioni…',
-  'map.edit_link': 'Modifica quest’area con iD editor',
+  'map.edit_link': 'Modifica quest\'area con iD editor',
   'map.about_link': 'Informazioni su questa app',
   'map.compass_tooltip': 'Trascina e entra in modalità 3D. Clicca per azzerare.',
 
@@ -145,24 +145,25 @@ export default {
   'editdialog.save_button_note': 'Aggiungi nota',
   'editdialog.changes_needed': 'Effettuare qualche modifica.',
   'editdialog.osm_session_expired': 'La tua sessione di OpenStreetMap è scaduta. Accedi nuovamente',
-  'editdialog.loggedInMessage': 'Hai effettuato l’accesso come <b>__osmUser__</b>, le modifiche verranno salvata immediatamente.',
+  'editdialog.loggedInMessage': 'Hai effettuato l\'accesso come <b>__osmUser__</b>, le modifiche verranno salvata immediatamente.',
   'editdialog.logout': 'esci',
   'editdialog.anonymousMessage':
     'Verrà aggiunta alla mappa una nota <b>anonima</b>. Se accedi accedi a OpenStreetMap, le tue modifiche saranno immediate.',
   'editdialog.add_major_tag': 'Aggiungi',
   'editdialog.location_checkbox': 'Cambia posizione',
-  'editdialog.location_placeholder': 'ad es. dall’altra parte della strada',
-  'editdialog.location_editor_to_be_added': 'La posizione non può ancora essere modificata qui, puoi farlo con l’<a href="__link__">iD editor</a>.',
+  'editdialog.location_placeholder': 'ad es. dall\'altra parte della strada',
+  'editdialog.location_editor_to_be_added': 'La posizione non può ancora essere modificata qui, puoi farlo con l\'<a href="__link__">iD editor</a>.',
   'editdialog.place_cancelled': 'Luogo permanentemente chiuso (elimina)',
   'editdialog.comment': 'Commenta (facoltativo)',
   'editdialog.comment_placeholder': 'un link alle fonti, etc.',
   'editdialog.info_edit': `La tua modifica verrà immediatamente salvata su OpenStreetMap. Inserisci
 solo informazioni che hai verificato di persona o che provengono da fonti attendibili.
          È proibita la copia di dati protetti da copyright (ad es. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/IT:How_We_Map">Ulteriori informazioni</a>`,
-  'editdialog.info_note': `Il tuo suggerimento verrà valutato dai volontari di OpenStreetMap. Qui puoi aggiungere un’ulteriore nota oppure descrivere la posizione precisa, ecc. Sarebbe anche appropriato supportare il tuo contributo con un collegamento a una fonte (sito web, foto, etc.).`,
+  'editdialog.info_note': `Il tuo suggerimento verrà valutato dai volontari di OpenStreetMap. Qui puoi aggiungere un\'ulteriore nota oppure descrivere la posizione precisa, ecc. Sarebbe anche appropriato supportare il tuo contributo con un collegamento a una fonte (sito web, foto, etc.).`,
   'editdialog.other_tags_heading': 'Altri tag',
-  'editdialog.tags_editor': 'Todas las propiedades – tag',
+  'editdialog.tags_editor': 'Tutti i tag',
   'editdialog.tags_editor_info': `Le etichette descrivono le proprietà di ogni elemento della mappa secondo un formato definito. Qui troverai la lista completa <a href="https://wiki.openstreetmap.org/wiki/IT:Map_Features" target="_blank">di tutte le etichette su OpenStreetMap</a>.`,
+  'editdialog.save_refused': 'Impossibile salvare le tue modifiche.',
 
   'editsuccess.close_button': 'Chiudi',
   'editsuccess.note.heading': 'Grazie per il tuo suggerimento!',
