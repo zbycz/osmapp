@@ -2,6 +2,7 @@ import React from 'react';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { positionToDeg } from '../../utils';
 import { PositionBoth } from '../../services/types';
+import { Typography } from '@mui/material';
 
 type Props = { coords: PositionBoth };
 
@@ -21,7 +22,11 @@ const Coordinates = () => {
   const { feature } = useFeatureContext();
   const { center, roundedCenter = undefined } = feature;
   const coords = roundedCenter ?? center;
-  return coords ? <Coords coords={coords} /> : null;
+  return coords ? (
+    <Typography variant="caption" color="secondary">
+      <Coords coords={coords} />
+    </Typography>
+  ) : null;
 };
 
 export default Coordinates;

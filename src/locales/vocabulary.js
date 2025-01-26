@@ -176,6 +176,7 @@ export default {
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
   'featurepanel.climbing_restriction': 'Climbing restriction',
   'featurepanel.login': 'Login',
+  'featurepanel.footer_title': 'Other info',
   'featurepanel.climbing_sectors': 'Climbing sectors',
   'featurepanel.climbing_sectors_in': 'in',
 
