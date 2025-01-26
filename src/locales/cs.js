@@ -259,5 +259,9 @@ export default {
   'sharedialog.copied': 'Zkopírováno!',
   'sharedialog.share': 'Sdílet',
 
+  osmtype_node: 'Uzel',
+  osmtype_way: 'Cesta',
+  osmtype_relation: 'Relace',
+
   weather: 'Počasí',
 };

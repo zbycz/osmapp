@@ -18,6 +18,7 @@ import { useEditContext } from '../EditContext';
 import { getShortId } from '../../../../services/helpers';
 import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
 import { TestApiWarning } from '../../helpers/TestApiWarning';
+import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 
 export const EditContent = () => {
   const { items, addFeature, current, setCurrent } = useEditContext();
@@ -51,7 +52,22 @@ export const EditContent = () => {
             }}
           >
             {items.map(({ shortId, tags }, idx) => (
-              <Tab key={idx} label={tags.name ?? shortId} value={shortId} />
+              <Tab
+                key={idx}
+                label={
+                  <Stack
+                    direction="row"
+                    gap={1}
+                    alignItems="center"
+                    justifyContent="space-between"
+                    width="100%"
+                  >
+                    {tags.name ?? shortId}{' '}
+                    <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
+                  </Stack>
+                }
+                value={shortId}
+              />
             ))}
           </Tabs>
         )}

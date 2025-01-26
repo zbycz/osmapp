@@ -356,5 +356,9 @@ export default {
   'sharedialog.copied': 'Copied!',
   'sharedialog.share': 'Share',
 
+  osmtype_node: 'Node',
+  osmtype_way: 'Way',
+  osmtype_relation: 'Relation',
+
   weather: 'Weather',
 };

@@ -9,6 +9,7 @@ import { Alert, Button, TextField } from '@mui/material';
 import { LonLat, OsmId } from '../../../../services/types';
 import { t } from '../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
+import { NwrIcon } from '../../NwrIcon';
 
 const hasAtLeastOneNode = (members: Members) => {
   return members?.some((member) => member.shortId.startsWith('n'));
@@ -150,6 +151,7 @@ export const AddMemberForm = ({
               color="inherit"
               variant="text"
               size="small"
+              startIcon={<NwrIcon osmType="relation" color="inherit" />}
             >
               {t('editdialog.members.convert_button')}
             </Button>
