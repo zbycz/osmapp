@@ -61,9 +61,10 @@ export default {
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
 
-  'climbing.guideinfo.title': 'A free climbing guide openclimbing.org',
+  'climbing.guideinfo.title': 'A free climbing guides',
   'climbing.guideinfo.description':
-    'OpenClimbing.org is an open platform for climbing guides and maps. Topos and photos are stored in OpenStreetMap and Wikipedia projects, so they can be edited by anyone.',
+    'openclimbing.org is an open platform for climbing guides and maps. Topos and photos are stored in OpenStreetMap and Wikipedia projects, so they can be edited by anyone.',
+  'climbing.guideinfo.button': 'More info',
 
   'project.openclimbing.description': 'Free wiki climbing map',
   'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',

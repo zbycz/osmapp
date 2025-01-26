@@ -33,9 +33,10 @@ export default {
   'project.openclimbing.description': 'Otevřený lezecký průvodce',
   'project.openclimbing.serpDescription': 'Otevřený lezecký průvodce s vyznačením cest. Postaveno na projektech OpenStreetMap a Wikipedie.',
 
-  'climbing.guideinfo.title': 'Otevřený lezecký průvodce openclimbing.org',
+  'climbing.guideinfo.title': 'Otevřený lezecký průvodce',
   'climbing.guideinfo.description':
     'OpenClimbing.org je otevřená platforma pro lezecké průvodce a mapy. Vyznačené cesty a fotky se ukládají do projektů OpenStreetMap a Wikipedie, takže je může kdykoliv editovat.',
+  'climbing.guideinfo.button': 'Více informací',
 
   'install.button': 'Stáhnout aplikaci',
   'install.tabs_aria_label': 'Vyberte si svou platformu',

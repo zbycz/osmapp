@@ -28,6 +28,7 @@ import { isPublictransportRoute } from '../../utils';
 import { Sockets } from './Sockets/Sockets';
 import { ClimbingTypeBadge } from './Climbing/ClimbingTypeBadge';
 import { TestApiWarning } from './helpers/TestApiWarning';
+import { FeaturePanelClimbingGuideInfo } from './Climbing/FeaturePanelClimbingGuideInfo';
 
 const Flex = styled.div`
   flex: 1;
@@ -60,13 +61,13 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   return (
     <>
       <PanelContent>
+        <FeaturePanelClimbingGuideInfo />
         <PanelSidePadding>
           <FeatureHeading ref={headingRef} />
           <Stack spacing={1} alignItems="flex-start">
             <ClimbingRouteGrade />
             <ClimbingTypeBadge feature={feature} />
           </Stack>
-          <ClimbingGuideInfo />
           <ParentLink />
           <ClimbingRestriction />
 

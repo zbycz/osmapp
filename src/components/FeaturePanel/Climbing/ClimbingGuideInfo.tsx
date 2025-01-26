@@ -1,32 +1,66 @@
 import React from 'react';
-import { Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Button,
+  Stack,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { t } from '../../../services/intl';
-import { TooltipButton } from '../../utils/TooltipButton';
-import styled from '@emotion/styled';
-
-const Container = styled.div`
-  font-size: 14px;
-  margin-bottom: 12px;
-`;
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { LogoOpenClimbing } from '../../../assets/LogoOpenClimbing';
 
 export const ClimbingGuideInfo = () => {
-  const { feature } = useFeatureContext();
+  const { persistShowHomepage } = useFeatureContext();
+  const theme = useTheme();
 
-  if (
-    !['crag', 'area', 'route', 'route_bottom', 'route_top'].includes(
-      feature.tags.climbing,
-    )
-  ) {
-    return null;
-  }
+  const handleClick = () => {
+    persistShowHomepage();
+  };
 
   return (
-    <Container>
-      <Typography variant="body2">
-        {t('climbing.guideinfo.title')}{' '}
-        <TooltipButton tooltip={t('climbing.guideinfo.description')} />
-      </Typography>
-    </Container>
+    <Accordion
+      disableGutters
+      elevation={0}
+      square
+      sx={{
+        borderBottom: `solid 1px ${theme.palette.divider}`,
+        marginBottom: 2,
+      }}
+    >
+      <AccordionSummary expandIcon={<ExpandMoreIcon color="secondary" />}>
+        <Stack direction="row" alignItems="center" gap={1}>
+          <LogoOpenClimbing width={24} />
+          <Typography color="secondary" variant="caption">
+            <strong>openclimbing.org:</strong> {t('climbing.guideinfo.title')}
+          </Typography>
+        </Stack>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2">
+          {t('climbing.guideinfo.description')}
+        </Typography>
+        <Stack
+          direction="row"
+          justifyContent="flex-end"
+          alignItems="center"
+          mt={1}
+        >
+          <Button
+            variant="text"
+            color="primary"
+            endIcon={<ArrowForwardIosIcon />}
+            sx={{ alignSelf: 'flex-end' }}
+            onClick={handleClick}
+          >
+            {t('climbing.guideinfo.button')}
+          </Button>
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
   );
 };
