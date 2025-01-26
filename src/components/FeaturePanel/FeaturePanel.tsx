@@ -22,13 +22,14 @@ import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box, Stack } from '@mui/material';
-import { ClimbingGuideInfo } from './Climbing/ClimbingGuideInfo';
 import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
 import { isPublictransportRoute } from '../../utils';
 import { Sockets } from './Sockets/Sockets';
 import { ClimbingTypeBadge } from './Climbing/ClimbingTypeBadge';
 import { TestApiWarning } from './helpers/TestApiWarning';
 import { FeaturePanelClimbingGuideInfo } from './Climbing/FeaturePanelClimbingGuideInfo';
+import { FeaturedTag } from './FeaturedTag';
+import { climbingTagValues } from './Climbing/utils/climbingTagValues';
 
 const Flex = styled.div`
   flex: 1;
@@ -54,6 +55,21 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   // Conditional components should have if(feature.tags.xxx) check at the beginning
   // All components should have margin-bottoms to accommodate missing parts
   const isClimbingCrag = tags.climbing === 'crag';
+  const isClimbing = climbingTagValues.includes(feature.tags.climbing);
+
+  const ClimbingDescription = () => {
+    if (!isClimbing || !feature.tags.description) {
+      return null;
+    }
+
+    return (
+      <FeaturedTag
+        key={'description'}
+        k={'description'}
+        v={feature.tags.description}
+      />
+    );
+  };
 
   const PropertiesComponent = () => (
     <Properties showTags={showTagsTable} key={getReactKey(feature)} />
@@ -73,6 +89,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
 
           <OsmError />
           <TestApiWarning />
+          <ClimbingDescription />
         </PanelSidePadding>
 
         <Flex>

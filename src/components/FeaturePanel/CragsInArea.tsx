@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -12,7 +12,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { Slider, Wrapper } from './FeatureImages/FeatureImages';
 import { Image } from './FeatureImages/Image/Image';
 import { getInstantImage } from '../../services/images/getImageDefs';
-import { intl } from '../../services/intl';
+import { intl, t } from '../../services/intl';
 import Link from 'next/link';
 import { naturalSort } from './Climbing/utils/array';
 
@@ -49,6 +49,7 @@ const CragList = styled.div`
   display: flex;
   flex-direction: column;
   gap: 12px;
+  margin-top: 12px;
 `;
 
 const StyledLink = styled(Link)`
@@ -157,7 +158,13 @@ export const CragsInArea = () => {
   }
 
   return (
-    <Box mb={2}>
+    <Box mt={2} mb={2}>
+      <Typography variant="subtitle2" color="secondary">
+        {t('featurepanel.climbing_sectors')}{' '}
+        {feature.tags.name
+          ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
+          : ''}
+      </Typography>
       <CragList>
         {feature.memberFeatures.map((item) => (
           <CragItem key={getOsmappLink(item)} feature={item} />

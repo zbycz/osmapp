@@ -1,14 +1,13 @@
 import { ClimbingGuideInfo } from './ClimbingGuideInfo';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { climbingTagValues } from './utils/climbingTagValues';
 
 export const FeaturePanelClimbingGuideInfo = () => {
   const { feature } = useFeatureContext();
 
-  if (
-    !['crag', 'area', 'route', 'route_bottom', 'route_top'].includes(
-      feature.tags.climbing,
-    )
-  ) {
+  const isClimbing = climbingTagValues.includes(feature.tags.climbing);
+
+  if (!isClimbing) {
     return null;
   }
 

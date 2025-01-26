@@ -138,6 +138,8 @@ export default {
   'featurepanel.inline_edit_title': 'Upravit',
   'featurepanel.objects_around': 'Objekty v okolí',
   'featurepanel.climbing_restriction': 'Lezecké omezení',
+  'featurepanel.climbing_sectors': 'Lezecké sektory',
+  'featurepanel.climbing_sectors_in': 'v oblasti',
 
   'opening_hours.open': 'Otevřeno: __todayTime__',
   'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',
