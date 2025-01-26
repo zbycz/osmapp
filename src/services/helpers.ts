@@ -89,7 +89,7 @@ export const getFullOsmappLink = (feature: Feature) =>
 
 export const getShortLink = (feature: Feature) => {
   const slug = getShortenerSlug(feature.osmMeta);
-  return slug === null ? null : `${PROJECT_URL}/${slug}`;
+  return slug === null ? null : `${PROJECT_URL}/-${slug}`;
 };
 
 export const prod = process.env.NODE_ENV === 'production';

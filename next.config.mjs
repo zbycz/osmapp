@@ -28,7 +28,7 @@ const nextConfig = {
     }
     return [
       {
-        source: '/((?!node|way|relation|install|directions|[0-9])):path(.*)',
+        source: '/((?!node|way|relation|install|directions|-|[0-9])):path(.*)',
         destination: process.env.PROXY_BACKEND + ':path',
       },
     ];

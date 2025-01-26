@@ -57,7 +57,7 @@ export const getShortenerSlug = ({ id, type }: OsmId): string | null => {
 export const getIdFromShortener = (slug: string): OsmId | null => {
   const typeChar = slug.substr(-1, 1);
   const type = LOOKUP[typeChar];
-  const encoded = slug.substring(0, slug.length - 1);
+  const encoded = slug.substring(1, slug.length - 1);
 
   if (!type) {
     return null;
