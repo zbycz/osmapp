@@ -232,6 +232,8 @@ export default {
   'editdialog.tags_editor': 'All properties – Tags',
   'editdialog.add_tag': 'Add tag',
   'editdialog.location': 'Location',
+  'editdialog.location_latitude': 'Latitude',
+  'editdialog.location_longitude': 'Longitude',
   'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
   'editdialog.login_in_progress': `Logging in...`,
   'editdialog.save_refused': 'Unable to save your changes.',
