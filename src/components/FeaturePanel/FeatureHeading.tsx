@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton, useMediaQuery } from '@mui/material';
+import { Box, IconButton, Stack, useMediaQuery } from '@mui/material';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 import { PoiDescription } from './helpers/PoiDescription';
 import { getLabel, getSecondaryLabel } from '../../helpers/featureLabel';
@@ -9,15 +9,13 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
 import { isMobileDevice } from '../helpers';
 import { QuickActions } from './QuickActions/QuickActions';
+import { NwrIcon } from './NwrIcon';
+import { getShortId } from '../../services/helpers';
 
 const StyledEditButton = styled(IconButton)`
   visibility: hidden;
   position: relative;
   top: 3px;
-`;
-const NameWithEdit = styled.div`
-  display: flex;
-  gap: 8px;
 `;
 
 const EditNameButton = () => {
@@ -49,7 +47,6 @@ const HeadingContainer = styled.div`
 
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
   position: relative;
 
   &:hover ${StyledEditButton} {
@@ -95,16 +92,20 @@ const SecondaryHeading = styled.h2<{ $deleted: boolean }>`
 export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
   // thw pwa needs space at the bottom
   const isStandalone = useMediaQuery('(display-mode: standalone)');
+  const { feature } = useFeatureContext();
 
   return (
     <Container ref={ref} isStandalone={isStandalone}>
       <PoiDescription />
       <HeadingContainer>
-        <NameWithEdit>
+        <Stack direction="row" gap={1}>
           <Headings />
           {/* <YellowedBadge /> */}
           <EditNameButton />
-        </NameWithEdit>
+        </Stack>
+        <Box mt={1.1}>
+          <NwrIcon osmType={feature.osmMeta.type} />
+        </Box>
       </HeadingContainer>
       <QuickActions />
     </Container>

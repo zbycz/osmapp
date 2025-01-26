@@ -19,6 +19,7 @@ const EditFeatureMapDynamic = dynamic(
 );
 import { Stack, Typography } from '@mui/material';
 import { useEditContext } from '../../EditContext';
+import { getOsmTypeFromShortId, NwrIcon } from '../../../NwrIcon';
 
 type Props = {
   shortId: string;
@@ -27,10 +28,6 @@ type Props = {
 const EditFeatureHeading = (props: { shortId: string }) => {
   const { items } = useEditContext();
   const { tags } = useFeatureEditData();
-
-  if (items.length <= 1) {
-    return null;
-  }
 
   return (
     <Stack
@@ -41,9 +38,7 @@ const EditFeatureHeading = (props: { shortId: string }) => {
       mb={2}
     >
       <Typography variant="h6">{tags.name || ' '}</Typography>
-      <Typography variant="caption" color="secondary">
-        {props.shortId}
-      </Typography>
+      <NwrIcon osmType={getOsmTypeFromShortId(props.shortId)} />
     </Stack>
   );
 };
