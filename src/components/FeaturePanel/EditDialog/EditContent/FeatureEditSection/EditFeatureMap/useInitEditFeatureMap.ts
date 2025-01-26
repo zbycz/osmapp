@@ -6,20 +6,20 @@ import { COMPASS_TOOLTIP } from '../../../../../Map/useAddTopRightControls';
 import { useEditContext } from '../../../EditContext';
 import { useFeatureMarkers } from './useStaticMarkers';
 import { useDraggableFeatureMarker } from './useDraggableMarker';
+import { isGpsValid } from './isGpsValid';
 
-export function useInitEditFeatureMap() {
+export function useInitEditFeatureMap(isFirstMapLoad, setIsFirstMapLoad) {
   const containerRef = React.useRef<HTMLDivElement>(null);
   const mapRef = React.useRef<maplibregl.Map>(null);
 
   const [isMapLoaded, setIsMapLoaded] = useState(false);
-  const [isFirstMapLoad, setIsFirstMapLoad] = useState(true);
 
   const { current, items, setCurrent } = useEditContext();
   const currentItem = items.find((item) => item.shortId === current);
 
   useFeatureMarkers(mapRef, items, setCurrent, current);
 
-  useDraggableFeatureMarker(mapRef, currentItem);
+  const { onMarkerChange } = useDraggableFeatureMarker(mapRef, currentItem);
 
   useEffect(() => {
     setIsMapLoaded(false);
@@ -58,14 +58,18 @@ export function useInitEditFeatureMap() {
   }, [containerRef, current]);
 
   const updateCenter = useCallback(() => {
-    if (isFirstMapLoad && currentItem?.nodeLonLat) {
+    if (
+      isFirstMapLoad &&
+      currentItem?.nodeLonLat &&
+      isGpsValid(currentItem?.nodeLonLat)
+    ) {
       mapRef.current?.jumpTo({
         center: currentItem.nodeLonLat as [number, number],
         zoom: 18.5,
       });
       setIsFirstMapLoad(false);
     }
-  }, [currentItem?.nodeLonLat, isFirstMapLoad]);
+  }, [currentItem.nodeLonLat, isFirstMapLoad, setIsFirstMapLoad]);
 
   useEffect(() => {
     mapRef.current?.on('load', () => {
@@ -79,7 +83,7 @@ export function useInitEditFeatureMap() {
 
   useEffect(() => {
     setIsFirstMapLoad(true);
-  }, [current]);
+  }, [current, setIsFirstMapLoad]);
 
-  return { containerRef, isMapLoaded };
+  return { containerRef, isMapLoaded, currentItem, onMarkerChange };
 }
