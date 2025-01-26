@@ -96,7 +96,6 @@ export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <Container ref={ref} isStandalone={isStandalone}>
-      <PoiDescription />
       <HeadingContainer>
         <Stack direction="row" gap={1}>
           <Headings />
@@ -107,6 +106,7 @@ export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
           <NwrIcon osmType={feature.osmMeta.type} />
         </Box>
       </HeadingContainer>
+      <PoiDescription />
       <QuickActions />
     </Container>
   );
