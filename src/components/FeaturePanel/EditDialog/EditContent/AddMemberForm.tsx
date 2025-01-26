@@ -41,7 +41,28 @@ const getNewNodeLocation = async (items: EditDataItem[], members: Members) => {
   return lonLat.map((x) => x + 0.0001);
 };
 
-export const AddMemberForm = ({ newLonLat }: { newLonLat?: LonLat }) => {
+const defaultRouteBottomTags = {
+  climbing: 'route_bottom',
+  sport: 'climbing',
+};
+
+export const AddMemberForm = ({
+  newLonLat,
+  selectedPresetKey,
+}: {
+  newLonLat?: LonLat;
+  selectedPresetKey?: string;
+}) => {
+  const getDefaultTags = useCallback(
+    () => ({
+      ...(selectedPresetKey === 'climbing/route_bottom'
+        ? defaultRouteBottomTags
+        : {}),
+    }),
+    [selectedPresetKey],
+  );
+  const defaultTags = getDefaultTags();
+
   const { addFeature, items, setCurrent, current } = useEditContext();
   const { members, setMembers, tags, setShortId } = useFeatureEditData();
   const [showInput, setShowInput] = React.useState(false);
@@ -51,7 +72,7 @@ export const AddMemberForm = ({ newLonLat }: { newLonLat?: LonLat }) => {
   const handleAddMember = useCallback(async () => {
     const lastNodeLocation =
       newLonLat ?? (await getNewNodeLocation(items, members));
-    const newNode = getNewNode(lastNodeLocation, label);
+    const newNode = getNewNode(lastNodeLocation, label, defaultTags);
     const newShortId = getShortId(newNode.osmMeta);
     addFeature(newNode);
     setMembers((prev) => [
@@ -61,7 +82,16 @@ export const AddMemberForm = ({ newLonLat }: { newLonLat?: LonLat }) => {
     setShowInput(false);
     setLabel('');
     setCurrent(newShortId);
-  }, [addFeature, items, label, members, newLonLat, setCurrent, setMembers]);
+  }, [
+    addFeature,
+    defaultTags,
+    items,
+    label,
+    members,
+    newLonLat,
+    setCurrent,
+    setMembers,
+  ]);
 
   React.useEffect(() => {
     const downHandler = (e) => {

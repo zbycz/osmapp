@@ -1,5 +1,5 @@
 import { getImagesFromCenter } from './images/getImageDefs';
-import { Feature, LonLat, LonLatRounded, OsmType } from './types';
+import { Feature, FeatureTags, LonLat, LonLatRounded, OsmType } from './types';
 
 let nextId = 0;
 
@@ -22,7 +22,11 @@ export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
   };
 };
 
-export const getNewNode = ([lon, lat]: LonLat, name: string): Feature => {
+export const getNewNode = (
+  [lon, lat]: LonLat,
+  name: string,
+  defaultTags: FeatureTags = {},
+): Feature => {
   nextId += 1;
 
   return {
@@ -33,7 +37,7 @@ export const getNewNode = ([lon, lat]: LonLat, name: string): Feature => {
       type: 'node',
       id: nextId * -1, // negative id means "adding new point" in osmApiAuth#saveChanges()
     },
-    tags: { name },
+    tags: { name, ...defaultTags },
     properties: { class: 'marker', subclass: 'point' },
   };
 };
