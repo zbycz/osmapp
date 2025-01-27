@@ -34,6 +34,8 @@ const typeMap: TypeMap = {
 
 export const NwrIcon = ({ osmType, color, fontSize }: NwrIconProps) => {
   const type = typeMap[osmType];
+  if (!type) return null;
+
   const IconComponent = type.icon;
   const { name, scale } = type;
 
