@@ -4,6 +4,8 @@ import {
   AccordionDetails,
   AccordionSummary,
   CircularProgress,
+  Stack,
+  TextField,
   Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -12,6 +14,7 @@ import styled from '@emotion/styled';
 import { t } from '../../../../../../services/intl';
 import { useFeatureEditData } from '../SingleFeatureEditContext';
 import { useInitEditFeatureMap } from './useInitEditFeatureMap';
+import { LngLat } from 'maplibre-gl';
 
 const Container = styled.div`
   width: 100%;
@@ -35,7 +38,9 @@ const Map = styled.div<{ $isVisible: boolean }>`
 `;
 
 export default function EditFeatureMap() {
-  const { containerRef, isMapLoaded } = useInitEditFeatureMap();
+  const [isFirstMapLoad, setIsFirstMapLoad] = useState(true);
+  const { containerRef, isMapLoaded, currentItem, onMarkerChange } =
+    useInitEditFeatureMap(isFirstMapLoad, setIsFirstMapLoad);
   const [expanded, setExpanded] = useState(false);
 
   const { shortId } = useFeatureEditData();
@@ -62,6 +67,34 @@ export default function EditFeatureMap() {
           )}
           <Map $isVisible={isMapLoaded} ref={containerRef} />
         </Container>
+        <Stack direction="row" mt={2} gap={1}>
+          <TextField
+            label={t('editdialog.location_latitude')}
+            variant="outlined"
+            value={currentItem?.nodeLonLat[1] || ''}
+            onChange={(e) => {
+              onMarkerChange({
+                lng: currentItem?.nodeLonLat[0],
+                lat: parseFloat(e.target.value),
+              } as LngLat);
+              setIsFirstMapLoad(true);
+            }}
+            size="small"
+          />
+          <TextField
+            label={t('editdialog.location_longitude')}
+            variant="outlined"
+            value={currentItem?.nodeLonLat[0] || ''}
+            onChange={(e) => {
+              onMarkerChange({
+                lng: parseFloat(e.target.value),
+                lat: currentItem?.nodeLonLat[1],
+              } as LngLat);
+              setIsFirstMapLoad(true);
+            }}
+            size="small"
+          />
+        </Stack>
       </AccordionDetails>
     </Accordion>
   );

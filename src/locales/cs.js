@@ -33,9 +33,10 @@ export default {
   'project.openclimbing.description': 'Otevřený lezecký průvodce',
   'project.openclimbing.serpDescription': 'Otevřený lezecký průvodce s vyznačením cest. Postaveno na projektech OpenStreetMap a Wikipedie.',
 
-  'climbing.guideinfo.title': 'Otevřený lezecký průvodce openclimbing.org',
+  'climbing.guideinfo.title': 'Otevřený lezecký průvodce',
   'climbing.guideinfo.description':
     'OpenClimbing.org je otevřená platforma pro lezecké průvodce a mapy. Vyznačené cesty a fotky se ukládají do projektů OpenStreetMap a Wikipedie, takže je může kdykoliv editovat.',
+  'climbing.guideinfo.button': 'Více informací',
 
   'install.button': 'Stáhnout aplikaci',
   'install.tabs_aria_label': 'Vyberte si svou platformu',
@@ -137,6 +138,9 @@ export default {
   'featurepanel.inline_edit_title': 'Upravit',
   'featurepanel.objects_around': 'Objekty v okolí',
   'featurepanel.climbing_restriction': 'Lezecké omezení',
+  'featurepanel.footer_title': 'Ostatní informace',
+  'featurepanel.climbing_sectors': 'Lezecké sektory',
+  'featurepanel.climbing_sectors_in': 'v oblasti',
 
   'opening_hours.open': 'Otevřeno: __todayTime__',
   'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',
@@ -189,6 +193,8 @@ export default {
   'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
   'editdialog.add_tag': 'Přidat tag',
   'editdialog.location': 'Poloha',
+  'editdialog.location_latitude': 'Zeměpisná šířka',
+  'editdialog.location_longitude': 'Zeměpisná délka',
   'editdialog.tags_editor_info': `Tagy popisují vlastnosti mapového prvku v dohodnutém formátu. Zde naleznete úplný
         <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
   'editdialog.save_refused': 'Změny se nepodařilo uložit.',
@@ -258,6 +264,10 @@ export default {
   'sharedialog.copy': 'Kopírovat',
   'sharedialog.copied': 'Zkopírováno!',
   'sharedialog.share': 'Sdílet',
+
+  osmtype_node: 'Uzel',
+  osmtype_way: 'Cesta',
+  osmtype_relation: 'Relace',
 
   weather: 'Počasí',
 };

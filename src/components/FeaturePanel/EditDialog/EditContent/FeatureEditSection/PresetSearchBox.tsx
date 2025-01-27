@@ -37,23 +37,23 @@ const StyledListSubheader = styled(ListSubheader)`
   }
 `;
 
-const emptyOptions = [
-  'amenity/cafe',
-  'amenity/restaurant',
-  'amenity/fast_food',
-  'amenity/bar',
-  'shop',
-  'leisure/park',
-  'amenity/place_of_worship',
-  ...(PROJECT_ID === 'openclimbing'
+const emptyOptions =
+  PROJECT_ID === 'openclimbing'
     ? [
         'climbing/route_bottom',
         'climbing/route',
         'climbing/crag',
         // 'climbing/area',
       ]
-    : []),
-];
+    : [
+        'amenity/cafe',
+        'amenity/restaurant',
+        'amenity/fast_food',
+        'amenity/bar',
+        'shop',
+        'leisure/park',
+        'amenity/place_of_worship',
+      ];
 
 const Placeholder = styled.span`
   color: ${({ theme }) => theme.palette.text.secondary};
