@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField, Typography, Box } from '@mui/material';
+import { Button, TextField, Typography, Box, Switch } from '@mui/material';
 import { t } from '../../../../../services/intl';
 import {
   getNextWikimediaCommonsIndex,
@@ -140,24 +140,31 @@ export const MajorKeysEditor = () => {
     }
   }, [focusTag]); // eslint-disable-line react-hooks/exhaustive-deps
 
+  const getInputEleement = (k: string) => {
+    if (!data.keys?.includes(k)) return null;
+    switch (k) {
+      case 'opening_hours':
+        return <OpeningHoursEditor />;
+
+      default:
+        return (
+          <TextFieldWithCharacterCount
+            label={data.names[k]}
+            k={k}
+            autoFocus={focusTag === k}
+            onChange={(e) => {
+              setTag(e.target.name, e.target.value);
+            }}
+            value={tags[k] ?? ''}
+          />
+        );
+    }
+  };
+
   return (
     <Box mb={3}>
       {activeMajorKeys.map((k) => (
-        <div key={k}>
-          {k === 'opening_hours' ? (
-            <OpeningHoursEditor />
-          ) : (
-            <TextFieldWithCharacterCount
-              label={data.names[k]}
-              k={k}
-              autoFocus={focusTag === k}
-              onChange={(e) => {
-                setTag(e.target.name, e.target.value);
-              }}
-              value={tags[k] ?? ''}
-            />
-          )}
-        </div>
+        <div key={k}>{getInputEleement(k)}</div>
       ))}
       {!!inactiveMajorKeys.length && (
         <>
