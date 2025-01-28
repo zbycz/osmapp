@@ -37,7 +37,7 @@ export default {
   'tick.style_description_TR': 'Arrampicata con una corda già ancorata sopra.',
   'tick.style_description_FS': 'Arrampicata senza alcuno strumento protettivo e senza corda.',
 
-  'climbing_renderer.climbing_grade': 'grado di arrampicata ',
+  'climbing_renderer.climbing_grade': 'grado di arrampicata',
 
   'project.osmapp.description': 'Una app OpenStreetMap universale',
   'project.osmapp.serpDescription':
@@ -161,8 +161,9 @@ solo informazioni che hai verificato di persona o che provengono da fonti attend
          È proibita la copia di dati protetti da copyright (ad es. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/IT:How_We_Map">Ulteriori informazioni</a>`,
   'editdialog.info_note': `Il tuo suggerimento verrà valutato dai volontari di OpenStreetMap. Qui puoi aggiungere un’ulteriore nota oppure descrivere la posizione precisa, ecc. Sarebbe anche appropriato supportare il tuo contributo con un collegamento a una fonte (sito web, foto, etc.).`,
   'editdialog.other_tags_heading': 'Altri tag',
-  'editdialog.tags_editor': 'Todas las propiedades – tag',
+  'editdialog.tags_editor': 'Tutti i tag',
   'editdialog.tags_editor_info': `Le etichette descrivono le proprietà di ogni elemento della mappa secondo un formato definito. Qui troverai la lista completa <a href="https://wiki.openstreetmap.org/wiki/IT:Map_Features" target="_blank">di tutte le etichette su OpenStreetMap</a>.`,
+  'editdialog.save_refused': 'Impossibile salvare le tue modifiche.',
 
   'editsuccess.close_button': 'Chiudi',
   'editsuccess.note.heading': 'Grazie per il tuo suggerimento!',
