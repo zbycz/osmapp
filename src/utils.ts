@@ -1,5 +1,6 @@
 import {
   Feature,
+  FeatureTags,
   LonLatRounded,
   Position,
   PositionBoth,
@@ -68,8 +69,11 @@ export const isClimbingRelation = (feature: Feature) =>
   feature.osmMeta.type === 'relation' &&
   (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
 
-export const isClimbingRoute = (feature: Feature) =>
-  ['route_bottom', 'route_top', 'route'].includes(feature?.tags.climbing);
+export const isFeatureClimbingRoute = (feature: Feature) =>
+  isClimbingRoute(feature?.tags);
+
+export const isClimbingRoute = (tags: FeatureTags) =>
+  ['route_bottom', 'route_top', 'route'].includes(tags.climbing);
 
 export const isRouteMaster = ({
   tags,

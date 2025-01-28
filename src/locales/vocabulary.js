@@ -270,6 +270,11 @@ export default {
   'tags.website': 'Website',
   'tags.phone': 'Phone',
   'tags.opening_hours': 'Hours',
+  'tags.author': 'Author',
+  'tags.climbing_grade_uiaa': 'UIAA climbing grade',
+  'tags.climbing_grade_french': 'French climbing grade',
+  'tags.climbing_boulder': 'Boulder',
+  'tags.length': 'Length',
 
   'coordinates.geo_uri': 'GeoURI (phone map app)',
 

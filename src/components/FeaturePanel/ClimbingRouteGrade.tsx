@@ -1,12 +1,12 @@
 import { useFeatureContext } from '../utils/FeatureContext';
-import { isClimbingRoute } from '../../utils';
+import { isFeatureClimbingRoute } from '../../utils';
 import { getDifficulties } from './Climbing/utils/grades/routeGrade';
 import { ConvertedRouteDifficultyBadge } from './Climbing/ConvertedRouteDifficultyBadge';
 import React from 'react';
 
 export const ClimbingRouteGrade = () => {
   const { feature } = useFeatureContext();
-  if (!isClimbingRoute(feature)) {
+  if (!isFeatureClimbingRoute(feature)) {
     return null;
   }
 
