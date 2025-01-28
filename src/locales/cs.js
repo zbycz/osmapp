@@ -227,6 +227,11 @@ export default {
   'tags.website': 'Web',
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Otevírací doba',
+  'tags.author': 'Autor',
+  'tags.climbing_grade_uiaa': 'UIAA klasifikace',
+  'tags.climbing_grade_french': 'Francouzská klasifikace',
+  'tags.climbing_boulder': 'Boulder',
+  'tags.length': 'Délka',
 
   'coordinates.geo_uri': 'GeoURI (mapová appka v telefonu)',
 

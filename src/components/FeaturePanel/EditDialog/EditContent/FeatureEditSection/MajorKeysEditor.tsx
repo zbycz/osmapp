@@ -10,6 +10,15 @@ import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import styled from '@emotion/styled';
 import { CharacterCount, getInputTypeForKey } from '../helpers';
 import { useFeatureEditData } from './SingleFeatureEditContext';
+import { isClimbingRoute } from '../../../../../utils';
+
+export const climbingRouteMajorKeys = [
+  'author',
+  'climbing:grade:uiaa',
+  'climbing:grade:french',
+  'climbing:boulder',
+  'length',
+];
 
 export const majorKeys = [
   'name',
@@ -21,7 +30,7 @@ export const majorKeys = [
 
 const MAX_INPUT_LENGTH = 255;
 
-const getData = (numberOfWikimediaItems: number) => {
+const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
   const wikimediaCommonTags = Array(numberOfWikimediaItems)
     .fill('')
     .reduce((acc, _, index) => {
@@ -31,7 +40,11 @@ const getData = (numberOfWikimediaItems: number) => {
     }, {});
 
   return {
-    keys: [...majorKeys, ...Object.keys(wikimediaCommonTags)],
+    keys: [
+      ...majorKeys,
+      ...Object.keys(wikimediaCommonTags),
+      ...(isClimbingRoute ? climbingRouteMajorKeys : []),
+    ],
     names: {
       name: t('tags.name'),
       description: t('tags.description'),
@@ -39,6 +52,15 @@ const getData = (numberOfWikimediaItems: number) => {
       phone: t('tags.phone'),
       opening_hours: t('tags.opening_hours'),
       ...wikimediaCommonTags,
+      ...(isClimbingRoute
+        ? {
+            author: t('tags.author'),
+            'climbing:grade:uiaa': t('tags.climbing_grade_uiaa'),
+            'climbing:grade:french': t('tags.climbing_grade_french'),
+            'climbing:boulder': t('tags.climbing_boulder'),
+            length: t('tags.length'),
+          }
+        : {}),
     },
   };
 };
@@ -100,8 +122,7 @@ export const MajorKeysEditor = () => {
 
   // TODO this code will be replaced when implementing id presets fields
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
-  const data = getData(nextWikimediaCommonsIndex + 1);
-
+  const data = getData(nextWikimediaCommonsIndex + 1, isClimbingRoute(tags));
   const [activeMajorKeys, setActiveMajorKeys] = useState(() =>
     data.keys.filter((k) => !!tags[k]),
   );

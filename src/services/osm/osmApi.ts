@@ -10,7 +10,7 @@ import { getImageDefs, mergeMemberImageDefs } from '../images/getImageDefs';
 import { fetchOverpassCenter } from '../overpass/fetchOverpassCenter';
 import {
   isClimbingRelation,
-  isClimbingRoute,
+  isFeatureClimbingRoute,
   isPublictransportRoute,
   isRouteMaster,
 } from '../../utils';
@@ -180,7 +180,7 @@ const addMemberFeaturesToRelation = async (relation: Feature) => {
 export const addMembersAndParents = async (
   feature: Feature,
 ): Promise<Feature> => {
-  if (isClimbingRoute(feature)) {
+  if (isFeatureClimbingRoute(feature)) {
     const parentFeatures = await fetchParentFeatures(feature.osmMeta);
     return { ...feature, parentFeatures };
   }

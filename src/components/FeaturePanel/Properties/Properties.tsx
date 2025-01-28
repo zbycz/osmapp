@@ -12,7 +12,7 @@ import { getReactKey, getShortId } from '../../../services/helpers';
 import * as Sentry from '@sentry/nextjs';
 import { MyRouteTicks } from '../Climbing/Ticks/MyRouteTicks';
 
-import { isClimbingRoute } from '../../../utils';
+import { isFeatureClimbingRoute } from '../../../utils';
 
 class ErrorBoundary extends React.Component<
   { fallback: React.ReactNode },
@@ -92,7 +92,9 @@ export const Properties = ({ showTags }) => {
         </ErrorBoundary>
       )}
 
-      {isClimbingRoute(feature) && <MyRouteTicks shortOsmId={shortOsmId} />}
+      {isFeatureClimbingRoute(feature) && (
+        <MyRouteTicks shortOsmId={shortOsmId} />
+      )}
     </>
   );
 };
