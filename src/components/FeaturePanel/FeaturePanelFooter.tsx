@@ -7,6 +7,14 @@ import Coordinates from './Coordinates';
 import { t } from '../../services/intl';
 import { ObjectsAround } from './ObjectsAround';
 import React from 'react';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Box,
+  Typography,
+} from '@mui/material';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 type Props = {
   advanced: boolean;
@@ -24,35 +32,53 @@ export const FeaturePanelFooter = ({
   const { feature } = useFeatureContext();
   const { point, skeleton, deleted } = feature;
 
-  const osmappLink = getFullOsmappLink(feature);
+  const onClick = (e: React.MouseEvent) => {
+    // Alt+Shift+click to enable FeaturePanel advanced mode
+    if (e.shiftKey && e.altKey) {
+      setAdvanced((v) => !v);
+    }
+  };
 
   return (
-    <PanelFooterWrapper>
-      <PanelSidePadding>
-        <FeatureDescription advanced={advanced} setAdvanced={setAdvanced} />
-        <Coordinates />
-        <br />
-        <a href={osmappLink}>{osmappLink}</a>
-        <br />
-        <label>
-          <input
-            type="checkbox"
-            onChange={toggleShowTags}
-            checked={showTagsTable}
-            disabled={point || deleted || (!skeleton && !feature.schema)}
-          />{' '}
-          {t('featurepanel.show_tags')}
-        </label>{' '}
-        <label>
-          <input
-            type="checkbox"
-            onChange={toggleShowAround}
-            checked={showAround}
-          />{' '}
-          {t('featurepanel.show_objects_around')}
-        </label>
-        {showAround && <ObjectsAround advanced={advanced} />}
-      </PanelSidePadding>
-    </PanelFooterWrapper>
+    <Accordion disableGutters elevation={0} square onClick={onClick}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="caption">
+          {t('featurepanel.footer_title')}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <PanelFooterWrapper>
+          <PanelSidePadding>
+            <FeatureDescription />
+            <Box mt={3} mb={1}>
+              <Typography color="secondary">
+                <label>
+                  <input
+                    type="checkbox"
+                    onChange={toggleShowTags}
+                    checked={showTagsTable}
+                    disabled={
+                      point || deleted || (!skeleton && !feature.schema)
+                    }
+                  />{' '}
+                  {t('featurepanel.show_tags')}
+                </label>
+                <br />
+                <label>
+                  <input
+                    type="checkbox"
+                    onChange={toggleShowAround}
+                    checked={showAround}
+                  />{' '}
+                  {t('featurepanel.show_objects_around')}
+                </label>
+                {showAround && <ObjectsAround advanced={advanced} />}
+              </Typography>
+            </Box>
+            <Coordinates />
+          </PanelSidePadding>
+        </PanelFooterWrapper>
+      </AccordionDetails>
+    </Accordion>
   );
 };

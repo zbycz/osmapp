@@ -127,15 +127,28 @@ export const SupportUs = () => {
                   </li>
                   <li>
                     <Typography variant="body2">
-                      <a href="https://github.com/sponsors/zbycz">
+                      <a
+                        href="https://github.com/sponsors/zbycz"
+                        target="_blank"
+                      >
                         Github sponsor
                       </a>
                     </Typography>
                   </li>
                   <li>
                     <Typography variant="body2">
-                      <a href="https://buymeacoffee.com/openclimbing.org">
+                      <a
+                        href="https://buymeacoffee.com/openclimbing.org"
+                        target="_blank"
+                      >
                         Buy me a coffee
+                      </a>
+                    </Typography>
+                  </li>
+                  <li>
+                    <Typography variant="body2">
+                      <a href="https://revolut.me/jvaclavik" target="_blank">
+                        Revolut
                       </a>
                     </Typography>
                   </li>

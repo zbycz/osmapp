@@ -57,6 +57,9 @@ export const MembersEditor = () => {
   );
 
   const isClimbingCrag = tags.climbing === 'crag';
+  const selectedPresetKey = isClimbingCrag
+    ? 'climbing/route_bottom'
+    : undefined;
   const hasNoMembers = !members || members.length === 0;
 
   if (!isClimbingCrag && hasNoMembers) return null;
@@ -74,9 +77,12 @@ export const MembersEditor = () => {
         );
       })}
       {isClimbingCrag && hasNoMembers ? (
-        <AddMemberForm newLonLat={nodeLonLat} />
+        <AddMemberForm
+          newLonLat={nodeLonLat}
+          selectedPresetKey={selectedPresetKey}
+        />
       ) : (
-        <AddMemberForm />
+        <AddMemberForm selectedPresetKey={selectedPresetKey} />
       )}
     </AccordionComponent>
   );

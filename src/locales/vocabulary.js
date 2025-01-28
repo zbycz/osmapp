@@ -61,9 +61,10 @@ export default {
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
 
-  'climbing.guideinfo.title': 'A free climbing guide openclimbing.org',
+  'climbing.guideinfo.title': 'A free climbing guides',
   'climbing.guideinfo.description':
-    'OpenClimbing.org is an open platform for climbing guides and maps. Topos and photos are stored in OpenStreetMap and Wikipedia projects, so they can be edited by anyone.',
+    'openclimbing.org is an open platform for climbing guides and maps. Topos and photos are stored in OpenStreetMap and Wikipedia projects, so they can be edited by anyone.',
+  'climbing.guideinfo.button': 'More info',
 
   'project.openclimbing.description': 'Free wiki climbing map',
   'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
@@ -175,6 +176,9 @@ export default {
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
   'featurepanel.climbing_restriction': 'Climbing restriction',
   'featurepanel.login': 'Login',
+  'featurepanel.footer_title': 'Other info',
+  'featurepanel.climbing_sectors': 'Climbing sectors',
+  'featurepanel.climbing_sectors_in': 'in',
 
   'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
@@ -228,6 +232,8 @@ export default {
   'editdialog.tags_editor': 'All properties – Tags',
   'editdialog.add_tag': 'Add tag',
   'editdialog.location': 'Location',
+  'editdialog.location_latitude': 'Latitude',
+  'editdialog.location_longitude': 'Longitude',
   'editdialog.tags_editor_info': `Tags contain the data used to display objects on the map.<br>You can find <a href="https://wiki.openstreetmap.org/wiki/Map_Features" target="_blank">a reference for all tags on the OpenStreetMap Wiki</a>.`,
   'editdialog.login_in_progress': `Logging in...`,
   'editdialog.save_refused': 'Unable to save your changes.',
@@ -355,6 +361,10 @@ export default {
   'sharedialog.copy': 'Copy',
   'sharedialog.copied': 'Copied!',
   'sharedialog.share': 'Share',
+
+  osmtype_node: 'Node',
+  osmtype_way: 'Way',
+  osmtype_relation: 'Relation',
 
   weather: 'Weather',
 };

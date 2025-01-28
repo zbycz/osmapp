@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import maplibregl, { LngLat } from 'maplibre-gl';
 import { createMapEffectHook } from '../../../../../helpers';
 import { LonLat } from '../../../../../../services/types';
+import { isGpsValid } from './isGpsValid';
 
 const useUpdateDraggableFeatureMarker = createMapEffectHook<
   [
@@ -24,8 +25,9 @@ const useUpdateDraggableFeatureMarker = createMapEffectHook<
   markerRef.current?.remove();
   markerRef.current = undefined;
 
-  if (nodeLonLat) {
+  if (nodeLonLat && isGpsValid(nodeLonLat)) {
     const [lng, lat] = nodeLonLat;
+
     markerRef.current = new maplibregl.Marker({
       color: 'salmon',
       draggable: true,
@@ -56,4 +58,5 @@ export function useDraggableFeatureMarker(
     nodeLonLat: currentItem?.nodeLonLat,
     markerRef,
   });
+  return { onMarkerChange };
 }

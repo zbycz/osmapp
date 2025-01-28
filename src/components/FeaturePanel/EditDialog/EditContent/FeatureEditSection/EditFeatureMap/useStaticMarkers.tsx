@@ -4,6 +4,7 @@ import maplibregl from 'maplibre-gl';
 import { Button, Stack, Typography } from '@mui/material';
 import { createMapEffectHook } from '../../../../../helpers';
 import { t } from '../../../../../../services/intl';
+import { isGpsValid } from './isGpsValid';
 
 const useUpdateFeatureMarkers = createMapEffectHook<
   [
@@ -19,7 +20,7 @@ const useUpdateFeatureMarkers = createMapEffectHook<
   markerRefs.current = [];
 
   items.forEach((item) => {
-    if (!item.nodeLonLat || item.shortId === current) return;
+    if (!isGpsValid(item.nodeLonLat) || item.shortId === current) return;
     const [lng, lat] = item.nodeLonLat;
 
     const marker = new maplibregl.Marker({
