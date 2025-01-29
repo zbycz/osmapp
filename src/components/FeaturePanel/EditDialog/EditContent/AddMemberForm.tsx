@@ -157,7 +157,9 @@ export const AddMemberForm = ({
             </Button>
           }
         >
-          {t('editdialog.members.convert_description')}
+          {isClimbingCrag
+            ? t('editdialog.members.climbing_crag_convert_description')
+            : t('editdialog.members.convert_description')}
         </Alert>
       ) : (
         <Button
@@ -165,7 +167,9 @@ export const AddMemberForm = ({
           onClick={() => setShowInput(true)}
           variant="text"
         >
-          {t('editdialog.members.add_member')}
+          {isClimbingCrag
+            ? t('editdialog.members.add_climbing_route')
+            : t('editdialog.members.add_member')}
         </Button>
       )}
     </>

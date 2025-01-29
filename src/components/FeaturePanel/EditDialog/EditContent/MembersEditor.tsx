@@ -15,13 +15,24 @@ import { FeatureRow } from './FeatureRow';
 import { t } from '../../../../services/intl';
 import { useGetHandleClick } from './helpers';
 import { AddMemberForm } from './AddMemberForm';
-import { useEditContext } from '../EditContext';
 
 export const MembersEditor = () => {
   const { members, tags, nodeLonLat } = useFeatureEditData();
-  const { current } = useEditContext();
   const theme = useTheme();
+  const isClimbingCrag = tags.climbing === 'crag';
   const handleClick = useGetHandleClick();
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  const getSectionName = () => {
+    const isClimbingArea = tags.climbing === 'area';
+    if (isClimbingArea) {
+      return t('editdialog.climbing_crags');
+    }
+    if (isClimbingCrag) {
+      return t('editdialog.climbing_routes');
+    }
+    return t('editdialog.members');
+  };
 
   const AccordionComponent = ({
     children,
@@ -30,14 +41,15 @@ export const MembersEditor = () => {
     children: React.ReactNode;
     membersLength?: number;
   }) => (
-    <Accordion disableGutters elevation={0} square>
+    <Accordion disableGutters elevation={0} square expanded={isExpanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
         id="panel1-header"
+        onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">{t('editdialog.members')}</Typography>
+          <Typography variant="button">{getSectionName()}</Typography>
           {membersLength && <Chip size="small" label={membersLength} />}
         </Stack>
       </AccordionSummary>
@@ -56,7 +68,6 @@ export const MembersEditor = () => {
     </Accordion>
   );
 
-  const isClimbingCrag = tags.climbing === 'crag';
   const selectedPresetKey = isClimbingCrag
     ? 'climbing/route_bottom'
     : undefined;
@@ -72,7 +83,10 @@ export const MembersEditor = () => {
             key={member.shortId}
             shortId={member.shortId}
             label={member.label}
-            onClick={(e) => handleClick(e, member.shortId)}
+            onClick={(e) => {
+              setIsExpanded(false);
+              handleClick(e, member.shortId);
+            }}
           />
         );
       })}

@@ -18,12 +18,30 @@ import { t } from '../../../../services/intl';
 import { useGetHandleClick } from './helpers';
 import { fetchNodesWaysFeatures } from '../../../../services/osm/fetchNodesWaysFeatures';
 import { useEditContext } from '../EditContext';
+import {
+  isClimbingRoute,
+  isClimbingRoute as getIsClimbingRoute,
+} from '../../../../utils';
 
 export const ParentsEditor = () => {
   const { current } = useEditContext();
+  const { tags } = useFeatureEditData();
   const [parents, setParents] = useState([]);
   const theme = useTheme();
   const handleClick = useGetHandleClick();
+  const [isExpanded, setIsExpanded] = React.useState(false);
+
+  const getSectionName = () => {
+    const isClimbingCrag = tags.climbing === 'crag';
+    const isClimbingRoute = getIsClimbingRoute(tags);
+    if (isClimbingCrag) {
+      return t('editdialog.climbing_areas');
+    }
+    if (isClimbingRoute) {
+      return t('editdialog.climbing_crags');
+    }
+    return t('editdialog.parents');
+  };
 
   useEffect(() => {
     (async () => {
@@ -42,14 +60,15 @@ export const ParentsEditor = () => {
   if (!parents || parents.length === 0) return null;
 
   return (
-    <Accordion disableGutters elevation={0} square>
+    <Accordion disableGutters elevation={0} square expanded={isExpanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
         id="panel1-header"
+        onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">{t('editdialog.parents')}</Typography>
+          <Typography variant="button">{getSectionName()}</Typography>
           <Chip size="small" label={parents.length} />
         </Stack>
       </AccordionSummary>
@@ -69,7 +88,10 @@ export const ParentsEditor = () => {
                 key={shortId}
                 shortId={shortId}
                 label={parent.tags.name}
-                onClick={(e) => handleClick(e, shortId)}
+                onClick={(e) => {
+                  setIsExpanded(false);
+                  handleClick(e, shortId);
+                }}
               />
             );
           })}

@@ -238,11 +238,16 @@ export default {
   'editdialog.login_in_progress': `Logging in...`,
   'editdialog.save_refused': 'Unable to save your changes.',
   'editdialog.parents': 'Parents',
+  'editdialog.climbing_areas': 'Climbing areas',
+  'editdialog.climbing_crags': 'Climbing crags',
+  'editdialog.climbing_routes': 'Climbing routes',
   'editdialog.members': 'Members',
   'editdialog.members.name': 'Name',
   'editdialog.members.add_member': 'Add member',
+  'editdialog.members.add_climbing_route': 'Add climbing route',
   'editdialog.members.confirm': 'Confirm',
   'editdialog.members.convert_description': 'For adding members, you need to convert node to relation.',
+  'editdialog.members.climbing_crag_convert_description': 'For adding climbing routes, you need to convert node to relation.',
   'editdialog.members.convert_button': 'Convert to relation',
   'editdialog.location_change_current_item': 'Edit',
 
@@ -275,6 +280,7 @@ export default {
   'tags.climbing_grade_french': 'French climbing grade',
   'tags.climbing_boulder': 'Boulder',
   'tags.length': 'Length',
+  'tags.wikimedia_commons_photo': 'Wikimedia Commons photo',
 
   'coordinates.geo_uri': 'GeoURI (phone map app)',
 

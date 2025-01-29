@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -15,6 +15,7 @@ import { getInstantImage } from '../../services/images/getImageDefs';
 import { intl, t } from '../../services/intl';
 import Link from 'next/link';
 import { naturalSort } from './Climbing/utils/array';
+import { PanelLabel } from './Climbing/PanelLabel';
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -158,18 +159,20 @@ export const CragsInArea = () => {
   }
 
   return (
-    <Box mt={2} mb={2}>
-      <Typography variant="subtitle2" color="secondary">
+    <>
+      <PanelLabel>
         {t('featurepanel.climbing_sectors')}{' '}
         {feature.tags.name
           ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
           : ''}
-      </Typography>
-      <CragList>
-        {feature.memberFeatures.map((item) => (
-          <CragItem key={getOsmappLink(item)} feature={item} />
-        ))}
-      </CragList>
-    </Box>
+      </PanelLabel>
+      <Box mt={2} mb={2}>
+        <CragList>
+          {feature.memberFeatures.map((item) => (
+            <CragItem key={getOsmappLink(item)} feature={item} />
+          ))}
+        </CragList>
+      </Box>
+    </>
   );
 };
