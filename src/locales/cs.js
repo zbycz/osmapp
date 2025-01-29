@@ -93,8 +93,8 @@ export default {
   'support_us.add_content': `Zakreslete lezecké cesty`,
   'support_us.develop': `Umíte programovat? Pošlete pull request do repozitáře.`,
   'support_us.contribute_financially': `Přispějte finančně`,
-  'support_us.thanks': `Thank you!`,
-  'support_us.bitcoin_dialog_title': `Support us with Bitcoin`,
+  'support_us.thanks': `Děkujeme`,
+  'support_us.bitcoin_dialog_title': `Podpořte nás Bitcoinem`,
 
   'searchbox.placeholder': 'Prohledat OpenStreetMap',
   'searchbox.category': 'kategorie',

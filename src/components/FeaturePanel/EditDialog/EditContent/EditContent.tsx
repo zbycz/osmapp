@@ -35,7 +35,7 @@ export const EditContent = () => {
     const presetName = options.find((o) => o.presetKey === preset)?.name;
 
     return (
-      <Stack direction="column" alignItems="flex-start">
+      <Stack direction="column" alignItems="flex-start" width="100%">
         <Stack
           direction="row"
           gap={1}
