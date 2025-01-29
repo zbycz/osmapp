@@ -20,7 +20,12 @@ const useUpdateFeatureMarkers = createMapEffectHook<
   markerRefs.current = [];
 
   items.forEach((item) => {
-    if (!isGpsValid(item.nodeLonLat) || item.shortId === current) return;
+    if (
+      !isGpsValid(item.nodeLonLat) ||
+      item.shortId === current ||
+      item.shortId[0] !== 'n'
+    )
+      return;
     const [lng, lat] = item.nodeLonLat;
 
     const marker = new maplibregl.Marker({
