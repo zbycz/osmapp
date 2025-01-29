@@ -238,6 +238,7 @@ export default {
   'tags.climbing_grade_french': 'Francouzská klasifikace',
   'tags.climbing_boulder': 'Boulder',
   'tags.length': 'Délka',
+  'tags.wikimedia_commons_photo': 'Wikimedia Commons fotka',
 
   'coordinates.geo_uri': 'GeoURI (mapová appka v telefonu)',
 

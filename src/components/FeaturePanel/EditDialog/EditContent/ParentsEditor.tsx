@@ -29,6 +29,7 @@ export const ParentsEditor = () => {
   const [parents, setParents] = useState([]);
   const theme = useTheme();
   const handleClick = useGetHandleClick();
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const getSectionName = () => {
     const isClimbingCrag = tags.climbing === 'crag';
@@ -59,11 +60,12 @@ export const ParentsEditor = () => {
   if (!parents || parents.length === 0) return null;
 
   return (
-    <Accordion disableGutters elevation={0} square>
+    <Accordion disableGutters elevation={0} square expanded={isExpanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
         id="panel1-header"
+        onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" spacing={2} alignItems="center">
           <Typography variant="button">{getSectionName()}</Typography>
@@ -86,7 +88,10 @@ export const ParentsEditor = () => {
                 key={shortId}
                 shortId={shortId}
                 label={parent.tags.name}
-                onClick={(e) => handleClick(e, shortId)}
+                onClick={(e) => {
+                  setIsExpanded(false);
+                  handleClick(e, shortId);
+                }}
               />
             );
           })}

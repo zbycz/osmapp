@@ -35,7 +35,7 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
     .fill('')
     .reduce((acc, _, index) => {
       const key = getWikimediaCommonsKey(index);
-      const value = `Wikimedia commons photo (${index})`;
+      const value = `${t('tags.wikimedia_commons_photo')} (${index})`;
       return { ...acc, [key]: value };
     }, {});
 

@@ -19,8 +19,9 @@ import { AddMemberForm } from './AddMemberForm';
 export const MembersEditor = () => {
   const { members, tags, nodeLonLat } = useFeatureEditData();
   const theme = useTheme();
-  const handleClick = useGetHandleClick();
   const isClimbingCrag = tags.climbing === 'crag';
+  const handleClick = useGetHandleClick();
+  const [isExpanded, setIsExpanded] = React.useState(false);
 
   const getSectionName = () => {
     const isClimbingArea = tags.climbing === 'area';
@@ -40,11 +41,12 @@ export const MembersEditor = () => {
     children: React.ReactNode;
     membersLength?: number;
   }) => (
-    <Accordion disableGutters elevation={0} square>
+    <Accordion disableGutters elevation={0} square expanded={isExpanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
         id="panel1-header"
+        onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" spacing={2} alignItems="center">
           <Typography variant="button">{getSectionName()}</Typography>
@@ -81,7 +83,10 @@ export const MembersEditor = () => {
             key={member.shortId}
             shortId={member.shortId}
             label={member.label}
-            onClick={(e) => handleClick(e, member.shortId)}
+            onClick={(e) => {
+              setIsExpanded(false);
+              handleClick(e, member.shortId);
+            }}
           />
         );
       })}
