@@ -20,8 +20,8 @@ export const MembersEditor = () => {
   const { members, tags, nodeLonLat } = useFeatureEditData();
   const theme = useTheme();
   const isClimbingCrag = tags.climbing === 'crag';
-  const handleClick = useGetHandleClick();
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const handleClick = useGetHandleClick({ setIsExpanded });
 
   const getSectionName = () => {
     const isClimbingArea = tags.climbing === 'area';
@@ -84,7 +84,6 @@ export const MembersEditor = () => {
             shortId={member.shortId}
             label={member.label}
             onClick={(e) => {
-              setIsExpanded(false);
               handleClick(e, member.shortId);
             }}
           />

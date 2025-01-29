@@ -28,8 +28,8 @@ export const ParentsEditor = () => {
   const { tags } = useFeatureEditData();
   const [parents, setParents] = useState([]);
   const theme = useTheme();
-  const handleClick = useGetHandleClick();
   const [isExpanded, setIsExpanded] = React.useState(false);
+  const handleClick = useGetHandleClick({ setIsExpanded });
 
   const getSectionName = () => {
     const isClimbingCrag = tags.climbing === 'crag';
