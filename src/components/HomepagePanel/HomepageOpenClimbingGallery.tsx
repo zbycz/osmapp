@@ -70,10 +70,13 @@ export const DiscoveryMoreText = styled.div`
   text-transform: lowercase;
   font-weight: normal;
   margin-bottom: 8px;
+  line-height: 2.5;
 `;
 export const GalleryWrapper = styled.div`
   width: calc(100% + 32px * 2);
-  height: calc(${HOMEPAGE_GALLERY_HEIGHT}px + 10px); // 10px for scrollbar
+  height: calc(
+    ${HOMEPAGE_GALLERY_HEIGHT}px + 26px
+  ); // 16px for scrollbar and 10px for shadow
   min-height: calc(
     ${HOMEPAGE_GALLERY_HEIGHT}px + 10px
   ); // otherwise it shrinks b/c of flex
@@ -83,7 +86,7 @@ export const GalleryWrapper = styled.div`
 const Gradient = styled.div<{ blur?: boolean }>`
   position: absolute;
   width: 100%;
-  height: calc(100% - 6px);
+  height: 100%;
   top: 0;
   transition: all 0.2s;
   ${({ blur }) =>
@@ -102,7 +105,7 @@ const Gradient = styled.div<{ blur?: boolean }>`
 
 const Text = styled.div<{ center: boolean }>`
   position: absolute;
-  bottom: 12px;
+  bottom: 16px;
   text-align: center;
   width: 100%;
   font-weight: 900;
@@ -113,9 +116,12 @@ const Text = styled.div<{ center: boolean }>`
   ${({ center }) => center === true && `top: 40%`};
 `;
 
+const StyledLink = styled(Link)`
+  line-height: 0;
+  display: block;
+`;
+
 const StyledScrollbars = styled(Scrollbars)`
-  width: 100%;
-  height: ${HOMEPAGE_GALLERY_HEIGHT}px;
   white-space: nowrap;
   text-align: center; // one image centering
   overflow-y: hidden;
@@ -129,10 +135,16 @@ const GalleryItemContainer = styled.div`
   position: relative;
   vertical-align: top;
   overflow: hidden;
+  margin-top: 10px;
   margin-right: 12px;
   cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
   &:first-of-type {
     margin-left: 30px;
+  }
+  &:last-of-type {
+    margin-right: 30px;
   }
 `;
 
@@ -158,7 +170,7 @@ const GalleryItem = ({
   title,
 }: GalleryItemProps) => (
   <GalleryItemContainer>
-    <Link href={href} locale={intl.lang}>
+    <StyledLink href={href} locale={intl.lang}>
       <>
         <img
           src={src}
@@ -171,7 +183,7 @@ const GalleryItem = ({
           <Text center={center}>{children}</Text>
         </Gradient>
       </>
-    </Link>
+    </StyledLink>
   </GalleryItemContainer>
 );
 

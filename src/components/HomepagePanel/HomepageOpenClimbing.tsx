@@ -29,6 +29,14 @@ const AccordionStyle = {
   },
 };
 
+export const From = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
+  padding-bottom: 10px;
+`;
+
 export const Divider = styled.div`
   align-items: center;
   display: flex;
@@ -148,7 +156,7 @@ const Banners = () => (
     spacing={1}
     direction={'row'}
     mt={6}
-    mb={2}
+    sx={{ paddingBottom: 3 }}
     justifyContent="space-between"
   >
     <a href="https://www.maptiler.com" target="_blank">
@@ -235,6 +243,11 @@ export function HomepageOpenClimbing({ onClose }: { onClose: () => void }) {
             <ImportantLinks />
             <SupportUs />
             <Banners />
+            <From>
+              <Typography variant="caption" color="secondary" letterSpacing={1}>
+                Made in Prague with ♥
+              </Typography>
+            </From>
           </Stack>
         </Content>
       </PanelScrollbars>

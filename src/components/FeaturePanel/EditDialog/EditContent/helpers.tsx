@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import { Box, Stack } from '@mui/material';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { EditDataItem } from '../useEditItems';
 import { useEditContext } from '../EditContext';
 import { getApiId, getShortId } from '../../../../services/helpers';
@@ -58,12 +58,21 @@ export const getInputTypeForKey = (key: string) => {
 const isInItems = (items: Array<EditDataItem>, shortId: string) =>
   items.find((item) => item.shortId === shortId);
 
-export const useGetHandleClick = () => {
+export const useGetHandleClick = ({
+  setIsExpanded,
+}: {
+  setIsExpanded?: Dispatch<SetStateAction<boolean>>;
+}) => {
   const { addFeature, items, setCurrent } = useEditContext();
 
   return async (e, shortId: string) => {
     const isCmdClicked = e.ctrlKey || e.metaKey;
     const apiId = getApiId(shortId);
+
+    if (!isCmdClicked) {
+      setIsExpanded?.(false);
+    }
+
     if (apiId.id < 0) {
       if (!isCmdClicked) setCurrent(shortId);
       return;

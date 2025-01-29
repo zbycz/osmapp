@@ -3,35 +3,70 @@ import {
   Stack,
   Tab,
   Tabs,
+  Typography,
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { EditDialogActions } from './EditDialogActions';
 import { CommentField } from './CommentField';
 import { OsmUserLogged } from './OsmUserLogged';
 import { ContributionInfoBox } from './ContributionInfoBox';
 import { OsmUserLoggedOut } from './OsmUserLoggedOut';
 import { FeatureEditSection } from './FeatureEditSection/FeatureEditSection';
-import { useEditDialogFeature } from '../utils';
 import { useEditContext } from '../EditContext';
-import { getShortId } from '../../../../services/helpers';
-import { fetchSchemaTranslations } from '../../../../services/tagging/translations';
 import { TestApiWarning } from '../../helpers/TestApiWarning';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { useMatchTags, useOptions } from './FeatureEditSection/PresetSelect';
 
 export const EditContent = () => {
-  const { items, addFeature, current, setCurrent } = useEditContext();
+  const { items, current, setCurrent } = useEditContext();
   const theme = useTheme();
+  const options = useOptions();
 
-  const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const RenderTabLabel = ({ item: { shortId, tags } }) => {
+    const [preset, setPreset] = useState('');
+    const { feature } = useFeatureContext();
+
+    useMatchTags(feature, tags, setPreset);
+    const presetName = options.find((o) => o.presetKey === preset)?.name;
+
+    return (
+      <Stack direction="column" alignItems="flex-start">
+        <Stack
+          direction="row"
+          gap={1}
+          alignItems="center"
+          justifyContent="space-between"
+          width="100%"
+        >
+          <Typography variant="button" whiteSpace="nowrap">
+            {tags.name ?? shortId}
+          </Typography>
+          <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
+        </Stack>
+        <Typography
+          variant="caption"
+          textTransform="lowercase"
+          whiteSpace="nowrap"
+        >
+          {presetName}
+        </Typography>
+      </Stack>
+    );
+  };
+
   return (
     <>
       <Stack
         direction={isSmallScreen ? 'column' : 'row'}
-        gap={2}
+        gap={1}
         overflow="hidden"
         flex={1}
+        sx={{ borderTop: `solid 1px ${theme.palette.divider}` }}
       >
         {items.length > 1 && (
           <Tabs
@@ -49,29 +84,31 @@ export const EditContent = () => {
                 alignItems: isSmallScreen ? undefined : 'baseline',
                 textAlign: isSmallScreen ? undefined : 'left',
               },
+              ...(isSmallScreen
+                ? {}
+                : {
+                    resize: 'horizontal',
+                    minWidth: 120,
+                    maxWidth: '50%',
+                  }),
             }}
           >
-            {items.map(({ shortId, tags }, idx) => (
+            {items.map((item, idx) => (
               <Tab
                 key={idx}
-                label={
-                  <Stack
-                    direction="row"
-                    gap={1}
-                    alignItems="center"
-                    justifyContent="space-between"
-                    width="100%"
-                  >
-                    {tags.name ?? shortId}{' '}
-                    <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
-                  </Stack>
-                }
-                value={shortId}
+                label={<RenderTabLabel item={item} />}
+                value={item.shortId}
+                sx={{
+                  maxWidth: '100%',
+                  ...(isSmallScreen
+                    ? {}
+                    : { borderBottom: `solid 1px ${theme.palette.divider}` }),
+                }}
               />
             ))}
           </Tabs>
         )}
-        <DialogContent dividers>
+        <DialogContent dividers sx={{ flex: 1, borderTop: 0 }}>
           <form
             autoComplete="off"
             onSubmit={(e) => e.preventDefault()}

@@ -60,7 +60,7 @@ const LabelWrapper = styled.div`
   margin-right: 1em;
 `;
 
-const useMatchTags = (
+export const useMatchTags = (
   feature: Feature,
   tags: FeatureTags,
   setPreset: Setter<string>,
@@ -81,7 +81,7 @@ const useMatchTags = (
   }, [tags, feature, setPreset]);
 };
 
-const useOptions = () => {
+export const useOptions = () => {
   const [options, setOptions] = useState<PresetsCache>([]);
   useEffect(() => {
     getTranslatedPresets().then((presets) => setOptions(presets));

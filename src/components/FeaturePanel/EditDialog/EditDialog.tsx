@@ -12,7 +12,7 @@ import { getReactKey } from '../../../services/helpers';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
-  return useMediaQuery(theme.breakpoints.down('sm'));
+  return useMediaQuery(theme.breakpoints.down('md'));
 };
 
 const StyledDialog = styled(Dialog)`
@@ -42,7 +42,7 @@ const EditDialogInner = () => {
       aria-labelledby="edit-dialog-title"
       sx={{ height: '100%' }}
     >
-      <EditDialogTitle />
+      <EditDialogTitle onClose={onClose} />
       {successInfo ? <SuccessContent /> : <EditContent />}
     </StyledDialog>
   );

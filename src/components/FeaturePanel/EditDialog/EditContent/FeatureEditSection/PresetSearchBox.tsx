@@ -40,9 +40,9 @@ const StyledListSubheader = styled(ListSubheader)`
 const emptyOptions =
   PROJECT_ID === 'openclimbing'
     ? [
-        'climbing/route_bottom',
-        'climbing/route',
         'climbing/crag',
+        'climbing/route_bottom',
+        // 'climbing/route',
         // 'climbing/area',
       ]
     : [
