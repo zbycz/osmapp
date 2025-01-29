@@ -18,12 +18,29 @@ import { t } from '../../../../services/intl';
 import { useGetHandleClick } from './helpers';
 import { fetchNodesWaysFeatures } from '../../../../services/osm/fetchNodesWaysFeatures';
 import { useEditContext } from '../EditContext';
+import {
+  isClimbingRoute,
+  isClimbingRoute as getIsClimbingRoute,
+} from '../../../../utils';
 
 export const ParentsEditor = () => {
   const { current } = useEditContext();
+  const { tags } = useFeatureEditData();
   const [parents, setParents] = useState([]);
   const theme = useTheme();
   const handleClick = useGetHandleClick();
+
+  const getSectionName = () => {
+    const isClimbingCrag = tags.climbing === 'crag';
+    const isClimbingRoute = getIsClimbingRoute(tags);
+    if (isClimbingCrag) {
+      return t('editdialog.climbing_areas');
+    }
+    if (isClimbingRoute) {
+      return t('editdialog.climbing_crags');
+    }
+    return t('editdialog.parents');
+  };
 
   useEffect(() => {
     (async () => {
@@ -49,7 +66,7 @@ export const ParentsEditor = () => {
         id="panel1-header"
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">{t('editdialog.parents')}</Typography>
+          <Typography variant="button">{getSectionName()}</Typography>
           <Chip size="small" label={parents.length} />
         </Stack>
       </AccordionSummary>

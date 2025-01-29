@@ -15,13 +15,23 @@ import { FeatureRow } from './FeatureRow';
 import { t } from '../../../../services/intl';
 import { useGetHandleClick } from './helpers';
 import { AddMemberForm } from './AddMemberForm';
-import { useEditContext } from '../EditContext';
 
 export const MembersEditor = () => {
   const { members, tags, nodeLonLat } = useFeatureEditData();
-  const { current } = useEditContext();
   const theme = useTheme();
   const handleClick = useGetHandleClick();
+  const isClimbingCrag = tags.climbing === 'crag';
+
+  const getSectionName = () => {
+    const isClimbingArea = tags.climbing === 'area';
+    if (isClimbingArea) {
+      return t('editdialog.climbing_crags');
+    }
+    if (isClimbingCrag) {
+      return t('editdialog.climbing_routes');
+    }
+    return t('editdialog.members');
+  };
 
   const AccordionComponent = ({
     children,
@@ -37,7 +47,7 @@ export const MembersEditor = () => {
         id="panel1-header"
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">{t('editdialog.members')}</Typography>
+          <Typography variant="button">{getSectionName()}</Typography>
           {membersLength && <Chip size="small" label={membersLength} />}
         </Stack>
       </AccordionSummary>
@@ -56,7 +66,6 @@ export const MembersEditor = () => {
     </Accordion>
   );
 
-  const isClimbingCrag = tags.climbing === 'crag';
   const selectedPresetKey = isClimbingCrag
     ? 'climbing/route_bottom'
     : undefined;

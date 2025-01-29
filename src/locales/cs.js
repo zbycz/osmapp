@@ -199,11 +199,16 @@ export default {
         <a href="https://wiki.openstreetmap.org/wiki/Cs:Map_Features" target="_blank">přehled všech tagů v OpenStreetMap</a>.`,
   'editdialog.save_refused': 'Změny se nepodařilo uložit.',
   'editdialog.parents': 'Nadřazené relace',
+  'editdialog.climbing_areas': 'Lezecké oblasti',
+  'editdialog.climbing_crags': 'Lezecké sektory',
+  'editdialog.climbing_routes': 'Lezecké cesty',
   'editdialog.members': 'Členové',
   'editdialog.members.name': 'Název',
   'editdialog.members.add_member': 'Přidat člena',
+  'editdialog.members.add_climbing_route': 'Přidat lezeckou cestu',
   'editdialog.members.confirm': 'Potvrdit',
   'editdialog.members.convert_description': 'Pro přidání členů, prosím, změňte uzel na relaci.',
+  'editdialog.members.climbing_crag_convert_description': 'Pro přidání lezeckých cest, prosím, změňte uzel na relaci.',
   'editdialog.members.convert_button': 'Změnit na relaci',
   'editdialog.location_change_current_item': 'Upravit',
 
@@ -224,6 +229,7 @@ export default {
   'editdialog.preset_select.edit_button': 'Upravit',
 
   'tags.name': 'Název',
+  'tags.description': 'Popis',
   'tags.website': 'Web',
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Otevírací doba',
@@ -260,6 +266,10 @@ export default {
 
   'climbing_grade_table.title': 'Tabulka lezeckých obtížností',
   'climbing_grade_table.show': 'Zobrazit',
+
+  'member_features.subitems': 'Položky',
+  'member_features.climbing': 'Lezecké cesty',
+  'member_features.routes': 'Cesty',
 
   'sharedialog.link': 'Odkaz',
   'sharedialog.shortened_link': 'Zkrácený odkaz',
