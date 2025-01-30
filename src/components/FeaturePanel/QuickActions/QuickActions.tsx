@@ -22,7 +22,7 @@ const Wrapper = styled.div`
 const Container = styled.div`
   width: max-content;
   display: flex;
-  gap: 6px;
+  gap: 8px;
 `;
 
 export const QuickActions = () => (
@@ -36,8 +36,8 @@ export const QuickActions = () => (
             Router.push('/directions');
           }}
         />
-        <ShareButton />
         <StarButton />
+        <ShareButton />
       </Container>
     </Wrapper>
   </>

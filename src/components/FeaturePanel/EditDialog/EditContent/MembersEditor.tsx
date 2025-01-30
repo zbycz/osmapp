@@ -50,7 +50,9 @@ export const MembersEditor = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center">
           <Typography variant="button">{getSectionName()}</Typography>
-          {membersLength && <Chip size="small" label={membersLength} />}
+          {membersLength && (
+            <Chip size="small" label={membersLength} variant="outlined" />
+          )}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>

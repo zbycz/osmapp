@@ -41,7 +41,7 @@ export const ShareDialog = ({ open, onClose }: Props) => {
         <CloseButton onClose={onClose} />
         {t('featurepanel.share_button')}: {label}
       </DialogTitle>
-      <DialogContent sx={isMobileMode ? undefined : { minWidth: 420 }}>
+      <DialogContent sx={isMobileMode ? undefined : { minWidth: 480 }}>
         <LinkSection />
         <CoordinateSection />
         <OpenInSection />

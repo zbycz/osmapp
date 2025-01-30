@@ -49,9 +49,9 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
   vertical-align: top;
   overflow: hidden;
 
-  margin-right: 8px;
+  margin-right: 12px;
   &:first-of-type {
-    margin-left: 8px;
+    margin-left: 16px;
   }
 
   ${({ onClick }) => onClick && `cursor: pointer;`}

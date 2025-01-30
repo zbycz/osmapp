@@ -1,13 +1,12 @@
 import { ClimbingGuideInfo } from './ClimbingGuideInfo';
-import { useFeatureContext } from '../../utils/FeatureContext';
-import { climbingTagValues } from './utils/climbingTagValues';
+import { PROJECT_ID } from '../../../services/project';
+import { useMobileMode } from '../../helpers';
 
 export const FeaturePanelClimbingGuideInfo = () => {
-  const { feature } = useFeatureContext();
+  const isOpenClimbing = PROJECT_ID === 'openclimbing';
+  const isMobileMode = useMobileMode();
 
-  const isClimbing = climbingTagValues.includes(feature.tags.climbing);
-
-  if (!isClimbing) {
+  if (!isOpenClimbing || isMobileMode) {
     return null;
   }
 

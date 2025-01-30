@@ -14,7 +14,7 @@ export const Table = styled.table`
 
     @media ${isDesktopResolution} {
       &:hover .show-on-hover {
-        display: block !important;
+        display: flex !important;
       }
     }
   }
