@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { IconButton } from '@mui/material';
+import { IconButton, Tooltip } from '@mui/material';
 import EditIcon from '@mui/icons-material/Edit';
 import React from 'react';
 import { t } from '../../../services/intl';
@@ -12,6 +12,12 @@ const StyledIconButton = styled(IconButton)`
   right: 1px;
   margin-top: -3px !important;
   display: none !important;
+  background: ${({ theme }) => theme.palette.background.paper};
+  border: solid 2px ${({ theme }) => theme.palette.divider};
+  border-radius: 50%;
+  &:hover {
+    background: ${({ theme }) => theme.palette.background.default};
+  }
 
   svg {
     /* width: 16px;
@@ -29,15 +35,14 @@ export const InlineEditButton = ({ k }: { k: string }) => {
   }
 
   return (
-    <StyledIconButton
-      className="show-on-hover"
-      onClick={() => openWithTag(k)}
-      size="small"
-    >
-      <EditIcon
-        fontSize="small"
-        titleAccess={t('featurepanel.inline_edit_title')}
-      />
-    </StyledIconButton>
+    <Tooltip title={t('featurepanel.inline_edit_title')}>
+      <StyledIconButton
+        className="show-on-hover"
+        onClick={() => openWithTag(k)}
+        size="small"
+      >
+        <EditIcon fontSize="small" />
+      </StyledIconButton>
+    </Tooltip>
   );
 };

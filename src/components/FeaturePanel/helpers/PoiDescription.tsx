@@ -4,21 +4,15 @@ import { getHumanPoiType } from '../../../helpers/featureLabel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import Maki from '../../utils/Maki';
 import { useUserThemeContext } from '../../../helpers/theme';
+import { Typography } from '@mui/material';
 
 const PoiType = styled.div<{ $isSkeleton: Boolean }>`
-  color: ${({ theme }) => theme.palette.secondary.main};
-
-  font-size: 13px;
   position: relative;
 
   img {
     position: relative;
     top: -1px;
     left: 1px;
-  }
-
-  span {
-    ${({ $isSkeleton }) => $isSkeleton && 'opacity: 0.4;'}
   }
 `;
 
@@ -34,9 +28,11 @@ export const PoiDescription = () => {
         ico={properties.class}
         invert={currentTheme === 'dark'}
         middle
-        style={{ opacity: '0.4' }}
+        style={{ opacity: '0.3' }}
       />
-      <span>{poiType}</span>
+      <Typography variant="caption" color="secondary">
+        {poiType}
+      </Typography>
     </PoiType>
   );
 };

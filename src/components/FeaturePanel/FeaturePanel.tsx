@@ -95,9 +95,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
         <Flex>
           {!skeleton && (
             <>
-              <PanelSidePadding>
-                <CragsInArea />
-              </PanelSidePadding>
+              <CragsInArea />
 
               <Box mb={2}>
                 <FeatureImages />

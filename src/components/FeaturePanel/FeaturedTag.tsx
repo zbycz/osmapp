@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 
   @media ${isDesktopResolution} {
     &:hover .show-on-hover {
-      display: block !important;
+      display: flex !important;
     }
   }
 `;

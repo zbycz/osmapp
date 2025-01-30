@@ -119,5 +119,5 @@ export const PanelFooterWrapper = styled.div`
 `;
 
 export const PanelSidePadding = styled.div`
-  padding: 0 12px;
+  padding: 0 16px;
 `;

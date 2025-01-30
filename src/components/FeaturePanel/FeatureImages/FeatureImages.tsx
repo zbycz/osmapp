@@ -6,6 +6,9 @@ import { useLoadImages } from './useLoadImages';
 import { NoImage } from './NoImage';
 import { HEIGHT, ImageSkeleton } from './helpers';
 import { naturalSort } from '../Climbing/utils/array';
+import { PROJECT_ID } from '../../../services/project';
+
+const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -17,7 +20,7 @@ const StyledScrollbars = styled(Scrollbars)`
   width: 100%;
   height: 100%;
   white-space: nowrap;
-  text-align: center; // one image centering
+  ${!isOpenClimbing && `text-align: center;`} // one image centering
 
   overflow-y: hidden;
   overflow-x: auto;

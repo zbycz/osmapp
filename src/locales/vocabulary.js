@@ -149,8 +149,8 @@ export default {
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
-  'featurepanel.favorites_save_button': 'Save to favorites',
-  'featurepanel.favorites_unsave_button': 'Remove from favorites',
+  'featurepanel.favorites_save_button': 'Save',
+  'featurepanel.favorites_unsave_button': 'Saved',
   'featurepanel.directions_button': 'Directions',
   'featurepanel.error': 'Error __code__ while fetching feature from OpenStreetMap',
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',
@@ -162,7 +162,7 @@ export default {
   'featurepanel.all_tags_heading': 'All tags',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.note_button': 'Suggest an edit',
-  'featurepanel.edit_button': 'Edit details',
+  'featurepanel.edit_button': 'Edit place',
   'featurepanel.add_place_button': 'Add a place',
   'featurepanel.undelete_button': 'Un-delete',
   'featurepanel.feature_description_nonosm': 'Map feature __type__',
@@ -179,6 +179,7 @@ export default {
   'featurepanel.footer_title': 'Other info',
   'featurepanel.climbing_sectors': 'Climbing sectors',
   'featurepanel.climbing_sectors_in': 'in',
+  'featurepanel.routes': 'routes',
 
   'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
@@ -222,7 +223,7 @@ export default {
   'editdialog.location_placeholder': 'eg. across the street',
   'editdialog.location_editor_to_be_added': 'The position cannot be edited here yet, you can do so in the <a href="__link__">iD editor</a>.',
   'editdialog.place_cancelled': 'Permanently closed (delete)',
-  'editdialog.comment': 'Comment (optional)',
+  'editdialog.comment': 'Comment on your changes (optional)',
   'editdialog.comment_placeholder': 'Note, link to source, etc.',
   'editdialog.info_edit': `Your edit will be immediately saved to the OpenStreetMap. Please,
          enter only information from your own or verified sources. It is prohibited
