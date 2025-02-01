@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { refresh } from '../../../src/server/climbing-tiles/refresh';
+import { refreshClimbingTiles } from '../../../src/server/climbing-tiles/refreshClimbingTiles';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
@@ -14,7 +14,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       res.write(line + '\n');
     };
 
-    await refresh(writeCallback);
+    await refreshClimbingTiles(writeCallback);
 
     res.end();
   } catch (err) {

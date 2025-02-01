@@ -182,7 +182,7 @@ const getNewRecords = (data: OsmResponse) => {
   return records;
 };
 
-export const refresh = async (log: (line: string) => void) => {
+export const refreshClimbingTiles = async (log: (line: string) => void) => {
   const client = new Client({
     user: 'tvgiad',
     password: 'xau_E0h76BAWwiiGCOqEYZsRoCUQqXEQ3jpM',
