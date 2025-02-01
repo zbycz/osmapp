@@ -1,8 +1,7 @@
 import { useToggleState } from '../helpers';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { getFullOsmappLink } from '../../services/helpers';
 import { PanelFooterWrapper, PanelSidePadding } from '../utils/PanelHelpers';
-import { FeatureDescription } from './FeatureDescription';
+import { FeatureDescription, FromOsm } from './FeatureDescription';
 import Coordinates from './Coordinates';
 import { t } from '../../services/intl';
 import { ObjectsAround } from './ObjectsAround';
@@ -14,7 +13,8 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { NwrIcon } from './NwrIcon';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 type Props = {
   advanced: boolean;
@@ -41,15 +41,15 @@ export const FeaturePanelFooter = ({
 
   return (
     <Accordion disableGutters elevation={0} square onClick={onClick}>
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+      <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
         <Typography variant="caption">
-          {t('featurepanel.footer_title')}
+          <FeatureDescription />
         </Typography>
       </AccordionSummary>
       <AccordionDetails>
         <PanelFooterWrapper>
           <PanelSidePadding>
-            <FeatureDescription />
+            {feature.point ? null : <FromOsm />}
             <Box mt={3} mb={1}>
               <Typography color="secondary">
                 <label>

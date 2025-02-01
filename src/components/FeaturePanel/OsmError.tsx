@@ -47,7 +47,11 @@ export const OsmError = () => {
     );
   }
 
-  if (Object.keys(feature.tags).length === 0 && !feature.point) {
+  if (
+    Object.keys(feature.tags).length === 0 &&
+    !feature.point &&
+    !feature.skeleton
+  ) {
     return (
       <Alert variant="outlined" severity="info" sx={{ mb: 2 }}>
         {t('featurepanel.info_no_tags')}
