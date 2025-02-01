@@ -52,22 +52,24 @@ const Container = styled.div<{ isStandalone: boolean }>`
   ${({ isStandalone }) => isStandalone && 'padding-bottom: 8px;'}
 `;
 
-const HeadingContainer = styled.div`
-  margin: 0 0 12px 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  position: relative;
-`;
-
 const HeadingsWrapper = styled.div`
+  margin: 0 0 12px 0;
+  position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
 `;
 
-const Headings = ({ onMouseEnter, onMouseLeave, isHovered }) => {
+const Headings = () => {
+  const [isHovered, setIsHovered] = React.useState(false);
+
+  const onMouseEnter = () => {
+    setIsHovered(true);
+  };
+  const onMouseLeave = () => {
+    setIsHovered(false);
+  };
+
   const { feature } = useFeatureContext();
   const label = getLabel(feature);
   const secondaryLabel = getSecondaryLabel(feature);
@@ -85,7 +87,7 @@ const Headings = ({ onMouseEnter, onMouseLeave, isHovered }) => {
 };
 
 const Heading = styled.h1<{ $deleted: boolean }>`
-  font-size: 46px;
+  font-size: 36px;
   line-height: 1.2;
   ${isOpenClimbing &&
   `
@@ -112,29 +114,10 @@ export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
   const isStandalone = useMediaQuery('(display-mode: standalone)');
   const { feature } = useFeatureContext();
 
-  const [isHovered, setIsHovered] = React.useState(false);
-
-  const onMouseEnter = () => {
-    setIsHovered(true);
-  };
-  const onMouseLeave = () => {
-    setIsHovered(false);
-  };
-
   return (
     <Container ref={ref} isStandalone={isStandalone}>
       <PoiDescription />
-      <HeadingContainer>
-        <Headings
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          isHovered={isHovered}
-        />
-
-        <Box mt={1.1}>
-          <NwrIcon osmType={feature.osmMeta.type} />
-        </Box>
-      </HeadingContainer>
+      <Headings />
 
       <QuickActions />
     </Container>

@@ -33,6 +33,7 @@ import { climbingTagValues } from './Climbing/utils/climbingTagValues';
 
 const Flex = styled.div`
   flex: 1;
+  margin-bottom: 40px;
 `;
 
 type FeaturePanelProps = {
