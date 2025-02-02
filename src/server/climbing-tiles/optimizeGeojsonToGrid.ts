@@ -1,5 +1,6 @@
 import { BBox, FeatureCollection } from 'geojson';
 
+// rows or columns count
 const COUNT = 500;
 
 export const optimizeGeojsonToGrid = (

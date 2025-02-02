@@ -3,58 +3,55 @@ import { tileToBBOX } from './tileToBBOX';
 import { Tile } from '../../types';
 import { optimizeGeojsonToGrid } from './optimizeGeojsonToGrid';
 
-const TILES_CONFIG = {
-  0: { optimized: true, routes: false },
-  6: { optimized: true, routes: false },
-  9: { optimized: false, routes: false },
-  12: { optimized: false, routes: true },
+const logCacheMiss = (duration: number, count: number) => {
+  console.log(`climbing_tiles_cache MISS ${duration}ms ${count}`); //eslint-disable-line no-console
+};
+const logCacheHit = (start: number) => {
+  const duration = Math.round(performance.now() - start);
+  console.log(`climbing_tiles_cache HIT ${duration}ms`); //eslint-disable-line no-console
 };
 
+const ZOOM_LEVELS = [0, 6, 9, 12];
+
 export const getClimbingTile = async ({ z, x, y }: Tile) => {
-  if (z > 12) {
-    throw new Error('Zoom 12 is maximum (with all details)');
-  }
-  const isDetails = z == 12;
-
   const start = performance.now();
-
   const client = await getClient();
+  const isOptimized = z >= 9;
+  const hasRoutes = z == 12;
+  if (!ZOOM_LEVELS.includes(z)) {
+    throw new Error('Zoom level not available');
+  }
 
-  const tile = await client.query(
+  const cache = await client.query(
     `SELECT tile_geojson FROM climbing_tiles_cache WHERE z = ${z} AND x = ${x} AND y = ${y}`,
   );
-  if (tile.rowCount > 0) {
-    console.log(
-      'climbing_tiles_cache HIT',
-      Math.round(performance.now() - start) + 'ms',
-    );
-    return tile.rows[0].tile_geojson;
+  if (cache.rowCount > 0) {
+    logCacheHit(start);
+    return cache.rows[0].tile_geojson as string;
   }
 
   const bbox = tileToBBOX({ z, x, y });
   const bboxCondition = `lon >= ${bbox[0]} AND lon <= ${bbox[2]} AND lat >= ${bbox[1]} AND lat <= ${bbox[3]}`;
-  const query = isDetails
+  const query = hasRoutes
     ? `SELECT geojson FROM climbing_features WHERE type IN ('group', 'route') AND ${bboxCondition}`
     : `SELECT geojson FROM climbing_features WHERE type = 'group' AND ${bboxCondition}`;
   const result = await client.query(query);
-  const geojson = {
+  const allGeojson: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
     features: result.rows.map((record) => record.geojson),
-  } as GeoJSON.FeatureCollection;
+  };
+  const geojson = isOptimized
+    ? optimizeGeojsonToGrid(allGeojson, bbox)
+    : allGeojson;
 
-  console.log(
-    'climbing_tiles_cache MISS',
-    Math.round(performance.now() - start) + 'ms',
-    result.rows.length,
-  );
+  const duration = Math.round(performance.now() - start);
+  logCacheMiss(duration, geojson.features.length);
 
-  const optimizedGeojson =
-    z >= 9 ? geojson : optimizeGeojsonToGrid(geojson, bbox);
-
+  // intentionally not awaited to make quicker return of data
   client.query(
-    `INSERT INTO climbing_tiles_cache VALUES (${z}, ${x}, ${y}, $1) ON CONFLICT (z, x, y) DO NOTHING`,
-    [optimizedGeojson],
+    `INSERT INTO climbing_tiles_cache VALUES (${z}, ${x}, ${y}, $1, $2, $3) ON CONFLICT (z, x, y) DO NOTHING`,
+    [geojson, duration, geojson.features.length],
   );
 
-  return JSON.stringify(optimizedGeojson);
+  return JSON.stringify(geojson);
 };
