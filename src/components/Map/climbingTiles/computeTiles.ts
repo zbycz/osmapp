@@ -10,8 +10,7 @@ import { publishDbgObject } from '../../../utils';
 -90 +----------------+
   = y = latitude
 * */
-
-const getTile = (z: number, { lng, lat }: LngLat) => {
+const getTile = (z: number, { lng, lat }: LngLat): Tile => {
   const xNorm = (lng + 180) / 360;
   const x = Math.floor(xNorm * Math.pow(2, z));
 
@@ -22,7 +21,7 @@ const getTile = (z: number, { lng, lat }: LngLat) => {
   const maxTileMinusOne = yNormBounded === 1 ? 1 : 0;
   const y = Math.floor(yNormBounded * Math.pow(2, z)) - maxTileMinusOne;
 
-  // TODO this won't work on wrapped coordinates around +-180°
+  // Note: this won't work on wrapped coordinates around +-180° (but we use projection:globe, so it doesn't happen)
 
   return { z, x, y };
 };
@@ -35,7 +34,7 @@ export const computeTiles = (
   const nwTile = getTile(z, northWest);
   const seTile = getTile(z, southEast);
 
-  const tiles = [];
+  const tiles: Tile[] = [];
   for (let x = nwTile.x; x <= seTile.x; x++) {
     for (let y = nwTile.y; y <= seTile.y; y++) {
       tiles.push({ z, x, y });

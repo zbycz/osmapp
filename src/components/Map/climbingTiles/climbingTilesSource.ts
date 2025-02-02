@@ -19,7 +19,7 @@ const getTileJson = async ({ z, x, y }: Tile) => {
 const updateData = async () => {
   const map = getGlobalMap();
   const mapZoom = map.getZoom();
-  const z = mapZoom >= 12 ? 12 : mapZoom >= 9 ? 9 : mapZoom >= 6 ? 6 : 0;
+  const z = mapZoom >= 13 ? 12 : mapZoom >= 10 ? 9 : mapZoom >= 7 ? 6 : 0;
 
   const bounds = map.getBounds();
   const northWest = bounds.getNorthWest();
@@ -29,7 +29,7 @@ const updateData = async () => {
 
   const features = [];
   for (const tile of tiles) {
-    const tileFeatures = await getTileJson(tile); // TODO consider showing results after each tile
+    const tileFeatures = await getTileJson(tile); // TODO consider showing results after each tile is loaded
     features.push(...tileFeatures);
   }
 
@@ -51,5 +51,14 @@ export const addClimbingTilesSource = (style: StyleSpecification) => {
     map.on('load', updateData);
     map.on('moveend', updateData);
     eventsAdded = true;
+  }
+};
+
+export const removeClimbingTilesSource = () => {
+  if (eventsAdded) {
+    const map = getGlobalMap();
+    map.off('load', updateData);
+    map.off('moveend', updateData);
+    eventsAdded = false;
   }
 };
