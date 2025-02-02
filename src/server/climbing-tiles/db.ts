@@ -8,7 +8,7 @@ export async function getClient(): Promise<Client> {
   if (!global.db.pool) {
     const client = new Client({
       user: 'tvgiad',
-      password: 'xau_E0h76BAWwiiGCOqEYZsRoCUQqXEQ3jpM',
+      password: process.env.XATA_PASSWORD,
       host: 'us-east-1.sql.xata.sh',
       port: 5432,
       database: 'db_with_direct_access:main',

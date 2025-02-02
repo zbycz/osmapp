@@ -59,7 +59,7 @@ const fetchFromOverpass = async () => {
   return data;
 };
 
-type Records = any; //Partial<EditableData<ClimbingTilesRecord>>[];
+type Records = any; //TODO Partial<EditableData<ClimbingTilesRecord>>[];
 
 const recordsFactory = () => {
   const records: Records = [];
@@ -78,7 +78,6 @@ const recordsFactory = () => {
       count: feature.properties.osmappRouteCount || 0,
       lon,
       lat,
-      // geohash: encodeBase32(lat, lon, 2),
       geojson: prepareGeojson(type, feature),
     });
   };

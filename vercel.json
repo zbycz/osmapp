@@ -1,8 +1,8 @@
 {
   "functions": {
     "pages/api/climbing-tiles/refresh.ts": {
-      "memory": 3009,
-      "maxDuration": 300
+      "memory": 1200,
+      "maxDuration": 200
     }
   }
 }
