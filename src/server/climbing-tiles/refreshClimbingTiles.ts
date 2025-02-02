@@ -7,7 +7,7 @@ import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
 import { LineString, LonLat, Point } from '../../services/types';
 import format from 'pg-format';
-import { getClient } from './db';
+import { closeClient, getClient } from './db';
 
 const centerGeometry = (feature: GeojsonFeature): GeojsonFeature<Point> => ({
   ...feature,
@@ -214,7 +214,7 @@ export const refreshClimbingTiles = async () => {
   log(`SQL Query length: ${query.length} chars`);
 
   await client.query(query);
-  await client.end();
+  await closeClient(client);
 
   log('Done.');
   log(`Duration: ${Math.round(performance.now() - start)} ms`);

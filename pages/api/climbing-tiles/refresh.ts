@@ -5,7 +5,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const log = await refreshClimbingTiles();
 
-    res.status(200).json(log);
+    res.status(200).send(log);
   } catch (err) {
     console.error(err); // eslint-disable-line no-console
     res.status(err.code ?? 400).send(String(err));

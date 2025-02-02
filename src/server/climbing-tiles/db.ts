@@ -11,7 +11,7 @@ export async function getClient(): Promise<Client> {
       password: process.env.XATA_PASSWORD,
       host: 'us-east-1.sql.xata.sh',
       port: 5432,
-      database: 'db_with_direct_access:main',
+      database: 'osmapp_db:main',
       ssl: {
         rejectUnauthorized: false,
       },
@@ -22,4 +22,8 @@ export async function getClient(): Promise<Client> {
     global.db.pool = client;
   }
   return global.db.pool;
+}
+
+export async function closeClient(client: Client): Promise<void> {
+  await client.end();
 }

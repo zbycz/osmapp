@@ -55,7 +55,7 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
 
   // intentionally not awaited to make quicker return of data
   client.query(
-    `INSERT INTO climbing_tiles_cache VALUES ($1, $2, $3, $4) ON CONFLICT (z, x, y) DO NOTHING`,
+    `INSERT INTO climbing_tiles_cache VALUES ($1, $2, $3, $4) ON CONFLICT (zxy) DO NOTHING`,
     [cacheKey, geojson, duration, geojson.features.length],
   );
 
