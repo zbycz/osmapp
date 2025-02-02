@@ -10,10 +10,6 @@ import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { getRasterStyle } from '../styles/rasterStyle';
 import { DEFAULT_MAP } from '../../../config.mjs';
 import { makinaAfricaStyle } from '../styles/makinaAfricaStyle';
-import {
-  CLIMBING_SPRITE,
-  climbingLayers,
-} from '../climbingTiles/climbingLayers';
 import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { fetchCrags } from '../../../services/fetchCrags';
 import { intl } from '../../../services/intl';
@@ -23,6 +19,10 @@ import { layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
+import {
+  CLIMBING_SPRITE,
+  climbingLayers,
+} from '../styles/layers/climbingLayers';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -64,18 +64,40 @@ const addRasterOverlay = (
   // TODO maxzoom 19 only for snow overlay
 };
 
+const addClimbingOverlay = (style: StyleSpecification, map: Map) => {
+  style.sources.climbing = EMPTY_GEOJSON_SOURCE;
+  style.layers.push(...climbingLayers); // must be also in `layersWithOsmId` because of hover effect
+  style.sprite = [...OSMAPP_SPRITE, CLIMBING_SPRITE];
+
+  fetchCrags().then(
+    (geojson) => {
+      const geojsonSource = map.getSource<GeoJSONSource>('climbing');
+      geojsonSource?.setData(geojson); // TODO can be undefined at first map render
+    },
+    (error) => {
+      console.warn('Climbing Layer failed to fetch.', error); // eslint-disable-line no-console
+    },
+  );
+};
+
 const addOverlaysToStyle = (
   map: Map,
   style: StyleSpecification,
   overlays: string[],
   currentTheme: Theme,
 ) => {
+  // removeClimbingTilesSource(); // TODO call when climbing removed
+
   overlays
     .filter((key: string) => osmappLayers[key]?.type === 'overlay')
     .forEach((key: string) => {
       switch (key) {
         case 'climbing':
-          addClimbingTilesSource(style);
+          if (process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES) {
+            addClimbingTilesSource(style);
+          } else {
+            addClimbingOverlay(style, map); // TODO remove this when climbingTiles are tested
+          }
           break;
 
         case 'indoor':
