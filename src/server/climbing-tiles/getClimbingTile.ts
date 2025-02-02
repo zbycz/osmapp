@@ -78,11 +78,11 @@ export const getClimbingTile = async ([z, x, y]: TileNumber) => {
   const client = await getClient();
 
   const tile = await client.query(
-    `SELECT tile_geojson FROM tiles_cache WHERE z = ${z} AND x = ${x} AND y = ${y}`,
+    `SELECT tile_geojson FROM climbing_tiles_cache WHERE z = ${z} AND x = ${x} AND y = ${y}`,
   );
   if (tile.rowCount > 0) {
     console.log(
-      'tiles_cache HIT',
+      'climbing_tiles_cache HIT',
       Math.round(performance.now() - start) + 'ms',
     );
     return tile.rows[0].tile_geojson;
@@ -91,8 +91,8 @@ export const getClimbingTile = async ([z, x, y]: TileNumber) => {
   const bbox = tileToBBOX([z, x, y]);
   const bboxCondition = `lon >= ${bbox[0]} AND lon <= ${bbox[2]} AND lat >= ${bbox[1]} AND lat <= ${bbox[3]}`;
   const query = isDetails
-    ? `SELECT geojson FROM climbing_tiles WHERE type IN ('group', 'route') AND ${bboxCondition}`
-    : `SELECT geojson FROM climbing_tiles WHERE type = 'group' AND ${bboxCondition}`;
+    ? `SELECT geojson FROM climbing_features WHERE type IN ('group', 'route') AND ${bboxCondition}`
+    : `SELECT geojson FROM climbing_features WHERE type = 'group' AND ${bboxCondition}`;
   const result = await client.query(query);
   const geojson = {
     type: 'FeatureCollection',
@@ -100,7 +100,7 @@ export const getClimbingTile = async ([z, x, y]: TileNumber) => {
   } as GeoJSON.FeatureCollection;
 
   console.log(
-    'tiles_cache MISS',
+    'climbing_tiles_cache MISS',
     Math.round(performance.now() - start) + 'ms',
     result.rows.length,
   );
@@ -108,7 +108,7 @@ export const getClimbingTile = async ([z, x, y]: TileNumber) => {
   const optimizedGeojson = z >= 9 ? geojson : optimizeGeojson(geojson, bbox);
 
   client.query(
-    `INSERT INTO tiles_cache VALUES (${z}, ${x}, ${y}, $1) ON CONFLICT (z, x, y) DO NOTHING`,
+    `INSERT INTO climbing_tiles_cache VALUES (${z}, ${x}, ${y}, $1) ON CONFLICT (z, x, y) DO NOTHING`,
     [optimizedGeojson],
   );
 

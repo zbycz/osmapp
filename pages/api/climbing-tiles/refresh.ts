@@ -3,20 +3,9 @@ import { refreshClimbingTiles } from '../../../src/server/climbing-tiles/refresh
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    res.writeHead(200, {
-      Connection: 'keep-alive',
-      'Content-Type': 'text/plain; charset=utf-8',
-      'Transfer-Encoding': 'chunked',
-    });
+    const log = await refreshClimbingTiles();
 
-    const writeCallback = (line: string) => {
-      console.log(line); // eslint-disable-line no-console
-      res.write(line + '\n');
-    };
-
-    await refreshClimbingTiles(writeCallback);
-
-    res.end();
+    res.status(200).json(log);
   } catch (err) {
     console.error(err); // eslint-disable-line no-console
     res.status(err.code ?? 400).send(String(err));

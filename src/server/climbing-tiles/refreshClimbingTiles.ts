@@ -6,9 +6,8 @@ import {
 import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
 import { LineString, LonLat, Point } from '../../services/types';
-import { Client } from 'pg';
 import format from 'pg-format';
-// import { encodeBase32, decodeBase32 } from 'geohashing';
+import { getClient } from './db';
 
 const centerGeometry = (feature: GeojsonFeature): GeojsonFeature<Point> => ({
   ...feature,
@@ -182,28 +181,22 @@ const getNewRecords = (data: OsmResponse) => {
   return records;
 };
 
-export const refreshClimbingTiles = async (log: (line: string) => void) => {
-  const client = new Client({
-    user: 'tvgiad',
-    password: 'xau_E0h76BAWwiiGCOqEYZsRoCUQqXEQ3jpM',
-    host: 'us-east-1.sql.xata.sh',
-    port: 5432,
-    database: 'db_with_direct_access:main',
-    ssl: {
-      rejectUnauthorized: false,
-    },
-  });
+const buildLogFactory = () => {
+  const buildLog: string[] = [];
+  const log = (message: string) => {
+    buildLog.push(message);
+    console.log(message); //eslint-disable-line no-console
+  };
+  log('Starting...');
+  return { buildLog, log };
+};
 
-  await client.connect();
-
+export const refreshClimbingTiles = async () => {
+  const { buildLog, log } = buildLogFactory();
   const start = performance.now();
+  const client = await getClient();
 
-  log('Fetching data from Overpass...');
   const data = await fetchFromOverpass();
-  // fs.writeFileSync('../overpass.json', JSON.stringify(data));
-  // const data = JSON.parse(
-  //   fs.readFileSync('../overpass.json').toString(),
-  // ) as OsmResponse;
   log(`Overpass elements: ${data.elements.length}`);
 
   const records = getNewRecords(data); // ~ 16k records
@@ -212,9 +205,10 @@ export const refreshClimbingTiles = async (log: (line: string) => void) => {
   const columns = Object.keys(records[0]);
   const values = records.map((record) => Object.values(record));
   const query = format(
-    `TRUNCATE TABLE climbing_tiles;
-      INSERT INTO climbing_tiles(%I) VALUES %L;
-      TRUNCATE TABLE tiles_cache;`,
+    `TRUNCATE TABLE climbing_features;
+      INSERT INTO climbing_features(%I) VALUES %L;
+      TRUNCATE TABLE climbing_tiles_cache;
+      `,
     columns,
     values,
   );
@@ -225,4 +219,6 @@ export const refreshClimbingTiles = async (log: (line: string) => void) => {
 
   log('Done.');
   log(`Duration: ${Math.round(performance.now() - start)} ms`);
+
+  return buildLog.join('\n');
 };
