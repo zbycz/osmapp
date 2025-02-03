@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import EditIcon from '@mui/icons-material/Edit';
-import { Box, IconButton, Stack, Tooltip, useMediaQuery } from '@mui/material';
+import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 import { PoiDescription } from './helpers/PoiDescription';
 import { getLabel, getSecondaryLabel } from '../../helpers/featureLabel';
@@ -9,15 +9,8 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
 import { isMobileDevice } from '../helpers';
 import { QuickActions } from './QuickActions/QuickActions';
-import { NwrIcon } from './NwrIcon';
 import { PROJECT_ID } from '../../services/project';
-
-const isOpenClimbing = PROJECT_ID === 'openclimbing';
-
-const StyledEditButton = styled(IconButton)`
-  position: relative;
-  top: 3px;
-`;
+import { css } from '@emotion/react';
 
 const EditNameContainer = styled.div`
   position: absolute;
@@ -27,6 +20,7 @@ const EditNameContainer = styled.div`
   bottom: 0;
   align-items: center;
   display: flex;
+  margin-top: 3px;
   background: ${({ theme }) => theme.palette.background.paper};
 `;
 const EditNameButton = () => {
@@ -39,9 +33,9 @@ const EditNameButton = () => {
   return (
     <EditNameContainer>
       <Tooltip title={t('featurepanel.inline_edit_title')}>
-        <StyledEditButton onClick={() => openWithTag('name')} size="small">
+        <IconButton onClick={() => openWithTag('name')} size="small">
           <EditIcon fontSize="small" />
-        </StyledEditButton>
+        </IconButton>
       </Tooltip>
     </EditNameContainer>
   );
@@ -61,6 +55,7 @@ const HeadingsWrapper = styled.div`
 `;
 
 const Headings = () => {
+  const isOpenClimbing = PROJECT_ID === 'openclimbing';
   const [isHovered, setIsHovered] = React.useState(false);
 
   const onMouseEnter = () => {
@@ -75,9 +70,14 @@ const Headings = () => {
   const secondaryLabel = getSecondaryLabel(feature);
   return (
     <HeadingsWrapper onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
-      <Heading $deleted={feature?.deleted}>{label}</Heading>
+      <Heading $deleted={feature?.deleted} $isOpenClimbing={isOpenClimbing}>
+        {label}
+      </Heading>
       {secondaryLabel && (
-        <SecondaryHeading $deleted={feature?.deleted}>
+        <SecondaryHeading
+          $deleted={feature?.deleted}
+          $isOpenClimbing={isOpenClimbing}
+        >
           {secondaryLabel}
         </SecondaryHeading>
       )}
@@ -86,25 +86,31 @@ const Headings = () => {
   );
 };
 
-const Heading = styled.h1<{ $deleted: boolean }>`
+const Heading = styled.h1<{ $deleted: boolean; $isOpenClimbing: boolean }>`
   font-size: 36px;
   line-height: 1.2;
-  ${isOpenClimbing &&
-  `
-    font-family: 'Piazzolla', sans-serif;
-    font-weight: 900;
-  `}
+  ${({ $isOpenClimbing }) =>
+    $isOpenClimbing &&
+    css`
+      font-family: 'Piazzolla', sans-serif;
+      font-weight: 900;
+      font-size: 46px;
+    `}
   margin: 0;
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
 `;
-const SecondaryHeading = styled.h2<{ $deleted: boolean }>`
+const SecondaryHeading = styled.h2<{
+  $deleted: boolean;
+  $isOpenClimbing: boolean;
+}>`
   font-size: 24px;
   line-height: 0.98;
-  ${isOpenClimbing &&
-  `
-    font-family: 'Piazzolla', sans-serif;
-    font-weight: 900;
-  `}
+  ${({ $isOpenClimbing }) =>
+    $isOpenClimbing &&
+    css`
+      font-family: 'Piazzolla', sans-serif;
+      font-weight: 900;
+    `}
   margin: 0;
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
 `;
@@ -112,7 +118,6 @@ const SecondaryHeading = styled.h2<{ $deleted: boolean }>`
 export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
   // thw pwa needs space at the bottom
   const isStandalone = useMediaQuery('(display-mode: standalone)');
-  const { feature } = useFeatureContext();
 
   return (
     <Container ref={ref} isStandalone={isStandalone}>
