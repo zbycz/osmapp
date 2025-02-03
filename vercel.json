@@ -4,5 +4,11 @@
       "memory": 1200,
       "maxDuration": 200
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/climbing-tiles/refresh",
+      "schedule": "0 2 * * *"
+    }
+  ]
 }

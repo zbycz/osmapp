@@ -3,6 +3,10 @@ import { refreshClimbingTiles } from '../../../src/server/climbing-tiles/refresh
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    if (!process.env.XATA_PASSWORD) {
+      throw new Error('XATA_PASSWORD must be set');
+    }
+
     const log = await refreshClimbingTiles();
 
     res.status(200).send(log);

@@ -4,6 +4,10 @@ import { Tile } from '../../../src/types';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    if (!process.env.XATA_PASSWORD) {
+      throw new Error('XATA_PASSWORD must be set');
+    }
+
     const tileNumber: Tile = {
       z: Number(req.query.z),
       x: Number(req.query.x),

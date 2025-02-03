@@ -10,6 +10,10 @@ import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { getRasterStyle } from '../styles/rasterStyle';
 import { DEFAULT_MAP } from '../../../config.mjs';
 import { makinaAfricaStyle } from '../styles/makinaAfricaStyle';
+import {
+  CLIMBING_SPRITE,
+  climbingLayers,
+} from '../styles/layers/climbingLayers';
 import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { fetchCrags } from '../../../services/fetchCrags';
 import { intl } from '../../../services/intl';
@@ -19,10 +23,6 @@ import { layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
-import {
-  CLIMBING_SPRITE,
-  climbingLayers,
-} from '../styles/layers/climbingLayers';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -71,7 +71,7 @@ const addClimbingOverlay = (style: StyleSpecification, map: Map) => {
 
   fetchCrags().then(
     (geojson) => {
-      const geojsonSource = map.getSource<GeoJSONSource>('climbing');
+      const geojsonSource = map.getSource('climbing') as GeoJSONSource;
       geojsonSource?.setData(geojson); // TODO can be undefined at first map render
     },
     (error) => {
