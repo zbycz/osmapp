@@ -22,6 +22,7 @@ import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
+import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -85,12 +86,18 @@ const addOverlaysToStyle = (
   overlays: string[],
   currentTheme: Theme,
 ) => {
+  // removeClimbingTilesSource(); // TODO call when climbing removed
+
   overlays
     .filter((key: string) => osmappLayers[key]?.type === 'overlay')
     .forEach((key: string) => {
       switch (key) {
         case 'climbing':
-          addClimbingOverlay(style, map);
+          if (process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES) {
+            addClimbingTilesSource(style);
+          } else {
+            addClimbingOverlay(style, map); // TODO remove this when climbingTiles are tested
+          }
           break;
 
         case 'indoor':
