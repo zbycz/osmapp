@@ -11,7 +11,7 @@ import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
 
-const HOST = 'https://openclimbing.org/';
+const HOST = 'https://osmapp-git-climbing-tiles-4-osm-app-team.vercel.app/';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   const url = `${HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
@@ -30,9 +30,11 @@ const updateData = async () => {
 
   const tiles = computeTiles(z, northWest, southEast);
 
+  const promises = tiles.map((tile) => getTileJson(tile)); // TODO consider showing results after each tile is loaded
+  const data = await Promise.all(promises);
+
   const features = [];
-  for (const tile of tiles) {
-    const tileFeatures = await getTileJson(tile); // TODO consider showing results after each tile is loaded
+  for (const tileFeatures of data) {
     features.push(...tileFeatures);
   }
 
@@ -51,7 +53,7 @@ export const addClimbingTilesSource = (style: StyleSpecification) => {
 
   if (!eventsAdded) {
     const map = getGlobalMap();
-    map.on('style.load', updateData);
+    map.on('load', updateData);
     map.on('moveend', updateData);
     eventsAdded = true;
   }
@@ -60,7 +62,7 @@ export const addClimbingTilesSource = (style: StyleSpecification) => {
 export const removeClimbingTilesSource = () => {
   if (eventsAdded) {
     const map = getGlobalMap();
-    map.off('style.load', updateData);
+    map.off('load', updateData);
     map.off('moveend', updateData);
     eventsAdded = false;
   }
