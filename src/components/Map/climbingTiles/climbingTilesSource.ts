@@ -11,7 +11,9 @@ import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
 
-const HOST = 'https://osmapp-git-climbing-tiles-4-osm-app-team.vercel.app/';
+const HOST = process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL
+  ? '/'
+  : 'https://openclimbing.org/';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   const url = `${HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
