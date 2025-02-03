@@ -11,12 +11,10 @@ import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
 
-const HOST = process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES_LOCAL
-  ? '/'
-  : 'https://openclimbing.org/';
+const HOST = 'https://openclimbing.org/';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
-  const url = `${HOST}/api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
+  const url = `${HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
   const data = await fetchJson(url);
   return data.features || [];
 };
@@ -53,7 +51,7 @@ export const addClimbingTilesSource = (style: StyleSpecification) => {
 
   if (!eventsAdded) {
     const map = getGlobalMap();
-    map.on('load', updateData);
+    map.on('style.load', updateData);
     map.on('moveend', updateData);
     eventsAdded = true;
   }
@@ -62,7 +60,7 @@ export const addClimbingTilesSource = (style: StyleSpecification) => {
 export const removeClimbingTilesSource = () => {
   if (eventsAdded) {
     const map = getGlobalMap();
-    map.off('load', updateData);
+    map.off('style.load', updateData);
     map.off('moveend', updateData);
     eventsAdded = false;
   }
