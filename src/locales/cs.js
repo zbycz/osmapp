@@ -185,8 +185,9 @@ export default {
   'editdialog.location_editor_to_be_added': 'Polohu zde zatím upravit nelze, můžete to provést třeba v <a href="__link__">editoru iD</a>.',
   'editdialog.place_cancelled': 'Místo zrušeno (smazat)',
   'editdialog.comment': 'Poznámka k úpravám (nepovinné)',
+  'editdialog.comment_checkbox': 'Přidat poznámku ke změnám',
   'editdialog.comment_placeholder': 'Odkaz na zdroj informace apod.',
-  'editdialog.info_edit': `Vaše úprava bude ihned uložena do databáze OpenStreetMap. Prosíme,
+  'editdialog.info_edit': `Vaše úprava bude ihned uložena do databáze OpenStreetMap, ale může trvat pár minut než se zobrazí na mapě. Prosíme,
         vkládejte pouze informace z vlastních nebo ověřených zdrojů. Je zakázano
         kopírovat data krytá autorským zákonem (např. Google Maps).
         <a href="https://wiki.openstreetmap.org/wiki/Cs:Jak_mapujeme">Více informací</a>`,
