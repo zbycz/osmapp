@@ -53,14 +53,14 @@ export const getCoordsOption = (inputValue: string): CoordsOption[] => {
   const c1 = Number(c1Str);
   const c2 = Number(c2Str);
   const coords = [
-    [c1, c2],
     [c2, c1],
+    [c1, c2],
   ].filter((c) => isValidCoord(c));
   return coords.map((coord) => ({
     type: 'coords',
     coords: {
       center: coord,
-      label: `${coord[0]}° ${coord[1]}°`,
+      label: `${coord[1]}° ${coord[0]}°`,
       sublabel: t('searchbox.coordinate_subtitle'),
     },
   }));
@@ -71,8 +71,8 @@ export const coordsOptionsSelected = (
   setFeature: Setter<Feature>,
 ) => {
   const newFeature = getCoordsFeature([
-    `${coords.center[1]}`,
     `${coords.center[0]}`,
+    `${coords.center[1]}`,
   ]);
   setFeature(newFeature);
 };
