@@ -78,7 +78,7 @@ const removeUnits = (label: string) => label.replace(unitRegExp, '');
 const addUnits = (label: string, value: string | ReactNode) => {
   if (typeof value !== 'string') return value;
   const unit = label.match(unitRegExp);
-  if (!unit) return value;
+  if (!unit || isNaN(Number(value))) return value;
   if (unit[1] === 'm') return `${value} m`;
   return `${value} (${unit[1]})`;
 };
