@@ -1,0 +1,43 @@
+name: PR Title Check
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  check-title:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check PR title format
+        env:
+          PR_TITLE: '${{ github.event.pull_request.title }}'
+          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
+        run: |
+          if [[ ! "$PR_TITLE" =~ ^([A-Za-z]+:|Revert|v[0-9]) ]]; then
+            COMMENT="⚠️ PR title must follow the format: 'category: description'. Please update your title.
+
+            **Common prefixes:**
+            - \`FeaturePanel\`, or more specifically \`EditDialog\`
+            - \`Map\`, or more specifically \`layers\`
+            - \`SearchBox\`
+            - \`Directions\`
+            - \`general\`
+            - \`locales\`
+
+            <details>
+            <summary>📊 Common prefixes in commit history</summary>
+
+            \`\`\`
+            $(git log --pretty=format:"%s" | awk -F':' '{print $1}' | sort | uniq -c | awk '$1 >= 2' | sort -nr)
+            \`\`\`
+            </details>"
+            echo "FAIL"
+            echo "$COMMENT" | gh pr comment ${{ github.event.pull_request.number }} --body-file -
+            exit 1
+          fi
