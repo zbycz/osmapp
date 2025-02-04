@@ -77,8 +77,8 @@ export default {
 
   'editdialog.add_heading': 'ወደ OpenStreetMap አስገባ',
   'editdialog.undelete_heading': 'ወደ OpenStreetMap በድጋሚ አስገባ',
-  'editdialog.edit_heading': 'አርትእ:',
-  'editdialog.suggest_heading': 'እርማቶች ጠቁም:',
+  'editdialog.edit_heading': 'አርትእ',
+  'editdialog.suggest_heading': 'እርማቶች ጠቁም',
   'editdialog.feature_type_select': 'ዓይነት ምረጥ',
   'editdialog.options_heading': 'አማራጮች',
   'editdialog.cancel_button': 'አቋርጥ',
