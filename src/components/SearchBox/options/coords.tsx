@@ -20,7 +20,7 @@ const olcDecoder = (inputValue: string): LonLat | null => {
 };
 
 const regex =
-  /^(\d{1,3}(?:(?:\.|,)\d+)?)°(?:\s|,|;)+(\d{1,3}(?:(?:\.|,)\d+)?)°/;
+  /^(-?\d{1,3}(?:(?:\.|,)\d+)?)°(?:\s|,|;)+(-?\d{1,3}(?:(?:\.|,)\d+)?)°/;
 
 const isValidCoord = ([lon, lat]: LonLat) => {
   const validLon = lon < 180 && lon > -180;
@@ -69,8 +69,8 @@ export const coordsOptionsSelected = (
   setFeature: Setter<Feature>,
 ) => {
   const newFeature = getCoordsFeature([
-    `${coords.center[0]}`,
     `${coords.center[1]}`,
+    `${coords.center[0]}`,
   ]);
   setFeature(newFeature);
 };

@@ -135,7 +135,7 @@ export default {
   'searchbox.overpass_success': 'Results found: __count__',
   'searchbox.overpass_error': 'Error fetching results. __message__',
   'searchbox.overpass_custom_query': 'custom query',
-  'searchbox.coordinate_subtitle': 'Longitude, Latitude',
+  'searchbox.coordinate_subtitle': 'Latitude, Longitude',
 
   'directions.get_directions': 'Get Directions',
   'directions.add_destination': 'Add destination',
