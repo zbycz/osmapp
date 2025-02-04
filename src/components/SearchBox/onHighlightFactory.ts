@@ -41,6 +41,11 @@ export const onHighlightFactory =
       setPreview({ center });
       return;
     }
+    if (option.type === 'coords') {
+      const { center } = option.coords;
+      setPreview({ center });
+      return;
+    }
 
     if (option.type === 'geocoder' && option.geocoder.geometry?.coordinates) {
       setPreview(getSkeleton(option));

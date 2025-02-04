@@ -18,6 +18,7 @@ import {
   StarOption,
 } from './types';
 import { osmOptionSelected } from './options/openstreetmap';
+import { coordsOptionsSelected } from './options/coords';
 
 const overpassOptionSelected = (
   option: OverpassOption | PresetOption,
@@ -115,5 +116,7 @@ export const onSelectedFactory =
       case 'osm':
         osmOptionSelected(option, router);
         break;
+      case 'coords':
+        coordsOptionsSelected(option, setFeature);
     }
   };

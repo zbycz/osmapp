@@ -68,7 +68,7 @@ type LoaderOption = GenericOption<'loader', null>;
 
 export type CoordsOption = GenericOption<
   'coords',
-  { center: LonLat; label: string }
+  { center: LonLat; label: string; sublabel: string }
 >;
 
 export type OsmOption = GenericOption<
