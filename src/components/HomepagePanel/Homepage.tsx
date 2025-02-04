@@ -24,7 +24,7 @@ import { HomepageOpenClimbing } from './HomepageOpenClimbing';
 
 export const Content = styled.div`
   height: 100%;
-  padding: 20px 2em 0 2em;
+  padding: 20px 1.5em 0 1.5em;
 `;
 const StyledLogoOsmapp = styled(LogoOsmapp)`
   width: 41%;

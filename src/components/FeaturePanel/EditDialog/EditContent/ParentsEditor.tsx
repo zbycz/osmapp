@@ -69,7 +69,7 @@ export const ParentsEditor = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center">
           <Typography variant="button">{getSectionName()}</Typography>
-          <Chip size="small" label={parents.length} />
+          <Chip size="small" label={parents.length} variant="outlined" />
         </Stack>
       </AccordionSummary>
       <AccordionDetails>

@@ -28,7 +28,8 @@ const Title = styled.div`
 const PhotosContainer = styled.div`
   display: flex;
   flex-direction: row;
-  gap: 4px;
+  gap: 8px;
+  align-items: center;
 `;
 
 const PhotosTitle = styled.div`
@@ -100,15 +101,18 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
         <Title>
           <Typography
             noWrap
-            variant="h6"
+            variant="h5"
             component="div"
             onClick={handleOnClick}
+            fontFamily={'Piazzolla'}
           >
             {label}
           </Typography>
           {photoPaths?.length > 1 && (
             <PhotosContainer>
-              <PhotosTitle>Photos:</PhotosTitle>
+              <Typography variant="caption" color="secondary">
+                Photos
+              </Typography>
               <PhotoLinks>
                 {photoPaths.map((photo, index) => (
                   <ItemContainer key={photo}>

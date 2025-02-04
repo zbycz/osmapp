@@ -1,12 +1,11 @@
 import React from 'react';
-import { Box, Grid, Stack, Typography } from '@mui/material';
-import styled from '@emotion/styled';
+import { Stack, Typography } from '@mui/material';
 import { capitalize } from '../helpers';
 import { t, Translation } from '../../services/intl';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { TooltipButton } from '../utils/TooltipButton';
 import { Feature } from '../../services/types';
 import { OSM_WEBSITE } from '../../services/osm/consts';
+import { NwrIcon } from './NwrIcon';
 
 const A = ({ href, children }) =>
   href ? (
@@ -42,7 +41,7 @@ const Urls = () => {
   );
 };
 
-const FromOsm = () => (
+export const FromOsm = () => (
   <>
     <Stack direction="row" alignItems="flex-start" gap={2}>
       <Typography variant="body2">
@@ -66,11 +65,19 @@ export const FeatureDescription = () => {
   const { type } = osmMeta;
 
   if (point) {
-    return <div>{t('featurepanel.feature_description_point')}</div>;
+    return <>{t('featurepanel.feature_description_point')}</>;
   }
   if (nonOsmObject) {
-    return <div>{t('featurepanel.feature_description_nonosm', { type })}</div>;
+    return <>{t('featurepanel.feature_description_nonosm', { type })}</>;
   }
 
-  return <FromOsm />;
+  return (
+    <Stack direction="row" gap={1.2} alignItems="center">
+      <NwrIcon osmType={osmMeta.type} />
+
+      {t('featurepanel.feature_description_osm', {
+        type: capitalize(type),
+      })}
+    </Stack>
+  );
 };

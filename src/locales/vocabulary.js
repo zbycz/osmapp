@@ -61,7 +61,7 @@ export default {
   'project.osmapp.serpDescription':
     'An open-source map of the world based on the OpenStreetMap database. Features a search, clickable points of interest, in-app map edits, and more!',
 
-  'climbing.guideinfo.title': 'A free climbing guides',
+  'climbing.guideinfo.title': 'free climbing guides',
   'climbing.guideinfo.description':
     'openclimbing.org is an open platform for climbing guides and maps. Topos and photos are stored in OpenStreetMap and Wikipedia projects, so they can be edited by anyone.',
   'climbing.guideinfo.button': 'More info',
@@ -150,8 +150,8 @@ export default {
 
   'featurepanel.no_name': 'No name',
   'featurepanel.share_button': 'Share',
-  'featurepanel.favorites_save_button': 'Save to favorites',
-  'featurepanel.favorites_unsave_button': 'Remove from favorites',
+  'featurepanel.favorites_save_button': 'Save',
+  'featurepanel.favorites_unsave_button': 'Saved',
   'featurepanel.directions_button': 'Directions',
   'featurepanel.error': 'Error __code__ while fetching feature from OpenStreetMap',
   'featurepanel.error_unknown': 'Unknown error while fetching feature from OpenStreetMap.',
@@ -163,7 +163,7 @@ export default {
   'featurepanel.all_tags_heading': 'All tags',
   'featurepanel.edit_button_title': 'Edit in OpenStreetMap database',
   'featurepanel.note_button': 'Suggest an edit',
-  'featurepanel.edit_button': 'Edit details',
+  'featurepanel.edit_button': 'Edit place',
   'featurepanel.add_place_button': 'Add a place',
   'featurepanel.undelete_button': 'Un-delete',
   'featurepanel.feature_description_nonosm': 'Map feature __type__',
@@ -180,6 +180,7 @@ export default {
   'featurepanel.footer_title': 'Other info',
   'featurepanel.climbing_sectors': 'Climbing sectors',
   'featurepanel.climbing_sectors_in': 'in',
+  'featurepanel.routes': 'routes',
 
   'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
@@ -223,9 +224,10 @@ export default {
   'editdialog.location_placeholder': 'eg. across the street',
   'editdialog.location_editor_to_be_added': 'The position cannot be edited here yet, you can do so in the <a href="__link__">iD editor</a>.',
   'editdialog.place_cancelled': 'Permanently closed (delete)',
-  'editdialog.comment': 'Comment (optional)',
+  'editdialog.comment': 'Comment on your changes (optional)',
+  'editdialog.comment_checkbox': 'Add comment to your changes',
   'editdialog.comment_placeholder': 'Note, link to source, etc.',
-  'editdialog.info_edit': `Your edit will be immediately saved to the OpenStreetMap. Please,
+  'editdialog.info_edit': `Your edit will be immediately saved to the OpenStreetMap, but it can take a few minutes to show new content on the map. Please,
          enter only information from your own or verified sources. It is prohibited
          to copy copyrighted data (e.g. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">More info</a>`,
   'editdialog.info_note':

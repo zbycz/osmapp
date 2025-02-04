@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Chip } from '@mui/material';
+import { Box, Chip, Stack } from '@mui/material';
 import { getOsmappLink, getReactKey } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { PanelLabel } from '../Climbing/PanelLabel';
@@ -68,7 +68,15 @@ export const MemberFeatures = () => {
   return (
     <Box mb={1}>
       <PanelLabel addition={<PanelAddition />}>
-        {getHeading(feature)} <Chip size="small" label={headingNum} />
+        <Stack direction="row" gap={1.5}>
+          <div>{getHeading(feature)}</div>
+          <Chip
+            size="small"
+            variant="outlined"
+            label={headingNum}
+            sx={{ position: 'relative', top: -3 }}
+          />
+        </Stack>
       </PanelLabel>
       {climbingRoutesFeatures.length > 0 && (
         <Ul>
