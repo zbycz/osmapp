@@ -5,7 +5,7 @@ import { CommentField } from './CommentField';
 import { OsmUserLogged } from './OsmUserLogged';
 import { ContributionInfoBox } from './ContributionInfoBox';
 import { OsmUserLoggedOut } from './OsmUserLoggedOut';
-import { FeatureEditSection } from './FeatureEditSection/FeatureEditSection';
+import { ItemEditSection } from './FeatureEditSection/ItemEditSection';
 import { useEditContext } from '../EditContext';
 import { TestApiWarning } from '../../helpers/TestApiWarning';
 import { ItemsTabs } from './ItemsTabs';
@@ -35,7 +35,7 @@ export const EditContent = () => {
 
             <Stack height="100%">
               <Stack flex={1}>
-                <FeatureEditSection shortId={current} />
+                <ItemEditSection shortId={current} />
               </Stack>
               <CommentField />
               <ContributionInfoBox />
