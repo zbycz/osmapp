@@ -2,10 +2,12 @@ import { getImagesFromCenter } from './images/getImageDefs';
 import { Feature, FeatureTags, LonLat, LonLatRounded, OsmType } from './types';
 
 let nextId = 0;
+export const getNewId = () => {
+  nextId -= 1; // negative id means "adding new point" in osmApiAuth#saveChanges()
+  return nextId;
+};
 
 export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
-  nextId += 1; // this is called twice: 1. onMapClicked 2. getInitialFeature
-
   const center = [lon, lat].map(parseFloat);
   return {
     type: 'Feature',
@@ -14,7 +16,7 @@ export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
     center,
     osmMeta: {
       type: 'node',
-      id: nextId * -1, // negative id means "adding new point" in osmApiAuth#saveChanges()
+      id: getNewId(), // this is called twice: 1. onMapClicked 2. getInitialFeature
     },
     tags: {},
     properties: { class: 'marker', subclass: 'point' },
@@ -27,15 +29,13 @@ export const getNewNode = (
   name: string,
   defaultTags: FeatureTags = {},
 ): Feature => {
-  nextId += 1;
-
   return {
     type: 'Feature',
     point: true,
     center: [lon, lat],
     osmMeta: {
       type: 'node',
-      id: nextId * -1, // negative id means "adding new point" in osmApiAuth#saveChanges()
+      id: getNewId(),
     },
     tags: { name, ...defaultTags },
     properties: { class: 'marker', subclass: 'point' },
