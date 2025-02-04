@@ -14,7 +14,7 @@ export const getOsmFullUrl = ({ type, id }: OsmId) =>
 export const getOsmParentUrl = ({ type, id }: OsmId) =>
   `${API_SERVER}/api/0.6/${type}/${id}/relations.json`;
 
-export const getOsmNodesWaysUrl = ({ id }: NodeOsmId) =>
+export const getOsmWaysUrl = ({ id }: NodeOsmId) =>
   `${API_SERVER}/api/0.6/node/${id}/ways.json`;
 
 export const getOsmHistoryUrl = ({ type, id }: OsmId) =>

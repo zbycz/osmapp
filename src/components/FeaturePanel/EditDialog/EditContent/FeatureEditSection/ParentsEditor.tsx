@@ -16,7 +16,7 @@ import { getApiId, getShortId } from '../../../../../services/helpers';
 import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
 import { useGetHandleClick } from '../helpers';
-import { fetchNodesWaysFeatures } from '../../../../../services/osm/fetchNodesWaysFeatures';
+import { fetchWays } from '../../../../../services/osm/fetchWays';
 import { useEditContext } from '../../EditContext';
 import {
   isClimbingRoute,
@@ -51,7 +51,7 @@ export const ParentsEditor = () => {
       }
       const [parentFeatures, waysFeatures] = await Promise.all([
         fetchParentFeatures(getApiId(current)),
-        fetchNodesWaysFeatures(getApiId(current)),
+        fetchWays(getApiId(current)),
       ]);
       setParents([...parentFeatures, ...waysFeatures]);
     })();
