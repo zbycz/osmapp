@@ -31,7 +31,6 @@ export const getNewNode = (
 ): Feature => {
   return {
     type: 'Feature',
-    point: true,
     center: [lon, lat],
     osmMeta: {
       type: 'node',
