@@ -32,18 +32,19 @@ const WayWarning = () => {
 };
 
 const useNodeWithoutWayCheck = (osmId: OsmId) => {
+  const isNew = osmId.id < 0;
   const [isNodeWithoutWay, setIsNodeWithoutWay] = useState(false);
 
   useEffect(() => {
-    if (osmId.type === 'node') {
+    if (osmId.type === 'node' && !isNew) {
       // this is already cached from ParentsEditor
       fetchWays(osmId).then((waysOfNodes) =>
         setIsNodeWithoutWay(waysOfNodes.length === 0),
       );
     }
-  }, [osmId]);
+  }, [isNew, osmId]);
 
-  return isNodeWithoutWay;
+  return isNew || isNodeWithoutWay;
 };
 
 export const LocationEditor = () => {
