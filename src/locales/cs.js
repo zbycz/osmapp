@@ -165,9 +165,9 @@ export default {
 
   'editdialog.add_heading': 'Přidat do OpenStreetMap',
   'editdialog.undelete_heading': 'Znovu přidat do OpenStreetMap',
-  'editdialog.edit_heading': 'Upravit:',
+  'editdialog.edit_heading': 'Upravit',
   'editdialog.items': 'položky',
-  'editdialog.suggest_heading': 'Navrhnout úpravu:',
+  'editdialog.suggest_heading': 'Navrhnout úpravu',
   'editdialog.feature_type_select': 'Zvolte typ objektu',
   'editdialog.options_heading': 'Možnosti',
   'editdialog.cancel_button': 'Zrušit',

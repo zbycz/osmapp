@@ -1,5 +1,5 @@
 import React from 'react';
-import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContext';
+import { useCurrentItem } from './CurrentContext';
 import {
   Accordion,
   AccordionDetails,
@@ -11,13 +11,13 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FeatureRow } from './FeatureRow';
-import { t } from '../../../../services/intl';
-import { useGetHandleClick } from './helpers';
+import { FeatureRow } from '../FeatureRow';
+import { t } from '../../../../../services/intl';
+import { useGetHandleClick } from '../helpers';
 import { AddMemberForm } from './AddMemberForm';
 
 export const MembersEditor = () => {
-  const { members, tags, nodeLonLat } = useFeatureEditData();
+  const { members, tags, nodeLonLat } = useCurrentItem();
   const theme = useTheme();
   const isClimbingCrag = tags.climbing === 'crag';
   const [isExpanded, setIsExpanded] = React.useState(false);

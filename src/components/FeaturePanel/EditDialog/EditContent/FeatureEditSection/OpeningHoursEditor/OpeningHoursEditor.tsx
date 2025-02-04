@@ -14,7 +14,7 @@ import { TimeSlot } from './TimeSlot';
 import { CopyFromAboveButton } from './CopyFromAboveButton';
 import { useGetBlurValidation } from './useGetBlurValidation';
 import { SetDaysAndTagFn, SetDaysFn } from './types';
-import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { useCurrentItem } from '../CurrentContext';
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,7 +42,7 @@ const Table = styled.table`
 
 const useUpdateState = (days: Day[], setDays: SetDaysFn) => {
   const valueSetHere = useRef<string | undefined>(undefined);
-  const { tags, setTag } = useFeatureEditData();
+  const { tags, setTag } = useCurrentItem();
 
   const tag = tags.opening_hours ?? '';
   useEffect(() => {
@@ -112,7 +112,7 @@ const EditorTable = () => {
 };
 
 export const OpeningHoursEditor = () => {
-  const { tags } = useFeatureEditData();
+  const { tags } = useCurrentItem();
 
   if (tags.opening_hours && !canItHandle(tags.opening_hours)) {
     return <OpeningHoursInput cantEdit />;

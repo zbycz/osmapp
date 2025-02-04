@@ -16,13 +16,13 @@ const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
   if (isUndelete) return t('editdialog.undelete_heading');
   if (!loggedIn) {
     if (items.length > 1)
-      return `${t('editdialog.suggest_heading')} ${items.length} ${t('editdialog.items')}`;
-    return `${t('editdialog.suggest_heading')} ${getLabel(feature)}`;
+      return `${t('editdialog.suggest_heading')}: ${items.length} ${t('editdialog.items')}`;
+    return `${t('editdialog.suggest_heading')}`;
   }
 
   if (items.length > 1)
-    return `${t('editdialog.edit_heading')} ${items.length} ${t('editdialog.items')}`;
-  return `${t('editdialog.edit_heading')} ${getLabel(feature)}`;
+    return `${t('editdialog.edit_heading')}: ${items.length} ${t('editdialog.items')}`;
+  return `${t('editdialog.edit_heading')}`;
 };
 
 export const EditDialogTitle = ({ onClose }) => {
