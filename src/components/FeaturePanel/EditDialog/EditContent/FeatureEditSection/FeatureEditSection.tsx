@@ -38,7 +38,12 @@ const EditFeatureHeading = (props: { shortId: string }) => {
       mb={2}
     >
       <Typography variant="h6">{tags.name || ' '}</Typography>
-      <NwrIcon osmType={getOsmTypeFromShortId(props.shortId)} />
+      <Stack direction="row" alignItems="center" gap={0.5}>
+        <Typography variant="caption" color="secondary">
+          {props.shortId}
+        </Typography>
+        <NwrIcon osmType={getOsmTypeFromShortId(props.shortId)} />
+      </Stack>
     </Stack>
   );
 };
