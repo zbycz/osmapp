@@ -7,6 +7,8 @@ import TravelExploreIcon from '@mui/icons-material/TravelExplore';
 import { getCoordsFeature } from '../../../services/getCoordsFeature';
 import { t } from '../../../services/intl';
 import { OpenLocationCode } from 'open-location-code';
+import { getRoundedPosition, roundedToDeg } from '../../../utils';
+import { getGlobalMap } from '../../../services/mapStorage';
 
 const olc = new OpenLocationCode();
 
@@ -88,3 +90,17 @@ export const renderCoords = ({ coords }: CoordsOption) => (
     </Grid>
   </>
 );
+
+export const getDirectionsCoordsOption = (
+  center: LonLat,
+  label?: string,
+): CoordsOption => ({
+  type: 'coords',
+  coords: {
+    center,
+    label:
+      label ||
+      roundedToDeg(getRoundedPosition(center, getGlobalMap().getZoom())),
+    sublabel: label || t('searchbox.coordinate_subtitle'),
+  },
+});

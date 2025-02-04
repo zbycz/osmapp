@@ -5,7 +5,7 @@ import { IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 import { Option } from '../SearchBox/types';
-import { getCoordsOption } from '../SearchBox/options/coords';
+import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
 
@@ -36,7 +36,7 @@ const urlCoordsToLonLat = (coords: string): LonLat =>
 export const parseUrlParts = (urlParts: string[]): Option[] =>
   urlParts.map((urlPart) => {
     const [coords, label] = splitByFirstTilda(urlPart);
-    return getCoordsOption(urlCoordsToLonLat(coords), label);
+    return getDirectionsCoordsOption(urlCoordsToLonLat(coords), label);
   });
 
 const close = () => {
