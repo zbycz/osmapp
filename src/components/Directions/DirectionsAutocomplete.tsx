@@ -22,7 +22,7 @@ import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
 import { Option } from '../SearchBox/types';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
-import { getCoordsOption } from '../SearchBox/options/coords';
+import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { LonLat } from '../../services/types';
 import { getGlobalMap } from '../../services/mapStorage';
 import maplibregl, { LngLatLike, PointLike } from 'maplibre-gl';
@@ -86,7 +86,10 @@ const DirectionsInput = ({
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
-    onOptionChange(null, getCoordsOption([longitude, latitude], 'My location'));
+    onOptionChange(
+      null,
+      getDirectionsCoordsOption([longitude, latitude], 'My location'),
+    );
     setIsLoading(false);
   }
   const handleError = (_error) => {
@@ -183,7 +186,7 @@ const useInputMapClickOverride = (
   const updatePoint = useUpdatePoint();
 
   const mapClickCallback = (coords: LonLat, label: string) => {
-    updatePoint(pointIndex, getCoordsOption(coords, label));
+    updatePoint(pointIndex, getDirectionsCoordsOption(coords, label));
     setInputValue(label);
     selectedOptionInputValue.current = label;
 
@@ -262,7 +265,7 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const onDragEnd = () => {
     const lngLat = markerRef.current?.getLngLat();
     if (lngLat) {
-      const coordsOption = getCoordsOption([lngLat.lng, lngLat.lat]);
+      const coordsOption = getDirectionsCoordsOption([lngLat.lng, lngLat.lat]);
       handleUpdate(coordsOption);
     }
   };

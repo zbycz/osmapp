@@ -90,6 +90,7 @@ export default {
   'searchbox.overpass_success': 'Ergebnisse gefunden: __count__',
   'searchbox.overpass_error': 'Fehler beim Laden. __message__',
   'searchbox.overpass_custom_query': 'Eigene Query',
+  'searchbox.coordinate_subtitle': 'Breite, Länge',
 
   'featurepanel.no_name': 'Kein Name',
   'featurepanel.share_button': 'Teilen',

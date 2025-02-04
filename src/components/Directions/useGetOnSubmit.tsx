@@ -11,7 +11,7 @@ import {
 } from './routing/handleRouting';
 import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
 import { getLastFeature } from '../../services/lastFeatureStorage';
-import { getCoordsOption } from '../SearchBox/options/coords';
+import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { getLabel } from '../../helpers/featureLabel';
 import { t } from '../../services/intl';
 import { FetchError } from '../../services/helpers';
@@ -61,7 +61,7 @@ export const useReactToUrl = (
 
       const lastFeature = getLastFeature();
       if (lastFeature) {
-        const newPoint = getCoordsOption(
+        const newPoint = getDirectionsCoordsOption(
           lastFeature.center,
           getLabel(lastFeature),
         );

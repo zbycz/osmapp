@@ -8,6 +8,7 @@ import { Option } from './types';
 import { Theme } from '../../helpers/theme';
 import { LonLat } from '../../services/types';
 import { renderOsm } from './options/openstreetmap';
+import { renderCoords } from './options/coords';
 
 const renderOption = (
   inputValue: string,
@@ -35,6 +36,8 @@ const renderOption = (
       );
     case 'osm':
       return renderOsm(option);
+    case 'coords':
+      return renderCoords(option);
   }
 };
 

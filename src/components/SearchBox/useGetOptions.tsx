@@ -11,6 +11,7 @@ import { getOverpassOptions } from './options/overpass';
 import { getPresetOptions } from './options/preset';
 import { Option } from './types';
 import { getOsmOptions } from './options/openstreetmap';
+import { getCoordsOption } from './options/coords';
 
 export const useGetOptions = (inputValue: string) => {
   const { view } = useMapStateContext();
@@ -25,6 +26,12 @@ export const useGetOptions = (inputValue: string) => {
 
       if (inputValue === '') {
         setOptions(starOptions);
+        return;
+      }
+
+      const coordOptions = getCoordsOption(inputValue);
+      if (coordOptions.length) {
+        setOptions(coordOptions);
         return;
       }
 
