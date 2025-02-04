@@ -4,7 +4,7 @@ import { getOsmElement } from '../../../../services/osm/quickFetchFeature';
 import { useEditContext } from '../EditContext';
 import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContext';
 import React, { useCallback } from 'react';
-import { getNewNode } from '../../../../services/getCoordsFeature';
+import { getNewId, getNewNode } from '../../../../services/getCoordsFeature';
 import { Alert, Button, TextField } from '@mui/material';
 import { LonLat, OsmId } from '../../../../services/types';
 import { t } from '../../../../services/intl';
@@ -119,8 +119,8 @@ export const AddMemberForm = ({
   }
 
   const convertToRelation = () => {
-    const newShortId = current.replace(/n/, 'r');
-    setShortId(newShortId);
+    const newShortId = `r${getNewId()}`;
+    setShortId(newShortId); // TODO duplicate item instead and add `redirect=relation/123` tag
     setCurrent(newShortId);
   };
 
