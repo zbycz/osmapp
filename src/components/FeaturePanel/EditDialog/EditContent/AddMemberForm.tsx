@@ -6,10 +6,12 @@ import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContex
 import React, { useCallback } from 'react';
 import { getNewId, getNewNode } from '../../../../services/getCoordsFeature';
 import { Alert, Button, TextField } from '@mui/material';
-import { LonLat, OsmId } from '../../../../services/types';
+import { Feature, LonLat, OsmId } from '../../../../services/types';
 import { t } from '../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
 import { NwrIcon } from '../../NwrIcon';
+import { getFullFeatureWithMemberFeatures } from '../../../../services/osm/getFullFeatureWithMemberFeatures';
+import { getLabel } from '../../../../helpers/featureLabel';
 
 const hasAtLeastOneNode = (members: Members) => {
   return members?.some((member) => member.shortId.startsWith('n'));
@@ -43,8 +45,8 @@ const getNewNodeLocation = async (items: EditDataItem[], members: Members) => {
 };
 
 const defaultRouteBottomTags = {
-  climbing: 'route_bottom',
   sport: 'climbing',
+  climbing: 'route_bottom',
 };
 
 export const AddMemberForm = ({
@@ -71,14 +73,22 @@ export const AddMemberForm = ({
   const isClimbingCrag = tags.climbing === 'crag';
 
   const handleAddMember = useCallback(async () => {
-    const lastNodeLocation =
-      newLonLat ?? (await getNewNodeLocation(items, members));
-    const newNode = getNewNode(lastNodeLocation, label, defaultTags);
-    const newShortId = getShortId(newNode.osmMeta);
-    addFeature(newNode);
+    let newFeature: Feature;
+    if (label.match(/^[nwr]\d+$/)) {
+      const apiId = getApiId(label);
+      newFeature = await getFullFeatureWithMemberFeatures(apiId);
+    } else {
+      const lastNodeLocation =
+        newLonLat ?? (await getNewNodeLocation(items, members));
+      newFeature = getNewNode(lastNodeLocation, label, defaultTags);
+    }
+
+    const newShortId = getShortId(newFeature.osmMeta);
+    const newLabel = getLabel(newFeature); // same as in buildDataItem()
+    addFeature(newFeature);
     setMembers((prev) => [
       ...(prev ?? []),
-      { shortId: newShortId, role: '', label },
+      { shortId: newShortId, role: '', label: newLabel },
     ]);
     setShowInput(false);
     setLabel('');
