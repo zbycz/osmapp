@@ -1,32 +1,24 @@
 import React from 'react';
-import dynamic from 'next/dynamic';
 import { PresetSelect } from './PresetSelect';
 import { MajorKeysEditor } from './MajorKeysEditor';
 import { TagsEditor } from './TagsEditor/TagsEditor';
 import { CurrentContextProvider } from './CurrentContext';
 import { MembersEditor } from './MembersEditor';
 import { ParentsEditor } from './ParentsEditor';
-import { EditFeatureHeading } from './EditFeatureHeading';
-
-const EditFeatureMapDynamic = dynamic(
-  () => import('./EditFeatureMap/EditFeatureMap'),
-  {
-    ssr: false,
-    loading: () => <div />,
-  },
-);
+import { ItemHeading } from './ItemHeading';
+import { LocationEditor } from './LocationEditor/LocationEditor';
 
 type Props = {
   shortId: string;
 };
 
-export const FeatureEditSection = ({ shortId }: Props) => (
+export const ItemEditSection = ({ shortId }: Props) => (
   <CurrentContextProvider shortId={shortId}>
-    <EditFeatureHeading />
+    <ItemHeading />
     <PresetSelect />
     <MajorKeysEditor />
     <TagsEditor />
-    <EditFeatureMapDynamic />
+    <LocationEditor />
     <ParentsEditor />
     <MembersEditor />
   </CurrentContextProvider>

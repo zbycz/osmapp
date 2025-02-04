@@ -3,7 +3,7 @@ import { Stack, Typography } from '@mui/material';
 import { getOsmTypeFromShortId, NwrIcon } from '../../../NwrIcon';
 import React from 'react';
 
-export const EditFeatureHeading = () => {
+export const ItemHeading = () => {
   const { shortId, tags, presetLabel } = useCurrentItem();
 
   return (
