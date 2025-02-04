@@ -104,6 +104,7 @@ const step = (
 export const routes: LayerSpecification[] = [
   {
     id: 'climbing routes (line)',
+    metadata: { clickableWithOsmId: true },
     type: 'line',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 16,
@@ -114,6 +115,7 @@ export const routes: LayerSpecification[] = [
   },
   {
     id: 'climbing routes (circle)',
+    metadata: { clickableWithOsmId: true },
     type: 'circle',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 16,
@@ -131,6 +133,7 @@ export const routes: LayerSpecification[] = [
   } as LayerSpecification,
   {
     id: 'climbing routes (labels)',
+    metadata: { clickableWithOsmId: true },
     type: 'symbol',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 19,
@@ -181,6 +184,7 @@ const cragSizeBig = 1;
 
 const mixed: LayerSpecification = {
   id: 'climbing crags and areas',
+  metadata: { clickableWithOsmId: true },
   type: 'symbol',
   source: CLIMBING_TILES_SOURCE,
   maxzoom: 20,
