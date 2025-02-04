@@ -9,6 +9,8 @@ import {
 import { MembersEditor } from '../MembersEditor';
 import { ParentsEditor } from '../ParentsEditor';
 import dynamic from 'next/dynamic';
+import { Stack, Typography } from '@mui/material';
+import { getOsmTypeFromShortId, NwrIcon } from '../../../NwrIcon';
 
 const EditFeatureMapDynamic = dynamic(
   () => import('./EditFeatureMap/EditFeatureMap'),
@@ -17,17 +19,13 @@ const EditFeatureMapDynamic = dynamic(
     loading: () => <div />,
   },
 );
-import { Stack, Typography } from '@mui/material';
-import { useEditContext } from '../../EditContext';
-import { getOsmTypeFromShortId, NwrIcon } from '../../../NwrIcon';
 
 type Props = {
   shortId: string;
 };
 
-const EditFeatureHeading = (props: { shortId: string }) => {
-  const { items } = useEditContext();
-  const { tags } = useFeatureEditData();
+const EditFeatureHeading = () => {
+  const { shortId, tags, presetLabel } = useFeatureEditData();
 
   return (
     <Stack
@@ -37,12 +35,12 @@ const EditFeatureHeading = (props: { shortId: string }) => {
       alignItems="center"
       mb={2}
     >
-      <Typography variant="h6">{tags.name || ' '}</Typography>
+      <Typography variant="h6">{tags.name || presetLabel || ' '}</Typography>
       <Stack direction="row" alignItems="center" gap={0.5}>
         <Typography variant="caption" color="secondary">
-          {props.shortId}
+          {shortId}
         </Typography>
-        <NwrIcon osmType={getOsmTypeFromShortId(props.shortId)} />
+        <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
       </Stack>
     </Stack>
   );
@@ -50,7 +48,7 @@ const EditFeatureHeading = (props: { shortId: string }) => {
 
 export const FeatureEditSection = ({ shortId }: Props) => (
   <SingleFeatureEditContextProvider shortId={shortId}>
-    <EditFeatureHeading shortId={shortId} />
+    <EditFeatureHeading />
     <PresetSelect />
     <MajorKeysEditor />
     <TagsEditor />

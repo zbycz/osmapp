@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { SuccessContent } from './SuccessContent';
@@ -9,6 +9,8 @@ import { EditContextProvider, useEditContext } from './EditContext';
 import { useGetOnClose } from './useGetOnClose';
 import { EditContent } from './EditContent/EditContent';
 import { getReactKey } from '../../../services/helpers';
+import { fetchSchemaTranslations } from '../../../services/tagging/translations';
+import { useBoolState } from '../../helpers';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -50,6 +52,14 @@ const EditDialogInner = () => {
 
 export const EditDialog = () => {
   const { feature } = useEditDialogFeature();
+
+  const [presetsLoaded, onLoaded] = useBoolState(false);
+  useEffect(() => {
+    fetchSchemaTranslations().then(onLoaded);
+  });
+  if (!presetsLoaded) {
+    return null;
+  }
 
   return (
     <EditContextProvider originalFeature={feature} key={getReactKey(feature)}>

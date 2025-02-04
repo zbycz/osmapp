@@ -1,5 +1,5 @@
 import { allPresets } from './data';
-import { Feature, OsmType } from '../types';
+import { Feature, FeatureTags, OsmType } from '../types';
 import { Preset } from './types/Presets';
 import { DEBUG_ID_SCHEMA } from '../../config.mjs';
 
@@ -97,9 +97,8 @@ Object.values(allPresets).forEach((preset) => {
 });
 
 // inspired by _this.matchTags() in iD codebase
-export const getPresetForFeature = (feature: Feature): Preset => {
-  const { tags, osmMeta } = feature;
-  const { type } = osmMeta;
+// takes ~1ms
+export const findPreset = (type: OsmType, tags: FeatureTags): Preset => {
   const candidates = [];
 
   index[type].forEach((candidate) => {
@@ -125,4 +124,11 @@ export const getPresetForFeature = (feature: Feature): Preset => {
   }
 
   return winner.candidate;
+};
+
+export const getPresetForFeature = (feature: Feature): Preset => {
+  const { tags, osmMeta } = feature;
+  const { type } = osmMeta;
+
+  return findPreset(type, tags);
 };
