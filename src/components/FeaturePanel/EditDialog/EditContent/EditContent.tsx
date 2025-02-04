@@ -27,37 +27,29 @@ export const EditContent = () => {
 
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
-  const RenderTabLabel = ({ item: { shortId, tags } }) => {
-    const [preset, setPreset] = useState('');
-    const { feature } = useFeatureContext();
-
-    useMatchTags(feature, tags, setPreset);
-    const presetName = options.find((o) => o.presetKey === preset)?.name;
-
-    return (
-      <Stack direction="column" alignItems="flex-start" width="100%">
-        <Stack
-          direction="row"
-          gap={1}
-          alignItems="center"
-          justifyContent="space-between"
-          width="100%"
-        >
-          <Typography variant="button" whiteSpace="nowrap">
-            {tags.name ?? shortId}
-          </Typography>
-          <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
-        </Stack>
-        <Typography
-          variant="caption"
-          textTransform="lowercase"
-          whiteSpace="nowrap"
-        >
-          {presetName}
+  const RenderTabLabel = ({ item: { shortId, tags, presetLabel } }) => (
+    <Stack direction="column" alignItems="flex-start" width="100%">
+      <Stack
+        direction="row"
+        gap={1}
+        alignItems="center"
+        justifyContent="space-between"
+        width="100%"
+      >
+        <Typography variant="button" whiteSpace="nowrap">
+          {tags.name ?? shortId}
         </Typography>
+        <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
       </Stack>
-    );
-  };
+      <Typography
+        variant="caption"
+        textTransform="lowercase"
+        whiteSpace="nowrap"
+      >
+        {presetLabel}
+      </Typography>
+    </Stack>
+  );
 
   return (
     <>

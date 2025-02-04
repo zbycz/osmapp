@@ -1,9 +1,11 @@
 import { Feature, FeatureTags, LonLat } from '../../../services/types';
-import { getShortId } from '../../../services/helpers';
+import { getApiId, getShortId } from '../../../services/helpers';
 import { getLabel } from '../../../helpers/featureLabel';
 import { Setter } from '../../../types';
 import { useMemo, useState } from 'react';
 import { publishDbgObject } from '../../../utils';
+import { findPreset } from '../../../services/tagging/presets';
+import { getPresetTranslation } from '../../../services/tagging/translations';
 
 export type TagsEntries = [string, string][];
 
@@ -27,10 +29,12 @@ export type EditDataItem = DataItem & {
   setTagsEntries: SetTagsEntries;
   tags: FeatureTags;
   setTag: (k: string, v: string) => void;
-  toggleToBeDeleted: () => void;
+  presetKey: string;
+  presetLabel: string;
   setMembers: SetMembers;
   setShortId: SetShortId;
   setNodeLonLat: (lonLat: LonLat) => void;
+  toggleToBeDeleted: () => void;
 };
 
 const buildDataItem = (feature: Feature): DataItem => {
@@ -53,6 +57,13 @@ const buildDataItem = (feature: Feature): DataItem => {
       })),
     nodeLonLat: apiId.type === 'node' ? feature.center : undefined,
   };
+};
+
+const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
+  const tags = Object.fromEntries(tagsEntries);
+  const osmId = getApiId(shortId);
+  const preset = findPreset(osmId.type, tags);
+  return preset.presetKey;
 };
 
 const getName = (d: DataItem): string | undefined =>
@@ -176,6 +187,7 @@ export const useEditItems = (originalFeature: Feature) => {
         const setDataItem = setDataItemFactory(setData, shortId);
         const setTagsEntries = setTagsEntriesFactory(setDataItem, tagsEntries);
         const setMembers = setMembersFactory(setDataItem, members);
+        const presetKey = getPresetKey(dataItem);
         return {
           ...dataItem,
           setTagsEntries,
@@ -185,6 +197,8 @@ export const useEditItems = (originalFeature: Feature) => {
           toggleToBeDeleted: toggleToBeDeletedFactory(setDataItem),
           setMembers,
           setNodeLonLat: setNodeLonLatFactory(setDataItem),
+          presetKey,
+          presetLabel: getPresetTranslation(presetKey),
         };
         // TODO maybe keep reference to original EditDataItem if DataItem didnt change? #performance
       }),

@@ -6,15 +6,10 @@ import React from 'react';
 import { t } from '../../services/intl';
 import { OsmType } from '../../services/types';
 import { fontSize } from '@mui/system';
+import { getApiId } from '../../services/helpers';
 
-export const getOsmTypeFromShortId = (shortId: string) => {
-  const typeMap = {
-    n: 'node',
-    w: 'way',
-    r: 'relation',
-  };
-  return typeMap[shortId[0]];
-};
+export const getOsmTypeFromShortId = (shortId: string): OsmType =>
+  getApiId(shortId).type;
 
 type NwrIconProps = {
   osmType: OsmType;
