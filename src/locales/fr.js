@@ -87,8 +87,8 @@ export default {
 
   'editdialog.add_heading': 'Ajouter à OpenStreetMap',
   'editdialog.undelete_heading': 'Ajouter de nouveau à OpenStreetMap',
-  'editdialog.edit_heading': 'Modifier :',
-  'editdialog.suggest_heading': 'Demander une modification :',
+  'editdialog.edit_heading': 'Modifier',
+  'editdialog.suggest_heading': 'Demander une modification',
   'editdialog.feature_type_select': 'Choisir un type',
   'editdialog.options_heading': 'Options',
   'editdialog.cancel_button': 'Annuler',
