@@ -15,7 +15,7 @@ import { getPresetForFeature } from '../../../../../services/tagging/presets';
 import { Feature, FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import { Setter } from '../../../../../types';
-import { useFeatureEditData } from './SingleFeatureEditContext';
+import { useCurrentItem } from './CurrentContext';
 
 export type TranslatedPreset = Preset & {
   name: string;
@@ -90,7 +90,7 @@ export const useOptions = () => {
 };
 
 export const PresetSelect = () => {
-  const { tags } = useFeatureEditData();
+  const { tags } = useCurrentItem();
   const [preset, setPreset] = useState('');
   const { feature } = useFeatureContext();
   const options = useOptions();

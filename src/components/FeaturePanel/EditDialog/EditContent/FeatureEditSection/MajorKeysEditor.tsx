@@ -9,7 +9,7 @@ import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import styled from '@emotion/styled';
 import { CharacterCount, getInputTypeForKey } from '../helpers';
-import { useFeatureEditData } from './SingleFeatureEditContext';
+import { useCurrentItem } from './CurrentContext';
 import { isClimbingRoute } from '../../../../../utils';
 
 export const climbingRouteMajorKeys = [
@@ -118,7 +118,7 @@ const TextFieldWithCharacterCount = ({
 
 export const MajorKeysEditor = () => {
   const { focusTag } = useEditDialogContext();
-  const { tags, setTag } = useFeatureEditData();
+  const { tags, setTag } = useCurrentItem();
 
   // TODO this code will be replaced when implementing id presets fields
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);

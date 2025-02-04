@@ -1,17 +1,17 @@
-import { EditDataItem, Members } from '../useEditItems';
-import { getApiId, getShortId } from '../../../../services/helpers';
-import { getOsmElement } from '../../../../services/osm/quickFetchFeature';
-import { useEditContext } from '../EditContext';
-import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContext';
+import { EditDataItem, Members } from '../../useEditItems';
+import { getApiId, getShortId } from '../../../../../services/helpers';
+import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
+import { useEditContext } from '../../EditContext';
+import { useCurrentItem } from './CurrentContext';
 import React, { useCallback } from 'react';
-import { getNewId, getNewNode } from '../../../../services/getCoordsFeature';
+import { getNewId, getNewNode } from '../../../../../services/getCoordsFeature';
 import { Alert, Button, TextField } from '@mui/material';
-import { Feature, LonLat, OsmId } from '../../../../services/types';
-import { t } from '../../../../services/intl';
+import { Feature, LonLat, OsmId } from '../../../../../services/types';
+import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
-import { NwrIcon } from '../../NwrIcon';
-import { getFullFeatureWithMemberFeatures } from '../../../../services/osm/getFullFeatureWithMemberFeatures';
-import { getLabel } from '../../../../helpers/featureLabel';
+import { NwrIcon } from '../../../NwrIcon';
+import { getFullFeatureWithMemberFeatures } from '../../../../../services/osm/getFullFeatureWithMemberFeatures';
+import { getLabel } from '../../../../../helpers/featureLabel';
 
 const hasAtLeastOneNode = (members: Members) => {
   return members?.some((member) => member.shortId.startsWith('n'));
@@ -67,7 +67,7 @@ export const AddMemberForm = ({
   const defaultTags = getDefaultTags();
 
   const { addFeature, items, setCurrent, current } = useEditContext();
-  const { members, setMembers, tags, setShortId } = useFeatureEditData();
+  const { members, setMembers, tags, setShortId } = useCurrentItem();
   const [showInput, setShowInput] = React.useState(false);
   const [label, setLabel] = React.useState('');
   const isClimbingCrag = tags.climbing === 'crag';

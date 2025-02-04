@@ -20,7 +20,7 @@ import { PROJECT_ID } from '../../../../../services/project';
 import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
-import { useFeatureEditData } from './SingleFeatureEditContext';
+import { useCurrentItem } from './CurrentContext';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -129,7 +129,7 @@ const useGetOnChange = (
   value: string,
   setValue: Setter<string>,
 ) => {
-  const { setTagsEntries } = useFeatureEditData();
+  const { setTagsEntries } = useCurrentItem();
 
   return (e: SelectChangeEvent<string>) => {
     const oldPreset = options.find((o) => o.presetKey === value);

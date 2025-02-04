@@ -2,7 +2,7 @@ import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import React, { useEffect, useState } from 'react';
 import { InputAdornment, TextField } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
-import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { useCurrentItem } from '../CurrentContext';
 import { FastInput } from './helpers';
 
 const useUpdatedState = (currentKey: string) => {
@@ -15,7 +15,7 @@ const useUpdatedState = (currentKey: string) => {
 };
 
 const useTmpState = (index: number) => {
-  const { tagsEntries, setTagsEntries } = useFeatureEditData();
+  const { tagsEntries, setTagsEntries } = useCurrentItem();
   const currentKey = tagsEntries[index][0];
   const { tmpKey, setTmpKey } = useUpdatedState(currentKey);
 
@@ -34,7 +34,7 @@ const useTmpState = (index: number) => {
 };
 
 const useIsError = (index: number) => {
-  const { tagsEntries } = useFeatureEditData();
+  const { tagsEntries } = useCurrentItem();
   const [currentKey, currentValue] = tagsEntries[index];
 
   const isEmptyKey = !!currentValue && !currentKey;
