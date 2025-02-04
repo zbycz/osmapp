@@ -119,9 +119,9 @@ export const EditContent = () => {
             <Stack height="100%">
               <Stack flex={1}>
                 <FeatureEditSection shortId={current} />
-                <CommentField />
-                <ContributionInfoBox />
               </Stack>
+              <CommentField />
+              <ContributionInfoBox />
               <OsmUserLogged />
               <TestApiWarning />
             </Stack>

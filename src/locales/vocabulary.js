@@ -224,8 +224,9 @@ export default {
   'editdialog.location_editor_to_be_added': 'The position cannot be edited here yet, you can do so in the <a href="__link__">iD editor</a>.',
   'editdialog.place_cancelled': 'Permanently closed (delete)',
   'editdialog.comment': 'Comment on your changes (optional)',
+  'editdialog.comment_checkbox': 'Add comment to your changes',
   'editdialog.comment_placeholder': 'Note, link to source, etc.',
-  'editdialog.info_edit': `Your edit will be immediately saved to the OpenStreetMap. Please,
+  'editdialog.info_edit': `Your edit will be immediately saved to the OpenStreetMap, but it can take a few minutes to show new content on the map. Please,
          enter only information from your own or verified sources. It is prohibited
          to copy copyrighted data (e.g. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">More info</a>`,
   'editdialog.info_note':
