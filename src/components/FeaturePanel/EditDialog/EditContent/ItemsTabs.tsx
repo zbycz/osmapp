@@ -18,7 +18,7 @@ const StyledTabs = styled(Tabs)`
   }
 
   ${({ theme }) => theme.breakpoints.up('sm')} {
-    border-right: 1px solid;
+    border-right: 1px solid ${({ theme }) => theme.palette.divider};
     resize: horizontal;
     min-width: 120px;
     max-width: 50%;
