@@ -3,7 +3,7 @@ import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { IconButton, Stack } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getInputTypeForKey } from '../../helpers';
-import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { useCurrentItem } from '../CurrentContext';
 import { FastInput } from './helpers';
 
 const useHidableDeleteButton = () => {
@@ -31,7 +31,7 @@ type DeleteButtonProps = {
   index: number;
 };
 const DeleteButton = ({ deleteButton, index }: DeleteButtonProps) => {
-  const { setTagsEntries } = useFeatureEditData();
+  const { setTagsEntries } = useCurrentItem();
   const onClick = () => {
     setTagsEntries((state) => state.toSpliced(index, 1));
   };
@@ -54,7 +54,7 @@ const DeleteButton = ({ deleteButton, index }: DeleteButtonProps) => {
 type Props = { index: number };
 export const ValueInput = ({ index }: Props) => {
   const { focusTag } = useEditDialogContext();
-  const { tagsEntries, setTagsEntries } = useFeatureEditData();
+  const { tagsEntries, setTagsEntries } = useCurrentItem();
   const [currentKey, currentValue] = tagsEntries[index];
 
   const deleteButton = useHidableDeleteButton();

@@ -17,7 +17,7 @@ import { t, Translation } from '../../../../../services/intl';
 import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { useToggleState } from '../../../../helpers';
 import { getIdEditorLink } from '../../../helpers/externalLinks';
-import { useFeatureEditData } from './SingleFeatureEditContext';
+import { useCurrentItem } from './CurrentContext';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getShortId } from '../../../../../services/helpers';
 import { FeatureRow } from '../FeatureRow';
@@ -25,7 +25,7 @@ import { fetchSchemaTranslations } from '../../../../../services/tagging/transla
 
 // TODO don't delete objects, but only remove their Preset tags https://github.com/zbycz/osmapp/issues/222
 export const PlaceCancelledToggle = () => {
-  const { toBeDeleted, toggleToBeDeleted } = useFeatureEditData();
+  const { toBeDeleted, toggleToBeDeleted } = useCurrentItem();
   return (
     <>
       <FormControlLabel

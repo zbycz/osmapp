@@ -17,7 +17,7 @@ import { t, Translation } from '../../../../../../services/intl';
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
-import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { useCurrentItem } from '../CurrentContext';
 import { TagsEntries } from '../../../useEditItems';
 import { OptionsEditor } from '../OptionsEditor';
 
@@ -68,7 +68,7 @@ const TagsEditorInfo = () => (
 );
 
 const AddButton = () => {
-  const { tagsEntries, setTagsEntries } = useFeatureEditData();
+  const { tagsEntries, setTagsEntries } = useCurrentItem();
   return (
     <tr>
       <td colSpan={2}>
@@ -87,7 +87,7 @@ const AddButton = () => {
 };
 
 const TagsEditorInner = () => {
-  const { tagsEntries } = useFeatureEditData();
+  const { tagsEntries } = useCurrentItem();
   return (
     <Table>
       <tbody>

@@ -12,7 +12,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import styled from '@emotion/styled';
 import { t } from '../../../../../../services/intl';
-import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { useCurrentItem } from '../CurrentContext';
 import { useInitEditFeatureMap } from './useInitEditFeatureMap';
 import { LngLat } from 'maplibre-gl';
 
@@ -44,7 +44,7 @@ export default function EditFeatureMap() {
     useInitEditFeatureMap(isFirstMapLoad, setIsFirstMapLoad);
   const [expanded, setExpanded] = useState(false);
 
-  const { shortId } = useFeatureEditData();
+  const { shortId } = useCurrentItem();
   const isNode = shortId[0] === 'n';
   if (!isNode) return null;
 

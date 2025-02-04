@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useFeatureEditData } from './FeatureEditSection/SingleFeatureEditContext';
+import { useCurrentItem } from './CurrentContext';
 import {
   Accordion,
   AccordionDetails,
@@ -11,21 +11,21 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fetchParentFeatures } from '../../../../services/osm/fetchParentFeatures';
-import { getApiId, getShortId } from '../../../../services/helpers';
-import { FeatureRow } from './FeatureRow';
-import { t } from '../../../../services/intl';
-import { useGetHandleClick } from './helpers';
-import { fetchNodesWaysFeatures } from '../../../../services/osm/fetchNodesWaysFeatures';
-import { useEditContext } from '../EditContext';
+import { fetchParentFeatures } from '../../../../../services/osm/fetchParentFeatures';
+import { getApiId, getShortId } from '../../../../../services/helpers';
+import { FeatureRow } from '../FeatureRow';
+import { t } from '../../../../../services/intl';
+import { useGetHandleClick } from '../helpers';
+import { fetchNodesWaysFeatures } from '../../../../../services/osm/fetchNodesWaysFeatures';
+import { useEditContext } from '../../EditContext';
 import {
   isClimbingRoute,
   isClimbingRoute as getIsClimbingRoute,
-} from '../../../../utils';
+} from '../../../../../utils';
 
 export const ParentsEditor = () => {
   const { current } = useEditContext();
-  const { tags } = useFeatureEditData();
+  const { tags } = useCurrentItem();
   const [parents, setParents] = useState([]);
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = React.useState(false);
