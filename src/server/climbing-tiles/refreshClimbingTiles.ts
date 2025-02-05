@@ -40,7 +40,7 @@ const prepareGeojson = (
 
 const fetchFromOverpass = async () => {
   // takes about 42 secs, 25MB
-  const query = `[out:json][timeout:80];(nwr["climbing"];nwr["sport"="climbing"];);>>;out qt;`;
+  const query = `[out:json][timeout:80];(nwr["climbing"];nwr["sport"="climbing"];);(._;>>;);out qt;`;
   const data = await fetchJson<OsmResponse>(
     'https://overpass-api.de/api/interpreter',
     {
