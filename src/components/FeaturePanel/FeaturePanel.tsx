@@ -52,29 +52,17 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
     return null;
   }
 
+  // ------------------------------------------------------------------------
   // Different components are shown for different types of features
   // Conditional components should have if(feature.tags.xxx) check at the beginning
   // All components should have margin-bottoms to accommodate missing parts
-  const isClimbingCrag = tags.climbing === 'crag';
-  const isClimbing = climbingTagValues.includes(feature.tags.climbing);
+  // ------------------------------------------------------------------------
 
-  const ClimbingDescription = () => {
-    if (!isClimbing || !feature.tags.description) {
-      return null;
-    }
-
-    return (
-      <FeaturedTag
-        key={'description'}
-        k={'description'}
-        v={feature.tags.description}
-      />
-    );
-  };
-
+  const movePropertiesBelowMembers = tags.climbing === 'crag';
   const PropertiesComponent = () => (
     <Properties showTags={showTagsTable} key={getReactKey(feature)} />
   );
+
   return (
     <>
       <PanelContent>
@@ -90,7 +78,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
 
           <OsmError />
           <TestApiWarning />
-          <ClimbingDescription />
+          <FeaturedTag k="description" renderer="DescriptionRenderer" />
         </PanelSidePadding>
 
         <Flex>
@@ -103,11 +91,11 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
               </Box>
 
               <PanelSidePadding>
-                {!isClimbingCrag && <PropertiesComponent />}
+                {!movePropertiesBelowMembers && <PropertiesComponent />}
                 <RouteDistributionInPanel />
                 {!isPublictransportRoute(feature) && <MemberFeatures />}
                 {advanced && <Members />}
-                {isClimbingCrag && <PropertiesComponent />}
+                {movePropertiesBelowMembers && <PropertiesComponent />}
                 <PublicTransport />
                 <Runways />
                 <Sockets />

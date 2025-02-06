@@ -18,7 +18,7 @@ import {
   Typography,
 } from '@mui/material';
 
-import { GRADE_SYSTEMS, GRADE_TABLE } from './utils/grades/gradeData';
+import { GRADE_TABLE } from './utils/grades/gradeData';
 import CloseIcon from '@mui/icons-material/Close';
 import zip from 'lodash/zip';
 import { useTheme } from '@emotion/react';
@@ -30,6 +30,7 @@ import { getUrlOsmId } from '../../../services/helpers';
 import { t } from '../../../services/intl';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { isMobileDevice } from '../../helpers';
+import { GRADE_SYSTEMS } from '../../../services/tagging/climbing';
 
 export const ClimbingGradesTable = () => {
   const [clickedItem, setClickedItem] = React.useState<{

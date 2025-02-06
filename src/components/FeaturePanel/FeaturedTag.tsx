@@ -1,17 +1,17 @@
 import React from 'react';
 import styled from '@emotion/styled';
-
-import WebsiteRenderer from './renderers/WebsiteRenderer';
-import OpeningHoursRenderer from './renderers/OpeningHoursRenderer';
-import PhoneRenderer from './renderers/PhoneRenderer';
+import { WebsiteRenderer } from './renderers/WebsiteRenderer';
+import { OpeningHoursRenderer } from './renderers/OpeningHoursRenderer';
+import { PhoneRenderer } from './renderers/PhoneRenderer';
 import { InlineEditButton } from './helpers/InlineEditButton';
 import { FoodHygieneRatingSchemeRenderer } from './renderers/FoodHygieneRatingScheme';
 import { WikipediaRenderer } from './renderers/WikipediaRenderer';
 import { WikidataRenderer } from './renderers/WikidataRenderer';
 import { isDesktopResolution } from '../helpers';
-import { ClimbingRenderer } from './renderers/ClimbingRenderer';
-import { gradeSystemKeys } from './Climbing/utils/grades/gradeSystem';
+import { ClimbingGradeRenderer } from './renderers/ClimbingGradeRenderer';
 import { nl2br } from '../utils/nl2br';
+import { FeaturedKeyRenderer } from '../../services/tagging/featuredKeys';
+import { useFeatureContext } from '../utils/FeatureContext';
 
 const Wrapper = styled.div`
   position: relative;
@@ -43,45 +43,44 @@ const Value = styled.div`
   }
 `;
 
-type Renderers = {
-  [key: string]: React.FC<{ k: string; v: string }>;
-};
-
 const DefaultRenderer = ({ v }) => <>{nl2br(v)}</>;
 
-const climbingRenderers = gradeSystemKeys.reduce(
-  (acc, gradeSystemKey) => ({
-    ...acc,
-    [gradeSystemKey]: ClimbingRenderer,
-  }),
-  {},
-);
-
-const renderers: Renderers = {
-  // also update in schema – getFeaturedTags()
-  website: WebsiteRenderer,
-  'website:2': WebsiteRenderer,
-  'contact:website': WebsiteRenderer,
-  url: WebsiteRenderer,
-  phone: PhoneRenderer,
-  'contact:phone': PhoneRenderer,
-  'contact:mobile': PhoneRenderer,
-  opening_hours: OpeningHoursRenderer,
-  'fhrs:id': FoodHygieneRatingSchemeRenderer,
-  wikipedia: WikipediaRenderer,
-  wikidata: WikidataRenderer,
-  ...climbingRenderers,
+type RendererComponents = {
+  [key in FeaturedKeyRenderer]: React.FC<{ k: string; v: string }>;
 };
 
-export const FeaturedTag = ({ k, v }) => {
-  const Renderer = renderers[k] || DefaultRenderer;
+const components: RendererComponents = {
+  WebsiteRenderer: WebsiteRenderer,
+  PhoneRenderer: PhoneRenderer,
+  OpeningHoursRenderer: OpeningHoursRenderer,
+  FoodHygieneRatingSchemeRenderer: FoodHygieneRatingSchemeRenderer,
+  WikipediaRenderer: WikipediaRenderer,
+  WikidataRenderer: WikidataRenderer,
+  ClimbingGradeRenderer: ClimbingGradeRenderer,
+  DescriptionRenderer: DefaultRenderer,
+  NullRenderer: null,
+};
+
+type Props = {
+  k: string;
+  renderer: FeaturedKeyRenderer;
+};
+
+export const FeaturedTag = ({ k, renderer }: Props) => {
+  const { feature } = useFeatureContext();
+  const value = feature.tags[k];
+
+  const Renderer = components[renderer];
+  if (!Renderer || !value) {
+    return null;
+  }
 
   return (
     <Wrapper>
       <InlineEditButton k={k} />
 
       <Value>
-        <Renderer k={k} v={v} />
+        <Renderer k={k} v={value} />
       </Value>
     </Wrapper>
   );

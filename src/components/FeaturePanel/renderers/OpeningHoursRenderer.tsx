@@ -49,7 +49,7 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
   }
 };
 
-const OpeningHoursRenderer = ({ v }) => {
+export const OpeningHoursRenderer = ({ v }) => {
   const [isExpanded, toggle] = useToggleState(false);
 
   const { countryCode, center } = useFeatureContext().feature;
@@ -102,5 +102,3 @@ const OpeningHoursRenderer = ({ v }) => {
     </>
   );
 };
-
-export default OpeningHoursRenderer;

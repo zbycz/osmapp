@@ -4,8 +4,8 @@ import { RouteDifficultyBadge } from '../Climbing/RouteDifficultyBadge';
 import {
   getDifficulties,
   getGradeSystemFromOsmTag,
-  getGradeSystemName,
 } from '../Climbing/utils/grades/routeGrade';
+import { getGradeSystemName } from '../../../services/tagging/climbing';
 import { t } from '../../../services/intl';
 
 const Container = styled.div`
@@ -13,7 +13,7 @@ const Container = styled.div`
   gap: 8px;
 `;
 
-export const ClimbingRenderer = ({ k, v }) => {
+export const ClimbingGradeRenderer = ({ k, v }) => {
   const routeDifficulties = getDifficulties({ [k]: v });
   const gradeSystemName = getGradeSystemName(getGradeSystemFromOsmTag(k));
   return (

@@ -8,7 +8,7 @@ import { publishDbgObject } from '../../utils';
 import { getShortId } from '../helpers';
 import { Field } from './types/Fields';
 import { DEBUG_ID_SCHEMA } from '../../config.mjs';
-import { gradeSystemKeys } from '../../components/FeaturePanel/Climbing/utils/grades/gradeSystem';
+import { FEATURED_KEYS } from './featuredKeys';
 import { deduplicate } from './utils';
 
 const logMoreMatchingFields = (matchingFields: Field[], key: string) => {
@@ -148,23 +148,11 @@ const keysTodo = {
 const getFeaturedTags = (feature: Feature) => {
   const { tags } = feature;
 
-  // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
-  const keys = [
-    'website',
-    'website:2',
-    'contact:website',
-    'url',
-    'phone',
-    'contact:phone',
-    'contact:mobile',
-    'opening_hours',
-    ...(tags.wikipedia ? ['wikipedia'] : tags.wikidata ? ['wikidata'] : []),
-    'fhrs:id',
-    'description',
-    ...gradeSystemKeys,
-  ];
+  const matchedKeys = Object.keys(feature.tags).filter((key) =>
+    FEATURED_KEYS.some(({ matcher }) => matcher.test(key)),
+  );
 
-  return keys.reduce(
+  return matchedKeys.reduce(
     (acc, key) => (tags[key] ? { ...acc, [key]: tags[key] } : acc),
     {} as FeatureTags,
   );
