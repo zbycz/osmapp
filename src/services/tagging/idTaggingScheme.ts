@@ -98,25 +98,28 @@ const matchRestToFields = (keysTodo: KeysTodo, feature: Feature): UiField[] =>
 type KeysTodo = typeof keysTodo;
 const keysTodo = {
   state: [] as string[],
-  init(feature) {
+  init(feature: Feature) {
     this.state = Object.keys(feature.tags);
   },
-  resolveTags(tags) {
+  resolveTags(tags: FeatureTags) {
     Object.keys(tags).forEach((key) => this.remove(key));
   },
-  has(key) {
+  has(key: string) {
     return this.state.includes(key);
   },
-  hasAny(keys) {
+  hasAny(keys: string[]) {
     return keys?.some((key) => this.state.includes(key));
   },
-  remove(key) {
+  remove(key: string) {
     const index = this.state.indexOf(key);
     if (index > -1) {
       this.state.splice(index, 1);
     }
   },
-  resolveFields(fieldsArray) {
+  removeByRegexp(regexp: RegExp) {
+    this.state = this.state.filter((key: string) => !regexp.test(key));
+  },
+  resolveFields(fieldsArray: UiField[]) {
     fieldsArray.forEach((field) => {
       if (field?.field?.key) {
         this.remove(field.field.key);
@@ -164,8 +167,12 @@ export const getSchemaForFeature = (feature: Feature) => {
   keysTodo.init(feature);
   keysTodo.resolveTags(preset.tags); // remove tags which are already covered by Preset
   keysTodo.remove('name'); // always rendered by FeaturePanel
+  keysTodo.removeByRegexp(/^(image$|type$|wikimedia_commons)/); // images are rendered in FeatureImages
+  if (feature.tags.climbing) {
+    keysTodo.removeByRegexp(/^(sport|type|site)$/);
+  }
 
-  const featuredTags = feature.deleted ? [] : getFeaturedTags(feature);
+  const featuredTags = feature.deleted ? {} : getFeaturedTags(feature);
   keysTodo.resolveTags(featuredTags);
 
   const matchedFields = matchFieldsFromPreset(preset, keysTodo, feature);

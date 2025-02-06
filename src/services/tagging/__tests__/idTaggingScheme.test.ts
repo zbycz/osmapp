@@ -141,9 +141,7 @@ describe('idTaggingScheme', () => {
 
     expect(schema.label).toBe('Fountain');
     expect(schema.featuredTags).toEqual([['wikidata', 'Q94435643']]);
-    expect(schema.matchedFields.map((x: any) => x.field.fieldKey)).toEqual([
-      'wikimedia_commons',
-    ]);
+    expect(schema.matchedFields.map((x: any) => x.field.fieldKey)).toEqual([]);
     expect(schema.tagsWithFields.map((x: any) => x.field.fieldKey)).toEqual([
       'natural',
       'source',
