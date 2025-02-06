@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import styled from '@emotion/styled';
-import { GRADE_SYSTEMS, GradeSystem } from './utils/grades/gradeData';
+import { GRADE_SYSTEMS, GradeSystem } from '../../../services/tagging/climbing';
 import Link from 'next/link';
 
 type Props = {

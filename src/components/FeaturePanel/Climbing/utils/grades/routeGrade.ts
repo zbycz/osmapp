@@ -1,12 +1,11 @@
 import { RouteDifficulty } from '../../types';
 import {
   csvToArray,
-  GRADE_SYSTEMS,
   GRADE_TABLE,
   gradeColors,
-  GradeSystem,
   gradeTableString,
 } from './gradeData';
+import { GradeSystem } from '../../../../../services/tagging/climbing';
 import { FeatureTags } from '../../../../../services/types';
 
 export const exportGradeDataToWikiTable = () => {
@@ -98,9 +97,6 @@ export const getDifficultyColor = (routeDifficulty, theme) => {
       : gradeWithoutApproximationCharacters;
   return gradeColors[uiaaGrade]?.[mode] || DEFAULT_COLOR;
 };
-
-export const getGradeSystemName = (gradeSystemKey: GradeSystem) =>
-  GRADE_SYSTEMS.find((item) => item.key === gradeSystemKey)?.name;
 
 export const findOrConvertRouteGrade = (
   routeDifficulties: RouteDifficulty[],

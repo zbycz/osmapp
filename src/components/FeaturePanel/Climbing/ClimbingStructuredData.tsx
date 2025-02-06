@@ -9,9 +9,9 @@ import { getHumanPoiType } from '../../../helpers/featureLabel';
 import {
   findOrConvertRouteGrade,
   getDifficulties,
-  getGradeSystemName,
 } from './utils/grades/routeGrade';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { getGradeSystemName } from '../../../services/tagging/climbing';
 
 const generateScriptContent = (feature, userSettings) => {
   const isClimbingArea = feature.tags.climbing === 'area';

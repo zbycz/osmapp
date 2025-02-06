@@ -1,7 +1,7 @@
 import React from 'react';
 import LocalPhone from '@mui/icons-material/LocalPhone';
 
-export const WebsiteRenderer = ({ v }) => (
+export const PhoneRenderer = ({ v }) => (
   <>
     <LocalPhone fontSize="small" />
     <span>
@@ -15,5 +15,3 @@ export const WebsiteRenderer = ({ v }) => (
     </span>
   </>
 );
-
-export default WebsiteRenderer;

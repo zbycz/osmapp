@@ -87,7 +87,7 @@ export const Properties = ({ showTags }) => {
 
       {!showTags && (
         <ErrorBoundary key={getReactKey(feature)} fallback={<OnlyTagsTable />}>
-          <FeaturedTags featuredTags={feature.schema?.featuredTags} />
+          <FeaturedTags />
           <IdSchemaFields />
         </ErrorBoundary>
       )}
