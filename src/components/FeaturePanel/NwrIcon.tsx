@@ -11,32 +11,61 @@ import { getApiId } from '../../services/helpers';
 export const getOsmTypeFromShortId = (shortId: string): OsmType =>
   getApiId(shortId).type;
 
-type NwrIconProps = {
+type TypeMap = {
+  [key: string]: {
+    Icon: React.ElementType;
+    scale?: number;
+    label: string;
+    description: string;
+  };
+};
+
+const typeMap: TypeMap = {
+  node: {
+    Icon: CircleIcon,
+    scale: 0.7,
+    label: t('osmtype.node'),
+    description: t('osmtype.node.description'),
+  },
+  way: {
+    Icon: TimelineIcon,
+    label: t('osmtype.way'),
+    description: t('osmtype.way.description'),
+  },
+  relation: {
+    Icon: HubIcon,
+    label: t('osmtype.relation'),
+    description: t('osmtype.relation.description'),
+  },
+};
+
+type Props = {
   osmType: OsmType;
   color?: string;
   fontSize?: string;
 };
 
-type TypeMap = {
-  [key: string]: { name: OsmType; icon: React.ElementType; scale?: number };
-};
-
-const typeMap: TypeMap = {
-  node: { name: 'node', icon: CircleIcon, scale: 0.7 },
-  way: { name: 'way', icon: TimelineIcon },
-  relation: { name: 'relation', icon: HubIcon },
-};
-
-export const NwrIcon = ({ osmType, color, fontSize }: NwrIconProps) => {
+export const NwrIcon = ({ osmType, color, fontSize }: Props) => {
   const type = typeMap[osmType];
-  if (!type) return null;
+  if (!type) {
+    return null;
+  }
 
-  const IconComponent = type.icon;
-  const { name, scale } = type;
+  const { Icon, scale, label, description } = type;
+  const english = label.toLowerCase() === osmType ? '' : ` (${osmType})`;
 
   return (
-    <Tooltip title={`OSM ${t(`osmtype_${name}`)}`}>
-      <IconComponent
+    <Tooltip
+      title={
+        <>
+          OSM {label}
+          {english}
+          <br />
+          {description}
+        </>
+      }
+    >
+      <Icon
         fontSize={fontSize || 'inherit'}
         color={color || 'secondary'}
         sx={{ transform: `scale(${scale || 1})` }}
