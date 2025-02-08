@@ -111,11 +111,8 @@ const addOverlaysToStyle = (
     });
 };
 
-let prevLayers = [] as string[];
-const openFreeMapCheck = (
-  activeLayers: string[],
-  showToast: (message: string | React.ReactNode, severity?: Severity) => void,
-) => {
+let prevLayers: string[] = [];
+const openFreeMapCheck = (activeLayers: string[], showToast: ShowToast) => {
   if (!prevLayers.includes('basicOfr') && activeLayers.includes('basicOfr')) {
     showToast(
       <>
