@@ -140,9 +140,5 @@ export const RELATION_FEATURE = {
     amenity: 'university',
     type: 'multipolygon',
   },
-  imageDefs: [
-    { type: 'center', service: 'panoramax', center: [15, 51] },
-    { type: 'center', service: 'kartaview', center: [15, 51] },
-    { type: 'center', service: 'mapillary', center: [15, 51] },
-  ],
+  imageDefs: [],
 };
