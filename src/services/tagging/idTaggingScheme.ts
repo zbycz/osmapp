@@ -151,9 +151,9 @@ const keysTodo = {
 const getFeaturedTags = (feature: Feature) => {
   const { tags } = feature;
 
-  const matchedKeys = Object.keys(feature.tags).filter((key) =>
-    FEATURED_KEYS.some(({ matcher }) => matcher.test(key)),
-  );
+  const matchedKeys = FEATURED_KEYS.map(({ matcher }) =>
+    Object.keys(feature.tags).filter((key) => matcher.test(key)),
+  ).flat();
 
   return matchedKeys.reduce(
     (acc, key) => (tags[key] ? { ...acc, [key]: tags[key] } : acc),
