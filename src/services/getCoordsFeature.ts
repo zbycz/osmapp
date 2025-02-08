@@ -20,7 +20,7 @@ export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
     },
     tags: {},
     properties: { class: 'marker', subclass: 'point' },
-    imageDefs: getImagesFromCenter({}, center),
+    imageDefs: getImagesFromCenter({}, 'node', center),
   };
 };
 
