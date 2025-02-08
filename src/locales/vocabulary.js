@@ -376,9 +376,12 @@ export default {
   'sharedialog.copied': 'Copied!',
   'sharedialog.share': 'Share',
 
-  osmtype_node: 'Node',
-  osmtype_way: 'Way',
-  osmtype_relation: 'Relation',
+  'osmtype.node': 'Node',
+  'osmtype.node.description': 'Point of interest OR point in a way – contains coordinates and properties (tags).',
+  'osmtype.way': 'Way',
+  'osmtype.way.description': 'Line consisting of severel (many) nodes.',
+  'osmtype.relation': 'Relation',
+  'osmtype.relation.description': 'Group of other elements – ways, nodes, and even other relations.',
 
   weather: 'Weather',
 };

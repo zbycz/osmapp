@@ -285,9 +285,12 @@ export default {
   'sharedialog.copied': 'Zkopírováno!',
   'sharedialog.share': 'Sdílet',
 
-  osmtype_node: 'Uzel',
-  osmtype_way: 'Cesta',
-  osmtype_relation: 'Relace',
+  'osmtype.node': 'Uzel',
+  'osmtype.node.description': 'Bod zájmu či bod v cestě – nese polohu a vlastnosti (tagy).',
+  'osmtype.way': 'Cesta',
+  'osmtype.way.description': 'Linie se skládá z dalších uzlů (node).',
+  'osmtype.relation': 'Relace',
+  'osmtype.relation.description': 'Skupina dalších prvků – cest, uzlů a případně dalších relací.',
 
   weather: 'Počasí',
 };
