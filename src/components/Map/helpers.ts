@@ -50,15 +50,18 @@ export const getIsOsmObject = ({ id, layer }) => {
   return layersWithOsmId(getGlobalMap().getStyle()).includes(layer.id);
 };
 
-export const convertMapIdToOsmId = (feature) => {
+export const convertMapIdToOsmId = (feature): OsmId | false => {
   if (!feature || !feature.id) return false;
 
   const mapId = `${feature.id}`;
-  const id = mapId.substring(0, mapId.length - 1);
+  const id = Number(mapId.substring(0, mapId.length - 1));
   const numType = mapId.substring(mapId.length - 1);
   const mapTypeToOsm = { 0: 'node', 1: 'way', 4: 'relation' };
-
-  return { id, type: mapTypeToOsm[numType] ?? `type${numType}` };
+  const type = mapTypeToOsm[numType];
+  if (!type) {
+    return false;
+  }
+  return { id, type };
 };
 
 export const convertOsmIdToMapId = (apiId: OsmId) => {

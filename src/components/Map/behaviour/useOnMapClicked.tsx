@@ -33,9 +33,10 @@ const getId = (feature) => {
     return { isOsmObject: true, osmMeta: indoorId };
   }
 
-  const isOsmObject = getIsOsmObject(feature);
+  const osmId = convertMapIdToOsmId(feature);
+  const isOsmObject = osmId && getIsOsmObject(feature);
   const osmMeta = isOsmObject
-    ? convertMapIdToOsmId(feature)
+    ? osmId
     : { type: feature.layer.id, id: feature.id };
   return { isOsmObject, osmMeta };
 };
