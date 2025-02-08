@@ -110,6 +110,8 @@ const addOverlaysToStyle = (
     });
 };
 
+const prevLayers = [] as string[]
+
 export const useUpdateStyle = createMapEffectHook(
   (
     map,
@@ -117,6 +119,7 @@ export const useUpdateStyle = createMapEffectHook(
     userLayers: Layer[],
     mapLoaded: boolean,
     currentTheme: Theme,
+    showToast
   ) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
@@ -146,5 +149,11 @@ export const useUpdateStyle = createMapEffectHook(
     if (mapLoaded && overlays.includes('indoor')) {
       addIndoorEqual();
     }
+
+
+    if (!prevLayers.includes("basicOfr") && activeLayers.includes("basicOfr")) {
+      showToast("OpenFreeMap clickabilty is currently broken, see this issue for more info: https://github.com/onthegomap/planetiler/issues/1120")
+    }
+    prevLayers = activeLayers;
   },
 );
