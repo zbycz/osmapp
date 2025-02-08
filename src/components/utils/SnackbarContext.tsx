@@ -2,7 +2,10 @@ import { Alert, Snackbar } from '@mui/material';
 import React, { createContext, useContext, useState, useMemo } from 'react';
 
 type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
-export type ShowToast = (message: string, severity?: Severity) => void;
+export type ShowToast = (
+  message: string | React.ReactNode,
+  severity?: Severity,
+) => void;
 export type SnackbarContextType = {
   showToast: ShowToast;
 };
@@ -14,7 +17,7 @@ const SnackbarContext = createContext<SnackbarContextType>({
 export const useSnackbar = () => useContext(SnackbarContext);
 
 type Props = {
-  initialToast?: { message: string; severity?: Severity };
+  initialToast?: { message: string | React.ReactNode; severity?: Severity };
 };
 
 // TODO maybe allow more messages ?
@@ -24,7 +27,9 @@ export const SnackbarProvider: React.FC<Props> = ({
   initialToast,
 }) => {
   const [open, setOpen] = useState(!!initialToast);
-  const [message, setMessage] = useState<string>(initialToast?.message ?? '');
+  const [message, setMessage] = useState<React.ReactNode>(
+    initialToast?.message ?? '',
+  );
   const [severity, setSeverity] = useState<Severity>(initialToast?.severity);
 
   const handleClose = (_event: React.SyntheticEvent, reason?: string) => {
@@ -36,7 +41,7 @@ export const SnackbarProvider: React.FC<Props> = ({
 
   const value: SnackbarContextType = useMemo(
     () => ({
-      showToast: (message: string, severity?: Severity) => {
+      showToast: (message: React.ReactNode, severity?: Severity) => {
         setMessage(message);
         setSeverity(severity);
         setOpen(true);
