@@ -20,7 +20,7 @@ export const osmToFeature = (element): Feature => {
     osmMeta,
     tags,
     members,
-    imageDefs: getImageDefs(tags, center),
+    imageDefs: getImageDefs(tags, osmMeta.type, center),
     properties: { ...getPoiClass(tags) },
     deleted: osmappDeletedMarker,
   };

@@ -114,7 +114,11 @@ const fetchFeatureWithCenter = async (apiId: OsmId) => {
   const feature = osmToFeature(element);
   if (!feature.center && center) {
     feature.center = center;
-    feature.imageDefs = getImageDefs(feature.tags, center);
+    feature.imageDefs = getImageDefs(
+      feature.tags,
+      feature.osmMeta.type,
+      center,
+    );
   }
 
   if (feature.center) {
