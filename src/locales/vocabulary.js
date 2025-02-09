@@ -183,6 +183,7 @@ export default {
   'featurepanel.inline_edit_title': 'Edit',
   'featurepanel.objects_around': 'Nearby objects',
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
+  'featurepanel.detail_page': 'Detail page',
   'featurepanel.climbing_restriction': 'Climbing restriction',
   'featurepanel.login': 'Login',
   'featurepanel.footer_title': 'Other info',
