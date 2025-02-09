@@ -176,7 +176,7 @@ export const CragsInArea = () => {
           ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
           : ''}
       </PanelLabel>
-      <Box mt={2} mb={2}>
+      <Box mt={2} mb={4}>
         <CragList>
           {crags.map((item) => (
             <CragItem key={getOsmappLink(item)} feature={item} />

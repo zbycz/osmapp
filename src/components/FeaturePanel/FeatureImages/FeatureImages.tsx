@@ -7,6 +7,7 @@ import { NoImage } from './NoImage';
 import { HEIGHT, ImageSkeleton } from './helpers';
 import { naturalSort } from '../Climbing/utils/array';
 import { PROJECT_ID } from '../../../services/project';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
@@ -34,9 +35,15 @@ export const Slider = ({ children }) => (
 );
 
 export const FeatureImages = () => {
+  const { feature } = useFeatureContext();
   const { loading, images } = useLoadImages();
   if (images.length === 0) {
-    return <Wrapper>{loading ? <ImageSkeleton /> : <NoImage />}</Wrapper>;
+    // CragsInArea condition
+    if (feature.memberFeatures?.length && feature.tags.climbing === 'area') {
+      return null;
+    } else {
+      return <Wrapper>{loading ? <ImageSkeleton /> : <NoImage />}</Wrapper>;
+    }
   }
 
   return (
