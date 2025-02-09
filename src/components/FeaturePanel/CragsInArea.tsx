@@ -4,7 +4,11 @@ import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
+import {
+  getOsmappLink,
+  getReactKey,
+  getUrlOsmId,
+} from '../../services/helpers';
 import { Feature, isInstant } from '../../services/types';
 import { useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
@@ -17,8 +21,14 @@ import Link from 'next/link';
 import { naturalSort } from './Climbing/utils/array';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { PROJECT_ID } from '../../services/project';
+import { Item } from './MemberFeatures/Item';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
+
+const Ul = styled.ul`
+  padding: 0;
+  list-style: none;
+`;
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
@@ -155,6 +165,9 @@ export const CragsInArea = () => {
     return null;
   }
 
+  const crags = feature.memberFeatures.filter(({ tags }) => tags.climbing);
+  const other = feature.memberFeatures.filter(({ tags }) => !tags.climbing);
+
   return (
     <>
       <PanelLabel>
@@ -165,10 +178,18 @@ export const CragsInArea = () => {
       </PanelLabel>
       <Box mt={2} mb={2}>
         <CragList>
-          {feature.memberFeatures.map((item) => (
+          {crags.map((item) => (
             <CragItem key={getOsmappLink(item)} feature={item} />
           ))}
         </CragList>
+
+        {other.length > 0 && (
+          <Ul>
+            {other.map((item) => (
+              <Item key={getReactKey(item)} feature={item} />
+            ))}
+          </Ul>
+        )}
       </Box>
     </>
   );
