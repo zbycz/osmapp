@@ -29,22 +29,21 @@ create table climbing_tiles_cache
 alter table climbing_tiles_cache
   owner to xata_owner_bb_3id0nfvj551arc4a8j3li4ee7s;
 
-drop table climbing_tiles_stats;
 create table climbing_tiles_stats
 (
   id                     serial
     primary key,
-  timestamp              text    null,
-  osm_data_timestamp     text    null,
-  build_log              text    null,
-  build_duration         bigint  null,
-  max_size               bigint  null,
-  max_size_zxy           text    null,
-  max_time               bigint  null,
-  max_time_zxy           text    null,
-  groups_count           integer null,
-  groups_with_name_count integer null,
-  routes_count           integer null
+  timestamp              text,
+  osm_data_timestamp     text,
+  build_log              text,
+  build_duration         bigint,
+  max_size               bigint,
+  max_size_zxy           text,
+  max_time               bigint,
+  max_time_zxy           text,
+  groups_count           integer,
+  groups_with_name_count integer,
+  routes_count           integer
 );
 
 alter table climbing_tiles_stats
