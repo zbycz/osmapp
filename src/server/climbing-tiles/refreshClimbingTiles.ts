@@ -7,7 +7,8 @@ import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
 import { LineString, LonLat, Point } from '../../services/types';
 import format from 'pg-format';
-import { closeClient, getClient } from './db';
+import { ClimbingFeaturesRecords, closeClient, getClient } from './db';
+import { queryTileStats, updateStats } from './utils';
 
 const centerGeometry = (feature: GeojsonFeature): GeojsonFeature<Point> => ({
   ...feature,
@@ -59,10 +60,8 @@ const fetchFromOverpass = async () => {
   return data;
 };
 
-type Records = any; //TODO Partial<EditableData<ClimbingTilesRecord>>[];
-
 const recordsFactory = () => {
-  const records: Records = [];
+  const records: ClimbingFeaturesRecords = [];
   const addRecordRaw = (
     type: string,
     coordinates: LonLat,
@@ -187,13 +186,14 @@ const buildLogFactory = () => {
     console.log(message); //eslint-disable-line no-console
   };
   log('Starting...');
-  return { buildLog, log };
+  return { getBuildLog: () => buildLog.join('\n'), log };
 };
 
 export const refreshClimbingTiles = async () => {
-  const { buildLog, log } = buildLogFactory();
+  const { getBuildLog, log } = buildLogFactory();
   const start = performance.now();
   const client = await getClient();
+  const tileStats = await queryTileStats(client);
 
   const data = await fetchFromOverpass();
   log(`Overpass elements: ${data.elements.length}`);
@@ -214,10 +214,13 @@ export const refreshClimbingTiles = async () => {
   log(`SQL Query length: ${query.length} chars`);
 
   await client.query(query);
+
+  const buildDuration = Math.round(performance.now() - start);
+  log(`Duration: ${buildDuration} ms`);
+  log('Done.');
+
+  await updateStats(data, getBuildLog(), buildDuration, tileStats, records);
   await closeClient(client);
 
-  log('Done.');
-  log(`Duration: ${Math.round(performance.now() - start)} ms`);
-
-  return buildLog.join('\n');
+  return getBuildLog();
 };

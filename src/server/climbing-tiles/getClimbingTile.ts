@@ -1,4 +1,4 @@
-import { getClient } from './db';
+import { closeClient, getClient } from './db';
 import { tileToBBOX } from './tileToBBOX';
 import { Tile } from '../../types';
 import { optimizeGeojsonToGrid } from './optimizeGeojsonToGrid';
@@ -58,6 +58,8 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
     `INSERT INTO climbing_tiles_cache VALUES ($1, $2, $3, $4) ON CONFLICT (zxy) DO NOTHING`,
     [cacheKey, geojson, duration, geojson.features.length],
   );
+
+  closeClient(client);
 
   return JSON.stringify(geojson);
 };

@@ -1,10 +1,25 @@
 import { Client } from 'pg';
 
+export type ClimbingFeaturesRecords = {
+  type: string;
+  osmType: string;
+  osmId: number;
+  name: string;
+  count: number;
+  lon: number;
+  lat: number;
+  geojson: string;
+}[];
+
 if (!global.db) {
   global.db = { pool: false };
 }
 
 export async function getClient(): Promise<Client> {
+  if (!process.env.XATA_PASSWORD) {
+    throw new Error('XATA_PASSWORD must be set');
+  }
+
   if (!global.db.pool) {
     const client = new Client({
       user: 'tvgiad',
@@ -26,4 +41,5 @@ export async function getClient(): Promise<Client> {
 
 export async function closeClient(client: Client): Promise<void> {
   await client.end();
+  global.db.pool = false;
 }
