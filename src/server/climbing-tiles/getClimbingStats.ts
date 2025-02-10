@@ -1,6 +1,6 @@
 import { getClient } from './db';
 
-const query = `SELECT * FROM climbing_tiles_stats LIMIT 1`;
+const query = `SELECT * FROM climbing_tiles_stats ORDER BY id DESC LIMIT 1`;
 
 export const getClimbingStats = async () => {
   const client = await getClient();

@@ -50,8 +50,7 @@ export const updateStats = async (
   records: ClimbingFeaturesRecords,
 ) => {
   const statsRow = {
-    id: 1,
-    timestamp: new Date().toISOString(),
+    timestamp: new Date(),
     osm_data_timestamp: data.osm3s.timestamp_osm_base,
     build_log: buildLog,
     build_duration: buildDuration,
@@ -62,12 +61,14 @@ export const updateStats = async (
       .length,
   };
 
-  const client = await getClient();
-  await client.query(
-    format(
-      'TRUNCATE climbing_tiles_stats;INSERT INTO climbing_tiles_stats(%I) VALUES %L',
-      Object.keys(statsRow),
-      Object.values(statsRow),
-    ),
+  const query = format(
+    'INSERT INTO climbing_tiles_stats(%I) VALUES (%L)',
+    Object.keys(statsRow),
+    Object.values(statsRow),
   );
+
+  console.log(query);
+
+  const client = await getClient();
+  await client.query(query);
 };
