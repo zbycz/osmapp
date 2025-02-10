@@ -46,29 +46,27 @@ export const updateStats = async (
   data: OsmResponse,
   buildLog: string,
   buildDuration: number,
-  tileStats: TileStats,
+  deletedTilesStats: TileStats,
   records: ClimbingFeaturesRecords,
 ) => {
   const statsRow = {
-    timestamp: new Date(),
+    timestamp: new Date().toISOString(),
     osm_data_timestamp: data.osm3s.timestamp_osm_base,
     build_log: buildLog,
     build_duration: buildDuration,
-    ...tileStats,
+    ...deletedTilesStats,
     routes_count: records.filter((r) => r.type === 'route').length,
     groups_count: records.filter((r) => r.type === 'group').length,
     groups_with_name_count: records.filter((r) => r.type === 'group' && r.name)
       .length,
   };
 
-  const query = format(
-    'INSERT INTO climbing_tiles_stats(%I) VALUES (%L)',
-    Object.keys(statsRow),
-    Object.values(statsRow),
-  );
-
-  console.log(query);
-
   const client = await getClient();
-  await client.query(query);
+  await client.query(
+    format(
+      'INSERT INTO climbing_tiles_stats(%I) VALUES (%L)',
+      Object.keys(statsRow),
+      Object.values(statsRow),
+    ),
+  );
 };
