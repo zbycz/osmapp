@@ -9,7 +9,7 @@ import {
 import { LayerIcon, Spacer, StyledList } from './helpers';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { dotToOptionalBr } from '../helpers';
-import { t } from '../../services/intl';
+import { intl, t } from '../../services/intl';
 import { TooltipButton } from '../utils/TooltipButton';
 import { useQuery } from 'react-query';
 import { fetchJson } from '../../services/fetch';
@@ -17,7 +17,7 @@ import { ClimbingStatsResponse } from '../../types';
 import { nl2br } from '../utils/nl2br';
 
 const getLocalTime = (lastRefresh: string) =>
-  lastRefresh ? new Date(lastRefresh).toLocaleString() : null;
+  lastRefresh ? new Date(lastRefresh).toLocaleString(intl.lang) : null;
 
 const fetchClimbingStats = () =>
   fetchJson<ClimbingStatsResponse>('/api/climbing-tiles/stats');
@@ -30,29 +30,33 @@ const ClimbingSecondary = () => {
   }
 
   if (error) {
-    return <>{`${error}`}</>;
+    return <>Error: {`${error}`}</>;
   }
 
   const { lastRefresh, osmDataTimestamp, devStats } = data;
-
+  const osmTime = getLocalTime(osmDataTimestamp);
   const tooltip = (
     <>
       Refreshed: 1× / night
       <br />
       Last refresh: {getLocalTime(lastRefresh)}
       <br />
-      OSM timestamp: {getLocalTime(osmDataTimestamp)}
-      {/*<br /><a href="">Refresh now</a>*/}
+      OSM timestamp: {osmTime}
       <br />
       <br />
-      Dev stats: {nl2br(JSON.stringify(devStats, null, 2))}
+      Dev stats:{' '}
+      {nl2br(
+        Object.entries(devStats)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n'),
+      )}
       <br />
     </>
   );
 
   return (
     <>
-      2025-02-10 15:23
+      {osmTime.replace(/:\d+( [APM]+)?$/, '$1')}
       <TooltipButton fontSize={14} tooltip={tooltip} />
     </>
   );
