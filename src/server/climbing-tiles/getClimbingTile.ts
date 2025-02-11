@@ -1,4 +1,4 @@
-import { getClient } from './db';
+import { closeClient, getClient } from './db';
 import { tileToBBOX } from './tileToBBOX';
 import { Tile } from '../../types';
 import { optimizeGeojsonToGrid } from './optimizeGeojsonToGrid';
@@ -53,11 +53,12 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   const duration = Math.round(performance.now() - start);
   logCacheMiss(duration, geojson.features.length);
 
-  // intentionally not awaited to make quicker return of data
-  client.query(
+  await client.query(
     `INSERT INTO climbing_tiles_cache VALUES ($1, $2, $3, $4) ON CONFLICT (zxy) DO NOTHING`,
     [cacheKey, geojson, duration, geojson.features.length],
   );
+
+  await closeClient(client);
 
   return JSON.stringify(geojson);
 };

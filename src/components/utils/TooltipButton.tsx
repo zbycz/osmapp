@@ -5,12 +5,6 @@ import { SvgIconOwnProps } from '@mui/material/SvgIcon/SvgIcon';
 import { isMobileDevice, useBoolState } from '../helpers';
 import styled from '@emotion/styled';
 
-type Props = {
-  tooltip: React.ReactNode;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  color?: SvgIconOwnProps['color'];
-};
-
 const useClickAwayListener = (
   tooltipRef: React.MutableRefObject<HTMLDivElement>,
   hide: () => void,
@@ -35,11 +29,18 @@ const useClickAwayListener = (
   }, [hide, isMobile, tooltipRef]);
 };
 
-const StyledIconButton = styled(IconButton)`
-  font-size: inherit;
+const StyledIconButton = styled(IconButton)<{ fontSize?: number }>`
+  font-size: ${({ fontSize }) => (fontSize ? `${fontSize}px` : 'inherit')};
 `;
 
-export const TooltipButton = ({ tooltip, onClick, color }: Props) => {
+type Props = {
+  tooltip: React.ReactNode;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  color?: SvgIconOwnProps['color'];
+  fontSize?: number;
+};
+
+export const TooltipButton = ({ tooltip, onClick, color, fontSize }: Props) => {
   const isMobile = isMobileDevice();
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [mobileTooltipShown, show, hide] = useBoolState(false);
@@ -55,8 +56,8 @@ export const TooltipButton = ({ tooltip, onClick, color }: Props) => {
   useClickAwayListener(tooltipRef, hide, isMobile);
 
   const content = (
-    <StyledIconButton onClick={handleClick}>
-      <InfoOutlinedIcon fontSize="small" color={color} />
+    <StyledIconButton onClick={handleClick} fontSize={fontSize}>
+      <InfoOutlinedIcon fontSize="inherit" color={color} />
     </StyledIconButton>
   );
 

@@ -7,7 +7,10 @@ import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
 import { LineString, LonLat, Point } from '../../services/types';
 import format from 'pg-format';
-import { closeClient, getClient } from './db';
+import { ClimbingFeaturesRecords, closeClient, getClient } from './db';
+import { queryTileStats, updateStats } from './utils';
+import { chunk } from 'lodash';
+import { readFileSync } from 'fs';
 
 const centerGeometry = (feature: GeojsonFeature): GeojsonFeature<Point> => ({
   ...feature,
@@ -39,6 +42,11 @@ const prepareGeojson = (
   });
 
 const fetchFromOverpass = async () => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('fetchFromOverpass: Using cache in ../overpass.json'); //eslint-disable-line no-console
+    return JSON.parse(readFileSync('../overpass.json', 'utf8'));
+  }
+
   // takes about 42 secs, 25MB
   const query = `[out:json][timeout:80];(nwr["climbing"];nwr["sport"="climbing"];);(._;>>;);out qt;`;
   const data = await fetchJson<OsmResponse>(
@@ -59,10 +67,8 @@ const fetchFromOverpass = async () => {
   return data;
 };
 
-type Records = any; //TODO Partial<EditableData<ClimbingTilesRecord>>[];
-
 const recordsFactory = () => {
-  const records: Records = [];
+  const records: ClimbingFeaturesRecords = [];
   const addRecordRaw = (
     type: string,
     coordinates: LonLat,
@@ -187,13 +193,14 @@ const buildLogFactory = () => {
     console.log(message); //eslint-disable-line no-console
   };
   log('Starting...');
-  return { buildLog, log };
+  return { getBuildLog: () => buildLog.join('\n'), log };
 };
 
 export const refreshClimbingTiles = async () => {
-  const { buildLog, log } = buildLogFactory();
+  const { getBuildLog, log } = buildLogFactory();
   const start = performance.now();
   const client = await getClient();
+  const tileStats = await queryTileStats(client);
 
   const data = await fetchFromOverpass();
   log(`Overpass elements: ${data.elements.length}`);
@@ -202,22 +209,27 @@ export const refreshClimbingTiles = async () => {
   log(`Records: ${records.length}`);
 
   const columns = Object.keys(records[0]);
-  const values = records.map((record) => Object.values(record));
-  const query = format(
-    `TRUNCATE TABLE climbing_features;
-      INSERT INTO climbing_features(%I) VALUES %L;
-      TRUNCATE TABLE climbing_tiles_cache;
-      `,
-    columns,
-    values,
-  );
-  log(`SQL Query length: ${query.length} chars`);
+  const chunks = chunk(records, 5000); // XATA max size is probably 4 MB, this produces queries about 2 MB big
 
-  await client.query(query);
+  await client.query('TRUNCATE TABLE climbing_features');
+  for (const [index, chunk] of chunks.entries()) {
+    const query = format(
+      'INSERT INTO climbing_features(%I) VALUES %L',
+      columns,
+      chunk.map((record) => Object.values(record)),
+    );
+    log(`SQL Query #${index + 1} length: ${query.length} chars`);
+    await client.query(query);
+  }
+
+  await client.query('TRUNCATE TABLE climbing_tiles_cache');
+
+  const buildDuration = Math.round(performance.now() - start);
+  log(`Duration: ${buildDuration} ms`);
+  log('Done.');
+
+  await updateStats(data, getBuildLog(), buildDuration, tileStats, records);
   await closeClient(client);
 
-  log('Done.');
-  log(`Duration: ${Math.round(performance.now() - start)} ms`);
-
-  return buildLog.join('\n');
+  return getBuildLog();
 };

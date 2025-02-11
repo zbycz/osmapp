@@ -37,6 +37,7 @@ type OsmRelation = {
 type OsmItem = OsmNode | OsmWay | OsmRelation;
 export type OsmResponse = {
   elements: OsmItem[];
+  osm3s: { timestamp_osm_base: string }; // overpass only
 };
 
 export type GeojsonFeature<T extends FeatureGeometry = FeatureGeometry> = {

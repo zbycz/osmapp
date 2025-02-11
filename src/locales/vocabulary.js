@@ -384,4 +384,6 @@ export default {
   'osmtype.relation.description': 'Group of other elements – ways, nodes, and even other relations.',
 
   weather: 'Weather',
+
+  'climbing_tiles.stats': `Refreshed: 1× / night<br />Last refresh: __lastRefresh__<br />OSM timestamp: __osmTime__`,
 };
