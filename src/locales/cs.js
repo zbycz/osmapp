@@ -293,4 +293,6 @@ export default {
   'osmtype.relation.description': 'Skupina dalších prvků – cest, uzlů a případně dalších relací.',
 
   weather: 'Počasí',
+
+  'climbing_tiles.stats': `Obnovuje se: 1× / noc<br />Naposledy: __lastRefresh__<br />OSM timestamp: __osmTime__`,
 };

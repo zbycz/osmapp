@@ -9,11 +9,11 @@ import {
 import { LayerIcon, Spacer, StyledList } from './helpers';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { dotToOptionalBr } from '../helpers';
-import { intl, t } from '../../services/intl';
+import { intl, t, Translation } from '../../services/intl';
 import { TooltipButton } from '../utils/TooltipButton';
 import { useQuery } from 'react-query';
 import { fetchJson } from '../../services/fetch';
-import { ClimbingStatsResponse } from '../../types';
+import type { ClimbingStatsResponse } from '../../types';
 import { nl2br } from '../utils/nl2br';
 
 const getLocalTime = (lastRefresh: string) =>
@@ -30,18 +30,20 @@ const ClimbingSecondary = () => {
   }
 
   if (error) {
-    return <>Error: {`${error}`}</>;
+    console.error('Error fetching climbing stats', error); // eslint-disable-line no-console
+    return null;
   }
 
   const { lastRefresh, osmDataTimestamp, devStats } = data;
-  const osmTime = getLocalTime(osmDataTimestamp);
   const tooltip = (
     <>
-      Refreshed: 1× / night
-      <br />
-      Last refresh: {getLocalTime(lastRefresh)}
-      <br />
-      OSM timestamp: {osmTime}
+      <Translation
+        id="climbing_tiles.stats"
+        values={{
+          lastRefresh: getLocalTime(lastRefresh),
+          osmTime: getLocalTime(osmDataTimestamp),
+        }}
+      />
       <br />
       <br />
       Dev stats:{' '}
@@ -56,7 +58,7 @@ const ClimbingSecondary = () => {
 
   return (
     <>
-      {osmTime.replace(/:\d+( [APM]+)?$/, '$1')}
+      {getLocalTime(osmDataTimestamp).replace(/:\d+( [APM]+)?$/, '$1')}
       <TooltipButton fontSize={14} tooltip={tooltip} />
     </>
   );
