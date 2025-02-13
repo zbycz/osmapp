@@ -49,7 +49,9 @@ export const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
 
 export const getWikimediaCommonsTags = (tags: FeatureTags) => {
   return naturalSort(
-    Object.entries(tags).filter(([key]) => isWikimediaCommons[key]),
+    Object.entries(tags).filter(([key]) => {
+      return isWikimediaCommons(key);
+    }),
     (item) => item[0],
   );
 };
