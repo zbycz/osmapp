@@ -12,6 +12,10 @@ import React from 'react';
 import { PoiIcon } from '../../../utils/icons/PoiIcon';
 import { EditDataItem } from '../useEditItems';
 
+const StyledTypography = styled(Typography)<{ $deleted: boolean }>`
+  ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
+`;
+
 const StyledTabs = styled(Tabs)`
   border-color: ${({ theme }) => theme.palette.divider};
   && .MuiTab-root {
@@ -42,34 +46,30 @@ const StyledTabs = styled(Tabs)`
 type TabLabelProps = {
   item: EditDataItem;
 };
-
-const TabLabel = ({ item }: TabLabelProps) => {
-  const { shortId, tags, presetLabel } = item;
-
-  return (
-    <Stack direction="column" alignItems="flex-start" width="100%">
-      <Stack
-        direction="row"
-        gap={1}
-        alignItems="center"
-        justifyContent="space-between"
-        width="100%"
-      >
-        <Typography variant="button" whiteSpace="nowrap">
-          {tags.name ?? shortId}
-        </Typography>
-      </Stack>
-      <Typography
-        variant="caption"
-        textTransform="lowercase"
+const TabLabel = ({
+  item: { shortId, tags, presetLabel, toBeDeleted },
+}: TabLabelProps) => (
+  <Stack direction="column" alignItems="flex-start" width="100%">
+    <Stack
+      direction="row"
+      gap={1}
+      alignItems="center"
+      justifyContent="space-between"
+      width="100%"
+    >
+      <StyledTypography
+        variant="button"
         whiteSpace="nowrap"
+        $deleted={toBeDeleted}
       >
-        <PoiIcon tags={tags} />
-        {presetLabel}
-      </Typography>
+        {tags.name ?? shortId}
+      </StyledTypography>
     </Stack>
-  );
-};
+    <Typography variant="caption" textTransform="lowercase" whiteSpace="nowrap">
+      {presetLabel}
+    </Typography>
+  </Stack>
+);
 
 export const ItemsTabs = () => {
   const { items, current, setCurrent } = useEditContext();
