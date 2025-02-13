@@ -72,44 +72,49 @@ export const AddMemberForm = ({
   const [label, setLabel] = React.useState('');
   const isClimbingCrag = tags.climbing === 'crag';
 
-  const handleAddMember = useCallback(async () => {
-    let newFeature: Feature;
-    if (label.match(/^[nwr]\d+$/)) {
-      const apiId = getApiId(label);
-      newFeature = await getFullFeatureWithMemberFeatures(apiId);
-    } else {
-      const lastNodeLocation =
-        newLonLat ?? (await getNewNodeLocation(items, members));
-      newFeature = getNewNode(lastNodeLocation, label, defaultTags);
-    }
+  const handleAddMember = useCallback(
+    async (e) => {
+      let newFeature: Feature;
+      if (label.match(/^[nwr]\d+$/)) {
+        const apiId = getApiId(label);
+        newFeature = await getFullFeatureWithMemberFeatures(apiId);
+      } else {
+        const lastNodeLocation =
+          newLonLat ?? (await getNewNodeLocation(items, members));
+        newFeature = getNewNode(lastNodeLocation, label, defaultTags);
+      }
 
-    const newShortId = getShortId(newFeature.osmMeta);
-    const newLabel = getLabel(newFeature); // same as in buildDataItem()
-    addFeature(newFeature);
-    setMembers((prev) => [
-      ...(prev ?? []),
-      { shortId: newShortId, role: '', label: newLabel },
-    ]);
-    setShowInput(false);
-    setLabel('');
-    setCurrent(newShortId);
-  }, [
-    addFeature,
-    defaultTags,
-    items,
-    label,
-    members,
-    newLonLat,
-    setCurrent,
-    setMembers,
-  ]);
+      const newShortId = getShortId(newFeature.osmMeta);
+      const newLabel = getLabel(newFeature); // same as in buildDataItem()
+      addFeature(newFeature);
+      setMembers((prev) => [
+        ...(prev ?? []),
+        { shortId: newShortId, role: '', label: newLabel },
+      ]);
+      setShowInput(false);
+      setLabel('');
+      if (!e.ctrlKey && !e.metaKey) {
+        setCurrent(newShortId);
+      }
+    },
+    [
+      addFeature,
+      defaultTags,
+      items,
+      label,
+      members,
+      newLonLat,
+      setCurrent,
+      setMembers,
+    ],
+  );
 
   React.useEffect(() => {
     const downHandler = (e) => {
       if (!showInput) return;
 
       if (e.key === 'Enter') {
-        handleAddMember();
+        handleAddMember(e);
       }
 
       if (e.key === 'Escape') {
