@@ -85,7 +85,9 @@ const getItems = (elements: OsmItem[]) => {
 };
 
 const numberToSuperScript = (number?: number) =>
-  number?.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d]);
+  number && number > 1
+    ? number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d])
+    : '';
 
 const getLabel = (tags: FeatureTags, osmappRouteCount: number) =>
   join(tags?.name, '\n', numberToSuperScript(osmappRouteCount));

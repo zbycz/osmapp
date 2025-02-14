@@ -67,6 +67,9 @@ const fetchFromOverpass = async () => {
   return data;
 };
 
+const removeDiacritics = (str: string) =>
+  str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+
 const recordsFactory = () => {
   const records: ClimbingFeaturesRecords = [];
   const addRecordRaw = (
@@ -81,6 +84,7 @@ const recordsFactory = () => {
       osmType: feature.osmMeta.type,
       osmId: feature.osmMeta.id,
       name: feature.tags.name,
+      nameRaw: removeDiacritics(feature.tags.name),
       count: feature.properties.osmappRouteCount || 0,
       lon,
       lat,
@@ -101,7 +105,7 @@ const recordsFactory = () => {
 };
 
 const getNewRecords = (data: OsmResponse) => {
-  const geojsons = overpassToGeojsons(data); // 700 ms on 16k items
+  const geojsons = overpassToGeojsons(data); // 300 ms on 200k items
   const { records, addRecord, addRecordWithLine } = recordsFactory();
 
   for (const node of geojsons.node) {
@@ -125,59 +129,75 @@ const getNewRecords = (data: OsmResponse) => {
 
     //
     else if (node.tags.climbing === 'route_top') {
-      // later + update climbingLayer
+      // TODO later + update climbingLayer
     }
 
-    // 120 k nodes ???
+    //
+    else if (node.tags.leisure || node.tags.building) {
+      addRecord('gym', node);
+    }
+
+    //
+    else if (node.tags.sport === 'climbing') {
+      if (
+        node.tags.opening_hours ||
+        node.tags.phone ||
+        node.tags['addr:street'] ||
+        node.tags.man_made ||
+        node.tags.name?.match(/gym/i)
+      ) {
+        addRecord('gym', node);
+      } else {
+        addRecord('group', node); //this needs tweaking
+      }
+    }
+
+    // 150 k nodes (probably geometries of ways, etc)
     else {
       //addRecord('_otherNodes', node);
     }
   }
 
   for (const way of geojsons.way) {
-    // climbing=route -> route + line
-    // highway=via_ferrata -> route + line
+    //
     if (way.tags.climbing === 'route' || way.tags.highway === 'via_ferrata') {
       addRecordWithLine('route', way);
     }
 
-    // natural=cliff + sport=climbing -> group
-    // natural=rock + sport=climbing -> group
-    else if (
-      way.tags.sport === 'climbing' &&
-      (way.tags.natural === 'cliff' || way.tags.natural === 'rock')
-    ) {
+    //
+    else if (way.tags.leisure || way.tags.building) {
+      addRecord('gym', centerGeometry(way));
+    }
+
+    //
+    else if (way.tags.climbing || way.tags.sport === 'climbing') {
       addRecord('group', centerGeometry(way));
     }
 
-    // _otherWays to debug
+    // TODO 900 ways – parts of some climbing relations
     else {
-      addRecord('_otherWays', centerGeometry(way));
+      //addRecord('_otherWays', centerGeometry(way));
       // TODO way/167416816 is natural=cliff with parent relation type=site
     }
   }
 
   for (const relation of geojsons.relation) {
-    // climbing=area -> group
-    // climbing=boulder -> group
-    // climbing=crag -> group
-    // climbing=route -> group // multipitch or via_ferrata
-    // type=site -> group
-    // type=multipolygon -> group + delete nodes
-    if (
-      relation.tags.climbing === 'area' ||
-      relation.tags.type === 'boulder' ||
-      relation.tags.type === 'crag' ||
-      relation.tags.climbing === 'route' ||
+    if (relation.tags.climbing === 'no') {
+    }
+
+    // climbing=area, boulder, crag, route
+    else if (
+      relation.tags.climbing ||
+      relation.tags.sport === 'climbing' ||
       relation.tags.type === 'site' ||
       relation.tags.type === 'multipolygon'
     ) {
       addRecord('group', centerGeometry(relation));
     }
 
-    // _otherRelations to debug
+    // TODO 4 items to debug
     else {
-      addRecord('group', centerGeometry(relation));
+      // addRecord('_otherRelations', centerGeometry(relation));
     }
 
     // TODO no center -> write to log
