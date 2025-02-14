@@ -10,6 +10,7 @@ create table climbing_features
   "osmType" text             not null,
   "osmId"   bigint           not null,
   name      text,
+  "nameRaw" text,
   count     integer,
   geojson   json             not null
 );

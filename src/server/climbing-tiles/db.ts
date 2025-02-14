@@ -5,6 +5,7 @@ export type ClimbingFeaturesRecords = {
   osmType: string;
   osmId: number;
   name: string;
+  nameRaw: string;
   count: number;
   lon: number;
   lat: number;
