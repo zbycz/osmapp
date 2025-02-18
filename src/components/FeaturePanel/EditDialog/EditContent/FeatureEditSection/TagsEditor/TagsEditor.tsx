@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
+import AppsIcon from '@mui/icons-material/Apps';
 import { majorKeys } from '../MajorKeysEditor';
 import { isString } from '../../../../../helpers';
 import { t, Translation } from '../../../../../../services/intl';
@@ -20,6 +21,7 @@ import { ValueInput } from './ValueInput';
 import { useCurrentItem } from '../CurrentContext';
 import { TagsEntries } from '../../../useEditItems';
 import { OptionsEditor } from '../OptionsEditor';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 const Table = styled.table`
   width: calc(100% - 8px);
@@ -132,7 +134,8 @@ export const TagsEditor = () => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Stack direction="row" spacing={2} alignItems="center">
+        <Stack direction="row" spacing={1} alignItems="center">
+          <AppsIcon />
           <Typography variant="button">
             {t('editdialog.tags_editor')}
           </Typography>

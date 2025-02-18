@@ -5,6 +5,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Chip,
+  Icon,
   List,
   Stack,
   Typography,
@@ -15,6 +16,8 @@ import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
 import { useGetHandleClick } from '../helpers';
 import { AddMemberForm } from './AddMemberForm';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import { CragIcon } from '../../../Climbing/CragIcon';
 
 export const MembersEditor = () => {
   const { members, tags, nodeLonLat } = useCurrentItem();
@@ -23,15 +26,41 @@ export const MembersEditor = () => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const handleClick = useGetHandleClick({ setIsExpanded });
 
-  const getSectionName = () => {
+  const SectionName = () => {
     const isClimbingArea = tags.climbing === 'area';
+
     if (isClimbingArea) {
-      return t('editdialog.climbing_crags');
+      return (
+        <Stack direction="row" gap={1}>
+          <CragIcon
+            fill={theme.palette.text.primary}
+            stroke={theme.palette.text.primary}
+            height={24}
+            width={24}
+          />
+          <Typography variant="button">
+            {t('editdialog.climbing_crags')}{' '}
+            <Typography variant="caption" color="secondary">
+              ({t('editdialog.members')})
+            </Typography>
+          </Typography>
+        </Stack>
+      );
     }
     if (isClimbingCrag) {
-      return t('editdialog.climbing_routes');
+      return (
+        <Stack direction="row" gap={1}>
+          <ShowChartIcon />
+          <Typography variant="button">
+            {t('editdialog.climbing_routes')}{' '}
+            <Typography variant="caption" color="secondary">
+              ({t('editdialog.members')})
+            </Typography>
+          </Typography>
+        </Stack>
+      );
     }
-    return t('editdialog.members');
+    return <Typography variant="button">{t('editdialog.members')}</Typography>;
   };
 
   const AccordionComponent = ({
@@ -49,7 +78,7 @@ export const MembersEditor = () => {
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">{getSectionName()}</Typography>
+          <SectionName />
           {membersLength && (
             <Chip size="small" label={membersLength} variant="outlined" />
           )}

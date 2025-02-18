@@ -4,27 +4,41 @@
     "pixelRatio": 2,
     "width": 64,
     "x": 0,
-    "y": 0
+    "y": 72
   },
   "area-gray": {
     "height": 64,
     "pixelRatio": 2,
     "width": 64,
     "x": 64,
+    "y": 72
+  },
+  "climbing-gym-gray": {
+    "height": 44,
+    "pixelRatio": 2,
+    "width": 78,
+    "x": 58,
     "y": 0
   },
   "crag-gray": {
     "height": 48,
     "pixelRatio": 2,
     "width": 48,
-    "x": 0,
-    "y": 64
+    "x": 128,
+    "y": 72
   },
   "crag-red": {
     "height": 48,
     "pixelRatio": 2,
     "width": 48,
-    "x": 48,
-    "y": 64
+    "x": 176,
+    "y": 72
+  },
+  "via-ferrata-gray": {
+    "height": 72,
+    "pixelRatio": 2,
+    "width": 58,
+    "x": 0,
+    "y": 0
   }
 }

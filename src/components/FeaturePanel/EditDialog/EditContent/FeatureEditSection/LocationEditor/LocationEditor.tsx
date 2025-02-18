@@ -4,6 +4,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Stack,
   Typography,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -12,6 +13,7 @@ import { useCurrentItem } from '../CurrentContext';
 import { getApiId } from '../../../../../../services/helpers';
 import { fetchWays } from '../../../../../../services/osm/fetchWays';
 import { OsmId } from '../../../../../../services/types';
+import PlaceIcon from '@mui/icons-material/Place';
 
 const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
   ssr: false,
@@ -76,7 +78,10 @@ export const LocationEditor = () => {
       onChange={() => setExpanded(!expanded)}
     >
       <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Typography variant="button">{t('editdialog.location')}</Typography>
+        <Stack direction="row" gap={1} alignItems="center">
+          <PlaceIcon />
+          <Typography variant="button">{t('editdialog.location')}</Typography>
+        </Stack>
       </AccordionSummary>
       <AccordionDetails>{content}</AccordionDetails>
     </Accordion>

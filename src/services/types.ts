@@ -78,6 +78,16 @@ export type RelationMember = {
   role: string;
 };
 
+export type FeatureProperties = {
+  class: string;
+  subclass: string;
+  [key: string]: string | number | boolean;
+  osmappRouteCount?: number;
+  osmappHasImages?: boolean;
+  osmappType?: 'node' | 'way' | 'relation';
+  osmappLabel?: string;
+};
+
 // TODO split in two types /extend/
 export type Feature = {
   point?: boolean; // TODO rename to isMarker or isCoords
@@ -102,15 +112,7 @@ export type Feature = {
   memberFeatures?: Feature[];
   parentFeatures?: Feature[];
   imageDefs?: ImageDef[];
-  properties: {
-    class: string;
-    subclass: string;
-    [key: string]: string | number | boolean;
-    osmappRouteCount?: number;
-    osmappHasImages?: boolean;
-    osmappType?: 'node' | 'way' | 'relation';
-    osmappLabel?: string;
-  };
+  properties: FeatureProperties;
   center: Position;
   countryCode?: string; // ISO3166-1 code lowercase, undefined = no country
   roundedCenter?: LonLatRounded;

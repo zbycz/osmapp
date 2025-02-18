@@ -12,6 +12,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useQuery } from 'react-query';
 import { getImportance } from './helpers/importance';
+import { PoiIcon } from '../utils/PoiIcon';
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
   const { currentTheme } = useUserThemeContext();
@@ -33,12 +34,12 @@ const AroundItem = ({ feature }: { feature: Feature }) => {
         onMouseEnter={mobileMode ? undefined : handleHover}
         onMouseLeave={() => setPreview(null)}
       >
-        <Maki
+        <PoiIcon
+          tags={tags}
           ico={properties.class}
           title={`${Object.keys(tags).length} keys / ${
             properties.class ?? ''
           } / ${properties.subclass}`}
-          invert={currentTheme === 'dark'}
         />
         {getLabel(feature)}
       </a>

@@ -12,3 +12,9 @@ docker run --platform linux/amd64 -it -e FOLDER=icons -e THEME=climbing -v ${PWD
 mv sprites/icons ./
 
 ```
+
+All in one command:
+
+```bash
+rm -r sprites && mkdir sprites && mv icons sprites/ && docker run --platform linux/amd64 -it -e FOLDER=icons -e THEME=climbing -v ${PWD}:/data dolomate/spritezero && mv sprites/icons ./
+```

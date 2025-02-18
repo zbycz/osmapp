@@ -8,6 +8,7 @@ import Maki from '../../utils/Maki';
 import { getLabel } from '../../../helpers/featureLabel';
 import React from 'react';
 import styled from '@emotion/styled';
+import { PoiIcon } from '../../utils/PoiIcon';
 
 const Li = styled.li`
   margin-left: 10px;
@@ -33,12 +34,12 @@ export const Item = ({ feature }: { feature: Feature }) => {
         onMouseEnter={mobileMode ? undefined : handleHover}
         onMouseLeave={() => setPreview(null)}
       >
-        <Maki
+        <PoiIcon
+          tags={tags}
           ico={properties.class}
           title={`${Object.keys(tags).length} keys / ${
             properties.class ?? ''
           } / ${properties.subclass}`}
-          invert={currentTheme === 'dark'}
         />
         {getLabel(feature)}
       </a>
