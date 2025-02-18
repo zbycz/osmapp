@@ -12,6 +12,8 @@ import Maki from '../utils/Maki';
 import { useUserThemeContext } from '../../helpers/theme';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
+import { Box } from '@mui/material';
+import { PoiIcon } from '../utils/PoiIcon';
 
 interface Layers {
   [key: string]: Layer;
@@ -23,12 +25,9 @@ const retina =
 const ClimbingIcon = () => {
   const { currentTheme } = useUserThemeContext();
   return (
-    <Maki
-      ico="climbing"
-      size={16}
-      style={{ opacity: 0.3, marginLeft: '3px' }}
-      invert={currentTheme === 'dark'}
-    />
+    <Box ml={0.5}>
+      <PoiIcon ico="climbing" size={16} />
+    </Box>
   );
 };
 

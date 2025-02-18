@@ -21,6 +21,7 @@ import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
 import { useCurrentItem } from './CurrentContext';
+import { PoiIcon } from '../../../../utils/PoiIcon';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -64,7 +65,7 @@ const renderOption = (option: TranslatedPreset) =>
     <Placeholder>{t('editdialog.preset_select.placeholder')}</Placeholder>
   ) : (
     <>
-      <Maki ico={option.icon} size={16} middle themed />
+      <PoiIcon ico={option.icon} tags={option.tags} size={16} middle themed />
       <span style={{ paddingLeft: 5 }} />
       {option.name}
     </>

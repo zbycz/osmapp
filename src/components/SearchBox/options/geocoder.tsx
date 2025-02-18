@@ -12,6 +12,7 @@ import { GeocoderOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { LonLat } from '../../../services/types';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { PoiIcon } from '../../utils/PoiIcon';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
@@ -177,11 +178,10 @@ export const renderGeocoder = (
   return (
     <>
       <IconPart>
-        <Maki
+        <PoiIcon
           ico={poiClass.class}
-          style={{ width: '20px', height: '20px', opacity: 0.5 }}
           title={`${tagKey}=${tagValue}`}
-          invert={currentTheme === 'dark'}
+          size={20}
         />
         <div>{distance}</div>
       </IconPart>

@@ -10,6 +10,7 @@ import {
 import { useEditContext } from '../EditContext';
 import React from 'react';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
+import { PoiIcon } from '../../../utils/PoiIcon';
 
 const StyledTabs = styled(Tabs)`
   border-color: ${({ theme }) => theme.palette.divider};
@@ -38,25 +39,34 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-const TabLabel = ({ item: { shortId, tags, presetLabel } }) => (
-  <Stack direction="column" alignItems="flex-start" width="100%">
-    <Stack
-      direction="row"
-      gap={1}
-      alignItems="center"
-      justifyContent="space-between"
-      width="100%"
-    >
-      <Typography variant="button" whiteSpace="nowrap">
-        {tags.name ?? shortId}
+const TabLabel = ({ item }) => {
+  const { shortId, tags, presetLabel, properties } = item;
+
+  return (
+    <Stack direction="column" alignItems="flex-start" width="100%">
+      <Stack
+        direction="row"
+        gap={1}
+        alignItems="center"
+        justifyContent="space-between"
+        width="100%"
+      >
+        <Typography variant="button" whiteSpace="nowrap">
+          {tags.name ?? shortId}
+        </Typography>
+        {/* <NwrIcon osmType={getOsmTypeFromShortId(shortId)} /> */}
+      </Stack>
+      <Typography
+        variant="caption"
+        textTransform="lowercase"
+        whiteSpace="nowrap"
+      >
+        <PoiIcon tags={tags} ico={properties.class} />
+        {presetLabel}
       </Typography>
-      <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
     </Stack>
-    <Typography variant="caption" textTransform="lowercase" whiteSpace="nowrap">
-      {presetLabel}
-    </Typography>
-  </Stack>
-);
+  );
+};
 
 export const ItemsTabs = () => {
   const { items, current, setCurrent } = useEditContext();
