@@ -231,6 +231,7 @@ export default {
   'editdialog.preset_select.placeholder': 'Vyberte typ',
   'editdialog.preset_select.search_placeholder': 'Zadejte hledaný výraz...',
   'editdialog.preset_select.edit_button': 'Upravit',
+  'editdialog.preset_select.change_type_warning': 'Změna typu není obvyklá operace. Pokud tato změna dává smysl, můžete změnit typ tlačítkem vpravo.',
 
   'tags.name': 'Název',
   'tags.description': 'Popis',

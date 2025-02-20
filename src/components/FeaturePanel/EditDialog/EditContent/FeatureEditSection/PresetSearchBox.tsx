@@ -6,6 +6,7 @@ import {
   ListSubheader,
   MenuItem,
   Select,
+  Tooltip,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
@@ -190,30 +191,40 @@ export const PresetSearchBox = ({ value, setValue, options }: Props) => {
 
   return (
     <>
-      <Select
-        disabled={!enabled}
-        MenuProps={{
-          autoFocus: false,
-          slotProps: { paper: getPaperMaxHeight(selectRef) },
-        }}
-        value={value}
-        onChange={onChange}
-        onClose={() => setSearchText('')}
-        renderValue={() =>
-          renderOption(options.find((o) => o.presetKey === value))
-        }
-        variant="outlined"
-        fullWidth
-        displayEmpty
-        ref={selectRef}
+      <Tooltip
+        title={enabled ? '' : t('editdialog.preset_select.change_type_warning')}
+        arrow
       >
-        <SearchRow onChange={(e) => setSearchText(e.target.value)} />
-        {displayedOptions.map((option) => (
-          <MenuItem key={option} component="li" value={option}>
-            {renderOption(options.find((o) => o.presetKey === option))}
-          </MenuItem>
-        ))}
-      </Select>
+        <Select
+          disabled={!enabled}
+          sx={{
+            '.Mui-disabled': {
+              cursor: 'not-allowed !important',
+            },
+          }}
+          MenuProps={{
+            autoFocus: false,
+            slotProps: { paper: getPaperMaxHeight(selectRef) },
+          }}
+          value={value}
+          onChange={onChange}
+          onClose={() => setSearchText('')}
+          renderValue={() =>
+            renderOption(options.find((o) => o.presetKey === value))
+          }
+          variant="outlined"
+          fullWidth
+          displayEmpty
+          ref={selectRef}
+        >
+          <SearchRow onChange={(e) => setSearchText(e.target.value)} />
+          {displayedOptions.map((option) => (
+            <MenuItem key={option} component="li" value={option}>
+              {renderOption(options.find((o) => o.presetKey === option))}
+            </MenuItem>
+          ))}
+        </Select>
+      </Tooltip>
       {!enabled && (
         // TODO we may warn users that this is not usual operation, if this becomes an issue
         <Box ml={1}>
