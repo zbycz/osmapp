@@ -20,7 +20,7 @@ type MakiProps = {
   themed?: boolean;
 };
 
-const Maki = ({
+export const Maki = ({
   ico,
   invert = false,
   title = undefined,
@@ -33,7 +33,7 @@ const Maki = ({
   const invertFinal = themed ? currentTheme === 'dark' : invert;
 
   const icon = icons.includes(ico) ? ico : 'information';
-  // console.log(icon, ' was: ',ico)
+
   return (
     <MakiImg
       src={`/icons/${icon}_11.svg`}
@@ -46,5 +46,3 @@ const Maki = ({
     />
   );
 };
-
-export default Maki;

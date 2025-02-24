@@ -3,7 +3,7 @@ import { useTheme } from '@mui/material';
 import { AreaIcon } from '../FeaturePanel/Climbing/AreaIcon';
 import { CragIcon } from '../FeaturePanel/Climbing/CragIcon';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import Maki from './Maki';
+import { Maki } from './Maki';
 import React from 'react';
 import styled from '@emotion/styled';
 import { FeatureTags } from '../../services/types';

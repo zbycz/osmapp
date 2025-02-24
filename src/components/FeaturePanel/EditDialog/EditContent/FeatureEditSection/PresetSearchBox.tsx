@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
-import Maki from '../../../../utils/Maki';
 import { TranslatedPreset } from './PresetSelect';
 import { Setter } from '../../../../../types';
 import { t } from '../../../../../services/intl';

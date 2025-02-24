@@ -4,7 +4,6 @@ import { useMobileMode } from '../../helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import Router from 'next/router';
 import { getUrlOsmId } from '../../../services/helpers';
-import Maki from '../../utils/Maki';
 import { getLabel } from '../../../helpers/featureLabel';
 import React from 'react';
 import styled from '@emotion/styled';

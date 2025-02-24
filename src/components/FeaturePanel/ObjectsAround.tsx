@@ -5,7 +5,6 @@ import { fetchAroundFeatures } from '../../services/overpass/fetchAroundFeatures
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
-import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 import { DotLoader, useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
