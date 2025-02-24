@@ -65,7 +65,7 @@ docker run --platform linux/amd64 -it -e FOLDER=icons -e THEME=osmapp -v ${PWD}:
 mv sprites/icons ./
 
 # update local icons lookup
-cat << 'EOF' | node > ../src/assets/icons.ts
+cat << 'EOF' | node > ../src/components/utils/icons/iconsLookup.ts
   require('fs').readFile('sprites/osmapp.json', 'utf8' , (err, data) => {
     if (err) {return console.error(err)}
     const sprite = JSON.parse(data);

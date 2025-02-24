@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { icons } from '../../assets/icons';
-import { useUserThemeContext } from '../../helpers/theme';
+import { iconsLookup } from './iconsLookup';
+import { useUserThemeContext } from '../../../helpers/theme';
 
 const MakiImg = styled.img<{ $invert: boolean }>`
   line-height: 14px;
@@ -32,7 +32,7 @@ export const Maki = ({
   const { currentTheme } = useUserThemeContext();
   const invertFinal = themed ? currentTheme === 'dark' : invert;
 
-  const icon = icons.includes(ico) ? ico : 'information';
+  const icon = iconsLookup.includes(ico) ? ico : 'information';
 
   return (
     <MakiImg

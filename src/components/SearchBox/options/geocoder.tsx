@@ -10,7 +10,7 @@ import { Theme } from '../../../helpers/theme';
 import { GeocoderOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { LonLat } from '../../../services/types';
-import { PoiIcon } from '../../utils/PoiIcon';
+import { PoiIcon } from '../../utils/icons/PoiIcon';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226

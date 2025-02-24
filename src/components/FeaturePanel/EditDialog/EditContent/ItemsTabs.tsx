@@ -10,7 +10,7 @@ import {
 import { useEditContext } from '../EditContext';
 import React from 'react';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
-import { PoiIcon } from '../../../utils/PoiIcon';
+import { PoiIcon } from '../../../utils/icons/PoiIcon';
 
 const StyledTabs = styled(Tabs)`
   border-color: ${({ theme }) => theme.palette.divider};

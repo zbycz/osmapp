@@ -21,7 +21,7 @@ import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
 import { useCurrentItem } from './CurrentContext';
-import { PoiIcon } from '../../../../utils/PoiIcon';
+import { PoiIcon } from '../../../../utils/icons/PoiIcon';
 
 // https://stackoverflow.com/a/70918883/671880
 

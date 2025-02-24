@@ -1,5 +1,5 @@
 import { buildAddress } from './helpers';
-import { icons } from '../assets/icons';
+import { iconsLookup } from '../components/utils/icons/iconsLookup';
 
 const keys = [
   'aerialway',
@@ -305,11 +305,11 @@ export const getPoiClass = (tags): PoiClass => {
     };
   }
 
-  if (icons.includes(subclass)) {
+  if (iconsLookup.includes(subclass)) {
     return { class: subclass, subclass };
   }
 
-  if (icons.includes(key)) {
+  if (iconsLookup.includes(key)) {
     return { class: key, subclass };
   }
 

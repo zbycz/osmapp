@@ -12,7 +12,7 @@ import { useUserThemeContext } from '../../helpers/theme';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import { Box } from '@mui/material';
-import { PoiIcon } from '../utils/PoiIcon';
+import { PoiIcon } from '../utils/icons/PoiIcon';
 
 interface Layers {
   [key: string]: Layer;

@@ -11,7 +11,7 @@ import { getLabel } from '../../helpers/featureLabel';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useQuery } from 'react-query';
 import { getImportance } from './helpers/importance';
-import { PoiIcon } from '../utils/PoiIcon';
+import { PoiIcon } from '../utils/icons/PoiIcon';
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
   const { currentTheme } = useUserThemeContext();

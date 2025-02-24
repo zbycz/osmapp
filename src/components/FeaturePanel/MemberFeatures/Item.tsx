@@ -7,7 +7,7 @@ import { getUrlOsmId } from '../../../services/helpers';
 import { getLabel } from '../../../helpers/featureLabel';
 import React from 'react';
 import styled from '@emotion/styled';
-import { PoiIcon } from '../../utils/PoiIcon';
+import { PoiIcon } from '../../utils/icons/PoiIcon';
 
 const Li = styled.li`
   margin-left: 10px;
