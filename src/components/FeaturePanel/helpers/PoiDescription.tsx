@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { getHumanPoiType } from '../../../helpers/featureLabel';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Typography } from '@mui/material';
-import { PoiIcon } from '../../utils/PoiIcon';
+import { PoiIcon } from '../../utils/icons/PoiIcon';
 
 const PoiType = styled.div<{ $isSkeleton: Boolean }>`
   position: relative;

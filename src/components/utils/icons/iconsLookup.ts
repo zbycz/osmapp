@@ -1,4 +1,4 @@
-export const icons = [
+export const iconsLookup = [
   'abseiling',
   'accessible_space',
   'accounting',

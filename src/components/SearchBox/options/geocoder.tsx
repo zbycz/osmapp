@@ -4,15 +4,13 @@ import debounce from 'lodash/debounce';
 import { join } from '../../../utils';
 import { getHumanDistance, highlightText, IconPart } from '../utils';
 import { getPoiClass } from '../../../services/getPoiClass';
-import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
 import { Theme } from '../../../helpers/theme';
 import { GeocoderOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { LonLat } from '../../../services/types';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { PoiIcon } from '../../utils/PoiIcon';
+import { PoiIcon } from '../../utils/icons/PoiIcon';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226

@@ -5,14 +5,13 @@ import { fetchAroundFeatures } from '../../services/overpass/fetchAroundFeatures
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
-import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 import { DotLoader, useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useQuery } from 'react-query';
 import { getImportance } from './helpers/importance';
-import { PoiIcon } from '../utils/PoiIcon';
+import { PoiIcon } from '../utils/icons/PoiIcon';
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
   const { currentTheme } = useUserThemeContext();

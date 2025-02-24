@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { icons } from '../../assets/icons';
-import { useUserThemeContext } from '../../helpers/theme';
+import { iconsLookup } from './iconsLookup';
+import { useUserThemeContext } from '../../../helpers/theme';
 
 const MakiImg = styled.img<{ $invert: boolean }>`
   line-height: 14px;
@@ -20,7 +20,7 @@ type MakiProps = {
   themed?: boolean;
 };
 
-const Maki = ({
+export const Maki = ({
   ico,
   invert = false,
   title = undefined,
@@ -32,8 +32,8 @@ const Maki = ({
   const { currentTheme } = useUserThemeContext();
   const invertFinal = themed ? currentTheme === 'dark' : invert;
 
-  const icon = icons.includes(ico) ? ico : 'information';
-  // console.log(icon, ' was: ',ico)
+  const icon = iconsLookup.includes(ico) ? ico : 'information';
+
   return (
     <MakiImg
       src={`/icons/${icon}_11.svg`}
@@ -46,5 +46,3 @@ const Maki = ({
     />
   );
 };
-
-export default Maki;

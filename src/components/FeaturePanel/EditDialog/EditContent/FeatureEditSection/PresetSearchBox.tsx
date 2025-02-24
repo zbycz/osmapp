@@ -10,7 +10,6 @@ import {
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
-import Maki from '../../../../utils/Maki';
 import { TranslatedPreset } from './PresetSelect';
 import { Setter } from '../../../../../types';
 import { t } from '../../../../../services/intl';
@@ -22,7 +21,7 @@ import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
 import { useCurrentItem } from './CurrentContext';
-import { PoiIcon } from '../../../../utils/PoiIcon';
+import { PoiIcon } from '../../../../utils/icons/PoiIcon';
 
 // https://stackoverflow.com/a/70918883/671880
 
