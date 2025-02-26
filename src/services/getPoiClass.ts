@@ -1,5 +1,6 @@
 import { buildAddress } from './helpers';
 import { iconsLookup } from '../components/utils/icons/iconsLookup';
+import { FeatureTags } from './types';
 
 const keys = [
   'aerialway',
@@ -279,12 +280,12 @@ const rules = [
   // }
 ];
 
-interface PoiClass {
+export type PoiClass = {
   class: string;
   subclass: string;
-}
+};
 
-export const getPoiClass = (tags): PoiClass => {
+export const getPoiClass = (tags: FeatureTags): PoiClass => {
   const key = keys.find((x) => x in tags); // find first matching key
   const value = tags[key]; // its value
 

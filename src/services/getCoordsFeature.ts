@@ -3,7 +3,7 @@ import { Feature, FeatureTags, LonLat, LonLatRounded, OsmType } from './types';
 
 let nextId = 0;
 export const getNewId = () => {
-  nextId -= 1; // negative id means "adding new point" in osmApiAuth#saveChanges()
+  nextId -= 1; // negative id means "adding new osm element" in osmApiAuth#saveChanges()
   return nextId;
 };
 
@@ -31,12 +31,12 @@ export const getNewNode = (
 ): Feature => {
   return {
     type: 'Feature',
-    center: [lon, lat],
+    center: [lon, lat], // buildDataItem takes nodeLonLat from `center` TODO let buildDataItem take OsmElement type
     osmMeta: {
       type: 'node',
       id: getNewId(),
     },
     tags: { name, ...defaultTags },
-    properties: { class: 'marker', subclass: 'point' },
+    properties: { class: '__unused', subclass: '__unused' },
   };
 };

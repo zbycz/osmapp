@@ -8,38 +8,31 @@ import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
 import { t } from '../../services/intl';
 import { DotLoader, useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
-import { useUserThemeContext } from '../../helpers/theme';
 import { useQuery } from 'react-query';
 import { getImportance } from './helpers/importance';
 import { PoiIcon } from '../utils/icons/PoiIcon';
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
-  const { currentTheme } = useUserThemeContext();
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
-  const { properties, tags, osmMeta } = feature;
+  const osmId = feature.osmMeta;
+
   const handleClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
     setPreview(null);
-    Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
+    Router.push(`/${getUrlOsmId(osmId)}${window.location.hash}`);
   };
   const handleHover = () => feature.center && setPreview(feature);
 
   return (
     <li>
       <a
-        href={`/${getUrlOsmId(osmMeta)}`}
+        href={`/${getUrlOsmId(osmId)}`}
         onClick={handleClick}
         onMouseEnter={mobileMode ? undefined : handleHover}
         onMouseLeave={() => setPreview(null)}
       >
-        <PoiIcon
-          tags={tags}
-          ico={properties.class}
-          title={`${Object.keys(tags).length} keys / ${
-            properties.class ?? ''
-          } / ${properties.subclass}`}
-        />
+        <PoiIcon tags={feature.tags} />
         {getLabel(feature)}
       </a>
     </li>

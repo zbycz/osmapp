@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { naturalSort } from './Climbing/utils/array';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { PROJECT_ID } from '../../services/project';
-import { Item } from './MemberFeatures/Item';
+import { MemberItem } from './MemberFeatures/MemberItem';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
@@ -186,7 +186,7 @@ export const CragsInArea = () => {
         {other.length > 0 && (
           <Ul>
             {other.map((item) => (
-              <Item key={getReactKey(item)} feature={item} />
+              <MemberItem key={getReactKey(item)} feature={item} />
             ))}
           </Ul>
         )}

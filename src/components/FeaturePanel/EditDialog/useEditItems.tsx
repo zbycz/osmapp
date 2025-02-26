@@ -25,7 +25,6 @@ type DataItem = {
   shortId: string;
   tagsEntries: TagsEntries;
   toBeDeleted: boolean;
-  properties: FeatureProperties;
   members: Members | undefined;
   version: number | undefined; // undefined for new item
   nodeLonLat: LonLat | undefined; // undefined for ways and relations
@@ -50,7 +49,6 @@ const buildDataItem = (feature: Feature): DataItem => {
     version: apiId.version,
     tagsEntries: Object.entries(feature.tags),
     toBeDeleted: false,
-    properties: feature.properties,
     members:
       feature.memberFeatures?.map((memberFeature) => ({
         shortId: getShortId(memberFeature.osmMeta),
@@ -190,7 +188,7 @@ export const useEditItems = (originalFeature: Feature) => {
   const items = useMemo<Array<EditDataItem>>(
     () =>
       data.map((dataItem) => {
-        const { shortId, tagsEntries, members, properties } = dataItem;
+        const { shortId, tagsEntries, members } = dataItem;
         const setDataItem = setDataItemFactory(setData, shortId);
         const setTagsEntries = setTagsEntriesFactory(setDataItem, tagsEntries);
         const setMembers = setMembersFactory(setDataItem, members);
@@ -206,7 +204,6 @@ export const useEditItems = (originalFeature: Feature) => {
           setNodeLonLat: setNodeLonLatFactory(setDataItem),
           presetKey,
           presetLabel: getPresetTranslation(presetKey),
-          properties,
         };
         // TODO maybe keep reference to original EditDataItem if DataItem didnt change? #performance
       }),

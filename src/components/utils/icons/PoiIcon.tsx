@@ -7,15 +7,17 @@ import { Maki } from './Maki';
 import React from 'react';
 import styled from '@emotion/styled';
 import { FeatureTags } from '../../../services/types';
+import { getPoiClass } from '../../../services/getPoiClass';
 
 const Container = styled.span`
   margin-right: 6px;
   font-size: 12px;
 `;
-type PoiIconProps = {
+
+type Props = {
+  ico?: string; // ico is supplied only in skeleton (until we have all tags) or point
   tags?: FeatureTags;
   size?: number;
-  ico: string;
   title?: string;
   middle?: boolean;
   themed?: boolean;
@@ -28,7 +30,7 @@ export const PoiIcon = ({
   title,
   middle,
   themed,
-}: PoiIconProps) => {
+}: Props) => {
   const { currentTheme } = useUserThemeContext();
   const theme = useTheme();
 
@@ -68,9 +70,12 @@ export const PoiIcon = ({
         </Container>
       );
   }
+
+  const finalIco = ico ? ico : getPoiClass(tags).class;
+
   return (
     <Maki
-      ico={ico}
+      ico={finalIco}
       invert={currentTheme === 'dark'}
       size={size}
       style={{ opacity: '0.3' }}

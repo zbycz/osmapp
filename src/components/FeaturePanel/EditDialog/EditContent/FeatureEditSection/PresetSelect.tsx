@@ -19,10 +19,9 @@ import { useCurrentItem } from './CurrentContext';
 
 export type TranslatedPreset = Preset & {
   name: string;
-  icon: string;
 };
 
-type PresetCacheItem = Preset & { name: string; icon: string; terms: string[] };
+type PresetCacheItem = Preset & { name: string; terms: string[] };
 type PresetsCache = PresetCacheItem[];
 
 let presetsCache: PresetsCache | null = null;
@@ -41,7 +40,6 @@ const getTranslatedPresets = async (): Promise<PresetsCache> => {
       return {
         ...preset,
         name: getPresetTranslation(preset.presetKey) ?? preset.presetKey,
-        icon: getPoiClass(preset.tags).class,
         terms: getPresetTermsTranslation(preset.presetKey) ?? preset.terms,
       };
     })

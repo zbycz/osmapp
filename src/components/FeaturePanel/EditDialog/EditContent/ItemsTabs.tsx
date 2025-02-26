@@ -9,8 +9,8 @@ import {
 } from '@mui/material';
 import { useEditContext } from '../EditContext';
 import React from 'react';
-import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 import { PoiIcon } from '../../../utils/icons/PoiIcon';
+import { EditDataItem } from '../useEditItems';
 
 const StyledTabs = styled(Tabs)`
   border-color: ${({ theme }) => theme.palette.divider};
@@ -39,8 +39,12 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
-const TabLabel = ({ item }) => {
-  const { shortId, tags, presetLabel, properties } = item;
+type TabLabelProps = {
+  item: EditDataItem;
+};
+
+const TabLabel = ({ item }: TabLabelProps) => {
+  const { shortId, tags, presetLabel } = item;
 
   return (
     <Stack direction="column" alignItems="flex-start" width="100%">
@@ -54,14 +58,13 @@ const TabLabel = ({ item }) => {
         <Typography variant="button" whiteSpace="nowrap">
           {tags.name ?? shortId}
         </Typography>
-        {/* <NwrIcon osmType={getOsmTypeFromShortId(shortId)} /> */}
       </Stack>
       <Typography
         variant="caption"
         textTransform="lowercase"
         whiteSpace="nowrap"
       >
-        <PoiIcon tags={tags} ico={properties.class} />
+        <PoiIcon tags={tags} />
         {presetLabel}
       </Typography>
     </Stack>

@@ -25,8 +25,15 @@ export const PoiDescription = () => {
 
   return (
     <PoiType $isSkeleton={feature.skeleton}>
-      <PoiIcon tags={feature.tags} ico={feature.properties.class} middle />
-
+      <PoiIcon
+        tags={feature.tags}
+        ico={
+          feature.skeleton || feature.point
+            ? feature.properties.class
+            : undefined
+        }
+        middle
+      />
       <Typography variant="caption" color="secondary" textTransform="lowercase">
         {poiType}
       </Typography>
