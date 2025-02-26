@@ -21,7 +21,7 @@ export const osmToFeature = (element): Feature => {
     tags,
     members,
     imageDefs: getImageDefs(tags, osmMeta.type, center),
-    properties: { ...getPoiClass(tags) },
+    properties: { ...getPoiClass(tags) }, // TODO PoiClass is computed from tags, this can be removed
     deleted: osmappDeletedMarker,
   };
 };

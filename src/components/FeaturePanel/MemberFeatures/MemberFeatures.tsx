@@ -3,7 +3,7 @@ import { Box, Chip, Stack } from '@mui/material';
 import { getOsmappLink, getReactKey } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { PanelLabel } from '../Climbing/PanelLabel';
-import { Item } from './Item';
+import { MemberItem } from './MemberItem';
 import { ClimbingItem } from './ClimbingItem';
 import styled from '@emotion/styled';
 import { GradeSystemSelect } from '../Climbing/GradeSystemSelect';
@@ -92,8 +92,8 @@ export const MemberFeatures = () => {
       )}
       {otherFeatures.length > 0 && (
         <Ul>
-          {otherFeatures.map((item) => (
-            <Item key={getReactKey(item)} feature={item} />
+          {otherFeatures.map((member) => (
+            <MemberItem key={getReactKey(member)} feature={member} />
           ))}
         </Ul>
       )}
