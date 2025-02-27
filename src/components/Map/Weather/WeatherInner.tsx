@@ -1,7 +1,13 @@
 import styled from '@emotion/styled';
 import { CurrentWeatherResponse } from './loadWeather';
 import { icons } from './icons';
-import { Stack, Dialog, DialogTitle, DialogContent } from '@mui/material';
+import {
+  Stack,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography,
+} from '@mui/material';
 import { Temperature } from './helpers';
 import React from 'react';
 import { DetailedWeather } from './DetailedWeather';
@@ -64,7 +70,14 @@ export const WeatherInner = ({ response, lat, lng }: Props) => {
         />
         <DialogContent>
           <DetailedWeather lng={lng} lat={lat} />
-          <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
+          <div style={{ textAlign: 'right' }}>
+            <Typography variant="caption">
+              <a href="https://open-meteo.com/">
+                Weather data by Open-Meteo.com
+              </a>{' '}
+              ❤️
+            </Typography>
+          </div>
         </DialogContent>
       </Dialog>
     </>
