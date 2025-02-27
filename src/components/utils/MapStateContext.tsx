@@ -18,19 +18,19 @@ export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
 export type Bbox = [number, number, number, number];
 
-export interface Layer {
+export type Layer = {
   type: 'basemap' | 'overlay' | 'user' | 'spacer';
   name?: string;
-  description?: string;
+  secondLine?: string;
   url?: string;
   darkUrl?: string; // optional url for dark mode
   key?: string;
   Icon?: LayerIcon;
-  attribution?: string[]; // missing in spacer TODO refactor ugly
+  attribution?: string[]; // missing in spacer TODO refactor this ugly type
   maxzoom?: number;
   minzoom?: number;
   bboxes?: Bbox[];
-}
+};
 
 // [z, lat, lon] - string because we use RoundedPosition
 export type View = [string, string, string];

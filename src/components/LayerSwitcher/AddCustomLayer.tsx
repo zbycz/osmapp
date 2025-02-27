@@ -8,6 +8,8 @@ import {
   CircularProgress,
   TextField,
   Autocomplete,
+  Typography,
+  Box,
 } from '@mui/material';
 import {
   Category as CategoryType,
@@ -312,6 +314,19 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
       </DialogTitle>
 
       <DialogContent>
+        <Box mb={2}>
+          <Typography variant="body1">
+            Layers are sourced from the{' '}
+            <a
+              href="https://github.com/osmlab/editor-layer-index"
+              target="_blank"
+            >
+              editor-layer-index
+            </a>{' '}
+            list.
+          </Typography>
+        </Box>
+
         <LayerDataInput
           onSelect={(newLayer) => {
             if (!newLayer) {

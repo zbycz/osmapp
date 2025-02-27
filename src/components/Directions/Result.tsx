@@ -79,7 +79,7 @@ const MobileResult = ({
         <strong>{distance}</strong> • <strong>{time}</strong> • ↑{ascent}
         <TooltipButton
           tooltip={<PoweredBy result={result} />}
-          color="secondary"
+          sx={{ color: 'secondary', fontSize: '16px' }}
         />
       </div>
       <Stack direction="row" justifyContent="space-between">
