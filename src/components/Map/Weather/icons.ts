@@ -13,6 +13,10 @@ const sunny = (description: string) => ({
   day: {
     description,
     image: 'https://openweathermap.org/img/wn/01d@2x.png',
+    filter: {
+      light: 'brightness(190%) hue-rotate(17deg) saturate(190%)',
+      dark: 'brightness(170%) hue-rotate(17deg) saturate(170%)',
+    },
   },
   night: {
     description: 'Clear',
