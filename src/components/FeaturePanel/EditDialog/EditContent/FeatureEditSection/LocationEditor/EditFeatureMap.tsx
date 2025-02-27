@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
-import { CircularProgress, Stack, TextField } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Chip, CircularProgress, Stack, TextField } from '@mui/material';
 
 import styled from '@emotion/styled';
 import { t } from '../../../../../../services/intl';
 import { useCurrentItem } from '../CurrentContext';
 import { useInitEditFeatureMap } from './useInitEditFeatureMap';
 import { LngLat } from 'maplibre-gl';
+import LayersIcon from '@mui/icons-material/Layers';
+import { getMapStyle } from './getMapStyle';
 
 const Container = styled.div`
   width: 100%;
@@ -28,15 +30,33 @@ const Map = styled.div<{ $isVisible: boolean }>`
   height: 100%;
   width: 100%;
 `;
+const MapStyle = styled.div`
+  position: absolute;
+  top: 4px;
+  right: 4px;
+`;
 
-const EditFeatureMap = () => {
+const EditFeatureMap = ({ mapStyle, setMapStyle }) => {
   const [isFirstMapLoad, setIsFirstMapLoad] = useState(true);
-  const { containerRef, isMapLoaded, currentItem, onMarkerChange } =
+  const { containerRef, isMapLoaded, currentItem, onMarkerChange, mapRef } =
     useInitEditFeatureMap(isFirstMapLoad, setIsFirstMapLoad);
+
+  useEffect(() => {
+    const style = getMapStyle(mapStyle);
+    mapRef.current.setStyle(style);
+  }, [mapStyle, mapRef]);
 
   const { shortId } = useCurrentItem();
   const isNode = shortId[0] === 'n';
   if (!isNode) return null;
+
+  const switchMapStyle = () => {
+    if (mapStyle === 'outdoor') {
+      setMapStyle('satellite');
+    } else {
+      setMapStyle('outdoor');
+    }
+  };
 
   return (
     <>
@@ -47,7 +67,17 @@ const EditFeatureMap = () => {
           </LoadingContainer>
         )}
         <Map $isVisible={isMapLoaded} ref={containerRef} />
+        <MapStyle>
+          <Chip
+            component="button"
+            label={mapStyle}
+            icon={<LayersIcon />}
+            onClick={switchMapStyle}
+            color="secondary"
+          />
+        </MapStyle>
       </Container>
+
       <Stack direction="row" mt={2} gap={1}>
         <TextField
           label={t('editdialog.location_latitude')}

@@ -54,6 +54,7 @@ export const LocationEditor = () => {
   const { shortId } = useCurrentItem();
   const osmId = getApiId(shortId);
   const isNodeWithoutWay = useNodeWithoutWayCheck(osmId);
+  const [mapStyle, setMapStyle] = useState<'outdoor' | 'satellite'>('outdoor');
 
   if (osmId.type === 'relation') {
     return null;
@@ -62,7 +63,11 @@ export const LocationEditor = () => {
   let content = null;
   if (expanded) {
     if (osmId.type === 'node') {
-      content = isNodeWithoutWay ? <EditFeatureMapDynamic /> : <WayWarning />;
+      content = isNodeWithoutWay ? (
+        <EditFeatureMapDynamic mapStyle={mapStyle} setMapStyle={setMapStyle} />
+      ) : (
+        <WayWarning />
+      );
     }
     if (osmId.type === 'way') {
       content = <WayWarning />;
