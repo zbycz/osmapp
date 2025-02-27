@@ -71,6 +71,7 @@ const getBorderRadius = (
   totalLength: number,
   radius: number,
 ) => {
+  // TODO make this with pure CSS - use pseudo class :first-child (or :first-of-type to satisfy Emotion styled components)
   if (index === 0) {
     return `${radius}px 0 0 ${radius}px`;
   }
@@ -94,6 +95,7 @@ export const DaySelector = ({ data, onSelect }: Props) => {
           weatherConditions={weatherConditions}
           sx={{
             borderRadius: getBorderRadius(i, entries.length, 4),
+            marginLeft: '-1px', // collapses borders from two adjacent buttons
           }}
         />
       ))}

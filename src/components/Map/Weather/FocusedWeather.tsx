@@ -3,8 +3,8 @@ import { DetailedWeather } from './loadWeather';
 import { icons } from './icons';
 import { wmoCodeForDay } from './wmoCodeForDay';
 import { intl } from '../../../services/intl';
-import Thermostat from '@mui/icons-material/Thermostat';
-import Rain from '@mui/icons-material/WaterDrop';
+import ThermostatIcon from '@mui/icons-material/Thermostat';
+import RainIcon from '@mui/icons-material/WaterDrop';
 import { Temperature } from './helpers';
 import { useUserThemeContext } from '../../../helpers/theme';
 
@@ -43,13 +43,17 @@ export const FocusedWeather = ({ weather, dayWeather }: Props) => {
 
   return (
     <Stack direction="row" alignItems="center" spacing={0.5}>
-      <Stack alignItems="center" justifyContent="space-evenly">
+      <Stack
+        alignItems="center"
+        justifyContent="space-evenly"
+        sx={{ minWidth: '120px' }}
+      >
         <img
           src={icon[isDay ? 'day' : 'night'].image}
           style={{
             width: 75,
             height: 75,
-            margin: '-20%',
+            margin: '-20px',
             filter: icon[isDay ? 'day' : 'night'].filter?.[currentTheme],
           }}
         />
@@ -58,7 +62,7 @@ export const FocusedWeather = ({ weather, dayWeather }: Props) => {
       <Stack spacing={0.5}>
         <h4 style={{ margin: '0 0 0.25rem 0' }}>{heading}</h4>
         <InformationRow>
-          <Thermostat />
+          <ThermostatIcon color="secondary" />
           {weather && (
             <Temperature precision={1} celsius={weather.temperature} />
           )}
@@ -82,7 +86,7 @@ export const FocusedWeather = ({ weather, dayWeather }: Props) => {
           )}
         </InformationRow>
         <InformationRow>
-          <Rain />
+          <RainIcon color="secondary" />
           <span>{precipitation}%</span>
         </InformationRow>
       </Stack>
