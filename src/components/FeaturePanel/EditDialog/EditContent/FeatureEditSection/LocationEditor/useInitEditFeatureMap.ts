@@ -85,5 +85,9 @@ export function useInitEditFeatureMap(isFirstMapLoad, setIsFirstMapLoad) {
     setIsFirstMapLoad(true);
   }, [current, setIsFirstMapLoad]);
 
-  return { containerRef, isMapLoaded, currentItem, onMarkerChange };
+  useEffect(() => {
+    setIsFirstMapLoad(true);
+  }, [current, setIsFirstMapLoad]);
+
+  return { containerRef, isMapLoaded, currentItem, onMarkerChange, mapRef };
 }

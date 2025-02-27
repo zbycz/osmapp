@@ -9,6 +9,8 @@ const displayForm = (url: string) =>
 export const WebsiteRenderer = ({ v }) => (
   <>
     <Language fontSize="small" />
-    <a href={fixHttp(v)}>{displayForm(v)}</a>
+    <a href={fixHttp(v)} target="_blank">
+      {displayForm(v)}
+    </a>
   </>
 );
