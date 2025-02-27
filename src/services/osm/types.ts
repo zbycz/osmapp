@@ -1,5 +1,6 @@
 import { OsmType, RelationMember } from '../types';
 
+// TODO use proper (unoptional) types for node/way/relations
 export type OsmElement<T extends OsmType = 'node' | 'way' | 'relation'> = {
   type: T;
   id: number;

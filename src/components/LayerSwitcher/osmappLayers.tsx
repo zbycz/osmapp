@@ -8,7 +8,6 @@ import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import { Bbox, Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
-import { useUserThemeContext } from '../../helpers/theme';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import { Box } from '@mui/material';
@@ -22,7 +21,6 @@ const retina =
   ((isBrowser() && window.devicePixelRatio) || 1) >= 2 ? '@2x' : '';
 
 const ClimbingIcon = () => {
-  const { currentTheme } = useUserThemeContext();
   return (
     <Box ml={0.5}>
       <PoiIcon ico="climbing" size={16} />

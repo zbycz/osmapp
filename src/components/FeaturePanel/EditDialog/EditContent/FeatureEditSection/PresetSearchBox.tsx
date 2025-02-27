@@ -65,7 +65,7 @@ const renderOption = (option: TranslatedPreset) =>
     <Placeholder>{t('editdialog.preset_select.placeholder')}</Placeholder>
   ) : (
     <>
-      <PoiIcon ico={option.icon} tags={option.tags} size={16} middle themed />
+      <PoiIcon tags={option.tags} size={16} middle themed />
       <span style={{ paddingLeft: 5 }} />
       {option.name}
     </>

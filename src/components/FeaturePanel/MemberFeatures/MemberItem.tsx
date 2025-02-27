@@ -13,33 +13,31 @@ const Li = styled.li`
   margin-left: 10px;
 `;
 
-export const Item = ({ feature }: { feature: Feature }) => {
-  const { currentTheme } = useUserThemeContext();
+type Props = {
+  feature: Feature;
+};
+
+export const MemberItem = ({ feature }: Props) => {
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
-  const { properties, tags, osmMeta } = feature;
+  const osmId = feature.osmMeta;
+
   const handleClick = (e) => {
     e.preventDefault();
     setPreview(null);
-    Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
+    Router.push(`/${getUrlOsmId(osmId)}${window.location.hash}`);
   };
   const handleHover = () => feature.center && setPreview(feature);
 
   return (
     <Li>
       <a
-        href={`/${getUrlOsmId(osmMeta)}`}
+        href={`/${getUrlOsmId(osmId)}`}
         onClick={handleClick}
         onMouseEnter={mobileMode ? undefined : handleHover}
         onMouseLeave={() => setPreview(null)}
       >
-        <PoiIcon
-          tags={tags}
-          ico={properties.class}
-          title={`${Object.keys(tags).length} keys / ${
-            properties.class ?? ''
-          } / ${properties.subclass}`}
-        />
+        <PoiIcon tags={feature.tags} />
         {getLabel(feature)}
       </a>
     </Li>
