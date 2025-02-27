@@ -4,7 +4,7 @@ import {
   loadDetailedWeather,
 } from './loadWeather';
 import { DotLoader } from '../../helpers';
-import React from 'react';
+import React, { useState } from 'react';
 import { TemperatureChart } from './TemperatureChart';
 import { DaySelector } from './DaySelector';
 import { FocusedWeather } from './FocusedWeather';
@@ -16,20 +16,20 @@ const DetailedWeatherDisplay = ({
   response: Awaited<ReturnType<typeof loadDetailedWeather>>;
 }) => {
   const entries = Object.entries(response);
-  const [focusedWeekday, setFocusedWeekday] = React.useState(entries[0][0]);
-  const [focusedWeather, setFocusedWeather] =
-    React.useState<DetailedWeatherType | null>(null);
+  const [weekDay, setWeekDay] = useState<string>(entries[0][0]);
+  const [focusedTimeslot, setFocusedTimeslot] =
+    useState<DetailedWeatherType | null>(null);
 
   return (
     <Stack spacing={1}>
-      <DaySelector data={response} onSelect={setFocusedWeekday} />
+      <DaySelector data={response} current={weekDay} onSelect={setWeekDay} />
       <FocusedWeather
-        dayWeather={response[focusedWeekday]}
-        weather={focusedWeather}
+        dayWeather={response[weekDay]}
+        weather={focusedTimeslot}
       />
       <TemperatureChart
-        weatherConditions={response[focusedWeekday]}
-        onMouseChange={setFocusedWeather}
+        weatherConditions={response[weekDay]}
+        onMouseChange={setFocusedTimeslot}
       />
     </Stack>
   );

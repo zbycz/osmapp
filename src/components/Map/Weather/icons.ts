@@ -12,36 +12,40 @@ type Icon = Record<
 const sunny = (description: string) => ({
   day: {
     description,
-    image: 'http://openweathermap.org/img/wn/01d@2x.png',
+    image: 'https://openweathermap.org/img/wn/01d@2x.png',
+    filter: {
+      light: 'brightness(190%) hue-rotate(17deg) saturate(190%)',
+      dark: 'brightness(170%) hue-rotate(17deg) saturate(170%)',
+    },
   },
   night: {
     description: 'Clear',
-    image: 'http://openweathermap.org/img/wn/01n@2x.png',
+    image: 'https://openweathermap.org/img/wn/01n@2x.png',
     filter: { dark: 'brightness(1.75)' },
   },
 });
 const drizzle = (description: string) => ({
   description,
   day: {
-    image: 'http://openweathermap.org/img/wn/09d@2x.png',
+    image: 'https://openweathermap.org/img/wn/09d@2x.png',
     filter: { light: 'brightness(0.75)', dark: 'brightness(2)' },
   },
   night: {
-    image: 'http://openweathermap.org/img/wn/09n@2x.png',
+    image: 'https://openweathermap.org/img/wn/09n@2x.png',
     filter: { light: 'brightness(0.75)', dark: 'brightness(2)' },
   },
 });
 const rain = (description: string) => ({
   description,
   day: {
-    image: 'http://openweathermap.org/img/wn/10d@2x.png',
+    image: 'https://openweathermap.org/img/wn/10d@2x.png',
     filter: {
       light: 'brightness(0.75) saturate(1.5)',
       dark: 'brightness(1.75) saturate(0.75)',
     },
   },
   night: {
-    image: 'http://openweathermap.org/img/wn/10n@2x.png',
+    image: 'https://openweathermap.org/img/wn/10n@2x.png',
     filter: {
       light: 'brightness(0.75)',
       dark: 'brightness(1.75)',
@@ -51,25 +55,25 @@ const rain = (description: string) => ({
 const snow = (description: string) => ({
   description,
   day: {
-    image: 'http://openweathermap.org/img/wn/13d@2x.png',
+    image: 'https://openweathermap.org/img/wn/13d@2x.png',
     filter: { dark: 'invert(1) brightness(1.25)' },
   },
   night: {
-    image: 'http://openweathermap.org/img/wn/13n@2x.png',
+    image: 'https://openweathermap.org/img/wn/13n@2x.png',
     filter: { dark: 'invert(1) brightness(1.25)' },
   },
 });
 const thunderstorm = (description: string) => ({
   description,
   day: {
-    image: 'http://openweathermap.org/img/wn/11d@2x.png',
+    image: 'https://openweathermap.org/img/wn/11d@2x.png',
     filter: {
       light: 'brightness(0.75) saturate(1.5)',
       dark: 'brightness(1.5) saturate(1.25)',
     },
   },
   night: {
-    image: 'http://openweathermap.org/img/wn/11n@2x.png',
+    image: 'https://openweathermap.org/img/wn/11n@2x.png',
     filter: {
       light: 'brightness(0.75) saturate(1.5)',
       dark: 'brightness(1.5) saturate(1.25)',
@@ -84,44 +88,44 @@ export const icons: Record<number, Icon> = {
   2: {
     description: 'Partly Cloudy',
     day: {
-      image: 'http://openweathermap.org/img/wn/02d@2x.png',
+      image: 'https://openweathermap.org/img/wn/02d@2x.png',
       filter: { light: 'brightness(0.75) saturate(1.5)' },
     },
     night: {
-      image: 'http://openweathermap.org/img/wn/02n@2x.png',
+      image: 'https://openweathermap.org/img/wn/02n@2x.png',
       filter: { light: 'brightness(0.75)' },
     },
   },
   3: {
     description: 'Cloudy',
     day: {
-      image: 'http://openweathermap.org/img/wn/03d@2x.png',
+      image: 'https://openweathermap.org/img/wn/03d@2x.png',
       filter: { light: 'brightness(0.75)' },
     },
     night: {
-      image: 'http://openweathermap.org/img/wn/03n@2x.png',
+      image: 'https://openweathermap.org/img/wn/03n@2x.png',
       filter: { light: 'brightness(0.75)' },
     },
   },
   45: {
     description: 'Foggy',
     day: {
-      image: 'http://openweathermap.org/img/wn/50d@2x.png',
+      image: 'https://openweathermap.org/img/wn/50d@2x.png',
       filter: { dark: 'brightness(2)' },
     },
     night: {
-      image: 'http://openweathermap.org/img/wn/50n@2x.png',
+      image: 'https://openweathermap.org/img/wn/50n@2x.png',
       filter: { dark: 'brightness(2)' },
     },
   },
   48: {
     description: 'Rime Fog',
     day: {
-      image: 'http://openweathermap.org/img/wn/50d@2x.png',
+      image: 'https://openweathermap.org/img/wn/50d@2x.png',
       filter: { dark: 'brightness(2)' },
     },
     night: {
-      image: 'http://openweathermap.org/img/wn/50n@2x.png',
+      image: 'https://openweathermap.org/img/wn/50n@2x.png',
       filter: { dark: 'brightness(2)' },
     },
   },
@@ -133,10 +137,10 @@ export const icons: Record<number, Icon> = {
   61: {
     description: 'Light Rain',
     day: {
-      image: 'http://openweathermap.org/img/wn/10d@2x.png',
+      image: 'https://openweathermap.org/img/wn/10d@2x.png',
     },
     night: {
-      image: 'http://openweathermap.org/img/wn/10n@2x.png',
+      image: 'https://openweathermap.org/img/wn/10n@2x.png',
     },
   },
   63: rain('Rain'),

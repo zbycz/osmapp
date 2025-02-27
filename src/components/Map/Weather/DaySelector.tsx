@@ -10,9 +10,15 @@ type ButtonProps = {
   weatherConditions: DetailedWeather[];
   onClick: () => void;
   sx: SxProps<Theme>;
+  isCurrent: boolean;
 };
 
-const DayButton = ({ onClick, weatherConditions, sx }: ButtonProps) => {
+const DayButton = ({
+  onClick,
+  weatherConditions,
+  sx,
+  isCurrent,
+}: ButtonProps) => {
   const { currentTheme } = useUserThemeContext();
   const temps = weatherConditions.map(({ temperature }) => temperature);
   const maxTemp = Math.max(...temps);
@@ -31,6 +37,8 @@ const DayButton = ({ onClick, weatherConditions, sx }: ButtonProps) => {
         padding: '0.2rem',
         borderRadius: '0',
         boxShadow: 'none',
+        backgroundColor: (theme) =>
+          isCurrent ? theme.palette.background.elevation : 'transparent',
         ...sx,
       }}
       onClick={onClick}
@@ -61,16 +69,12 @@ const DayButton = ({ onClick, weatherConditions, sx }: ButtonProps) => {
   );
 };
 
-type Props = {
-  data: Record<string, DetailedWeather[]>;
-  onSelect?: (weekdayIndex: string) => void;
-};
-
 const getBorderRadius = (
   index: number,
   totalLength: number,
   radius: number,
 ) => {
+  // TODO make this with pure CSS - use pseudo class :first-child (or :first-of-type to satisfy Emotion styled components)
   if (index === 0) {
     return `${radius}px 0 0 ${radius}px`;
   }
@@ -80,9 +84,16 @@ const getBorderRadius = (
   return '0';
 };
 
-export const DaySelector = ({ data, onSelect }: Props) => {
+type Props = {
+  data: Record<string, DetailedWeather[]>;
+  current: string;
+  onSelect: (weekdayIndex: string) => void;
+};
+
+export const DaySelector = ({ data, current, onSelect }: Props) => {
   const entries = Object.entries(data);
 
+  // TODO refactor this to ToggleButtonGroup and ToggleButtons
   return (
     <Stack direction="row">
       {entries.map(([weekdayIndex, weatherConditions], i) => (
@@ -91,9 +102,11 @@ export const DaySelector = ({ data, onSelect }: Props) => {
           onClick={() => {
             onSelect?.(weekdayIndex);
           }}
+          isCurrent={weekdayIndex === current}
           weatherConditions={weatherConditions}
           sx={{
             borderRadius: getBorderRadius(i, entries.length, 4),
+            marginLeft: '-1px', // collapses borders from two adjacent buttons
           }}
         />
       ))}
