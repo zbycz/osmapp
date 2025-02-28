@@ -69,7 +69,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
         <FeaturePanelClimbingGuideInfo />
         <PanelSidePadding>
           <FeatureHeading ref={headingRef} />
-          <Stack spacing={1} alignItems="flex-start">
+          <Stack spacing={1} alignItems="flex-start" sx={{ marginBottom: 1 }}>
             <ClimbingRouteGrade />
             <ClimbingTypeBadge feature={feature} />
           </Stack>
