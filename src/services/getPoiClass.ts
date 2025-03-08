@@ -322,5 +322,5 @@ export const getPoiClass = (tags: FeatureTags): PoiClass => {
     };
   }
 
-  return { class: 'information', subclass }; // default icon
+  return { class: 'marker', subclass }; // default icon
 };

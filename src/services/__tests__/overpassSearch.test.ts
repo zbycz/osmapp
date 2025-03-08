@@ -109,7 +109,7 @@ const geojson = [
       type: 'node',
     },
     properties: {
-      class: 'information',
+      class: 'marker',
       crossing: 'marked',
       highway: 'crossing',
       osmappType: 'node',
@@ -137,7 +137,7 @@ const geojson = [
       type: 'way',
     },
     properties: {
-      class: 'information',
+      class: 'marker',
       highway: 'track',
       osmappType: 'way',
       subclass: 'track',
