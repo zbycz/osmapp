@@ -105,7 +105,7 @@ const skeletons = [
       type: 'node',
     },
     properties: {
-      class: 'information',
+      class: 'marker',
     },
     tags: {},
     type: 'Feature',
@@ -121,7 +121,7 @@ const skeletons = [
       type: 'node',
     },
     properties: {
-      class: 'information',
+      class: 'marker',
       subclass: 'crossing',
     },
     tags: {

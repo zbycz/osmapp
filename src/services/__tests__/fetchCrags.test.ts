@@ -106,7 +106,7 @@ const geojson = [
     id: 2221,
     osmMeta: { id: 222, type: 'way' },
     properties: {
-      class: 'information',
+      class: 'marker',
       osmappType: 'way',
       osmappHasImages: false,
       osmappLabel: '',
@@ -203,7 +203,7 @@ test('conversion with centers instead of geometries', () => {
         type: 'GeometryCollection',
       },
       properties: {
-        class: 'information',
+        class: 'marker',
         osmappType: 'relation',
         osmappHasImages: false,
         osmappLabel: '',
@@ -218,7 +218,7 @@ test('conversion with centers instead of geometries', () => {
       center: [14, 51],
       geometry: { coordinates: [14, 51], type: 'Point' },
       properties: {
-        class: 'information',
+        class: 'marker',
         osmappType: 'relation',
         osmappHasImages: false,
         osmappLabel: '',
