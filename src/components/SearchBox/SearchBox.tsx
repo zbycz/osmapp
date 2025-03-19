@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
@@ -74,7 +74,7 @@ const useOnClosePanel = () => {
   };
 };
 
-const SearchBox = ({ withShadow = false }) => {
+const SearchBoxInner = ({ panelShown = false }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const [overpassLoading, setOverpassLoading] = useState(false);
@@ -83,7 +83,11 @@ const SearchBox = ({ withShadow = false }) => {
 
   return (
     <TopPanel>
-      <StyledPaper $withShadow={withShadow} elevation={1} ref={autocompleteRef}>
+      <StyledPaper
+        $withShadow={isMobileMode || panelShown}
+        elevation={1}
+        ref={autocompleteRef}
+      >
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
         </SearchIconButton>
@@ -110,4 +114,16 @@ const SearchBox = ({ withShadow = false }) => {
   );
 };
 
-export default SearchBox;
+export const SearchBox = () => {
+  const { featureShown, homepageShown } = useFeatureContext();
+
+  const router = useRouter();
+  const otherPageShown = router.pathname !== '/'; // TODO there was a bug in nextjs which sometimes gave some nonsense pathname – CHECK!
+
+  // homepageShown => url '/'
+  // featureShown => url '/xxx/123', but skeleton can be shown earlier
+  // any other panel => url other than root
+  const panelShown = homepageShown || featureShown || otherPageShown;
+
+  return <SearchBoxInner panelShown={panelShown} />;
+};

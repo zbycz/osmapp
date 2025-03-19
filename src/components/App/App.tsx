@@ -1,4 +1,4 @@
-import React, { Ref, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
@@ -6,7 +6,7 @@ import Router, { useRouter } from 'next/router';
 import { QueryClientProvider, QueryClient } from 'react-query';
 import { FeaturePanelOnSide } from '../FeaturePanel/FeaturePanelOnSide';
 import Map from '../Map/Map';
-import SearchBox from '../SearchBox/SearchBox';
+import { SearchBox } from '../SearchBox/SearchBox';
 import {
   MapStateProvider,
   useMapStateContext,
@@ -25,7 +25,7 @@ import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog'
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
-import { useIsClient, useMobileMode } from '../helpers';
+import { useMobileMode } from '../helpers';
 import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
@@ -125,7 +125,6 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   const isMobileMode = useMobileMode();
   const { feature, featureShown, homepageShown } = useFeatureContext();
   const router = useRouter();
-  const isMounted = useIsClient();
   const scrollRef = useScrollToTopWhenRouteChanged() as any;
   useUpdateViewFromFeature();
   usePersistMapView();
@@ -156,7 +155,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
           <DirectionsBox />
         </DirectionsProvider>
       )}
-      {!directions && <SearchBox withShadow={withShadow} />}
+      <SearchBox />
       {featureShown && !isMobileMode && (
         <FeaturePanelOnSide scrollRef={scrollRef} />
       )}
