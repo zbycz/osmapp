@@ -41,6 +41,7 @@ import { DirectionsBox } from '../Directions/DirectionsBox';
 import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
 import { DirectionsProvider } from '../Directions/DirectionsContext';
 import { ResponsiveFeaturePanel } from '../FeaturePanel/ResponsiveFeaturePanel';
+import { Climbing } from '../Climbing/Climbing';
 
 const URL_NOT_FOUND_TOAST = {
   message: t('url_not_found_toast'),
@@ -73,19 +74,13 @@ type IndexWithProvidersProps = {
 };
 
 const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
-  const { feature, featureShown } = useFeatureContext();
+  const { featureShown } = useFeatureContext();
   usePersistMapView();
   useUpdateViewFromHash();
 
   // TODO add correct error boundaries
 
   const router = useRouter();
-  const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
-  const photo =
-    router.query.all?.[3] === 'photo' ? router.query.all?.[4] : undefined;
-  const routeNumber =
-    router.query.all?.[3] === 'route' ? router.query.all?.[4] : undefined;
-
   const directions = router.query.all?.[0] === 'directions' && !featureShown;
 
   return (
@@ -98,14 +93,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
       )}
       <SearchBox />
       <ResponsiveFeaturePanel />
-      {isClimbingDialogShown && (
-        <ClimbingContextProvider feature={feature}>
-          <ClimbingCragDialog
-            photo={photo}
-            routeNumber={routeNumber ? parseFloat(routeNumber) : undefined}
-          />
-        </ClimbingContextProvider>
-      )}
+      <Climbing />
       <HomepagePanel />
       {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
