@@ -24,8 +24,6 @@ import { TitleAndMetaTags } from '../../helpers/TitleAndMetaTags';
 import { InstallDialog } from '../HomepagePanel/InstallDialog';
 import { setIntlForSSR, t } from '../../services/intl';
 import { EditDialogProvider } from '../FeaturePanel/helpers/EditDialogContext';
-import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog';
-import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
@@ -37,11 +35,10 @@ import {
   ClimbingArea,
   getClimbingAreas,
 } from '../../services/climbing-areas/getClimbingAreas';
-import { DirectionsBox } from '../Directions/DirectionsBox';
 import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
-import { DirectionsProvider } from '../Directions/DirectionsContext';
 import { ResponsiveFeaturePanel } from '../FeaturePanel/ResponsiveFeaturePanel';
 import { Climbing } from '../Climbing/Climbing';
+import { Directions } from '../Directions/Directions';
 
 const URL_NOT_FOUND_TOAST = {
   message: t('url_not_found_toast'),
@@ -86,15 +83,11 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
   return (
     <>
       <Loading />
-      {directions && (
-        <DirectionsProvider>
-          <DirectionsBox />
-        </DirectionsProvider>
-      )}
       <SearchBox />
       <ResponsiveFeaturePanel />
-      <Climbing />
       <HomepagePanel />
+      <Climbing />
+      {router.query.all?.[0] === 'directions' && <Directions />}
       {router.pathname === '/my-ticks' && <MyTicksPanel />}
       {router.pathname === '/install' && <InstallDialog />}
       {router.pathname === '/climbing-grades' && <ClimbingGradesTable />}
