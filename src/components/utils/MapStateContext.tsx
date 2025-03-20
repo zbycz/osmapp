@@ -12,6 +12,9 @@ import { PROJECT_ID } from '../../services/project';
 import { useBoolState } from '../helpers';
 import { Setter } from '../../types';
 import { LonLat } from '../../services/types';
+import Cookies from 'js-cookie';
+import Router from 'next/router';
+import { getMapViewFromHash } from '../App/helpers';
 
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
@@ -58,6 +61,25 @@ type MapStateContextType = {
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
 
+const usePersistMapView = (view: View) => {
+  useEffect(() => {
+    window.location.hash = view.join('/');
+    Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
+  }, [view]);
+};
+
+const useUpdateViewFromHash = (setView: Setter<View>) => {
+  useEffect(() => {
+    Router.beforePopState(() => {
+      const mapViewFromHash = getMapViewFromHash();
+      if (mapViewFromHash) {
+        setView(mapViewFromHash);
+      }
+      return true; // let nextjs handle the route change as well
+    });
+  }, [setView]);
+};
+
 const useActiveLayersState = () => {
   const isClimbing = PROJECT_ID === 'openclimbing';
   const initLayers = isClimbing
@@ -102,6 +124,9 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     mapLoaded,
     setMapLoaded,
   };
+
+  usePersistMapView(view);
+  useUpdateViewFromHash(setBothViews);
 
   return (
     <MapStateContext.Provider value={mapState}>
