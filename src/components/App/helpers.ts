@@ -124,3 +124,13 @@ export const getInitialFeature = async (
 
   return initialFeature;
 };
+
+export const getMapViewFromHash = (): View | undefined => {
+  const view = global.window?.location.hash
+    .substring(1)
+    .split('/')
+    .map(parseFloat) //we want to parse numbers, then serialize back in usePersistMapView()
+    .filter((num) => !Number.isNaN(num))
+    .map((num) => num.toString());
+  return view?.length === 3 ? (view as View) : undefined;
+};
