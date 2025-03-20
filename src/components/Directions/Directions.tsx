@@ -3,6 +3,8 @@ import { DirectionsProvider } from './DirectionsContext';
 import { DirectionsBox } from './DirectionsBox';
 import React from 'react';
 
+// TODO use router.pathname in SearchBox once THIS is a Page
+
 export const Directions = () => {
   const { featureShown } = useFeatureContext();
 

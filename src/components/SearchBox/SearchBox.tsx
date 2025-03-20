@@ -118,6 +118,10 @@ export const SearchBox = () => {
   const { featureShown, homepageShown } = useFeatureContext();
 
   const router = useRouter();
+  if (router.asPath.startsWith('/directions')) {
+    return null; // TODO use router.pathname once directions is a Page
+  }
+
   const otherPageShown = router.pathname !== '/'; // TODO there was a bug in nextjs which sometimes gave some nonsense pathname – CHECK!
 
   // homepageShown => url '/'
