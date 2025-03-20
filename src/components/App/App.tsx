@@ -1,10 +1,9 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Cookies from 'js-cookie';
 
 import nextCookies from 'next-cookies';
 import Router, { useRouter } from 'next/router';
-import { QueryClientProvider, QueryClient } from 'react-query';
-import { FeaturePanelOnSide } from '../FeaturePanel/FeaturePanelOnSide';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import Map from '../Map/Map';
 import { SearchBox } from '../SearchBox/SearchBox';
 import {
@@ -12,7 +11,11 @@ import {
   useMapStateContext,
   View,
 } from '../utils/MapStateContext';
-import { getInitialMapView, getInitialFeature } from './helpers';
+import {
+  getInitialFeature,
+  getInitialMapView,
+  getMapViewFromHash,
+} from './helpers';
 import { HomepagePanel } from '../HomepagePanel/HomepagePanel';
 import { Loading } from './Loading';
 import { FeatureProvider, useFeatureContext } from '../utils/FeatureContext';
@@ -25,8 +28,6 @@ import { ClimbingCragDialog } from '../FeaturePanel/Climbing/ClimbingCragDialog'
 import { ClimbingContextProvider } from '../FeaturePanel/Climbing/contexts/ClimbingContext';
 import { StarsProvider } from '../utils/StarsContext';
 import { SnackbarProvider } from '../utils/SnackbarContext';
-import { useMobileMode } from '../helpers';
-import { FeaturePanelInDrawer } from '../FeaturePanel/FeaturePanelInDrawer';
 import { UserSettingsProvider } from '../utils/UserSettingsContext';
 import { MyTicksPanel } from '../MyTicksPanel/MyTicksPanel';
 import { NextPage, NextPageContext } from 'next';
@@ -37,9 +38,9 @@ import {
   getClimbingAreas,
 } from '../../services/climbing-areas/getClimbingAreas';
 import { DirectionsBox } from '../Directions/DirectionsBox';
-import { Scrollbars } from 'react-custom-scrollbars';
 import { ClimbingGradesTable } from '../FeaturePanel/Climbing/ClimbingGradesTable';
 import { DirectionsProvider } from '../Directions/DirectionsContext';
+import { ResponsiveFeaturePanel } from '../FeaturePanel/ResponsiveFeaturePanel';
 
 const URL_NOT_FOUND_TOAST = {
   message: t('url_not_found_toast'),
@@ -52,29 +53,6 @@ const usePersistMapView = () => {
     window.location.hash = view.join('/');
     Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
   }, [view]);
-};
-
-export const getMapViewFromHash = (): View | undefined => {
-  const view = global.window?.location.hash
-    .substring(1)
-    .split('/')
-    .map(parseFloat) //we want to parse numbers, then serialize back in usePersistMapView()
-    .filter((num) => !Number.isNaN(num))
-    .map((num) => num.toString());
-  return view?.length === 3 ? (view as View) : undefined;
-};
-
-const useUpdateViewFromFeature = () => {
-  const { feature } = useFeatureContext();
-  const { setView } = useMapStateContext();
-
-  React.useEffect(() => {
-    if (!feature?.center) return;
-    if (getMapViewFromHash()) return;
-
-    const [lon, lat] = feature.center.map((deg) => deg.toFixed(4));
-    setView(['17.00', lat, lon]);
-  }, [feature, setView]);
 };
 
 const useUpdateViewFromHash = () => {
@@ -94,44 +72,14 @@ type IndexWithProvidersProps = {
   climbingAreas: Array<ClimbingArea>;
 };
 
-const useScrollToTopWhenRouteChanged = () => {
-  const isMobileMode = useMobileMode();
-  const desktopScrollRef = useRef<Scrollbars>(null);
-  const mobileScrollRef = useRef<HTMLDivElement>(null);
-  const scrollRef = isMobileMode ? mobileScrollRef : desktopScrollRef;
-  const router = useRouter();
-
-  useEffect(() => {
-    const routeChangeComplete = () => {
-      if (scrollRef?.current) {
-        if (isMobileMode) {
-          (scrollRef as any).current?.scrollTo?.(0, 0);
-        } else {
-          (scrollRef as any).current?.scrollToTop?.();
-        }
-      }
-    };
-    router.events.on('routeChangeComplete', routeChangeComplete);
-
-    return () => {
-      router.events.off('routeChangeComplete', routeChangeComplete);
-    };
-  }, [isMobileMode, router.events, scrollRef]);
-
-  return scrollRef;
-};
-
 const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
-  const isMobileMode = useMobileMode();
-  const { feature, featureShown, homepageShown } = useFeatureContext();
-  const router = useRouter();
-  const scrollRef = useScrollToTopWhenRouteChanged() as any;
-  useUpdateViewFromFeature();
+  const { feature, featureShown } = useFeatureContext();
   usePersistMapView();
   useUpdateViewFromHash();
 
   // TODO add correct error boundaries
 
+  const router = useRouter();
   const isClimbingDialogShown = router.query.all?.[2] === 'climbing';
   const photo =
     router.query.all?.[3] === 'photo' ? router.query.all?.[4] : undefined;
@@ -139,13 +87,6 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
     router.query.all?.[3] === 'route' ? router.query.all?.[4] : undefined;
 
   const directions = router.query.all?.[0] === 'directions' && !featureShown;
-
-  const isMyTicksVisible = router.pathname === '/my-ticks';
-  const isInstallVisible = router.pathname === '/install';
-
-  const withShadow =
-    isMobileMode ||
-    (!featureShown && !isMyTicksVisible && !isInstallVisible && !homepageShown);
 
   return (
     <>
@@ -156,12 +97,7 @@ const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
         </DirectionsProvider>
       )}
       <SearchBox />
-      {featureShown && !isMobileMode && (
-        <FeaturePanelOnSide scrollRef={scrollRef} />
-      )}
-      {featureShown && isMobileMode && (
-        <FeaturePanelInDrawer scrollRef={scrollRef} />
-      )}
+      <ResponsiveFeaturePanel />
       {isClimbingDialogShown && (
         <ClimbingContextProvider feature={feature}>
           <ClimbingCragDialog

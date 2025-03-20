@@ -176,5 +176,7 @@ export const performOverpassSearch = async (
   const features = overpassGeomToGeojson(overpass);
   console.log('overpass geojson', features); // eslint-disable-line no-console
 
+  // TODO preprocess the data to tell polygons from lines, see https://github.com/zbycz/osmapp/issues/974
+
   return { type: 'FeatureCollection', features };
 };
