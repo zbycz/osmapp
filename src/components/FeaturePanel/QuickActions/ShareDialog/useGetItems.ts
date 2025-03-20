@@ -8,13 +8,19 @@ import { imageAttributions, items } from './items';
 const MAPLIBREGL_ZOOM_DIFFERENCE = 1;
 
 export const useGetItems = () => {
+  const { view, activeLayers } = useMapStateContext();
   const { feature } = useFeatureContext();
   const { center, roundedCenter = undefined } = feature;
   const position = roundedCenter ?? center;
 
-  const { view, activeLayers } = useMapStateContext();
-  const [lon, lat] = position;
+  if (!position) {
+    return {
+      imageAttributions: [],
+      items: [],
+    };
+  }
 
+  const [lon, lat] = position;
   const [ourZoom] = view;
   const zoom = parseFloat(ourZoom) + MAPLIBREGL_ZOOM_DIFFERENCE;
   const zoomInt = Math.round(zoom);
