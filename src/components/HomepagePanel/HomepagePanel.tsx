@@ -6,6 +6,8 @@ import { Homepage } from './Homepage';
 import { MobilePageDrawer } from '../utils/MobilePageDrawer';
 import { useRouter } from 'next/router';
 
+/** shows conditionally on first visit, or in /install
+ */
 export const HomepagePanel = () => {
   const { feature, homepageShown, hideHomepage, persistHideHomepage } =
     useFeatureContext();
