@@ -1,16 +1,11 @@
-import React, { useEffect } from 'react';
-import Cookies from 'js-cookie';
+import React from 'react';
 
 import nextCookies from 'next-cookies';
-import Router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Map from '../Map/Map';
 import { SearchBox } from '../SearchBox/SearchBox';
-import {
-  MapStateProvider,
-  useMapStateContext,
-  View,
-} from '../utils/MapStateContext';
+import { MapStateProvider, View } from '../utils/MapStateContext';
 import {
   getInitialFeature,
   getInitialMapView,
@@ -45,59 +40,6 @@ const URL_NOT_FOUND_TOAST = {
   severity: 'warning' as const,
 };
 
-const usePersistMapView = () => {
-  const { view } = useMapStateContext();
-  useEffect(() => {
-    window.location.hash = view.join('/');
-    Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
-  }, [view]);
-};
-
-const useUpdateViewFromHash = () => {
-  const { setView } = useMapStateContext();
-  useEffect(() => {
-    Router.beforePopState(() => {
-      const mapViewFromHash = getMapViewFromHash();
-      if (mapViewFromHash) {
-        setView(mapViewFromHash);
-      }
-      return true; // let nextjs handle the route change as well
-    });
-  }, [setView]);
-};
-
-type IndexWithProvidersProps = {
-  climbingAreas: Array<ClimbingArea>;
-};
-
-const IndexWithProviders = ({ climbingAreas }: IndexWithProvidersProps) => {
-  const { featureShown } = useFeatureContext();
-  usePersistMapView();
-  useUpdateViewFromHash();
-
-  // TODO add correct error boundaries
-
-  const router = useRouter();
-  const directions = router.query.all?.[0] === 'directions' && !featureShown;
-
-  return (
-    <>
-      <Loading />
-      <SearchBox />
-      <ResponsiveFeaturePanel />
-      <HomepagePanel />
-      <Climbing />
-      {router.query.all?.[0] === 'directions' && <Directions />}
-      {router.pathname === '/my-ticks' && <MyTicksPanel />}
-      {router.pathname === '/install' && <InstallDialog />}
-      {router.pathname === '/climbing-grades' && <ClimbingGradesTable />}
-      {climbingAreas && <ClimbingAreasPanel areas={climbingAreas} />}
-      <Map />
-      <TitleAndMetaTags />
-    </>
-  );
-};
-
 const reactQueryClient = new QueryClient();
 
 type Props = {
@@ -113,6 +55,7 @@ const App: NextPage<Props> = ({
   cookies,
   climbingAreas,
 }) => {
+  const router = useRouter();
   const mapView = getMapViewFromHash() || initialMapView;
   const initialToast =
     featureFromRouter === '404' ? URL_NOT_FOUND_TOAST : undefined;
@@ -131,7 +74,22 @@ const App: NextPage<Props> = ({
               <StarsProvider>
                 <EditDialogProvider /* TODO supply router.query */>
                   <QueryClientProvider client={reactQueryClient}>
-                    <IndexWithProviders climbingAreas={climbingAreas} />
+                    <Loading />
+                    <SearchBox />
+                    <ResponsiveFeaturePanel />
+                    <HomepagePanel />
+                    <Climbing />
+                    {router.query.all?.[0] === 'directions' && <Directions />}
+                    {router.pathname === '/my-ticks' && <MyTicksPanel />}
+                    {router.pathname === '/install' && <InstallDialog />}
+                    {router.pathname === '/climbing-grades' && (
+                      <ClimbingGradesTable />
+                    )}
+                    {climbingAreas && (
+                      <ClimbingAreasPanel areas={climbingAreas} />
+                    )}
+                    <Map />
+                    <TitleAndMetaTags />
                   </QueryClientProvider>
                 </EditDialogProvider>
               </StarsProvider>
