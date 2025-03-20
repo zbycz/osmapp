@@ -84,7 +84,8 @@ const getValidApiId = (path: string[]): OsmId => {
 export const getInitialFeature = async (
   ctx: NextPageContext,
 ): Promise<Feature | '404' | null> => {
-  const path = ctx.query.all as string[];
+  const parts = ctx.asPath.split(/\/|#/);
+  const [_, ...path] = parts;
 
   // url: "/"
   if (!path) {
