@@ -74,7 +74,7 @@ const useOnClosePanel = () => {
   };
 };
 
-const SearchBoxInner = ({ panelShown = false }) => {
+const SearchBoxInner = ({ withoutPanel }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
   const [overpassLoading, setOverpassLoading] = useState(false);
@@ -84,7 +84,7 @@ const SearchBoxInner = ({ panelShown = false }) => {
   return (
     <TopPanel>
       <StyledPaper
-        $withShadow={isMobileMode || panelShown}
+        $withShadow={isMobileMode || withoutPanel}
         elevation={1}
         ref={autocompleteRef}
       >
@@ -124,10 +124,12 @@ export const SearchBox = () => {
 
   const otherPageShown = router.pathname !== '/'; // TODO there was a bug in nextjs which sometimes gave some nonsense pathname – CHECK!
 
-  // homepageShown => url '/'
-  // featureShown => url '/xxx/123', but skeleton can be shown earlier
-  // any other panel => url other than root
-  const panelShown = homepageShown || featureShown || otherPageShown;
+  const panelShown = router.pathname.match(/^\/(node|way|relation)\//)
+    ? featureShown
+    : // homepageShown => url '/'
+      // featureShown => url '/xxx/123', but skeleton can be shown earlier
+      // any other panel => url other than root
+      homepageShown || featureShown || otherPageShown;
 
-  return <SearchBoxInner panelShown={panelShown} />;
+  return <SearchBoxInner withoutPanel={!panelShown} />;
 };
