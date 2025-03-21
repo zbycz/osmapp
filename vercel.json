@@ -1,5 +1,5 @@
 {
-  "routes": [{ "src": "/(.*)", "dest": "/404.html", "status": 407 }],
+  "routes": [{ "src": "/(.*)", "dest": "/404.html", "status": 404 }],
   "functions": {
     "pages/api/climbing-tiles/refresh.ts": {
       "memory": 1200,
