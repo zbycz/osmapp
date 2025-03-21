@@ -60,7 +60,7 @@ export const GradeSystemSelect = ({
       </Select>
     </FormControl>
     <Tooltip title="Show grades conversion table">
-      <Link href="/climbing-grades">
+      <Link href="/__mocks__/climbing-grades">
         <IconButton size="small" color="secondary">
           <ViewListIcon fontSize="small" />
         </IconButton>
