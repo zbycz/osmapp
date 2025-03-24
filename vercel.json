@@ -1,8 +1,5 @@
 {
-  "routes": [
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "/404.html", "status": 404 }
-  ],
+  "rewrites": [{ "source": "/((?!node).*)", "destination": "/404.html" }],
   "functions": {
     "pages/api/climbing-tiles/refresh.ts": {
       "memory": 1200,
