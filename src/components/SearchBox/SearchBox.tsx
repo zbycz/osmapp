@@ -30,7 +30,7 @@ const TopPanel = styled.div`
 `;
 
 const StyledPaper = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== '$withShadow',
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
 })<{ $withShadow: boolean }>`
   padding: 2px 4px;
   display: flex;

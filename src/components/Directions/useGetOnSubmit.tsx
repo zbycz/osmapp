@@ -33,6 +33,7 @@ const getRoutingFailed = (showToast: ShowToast) => {
     }
   };
 };
+
 export const useReactToUrl = (
   setMode: (param: ((current: string) => string) | string) => void,
   setPoints: (points: Array<Option>) => void,
@@ -44,7 +45,8 @@ export const useReactToUrl = (
   const urlParts = router.query.all;
 
   useEffect(() => {
-    const [, mode, ...points] = urlParts as [string, Profile, ...string[]];
+    const urlPartsArr = Array.isArray(router.query.all) ? router.query.all : [];
+    const [mode, ...points] = urlPartsArr as [Profile, ...string[]];
     const options = parseUrlParts(points.flatMap((str) => str.split('/')));
 
     if (mode && options.length >= 2) {

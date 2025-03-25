@@ -33,7 +33,11 @@ const rewrites = async () => {
       },
     ],
     fallback: [
-      // This works correctly only on Vercel, on dev internal 404 may be rendered
+      // Experiment with static SSR 404:
+      //  - On vercel these routing rules are applied before passing the request to backend
+      //    This way we can try to optimize number of paid function exectuions and leave pretty urls.
+      //  - It works correctly only on Vercel, on dev internal 404 may be rendered.
+      //  - WARNING: unfortunately I wasn't able to send HTTP statu 404, so the page just have meta-equiv=noindex
       {
         source: '/:path*',
         destination: `/404.html`,

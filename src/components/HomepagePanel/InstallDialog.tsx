@@ -124,7 +124,7 @@ export function InstallDialog() {
               <li>
                 <Translation id="install.ios_share" />{' '}
                 <img
-                  src="/__mocks__/install.ts/ios_shareicon.png"
+                  src="/install/ios_shareicon.png"
                   srcSet="/install/ios_shareicon.png 1x, /install/ios_shareicon@2.png 2x"
                   width={16}
                   height={16}
@@ -136,7 +136,7 @@ export function InstallDialog() {
               <li>
                 <Translation id="install.ios_add" />{' '}
                 <img
-                  src="/__mocks__/install.ts/ios_addicon.png"
+                  src="/install/ios_addicon.png"
                   alt="add icon"
                   width={16}
                   height={16}
@@ -187,7 +187,7 @@ export function InstallDialog() {
               <li>
                 <Translation id="install.desktop_install" />{' '}
                 <img
-                  src="/__mocks__/install.ts/desktop_add.png"
+                  src="/install/desktop_add.png"
                   width={16}
                   height={16}
                   alt="add icon"

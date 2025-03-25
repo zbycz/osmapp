@@ -24,7 +24,7 @@ import { getOptionLabel } from '../SearchBox/getOptionLabel';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { LonLat } from '../../services/types';
-import { getGlobalMap } from '../../services/mapStorage';
+import { getGlobalMap, mapIdlePromise } from '../../services/mapStorage';
 import maplibregl, { LngLatLike, PointLike } from 'maplibre-gl';
 import ReactDOMServer from 'react-dom/server';
 import { AlphabeticalMarker } from './TextMarker';
@@ -246,11 +246,13 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
 
   useEffect(() => {
-    const map = getGlobalMap();
     if (value?.type === 'coords') {
-      markerRef.current = new maplibregl.Marker(ALPHABETICAL_MARKER)
-        .setLngLat(value.coords.center as LngLatLike)
-        .addTo(map);
+      // in SSR could be executed before map is loaded
+      mapIdlePromise.then((map) => {
+        markerRef.current = new maplibregl.Marker(ALPHABETICAL_MARKER)
+          .setLngLat(value.coords.center as LngLatLike)
+          .addTo(map);
+      });
     }
     return () => {
       markerRef.current?.remove();
