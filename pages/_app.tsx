@@ -110,12 +110,12 @@ const MyApp = (props: Props) => {
                           <Loading />
                           <SearchBox />
                           <ResponsiveFeaturePanel />
-                          <HomepagePanel />
                           <Climbing />
                           <Map />
                           <TitleAndMetaTags />
 
                           <Component {...pageProps} />
+                          <HomepagePanel />
                         </QueryClientProvider>
                       </EditDialogProvider>
                     </StarsProvider>

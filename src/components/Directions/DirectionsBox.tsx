@@ -15,7 +15,7 @@ const Wrapper = styled(Stack, {
   top: 8px;
   left: 8px;
   right: 8px;
-  z-index: 1001; // over the LayerSwitcherButton
+  z-index: 1101; // over the LayerSwitcherButton and FeaturePanel
   max-height: calc(100vh - 16px);
   box-shadow: 0 10px 20px 0 rgba(0, 0, 0, 0.12);
 

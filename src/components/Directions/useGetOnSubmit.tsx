@@ -45,8 +45,8 @@ export const useReactToUrl = (
   const urlParts = router.query.all;
 
   useEffect(() => {
-    const urlPartsArr = Array.isArray(router.query.all) ? router.query.all : [];
-    const [mode, ...points] = urlPartsArr as [Profile, ...string[]];
+    const urlPartsArray = Array.isArray(urlParts) ? urlParts : [];
+    const [mode, ...points] = urlPartsArray as [Profile, ...string[]];
     const options = parseUrlParts(points.flatMap((str) => str.split('/')));
 
     if (mode && options.length >= 2) {
