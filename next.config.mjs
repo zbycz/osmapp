@@ -7,6 +7,41 @@ const commitHash = (process.env.VERCEL_GIT_COMMIT_SHA || '').substring(0, 7);
 const commitMessage = process.env.VERCEL_GIT_COMMIT_MESSAGE || 'dev';
 const sentryRelease = `${osmappVersion}-${commitHash}-${commitMessage.substring(0, 10)}`;
 
+const rewrites = async () => {
+  return {
+    beforeFiles: [],
+    afterFiles: [
+      {
+        source: '/:coords([-.0-9]+,[-.0-9]+)',
+        destination: '/feature/:coords',
+      },
+      {
+        source: '/:shortener([A-Za-z0-9]+[nwr])',
+        destination: '/feature/:shortener',
+      },
+      {
+        source: '/node/:path*',
+        destination: '/feature/node/:path*',
+      },
+      {
+        source: '/way/:path*',
+        destination: '/feature/way/:path*',
+      },
+      {
+        source: '/relation/:path*',
+        destination: '/feature/relation/:path*',
+      },
+    ],
+    fallback: [
+      // This works correctly only on Vercel, on dev internal 404 may be rendered
+      {
+        source: '/:path*',
+        destination: `/404.html`,
+      },
+    ],
+  };
+};
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   compiler: {
@@ -19,6 +54,7 @@ const nextConfig = {
     defaultLocale: 'default',
     localeDetection: false,
   },
+  rewrites,
 };
 
 export default withSentryConfig(nextConfig, {

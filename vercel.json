@@ -1,5 +1,4 @@
 {
-  "rewrites": [{ "source": "/((?!node).*)", "destination": "/404.html" }],
   "functions": {
     "pages/api/climbing-tiles/refresh.ts": {
       "memory": 1200,

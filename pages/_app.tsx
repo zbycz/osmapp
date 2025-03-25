@@ -151,7 +151,6 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
 
   const cookies = nextCookies(ctx);
 
-  console.log(ctx.pathname);
   const featureFromRouter = await getInitialFeature(ctx);
   if (ctx.res) {
     if (featureFromRouter === '404' || featureFromRouter?.error === '404') {
