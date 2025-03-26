@@ -167,7 +167,6 @@ MyApp.getInitialProps = async ({
       ctx.res.statusCode = 500;
     }
   }
-  console.log(featureFromRouter);
 
   const initialMapView = await getInitialMapView(ctx);
 
