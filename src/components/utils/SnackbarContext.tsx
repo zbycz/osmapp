@@ -1,5 +1,11 @@
 import { Alert, Snackbar } from '@mui/material';
-import React, { createContext, useContext, useState, useMemo } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useMemo,
+  useEffect,
+} from 'react';
 
 type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
 export type ShowToast = (
@@ -31,6 +37,14 @@ export const SnackbarProvider: React.FC<Props> = ({
     initialToast?.message ?? '',
   );
   const [severity, setSeverity] = useState<Severity>(initialToast?.severity);
+
+  useEffect(() => {
+    if (initialToast) {
+      setMessage(initialToast.message);
+      setSeverity(initialToast.severity);
+      setOpen(true);
+    }
+  }, [initialToast]);
 
   const handleClose = (_event: React.SyntheticEvent, reason?: string) => {
     if (reason === 'clickaway') {

@@ -11,7 +11,9 @@ import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { Instructions } from './Instructions';
 import { useDirectionsContext } from './DirectionsContext';
 
-export const StyledPaper = styled(Paper)<{
+export const StyledPaper = styled(Paper, {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<{
   $height?: string;
   $overflow?: string;
 }>`

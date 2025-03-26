@@ -1,1 +1,1 @@
-export { default } from '../src/components/App/App';
+export { ClimbingGradesTable as default } from '../src/components/FeaturePanel/Climbing/ClimbingGradesTable';
