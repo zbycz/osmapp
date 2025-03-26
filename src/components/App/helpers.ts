@@ -87,7 +87,6 @@ export const getInitialFeature = async (
   // WARNING: The routing from node, way, relation (/node/123),
   // coords feature (/50.1,14.1) and shortener (/xyzn) are matched
   // in next.config.mjs and routed to `/feature/<original-path>` page internally
-
   if (ctx.pathname !== '/feature/[...all]') {
     return null;
   }

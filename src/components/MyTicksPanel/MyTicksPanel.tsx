@@ -21,6 +21,7 @@ import { getMyTicks, TickRowType } from '../../services/my-ticks/getMyTicks';
 import { useAddHeatmap } from './useAddHeatmap';
 import { useSortedTable } from './useSortedTable';
 import { MyTicksRow } from './MyTicksRow';
+import Link from 'next/link';
 
 function NoTicksContent() {
   return (
@@ -81,6 +82,9 @@ export const MyTicksPanel = () => {
                 </Table>
               </TableContainer>
             )}
+
+            <Link href={'/xxx'}>xxx</Link>
+            <Link href={'/node/xxx'}>node/xxx</Link>
           </PanelScrollbars>
         </PanelContent>
       </MobilePageDrawer>

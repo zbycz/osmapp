@@ -1,5 +1,5 @@
-import React from 'react';
-import App, { AppProps } from 'next/app';
+import React, { useEffect } from 'react';
+import { AppContext, AppInitialProps, AppProps } from 'next/app';
 import Head from 'next/head';
 import nextCookies from 'next-cookies';
 import { CssBaseline } from '@mui/material';
@@ -38,11 +38,15 @@ import { setIntlForSSR, t } from '../src/services/intl';
 import { Feature } from '../src/services/types';
 import { ResponsiveFeaturePanel } from '../src/components/FeaturePanel/ResponsiveFeaturePanel';
 import { Climbing } from '../src/components/Climbing/Climbing';
+import Router from 'next/router';
 
-const URL_NOT_FOUND_TOAST = {
-  message: t('url_not_found_toast'),
-  severity: 'warning' as const,
-};
+const getInitialToast = (featureFromRouter: Feature | '404') =>
+  featureFromRouter === '404'
+    ? {
+        message: t('url_not_found_toast'),
+        severity: 'warning' as const,
+      }
+    : undefined;
 
 const reactQueryClient = new QueryClient();
 
@@ -55,29 +59,25 @@ type OwnProps = {
 
 type Props = AppProps & EmotionCacheProviderProps & OwnProps;
 
-// export default class MyApp extends App<Props> {
-//   componentDidMount() {
-//     // setTimeout(() => {
-//     //   // TODO find a way to load both pages only once (they contain same code)
-//     //   //  OR maybe split the different next pages to contain just specific Panel (and move App.tsx to _app.tsx)
-//     //   Router.prefetch('/'); // works only in PROD
-//     //   Router.prefetch('/[osmtype]/[osmid]');
-//     // }, 500);
-//   }
-//
-//   render() {
-
 const MyApp = (props: Props) => {
   const {
     Component,
     pageProps,
     emotionCache,
     userThemeCookie,
-    initialMapView = ['4', '50', '14'],
-    cookies = {},
-    featureFromRouter = null,
+    initialMapView,
+    cookies,
+    featureFromRouter,
   } = props;
   const mapView = getMapViewFromHash() || initialMapView;
+  const initialToast = getInitialToast(featureFromRouter);
+
+  useEffect(() => {
+    setTimeout(() => {
+      Router.prefetch('/'); // works only in PROD
+      Router.prefetch('/directions/[[...all]]');
+    }, 1000);
+  }, []);
 
   return (
     <>
@@ -90,11 +90,9 @@ const MyApp = (props: Props) => {
       </Head>
       <AppCacheProvider emotionCache={emotionCache}>
         <UserThemeProvider userThemeCookie={userThemeCookie}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
-          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
 
-          <SnackbarProvider initialToast={undefined}>
+          <SnackbarProvider initialToast={initialToast}>
             <UserSettingsProvider>
               <FeatureProvider
                 featureFromRouter={
@@ -110,12 +108,13 @@ const MyApp = (props: Props) => {
                           <Loading />
                           <SearchBox />
                           <ResponsiveFeaturePanel />
+                          <HomepagePanel />
                           <Climbing />
                           <Map />
                           <TitleAndMetaTags />
 
+                          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
                           <Component {...pageProps} />
-                          <HomepagePanel />
                         </QueryClientProvider>
                       </EditDialogProvider>
                     </StarsProvider>
@@ -137,11 +136,20 @@ const MyApp = (props: Props) => {
     </>
   );
 };
-// }
 
-MyApp.getInitialProps = async ({ ctx, Component }) => {
+MyApp.getInitialProps = async ({
+  ctx,
+  Component,
+}: AppContext): Promise<OwnProps & AppInitialProps> => {
   if (doShortenerRedirect(ctx)) {
-    return { pageProps: undefined };
+    // TODO move shortener redirect somewhere else (with use of next.config rewrites)
+    return {
+      cookies: undefined,
+      featureFromRouter: undefined,
+      initialMapView: ['', '', ''],
+      userThemeCookie: '',
+      pageProps: undefined,
+    };
   }
 
   await setIntlForSSR(ctx); // needed for lang urls like /es/node/123
@@ -159,6 +167,7 @@ MyApp.getInitialProps = async ({ ctx, Component }) => {
       ctx.res.statusCode = 500;
     }
   }
+  console.log(featureFromRouter);
 
   const initialMapView = await getInitialMapView(ctx);
 
