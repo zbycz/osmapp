@@ -1,5 +1,7 @@
 import * as Sentry from '@sentry/nextjs';
 import Head from 'next/head';
+import Link from 'next/link';
+import React from 'react';
 
 const throwError = async () => {
   await Sentry.startSpan(
@@ -29,6 +31,9 @@ const Page = () => (
     <a href="https://osmapp.sentry.io/issues/?project=1858591&query=is%3Aunresolved&statsPeriod=1h">
       Issues
     </a>
+    <h1>404 test</h1>
+    <Link href="/xxx">xxx</Link> <br />
+    <Link href="/node/xxx">node/xxx</Link>
     <Head>
       <meta name="robots" content="noindex" />
     </Head>

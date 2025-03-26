@@ -82,9 +82,6 @@ export const MyTicksPanel = () => {
                 </Table>
               </TableContainer>
             )}
-
-            <Link href={'/xxx'}>xxx</Link>
-            <Link href={'/node/xxx'}>node/xxx</Link>
           </PanelScrollbars>
         </PanelContent>
       </MobilePageDrawer>
