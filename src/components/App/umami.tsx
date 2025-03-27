@@ -13,7 +13,7 @@ export const Umami = () => {
     <Script
       defer
       src="https://cloud.umami.is/script.js"
-      data-website-id={isOpenClimbing ? UMAMI_ID_OSMAPP : UMAMI_ID_OPENCLIMBING}
+      data-website-id={isOpenClimbing ? UMAMI_ID_OPENCLIMBING : UMAMI_ID_OSMAPP}
     />
   );
 };
