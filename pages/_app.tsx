@@ -127,12 +127,8 @@ const MyApp = (props: Props) => {
           <GlobalStyle />
         </UserThemeProvider>
       </AppCacheProvider>
-      {PROJECT_ID === 'openclimbing' && (
-        <>
-          <GoogleAnalytics />
-          <Umami />
-        </>
-      )}
+      <Umami />
+      {PROJECT_ID === 'openclimbing' && <GoogleAnalytics />}
     </>
   );
 };
