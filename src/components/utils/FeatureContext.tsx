@@ -58,9 +58,10 @@ export const FeatureProvider = ({
   const persistShowHomepage = () => {
     setFeature(null);
     hideHomepage();
-    showHomepage();
-    Router.push(`/${window.location.hash}`);
     Cookies.remove('hideHomepage');
+    Router.push(`/${window.location.hash}`).then(() => {
+      showHomepage();
+    });
   };
   const persistHideHomepage = () => {
     hideHomepage();
