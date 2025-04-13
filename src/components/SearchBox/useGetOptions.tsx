@@ -29,6 +29,15 @@ export const useGetOptions = (inputValue: string) => {
         return;
       }
 
+      // Check for overpass options first if input matches a tag pattern
+      if (inputValue.includes('=')) {
+        const overpassOptions = getOverpassOptions(inputValue);
+        if (overpassOptions.length) {
+          setOptions(overpassOptions);
+          return;
+        }
+      }
+
       const coordOptions = getCoordsOption(inputValue);
       if (coordOptions.length) {
         setOptions(coordOptions);
@@ -54,11 +63,11 @@ export const useGetOptions = (inputValue: string) => {
       fetchGeocoderOptions({
         inputValue,
         view,
-        setOptions, // TODO refactor to await options instead of setOptions
+        setOptions,
         before: beforeWithStars,
         after,
       });
     })();
-  }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [inputValue, stars, view]);
   return options;
 };
