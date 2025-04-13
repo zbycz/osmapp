@@ -217,6 +217,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       clearOnEscape
       freeSolo
       open={isOpen}
+      onClose={() => setIsOpen(false)}
       renderInput={(params) => (
         <SearchBoxInput
           params={params}
