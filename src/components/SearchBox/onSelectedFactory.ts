@@ -19,6 +19,7 @@ import {
 } from './types';
 import { osmOptionSelected } from './options/openstreetmap';
 import { coordsOptionsSelected } from './options/coords';
+import { getGlobalMap } from '../../services/mapStorage';
 
 const overpassOptionSelected = (
   option: OverpassOption | PresetOption,
@@ -29,7 +30,7 @@ const overpassOptionSelected = (
   const astOrQuery =
     option.type === 'preset'
       ? option.preset?.presetForSearch.tags
-      : (option.overpass.ast ?? option.overpass.query); // TODO there should be two types for "query" and "ast"
+      : (option.overpass.ast ?? option.overpass.query);
 
   const timeout = setTimeout(() => {
     setOverpassLoading(true);
@@ -40,7 +41,23 @@ const overpassOptionSelected = (
       const count = geojson.features.length;
       const content = t('searchbox.overpass_success', { count });
       showToast(content);
-      getOverpassSource()?.setData(geojson);
+
+      // Wait for the map to be ready
+      const map = getGlobalMap();
+      const setDataWhenReady = () => {
+        const source = getOverpassSource();
+        if (source) {
+          source.setData(geojson);
+        }
+      };
+
+      // If the map is loaded, set the data immediately
+      if (map?.loaded()) {
+        setDataWhenReady();
+      } else {
+        // Otherwise, wait for the load event
+        map?.once('load', setDataWhenReady);
+      }
 
       if (option.type === 'overpass' && !option.overpass.ast) {
         addOverpassQueryHistory(option.overpass.query);
@@ -49,7 +66,7 @@ const overpassOptionSelected = (
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
       const content = t('searchbox.overpass_error', { message });
-      console.error(e); // eslint-disable-line no-console
+      console.error(e);
       showToast(content, 'error');
     })
     .finally(() => {
@@ -100,7 +117,9 @@ export const onSelectedFactory =
     router,
   }: OnSelectedFactoryProps) =>
   (_: never, option: Option) => {
-    setPreview(null); // it could be stuck from onHighlight
+    setPreview(null);
+
+    const isQuickSearch = typeof router.query.qd === 'string';
 
     switch (option.type) {
       case 'star':
@@ -108,16 +127,21 @@ export const onSelectedFactory =
         break;
       case 'overpass':
       case 'preset':
-        overpassOptionSelected(option, setOverpassLoading, bbox, showToast);
-        break;
+        return overpassOptionSelected(
+          option,
+          setOverpassLoading,
+          bbox,
+          showToast,
+        );
       case 'geocoder':
         geocoderOptionSelected(option, setFeature);
-        // Update URL with search query
-        const searchQuery = option.geocoder.properties?.name || '';
-        router.push({
-          pathname: router.pathname,
-          query: { ...router.query, q: searchQuery },
-        });
+        if (!isQuickSearch) {
+          const searchQuery = option.geocoder.properties?.name || '';
+          router.push({
+            pathname: router.pathname,
+            query: { ...router.query, q: searchQuery },
+          });
+        }
         break;
       case 'osm':
         osmOptionSelected(option, router);

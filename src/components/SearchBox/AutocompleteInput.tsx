@@ -16,6 +16,7 @@ import { useInputValueState } from './options/geocoder';
 import { useRouter } from 'next/router';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { OptionsPaper, OptionsPopper } from './optionsPopper';
+import { getOverpassSource } from '../../services/mapStorage';
 
 type SearchBoxInputProps = {
   params: any;
@@ -99,7 +100,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
             firstOption.type === 'preset' ||
             firstOption.type === 'overpass'
           ) {
-            // First perform the search
+            // Perform the search without updating the URL
             onSelectedFactory({
               setFeature,
               setPreview,
@@ -108,22 +109,9 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
               setOverpassLoading,
               router: {
                 ...router,
-                push: () => Promise.resolve(true), // Mock router.push to do nothing
+                push: () => Promise.resolve(true), // Mock router.push to prevent URL updates
               },
             })(null as never, firstOption);
-
-            // Then update the URL after a delay to ensure the search is complete
-            setTimeout(() => {
-              const { qd: _, ...restQuery } = router.query;
-              router.push(
-                {
-                  pathname: router.pathname,
-                  query: restQuery, // Don't add q parameter to keep search box closed
-                },
-                undefined,
-                { shallow: true },
-              );
-            }, 1000);
           }
         }
       }, 500);
@@ -138,11 +126,31 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Handle input changes
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setInputValue(newValue);
+
+    // If we had a qd parameter and user starts typing, remove it
+    if (router.query.qd) {
+      const { qd, ...restQuery } = router.query;
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...restQuery, q: newValue }, // Add the new search term as 'q'
+          hash: window.location.hash,
+        },
+        undefined,
+        { shallow: true },
+      );
+    }
+  };
+
   // Update URL while typing (debounced)
   const debouncedInputValue = useDebounce(inputValue, 300);
   useEffect(() => {
-    // Skip URL update if we're handling qd parameter
-    if (router.query.qd) {
+    // Skip if this is the initial qd parameter value
+    if (router.query.qd && inputValue === router.query.qd) {
       return;
     }
 
@@ -156,31 +164,27 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         {
           pathname: router.pathname,
           query: { ...router.query, q: debouncedInputValue },
+          hash: window.location.hash,
         },
         undefined,
         { shallow: true },
       );
-      setIsOpen(true); // Keep search box open when typing
+      setIsOpen(true);
     } else {
       // Remove q parameter when input is empty
-      const { q, ...restQuery } = router.query;
+      const { q, qd, ...restQuery } = router.query; // Also remove qd if it exists
       router.push(
         {
           pathname: router.pathname,
           query: restQuery,
+          hash: window.location.hash,
         },
         undefined,
         { shallow: true },
       );
-      setIsOpen(false); // Close search box when input is empty
+      setIsOpen(false);
     }
   }, [debouncedInputValue, router]);
-
-  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newValue = event.target.value;
-    setInputValue(newValue);
-    setIsOpen(!!newValue); // Open dialog when there's input
-  };
 
   return (
     <Autocomplete
