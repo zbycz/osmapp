@@ -86,6 +86,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const inputRef = useRef<HTMLInputElement>(null);
   const lastInputValue = useRef(inputValue);
   const [isOpen, setIsOpen] = useState(false);
+  const { feature } = useFeatureContext();
 
   // Handle qd parameter on mount
   useEffect(() => {
@@ -176,6 +177,13 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       { shallow: true },
     );
   }, [debouncedInputValue, router, inputValue]);
+
+  // Keep search box closed when feature is shown
+  useEffect(() => {
+    if (feature) {
+      setIsOpen(false);
+    }
+  }, [feature]);
 
   return (
     <Autocomplete
