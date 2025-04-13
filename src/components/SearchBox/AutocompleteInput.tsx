@@ -110,6 +110,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
                 push: () => Promise.resolve(true),
               },
             })(null as never, firstOption);
+            // Ensure search box stays closed after qd search
+            setIsOpen(false);
           }
         }
       }, 500);
@@ -177,7 +179,10 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         undefined,
         { shallow: true },
       );
-      setIsOpen(true);
+      // Only open search box if not using qd parameter
+      if (!router.query.qd) {
+        setIsOpen(true);
+      }
     } else {
       const { q, qd, ...restQuery } = router.query;
       void router.push(
