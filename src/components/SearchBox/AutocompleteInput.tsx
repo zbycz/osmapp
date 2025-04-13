@@ -89,7 +89,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   // Handle qd parameter on mount
   useEffect(() => {
     const qd = router.query.qd;
-    if (typeof qd === 'string') {
+    if (typeof qd === 'string' && bbox) {
       // Set input value and wait for options
       setInputValue(qd);
       const timer = setTimeout(() => {
@@ -129,7 +129,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [router.query.qd, options.length]);
+  }, [router.query.qd, options.length, bbox]);
 
   // Only set initial query value on mount
   useEffect(() => {
