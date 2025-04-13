@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import debounce from 'lodash/debounce';
 
 export const useScreensize = () => {
   const [screenSize, setScreenSize] = useState({
@@ -71,4 +72,25 @@ export const useLog = (...params: any[]) => {
     console.log(...params);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...params]);
+};
+
+export const useDebounce = <T>(value: T, delay: number): T => {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+  const debouncedRef = useRef<ReturnType<typeof debounce>>();
+
+  useEffect(() => {
+    if (!debouncedRef.current) {
+      debouncedRef.current = debounce((newValue: T) => {
+        setDebouncedValue(newValue);
+      }, delay);
+    }
+
+    debouncedRef.current(value);
+
+    return () => {
+      debouncedRef.current?.cancel();
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
 };

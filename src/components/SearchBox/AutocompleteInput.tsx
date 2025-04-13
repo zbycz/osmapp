@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Autocomplete, InputBase } from '@mui/material';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { renderOptionFactory } from './renderOptionFactory';
@@ -9,7 +9,7 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
 import { useMapCenter } from './utils';
 import { useSnackbar } from '../utils/SnackbarContext';
-import { useKeyDown } from '../../helpers/hooks';
+import { useKeyDown, useDebounce } from '../../helpers/hooks';
 import { getOptionLabel } from './getOptionLabel';
 import { useGetOptions } from './useGetOptions';
 import { useInputValueState } from './options/geocoder';
@@ -19,17 +19,17 @@ import { OptionsPaper, OptionsPopper } from './optionsPopper';
 
 type SearchBoxInputProps = {
   params: any;
-  setInputValue: (value: string) => void;
+  setInputValue: (event: React.ChangeEvent<HTMLInputElement>) => void;
   autocompleteRef: React.MutableRefObject<undefined>;
+  inputRef: React.RefObject<HTMLInputElement>;
 };
 
 const SearchBoxInput = ({
   params,
   setInputValue,
   autocompleteRef,
+  inputRef,
 }: SearchBoxInputProps) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
   useKeyDown('/', (e) => {
     const isInput = e.target instanceof HTMLInputElement;
     const isTextarea = e.target instanceof HTMLTextAreaElement;
@@ -49,13 +49,13 @@ const SearchBoxInput = ({
 
   return (
     <InputBase
-      {...restParams} // eslint-disable-line react/jsx-props-no-spreading
+      {...restParams}
       sx={{
         height: '47px',
       }}
       inputRef={inputRef}
       placeholder={t('searchbox.placeholder')}
-      onChange={({ target }) => setInputValue(target.value)}
+      onChange={setInputValue}
       onFocus={({ target }) => target.select()}
     />
   );
@@ -82,6 +82,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const router = useRouter();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
+  const inputRef = useRef<HTMLInputElement>(null);
+  const lastInputValue = useRef(inputValue);
 
   // Only set initial query value on mount
   useEffect(() => {
@@ -90,11 +92,46 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
+  // Update URL while typing (debounced)
+  const debouncedInputValue = useDebounce(inputValue, 300);
+  useEffect(() => {
+    if (debouncedInputValue === lastInputValue.current) {
+      return;
+    }
+    lastInputValue.current = debouncedInputValue;
+
+    if (debouncedInputValue) {
+      router.push(
+        {
+          pathname: router.pathname,
+          query: { ...router.query, q: debouncedInputValue },
+        },
+        undefined,
+        { shallow: true },
+      );
+    } else {
+      // Remove q parameter when input is empty
+      const { q, ...restQuery } = router.query;
+      router.push(
+        {
+          pathname: router.pathname,
+          query: restQuery,
+        },
+        undefined,
+        { shallow: true },
+      );
+    }
+  }, [debouncedInputValue, router]);
+
+  const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = event.target.value;
+    setInputValue(newValue);
+  };
+
   return (
     <Autocomplete
       inputValue={inputValue}
       options={options}
-      // we need null to be able to select the same again (eg. category search)
       value={null}
       filterOptions={(o) => o}
       getOptionLabel={getOptionLabel}
@@ -113,15 +150,14 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       disableClearable
       autoHighlight
       clearOnEscape
-      // disableCloseOnSelect
       freeSolo
-      open={!!inputValue} // Show results when there's input
-      // disableOpenOnFocus
+      open={!!inputValue}
       renderInput={(params) => (
         <SearchBoxInput
           params={params}
-          setInputValue={setInputValue}
+          setInputValue={handleInputChange}
           autocompleteRef={autocompleteRef}
+          inputRef={inputRef}
         />
       )}
       slots={{ paper: OptionsPaper, popper: OptionsPopper }}
