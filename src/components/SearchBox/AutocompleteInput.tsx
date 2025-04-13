@@ -110,24 +110,13 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
                 push: () => Promise.resolve(true),
               },
             })(null as never, firstOption);
-            // Ensure search box stays closed after qd search
             setIsOpen(false);
           }
         }
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [
-    router.query.qd,
-    bbox,
-    options,
-    router,
-    setFeature,
-    setInputValue,
-    setOverpassLoading,
-    setPreview,
-    showToast,
-  ]);
+  }, [router.query.qd, bbox, options]);
 
   // Only set initial query value on mount
   useEffect(() => {
@@ -140,20 +129,6 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = event.target.value;
     setInputValue(newValue);
-
-    // If we had a qd parameter and user starts typing, remove it
-    if (router.query.qd) {
-      const { qd, ...restQuery } = router.query;
-      router.push(
-        {
-          pathname: router.pathname,
-          query: { ...restQuery, q: newValue }, // Add the new search term as 'q'
-          hash: window.location.hash,
-        },
-        undefined,
-        { shallow: true },
-      );
-    }
   };
 
   // Update URL while typing (debounced)
@@ -169,33 +144,31 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     }
     lastInputValue.current = debouncedInputValue;
 
+    const newQuery = { ...router.query };
     if (debouncedInputValue) {
-      void router.push(
-        {
-          pathname: router.pathname,
-          query: { ...router.query, q: debouncedInputValue },
-          hash: window.location.hash,
-        },
-        undefined,
-        { shallow: true },
-      );
+      newQuery.q = debouncedInputValue;
+      if (router.query.qd) {
+        delete newQuery.qd;
+      }
       // Only open search box if not using qd parameter
       if (!router.query.qd) {
         setIsOpen(true);
       }
     } else {
-      const { q, qd, ...restQuery } = router.query;
-      void router.push(
-        {
-          pathname: router.pathname,
-          query: restQuery,
-          hash: window.location.hash,
-        },
-        undefined,
-        { shallow: true },
-      );
+      delete newQuery.q;
+      delete newQuery.qd;
       setIsOpen(false);
     }
+
+    void router.push(
+      {
+        pathname: router.pathname,
+        query: newQuery,
+        hash: window.location.hash,
+      },
+      undefined,
+      { shallow: true },
+    );
   }, [debouncedInputValue, router, inputValue]);
 
   return (
