@@ -80,6 +80,8 @@ const SearchBoxInner = ({ withoutPanel }) => {
   const [overpassLoading, setOverpassLoading] = useState(false);
   const autocompleteRef = useRef();
   const onClosePanel = useOnClosePanel();
+  const router = useRouter();
+  const searchQuery = router.query.q as string;
 
   return (
     <TopPanel>
@@ -95,6 +97,7 @@ const SearchBoxInner = ({ withoutPanel }) => {
         <AutocompleteInput
           autocompleteRef={autocompleteRef}
           setOverpassLoading={setOverpassLoading}
+          initialQuery={searchQuery}
         />
 
         {overpassLoading && <OverpassCircularProgress />}

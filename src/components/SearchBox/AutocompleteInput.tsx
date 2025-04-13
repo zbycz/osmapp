@@ -64,11 +64,13 @@ const SearchBoxInput = ({
 type AutocompleteInputProps = {
   autocompleteRef: React.MutableRefObject<undefined>;
   setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  initialQuery?: string;
 };
 
 export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   autocompleteRef,
   setOverpassLoading,
+  initialQuery,
 }) => {
   const { setFeature, setPreview } = useFeatureContext();
   const { bbox } = useMapStateContext();
@@ -80,6 +82,13 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const router = useRouter();
   const { userSettings } = useUserSettingsContext();
   const { isImperial } = userSettings;
+
+  // Only set initial query value on mount
+  useEffect(() => {
+    if (initialQuery && inputValue === '') {
+      setInputValue(initialQuery);
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Autocomplete
@@ -106,6 +115,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       clearOnEscape
       // disableCloseOnSelect
       freeSolo
+      open={!!inputValue} // Show results when there's input
       // disableOpenOnFocus
       renderInput={(params) => (
         <SearchBoxInput

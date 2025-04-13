@@ -112,6 +112,12 @@ export const onSelectedFactory =
         break;
       case 'geocoder':
         geocoderOptionSelected(option, setFeature);
+        // Update URL with search query
+        const searchQuery = option.geocoder.properties?.name || '';
+        router.push({
+          pathname: router.pathname,
+          query: { ...router.query, q: searchQuery },
+        });
         break;
       case 'osm':
         osmOptionSelected(option, router);
