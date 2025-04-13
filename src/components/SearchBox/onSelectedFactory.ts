@@ -42,7 +42,6 @@ const overpassOptionSelected = (
       const content = t('searchbox.overpass_success', { count });
       showToast(content);
 
-      // Wait for the map to be ready
       const map = getGlobalMap();
       const setDataWhenReady = () => {
         const source = getOverpassSource();
@@ -51,11 +50,9 @@ const overpassOptionSelected = (
         }
       };
 
-      // If the map is loaded, set the data immediately
       if (map?.loaded()) {
         setDataWhenReady();
       } else {
-        // Otherwise, wait for the load event
         map?.once('load', setDataWhenReady);
       }
 
@@ -66,7 +63,6 @@ const overpassOptionSelected = (
     .catch((e) => {
       const message = `${e}`.substring(0, 100);
       const content = t('searchbox.overpass_error', { message });
-      console.error(e);
       showToast(content, 'error');
     })
     .finally(() => {

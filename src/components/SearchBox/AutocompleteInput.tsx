@@ -91,7 +91,6 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   useEffect(() => {
     const qd = router.query.qd;
     if (typeof qd === 'string' && bbox) {
-      // Set input value and wait for options
       setInputValue(qd);
       const timer = setTimeout(() => {
         if (options.length > 0) {
@@ -100,7 +99,6 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
             firstOption.type === 'preset' ||
             firstOption.type === 'overpass'
           ) {
-            // Perform the search without updating the URL
             onSelectedFactory({
               setFeature,
               setPreview,
@@ -109,7 +107,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
               setOverpassLoading,
               router: {
                 ...router,
-                push: () => Promise.resolve(true), // Mock router.push to prevent URL updates
+                push: () => Promise.resolve(true),
               },
             })(null as never, firstOption);
           }
@@ -117,7 +115,17 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       }, 500);
       return () => clearTimeout(timer);
     }
-  }, [router.query.qd, options.length, bbox]);
+  }, [
+    router.query.qd,
+    bbox,
+    options,
+    router,
+    setFeature,
+    setInputValue,
+    setOverpassLoading,
+    setPreview,
+    showToast,
+  ]);
 
   // Only set initial query value on mount
   useEffect(() => {
@@ -160,7 +168,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     lastInputValue.current = debouncedInputValue;
 
     if (debouncedInputValue) {
-      router.push(
+      void router.push(
         {
           pathname: router.pathname,
           query: { ...router.query, q: debouncedInputValue },
@@ -171,9 +179,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       );
       setIsOpen(true);
     } else {
-      // Remove q parameter when input is empty
-      const { q, qd, ...restQuery } = router.query; // Also remove qd if it exists
-      router.push(
+      const { q, qd, ...restQuery } = router.query;
+      void router.push(
         {
           pathname: router.pathname,
           query: restQuery,
@@ -184,7 +191,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
       );
       setIsOpen(false);
     }
-  }, [debouncedInputValue, router]);
+  }, [debouncedInputValue, router, inputValue]);
 
   return (
     <Autocomplete
