@@ -92,38 +92,44 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
     const qd = router.query.qd;
     if (typeof qd === 'string' && bbox) {
       setInputValue(qd);
-      const timer = setTimeout(() => {
-        if (options.length > 0) {
-          const firstOption = options[0];
-          if (
-            firstOption.type === 'preset' ||
-            firstOption.type === 'overpass'
-          ) {
-            onSelectedFactory({
-              setFeature,
-              setPreview,
-              bbox,
-              showToast,
-              setOverpassLoading,
-              router: {
-                ...router,
-                push: () => Promise.resolve(true),
-              },
-            })(null as never, firstOption);
-            setIsOpen(false);
-          }
-        }
-      }, 500);
-      return () => clearTimeout(timer);
+      // Trigger search immediately
+      const firstOption = options[0];
+      if (
+        firstOption &&
+        (firstOption.type === 'preset' || firstOption.type === 'overpass')
+      ) {
+        onSelectedFactory({
+          setFeature,
+          setPreview,
+          bbox,
+          showToast,
+          setOverpassLoading,
+          router: {
+            ...router,
+            push: () => Promise.resolve(true),
+          },
+        })(null as never, firstOption);
+        setIsOpen(false);
+      }
     }
-  }, [router.query.qd, bbox, options]);
+  }, [
+    router.query.qd,
+    bbox,
+    options,
+    router,
+    setFeature,
+    setPreview,
+    showToast,
+    setOverpassLoading,
+    setInputValue,
+  ]);
 
   // Only set initial query value on mount
   useEffect(() => {
     if (initialQuery && inputValue === '') {
       setInputValue(initialQuery);
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [initialQuery, inputValue, setInputValue]);
 
   // Handle input changes
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
