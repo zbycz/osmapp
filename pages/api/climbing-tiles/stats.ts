@@ -10,6 +10,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(200).setHeader('Content-Type', 'application/json').send(json);
   } catch (err) {
     console.error(err); // eslint-disable-line no-console
-    res.status(err.code ?? 400).send(String(err));
+    res.status(500).send(String(err));
   }
 };
