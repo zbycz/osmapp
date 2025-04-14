@@ -1,0 +1,47 @@
+name: Deploy Next.js to VPS
+
+on:
+  push:
+#    branches:
+#      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20'
+
+      - name: Cache Yarn dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/yarn
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build Next.js app
+        run: yarn build
+
+      - name: Deploy to VPS
+        env:
+          VPS_USER_HOST: ${{ secrets.VPS_USER_HOST }}
+          VPS_PATH: ${{ secrets.VPS_PATH }}
+          VPS_PRIVATE_KEY: ${{ secrets.VPS_PRIVATE_KEY }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$VPS_PRIVATE_KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+
+          ssh -o StrictHostKeyChecking=no $VPS_USER_HOST "echo Connected"
+
+          rsync -avz --delete --exclude 'node_modules' --exclude '.git' ./out/ $VPS_USER_HOST:$VPS_PATH
