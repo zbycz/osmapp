@@ -3,7 +3,7 @@ import TerrainIcon from '@mui/icons-material/Terrain';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
 import React, { useEffect, useState } from 'react';
-import { Menu, MenuItem } from '@mui/material';
+import { Menu, MenuItem, Typography } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import HelpIcon from '@mui/icons-material/Help';
 import styled from '@emotion/styled';
@@ -126,7 +126,7 @@ const ClimbingAreasLink = ({ closeMenu }) => (
 );
 const ClimbingGradesTableLink = ({ closeMenu }) => (
   <MenuItem href="/climbing-grades" component={Link} onClick={closeMenu}>
-    <ViewListIcon fontSize="small" />
+    <ViewListIcon fontSize="inherit" sx={{ mr: 1 }} />
     {t('climbing_grade_table.title')}
   </MenuItem>
 );
@@ -201,6 +201,14 @@ export const HamburgerMenu = () => {
         <ThemeSelection />
         <EditLink closeMenu={close} />
         <StyledDivider />
+        {isOpenClimbing && [
+          <Typography variant="caption" ml={2} key="climbing-header">
+            {t('hamburger_menu.climbing.title')}
+          </Typography>,
+          <ClimbingAreasLink closeMenu={close} key="climbing-areas" />,
+          <ClimbingGradesTableLink closeMenu={close} key="climbing-grades" />,
+          <StyledDivider key="divider" />,
+        ]}
         <InstallLink closeMenu={close} />
         <AboutLink closeMenu={close} />
         <GithubLink closeMenu={close} />
