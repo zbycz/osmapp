@@ -233,7 +233,7 @@ export const RouteFloatingMenu = () => {
                   onClick={onContinueClimbingRouteClick}
                   startIcon={<AddLocationIcon />}
                 >
-                  Extend
+                  {getCurrentPath().length > 0 ? 'Extend' : 'Start'}
                 </Button>
               )}
               {machine.currentStateName === 'pointMenu' && (

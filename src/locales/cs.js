@@ -270,6 +270,7 @@ export default {
   'climbingareas.area': 'Oblast',
   'climbingareas.num_of_crags': 'Počet skal',
 
+  'hamburger_menu.climbing.title': 'Lezení',
   'climbing_grade_table.title': 'Tabulka lezeckých obtížností',
   'climbing_grade_table.show': 'Zobrazit',
 
