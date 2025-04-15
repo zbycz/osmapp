@@ -1,4 +1,4 @@
-import { Preset } from './types/Presets';
+import { FieldTranslation, Preset } from './types/Presets';
 import { allFields, allPresets } from './data';
 import { deduplicate } from './utils';
 import { Field } from './types/Fields';
@@ -81,13 +81,23 @@ export const getFields = (preset: Preset) => {
   };
 };
 
+const getOption = (option: FieldTranslation['options'][0]): string | null => {
+  if (typeof option === 'string') {
+    return option;
+  }
+  if (option?.description && option?.title) {
+    return option.title + ' – ' + option.description;
+  }
+  return null;
+};
+
 // TODO check - 1) field.options 2) strings.options
 export const getValueForField = (
   field: Field,
-  fieldTranslation,
+  fieldTranslation: FieldTranslation,
   value: string | undefined,
   tagsForField = [],
-) => {
+): string => {
   if (field.type === 'semiCombo') {
     return value
       .split(';')
@@ -99,7 +109,7 @@ export const getValueForField = (
     return tagsForField
       .map(
         ({ key, value: value2 }) =>
-          `${fieldTranslation.types[key]}: ${fieldTranslation.options[value2]?.title}`,
+          `${fieldTranslation.types[key]}: ${getOption(fieldTranslation.options[value2])}`,
       )
       .join(',\n');
   }
@@ -111,5 +121,6 @@ export const getValueForField = (
       .join(',\n');
   }
 
-  return fieldTranslation?.options?.[value] ?? value;
+  const option = getOption(fieldTranslation?.options?.[value]); // testcase way/1200404964
+  return option ?? value;
 };
