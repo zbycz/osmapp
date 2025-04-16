@@ -5,7 +5,7 @@ import { DirectionValue } from './Direction';
 import { osmColorToHex, whiteOrBlackText } from '../helpers/color';
 import styled from '@emotion/styled';
 
-const getEllipsisHumanUrl = (humanUrl) => {
+const getEllipsisHumanUrl = (humanUrl: string) => {
   const MAX_LENGTH = 40;
   return humanUrl.replace(/^([^/]+.{0,5})(.*)$/, (full, hostname, rest) => {
     const charsLeft = MAX_LENGTH - 10 - hostname.length;
@@ -18,7 +18,7 @@ const getEllipsisHumanUrl = (humanUrl) => {
   });
 };
 
-const getHumanValue = (k, v, featured: boolean) => {
+const getHumanValue = (k: string, v: string, featured: boolean) => {
   const humanValue = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
 
   if (v.startsWith('https://commons.wikimedia.org/wiki/')) {
@@ -53,9 +53,7 @@ const ColorValue = styled.div<{ v: string }>`
   display: inline;
 `;
 
-// TODO rename to renderTag
-export const renderValue = (k: string, v: string, featured = false) => {
-  const url = getUrlForTag(k, v);
+export const renderTag = (k: string, v: string, featured = false) => {
   const humanValue = getHumanValue(k, v, featured);
 
   if (k === 'direction') {
@@ -65,5 +63,6 @@ export const renderValue = (k: string, v: string, featured = false) => {
     return <ColorValue v={v}>{humanValue}</ColorValue>;
   }
 
+  const url = getUrlForTag(k, v);
   return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : humanValue;
 };

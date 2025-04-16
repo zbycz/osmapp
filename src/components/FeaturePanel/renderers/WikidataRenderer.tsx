@@ -1,10 +1,10 @@
 import React from 'react';
-import { renderValue } from '../Properties/renderValue';
+import { renderTag } from '../Properties/renderTag';
 import { WikipediaIcon } from '../../../assets/WikipediaIcon';
 
 export const WikidataRenderer = ({ k, v }) => (
   <>
     <WikipediaIcon width={20} height={20} />
-    {renderValue(k, v, true)}
+    {renderTag(k, v, true)}
   </>
 );
