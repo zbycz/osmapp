@@ -131,5 +131,5 @@ export const getValueForField = (
       .join(',\n');
   }
 
-  return translateField(fieldTranslation, value); // TODO add testcase way/1200404964
+  return translateField(fieldTranslation, value);
 };
