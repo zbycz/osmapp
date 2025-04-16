@@ -217,10 +217,6 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
   const selectedOptionInputValue = useRef<string | null>(null);
-  const mapCenter = useMapCenter();
-  const { currentTheme } = useUserThemeContext();
-  const { userSettings } = useUserSettingsContext();
-  const { isImperial } = userSettings;
   const updatePoint = useUpdatePoint();
 
   const ALPHABETICAL_MARKER = useMemo(() => {
@@ -336,12 +332,7 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
             onOptionChange={onChange}
           />
         )}
-        renderOption={renderOptionFactory(
-          inputValue,
-          currentTheme,
-          mapCenter,
-          isImperial,
-        )}
+        renderOption={renderOptionFactory(inputValue)}
       />
     </Row>
   );

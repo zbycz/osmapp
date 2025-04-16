@@ -77,7 +77,11 @@ export const coordsOptionsSelected = (
   setFeature(newFeature);
 };
 
-export const renderCoords = ({ coords }: CoordsOption) => (
+type Props = {
+  option: CoordsOption;
+};
+
+export const CoordsRow = ({ option: { coords } }: Props) => (
   <>
     <IconPart>
       <TravelExploreIcon />

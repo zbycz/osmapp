@@ -115,7 +115,12 @@ const getAdditionalText = (preset: PresetOption['preset']) => {
   return ` (${matchingText}…)`;
 };
 
-export const renderPreset = ({ preset }: PresetOption, inputValue: string) => {
+type Props = {
+  option: PresetOption;
+  inputValue: string;
+};
+
+export const PresetRow = ({ option: { preset }, inputValue }: Props) => {
   const { name } = preset.presetForSearch;
   const additionalText = getAdditionalText(preset);
 

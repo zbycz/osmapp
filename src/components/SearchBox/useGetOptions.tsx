@@ -10,7 +10,7 @@ import { getStarsOptions } from './options/stars';
 import { getOverpassOptions } from './options/overpass';
 import { getPresetOptions } from './options/preset';
 import { Option } from './types';
-import { getOsmOptions } from './options/openstreetmap';
+import { getOsmOptions } from './options/osm';
 import { getCoordsOption } from './options/coords';
 
 export const useGetOptions = (inputValue: string) => {

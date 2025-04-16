@@ -1,7 +1,7 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { Grid, Typography } from '@mui/material';
-import type { OverpassOption } from '../types';
+import { GeocoderOption, OverpassOption } from '../types';
 import { t } from '../../../services/intl';
 import { IconPart } from '../utils';
 import { getAST, queryWizardLabel } from '../queryWizard/queryWizard';
@@ -61,7 +61,11 @@ export const getOverpassOptions = (inputValue: string): OverpassOption[] => {
   return [];
 };
 
-export const renderOverpass = ({ overpass }: OverpassOption) => (
+type Props = {
+  option: OverpassOption;
+};
+
+export const OverpassRow = ({ option: { overpass } }: Props) => (
   <>
     <IconPart>
       <SearchIcon />
