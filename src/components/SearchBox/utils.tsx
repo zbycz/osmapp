@@ -64,7 +64,7 @@ export const useMapCenter = (): LonLat => {
   return [parseFloat(lon), parseFloat(lat)];
 };
 
-export const renderLoader = () => (
+export const LoaderRow = () => (
   <>
     <IconPart />
     <Grid item xs>

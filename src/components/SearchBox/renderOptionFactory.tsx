@@ -1,56 +1,42 @@
 import React from 'react';
-import { renderOverpass } from './options/overpass';
-import { renderPreset } from './options/preset';
-import { renderLoader } from './utils';
-import { renderStar } from './options/stars';
-import { renderGeocoder } from './options/geocoder';
+import { OverpassRow } from './options/overpass';
+import { PresetRow } from './options/preset';
+import { LoaderRow } from './utils';
+import { StarRow } from './options/stars';
+import { GeocoderRow } from './options/geocoder';
 import { Option } from './types';
-import { Theme } from '../../helpers/theme';
-import { LonLat } from '../../services/types';
-import { renderOsm } from './options/openstreetmap';
-import { renderCoords } from './options/coords';
+import { OsmRow } from './options/osm';
+import { CoordsRow } from './options/coords';
 
-const renderOption = (
-  inputValue: string,
-  currentTheme: Theme,
-  mapCenter: LonLat,
-  option: Option,
-  isImperial: boolean,
-) => {
+type Props = {
+  option: Option;
+  inputValue: string;
+};
+
+const Row = ({ option, inputValue }: Props) => {
   switch (option.type) {
-    case 'overpass':
-      return renderOverpass(option);
-    case 'star':
-      return renderStar(option, inputValue, mapCenter, isImperial);
-    case 'loader':
-      return renderLoader();
-    case 'preset':
-      return renderPreset(option, inputValue);
     case 'geocoder':
-      return renderGeocoder(
-        option,
-        currentTheme,
-        inputValue,
-        mapCenter,
-        isImperial,
-      );
+      return <GeocoderRow option={option} inputValue={inputValue} />;
+    case 'preset':
+      return <PresetRow option={option} inputValue={inputValue} />;
+    case 'star':
+      return <StarRow option={option} inputValue={inputValue} />;
+    case 'overpass':
+      return <OverpassRow option={option} />;
     case 'osm':
-      return renderOsm(option);
+      return <OsmRow option={option} />;
     case 'coords':
-      return renderCoords(option);
+      return <CoordsRow option={option} />;
+    case 'loader':
+      return <LoaderRow />;
   }
 };
 
-export const renderOptionFactory = (
-  inputValue: string,
-  currentTheme: Theme,
-  mapCenter: LonLat,
-  isImperial: boolean,
-) => {
-  const Option = ({ key, ...props }, option: Option) => (
+export const renderOptionFactory = (inputValue: string) => {
+  const renderFn = ({ key, ...props }, option: Option) => (
     <li key={key} {...props}>
-      {renderOption(inputValue, currentTheme, mapCenter, option, isImperial)}
+      <Row option={option} inputValue={inputValue} />
     </li>
   );
-  return Option;
+  return renderFn;
 };

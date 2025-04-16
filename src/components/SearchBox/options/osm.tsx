@@ -74,7 +74,11 @@ export const getOsmOptions = (inputValue: string): OsmOption[] => {
   ];
 };
 
-export const renderOsm = ({ osm }: OsmOption) => (
+type Props = {
+  option: OsmOption;
+};
+
+export const OsmRow = ({ option: { osm } }: Props) => (
   <>
     <IconPart>
       <MapIcon />

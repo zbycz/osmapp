@@ -2,15 +2,21 @@ import { Grid, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { join } from '../../../utils';
-import { getHumanDistance, highlightText, IconPart } from '../utils';
+import {
+  getHumanDistance,
+  highlightText,
+  IconPart,
+  useMapCenter,
+} from '../utils';
 import { getPoiClass } from '../../../services/getPoiClass';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
-import { Theme } from '../../../helpers/theme';
+import { Theme, useUserThemeContext } from '../../../helpers/theme';
 import { GeocoderOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { LonLat } from '../../../services/types';
 import { PoiIcon } from '../../utils/icons/PoiIcon';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
@@ -107,61 +113,15 @@ export const buildPhotonAddress = ({
   streetnumber: snum,
 }) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
-/** photon
- [
- {
-    geometry: {
-      coordinates: [16.5920871, 49.2416882],
-      type: 'Point',
-    },
-    type: 'Feature',
-    properties: {
-      osm_id: 2493045013,
-      country: 'Česko',
-      city: 'Brno',
-      countrycode: 'CZ',
-      postcode: '612 00',
-      county: 'Jihomoravský kraj',
-      type: 'house',
-      osm_type: 'N',
-      osm_key: 'leisure',
-      street: 'Podhájí',
-      district: 'Řečkovice',
-      osm_value: 'sports_centre',
-      name: 'VSK MENDELU',
-      state: 'Jihovýchod',
-    },
-  },
- // housenumber
- {
-    geometry: { coordinates: [14.4036424, 50.098012], type: 'Point' },
-    type: 'Feature',
-    properties: {
-      osm_id: 296816783,
-      country: 'Czechia',
-      city: 'Prague',
-      countrycode: 'CZ',
-      postcode: '16000',
-      type: 'house',
-      osm_type: 'N',
-      osm_key: 'place',
-      housenumber: '8',
-      street: 'Dejvická',
-      district: 'Dejvice',
-      osm_value: 'house',
-      state: 'Prague',
-    },
-  },
- ];
- */
-export const renderGeocoder = (
-  { geocoder }: GeocoderOption,
-  currentTheme: Theme,
-  inputValue: string,
-  mapCenter: LonLat,
-  isImperial: boolean,
-) => {
-  const { geometry, properties } = geocoder;
+type Props = {
+  option: GeocoderOption;
+  inputValue: string;
+};
+
+export const GeocoderRow = ({ option, inputValue }: Props) => {
+  const mapCenter = useMapCenter();
+  const { isImperial } = useUserSettingsContext().userSettings;
+  const { geometry, properties } = option.geocoder;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 
   const distance = getHumanDistance(

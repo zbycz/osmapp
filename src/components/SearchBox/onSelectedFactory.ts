@@ -17,7 +17,7 @@ import {
   PresetOption,
   StarOption,
 } from './types';
-import { osmOptionSelected } from './options/openstreetmap';
+import { osmOptionSelected } from './options/osm';
 import { coordsOptionsSelected } from './options/coords';
 
 const overpassOptionSelected = (

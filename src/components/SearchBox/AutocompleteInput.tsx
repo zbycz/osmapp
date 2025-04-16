@@ -73,13 +73,10 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const { setFeature, setPreview } = useFeatureContext();
   const { bbox } = useMapStateContext();
   const { showToast } = useSnackbar();
-  const mapCenter = useMapCenter();
-  const { currentTheme } = useUserThemeContext();
   const { inputValue, setInputValue } = useInputValueState();
   const options = useGetOptions(inputValue);
   const router = useRouter();
   const { userSettings } = useUserSettingsContext();
-  const { isImperial } = userSettings;
 
   return (
     <Autocomplete
@@ -115,12 +112,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         />
       )}
       slots={{ paper: OptionsPaper, popper: OptionsPopper }}
-      renderOption={renderOptionFactory(
-        inputValue,
-        currentTheme,
-        mapCenter,
-        isImperial,
-      )}
+      renderOption={renderOptionFactory(inputValue)}
     />
   );
 };
