@@ -7,7 +7,7 @@ import { Feature } from '../../../services/types';
 import { t } from '../../../services/intl';
 import { TagsTableInner } from './TagsTableInner';
 import { InlineEditButton } from '../helpers/InlineEditButton';
-import { renderValue } from './renderValue';
+import { renderTag } from './renderTag';
 import { Table } from './Table';
 import { ShowMoreButton } from './helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -30,12 +30,12 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
   }
 
   if (field.fieldKey === 'wikidata') {
-    return renderValue('wikidata', feature.tags.wikidata);
+    return renderTag('wikidata', feature.tags.wikidata);
   }
 
   // combo with options
   if (fieldTranslation?.options?.[v]) {
-    return renderValue(k, translateField(fieldTranslation, v));
+    return renderTag(k, translateField(fieldTranslation, v));
   }
 
   // multicombo ?
@@ -43,7 +43,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return tagsForField.map(({ key, value: value2 }) => (
       <div key={key}>
         {fieldTranslation.types[key]}:{' '}
-        {renderValue(key, translateField(fieldTranslation, value2))}
+        {renderTag(key, translateField(fieldTranslation, value2))}
       </div>
     ));
   }
@@ -52,7 +52,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return tagsForField.map(({ key, value: value2 }) => (
       <div key={key}>
         {fieldTranslation.options[key]}:{' '}
-        {renderValue(key, translateField(fieldTranslation, value2))}
+        {renderTag(key, translateField(fieldTranslation, value2))}
       </div>
     ));
   }
@@ -61,18 +61,18 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return (
       <>
         {tagsForField.map(({ key, value: value2 }) => (
-          <div key={key}>{renderValue(key, value2)}</div>
+          <div key={key}>{renderTag(key, value2)}</div>
         ))}
       </>
     );
   }
 
   if (!k) {
-    return renderValue(tagsForField[0].key, tagsForField[0].value);
+    return renderTag(tagsForField[0].key, tagsForField[0].value);
   }
 
   // `v` should not be undefined but maybe there is a bug
-  return renderValue(k, v ?? 'Value could not be determined.');
+  return renderTag(k, v ?? 'Value could not be determined.');
 };
 
 // TODO some fields eg. oneway/bicycle doesnt have units in brackets
