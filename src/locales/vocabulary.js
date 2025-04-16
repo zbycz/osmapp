@@ -362,6 +362,7 @@ export default {
   'climbingareas.area': 'Area',
   'climbingareas.num_of_crags': 'Number of crags',
 
+  'hamburger_menu.climbing.title': 'Climbing',
   'climbing_grade_table.title': 'Climbing grades table',
   'climbing_grade_table.show': 'Show',
 
