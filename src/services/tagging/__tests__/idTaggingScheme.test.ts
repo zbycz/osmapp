@@ -12,7 +12,7 @@ describe('idTaggingScheme', () => {
     mockSchemaTranslations(translations);
   });
 
-  it('should multiple access', () => {
+  it('should render multiple access=*', () => {
     const feature = {
       osmMeta: { type: 'way' },
       tags: {
@@ -50,7 +50,10 @@ describe('idTaggingScheme', () => {
       { label: 'Structure', value: undefined },
       {
         label: 'Allowed Access',
-        value: 'Foot: Prohibited,\nBicycles: Prohibited,\nHorses: Prohibited',
+        value:
+          'Foot: Prohibited – Access not allowed to the general public,\n' +
+          'Bicycles: Prohibited – Access not allowed to the general public,\n' +
+          'Horses: Prohibited – Access not allowed to the general public',
       },
       { label: 'Lit', value: 'no' },
     ]);
@@ -63,6 +66,36 @@ describe('idTaggingScheme', () => {
       'tiger:county',
       'tiger:name_base',
     ]);
+  });
+
+  it('should work for parging surface', () => {
+    const feature = {
+      osmMeta: { type: 'way', id: 1200404964 },
+      tags: {
+        amenity: 'parking',
+        parking: 'surface',
+        surface: 'unpaved',
+        smoothness: 'bad',
+      },
+    } as unknown as Feature;
+
+    const result = getSchemaForFeature(feature);
+
+    expect(result.label).toBe('Parking Lot');
+    expect(result.presetKey).toBe('amenity/parking');
+    expect(
+      result.matchedFields.map(({ label, value }) => ({ label, value })),
+    ).toMatchObject([
+      { label: 'Type', value: 'Surface' },
+      { label: 'Surface', value: 'Unpaved' },
+    ]);
+    expect(result.tagsWithFields).toMatchObject([
+      {
+        label: 'Smoothness',
+        value: 'Robust Wheels: trekking bike, car, rickshaw',
+      },
+    ]);
+    expect(result.keysTodo).toMatchObject([]);
   });
 
   it('should use @template field', () => {
