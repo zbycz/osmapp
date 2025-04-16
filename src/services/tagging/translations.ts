@@ -32,7 +32,7 @@ export const fetchSchemaTranslations = async () => {
     translations[intl.lang] = localTranslation[intl.lang];
     merge(translations, getOurTranslations(intl.lang));
   } finally {
-    publishDbgObject('schemaTranslations', translations);
+    publishDbgObject('id-tagging-schema translations', translations);
   }
 };
 

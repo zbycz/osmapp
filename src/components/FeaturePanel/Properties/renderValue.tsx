@@ -53,6 +53,7 @@ const ColorValue = styled.div<{ v: string }>`
   display: inline;
 `;
 
+// TODO rename to renderTag
 export const renderValue = (k: string, v: string, featured = false) => {
   const url = getUrlForTag(k, v);
   const humanValue = getHumanValue(k, v, featured);

@@ -81,14 +81,23 @@ export const getFields = (preset: Preset) => {
   };
 };
 
-const getOption = (option: FieldTranslation['options'][0]): string | null => {
+export const translateField = (
+  fieldTranslation: FieldTranslation | undefined,
+  v: string,
+): string => {
+  const option = fieldTranslation?.options?.[v];
+
   if (typeof option === 'string') {
     return option;
   }
   if (option?.description && option?.title) {
-    return option.title + ' – ' + option.description;
+    return `${option.title} – ${option.description}`;
   }
-  return null;
+  if (option?.title) {
+    return option.title;
+  }
+
+  return v;
 };
 
 // TODO check - 1) field.options 2) strings.options
@@ -101,15 +110,16 @@ export const getValueForField = (
   if (field.type === 'semiCombo') {
     return value
       .split(';')
-      .map((v) => fieldTranslation?.options?.[v] ?? v)
+      .map((v) => translateField(fieldTranslation, v))
       .join(',\n');
   }
+
   // eg field.type === 'access' or 'structure'
   if (fieldTranslation?.types && fieldTranslation?.options) {
     return tagsForField
       .map(
         ({ key, value: value2 }) =>
-          `${fieldTranslation.types[key]}: ${getOption(fieldTranslation.options[value2])}`,
+          `${fieldTranslation.types[key]}: ${translateField(fieldTranslation, value2)}`,
       )
       .join(',\n');
   }
@@ -121,6 +131,5 @@ export const getValueForField = (
       .join(',\n');
   }
 
-  const option = getOption(fieldTranslation?.options?.[value]); // testcase way/1200404964
-  return option ?? value;
+  return translateField(fieldTranslation, value); // TODO add testcase way/1200404964
 };
