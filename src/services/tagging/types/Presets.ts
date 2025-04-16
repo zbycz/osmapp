@@ -107,7 +107,7 @@ export type FieldTranslation = {
   placeholder?: string;
   terms?: string;
   options?: {
-    [key: string]: { title: string; description: string };
+    [key: string]: string | { title: string; description: string };
   };
   types?: {
     [key: string]: string;

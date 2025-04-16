@@ -13,12 +13,15 @@ import { ShowMoreButton } from './helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Subheading } from '../helpers/Subheading';
 import { UiField } from '../../../services/tagging/types/Presets';
+import { translateField } from '../../../services/tagging/fields';
 
 const Spacer = styled.div`
   width: 100%;
   height: 50px;
 `;
 
+// TODO get rid of `value` and `key` and use only tagsForField universally
+// TODO design UiField to hold only what is needed to render (nothing more)
 const render = (uiField: UiField, feature: Feature): string | ReactNode => {
   const { field, key: k, value: v, tagsForField, fieldTranslation } = uiField;
 
@@ -32,7 +35,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
 
   // combo with options
   if (fieldTranslation?.options?.[v]) {
-    return renderValue(k, fieldTranslation.options[v]?.title);
+    return renderValue(k, translateField(fieldTranslation, v));
   }
 
   // multicombo ?
@@ -40,7 +43,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return tagsForField.map(({ key, value: value2 }) => (
       <div key={key}>
         {fieldTranslation.types[key]}:{' '}
-        {renderValue(key, fieldTranslation.options[value2]?.title)}
+        {renderValue(key, translateField(fieldTranslation, value2))}
       </div>
     ));
   }
@@ -49,7 +52,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return tagsForField.map(({ key, value: value2 }) => (
       <div key={key}>
         {fieldTranslation.options[key]}:{' '}
-        {renderValue(key, fieldTranslation.options[value2]?.title ?? value2)}
+        {renderValue(key, translateField(fieldTranslation, value2))}
       </div>
     ));
   }
