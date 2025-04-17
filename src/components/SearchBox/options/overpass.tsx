@@ -1,10 +1,14 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { Grid, Typography } from '@mui/material';
-import { GeocoderOption, OverpassOption } from '../types';
+import { OverpassOption, PresetOption } from '../types';
 import { t } from '../../../services/intl';
 import { IconPart } from '../utils';
 import { getAST, queryWizardLabel } from '../queryWizard/queryWizard';
+import { Bbox } from '../../utils/MapStateContext';
+import { ShowToast } from '../../utils/SnackbarContext';
+import { performOverpassSearch } from '../../../services/overpass/overpassSearch';
+import { getOverpassSource } from '../../../services/mapStorage';
 
 const OVERPASS_HISTORY_KEY = 'overpassQueryHistory';
 
@@ -78,3 +82,41 @@ export const OverpassRow = ({ option: { overpass } }: Props) => (
     </Grid>
   </>
 );
+
+export const overpassOptionSelected = (
+  option: OverpassOption | PresetOption,
+  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  bbox: Bbox,
+  showToast: ShowToast,
+) => {
+  const astOrQuery =
+    option.type === 'preset'
+      ? option.preset?.presetForSearch.tags
+      : (option.overpass.ast ?? option.overpass.query); // TODO there should be two types for "query" and "ast"
+
+  const timeout = setTimeout(() => {
+    setOverpassLoading(true);
+  }, 300);
+
+  performOverpassSearch(bbox, astOrQuery)
+    .then((geojson) => {
+      const count = geojson.features.length;
+      const content = t('searchbox.overpass_success', { count });
+      showToast(content);
+      getOverpassSource()?.setData(geojson);
+
+      if (option.type === 'overpass' && !option.overpass.ast) {
+        addOverpassQueryHistory(option.overpass.query);
+      }
+    })
+    .catch((e) => {
+      const message = `${e}`.substring(0, 100);
+      const content = t('searchbox.overpass_error', { message });
+      console.error(e); // eslint-disable-line no-console
+      showToast(content, 'error');
+    })
+    .finally(() => {
+      clearTimeout(timeout);
+      setOverpassLoading(false);
+    });
+};

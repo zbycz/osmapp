@@ -1,85 +1,15 @@
-import Router, { NextRouter } from 'next/router';
-import { getApiId, getShortId, getUrlOsmId } from '../../services/helpers';
-import { addFeatureCenterToCache } from '../../services/osm/featureCenterToCache';
-import { getOverpassSource } from '../../services/mapStorage';
-import { performOverpassSearch } from '../../services/overpass/overpassSearch';
-import { t } from '../../services/intl';
-import { fitBounds } from './utils';
-import { getSkeleton } from './onHighlightFactory';
+import { NextRouter } from 'next/router';
 import { ShowToast } from '../utils/SnackbarContext';
-import { addOverpassQueryHistory } from './options/overpass';
-import { Feature } from '../../services/types';
+import { overpassOptionSelected } from './options/overpass';
 import { Bbox } from '../utils/MapStateContext';
-import {
-  GeocoderOption,
-  Option,
-  OverpassOption,
-  PresetOption,
-  StarOption,
-} from './types';
+import { Option } from './types';
 import { osmOptionSelected } from './options/osm';
 import { coordsOptionsSelected } from './options/coords';
-
-const overpassOptionSelected = (
-  option: OverpassOption | PresetOption,
-  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  bbox: Bbox,
-  showToast: ShowToast,
-) => {
-  const astOrQuery =
-    option.type === 'preset'
-      ? option.preset?.presetForSearch.tags
-      : (option.overpass.ast ?? option.overpass.query); // TODO there should be two types for "query" and "ast"
-
-  const timeout = setTimeout(() => {
-    setOverpassLoading(true);
-  }, 300);
-
-  performOverpassSearch(bbox, astOrQuery)
-    .then((geojson) => {
-      const count = geojson.features.length;
-      const content = t('searchbox.overpass_success', { count });
-      showToast(content);
-      getOverpassSource()?.setData(geojson);
-
-      if (option.type === 'overpass' && !option.overpass.ast) {
-        addOverpassQueryHistory(option.overpass.query);
-      }
-    })
-    .catch((e) => {
-      const message = `${e}`.substring(0, 100);
-      const content = t('searchbox.overpass_error', { message });
-      console.error(e); // eslint-disable-line no-console
-      showToast(content, 'error');
-    })
-    .finally(() => {
-      clearTimeout(timeout);
-      setOverpassLoading(false);
-    });
-};
-
-const starOptionSelected = ({ star }: StarOption) => {
-  const apiId = getApiId(star.shortId);
-  Router.push(`/${getUrlOsmId(apiId)}`);
-};
+import { geocoderOptionSelected } from './options/geocoder';
+import { Feature } from '../../services/types';
+import { starOptionSelected } from './options/stars';
 
 type SetFeature = (feature: Feature | null) => void;
-
-const geocoderOptionSelected = (
-  option: GeocoderOption,
-  setFeature: SetFeature,
-) => {
-  if (!option?.geocoder.geometry?.coordinates) return;
-
-  const skeleton = getSkeleton(option);
-  console.log('Search item selected:', { location: option, skeleton }); // eslint-disable-line no-console
-
-  addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
-
-  setFeature(skeleton);
-  fitBounds(option);
-  Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
-};
 
 type OnSelectedFactoryProps = {
   setFeature: SetFeature;
