@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export const useScreensize = () => {
   const [screenSize, setScreenSize] = useState({
@@ -58,6 +58,19 @@ export const useKeyDown = (
       window.removeEventListener('keydown', onKeydown);
     };
   }, [key, listener]);
+};
+
+export const useFocusOnSlash = (
+  inputRef: React.MutableRefObject<HTMLInputElement>,
+) => {
+  useKeyDown('/', (e) => {
+    const isEventInInput = e.target instanceof HTMLInputElement;
+    const isEventInTextarea = e.target instanceof HTMLTextAreaElement;
+    if (!isEventInInput && !isEventInTextarea) {
+      e.preventDefault();
+      inputRef.current?.focus();
+    }
+  });
 };
 
 /**

@@ -7,15 +7,20 @@ import { onSelectedFactory } from './onSelectedFactory';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
 import { useSnackbar } from '../utils/SnackbarContext';
-import { useKeyDown } from '../../helpers/hooks';
+import { useFocusOnSlash } from '../../helpers/hooks';
 import { getOptionLabel } from './getOptionLabel';
 import { useGetOptions } from './useGetOptions';
 import { useInputValueState } from './options/geocoder';
 import { useRouter } from 'next/router';
 import { OptionsPaper, OptionsPopper } from './optionsPopper';
+import {
+  AutocompleteProps,
+  AutocompleteRenderInputParams,
+} from '@mui/material/Autocomplete/Autocomplete';
+import { Option } from './types';
 
 type SearchBoxInputProps = {
-  params: any;
+  params: AutocompleteRenderInputParams;
   setInputValue: (value: string) => void;
   autocompleteRef: React.MutableRefObject<undefined>;
 };
@@ -26,16 +31,7 @@ const SearchBoxInput = ({
   autocompleteRef,
 }: SearchBoxInputProps) => {
   const inputRef = React.useRef<HTMLInputElement>(null);
-
-  useKeyDown('/', (e) => {
-    const isInput = e.target instanceof HTMLInputElement;
-    const isTextarea = e.target instanceof HTMLTextAreaElement;
-    if (isInput || isTextarea) {
-      return;
-    }
-    e.preventDefault();
-    inputRef.current?.focus();
-  });
+  useFocusOnSlash(inputRef);
 
   const { InputLabelProps, InputProps, ...restParams } = params;
 
@@ -58,6 +54,23 @@ const SearchBoxInput = ({
   );
 };
 
+const AutocompleteConfigured = (
+  props: AutocompleteProps<Option, false, true, true>,
+) => (
+  <Autocomplete
+    value={null} // we need value=null to be able to select the same again (eg. fire same category search again)
+    autoComplete
+    disableClearable
+    // disableCloseOnSelect
+    // disableOpenOnFocus
+    autoHighlight
+    clearOnEscape
+    freeSolo
+    slots={{ paper: OptionsPaper, popper: OptionsPopper }}
+    {...props} // eslint-disable-line react/jsx-props-no-spreading
+  />
+);
+
 type AutocompleteInputProps = {
   autocompleteRef: React.MutableRefObject<undefined>;
   setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -75,19 +88,9 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const router = useRouter();
 
   return (
-    <Autocomplete
+    <AutocompleteConfigured
       inputValue={inputValue}
       options={options}
-      // we need value=null to be able to select the same again (eg. category search)
-      value={null}
-      autoComplete
-      disableClearable
-      autoHighlight
-      clearOnEscape
-      freeSolo
-      slots={{ paper: OptionsPaper, popper: OptionsPopper }}
-      // disableCloseOnSelect
-      // disableOpenOnFocus
       getOptionDisabled={(o) => o.type === 'loader'}
       filterOptions={(o) => o}
       getOptionLabel={getOptionLabel}
