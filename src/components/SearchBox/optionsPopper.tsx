@@ -2,7 +2,9 @@ import styled from '@emotion/styled';
 import { Paper, PaperProps, Popper, PopperProps } from '@mui/material';
 import { useFeatureContext } from '../utils/FeatureContext';
 
-const StyledPaper = styled(Paper)<PaperProps & { $solidBg: boolean }>`
+const StyledPaper = styled(Paper, {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<PaperProps & { $solidBg: boolean }>`
   background-color: ${({ theme, $solidBg }) =>
     $solidBg
       ? theme.palette.background.searchInputSolid
