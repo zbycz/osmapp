@@ -33,10 +33,10 @@ const Row = ({ option, inputValue }: Props) => {
 };
 
 export const renderOptionFactory = (inputValue: string) => {
-  const renderFn = ({ key, ...props }, option: Option) => (
+  const renderOptionFn = ({ key, ...props }, option: Option) => (
     <li key={key} {...props}>
       <Row option={option} inputValue={inputValue} />
     </li>
   );
-  return renderFn;
+  return renderOptionFn;
 };

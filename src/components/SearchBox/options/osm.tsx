@@ -3,7 +3,7 @@ import { OsmOption } from '../types';
 import MapIcon from '@mui/icons-material/Map';
 import { Grid, Typography } from '@mui/material';
 import { IconPart } from '../utils';
-import { NextRouter } from 'next/router';
+import Router, { NextRouter } from 'next/router';
 import { isUrl } from '../../../helpers/utils';
 
 const parseType = (rawType: string) => {
@@ -94,6 +94,6 @@ export const OsmRow = ({ option: { osm } }: Props) => (
   </>
 );
 
-export const osmOptionSelected = ({ osm }: OsmOption, router: NextRouter) => {
-  router.push(`${osm.type}/${osm.id}`);
+export const osmOptionSelected = ({ osm }: OsmOption) => {
+  Router.push(`${osm.type}/${osm.id}`);
 };

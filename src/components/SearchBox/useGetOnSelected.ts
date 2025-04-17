@@ -1,13 +1,16 @@
-import { NextRouter } from 'next/router';
-import { ShowToast } from '../utils/SnackbarContext';
+import { NextRouter, useRouter } from 'next/router';
+import { ShowToast, useSnackbar } from '../utils/SnackbarContext';
 import { overpassOptionSelected } from './options/overpass';
-import { Bbox } from '../utils/MapStateContext';
+import { Bbox, useMapStateContext } from '../utils/MapStateContext';
 import { Option } from './types';
 import { osmOptionSelected } from './options/osm';
 import { coordsOptionsSelected } from './options/coords';
-import { geocoderOptionSelected } from './options/geocoder';
+import { geocoderOptionSelected, useInputValueState } from './options/geocoder';
 import { Feature } from '../../services/types';
 import { starOptionSelected } from './options/stars';
+import { useFeatureContext } from '../utils/FeatureContext';
+import { useGetOptions } from './useGetOptions';
+import { Setter } from '../../types';
 
 type SetFeature = (feature: Feature | null) => void;
 
@@ -20,16 +23,12 @@ type OnSelectedFactoryProps = {
   router: NextRouter;
 };
 
-export const onSelectedFactory =
-  ({
-    setFeature,
-    setPreview,
-    bbox,
-    showToast,
-    setOverpassLoading,
-    router,
-  }: OnSelectedFactoryProps) =>
-  (_: never, option: Option) => {
+export const useGetOnSelected = (setOverpassLoading: Setter<boolean>) => {
+  const { setFeature, setPreview } = useFeatureContext();
+  const { bbox } = useMapStateContext();
+  const { showToast } = useSnackbar();
+
+  return (_: never, option: Option) => {
     setPreview(null); // it could be stuck from onHighlight
 
     switch (option.type) {
@@ -44,9 +43,10 @@ export const onSelectedFactory =
         geocoderOptionSelected(option, setFeature);
         break;
       case 'osm':
-        osmOptionSelected(option, router);
+        osmOptionSelected(option);
         break;
       case 'coords':
         coordsOptionsSelected(option, setFeature);
     }
   };
+};
