@@ -4,17 +4,14 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { renderOptionFactory } from './renderOptionFactory';
 import { t } from '../../services/intl';
 import { onSelectedFactory } from './onSelectedFactory';
-import { useUserThemeContext } from '../../helpers/theme';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { onHighlightFactory } from './onHighlightFactory';
-import { useMapCenter } from './utils';
 import { useSnackbar } from '../utils/SnackbarContext';
 import { useKeyDown } from '../../helpers/hooks';
 import { getOptionLabel } from './getOptionLabel';
 import { useGetOptions } from './useGetOptions';
 import { useInputValueState } from './options/geocoder';
 import { useRouter } from 'next/router';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { OptionsPaper, OptionsPopper } from './optionsPopper';
 
 type SearchBoxInputProps = {
@@ -76,17 +73,26 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const { inputValue, setInputValue } = useInputValueState();
   const options = useGetOptions(inputValue);
   const router = useRouter();
-  const { userSettings } = useUserSettingsContext();
 
   return (
     <Autocomplete
       inputValue={inputValue}
       options={options}
-      // we need null to be able to select the same again (eg. category search)
+      // we need value=null to be able to select the same again (eg. category search)
       value={null}
+      autoComplete
+      disableClearable
+      autoHighlight
+      clearOnEscape
+      freeSolo
+      slots={{ paper: OptionsPaper, popper: OptionsPopper }}
+      // disableCloseOnSelect
+      // disableOpenOnFocus
+      getOptionDisabled={(o) => o.type === 'loader'}
       filterOptions={(o) => o}
       getOptionLabel={getOptionLabel}
       getOptionKey={(option) => JSON.stringify(option)}
+      onHighlightChange={onHighlightFactory(setPreview)}
       onChange={onSelectedFactory({
         setFeature,
         setPreview,
@@ -95,15 +101,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
         setOverpassLoading,
         router,
       })}
-      onHighlightChange={onHighlightFactory(setPreview)}
-      getOptionDisabled={(o) => o.type === 'loader'}
-      autoComplete
-      disableClearable
-      autoHighlight
-      clearOnEscape
-      // disableCloseOnSelect
-      freeSolo
-      // disableOpenOnFocus
+      renderOption={renderOptionFactory(inputValue)}
       renderInput={(params) => (
         <SearchBoxInput
           params={params}
@@ -111,8 +109,6 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
           autocompleteRef={autocompleteRef}
         />
       )}
-      slots={{ paper: OptionsPaper, popper: OptionsPopper }}
-      renderOption={renderOptionFactory(inputValue)}
     />
   );
 };
