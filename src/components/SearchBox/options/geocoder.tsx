@@ -3,6 +3,7 @@ import React, { useCallback, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { join } from '../../../utils';
 import {
+  fitBounds,
   getHumanDistance,
   highlightText,
   IconPart,
@@ -11,12 +12,19 @@ import {
 import { getPoiClass } from '../../../services/getPoiClass';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
-import { Theme, useUserThemeContext } from '../../../helpers/theme';
-import { GeocoderOption, Option } from '../types';
+import {
+  GeocoderOption,
+  Option,
+  PhotonGeojsonFeature,
+  PhotonResponse,
+} from '../types';
 import { View } from '../../utils/MapStateContext';
-import { LonLat } from '../../../services/types';
 import { PoiIcon } from '../../utils/icons/PoiIcon';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { Feature } from '../../../services/types';
+import { addFeatureCenterToCache } from '../../../services/osm/featureCenterToCache';
+import { getShortId, getUrlOsmId } from '../../../services/helpers';
+import Router from 'next/router';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
@@ -51,10 +59,6 @@ type FetchGeocoderOptionsProps = {
   after: Option[];
 };
 
-type PhotonResponse = {
-  features: GeocoderOption['geocoder'][];
-};
-
 export const fetchGeocoderOptions = debounce(
   async ({
     inputValue,
@@ -85,23 +89,27 @@ export const fetchGeocoderOptions = debounce(
         ...after,
       ]);
     } catch (e) {
-      if (!(e instanceof DOMException && e.name === 'AbortError')) {
-        throw e;
+      if (e instanceof DOMException && e.name === 'AbortError') {
+        return;
       }
+      throw e;
     }
   },
   400,
 );
 
-const getAdditionalText = (props) => {
+const getAdditionalText = (props: PhotonGeojsonFeature['properties']) => {
   const address = [
     props.street,
     props.district,
     props.city,
+    props.locality,
     props.county,
     props.state,
-    props.country,
-  ].filter((x) => x !== undefined);
+    props.countrycode,
+  ]
+    .filter((x) => x !== undefined)
+    .filter((value, index, array) => array.indexOf(value) === index);
   return address.join(', ');
 };
 
@@ -111,17 +119,18 @@ export const buildPhotonAddress = ({
   city,
   housenumber: hnum,
   streetnumber: snum,
-}) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
+}: PhotonGeojsonFeature['properties']) =>
+  join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
 type Props = {
   option: GeocoderOption;
   inputValue: string;
 };
 
-export const GeocoderRow = ({ option, inputValue }: Props) => {
+export const GeocoderRow = ({ option: { geocoder }, inputValue }: Props) => {
   const mapCenter = useMapCenter();
   const { isImperial } = useUserSettingsContext().userSettings;
-  const { geometry, properties } = option.geocoder;
+  const { geometry, properties } = geocoder;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 
   const distance = getHumanDistance(
@@ -151,4 +160,56 @@ export const GeocoderRow = ({ option, inputValue }: Props) => {
       </Grid>
     </>
   );
+};
+
+const getElementType = (osmType: string) => {
+  switch (osmType) {
+    case 'R':
+      return 'relation';
+    case 'W':
+      return 'way';
+    case 'N':
+      return 'node';
+    default:
+      throw new Error(`Geocoder osm_id is invalid: ${osmType}`);
+  }
+};
+export const getGeocoderSkeleton = ({ geocoder }: GeocoderOption): Feature => {
+  const center = geocoder.geometry.coordinates;
+  const {
+    osm_id: id,
+    osm_type: osmType,
+    osm_key: tagKey,
+    osm_value: tagValue,
+    name,
+  } = geocoder.properties;
+  const type = getElementType(osmType);
+
+  return {
+    type: 'Feature',
+    skeleton: true,
+    nonOsmObject: false,
+    osmMeta: { type, id: parseInt(id, 10) },
+    tags: { name },
+    properties: getPoiClass({ [tagKey]: tagValue }),
+    center,
+  };
+};
+
+type SetFeature = (feature: Feature | null) => void;
+
+export const geocoderOptionSelected = (
+  option: GeocoderOption,
+  setFeature: SetFeature,
+) => {
+  if (!option?.geocoder.geometry?.coordinates) return;
+
+  const skeleton = getGeocoderSkeleton(option);
+  console.log('Search item selected:', { option, skeleton }); // eslint-disable-line no-console
+
+  addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
+
+  setFeature(skeleton);
+  fitBounds(option);
+  Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };

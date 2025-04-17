@@ -9,12 +9,10 @@ import {
   useMapCenter,
 } from '../utils';
 import type { Star } from '../../utils/StarsContext';
-import { GeocoderOption, StarOption } from '../types';
-import { LonLat } from '../../../services/types';
-import {
-  UserSettingsContext,
-  useUserSettingsContext,
-} from '../../utils/UserSettingsContext';
+import { StarOption } from '../types';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { getApiId, getUrlOsmId } from '../../../services/helpers';
+import Router from 'next/router';
 
 export const getStarsOptions = (
   stars: Star[],
@@ -60,4 +58,9 @@ export const StarRow = ({ option: { star }, inputValue }: Props) => {
       </Grid>
     </>
   );
+};
+
+export const starOptionSelected = ({ star }: StarOption) => {
+  const apiId = getApiId(star.shortId);
+  Router.push(`/${getUrlOsmId(apiId)}`);
 };
