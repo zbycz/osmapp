@@ -160,13 +160,10 @@ const useOptions = (inputValue: string) => {
         return;
       }
 
-      await fetchGeocoderOptions({
-        inputValue,
-        view,
-        before: [],
-        after: [],
-        setOptions,
-      });
+      const geocoderOptions = await fetchGeocoderOptions(inputValue, view);
+      if (geocoderOptions) {
+        setOptions(geocoderOptions);
+      }
     })();
   }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -314,6 +311,7 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
         filterOptions={(x) => x}
         getOptionLabel={getOptionLabel}
         getOptionKey={(option) => JSON.stringify(option)}
+        getOptionDisabled={(option) => option.type === 'loader'}
         onChange={onChange}
         autoComplete
         noOptionsText=""

@@ -52,8 +52,8 @@ const getPresetsForSearch = async () => {
 };
 
 type PresetOptions = Promise<{
-  before: PresetOption[];
-  after: PresetOption[];
+  firstTwoPresets: PresetOption[];
+  restPresets: PresetOption[];
 }>;
 
 export const getPresetOptions = async (
@@ -61,7 +61,7 @@ export const getPresetOptions = async (
   threshold = SEARCH_THRESHOLD,
 ): PresetOptions => {
   if (inputValue.length <= 2) {
-    return { before: [], after: [] };
+    return { firstTwoPresets: [], restPresets: [] };
   }
 
   const presets = await getPresetsForSearch();
@@ -95,10 +95,10 @@ export const getPresetOptions = async (
     preset: result,
   }));
 
-  const before = allResults.slice(0, 2);
-  const after = allResults.slice(2);
+  const firstTwoPresets = allResults.slice(0, 2);
+  const restPresets = allResults.slice(2);
 
-  return { before, after };
+  return { firstTwoPresets, restPresets };
 };
 
 const getAdditionalText = (preset: PresetOption['preset']) => {
