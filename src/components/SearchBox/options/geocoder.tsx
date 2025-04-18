@@ -51,22 +51,8 @@ export const useInputValueState = () => {
   };
 };
 
-type FetchGeocoderOptionsProps = {
-  inputValue: string;
-  view: View;
-  setOptions: React.Dispatch<React.SetStateAction<Option[]>>;
-  before: Option[];
-  after: Option[];
-};
-
 export const fetchGeocoderOptions = debounce(
-  async ({
-    inputValue,
-    view,
-    setOptions,
-    before,
-    after,
-  }: FetchGeocoderOptionsProps) => {
+  async (inputValue: string, view: View): Promise<Option[] | undefined> => {
     try {
       const searchResponse = await fetchJson<PhotonResponse>(
         getApiUrl(inputValue, view),
@@ -79,15 +65,10 @@ export const fetchGeocoderOptions = debounce(
       }
 
       const options = searchResponse?.features || [];
-
-      setOptions([
-        ...before,
-        ...options.map((feature) => ({
-          type: 'geocoder' as const,
-          geocoder: feature,
-        })),
-        ...after,
-      ]);
+      return options.map((feature) => ({
+        type: 'geocoder' as const,
+        geocoder: feature,
+      }));
     } catch (e) {
       if (e instanceof DOMException && e.name === 'AbortError') {
         return;
