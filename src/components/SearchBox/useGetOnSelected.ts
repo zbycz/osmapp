@@ -1,27 +1,13 @@
-import { NextRouter, useRouter } from 'next/router';
-import { ShowToast, useSnackbar } from '../utils/SnackbarContext';
+import { useSnackbar } from '../utils/SnackbarContext';
 import { overpassOptionSelected } from './options/overpass';
-import { Bbox, useMapStateContext } from '../utils/MapStateContext';
+import { useMapStateContext } from '../utils/MapStateContext';
 import { Option } from './types';
 import { osmOptionSelected } from './options/osm';
 import { coordsOptionsSelected } from './options/coords';
 import { geocoderOptionSelected, useInputValueState } from './options/geocoder';
-import { Feature } from '../../services/types';
 import { starOptionSelected } from './options/stars';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { useGetOptions } from './useGetOptions';
 import { Setter } from '../../types';
-
-type SetFeature = (feature: Feature | null) => void;
-
-type OnSelectedFactoryProps = {
-  setFeature: SetFeature;
-  setPreview: SetFeature;
-  bbox: Bbox;
-  showToast: ShowToast;
-  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
-  router: NextRouter;
-};
 
 export const useGetOnSelected = (setOverpassLoading: Setter<boolean>) => {
   const { setFeature, setPreview } = useFeatureContext();

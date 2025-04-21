@@ -5,6 +5,8 @@ import { abortFetch } from '../../services/fetch';
 import {
   GEOCODER_ABORTABLE_QUEUE,
   fetchGeocoderOptions,
+  debounceGeocoderOrReject,
+  GeocoderDebounced,
 } from './options/geocoder';
 import { getStarsOptions } from './options/stars';
 import { getOverpassOptions } from './options/overpass';
@@ -49,20 +51,31 @@ export const useGetOptions = (inputValue: string) => {
 
   useEffect(() => {
     (async () => {
-      abortFetch(GEOCODER_ABORTABLE_QUEUE);
+      try {
+        abortFetch(GEOCODER_ABORTABLE_QUEUE);
 
-      const options = getMatchedOptions(inputValue, stars);
-      if (options) {
-        setOptions(options);
-        return;
-      }
+        const options = getMatchedOptions(inputValue, stars);
+        if (options) {
+          setOptions(options);
+          return;
+        }
 
-      const { before, restPresets } = await getSearchOptions(stars, inputValue);
-      setOptions([...before, { type: 'loader' }]);
+        const { before, restPresets } = await getSearchOptions(
+          stars,
+          inputValue,
+        );
+        setOptions([...before, { type: 'loader' }]);
 
-      const geocoderOptions = await fetchGeocoderOptions(inputValue, view);
-      if (geocoderOptions) {
-        setOptions([...before, ...geocoderOptions, ...restPresets]);
+        await debounceGeocoderOrReject(400);
+        const geocoderOptions = await fetchGeocoderOptions(inputValue, view);
+        if (geocoderOptions) {
+          setOptions([...before, ...geocoderOptions, ...restPresets]);
+        }
+      } catch (e) {
+        if (e instanceof GeocoderDebounced) {
+          return;
+        }
+        throw e;
       }
     })();
 

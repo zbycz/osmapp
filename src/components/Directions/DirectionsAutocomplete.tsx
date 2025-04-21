@@ -5,6 +5,7 @@ import { abortFetch } from '../../services/fetch';
 import {
   fetchGeocoderOptions,
   GEOCODER_ABORTABLE_QUEUE,
+  GeocoderDebounced,
   useInputValueState,
 } from '../SearchBox/options/geocoder';
 import { getStarsOptions } from '../SearchBox/options/stars';
@@ -16,15 +17,12 @@ import {
   Tooltip,
   useTheme,
 } from '@mui/material';
-import { useMapCenter } from '../SearchBox/utils';
-import { useUserThemeContext } from '../../helpers/theme';
 import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
 import { Option } from '../SearchBox/types';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { LonLat } from '../../services/types';
-import { getGlobalMap, mapIdlePromise } from '../../services/mapStorage';
+import { mapIdlePromise } from '../../services/mapStorage';
 import maplibregl, { LngLatLike, PointLike } from 'maplibre-gl';
 import ReactDOMServer from 'react-dom/server';
 import { AlphabeticalMarker } from './TextMarker';
@@ -34,6 +32,7 @@ import { useSnackbar } from '../utils/SnackbarContext';
 import { useGetOnSubmitFactory, useUpdatePoint } from './useGetOnSubmit';
 import { useDirectionsContext } from './DirectionsContext';
 import { removeElementOnIndex } from '../FeaturePanel/Climbing/utils/array';
+
 const DotLoaderContainer = styled.div`
   font-size: 16px;
   right: 6px;
@@ -153,16 +152,23 @@ const useOptions = (inputValue: string) => {
 
   useEffect(() => {
     (async () => {
-      abortFetch(GEOCODER_ABORTABLE_QUEUE);
+      try {
+        abortFetch(GEOCODER_ABORTABLE_QUEUE);
 
-      if (inputValue === '') {
-        setOptions(getStarsOptions(stars, inputValue));
-        return;
-      }
+        if (inputValue === '') {
+          setOptions(getStarsOptions(stars, inputValue));
+          return;
+        }
 
-      const geocoderOptions = await fetchGeocoderOptions(inputValue, view);
-      if (geocoderOptions) {
-        setOptions(geocoderOptions);
+        const geocoderOptions = await fetchGeocoderOptions(inputValue, view);
+        if (geocoderOptions) {
+          setOptions(geocoderOptions);
+        }
+      } catch (e) {
+        if (e instanceof GeocoderDebounced) {
+          return;
+        }
+        throw e;
       }
     })();
   }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
