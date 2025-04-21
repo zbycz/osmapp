@@ -51,33 +51,52 @@ export const useInputValueState = () => {
   };
 };
 
-export const fetchGeocoderOptions = debounce(
-  async (inputValue: string, view: View): Promise<Option[] | undefined> => {
-    try {
-      const searchResponse = await fetchJson<PhotonResponse>(
-        getApiUrl(inputValue, view),
-        { abortableQueueName: GEOCODER_ABORTABLE_QUEUE },
-      );
+export class GeocoderDebounced extends Error {}
 
-      // This blocks rendering of old result, when user already changed input
-      if (inputValue !== currentInput) {
-        return;
-      }
+let timeoutId: NodeJS.Timeout | null = null;
+let rejectPreviousPromise: (reason?: any) => void = () => {};
 
-      const options = searchResponse?.features || [];
-      return options.map((feature) => ({
-        type: 'geocoder' as const,
-        geocoder: feature,
-      }));
-    } catch (e) {
-      if (e instanceof DOMException && e.name === 'AbortError') {
-        return;
-      }
-      throw e;
+export const debounceGeocoderOrReject = (delay: number): Promise<void> => {
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    rejectPreviousPromise(new GeocoderDebounced());
+  }
+  return new Promise<void>((resolve, reject) => {
+    rejectPreviousPromise = reject;
+    timeoutId = setTimeout(() => {
+      timeoutId = null;
+      resolve();
+    }, delay);
+  });
+};
+
+export const fetchGeocoderOptions = async (
+  inputValue: string,
+  view: View,
+): Promise<Option[] | undefined> => {
+  try {
+    const searchResponse = await fetchJson<PhotonResponse>(
+      getApiUrl(inputValue, view),
+      { abortableQueueName: GEOCODER_ABORTABLE_QUEUE },
+    );
+
+    // This blocks rendering of old result, when user already changed input
+    if (inputValue !== currentInput) {
+      return;
     }
-  },
-  400,
-);
+
+    const options = searchResponse?.features || [];
+    return options.map((feature) => ({
+      type: 'geocoder' as const,
+      geocoder: feature,
+    }));
+  } catch (e) {
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      return;
+    }
+    throw e;
+  }
+};
 
 const getAdditionalText = (props: PhotonGeojsonFeature['properties']) => {
   const address = [
