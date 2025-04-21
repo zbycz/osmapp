@@ -160,7 +160,11 @@ const useOptions = (inputValue: string) => {
           return;
         }
 
-        const geocoderOptions = await fetchGeocoderOptions(inputValue, view);
+        const geocoderOptions = await fetchGeocoderOptions(
+          inputValue,
+          view,
+          GEOCODER_ABORTABLE_QUEUE,
+        );
         if (geocoderOptions) {
           setOptions(geocoderOptions);
         }

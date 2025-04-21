@@ -44,6 +44,27 @@ const getSearchOptions = async (stars: Star[], inputValue: string) => {
   return { restPresets, before };
 };
 
+export const getFirstOption = async (
+  query: string,
+  stars: Star[],
+  view: View,
+) => {
+  const options = getMatchedOptions(query, stars);
+  if (options && options.length > 0) {
+    return options[0];
+  }
+
+  const { before, restPresets } = await getSearchOptions(stars, query);
+  if (before && before.length > 0) {
+    return before[0];
+  }
+
+  const geocoderOptions = await fetchGeocoderOptions(query, view);
+  if (geocoderOptions && geocoderOptions.length > 0) {
+    return geocoderOptions[0];
+  }
+};
+
 export const useGetOptions = (inputValue: string) => {
   const { view } = useMapStateContext();
   const { stars } = useStarsContext();
@@ -67,7 +88,11 @@ export const useGetOptions = (inputValue: string) => {
         setOptions([...before, { type: 'loader' }]);
 
         await debounceGeocoderOrReject(400);
-        const geocoderOptions = await fetchGeocoderOptions(inputValue, view);
+        const geocoderOptions = await fetchGeocoderOptions(
+          inputValue,
+          view,
+          GEOCODER_ABORTABLE_QUEUE,
+        );
         if (geocoderOptions) {
           setOptions([...before, ...geocoderOptions, ...restPresets]);
         }

@@ -73,11 +73,12 @@ export const debounceGeocoderOrReject = (delay: number): Promise<void> => {
 export const fetchGeocoderOptions = async (
   inputValue: string,
   view: View,
+  abortQueue?: string,
 ): Promise<Option[] | undefined> => {
   try {
     const searchResponse = await fetchJson<PhotonResponse>(
       getApiUrl(inputValue, view),
-      { abortableQueueName: GEOCODER_ABORTABLE_QUEUE },
+      { abortableQueueName: abortQueue },
     );
 
     // This blocks rendering of old result, when user already changed input

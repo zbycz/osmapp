@@ -10,6 +10,7 @@ import { OptionsPaper, OptionsPopper } from './optionsPopper';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { Option } from './types';
 import { renderInputFactory } from './renderInputFactory';
+import { useHandleDirectQuery } from './useHandleDirectQuery';
 
 const AutocompleteConfigured = (
   props: AutocompleteProps<Option, false, true, true>,
@@ -39,6 +40,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const options = useGetOptions(inputValue);
   const onHighlight = useGetOnHighlight();
   const onSelected = useGetOnSelected(setOverpassLoading);
+
+  useHandleDirectQuery(onSelected, setInputValue);
 
   return (
     <AutocompleteConfigured

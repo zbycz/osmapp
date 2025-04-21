@@ -8,7 +8,10 @@ import { getAST, queryWizardLabel } from '../queryWizard/queryWizard';
 import { Bbox } from '../../utils/MapStateContext';
 import { ShowToast } from '../../utils/SnackbarContext';
 import { performOverpassSearch } from '../../../services/overpass/overpassSearch';
-import { getOverpassSource } from '../../../services/mapStorage';
+import {
+  getOverpassSource,
+  mapIdlePromise,
+} from '../../../services/mapStorage';
 
 const OVERPASS_HISTORY_KEY = 'overpassQueryHistory';
 
@@ -103,7 +106,10 @@ export const overpassOptionSelected = (
       const count = geojson.features.length;
       const content = t('searchbox.overpass_success', { count });
       showToast(content);
-      getOverpassSource()?.setData(geojson);
+
+      mapIdlePromise.then(() => {
+        getOverpassSource()?.setData(geojson);
+      });
 
       if (option.type === 'overpass' && !option.overpass.ast) {
         addOverpassQueryHistory(option.overpass.query);

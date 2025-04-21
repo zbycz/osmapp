@@ -8,31 +8,35 @@ import { geocoderOptionSelected, useInputValueState } from './options/geocoder';
 import { starOptionSelected } from './options/stars';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Setter } from '../../types';
+import { useCallback } from 'react';
 
 export const useGetOnSelected = (setOverpassLoading: Setter<boolean>) => {
   const { setFeature, setPreview } = useFeatureContext();
   const { bbox } = useMapStateContext();
   const { showToast } = useSnackbar();
 
-  return (_: never, option: Option) => {
-    setPreview(null); // it could be stuck from onHighlight
+  return useCallback(
+    (_: null, option: Option) => {
+      setPreview(null); // it could be stuck from onHighlight
 
-    switch (option.type) {
-      case 'star':
-        starOptionSelected(option);
-        break;
-      case 'overpass':
-      case 'preset':
-        overpassOptionSelected(option, setOverpassLoading, bbox, showToast);
-        break;
-      case 'geocoder':
-        geocoderOptionSelected(option, setFeature);
-        break;
-      case 'osm':
-        osmOptionSelected(option);
-        break;
-      case 'coords':
-        coordsOptionsSelected(option, setFeature);
-    }
-  };
+      switch (option.type) {
+        case 'star':
+          starOptionSelected(option);
+          break;
+        case 'overpass':
+        case 'preset':
+          overpassOptionSelected(option, setOverpassLoading, bbox, showToast);
+          break;
+        case 'geocoder':
+          geocoderOptionSelected(option, setFeature);
+          break;
+        case 'osm':
+          osmOptionSelected(option);
+          break;
+        case 'coords':
+          coordsOptionsSelected(option, setFeature);
+      }
+    },
+    [bbox, setFeature, setOverpassLoading, setPreview, showToast],
+  );
 };
