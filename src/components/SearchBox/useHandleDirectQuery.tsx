@@ -9,6 +9,7 @@ import { useStarsContext } from '../utils/StarsContext';
 export const useHandleDirectQuery = (
   onSelected: (_: null, option: Option) => void,
   setInputValue: Setter<string>,
+  setIsLoading: Setter<boolean>,
 ) => {
   const { stars } = useStarsContext();
   const { bbox, view } = useMapStateContext();
@@ -28,8 +29,10 @@ export const useHandleDirectQuery = (
 
       lastQuery.current = query;
       setInputValue(query);
+      setIsLoading(true);
 
       const foundOption = await getFirstOption(query, stars, view);
+      setIsLoading(false);
       if (foundOption) {
         onSelected(null, foundOption);
       }

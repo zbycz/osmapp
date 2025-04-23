@@ -58,7 +58,7 @@ const SearchIconButton = styled(IconButton)`
   }
 `;
 
-const OverpassCircularProgress = styled(CircularProgress)`
+const LoadingSpinner = styled(CircularProgress)`
   padding: 10px;
 `;
 
@@ -77,7 +77,7 @@ const useOnClosePanel = () => {
 const SearchBoxInner = ({ withoutPanel }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
-  const [overpassLoading, setOverpassLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef();
   const onClosePanel = useOnClosePanel();
 
@@ -94,10 +94,10 @@ const SearchBoxInner = ({ withoutPanel }) => {
 
         <AutocompleteInput
           autocompleteRef={autocompleteRef}
-          setOverpassLoading={setOverpassLoading}
+          setIsLoading={setIsLoading}
         />
 
-        {overpassLoading && <OverpassCircularProgress />}
+        {isLoading && <LoadingSpinner />}
         {!isMobileMode && featureShown && (
           <ClosePanelButton onClick={onClosePanel} />
         )}
