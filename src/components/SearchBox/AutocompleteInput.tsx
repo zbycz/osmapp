@@ -11,6 +11,7 @@ import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { Option } from './types';
 import { renderInputFactory } from './renderInputFactory';
 import { useHandleDirectQuery } from './useHandleDirectQuery';
+import { Setter } from '../../types';
 
 const AutocompleteConfigured = (
   props: AutocompleteProps<Option, false, true, true>,
@@ -29,19 +30,19 @@ const AutocompleteConfigured = (
 
 type AutocompleteInputProps = {
   autocompleteRef: React.MutableRefObject<undefined>;
-  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoading: Setter<boolean>;
 };
 
 export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   autocompleteRef,
-  setOverpassLoading,
+  setIsLoading,
 }) => {
   const { inputValue, setInputValue } = useInputValueState();
   const options = useGetOptions(inputValue);
   const onHighlight = useGetOnHighlight();
-  const onSelected = useGetOnSelected(setOverpassLoading);
+  const onSelected = useGetOnSelected(setIsLoading);
 
-  useHandleDirectQuery(onSelected, setInputValue);
+  useHandleDirectQuery(onSelected, setInputValue, setIsLoading);
 
   return (
     <AutocompleteConfigured
