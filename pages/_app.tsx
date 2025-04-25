@@ -164,6 +164,11 @@ MyApp.getInitialProps = async ({
     }
   }
 
+  ctx.res?.setHeader(
+    'Cache-Control',
+    'public, max-age=600, s-maxage=3600, stale-while-revalidate=86400',
+  );
+
   const initialMapView = await getInitialMapView(ctx);
 
   return {
