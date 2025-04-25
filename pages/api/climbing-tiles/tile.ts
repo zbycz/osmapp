@@ -14,6 +14,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
     const geojson = await getClimbingTile(tileNumber);
 
+    res.setHeader(
+      'Cache-Control',
+      'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+    );
+
     res.status(200).setHeader('Content-Type', 'application/json').send(geojson);
   } catch (err) {
     console.error(err); // eslint-disable-line no-console

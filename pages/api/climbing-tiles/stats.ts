@@ -7,6 +7,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const json = await getClimbingStats();
 
+    res.setHeader(
+      'Cache-Control',
+      'public, max-age=3600, s-maxage=3600, stale-while-revalidate=86400',
+    );
+
     res.status(200).setHeader('Content-Type', 'application/json').send(json);
   } catch (err) {
     console.error(err); // eslint-disable-line no-console
