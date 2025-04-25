@@ -37,5 +37,5 @@ export const useHandleDirectQuery = (
         onSelected(null, foundOption);
       }
     })();
-  }, [bbox, onSelected, query, setInputValue, stars, view]);
+  }, [bbox, onSelected, query, setInputValue, setIsLoading, stars, view]);
 };
