@@ -366,6 +366,10 @@ export default {
   'climbing_grade_table.title': 'Climbing grades table',
   'climbing_grade_table.show': 'Show',
 
+  'grade_system_select.default_grade_system': 'Default grade',
+  'grade_system_select.show_more': 'Show more...',
+  'grade_system_select.convert_grade': 'Convert grades',
+
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
   'member_features.routes': 'Routes',
