@@ -67,17 +67,19 @@ export const MemberFeatures = () => {
 
   return (
     <Box mb={1}>
-      <PanelLabel addition={<PanelAddition />}>
-        <Stack direction="row" gap={1.5}>
-          <div>{getHeading(feature)}</div>
-          <Chip
-            size="small"
-            variant="outlined"
-            label={headingNum}
-            sx={{ position: 'relative', top: -3 }}
-          />
-        </Stack>
-      </PanelLabel>
+      <Box ml={-2} mr={-2}>
+        <PanelLabel addition={<PanelAddition />}>
+          <Stack direction="row" gap={1.5}>
+            <div>{getHeading(feature)}</div>
+            <Chip
+              size="small"
+              variant="outlined"
+              label={headingNum}
+              sx={{ position: 'relative', top: -3 }}
+            />
+          </Stack>
+        </PanelLabel>
+      </Box>
       {climbingRoutesFeatures.length > 0 && (
         <Ul>
           {climbingRoutesFeatures.map((item, index) => (

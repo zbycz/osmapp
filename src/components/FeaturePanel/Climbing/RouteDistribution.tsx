@@ -42,11 +42,20 @@ const DifficultyLevel = styled.div<{ $isActive: boolean; $color: string }>`
   font-size: 11px;
 `;
 
+const StaticHeightContainer = styled.div`
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: column;
+`;
+
 const Chart = styled.div<{ $ratio: number; $color: string }>`
   height: ${({ $ratio }) => MAX_HEIGHT * $ratio}px;
   background-color: ${({ $color, theme, $ratio }) =>
     $ratio === 0 ? theme.palette.secondary.main : $color};
   border-radius: 2px;
+  width: 100%;
 `;
 
 const getGroupingLabel = (label: string) => String(parseFloat(label));
@@ -96,6 +105,7 @@ export const RouteDistribution = () => {
     grade: key,
     ratio: routeOccurrences[key] / routes.length,
   }));
+  if (heightsRatios.length < 2) return null;
 
   return (
     <Container>
@@ -116,13 +126,14 @@ export const RouteDistribution = () => {
             const isColumnActive = numberOfRoutes > 0;
             return (
               <Column key={heightRatioItem.grade}>
-                {numberOfRoutes > 0 && (
-                  <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
-                )}
-                <Chart $color={color} $ratio={heightRatioItem.ratio} />
-
+                <StaticHeightContainer>
+                  {numberOfRoutes > 0 && (
+                    <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
+                  )}
+                  <Chart $color={color} $ratio={heightRatioItem.ratio} />
+                </StaticHeightContainer>
                 <DifficultyLevel $color={color} $isActive={isColumnActive}>
-                  {heightRatioItem.grade}
+                  {heightRatioItem.grade === 'NaN' ? '' : heightRatioItem.grade}
                 </DifficultyLevel>
               </Column>
             );

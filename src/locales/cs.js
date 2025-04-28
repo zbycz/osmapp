@@ -274,6 +274,10 @@ export default {
   'climbing_grade_table.title': 'Tabulka lezeckých obtížností',
   'climbing_grade_table.show': 'Zobrazit',
 
+  'grade_system_select.default_grade_system': 'Původní klasifikace',
+  'grade_system_select.show_more': 'Zobrazit další...',
+  'grade_system_select.convert_grade': 'Převést klasifikaci',
+
   'member_features.subitems': 'Položky',
   'member_features.climbing': 'Lezecké cesty',
   'member_features.routes': 'Cesty',
