@@ -3,7 +3,7 @@ import {
   loginAndfetchOsmUser,
   osmLogout,
   OsmUser,
-} from '../../services/osm/osmApiAuth';
+} from '../../services/osm/auth/user';
 import { useSnackbar } from './SnackbarContext';
 import { OSM_USER_COOKIE } from '../../services/osm/consts';
 

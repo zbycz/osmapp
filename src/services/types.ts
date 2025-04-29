@@ -108,8 +108,9 @@ export type Feature = {
     role?: string; // only for memberFeatures
   };
   tags: FeatureTags;
-  members?: RelationMember[];
-  memberFeatures?: Feature[];
+  members?: RelationMember[]; // only for relations
+  memberFeatures?: Feature[]; // for relations with children (full)
+  nodes?: number[]; // only for ways
   parentFeatures?: Feature[];
   imageDefs?: ImageDef[];
   properties: FeatureProperties;
