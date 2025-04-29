@@ -23,11 +23,12 @@ export type Members = Array<{
 // internal type stored in the state
 type DataItem = {
   shortId: string;
+  version: number | undefined; // undefined for new item
   tagsEntries: TagsEntries;
   toBeDeleted: boolean;
-  members: Members | undefined;
-  version: number | undefined; // undefined for new item
-  nodeLonLat: LonLat | undefined; // undefined for ways and relations
+  nodeLonLat: LonLat | undefined; // only for nodes
+  nodes: number[] | undefined; // only for ways
+  members: Members | undefined; // only for relations
 };
 
 export type EditDataItem = DataItem & {
@@ -49,6 +50,8 @@ const buildDataItem = (feature: Feature): DataItem => {
     version: apiId.version,
     tagsEntries: Object.entries(feature.tags),
     toBeDeleted: false,
+    nodeLonLat: apiId.type === 'node' ? feature.center : undefined,
+    nodes: feature.nodes,
     members:
       feature.memberFeatures?.map((memberFeature) => ({
         shortId: getShortId(memberFeature.osmMeta),
@@ -60,7 +63,6 @@ const buildDataItem = (feature: Feature): DataItem => {
         role: member.role,
         label: `${member.type} ${member.ref}`,
       })),
-    nodeLonLat: apiId.type === 'node' ? feature.center : undefined,
   };
 };
 

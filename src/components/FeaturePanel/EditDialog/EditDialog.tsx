@@ -55,6 +55,9 @@ export const EditDialog = () => {
 
   const [presetsLoaded, onLoaded] = useBoolState(false);
   useEffect(() => {
+    // to ensure the feature is fresh+contains all editable parts (eg. nodesRefs for ways which we dont normally download)
+    // we could load the feature as fresh DataItem and forward to EditContext once loaded
+
     fetchSchemaTranslations().then(onLoaded);
   });
   if (!presetsLoaded) {
