@@ -79,9 +79,9 @@ export const MembersEditor = () => {
       >
         <Stack direction="row" spacing={2} alignItems="center">
           <SectionName />
-          {membersLength && (
+          {membersLength ? (
             <Chip size="small" label={membersLength} variant="outlined" />
-          )}
+          ) : null}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>

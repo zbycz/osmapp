@@ -12,6 +12,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { NwrIcon } from '../../../NwrIcon';
 import { getFullFeatureWithMemberFeatures } from '../../../../../services/osm/getFullFeatureWithMemberFeatures';
 import { getLabel } from '../../../../../helpers/featureLabel';
+import { useMapStateContext } from '../../../../utils/MapStateContext';
 
 const hasAtLeastOneNode = (members: Members) => {
   return members?.some((member) => member.shortId.startsWith('n'));
@@ -38,7 +39,7 @@ const getLastNodeLocation = async (osmId: OsmId, items: EditDataItem[]) => {
 const getNewNodeLocation = async (items: EditDataItem[], members: Members) => {
   const osmId = getLastNodeApiId(members);
   if (!osmId) {
-    throw new Error('No node found');
+    return undefined;
   }
   const lonLat = await getLastNodeLocation(osmId, items);
   return lonLat.map((x) => x + 0.0001);
@@ -66,8 +67,9 @@ export const AddMemberForm = ({
   );
   const defaultTags = getDefaultTags();
 
+  const { view } = useMapStateContext();
   const { addFeature, items, setCurrent, current } = useEditContext();
-  const { members, setMembers, tags, setShortId } = useCurrentItem();
+  const { members, setMembers, tags, convertToRelation } = useCurrentItem();
   const [showInput, setShowInput] = React.useState(false);
   const [label, setLabel] = React.useState('');
   const isClimbingCrag = tags.climbing === 'crag';
@@ -79,8 +81,10 @@ export const AddMemberForm = ({
         const apiId = getApiId(label);
         newFeature = await getFullFeatureWithMemberFeatures(apiId);
       } else {
+        const [z, lat, lon] = view;
+        const viewPoint = [parseFloat(lon), parseFloat(lat)];
         const lastNodeLocation =
-          newLonLat ?? (await getNewNodeLocation(items, members));
+          newLonLat ?? (await getNewNodeLocation(items, members)) ?? viewPoint;
         newFeature = getNewNode(lastNodeLocation, label, defaultTags);
       }
 
@@ -106,6 +110,7 @@ export const AddMemberForm = ({
       newLonLat,
       setCurrent,
       setMembers,
+      view,
     ],
   );
 
@@ -129,13 +134,8 @@ export const AddMemberForm = ({
     };
   }, [handleAddMember, showInput]);
 
-  if (!hasAtLeastOneNode(members) && !newLonLat) {
-    return; // TODO so far, we need a node (with coordinates) for adding a new node
-  }
-
-  const convertToRelation = () => {
-    const newShortId = `r${getNewId()}`;
-    setShortId(newShortId); // TODO duplicate item instead and add `redirect=relation/123` tag
+  const handleConvertToRelation = async () => {
+    const newShortId = await convertToRelation();
     setCurrent(newShortId);
   };
 
@@ -162,7 +162,7 @@ export const AddMemberForm = ({
           icon={null}
           action={
             <Button
-              onClick={convertToRelation}
+              onClick={handleConvertToRelation}
               color="inherit"
               variant="text"
               size="small"
