@@ -2,6 +2,7 @@ import { OsmId } from '../../types';
 import { authFetch } from './authFetch';
 import { getUrlOsmId } from '../../helpers';
 import { parseToXmljs } from './xmlHelpers';
+import { DiffResultXmljs } from './xmlTypes';
 import { stringifyDomXml } from './stringifyDomXml';
 
 export const putChangeset = (content: string) =>
@@ -63,6 +64,16 @@ export const createRelationItem = (content: string) =>
     headers: { 'Content-Type': 'text/xml; charset=utf-8' },
     content,
   });
+
+export const uploadDiff = async (changesetId: string, content: string) => {
+  const result = await authFetch<Node>({
+    method: 'POST',
+    path: `/api/0.6/changeset/${changesetId}/upload`,
+    headers: { 'Content-Type': 'text/xml; charset=utf-8' },
+    content,
+  });
+  return await parseToXmljs<DiffResultXmljs>(stringifyDomXml(result));
+};
 
 export const putOrDeleteItem = async (
   toBeDeleted: boolean,

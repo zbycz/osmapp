@@ -10,7 +10,9 @@ export const TestApiWarning = () =>
         TEST API IN USE: {API_SERVER}
         <br />
         Clicking the map will not work.
-        <Link href="/relation/4305224335">Test relation</Link>
+        <Link href="/relation/4305224335">Test relation</Link>/
+        <Link href="/way/4307240838">way</Link>/
+        <Link href="/node/4352746388">node</Link>
       </Alert>
     </Box>
   );
