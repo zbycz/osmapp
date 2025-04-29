@@ -21,7 +21,7 @@ export type Members = Array<{
 }>;
 
 // internal type stored in the state
-type DataItem = {
+export type DataItem = {
   shortId: string;
   version: number | undefined; // undefined for new item
   tagsEntries: TagsEntries;
