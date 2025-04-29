@@ -9,16 +9,17 @@ import {
   ListItemIcon,
   Button,
   Menu,
+  Tooltip,
 } from '@mui/material';
 import {
   getGradeSystemName,
   GRADE_SYSTEMS,
   GradeSystem,
 } from '../../../services/tagging/climbing';
-import Router from 'next/router';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { t } from '../../../services/intl';
+import { ClimbingGradesTable } from './ClimbingGradesTable';
 
 type Props = {
   selectedGradeSystem: GradeSystem;
@@ -31,23 +32,30 @@ const GradeSystemItem = ({ isMinor, onClick, selectedGradeSystem }) => (
   <>
     {GRADE_SYSTEMS.filter(({ minor }) => minor === isMinor).map(
       ({ key, name, description, flags }) => (
-        <MenuItem
+        <Tooltip
+          title={description}
+          placement="right"
+          enterDelay={1000}
+          arrow
           key={key}
-          value={key}
-          sx={{ paddingLeft: 4 }}
-          onClick={() => onClick(key)}
-          selected={selectedGradeSystem === key}
         >
-          <Stack
-            direction="row"
-            spacing={1}
-            justifyContent="space-between"
-            width="100%"
+          <MenuItem
+            value={key}
+            sx={{ paddingLeft: 4 }}
+            onClick={() => onClick(key)}
+            selected={selectedGradeSystem === key}
           >
-            <div>{name}</div>
-            <div>{flags}</div>
-          </Stack>
-        </MenuItem>
+            <Stack
+              direction="row"
+              spacing={1}
+              justifyContent="space-between"
+              width="100%"
+            >
+              <div>{name}</div>
+              <div>{flags}</div>
+            </Stack>
+          </MenuItem>
+        </Tooltip>
       ),
     )}
   </>
@@ -59,6 +67,8 @@ export const GradeSystemSelect = ({
   onClick,
   allowUnsetValue = true,
 }: Props) => {
+  const [isGradeTableOpen, setIsGradeTableOpen] =
+    React.useState<boolean>(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
@@ -70,9 +80,6 @@ export const GradeSystemSelect = ({
   };
 
   const [isMinorOpened, setIsMinorOpened] = React.useState(false);
-  const openConversionTable = () => {
-    Router.push('/climbing-grades');
-  };
 
   const handleChange = (gradeSystem) => {
     setGradeSystem(gradeSystem);
@@ -80,85 +87,96 @@ export const GradeSystemSelect = ({
   };
 
   return (
-    <Stack direction="row" spacing={1} alignItems="center">
-      <Button
-        aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
-        disableElevation
-        onClick={handleClick}
-        sx={{ maxWidth: 200 }}
-        endIcon={open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-        size="small"
-        variant="text"
-      >
-        {getGradeSystemName(selectedGradeSystem) ??
-          t('grade_system_select.convert_grade')}
-      </Button>
-      <Menu
-        id="demo-customized-menu"
-        MenuListProps={{
-          'aria-labelledby': 'demo-customized-button',
-        }}
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <ListSubheader>Select grade system</ListSubheader>
-        {allowUnsetValue && (
-          <MenuItem
-            value={null}
-            sx={{ paddingLeft: 4 }}
-            onClick={() => {
-              setGradeSystem(null);
-              handleClose();
-            }}
-            selected={selectedGradeSystem === null}
-          >
-            {t('grade_system_select.default_grade_system')}
-          </MenuItem>
-        )}
+    <>
+      <Stack direction="row" spacing={1} alignItems="center">
+        <Button
+          aria-haspopup="true"
+          aria-expanded={open ? 'true' : undefined}
+          disableElevation
+          onClick={handleClick}
+          sx={{ maxWidth: 200 }}
+          endIcon={open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          size="small"
+          variant="text"
+        >
+          {getGradeSystemName(selectedGradeSystem) ??
+            t('grade_system_select.convert_grade')}
+        </Button>
+        <Menu
+          id="demo-customized-menu"
+          MenuListProps={{
+            'aria-labelledby': 'demo-customized-button',
+          }}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+          }}
+        >
+          <ListSubheader>
+            {t('grade_system_select.select_grade_system')}
+          </ListSubheader>
+          {allowUnsetValue && (
+            <MenuItem
+              value={null}
+              sx={{ paddingLeft: 4 }}
+              onClick={() => {
+                setGradeSystem(null);
+                handleClose();
+              }}
+              selected={selectedGradeSystem === null}
+            >
+              {t('grade_system_select.default_grade_system')}
+            </MenuItem>
+          )}
 
-        <GradeSystemItem
-          isMinor={false}
-          onClick={handleChange}
-          selectedGradeSystem={selectedGradeSystem}
-        />
-        {!isMinorOpened && (
-          <MenuItem
-            sx={{ paddingLeft: 4, marginTop: 1 }}
-            onClick={(e) => {
-              setIsMinorOpened(!isMinorOpened);
-              e.stopPropagation();
-              e.preventDefault();
-              return false;
-            }}
-          >
-            {t('grade_system_select.show_more')}
-          </MenuItem>
-        )}
-
-        {isMinorOpened && (
           <GradeSystemItem
-            isMinor
+            isMinor={false}
             onClick={handleChange}
             selectedGradeSystem={selectedGradeSystem}
           />
-        )}
+          {!isMinorOpened && (
+            <MenuItem
+              sx={{ paddingLeft: 4, marginTop: 1 }}
+              onClick={(e) => {
+                setIsMinorOpened(!isMinorOpened);
+                e.stopPropagation();
+                e.preventDefault();
+                return false;
+              }}
+            >
+              {t('grade_system_select.show_more')}
+            </MenuItem>
+          )}
 
-        <Divider />
-        <MenuItem onClick={openConversionTable}>
-          <ListItemIcon>
-            <IconButton size="small">
-              <ViewListIcon fontSize="small" />
-            </IconButton>
-          </ListItemIcon>
-          {t('climbing_grade_table.title')}
-        </MenuItem>
-      </Menu>
-    </Stack>
+          {isMinorOpened && (
+            <GradeSystemItem
+              isMinor
+              onClick={handleChange}
+              selectedGradeSystem={selectedGradeSystem}
+            />
+          )}
+
+          <Divider />
+          <MenuItem
+            onClick={() => {
+              setIsGradeTableOpen(true);
+            }}
+          >
+            <ListItemIcon>
+              <IconButton size="small">
+                <ViewListIcon fontSize="small" />
+              </IconButton>
+            </ListItemIcon>
+            {t('climbing_grade_table.title')}
+          </MenuItem>
+        </Menu>
+      </Stack>
+      {isGradeTableOpen && (
+        <ClimbingGradesTable onClose={() => setIsGradeTableOpen(false)} />
+      )}
+    </>
   );
 };

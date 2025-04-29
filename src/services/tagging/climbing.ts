@@ -6,15 +6,15 @@ export const GRADE_SYSTEMS = [
     flags: '🇪🇺',
     minor: false,
     description:
-      'Grade system used by the International Climbing and Mountaineering Federation.',
+      'Grade system used by the International Climbing and Mountaineering Federation. Widely used in Alps and central Europe.',
   },
   {
     key: 'french',
     name: 'French',
-    flags: '🇫🇷',
+    flags: '🇪🇺',
     minor: false,
     description:
-      'The French numerical system (Fontainebleau scale) rates a climb according to the overall technical difficulty and strenuousness of the route.',
+      'The French numerical system (Fontainebleau scale) rates a climb according to the overall technical difficulty and strenuousness of the route. Widely used, mainly in western Europe.',
   },
   {
     key: 'saxon',
@@ -22,7 +22,7 @@ export const GRADE_SYSTEMS = [
     flags: '🇩🇪🇨🇿',
     minor: false,
     description:
-      'The Saxon grading system was developed in the beginning of the 20th century for the formidable Saxon Switzerland climbing region.',
+      'The Saxon grading system was developed in the beginning of the 20th century for the formidable Saxon Switzerland (Germany, Czechia) climbing region with strict ethics.',
   },
   {
     key: 'yds_class',
@@ -30,11 +30,11 @@ export const GRADE_SYSTEMS = [
     flags: '🇺🇸',
     minor: false,
     description:
-      'The Yosemite Decimal System of grading routes of hikes and climbs developed for the Sierra Nevada range.',
+      'The Yosemite Decimal System of grading routes of hikes and climbs developed for the Sierra Nevada range (USA).',
   },
   {
     key: 'hueco',
-    name: 'V grade',
+    name: 'V scale',
     flags: '🇺🇸',
     minor: false,
     description:
@@ -66,13 +66,14 @@ export const GRADE_SYSTEMS = [
   {
     key: 'nordic',
     name: 'Nordic',
-    flags: '🇳🇴',
+    flags: '🇳🇴🇸🇪',
     minor: true,
     description: 'The Nordic grading system.',
   },
   {
     key: 'ice',
     name: 'WI',
+    flags: '🇨🇦',
     minor: true,
     description: 'Waterfall ice rating system as used in the Canadian Rockies.',
   },
