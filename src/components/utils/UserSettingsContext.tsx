@@ -34,10 +34,9 @@ const initialUserSettings: UserSettingsType = {
   'climbing.defaultClimbingStyle': 'OS',
   'climbing.selectRoutesByScrolling': isMobileDevice(),
   'climbing.switchPhotosByScrolling': true,
-  'climbing.visibleGradeSystems': GRADE_SYSTEMS.reduce(
-    (acc, { key }) => ({ ...acc, [key]: true }),
-    {},
-  ),
+  'climbing.visibleGradeSystems': GRADE_SYSTEMS.filter(
+    ({ minor }) => !minor,
+  ).reduce((acc, { key }) => ({ ...acc, [key]: true }), {}),
   'climbing.cragViewLayout': 'auto',
 
   'climbing.splitPaneSize': null,

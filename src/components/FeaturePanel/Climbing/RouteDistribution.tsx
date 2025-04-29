@@ -6,14 +6,13 @@ import {
   useClimbingContext,
 } from './contexts/ClimbingContext';
 import { convertGrade, getDifficultyColor } from './utils/grades/routeGrade';
-import { PanelLabel } from './PanelLabel';
 import { ContentContainer } from './ContentContainer';
 import { GRADE_TABLE } from './utils/grades/gradeData';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { GradeSystemSelect } from './GradeSystemSelect';
 import { isClimbingRelation } from '../../../utils';
 import { getReactKey } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { GradeSystem } from '../../../services/tagging/climbing';
 
 const MAX_HEIGHT = 100;
 
@@ -58,7 +57,17 @@ const Chart = styled.div<{ $ratio: number; $color: string }>`
   width: 100%;
 `;
 
-const getGroupingLabel = (label: string) => String(parseFloat(label));
+const getGroupingLabel = (label: string, gradeSystem: GradeSystem) => {
+  if (gradeSystem === 'saxon') {
+    const match = label.match(/^[A-Z]+/);
+    return match ? match[0] : '';
+  }
+  if (gradeSystem === 'hueco') {
+    const match = label.match(/^[A-Z0-9]+/);
+    return match ? match[0] : '';
+  }
+  return String(parseFloat(label));
+};
 
 export const RouteDistribution = () => {
   const { userSettings } = useUserSettingsContext();
@@ -72,7 +81,7 @@ export const RouteDistribution = () => {
     GRADE_TABLE[gradeSystem].reduce<{ [grade: string]: number }>(
       (acc, grade) => ({
         ...acc,
-        [getGroupingLabel(grade)]: 0,
+        [getGroupingLabel(grade, gradeSystem)]: 0,
       }),
       {},
     );
@@ -86,12 +95,11 @@ export const RouteDistribution = () => {
         gradeSystem,
         route.difficulty.grade,
       );
-      const newGrade = getGroupingLabel(convertedGrade);
+      const newGrade = getGroupingLabel(convertedGrade, gradeSystem);
       if (!structure) return {};
-      const updatedKey = Object.keys(structure).find((grade) => {
-        if (grade === newGrade) return true;
-        return false;
-      });
+      const updatedKey = Object.keys(structure).find(
+        (grade) => grade === newGrade,
+      );
       if (updatedKey === undefined) return acc;
       return { ...acc, [updatedKey]: acc[updatedKey] + 1 };
     }, structure);
@@ -114,7 +122,7 @@ export const RouteDistribution = () => {
           {heightsRatios.map((heightRatioItem) => {
             const color = getDifficultyColor(
               {
-                gradeSystem: 'uiaa',
+                gradeSystem: gradeSystem,
                 grade: heightRatioItem.grade,
               },
               theme,
@@ -133,7 +141,9 @@ export const RouteDistribution = () => {
                   <Chart $color={color} $ratio={heightRatioItem.ratio} />
                 </StaticHeightContainer>
                 <DifficultyLevel $color={color} $isActive={isColumnActive}>
-                  {heightRatioItem.grade === 'NaN' ? '' : heightRatioItem.grade}
+                  {heightRatioItem.grade === 'NaN'
+                    ? '?'
+                    : heightRatioItem.grade}
                 </DifficultyLevel>
               </Column>
             );
