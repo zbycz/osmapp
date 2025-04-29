@@ -9,8 +9,8 @@ import { EditContextProvider, useEditContext } from './EditContext';
 import { useGetOnClose } from './useGetOnClose';
 import { EditContent } from './EditContent/EditContent';
 import { getReactKey } from '../../../services/helpers';
-import { fetchSchemaTranslations } from '../../../services/tagging/translations';
-import { useBoolState } from '../../helpers';
+import { getFullFeatureWithMemberFeatures } from '../../../services/osm/getFullFeatureWithMemberFeatures';
+import { Feature } from '../../../services/types';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -53,19 +53,34 @@ const EditDialogInner = () => {
 export const EditDialog = () => {
   const { feature } = useEditDialogFeature();
 
-  const [presetsLoaded, onLoaded] = useBoolState(false);
-  useEffect(() => {
-    // to ensure the feature is fresh+contains all editable parts (eg. nodesRefs for ways which we dont normally download)
-    // we could load the feature as fresh DataItem and forward to EditContext once loaded
+  const [freshFeature, setFreshFeature] = useState<Feature>();
 
-    fetchSchemaTranslations().then(onLoaded);
-  });
-  if (!presetsLoaded) {
+  useEffect(() => {
+    (async () => {
+      // to ensure the feature is fresh+contains all editable parts we load it here.
+      // - eg. nodesRefs for ways which we dont normally download)
+      // - eg. all members as memberFeatures
+
+      if (feature.osmMeta.id < 0) {
+        setFreshFeature(feature);
+      } else {
+        const newFeature = await getFullFeatureWithMemberFeatures(
+          feature.osmMeta,
+        );
+        setFreshFeature(newFeature);
+      }
+    })();
+  }, [feature]);
+
+  if (!freshFeature) {
     return null;
   }
 
   return (
-    <EditContextProvider originalFeature={feature} key={getReactKey(feature)}>
+    <EditContextProvider
+      originalFeature={freshFeature}
+      key={getReactKey(feature)}
+    >
       <EditDialogInner />
     </EditContextProvider>
   );

@@ -131,9 +131,11 @@ const setDataItemFactory =
   };
 
 type ConvertToRelation = () => Promise<string>;
-const convertToRelationFactory =
-  (setData: Setter<DataItem[]>, shortId: string): ConvertToRelation =>
-  async () => {
+const convertToRelationFactory = (
+  setData: Setter<DataItem[]>,
+  shortId: string,
+): ConvertToRelation => {
+  return async () => {
     const [parentFeatures, waysFeatures] = await Promise.all([
       fetchParentFeatures(getApiId(shortId)),
       fetchWays(getApiId(shortId)),
@@ -149,20 +151,23 @@ const convertToRelationFactory =
       const newData = prevData.map((item) =>
         item.shortId === shortId ? { ...item, toBeDeleted: true } : item,
       );
-      const currentItem = prevData.find((item) => item.shortId === shortId);
+      const currentItem = newData.find((item) => item.shortId === shortId);
 
       const newRelation: DataItem = {
         shortId: newShortId,
         version: undefined,
         tagsEntries: currentItem.tagsEntries,
         toBeDeleted: false,
-        members: [],
         nodeLonLat: undefined,
+        nodes: undefined,
+        members: [],
       };
 
+      // add all parent relations which are not already there
+      newData.concat(parentFeatures.map((feature) => buildDataItem(feature)));
+
       // update member id in all parent relations
-      const parentItems = parentFeatures.map((feature) => {
-        const dataItem = buildDataItem(feature);
+      const newData2 = newData.map((dataItem) => {
         return {
           ...dataItem,
           members: dataItem.members.map((member) =>
@@ -177,11 +182,12 @@ const convertToRelationFactory =
         };
       });
 
-      return [...newData, ...parentItems, newRelation];
+      return [...newData2, newRelation];
     });
 
     return newShortId;
   };
+};
 
 type SetTagsEntries = (updateFn: (prev: TagsEntries) => TagsEntries) => void;
 const setTagsEntriesFactory =
