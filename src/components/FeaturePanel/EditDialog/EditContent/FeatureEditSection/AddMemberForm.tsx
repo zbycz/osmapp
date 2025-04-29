@@ -110,6 +110,7 @@ export const AddMemberForm = ({
       newLonLat,
       setCurrent,
       setMembers,
+      view,
     ],
   );
 
