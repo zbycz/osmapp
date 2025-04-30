@@ -3,7 +3,7 @@ import { useEditDialogFeature } from './utils';
 import { useEditContext } from './EditContext';
 import { createNoteText } from './createNoteText';
 import { t } from '../../../services/intl';
-import { saveChanges } from '../../../services/osm/osmApiAuth';
+import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 import { insertOsmNote } from '../../../services/osm/insertOsmNote';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import { getShortId } from '../../../services/helpers';
