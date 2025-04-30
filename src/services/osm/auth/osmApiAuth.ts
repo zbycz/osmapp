@@ -1,20 +1,20 @@
 // TODO move this file to ./auth folder
 import escape from 'lodash/escape';
-import { Feature, FeatureTags, LonLat, OsmId, SuccessInfo } from '../types';
-import { getApiId, getFullOsmappLink, getUrlOsmId } from '../helpers';
-import { join } from '../../utils';
-import { clearFetchCache } from '../fetchCache';
-import { getLabel } from '../../helpers/featureLabel';
+import { Feature, FeatureTags, LonLat, OsmId, SuccessInfo } from '../../types';
+import { getApiId, getFullOsmappLink, getUrlOsmId } from '../../helpers';
+import { join } from '../../../utils';
+import { clearFetchCache } from '../../fetchCache';
+import { getLabel } from '../../../helpers/featureLabel';
 import {
   EditDataItem,
   Members,
-} from '../../components/FeaturePanel/EditDialog/useEditItems';
-import { OSM_WEBSITE } from './consts';
-import { getDiffXml } from './auth/getDIffXml';
-import { SingleDocXmljs } from './auth/xmlTypes';
-import { xmljsBuildOsm } from './auth/xmlHelpers';
-import * as api from './auth/api';
-import { getFirstId } from './getFirstId';
+} from '../../../components/FeaturePanel/EditDialog/useEditItems';
+import { OSM_WEBSITE } from '../consts';
+import { getDiffXml } from './getDIffXml';
+import { SingleDocXmljs } from './xmlTypes';
+import { xmljsBuildOsm } from './xmlHelpers';
+import * as api from './api';
+import { getFirstId } from '../getFirstId';
 
 export const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [

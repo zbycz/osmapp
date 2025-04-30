@@ -5,7 +5,7 @@ import { getLabel } from '../../../helpers/featureLabel';
 import { clearFetchCache } from '../../fetchCache';
 import { OSM_WEBSITE } from '../consts';
 import { getOsmappLink } from '../../helpers';
-import { getChangesetXml, updateItemXml } from '../osmApiAuth';
+import { getChangesetXml, updateItemXml } from './osmApiAuth';
 
 export type CragChange = {
   feature: Feature;
