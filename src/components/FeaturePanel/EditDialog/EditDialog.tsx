@@ -50,10 +50,10 @@ const EditDialogInner = () => {
   );
 };
 
-export const EditDialog = () => {
+const EditDialogFetcher = () => {
   const { feature } = useEditDialogFeature();
 
-  const [freshFeature, setFreshFeature] = useState<Feature>();
+  const [freshFeature, setFreshFeature] = useState<Feature | undefined>();
 
   useEffect(() => {
     (async () => {
@@ -67,7 +67,7 @@ export const EditDialog = () => {
         const newFeature = await getFullFeatureWithMemberFeatures(
           feature.osmMeta,
         );
-        setFreshFeature(newFeature);
+        setFreshFeature(newFeature); // TODO potentially leaking - use react-query (with max repetions 10?)
       }
     })();
   }, [feature]);
@@ -77,11 +77,14 @@ export const EditDialog = () => {
   }
 
   return (
-    <EditContextProvider
-      originalFeature={freshFeature}
-      key={getReactKey(feature)}
-    >
+    <EditContextProvider originalFeature={freshFeature}>
       <EditDialogInner />
     </EditContextProvider>
   );
+};
+
+export const EditDialog = () => {
+  const { feature } = useEditDialogFeature();
+
+  return <EditDialogFetcher key={getReactKey(feature)} />;
 };
