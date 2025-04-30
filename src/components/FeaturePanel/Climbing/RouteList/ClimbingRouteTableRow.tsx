@@ -65,7 +65,9 @@ const RouteAuthor = styled(RouteDescription)``;
 
 const RouteGrade = styled.div``;
 
-const Row = styled.div<{ $isHoverHighlighted: boolean }>`
+const Row = styled('div', {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<{ $isHoverHighlighted: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
