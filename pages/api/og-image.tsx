@@ -108,11 +108,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }ms, fetchImage+renderSvg: ${t4 - t3}ms, svg2png: ${t5 - t4}ms`,
     );
 
-    res.setHeader(
-      'Cache-Control',
-      'public, max-age=600, s-maxage=3600, stale-while-revalidate=86400',
-    );
-
     sendImageResponse(res, feature, png, PNG_TYPE);
     return;
   } catch (err) {
