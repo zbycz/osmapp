@@ -56,6 +56,7 @@ export default {
   'tick.style_description_FS': 'Climbing the route without any protective gear or ropes.',
 
   'climbing_renderer.climbing_grade': 'climbing grade ',
+  'climbing.photos': 'Photos',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',
   'project.osmapp.serpDescription':
@@ -220,6 +221,8 @@ export default {
   'editdialog.logout': 'logout',
   'editdialog.anonymousMessage': 'An <b>anonymous</b> note will be added to the map. If you log in to OpenStreetMap, your changes will be immediate.',
   'editdialog.add_major_tag': 'Add',
+  'editdialog.upload_photo': 'Upload photo',
+  'editdialog.upload_photo_tooltip': 'After uploading photo to Wikimedia Common, paste its name to the input field. E.g. File:Crag photo example.jpg',
   'editdialog.location_checkbox': 'New location',
   'editdialog.location_placeholder': 'eg. across the street',
   'editdialog.location_editor_to_be_added': 'The position cannot be edited here yet, you can do so in the <a href="__link__">iD editor</a>.',
@@ -320,10 +323,27 @@ export default {
   'climbingpanel.create_climbing_route': 'Draw new route in schema',
   'climbingpanel.edit_climbing_route': 'Edit route in schema',
   'climbingpanel.finish_climbing_route': 'Finish route',
+  'climbingpanel.undo': 'Undo',
+  'climbingpanel.type': 'Type',
+  'climbingpanel.extend': 'Extend',
+  'climbingpanel.start': 'Start',
   'climbingpanel.cancel_climbing_route': 'Cancel',
+  'climbingpanel.climbing_point_bolt': 'Bolt',
+  'climbingpanel.climbing_point_anchor': 'Anchor',
+  'climbingpanel.climbing_point_sling': 'Sling',
+  'climbingpanel.climbing_point_piton': 'Piton',
+  'climbingpanel.climbing_point_unfinished': 'Unfinished',
+  'climbingpanel.climbing_point_none': 'None',
+  'climbingpanel.delete_point_text': 'Do you want to delete this point?',
+  'climbingpanel.delete_point_cancel': 'Cancel',
+  'climbingpanel.delete_point_delete': 'Delete',
   'climbingpanel.delete_climbing_route': 'Delete route __route__ in schema',
   'climbingpanel.create_first_node': 'Click on the beginning of the route and continue in the direction of the route',
   'climbingpanel.create_next_node': 'Follow direction of the route and click "Done" when finished',
+  'climbingpanel.route_not_drawn_yet': 'This route is not drawn yet.',
+  'climbingpanel.select_route_to_draw': 'Select route you want to draw from the list.',
+  'climbingpanel.update_route_1': 'Route',
+  'climbingpanel.update_route_2': 'is already drawn, but you can update it. Just drag the points or add a new one.',
   'climbingview.description': 'Description',
 
   'publictransport.tourism': 'Touristic trains',
@@ -348,6 +368,7 @@ export default {
   'publictransport.visible_stops': 'Hide __amount__ stops',
 
   'climbingpanel.draw_route': 'Draw route',
+  'climbingpanel.draw_routes': 'Draw routes',
 
   'climbingpanel.show_route_detail': 'Show route detail',
   'climbingpanel.add_tick': 'Add tick',
