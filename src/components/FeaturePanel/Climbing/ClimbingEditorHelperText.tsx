@@ -7,6 +7,7 @@ import { getWikimediaCommonsPhotoPathKeys } from './utils/photo';
 import { RouteNumber } from './RouteNumber';
 import { t } from '../../../services/intl';
 import { useMobileMode } from '../../helpers';
+import { type } from 'node:os';
 
 const InlineBlockContainer = styled.div`
   display: inline-block;
@@ -51,7 +52,7 @@ export const ClimbingEditorHelperText = () => {
         <>
           {routeSelectedIndex === null && (
             <Alert severity="info">
-              Select route you want to draw from the list.
+              {t('climbingpanel.select_route_to_draw')}
             </Alert>
           )}
 
@@ -60,7 +61,7 @@ export const ClimbingEditorHelperText = () => {
             isInSchema &&
             routePhotoPathsCount > 0 && (
               <Alert severity="info">
-                Route{' '}
+                {t('climbingpanel.update_route_1')}{' '}
                 <InlineBlockContainer>
                   <RouteNumber
                     hasCircle={true}
@@ -70,8 +71,7 @@ export const ClimbingEditorHelperText = () => {
                     {routeSelectedIndex + 1}
                   </RouteNumber>
                 </InlineBlockContainer>{' '}
-                is already drawn, but you can update it. Just drag the points or
-                add a new one.
+                {t('climbingpanel.update_route_2')}
               </Alert>
             )}
 
@@ -94,7 +94,7 @@ export const ClimbingEditorHelperText = () => {
               <DrawButton />
             ) : (
               <Alert severity="info" action={<DrawButton />}>
-                This route is not drawn yet.
+                {t('climbingpanel.route_not_drawn_yet')}
               </Alert>
             )}
           </>

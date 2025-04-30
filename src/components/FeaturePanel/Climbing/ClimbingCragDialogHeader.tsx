@@ -19,6 +19,7 @@ import { getOsmappLink } from '../../../services/helpers';
 import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
 import { useDragItems } from '../../utils/useDragItems';
 import { moveElementToIndex } from './utils/array';
+import { t } from '../../../services/intl';
 
 const Title = styled.div`
   flex: 1;
@@ -111,7 +112,7 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
           {photoPaths?.length > 1 && (
             <PhotosContainer>
               <Typography variant="caption" color="secondary">
-                Photos
+                {t('climbing.photos')}
               </Typography>
               <PhotoLinks>
                 {photoPaths.map((photo, index) => (

@@ -1,5 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Button, TextField, Typography, Box, Switch } from '@mui/material';
+import {
+  Button,
+  TextField,
+  Typography,
+  Box,
+  Switch,
+  Stack,
+  Tooltip,
+} from '@mui/material';
 import { t } from '../../../../../services/intl';
 import {
   getNextWikimediaCommonsIndex,
@@ -11,6 +19,7 @@ import styled from '@emotion/styled';
 import { CharacterCount, getInputTypeForKey } from '../helpers';
 import { useCurrentItem } from './CurrentContext';
 import { isClimbingRoute } from '../../../../../utils';
+import OpenInNew from '@mui/icons-material/OpenInNew';
 
 export const climbingRouteMajorKeys = [
   'author',
@@ -74,6 +83,7 @@ type TextFieldProps = {
   label: string;
   onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
   value?: string;
+  placeholder?: string;
   autoFocus?: boolean;
 };
 
@@ -83,6 +93,7 @@ const TextFieldWithCharacterCount = ({
   autoFocus,
   onChange,
   value,
+  placeholder,
 }: TextFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
   const inputType = getInputTypeForKey(k);
@@ -101,6 +112,7 @@ const TextFieldWithCharacterCount = ({
         onChange={onChange}
         fullWidth
         autoFocus={autoFocus}
+        placeholder={placeholder}
         inputProps={{ maxLength: MAX_INPUT_LENGTH }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
@@ -140,31 +152,67 @@ export const MajorKeysEditor = () => {
     }
   }, [focusTag]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const getInputEleement = (k: string) => {
+  const getInputElement = (k: string) => {
     if (!data.keys?.includes(k)) return null;
-    switch (k) {
-      case 'opening_hours':
-        return <OpeningHoursEditor />;
 
-      default:
-        return (
-          <TextFieldWithCharacterCount
-            label={data.names[k]}
-            k={k}
-            autoFocus={focusTag === k}
-            onChange={(e) => {
-              setTag(e.target.name, e.target.value);
-            }}
-            value={tags[k] ?? ''}
-          />
-        );
+    if (k === 'opening_hours') {
+      return <OpeningHoursEditor />;
     }
+
+    if (k.startsWith('wikimedia_commons')) {
+      return (
+        <Stack direction="row" spacing={1} alignItems="center">
+          <Box flex={1}>
+            <TextFieldWithCharacterCount
+              label={data.names[k]}
+              k={k}
+              autoFocus={focusTag === k}
+              placeholder="File:Crag photo example.jpg"
+              onChange={(e) => {
+                setTag(e.target.name, e.target.value);
+              }}
+              value={tags[k] ?? ''}
+            />
+          </Box>
+          <div>
+            <Tooltip
+              arrow
+              title={t('editdialog.upload_photo_tooltip')}
+              enterDelay={1000}
+            >
+              <Button
+                variant="text"
+                color="primary"
+                onClick={() => {}}
+                endIcon={<OpenInNew />}
+                target="_blank"
+                href="https://commons.wikimedia.org/wiki/Special:UploadWizard"
+              >
+                {t('editdialog.upload_photo')}
+              </Button>
+            </Tooltip>
+          </div>
+        </Stack>
+      );
+    }
+
+    return (
+      <TextFieldWithCharacterCount
+        label={data.names[k]}
+        k={k}
+        autoFocus={focusTag === k}
+        onChange={(e) => {
+          setTag(e.target.name, e.target.value);
+        }}
+        value={tags[k] ?? ''}
+      />
+    );
   };
 
   return (
     <Box mb={3}>
       {activeMajorKeys.map((k) => (
-        <div key={k}>{getInputEleement(k)}</div>
+        <div key={k}>{getInputElement(k)}</div>
       ))}
       {!!inactiveMajorKeys.length && (
         <>

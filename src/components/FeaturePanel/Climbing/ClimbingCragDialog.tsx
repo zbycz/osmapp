@@ -18,6 +18,7 @@ import { useGetHandleSave } from './useGetHandleSave';
 import { getWikimediaCommonsPhotoKeys, removeFilePrefix } from './utils/photo';
 import { useMobileMode } from '../../helpers';
 import { ClimbingEditorHelperText } from './ClimbingEditorHelperText';
+import { t } from '../../../services/intl';
 
 const Flex = styled.div`
   display: flex;
@@ -155,7 +156,7 @@ export const ClimbingCragDialog = ({
             <div>
               <Stack spacing={2} direction="row">
                 <Button autoFocus onClick={handleCancel}>
-                  Cancel
+                  {t('editdialog.cancel_button')}
                 </Button>
 
                 <Button
@@ -163,7 +164,7 @@ export const ClimbingCragDialog = ({
                   variant="contained"
                   color="primary"
                 >
-                  Save
+                  {t('editdialog.save_button_edit')}
                 </Button>
               </Stack>
             </div>

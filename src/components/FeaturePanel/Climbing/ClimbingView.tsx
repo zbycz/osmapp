@@ -36,6 +36,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
 import { RouteFloatingMenu } from './Editor/RouteFloatingMenu';
+import { t } from '../../../services/intl';
 
 export const DEFAULT_CRAG_VIEW_LAYOUT = 'horizontal';
 
@@ -462,7 +463,11 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
             <>
               {!isEditMode && (
                 <FabContainer>
-                  <Tooltip title="Draw routes" enterDelay={1500} arrow>
+                  <Tooltip
+                    title={t('climbingpanel.draw_routes')}
+                    enterDelay={1500}
+                    arrow
+                  >
                     <Fab
                       size="small"
                       color="secondary"
