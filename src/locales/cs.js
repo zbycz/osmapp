@@ -184,6 +184,7 @@ export default {
   'editdialog.add_major_tag': 'Přidat',
   'editdialog.upload_photo': 'Nahrát fotku',
   'editdialog.upload_photo_tooltip': 'Po nahrání fotky na Wikimedia Commons, vložit její název do vstupního pole. Např. File:Crag photo example.jpg',
+  'editdialog.upload_photo_filename_error': 'Neplatný název souboru na Wikimedia Commons. Měl by vypadat následovně: File:Photo example.jpg',
   'editdialog.location_checkbox': 'Zadat novou polohu',
   'editdialog.location_placeholder': 'např. naproti přes ulici',
   'editdialog.location_editor_to_be_added': 'Polohu zde zatím upravit nelze, můžete to provést třeba v <a href="__link__">editoru iD</a>.',

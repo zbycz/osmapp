@@ -85,10 +85,14 @@ type TextFieldProps = {
   value?: string;
   placeholder?: string;
   autoFocus?: boolean;
+  error?: boolean;
+  helperText?: string;
 };
 
 const TextFieldWithCharacterCount = ({
   k,
+  error,
+  helperText,
   label,
   autoFocus,
   onChange,
@@ -96,11 +100,14 @@ const TextFieldWithCharacterCount = ({
   placeholder,
 }: TextFieldProps) => {
   const [isFocused, setIsFocused] = useState(false);
+  const [isValidationReadyToCheck, setIsValidationReadyToCheck] =
+    useState(false);
   const inputType = getInputTypeForKey(k);
 
   return (
     <InputContainer>
       <TextField
+        error={isValidationReadyToCheck && error}
         label={label}
         type={inputType}
         multiline={inputType === 'text'}
@@ -115,13 +122,19 @@ const TextFieldWithCharacterCount = ({
         placeholder={placeholder}
         inputProps={{ maxLength: MAX_INPUT_LENGTH }}
         onFocus={() => setIsFocused(true)}
-        onBlur={() => setIsFocused(false)}
+        onBlur={() => {
+          setIsValidationReadyToCheck(true);
+          setIsFocused(false);
+        }}
         helperText={
-          <CharacterCount
-            count={value?.length}
-            max={MAX_INPUT_LENGTH}
-            isInputFocused={isFocused}
-          />
+          <Stack direction="row" spacing={1}>
+            {isValidationReadyToCheck && helperText}
+            <CharacterCount
+              count={value?.length}
+              max={MAX_INPUT_LENGTH}
+              isInputFocused={isFocused}
+            />
+          </Stack>
         }
       />
     </InputContainer>
@@ -145,6 +158,11 @@ export const MajorKeysEditor = () => {
       k === getWikimediaCommonsKey(nextWikimediaCommonsIndex + 1),
   );
 
+  const isWikimediaCommonsFileNameInvalid = (value: string) => {
+    const regex = /^File:.+\.[a-zA-Z0-9_]+$/;
+    return !regex.test(value);
+  };
+
   useEffect(() => {
     // name can be clicked even though it was built from preset name
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
@@ -160,14 +178,20 @@ export const MajorKeysEditor = () => {
     }
 
     if (k.startsWith('wikimedia_commons')) {
+      const error = isWikimediaCommonsFileNameInvalid(tags[k]);
+
       return (
         <Stack direction="row" spacing={1} alignItems="center">
           <Box flex={1}>
             <TextFieldWithCharacterCount
               label={data.names[k]}
+              helperText={
+                error ? t('editdialog.upload_photo_filename_error') : undefined
+              }
+              error={error}
               k={k}
               autoFocus={focusTag === k}
-              placeholder="File:Crag photo example.jpg"
+              placeholder="File:Photo example.jpg"
               onChange={(e) => {
                 setTag(e.target.name, e.target.value);
               }}

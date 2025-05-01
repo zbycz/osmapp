@@ -222,7 +222,9 @@ export default {
   'editdialog.anonymousMessage': 'An <b>anonymous</b> note will be added to the map. If you log in to OpenStreetMap, your changes will be immediate.',
   'editdialog.add_major_tag': 'Add',
   'editdialog.upload_photo': 'Upload photo',
-  'editdialog.upload_photo_tooltip': 'After uploading photo to Wikimedia Common, paste its name to the input field. E.g. File:Crag photo example.jpg',
+  'editdialog.upload_photo_tooltip':
+    'After uploading photo to Wikimedia Commons, paste its name to the input field. For example: File:Photo example.jpg',
+  'editdialog.upload_photo_filename_error': 'Invalid Wikimedia Commons filename. It should look like this: File:Photo example.jpg',
   'editdialog.location_checkbox': 'New location',
   'editdialog.location_placeholder': 'eg. across the street',
   'editdialog.location_editor_to_be_added': 'The position cannot be edited here yet, you can do so in the <a href="__link__">iD editor</a>.',
