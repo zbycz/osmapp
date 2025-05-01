@@ -4,7 +4,6 @@ import uniq from 'lodash/uniq';
 import { Layer, useMapStateContext, View } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { Translation } from '../../../services/intl';
-import { usePersistedState } from '../../utils/usePersistedState';
 
 export const Attribution = ({ label, link, title }) => (
   <>
