@@ -1,6 +1,6 @@
 import { getLabel } from '../../../helpers/featureLabel';
 import { Feature, PositionBoth } from '../../../services/types';
-import { View } from '../../utils/MapStateContext';
+import { Layer, View } from '../../utils/MapStateContext';
 import { OSM_WEBSITE } from '../../../services/osm/consts';
 
 export const getIdEditorLink = (feature: Feature, view?: View) => {
@@ -14,12 +14,9 @@ export const getIdEditorLink = (feature: Feature, view?: View) => {
 export const getAppleMapsLink = (
   feature: Feature,
   position: PositionBoth,
-  activeLayers: string[],
+  isSateliteActive: boolean,
 ) => {
-  // TODO: satelite detection on userLayers
-  const layer = activeLayers.some((layer) =>
-    ['sat', 'bingSat', 'cuzkSat'].includes(layer),
-  )
+  const layer = isSateliteActive
     ? 'h' // satelite
     : 'm'; // normal
 

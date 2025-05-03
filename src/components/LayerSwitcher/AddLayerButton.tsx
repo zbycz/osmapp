@@ -34,6 +34,7 @@ export const AddUserLayerButton = () => {
             min_zoom: minzoom,
             attribution,
             bbox: bboxes,
+            category,
           } = layer;
 
           const newLayer: Layer = {
@@ -43,6 +44,7 @@ export const AddUserLayerButton = () => {
             name,
             url,
             bboxes,
+            isSatelite: category === 'photo',
             ...(attribution && {
               attribution: [fmtAttributionHtml(attribution)],
             }),
