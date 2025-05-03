@@ -29,19 +29,23 @@ type ExternalMapLink = {
   image?: string;
 };
 
+type ItemArgs = {
+  osmQuery: string;
+  appleMaps: string;
+  idEditor: string;
+  position: PositionBoth;
+  zoomInt: number;
+  isSateliteActive: boolean;
+};
+
 export const items = ({
   osmQuery,
   appleMaps,
   idEditor,
   position: [lon, lat],
   zoomInt,
-}: {
-  osmQuery: string;
-  appleMaps: string;
-  idEditor: string;
-  position: PositionBoth;
-  zoomInt: number;
-}): ExternalMapLink[] => [
+  isSateliteActive,
+}: ItemArgs): ExternalMapLink[] => [
   {
     label: 'OpenStreetMap.org',
     href: `https://openstreetmap.org/${osmQuery}`,
@@ -60,7 +64,13 @@ export const items = ({
     : []),
   {
     label: 'Google Maps',
-    href: `https://google.com/maps/search/${lat}%C2%B0%20${lon}%C2%B0/@${lat},${lon},${zoomInt}z`,
+    // https://developers.google.com/maps/documentation/urls/get-started#map-action
+    href:
+      `https://www.google.com/maps/@?api=1` +
+      '&map_action=map' +
+      `&center=${lat},${lon}` +
+      `&zoom=${zoomInt}` +
+      `&basemap=${isSateliteActive ? 'satellite' : 'roadmap'}`,
     image:
       'https://upload.wikimedia.org/wikipedia/commons/a/aa/Google_Maps_icon_%282020%29.svg',
   },

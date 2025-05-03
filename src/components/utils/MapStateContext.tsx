@@ -15,6 +15,7 @@ import { LonLat } from '../../services/types';
 import Cookies from 'js-cookie';
 import Router from 'next/router';
 import { getMapViewFromHash } from '../App/helpers';
+import { osmappLayers } from '../LayerSwitcher/osmappLayers';
 
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
@@ -29,6 +30,7 @@ export type Layer = {
   darkUrl?: string; // optional url for dark mode
   key?: string;
   Icon?: LayerIcon;
+  isSatelite?: boolean;
   attribution?: string[]; // missing in spacer TODO refactor this ugly type
   maxzoom?: number;
   minzoom?: number;
@@ -57,6 +59,7 @@ type MapStateContextType = {
   mapClickOverrideRef: MapClickOverrideRef;
   mapLoaded: boolean;
   setMapLoaded: () => void;
+  allActiveLayers: Layer[];
 };
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
@@ -100,9 +103,20 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     'userLayerIndex',
     [],
   );
+  const [allActiveLayers, setAllActiveLayers] = useState<Layer[]>([]);
   const mapClickOverrideRef = useRef<MapClickOverride>();
   const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
   useEffect(setNotLoaded, [setNotLoaded]);
+
+  useEffect(() => {
+    const activeOsmappLayers = activeLayers
+      .map((key) => osmappLayers[key])
+      .filter((x) => x);
+    const activeUserLayers = userLayers.filter(({ url }) =>
+      activeLayers.includes(url),
+    );
+    setAllActiveLayers([...activeUserLayers, ...activeOsmappLayers]);
+  }, [activeLayers, userLayers]);
 
   const setBothViews: Setter<View> = useCallback((newView) => {
     setView(newView);
@@ -123,6 +137,7 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     mapClickOverrideRef,
     mapLoaded,
     setMapLoaded,
+    allActiveLayers,
   };
 
   usePersistMapView(view);

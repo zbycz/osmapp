@@ -89,6 +89,7 @@ export const osmappLayers: Layers = {
     url: `https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=${process.env.NEXT_PUBLIC_API_KEY_MAPTILER}`,
     Icon: SatelliteIcon,
     attribution: ['maptiler'],
+    isSatelite: true,
   },
   bingSat: {
     name: t('layers.bingSat'),
@@ -97,6 +98,7 @@ export const osmappLayers: Layers = {
     Icon: SatelliteIcon,
     attribution: ['&copy; <a href="https://www.bing.com/maps">Microsoft</a>'],
     maxzoom: 19,
+    isSatelite: true,
   },
   cuzkSat: {
     name: 'ČÚZK ortofoto (CZ)',
@@ -105,6 +107,7 @@ export const osmappLayers: Layers = {
     Icon: SatelliteIcon,
     attribution: ['&copy; <a href="https://geoportal.cuzk.cz">ČÚZK</a>'],
     bboxes: [czBbox],
+    isSatelite: true,
   },
   // mtb: {
   //   name: t('layers.mtb'),
