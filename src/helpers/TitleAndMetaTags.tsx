@@ -26,8 +26,21 @@ const OpenGraphTags = ({ title, url, ogImage }) => (
   </>
 );
 
+const getCustomLabel = (feature: Feature) => {
+  switch (feature.tags.climbing) {
+    case 'area':
+      return `${getLabel(feature)} - ${t('project.openclimbing.climbing_guide')}`;
+    case 'crag':
+    case 'route_bottom':
+      const parentLabel = getParentLabel(feature);
+      return `${getLabel(feature)}${parentLabel ? `, ${parentLabel}` : ''} - ${t('project.openclimbing.climbing_guide')}`;
+    default:
+      return join(getLabel(feature), ' – ', getParentLabel(feature));
+  }
+};
+
 const getTitleLabel = (feature: Feature) => {
-  const label = join(getLabel(feature), ' – ', getParentLabel(feature));
+  const label = getCustomLabel(feature);
 
   return feature.deleted ? getUtfStrikethrough(label) : label;
 };
@@ -50,7 +63,7 @@ export const TitleAndMetaTags = () => {
 
   const osmappLink = getFullOsmappLink(feature);
   const titleLabel = getTitleLabel(feature);
-  const title = `${titleLabel} · ${PROJECT_NAME}`;
+  const title = `${titleLabel} | ${PROJECT_NAME}`;
 
   const ogImage = feature.imageDefs?.length
     ? `${PROJECT_URL}/api/og-image?id=${getShortId(feature.osmMeta)}`
