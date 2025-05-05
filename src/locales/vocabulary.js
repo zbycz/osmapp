@@ -69,6 +69,7 @@ export default {
 
   'project.openclimbing.description': 'Free wiki climbing map',
   'project.openclimbing.serpDescription': 'A wiki based open-source climbing map with topos. Built on OpenStreetMap and Wikipedia projects.',
+  'project.openclimbing.climbing_guide': 'Climbing guide & topos',
 
   'install.button': 'Install app',
   'install.tabs_aria_label': 'Choose your platform',
