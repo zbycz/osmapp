@@ -335,7 +335,8 @@ export default {
 
   'hamburger_menu.climbing.title': 'Lezení',
   'climbing_grade_table.title': 'Tabulka lezeckých obtížností',
-  'climbing_grade_table.show': 'Zobrazit',
+  'climbing_grade_table.show': 'Zobrazení lezeckých obtížností',
+  'climbing_grade_table.warning': 'Převody lezeckých obtížností jsou přibližné. Pokud najdete nepřesnosti, dejte nám prosím vědět na ',
 
   'grade_system_select.default_grade_system': 'Původní klasifikace',
   'grade_system_select.show_more': 'Zobrazit další...',

@@ -387,7 +387,8 @@ export default {
 
   'hamburger_menu.climbing.title': 'Climbing',
   'climbing_grade_table.title': 'Climbing grades table',
-  'climbing_grade_table.show': 'Show',
+  'climbing_grade_table.show': 'Show climbing grades',
+  'climbing_grade_table.warning': 'Please be aware that conversions are approximate. If you spot any inaccuracies, please report them to us on ',
 
   'grade_system_select.default_grade_system': 'Default grade',
   'grade_system_select.show_more': 'Show more...',

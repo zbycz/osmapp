@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Alert,
   AppBar,
+  Box,
   Chip,
   Dialog,
   IconButton,
@@ -11,7 +12,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
   TableRow,
   Toolbar,
@@ -32,12 +32,15 @@ import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { isMobileDevice } from '../../helpers';
 import { GRADE_SYSTEMS } from '../../../services/tagging/climbing';
 import { RouteDifficultyBadge } from './RouteDifficultyBadge';
+import TuneIcon from '@mui/icons-material/Tune';
 
 export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
   const [clickedItem, setClickedItem] = React.useState<{
     row: number | undefined;
     column: number | undefined;
   }>({ row: undefined, column: undefined });
+
+  const [isSettingVisible, setIsSettingVisible] = React.useState(false);
 
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const visibleGradeSystems =
@@ -60,21 +63,21 @@ export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
 
   const getRowBackgroundColor = (rowIndex) => {
     return clickedItem.row === rowIndex
-      ? convertHexToRgba(theme.palette.primary.main, 0.1)
+      ? convertHexToRgba(theme.palette.secondary.main, 0.5)
       : 'transparent';
   };
 
   const getCellColors = (columnIndex, rowIndex) => {
     if (clickedItem.row === rowIndex && clickedItem.column === columnIndex) {
       return {
-        backgroundColor: convertHexToRgba(theme.palette.primary.main, 0.5),
-        color: theme.palette.getContrastText(theme.palette.primary.main),
+        backgroundColor: convertHexToRgba(theme.palette.secondary.main, 0.8),
+        color: theme.palette.getContrastText(theme.palette.secondary.main),
         fontWeight: 'bold',
       };
     }
     if (clickedItem.column === columnIndex) {
       return {
-        backgroundColor: convertHexToRgba(theme.palette.primary.main, 0.1),
+        backgroundColor: convertHexToRgba(theme.palette.secondary.main, 0.3),
       };
     }
     return { backgroundColor: 'transparent' };
@@ -84,9 +87,8 @@ export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
     (gradeSystemKey) => visibleGradeSystems[gradeSystemKey],
   );
 
-  const hiddenGradeSystems = GRADE_SYSTEMS.filter(
-    (gradeSystem) => !visibleGradeSystems[gradeSystem.key],
-  );
+  const isGradeSystemVisible = (gradeSystemKey) =>
+    visibleGradeSystems[gradeSystemKey];
 
   return (
     <Dialog maxWidth="xl" open onClose={handleClose} fullScreen>
@@ -108,39 +110,43 @@ export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
         </Toolbar>
       </AppBar>
 
+      {isSettingVisible && (
+        <Box m={1}>
+          <Alert severity="warning">
+            {t('climbing_grade_table.warning')}{' '}
+            <a href="https://github.com/zbycz/osmapp/issues" target="_blank">
+              Github
+            </a>
+            .
+          </Alert>
+
+          <Typography variant="body2" mt={3} ml={1}>
+            {t('climbing_grade_table.show')}
+          </Typography>
+          <Stack direction="row" flexWrap="wrap" gap={0.6} mt={1}>
+            {GRADE_SYSTEMS.map((gradeSystem) => {
+              const isVisible = isGradeSystemVisible(gradeSystem.key);
+              return (
+                <Chip
+                  key={`chip-${gradeSystem.key}`}
+                  label={`${gradeSystem.name} ${gradeSystem.flags ?? ''}`}
+                  variant={isVisible ? 'filled' : 'outlined'}
+                  onClick={() => {
+                    setUserSetting('climbing.visibleGradeSystems', {
+                      ...visibleGradeSystems,
+                      [gradeSystem.key]: !isVisible,
+                    });
+                  }}
+                />
+              );
+            })}
+          </Stack>
+        </Box>
+      )}
+
       <TableContainer component={Paper} sx={{ maxHeight: '100vh' }}>
         <Table stickyHeader size="small">
           <TableHead>
-            {hiddenGradeSystems.length > 0 && (
-              <TableRow>
-                <TableCell colSpan={columns.length}>
-                  <Stack direction="row" spacing={1}>
-                    <Typography
-                      variant="caption"
-                      sx={{ mr: 2, mt: 1, alignSelf: 'center' }}
-                    >
-                      {t('climbing_grade_table.show')}
-                    </Typography>
-                    {hiddenGradeSystems.map((gradeSystem) => {
-                      return (
-                        <Chip
-                          key={`chip-${gradeSystem.key}`}
-                          size="small"
-                          label={gradeSystem.name}
-                          variant="outlined"
-                          onClick={() => {
-                            setUserSetting('climbing.visibleGradeSystems', {
-                              ...visibleGradeSystems,
-                              [gradeSystem.key]: true,
-                            });
-                          }}
-                        />
-                      );
-                    })}
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            )}
             <TableRow>
               {columns.map((gradeSystemKey) => {
                 const grade = GRADE_SYSTEMS.find(
@@ -148,7 +154,7 @@ export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
                 );
                 return (
                   <TableCell
-                    sx={{ cursor: 'help' }}
+                    sx={{ whiteSpace: 'nowrap' }}
                     key={`header-cell-${gradeSystemKey}`}
                   >
                     <Stack
@@ -172,22 +178,20 @@ export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
                           )}
                         </Stack>
                       </Tooltip>
-                      <IconButton
-                        size="small"
-                        color="secondary"
-                        onClick={() =>
-                          setUserSetting('climbing.visibleGradeSystems', {
-                            ...visibleGradeSystems,
-                            [grade.key]: false,
-                          })
-                        }
-                      >
-                        <CloseIcon fontSize="small" />
-                      </IconButton>
                     </Stack>
                   </TableCell>
                 );
               })}
+              <TableCell sx={{ width: '100%', textAlign: 'right' }}>
+                <IconButton
+                  size="small"
+                  onClick={() => setIsSettingVisible(!isSettingVisible)}
+                  aria-label="close"
+                  color={isSettingVisible ? 'primary' : 'secondary'}
+                >
+                  <TuneIcon fontSize="small" />
+                </IconButton>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -214,12 +218,15 @@ export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
                       }}
                       sx={{
                         ...getCellColors(columnIndex, rowIndex),
-                        fontFamily: 'Courier, monospace',
+                        borderRight: `1px solid ${theme.palette.divider} !important`,
                         '&:hover': {
                           cursor: 'pointer',
                           backgroundColor: isMobileDevice()
                             ? undefined
-                            : convertHexToRgba(theme.palette.primary.main, 0.3),
+                            : convertHexToRgba(
+                                theme.palette.secondary.main,
+                                0.2,
+                              ),
                         },
                       }}
                     >
@@ -231,26 +238,10 @@ export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
                       />
                     </TableCell>
                   ))}
+                <TableCell sx={{ width: '100%' }} />
               </TableRow>
             ))}
           </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={columns.length} sx={{ padding: 1 }}>
-                <Alert severity="warning">
-                  Please be aware that conversions are approximate. If you spot
-                  any inaccuracies, please report them to us on{' '}
-                  <a
-                    href="https://github.com/zbycz/osmapp/issues"
-                    target="_blank"
-                  >
-                    Github
-                  </a>
-                  .
-                </Alert>
-              </TableCell>
-            </TableRow>
-          </TableFooter>
         </Table>
       </TableContainer>
     </Dialog>
