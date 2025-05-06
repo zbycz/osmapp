@@ -17,6 +17,7 @@ import {
   MenuItem,
   Stack,
   Tooltip,
+  Typography,
 } from '@mui/material';
 import Router from 'next/router';
 import { useSnackbar } from '../../../utils/SnackbarContext';
@@ -65,7 +66,7 @@ const RouteAuthor = styled(RouteDescription)``;
 
 const RouteGrade = styled.div``;
 
-const Row = styled('div', {
+const Row = styled('a', {
   shouldForwardProp: (prop) => !prop.startsWith('$'),
 })<{ $isHoverHighlighted: boolean }>`
   display: flex;
@@ -192,7 +193,7 @@ export const ClimbingRouteTableRow = forwardRef<
           onMouseEnter={onMouseEnter}
           onMouseLeave={onMouseLeave}
           $isHoverHighlighted={isHoverHighlighted}
-          as={isHrefLinkVisible ? Link : 'div'}
+          as={isHrefLinkVisible ? 'a' : 'div'}
           {...(isHrefLinkVisible ? linkProps : {})}
         >
           <RoutePhoto>
@@ -202,7 +203,9 @@ export const ClimbingRouteTableRow = forwardRef<
           </RoutePhoto>
           <Stack justifyContent="stretch" flex={1}>
             <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
-              {feature.tags?.name}
+              <Typography variant="inherit" component="h3">
+                {feature.tags?.name}
+              </Typography>
               <ClimbingTypeBadge feature={feature} />
 
               {!isMobileMode && isSelected && (
@@ -223,7 +226,9 @@ export const ClimbingRouteTableRow = forwardRef<
 
             {feature.tags?.description && (
               <RouteDescription opacity={photoPathsCount === 0 ? 0.5 : 1}>
-                {feature.tags?.description}
+                <Typography variant="inherit" component="p">
+                  {feature.tags?.description}
+                </Typography>
               </RouteDescription>
             )}
             {feature.tags?.author && (

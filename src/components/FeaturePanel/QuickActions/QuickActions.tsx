@@ -9,7 +9,7 @@ import { t } from '../../../services/intl';
 const Wrapper = styled.div`
   max-width: 100%;
   width: fit-content;
-  margin-top: 0.75rem;
+  margin-top: 24px;
 
   overflow-x: auto;
   scroll-behavior: smooth;
@@ -26,19 +26,17 @@ const Container = styled.div`
 `;
 
 export const QuickActions = () => (
-  <>
-    <Wrapper>
-      <Container>
-        <QuickActionButton
-          icon={DirectionsIcon}
-          label={t('featurepanel.directions_button')}
-          onClick={() => {
-            Router.push('/directions');
-          }}
-        />
-        <StarButton />
-        <ShareButton />
-      </Container>
-    </Wrapper>
-  </>
+  <Wrapper>
+    <Container>
+      <QuickActionButton
+        icon={DirectionsIcon}
+        label={t('featurepanel.directions_button')}
+        onClick={() => {
+          Router.push('/directions');
+        }}
+      />
+      <StarButton />
+      <ShareButton />
+    </Container>
+  </Wrapper>
 );

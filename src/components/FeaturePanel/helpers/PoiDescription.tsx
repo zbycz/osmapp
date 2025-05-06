@@ -7,6 +7,7 @@ import { PoiIcon } from '../../utils/icons/PoiIcon';
 
 const PoiType = styled.div<{ $isSkeleton: Boolean }>`
   position: relative;
+  display: flex;
 
   img {
     position: relative;
@@ -34,7 +35,12 @@ export const PoiDescription = () => {
         }
         middle
       />
-      <Typography variant="caption" color="secondary" textTransform="lowercase">
+      <Typography
+        variant="caption"
+        color="secondary"
+        textTransform="lowercase"
+        component="h2"
+      >
         {poiType}
       </Typography>
     </PoiType>

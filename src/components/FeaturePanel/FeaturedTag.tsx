@@ -12,6 +12,7 @@ import { ClimbingGradeRenderer } from './renderers/ClimbingGradeRenderer';
 import { nl2br } from '../utils/nl2br';
 import { FeaturedKeyRenderer } from '../../services/tagging/featuredKeys';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { Typography } from '@mui/material';
 
 const Wrapper = styled.div`
   position: relative;
@@ -43,7 +44,11 @@ const Value = styled.div`
   }
 `;
 
-const DefaultRenderer = ({ v }) => <>{nl2br(v)}</>;
+const ParagraphRenderer = ({ v }) => (
+  <Typography component="p" variant="inherit">
+    {nl2br(v)}
+  </Typography>
+);
 
 type RendererComponents = {
   [key in FeaturedKeyRenderer]: React.FC<{ k: string; v: string }>;
@@ -57,7 +62,7 @@ const components: RendererComponents = {
   WikipediaRenderer: WikipediaRenderer,
   WikidataRenderer: WikidataRenderer,
   ClimbingGradeRenderer: ClimbingGradeRenderer,
-  DescriptionRenderer: DefaultRenderer,
+  DescriptionRenderer: ParagraphRenderer,
   NullRenderer: null,
 };
 

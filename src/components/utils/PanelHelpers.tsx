@@ -102,13 +102,13 @@ export const PanelScrollbars = ({
   );
 };
 
-export const PanelContent = styled.div`
+export const PanelContent = styled.main`
   display: flex;
   flex-direction: column;
   height: 100%;
 `;
 
-export const PanelFooterWrapper = styled.div`
+export const PanelFooterWrapper = styled.footer`
   color: ${({ theme }) => theme.palette.text.secondary};
   margin-top: auto;
   padding-bottom: 15px;

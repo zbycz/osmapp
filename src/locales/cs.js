@@ -143,7 +143,7 @@ export default {
   'featurepanel.objects_around': 'Objekty v okolí',
   'featurepanel.climbing_restriction': 'Lezecké omezení',
   'featurepanel.footer_title': 'Ostatní informace',
-  'featurepanel.climbing_sectors': 'Lezecké sektory',
+  'featurepanel.climbing_sectors': 'Lezení',
   'featurepanel.climbing_sectors_in': 'v oblasti',
   'featurepanel.routes': 'cest',
 

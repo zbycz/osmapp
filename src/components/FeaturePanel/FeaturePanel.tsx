@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { FeatureHeading } from './FeatureHeading';
-import { useToggleState } from '../helpers';
+import { useMobileMode, useToggleState } from '../helpers';
 import { getReactKey } from '../../services/helpers';
 import { PanelContent, PanelSidePadding } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -44,6 +44,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   const { feature } = useFeatureContext();
   const [advanced, setAdvanced] = useState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
+  const isMobileMode = useMobileMode();
 
   const { tags, skeleton, deleted } = feature;
   const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
@@ -66,19 +67,21 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   return (
     <>
       <PanelContent>
-        <FeaturePanelClimbingGuideInfo />
         <PanelSidePadding>
+          {!isMobileMode && <ParentLink />}
+
           <FeatureHeading ref={headingRef} />
           <Stack spacing={1} alignItems="flex-start" sx={{ marginBottom: 1 }}>
             <ClimbingRouteGrade />
             <ClimbingTypeBadge feature={feature} />
           </Stack>
-          <ParentLink />
+
           <ClimbingRestriction />
 
           <OsmError />
           <TestApiWarning />
           <FeaturedTag k="description" renderer="DescriptionRenderer" />
+          {isMobileMode && <ParentLink />}
         </PanelSidePadding>
 
         <Flex>
@@ -113,6 +116,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
           showTagsTable={showTagsTable}
           toggleShowTags={toggleShowTags}
         />
+        <FeaturePanelClimbingGuideInfo />
       </PanelContent>
       <ClimbingStructuredData />
     </>

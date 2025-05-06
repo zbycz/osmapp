@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Chip } from '@mui/material';
+import { Box, Chip, Typography } from '@mui/material';
 import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -11,7 +11,7 @@ import {
 } from '../../services/helpers';
 import { Feature, isInstant } from '../../services/types';
 import { useMobileMode } from '../helpers';
-import { getLabel } from '../../helpers/featureLabel';
+import { getHumanPoiType, getLabel } from '../../helpers/featureLabel';
 
 import { Slider, Wrapper } from './FeatureImages/FeatureImages';
 import { Image } from './FeatureImages/Image/Image';
@@ -64,7 +64,7 @@ const Name = styled.div`
   text-overflow: ellipsis;
 `;
 
-const CragName = styled.h2`
+const CragName = styled.div`
   font-weight: 900;
   margin: 0;
   font-size: 28px;
@@ -80,7 +80,7 @@ const CragName = styled.h2`
 
 const StyledLink = styled(Link)`
   text-decoration: none !important;
-  &:hover ${Name} {
+  &:hover h3 {
     text-decoration: underline;
   }
 `;
@@ -94,7 +94,14 @@ const Header = ({
 }) => (
   <Box ml={2} mr={2}>
     <CragName>
-      <Name>{label}</Name>
+      <Typography
+        component="h3"
+        variant="inherit"
+        overflow="hidden"
+        textOverflow="ellipsis"
+      >
+        {label}
+      </Typography>
       {routesCount && (
         <Chip
           size="small"
@@ -111,12 +118,20 @@ const Header = ({
   </Box>
 );
 
-const Gallery = ({ images }) => {
+const Gallery = ({ images, feature }) => {
+  const poiType = getHumanPoiType(feature);
+  const alt = `${poiType} ${getLabel(feature)}`;
+
   return (
     <Wrapper>
       <Slider>
-        {naturalSort(images, (item) => item.def.k).map((item) => (
-          <Image key={item.image.imageUrl} def={item.def} image={item.image} />
+        {naturalSort(images, (item) => item.def.k).map((item, index) => (
+          <Image
+            key={item.image.imageUrl}
+            def={item.def}
+            image={item.image}
+            alt={`${alt} ${index + 1}`}
+          />
         ))}
       </Slider>
     </Wrapper>
@@ -152,7 +167,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
           label={getLabel(feature)}
           routesCount={feature.members?.length}
         />
-        {images.length ? <Gallery images={images} /> : null}
+        {images.length ? <Gallery images={images} feature={feature} /> : null}
       </Container>
     </StyledLink>
   );

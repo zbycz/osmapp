@@ -71,7 +71,6 @@ const NameHeader = styled.div`
   flex: 1;
   padding-left: 40px;
 `;
-const DifficultyHeader = styled.div``;
 
 export const RouteListDndContent = ({ isEditable }) => {
   const {
