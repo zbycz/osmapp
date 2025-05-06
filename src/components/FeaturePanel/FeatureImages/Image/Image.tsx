@@ -61,9 +61,10 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
 type Props = {
   def: ImageDef;
   image: ImageType;
+  alt?: string;
 };
 
-export const Image = ({ def, image }: Props) => {
+export const Image = ({ def, image, alt }: Props) => {
   const { imgRef, size, onPhotoLoad } = useImgSizeOnload();
   const onClick = useGetOnClick(def);
   const hasPaths =
@@ -79,7 +80,7 @@ export const Image = ({ def, image }: Props) => {
         <Img
           src={image.imageUrl}
           height={HEIGHT}
-          alt={getImageDefId(def)}
+          alt={alt || getImageDefId(def)}
           onLoad={onPhotoLoad}
           $hasPaths={hasPaths}
           ref={imgRef}

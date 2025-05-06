@@ -14,15 +14,41 @@ import {
 } from '../services/project';
 import { t } from '../services/intl';
 
-const OpenGraphTags = ({ title, url, ogImage }) => (
+type OpenGraphTagsProps = {
+  title: string;
+  url: string;
+  ogImage?: string;
+  description?: string;
+};
+
+const OpenGraphTags = ({
+  title,
+  url,
+  ogImage,
+  description,
+}: OpenGraphTagsProps) => (
   <>
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url} />
     <meta property="og:title" content={title} />
+    <meta property="og:site_name" content={PROJECT_NAME} />
     {ogImage && <meta property="og:image" content={ogImage} />}
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="og:description" content={t(PROJECT_DECRIPTION)} />
-    <meta property="description" content={t(PROJECT_SERP_DESCRIPTION)} />
+    <meta
+      property="og:description"
+      content={description || t(PROJECT_DECRIPTION)}
+    />
+    <meta
+      property="description"
+      content={description || t(PROJECT_SERP_DESCRIPTION)}
+    />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta
+      name="twitter:description"
+      content={description || t(PROJECT_DECRIPTION)}
+    />
+    {ogImage && <meta name="twitter:image" content={ogImage} />}
   </>
 );
 
@@ -71,7 +97,12 @@ export const TitleAndMetaTags = () => {
   return (
     <Head>
       <title>{title}</title>
-      <OpenGraphTags title={title} url={osmappLink} ogImage={ogImage} />
+      <OpenGraphTags
+        title={title}
+        description={feature.tags.description}
+        url={osmappLink}
+        ogImage={ogImage}
+      />
     </Head>
   );
 };

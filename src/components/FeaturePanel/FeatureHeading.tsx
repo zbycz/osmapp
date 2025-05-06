@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
+import { IconButton, Stack, Tooltip, useMediaQuery } from '@mui/material';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 import { PoiDescription } from './helpers/PoiDescription';
 import { getLabel, getSecondaryLabel } from '../../helpers/featureLabel';
@@ -42,16 +42,16 @@ const EditNameButton = () => {
 };
 
 const Container = styled.div<{ isStandalone: boolean }>`
-  margin: 20px 0;
+  margin: 20px 0 20px 0;
   ${({ isStandalone }) => isStandalone && 'padding-bottom: 8px;'}
 `;
 
 const HeadingsWrapper = styled.div`
-  margin: 0 0 12px 0;
   position: relative;
   display: flex;
   flex-direction: column;
   flex: 1;
+  margin-bottom: 8px;
 `;
 
 const Headings = () => {
@@ -88,7 +88,7 @@ const Headings = () => {
 
 const Heading = styled.h1<{ $deleted: boolean; $isOpenClimbing: boolean }>`
   font-size: 36px;
-  line-height: 1.2;
+  line-height: 1.1;
   ${({ $isOpenClimbing }) =>
     $isOpenClimbing &&
     css`
@@ -121,8 +121,8 @@ export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
 
   return (
     <Container ref={ref} isStandalone={isStandalone}>
-      <PoiDescription />
       <Headings />
+      <PoiDescription />
 
       <QuickActions />
     </Container>
