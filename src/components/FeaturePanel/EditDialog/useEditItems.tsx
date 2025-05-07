@@ -1,9 +1,4 @@
-import {
-  Feature,
-  FeatureProperties,
-  FeatureTags,
-  LonLat,
-} from '../../../services/types';
+import { Feature, FeatureTags, LonLat } from '../../../services/types';
 import { getApiId, getShortId } from '../../../services/helpers';
 import { getLabel } from '../../../helpers/featureLabel';
 import { Setter } from '../../../types';
@@ -86,29 +81,32 @@ const someNameHasChanged = (prevData: DataItem[], newData: DataItem[]) => {
   return prevNames.some((name, index) => name !== newNames[index]);
 };
 
-const updateAllMemberLabels = (newData: DataItem[], shortId: string) => {
-  // TODO this code is ugly, but we would have to remove the "one state"
-  const referencingParents = new Set<string>();
-  newData.forEach((dataItem) => {
-    dataItem.members?.forEach((member) => {
-      if (member.shortId === shortId) {
-        referencingParents.add(dataItem.shortId);
-      }
-    });
+const hasMember = (item: DataItem, shortId: string) =>
+  item.members?.some((member) => {
+    if (member.shortId === shortId) {
+      return true;
+    }
   });
 
-  const currentItem = newData.find((dataItem) => dataItem.shortId === shortId);
+const getItemName = (items: DataItem[], shortId: string) => {
+  const current = items.find((dataItem) => dataItem.shortId === shortId);
+  return getName(current);
+};
 
-  return newData.map((dataItem) => {
-    if (referencingParents.has(dataItem.shortId)) {
-      const clone = JSON.parse(JSON.stringify(dataItem)) as DataItem;
-      const index = clone.members.findIndex(
-        (member) => member.shortId === shortId,
-      );
-      clone.members[index].label = getName(currentItem);
+const cloneItem = (item: DataItem) =>
+  JSON.parse(JSON.stringify(item)) as DataItem;
+
+const updateAllMemberLabels = (newItems: DataItem[], id: string) => {
+  const newName = getItemName(newItems, id);
+
+  return newItems.map((item) => {
+    if (hasMember(item, id)) {
+      const clone = cloneItem(item);
+      const idx = clone.members.findIndex(({ shortId }) => shortId === id);
+      clone.members[idx].label = newName;
       return clone;
     } else {
-      return dataItem;
+      return item;
     }
   });
 };
