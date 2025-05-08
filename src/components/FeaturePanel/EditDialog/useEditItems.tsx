@@ -240,10 +240,8 @@ const toggleToBeDeletedFactory = (setDataItem: SetDataItem) => {
     }));
 };
 
-export const useEditItems = (originalFeature: Feature) => {
-  const [data, setData] = useState<DataItem[]>(() => [
-    buildDataItem(originalFeature),
-  ]);
+export const useEditItems = (initialItem: DataItem) => {
+  const [data, setData] = useState<DataItem[]>([initialItem]);
 
   const items = useMemo<Array<EditDataItem>>(
     () =>

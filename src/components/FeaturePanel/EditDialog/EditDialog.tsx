@@ -11,6 +11,8 @@ import { EditContent } from './EditContent/EditContent';
 import { getReactKey } from '../../../services/helpers';
 import { getFullFeatureWithMemberFeatures } from '../../../services/osm/getFullFeatureWithMemberFeatures';
 import { Feature } from '../../../services/types';
+import { fetchFreshItem, getNewNodeItem } from './itemsHelpers';
+import { DataItem } from './useEditItems';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
@@ -53,31 +55,26 @@ const EditDialogInner = () => {
 const EditDialogFetcher = () => {
   const { feature } = useEditDialogFeature();
 
-  const [freshFeature, setFreshFeature] = useState<Feature | undefined>();
+  const [initialItem, setInitialItem] = useState<DataItem | undefined>();
 
   useEffect(() => {
     (async () => {
-      // to ensure the feature is fresh+contains all editable parts we load it here.
-      // - eg. nodesRefs for ways which we dont normally download)
-      // - eg. all members as memberFeatures
-
       if (feature.osmMeta.id < 0) {
-        setFreshFeature(feature);
+        const newItem = getNewNodeItem(feature.center);
+        setInitialItem(newItem);
       } else {
-        const newFeature = await getFullFeatureWithMemberFeatures(
-          feature.osmMeta,
-        );
-        setFreshFeature(newFeature); // TODO potentially leaking - use react-query (with max repetions 10?)
+        const newItem = await fetchFreshItem(feature.osmMeta); // TODO potentially leaking - use react-query (with max repetions 10?)
+        setInitialItem(newItem);
       }
     })();
   }, [feature]);
 
-  if (!freshFeature) {
+  if (!initialItem) {
     return null;
   }
 
   return (
-    <EditContextProvider originalFeature={freshFeature}>
+    <EditContextProvider initialItem={initialItem}>
       <EditDialogInner />
     </EditContextProvider>
   );

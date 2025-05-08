@@ -9,32 +9,14 @@ import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
 import { useEditContext } from '../../EditContext';
 import { useCurrentItem } from './CurrentContext';
 import React, { useCallback } from 'react';
-import { getNewId } from '../../../../../services/getCoordsFeature';
 import { Alert, Button, TextField } from '@mui/material';
-import { FeatureTags, LonLat, OsmId } from '../../../../../services/types';
+import { LonLat, OsmId } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
 import { NwrIcon } from '../../../NwrIcon';
 import { useMapStateContext } from '../../../../utils/MapStateContext';
-import {
-  fetchSchemaTranslations,
-  getPresetTranslation,
-} from '../../../../../services/tagging/translations';
-import { fetchJson } from '../../../../../services/fetch';
-import { OsmResponse } from '../../../../../services/osm/types';
-import { getOsmUrlOrFull } from '../../../../../services/osm/urls';
-import {
-  getItemsMap,
-  getMemberFeatures,
-} from '../../../../../services/osm/helpers';
-import { addSchemaToFeature } from '../../../../../services/tagging/idTaggingScheme';
-import { osmToFeature } from '../../../../../services/osm/osmToFeature';
-import { getLabel } from '../../../../../helpers/featureLabel';
-import { findPreset } from '../../../../../services/tagging/presets';
-
-const hasAtLeastOneNode = (members: Members) => {
-  return members?.some((member) => member.shortId.startsWith('n'));
-};
+import { getPresetTranslation } from '../../../../../services/tagging/translations';
+import { fetchFreshItem, getNewNodeItem } from '../../itemsHelpers';
 
 const getLastNodeApiId = (members: Members) => {
   const lastNode = members
@@ -71,54 +53,6 @@ const getDefaultTags = (selectedPresetKey: string) => {
   return selectedPresetKey === 'climbing/route_bottom' ? ROUTE_BOTTOM_TAGS : {};
 };
 
-const getNewNodeItem = (
-  [lon, lat]: LonLat,
-  name: string,
-  tags: FeatureTags = {},
-): DataItem => ({
-  shortId: `n${getNewId()}`,
-  version: undefined,
-  tagsEntries: Object.entries({ name, ...tags }),
-  toBeDeleted: false,
-  nodeLonLat: [lon, lat],
-  nodes: undefined,
-  members: undefined,
-});
-
-const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
-  await fetchSchemaTranslations();
-  const full = await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));
-  const itemsMap = getItemsMap(full.elements);
-  const main = itemsMap[apiId.type][apiId.id];
-
-  return {
-    shortId: getShortId(apiId),
-    version: main.version,
-    tagsEntries: Object.entries(main.tags),
-    toBeDeleted: false,
-    nodeLonLat: apiId.type === 'node' ? [main.lon, main.lat] : undefined,
-    nodes: apiId.type === 'way' ? main.nodes : undefined,
-    members: main.members?.map((member) => {
-      const memberEl = itemsMap[member.type][member.ref];
-      const label = memberEl
-        ? (() => {
-            if (memberEl.tags.name) {
-              return memberEl.tags.name;
-            }
-            const preset = findPreset(member.type, memberEl.tags);
-            return getPresetTranslation(preset.presetKey);
-          })()
-        : `${member.type} ${member.ref}`;
-
-      return {
-        shortId: getShortId({ type: member.type, id: member.ref }),
-        role: member.role,
-        label,
-      };
-    }),
-  };
-};
-
 export const AddMemberForm = ({
   newLonLat,
   selectedPresetKey,
@@ -145,7 +79,10 @@ export const AddMemberForm = ({
         const newNodePosition =
           newLonLat ?? (await getNewNodeLocation(items, members)) ?? viewPoint;
         const defaultTags = getDefaultTags(selectedPresetKey);
-        newItem = getNewNodeItem(newNodePosition, label, defaultTags);
+        newItem = getNewNodeItem(newNodePosition, {
+          name: label,
+          ...defaultTags,
+        });
       }
 
       const newShortId = newItem.shortId;

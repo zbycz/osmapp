@@ -23,18 +23,17 @@ type EditContextType = {
 const EditContext = createContext<EditContextType>(undefined);
 
 type Props = {
-  originalFeature: Feature;
+  initialItem: DataItem;
   children: React.ReactNode;
 };
 
-export const EditContextProvider = ({ originalFeature, children }: Props) => {
-  const { feature } = useEditDialogFeature();
+export const EditContextProvider = ({ initialItem, children }: Props) => {
   const [successInfo, setSuccessInfo] = useState<undefined | SuccessInfo>();
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState(''); // technically is "data", but only for note
   const [comment, setComment] = useState('');
-  const { items, addFeature, addNewItem } = useEditItems(originalFeature);
-  const [current, setCurrent] = React.useState(getShortId(feature.osmMeta));
+  const { items, addFeature, addNewItem } = useEditItems(initialItem);
+  const [current, setCurrent] = useState(initialItem.shortId);
 
   const value: EditContextType = {
     successInfo,
