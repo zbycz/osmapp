@@ -182,6 +182,8 @@ export default {
   'featurepanel.footer_title': 'Other info',
   'featurepanel.climbing_sectors': 'Climbing',
   'featurepanel.climbing_sectors_in': 'in',
+  'featurepanel.sector': 'Climbing sector',
+  'featurepanel.sectors': 'sectors',
   'featurepanel.routes': 'routes',
 
   'opening_hours.all_day': '24 hours',

@@ -161,6 +161,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
       onClick={getOnClickWithHash}
       onMouseEnter={mobileMode ? undefined : handleHover}
       onMouseLeave={() => setPreview(null)}
+      title={`${t('featurepanel.sector')} ${getLabel(feature)}`}
     >
       <Container>
         <Header
@@ -183,9 +184,27 @@ export const CragsInArea = () => {
   const crags = feature.memberFeatures.filter(({ tags }) => tags.climbing);
   const other = feature.memberFeatures.filter(({ tags }) => !tags.climbing);
 
+  const numberOfRoutes = crags.reduce((acc, { members }) => {
+    return acc + members.length;
+  }, 0);
+
   return (
     <>
-      <PanelLabel>
+      <PanelLabel
+        addition={
+          <Chip
+            size="small"
+            variant="outlined"
+            label={
+              <>
+                <strong>{crags.length}</strong> {t('featurepanel.sectors')},{' '}
+                <strong>{numberOfRoutes}</strong> {t('featurepanel.routes')}
+              </>
+            }
+            sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+          />
+        }
+      >
         {t('featurepanel.climbing_sectors')}{' '}
         {feature.tags.name
           ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
