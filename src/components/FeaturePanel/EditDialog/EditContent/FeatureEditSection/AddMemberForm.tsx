@@ -1,18 +1,36 @@
-import { EditDataItem, Members } from '../../useEditItems';
+import {
+  DataItem,
+  EditDataItem,
+  getPresetKey,
+  Members,
+} from '../../useEditItems';
 import { getApiId, getShortId } from '../../../../../services/helpers';
 import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
 import { useEditContext } from '../../EditContext';
 import { useCurrentItem } from './CurrentContext';
 import React, { useCallback } from 'react';
-import { getNewId, getNewNode } from '../../../../../services/getCoordsFeature';
+import { getNewId } from '../../../../../services/getCoordsFeature';
 import { Alert, Button, TextField } from '@mui/material';
-import { Feature, LonLat, OsmId } from '../../../../../services/types';
+import { FeatureTags, LonLat, OsmId } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
 import { NwrIcon } from '../../../NwrIcon';
-import { getFullFeatureWithMemberFeatures } from '../../../../../services/osm/getFullFeatureWithMemberFeatures';
-import { getLabel } from '../../../../../helpers/featureLabel';
 import { useMapStateContext } from '../../../../utils/MapStateContext';
+import {
+  fetchSchemaTranslations,
+  getPresetTranslation,
+} from '../../../../../services/tagging/translations';
+import { fetchJson } from '../../../../../services/fetch';
+import { OsmResponse } from '../../../../../services/osm/types';
+import { getOsmUrlOrFull } from '../../../../../services/osm/urls';
+import {
+  getItemsMap,
+  getMemberFeatures,
+} from '../../../../../services/osm/helpers';
+import { addSchemaToFeature } from '../../../../../services/tagging/idTaggingScheme';
+import { osmToFeature } from '../../../../../services/osm/osmToFeature';
+import { getLabel } from '../../../../../helpers/featureLabel';
+import { findPreset } from '../../../../../services/tagging/presets';
 
 const hasAtLeastOneNode = (members: Members) => {
   return members?.some((member) => member.shortId.startsWith('n'));
@@ -45,9 +63,60 @@ const getNewNodeLocation = async (items: EditDataItem[], members: Members) => {
   return lonLat.map((x) => x + 0.0001);
 };
 
-const defaultRouteBottomTags = {
+const ROUTE_BOTTOM_TAGS = {
   sport: 'climbing',
   climbing: 'route_bottom',
+};
+const getDefaultTags = (selectedPresetKey: string) => {
+  return selectedPresetKey === 'climbing/route_bottom' ? ROUTE_BOTTOM_TAGS : {};
+};
+
+const getNewNodeItem = (
+  [lon, lat]: LonLat,
+  name: string,
+  tags: FeatureTags = {},
+): DataItem => ({
+  shortId: `n${getNewId()}`,
+  version: undefined,
+  tagsEntries: Object.entries({ name, ...tags }),
+  toBeDeleted: false,
+  nodeLonLat: [lon, lat],
+  nodes: undefined,
+  members: undefined,
+});
+
+const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
+  await fetchSchemaTranslations();
+  const full = await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));
+  const itemsMap = getItemsMap(full.elements);
+  const main = itemsMap[apiId.type][apiId.id];
+
+  return {
+    shortId: getShortId(apiId),
+    version: main.version,
+    tagsEntries: Object.entries(main.tags),
+    toBeDeleted: false,
+    nodeLonLat: apiId.type === 'node' ? [main.lon, main.lat] : undefined,
+    nodes: apiId.type === 'way' ? main.nodes : undefined,
+    members: main.members?.map((member) => {
+      const memberEl = itemsMap[member.type][member.ref];
+      const label = memberEl
+        ? (() => {
+            if (memberEl.tags.name) {
+              return memberEl.tags.name;
+            }
+            const preset = findPreset(member.type, memberEl.tags);
+            return getPresetTranslation(preset.presetKey);
+          })()
+        : `${member.type} ${member.ref}`;
+
+      return {
+        shortId: getShortId({ type: member.type, id: member.ref }),
+        role: member.role,
+        label,
+      };
+    }),
+  };
 };
 
 export const AddMemberForm = ({
@@ -57,40 +126,38 @@ export const AddMemberForm = ({
   newLonLat?: LonLat;
   selectedPresetKey?: string;
 }) => {
-  const getDefaultTags = useCallback(
-    () => ({
-      ...(selectedPresetKey === 'climbing/route_bottom'
-        ? defaultRouteBottomTags
-        : {}),
-    }),
-    [selectedPresetKey],
-  );
-  const defaultTags = getDefaultTags();
-
   const { view } = useMapStateContext();
-  const { addFeature, items, setCurrent, current } = useEditContext();
+  const { addNewItem, items, setCurrent, current } = useEditContext();
   const { members, setMembers, tags, convertToRelation } = useCurrentItem();
   const [showInput, setShowInput] = React.useState(false);
   const [label, setLabel] = React.useState('');
-  const isClimbingCrag = tags.climbing === 'crag';
 
   const handleAddMember = useCallback(
     async (e) => {
-      let newFeature: Feature;
+      let newItem: DataItem;
+
       if (label.match(/^[nwr]\d+$/)) {
         const apiId = getApiId(label);
-        newFeature = await getFullFeatureWithMemberFeatures(apiId);
+        newItem = await fetchFreshItem(apiId);
       } else {
         const [z, lat, lon] = view;
         const viewPoint = [parseFloat(lon), parseFloat(lat)];
-        const lastNodeLocation =
+        const newNodePosition =
           newLonLat ?? (await getNewNodeLocation(items, members)) ?? viewPoint;
-        newFeature = getNewNode(lastNodeLocation, label, defaultTags);
+        const defaultTags = getDefaultTags(selectedPresetKey);
+        newItem = getNewNodeItem(newNodePosition, label, defaultTags);
       }
 
-      const newShortId = getShortId(newFeature.osmMeta);
-      const newLabel = getLabel(newFeature); // same as in buildDataItem()
-      addFeature(newFeature);
+      const newShortId = newItem.shortId;
+
+      // TODO this code could be removed, if we lookup the label among editItems
+      const presetKey = getPresetKey(newItem);
+      const presetLabel = getPresetTranslation(presetKey);
+      const tags = Object.fromEntries(newItem.tagsEntries);
+      const newLabel = tags.name ?? presetLabel;
+
+      addNewItem(newItem);
+
       setMembers((prev) => [
         ...(prev ?? []),
         { shortId: newShortId, role: '', label: newLabel },
@@ -102,12 +169,12 @@ export const AddMemberForm = ({
       }
     },
     [
-      addFeature,
-      defaultTags,
+      addNewItem,
       items,
       label,
       members,
       newLonLat,
+      selectedPresetKey,
       setCurrent,
       setMembers,
       view,
@@ -138,6 +205,8 @@ export const AddMemberForm = ({
     const newShortId = await convertToRelation();
     setCurrent(newShortId);
   };
+
+  const isClimbingCrag = tags.climbing === 'crag';
 
   return (
     <>

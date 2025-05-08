@@ -7,6 +7,10 @@ import { getItemsMap, getMemberFeatures } from './helpers';
 import { addSchemaToFeature } from '../tagging/idTaggingScheme';
 import { osmToFeature } from './osmToFeature';
 
+// - AddMemberForm - new feature from shortid
+// - MembersEditor+ParentsEditor - onClick handler
+// - EditDialog - change Feature to EditItem
+// - osmApi - fetchFeature (addMemberFeaturesToRelation)
 export const getFullFeatureWithMemberFeatures = async (apiId: OsmId) => {
   await fetchSchemaTranslations();
   const full = await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));

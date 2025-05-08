@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Feature, SuccessInfo } from '../../../services/types';
-import { EditDataItem, useEditItems } from './useEditItems';
+import { DataItem, EditDataItem, useEditItems } from './useEditItems';
 import { getShortId } from '../../../services/helpers';
 import { useEditDialogFeature } from './utils';
 
@@ -14,6 +14,7 @@ type EditContextType = {
   comment: string;
   setComment: (s: string) => void;
   addFeature: (feature: Feature) => void;
+  addNewItem: (newItem: DataItem) => void;
   items: Array<EditDataItem>;
   current: string;
   setCurrent: (s: string) => void;
@@ -32,7 +33,7 @@ export const EditContextProvider = ({ originalFeature, children }: Props) => {
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState(''); // technically is "data", but only for note
   const [comment, setComment] = useState('');
-  const { items, addFeature } = useEditItems(originalFeature);
+  const { items, addFeature, addNewItem } = useEditItems(originalFeature);
   const [current, setCurrent] = React.useState(getShortId(feature.osmMeta));
 
   const value: EditContextType = {
@@ -45,6 +46,7 @@ export const EditContextProvider = ({ originalFeature, children }: Props) => {
     comment,
     setComment,
     addFeature,
+    addNewItem,
     items,
     current,
     setCurrent,

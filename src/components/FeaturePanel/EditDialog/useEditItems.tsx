@@ -16,6 +16,7 @@ export type Members = Array<{
   shortId: string;
   role: string;
   label: string; // cached from other dataItems, or from originalFeature
+  // TODO rename to originalLabel - only used when member is not among editItems
 }>;
 
 // internal type stored in the state
@@ -65,7 +66,7 @@ const buildDataItem = (feature: Feature): DataItem => {
   };
 };
 
-const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
+export const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
   const tags = Object.fromEntries(tagsEntries);
   const osmId = getApiId(shortId);
   const preset = findPreset(osmId.type, tags);
@@ -275,7 +276,11 @@ export const useEditItems = (originalFeature: Feature) => {
     setData((state) => [...state, newItem]);
   };
 
+  const addNewItem = (newItem: DataItem) => {
+    setData((state) => [...state, newItem]);
+  };
+
   publishDbgObject('EditContext state', data);
 
-  return { items, addFeature };
+  return { items, addFeature, addNewItem };
 };
