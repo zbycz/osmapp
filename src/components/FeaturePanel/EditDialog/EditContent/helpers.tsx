@@ -6,6 +6,7 @@ import { useEditContext } from '../EditContext';
 import { getApiId, getShortId } from '../../../../services/helpers';
 
 import { getFullFeatureWithMemberFeatures } from '../../../../services/osm/getFullFeatureWithMemberFeatures';
+import { fetchFreshItem } from '../itemsHelpers';
 
 const CharacterCountContainer = styled.div`
   position: absolute;
@@ -63,28 +64,32 @@ export const useGetHandleClick = ({
 }: {
   setIsExpanded?: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { addFeature, items, setCurrent } = useEditContext();
+  const { addNewItem, items, setCurrent } = useEditContext();
 
   return async (e, shortId: string) => {
     const isCmdClicked = e.ctrlKey || e.metaKey;
+    const switchToNewTab = !isCmdClicked;
     const apiId = getApiId(shortId);
 
-    if (!isCmdClicked) {
+    if (switchToNewTab) {
       setIsExpanded?.(false);
     }
 
+    // TODO merge these two conditions:
     if (apiId.id < 0) {
-      if (!isCmdClicked) setCurrent(shortId);
+      if (switchToNewTab) setCurrent(shortId);
       return;
     }
-
     if (isInItems(items, shortId)) {
-      if (!isCmdClicked) setCurrent(shortId);
+      if (switchToNewTab) setCurrent(shortId);
       return;
     }
 
-    const feature = await getFullFeatureWithMemberFeatures(apiId);
-    addFeature(feature);
-    if (!isCmdClicked) setCurrent(getShortId(feature.osmMeta));
+    const newItem = await fetchFreshItem(apiId);
+    addNewItem(newItem);
+
+    if (switchToNewTab) {
+      setCurrent(newItem.shortId);
+    }
   };
 };

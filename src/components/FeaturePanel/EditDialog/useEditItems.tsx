@@ -269,16 +269,11 @@ export const useEditItems = (initialItem: DataItem) => {
     [data],
   );
 
-  const addFeature = (feature: Feature) => {
-    const newItem = buildDataItem(JSON.parse(JSON.stringify(feature)));
-    setData((state) => [...state, newItem]);
-  };
-
   const addNewItem = (newItem: DataItem) => {
     setData((state) => [...state, newItem]);
   };
 
   publishDbgObject('EditContext state', data);
 
-  return { items, addFeature, addNewItem };
+  return { items, addNewItem };
 };
