@@ -64,5 +64,11 @@ export const renderTag = (k: string, v: string, featured = false) => {
   }
 
   const url = getUrlForTag(k, v);
-  return url ? <a href={url}>{slashToOptionalBr(humanValue)}</a> : humanValue;
+  return url ? (
+    <a href={url} target="_blank">
+      {slashToOptionalBr(humanValue)}
+    </a>
+  ) : (
+    humanValue
+  );
 };
