@@ -82,11 +82,7 @@ const someNameHasChanged = (prevData: DataItem[], newData: DataItem[]) => {
 };
 
 const hasMember = (item: DataItem, shortId: string) =>
-  item.members?.some((member) => {
-    if (member.shortId === shortId) {
-      return true;
-    }
-  });
+  item.members?.some((member) => member.shortId === shortId);
 
 const getItemName = (items: DataItem[], shortId: string) => {
   const current = items.find((dataItem) => dataItem.shortId === shortId);
@@ -96,20 +92,18 @@ const getItemName = (items: DataItem[], shortId: string) => {
 const cloneItem = (item: DataItem) =>
   JSON.parse(JSON.stringify(item)) as DataItem;
 
-const updateAllMemberLabels = (newItems: DataItem[], id: string) => {
-  const newName = getItemName(newItems, id);
-
-  return newItems.map((item) => {
-    if (hasMember(item, id)) {
+const updateAllMemberLabels = (newItems: DataItem[], updatedId: string) =>
+  newItems.map((item) => {
+    if (hasMember(item, updatedId)) {
       const clone = cloneItem(item);
-      const idx = clone.members.findIndex(({ shortId }) => shortId === id);
-      clone.members[idx].label = newName;
+      const { members } = clone;
+      const idx = members.findIndex(({ shortId }) => shortId === updatedId);
+      members[idx].label = getItemName(newItems, updatedId);
       return clone;
     } else {
       return item;
     }
   });
-};
 
 type SetDataItem = (updateFn: (prevValue: DataItem) => DataItem) => void;
 const setDataItemFactory =
