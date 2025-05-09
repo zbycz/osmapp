@@ -6,6 +6,7 @@ import {
   ImageDefFromTag,
   isTag,
   LonLat,
+  OsmType,
   PathType,
 } from '../types';
 import { getCommonsImageUrl } from './getCommonsImageUrl';
@@ -130,9 +131,10 @@ const getImagesFromTags = (tags: FeatureTags) => {
 
 export const getImagesFromCenter = (
   tags: FeatureTags,
+  osmType: OsmType,
   center?: LonLat,
 ): ImageDef[] => {
-  if (!center) {
+  if (!center || osmType === 'relation') {
     return [];
   }
   return [
@@ -146,9 +148,13 @@ export const getImagesFromCenter = (
   ];
 };
 
-export const getImageDefs = (tags: FeatureTags, center?: LonLat) => [
+export const getImageDefs = (
+  tags: FeatureTags,
+  osmType: OsmType,
+  center?: LonLat,
+) => [
   ...getImagesFromTags(tags),
-  ...getImagesFromCenter(tags, center),
+  ...getImagesFromCenter(tags, osmType, center),
 ];
 
 export const mergeMemberImageDefs = (feature: Feature) => {

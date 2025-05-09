@@ -1,1 +1,1 @@
-export { default } from '../src/components/App/App';
+export { MyTicksPanel as default } from '../src/components/MyTicksPanel/MyTicksPanel';

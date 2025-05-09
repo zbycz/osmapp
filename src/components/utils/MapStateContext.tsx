@@ -12,25 +12,30 @@ import { PROJECT_ID } from '../../services/project';
 import { useBoolState } from '../helpers';
 import { Setter } from '../../types';
 import { LonLat } from '../../services/types';
+import Cookies from 'js-cookie';
+import Router from 'next/router';
+import { getMapViewFromHash } from '../App/helpers';
+import { osmappLayers } from '../LayerSwitcher/osmappLayers';
 
 export type LayerIcon = React.ComponentType<{ fontSize: 'small' }>;
 
 // [b.getWest(), b.getNorth(), b.getEast(), b.getSouth()]
 export type Bbox = [number, number, number, number];
 
-export interface Layer {
+export type Layer = {
   type: 'basemap' | 'overlay' | 'user' | 'spacer';
   name?: string;
-  description?: string;
+  secondLine?: string;
   url?: string;
   darkUrl?: string; // optional url for dark mode
   key?: string;
   Icon?: LayerIcon;
-  attribution?: string[]; // missing in spacer TODO refactor ugly
+  isSatelite?: boolean;
+  attribution?: string[]; // missing in spacer TODO refactor this ugly type
   maxzoom?: number;
   minzoom?: number;
   bboxes?: Bbox[];
-}
+};
 
 // [z, lat, lon] - string because we use RoundedPosition
 export type View = [string, string, string];
@@ -54,9 +59,29 @@ type MapStateContextType = {
   mapClickOverrideRef: MapClickOverrideRef;
   mapLoaded: boolean;
   setMapLoaded: () => void;
+  allActiveLayers: Layer[];
 };
 
 export const MapStateContext = createContext<MapStateContextType>(undefined);
+
+const usePersistMapView = (view: View) => {
+  useEffect(() => {
+    window.location.hash = view.join('/');
+    Cookies.set('mapView', view.join('/'), { expires: 7, path: '/' }); // TODO find optimal expiration
+  }, [view]);
+};
+
+const useUpdateViewFromHash = (setView: Setter<View>) => {
+  useEffect(() => {
+    Router.beforePopState(() => {
+      const mapViewFromHash = getMapViewFromHash();
+      if (mapViewFromHash) {
+        setView(mapViewFromHash);
+      }
+      return true; // let nextjs handle the route change as well
+    });
+  }, [setView]);
+};
 
 const useActiveLayersState = () => {
   const isClimbing = PROJECT_ID === 'openclimbing';
@@ -78,9 +103,20 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     'userLayerIndex',
     [],
   );
+  const [allActiveLayers, setAllActiveLayers] = useState<Layer[]>([]);
   const mapClickOverrideRef = useRef<MapClickOverride>();
   const [mapLoaded, setMapLoaded, setNotLoaded] = useBoolState(true);
   useEffect(setNotLoaded, [setNotLoaded]);
+
+  useEffect(() => {
+    const activeOsmappLayers = activeLayers
+      .map((key) => osmappLayers[key])
+      .filter((x) => x);
+    const activeUserLayers = userLayers.filter(({ url }) =>
+      activeLayers.includes(url),
+    );
+    setAllActiveLayers([...activeUserLayers, ...activeOsmappLayers]);
+  }, [activeLayers, userLayers]);
 
   const setBothViews: Setter<View> = useCallback((newView) => {
     setView(newView);
@@ -101,7 +137,11 @@ export const MapStateProvider: React.FC<{ initialMapView: View }> = ({
     mapClickOverrideRef,
     mapLoaded,
     setMapLoaded,
+    allActiveLayers,
   };
+
+  usePersistMapView(view);
+  useUpdateViewFromHash(setBothViews);
 
   return (
     <MapStateContext.Provider value={mapState}>

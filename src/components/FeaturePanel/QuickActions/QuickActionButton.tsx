@@ -15,7 +15,6 @@ export const QuickActionButton = forwardRef<HTMLButtonElement, Props>(
       label={label}
       icon={<Icon fontSize="small" />}
       onClick={onClick}
-      variant="outlined"
     />
   ),
 );

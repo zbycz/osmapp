@@ -9,7 +9,67 @@ import {
 import { LayerIcon, Spacer, StyledList } from './helpers';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
 import { dotToOptionalBr } from '../helpers';
-import { t } from '../../services/intl';
+import { intl, t, Translation } from '../../services/intl';
+import { TooltipButton } from '../utils/TooltipButton';
+import { useQuery } from 'react-query';
+import { fetchJson } from '../../services/fetch';
+import type { ClimbingStatsResponse } from '../../types';
+import { nl2br } from '../utils/nl2br';
+
+const getLocalTime = (lastRefresh: string) =>
+  lastRefresh ? new Date(lastRefresh).toLocaleString(intl.lang) : null;
+
+const HOST = process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL
+  ? '/'
+  : 'https://openclimbing.org/';
+
+const fetchClimbingStats = () =>
+  fetchJson<ClimbingStatsResponse>(`${HOST}api/climbing-tiles/stats`);
+
+const ClimbingSecondary = () => {
+  const { data, error, isFetching } = useQuery([], () => fetchClimbingStats());
+
+  if (isFetching) {
+    return null;
+  }
+
+  if (error) {
+    console.error('Error fetching climbing stats', error); // eslint-disable-line no-console
+    return null;
+  }
+
+  const { lastRefresh, osmDataTimestamp, devStats } = data;
+  const tooltip = (
+    <>
+      <Translation
+        id="climbing_tiles.stats"
+        values={{
+          lastRefresh: getLocalTime(lastRefresh),
+          osmTime: getLocalTime(osmDataTimestamp),
+        }}
+      />
+      <br />
+      <br />
+      Dev stats:{' '}
+      {nl2br(
+        Object.entries(devStats)
+          .map(([k, v]) => `${k}: ${v}`)
+          .join('\n'),
+      )}
+      <br />
+    </>
+  );
+
+  return (
+    <>
+      {getLocalTime(osmDataTimestamp).replace(/:\d+( [APM]+)?$/, '$1')}
+      <TooltipButton
+        sx={{ fontSize: '14px', margin: '-8px -3px -6px -3px' }}
+        tooltip={tooltip}
+      />
+    </>
+  );
+};
 
 const OverlayItem = ({ layer }: { layer: Layer }) => {
   const { activeLayers, setActiveLayers } = useMapStateContext();
@@ -24,11 +84,13 @@ const OverlayItem = ({ layer }: { layer: Layer }) => {
     e.stopPropagation();
   };
   const selected = activeLayers.includes(key);
+  const secondary =
+    key === 'climbing' && selected ? <ClimbingSecondary /> : undefined;
 
   return (
     <ListItemButton onClick={handleClick} key={key}>
       <LayerIcon Icon={Icon} />
-      <ListItemText primary={dotToOptionalBr(name)} />
+      <ListItemText primary={dotToOptionalBr(name)} secondary={secondary} />
       <ListItemSecondaryAction>
         <Checkbox edge="end" checked={selected} onClick={handleClick} />
       </ListItemSecondaryAction>

@@ -90,6 +90,7 @@ export default {
   'searchbox.overpass_success': 'Ergebnisse gefunden: __count__',
   'searchbox.overpass_error': 'Fehler beim Laden. __message__',
   'searchbox.overpass_custom_query': 'Eigene Query',
+  'searchbox.coordinate_subtitle': 'Breite, Länge',
 
   'featurepanel.no_name': 'Kein Name',
   'featurepanel.share_button': 'Teilen',
@@ -145,8 +146,8 @@ export default {
 
   'editdialog.add_heading': 'Zu OpenStreetMap hinzufügen',
   'editdialog.undelete_heading': 'Wieder zu OpenStreetMap hinzufügen',
-  'editdialog.edit_heading': 'Bearbeiten:',
-  'editdialog.suggest_heading': 'Änderung vorschlagen:',
+  'editdialog.edit_heading': 'Bearbeiten',
+  'editdialog.suggest_heading': 'Änderung vorschlagen',
   'editdialog.feature_type_select': 'Typ auswählen',
   'editdialog.options_heading': 'Optionen',
   'editdialog.cancel_button': 'Abbrechen',

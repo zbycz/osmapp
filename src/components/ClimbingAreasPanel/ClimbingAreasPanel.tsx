@@ -21,6 +21,7 @@ import { MobilePageDrawer } from '../utils/MobilePageDrawer';
 import { ClimbingArea } from '../../services/climbing-areas/getClimbingAreas';
 import Link from 'next/link';
 import { TooltipButton } from '../utils/TooltipButton';
+import { ClimbingGuideInfo } from '../FeaturePanel/Climbing/ClimbingGuideInfo';
 
 type ClimbingAreasPanelProps = {
   areas: ClimbingArea[];
@@ -35,14 +36,10 @@ export const ClimbingAreasPanel = ({ areas }: ClimbingAreasPanelProps) => {
     <MobilePageDrawer className="climbing-areas-drawer">
       <PanelContent>
         <PanelScrollbars>
-          <ClosePanelButton right onClick={handleClose} />
+          <ClimbingGuideInfo />
           <PanelSidePadding>
+            <ClosePanelButton right onClick={handleClose} />
             <h1>{t('climbingareas.title')}</h1>
-
-            <Typography variant="body2">
-              {t('climbing.guideinfo.title')}{' '}
-              <TooltipButton tooltip={t('climbing.guideinfo.description')} />
-            </Typography>
           </PanelSidePadding>
 
           <TableContainer component={Paper}>

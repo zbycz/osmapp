@@ -1,124 +1,61 @@
-import React, { useEffect } from 'react';
-import { Autocomplete, InputBase } from '@mui/material';
-import { useFeatureContext } from '../utils/FeatureContext';
+import React from 'react';
+import { Autocomplete } from '@mui/material';
 import { renderOptionFactory } from './renderOptionFactory';
-import { t } from '../../services/intl';
-import { onSelectedFactory } from './onSelectedFactory';
-import { useUserThemeContext } from '../../helpers/theme';
-import { useMapStateContext } from '../utils/MapStateContext';
-import { onHighlightFactory } from './onHighlightFactory';
-import { useMapCenter } from './utils';
-import { useSnackbar } from '../utils/SnackbarContext';
-import { useKeyDown } from '../../helpers/hooks';
+import { useGetOnSelected } from './useGetOnSelected';
+import { useGetOnHighlight } from './useGetOnHighlight';
 import { getOptionLabel } from './getOptionLabel';
 import { useGetOptions } from './useGetOptions';
 import { useInputValueState } from './options/geocoder';
-import { useRouter } from 'next/router';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { OptionsPaper, OptionsPopper } from './optionsPopper';
+import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
+import { Option } from './types';
+import { renderInputFactory } from './renderInputFactory';
+import { useHandleDirectQuery } from './useHandleDirectQuery';
+import { Setter } from '../../types';
 
-type SearchBoxInputProps = {
-  params: any;
-  setInputValue: (value: string) => void;
-  autocompleteRef: React.MutableRefObject<undefined>;
-};
-
-const SearchBoxInput = ({
-  params,
-  setInputValue,
-  autocompleteRef,
-}: SearchBoxInputProps) => {
-  const inputRef = React.useRef<HTMLInputElement>(null);
-
-  useKeyDown('/', (e) => {
-    const isInput = e.target instanceof HTMLInputElement;
-    const isTextarea = e.target instanceof HTMLTextAreaElement;
-    if (isInput || isTextarea) {
-      return;
-    }
-    e.preventDefault();
-    inputRef.current?.focus();
-  });
-
-  const { InputLabelProps, InputProps, ...restParams } = params;
-
-  useEffect(() => {
-    // @ts-ignore
-    params.InputProps.ref(autocompleteRef.current);
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  return (
-    <InputBase
-      {...restParams} // eslint-disable-line react/jsx-props-no-spreading
-      sx={{
-        height: '47px',
-      }}
-      inputRef={inputRef}
-      placeholder={t('searchbox.placeholder')}
-      onChange={({ target }) => setInputValue(target.value)}
-      onFocus={({ target }) => target.select()}
-    />
-  );
-};
+const AutocompleteConfigured = (
+  props: AutocompleteProps<Option, false, true, true>,
+) => (
+  <Autocomplete
+    value={null} // we need value=null to be able to select the same again (eg. fire same category search again)
+    autoComplete
+    disableClearable
+    autoHighlight
+    clearOnEscape
+    freeSolo
+    slots={{ paper: OptionsPaper, popper: OptionsPopper }}
+    {...props} // eslint-disable-line react/jsx-props-no-spreading
+  />
+);
 
 type AutocompleteInputProps = {
   autocompleteRef: React.MutableRefObject<undefined>;
-  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsLoading: Setter<boolean>;
 };
 
 export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   autocompleteRef,
-  setOverpassLoading,
+  setIsLoading,
 }) => {
-  const { setFeature, setPreview } = useFeatureContext();
-  const { bbox } = useMapStateContext();
-  const { showToast } = useSnackbar();
-  const mapCenter = useMapCenter();
-  const { currentTheme } = useUserThemeContext();
   const { inputValue, setInputValue } = useInputValueState();
   const options = useGetOptions(inputValue);
-  const router = useRouter();
-  const { userSettings } = useUserSettingsContext();
-  const { isImperial } = userSettings;
+  const onHighlight = useGetOnHighlight();
+  const onSelected = useGetOnSelected(setIsLoading);
+
+  useHandleDirectQuery(onSelected, setInputValue, setIsLoading);
 
   return (
-    <Autocomplete
+    <AutocompleteConfigured
       inputValue={inputValue}
       options={options}
-      // we need null to be able to select the same again (eg. category search)
-      value={null}
-      filterOptions={(o) => o}
       getOptionLabel={getOptionLabel}
+      onChange={onSelected}
+      onHighlightChange={onHighlight}
+      renderOption={renderOptionFactory(inputValue)}
+      renderInput={renderInputFactory(setInputValue, autocompleteRef)}
+      filterOptions={(option) => option}
+      getOptionDisabled={(option) => option.type === 'loader'}
       getOptionKey={(option) => JSON.stringify(option)}
-      onChange={onSelectedFactory({
-        setFeature,
-        setPreview,
-        bbox,
-        showToast,
-        setOverpassLoading,
-        router,
-      })}
-      onHighlightChange={onHighlightFactory(setPreview)}
-      getOptionDisabled={(o) => o.type === 'loader'}
-      autoComplete
-      disableClearable
-      autoHighlight
-      clearOnEscape
-      // disableCloseOnSelect
-      freeSolo
-      // disableOpenOnFocus
-      renderInput={(params) => (
-        <SearchBoxInput
-          params={params}
-          setInputValue={setInputValue}
-          autocompleteRef={autocompleteRef}
-        />
-      )}
-      renderOption={renderOptionFactory(
-        inputValue,
-        currentTheme,
-        mapCenter,
-        isImperial,
-      )}
     />
   );
 };

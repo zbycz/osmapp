@@ -2,6 +2,7 @@ import type { DocumentContext } from 'next/dist/shared/lib/utils';
 import { Intl } from '../services/intl';
 import { getIp } from '../components/App/helpers';
 import { fetchText } from '../services/fetch';
+import { prod } from '../services/helpers';
 
 // On some days we have 100k of page loads of Vercel Serveless Function.
 // Because of that, we had to switch to paid Pro plan from the Hobby.
@@ -12,7 +13,7 @@ import { fetchText } from '../services/fetch';
 
 export const logRequest = (ctx: DocumentContext, intl: Intl) => {
   const website = process.env.UMAMI_WEBSITE_ID;
-  if (!website) {
+  if (!website || !prod) {
     return;
   }
 

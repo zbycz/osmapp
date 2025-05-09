@@ -5,7 +5,8 @@ import { RouteDifficulty } from './types';
 import { GradeSystemSelect } from './GradeSystemSelect';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { convertGrade } from './utils/grades/routeGrade';
-import { GradeSystem } from './utils/grades/gradeData';
+
+import { GradeSystem } from '../../../services/tagging/climbing';
 
 const Flex = styled.div`
   display: flex;

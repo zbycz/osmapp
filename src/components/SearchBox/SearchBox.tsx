@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
@@ -30,7 +30,7 @@ const TopPanel = styled.div`
 `;
 
 const StyledPaper = styled(Paper, {
-  shouldForwardProp: (prop) => prop !== '$withShadow',
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
 })<{ $withShadow: boolean }>`
   padding: 2px 4px;
   display: flex;
@@ -58,7 +58,7 @@ const SearchIconButton = styled(IconButton)`
   }
 `;
 
-const OverpassCircularProgress = styled(CircularProgress)`
+const LoadingSpinner = styled(CircularProgress)`
   padding: 10px;
 `;
 
@@ -74,26 +74,30 @@ const useOnClosePanel = () => {
   };
 };
 
-const SearchBox = ({ withShadow = false }) => {
+const SearchBoxInner = ({ withoutPanel }) => {
   const isMobileMode = useMobileMode();
   const { featureShown } = useFeatureContext();
-  const [overpassLoading, setOverpassLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const autocompleteRef = useRef();
   const onClosePanel = useOnClosePanel();
 
   return (
     <TopPanel>
-      <StyledPaper $withShadow={withShadow} elevation={1} ref={autocompleteRef}>
+      <StyledPaper
+        $withShadow={isMobileMode || withoutPanel}
+        elevation={1}
+        ref={autocompleteRef}
+      >
         <SearchIconButton disabled aria-label={t('searchbox.placeholder')}>
           <SearchIcon />
         </SearchIconButton>
 
         <AutocompleteInput
           autocompleteRef={autocompleteRef}
-          setOverpassLoading={setOverpassLoading}
+          setIsLoading={setIsLoading}
         />
 
-        {overpassLoading && <OverpassCircularProgress />}
+        {isLoading && <LoadingSpinner />}
         {!isMobileMode && featureShown && (
           <ClosePanelButton onClick={onClosePanel} />
         )}
@@ -110,4 +114,22 @@ const SearchBox = ({ withShadow = false }) => {
   );
 };
 
-export default SearchBox;
+export const SearchBox = () => {
+  const { featureShown, homepageShown } = useFeatureContext();
+
+  const router = useRouter();
+  if (router.asPath.startsWith('/directions')) {
+    return null; // TODO use router.pathname once directions is a Page
+  }
+
+  const otherPageShown = router.pathname !== '/'; // TODO there was a bug in nextjs which sometimes gave some nonsense pathname – CHECK!
+
+  const panelShown = router.pathname.match(/^\/(node|way|relation)\//)
+    ? featureShown
+    : // homepageShown => url '/'
+      // featureShown => url '/xxx/123', but skeleton can be shown earlier
+      // any other panel => url other than root
+      homepageShown || featureShown || otherPageShown;
+
+  return <SearchBoxInner withoutPanel={!panelShown} />;
+};

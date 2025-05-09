@@ -43,7 +43,7 @@ export const InfoButton = ({ image }: { image: ImageType }) => (
         <>
           <TooltipContent image={image} />
           {image.sameUrlResolvedAlsoFrom?.map((item) => (
-            <Box key={item.imageUrl} mt={1}>
+            <Box key={item.link} mt={1}>
               <TooltipContent image={item} />
             </Box>
           ))}

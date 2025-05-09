@@ -1,45 +1,38 @@
 import React from 'react';
 import { Box, Typography } from '@mui/material';
 import Router from 'next/router';
-import { fetchAroundFeature } from '../../services/osmApi';
+import { fetchAroundFeatures } from '../../services/overpass/fetchAroundFeatures';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
 import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
-import Maki from '../utils/Maki';
 import { t } from '../../services/intl';
 import { DotLoader, useMobileMode } from '../helpers';
 import { getLabel } from '../../helpers/featureLabel';
-import { useUserThemeContext } from '../../helpers/theme';
 import { useQuery } from 'react-query';
 import { getImportance } from './helpers/importance';
+import { PoiIcon } from '../utils/icons/PoiIcon';
 
 const AroundItem = ({ feature }: { feature: Feature }) => {
-  const { currentTheme } = useUserThemeContext();
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
-  const { properties, tags, osmMeta } = feature;
+  const osmId = feature.osmMeta;
+
   const handleClick: React.MouseEventHandler<HTMLAnchorElement> = (e) => {
     e.preventDefault();
     setPreview(null);
-    Router.push(`/${getUrlOsmId(osmMeta)}${window.location.hash}`);
+    Router.push(`/${getUrlOsmId(osmId)}${window.location.hash}`);
   };
   const handleHover = () => feature.center && setPreview(feature);
 
   return (
     <li>
       <a
-        href={`/${getUrlOsmId(osmMeta)}`}
+        href={`/${getUrlOsmId(osmId)}`}
         onClick={handleClick}
         onMouseEnter={mobileMode ? undefined : handleHover}
         onMouseLeave={() => setPreview(null)}
       >
-        <Maki
-          ico={properties.class}
-          title={`${Object.keys(tags).length} keys / ${
-            properties.class ?? ''
-          } / ${properties.subclass}`}
-          invert={currentTheme === 'dark'}
-        />
+        <PoiIcon tags={feature.tags} />
         {getLabel(feature)}
       </a>
     </li>
@@ -76,7 +69,7 @@ export const ObjectsAround = ({ advanced }) => {
     data: around,
     error,
     isFetching,
-  } = useQuery([feature], () => fetchAroundFeature(feature.center), {
+  } = useQuery([feature], () => fetchAroundFeatures(feature.center), {
     initialData: [],
   });
 

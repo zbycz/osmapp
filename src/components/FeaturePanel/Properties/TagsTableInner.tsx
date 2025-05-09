@@ -5,7 +5,7 @@ import { useToggleState } from '../../helpers';
 import { InlineEditButton } from '../helpers/InlineEditButton';
 import { buildAddress } from '../../../services/helpers';
 import { ToggleButton } from '../helpers/ToggleButton';
-import { renderValue } from './renderValue';
+import { renderTag } from './renderTag';
 import { Position } from '../../../services/types';
 
 const isAddr = (k: string) => k.match(/^addr:|uir_adr|:addr/);
@@ -60,7 +60,7 @@ const TagsGroup = ({
                 {tags.map(([k, v]) => (
                   <tr key={k}>
                     <th>{k}</th>
-                    <td>{renderValue(k, v)}</td>
+                    <td>{renderTag(k, v)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -185,7 +185,7 @@ export const TagsTableInner = ({
           <th style={{ verticalAlign: 'middle' }}>{k}</th>
           <td>
             <InlineEditButton k={k} />
-            {renderValue(k, v)}
+            {renderTag(k, v)}
           </td>
         </tr>
       ))}

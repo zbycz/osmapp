@@ -3,8 +3,8 @@ import { useEditDialogFeature } from './utils';
 import { useEditContext } from './EditContext';
 import { createNoteText } from './createNoteText';
 import { t } from '../../../services/intl';
-import { saveChanges } from '../../../services/osmApiAuth';
-import { insertOsmNote } from '../../../services/osmApi';
+import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
+import { insertOsmNote } from '../../../services/osm/insertOsmNote';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import { getShortId } from '../../../services/helpers';
 
@@ -67,7 +67,7 @@ export const useGetHandleSave = () => {
         handleLogout();
       } else {
         showToast(
-          `${t('editdialog.save_refused')} ${err.responseText ?? err.message}`,
+          `${t('editdialog.save_refused')} ${err.responseText ?? err.message ?? err}`,
           'error',
         );
         console.error(err); // eslint-disable-line no-console

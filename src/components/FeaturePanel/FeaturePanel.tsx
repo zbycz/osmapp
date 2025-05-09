@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { FeatureHeading } from './FeatureHeading';
-import { useToggleState } from '../helpers';
+import { useMobileMode, useToggleState } from '../helpers';
 import { getReactKey } from '../../services/helpers';
 import { PanelContent, PanelSidePadding } from '../utils/PanelHelpers';
 import { useFeatureContext } from '../utils/FeatureContext';
@@ -22,15 +22,19 @@ import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box, Stack } from '@mui/material';
-import { ClimbingGuideInfo } from './Climbing/ClimbingGuideInfo';
 import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
 import { isPublictransportRoute } from '../../utils';
 import { Sockets } from './Sockets/Sockets';
 import { ClimbingTypeBadge } from './Climbing/ClimbingTypeBadge';
+import { TestApiWarning } from './helpers/TestApiWarning';
+import { FeaturePanelClimbingGuideInfo } from './Climbing/FeaturePanelClimbingGuideInfo';
+import { FeaturedTag } from './FeaturedTag';
+import { climbingTagValues } from './Climbing/utils/climbingTagValues';
 import { UploadDialog } from './UploadDialog/UploadDialog';
 
 const Flex = styled.div`
   flex: 1;
+  margin-bottom: 40px;
 `;
 
 type FeaturePanelProps = {
@@ -41,6 +45,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   const { feature } = useFeatureContext();
   const [advanced, setAdvanced] = useState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
+  const isMobileMode = useMobileMode();
 
   const { tags, skeleton, deleted } = feature;
   const showTagsTable = deleted || showTags || (!skeleton && !feature.schema);
@@ -49,36 +54,41 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
     return null;
   }
 
+  // ------------------------------------------------------------------------
   // Different components are shown for different types of features
   // Conditional components should have if(feature.tags.xxx) check at the beginning
   // All components should have margin-bottoms to accommodate missing parts
-  const isClimbingCrag = tags.climbing === 'crag';
+  // ------------------------------------------------------------------------
 
+  const movePropertiesBelowMembers = tags.climbing === 'crag';
   const PropertiesComponent = () => (
     <Properties showTags={showTagsTable} key={getReactKey(feature)} />
   );
+
   return (
     <>
       <PanelContent>
         <PanelSidePadding>
+          {!isMobileMode && <ParentLink />}
+
           <FeatureHeading ref={headingRef} />
-          <Stack spacing={1} alignItems="flex-start">
+          <Stack spacing={1} alignItems="flex-start" sx={{ marginBottom: 1 }}>
             <ClimbingRouteGrade />
             <ClimbingTypeBadge feature={feature} />
           </Stack>
-          <ClimbingGuideInfo />
-          <ParentLink />
+
           <ClimbingRestriction />
 
           <OsmError />
+          <TestApiWarning />
+          <FeaturedTag k="description" renderer="DescriptionRenderer" />
+          {isMobileMode && <ParentLink />}
         </PanelSidePadding>
 
         <Flex>
           {!skeleton && (
             <>
-              <PanelSidePadding>
-                <CragsInArea />
-              </PanelSidePadding>
+              <CragsInArea />
 
               <Box mb={2}>
                 {process.env.NEXT_PUBLIC_ENABLE_UPLOAD && (
@@ -91,11 +101,11 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
               </Box>
 
               <PanelSidePadding>
-                {!isClimbingCrag && <PropertiesComponent />}
+                {!movePropertiesBelowMembers && <PropertiesComponent />}
                 <RouteDistributionInPanel />
                 {!isPublictransportRoute(feature) && <MemberFeatures />}
                 {advanced && <Members />}
-                {isClimbingCrag && <PropertiesComponent />}
+                {movePropertiesBelowMembers && <PropertiesComponent />}
                 <PublicTransport />
                 <Runways />
                 <Sockets />
@@ -113,6 +123,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
           showTagsTable={showTagsTable}
           toggleShowTags={toggleShowTags}
         />
+        <FeaturePanelClimbingGuideInfo />
       </PanelContent>
       <ClimbingStructuredData />
     </>

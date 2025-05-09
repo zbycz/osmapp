@@ -3,19 +3,18 @@ import { Button, CircularProgress } from '@mui/material';
 import { fetchJson, fetchText } from '../../../services/fetch';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getShortId } from '../../../services/helpers';
-import {
-  editOsmFeature,
-  loginAndfetchOsmUser,
-} from '../../../services/osmApiAuth';
 import { intl } from '../../../services/intl';
 import { Feature } from '../../../services/types';
-import { clearFeatureCache, quickFetchFeature } from '../../../services/osmApi';
 import {
   getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from '../Climbing/utils/photo';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import { useRouter } from 'next/navigation';
+import { loginAndfetchOsmUser } from '../../../services/osm/auth/user';
+import { clearFeatureCache } from '../../../services/osm/osmApi';
+import { quickFetchFeature } from '../../../services/osm/quickFetchFeature';
+import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 
 const WIKIPEDIA_LIMIT = 100 * 1024 * 1024;
 const BUCKET_URL = 'https://osmapp-upload-tmp.s3.amazonaws.com/';
@@ -66,15 +65,11 @@ const submitToOsm = async (feature: Feature, fileTitle: string) => {
   clearFeatureCache(feature.osmMeta);
   const freshFeature = await quickFetchFeature(feature.osmMeta);
   const newPhotoIndex = getNextWikimediaCommonsIndex(freshFeature.tags);
-  await editOsmFeature(
-    freshFeature,
-    `Upload image ${fileTitle}`,
-    {
-      ...freshFeature.tags,
-      [getWikimediaCommonsKey(newPhotoIndex)]: fileTitle,
-    },
-    false,
-  );
+
+  // TODO after ed-refa merged
+  // const item = await fetchFreshDataItem();
+  // item.tagsEntries.push([getWikimediaCommonsKey(newPhotoIndex), fileTitle]);
+  // await saveChanges(freshFeature, `Upload image ${fileTitle}`, [item]);
 
   clearFeatureCache(feature.osmMeta);
 };

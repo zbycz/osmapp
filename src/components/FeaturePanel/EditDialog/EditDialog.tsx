@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { SuccessContent } from './SuccessContent';
@@ -9,10 +9,12 @@ import { EditContextProvider, useEditContext } from './EditContext';
 import { useGetOnClose } from './useGetOnClose';
 import { EditContent } from './EditContent/EditContent';
 import { getReactKey } from '../../../services/helpers';
+import { getFullFeatureWithMemberFeatures } from '../../../services/osm/getFullFeatureWithMemberFeatures';
+import { Feature } from '../../../services/types';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
-  return useMediaQuery(theme.breakpoints.down('sm'));
+  return useMediaQuery(theme.breakpoints.down('md'));
 };
 
 const StyledDialog = styled(Dialog)`
@@ -38,21 +40,51 @@ const EditDialogInner = () => {
       fullScreen={fullScreen}
       open={opened}
       onClose={onClose}
+      disableEscapeKeyDown
       aria-labelledby="edit-dialog-title"
       sx={{ height: '100%' }}
     >
-      <EditDialogTitle />
+      <EditDialogTitle onClose={onClose} />
       {successInfo ? <SuccessContent /> : <EditContent />}
     </StyledDialog>
+  );
+};
+
+const EditDialogFetcher = () => {
+  const { feature } = useEditDialogFeature();
+
+  const [freshFeature, setFreshFeature] = useState<Feature | undefined>();
+
+  useEffect(() => {
+    (async () => {
+      // to ensure the feature is fresh+contains all editable parts we load it here.
+      // - eg. nodesRefs for ways which we dont normally download)
+      // - eg. all members as memberFeatures
+
+      if (feature.osmMeta.id < 0) {
+        setFreshFeature(feature);
+      } else {
+        const newFeature = await getFullFeatureWithMemberFeatures(
+          feature.osmMeta,
+        );
+        setFreshFeature(newFeature); // TODO potentially leaking - use react-query (with max repetions 10?)
+      }
+    })();
+  }, [feature]);
+
+  if (!freshFeature) {
+    return null;
+  }
+
+  return (
+    <EditContextProvider originalFeature={freshFeature}>
+      <EditDialogInner />
+    </EditContextProvider>
   );
 };
 
 export const EditDialog = () => {
   const { feature } = useEditDialogFeature();
 
-  return (
-    <EditContextProvider originalFeature={feature} key={getReactKey(feature)}>
-      <EditDialogInner />
-    </EditContextProvider>
-  );
+  return <EditDialogFetcher key={getReactKey(feature)} />;
 };

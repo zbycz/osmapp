@@ -1,1 +1,1 @@
-export { default } from '../src/components/App/App';
+export { InstallDialog as default } from '../src/components/HomepagePanel/InstallDialog';

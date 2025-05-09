@@ -7,7 +7,6 @@ import {
   ImageDefFromCenter,
   ImageDefFromTag,
 } from '../../src/services/types';
-import { fetchWithMemberFeatures } from '../../src/services/osmApi';
 import { getImageFromApi } from '../../src/services/images/getImageFromApi';
 import { getLogo, ProjectLogo } from '../../src/server/images/logo';
 import { ImageType } from '../../src/services/images/getImageDefs';
@@ -21,6 +20,7 @@ import { svg2png } from '../../src/server/images/svg2png';
 import { Size } from '../../src/components/FeaturePanel/FeatureImages/types';
 import { getApiId } from '../../src/services/helpers';
 import { renderStyledHtml } from '../../src/server/images/renderStyledHtml';
+import { fetchWithMemberFeatures } from '../../src/services/osm/fetchWithMemberFeatures';
 
 const Svg = ({ children, size }) => (
   <UserThemeProvider userThemeCookie={undefined}>
@@ -112,6 +112,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     return;
   } catch (err) {
     console.error(err); // eslint-disable-line no-console
-    res.status(err.code ?? 400).send(String(err));
+    res.status(500).send(String(err));
   }
 };

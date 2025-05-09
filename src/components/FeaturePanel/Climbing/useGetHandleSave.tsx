@@ -2,14 +2,13 @@ import { ClimbingRoute } from './types';
 import { Feature, FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { CragChange, editCrag } from '../../../services/osmApiAuth';
+import { CragChange, editCrag } from '../../../services/osm/auth/editCrag';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
   getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from './utils/photo';
-import { result } from 'lodash';
 
 const getPathString = (path) =>
   path.length === 0

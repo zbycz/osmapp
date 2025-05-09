@@ -8,10 +8,10 @@ import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import { Bbox, Layer } from '../utils/MapStateContext';
 import { t } from '../../services/intl';
 import { isBrowser } from '../helpers';
-import Maki from '../utils/Maki';
-import { useUserThemeContext } from '../../helpers/theme';
 import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
+import { Box } from '@mui/material';
+import { PoiIcon } from '../utils/icons/PoiIcon';
 
 interface Layers {
   [key: string]: Layer;
@@ -21,14 +21,10 @@ const retina =
   ((isBrowser() && window.devicePixelRatio) || 1) >= 2 ? '@2x' : '';
 
 const ClimbingIcon = () => {
-  const { currentTheme } = useUserThemeContext();
   return (
-    <Maki
-      ico="climbing"
-      size={16}
-      style={{ opacity: 0.3, marginLeft: '3px' }}
-      invert={currentTheme === 'dark'}
-    />
+    <Box ml={0.5}>
+      <PoiIcon ico="climbing" size={16} />
+    </Box>
   );
 };
 
@@ -49,14 +45,12 @@ const czBbox: Bbox = [
 export const osmappLayers: Layers = {
   basic: {
     name: `${t('layers.basic')} Maptiler`,
-    description: 'maptiler.com',
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: ['maptiler', 'osm'],
   },
   basicOfr: {
     name: `${t('layers.basic')} OpenFreeMap (beta)`,
-    description: '',
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: [
@@ -66,7 +60,6 @@ export const osmappLayers: Layers = {
   },
   makinaAfrica: {
     name: t('layers.makina_africa'),
-    description: 'OpenPlaceGuide.org',
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: [
@@ -77,15 +70,14 @@ export const osmappLayers: Layers = {
   },
   outdoor: {
     name: t('layers.outdoor'),
-    description: 'Maptiler.com',
     type: 'basemap',
     Icon: FilterHdrIcon,
     attribution: ['maptiler', 'osm'],
+    // https://api.maptiler.com/tiles/outdoor/tiles.json?key=7dlhLl3hiXQ1gsth0kGu .planettime="1703030400000",
   },
   s1: { type: 'spacer' },
   carto: {
     name: t('layers.carto'),
-    description: 'Default OSM.org style',
     type: 'basemap',
     url: 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
     Icon: MapIcon,
@@ -97,6 +89,7 @@ export const osmappLayers: Layers = {
     url: `https://api.maptiler.com/tiles/satellite-v2/tiles.json?key=${process.env.NEXT_PUBLIC_API_KEY_MAPTILER}`,
     Icon: SatelliteIcon,
     attribution: ['maptiler'],
+    isSatelite: true,
   },
   bingSat: {
     name: t('layers.bingSat'),
@@ -105,6 +98,7 @@ export const osmappLayers: Layers = {
     Icon: SatelliteIcon,
     attribution: ['&copy; <a href="https://www.bing.com/maps">Microsoft</a>'],
     maxzoom: 19,
+    isSatelite: true,
   },
   cuzkSat: {
     name: 'ČÚZK ortofoto (CZ)',
@@ -113,6 +107,7 @@ export const osmappLayers: Layers = {
     Icon: SatelliteIcon,
     attribution: ['&copy; <a href="https://geoportal.cuzk.cz">ČÚZK</a>'],
     bboxes: [czBbox],
+    isSatelite: true,
   },
   // mtb: {
   //   name: t('layers.mtb'),
@@ -121,7 +116,7 @@ export const osmappLayers: Layers = {
   // },
   bike: {
     name: t('layers.bike'),
-    description: 'Thunderforest.com',
+    secondLine: 'Thunderforest.com',
     type: 'basemap',
     url: `https://{s}.tile.thunderforest.com/cycle/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
     Icon: DirectionsBikeIcon,
@@ -132,7 +127,7 @@ export const osmappLayers: Layers = {
   },
   transport: {
     name: t('layers.transport'),
-    description: 'Thunderforest.com',
+    secondLine: 'Thunderforest.com',
     type: 'basemap',
     url: `https://{s}.tile.thunderforest.com/transport/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,
     darkUrl: `https://{s}.tile.thunderforest.com/transport-dark/{z}/{x}/{y}${retina}.png?apikey=${process.env.NEXT_PUBLIC_API_KEY_THUNDERFOREST}`,

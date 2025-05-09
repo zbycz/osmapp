@@ -1,64 +1,9 @@
-import * as xml2js from 'isomorphic-xml2js';
 import fetch from 'isomorphic-unfetch';
-import { isServer, isString } from '../components/helpers';
+import { isServer } from '../components/helpers';
 import { Feature, OsmId, OsmType, Position } from './types';
 import { join, roundedToDegUrl } from '../utils';
 import { PROJECT_URL } from './project';
 import { getIdFromShortener, getShortenerSlug } from './shortener';
-
-type Xml2JsOsmItem = {
-  tag: { $: { k: string; v: string } }[];
-  $: {
-    id: string;
-    visible: string;
-    version: string;
-    changeset: string;
-    timestamp: string;
-    user: string;
-    uid: string;
-    lat: string;
-    lon: string;
-  };
-};
-
-export type Xml2JsSingleDoc = {
-  node: Xml2JsOsmItem; // only one of these is present, but I am lazy to type it properly
-  way: Xml2JsOsmItem;
-  relation: Xml2JsOsmItem;
-};
-
-export type Xml2JsMultiDoc = {
-  node: Xml2JsOsmItem[]; // one or more may be present
-  way: Xml2JsOsmItem[];
-  relation: Xml2JsOsmItem[];
-};
-
-export const parseToXml2Js = <
-  T extends Xml2JsSingleDoc | Xml2JsMultiDoc = Xml2JsSingleDoc,
->(
-  xmlString: string,
-) => {
-  const parser = new xml2js.Parser({
-    explicitArray: false,
-    explicitCharkey: false,
-    explicitRoot: false,
-  });
-
-  return new Promise<T>((resolve, reject) => {
-    parser.parseString(xmlString, (err, result) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve(result);
-      }
-    });
-  });
-};
-
-export const buildXmlString = (xml: Xml2JsSingleDoc | Xml2JsMultiDoc) => {
-  const builder = new xml2js.Builder({ rootName: 'osm' });
-  return builder.buildObject(xml);
-};
 
 export const getShortId = ({ id, type }: OsmId): string => `${type[0]}${id}`;
 export const getUrlOsmId = ({ id, type }: OsmId): string => `${type}/${id}`;
@@ -119,13 +64,6 @@ export const getImageSize = (url): Promise<ImageSize> =>
     imgElement.onerror = () => resolve(null);
     imgElement.src = url;
   });
-
-export const stringifyDomXml = (itemXml: Node) => {
-  if (isString(itemXml)) {
-    throw new Error('String given');
-  }
-  return new XMLSerializer().serializeToString(itemXml);
-};
 
 // TODO better mexico border + add Australia, New Zealand & South Africa
 const polygonUsCan = [[-143, 36], [-117, 32], [-96, 25], [-50, 19], [-56, 71], [-175, 70], [-143, 36]]; // prettier-ignore

@@ -17,6 +17,7 @@ import {
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PointType } from '../types';
 import UndoIcon from '@mui/icons-material/Undo';
+import { t } from '../../../../services/intl';
 
 const Container = styled.div`
   position: absolute;
@@ -150,15 +151,15 @@ export const RouteFloatingMenu = () => {
         <DialogTitle id="alert-dialog-title">Delete point?</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Do you want to delete this point?
+            {t('climbingpanel.delete_point_text')}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={toggleDeletePointDialog} autoFocus>
-            Cancel
+            {t('climbingpanel.delete_point_cancel')}
           </Button>
           <Button onClick={onDeletePoint} variant="contained">
-            Delete
+            {t('climbingpanel.delete_point_delete')}
           </Button>
         </DialogActions>
       </Dialog>
@@ -188,42 +189,42 @@ export const RouteFloatingMenu = () => {
                   onPointTypeChange('bolt');
                 }}
               >
-                Bolt
+                {t('climbingpanel.climbing_point_bolt')}
               </Button>
               <Button
                 onClick={() => {
                   onPointTypeChange('anchor');
                 }}
               >
-                Anchor
+                {t('climbingpanel.climbing_point_anchor')}
               </Button>
               <Button
                 onClick={() => {
                   onPointTypeChange('sling');
                 }}
               >
-                Sling
+                {t('climbingpanel.climbing_point_sling')}
               </Button>
               <Button
                 onClick={() => {
                   onPointTypeChange('piton');
                 }}
               >
-                Piton
+                {t('climbingpanel.climbing_point_piton')}
               </Button>
               <Button
                 onClick={() => {
                   onPointTypeChange('unfinished');
                 }}
               >
-                Unfinished
+                {t('climbingpanel.climbing_point_unfinished')}
               </Button>
               <Button
                 onClick={() => {
                   onPointTypeChange(null);
                 }}
               >
-                None
+                {t('climbingpanel.climbing_point_none')}
               </Button>
             </>
           ) : (
@@ -233,7 +234,9 @@ export const RouteFloatingMenu = () => {
                   onClick={onContinueClimbingRouteClick}
                   startIcon={<AddLocationIcon />}
                 >
-                  Extend
+                  {getCurrentPath().length > 0
+                    ? t('climbingpanel.extend')
+                    : t('climbingpanel.start')}
                 </Button>
               )}
               {machine.currentStateName === 'pointMenu' && (
@@ -242,7 +245,7 @@ export const RouteFloatingMenu = () => {
                     setShowRouteMarksMenu(true);
                   }}
                 >
-                  Type
+                  {t('climbingpanel.type')}
                 </Button>
               )}
               {isUndoVisible && (
@@ -252,7 +255,7 @@ export const RouteFloatingMenu = () => {
                   onMouseLeave={onMouseLeave}
                   startIcon={<UndoIcon fontSize="small" />}
                 >
-                  Undo
+                  {t('climbingpanel.undo')}
                 </Button>
               )}
               {machine.currentStateName === 'pointMenu' && (
@@ -274,7 +277,7 @@ export const RouteFloatingMenu = () => {
                   onMouseEnter={onMouseEnter}
                   onMouseLeave={onMouseLeave}
                 >
-                  Done
+                  {t('climbingpanel.finish_climbing_route')}
                 </Button>
               )}
             </>

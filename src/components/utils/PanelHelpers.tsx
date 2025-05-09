@@ -9,9 +9,7 @@ import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
 // maybe https://github.com/malte-wessel/react-custom-scrollbars (larger)
-const Columns = styled.div`
-  display: flex;
-  flex-direction: column;
+const EffectiveHeight = styled.main`
   height: calc(100% - ${SEARCH_BOX_HEIGHT}px);
 `;
 
@@ -47,7 +45,7 @@ const Container = styled.div`
 export const PanelWrapper = ({ children }) => (
   <Container>
     <SearchBoxBackground />
-    <Columns>{children}</Columns>
+    <EffectiveHeight>{children}</EffectiveHeight>
   </Container>
 );
 
@@ -104,13 +102,13 @@ export const PanelScrollbars = ({
   );
 };
 
-export const PanelContent = styled.div`
+export const PanelContent = styled.main`
   display: flex;
   flex-direction: column;
   height: 100%;
 `;
 
-export const PanelFooterWrapper = styled.div`
+export const PanelFooterWrapper = styled.footer`
   color: ${({ theme }) => theme.palette.text.secondary};
   margin-top: auto;
   padding-bottom: 15px;
@@ -119,5 +117,5 @@ export const PanelFooterWrapper = styled.div`
 `;
 
 export const PanelSidePadding = styled.div`
-  padding: 0 12px;
+  padding: 0 16px;
 `;

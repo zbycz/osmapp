@@ -157,7 +157,7 @@ export const getOurTranslations = (lang) => ({
           terms: 'rock climbing,climbing',
         },
         'climbing/crag': {
-          name: lang === 'cs' ? 'Lezecký sektor (skála, věž)' : 'Climbing Crag',
+          name: lang === 'cs' ? 'Lezecký sektor' : 'Climbing Crag',
           terms: 'rock climbing,climbing',
         },
         'climbing/area': {

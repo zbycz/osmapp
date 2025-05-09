@@ -6,14 +6,13 @@ import {
   getHumanDistance,
   highlightText,
   IconPart,
+  useMapCenter,
 } from '../utils';
 import type { Star } from '../../utils/StarsContext';
 import { StarOption } from '../types';
-import { LonLat } from '../../../services/types';
-import {
-  UserSettingsContext,
-  useUserSettingsContext,
-} from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { getApiId, getUrlOsmId } from '../../../services/helpers';
+import Router from 'next/router';
 
 export const getStarsOptions = (
   stars: Star[],
@@ -31,12 +30,15 @@ export const getStarsOptions = (
   return sorted.map((star) => ({ type: 'star', star }));
 };
 
-export const renderStar = (
-  { star }: StarOption,
-  inputValue: string,
-  mapCenter: LonLat,
-  isImperial: boolean,
-) => {
+type Props = {
+  option: StarOption;
+  inputValue: string;
+};
+
+export const StarRow = ({ option: { star }, inputValue }: Props) => {
+  const mapCenter = useMapCenter();
+  const { isImperial } = useUserSettingsContext().userSettings;
+
   // Note: for compatibility, `center` is optional
   const distance = star.center
     ? getHumanDistance(isImperial, mapCenter, star.center)
@@ -56,4 +58,9 @@ export const renderStar = (
       </Grid>
     </>
   );
+};
+
+export const starOptionSelected = ({ star }: StarOption) => {
+  const apiId = getApiId(star.shortId);
+  Router.push(`/${getUrlOsmId(apiId)}`);
 };

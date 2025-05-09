@@ -15,14 +15,13 @@ import { getPresetForFeature } from '../../../../../services/tagging/presets';
 import { Feature, FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import { Setter } from '../../../../../types';
-import { useFeatureEditData } from './SingleFeatureEditContext';
+import { useCurrentItem } from './CurrentContext';
 
 export type TranslatedPreset = Preset & {
   name: string;
-  icon: string;
 };
 
-type PresetCacheItem = Preset & { name: string; icon: string; terms: string[] };
+type PresetCacheItem = Preset & { name: string; terms: string[] };
 type PresetsCache = PresetCacheItem[];
 
 let presetsCache: PresetsCache | null = null;
@@ -41,7 +40,6 @@ const getTranslatedPresets = async (): Promise<PresetsCache> => {
       return {
         ...preset,
         name: getPresetTranslation(preset.presetKey) ?? preset.presetKey,
-        icon: getPoiClass(preset.tags).class,
         terms: getPresetTermsTranslation(preset.presetKey) ?? preset.terms,
       };
     })
@@ -60,7 +58,7 @@ const LabelWrapper = styled.div`
   margin-right: 1em;
 `;
 
-const useMatchTags = (
+export const useMatchTags = (
   feature: Feature,
   tags: FeatureTags,
   setPreset: Setter<string>,
@@ -81,7 +79,7 @@ const useMatchTags = (
   }, [tags, feature, setPreset]);
 };
 
-const useOptions = () => {
+export const useOptions = () => {
   const [options, setOptions] = useState<PresetsCache>([]);
   useEffect(() => {
     getTranslatedPresets().then((presets) => setOptions(presets));
@@ -90,7 +88,7 @@ const useOptions = () => {
 };
 
 export const PresetSelect = () => {
-  const { tags } = useFeatureEditData();
+  const { tags } = useCurrentItem();
   const [preset, setPreset] = useState('');
   const { feature } = useFeatureContext();
   const options = useOptions();

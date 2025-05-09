@@ -1,8 +1,14 @@
 import { OsmId } from '../../services/types';
 import { isBrowser } from '../helpers';
 import { getGlobalMap } from '../../services/mapStorage';
+import { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 
-const isOsmLayer = (id: string) => {
+type OsmappMetadata = { clickableWithOsmId?: boolean };
+
+const isOsmLayer = ({ id, metadata }: LayerSpecification) => {
+  if ((metadata as OsmappMetadata)?.clickableWithOsmId) {
+    return true;
+  }
   if (id.startsWith('place-country-')) return false; // https://github.com/zbycz/osmapp/issues/35
   if (id === 'place-continent') return false;
   if (id === 'water-name-ocean') return false;
@@ -19,8 +25,8 @@ const isOsmLayer = (id: string) => {
 
 export const layersWithOsmId = (style: maplibregl.StyleSpecification) =>
   style.layers // TODO make it custom for basic/outdoor + revert place_
-    .map((x) => x.id)
-    .filter((id) => isOsmLayer(id));
+    .filter((layer) => isOsmLayer(layer))
+    .map((x) => x.id);
 
 export const getIsOsmObject = ({ id, layer }) => {
   // these layers with id <= ~10000 are broken
@@ -33,22 +39,29 @@ export const getIsOsmObject = ({ id, layer }) => {
     return false;
   }
 
-  if (layer.id?.startsWith('overpass') || layer.id?.startsWith('climbing-')) {
+  if (
+    layer.id?.startsWith('overpass') ||
+    layer.id?.startsWith('climbing-') ||
+    layer.metadata?.clickableWithOsmId
+  ) {
     return true;
   }
 
   return layersWithOsmId(getGlobalMap().getStyle()).includes(layer.id);
 };
 
-export const convertMapIdToOsmId = (feature) => {
+export const convertMapIdToOsmId = (feature): OsmId | false => {
   if (!feature || !feature.id) return false;
 
   const mapId = `${feature.id}`;
-  const id = mapId.substring(0, mapId.length - 1);
+  const id = Number(mapId.substring(0, mapId.length - 1));
   const numType = mapId.substring(mapId.length - 1);
   const mapTypeToOsm = { 0: 'node', 1: 'way', 4: 'relation' };
-
-  return { id, type: mapTypeToOsm[numType] ?? `type${numType}` };
+  const type = mapTypeToOsm[numType];
+  if (!type) {
+    return false;
+  }
+  return { id, type };
 };
 
 export const convertOsmIdToMapId = (apiId: OsmId) => {

@@ -8,8 +8,9 @@ import { publishDbgObject } from '../../utils';
 import { getShortId } from '../helpers';
 import { Field } from './types/Fields';
 import { DEBUG_ID_SCHEMA } from '../../config.mjs';
-import { gradeSystemKeys } from '../../components/FeaturePanel/Climbing/utils/grades/gradeSystem';
+import { FEATURED_KEYS } from './featuredKeys';
 import { deduplicate } from './utils';
+import { KeysTodo, keysTodo } from './keysTodo';
 
 const logMoreMatchingFields = (matchingFields: Field[], key: string) => {
   if (DEBUG_ID_SCHEMA && matchingFields.length > 1) {
@@ -56,7 +57,7 @@ const getUiField = (
 
 const matchFieldsFromPreset = (
   preset: Preset,
-  keysTodo: any,
+  keysTodo: KeysTodo,
   feature: Feature,
 ): UiField[] => {
   const fieldKeys = getFieldKeys(preset);
@@ -95,76 +96,14 @@ const matchRestToFields = (keysTodo: KeysTodo, feature: Feature): UiField[] =>
     return getUiField(field, keysTodo, feature, key);
   });
 
-type KeysTodo = typeof keysTodo;
-const keysTodo = {
-  state: [] as string[],
-  init(feature) {
-    this.state = Object.keys(feature.tags);
-  },
-  resolveTags(tags) {
-    Object.keys(tags).forEach((key) => this.remove(key));
-  },
-  has(key) {
-    return this.state.includes(key);
-  },
-  hasAny(keys) {
-    return keys?.some((key) => this.state.includes(key));
-  },
-  remove(key) {
-    const index = this.state.indexOf(key);
-    if (index > -1) {
-      this.state.splice(index, 1);
-    }
-  },
-  resolveFields(fieldsArray) {
-    fieldsArray.forEach((field) => {
-      if (field?.field?.key) {
-        this.remove(field.field.key);
-      }
-      if (field?.field?.keys) {
-        field.field.keys.forEach((key) => this.remove(key));
-      }
-    });
-  },
-  mapOrSkip<T>(fn: (key: string) => T): NonNullable<T>[] {
-    const skippedFields = [];
-    const output = [];
-
-    while (this.state.length) {
-      const field = this.state.shift();
-      const result = fn(field); // this can remove items from this.state
-      if (result) {
-        output.push(result);
-      } else {
-        skippedFields.push(field);
-      }
-    }
-
-    this.state = skippedFields;
-    return output;
-  },
-};
-
 const getFeaturedTags = (feature: Feature) => {
   const { tags } = feature;
 
-  // more ideas in here, run in browser: Object.values(dbg.fields).filter(f=>f.universal)
-  const keys = [
-    'website',
-    'website:2',
-    'contact:website',
-    'url',
-    'phone',
-    'contact:phone',
-    'contact:mobile',
-    'opening_hours',
-    ...(tags.wikipedia ? ['wikipedia'] : tags.wikidata ? ['wikidata'] : []),
-    'fhrs:id',
-    'description',
-    ...gradeSystemKeys,
-  ];
+  const matchedKeys = FEATURED_KEYS.map(({ matcher }) =>
+    Object.keys(feature.tags).filter((key) => matcher.test(key)),
+  ).flat();
 
-  return keys.reduce(
+  return matchedKeys.reduce(
     (acc, key) => (tags[key] ? { ...acc, [key]: tags[key] } : acc),
     {} as FeatureTags,
   );
@@ -176,8 +115,12 @@ export const getSchemaForFeature = (feature: Feature) => {
   keysTodo.init(feature);
   keysTodo.resolveTags(preset.tags); // remove tags which are already covered by Preset
   keysTodo.remove('name'); // always rendered by FeaturePanel
+  keysTodo.removeByRegexp(/^(image$|type$|wikimedia_commons)/); // images are rendered in FeatureImages
+  if (feature.tags.climbing) {
+    keysTodo.removeByRegexp(/^(sport|type|site)$/);
+  }
 
-  const featuredTags = feature.deleted ? [] : getFeaturedTags(feature);
+  const featuredTags = feature.deleted ? {} : getFeaturedTags(feature);
   keysTodo.resolveTags(featuredTags);
 
   const matchedFields = matchFieldsFromPreset(preset, keysTodo, feature);
@@ -197,7 +140,7 @@ export const getSchemaForFeature = (feature: Feature) => {
   };
 };
 
-export const addSchemaToFeature = (feature: Feature) => {
+export const addSchemaToFeature = (feature: Feature): Feature => {
   let schema;
   try {
     schema = getSchemaForFeature(feature); // TODO forward lang here ?? maybe full intl?

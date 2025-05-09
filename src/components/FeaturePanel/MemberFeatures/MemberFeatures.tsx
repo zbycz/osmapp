@@ -1,9 +1,9 @@
 import React from 'react';
-import { Box } from '@mui/material';
-import { getOsmappLink } from '../../../services/helpers';
+import { Box, Chip, Stack } from '@mui/material';
+import { getOsmappLink, getReactKey } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { PanelLabel } from '../Climbing/PanelLabel';
-import { Item } from './Item';
+import { MemberItem } from './MemberItem';
 import { ClimbingItem } from './ClimbingItem';
 import styled from '@emotion/styled';
 import { GradeSystemSelect } from '../Climbing/GradeSystemSelect';
@@ -63,17 +63,28 @@ export const MemberFeatures = () => {
     getDividedFeaturesBySections(memberFeatures);
   const climbingRoutesFeatures = dividedFeaturesBySections.routes;
   const otherFeatures = dividedFeaturesBySections.other;
+  const headingNum = climbingRoutesFeatures.length || memberFeatures.length;
 
   return (
     <Box mb={1}>
-      <PanelLabel addition={<PanelAddition />}>
-        {getHeading(feature)} ({memberFeatures.length})
-      </PanelLabel>
+      <Box ml={-2} mr={-2}>
+        <PanelLabel addition={<PanelAddition />}>
+          <Stack direction="row" gap={1.5}>
+            <div>{getHeading(feature)}</div>
+            <Chip
+              size="small"
+              variant="outlined"
+              label={headingNum}
+              sx={{ position: 'relative', top: -3 }}
+            />
+          </Stack>
+        </PanelLabel>
+      </Box>
       {climbingRoutesFeatures.length > 0 && (
         <Ul>
           {climbingRoutesFeatures.map((item, index) => (
             <ClimbingItem
-              key={getOsmappLink(item)}
+              key={getReactKey(item)}
               feature={item}
               index={index}
               cragFeature={feature}
@@ -83,8 +94,8 @@ export const MemberFeatures = () => {
       )}
       {otherFeatures.length > 0 && (
         <Ul>
-          {otherFeatures.map((item) => (
-            <Item key={getOsmappLink(item)} feature={item} />
+          {otherFeatures.map((member) => (
+            <MemberItem key={getReactKey(member)} feature={member} />
           ))}
         </Ul>
       )}

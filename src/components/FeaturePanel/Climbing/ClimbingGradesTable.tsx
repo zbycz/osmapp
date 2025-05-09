@@ -1,6 +1,8 @@
 import React from 'react';
 import {
+  Alert,
   AppBar,
+  Box,
   Chip,
   Dialog,
   IconButton,
@@ -10,7 +12,6 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableFooter,
   TableHead,
   TableRow,
   Toolbar,
@@ -18,57 +19,65 @@ import {
   Typography,
 } from '@mui/material';
 
-import { GRADE_SYSTEMS, GRADE_TABLE } from './utils/grades/gradeData';
+import { GRADE_TABLE } from './utils/grades/gradeData';
 import CloseIcon from '@mui/icons-material/Close';
 import zip from 'lodash/zip';
 import { useTheme } from '@emotion/react';
 import { convertHexToRgba } from '../../utils/colorUtils';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import Router from 'next/router';
 import { getUrlOsmId } from '../../../services/helpers';
 import { t } from '../../../services/intl';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { isMobileDevice } from '../../helpers';
+import { GRADE_SYSTEMS } from '../../../services/tagging/climbing';
+import { RouteDifficultyBadge } from './RouteDifficultyBadge';
+import TuneIcon from '@mui/icons-material/Tune';
 
-export const ClimbingGradesTable = () => {
+export const ClimbingGradesTable = ({ onClose }: { onClose?: () => void }) => {
   const [clickedItem, setClickedItem] = React.useState<{
     row: number | undefined;
     column: number | undefined;
   }>({ row: undefined, column: undefined });
+
+  const [isSettingVisible, setIsSettingVisible] = React.useState(false);
 
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const visibleGradeSystems =
     userSettings['climbing.visibleGradeSystems'] ??
     GRADE_SYSTEMS.reduce((acc, { key }) => ({ ...acc, [key]: true }), {});
   const { feature } = useFeatureContext();
-
+  const currentGradeSystem = userSettings['climbing.gradeSystem'];
   const theme = useTheme();
   const handleClose = () => {
-    Router.push(
-      `/${feature?.osmMeta ? getUrlOsmId(feature.osmMeta) : ''}${window.location.hash}`,
-    );
+    if (onClose) {
+      onClose();
+    } else {
+      Router.push(
+        `/${feature?.osmMeta ? getUrlOsmId(feature.osmMeta) : ''}${window.location.hash}`,
+      );
+    }
   };
 
   const transposedTable = zip(...Object.values(GRADE_TABLE));
 
   const getRowBackgroundColor = (rowIndex) => {
     return clickedItem.row === rowIndex
-      ? convertHexToRgba(theme.palette.primary.main, 0.1)
+      ? convertHexToRgba(theme.palette.secondary.main, 0.5)
       : 'transparent';
   };
 
   const getCellColors = (columnIndex, rowIndex) => {
     if (clickedItem.row === rowIndex && clickedItem.column === columnIndex) {
       return {
-        backgroundColor: convertHexToRgba(theme.palette.primary.main, 0.5),
-        color: theme.palette.getContrastText(theme.palette.primary.main),
+        backgroundColor: convertHexToRgba(theme.palette.secondary.main, 0.8),
+        color: theme.palette.getContrastText(theme.palette.secondary.main),
         fontWeight: 'bold',
       };
     }
     if (clickedItem.column === columnIndex) {
       return {
-        backgroundColor: convertHexToRgba(theme.palette.primary.main, 0.1),
+        backgroundColor: convertHexToRgba(theme.palette.secondary.main, 0.3),
       };
     }
     return { backgroundColor: 'transparent' };
@@ -78,9 +87,8 @@ export const ClimbingGradesTable = () => {
     (gradeSystemKey) => visibleGradeSystems[gradeSystemKey],
   );
 
-  const hiddenGradeSystems = GRADE_SYSTEMS.filter(
-    (gradeSystem) => !visibleGradeSystems[gradeSystem.key],
-  );
+  const isGradeSystemVisible = (gradeSystemKey) =>
+    visibleGradeSystems[gradeSystemKey];
 
   return (
     <Dialog maxWidth="xl" open onClose={handleClose} fullScreen>
@@ -102,6 +110,40 @@ export const ClimbingGradesTable = () => {
         </Toolbar>
       </AppBar>
 
+      {isSettingVisible && (
+        <Box m={1}>
+          <Alert severity="warning">
+            {t('climbing_grade_table.warning')}{' '}
+            <a href="https://github.com/zbycz/osmapp/issues" target="_blank">
+              Github
+            </a>
+            .
+          </Alert>
+
+          <Typography variant="body2" mt={3} ml={1}>
+            {t('climbing_grade_table.show')}
+          </Typography>
+          <Stack direction="row" flexWrap="wrap" gap={0.6} mt={1}>
+            {GRADE_SYSTEMS.map((gradeSystem) => {
+              const isVisible = isGradeSystemVisible(gradeSystem.key);
+              return (
+                <Chip
+                  key={`chip-${gradeSystem.key}`}
+                  label={`${gradeSystem.name} ${gradeSystem.flags ?? ''}`}
+                  variant={isVisible ? 'filled' : 'outlined'}
+                  onClick={() => {
+                    setUserSetting('climbing.visibleGradeSystems', {
+                      ...visibleGradeSystems,
+                      [gradeSystem.key]: !isVisible,
+                    });
+                  }}
+                />
+              );
+            })}
+          </Stack>
+        </Box>
+      )}
+
       <TableContainer component={Paper} sx={{ maxHeight: '100vh' }}>
         <Table stickyHeader size="small">
           <TableHead>
@@ -112,42 +154,44 @@ export const ClimbingGradesTable = () => {
                 );
                 return (
                   <TableCell
-                    sx={{ cursor: 'help' }}
+                    sx={{ whiteSpace: 'nowrap' }}
                     key={`header-cell-${gradeSystemKey}`}
                   >
-                    <Stack direction="row" spacing={1}>
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      alignItems="center"
+                      justifyContent="space-between"
+                    >
                       <Tooltip
                         arrow
                         title={grade.description}
                         placement="right"
+                        enterDelay={1000}
                       >
-                        <Stack direction="row" spacing={2} alignItems="center">
+                        <Stack direction="row" spacing={1} alignItems="center">
                           <Typography variant="caption" fontWeight={900}>
-                            {grade.name}
+                            {grade.name} {grade.flags}
                           </Typography>
-
-                          <InfoOutlinedIcon
-                            fontSize="small"
-                            color="secondary"
-                          />
+                          {currentGradeSystem === gradeSystemKey && (
+                            <Chip size="small" label="selected" />
+                          )}
                         </Stack>
                       </Tooltip>
-                      <IconButton
-                        size="small"
-                        color="secondary"
-                        onClick={() =>
-                          setUserSetting('climbing.visibleGradeSystems', {
-                            ...visibleGradeSystems,
-                            [grade.key]: false,
-                          })
-                        }
-                      >
-                        <CloseIcon />
-                      </IconButton>
                     </Stack>
                   </TableCell>
                 );
               })}
+              <TableCell sx={{ width: '100%', textAlign: 'right' }}>
+                <IconButton
+                  size="small"
+                  onClick={() => setIsSettingVisible(!isSettingVisible)}
+                  aria-label="close"
+                  color={isSettingVisible ? 'primary' : 'secondary'}
+                >
+                  <TuneIcon fontSize="small" />
+                </IconButton>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -174,53 +218,30 @@ export const ClimbingGradesTable = () => {
                       }}
                       sx={{
                         ...getCellColors(columnIndex, rowIndex),
-                        fontFamily: 'Courier, monospace',
+                        borderRight: `1px solid ${theme.palette.divider} !important`,
                         '&:hover': {
                           cursor: 'pointer',
                           backgroundColor: isMobileDevice()
                             ? undefined
-                            : convertHexToRgba(theme.palette.primary.main, 0.3),
+                            : convertHexToRgba(
+                                theme.palette.secondary.main,
+                                0.2,
+                              ),
                         },
                       }}
                     >
-                      {grade}
+                      <RouteDifficultyBadge
+                        routeDifficulty={{
+                          grade,
+                          gradeSystem: GRADE_SYSTEMS[columnIndex].key,
+                        }}
+                      />
                     </TableCell>
                   ))}
+                <TableCell sx={{ width: '100%' }} />
               </TableRow>
             ))}
           </TableBody>
-          {hiddenGradeSystems.length > 0 && (
-            <TableFooter>
-              <TableRow>
-                <TableCell colSpan={columns.length}>
-                  <Stack direction="row" spacing={1}>
-                    <Typography
-                      variant="caption"
-                      sx={{ mr: 2, mt: 1, alignSelf: 'center' }}
-                    >
-                      {t('climbing_grade_table.show')}
-                    </Typography>
-                    {hiddenGradeSystems.map((gradeSystem) => {
-                      return (
-                        <Chip
-                          key={`chip-${gradeSystem.key}`}
-                          size="small"
-                          label={gradeSystem.name}
-                          variant="outlined"
-                          onClick={() => {
-                            setUserSetting('climbing.visibleGradeSystems', {
-                              ...visibleGradeSystems,
-                              [gradeSystem.key]: true,
-                            });
-                          }}
-                        />
-                      );
-                    })}
-                  </Stack>
-                </TableCell>
-              </TableRow>
-            </TableFooter>
-          )}
         </Table>
       </TableContainer>
     </Dialog>

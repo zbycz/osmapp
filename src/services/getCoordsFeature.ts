@@ -1,11 +1,13 @@
 import { getImagesFromCenter } from './images/getImageDefs';
-import { Feature, LonLatRounded, OsmType } from './types';
+import { Feature, FeatureTags, LonLat, LonLatRounded, OsmType } from './types';
 
 let nextId = 0;
+export const getNewId = () => {
+  nextId -= 1; // negative id means "adding new osm element" in osmApiAuth#saveChanges()
+  return nextId;
+};
 
 export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
-  nextId += 1; // this is called twice: 1. onMapClicked 2. getInitialFeature
-
   const center = [lon, lat].map(parseFloat);
   return {
     type: 'Feature',
@@ -14,10 +16,27 @@ export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
     center,
     osmMeta: {
       type: 'node',
-      id: nextId * -1, // negative id means "adding new point" in osmApiAuth#saveChanges()
+      id: getNewId(), // this is called twice: 1. onMapClicked 2. getInitialFeature
     },
     tags: {},
     properties: { class: 'marker', subclass: 'point' },
-    imageDefs: getImagesFromCenter({}, center),
+    imageDefs: getImagesFromCenter({}, 'node', center),
+  };
+};
+
+export const getNewNode = (
+  [lon, lat]: LonLat,
+  name: string,
+  defaultTags: FeatureTags = {},
+): Feature => {
+  return {
+    type: 'Feature',
+    center: [lon, lat], // buildDataItem takes nodeLonLat from `center` TODO let buildDataItem take OsmElement type
+    osmMeta: {
+      type: 'node',
+      id: getNewId(),
+    },
+    tags: { name, ...defaultTags },
+    properties: { class: '__unused', subclass: '__unused' },
   };
 };

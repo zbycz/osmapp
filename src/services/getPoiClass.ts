@@ -1,5 +1,6 @@
 import { buildAddress } from './helpers';
-import { icons } from '../assets/icons';
+import { iconsLookup } from '../components/utils/icons/iconsLookup';
+import { FeatureTags } from './types';
 
 const keys = [
   'aerialway',
@@ -279,12 +280,12 @@ const rules = [
   // }
 ];
 
-interface PoiClass {
+export type PoiClass = {
   class: string;
   subclass: string;
-}
+};
 
-export const getPoiClass = (tags): PoiClass => {
+export const getPoiClass = (tags: FeatureTags): PoiClass => {
   const key = keys.find((x) => x in tags); // find first matching key
   const value = tags[key]; // its value
 
@@ -305,11 +306,11 @@ export const getPoiClass = (tags): PoiClass => {
     };
   }
 
-  if (icons.includes(subclass)) {
+  if (iconsLookup.includes(subclass)) {
     return { class: subclass, subclass };
   }
 
-  if (icons.includes(key)) {
+  if (iconsLookup.includes(key)) {
     return { class: key, subclass };
   }
 
@@ -321,5 +322,5 @@ export const getPoiClass = (tags): PoiClass => {
     };
   }
 
-  return { class: 'information', subclass }; // default icon
+  return { class: 'marker', subclass }; // default icon
 };

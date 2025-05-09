@@ -5,6 +5,7 @@ import { abortFetch } from '../../services/fetch';
 import {
   fetchGeocoderOptions,
   GEOCODER_ABORTABLE_QUEUE,
+  GeocoderDebounced,
   useInputValueState,
 } from '../SearchBox/options/geocoder';
 import { getStarsOptions } from '../SearchBox/options/stars';
@@ -16,15 +17,12 @@ import {
   Tooltip,
   useTheme,
 } from '@mui/material';
-import { useMapCenter } from '../SearchBox/utils';
-import { useUserThemeContext } from '../../helpers/theme';
 import { renderOptionFactory } from '../SearchBox/renderOptionFactory';
 import { Option } from '../SearchBox/types';
 import { getOptionLabel } from '../SearchBox/getOptionLabel';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
-import { getCoordsOption } from '../SearchBox/options/coords';
+import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { LonLat } from '../../services/types';
-import { getGlobalMap } from '../../services/mapStorage';
+import { mapIdlePromise } from '../../services/mapStorage';
 import maplibregl, { LngLatLike, PointLike } from 'maplibre-gl';
 import ReactDOMServer from 'react-dom/server';
 import { AlphabeticalMarker } from './TextMarker';
@@ -34,6 +32,7 @@ import { useSnackbar } from '../utils/SnackbarContext';
 import { useGetOnSubmitFactory, useUpdatePoint } from './useGetOnSubmit';
 import { useDirectionsContext } from './DirectionsContext';
 import { removeElementOnIndex } from '../FeaturePanel/Climbing/utils/array';
+
 const DotLoaderContainer = styled.div`
   font-size: 16px;
   right: 6px;
@@ -86,7 +85,10 @@ const DirectionsInput = ({
     const latitude = position.coords.latitude;
     const longitude = position.coords.longitude;
 
-    onOptionChange(null, getCoordsOption([longitude, latitude], 'My location'));
+    onOptionChange(
+      null,
+      getDirectionsCoordsOption([longitude, latitude], 'My location'),
+    );
     setIsLoading(false);
   }
   const handleError = (_error) => {
@@ -150,20 +152,28 @@ const useOptions = (inputValue: string) => {
 
   useEffect(() => {
     (async () => {
-      abortFetch(GEOCODER_ABORTABLE_QUEUE);
+      try {
+        abortFetch(GEOCODER_ABORTABLE_QUEUE);
 
-      if (inputValue === '') {
-        setOptions(getStarsOptions(stars, inputValue));
-        return;
+        if (inputValue === '') {
+          setOptions(getStarsOptions(stars, inputValue));
+          return;
+        }
+
+        const geocoderOptions = await fetchGeocoderOptions(
+          inputValue,
+          view,
+          GEOCODER_ABORTABLE_QUEUE,
+        );
+        if (geocoderOptions) {
+          setOptions(geocoderOptions);
+        }
+      } catch (e) {
+        if (e instanceof GeocoderDebounced) {
+          return;
+        }
+        throw e;
       }
-
-      await fetchGeocoderOptions({
-        inputValue,
-        view,
-        before: [],
-        after: [],
-        setOptions,
-      });
     })();
   }, [inputValue, stars]); // eslint-disable-line react-hooks/exhaustive-deps
 
@@ -183,7 +193,7 @@ const useInputMapClickOverride = (
   const updatePoint = useUpdatePoint();
 
   const mapClickCallback = (coords: LonLat, label: string) => {
-    updatePoint(pointIndex, getCoordsOption(coords, label));
+    updatePoint(pointIndex, getDirectionsCoordsOption(coords, label));
     setInputValue(label);
     selectedOptionInputValue.current = label;
 
@@ -214,10 +224,6 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();
   const selectedOptionInputValue = useRef<string | null>(null);
-  const mapCenter = useMapCenter();
-  const { currentTheme } = useUserThemeContext();
-  const { userSettings } = useUserSettingsContext();
-  const { isImperial } = userSettings;
   const updatePoint = useUpdatePoint();
 
   const ALPHABETICAL_MARKER = useMemo(() => {
@@ -243,11 +249,13 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const submitFactory = useGetOnSubmitFactory(setResult, setLoading);
 
   useEffect(() => {
-    const map = getGlobalMap();
     if (value?.type === 'coords') {
-      markerRef.current = new maplibregl.Marker(ALPHABETICAL_MARKER)
-        .setLngLat(value.coords.center as LngLatLike)
-        .addTo(map);
+      // in SSR could be executed before map is loaded
+      mapIdlePromise.then((map) => {
+        markerRef.current = new maplibregl.Marker(ALPHABETICAL_MARKER)
+          .setLngLat(value.coords.center as LngLatLike)
+          .addTo(map);
+      });
     }
     return () => {
       markerRef.current?.remove();
@@ -262,7 +270,7 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const onDragEnd = () => {
     const lngLat = markerRef.current?.getLngLat();
     if (lngLat) {
-      const coordsOption = getCoordsOption([lngLat.lng, lngLat.lat]);
+      const coordsOption = getDirectionsCoordsOption([lngLat.lng, lngLat.lat]);
       handleUpdate(coordsOption);
     }
   };
@@ -313,6 +321,7 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
         filterOptions={(x) => x}
         getOptionLabel={getOptionLabel}
         getOptionKey={(option) => JSON.stringify(option)}
+        getOptionDisabled={(option) => option.type === 'loader'}
         onChange={onChange}
         autoComplete
         noOptionsText=""
@@ -331,12 +340,7 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
             onOptionChange={onChange}
           />
         )}
-        renderOption={renderOptionFactory(
-          inputValue,
-          currentTheme,
-          mapCenter,
-          isImperial,
-        )}
+        renderOption={renderOptionFactory(inputValue)}
       />
     </Row>
   );

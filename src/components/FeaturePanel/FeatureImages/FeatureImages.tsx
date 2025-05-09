@@ -6,6 +6,11 @@ import { useLoadImages } from './useLoadImages';
 import { NoImage } from './NoImage';
 import { HEIGHT, ImageSkeleton } from './helpers';
 import { naturalSort } from '../Climbing/utils/array';
+import { PROJECT_ID } from '../../../services/project';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { getHumanPoiType, getLabel } from '../../../helpers/featureLabel';
+
+const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
 export const Wrapper = styled.div`
   width: 100%;
@@ -17,7 +22,7 @@ const StyledScrollbars = styled(Scrollbars)`
   width: 100%;
   height: 100%;
   white-space: nowrap;
-  text-align: center; // one image centering
+  ${!isOpenClimbing && `text-align: center;`} // one image centering
 
   overflow-y: hidden;
   overflow-x: auto;
@@ -31,16 +36,30 @@ export const Slider = ({ children }) => (
 );
 
 export const FeatureImages = () => {
+  const { feature } = useFeatureContext();
   const { loading, images } = useLoadImages();
+  const poiType = getHumanPoiType(feature);
+  const alt = `${poiType} ${getLabel(feature)}`;
+
   if (images.length === 0) {
-    return <Wrapper>{loading ? <ImageSkeleton /> : <NoImage />}</Wrapper>;
+    // CragsInArea condition
+    if (feature.memberFeatures?.length && feature.tags.climbing === 'area') {
+      return null;
+    } else {
+      return <Wrapper>{loading ? <ImageSkeleton /> : <NoImage />}</Wrapper>;
+    }
   }
 
   return (
     <Wrapper>
       <Slider>
-        {naturalSort(images, (item) => item.def.k).map((item) => (
-          <Image key={item.image.imageUrl} def={item.def} image={item.image} />
+        {naturalSort(images, (item) => item.def.k).map((item, index) => (
+          <Image
+            key={item.image.imageUrl}
+            def={item.def}
+            image={item.image}
+            alt={`${alt} ${index + 1}`}
+          />
         ))}
       </Slider>
     </Wrapper>

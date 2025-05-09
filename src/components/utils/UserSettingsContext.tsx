@@ -1,12 +1,8 @@
 import React, { createContext, useContext } from 'react';
 import { usePersistedState } from './usePersistedState';
-import {
-  GRADE_SYSTEMS,
-  GradeSystem,
-} from '../FeaturePanel/Climbing/utils/grades/gradeData';
+import { GRADE_SYSTEMS, GradeSystem } from '../../services/tagging/climbing';
 import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
-import { SPLIT_PANE_DEFAULT_SIZE } from '../FeaturePanel/Climbing/config';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
 
@@ -38,10 +34,9 @@ const initialUserSettings: UserSettingsType = {
   'climbing.defaultClimbingStyle': 'OS',
   'climbing.selectRoutesByScrolling': isMobileDevice(),
   'climbing.switchPhotosByScrolling': true,
-  'climbing.visibleGradeSystems': GRADE_SYSTEMS.reduce(
-    (acc, { key }) => ({ ...acc, [key]: true }),
-    {},
-  ),
+  'climbing.visibleGradeSystems': GRADE_SYSTEMS.filter(
+    ({ minor }) => !minor,
+  ).reduce((acc, { key }) => ({ ...acc, [key]: true }), {}),
   'climbing.cragViewLayout': 'auto',
 
   'climbing.splitPaneSize': null,

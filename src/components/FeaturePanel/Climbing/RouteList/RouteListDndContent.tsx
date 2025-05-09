@@ -5,6 +5,10 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
 import { useDragItems } from '../../../utils/useDragItems';
 import { DragHandler } from '../../../utils/DragHandler';
+import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { GradeSystemSelect } from '../GradeSystemSelect';
+import { t } from '../../../../services/intl';
+import { Box } from '@mui/material';
 
 type Item = {
   id: number;
@@ -26,7 +30,7 @@ const MaxWidthContainer = styled.div`
   width: 100%;
   max-width: 800px;
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   flex-direction: row;
 `;
@@ -67,9 +71,6 @@ const NameHeader = styled.div`
   flex: 1;
   padding-left: 40px;
 `;
-const DifficultyHeader = styled.div`
-  width: 115px;
-`;
 
 export const RouteListDndContent = ({ isEditable }) => {
   const {
@@ -84,6 +85,7 @@ export const RouteListDndContent = ({ isEditable }) => {
   } = useClimbingContext();
   const [items, setItems] = useState([]);
   const machine = getMachine();
+  const { userSettings, setUserSetting } = useUserSettingsContext();
   useEffect(() => {
     const content = routes.map((route, index) => ({
       id: index,
@@ -145,8 +147,15 @@ export const RouteListDndContent = ({ isEditable }) => {
     <Container ref={parentRef}>
       <TableHeader>
         <MaxWidthContainer>
-          <NameHeader>Name</NameHeader>
-          <DifficultyHeader>Difficulty</DifficultyHeader>
+          <NameHeader>{t('member_features.climbing')}</NameHeader>
+          <Box mr={1}>
+            <GradeSystemSelect
+              setGradeSystem={(system) => {
+                setUserSetting('climbing.gradeSystem', system);
+              }}
+              selectedGradeSystem={userSettings['climbing.gradeSystem']}
+            />
+          </Box>
         </MaxWidthContainer>
       </TableHeader>
       {items.map((item, index) => {

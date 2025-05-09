@@ -1,15 +1,7 @@
 import React, { useEffect, useRef } from 'react';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, SxProps, Theme, Tooltip } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import { SvgIconOwnProps } from '@mui/material/SvgIcon/SvgIcon';
 import { isMobileDevice, useBoolState } from '../helpers';
-import styled from '@emotion/styled';
-
-type Props = {
-  tooltip: React.ReactNode;
-  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
-  color?: SvgIconOwnProps['color'];
-};
 
 const useClickAwayListener = (
   tooltipRef: React.MutableRefObject<HTMLDivElement>,
@@ -35,17 +27,21 @@ const useClickAwayListener = (
   }, [hide, isMobile, tooltipRef]);
 };
 
-const StyledIconButton = styled(IconButton)`
-  font-size: inherit;
-`;
+type Props = {
+  tooltip: React.ReactNode;
+  sx?: SxProps<Theme>;
+};
 
-export const TooltipButton = ({ tooltip, onClick, color }: Props) => {
+/**
+ * Button with InfoIcon, which works on both desktop and mobile.
+ * (Desktop onHover, Mobile onClick)
+ */
+export const TooltipButton = ({ tooltip, sx }: Props) => {
   const isMobile = isMobileDevice();
   const tooltipRef = useRef<HTMLDivElement>(null);
   const [mobileTooltipShown, show, hide] = useBoolState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    onClick?.(e);
     if (isMobile) {
       show();
     }
@@ -54,17 +50,32 @@ export const TooltipButton = ({ tooltip, onClick, color }: Props) => {
 
   useClickAwayListener(tooltipRef, hide, isMobile);
 
-  return (
+  const button = (
+    <IconButton onClick={handleClick} sx={sx}>
+      <InfoOutlinedIcon fontSize="inherit" color="inherit" />
+    </IconButton>
+  );
+
+  // There is a bug in MUI, passing `open={undefined}` prop to Tooltip makes it uninteractive TODO check again eg 6/2025, or report
+  return isMobile ? (
     <Tooltip
       arrow
       title={tooltip}
       placement="top"
-      open={isMobile ? mobileTooltipShown : undefined}
+      open={mobileTooltipShown}
       ref={tooltipRef}
     >
-      <StyledIconButton onClick={handleClick}>
-        <InfoOutlinedIcon fontSize="small" color={color} />
-      </StyledIconButton>
+      {button}
+    </Tooltip>
+  ) : (
+    <Tooltip
+      arrow
+      title={tooltip}
+      placement="top"
+      //open={isMobile ? mobileTooltipShown : undefined} -- broken, see above
+      ref={tooltipRef}
+    >
+      {button}
     </Tooltip>
   );
 };

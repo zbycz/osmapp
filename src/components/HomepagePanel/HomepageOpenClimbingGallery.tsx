@@ -4,6 +4,7 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Link from 'next/link';
 import { intl, t } from '../../services/intl';
 import React from 'react';
+import { Typography } from '@mui/material';
 
 const HOMEPAGE_GALLERY_HEIGHT = 200;
 
@@ -12,6 +13,11 @@ const data = [
     href: '/relation/17262675',
     src: '/images/homepage/hlubocepske-plotny',
     children: 'Hlubočepské plotny',
+  },
+  {
+    href: '/relation/14297763',
+    src: '/images/homepage/velka',
+    children: 'Velká (Vltavská žula)',
   },
   {
     href: '/relation/17696060',
@@ -60,9 +66,17 @@ const data = [
   },
 ];
 
+export const DiscoveryMoreText = styled.div`
+  text-transform: lowercase;
+  font-weight: normal;
+  margin-bottom: 8px;
+  line-height: 2.5;
+`;
 export const GalleryWrapper = styled.div`
   width: calc(100% + 32px * 2);
-  height: calc(${HOMEPAGE_GALLERY_HEIGHT}px + 10px); // 10px for scrollbar
+  height: calc(
+    ${HOMEPAGE_GALLERY_HEIGHT}px + 26px
+  ); // 16px for scrollbar and 10px for shadow
   min-height: calc(
     ${HOMEPAGE_GALLERY_HEIGHT}px + 10px
   ); // otherwise it shrinks b/c of flex
@@ -72,7 +86,7 @@ export const GalleryWrapper = styled.div`
 const Gradient = styled.div<{ blur?: boolean }>`
   position: absolute;
   width: 100%;
-  height: calc(100% - 6px);
+  height: 100%;
   top: 0;
   transition: all 0.2s;
   ${({ blur }) =>
@@ -91,7 +105,7 @@ const Gradient = styled.div<{ blur?: boolean }>`
 
 const Text = styled.div<{ center: boolean }>`
   position: absolute;
-  bottom: 12px;
+  bottom: 16px;
   text-align: center;
   width: 100%;
   font-weight: 900;
@@ -99,12 +113,15 @@ const Text = styled.div<{ center: boolean }>`
   font-size: 12px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  ${({ center }) => center === true && `top: 35%`};
+  ${({ center }) => center === true && `top: 40%`};
+`;
+
+const StyledLink = styled(Link)`
+  line-height: 0;
+  display: block;
 `;
 
 const StyledScrollbars = styled(Scrollbars)`
-  width: 100%;
-  height: ${HOMEPAGE_GALLERY_HEIGHT}px;
   white-space: nowrap;
   text-align: center; // one image centering
   overflow-y: hidden;
@@ -118,10 +135,16 @@ const GalleryItemContainer = styled.div`
   position: relative;
   vertical-align: top;
   overflow: hidden;
+  margin-top: 10px;
   margin-right: 12px;
   cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+
   &:first-of-type {
     margin-left: 30px;
+  }
+  &:last-of-type {
+    margin-right: 30px;
   }
 `;
 
@@ -133,6 +156,7 @@ type GalleryItemProps = {
   blur?: boolean;
   center?: boolean;
   alt?: string;
+  title?: string;
 };
 
 const GalleryItem = ({
@@ -143,21 +167,23 @@ const GalleryItem = ({
   blur,
   center,
   alt,
+  title,
 }: GalleryItemProps) => (
   <GalleryItemContainer>
-    <Link href={href} locale={intl.lang}>
+    <StyledLink href={href} locale={intl.lang}>
       <>
         <img
           src={src}
           srcSet={srcSet}
           height={HOMEPAGE_GALLERY_HEIGHT}
           alt={alt}
+          title={title}
         />
         <Gradient blur={blur}>
           <Text center={center}>{children}</Text>
         </Gradient>
       </>
-    </Link>
+    </StyledLink>
   </GalleryItemContainer>
 );
 
@@ -171,7 +197,8 @@ export const HomepageOpenClimbingGallery = () => (
           src={`${item.src}.jpg`}
           srcSet={`${item.src}.jpg,
           ${item.src}-2.jpg 2x`}
-          alt={item.children}
+          alt={`${t('homepage.openclimbing_climbing_area')} ${item.children}`}
+          title={`${t('homepage.openclimbing_climbing_area')} ${item.children}`}
         >
           {item.children}
         </GalleryItem>
@@ -183,9 +210,8 @@ export const HomepageOpenClimbingGallery = () => (
         href="/climbing-areas"
         src="/images/homepage/solvayovy-lomy.jpg"
       >
-        {t('homepage.discover_more_p1')}
-        <br />
-        <h2>370+ {t('homepage.discover_more_p2')}</h2>
+        <DiscoveryMoreText>{t('homepage.discover_more_p1')}</DiscoveryMoreText>
+        370+ {t('homepage.discover_more_p2')}
       </GalleryItem>
     </StyledScrollbars>
   </GalleryWrapper>

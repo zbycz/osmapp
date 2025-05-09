@@ -2,41 +2,47 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { getHumanPoiType } from '../../../helpers/featureLabel';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import Maki from '../../utils/Maki';
-import { useUserThemeContext } from '../../../helpers/theme';
+import { Typography } from '@mui/material';
+import { PoiIcon } from '../../utils/icons/PoiIcon';
 
 const PoiType = styled.div<{ $isSkeleton: Boolean }>`
-  color: ${({ theme }) => theme.palette.secondary.main};
-
-  font-size: 13px;
   position: relative;
+  display: flex;
 
   img {
     position: relative;
     top: -1px;
     left: 1px;
   }
-
-  span {
-    ${({ $isSkeleton }) => $isSkeleton && 'opacity: 0.4;'}
+  svg {
+    position: relative;
+    top: 1px;
   }
 `;
 
 export const PoiDescription = () => {
-  const { currentTheme } = useUserThemeContext();
   const { feature } = useFeatureContext();
-  const { properties } = feature;
   const poiType = getHumanPoiType(feature);
 
   return (
     <PoiType $isSkeleton={feature.skeleton}>
-      <Maki
-        ico={properties.class}
-        invert={currentTheme === 'dark'}
+      <PoiIcon
+        tags={feature.tags}
+        ico={
+          feature.skeleton || feature.point
+            ? feature.properties.class
+            : undefined
+        }
         middle
-        style={{ opacity: '0.4' }}
       />
-      <span>{poiType}</span>
+      <Typography
+        variant="caption"
+        color="secondary"
+        textTransform="lowercase"
+        component="h2"
+      >
+        {poiType}
+      </Typography>
     </PoiType>
   );
 };

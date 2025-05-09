@@ -11,15 +11,17 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import AddIcon from '@mui/icons-material/Add';
+import AppsIcon from '@mui/icons-material/Apps';
 import { majorKeys } from '../MajorKeysEditor';
 import { isString } from '../../../../../helpers';
 import { t, Translation } from '../../../../../../services/intl';
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
-import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { useCurrentItem } from '../CurrentContext';
 import { TagsEntries } from '../../../useEditItems';
 import { OptionsEditor } from '../OptionsEditor';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 
 const Table = styled.table`
   width: calc(100% - 8px);
@@ -60,7 +62,7 @@ const TagsEditorHeading = () => (
 const TagsEditorInfo = () => (
   <tr>
     <td colSpan={2}>
-      <Typography color="textSecondary" style={{ paddingTop: '1em' }}>
+      <Typography variant="body2" color="textSecondary" mt={2}>
         <Translation id="editdialog.tags_editor_info" />
       </Typography>
     </td>
@@ -68,18 +70,18 @@ const TagsEditorInfo = () => (
 );
 
 const AddButton = () => {
-  const { tagsEntries, setTagsEntries } = useFeatureEditData();
+  const { tagsEntries, setTagsEntries } = useCurrentItem();
   return (
     <tr>
-      <td />
-      <td>
+      <td colSpan={2}>
         <Button
-          variant="contained"
-          color="secondary"
+          variant="text"
+          color="primary"
           disableElevation
           onClick={() => setTagsEntries((state) => [...state, ['', '']])}
+          startIcon={<AddIcon />}
         >
-          <AddIcon />
+          {t('editdialog.add_tag')}
         </Button>
       </td>
     </tr>
@@ -87,7 +89,7 @@ const AddButton = () => {
 };
 
 const TagsEditorInner = () => {
-  const { tagsEntries } = useFeatureEditData();
+  const { tagsEntries } = useCurrentItem();
   return (
     <Table>
       <tbody>
@@ -132,7 +134,8 @@ export const TagsEditor = () => {
         aria-controls="panel1-content"
         id="panel1-header"
       >
-        <Stack direction="row" spacing={2} alignItems="center">
+        <Stack direction="row" spacing={1} alignItems="center">
+          <AppsIcon />
           <Typography variant="button">
             {t('editdialog.tags_editor')}
           </Typography>

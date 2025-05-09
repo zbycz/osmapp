@@ -22,6 +22,8 @@ import { setUpHover } from './featureHover';
 import { layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
+import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
+import { ShowToast } from '../../utils/SnackbarContext';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -85,12 +87,18 @@ const addOverlaysToStyle = (
   overlays: string[],
   currentTheme: Theme,
 ) => {
+  // removeClimbingTilesSource(); // TODO call when climbing removed
+
   overlays
     .filter((key: string) => osmappLayers[key]?.type === 'overlay')
     .forEach((key: string) => {
       switch (key) {
         case 'climbing':
-          addClimbingOverlay(style, map);
+          if (process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES) {
+            addClimbingTilesSource(style);
+          } else {
+            addClimbingOverlay(style, map); // TODO remove this when climbingTiles are tested
+          }
           break;
 
         case 'indoor':
@@ -103,6 +111,25 @@ const addOverlaysToStyle = (
     });
 };
 
+let prevLayers: string[] = [];
+const openFreeMapCheck = (activeLayers: string[], showToast: ShowToast) => {
+  if (!prevLayers.includes('basicOfr') && activeLayers.includes('basicOfr')) {
+    showToast(
+      <>
+        OpenFreeMap clickabilty is currently broken, see{' '}
+        <a
+          href="https://github.com/onthegomap/planetiler/issues/1120"
+          target="_blank"
+        >
+          this issue for more info
+        </a>
+      </>,
+      'warning',
+    );
+  }
+  prevLayers = activeLayers;
+};
+
 export const useUpdateStyle = createMapEffectHook(
   (
     map,
@@ -110,6 +137,7 @@ export const useUpdateStyle = createMapEffectHook(
     userLayers: Layer[],
     mapLoaded: boolean,
     currentTheme: Theme,
+    showToast: ShowToast,
   ) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
@@ -126,6 +154,7 @@ export const useUpdateStyle = createMapEffectHook(
 
     const style = cloneDeep(getBaseStyle(key, currentTheme));
     addOverlaysToStyle(map, style, overlays, currentTheme);
+    style.projection = { type: 'globe' };
     map.setStyle(style, { diff: mapLoaded });
 
     const languageControl = new OpenMapTilesLanguage({
@@ -138,5 +167,7 @@ export const useUpdateStyle = createMapEffectHook(
     if (mapLoaded && overlays.includes('indoor')) {
       addIndoorEqual();
     }
+
+    openFreeMapCheck(activeLayers, showToast);
   },
 );

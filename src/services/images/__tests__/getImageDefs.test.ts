@@ -72,7 +72,7 @@ test('conversion', () => {
     },
   ];
 
-  expect(getImageDefs(tags, center)).toEqual(imageDefs);
+  expect(getImageDefs(tags, 'node', center)).toEqual(imageDefs);
 });
 
 test('correctly sorted', () => {
@@ -87,7 +87,7 @@ test('correctly sorted', () => {
     'ignored-non-image-tag': 'x',
   };
 
-  expect(getImageDefs(tags, center).map((def: any) => def.k)).toEqual([
+  expect(getImageDefs(tags, 'node', center).map((def: any) => def.k)).toEqual([
     'wikimedia_commons',
     'image',
     'image2',
@@ -97,4 +97,10 @@ test('correctly sorted', () => {
     'wikimedia_commons:3',
     undefined, // mapillary
   ]);
+});
+
+test('no center for relation', () => {
+  const tags = {};
+  expect(getImageDefs(tags, 'node', center)).toHaveLength(3);
+  expect(getImageDefs(tags, 'relation', center)).toEqual([]);
 });

@@ -2,16 +2,29 @@ import { Grid, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import debounce from 'lodash/debounce';
 import { join } from '../../../utils';
-import { getHumanDistance, highlightText, IconPart } from '../utils';
+import {
+  fitBounds,
+  getHumanDistance,
+  highlightText,
+  IconPart,
+  useMapCenter,
+} from '../utils';
 import { getPoiClass } from '../../../services/getPoiClass';
-import Maki from '../../utils/Maki';
 import { fetchJson } from '../../../services/fetch';
 import { intl } from '../../../services/intl';
-import { Theme } from '../../../helpers/theme';
-import { GeocoderOption, Option } from '../types';
+import {
+  GeocoderOption,
+  Option,
+  PhotonGeojsonFeature,
+  PhotonResponse,
+} from '../types';
 import { View } from '../../utils/MapStateContext';
-import { LonLat } from '../../../services/types';
+import { PoiIcon } from '../../utils/icons/PoiIcon';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { Feature } from '../../../services/types';
+import { addFeatureCenterToCache } from '../../../services/osm/featureCenterToCache';
+import { getShortId, getUrlOsmId } from '../../../services/helpers';
+import Router from 'next/router';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
@@ -38,65 +51,66 @@ export const useInputValueState = () => {
   };
 };
 
-type FetchGeocoderOptionsProps = {
-  inputValue: string;
-  view: View;
-  setOptions: React.Dispatch<React.SetStateAction<Option[]>>;
-  before: Option[];
-  after: Option[];
+export class GeocoderDebounced extends Error {}
+
+let timeoutId: NodeJS.Timeout | null = null;
+let rejectPreviousPromise: (reason?: any) => void = () => {};
+
+export const debounceGeocoderOrReject = (delay: number): Promise<void> => {
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+    rejectPreviousPromise(new GeocoderDebounced());
+  }
+  return new Promise<void>((resolve, reject) => {
+    rejectPreviousPromise = reject;
+    timeoutId = setTimeout(() => {
+      timeoutId = null;
+      resolve();
+    }, delay);
+  });
 };
 
-type PhotonResponse = {
-  features: GeocoderOption['geocoder'][];
-};
+export const fetchGeocoderOptions = async (
+  inputValue: string,
+  view: View,
+  abortQueue?: string,
+): Promise<Option[] | undefined> => {
+  try {
+    const searchResponse = await fetchJson<PhotonResponse>(
+      getApiUrl(inputValue, view),
+      { abortableQueueName: abortQueue },
+    );
 
-export const fetchGeocoderOptions = debounce(
-  async ({
-    inputValue,
-    view,
-    setOptions,
-    before,
-    after,
-  }: FetchGeocoderOptionsProps) => {
-    try {
-      const searchResponse = await fetchJson<PhotonResponse>(
-        getApiUrl(inputValue, view),
-        { abortableQueueName: GEOCODER_ABORTABLE_QUEUE },
-      );
-
-      // This blocks rendering of old result, when user already changed input
-      if (inputValue !== currentInput) {
-        return;
-      }
-
-      const options = searchResponse?.features || [];
-
-      setOptions([
-        ...before,
-        ...options.map((feature) => ({
-          type: 'geocoder' as const,
-          geocoder: feature,
-        })),
-        ...after,
-      ]);
-    } catch (e) {
-      if (!(e instanceof DOMException && e.name === 'AbortError')) {
-        throw e;
-      }
+    // This blocks rendering of old result, when user already changed input
+    if (inputValue !== currentInput) {
+      return;
     }
-  },
-  400,
-);
 
-const getAdditionalText = (props) => {
+    const options = searchResponse?.features || [];
+    return options.map((feature) => ({
+      type: 'geocoder' as const,
+      geocoder: feature,
+    }));
+  } catch (e) {
+    if (e instanceof DOMException && e.name === 'AbortError') {
+      return;
+    }
+    throw e;
+  }
+};
+
+const getAdditionalText = (props: PhotonGeojsonFeature['properties']) => {
   const address = [
     props.street,
     props.district,
     props.city,
+    props.locality,
     props.county,
     props.state,
-    props.country,
-  ].filter((x) => x !== undefined);
+    props.countrycode,
+  ]
+    .filter((x) => x !== undefined)
+    .filter((value, index, array) => array.indexOf(value) === index);
   return address.join(', ');
 };
 
@@ -106,62 +120,17 @@ export const buildPhotonAddress = ({
   city,
   housenumber: hnum,
   streetnumber: snum,
-}) => join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
+}: PhotonGeojsonFeature['properties']) =>
+  join(street ?? place ?? city, ' ', hnum ? hnum.replace(' ', '/') : snum);
 
-/** photon
- [
- {
-    geometry: {
-      coordinates: [16.5920871, 49.2416882],
-      type: 'Point',
-    },
-    type: 'Feature',
-    properties: {
-      osm_id: 2493045013,
-      country: 'Česko',
-      city: 'Brno',
-      countrycode: 'CZ',
-      postcode: '612 00',
-      county: 'Jihomoravský kraj',
-      type: 'house',
-      osm_type: 'N',
-      osm_key: 'leisure',
-      street: 'Podhájí',
-      district: 'Řečkovice',
-      osm_value: 'sports_centre',
-      name: 'VSK MENDELU',
-      state: 'Jihovýchod',
-    },
-  },
- // housenumber
- {
-    geometry: { coordinates: [14.4036424, 50.098012], type: 'Point' },
-    type: 'Feature',
-    properties: {
-      osm_id: 296816783,
-      country: 'Czechia',
-      city: 'Prague',
-      countrycode: 'CZ',
-      postcode: '16000',
-      type: 'house',
-      osm_type: 'N',
-      osm_key: 'place',
-      housenumber: '8',
-      street: 'Dejvická',
-      district: 'Dejvice',
-      osm_value: 'house',
-      state: 'Prague',
-    },
-  },
- ];
- */
-export const renderGeocoder = (
-  { geocoder }: GeocoderOption,
-  currentTheme: Theme,
-  inputValue: string,
-  mapCenter: LonLat,
-  isImperial: boolean,
-) => {
+type Props = {
+  option: GeocoderOption;
+  inputValue: string;
+};
+
+export const GeocoderRow = ({ option: { geocoder }, inputValue }: Props) => {
+  const mapCenter = useMapCenter();
+  const { isImperial } = useUserSettingsContext().userSettings;
   const { geometry, properties } = geocoder;
   const { name, osm_key: tagKey, osm_value: tagValue } = properties;
 
@@ -177,11 +146,10 @@ export const renderGeocoder = (
   return (
     <>
       <IconPart>
-        <Maki
+        <PoiIcon
           ico={poiClass.class}
-          style={{ width: '20px', height: '20px', opacity: 0.5 }}
           title={`${tagKey}=${tagValue}`}
-          invert={currentTheme === 'dark'}
+          size={20}
         />
         <div>{distance}</div>
       </IconPart>
@@ -193,4 +161,56 @@ export const renderGeocoder = (
       </Grid>
     </>
   );
+};
+
+const getElementType = (osmType: string) => {
+  switch (osmType) {
+    case 'R':
+      return 'relation';
+    case 'W':
+      return 'way';
+    case 'N':
+      return 'node';
+    default:
+      throw new Error(`Geocoder osm_id is invalid: ${osmType}`);
+  }
+};
+export const getGeocoderSkeleton = ({ geocoder }: GeocoderOption): Feature => {
+  const center = geocoder.geometry.coordinates;
+  const {
+    osm_id: id,
+    osm_type: osmType,
+    osm_key: tagKey,
+    osm_value: tagValue,
+    name,
+  } = geocoder.properties;
+  const type = getElementType(osmType);
+
+  return {
+    type: 'Feature',
+    skeleton: true,
+    nonOsmObject: false,
+    osmMeta: { type, id: parseInt(id, 10) },
+    tags: { name },
+    properties: getPoiClass({ [tagKey]: tagValue }),
+    center,
+  };
+};
+
+type SetFeature = (feature: Feature | null) => void;
+
+export const geocoderOptionSelected = (
+  option: GeocoderOption,
+  setFeature: SetFeature,
+) => {
+  if (!option?.geocoder.geometry?.coordinates) return;
+
+  const skeleton = getGeocoderSkeleton(option);
+  console.log('Search item selected:', { option, skeleton }); // eslint-disable-line no-console
+
+  addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
+
+  setFeature(skeleton);
+  fitBounds(option);
+  Router.push(`/${getUrlOsmId(skeleton.osmMeta)}`);
 };

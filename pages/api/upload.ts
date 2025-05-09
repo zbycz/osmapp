@@ -1,9 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { serverFetchOsmUser } from '../../src/server/osmApiAuthServer';
-import {
-  fetchFeatureWithCenter,
-  fetchParentFeatures,
-} from '../../src/services/osmApi';
 import { intl, setIntl } from '../../src/services/intl';
 import { getExifData } from '../../src/server/upload/getExifData';
 import { uploadToWikimediaCommons } from '../../src/server/upload/uploadToWikimediaCommons';
@@ -14,6 +10,8 @@ import { fetchToFile } from '../../src/server/upload/fetchToFile';
 import { OsmId } from '../../src/services/types';
 import { isClimbingRoute } from '../../src/utils';
 import { Feature } from '../../src/services/types';
+import { fetchParentFeatures } from '../../src/services/osm/fetchParentFeatures';
+import { fetchFeatureWithCenter } from '../../src/services/osm/osmApi';
 
 // inspiration: https://commons.wikimedia.org/wiki/File:Drive_approaching_the_Grecian_Lodges_-_geograph.org.uk_-_5765640.jpg
 // https://github.com/multichill/toollabs/blob/master/bot/commons/geograph_uploader.py
@@ -21,7 +19,7 @@ import { Feature } from '../../src/services/types';
 
 const getFeature = async (apiId: OsmId): Promise<Feature> => {
   const feature = await fetchFeatureWithCenter(apiId);
-  if (isClimbingRoute(feature)) {
+  if (isClimbingRoute(feature.tags)) {
     const parentFeatures = await fetchParentFeatures(feature.osmMeta);
     return { ...feature, parentFeatures };
   }

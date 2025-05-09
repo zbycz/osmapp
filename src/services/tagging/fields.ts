@@ -1,4 +1,4 @@
-import { Preset } from './types/Presets';
+import { FieldTranslation, Preset } from './types/Presets';
 import { allFields, allPresets } from './data';
 import { deduplicate } from './utils';
 import { Field } from './types/Fields';
@@ -81,25 +81,45 @@ export const getFields = (preset: Preset) => {
   };
 };
 
+export const translateField = (
+  fieldTranslation: FieldTranslation | undefined,
+  v: string,
+): string => {
+  const option = fieldTranslation?.options?.[v];
+
+  if (typeof option === 'string') {
+    return option;
+  }
+  if (option?.description && option?.title) {
+    return `${option.title} – ${option.description}`;
+  }
+  if (option?.title) {
+    return option.title;
+  }
+
+  return v;
+};
+
 // TODO check - 1) field.options 2) strings.options
 export const getValueForField = (
   field: Field,
-  fieldTranslation,
+  fieldTranslation: FieldTranslation,
   value: string | undefined,
   tagsForField = [],
-) => {
+): string => {
   if (field.type === 'semiCombo') {
     return value
       .split(';')
-      .map((v) => fieldTranslation?.options?.[v] ?? v)
+      .map((v) => translateField(fieldTranslation, v))
       .join(',\n');
   }
+
   // eg field.type === 'access' or 'structure'
   if (fieldTranslation?.types && fieldTranslation?.options) {
     return tagsForField
       .map(
         ({ key, value: value2 }) =>
-          `${fieldTranslation.types[key]}: ${fieldTranslation.options[value2]?.title}`,
+          `${fieldTranslation.types[key]}: ${translateField(fieldTranslation, value2)}`,
       )
       .join(',\n');
   }
@@ -111,5 +131,5 @@ export const getValueForField = (
       .join(',\n');
   }
 
-  return fieldTranslation?.options?.[value] ?? value;
+  return translateField(fieldTranslation, value);
 };

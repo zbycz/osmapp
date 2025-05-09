@@ -1,6 +1,9 @@
 import { getApiId, getShortId } from '../helpers';
 import { fetchJson } from '../fetch';
-import { getOverpassUrl, overpassGeomToGeojson } from '../overpassSearch';
+import {
+  getOverpassUrl,
+  overpassGeomToGeojson,
+} from '../overpass/overpassSearch';
 import { getAllTicks, getTickKey } from '../ticks';
 import { Tick, TickStyle } from '../../components/FeaturePanel/Climbing/types';
 import {

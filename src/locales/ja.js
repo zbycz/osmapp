@@ -157,8 +157,8 @@ export default {
 
   'editdialog.add_heading': 'OpenStreetMap に追加',
   'editdialog.undelete_heading': 'OpenStreetMap に再度追加',
-  'editdialog.edit_heading': '編集:',
-  'editdialog.suggest_heading': '編集を提案:',
+  'editdialog.edit_heading': '編集',
+  'editdialog.suggest_heading': '編集を提案',
   'editdialog.feature_type_select': '種類を選択',
   'editdialog.options_heading': 'オプション',
   'editdialog.cancel_button': 'キャンセル',

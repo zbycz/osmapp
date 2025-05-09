@@ -7,18 +7,21 @@ import { Feature } from '../../../services/types';
 import { t } from '../../../services/intl';
 import { TagsTableInner } from './TagsTableInner';
 import { InlineEditButton } from '../helpers/InlineEditButton';
-import { renderValue } from './renderValue';
+import { renderTag } from './renderTag';
 import { Table } from './Table';
 import { ShowMoreButton } from './helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { Subheading } from '../helpers/Subheading';
 import { UiField } from '../../../services/tagging/types/Presets';
+import { translateField } from '../../../services/tagging/fields';
 
 const Spacer = styled.div`
   width: 100%;
   height: 50px;
 `;
 
+// TODO get rid of `value` and `key` and use only tagsForField universally
+// TODO design UiField to hold only what is needed to render (nothing more)
 const render = (uiField: UiField, feature: Feature): string | ReactNode => {
   const { field, key: k, value: v, tagsForField, fieldTranslation } = uiField;
 
@@ -27,12 +30,12 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
   }
 
   if (field.fieldKey === 'wikidata') {
-    return renderValue('wikidata', feature.tags.wikidata);
+    return renderTag('wikidata', feature.tags.wikidata);
   }
 
   // combo with options
   if (fieldTranslation?.options?.[v]) {
-    return renderValue(k, fieldTranslation.options[v]?.title);
+    return renderTag(k, translateField(fieldTranslation, v));
   }
 
   // multicombo ?
@@ -40,7 +43,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return tagsForField.map(({ key, value: value2 }) => (
       <div key={key}>
         {fieldTranslation.types[key]}:{' '}
-        {renderValue(key, fieldTranslation.options[value2]?.title)}
+        {renderTag(key, translateField(fieldTranslation, value2))}
       </div>
     ));
   }
@@ -49,7 +52,7 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return tagsForField.map(({ key, value: value2 }) => (
       <div key={key}>
         {fieldTranslation.options[key]}:{' '}
-        {renderValue(key, fieldTranslation.options[value2]?.title ?? value2)}
+        {renderTag(key, translateField(fieldTranslation, value2))}
       </div>
     ));
   }
@@ -58,18 +61,18 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return (
       <>
         {tagsForField.map(({ key, value: value2 }) => (
-          <div key={key}>{renderValue(key, value2)}</div>
+          <div key={key}>{renderTag(key, value2)}</div>
         ))}
       </>
     );
   }
 
   if (!k) {
-    return renderValue(tagsForField[0].key, tagsForField[0].value);
+    return renderTag(tagsForField[0].key, tagsForField[0].value);
   }
 
   // `v` should not be undefined but maybe there is a bug
-  return renderValue(k, v ?? 'Value could not be determined.');
+  return renderTag(k, v ?? 'Value could not be determined.');
 };
 
 // TODO some fields eg. oneway/bicycle doesnt have units in brackets
@@ -78,7 +81,7 @@ const removeUnits = (label: string) => label.replace(unitRegExp, '');
 const addUnits = (label: string, value: string | ReactNode) => {
   if (typeof value !== 'string') return value;
   const unit = label.match(unitRegExp);
-  if (!unit) return value;
+  if (!unit || isNaN(Number(value))) return value;
   if (unit[1] === 'm') return `${value} m`;
   return `${value} (${unit[1]})`;
 };

@@ -1,7 +1,7 @@
 import * as Sentry from '@sentry/nextjs';
 import nextCookies from 'next-cookies';
 import Cookies from 'js-cookie';
-import { clearFeatureCache, fetchFeature } from '../../services/osmApi';
+import { clearFeatureCache, fetchFeature } from '../../services/osm/osmApi';
 import { fetchJson } from '../../services/fetch';
 import { isServer } from '../helpers';
 import { getCoordsFeature } from '../../services/getCoordsFeature';
@@ -84,6 +84,13 @@ const getValidApiId = (path: string[]): OsmId => {
 export const getInitialFeature = async (
   ctx: NextPageContext,
 ): Promise<Feature | '404' | null> => {
+  // WARNING: The routing from node, way, relation (/node/123),
+  // coords feature (/50.1,14.1) and shortener (/xyzn) are matched
+  // in next.config.mjs and routed to `/feature/<original-path>` page internally
+  if (ctx.pathname !== '/feature/[...all]') {
+    return null;
+  }
+
   const path = ctx.query.all as string[];
 
   // url: "/"
@@ -123,4 +130,14 @@ export const getInitialFeature = async (
   });
 
   return initialFeature;
+};
+
+export const getMapViewFromHash = (): View | undefined => {
+  const view = global.window?.location.hash
+    .substring(1)
+    .split('/')
+    .map(parseFloat) //we want to parse numbers, then serialize back in usePersistMapView()
+    .filter((num) => !Number.isNaN(num))
+    .map((num) => num.toString());
+  return view?.length === 3 ? (view as View) : undefined;
 };

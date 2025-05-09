@@ -82,5 +82,8 @@ export const loadDetailedWeather = async ({ lat, lon }: Props) => {
       time: new Date(time),
     }),
   );
-  return groupBy(transformed, ({ time }) => time.getDay());
+  return groupBy(
+    transformed,
+    ({ time }) => time.getDay() + (today.getDay() > time.getDay() ? 100 : 0), // if we are on Thursday (4) and get forecast for Sunday (0), we want it to show after Saturday (6),
+  );
 };

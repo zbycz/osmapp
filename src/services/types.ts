@@ -5,7 +5,7 @@ import type { Polygon } from 'geojson';
 export type OsmType = 'node' | 'way' | 'relation';
 export type OsmId = {
   type: OsmType;
-  id: number;
+  id: number; // negative value means new feature (to be added)
 };
 
 export type PathType = { x: number; y: number; suffix: string }[];
@@ -72,14 +72,24 @@ export type FeatureTags = {
   [key: string]: string;
 };
 
-type RelationMember = {
+export type RelationMember = {
   type: OsmType;
   ref: number;
   role: string;
 };
 
+export type FeatureProperties = {
+  class: string;
+  subclass: string;
+  [key: string]: string | number | boolean;
+  osmappRouteCount?: number;
+  osmappHasImages?: boolean;
+  osmappType?: 'node' | 'way' | 'relation';
+  osmappLabel?: string;
+};
+
 // TODO split in two types /extend/
-export interface Feature {
+export type Feature = {
   point?: boolean; // TODO rename to isMarker or isCoords
   type: 'Feature';
   id?: number; // for map hover effect
@@ -98,19 +108,12 @@ export interface Feature {
     role?: string; // only for memberFeatures
   };
   tags: FeatureTags;
-  members?: RelationMember[];
-  memberFeatures?: Feature[];
+  members?: RelationMember[]; // only for relations
+  memberFeatures?: Feature[]; // for relations with children (full)
+  nodes?: number[]; // only for ways
   parentFeatures?: Feature[];
   imageDefs?: ImageDef[];
-  properties: {
-    class: string;
-    subclass: string;
-    [key: string]: string | number | boolean;
-    osmappRouteCount?: number;
-    osmappHasImages?: boolean;
-    osmappType?: 'node' | 'way' | 'relation';
-    osmappLabel?: string;
-  };
+  properties: FeatureProperties;
   center: Position;
   countryCode?: string; // ISO3166-1 code lowercase, undefined = no country
   roundedCenter?: LonLatRounded;
@@ -125,7 +128,7 @@ export interface Feature {
   state?: { hover: boolean };
   skeleton?: boolean; // that means loading is in progress
   nonOsmObject?: boolean;
-}
+};
 
 export type MessagesType = typeof Vocabulary;
 export type TranslationId = keyof MessagesType;

@@ -1,31 +1,38 @@
 import styled from '@emotion/styled';
-import { Box } from '@mui/material';
+import { Box, Chip, Typography } from '@mui/material';
 import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { getOsmappLink, getUrlOsmId } from '../../services/helpers';
+import {
+  getOsmappLink,
+  getReactKey,
+  getUrlOsmId,
+} from '../../services/helpers';
 import { Feature, isInstant } from '../../services/types';
 import { useMobileMode } from '../helpers';
-import { getLabel } from '../../helpers/featureLabel';
+import { getHumanPoiType, getLabel } from '../../helpers/featureLabel';
 
 import { Slider, Wrapper } from './FeatureImages/FeatureImages';
 import { Image } from './FeatureImages/Image/Image';
 import { getInstantImage } from '../../services/images/getImageDefs';
-import { intl } from '../../services/intl';
+import { intl, t } from '../../services/intl';
 import Link from 'next/link';
 import { naturalSort } from './Climbing/utils/array';
+import { PanelLabel } from './Climbing/PanelLabel';
+import { PROJECT_ID } from '../../services/project';
+import { MemberItem } from './MemberFeatures/MemberItem';
+
+const isOpenClimbing = PROJECT_ID === 'openclimbing';
+
+const Ul = styled.ul`
+  padding: 0;
+  list-style: none;
+`;
 
 const ArrowIcon = styled(ArrowForwardIosIcon)`
   opacity: 0.2;
   margin-left: 12px;
-`;
-
-const HeadingRow = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 0 12px;
 `;
 
 const Container = styled.div`
@@ -35,9 +42,9 @@ const Container = styled.div`
   gap: 8px;
   justify-content: space-between;
   cursor: pointer;
-  border-radius: 8px;
-  padding: 12px 0;
-  background-color: ${({ theme }) => theme.palette.background.elevation};
+  //border-radius: 8px;
+  padding: 0 0 20px 0;
+  //background-color: ${({ theme }) => theme.palette.background.elevation};
   &:hover {
     ${ArrowIcon} {
       opacity: 1;
@@ -48,65 +55,83 @@ const Container = styled.div`
 const CragList = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 20px;
+  margin-top: 12px;
+`;
+
+const Name = styled.div`
+  overflow: hidden;
+  text-overflow: ellipsis;
+`;
+
+const CragName = styled.div`
+  font-weight: 900;
+  margin: 0;
+  font-size: 28px;
+  line-height: 1.2;
+  ${isOpenClimbing && `font-family: 'Piazzolla', sans-serif;`}
+  color: ${({ theme }) => theme.palette.primary.main};
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-between;
 `;
 
 const StyledLink = styled(Link)`
   text-decoration: none !important;
-`;
-
-const Content = styled.div`
-  flex: 1;
-`;
-
-const CragName = styled.div`
-  padding: 0;
-  font-weight: 900;
-  font-size: 20px;
-  color: ${({ theme }) => theme.palette.primary.main};
-`;
-
-const Attributes = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const NumberOfRoutes = styled.div`
-  font-size: 13px;
-  color: ${({ theme }) => theme.palette.secondary.main};
+  &:hover h3 {
+    text-decoration: underline;
+  }
 `;
 
 const Header = ({
-  imagesCount,
   label,
   routesCount,
 }: {
   label: string;
   routesCount: number;
-  imagesCount: number;
 }) => (
-  <HeadingRow>
-    <Content>
-      <CragName>{label}</CragName>{' '}
-      <Attributes>
-        {routesCount > 0 && (
-          <NumberOfRoutes>{routesCount} routes </NumberOfRoutes>
-        )}
-        {imagesCount > 0 && (
-          <NumberOfRoutes>{imagesCount} photos</NumberOfRoutes>
-        )}
-      </Attributes>
-    </Content>
-    <ArrowIcon color="primary" />
-  </HeadingRow>
+  <Box ml={2} mr={2}>
+    <CragName>
+      <Typography
+        component="h3"
+        variant="inherit"
+        overflow="hidden"
+        textOverflow="ellipsis"
+      >
+        {label}
+      </Typography>
+      {routesCount && (
+        <Chip
+          size="small"
+          variant="outlined"
+          label={
+            <>
+              <strong>{routesCount}</strong> {t('featurepanel.routes')}
+            </>
+          }
+          sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+        />
+      )}
+    </CragName>{' '}
+  </Box>
 );
 
-const Gallery = ({ images }) => {
+const Gallery = ({ images, feature }) => {
+  const poiType = getHumanPoiType(feature);
+  const alt = `${poiType} ${getLabel(feature)}`;
+
   return (
     <Wrapper>
       <Slider>
-        {naturalSort(images, (item) => item.def.k).map((item) => (
-          <Image key={item.image.imageUrl} def={item.def} image={item.image} />
+        {naturalSort(images, (item) => item.def.k).map((item, index) => (
+          <Image
+            key={item.image.imageUrl}
+            def={item.def}
+            image={item.image}
+            alt={`${alt} ${index + 1}`}
+          />
         ))}
       </Slider>
     </Wrapper>
@@ -141,9 +166,8 @@ const CragItem = ({ feature }: { feature: Feature }) => {
         <Header
           label={getLabel(feature)}
           routesCount={feature.members?.length}
-          imagesCount={images.length}
         />
-        {images.length ? <Gallery images={images} /> : null}
+        {images.length ? <Gallery images={images} feature={feature} /> : null}
       </Container>
     </StyledLink>
   );
@@ -156,13 +180,32 @@ export const CragsInArea = () => {
     return null;
   }
 
+  const crags = feature.memberFeatures.filter(({ tags }) => tags.climbing);
+  const other = feature.memberFeatures.filter(({ tags }) => !tags.climbing);
+
   return (
-    <Box mb={2}>
-      <CragList>
-        {feature.memberFeatures.map((item) => (
-          <CragItem key={getOsmappLink(item)} feature={item} />
-        ))}
-      </CragList>
-    </Box>
+    <>
+      <PanelLabel>
+        {t('featurepanel.climbing_sectors')}{' '}
+        {feature.tags.name
+          ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
+          : ''}
+      </PanelLabel>
+      <Box mt={2} mb={4}>
+        <CragList>
+          {crags.map((item) => (
+            <CragItem key={getOsmappLink(item)} feature={item} />
+          ))}
+        </CragList>
+
+        {other.length > 0 && (
+          <Ul>
+            {other.map((item) => (
+              <MemberItem key={getReactKey(item)} feature={item} />
+            ))}
+          </Ul>
+        )}
+      </Box>
+    </>
   );
 };

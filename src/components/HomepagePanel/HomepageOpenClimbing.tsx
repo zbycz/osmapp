@@ -21,6 +21,21 @@ import { LogoMaptiler } from '../../assets/LogoMaptiler';
 import { DividerOpenClimbing } from './DividerOpenClimbing';
 import { useMobileMode } from '../helpers';
 import { HomepageOpenClimbingGallery } from './HomepageOpenClimbingGallery';
+import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
+import { SupportUs } from './SupportUs';
+const AccordionStyle = {
+  '&:before': {
+    backgroundColor: 'transparent !important',
+  },
+};
+
+export const From = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  margin-top: 2em;
+  padding-bottom: 10px;
+`;
 
 export const Divider = styled.div`
   align-items: center;
@@ -111,9 +126,14 @@ const Buttons = ({ onClose }) => (
       {t('homepage.go_to_map_button')}
     </Button>
     <Stack spacing={1} direction={'row'} mb={6}>
-      {/* <Button variant="text" fullWidth> */}
-      {/*   {t('homepage.add_new_climbing_area')} */}
-      {/* </Button> */}
+      <Button
+        variant="text"
+        fullWidth
+        href="https://medium.com/@jvaclavik/how-to-contribute-to-openclimbing-org-9a159ddd5d4c"
+        target="_blank"
+      >
+        {t('homepage.add_new_climbing_area')}
+      </Button>
       <Button
         variant="text"
         fullWidth
@@ -131,12 +151,32 @@ const StyledGithubIcon = styled(GithubIcon)`
   margin: -2px 8px 0 0;
 `;
 
+const Banners = () => (
+  <Stack
+    spacing={1}
+    direction={'row'}
+    mt={6}
+    sx={{ paddingBottom: 3 }}
+    justifyContent="space-between"
+  >
+    <a href="https://www.maptiler.com" target="_blank">
+      <LogoMaptiler width={140} />
+    </a>
+    <a
+      href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss"
+      target="_blank"
+    >
+      <img src="/vercel.svg" alt="Vercel" width="160" />
+    </a>
+  </Stack>
+);
+
 const ImportantLinks = () => (
   <>
     <Typography variant="h6" paragraph mt={4}>
       {t('homepage.important_links')}
     </Typography>
-    <Accordion sx={{ background: 'rgba(0,0,0,0.05)' }}>
+    <Accordion disableGutters elevation={0} sx={AccordionStyle}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
@@ -155,7 +195,7 @@ const ImportantLinks = () => (
         </Typography>
       </AccordionDetails>
     </Accordion>
-    <Accordion sx={{ background: 'rgba(0, 0, 0, 0.05)' }}>
+    <Accordion disableGutters elevation={0} sx={AccordionStyle}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
@@ -174,24 +214,6 @@ const ImportantLinks = () => (
         </Typography>
       </AccordionDetails>
     </Accordion>
-
-    <Stack
-      spacing={1}
-      direction={'row'}
-      mt={6}
-      mb={2}
-      justifyContent="space-between"
-    >
-      <a href="https://www.maptiler.com" target="_blank">
-        <LogoMaptiler width={140} />
-      </a>
-      <a
-        href="https://vercel.com/?utm_source=osm-app-team&utm_campaign=oss"
-        target="_blank"
-      >
-        <img src="/vercel.svg" alt="Vercel" width="160" />
-      </a>
-    </Stack>
   </>
 );
 
@@ -219,6 +241,13 @@ export function HomepageOpenClimbing({ onClose }: { onClose: () => void }) {
             </Divider>
 
             <ImportantLinks />
+            <SupportUs />
+            <Banners />
+            <From>
+              <Typography variant="caption" color="secondary" letterSpacing={1}>
+                Made in Prague with ♥
+              </Typography>
+            </From>
           </Stack>
         </Content>
       </PanelScrollbars>

@@ -6,24 +6,24 @@ import { Homepage } from './Homepage';
 import { MobilePageDrawer } from '../utils/MobilePageDrawer';
 import { useRouter } from 'next/router';
 
+/** shows conditionally on first visit, or in /install
+ */
 export const HomepagePanel = () => {
   const { feature, homepageShown, hideHomepage, persistHideHomepage } =
     useFeatureContext();
   const isMobileMode = useMobileMode();
 
   const router = useRouter();
-  const directions = router.query.all?.[0] === 'directions';
+  const notIndex = router.pathname !== '/';
 
   // hide after first shown feature or directions box
   useEffect(() => {
-    if (feature || directions) hideHomepage();
-  }, [feature, directions, hideHomepage]);
+    if (feature || notIndex) hideHomepage();
+  }, [feature, notIndex, hideHomepage]);
 
   if (!homepageShown) {
     return null;
   }
-
-  const isClimbing = PROJECT_ID === 'openclimbing';
 
   const onClose = (_: React.TransitionEvent<HTMLDivElement>, open: boolean) => {
     if (!open) {

@@ -8,16 +8,25 @@ import { imageAttributions, items } from './items';
 const MAPLIBREGL_ZOOM_DIFFERENCE = 1;
 
 export const useGetItems = () => {
+  const { view, allActiveLayers } = useMapStateContext();
+
   const { feature } = useFeatureContext();
   const { center, roundedCenter = undefined } = feature;
   const position = roundedCenter ?? center;
 
-  const { view, activeLayers } = useMapStateContext();
-  const [lon, lat] = position;
+  if (!position) {
+    return {
+      imageAttributions: [],
+      items: [],
+    };
+  }
 
+  const [lon, lat] = position;
   const [ourZoom] = view;
   const zoom = parseFloat(ourZoom) + MAPLIBREGL_ZOOM_DIFFERENCE;
   const zoomInt = Math.round(zoom);
+
+  const isSateliteActive = allActiveLayers.some((layer) => layer.isSatelite);
 
   const osmQuery = feature?.osmMeta?.id
     ? `${feature.osmMeta.type}/${feature.osmMeta.id}`
@@ -29,7 +38,8 @@ export const useGetItems = () => {
       position,
       osmQuery,
       zoomInt,
-      appleMaps: getAppleMapsLink(feature, position, activeLayers),
+      isSateliteActive,
+      appleMaps: getAppleMapsLink(feature, position, isSateliteActive),
       idEditor: getIdEditorLink(feature, view), // TODO coordsFeature has random id which gets forwarded LOL
     }),
   };

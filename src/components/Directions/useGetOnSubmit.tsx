@@ -11,7 +11,7 @@ import {
 } from './routing/handleRouting';
 import { getOptionToLonLat } from '../SearchBox/getOptionToLonLat';
 import { getLastFeature } from '../../services/lastFeatureStorage';
-import { getCoordsOption } from '../SearchBox/options/coords';
+import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { getLabel } from '../../helpers/featureLabel';
 import { t } from '../../services/intl';
 import { FetchError } from '../../services/helpers';
@@ -33,6 +33,7 @@ const getRoutingFailed = (showToast: ShowToast) => {
     }
   };
 };
+
 export const useReactToUrl = (
   setMode: (param: ((current: string) => string) | string) => void,
   setPoints: (points: Array<Option>) => void,
@@ -44,7 +45,8 @@ export const useReactToUrl = (
   const urlParts = router.query.all;
 
   useEffect(() => {
-    const [, mode, ...points] = urlParts as [string, Profile, ...string[]];
+    const urlPartsArray = Array.isArray(urlParts) ? urlParts : [];
+    const [mode, ...points] = urlPartsArray as [Profile, ...string[]];
     const options = parseUrlParts(points.flatMap((str) => str.split('/')));
 
     if (mode && options.length >= 2) {
@@ -61,7 +63,7 @@ export const useReactToUrl = (
 
       const lastFeature = getLastFeature();
       if (lastFeature) {
-        const newPoint = getCoordsOption(
+        const newPoint = getDirectionsCoordsOption(
           lastFeature.center,
           getLabel(lastFeature),
         );

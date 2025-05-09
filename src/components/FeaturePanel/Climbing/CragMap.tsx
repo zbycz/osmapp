@@ -186,6 +186,8 @@ const useInitMap = () => {
   const containerRef = React.useRef(null);
   const mapRef = React.useRef<maplibregl.Map>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
+  const [isFirstMapLoad, setIsFirstMapLoad] = useState(true);
+
   const { feature } = useFeatureContext();
   const { photoPaths } = useClimbingContext();
 
@@ -230,7 +232,18 @@ const useInitMap = () => {
 
     mapRef.current.on('load', () => {
       setIsMapLoaded(true);
-      if (mapRef.current) {
+    });
+
+    return () => {
+      if (map) {
+        map.remove();
+      }
+    };
+  }, [containerRef]);
+
+  useEffect(() => {
+    mapRef.current?.on('load', () => {
+      if (isFirstMapLoad) {
         mapRef.current.jumpTo({
           center: feature.center as [number, number],
           zoom: 18.5,
@@ -240,15 +253,15 @@ const useInitMap = () => {
           type: 'FeatureCollection' as const,
           features: transformMemberFeaturesToGeojson(feature.memberFeatures),
         });
+        setIsFirstMapLoad(false);
       }
     });
-
-    return () => {
-      if (map) {
-        map.remove();
-      }
-    };
-  }, [containerRef, feature.center, feature.memberFeatures, getClimbingSource]);
+  }, [
+    feature.center,
+    feature.memberFeatures,
+    getClimbingSource,
+    isFirstMapLoad,
+  ]);
 
   return { containerRef, isMapLoaded };
 };

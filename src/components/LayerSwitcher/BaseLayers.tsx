@@ -14,6 +14,7 @@ import {
 import React from 'react';
 import { ListItemButton, ListItemText, Tooltip } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
+import { TooltipButton } from '../utils/TooltipButton';
 
 const OutsideOfView = () => (
   <Tooltip title="Not visible currently" arrow placement="top-end">
@@ -26,7 +27,7 @@ const getIsOutsideOfView = (bboxes: Bbox[], view: View) =>
 
 const BaseLayerItem = ({ layer }: { layer: Layer }) => {
   const { view, activeLayers, setActiveLayers } = useMapStateContext();
-  const { key, name, type, url, Icon, bboxes } = layer;
+  const { key, name, type, url, Icon, bboxes, secondLine } = layer;
 
   const handleClick = () => {
     setActiveLayers((prev) => [key, ...prev.slice(1)]);
@@ -38,7 +39,10 @@ const BaseLayerItem = ({ layer }: { layer: Layer }) => {
     <>
       <ListItemButton key={key} selected={selected} onClick={handleClick}>
         <LayerIcon Icon={Icon} />
-        <ListItemText primary={name} />
+        <ListItemText
+          primary={name}
+          secondary={selected && secondLine ? secondLine : undefined}
+        />
         {isOutsideOfView && <OutsideOfView />}
         {type === 'user' && <RemoveUserLayerAction url={url} />}
       </ListItemButton>

@@ -3,10 +3,10 @@ import { TextField } from '@mui/material';
 import { t, Translation } from '../../../../../../services/intl';
 import { encodeUrl } from '../../../../../../helpers/utils';
 import React from 'react';
-import { useFeatureEditData } from '../SingleFeatureEditContext';
+import { useCurrentItem } from '../CurrentContext';
 
 const CantEditText = () => {
-  const { tags } = useFeatureEditData();
+  const { tags } = useCurrentItem();
   const url = encodeUrl`https://projets.pavie.info/yohours/?oh=${tags['opening_hours']}`;
 
   return (
@@ -21,7 +21,7 @@ const CantEditText = () => {
 
 export const OpeningHoursInput = ({ cantEdit }: { cantEdit?: boolean }) => {
   const { focusTag } = useEditDialogContext();
-  const { tags, setTag } = useFeatureEditData();
+  const { tags, setTag } = useCurrentItem();
 
   return (
     <TextField

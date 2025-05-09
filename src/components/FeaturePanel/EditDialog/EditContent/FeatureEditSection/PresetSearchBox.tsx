@@ -6,10 +6,10 @@ import {
   ListSubheader,
   MenuItem,
   Select,
+  Tooltip,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
-import Maki from '../../../../utils/Maki';
 import { TranslatedPreset } from './PresetSelect';
 import { Setter } from '../../../../../types';
 import { t } from '../../../../../services/intl';
@@ -20,7 +20,8 @@ import { PROJECT_ID } from '../../../../../services/project';
 import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
-import { useFeatureEditData } from './SingleFeatureEditContext';
+import { useCurrentItem } from './CurrentContext';
+import { PoiIcon } from '../../../../utils/icons/PoiIcon';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -37,23 +38,23 @@ const StyledListSubheader = styled(ListSubheader)`
   }
 `;
 
-const emptyOptions = [
-  'amenity/cafe',
-  'amenity/restaurant',
-  'amenity/fast_food',
-  'amenity/bar',
-  'shop',
-  'leisure/park',
-  'amenity/place_of_worship',
-  ...(PROJECT_ID === 'openclimbing'
+const emptyOptions =
+  PROJECT_ID === 'openclimbing'
     ? [
-        'climbing/route_bottom',
-        'climbing/route',
         'climbing/crag',
+        'climbing/route_bottom',
+        // 'climbing/route',
         // 'climbing/area',
       ]
-    : []),
-];
+    : [
+        'amenity/cafe',
+        'amenity/restaurant',
+        'amenity/fast_food',
+        'amenity/bar',
+        'shop',
+        'leisure/park',
+        'amenity/place_of_worship',
+      ];
 
 const Placeholder = styled.span`
   color: ${({ theme }) => theme.palette.text.secondary};
@@ -64,7 +65,7 @@ const renderOption = (option: TranslatedPreset) =>
     <Placeholder>{t('editdialog.preset_select.placeholder')}</Placeholder>
   ) : (
     <>
-      <Maki ico={option.icon} size={16} middle themed />
+      <PoiIcon tags={option.tags} size={16} middle themed />
       <span style={{ paddingLeft: 5 }} />
       {option.name}
     </>
@@ -129,7 +130,7 @@ const useGetOnChange = (
   value: string,
   setValue: Setter<string>,
 ) => {
-  const { setTagsEntries } = useFeatureEditData();
+  const { setTagsEntries } = useCurrentItem();
 
   return (e: SelectChangeEvent<string>) => {
     const oldPreset = options.find((o) => o.presetKey === value);
@@ -189,31 +190,40 @@ export const PresetSearchBox = ({ value, setValue, options }: Props) => {
 
   return (
     <>
-      <Select
-        disabled={!enabled}
-        MenuProps={{
-          autoFocus: false,
-          slotProps: { paper: getPaperMaxHeight(selectRef) },
-        }}
-        value={value}
-        onChange={onChange}
-        onClose={() => setSearchText('')}
-        renderValue={() =>
-          renderOption(options.find((o) => o.presetKey === value))
-        }
-        size="small"
-        variant="outlined"
-        fullWidth
-        displayEmpty
-        ref={selectRef}
+      <Tooltip
+        title={enabled ? '' : t('editdialog.preset_select.change_type_warning')}
+        arrow
       >
-        <SearchRow onChange={(e) => setSearchText(e.target.value)} />
-        {displayedOptions.map((option) => (
-          <MenuItem key={option} component="li" value={option}>
-            {renderOption(options.find((o) => o.presetKey === option))}
-          </MenuItem>
-        ))}
-      </Select>
+        <Select
+          disabled={!enabled}
+          sx={{
+            '.Mui-disabled': {
+              cursor: 'not-allowed !important',
+            },
+          }}
+          MenuProps={{
+            autoFocus: false,
+            slotProps: { paper: getPaperMaxHeight(selectRef) },
+          }}
+          value={value}
+          onChange={onChange}
+          onClose={() => setSearchText('')}
+          renderValue={() =>
+            renderOption(options.find((o) => o.presetKey === value))
+          }
+          variant="outlined"
+          fullWidth
+          displayEmpty
+          ref={selectRef}
+        >
+          <SearchRow onChange={(e) => setSearchText(e.target.value)} />
+          {displayedOptions.map((option) => (
+            <MenuItem key={option} component="li" value={option}>
+              {renderOption(options.find((o) => o.presetKey === option))}
+            </MenuItem>
+          ))}
+        </Select>
+      </Tooltip>
       {!enabled && (
         // TODO we may warn users that this is not usual operation, if this becomes an issue
         <Box ml={1}>

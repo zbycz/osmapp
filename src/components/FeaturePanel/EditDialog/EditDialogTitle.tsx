@@ -1,4 +1,4 @@
-import { DialogTitle, Stack } from '@mui/material';
+import { DialogTitle, IconButton, Stack } from '@mui/material';
 import React from 'react';
 import { useEditDialogFeature } from './utils';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
@@ -7,6 +7,7 @@ import { getLabel } from '../../../helpers/featureLabel';
 import CommentIcon from '@mui/icons-material/Comment';
 import EditIcon from '@mui/icons-material/Edit';
 import { useEditContext } from './EditContext';
+import CloseIcon from '@mui/icons-material/Close';
 
 const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
   const { loggedIn } = useOsmAuthContext();
@@ -15,16 +16,16 @@ const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
   if (isUndelete) return t('editdialog.undelete_heading');
   if (!loggedIn) {
     if (items.length > 1)
-      return `${t('editdialog.suggest_heading')} ${items.length} ${t('editdialog.items')}`;
-    return `${t('editdialog.suggest_heading')} ${getLabel(feature)}`;
+      return `${t('editdialog.suggest_heading')}: ${items.length} ${t('editdialog.items')}`;
+    return `${t('editdialog.suggest_heading')}`;
   }
 
   if (items.length > 1)
-    return `${t('editdialog.edit_heading')} ${items.length} ${t('editdialog.items')}`;
-  return `${t('editdialog.edit_heading')} ${getLabel(feature)}`;
+    return `${t('editdialog.edit_heading')}: ${items.length} ${t('editdialog.items')}`;
+  return `${t('editdialog.edit_heading')}`;
 };
 
-export const EditDialogTitle = () => {
+export const EditDialogTitle = ({ onClose }) => {
   const { loggedIn } = useOsmAuthContext();
   const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
 
@@ -32,9 +33,20 @@ export const EditDialogTitle = () => {
 
   return (
     <DialogTitle id="edit-dialog-title">
-      <Stack direction="row" gap={1} alignItems="center">
-        {loggedIn ? <EditIcon /> : <CommentIcon />}
-        {dialogTitle}
+      <Stack
+        direction="row"
+        gap={1}
+        alignItems="center"
+        justifyContent="space-between"
+      >
+        <Stack direction="row" gap={2} alignItems="center">
+          {loggedIn ? <EditIcon /> : <CommentIcon />}
+          {dialogTitle}
+        </Stack>
+
+        <IconButton color="secondary" edge="end" onClick={onClose}>
+          <CloseIcon fontSize="small" />
+        </IconButton>
       </Stack>
     </DialogTitle>
   );

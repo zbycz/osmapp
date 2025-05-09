@@ -1,6 +1,7 @@
 import { Option } from './types';
 import { buildPhotonAddress } from './options/geocoder';
 
+// This is what is showin in the <input> after users selects the Option
 export const getOptionLabel = (option: Option | undefined) => {
   if (option == null) {
     return '';

@@ -50,6 +50,7 @@ export const overpassLayers: LayerSpecification[] = [
     },
   } as LayerSpecification,
   // -- commented out until this is fixed https://github.com/zbycz/osmapp/issues/739
+  // -- related: preprocess the data to tell polygons from lines, see https://github.com/zbycz/osmapp/issues/974
   // {
   //   id: 'overpass-fill',
   //   type: 'fill',

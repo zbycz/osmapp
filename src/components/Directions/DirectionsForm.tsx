@@ -9,7 +9,7 @@ import { DirectionsAutocomplete } from './DirectionsAutocomplete';
 import { t } from '../../services/intl';
 import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
-import { getCoordsOption } from '../SearchBox/options/coords';
+import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useDirectionsContext } from './DirectionsContext';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
@@ -40,7 +40,7 @@ const useGlobalMapClickOverride = (
   useEffect(() => {
     mapClickOverrideRef.current = (coords, label) => {
       if (points) {
-        const coordinates = getCoordsOption(coords, label);
+        const coordinates = getDirectionsCoordsOption(coords, label);
         if (!points[0]) {
           const newPoints = updatePoint(0, coordinates);
           submitFactory(newPoints, mode);

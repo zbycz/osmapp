@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import Cookies from 'js-cookie';
 import { Feature } from '../../services/types';
 import { useBoolState } from '../helpers';
@@ -50,15 +50,18 @@ export const FeatureProvider = ({
     publishDbgObject('schema', featureFromRouter?.schema);
   }, [featureFromRouter]);
 
+  const router = useRouter();
+  const isIndex = router.pathname === '/';
   const [homepageShown, showHomepage, hideHomepage] = useBoolState(
-    feature == null && cookies.hideHomepage !== 'yes',
+    feature === null && isIndex && cookies.hideHomepage !== 'yes',
   );
   const persistShowHomepage = () => {
     setFeature(null);
     hideHomepage();
-    showHomepage();
-    Router.push(`/${window.location.hash}`);
     Cookies.remove('hideHomepage');
+    Router.push(`/${window.location.hash}`).then(() => {
+      showHomepage();
+    });
   };
   const persistHideHomepage = () => {
     hideHomepage();

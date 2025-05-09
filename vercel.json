@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "pages/api/climbing-tiles/refresh.ts": {
+      "memory": 3000,
+      "maxDuration": 200
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/climbing-tiles/refresh",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}
