@@ -22,6 +22,7 @@ import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
 import { useCurrentItem } from './CurrentContext';
 import { PoiIcon } from '../../../../utils/icons/PoiIcon';
+import { getApiId } from '../../../../../services/helpers';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -38,23 +39,26 @@ const StyledListSubheader = styled(ListSubheader)`
   }
 `;
 
-const emptyOptions =
-  PROJECT_ID === 'openclimbing'
-    ? [
-        'climbing/crag',
-        'climbing/route_bottom',
-        // 'climbing/route',
-        // 'climbing/area',
-      ]
-    : [
-        'amenity/cafe',
-        'amenity/restaurant',
-        'amenity/fast_food',
-        'amenity/bar',
-        'shop',
-        'leisure/park',
-        'amenity/place_of_worship',
-      ];
+const useEmptyOptions = () => {
+  const { shortId } = useCurrentItem();
+  const isNode = shortId[0] === 'n';
+  const isRelation = shortId[0] === 'r';
+  if ((PROJECT_ID === 'openclimbing' && isRelation) || isNode) {
+    return ['climbing/crag', 'climbing/route_bottom'];
+  }
+  if (isNode) {
+    return [
+      'amenity/cafe',
+      'amenity/restaurant',
+      'amenity/fast_food',
+      'amenity/bar',
+      'shop',
+      'leisure/park',
+      'amenity/place_of_worship',
+    ];
+  }
+  return [];
+};
 
 const Placeholder = styled.span`
   color: ${({ theme }) => theme.palette.text.secondary};
@@ -94,12 +98,14 @@ const useDisplayedOptions = (
   options: TranslatedPreset[],
 ): string[] => {
   const { feature } = useFeatureContext();
+  const emptyOptions = useEmptyOptions();
+
   return useMemo<string[]>(
     () =>
       searchText.length
         ? getFilteredOptions(options, searchText, feature.osmMeta?.type)
         : emptyOptions,
-    [feature.osmMeta?.type, options, searchText],
+    [emptyOptions, feature.osmMeta?.type, options, searchText],
   );
 };
 

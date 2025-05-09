@@ -129,7 +129,7 @@ export const ourPresets = {
   },
   'climbing/area': {
     icon: 'temaki-abseiling',
-    geometry: ['relation'],
+    geometry: ['point', 'relation'],
     fields: ['name'],
     tags: {
       climbing: 'area',
