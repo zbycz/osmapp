@@ -145,6 +145,8 @@ export default {
   'featurepanel.footer_title': 'Ostatní informace',
   'featurepanel.climbing_sectors': 'Lezení',
   'featurepanel.climbing_sectors_in': 'v oblasti',
+  'featurepanel.sector': 'Lezecký sektor',
+  'featurepanel.sectors': 'sektorů',
   'featurepanel.routes': 'cest',
 
   'opening_hours.open': 'Otevřeno: __todayTime__',
