@@ -134,12 +134,14 @@ const convertToRelationFactory = (
     ]);
 
     if (waysFeatures.length > 0) {
-      throw new Error(`Can't convert node ${shortId} which is part of a way`);
+      throw new Error(`Can't convert node ${shortId} which is part of a way.`); // TODO duplicate the node ?
     }
+
+    const parentItems = parentFeatures.map((feature) => buildDataItem(feature));
 
     const newShortId = `r${getNewId()}`;
     setData((prevData) => {
-      // TODO - don't delete natural=peak - leave it as node
+      // TODO - don't delete e.g. natural=peak - leave it as node
       const newData = prevData.map((item) =>
         item.shortId === shortId ? { ...item, toBeDeleted: true } : item,
       );
@@ -154,27 +156,27 @@ const convertToRelationFactory = (
         nodes: undefined,
         members: [],
       };
+      newData.push(newRelation);
 
       // add all parent relations which are not already there
-      newData.concat(parentFeatures.map((feature) => buildDataItem(feature)));
+      const newParentItems = parentItems.filter(
+        (parent) => !newData.some((item) => item.shortId === parent.shortId),
+      );
+      newData.push(...newParentItems);
 
-      // update member id in all parent relations
-      const newData2 = newData.map((dataItem) => {
-        return {
-          ...dataItem,
-          members: dataItem.members.map((member) =>
-            member.shortId === shortId
-              ? {
-                  ...member,
-                  shortId: newShortId,
-                  label: getName(currentItem) ?? newShortId,
-                }
-              : member,
-          ),
-        };
-      });
-
-      return [...newData2, newRelation];
+      // update member id everywhere
+      return newData.map((item) => ({
+        ...item,
+        members: item.members?.map((member) =>
+          member.shortId === shortId
+            ? {
+                ...member,
+                shortId: newShortId,
+                label: getName(newRelation) ?? newShortId,
+              }
+            : member,
+        ),
+      }));
     });
 
     return newShortId;
