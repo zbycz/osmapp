@@ -9,6 +9,7 @@ import { getPresetTranslation } from '../../../services/tagging/translations';
 import { getNewId } from '../../../services/getCoordsFeature';
 import { fetchParentFeatures } from '../../../services/osm/fetchParentFeatures';
 import { fetchWays } from '../../../services/osm/fetchWays';
+import { fetchFreshItem } from './itemsHelpers';
 
 export type TagsEntries = [string, string][];
 
@@ -41,29 +42,6 @@ export type EditDataItem = DataItem & {
   setNodeLonLat: (lonLat: LonLat) => void;
   toggleToBeDeleted: () => void;
   convertToRelation: ConvertToRelation;
-};
-
-const buildDataItem = (feature: Feature): DataItem => {
-  const apiId = feature.osmMeta;
-  return {
-    shortId: getShortId(apiId),
-    version: apiId.version,
-    tagsEntries: Object.entries(feature.tags),
-    toBeDeleted: false,
-    nodeLonLat: apiId.type === 'node' ? feature.center : undefined,
-    nodes: feature.nodes,
-    members:
-      feature.memberFeatures?.map((memberFeature) => ({
-        shortId: getShortId(memberFeature.osmMeta),
-        role: memberFeature.osmMeta.role,
-        label: getLabel(memberFeature),
-      })) ??
-      feature.members?.map((member) => ({
-        shortId: getShortId({ type: member.type, id: member.ref }),
-        role: member.role,
-        label: `${member.type} ${member.ref}`,
-      })),
-  };
 };
 
 export const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
@@ -138,7 +116,9 @@ const convertToRelationFactory = (
       throw new Error(`Can't convert node ${shortId} which is part of a way.`); // TODO duplicate the node ?
     }
 
-    const parentItems = parentFeatures.map((feature) => buildDataItem(feature));
+    const parentItems = await Promise.all(
+      parentFeatures.map((feature) => fetchFreshItem(feature.osmMeta)),
+    );
 
     const newShortId = `r${getNewId()}`;
     setData((prevData) => {
