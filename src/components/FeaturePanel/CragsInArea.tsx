@@ -185,7 +185,7 @@ export const CragsInArea = () => {
   const other = feature.memberFeatures.filter(({ tags }) => !tags.climbing);
 
   const numberOfRoutes = crags.reduce((acc, { members }) => {
-    return acc + members.length;
+    return acc + (members?.length ?? 0);
   }, 0);
 
   return (
