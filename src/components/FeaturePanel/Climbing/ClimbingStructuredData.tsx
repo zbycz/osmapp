@@ -99,7 +99,6 @@ export const ClimbingStructuredData = () => {
   const { userSettings } = useUserSettingsContext();
 
   const structuredData = generateScriptContent(feature, userSettings);
-  console.log('___', structuredData);
   if (!structuredData) return null;
 
   return (
