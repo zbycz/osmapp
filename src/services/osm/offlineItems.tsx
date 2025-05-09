@@ -48,15 +48,13 @@ export const TEST_NODE = {
         type: 'site',
         wikimedia_commons: 'File:Hlubočepské plotny - Pravá plotna.jpg',
       },
-      properties: {
-        class: 'climbing',
-        subclass: 'crag',
-      },
+      properties: { class: 'climbing', subclass: 'crag' },
     } as unknown as Feature),
     {
       type: 'Feature',
       osmMeta: { type: 'relation', id: 6 },
       tags: { name: 'Nejlepší cesty v ČR' },
+      properties: { class: 'climbing', subclass: 'crag' },
     },
   ],
 } as unknown as Feature;
