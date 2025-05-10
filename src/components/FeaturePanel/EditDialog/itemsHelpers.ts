@@ -58,10 +58,13 @@ export const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
     toBeDeleted: false,
     nodeLonLat: apiId.type === 'node' ? [main.lon, main.lat] : undefined,
     nodes: apiId.type === 'way' ? main.nodes : undefined,
-    members: main.members?.map((member) => ({
-      shortId: getShortId({ type: member.type, id: member.ref }),
-      role: member.role,
-      label: getLabel(itemsMap, member),
-    })),
+    members:
+      apiId.type === 'relation'
+        ? (main.members?.map((member) => ({
+            shortId: getShortId({ type: member.type, id: member.ref }),
+            role: member.role,
+            label: getLabel(itemsMap, member),
+          })) ?? [])
+        : undefined,
   };
 };

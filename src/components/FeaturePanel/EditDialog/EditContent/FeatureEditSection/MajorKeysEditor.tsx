@@ -126,6 +126,7 @@ const TextFieldWithCharacterCount = ({
           setIsValidationReadyToCheck(true);
           setIsFocused(false);
         }}
+        slotProps={{ formHelperText: { component: 'div' } }}
         helperText={
           <Stack direction="row" spacing={1}>
             {isValidationReadyToCheck && helperText}
