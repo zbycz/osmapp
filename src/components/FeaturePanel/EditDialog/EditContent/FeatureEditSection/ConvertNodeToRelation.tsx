@@ -5,17 +5,21 @@ import { NwrIcon } from '../../../NwrIcon';
 import { t } from '../../../../../services/intl';
 import React from 'react';
 import { FeatureTags } from '../../../../../services/types';
+import { getApiId } from '../../../../../services/helpers';
 
 export const isConvertible = (shortId: string, tags: FeatureTags) =>
   shortId.startsWith('n') && ['crag', 'area'].includes(tags.climbing);
 
 export const ConvertNodeToRelation = () => {
-  const { setCurrent } = useEditContext();
-  const { tags, convertToRelation } = useCurrentItem();
+  const { setCurrent, removeItem } = useEditContext();
+  const { shortId, tags, convertToRelation } = useCurrentItem();
 
   const handleConvertToRelation = async () => {
     const newShortId = await convertToRelation();
     setCurrent(newShortId);
+    if (getApiId(shortId).id < 0) {
+      removeItem(shortId);
+    }
   };
 
   return (

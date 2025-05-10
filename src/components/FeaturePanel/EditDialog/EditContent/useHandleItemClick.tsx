@@ -9,7 +9,7 @@ const isInItems = (items: Array<EditDataItem>, shortId: string) =>
   items.find((item) => item.shortId === shortId);
 
 export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
-  const { addNewItem, items, setCurrent } = useEditContext();
+  const { addItem, items, setCurrent } = useEditContext();
 
   return async (e: React.MouseEvent, shortId: string) => {
     const isCmdClicked = e.ctrlKey || e.metaKey;
@@ -31,7 +31,7 @@ export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
     }
 
     const newItem = await fetchFreshItem(apiId);
-    addNewItem(newItem);
+    addItem(newItem);
 
     if (switchToNewTab) {
       setCurrent(newItem.shortId);
