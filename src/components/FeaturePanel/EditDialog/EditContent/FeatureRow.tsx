@@ -10,9 +10,16 @@ import React from 'react';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 import { useEditContext } from '../EditContext';
 
-export const FeatureRow = ({ label, shortId, onClick }) => {
+type Props = {
+  label?: string;
+  shortId: string;
+  onClick: (e: React.MouseEvent) => void;
+};
+
+export const FeatureRow = ({ label, shortId, onClick }: Props) => {
   const { items } = useEditContext();
-  const isAlreadyOpen = items.find((item) => item.shortId === shortId);
+  const isAlreadyInItems = items.find((item) => item.shortId === shortId);
+
   return (
     <>
       <ListItem onClick={onClick}>
@@ -24,7 +31,7 @@ export const FeatureRow = ({ label, shortId, onClick }) => {
         >
           <ListItemText>
             <Stack direction="row" gap={2} alignItems="center">
-              <Typography color={isAlreadyOpen ? 'secondary' : undefined}>
+              <Typography color={isAlreadyInItems ? 'secondary' : undefined}>
                 {label ?? shortId}
               </Typography>
               <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
