@@ -77,6 +77,7 @@ const getXmlByAction = (
     way: items.filter(isWay).map((way) => wayItemToXml(way, changesetId)),
     relation: items
       .filter(isRelation)
+      .toReversed() // new relation can be referenced by another only above, but OSM needs the reference beforehand
       .map((relation) => relationItemToXml(relation, changesetId)),
   };
 };

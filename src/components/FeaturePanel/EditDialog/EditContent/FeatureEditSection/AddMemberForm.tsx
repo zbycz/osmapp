@@ -8,7 +8,7 @@ import { getApiId, getShortId } from '../../../../../services/helpers';
 import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
 import { useEditContext } from '../../EditContext';
 import { useCurrentItem } from './CurrentContext';
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
 import { FeatureTags, OsmId } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
@@ -64,7 +64,7 @@ const getMemberTags = (parentTags: FeatureTags) => {
 
 export const AddMemberForm = () => {
   const { view } = useMapStateContext();
-  const { addNewItem, items, setCurrent } = useEditContext();
+  const { addItem, items, setCurrent } = useEditContext();
   const { members, setMembers, tags } = useCurrentItem();
   const [showInput, setShowInput] = React.useState(false);
   const [label, setLabel] = React.useState('');
@@ -95,7 +95,7 @@ export const AddMemberForm = () => {
       const tags2 = Object.fromEntries(newItem.tagsEntries);
       const newLabel = tags2.name ?? presetLabel;
 
-      addNewItem(newItem);
+      addItem(newItem);
 
       setMembers((prev) => [
         ...(prev ?? []),
@@ -107,10 +107,10 @@ export const AddMemberForm = () => {
         setCurrent(newShortId);
       }
     },
-    [addNewItem, items, label, members, setCurrent, setMembers, tags, view],
+    [addItem, items, label, members, setCurrent, setMembers, tags, view],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const downHandler = (e) => {
       if (!showInput) return;
 

@@ -13,7 +13,8 @@ type EditContextType = {
   setLocation: (s: string) => void;
   comment: string;
   setComment: (s: string) => void;
-  addNewItem: (newItem: DataItem) => void;
+  addItem: (newItem: DataItem) => void;
+  removeItem: (shortId: string) => void;
   items: Array<EditDataItem>;
   current: string;
   setCurrent: (s: string) => void;
@@ -31,7 +32,7 @@ export const EditContextProvider = ({ initialItem, children }: Props) => {
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState(''); // technically is "data", but only for note
   const [comment, setComment] = useState('');
-  const { items, addNewItem } = useEditItems(initialItem);
+  const { items, addItem, removeItem } = useEditItems(initialItem);
   const [current, setCurrent] = useState(initialItem.shortId);
 
   const value: EditContextType = {
@@ -43,7 +44,8 @@ export const EditContextProvider = ({ initialItem, children }: Props) => {
     setLocation,
     comment,
     setComment,
-    addNewItem,
+    addItem,
+    removeItem,
     items,
     current,
     setCurrent,

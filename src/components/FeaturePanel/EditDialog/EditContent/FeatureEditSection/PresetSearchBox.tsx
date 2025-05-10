@@ -43,8 +43,8 @@ const useEmptyOptions = () => {
   const { shortId } = useCurrentItem();
   const isNode = shortId[0] === 'n';
   const isRelation = shortId[0] === 'r';
-  if ((PROJECT_ID === 'openclimbing' && isRelation) || isNode) {
-    return ['climbing/crag', 'climbing/route_bottom'];
+  if (PROJECT_ID === 'openclimbing' && (isRelation || isNode)) {
+    return ['climbing/area', 'climbing/crag', 'climbing/route_bottom'];
   }
   if (isNode) {
     return [

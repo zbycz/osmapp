@@ -249,11 +249,18 @@ export const useEditItems = (initialItem: DataItem) => {
     [data],
   );
 
-  const addNewItem = (newItem: DataItem) => {
+  const addItem = (newItem: DataItem) => {
     setData((state) => [...state, newItem]);
+  };
+
+  const removeItem = (shortId: string) => {
+    if (getApiId(shortId).id > 0) {
+      throw new Error('Existing item should not be removed from items.');
+    }
+    setData((state) => state.filter((item) => item.shortId !== shortId));
   };
 
   publishDbgObject('EditContext state', data);
 
-  return { items, addNewItem };
+  return { items, addItem, removeItem };
 };
