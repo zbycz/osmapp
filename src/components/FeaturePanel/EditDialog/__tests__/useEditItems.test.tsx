@@ -36,7 +36,7 @@ describe('useEditItems', () => {
     };
 
     act(() => {
-      result.current.addNewItem(newItem);
+      result.current.addItem(newItem);
     });
 
     expect(result.current.items).toHaveLength(2);
