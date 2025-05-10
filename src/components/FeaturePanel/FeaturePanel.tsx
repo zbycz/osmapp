@@ -30,6 +30,7 @@ import { TestApiWarning } from './helpers/TestApiWarning';
 import { FeaturePanelClimbingGuideInfo } from './Climbing/FeaturePanelClimbingGuideInfo';
 import { FeaturedTag } from './FeaturedTag';
 import { climbingTagValues } from './Climbing/utils/climbingTagValues';
+import { UploadDialog } from './UploadDialog/UploadDialog';
 
 const Flex = styled.div`
   flex: 1;
@@ -90,6 +91,12 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
               <CragsInArea />
 
               <Box mb={2}>
+                {process.env.NEXT_PUBLIC_ENABLE_UPLOAD && (
+                  <PanelSidePadding>
+                    <UploadDialog />
+                  </PanelSidePadding>
+                )}
+
                 <FeatureImages />
               </Box>
 
