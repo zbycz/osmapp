@@ -13,11 +13,11 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
-import { useGetHandleClick } from '../helpers';
 import { AddMemberForm } from './AddMemberForm';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { CragIcon } from '../../../Climbing/CragIcon';
 import { Setter } from '../../../../../types';
+import { useHandleItemClick } from '../useHandleItemClick';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -107,7 +107,7 @@ export const MembersEditor = () => {
   const theme = useTheme();
   const isClimbingCrag = tags.climbing === 'crag';
   const [isExpanded, setIsExpanded] = useState(false);
-  const handleClick = useGetHandleClick({ setIsExpanded });
+  const handleClick = useHandleItemClick(setIsExpanded);
 
   const selectedPresetKey = isClimbingCrag
     ? 'climbing/route_bottom'

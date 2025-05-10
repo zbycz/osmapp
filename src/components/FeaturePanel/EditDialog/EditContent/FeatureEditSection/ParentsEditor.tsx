@@ -15,12 +15,12 @@ import { fetchParentFeatures } from '../../../../../services/osm/fetchParentFeat
 import { getApiId, getShortId } from '../../../../../services/helpers';
 import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
-import { useGetHandleClick } from '../helpers';
 import { fetchWays } from '../../../../../services/osm/fetchWays';
 import { useEditContext } from '../../EditContext';
 import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
+import { useHandleItemClick } from '../useHandleItemClick';
 
 export const ParentsEditor = () => {
   const { current } = useEditContext();
@@ -28,7 +28,7 @@ export const ParentsEditor = () => {
   const [parents, setParents] = useState([]);
   const theme = useTheme();
   const [isExpanded, setIsExpanded] = React.useState(false);
-  const handleClick = useGetHandleClick({ setIsExpanded });
+  const handleClick = useHandleItemClick(setIsExpanded);
 
   const getSectionName = () => {
     const isClimbingCrag = tags.climbing === 'crag';
