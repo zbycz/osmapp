@@ -1,12 +1,6 @@
 import styled from '@emotion/styled';
 import { Box, Stack } from '@mui/material';
-import React, { Dispatch, SetStateAction } from 'react';
-import { EditDataItem } from '../useEditItems';
-import { useEditContext } from '../EditContext';
-import { getApiId, getShortId } from '../../../../services/helpers';
-
-import { getFullFeatureWithMemberFeatures } from '../../../../services/osm/getFullFeatureWithMemberFeatures';
-import { fetchFreshItem } from '../itemsHelpers';
+import React from 'react';
 
 const CharacterCountContainer = styled.div`
   position: absolute;
@@ -35,6 +29,9 @@ export const CharacterCount = ({
   ) : null;
 
 export const getInputTypeForKey = (key: string) => {
+  // TODO input type is too restrictive,
+  //  if OSM DB can contain any arbitrary string, not just valid phone number
+  //  e.g. phone="123; 124" is also valid,  the user should be able to modify it
   switch (key) {
     case 'fax':
     case 'phone':
@@ -53,43 +50,6 @@ export const getInputTypeForKey = (key: string) => {
     case 'email':
       return 'email';
   }
+
   return 'text';
-};
-
-const isInItems = (items: Array<EditDataItem>, shortId: string) =>
-  items.find((item) => item.shortId === shortId);
-
-export const useGetHandleClick = ({
-  setIsExpanded,
-}: {
-  setIsExpanded?: Dispatch<SetStateAction<boolean>>;
-}) => {
-  const { addNewItem, items, setCurrent } = useEditContext();
-
-  return async (e, shortId: string) => {
-    const isCmdClicked = e.ctrlKey || e.metaKey;
-    const switchToNewTab = !isCmdClicked;
-    const apiId = getApiId(shortId);
-
-    if (switchToNewTab) {
-      setIsExpanded?.(false);
-    }
-
-    // TODO merge these two conditions:
-    if (apiId.id < 0) {
-      if (switchToNewTab) setCurrent(shortId);
-      return;
-    }
-    if (isInItems(items, shortId)) {
-      if (switchToNewTab) setCurrent(shortId);
-      return;
-    }
-
-    const newItem = await fetchFreshItem(apiId);
-    addNewItem(newItem);
-
-    if (switchToNewTab) {
-      setCurrent(newItem.shortId);
-    }
-  };
 };
