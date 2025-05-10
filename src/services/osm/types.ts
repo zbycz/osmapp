@@ -11,7 +11,7 @@ export type OsmElement<T extends OsmType = 'node' | 'way' | 'relation'> = {
   changeset: number;
   user: string;
   uid: number;
-  tags: Record<string, string>;
+  tags?: Record<string, string>; // elements with no tags = tags is undefined
   members?: RelationMember[];
   nodes?: number[];
 };

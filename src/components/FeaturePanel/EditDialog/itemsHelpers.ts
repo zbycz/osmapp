@@ -54,7 +54,7 @@ export const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
   return {
     shortId: getShortId(apiId),
     version: main.version,
-    tagsEntries: Object.entries(main.tags),
+    tagsEntries: Object.entries(main.tags ?? {}),
     toBeDeleted: false,
     nodeLonLat: apiId.type === 'node' ? [main.lon, main.lat] : undefined,
     nodes: apiId.type === 'way' ? main.nodes : undefined,
