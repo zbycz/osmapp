@@ -1,4 +1,4 @@
-import { OsmId } from '../types';
+import { Feature, OsmId } from '../types';
 import { fetchSchemaTranslations } from '../tagging/translations';
 import { fetchJson } from '../fetch';
 import { OsmResponse } from './types';
@@ -7,11 +7,10 @@ import { getItemsMap, getMemberFeatures } from './helpers';
 import { addSchemaToFeature } from '../tagging/idTaggingScheme';
 import { osmToFeature } from './osmToFeature';
 
-// - AddMemberForm - new feature from shortid
-// - MembersEditor+ParentsEditor - onClick handler
-// - EditDialog - change Feature to EditItem
-// - osmApi - fetchFeature (addMemberFeaturesToRelation)
-export const getFullFeatureWithMemberFeatures = async (apiId: OsmId) => {
+// For EditDialog - use fetchFreshItem() which returns DataItem
+export const getFullFeatureWithMemberFeatures = async (
+  apiId: OsmId,
+): Promise<Feature> => {
   await fetchSchemaTranslations();
   const full = await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));
   const itemsMap = getItemsMap(full.elements);

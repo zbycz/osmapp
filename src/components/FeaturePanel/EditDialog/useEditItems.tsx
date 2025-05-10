@@ -17,7 +17,7 @@ export type Members = Array<{
   shortId: string;
   role: string;
   label: string; // cached from other dataItems, or from originalFeature
-  // TODO rename to originalLabel - only used when member is not among editItems
+  // TODO rename to originalLabel - only to be used when member is not among editItems
 }>;
 
 // internal type stored in the state

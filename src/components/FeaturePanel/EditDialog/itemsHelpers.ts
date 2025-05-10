@@ -1,4 +1,9 @@
-import { FeatureTags, LonLat, OsmId } from '../../../services/types';
+import {
+  FeatureTags,
+  LonLat,
+  OsmId,
+  RelationMember,
+} from '../../../services/types';
 import { DataItem } from './useEditItems';
 import {
   fetchSchemaTranslations,
@@ -7,7 +12,7 @@ import {
 import { fetchJson } from '../../../services/fetch';
 import { OsmResponse } from '../../../services/osm/types';
 import { getOsmUrlOrFull } from '../../../services/osm/urls';
-import { getItemsMap } from '../../../services/osm/helpers';
+import { getItemsMap, ItemsMap } from '../../../services/osm/helpers';
 import { getShortId } from '../../../services/helpers';
 import { findPreset } from '../../../services/tagging/presets';
 import { getNewId } from '../../../services/getCoordsFeature';
@@ -25,6 +30,21 @@ export const getNewNodeItem = (
   members: undefined,
 });
 
+const getLabel = (itemsMap: ItemsMap, member: RelationMember) => {
+  const element = itemsMap[member.type][member.ref];
+  if (!element) {
+    return `${member.type} ${member.ref}`;
+  }
+
+  if (element.tags.name) {
+    return element.tags.name;
+  }
+
+  const preset = findPreset(member.type, element.tags);
+  return getPresetTranslation(preset.presetKey);
+};
+
+// For FeaturePanel - use getFullFeatureWithMemberFeatures() which returns `Feature` type
 export const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
   await fetchSchemaTranslations();
   const full = await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));
@@ -38,23 +58,10 @@ export const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
     toBeDeleted: false,
     nodeLonLat: apiId.type === 'node' ? [main.lon, main.lat] : undefined,
     nodes: apiId.type === 'way' ? main.nodes : undefined,
-    members: main.members?.map((member) => {
-      const memberEl = itemsMap[member.type][member.ref];
-      const label = memberEl
-        ? (() => {
-            if (memberEl.tags.name) {
-              return memberEl.tags.name;
-            }
-            const preset = findPreset(member.type, memberEl.tags);
-            return getPresetTranslation(preset.presetKey);
-          })()
-        : `${member.type} ${member.ref}`;
-
-      return {
-        shortId: getShortId({ type: member.type, id: member.ref }),
-        role: member.role,
-        label,
-      };
-    }),
+    members: main.members?.map((member) => ({
+      shortId: getShortId({ type: member.type, id: member.ref }),
+      role: member.role,
+      label: getLabel(itemsMap, member),
+    })),
   };
 };

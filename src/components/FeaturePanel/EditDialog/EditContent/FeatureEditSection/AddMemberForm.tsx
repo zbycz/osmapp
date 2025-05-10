@@ -87,7 +87,7 @@ export const AddMemberForm = ({
 
       const newShortId = newItem.shortId;
 
-      // TODO this code could be removed, if we lookup the label among editItems
+      // TODO this code could be removed, if we lookup the label in render among editItems
       const presetKey = getPresetKey(newItem);
       const presetLabel = getPresetTranslation(presetKey);
       const tags = Object.fromEntries(newItem.tagsEntries);
