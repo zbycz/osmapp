@@ -14,7 +14,7 @@ import { getDiffXml } from './getDIffXml';
 import { SingleDocXmljs } from './xmlTypes';
 import { xmljsBuildOsm } from './xmlHelpers';
 import * as api from './api';
-import { getFirstId } from '../getFirstId';
+import { getFirstExistingId } from '../getFirstExistingId';
 
 export const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [
@@ -116,7 +116,7 @@ export const saveChanges = async (
 
   const diffXml = getDiffXml(changesetId, changes);
   const diffResult = await api.uploadDiff(changesetId, diffXml);
-  const firstId = getFirstId(diffResult, changes);
+  const firstId = getFirstExistingId(diffResult, changes);
 
   await api.putChangesetClose(changesetId);
 

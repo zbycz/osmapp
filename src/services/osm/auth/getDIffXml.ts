@@ -60,8 +60,9 @@ const relationItemToXml = (
 const isNew = ({ shortId }: DataItem) => shortId.includes('-');
 const isDeleted = ({ toBeDeleted }: DataItem) => toBeDeleted;
 const condition = {
-  create: isNew,
-  delete: isDeleted,
+  _ignore_: (item: DataItem) => isNew(item) && isDeleted(item),
+  create: (item: DataItem) => isNew(item) && !isDeleted(item),
+  delete: (item: DataItem) => !isNew(item) && isDeleted(item),
   modify: (item: DataItem) => !isNew(item) && !isDeleted(item),
 };
 
