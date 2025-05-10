@@ -15,14 +15,14 @@ export const AreaIcon = ({ fill, stroke, height, width }: AreaIconProps) => (
   >
     <mask id="path-1-inside-1_1773_242" fill="white">
       <path
-        fill-rule="evenodd"
-        clip-rule="evenodd"
+        fillRule="evenodd"
+        clipRule="evenodd"
         d="M19.3192 14.5187L13.516 2L1 29H12.7073L12.7068 29.001H30.9995L21.8532 8.96875L19.3192 14.5187Z"
       />
     </mask>
     <path
-      fill-rule="evenodd"
-      clip-rule="evenodd"
+      fillRule="evenodd"
+      clipRule="evenodd"
       d="M19.3192 14.5187L13.516 2L1 29H12.7073L12.7068 29.001H30.9995L21.8532 8.96875L19.3192 14.5187Z"
       fill={fill}
     />
