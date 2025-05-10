@@ -1,47 +1,50 @@
-import { renderHook } from '@testing-library/react-hooks';
-import { useEditItems } from '../useEditItems';
-import { Feature } from '../../../../services/types';
-// @ts-ignore
-import { act } from 'react';
+import { act, renderHook } from '@testing-library/react';
+import { DataItem, useEditItems } from '../useEditItems';
 
-const originalFeature: Feature = {
-  osmMeta: { type: 'node', id: 1 },
-  tags: { amenity: 'cafe' },
-  type: 'Feature',
-  properties: { class: 'x', subclass: 'y' },
-  center: [14, 50],
+const initialItem: DataItem = {
+  shortId: 'n1',
+  version: 1,
+  tagsEntries: Object.entries({ amenity: 'cafe' }),
+  toBeDeleted: false,
+  nodeLonLat: [14, 50],
+  nodes: undefined,
+  members: undefined,
 };
 
 describe('useEditItems', () => {
   it('should initialize with the original feature', () => {
-    const { result } = renderHook(() => useEditItems(originalFeature));
+    const { result } = renderHook(() => useEditItems(initialItem));
 
     expect(result.current.items).toHaveLength(1);
     expect(result.current.items[0].shortId).toEqual('n1');
-    expect(result.current.items[0].tags).toEqual(originalFeature.tags);
+    expect(result.current.items[0].version).toEqual(1);
+    expect(result.current.items[0].presetKey).toEqual('amenity/cafe');
+    expect(result.current.items[0].tags).toEqual({ amenity: 'cafe' });
   });
 
   it('should add a new feature', () => {
-    const { result } = renderHook(() => useEditItems(originalFeature));
+    const { result } = renderHook(() => useEditItems(initialItem));
 
-    const newFeature: Feature = {
-      osmMeta: { type: 'node', id: 2 },
-      tags: { amenity: 'restaurant' },
-      type: 'Feature',
-      properties: { class: 'x', subclass: 'y' },
-      center: [14, 50],
+    const newItem: DataItem = {
+      shortId: 'n2',
+      version: 1,
+      tagsEntries: [['amenity', 'restaurant']],
+      toBeDeleted: false,
+      nodeLonLat: [14, 50],
+      nodes: undefined,
+      members: undefined,
     };
 
     act(() => {
-      result.current.addFeature(newFeature);
+      result.current.addNewItem(newItem);
     });
 
     expect(result.current.items).toHaveLength(2);
-    expect(result.current.items[1].tags).toEqual(newFeature.tags);
+    expect(result.current.items[1].tags).toEqual({ amenity: 'restaurant' });
   });
 
   it('should update tags of a feature', () => {
-    const { result } = renderHook(() => useEditItems(originalFeature));
+    const { result } = renderHook(() => useEditItems(initialItem));
 
     act(() => {
       result.current.items[0].setTag('name', 'Test Cafe');
@@ -54,7 +57,7 @@ describe('useEditItems', () => {
   });
 
   it('should toggle toBeDeleted flag', () => {
-    const { result } = renderHook(() => useEditItems(originalFeature));
+    const { result } = renderHook(() => useEditItems(initialItem));
 
     act(() => {
       result.current.items[0].toggleToBeDeleted();
