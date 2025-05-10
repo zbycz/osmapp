@@ -9,11 +9,10 @@ import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
 import { useEditContext } from '../../EditContext';
 import { useCurrentItem } from './CurrentContext';
 import React, { useCallback } from 'react';
-import { Alert, Button, TextField } from '@mui/material';
-import { LonLat, OsmId } from '../../../../../services/types';
+import { Button, TextField } from '@mui/material';
+import { FeatureTags, OsmId } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
-import { NwrIcon } from '../../../NwrIcon';
 import { useMapStateContext } from '../../../../utils/MapStateContext';
 import { getPresetTranslation } from '../../../../../services/tagging/translations';
 import { fetchFreshItem, getNewNodeItem } from '../../itemsHelpers';
@@ -46,23 +45,27 @@ const getNewNodeLocation = async (items: EditDataItem[], members: Members) => {
 };
 
 const ROUTE_BOTTOM_TAGS = {
-  sport: 'climbing',
   climbing: 'route_bottom',
+  sport: 'climbing',
 };
-const getDefaultTags = (selectedPresetKey: string) => {
-  return selectedPresetKey === 'climbing/route_bottom' ? ROUTE_BOTTOM_TAGS : {};
+const CRAG_TAGS = {
+  climbing: 'crag',
+  sport: 'climbing',
+};
+const getMemberTags = (parentTags: FeatureTags) => {
+  if (parentTags.climbing === 'crag') {
+    return ROUTE_BOTTOM_TAGS;
+  }
+  if (parentTags.climbing === 'area') {
+    return CRAG_TAGS;
+  }
+  return {};
 };
 
-export const AddMemberForm = ({
-  newLonLat,
-  selectedPresetKey,
-}: {
-  newLonLat?: LonLat;
-  selectedPresetKey?: string;
-}) => {
+export const AddMemberForm = () => {
   const { view } = useMapStateContext();
-  const { addNewItem, items, setCurrent, current } = useEditContext();
-  const { members, setMembers, tags, convertToRelation } = useCurrentItem();
+  const { addNewItem, items, setCurrent } = useEditContext();
+  const { members, setMembers, tags } = useCurrentItem();
   const [showInput, setShowInput] = React.useState(false);
   const [label, setLabel] = React.useState('');
 
@@ -77,11 +80,10 @@ export const AddMemberForm = ({
         const [z, lat, lon] = view;
         const viewPoint = [parseFloat(lon), parseFloat(lat)];
         const newNodePosition =
-          newLonLat ?? (await getNewNodeLocation(items, members)) ?? viewPoint;
-        const defaultTags = getDefaultTags(selectedPresetKey);
+          (await getNewNodeLocation(items, members)) ?? viewPoint;
         newItem = getNewNodeItem(newNodePosition, {
           name: label,
-          ...defaultTags,
+          ...getMemberTags(tags),
         });
       }
 
@@ -90,8 +92,8 @@ export const AddMemberForm = ({
       // TODO this code could be removed, if we lookup the label in render among editItems
       const presetKey = getPresetKey(newItem);
       const presetLabel = getPresetTranslation(presetKey);
-      const tags = Object.fromEntries(newItem.tagsEntries);
-      const newLabel = tags.name ?? presetLabel;
+      const tags2 = Object.fromEntries(newItem.tagsEntries);
+      const newLabel = tags2.name ?? presetLabel;
 
       addNewItem(newItem);
 
@@ -105,17 +107,7 @@ export const AddMemberForm = ({
         setCurrent(newShortId);
       }
     },
-    [
-      addNewItem,
-      items,
-      label,
-      members,
-      newLonLat,
-      selectedPresetKey,
-      setCurrent,
-      setMembers,
-      view,
-    ],
+    [addNewItem, items, label, members, setCurrent, setMembers, tags, view],
   );
 
   React.useEffect(() => {
@@ -138,11 +130,6 @@ export const AddMemberForm = ({
     };
   }, [handleAddMember, showInput]);
 
-  const handleConvertToRelation = async () => {
-    const newShortId = await convertToRelation();
-    setCurrent(newShortId);
-  };
-
   const isClimbingCrag = tags.climbing === 'crag';
 
   return (
@@ -162,26 +149,6 @@ export const AddMemberForm = ({
             {t('editdialog.members.confirm')}
           </Button>
         </>
-      ) : isClimbingCrag && getApiId(current).type === 'node' ? (
-        <Alert
-          severity="info"
-          icon={null}
-          action={
-            <Button
-              onClick={handleConvertToRelation}
-              color="inherit"
-              variant="text"
-              size="small"
-              startIcon={<NwrIcon osmType="relation" color="inherit" />}
-            >
-              {t('editdialog.members.convert_button')}
-            </Button>
-          }
-        >
-          {isClimbingCrag
-            ? t('editdialog.members.climbing_crag_convert_description')
-            : t('editdialog.members.convert_description')}
-        </Alert>
       ) : (
         <Button
           startIcon={<AddIcon />}

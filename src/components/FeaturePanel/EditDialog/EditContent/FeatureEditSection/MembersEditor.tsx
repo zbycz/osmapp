@@ -18,6 +18,7 @@ import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { CragIcon } from '../../../Climbing/CragIcon';
 import { Setter } from '../../../../../types';
 import { useHandleItemClick } from '../useHandleItemClick';
+import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -103,18 +104,14 @@ const AccordionComponent = ({
 };
 
 export const MembersEditor = () => {
-  const { members, tags, nodeLonLat } = useCurrentItem();
-  const theme = useTheme();
-  const isClimbingCrag = tags.climbing === 'crag';
+  const { shortId, members, tags } = useCurrentItem();
   const [isExpanded, setIsExpanded] = useState(false);
   const handleClick = useHandleItemClick(setIsExpanded);
+  const convertible = isConvertible(shortId, tags);
 
-  const selectedPresetKey = isClimbingCrag
-    ? 'climbing/route_bottom'
-    : undefined;
-  const hasNoMembers = !members || members.length === 0;
-
-  if (!isClimbingCrag && hasNoMembers) return null;
+  if (!members && !convertible) {
+    return null;
+  }
 
   return (
     <AccordionComponent
@@ -122,26 +119,18 @@ export const MembersEditor = () => {
       isExpanded={isExpanded}
       setIsExpanded={setIsExpanded}
     >
-      {members?.map((member) => {
-        return (
-          <FeatureRow
-            key={member.shortId}
-            shortId={member.shortId}
-            label={member.label}
-            onClick={(e) => {
-              handleClick(e, member.shortId);
-            }}
-          />
-        );
-      })}
-      {isClimbingCrag && hasNoMembers ? (
-        <AddMemberForm
-          newLonLat={nodeLonLat}
-          selectedPresetKey={selectedPresetKey}
+      {members?.map((member) => (
+        <FeatureRow
+          key={member.shortId}
+          shortId={member.shortId}
+          label={member.label}
+          onClick={(e: React.MouseEvent) => {
+            handleClick(e, member.shortId);
+          }}
         />
-      ) : (
-        <AddMemberForm selectedPresetKey={selectedPresetKey} />
-      )}
+      ))}
+
+      {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
     </AccordionComponent>
   );
 };

@@ -1,5 +1,5 @@
 import { EditDataItem } from '../useEditItems';
-import { Dispatch, SetStateAction } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { useEditContext } from '../EditContext';
 import { getApiId } from '../../../../services/helpers';
 import { fetchFreshItem } from '../itemsHelpers';
@@ -11,7 +11,7 @@ const isInItems = (items: Array<EditDataItem>, shortId: string) =>
 export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
   const { addNewItem, items, setCurrent } = useEditContext();
 
-  return async (e, shortId: string) => {
+  return async (e: React.MouseEvent, shortId: string) => {
     const isCmdClicked = e.ctrlKey || e.metaKey;
     const switchToNewTab = !isCmdClicked;
     const apiId = getApiId(shortId);
