@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Feature, SuccessInfo } from '../../../services/types';
-import { EditDataItem, useEditItems } from './useEditItems';
+import { DataItem, EditDataItem, useEditItems } from './useEditItems';
 import { getShortId } from '../../../services/helpers';
 import { useEditDialogFeature } from './utils';
 
@@ -13,7 +13,7 @@ type EditContextType = {
   setLocation: (s: string) => void;
   comment: string;
   setComment: (s: string) => void;
-  addFeature: (feature: Feature) => void;
+  addNewItem: (newItem: DataItem) => void;
   items: Array<EditDataItem>;
   current: string;
   setCurrent: (s: string) => void;
@@ -22,18 +22,17 @@ type EditContextType = {
 const EditContext = createContext<EditContextType>(undefined);
 
 type Props = {
-  originalFeature: Feature;
+  initialItem: DataItem;
   children: React.ReactNode;
 };
 
-export const EditContextProvider = ({ originalFeature, children }: Props) => {
-  const { feature } = useEditDialogFeature();
+export const EditContextProvider = ({ initialItem, children }: Props) => {
   const [successInfo, setSuccessInfo] = useState<undefined | SuccessInfo>();
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState(''); // technically is "data", but only for note
   const [comment, setComment] = useState('');
-  const { items, addFeature } = useEditItems(originalFeature);
-  const [current, setCurrent] = React.useState(getShortId(feature.osmMeta));
+  const { items, addNewItem } = useEditItems(initialItem);
+  const [current, setCurrent] = useState(initialItem.shortId);
 
   const value: EditContextType = {
     successInfo,
@@ -44,7 +43,7 @@ export const EditContextProvider = ({ originalFeature, children }: Props) => {
     setLocation,
     comment,
     setComment,
-    addFeature,
+    addNewItem,
     items,
     current,
     setCurrent,

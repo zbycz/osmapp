@@ -181,9 +181,7 @@ const addMemberFeaturesToRelation = async (relation: Feature) => {
 //  - wait until UI is prepared
 //  - maybe this can be merged in fetchFeatureWithCenter()
 //  - check: Warning: data for page "/[[...all]]" (path "/relation/4810774") is 627 kB which exceeds the threshold of 128 kB, this amount of data can reduce performance. See more info here: https://nextjs.org/docs/messages/large-page-data
-export const addMembersAndParents = async (
-  feature: Feature,
-): Promise<Feature> => {
+const addMembersAndParents = async (feature: Feature): Promise<Feature> => {
   if (isFeatureClimbingRoute(feature)) {
     const parentFeatures = await fetchParentFeatures(feature.osmMeta);
     return { ...feature, parentFeatures };

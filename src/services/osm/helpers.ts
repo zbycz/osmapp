@@ -3,12 +3,14 @@ import { Feature } from '../types';
 import { addSchemaToFeature } from '../tagging/idTaggingScheme';
 import { osmToFeature } from './osmToFeature';
 
+export type ItemsMap = {
+  node: Record<number, OsmElement<'node'>>;
+  way: Record<number, OsmElement<'way'>>;
+  relation: Record<number, OsmElement<'relation'>>;
+};
+
 export const getItemsMap = (elements: OsmElement[]) => {
-  const itemsMap = {
-    node: {} as Record<number, OsmElement<'node'>>,
-    way: {} as Record<number, OsmElement<'way'>>,
-    relation: {} as Record<number, OsmElement<'relation'>>,
-  };
+  const itemsMap: ItemsMap = { node: {}, way: {}, relation: {} };
   elements.forEach((element) => {
     itemsMap[element.type][element.id] = element;
   });

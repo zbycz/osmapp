@@ -10,6 +10,7 @@ export const getUrlOsmId = ({ id, type }: OsmId): string => `${type}/${id}`;
 
 export const getReactKey = (feature: Feature) =>
   getUrlOsmId(feature.osmMeta) +
+  '_' +
   (feature.point ? feature.center.join(',') : feature.osmMeta.version);
 
 export const getApiId = (shortId: string): OsmId => {

@@ -9,6 +9,7 @@ import { getPresetTranslation } from '../../../services/tagging/translations';
 import { getNewId } from '../../../services/getCoordsFeature';
 import { fetchParentFeatures } from '../../../services/osm/fetchParentFeatures';
 import { fetchWays } from '../../../services/osm/fetchWays';
+import { fetchFreshItem } from './itemsHelpers';
 
 export type TagsEntries = [string, string][];
 
@@ -16,6 +17,7 @@ export type Members = Array<{
   shortId: string;
   role: string;
   label: string; // cached from other dataItems, or from originalFeature
+  // TODO rename to originalLabel - only to be used when member is not among editItems
 }>;
 
 // internal type stored in the state
@@ -42,30 +44,7 @@ export type EditDataItem = DataItem & {
   convertToRelation: ConvertToRelation;
 };
 
-const buildDataItem = (feature: Feature): DataItem => {
-  const apiId = feature.osmMeta;
-  return {
-    shortId: getShortId(apiId),
-    version: apiId.version,
-    tagsEntries: Object.entries(feature.tags),
-    toBeDeleted: false,
-    nodeLonLat: apiId.type === 'node' ? feature.center : undefined,
-    nodes: feature.nodes,
-    members:
-      feature.memberFeatures?.map((memberFeature) => ({
-        shortId: getShortId(memberFeature.osmMeta),
-        role: memberFeature.osmMeta.role,
-        label: getLabel(memberFeature),
-      })) ??
-      feature.members?.map((member) => ({
-        shortId: getShortId({ type: member.type, id: member.ref }),
-        role: member.role,
-        label: `${member.type} ${member.ref}`,
-      })),
-  };
-};
-
-const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
+export const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
   const tags = Object.fromEntries(tagsEntries);
   const osmId = getApiId(shortId);
   const preset = findPreset(osmId.type, tags);
@@ -137,7 +116,9 @@ const convertToRelationFactory = (
       throw new Error(`Can't convert node ${shortId} which is part of a way.`); // TODO duplicate the node ?
     }
 
-    const parentItems = parentFeatures.map((feature) => buildDataItem(feature));
+    const parentItems = await Promise.all(
+      parentFeatures.map((feature) => fetchFreshItem(feature.osmMeta)),
+    );
 
     const newShortId = `r${getNewId()}`;
     setData((prevData) => {
@@ -239,10 +220,8 @@ const toggleToBeDeletedFactory = (setDataItem: SetDataItem) => {
     }));
 };
 
-export const useEditItems = (originalFeature: Feature) => {
-  const [data, setData] = useState<DataItem[]>(() => [
-    buildDataItem(originalFeature),
-  ]);
+export const useEditItems = (initialItem: DataItem) => {
+  const [data, setData] = useState<DataItem[]>([initialItem]);
 
   const items = useMemo<Array<EditDataItem>>(
     () =>
@@ -270,12 +249,11 @@ export const useEditItems = (originalFeature: Feature) => {
     [data],
   );
 
-  const addFeature = (feature: Feature) => {
-    const newItem = buildDataItem(JSON.parse(JSON.stringify(feature)));
+  const addNewItem = (newItem: DataItem) => {
     setData((state) => [...state, newItem]);
   };
 
   publishDbgObject('EditContext state', data);
 
-  return { items, addFeature };
+  return { items, addNewItem };
 };
