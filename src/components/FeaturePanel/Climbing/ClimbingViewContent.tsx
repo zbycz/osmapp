@@ -93,7 +93,7 @@ export const ClimbingViewContent = ({ isMapVisible }) => {
             </>
           )}
         </ContentContainer>
-        <RouteDistribution />
+        <RouteDistribution features={feature.memberFeatures} />
 
         {feature.tags.description ? (
           <>

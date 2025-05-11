@@ -69,6 +69,9 @@ export const isClimbingRelation = (feature: Feature) =>
   feature.osmMeta.type === 'relation' &&
   (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
 
+export const isClimbingCrag = (feature: Feature) =>
+  feature.osmMeta.type === 'relation' && feature.tags.climbing === 'crag';
+
 export const isFeatureClimbingRoute = (feature: Feature) =>
   isClimbingRoute(feature?.tags);
 
