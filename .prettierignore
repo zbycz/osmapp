@@ -11,4 +11,3 @@ yarn-debug.log*
 yarn-error.log*
 /.next
 /public
-/src/helpers/Favicons.tsx

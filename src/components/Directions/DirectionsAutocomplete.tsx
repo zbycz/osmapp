@@ -220,6 +220,8 @@ type Props = {
   pointIndex: number;
 };
 
+// TODO refactor this - extract member functions
+// eslint-disable-next-line max-lines-per-function
 export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const autocompleteRef = useRef();
   const { inputValue, setInputValue } = useInputValueState();

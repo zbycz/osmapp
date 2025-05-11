@@ -142,6 +142,8 @@ const TextFieldWithCharacterCount = ({
   );
 };
 
+// TODO refactor this - extract member functions
+// eslint-disable-next-line max-lines-per-function
 export const MajorKeysEditor = () => {
   const { focusTag } = useEditDialogContext();
   const { tags, setTag } = useCurrentItem();

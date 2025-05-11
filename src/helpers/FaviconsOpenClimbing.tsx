@@ -1,29 +1,7 @@
-// this file is ignored by prettier
 import React from 'react';
 
-/*
-
-// ios - pwa maskable icons (white background)
-57x57 (iOS)
-60x60 (iOS)
-72x72 (iOS)
-76x76 (iOS)
-114x114 (iOS)
-120x120 (iOS)
-152x152 (iOS)
-180x180 (iOS)
-
-// others - pwa maskable icons (transparent)
-48x48
-96x96
-144x144
-192x192
-256x256
-384x384
-512x512
-
-*/
-
+// This function doesn't contain any logic - so no extraction needed.
+// eslint-disable-next-line max-lines-per-function
 export const FaviconsOpenClimbing = () => (
   <>
     <link

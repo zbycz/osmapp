@@ -141,6 +141,7 @@ export const ourPresets = {
   },
 } as RawPresets;
 
+// eslint-disable-next-line max-lines-per-function
 export const getOurTranslations = (lang) => ({
   [lang]: {
     presets: {

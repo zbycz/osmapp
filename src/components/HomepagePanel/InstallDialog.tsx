@@ -80,7 +80,9 @@ const PaperImg = ({ src, width }: PaperImgProps) => (
   />
 );
 
-export function InstallDialog() {
+// This function doesn't contain any logic - so no extraction needed.
+// eslint-disable-next-line max-lines-per-function
+export const InstallDialog = () => {
   const [value, setValue] = useState('ios');
   const { showHomepage } = useFeatureContext();
 
@@ -209,4 +211,4 @@ export function InstallDialog() {
       </TabContext>
     </StyledDialog>
   );
-}
+};

@@ -37,6 +37,8 @@ type UseDragItemsProps<T> = {
   direction?: 'horizontal' | 'vertical';
 };
 
+// TODO refactor this - extract member functions
+// eslint-disable-next-line max-lines-per-function
 export const useDragItems = <T,>({
   initialItems,
   moveItems,

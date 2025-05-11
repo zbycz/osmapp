@@ -71,6 +71,8 @@ type InputItem = {
   label: string;
 };
 
+// TODO refactor this - extract member functions
+// eslint-disable-next-line max-lines-per-function
 export const DirectionsForm = ({ setResult, hideForm }: Props) => {
   const defaultFrom = {
     value: null,

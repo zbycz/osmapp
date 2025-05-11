@@ -57,6 +57,8 @@ const Qr = styled.img<{ $isDark: boolean }>`
   ${({ $isDark }) => $isDark && `filter: invert(1);`}
 `;
 
+// This function doesn't contain any logic - so no extraction needed.
+// eslint-disable-next-line max-lines-per-function
 export const SupportUs = () => {
   const [isBitcoinDialogOpen, setIsBitcoinDialogOpen] = useState(false);
   const { currentTheme } = useUserThemeContext();

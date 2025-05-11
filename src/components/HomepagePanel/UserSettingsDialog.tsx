@@ -22,6 +22,8 @@ type Props = {
   isOpened: boolean;
 };
 
+// TODO refactor this - extract member functions
+// eslint-disable-next-line max-lines-per-function
 export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
 
