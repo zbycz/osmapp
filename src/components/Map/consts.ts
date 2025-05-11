@@ -10,6 +10,10 @@ export const OSMAPP_SPRITE = [
     id: 'default',
     url: `${window.location.protocol}//${window.location.host}/sprites/osmapp`,
   },
+  {
+    id: 'outdoorSprite',
+    url: `https://api.maptiler.com/maps/outdoor-v2/sprite?key=${apiKey}`,
+  },
 ];
 
 export const GLYPHS = `https://api.maptiler.com/fonts/{fontstack}/{range}.pbf?key=${apiKey}`;
