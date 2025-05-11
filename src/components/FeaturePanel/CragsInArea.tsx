@@ -22,9 +22,7 @@ import { naturalSort } from './Climbing/utils/array';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { PROJECT_ID } from '../../services/project';
 import { MemberItem } from './MemberFeatures/MemberItem';
-import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
-import { GradeSystemSelect } from './Climbing/GradeSystemSelect';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { RouteDistribution } from './Climbing/RouteDistribution';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
@@ -171,7 +169,11 @@ const CragItem = ({ feature }: { feature: Feature }) => {
           {images.length ? <Gallery images={images} feature={feature} /> : null}
         </InnerContainer>
       </StyledLink>
-      <RouteDistributionInPanel feature={feature} />
+      {feature.memberFeatures.length > 0 && (
+        <Box mb={2}>
+          <RouteDistribution features={feature.memberFeatures} />
+        </Box>
+      )}
     </Container>
   );
 };
@@ -190,8 +192,14 @@ export const CragsInArea = () => {
     return acc + (members?.length ?? 0);
   }, 0);
 
+  const allCragRoutes = crags.reduce((acc, crag) => {
+    return [...acc, ...crag.memberFeatures];
+  }, []);
+
   return (
     <>
+      {crags.length > 1 && <RouteDistribution features={allCragRoutes} />}
+
       <PanelLabel
         addition={
           <Chip

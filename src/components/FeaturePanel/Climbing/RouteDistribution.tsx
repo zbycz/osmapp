@@ -2,21 +2,18 @@ import styled from '@emotion/styled';
 import { useTheme } from '@emotion/react';
 import React from 'react';
 import {
-  ClimbingContextProvider,
-  useClimbingContext,
-} from './contexts/ClimbingContext';
-import { convertGrade, getDifficultyColor } from './utils/grades/routeGrade';
+  convertGrade,
+  getDifficulty,
+  getDifficultyColor,
+} from './utils/grades/routeGrade';
 import { ContentContainer } from './ContentContainer';
 import { GRADE_TABLE } from './utils/grades/gradeData';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { isClimbingRelation } from '../../../utils';
-import { getReactKey } from '../../../services/helpers';
 import {
   getGradeSystemName,
   GradeSystem,
 } from '../../../services/tagging/climbing';
 import { Feature } from '../../../services/types';
-import { color } from '@mui/system';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
@@ -91,13 +88,16 @@ const getGroupingLabel = (label: string, gradeSystem: GradeSystem) => {
   return String(parseFloat(label));
 };
 
-export const RouteDistribution = () => {
+export const RouteDistribution = ({
+  features,
+}: {
+  features: Array<Feature>;
+}) => {
   const { userSettings } = useUserSettingsContext();
   const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   const theme = useTheme();
-  const { routes } = useClimbingContext();
-  if (routes.length === 0) return null;
+  if (features.length === 0) return null;
 
   const prepareOccurrenceStructure = () =>
     GRADE_TABLE[gradeSystem].reduce<{ [grade: string]: number }>(
@@ -110,12 +110,13 @@ export const RouteDistribution = () => {
 
   const getOccurrences = () => {
     const structure = prepareOccurrenceStructure();
-    return routes.reduce((acc, route) => {
-      if (!route.difficulty) return acc;
+    return features.reduce((acc, feature) => {
+      const difficulty = getDifficulty(feature.tags);
+      if (!difficulty) return acc;
       const convertedGrade = convertGrade(
-        route.difficulty.gradeSystem,
+        difficulty.gradeSystem,
         gradeSystem,
-        route.difficulty.grade,
+        difficulty.grade,
       );
       const newGrade = getGroupingLabel(convertedGrade, gradeSystem);
       if (!structure) return {};
@@ -133,7 +134,7 @@ export const RouteDistribution = () => {
 
   const heightsRatios = Object.keys(routeOccurrences).map((key) => ({
     grade: key,
-    ratio: routeOccurrences[key] / routes.length,
+    ratio: routeOccurrences[key] / features.length,
   }));
   if (
     heightsRatios.length < 2 ||
@@ -197,19 +198,4 @@ export const RouteDistribution = () => {
       </ContentContainer>
     </Container>
   );
-};
-
-export const RouteDistributionInPanel = ({ feature }: { feature: Feature }) => {
-  if (
-    isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
-    feature.tags.climbing === 'crag'
-  ) {
-    return (
-      <ClimbingContextProvider feature={feature} key={getReactKey(feature)}>
-        <RouteDistribution />
-      </ClimbingContextProvider>
-    );
-  }
-
-  return null;
 };
