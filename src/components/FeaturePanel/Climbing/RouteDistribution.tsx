@@ -11,13 +11,22 @@ import { GRADE_TABLE } from './utils/grades/gradeData';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { isClimbingRelation } from '../../../utils';
 import { getReactKey } from '../../../services/helpers';
-import { useFeatureContext } from '../../utils/FeatureContext';
-import { GradeSystem } from '../../../services/tagging/climbing';
+import {
+  getGradeSystemName,
+  GradeSystem,
+} from '../../../services/tagging/climbing';
+import { Feature } from '../../../services/types';
+import { color } from '@mui/system';
+import { convertHexToRgba } from '../../utils/colorUtils';
+import { Tooltip } from '@mui/material';
+import { t } from '../../../services/intl';
 
-const MAX_HEIGHT = 100;
+const MAX_COLUMN_HEIGHT = 40;
+const NUMBER_OF_ROUTES_HEIGHT = 14;
+const MAX_CHART_HEIGHT = MAX_COLUMN_HEIGHT + NUMBER_OF_ROUTES_HEIGHT;
 
 const Container = styled.div`
-  margin: 16px 12px 12px;
+  margin: 4px 12px 0;
 `;
 
 const Items = styled.div`
@@ -33,16 +42,29 @@ const NumberOfRoutes = styled.div`
 const Column = styled.div`
   flex: 1;
 `;
+
+const GraphItems = styled.div`
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+`;
+const GradeSystemName = styled.div`
+  color: ${({ theme }) => theme.palette.secondary.main};
+  font-size: 10px;
+  flex: 1;
+  text-align: right;
+`;
+
 const DifficultyLevel = styled.div<{ $isActive: boolean; $color: string }>`
   text-align: center;
   color: ${({ $color, $isActive, theme }) =>
-    $isActive ? $color : theme.palette.secondary.main};
+    $isActive ? $color : convertHexToRgba(theme.palette.secondary.main, 0.6)};
   font-weight: bold;
-  font-size: 11px;
+  font-size: 10px;
 `;
 
 const StaticHeightContainer = styled.div`
-  height: 80px;
+  height: ${MAX_CHART_HEIGHT};
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -50,20 +72,20 @@ const StaticHeightContainer = styled.div`
 `;
 
 const Chart = styled.div<{ $ratio: number; $color: string }>`
-  height: ${({ $ratio }) => MAX_HEIGHT * $ratio}px;
+  height: ${({ $ratio }) => MAX_COLUMN_HEIGHT * $ratio}px;
   background-color: ${({ $color, theme, $ratio }) =>
     $ratio === 0 ? theme.palette.secondary.main : $color};
   border-radius: 2px;
-  width: 100%;
+  width: 17px;
 `;
 
 const getGroupingLabel = (label: string, gradeSystem: GradeSystem) => {
   if (gradeSystem === 'saxon') {
-    const match = label.match(/^[A-Z]+/);
+    const match = label?.match(/^[A-Z]+/);
     return match ? match[0] : '';
   }
   if (gradeSystem === 'hueco') {
-    const match = label.match(/^[A-Z0-9]+/);
+    const match = label?.match(/^[A-Z0-9]+/);
     return match ? match[0] : '';
   }
   return String(parseFloat(label));
@@ -113,50 +135,71 @@ export const RouteDistribution = () => {
     grade: key,
     ratio: routeOccurrences[key] / routes.length,
   }));
-  if (heightsRatios.length < 2) return null;
+  if (
+    heightsRatios.length < 2 ||
+    heightsRatios.reduce((acc, { ratio }) => acc + ratio, 0) === 0
+  )
+    return null;
+
+  const getMaxHeightRatio = Math.max(
+    ...heightsRatios.map(({ ratio }) => ratio),
+  );
+  const gradeSystemName = getGradeSystemName(gradeSystem);
 
   return (
     <Container>
       <ContentContainer>
         <Items>
-          {heightsRatios.map((heightRatioItem) => {
-            const color = getDifficultyColor(
-              {
-                gradeSystem: gradeSystem,
-                grade: heightRatioItem.grade,
-              },
-              theme,
-            );
-            const numberOfRoutesKey = Object.keys(routeOccurrences).find(
-              (key) => key === heightRatioItem.grade,
-            );
-            const numberOfRoutes = routeOccurrences[numberOfRoutesKey];
-            const isColumnActive = numberOfRoutes > 0;
-            return (
-              <Column key={heightRatioItem.grade}>
-                <StaticHeightContainer>
-                  {numberOfRoutes > 0 && (
-                    <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
-                  )}
-                  <Chart $color={color} $ratio={heightRatioItem.ratio} />
-                </StaticHeightContainer>
-                <DifficultyLevel $color={color} $isActive={isColumnActive}>
-                  {heightRatioItem.grade === 'NaN'
-                    ? '?'
-                    : heightRatioItem.grade}
-                </DifficultyLevel>
-              </Column>
-            );
-          })}
+          <GraphItems>
+            {heightsRatios.map((heightRatioItem) => {
+              const color = getDifficultyColor(
+                {
+                  gradeSystem: gradeSystem,
+                  grade: heightRatioItem.grade,
+                },
+                theme,
+              );
+              const numberOfRoutesKey = Object.keys(routeOccurrences).find(
+                (key) => key === heightRatioItem.grade,
+              );
+              const numberOfRoutes = routeOccurrences[numberOfRoutesKey];
+              const isColumnActive = numberOfRoutes > 0;
+              return (
+                <Column key={heightRatioItem.grade}>
+                  <StaticHeightContainer>
+                    {numberOfRoutes > 0 && (
+                      <NumberOfRoutes>{numberOfRoutes}x</NumberOfRoutes>
+                    )}
+                    <Chart
+                      $color={color}
+                      $ratio={heightRatioItem.ratio / getMaxHeightRatio}
+                    />
+                  </StaticHeightContainer>
+                  <DifficultyLevel $color={color} $isActive={isColumnActive}>
+                    {heightRatioItem.grade === 'NaN' || !heightRatioItem.grade
+                      ? '?'
+                      : heightRatioItem.grade}
+                  </DifficultyLevel>
+                </Column>
+              );
+            })}
+          </GraphItems>
+          <GradeSystemName>
+            <Tooltip
+              title={t('routedistribution.grade_system_description', {
+                gradeSystemName,
+              })}
+            >
+              <>{gradeSystemName}</>
+            </Tooltip>
+          </GradeSystemName>
         </Items>
       </ContentContainer>
     </Container>
   );
 };
 
-export const RouteDistributionInPanel = () => {
-  const { feature } = useFeatureContext();
-
+export const RouteDistributionInPanel = ({ feature }: { feature: Feature }) => {
   if (
     isClimbingRelation(feature) && // only for this condition is memberFeatures fetched
     feature.tags.climbing === 'crag'

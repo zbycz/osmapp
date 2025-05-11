@@ -22,6 +22,9 @@ import { naturalSort } from './Climbing/utils/array';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { PROJECT_ID } from '../../services/project';
 import { MemberItem } from './MemberFeatures/MemberItem';
+import { RouteDistributionInPanel } from './Climbing/RouteDistribution';
+import { GradeSystemSelect } from './Climbing/GradeSystemSelect';
+import { useUserSettingsContext } from '../utils/UserSettingsContext';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
@@ -36,15 +39,16 @@ const ArrowIcon = styled(ArrowForwardIosIcon)`
 `;
 
 const Container = styled.div`
+  margin: 0 0 20px 0;
+`;
+
+const InnerContainer = styled.div`
   overflow: auto;
   flex-direction: column;
   display: flex;
   gap: 8px;
   justify-content: space-between;
   cursor: pointer;
-  //border-radius: 8px;
-  padding: 0 0 20px 0;
-  //background-color: ${({ theme }) => theme.palette.background.elevation};
   &:hover {
     ${ArrowIcon} {
       opacity: 1;
@@ -57,11 +61,6 @@ const CragList = styled.div`
   flex-direction: column;
   gap: 20px;
   margin-top: 12px;
-`;
-
-const Name = styled.div`
-  overflow: hidden;
-  text-overflow: ellipsis;
 `;
 
 const CragName = styled.div`
@@ -155,22 +154,25 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   };
 
   return (
-    <StyledLink
-      href={`/${getUrlOsmId(feature.osmMeta)}`}
-      locale={intl.lang}
-      onClick={getOnClickWithHash}
-      onMouseEnter={mobileMode ? undefined : handleHover}
-      onMouseLeave={() => setPreview(null)}
-      title={`${t('featurepanel.sector')} ${getLabel(feature)}`}
-    >
-      <Container>
-        <Header
-          label={getLabel(feature)}
-          routesCount={feature.members?.length}
-        />
-        {images.length ? <Gallery images={images} feature={feature} /> : null}
-      </Container>
-    </StyledLink>
+    <Container>
+      <StyledLink
+        href={`/${getUrlOsmId(feature.osmMeta)}`}
+        locale={intl.lang}
+        onClick={getOnClickWithHash}
+        onMouseEnter={mobileMode ? undefined : handleHover}
+        onMouseLeave={() => setPreview(null)}
+        title={`${t('featurepanel.sector')} ${getLabel(feature)}`}
+      >
+        <InnerContainer>
+          <Header
+            label={getLabel(feature)}
+            routesCount={feature.members?.length}
+          />
+          {images.length ? <Gallery images={images} feature={feature} /> : null}
+        </InnerContainer>
+      </StyledLink>
+      <RouteDistributionInPanel feature={feature} />
+    </Container>
   );
 };
 
@@ -210,6 +212,7 @@ export const CragsInArea = () => {
           ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
           : ''}
       </PanelLabel>
+
       <Box mt={2} mb={4}>
         <CragList>
           {crags.map((item) => (
