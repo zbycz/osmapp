@@ -320,6 +320,7 @@ export default {
   'publictransport.hidden_stops': '__amount__ dalších zastávek',
   'publictransport.visible_stops': 'Skrýt __amount__ zastávek',
 
+  'routedistribution.grade_system_description': 'Graf rozdělení cest podle obtížnosti je ve stupnici __gradeSystemName__',
   'climbingpanel.draw_route': 'Zakreslit cestu',
   'climbingpanel.draw_routes': 'Zakreslit cesty',
 

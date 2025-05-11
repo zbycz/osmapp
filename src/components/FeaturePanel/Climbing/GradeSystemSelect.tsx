@@ -24,7 +24,6 @@ import { ClimbingGradesTable } from './ClimbingGradesTable';
 type Props = {
   selectedGradeSystem: GradeSystem;
   setGradeSystem: (GradeSystem: GradeSystem) => void;
-  onClick?: (e: any) => void;
   allowUnsetValue?: boolean;
 };
 
@@ -64,7 +63,6 @@ const GradeSystemItem = ({ isMinor, onClick, selectedGradeSystem }) => (
 export const GradeSystemSelect = ({
   selectedGradeSystem,
   setGradeSystem,
-  onClick,
   allowUnsetValue = true,
 }: Props) => {
   const [isGradeTableOpen, setIsGradeTableOpen] =

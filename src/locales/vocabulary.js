@@ -372,6 +372,7 @@ export default {
   'publictransport.hidden_stops': '__amount__ more stops',
   'publictransport.visible_stops': 'Hide __amount__ stops',
 
+  'routedistribution.grade_system_description': 'Distribution of routes by difficulty is in __gradeSystemName__ grade system',
   'climbingpanel.draw_route': 'Draw route',
   'climbingpanel.draw_routes': 'Draw routes',
 
