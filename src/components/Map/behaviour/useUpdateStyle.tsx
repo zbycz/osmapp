@@ -24,6 +24,7 @@ import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
 import { emptyStyle } from '../styles/emptyStyle';
+import { outdoor2Style } from '../styles/outdoor2Style';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -49,6 +50,9 @@ const getBaseStyle = (key: string, currentTheme: Theme): StyleSpecification => {
   }
   if (key === 'outdoor') {
     return outdoorStyle;
+  }
+  if (key === 'outdoor2') {
+    return outdoor2Style;
   }
 
   const url = osmappLayers[key]?.url ?? key;
