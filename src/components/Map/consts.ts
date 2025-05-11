@@ -33,15 +33,15 @@ export const OSMAPP_SOURCES: Record<string, SourceSpecification> = {
   },
   contours: {
     type: 'vector' as const,
-    url: `https://api.maptiler.com/tiles/contours/tiles.json?key=${apiKey}`,
+    url: `https://api.maptiler.com/tiles/contours-v2/tiles.json?key=${apiKey}`,
   },
   terrain3d: {
-    url: `https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=${apiKey}`, // this source must be duplicated for terrain/hillshade https://github.com/maplibre/maplibre-gl-js/issues/2035
+    url: `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${apiKey}`, // this source must be duplicated for terrain/hillshade https://github.com/maplibre/maplibre-gl-js/issues/2035
     type: 'raster-dem' as const,
     tileSize: 256,
   },
   terrainHillshade: {
-    url: `https://api.maptiler.com/tiles/terrain-rgb/tiles.json?key=${apiKey}`,
+    url: `https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${apiKey}`,
     type: 'raster-dem' as const,
     tileSize: 256,
   },
