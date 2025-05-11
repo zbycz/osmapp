@@ -9,6 +9,9 @@ import { motorwayConstruction } from './layers/contruction';
 import { overpassLayers } from './layers/overpassLayers';
 import { cliffsLayers } from './layers/cliffsLayers';
 
+// Maptiler Outdoor style is copyrighted – only to be used with valid Maptiler subscription
+// https://www.maptiler.com/maps/outdoor/
+
 // TODO add icons for outdoor to our sprite (guideposts, benches, etc)
 // https://api.maptiler.com/maps/outdoor/sprite.png?key=7dlhLl3hiXQ1gsth0kGu
 
@@ -255,7 +258,7 @@ export const outdoorStyle = addHoverPaint({
         'hillshade-exaggeration': {
           stops: [
             [6, 0.45],
-            [14, 0.55],
+            [14, 0.35],
           ],
         },
         'hillshade-shadow-color': 'rgba(107, 101, 100, 1)',
