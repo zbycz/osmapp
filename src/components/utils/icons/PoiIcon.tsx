@@ -14,6 +14,40 @@ const Container = styled.span`
   font-size: 12px;
 `;
 
+const ClimbingAreaIcon = (props: { size: number }) => {
+  const theme = useTheme();
+  return (
+    <Container>
+      <AreaIcon
+        fill={theme.palette.text.secondary}
+        stroke={theme.palette.text.secondary}
+        height={props.size}
+        width={props.size}
+      />
+    </Container>
+  );
+};
+
+const ClimbingCragIcon = (props: { size: number }) => {
+  const theme = useTheme();
+  return (
+    <Container>
+      <CragIcon
+        fill={theme.palette.text.secondary}
+        stroke={theme.palette.text.secondary}
+        height={props.size}
+        width={props.size}
+      />
+    </Container>
+  );
+};
+
+const ClimbingRouteIcon = () => (
+  <Container>
+    <ShowChartIcon fontSize="inherit" color="secondary" />
+  </Container>
+);
+
 type Props = {
   ico?: string; // ico is supplied only in skeleton (until we have all tags) or point
   tags?: FeatureTags;
@@ -32,43 +66,15 @@ export const PoiIcon = ({
   themed,
 }: Props) => {
   const { currentTheme } = useUserThemeContext();
-  const theme = useTheme();
 
   if (tags) {
     const isClimbingArea = tags.climbing === 'area';
     const isClimbingCrag = tags.climbing === 'crag';
     const isClimbingRoute = tags.climbing === 'route_bottom';
 
-    if (isClimbingArea)
-      return (
-        <Container>
-          <AreaIcon
-            fill={theme.palette.text.secondary}
-            stroke={theme.palette.text.secondary}
-            height={size}
-            width={size}
-          />
-        </Container>
-      );
-
-    if (isClimbingCrag)
-      return (
-        <Container>
-          <CragIcon
-            fill={theme.palette.text.secondary}
-            stroke={theme.palette.text.secondary}
-            height={size}
-            width={size}
-          />
-        </Container>
-      );
-
-    if (isClimbingRoute)
-      return (
-        <Container>
-          <ShowChartIcon fontSize="inherit" color="secondary" />
-        </Container>
-      );
+    if (isClimbingArea) return <ClimbingAreaIcon size={size} />;
+    if (isClimbingCrag) return <ClimbingCragIcon size={size} />;
+    if (isClimbingRoute) return <ClimbingRouteIcon />;
   }
 
   const finalIco = ico ? ico : getPoiClass(tags).class;

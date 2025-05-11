@@ -12,6 +12,27 @@
         "selector": "Identifier[name=\"useLog\"]"
       }
     ],
-    "react/no-unknown-property": "error"
-  }
+    "react/no-unknown-property": "error",
+    "max-lines-per-function": [
+      "error",
+      {
+        "max": 100,
+        "skipBlankLines": true,
+        "skipComments": true,
+        "IIFEs": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "__tests__/**",
+        "**/*.test.{ts,tsx}",
+        "./src/components/FeaturePanel/Climbing/**"
+      ],
+      "rules": {
+        "max-lines-per-function": "off"
+      }
+    }
+  ]
 }

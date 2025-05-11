@@ -104,6 +104,7 @@ const recordsFactory = () => {
   return { records, addRecord, addRecordWithLine };
 };
 
+// eslint-disable-next-line max-lines-per-function
 const getNewRecords = (data: OsmResponse) => {
   const geojsons = overpassToGeojsons(data); // 300 ms on 200k items
   const { records, addRecord, addRecordWithLine } = recordsFactory();

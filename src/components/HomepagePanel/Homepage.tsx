@@ -53,13 +53,14 @@ const Examples = () => (
   </>
 );
 
-export function Homepage({
-  mobileMode,
-  onClick,
-}: {
+type Props = {
   onClick: () => void;
   mobileMode: boolean;
-}) {
+};
+
+// This function doesn't contain any logic - so no extraction needed.
+// eslint-disable-next-line max-lines-per-function
+export const Homepage = ({ mobileMode, onClick }: Props) => {
   const isClimbing = PROJECT_ID === 'openclimbing';
 
   if (isClimbing) {
@@ -226,4 +227,4 @@ export function Homepage({
       </PanelScrollbars>
     </PanelContent>
   );
-}
+};

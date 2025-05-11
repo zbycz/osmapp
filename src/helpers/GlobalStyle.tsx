@@ -8,6 +8,8 @@ import {
 import { convertHexToRgba } from '../components/utils/colorUtils';
 import { useUserThemeContext } from './theme';
 
+// This function doesn't contain any logic - so no extraction needed.
+// eslint-disable-next-line max-lines-per-function
 const globalStyle = (theme: Theme) => css`
   html,
   body,

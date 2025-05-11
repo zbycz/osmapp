@@ -22,6 +22,8 @@ import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
 import { useHandleItemClick } from '../useHandleItemClick';
 
+// TODO refactor this - extract member functions
+// eslint-disable-next-line max-lines-per-function
 export const ParentsEditor = () => {
   const { current } = useEditContext();
   const { tags } = useCurrentItem();
