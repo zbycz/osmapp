@@ -30,7 +30,7 @@ type Props = {
 export const EditContextProvider = ({ initialItem, children }: Props) => {
   const [successInfo, setSuccessInfo] = useState<undefined | SuccessInfo>();
   const [isSaving, setIsSaving] = useState(false);
-  const [location, setLocation] = useState(''); // technically is "data", but only for note
+  const [location, setLocation] = useState(''); // only for note
   const [comment, setComment] = useState('');
   const { items, addItem, removeItem } = useEditItems(initialItem);
   const [current, setCurrent] = useState(initialItem.shortId);

@@ -3,11 +3,11 @@ import React from 'react';
 import { useEditDialogFeature } from './utils';
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { t } from '../../../services/intl';
-import { getLabel } from '../../../helpers/featureLabel';
 import CommentIcon from '@mui/icons-material/Comment';
 import EditIcon from '@mui/icons-material/Edit';
 import { useEditContext } from './EditContext';
 import CloseIcon from '@mui/icons-material/Close';
+import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
   const { loggedIn } = useOsmAuthContext();
@@ -25,9 +25,10 @@ const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
   return `${t('editdialog.edit_heading')}`;
 };
 
-export const EditDialogTitle = ({ onClose }) => {
+export const EditDialogTitle = () => {
   const { loggedIn } = useOsmAuthContext();
   const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
+  const { close } = useEditDialogContext();
 
   const dialogTitle = useGetDialogTitle(isAddPlace, isUndelete, feature);
 
@@ -44,7 +45,7 @@ export const EditDialogTitle = ({ onClose }) => {
           {dialogTitle}
         </Stack>
 
-        <IconButton color="secondary" edge="end" onClick={onClose}>
+        <IconButton color="secondary" edge="end" onClick={close}>
           <CloseIcon fontSize="small" />
         </IconButton>
       </Stack>

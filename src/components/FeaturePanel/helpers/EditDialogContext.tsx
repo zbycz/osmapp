@@ -10,21 +10,36 @@ type EditDialogType = {
   open: () => void;
   close: () => void;
   openWithTag: (tag: Tag) => void;
+  redirectOnClose: string | undefined;
+  setRedirectOnClose: (url: string | undefined) => void;
 };
 
 const EditDialogContext = createContext<EditDialogType>(undefined);
 
-// lives in App.tsx because it needs ctx in SSR
+// lives in App.tsx because the context is needed in SSR
 export const EditDialogProvider = ({ children }) => {
   const initialState = isBrowser() ? Router.query.all?.[2] === 'edit' : false;
   const [opened, setOpened] = useState<boolean | Tag>(initialState);
+  const [redirectOnClose, setRedirectOnClose] = useState<string | undefined>();
+
+  const close = () => {
+    if (redirectOnClose) {
+      Router.replace('/').then(() => {
+        Router.replace(redirectOnClose); // to reload the panel, we need two redirects, see https://github.com/zbycz/osmapp/pull/685
+      });
+    }
+    setOpened(false);
+    setRedirectOnClose(undefined);
+  };
 
   const value: EditDialogType = {
     opened: !!opened,
     focusTag: opened,
     open: () => setOpened(true),
-    close: () => setOpened(false),
     openWithTag: (tag: Tag) => setOpened(tag),
+    close,
+    redirectOnClose,
+    setRedirectOnClose,
   };
 
   return (

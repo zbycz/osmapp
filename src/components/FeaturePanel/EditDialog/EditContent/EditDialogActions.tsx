@@ -1,10 +1,10 @@
 import { Button, CircularProgress, DialogActions } from '@mui/material';
 import React from 'react';
-import { useGetOnClose } from '../useGetOnClose';
 import { t } from '../../../../services/intl';
 import { useEditContext } from '../EditContext';
 import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { useGetHandleSave } from '../useGetHandleSave';
+import { useEditDialogContext } from '../../helpers/EditDialogContext';
 
 const SaveButton = () => {
   const { loggedIn } = useOsmAuthContext();
@@ -20,9 +20,10 @@ const SaveButton = () => {
 };
 
 const CancelButton = () => {
-  const onClose = useGetOnClose();
+  const { close } = useEditDialogContext();
+
   return (
-    <Button onClick={onClose} color="primary">
+    <Button onClick={close} color="primary">
       {t('editdialog.cancel_button')}
     </Button>
   );

@@ -6,11 +6,8 @@ import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { EditDialogTitle } from './EditDialogTitle';
 import { useEditDialogFeature } from './utils';
 import { EditContextProvider, useEditContext } from './EditContext';
-import { useGetOnClose } from './useGetOnClose';
 import { EditContent } from './EditContent/EditContent';
 import { getReactKey } from '../../../services/helpers';
-import { getFullFeatureWithMemberFeatures } from '../../../services/osm/getFullFeatureWithMemberFeatures';
-import { Feature } from '../../../services/types';
 import { fetchFreshItem, getNewNodeItem } from './itemsHelpers';
 import { DataItem } from './useEditItems';
 
@@ -26,10 +23,9 @@ const StyledDialog = styled(Dialog)`
 `;
 
 const EditDialogInner = () => {
-  const { opened } = useEditDialogContext();
+  const { opened, close } = useEditDialogContext();
   const { successInfo } = useEditContext();
   const fullScreen = useIsFullScreen();
-  const onClose = useGetOnClose();
 
   return (
     <StyledDialog
@@ -41,12 +37,12 @@ const EditDialogInner = () => {
       maxWidth="xl"
       fullScreen={fullScreen}
       open={opened}
-      onClose={onClose}
+      onClose={close}
       disableEscapeKeyDown
       aria-labelledby="edit-dialog-title"
       sx={{ height: '100%' }}
     >
-      <EditDialogTitle onClose={onClose} />
+      <EditDialogTitle />
       {successInfo ? <SuccessContent /> : <EditContent />}
     </StyledDialog>
   );
