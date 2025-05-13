@@ -22,57 +22,55 @@ import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
 import { useHandleItemClick } from '../useHandleItemClick';
 
-// TODO refactor this - extract member functions
-// eslint-disable-next-line max-lines-per-function
-export const ParentsEditor = () => {
-  const { current } = useEditContext();
-  const { tags } = useCurrentItem();
-  const [parents, setParents] = useState([]);
+const SectionName = () => {
   const theme = useTheme();
-  const [isExpanded, setIsExpanded] = React.useState(false);
-  const handleClick = useHandleItemClick(setIsExpanded);
+  const { tags } = useCurrentItem();
 
-  const getSectionName = () => {
-    const isClimbingCrag = tags.climbing === 'crag';
-    const isClimbingRoute = getIsClimbingRoute(tags);
-    if (isClimbingCrag) {
-      return (
-        <Stack direction="row" gap={1}>
-          <AreaIcon
-            fill={theme.palette.text.primary}
-            stroke={theme.palette.text.primary}
-            height={24}
-            width={24}
-          />
-          <Typography variant="button">
-            {t('editdialog.climbing_areas')}{' '}
-            <Typography variant="caption" color="secondary">
-              ({t('editdialog.parents')})
-            </Typography>
+  const isClimbingCrag = tags.climbing === 'crag';
+  const isClimbingRoute = getIsClimbingRoute(tags);
+
+  if (isClimbingCrag) {
+    return (
+      <Stack direction="row" gap={1}>
+        <AreaIcon
+          fill={theme.palette.text.primary}
+          stroke={theme.palette.text.primary}
+          height={24}
+          width={24}
+        />
+        <Typography variant="button">
+          {t('editdialog.climbing_areas')}{' '}
+          <Typography variant="caption" color="secondary">
+            ({t('editdialog.parents')})
           </Typography>
-        </Stack>
-      );
-    }
-    if (isClimbingRoute) {
-      return (
-        <Stack direction="row" gap={1}>
-          <CragIcon
-            fill={theme.palette.text.primary}
-            stroke={theme.palette.text.primary}
-            height={24}
-            width={24}
-          />
-          <Typography variant="button">
-            {t('editdialog.climbing_crags')}{' '}
-            <Typography variant="caption" color="secondary">
-              ({t('editdialog.parents')})
-            </Typography>
+        </Typography>
+      </Stack>
+    );
+  }
+  if (isClimbingRoute) {
+    return (
+      <Stack direction="row" gap={1}>
+        <CragIcon
+          fill={theme.palette.text.primary}
+          stroke={theme.palette.text.primary}
+          height={24}
+          width={24}
+        />
+        <Typography variant="button">
+          {t('editdialog.climbing_crags')}{' '}
+          <Typography variant="caption" color="secondary">
+            ({t('editdialog.parents')})
           </Typography>
-        </Stack>
-      );
-    }
-    return <Typography variant="button">{t('editdialog.parents')}</Typography>;
-  };
+        </Typography>
+      </Stack>
+    );
+  }
+  return <Typography variant="button">{t('editdialog.parents')}</Typography>;
+};
+
+const useGetParents = () => {
+  const { current } = useEditContext();
+  const [parents, setParents] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -87,9 +85,17 @@ export const ParentsEditor = () => {
       setParents([...parentFeatures, ...waysFeatures]);
     })();
   }, [current]);
+  return parents;
+};
 
-  if (!parents || parents.length === 0) return null;
-  const sectionName = getSectionName();
+export const ParentsEditor = () => {
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const handleClick = useHandleItemClick(setIsExpanded);
+  const parents = useGetParents();
+
+  if (!parents || parents.length === 0) {
+    return null;
+  }
 
   return (
     <Accordion disableGutters elevation={0} square expanded={isExpanded}>
@@ -100,19 +106,14 @@ export const ParentsEditor = () => {
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">{sectionName}</Typography>
+          <Typography variant="button">
+            <SectionName />
+          </Typography>
           <Chip size="small" label={parents.length} variant="outlined" />
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
-        <List
-          sx={{
-            '& > .MuiListItem-root:hover': {
-              backgroundColor: theme.palette.background.hover,
-              cursor: 'pointer',
-            },
-          }}
-        >
+        <List>
           {parents.map((parent) => {
             const shortId = getShortId(parent.osmMeta);
             return (
