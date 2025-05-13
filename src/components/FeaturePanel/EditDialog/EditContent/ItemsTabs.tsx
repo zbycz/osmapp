@@ -9,8 +9,8 @@ import {
 } from '@mui/material';
 import { useEditContext } from '../EditContext';
 import React from 'react';
-import { PoiIcon } from '../../../utils/icons/PoiIcon';
 import { EditDataItem } from '../useEditItems';
+import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 
 const StyledTypography = styled(Typography)<{ $deleted: boolean }>`
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
@@ -62,11 +62,11 @@ const TabLabel = ({
         whiteSpace="nowrap"
         $deleted={toBeDeleted}
       >
-        {tags.name ?? shortId}
+        {tags.name || shortId}
       </StyledTypography>
     </Stack>
     <Typography variant="caption" textTransform="lowercase" whiteSpace="nowrap">
-      {presetLabel}
+      {presetLabel} <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
     </Typography>
   </Stack>
 );
