@@ -6,9 +6,17 @@ import {
   Typography,
 } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import styled from '@emotion/styled';
 import React from 'react';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 import { useEditContext } from '../EditContext';
+
+const StyledListItem = styled(ListItem)(({ theme }) => ({
+  ':hover': {
+    backgroundColor: theme.palette.background.hover,
+    cursor: 'pointer',
+  },
+}));
 
 type Props = {
   label?: string;
@@ -22,7 +30,7 @@ export const FeatureRow = ({ label, shortId, onClick }: Props) => {
 
   return (
     <>
-      <ListItem onClick={onClick}>
+      <StyledListItem onClick={onClick}>
         <Stack
           alignItems="center"
           justifyContent="space-between"
@@ -39,7 +47,7 @@ export const FeatureRow = ({ label, shortId, onClick }: Props) => {
           </ListItemText>
           <ChevronRightIcon />
         </Stack>
-      </ListItem>
+      </StyledListItem>
       <Divider />
     </>
   );

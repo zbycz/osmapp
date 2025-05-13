@@ -70,8 +70,6 @@ const AccordionComponent = ({
   isExpanded?: boolean;
   setIsExpanded?: Setter<boolean>;
 }) => {
-  const theme = useTheme();
-
   return (
     <Accordion disableGutters elevation={0} square expanded={isExpanded}>
       <AccordionSummary
@@ -88,16 +86,7 @@ const AccordionComponent = ({
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
-        <List
-          sx={{
-            '& > .MuiListItem-root:hover': {
-              backgroundColor: theme.palette.background.hover,
-              cursor: 'pointer',
-            },
-          }}
-        >
-          {children}
-        </List>
+        <List>{children}</List>
       </AccordionDetails>
     </Accordion>
   );
