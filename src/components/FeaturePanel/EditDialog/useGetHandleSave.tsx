@@ -7,6 +7,7 @@ import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 import { insertOsmNote } from '../../../services/osm/insertOsmNote';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import { getShortId } from '../../../services/helpers';
+import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const useGetSaveNote = () => {
   const { showToast } = useSnackbar();
@@ -45,6 +46,7 @@ export const useGetHandleSave = () => {
   const { showToast } = useSnackbar();
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { feature } = useEditDialogFeature();
+  const { setRedirectOnClose } = useEditDialogContext();
   const { setSuccessInfo, setIsSaving, comment, items } = useEditContext();
   const saveNote = useGetSaveNote();
 
@@ -59,6 +61,7 @@ export const useGetHandleSave = () => {
         : await saveNote();
 
       setSuccessInfo(successInfo);
+      setRedirectOnClose(successInfo.redirect);
       setTimeout(() => setIsSaving(false), 500);
     } catch (err) {
       setIsSaving(false);

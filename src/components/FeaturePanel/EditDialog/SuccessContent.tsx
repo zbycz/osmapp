@@ -13,7 +13,7 @@ import { t, Translation } from '../../../services/intl';
 import { nl2br } from '../../utils/nl2br';
 import { SuccessInfo } from '../../../services/types';
 import { useEditContext } from './EditContext';
-import { useGetOnClose } from './useGetOnClose';
+import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const StyledCheckCircleIcon = styled(CheckCircleIcon)`
   color: #4b912e;
@@ -52,7 +52,7 @@ const getTexts = (successInfo: SuccessInfo) =>
       };
 
 export const SuccessContent = () => {
-  const onClose = useGetOnClose();
+  const { close } = useEditDialogContext();
   const { successInfo } = useEditContext();
   const texts = getTexts(successInfo);
 
@@ -90,7 +90,7 @@ export const SuccessContent = () => {
         </GrayBox>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={close} color="primary">
           {t('editsuccess.close_button')}
         </Button>
       </DialogActions>
