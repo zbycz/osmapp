@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Feature, SuccessInfo } from '../../../services/types';
+import { SuccessInfo } from '../../../services/types';
 import { DataItem, EditDataItem, useEditItems } from './useEditItems';
-import { getShortId } from '../../../services/helpers';
-import { useEditDialogFeature } from './utils';
+
+type ShortId = string;
 
 type EditContextType = {
   successInfo: undefined | SuccessInfo;
@@ -22,18 +22,13 @@ type EditContextType = {
 
 const EditContext = createContext<EditContextType>(undefined);
 
-type Props = {
-  initialItem: DataItem;
-  children: React.ReactNode;
-};
-
-export const EditContextProvider = ({ initialItem, children }: Props) => {
+export const EditContextProvider: React.FC = ({ children }) => {
   const [successInfo, setSuccessInfo] = useState<undefined | SuccessInfo>();
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState(''); // only for note
   const [comment, setComment] = useState('');
-  const { items, addItem, removeItem } = useEditItems(initialItem);
-  const [current, setCurrent] = useState(initialItem.shortId);
+  const { items, addItem, removeItem } = useEditItems();
+  const [current, setCurrent] = useState<ShortId>(''); // to get currentItem - use `useCurrentItem()`
 
   const value: EditContextType = {
     successInfo,

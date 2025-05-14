@@ -1,8 +1,7 @@
-import { Feature, FeatureTags, LonLat } from '../../../services/types';
-import { getApiId, getShortId } from '../../../services/helpers';
-import { getLabel } from '../../../helpers/featureLabel';
+import { FeatureTags, LonLat } from '../../../services/types';
+import { getApiId } from '../../../services/helpers';
 import { Setter } from '../../../types';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { publishDbgObject } from '../../../utils';
 import { findPreset } from '../../../services/tagging/presets';
 import { getPresetTranslation } from '../../../services/tagging/translations';
@@ -220,8 +219,8 @@ const toggleToBeDeletedFactory = (setDataItem: SetDataItem) => {
     }));
 };
 
-export const useEditItems = (initialItem: DataItem) => {
-  const [data, setData] = useState<DataItem[]>([initialItem]);
+export const useEditItems = () => {
+  const [data, setData] = useState<DataItem[]>([]);
 
   const items = useMemo<Array<EditDataItem>>(
     () =>
@@ -249,16 +248,16 @@ export const useEditItems = (initialItem: DataItem) => {
     [data],
   );
 
-  const addItem = (newItem: DataItem) => {
+  const addItem = useCallback((newItem: DataItem) => {
     setData((state) => [...state, newItem]);
-  };
+  }, []);
 
-  const removeItem = (shortId: string) => {
+  const removeItem = useCallback((shortId: string) => {
     if (getApiId(shortId).id > 0) {
       throw new Error('Existing item should not be removed from items.');
     }
     setData((state) => state.filter((item) => item.shortId !== shortId));
-  };
+  }, []);
 
   publishDbgObject('EditContext state', data);
 

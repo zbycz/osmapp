@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
@@ -6,7 +6,6 @@ import { useEditDialogFeature } from './utils';
 import { EditContextProvider, useEditContext } from './EditContext';
 import { getReactKey } from '../../../services/helpers';
 import { fetchFreshItem, getNewNodeItem } from './itemsHelpers';
-import { DataItem } from './useEditItems';
 import {
   EditDialogContent,
   EditDialogLoadingSkeleton,
@@ -24,7 +23,7 @@ const StyledDialog = styled(Dialog)`
 const CustomizedDialog: React.FC = ({ children }) => {
   const { opened, close } = useEditDialogContext();
   const fullScreen = useIsFullScreen();
-  const { items } = useEditContext() ?? { items: [] };
+  const { items } = useEditContext();
   const hasMoreItems = items.length > 1;
 
   return (
@@ -49,29 +48,26 @@ const CustomizedDialog: React.FC = ({ children }) => {
 
 const EditDialogFetcher = () => {
   const { feature } = useEditDialogFeature();
-  const [initialItem, setInitialItem] = useState<DataItem | undefined>();
+  const { current, addItem, setCurrent } = useEditContext();
 
   useEffect(() => {
     (async () => {
       if (feature.osmMeta.id < 0) {
         const newItem = getNewNodeItem(feature.center);
-        setInitialItem(newItem);
+        addItem(newItem);
+        setCurrent(newItem.shortId);
       } else {
         const newItem = await fetchFreshItem(feature.osmMeta); // TODO potentially leaking - use react-query (with max repetions 10?)
-        setInitialItem(newItem);
+        addItem(newItem);
+        setCurrent(newItem.shortId);
       }
     })();
-  }, [feature]);
+  }, [addItem, feature, setCurrent]);
 
-  if (!initialItem) {
+  if (!current) {
     return <EditDialogLoadingSkeleton />;
   }
-
-  return (
-    <EditContextProvider initialItem={initialItem}>
-      <EditDialogContent />
-    </EditContextProvider>
-  );
+  return <EditDialogContent />;
 };
 
 export const EditDialog = () => {
@@ -83,9 +79,11 @@ export const EditDialog = () => {
   }
 
   return (
-    // dialog has to be mounted only once - it has animation
-    <CustomizedDialog>
-      <EditDialogFetcher key={getReactKey(feature)} />
-    </CustomizedDialog>
+    <EditContextProvider key={getReactKey(feature)}>
+      {/*dialog has to be mounted only once - it has animation*/}
+      <CustomizedDialog>
+        <EditDialogFetcher />
+      </CustomizedDialog>
+    </EditContextProvider>
   );
 };

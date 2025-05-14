@@ -11,7 +11,7 @@ import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const useGetDialogTitle = (isAddPlace, isUndelete) => {
   const { loggedIn } = useOsmAuthContext();
-  const { items } = useEditContext() ?? { items: [] };
+  const { items } = useEditContext();
   if (isAddPlace) return t('editdialog.add_heading');
   if (isUndelete) return t('editdialog.undelete_heading');
   if (!loggedIn) {
