@@ -14,7 +14,8 @@ import { TimeSlot } from './TimeSlot';
 import { CopyFromAboveButton } from './CopyFromAboveButton';
 import { useGetBlurValidation } from './useGetBlurValidation';
 import { SetDaysAndTagFn, SetDaysFn } from './types';
-import { useCurrentItem } from '../CurrentContext';
+
+import { useCurrentItem } from '../../../EditContext';
 
 const Wrapper = styled.div`
   display: flex;

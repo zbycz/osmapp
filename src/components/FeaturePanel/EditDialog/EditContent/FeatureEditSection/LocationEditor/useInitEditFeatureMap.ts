@@ -1,9 +1,8 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import maplibregl from 'maplibre-gl';
 import { outdoorStyle } from '../../../../../Map/styles/outdoorStyle';
 import { COMPASS_TOOLTIP } from '../../../../../Map/useAddTopRightControls';
-
-import { useEditContext } from '../../../EditContext';
+import { useCurrentItem, useEditContext } from '../../../EditContext';
 import { useFeatureMarkers } from './useStaticMarkers';
 import { useDraggableFeatureMarker } from './useDraggableMarker';
 import { isGpsValid } from './isGpsValid';
@@ -15,7 +14,7 @@ export function useInitEditFeatureMap(isFirstMapLoad, setIsFirstMapLoad) {
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
   const { current, items, setCurrent } = useEditContext();
-  const currentItem = items.find((item) => item.shortId === current);
+  const currentItem = useCurrentItem();
 
   useFeatureMarkers(mapRef, items, setCurrent, current);
 

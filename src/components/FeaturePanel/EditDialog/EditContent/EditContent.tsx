@@ -5,25 +5,48 @@ import { CommentField } from './CommentField';
 import { OsmUserLogged } from './OsmUserLogged';
 import { ContributionInfoBox } from './ContributionInfoBox';
 import { OsmUserLoggedOut } from './OsmUserLoggedOut';
-import { ItemEditSection } from './FeatureEditSection/ItemEditSection';
-import { useEditContext } from '../EditContext';
 import { TestApiWarning } from '../../helpers/TestApiWarning';
 import { ItemsTabs } from './ItemsTabs';
+import { ItemHeading } from './FeatureEditSection/ItemHeading';
+import { PresetSelect } from './FeatureEditSection/PresetSelect';
+import { MajorKeysEditor } from './FeatureEditSection/MajorKeysEditor';
+import { TagsEditor } from './FeatureEditSection/TagsEditor/TagsEditor';
+import { LocationEditor } from './FeatureEditSection/LocationEditor/LocationEditor';
+import { ParentsEditor } from './FeatureEditSection/ParentsEditor';
+import { MembersEditor } from './FeatureEditSection/MembersEditor';
 
-export const EditContent = () => {
-  const { current } = useEditContext();
+const Wrapper: React.FC = ({ children }) => {
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  return (
+    <Stack
+      direction={isSmallScreen ? 'column' : 'row'}
+      gap={1}
+      overflow="hidden"
+      flex={1}
+      sx={{ borderTop: `solid 1px ${theme.palette.divider}` }}
+    >
+      {children}
+    </Stack>
+  );
+};
 
+const ItemSection = () => (
+  <>
+    <ItemHeading />
+    <PresetSelect />
+    <MajorKeysEditor />
+    <TagsEditor />
+    <LocationEditor />
+    <ParentsEditor />
+    <MembersEditor />
+  </>
+);
+
+export const EditContent = () => {
   return (
     <>
-      <Stack
-        direction={isSmallScreen ? 'column' : 'row'}
-        gap={1}
-        overflow="hidden"
-        flex={1}
-        sx={{ borderTop: `solid 1px ${theme.palette.divider}` }}
-      >
+      <Wrapper>
         <ItemsTabs />
         <DialogContent dividers sx={{ flex: 1, borderTop: 0 }}>
           <form
@@ -35,7 +58,7 @@ export const EditContent = () => {
 
             <Stack height="100%">
               <Stack flex={1}>
-                <ItemEditSection shortId={current} />
+                <ItemSection />
               </Stack>
               <CommentField />
               <ContributionInfoBox />
@@ -44,7 +67,7 @@ export const EditContent = () => {
             </Stack>
           </form>
         </DialogContent>
-      </Stack>
+      </Wrapper>
       <EditDialogActions />
     </>
   );

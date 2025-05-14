@@ -1,9 +1,7 @@
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import React, { useEffect, useState } from 'react';
-import { InputAdornment, TextField } from '@mui/material';
-import WarningIcon from '@mui/icons-material/Warning';
-import { useCurrentItem } from '../CurrentContext';
 import { FastInput } from './helpers';
+import { useCurrentItem } from '../../../EditContext';
 
 const useUpdatedState = (currentKey: string) => {
   const [tmpKey, setTmpKey] = useState(currentKey);

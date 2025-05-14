@@ -18,10 +18,8 @@ import { t, Translation } from '../../../../../../services/intl';
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
-import { useCurrentItem } from '../CurrentContext';
-import { TagsEntries } from '../../../useEditItems';
 import { OptionsEditor } from '../OptionsEditor';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import { useCurrentItem } from '../../../EditContext';
 
 const Table = styled.table`
   width: calc(100% - 8px);

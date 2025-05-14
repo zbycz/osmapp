@@ -1,8 +1,8 @@
-import { useCurrentItem } from './CurrentContext';
 import { Stack, Typography } from '@mui/material';
 import { getOsmTypeFromShortId, NwrIcon } from '../../../NwrIcon';
 import React from 'react';
 import styled from '@emotion/styled';
+import { useCurrentItem } from '../../EditContext';
 
 const StyledTypography = styled(Typography)<{ $deleted: boolean }>`
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}

@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { useCurrentItem } from './CurrentContext';
 import {
   Accordion,
   AccordionDetails,
@@ -16,7 +15,7 @@ import { getApiId, getShortId } from '../../../../../services/helpers';
 import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
 import { fetchWays } from '../../../../../services/osm/fetchWays';
-import { useEditContext } from '../../EditContext';
+import { useCurrentItem, useEditContext } from '../../EditContext';
 import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';

@@ -9,11 +9,11 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { t, Translation } from '../../../../../../services/intl';
-import { useCurrentItem } from '../CurrentContext';
 import { getApiId } from '../../../../../../services/helpers';
 import { fetchWays } from '../../../../../../services/osm/fetchWays';
 import { OsmId } from '../../../../../../services/types';
 import PlaceIcon from '@mui/icons-material/Place';
+import { useCurrentItem } from '../../../EditContext';
 
 const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
   ssr: false,

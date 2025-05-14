@@ -15,7 +15,7 @@ import { getPresetForFeature } from '../../../../../services/tagging/presets';
 import { Feature, FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import { Setter } from '../../../../../types';
-import { useCurrentItem } from './CurrentContext';
+import { useCurrentItem } from '../../EditContext';
 
 export type TranslatedPreset = Preset & {
   name: string;

@@ -50,3 +50,9 @@ export const EditContextProvider: React.FC = ({ children }) => {
 };
 
 export const useEditContext = () => useContext(EditContext);
+
+export const useCurrentItem = (): EditDataItem => {
+  const { items, current } = useEditContext();
+
+  return items.find((item) => item.shortId === current);
+};
