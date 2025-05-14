@@ -11,7 +11,7 @@ import { TestApiWarning } from '../../helpers/TestApiWarning';
 import { ItemsTabs } from './ItemsTabs';
 
 export const EditContent = () => {
-  const { items, current, setCurrent } = useEditContext();
+  const { current } = useEditContext();
   const theme = useTheme();
   const isSmallScreen = useMediaQuery(theme.breakpoints.down('sm'));
 

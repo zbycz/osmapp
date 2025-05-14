@@ -39,6 +39,7 @@ import { Feature } from '../src/services/types';
 import { ResponsiveFeaturePanel } from '../src/components/FeaturePanel/ResponsiveFeaturePanel';
 import { Climbing } from '../src/components/Climbing/Climbing';
 import Router from 'next/router';
+import { fetchSchemaTranslations } from '../src/services/tagging/translations';
 
 const getInitialToast = (featureFromRouter: Feature | '404') =>
   featureFromRouter === '404'
@@ -76,6 +77,7 @@ const MyApp = (props: Props) => {
     setTimeout(() => {
       Router.prefetch('/'); // works only in PROD
       Router.prefetch('/directions/[[...all]]');
+      fetchSchemaTranslations();
     }, 1000);
   }, []);
 
