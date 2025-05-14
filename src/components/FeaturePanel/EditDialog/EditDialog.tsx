@@ -51,6 +51,10 @@ const EditDialogFetcher = () => {
   const { current, addItem, setCurrent } = useEditContext();
 
   useEffect(() => {
+    if (current) {
+      return; // for development
+    }
+
     (async () => {
       if (feature.osmMeta.id < 0) {
         const newItem = getNewNodeItem(feature.center);
@@ -62,7 +66,7 @@ const EditDialogFetcher = () => {
         setCurrent(newItem.shortId);
       }
     })();
-  }, [addItem, feature, setCurrent]);
+  }, [addItem, current, feature, setCurrent]);
 
   if (!current) {
     return <EditDialogLoadingSkeleton />;
@@ -74,16 +78,13 @@ export const EditDialog = () => {
   const { opened } = useEditDialogContext();
   const { feature } = useEditDialogFeature();
 
-  if (!opened) {
-    return null;
-  }
-
   return (
     <EditContextProvider key={getReactKey(feature)}>
-      {/*dialog has to be mounted only once - it has animation*/}
-      <CustomizedDialog>
-        <EditDialogFetcher />
-      </CustomizedDialog>
+      {opened && (
+        <CustomizedDialog>
+          <EditDialogFetcher />
+        </CustomizedDialog>
+      )}
     </EditContextProvider>
   );
 };

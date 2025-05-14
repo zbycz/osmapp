@@ -1,27 +1,24 @@
 import React, { useMemo, useState } from 'react';
 import {
-  Box,
   Button,
   InputBase,
   ListSubheader,
+  Menu,
   MenuItem,
-  Select,
-  Tooltip,
 } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
-import { TranslatedPreset } from './PresetSelect';
+import { TranslatedPreset, useOptions } from './PresetSelect';
 import { Setter } from '../../../../../types';
 import { t } from '../../../../../services/intl';
-import { SelectChangeEvent } from '@mui/material/Select/SelectInput';
-import { useBoolState } from '../../../../helpers';
 import { useFeatureContext } from '../../../../utils/FeatureContext';
 import { PROJECT_ID } from '../../../../../services/project';
-import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
 import { PoiIcon } from '../../../../utils/icons/PoiIcon';
 import { useCurrentItem } from '../../EditContext';
+import { useBoolState } from '../../../../helpers';
+import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -59,21 +56,6 @@ const useEmptyOptions = () => {
   return [];
 };
 
-const Placeholder = styled.span`
-  color: ${({ theme }) => theme.palette.text.secondary};
-`;
-
-const renderOption = (option: TranslatedPreset) =>
-  !option ? (
-    <Placeholder>{t('editdialog.preset_select.placeholder')}</Placeholder>
-  ) : (
-    <>
-      <PoiIcon tags={option.tags} size={16} middle themed />
-      <span style={{ paddingLeft: 5 }} />
-      {option.name}
-    </>
-  );
-
 const getFilteredOptions = (
   options: TranslatedPreset[],
   searchText: string,
@@ -109,9 +91,11 @@ const useDisplayedOptions = (
 };
 
 const SearchRow = ({
-  onChange,
+  searchText,
+  setSearchText,
 }: {
-  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  searchText: string;
+  setSearchText: Setter<string>;
 }) => (
   <StyledListSubheader>
     <SearchIcon fontSize="small" />
@@ -120,7 +104,8 @@ const SearchRow = ({
       autoFocus
       placeholder={t('editdialog.preset_select.search_placeholder')}
       fullWidth
-      onChange={onChange}
+      value={searchText}
+      onChange={(e) => setSearchText(e.target.value)}
       onKeyDown={(e) => {
         if (e.key !== 'Escape') {
           e.stopPropagation();
@@ -130,20 +115,16 @@ const SearchRow = ({
   </StyledListSubheader>
 );
 
-const useGetOnChange = (
-  options: TranslatedPreset[],
-  value: string,
-  setValue: Setter<string>,
-) => {
-  const { setTagsEntries } = useCurrentItem();
+const useGetOnClick = (options: TranslatedPreset[]) => {
+  const { presetKey, setTagsEntries } = useCurrentItem();
 
-  return (e: SelectChangeEvent<string>) => {
-    const oldPreset = options.find((o) => o.presetKey === value);
+  return (newPresetKey: string) => {
+    const oldPreset = options.find((o) => o.presetKey === presetKey);
     const toRemove = oldPreset
       ? (oldPreset.addTags ?? oldPreset.tags ?? {})
       : {};
 
-    const newPreset = options.find((o) => o.presetKey === e.target.value);
+    const newPreset = options.find((o) => o.presetKey === newPresetKey);
     const toAdd = newPreset
       ? Object.entries(newPreset.addTags ?? newPreset.tags ?? {})
       : [];
@@ -154,89 +135,65 @@ const useGetOnChange = (
         ([key, value]) => !(toRemove[key] && toRemove[key] === value),
       ),
     ]);
-
-    if (newPreset) {
-      setValue(newPreset.presetKey);
-    }
   };
 };
 
-const getPaperMaxHeight = (
-  selectRef: React.MutableRefObject<HTMLDivElement>,
-) => {
-  if (!selectRef.current) {
+const getPaperSize = (selectRef: HTMLElement) => {
+  if (!selectRef) {
     return undefined;
   }
   const BOTTOM_PADDING = 50;
-  const rect = selectRef.current.getBoundingClientRect();
+  const rect = selectRef.getBoundingClientRect();
   const height = window.innerHeight - (rect.top + rect.height) - BOTTOM_PADDING;
   return {
     style: {
+      width: rect.width,
       maxHeight: height,
     },
   };
 };
 
 type Props = {
-  value: string;
-  setValue: Setter<string>;
-  options: TranslatedPreset[];
+  anchorEl: HTMLElement;
+  onClose: () => void;
 };
-export const PresetSearchBox = ({ value, setValue, options }: Props) => {
-  const selectRef = React.useRef<HTMLDivElement>(null);
-  const { feature } = useFeatureContext();
-  const { loggedIn } = useOsmAuthContext();
-  const [enabled, enable] = useBoolState(feature.point || !loggedIn);
 
+export const PresetSearchBox = ({ anchorEl, onClose }: Props) => {
   const [searchText, setSearchText] = useState('');
+  const options = useOptions();
   const displayedOptions = useDisplayedOptions(searchText, options);
+  const handleClick = useGetOnClick(options);
 
-  const onChange = useGetOnChange(options, value, setValue);
+  if (!options.length) {
+    return null;
+  }
 
   return (
-    <>
-      <Tooltip
-        title={enabled ? '' : t('editdialog.preset_select.change_type_warning')}
-        arrow
-      >
-        <Select
-          disabled={!enabled}
-          sx={{
-            '.Mui-disabled': {
-              cursor: 'not-allowed !important',
-            },
-          }}
-          MenuProps={{
-            autoFocus: false,
-            slotProps: { paper: getPaperMaxHeight(selectRef) },
-          }}
-          value={value}
-          onChange={onChange}
-          onClose={() => setSearchText('')}
-          renderValue={() =>
-            renderOption(options.find((o) => o.presetKey === value))
-          }
-          variant="outlined"
-          fullWidth
-          displayEmpty
-          ref={selectRef}
-        >
-          <SearchRow onChange={(e) => setSearchText(e.target.value)} />
-          {displayedOptions.map((option) => (
-            <MenuItem key={option} component="li" value={option}>
-              {renderOption(options.find((o) => o.presetKey === option))}
-            </MenuItem>
-          ))}
-        </Select>
-      </Tooltip>
-      {!enabled && (
-        // TODO we may warn users that this is not usual operation, if this becomes an issue
-        <Box ml={1}>
-          <Button color="secondary" onClick={enable}>
-            {t('editdialog.preset_select.edit_button')}
-          </Button>
-        </Box>
-      )}
-    </>
+    <Menu
+      anchorEl={anchorEl}
+      open={Boolean(anchorEl)}
+      onClose={onClose}
+      autoFocus={false}
+      slotProps={{ paper: getPaperSize(anchorEl) }}
+    >
+      <SearchRow searchText={searchText} setSearchText={setSearchText} />
+      {displayedOptions.map((optionKey) => {
+        const option = options.find((o) => o.presetKey === optionKey);
+        return (
+          <MenuItem
+            key={optionKey}
+            component="li"
+            onClick={() => {
+              handleClick(optionKey);
+              onClose();
+            }}
+          >
+            <PoiIcon tags={option.tags} size={16} middle themed />
+            <span style={{ paddingLeft: 5 }} />
+            {option.name}
+          </MenuItem>
+        );
+      })}
+    </Menu>
   );
 };

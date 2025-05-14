@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box, Button, Tooltip, Typography } from '@mui/material';
 import styled from '@emotion/styled';
-import { getPoiClass } from '../../../../../services/getPoiClass';
 import { allPresets } from '../../../../../services/tagging/data';
 import {
   fetchSchemaTranslations,
   getPresetTermsTranslation,
   getPresetTranslation,
 } from '../../../../../services/tagging/translations';
-import { useFeatureContext } from '../../../../utils/FeatureContext';
-import { PresetSearchBox } from './PresetSearchBox';
 import { Preset } from '../../../../../services/tagging/types/Presets';
-import { getPresetForFeature } from '../../../../../services/tagging/presets';
-import { Feature, FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
-import { Setter } from '../../../../../types';
 import { useCurrentItem } from '../../EditContext';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { PoiIcon } from '../../../../utils/icons/PoiIcon';
+import { PresetSearchBox } from './PresetSearchBox';
+import { useFeatureContext } from '../../../../utils/FeatureContext';
+import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
+import { useBoolState } from '../../../../helpers';
 
 export type TranslatedPreset = Preset & {
   name: string;
@@ -58,27 +58,6 @@ const LabelWrapper = styled.div`
   margin-right: 1em;
 `;
 
-export const useMatchTags = (
-  feature: Feature,
-  tags: FeatureTags,
-  setPreset: Setter<string>,
-) => {
-  useEffect(() => {
-    (async () => {
-      const updatedFeature: Feature = {
-        ...feature,
-        ...(feature.point ? { osmMeta: { type: 'node', id: -1 } } : {}),
-        tags,
-      };
-      const foundPreset = getPresetForFeature(updatedFeature); // takes ~ 1 ms
-      const translatedPreset = (await getTranslatedPresets()).find(
-        (option) => option.presetKey === foundPreset.presetKey,
-      );
-      setPreset(translatedPreset?.presetKey ?? '');
-    })();
-  }, [tags, feature, setPreset]);
-};
-
 export const useOptions = () => {
   const [options, setOptions] = useState<PresetsCache>([]);
   useEffect(() => {
@@ -87,16 +66,62 @@ export const useOptions = () => {
   return options;
 };
 
-export const PresetSelect = () => {
-  const { tags } = useCurrentItem();
-  const [preset, setPreset] = useState('');
-  const { feature } = useFeatureContext();
-  const options = useOptions();
-  useMatchTags(feature, tags, setPreset);
+const SelectFieldBox = styled(Box)`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border: 1px solid ${({ theme }) => theme.palette.action.disabled};
+  border-radius: ${({ theme }) => theme.shape.borderRadius}px;
+  min-width: 300px;
+  cursor: pointer;
+  background-color: ${({ theme }) => theme.palette.background.paper};
+  min-height: 40px;
+  transition: border-color 0.2s ease-in-out;
 
-  if (options.length === 0) {
-    return null;
+  &:hover {
+    border-color: ${({ theme }) => theme.palette.secondary.main};
   }
+
+  box-sizing: border-box;
+  &:focus {
+    outline: none;
+    border-color: ${({ theme }) => theme.palette.primary.main};
+    border-width: 2px;
+    padding: 9px 13px;
+    background-position: right 7px center;
+  }
+`;
+
+const Placeholder = () => (
+  <Typography component="span" sx={{ color: 'text.secondary' }}>
+    {t('editdialog.preset_select.placeholder')}
+  </Typography>
+);
+
+const useAnchorElement = () => {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  return { anchorEl, handleClick, handleClose };
+};
+
+const useEnabledState = () => {
+  const { feature } = useFeatureContext();
+  const { loggedIn } = useOsmAuthContext();
+  const [enabled, enable] = useBoolState(feature.point || !loggedIn);
+  return { enabled, enable };
+};
+
+export const PresetSelect = () => {
+  const { anchorEl, handleClick, handleClose } = useAnchorElement();
+  const { presetKey, presetLabel } = useCurrentItem();
+  const poiTags = allPresets[presetKey].tags;
+  const { enabled, enable } = useEnabledState();
 
   return (
     <Row mb={3}>
@@ -106,7 +131,36 @@ export const PresetSelect = () => {
         </Typography>
       </LabelWrapper>
 
-      <PresetSearchBox value={preset} setValue={setPreset} options={options} />
+      <Tooltip
+        title={enabled ? '' : t('editdialog.preset_select.change_type_warning')}
+        arrow
+      >
+        <SelectFieldBox
+          tabIndex={enabled ? 0 : undefined}
+          onClick={enabled ? handleClick : undefined}
+        >
+          {presetKey === 'point' ? (
+            <Placeholder />
+          ) : (
+            <div>
+              <PoiIcon tags={poiTags} size={16} middle themed />
+              <span style={{ paddingLeft: 5 }} />
+              {presetLabel}
+            </div>
+          )}
+          <ArrowDropDownIcon color="action" />
+        </SelectFieldBox>
+      </Tooltip>
+      {!enabled && (
+        // TODO we may warn users that this is not usual operation, if this becomes an issue
+        <Box ml={1}>
+          <Button color="secondary" onClick={enable}>
+            {t('editdialog.preset_select.edit_button')}
+          </Button>
+        </Box>
+      )}
+
+      <PresetSearchBox anchorEl={anchorEl} onClose={handleClose} />
     </Row>
   );
 };

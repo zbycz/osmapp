@@ -281,7 +281,7 @@ export default {
   'editdialog.preset_select.search_placeholder': 'Type to search...',
   'editdialog.preset_select.edit_button': 'Edit',
   'editdialog.preset_select.change_type_warning':
-    'Changing the type is not usual operation. Consider if this change makes sense and use button on the right to enable.',
+    'Changing the type is not a usual operation. It will remove the tags for current type and add tags for the selected one.',
 
   'tags.name': 'Name',
   'tags.description': 'Description',
