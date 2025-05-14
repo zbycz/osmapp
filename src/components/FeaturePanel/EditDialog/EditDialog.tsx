@@ -1,40 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
-import { SuccessContent } from './SuccessContent';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
-import { EditDialogTitle } from './EditDialogTitle';
 import { useEditDialogFeature } from './utils';
 import { EditContextProvider, useEditContext } from './EditContext';
-import { EditContent } from './EditContent/EditContent';
 import { getReactKey } from '../../../services/helpers';
 import { fetchFreshItem, getNewNodeItem } from './itemsHelpers';
-import { DataItem } from './useEditItems';
+import {
+  EditDialogContent,
+  EditDialogLoadingSkeleton,
+} from './EditDialogContent';
 
 const useIsFullScreen = () => {
   const theme = useTheme();
   return useMediaQuery(theme.breakpoints.down('md'));
 };
-
 const StyledDialog = styled(Dialog)`
   .MuiDialog-container.MuiDialog-scrollPaper {
     align-items: start;
   }
 `;
-
-const EditDialogInner = () => {
+const CustomizedDialog: React.FC = ({ children }) => {
   const { opened, close } = useEditDialogContext();
-  const { successInfo } = useEditContext();
   const fullScreen = useIsFullScreen();
+  const { items } = useEditContext();
+  const hasMoreItems = items.length > 1;
 
   return (
     <StyledDialog
       PaperProps={{
         sx: {
           height: '100%',
+          maxWidth: hasMoreItems ? 1100 : 900,
         },
       }}
-      maxWidth="xl"
       fullScreen={fullScreen}
       open={opened}
       onClose={close}
@@ -42,42 +41,49 @@ const EditDialogInner = () => {
       aria-labelledby="edit-dialog-title"
       sx={{ height: '100%' }}
     >
-      <EditDialogTitle />
-      {successInfo ? <SuccessContent /> : <EditContent />}
+      {children}
     </StyledDialog>
   );
 };
 
 const EditDialogFetcher = () => {
   const { feature } = useEditDialogFeature();
-
-  const [initialItem, setInitialItem] = useState<DataItem | undefined>();
+  const { current, addItem, setCurrent } = useEditContext();
 
   useEffect(() => {
     (async () => {
       if (feature.osmMeta.id < 0) {
         const newItem = getNewNodeItem(feature.center);
-        setInitialItem(newItem);
+        addItem(newItem);
+        setCurrent(newItem.shortId);
       } else {
         const newItem = await fetchFreshItem(feature.osmMeta); // TODO potentially leaking - use react-query (with max repetions 10?)
-        setInitialItem(newItem);
+        addItem(newItem);
+        setCurrent(newItem.shortId);
       }
     })();
-  }, [feature]);
+  }, [addItem, feature, setCurrent]);
 
-  if (!initialItem) {
+  if (!current) {
+    return <EditDialogLoadingSkeleton />;
+  }
+  return <EditDialogContent />;
+};
+
+export const EditDialog = () => {
+  const { opened } = useEditDialogContext();
+  const { feature } = useEditDialogFeature();
+
+  if (!opened) {
     return null;
   }
 
   return (
-    <EditContextProvider initialItem={initialItem}>
-      <EditDialogInner />
+    <EditContextProvider key={getReactKey(feature)}>
+      {/*dialog has to be mounted only once - it has animation*/}
+      <CustomizedDialog>
+        <EditDialogFetcher />
+      </CustomizedDialog>
     </EditContextProvider>
   );
-};
-
-export const EditDialog = () => {
-  const { feature } = useEditDialogFeature();
-
-  return <EditDialogFetcher key={getReactKey(feature)} />;
 };

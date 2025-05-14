@@ -9,7 +9,7 @@ import { useEditContext } from './EditContext';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 
-const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
+const useGetDialogTitle = (isAddPlace, isUndelete) => {
   const { loggedIn } = useOsmAuthContext();
   const { items } = useEditContext();
   if (isAddPlace) return t('editdialog.add_heading');
@@ -27,10 +27,10 @@ const useGetDialogTitle = (isAddPlace, isUndelete, feature) => {
 
 export const EditDialogTitle = () => {
   const { loggedIn } = useOsmAuthContext();
-  const { feature, isAddPlace, isUndelete } = useEditDialogFeature();
+  const { isAddPlace, isUndelete } = useEditDialogFeature();
   const { close } = useEditDialogContext();
 
-  const dialogTitle = useGetDialogTitle(isAddPlace, isUndelete, feature);
+  const dialogTitle = useGetDialogTitle(isAddPlace, isUndelete);
 
   return (
     <DialogTitle id="edit-dialog-title">
