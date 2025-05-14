@@ -6,8 +6,7 @@ import {
 } from '../../useEditItems';
 import { getApiId, getShortId } from '../../../../../services/helpers';
 import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
-import { useEditContext } from '../../EditContext';
-import { useCurrentItem } from './CurrentContext';
+import { useCurrentItem, useEditContext } from '../../EditContext';
 import React, { useCallback, useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
 import { FeatureTags, OsmId } from '../../../../../services/types';

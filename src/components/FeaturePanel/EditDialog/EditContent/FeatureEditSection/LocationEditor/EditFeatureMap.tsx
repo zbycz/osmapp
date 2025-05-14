@@ -3,11 +3,11 @@ import { Chip, CircularProgress, Stack, TextField } from '@mui/material';
 
 import styled from '@emotion/styled';
 import { t } from '../../../../../../services/intl';
-import { useCurrentItem } from '../CurrentContext';
 import { useInitEditFeatureMap } from './useInitEditFeatureMap';
 import { LngLat } from 'maplibre-gl';
 import LayersIcon from '@mui/icons-material/Layers';
 import { getMapStyle } from './getMapStyle';
+import { useCurrentItem } from '../../../EditContext';
 
 const Container = styled.div`
   width: 100%;

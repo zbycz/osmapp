@@ -1,8 +1,8 @@
 import { Typography } from '@mui/material';
 import { encodeUrl } from '../../../../../../helpers/utils';
 import React from 'react';
-import { t, Translation } from '../../../../../../services/intl';
-import { useCurrentItem } from '../CurrentContext';
+import { Translation } from '../../../../../../services/intl';
+import { useCurrentItem } from '../../../EditContext';
 
 export const YoHoursLink = () => {
   const { tags } = useCurrentItem();

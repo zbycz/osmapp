@@ -1,27 +1,11 @@
 import React from 'react';
-import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  Checkbox,
-  FormControlLabel,
-  List,
-  Stack,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { useEditDialogFeature } from '../../utils';
-import { useEditContext } from '../../EditContext';
-import { DialogHeading } from '../../components';
+import { useCurrentItem, useEditContext } from '../../EditContext';
 import { t, Translation } from '../../../../../services/intl';
 import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { useToggleState } from '../../../../helpers';
 import { getIdEditorLink } from '../../../helpers/externalLinks';
-import { useCurrentItem } from './CurrentContext';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { getShortId } from '../../../../../services/helpers';
-import { FeatureRow } from '../FeatureRow';
-import { fetchSchemaTranslations } from '../../../../../services/tagging/translations';
 
 // TODO don't delete objects, but only remove their Preset tags https://github.com/zbycz/osmapp/issues/222
 export const PlaceCancelledToggle = () => {

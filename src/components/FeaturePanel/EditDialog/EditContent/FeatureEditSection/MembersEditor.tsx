@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useCurrentItem } from './CurrentContext';
 import {
   Accordion,
   AccordionDetails,
@@ -19,6 +18,7 @@ import { CragIcon } from '../../../Climbing/CragIcon';
 import { Setter } from '../../../../../types';
 import { useHandleItemClick } from '../useHandleItemClick';
 import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
+import { useCurrentItem } from '../../EditContext';
 
 const SectionName = () => {
   const theme = useTheme();

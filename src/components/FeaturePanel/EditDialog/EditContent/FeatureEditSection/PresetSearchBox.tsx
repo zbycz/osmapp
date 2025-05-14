@@ -20,9 +20,8 @@ import { PROJECT_ID } from '../../../../../services/project';
 import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
-import { useCurrentItem } from './CurrentContext';
 import { PoiIcon } from '../../../../utils/icons/PoiIcon';
-import { getApiId } from '../../../../../services/helpers';
+import { useCurrentItem } from '../../EditContext';
 
 // https://stackoverflow.com/a/70918883/671880
 

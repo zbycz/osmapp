@@ -17,9 +17,9 @@ import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import styled from '@emotion/styled';
 import { CharacterCount, getInputTypeForKey } from '../helpers';
-import { useCurrentItem } from './CurrentContext';
 import { isClimbingRoute } from '../../../../../utils';
 import OpenInNew from '@mui/icons-material/OpenInNew';
+import { useCurrentItem } from '../../EditContext';
 
 export const climbingRouteMajorKeys = [
   'author',
