@@ -8,7 +8,7 @@ import { OsmUserLoggedOut } from './OsmUserLoggedOut';
 import { TestApiWarning } from '../../helpers/TestApiWarning';
 import { ItemsTabs } from './ItemsTabs';
 import { ItemHeading } from './FeatureEditSection/ItemHeading';
-import { PresetSelect } from './FeatureEditSection/PresetSelect';
+import { PresetSelect } from './FeatureEditSection/PresetSelect/PresetSelect';
 import { MajorKeysEditor } from './FeatureEditSection/MajorKeysEditor';
 import { TagsEditor } from './FeatureEditSection/TagsEditor/TagsEditor';
 import { LocationEditor } from './FeatureEditSection/LocationEditor/LocationEditor';

@@ -11,28 +11,24 @@ import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const useGetSaveNote = () => {
   const { showToast } = useSnackbar();
-  const { feature, isUndelete, isAddPlace } = useEditDialogFeature();
-  const { setSuccessInfo, setIsSaving, location, comment, items } =
-    useEditContext();
+  const { feature, isUndelete } = useEditDialogFeature();
+  const { location, comment, items } = useEditContext();
 
   return async () => {
-    if (items.length !== 1) {
-      showToast('Please log in to save multiple items.', 'error');
-      return;
-    }
+    const texts = items.map((item) => {
+      const { tags, toBeDeleted } = item;
+      const noteText = createNoteText(
+        feature, // TODO this is wrong, we must diff each feature from its original state, not from the feature it was opened from
+        tags,
+        toBeDeleted,
+        location,
+        comment,
+        isUndelete,
+      );
+      return noteText;
+    });
 
-    const { tags, toBeDeleted } = items.find(
-      (item) => item.shortId === getShortId(feature.osmMeta),
-    );
-
-    const noteText = createNoteText(
-      feature,
-      tags,
-      toBeDeleted,
-      location,
-      comment,
-      isUndelete,
-    );
+    const noteText = texts.join('\n\n--------\n');
     if (noteText == null) {
       showToast(t('editdialog.changes_needed'), 'warning');
       return;

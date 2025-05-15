@@ -33,15 +33,15 @@ const getPresetsForSearch = async () => {
     .filter(({ searchable }) => searchable === undefined || searchable)
     .filter(({ locationSet }) => !locationSet?.include)
     .filter(({ tags }) => Object.keys(tags).length > 0)
-    .map(({ name, presetKey, tags, terms }) => {
+    .map(({ presetKey, tags, terms }) => {
       const tagsAsStrings = Object.entries(tags).map(([k, v]) => `${k}=${v}`);
       return {
         key: presetKey,
-        name: getPresetTranslation(presetKey) ?? name ?? 'x',
+        name: getPresetTranslation(presetKey),
         tags,
         tagsAsOneString: tagsAsStrings.join(', '),
         texts: [
-          ...(getPresetTermsTranslation(presetKey) ?? terms ?? 'x').split(','),
+          ...getPresetTermsTranslation(presetKey).split(','),
           ...tagsAsStrings,
           presetKey,
         ],
