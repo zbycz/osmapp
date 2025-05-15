@@ -1,24 +1,16 @@
 import React, { useMemo, useState } from 'react';
-import {
-  Button,
-  InputBase,
-  ListSubheader,
-  Menu,
-  MenuItem,
-} from '@mui/material';
+import { InputBase, ListSubheader, Menu, MenuItem } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import styled from '@emotion/styled';
 import { TranslatedPreset, useOptions } from './PresetSelect';
 import { Setter } from '../../../../../types';
 import { t } from '../../../../../services/intl';
-import { useFeatureContext } from '../../../../utils/FeatureContext';
 import { PROJECT_ID } from '../../../../../services/project';
 import { OsmType } from '../../../../../services/types';
 import { geometryMatchesOsmType } from '../../../../../services/tagging/presets';
 import { PoiIcon } from '../../../../utils/icons/PoiIcon';
 import { useCurrentItem } from '../../EditContext';
-import { useBoolState } from '../../../../helpers';
-import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
+import { getApiId } from '../../../../../services/helpers';
 
 // https://stackoverflow.com/a/70918883/671880
 
@@ -35,25 +27,32 @@ const StyledListSubheader = styled(ListSubheader)`
   }
 `;
 
-const useEmptyOptions = () => {
-  const { shortId } = useCurrentItem();
-  const isNode = shortId[0] === 'n';
-  const isRelation = shortId[0] === 'r';
-  if (PROJECT_ID === 'openclimbing' && (isRelation || isNode)) {
-    return ['climbing/area', 'climbing/crag', 'climbing/route_bottom'];
-  }
-  if (isNode) {
-    return [
-      'amenity/cafe',
-      'amenity/restaurant',
-      'amenity/fast_food',
-      'amenity/bar',
-      'shop',
-      'leisure/park',
-      'amenity/place_of_worship',
-    ];
-  }
-  return [];
+const getEmptyOptions = (options: TranslatedPreset[], osmType: OsmType) => {
+  const EMPTY_OPTIONS =
+    PROJECT_ID === 'openclimbing'
+      ? [
+          'climbing/area',
+          'climbing/crag',
+          'climbing/route_bottom',
+          ...(osmType === 'way' ? ['climbing/route'] : []), // this preset has both geometris (node,way) we need it offered only for `way`
+        ]
+      : [
+          'amenity/cafe',
+          'amenity/restaurant',
+          'amenity/fast_food',
+          'amenity/bar',
+          'shop',
+          'leisure/park',
+          'amenity/place_of_worship',
+        ];
+  const emptyOptions = EMPTY_OPTIONS.map((presetKey) =>
+    options.find((option) => option.presetKey === presetKey),
+  );
+
+  return emptyOptions
+    .filter(Boolean)
+    .filter(({ geometry }) => geometryMatchesOsmType(geometry, osmType)) // it won't be matched, if geometry differs
+    .map((option) => option.presetKey);
 };
 
 const getFilteredOptions = (
@@ -78,16 +77,18 @@ const useDisplayedOptions = (
   searchText: string,
   options: TranslatedPreset[],
 ): string[] => {
-  const { feature } = useFeatureContext();
-  const emptyOptions = useEmptyOptions();
+  const { shortId } = useCurrentItem();
+  const osmType = getApiId(shortId).type;
 
-  return useMemo<string[]>(
-    () =>
-      searchText.length
-        ? getFilteredOptions(options, searchText, feature.osmMeta?.type)
-        : emptyOptions,
-    [emptyOptions, feature.osmMeta?.type, options, searchText],
-  );
+  return useMemo<string[]>(() => {
+    if (!options.length) {
+      return [];
+    }
+
+    return searchText.length
+      ? getFilteredOptions(options, searchText, osmType)
+      : getEmptyOptions(options, osmType);
+  }, [osmType, options, searchText]);
 };
 
 const SearchRow = ({
