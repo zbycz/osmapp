@@ -44,7 +44,7 @@ export const getPresetTranslation = (key: string): string =>
   translations?.[intl.lang]?.presets?.presets?.[key]?.name ?? `[${key}]`;
 
 export const getPresetTermsTranslation = (key: string) =>
-  translations?.[intl.lang]?.presets?.presets?.[key]?.terms;
+  translations?.[intl.lang]?.presets?.presets?.[key]?.terms ?? '';
 
 export const getAllTranslations = () => translations?.[intl.lang];
 
