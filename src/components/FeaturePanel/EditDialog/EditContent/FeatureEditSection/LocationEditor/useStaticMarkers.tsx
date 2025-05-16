@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import maplibregl from 'maplibre-gl';
 import { Button, Stack, Typography } from '@mui/material';
 import { createMapEffectHook } from '../../../../../helpers';
@@ -57,8 +57,8 @@ const useUpdateFeatureMarkers = createMapEffectHook<
       );
     };
 
-    // eslint-disable-next-line react/no-deprecated
-    ReactDOM.render(<MyPopupContent />, popupContainer);
+    const root = ReactDOM.createRoot(popupContainer);
+    root.render(<MyPopupContent />);
 
     const popup = new maplibregl.Popup({ offset: 25 }).setDOMContent(
       popupContainer,
