@@ -64,7 +64,7 @@ const CragList = styled.div`
 const CragName = styled.div`
   font-weight: 900;
   margin: 0;
-  font-size: 28px;
+  font-size: 32px;
   line-height: 1.2;
   ${isOpenClimbing && `font-family: 'Piazzolla', sans-serif;`}
   color: ${({ theme }) => theme.palette.primary.main};
@@ -96,6 +96,7 @@ const Header = ({
         variant="inherit"
         overflow="hidden"
         textOverflow="ellipsis"
+        fontFamily="inherit"
       >
         {label}
       </Typography>

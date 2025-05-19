@@ -11,6 +11,7 @@ import {
   Toolbar,
   Tooltip,
   Typography,
+  Link,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import React, { useState } from 'react';
@@ -122,9 +123,12 @@ export const SupportUs = () => {
                 <ul>
                   <li>
                     <Typography variant="body2">
-                      <a onClick={() => setIsBitcoinDialogOpen(true)}>
+                      <Link
+                        component="button"
+                        onClick={() => setIsBitcoinDialogOpen(true)}
+                      >
                         Bitcoin
-                      </a>
+                      </Link>
                     </Typography>
                   </li>
                   <li>

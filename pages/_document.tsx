@@ -48,6 +48,10 @@ export default class MyDocument extends Document<Props> {
       <Html lang={serverIntl.lang}>
         <Head>
           <meta charSet="utf-8" />
+          <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, initial-scale=1"
+          />
           <DocumentHeadTags emotionStyleTags={emotionStyleTags} />
           {isOpenClimbing ? (
             <link

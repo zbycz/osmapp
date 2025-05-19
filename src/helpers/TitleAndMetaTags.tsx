@@ -7,6 +7,7 @@ import { getFullOsmappLink, getShortId } from '../services/helpers';
 import { getLabel, getParentLabel } from './featureLabel';
 import {
   PROJECT_DECRIPTION,
+  PROJECT_ID,
   PROJECT_NAME,
   PROJECT_OG_IMAGE,
   PROJECT_SERP_DESCRIPTION,
@@ -20,6 +21,8 @@ type MetaTagsProps = {
   ogImage?: string;
   description?: string;
 };
+
+const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
 const MetaTags = ({ title, url, ogImage, description }: MetaTagsProps) => (
   <>
@@ -76,7 +79,12 @@ export const TitleAndMetaTags = () => {
   if (!feature) {
     return (
       <Head>
-        <title>{PROJECT_NAME}</title>
+        <title>
+          {PROJECT_NAME}
+          {isOpenClimbing
+            ? ` | ${t('project.openclimbing.climbing_guide')}`
+            : ''}
+        </title>
         <MetaTags
           title={PROJECT_NAME}
           url={PROJECT_URL}
@@ -93,9 +101,11 @@ export const TitleAndMetaTags = () => {
   const ogImage = feature.imageDefs?.length
     ? `${PROJECT_URL}/api/og-image?id=${getShortId(feature.osmMeta)}`
     : undefined;
+
   return (
     <Head>
       <title>{title}</title>
+
       <MetaTags
         title={title}
         description={feature.tags.description}

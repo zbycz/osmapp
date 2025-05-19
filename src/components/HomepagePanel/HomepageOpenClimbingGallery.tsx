@@ -103,9 +103,9 @@ const Gradient = styled.div<{ blur?: boolean }>`
   );`}
 `;
 
-const Text = styled.div<{ center: boolean }>`
+const Text = styled.h2<{ center: boolean }>`
   position: absolute;
-  bottom: 16px;
+  bottom: 10px;
   text-align: center;
   width: 100%;
   font-weight: 900;
@@ -209,6 +209,7 @@ export const HomepageOpenClimbingGallery = () => (
         center
         href="/climbing-areas"
         src="/images/homepage/solvayovy-lomy.jpg"
+        alt="Solvayovy lomy"
       >
         <DiscoveryMoreText>{t('homepage.discover_more_p1')}</DiscoveryMoreText>
         370+ {t('homepage.discover_more_p2')}

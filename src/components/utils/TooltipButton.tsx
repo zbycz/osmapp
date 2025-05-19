@@ -51,7 +51,7 @@ export const TooltipButton = ({ tooltip, sx }: Props) => {
   useClickAwayListener(tooltipRef, hide, isMobile);
 
   const button = (
-    <IconButton onClick={handleClick} sx={sx}>
+    <IconButton onClick={handleClick} sx={sx} aria-label="info button">
       <InfoOutlinedIcon fontSize="inherit" color="inherit" />
     </IconButton>
   );

@@ -21,7 +21,6 @@ import { LogoMaptiler } from '../../assets/LogoMaptiler';
 import { DividerOpenClimbing } from './DividerOpenClimbing';
 import { useMobileMode } from '../helpers';
 import { HomepageOpenClimbingGallery } from './HomepageOpenClimbingGallery';
-import VolunteerActivismIcon from '@mui/icons-material/VolunteerActivism';
 import { SupportUs } from './SupportUs';
 const AccordionStyle = {
   '&:before': {
@@ -63,15 +62,27 @@ const Header = () => {
       }}
     >
       <LogoOpenClimbing width={iconWidth} style={{ minWidth: iconWidth }} />
-      <Typography
-        variant={isMobileMode ? 'h5' : 'h4'}
-        fontFamily="Piazzolla"
-        component="h1"
-        color="inherit"
-        fontWeight={900}
-      >
-        openclimbing.org
-      </Typography>
+      <Stack component="section" direction="column-reverse">
+        <Typography
+          component="h1"
+          variant="subtitle2"
+          color="secondary"
+          sx={{ textAlign: 'center' }}
+          textTransform="lowercase"
+        >
+          {t('project.openclimbing.climbing_guide')}
+        </Typography>
+
+        <Typography
+          variant={isMobileMode ? 'h5' : 'h4'}
+          fontFamily="Piazzolla"
+          component="h2"
+          color="inherit"
+          fontWeight={900}
+        >
+          openclimbing.org
+        </Typography>
+      </Stack>
     </Stack>
   );
 };
@@ -86,7 +97,11 @@ const Description = ({ isTextInfoExpanded, setIsTextInfoExpanded }) => (
         {!isTextInfoExpanded && (
           <>
             ..{' '}
-            <LinkMui onClick={() => setIsTextInfoExpanded(true)} noWrap>
+            <LinkMui
+              onClick={() => setIsTextInfoExpanded(true)}
+              noWrap
+              component="button"
+            >
               ({t('homepage.description_show_more')})
             </LinkMui>
           </>
@@ -159,7 +174,12 @@ const Banners = () => (
     sx={{ paddingBottom: 3 }}
     justifyContent="space-between"
   >
-    <a href="https://www.maptiler.com" target="_blank">
+    <a
+      href="https://www.maptiler.com"
+      target="_blank"
+      aria-label="MapTiler"
+      title="MapTiler"
+    >
       <LogoMaptiler width={140} />
     </a>
     <a
@@ -173,7 +193,7 @@ const Banners = () => (
 
 const ImportantLinks = () => (
   <>
-    <Typography variant="h6" paragraph mt={4}>
+    <Typography variant="h6" component="h2" mt={4}>
       {t('homepage.important_links')}
     </Typography>
     <Accordion disableGutters elevation={0} sx={AccordionStyle}>

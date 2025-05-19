@@ -83,13 +83,6 @@ const MyApp = (props: Props) => {
 
   return (
     <>
-      <Head>
-        <title>{PROJECT_NAME}</title>
-        <meta
-          name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1"
-        />
-      </Head>
       <AppCacheProvider emotionCache={emotionCache}>
         <UserThemeProvider userThemeCookie={userThemeCookie}>
           <CssBaseline />
