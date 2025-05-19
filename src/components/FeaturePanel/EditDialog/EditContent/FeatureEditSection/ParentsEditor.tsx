@@ -120,10 +120,7 @@ export const ParentsEditor = () => {
                 key={shortId}
                 shortId={shortId}
                 label={parent.tags.name}
-                onClick={(e) => {
-                  setIsExpanded(false);
-                  handleClick(e, shortId);
-                }}
+                onClick={(e) => handleClick(e, shortId)}
               />
             );
           })}

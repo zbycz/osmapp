@@ -113,9 +113,7 @@ export const MembersEditor = () => {
           key={member.shortId}
           shortId={member.shortId}
           label={member.label}
-          onClick={(e: React.MouseEvent) => {
-            handleClick(e, member.shortId);
-          }}
+          onClick={(e: React.MouseEvent) => handleClick(e, member.shortId)}
         />
       ))}
 

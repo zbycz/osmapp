@@ -1,4 +1,5 @@
 import {
+  CircularProgress,
   Divider,
   ListItem,
   ListItemText,
@@ -7,9 +8,28 @@ import {
 } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import styled from '@emotion/styled';
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 import { useEditContext } from '../EditContext';
+import { useBoolState } from '../../../helpers';
+
+const useLoadingState = () => {
+  const [isLoading, start, stop] = useBoolState(false);
+  const timeout = React.useRef<NodeJS.Timeout>();
+  return {
+    isLoading,
+    startLoading: useCallback(() => {
+      timeout.current = setTimeout(start, 300);
+    }, [start]),
+    stopLoading: useCallback(() => {
+      if (timeout.current) {
+        clearTimeout(timeout.current);
+        timeout.current = undefined;
+      }
+      stop();
+    }, [stop]),
+  };
+};
 
 const StyledListItem = styled(ListItem)(({ theme }) => ({
   ':hover': {
@@ -21,16 +41,24 @@ const StyledListItem = styled(ListItem)(({ theme }) => ({
 type Props = {
   label?: string;
   shortId: string;
-  onClick: (e: React.MouseEvent) => void;
+  onClick: (e: React.MouseEvent) => Promise<void>;
 };
 
 export const FeatureRow = ({ label, shortId, onClick }: Props) => {
+  const { isLoading, startLoading, stopLoading } = useLoadingState();
   const { items } = useEditContext();
   const isAlreadyInItems = items.find((item) => item.shortId === shortId);
 
+  const handleClick = (e: React.MouseEvent) => {
+    startLoading();
+    onClick(e).then(() => {
+      stopLoading();
+    });
+  };
+
   return (
     <>
-      <StyledListItem onClick={onClick}>
+      <StyledListItem onClick={handleClick}>
         <Stack
           alignItems="center"
           justifyContent="space-between"
@@ -45,7 +73,7 @@ export const FeatureRow = ({ label, shortId, onClick }: Props) => {
               <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
             </Stack>
           </ListItemText>
-          <ChevronRightIcon />
+          {isLoading ? <CircularProgress size={14} /> : <ChevronRightIcon />}
         </Stack>
       </StyledListItem>
       <Divider />
