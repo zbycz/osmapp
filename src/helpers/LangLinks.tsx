@@ -1,6 +1,7 @@
 import { LANGUAGES } from '../config.mjs';
 import React from 'react';
 import type { DocumentContext } from 'next/dist/shared/lib/utils';
+import { PROJECT_URL } from '../services/project';
 
 export const getUrlForLangLinks = (ctx: DocumentContext) => {
   // NOTE: there are two bugs in vercel deployments
@@ -37,7 +38,7 @@ export const LangLinks = ({ urlForLangLinks }: Props) =>
           key={lang}
           rel="alternate"
           hrefLang={lang}
-          href={`/${lang}${urlForLangLinks}`}
+          href={`${PROJECT_URL}/${lang}${urlForLangLinks}`}
         />
       ))}
     </>
