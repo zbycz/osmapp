@@ -16,25 +16,18 @@ export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
     const switchToNewTab = !isCmdClicked;
     const apiId = getApiId(shortId);
 
-    if (switchToNewTab) {
-      setIsExpanded?.(false);
-    }
+    if (!isInItems(items, shortId)) {
+      const newItem = await fetchFreshItem(apiId);
+      addItem(newItem);
 
-    // TODO merge these two conditions:
-    if (apiId.id < 0) {
-      if (switchToNewTab) setCurrent(shortId);
-      return;
-    }
-    if (isInItems(items, shortId)) {
-      if (switchToNewTab) setCurrent(shortId);
-      return;
-    }
-
-    const newItem = await fetchFreshItem(apiId);
-    addItem(newItem);
-
-    if (switchToNewTab) {
-      setCurrent(newItem.shortId);
+      if (switchToNewTab) {
+        setIsExpanded(false);
+        setCurrent(newItem.shortId);
+      }
+    } else {
+      if (switchToNewTab) {
+        setCurrent(shortId);
+      }
     }
   };
 };
