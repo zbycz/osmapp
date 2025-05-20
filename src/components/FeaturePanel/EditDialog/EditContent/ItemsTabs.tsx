@@ -12,7 +12,9 @@ import React from 'react';
 import { EditDataItem } from '../useEditItems';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 
-const StyledTypography = styled(Typography)<{ $deleted: boolean }>`
+const StyledTypography = styled(Typography, {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<{ $deleted: boolean }>`
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
 `;
 
