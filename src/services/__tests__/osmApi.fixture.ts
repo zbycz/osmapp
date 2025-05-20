@@ -77,7 +77,6 @@ export const WAY_FEATURE = {
     { type: 'center', service: 'kartaview', center: [14, 50] },
     { type: 'center', service: 'mapillary', center: [14, 50] },
   ],
-  nodes: [1, 2],
 };
 export const RELATION = {
   elements: [
