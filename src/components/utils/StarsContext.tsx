@@ -4,6 +4,7 @@ import { useFeatureContext } from './FeatureContext';
 import { getShortId } from '../../services/helpers';
 import { getLabel, getHumanPoiType } from '../../helpers/featureLabel';
 import { LonLat } from '../../services/types';
+import { useMapStateContext, View } from './MapStateContext';
 
 export type Star = {
   shortId: string;
@@ -23,7 +24,12 @@ export const StarsContext = createContext<StarsContextType>(undefined);
 const hasStar = (stars: Star[], shortId: string) =>
   !!stars.find((star) => star.shortId === shortId);
 
+const getLonLat = ([z, lat, lon]: View): LonLat => {
+  return [parseFloat(lon), parseFloat(lat)];
+};
+
 export const StarsProvider: React.FC = ({ children }) => {
+  const { view } = useMapStateContext();
   const { feature } = useFeatureContext();
   const shortId = feature ? getShortId(feature.osmMeta) : undefined;
 
@@ -48,7 +54,7 @@ export const StarsProvider: React.FC = ({ children }) => {
             shortId,
             poiType: getHumanPoiType(feature),
             label: getLabel(feature),
-            center: feature.center,
+            center: feature.center ?? getLonLat(view), // feature can be without center, when Overpass fails
           }),
     );
   };
