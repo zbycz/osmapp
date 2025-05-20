@@ -7,13 +7,7 @@ import { ContributionInfoBox } from './ContributionInfoBox';
 import { OsmUserLoggedOut } from './OsmUserLoggedOut';
 import { TestApiWarning } from '../../helpers/TestApiWarning';
 import { ItemsTabs } from './ItemsTabs';
-import { ItemHeading } from './FeatureEditSection/ItemHeading';
-import { PresetSelect } from './FeatureEditSection/PresetSelect/PresetSelect';
-import { MajorKeysEditor } from './FeatureEditSection/MajorKeysEditor';
-import { TagsEditor } from './FeatureEditSection/TagsEditor/TagsEditor';
-import { LocationEditor } from './FeatureEditSection/LocationEditor/LocationEditor';
-import { ParentsEditor } from './FeatureEditSection/ParentsEditor';
-import { MembersEditor } from './FeatureEditSection/MembersEditor';
+import { ItemEditSection } from './ItemEditSection';
 
 const Wrapper: React.FC = ({ children }) => {
   const theme = useTheme();
@@ -31,18 +25,6 @@ const Wrapper: React.FC = ({ children }) => {
   );
 };
 
-const ItemSection = () => (
-  <>
-    <ItemHeading />
-    <PresetSelect />
-    <MajorKeysEditor />
-    <TagsEditor />
-    <LocationEditor />
-    <ParentsEditor />
-    <MembersEditor />
-  </>
-);
-
 export const EditContent = () => {
   return (
     <>
@@ -58,7 +40,7 @@ export const EditContent = () => {
 
             <Stack height="100%">
               <Stack flex={1}>
-                <ItemSection />
+                <ItemEditSection />
               </Stack>
               <CommentField />
               <ContributionInfoBox />
