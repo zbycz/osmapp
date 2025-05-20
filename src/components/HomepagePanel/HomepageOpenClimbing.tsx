@@ -50,7 +50,7 @@ export const Content = styled.div`
 const Header = () => {
   const isMobileMode = useMobileMode();
 
-  const iconWidth = isMobileMode ? 32 : 58;
+  const iconWidth = isMobileMode ? 40 : 58;
   return (
     <Stack
       direction={isMobileMode ? 'row' : 'column'}
@@ -67,7 +67,7 @@ const Header = () => {
           component="h1"
           variant="subtitle2"
           color="secondary"
-          sx={{ textAlign: 'center' }}
+          sx={{ textAlign: isMobileMode ? 'left' : 'center' }}
           textTransform="lowercase"
         >
           {t('project.openclimbing.climbing_guide')}
