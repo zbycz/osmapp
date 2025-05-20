@@ -32,7 +32,7 @@ const openclimbing: Project = {
   id: 'openclimbing',
   name: 'openclimbing.org',
   url: 'https://openclimbing.org',
-  ogImage: 'https://osmapp.org/screens/karlstejn2.png', // TODO
+  ogImage: 'https://openclimbing.org/openclimbing/homepage.png',
   description: 'project.openclimbing.description',
   serpDescription: 'project.openclimbing.serpDescription',
 };
