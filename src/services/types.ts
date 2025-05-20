@@ -110,7 +110,6 @@ export type Feature = {
   tags: FeatureTags;
   members?: RelationMember[]; // only for relations
   memberFeatures?: Feature[]; // for relations with children (full)
-  nodes?: number[]; // only for ways
   parentFeatures?: Feature[];
   imageDefs?: ImageDef[];
   properties: FeatureProperties;
