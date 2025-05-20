@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { AppContext, AppInitialProps, AppProps } from 'next/app';
-import Head from 'next/head';
 import nextCookies from 'next-cookies';
 import { CssBaseline } from '@mui/material';
 import {
