@@ -22,20 +22,37 @@ import { featureCenterCache } from './featureCenterToCache';
 import { getCountryCode } from './getCountryCode';
 import { getItemsMap, getMemberFeatures } from './helpers';
 import { getFullFeatureWithMemberFeatures } from './getFullFeatureWithMemberFeatures';
+import { OsmElement, OsmResponse } from './types';
+
+export const getLastBeforeDeleted = async (
+  e: FetchError,
+  apiId: OsmId,
+): Promise<OsmElement | undefined> => {
+  if (!(e instanceof FetchError && e.code === '410')) {
+    return undefined;
+  }
+
+  const { elements } = await fetchJson<OsmResponse>(getOsmHistoryUrl(apiId)); // TODO use multi fetch instead of history: https://wiki.openstreetmap.org/wiki/API_v0.6#Multi_fetch:_GET_/api/0.6/[nodes|ways|relations]?#parameters
+  const length = elements?.length;
+
+  if (length >= 2) {
+    const lastWithTags = elements[length - 2];
+    const last = elements[length - 1];
+    return {
+      ...lastWithTags,
+      ...last,
+      osmappDeletedMarker: true,
+    } as OsmElement;
+  }
+};
 
 const getOsmPromise = async (apiId: OsmId) => {
   try {
     return await getOsmElement(apiId);
   } catch (e) {
-    if (e instanceof FetchError && e.code === '410') {
-      const { elements } = await fetchJson(getOsmHistoryUrl(apiId)); // TODO use multi fetch instead of history: https://wiki.openstreetmap.org/wiki/API_v0.6#Multi_fetch:_GET_/api/0.6/[nodes|ways|relations]?#parameters
-      const length = elements?.length;
-
-      if (length >= 2) {
-        const lastWithTags = elements[length - 2];
-        const last = elements[length - 1];
-        return { ...lastWithTags, ...last, osmappDeletedMarker: true };
-      }
+    const undeleted = await getLastBeforeDeleted(e, apiId);
+    if (undeleted) {
+      return undeleted;
     }
     throw e;
   }
