@@ -1,5 +1,6 @@
 {
-  "extends": ["next/core-web-vitals", "prettier"],
+  "plugins": ["eslint-plugin-local-rules"],
+  "extends": ["next/core-web-vitals", "prettier", "plugin:local-rules/all"],
   "rules": {
     "import/no-anonymous-default-export": "off",
     "@next/next/no-img-element": "off",
