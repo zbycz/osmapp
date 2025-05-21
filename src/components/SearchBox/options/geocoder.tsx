@@ -24,6 +24,7 @@ import { Feature } from '../../../services/types';
 import { addFeatureCenterToCache } from '../../../services/osm/featureCenterToCache';
 import { getShortId, getUrlOsmId } from '../../../services/helpers';
 import Router from 'next/router';
+import { debounce } from 'lodash';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
@@ -38,6 +39,19 @@ const getApiUrl = (inputValue: string, view: View) => {
 
 export const GEOCODER_ABORTABLE_QUEUE = 'search';
 
+export const setSearchUrl = (value: string) => {
+  const query = value ? `?q=${encodeURIComponent(value)}` : '';
+
+  if (window.location.pathname === '/') {
+    Router.push(`/${query}${window.location.hash}`);
+  }
+};
+
+// TODO this needs to be moved in AutocompleteInput - but here we have dependency on currentInput used in geocoder - refactor this first
+const setUrlQuery = debounce((value: string) => {
+  setSearchUrl(value);
+}, 500);
+
 export const useInputValueState = () => {
   const valueRef = useRef<string>(''); // we need the freshest Value in the geocoder callback, so we may cancel it. The Abort queue should handle it, but wasn't 100%.
   const [inputValue, setInputValue] = useState('');
@@ -48,6 +62,7 @@ export const useInputValueState = () => {
     setInputValue: useCallback((value: string) => {
       valueRef.current = value;
       setInputValue(value);
+      setUrlQuery(value);
     }, []),
   };
 };
