@@ -12,15 +12,17 @@ export const getBgColor = (color: string | undefined, darkmode: boolean) => {
   return darkmode ? '#898989' : '#dddddd';
 };
 
-const LineNumberWrapper = styled(Link)<{
-  color: string | undefined;
-  darkmode: boolean;
+const LineNumberWrapper = styled(Link, {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<{
+  $color: string | undefined;
+  $darkmode: boolean;
 }>`
-  background-color: ${({ color, darkmode }) => getBgColor(color, darkmode)};
-  color: ${({ color, darkmode }) =>
-    whiteOrBlackText(getBgColor(color, darkmode))};
+  background-color: ${({ $color, $darkmode }) => getBgColor($color, $darkmode)};
+  color: ${({ $color, $darkmode }) =>
+    whiteOrBlackText(getBgColor($color, $darkmode))};
   padding: 0.2rem 0.4rem;
-  borderradius: 0.125rem;
+  border-radius: 2px;
   display: inline;
 `;
 
@@ -58,8 +60,8 @@ export const LineNumber = ({ line }: { line: LineInformation }) => {
     >
       <LineNumberWrapper
         href={`/${line.osmType}/${line.osmId}`}
-        color={line.colour}
-        darkmode={darkmode}
+        $color={line.colour}
+        $darkmode={darkmode}
       >
         {line.ref}
       </LineNumberWrapper>

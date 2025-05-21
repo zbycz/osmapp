@@ -12,7 +12,7 @@ module.exports = {
       schema: [],
       messages: {
         missingShouldForwardProp:
-          "styled() has custom props, but is missing `shouldForwardProp`. Add `styled(..., { shouldForwardProp: (prop) => !prop.startsWith('$') })`.",
+          "styled() has custom props, but is missing `shouldForwardProp`. Make sure that your props start with `$` and add `styled(..., { shouldForwardProp: (prop) => !prop.startsWith('$') })`.",
       },
     },
     create(context) {
@@ -20,7 +20,7 @@ module.exports = {
         CallExpression(callExpression) {
           if (
             callExpression.callee.type === 'Identifier' &&
-            callExpression.callee.name === 'styledd'
+            callExpression.callee.name === 'styled'
           ) {
             let hasCustomProps = false;
             let hasShouldForwardProp = false;

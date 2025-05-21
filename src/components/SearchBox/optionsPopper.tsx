@@ -18,6 +18,7 @@ export const OptionsPaper = (props: PaperProps) => {
   return <StyledPaper {...props} $solidBg={!!feature} />;
 };
 
+// eslint-disable-next-line local-rules/no-styled-missing-transient-props
 export const OptionsPopper = styled(Popper)<PopperProps>`
   padding-top: 5px;
 `;
