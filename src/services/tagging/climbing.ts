@@ -64,11 +64,11 @@ export const GRADE_SYSTEMS = [
       'Sport climbing in Britain and Ireland uses the French grading system.',
   },
   {
-    key: 'nordic',
-    name: 'Nordic',
+    key: 'norwegian',
+    name: 'Norwegian',
     flags: '🇳🇴🇸🇪',
     minor: true,
-    description: 'The Nordic grading system.',
+    description: 'Norwegian grading system.',
   },
   {
     key: 'ice',
