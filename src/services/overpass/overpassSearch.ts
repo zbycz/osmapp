@@ -1,10 +1,4 @@
-import {
-  LineString,
-  OsmId,
-  Point,
-  GeometryCollection,
-  Feature,
-} from '../types';
+import { LineString, OsmId, Point, GeometryCollection } from '../types';
 import { getPoiClass } from '../getPoiClass';
 import { getCenter } from '../getCenter';
 import { fetchJson } from '../fetch';
@@ -14,8 +8,15 @@ import { Bbox } from '../../components/utils/MapStateContext';
 import { generateQuery } from '../../components/SearchBox/queryWizard/generateQuery';
 import { isAstNode } from '../../components/SearchBox/queryWizard/isAst';
 
-const getOverpassQuery = ([a, b, c, d], query: string) =>
-  `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
+const getOverpassQuery = ([a, b, c, d], query: string) => {
+  const isGlobal = query.startsWith('!global:');
+  if (isGlobal) {
+    const globalQuery = query.replace(/^!global:/, '');
+    return `[out:json][timeout:25];(${globalQuery};);out geom qt;`;
+  }
+
+  return `[out:json][timeout:25][bbox:${[d, a, b, c]}];(${query};);out geom qt;`;
+};
 
 export const getOverpassUrl = (fullQuery: string) =>
   `https://overpass-api.de/api/interpreter?data=${encodeURIComponent(
