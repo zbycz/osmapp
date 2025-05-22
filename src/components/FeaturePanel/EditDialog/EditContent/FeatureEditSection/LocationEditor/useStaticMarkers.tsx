@@ -44,7 +44,7 @@ const useUpdateFeatureMarkers = createMapEffectHook<
       return (
         <Stack direction="column" gap={2}>
           <Typography variant="subtitle2" color="primary">
-            {item.tags.name}
+            {item.tags?.name || item.shortId}
           </Typography>
           <Button
             size="small"

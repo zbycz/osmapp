@@ -38,11 +38,11 @@ const getLabel = (itemsMap: ItemsMap, member: RelationMember) => {
     return `${member.type} ${member.ref}`;
   }
 
-  if (element.tags.name) {
+  if (element.tags?.name) {
     return element.tags.name;
   }
 
-  const preset = findPreset(member.type, element.tags);
+  const preset = findPreset(member.type, element.tags ?? {});
   return getPresetTranslation(preset.presetKey);
 };
 
