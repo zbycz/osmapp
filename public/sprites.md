@@ -73,10 +73,11 @@ cat << 'EOF' | node > ../src/components/utils/icons/iconsLookup.ts
     console.log(`export const icons = ${JSON.stringify(names)};`)
   })
 EOF
+```
 
 
 ## TODO  - later
-
+```
 # We can use more sprite files and import them directly from iD project
 // Icon prefixes:
 // 2 far
@@ -100,3 +101,6 @@ cat << 'EOF' | node > ../src/assets/icons.ts
 EOF
 
 ```
+
+## For later:
+- we may use simpler tool: https://github.com/stevage/mbsprite (maybe when that docker image fails)
