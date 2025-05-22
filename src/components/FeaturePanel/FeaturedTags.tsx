@@ -26,7 +26,7 @@ export const FeaturedTags = () => {
 
   return (
     <>
-      {keys.map(({ k, v, featuredKey }) => {
+      {keys.map(({ k, featuredKey }) => {
         return <FeaturedTag key={k} k={k} renderer={featuredKey.renderer} />;
       })}
       <Spacer />

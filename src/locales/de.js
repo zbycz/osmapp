@@ -39,7 +39,7 @@ export default {
   'tick.style_description_TR': 'Die Route mit einem bereits oben verankerten Seil klettern.',
   'tick.style_description_FS': 'Die Route ohne jegliche Sicherung oder Seile klettern.',
 
-  'climbing_renderer.climbing_grade': 'Schwierigkeitsgrad',
+  'climbing_renderer.climbing_grade_single': 'Schwierigkeitsgrad',
 
   'project.osmapp.description': 'Eine universelle App für OpenStreetMap',
   'project.osmapp.serpDescription':

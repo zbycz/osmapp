@@ -29,6 +29,11 @@ export default {
   'user_settings.crag_view_layout_horizontal': 'Pod sebou',
   'user_settings.crag_view_layout_auto': 'Automaticky (podle rozlišení)',
 
+  'climbing_renderer.climbing_grade_single': 'obtížnost cesty',
+  'climbing_renderer.climbing_grade_average': 'průměrná obtížnost cest',
+  'climbing_renderer.climbing_grade_minimum': 'minimální obtížnost cest',
+  'climbing_renderer.climbing_grade_maximum': 'maximální obtížnost cest',
+
   'project.osmapp.description': 'Univerzální appka pro OpenStreetMap',
   'project.osmapp.serpDescription': 'Otevřená mapa světa nad OpenStreetMap databází. Hledání, klikatelné POIs, editace a více!',
 

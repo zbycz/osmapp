@@ -55,7 +55,10 @@ export default {
   'tick.style_description_TR': 'Climbing the route with a rope already anchored at the top.',
   'tick.style_description_FS': 'Climbing the route without any protective gear or ropes.',
 
-  'climbing_renderer.climbing_grade': 'climbing grade ',
+  'climbing_renderer.climbing_grade_single': 'climbing grade',
+  'climbing_renderer.climbing_grade_average': 'average climbing grade',
+  'climbing_renderer.climbing_grade_minimum': 'minimum climbing grade',
+  'climbing_renderer.climbing_grade_maximum': 'maximum climbing grade',
   'climbing.photos': 'Photos',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',

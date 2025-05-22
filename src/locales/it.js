@@ -37,7 +37,7 @@ export default {
   'tick.style_description_TR': 'Arrampicata con una corda già ancorata sopra.',
   'tick.style_description_FS': 'Arrampicata senza alcuno strumento protettivo e senza corda.',
 
-  'climbing_renderer.climbing_grade': 'grado di arrampicata',
+  'climbing_renderer.climbing_grade_single': 'grado di arrampicata',
 
   'project.osmapp.description': 'Una app OpenStreetMap universale',
   'project.osmapp.serpDescription':

@@ -40,7 +40,7 @@ export default {
   'tick.style_description_TR': 'すでに頂上に固定されているロープを使ってルートを登ること。',
   'tick.style_description_FS': '防具やロープを着用せずにルートを登ること。',
 
-  'climbing_renderer.climbing_grade': 'クライミンググレード ',
+  'climbing_renderer.climbing_grade_single': 'クライミンググレード ',
 
   'project.osmapp.description': 'OpenStreetMap のユニバーサル アプリ',
   'project.osmapp.serpDescription':
