@@ -11,8 +11,9 @@ test('conversion', () => {
     'wikimedia_commons:2': 'File:2.jpg',
     'wikimedia_commons:2:path': '0.1,0.2|0.8,0.9whatever🙂',
     'wikimedia_commons:xy': 'Category:cat.jpg',
-    image: 'blah blah url',
-    image2: 'image2 url',
+    image: 'http://blah blah url',
+    image2: 'File:image2 like commons image name',
+    'image:license': 'to be ignored',
     website: 'https://site-may-have-og-image',
   };
 
@@ -40,13 +41,13 @@ test('conversion', () => {
     {
       type: 'tag',
       k: 'image',
-      v: 'blah blah url',
+      v: 'http://blah blah url',
       instant: true,
     },
     {
       type: 'tag',
       k: 'image2',
-      v: 'image2 url',
+      v: 'File:image2 like commons image name',
       instant: true,
     },
     {
@@ -80,8 +81,8 @@ test('correctly sorted', () => {
     'wikimedia_commons:3': 'Category:1.jpg',
     wikidata: 'Q123',
     wikimedia_commons: 'File:1.jpg',
-    image: '2.jpg',
-    image2: '3.jpg',
+    image: 'http://blah blah url',
+    image2: 'File:image2 like commons image name',
     'wikipedia:cs': '2.jpg',
     'image:2': 'https://commons.wikimedia.org/wiki/File%3Axxxx4.jpg',
     'ignored-non-image-tag': 'x',
