@@ -99,10 +99,11 @@ export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
 
 const wikipedia = ([k, _]) => k.match(/^wikipedia(\d*|:.*)$/);
 const wikidata = ([k, _]) => k.match(/^wikidata(\d*|:.*)$/);
-const image = ([k, _]) => k.match(/^image(\d*|:(?!path).*)$/);
+const image = ([k, v]) =>
+  k.match(/^image(\d*|:(?!path).*)$/) && v.match(/^File:|^https?:/);
 
 const commons = (k: string) => k.match(/^wikimedia_commons(\d*|:(?!path).*)$/);
-const commonsFile = ([k, v]) => commons(k) && v.startsWith('File:');
+const commonsFile = ([k, v]) => commons(k) && v.startsWith('File:'); // TODO sometimes full url to the file may be present, but lets not support it for now
 const commonsCategory = ([k, v]) => commons(k) && v.startsWith('Category:');
 
 const mapillary = ([k, v]) => k === 'mapillary' && v.match(/^\d+$/);
