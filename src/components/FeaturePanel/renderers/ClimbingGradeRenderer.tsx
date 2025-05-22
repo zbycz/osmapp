@@ -22,18 +22,21 @@ const getType = (k: string): GradingType => {
   return 'single';
 };
 
-const typeToLabel: Record<GradingType, string> = {
-  single: t('climbing_renderer.climbing_grade_single'),
-  avg: t('climbing_renderer.climbing_grade_average'),
-  min: t('climbing_renderer.climbing_grade_minimum'),
-  max: t('climbing_renderer.climbing_grade_maximum'),
+const getLabel = (type: GradingType) => {
+  const typeToLabel: Record<GradingType, string> = {
+    single: t('climbing_renderer.climbing_grade_single'),
+    avg: t('climbing_renderer.climbing_grade_average'),
+    min: t('climbing_renderer.climbing_grade_minimum'),
+    max: t('climbing_renderer.climbing_grade_maximum'),
+  };
+  return typeToLabel[type];
 };
 
 export const ClimbingGradeRenderer = ({ k, v }) => {
   const routeDifficulties = getDifficulties({ [k]: v });
   const gradeSystemName = getGradeSystemName(getGradeSystemFromOsmTag(k));
   const type = getType(k);
-  const label = typeToLabel[type];
+  const label = getLabel(type);
 
   return (
     <Container>
