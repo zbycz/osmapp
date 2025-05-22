@@ -131,6 +131,7 @@ export const overpassGeomToGeojson = (
 ): OverpassFeature[] =>
   response.elements
     .filter((element) => !(element.type === 'node' && !element.tags))
+    .filter((element) => ['node', 'way', 'relation'].includes(element.type)) // overpass may return type `area` for queries like `area(3611589457);nwr["amenity"="bar"][name](area)`
     .map((element) => {
       const { type, id, tags = {} } = element;
       const geometry = GEOMETRY[type]?.(element);

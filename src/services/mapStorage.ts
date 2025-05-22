@@ -8,7 +8,8 @@ export const mapIdlePromise = new Promise<maplibregl.Map>((resolve) => {
 let map: maplibregl.Map | undefined = undefined;
 export const setGlobalMap = (newMap: maplibregl.Map) => {
   map = newMap;
-  map?.on('idle', () => mapIsIdle(newMap));
+  global.DEBUG_map = newMap;
+  map.on('idle', () => mapIsIdle(newMap));
 };
 export const getGlobalMap = () => map;
 

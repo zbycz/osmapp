@@ -9,9 +9,12 @@ import { Bbox } from '../../utils/MapStateContext';
 import { ShowToast } from '../../utils/SnackbarContext';
 import { performOverpassSearch } from '../../../services/overpass/overpassSearch';
 import {
+  getGlobalMap,
   getOverpassSource,
   mapIdlePromise,
 } from '../../../services/mapStorage';
+import { Setter } from '../../../types';
+import { bbox as turfBbox } from '@turf/bbox';
 
 const OVERPASS_HISTORY_KEY = 'overpassQueryHistory';
 
@@ -88,8 +91,8 @@ export const OverpassRow = ({ option: { overpass } }: Props) => (
 
 export const overpassOptionSelected = (
   option: OverpassOption | PresetOption,
-  setOverpassLoading: React.Dispatch<React.SetStateAction<boolean>>,
-  bbox: Bbox,
+  setOverpassLoading: Setter<boolean>,
+  mapBbox: Bbox,
   showToast: ShowToast,
 ) => {
   const astOrQuery =
@@ -101,14 +104,25 @@ export const overpassOptionSelected = (
     setOverpassLoading(true);
   }, 300);
 
-  performOverpassSearch(bbox, astOrQuery)
+  performOverpassSearch(mapBbox, astOrQuery)
     .then((geojson) => {
-      const count = geojson.features.length;
-      const content = t('searchbox.overpass_success', { count });
-      showToast(content);
-
       mapIdlePromise.then(() => {
         getOverpassSource()?.setData(geojson);
+
+        const count = geojson.features.length;
+        const content = t('searchbox.overpass_success', { count });
+        showToast(content);
+
+        if (
+          typeof astOrQuery === 'string' &&
+          astOrQuery.startsWith('!global:')
+        ) {
+          const bbox = turfBbox(geojson) as Bbox;
+          const panelWidth = window.innerWidth > 700 ? 410 : 0;
+          getGlobalMap()?.fitBounds(bbox, {
+            padding: { top: 5, bottom: 5, right: 5, left: panelWidth + 5 },
+          });
+        }
       });
 
       if (option.type === 'overpass' && !option.overpass.ast) {

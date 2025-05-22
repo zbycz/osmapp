@@ -130,6 +130,8 @@ const openFreeMapCheck = (activeLayers: string[], showToast: ShowToast) => {
   prevLayers = activeLayers;
 };
 
+let prevMapLoaded = false;
+
 export const useUpdateStyle = createMapEffectHook(
   (
     map,
@@ -139,6 +141,11 @@ export const useUpdateStyle = createMapEffectHook(
     currentTheme: Theme,
     showToast: ShowToast,
   ) => {
+    if (mapLoaded && !prevMapLoaded) {
+      prevMapLoaded = true; //we don't want to update the style after mapLoaded finished
+      return;
+    }
+
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
 
