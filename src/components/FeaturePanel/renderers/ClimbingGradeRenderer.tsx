@@ -13,14 +13,36 @@ const Container = styled.div`
   gap: 8px;
 `;
 
+type GradingType = 'single' | 'avg' | 'min' | 'max';
+
+const getType = (k: string): GradingType => {
+  if (k.endsWith(':max')) return 'max';
+  if (k.endsWith(':min')) return 'min';
+  if (k.endsWith(':mean')) return 'avg';
+  return 'single';
+};
+
+const getLabel = (type: GradingType) => {
+  const typeToLabel: Record<GradingType, string> = {
+    single: t('climbing_renderer.climbing_grade_single'),
+    avg: t('climbing_renderer.climbing_grade_average'),
+    min: t('climbing_renderer.climbing_grade_minimum'),
+    max: t('climbing_renderer.climbing_grade_maximum'),
+  };
+  return typeToLabel[type];
+};
+
 export const ClimbingGradeRenderer = ({ k, v }) => {
   const routeDifficulties = getDifficulties({ [k]: v });
   const gradeSystemName = getGradeSystemName(getGradeSystemFromOsmTag(k));
+  const type = getType(k);
+  const label = getLabel(type);
+
   return (
     <Container>
       <RouteDifficultyBadge routeDifficulty={routeDifficulties[0]} />
       <span>
-        {t('climbing_renderer.climbing_grade')}({gradeSystemName})
+        {label} ({gradeSystemName})
       </span>
     </Container>
   );

@@ -77,7 +77,7 @@ export const ourPresets = {
   },
   'climbing/route': {
     icon: 'temaki-abseiling',
-    geometry: ['point', 'line'],
+    geometry: ['point', 'line'], // TODO could be relation, but we must not offer it in PresetSelect
     fields: [
       'name',
       'climbing/length',
@@ -106,7 +106,7 @@ export const ourPresets = {
   },
   'climbing/crag': {
     icon: 'temaki-abseiling',
-    geometry: ['point', 'relation'],
+    geometry: ['point', 'line', 'relation'], // line is not intended use, but we need to match way+climbing=crag
     fields: ['name'],
     moreFields: [
       'climbing/length',
@@ -142,7 +142,7 @@ export const ourPresets = {
 } as RawPresets;
 
 // eslint-disable-next-line max-lines-per-function
-export const getOurTranslations = (lang) => ({
+export const getOurTranslations = (lang: string) => ({
   [lang]: {
     presets: {
       presets: {
