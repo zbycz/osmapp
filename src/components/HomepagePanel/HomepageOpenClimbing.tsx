@@ -15,7 +15,7 @@ import { PanelContent, PanelScrollbars } from '../utils/PanelHelpers';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { LogoOpenClimbing } from '../../assets/LogoOpenClimbing';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { t, Translation } from '../../services/intl';
+import { intl, t, Translation } from '../../services/intl';
 import GithubIcon from '../../assets/GithubIcon';
 import { LogoMaptiler } from '../../assets/LogoMaptiler';
 import { DividerOpenClimbing } from './DividerOpenClimbing';
@@ -127,6 +127,11 @@ const Description = ({ isTextInfoExpanded, setIsTextInfoExpanded }) => (
   </>
 );
 
+const STORY_URL = (lang) =>
+  lang === 'cs'
+    ? 'https://medium.com/@jvaclavik/p%C5%99%C3%ADb%C4%9Bh-za-openclimbing-org-e1e2b3de2024'
+    : 'https://medium.com/@jvaclavik/story-behind-openclimbing-org-ab448939c6ac';
+
 const Buttons = ({ onClose }) => (
   <>
     <Button
@@ -152,7 +157,7 @@ const Buttons = ({ onClose }) => (
       <Button
         variant="text"
         fullWidth
-        href="https://medium.com/@jvaclavik/story-behind-openclimbing-org-ab448939c6ac"
+        href={STORY_URL(intl.lang)}
         target="_blank"
       >
         {t('homepage.our_story')}
