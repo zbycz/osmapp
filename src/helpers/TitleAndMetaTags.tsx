@@ -76,8 +76,7 @@ export const TitleAndMetaTags = () => {
   return (
     <Head>
       <title>
-        {PROJECT_NAME}
-        {isOpenClimbing ? ` | ${t('project.openclimbing.climbing_guide')}` : ''}
+        {`${PROJECT_NAME}${isOpenClimbing ? ` | ${t('project.openclimbing.climbing_guide')}` : ''}`}
       </title>
       <meta name="description" content={description} />
 
