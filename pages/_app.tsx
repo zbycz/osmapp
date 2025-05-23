@@ -39,6 +39,7 @@ import { ResponsiveFeaturePanel } from '../src/components/FeaturePanel/Responsiv
 import { Climbing } from '../src/components/Climbing/Climbing';
 import Router from 'next/router';
 import { fetchSchemaTranslations } from '../src/services/tagging/translations';
+import Head from 'next/head';
 
 const getInitialToast = (featureFromRouter: Feature | '404') =>
   featureFromRouter === '404'
@@ -99,6 +100,12 @@ const MyApp = (props: Props) => {
                     <StarsProvider>
                       <EditDialogProvider /* TODO supply router.query */>
                         <QueryClientProvider client={reactQueryClient}>
+                          <Head>
+                            <meta
+                              name="viewport"
+                              content="width=device-width, user-scalable=no, initial-scale=1"
+                            />
+                          </Head>
                           <Loading />
                           <SearchBox />
                           <ResponsiveFeaturePanel />
