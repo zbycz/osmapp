@@ -27,16 +27,17 @@ const TooltipGradeItem = ({
 }: {
   difficulty: RouteDifficulty;
   isConverted?: boolean;
-}) => (
-  <TooltipGradeItemContainer>
-    <GradeValue>{difficulty.grade}</GradeValue> according to{' '}
-    <strong>{getGradeSystemName(difficulty.gradeSystem)}</strong>{' '}
-    {isConverted && <WarningText>(converted)</WarningText>}
-    {difficulty.grade.includes('~') && (
-      <WarningText>(approximated)</WarningText>
-    )}
-  </TooltipGradeItemContainer>
-);
+}) => {
+  const name = getGradeSystemName(difficulty.gradeSystem);
+  return (
+    <TooltipGradeItemContainer>
+      <GradeValue>{difficulty.grade}</GradeValue> according to{' '}
+      <strong>{name || difficulty.gradeSystem}</strong>{' '}
+      {isConverted && <WarningText>(converted)</WarningText>}
+      {difficulty.grade.includes('~') && <WarningText>(estimated)</WarningText>}
+    </TooltipGradeItemContainer>
+  );
+};
 
 type Props = {
   routeDifficulties?: RouteDifficulty[];

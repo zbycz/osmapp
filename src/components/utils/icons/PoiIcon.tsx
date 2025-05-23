@@ -84,7 +84,7 @@ export const PoiIcon = ({
       ico={finalIco}
       invert={currentTheme === 'dark'}
       size={size}
-      style={{ opacity: '0.3' }}
+      style={{ opacity: '0.3', position: 'relative', top: 3 }}
       title={title}
       middle={middle}
       themed={themed}
