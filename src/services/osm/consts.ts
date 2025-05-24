@@ -9,7 +9,7 @@ export const OSM_WEBSITE = USE_PROD_API
 export const API_SERVER = USE_PROD_API ? PROD_SERVER : TEST_SERVER;
 
 export const PROD_CLIENT_ID = process.env.NEXT_PUBLIC_OSM_CLIENT_ID;
-export const TEST_CLIENT_ID = 'a_f_aB7ADY_kdwe4YHpmCSBtNtDZ-BitW8m5I6ijDwI';
+export const TEST_CLIENT_ID = process.env.NEXT_PUBLIC_OSM_TEST_CLIENT_ID;
 
 export const OSM_USER_COOKIE = USE_PROD_API
   ? 'osmUserForSSR'
