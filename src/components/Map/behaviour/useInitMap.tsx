@@ -51,7 +51,7 @@ export const useInitMap = () => {
 
     const map = new maplibregl.Map({
       container: mapRef.current,
-      style: basicStyle,
+      // style: basicStyle,
       attributionControl: false,
       refreshExpiredTiles: false,
       locale: {
