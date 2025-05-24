@@ -19,7 +19,7 @@ import {
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { t } from '../../../services/intl';
-import { ClimbingGradesTable } from './ClimbingGradesTable';
+import { ClimbingGradesTable } from './ClimbingGradesTable/ClimbingGradesTable';
 
 type Props = {
   selectedGradeSystem: GradeSystem;

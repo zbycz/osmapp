@@ -34,15 +34,15 @@ const getLabel = (type: GradingType) => {
 
 export const ClimbingGradeRenderer = ({ k, v }) => {
   const routeDifficulties = getDifficulties({ [k]: v });
-  const gradeSystemName = getGradeSystemName(getGradeSystemFromOsmTag(k));
+  const key = getGradeSystemFromOsmTag(k);
+  const gradeSystemName = getGradeSystemName(key);
   const type = getType(k);
   const label = getLabel(type);
-
   return (
     <Container>
       <RouteDifficultyBadge routeDifficulty={routeDifficulties[0]} />
       <span>
-        {label} ({gradeSystemName})
+        {label} ({gradeSystemName || key})
       </span>
     </Container>
   );
