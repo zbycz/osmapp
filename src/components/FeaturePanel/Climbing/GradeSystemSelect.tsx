@@ -20,6 +20,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { t } from '../../../services/intl';
 import { ClimbingGradesTable } from './ClimbingGradesTable/ClimbingGradesTable';
+import { useVisibleGradeSystems } from './utils/useVisibleGradeSystems';
 
 type Props = {
   selectedGradeSystem: GradeSystem;
@@ -27,10 +28,16 @@ type Props = {
   allowUnsetValue?: boolean;
 };
 
-const GradeSystemItem = ({ isMinor, onClick, selectedGradeSystem }) => (
-  <>
-    {GRADE_SYSTEMS.filter(({ minor }) => minor === isMinor).map(
-      ({ key, name, description, flags }) => (
+const GradeSystemItem = ({ showMinor, onClick, selectedGradeSystem }) => {
+  const visibleGradeSystems = useVisibleGradeSystems();
+
+  return (
+    <>
+      {GRADE_SYSTEMS.filter(({ key }) =>
+        showMinor
+          ? !visibleGradeSystems.includes(key)
+          : visibleGradeSystems.includes(key),
+      ).map(({ key, name, description, flags }) => (
         <Tooltip
           title={description}
           placement="right"
@@ -55,10 +62,10 @@ const GradeSystemItem = ({ isMinor, onClick, selectedGradeSystem }) => (
             </Stack>
           </MenuItem>
         </Tooltip>
-      ),
-    )}
-  </>
-);
+      ))}
+    </>
+  );
+};
 
 export const GradeSystemSelect = ({
   selectedGradeSystem,
@@ -131,7 +138,7 @@ export const GradeSystemSelect = ({
           )}
 
           <GradeSystemItem
-            isMinor={false}
+            showMinor={false}
             onClick={handleChange}
             selectedGradeSystem={selectedGradeSystem}
           />
@@ -151,7 +158,7 @@ export const GradeSystemSelect = ({
 
           {isMinorOpened && (
             <GradeSystemItem
-              isMinor
+              showMinor
               onClick={handleChange}
               selectedGradeSystem={selectedGradeSystem}
             />
