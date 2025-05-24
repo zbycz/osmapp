@@ -3,12 +3,11 @@ import { Alert, Box, Chip, Stack, Typography } from '@mui/material';
 import { t } from '../../../../services/intl';
 import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing';
 import React from 'react';
+import { useGradeSystemsStatus } from '../utils/useVisibleGradeSystems';
 
-export const ClimbingGradesTableSettings = ({
-  visibleGradeSystems,
-  isSettingVisible,
-}) => {
-  const isGradeSystemVisible = (key: string) => visibleGradeSystems[key];
+export const ClimbingGradesTableSettings = ({ isSettingVisible }) => {
+  const gradeSystemsStatus = useGradeSystemsStatus();
+  const isGradeSystemVisible = (key: string) => gradeSystemsStatus[key];
   const { setUserSetting } = useUserSettingsContext();
 
   return (
@@ -35,7 +34,7 @@ export const ClimbingGradesTableSettings = ({
                 variant={isVisible ? 'filled' : 'outlined'}
                 onClick={() =>
                   setUserSetting('climbing.visibleGradeSystems', {
-                    ...visibleGradeSystems,
+                    ...gradeSystemsStatus,
                     [gs.key]: !isVisible,
                   })
                 }

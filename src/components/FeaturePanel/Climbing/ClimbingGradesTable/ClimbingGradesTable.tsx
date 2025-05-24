@@ -16,28 +16,19 @@ import { useFeatureContext } from '../../../utils/FeatureContext';
 import Router from 'next/router';
 import { getUrlOsmId } from '../../../../services/helpers';
 import { t } from '../../../../services/intl';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
-import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing';
 import { ClimbingGradesTableBody } from './ClimbingGradesTableBody';
 import { ClimbingGradesTableHead } from './ClimbingGradesTableHead';
 import { ClimbingGradesTableSettings } from './ClimbingGradesTableSettings';
+import { useVisibleGradeSystems } from '../utils/useVisibleGradeSystems';
 
 type ClimbingGradesTableProps = {
   onClose?: () => void;
 };
 
 export const ClimbingGradesTable = ({ onClose }: ClimbingGradesTableProps) => {
-  const { userSettings } = useUserSettingsContext();
   const { feature } = useFeatureContext();
 
   const [isSettingVisible, setIsSettingVisible] = React.useState(false);
-
-  const visibleGradeSystems =
-    userSettings['climbing.visibleGradeSystems'] ??
-    GRADE_SYSTEMS.reduce(
-      (acc, { key }) => ({ ...acc, [key]: true }),
-      {} as Record<string, boolean>,
-    );
 
   const handleClose = () => {
     if (onClose) {
@@ -49,15 +40,7 @@ export const ClimbingGradesTable = ({ onClose }: ClimbingGradesTableProps) => {
     }
   };
 
-  const columns = React.useMemo(
-    () =>
-      Object.keys(visibleGradeSystems).filter(
-        (key) =>
-          visibleGradeSystems[key] &&
-          GRADE_SYSTEMS.some((gs) => gs.key === key),
-      ),
-    [visibleGradeSystems],
-  );
+  const columns = useVisibleGradeSystems();
 
   return (
     <Dialog maxWidth="xl" open onClose={handleClose} fullScreen>
@@ -79,10 +62,7 @@ export const ClimbingGradesTable = ({ onClose }: ClimbingGradesTableProps) => {
         </Toolbar>
       </AppBar>
 
-      <ClimbingGradesTableSettings
-        visibleGradeSystems={visibleGradeSystems}
-        isSettingVisible={isSettingVisible}
-      />
+      <ClimbingGradesTableSettings isSettingVisible={isSettingVisible} />
 
       <TableContainer component={Paper} sx={{ maxHeight: '100vh' }}>
         <Table stickyHeader size="small">
