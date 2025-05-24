@@ -17,6 +17,8 @@ import { Feature } from '../../../services/types';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
+import { isClimbingCrag } from '../../../utils';
+import { useFeatureContext } from '../../utils/FeatureContext';
 
 const MAX_COLUMN_HEIGHT = 40;
 const NUMBER_OF_ROUTES_HEIGHT = 14;
@@ -197,5 +199,16 @@ export const RouteDistribution = ({
         </Items>
       </ContentContainer>
     </Container>
+  );
+};
+
+export const RouteDistributionInFeaturePanel = () => {
+  const { feature } = useFeatureContext();
+  if (!feature) return null;
+
+  return (
+    isClimbingCrag(feature) && (
+      <RouteDistribution features={feature.memberFeatures} />
+    )
   );
 };

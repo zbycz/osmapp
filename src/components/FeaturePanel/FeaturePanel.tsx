@@ -18,12 +18,12 @@ import { ClimbingRestriction } from './Climbing/ClimbingRestriction';
 import { Runways } from './Runways/Runways';
 import { EditButton } from './EditButton';
 import { EditDialog } from './EditDialog/EditDialog';
-import { RouteDistribution } from './Climbing/RouteDistribution';
+import { RouteDistributionInFeaturePanel } from './Climbing/RouteDistribution';
 import { FeaturePanelFooter } from './FeaturePanelFooter';
 import { ClimbingRouteGrade } from './ClimbingRouteGrade';
 import { Box, Stack } from '@mui/material';
 import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
-import { isClimbingCrag, isPublictransportRoute } from '../../utils';
+import { isPublictransportRoute } from '../../utils';
 import { Sockets } from './Sockets/Sockets';
 import { ClimbingTypeBadge } from './Climbing/ClimbingTypeBadge';
 import { TestApiWarning } from './helpers/TestApiWarning';
@@ -94,9 +94,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
 
               <PanelSidePadding>
                 {!movePropertiesBelowMembers && <PropertiesComponent />}
-                {isClimbingCrag(feature) && (
-                  <RouteDistribution features={feature.memberFeatures} />
-                )}
+                <RouteDistributionInFeaturePanel />
                 {!isPublictransportRoute(feature) && <MemberFeatures />}
                 {advanced && <Members />}
                 {movePropertiesBelowMembers && <PropertiesComponent />}
