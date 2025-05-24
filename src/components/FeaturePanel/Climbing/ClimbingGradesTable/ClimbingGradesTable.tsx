@@ -52,7 +52,9 @@ export const ClimbingGradesTable = ({ onClose }: ClimbingGradesTableProps) => {
   const columns = React.useMemo(
     () =>
       Object.keys(visibleGradeSystems).filter(
-        (key) => visibleGradeSystems[key],
+        (key) =>
+          visibleGradeSystems[key] &&
+          GRADE_SYSTEMS.some((gs) => gs.key === key),
       ),
     [visibleGradeSystems],
   );
