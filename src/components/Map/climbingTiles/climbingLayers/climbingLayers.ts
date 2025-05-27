@@ -4,7 +4,7 @@ import {
   SymbolLayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
-import { AREA, CLIMBING_TILES_SOURCE, CRAG } from './consts';
+import { AREA, CLIMBING_TILES_SOURCE, CRAG } from '../consts';
 
 const linear = (
   from: number,

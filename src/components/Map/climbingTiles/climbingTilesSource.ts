@@ -2,7 +2,7 @@ import { GeoJSONSource } from 'maplibre-gl';
 import { fetchJson } from '../../../services/fetch';
 import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { getGlobalMap } from '../../../services/mapStorage';
-import { climbingLayers } from './climbingLayers';
+import { climbingLayers } from './climbingLayers/climbingLayers';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
