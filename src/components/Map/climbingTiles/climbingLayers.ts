@@ -4,14 +4,7 @@ import {
   SymbolLayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
-import { AREA, CRAG } from './consts';
-
-export const CLIMBING_TILES_SOURCE = 'climbing-tiles';
-
-export const CLIMBING_SPRITE = {
-  id: 'climbing',
-  url: `${window.location.protocol}//${window.location.host}/icons-climbing/sprites/climbing`,
-};
+import { AREA, CLIMBING_TILES_SOURCE, CRAG } from './consts';
 
 const linear = (
   from: number,
@@ -63,12 +56,12 @@ const byHasImages = (
   ifHasImages(spec.HAS_IMAGES[property], spec.NO_IMAGES[property]);
 
 const ifCrag = (
-  value: ExpressionSpecification | number,
+  crag: ExpressionSpecification | number,
   elseValue: ExpressionSpecification | number,
 ): ExpressionSpecification => [
   'case',
   ['==', ['get', 'climbing'], 'crag'],
-  value,
+  crag,
   elseValue,
 ];
 
@@ -88,17 +81,6 @@ const hover = (basic: number, hovered: number): ExpressionSpecification => [
   ['boolean', ['feature-state', 'hover'], false],
   hovered,
   basic,
-];
-const step = (
-  a: unknown,
-  from: number,
-  b: unknown,
-): ExpressionSpecification => [
-  'step',
-  ['zoom'],
-  ['literal', a],
-  from,
-  ['literal', b],
 ];
 
 export const routes: LayerSpecification[] = [

@@ -29,3 +29,10 @@ export const GYM = {
   IMAGE: 'climbing:climbing-gym-gray',
   COLOR: '#666',
 };
+
+export const CLIMBING_TILES_SOURCE = 'climbing-tiles';
+
+export const CLIMBING_SPRITE = {
+  id: 'climbing',
+  url: `${window.location.protocol}//${window.location.host}/icons-climbing/sprites/climbing`,
+};
