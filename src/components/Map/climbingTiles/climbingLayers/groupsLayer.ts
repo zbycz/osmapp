@@ -7,17 +7,33 @@ import {
   sortKey,
 } from './helpers';
 import {
+  ExpressionSpecification,
   LayerSpecification,
   SymbolLayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
-import { AREA, CLIMBING_TILES_SOURCE, CRAG } from '../consts';
+import { AREA, CLIMBING_TILES_SOURCE, CRAG, GYM } from '../consts';
+
+export const ifGym = (
+  gym: ExpressionSpecification | string,
+  elseValue: ExpressionSpecification | string,
+): ExpressionSpecification => [
+  'case',
+  ['==', ['get', 'type'], 'gym'],
+  gym,
+  elseValue,
+];
+
+const ICON_IMAGE = ifGym(
+  GYM.IMAGE,
+  ifCrag(byHasImages(CRAG, 'IMAGE'), byHasImages(AREA, 'IMAGE')),
+);
 
 const areaSize = linearByRouteCount(0, 0.4, 400, 1);
 const cragSize = linearByRouteCount(0, 0.4, 50, 0.7);
 const cragSizeBig = 1;
 
 const GROUPS_LAYOUT: SymbolLayerSpecification['layout'] = {
-  'icon-image': ifCrag(byHasImages(CRAG, 'IMAGE'), byHasImages(AREA, 'IMAGE')),
+  'icon-image': ICON_IMAGE,
   'icon-size': linear(
     6,
     0.4,
@@ -67,4 +83,12 @@ export const groupsLayer: LayerSpecification = {
     'text-halo-color': '#ffffff',
     'text-halo-width': 2,
   },
+};
+
+export const gymsLayer: LayerSpecification = {
+  ...groupsLayer,
+  id: 'climbing gym',
+  filter: ['all', ['==', 'type', 'gym']],
+  minzoom: 9,
+  maxzoom: 24,
 };
