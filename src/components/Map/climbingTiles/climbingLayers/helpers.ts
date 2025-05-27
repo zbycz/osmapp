@@ -1,5 +1,6 @@
 import { ExpressionSpecification } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
+import { AREA, CRAG } from '../consts';
 
 export const linear = (
   from: number,
@@ -43,4 +44,40 @@ export const linearByRouteCount = (
   a,
   to,
   b,
+];
+
+const ifHasImages = (
+  value: string,
+  elseValue: string,
+): ExpressionSpecification => [
+  'case',
+  ['get', 'osmappHasImages'],
+  value,
+  elseValue,
+];
+
+export const byHasImages = (
+  spec: typeof AREA | typeof CRAG,
+  property: 'IMAGE' | 'COLOR',
+): ExpressionSpecification =>
+  ifHasImages(spec.HAS_IMAGES[property], spec.NO_IMAGES[property]);
+
+export const ifCrag = (
+  crag: ExpressionSpecification | number,
+  elseValue: ExpressionSpecification | number,
+): ExpressionSpecification => [
+  'case',
+  ['==', ['get', 'climbing'], 'crag'],
+  crag,
+  elseValue,
+];
+
+export const hover = (
+  basic: number,
+  hovered: number,
+): ExpressionSpecification => [
+  'case',
+  ['boolean', ['feature-state', 'hover'], false],
+  hovered,
+  basic,
 ];
