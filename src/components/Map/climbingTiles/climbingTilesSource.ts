@@ -2,21 +2,15 @@ import { GeoJSONSource } from 'maplibre-gl';
 import { fetchJson } from '../../../services/fetch';
 import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { getGlobalMap } from '../../../services/mapStorage';
-import {
-  CLIMBING_SPRITE,
-  CLIMBING_TILES_SOURCE,
-  climbingLayers,
-} from './climbingLayers';
+import { climbingLayers } from './climbingLayers/climbingLayers';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
-
-const HOST = process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL
-  ? '/'
-  : 'https://openclimbing.org/';
+import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
+import { CLIMBING_SPRITE, CLIMBING_TILES_SOURCE } from './consts';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
-  const url = `${HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
+  const url = `${CLIMBING_TILES_HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
   const data = await fetchJson(url);
   return data.features || [];
 };

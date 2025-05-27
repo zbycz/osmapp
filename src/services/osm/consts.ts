@@ -18,3 +18,8 @@ export const OSM_USER_COOKIE = USE_PROD_API
 export const OSM_TOKEN_COOKIE = USE_PROD_API
   ? 'osmAccessToken'
   : 'osmAccessToken_TESTAPI';
+
+const localClimbingTiles = process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL;
+export const CLIMBING_TILES_HOST = localClimbingTiles
+  ? '/'
+  : 'https://openclimbing.org/';

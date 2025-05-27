@@ -4,7 +4,7 @@ import {
   SymbolLayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
 import type { DataDrivenPropertyValueSpecification } from 'maplibre-gl';
-import { AREA, CRAG } from '../../MapFooter/ClimbingLegend';
+import { AREA, CRAG } from '../../climbingTiles/consts';
 
 export const CLIMBING_SPRITE = {
   id: 'climbing',

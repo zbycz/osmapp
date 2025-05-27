@@ -8,28 +8,6 @@ import CragRed from '../../../../public/icons-climbing/icons/crag-red.svg';
 import AreaGray from '../../../../public/icons-climbing/icons/area-gray.svg';
 import CragGray from '../../../../public/icons-climbing/icons/crag-gray.svg';
 
-export const AREA = {
-  HAS_IMAGES: {
-    IMAGE: 'climbing:area-blue',
-    COLOR: 'rgba(0, 59, 210, 1)',
-  },
-  NO_IMAGES: {
-    IMAGE: 'climbing:area-gray',
-    COLOR: '#666',
-  },
-};
-
-export const CRAG = {
-  HAS_IMAGES: {
-    IMAGE: 'climbing:crag-red',
-    COLOR: '#ea5540',
-  },
-  NO_IMAGES: {
-    IMAGE: 'climbing:crag-gray',
-    COLOR: '#666',
-  },
-};
-
 const HideableContainer = styled.div<{ $isVisible: boolean }>`
   transition: max-height 0.15s ease-out;
   max-height: ${({ $isVisible }) => ($isVisible ? 500 : 0)}px;
