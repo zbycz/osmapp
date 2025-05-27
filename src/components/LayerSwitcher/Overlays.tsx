@@ -15,16 +15,15 @@ import { useQuery } from 'react-query';
 import { fetchJson } from '../../services/fetch';
 import type { ClimbingStatsResponse } from '../../types';
 import { nl2br } from '../utils/nl2br';
+import { CLIMBING_TILES_HOST } from '../../services/osm/consts';
 
 const getLocalTime = (lastRefresh: string) =>
   lastRefresh ? new Date(lastRefresh).toLocaleString(intl.lang) : null;
 
-const HOST = process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL
-  ? '/'
-  : 'https://openclimbing.org/';
-
 const fetchClimbingStats = () =>
-  fetchJson<ClimbingStatsResponse>(`${HOST}api/climbing-tiles/stats`);
+  fetchJson<ClimbingStatsResponse>(
+    `${CLIMBING_TILES_HOST}api/climbing-tiles/stats`,
+  );
 
 const ClimbingSecondary = () => {
   const { data, error, isFetching } = useQuery([], () => fetchClimbingStats());

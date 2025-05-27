@@ -10,13 +10,10 @@ import {
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
-
-const HOST = process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL
-  ? '/'
-  : 'https://openclimbing.org/';
+import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
-  const url = `${HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
+  const url = `${CLIMBING_TILES_HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
   const data = await fetchJson(url);
   return data.features || [];
 };
