@@ -20,6 +20,7 @@ import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
 import { useHandleItemClick } from '../useHandleItemClick';
+import { Feature } from '../../../../../services/types';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -69,7 +70,7 @@ const SectionName = () => {
 
 const useGetParents = () => {
   const { current } = useEditContext();
-  const [parents, setParents] = useState([]);
+  const [parents, setParents] = useState<Feature[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -85,6 +86,11 @@ const useGetParents = () => {
     })();
   }, [current]);
   return parents;
+};
+
+const getLabel = (parent: Feature) => {
+  const shortId = getShortId(parent.osmMeta);
+  return parent.tags?.name || parent.schema?.label || shortId;
 };
 
 export const ParentsEditor = () => {
@@ -119,7 +125,7 @@ export const ParentsEditor = () => {
               <FeatureRow
                 key={shortId}
                 shortId={shortId}
-                label={parent.tags?.name || shortId}
+                label={getLabel(parent)}
                 onClick={(e) => handleClick(e, shortId)}
               />
             );
