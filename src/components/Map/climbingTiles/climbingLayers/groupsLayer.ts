@@ -10,7 +10,7 @@ import {
   LayerSpecification,
   SymbolLayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
-import { AREA, CLIMBING_TILES_SOURCE, CRAG } from '../consts';
+import { AREA, CLIMBING_TILES_SOURCE, CRAG, GYM } from '../consts';
 
 const areaSize = linearByRouteCount(0, 0.4, 400, 1);
 const cragSize = linearByRouteCount(0, 0.4, 50, 0.7);
@@ -66,5 +66,17 @@ export const groupsLayer: LayerSpecification = {
     ),
     'text-halo-color': '#ffffff',
     'text-halo-width': 2,
+  },
+};
+
+export const gymsLayer: LayerSpecification = {
+  ...groupsLayer,
+  id: 'climbing gym',
+  filter: ['all', ['==', 'type', 'gym']],
+  minzoom: 9,
+  maxzoom: 24,
+  layout: {
+    ...groupsLayer.layout,
+    'icon-image': GYM.IMAGE,
   },
 };

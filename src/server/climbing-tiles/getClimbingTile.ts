@@ -27,20 +27,20 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   }
 
   const cacheKey = `${z}/${x}/${y}`;
-  const cache = await client.query(
-    `SELECT tile_geojson FROM climbing_tiles_cache WHERE zxy = $1`,
-    [cacheKey],
-  );
-  if (cache.rowCount > 0) {
-    logCacheHit(start);
-    return cache.rows[0].tile_geojson as string;
-  }
+  // const cache = await client.query(
+  //   `SELECT tile_geojson FROM climbing_tiles_cache WHERE zxy = $1`,
+  //   [cacheKey],
+  // );
+  // if (cache.rowCount > 0) {
+  //   logCacheHit(start);
+  //   return cache.rows[0].tile_geojson as string;
+  // }
 
   const bbox = tileToBBOX({ z, x, y });
   const bboxCondition = getBboxCondition(bbox);
   const query = hasRoutes
-    ? `SELECT geojson FROM climbing_features WHERE type IN ('group', 'route') AND ${bboxCondition}`
-    : `SELECT geojson FROM climbing_features WHERE type = 'group' AND ${bboxCondition}`;
+    ? `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'group', 'route') AND ${bboxCondition}`
+    : `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'group') AND ${bboxCondition}`;
   const result = await client.query(query);
   const allGeojson: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',
