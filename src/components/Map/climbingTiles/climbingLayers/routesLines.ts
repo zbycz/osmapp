@@ -49,6 +49,7 @@ export const routesLines: LayerSpecification[] = [
   },
   {
     id: 'climbing route (line) - text',
+    metadata: { clickableWithOsmId: true },
     type: 'symbol',
     source: CLIMBING_TILES_SOURCE,
     filter: ['all', ['==', 'type', 'route']],
