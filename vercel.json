@@ -3,6 +3,9 @@
     "pages/api/climbing-tiles/refresh.ts": {
       "memory": 3000,
       "maxDuration": 200
+    },
+    "pages/api/climbing-tiles/tile.ts": {
+      "maxDuration": 40
     }
   },
   "crons": [
