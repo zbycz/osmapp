@@ -6,6 +6,7 @@ export type FeaturedKeyRenderer =
   | 'WikipediaRenderer'
   | 'WikidataRenderer'
   | 'ClimbingGradeRenderer'
+  | 'ScaleRenderer'
   | 'NullRenderer' // - doesn't render among other FeaturedTags
   | 'DescriptionRenderer'; // - used directly in FeaturePanel
 
@@ -27,6 +28,7 @@ export const FEATURED_KEYS: FeaturedKeys = [
   { matcher: /wikidata/, renderer: 'WikidataRenderer' },
   { matcher: /fhrs:id/, renderer: 'FoodHygieneRatingSchemeRenderer' },
   { matcher: /climbing:grade:/, renderer: 'ClimbingGradeRenderer' },
+  { matcher: /(via_ferrata_scale|sac_scale)/, renderer: 'ScaleRenderer' },
   { matcher: /description/, renderer: 'NullRenderer' },
 ];
 
