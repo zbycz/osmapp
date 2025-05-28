@@ -59,6 +59,8 @@ export default {
   'climbing_renderer.climbing_grade_average': 'average climbing grade',
   'climbing_renderer.climbing_grade_minimum': 'minimum climbing grade',
   'climbing_renderer.climbing_grade_maximum': 'maximum climbing grade',
+  'climbing_renderer.via_ferrata_scale': 'via ferrata scale',
+  'climbing_renderer.sac_scale': 'SAC scale',
   'climbing.photos': 'Photos',
 
   'project.osmapp.description': 'A universal app for OpenStreetMap',

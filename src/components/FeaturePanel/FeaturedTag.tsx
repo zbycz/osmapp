@@ -13,6 +13,7 @@ import { nl2br } from '../utils/nl2br';
 import { FeaturedKeyRenderer } from '../../services/tagging/featuredKeys';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Typography } from '@mui/material';
+import { ScaleRenderer } from './renderers/ScaleRenderer';
 
 const Wrapper = styled.div`
   position: relative;
@@ -62,6 +63,7 @@ const components: RendererComponents = {
   WikipediaRenderer: WikipediaRenderer,
   WikidataRenderer: WikidataRenderer,
   ClimbingGradeRenderer: ClimbingGradeRenderer,
+  ScaleRenderer: ScaleRenderer,
   DescriptionRenderer: ParagraphRenderer,
   NullRenderer: null,
 };
