@@ -18,8 +18,8 @@ const fetchFromOverpass = async () => {
     return JSON.parse(readFileSync('../overpass.json', 'utf8'));
   }
 
-  // takes about 42 secs, 25MB
-  const query = `[out:json][timeout:80];(nwr["climbing"];nwr["sport"="climbing"];);(._;>>;);out qt;`;
+  // takes about 42 secs, 25MB; in May25 = 25MB - 217k items->55k records
+  const query = `[out:json][timeout:100];(nwr["climbing"];nwr["sport"="climbing"];);(._;>>;);out qt;`;
   const data = await fetchJson<OsmResponse>(
     'https://overpass-api.de/api/interpreter',
     {
@@ -35,6 +35,7 @@ const fetchFromOverpass = async () => {
     );
   }
 
+  // writeFileSync('../overpass.json', JSON.stringify(data));
   return data;
 };
 
@@ -121,8 +122,16 @@ const getNewRecords = (data: OsmResponse) => {
   for (const relation of geojsons.relation) {
     if (!relation.tags || relation.tags.climbing === 'no') continue;
 
-    // climbing=area, boulder, crag, route
+    // usually climbing=route + route=via_ferrata
     if (
+      relation.tags.route === 'via_ferrata' ||
+      relation.tags.via_ferrata_scale
+    ) {
+      addRecord('ferrata', centerGeometry(relation));
+    }
+
+    // climbing=area, boulder, crag, route
+    else if (
       relation.tags.climbing ||
       relation.tags.sport === 'climbing' ||
       relation.tags.type === 'site' ||

@@ -10,7 +10,7 @@ import {
   LayerSpecification,
   SymbolLayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
-import { AREA, CLIMBING_TILES_SOURCE, CRAG, GYM } from '../consts';
+import { AREA, CLIMBING_TILES_SOURCE, CRAG, GYM, VIA_FERRATA } from '../consts';
 
 const areaSize = linearByRouteCount(0, 0.4, 400, 1);
 const cragSize = linearByRouteCount(0, 0.4, 50, 0.7);
@@ -78,5 +78,15 @@ export const gymsLayer: LayerSpecification = {
   layout: {
     ...groupsLayer.layout,
     'icon-image': GYM.IMAGE,
+  },
+};
+
+export const ferrataLayer: LayerSpecification = {
+  ...groupsLayer,
+  id: 'climbing via_ferrata',
+  filter: ['all', ['==', 'type', 'ferrata']],
+  layout: {
+    ...groupsLayer.layout,
+    'icon-image': VIA_FERRATA.IMAGE,
   },
 };
