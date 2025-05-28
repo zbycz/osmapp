@@ -42,9 +42,10 @@ type Props = {
   label?: string;
   shortId: string;
   onClick: (e: React.MouseEvent) => Promise<void>;
+  role?: string;
 };
 
-export const FeatureRow = ({ label, shortId, onClick }: Props) => {
+export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
   const { isLoading, startLoading, stopLoading } = useLoadingState();
   const { items } = useEditContext();
   const isAlreadyInItems = items.find((item) => item.shortId === shortId);
@@ -68,9 +69,15 @@ export const FeatureRow = ({ label, shortId, onClick }: Props) => {
           <ListItemText>
             <Stack direction="row" gap={2} alignItems="center">
               <Typography color={isAlreadyInItems ? 'secondary' : undefined}>
-                {label ?? shortId}
+                {label || shortId}
               </Typography>
               <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
+              {role && (
+                <>
+                  <div style={{ flex: '1' }} />
+                  <Typography variant="caption">{role}</Typography>
+                </>
+              )}
             </Stack>
           </ListItemText>
           {isLoading ? <CircularProgress size={14} /> : <ChevronRightIcon />}

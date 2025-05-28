@@ -113,6 +113,7 @@ export const MembersEditor = () => {
           key={member.shortId}
           shortId={member.shortId}
           label={member.label}
+          role={member.role}
           onClick={(e: React.MouseEvent) => handleClick(e, member.shortId)}
         />
       ))}
