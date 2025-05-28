@@ -186,5 +186,7 @@ export const refreshClimbingTiles = async () => {
   await updateStats(data, getBuildLog(), buildDuration, tileStats, records);
   await closeClient(client);
 
+  // consider cache the tile 0/0/0 here - it takes too long to compute (15s)
+
   return getBuildLog();
 };
