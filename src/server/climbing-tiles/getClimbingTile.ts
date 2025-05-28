@@ -15,7 +15,7 @@ const logCacheHit = (start: number) => {
   console.log(`climbing_tiles_cache HIT ${duration}ms`); //eslint-disable-line no-console
 };
 
-const ZOOM_LEVELS = [0, 6, 9, 12];
+const ZOOM_LEVELS = [0, 6, 9, 12]; // the zoom level is fetched, when Map reaches zoom+1, see climbingTilesSource.ts
 
 export const getClimbingTile = async ({ z, x, y }: Tile) => {
   const start = performance.now();
@@ -27,20 +27,20 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   }
 
   const cacheKey = `${z}/${x}/${y}`;
-  // const cache = await client.query(
-  //   `SELECT tile_geojson FROM climbing_tiles_cache WHERE zxy = $1`,
-  //   [cacheKey],
-  // );
-  // if (cache.rowCount > 0) {
-  //   logCacheHit(start);
-  //   return cache.rows[0].tile_geojson as string;
-  // }
+  const cache = await client.query(
+    `SELECT tile_geojson FROM climbing_tiles_cache WHERE zxy = $1`,
+    [cacheKey],
+  );
+  if (cache.rowCount > 0) {
+    logCacheHit(start);
+    return cache.rows[0].tile_geojson as string;
+  }
 
   const bbox = tileToBBOX({ z, x, y });
   const bboxCondition = getBboxCondition(bbox);
   const query = hasRoutes
-    ? `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'group', 'route') AND ${bboxCondition}`
-    : `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'group') AND ${bboxCondition}`;
+    ? `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'ferrata', 'group', 'route') AND ${bboxCondition}`
+    : `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'ferrata', 'group') AND ${bboxCondition}`;
   const result = await client.query(query);
   const allGeojson: GeoJSON.FeatureCollection = {
     type: 'FeatureCollection',

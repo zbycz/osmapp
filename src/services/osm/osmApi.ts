@@ -175,19 +175,20 @@ const addMemberFeaturesToArea = async (relation: Feature) => {
   return { ...relation, memberFeatures };
 };
 
-const addMemberFeaturesToRelation = async (relation: Feature) => {
-  const { tags, osmMeta: apiId } = relation;
-  if (apiId.type !== 'relation') {
-    throw new Error('addMemberFeaturesToRelation() called with non-relation');
+const addMemberFeatures = async (feature: Feature) => {
+  if (feature.osmMeta.type !== 'relation') {
+    return feature;
   }
 
+  const { tags, osmMeta: apiId } = feature;
+
   if (tags.climbing === 'area') {
-    return await addMemberFeaturesToArea(relation);
+    return await addMemberFeaturesToArea(feature);
   }
 
   const full = await getFullFeatureWithMemberFeatures(apiId);
   const out: Feature = {
-    ...relation,
+    ...feature,
     memberFeatures: full.memberFeatures,
   };
   mergeMemberImageDefs(out);
@@ -211,7 +212,7 @@ const addMembersAndParents = async (feature: Feature): Promise<Feature> => {
   ) {
     const [parentFeatures, featureWithMemberFeatures] = await Promise.all([
       fetchParentFeatures(feature.osmMeta),
-      addMemberFeaturesToRelation(feature),
+      addMemberFeatures(feature),
     ]);
 
     return {
