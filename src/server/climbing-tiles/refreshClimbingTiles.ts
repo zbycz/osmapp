@@ -44,7 +44,7 @@ const getNewRecords = (data: OsmResponse) => {
   const { records, addRecord, addRecordWithLine } = recordsFactory();
 
   for (const node of geojsons.node) {
-    if (!node.tags) continue;
+    if (!node.tags || node.tags.climbing === 'no') continue;
     if (
       node.tags.climbing === 'area' ||
       node.tags.climbing === 'boulder' ||
@@ -94,6 +94,8 @@ const getNewRecords = (data: OsmResponse) => {
   }
 
   for (const way of geojsons.way) {
+    if (!way.tags || way.tags.climbing === 'no') continue;
+
     //
     if (way.tags.climbing === 'route' || way.tags.highway === 'via_ferrata') {
       addRecordWithLine('route', way);
@@ -117,11 +119,10 @@ const getNewRecords = (data: OsmResponse) => {
   }
 
   for (const relation of geojsons.relation) {
-    if (relation.tags.climbing === 'no') {
-    }
+    if (!relation.tags || relation.tags.climbing === 'no') continue;
 
     // climbing=area, boulder, crag, route
-    else if (
+    if (
       relation.tags.climbing ||
       relation.tags.sport === 'climbing' ||
       relation.tags.type === 'site' ||
