@@ -8,6 +8,7 @@ import { BACKGROUND, GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 import { motorwayConstruction } from './layers/contruction';
 import { overpassLayers } from './layers/overpassLayers';
 import { cliffsLayers } from './layers/cliffsLayers';
+import { SymbolLayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 
 // Maptiler Outdoor style is copyrighted – only to be used with valid Maptiler subscription
 // https://www.maptiler.com/maps/outdoor/
@@ -2684,12 +2685,7 @@ export const outdoorStyle = addHoverPaint({
         'text-font': ['Roboto Condensed Italic'],
         'text-size': 12,
         'icon-image': 'camp-site',
-        'text-field': {
-          stops: [
-            [13, ''],
-            [14, '{name}'],
-          ],
-        },
+        'text-field': ['step', ['zoom'], '', 14, '{name}'],
         visibility: 'visible',
         'icon-anchor': 'bottom',
         'icon-offset': [0, -3],
@@ -2698,7 +2694,7 @@ export const outdoorStyle = addHoverPaint({
       source: 'maptiler_planet',
       minzoom: 12,
       'source-layer': 'poi',
-    },
+    } as SymbolLayerSpecification,
     {
       id: 'outdoor_poi_memorial_monument',
       type: 'symbol',
@@ -2904,12 +2900,7 @@ export const outdoorStyle = addHoverPaint({
         'text-font': ['Roboto Condensed Italic'],
         'text-size': 12,
         'icon-image': 'church',
-        'text-field': {
-          stops: [
-            [14, ''],
-            [16, '{name}'],
-          ],
-        },
+        'text-field': ['step', ['zoom'], '', 16, '{name}'],
         'icon-anchor': 'bottom',
         'icon-offset': [0, -3],
         'text-anchor': 'top',
@@ -2973,12 +2964,7 @@ export const outdoorStyle = addHoverPaint({
           ],
         },
         'icon-image': 'square',
-        'text-field': {
-          stops: [
-            [11, ' '],
-            [12, '{name:latin}'],
-          ],
-        },
+        'text-field': ['step', ['zoom'], '', 12, '{name:latin}'],
         visibility: 'visible',
         'icon-anchor': 'bottom',
         'icon-offset': [0, -8],
@@ -3016,12 +3002,7 @@ export const outdoorStyle = addHoverPaint({
           ],
         },
         'icon-image': 'airport',
-        'text-field': {
-          stops: [
-            [10, '{iata}'],
-            [14, '{name:latin}'],
-          ],
-        },
+        'text-field': ['step', ['zoom'], '{iata}', 14, '{name:latin}'],
         visibility: 'visible',
         'icon-anchor': 'bottom',
         'icon-offset': {
@@ -3057,12 +3038,7 @@ export const outdoorStyle = addHoverPaint({
         'text-font': ['Roboto Regular'],
         'text-size': 13,
         'icon-image': 'airfield',
-        'text-field': {
-          stops: [
-            [11, ' '],
-            [13, '{name:latin}'],
-          ],
-        },
+        'text-field': ['step', ['zoom'], '', 13, '{name:latin}'],
         visibility: 'visible',
         'icon-anchor': 'bottom',
         'icon-offset': {
