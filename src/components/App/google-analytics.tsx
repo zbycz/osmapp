@@ -1,7 +1,7 @@
 import React from 'react';
 import Script from 'next/script';
 
-const OPENCLIMBING_ID = 'G-XCHYKP28FT';
+const OPENCLIMBING_ID = process.env.NEXT_PUBLIC_GTM_ID_OPENCLIMING;
 
 export const GoogleAnalytics = () => (
   <>
