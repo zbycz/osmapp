@@ -21,6 +21,9 @@ import { Size } from '../../src/components/FeaturePanel/FeatureImages/types';
 import { getApiId } from '../../src/services/helpers';
 import { renderStyledHtml } from '../../src/server/images/renderStyledHtml';
 import { fetchWithMemberFeatures } from '../../src/services/osm/fetchWithMemberFeatures';
+import { mockSchemaTranslations } from '../../src/services/tagging/translations';
+import translations from '@openstreetmap/id-tagging-schema/dist/translations/en.json';
+import { intl } from '../../src/services/intl';
 
 const Svg = ({ children, size }) => (
   <UserThemeProvider userThemeCookie={undefined}>
@@ -76,8 +79,11 @@ const renderSvg = async (
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const t1 = Date.now();
   try {
+    intl.lang = 'en';
+    mockSchemaTranslations(translations); // local is fine, TODO remove the need for translations in this case
+
     const osmId = getApiId(req.query.id as string);
-    const feature = await fetchWithMemberFeatures(osmId);
+    const feature = await fetchWithMemberFeatures(osmId); // TODO
     const def = feature.imageDefs?.[0]; // TODO iterate when first not found
     if (!def) {
       throw new Error('No image definition found');
