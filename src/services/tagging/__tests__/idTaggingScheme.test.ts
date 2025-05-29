@@ -86,7 +86,7 @@ describe('idTaggingScheme', () => {
     expect(
       result.matchedFields.map(({ label, value }) => ({ label, value })),
     ).toMatchObject([
-      { label: 'Type', value: 'Surface' },
+      { label: 'Type', value: 'Surface – One level of parking on the ground.' },
       { label: 'Surface', value: 'Unpaved' },
     ]);
     expect(result.tagsWithFields).toMatchObject([
@@ -139,6 +139,7 @@ describe('idTaggingScheme', () => {
       'start_date',
       'short_name',
       'reg_name',
+      'panoramax',
       'official_name',
       'note',
       'nat_name',
