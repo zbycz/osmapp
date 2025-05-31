@@ -24,6 +24,7 @@ import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
 import { ShowToast } from '../../utils/SnackbarContext';
+import { ClimbingFilters } from '../climbingTiles/climbingFiltersUtils';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -86,6 +87,7 @@ const addOverlaysToStyle = (
   style: StyleSpecification,
   overlays: string[],
   currentTheme: Theme,
+  climbingFilters: ClimbingFilters,
 ) => {
   // removeClimbingTilesSource(); // TODO call when climbing removed
 
@@ -95,7 +97,7 @@ const addOverlaysToStyle = (
       switch (key) {
         case 'climbing':
           if (process.env.NEXT_PUBLIC_ENABLE_CLIMBING_TILES) {
-            addClimbingTilesSource(style);
+            addClimbingTilesSource(style, climbingFilters);
           } else {
             addClimbingOverlay(style, map); // TODO remove this when climbingTiles are tested
           }
@@ -138,6 +140,7 @@ export const useUpdateStyle = createMapEffectHook(
     mapLoaded: boolean,
     currentTheme: Theme,
     showToast: ShowToast,
+    climbingFilters: ClimbingFilters,
   ) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
@@ -153,7 +156,7 @@ export const useUpdateStyle = createMapEffectHook(
     map.setMinZoom(osmappLayerMinZoom ?? userLayerMinZoom ?? 0);
 
     const style = cloneDeep(getBaseStyle(key, currentTheme));
-    addOverlaysToStyle(map, style, overlays, currentTheme);
+    addOverlaysToStyle(map, style, overlays, currentTheme, climbingFilters);
     style.projection = { type: 'globe' };
     map.setStyle(style, { diff: mapLoaded });
 

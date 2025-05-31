@@ -73,7 +73,6 @@ export const gymsLayer: LayerSpecification = {
   ...groupsLayer,
   id: 'climbing gym',
   filter: ['all', ['==', 'type', 'gym']],
-  minzoom: 9,
   maxzoom: 24,
   layout: {
     ...groupsLayer.layout,

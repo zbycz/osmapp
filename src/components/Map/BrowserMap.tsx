@@ -21,6 +21,7 @@ import { useAddTopRightControls } from './useAddTopRightControls';
 import { usePersistedScaleControl } from './behaviour/PersistedScaleControl';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useSnackbar } from '../utils/SnackbarContext';
+import { ClimbingFilters } from './climbingTiles/climbingFiltersUtils';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
@@ -47,7 +48,11 @@ const NotSupportedMessage = () => (
 
 // TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
-const BrowserMap = () => {
+export type BrowserMapProps = {
+  climbingFilters: ClimbingFilters;
+};
+
+const BrowserMap = ({ climbingFilters }: BrowserMapProps) => {
   const { userLayers } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
@@ -56,6 +61,7 @@ const BrowserMap = () => {
   const { showToast } = useSnackbar();
 
   const [map, mapRef] = useInitMap();
+
   useAddTopRightControls(map, mobileMode);
   useOnMapClicked(map, setFeature, mapClickOverrideRef);
   useOnMapLongPressed(map, setFeature);
@@ -64,6 +70,7 @@ const BrowserMap = () => {
 
   const { viewForMap, setViewFromMap, setBbox, activeLayers } =
     useMapStateContext();
+
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
@@ -74,13 +81,14 @@ const BrowserMap = () => {
     mapLoaded,
     currentTheme,
     showToast,
+    climbingFilters,
   );
   usePersistedScaleControl(map);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
 
-const BrowserMapCheck = () => {
+const BrowserMapCheck = ({ climbingFilters }: BrowserMapProps) => {
   const { setMapLoaded } = useMapStateContext();
 
   if (!webglSupported) {
@@ -88,7 +96,7 @@ const BrowserMapCheck = () => {
     return <NotSupportedMessage />;
   }
 
-  return <BrowserMap />;
+  return <BrowserMap climbingFilters={climbingFilters} />;
 };
 
 export default BrowserMapCheck; // dynamic import
