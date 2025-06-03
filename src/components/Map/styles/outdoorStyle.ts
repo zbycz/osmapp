@@ -655,6 +655,41 @@ export const outdoorStyle = addHoverPaint({
       metadata: {},
       'source-layer': 'transportation',
     },
+
+    {
+      id: 'Track',
+      type: 'line',
+      source: 'maptiler_planet',
+      'source-layer': 'transportation',
+      minzoom: 12,
+      layout: {
+        'line-join': 'round',
+        visibility: 'visible',
+      },
+      paint: {
+        'line-color': 'hsl(24, 10%, 60%)',
+        'line-dasharray': [5, 2],
+        'line-width': [
+          'interpolate',
+          ['exponential', 1.2],
+          ['zoom'],
+          13,
+          1,
+          16,
+          1,
+          20,
+          2,
+        ],
+      },
+      metadata: {},
+      filter: [
+        'all',
+        ['==', '$type', 'LineString'],
+        ['==', 'class', 'track'],
+        ['!=', 'brunnel', 'tunnel'],
+      ],
+    },
+
     {
       id: 'tunnel_road_major',
       type: 'line',
@@ -836,7 +871,7 @@ export const outdoorStyle = addHoverPaint({
       filter: [
         'all',
         ['!in', 'brunnel', 'tunnel'],
-        ['in', 'class', 'minor', 'service', 'track', 'pier'],
+        ['in', 'class', 'minor', 'service', 'pier'],
       ],
       layout: {
         'line-cap': 'round',
