@@ -7,10 +7,10 @@ export const usePersistedState = <T>(
   const persist = (value: T) =>
     window?.localStorage.setItem(storageKey, JSON.stringify(value));
 
-  const [value, setStateValue] = useState<T>(
+  const initialState = () =>
     JSON.parse(global?.window?.localStorage.getItem(storageKey) ?? 'null') ??
-      init,
-  );
+    init;
+  const [value, setStateValue] = useState<T>(initialState);
 
   const setValue = (param: (prev: T) => T | T) => {
     if (typeof param === 'function') {
