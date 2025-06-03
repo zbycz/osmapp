@@ -19,7 +19,7 @@ export const RemoveUserLayerAction = ({ url }: RemoveUserLayerActionProps) => {
   const { activeLayers, setActiveLayers, setUserLayers } = useMapStateContext();
 
   const onClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-    e.preventDefault();
+    e.stopPropagation();
     setUserLayers((current) => {
       if (activeLayers.includes(url)) {
         setActiveLayers(['basic']);
