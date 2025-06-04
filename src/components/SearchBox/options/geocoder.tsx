@@ -39,6 +39,19 @@ const getApiUrl = (inputValue: string, view: View) => {
 
 export const GEOCODER_ABORTABLE_QUEUE = 'search';
 
+export const setSearchUrl = (value: string) => {
+  const query = value ? `?q=${encodeURIComponent(value)}` : '';
+
+  if (window.location.pathname === '/') {
+    Router.push(`/${query}${window.location.hash}`);
+  }
+};
+
+// TODO this needs to be moved in AutocompleteInput - but here we have dependency on currentInput used in geocoder - refactor this first
+const setUrlQuery = debounce((value: string) => {
+  setSearchUrl(value);
+}, 500);
+
 let currentInput = '';
 export const useInputValueState = () => {
   const [inputValue, setInputValue] = useState('');
@@ -47,6 +60,7 @@ export const useInputValueState = () => {
     setInputValue: useCallback((value: string) => {
       currentInput = value;
       setInputValue(value);
+      setUrlQuery(value);
     }, []),
   };
 };

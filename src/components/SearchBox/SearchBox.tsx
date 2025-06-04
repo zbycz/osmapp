@@ -119,10 +119,10 @@ export const SearchBox = () => {
 
   const router = useRouter();
   if (router.asPath.startsWith('/directions')) {
-    return null; // TODO use router.pathname once directions is a Page
+    return null;
   }
 
-  const otherPageShown = router.pathname !== '/'; // TODO there was a bug in nextjs which sometimes gave some nonsense pathname – CHECK!
+  const otherPageShown = router.pathname !== '/'; // TODO there was a bug in nextjs which sometimes gave some nonsense pathname like `?nxtPall` – CHECK!
 
   const panelShown = router.pathname.match(/^\/(node|way|relation)\//)
     ? featureShown
