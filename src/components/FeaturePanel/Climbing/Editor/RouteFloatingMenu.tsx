@@ -43,6 +43,7 @@ export const RouteFloatingMenu = () => {
     routeSelectedIndex,
     getCurrentPath,
     setRouteIndexHovered,
+    isEditMode,
   } = useClimbingContext();
   const path = getCurrentPath();
   const machine = getMachine();
@@ -52,6 +53,8 @@ export const RouteFloatingMenu = () => {
       routes[routeSelectedIndex] &&
       pointSelectedIndex === getCurrentPath().length - 1) ||
     machine.currentStateName === 'editRoute';
+
+  const areCragPointsVisible = isEditMode;
   const isDoneVisible = machine.currentStateName === 'extendRoute';
   const isUndoVisible =
     machine.currentStateName === 'extendRoute' && path.length !== 0;
@@ -62,6 +65,15 @@ export const RouteFloatingMenu = () => {
   const onContinueClimbingRouteClick = useCallback(() => {
     machine.execute('extendRoute');
   }, [machine]);
+
+  const onMockPointsClick = useCallback(() => {
+    machine.execute('mockPoints');
+  }, [machine]);
+
+  const onMockPointsFinish = () => {
+    machine.execute('editRoute');
+  };
+
   const onDeletePoint = () => {
     machine.execute('deletePoint');
     setIsDeletePointDialogVisible(false);
@@ -73,11 +85,16 @@ export const RouteFloatingMenu = () => {
 
   const onPointTypeChange = useCallback(
     (type: PointType) => {
-      machine.execute('changePointType', { type });
+      // @TODO tady upravit aby se tam posílalo routeSelectedIndex=undefined a pointSelectedIndex podle indexu v mockedPoints. Zároveň bude potřeba sem předat informaci který index měním. Možná v climbing contextu?
+      machine.execute('changePointType', {
+        type,
+        routeSelectedIndex,
+        pointSelectedIndex,
+      });
 
       setShowRouteMarksMenu(false);
     },
-    [machine],
+    [machine, routeSelectedIndex, pointSelectedIndex],
   );
 
   const onMouseEnter = () => {
@@ -118,6 +135,9 @@ export const RouteFloatingMenu = () => {
       if (e.key === 'e') {
         onContinueClimbingRouteClick();
       }
+      if (e.key === 'm') {
+        onMockPointsClick();
+      }
       if (isUndoVisible && e.key === 'z' && e.metaKey) {
         handleUndo(e);
       }
@@ -137,6 +157,7 @@ export const RouteFloatingMenu = () => {
     isUndoVisible,
     onContinueClimbingRouteClick,
     onFinishClimbingRouteClick,
+    onMockPointsClick,
     onPointTypeChange,
   ]);
 
@@ -239,6 +260,14 @@ export const RouteFloatingMenu = () => {
                     : t('climbingpanel.start')}
                 </Button>
               )}
+              {areCragPointsVisible &&
+                (machine.currentStateName === 'mockPoints' ? (
+                  <Button onClick={onMockPointsFinish}>
+                    Finish mock points
+                  </Button>
+                ) : (
+                  <Button onClick={onMockPointsClick}>Mock points</Button>
+                ))}
               {machine.currentStateName === 'pointMenu' && (
                 <Button
                   onClick={() => {
