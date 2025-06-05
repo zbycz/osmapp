@@ -25,6 +25,7 @@ import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
 import { ShowToast } from '../../utils/SnackbarContext';
 import { ClimbingFilters } from '../climbingTiles/climbingFiltersUtils';
+import { gymsLayer } from '../climbingTiles/climbingLayers/groupsLayer';
 
 const ofrBasicStyle = {
   ...basicStyle,

@@ -12,8 +12,8 @@ export const ClimbingFiltersContext =
 
 export const ClimbingFiltersProvider = ({ children }) => {
   const [type, setType] = useState<ClimbingFilterType>([
-    'gym',
-    'viaFerrata',
+    // 'gym',
+    // 'viaFerrata',
     'rockClimbing',
   ]);
 

@@ -7,7 +7,8 @@ import { Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
 import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 import { CLIMBING_SPRITE, CLIMBING_TILES_SOURCE } from './consts';
-import { addClimbingLayers, ClimbingFilters } from './climbingFiltersUtils';
+import { ClimbingFilters } from './climbingFiltersUtils';
+import { getClimbingLayers } from './climbingLayers/climbingLayers';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   const url = `${CLIMBING_TILES_HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
@@ -49,7 +50,7 @@ export function addClimbingTilesSource(
   style.sources[CLIMBING_TILES_SOURCE] = EMPTY_GEOJSON_SOURCE;
   style.sprite = [...OSMAPP_SPRITE, CLIMBING_SPRITE];
 
-  const layersToAdd = addClimbingLayers(climbingFilters);
+  const layersToAdd = getClimbingLayers(climbingFilters);
   style.layers = [...(style.layers ?? []), ...layersToAdd];
 
   if (!eventsAdded) {

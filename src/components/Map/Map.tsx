@@ -12,16 +12,11 @@ import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { Weather } from './Weather/Weather';
-import { useClimbingFiltersContext } from '../utils/ClimbingFiltersContext';
-import { BrowserMapProps } from './BrowserMap';
 
-const BrowserMapDynamic = dynamic<BrowserMapProps>(
-  () => import('./BrowserMap'),
-  {
-    ssr: false,
-    loading: () => <div />,
-  },
-);
+const BrowserMapDynamic = dynamic(() => import('./BrowserMap'), {
+  ssr: false,
+  loading: () => <div />,
+});
 
 const LayerSwitcherDynamic = dynamic(
   () => import('../LayerSwitcher/LayerSwitcher'),
@@ -83,11 +78,10 @@ const NoscriptMessage = () => (
 
 const Map = () => {
   const { mapLoaded } = useMapStateContext();
-  const { type } = useClimbingFiltersContext();
 
   return (
     <>
-      <BrowserMapDynamic climbingFilters={{ type }} />
+      <BrowserMapDynamic />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
       <TopRight>

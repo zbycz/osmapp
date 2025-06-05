@@ -22,6 +22,7 @@ import { usePersistedScaleControl } from './behaviour/PersistedScaleControl';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useSnackbar } from '../utils/SnackbarContext';
 import { ClimbingFilters } from './climbingTiles/climbingFiltersUtils';
+import { useClimbingFiltersContext } from '../utils/ClimbingFiltersContext';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
@@ -48,18 +49,14 @@ const NotSupportedMessage = () => (
 
 // TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
-export type BrowserMapProps = {
-  climbingFilters: ClimbingFilters;
-};
-
-const BrowserMap = ({ climbingFilters }: BrowserMapProps) => {
+const BrowserMap = () => {
   const { userLayers } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
   const { mapLoaded, setMapLoaded, mapClickOverrideRef } = useMapStateContext();
   const { currentTheme } = useUserThemeContext();
   const { showToast } = useSnackbar();
-
+  const { type } = useClimbingFiltersContext();
   const [map, mapRef] = useInitMap();
 
   useAddTopRightControls(map, mobileMode);
@@ -81,14 +78,14 @@ const BrowserMap = ({ climbingFilters }: BrowserMapProps) => {
     mapLoaded,
     currentTheme,
     showToast,
-    climbingFilters,
+    { type },
   );
   usePersistedScaleControl(map);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
 };
 
-const BrowserMapCheck = ({ climbingFilters }: BrowserMapProps) => {
+const BrowserMapCheck = () => {
   const { setMapLoaded } = useMapStateContext();
 
   if (!webglSupported) {
@@ -96,7 +93,7 @@ const BrowserMapCheck = ({ climbingFilters }: BrowserMapProps) => {
     return <NotSupportedMessage />;
   }
 
-  return <BrowserMap climbingFilters={climbingFilters} />;
+  return <BrowserMap />;
 };
 
 export default BrowserMapCheck; // dynamic import

@@ -12,14 +12,18 @@ import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { useClimbingFiltersContext } from '../utils/ClimbingFiltersContext';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { useFeatureContext } from '../utils/FeatureContext';
+import { gymsLayer } from '../Map/climbingTiles/climbingLayers/groupsLayer';
+import { getGlobalMap } from '../../services/mapStorage';
 
 const ClimbingFilters = () => {
+  const map = getGlobalMap();
   const { type, setType } = useClimbingFiltersContext();
   return (
     <ToggleButtonGroup
       value={type}
       onChange={(_e, type) => {
-        setType(type);
+        // setType(type);
+        map.addLayer(gymsLayer);
       }}
     >
       <ToggleButton value="rockClimbing">Rock climbing</ToggleButton>
