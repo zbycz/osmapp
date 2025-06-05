@@ -40,6 +40,7 @@ import { Climbing } from '../src/components/Climbing/Climbing';
 import Router from 'next/router';
 import { fetchSchemaTranslations } from '../src/services/tagging/translations';
 import Head from 'next/head';
+import { ClimbingFiltersProvider } from '../src/components/utils/ClimbingFiltersContext';
 
 const getInitialToast = (featureFromRouter: Feature | '404') =>
   featureFromRouter === '404'
@@ -96,30 +97,32 @@ const MyApp = (props: Props) => {
                 cookies={cookies}
               >
                 <MapStateProvider initialMapView={mapView}>
-                  <OsmAuthProvider cookies={cookies}>
-                    <StarsProvider>
-                      <EditDialogProvider /* TODO supply router.query */>
-                        <QueryClientProvider client={reactQueryClient}>
-                          <Head>
-                            <meta
-                              name="viewport"
-                              content="width=device-width, user-scalable=no, initial-scale=1"
-                            />
-                          </Head>
-                          <Loading />
-                          <SearchBox />
-                          <ResponsiveFeaturePanel />
-                          <HomepagePanel />
-                          <Climbing />
-                          <Map />
-                          <TitleAndMetaTags />
+                  <ClimbingFiltersProvider>
+                    <OsmAuthProvider cookies={cookies}>
+                      <StarsProvider>
+                        <EditDialogProvider /* TODO supply router.query */>
+                          <QueryClientProvider client={reactQueryClient}>
+                            <Head>
+                              <meta
+                                name="viewport"
+                                content="width=device-width, user-scalable=no, initial-scale=1"
+                              />
+                            </Head>
+                            <Loading />
+                            <SearchBox />
+                            <ResponsiveFeaturePanel />
+                            <HomepagePanel />
+                            <Climbing />
+                            <Map />
+                            <TitleAndMetaTags />
 
-                          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-                          <Component {...pageProps} />
-                        </QueryClientProvider>
-                      </EditDialogProvider>
-                    </StarsProvider>
-                  </OsmAuthProvider>
+                            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+                            <Component {...pageProps} />
+                          </QueryClientProvider>
+                        </EditDialogProvider>
+                      </StarsProvider>
+                    </OsmAuthProvider>
+                  </ClimbingFiltersProvider>
                 </MapStateProvider>
               </FeatureProvider>
             </UserSettingsProvider>

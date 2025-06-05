@@ -21,6 +21,8 @@ import { useAddTopRightControls } from './useAddTopRightControls';
 import { usePersistedScaleControl } from './behaviour/PersistedScaleControl';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useSnackbar } from '../utils/SnackbarContext';
+import { ClimbingFilters } from './climbingTiles/climbingFiltersUtils';
+import { useClimbingFiltersContext } from '../utils/ClimbingFiltersContext';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
@@ -54,8 +56,9 @@ const BrowserMap = () => {
   const { mapLoaded, setMapLoaded, mapClickOverrideRef } = useMapStateContext();
   const { currentTheme } = useUserThemeContext();
   const { showToast } = useSnackbar();
-
+  const { type } = useClimbingFiltersContext();
   const [map, mapRef] = useInitMap();
+
   useAddTopRightControls(map, mobileMode);
   useOnMapClicked(map, setFeature, mapClickOverrideRef);
   useOnMapLongPressed(map, setFeature);
@@ -64,6 +67,7 @@ const BrowserMap = () => {
 
   const { viewForMap, setViewFromMap, setBbox, activeLayers } =
     useMapStateContext();
+
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
@@ -74,6 +78,7 @@ const BrowserMap = () => {
     mapLoaded,
     currentTheme,
     showToast,
+    { type },
   );
   usePersistedScaleControl(map);
 
