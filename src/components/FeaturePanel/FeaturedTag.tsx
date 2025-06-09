@@ -86,7 +86,7 @@ export const FeaturedTag = ({ k, renderer }: Props) => {
     <Wrapper>
       <InlineEditButton k={k} />
 
-      <Value>
+      <Value title={k}>
         <Renderer k={k} v={value} />
       </Value>
     </Wrapper>
