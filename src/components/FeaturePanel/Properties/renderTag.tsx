@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import { getUrlForTag } from './getUrlForTag';
 import { slashToOptionalBr } from '../../helpers';
 import { DirectionValue } from './Direction';
@@ -53,7 +53,7 @@ const ColorValue = styled.div<{ v: string }>`
   display: inline;
 `;
 
-export const renderTag = (k: string, v: string, featured = false) => {
+const renderTagSingleValue = (k: string, v: string, featured = false) => {
   const humanValue = getHumanValue(k, v, featured);
 
   if (k === 'direction') {
@@ -71,4 +71,14 @@ export const renderTag = (k: string, v: string, featured = false) => {
   ) : (
     humanValue
   );
+};
+
+export const renderTag = (k: string, v: string, featured = false) => {
+  return v.split(';').map((v, idx) => (
+    // eslint-disable-next-line react/no-array-index-key
+    <Fragment key={idx}>
+      {idx > 0 && (featured ? ', ' : '; ')}
+      {renderTagSingleValue(k, v, featured)}
+    </Fragment>
+  ));
 };

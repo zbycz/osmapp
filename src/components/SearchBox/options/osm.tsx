@@ -58,7 +58,7 @@ export const getOsmOptions = (inputValue: string): OsmOption[] => {
   }
 
   const splitted = inputValue.split(/[/\s,]/);
-  const type = parseType(splitted[0]);
+  const type = parseType(splitted[0].toLowerCase());
   const idString = splitted[1];
   const id = parseInt(idString);
 
