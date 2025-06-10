@@ -276,6 +276,8 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     setRouteSelectedIndex,
     routes,
     setIsEditMode,
+    isRoutesLayerVisible,
+    setIsRoutesLayerVisible,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
 
@@ -305,6 +307,20 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   useEffect(() => {
     loadPhotoRelatedData();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  React.useEffect(() => {
+    const downHandler = (e) => {
+      if (e.key === 'h') {
+        setIsRoutesLayerVisible(!isRoutesLayerVisible);
+      }
+    };
+
+    window.addEventListener('keydown', downHandler);
+
+    return () => {
+      window.removeEventListener('keydown', downHandler);
+    };
+  }, [isRoutesLayerVisible, setIsRoutesLayerVisible]);
 
   const onSplitPaneSizeReset = () => {
     setUserSetting('climbing.splitPaneSize', null);
@@ -497,17 +513,17 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     wrapperStyle={{ height: '100%', width: '100%' }}
                     contentStyle={{ height: '100%', width: '100%' }}
                   >
-                    <>
-                      <RoutesEditor
-                        setIsPhotoLoading={setIsPhotoLoading}
-                        isPhotoLoading={isPhotoLoading}
-                        isRoutesLayerVisible={
-                          !isSplitViewDragging && !areRoutesLoading
-                        }
-                        imageUrl={imageUrl}
-                        photoResolution={photoResolution}
-                      />
-                    </>
+                    <RoutesEditor
+                      setIsPhotoLoading={setIsPhotoLoading}
+                      isPhotoLoading={isPhotoLoading}
+                      isRoutesLayerVisible={
+                        !isSplitViewDragging &&
+                        !areRoutesLoading &&
+                        isRoutesLayerVisible
+                      }
+                      imageUrl={imageUrl}
+                      photoResolution={photoResolution}
+                    />
                   </TransformComponent>
                 </TransformWrapper>
               </BlurContainer>
