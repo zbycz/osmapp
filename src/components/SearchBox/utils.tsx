@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Grid, Typography } from '@mui/material';
+import { GridLegacy, Typography } from '@mui/material';
 import orderBy from 'lodash/orderBy';
 import React from 'react';
 import maplibregl, { LngLatLike } from 'maplibre-gl';
@@ -67,12 +67,12 @@ export const useMapCenter = (): LonLat => {
 export const LoaderRow = () => (
   <>
     <IconPart />
-    <Grid item xs>
+    <GridLegacy item xs>
       <Typography>
         {t('loading')}
         <DotLoader />
       </Typography>
-    </Grid>
+    </GridLegacy>
   </>
 );
 

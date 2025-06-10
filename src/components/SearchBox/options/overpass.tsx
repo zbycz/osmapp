@@ -1,6 +1,6 @@
 import React from 'react';
 import SearchIcon from '@mui/icons-material/Search';
-import { Grid, Typography } from '@mui/material';
+import { GridLegacy, Typography } from '@mui/material';
 import { OverpassOption, PresetOption } from '../types';
 import { t } from '../../../services/intl';
 import { IconPart } from '../utils';
@@ -77,12 +77,12 @@ export const OverpassRow = ({ option: { overpass } }: Props) => (
     <IconPart>
       <SearchIcon />
     </IconPart>
-    <Grid item xs>
+    <GridLegacy item xs>
       <span style={{ fontWeight: 700 }}>{overpass.label}</span>
       <Typography variant="body2" color="textSecondary">
         overpass search
       </Typography>
-    </Grid>
+    </GridLegacy>
   </>
 );
 

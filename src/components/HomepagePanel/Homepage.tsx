@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from '@mui/material';
+import { Button, GridLegacy, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import React from 'react';
@@ -109,26 +109,26 @@ export const Homepage = ({ mobileMode, onClick }: Props) => {
               />
             </Center>
             <Spacer />
-            <Grid
+            <GridLegacy
               container
               direction="row"
               alignItems="flex-start"
               justifyContent="flex-start"
             >
-              <Grid item xs={4}>
+              <GridLegacy item xs={4}>
                 <img
                   src="/logo-osm.svg"
                   alt="OpenStreetMap logo"
                   width={100}
                   height={100}
                 />
-              </Grid>
-              <Grid item xs={8}>
+              </GridLegacy>
+              <GridLegacy item xs={8}>
                 <Typography variant="body2" paragraph>
                   <Translation id="homepage.about_osm" />
                 </Typography>
-              </Grid>
-            </Grid>
+              </GridLegacy>
+            </GridLegacy>
             <Spacer />
             <Typography
               variant="overline"
