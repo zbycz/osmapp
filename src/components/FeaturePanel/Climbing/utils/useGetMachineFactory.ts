@@ -51,6 +51,7 @@ export const useGetMachineFactory = ({
   findCloserPoint,
   svgRef,
   photoZoom,
+  setIsPanningDisabled,
 }) => {
   const [currentState, setCurrentState] = useState<State>('init');
 
@@ -89,6 +90,7 @@ export const useGetMachineFactory = ({
 
   const finishRoute = () => {
     setMousePosition(null);
+    setIsPanningDisabled(false);
   };
 
   const createRoute = () => {
