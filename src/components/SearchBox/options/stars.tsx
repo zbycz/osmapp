@@ -1,5 +1,5 @@
 import StarIcon from '@mui/icons-material/Star';
-import { Grid, Typography } from '@mui/material';
+import { GridLegacy, Typography } from '@mui/material';
 import React from 'react';
 import {
   diceCoefficientSort,
@@ -50,12 +50,12 @@ export const StarRow = ({ option: { star }, inputValue }: Props) => {
         <StarIcon />
         {distance !== null && <div>{distance}</div>}
       </IconPart>
-      <Grid item xs={8}>
+      <GridLegacy item xs={8}>
         {highlightText(star.label, inputValue)}
         <Typography variant="body2" color="textSecondary">
           {star.poiType}
         </Typography>
-      </Grid>
+      </GridLegacy>
     </>
   );
 };

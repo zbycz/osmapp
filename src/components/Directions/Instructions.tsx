@@ -3,7 +3,7 @@ import { icon, Sign } from './routing/instructions';
 import { RoutingResult } from './routing/types';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';
 import { toHumanDistance } from './helpers';
-import { Box, Divider, Grid2, Stack, Typography } from '@mui/material';
+import { Box, Divider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@emotion/react';
 
 type Instruction = RoutingResult['instructions'][number];
