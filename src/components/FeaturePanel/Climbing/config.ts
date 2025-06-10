@@ -3,12 +3,17 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 
 export const useConfig = () => {
   const theme: any = useTheme();
-  const { photoZoom } = useClimbingContext();
+  const { photoZoom, imageSize } = useClimbingContext();
 
   const activeColor = theme.palette.climbing.active;
   const inactiveColor = theme.palette.climbing.inactive;
   const borderColor = theme.palette.climbing.border;
   const selectedColor = theme.palette.climbing.selected;
+
+  const imageScale = Math.max(
+    0.5,
+    Math.min(1, ((imageSize.width - 150) / (1400 - 150)) * 0.5 + 0.5),
+  );
 
   return {
     pathBorderColor: borderColor,
@@ -21,9 +26,9 @@ export const useConfig = () => {
     anchorBorderColor: borderColor,
     anchorBorderColorSelected: inactiveColor,
 
-    pathBorderWidth: 5.1 / photoZoom.scale,
+    pathBorderWidth: (5.1 / photoZoom.scale) * imageScale,
     pathBorderOpacity: 1,
-    pathStrokeWidth: 3.5 / photoZoom.scale,
+    pathStrokeWidth: (3.5 / photoZoom.scale) * imageScale,
   };
 };
 
