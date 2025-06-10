@@ -45,6 +45,8 @@ type ClimbingContextType = {
   editorPosition: PositionPx;
   imageSize: ImageSize;
   imageContainerSize: ImageSize;
+  isRoutesLayerVisible: boolean;
+  setIsRoutesLayerVisible: (isRoutesLayerVisible: boolean) => void;
   isPointMoving: boolean;
   isPanningDisabled: boolean;
   setIsPanningDisabled: (isPanningDisabled: boolean) => void;
@@ -156,6 +158,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   });
   const [loadedPhotos, setLoadedPhotos] = useState<LoadedPhotos>({});
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
+  const [isRoutesLayerVisible, setIsRoutesLayerVisible] =
+    useState<boolean>(true);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPanningDisabled, setIsPanningDisabled] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
@@ -326,6 +330,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     getPixelPosition,
     imageSize,
     isPointClicked,
+    isRoutesLayerVisible,
+    setIsRoutesLayerVisible,
     isPointMoving,
     isPanningDisabled,
     setIsPanningDisabled,
