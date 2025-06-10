@@ -275,6 +275,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     findCloserPoint,
     svgRef,
     photoZoom,
+    setIsPanningDisabled,
   });
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
