@@ -20,6 +20,7 @@ import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
 import { useDragItems } from '../../utils/useDragItems';
 import { moveElementToIndex } from './utils/array';
 import { t } from '../../../services/intl';
+import { usePhotoChange } from './utils/usePhotoChange';
 
 const Title = styled.div`
   flex: 1;
@@ -49,24 +50,11 @@ export const ClimbingCragDialogHeader = ({ onClose }) => {
   const [isUserSettingsOpened, setIsUserSettingsOpened] =
     useState<boolean>(false);
   const [clickCounter, setClickCounter] = useState<number>(0);
-  const {
-    photoPath,
-    setAreRoutesLoading,
-    photoPaths,
-    setShowDebugMenu,
-    isEditMode,
-    showDebugMenu,
-    setPhotoPaths,
-  } = useClimbingContext();
+  const { photoPath, photoPaths, setShowDebugMenu, isEditMode, setPhotoPaths } =
+    useClimbingContext();
 
   const { feature } = useFeatureContext();
-
-  const onPhotoChange = (photo: string) => {
-    Router.push(
-      `${getOsmappLink(feature)}/climbing/photo/${photo}${window.location.hash}`,
-    );
-    setAreRoutesLoading(true);
-  };
+  const onPhotoChange = usePhotoChange();
 
   const label = getLabel(feature);
 
