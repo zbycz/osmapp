@@ -85,7 +85,7 @@ export const ClimbingGradesTableBody = ({ columns }: BodyProps) => {
                 onClick={() =>
                   setClickedItem(
                     clickedItem.row === rowIdx && clickedItem.column === colIdx
-                      ? { row: null, column: null }
+                      ? {}
                       : { row: rowIdx, column: colIdx },
                   )
                 }

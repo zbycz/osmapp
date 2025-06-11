@@ -110,6 +110,10 @@ export const useGetMachineFactory = ({
     updatePathOnRouteIndex(routeSelectedIndex, (path) => path.slice(0, -1));
   };
 
+  const showPointMenu = () => {
+    setIsPanningDisabled(false);
+  };
+
   const dragPoint = () => {};
 
   const changePointType = ({ type }) => {
@@ -172,7 +176,7 @@ export const useGetMachineFactory = ({
         nextState: 'editRoute',
         callback: addPointInBetween,
       },
-      showPointMenu: { nextState: 'pointMenu' },
+      showPointMenu: { nextState: 'pointMenu', callback: showPointMenu },
       finishRoute: { nextState: 'editRoute', callback: finishRoute },
       extendRoute: { nextState: 'extendRoute', callback: extendRoute },
       routeSelect: { nextState: 'routeSelected', callback: routeSelect },
@@ -182,7 +186,7 @@ export const useGetMachineFactory = ({
       deleteRoute: { nextState: 'init', callback: deleteRoute },
       finishRoute: { nextState: 'editRoute', callback: finishRoute },
       undoPoint: { nextState: 'extendRoute', callback: undoPoint },
-      showPointMenu: { nextState: 'pointMenu' },
+      showPointMenu: { nextState: 'pointMenu', callback: showPointMenu },
       dragPoint: { nextState: 'extendRoute', callback: dragPoint },
       addPointInBetween: {
         nextState: 'extendRoute',
