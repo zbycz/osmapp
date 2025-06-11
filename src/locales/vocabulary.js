@@ -333,6 +333,7 @@ export default {
   'climbingpanel.create_climbing_route': 'Draw new route in schema',
   'climbingpanel.edit_climbing_route': 'Edit route in schema',
   'climbingpanel.finish_climbing_route': 'Finish route',
+  'climbingpanel.show_routes_layer': 'Show route layer',
   'climbingpanel.undo': 'Undo',
   'climbingpanel.type': 'Type',
   'climbingpanel.extend': 'Extend',
