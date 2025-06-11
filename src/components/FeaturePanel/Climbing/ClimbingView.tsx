@@ -37,6 +37,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
 import { RouteFloatingMenu } from './Editor/RouteFloatingMenu';
 import { t } from '../../../services/intl';
+import { usePhotoChange } from './utils/usePhotoChange';
+import { useClimbingViewShortcuts } from './utils/useClimbingViewShortcuts';
 
 export const DEFAULT_CRAG_VIEW_LAYOUT = 'horizontal';
 
@@ -277,7 +279,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     routes,
     setIsEditMode,
     isRoutesLayerVisible,
-    setIsRoutesLayerVisible,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
 
@@ -289,6 +290,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const cragViewLayout = useGetCragViewLayout();
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const splitPaneSize = userSettings['climbing.splitPaneSize'];
+  useClimbingViewShortcuts();
 
   useEffect(() => {
     if (isEditMode && machine.currentStateName === 'routeSelected') {
@@ -307,20 +309,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   useEffect(() => {
     loadPhotoRelatedData();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
-
-  React.useEffect(() => {
-    const downHandler = (e) => {
-      if (e.key === 'h') {
-        setIsRoutesLayerVisible(!isRoutesLayerVisible);
-      }
-    };
-
-    window.addEventListener('keydown', downHandler);
-
-    return () => {
-      window.removeEventListener('keydown', downHandler);
-    };
-  }, [isRoutesLayerVisible, setIsRoutesLayerVisible]);
 
   const onSplitPaneSizeReset = () => {
     setUserSetting('climbing.splitPaneSize', null);
