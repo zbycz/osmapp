@@ -2,12 +2,13 @@ import { GeoJSONSource } from 'maplibre-gl';
 import { fetchJson } from '../../../services/fetch';
 import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { getGlobalMap } from '../../../services/mapStorage';
-import { climbingLayers } from './climbingLayers/climbingLayers';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
 import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 import { CLIMBING_SPRITE, CLIMBING_TILES_SOURCE } from './consts';
+import { ClimbingFilters } from './climbingFiltersUtils';
+import { getClimbingLayers } from './climbingLayers/climbingLayers';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   const url = `${CLIMBING_TILES_HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
@@ -42,10 +43,15 @@ const updateData = async () => {
 
 let eventsAdded = false;
 
-export const addClimbingTilesSource = (style: StyleSpecification) => {
+export function addClimbingTilesSource(
+  style: StyleSpecification,
+  climbingFilters: ClimbingFilters,
+): void {
   style.sources[CLIMBING_TILES_SOURCE] = EMPTY_GEOJSON_SOURCE;
   style.sprite = [...OSMAPP_SPRITE, CLIMBING_SPRITE];
-  style.layers.push(...climbingLayers); // must be also in `layersWithOsmId` because of hover effect
+
+  const layersToAdd = getClimbingLayers(climbingFilters);
+  style.layers = [...(style.layers ?? []), ...layersToAdd];
 
   if (!eventsAdded) {
     const map = getGlobalMap();
@@ -53,7 +59,7 @@ export const addClimbingTilesSource = (style: StyleSpecification) => {
     map.on('moveend', updateData);
     eventsAdded = true;
   }
-};
+}
 
 export const removeClimbingTilesSource = () => {
   if (eventsAdded) {
