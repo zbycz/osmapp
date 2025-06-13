@@ -73,7 +73,14 @@ export const osmappLayers: Layers = {
     type: 'basemap',
     Icon: FilterHdrIcon,
     attribution: ['maptiler', 'osm'],
-    // https://api.maptiler.com/tiles/outdoor/tiles.json?key=7dlhLl3hiXQ1gsth0kGu .planettime="1703030400000",
+    // https://api.maptiler.com/tiles/outdoor/tiles.json?key=KEY .planettime="1703030400000",
+  },
+  outdoor2: {
+    name: t('layers.outdoor') + ' v2',
+    type: 'basemap',
+    Icon: FilterHdrIcon,
+    attribution: ['maptiler', 'osm'],
+    // https://api.maptiler.com/tiles/outdoor/tiles.json?key=KEY .planettime="1703030400000",
   },
   s1: { type: 'spacer' },
   carto: {
