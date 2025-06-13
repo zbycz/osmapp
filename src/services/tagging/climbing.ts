@@ -84,6 +84,13 @@ export const GRADE_SYSTEMS = [
     description:
       'Mixed climbing has its own grading scale that roughly follows the WI rating system.',
   },
+  {
+    key: 'polish',
+    name: 'Polish',
+    flags: '🇵🇱',
+    minor: true,
+    description: 'Polish grading system.',
+  },
 ];
 
 export type GradeSystem = (typeof GRADE_SYSTEMS)[number]['key'];
