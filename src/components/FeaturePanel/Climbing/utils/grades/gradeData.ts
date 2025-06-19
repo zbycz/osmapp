@@ -29,9 +29,9 @@ export const gradeTableString = `UIAA|Germany, French, Saxon|Swiss, YDS|YDS_clas
 5+,      5a,     VI,           5.9,    VB/V0-,  4c,    HS/VS,  4a,      5-,       WI5,   M5,     V/V+
 5+,      5a,     VI,           5.9,    VB/V0-,  4c,    HS/VS,  4a,      5-,       WI5,   M5,     V+
 6-,      5b,     VIIa,         5.10a,  V0-,     4c/5a, VS,     4a/4b,   5/5+,     WI6,   M6,     V+/VI-
-6,       5c,     VIIb,         5.10b,  V0-/V0,  5a,    HVS,    4b,      5,        WI6,   M6,     VI-
+6-/6,    5c,     VIIb,         5.10b,  V0-/V0,  5a,    HVS,    4b,      5,        WI6,   M6,     VI-
 6,       5c,     VIIb,         5.10b,  V0-/V0,  5a,    HVS,    4b,      5+,       WI6,   M6,     VI-
-6,       5c,     VII,          5.10b,  V0-/V0,  5a,    HVS,    4b,      5+/6-,    WI6,   M6,     VI-/VI
+6/6+,    5c,     VII,          5.10b,  V0-/V0,  5a,    HVS,    4b,      5+/6-,    WI6,   M6,     VI-/VI
 6+,      5c+,    VIIc,         5.10c,  V0,      5a/5b, E1,     4c,      6-,       WI6,   M6,     VI
 6+/7-,   6a,     VIIc/VIIIa,   5.10c,  V0,      5a/5b, E1,     4c,      6-,       WI6,   M6,     VI/VI+
 7-,      6a+,    VIIIa,        5.10d,  V0+,     5b,    E1/E2,  5a,      6-/6,     WI6,   M6,     VI+
@@ -110,7 +110,9 @@ export const gradeColors = {
   '5': { light: '#6B9617', dark: '#92af00' },
   '5+': { light: '#6B9617', dark: '#92af00' },
   '6-': { light: '#D49D05', dark: '#efca00' },
+  '6-/6': { light: '#D49D05', dark: '#efca00' },
   '6': { light: '#D49D05', dark: '#efca00' },
+  '6/6+': { light: '#D49D05', dark: '#efca00' },
   '6+': { light: '#D49D05', dark: '#efca00' },
   '6+/7-': { light: '#D49D05', dark: '#efca00' },
   '7-': { light: '#D49D05', dark: '#efca00' },
