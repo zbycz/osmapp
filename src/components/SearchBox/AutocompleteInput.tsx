@@ -37,8 +37,8 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   autocompleteRef,
   setIsLoading,
 }) => {
-  const { inputValue, setInputValue } = useInputValueState();
-  const options = useGetOptions(inputValue);
+  const { inputValue, valueRef, setInputValue } = useInputValueState();
+  const options = useGetOptions(inputValue, valueRef);
   const onHighlight = useGetOnHighlight();
   const onSelected = useGetOnSelected(setIsLoading);
 

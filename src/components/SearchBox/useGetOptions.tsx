@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMapStateContext, View } from '../utils/MapStateContext';
 import { Star, useStarsContext } from '../utils/StarsContext';
 import { abortFetch } from '../../services/fetch';
@@ -6,6 +6,7 @@ import {
   GEOCODER_ABORTABLE_QUEUE,
   fetchGeocoderOptions,
   debounceGeocoderOrReject,
+  GeocoderAborted,
   GeocoderDebounced,
 } from './options/geocoder';
 import { getStarsOptions } from './options/stars';
@@ -54,18 +55,21 @@ export const getFirstOption = async (
     return options[0];
   }
 
-  const { before, restPresets } = await getSearchOptions(stars, query);
+  const { before } = await getSearchOptions(stars, query);
   if (before && before.length > 0) {
     return before[0];
   }
 
   const geocoderOptions = await fetchGeocoderOptions(query, view);
-  if (geocoderOptions && geocoderOptions.length > 0) {
+  if (geocoderOptions.length > 0) {
     return geocoderOptions[0];
   }
 };
 
-export const useGetOptions = (inputValue: string) => {
+export const useGetOptions = (
+  inputValue: string,
+  valueRef: React.MutableRefObject<string>,
+) => {
   const { view } = useMapStateContext();
   const { stars } = useStarsContext();
   const [options, setOptions] = useState<Option[]>([]);
@@ -93,11 +97,14 @@ export const useGetOptions = (inputValue: string) => {
           view,
           GEOCODER_ABORTABLE_QUEUE,
         );
-        if (geocoderOptions) {
-          setOptions([...before, ...geocoderOptions, ...restPresets]);
+
+        if (inputValue !== valueRef.current) {
+          return; // This blocks rendering of old result, when user already changed input
         }
+
+        setOptions([...before, ...geocoderOptions, ...restPresets]);
       } catch (e) {
-        if (e instanceof GeocoderDebounced) {
+        if (e instanceof GeocoderDebounced || e instanceof GeocoderAborted) {
           return;
         }
         throw e;

@@ -3,8 +3,10 @@ import { useStarsContext } from '../utils/StarsContext';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { abortFetch } from '../../services/fetch';
 import {
+  debounceGeocoderOrReject,
   fetchGeocoderOptions,
   GEOCODER_ABORTABLE_QUEUE,
+  GeocoderAborted,
   GeocoderDebounced,
   useInputValueState,
 } from '../SearchBox/options/geocoder';
@@ -145,7 +147,10 @@ const DirectionsInput = ({
 };
 
 // TODO: merge with useGetOptions
-const useOptions = (inputValue: string) => {
+const useOptions = (
+  inputValue: string,
+  valueRef: React.MutableRefObject<string>,
+) => {
   const { view } = useMapStateContext();
   const { stars } = useStarsContext();
   const [options, setOptions] = useState<Option[]>([]);
@@ -160,16 +165,20 @@ const useOptions = (inputValue: string) => {
           return;
         }
 
+        await debounceGeocoderOrReject(400);
         const geocoderOptions = await fetchGeocoderOptions(
           inputValue,
           view,
           GEOCODER_ABORTABLE_QUEUE,
         );
-        if (geocoderOptions) {
-          setOptions(geocoderOptions);
+
+        if (inputValue !== valueRef.current) {
+          return; // This blocks rendering of old result, when user already changed input
         }
+
+        setOptions(geocoderOptions);
       } catch (e) {
-        if (e instanceof GeocoderDebounced) {
+        if (e instanceof GeocoderDebounced || e instanceof GeocoderAborted) {
           return;
         }
         throw e;
@@ -224,7 +233,7 @@ type Props = {
 // eslint-disable-next-line max-lines-per-function
 export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
   const autocompleteRef = useRef();
-  const { inputValue, setInputValue } = useInputValueState();
+  const { inputValue, valueRef, setInputValue } = useInputValueState();
   const selectedOptionInputValue = useRef<string | null>(null);
   const updatePoint = useUpdatePoint();
 
@@ -279,7 +288,7 @@ export const DirectionsAutocomplete = ({ label, value, pointIndex }: Props) => {
 
   markerRef.current?.on('dragend', onDragEnd);
 
-  const options = useOptions(inputValue);
+  const options = useOptions(inputValue, valueRef);
 
   const onChange = (_: unknown, option: Option) => {
     console.log('selected', option); // eslint-disable-line no-console
