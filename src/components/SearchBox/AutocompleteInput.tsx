@@ -1,31 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Autocomplete } from '@mui/material';
 import { renderOptionFactory } from './renderOptionFactory';
 import { useGetOnSelected } from './useGetOnSelected';
 import { useGetOnHighlight } from './useGetOnHighlight';
 import { getOptionLabel } from './getOptionLabel';
 import { useGetOptions } from './useGetOptions';
-import { setSearchUrl, useInputValueState } from './options/geocoder';
 import { OptionsPaper, OptionsPopper } from './optionsPopper';
 import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { Option } from './types';
 import { renderInputFactory } from './renderInputFactory';
 import { useHandleDirectQuery } from './useHandleDirectQuery';
 import { Setter } from '../../types';
-import { useRouter } from 'next/router';
-
-const useHandleQuery = (
-  setInputValue: (value: string) => void,
-  setIsOpen: Setter<boolean>,
-) => {
-  const router = useRouter();
-  useEffect(() => {
-    if (router.query.q && typeof router.query.q === 'string') {
-      setInputValue(router.query.q);
-      setIsOpen(true);
-    }
-  }, [router.query.q, setInputValue, setIsOpen]);
-};
+import {
+  setSearchUrl,
+  useHandleQuery,
+  useInputValueWithUrl,
+} from './useHandleQuery';
 
 const AutocompleteConfigured = (
   props: AutocompleteProps<Option, false, true, true>,
@@ -52,7 +42,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   setIsLoading,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { inputValue, valueRef, setInputValue } = useInputValueState();
+  const { inputValue, valueRef, setInputValue } = useInputValueWithUrl();
   const options = useGetOptions(inputValue, valueRef);
   const onHighlight = useGetOnHighlight();
   const onSelected = useGetOnSelected(setIsLoading);
