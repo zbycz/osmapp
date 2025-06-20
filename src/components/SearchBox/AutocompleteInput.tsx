@@ -48,7 +48,7 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   const onSelected = useGetOnSelected(setIsLoading);
 
   useHandleDirectQuery(onSelected, setInputValue, setIsLoading);
-  useHandleQuery(setInputValue, setIsOpen);
+  useHandleQuery(setInputValue, setIsOpen, valueRef);
 
   return (
     <AutocompleteConfigured

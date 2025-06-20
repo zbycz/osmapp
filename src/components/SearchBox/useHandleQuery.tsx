@@ -1,6 +1,6 @@
 import { Setter } from '../../types';
 import Router, { useRouter } from 'next/router';
-import { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import { debounce } from 'lodash';
 import { useInputValueState } from './options/geocoder';
 
@@ -37,15 +37,20 @@ export const useInputValueWithUrl = () => {
 export const useHandleQuery = (
   setInputValue: (value: string) => void,
   setIsOpen: Setter<boolean>,
+  valueRef: React.MutableRefObject<string>,
 ) => {
   const lastSyncedValue = useRef<string | undefined>();
   const router = useRouter();
   useEffect(() => {
     const q = router.query.q;
-    if (typeof q === 'string' && q !== lastSyncedValue.current) {
+    if (
+      typeof q === 'string' &&
+      q !== lastSyncedValue.current && // we don't want to sync one q twice
+      q !== valueRef.current // we don't want to sync after we initiated the change of q (with setInputValue->setUrlQuery)
+    ) {
       setInputValue(q);
       setIsOpen(true);
       lastSyncedValue.current = q;
     }
-  }, [router.query.q, setInputValue, setIsOpen]);
+  }, [router.query.q, setInputValue, setIsOpen, valueRef]);
 };
