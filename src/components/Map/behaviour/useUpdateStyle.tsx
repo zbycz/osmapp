@@ -23,7 +23,6 @@ import { layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
-import { ShowToast } from '../../utils/SnackbarContext';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -111,25 +110,6 @@ const addOverlaysToStyle = (
     });
 };
 
-let prevLayers: string[] = [];
-const openFreeMapCheck = (activeLayers: string[], showToast: ShowToast) => {
-  if (!prevLayers.includes('basicOfr') && activeLayers.includes('basicOfr')) {
-    showToast(
-      <>
-        OpenFreeMap clickabilty is currently broken, see{' '}
-        <a
-          href="https://github.com/onthegomap/planetiler/issues/1120"
-          target="_blank"
-        >
-          this issue for more info
-        </a>
-      </>,
-      'warning',
-    );
-  }
-  prevLayers = activeLayers;
-};
-
 export const useUpdateStyle = createMapEffectHook(
   (
     map,
@@ -137,7 +117,6 @@ export const useUpdateStyle = createMapEffectHook(
     userLayers: Layer[],
     mapLoaded: boolean,
     currentTheme: Theme,
-    showToast: ShowToast,
   ) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
@@ -167,7 +146,5 @@ export const useUpdateStyle = createMapEffectHook(
     if (mapLoaded && overlays.includes('indoor')) {
       addIndoorEqual();
     }
-
-    openFreeMapCheck(activeLayers, showToast);
   },
 );
