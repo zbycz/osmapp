@@ -158,7 +158,7 @@ export const FODY: ApiMock = {
 };
 
 export const MAPILLARY: ApiMock = {
-  url: 'https://graph.mapillary.com/images?access_token=MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2&fields=compass_angle,computed_geometry,geometry,captured_at,thumb_1024_url,thumb_original_url,is_pano&bbox=14.4208535,50.0870654,14.421653500000001,50.0878654',
+  url: `https://graph.mapillary.com/images?access_token=${process.env.NEXT_PUBLIC_API_KEY_MAPILLARY}&fields=compass_angle,computed_geometry,geometry,captured_at,thumb_1024_url,thumb_original_url,is_pano&bbox=14.4208535,50.0870654,14.421653500000001,50.0878654`,
   response: {
     data: [
       {
