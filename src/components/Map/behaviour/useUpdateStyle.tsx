@@ -1,8 +1,16 @@
 /* eslint-disable no-param-reassign */
-import type { GeoJSONSource, Map } from 'maplibre-gl';
+import type {
+  DiffCommand,
+  DiffOperationsMap,
+  GeoJSONSource,
+  Map,
+} from 'maplibre-gl';
 import { OpenMapTilesLanguage } from '@teritorio/openmaptiles-gl-language';
 import cloneDeep from 'lodash/cloneDeep';
-import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
+import {
+  diff as styleDiff,
+  type StyleSpecification,
+} from '@maplibre/maplibre-gl-style-spec';
 import { createMapEffectHook } from '../../helpers';
 import { basicStyle } from '../styles/basicStyle';
 import { outdoorStyle } from '../styles/outdoorStyle';
@@ -24,18 +32,8 @@ import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
 import { emptyStyle } from '../styles/emptyStyle';
-
-const ofrBasicStyle = {
-  ...basicStyle,
-  layers: basicStyle.layers.map((layer) =>
-    (layer as any).source === 'maptiler_planet'
-      ? {
-          ...layer,
-          source: 'ofr_planet',
-        }
-      : layer,
-  ),
-};
+import { ofrBasicStyle } from './ofrBasicStyle';
+import { publishDbgObject } from '../../../utils';
 
 const getBaseStyle = (key: string, currentTheme: Theme): StyleSpecification => {
   if (key === 'basic') {
@@ -116,6 +114,45 @@ const addOverlaysToStyle = (
     });
 };
 
+const isSourceAdded = (
+  map: Map,
+  change: DiffCommand<keyof DiffOperationsMap>,
+) => {
+  const sourceName = change.args[0] as string;
+  return !!map.getSource(sourceName);
+};
+
+const updateStyleWithCustomDiff = (map: Map, style: StyleSpecification) => {
+  const lastStyle = map.getStyle();
+  const diff = styleDiff(lastStyle, style);
+
+  const filteredDiff = diff.filter((change) => {
+    const command = change.command;
+    const commandFn = map[command];
+
+    if (['removeSource', 'setGeoJSONSourceData'].includes(command)) {
+      return;
+    }
+
+    if (command === 'addSource' && isSourceAdded(map, change)) {
+      return;
+    }
+
+    if (!commandFn) {
+      // TODO sentry semantical error
+      console.warn(`Unexpected mapdiff change.command: ${command}`); // eslint-disable-line no-console
+      return;
+    }
+
+    return true;
+  });
+
+  publishDbgObject('last mapDiff commands', filteredDiff);
+  filteredDiff.forEach((change) => {
+    map[change.command].call(map, ...change.args);
+  });
+};
+
 export const useUpdateStyle = createMapEffectHook(
   (
     map,
@@ -140,7 +177,11 @@ export const useUpdateStyle = createMapEffectHook(
     const style = cloneDeep(getBaseStyle(key, currentTheme));
     addOverlaysToStyle(map, style, overlays, currentTheme);
     style.projection = { type: 'globe' };
-    map.setStyle(style, { diff: mapLoaded });
+
+    // TODO refactor the {style,minZoom,maxZoom} to another pure function
+    // TODO use that function to get initial style (once!)
+
+    updateStyleWithCustomDiff(map, style);
 
     const languageControl = new OpenMapTilesLanguage({
       defaultLanguage: intl.lang,

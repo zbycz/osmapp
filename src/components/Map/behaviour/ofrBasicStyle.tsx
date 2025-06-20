@@ -1,20 +1,20 @@
-import { basicStyle } from './basicStyle';
+import { basicStyle } from '../styles/basicStyle';
 import { OSMAPP_SOURCES } from '../consts';
 
-export const makinaAfricaStyle = {
+export const ofrBasicStyle = {
   ...basicStyle,
   sources: {
     ...OSMAPP_SOURCES,
-    africa_opg: {
+    ofr_planet: {
       type: 'vector' as const,
-      url: 'https://africa.tiles.openplaceguide.org/data/v3.json',
+      url: `https://tiles.openfreemap.org/planet`,
     },
   },
   layers: basicStyle.layers.map((layer) =>
     (layer as any).source === 'maptiler_planet'
       ? {
           ...layer,
-          source: 'africa_opg',
+          source: 'ofr_planet',
         }
       : layer,
   ),

@@ -3,7 +3,8 @@ import { StyleSpecification } from 'maplibre-gl';
 
 export const emptyStyle = {
   version: 8,
-  name: 'OSM Bright',
+  id: 'empty',
+  name: 'Empty style',
   sources: {},
   sprite: [],
   glyphs: GLYPHS,
