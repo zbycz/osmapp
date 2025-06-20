@@ -10,9 +10,14 @@ import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 import { CLIMBING_SPRITE, CLIMBING_TILES_SOURCE } from './consts';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
-  const url = `${CLIMBING_TILES_HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
-  const data = await fetchJson(url);
-  return data.features || [];
+  try {
+    const url = `${CLIMBING_TILES_HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
+    const data = await fetchJson(url);
+    return data.features || [];
+  } catch (e) {
+    console.warn('climbingTiles fetch error:', e); // eslint-disable-line no-console
+    return [];
+  }
 };
 
 const updateData = async () => {

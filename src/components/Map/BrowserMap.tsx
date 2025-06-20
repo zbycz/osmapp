@@ -53,7 +53,6 @@ const BrowserMap = () => {
   const { setFeature } = useFeatureContext();
   const { mapLoaded, setMapLoaded, mapClickOverrideRef } = useMapStateContext();
   const { currentTheme } = useUserThemeContext();
-  const { showToast } = useSnackbar();
 
   const [map, mapRef] = useInitMap();
   useAddTopRightControls(map, mobileMode);
@@ -67,14 +66,7 @@ const BrowserMap = () => {
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
-  useUpdateStyle(
-    map,
-    activeLayers,
-    userLayers,
-    mapLoaded,
-    currentTheme,
-    showToast,
-  );
+  useUpdateStyle(map, activeLayers, userLayers, mapLoaded, currentTheme);
   usePersistedScaleControl(map);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;

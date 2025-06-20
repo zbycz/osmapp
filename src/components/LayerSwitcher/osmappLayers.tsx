@@ -50,7 +50,7 @@ export const osmappLayers: Layers = {
     attribution: ['maptiler', 'osm'],
   },
   basicOfr: {
-    name: `${t('layers.basic')} OpenFreeMap (beta)`,
+    name: `${t('layers.basic')} OpenFreeMap`,
     type: 'basemap',
     Icon: ExploreIcon,
     attribution: [

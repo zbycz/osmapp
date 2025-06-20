@@ -53,10 +53,14 @@ export const getIsOsmObject = ({ id, layer }) => {
 export const convertMapIdToOsmId = (feature): OsmId | false => {
   if (!feature || !feature.id) return false;
 
+  const mapTypeToOsm =
+    feature.source === 'ofr_planet'
+      ? { 1: 'node', 2: 'way', 3: 'relation' } // planetiler uses 1/2/3 - https://github.com/onthegomap/planetiler/issues/1120
+      : { 0: 'node', 1: 'way', 4: 'relation' };
+
   const mapId = `${feature.id}`;
   const id = Number(mapId.substring(0, mapId.length - 1));
   const numType = mapId.substring(mapId.length - 1);
-  const mapTypeToOsm = { 0: 'node', 1: 'way', 4: 'relation' };
   const type = mapTypeToOsm[numType];
   if (!type) {
     return false;
