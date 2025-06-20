@@ -1,6 +1,5 @@
 import { GridLegacy, Typography } from '@mui/material';
-import React, { useCallback, useState } from 'react';
-import debounce from 'lodash/debounce';
+import React, { useCallback, useRef, useState } from 'react';
 import { join } from '../../../utils';
 import {
   fitBounds,
@@ -39,18 +38,21 @@ const getApiUrl = (inputValue: string, view: View) => {
 
 export const GEOCODER_ABORTABLE_QUEUE = 'search';
 
-let currentInput = '';
 export const useInputValueState = () => {
+  const valueRef = useRef<string>(''); // we need the freshest Value in the geocoder callback, so we may cancel it. The Abort queue should handle it, but wasn't 100%.
   const [inputValue, setInputValue] = useState('');
+
   return {
+    valueRef,
     inputValue,
     setInputValue: useCallback((value: string) => {
-      currentInput = value;
+      valueRef.current = value;
       setInputValue(value);
     }, []),
   };
 };
 
+export class GeocoderAborted extends Error {}
 export class GeocoderDebounced extends Error {}
 
 let timeoutId: NodeJS.Timeout | null = null;
@@ -74,17 +76,12 @@ export const fetchGeocoderOptions = async (
   inputValue: string,
   view: View,
   abortQueue?: string,
-): Promise<Option[] | undefined> => {
+): Promise<Option[]> => {
   try {
     const searchResponse = await fetchJson<PhotonResponse>(
       getApiUrl(inputValue, view),
       { abortableQueueName: abortQueue },
     );
-
-    // This blocks rendering of old result, when user already changed input
-    if (inputValue !== currentInput) {
-      return;
-    }
 
     const options = searchResponse?.features || [];
     return options.map((feature) => ({
@@ -93,7 +90,7 @@ export const fetchGeocoderOptions = async (
     }));
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') {
-      return;
+      throw new GeocoderAborted();
     }
     throw e;
   }
