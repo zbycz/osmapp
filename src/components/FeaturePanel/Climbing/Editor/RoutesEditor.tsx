@@ -134,14 +134,18 @@ export const RoutesEditor = ({
     const photosToLoad = photoPaths.filter((path) => !loadedPhotos[path]);
 
     const tempLoadedPhotos = photosToLoad.reduce((acc, otherPhotoPath) => {
+      const sanitizedOtherPhotoPath = decodeURI(otherPhotoPath);
       const img = new Image();
-      const url = getCommonsImageUrl(`File:${otherPhotoPath}`, photoResolution);
+      const url = getCommonsImageUrl(
+        `File:${sanitizedOtherPhotoPath}`,
+        photoResolution,
+      );
       img.src = url;
 
       return {
         ...acc,
-        [otherPhotoPath]: {
-          ...acc[otherPhotoPath],
+        [sanitizedOtherPhotoPath]: {
+          ...acc[sanitizedOtherPhotoPath],
           [photoResolution]: true,
         },
       };
