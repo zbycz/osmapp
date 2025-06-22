@@ -48,6 +48,7 @@ const rewrites = async () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: { position: 'bottom-right' },
   compiler: {
     emotion: true,
   },
