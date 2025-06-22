@@ -12,10 +12,13 @@ import DirectionsBusIcon from '@mui/icons-material/DirectionsBus';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import { Box } from '@mui/material';
 import { PoiIcon } from '../utils/icons/PoiIcon';
+import { PROJECT_ID } from '../../services/project';
 
 interface Layers {
   [key: string]: Layer;
 }
+
+const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
 const retina =
   ((isBrowser() && window.devicePixelRatio) || 1) >= 2 ? '@2x' : '';
@@ -109,6 +112,29 @@ export const osmappLayers: Layers = {
     bboxes: [czBbox],
     isSatelite: true,
   },
+  ...(isOpenClimbing
+    ? {
+        cuzkMap: {
+          name: 'ČÚZK map (CZ)',
+          type: 'basemap',
+          url: 'https://geoportal.cuzk.cz/WMS_ZM10_PUB/WMService.aspx?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&FORMAT=image/png&TRANSPARENT=TRUE&LAYERS=GR_ZM10&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}',
+          Icon: MapIcon,
+          attribution: ['&copy; <a href="https://geoportal.cuzk.cz">ČÚZK</a>'],
+          bboxes: [czBbox],
+          isSatelite: false,
+        },
+        cuzkGrayscale: {
+          name: 'ČÚZK grayscale (CZ)',
+          type: 'basemap',
+          url: 'https://ags.cuzk.cz/arcgis2/services/dmr5g/ImageServer/WMSServer?FORMAT=image/png&TRANSPARENT=TRUE&VERSION=1.3.0&SERVICE=WMS&REQUEST=GetMap&LAYERS=dmr5g:GrayscaleHillshade&STYLES=&CRS=EPSG:3857&WIDTH=256&HEIGHT=256&BBOX={bbox-epsg-3857}',
+          Icon: MapIcon,
+          attribution: ['&copy; <a href="https://geoportal.cuzk.cz">ČÚZK</a>'],
+          bboxes: [czBbox],
+          isSatelite: false,
+        },
+      }
+    : {}),
+
   // mtb: {
   //   name: t('layers.mtb'),
   //   type: 'basemap',
