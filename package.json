@@ -49,7 +49,7 @@
     "lodash": "^4.17.21",
     "maplibre-gl": "5.5.0",
     "maplibre-gl-indoorequal": "^1.3.0",
-    "next": "^14.2.15",
+    "next": "^15.3.4",
     "next-codegrid": "^1.0.3",
     "next-cookies": "^2.0.3",
     "open-location-code": "^1.0.3",
