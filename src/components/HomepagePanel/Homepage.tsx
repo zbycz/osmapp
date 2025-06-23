@@ -165,24 +165,28 @@ export const Homepage = ({ mobileMode, onClick }: Props) => {
             </Typography>
             <ul style={{ paddingLeft: '1.6em' }}>
               <li>
+                <a href="https://www.openstreetmap.org/" target="_blank">
+                  OpenStreetMap
+                </a>
+                {` – ${t('homepage.for_osm')}`}
+              </li>
+              <li>
                 <a href="https://www.mapillary.com/" target="_blank">
                   Mapillary
                 </a>
                 {', '}
-                <a href="https://openstreetmap.cz/fody" target="_blank">
-                  Fody
+                <a href="https://kartaview.org/" target="_blank">
+                  KartaView
+                </a>
+                {', '}
+                <a href="https://www.panoramax.xyz/" target="_blank">
+                  Panoramax
                 </a>
                 {', '}
                 <a href="https://www.wikipedia.org/" target="_blank">
                   Wikipedia
                 </a>
                 {` – ${t('homepage.for_images')}`}
-              </li>
-              <li>
-                <a href="https://www.openstreetmap.org/" target="_blank">
-                  OpenStreetMap
-                </a>
-                {` – ${t('homepage.for_osm')}`}
               </li>
               <li>
                 <a href="https://www.maptiler.com" target="_blank">
@@ -198,6 +202,18 @@ export const Homepage = ({ mobileMode, onClick }: Props) => {
                   Vercel
                 </a>
                 {` – ${t('homepage.vercel')}`}
+              </li>
+              <li>
+                <a href="https://www.thunderforest.com/" target="_blank">
+                  Thunderforest
+                </a>
+                {` – ${t('homepage.thunderforest')}`}
+              </li>
+              <li>
+                <a href="https://www.graphhopper.com/" target="_blank">
+                  GraphHopper
+                </a>
+                {` – ${t('homepage.graphhopper')}`}
               </li>
             </ul>
             <a href="https://www.maptiler.com" target="_blank">

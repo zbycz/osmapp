@@ -108,6 +108,8 @@ export default {
   'homepage.for_osm': 'for the best world map 🌎',
   'homepage.maptiler': 'for awesome vector maps and for supporting this project  ❤️ ',
   'homepage.vercel': 'for a great app hosting platform',
+  'homepage.thunderforest': 'for beatiful map tiles',
+  'homepage.graphhopper': 'for a great routing engine',
   'homepage.disclaimer_heading': 'Disclaimer',
   'homepage.disclaimer': `OpenStreetMap and OSM are a trademark of the OpenStreetMap Foundation. This project is not endorsed by or affiliated with the <a href="https://osmfoundation.org/" target='_blank'>OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vector maps ("Basic" and "Outdoor") contain some place names from the Wikidata project, more <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>here</a>.`,
