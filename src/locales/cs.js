@@ -75,6 +75,9 @@ export default {
   'homepage.for_osm': 'za nejlepší mapu Země 🌎',
   'homepage.maptiler': 'za skvělé vektorové mapy a za podporu tohoto projektu  ❤️ ',
   'homepage.vercel': 'za skvělou hostingovou platformu',
+  'homepage.thunderforest': 'za nádherné mapy',
+  'homepage.graphhopper': 'za skvělé vyhledávání tras',
+
   'homepage.disclaimer_heading': 'Poznámka',
   'homepage.disclaimer': `OpenStreetMap a OSM jsou ochranné známky nadace OpenStreetMap. Tento projekt není schválen ani spojen s nadací <a href="https://osmfoundation.org/">OpenStreetMap Foundation</a>.`,
   'homepage.disclaimer_maptiler': `Vektorové mapy ("Základní" a "Outdoorová") obsahují některé názvy míst z projektu Wikidata,  více <a href="https://github.com/openstreetmap/openstreetmap-website/pull/4042#issuecomment-1562761674" target='_blank'>zde</a>.`,
