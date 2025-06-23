@@ -12,18 +12,23 @@ export const setSearchUrl = (value: string) => {
   }
 };
 
-const setUrlQuery = debounce((value: string) => {
-  setSearchUrl(value);
-}, 500);
+const setUrlQuery = debounce(
+  (value: string, lastSyncedValue: React.MutableRefObject<string>) => {
+    setSearchUrl(value);
+    lastSyncedValue.current = value; // we ignore this in useHandleQuery
+  },
+  500,
+);
 
 export const useInputValueWithUrl = () => {
   const original = useInputValueState();
   const originalSetInputValue = original.setInputValue;
+  const lastSyncedValue = useRef<string | undefined>();
 
   const setInputValue = useCallback(
     (value: string) => {
       originalSetInputValue(value);
-      setUrlQuery(value);
+      setUrlQuery(value, lastSyncedValue);
     },
     [originalSetInputValue],
   );
@@ -31,26 +36,21 @@ export const useInputValueWithUrl = () => {
   return {
     ...original,
     setInputValue,
+    lastSyncedValue,
   };
 };
 
 export const useHandleQuery = (
   setInputValue: (value: string) => void,
   setIsOpen: Setter<boolean>,
-  valueRef: React.MutableRefObject<string>,
+  lastSyncedValue: React.MutableRefObject<string>,
 ) => {
-  const lastSyncedValue = useRef<string | undefined>();
   const router = useRouter();
   useEffect(() => {
     const q = router.query.q;
-    if (
-      typeof q === 'string' &&
-      q !== lastSyncedValue.current && // we don't want to sync one q twice
-      q !== valueRef.current // we don't want to sync after we initiated the change of q (with setInputValue->setUrlQuery)
-    ) {
+    if (typeof q === 'string' && q !== lastSyncedValue.current) {
       setInputValue(q);
       setIsOpen(true);
-      lastSyncedValue.current = q;
     }
-  }, [router.query.q, setInputValue, setIsOpen, valueRef]);
+  }, [router.query.q, lastSyncedValue, setInputValue, setIsOpen]);
 };

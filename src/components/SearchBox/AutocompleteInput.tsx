@@ -42,13 +42,14 @@ export const AutocompleteInput: React.FC<AutocompleteInputProps> = ({
   setIsLoading,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const { inputValue, valueRef, setInputValue } = useInputValueWithUrl();
+  const { inputValue, valueRef, setInputValue, lastSyncedValue } =
+    useInputValueWithUrl();
   const options = useGetOptions(inputValue, valueRef);
   const onHighlight = useGetOnHighlight();
   const onSelected = useGetOnSelected(setIsLoading);
 
   useHandleDirectQuery(onSelected, setInputValue, setIsLoading);
-  useHandleQuery(setInputValue, setIsOpen, valueRef);
+  useHandleQuery(setInputValue, setIsOpen, lastSyncedValue);
 
   return (
     <AutocompleteConfigured
