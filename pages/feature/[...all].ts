@@ -1,2 +1,13 @@
-// The FeaturePanel is rendered in _app (skeleton shows it before URL change, see ARCHITECTURE.md for more info)
+// remove this after 11/2025
+
+export const getServerSideProps = async ({ req, res }) => {
+  res.setHeader('Location', req.url.replace('/feature/', '/'));
+  res.statusCode = 302;
+  res.end();
+
+  return {
+    props: {},
+  };
+};
+
 export default () => null;
