@@ -48,6 +48,8 @@ const rewrites = async () => {
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  devIndicators: { position: 'bottom-right' },
+  allowedDevOrigins: ['127.0.0.1', 'localhost'],
   compiler: {
     emotion: true,
   },
