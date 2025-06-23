@@ -7,45 +7,6 @@ const commitHash = (process.env.VERCEL_GIT_COMMIT_SHA || '').substring(0, 7);
 const commitMessage = process.env.VERCEL_GIT_COMMIT_MESSAGE || 'dev';
 const sentryRelease = `${osmappVersion}-${commitHash}-${commitMessage.substring(0, 10)}`;
 
-const rewrites = async () => {
-  return {
-    beforeFiles: [],
-    afterFiles: [
-      {
-        source: '/:coords([-.0-9]+,[-.0-9]+)',
-        destination: '/feature/:coords',
-      },
-      {
-        source: '/:shortener([A-Za-z0-9]+[nwr])',
-        destination: '/feature/:shortener',
-      },
-      {
-        source: '/node/:path*',
-        destination: '/feature/node/:path*',
-      },
-      {
-        source: '/way/:path*',
-        destination: '/feature/way/:path*',
-      },
-      {
-        source: '/relation/:path*',
-        destination: '/feature/relation/:path*',
-      },
-    ],
-    fallback: [
-      // Experiment with static SSR 404:
-      //  - On vercel these routing rules are applied before passing the request to backend
-      //    This way we can try to optimize number of paid function exectuions and leave pretty urls.
-      //  - It works correctly only on Vercel, on dev internal 404 may be rendered.
-      //  - WARNING: unfortunately I wasn't able to send HTTP statu 404, so the page just have meta-equiv=noindex
-      {
-        source: '/:path*',
-        destination: `/404.html`,
-      },
-    ],
-  };
-};
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   devIndicators: { position: 'bottom-right' },
@@ -60,7 +21,6 @@ const nextConfig = {
     defaultLocale: 'default',
     localeDetection: false,
   },
-  rewrites,
 };
 
 export default withSentryConfig(nextConfig, {

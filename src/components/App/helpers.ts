@@ -84,10 +84,7 @@ const getValidApiId = (path: string[]): OsmId => {
 export const getInitialFeature = async (
   ctx: NextPageContext,
 ): Promise<Feature | '404' | null> => {
-  // WARNING: The routing from node, way, relation (/node/123),
-  // coords feature (/50.1,14.1) and shortener (/xyzn) are matched
-  // in next.config.mjs and routed to `/feature/<original-path>` page internally
-  if (ctx.pathname !== '/feature/[...all]') {
+  if (ctx.pathname !== '/[...all]') {
     return null;
   }
 
