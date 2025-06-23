@@ -7,7 +7,6 @@ import { Box, Button, Stack } from '@mui/material';
 import { ModeToggler } from './ModeToggler';
 import { DirectionsAutocomplete } from './DirectionsAutocomplete';
 import { t } from '../../services/intl';
-import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { useMapStateContext } from '../utils/MapStateContext';
@@ -205,7 +204,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         </div>
       </Stack>
 
-      <LoadingButton
+      <Button
         loading={loading}
         loadingPosition="start"
         variant="contained"
@@ -214,7 +213,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         onClick={() => onSubmitFactory(points, mode)}
       >
         {t('directions.get_directions')}
-      </LoadingButton>
+      </Button>
     </StyledPaper>
   );
 };
