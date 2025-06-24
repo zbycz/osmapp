@@ -161,7 +161,7 @@ export const refreshClimbingTiles = async () => {
   const data = await fetchFromOverpass();
   log(`Overpass elements: ${data.elements.length}`);
 
-  const records = getNewRecords(data); // ~ 16k records
+  const records = getNewRecords(data); // ~ 55k records
   log(`Records: ${records.length}`);
 
   const columns = Object.keys(records[0]);
