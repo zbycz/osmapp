@@ -1,4 +1,5 @@
 import { Client } from 'pg';
+import { CTFeature } from '../../types';
 
 export type ClimbingFeaturesRecords = {
   type: string;
@@ -9,7 +10,7 @@ export type ClimbingFeaturesRecords = {
   count: number;
   lon: number;
   lat: number;
-  geojson: string;
+  geojson: CTFeature;
 }[];
 
 if (!global.db) {

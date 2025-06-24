@@ -1,19 +1,20 @@
-import { BBox, FeatureCollection } from 'geojson';
+import { BBox } from 'geojson';
+import { CTFeature } from '../../types';
 
 // rows or columns count
 const COUNT = 500;
 
-export const optimizeGeojsonToGrid = (
-  geojson: FeatureCollection,
+const optimizeFeaturesToGrid = (
+  features: CTFeature[],
   [west, south, east, north]: BBox,
-): GeoJSON.FeatureCollection => {
+): CTFeature[] => {
   const intervalX = (east - west) / COUNT;
   const intervalY = (north - south) / COUNT;
   const grid = Array.from({ length: COUNT }, () =>
-    Array.from({ length: COUNT }, () => null as GeoJSON.Feature | null),
+    Array.from({ length: COUNT }, () => null as CTFeature | null),
   );
 
-  for (const feature of geojson.features) {
+  for (const feature of features) {
     if (!feature.geometry || feature.geometry.type !== 'Point') {
       continue;
     }
@@ -36,7 +37,20 @@ export const optimizeGeojsonToGrid = (
     }
   }
 
-  const features = grid.flat().filter((f) => f !== null) as GeoJSON.Feature[];
+  return grid.flat().filter((f) => f !== null);
+};
 
-  return { type: 'FeatureCollection', features };
+export const buildTileGeojson = (
+  isOptimizedToGrid: boolean,
+  featuresInBbox: CTFeature[],
+  bbox: BBox,
+): GeoJSON.FeatureCollection => {
+  const features = isOptimizedToGrid
+    ? optimizeFeaturesToGrid(featuresInBbox, bbox)
+    : featuresInBbox;
+
+  return {
+    type: 'FeatureCollection' as const,
+    features,
+  };
 };
