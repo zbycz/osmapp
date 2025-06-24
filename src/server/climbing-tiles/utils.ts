@@ -1,15 +1,7 @@
-import type { NextApiResponse } from 'next';
 import { Client } from 'pg';
 import { OsmResponse } from './overpass/overpassToGeojsons';
 import { ClimbingFeaturesRecords, getClient } from './db';
 import format from 'pg-format';
-
-export const addCorsAndCache = (res: NextApiResponse) => {
-  res.setHeader('Access-Control-Allow-Origin', '*'); // wildcard is needed to enable the vercel cache, it ignores the `origin` and caches randomnly one
-  res.setHeader('Cache-Control', 'public, max-age=3600, s-maxage=3600'); // Update also in `climbing_tiles.stats` message
-  // TODO maybe try `stale-while-revalidate=7200`
-  // TODO maybe set longer time right after refresh
-};
 
 type TileStats =
   | {}

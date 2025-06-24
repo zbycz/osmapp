@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { addCorsAndCache } from '../../../src/server/climbing-tiles/utils';
 import { getClimbingStats } from '../../../src/server/climbing-tiles/getClimbingStats';
+import { addCorsAndCache } from '../../../src/server/climbing-tiles/addCorsAndCache';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   addCorsAndCache(res);
