@@ -5,7 +5,7 @@
       "maxDuration": 200
     },
     "pages/api/climbing-tiles/tile.ts": {
-      "maxDuration": 40
+      "maxDuration": 30
     }
   },
   "crons": [
