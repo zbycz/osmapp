@@ -18,7 +18,7 @@ if (!global.db) {
   global.db = { pool: false };
 }
 
-const XATA_DATABASE = 'osmapp_db:pr2'; //X
+const XATA_DATABASE = 'osmapp_db:main';
 const XATA_REST_URL = `https://osmapp-tvgiad.us-east-1.xata.sh/db/${XATA_DATABASE}/sql`;
 
 export async function getClient(): Promise<Client> {
