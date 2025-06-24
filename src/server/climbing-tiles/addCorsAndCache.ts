@@ -1,12 +1,10 @@
 import type { NextApiResponse } from 'next';
-import vercelJson from '../../../vercel.json';
 
-const REFRESH_TIME = Number(vercelJson.crons[0].schedule.split(' ')[1]);
+const REFRESH_TIME = 3; // taken from vercel.json cron schedule
 
 export const getHoursUntilNextRefresh = () => {
   const currentTimeUtc = new Date().getUTCHours() + 1; // 1-24 (we ceil 2:29 up to 3)
-  const hoursUntilNextRefresh = (REFRESH_TIME - currentTimeUtc + 24) % 24;
-  return hoursUntilNextRefresh;
+  return (REFRESH_TIME - currentTimeUtc + 24) % 24;
 };
 
 const getSwrAge = () => {
