@@ -1,7 +1,7 @@
-import { closeClient, getClient } from './db';
+import { ClimbingFeaturesRecords, closeClient, getClient } from './db';
 import { tileToBBOX } from './tileToBBOX';
-import { Tile } from '../../types';
-import { optimizeGeojsonToGrid } from './optimizeGeojsonToGrid';
+import { CTFeature, Tile } from '../../types';
+import { buildTileGeojson } from './buildTileGeojson';
 import { BBox } from 'geojson';
 
 const getBboxCondition = (bbox: BBox) =>
@@ -42,13 +42,9 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
     ? `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'ferrata', 'group', 'route') AND ${bboxCondition}`
     : `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'ferrata', 'group') AND ${bboxCondition}`;
   const result = await client.query(query);
-  const allGeojson: GeoJSON.FeatureCollection = {
-    type: 'FeatureCollection',
-    features: result.rows.map((record) => record.geojson),
-  };
-  const geojson = isOptimizedToGrid
-    ? optimizeGeojsonToGrid(allGeojson, bbox)
-    : allGeojson;
+
+  const features = result.rows.map((record) => record.geojson as CTFeature);
+  const geojson = buildTileGeojson(isOptimizedToGrid, features, bbox);
 
   const duration = Math.round(performance.now() - start);
   logCacheMiss(duration, geojson.features.length);
@@ -57,8 +53,21 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
     `INSERT INTO climbing_tiles_cache VALUES ($1, $2, $3, $4) ON CONFLICT (zxy) DO NOTHING`,
     [cacheKey, geojson, duration, geojson.features.length],
   );
-
   await closeClient(client);
 
   return JSON.stringify(geojson);
+};
+
+export const cacheTile000 = async (records: ClimbingFeaturesRecords) => {
+  const tile000 = buildTileGeojson(
+    true,
+    records.map((r) => r.geojson),
+    tileToBBOX({ z: 0, x: 0, y: 0 }),
+  );
+
+  const client = await getClient();
+  await client.query(
+    `INSERT INTO climbing_tiles_cache VALUES ('0/0/0', $1, -1, -1)`,
+    [tile000],
+  );
 };
