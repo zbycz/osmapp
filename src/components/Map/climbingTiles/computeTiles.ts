@@ -11,7 +11,7 @@ import { publishDbgObject } from '../../../utils';
   = y = latitude
 * */
 const getTile = (z: number, { lng, lat }: LngLat): Tile => {
-  const xNorm = (lng + 180) / 360;
+  const xNorm = ((lng + 180) % 360) / 360;
   const x = Math.floor(xNorm * Math.pow(2, z));
 
   const yRad = (lat * Math.PI) / 180;
