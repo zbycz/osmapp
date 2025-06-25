@@ -97,6 +97,9 @@ export const getInstantImage = ({ k, v }: KeyValue): ImageType | null => {
   return null; // API call needed
 };
 
+const naturalKeySorter = ([a]: string[], [b]: string[]) =>
+  a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
+
 const wikipedia = ([k, _]) => k.match(/^wikipedia(\d*|:.*)$/);
 const wikidata = ([k, _]) => k.match(/^wikidata(\d*|:.*)$/);
 const image = ([k, v]) =>
@@ -112,7 +115,7 @@ const panoramax = ([k, _]) => k === 'panoramax';
 const getImagesFromTags = (tags: FeatureTags) => {
   const entries = Object.entries(tags);
   const imageTags = [
-    ...entries.filter(commonsFile),
+    ...entries.filter(commonsFile).sort(naturalKeySorter),
     ...entries.filter(image),
     ...entries.filter(wikipedia),
     ...entries.filter(wikidata),
