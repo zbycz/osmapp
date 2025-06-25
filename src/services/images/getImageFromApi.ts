@@ -1,12 +1,13 @@
 import { fetchJson } from '../fetch';
-import { isInstant, ImageDef, isCenter, isTag } from '../types';
+import { ImageDef, isCenter, isInstant, isTag } from '../types';
 import { getMapillaryImage, MAPILLARY_ACCESS_TOKEN } from './getMapillaryImage';
 import { getFodyImage } from './getFodyImage';
-import { getInstantImage, WIDTH, ImageType } from './getImageDefs';
+import { getInstantImage, ImageType, WIDTH } from './getImageDefs';
 import { encodeUrl } from '../../helpers/utils';
 import { getCommonsImageUrl } from './getCommonsImageUrl';
 import { getKartaViewImage } from './getkartaViewImage';
 import { getPanoramaxImage } from './getPanoramaxImage';
+import { makeCategoryImage } from './makeCategoryImage';
 
 type ImagePromise = Promise<ImageType | null>;
 
@@ -30,20 +31,24 @@ const fetchCommonsFile = async (k: string, v: string): ImagePromise => {
   };
 };
 
-// TODO perhaps fetch more images, or create a collage of first few images
 const getCommonsCategoryApiUrl = (title: string) =>
-  encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${title}&gcmlimit=1&gcmtype=file&prop=imageinfo&&iiprop=url&iiurlwidth=${WIDTH}&format=json&origin=*`;
+  encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${title}&gcmlimit=9&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=${WIDTH}&format=json&origin=*`;
 
 const fetchCommonsCategory = async (k: string, v: string): ImagePromise => {
   const url = getCommonsCategoryApiUrl(v);
   const data = await fetchJson(url);
-  const page = Object.values(data.query.pages)[0] as any;
-  if (!page.imageinfo?.length) {
+  const pages = Object.values(data.query.pages);
+  const imageInfos = pages
+    .map((page: any) => page.imageinfo?.[0])
+    .filter(Boolean);
+  const thumbs = imageInfos.map(({ thumburl }) => thumburl);
+  const imageUrl = await makeCategoryImage(thumbs);
+  if (!imageUrl) {
     return null;
   }
-  const image = page.imageinfo[0];
+
   return {
-    imageUrl: decodeURI(image.thumburl),
+    imageUrl,
     description: `Wikimedia Commons category (${k}=*)`,
     link: v,
     linkUrl: `https://commons.wikimedia.org/wiki/${v}`,
