@@ -1,5 +1,6 @@
 const WIDTH = 300;
 const HEIGHT = 238;
+const PADDING = 2;
 
 type LoadedImage = {
   img: HTMLImageElement;
@@ -25,9 +26,8 @@ const placeImageToCanvas = (
   validImages: LoadedImage[],
   ctx: CanvasRenderingContext2D,
 ) => {
-  const padding = 2;
-  const numCols = 3;
-  const columnWidth = (WIDTH - (numCols - 1) * padding) / numCols;
+  const numCols = validImages.length >= 8 ? 3 : validImages.length >= 3 ? 2 : 1;
+  const columnWidth = (WIDTH - (numCols - 1) * PADDING) / numCols;
 
   const columnContents: { img: LoadedImage; y: number; height: number }[][] =
     Array(numCols)
@@ -50,19 +50,22 @@ const placeImageToCanvas = (
 
     if (y + height <= HEIGHT) {
       columnContents[targetCol].push({ img, y, height });
-      columnHeights[targetCol] += height + padding;
+      columnHeights[targetCol] += height;
     }
   });
 
   for (let col = 0; col < numCols; col++) {
     const columnHeight = columnHeights[col];
-    const verticalCenterOffset = (HEIGHT - columnHeight) / 2;
+    const totalYPadding = (columnContents[col].length - 1) * PADDING;
+    const availibleHeight = HEIGHT - totalYPadding;
 
+    let offsetY = 0;
     columnContents[col].forEach((item) => {
-      const drawX = col * (columnWidth + padding);
-      const drawY = item.y + verticalCenterOffset;
+      const drawX = col * (columnWidth + PADDING);
+      const cellHeight = (item.height / columnHeight) * availibleHeight;
 
-      ctx.drawImage(item.img.img, drawX, drawY, columnWidth, item.height);
+      ctx.drawImage(item.img.img, drawX, offsetY, columnWidth, cellHeight);
+      offsetY += cellHeight + PADDING;
     });
   }
 };
