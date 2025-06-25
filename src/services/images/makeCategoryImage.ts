@@ -29,9 +29,13 @@ const placeImageToCanvas = (
   const numCols = 3;
   const columnWidth = (WIDTH - (numCols - 1) * padding) / numCols;
 
-  const columnHeights = Array(numCols).fill(0);
+  const columnContents: { img: LoadedImage; y: number; height: number }[][] =
+    Array(numCols)
+      .fill(null)
+      .map(() => []);
+  const columnHeights: number[] = Array(numCols).fill(0);
 
-  validImages.forEach((imageObj) => {
+  validImages.forEach((img) => {
     let minHeight = Infinity;
     let targetCol = 0;
     for (let i = 0; i < numCols; i++) {
@@ -41,19 +45,26 @@ const placeImageToCanvas = (
       }
     }
 
-    const scaledHeight = imageObj.height * (columnWidth / imageObj.width);
+    const height = img.height * (columnWidth / img.width);
+    const y = columnHeights[targetCol];
 
-    const drawX = targetCol * (columnWidth + padding);
-    const drawY = columnHeights[targetCol];
-
-    if (drawY + scaledHeight > HEIGHT) {
-      return;
+    if (y + height <= HEIGHT) {
+      columnContents[targetCol].push({ img, y, height });
+      columnHeights[targetCol] += height + padding;
     }
-
-    ctx.drawImage(imageObj.img, drawX, drawY, columnWidth, scaledHeight);
-
-    columnHeights[targetCol] += scaledHeight + padding;
   });
+
+  for (let col = 0; col < numCols; col++) {
+    const columnHeight = columnHeights[col];
+    const verticalCenterOffset = (HEIGHT - columnHeight) / 2;
+
+    columnContents[col].forEach((item) => {
+      const drawX = col * (columnWidth + padding);
+      const drawY = item.y + verticalCenterOffset;
+
+      ctx.drawImage(item.img.img, drawX, drawY, columnWidth, item.height);
+    });
+  }
 };
 
 export const makeCategoryImage = async (
