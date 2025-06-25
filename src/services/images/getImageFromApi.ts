@@ -31,8 +31,11 @@ const fetchCommonsFile = async (k: string, v: string): ImagePromise => {
   };
 };
 
+const isAudioUrl = (url: string) =>
+  url.endsWith('.ogg') || url.endsWith('.mp3') || url.endsWith('.wav');
+
 const getCommonsCategoryApiUrl = (title: string) =>
-  encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${title}&gcmlimit=9&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=${WIDTH}&format=json&origin=*`;
+  encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${title}&gcmlimit=12&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=${WIDTH}&format=json&origin=*`;
 
 const fetchCommonsCategory = async (k: string, v: string): ImagePromise => {
   const url = getCommonsCategoryApiUrl(v);
@@ -41,7 +44,9 @@ const fetchCommonsCategory = async (k: string, v: string): ImagePromise => {
   const imageInfos = pages
     .map((page: any) => page.imageinfo?.[0])
     .filter(Boolean);
-  const thumbs = imageInfos.map(({ thumburl }) => thumburl);
+  const thumbs = imageInfos
+    .filter(({ url }) => !isAudioUrl(url))
+    .map(({ thumburl }) => thumburl);
   const imageUrl = await makeCategoryImage(thumbs);
   if (!imageUrl) {
     return null;

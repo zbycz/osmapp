@@ -1,6 +1,7 @@
-const WIDTH = 300;
-const HEIGHT = 238;
-const PADDING = 2;
+const retina = (typeof window !== 'undefined' && window.devicePixelRatio) || 1;
+const WIDTH = 300 * retina;
+const HEIGHT = 238 * retina;
+const PADDING = 1 * retina;
 
 type LoadedImage = {
   img: HTMLImageElement;
@@ -22,11 +23,23 @@ const loadImages = async (thumbsUrls: string[]) => {
   return images.filter((item) => item && item.width > 0 && item.height > 0);
 };
 
+const findMinimalHeightColumn = (columnHeights: number[]) => {
+  let minHeight = Infinity;
+  let targetCol = 0;
+  for (let i = 0; i < columnHeights.length; i++) {
+    if (columnHeights[i] < minHeight) {
+      minHeight = columnHeights[i];
+      targetCol = i;
+    }
+  }
+  return targetCol;
+};
+
 const placeImageToCanvas = (
-  validImages: LoadedImage[],
+  images: LoadedImage[],
   ctx: CanvasRenderingContext2D,
 ) => {
-  const numCols = validImages.length >= 8 ? 3 : validImages.length >= 3 ? 2 : 1;
+  const numCols = images.length >= 8 ? 3 : images.length >= 3 ? 2 : 1;
   const columnWidth = (WIDTH - (numCols - 1) * PADDING) / numCols;
 
   const columnContents: { img: LoadedImage; y: number; height: number }[][] =
@@ -35,21 +48,14 @@ const placeImageToCanvas = (
       .map(() => []);
   const columnHeights: number[] = Array(numCols).fill(0);
 
-  validImages.forEach((img) => {
-    let minHeight = Infinity;
-    let targetCol = 0;
-    for (let i = 0; i < numCols; i++) {
-      if (columnHeights[i] < minHeight) {
-        minHeight = columnHeights[i];
-        targetCol = i;
-      }
-    }
-
+  // we do classic masonry here
+  images.forEach((img) => {
     const height = img.height * (columnWidth / img.width);
-    const y = columnHeights[targetCol];
+    const targetCol = findMinimalHeightColumn(columnHeights);
+    const offsetY = columnHeights[targetCol];
 
-    if (y + height <= HEIGHT) {
-      columnContents[targetCol].push({ img, y, height });
+    if (offsetY + height <= HEIGHT) {
+      columnContents[targetCol].push({ img, y: offsetY, height });
       columnHeights[targetCol] += height;
     }
   });
@@ -64,9 +70,6 @@ const placeImageToCanvas = (
       const drawX = col * (columnWidth + PADDING);
       const cellHeight = (item.height / contentHeight) * availibleHeight;
 
-      const enlargeRatio = cellHeight / item.height;
-
-      // Výpočet pro "cover" efekt
       const imgAspect = item.img.width / item.img.height;
       const cellAspect = columnWidth / cellHeight;
       let sx = 0,
@@ -75,11 +78,9 @@ const placeImageToCanvas = (
         sh = item.img.height;
 
       if (imgAspect > cellAspect) {
-        // Obrázek je širší než buňka, oříznout šířku
         sw = item.img.height * cellAspect;
         sx = (item.img.width - sw) / 2;
       } else {
-        // Obrázek je vyšší než buňka, oříznout výšku
         sh = item.img.width / cellAspect;
         sy = (item.img.height - sh) / 2;
       }
@@ -96,17 +97,6 @@ const placeImageToCanvas = (
         cellHeight,
       );
 
-      ctx.drawImage(
-        item.img.img,
-        sx,
-        sy,
-        sw,
-        sh,
-        drawX,
-        offsetY,
-        columnWidth,
-        cellHeight,
-      );
       offsetY += cellHeight + PADDING;
     });
   }
