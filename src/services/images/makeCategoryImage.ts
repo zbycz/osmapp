@@ -20,6 +20,7 @@ const loadImages = async (thumbsUrls: string[]) => {
   const images = await Promise.all(thumbsUrls.map(loadImage));
   return images.filter((item) => item && item.width > 0 && item.height > 0);
 };
+
 const placeImageToCanvas = (
   validImages: LoadedImage[],
   ctx: CanvasRenderingContext2D,
@@ -44,6 +45,10 @@ const placeImageToCanvas = (
 
     const drawX = targetCol * (columnWidth + padding);
     const drawY = columnHeights[targetCol];
+
+    if (drawY + scaledHeight > HEIGHT) {
+      return;
+    }
 
     ctx.drawImage(imageObj.img, drawX, drawY, columnWidth, scaledHeight);
 
