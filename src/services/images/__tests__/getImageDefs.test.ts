@@ -79,7 +79,9 @@ test('conversion', () => {
 test('correctly sorted', () => {
   const tags = {
     'wikimedia_commons:3': 'Category:1.jpg',
+    'wikimedia_commons:10': 'File:15.jpg',
     wikidata: 'Q123',
+    'wikimedia_commons:9': 'File:14.jpg',
     wikimedia_commons: 'File:1.jpg',
     image: 'http://blah blah url',
     image2: 'File:image2 like commons image name',
@@ -90,6 +92,8 @@ test('correctly sorted', () => {
 
   expect(getImageDefs(tags, 'node', center).map((def: any) => def.k)).toEqual([
     'wikimedia_commons',
+    'wikimedia_commons:9',
+    'wikimedia_commons:10',
     'image',
     'image2',
     'image:2',
