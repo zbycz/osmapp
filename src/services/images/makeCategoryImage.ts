@@ -20,62 +20,34 @@ const loadImages = async (thumbsUrls: string[]) => {
   const images = await Promise.all(thumbsUrls.map(loadImage));
   return images.filter((item) => item && item.width > 0 && item.height > 0);
 };
-
 const placeImageToCanvas = (
-  validImages: Awaited<LoadedImage>[],
+  validImages: LoadedImage[],
   ctx: CanvasRenderingContext2D,
 ) => {
   const padding = 2;
-  const numImages = validImages.length;
+  const numCols = 3;
+  const columnWidth = (WIDTH - (numCols - 1) * padding) / numCols;
 
-  let numCols: number;
-  let numRows: number;
+  const columnHeights = Array(numCols).fill(0);
 
-  if (numImages === 1) {
-    numCols = 1;
-    numRows = 1;
-  } else if (numImages <= 4) {
-    numCols = 2;
-    numRows = Math.ceil(numImages / numCols);
-  } else if (numImages <= 9) {
-    numCols = 3;
-    numRows = Math.ceil(numImages / numCols);
-  } else {
-    numCols = Math.ceil(Math.sqrt(numImages));
-    numRows = Math.ceil(numImages / numCols);
-  }
-
-  const totalHorizontalPadding = (numCols + 1) * padding;
-  const totalVerticalPadding = (numRows + 1) * padding;
-
-  const cellWidth = (WIDTH - totalHorizontalPadding) / numCols;
-  const cellHeight = (HEIGHT - totalVerticalPadding) / numRows;
-
-  validImages.forEach((imageObj, index) => {
-    const col = index % numCols;
-    const row = Math.floor(index / numCols);
-
-    let drawX = padding + col * (cellWidth + padding);
-    let drawY = padding + row * (cellHeight + padding);
-
-    const imgAspectRatio = imageObj.width / imageObj.height;
-    const cellAspectRatio = cellWidth / cellHeight;
-
-    let finalWidth: number;
-    let finalHeight: number;
-
-    if (imgAspectRatio > cellAspectRatio) {
-      finalWidth = cellWidth;
-      finalHeight = cellWidth / imgAspectRatio;
-    } else {
-      finalHeight = cellHeight;
-      finalWidth = cellHeight * imgAspectRatio;
+  validImages.forEach((imageObj) => {
+    let minHeight = Infinity;
+    let targetCol = 0;
+    for (let i = 0; i < numCols; i++) {
+      if (columnHeights[i] < minHeight) {
+        minHeight = columnHeights[i];
+        targetCol = i;
+      }
     }
 
-    drawX += (cellWidth - finalWidth) / 2;
-    drawY += (cellHeight - finalHeight) / 2;
+    const scaledHeight = imageObj.height * (columnWidth / imageObj.width);
 
-    ctx.drawImage(imageObj.img, drawX, drawY, finalWidth, finalHeight);
+    const drawX = targetCol * (columnWidth + padding);
+    const drawY = columnHeights[targetCol];
+
+    ctx.drawImage(imageObj.img, drawX, drawY, columnWidth, scaledHeight);
+
+    columnHeights[targetCol] += scaledHeight + padding;
   });
 };
 
