@@ -47,7 +47,7 @@ const fetchCommonsCategory = async (k: string, v: string): ImagePromise => {
   const thumbs = imageInfos
     .filter(({ url }) => !isAudioUrl(url))
     .map(({ thumburl }) => thumburl);
-  const imageUrl = await makeCategoryImage(thumbs);
+  const imageUrl = await makeCategoryImage(thumbs.slice(0, 10)); // TODO compute the masonry based on the request and only fetch the fitting images
   if (!imageUrl) {
     return null;
   }
