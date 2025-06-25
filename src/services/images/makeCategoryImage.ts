@@ -29,8 +29,10 @@ const findMinimalHeightColumn = (columnHeights: number[]) => {
   return targetCol;
 };
 
+type ColumnItem = { img: HTMLImageElement; height: number };
+
 const computeCoverEffect = (
-  item: { img: HTMLImageElement; height: number },
+  item: ColumnItem,
   targetWidth: number,
   targetHeight: number,
 ) => {
@@ -51,16 +53,14 @@ const computeCoverEffect = (
   return { sx, sy, sw, sh }; // https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
 };
 
-const placeImageToCanvas = (
+export const placeImageToCanvas = (
   images: HTMLImageElement[],
   ctx: CanvasRenderingContext2D,
 ) => {
   const numCols = images.length >= 8 ? 3 : images.length >= 3 ? 2 : 1;
   const columnWidth = (WIDTH - (numCols - 1) * PADDING) / numCols;
 
-  const columnContents: { img: HTMLImageElement; height: number }[][] = Array(
-    numCols,
-  )
+  const columnContents: ColumnItem[][] = Array(numCols)
     .fill(null)
     .map(() => []);
   const columnHeights: number[] = Array(numCols).fill(0);
