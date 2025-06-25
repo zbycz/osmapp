@@ -55,16 +55,58 @@ const placeImageToCanvas = (
   });
 
   for (let col = 0; col < numCols; col++) {
-    const columnHeight = columnHeights[col];
+    const contentHeight = columnHeights[col];
     const totalYPadding = (columnContents[col].length - 1) * PADDING;
     const availibleHeight = HEIGHT - totalYPadding;
 
     let offsetY = 0;
     columnContents[col].forEach((item) => {
       const drawX = col * (columnWidth + PADDING);
-      const cellHeight = (item.height / columnHeight) * availibleHeight;
+      const cellHeight = (item.height / contentHeight) * availibleHeight;
 
-      ctx.drawImage(item.img.img, drawX, offsetY, columnWidth, cellHeight);
+      const enlargeRatio = cellHeight / item.height;
+
+      // Výpočet pro "cover" efekt
+      const imgAspect = item.img.width / item.img.height;
+      const cellAspect = columnWidth / cellHeight;
+      let sx = 0,
+        sy = 0,
+        sw = item.img.width,
+        sh = item.img.height;
+
+      if (imgAspect > cellAspect) {
+        // Obrázek je širší než buňka, oříznout šířku
+        sw = item.img.height * cellAspect;
+        sx = (item.img.width - sw) / 2;
+      } else {
+        // Obrázek je vyšší než buňka, oříznout výšku
+        sh = item.img.width / cellAspect;
+        sy = (item.img.height - sh) / 2;
+      }
+
+      ctx.drawImage(
+        item.img.img,
+        sx,
+        sy,
+        sw,
+        sh,
+        drawX,
+        offsetY,
+        columnWidth,
+        cellHeight,
+      );
+
+      ctx.drawImage(
+        item.img.img,
+        sx,
+        sy,
+        sw,
+        sh,
+        drawX,
+        offsetY,
+        columnWidth,
+        cellHeight,
+      );
       offsetY += cellHeight + PADDING;
     });
   }
