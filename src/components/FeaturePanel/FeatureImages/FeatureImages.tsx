@@ -53,7 +53,7 @@ export const FeatureImages = () => {
   return (
     <Wrapper>
       <Slider>
-        {naturalSort(images, (item) => item.def.k).map((item, index) => (
+        {images.map((item, index) => (
           <Image
             key={item.image.imageUrl}
             def={item.def}
