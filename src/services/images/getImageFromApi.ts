@@ -35,7 +35,7 @@ const isAudioUrl = (url: string) =>
   url.endsWith('.ogg') || url.endsWith('.mp3') || url.endsWith('.wav');
 
 const getCommonsCategoryApiUrl = (title: string) =>
-  encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${title}&gcmlimit=12&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=${WIDTH}&format=json&origin=*`;
+  encodeUrl`https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=${title}&gcmlimit=20&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=${WIDTH}&format=json&origin=*`;
 
 const fetchCommonsCategory = async (k: string, v: string): ImagePromise => {
   const url = getCommonsCategoryApiUrl(v);
@@ -141,22 +141,22 @@ const fetchMapillaryTag = async (k: string, v: string): ImagePromise => {
 };
 
 export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
-  if (isCenter(def)) {
-    const { service, center } = def;
-    if (service === 'mapillary') {
-      return getMapillaryImage(center);
-    }
-    if (service === 'kartaview') {
-      return getKartaViewImage(center);
-    }
-    if (service === 'panoramax') {
-      return getPanoramaxImage(center);
-    }
-
-    if (service === 'fody') {
-      return getFodyImage(center);
-    }
-  }
+  // if (isCenter(def)) {
+  //   const { service, center } = def;
+  //   if (service === 'mapillary') {
+  //     return getMapillaryImage(center);
+  //   }
+  //   if (service === 'kartaview') {
+  //     return getKartaViewImage(center);
+  //   }
+  //   if (service === 'panoramax') {
+  //     return getPanoramaxImage(center);
+  //   }
+  //
+  //   if (service === 'fody') {
+  //     return getFodyImage(center);
+  //   }
+  // }
 
   if (isTag(def)) {
     const { k, v } = def;
