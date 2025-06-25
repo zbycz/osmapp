@@ -22,7 +22,7 @@ const loadImages = async (thumbsUrls: string[]) => {
 };
 
 const placeImageToCanvas = (
-  validImages: LoadedImage[],
+  validImages: Awaited<LoadedImage>[],
   ctx: CanvasRenderingContext2D,
 ) => {
   const padding = 2;
@@ -45,8 +45,8 @@ const placeImageToCanvas = (
     numRows = Math.ceil(numImages / numCols);
   }
 
-  const totalHorizontalPadding = Math.max(0, (numCols - 1) * padding);
-  const totalVerticalPadding = Math.max(0, (numRows - 1) * padding);
+  const totalHorizontalPadding = (numCols + 1) * padding;
+  const totalVerticalPadding = (numRows + 1) * padding;
 
   const cellWidth = (WIDTH - totalHorizontalPadding) / numCols;
   const cellHeight = (HEIGHT - totalVerticalPadding) / numRows;
@@ -55,43 +55,27 @@ const placeImageToCanvas = (
     const col = index % numCols;
     const row = Math.floor(index / numCols);
 
-    const dx = col * cellWidth + col * padding;
-    const dy = row * cellHeight + row * padding;
-
-    const dWidth = cellWidth;
-    const dHeight = cellHeight;
+    let drawX = padding + col * (cellWidth + padding);
+    let drawY = padding + row * (cellHeight + padding);
 
     const imgAspectRatio = imageObj.width / imageObj.height;
     const cellAspectRatio = cellWidth / cellHeight;
 
-    let sx: number;
-    let sy: number;
-    let sWidth: number;
-    let sHeight: number;
+    let finalWidth: number;
+    let finalHeight: number;
 
     if (imgAspectRatio > cellAspectRatio) {
-      sHeight = imageObj.height;
-      sWidth = sHeight * cellAspectRatio;
-      sx = (imageObj.width - sWidth) / 2;
-      sy = 0;
+      finalWidth = cellWidth;
+      finalHeight = cellWidth / imgAspectRatio;
     } else {
-      sWidth = imageObj.width;
-      sHeight = sWidth / cellAspectRatio;
-      sx = 0;
-      sy = (imageObj.height - sHeight) / 2;
+      finalHeight = cellHeight;
+      finalWidth = cellHeight * imgAspectRatio;
     }
 
-    ctx.drawImage(
-      imageObj.img,
-      sx,
-      sy,
-      sWidth,
-      sHeight,
-      dx,
-      dy,
-      dWidth,
-      dHeight,
-    );
+    drawX += (cellWidth - finalWidth) / 2;
+    drawY += (cellHeight - finalHeight) / 2;
+
+    ctx.drawImage(imageObj.img, drawX, drawY, finalWidth, finalHeight);
   });
 };
 

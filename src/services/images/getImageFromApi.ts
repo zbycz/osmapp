@@ -155,24 +155,24 @@ export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
 
   if (isTag(def)) {
     const { k, v } = def;
-    if (k.startsWith('image') && v.startsWith('File:')) {
-      return fetchCommonsFile(k, v);
-    }
-    if (k.startsWith('wikidata')) {
-      return fetchWikidata(v);
-    }
-    if (k.startsWith('wikimedia_commons') && v.startsWith('File:')) {
-      return fetchCommonsFile(k, v);
-    }
+    // if (k.startsWith('image') && v.startsWith('File:')) {
+    //   return fetchCommonsFile(k, v);
+    // }
+    // if (k.startsWith('wikidata')) {
+    //   return fetchWikidata(v);
+    // }
+    // if (k.startsWith('wikimedia_commons') && v.startsWith('File:')) {
+    //   return fetchCommonsFile(k, v);
+    // }
     if (k.startsWith('wikimedia_commons') && v.startsWith('Category:')) {
       return fetchCommonsCategory(k, v);
     }
-    if (k.startsWith('wikipedia')) {
-      return fetchWikipedia(k, v);
-    }
-    if (k.startsWith('mapillary')) {
-      return fetchMapillaryTag(k, v);
-    }
+    // if (k.startsWith('wikipedia')) {
+    //   return fetchWikipedia(k, v);
+    // }
+    // if (k.startsWith('mapillary')) {
+    //   return fetchMapillaryTag(k, v);
+    // }
   }
 
   throw new Error(`No match in getImageFromApi(${JSON.stringify(def)})`);
