@@ -97,3 +97,7 @@ const isWebglSupported = () => {
 };
 
 export const webglSupported = isBrowser() ? isWebglSupported() : true;
+
+export const isUrlForRasterLayer = (layerUrl: string) => {
+  return layerUrl.match(/^https?:\/\//);
+};

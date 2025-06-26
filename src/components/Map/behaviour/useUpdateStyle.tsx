@@ -19,10 +19,11 @@ import { fetchCrags } from '../../../services/fetchCrags';
 import { intl } from '../../../services/intl';
 import { Layer } from '../../utils/MapStateContext';
 import { setUpHover } from './featureHover';
-import { layersWithOsmId } from '../helpers';
+import { isUrlForRasterLayer, layersWithOsmId } from '../helpers';
 import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
+import { emptyStyle } from '../styles/emptyStyle';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -50,7 +51,11 @@ const getBaseStyle = (key: string, currentTheme: Theme): StyleSpecification => {
     return outdoorStyle;
   }
 
-  return getRasterStyle(key, currentTheme);
+  if (isUrlForRasterLayer(key)) {
+    return getRasterStyle(key, currentTheme);
+  }
+
+  return emptyStyle;
 };
 
 const addRasterOverlay = (
