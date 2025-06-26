@@ -2,7 +2,10 @@
 import type { GeoJSONSource, Map } from 'maplibre-gl';
 import { OpenMapTilesLanguage } from '@teritorio/openmaptiles-gl-language';
 import cloneDeep from 'lodash/cloneDeep';
-import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
+import {
+  type StyleSpecification,
+  diff as styleDiff,
+} from '@maplibre/maplibre-gl-style-spec';
 import { createMapEffectHook } from '../../helpers';
 import { basicStyle } from '../styles/basicStyle';
 import { outdoorStyle } from '../styles/outdoorStyle';
@@ -115,6 +118,10 @@ const addOverlaysToStyle = (
     });
 };
 
+let lastStyle;
+
+const firstStyleDone = false;
+
 export const useUpdateStyle = createMapEffectHook(
   (
     map,
@@ -139,7 +146,43 @@ export const useUpdateStyle = createMapEffectHook(
     const style = cloneDeep(getBaseStyle(key, currentTheme));
     addOverlaysToStyle(map, style, overlays, currentTheme);
     style.projection = { type: 'globe' };
-    map.setStyle(style, { diff: mapLoaded });
+
+    // TODO refactor the {style,minZoom,maxZoom} to another pure function
+    // TODO use that function to get initial style (once!)
+    // TODO ensure no diff is created afterwards
+
+    if (lastStyle) {
+      const diff = styleDiff(lastStyle, style);
+      diff.forEach((change) => {
+        if (change.command === 'addLayer') {
+          map.addLayer.call(map, ...change.args);
+        } else if (change.command === 'removeLayer') {
+          map.removeLayer.call(map, ...change.args);
+        } else if (change.command === 'addSource') {
+          if (!map.getSource(change.args[0] as string)) {
+            map.addSource.call(map, ...change.args);
+          }
+        } else if (change.command === 'removeSource') {
+          // map.removeSource.call(map, ...change.args);
+        } else if (change.command === 'setPaintProperty') {
+          console.log(change);
+          map.setPaintProperty.call(map, ...change.args);
+        } else if (change.command === 'setLayoutProperty') {
+          console.log(change);
+          map.setLayoutProperty.call(map, ...change.args);
+        } else if (change.command === 'setFilter') {
+          console.log(change);
+          map.setFilter.call(map, ...change.args);
+        } else if (change.command === 'setSprite') {
+          map.setSprite.call(map, ...change.args);
+        } else {
+          console.log(change);
+        }
+      });
+    } else {
+      map.setStyle(style, { diff: mapLoaded });
+    }
+    lastStyle = map.getStyle();
 
     const languageControl = new OpenMapTilesLanguage({
       defaultLanguage: intl.lang,
