@@ -7,7 +7,6 @@ import { Box, Button, Stack } from '@mui/material';
 import { ModeToggler } from './ModeToggler';
 import { DirectionsAutocomplete } from './DirectionsAutocomplete';
 import { t } from '../../services/intl';
-import { LoadingButton } from '@mui/lab';
 import SearchIcon from '@mui/icons-material/Search';
 import { getDirectionsCoordsOption } from '../SearchBox/options/coords';
 import { useMapStateContext } from '../utils/MapStateContext';
@@ -29,7 +28,6 @@ type Props = {
 
 const useGlobalMapClickOverride = (
   points: Array<Option>,
-  setPoints: (points: Array<Option>) => void,
   inputs: Array<InputItem>,
 ) => {
   const { setResult, setLoading, mode } = useDirectionsContext();
@@ -54,15 +52,7 @@ const useGlobalMapClickOverride = (
     return () => {
       mapClickOverrideRef.current = undefined;
     };
-  }, [
-    inputs.length,
-    mapClickOverrideRef,
-    mode,
-    points,
-    setPoints,
-    submitFactory,
-    updatePoint,
-  ]);
+  }, [inputs, mapClickOverrideRef, mode, points, submitFactory, updatePoint]);
 };
 
 type InputItem = {
@@ -130,7 +120,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
     }
   }, [defaultTo, points]);
 
-  useGlobalMapClickOverride(points, setPoints, inputs);
+  useGlobalMapClickOverride(points, inputs);
   useReactToUrl(setMode, setPoints, setResult);
 
   const onSubmitFactory = useGetOnSubmitFactory(setResult, setLoading);
@@ -186,7 +176,10 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
                       draggedOverIndex,
                     );
 
+                    const newPoints = newArray.map((item) => item.value);
                     setInputs(newArray);
+                    setPoints(newPoints);
+                    onSubmitFactory(newPoints, mode);
                   }}
                 />
                 <DirectionsAutocomplete
@@ -211,7 +204,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         </div>
       </Stack>
 
-      <LoadingButton
+      <Button
         loading={loading}
         loadingPosition="start"
         variant="contained"
@@ -220,7 +213,7 @@ export const DirectionsForm = ({ setResult, hideForm }: Props) => {
         onClick={() => onSubmitFactory(points, mode)}
       >
         {t('directions.get_directions')}
-      </LoadingButton>
+      </Button>
     </StyledPaper>
   );
 };

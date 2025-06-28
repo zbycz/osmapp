@@ -11,6 +11,7 @@ import {
   centerGeometry,
   recordsFactory,
 } from './refreshClimbingTilesHelpers';
+import { cacheTile000 } from './getClimbingTile';
 
 const fetchFromOverpass = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -160,7 +161,7 @@ export const refreshClimbingTiles = async () => {
   const data = await fetchFromOverpass();
   log(`Overpass elements: ${data.elements.length}`);
 
-  const records = getNewRecords(data); // ~ 16k records
+  const records = getNewRecords(data); // ~ 55k records
   log(`Records: ${records.length}`);
 
   const columns = Object.keys(records[0]);
@@ -179,14 +180,15 @@ export const refreshClimbingTiles = async () => {
 
   await client.query('TRUNCATE TABLE climbing_tiles_cache');
 
+  log('Caching tile 0/0/0');
+  await cacheTile000(records);
+
   const buildDuration = Math.round(performance.now() - start);
   log(`Duration: ${buildDuration} ms`);
   log('Done.');
 
   await updateStats(data, getBuildLog(), buildDuration, tileStats, records);
   await closeClient(client);
-
-  // consider cache the tile 0/0/0 here - it takes too long to compute (15s)
 
   return getBuildLog();
 };

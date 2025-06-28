@@ -5,13 +5,13 @@
       "maxDuration": 200
     },
     "pages/api/climbing-tiles/tile.ts": {
-      "maxDuration": 40
+      "maxDuration": 30
     }
   },
   "crons": [
     {
       "path": "/api/climbing-tiles/refresh",
-      "schedule": "0 2 * * *"
+      "schedule": "0 3 * * *"
     }
   ]
 }

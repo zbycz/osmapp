@@ -1,17 +1,7 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { Client } from 'pg';
 import { OsmResponse } from './overpass/overpassToGeojsons';
 import { ClimbingFeaturesRecords, getClient } from './db';
 import format from 'pg-format';
-
-export const addCorsHeaders = (req: NextApiRequest, res: NextApiResponse) => {
-  const origin = req.headers.origin;
-  if (origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin);
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  }
-};
 
 type TileStats =
   | {}

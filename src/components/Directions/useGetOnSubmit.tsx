@@ -18,6 +18,7 @@ import { FetchError } from '../../services/helpers';
 import * as Sentry from '@sentry/nextjs';
 import { useDirectionsContext } from './DirectionsContext';
 import { updateElementOnIndex } from '../FeaturePanel/Climbing/utils/array';
+import { Setter } from '../../types';
 
 const getRoutingFailed = (showToast: ShowToast) => {
   return (error: unknown) => {
@@ -83,7 +84,7 @@ export const useReactToUrl = (
 
 export const useGetOnSubmitFactory = (
   setResult: (result: RoutingResult) => void,
-  setLoading: (value: ((prevState: boolean) => boolean) | boolean) => void,
+  setLoading: Setter<boolean>,
 ) => {
   const { showToast } = useSnackbar();
   return (points: Array<Option>, mode: Profile) => {

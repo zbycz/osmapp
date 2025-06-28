@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { addCorsHeaders } from '../../../src/server/climbing-tiles/utils';
 import { getClimbingStats } from '../../../src/server/climbing-tiles/getClimbingStats';
+import { addCorsAndCache } from '../../../src/server/climbing-tiles/addCorsAndCache';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  addCorsHeaders(req, res);
+  addCorsAndCache(res);
   try {
     const json = await getClimbingStats();
 

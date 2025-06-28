@@ -1,10 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getClimbingTile } from '../../../src/server/climbing-tiles/getClimbingTile';
-import { addCorsHeaders } from '../../../src/server/climbing-tiles/utils';
 import { Tile } from '../../../src/types';
+import { addCorsAndCache } from '../../../src/server/climbing-tiles/addCorsAndCache';
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-  addCorsHeaders(req, res);
+  addCorsAndCache(res);
   try {
     const tileNumber: Tile = {
       z: Number(req.query.z),

@@ -29,12 +29,12 @@ export const WIKIDATA: ApiMock = {
 };
 
 export const COMMONS_CATEGORY: ApiMock = {
-  url: 'https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category%3AYosemite%20National%20Park&gcmlimit=1&gcmtype=file&prop=imageinfo&&iiprop=url&iiurlwidth=410&format=json&origin=*',
+  url: 'https://commons.wikimedia.org/w/api.php?action=query&generator=categorymembers&gcmtitle=Category%3AYosemite%20National%20Park&gcmlimit=20&gcmtype=file&prop=imageinfo&iiprop=url&iiurlwidth=410&format=json&origin=*',
   response: {
     batchcomplete: '',
     continue: {
       gcmcontinue:
-        'file|3139313620594f53454d4954452042592047454f52474520535445524c494e472046524f4e5420434f5645522e504e47|149319876',
+        'file|35303050582050484f544f2028313039393139373931292e4a504547|78764811',
       continue: 'gcmcontinue||',
     },
     query: {

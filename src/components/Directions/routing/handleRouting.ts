@@ -186,7 +186,14 @@ export const handleRouting = async (
   const padding = isMobileModeVanilla()
     ? { left: 30, right: 30, bottom: 30, top: 120 }
     : { left: 390, right: 50, top: 50, bottom: 50 };
-  map.fitBounds(bbox, { padding });
+
+  const currentBounds = map.getBounds();
+  if (
+    !currentBounds.contains(bbox.getSouthWest()) ||
+    !currentBounds.contains(bbox.getNorthEast())
+  ) {
+    map.fitBounds(bbox, { padding });
+  }
 
   return result;
 };

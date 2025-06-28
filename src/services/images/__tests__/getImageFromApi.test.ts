@@ -10,6 +10,11 @@ import {
   WIKIPEDIA,
   WIKIPEDIA_CS,
 } from './apiMocks.fixture';
+import * as makeCategoryImageModule from '../makeCategoryImage';
+
+jest.mock('../makeCategoryImage', () => ({
+  makeCategoryImage: jest.fn(),
+}));
 
 jest.mock('../../fetch', () => ({
   fetchJson: jest.fn(),
@@ -119,6 +124,9 @@ test('wikimedia_commons=File:', async () => {
 
 test('wikimedia_commons=Category:', async () => {
   mockApi(COMMONS_CATEGORY);
+  jest
+    .spyOn(makeCategoryImageModule, 'makeCategoryImage')
+    .mockResolvedValue('xyz');
   expect(
     await getImageFromApiRaw({
       type: 'tag',
@@ -128,8 +136,7 @@ test('wikimedia_commons=Category:', async () => {
     }),
   ).toEqual({
     description: 'Wikimedia Commons category (wikimedia_commons:2=*)',
-    imageUrl:
-      'https://upload.wikimedia.org/wikipedia/commons/thumb/0/0c/1912_Indian_Motorcycle._This_two-cylinder_motorcycle_is_thought_to_have_been_the_first_motorcycle_in_Yosemite._The_driver_was_(ca6a33cc-1dd8-b71b-0b83-9551ada5207f).jpg/410px-thumbnail.jpg',
+    imageUrl: 'xyz',
     link: 'Category:Yosemite National Park',
     linkUrl:
       'https://commons.wikimedia.org/wiki/Category:Yosemite National Park',

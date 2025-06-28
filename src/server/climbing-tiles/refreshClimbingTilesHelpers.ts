@@ -1,6 +1,7 @@
 import { GeojsonFeature } from './overpass/overpassToGeojsons';
 import { LineString, LonLat, Point } from '../../services/types';
 import { ClimbingFeaturesRecords } from './db';
+import { CTFeature } from '../../types';
 
 export const centerGeometry = (
   feature: GeojsonFeature,
@@ -25,13 +26,12 @@ const firstPointGeometry = (
 const prepareGeojson = (
   type: string,
   { id, geometry, properties }: GeojsonFeature,
-) =>
-  JSON.stringify({
-    type: 'Feature',
-    id,
-    geometry,
-    properties: { ...properties, type },
-  });
+): CTFeature => ({
+  type: 'Feature',
+  id,
+  geometry,
+  properties: { ...properties, type },
+});
 
 const removeDiacritics = (str: string) =>
   str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');

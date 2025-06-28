@@ -4,6 +4,7 @@ import uniq from 'lodash/uniq';
 import { Layer, useMapStateContext, View } from '../../utils/MapStateContext';
 import { osmappLayers } from '../../LayerSwitcher/osmappLayers';
 import { Translation } from '../../../services/intl';
+import { isUrlForRasterLayer } from '../helpers';
 
 export const Attribution = ({ label, link, title }) => (
   <>
@@ -53,7 +54,13 @@ export const AttributionLinks = () => {
         }
 
         const userLayer = userLayers.find(({ url }) => url === layerUrl);
-        return userLayer?.attribution || decodeURI(new URL(layerUrl)?.hostname);
+        if (userLayer?.attribution) {
+          return userLayer?.attribution;
+        }
+        if (isUrlForRasterLayer(layerUrl)) {
+          return decodeURI(new URL(layerUrl)?.hostname);
+        }
+        return null;
       })
       .filter(Boolean),
   );
