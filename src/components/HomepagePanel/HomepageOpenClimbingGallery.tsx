@@ -12,58 +12,108 @@ const data = [
   {
     href: '/relation/17262675',
     src: '/images/homepage/hlubocepske-plotny',
-    children: 'Hlubočepské plotny',
-  },
-  {
-    href: '/relation/14297763',
-    src: '/images/homepage/velka',
-    children: 'Velká (Vltavská žula)',
+    children: 'Hlubočepské plotny 🇨🇿',
   },
   {
     href: '/relation/17696060',
     src: '/images/homepage/frankenjura',
-    children: 'Frankenjura',
+    children: 'Frankenjura 🇩🇪',
+  },
+  {
+    href: '/relation/17470613',
+    src: '/images/homepage/alkazar',
+    children: 'Alkazar 🇨🇿',
+  },
+  {
+    href: '/relation/19250793',
+    src: '/images/homepage/sokoliki',
+    children: 'Sokoliki 🇵🇱',
+  },
+  {
+    href: '/relation/14297763',
+    src: '/images/homepage/velka',
+    children: 'Velká (Vltavská žula) 🇨🇿',
+  },
+  {
+    href: '/relation/18501782',
+    src: '/images/homepage/geyikbayiri',
+    children: 'Geyikbayırı 🇹🇷',
   },
   {
     href: '/relation/17130099',
     src: '/images/homepage/roviste',
-    children: 'Roviště',
+    children: 'Roviště 🇨🇿',
   },
   {
-    href: '/relation/17416413',
-    src: '/images/homepage/solvayovy-lomy',
-    children: 'Solvayovy lomy',
+    href: '/relation/19257709',
+    src: '/images/homepage/szklarska-poreba',
+    children: 'Szklarska Poręba 🇵🇱',
+  },
+  {
+    href: '/relation/18647139',
+    src: '/images/homepage/san-bartolo',
+    children: 'San Bartolo 🇪🇸',
+  },
+  {
+    href: '/relation/18452584',
+    src: '/images/homepage/rochlitz',
+    children: 'Rochlitz 🇩🇪',
+  },
+  {
+    href: '/relation/18478296',
+    src: '/images/homepage/timpa-rossa',
+    children: 'Timpa Rossa 🇮🇹',
+  },
+  {
+    href: '/relation/18218704',
+    src: '/images/homepage/rastenfeld',
+    children: 'Rastenfeld 🇦🇹',
   },
   {
     href: '/relation/17142287',
     src: '/images/homepage/lomy-nad-velkou',
-    children: 'Lomy nad Velkou',
-  },
-  {
-    href: '/relation/17424002',
-    src: '/images/homepage/udoli-kacaku',
-    children: 'Údolí Kačáku',
+    children: 'Lomy nad Velkou 🇨🇿',
   },
   {
     href: '/relation/17400318',
     src: '/images/homepage/kobyla',
-    children: 'Kobyla',
+    children: 'Kobyla 🇨🇿',
   },
   {
-    href: '/relation/17129044',
-    src: '/images/homepage/zupanovice',
-    children: 'Županovice',
+    href: '/relation/18286650',
+    src: '/images/homepage/ratao',
+    children: 'Ratão 🇵🇹',
+  },
+  {
+    href: '/relation/14297668',
+    src: '/images/homepage/jickovice',
+    children: 'Jickovice 🇨🇿',
   },
   {
     href: '/relation/17301396',
     src: '/images/homepage/tetinske-skaly',
-    children: 'Tetínské skály',
+    children: 'Tetínské skály 🇨🇿',
+  },
+  {
+    href: '/relation/17416413',
+    src: '/images/homepage/solvayovy-lomy',
+    children: 'Solvayovy lomy 🇨🇿',
   },
   {
     href: '/relation/17399801',
     src: '/images/homepage/u-zidovy-strouhy',
-    children: 'U Židovy strouhy',
+    children: 'U Židovy strouhy 🇨🇿',
   },
+  // {
+  //   href: '/relation/17424002',
+  //   src: '/images/homepage/udoli-kacaku',
+  //   children: 'Údolí Kačáku 🇨🇿',
+  // },
+  // {
+  //   href: '/relation/17129044',
+  //   src: '/images/homepage/zupanovice',
+  //   children: 'Županovice 🇨🇿',
+  // },
 ];
 
 export const DiscoveryMoreText = styled.div`
