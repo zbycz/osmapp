@@ -118,6 +118,8 @@ type ClimbingContextType = {
   getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
   showDebugMenu: boolean;
   setShowDebugMenu: (showDebugMenu: boolean) => void;
+  isPanningActive: boolean;
+  setIsPanningActive: (isPanningActive: boolean) => void;
   arePointerEventsDisabled: boolean; // @TODO do we need it?
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
   preparePhotos: (cragPhotos: Array<string>) => void;
@@ -160,6 +162,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [routes, setRoutes] = useState<Array<ClimbingRoute>>(initialRoutes);
   const [isRoutesLayerVisible, setIsRoutesLayerVisible] =
     useState<boolean>(true);
+  const [isPanningActive, setIsPanningActive] = useState<boolean>(false);
   const [isPointMoving, setIsPointMoving] = useState<boolean>(false);
   const [isPanningDisabled, setIsPanningDisabled] = useState<boolean>(false);
   const [isPointClicked, setIsPointClicked] = useState<boolean>(false);
@@ -387,6 +390,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     getAllRoutesPhotos,
     showDebugMenu,
     setShowDebugMenu,
+    isPanningActive,
+    setIsPanningActive,
     arePointerEventsDisabled,
     setArePointerEventsDisabled,
     preparePhotos,

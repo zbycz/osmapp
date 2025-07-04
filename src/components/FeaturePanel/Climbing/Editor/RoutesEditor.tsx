@@ -4,22 +4,22 @@ import { RoutesLayer } from './RoutesLayer';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
-import {
-  getMouseFromPositionInImage,
-  getPositionInImageFromMouse,
-} from '../utils/mousePositionUtils';
+import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
 import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
 import { isMobileDevice } from '../../../helpers';
-import { RouteFloatingMenu } from './RouteFloatingMenu';
 
-const EditorContainer = styled.div<{ imageHeight: number }>`
+const EditorContainer = styled.div<{
+  $imageHeight: number;
+  $isPanningActive: boolean;
+}>`
   display: flex;
   justify-content: center;
-  height: ${({ imageHeight }) => `${imageHeight}px`};
+  height: ${({ $imageHeight }) => `${$imageHeight}px`};
   top: 0;
   position: absolute;
   width: 100%;
   height: 100%;
+  ${({ $isPanningActive }) => ($isPanningActive ? `cursor: grabbing;` : '')};
 `;
 
 const ImageContainer = styled.div`
@@ -70,6 +70,7 @@ export const RoutesEditor = ({
     setLoadedPhotos,
     photoZoom,
     photoPaths,
+    isPanningActive,
   } = useClimbingContext();
   const machine = getMachine();
   const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
@@ -84,7 +85,7 @@ export const RoutesEditor = ({
 
     if (machine.currentStateName === 'pointMenu') {
       machine.execute('cancelPointMenu');
-    } else {
+    } else if (!isPanningActive) {
       machine.execute('cancelRouteSelection');
     }
   };
@@ -163,10 +164,10 @@ export const RoutesEditor = ({
     preloadOtherPhotos();
     setIsPhotoLoading(false);
   };
-
   return (
     <EditorContainer
-      imageHeight={imageSize.height}
+      $isPanningActive={isPanningActive}
+      $imageHeight={imageSize.height}
       onContextMenu={isMobileDevice() ? (e) => e.preventDefault() : undefined}
     >
       <ImageContainer>
