@@ -23,24 +23,6 @@ const getHeading = (feature: Feature) => {
   return t('member_features.subitems');
 };
 
-const PanelAddition = () => {
-  const { feature } = useFeatureContext();
-  const { userSettings, setUserSetting } = useUserSettingsContext();
-
-  if (feature.tags.climbing !== 'crag') {
-    return null;
-  }
-
-  return (
-    <GradeSystemSelect
-      setGradeSystem={(system) => {
-        setUserSetting('climbing.gradeSystem', system);
-      }}
-      selectedGradeSystem={userSettings['climbing.gradeSystem']}
-    />
-  );
-};
-
 const Ul = styled.ul`
   padding: 0;
   list-style: none;
@@ -68,7 +50,7 @@ export const MemberFeatures = () => {
   return (
     <Box mb={1}>
       <Box ml={-2} mr={-2}>
-        <PanelLabel addition={<PanelAddition />}>
+        <PanelLabel>
           <Stack direction="row" gap={1.5}>
             <div>{getHeading(feature)}</div>
             <Chip

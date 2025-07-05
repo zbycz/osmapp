@@ -105,7 +105,7 @@ export const GradeSystemSelect = ({
           variant="text"
         >
           {getGradeSystemName(selectedGradeSystem) ??
-            t('grade_system_select.convert_grade')}
+            t('grade_system_select.convert_grade_short')}
         </Button>
         <Menu
           id="demo-customized-menu"
