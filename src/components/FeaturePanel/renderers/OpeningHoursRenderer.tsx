@@ -20,6 +20,23 @@ const Table = styled.table`
   }
 `;
 
+const StatusText = styled.span<{ status: Status }>`
+  color: ${({ status }) => {
+    switch (status) {
+      case 'opened':
+        return '#4caf50'; // green
+      case 'closed':
+        return '#f44336'; // red
+      case 'opens-soon':
+        return '#ff9800'; // orange
+      case 'closes-soon':
+        return '#ffc107'; // amber/yellow
+      default:
+        return 'inherit';
+    }
+  }};
+`;
+
 // const weekDays = ['su', 'mo', 'tu', 'we', 'th', 'fr', 'sa'];
 const weekDays = t('opening_hours.days_su_mo_tu_we_th_fr_sa').split('|');
 
@@ -78,7 +95,9 @@ export const OpeningHoursRenderer = ({ v }) => {
     <>
       <AccessTime fontSize="small" />
       <div suppressHydrationWarning>
-        {formatDescription(status, daysTable)}
+        <StatusText status={status}>
+          {formatDescription(status, daysTable)}
+        </StatusText>
         {maybeReasons.length > 0 && (
           <>
             <br />
