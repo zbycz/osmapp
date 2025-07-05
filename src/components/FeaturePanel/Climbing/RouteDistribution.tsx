@@ -19,13 +19,18 @@ import { Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
 import { isClimbingCrag } from '../../../utils';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { GradeSystemSelect } from './GradeSystemSelect';
+import { PanelLabel } from './PanelLabel';
 
 const MAX_COLUMN_HEIGHT = 40;
 const NUMBER_OF_ROUTES_HEIGHT = 14;
 const MAX_CHART_HEIGHT = MAX_COLUMN_HEIGHT + NUMBER_OF_ROUTES_HEIGHT;
 
 const Container = styled.div`
-  margin: 4px 12px 0;
+  margin: 4px 0px 0px;
+
+  padding: 0 4px 8px 16px;
+  overflow: auto;
 `;
 
 const Items = styled.div`
@@ -52,14 +57,17 @@ const GradeSystemName = styled.div`
   font-size: 10px;
   flex: 1;
   text-align: right;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const DifficultyLevel = styled.div<{ $isActive: boolean; $color: string }>`
   text-align: center;
   color: ${({ $color, $isActive, theme }) =>
     $isActive ? $color : convertHexToRgba(theme.palette.secondary.main, 0.6)};
-  font-weight: bold;
-  font-size: 10px;
+  font-weight: ${({ $isActive }) => ($isActive ? 'bold' : 'normal')};
+  font-size: 9px;
+  height: 23px;
 `;
 
 const StaticHeightContainer = styled.div`
@@ -83,6 +91,10 @@ const getGroupingLabel = (label: string, gradeSystem: GradeSystem) => {
     const match = label?.match(/^[A-Z]+/);
     return match ? match[0] : '';
   }
+  if (gradeSystem === 'polish') {
+    const match = label?.match(/^[A-Z]+\.?[0-9]?/);
+    return match ? match[0] : '';
+  }
   if (gradeSystem === 'hueco') {
     const match = label?.match(/^[A-Z0-9]+/);
     return match ? match[0] : '';
@@ -95,7 +107,7 @@ export const RouteDistribution = ({
 }: {
   features: Array<Feature>;
 }) => {
-  const { userSettings } = useUserSettingsContext();
+  const { userSettings, setUserSetting } = useUserSettingsContext();
   const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   const theme = useTheme();
@@ -142,7 +154,20 @@ export const RouteDistribution = ({
     heightsRatios.length < 2 ||
     heightsRatios.reduce((acc, { ratio }) => acc + ratio, 0) === 0
   )
-    return null;
+    return (
+      <PanelLabel
+        addition={
+          <GradeSystemSelect
+            setGradeSystem={(system) => {
+              setUserSetting('climbing.gradeSystem', system);
+            }}
+            selectedGradeSystem={userSettings['climbing.gradeSystem']}
+          />
+        }
+      >
+        {t('grade_system_select.convert_grade')}
+      </PanelLabel>
+    );
 
   const getMaxHeightRatio = Math.max(
     ...heightsRatios.map(({ ratio }) => ratio),
@@ -162,6 +187,7 @@ export const RouteDistribution = ({
                 },
                 theme,
               );
+
               const numberOfRoutesKey = Object.keys(routeOccurrences).find(
                 (key) => key === heightRatioItem.grade,
               );
@@ -193,7 +219,12 @@ export const RouteDistribution = ({
                 gradeSystemName,
               })}
             >
-              <>{gradeSystemName}</>
+              <GradeSystemSelect
+                setGradeSystem={(system) => {
+                  setUserSetting('climbing.gradeSystem', system);
+                }}
+                selectedGradeSystem={userSettings['climbing.gradeSystem']}
+              />
             </Tooltip>
           </GradeSystemName>
         </Items>
