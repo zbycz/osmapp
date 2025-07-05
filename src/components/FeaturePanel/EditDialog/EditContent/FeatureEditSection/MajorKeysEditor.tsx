@@ -7,6 +7,7 @@ import {
   Switch,
   Stack,
   Tooltip,
+  Autocomplete,
 } from '@mui/material';
 import { t } from '../../../../../services/intl';
 import {
@@ -20,6 +21,10 @@ import { CharacterCount, getInputTypeForKey } from '../helpers';
 import { isClimbingRoute } from '../../../../../utils';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import { useCurrentItem } from '../../EditContext';
+import { GRADE_TABLE } from '../../../Climbing/utils/grades/gradeData';
+import { extractClimbingGradeFromTagName } from '../../../Climbing/utils/grades/routeGrade';
+import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
+import { RouteDifficultyBadge } from '../../../Climbing/RouteDifficultyBadge';
 
 export const climbingRouteMajorKeys = [
   'author',
@@ -142,6 +147,19 @@ const TextFieldWithCharacterCount = ({
   );
 };
 
+const AutocompleteSelect = ({ values, label, defaultValue, renderOption }) => {
+  return (
+    <Autocomplete
+      options={values}
+      defaultValue={defaultValue}
+      renderInput={(params) => (
+        <TextField {...params} margin="dense" label={label} />
+      )}
+      renderOption={renderOption}
+    />
+  );
+};
+
 // TODO refactor this - extract member functions
 // eslint-disable-next-line max-lines-per-function
 export const MajorKeysEditor = () => {
@@ -178,6 +196,34 @@ export const MajorKeysEditor = () => {
 
     if (k === 'opening_hours') {
       return <OpeningHoursEditor />;
+    }
+
+    const climbingGradeSystem = extractClimbingGradeFromTagName(k);
+    if (climbingGradeSystem) {
+      const values = GRADE_TABLE[climbingGradeSystem];
+      const uniqueValues = [...new Set(values)];
+      const value = tags[k] ?? '';
+
+      return (
+        <AutocompleteSelect
+          values={uniqueValues}
+          label={data.names[k]}
+          defaultValue={value}
+          renderOption={(props, option, state, ownerState) => {
+            const { key, ...optionProps } = props;
+            return (
+              <Box key={key} {...optionProps}>
+                <RouteDifficultyBadge
+                  routeDifficulty={{
+                    gradeSystem: climbingGradeSystem,
+                    grade: ownerState.getOptionLabel(option),
+                  }}
+                />
+              </Box>
+            );
+          }}
+        />
+      );
     }
 
     if (k.startsWith('wikimedia_commons')) {

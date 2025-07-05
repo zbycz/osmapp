@@ -121,3 +121,10 @@ export const findOrConvertRouteGrade = (
     routeDifficulty,
   };
 };
+
+export const extractClimbingGradeFromTagName = (
+  value: string,
+): string | null => {
+  const match = value.match(/^climbing:grade:([^:]+)/);
+  return match ? match[1] : null;
+};
