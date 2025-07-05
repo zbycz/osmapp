@@ -40,13 +40,26 @@ export const UncertainCover = styled.div`
 
 export const useGetOnClick = (def: ImageDef) => {
   const { feature } = useFeatureContext();
-
   if (isTag(def) && feature.tags.climbing === 'crag') {
     return () => {
       const featureLink = getOsmappLink(feature);
       const photoLink = removeFilePrefix(def.v);
       Router.push(`${featureLink}/climbing/photo/${photoLink}`);
     };
+  }
+
+  if (isTag(def) && feature.tags.climbing === 'route_bottom') {
+    const parentCragFeature = feature.parentFeatures.filter(
+      (item) => item.tags.climbing === 'crag',
+    );
+    if (parentCragFeature.length > 0) {
+      return () => {
+        const featureLink = getOsmappLink(parentCragFeature[0]);
+        const photoLink = removeFilePrefix(def.v);
+
+        Router.push(`${featureLink}/climbing/photo/${photoLink}`);
+      };
+    }
   }
 
   return undefined;
