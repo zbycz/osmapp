@@ -7,7 +7,7 @@ import { TooltipButton } from '../../../utils/TooltipButton';
 
 const TooltipContent = ({ image }: { image: ImageType }) => (
   <>
-    {image.description}
+    <span dangerouslySetInnerHTML={{ __html: image.description }} />
     <br />
     <a href={image.linkUrl} target="_blank">
       {image.link}
