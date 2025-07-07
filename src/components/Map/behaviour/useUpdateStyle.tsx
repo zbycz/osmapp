@@ -51,7 +51,8 @@ const getBaseStyle = (key: string, currentTheme: Theme): StyleSpecification => {
     return outdoorStyle;
   }
 
-  if (isUrlForRasterLayer(key)) {
+  const url = osmappLayers[key]?.url ?? key;
+  if (isUrlForRasterLayer(url)) {
     return getRasterStyle(key, currentTheme);
   }
 
