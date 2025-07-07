@@ -20,7 +20,7 @@ export type ImageType = {
   link: string;
   uncertainImage?: true;
   sameUrlResolvedAlsoFrom?: ImageType[]; // only 1 level
-  panoramaUrl?: string; // only for Mapillary (ImageDefFromCenter)
+  panoramaUrl?: string; // only for street side photography (ImageDefFromCenter)
   provider?: string;
 };
 
@@ -111,6 +111,7 @@ const commonsCategory = ([k, v]) => commons(k) && v.startsWith('Category:');
 
 const mapillary = ([k, v]) => k === 'mapillary' && v.match(/^\d+$/);
 const panoramax = ([k, _]) => k === 'panoramax';
+const website = ([k, _]) => k === 'website' || k === 'contact:website';
 
 const getImagesFromTags = (tags: FeatureTags) => {
   const entries = Object.entries(tags);
@@ -122,6 +123,7 @@ const getImagesFromTags = (tags: FeatureTags) => {
     ...entries.filter(commonsCategory),
     ...entries.filter(mapillary),
     ...entries.filter(panoramax),
+    ...entries.filter(website),
   ];
 
   return imageTags

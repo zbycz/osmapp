@@ -183,6 +183,7 @@ export default {
   'featurepanel.uncertain_image': 'This is the closest street view image from __from__. It may be inaccurate.',
   'featurepanel.image_description': '__provider__ image from __date__',
   'featurepanel.image_license': 'Licensed under __license__',
+  'featurepanel.og_image': 'Featured image from __url__',
   'featurepanel.inline_edit_title': 'Edit',
   'featurepanel.objects_around': 'Nearby objects',
   'featurepanel.more_in_openplaceguide': 'More information on __instanceName__',
