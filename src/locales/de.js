@@ -116,6 +116,8 @@ export default {
   'featurepanel.show_tags': 'Zeige Tags an',
   'featurepanel.show_objects_around': 'Zeige Orte in der Nähe an',
   'featurepanel.uncertain_image': 'Dies ist das nächste Street View Bild von __from__. Es kann ein anders Objekt zeigen.',
+  'featurepanel.image_description': '__provider__ Bild vom __date__',
+  'featurepanel.image_license': 'Lizenziert unter __license__',
   'featurepanel.inline_edit_title': 'Bearbeiten',
   'featurepanel.objects_around': 'Orte in der Nähe',
   'featurepanel.more_in_openplaceguide': 'Weitere Information auf __instanceName__',

@@ -1,3 +1,4 @@
+import { t, intl } from '../intl';
 import { Position } from '../types';
 import { ImageType } from './getImageDefs';
 
@@ -19,6 +20,7 @@ type ImageProvider<T> = {
   getImageLink: (img: T) => string;
   getImageLinkUrl: (img: T) => string;
   getPanoUrl: (img: T) => string;
+  getDescription?: (img: T, defaultDescription: string) => string;
 };
 
 export const getImageFromCenterFactory =
@@ -34,6 +36,7 @@ export const getImageFromCenterFactory =
       getImageLink,
       getImageLinkUrl,
       getPanoUrl,
+      getDescription,
     }: ImageProvider<T>,
   ) =>
   async (poiCoords: Position): Promise<ImageType | null> => {
@@ -62,10 +65,18 @@ export const getImageFromCenterFactory =
 
     const imageToUse = sorted[0];
 
+    const defaultDescription = t('featurepanel.image_description', {
+      provider,
+      date: getImageDate(imageToUse).toLocaleString(intl.lang),
+    });
+
+    const description =
+      getDescription?.(imageToUse, defaultDescription) ?? defaultDescription;
+
     return {
       provider,
+      description,
       imageUrl: getImageUrl(imageToUse),
-      description: `${provider} image from ${getImageDate(imageToUse).toLocaleString()}`,
       linkUrl: getImageLinkUrl(imageToUse),
       link: getImageLink(imageToUse),
       uncertainImage: true,
