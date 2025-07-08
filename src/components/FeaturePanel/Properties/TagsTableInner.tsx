@@ -32,6 +32,7 @@ type TagsGroupProps = {
 
 const getTagGroupPreview = (tags: [string, string][]) => {
   const tag =
+    tags.find(([key]) => key.endsWith('short')) ??
     tags.find(([key]) => key.endsWith('wikipedia')) ??
     tags.find(([key]) => !key.endsWith('wikidata')) ??
     tags[0];
@@ -56,7 +57,7 @@ const TagsGroup = ({
         <th>{label}</th>
         <td style={{ overflow: 'visible' }}>
           <InlineEditButton k={tags[0][0]} />
-          {value || getTagGroupPreview(tags)}
+          {value ?? getTagGroupPreview(tags)}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
       </tr>
