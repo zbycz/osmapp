@@ -19,7 +19,7 @@ const getEllipsisHumanUrl = (humanUrl: string) => {
   });
 };
 
-const getHumanValue = (k: string, v: string, featured: boolean) => {
+export const getHumanValue = (k: string, v: string) => {
   const humanValue = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
 
   if (v.startsWith('https://commons.wikimedia.org/wiki/')) {
@@ -40,9 +40,6 @@ const getHumanValue = (k: string, v: string, featured: boolean) => {
       return v;
     }
   }
-  if (featured && k === 'wikidata') {
-    return `Wikipedia (wikidata)`; // TODO fetch label from wikidata
-  }
   if (v === 'yes') {
     return '✓';
   }
@@ -61,8 +58,8 @@ const ColorValue = styled.div<{ v: string }>`
   display: inline;
 `;
 
-const renderTagSingleValue = (k: string, v: string, featured = false) => {
-  const humanValue = getHumanValue(k, v, featured);
+const renderTagSingleValue = (k: string, v: string) => {
+  const humanValue = getHumanValue(k, v);
 
   if (k === 'direction') {
     return <DirectionValue v={v}>{humanValue}</DirectionValue>;
@@ -81,12 +78,12 @@ const renderTagSingleValue = (k: string, v: string, featured = false) => {
   );
 };
 
-export const renderTag = (k: string, v: string, featured = false) => {
+export const renderTag = (k: string, v: string) => {
   return v.split(';').map((v, idx) => (
     // eslint-disable-next-line react/no-array-index-key
     <Fragment key={idx}>
-      {idx > 0 && (featured ? ', ' : '; ')}
-      {renderTagSingleValue(k, v, featured)}
+      {idx > 0 && '; '}
+      {renderTagSingleValue(k, v)}
     </Fragment>
   ));
 };
