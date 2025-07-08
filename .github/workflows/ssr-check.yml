@@ -10,10 +10,13 @@ jobs:
         run: |
           URL=$(echo ${{ github.event.deployment_status.environment_url }})/node/6
           echo "Fetch the URL: $URL"
-          curl -v $URL | grep -q "Originally Detonátor route (this message used for SSR check)"
+
+          RESPONSE=$(curl -s $URL)
+          echo "$RESPONSE" | grep -q "Originally Detonátor route (this message used for SSR check)"
           if [ $? -eq 0 ]; then
               echo "Server-side rendering is working"
           else
               echo "Server-side rendering broken"
+              echo "Server response: $RESPONSE"
               exit 1
           fi
