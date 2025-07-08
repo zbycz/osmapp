@@ -407,6 +407,7 @@ export default {
 
   'grade_system_select.default_grade_system': 'Default grade',
   'grade_system_select.show_more': 'Show more...',
+  'grade_system_select.convert_grade_short': 'Convert',
   'grade_system_select.convert_grade': 'Convert grades',
   'grade_system_select.select_grade_system': 'Select grade system',
 

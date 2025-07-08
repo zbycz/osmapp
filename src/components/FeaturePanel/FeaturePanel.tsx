@@ -94,7 +94,9 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
 
               <PanelSidePadding>
                 {!movePropertiesBelowMembers && <PropertiesComponent />}
-                <RouteDistributionInFeaturePanel />
+              </PanelSidePadding>
+              <RouteDistributionInFeaturePanel />
+              <PanelSidePadding>
                 {!isPublictransportRoute(feature) && <MemberFeatures />}
                 {advanced && <Members />}
                 {movePropertiesBelowMembers && <PropertiesComponent />}
