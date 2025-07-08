@@ -57,6 +57,12 @@ test('conversion', () => {
       instant: false,
     },
     {
+      type: 'tag',
+      k: 'website',
+      v: 'https://site-may-have-og-image',
+      instant: false,
+    },
+    {
       type: 'center',
       service: 'panoramax',
       center: [14, 50],

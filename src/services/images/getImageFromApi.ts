@@ -8,6 +8,8 @@ import { getCommonsImageUrl } from './getCommonsImageUrl';
 import { getKartaViewImage } from './getkartaViewImage';
 import { getPanoramaxImage } from './getPanoramaxImage';
 import { makeCategoryImage } from './makeCategoryImage';
+import { displayForm } from '../../components/FeaturePanel/renderers/helpers';
+import { t } from '../intl';
 
 type ImagePromise = Promise<ImageType | null>;
 
@@ -140,6 +142,27 @@ const fetchMapillaryTag = async (k: string, v: string): ImagePromise => {
   };
 };
 
+// Only ogImage *OR* error can be there, for typescript we show it like this
+type OgImageResponse = { ogImage?: string; error?: string };
+
+const fetchOgImage = async (k: string, v: string): ImagePromise => {
+  const ogResponse = await fetchJson<OgImageResponse>(
+    `/api/load-og-image?href=${encodeURIComponent(v)}`,
+  );
+
+  if (ogResponse.error) {
+    return null;
+  }
+
+  const displayUrl = displayForm(v);
+  return {
+    imageUrl: ogResponse.ogImage,
+    description: `${t('featurepanel.og_image', { url: displayUrl })} (${k}=*)`,
+    linkUrl: v,
+    link: displayUrl,
+  };
+};
+
 export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
   if (isCenter(def)) {
     const { service, center } = def;
@@ -177,6 +200,9 @@ export const getImageFromApiRaw = async (def: ImageDef): ImagePromise => {
     }
     if (k.startsWith('mapillary')) {
       return fetchMapillaryTag(k, v);
+    }
+    if (k.startsWith('website') || k.startsWith('contact:website')) {
+      return fetchOgImage(k, v);
     }
   }
 
