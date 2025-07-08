@@ -4,6 +4,7 @@ import { slashToOptionalBr } from '../../helpers';
 import { DirectionValue } from './Direction';
 import { osmColorToHex, whiteOrBlackText } from '../helpers/color';
 import styled from '@emotion/styled';
+import { humanInterval } from './interval';
 
 const getEllipsisHumanUrl = (humanUrl: string) => {
   const MAX_LENGTH = 40;
@@ -31,6 +32,13 @@ const getHumanValue = (k: string, v: string, featured: boolean) => {
   }
   if (k.match(/:?wikipedia$/) && v.match(/:/)) {
     return v.split(':', 2)[1];
+  }
+  if (k === 'interval') {
+    try {
+      return humanInterval(v);
+    } catch {
+      return v;
+    }
   }
   if (featured && k === 'wikidata') {
     return `Wikipedia (wikidata)`; // TODO fetch label from wikidata
