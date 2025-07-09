@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { naturalSort } from './Climbing/utils/array';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { PROJECT_ID } from '../../services/project';
+import { handleClimbingDialogOnClick } from './FeatureImages/Image/helpers';
 import { MemberItem } from './MemberFeatures/MemberItem';
 import { RouteDistribution } from './Climbing/RouteDistribution';
 
@@ -127,6 +128,7 @@ const Gallery = ({ images, feature }) => {
             def={item.def}
             image={item.image}
             alt={`${alt} ${index + 1}`}
+            onClick={handleClimbingDialogOnClick(feature, item.def)}
           />
         ))}
       </Slider>
@@ -165,7 +167,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
             label={getLabel(feature)}
             routesCount={feature.members?.length}
           />
-          {images.length ? <Gallery images={images} feature={feature} /> : null}
+          {images.length ? <Gallery feature={feature} images={images} /> : null}
         </InnerContainer>
       </StyledLink>
       {feature.memberFeatures.length > 0 && (

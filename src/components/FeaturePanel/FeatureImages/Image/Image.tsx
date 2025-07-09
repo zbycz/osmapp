@@ -7,12 +7,7 @@ import {
 import { PathsSvg } from '../PathsSvg';
 
 import { HEIGHT } from '../helpers';
-import {
-  initialSize,
-  UncertainCover,
-  useGetOnClick,
-  useImgSizeOnload,
-} from './helpers';
+import { initialSize, UncertainCover, useImgSizeOnload } from './helpers';
 import { PanoramaImg } from './PanoramaImg';
 import { InfoButton } from './InfoButton';
 import { ImageDef, isTag } from '../../../../services/types';
@@ -61,19 +56,27 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
 type Props = {
   def: ImageDef;
   image: ImageType;
+  onClick: (def: ImageDef) => void;
   alt?: string;
 };
 
-export const Image = ({ def, image, alt }: Props) => {
+export const Image = ({ def, image, onClick, alt }: Props) => {
   const { imgRef, size, onPhotoLoad } = useImgSizeOnload();
-  const onClick = useGetOnClick(def);
+
   const hasPaths =
     isTag(def) && !!(def.path?.length || def.memberPaths?.length);
 
   const isImageLoaded = size !== initialSize;
   const showInfo = image.panoramaUrl || isImageLoaded;
   return (
-    <ImageWrapper $hasPaths={hasPaths} onClick={onClick}>
+    <ImageWrapper
+      $hasPaths={hasPaths}
+      onClick={(e) => {
+        onClick(def);
+        e.stopPropagation();
+        e.preventDefault();
+      }}
+    >
       {image.panoramaUrl ? (
         <PanoramaImg small={image.imageUrl} large={image.panoramaUrl} />
       ) : (
