@@ -36,16 +36,20 @@ const prepareGeojson = (
 const removeDiacritics = (str: string) =>
   str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-export const recordsFactory = () => {
+export const recordsFactory = (log: (message: string) => void) => {
   const records: ClimbingFeaturesRecords = [];
   const addRecordRaw = (
     type: string,
     coordinates: LonLat,
     feature: GeojsonFeature,
   ) => {
-    const lon = coordinates[0];
-    const lat = coordinates[1];
-    return records.push({
+    if (!coordinates) {
+      log(`Skipping record without geometry, mapid: ${feature.id}`);
+      return;
+    }
+
+    const [lon, lat] = coordinates;
+    records.push({
       type,
       osmType: feature.osmMeta.type,
       osmId: feature.osmMeta.id,

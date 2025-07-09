@@ -26,7 +26,7 @@ type OsmWay = {
 type OsmRelation = {
   type: 'relation';
   id: number;
-  members: {
+  members?: {
     type: OsmType;
     ref: number;
     role: string;
@@ -68,7 +68,7 @@ const convertOsmIdToMapId = (apiId: OsmId) => {
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-const getItems = (elements: OsmItem[]) => {
+const getItems = (elements: OsmItem[], log: (message: string) => void) => {
   const nodes: OsmNode[] = [];
   const ways: OsmWay[] = [];
   const relations: OsmRelation[] = [];
@@ -78,7 +78,11 @@ const getItems = (elements: OsmItem[]) => {
     } else if (element.type === 'way') {
       ways.push(element);
     } else if (element.type === 'relation') {
-      relations.push(element);
+      if (element.members) {
+        relations.push(element);
+      } else {
+        log(`Skipping relation without members: relation/${element.id}`);
+      }
     }
   });
   return { nodes, ways, relations };
@@ -212,8 +216,11 @@ const getRelationWithAreaCount = (
     return relation;
   });
 
-export const overpassToGeojsons = (response: OsmResponse) => {
-  const { nodes, ways, relations } = getItems(response.elements);
+export const overpassToGeojsons = (
+  response: OsmResponse,
+  log: (message: string) => void,
+) => {
+  const { nodes, ways, relations } = getItems(response.elements, log);
 
   const lookup = { node: {}, way: {}, relation: {} } as Lookup;
 
