@@ -36,7 +36,7 @@ const prepareGeojson = (
 const removeDiacritics = (str: string) =>
   str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-export const recordsFactory = () => {
+export const recordsFactory = (log: (message: string) => void) => {
   const records: ClimbingFeaturesRecords = [];
   const addRecordRaw = (
     type: string,
@@ -44,7 +44,7 @@ export const recordsFactory = () => {
     feature: GeojsonFeature,
   ) => {
     if (!coordinates) {
-      console.log(`Skipping record without geometry, mapid: ${feature.id}`);
+      log(`Skipping record without geometry, mapid: ${feature.id}`);
       return;
     }
 
