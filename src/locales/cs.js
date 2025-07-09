@@ -353,6 +353,7 @@ export default {
 
   'grade_system_select.default_grade_system': 'Původní klasifikace',
   'grade_system_select.show_more': 'Zobrazit další...',
+  'grade_system_select.convert_grade_short': 'Převést',
   'grade_system_select.convert_grade': 'Převést klasifikaci',
   'grade_system_select.select_grade_system': 'Vybrat klasifikaci',
 

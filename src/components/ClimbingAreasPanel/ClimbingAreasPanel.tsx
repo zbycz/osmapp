@@ -64,7 +64,7 @@ export const ClimbingAreasPanel = ({ areas }: ClimbingAreasPanelProps) => {
                           `N/A – relation/${climbingArea.id}`}
                       </Link>
                     </TableCell>
-                    <TableCell>{climbingArea.members.length}</TableCell>
+                    <TableCell>{climbingArea.members?.length}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

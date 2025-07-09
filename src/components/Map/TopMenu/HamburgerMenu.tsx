@@ -119,7 +119,7 @@ const GithubLink = ({ closeMenu }) => (
   </MenuItem>
 );
 const ClimbingAreasLink = ({ closeMenu }) => (
-  <MenuItem href="/climbing-areas" component={Link} onClick={closeMenu}>
+  <MenuItem href={`/climbing-areas`} component={Link} onClick={closeMenu}>
     <TerrainIcon fontSize="inherit" sx={{ mr: 1 }} />
     {t('climbingareas.title')}
   </MenuItem>

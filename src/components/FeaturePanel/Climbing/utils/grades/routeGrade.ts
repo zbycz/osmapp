@@ -20,7 +20,10 @@ export const convertGrade = (
   value: string,
 ) => {
   if (!from || !to || !value || !GRADE_TABLE[from]) return null;
-  const indexInTable = GRADE_TABLE[from].indexOf(value);
+
+  const indexInTable = GRADE_TABLE[from].findIndex((item) =>
+    item.startsWith(value),
+  );
 
   if (GRADE_TABLE[to][indexInTable]) {
     return GRADE_TABLE[to][indexInTable];
@@ -87,6 +90,7 @@ export const getDifficultyColor = (routeDifficulty, theme) => {
   );
 
   const { mode } = theme.palette;
+
   const uiaaGrade =
     routeDifficulty.gradeSystem !== 'uiaa'
       ? convertGrade(

@@ -257,7 +257,7 @@ export const HomepageOpenClimbingGallery = () => (
       <GalleryItem
         blur
         center
-        href="/climbing-areas"
+        href={`/climbing-areas`}
         src="/images/homepage/solvayovy-lomy.jpg"
         alt="Solvayovy lomy"
       >
