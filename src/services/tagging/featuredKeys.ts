@@ -13,19 +13,24 @@ export type FeaturedKeyRenderer =
 export type FeaturedKey = {
   matcher: RegExp;
   renderer: FeaturedKeyRenderer;
+  uniqPredicate?: (k: string, v: string) => string;
 };
 export type FeaturedKeys = FeaturedKey[];
 
 export const FEATURED_KEYS: FeaturedKeys = [
-  { matcher: /website/, renderer: 'WebsiteRenderer' },
-  { matcher: /url/, renderer: 'WebsiteRenderer' },
-  { matcher: /phone/, renderer: 'PhoneRenderer' },
-  { matcher: /contact:phone/, renderer: 'PhoneRenderer' },
-  { matcher: /contact:mobile/, renderer: 'PhoneRenderer' },
-  { matcher: /opening_hours/, renderer: 'OpeningHoursRenderer' },
-  { matcher: /service_hours/, renderer: 'OpeningHoursRenderer' },
-  { matcher: /wikipedia/, renderer: 'WikipediaRenderer' },
-  { matcher: /wikidata/, renderer: 'WikidataRenderer' },
+  {
+    matcher: /website|url/,
+    renderer: 'WebsiteRenderer',
+    uniqPredicate: (_, v) => v.replace('https', 'http').replace(/\/$/, ''),
+  },
+  {
+    matcher: /phone|contact:mobile/,
+    renderer: 'PhoneRenderer',
+    uniqPredicate: (_, v) => v.replace(/\s+/g, ''),
+  },
+  { matcher: /(opening|service)_hours/, renderer: 'OpeningHoursRenderer' },
+  { matcher: /^wikipedia/, renderer: 'WikipediaRenderer' },
+  { matcher: /^wikidata/, renderer: 'WikidataRenderer' },
   { matcher: /fhrs:id/, renderer: 'FoodHygieneRatingSchemeRenderer' },
   { matcher: /climbing:grade:/, renderer: 'ClimbingGradeRenderer' },
   { matcher: /(via_ferrata_scale|sac_scale)/, renderer: 'ScaleRenderer' },
