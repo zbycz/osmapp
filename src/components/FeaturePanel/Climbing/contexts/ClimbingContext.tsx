@@ -118,6 +118,7 @@ type ClimbingContextType = {
   getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
   showDebugMenu: boolean;
   setShowDebugMenu: (showDebugMenu: boolean) => void;
+  isPanningActiveRef: React.MutableRefObject<any>;
   arePointerEventsDisabled: boolean; // @TODO do we need it?
   setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
   preparePhotos: (cragPhotos: Array<string>) => void;
@@ -147,6 +148,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);
   const svgRef = useRef(null);
+  const isPanningActiveRef = useRef(false);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);
@@ -387,6 +389,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     getAllRoutesPhotos,
     showDebugMenu,
     setShowDebugMenu,
+    isPanningActiveRef,
     arePointerEventsDisabled,
     setArePointerEventsDisabled,
     preparePhotos,
