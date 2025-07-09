@@ -71,7 +71,7 @@ const GEOMETRY = {
     tags = {},
   }: OverpassObject): GeometryCollection | Polygon => {
     if (tags.type === 'multipolygon') {
-      const membersWithGeometry = members.filter(({ geometry }) => geometry);
+      const membersWithGeometry = members.filter(({ geometry }) => geometry); //eg `op:relation(1561811)`
       const outer = membersWithGeometry
         .filter(({ role }) => role === 'outer')
         .flatMap(geojsonCoords);
