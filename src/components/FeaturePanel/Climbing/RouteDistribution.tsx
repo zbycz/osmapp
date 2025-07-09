@@ -114,7 +114,7 @@ export const RouteDistribution = ({
   const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   const theme = useTheme();
-  if (features.length === 0) return null;
+  if (features?.length === 0) return null;
 
   const prepareOccurrenceStructure = () =>
     GRADE_TABLE[gradeSystem].reduce<{ [grade: string]: number }>(
@@ -127,7 +127,7 @@ export const RouteDistribution = ({
 
   const getOccurrences = () => {
     const structure = prepareOccurrenceStructure();
-    return features.reduce((acc, feature) => {
+    return features?.reduce((acc, feature) => {
       const difficulty = getDifficulty(feature.tags);
       if (!difficulty) return acc;
       const convertedGrade = convertGrade(
