@@ -165,7 +165,7 @@ export const refreshClimbingTiles = async () => {
   log(`Records: ${records.length}`);
 
   const columns = Object.keys(records[0]);
-  const chunks = chunk(records, 5000); // XATA max size is probably 4 MB, this produces queries about 2 MB big
+  const chunks = chunk(records, 1000); // XATA max size is probably 4 MB, but it was out of memory on 1.8MB as well. This produces queries about 0.4 MB big
 
   await client.query('TRUNCATE TABLE climbing_features');
   for (const [index, chunk] of chunks.entries()) {
