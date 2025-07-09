@@ -20,7 +20,7 @@ const TopPanel = styled.div`
   padding: 8px;
   box-sizing: border-box;
 
-  top: 0;
+  top: env(safe-area-inset-top);
   z-index: 1200; // 1100 is PanelWrapper
 
   width: 100%;

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { Global, css } from '@emotion/react';
 import React, { Ref, useState } from 'react';
 import { SwipeableDrawer } from '@mui/material';
-import { Puller } from '../FeaturePanel/helpers/Puller';
+import { Puller, PULLER_HEIGHT } from '../FeaturePanel/helpers/Puller';
 
 type SettingsProps = {
   $collapsedHeight: number;
@@ -12,7 +12,7 @@ type SettingsProps = {
 
 const getPaperStyle = (className: string, offset: number) => css`
   .${className}.MuiDrawer-root > .MuiPaper-root {
-    height: calc(100% - ${offset}px);
+    height: calc(100% - ${offset}px - env(safe-area-inset-top));
     overflow: visible;
     background-color: transparent;
   }
@@ -33,6 +33,7 @@ const Container = styled.div<SettingsProps>`
       ${({ $topOffset }) => $topOffset}px
   );
   overflow: hidden;
+  padding-bottom: env(safe-area-inset-bottom);
 `;
 
 const Content = styled.main`
@@ -70,7 +71,12 @@ export const Drawer = ({
 
   return (
     <>
-      <Global styles={getPaperStyle(className, collapsedHeight + topOffset)} />
+      <Global
+        styles={getPaperStyle(
+          className,
+          collapsedHeight + topOffset + PULLER_HEIGHT,
+        )}
+      />
       <SwipeableDrawer
         anchor="bottom"
         open={open}
@@ -86,7 +92,10 @@ export const Drawer = ({
           onTransitionEnd?.(e, open);
         }}
       >
-        <Container $collapsedHeight={collapsedHeight} $topOffset={topOffset}>
+        <Container
+          $collapsedHeight={collapsedHeight + PULLER_HEIGHT}
+          $topOffset={topOffset}
+        >
           <Puller setOpen={setOpen} open={open} />
           <Content ref={ref}>{children}</Content>
         </Container>

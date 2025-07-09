@@ -6,7 +6,6 @@ import BugReport from '@mui/icons-material/BugReport';
 import { Button, CircularProgress } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
-import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
@@ -38,7 +37,7 @@ const TopRight = styled.div`
   z-index: 1000;
   padding: 10px;
   right: 0;
-  top: 62px;
+  top: calc(env(safe-area-inset-top) + 62px);
 
   @media ${isDesktop} {
     top: 0;
@@ -48,7 +47,7 @@ const TopRight = styled.div`
 const BottomRight = styled.div`
   position: absolute;
   right: 0;
-  bottom: 0;
+  bottom: env(safe-area-inset-bottom);
   z-index: 1000;
   text-align: right;
   pointer-events: none;
@@ -61,13 +60,6 @@ const BottomRight = styled.div`
   padding: 0 4px 4px 4px;
 `;
 
-const BugReportButton = () => (
-  <Button size="small">
-    <BugReport width="10" height="10" />
-    Nahlásit chybu v mapě
-  </Button>
-);
-
 const NoscriptMessage = () => (
   <noscript>
     <span style={{ position: 'absolute', left: '50%', top: '50%' }}>
@@ -76,12 +68,22 @@ const NoscriptMessage = () => (
   </noscript>
 );
 
+const TopBlur = styled.div`
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: env(safe-area-inset-top);
+  backdrop-filter: blur(4px);
+`;
+
 const Map = () => {
   const { mapLoaded } = useMapStateContext();
 
   return (
     <>
       <BrowserMapDynamic />
+      <TopBlur />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
       <TopRight>
@@ -89,7 +91,6 @@ const Map = () => {
         <LayerSwitcherDynamic />
       </TopRight>
       <BottomRight>
-        {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
         <Weather />
         <MapFooter />

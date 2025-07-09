@@ -69,7 +69,15 @@ const BrowserMap = () => {
   useUpdateStyle(map, activeLayers, userLayers, mapLoaded, currentTheme);
   usePersistedScaleControl(map);
 
-  return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
+  return (
+    <div
+      ref={mapRef}
+      style={{
+        height: '100%',
+        width: '100%',
+      }}
+    />
+  );
 };
 
 const BrowserMapCheck = () => {

@@ -22,6 +22,7 @@ export const FeaturePanelInDrawer = ({
   const [collapsedHeight, setCollapsedHeight] = React.useState<number>(
     DRAWER_PREVIEW_HEIGHT,
   );
+  const [collapsed, setCollapsed] = React.useState(true);
   const { height: windowHeight } = useScreensize();
   const maxCollapsedHeight = windowHeight / 3;
 
@@ -42,8 +43,9 @@ export const FeaturePanelInDrawer = ({
       className={DRAWER_CLASSNAME}
       collapsedHeight={collapsedHeight}
       scrollRef={scrollRef}
+      onTransitionEnd={(_, open) => setCollapsed(!open)}
     >
-      <FeaturePanel headingRef={headingRef} />
+      <FeaturePanel headingRef={headingRef} isCollapsed={collapsed} />
     </Drawer>
   );
 };

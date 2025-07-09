@@ -21,8 +21,20 @@ const LayerSwitcher = () => {
         disableBackdropTransition
         disableSwipeToOpen
       >
-        <div role="presentation" style={{ width: '280px', height: '100%' }}>
-          <ClosePanelButton right onClick={close} style={{ top: 13 }} />
+        <div
+          role="presentation"
+          style={{
+            width: '280px',
+            height: '100%',
+            paddingTop: 'env(safe-area-inset-top, 0)',
+            paddingBottom: 'env(safe-area-inset-bottom, 0)',
+          }}
+        >
+          <ClosePanelButton
+            right
+            onClick={close}
+            style={{ top: 'calc(13px + env(safe-area-inset-top, 0))' }}
+          />
           <LayerSwitcherContent />
         </div>
       </SwipeableDrawer>
