@@ -43,9 +43,13 @@ export const recordsFactory = () => {
     coordinates: LonLat,
     feature: GeojsonFeature,
   ) => {
-    const lon = coordinates[0];
-    const lat = coordinates[1];
-    return records.push({
+    if (!coordinates) {
+      console.log(`Skipping record without geometry, mapid: ${feature.id}`);
+      return;
+    }
+
+    const [lon, lat] = coordinates;
+    records.push({
       type,
       osmType: feature.osmMeta.type,
       osmId: feature.osmMeta.id,

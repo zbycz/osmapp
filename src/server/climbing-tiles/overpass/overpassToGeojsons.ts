@@ -26,7 +26,7 @@ type OsmWay = {
 type OsmRelation = {
   type: 'relation';
   id: number;
-  members: {
+  members?: {
     type: OsmType;
     ref: number;
     role: string;
@@ -78,7 +78,13 @@ const getItems = (elements: OsmItem[]) => {
     } else if (element.type === 'way') {
       ways.push(element);
     } else if (element.type === 'relation') {
-      relations.push(element);
+      if (element.members) {
+        relations.push(element);
+      } else {
+        console.log(
+          `Skipping relation without members: relation/${element.id}`,
+        );
+      }
     }
   });
   return { nodes, ways, relations };
