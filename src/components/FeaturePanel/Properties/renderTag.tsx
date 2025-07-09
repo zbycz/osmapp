@@ -5,6 +5,10 @@ import { DirectionValue } from './Direction';
 import { osmColorToHex, whiteOrBlackText } from '../helpers/color';
 import styled from '@emotion/styled';
 import { humanInterval } from './interval';
+import { useQuery } from 'react-query';
+import { encodeUrl } from '../../../helpers/utils';
+import { fetchJson } from '../../../services/fetch';
+import { intl } from '../../../services/intl';
 
 const getEllipsisHumanUrl = (humanUrl: string) => {
   const MAX_LENGTH = 40;
@@ -19,7 +23,7 @@ const getEllipsisHumanUrl = (humanUrl: string) => {
   });
 };
 
-const getHumanValue = (k: string, v: string, featured: boolean) => {
+export const getHumanValue = (k: string, v: string) => {
   const humanValue = v.replace(/^https?:\/\//, '').replace(/^([^/]+)\/$/, '$1');
 
   if (v.startsWith('https://commons.wikimedia.org/wiki/')) {
@@ -40,9 +44,6 @@ const getHumanValue = (k: string, v: string, featured: boolean) => {
       return v;
     }
   }
-  if (featured && k === 'wikidata') {
-    return `Wikipedia (wikidata)`; // TODO fetch label from wikidata
-  }
   if (v === 'yes') {
     return '✓';
   }
@@ -61,32 +62,68 @@ const ColorValue = styled.div<{ v: string }>`
   display: inline;
 `;
 
-const renderTagSingleValue = (k: string, v: string, featured = false) => {
-  const humanValue = getHumanValue(k, v, featured);
+type WikidataResponse = {
+  entities: Record<string, { labels: Record<string, { value: string }> }>;
+};
 
+const WikidataValue = ({ v }: { v: string }) => {
+  const { data } = useQuery([v], async () => {
+    const url = encodeUrl`https://www.wikidata.org/w/api.php?action=wbgetentities&ids=${v}&format=json&props=labels&origin=*`;
+    const response = await fetchJson<WikidataResponse>(url);
+    const { labels } = response.entities[v];
+    return (
+      labels[intl.lang].value ||
+      labels.en.value ||
+      Object.values(labels)[0].value ||
+      v
+    );
+  });
+
+  return <>{data || v} (Wikidata)</>;
+};
+
+const SpecialRenderer = ({
+  k,
+  v,
+  humanValue,
+}: {
+  k: string;
+  v: string;
+  humanValue: string;
+}) => {
   if (k === 'direction') {
     return <DirectionValue v={v}>{humanValue}</DirectionValue>;
   }
-  if (k === 'colour') {
+  if (/colour/.test(k)) {
     return <ColorValue v={v}>{humanValue}</ColorValue>;
   }
+  if (/wikidata/.test(k)) {
+    return <WikidataValue v={v} />;
+  }
 
+  return null;
+};
+
+const renderTagSingleValue = (k: string, v: string) => {
+  const humanValue = getHumanValue(k, v);
+
+  const special = SpecialRenderer({ k, v, humanValue });
   const url = getUrlForTag(k, v);
   return url ? (
     <a href={url} target="_blank">
-      {slashToOptionalBr(humanValue)}
+      {special || slashToOptionalBr(humanValue)}
     </a>
   ) : (
-    humanValue
+    special || humanValue
   );
 };
 
-export const renderTag = (k: string, v: string, featured = false) => {
+export const renderTag = (k: string, v: string) => {
   return v.split(';').map((v, idx) => (
     // eslint-disable-next-line react/no-array-index-key
     <Fragment key={idx}>
-      {idx > 0 && (featured ? ', ' : '; ')}
-      {renderTagSingleValue(k, v, featured)}
+      {idx > 0 && '; '}
+      {renderTagSingleValue(k, v)}
     </Fragment>
   ));
 };
