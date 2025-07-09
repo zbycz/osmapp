@@ -1,48 +1,20 @@
 /**
- * A function to map a color name to hex. When a color is not found, it is returned as is, the same goes for hex colors.
+ * A function to map a color name to hex.
  * @param color The color to map to hex
  * @returns The color in hex format, e.g. #ff0000
  */
 export function osmColorToHex(color: string) {
-  switch (color.toLowerCase()) {
-    case 'black':
-      return '#000000';
-    case 'gray':
-    case 'grey':
-      return '#808080';
-    case 'maroon':
-      return '#800000';
-    case 'olive':
-      return '#808000';
-    case 'green':
-      return '#008000';
-    case 'teal':
-      return '#008080';
-    case 'navy':
-      return '#000080';
-    case 'purple':
-      return '#800080';
-    case 'white':
-      return '#ffffff';
-    case 'silver':
-      return '#c0c0c0';
-    case 'red':
-      return '#ff0000';
-    case 'yellow':
-      return '#ffff00';
-    case 'lime':
-      return '#00ff00';
-    case 'aqua':
-    case 'cyan':
-      return '#00ffff';
-    case 'blue':
-      return '#0000ff';
-    case 'fuchsia':
-    case 'magenta':
-      return '#ff00ff';
-    default:
-      return color;
+  if (/^#[0-9A-Fa-f]{6}$/.test(color)) {
+    return color.toLowerCase();
   }
+
+  const ctx = document?.createElement('canvas').getContext('2d');
+  if (!ctx) {
+    return color.toLowerCase();
+  }
+
+  ctx.fillStyle = color;
+  return ctx.fillStyle;
 }
 
 /**
