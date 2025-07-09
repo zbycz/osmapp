@@ -4,6 +4,7 @@ import {
   Point,
   GeometryCollection,
   Feature,
+  LonLat,
 } from '../types';
 import { getPoiClass } from '../getPoiClass';
 import { getCenter } from '../getCenter';
@@ -42,7 +43,7 @@ type OverpassObject = {
   members?: any[];
 };
 
-const geojsonCoords = ({ geometry }: OverpassObject): [number, number][] =>
+const geojsonCoords = ({ geometry }: OverpassObject): LonLat[] =>
   geometry.map(({ lon, lat }) => [lon, lat]);
 
 const GEOMETRY = {
@@ -66,15 +67,16 @@ const GEOMETRY = {
   },
 
   relation: ({
-    members,
+    members = [],
     tags = {},
   }: OverpassObject): GeometryCollection | Polygon => {
     if (tags.type === 'multipolygon') {
-      const outer = members
+      const membersWithGeometry = members.filter(({ geometry }) => geometry);
+      const outer = membersWithGeometry
         .filter(({ role }) => role === 'outer')
         .flatMap(geojsonCoords);
 
-      const inner = members
+      const inner = membersWithGeometry
         .filter(({ role }) => role === 'inner')
         .map(geojsonCoords);
 
