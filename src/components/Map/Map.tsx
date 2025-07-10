@@ -74,7 +74,8 @@ const TopBlur = styled.div`
   left: 0;
   right: 0;
   height: var(--safe-top);
-  backdrop-filter: blur(4px);
+  backdrop-filter: blur(3px);
+  pointer-events: none;
 `;
 const BottomBlur = styled.div`
   position: fixed;
@@ -83,6 +84,7 @@ const BottomBlur = styled.div`
   right: 0;
   height: var(--safe-bottom);
   backdrop-filter: blur(1px);
+  pointer-events: none;
 `;
 const LeftBlur = styled.div`
   position: fixed;
@@ -90,7 +92,8 @@ const LeftBlur = styled.div`
   bottom: 0;
   left: 0;
   width: var(--safe-left);
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
 `;
 const RightBlur = styled.div`
   position: fixed;
@@ -98,7 +101,8 @@ const RightBlur = styled.div`
   bottom: 0;
   right: 0;
   width: var(--safe-right);
-  backdrop-filter: blur(3px);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
 `;
 
 const Map = () => {
