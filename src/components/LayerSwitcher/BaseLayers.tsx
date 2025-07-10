@@ -37,7 +37,12 @@ const BaseLayerItem = ({ layer }: { layer: Layer }) => {
 
   return (
     <>
-      <ListItemButton key={key} selected={selected} onClick={handleClick}>
+      <ListItemButton
+        key={key}
+        selected={selected}
+        onClick={handleClick}
+        sx={{ paddingRight: 'var(--safe-right)' }}
+      >
         <LayerIcon Icon={Icon} />
         <ListItemText
           primary={name}

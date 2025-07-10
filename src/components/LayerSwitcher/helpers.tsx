@@ -44,7 +44,7 @@ export const LayersHeader = () => (
       </Typography>
     </Box>
 
-    <Box m={2}>
+    <Box m={2} sx={{ paddingRight: 'var(--safe-right)' }}>
       <Typography variant="body2" color="textSecondary">
         <Translation id="layerswitcher.intro" />
       </Typography>
