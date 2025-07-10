@@ -184,6 +184,12 @@ const globalStyle = (theme: Theme) => css`
     padding: var(--safe-top) var(--safe-right) var(--safe-bottom)
       var(--safe-left);
   }
+
+  // Give a appropiate spacing around not fullscreened dialogs
+  .MuiDialog-container:not(:has(.MuiDialog-paperFullScreen)) {
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom)
+      var(--safe-left);
+  }
 `;
 
 // CAREFUL: Emotion doesn't apply Dark style in dev mode
