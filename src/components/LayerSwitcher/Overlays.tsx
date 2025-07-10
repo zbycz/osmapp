@@ -90,11 +90,11 @@ const OverlayItem = ({ layer }: { layer: Layer }) => {
     <ListItemButton
       onClick={handleClick}
       key={key}
-      sx={{ paddingRight: 'var(--safe-right)' }}
+      sx={{ paddingRight: 'calc(var(--safe-right) + 16px)' }}
     >
       <LayerIcon Icon={Icon} />
       <ListItemText primary={dotToOptionalBr(name)} secondary={secondary} />
-      <ListItemSecondaryAction sx={{ right: 'var(--safe-right)' }}>
+      <ListItemSecondaryAction sx={{ right: 'calc(var(--safe-right) + 16px)' }}>
         <Checkbox edge="end" checked={selected} onClick={handleClick} />
       </ListItemSecondaryAction>
     </ListItemButton>

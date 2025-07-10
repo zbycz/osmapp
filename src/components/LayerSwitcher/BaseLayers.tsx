@@ -41,7 +41,7 @@ const BaseLayerItem = ({ layer }: { layer: Layer }) => {
         key={key}
         selected={selected}
         onClick={handleClick}
-        sx={{ paddingRight: 'var(--safe-right)' }}
+        sx={{ paddingRight: 'calc(var(--safe-right) + 16px)' }}
       >
         <LayerIcon Icon={Icon} />
         <ListItemText
