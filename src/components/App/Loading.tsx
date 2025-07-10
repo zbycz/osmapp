@@ -7,9 +7,10 @@ import { useFeatureContext } from '../utils/FeatureContext';
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 0;
+  top: var(--safe-top);
   z-index: 1200;
 
+  margin-left: var(--safe-left);
   width: 100%;
   @media ${isDesktop} {
     width: 410px;
