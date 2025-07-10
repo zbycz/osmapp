@@ -7,7 +7,7 @@ import { PoiDescription } from './helpers/PoiDescription';
 import { getLabel, getSecondaryLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
-import { isMobileDevice } from '../helpers';
+import { isMobileDevice, useMobileMode } from '../helpers';
 import { QuickActions } from './QuickActions/QuickActions';
 import { PROJECT_ID } from '../../services/project';
 import { css } from '@emotion/react';
@@ -41,9 +41,10 @@ const EditNameButton = () => {
   );
 };
 
-const Container = styled.div<{ showBottomPadding: boolean }>`
+const Container = styled.div<{ showBottomPadding: boolean; isMobile: boolean }>`
   margin-bottom: ${({ showBottomPadding }) =>
     showBottomPadding ? '5px' : '20px'};
+  ${({ isMobile }) => !isMobile && 'margin-top: 20px;'}
   ${({ showBottomPadding }) =>
     showBottomPadding && 'padding-bottom: var(--safe-bottom);'}
 `;
@@ -125,8 +126,9 @@ export const FeatureHeading = React.forwardRef<
   HTMLDivElement,
   FeatureHeadingProps
 >(({ isCollapsed }, ref) => {
+  const isMobile = useMobileMode();
   return (
-    <Container ref={ref} showBottomPadding={isCollapsed}>
+    <Container ref={ref} showBottomPadding={isCollapsed} isMobile={isMobile}>
       <Headings />
       <PoiDescription />
 
