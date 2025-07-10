@@ -1,9 +1,18 @@
 import React from 'react';
+import styled from '@emotion/styled';
 import { SwipeableDrawer, useMediaQuery } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
 import { LayerSwitcherButton } from './LayerSwitcherButton';
 import { LayerSwitcherContent } from './LayerSwitcherContent';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
+
+const Wrapper = styled.div`
+  width: calc(280px + var(--safe-left));
+  height: 100%;
+  padding-top: var(--safe-top);
+  padding-bottom: var(--safe-bottom);
+  position: relative;
+`;
 
 const LayerSwitcher = () => {
   const [opened, open, close] = useBoolState(false);
@@ -21,10 +30,14 @@ const LayerSwitcher = () => {
         disableBackdropTransition
         disableSwipeToOpen
       >
-        <div role="presentation" style={{ width: '280px', height: '100%' }}>
-          <ClosePanelButton right onClick={close} style={{ top: 13 }} />
+        <Wrapper role="presentation">
+          <ClosePanelButton
+            right="var(--safe-right)"
+            onClick={close}
+            style={{ top: 'calc(13px + var(--safe-top))' }}
+          />
           <LayerSwitcherContent />
-        </div>
+        </Wrapper>
       </SwipeableDrawer>
     </>
   );
