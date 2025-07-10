@@ -179,6 +179,11 @@ const globalStyle = (theme: Theme) => css`
   .MuiAutocomplete-noOptions {
     padding: 0;
   }
+
+  .MuiDialog-paperFullScreen {
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom)
+      var(--safe-left);
+  }
 `;
 
 // CAREFUL: Emotion doesn't apply Dark style in dev mode
