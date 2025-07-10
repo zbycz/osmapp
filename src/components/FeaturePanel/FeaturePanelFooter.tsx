@@ -40,7 +40,13 @@ export const FeaturePanelFooter = ({
   };
 
   return (
-    <Accordion disableGutters elevation={0} square onClick={onClick}>
+    <Accordion
+      disableGutters
+      elevation={0}
+      square
+      onClick={onClick}
+      sx={{ paddingBottom: 'var(--safe-bottom)' }}
+    >
       <AccordionSummary expandIcon={<ArrowDropDownIcon />}>
         <Typography variant="caption">
           <FeatureDescription />
