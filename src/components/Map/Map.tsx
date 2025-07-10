@@ -6,7 +6,6 @@ import BugReport from '@mui/icons-material/BugReport';
 import { Button, CircularProgress } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
-import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
@@ -61,13 +60,6 @@ const BottomRight = styled.div`
   padding: 0 4px 4px 4px;
 `;
 
-const BugReportButton = () => (
-  <Button size="small">
-    <BugReport width="10" height="10" />
-    Nahlásit chybu v mapě
-  </Button>
-);
-
 const NoscriptMessage = () => (
   <noscript>
     <span style={{ position: 'absolute', left: '50%', top: '50%' }}>
@@ -89,7 +81,6 @@ const Map = () => {
         <LayerSwitcherDynamic />
       </TopRight>
       <BottomRight>
-        {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
         <Weather />
         <MapFooter />
