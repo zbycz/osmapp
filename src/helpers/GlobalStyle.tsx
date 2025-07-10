@@ -16,21 +16,13 @@ const globalStyle = (theme: Theme) => css`
   #__next {
     margin: 0;
     padding: 0;
+    height: 100%;
     border: 0;
     font-family: 'Roboto', sans-serif;
     background-color: ${theme.palette.background.default};
 
     // disable pulling the page around on mobile
     overscroll-behavior: none;
-  }
-
-  body,
-  #__next {
-    height: 100%;
-  }
-
-  html {
-    height: calc(100% + env(safe-area-inset-bottom) + env(safe-area-inset-top));
   }
 
   body {
@@ -114,19 +106,15 @@ const globalStyle = (theme: Theme) => css`
   }
 
   .maplibregl-ctrl-top-right {
-    top: calc(114px + env(safe-area-inset-top)) !important;
+    top: 114px !important;
 
     @media ${isTabletResolution} {
-      top: calc(54px + env(safe-area-inset-top)) !important;
+      top: 54px !important;
     }
 
     @media ${isDesktopResolution} {
-      top: calc(83px + env(safe-area-inset-top)) !important;
+      top: 83px !important;
     }
-  }
-
-  .maplibregl-ctrl-bottom-left {
-    bottom: max(calc(env(safe-area-inset-bottom) - 10px), 0px) !important;
   }
 
   .maplibregl-canvas:not(:focus) {
@@ -160,9 +148,8 @@ const globalStyle = (theme: Theme) => css`
     display: none;
   }
 
-  .MuiDialog-paperFullScreen {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
+  .MuiAutocomplete-noOptions {
+    padding: 0;
   }
 `;
 

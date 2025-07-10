@@ -41,12 +41,9 @@ const EditNameButton = () => {
   );
 };
 
-const Container = styled.div<{ isStandalone: boolean; isCollapsed: boolean }>`
-  margin-bottom: 20px;
-  ${({ isStandalone, isCollapsed }) =>
-    isStandalone &&
-    isCollapsed &&
-    'padding-bottom: env(safe-area-inset-bottom, 8px);'}
+const Container = styled.div<{ isStandalone: boolean }>`
+  margin: 20px 0 20px 0;
+  ${({ isStandalone }) => isStandalone && 'padding-bottom: 8px;'}
 `;
 
 const HeadingsWrapper = styled.div`
@@ -118,17 +115,12 @@ const SecondaryHeading = styled.h2<{
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
 `;
 
-type FeatureHeadingProps = { isCollapsed: boolean };
-
-export const FeatureHeading = React.forwardRef<
-  HTMLDivElement,
-  FeatureHeadingProps
->(({ isCollapsed }, ref) => {
+export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
   // thw pwa needs space at the bottom
   const isStandalone = useMediaQuery('(display-mode: standalone)');
 
   return (
-    <Container ref={ref} isStandalone={isStandalone} isCollapsed={isCollapsed}>
+    <Container ref={ref} isStandalone={isStandalone}>
       <Headings />
       <PoiDescription />
 

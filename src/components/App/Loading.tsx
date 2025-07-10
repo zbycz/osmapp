@@ -7,7 +7,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 
 const Wrapper = styled.div`
   position: absolute;
-  top: env(safe-area-inset-top, 0);
+  top: 0;
   z-index: 1200;
 
   width: 100%;

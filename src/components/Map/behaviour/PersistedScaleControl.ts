@@ -53,7 +53,7 @@ export const usePersistedScaleControl = (map: Map) => {
     });
 
     const addControl = () => {
-      map.addControl(scaleControl, 'bottom-left');
+      map.addControl(scaleControl);
     };
 
     if (map.loaded()) {

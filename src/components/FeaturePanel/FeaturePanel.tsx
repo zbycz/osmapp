@@ -37,13 +37,9 @@ const Flex = styled.div`
 
 type FeaturePanelProps = {
   headingRef?: React.Ref<HTMLDivElement>;
-  isCollapsed?: boolean;
 };
 
-export const FeaturePanel = ({
-  headingRef,
-  isCollapsed,
-}: FeaturePanelProps) => {
+export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
   const { feature } = useFeatureContext();
   const [advanced, setAdvanced] = useState(false);
   const [showTags, toggleShowTags] = useToggleState(false);
@@ -73,7 +69,7 @@ export const FeaturePanel = ({
         <PanelSidePadding>
           {!isMobileMode && <ParentLink />}
 
-          <FeatureHeading ref={headingRef} isCollapsed={isCollapsed ?? false} />
+          <FeatureHeading ref={headingRef} />
           <Stack spacing={1} alignItems="flex-start" sx={{ marginBottom: 1 }}>
             <ClimbingRouteGrade />
             <ClimbingTypeBadge feature={feature} />
