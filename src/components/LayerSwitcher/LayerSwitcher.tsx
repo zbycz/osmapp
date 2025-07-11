@@ -8,9 +8,8 @@ import { ClosePanelButton } from '../utils/ClosePanelButton';
 
 const Wrapper = styled.div`
   width: calc(280px + var(--safe-left));
-  height: 100%;
-  padding-top: var(--safe-top);
-  padding-bottom: var(--safe-bottom);
+  margin-top: var(--safe-top);
+  margin-bottom: var(--safe-bottom);
   position: relative;
 `;
 
@@ -34,7 +33,7 @@ const LayerSwitcher = () => {
           <ClosePanelButton
             right="var(--safe-right)"
             onClick={close}
-            style={{ top: 'calc(13px + var(--safe-top))' }}
+            style={{ top: '13px' }}
           />
           <LayerSwitcherContent />
         </Wrapper>

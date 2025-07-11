@@ -83,9 +83,7 @@ export const Drawer = ({
         onOpen={handleOnOpen}
         swipeAreaWidth={collapsedHeight}
         disableSwipeToOpen={false}
-        ModalProps={{
-          keepMounted: true,
-        }}
+        ModalProps={{ keepMounted: true }}
         className={className}
         onTransitionEnd={(e) => {
           onTransitionEnd?.(e, open);
@@ -96,7 +94,11 @@ export const Drawer = ({
           $topOffset={topOffset}
         >
           <Puller setOpen={setOpen} open={open} />
-          <Content ref={ref}>{children}</Content>
+          <Content ref={ref}>
+            <div style={{ paddingBottom: 'var(--safe-bottom)' }}>
+              {children}
+            </div>
+          </Content>
         </Container>
       </SwipeableDrawer>
     </>

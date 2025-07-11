@@ -44,9 +44,8 @@ const EditNameButton = () => {
 const Container = styled.div<{ showBottomPadding: boolean; isMobile: boolean }>`
   margin-bottom: ${({ showBottomPadding }) =>
     showBottomPadding ? '5px' : '20px'};
-  ${({ isMobile }) => !isMobile && 'margin-top: 20px;'}
   ${({ showBottomPadding }) =>
-    showBottomPadding && 'padding-bottom: var(--safe-bottom);'}
+    showBottomPadding && 'padding-bottom: max(var(--safe-bottom), 8px);'}
 `;
 
 const HeadingsWrapper = styled.div`
