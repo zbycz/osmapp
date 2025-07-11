@@ -5,7 +5,7 @@ import { t } from '../../services/intl';
 
 type ClosePanelButtonProps = {
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
-  right?: boolean;
+  right?: boolean | string;
   style?: React.CSSProperties;
 };
 
@@ -18,7 +18,9 @@ export const ClosePanelButton = ({
     aria-label={t('close_panel')}
     onClick={onClick}
     style={{
-      ...(right ? { position: 'absolute', right: 0 } : {}),
+      ...(right
+        ? { position: 'absolute', right: typeof right === 'string' ? right : 0 }
+        : {}),
       ...style,
     }}
   >

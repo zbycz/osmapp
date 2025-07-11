@@ -103,7 +103,11 @@ const MyApp = (props: Props) => {
                           <Head>
                             <meta
                               name="viewport"
-                              content="width=device-width, user-scalable=no, initial-scale=1"
+                              content="width=device-width, user-scalable=no, initial-scale=1, viewport-fit=cover"
+                            />
+                            <meta
+                              name="apple-mobile-web-app-status-bar-style"
+                              content="black-translucent"
                             />
                           </Head>
                           <Loading />

@@ -3,7 +3,7 @@ import TerrainIcon from '@mui/icons-material/Terrain';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
 import BrightnessHighIcon from '@mui/icons-material/BrightnessHigh';
 import React, { useEffect, useState } from 'react';
-import { Menu, MenuItem, Typography } from '@mui/material';
+import { Menu, MenuItem, Typography, useMediaQuery } from '@mui/material';
 import CreateIcon from '@mui/icons-material/Create';
 import HelpIcon from '@mui/icons-material/Help';
 import styled from '@emotion/styled';
@@ -136,6 +136,12 @@ const InstallLink = ({ closeMenu }) => {
     closeMenu();
     Router.push('/install');
   };
+  const standalone = useMediaQuery('(display-mode: standalone)');
+
+  if (standalone) {
+    return null;
+  }
+
   return (
     <MenuItem onClick={handleClick} href="/install">
       <InstallIcon />
