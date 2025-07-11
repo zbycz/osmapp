@@ -9,6 +9,7 @@ export const TransformWrapper = ({ children }) => {
     setPhotoZoom,
     isEditMode,
     isPanningDisabled,
+    isPanningActiveRef,
   } = useClimbingContext();
 
   const startPointerEvents = () => {
@@ -16,6 +17,15 @@ export const TransformWrapper = ({ children }) => {
   };
   const stopPointerEvents = () => {
     setArePointerEventsDisabled(true);
+  };
+
+  const handlePanningStart = () => {
+    startPointerEvents();
+    isPanningActiveRef.current = true;
+  };
+  const handlePanningStop = () => {
+    startPointerEvents();
+    isPanningActiveRef.current = false;
   };
 
   return (
@@ -32,8 +42,8 @@ export const TransformWrapper = ({ children }) => {
       onPinchingStop={startPointerEvents}
       onZoomStart={stopPointerEvents}
       onZoomStop={startPointerEvents}
-      onPanningStart={startPointerEvents}
-      onPanningStop={startPointerEvents}
+      onPanningStart={handlePanningStart}
+      onPanningStop={handlePanningStop}
       disablePadding
       panning={{ disabled: isPanningDisabled }}
       wheel={{ step: 100 }}

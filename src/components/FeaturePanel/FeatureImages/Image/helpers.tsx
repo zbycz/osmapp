@@ -38,15 +38,28 @@ export const UncertainCover = styled.div`
   box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.3);
 `;
 
-export const useGetOnClick = (def: ImageDef) => {
-  const { feature } = useFeatureContext();
-
+export const handleClimbingDialogOnClick = (feature, def: ImageDef) => {
   if (isTag(def) && feature.tags.climbing === 'crag') {
     return () => {
       const featureLink = getOsmappLink(feature);
       const photoLink = removeFilePrefix(def.v);
+
       Router.push(`${featureLink}/climbing/photo/${photoLink}`);
     };
+  }
+
+  if (isTag(def) && feature.tags.climbing === 'route_bottom') {
+    const parentCragFeature = feature.parentFeatures.filter(
+      (item) => item.tags.climbing === 'crag',
+    );
+    if (parentCragFeature.length > 0) {
+      return () => {
+        const featureLink = getOsmappLink(parentCragFeature[0]);
+        const photoLink = removeFilePrefix(def.v);
+
+        Router.push(`${featureLink}/climbing/photo/${photoLink}`);
+      };
+    }
   }
 
   return undefined;

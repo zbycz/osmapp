@@ -41,9 +41,9 @@ const fetchFromOverpass = async () => {
 };
 
 // eslint-disable-next-line max-lines-per-function
-const getNewRecords = (data: OsmResponse) => {
-  const geojsons = overpassToGeojsons(data); // 300 ms on 200k items
-  const { records, addRecord, addRecordWithLine } = recordsFactory();
+const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
+  const geojsons = overpassToGeojsons(data, log); // 300 ms on 200k items
+  const { records, addRecord, addRecordWithLine } = recordsFactory(log);
 
   for (const node of geojsons.node) {
     if (!node.tags || node.tags.climbing === 'no') continue;
@@ -161,11 +161,11 @@ export const refreshClimbingTiles = async () => {
   const data = await fetchFromOverpass();
   log(`Overpass elements: ${data.elements.length}`);
 
-  const records = getNewRecords(data); // ~ 55k records
+  const records = getNewRecords(data, log); // ~ 55k records
   log(`Records: ${records.length}`);
 
   const columns = Object.keys(records[0]);
-  const chunks = chunk(records, 5000); // XATA max size is probably 4 MB, this produces queries about 2 MB big
+  const chunks = chunk(records, 1000); // XATA max size is probably 4 MB, but it was out of memory on 1.8MB as well. This produces queries about 0.4 MB big
 
   await client.query('TRUNCATE TABLE climbing_features');
   for (const [index, chunk] of chunks.entries()) {

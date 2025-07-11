@@ -24,8 +24,9 @@ const Svg = styled.svg<{
   transition: ${({ $isVisible }) =>
     $isVisible ? 'opacity 0.1s ease' : 'none'};
   transform-origin: 0 0;
+
   ${({ $hasEditableCursor }) =>
-    `cursor: ${$hasEditableCursor ? 'crosshair' : 'auto'}`};
+    $hasEditableCursor ? `cursor: crosshair;` : ''};
   ${({ $imageSize: { width, height } }) =>
     `width: ${width}px;
     height:${height}px;

@@ -4,18 +4,16 @@ import { RoutesLayer } from './RoutesLayer';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { updateElementOnIndex } from '../utils/array';
 import { PositionPx } from '../types';
-import {
-  getMouseFromPositionInImage,
-  getPositionInImageFromMouse,
-} from '../utils/mousePositionUtils';
+import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
 import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
 import { isMobileDevice } from '../../../helpers';
-import { RouteFloatingMenu } from './RouteFloatingMenu';
 
-const EditorContainer = styled.div<{ imageHeight: number }>`
+const EditorContainer = styled.div<{
+  $imageHeight: number;
+}>`
   display: flex;
   justify-content: center;
-  height: ${({ imageHeight }) => `${imageHeight}px`};
+  height: ${({ $imageHeight }) => `${$imageHeight}px`};
   top: 0;
   position: absolute;
   width: 100%;
@@ -70,6 +68,7 @@ export const RoutesEditor = ({
     setLoadedPhotos,
     photoZoom,
     photoPaths,
+    isPanningActiveRef,
   } = useClimbingContext();
   const machine = getMachine();
   const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
@@ -84,7 +83,7 @@ export const RoutesEditor = ({
 
     if (machine.currentStateName === 'pointMenu') {
       machine.execute('cancelPointMenu');
-    } else {
+    } else if (!isPanningActiveRef) {
       machine.execute('cancelRouteSelection');
     }
   };
@@ -163,10 +162,9 @@ export const RoutesEditor = ({
     preloadOtherPhotos();
     setIsPhotoLoading(false);
   };
-
   return (
     <EditorContainer
-      imageHeight={imageSize.height}
+      $imageHeight={imageSize.height}
       onContextMenu={isMobileDevice() ? (e) => e.preventDefault() : undefined}
     >
       <ImageContainer>
