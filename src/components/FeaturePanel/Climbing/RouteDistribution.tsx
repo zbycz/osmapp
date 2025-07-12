@@ -37,6 +37,7 @@ const Items = styled.div`
   display: flex;
   align-items: flex-end;
   gap: 4px;
+  flex-direction: column;
 `;
 
 const NumberOfRoutes = styled.div`
@@ -74,7 +75,7 @@ const DifficultyLevel = styled.div<{ $isActive: boolean; $color: string }>`
 `;
 
 const StaticHeightContainer = styled.div`
-  height: ${MAX_CHART_HEIGHT};
+  height: ${MAX_CHART_HEIGHT}px;
   display: flex;
   align-items: center;
   justify-content: flex-end;

@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from 'react';
 import Router from 'next/router';
 import { Size } from '../types';
 import { HEIGHT } from '../helpers';
-import { useFeatureContext } from '../../../utils/FeatureContext';
 import { getOsmappLink } from '../../../../services/helpers';
 import { removeFilePrefix } from '../../Climbing/utils/photo';
 import { ImageDef, isTag } from '../../../../services/types';
