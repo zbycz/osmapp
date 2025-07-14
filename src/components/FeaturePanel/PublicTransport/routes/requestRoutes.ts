@@ -61,13 +61,20 @@ export async function requestLines(featureType: string, id: number) {
     // Try to find stop_area relations containing the specific node and get their stops
     (
       rel(bn.specific_feature)["public_transport"="stop_area"];
+      rel(bw.specific_feature)["public_transport"="stop_area"];
       rel(r._)["public_transport"="stop_area"] -> .stop_areas;
     ) -> .stop_areas;
-    node(r.stop_areas: "stop") -> .stops;
+    (
+        node(r.stop_areas: "stop");
+        node(r.stop_areas: "stop_position");
+        node(r.stop_areas: "station");
+        node(r.stop_areas: "bus_stop");
+    ) -> .stops;
     (
       rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
-      // If no stop_area, find routes that directly include the specific node
+      // If no stop_area, find routes that directly include the specific node/way
       rel(bn.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
+      rel(bw.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
     ) -> .routes;
     // Get the master relation
     (
