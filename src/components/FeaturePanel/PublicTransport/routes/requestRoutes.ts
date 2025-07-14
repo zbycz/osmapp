@@ -6,7 +6,8 @@ import {
 } from '../../../../services/overpass/overpassSearch';
 import { intl } from '../../../../services/intl';
 
-type WithTags = { tags: Record<string, string> };
+type WithTags = { id: String; tags: Record<string, string> };
+type WithRef = { ref: string };
 
 export interface LineInformation {
   tags: Record<string, string>;
@@ -18,8 +19,8 @@ export interface LineInformation {
   osmId: string;
 }
 
-const filterRoutesByRef = (routes: WithTags[], ref: string) =>
-  routes.filter(({ tags }) => tags.ref === ref);
+const filterRoutesByRef = (routes: WithTags[], members: WithRef[]) =>
+  routes.filter(({ id }) => members.find(({ ref }) => ref == id));
 
 const getTagValue = (
   key: string,
@@ -88,8 +89,8 @@ export async function requestLines(featureType: string, id: number) {
   };
 
   const allRoutes = routeMasters
-    .map(({ type, id, tags }) => {
-      const directionRouteTags = filterRoutesByRef(routes, tags.ref);
+    .map(({ type, id, tags, members }) => {
+      const directionRouteTags = filterRoutesByRef(routes, members);
       const getVal = (key: string) =>
         getTagValue(key, tags, directionRouteTags);
 
