@@ -1,3 +1,5 @@
+import { isServer } from '../../components/helpers';
+
 const retina = (typeof window !== 'undefined' && window.devicePixelRatio) || 1;
 const WIDTH = 300 * retina;
 const HEIGHT = 238 * retina;
@@ -114,6 +116,10 @@ export const placeImageToCanvas = (
 export const makeCategoryImage = async (
   thumbsUrls: string[],
 ): Promise<string> => {
+  if (isServer()) {
+    return thumbsUrls[0];
+  }
+
   const canvas = document.createElement('canvas');
   canvas.width = WIDTH;
   canvas.height = HEIGHT;
