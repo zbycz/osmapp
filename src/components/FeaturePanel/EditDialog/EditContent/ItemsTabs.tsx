@@ -83,7 +83,7 @@ export const ItemsTabs = () => {
       {items.length > 1 && (
         <StyledTabs
           orientation={isSmallScreen ? 'horizontal' : 'vertical'}
-          variant={isSmallScreen ? 'scrollable' : 'standard'}
+          variant="scrollable"
           value={current}
           onChange={(_event: React.SyntheticEvent, newShortId: string) => {
             setCurrent(newShortId);
