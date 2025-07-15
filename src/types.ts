@@ -1,4 +1,5 @@
 import { Feature } from 'geojson';
+import { OsmType } from './services/types';
 
 export type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
@@ -12,5 +13,14 @@ export type ClimbingStatsResponse = {
   groupsWithNameCount: number;
   routesCount: number;
 };
+
+export type ClimbingSearchResponse = Array<{
+  type: string;
+  lon: string;
+  lat: string;
+  osmType: OsmType;
+  osmId: number;
+  name: string;
+}>;
 
 export type CTFeature = Feature;
