@@ -11,7 +11,7 @@ test('conversion', async () => {
       {
         type: 'relation',
         id: 6818857,
-        members: [],
+        members: [{ ref: 68352 }, { ref: 4673219 }],
         tags: {
           colour: '#880088',
           ref: '89',
