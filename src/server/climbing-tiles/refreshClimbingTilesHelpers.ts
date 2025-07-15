@@ -2,6 +2,7 @@ import { GeojsonFeature } from './overpass/overpassToGeojsons';
 import { LineString, LonLat, Point } from '../../services/types';
 import { ClimbingFeaturesRecords } from './db';
 import { CTFeature } from '../../types';
+import { removeDiacritics } from './utils';
 
 export const centerGeometry = (
   feature: GeojsonFeature,
@@ -32,9 +33,6 @@ const prepareGeojson = (
   geometry,
   properties: { ...properties, type },
 });
-
-const removeDiacritics = (str: string) =>
-  str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
 export const recordsFactory = (log: (message: string) => void) => {
   const records: ClimbingFeaturesRecords = [];

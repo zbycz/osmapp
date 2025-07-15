@@ -11,7 +11,6 @@ import { ClimbingOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { PoiIcon } from '../../utils/icons/PoiIcon';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { Feature } from '../../../services/types';
 import Router from 'next/router';
 import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 import { PROJECT_ID } from '../../../services/project';
@@ -86,16 +85,7 @@ export const ClimbingRow = ({ option, inputValue }: Props) => {
   );
 };
 
-type SetFeature = (feature: Feature | null) => void;
-
-export const climbingOptionSelected = (
-  option: ClimbingOption,
-  setFeature: SetFeature,
-) => {
+export const climbingOptionSelected = (option: ClimbingOption) => {
   const { osmType, osmId } = option.climbing;
-
-  // addFeatureCenterToCache(getShortId(skeleton.osmMeta), skeleton.center);
-  //setFeature(skeleton);
-  //fitBounds(option);
   Router.push(`/${osmType}/${osmId}`);
 };

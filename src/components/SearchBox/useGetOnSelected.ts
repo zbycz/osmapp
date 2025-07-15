@@ -32,7 +32,7 @@ export const useGetOnSelected = (setOverpassLoading: Setter<boolean>) => {
           geocoderOptionSelected(option, setFeature);
           break;
         case 'climbing':
-          climbingOptionSelected(option, setFeature);
+          climbingOptionSelected(option);
           break;
         case 'osm':
           osmOptionSelected(option);
