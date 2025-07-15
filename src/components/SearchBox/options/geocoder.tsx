@@ -75,7 +75,7 @@ export const debounceGeocoderOrReject = (delay: number): Promise<void> => {
 export const fetchGeocoderOptions = async (
   inputValue: string,
   view: View,
-  abortQueue?: string,
+  abortQueue: string = GEOCODER_ABORTABLE_QUEUE,
 ): Promise<Option[]> => {
   try {
     const searchResponse = await fetchJson<PhotonResponse>(

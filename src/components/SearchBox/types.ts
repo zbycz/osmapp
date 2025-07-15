@@ -1,8 +1,8 @@
 import { LonLat } from '../../services/types';
 import { Star } from '../utils/StarsContext';
 import { ASTNode } from './queryWizard/ast';
-import { BBox } from 'geojson';
 import { Bbox } from '../utils/MapStateContext';
+import { ClimbingSearchRecord } from '../../types';
 
 type GenericOption<T extends string, U extends Object | null> = {
   type: T;
@@ -41,6 +41,8 @@ export type PhotonResponse = {
 };
 
 export type GeocoderOption = GenericOption<'geocoder', PhotonGeojsonFeature>;
+
+export type ClimbingOption = GenericOption<'climbing', ClimbingSearchRecord>;
 
 export type OverpassOption = GenericOption<
   'overpass',
@@ -95,4 +97,5 @@ export type Option =
   | PresetOption
   | LoaderOption
   | GeocoderOption
+  | ClimbingOption
   | OsmOption;

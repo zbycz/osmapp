@@ -7,6 +7,7 @@ import { GeocoderRow } from './options/geocoder';
 import { Option } from './types';
 import { OsmRow } from './options/osm';
 import { CoordsRow } from './options/coords';
+import { ClimbingRow } from './options/climbing';
 
 type Props = {
   option: Option;
@@ -17,6 +18,8 @@ const Row = ({ option, inputValue }: Props) => {
   switch (option.type) {
     case 'geocoder':
       return <GeocoderRow option={option} inputValue={inputValue} />;
+    case 'climbing':
+      return <ClimbingRow option={option} inputValue={inputValue} />;
     case 'preset':
       return <PresetRow option={option} inputValue={inputValue} />;
     case 'star':
