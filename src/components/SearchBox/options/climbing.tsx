@@ -29,7 +29,7 @@ export const CLIMBING_SEARCH_ABORTABLE_QUEUE = 'climbing-search';
 export const fetchClimbingSearchOptions = async (
   inputValue: string,
   view: View,
-  abortQueue?: string = CLIMBING_SEARCH_ABORTABLE_QUEUE,
+  abortQueue: string = CLIMBING_SEARCH_ABORTABLE_QUEUE,
 ): Promise<Option[]> => {
   if (PROJECT_ID !== 'openclimbing') {
     return [];
@@ -42,9 +42,9 @@ export const fetchClimbingSearchOptions = async (
     );
 
     const options = records || [];
-    return options.map((feature) => ({
+    return options.map((record) => ({
       type: 'climbing' as const,
-      climbing: feature,
+      climbing: record,
     }));
   } catch (e) {
     if (e instanceof DOMException && e.name === 'AbortError') {
