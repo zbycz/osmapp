@@ -1,4 +1,4 @@
-import { GridLegacy } from '@mui/material';
+import { GridLegacy, Typography } from '@mui/material';
 import React from 'react';
 import {
   getHumanDistance,
@@ -69,14 +69,18 @@ export const ClimbingRow = ({ option, inputValue }: Props) => {
   return (
     <>
       <IconPart>
-        <PoiIcon tags={{ climbing: 'area' }} size={20} />
+        <PoiIcon
+          tags={type === 'group' ? { climbing: 'area' } : undefined}
+          ico="climbing"
+          size={20}
+        />
         <div>{distance}</div>
       </IconPart>
       <GridLegacy item xs>
         {highlightText(name, inputValue)}
-        {/*<Typography variant="body2" color="textSecondary">*/}
-        {/*  {additionalText}*/}
-        {/*</Typography>*/}
+        <Typography variant="body2" color="textSecondary">
+          climbing {type}
+        </Typography>
       </GridLegacy>
     </>
   );

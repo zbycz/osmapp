@@ -68,6 +68,7 @@ export const PoiIcon = ({
   const { currentTheme } = useUserThemeContext();
 
   if (tags) {
+    // TODO merge these icons with getPoiClass logic
     const isClimbingArea = tags.climbing === 'area';
     const isClimbingCrag = tags.climbing === 'crag';
     const isClimbingRoute = tags.climbing === 'route_bottom';
