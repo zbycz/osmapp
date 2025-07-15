@@ -1,27 +1,24 @@
 import { xataRestQuery } from './db';
-import { ClimbingSearchResponse } from '../../types';
+import { ClimbingSearchRecord } from '../../types';
 
 export const getClimbingSearch = async (
   q: string,
   lon: number,
   lat: number,
-): Promise<ClimbingSearchResponse> => {
+): Promise<ClimbingSearchRecord[]> => {
   const query = `
       SELECT "type", "lon", "lat", "osmType", "osmId", "name",
           acos(
             cos(radians($1)) * cos(radians(lat)) *
             cos(radians(lon) - radians($2)) +
             sin(radians($1)) * sin(radians(lat))
-          ) AS distance -- for km multiply by 6378
+          )*6378 AS distance_km
       FROM climbing_features
       WHERE type != 'route' AND "nameRaw" ILIKE $3
-      ORDER BY distance
+      ORDER BY distance_km
       LIMIT 30`;
-  const result = await xataRestQuery(query, [lon, lat, `%${q}%`]);
 
-  if (result.records.length === 0) {
-    throw new Error('No row found in climbing_tiles_stats');
-  }
+  const result = await xataRestQuery(query, [lat, lon, `%${q}%`]);
 
-  return result.records as ClimbingSearchResponse;
+  return result.records as ClimbingSearchRecord[];
 };

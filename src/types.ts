@@ -14,13 +14,13 @@ export type ClimbingStatsResponse = {
   routesCount: number;
 };
 
-export type ClimbingSearchResponse = Array<{
+export type ClimbingSearchRecord = {
   type: string;
-  lon: string;
-  lat: string;
+  lon: number;
+  lat: number;
   osmType: OsmType;
   osmId: number;
   name: string;
-}>;
+};
 
 export type CTFeature = Feature;

@@ -166,11 +166,7 @@ const useOptions = (
         }
 
         await debounceGeocoderOrReject(400);
-        const geocoderOptions = await fetchGeocoderOptions(
-          inputValue,
-          view,
-          GEOCODER_ABORTABLE_QUEUE,
-        );
+        const geocoderOptions = await fetchGeocoderOptions(inputValue, view);
 
         if (inputValue !== valueRef.current) {
           return; // This blocks rendering of old result, when user already changed input
