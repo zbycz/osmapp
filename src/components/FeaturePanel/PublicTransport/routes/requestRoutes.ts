@@ -103,6 +103,26 @@ export async function requestLines(featureType: string, id: number) {
     features: geoJsonFeatures,
   };
 
+  const orphanRoutes = routes
+    .filter(
+      ({ id }) =>
+        !routeMasters.find(({ members }) =>
+          members.find(({ ref }) => ref == id),
+        ),
+    )
+    .map((r) => {
+      const { id, type, tags } = r;
+      return {
+        tags,
+        routes: [r],
+        ref: `${tags.ref || tags.name}`,
+        colour: tags.colour,
+        service: getService(tags, []),
+        osmId: `${id}`,
+        osmType: type,
+      };
+    });
+
   const allRoutes = routeMasters
     .map(({ type, id, tags, members }) => {
       const directionRouteTags = filterRoutesByRef(routes, members);
@@ -119,6 +139,7 @@ export async function requestLines(featureType: string, id: number) {
         osmType: type,
       };
     })
+    .concat(orphanRoutes)
     .sort((a, b) => a.ref.localeCompare(b.ref, intl.lang, { numeric: true }));
 
   return {
