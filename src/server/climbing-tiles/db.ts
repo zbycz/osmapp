@@ -52,7 +52,7 @@ export async function closeClient(client: Client): Promise<void> {
 
 type SQLResponseJSON = {
   columns: { name: string; type: string }[];
-  total: number;
+  //total: number; // usually not present ???
   warning?: string;
   records: Record<string, any>[];
 };
