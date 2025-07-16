@@ -357,10 +357,18 @@ export default {
   'grade_system_select.convert_grade': 'Převést klasifikaci',
   'grade_system_select.select_grade_system': 'Vybrat klasifikaci',
 
-  'crag_sort.title': 'Řazení',
+  'crag_sort.title': 'Seřadit',
   'crag_sort.option_default': 'Defaultní',
   'crag_sort.option_photos': 'Podle počtu fotek',
   'crag_sort.option_routes': 'Podle počtu cest',
+
+  'crag_filter.title': 'Filtrovat',
+  'crag_filter.grade': 'Klasifikace',
+  'crag_filter.grade_from': 'od',
+  'crag_filter.grade_to': 'do',
+  'crag_filter.show_at_least': 'zobrazit sektory s alespoň',
+  'crag_filter.routes': 'cestami',
+  'crag_filter.reset': 'Reset',
 
   'member_features.subitems': 'Položky',
   'member_features.climbing': 'Lezecké cesty',

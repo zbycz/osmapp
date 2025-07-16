@@ -27,6 +27,7 @@ type Props = {
   setGradeSystem: (GradeSystem: GradeSystem) => void;
   allowUnsetValue?: boolean;
   size?: 'small' | 'tiny';
+  onGradeSystemChange?: (gradeSystem: GradeSystem) => void;
 };
 
 const GradeSystemItem = ({ showMinor, onClick, selectedGradeSystem }) => {
@@ -73,6 +74,7 @@ export const GradeSystemSelect = ({
   setGradeSystem,
   allowUnsetValue = true,
   size,
+  onGradeSystemChange,
 }: Props) => {
   const [isGradeTableOpen, setIsGradeTableOpen] =
     React.useState<boolean>(false);
@@ -90,6 +92,7 @@ export const GradeSystemSelect = ({
 
   const handleChange = (gradeSystem) => {
     setGradeSystem(gradeSystem);
+    onGradeSystemChange?.(gradeSystem);
     handleClose();
   };
 
@@ -110,10 +113,6 @@ export const GradeSystemSelect = ({
             t('grade_system_select.convert_grade_short')}
         </Button>
         <Menu
-          id="demo-customized-menu"
-          MenuListProps={{
-            'aria-labelledby': 'demo-customized-button',
-          }}
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}

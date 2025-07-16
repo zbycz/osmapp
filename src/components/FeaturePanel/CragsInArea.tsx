@@ -28,6 +28,12 @@ import {
   CragsInAreaSort,
   useCragsInAreaSort,
 } from './Climbing/CragsInAreaSort';
+import {
+  CragsInAreaFilter,
+  filterCrag,
+  useCragsInAreaFilter,
+} from './Climbing/CragsInAreaFilter';
+import { useUserSettingsContext } from '../utils/UserSettingsContext';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
@@ -191,13 +197,31 @@ const CragItem = ({ feature }: { feature: Feature }) => {
 export const CragsInArea = () => {
   const { feature } = useFeatureContext();
   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
-
+  const {
+    gradeInterval,
+    setGradeInterval,
+    minimumRoutesInInterval,
+    setMinimumRoutesInInterval,
+    uniqueValues,
+    setIsTouched,
+    isTouched,
+  } = useCragsInAreaFilter();
+  const { userSettings } = useUserSettingsContext();
+  const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
   if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
     return null;
   }
 
   const crags = feature.memberFeatures
     .filter(({ tags }) => tags.climbing)
+    .filter(
+      filterCrag({
+        gradeInterval,
+        currentGradeSystem,
+        uniqueValues,
+        minimumRoutesInInterval,
+      }),
+    )
     .sort((item1, item2) => sortByFn(sortBy)(item1, item2));
 
   const other = feature.memberFeatures.filter(({ tags }) => !tags.climbing);
@@ -212,6 +236,24 @@ export const CragsInArea = () => {
 
   return (
     <>
+      <Box mr={2.5} mt={2}>
+        <SortContainer>
+          <CragsInAreaFilter
+            uniqueValues={uniqueValues}
+            gradeInterval={gradeInterval}
+            setGradeInterval={setGradeInterval}
+            minimumRoutesInInterval={minimumRoutesInInterval}
+            setMinimumRoutesInInterval={setMinimumRoutesInInterval}
+            setIsTouched={setIsTouched}
+            isTouched={isTouched}
+          />
+          <CragsInAreaSort
+            crags={crags}
+            setSortBy={setSortBy}
+            sortBy={sortBy}
+          />
+        </SortContainer>
+      </Box>
       {crags.length > 1 && <RouteDistribution features={allCragRoutes} />}
 
       <PanelLabel
@@ -235,15 +277,6 @@ export const CragsInArea = () => {
           : ''}
       </PanelLabel>
 
-      <Box mr={2.5} mt={2}>
-        <SortContainer>
-          <CragsInAreaSort
-            crags={crags}
-            setSortBy={setSortBy}
-            sortBy={sortBy}
-          />
-        </SortContainer>
-      </Box>
       <Box mt={2} mb={4}>
         <CragList>
           {crags.map((item) => (
