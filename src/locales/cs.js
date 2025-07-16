@@ -357,6 +357,11 @@ export default {
   'grade_system_select.convert_grade': 'Převést klasifikaci',
   'grade_system_select.select_grade_system': 'Vybrat klasifikaci',
 
+  'crag_sort.title': 'Řazení',
+  'crag_sort.option_default': 'Defaultní',
+  'crag_sort.option_photos': 'Podle počtu fotek',
+  'crag_sort.option_routes': 'Podle počtu cest',
+
   'member_features.subitems': 'Položky',
   'member_features.climbing': 'Lezecké cesty',
   'member_features.routes': 'Cesty',
