@@ -411,6 +411,11 @@ export default {
   'grade_system_select.convert_grade': 'Convert grades',
   'grade_system_select.select_grade_system': 'Select grade system',
 
+  'crag_sort.title': 'Sort by',
+  'crag_sort.option_default': 'Default',
+  'crag_sort.option_photos': 'Number of photos',
+  'crag_sort.option_routes': 'Number of routes',
+
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
   'member_features.routes': 'Routes',

@@ -24,6 +24,10 @@ import { PROJECT_ID } from '../../services/project';
 import { handleClimbingDialogOnClick } from './FeatureImages/Image/helpers';
 import { MemberItem } from './MemberFeatures/MemberItem';
 import { RouteDistribution } from './Climbing/RouteDistribution';
+import {
+  CragsInAreaSort,
+  useCragsInAreaSort,
+} from './Climbing/CragsInAreaSort';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
@@ -53,6 +57,11 @@ const InnerContainer = styled.div`
       opacity: 1;
     }
   }
+`;
+
+const SortContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const CragList = styled.div`
@@ -181,12 +190,16 @@ const CragItem = ({ feature }: { feature: Feature }) => {
 
 export const CragsInArea = () => {
   const { feature } = useFeatureContext();
+  const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
 
   if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
     return null;
   }
 
-  const crags = feature.memberFeatures.filter(({ tags }) => tags.climbing);
+  const crags = feature.memberFeatures
+    .filter(({ tags }) => tags.climbing)
+    .sort((item1, item2) => sortByFn(sortBy)(item1, item2));
+
   const other = feature.memberFeatures.filter(({ tags }) => !tags.climbing);
 
   const numberOfRoutes = crags.reduce((acc, { members }) => {
@@ -222,6 +235,15 @@ export const CragsInArea = () => {
           : ''}
       </PanelLabel>
 
+      <Box mr={2.5} mt={2}>
+        <SortContainer>
+          <CragsInAreaSort
+            crags={crags}
+            setSortBy={setSortBy}
+            sortBy={sortBy}
+          />
+        </SortContainer>
+      </Box>
       <Box mt={2} mb={4}>
         <CragList>
           {crags.map((item) => (
