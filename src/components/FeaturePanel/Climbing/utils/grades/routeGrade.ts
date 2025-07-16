@@ -132,3 +132,17 @@ export const extractClimbingGradeFromTagName = (
   const match = value.match(/^climbing:grade:([^:]+)/);
   return match ? match[1] : null;
 };
+
+export const isInGradeInterval = ({
+  gradeMin,
+  gradeMax,
+  grade,
+  currentGradeSystem,
+}) => {
+  if (!gradeMin || !gradeMax || !grade) return false;
+  const minIndex = GRADE_TABLE[currentGradeSystem].indexOf(gradeMin);
+  const maxIndex = GRADE_TABLE[currentGradeSystem].indexOf(gradeMax);
+  const gradeIndex = GRADE_TABLE[currentGradeSystem].indexOf(grade);
+
+  return gradeIndex >= minIndex && gradeIndex <= maxIndex;
+};
