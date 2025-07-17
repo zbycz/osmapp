@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LineInformation, requestLines } from './requestRoutes';
+import { categories, LineInformation, requestLines } from './requestRoutes';
 import { PublicTransportCategory } from './PublicTransportWrapper';
 import { DotLoader } from '../../../helpers';
 import { sortByReference } from './helpers';
@@ -8,21 +8,6 @@ import groupBy from 'lodash/groupBy';
 import { useQuery } from 'react-query';
 import { Typography } from '@mui/material';
 import { useShowOnMap } from './useShowOnMap';
-
-const categories = [
-  'tourism',
-  'subway',
-  'commuter',
-  'regional',
-  'long_distance',
-  'high_speed',
-  'night',
-  'car',
-  'car_shuttle',
-  'bus',
-  'trolleybus',
-  'unknown',
-];
 
 type PublicTransportDisplayProps = {
   routes: LineInformation[];
