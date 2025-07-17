@@ -62,6 +62,10 @@ const PublicTransportDisplay = ({
   const { sortedEntries, initialCategories } = categorizedRoutes(routes);
   const [shownCategories, setShownCategories] = useState(initialCategories);
 
+  geoJson.features.forEach((f) => {
+    if (!categories.includes(f.properties.service))
+      f.properties.service = 'unknown';
+  });
   useShowOnMap(geoJson, shownCategories);
 
   return (
