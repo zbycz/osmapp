@@ -9,6 +9,21 @@ import { intl } from '../../../../services/intl';
 type WithTags = { id: String; tags: Record<string, string> };
 type WithRef = { ref: string };
 
+export const categories = [
+  'tourism',
+  'subway',
+  'commuter',
+  'regional',
+  'long_distance',
+  'high_speed',
+  'night',
+  'car',
+  'car_shuttle',
+  'bus',
+  'trolleybus',
+  'unknown',
+];
+
 export interface LineInformation {
   tags: Record<string, string>;
   routes: WithTags[];
@@ -44,14 +59,14 @@ const getService = (tags: Record<string, string>, routes: WithTags[]) => {
     serviceTagValue === 'highspeed' ? 'high_speed' : serviceTagValue;
   const isHighspeed = getVal('highspeed') === 'yes';
   const isSubway = getVal('subway') === 'yes';
-
-  return (
+  const service =
     serviceTag ||
     (isHighspeed && 'high_speed') ||
     (isSubway && 'subway') ||
     getVal('route') ||
-    getVal('route_master')
-  );
+    getVal('route_master');
+
+  return categories.includes(service) ? service : 'unknown';
 };
 
 const getLetter = (featureType: string) => {
