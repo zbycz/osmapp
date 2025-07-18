@@ -1,8 +1,7 @@
 import { fetchJson } from '../fetch';
 import { getImageFromCenterFactory } from './getImageFromCenterFactory';
 
-export const MAPILLARY_ACCESS_TOKEN =
-  'MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2';
+export const MAPILLARY_ACCESS_TOKEN = process.env.NEXT_PUBLIC_API_KEY_MAPILLARY;
 
 type MapillaryImage = {
   compass_angle: number;
