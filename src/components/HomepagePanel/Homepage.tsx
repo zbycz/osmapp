@@ -215,6 +215,12 @@ export const Homepage = ({ mobileMode, onClick }: Props) => {
                 </a>
                 {` – ${t('homepage.graphhopper')}`}
               </li>
+              <li>
+                <a href="https://indoorequal.com/" target="_blank">
+                  indoor=
+                </a>
+                {` – ${t('homepage.indoorequal')}`}
+              </li>
             </ul>
             <a href="https://www.maptiler.com" target="_blank">
               <LogoMaptiler width={200} height={52} />
