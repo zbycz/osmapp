@@ -8,13 +8,15 @@
     <div id="noredirect">
       <h1>OsmAPP auth popup</h1>
       <p>
-        [en] If this popup doesn't close automatically, you may close it and
-        proceed back to <a href="/">the app</a>.
+        [en] If this popup doesn't close automatically, it is probably an error.
+        Please, let us know at
+        <a href="https://github.com/zbycz/osmapp/issues">the issue tracker</a>.
       </p>
 
       <p>
-        [cs] Pokud se toto okno nezavře automaticky, můžete ho zavřít a
-        pokračovat <a href="/">do aplikace</a>.
+        [cs] Pokud se toto okno automaticky nezavře, pravděpodobně došlo k chybě.
+        Prosím, dejte nám vědět
+        <a href="https://github.com/zbycz/osmapp/issues">zde</a>.
       </p>
 
       <img src="/osmapp/logo/osmapp.svg" />
@@ -22,11 +24,13 @@
 
     <script>
       document.getElementById('noredirect').style.display = 'none';
-      if (opener && opener.authComplete) {
-        opener.authComplete(window.location.href);
-        window.close();
-      } else {
+      setTimeout(() => {
         document.getElementById('noredirect').style.display = 'block';
+      }, 10000);
+
+      if (new URLSearchParams(location.search).has("code")) {
+        new BroadcastChannel("osm-api-auth-complete").postMessage(location.href);
+        window.close();
       }
     </script>
   </body>
