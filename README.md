@@ -79,6 +79,7 @@ We are standing on the shoulders of giants, OsmAPP would not be possible without
 [Mapillary](https://www.mapillary.com/),
 [Overpass](https://wiki.openstreetmap.org/wiki/Overpass_API),
 [iD editor tagging schema](https://github.com/openstreetmap/id-tagging-schema),
+[indoor=](https://indoorequal.com/),
 [React](https://react.dev/),
 [Next.js](https://nextjs.org/),
 [Material-UI](https://mui.com/),
