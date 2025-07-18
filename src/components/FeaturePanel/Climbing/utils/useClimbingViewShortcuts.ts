@@ -1,6 +1,7 @@
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { usePhotoChange } from './usePhotoChange';
 import React from 'react';
+import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 
 export const useClimbingViewShortcuts = () => {
   const {
@@ -9,12 +10,14 @@ export const useClimbingViewShortcuts = () => {
     isRoutesLayerVisible,
     photoPath,
     photoPaths,
+    isEditMode,
   } = useClimbingContext();
   const onPhotoChange = usePhotoChange();
+  const { userSettings, setUserSetting } = useUserSettingsContext();
 
   React.useEffect(() => {
     const downHandler = (e) => {
-      if (e.key === 'h') {
+      if (e.shiftKey && e.key === 'H') {
         setIsRoutesLayerVisible(!isRoutesLayerVisible);
       }
       if (e.key === 'ArrowLeft') {
@@ -34,6 +37,17 @@ export const useClimbingViewShortcuts = () => {
       if (e.key === 'Escape') {
         setIsEditMode(false);
       }
+      if (e.shiftKey && e.key === 'D') {
+        setUserSetting(
+          'climbing.cragViewLayout',
+          userSettings['climbing.cragViewLayout'] === 'horizontal'
+            ? 'vertical'
+            : 'horizontal',
+        );
+      }
+      if (!isEditMode && e.key === 'e') {
+        setIsEditMode(true);
+      }
     };
 
     window.addEventListener('keydown', downHandler);
@@ -48,5 +62,8 @@ export const useClimbingViewShortcuts = () => {
     photoPaths,
     photoPath,
     onPhotoChange,
+    isEditMode,
+    setUserSetting,
+    userSettings,
   ]);
 };

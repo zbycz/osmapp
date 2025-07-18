@@ -2,23 +2,13 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import {
-  CircularProgress,
-  Fab,
-  IconButton,
-  Tooltip,
-  useTheme,
-} from '@mui/material';
+import { CircularProgress, Fab, IconButton, Tooltip } from '@mui/material';
 import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RoutesEditor } from './Editor/RoutesEditor';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import {
   getResolution,
-  getWikimediaCommonsKeys,
-  getWikimediaCommonsPhotoKeys,
-  getWikimediaCommonsPhotoTags,
-  getWikimediaCommonsPhotoTagsObject,
   getWikimediaCommonsPhotoValues,
   removeFilePrefix,
 } from './utils/photo';
@@ -37,7 +27,6 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
 import { RouteFloatingMenu } from './Editor/RouteFloatingMenu';
 import { t } from '../../../services/intl';
-import { usePhotoChange } from './utils/usePhotoChange';
 import { useClimbingViewShortcuts } from './utils/useClimbingViewShortcuts';
 
 export const DEFAULT_CRAG_VIEW_LAYOUT = 'horizontal';
@@ -456,7 +445,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
           onDragFinished={onDragFinished}
           pane1Style={
             cragViewLayout === 'vertical'
-              ? { maxWidth: 'calc(100vw - 300px)' }
+              ? { maxWidth: '100vw' }
               : { maxHeight: '90%' }
           }
         >
