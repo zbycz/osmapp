@@ -6,7 +6,8 @@ import {
 } from '../../../../services/overpass/overpassSearch';
 import { intl } from '../../../../services/intl';
 
-type WithTags = { tags: Record<string, string> };
+type WithTags = { id: String; tags: Record<string, string> };
+type WithRef = { ref: string };
 
 export interface LineInformation {
   tags: Record<string, string>;
@@ -18,8 +19,8 @@ export interface LineInformation {
   osmId: string;
 }
 
-const filterRoutesByRef = (routes: WithTags[], ref: string) =>
-  routes.filter(({ tags }) => tags.ref === ref);
+const filterRoutesByRef = (routes: WithTags[], members: WithRef[]) =>
+  routes.filter(({ id }) => members.find(({ ref }) => ref == id));
 
 const getTagValue = (
   key: string,
@@ -60,13 +61,20 @@ export async function requestLines(featureType: string, id: number) {
     // Try to find stop_area relations containing the specific node and get their stops
     (
       rel(bn.specific_feature)["public_transport"="stop_area"];
+      rel(bw.specific_feature)["public_transport"="stop_area"];
       rel(r._)["public_transport"="stop_area"] -> .stop_areas;
     ) -> .stop_areas;
-    node(r.stop_areas: "stop") -> .stops;
+    (
+        node(r.stop_areas: "stop");
+        node(r.stop_areas: "stop_position");
+        node(r.stop_areas: "station");
+        node(r.stop_areas: "bus_stop");
+    ) -> .stops;
     (
       rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
-      // If no stop_area, find routes that directly include the specific node
+      // If no stop_area, find routes that directly include the specific node/way
       rel(bn.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
+      rel(bw.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
     ) -> .routes;
     // Get the master relation
     (
@@ -87,9 +95,29 @@ export async function requestLines(featureType: string, id: number) {
     features: geoJsonFeatures,
   };
 
+  const orphanRoutes = routes
+    .filter(
+      ({ id }) =>
+        !routeMasters.find(({ members }) =>
+          members.find(({ ref }) => ref == id),
+        ),
+    )
+    .map((r) => {
+      const { id, type, tags } = r;
+      return {
+        tags,
+        routes: [r],
+        ref: `${tags.ref || tags.name}`,
+        colour: tags.colour,
+        service: getService(tags, []),
+        osmId: `${id}`,
+        osmType: type,
+      };
+    });
+
   const allRoutes = routeMasters
-    .map(({ type, id, tags }) => {
-      const directionRouteTags = filterRoutesByRef(routes, tags.ref);
+    .map(({ type, id, tags, members }) => {
+      const directionRouteTags = filterRoutesByRef(routes, members);
       const getVal = (key: string) =>
         getTagValue(key, tags, directionRouteTags);
 
@@ -103,6 +131,7 @@ export async function requestLines(featureType: string, id: number) {
         osmType: type,
       };
     })
+    .concat(orphanRoutes)
     .sort((a, b) => a.ref.localeCompare(b.ref, intl.lang, { numeric: true }));
 
   return {
