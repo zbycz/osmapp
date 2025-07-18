@@ -7,7 +7,7 @@ import { PoiDescription } from './helpers/PoiDescription';
 import { getLabel, getSecondaryLabel } from '../../helpers/featureLabel';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { t } from '../../services/intl';
-import { isMobileDevice } from '../helpers';
+import { isMobileDevice, useMobileMode } from '../helpers';
 import { QuickActions } from './QuickActions/QuickActions';
 import { PROJECT_ID } from '../../services/project';
 import { css } from '@emotion/react';
@@ -41,9 +41,11 @@ const EditNameButton = () => {
   );
 };
 
-const Container = styled.div<{ isStandalone: boolean }>`
-  margin: 20px 0 20px 0;
-  ${({ isStandalone }) => isStandalone && 'padding-bottom: 8px;'}
+const Container = styled.div<{ showBottomPadding: boolean; isMobile: boolean }>`
+  margin-bottom: ${({ showBottomPadding }) =>
+    showBottomPadding ? '5px' : '20px'};
+  ${({ showBottomPadding }) =>
+    showBottomPadding && 'padding-bottom: max(var(--safe-bottom), 8px);'}
 `;
 
 const HeadingsWrapper = styled.div`
@@ -115,12 +117,17 @@ const SecondaryHeading = styled.h2<{
   ${({ $deleted }) => $deleted && 'text-decoration: line-through;'}
 `;
 
-export const FeatureHeading = React.forwardRef<HTMLDivElement>((_, ref) => {
-  // thw pwa needs space at the bottom
-  const isStandalone = useMediaQuery('(display-mode: standalone)');
+type FeatureHeadingProps = {
+  isCollapsed: boolean;
+};
 
+export const FeatureHeading = React.forwardRef<
+  HTMLDivElement,
+  FeatureHeadingProps
+>(({ isCollapsed }, ref) => {
+  const isMobile = useMobileMode();
   return (
-    <Container ref={ref} isStandalone={isStandalone}>
+    <Container ref={ref} showBottomPadding={isCollapsed} isMobile={isMobile}>
       <Headings />
       <PoiDescription />
 

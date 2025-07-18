@@ -10,11 +10,12 @@ import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 // better: https://github.com/rommguy/react-custom-scroll
 // maybe https://github.com/malte-wessel/react-custom-scrollbars (larger)
 const EffectiveHeight = styled.main`
-  height: calc(100% - ${SEARCH_BOX_HEIGHT}px);
+  height: calc(100% - calc(${SEARCH_BOX_HEIGHT}px + var(--safe-top)));
+  padding-left: var(--safe-left);
 `;
 
 const SearchBoxBackground = styled.div`
-  height: ${SEARCH_BOX_HEIGHT}px;
+  height: calc(${SEARCH_BOX_HEIGHT}px + var(--safe-top));
   background-color: ${({ theme }) => theme.palette.background.searchBox};
   position: relative;
   z-index: 1;
@@ -31,7 +32,7 @@ const Container = styled.div`
 
   width: 100%;
   @media ${isDesktop} {
-    width: 410px;
+    width: calc(410px + var(--safe-left));
   }
 
   & > div > div {
@@ -111,7 +112,6 @@ export const PanelContent = styled.main`
 export const PanelFooterWrapper = styled.footer`
   color: ${({ theme }) => theme.palette.text.secondary};
   margin-top: auto;
-  padding-bottom: 15px;
   font-size: 1rem;
   line-height: 1.5;
 `;
