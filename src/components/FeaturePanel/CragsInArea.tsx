@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Chip, Stack, Typography } from '@mui/material';
 import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -65,12 +65,7 @@ const InnerContainer = styled.div`
   }
 `;
 
-const SortContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`;
-
-const CragList = styled.div`
+const CragListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -130,6 +125,31 @@ const Header = ({
   </Box>
 );
 
+const AreaInfo = ({ crags, numberOfRoutes, feature }) => {
+  return (
+    <PanelLabel
+      addition={
+        <Chip
+          size="small"
+          variant="outlined"
+          label={
+            <>
+              <strong>{crags.length}</strong> {t('featurepanel.sectors')},{' '}
+              <strong>{numberOfRoutes}</strong> {t('featurepanel.routes')}
+            </>
+          }
+          sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+        />
+      }
+    >
+      {t('featurepanel.climbing_sectors')}{' '}
+      {feature.tags.name
+        ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
+        : ''}
+    </PanelLabel>
+  );
+};
+
 const Gallery = ({ images, feature }) => {
   const poiType = getHumanPoiType(feature);
   const alt = `${poiType} ${getLabel(feature)}`;
@@ -151,6 +171,25 @@ const Gallery = ({ images, feature }) => {
   );
 };
 
+const CragList = ({ crags, other }) => {
+  return (
+    <Box mt={2} mb={4}>
+      <CragListContainer>
+        {crags.map((item) => (
+          <CragItem key={getOsmappLink(item)} feature={item} />
+        ))}
+      </CragListContainer>
+
+      {other.length > 0 && (
+        <Ul>
+          {other.map((item) => (
+            <MemberItem key={getReactKey(item)} feature={item} />
+          ))}
+        </Ul>
+      )}
+    </Box>
+  );
+};
 const CragItem = ({ feature }: { feature: Feature }) => {
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
@@ -206,6 +245,7 @@ export const CragsInArea = () => {
     setIsTouched,
     isTouched,
   } = useCragsInAreaFilter();
+  const [isPopperOpen, setIsPopperOpen] = React.useState(false);
   const { userSettings } = useUserSettingsContext();
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
   if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
@@ -236,62 +276,33 @@ export const CragsInArea = () => {
 
   return (
     <>
-      <Box mr={2.5} mt={2}>
-        <SortContainer>
-          <CragsInAreaFilter
-            uniqueValues={uniqueValues}
-            gradeInterval={gradeInterval}
-            setGradeInterval={setGradeInterval}
-            minimumRoutesInInterval={minimumRoutesInInterval}
-            setMinimumRoutesInInterval={setMinimumRoutesInInterval}
-            setIsTouched={setIsTouched}
-            isTouched={isTouched}
-          />
-          <CragsInAreaSort
-            crags={crags}
-            setSortBy={setSortBy}
-            sortBy={sortBy}
-          />
-        </SortContainer>
-      </Box>
+      <Stack
+        mr={1}
+        mt={2}
+        direction="row"
+        spacing={0.5}
+        justifyContent="flex-end"
+      >
+        <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
+        <CragsInAreaFilter
+          uniqueValues={uniqueValues}
+          gradeInterval={gradeInterval}
+          setGradeInterval={setGradeInterval}
+          minimumRoutesInInterval={minimumRoutesInInterval}
+          setMinimumRoutesInInterval={setMinimumRoutesInInterval}
+          setIsTouched={setIsTouched}
+          isTouched={isTouched}
+        />
+      </Stack>
       {crags.length > 1 && <RouteDistribution features={allCragRoutes} />}
 
-      <PanelLabel
-        addition={
-          <Chip
-            size="small"
-            variant="outlined"
-            label={
-              <>
-                <strong>{crags.length}</strong> {t('featurepanel.sectors')},{' '}
-                <strong>{numberOfRoutes}</strong> {t('featurepanel.routes')}
-              </>
-            }
-            sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
-          />
-        }
-      >
-        {t('featurepanel.climbing_sectors')}{' '}
-        {feature.tags.name
-          ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
-          : ''}
-      </PanelLabel>
+      <AreaInfo
+        crags={crags}
+        numberOfRoutes={numberOfRoutes}
+        feature={feature}
+      />
 
-      <Box mt={2} mb={4}>
-        <CragList>
-          {crags.map((item) => (
-            <CragItem key={getOsmappLink(item)} feature={item} />
-          ))}
-        </CragList>
-
-        {other.length > 0 && (
-          <Ul>
-            {other.map((item) => (
-              <MemberItem key={getReactKey(item)} feature={item} />
-            ))}
-          </Ul>
-        )}
-      </Box>
+      <CragList crags={crags} other={other} />
     </>
   );
 };
