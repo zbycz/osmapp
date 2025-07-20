@@ -1,9 +1,11 @@
 import {
   Badge,
   Button,
+  Fade,
   IconButton,
   ListSubheader,
-  Menu,
+  Paper,
+  Popper,
   Slider,
   Stack,
   Tooltip,
@@ -76,6 +78,16 @@ export const filterCrag =
     return numberOfFilteredRoutes > minimumRoutesInInterval;
   };
 
+type CragsInAreaFilterProps = {
+  gradeInterval: number[] | null;
+  setGradeInterval: (gradeInterval: number[] | null) => void;
+  minimumRoutesInInterval: number;
+  setMinimumRoutesInInterval: (minimumRoutesInInterval: number) => void;
+  uniqueValues: string[];
+  setIsTouched: (isTouched: boolean) => void;
+  isTouched: boolean;
+};
+
 export const CragsInAreaFilter = ({
   gradeInterval,
   setGradeInterval,
@@ -84,17 +96,17 @@ export const CragsInAreaFilter = ({
   uniqueValues,
   setIsTouched,
   isTouched,
-}) => {
+}: CragsInAreaFilterProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const open = Boolean(anchorEl);
+  const [open, setOpen] = React.useState(false);
   const { userSettings, setUserSetting } = useUserSettingsContext();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+    setOpen(!open);
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
-    setAnchorEl(null);
+    setOpen(false);
   };
 
   const handleIfTouched = ({
@@ -151,74 +163,109 @@ export const CragsInAreaFilter = ({
   return (
     <>
       <Tooltip title={t('crag_filter.title')}>
-        <IconButton color="primary" edge="end" onClick={handleClick}>
+        <IconButton
+          color={open ? 'primary' : 'secondary'}
+          edge="end"
+          onClick={handleClick}
+        >
           <Badge variant="dot" color="primary" invisible={!isTouched}>
             <FilterListAltIcon fontSize="small" />
           </Badge>
         </IconButton>
       </Tooltip>
-      <Menu
-        anchorEl={anchorEl}
-        open={open}
-        onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-      >
-        <ListSubheader>
-          <Stack direction="row" justifyContent="space-between">
-            {t('crag_filter.title')}
-            <Button onClick={handleReset} size="small" color="secondary">
-              {t('crag_filter.reset')}
-            </Button>
-          </Stack>
-        </ListSubheader>
-        <ListSubheader>{t('crag_filter.grade')}</ListSubheader>
 
-        <Stack gap={1} sx={{ minWidth: 350 }} m={2}>
-          <Slider
-            value={gradeInterval}
-            onChange={handleChangeGradeFilter}
-            min={0}
-            max={uniqueValues.length - 1}
-          />
-          <Stack direction="row" spacing={1} justifyContent="space-between">
+      <Popper
+        open={open}
+        anchorEl={anchorEl}
+        transition
+        placement="right-start"
+        modifiers={[
+          {
+            name: 'offset',
+            options: {
+              offset: [-20, 15],
+            },
+          },
+        ]}
+        sx={{ zIndex: 10000 }}
+      >
+        {({ TransitionProps }) => (
+          <Fade {...TransitionProps} timeout={350}>
             <div>
-              {t('crag_filter.grade_from')}{' '}
-              <RouteDifficultyBadge
-                routeDifficulty={{
-                  gradeSystem: currentGradeSystem,
-                  grade: uniqueValues[gradeInterval[0]],
-                }}
-              />{' '}
-              {t('crag_filter.grade_to')}{' '}
-              <RouteDifficultyBadge
-                routeDifficulty={{
-                  gradeSystem: currentGradeSystem,
-                  grade: uniqueValues[gradeInterval[1]],
-                }}
-              />
+              <Paper elevation={2}>
+                <ListSubheader>
+                  <Stack direction="row" justifyContent="space-between">
+                    {t('crag_filter.title')}
+                    <Button
+                      onClick={handleReset}
+                      size="small"
+                      color="secondary"
+                    >
+                      {t('crag_filter.reset')}
+                    </Button>
+                  </Stack>
+                </ListSubheader>
+                <ListSubheader>{t('crag_filter.grade')}</ListSubheader>
+
+                <Stack gap={1} m={2}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    justifyContent="space-between"
+                  >
+                    <div>
+                      {t('crag_filter.grade_from')}{' '}
+                      <RouteDifficultyBadge
+                        routeDifficulty={{
+                          gradeSystem: currentGradeSystem,
+                          grade: uniqueValues[gradeInterval[0]],
+                        }}
+                      />{' '}
+                      {t('crag_filter.grade_to')}{' '}
+                      <RouteDifficultyBadge
+                        routeDifficulty={{
+                          gradeSystem: currentGradeSystem,
+                          grade: uniqueValues[gradeInterval[1]],
+                        }}
+                      />
+                    </div>
+                    <GradeSystemSelect
+                      setGradeSystem={(system) => {
+                        setUserSetting('climbing.gradeSystem', system);
+                      }}
+                      selectedGradeSystem={userSettings['climbing.gradeSystem']}
+                    />
+                  </Stack>
+                  <Slider
+                    value={gradeInterval}
+                    onChange={handleChangeGradeFilter}
+                    min={0}
+                    max={uniqueValues.length - 1}
+                  />
+                  <div>
+                    {t('crag_filter.show_at_least')}{' '}
+                    <strong>{minimumRoutesInInterval}</strong>{' '}
+                    {t('crag_filter.routes')}
+                  </div>
+                  <Slider
+                    value={minimumRoutesInInterval}
+                    onChange={handleChangeMinimumRoutesInInterval}
+                    min={1}
+                    max={80}
+                  />
+                </Stack>
+                <Button
+                  variant="contained"
+                  sx={{ ml: 1, mb: 1 }}
+                  onClick={handleClose}
+                >
+                  Hotovo
+                </Button>
+              </Paper>
             </div>
-            <GradeSystemSelect
-              setGradeSystem={(system) => {
-                setUserSetting('climbing.gradeSystem', system);
-              }}
-              selectedGradeSystem={userSettings['climbing.gradeSystem']}
-            />
-          </Stack>
-          <Slider
-            value={minimumRoutesInInterval}
-            onChange={handleChangeMinimumRoutesInInterval}
-            min={1}
-            max={80}
-          />
-          <div>
-            {t('crag_filter.show_at_least')}{' '}
-            <strong>{minimumRoutesInInterval}</strong> {t('crag_filter.routes')}
-          </div>
-        </Stack>
-      </Menu>
+          </Fade>
+        )}
+      </Popper>
     </>
   );
 };

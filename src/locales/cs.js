@@ -362,10 +362,11 @@ export default {
   'crag_sort.option_default': 'Defaultní',
   'crag_sort.option_photos': 'Podle počtu fotek',
   'crag_sort.option_routes': 'Podle počtu cest',
+  'crag_sort.option_alphabetical': 'Podle abecedy',
 
   'crag_filter.title': 'Filtrovat',
   'crag_filter.grade': 'Klasifikace',
-  'crag_filter.grade_from': 'od',
+  'crag_filter.grade_from': 'v obtížnosti od',
   'crag_filter.grade_to': 'do',
   'crag_filter.show_at_least': 'zobrazit sektory s alespoň',
   'crag_filter.routes': 'cestami',
