@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Autocomplete,
+  Box,
   Button,
   TextField,
   Typography,
-  Box,
-  Switch,
-  Stack,
-  Tooltip,
-  Autocomplete,
 } from '@mui/material';
 import { t } from '../../../../../services/intl';
 import {
@@ -16,15 +13,13 @@ import {
 } from '../../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
-import styled from '@emotion/styled';
-import { CharacterCount, getInputTypeForKey } from '../helpers';
 import { isClimbingRoute } from '../../../../../utils';
-import OpenInNew from '@mui/icons-material/OpenInNew';
 import { useCurrentItem } from '../../EditContext';
 import { GRADE_TABLE } from '../../../Climbing/utils/grades/gradeData';
 import { extractClimbingGradeFromTagName } from '../../../Climbing/utils/grades/routeGrade';
-import { AutocompleteProps } from '@mui/material/Autocomplete/Autocomplete';
 import { RouteDifficultyBadge } from '../../../Climbing/RouteDifficultyBadge';
+import { TextFieldWithCharacterCount } from './helpers';
+import { WikimediaCommonsEditor } from './WikimediaCommonsEditor';
 
 export const climbingRouteMajorKeys = [
   'author',
@@ -41,8 +36,6 @@ export const majorKeys = [
   'phone',
   'opening_hours',
 ];
-
-const MAX_INPUT_LENGTH = 255;
 
 const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
   const wikimediaCommonTags = Array(numberOfWikimediaItems)
@@ -79,74 +72,6 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
   };
 };
 
-const InputContainer = styled.div`
-  position: relative;
-`;
-
-type TextFieldProps = {
-  k: string;
-  label: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-  value?: string;
-  placeholder?: string;
-  autoFocus?: boolean;
-  error?: boolean;
-  helperText?: string;
-};
-
-const TextFieldWithCharacterCount = ({
-  k,
-  error,
-  helperText,
-  label,
-  autoFocus,
-  onChange,
-  value,
-  placeholder,
-}: TextFieldProps) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isValidationReadyToCheck, setIsValidationReadyToCheck] =
-    useState(false);
-  const inputType = getInputTypeForKey(k);
-
-  return (
-    <InputContainer>
-      <TextField
-        error={isValidationReadyToCheck && error}
-        label={label}
-        type={inputType}
-        multiline={inputType === 'text'}
-        value={value}
-        InputLabelProps={{ shrink: true }}
-        variant="outlined"
-        margin="normal"
-        name={k}
-        onChange={onChange}
-        fullWidth
-        autoFocus={autoFocus}
-        placeholder={placeholder}
-        inputProps={{ maxLength: MAX_INPUT_LENGTH }}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => {
-          setIsValidationReadyToCheck(true);
-          setIsFocused(false);
-        }}
-        slotProps={{ formHelperText: { component: 'div' } }}
-        helperText={
-          <Stack direction="row" spacing={1}>
-            {isValidationReadyToCheck && helperText}
-            <CharacterCount
-              count={value?.length}
-              max={MAX_INPUT_LENGTH}
-              isInputFocused={isFocused}
-            />
-          </Stack>
-        }
-      />
-    </InputContainer>
-  );
-};
-
 const AutocompleteSelect = ({ values, label, defaultValue, renderOption }) => {
   return (
     <Autocomplete
@@ -166,7 +91,7 @@ export const MajorKeysEditor = () => {
   const { focusTag } = useEditDialogContext();
   const { tags, setTag } = useCurrentItem();
 
-  // TODO this code will be replaced when implementing id presets fields
+  // TODO this code will be replaced when implementing id presets fields... probably not happening
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
   const data = getData(nextWikimediaCommonsIndex + 1, isClimbingRoute(tags));
   const [activeMajorKeys, setActiveMajorKeys] = useState(() =>
@@ -178,11 +103,6 @@ export const MajorKeysEditor = () => {
       !activeMajorKeys.includes(k) ||
       k === getWikimediaCommonsKey(nextWikimediaCommonsIndex + 1),
   );
-
-  const isWikimediaCommonsFileNameInvalid = (value: string) => {
-    const regex = /^File:.+\.[a-zA-Z0-9_]+$/;
-    return !regex.test(value);
-  };
 
   useEffect(() => {
     // name can be clicked even though it was built from preset name
@@ -227,46 +147,7 @@ export const MajorKeysEditor = () => {
     }
 
     if (k.startsWith('wikimedia_commons')) {
-      const error = isWikimediaCommonsFileNameInvalid(tags[k]);
-
-      return (
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Box flex={1}>
-            <TextFieldWithCharacterCount
-              label={data.names[k]}
-              helperText={
-                error ? t('editdialog.upload_photo_filename_error') : undefined
-              }
-              error={error}
-              k={k}
-              autoFocus={focusTag === k}
-              placeholder="File:Photo example.jpg"
-              onChange={(e) => {
-                setTag(e.target.name, e.target.value);
-              }}
-              value={tags[k] ?? ''}
-            />
-          </Box>
-          <div>
-            <Tooltip
-              arrow
-              title={t('editdialog.upload_photo_tooltip')}
-              enterDelay={1000}
-            >
-              <Button
-                variant="text"
-                color="primary"
-                onClick={() => {}}
-                endIcon={<OpenInNew />}
-                target="_blank"
-                href="https://commons.wikimedia.org/wiki/Special:UploadWizard"
-              >
-                {t('editdialog.upload_photo')}
-              </Button>
-            </Tooltip>
-          </div>
-        </Stack>
-      );
+      return <WikimediaCommonsEditor k={k} />;
     }
 
     return (

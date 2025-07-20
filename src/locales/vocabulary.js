@@ -237,7 +237,7 @@ export default {
   'editdialog.add_major_tag': 'Add',
   'editdialog.upload_photo': 'Upload photo',
   'editdialog.upload_photo_tooltip':
-    'After uploading photo to Wikimedia Commons, paste its name to the input field. For example: File:Photo example.jpg',
+    'After uploading photo to Wikimedia Commons, paste its name or URL to the input field. For example: File:Photo example.jpg',
   'editdialog.upload_photo_filename_error': 'Invalid Wikimedia Commons filename. It should look like this: File:Photo example.jpg',
   'editdialog.location_checkbox': 'New location',
   'editdialog.location_placeholder': 'eg. across the street',
