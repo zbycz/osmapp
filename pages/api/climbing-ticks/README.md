@@ -8,7 +8,7 @@ curl -X POST http://127.0.0.1:3000/api/climbing-ticks \
   -H "Cookie: osmAccessToken=XYZ" \
   -d '{
     "osmType": "node",
-    "osmId": 123,
+    "osmId": 12076622869,
     "timestamp": "2024-06-10T12:00:00Z",
     "style": "OS",
     "note": "climbing with JV",
@@ -31,7 +31,7 @@ curl http://127.0.0.1:3000/api/climbing-ticks \
     "id": 1,
     "osmUserId": 162287,
     "osmType": "node",
-    "osmId": 123,
+    "osmId": 12076622869,
     "timestamp": "2024-06-10 12:00:00+00",
     "style": "OS",
     "note": "climbing with JV",
