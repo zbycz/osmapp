@@ -1,9 +1,9 @@
 import { Feature } from 'geojson';
 import { OsmType } from './services/types';
 
-// ONLY shared types among server + client (climbingTiles, climbingTicks, ...)
-
 export type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
+
+// below ONLY shared types among server + client
 
 export type Tile = { z: number; x: number; y: number };
 

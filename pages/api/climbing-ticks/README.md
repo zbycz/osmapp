@@ -1,3 +1,5 @@
+Use type `ClimbingTick` in FE.
+
 # POST /api/climbing-ticks
 
 ```

@@ -8,6 +8,7 @@ import { ClimbingTick } from '../../../src/types';
 const addTickToDB = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
   const { pairing, style, myGrade, osmType, osmId, note, timestamp } = req.body;
+
   const newTick: Omit<ClimbingTick, 'id'> = {
     osmUserId: user.id,
     osmType,
@@ -19,24 +20,24 @@ const addTickToDB = async (req: NextApiRequest) => {
     pairing,
   };
 
-  const statement = format(
-    'INSERT INTO climbing_ticks (%I) VALUES (%L)',
-    Object.keys(newTick),
-    Object.values(newTick),
+  return await xataRestQuery(
+    format(
+      'INSERT INTO climbing_ticks (%I) VALUES (%L)',
+      Object.keys(newTick),
+      Object.values(newTick),
+    ),
   );
-
-  return await xataRestQuery(statement);
 };
 
 const getAllTicks = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
 
-  const result = await xataRestQuery(
+  const result = await xataRestQuery<ClimbingTick>(
     'SELECT * FROM climbing_ticks WHERE "osmUserId" = $1',
     [user.id],
   );
 
-  return result.records as ClimbingTick[];
+  return result.records;
 };
 
 const performGetOrPost = async (req: NextApiRequest) => {

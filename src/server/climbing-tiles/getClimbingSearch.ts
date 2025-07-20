@@ -19,11 +19,11 @@ export const getClimbingSearch = async (
       ORDER BY distance_km
       LIMIT 30`;
 
-  const result = await xataRestQuery(query, [
+  const result = await xataRestQuery<ClimbingSearchRecord>(query, [
     lat,
     lon,
     `%${removeDiacritics(q)}%`,
   ]);
 
-  return result.records as ClimbingSearchRecord[];
+  return result.records;
 };
