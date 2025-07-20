@@ -50,18 +50,21 @@ export async function closeClient(client: Client): Promise<void> {
   global.db.pool = false;
 }
 
-type SQLResponseJSON = {
+type SQLResponseJSON<T> = {
   columns: { name: string; type: string }[];
-  //total: number; // usually not present ???
+  //total: number; // present in some queries, but usually 0
   warning?: string;
-  records: Record<string, any>[];
+  records: T[];
 };
-export const xataRestQuery = async (statement: string, params?: any[]) => {
+export const xataRestQuery = async <T = Record<string, any>>(
+  statement: string,
+  params?: any[],
+) => {
   const headers = {
     Authorization: `Bearer ${process.env.XATA_PASSWORD}`,
     'Content-Type': 'application/json',
   };
-  const result = await fetchJson<SQLResponseJSON>(XATA_REST_URL, {
+  const result = await fetchJson<SQLResponseJSON<T>>(XATA_REST_URL, {
     nocache: true,
     headers,
     method: 'POST',

@@ -11,6 +11,7 @@ import {
   getDifficulties,
 } from '../../components/FeaturePanel/Climbing/utils/grades/routeGrade';
 import { FeatureTags, OsmId } from '../types';
+import { publishDbgObject } from '../../utils';
 
 export type TickRowType = {
   key: string;
@@ -26,6 +27,7 @@ export type TickRowType = {
 
 export const getMyTicks = async (userSettings): Promise<TickRowType[]> => {
   const allTicks = getAllTicks();
+  publishDbgObject('allTicks', allTicks);
 
   const queryTicks = allTicks
     .map(({ osmId }) => {
@@ -46,7 +48,7 @@ export const getMyTicks = async (userSettings): Promise<TickRowType[]> => {
     };
   }, {});
 
-  return allTicks.map((tick: Tick, index) => {
+  const tickRows = allTicks.map((tick: Tick, index) => {
     const feature = featureMap[tick.osmId];
     const difficulties = getDifficulties(feature?.tags);
     const { routeDifficulty } = findOrConvertRouteGrade(
@@ -66,4 +68,8 @@ export const getMyTicks = async (userSettings): Promise<TickRowType[]> => {
       tags: feature?.tags,
     };
   });
+
+  publishDbgObject('tickRows', tickRows);
+
+  return tickRows;
 };
