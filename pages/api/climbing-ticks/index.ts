@@ -3,11 +3,12 @@ import { xataRestQuery } from '../../../src/server/climbing-tiles/db';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
 import format from 'pg-format';
+import { ClimbingTick } from '../../../src/types';
 
 const addTickToDB = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
   const { pairing, style, myGrade, osmType, osmId, note, timestamp } = req.body;
-  const newTick = {
+  const newTick: Omit<ClimbingTick, 'id'> = {
     osmUserId: user.id,
     osmType,
     osmId,
@@ -35,7 +36,7 @@ const getAllTicks = async (req: NextApiRequest) => {
     [user.id],
   );
 
-  return result.records;
+  return result.records as ClimbingTick[];
 };
 
 const performGetOrPost = async (req: NextApiRequest) => {
