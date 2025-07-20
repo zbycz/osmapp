@@ -265,6 +265,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       photoZoom,
     });
 
+  // TODO return the `machine` not a factory
   const getMachine = useGetMachineFactory({
     setRouteSelectedIndex,
     setPointSelectedIndex,
