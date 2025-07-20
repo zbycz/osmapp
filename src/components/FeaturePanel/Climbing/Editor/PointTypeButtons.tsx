@@ -4,9 +4,10 @@ import { PointType } from '../types';
 import { Button } from '@mui/material';
 import { t } from '../../../../services/intl';
 import { Setter } from '../../../../types';
+import { addShortcutUnderline } from './utils';
 
 type ButtonDef = {
-  type: PointType;
+  type: PointType | 'none';
   message: string;
   shortcut: string;
 };
@@ -37,23 +38,12 @@ const pointTypes: Array<ButtonDef> = [
     message: t('climbingpanel.climbing_point_unfinished'),
     shortcut: 'u',
   },
+  {
+    type: 'none',
+    message: t('climbingpanel.climbing_point_none'),
+    shortcut: 'n',
+  },
 ];
-
-const addShortcutUnderline = (message: string, shortcut: string) => {
-  const firstLetter = message.substring(0, 1);
-  const rest = message.substring(1);
-
-  if (firstLetter.toUpperCase() === shortcut.toUpperCase()) {
-    return (
-      <>
-        <u>{shortcut}</u>
-        {rest}
-      </>
-    );
-  }
-
-  return message;
-};
 
 type Props = {
   setShowRouteMarksMenu: Setter<boolean>;
@@ -63,8 +53,8 @@ export const PointTypeButtons = ({ setShowRouteMarksMenu }: Props) => {
   const { getMachine } = useClimbingContext();
   const machine = getMachine();
 
-  const onPointTypeChange = (type: PointType) => {
-    machine.execute('changePointType', { type });
+  const onPointTypeChange = (type: PointType | 'none') => {
+    machine.execute('changePointType', { type: type === 'none' ? null : type });
     setShowRouteMarksMenu(false);
   };
 

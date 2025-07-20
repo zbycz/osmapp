@@ -23,6 +23,7 @@ import { t } from '../../../../services/intl';
 import { useFloatingMenuShortcuts } from './useFloatingMenuShortcuts';
 import { PointTypeButtons } from './PointTypeButtons';
 import { PointType } from '../types';
+import { addShortcutUnderline } from './utils';
 
 const Container = styled.div<{ $isEditMode: boolean }>`
   position: absolute;
@@ -156,13 +157,6 @@ export const RouteFloatingMenu = () => {
                 }}
               />
               <PointTypeButtons setShowRouteMarksMenu={setShowRouteMarksMenu} />
-              <Button
-                onClick={() => {
-                  onPointTypeChange(null);
-                }}
-              >
-                {t('climbingpanel.climbing_point_none')}
-              </Button>
             </>
           ) : (
             <>
@@ -172,7 +166,7 @@ export const RouteFloatingMenu = () => {
                   startIcon={<AddLocationIcon />}
                 >
                   {getCurrentPath().length > 0
-                    ? t('climbingpanel.extend')
+                    ? addShortcutUnderline(t('climbingpanel.extend'), 'e')
                     : t('climbingpanel.start')}
                 </Button>
               )}
