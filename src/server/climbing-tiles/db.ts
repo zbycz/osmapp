@@ -102,3 +102,22 @@ export const xataRestQueryPaginated = async (
 
   return allRecords;
 };
+
+export const xataRestUpdate = async (
+  sql: string,
+  params: any[],
+  allowedFields: string[],
+  data: Record<string, any>, // unsafe user input
+) => {
+  const offset = params.length + 1;
+  const setClause = allowedFields
+    .filter((field) => data[field])
+    .map((field, index) => `"${field}"=$${index + offset}`)
+    .join(', ');
+  const setParams = allowedFields
+    .filter((field) => data[field])
+    .map((field) => data[field]);
+
+  const statement = sql.replace('...', setClause);
+  return xataRestQuery(statement, [...params, ...setParams]);
+};
