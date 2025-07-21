@@ -3,7 +3,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useRouteNumberColors } from '../utils/useRouteNumberColors';
-import { isTicked } from '../../../../services/ticks';
+import { isTicked } from '../../../../services/my-ticks/ticks';
 import { useTheme } from '@mui/material';
 
 type Props = {

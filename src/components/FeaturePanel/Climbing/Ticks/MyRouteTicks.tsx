@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Table } from '@mui/material';
-import { findTicks, getTickKey } from '../../../../services/ticks';
+import { findTicks, getTickKey } from '../../../../services/my-ticks/ticks';
 import { PanelLabel } from '../PanelLabel';
 import { TickRow } from '../TickRow';
 import { AddTickButton } from './AddTickButton';

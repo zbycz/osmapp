@@ -1,9 +1,9 @@
-import { Tick, TickStyle } from '../components/FeaturePanel/Climbing/types';
+import { Tick, TickStyle } from '../../components/FeaturePanel/Climbing/types';
 import {
   deleteFromArray,
   updateElementOnIndex,
-} from '../components/FeaturePanel/Climbing/utils/array';
-import { t } from './intl';
+} from '../../components/FeaturePanel/Climbing/utils/array';
+import { t } from '../intl';
 
 const KEY = 'ticks';
 export const tickStyles: Array<{

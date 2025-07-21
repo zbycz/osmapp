@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 import CheckIcon from '@mui/icons-material/Check';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { isTicked } from '../../../services/ticks';
+import { isTicked } from '../../../services/my-ticks/ticks';
 import { getShortId } from '../../../services/helpers';
 
 const Text = styled.div``;

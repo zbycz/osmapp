@@ -6,7 +6,7 @@ import { getDifficulties } from '../utils/grades/routeGrade';
 import CheckIcon from '@mui/icons-material/Check';
 import { getWikimediaCommonsPhotoPathKeys } from '../utils/photo';
 import { RouteNumber } from '../RouteNumber';
-import { isTicked, onTickAdd } from '../../../../services/ticks';
+import { isTicked, onTickAdd } from '../../../../services/my-ticks/ticks';
 import { getOsmappLink, getShortId } from '../../../../services/helpers';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { intl, t } from '../../../../services/intl';

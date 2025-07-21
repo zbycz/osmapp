@@ -1,7 +1,7 @@
 import React from 'react';
 import { Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
-import { isTicked, onTickAdd } from '../../../../services/ticks';
+import { isTicked, onTickAdd } from '../../../../services/my-ticks/ticks';
 import { useSnackbar } from '../../../utils/SnackbarContext';
 import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 
