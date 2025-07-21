@@ -5,11 +5,13 @@ import { ImageType } from '../../../../services/images/getImageDefs';
 import { t } from '../../../../services/intl';
 import { TooltipButton } from '../../../utils/TooltipButton';
 
+const STOP = (e: React.MouseEvent) => e.stopPropagation();
+
 const TooltipContent = ({ image }: { image: ImageType }) => (
   <>
     <span dangerouslySetInnerHTML={{ __html: image.description }} />
     <br />
-    <a href={image.linkUrl} target="_blank">
+    <a href={image.linkUrl} target="_blank" onClick={STOP}>
       {image.link}
     </a>
     {image.uncertainImage && (

@@ -15,7 +15,7 @@ export const getUrlForTag = (k: string, v: string) => {
   if (k.match(/^wikidata$/) || k.match(/:wikidata$/)) {
     return `https://www.wikidata.org/wiki/${v}`;
   }
-  if (k.match(/^wikimedia_commons$/)) {
+  if (k.match(/^wikimedia_commons(?!:path$)/)) {
     return `https://commons.wikimedia.org/wiki/${v}`;
   }
   if (k === 'image' && v.match(/^File:/)) {

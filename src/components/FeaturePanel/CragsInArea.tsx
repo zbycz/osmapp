@@ -21,7 +21,7 @@ import Link from 'next/link';
 import { naturalSort } from './Climbing/utils/array';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { PROJECT_ID } from '../../services/project';
-import { handleClimbingDialogOnClick } from './FeatureImages/Image/helpers';
+import { getClickHandler } from './FeatureImages/Image/helpers';
 import { MemberItem } from './MemberFeatures/MemberItem';
 import { RouteDistribution } from './Climbing/RouteDistribution';
 import {
@@ -163,7 +163,7 @@ const Gallery = ({ images, feature }) => {
             def={item.def}
             image={item.image}
             alt={`${alt} ${index + 1}`}
-            onClick={handleClimbingDialogOnClick(feature, item.def)}
+            onClick={getClickHandler(feature, item.def)}
           />
         ))}
       </Slider>

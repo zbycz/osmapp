@@ -3,10 +3,9 @@ import React, { useEffect, useRef } from 'react';
 import Router from 'next/router';
 import { Size } from '../types';
 import { HEIGHT } from '../helpers';
-import { useFeatureContext } from '../../../utils/FeatureContext';
 import { getOsmappLink } from '../../../../services/helpers';
 import { removeFilePrefix } from '../../Climbing/utils/photo';
-import { ImageDef, isTag } from '../../../../services/types';
+import { Feature, ImageDef, isTag } from '../../../../services/types';
 
 export const initialSize: Size = { width: 100, height: HEIGHT }; // until image size is known, the paths are rendered using this (eg. ssr)
 
@@ -38,7 +37,7 @@ export const UncertainCover = styled.div`
   box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.3);
 `;
 
-export const handleClimbingDialogOnClick = (feature, def: ImageDef) => {
+export const getClickHandler = (feature: Feature, def: ImageDef) => {
   if (isTag(def) && feature.tags.climbing === 'crag') {
     return () => {
       const featureLink = getOsmappLink(feature);
