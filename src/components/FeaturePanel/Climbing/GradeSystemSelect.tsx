@@ -116,12 +116,17 @@ export const GradeSystemSelect = ({
           anchorEl={anchorEl}
           open={open}
           onClose={handleClose}
+          slotProps={{
+            paper: {
+              elevation: 4,
+            },
+          }}
           anchorOrigin={{
             vertical: 'top',
             horizontal: 'right',
           }}
         >
-          <ListSubheader>
+          <ListSubheader sx={{ background: 'transparent' }}>
             {t('grade_system_select.select_grade_system')}
           </ListSubheader>
           {allowUnsetValue && (

@@ -371,6 +371,7 @@ export default {
   'crag_filter.show_at_least': 'zobrazit sektory s alespoň',
   'crag_filter.routes': 'cestami',
   'crag_filter.reset': 'Reset',
+  'crag_filter.done': 'Hotovo',
 
   'member_features.subitems': 'Položky',
   'member_features.climbing': 'Lezecké cesty',
