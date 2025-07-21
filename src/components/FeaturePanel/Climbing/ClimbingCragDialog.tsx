@@ -121,6 +121,11 @@ export const ClimbingCragDialog = ({
       open
       onClose={handleClose}
       disableEscapeKeyDown={isEditMode}
+      slotProps={{
+        paper: {
+          elevation: 0,
+        },
+      }}
     >
       <ClimbingCragDialogHeader onClose={handleClose} />
 

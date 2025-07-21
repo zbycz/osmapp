@@ -425,6 +425,7 @@ export default {
   'crag_filter.show_at_least': 'show crags with at least',
   'crag_filter.routes': 'routes',
   'crag_filter.reset': 'Reset',
+  'crag_filter.done': 'Done',
 
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',

@@ -86,11 +86,6 @@ const darkTheme = createTheme({
       selected: '#ffffff',
     },
   },
-  components: {
-    MuiPaper: {
-      styleOverrides: { root: { backgroundImage: 'unset' } },
-    },
-  },
 });
 
 export type Theme = 'light' | 'dark';
