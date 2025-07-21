@@ -88,7 +88,7 @@ export const CragsInAreaSort = ({
         anchorEl={anchorEl}
         transition
         placement="left-start"
-        sx={{ zIndex: 10000 }}
+        sx={{ zIndex: 1300 }}
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>

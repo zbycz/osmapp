@@ -419,8 +419,8 @@ export default {
   'crag_sort.option_alphabetical': 'Alphabetical',
 
   'crag_filter.title': 'Filter',
-  'crag_filter.grade': 'Grade',
-  'crag_filter.grade_from': 'with grade from',
+  'crag_filter.grade': 'With grade',
+  'crag_filter.grade_from': 'from',
   'crag_filter.grade_to': 'to',
   'crag_filter.show_at_least': 'show crags with at least',
   'crag_filter.routes': 'routes',
