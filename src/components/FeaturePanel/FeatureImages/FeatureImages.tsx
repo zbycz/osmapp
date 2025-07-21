@@ -5,8 +5,7 @@ import { Image } from './Image/Image';
 import { useLoadImages } from './useLoadImages';
 import { NoImage } from './NoImage';
 import { HEIGHT, ImageSkeleton } from './helpers';
-import { naturalSort } from '../Climbing/utils/array';
-import { handleClimbingDialogOnClick } from './Image/helpers';
+import { getClickHandler } from './Image/helpers';
 import { PROJECT_ID } from '../../../services/project';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getHumanPoiType, getLabel } from '../../../helpers/featureLabel';
@@ -58,7 +57,7 @@ export const FeatureImages = () => {
             key={item.image.imageUrl}
             def={item.def}
             image={item.image}
-            onClick={handleClimbingDialogOnClick(feature, item.def)}
+            onClick={getClickHandler(feature, item.def)}
             alt={`${alt} ${index + 1}`}
           />
         ))}
