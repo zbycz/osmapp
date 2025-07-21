@@ -31,6 +31,7 @@ const fmtCategory = (category: string) => {
       subway: t('publictransport.subway'),
       trolleybus: t('publictransport.trolleybus'),
       tram: t('publictransport.tram'),
+      funicular: t('publictransport.funicular'),
       unknown: t('publictransport.unknown'),
     }[category] || category
   );

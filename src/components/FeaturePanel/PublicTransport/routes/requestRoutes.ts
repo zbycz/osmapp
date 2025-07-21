@@ -22,6 +22,7 @@ export const categories = [
   'bus',
   'trolleybus',
   'tram',
+  'funicular',
   'unknown',
 ];
 
@@ -96,9 +97,9 @@ export async function requestLines(featureType: string, id: number) {
         node(r.stop_areas: "bus_stop");
     ) -> .stops;
     (
-      rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
+      rel(bn.stops)["route"~"bus|train|tram|subway|light_rail|ferry|monorail|funicular"];
       // If no stop_area, find routes that directly include the specific node/way
-      rel(b${l}.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail"];
+      rel(b${l}.specific_feature)["route"~"bus|train|tram|subway|light_rail|ferry|monorail|funicular"];
     ) -> .routes;
     // Get the master relation
     (
