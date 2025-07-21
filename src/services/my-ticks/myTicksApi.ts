@@ -11,6 +11,16 @@ export const postClimbingTick = async (
   });
 };
 
+export const putClimbingTick = async (
+  tick: Partial<Omit<ClimbingTick, 'id' | 'osmUserId'>>,
+) => {
+  return await fetchJson<ClimbingTick>('/api/climbing-ticks', {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(tick),
+  });
+};
+
 export const getClimbingTicks = async () => {
   return await fetchJson<ClimbingTick[]>('/api/climbing-ticks', {
     method: 'GET',

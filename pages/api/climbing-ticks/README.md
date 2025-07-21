@@ -48,3 +48,12 @@ curl -X DELETE http://127.0.0.1:3000/api/climbing-ticks/1 \
   -H "Content-Type: application/json" \
   -H "Cookie: osmAccessToken=XYZ"
 ```
+
+# PUT /api/climbing-ticks/[id]
+
+```
+curl -X PUT http://127.0.0.1:3000/api/climbing-ticks/1 \
+  -H "Content-Type: application/json" \
+  -H "Cookie: osmAccessToken=XYZ" \
+    -d '{"note": "climbing with JV and JayZee"}'
+```

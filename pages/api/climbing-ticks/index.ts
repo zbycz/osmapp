@@ -47,7 +47,6 @@ const performGetOrPost = async (req: NextApiRequest) => {
   if (req.method === 'POST') {
     return addTickToDB(req);
   }
-
   throw new Error('Method not implemented.');
 };
 
