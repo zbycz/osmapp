@@ -52,9 +52,10 @@ export const filterCrag =
     currentGradeSystem,
     uniqueValues,
     minimumRoutesInInterval,
+    isTouched,
   }) =>
   (crag) => {
-    if (!gradeInterval) return true;
+    if (!gradeInterval || !isTouched) return true;
 
     const numberOfFilteredRoutes = crag.memberFeatures.reduce((acc, route) => {
       const difficulty = getDifficulty(route.tags);
@@ -187,7 +188,7 @@ export const CragsInAreaFilter = ({
             },
           },
         ]}
-        sx={{ zIndex: 10000 }}
+        sx={{ zIndex: 1300 }}
       >
         {({ TransitionProps }) => (
           <Fade {...TransitionProps} timeout={350}>
@@ -205,37 +206,48 @@ export const CragsInAreaFilter = ({
                     </Button>
                   </Stack>
                 </ListSubheader>
-                <ListSubheader>{t('crag_filter.grade')}</ListSubheader>
 
-                <Stack gap={1} m={2}>
-                  <Stack
-                    direction="row"
-                    spacing={1}
-                    justifyContent="space-between"
-                  >
-                    <div>
-                      {t('crag_filter.grade_from')}{' '}
-                      <RouteDifficultyBadge
-                        routeDifficulty={{
-                          gradeSystem: currentGradeSystem,
-                          grade: uniqueValues[gradeInterval[0]],
-                        }}
-                      />{' '}
-                      {t('crag_filter.grade_to')}{' '}
-                      <RouteDifficultyBadge
-                        routeDifficulty={{
-                          gradeSystem: currentGradeSystem,
-                          grade: uniqueValues[gradeInterval[1]],
-                        }}
-                      />
-                    </div>
-                    <GradeSystemSelect
-                      setGradeSystem={(system) => {
-                        setUserSetting('climbing.gradeSystem', system);
+                <Stack
+                  direction={{ xs: 'column', md: 'row' }}
+                  spacing={1}
+                  justifyContent="space-between"
+                  mr={2}
+                >
+                  <ListSubheader>{t('crag_filter.grade')}</ListSubheader>
+                  <GradeSystemSelect
+                    setGradeSystem={(system) => {
+                      setUserSetting('climbing.gradeSystem', system);
+                    }}
+                    selectedGradeSystem={userSettings['climbing.gradeSystem']}
+                  />
+                </Stack>
+                <Stack
+                  gap={1}
+                  ml={2}
+                  mr={2}
+                  mb={2}
+                  sx={{ minWidth: { md: 380, sx: '100%' } }}
+                >
+                  <div>
+                    {t('crag_filter.grade_from')}{' '}
+                    <RouteDifficultyBadge
+                      routeDifficulty={{
+                        gradeSystem: currentGradeSystem,
+                        grade: uniqueValues[gradeInterval[0]],
                       }}
-                      selectedGradeSystem={userSettings['climbing.gradeSystem']}
-                    />
-                  </Stack>
+                    />{' '}
+                    {uniqueValues[gradeInterval[1]] && (
+                      <>
+                        {t('crag_filter.grade_to')}{' '}
+                        <RouteDifficultyBadge
+                          routeDifficulty={{
+                            gradeSystem: currentGradeSystem,
+                            grade: uniqueValues[gradeInterval[1]],
+                          }}
+                        />
+                      </>
+                    )}
+                  </div>
                   <Slider
                     value={gradeInterval}
                     onChange={handleChangeGradeFilter}

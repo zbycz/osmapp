@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Chip, Stack, Typography } from '@mui/material';
+import { Box, Chip, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -245,6 +245,7 @@ export const CragsInArea = () => {
     setIsTouched,
     isTouched,
   } = useCragsInAreaFilter();
+  const isMobileMode = useMobileMode();
   const [isPopperOpen, setIsPopperOpen] = React.useState(false);
   const { userSettings } = useUserSettingsContext();
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
@@ -260,6 +261,7 @@ export const CragsInArea = () => {
         currentGradeSystem,
         uniqueValues,
         minimumRoutesInInterval,
+        isTouched,
       }),
     )
     .sort((item1, item2) => sortByFn(sortBy)(item1, item2));
@@ -276,24 +278,29 @@ export const CragsInArea = () => {
 
   return (
     <>
-      <Stack
-        mr={1}
-        mt={2}
-        direction="row"
-        spacing={0.5}
-        justifyContent="flex-end"
+      <Paper
+        elevation={0}
+        square
+        sx={{
+          position: isMobileMode ? 'static' : 'sticky',
+          top: 0,
+          zIndex: 1,
+          opacity: 0.9,
+        }}
       >
-        <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
-        <CragsInAreaFilter
-          uniqueValues={uniqueValues}
-          gradeInterval={gradeInterval}
-          setGradeInterval={setGradeInterval}
-          minimumRoutesInInterval={minimumRoutesInInterval}
-          setMinimumRoutesInInterval={setMinimumRoutesInInterval}
-          setIsTouched={setIsTouched}
-          isTouched={isTouched}
-        />
-      </Stack>
+        <Stack direction="row" spacing={0.5} justifyContent="flex-end" m={1}>
+          <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
+          <CragsInAreaFilter
+            uniqueValues={uniqueValues}
+            gradeInterval={gradeInterval}
+            setGradeInterval={setGradeInterval}
+            minimumRoutesInInterval={minimumRoutesInInterval}
+            setMinimumRoutesInInterval={setMinimumRoutesInInterval}
+            setIsTouched={setIsTouched}
+            isTouched={isTouched}
+          />
+        </Stack>
+      </Paper>
       {crags.length > 1 && <RouteDistribution features={allCragRoutes} />}
 
       <AreaInfo
