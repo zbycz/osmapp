@@ -5,12 +5,6 @@ import { InputBase } from '@mui/material';
 import { t } from '../../services/intl';
 import { Setter } from '../../types';
 
-const stopEnterKey = (event: React.KeyboardEvent<HTMLInputElement>) => {
-  if (event.key === 'Enter') {
-    event.stopPropagation();
-  }
-};
-
 type SearchBoxInputProps = {
   params: AutocompleteRenderInputParams;
   setInputValue: (value: string) => void;
@@ -40,7 +34,6 @@ const SearchBoxInput = ({
       placeholder={t('searchbox.placeholder')}
       onChange={({ target }) => setInputValue(target.value)}
       onFocus={({ target }) => target.select()}
-      onKeyDown={stopEnterKey}
     />
   );
 };
