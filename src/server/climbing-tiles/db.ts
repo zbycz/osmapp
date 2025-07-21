@@ -114,12 +114,10 @@ export const xataRestUpdate = async (
     .filter((field) => data[field])
     .map((field, index) => `"${field}"=$${index + offset}`)
     .join(', ');
-
   const setParams = allowedFields
     .filter((field) => data[field])
     .map((field) => data[field]);
 
   const statement = sql.replace('...', setClause);
-  console.log([...params, ...setParams]);
   return xataRestQuery(statement, [...params, ...setParams]);
 };
