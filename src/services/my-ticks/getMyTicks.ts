@@ -4,7 +4,7 @@ import {
   getOverpassUrl,
   overpassGeomToGeojson,
 } from '../overpass/overpassSearch';
-import { getAllTicks, getTickKey } from '../ticks';
+import { getAllTicks, getTickKey } from './ticks';
 import { Tick, TickStyle } from '../../components/FeaturePanel/Climbing/types';
 import {
   findOrConvertRouteGrade,

@@ -6,7 +6,7 @@ import {
   getTickKey,
   onTickDelete,
   onTickUpdate,
-} from '../../../services/ticks';
+} from '../../../services/my-ticks/ticks';
 import { DEFAULT_DATA_FORMAT } from '../../../config.mjs';
 import { Tick } from './types';
 import { TickStyleSelect } from './Ticks/TickStyleSelect';
