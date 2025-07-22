@@ -1,11 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Autocomplete,
-  Box,
-  Button,
-  TextField,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { t } from '../../../../../services/intl';
 import {
   getNextWikimediaCommonsIndex,
@@ -15,11 +9,10 @@ import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import { isClimbingRoute } from '../../../../../utils';
 import { useCurrentItem } from '../../EditContext';
-import { GRADE_TABLE } from '../../../Climbing/utils/grades/gradeData';
 import { extractClimbingGradeFromTagName } from '../../../Climbing/utils/grades/routeGrade';
-import { RouteDifficultyBadge } from '../../../Climbing/RouteDifficultyBadge';
 import { TextFieldWithCharacterCount } from './helpers';
 import { WikimediaCommonsEditor } from './WikimediaCommonsEditor';
+import { GradeSelect } from './GradeSelect';
 
 export const climbingRouteMajorKeys = [
   'author',
@@ -72,20 +65,6 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
   };
 };
 
-const AutocompleteSelect = ({ values, label, defaultValue, renderOption }) => {
-  return (
-    <Autocomplete
-      options={values}
-      defaultValue={defaultValue}
-      renderInput={(params) => (
-        <TextField {...params} margin="dense" label={label} />
-      )}
-      renderOption={renderOption}
-    />
-  );
-};
-
-// TODO refactor this - extract member functions
 // eslint-disable-next-line max-lines-per-function
 export const MajorKeysEditor = () => {
   const { focusTag } = useEditDialogContext();
@@ -120,28 +99,12 @@ export const MajorKeysEditor = () => {
 
     const climbingGradeSystem = extractClimbingGradeFromTagName(k);
     if (climbingGradeSystem) {
-      const values = GRADE_TABLE[climbingGradeSystem];
-      const uniqueValues = [...new Set(values)];
-      const value = tags[k] ?? '';
-
       return (
-        <AutocompleteSelect
-          values={uniqueValues}
-          label={data.names[k]}
-          defaultValue={value}
-          renderOption={(props, option, state, ownerState) => {
-            const { key, ...optionProps } = props;
-            return (
-              <Box key={key} {...optionProps}>
-                <RouteDifficultyBadge
-                  routeDifficulty={{
-                    gradeSystem: climbingGradeSystem,
-                    grade: ownerState.getOptionLabel(option),
-                  }}
-                />
-              </Box>
-            );
-          }}
+        <GradeSelect
+          data={data}
+          k={k}
+          climbingGradeSystem={climbingGradeSystem}
+          tags={tags}
         />
       );
     }

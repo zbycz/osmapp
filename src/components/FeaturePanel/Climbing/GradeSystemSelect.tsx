@@ -33,13 +33,14 @@ type Props = {
 const GradeSystemItem = ({ showMinor, onClick, selectedGradeSystem }) => {
   const visibleGradeSystems = useVisibleGradeSystems();
 
+  const filteredGradeSystems = GRADE_SYSTEMS.filter(({ key }) =>
+    showMinor
+      ? !visibleGradeSystems.includes(key)
+      : visibleGradeSystems.includes(key),
+  );
   return (
     <>
-      {GRADE_SYSTEMS.filter(({ key }) =>
-        showMinor
-          ? !visibleGradeSystems.includes(key)
-          : visibleGradeSystems.includes(key),
-      ).map(({ key, name, description, flags }) => (
+      {filteredGradeSystems.map(({ key, name, description, flags }) => (
         <Tooltip
           title={description}
           placement="right"
