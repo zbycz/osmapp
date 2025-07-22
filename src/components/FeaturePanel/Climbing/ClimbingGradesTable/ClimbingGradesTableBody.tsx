@@ -7,6 +7,8 @@ import { getDifficultyColor } from '../utils/grades/routeGrade';
 import { convertHexToRgba } from '../../../utils/colorUtils';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing';
+import styled from '@emotion/styled';
+import { borderRight } from '@mui/system';
 
 type BodyProps = {
   columns: string[];
@@ -47,6 +49,17 @@ const useMergedCells = (columns: string[], transposedTable: string[][]) => {
   }, [columns, transposedTable]);
 };
 
+const StyledTableCell = styled(TableCell, {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<{ $backgroundColor: string }>`
+  background-color: ${({ $backgroundColor }) => $backgroundColor};
+  border-right: 4px solid ${({ theme }) => theme.palette.background.default} !important;
+  border-bottom: 4px solid ${({ theme }) => theme.palette.background.default} !important;
+  &:hover {
+    cursor: pointer;
+  }
+`;
+
 export const ClimbingGradesTableBody = ({ columns }: BodyProps) => {
   const [clickedItem, setClickedItem] = React.useState<{
     row?: number;
@@ -78,8 +91,21 @@ export const ClimbingGradesTableBody = ({ columns }: BodyProps) => {
               theme,
             );
 
+            const isHightlighted =
+              clickedItem.row === null ||
+              clickedItem.column === null ||
+              clickedItem.row === rowIdx ||
+              (rowIdx <= clickedItem.row &&
+                rowIdx + cell.rowSpan - 1 >= clickedItem.row) ||
+              clickedItem.column === colIdx;
+
+            const backgroundColor = isHightlighted
+              ? colorByDifficulty
+              : convertHexToRgba(colorByDifficulty, 0.3);
+
             return (
-              <TableCell
+              <StyledTableCell
+                $backgroundColor={backgroundColor}
                 key={`cell-${rowIdx}-${key}`}
                 rowSpan={cell.rowSpan}
                 onClick={() =>
@@ -89,25 +115,9 @@ export const ClimbingGradesTableBody = ({ columns }: BodyProps) => {
                       : { row: rowIdx, column: colIdx },
                   )
                 }
-                sx={{
-                  backgroundColor:
-                    clickedItem.row === null ||
-                    clickedItem.column === null ||
-                    clickedItem.row === rowIdx ||
-                    (rowIdx <= clickedItem.row &&
-                      rowIdx + cell.rowSpan - 1 >= clickedItem.row) ||
-                    clickedItem.column === colIdx
-                      ? colorByDifficulty
-                      : convertHexToRgba(colorByDifficulty, 0.3),
-                  borderRight: `4px solid ${theme.palette.background.default} !important`,
-                  borderBottom: `4px solid ${theme.palette.background.default} !important`,
-                  '&:hover': {
-                    cursor: 'pointer',
-                  },
-                }}
               >
                 <RouteDifficultyBadge routeDifficulty={routeDifficulty} />
-              </TableCell>
+              </StyledTableCell>
             );
           })}
           <TableCell sx={{ width: '100%' }} />
