@@ -1,4 +1,4 @@
-import { GridLegacy, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import React, { useCallback, useRef, useState } from 'react';
 import { join } from '../../../utils';
 import {
@@ -150,12 +150,12 @@ export const GeocoderRow = ({ option: { geocoder }, inputValue }: Props) => {
         />
         <div>{distance}</div>
       </IconPart>
-      <GridLegacy item xs>
+      <Grid size={{ xs: 12 }}>
         {highlightText(text, inputValue)}
         <Typography variant="body2" color="textSecondary">
           {additionalText}
         </Typography>
-      </GridLegacy>
+      </Grid>
     </>
   );
 };

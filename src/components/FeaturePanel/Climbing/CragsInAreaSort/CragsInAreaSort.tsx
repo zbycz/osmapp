@@ -34,41 +34,36 @@ export const CragsInAreaSort = ({
     <>
       <CragsInAreaSortIcon open={open} onClick={handleClick} sortBy={sortBy} />
       <PopperWithArrow
-        title={t('crag_filter.title')}
+        title={t('crag_sort.title')}
         isOpen={open}
         anchorEl={anchorEl}
         placement="left-start"
-        offset={[-20, 15]}
+        offset={[-10, 15]}
       >
-        <>
-          <Typography variant="overline" fontWeight={900} ml={2} mt={2}>
-            {t('crag_sort.title')}
-          </Typography>
-          <MenuItem
-            selected={sortBy === 'default'}
-            onClick={handleSortClick('default')}
-          >
-            {t('crag_sort.option_default')}
-          </MenuItem>
-          <MenuItem
-            selected={sortBy === 'routes'}
-            onClick={handleSortClick('routes')}
-          >
-            {t('crag_sort.option_routes')}
-          </MenuItem>
-          <MenuItem
-            selected={sortBy === 'photos'}
-            onClick={handleSortClick('photos')}
-          >
-            {t('crag_sort.option_photos')}
-          </MenuItem>
-          <MenuItem
-            selected={sortBy === 'alphabetical'}
-            onClick={handleSortClick('alphabetical')}
-          >
-            {t('crag_sort.option_alphabetical')}
-          </MenuItem>
-        </>
+        <MenuItem
+          selected={sortBy === 'default'}
+          onClick={handleSortClick('default')}
+        >
+          {t('crag_sort.option_default')}
+        </MenuItem>
+        <MenuItem
+          selected={sortBy === 'routes'}
+          onClick={handleSortClick('routes')}
+        >
+          {t('crag_sort.option_routes')}
+        </MenuItem>
+        <MenuItem
+          selected={sortBy === 'photos'}
+          onClick={handleSortClick('photos')}
+        >
+          {t('crag_sort.option_photos')}
+        </MenuItem>
+        <MenuItem
+          selected={sortBy === 'alphabetical'}
+          onClick={handleSortClick('alphabetical')}
+        >
+          {t('crag_sort.option_alphabetical')}
+        </MenuItem>
       </PopperWithArrow>
     </>
   );

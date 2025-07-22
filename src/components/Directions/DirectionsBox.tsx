@@ -5,7 +5,6 @@ import { Result } from './Result';
 import { RoutingResult } from './routing/types';
 import { isTabletResolution, useBoolState, useMobileMode } from '../helpers';
 import { DirectionsForm } from './DirectionsForm';
-import { result } from 'lodash';
 import { useDirectionsContext } from './DirectionsContext';
 
 const Wrapper = styled(Stack, {
@@ -26,10 +25,10 @@ const Wrapper = styled(Stack, {
 
 export const DirectionsBox = () => {
   const isMobileMode = useMobileMode();
+  const { setResult, result } = useDirectionsContext();
+
   const [revealed, revealForm, hide] = useBoolState(true); // mobile only
   const hideForm = isMobileMode && result && !revealed;
-
-  const { setResult } = useDirectionsContext();
 
   const setResultAndHide = useCallback(
     (result: RoutingResult) => {

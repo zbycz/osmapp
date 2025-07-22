@@ -104,7 +104,7 @@ export const CragsInAreaFilter = ({
         isOpen={open}
         anchorEl={anchorEl}
         placement={isMobileMode ? undefined : 'right-start'}
-        offset={isMobileMode ? undefined : [-20, 15]}
+        offset={isMobileMode ? undefined : [-10, 15]}
         sx={{ minWidth: 350 }}
         addition={
           <Button onClick={handleReset} size="small" color="secondary">

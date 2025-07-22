@@ -1,7 +1,7 @@
 import orderBy from 'lodash/orderBy';
 import { diceCoefficient } from 'dice-coefficient';
 import FolderIcon from '@mui/icons-material/Folder';
-import { GridLegacy, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import React from 'react';
 import {
   fetchSchemaTranslations,
@@ -129,12 +129,12 @@ export const PresetRow = ({ option: { preset }, inputValue }: Props) => {
       <IconPart>
         <FolderIcon />
       </IconPart>
-      <GridLegacy item xs>
+      <Grid size={{ xs: 12 }}>
         {highlightText(`${name}${additionalText}`, inputValue)}
         <Typography variant="body2" color="textSecondary">
           {t('searchbox.category')}
         </Typography>
-      </GridLegacy>
+      </Grid>
     </>
   );
 };

@@ -28,17 +28,20 @@ const CustomizedDialog: React.FC = ({ children }) => {
 
   return (
     <StyledDialog
-      PaperProps={{
-        sx: {
-          height: '100%',
-          maxWidth: hasMoreItems ? 1100 : 900,
-        },
-      }}
       fullScreen={fullScreen}
       open={opened}
       onClose={close}
       disableEscapeKeyDown
       aria-labelledby="edit-dialog-title"
+      slotProps={{
+        paper: {
+          sx: {
+            height: '100%',
+            maxWidth: hasMoreItems ? 1100 : 900,
+          },
+          elevation: 0,
+        },
+      }}
       sx={{ height: '100%' }}
     >
       {children}

@@ -1,4 +1,4 @@
-import { useCurrentItem } from '../EditContext';
+import { useCurrentItem, useEditContext } from '../EditContext';
 import { ItemHeading } from './FeatureEditSection/ItemHeading';
 import { PlaceCancelledToggle } from './FeatureEditSection/OptionsEditor';
 import { PresetSelect } from './FeatureEditSection/PresetSelect/PresetSelect';
@@ -11,7 +11,7 @@ import React from 'react';
 
 export const ItemEditSection = () => {
   const { toBeDeleted } = useCurrentItem();
-
+  const { items } = useEditContext();
   if (toBeDeleted) {
     return (
       <>

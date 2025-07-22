@@ -1,4 +1,4 @@
-import { GridLegacy, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { Feature, LonLat } from '../../../services/types';
 import { Setter } from '../../../types';
 import { CoordsOption } from '../types';
@@ -86,12 +86,12 @@ export const CoordsRow = ({ option: { coords } }: Props) => (
     <IconPart>
       <TravelExploreIcon />
     </IconPart>
-    <GridLegacy item xs>
+    <Grid size={12}>
       <span style={{ fontWeight: 700 }}>{coords.label}</span>
       <Typography variant="body2" color="textSecondary">
         {coords.sublabel}
       </Typography>
-    </GridLegacy>
+    </Grid>
   </>
 );
 
