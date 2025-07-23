@@ -14,7 +14,14 @@ type PublicTransportDisplayProps = {
   geoJson: GeoJSON.FeatureCollection;
 };
 
-const defaultShown = ['subway', 'commuter', 'regional', 'trolleybus', 'bus'];
+const defaultShown = [
+  'subway',
+  'commuter',
+  'regional',
+  'trolleybus',
+  'bus',
+  'tram',
+];
 
 const categorizedRoutes = (routes: LineInformation[]) => {
   const grouped = groupBy(routes, ({ service }) => {
