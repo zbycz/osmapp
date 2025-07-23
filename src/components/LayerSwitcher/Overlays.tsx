@@ -87,10 +87,14 @@ const OverlayItem = ({ layer }: { layer: Layer }) => {
     key === 'climbing' && selected ? <ClimbingSecondary /> : undefined;
 
   return (
-    <ListItemButton onClick={handleClick} key={key}>
+    <ListItemButton
+      onClick={handleClick}
+      key={key}
+      sx={{ paddingRight: 'calc(var(--safe-right) + 16px)' }}
+    >
       <LayerIcon Icon={Icon} />
       <ListItemText primary={dotToOptionalBr(name)} secondary={secondary} />
-      <ListItemSecondaryAction>
+      <ListItemSecondaryAction sx={{ right: 'calc(var(--safe-right) + 16px)' }}>
         <Checkbox edge="end" checked={selected} onClick={handleClick} />
       </ListItemSecondaryAction>
     </ListItemButton>

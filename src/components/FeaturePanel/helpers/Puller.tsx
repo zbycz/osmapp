@@ -6,10 +6,12 @@ import { isMobileDevice } from '../../helpers';
 
 const HANDLE_WIDTH = 30;
 const HANDLE_HIP_SLOP = 10;
+const HANDLE_HEIGHT = 6;
+export const PULLER_HEIGHT = HANDLE_HEIGHT + HANDLE_HIP_SLOP * 2;
 
 const Handle = styled.div`
   width: ${HANDLE_WIDTH}px;
-  height: 6px;
+  height: ${HANDLE_HEIGHT}px;
   margin: auto;
   background-color: ${({ theme }) =>
     theme.palette.mode === 'light' ? grey[300] : grey[900]};
@@ -21,7 +23,7 @@ const PullerContainer = styled.div<{
   $isDesktop: boolean;
   $isClosed: boolean;
 }>`
-  position: absolute;
+  position: sticky;
   top: 0;
   left: calc(50% - ${HANDLE_WIDTH / 2}px - ${HANDLE_HIP_SLOP}px);
   z-index: 1;
