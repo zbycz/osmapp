@@ -21,6 +21,7 @@ export const categories = [
   'car_shuttle',
   'bus',
   'trolleybus',
+  'tram',
   'unknown',
 ];
 
