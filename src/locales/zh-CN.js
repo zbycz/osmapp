@@ -68,7 +68,8 @@ export default {
   'project.osmapp.serpDescription': '一个基于 OpenStreetMap 数据库的开源世界地图。支持搜索、兴趣点点击、应用内地图编辑等功能！',
 
   'climbing.guideinfo.title': '免费攀岩指南',
-  'climbing.guideinfo.description': 'openclimbing.org 是一个开放的攀岩指南和地图平台。岩壁图和照片储存在 OpenStreetMap 和维基百科项目中，因此任何人都可以编辑。',
+  'climbing.guideinfo.description':
+    'openclimbing.org 是一个开放的攀岩指南和地图平台。岩壁图和照片储存在 OpenStreetMap 和维基百科项目中，因此任何人都可以编辑。',
   'climbing.guideinfo.button': '更多信息',
 
   'project.openclimbing.description': '免费的维基攀岩地图',
