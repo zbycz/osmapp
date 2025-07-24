@@ -10,7 +10,6 @@ type Props = {
   y: number;
   routeNumberXShift: number;
   routeNumber: number;
-  onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
   osmId: string;
 };
 
@@ -46,7 +45,6 @@ export const StartPoint = ({
   routeNumber,
   routeNumberXShift = 0,
   osmId,
-  onPointInSelectedRouteClick,
 }: Props) => {
   const { isRouteSelected, getMachine } = useClimbingContext();
   const isSelected = isRouteSelected(routeNumber);
@@ -59,7 +57,6 @@ export const StartPoint = ({
         <Point
           x={x}
           y={y}
-          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
           index={0}
           routeNumber={routeNumber}
           type={undefined}

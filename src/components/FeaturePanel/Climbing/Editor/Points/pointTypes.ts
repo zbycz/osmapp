@@ -4,4 +4,5 @@ export type PointProps = {
   isPointSelected: boolean;
   onClick?: (e: any) => void;
   pointerEvents?: string;
+  pointIndex: number;
 };
