@@ -18,12 +18,17 @@ import { landcoverRockLayer } from './layers/landcoverRockLayer';
 // https://api.maptiler.com/maps/outdoor/sprite.png?key=7dlhLl3hiXQ1gsth0kGu
 
 export const outdoorStyle = addHoverPaint({
+  version: 8,
   id: 'outdoor',
-  name: 'Outdoor',
-  zoom: 7,
-  pitch: 0,
-  center: [8.299512182724584, 46.67124020906036],
+  name: 'Maptiler Outdoor',
   glyphs: GLYPHS,
+  sources: OSMAPP_SOURCES,
+  metadata: {
+    'maptiler:copyright':
+      'This style was generated on MapTiler Cloud. Usage outside of MapTiler Cloud requires valid OpenMapTiles Production Package: https://openmaptiles.com/production-package/ -- please contact us.',
+    'openmaptiles:version': '3.x',
+  },
+  sprite: OSMAPP_SPRITE,
   layers: [
     ...BACKGROUND,
     motorwayConstruction,
@@ -3905,14 +3910,4 @@ export const outdoorStyle = addHoverPaint({
     ...poiLayers,
     ...overpassLayers,
   ],
-  bearing: 0,
-  sources: OSMAPP_SOURCES,
-  version: 8,
-  metadata: {
-    'mapbox:type': 'template',
-    'maptiler:copyright':
-      'This style was generated on MapTiler Cloud. Usage outside of MapTiler Cloud requires valid OpenMapTiles Production Package: https://openmaptiles.com/production-package/ -- please contact us.',
-    'openmaptiles:version': '3.x',
-  },
-  sprite: OSMAPP_SPRITE,
 });
