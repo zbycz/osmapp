@@ -8,8 +8,6 @@ import { RouteMarks } from './RouteMarks';
 import { getMouseFromPositionInImage } from '../utils/mousePositionUtils';
 import { DIALOG_TOP_BAR_HEIGHT } from '../config';
 
-type RouteRenders = { route: React.ReactNode; marks: React.ReactNode };
-
 const Svg = styled.svg<{
   $hasEditableCursor: boolean;
   $imageSize: { width: number; height: number };
@@ -55,11 +53,9 @@ export const RoutesLayer = ({
   const {
     imageSize,
     pointSelectedIndex,
-    routeSelectedIndex,
     getMachine,
     isRouteSelected,
     isRouteHovered,
-    getPixelPosition,
     isPointMoving,
     setIsPointClicked,
     setIsPointMoving,
@@ -95,73 +91,17 @@ export const RoutesLayer = ({
     }
   };
 
-  const sortedRoutes = routes.reduce<{
-    selected: Array<RouteRenders>;
-    rest: Array<RouteRenders>;
-    hovered: Array<RouteRenders>;
-  }>(
-    (acc, route, index) => {
-      const RouteInner = () => (
-        <RouteWithLabel
-          route={route}
-          routeNumber={index}
-          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
-        />
-      );
-      const RenderRouteMarks = () => (
-        <RouteMarks
-          route={route}
-          routeNumber={index}
-          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
-        />
-      );
+  const routesWithNumbers = routes.map((route, routeNumber) => ({
+    routeNumber,
+    route,
+  }));
 
-      if (isRouteSelected(index)) {
-        return {
-          ...acc,
-          selected: [
-            ...acc.selected,
-            { route: <RouteInner />, marks: <RenderRouteMarks /> },
-          ],
-        };
-      }
-      if (isRouteHovered(index)) {
-        return {
-          ...acc,
-          hovered: [
-            ...acc.hovered,
-            { route: <RouteInner />, marks: <RenderRouteMarks /> },
-          ],
-        };
-      }
-      return {
-        ...acc,
-        rest: [
-          ...acc.rest,
-          { route: <RouteInner />, marks: <RenderRouteMarks /> },
-        ],
-      };
-    },
-    { selected: [], rest: [], hovered: [] },
+  const selectedRoute = routesWithNumbers.find(({ routeNumber }) =>
+    isRouteSelected(routeNumber),
   );
-
-  const lastPointOfSelectedRoute =
-    routeSelectedIndex !== null && path.length > 0
-      ? getPixelPosition(path[path.length - 1])
-      : null;
-
-  const selectedPointOfSelectedRoute =
-    pointSelectedIndex !== null &&
-    path.length > 0 &&
-    routes[routeSelectedIndex] &&
-    path[pointSelectedIndex]
-      ? getPixelPosition(path[pointSelectedIndex])
-      : null;
-
-  const routeFloatingMenuPosition =
-    machine.currentStateName === 'pointMenu'
-      ? selectedPointOfSelectedRoute
-      : lastPointOfSelectedRoute;
+  const hoveredRoute = routesWithNumbers.find(({ routeNumber }) =>
+    isRouteHovered(routeNumber),
+  );
 
   return (
     <Svg
@@ -179,12 +119,52 @@ export const RoutesLayer = ({
       xmlns="http://www.w3.org/2000/svg"
       ref={svgRef}
     >
-      {sortedRoutes.rest.map((item) => item.route)}
-      {sortedRoutes.rest.map((item) => item.marks)}
-      {sortedRoutes.selected.map((item) => item.route)}
-      {sortedRoutes.selected.map((item) => item.marks)}
-      {sortedRoutes.hovered.map((item) => item.route)}
-      {sortedRoutes.hovered.map((item) => item.marks)}
+      {routesWithNumbers.map(({ route, routeNumber }) => (
+        <RouteWithLabel
+          key={routeNumber}
+          routeNumber={routeNumber}
+          route={route}
+          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
+        />
+      ))}
+      {routesWithNumbers.map(({ route, routeNumber }) => (
+        <RouteMarks
+          key={routeNumber}
+          routeNumber={routeNumber}
+          route={route}
+          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
+        />
+      ))}
+
+      {selectedRoute ? (
+        <>
+          <RouteWithLabel
+            routeNumber={selectedRoute.routeNumber}
+            route={selectedRoute.route}
+            onPointInSelectedRouteClick={onPointInSelectedRouteClick}
+          />
+          <RouteMarks
+            routeNumber={selectedRoute.routeNumber}
+            route={selectedRoute.route}
+            onPointInSelectedRouteClick={onPointInSelectedRouteClick}
+          />
+        </>
+      ) : null}
+
+      {hoveredRoute ? (
+        <>
+          <RouteWithLabel
+            routeNumber={hoveredRoute.routeNumber}
+            route={hoveredRoute.route}
+            onPointInSelectedRouteClick={onPointInSelectedRouteClick}
+          />
+          <RouteMarks
+            routeNumber={hoveredRoute.routeNumber}
+            route={hoveredRoute.route}
+            onPointInSelectedRouteClick={onPointInSelectedRouteClick}
+          />
+        </>
+      ) : null}
     </Svg>
   );
 };
