@@ -1,9 +1,9 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
 import { useMobileMode } from '../../../../helpers';
+import { usePointClickHandler } from '../utils';
 
 const ClickableArea = styled.circle``;
 
@@ -41,22 +41,11 @@ const usePointColor = (type, isHovered) => {
   };
 };
 
-export const Point = ({
-  x,
-  y,
-  onPointInSelectedRouteClick,
-  type,
-  index,
-  routeNumber,
-}) => {
+export const Point = ({ x, y, type, index, routeNumber }) => {
   const [isHovered, setIsHovered] = useState(false);
   const {
     setPointSelectedIndex,
-    setIsPointMoving,
     setIsPointClicked,
-    isPointMoving,
-    pointElement,
-    setPointElement,
     setRouteIndexHovered,
     photoZoom,
     getCurrentPath,
@@ -97,19 +86,7 @@ export const Point = ({
     e.stopPropagation();
   };
 
-  const onPointMouseUp = (e) => {
-    // @TODO unify with RouteMarks.tsx
-    if (!isPointMoving) {
-      onPointInSelectedRouteClick(e);
-      setPointElement(pointElement !== null ? null : e.currentTarget);
-      setPointSelectedIndex(index);
-      setIsPointMoving(false);
-      setIsPointClicked(false);
-      e.stopPropagation();
-      e.preventDefault();
-    }
-  };
-
+  const onPointMouseUp = usePointClickHandler(index);
   const isTouchDevice = 'ontouchstart' in window;
 
   const commonProps = {
@@ -143,6 +120,7 @@ export const Point = ({
       <ClickableArea
         fill="transparent"
         r={isTouchDevice ? 20 : 10}
+        // eslint-disable-next-line react/jsx-props-no-spreading
         {...commonProps}
       >
         {title}
@@ -154,6 +132,7 @@ export const Point = ({
         r={isTouchDevice ? 7 : 4}
         $isHovered={isHovered}
         $isPointSelected={isPointOnRouteSelected}
+        // eslint-disable-next-line react/jsx-props-no-spreading
         {...commonProps}
       >
         {title}

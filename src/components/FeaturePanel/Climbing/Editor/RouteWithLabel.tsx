@@ -13,14 +13,9 @@ import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 type Props = {
   route: ClimbingRoute;
   routeNumber: number;
-  onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
 };
 
-export const RouteWithLabel = ({
-  route,
-  routeNumber,
-  onPointInSelectedRouteClick,
-}: Props) => {
+export const RouteWithLabel = ({ route, routeNumber }: Props) => {
   const { getPixelPosition, getPathForRoute, routes, photoPath, photoZoom } =
     useClimbingContext();
   const { userSettings } = useUserSettingsContext();
@@ -46,7 +41,6 @@ export const RouteWithLabel = ({
   if (path.length === 1) {
     return (
       <StartPoint
-        onPointInSelectedRouteClick={onPointInSelectedRouteClick}
         x={x}
         y={y}
         routeNumberXShift={shift}

@@ -3,10 +3,7 @@ import styled from '@emotion/styled';
 
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
-import { RouteFloatingMenu } from './RouteFloatingMenu';
 import { RouteMarks } from './RouteMarks';
-import { getMouseFromPositionInImage } from '../utils/mousePositionUtils';
-import { DIALOG_TOP_BAR_HEIGHT } from '../config';
 
 const Svg = styled.svg<{
   $hasEditableCursor: boolean;
@@ -52,7 +49,6 @@ export const RoutesLayer = ({
 }: Props) => {
   const {
     imageSize,
-    pointSelectedIndex,
     getMachine,
     isRouteSelected,
     isRouteHovered,
@@ -69,18 +65,6 @@ export const RoutesLayer = ({
   const machine = getMachine();
   const path = getCurrentPath();
   if (!path) return null;
-
-  const onPointInSelectedRouteClick = (
-    event: React.MouseEvent<HTMLElement>,
-  ) => {
-    machine.execute('showPointMenu');
-    const isDoubleClick = event.detail === 2;
-    const lastPointIndex = path.length - 1;
-
-    if (isDoubleClick && pointSelectedIndex === lastPointIndex) {
-      machine.execute('finishRoute');
-    }
-  };
 
   const handleOnMovingPointDropOnCanvas = () => {
     if (isPointMoving) {
@@ -124,16 +108,10 @@ export const RoutesLayer = ({
           key={routeNumber}
           routeNumber={routeNumber}
           route={route}
-          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
         />
       ))}
       {routesWithNumbers.map(({ route, routeNumber }) => (
-        <RouteMarks
-          key={routeNumber}
-          routeNumber={routeNumber}
-          route={route}
-          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
-        />
+        <RouteMarks key={routeNumber} routeNumber={routeNumber} route={route} />
       ))}
 
       {selectedRoute ? (
@@ -141,12 +119,10 @@ export const RoutesLayer = ({
           <RouteWithLabel
             routeNumber={selectedRoute.routeNumber}
             route={selectedRoute.route}
-            onPointInSelectedRouteClick={onPointInSelectedRouteClick}
           />
           <RouteMarks
             routeNumber={selectedRoute.routeNumber}
             route={selectedRoute.route}
-            onPointInSelectedRouteClick={onPointInSelectedRouteClick}
           />
         </>
       ) : null}
@@ -156,12 +132,10 @@ export const RoutesLayer = ({
           <RouteWithLabel
             routeNumber={hoveredRoute.routeNumber}
             route={hoveredRoute.route}
-            onPointInSelectedRouteClick={onPointInSelectedRouteClick}
           />
           <RouteMarks
             routeNumber={hoveredRoute.routeNumber}
             route={hoveredRoute.route}
-            onPointInSelectedRouteClick={onPointInSelectedRouteClick}
           />
         </>
       ) : null}

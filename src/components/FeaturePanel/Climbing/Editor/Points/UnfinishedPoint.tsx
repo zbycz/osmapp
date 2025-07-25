@@ -2,16 +2,19 @@ import React from 'react';
 import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
 import { PointProps } from './pointTypes';
+import { usePointClickHandler } from '../utils';
 
 export const UnfinishedPoint = ({
   x,
   y,
   isPointSelected,
-  onClick,
+  pointIndex,
   pointerEvents,
 }: PointProps) => {
   const { isEditMode, photoZoom } = useClimbingContext();
+  const onClick = usePointClickHandler(pointIndex);
   const config = useConfig();
+
   const strokeWidth = 1;
   const size = 12;
   const dx = x - size / 2 - strokeWidth / 2;

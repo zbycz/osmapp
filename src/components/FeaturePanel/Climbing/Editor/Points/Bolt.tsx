@@ -2,15 +2,18 @@ import React from 'react';
 import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
 import { PointProps } from './pointTypes';
+import { usePointClickHandler } from '../utils';
 
 export const Bolt = ({
   x,
   y,
   isPointSelected,
-  onClick,
   pointerEvents,
+  pointIndex,
 }: PointProps) => {
   const { isEditMode, photoZoom } = useClimbingContext();
+  const onClick = usePointClickHandler(pointIndex);
+
   const config = useConfig();
   const size = 14;
   const strokeWidth = 2.5;

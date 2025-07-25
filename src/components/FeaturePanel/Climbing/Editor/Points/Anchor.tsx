@@ -2,16 +2,18 @@ import React from 'react';
 import { useConfig } from '../../config';
 import { PointProps } from './pointTypes';
 import { useClimbingContext } from '../../contexts/ClimbingContext';
+import { usePointClickHandler } from '../utils';
 
 export const Anchor = ({
   x,
   y,
   isPointSelected,
-  onClick,
+  pointIndex,
   pointerEvents,
 }: PointProps) => {
   const config = useConfig();
   const { photoZoom } = useClimbingContext();
+  const onClick = usePointClickHandler(pointIndex);
   const size = 5;
 
   const foregroundColor = isPointSelected

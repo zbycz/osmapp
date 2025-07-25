@@ -12,26 +12,15 @@ import { UnfinishedPoint } from './Points/UnfinishedPoint';
 type Props = {
   route: ClimbingRoute;
   routeNumber: number;
-  onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
 };
 
-export const RouteMarks = ({
-  route,
-  routeNumber,
-  onPointInSelectedRouteClick,
-}: Props) => {
+export const RouteMarks = ({ route, routeNumber }: Props) => {
   const {
     getPixelPosition,
     isPointSelected,
     getMachine,
     getPathForRoute,
     isRouteSelected,
-    pointElement,
-    isPointMoving,
-    setPointElement,
-    setPointSelectedIndex,
-    setIsPointMoving,
-    setIsPointClicked,
     isOtherRouteSelected,
     isEditMode,
   } = useClimbingContext();
@@ -40,19 +29,6 @@ export const RouteMarks = ({
   return (
     <>
       {getPathForRoute(route).map(({ x, y, type }, index) => {
-        const onMarkedPointClick = (e: any) => {
-          // @TODO unify with Point.tsx
-          if (!isPointMoving) {
-            onPointInSelectedRouteClick(e);
-            setPointElement(pointElement !== null ? null : e.currentTarget);
-            setPointSelectedIndex(index);
-            setIsPointMoving(false);
-            setIsPointClicked(false);
-            e.stopPropagation();
-            e.preventDefault();
-          }
-        };
-
         const isBoltVisible = !isOtherSelected && type === 'bolt';
         const isAnchorVisible = !isOtherSelected && type === 'anchor';
         const isSlingVisible = !isOtherSelected && type === 'sling';
@@ -82,7 +58,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             {isPitonVisible && (
@@ -91,7 +67,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             {isSlingVisible && (
@@ -100,7 +76,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             {isAnchorVisible && (
@@ -109,7 +85,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             {isUnfinishedPointVisible && (
@@ -118,14 +94,13 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             <Point
               x={position.x}
               y={position.y}
               type={type}
-              onPointInSelectedRouteClick={onPointInSelectedRouteClick}
               index={index}
               routeNumber={routeNumber}
             />
