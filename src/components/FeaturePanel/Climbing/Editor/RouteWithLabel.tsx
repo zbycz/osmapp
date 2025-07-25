@@ -52,30 +52,6 @@ export const RouteWithLabel = ({ route, routeNumber }: Props) => {
 
   return (
     <>
-      <defs>
-        <marker
-          id="triangle"
-          viewBox="0 0 15 15"
-          refX="30"
-          refY="5"
-          markerUnits="strokeWidth"
-          orient="auto"
-        >
-          <path
-            d="M 0 0 L 10 5 L 0 10"
-            stroke="white"
-            strokeWidth={5}
-            fill="none"
-          />
-          <path
-            d="M 0 0 L 10 5 L 0 10"
-            stroke="black"
-            strokeWidth={3}
-            fill="none"
-          />
-        </marker>
-      </defs>
-
       <RoutePath route={route} routeNumber={routeNumber} />
       <RouteNumber x={x + shift} y={y} osmId={osmId}>
         {routeNumber}

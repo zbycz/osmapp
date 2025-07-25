@@ -126,7 +126,6 @@ export const RoutePath = ({ route, routeNumber }) => {
         d={`M0 0 ${pointsInString}`}
         isSelected={isSelected}
         {...commonProps}
-        // style={{ pointerEvents: arePointerEventsDisabled ? 'none' : 'all' }}
         style={{ pointerEvents: 'all' }}
         route={route}
         routeNumber={routeNumber}
