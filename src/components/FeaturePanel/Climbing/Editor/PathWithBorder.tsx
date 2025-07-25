@@ -1,10 +1,10 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from '@emotion/styled';
 import { useTheme } from '@mui/material';
 import { useConfig } from '../config';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { getDifficulty, getDifficultyColor } from '../utils/grades/routeGrade';
+import { ClimbingRoute } from '../types';
 
 const RouteLine = styled.path`
   pointer-events: all;
@@ -13,13 +13,23 @@ const RouteBorder = styled.path`
   pointer-events: all;
 `;
 
+type Props = {
+  d: string;
+  routeNumber: number;
+  isSelected: boolean;
+  route: ClimbingRoute;
+  opacity?: number;
+  style?: Record<string, string>;
+};
+
 export const PathWithBorder = ({
   d,
   routeNumber,
   isSelected,
   route,
-  ...props
-}) => {
+  opacity,
+  style,
+}: Props) => {
   const config = useConfig();
   const theme = useTheme();
   const { routeIndexHovered, isOtherRouteSelected, isEditMode } =
@@ -44,8 +54,8 @@ export const PathWithBorder = ({
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity={isOtherSelected ? 0 : 1}
-        {...props}
+        opacity={opacity ? opacity : isOtherSelected ? 0 : 1}
+        style={style}
       />
       <RouteLine
         d={d}
@@ -54,8 +64,10 @@ export const PathWithBorder = ({
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity={isOtherSelected ? (isEditMode ? 1 : 0.6) : 1}
-        {...props}
+        opacity={
+          opacity ? opacity : isOtherSelected ? (isEditMode ? 1 : 0.6) : 1
+        }
+        style={style}
       />
       {routeIndexHovered === routeNumber && (
         <RouteLine
@@ -65,7 +77,8 @@ export const PathWithBorder = ({
           strokeLinecap="round"
           strokeLinejoin="round"
           fill="none"
-          {...props}
+          opacity={opacity}
+          style={style}
         />
       )}
     </>

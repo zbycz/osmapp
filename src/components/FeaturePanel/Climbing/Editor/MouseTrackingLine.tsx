@@ -35,7 +35,6 @@ export const MouseTrackingLine = ({ routeNumber }) => {
         routeNumber={routeNumber}
         isSelected={isSelected}
         route={route}
-        pointerEvents="none"
         opacity={0.7}
       />
     )
