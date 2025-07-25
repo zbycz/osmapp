@@ -45,7 +45,6 @@ export const PathWithBorder = ({
         strokeLinejoin="round"
         fill="none"
         opacity={isOtherSelected ? 0 : 1}
-        // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
       />
       <RouteLine
@@ -56,8 +55,6 @@ export const PathWithBorder = ({
         strokeLinejoin="round"
         fill="none"
         opacity={isOtherSelected ? (isEditMode ? 1 : 0.6) : 1}
-        // markerMid="url(#triangle)"
-        // pointerEvents={arePointerEventsDisabled ? 'none' : 'all'}
         {...props}
       />
       {routeIndexHovered === routeNumber && (

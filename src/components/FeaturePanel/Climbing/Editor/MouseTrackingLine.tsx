@@ -32,11 +32,11 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     isSelected && (
       <PathWithBorder
         d={`M ${lastPointPositionInPx.x} ${lastPointPositionInPx.y} L ${mousePositionSticked.x} ${mousePositionSticked.y}`}
+        routeNumber={routeNumber}
         isSelected={isSelected}
+        route={route}
         pointerEvents="none"
         opacity={0.7}
-        route={route}
-        routeNumber={routeNumber}
       />
     )
   );
