@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Tooltip, useTheme } from '@mui/material';
-import { getDifficultyColor } from './utils/grades/routeGrade';
+import { getDifficultyColor } from '../../../services/tagging/climbing/routeGrade';
 import { RouteDifficulty } from './types';
 
 const Container = styled.div<{ $color: string; $isTooltipActive: boolean }>`

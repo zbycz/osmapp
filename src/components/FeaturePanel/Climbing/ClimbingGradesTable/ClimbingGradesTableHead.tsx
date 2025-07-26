@@ -10,7 +10,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing';
+import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing/gradeSystems';
 import TuneIcon from '@mui/icons-material/Tune';
 
 type HeadProps = {

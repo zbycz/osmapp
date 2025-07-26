@@ -2,7 +2,7 @@ import { Feature } from '../../../../services/types';
 import React, { forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
-import { getDifficulties } from '../utils/grades/routeGrade';
+import { getDifficulties } from '../../../../services/tagging/climbing/routeGrade';
 import CheckIcon from '@mui/icons-material/Check';
 import { getWikimediaCommonsPhotoPathKeys } from '../utils/photo';
 import { RouteNumber } from '../RouteNumber';

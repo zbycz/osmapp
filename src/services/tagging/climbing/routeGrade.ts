@@ -1,12 +1,12 @@
-import { RouteDifficulty } from '../../types';
+import { RouteDifficulty } from '../../../components/FeaturePanel/Climbing/types';
 import {
   csvToArray,
   GRADE_TABLE,
   gradeColors,
   gradeTableString,
 } from './gradeData';
-import { GradeSystem } from '../../../../../services/tagging/climbing';
-import { FeatureTags } from '../../../../../services/types';
+import { GradeSystem } from './gradeSystems';
+import { FeatureTags } from '../../types';
 
 export const exportGradeDataToWikiTable = () => {
   const csvArray = csvToArray(gradeTableString);

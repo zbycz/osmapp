@@ -1,7 +1,4 @@
-import {
-  GRADE_SYSTEMS,
-  GradeSystem,
-} from '../../../../../services/tagging/climbing';
+import { GRADE_SYSTEMS, GradeSystem } from './gradeSystems';
 
 type GradeTable = Record<GradeSystem, Array<string>>;
 

@@ -1,5 +1,5 @@
 import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
-import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing';
+import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing/gradeSystems';
 
 export const useGradeSystemsStatus = () => {
   const { userSettings } = useUserSettingsContext();

@@ -1,6 +1,9 @@
 import React, { createContext, useContext } from 'react';
 import { usePersistedState } from './usePersistedState';
-import { GRADE_SYSTEMS, GradeSystem } from '../../services/tagging/climbing';
+import {
+  GRADE_SYSTEMS,
+  GradeSystem,
+} from '../../services/tagging/climbing/gradeSystems';
 import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
 

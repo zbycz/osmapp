@@ -12,7 +12,7 @@ import {
 import {
   getDifficulty,
   getDifficultyColor,
-} from '../Climbing/utils/grades/routeGrade';
+} from '../../../services/tagging/climbing/routeGrade';
 
 import { Size } from './types';
 import { useFeatureContext } from '../../utils/FeatureContext';

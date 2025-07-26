@@ -1,14 +1,13 @@
 import React from 'react';
 import zip from 'lodash/zip';
-import { GRADE_TABLE } from '../utils/grades/gradeData';
+import { GRADE_TABLE } from '../../../../services/tagging/climbing/gradeData';
 import { useTheme } from '@emotion/react';
 import { TableBody, TableCell, TableRow } from '@mui/material';
-import { getDifficultyColor } from '../utils/grades/routeGrade';
+import { getDifficultyColor } from '../../../../services/tagging/climbing/routeGrade';
 import { convertHexToRgba } from '../../../utils/colorUtils';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
-import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing';
+import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing/gradeSystems';
 import styled from '@emotion/styled';
-import { borderRight } from '@mui/system';
 
 type BodyProps = {
   columns: string[];

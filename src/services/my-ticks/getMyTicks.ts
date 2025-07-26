@@ -9,7 +9,7 @@ import { Tick, TickStyle } from '../../components/FeaturePanel/Climbing/types';
 import {
   findOrConvertRouteGrade,
   getDifficulties,
-} from '../../components/FeaturePanel/Climbing/utils/grades/routeGrade';
+} from '../tagging/climbing/routeGrade';
 import { FeatureTags, OsmId } from '../types';
 import { publishDbgObject } from '../../utils';
 

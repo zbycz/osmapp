@@ -1,5 +1,5 @@
 import { Feature, FeatureTags } from '../../../services/types';
-import { GradeSystem } from '../../../services/tagging/climbing';
+import { GradeSystem } from '../../../services/tagging/climbing/gradeSystems';
 
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling' | 'unfinished';
 

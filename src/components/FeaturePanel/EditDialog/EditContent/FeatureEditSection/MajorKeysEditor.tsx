@@ -9,7 +9,7 @@ import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import { isClimbingRoute } from '../../../../../utils';
 import { useCurrentItem } from '../../EditContext';
-import { extractClimbingGradeFromTagName } from '../../../Climbing/utils/grades/routeGrade';
+import { extractClimbingGradeFromTagName } from '../../../../../services/tagging/climbing/routeGrade';
 import { TextFieldWithCharacterCount } from './helpers';
 import { WikimediaCommonsEditor } from './WikimediaCommonsEditor';
 import { GradeSelect } from './GradeSelect';

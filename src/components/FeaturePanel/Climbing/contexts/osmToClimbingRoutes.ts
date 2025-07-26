@@ -3,7 +3,7 @@ import { ClimbingRoute, PathPoints } from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
 import { boltCodeMap } from '../utils/boltCodes';
 import { removeFilePrefix } from '../utils/photo';
-import { getDifficulty } from '../utils/grades/routeGrade';
+import { getDifficulty } from '../../../../services/tagging/climbing/routeGrade';
 import { publishDbgObject } from '../../../../utils';
 import { getDividedFeaturesBySections } from '../utils/getDividedFeaturesBySections';
 
