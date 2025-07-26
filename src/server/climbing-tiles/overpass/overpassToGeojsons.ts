@@ -8,6 +8,7 @@ import {
 } from '../../../services/types';
 import { join } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
+import { getDifficultyColorByTags } from '../../../services/tagging/climbing/routeGrade';
 
 type OsmType = 'node' | 'way' | 'relation';
 type OsmNode = {
@@ -136,15 +137,21 @@ const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
           getRouteNumberFromTags(element),
         )
       : undefined;
+
+  const color = tags?.climbing?.startsWith('route')
+    ? getDifficultyColorByTags(tags, 'light')
+    : undefined;
+
   const properties = {
     climbing: tags?.climbing,
-    name: tags?.name,
+    name: tags?.name, // used for storing climbing_features.name - TODO filter properties in prepareGeojson not here
     osmappType: type,
     osmappRouteCount,
     osmappLabel: getLabel(tags, osmappRouteCount),
     osmappHasImages: Object.keys(tags).some((key) =>
       key.startsWith('wikimedia_commons'),
     ),
+    ...(color ? { color } : {}),
   };
 
   return {
