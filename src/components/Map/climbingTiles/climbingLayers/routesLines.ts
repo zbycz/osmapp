@@ -56,7 +56,7 @@ export const routesLines: LayerSpecification[] = [
     layout: {
       'symbol-placement': 'line-center',
       'text-font': ['Noto Sans Regular'],
-      'text-field': '{name}',
+      'text-field': '{osmappLabel}',
       'text-size': 12,
       'text-rotation-alignment': 'map',
     },
