@@ -67,7 +67,7 @@ const Path = ({
   const theme = useTheme();
   const color = isHighlighted
     ? theme.palette.climbing.selected
-    : getDifficultyColor(getDifficulty(feature.tags), theme);
+    : getDifficultyColor(getDifficulty(feature.tags), theme.palette.mode);
   const contrastColor = theme.palette.getContrastText(color);
   const d = path
     .map(({ x, y }, idx) => `${!idx ? 'M' : 'L'}${x * width} ${y * height}`)

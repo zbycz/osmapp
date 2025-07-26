@@ -24,7 +24,10 @@ type Props = {
 export const RouteDifficultyBadge = ({ routeDifficulty, tooltip }: Props) => {
   const theme = useTheme();
 
-  const colorByDifficulty = getDifficultyColor(routeDifficulty, theme);
+  const colorByDifficulty = getDifficultyColor(
+    routeDifficulty,
+    theme.palette.mode,
+  );
 
   return (
     <Tooltip title={tooltip} enterDelay={1000} arrow>

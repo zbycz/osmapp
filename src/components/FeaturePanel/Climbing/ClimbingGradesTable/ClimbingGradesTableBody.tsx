@@ -88,7 +88,7 @@ export const ClimbingGradesTableBody = ({ columns }: BodyProps) => {
             };
             const colorByDifficulty = getDifficultyColor(
               routeDifficulty,
-              theme,
+              theme.palette.mode,
             );
 
             const isHightlighted =

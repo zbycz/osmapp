@@ -35,7 +35,10 @@ export const RouteDifficulty = ({ route, x, y }: Props) => {
   const {
     photoZoom: { scale },
   } = useClimbingContext();
-  const color = getDifficultyColor(getDifficulty(route.feature.tags), theme);
+  const color = getDifficultyColor(
+    getDifficulty(route.feature.tags),
+    theme.palette.mode,
+  );
   const routeDifficulties = getDifficulties(route.feature?.tags);
   const selectedRouteSystem = userSettings['climbing.gradeSystem'];
   const { routeDifficulty } = findOrConvertRouteGrade(

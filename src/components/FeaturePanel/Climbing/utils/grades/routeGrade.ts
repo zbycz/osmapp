@@ -79,7 +79,10 @@ export const sanitizeApproximationSymbol = (grade) => {
   return grade?.replace('~', '');
 };
 
-export const getDifficultyColor = (routeDifficulty, theme) => {
+export const getDifficultyColor = (
+  routeDifficulty: RouteDifficulty,
+  mode: 'light' | 'dark',
+) => {
   const DEFAULT_COLOR = '#555';
   if (!routeDifficulty) {
     return DEFAULT_COLOR;
@@ -88,8 +91,6 @@ export const getDifficultyColor = (routeDifficulty, theme) => {
   const gradeWithoutApproximationCharacters = sanitizeApproximationSymbol(
     routeDifficulty.grade,
   );
-
-  const { mode } = theme.palette;
 
   const uiaaGrade =
     routeDifficulty.gradeSystem !== 'uiaa'
