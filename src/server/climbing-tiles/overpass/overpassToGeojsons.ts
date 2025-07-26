@@ -93,8 +93,24 @@ const numberToSuperScript = (number?: number) =>
     ? number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d])
     : '';
 
+const getNameWithDifficulty = (tags: FeatureTags) => {
+  if (tags.climbing?.startsWith('route')) {
+    const gradeKey = Object.keys(tags).find((key) =>
+      key.match(/^climbing:grade:[^:]+$/),
+    );
+    const grade = gradeKey ? tags[gradeKey] : '';
+    return `${tags.name ?? ''}${grade ? ` ${grade}` : ''}`;
+  }
+
+  return tags.name ?? '';
+};
+
 const getLabel = (tags: FeatureTags, osmappRouteCount: number) =>
-  join(tags?.name, '\n', numberToSuperScript(osmappRouteCount));
+  join(
+    getNameWithDifficulty(tags),
+    '\n',
+    numberToSuperScript(osmappRouteCount),
+  );
 
 const getRouteNumberFromTags = (element: OsmItem) => {
   // TODO sum all types

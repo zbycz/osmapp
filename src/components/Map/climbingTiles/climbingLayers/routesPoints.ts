@@ -32,7 +32,7 @@ export const routesPoints: LayerSpecification[] = [
       'text-padding': 2,
       'text-font': ['Noto Sans Medium'],
       'text-anchor': 'left',
-      'text-field': '{name} {climbing:grade:uiaa}',
+      'text-field': '{osmappLabel}',
       'text-offset': [1, 0],
       'text-size': linear(20, 12, 26, 30),
       'text-max-width': 9,
