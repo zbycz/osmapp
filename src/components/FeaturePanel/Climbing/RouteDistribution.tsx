@@ -147,7 +147,13 @@ export const RouteDistribution = ({
 
   const routeOccurrences = getOccurrences();
 
-  if (!routeOccurrences) return null;
+  if (
+    !routeOccurrences ||
+    !Object.values(routeOccurrences).find(
+      (numberOfRoutes) => numberOfRoutes > 0,
+    )
+  )
+    return null;
 
   const heightsRatios = Object.keys(routeOccurrences).map((key) => ({
     grade: key,
