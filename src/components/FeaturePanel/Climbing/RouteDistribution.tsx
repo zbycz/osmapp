@@ -188,7 +188,7 @@ export const RouteDistribution = ({
                   gradeSystem: gradeSystem,
                   grade: heightRatioItem.grade,
                 },
-                theme,
+                theme.palette.mode,
               );
 
               const numberOfRoutesKey = Object.keys(routeOccurrences).find(
