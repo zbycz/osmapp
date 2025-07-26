@@ -82,7 +82,7 @@ export const sanitizeApproximationSymbol = (grade) => {
 export const getDifficultyColor = (
   routeDifficulty: RouteDifficulty,
   mode: 'light' | 'dark',
-) => {
+): string => {
   const DEFAULT_COLOR = '#555';
   if (!routeDifficulty) {
     return DEFAULT_COLOR;
@@ -101,6 +101,15 @@ export const getDifficultyColor = (
         )
       : gradeWithoutApproximationCharacters;
   return gradeColors[uiaaGrade]?.[mode] || DEFAULT_COLOR;
+};
+
+// used for climbingTiles
+export const getDifficultyColorByTags = (
+  tags: FeatureTags,
+  mode: 'light' | 'dark',
+): string | undefined => {
+  const difficulty = getDifficulty(tags);
+  return difficulty ? getDifficultyColor(difficulty, mode) : undefined;
 };
 
 export const findOrConvertRouteGrade = (

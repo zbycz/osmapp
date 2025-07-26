@@ -1,5 +1,6 @@
 import { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { CLIMBING_TILES_SOURCE } from '../consts';
+import { linear } from './helpers';
 
 export const routesLines: LayerSpecification[] = [
   {
@@ -13,6 +14,7 @@ export const routesLines: LayerSpecification[] = [
     paint: {
       'line-color': '#f8f4f0',
       'line-width': 4,
+      'line-opacity': linear(16, 0.4, 21, 1),
     },
   },
   {
@@ -24,8 +26,9 @@ export const routesLines: LayerSpecification[] = [
     filter: ['all', ['==', 'type', 'route']],
     layout: { 'line-cap': 'round' },
     paint: {
-      'line-color': '#ea5540',
+      'line-color': ['coalesce', ['get', 'color'], '#999'],
       'line-width': 2,
+      'line-opacity': linear(16, 0.4, 21, 1),
     },
   },
   {
@@ -37,7 +40,7 @@ export const routesLines: LayerSpecification[] = [
     filter: ['all', ['==', 'type', 'route']],
     layout: { 'line-cap': 'round' },
     paint: {
-      'line-color': '#4150a0',
+      'line-color': '#000',
       'line-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
