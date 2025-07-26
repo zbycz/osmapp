@@ -4,8 +4,8 @@ import { RouteDifficultyBadge } from '../Climbing/RouteDifficultyBadge';
 import {
   getDifficulties,
   getGradeSystemFromOsmTag,
-} from '../Climbing/utils/grades/routeGrade';
-import { getGradeSystemName } from '../../../services/tagging/climbing';
+} from '../../../services/tagging/climbing/routeGrade';
+import { getGradeSystemName } from '../../../services/tagging/climbing/gradeSystems';
 import { t } from '../../../services/intl';
 
 const Container = styled.div`

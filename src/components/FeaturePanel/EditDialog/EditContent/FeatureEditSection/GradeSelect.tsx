@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import React from 'react';
-import { GRADE_TABLE } from '../../../Climbing/utils/grades/gradeData';
+import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData';
 import { RouteDifficultyBadge } from '../../../Climbing/RouteDifficultyBadge';
 import { AutocompleteSelect } from './AutocompleteSelect';
 import { FeatureTags } from '../../../../../services/types';

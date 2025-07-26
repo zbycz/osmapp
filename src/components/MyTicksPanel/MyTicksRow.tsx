@@ -7,7 +7,7 @@ import { getUrlOsmId } from '../../services/helpers';
 import { ConvertedRouteDifficultyBadge } from '../FeaturePanel/Climbing/ConvertedRouteDifficultyBadge';
 import { DEFAULT_DATA_FORMAT } from '../../config.mjs';
 import { useMapStateContext } from '../utils/MapStateContext';
-import { getDifficulties } from '../FeaturePanel/Climbing/utils/grades/routeGrade';
+import { getDifficulties } from '../../services/tagging/climbing/routeGrade';
 
 export const MyTicksRow = ({ tickRow }: { tickRow: TickRowType }) => {
   const routeDifficulties = getDifficulties(tickRow.tags);

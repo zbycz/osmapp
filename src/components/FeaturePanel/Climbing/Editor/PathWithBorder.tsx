@@ -3,7 +3,10 @@ import styled from '@emotion/styled';
 import { useTheme } from '@mui/material';
 import { useConfig } from '../config';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { getDifficulty, getDifficultyColor } from '../utils/grades/routeGrade';
+import {
+  getDifficulty,
+  getDifficultyColor,
+} from '../../../../services/tagging/climbing/routeGrade';
 import { ClimbingRoute } from '../types';
 
 const RouteLine = styled.path`

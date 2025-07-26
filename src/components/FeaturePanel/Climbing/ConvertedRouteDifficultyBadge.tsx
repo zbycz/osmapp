@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
-import { findOrConvertRouteGrade } from './utils/grades/routeGrade';
-import { getGradeSystemName } from '../../../services/tagging/climbing';
+import { findOrConvertRouteGrade } from '../../../services/tagging/climbing/routeGrade';
+import { getGradeSystemName } from '../../../services/tagging/climbing/gradeSystems';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { RouteDifficulty } from './types';
 import { RouteDifficultyBadge } from './RouteDifficultyBadge';

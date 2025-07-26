@@ -5,14 +5,14 @@ import {
   convertGrade,
   getDifficulty,
   getDifficultyColor,
-} from './utils/grades/routeGrade';
+} from '../../../services/tagging/climbing/routeGrade';
 import { ContentContainer } from './ContentContainer';
-import { GRADE_TABLE } from './utils/grades/gradeData';
+import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
 import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import {
   getGradeSystemName,
   GradeSystem,
-} from '../../../services/tagging/climbing';
+} from '../../../services/tagging/climbing/gradeSystems';
 import { Feature } from '../../../services/types';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { Tooltip } from '@mui/material';

@@ -2,7 +2,7 @@ import {
   convertGrade,
   getDifficulty,
   isInGradeInterval,
-} from '../../utils/grades/routeGrade';
+} from '../../../../../services/tagging/climbing/routeGrade';
 
 export const filterCrag =
   ({

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useUserSettingsContext } from '../../../../utils/UserSettingsContext';
-import { GRADE_TABLE } from '../../utils/grades/gradeData';
+import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData';
 
 export const useCragsInAreaFilter = () => {
   const [gradeInterval, setGradeInterval] = React.useState<number[] | null>(

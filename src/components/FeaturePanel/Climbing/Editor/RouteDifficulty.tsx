@@ -5,7 +5,7 @@ import {
   getDifficulties,
   getDifficulty,
   getDifficultyColor,
-} from '../utils/grades/routeGrade';
+} from '../../../../services/tagging/climbing/routeGrade';
 import { ClimbingRoute } from '../types';
 import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 import { useClimbingContext } from '../contexts/ClimbingContext';

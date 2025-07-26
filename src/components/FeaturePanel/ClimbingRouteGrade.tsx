@@ -1,6 +1,6 @@
 import { useFeatureContext } from '../utils/FeatureContext';
 import { isFeatureClimbingRoute } from '../../utils';
-import { getDifficulties } from './Climbing/utils/grades/routeGrade';
+import { getDifficulties } from '../../services/tagging/climbing/routeGrade';
 import { ConvertedRouteDifficultyBadge } from './Climbing/ConvertedRouteDifficultyBadge';
 import React from 'react';
 import { useUserSettingsContext } from '../utils/UserSettingsContext';

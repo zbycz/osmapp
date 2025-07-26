@@ -15,7 +15,7 @@ import {
   getGradeSystemName,
   GRADE_SYSTEMS,
   GradeSystem,
-} from '../../../services/tagging/climbing';
+} from '../../../services/tagging/climbing/gradeSystems';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { t } from '../../../services/intl';
