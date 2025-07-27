@@ -18,7 +18,6 @@ export const routesPoints: LayerSpecification[] = [
         ['coalesce', ['get', 'color'], '#999'],
       ],
       'circle-radius': linear(16, 1, 21, 6),
-      'circle-opacity': linear(16, 0.4, 21, 1),
       'circle-stroke-color': '#f8f4f0',
       'circle-stroke-width': linear(16, 0.4, 21, 1.2),
     },
