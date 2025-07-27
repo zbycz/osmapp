@@ -5,8 +5,8 @@ import {
 } from '../../../../utils/UserSettingsContext';
 import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData';
 
-const SETTINGS_KEY = 'climbing.filter';
 type ClimbingFilter = UserSettingsType['climbing.filter'];
+const SETTINGS_KEY = 'climbing.filter';
 const DEFAULT_MINIMUM_ROUTES_IN_INTERVAL = 1;
 
 const isSameInterval = (a: [number, number], b: [number, number]) =>

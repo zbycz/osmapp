@@ -11,9 +11,9 @@ import { number } from 'prop-types';
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
 
 type ClimbingFilter = {
+  filterGradeSystem: GradeSystem;
   gradeInterval: [number, number] | null;
   minimumRoutesInInterval: number;
-  isTouched: boolean;
 };
 
 export type UserSettingsType = Partial<{

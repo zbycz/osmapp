@@ -13,7 +13,7 @@ type CragsInAreaFilterProps = {
   setGradeInterval: (gradeInterval: number[] | null) => void;
   minimumRoutesInInterval: number;
   setMinimumRoutesInInterval: (minimumRoutesInInterval: number) => void;
-  uniqueValues: string[];
+  uniqueGrades: string[];
   isDefaultFilter: boolean;
 };
 
@@ -22,7 +22,7 @@ export const CragsInAreaFilter = ({
   setGradeInterval,
   minimumRoutesInInterval,
   setMinimumRoutesInInterval,
-  uniqueValues,
+  uniqueGrades,
   isDefaultFilter,
 }: CragsInAreaFilterProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -56,14 +56,14 @@ export const CragsInAreaFilter = ({
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   useEffect(() => {
-    if (gradeInterval === null) setGradeInterval([0, uniqueValues.length - 1]);
-  }, [uniqueValues, gradeInterval, currentGradeSystem, setGradeInterval]);
+    if (gradeInterval === null) setGradeInterval([0, uniqueGrades.length - 1]);
+  }, [uniqueGrades, gradeInterval, currentGradeSystem, setGradeInterval]);
 
   if (gradeInterval === null) {
     return null;
   }
   const handleReset = () => {
-    setGradeInterval([0, uniqueValues.length - 1]);
+    setGradeInterval([0, uniqueGrades.length - 1]);
     setMinimumRoutesInInterval(1);
   };
 
@@ -89,7 +89,7 @@ export const CragsInAreaFilter = ({
         }
       >
         <GradeFilter
-          uniqueValues={uniqueValues}
+          uniqueValues={uniqueGrades}
           currentGradeSystem={currentGradeSystem}
           gradeInterval={gradeInterval}
           onChange={handleChangeGradeFilter}
