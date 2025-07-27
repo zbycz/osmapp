@@ -5,13 +5,51 @@ import { GradeSystemSelect } from '../GradeSystemSelect';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import React from 'react';
 
-export const GradeFilter = ({
-  uniqueValues,
-  currentGradeSystem,
-  gradeInterval,
-  onChange,
-}) => {
-  const { userSettings, setUserSetting } = useUserSettingsContext();
+type Interval = [number, number];
+
+const convertToUnique = ([minIndex, maxIndex]: Interval, grades: string[]) => {
+  const uniqueGrades = [...new Set(grades)];
+  const value: Interval = [
+    uniqueGrades.indexOf(grades[minIndex]),
+    uniqueGrades.indexOf(grades[maxIndex]),
+  ];
+  return { value, max: uniqueGrades.length - 1 };
+};
+
+const convertFromUnique = (
+  [minIndex, maxIndex]: Interval,
+  grades: string[],
+): Interval => {
+  const uniqueGrades = [...new Set(grades)];
+  const gradeToOriginalIndexMap: Record<string, number> = {};
+  grades.forEach((grade, i) => {
+    if (!(grade in gradeToOriginalIndexMap)) {
+      gradeToOriginalIndexMap[grade] = i;
+    }
+  });
+
+  return [
+    gradeToOriginalIndexMap[uniqueGrades[minIndex]],
+    gradeToOriginalIndexMap[uniqueGrades[maxIndex]],
+  ];
+};
+
+const GradesFilterSlider = () => {
+  const { climbingFilter } = useUserSettingsContext();
+  const { gradeInterval, setGradeInterval, grades } = climbingFilter;
+  const { value, max } = convertToUnique(gradeInterval, grades);
+
+  const onChange = (_: Event, newValue: Interval) => {
+    setGradeInterval(convertFromUnique(newValue, grades));
+  };
+  return <Slider value={value} onChange={onChange} min={0} max={max} />;
+};
+
+export const GradeFilter = () => {
+  const { userSettings, setUserSetting, climbingFilter } =
+    useUserSettingsContext();
+  const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
+  const { gradeInterval, grades } = climbingFilter;
 
   return (
     <>
@@ -38,27 +76,22 @@ export const GradeFilter = ({
           <RouteDifficultyBadge
             routeDifficulty={{
               gradeSystem: currentGradeSystem,
-              grade: uniqueValues[gradeInterval[0]],
+              grade: grades[gradeInterval[0]],
             }}
           />{' '}
-          {uniqueValues[gradeInterval[1]] && (
+          {grades[gradeInterval[1]] && (
             <>
               {t('crag_filter.grade_to')}{' '}
               <RouteDifficultyBadge
                 routeDifficulty={{
                   gradeSystem: currentGradeSystem,
-                  grade: uniqueValues[gradeInterval[1]],
+                  grade: grades[gradeInterval[1]],
                 }}
               />
             </>
           )}
         </div>
-        <Slider
-          value={gradeInterval}
-          onChange={onChange}
-          min={0}
-          max={uniqueValues.length - 1}
-        />
+        <GradesFilterSlider />
       </Stack>
     </>
   );

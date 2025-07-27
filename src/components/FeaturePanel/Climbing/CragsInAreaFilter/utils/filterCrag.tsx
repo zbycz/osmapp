@@ -9,7 +9,7 @@ import { Feature } from '../../../../../services/types';
 type Props = {
   gradeInterval: [number, number] | null;
   currentGradeSystem: GradeSystem;
-  uniqueGrades: string[];
+  grades: string[];
   minimumRoutesInInterval: number;
   isDefaultFilter: boolean;
 };
@@ -18,7 +18,7 @@ export const filterCrag =
   ({
     gradeInterval,
     currentGradeSystem,
-    uniqueGrades,
+    grades,
     minimumRoutesInInterval,
     isDefaultFilter,
   }: Props) =>
@@ -35,8 +35,8 @@ export const filterCrag =
       );
       if (
         isInGradeInterval({
-          gradeMin: uniqueGrades[gradeInterval[0]],
-          gradeMax: uniqueGrades[gradeInterval[1]],
+          gradeMin: grades[gradeInterval[0]],
+          gradeMax: grades[gradeInterval[1]],
           grade: convertedGrade,
           currentGradeSystem,
         })
