@@ -11,7 +11,7 @@ type CragsInAreaFilterProps = {
   setGradeInterval: (gradeInterval: number[] | null) => void;
   minimumRoutesInInterval: number;
   setMinimumRoutesInInterval: (minimumRoutesInInterval: number) => void;
-  uniqueGrades: string[];
+  grades: string[];
   isDefaultFilter: boolean;
 };
 
@@ -19,7 +19,7 @@ export const CragsInAreaFilter = ({
   setGradeInterval,
   minimumRoutesInInterval,
   setMinimumRoutesInInterval,
-  uniqueGrades,
+  grades,
   isDefaultFilter,
 }: CragsInAreaFilterProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -42,8 +42,8 @@ export const CragsInAreaFilter = ({
   };
 
   const handleReset = () => {
-    setGradeInterval([0, uniqueGrades.length - 1]);
-    setMinimumRoutesInInterval(1);
+    setMinimumRoutesInInterval(1); // TODO this doesnt work
+    setGradeInterval([0, grades.length - 1]);
   };
 
   return (

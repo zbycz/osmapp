@@ -285,7 +285,7 @@ export const CragsInArea = () => {
         <Stack direction="row" spacing={0.5} justifyContent="flex-end" m={1}>
           <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
           <CragsInAreaFilter
-            uniqueGrades={grades}
+            grades={grades}
             setGradeInterval={setGradeInterval}
             minimumRoutesInInterval={minimumRoutesInInterval}
             setMinimumRoutesInInterval={setMinimumRoutesInInterval}
