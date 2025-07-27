@@ -237,12 +237,10 @@ export const CragsInArea = () => {
     setGradeInterval,
     minimumRoutesInInterval,
     setMinimumRoutesInInterval,
-    uniqueValues,
-    setIsTouched,
-    isTouched,
+    uniqueGrades,
+    isDefaultFilter,
   } = useCragsInAreaFilter();
   const isMobileMode = useMobileMode();
-  const [isPopperOpen, setIsPopperOpen] = React.useState(false);
   const { userSettings } = useUserSettingsContext();
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
   if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
@@ -255,9 +253,9 @@ export const CragsInArea = () => {
       filterCrag({
         gradeInterval,
         currentGradeSystem,
-        uniqueValues,
+        uniqueGrades,
         minimumRoutesInInterval,
-        isTouched,
+        isDefaultFilter,
       }),
     )
     .sort((item1, item2) => sortByFn(sortBy)(item1, item2));
@@ -287,13 +285,12 @@ export const CragsInArea = () => {
         <Stack direction="row" spacing={0.5} justifyContent="flex-end" m={1}>
           <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
           <CragsInAreaFilter
-            uniqueValues={uniqueValues}
+            uniqueGrades={uniqueGrades}
             gradeInterval={gradeInterval}
             setGradeInterval={setGradeInterval}
             minimumRoutesInInterval={minimumRoutesInInterval}
             setMinimumRoutesInInterval={setMinimumRoutesInInterval}
-            setIsTouched={setIsTouched}
-            isTouched={isTouched}
+            isDefaultFilter={isDefaultFilter}
           />
         </Stack>
       </Paper>

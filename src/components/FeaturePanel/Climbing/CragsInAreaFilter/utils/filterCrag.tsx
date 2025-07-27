@@ -3,17 +3,27 @@ import {
   getDifficulty,
   isInGradeInterval,
 } from '../../../../../services/tagging/climbing/routeGrade';
+import { GradeSystem } from '../../../../../services/tagging/climbing/gradeSystems';
+import { Feature } from '../../../../../services/types';
+
+type Props = {
+  gradeInterval: [number, number] | null;
+  currentGradeSystem: GradeSystem;
+  uniqueGrades: string[];
+  minimumRoutesInInterval: number;
+  isDefaultFilter: boolean;
+};
 
 export const filterCrag =
   ({
     gradeInterval,
     currentGradeSystem,
-    uniqueValues,
+    uniqueGrades,
     minimumRoutesInInterval,
-    isTouched,
-  }) =>
-  (crag) => {
-    if (!gradeInterval || !isTouched) return true;
+    isDefaultFilter,
+  }: Props) =>
+  (crag: Feature) => {
+    if (!gradeInterval || isDefaultFilter) return true;
 
     const numberOfFilteredRoutes = crag.memberFeatures.reduce((acc, route) => {
       const difficulty = getDifficulty(route.tags);
@@ -25,8 +35,8 @@ export const filterCrag =
       );
       if (
         isInGradeInterval({
-          gradeMin: uniqueValues[gradeInterval[0]],
-          gradeMax: uniqueValues[gradeInterval[1]],
+          gradeMin: uniqueGrades[gradeInterval[0]],
+          gradeMax: uniqueGrades[gradeInterval[1]],
           grade: convertedGrade,
           currentGradeSystem,
         })
@@ -34,5 +44,6 @@ export const filterCrag =
         return acc + 1;
       return acc;
     }, 0);
+
     return numberOfFilteredRoutes > minimumRoutesInInterval;
   };

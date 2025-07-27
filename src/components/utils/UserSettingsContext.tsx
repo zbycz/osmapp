@@ -6,10 +6,17 @@ import {
 } from '../../services/tagging/climbing/gradeSystems';
 import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
+import { number } from 'prop-types';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
 
-type UserSettingsType = {
+type ClimbingFilter = {
+  filterGradeSystem: GradeSystem;
+  gradeInterval: [number, number] | null;
+  minimumRoutesInInterval: number;
+};
+
+export type UserSettingsType = Partial<{
   isImperial: boolean;
   'weather.enabled': boolean;
   'climbing.gradeSystem': GradeSystem;
@@ -20,7 +27,8 @@ type UserSettingsType = {
   'climbing.visibleGradeSystems': Record<string, boolean>;
   'climbing.cragViewLayout': CragViewLayout;
   'climbing.splitPaneSize': null | number;
-};
+  'climbing.filter': ClimbingFilter;
+}>;
 
 type UserSettingsContextType = {
   userSettings: UserSettingsType;
@@ -30,6 +38,7 @@ type UserSettingsContextType = {
 };
 
 const initialUserSettings: UserSettingsType = {
+  // TODO remove initial settings and handle it as default in the usage code
   isImperial: false,
   'weather.enabled': true,
   'climbing.gradeSystem': null,
@@ -41,7 +50,6 @@ const initialUserSettings: UserSettingsType = {
     ({ minor }) => !minor,
   ).reduce((acc, { key }) => ({ ...acc, [key]: true }), {}),
   'climbing.cragViewLayout': 'auto',
-
   'climbing.splitPaneSize': null,
 };
 

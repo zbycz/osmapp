@@ -13,9 +13,8 @@ type CragsInAreaFilterProps = {
   setGradeInterval: (gradeInterval: number[] | null) => void;
   minimumRoutesInInterval: number;
   setMinimumRoutesInInterval: (minimumRoutesInInterval: number) => void;
-  uniqueValues: string[];
-  setIsTouched: (isTouched: boolean) => void;
-  isTouched: boolean;
+  uniqueGrades: string[];
+  isDefaultFilter: boolean;
 };
 
 export const CragsInAreaFilter = ({
@@ -23,9 +22,8 @@ export const CragsInAreaFilter = ({
   setGradeInterval,
   minimumRoutesInInterval,
   setMinimumRoutesInInterval,
-  uniqueValues,
-  setIsTouched,
-  isTouched,
+  uniqueGrades,
+  isDefaultFilter,
 }: CragsInAreaFilterProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -40,31 +38,11 @@ export const CragsInAreaFilter = ({
     setOpen(false);
   };
 
-  const handleIfTouched = ({
-    gradeInterval,
-    minimumRoutesInInterval,
-  }: {
-    gradeInterval?: number[];
-    minimumRoutesInInterval?: number;
-  }) => {
-    if (
-      gradeInterval &&
-      (gradeInterval[0] !== 0 || gradeInterval[1] !== uniqueValues.length - 1)
-    )
-      setIsTouched(true);
-    else if (minimumRoutesInInterval && minimumRoutesInInterval !== 1)
-      setIsTouched(true);
-    else {
-      setIsTouched(false);
-    }
-  };
-
   const handleChangeGradeFilter = (
     _event: Event,
     newValue: number | number[],
   ) => {
     if (Array.isArray(newValue)) {
-      handleIfTouched({ gradeInterval: newValue });
       setGradeInterval(newValue);
     }
   };
@@ -72,23 +50,21 @@ export const CragsInAreaFilter = ({
     _event: Event,
     newValue: number,
   ) => {
-    handleIfTouched({ minimumRoutesInInterval: newValue });
     setMinimumRoutesInInterval(newValue);
   };
 
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
 
   useEffect(() => {
-    if (gradeInterval === null) setGradeInterval([0, uniqueValues.length - 1]);
-  }, [uniqueValues, gradeInterval, currentGradeSystem, setGradeInterval]);
+    if (gradeInterval === null) setGradeInterval([0, uniqueGrades.length - 1]);
+  }, [uniqueGrades, gradeInterval, currentGradeSystem, setGradeInterval]);
 
   if (gradeInterval === null) {
     return null;
   }
   const handleReset = () => {
-    setGradeInterval([0, uniqueValues.length - 1]);
+    setGradeInterval([0, uniqueGrades.length - 1]);
     setMinimumRoutesInInterval(1);
-    setIsTouched(false);
   };
 
   return (
@@ -96,7 +72,7 @@ export const CragsInAreaFilter = ({
       <CragsInAreaFilterIcon
         open={open}
         onClick={handleClick}
-        touched={isTouched}
+        touched={!isDefaultFilter}
       />
 
       <PopperWithArrow
@@ -113,7 +89,7 @@ export const CragsInAreaFilter = ({
         }
       >
         <GradeFilter
-          uniqueValues={uniqueValues}
+          uniqueValues={uniqueGrades}
           currentGradeSystem={currentGradeSystem}
           gradeInterval={gradeInterval}
           onChange={handleChangeGradeFilter}
