@@ -14,7 +14,7 @@ import { AREA, CLIMBING_TILES_SOURCE, CRAG, GYM, VIA_FERRATA } from '../consts';
 
 const areaSize = linearByRouteCount(0, 0.4, 400, 1);
 const cragSize = linearByRouteCount(0, 0.4, 50, 0.7);
-const cragSizeBig = 1;
+const cragSizeBig = 0.7;
 
 const GROUPS_LAYOUT: SymbolLayerSpecification['layout'] = {
   'icon-image': ifCrag(byHasImages(CRAG, 'IMAGE'), byHasImages(AREA, 'IMAGE')),
@@ -32,7 +32,7 @@ const GROUPS_LAYOUT: SymbolLayerSpecification['layout'] = {
     15,
     ifCrag(12, 14),
     21,
-    ifCrag(20, 14),
+    ifCrag(15, 14),
   ),
   'text-offset': [0, 0.6],
   'icon-optional': false,

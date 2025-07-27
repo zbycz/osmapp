@@ -14,7 +14,6 @@ export const routesLines: LayerSpecification[] = [
     paint: {
       'line-color': '#f8f4f0',
       'line-width': 4,
-      'line-opacity': linear(16, 0.4, 21, 1),
     },
   },
   {
@@ -28,7 +27,6 @@ export const routesLines: LayerSpecification[] = [
     paint: {
       'line-color': ['coalesce', ['get', 'color'], '#999'],
       'line-width': 2,
-      'line-opacity': linear(16, 0.4, 21, 1),
     },
   },
   {
@@ -67,12 +65,6 @@ export const routesLines: LayerSpecification[] = [
       'text-color': '#000000',
       'text-halo-width': 1.5,
       'text-halo-color': 'rgba(255,255,255,0.7)',
-      'text-opacity': [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        0.5,
-        1,
-      ],
     },
   },
 ];
