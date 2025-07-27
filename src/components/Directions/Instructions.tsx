@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { icon, Sign } from './routing/instructions';
 import { RoutingResult } from './routing/types';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import { toHumanDistance } from './helpers';
 import { Box, Divider, Stack, Typography } from '@mui/material';
 import { useTheme } from '@emotion/react';

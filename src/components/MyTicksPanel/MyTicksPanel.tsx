@@ -15,13 +15,12 @@ import {
   PanelSidePadding,
 } from '../utils/PanelHelpers';
 import { ClientOnly } from '../helpers';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import { MobilePageDrawer } from '../utils/MobilePageDrawer';
 import { getMyTicks, TickRowType } from '../../services/my-ticks/getMyTicks';
 import { useAddHeatmap } from './useAddHeatmap';
 import { useSortedTable } from './useSortedTable';
 import { MyTicksRow } from './MyTicksRow';
-import Link from 'next/link';
 
 function NoTicksContent() {
   return (

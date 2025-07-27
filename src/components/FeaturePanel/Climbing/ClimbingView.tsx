@@ -15,7 +15,7 @@ import {
 import { TransformWrapper } from './TransformWrapper';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { CLIMBING_ROUTE_ROW_HEIGHT, SPLIT_PANE_DEFAULT_SIZE } from './config';
 import { ClimbingViewContent } from './ClimbingViewContent';
 import { getOsmappLink } from '../../../services/helpers';

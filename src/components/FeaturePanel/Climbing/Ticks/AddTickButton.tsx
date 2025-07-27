@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { isTicked, onTickAdd } from '../../../../services/my-ticks/ticks';
 import { useSnackbar } from '../../../utils/SnackbarContext';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 
 export const AddTickButton = ({ shortOsmId }) => {
   const { showToast } = useSnackbar();

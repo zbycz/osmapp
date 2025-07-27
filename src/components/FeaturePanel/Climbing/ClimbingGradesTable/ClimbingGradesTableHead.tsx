@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import {
   Chip,
   IconButton,

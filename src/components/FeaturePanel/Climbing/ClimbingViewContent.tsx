@@ -16,7 +16,7 @@ import dynamic from 'next/dynamic';
 import { EditButton } from '../EditButton';
 import { EditDialog } from '../EditDialog/EditDialog';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { PanelLabel } from './PanelLabel';
 import { t } from '../../../services/intl';

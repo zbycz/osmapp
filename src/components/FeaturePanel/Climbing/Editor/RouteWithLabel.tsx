@@ -8,7 +8,7 @@ import { getShiftForStartPoint } from '../utils/startPoint';
 import { RoutePath } from './RoutePath';
 import { getShortId } from '../../../../services/helpers';
 import { RouteDifficulty } from './RouteDifficulty';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 
 type Props = {
   route: ClimbingRoute;

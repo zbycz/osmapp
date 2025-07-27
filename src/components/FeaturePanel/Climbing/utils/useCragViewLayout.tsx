@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { DEFAULT_CRAG_VIEW_LAYOUT } from '../ClimbingView';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 

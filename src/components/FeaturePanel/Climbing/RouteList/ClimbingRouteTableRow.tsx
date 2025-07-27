@@ -21,7 +21,7 @@ import {
 } from '@mui/material';
 import Router from 'next/router';
 import { useSnackbar } from '../../../utils/SnackbarContext';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import Link from 'next/link';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import EditIcon from '@mui/icons-material/Edit';

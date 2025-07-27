@@ -7,7 +7,7 @@ import {
   getDifficultyColor,
 } from '../../../../services/tagging/climbing/routeGrade';
 import { ClimbingRoute } from '../types';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 type Props = {

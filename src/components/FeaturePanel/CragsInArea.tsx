@@ -26,9 +26,8 @@ import { MemberItem } from './MemberFeatures/MemberItem';
 import { RouteDistribution } from './Climbing/RouteDistribution';
 import { CragsInAreaSort } from './Climbing/CragsInAreaSort/CragsInAreaSort';
 import { CragsInAreaFilter } from './Climbing/CragsInAreaFilter/CragsInAreaFilter';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import { filterCrag } from './Climbing/CragsInAreaFilter/utils/filterCrag';
-import { useCragsInAreaFilter } from './Climbing/CragsInAreaFilter/utils/useCragsInAreaFilter';
 import { useCragsInAreaSort } from './Climbing/CragsInAreaSort/utils/useCragsInAreaSort';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
@@ -232,6 +231,13 @@ const CragItem = ({ feature }: { feature: Feature }) => {
 export const CragsInArea = () => {
   const { feature } = useFeatureContext();
   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
+  const isMobileMode = useMobileMode();
+  const { userSettings, climbingFilter } = useUserSettingsContext();
+  const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
+  if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
+    return null;
+  }
+
   const {
     gradeInterval,
     setGradeInterval,
@@ -239,13 +245,7 @@ export const CragsInArea = () => {
     setMinimumRoutesInInterval,
     uniqueGrades,
     isDefaultFilter,
-  } = useCragsInAreaFilter();
-  const isMobileMode = useMobileMode();
-  const { userSettings } = useUserSettingsContext();
-  const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
-  if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
-    return null;
-  }
+  } = climbingFilter;
 
   const crags = feature.memberFeatures
     .filter(({ tags }) => tags.climbing)

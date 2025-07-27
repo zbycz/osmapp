@@ -10,7 +10,7 @@ import { fetchJson } from '../../../services/fetch';
 import { ClimbingOption, Option } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { PoiIcon } from '../../utils/icons/PoiIcon';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import Router from 'next/router';
 import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 import { PROJECT_ID } from '../../../services/project';
