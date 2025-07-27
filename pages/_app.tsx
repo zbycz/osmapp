@@ -13,7 +13,7 @@ import { PROJECT_ID, PROJECT_NAME } from '../src/services/project';
 import { GoogleAnalytics } from '../src/components/App/google-analytics';
 import { Umami } from '../src/components/App/umami';
 import { SnackbarProvider } from '../src/components/utils/SnackbarContext';
-import { UserSettingsProvider } from '../src/components/utils/UserSettingsContext';
+import { UserSettingsProvider } from '../src/components/utils/userSettings/UserSettingsContext';
 import {
   MapStateProvider,
   View,

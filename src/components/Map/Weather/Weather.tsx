@@ -1,14 +1,13 @@
 import { useQuery } from 'react-query';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import styled from '@emotion/styled';
-import { DotLoader } from '../../helpers';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { loadCurrentWeather } from './loadWeather';
 import { WeatherInner } from './WeatherInner';
 import { LonLat } from '../../../services/types';
 import React from 'react';
 import { getDistance } from '../../SearchBox/utils';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 
 const WeatherWrapper = styled.div`
   color: ${({ theme }) => theme.palette.text.primary};

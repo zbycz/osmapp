@@ -8,7 +8,7 @@ import {
 } from '../../../services/tagging/climbing/routeGrade';
 import { ContentContainer } from './ContentContainer';
 import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import {
   getGradeSystemName,
   GradeSystem,

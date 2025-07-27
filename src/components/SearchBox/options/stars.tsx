@@ -10,7 +10,7 @@ import {
 } from '../utils';
 import type { Star } from '../../utils/StarsContext';
 import { StarOption } from '../types';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { getApiId, getUrlOsmId } from '../../../services/helpers';
 import Router from 'next/router';
 

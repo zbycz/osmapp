@@ -7,7 +7,7 @@ import { TooltipButton } from '../utils/TooltipButton';
 import { RoutingResult } from './routing/types';
 import { t, Translation } from '../../services/intl';
 import { CloseButton, toHumanDistance } from './helpers';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import { Instructions } from './Instructions';
 import { useDirectionsContext } from './DirectionsContext';
 

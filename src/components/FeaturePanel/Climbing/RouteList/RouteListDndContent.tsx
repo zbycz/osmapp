@@ -5,7 +5,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
 import { useDragItems } from '../../../utils/useDragItems';
 import { DragHandler } from '../../../utils/DragHandler';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { GradeSystemSelect } from '../GradeSystemSelect';
 import { t } from '../../../../services/intl';
 import { Box } from '@mui/material';

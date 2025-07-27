@@ -1,6 +1,5 @@
 import { Map, ScaleControl } from 'maplibre-gl';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { createMapEventHook } from '../../helpers';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { useEffect } from 'react';
 
 // https://github.com/maplibre/maplibre-gl-js/blob/afe4377706429a6b4e708e62a3c39a795ae8f28e/src/ui/control/scale_control.js#L36-L83

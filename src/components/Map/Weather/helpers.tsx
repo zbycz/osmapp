@@ -1,5 +1,5 @@
 import range from 'lodash/range';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 
 export const celsiusToFahrenheit = (celsius: number) => celsius * 1.8 + 32;
 

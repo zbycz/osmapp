@@ -1,7 +1,7 @@
 import { Button } from '@mui/material';
 import React, { useEffect } from 'react';
 import { t } from '../../../../services/intl';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { MinimumRoutesFilter } from './MinimumRoutesFilter';
 import { GradeFilter } from './GradeFilter';
 import { CragsInAreaFilterIcon } from './CragsInAreaFilterIcon';

@@ -1,4 +1,4 @@
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { Slider, Stack } from '@mui/material';
 import { t } from '../../../../services/intl';
 import { GradeSystemSelect } from '../GradeSystemSelect';

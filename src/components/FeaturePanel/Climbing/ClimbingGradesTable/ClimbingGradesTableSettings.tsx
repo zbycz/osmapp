@@ -1,4 +1,4 @@
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { Alert, Box, Chip, Stack, Typography } from '@mui/material';
 import { t } from '../../../../services/intl';
 import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing/gradeSystems';

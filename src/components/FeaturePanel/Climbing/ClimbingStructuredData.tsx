@@ -6,7 +6,7 @@ import {
   findOrConvertRouteGrade,
   getDifficulties,
 } from '../../../services/tagging/climbing/routeGrade';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { getGradeSystemName } from '../../../services/tagging/climbing/gradeSystems';
 import Head from 'next/head';
 

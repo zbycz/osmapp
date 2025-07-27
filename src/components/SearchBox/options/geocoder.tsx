@@ -19,7 +19,7 @@ import {
 } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { PoiIcon } from '../../utils/icons/PoiIcon';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { Feature } from '../../../services/types';
 import { addFeatureCenterToCache } from '../../../services/osm/featureCenterToCache';
 import { getShortId, getUrlOsmId } from '../../../services/helpers';

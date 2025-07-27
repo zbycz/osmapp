@@ -3,7 +3,7 @@ import { isFeatureClimbingRoute } from '../../utils';
 import { getDifficulties } from '../../services/tagging/climbing/routeGrade';
 import { ConvertedRouteDifficultyBadge } from './Climbing/ConvertedRouteDifficultyBadge';
 import React from 'react';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import { GradeSystemSelect } from './Climbing/GradeSystemSelect';
 import { Stack } from '@mui/material';
 

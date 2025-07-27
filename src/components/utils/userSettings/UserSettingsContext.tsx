@@ -1,20 +1,18 @@
 import React, { createContext, useContext } from 'react';
-import { usePersistedState } from './usePersistedState';
+import { usePersistedState } from '../usePersistedState';
 import {
   GRADE_SYSTEMS,
   GradeSystem,
-} from '../../services/tagging/climbing/gradeSystems';
-import { TickStyle } from '../FeaturePanel/Climbing/types';
-import { isMobileDevice } from '../helpers';
-import { number } from 'prop-types';
+} from '../../../services/tagging/climbing/gradeSystems';
+import { TickStyle } from '../../FeaturePanel/Climbing/types';
+import { isMobileDevice } from '../../helpers';
+import {
+  ClimbingFilter,
+  ClimbingFilterSettings,
+  useClimbingFilter,
+} from './useClimbingFilter';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
-
-type ClimbingFilter = {
-  filterGradeSystem: GradeSystem;
-  gradeInterval: [number, number] | null;
-  minimumRoutesInInterval: number;
-};
 
 export type UserSettingsType = Partial<{
   isImperial: boolean;
@@ -27,7 +25,7 @@ export type UserSettingsType = Partial<{
   'climbing.visibleGradeSystems': Record<string, boolean>;
   'climbing.cragViewLayout': CragViewLayout;
   'climbing.splitPaneSize': null | number;
-  'climbing.filter': ClimbingFilter;
+  'climbing.filter': ClimbingFilterSettings;
 }>;
 
 type UserSettingsContextType = {
@@ -35,6 +33,7 @@ type UserSettingsContextType = {
   setUserSettings: (userSettings: UserSettingsType) => void;
   // TODO: Real generic typesafety
   setUserSetting: (key: string, value: any) => void;
+  climbingFilter: ClimbingFilter;
 };
 
 const initialUserSettings: UserSettingsType = {
@@ -62,14 +61,17 @@ export const UserSettingsProvider: React.FC = ({ children }) => {
     initialUserSettings,
   );
 
-  const setUserSetting = (key: string, value: string) => {
+  const setUserSetting = (key: string, value: Object) => {
     setUserSettings({ ...userSettings, [key]: value });
   };
+
+  const climbingFilter = useClimbingFilter(userSettings, setUserSetting);
 
   const value: UserSettingsContextType = {
     userSettings,
     setUserSetting,
     setUserSettings,
+    climbingFilter,
   };
   return (
     <UserSettingsContext.Provider value={value}>

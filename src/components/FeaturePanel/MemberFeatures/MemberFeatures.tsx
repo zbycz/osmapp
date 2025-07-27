@@ -1,13 +1,11 @@
 import React from 'react';
 import { Box, Chip, Stack } from '@mui/material';
-import { getOsmappLink, getReactKey } from '../../../services/helpers';
+import { getReactKey } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { PanelLabel } from '../Climbing/PanelLabel';
 import { MemberItem } from './MemberItem';
 import { ClimbingItem } from './ClimbingItem';
 import styled from '@emotion/styled';
-import { GradeSystemSelect } from '../Climbing/GradeSystemSelect';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { Feature } from '../../../services/types';
 import { isRouteMaster } from '../../../utils';
 import { t } from '../../../services/intl';

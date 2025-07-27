@@ -13,7 +13,7 @@ import React from 'react';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { PanelLabel } from '../FeaturePanel/Climbing/PanelLabel';
 import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
 import { t } from '../../services/intl';
 
