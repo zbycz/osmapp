@@ -16,7 +16,7 @@ type ClimbingFilter = {
   isTouched: boolean;
 };
 
-type UserSettingsType = {
+export type UserSettingsType = Partial<{
   isImperial: boolean;
   'weather.enabled': boolean;
   'climbing.gradeSystem': GradeSystem;
@@ -28,7 +28,7 @@ type UserSettingsType = {
   'climbing.cragViewLayout': CragViewLayout;
   'climbing.splitPaneSize': null | number;
   'climbing.filter': ClimbingFilter;
-};
+}>;
 
 type UserSettingsContextType = {
   userSettings: UserSettingsType;
@@ -38,6 +38,7 @@ type UserSettingsContextType = {
 };
 
 const initialUserSettings: UserSettingsType = {
+  // TODO remove initial settings and handle it as default in the usage code
   isImperial: false,
   'weather.enabled': true,
   'climbing.gradeSystem': null,
@@ -50,11 +51,6 @@ const initialUserSettings: UserSettingsType = {
   ).reduce((acc, { key }) => ({ ...acc, [key]: true }), {}),
   'climbing.cragViewLayout': 'auto',
   'climbing.splitPaneSize': null,
-  'climbing.filter': {
-    gradeInterval: null,
-    minimumRoutesInInterval: 1,
-    isTouched: false,
-  },
 };
 
 export const UserSettingsContext =

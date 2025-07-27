@@ -14,8 +14,7 @@ type CragsInAreaFilterProps = {
   minimumRoutesInInterval: number;
   setMinimumRoutesInInterval: (minimumRoutesInInterval: number) => void;
   uniqueValues: string[];
-  setIsTouched: (isTouched: boolean) => void;
-  isTouched: boolean;
+  isDefaultFilter: boolean;
 };
 
 export const CragsInAreaFilter = ({
@@ -24,8 +23,7 @@ export const CragsInAreaFilter = ({
   minimumRoutesInInterval,
   setMinimumRoutesInInterval,
   uniqueValues,
-  setIsTouched,
-  isTouched,
+  isDefaultFilter,
 }: CragsInAreaFilterProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState(false);
@@ -40,31 +38,11 @@ export const CragsInAreaFilter = ({
     setOpen(false);
   };
 
-  const handleIfTouched = ({
-    gradeInterval,
-    minimumRoutesInInterval,
-  }: {
-    gradeInterval?: number[];
-    minimumRoutesInInterval?: number;
-  }) => {
-    if (
-      gradeInterval &&
-      (gradeInterval[0] !== 0 || gradeInterval[1] !== uniqueValues.length - 1)
-    )
-      setIsTouched(true);
-    else if (minimumRoutesInInterval && minimumRoutesInInterval !== 1)
-      setIsTouched(true);
-    else {
-      setIsTouched(false);
-    }
-  };
-
   const handleChangeGradeFilter = (
     _event: Event,
     newValue: number | number[],
   ) => {
     if (Array.isArray(newValue)) {
-      handleIfTouched({ gradeInterval: newValue });
       setGradeInterval(newValue);
     }
   };
@@ -72,7 +50,6 @@ export const CragsInAreaFilter = ({
     _event: Event,
     newValue: number,
   ) => {
-    handleIfTouched({ minimumRoutesInInterval: newValue });
     setMinimumRoutesInInterval(newValue);
   };
 
@@ -88,7 +65,6 @@ export const CragsInAreaFilter = ({
   const handleReset = () => {
     setGradeInterval([0, uniqueValues.length - 1]);
     setMinimumRoutesInInterval(1);
-    setIsTouched(false);
   };
 
   return (
@@ -96,7 +72,7 @@ export const CragsInAreaFilter = ({
       <CragsInAreaFilterIcon
         open={open}
         onClick={handleClick}
-        touched={isTouched}
+        touched={!isDefaultFilter}
       />
 
       <PopperWithArrow

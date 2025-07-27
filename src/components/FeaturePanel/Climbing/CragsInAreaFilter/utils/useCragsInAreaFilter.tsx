@@ -1,34 +1,51 @@
-import React, { useMemo } from 'react';
-import { useUserSettingsContext } from '../../../../utils/UserSettingsContext';
+import { useMemo } from 'react';
+import {
+  UserSettingsType,
+  useUserSettingsContext,
+} from '../../../../utils/UserSettingsContext';
 import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData';
-import { number } from 'prop-types';
 
-const userSettingsClimbingFilterKey = 'climbing.filter';
+const SETTINGS_KEY = 'climbing.filter';
+type ClimbingFilter = UserSettingsType['climbing.filter'];
+const DEFAULT_MINIMUM_ROUTES_IN_INTERVAL = 1;
+
+const isSameInterval = (a: [number, number], b: [number, number]) =>
+  a[0] === b[0] && a[1] === b[1];
 
 export const useCragsInAreaFilter = () => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
-
-  const filter = userSettings[userSettingsClimbingFilterKey];
   const values = GRADE_TABLE[currentGradeSystem];
-  const uniqueValues = useMemo(() => [...new Set(values)], [values]);
+  const uniqueGrades = useMemo(() => [...new Set(values)], [values]);
+  const defaultGradeInterval = [0, uniqueGrades.length - 1] as [number, number];
 
-  const setFilter = (name, value) => {
-    setUserSetting(userSettingsClimbingFilterKey, {
+  const filter = (userSettings[SETTINGS_KEY] ?? {}) as ClimbingFilter;
+  const setFilter = (name: string, value) => {
+    setUserSetting(SETTINGS_KEY, {
       ...filter,
       [name]: value,
     });
   };
 
+  const gradeInterval = filter?.gradeInterval ?? defaultGradeInterval;
+  const setGradeInterval = (gradeInterval: [number, number]) =>
+    setFilter('gradeInterval', gradeInterval);
+
+  const minimumRoutesInInterval =
+    filter?.minimumRoutesInInterval ?? DEFAULT_MINIMUM_ROUTES_IN_INTERVAL;
+  const setMinimumRoutesInInterval = (minimumRoutesInInterval: number) =>
+    setFilter('minimumRoutesInInterval', minimumRoutesInInterval);
+
+  const isDefaultFilter =
+    minimumRoutesInInterval === DEFAULT_MINIMUM_ROUTES_IN_INTERVAL &&
+    isSameInterval(gradeInterval, defaultGradeInterval);
+
   return {
-    uniqueValues,
-    gradeInterval: filter?.gradeInterval ?? null,
-    setGradeInterval: (gradeInterval: number[]) =>
-      setFilter('gradeInterval', gradeInterval),
-    minimumRoutesInInterval: filter?.minimumRoutesInInterval ?? 1,
-    setMinimumRoutesInInterval: (minimumRoutesInInterval: number) =>
-      setFilter('minimumRoutesInInterval', minimumRoutesInInterval),
-    isTouched: filter?.isTouched ?? false,
-    setIsTouched: (isTouched: boolean) => setFilter('isTouched', isTouched),
+    uniqueGrades,
+    gradeInterval,
+    setGradeInterval,
+    minimumRoutesInInterval,
+    setMinimumRoutesInInterval,
+    isDefaultFilter,
   };
 };
