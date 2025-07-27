@@ -242,7 +242,6 @@ export const CragsInArea = () => {
     isTouched,
   } = useCragsInAreaFilter();
   const isMobileMode = useMobileMode();
-  const [isPopperOpen, setIsPopperOpen] = React.useState(false);
   const { userSettings } = useUserSettingsContext();
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
   if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {

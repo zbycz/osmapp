@@ -6,8 +6,15 @@ import {
 } from '../../services/tagging/climbing/gradeSystems';
 import { TickStyle } from '../FeaturePanel/Climbing/types';
 import { isMobileDevice } from '../helpers';
+import { number } from 'prop-types';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
+
+type ClimbingFilter = {
+  gradeInterval: [number, number] | null;
+  minimumRoutesInInterval: number;
+  isTouched: boolean;
+};
 
 type UserSettingsType = {
   isImperial: boolean;
@@ -20,6 +27,7 @@ type UserSettingsType = {
   'climbing.visibleGradeSystems': Record<string, boolean>;
   'climbing.cragViewLayout': CragViewLayout;
   'climbing.splitPaneSize': null | number;
+  'climbing.filter': ClimbingFilter;
 };
 
 type UserSettingsContextType = {
@@ -41,8 +49,12 @@ const initialUserSettings: UserSettingsType = {
     ({ minor }) => !minor,
   ).reduce((acc, { key }) => ({ ...acc, [key]: true }), {}),
   'climbing.cragViewLayout': 'auto',
-
   'climbing.splitPaneSize': null,
+  'climbing.filter': {
+    gradeInterval: null,
+    minimumRoutesInInterval: 1,
+    isTouched: false,
+  },
 };
 
 export const UserSettingsContext =
