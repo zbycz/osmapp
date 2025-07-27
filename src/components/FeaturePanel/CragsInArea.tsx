@@ -243,7 +243,7 @@ export const CragsInArea = () => {
     setGradeInterval,
     minimumRoutesInInterval,
     setMinimumRoutesInInterval,
-    uniqueGrades,
+    grades,
     isDefaultFilter,
   } = climbingFilter;
 
@@ -253,7 +253,7 @@ export const CragsInArea = () => {
       filterCrag({
         gradeInterval,
         currentGradeSystem,
-        uniqueGrades,
+        grades,
         minimumRoutesInInterval,
         isDefaultFilter,
       }),
@@ -285,8 +285,7 @@ export const CragsInArea = () => {
         <Stack direction="row" spacing={0.5} justifyContent="flex-end" m={1}>
           <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
           <CragsInAreaFilter
-            uniqueGrades={uniqueGrades}
-            gradeInterval={gradeInterval}
+            uniqueGrades={grades}
             setGradeInterval={setGradeInterval}
             minimumRoutesInInterval={minimumRoutesInInterval}
             setMinimumRoutesInInterval={setMinimumRoutesInInterval}

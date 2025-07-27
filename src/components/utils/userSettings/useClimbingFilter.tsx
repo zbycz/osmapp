@@ -1,5 +1,8 @@
 import { useMemo } from 'react';
-import { UserSettingsType } from './UserSettingsContext';
+import {
+  UserSettingsContextType,
+  UserSettingsType,
+} from './UserSettingsContext';
 import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
 import { GradeSystem } from '../../../services/tagging/climbing/gradeSystems';
 
@@ -16,7 +19,7 @@ const isSameInterval = (a: [number, number], b: [number, number]) =>
   a[0] === b[0] && a[1] === b[1];
 
 export type ClimbingFilter = {
-  uniqueGrades: string[];
+  grades: string[];
   gradeInterval: [number, number];
   setGradeInterval: (gradeInterval: [number, number]) => void;
   minimumRoutesInInterval: number;
@@ -26,14 +29,13 @@ export type ClimbingFilter = {
 
 export const useClimbingFilter = (
   userSettings: UserSettingsType,
-  setUserSetting: (key: string, value: Object) => void,
+  setUserSetting: UserSettingsContextType['setUserSetting'],
 ): ClimbingFilter => {
-  const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
-  const values = GRADE_TABLE[currentGradeSystem];
-  const uniqueGrades = useMemo(() => [...new Set(values)], [values]);
-  const defaultGradeInterval = [0, uniqueGrades.length - 1] as [number, number];
-
+  const currentSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
   const filter = (userSettings[SETTINGS_KEY] ?? {}) as ClimbingFilterSettings;
+
+  const grades = GRADE_TABLE[currentSystem];
+  const defaultGradeInterval = [0, grades.length - 1] as [number, number];
 
   const setFilter = <T extends keyof ClimbingFilterSettings>(
     name: T,
@@ -59,7 +61,7 @@ export const useClimbingFilter = (
     isSameInterval(gradeInterval, defaultGradeInterval);
 
   return {
-    uniqueGrades,
+    grades,
     gradeInterval,
     setGradeInterval,
     minimumRoutesInInterval,

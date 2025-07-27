@@ -1,7 +1,6 @@
 import { Button } from '@mui/material';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { t } from '../../../../services/intl';
-import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { MinimumRoutesFilter } from './MinimumRoutesFilter';
 import { GradeFilter } from './GradeFilter';
 import { CragsInAreaFilterIcon } from './CragsInAreaFilterIcon';
@@ -9,7 +8,6 @@ import { PopperWithArrow } from '../../../utils/PopperWithArrow';
 import { useMobileMode } from '../../../helpers';
 
 type CragsInAreaFilterProps = {
-  gradeInterval: number[] | null;
   setGradeInterval: (gradeInterval: number[] | null) => void;
   minimumRoutesInInterval: number;
   setMinimumRoutesInInterval: (minimumRoutesInInterval: number) => void;
@@ -18,7 +16,6 @@ type CragsInAreaFilterProps = {
 };
 
 export const CragsInAreaFilter = ({
-  gradeInterval,
   setGradeInterval,
   minimumRoutesInInterval,
   setMinimumRoutesInInterval,
@@ -27,7 +24,6 @@ export const CragsInAreaFilter = ({
 }: CragsInAreaFilterProps) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [open, setOpen] = React.useState(false);
-  const { userSettings } = useUserSettingsContext();
   const isMobileMode = useMobileMode();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -38,14 +34,6 @@ export const CragsInAreaFilter = ({
     setOpen(false);
   };
 
-  const handleChangeGradeFilter = (
-    _event: Event,
-    newValue: number | number[],
-  ) => {
-    if (Array.isArray(newValue)) {
-      setGradeInterval(newValue);
-    }
-  };
   const handleChangeMinimumRoutesInInterval = (
     _event: Event,
     newValue: number,
@@ -53,15 +41,6 @@ export const CragsInAreaFilter = ({
     setMinimumRoutesInInterval(newValue);
   };
 
-  const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
-
-  useEffect(() => {
-    if (gradeInterval === null) setGradeInterval([0, uniqueGrades.length - 1]);
-  }, [uniqueGrades, gradeInterval, currentGradeSystem, setGradeInterval]);
-
-  if (gradeInterval === null) {
-    return null;
-  }
   const handleReset = () => {
     setGradeInterval([0, uniqueGrades.length - 1]);
     setMinimumRoutesInInterval(1);
@@ -88,12 +67,7 @@ export const CragsInAreaFilter = ({
           </Button>
         }
       >
-        <GradeFilter
-          uniqueValues={uniqueGrades}
-          currentGradeSystem={currentGradeSystem}
-          gradeInterval={gradeInterval}
-          onChange={handleChangeGradeFilter}
-        />
+        <GradeFilter />
         <MinimumRoutesFilter
           minimumRoutesInInterval={minimumRoutesInInterval}
           onChange={handleChangeMinimumRoutesInInterval}

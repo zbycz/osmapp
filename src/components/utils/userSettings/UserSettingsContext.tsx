@@ -28,11 +28,13 @@ export type UserSettingsType = Partial<{
   'climbing.filter': ClimbingFilterSettings;
 }>;
 
-type UserSettingsContextType = {
+export type UserSettingsContextType = {
   userSettings: UserSettingsType;
   setUserSettings: (userSettings: UserSettingsType) => void;
-  // TODO: Real generic typesafety
-  setUserSetting: (key: string, value: any) => void;
+  setUserSetting: <T extends keyof UserSettingsType>(
+    key: T,
+    value: UserSettingsType[T],
+  ) => void;
   climbingFilter: ClimbingFilter;
 };
 
@@ -61,7 +63,10 @@ export const UserSettingsProvider: React.FC = ({ children }) => {
     initialUserSettings,
   );
 
-  const setUserSetting = (key: string, value: Object) => {
+  const setUserSetting = <T extends keyof UserSettingsType>(
+    key: T,
+    value: UserSettingsType[T],
+  ) => {
     setUserSettings({ ...userSettings, [key]: value });
   };
 
