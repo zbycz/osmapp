@@ -5,33 +5,44 @@ import { GradeSystemSelect } from '../GradeSystemSelect';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import React from 'react';
 
-const convertToUnique = (gradeInterval: [number, number], grades: string[]) => {
-  const uniqueGrades = [...new Set(grades)];
-  const gradeIntervalInUnique = [
-    uniqueGrades.indexOf(grades[gradeInterval[0]]),
-    uniqueGrades.indexOf(grades[gradeInterval[1]]),
-  ] as [number, number];
+type Interval = [number, number];
 
-  return { gradeIntervalInUnique, uniqueGrades };
+const convertToUnique = ([minIndex, maxIndex]: Interval, grades: string[]) => {
+  const uniqueGrades = [...new Set(grades)];
+  const value: Interval = [
+    uniqueGrades.indexOf(grades[minIndex]),
+    uniqueGrades.indexOf(grades[maxIndex]),
+  ];
+  return { value, max: uniqueGrades.length - 1 };
 };
 
 const convertFromUnique = (
-  gradeIntervalInUnique: [number, number],
+  [minIndex, maxIndex]: Interval,
   grades: string[],
-) => {
+): Interval => {
   const uniqueGrades = [...new Set(grades)];
-
-  const gradeToOriginalIndex: Record<string, number> = {};
+  const gradeToOriginalIndexMap: Record<string, number> = {};
   grades.forEach((grade, i) => {
-    if (!(grade in gradeToOriginalIndex)) {
-      gradeToOriginalIndex[grade] = i;
+    if (!(grade in gradeToOriginalIndexMap)) {
+      gradeToOriginalIndexMap[grade] = i;
     }
   });
 
   return [
-    gradeToOriginalIndex[uniqueGrades[gradeIntervalInUnique[0]]],
-    gradeToOriginalIndex[uniqueGrades[gradeIntervalInUnique[1]]],
-  ] as [number, number];
+    gradeToOriginalIndexMap[uniqueGrades[minIndex]],
+    gradeToOriginalIndexMap[uniqueGrades[maxIndex]],
+  ];
+};
+
+const GradesFilterSlider = () => {
+  const { climbingFilter } = useUserSettingsContext();
+  const { gradeInterval, setGradeInterval, grades } = climbingFilter;
+  const { value, max } = convertToUnique(gradeInterval, grades);
+
+  const onChange = (_: Event, newValue: Interval) => {
+    setGradeInterval(convertFromUnique(newValue, grades));
+  };
+  return <Slider value={value} onChange={onChange} min={0} max={max} />;
 };
 
 export const GradeFilter = () => {
@@ -39,17 +50,6 @@ export const GradeFilter = () => {
     useUserSettingsContext();
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
   const { gradeInterval, grades } = climbingFilter;
-
-  const { gradeIntervalInUnique, uniqueGrades } = convertToUnique(
-    gradeInterval,
-    grades,
-  );
-
-  const onChange = (_event: Event, newIntervalInUnique: [number, number]) => {
-    climbingFilter.setGradeInterval(
-      convertFromUnique(newIntervalInUnique, grades),
-    );
-  };
 
   return (
     <>
@@ -91,12 +91,7 @@ export const GradeFilter = () => {
             </>
           )}
         </div>
-        <Slider
-          value={gradeIntervalInUnique}
-          onChange={onChange}
-          min={0}
-          max={uniqueGrades.length - 1}
-        />
+        <GradesFilterSlider />
       </Stack>
     </>
   );
