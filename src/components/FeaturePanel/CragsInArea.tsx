@@ -232,31 +232,22 @@ const CragsInAreaInner = () => {
   const { feature } = useFeatureContext();
   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
   const isMobileMode = useMobileMode();
-  const { climbingFilter } = useUserSettingsContext();
   const crags = useGetFilteredCrags().sort(sortByFn(sortBy));
 
   if (!crags.length) {
     return null;
   }
 
-  const {
-    setGradeInterval,
-    minimumRoutes,
-    setMinimumRoutes,
-    grades,
-    isDefaultFilter,
-  } = climbingFilter;
-
-  const other = feature.memberFeatures.filter(
+  const otherFeatures = feature.memberFeatures.filter(
     ({ tags }) => tags.climbing !== 'crag',
   );
 
-  const numberOfRoutes = crags.reduce((acc, { members }) => {
-    return acc + (members?.length ?? 0);
+  const numberOfRoutes = crags.reduce((acc, { memberFeatures }) => {
+    return acc + (memberFeatures?.length ?? 0);
   }, 0);
 
-  const allCragRoutes = crags.reduce((acc, crag) => {
-    return [...acc, ...crag.memberFeatures];
+  const allCragRoutes = crags.reduce((acc, { memberFeatures }) => {
+    return [...acc, ...memberFeatures];
   }, []);
 
   return (
@@ -273,13 +264,7 @@ const CragsInAreaInner = () => {
       >
         <Stack direction="row" spacing={0.5} justifyContent="flex-end" m={1}>
           <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
-          <CragsInAreaFilter
-            grades={grades}
-            setGradeInterval={setGradeInterval}
-            minimumRoutesInInterval={minimumRoutes}
-            setMinimumRoutesInInterval={setMinimumRoutes}
-            isDefaultFilter={isDefaultFilter}
-          />
+          <CragsInAreaFilter />
         </Stack>
       </Paper>
       {crags.length > 1 && <RouteDistribution features={allCragRoutes} />}
@@ -290,7 +275,7 @@ const CragsInAreaInner = () => {
         feature={feature}
       />
 
-      <CragList crags={crags} other={other} />
+      <CragList crags={crags} other={otherFeatures} />
     </>
   );
 };
