@@ -4,8 +4,7 @@ import { t } from '../../../../services/intl';
 import { GradeSystemSelect } from '../GradeSystemSelect';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import React from 'react';
-
-type Interval = [number, number];
+import { Interval } from '../../../utils/userSettings/getClimbingFilter';
 
 const convertToUnique = ([minIndex, maxIndex]: Interval, grades: string[]) => {
   const uniqueGrades = [...new Set(grades)];

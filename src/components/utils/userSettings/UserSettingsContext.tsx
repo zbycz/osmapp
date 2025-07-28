@@ -9,8 +9,8 @@ import { isMobileDevice } from '../../helpers';
 import {
   ClimbingFilter,
   ClimbingFilterSettings,
-  useClimbingFilter,
-} from './useClimbingFilter';
+  getClimbingFilter,
+} from './getClimbingFilter';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
 
@@ -70,7 +70,7 @@ export const UserSettingsProvider: React.FC = ({ children }) => {
     setUserSettings({ ...userSettings, [key]: value });
   };
 
-  const climbingFilter = useClimbingFilter(userSettings, setUserSetting);
+  const climbingFilter = getClimbingFilter(userSettings, setUserSetting);
 
   const value: UserSettingsContextType = {
     userSettings,
