@@ -66,12 +66,7 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
             <ListItemText>
               {t('user_settings.default_grade_system')}
             </ListItemText>
-            <GradeSystemSelect
-              setGradeSystem={(gradeSystem) => {
-                setUserSetting('climbing.gradeSystem', gradeSystem);
-              }}
-              selectedGradeSystem={userSettings['climbing.gradeSystem']}
-            />
+            <GradeSystemSelect />
           </ListItem>
           <ListItem>
             <ListItemText>

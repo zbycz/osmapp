@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import {
   MenuItem,
@@ -21,14 +21,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { t } from '../../../services/intl';
 import { ClimbingGradesTable } from './ClimbingGradesTable/ClimbingGradesTable';
 import { useVisibleGradeSystems } from './utils/useVisibleGradeSystems';
-
-type Props = {
-  selectedGradeSystem: GradeSystem;
-  setGradeSystem: (GradeSystem: GradeSystem) => void;
-  allowUnsetValue?: boolean;
-  size?: 'small' | 'tiny';
-  onGradeSystemChange?: (gradeSystem: GradeSystem) => void;
-};
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 
 const GradeSystemItem = ({ showMinor, onClick, selectedGradeSystem }) => {
   const visibleGradeSystems = useVisibleGradeSystems();
@@ -70,29 +63,34 @@ const GradeSystemItem = ({ showMinor, onClick, selectedGradeSystem }) => {
   );
 };
 
+type Props = {
+  allowUnsetValue?: boolean;
+  size?: 'small' | 'tiny';
+  onGradeSystemChange?: (gradeSystem: GradeSystem) => void;
+};
+
 export const GradeSystemSelect = ({
-  selectedGradeSystem,
-  setGradeSystem,
   allowUnsetValue = true,
   size,
   onGradeSystemChange,
 }: Props) => {
-  const [isGradeTableOpen, setIsGradeTableOpen] =
-    React.useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const { userSettings, setUserSetting } = useUserSettingsContext();
+  const [isGradeTableOpen, setIsGradeTableOpen] = useState<boolean>(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const selectedGradeSystem = userSettings['climbing.gradeSystem'];
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleButtonClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
   const handleClose = () => {
     setAnchorEl(null);
   };
 
-  const [isMinorOpened, setIsMinorOpened] = React.useState(false);
+  const [showMore, setShowMore] = useState(false);
 
-  const handleChange = (gradeSystem) => {
-    setGradeSystem(gradeSystem);
+  const changeGradeSystem = (gradeSystem: GradeSystem) => {
+    setUserSetting('climbing.gradeSystem', gradeSystem);
     onGradeSystemChange?.(gradeSystem);
     handleClose();
   };
@@ -104,7 +102,7 @@ export const GradeSystemSelect = ({
           aria-haspopup="true"
           aria-expanded={open ? 'true' : undefined}
           disableElevation
-          onClick={handleClick}
+          onClick={handleButtonClick}
           sx={{ maxWidth: 200, ...(size === 'tiny' ? { fontSize: 10 } : {}) }}
           endIcon={open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           size="small"
@@ -135,8 +133,7 @@ export const GradeSystemSelect = ({
               value={null}
               sx={{ paddingLeft: 4 }}
               onClick={() => {
-                setGradeSystem(null);
-                handleClose();
+                changeGradeSystem(undefined);
               }}
               selected={selectedGradeSystem === null}
             >
@@ -146,14 +143,14 @@ export const GradeSystemSelect = ({
 
           <GradeSystemItem
             showMinor={false}
-            onClick={handleChange}
+            onClick={changeGradeSystem}
             selectedGradeSystem={selectedGradeSystem}
           />
-          {!isMinorOpened && (
+          {!showMore && (
             <MenuItem
               sx={{ paddingLeft: 4, marginTop: 1 }}
               onClick={(e) => {
-                setIsMinorOpened(!isMinorOpened);
+                setShowMore(!showMore);
                 e.stopPropagation();
                 e.preventDefault();
                 return false;
@@ -163,10 +160,10 @@ export const GradeSystemSelect = ({
             </MenuItem>
           )}
 
-          {isMinorOpened && (
+          {showMore && (
             <GradeSystemItem
               showMinor
-              onClick={handleChange}
+              onClick={changeGradeSystem}
               selectedGradeSystem={selectedGradeSystem}
             />
           )}

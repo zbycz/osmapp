@@ -1,11 +1,9 @@
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
 import { useDragItems } from '../../../utils/useDragItems';
 import { DragHandler } from '../../../utils/DragHandler';
-import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { GradeSystemSelect } from '../GradeSystemSelect';
 import { t } from '../../../../services/intl';
 import { Box } from '@mui/material';
@@ -85,7 +83,6 @@ export const RouteListDndContent = ({ isEditable }) => {
   } = useClimbingContext();
   const [items, setItems] = useState([]);
   const machine = getMachine();
-  const { userSettings, setUserSetting } = useUserSettingsContext();
   useEffect(() => {
     const content = routes.map((route, index) => ({
       id: index,
@@ -149,12 +146,7 @@ export const RouteListDndContent = ({ isEditable }) => {
         <MaxWidthContainer>
           <NameHeader>{t('member_features.climbing')}</NameHeader>
           <Box mr={1}>
-            <GradeSystemSelect
-              setGradeSystem={(system) => {
-                setUserSetting('climbing.gradeSystem', system);
-              }}
-              selectedGradeSystem={userSettings['climbing.gradeSystem']}
-            />
+            <GradeSystemSelect />
           </Box>
         </MaxWidthContainer>
       </TableHeader>
