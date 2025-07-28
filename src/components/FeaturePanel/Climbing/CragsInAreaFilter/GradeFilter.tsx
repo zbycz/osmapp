@@ -6,10 +6,7 @@ import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import React from 'react';
 import { Interval } from '../../../utils/userSettings/getClimbingFilter';
 import styled from '@emotion/styled';
-import {
-  GRADE_TABLE,
-  gradeColors,
-} from '../../../../services/tagging/climbing/gradeData';
+import { useGetSliderColors } from '../../../../services/tagging/climbing/gradeData';
 
 const convertToUnique = ([minIndex, maxIndex]: Interval, grades: string[]) => {
   const uniqueGrades = [...new Set(grades)];
@@ -31,26 +28,14 @@ const convertFromUnique = (
   ];
 };
 
-const max = GRADE_TABLE.uiaa.length;
-const p6 = Math.round((GRADE_TABLE.uiaa.indexOf('6-') / max) * 100);
-const p8 = Math.round((GRADE_TABLE.uiaa.indexOf('8-') / max) * 100);
-const p10 = Math.round((GRADE_TABLE.uiaa.indexOf('10-') / max) * 100);
-
-const StyledSlider = styled(Slider)`
+const StyledSlider = styled(Slider, {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<{ $colors: string }>`
   .MuiSlider-rail {
-    background-image: linear-gradient(
-      90deg,
-      ${gradeColors['1-'].light} ${p6}%,
-      ${gradeColors['6-'].light} ${p6}%,
-      ${gradeColors['6-'].light} ${p8}%,
-      ${gradeColors['8-'].light} ${p8}%,
-      ${gradeColors['8-'].light} ${p10}%,
-      ${gradeColors['10-'].light} ${p10}%
-    );
+    background-image:${({ $colors }) => $colors});
     opacity: 1;
     height: 6px;
   }
-
   .MuiSlider-track {
     background: none;
     border: 0;
@@ -71,7 +56,8 @@ const GradesFilterSlider = () => {
       onChange={onChange}
       min={0}
       max={max}
-      // thumb={<span className="custom-thumb"></span>}
+      marks
+      $colors={useGetSliderColors(grades)}
     />
   );
 };
