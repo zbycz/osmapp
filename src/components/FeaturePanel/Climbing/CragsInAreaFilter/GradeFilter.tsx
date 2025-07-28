@@ -20,16 +20,9 @@ const convertFromUnique = (
   grades: string[],
 ): Interval => {
   const uniqueGrades = [...new Set(grades)];
-  const gradeToOriginalIndexMap: Record<string, number> = {};
-  grades.forEach((grade, i) => {
-    if (!(grade in gradeToOriginalIndexMap)) {
-      gradeToOriginalIndexMap[grade] = i;
-    }
-  });
-
   return [
-    gradeToOriginalIndexMap[uniqueGrades[minIndex]],
-    gradeToOriginalIndexMap[uniqueGrades[maxIndex]],
+    grades.indexOf(uniqueGrades[minIndex]),
+    grades.indexOf(uniqueGrades[maxIndex]),
   ];
 };
 
