@@ -234,6 +234,10 @@ const CragsInAreaInner = () => {
   const isMobileMode = useMobileMode();
   const crags = useGetFilteredCrags().sort(sortByFn(sortBy));
 
+  if (!crags.length) {
+    return null;
+  }
+
   const otherFeatures = feature.memberFeatures.filter(
     ({ tags }) => tags.climbing !== 'crag',
   );
