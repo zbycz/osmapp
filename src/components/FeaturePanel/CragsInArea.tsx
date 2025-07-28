@@ -10,7 +10,7 @@ import {
   getUrlOsmId,
 } from '../../services/helpers';
 import { Feature, isInstant } from '../../services/types';
-import { useMobileMode } from '../helpers';
+import { ClientOnly, useMobileMode } from '../helpers';
 import { getHumanPoiType, getLabel } from '../../helpers/featureLabel';
 
 import { Slider, Wrapper } from './FeatureImages/FeatureImages';
@@ -27,7 +27,10 @@ import { RouteDistribution } from './Climbing/RouteDistribution';
 import { CragsInAreaSort } from './Climbing/CragsInAreaSort/CragsInAreaSort';
 import { CragsInAreaFilter } from './Climbing/CragsInAreaFilter/CragsInAreaFilter';
 import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
-import { useGetFilteredCrags } from './Climbing/CragsInAreaFilter/utils/useGetFilteredCrags';
+import {
+  useGetFilteredCrags,
+  useGetMemberCrags,
+} from './Climbing/CragsInAreaFilter/utils/useGetFilteredCrags';
 import { useCragsInAreaSort } from './Climbing/CragsInAreaSort/utils/useCragsInAreaSort';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
@@ -232,9 +235,11 @@ const CragsInAreaInner = () => {
   const { feature } = useFeatureContext();
   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
   const isMobileMode = useMobileMode();
-  const crags = useGetFilteredCrags().sort(sortByFn(sortBy));
+  const unfilteredCrags = useGetMemberCrags();
+  const crags = useGetFilteredCrags(unfilteredCrags).sort(sortByFn(sortBy));
+  const numberOfHiddenCrags = unfilteredCrags.length - crags.length;
 
-  if (!crags.length) {
+  if (!unfilteredCrags.length) {
     return null;
   }
 
@@ -262,7 +267,25 @@ const CragsInAreaInner = () => {
           opacity: 0.9,
         }}
       >
-        <Stack direction="row" spacing={0.5} justifyContent="flex-end" m={1}>
+        <Stack
+          direction="row"
+          spacing={0.5}
+          justifyContent="flex-end"
+          m={1}
+          alignItems="center"
+        >
+          {numberOfHiddenCrags > 0 && (
+            <ClientOnly>
+              <Typography
+                variant="caption"
+                color="secondary"
+                sx={{ paddingRight: 2 }}
+              >
+                <strong>{numberOfHiddenCrags}</strong>{' '}
+                {t('featurepanel.hidden_crags')}
+              </Typography>
+            </ClientOnly>
+          )}
           <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
           <CragsInAreaFilter />
         </Stack>

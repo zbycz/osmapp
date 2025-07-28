@@ -193,9 +193,10 @@ export default {
   'featurepanel.footer_title': 'Other info',
   'featurepanel.climbing_sectors': 'Climbing',
   'featurepanel.climbing_sectors_in': 'in',
-  'featurepanel.sector': 'Climbing sector',
-  'featurepanel.sectors': 'sectors',
+  'featurepanel.sector': 'Climbing crag',
+  'featurepanel.sectors': 'crags',
   'featurepanel.routes': 'routes',
+  'featurepanel.hidden_crags': 'hidden crags',
 
   'opening_hours.all_day': '24 hours',
   'opening_hours.open': 'Open: __todayTime__',
