@@ -164,11 +164,10 @@ export const gradeColors = {
 export const useGetSliderColors = (grades: string[]) => {
   const uniqueGrades = [...new Set(grades)];
   const g6 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('6-')]);
-
   const g8 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('8-')]);
   const g10 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('10-')]);
-  const max = uniqueGrades.length;
 
+  const max = uniqueGrades.length;
   const p6 = Math.round((g6 / max) * 100);
   const p8 = Math.round((g8 / max) * 100);
   const p10 = Math.round((g10 / max) * 100);
@@ -178,6 +177,7 @@ export const useGetSliderColors = (grades: string[]) => {
   const color6 = gradeColors['6-'][skin];
   const color8 = gradeColors['8-'][skin];
   const color10 = gradeColors['10-'][skin];
+
   return `linear-gradient(90deg,
             ${color} ${p6}%, ${color6} ${p6}%,
             ${color6} ${p8}%, ${color8} ${p8}%,
