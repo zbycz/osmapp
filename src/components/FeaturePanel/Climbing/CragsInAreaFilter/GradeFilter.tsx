@@ -38,8 +38,7 @@ const GradesFilterSlider = () => {
 };
 
 export const GradeFilter = () => {
-  const { userSettings, setUserSetting, climbingFilter } =
-    useUserSettingsContext();
+  const { userSettings, climbingFilter } = useUserSettingsContext();
   const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
   const { gradeInterval, grades } = climbingFilter;
 
@@ -55,12 +54,7 @@ export const GradeFilter = () => {
         mt={1}
       >
         {t('crag_filter.grade')}
-        <GradeSystemSelect
-          setGradeSystem={(system) => {
-            setUserSetting('climbing.gradeSystem', system);
-          }}
-          selectedGradeSystem={userSettings['climbing.gradeSystem']}
-        />
+        <GradeSystemSelect />
       </Stack>
       <Stack gap={1} ml={2} mr={2} mb={2}>
         <div>

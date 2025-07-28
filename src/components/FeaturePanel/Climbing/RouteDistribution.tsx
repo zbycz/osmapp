@@ -164,16 +164,7 @@ export const RouteDistribution = ({
     heightsRatios.reduce((acc, { ratio }) => acc + ratio, 0) === 0
   )
     return (
-      <PanelLabel
-        addition={
-          <GradeSystemSelect
-            setGradeSystem={(system) => {
-              setUserSetting('climbing.gradeSystem', system);
-            }}
-            selectedGradeSystem={userSettings['climbing.gradeSystem']}
-          />
-        }
-      >
+      <PanelLabel addition={<GradeSystemSelect />}>
         {t('grade_system_select.convert_grade')}
       </PanelLabel>
     );
@@ -228,13 +219,7 @@ export const RouteDistribution = ({
                 gradeSystemName,
               })}
             >
-              <GradeSystemSelect
-                setGradeSystem={(system) => {
-                  setUserSetting('climbing.gradeSystem', system);
-                }}
-                selectedGradeSystem={userSettings['climbing.gradeSystem']}
-                size="tiny"
-              />
+              <GradeSystemSelect size="tiny" />
             </Tooltip>
           </GradeSystemName>
         </Items>
