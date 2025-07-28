@@ -11,8 +11,7 @@ const useGetMemberCrags = () => {
 export const useGetFilteredCrags = (): Feature[] => {
   const crags = useGetMemberCrags();
   const { climbingFilter } = useUserSettingsContext();
-  const { gradeInterval, minimumRoutesInInterval, isDefaultFilter } =
-    climbingFilter;
+  const { gradeInterval, minimumRoutes, isDefaultFilter } = climbingFilter;
   const [minIndex, maxIndex] = gradeInterval;
 
   if (isDefaultFilter) {
@@ -25,6 +24,6 @@ export const useGetFilteredCrags = (): Feature[] => {
       .map((route) => getGradeIndexFromTags(route.tags))
       .filter((gradeIndex) => gradeIndex >= minIndex && gradeIndex <= maxIndex);
 
-    return filteredRoutes.length >= minimumRoutesInInterval;
+    return filteredRoutes.length >= minimumRoutes;
   });
 };

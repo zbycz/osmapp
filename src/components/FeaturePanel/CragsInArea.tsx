@@ -241,8 +241,8 @@ const CragsInAreaInner = () => {
 
   const {
     setGradeInterval,
-    minimumRoutesInInterval,
-    setMinimumRoutesInInterval,
+    minimumRoutes,
+    setMinimumRoutes,
     grades,
     isDefaultFilter,
   } = climbingFilter;
@@ -276,8 +276,8 @@ const CragsInAreaInner = () => {
           <CragsInAreaFilter
             grades={grades}
             setGradeInterval={setGradeInterval}
-            minimumRoutesInInterval={minimumRoutesInInterval}
-            setMinimumRoutesInInterval={setMinimumRoutesInInterval}
+            minimumRoutesInInterval={minimumRoutes}
+            setMinimumRoutesInInterval={setMinimumRoutes}
             isDefaultFilter={isDefaultFilter}
           />
         </Stack>
