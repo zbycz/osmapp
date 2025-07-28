@@ -31,6 +31,7 @@ export type ClimbingFilter = {
   minimumRoutes: number;
   setMinimumRoutes: (minimumRoutes: number) => void;
   isDefaultFilter: boolean;
+  reset: () => void;
 };
 
 export const getClimbingFilter = (
@@ -64,5 +65,6 @@ export const getClimbingFilter = (
     minimumRoutes,
     setMinimumRoutes,
     isDefaultFilter,
+    reset: () => setUserSetting(SETTINGS_KEY, {} as ClimbingFilterSettings),
   };
 };
