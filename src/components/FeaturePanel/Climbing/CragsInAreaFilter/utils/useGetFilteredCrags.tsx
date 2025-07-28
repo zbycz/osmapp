@@ -3,13 +3,12 @@ import { Feature } from '../../../../../services/types';
 import { useFeatureContext } from '../../../../utils/FeatureContext';
 import { useUserSettingsContext } from '../../../../utils/userSettings/UserSettingsContext';
 
-const useGetMemberCrags = () => {
+export const useGetMemberCrags = () => {
   const { feature } = useFeatureContext();
   return feature.memberFeatures.filter(({ tags }) => tags.climbing === 'crag');
 };
 
-export const useGetFilteredCrags = (): Feature[] => {
-  const crags = useGetMemberCrags();
+export const useGetFilteredCrags = (crags: Feature[]): Feature[] => {
   const { climbingFilter } = useUserSettingsContext();
   const { gradeInterval, minimumRoutes, isDefaultFilter } = climbingFilter;
   const [minIndex, maxIndex] = gradeInterval;
