@@ -27,7 +27,7 @@ import { RouteDistribution } from './Climbing/RouteDistribution';
 import { CragsInAreaSort } from './Climbing/CragsInAreaSort/CragsInAreaSort';
 import { CragsInAreaFilter } from './Climbing/CragsInAreaFilter/CragsInAreaFilter';
 import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
-import { filterCrag } from './Climbing/CragsInAreaFilter/utils/filterCrag';
+import { useGetFilteredCrags } from './Climbing/CragsInAreaFilter/utils/useGetFilteredCrags';
 import { useCragsInAreaSort } from './Climbing/CragsInAreaSort/utils/useCragsInAreaSort';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
@@ -228,18 +228,18 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
-export const CragsInArea = () => {
+const CragsInAreaInner = () => {
   const { feature } = useFeatureContext();
   const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
   const isMobileMode = useMobileMode();
-  const { userSettings, climbingFilter } = useUserSettingsContext();
-  const currentGradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
-  if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
+  const { climbingFilter } = useUserSettingsContext();
+  const crags = useGetFilteredCrags().sort(sortByFn(sortBy));
+
+  if (!crags.length) {
     return null;
   }
 
   const {
-    gradeInterval,
     setGradeInterval,
     minimumRoutesInInterval,
     setMinimumRoutesInInterval,
@@ -247,20 +247,9 @@ export const CragsInArea = () => {
     isDefaultFilter,
   } = climbingFilter;
 
-  const crags = feature.memberFeatures
-    .filter(({ tags }) => tags.climbing)
-    .filter(
-      filterCrag({
-        gradeInterval,
-        currentGradeSystem,
-        grades,
-        minimumRoutesInInterval,
-        isDefaultFilter,
-      }),
-    )
-    .sort((item1, item2) => sortByFn(sortBy)(item1, item2));
-
-  const other = feature.memberFeatures.filter(({ tags }) => !tags.climbing);
+  const other = feature.memberFeatures.filter(
+    ({ tags }) => tags.climbing !== 'crag',
+  );
 
   const numberOfRoutes = crags.reduce((acc, { members }) => {
     return acc + (members?.length ?? 0);
@@ -304,4 +293,13 @@ export const CragsInArea = () => {
       <CragList crags={crags} other={other} />
     </>
   );
+};
+
+export const CragsInArea = () => {
+  const { feature } = useFeatureContext();
+  if (feature.tags.climbing !== 'area' || !feature.memberFeatures?.length) {
+    return null;
+  }
+
+  return <CragsInAreaInner />;
 };

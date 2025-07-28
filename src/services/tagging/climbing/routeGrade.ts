@@ -143,16 +143,14 @@ export const extractClimbingGradeFromTagName = (
   return match ? match[1] : null;
 };
 
-export const isInGradeInterval = ({
-  gradeMin,
-  gradeMax,
-  grade,
-  currentGradeSystem,
-}) => {
-  if (!gradeMin || !gradeMax || !grade) return false;
-  const minIndex = GRADE_TABLE[currentGradeSystem].indexOf(gradeMin);
-  const maxIndex = GRADE_TABLE[currentGradeSystem].indexOf(gradeMax);
-  const gradeIndex = GRADE_TABLE[currentGradeSystem].indexOf(grade);
+export const getGradeIndexFromTags = (
+  tags: FeatureTags,
+): number | undefined => {
+  const grade = getDifficulty(tags);
+  if (!grade) return undefined;
 
-  return gradeIndex >= minIndex && gradeIndex <= maxIndex;
+  const table = GRADE_TABLE[grade.gradeSystem];
+  if (!table) return undefined;
+
+  return table.indexOf(grade.grade);
 };

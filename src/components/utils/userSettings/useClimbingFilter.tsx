@@ -64,7 +64,7 @@ export const useClimbingFilter = (
     grades,
     gradeInterval,
     setGradeInterval,
-    minimumRoutesInInterval,
+    minimumRoutesInInterval: minimumRoutesInInterval,
     setMinimumRoutesInInterval,
     isDefaultFilter,
   };
