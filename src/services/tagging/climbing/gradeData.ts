@@ -94,21 +94,21 @@ export const gradeTableString = `UIAA|Germany, French, Saxon|Swiss, YDS|YDS_clas
 14-,     >10a,   >XIIIc,       5.15d,  V15,     >7b,   >E11,   8c+,     12+,      WI13,  M13,    >VI.9+`;
 
 export const gradeColors = {
-  '1-': { light: '#048F28', dark: '#00c132' },
-  '1': { light: '#048F28', dark: '#00c132' },
-  '1+': { light: '#048F28', dark: '#00c132' },
-  '2-': { light: '#048F28', dark: '#00c132' },
-  '2': { light: '#048F28', dark: '#00c132' },
-  '2+': { light: '#048F28', dark: '#00c132' },
-  '3-': { light: '#048F28', dark: '#00c132' },
-  '3': { light: '#048F28', dark: '#00c132' },
-  '3+': { light: '#048F28', dark: '#00c132' },
-  '4-': { light: '#6B9617', dark: '#92af00' },
-  '4': { light: '#6B9617', dark: '#92af00' },
-  '4+': { light: '#6B9617', dark: '#92af00' },
-  '5-': { light: '#6B9617', dark: '#92af00' },
-  '5': { light: '#6B9617', dark: '#92af00' },
-  '5+': { light: '#6B9617', dark: '#92af00' },
+  '1-': { light: '#07bc35', dark: '#03dd38' },
+  '1': { light: '#07bc35', dark: '#03dd38' },
+  '1+': { light: '#07bc35', dark: '#03dd38' },
+  '2-': { light: '#07bc35', dark: '#03dd38' },
+  '2': { light: '#07bc35', dark: '#03dd38' },
+  '2+': { light: '#07bc35', dark: '#03dd38' },
+  '3-': { light: '#07bc35', dark: '#03dd38' },
+  '3': { light: '#07bc35', dark: '#03dd38' },
+  '3+': { light: '#07bc35', dark: '#03dd38' },
+  '4-': { light: '#668f16', dark: '#92af00' },
+  '4': { light: '#668f16', dark: '#92af00' },
+  '4+': { light: '#668f16', dark: '#92af00' },
+  '5-': { light: '#668f16', dark: '#92af00' },
+  '5': { light: '#668f16', dark: '#92af00' },
+  '5+': { light: '#668f16', dark: '#92af00' },
   '6-': { light: '#D49D05', dark: '#efca00' },
   '6-/6': { light: '#D49D05', dark: '#efca00' },
   '6': { light: '#D49D05', dark: '#efca00' },
@@ -163,23 +163,27 @@ export const gradeColors = {
 
 export const useGetSliderColors = (grades: string[]) => {
   const uniqueGrades = [...new Set(grades)];
+  const g4 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('4-')]);
   const g6 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('6-')]);
   const g8 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('8-')]);
   const g10 = uniqueGrades.indexOf(grades[GRADE_TABLE.uiaa.indexOf('10-')]);
 
   const max = uniqueGrades.length;
+  const p4 = Math.round((g4 / max) * 100);
   const p6 = Math.round((g6 / max) * 100);
   const p8 = Math.round((g8 / max) * 100);
   const p10 = Math.round((g10 / max) * 100);
 
   const skin = useTheme().palette.mode;
   const color = gradeColors['1-'][skin];
+  const color4 = gradeColors['4-'][skin];
   const color6 = gradeColors['6-'][skin];
   const color8 = gradeColors['8-'][skin];
   const color10 = gradeColors['10-'][skin];
 
   return `linear-gradient(90deg,
-            ${color} ${p6}%, ${color6} ${p6}%,
+            ${color} ${p4}%, ${color4} ${p4}%,
+            ${color4} ${p6}%, ${color6} ${p6}%,
             ${color6} ${p8}%, ${color8} ${p8}%,
             ${color8} ${p10}%, ${color10} ${p10}%`;
 };

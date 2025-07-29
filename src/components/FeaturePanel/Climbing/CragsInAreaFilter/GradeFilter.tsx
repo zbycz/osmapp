@@ -56,7 +56,6 @@ const GradesFilterSlider = () => {
       onChange={onChange}
       min={0}
       max={max}
-      marks
       $colors={useGetSliderColors(grades)}
     />
   );
