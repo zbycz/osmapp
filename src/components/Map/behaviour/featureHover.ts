@@ -21,6 +21,20 @@ export const addHoverPaint = (origStyle): StyleSpecification => {
   return origStyle;
 };
 
+//   origStyle.layers
+//     .filter(
+//       (layer) =>
+//         layer['source-layer'] === 'poi' ||
+//         layer['source-layer'] === 'outdoor_poi',
+//     )
+//     .forEach((layer) => {
+//       if (layer.paint) {
+//         // TODO for outdoor style they use it for hiding icons by zoom layer id:'Outdoor'
+//         layer.paint['icon-opacity'] = iconOpacity; // eslint-disable-line no-param-reassign
+//         layer.paint['text-opacity'] = iconOpacity; // eslint-disable-line no-param-reassign
+//       }
+//     });
+
 export const setUpHover = (map: Map, layersWithOsmId: string[]) => {
   let lastHover = null;
 

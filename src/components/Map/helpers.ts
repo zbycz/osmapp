@@ -28,6 +28,15 @@ export const layersWithOsmId = (style: maplibregl.StyleSpecification) =>
     .filter((layer) => isOsmLayer(layer))
     .map((x) => x.id);
 
+// export const layersWithOsmId = (style: maplibregl.StyleSpecification) =>
+//   style.layers // TODO make it custom for basic/outdoor + revert place_
+//     .filter(
+//       (layer) =>
+//         layer['source-layer'] === 'poi' ||
+//         layer['source-layer'] === 'outdoor_poi',
+//     )
+//     .map((x) => x.id);
+
 export const getIsOsmObject = ({ id, layer }) => {
   // these layers with id <= ~10000 are broken
   // eg. US states
