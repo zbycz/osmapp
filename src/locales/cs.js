@@ -156,6 +156,7 @@ export default {
   'featurepanel.sector': 'Lezecký sektor',
   'featurepanel.sectors': 'sektorů',
   'featurepanel.routes': 'cest',
+  'featurepanel.hidden_crags': 'skrytých sektorů',
 
   'opening_hours.open': 'Otevřeno: __todayTime__',
   'opening_hours.now_closed_but_today': 'Nyní zavřeno, dnes: __todayTime__',
