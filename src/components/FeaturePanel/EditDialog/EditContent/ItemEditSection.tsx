@@ -8,6 +8,7 @@ import { LocationEditor } from './FeatureEditSection/LocationEditor/LocationEdit
 import { ParentsEditor } from './FeatureEditSection/ParentsEditor';
 import { MembersEditor } from './FeatureEditSection/MembersEditor';
 import React from 'react';
+import { FieldsEditor } from './FeatureEditSection/FieldsEditor';
 
 export const ItemEditSection = () => {
   const { toBeDeleted } = useCurrentItem();
@@ -25,7 +26,8 @@ export const ItemEditSection = () => {
     <>
       <ItemHeading />
       <PresetSelect />
-      <MajorKeysEditor />
+      {/*<MajorKeysEditor />*/}
+      <FieldsEditor />
       <TagsEditor />
       <LocationEditor />
       <ParentsEditor />
