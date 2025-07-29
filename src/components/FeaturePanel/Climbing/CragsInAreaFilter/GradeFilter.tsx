@@ -5,6 +5,8 @@ import { GradeSystemSelect } from '../GradeSystemSelect';
 import { RouteDifficultyBadge } from '../RouteDifficultyBadge';
 import React from 'react';
 import { Interval } from '../../../utils/userSettings/getClimbingFilter';
+import styled from '@emotion/styled';
+import { useGetSliderColors } from '../../../../services/tagging/climbing/gradeData';
 
 const convertToUnique = ([minIndex, maxIndex]: Interval, grades: string[]) => {
   const uniqueGrades = [...new Set(grades)];
@@ -26,6 +28,20 @@ const convertFromUnique = (
   ];
 };
 
+const StyledSlider = styled(Slider, {
+  shouldForwardProp: (prop) => !prop.startsWith('$'),
+})<{ $colors: string }>`
+  .MuiSlider-rail {
+    background-image:${({ $colors }) => $colors});
+    opacity: 1;
+    height: 6px;
+  }
+  .MuiSlider-track {
+    background: none;
+    border: 0;
+  }
+`;
+
 const GradesFilterSlider = () => {
   const { climbingFilter } = useUserSettingsContext();
   const { gradeInterval, setGradeInterval, grades } = climbingFilter;
@@ -34,7 +50,15 @@ const GradesFilterSlider = () => {
   const onChange = (_: Event, newValue: Interval) => {
     setGradeInterval(convertFromUnique(newValue, grades));
   };
-  return <Slider value={value} onChange={onChange} min={0} max={max} />;
+  return (
+    <StyledSlider
+      value={value}
+      onChange={onChange}
+      min={0}
+      max={max}
+      $colors={useGetSliderColors(grades)}
+    />
+  );
 };
 
 export const GradeFilter = () => {
