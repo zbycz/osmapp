@@ -1,28 +1,50 @@
 import React from 'react';
-import { Global, css, Theme, useTheme } from '@emotion/react';
+import { Global, css, Theme } from '@emotion/react';
 import {
   isDesktopResolution,
   isMobileMode,
   isTabletResolution,
 } from '../components/helpers';
 import { convertHexToRgba } from '../components/utils/colorUtils';
-import { useUserThemeContext } from './theme';
 
 // This function doesn't contain any logic - so no extraction needed.
 // eslint-disable-next-line max-lines-per-function
 const globalStyle = (theme: Theme) => css`
+  // As variables to allow for easy development in dev
+  :root {
+    --safe-top: env(safe-area-inset-top);
+    // --safe-top: 50px;
+
+    --safe-bottom: env(safe-area-inset-bottom);
+    // --safe-bottom: 30px;
+
+    --safe-right: env(safe-area-inset-right);
+    // --safe-right: 20px;
+
+    --safe-left: env(safe-area-inset-left);
+    // --safe-left: 50px;
+  }
+
   html,
   body,
   #__next {
     margin: 0;
     padding: 0;
-    height: 100%;
     border: 0;
     font-family: 'Roboto', sans-serif;
     background-color: ${theme.palette.background.default};
 
     // disable pulling the page around on mobile
     overscroll-behavior: none;
+  }
+
+  html {
+    height: calc(100% + var(--safe-top) + var(--safe-bottom));
+  }
+
+  body,
+  #__next {
+    height: 100%;
   }
 
   body {
@@ -106,15 +128,21 @@ const globalStyle = (theme: Theme) => css`
   }
 
   .maplibregl-ctrl-top-right {
-    top: 114px !important;
+    top: calc(114px + var(--safe-top)) !important;
+    right: var(--safe-right) !important;
 
     @media ${isTabletResolution} {
-      top: 54px !important;
+      top: calc(54px + var(--safe-top)) !important;
     }
 
     @media ${isDesktopResolution} {
-      top: 83px !important;
+      top: calc(83px + var(--safe-top)) !important;
     }
+  }
+
+  .maplibregl-ctrl-bottom-left {
+    bottom: max(calc(var(--safe-bottom) - 5px), 0px) !important;
+    left: max(calc(var(--safe-left) - 5px), 0px) !important;
   }
 
   .maplibregl-canvas:not(:focus) {
@@ -150,6 +178,17 @@ const globalStyle = (theme: Theme) => css`
 
   .MuiAutocomplete-noOptions {
     padding: 0;
+  }
+
+  .MuiDialog-paperFullScreen {
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom)
+      var(--safe-left);
+  }
+
+  // Give a appropiate spacing around not fullscreened dialogs
+  .MuiDialog-container:not(:has(.MuiDialog-paperFullScreen)) {
+    padding: var(--safe-top) var(--safe-right) var(--safe-bottom)
+      var(--safe-left);
   }
 `;
 

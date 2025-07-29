@@ -6,7 +6,6 @@ import BugReport from '@mui/icons-material/BugReport';
 import { Button, CircularProgress } from '@mui/material';
 import { isDesktop, useBoolState } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
-import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
 import { TopMenu } from './TopMenu/TopMenu';
@@ -37,18 +36,18 @@ const TopRight = styled.div`
   position: absolute;
   z-index: 1000;
   padding: 10px;
-  right: 0;
-  top: 62px;
+  right: var(--safe-right);
+  top: calc(62px + var(--safe-top));
 
   @media ${isDesktop} {
-    top: 0;
+    top: var(--safe-top);
   }
 `;
 
 const BottomRight = styled.div`
   position: absolute;
-  right: 0;
-  bottom: 0;
+  right: var(--safe-right);
+  bottom: var(--safe-bottom);
   z-index: 1000;
   text-align: right;
   pointer-events: none;
@@ -61,13 +60,6 @@ const BottomRight = styled.div`
   padding: 0 4px 4px 4px;
 `;
 
-const BugReportButton = () => (
-  <Button size="small">
-    <BugReport width="10" height="10" />
-    Nahlásit chybu v mapě
-  </Button>
-);
-
 const NoscriptMessage = () => (
   <noscript>
     <span style={{ position: 'absolute', left: '50%', top: '50%' }}>
@@ -76,12 +68,53 @@ const NoscriptMessage = () => (
   </noscript>
 );
 
+const TopBlur = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--safe-top);
+  backdrop-filter: blur(3px);
+  pointer-events: none;
+`;
+const BottomBlur = styled.div`
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: var(--safe-bottom);
+  backdrop-filter: blur(1px);
+  pointer-events: none;
+`;
+const LeftBlur = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: var(--safe-left);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+`;
+const RightBlur = styled.div`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: var(--safe-right);
+  backdrop-filter: blur(2px);
+  pointer-events: none;
+`;
+
 const Map = () => {
   const { mapLoaded } = useMapStateContext();
 
   return (
     <>
       <BrowserMapDynamic />
+      <TopBlur />
+      <BottomBlur />
+      <LeftBlur />
+      <RightBlur />
       {!mapLoaded && <Spinner color="secondary" />}
       <NoscriptMessage />
       <TopRight>
@@ -89,7 +122,6 @@ const Map = () => {
         <LayerSwitcherDynamic />
       </TopRight>
       <BottomRight>
-        {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
         <Weather />
         <MapFooter />

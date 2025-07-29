@@ -20,9 +20,10 @@ const TopPanel = styled.div`
   padding: 8px;
   box-sizing: border-box;
 
-  top: 0;
+  top: var(--safe-top);
   z-index: 1200; // 1100 is PanelWrapper
 
+  margin-left: var(--safe-left);
   width: 100%;
   @media ${isDesktop} {
     width: 410px;

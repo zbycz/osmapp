@@ -3,7 +3,6 @@ import { FeaturePanel } from './FeaturePanel';
 import { Drawer } from '../utils/Drawer';
 import {
   DRAWER_PREVIEW_HEIGHT,
-  DRAWER_PREVIEW_PADDING,
   DRAWER_TOP_OFFSET,
 } from '../utils/MobilePageDrawer';
 import { useScreensize } from '../../helpers/hooks';
@@ -19,9 +18,12 @@ export const FeaturePanelInDrawer = ({
   scrollRef,
 }: FeaturePanelInDrawerProps) => {
   const { feature } = useFeatureContext();
+
   const [collapsedHeight, setCollapsedHeight] = React.useState<number>(
     DRAWER_PREVIEW_HEIGHT,
   );
+  const [collapsed, setCollapsed] = React.useState(true);
+
   const { height: windowHeight } = useScreensize();
   const maxCollapsedHeight = windowHeight / 3;
 
@@ -32,7 +34,7 @@ export const FeaturePanelInDrawer = ({
     if (!headingDiv) return;
 
     const baseHeight = Math.min(headingDiv.clientHeight, maxCollapsedHeight);
-    setCollapsedHeight(baseHeight + DRAWER_PREVIEW_PADDING);
+    setCollapsedHeight(baseHeight);
   }, [headingRef, feature, maxCollapsedHeight]);
 
   return (
@@ -42,8 +44,9 @@ export const FeaturePanelInDrawer = ({
       className={DRAWER_CLASSNAME}
       collapsedHeight={collapsedHeight}
       scrollRef={scrollRef}
+      onTransitionEnd={(_, open) => setCollapsed(!open)}
     >
-      <FeaturePanel headingRef={headingRef} />
+      <FeaturePanel headingRef={headingRef} isCollapsed={collapsed} />
     </Drawer>
   );
 };

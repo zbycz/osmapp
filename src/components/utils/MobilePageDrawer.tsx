@@ -3,8 +3,7 @@ import { Drawer } from './Drawer';
 import { PanelWrapper } from './PanelHelpers';
 import { useMobileMode } from '../helpers';
 
-export const DRAWER_PREVIEW_PADDING = 24;
-export const DRAWER_PREVIEW_HEIGHT = 62 + DRAWER_PREVIEW_PADDING;
+export const DRAWER_PREVIEW_HEIGHT = 62;
 export const DRAWER_TOP_OFFSET = 8;
 
 type MobilePageDrawerProps = {
