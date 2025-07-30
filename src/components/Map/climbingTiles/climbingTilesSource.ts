@@ -17,6 +17,7 @@ import {
   gradeColors,
 } from '../../../services/tagging/climbing/gradeData';
 import { join } from '../../../utils';
+import { number } from 'prop-types';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
@@ -37,9 +38,9 @@ const numberToSuperScript = (number?: number) =>
 const getLabel = (name: string, routeCount: number) =>
   join(name, '\n', numberToSuperScript(routeCount));
 
-const getColor = (properties: ClimbingTilesProperties): string | undefined => {
-  if (properties.type === 'route' && properties.gradeId) {
-    return gradeColors[GRADE_TABLE.uiaa[properties.gradeId]]?.light;
+const getColor = (gradeId: number): string | undefined => {
+  if (gradeId) {
+    return gradeColors[GRADE_TABLE.uiaa[gradeId]]?.light;
   }
 
   return undefined;
@@ -50,13 +51,13 @@ const processFeature = (
 ): ClimbingTilesFeature => {
   const properties = feature.properties;
 
-  const color = getColor(properties);
+  const color = getColor(properties.gradeId);
   return {
     ...feature,
     properties: {
       ...properties,
       label: getLabel(properties.label, properties.routeCount),
-      ...(color ? { color } : {}),
+      color,
     },
   };
 };

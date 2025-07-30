@@ -47,15 +47,8 @@ export type GeojsonFeature<T extends FeatureGeometry = FeatureGeometry> = {
   osmMeta: OsmId;
   tags: FeatureTags;
   properties: {
-    // climbing?: string;
-    // osmappRouteCount?: number;
-
-    routeCount?: number; // for relations climbing=crag,area
-    hasImages?: boolean; // for climbing=route*,crag,area
-
-    // osmappType?: 'node' | 'way' | 'relation';
-    // osmappLabel?: string;
-    // color?: string;
+    routeCount?: number;
+    hasImages?: boolean;
   };
   geometry: T;
   center?: number[];
@@ -94,11 +87,13 @@ const getItems = (elements: OsmItem[], log: (message: string) => void) => {
 };
 
 const getRouteNumberFromTags = (element: OsmItem) => {
-  // TODO sum all types
-  const number = parseFloat(element.tags['climbing:sport'] ?? '0');
+  const sport = parseFloat(element.tags['climbing:sport'] ?? '0');
+  const trad = parseFloat(element.tags['climbing:trad'] ?? '0');
+  const ice = parseFloat(element.tags['climbing:ice'] ?? '0');
+  const multipitch = parseFloat(element.tags['climbing:multipitch'] ?? '0');
+  const sum = sport + trad + ice + multipitch;
 
-  // can be eg. "yes" .. eg. relation/15056469
-  return Number.isNaN(number) ? 1 : number;
+  return Number.isNaN(sum) ? 1 : sum; // can be eg. "yes" .. eg. relation/15056469
 };
 
 const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
@@ -118,19 +113,11 @@ const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
         )
       : undefined;
 
-  // const color = tags?.climbing?.startsWith('route')
-  //   ? getDifficultyColorByTags(tags, 'light')
-  //   : undefined;
-
   const properties: GeojsonFeature['properties'] = {
-    //osmappLabel: getLabel(tags, osmappRouteCount),
-    // osmappLabel: getNameWithDifficulty(tags),
-
     routeCount: osmappRouteCount,
     hasImages: Object.keys(tags).some((key) =>
       key.startsWith('wikimedia_commons'),
     ),
-    // ...(color ? { color } : {}),
   };
 
   return {
