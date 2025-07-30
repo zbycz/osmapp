@@ -1,5 +1,4 @@
 import { Client } from 'pg';
-import { ClimbingTilesFeature } from '../../types';
 import { fetchJson } from '../../services/fetch';
 import { OsmType } from '../../services/types';
 
@@ -28,8 +27,6 @@ export async function getClient(): Promise<Client> {
   if (!process.env.XATA_PASSWORD) {
     throw new Error('XATA_PASSWORD must be set');
   }
-
-  console.log(`Using db:${XATA_DATABASE}`); //eslint-disable-line no-console
 
   if (!global.db.pool) {
     const client = new Client({
