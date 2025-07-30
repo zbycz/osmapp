@@ -25,7 +25,7 @@ export const sortKey = [
   -1,
   [
     '+',
-    ['to-number', ['get', 'count']],
+    ['to-number', ['get', 'routeCount']],
     ['case', ['get', 'hasImages'], 10000, 0], // preference for items with images
     ['case', ['to-boolean', ['get', 'name']], 2, 0], // prefer items with name
   ],
@@ -39,7 +39,7 @@ export const linearByRouteCount = (
 ): ExpressionSpecification => [
   'interpolate',
   ['linear'],
-  ['coalesce', ['get', 'count'], 0],
+  ['coalesce', ['get', 'routeCount'], 0],
   from,
   a,
   to,
@@ -49,7 +49,12 @@ export const linearByRouteCount = (
 const ifHasImages = (
   value: string,
   elseValue: string,
-): ExpressionSpecification => ['case', ['get', 'hasImages'], value, elseValue];
+): ExpressionSpecification => [
+  'case',
+  ['coalesce', ['get', 'hasImages'], false],
+  value,
+  elseValue,
+];
 
 export const byHasImages = (
   spec: typeof AREA | typeof CRAG,

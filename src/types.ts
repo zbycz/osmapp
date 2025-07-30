@@ -23,7 +23,12 @@ export type ClimbingTilesProperties =
   | { type: 'crag'; label: string; routeCount: number; hasImages: boolean }
   | { type: 'gym'; label: string }
   | { type: 'ferrata'; label: string }
-  | { type: 'route'; label: string; gradeId: number; color?: string }; // label contains name + original grade
+  | {
+      type: 'route';
+      label: string; // contains name + original grade
+      gradeId: number;
+      color?: string; // computed on FE from the gradeId
+    };
 
 export type ClimbingSearchRecord = {
   type: string;

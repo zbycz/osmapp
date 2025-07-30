@@ -8,7 +8,7 @@ export const getClimbingSearch = async (
   lat: number,
 ): Promise<ClimbingSearchRecord[]> => {
   const query = `
-      SELECT "type", "lon", "lat", "osmType", "osmId", "name",
+      SELECT "type", "lon", "lat", "osmType", "osmId", COALESCE("name", "nameRaw") AS "name",
           acos(
             cos(radians($1)) * cos(radians(lat)) *
             cos(radians(lon) - radians($2)) +

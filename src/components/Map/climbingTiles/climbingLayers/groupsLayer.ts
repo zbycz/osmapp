@@ -81,6 +81,8 @@ export const gymsLayer: LayerSpecification = {
   },
 };
 
+console.log(gymsLayer);
+
 export const ferrataLayer: LayerSpecification = {
   ...groupsLayer,
   id: 'climbing via_ferrata',
