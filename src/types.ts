@@ -18,17 +18,14 @@ export type ClimbingStatsResponse = {
   routesCount: number;
 };
 
-export type ClimbingTilesProperties =
-  | { type: 'area'; label: string; routeCount: number; hasImages: boolean }
-  | { type: 'crag'; label: string; routeCount: number; hasImages: boolean }
-  | { type: 'gym'; label: string }
-  | { type: 'ferrata'; label: string }
-  | {
-      type: 'route';
-      label: string; // contains name + original grade
-      gradeId: number;
-      color?: string; // computed on FE from the gradeId
-    };
+export type ClimbingTilesProperties = {
+  type: 'area' | 'crag' | 'route' | 'gym' | 'ferrata';
+  label: string;
+  routeCount?: number; // group only
+  hasImages?: boolean; // group only
+  gradeId?: number; // route only
+  color?: string; // route only, computed on FE
+};
 
 export type ClimbingSearchRecord = {
   type: string;

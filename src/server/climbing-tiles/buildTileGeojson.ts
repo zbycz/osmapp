@@ -30,8 +30,8 @@ const optimizeFeaturesToGrid = (
       const current = grid[xIndex][yIndex];
       const shouldReplaceCell =
         !current ||
-        !current.properties.count ||
-        current.properties.count < feature.properties.count;
+        !current.properties.routeCount ||
+        current.properties.routeCount < feature.properties.routeCount;
 
       if (shouldReplaceCell) {
         grid[xIndex][yIndex] = feature;
