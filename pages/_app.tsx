@@ -40,6 +40,7 @@ import { Climbing } from '../src/components/Climbing/Climbing';
 import Router from 'next/router';
 import { fetchSchemaTranslations } from '../src/services/tagging/translations';
 import Head from 'next/head';
+import { HotJar } from '../src/components/App/hotjar';
 
 const getInitialToast = (featureFromRouter: Feature | '404') =>
   featureFromRouter === '404'
@@ -129,7 +130,12 @@ const MyApp = (props: Props) => {
         </UserThemeProvider>
       </AppCacheProvider>
       <Umami />
-      {PROJECT_ID === 'openclimbing' && <GoogleAnalytics />}
+      {PROJECT_ID === 'openclimbing' && (
+        <>
+          <GoogleAnalytics />
+          <HotJar />
+        </>
+      )}
     </>
   );
 };
