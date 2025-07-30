@@ -25,7 +25,7 @@ import { Box, Stack } from '@mui/material';
 import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
 import { isPublictransportRoute } from '../../utils';
 import { Sockets } from './Sockets/Sockets';
-import { ClimbingTypeBadge } from './Climbing/ClimbingTypeBadge';
+import { ClimbingBadges } from './Climbing/ClimbingBadges';
 import { TestApiWarning } from './helpers/TestApiWarning';
 import { FeaturePanelClimbingGuideInfo } from './Climbing/FeaturePanelClimbingGuideInfo';
 import { FeaturedTag } from './FeaturedTag';
@@ -72,7 +72,7 @@ export const FeaturePanel = ({ headingRef }: FeaturePanelProps) => {
           <FeatureHeading ref={headingRef} />
           <Stack spacing={1} alignItems="flex-start" sx={{ marginBottom: 1 }}>
             <ClimbingRouteGrade />
-            <ClimbingTypeBadge feature={feature} />
+            <ClimbingBadges feature={feature} hasTooltip />
           </Stack>
 
           <ClimbingRestriction />
