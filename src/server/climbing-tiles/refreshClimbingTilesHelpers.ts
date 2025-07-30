@@ -97,7 +97,7 @@ export const recordsFactory = (log: (message: string) => void) => {
   };
 
   const addRecordWithLine = (type: string, way: GeojsonFeature<LineString>) => {
-    addRecord(type, firstPointGeometry(way)); // TODO this may be optimized not to create two row but one with firstPoint coordinates + way geometry -> in geojson as two items (2800 records ~ 4%)
+    addRecord(type, firstPointGeometry(way)); // TODO this may be optimized not to create two row but one with firstPoint coordinates + way geometry -> in geojson again construct two items (2800 records ~ 4% saved)
     addRecordRaw(type, way.center, way);
   };
 
