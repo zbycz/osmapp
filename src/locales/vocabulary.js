@@ -480,6 +480,8 @@ export default {
   'climbing_badges.hazard_animal_nest_label': 'animal nest',
   'climbing_badges.hazard_death_fall_zone_label': 'death fall zone',
   'climbing_badges.hazard_first_bolt_high_label': 'high first bolt',
+  'climbing_badges.hazard_long_runout_label': 'long runout',
+  'climbing_badges.hazard_bad_protection_label': 'bad protection',
   'climbing_badges.hazard_loose_rock_description': 'Unstable rock that may shift or break under weight.',
   'climbing_badges.hazard_rockfall_zone_description': 'Area prone to falling rocks from above.',
   'climbing_badges.hazard_wet_description': 'Slippery or wet rock, even in dry weather.',
@@ -490,4 +492,7 @@ export default {
   'climbing_badges.hazard_death_fall_zone_description': 'Fall here would likely result in serious injury or death.',
   'climbing_badges.hazard_first_bolt_high_description':
     'The first bolt is unusually high, which may increase the risk of ground fall before clipping it.',
+  'climbing_badges.hazard_long_runout_description':
+    'The spacing between protection points is large, which may lead to long falls or increased risk between bolts.',
+  'climbing_badges.hazard_bad_protection_description': 'The available fixed gear is outdated, rusty, or otherwise unreliable.',
 };
