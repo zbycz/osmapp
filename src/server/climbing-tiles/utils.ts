@@ -1,6 +1,6 @@
 import { Client } from 'pg';
 import { OsmResponse } from './overpass/overpassToGeojsons';
-import { ClimbingFeaturesRecords, getClient } from './db';
+import { ClimbingFeaturesRecord, getClient } from './db';
 import format from 'pg-format';
 
 type TileStats =
@@ -37,7 +37,7 @@ export const updateStats = async (
   buildLog: string,
   buildDuration: number,
   deletedTilesStats: TileStats,
-  records: ClimbingFeaturesRecords,
+  records: ClimbingFeaturesRecord[],
 ) => {
   const statsRow = {
     timestamp: new Date().toISOString(),

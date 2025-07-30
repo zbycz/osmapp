@@ -1,4 +1,4 @@
-import { Feature } from 'geojson';
+import { Feature as GeojsonFeature, Geometry } from 'geojson';
 import { OsmType } from './services/types';
 
 export type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
@@ -16,6 +16,15 @@ export type ClimbingStatsResponse = {
   routesCount: number;
 };
 
+export type ClimbingTilesProperties = {
+  type: 'area' | 'crag' | 'route' | 'gym' | 'ferrata';
+  label: string;
+  routeCount?: number; // group only
+  hasImages?: boolean; // group only
+  gradeId?: number; // route only
+  color?: string; // route only, computed on FE
+};
+
 export type ClimbingSearchRecord = {
   type: string;
   lon: number;
@@ -25,7 +34,10 @@ export type ClimbingSearchRecord = {
   name: string;
 };
 
-export type CTFeature = Feature;
+export type ClimbingTilesFeature = GeojsonFeature<
+  Geometry,
+  ClimbingTilesProperties
+>;
 
 export type ClimbingTick = {
   id: number;

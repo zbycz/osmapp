@@ -669,7 +669,7 @@ export const outdoorStyle = addHoverPaint({
         visibility: 'visible',
       },
       paint: {
-        'line-color': 'hsl(24, 10%, 60%)',
+        'line-color': 'hsl(25,6%,38%)',
         'line-dasharray': [5, 2],
         'line-width': [
           'interpolate',

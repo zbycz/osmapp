@@ -40,6 +40,7 @@ const fetchFromOverpass = async () => {
   return data;
 };
 
+// (splitting this function doesn't make sense - it has very simple structure)
 // eslint-disable-next-line max-lines-per-function
 const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
   const geojsons = overpassToGeojsons(data, log); // 300 ms on 200k items
@@ -47,13 +48,17 @@ const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
 
   for (const node of geojsons.node) {
     if (!node.tags || node.tags.climbing === 'no') continue;
-    if (
-      node.tags.climbing === 'area' ||
-      node.tags.climbing === 'boulder' ||
+    if (node.tags.climbing === 'area') {
+      addRecord('area', node);
+    }
+
+    //
+    else if (
       node.tags.climbing === 'crag' ||
+      node.tags.climbing === 'boulder' ||
       node.tags.natural === 'peak'
     ) {
-      addRecord('group', node);
+      addRecord('crag', node);
     }
 
     //
@@ -85,7 +90,7 @@ const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
       ) {
         addRecord('gym', node);
       } else {
-        addRecord('group', node); //this needs tweaking
+        addRecord('crag', node); //this needs tweaking
       }
     }
 
@@ -109,8 +114,13 @@ const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
     }
 
     //
+    else if (way.tags.climbing === 'area') {
+      addRecord('area', centerGeometry(way)); // way climbing=area probably doesnt exist
+    }
+
+    //
     else if (way.tags.climbing || way.tags.sport === 'climbing') {
-      addRecord('group', centerGeometry(way));
+      addRecord('crag', centerGeometry(way));
     }
 
     // TODO 900 ways – parts of some climbing relations
@@ -132,13 +142,18 @@ const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
     }
 
     // climbing=area, boulder, crag, route
+    else if (relation.tags.climbing === 'area') {
+      addRecord('area', centerGeometry(relation));
+    }
+
+    //
     else if (
       relation.tags.climbing ||
       relation.tags.sport === 'climbing' ||
       relation.tags.type === 'site' ||
       relation.tags.type === 'multipolygon'
     ) {
-      addRecord('group', centerGeometry(relation));
+      addRecord('crag', centerGeometry(relation));
     }
 
     // TODO 4 items to debug

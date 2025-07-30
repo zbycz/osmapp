@@ -38,7 +38,7 @@ const GROUPS_LAYOUT: SymbolLayerSpecification['layout'] = {
   'icon-optional': false,
   'icon-ignore-placement': false,
   'icon-allow-overlap': ['step', ['zoom'], true, 4, false],
-  'text-field': ['step', ['zoom'], '', 4, ['get', 'osmappLabel']],
+  'text-field': ['step', ['zoom'], '', 4, ['get', 'label']],
   'text-padding': 2,
   'text-font': ['Noto Sans Bold'],
   'text-anchor': 'top',
@@ -55,7 +55,7 @@ export const groupsLayer: LayerSpecification = {
   type: 'symbol',
   source: CLIMBING_TILES_SOURCE,
   maxzoom: 20,
-  filter: ['all', ['==', 'type', 'group']],
+  filter: ['all', ['in', 'type', 'area', 'crag']],
   layout: GROUPS_LAYOUT,
   paint: {
     'icon-opacity': hover(1, 0.6),
