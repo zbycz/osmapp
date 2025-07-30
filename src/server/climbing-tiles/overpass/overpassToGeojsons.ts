@@ -195,7 +195,6 @@ const getRelationWithAreaCount = (
           ...relation.properties,
           routeCount,
           hasImages,
-          // osmappLabel: getLabel(relation.tags, routeCount),
         },
       };
     }

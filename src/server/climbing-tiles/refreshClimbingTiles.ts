@@ -190,12 +190,7 @@ export const refreshClimbingTiles = async () => {
       chunk.map((record) => Object.values(record)),
     );
     log(`SQL Query #${index + 1} length: ${query.length} chars`);
-    try {
-      await client.query(query);
-    } catch (error) {
-      require('fs').writeFileSync('../x.sql', query);
-      throw error;
-    }
+    await client.query(query);
   }
 
   await client.query('TRUNCATE TABLE climbing_tiles_cache');

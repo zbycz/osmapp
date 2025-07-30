@@ -85,7 +85,7 @@ export const recordsFactory = (log: (message: string) => void) => {
       lat,
       line:
         feature.geometry.type === 'LineString'
-          ? (JSON.stringify(feature.geometry.coordinates) as unknown as any)
+          ? (JSON.stringify(feature.geometry.coordinates) as unknown as any) // careful, pg and rest handles differently
           : null,
     };
 

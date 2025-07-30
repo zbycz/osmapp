@@ -5,8 +5,6 @@ export type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
 // below ONLY shared types among server + client
 
-// shared types among climbingTiles server + client:
-
 export type Tile = { z: number; x: number; y: number };
 
 export type ClimbingStatsResponse = {
