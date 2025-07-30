@@ -1,11 +1,5 @@
 import { GeojsonFeature } from './overpass/overpassToGeojsons';
-import {
-  FeatureGeometry,
-  FeatureTags,
-  LineString,
-  LonLat,
-  Point,
-} from '../../services/types';
+import { FeatureTags, LineString, LonLat, Point } from '../../services/types';
 import { ClimbingFeaturesRecord } from './db';
 import { removeDiacritics } from './utils';
 import { getDifficulty } from '../../services/tagging/climbing/routeGrade';

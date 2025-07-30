@@ -93,18 +93,6 @@ const getItems = (elements: OsmItem[], log: (message: string) => void) => {
   return { nodes, ways, relations };
 };
 
-const numberToSuperScript = (number?: number) =>
-  number && number > 1
-    ? number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d])
-    : '';
-
-// const getLabel = (tags: FeatureTags, osmappRouteCount: number) =>
-//   join(
-//     getNameWithDifficulty(tags),
-//     '\n',
-//     numberToSuperScript(osmappRouteCount),
-//   );
-
 const getRouteNumberFromTags = (element: OsmItem) => {
   // TODO sum all types
   const number = parseFloat(element.tags['climbing:sport'] ?? '0');

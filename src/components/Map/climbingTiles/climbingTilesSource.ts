@@ -16,6 +16,7 @@ import {
   GRADE_TABLE,
   gradeColors,
 } from '../../../services/tagging/climbing/gradeData';
+import { join } from '../../../utils';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
@@ -27,6 +28,14 @@ const getTileJson = async ({ z, x, y }: Tile) => {
     return [];
   }
 };
+
+const numberToSuperScript = (number?: number) =>
+  number && number > 1
+    ? number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d])
+    : '';
+
+const getLabel = (name: string, routeCount: number) =>
+  join(name, '\n', numberToSuperScript(routeCount));
 
 const getColor = (properties: ClimbingTilesProperties): string | undefined => {
   if (properties.type === 'route' && properties.gradeId) {
@@ -46,6 +55,7 @@ const processFeature = (
     ...feature,
     properties: {
       ...properties,
+      label: getLabel(properties.label, properties.routeCount),
       ...(color ? { color } : {}),
     },
   };
