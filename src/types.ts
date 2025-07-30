@@ -1,9 +1,11 @@
-import { Feature } from 'geojson';
+import { Feature as GeojsonFeature, Geometry } from 'geojson';
 import { OsmType } from './services/types';
 
 export type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
 
 // below ONLY shared types among server + client
+
+// shared types among climbingTiles server + client:
 
 export type Tile = { z: number; x: number; y: number };
 
@@ -16,6 +18,13 @@ export type ClimbingStatsResponse = {
   routesCount: number;
 };
 
+export type ClimbingTilesProperties =
+  | { type: 'area'; label: string; count: number; hasImages: boolean }
+  | { type: 'crag'; label: string; count: number; hasImages: boolean }
+  | { type: 'gym'; label: string }
+  | { type: 'ferrata'; label: string }
+  | { type: 'route'; label: string; gradeId: number; color?: string }; // label contains name + original grade
+
 export type ClimbingSearchRecord = {
   type: string;
   lon: number;
@@ -25,7 +34,10 @@ export type ClimbingSearchRecord = {
   name: string;
 };
 
-export type CTFeature = Feature;
+export type ClimbingTilesFeature = GeojsonFeature<
+  Geometry,
+  ClimbingTilesProperties
+>;
 
 export type ClimbingTick = {
   id: number;

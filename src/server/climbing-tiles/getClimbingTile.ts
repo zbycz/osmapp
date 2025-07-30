@@ -1,11 +1,11 @@
 import {
-  ClimbingFeaturesRecords,
+  ClimbingFeaturesRecord,
   getClient,
   xataRestQuery,
   xataRestQueryPaginated,
 } from './db';
 import { tileToBBOX } from './tileToBBOX';
-import { CTFeature, Tile } from '../../types';
+import { Tile } from '../../types';
 import { buildTileGeojson } from './buildTileGeojson';
 import { BBox } from 'geojson';
 
@@ -43,12 +43,11 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   const bbox = tileToBBOX({ z, x, y });
   const bboxCondition = getBboxCondition(bbox);
   const query = hasRoutes
-    ? `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'ferrata', 'group', 'route') AND ${bboxCondition}`
-    : `SELECT geojson FROM climbing_features WHERE type IN ('gym', 'ferrata', 'group') AND ${bboxCondition}`;
-  const records = await xataRestQueryPaginated(query);
+    ? `SELECT * FROM climbing_features WHERE ${bboxCondition}`
+    : `SELECT * FROM climbing_features WHERE type != 'route' AND ${bboxCondition}`;
 
-  const features = records.map((record) => record.geojson as CTFeature);
-  const geojson = buildTileGeojson(isOptimizedToGrid, features, bbox);
+  const records = await xataRestQueryPaginated<ClimbingFeaturesRecord>(query);
+  const geojson = buildTileGeojson(isOptimizedToGrid, records, bbox);
 
   const duration = Math.round(performance.now() - start);
   logCacheMiss(duration, geojson.features.length);
@@ -61,12 +60,9 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   return JSON.stringify(geojson);
 };
 
-export const cacheTile000 = async (records: ClimbingFeaturesRecords) => {
-  const tile000 = buildTileGeojson(
-    true,
-    records.map((r) => r.geojson),
-    tileToBBOX({ z: 0, x: 0, y: 0 }),
-  );
+export const cacheTile000 = async (records: ClimbingFeaturesRecord[]) => {
+  const bbox = tileToBBOX({ z: 0, x: 0, y: 0 });
+  const tile000 = buildTileGeojson(true, records, bbox);
 
   const client = await getClient();
   await client.query(

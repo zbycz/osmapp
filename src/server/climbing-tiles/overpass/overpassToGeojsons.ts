@@ -47,11 +47,15 @@ export type GeojsonFeature<T extends FeatureGeometry = FeatureGeometry> = {
   osmMeta: OsmId;
   tags: FeatureTags;
   properties: {
-    climbing?: string;
-    osmappRouteCount?: number;
-    osmappHasImages?: boolean;
-    osmappType?: 'node' | 'way' | 'relation';
-    osmappLabel?: string;
+    // climbing?: string;
+    // osmappRouteCount?: number;
+
+    routeCount?: number; // for relations climbing=crag,area
+    hasImages?: boolean; // for climbing=route*,crag,area
+
+    // osmappType?: 'node' | 'way' | 'relation';
+    // osmappLabel?: string;
+    // color?: string;
   };
   geometry: T;
   center?: number[];
@@ -94,24 +98,12 @@ const numberToSuperScript = (number?: number) =>
     ? number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d])
     : '';
 
-const getNameWithDifficulty = (tags: FeatureTags) => {
-  if (tags.climbing?.startsWith('route')) {
-    const gradeKey = Object.keys(tags).find((key) =>
-      key.match(/^climbing:grade:[^:]+$/),
-    );
-    const grade = gradeKey ? tags[gradeKey] : '';
-    return `${tags.name ?? ''}${grade ? ` ${grade}` : ''}`;
-  }
-
-  return tags.name ?? '';
-};
-
-const getLabel = (tags: FeatureTags, osmappRouteCount: number) =>
-  join(
-    getNameWithDifficulty(tags),
-    '\n',
-    numberToSuperScript(osmappRouteCount),
-  );
+// const getLabel = (tags: FeatureTags, osmappRouteCount: number) =>
+//   join(
+//     getNameWithDifficulty(tags),
+//     '\n',
+//     numberToSuperScript(osmappRouteCount),
+//   );
 
 const getRouteNumberFromTags = (element: OsmItem) => {
   // TODO sum all types
@@ -138,20 +130,19 @@ const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
         )
       : undefined;
 
-  const color = tags?.climbing?.startsWith('route')
-    ? getDifficultyColorByTags(tags, 'light')
-    : undefined;
+  // const color = tags?.climbing?.startsWith('route')
+  //   ? getDifficultyColorByTags(tags, 'light')
+  //   : undefined;
 
-  const properties = {
-    climbing: tags?.climbing,
-    name: tags?.name, // used for storing climbing_features.name - TODO filter properties in prepareGeojson not here
-    osmappType: type,
-    osmappRouteCount,
-    osmappLabel: getLabel(tags, osmappRouteCount),
-    osmappHasImages: Object.keys(tags).some((key) =>
+  const properties: GeojsonFeature['properties'] = {
+    //osmappLabel: getLabel(tags, osmappRouteCount),
+    // osmappLabel: getNameWithDifficulty(tags),
+
+    routeCount: osmappRouteCount,
+    hasImages: Object.keys(tags).some((key) =>
       key.startsWith('wikimedia_commons'),
     ),
-    ...(color ? { color } : {}),
+    // ...(color ? { color } : {}),
   };
 
   return {
@@ -212,26 +203,24 @@ const addToLookup = <T extends FeatureGeometry>(
 const getRelationWithAreaCount = (
   relations: GeojsonFeature[],
   lookup: Record<string, Record<string, GeojsonFeature>>,
-) =>
+): GeojsonFeature[] =>
   relations.map((relation) => {
     if (relation.tags?.climbing === 'area') {
       const members = relation.members.map(
         ({ type, ref }) => lookup[type][ref]?.properties,
       );
-      const osmappRouteCount = members
-        .map((member) => member?.osmappRouteCount ?? 0)
+      const routeCount = members
+        .map((member) => member?.routeCount ?? 0)
         .reduce((acc, count) => acc + count);
-      const osmappHasImages = members
-        .map((member) => member?.osmappHasImages)
-        .some((value) => value === true);
+      const hasImages = members.some((member) => member?.hasImages);
 
       return {
         ...relation,
         properties: {
           ...relation.properties,
-          osmappRouteCount,
-          osmappHasImages,
-          osmappLabel: getLabel(relation.tags, osmappRouteCount),
+          routeCount,
+          hasImages,
+          // osmappLabel: getLabel(relation.tags, routeCount),
         },
       };
     }

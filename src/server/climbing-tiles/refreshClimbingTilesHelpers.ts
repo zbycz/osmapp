@@ -1,8 +1,15 @@
 import { GeojsonFeature } from './overpass/overpassToGeojsons';
-import { LineString, LonLat, Point } from '../../services/types';
-import { ClimbingFeaturesRecords } from './db';
-import { CTFeature } from '../../types';
+import {
+  FeatureGeometry,
+  FeatureTags,
+  LineString,
+  LonLat,
+  Point,
+} from '../../services/types';
+import { ClimbingFeaturesRecord } from './db';
 import { removeDiacritics } from './utils';
+import { getDifficulty } from '../../services/tagging/climbing/routeGrade';
+import { GRADE_TABLE } from '../../services/tagging/climbing/gradeData';
 
 export const centerGeometry = (
   feature: GeojsonFeature,
@@ -24,18 +31,38 @@ const firstPointGeometry = (
   },
 });
 
-const prepareGeojson = (
-  type: string,
-  { id, geometry, properties }: GeojsonFeature,
-): CTFeature => ({
-  type: 'Feature',
-  id,
-  geometry,
-  properties: { ...properties, type },
-});
+const getNameWithDifficulty = (tags: FeatureTags) => {
+  if (tags.climbing?.startsWith('route')) {
+    const gradeKey = Object.keys(tags).find((key) =>
+      key.match(/^climbing:grade:[^:]+$/),
+    );
+    const grade = gradeKey ? tags[gradeKey] : '';
+    return `${tags.name ?? ''}${grade ? ` ${grade}` : ''}`;
+  }
+
+  return tags.name ?? null;
+};
+
+const getRouteGradeIndex = (tags: FeatureTags) => {
+  if (tags?.climbing?.startsWith('route')) {
+    const difficulty = getDifficulty(tags);
+    if (!difficulty) {
+      return null;
+    }
+    const { gradeSystem, grade } = difficulty;
+    const grades = GRADE_TABLE[gradeSystem];
+    if (!grades) {
+      return null;
+    }
+    const index = grades.indexOf(grade);
+    return index >= 0 ? index : null;
+  }
+
+  return null;
+};
 
 export const recordsFactory = (log: (message: string) => void) => {
-  const records: ClimbingFeaturesRecords = [];
+  const records: ClimbingFeaturesRecord[] = [];
   const addRecordRaw = (
     type: string,
     coordinates: LonLat,
@@ -47,17 +74,29 @@ export const recordsFactory = (log: (message: string) => void) => {
     }
 
     const [lon, lat] = coordinates;
-    records.push({
+    const name = getNameWithDifficulty(feature.tags);
+    const gradeId = getRouteGradeIndex(feature.tags);
+
+    const nameRaw = removeDiacritics(name);
+    const record = {
       type,
       osmType: feature.osmMeta.type,
       osmId: feature.osmMeta.id,
-      name: feature.tags.name,
-      nameRaw: removeDiacritics(feature.tags.name),
-      count: feature.properties.osmappRouteCount || 0,
+      name: name === nameRaw ? null : name, // query lenght optimization
+      nameRaw,
+      count: feature.properties.routeCount,
+      hasImages: feature.properties.hasImages,
+      gradeId,
       lon,
       lat,
-      geojson: prepareGeojson(type, feature),
-    });
+      //geojson: prepareGeojson(type, feature),
+      line:
+        feature.geometry.type === 'LineString'
+          ? (JSON.stringify(feature.geometry.coordinates) as unknown as any)
+          : null,
+    };
+
+    records.push(record);
   };
 
   const addRecord = (type: string, feature: GeojsonFeature<Point>) => {
@@ -65,7 +104,7 @@ export const recordsFactory = (log: (message: string) => void) => {
   };
 
   const addRecordWithLine = (type: string, way: GeojsonFeature<LineString>) => {
-    addRecord(type, firstPointGeometry(way));
+    addRecord(type, firstPointGeometry(way)); // TODO this may be optimized not to create two row but one with firstPoint coordinates + way geometry -> in geojson as two items
     addRecordRaw(type, way.center, way);
   };
 

@@ -67,7 +67,7 @@ export const ifCrag = (
   elseValue: ExpressionSpecification | number,
 ): ExpressionSpecification => [
   'case',
-  ['==', ['get', 'climbing'], 'crag'],
+  ['==', ['get', 'type'], 'crag'],
   crag,
   elseValue,
 ];

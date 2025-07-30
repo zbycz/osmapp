@@ -4,20 +4,51 @@ import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { getGlobalMap } from '../../../services/mapStorage';
 import { climbingLayers } from './climbingLayers/climbingLayers';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
-import { Tile } from '../../../types';
+import {
+  ClimbingTilesFeature,
+  ClimbingTilesProperties,
+  Tile,
+} from '../../../types';
 import { computeTiles } from './computeTiles';
 import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 import { CLIMBING_SPRITE, CLIMBING_TILES_SOURCE } from './consts';
+import {
+  GRADE_TABLE,
+  gradeColors,
+} from '../../../services/tagging/climbing/gradeData';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
     const url = `${CLIMBING_TILES_HOST}api/climbing-tiles/tile?z=${z}&x=${x}&y=${y}`;
-    const data = await fetchJson(url);
-    return data.features || [];
+    const data = await fetchJson(url); // this is cached by fetchCache
+    return (data.features || []) as ClimbingTilesFeature[];
   } catch (e) {
     console.warn('climbingTiles fetch error:', e); // eslint-disable-line no-console
     return [];
   }
+};
+
+const getColor = (properties: ClimbingTilesProperties): string | undefined => {
+  if (properties.type === 'route' && properties.gradeId) {
+    return gradeColors[GRADE_TABLE.uiaa[properties.gradeId]]?.light;
+  }
+
+  return undefined;
+};
+
+const processFeature = (
+  feature: ClimbingTilesFeature,
+): ClimbingTilesFeature => {
+  const properties = feature.properties;
+
+  const color = getColor(properties);
+  return {
+    ...feature,
+    properties: {
+      ...properties,
+      ...(color ? { color } : {}),
+    },
+  };
 };
 
 const updateData = async () => {
@@ -34,14 +65,14 @@ const updateData = async () => {
   const promises = tiles.map((tile) => getTileJson(tile)); // TODO consider showing results after each tile is loaded
   const data = await Promise.all(promises);
 
-  const features = [];
+  const features: ClimbingTilesFeature[] = [];
   for (const tileFeatures of data) {
     features.push(...tileFeatures);
   }
 
   map?.getSource<GeoJSONSource>(CLIMBING_TILES_SOURCE)?.setData({
     type: 'FeatureCollection' as const,
-    features,
+    features: features.map(processFeature),
   });
 };
 

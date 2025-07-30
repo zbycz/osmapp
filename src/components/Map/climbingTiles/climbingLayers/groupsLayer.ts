@@ -55,7 +55,7 @@ export const groupsLayer: LayerSpecification = {
   type: 'symbol',
   source: CLIMBING_TILES_SOURCE,
   maxzoom: 20,
-  filter: ['all', ['==', 'type', 'group']],
+  filter: ['all', ['in', 'type', 'area', 'crag']],
   layout: GROUPS_LAYOUT,
   paint: {
     'icon-opacity': hover(1, 0.6),

@@ -1,24 +1,28 @@
 import { Client } from 'pg';
-import { CTFeature } from '../../types';
+import { ClimbingTilesFeature } from '../../types';
 import { fetchJson } from '../../services/fetch';
+import type { Polygon } from 'geojson';
+import { GeometryCollection, LineString, OsmType } from '../../services/types';
 
-export type ClimbingFeaturesRecords = {
+export type ClimbingFeaturesRecord = {
   type: string;
-  osmType: string;
+  osmType: OsmType;
   osmId: number;
-  name: string;
-  nameRaw: string;
-  count: number;
   lon: number;
   lat: number;
-  geojson: CTFeature;
-}[];
+  name?: string;
+  nameRaw: string;
+  count?: number;
+  hasImages?: boolean;
+  gradeId?: number;
+  line?: number[][];
+};
 
 if (!global.db) {
   global.db = { pool: false };
 }
 
-const XATA_DATABASE = 'osmapp_db:main';
+const XATA_DATABASE = `osmapp_db:${process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL_BRANCH ?? 'main'}`;
 const XATA_REST_URL = `https://osmapp-tvgiad.us-east-1.xata.sh/db/${XATA_DATABASE}/sql`;
 
 export async function getClient(): Promise<Client> {
@@ -77,20 +81,20 @@ export const xataRestQuery = async <T = Record<string, any>>(
   return result;
 };
 
-export const xataRestQueryPaginated = async (
+export const xataRestQueryPaginated = async <T = Record<string, any>>(
   statement: string,
   params?: any[],
 ) => {
   const LIMIT = 1000;
 
   let offset = 0;
-  let allRecords: any[] = [];
+  let allRecords: T[] = [];
   let hasMore = true;
 
   while (hasMore) {
     const paginatedStatement = `${statement} LIMIT ${LIMIT} OFFSET ${offset}`;
     console.log(`Executing paginated query: ${paginatedStatement}`); //eslint-disable-line no-console
-    const result = await xataRestQuery(paginatedStatement, params);
+    const result = await xataRestQuery<T>(paginatedStatement, params);
 
     allRecords = allRecords.concat(result.records);
     if (result.records.length >= LIMIT) {
