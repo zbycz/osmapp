@@ -19,8 +19,8 @@ export type ClimbingStatsResponse = {
 };
 
 export type ClimbingTilesProperties =
-  | { type: 'area'; label: string; count: number; hasImages: boolean }
-  | { type: 'crag'; label: string; count: number; hasImages: boolean }
+  | { type: 'area'; label: string; routeCount: number; hasImages: boolean }
+  | { type: 'crag'; label: string; routeCount: number; hasImages: boolean }
   | { type: 'gym'; label: string }
   | { type: 'ferrata'; label: string }
   | { type: 'route'; label: string; gradeId: number; color?: string }; // label contains name + original grade

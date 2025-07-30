@@ -78,18 +78,17 @@ export const recordsFactory = (log: (message: string) => void) => {
     const gradeId = getRouteGradeIndex(feature.tags);
 
     const nameRaw = removeDiacritics(name);
-    const record = {
+    const record: ClimbingFeaturesRecord = {
       type,
       osmType: feature.osmMeta.type,
       osmId: feature.osmMeta.id,
-      name: name === nameRaw ? null : name, // query lenght optimization
+      name: name === nameRaw ? null : name, // query length optimization
       nameRaw,
-      count: feature.properties.routeCount,
+      routeCount: feature.properties.routeCount,
       hasImages: feature.properties.hasImages,
       gradeId,
       lon,
       lat,
-      //geojson: prepareGeojson(type, feature),
       line:
         feature.geometry.type === 'LineString'
           ? (JSON.stringify(feature.geometry.coordinates) as unknown as any)
@@ -104,7 +103,7 @@ export const recordsFactory = (log: (message: string) => void) => {
   };
 
   const addRecordWithLine = (type: string, way: GeojsonFeature<LineString>) => {
-    addRecord(type, firstPointGeometry(way)); // TODO this may be optimized not to create two row but one with firstPoint coordinates + way geometry -> in geojson as two items
+    addRecord(type, firstPointGeometry(way)); // TODO this may be optimized not to create two row but one with firstPoint coordinates + way geometry -> in geojson as two items (2800 records ~ 4%)
     addRecordRaw(type, way.center, way);
   };
 

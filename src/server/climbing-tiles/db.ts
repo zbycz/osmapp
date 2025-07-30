@@ -1,8 +1,7 @@
 import { Client } from 'pg';
 import { ClimbingTilesFeature } from '../../types';
 import { fetchJson } from '../../services/fetch';
-import type { Polygon } from 'geojson';
-import { GeometryCollection, LineString, OsmType } from '../../services/types';
+import { OsmType } from '../../services/types';
 
 export type ClimbingFeaturesRecord = {
   type: string;
@@ -12,7 +11,7 @@ export type ClimbingFeaturesRecord = {
   lat: number;
   name?: string;
   nameRaw: string;
-  count?: number;
+  routeCount?: number;
   hasImages?: boolean;
   gradeId?: number;
   line?: number[][];
