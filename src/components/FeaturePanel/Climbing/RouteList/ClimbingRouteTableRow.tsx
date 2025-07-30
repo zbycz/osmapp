@@ -27,7 +27,7 @@ import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMobileMode } from '../../../helpers';
-import { ClimbingTypeBadge } from '../ClimbingTypeBadge';
+import { ClimbingBadges } from '../ClimbingBadges';
 
 const Container = styled.div`
   width: 100%;
@@ -206,7 +206,7 @@ export const ClimbingRouteTableRow = forwardRef<
               <Typography variant="inherit" component="h3">
                 {feature.tags?.name}
               </Typography>
-              <ClimbingTypeBadge feature={feature} />
+              <ClimbingBadges feature={feature} />
 
               {!isMobileMode && isSelected && (
                 <SelectedButton>
