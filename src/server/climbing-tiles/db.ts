@@ -21,13 +21,15 @@ if (!global.db) {
   global.db = { pool: false };
 }
 
-const XATA_DATABASE = `osmapp_db:${process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL_BRANCH ?? 'pr3'}`; // we need to merge pr3 as it has new structure, then update main DB and change to `main`
+const XATA_DATABASE = `osmapp_db:${process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL_BRANCH ?? 'main'}`;
 const XATA_REST_URL = `https://osmapp-tvgiad.us-east-1.xata.sh/db/${XATA_DATABASE}/sql`;
 
 export async function getClient(): Promise<Client> {
   if (!process.env.XATA_PASSWORD) {
     throw new Error('XATA_PASSWORD must be set');
   }
+
+  console.log(`Using db:${XATA_DATABASE}`); //eslint-disable-line no-console
 
   if (!global.db.pool) {
     const client = new Client({
