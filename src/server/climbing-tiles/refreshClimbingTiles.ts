@@ -40,6 +40,7 @@ const fetchFromOverpass = async () => {
   return data;
 };
 
+// (splitting this function doesn't make sense - it has very simple structure)
 // eslint-disable-next-line max-lines-per-function
 const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
   const geojsons = overpassToGeojsons(data, log); // 300 ms on 200k items

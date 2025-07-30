@@ -59,7 +59,7 @@ const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
   const label = name ? name : nameRaw;
   const properties: ClimbingTilesProperties =
     type === 'area' || type === 'crag'
-      ? { type, label, count, hasImages }
+      ? { type, label, count: count ?? 0, hasImages }
       : type === 'gym' || type === 'ferrata'
         ? { type, label }
         : type === 'route'

@@ -38,7 +38,7 @@ const GROUPS_LAYOUT: SymbolLayerSpecification['layout'] = {
   'icon-optional': false,
   'icon-ignore-placement': false,
   'icon-allow-overlap': ['step', ['zoom'], true, 4, false],
-  'text-field': ['step', ['zoom'], '', 4, ['get', 'osmappLabel']],
+  'text-field': ['step', ['zoom'], '', 4, ['get', 'label']],
   'text-padding': 2,
   'text-font': ['Noto Sans Bold'],
   'text-anchor': 'top',
