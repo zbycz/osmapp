@@ -36,10 +36,9 @@ export const encodeHistogram = (array: number[] | undefined): string | null => {
   return nodeBuffer.toString('base64'); // TODO optimization pack in 6 bits instead of 8 bits
 };
 
-const decodeHistogram = (
-  base64String: string,
-  originalArrayLength: number,
-): number[] => {
+export const decodeHistogram = (base64String: string): number[] => {
+  const originalArrayLength = GRADE_TABLE.uiaa.length;
+
   const buf = Buffer.from(base64String, 'base64');
   const view = new DataView(buf.buffer, buf.byteOffset, buf.byteLength);
   const resultArray: number[] = new Array(originalArrayLength).fill(0);

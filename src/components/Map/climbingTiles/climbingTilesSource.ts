@@ -4,11 +4,7 @@ import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { getGlobalMap } from '../../../services/mapStorage';
 import { climbingLayers } from './climbingLayers/climbingLayers';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
-import {
-  ClimbingTilesFeature,
-  ClimbingTilesProperties,
-  Tile,
-} from '../../../types';
+import { ClimbingTilesFeature, Tile } from '../../../types';
 import { computeTiles } from './computeTiles';
 import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 import { CLIMBING_SPRITE, CLIMBING_TILES_SOURCE } from './consts';
@@ -17,7 +13,8 @@ import {
   gradeColors,
 } from '../../../services/tagging/climbing/gradeData';
 import { join } from '../../../utils';
-import { number } from 'prop-types';
+import { mapClimbingFilter } from '../../utils/userSettings/getClimbingFilter';
+import { decodeHistogram } from '../../../server/climbing-tiles/overpass/histogram';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
@@ -62,6 +59,38 @@ const processFeature = (
   };
 };
 
+const doClimbingFilter = (features: ClimbingTilesFeature[]) => {
+  const filteredFeatures = features.filter((feature) => {
+    const { type, routeCount, gradeId, histogramCode } = feature.properties;
+
+    if (['crag', 'area', 'gym', 'ferrata'].includes(type)) {
+      if (mapClimbingFilter.isDefaultFilter) {
+        return true;
+      }
+
+      if (routeCount && histogramCode) {
+        const [minIndex, maxIndex] = mapClimbingFilter.gradeInterval;
+        const histogram = decodeHistogram(histogramCode);
+        const filteredRouteCount = histogram
+          .slice(minIndex, maxIndex)
+          .reduce((a, b) => a + b, 0);
+
+        return filteredRouteCount >= mapClimbingFilter.minimumRoutes;
+      }
+      return false;
+    }
+
+    // route
+    if (gradeId) {
+      const [minIndex, maxIndex] = mapClimbingFilter.gradeInterval;
+      return gradeId >= minIndex && gradeId <= maxIndex;
+    }
+
+    return true;
+  });
+  return filteredFeatures;
+};
+
 const updateData = async () => {
   const map = getGlobalMap();
   const mapZoom = map.getZoom();
@@ -80,12 +109,28 @@ const updateData = async () => {
   for (const tileFeatures of data) {
     features.push(...tileFeatures);
   }
+  const filteredFeatures = doClimbingFilter(features);
+
+  // if (mapClimbingFilter.gradeInterval) {
+  //   mapIdlePromise.then((map) => {
+  //     map.setGlobalStateProperty(
+  //       'minGrade',
+  //       mapClimbingFilter.gradeInterval[0],
+  //     );
+  //     map.setGlobalStateProperty(
+  //       'maxGrade',
+  //       mapClimbingFilter.gradeInterval[1],
+  //     );
+  //   });
+  // }
 
   map?.getSource<GeoJSONSource>(CLIMBING_TILES_SOURCE)?.setData({
     type: 'FeatureCollection' as const,
-    features: features.map(processFeature),
+    features: filteredFeatures.map(processFeature),
   });
 };
+
+mapClimbingFilter.callback = updateData;
 
 let eventsAdded = false;
 
