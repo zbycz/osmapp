@@ -14,6 +14,7 @@ export type ClimbingFeaturesRecord = {
   hasImages?: boolean;
   gradeId?: number;
   line?: number[][];
+  histogramCode?: string;
 };
 
 if (!global.db) {

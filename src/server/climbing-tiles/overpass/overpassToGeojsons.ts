@@ -1,65 +1,20 @@
 import {
   FeatureGeometry,
-  FeatureTags,
-  GeometryCollection,
   LineString,
   OsmId,
   Point,
 } from '../../../services/types';
-import { join } from '../../../utils';
 import { getCenter } from '../../../services/getCenter';
-import { getDifficultyColorByTags } from '../../../services/tagging/climbing/routeGrade';
-
-type OsmType = 'node' | 'way' | 'relation';
-type OsmNode = {
-  type: 'node';
-  id: number;
-  lat: number;
-  lon: number;
-  tags?: Record<string, string>;
-};
-type OsmWay = {
-  type: 'way';
-  id: number;
-  nodes: number[];
-  tags?: Record<string, string>;
-};
-type OsmRelation = {
-  type: 'relation';
-  id: number;
-  members?: {
-    type: OsmType;
-    ref: number;
-    role: string;
-  }[];
-  tags?: Record<string, string>;
-  center?: { lat: number; lon: number }; // only for overpass `out center` queries
-};
-type OsmItem = OsmNode | OsmWay | OsmRelation;
-export type OsmResponse = {
-  elements: OsmItem[];
-  osm3s: { timestamp_osm_base: string }; // overpass only
-};
-
-export type GeojsonFeature<T extends FeatureGeometry = FeatureGeometry> = {
-  type: 'Feature';
-  id: number;
-  osmMeta: OsmId;
-  tags: FeatureTags;
-  properties: {
-    routeCount?: number;
-    hasImages?: boolean;
-  };
-  geometry: T;
-  center?: number[];
-  members?: OsmRelation['members'];
-};
-
-type Lookup = {
-  node: Record<number, GeojsonFeature<Point>>;
-  way: Record<number, GeojsonFeature<LineString>>;
-  relation: Record<number, GeojsonFeature<GeometryCollection>>;
-};
+import { getHistogram, sumMemberHistograms } from './histogram';
+import {
+  GeojsonFeature,
+  Lookup,
+  OsmItem,
+  OsmNode,
+  OsmRelation,
+  OsmResponse,
+  OsmWay,
+} from './types';
 
 const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
@@ -99,6 +54,7 @@ const getRouteNumberFromTags = (element: OsmItem) => {
 const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
   element: T,
   geometryFn: (element: T) => TGeometry,
+  lookup: Lookup,
 ): GeojsonFeature<TGeometry> => {
   const { type, id, tags = {} } = element;
   const geometry = geometryFn(element);
@@ -113,11 +69,14 @@ const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
         )
       : undefined;
 
+  const histogram = getHistogram(element, lookup);
+
   const properties: GeojsonFeature['properties'] = {
     routeCount: osmappRouteCount,
     hasImages: Object.keys(tags).some((key) =>
       key.startsWith('wikimedia_commons'),
     ),
+    histogram,
   };
 
   return {
@@ -175,7 +134,7 @@ const addToLookup = <T extends FeatureGeometry>(
   });
 };
 
-const getRelationWithAreaCount = (
+const getRelationsWithAreaCount = (
   relations: GeojsonFeature[],
   lookup: Record<string, Record<string, GeojsonFeature>>,
 ): GeojsonFeature[] =>
@@ -189,12 +148,15 @@ const getRelationWithAreaCount = (
         .reduce((acc, count) => acc + count);
       const hasImages = members.some((member) => member?.hasImages);
 
+      const histogram = sumMemberHistograms(members);
+
       return {
         ...relation,
         properties: {
           ...relation.properties,
           routeCount,
           hasImages,
+          histogram,
         },
       };
     }
@@ -211,17 +173,17 @@ export const overpassToGeojsons = (
   const lookup = { node: {}, way: {}, relation: {} } as Lookup;
 
   const NODE_GEOM = getNodeGeomFn();
-  const nodesOut = nodes.map((node) => convert(node, NODE_GEOM));
+  const nodesOut = nodes.map((node) => convert(node, NODE_GEOM, lookup));
   addToLookup(nodesOut, lookup);
 
   const WAY_GEOM = getWayGeomFn(lookup);
-  const waysOut = ways.map((way) => convert(way, WAY_GEOM));
+  const waysOut = ways.map((way) => convert(way, WAY_GEOM, lookup));
   addToLookup(waysOut, lookup);
 
   // first pass
   const RELATION_GEOM1 = getRelationGeomFn(lookup);
   const relationsOut1 = relations.map((relation) =>
-    convert(relation, RELATION_GEOM1),
+    convert(relation, RELATION_GEOM1, lookup),
   );
   addToLookup(relationsOut1, lookup);
 
@@ -230,10 +192,10 @@ export const overpassToGeojsons = (
   // TODO: update only geometries (?)
   const RELATION_GEOM2 = getRelationGeomFn(lookup);
   const relationsOut2 = relations.map((relation) =>
-    convert(relation, RELATION_GEOM2),
+    convert(relation, RELATION_GEOM1, lookup),
   );
 
-  const relationsOut3 = getRelationWithAreaCount(relationsOut2, lookup);
+  const relationsOut3 = getRelationsWithAreaCount(relationsOut2, lookup);
 
   return { node: nodesOut, way: waysOut, relation: relationsOut3 };
 };

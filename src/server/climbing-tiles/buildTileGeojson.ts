@@ -1,8 +1,7 @@
 import { BBox, Geometry } from 'geojson';
 import { ClimbingTilesFeature, ClimbingTilesProperties } from '../../types';
 import { ClimbingFeaturesRecord } from './db';
-import { GeojsonFeature } from './overpass/overpassToGeojsons';
-import { LineString, OsmId } from '../../services/types';
+import { OsmId } from '../../services/types';
 
 // rows or columns count
 const COUNT = 500;
@@ -55,11 +54,12 @@ const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
     ? { type: 'LineString', coordinates: line }
     : { type: 'Point', coordinates: [lon, lat] };
 
-  const { name, nameRaw, routeCount, hasImages, gradeId } = record;
+  const { name, nameRaw, routeCount, hasImages, gradeId, histogramCode } =
+    record;
   const label = name ? name : nameRaw;
   const properties: ClimbingTilesProperties =
     type === 'area' || type === 'crag'
-      ? { type, label, routeCount: routeCount ?? 0, hasImages }
+      ? { type, label, routeCount: routeCount ?? 0, hasImages, histogramCode }
       : type === 'gym' || type === 'ferrata'
         ? { type, label }
         : type === 'route'

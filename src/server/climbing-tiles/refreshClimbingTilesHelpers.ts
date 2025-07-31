@@ -1,9 +1,10 @@
-import { GeojsonFeature } from './overpass/overpassToGeojsons';
 import { FeatureTags, LineString, LonLat, Point } from '../../services/types';
 import { ClimbingFeaturesRecord } from './db';
 import { removeDiacritics } from './utils';
 import { getDifficulty } from '../../services/tagging/climbing/routeGrade';
 import { GRADE_TABLE } from '../../services/tagging/climbing/gradeData';
+import { encodeHistogram } from './overpass/histogram';
+import { GeojsonFeature } from './overpass/types';
 
 export const centerGeometry = (
   feature: GeojsonFeature,
@@ -87,6 +88,7 @@ export const recordsFactory = (log: (message: string) => void) => {
         feature.geometry.type === 'LineString'
           ? (JSON.stringify(feature.geometry.coordinates) as unknown as any) // careful, pg and rest handles differently
           : null,
+      histogramCode: encodeHistogram(feature.properties.histogram),
     };
 
     records.push(record);
