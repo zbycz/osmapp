@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
-import Router, { useRouter } from 'next/router';
+import Router from 'next/router';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
@@ -13,6 +13,7 @@ import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
 import { UserMenu } from '../Map/TopMenu/UserMenu';
 import { setLastFeature } from '../../services/lastFeatureStorage';
 import { DirectionsButton } from '../Directions/DirectionsButton';
+import { usePanelShown } from '../utils/usePanelShown';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -115,21 +116,7 @@ const SearchBoxInner = ({ withoutPanel }) => {
 };
 
 export const SearchBox = () => {
-  const { featureShown, homepageShown } = useFeatureContext();
+  const isPanelShown = usePanelShown();
 
-  const router = useRouter();
-  if (router.asPath.startsWith('/directions')) {
-    return null;
-  }
-
-  const otherPageShown = router.pathname !== '/'; // TODO there was a bug in nextjs which sometimes gave some nonsense pathname like `?nxtPall` – CHECK!
-
-  const panelShown = router.pathname.match(/^\/(node|way|relation)\//)
-    ? featureShown
-    : // homepageShown => url '/'
-      // featureShown => url '/xxx/123', but skeleton can be shown earlier
-      // any other panel => url other than root
-      homepageShown || featureShown || otherPageShown;
-
-  return <SearchBoxInner withoutPanel={!panelShown} />;
+  return <SearchBoxInner withoutPanel={!isPanelShown} />;
 };
