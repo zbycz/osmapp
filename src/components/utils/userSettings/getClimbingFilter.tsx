@@ -25,6 +25,8 @@ export const mapClimbingFilter = {
   gradeInterval: undefined,
   minimumRoutes: undefined,
   isDefaultFilter: false,
+  isGradeIntervalDefault: true,
+  isMinimumRoutesDefault: true,
   callback: () => {},
 };
 const updateMapFilter = (
@@ -53,6 +55,8 @@ export type ClimbingFilter = {
   minimumRoutes: number;
   setMinimumRoutes: (minimumRoutes: number) => void;
   isDefaultFilter: boolean;
+  isGradeIntervalDefault: boolean;
+  isMinimumRoutesDefault: boolean;
   reset: () => void;
 };
 
@@ -76,9 +80,13 @@ export const getClimbingFilter = (
   const minimumRoutes = data?.minimumRoutes ?? DEFAULT_MINIMUM_ROUTES;
   const setMinimumRoutes = (num: number) => setFilter('minimumRoutes', num);
 
-  const isDefaultFilter =
-    minimumRoutes === DEFAULT_MINIMUM_ROUTES &&
-    isSameInterval(gradeInterval, defaultGradeInterval);
+  const isGradeIntervalDefault = isSameInterval(
+    gradeInterval,
+    defaultGradeInterval,
+  );
+  const isMinimumRoutesDefault = minimumRoutes === DEFAULT_MINIMUM_ROUTES;
+
+  const isDefaultFilter = isGradeIntervalDefault && isMinimumRoutesDefault;
 
   updateMapFilter(gradeInterval, minimumRoutes, isDefaultFilter);
 
@@ -89,6 +97,8 @@ export const getClimbingFilter = (
     minimumRoutes,
     setMinimumRoutes,
     isDefaultFilter,
+    isGradeIntervalDefault,
+    isMinimumRoutesDefault,
     reset: () => setUserSetting(SETTINGS_KEY, {} as ClimbingFilterSettings),
   };
 };

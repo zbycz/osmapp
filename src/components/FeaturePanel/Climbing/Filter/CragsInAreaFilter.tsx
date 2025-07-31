@@ -1,12 +1,8 @@
-import { Button } from '@mui/material';
 import React from 'react';
-import { t } from '../../../../services/intl';
-import { MinimumRoutesFilter } from './MinimumRoutesFilter';
-import { GradeFilter } from './GradeFilter';
 import { CragsInAreaFilterIcon } from './CragsInAreaFilterIcon';
-import { PopperWithArrow } from '../../../utils/PopperWithArrow';
-import { useMobileMode } from '../../../helpers';
 import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
+import { FilterPopover } from './FilterPopover';
+import { isMobileMode, useMobileMode } from '../../../helpers';
 
 export const CragsInAreaFilter = () => {
   const { climbingFilter } = useUserSettingsContext();
@@ -19,9 +15,6 @@ export const CragsInAreaFilter = () => {
     setOpen(!open);
     setAnchorEl(event.currentTarget);
   };
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   return (
     <>
@@ -30,25 +23,13 @@ export const CragsInAreaFilter = () => {
         onClick={handleToggle}
         touched={!isDefaultFilter}
       />
-      <PopperWithArrow
-        title={t('crag_filter.title')}
-        isOpen={open}
+      <FilterPopover
         anchorEl={anchorEl}
+        open={open}
+        setOpen={setOpen}
         placement={isMobileMode ? undefined : 'right-start'}
         offset={isMobileMode ? undefined : [-10, 15]}
-        sx={{ minWidth: 350 }}
-        addition={
-          <Button onClick={reset} size="small" color="secondary">
-            {t('crag_filter.reset')}
-          </Button>
-        }
-      >
-        <GradeFilter />
-        <MinimumRoutesFilter />
-        <Button variant="contained" sx={{ ml: 1, mb: 1 }} onClick={handleClose}>
-          {t('crag_filter.done')}
-        </Button>
-      </PopperWithArrow>
+      />
     </>
   );
 };
