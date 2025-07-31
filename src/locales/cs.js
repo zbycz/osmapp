@@ -425,6 +425,8 @@ export default {
   'climbing_badges.hazard_animal_nest_label': 'zvířecí hnízdo',
   'climbing_badges.hazard_death_fall_zone_label': 'smrtelná zóna',
   'climbing_badges.hazard_first_bolt_high_label': 'první jištění vysoko',
+  'climbing_badges.hazard_long_runout_label': 'odlezy',
+  'climbing_badges.hazard_bad_protection_label': 'špatné jištění',
   'climbing_badges.hazard_loose_rock_description': 'Nestabilní kameny, které se mohou při zatížení pohnout nebo vylomit.',
   'climbing_badges.hazard_rockfall_zone_description': 'Místo s rizikem pádu kamenů z výšky.',
   'climbing_badges.hazard_wet_description': 'Mokrá nebo kluzká skála, i za suchého počasí.',
@@ -434,4 +436,6 @@ export default {
   'climbing_badges.hazard_animal_nest_description': 'Na cestě je hnízdo ptáků, vos nebo jiných zvířat.',
   'climbing_badges.hazard_death_fall_zone_description': 'Pád zde může mít fatální následky (dopad na polici, zem apod.).',
   'climbing_badges.hazard_first_bolt_high_description': 'První jištění je neobvykle vysoko, což může zvýšit riziko pádu na zem před jeho cvaknutím.',
+  'climbing_badges.hazard_long_runout_description': 'Mezi jištěním jsou dlouhé odlezy, což může znamenat delší pády nebo vyšší riziko zranění.',
+  'climbing_badges.hazard_bad_protection_description': 'Dostupné jištění je zastaralé, zkorodované nebo jinak nespolehlivé.',
 };

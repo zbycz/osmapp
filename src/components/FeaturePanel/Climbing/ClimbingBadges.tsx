@@ -113,6 +113,16 @@ const climbingHazards = {
     label: 'climbing_badges.hazard_first_bolt_high_label',
     description: 'climbing_badges.hazard_first_bolt_high_description',
   },
+  long_runout: {
+    value: 'climbing:hazard:long_runout',
+    label: 'climbing_badges.hazard_long_runout_label',
+    description: 'climbing_badges.hazard_long_runout_description',
+  },
+  bad_protection: {
+    value: 'climbing:hazard:bad_protection',
+    label: 'climbing_badges.hazard_bad_protection_label',
+    description: 'climbing_badges.hazard_bad_protection_description',
+  },
 } as const;
 
 const renderTitle = (label, tagValue: string) => {
