@@ -3,19 +3,20 @@
 
 create table climbing_features
 (
-  id           serial
+  id              serial
     primary key,
-  type         text             not null,
-  lon          double precision not null,
-  lat          double precision not null,
-  "osmType"    text             not null,
-  "osmId"      bigint           not null,
-  name         text,
-  "routeCount" integer,
-  "nameRaw"    text,
-  "hasImages"  boolean,
-  line         json,
-  "gradeId"    integer
+  type            text             not null,
+  lon             double precision not null,
+  lat             double precision not null,
+  "osmType"       text             not null,
+  "osmId"         bigint           not null,
+  name            text,
+  "routeCount"    integer,
+  "nameRaw"       text,
+  "hasImages"     boolean,
+  line            json,
+  "gradeId"       integer,
+  "histogramCode" text
 );
 
 alter table climbing_features

@@ -1,7 +1,7 @@
 import { Client } from 'pg';
-import { OsmResponse } from './overpass/overpassToGeojsons';
 import { ClimbingFeaturesRecord, getClient } from './db';
 import format from 'pg-format';
+import { OsmResponse } from './overpass/types';
 
 type TileStats =
   | {}

@@ -1,4 +1,4 @@
-import { OsmResponse, overpassToGeojsons } from './overpass/overpassToGeojsons';
+import { overpassToGeojsons } from './overpass/overpassToGeojsons';
 import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
 import format from 'pg-format';
@@ -12,6 +12,7 @@ import {
   recordsFactory,
 } from './refreshClimbingTilesHelpers';
 import { cacheTile000 } from './getClimbingTile';
+import { OsmResponse } from './overpass/types';
 
 const fetchFromOverpass = async () => {
   if (process.env.NODE_ENV === 'development') {
