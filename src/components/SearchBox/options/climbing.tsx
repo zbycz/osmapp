@@ -68,11 +68,7 @@ export const ClimbingRow = ({ option, inputValue }: Props) => {
   return (
     <>
       <IconPart>
-        <PoiIcon
-          tags={type === 'group' ? { climbing: 'area' } : undefined}
-          ico="climbing"
-          size={20}
-        />
+        <PoiIcon tags={{ climbing: type }} ico="climbing" size={20} />
         <div>{distance}</div>
       </IconPart>
       <Grid size={{ xs: 12 }}>

@@ -111,19 +111,6 @@ const updateData = async () => {
   }
   const filteredFeatures = doClimbingFilter(features);
 
-  // if (mapClimbingFilter.gradeInterval) {
-  //   mapIdlePromise.then((map) => {
-  //     map.setGlobalStateProperty(
-  //       'minGrade',
-  //       mapClimbingFilter.gradeInterval[0],
-  //     );
-  //     map.setGlobalStateProperty(
-  //       'maxGrade',
-  //       mapClimbingFilter.gradeInterval[1],
-  //     );
-  //   });
-  // }
-
   map?.getSource<GeoJSONSource>(CLIMBING_TILES_SOURCE)?.setData({
     type: 'FeatureCollection' as const,
     features: filteredFeatures.map(processFeature),
