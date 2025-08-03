@@ -57,6 +57,7 @@
     "osm-auth": "^3.0.0",
     "pg": "^8.16.2",
     "pg-format": "^1.0.4",
+    "qrcode.react": "^4.2.0",
     "react": "^19.1.0",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^19.1.0",

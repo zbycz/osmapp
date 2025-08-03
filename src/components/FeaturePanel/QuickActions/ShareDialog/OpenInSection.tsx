@@ -1,9 +1,24 @@
-import { Typography } from '@mui/material';
+import {
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Stack,
+  Typography,
+} from '@mui/material';
 import { useGetItems } from './useGetItems';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import styled from '@emotion/styled';
 import { t } from '../../../../services/intl';
 import React from 'react';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { QRCodeSVG } from 'qrcode.react';
+import { useTheme } from '@emotion/react';
+
+const AccordionStyle = {
+  '&:before': {
+    backgroundColor: 'transparent !important',
+  },
+};
 
 const StyledUl = styled.ul`
   list-style: none;
@@ -11,64 +26,75 @@ const StyledUl = styled.ul`
   margin: 0;
 `;
 
-const StyledLi = styled.li`
-  line-height: 35px;
-  padding-bottom: 5px;
-
-  svg {
-    font-size: 10px;
-    color: #bbb;
-    position: relative;
-    top: -4px;
-    left: 5px;
-  }
-
-  img {
-    max-width: 35px;
-    max-height: 35px;
-    vertical-align: middle;
-  }
-`;
-
 type LinkItemProps = {
   href: string;
   label: string;
-  image?: string;
 };
 
-const ImageWrapper = styled.div`
+const OpenInNewContainer = styled.div`
+  margin-left: 8px;
   display: inline-block;
-  margin-right: 11px;
-  width: 35px;
-  text-align: center;
-  vertical-align: middle;
+  position: relative;
+  top: 2px;
 `;
 
-const Image = ({ image, label }: { image: string; label: string }) => (
-  <ImageWrapper>
-    <img src={image} alt={`Logo of ${label}`} />
-  </ImageWrapper>
-);
-
-const LinkItem = ({ href, label, image }: LinkItemProps) => (
-  <StyledLi>
-    <a href={href} target="_blank">
-      {image && <Image image={image} label={label} />}
-      {label}
-      <OpenInNew />
-    </a>
-  </StyledLi>
+const LinkItem = ({ href, label }: LinkItemProps) => (
+  <a href={href} target="_blank" onClick={(e) => e.stopPropagation()}>
+    {t('sharedialog.openin')} {label}
+    <OpenInNewContainer>
+      <OpenInNew fontSize={'inherit'} />
+    </OpenInNewContainer>
+  </a>
 );
 
 export const OpenInSection = () => {
   const { items } = useGetItems();
+  const theme = useTheme();
+  const [expanded, setExpanded] = React.useState<number | undefined>(undefined);
 
   return (
     <section>
       <Typography variant="overline">{t('sharedialog.openin')}</Typography>
+
       <StyledUl>
-        {items.map(({ label, href, image }) => (
-          <LinkItem key={label} href={href} label={label} image={image} />
+        {items.map(({ label, href, image }, index) => (
+          <Accordion
+            disableGutters={true}
+            elevation={0}
+            sx={AccordionStyle}
+            key={label}
+            expanded={index === expanded}
+            onChange={() => {
+              setExpanded(index === expanded ? undefined : index);
+            }}
+          >
+            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+              <Typography variant="body1">{label}</Typography>
+            </AccordionSummary>
+            <AccordionDetails>
+              <Stack direction="column" gap={2}>
+                <QRCodeSVG
+                  value={href}
+                  size={128}
+                  level="M"
+                  bgColor="transparent"
+                  fgColor={theme.palette.text.primary}
+                  imageSettings={
+                    image
+                      ? {
+                          src: image,
+                          width: 32,
+                          height: 32,
+                          excavate: true,
+                        }
+                      : undefined
+                  }
+                />
+
+                <LinkItem href={href} label={label} />
+              </Stack>
+            </AccordionDetails>
+          </Accordion>
         ))}
       </StyledUl>
     </section>

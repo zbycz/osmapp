@@ -9,6 +9,7 @@ import { useFeatureContext } from '../../../utils/FeatureContext';
 import { getLabel } from '../../../../helpers/featureLabel';
 import { useMobileMode } from '../../../helpers';
 import CloseIcon from '@mui/icons-material/Close';
+import { QrCodeSection } from './QrCodeSection';
 
 type CloseButtonProps = {
   onClose: () => void;
@@ -43,6 +44,7 @@ export const ShareDialog = ({ open, onClose }: Props) => {
       </DialogTitle>
       <DialogContent sx={isMobileMode ? undefined : { minWidth: 480 }}>
         <LinkSection />
+        <QrCodeSection />
         <CoordinateSection />
         <OpenInSection />
         <ImageAttribution />
