@@ -2,7 +2,10 @@ import { Feature } from '../../../../services/types';
 import React, { forwardRef } from 'react';
 import styled from '@emotion/styled';
 import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
-import { getDifficulties } from '../../../../services/tagging/climbing/routeGrade';
+import {
+  getDifficulties,
+  getGradeIndexFromTags,
+} from '../../../../services/tagging/climbing/routeGrade';
 import CheckIcon from '@mui/icons-material/Check';
 import { getWikimediaCommonsPhotoPathKeys } from '../utils/photo';
 import { RouteNumber } from '../RouteNumber';
@@ -45,9 +48,8 @@ const StyledChip = styled(Chip)`
   height: 18px;
 `;
 
-const RouteName = styled.div<{ opacity: number }>`
+const RouteName = styled.div`
   flex: 1;
-  opacity: ${({ opacity }) => opacity};
   display: flex;
   gap: 8px;
   position: relative;
@@ -55,9 +57,8 @@ const RouteName = styled.div<{ opacity: number }>`
   user-select: text;
 `;
 
-const RouteDescription = styled.div<{ opacity: number }>`
+const RouteDescription = styled.div`
   font-size: 10px;
-  opacity: ${({ opacity }) => opacity};
   color: ${({ theme }) => theme.palette.text.secondary};
   user-select: text;
 `;
@@ -68,7 +69,7 @@ const RouteGrade = styled.div``;
 
 const Row = styled('a', {
   shouldForwardProp: (prop) => !prop.startsWith('$'),
-})<{ $isHoverHighlighted: boolean }>`
+})<{ $isHoverHighlighted: boolean; $isVisible: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -80,6 +81,7 @@ const Row = styled('a', {
   cursor: pointer;
   padding: 8px;
   transition: all 0.1s;
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0.2)};
   *,
   &:focus {
     text-decoration: none;
@@ -152,6 +154,9 @@ export const ClimbingRouteTableRow = forwardRef<
     const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
     const { open: openEditDialog } = useEditDialogContext();
     const isMobileMode = useMobileMode();
+    const { climbingFilter } = useUserSettingsContext();
+    const { gradeInterval } = climbingFilter;
+    const [minIndex, maxIndex] = gradeInterval;
 
     if (!feature) return null;
 
@@ -183,9 +188,14 @@ export const ClimbingRouteTableRow = forwardRef<
       href: routeDetailUrl,
       locale: intl.lang,
     };
+
+    const gradeIndex = getGradeIndexFromTags(feature.tags);
+    const isVisible = gradeIndex >= minIndex && gradeIndex <= maxIndex;
+
     return (
       <Container ref={ref}>
         <Row
+          $isVisible={isVisible}
           onClick={(e) => {
             onClick(e);
             e.preventDefault();
@@ -202,7 +212,7 @@ export const ClimbingRouteTableRow = forwardRef<
             </RouteNumber>
           </RoutePhoto>
           <Stack justifyContent="stretch" flex={1}>
-            <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
+            <RouteName>
               <Typography variant="inherit" component="h3">
                 {feature.tags?.name}
               </Typography>
@@ -225,14 +235,14 @@ export const ClimbingRouteTableRow = forwardRef<
             </RouteName>
 
             {feature.tags?.description && (
-              <RouteDescription opacity={photoPathsCount === 0 ? 0.5 : 1}>
+              <RouteDescription>
                 <Typography variant="inherit" component="p">
                   {feature.tags?.description}
                 </Typography>
               </RouteDescription>
             )}
             {feature.tags?.author && (
-              <RouteAuthor opacity={0.5}>{feature.tags?.author}</RouteAuthor>
+              <RouteAuthor>{feature.tags?.author}</RouteAuthor>
             )}
           </Stack>
           <RouteGrade>
