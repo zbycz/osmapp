@@ -452,6 +452,10 @@ export default {
   weather: 'Weather',
 
   'climbing_tiles.stats': `Refreshed: 1× / night<br />Last refresh: __lastRefresh__<br />OSM timestamp: __osmTime__<br/>CDN cache: 1 hour`,
+  'climbing.type.area': 'Climbing area',
+  'climbing.type.crag': 'Climbing crag',
+  'climbing.type.gym': 'Climbing gym',
+  'climbing.type.ferrata': 'Via Ferrata',
 
   'climbing_badges.type_boulder_label': 'boulder',
   'climbing_badges.type_trad_label': 'trad',
