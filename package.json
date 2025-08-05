@@ -30,7 +30,7 @@
     "@mui/lab": "^7.0.0-beta.14",
     "@mui/material": "^7.1.2",
     "@mui/material-nextjs": "^7.1.1",
-    "@openstreetmap/id-tagging-schema": "^6.11.0",
+    "@openstreetmap/id-tagging-schema": "^6.12.0",
     "@sentry/nextjs": "^8.34.0",
     "@teritorio/openmaptiles-gl-language": "^1.5.4",
     "@xmldom/xmldom": "^0.9.8",
