@@ -1,19 +1,18 @@
 import fieldsJson from '@openstreetmap/id-tagging-schema/dist/fields.json';
 import presetsJson from '@openstreetmap/id-tagging-schema/dist/presets.json';
-import { Fields, RawFields } from './types/Fields';
+import { Fields } from './types/Fields';
 import { Presets } from './types/Presets';
 import { publishDbgObject } from '../../utils';
-import { ourFields, ourPresets } from './ourPresets';
+import { modifyPresets, ourFields } from './ourPresets';
 
 export const allFields = { ...fieldsJson, ...ourFields } as unknown as Fields;
 Object.keys(allFields).forEach((fieldKey) => {
   allFields[fieldKey].fieldKey = fieldKey;
 });
 
-export const allPresets = {
-  ...presetsJson,
-  ...ourPresets,
-} as unknown as Presets;
+export const allPresets: Presets = modifyPresets(
+  presetsJson as unknown as Presets,
+);
 Object.keys(allPresets).forEach((presetKey) => {
   allPresets[presetKey].presetKey = presetKey;
 });
