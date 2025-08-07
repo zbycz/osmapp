@@ -225,6 +225,7 @@ export default {
   'editdialog.climbing_areas': 'Lezecké oblasti',
   'editdialog.climbing_crags': 'Lezecké sektory',
   'editdialog.climbing_routes': 'Lezecké cesty',
+  'editdialog.open_all': 'Otevřít vše',
   'editdialog.members': 'Členové',
   'editdialog.members.name': 'Název',
   'editdialog.members.add_member': 'Přidat člena',

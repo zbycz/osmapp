@@ -265,6 +265,7 @@ export default {
   'editdialog.climbing_areas': 'Climbing areas',
   'editdialog.climbing_crags': 'Climbing crags',
   'editdialog.climbing_routes': 'Climbing routes',
+  'editdialog.open_all': 'Open all',
   'editdialog.members': 'Members',
   'editdialog.members.name': 'Name',
   'editdialog.members.add_member': 'Add member',

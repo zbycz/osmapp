@@ -3,6 +3,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Chip,
   List,
   Stack,
@@ -16,9 +17,10 @@ import { AddMemberForm } from './AddMemberForm';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { CragIcon } from '../../../Climbing/CragIcon';
 import { Setter } from '../../../../../types';
-import { useHandleItemClick } from '../useHandleItemClick';
+import { useHandleItemClick, useOpenAll } from '../useHandleItemClick';
 import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
 import { useCurrentItem } from '../../EditContext';
+import { Members } from '../../useEditItems';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -64,12 +66,21 @@ const AccordionComponent = ({
   membersLength,
   isExpanded,
   setIsExpanded,
+  members,
 }: {
   children: React.ReactNode;
   membersLength?: number;
   isExpanded?: boolean;
   setIsExpanded?: Setter<boolean>;
+  members: Members;
 }) => {
+  const openAll = useOpenAll(members.map(({ shortId }) => shortId));
+
+  const handleOpenAll = (e) => {
+    openAll();
+    e.stopPropagation();
+  };
+
   return (
     <Accordion disableGutters elevation={0} square expanded={isExpanded}>
       <AccordionSummary
@@ -78,11 +89,24 @@ const AccordionComponent = ({
         id="panel1-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <Stack direction="row" spacing={2} alignItems="center">
-          <SectionName />
-          {membersLength ? (
-            <Chip size="small" label={membersLength} variant="outlined" />
-          ) : null}
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          justifyContent="space-between"
+          flex="1"
+        >
+          <Stack direction="row" spacing={2} alignItems="center">
+            <SectionName />
+            {membersLength ? (
+              <Chip size="small" label={membersLength} variant="outlined" />
+            ) : null}
+          </Stack>
+          {isExpanded && (
+            <Button size="small" color="secondary" onClick={handleOpenAll}>
+              {t('editdialog.open_all')}
+            </Button>
+          )}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
@@ -107,6 +131,7 @@ export const MembersEditor = () => {
       membersLength={members?.length}
       isExpanded={isExpanded}
       setIsExpanded={setIsExpanded}
+      members={members}
     >
       {members?.map((member) => (
         <FeatureRow
