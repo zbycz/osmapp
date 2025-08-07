@@ -51,9 +51,11 @@ export const WikimediaCommonsEditor = ({ k }: { k: string }) => {
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTag(
       e.target.name,
-      e.target.value
-        .replace(/^https:\/\/commons\.wikimedia\.org\/wiki\//, '')
-        .replaceAll('_', ' '),
+      decodeURI(
+        e.target.value
+          .replace(/^https:\/\/commons\.wikimedia\.org\/wiki\//, '')
+          .replaceAll('_', ' '),
+      ),
     );
   };
 
