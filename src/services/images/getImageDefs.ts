@@ -123,7 +123,7 @@ const getImagesFromTags = (tags: FeatureTags) => {
     ...entries.filter(commonsCategory),
     ...entries.filter(mapillary),
     ...entries.filter(panoramax),
-    ...entries.filter(website),
+    ...(tags.climbing ? [] : entries.filter(website)), // don't request og-image for climbing=* ... TODO maybe other tags as well??
   ];
 
   return imageTags
