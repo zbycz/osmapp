@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import styled from '@emotion/styled';
 import SearchIcon from '@mui/icons-material/Search';
 import { CircularProgress, IconButton, Paper } from '@mui/material';
-import Router from 'next/router';
+import Router, { useRouter } from 'next/router';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { AutocompleteInput } from './AutocompleteInput';
 import { t } from '../../services/intl';
@@ -117,6 +117,11 @@ const SearchBoxInner = ({ withoutPanel }) => {
 
 export const SearchBox = () => {
   const isPanelShown = usePanelShown();
+
+  const router = useRouter();
+  if (router.asPath.startsWith('/directions')) {
+    return null;
+  }
 
   return <SearchBoxInner withoutPanel={!isPanelShown} />;
 };
