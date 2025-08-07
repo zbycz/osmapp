@@ -30,7 +30,7 @@ const StyledScrollbars = styled(Scrollbars)`
   -webkit-overflow-scrolling: touch;
 `;
 export const Slider = ({ children }) => (
-  <StyledScrollbars universal autoHide>
+  <StyledScrollbars universal autoHide suppressHydrationWarning={true}>
     {children}
   </StyledScrollbars>
 );
