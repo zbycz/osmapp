@@ -429,6 +429,8 @@ export default {
   'climbing_badges.hazard_vegetation_label': 'vegetace',
   'climbing_badges.hazard_wet_description': 'Mokrá nebo kluzká skála, i za suchého počasí.',
   'climbing_badges.hazard_wet_label': 'mokré',
+  'climbing_badges.hazard_slippery_rock_label': 'klouzavá skála',
+  'climbing_badges.hazard_slippery_rock_description': 'Skála je ohlazená a kluzká vlivem častého lezení, typicky na vápenci.',
   'climbing_badges.inclination_horizontal_description': 'Cesta vede po vodorovné stěně nebo polici, horizontální travers.',
   'climbing_badges.inclination_horizontal_label': 'horizontální',
   'climbing_badges.inclination_label': 'Sklon lezení',

@@ -40,6 +40,7 @@ export const ClimbingMultiValues = () => (
         'long_runout',
         'bad_protection',
         'dirty_rock',
+        'slippery_rock',
       ]}
       editableValues={['first_bolt_high', 'long_runout']}
     />

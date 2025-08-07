@@ -485,6 +485,9 @@ export default {
   'climbing_badges.hazard_vegetation_label': 'vegetation',
   'climbing_badges.hazard_wet_description': 'Slippery or wet rock, even in dry weather.',
   'climbing_badges.hazard_wet_label': 'wet',
+  'climbing_badges.hazard_slippery_rock_label': 'slippery rock',
+  'climbing_badges.hazard_slippery_rock_description':
+    'The rock surface is worn smooth and slippery, often due to frequent traffic, especially on limestone.',
   'climbing_badges.inclination_horizontal_description': 'Traversing route that moves sideways rather than upwards.',
   'climbing_badges.inclination_horizontal_label': 'horizontal',
   'climbing_badges.inclination_label': 'Climbing inclination',

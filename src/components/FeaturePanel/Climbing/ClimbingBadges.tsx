@@ -128,6 +128,11 @@ const climbingHazards = {
     label: 'climbing_badges.hazard_dirty_rock_label',
     description: 'climbing_badges.hazard_dirty_rock_description',
   },
+  slippery_rock: {
+    value: 'climbing:hazard:slippery_rock',
+    label: 'climbing_badges.hazard_slippery_rock_label',
+    description: 'climbing_badges.hazard_slippery_rock_description',
+  },
 } as const;
 
 const renderTitle = (label, tagValue: string) => {
