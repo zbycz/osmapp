@@ -1,4 +1,4 @@
-import { useCurrentItem, useEditContext } from '../EditContext';
+import { useCurrentItem } from '../EditContext';
 import { ItemHeading } from './FeatureEditSection/ItemHeading';
 import { PlaceCancelledToggle } from './FeatureEditSection/OptionsEditor';
 import { PresetSelect } from './FeatureEditSection/PresetSelect/PresetSelect';
@@ -8,10 +8,11 @@ import { LocationEditor } from './FeatureEditSection/LocationEditor/LocationEdit
 import { ParentsEditor } from './FeatureEditSection/ParentsEditor';
 import { MembersEditor } from './FeatureEditSection/MembersEditor';
 import React from 'react';
+import { ClimbingMultiValues } from './FeatureEditSection/ClimbingMultiValues';
 
 export const ItemEditSection = () => {
-  const { toBeDeleted } = useCurrentItem();
-  const { items } = useEditContext();
+  const { toBeDeleted, tags } = useCurrentItem();
+  const isClimbing = tags.climbing;
   if (toBeDeleted) {
     return (
       <>
@@ -26,6 +27,7 @@ export const ItemEditSection = () => {
       <ItemHeading />
       <PresetSelect />
       <MajorKeysEditor />
+      {isClimbing && <ClimbingMultiValues />}
       <TagsEditor />
       <LocationEditor />
       <ParentsEditor />

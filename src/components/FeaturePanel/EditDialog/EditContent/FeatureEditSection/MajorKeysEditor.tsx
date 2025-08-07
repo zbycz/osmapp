@@ -14,20 +14,20 @@ import { TextFieldWithCharacterCount } from './helpers';
 import { WikimediaCommonsEditor } from './WikimediaCommonsEditor';
 import { GradeSelect } from './GradeSelect';
 
-export const climbingRouteMajorKeys = [
-  'author',
-  'climbing:grade:uiaa',
-  'climbing:grade:french',
-  'climbing:boulder',
-  'length',
-];
-
 export const majorKeys = [
   'name',
   'description',
   'website',
   'phone',
   'opening_hours',
+];
+
+const climbingRouteMajorKeys = [
+  'author',
+  'climbing:grade:uiaa',
+  'climbing:grade:french',
+  'climbing:boulder',
+  'climbing:length',
 ];
 
 const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
@@ -65,14 +65,14 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
   };
 };
 
-// eslint-disable-next-line max-lines-per-function
-export const MajorKeysEditor = () => {
+export const MajorKeysEditor: React.FC = () => {
   const { focusTag } = useEditDialogContext();
   const { tags, setTag } = useCurrentItem();
 
-  // TODO this code will be replaced when implementing id presets fields... probably not happening
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
-  const data = getData(nextWikimediaCommonsIndex + 1, isClimbingRoute(tags));
+  const isRoute = isClimbingRoute(tags);
+  const data = getData(nextWikimediaCommonsIndex + 1, isRoute);
+
   const [activeMajorKeys, setActiveMajorKeys] = useState(() =>
     data.keys.filter((k) => !!tags[k]),
   );
@@ -84,11 +84,10 @@ export const MajorKeysEditor = () => {
   );
 
   useEffect(() => {
-    // name can be clicked even though it was built from preset name
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
       setActiveMajorKeys((arr) => [...arr, 'name']);
     }
-  }, [focusTag]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeMajorKeys, focusTag]);
 
   const getInputElement = (k: string) => {
     if (!data.keys?.includes(k)) return null;
@@ -127,25 +126,26 @@ export const MajorKeysEditor = () => {
   };
 
   return (
-    <Box mb={3}>
+    <Box>
       {activeMajorKeys.map((k) => (
-        <div key={k}>{getInputElement(k)}</div>
+        <Box key={k} mb={2}>
+          {getInputElement(k)}
+        </Box>
       ))}
+
       {!!inactiveMajorKeys.length && (
         <>
           <Typography variant="body1" component="span" color="textSecondary">
             {t('editdialog.add_major_tag')}:
           </Typography>
           {inactiveMajorKeys.map((k) => (
-            <React.Fragment key={k}>
-              {' '}
-              <Button
-                size="small"
-                onClick={() => setActiveMajorKeys((arr) => [...arr, k])}
-              >
-                {data.names[k]}
-              </Button>
-            </React.Fragment>
+            <Button
+              key={k}
+              size="small"
+              onClick={() => setActiveMajorKeys((arr) => [...arr, k])}
+            >
+              {data.names[k]}
+            </Button>
           ))}
         </>
       )}
