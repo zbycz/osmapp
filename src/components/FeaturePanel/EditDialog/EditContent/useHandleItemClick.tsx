@@ -1,5 +1,5 @@
 import { EditDataItem } from '../useEditItems';
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import { useEditContext } from '../EditContext';
 import { getApiId } from '../../../../services/helpers';
 import { fetchFreshItem } from '../itemsHelpers';
@@ -29,5 +29,18 @@ export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
         setCurrent(shortId);
       }
     }
+  };
+};
+
+export const useOpenAll = (shortIds: string[]) => {
+  const { addItem, items } = useEditContext();
+  return () => {
+    shortIds.forEach(async (shortId) => {
+      const apiId = getApiId(shortId);
+      if (!isInItems(items, shortId)) {
+        const newItem = await fetchFreshItem(apiId);
+        addItem(newItem);
+      }
+    });
   };
 };

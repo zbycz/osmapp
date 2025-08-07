@@ -3,6 +3,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Button,
   Chip,
   List,
   Stack,
@@ -19,7 +20,7 @@ import { useCurrentItem, useEditContext } from '../../EditContext';
 import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
-import { useHandleItemClick } from '../useHandleItemClick';
+import { useHandleItemClick, useOpenAll } from '../useHandleItemClick';
 import { Feature } from '../../../../../services/types';
 
 const SectionName = () => {
@@ -97,6 +98,14 @@ export const ParentsEditor = () => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const handleClick = useHandleItemClick(setIsExpanded);
   const parents = useGetParents();
+  const openAll = useOpenAll(
+    parents.map((parent) => getShortId(parent.osmMeta)),
+  );
+
+  const handleOpenAll = (e) => {
+    openAll();
+    e.stopPropagation();
+  };
 
   if (!parents || parents.length === 0) {
     return null;
@@ -110,11 +119,24 @@ export const ParentsEditor = () => {
         id="panel1-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">
-            <SectionName />
-          </Typography>
-          <Chip size="small" label={parents.length} variant="outlined" />
+        <Stack
+          direction="row"
+          spacing={2}
+          alignItems="center"
+          justifyContent="space-between"
+          flex="1"
+        >
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Typography variant="button">
+              <SectionName />
+            </Typography>
+            <Chip size="small" label={parents.length} variant="outlined" />
+          </Stack>
+          {isExpanded && (
+            <Button size="small" color="secondary" onClick={handleOpenAll}>
+              {t('editdialog.open_all')}
+            </Button>
+          )}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
