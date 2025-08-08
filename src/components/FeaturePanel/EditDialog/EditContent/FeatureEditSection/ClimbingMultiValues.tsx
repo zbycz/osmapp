@@ -22,7 +22,7 @@ export const ClimbingMultiValues = () => (
     <MultiValueKeyEditor
       baseKey="climbing:inclination"
       translationKey="climbing_badges.inclination"
-      values={['vertical', 'horizontal', 'roof', 'slab']}
+      values={['vertical', 'slab', 'overhang', 'traverse', 'roof']}
     />
     <MultiValueKeyEditor
       baseKey="climbing:hazard"
