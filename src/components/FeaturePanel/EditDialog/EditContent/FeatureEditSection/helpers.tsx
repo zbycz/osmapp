@@ -17,12 +17,14 @@ type TextFieldProps = {
   autoFocus?: boolean;
   error?: boolean;
   helperText?: string;
+  errorText?: string;
 };
 
 export const TextFieldWithCharacterCount = ({
   k,
   error,
   helperText,
+  errorText,
   label,
   autoFocus,
   onChange,
@@ -59,7 +61,11 @@ export const TextFieldWithCharacterCount = ({
         slotProps={{ formHelperText: { component: 'div' } }}
         helperText={
           <Stack direction="row" spacing={1}>
-            {isValidationReadyToCheck && helperText}
+            {errorText
+              ? isValidationReadyToCheck
+                ? errorText
+                : helperText
+              : helperText}
             <CharacterCount
               count={value?.length}
               max={MAX_INPUT_LENGTH}
