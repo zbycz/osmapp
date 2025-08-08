@@ -5,6 +5,7 @@ import { t } from '../../../../../services/intl';
 import OpenInNew from '@mui/icons-material/OpenInNew';
 import React from 'react';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
+import { isClimbingRoute } from '../../../../../utils';
 
 const UploadButton = () => (
   <div>
@@ -47,7 +48,8 @@ export const WikimediaCommonsEditor = ({ k }: { k: string }) => {
   const error = isWikimediaCommonsFileNameInvalid(tags[k]);
   const index = getIndexFromWikimediaCommonsKey(k);
   const label = `${t('tags.wikimedia_commons_photo')}${index ? ` (${index})` : ''}`;
-
+  const isClimbingRouteOrCrag =
+    isClimbingRoute(tags) || tags.climbing === 'crag';
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTag(
       e.target.name,
@@ -64,8 +66,13 @@ export const WikimediaCommonsEditor = ({ k }: { k: string }) => {
       <Box flex={1}>
         <TextFieldWithCharacterCount
           label={label}
-          helperText={
+          errorText={
             error ? t('editdialog.upload_photo_filename_error') : undefined
+          }
+          helperText={
+            isClimbingRouteOrCrag
+              ? t('editdialog.wikimedia_commons_climbing_helper_text')
+              : undefined
           }
           error={error}
           k={k}
