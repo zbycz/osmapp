@@ -2,14 +2,16 @@ import React from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 export const addShortcutUnderline = (message: string, shortcut: string) => {
-  const firstLetter = message.substring(0, 1);
-  const rest = message.substring(1);
+  const shortcutUp = shortcut.toUpperCase();
+  const messageUp = message.toUpperCase();
 
-  if (firstLetter.toUpperCase() === shortcut.toUpperCase()) {
+  if (messageUp.includes(shortcutUp)) {
+    const position = messageUp.indexOf(shortcutUp);
     return (
       <>
+        {message.substring(0, position)}
         <u>{shortcut}</u>
-        {rest}
+        {message.substring(position + 1)}
       </>
     );
   }

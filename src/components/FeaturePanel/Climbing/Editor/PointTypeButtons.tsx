@@ -61,7 +61,11 @@ export const PointTypeButtons = ({ setShowRouteMarksMenu }: Props) => {
   return (
     <>
       {pointTypes.map(({ message, type, shortcut }) => (
-        <Button key={type} onClick={() => onPointTypeChange(type)}>
+        <Button
+          key={type}
+          title={t('shortcut', { shortcut })}
+          onClick={() => onPointTypeChange(type)}
+        >
           {addShortcutUnderline(message, shortcut)}
         </Button>
       ))}
