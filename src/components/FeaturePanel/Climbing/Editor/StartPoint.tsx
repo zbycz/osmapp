@@ -58,13 +58,13 @@ export const StartPoint = ({
           x={x}
           y={y}
           index={0}
-          routeNumber={routeNumber}
+          routeIndex={routeNumber}
           type={undefined}
         />
       ) : (
         <NonEditablePoint isSelected={isSelected} x={x} y={y} />
       )}
-      <MouseTrackingLine routeNumber={routeNumber} />
+      <MouseTrackingLine routeIndex={routeNumber} />
       <RouteNumber x={x + routeNumberXShift} y={y} osmId={osmId}>
         {routeNumber}
       </RouteNumber>

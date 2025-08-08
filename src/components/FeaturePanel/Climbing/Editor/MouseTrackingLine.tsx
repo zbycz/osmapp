@@ -2,7 +2,11 @@ import React from 'react';
 import { PathWithBorder } from './PathWithBorder';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
-export const MouseTrackingLine = ({ routeNumber }) => {
+type Props = {
+  routeIndex: number;
+};
+
+export const MouseTrackingLine = ({ routeIndex }: Props) => {
   const {
     mousePosition,
     isRouteSelected,
@@ -13,7 +17,7 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     getPathForRoute,
   } = useClimbingContext();
 
-  const route = routes[routeNumber];
+  const route = routes[routeIndex];
   const path = getPathForRoute(route);
   const lastPoint = path[path.length - 1];
   const lastPointPositionInPx = getPixelPosition(lastPoint);
@@ -25,14 +29,14 @@ export const MouseTrackingLine = ({ routeNumber }) => {
     ? getPixelPosition(closerMousePositionPoint)
     : mousePosition;
 
-  const isSelected = isRouteSelected(routeNumber);
+  const isSelected = isRouteSelected(routeIndex);
 
   return (
     mousePositionSticked &&
     isSelected && (
       <PathWithBorder
         d={`M ${lastPointPositionInPx.x} ${lastPointPositionInPx.y} L ${mousePositionSticked.x} ${mousePositionSticked.y}`}
-        routeNumber={routeNumber}
+        routeNumber={routeIndex}
         isSelected={isSelected}
         route={route}
         opacity={0.7}

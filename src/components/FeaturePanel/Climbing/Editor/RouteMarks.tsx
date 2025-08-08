@@ -6,15 +6,13 @@ import { PulsedPoint } from './Points/PulsedPoint';
 import { Sling } from './Points/Sling';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Anchor } from './Points/Anchor';
-import { ClimbingRoute } from '../types';
 import { UnfinishedPoint } from './Points/UnfinishedPoint';
 
 type Props = {
-  route: ClimbingRoute;
-  routeNumber: number;
+  routeIndex: number;
 };
 
-export const RouteMarks = ({ route, routeNumber }: Props) => {
+export const RouteMarks = ({ routeIndex }: Props) => {
   const {
     getPixelPosition,
     isPointSelected,
@@ -23,12 +21,16 @@ export const RouteMarks = ({ route, routeNumber }: Props) => {
     isRouteSelected,
     isOtherRouteSelected,
     isEditMode,
+    routes,
   } = useClimbingContext();
-  const isSelected = isRouteSelected(routeNumber);
-  const isOtherSelected = isOtherRouteSelected(routeNumber);
+  const isSelected = isRouteSelected(routeIndex);
+  const isOtherSelected = isOtherRouteSelected(routeIndex);
+  const route = routes[routeIndex];
+  const path = getPathForRoute(route);
+
   return (
     <>
-      {getPathForRoute(route).map(({ x, y, type }, index) => {
+      {path.map(({ x, y, type }, index) => {
         const isBoltVisible = !isOtherSelected && type === 'bolt';
         const isAnchorVisible = !isOtherSelected && type === 'anchor';
         const isSlingVisible = !isOtherSelected && type === 'sling';
@@ -49,7 +51,7 @@ export const RouteMarks = ({ route, routeNumber }: Props) => {
         const xOffset = isSelected && isEditMode ? 15 : 0;
         return (
           // eslint-disable-next-line react/no-array-index-key
-          <React.Fragment key={`${routeNumber}-${index}-${x}-${y}`}>
+          <React.Fragment key={`${routeIndex}-${index}-${x}-${y}`}>
             {isThisRouteEditOrExtendMode && <PulsedPoint x={x} y={y} />}
 
             {isBoltVisible && (
@@ -102,7 +104,7 @@ export const RouteMarks = ({ route, routeNumber }: Props) => {
               y={position.y}
               type={type}
               index={index}
-              routeNumber={routeNumber}
+              routeIndex={routeIndex}
             />
           </React.Fragment>
         );

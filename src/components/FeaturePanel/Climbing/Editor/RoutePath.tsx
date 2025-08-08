@@ -15,7 +15,11 @@ const AddNewPoint = styled.circle`
   cursor: copy;
 `;
 
-export const RoutePath = ({ route, routeNumber }) => {
+type Props = {
+  routeIndex: number;
+};
+
+export const RoutePath = ({ routeIndex }: Props) => {
   const [tempPointPosition, setTempPointPosition] = useState<PositionPx | null>(
     null,
   );
@@ -33,9 +37,11 @@ export const RoutePath = ({ route, routeNumber }) => {
     getPathForRoute,
     svgRef,
     photoZoom,
+    routes,
   } = useClimbingContext();
-  const isSelected = isRouteSelected(routeNumber);
+  const isSelected = isRouteSelected(routeIndex);
   const machine = getMachine();
+  const route = routes[routeIndex];
   const path = getPathForRoute(route);
   const isMobileMode = useMobileMode();
 
@@ -56,7 +62,7 @@ export const RoutePath = ({ route, routeNumber }) => {
       machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute'
     ) {
-      if (!routeIndexHovered) setRouteIndexHovered(routeNumber);
+      if (!routeIndexHovered) setRouteIndexHovered(routeIndex);
 
       const mousePosition: PositionPx = {
         x: e.clientX,
@@ -75,21 +81,11 @@ export const RoutePath = ({ route, routeNumber }) => {
   };
 
   const onMouseEnter = () => {
-    setRouteIndexHovered(routeNumber);
+    setRouteIndexHovered(routeIndex);
   };
 
   const onMouseLeave = () => {
     setRouteIndexHovered(null);
-  };
-
-  const onMidpointAdd = (e) => {
-    if (tempPointPosition) {
-      machine.execute('addPointInBetween', {
-        hoveredPosition: tempPointPosition,
-        hoveredSegmentIndex: tempPointSegmentIndex,
-      });
-      e.stopPropagation();
-    }
   };
 
   const isMidpointAddScenario =
@@ -100,19 +96,23 @@ export const RoutePath = ({ route, routeNumber }) => {
     routeIndexHovered !== null;
 
   const isExtendingDifferentRoute =
-    machine.currentStateName === 'extendRoute' && !isRouteSelected(routeNumber);
+    machine.currentStateName === 'extendRoute' && !isRouteSelected(routeIndex);
 
-  const onClick = isMidpointAddScenario
-    ? onMidpointAdd
-    : (e) => {
-        if (isExtendingDifferentRoute) return;
-        if (isEditMode) {
-          machine.execute('editRoute', { routeNumber });
-        } else {
-          machine.execute('routeSelect', { routeNumber });
-        }
-        e.stopPropagation();
-      };
+  const onClick = (e) => {
+    if (isMidpointAddScenario) {
+      if (tempPointPosition) {
+        machine.execute('addPointInBetween', {
+          hoveredPosition: tempPointPosition,
+          hoveredSegmentIndex: tempPointSegmentIndex,
+        });
+      }
+    } else if (isEditMode) {
+      machine.execute('editRoute', { routeIndex });
+    } else {
+      machine.execute('routeSelect', { routeIndex });
+    }
+    e.stopPropagation();
+  };
 
   return (
     <>
@@ -120,41 +120,38 @@ export const RoutePath = ({ route, routeNumber }) => {
         d={`M0 0 ${pointsInString}`}
         isSelected={isSelected}
         route={route}
-        routeNumber={routeNumber}
+        routeNumber={routeIndex}
       />
 
       {!isExtendingDifferentRoute &&
-        path.length > 1 &&
-        path.map(({ x, y }, index) => {
-          if (path && index < path.length - 1) {
-            const position1 = getPixelPosition({ x, y, units: 'percentage' });
-            const position2 = getPixelPosition({
-              ...path[index + 1],
-              units: 'percentage',
-            });
+        path.length > 2 &&
+        path.slice(0, -1).map(({ x, y }, index) => {
+          const position1 = getPixelPosition({ x, y, units: 'percentage' });
+          const position2 = getPixelPosition({
+            ...path[index + 1],
+            units: 'percentage',
+          });
 
-            const desktopProps = {
-              onMouseEnter: onMouseEnter,
-              onMouseLeave: onMouseLeave,
-            };
-            return (
-              <InteractiveArea
-                // eslint-disable-next-line react/no-array-index-key
-                key={`${routeNumber}-${index}-${x}-${y}`}
-                stroke="transparent"
-                strokeWidth={15}
-                x1={position1.x}
-                y1={position1.y}
-                x2={position2.x}
-                y2={position2.y}
-                {...(isMobileMode ? {} : desktopProps)}
-                onMouseMove={(e) => onMouseMove(e, index)}
-                onClick={onClick}
-                cursor={isMidpointAddScenario ? 'copy' : 'pointer'}
-              />
-            );
-          }
-          return null;
+          const desktopProps = {
+            onMouseEnter: onMouseEnter,
+            onMouseLeave: onMouseLeave,
+          };
+          return (
+            <InteractiveArea
+              // eslint-disable-next-line react/no-array-index-key
+              key={`${routeIndex}-${index}-${x}-${y}`}
+              stroke="transparent"
+              strokeWidth={15}
+              x1={position1.x}
+              y1={position1.y}
+              x2={position2.x}
+              y2={position2.y}
+              {...(isMobileMode ? {} : desktopProps)}
+              onMouseMove={(e) => onMouseMove(e, index)}
+              onClick={onClick}
+              cursor={isMidpointAddScenario ? 'copy' : 'pointer'}
+            />
+          );
         })}
       {isMidpointAddScenario && tempPointPosition && (
         <AddNewPoint
@@ -168,7 +165,7 @@ export const RoutePath = ({ route, routeNumber }) => {
       )}
       {machine.currentStateName === 'extendRoute' &&
         routeIndexHovered === null && (
-          <MouseTrackingLine routeNumber={routeNumber} />
+          <MouseTrackingLine routeIndex={routeIndex} />
         )}
     </>
   );

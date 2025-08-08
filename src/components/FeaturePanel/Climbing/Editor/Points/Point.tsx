@@ -4,6 +4,7 @@ import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
 import { useMobileMode } from '../../../../helpers';
 import { usePointClickHandler } from '../utils';
+import { PointType } from '../../types';
 
 const ClickableArea = styled.circle``;
 
@@ -41,7 +42,15 @@ const usePointColor = (type, isHovered) => {
   };
 };
 
-export const Point = ({ x, y, type, index, routeNumber }) => {
+type Props = {
+  routeIndex: number;
+  index: number;
+  type: PointType;
+  x: number;
+  y: number;
+};
+
+export const Point = ({ x, y, type, index, routeIndex }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
   const {
     setPointSelectedIndex,
@@ -56,8 +65,8 @@ export const Point = ({ x, y, type, index, routeNumber }) => {
     isEditMode,
   } = useClimbingContext();
   const isMobileMode = useMobileMode();
-  const isSelected = isRouteSelected(routeNumber);
-  const isOtherSelected = isOtherRouteSelected(routeNumber);
+  const isSelected = isRouteSelected(routeIndex);
+  const isOtherSelected = isOtherRouteSelected(routeIndex);
   const { pointColor, pointStroke } = usePointColor(type, isHovered);
 
   const isPointOnRouteSelected = isSelected && isPointSelected(index);
@@ -70,7 +79,7 @@ export const Point = ({ x, y, type, index, routeNumber }) => {
     setIsHovered(true);
     const isLastPoint = getCurrentPath().length - 1 === index;
     if (!isLastPoint) {
-      setRouteIndexHovered(routeNumber);
+      setRouteIndexHovered(routeIndex);
     }
   };
 
