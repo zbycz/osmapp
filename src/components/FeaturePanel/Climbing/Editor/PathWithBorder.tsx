@@ -10,10 +10,10 @@ import {
 import { ClimbingRoute } from '../types';
 
 const RouteLine = styled.path`
-  pointer-events: all;
+  pointer-events: none;
 `;
 const RouteBorder = styled.path`
-  pointer-events: all;
+  pointer-events: none;
 `;
 
 type Props = {
@@ -22,7 +22,6 @@ type Props = {
   isSelected: boolean;
   route: ClimbingRoute;
   opacity?: number;
-  style?: Record<string, string>;
 };
 
 export const PathWithBorder = ({
@@ -31,7 +30,6 @@ export const PathWithBorder = ({
   isSelected,
   route,
   opacity,
-  style,
 }: Props) => {
   const config = useConfig();
   const theme = useTheme();
@@ -58,7 +56,6 @@ export const PathWithBorder = ({
         strokeLinejoin="round"
         fill="none"
         opacity={opacity ? opacity : isOtherSelected ? 0 : 1}
-        style={style}
       />
       <RouteLine
         d={d}
@@ -70,7 +67,6 @@ export const PathWithBorder = ({
         opacity={
           opacity ? opacity : isOtherSelected ? (isEditMode ? 1 : 0.6) : 1
         }
-        style={style}
       />
       {routeIndexHovered === routeNumber && (
         <RouteLine
@@ -81,7 +77,6 @@ export const PathWithBorder = ({
           strokeLinejoin="round"
           fill="none"
           opacity={opacity}
-          style={style}
         />
       )}
     </>
