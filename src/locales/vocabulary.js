@@ -17,6 +17,7 @@ export default {
   show_more: 'Show more',
   show_less: 'Show less',
   url_not_found_toast: 'Requested URL not found, check your address bar.',
+  shortcut: 'Keyboard shortcut: __shortcut__',
 
   'user.login_register': 'Login / register',
   'user.logout': 'Logout',

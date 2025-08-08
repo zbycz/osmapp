@@ -110,35 +110,24 @@ export const RoutesLayer = ({
           route={route}
         />
       ))}
-      {routesWithNumbers.map(({ route, routeNumber }) => (
-        <RouteMarks key={routeNumber} routeNumber={routeNumber} route={route} />
-      ))}
 
       {selectedRoute ? (
-        <>
-          <RouteWithLabel
-            routeNumber={selectedRoute.routeNumber}
-            route={selectedRoute.route}
-          />
-          <RouteMarks
-            routeNumber={selectedRoute.routeNumber}
-            route={selectedRoute.route}
-          />
-        </>
+        <RouteWithLabel
+          routeNumber={selectedRoute.routeNumber}
+          route={selectedRoute.route}
+        />
       ) : null}
 
       {hoveredRoute ? (
-        <>
-          <RouteWithLabel
-            routeNumber={hoveredRoute.routeNumber}
-            route={hoveredRoute.route}
-          />
-          <RouteMarks
-            routeNumber={hoveredRoute.routeNumber}
-            route={hoveredRoute.route}
-          />
-        </>
+        <RouteWithLabel
+          routeNumber={hoveredRoute.routeNumber}
+          route={hoveredRoute.route}
+        />
       ) : null}
+
+      {routesWithNumbers.map(({ route, routeNumber }) => (
+        <RouteMarks key={routeNumber} routeNumber={routeNumber} route={route} />
+      ))}
     </Svg>
   );
 };
