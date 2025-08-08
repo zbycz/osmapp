@@ -26,7 +26,6 @@ const climbingRouteMajorKeys = [
   'author',
   'climbing:grade:uiaa',
   'climbing:grade:french',
-  'climbing:boulder',
   'climbing:length',
 ];
 
