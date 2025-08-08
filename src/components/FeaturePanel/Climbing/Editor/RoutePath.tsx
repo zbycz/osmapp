@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { useClimbingContext } from '../contexts/ClimbingContext';
@@ -40,7 +39,10 @@ export const RoutePath = ({ route, routeNumber }) => {
   const path = getPathForRoute(route);
   const isMobileMode = useMobileMode();
 
-  if (!path) return null;
+  if (!path) {
+    return null;
+  }
+
   const pointsInString = path
     .map(({ x, y }, index) => {
       const position = getPixelPosition({ x, y, units: 'percentage' });
@@ -80,44 +82,36 @@ export const RoutePath = ({ route, routeNumber }) => {
     setRouteIndexHovered(null);
   };
 
-  const onPointAdd = () => {
+  const onMidpointAdd = (e) => {
     if (tempPointPosition) {
       machine.execute('addPointInBetween', {
         hoveredPosition: tempPointPosition,
         hoveredSegmentIndex: tempPointSegmentIndex,
       });
+      e.stopPropagation();
     }
   };
 
-  const onMouseDown = (e) => {
-    onPointAdd();
-
-    e.stopPropagation();
-  };
-
-  const isEditableSelectedRouteHovered =
+  const isMidpointAddScenario =
     !isPointMoving &&
     (machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute') &&
     isSelected &&
     routeIndexHovered !== null;
 
-  const isInteractionDisabled =
+  const isExtendingDifferentRoute =
     machine.currentStateName === 'extendRoute' && !isRouteSelected(routeNumber);
 
-  const commonProps = isEditableSelectedRouteHovered
-    ? { cursor: 'copy' }
-    : {
-        onClick: (e) => {
-          if (isInteractionDisabled) return;
-          if (isEditMode) {
-            machine.execute('editRoute', { routeNumber });
-          } else {
-            machine.execute('routeSelect', { routeNumber });
-          }
-          e.stopPropagation();
-        },
-        cursor: isInteractionDisabled ? undefined : 'pointer',
+  const onClick = isMidpointAddScenario
+    ? onMidpointAdd
+    : (e) => {
+        if (isExtendingDifferentRoute) return;
+        if (isEditMode) {
+          machine.execute('editRoute', { routeNumber });
+        } else {
+          machine.execute('routeSelect', { routeNumber });
+        }
+        e.stopPropagation();
       };
 
   return (
@@ -125,16 +119,15 @@ export const RoutePath = ({ route, routeNumber }) => {
       <PathWithBorder
         d={`M0 0 ${pointsInString}`}
         isSelected={isSelected}
-        {...commonProps}
         route={route}
         routeNumber={routeNumber}
       />
 
-      {path.length > 1 &&
+      {!isExtendingDifferentRoute &&
+        path.length > 1 &&
         path.map(({ x, y }, index) => {
-          const position1 = getPixelPosition({ x, y, units: 'percentage' });
-
-          if (path && index < path.length - 1 && !isInteractionDisabled) {
+          if (path && index < path.length - 1) {
+            const position1 = getPixelPosition({ x, y, units: 'percentage' });
             const position2 = getPixelPosition({
               ...path[index + 1],
               units: 'percentage',
@@ -156,14 +149,14 @@ export const RoutePath = ({ route, routeNumber }) => {
                 y2={position2.y}
                 {...(isMobileMode ? {} : desktopProps)}
                 onMouseMove={(e) => onMouseMove(e, index)}
-                onClick={onMouseDown}
-                {...commonProps}
+                onClick={onClick}
+                cursor={isMidpointAddScenario ? 'copy' : 'pointer'}
               />
             );
           }
           return null;
         })}
-      {isEditableSelectedRouteHovered && tempPointPosition && (
+      {isMidpointAddScenario && tempPointPosition && (
         <AddNewPoint
           cx={tempPointPosition.x}
           cy={tempPointPosition.y}
