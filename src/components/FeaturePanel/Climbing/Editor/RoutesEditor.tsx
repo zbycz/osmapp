@@ -73,11 +73,9 @@ export const RoutesEditor = ({
   const machine = getMachine();
   const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
 
-  const onCanvasClick = (e) => {
+  const onCanvasClick = (event: React.MouseEvent) => {
     if (machine.currentStateName === 'extendRoute') {
-      machine.execute('addPointToEnd', {
-        position: { x: e.clientX, y: e.clientY },
-      });
+      machine.execute('addPointToEnd', event);
       return;
     }
 
@@ -114,15 +112,10 @@ export const RoutesEditor = ({
     }
   };
 
-  const onMouseMove = (e) => {
-    const mousePosition: PositionPx = {
-      x: e.clientX,
-      y: e.clientY,
-      units: 'px',
-    };
+  const onMouseMove = (event: React.MouseEvent /*TODO wrong*/) => {
     const positionInImage = getPositionInImageFromMouse(
       svgRef,
-      mousePosition,
+      event,
       photoZoom,
     );
 

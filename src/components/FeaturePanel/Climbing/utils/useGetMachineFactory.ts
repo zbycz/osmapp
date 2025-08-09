@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { PositionPx } from '../types';
+import React, { useState } from 'react';
 import { getEmptyRoute } from './getEmptyRoute';
 import { getPositionInImageFromMouse } from './mousePositionUtils';
 
@@ -135,11 +134,10 @@ export const useGetMachineFactory = ({
     ]);
   };
 
-  const addPointToEnd = (props: { position: PositionPx }) => {
-    if (!props) return;
+  const addPointToEnd = (event: React.MouseEvent) => {
     const positionInImage = getPositionInImageFromMouse(
       svgRef,
-      props.position,
+      event,
       photoZoom,
     );
 
