@@ -17,24 +17,24 @@ const RouteBorder = styled.path`
 `;
 
 type Props = {
-  d: string;
-  routeNumber: number;
-  isSelected: boolean;
-  route: ClimbingRoute;
+  d: string; // TODO this should be moved inside this components
+  routeIndex: number;
   opacity?: number;
 };
 
-export const PathWithBorder = ({
-  d,
-  routeNumber,
-  isSelected,
-  route,
-  opacity,
-}: Props) => {
+export const PathWithBorder = ({ d, routeIndex, opacity }: Props) => {
   const config = useConfig();
   const theme = useTheme();
-  const { routeIndexHovered, isOtherRouteSelected, isEditMode } =
-    useClimbingContext();
+  const {
+    routeIndexHovered,
+    isOtherRouteSelected,
+    isEditMode,
+    routes,
+    isRouteSelected,
+  } = useClimbingContext();
+
+  const route = routes[routeIndex];
+  const isSelected = isRouteSelected(routeIndex);
 
   const strokeColor = getDifficultyColor(
     getDifficulty(route.feature.tags),
@@ -44,7 +44,7 @@ export const PathWithBorder = ({
   const contrastColor = theme.palette.getContrastText(
     isSelected ? config.pathStrokeColorSelected : strokeColor,
   );
-  const isOtherSelected = isOtherRouteSelected(routeNumber);
+  const isOtherSelected = isOtherRouteSelected(routeIndex);
 
   return (
     <>
@@ -68,7 +68,7 @@ export const PathWithBorder = ({
           opacity ? opacity : isOtherSelected ? (isEditMode ? 1 : 0.6) : 1
         }
       />
-      {routeIndexHovered === routeNumber && (
+      {routeIndexHovered === routeIndex && (
         <RouteLine
           d={d}
           strokeWidth={config.pathStrokeWidth}

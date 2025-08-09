@@ -36,9 +36,7 @@ export const MouseTrackingLine = ({ routeIndex }: Props) => {
     isSelected && (
       <PathWithBorder
         d={`M ${lastPointPositionInPx.x} ${lastPointPositionInPx.y} L ${mousePositionSticked.x} ${mousePositionSticked.y}`}
-        routeNumber={routeIndex}
-        isSelected={isSelected}
-        route={route}
+        routeIndex={routeIndex}
         opacity={0.7}
       />
     )
