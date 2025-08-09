@@ -53,9 +53,9 @@ export const RoutePath = ({ routeIndex }: Props) => {
     .map(({ x, y }, index) => {
       const position = getPixelPosition({ x, y, units: 'percentage' });
 
-      return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y} `;
+      return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y}`;
     })
-    .join('');
+    .join(' ');
 
   const onMouseMove = (e, segmentIndex: number) => {
     if (
@@ -116,12 +116,7 @@ export const RoutePath = ({ routeIndex }: Props) => {
 
   return (
     <>
-      <PathWithBorder
-        d={`M0 0 ${pointsInString}`}
-        isSelected={isSelected}
-        route={route}
-        routeNumber={routeIndex}
-      />
+      <PathWithBorder d={`${pointsInString}`} routeIndex={routeIndex} />
 
       {!isExtendingDifferentRoute &&
         path.length >= 2 &&
