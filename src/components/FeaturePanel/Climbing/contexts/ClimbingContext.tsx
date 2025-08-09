@@ -150,7 +150,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const svgRef = useRef(null);
   const isPanningActiveRef = useRef(false);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
-  const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
+  const [photoPath, setPhotoPath] = useState<string>(null); // photo URL (pathname), should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });

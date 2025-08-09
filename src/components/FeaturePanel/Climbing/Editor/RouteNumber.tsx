@@ -5,9 +5,13 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useRouteNumberColors } from '../utils/useRouteNumberColors';
 import { isTicked } from '../../../../services/my-ticks/ticks';
 import { useTheme } from '@mui/material';
+import { RouteDifficulty } from './RouteDifficulty';
+import { getShiftForStartPoint } from '../utils/startPoint';
+import { getShortId } from '../../../../services/helpers';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 
 type Props = {
-  children: number;
+  routeIndex: number;
   x: number;
   y: number;
   osmId: string;
@@ -44,7 +48,7 @@ const CheckCircle = ({ x, y, scale }) => {
   );
 };
 
-export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
+const RouteNumberBadge = ({ routeIndex, x, y, osmId }: Props) => {
   const {
     imageSize,
     photoZoom,
@@ -54,7 +58,7 @@ export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
     routeIndexHovered,
     setRouteIndexHovered,
   } = useClimbingContext();
-  const digits = String(routeNumber).length;
+  const digits = String(routeIndex).length;
   const RECT_WIDTH = ((digits > 2 ? digits : 0) * 3 + 18) / photoZoom.scale;
   const RECT_HEIGHT = 18 / photoZoom.scale;
   const RECT_Y_OFFSET = 8 / photoZoom.scale;
@@ -81,7 +85,7 @@ export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
   };
 
   const onMouseEnter = () => {
-    setRouteIndexHovered(routeNumber);
+    setRouteIndexHovered(routeIndex);
   };
 
   const onMouseLeave = () => {
@@ -97,19 +101,19 @@ export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
     pointerEvents: 'none',
     onClick: (e) => {
       if (isEditMode) {
-        machine.execute('editRoute', { routeNumber });
+        machine.execute('editRoute', { routeNumber: routeIndex });
       } else {
-        machine.execute('routeSelect', { routeNumber });
+        machine.execute('routeSelect', { routeNumber: routeIndex });
       }
       e.stopPropagation();
     },
     onMouseEnter,
     onMouseLeave,
   };
-  const isSelected = isRouteSelected(routeNumber);
+  const isSelected = isRouteSelected(routeIndex);
 
   const colors = useRouteNumberColors({
-    isSelected: isSelected || routeIndexHovered === routeNumber,
+    isSelected: isSelected || routeIndexHovered === routeIndex,
     hasPathOnThisPhoto: true,
   });
 
@@ -154,8 +158,48 @@ export const RouteNumber = ({ children: routeNumber, x, y, osmId }: Props) => {
         textAnchor="middle"
         {...commonProps}
       >
-        {routeNumber + 1}
+        {routeIndex + 1}
       </Text>
+    </>
+  );
+};
+
+export const RouteNumber = ({ routeIndex }: { routeIndex: number }) => {
+  const { getPixelPosition, getPathForRoute, routes, photoPath, photoZoom } =
+    useClimbingContext();
+  const { userSettings } = useUserSettingsContext();
+
+  const route = routes[routeIndex];
+  const path = getPathForRoute(route);
+  if (!route || !path || path?.length === 0) return null;
+
+  const shift =
+    getShiftForStartPoint({
+      currentRouteSelectedIndex: routeIndex,
+      currentPosition: path[0],
+      checkedRoutes: routes,
+      photoPath,
+    }) / photoZoom.scale;
+
+  const { x, y } = getPixelPosition({
+    ...path[0],
+    units: 'percentage',
+  });
+  const osmId = route.feature?.osmMeta
+    ? getShortId(route.feature.osmMeta)
+    : null;
+
+  return (
+    <>
+      <RouteNumberBadge
+        routeIndex={routeIndex}
+        x={x + shift}
+        y={y}
+        osmId={osmId}
+      />
+      {userSettings['climbing.isGradesOnPhotosVisible'] && (
+        <RouteDifficulty x={x + shift} y={y + 40} route={route} />
+      )}
     </>
   );
 };

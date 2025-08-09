@@ -5,14 +5,6 @@ import { Point } from './Points/Point';
 import { MouseTrackingLine } from './MouseTrackingLine';
 import { useConfig } from '../config';
 
-type Props = {
-  x: number;
-  y: number;
-  routeNumberXShift: number;
-  routeNumber: number;
-  osmId: string;
-};
-
 const NonEditablePoint = ({ x, y, isSelected }) => {
   const config = useConfig();
   return (
@@ -39,35 +31,42 @@ const NonEditablePoint = ({ x, y, isSelected }) => {
   );
 };
 
-export const StartPoint = ({
-  x,
-  y,
-  routeNumber,
-  routeNumberXShift = 0,
-  osmId,
-}: Props) => {
-  const { isRouteSelected, getMachine } = useClimbingContext();
-  const isSelected = isRouteSelected(routeNumber);
+type Props = {
+  routeIndex: number;
+};
+
+export const StartPoint = ({ routeIndex }: Props) => {
+  const {
+    isRouteSelected,
+    getMachine,
+    getPixelPosition,
+    getPathForRoute,
+    routes,
+  } = useClimbingContext();
+
+  const route = routes[routeIndex];
+  const path = getPathForRoute(route);
+  if (!route || !path || path?.length === 0) return null;
+
+  const { x, y } = getPixelPosition({
+    ...path[0],
+    units: 'percentage',
+  });
+
+  const isSelected = isRouteSelected(routeIndex);
   const machine = getMachine();
+
   return (
     <>
       {isSelected &&
       (machine.currentStateName === 'editRoute' ||
         machine.currentStateName === 'extendRoute') ? (
-        <Point
-          x={x}
-          y={y}
-          index={0}
-          routeIndex={routeNumber}
-          type={undefined}
-        />
+        <Point x={x} y={y} index={0} routeIndex={routeIndex} type={undefined} />
       ) : (
         <NonEditablePoint isSelected={isSelected} x={x} y={y} />
       )}
-      <MouseTrackingLine routeIndex={routeNumber} />
-      <RouteNumber x={x + routeNumberXShift} y={y} osmId={osmId}>
-        {routeNumber}
-      </RouteNumber>
+      <MouseTrackingLine routeIndex={routeIndex} />
+      <RouteNumber routeIndex={routeIndex} />
     </>
   );
 };
