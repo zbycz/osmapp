@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
-import { PositionPx } from '../types';
+import { PositionPx, ZoomState } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useMobileMode } from '../../../helpers';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
@@ -11,9 +11,27 @@ const InteractiveRectangle = styled.line`
   stroke-linecap: round;
 `;
 
-const AddNewPoint = styled.circle`
+const NewMidpoint = styled.circle`
   pointer-events: none;
 `;
+
+const getMidpointPosition = (
+  e: React.MouseEvent,
+  svgRef: React.MutableRefObject<any>,
+  photoZoom: ZoomState,
+) => {
+  const mousePosition: PositionPx = {
+    x: e.clientX,
+    y: e.clientY,
+    units: 'px',
+  };
+  const positionInImage = getPositionInImageFromMouse(
+    svgRef,
+    mousePosition,
+    photoZoom,
+  );
+  return positionInImage;
+};
 
 type Props = {
   routeIndex: number;
@@ -46,33 +64,23 @@ export const InteractivePath = ({ routeIndex }: Props) => {
     return null;
   }
 
-  const onMouseMove = (e) => {
+  const setMidpointPosition = (e: React.MouseEvent) => {
     if (
       machine.currentStateName === 'editRoute' ||
       machine.currentStateName === 'extendRoute'
     ) {
-      if (!routeIndexHovered) setRouteIndexHovered(routeIndex);
-
-      const mousePosition: PositionPx = {
-        x: e.clientX,
-        y: e.clientY,
-        units: 'px',
-      };
-      const positionInImage = getPositionInImageFromMouse(
-        svgRef,
-        mousePosition,
-        photoZoom,
-      );
-
-      setTempPointPosition(positionInImage);
+      if (!routeIndexHovered) {
+        setRouteIndexHovered(routeIndex);
+      }
+      setTempPointPosition(getMidpointPosition(e, svgRef, photoZoom));
     }
   };
 
-  const onMouseEnter = () => {
+  const setHover = () => {
     setRouteIndexHovered(routeIndex);
   };
 
-  const onMouseLeave = () => {
+  const unsetHover = () => {
     setRouteIndexHovered(null);
   };
 
@@ -92,12 +100,10 @@ export const InteractivePath = ({ routeIndex }: Props) => {
 
   const onClick = (e: React.MouseEvent, segmentIndex: number) => {
     if (isMidpointAddScenario) {
-      if (tempPointPosition) {
-        machine.execute('addPointInBetween', {
-          hoveredPosition: tempPointPosition,
-          hoveredSegmentIndex: segmentIndex,
-        });
-      }
+      machine.execute('addPointInBetween', {
+        hoveredPosition: getMidpointPosition(e, svgRef, photoZoom),
+        hoveredSegmentIndex: segmentIndex,
+      });
     } else if (isEditMode) {
       machine.execute('editRoute', { routeNumber: routeIndex });
     } else {
@@ -110,33 +116,30 @@ export const InteractivePath = ({ routeIndex }: Props) => {
 
   return (
     <>
-      {pathPx.slice(0, -1).map((position1, index) => {
-        const position2 = pathPx[index + 1];
+      {pathPx.slice(0, -1).map((position1, segmentIndex) => {
+        const position2 = pathPx[segmentIndex + 1];
 
-        const desktopProps = {
-          onMouseEnter: onMouseEnter,
-          onMouseLeave: onMouseLeave,
-        };
         return (
           <InteractiveRectangle
             // eslint-disable-next-line react/no-array-index-key
-            key={`-${index}`}
+            key={segmentIndex}
             stroke="transparent"
             strokeWidth={15}
             x1={position1.x}
             y1={position1.y}
             x2={position2.x}
             y2={position2.y}
-            {...(isMobileMode ? {} : desktopProps)}
-            onMouseMove={onMouseMove}
-            onClick={(e: React.MouseEvent) => onClick(e, index)}
+            onMouseEnter={isMobileMode ? undefined : setHover}
+            onMouseLeave={isMobileMode ? undefined : unsetHover}
+            onMouseMove={isMobileMode ? undefined : setMidpointPosition}
+            onClick={(e) => onClick(e, segmentIndex)}
             cursor={isMidpointAddScenario ? 'copy' : 'pointer'}
           />
         );
       })}
 
       {isMidpointAddScenario && tempPointPosition && (
-        <AddNewPoint
+        <NewMidpoint
           cx={tempPointPosition.x}
           cy={tempPointPosition.y}
           fill="white"

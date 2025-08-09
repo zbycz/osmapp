@@ -38,8 +38,6 @@ export const RoutePath = ({ routeIndex }: Props) => {
         routeIndexHovered === null && (
           <MouseTrackingLine routeIndex={routeIndex} />
         )}
-
-      <InteractivePath routeIndex={routeIndex} />
     </>
   );
 };
