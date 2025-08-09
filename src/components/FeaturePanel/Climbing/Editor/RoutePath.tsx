@@ -116,7 +116,7 @@ export const RoutePath = ({ routeIndex }: Props) => {
 
   return (
     <>
-      <PathWithBorder d={`${pointsInString}`} routeIndex={routeIndex} />
+      <PathWithBorder d={pointsInString} routeIndex={routeIndex} />
 
       {!isExtendingDifferentRoute &&
         path.length >= 2 &&
