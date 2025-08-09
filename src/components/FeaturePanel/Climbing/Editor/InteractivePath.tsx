@@ -15,24 +15,6 @@ const NewMidpoint = styled.circle`
   pointer-events: none;
 `;
 
-const getMidpointPosition = (
-  e: React.MouseEvent,
-  svgRef: React.MutableRefObject<any>,
-  photoZoom: ZoomState,
-) => {
-  const mousePosition: PositionPx = {
-    x: e.clientX,
-    y: e.clientY,
-    units: 'px',
-  };
-  const positionInImage = getPositionInImageFromMouse(
-    svgRef,
-    mousePosition,
-    photoZoom,
-  );
-  return positionInImage;
-};
-
 type Props = {
   routeIndex: number;
 };
@@ -72,7 +54,7 @@ export const InteractivePath = ({ routeIndex }: Props) => {
       if (!routeIndexHovered) {
         setRouteIndexHovered(routeIndex);
       }
-      setTempPointPosition(getMidpointPosition(e, svgRef, photoZoom));
+      setTempPointPosition(getPositionInImageFromMouse(svgRef, e, photoZoom));
     }
   };
 
@@ -101,7 +83,7 @@ export const InteractivePath = ({ routeIndex }: Props) => {
   const onClick = (e: React.MouseEvent, segmentIndex: number) => {
     if (isMidpointAddScenario) {
       machine.execute('addPointInBetween', {
-        hoveredPosition: getMidpointPosition(e, svgRef, photoZoom),
+        hoveredPosition: getPositionInImageFromMouse(svgRef, e, photoZoom),
         hoveredSegmentIndex: segmentIndex,
       });
     } else if (isEditMode) {
