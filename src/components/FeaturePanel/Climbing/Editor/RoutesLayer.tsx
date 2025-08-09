@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteMarks } from './RouteMarks';
+import { InteractivePath } from './InteractivePath';
 
 const Svg = styled.svg<{
   $hasEditableCursor: boolean;
@@ -92,16 +93,25 @@ export const RoutesLayer = ({
       ref={svgRef}
     >
       {routes.map((_, routeIndex) => (
-        <RouteWithLabel key={routeIndex} routeIndex={routeIndex} />
+        <React.Fragment key={routeIndex}>
+          <RouteWithLabel routeIndex={routeIndex} />
+          <InteractivePath routeIndex={routeIndex} />
+        </React.Fragment>
       ))}
 
-      {routeSelectedIndex == null ? null : (
-        <RouteWithLabel routeIndex={routeSelectedIndex} />
-      )}
+      {routeSelectedIndex != null ? (
+        <>
+          <RouteWithLabel routeIndex={routeSelectedIndex} />
+          <InteractivePath routeIndex={routeSelectedIndex} />
+        </>
+      ) : null}
 
-      {routeIndexHovered == null ? null : (
-        <RouteWithLabel routeIndex={routeIndexHovered} />
-      )}
+      {routeIndexHovered != null ? (
+        <>
+          <RouteWithLabel routeIndex={routeIndexHovered} />
+          <InteractivePath routeIndex={routeIndexHovered} />
+        </>
+      ) : null}
 
       {routes.map((_, routeIndex) => (
         <RouteMarks key={routeIndex} routeIndex={routeIndex} />
