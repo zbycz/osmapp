@@ -10,7 +10,6 @@ const Svg = styled.svg<{
   $hasEditableCursor: boolean;
   $imageSize: { width: number; height: number };
   $isVisible: boolean;
-  $transformOrigin: any;
 }>`
   position: absolute;
   top: 0;
@@ -44,7 +43,6 @@ export const RoutesLayer = ({
   onClick,
   onEditorMouseMove,
   isVisible = true,
-  transformOrigin = { x: 0, y: 0 },
 }: Props) => {
   const {
     imageSize,
@@ -84,7 +82,6 @@ export const RoutesLayer = ({
       onPointerMove={onEditorMouseMove}
       $imageSize={imageSize}
       $isVisible={isVisible}
-      $transformOrigin={transformOrigin}
       xmlns="http://www.w3.org/2000/svg"
       ref={svgRef}
     >

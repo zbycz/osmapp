@@ -71,7 +71,6 @@ export const RoutesEditor = ({
     isPanningActiveRef,
   } = useClimbingContext();
   const machine = getMachine();
-  const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
 
   const onCanvasClick = (event: React.MouseEvent) => {
     if (machine.currentStateName === 'extendRoute') {
@@ -168,7 +167,6 @@ export const RoutesEditor = ({
           isVisible={isRoutesLayerVisible}
           onClick={onCanvasClick}
           onEditorMouseMove={onMouseMove}
-          transformOrigin={transformOrigin}
         />
       )}
     </EditorContainer>
