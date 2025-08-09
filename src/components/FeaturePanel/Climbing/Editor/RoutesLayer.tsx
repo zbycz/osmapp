@@ -50,8 +50,8 @@ export const RoutesLayer = ({
   const {
     imageSize,
     getMachine,
-    isRouteSelected,
-    isRouteHovered,
+    routeSelectedIndex,
+    routeIndexHovered,
     isPointMoving,
     setIsPointClicked,
     setIsPointMoving,
@@ -75,18 +75,6 @@ export const RoutesLayer = ({
     }
   };
 
-  const routesWithNumbers = routes.map((route, routeNumber) => ({
-    routeNumber,
-    route,
-  }));
-
-  const selectedRoute = routesWithNumbers.find(({ routeNumber }) =>
-    isRouteSelected(routeNumber),
-  );
-  const hoveredRoute = routesWithNumbers.find(({ routeNumber }) =>
-    isRouteHovered(routeNumber),
-  );
-
   return (
     <Svg
       $hasEditableCursor={machine.currentStateName === 'extendRoute'}
@@ -103,30 +91,20 @@ export const RoutesLayer = ({
       xmlns="http://www.w3.org/2000/svg"
       ref={svgRef}
     >
-      {routesWithNumbers.map(({ route, routeNumber }) => (
-        <RouteWithLabel
-          key={routeNumber}
-          routeNumber={routeNumber}
-          route={route}
-        />
+      {routes.map((_, routeIndex) => (
+        <RouteWithLabel key={routeIndex} routeIndex={routeIndex} />
       ))}
 
-      {selectedRoute ? (
-        <RouteWithLabel
-          routeNumber={selectedRoute.routeNumber}
-          route={selectedRoute.route}
-        />
-      ) : null}
+      {routeSelectedIndex == null ? null : (
+        <RouteWithLabel routeIndex={routeSelectedIndex} />
+      )}
 
-      {hoveredRoute ? (
-        <RouteWithLabel
-          routeNumber={hoveredRoute.routeNumber}
-          route={hoveredRoute.route}
-        />
-      ) : null}
+      {routeIndexHovered == null ? null : (
+        <RouteWithLabel routeIndex={routeIndexHovered} />
+      )}
 
-      {routesWithNumbers.map(({ route, routeNumber }) => (
-        <RouteMarks key={routeNumber} routeNumber={routeNumber} route={route} />
+      {routes.map((_, routeIndex) => (
+        <RouteMarks key={routeIndex} routeIndex={routeIndex} />
       ))}
     </Svg>
   );

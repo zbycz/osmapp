@@ -2,7 +2,6 @@ import React from 'react';
 
 import { RouteNumber } from './RouteNumber';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { ClimbingRoute } from '../types';
 import { StartPoint } from './StartPoint';
 import { getShiftForStartPoint } from '../utils/startPoint';
 import { RoutePath } from './RoutePath';
@@ -11,20 +10,21 @@ import { RouteDifficulty } from './RouteDifficulty';
 import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 
 type Props = {
-  route: ClimbingRoute;
-  routeNumber: number;
+  routeIndex: number;
 };
 
-export const RouteWithLabel = ({ route, routeNumber }: Props) => {
+export const RouteWithLabel = ({ routeIndex }: Props) => {
   const { getPixelPosition, getPathForRoute, routes, photoPath, photoZoom } =
     useClimbingContext();
   const { userSettings } = useUserSettingsContext();
+
+  const route = routes[routeIndex];
   const path = getPathForRoute(route);
   if (!route || !path || path?.length === 0) return null;
 
   const shift =
     getShiftForStartPoint({
-      currentRouteSelectedIndex: routeNumber,
+      currentRouteSelectedIndex: routeIndex,
       currentPosition: path[0],
       checkedRoutes: routes,
       photoPath,
@@ -44,7 +44,7 @@ export const RouteWithLabel = ({ route, routeNumber }: Props) => {
         x={x}
         y={y}
         routeNumberXShift={shift}
-        routeNumber={routeNumber}
+        routeNumber={routeIndex}
         osmId={osmId}
       />
     );
@@ -52,9 +52,9 @@ export const RouteWithLabel = ({ route, routeNumber }: Props) => {
 
   return (
     <>
-      <RoutePath route={route} routeNumber={routeNumber} />
+      <RoutePath routeIndex={routeIndex} />
       <RouteNumber x={x + shift} y={y} osmId={osmId}>
-        {routeNumber}
+        {routeIndex}
       </RouteNumber>
       {userSettings['climbing.isGradesOnPhotosVisible'] && (
         <RouteDifficulty x={x + shift} y={y + 40} route={route} />
