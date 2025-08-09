@@ -95,13 +95,13 @@ export const RoutesLayer = ({
         <RouteWithLabel key={routeIndex} routeIndex={routeIndex} />
       ))}
 
-      {routeSelectedIndex ? (
+      {routeSelectedIndex == null ? null : (
         <RouteWithLabel routeIndex={routeSelectedIndex} />
-      ) : null}
+      )}
 
-      {routeIndexHovered ? (
+      {routeIndexHovered == null ? null : (
         <RouteWithLabel routeIndex={routeIndexHovered} />
-      ) : null}
+      )}
 
       {routes.map((_, routeIndex) => (
         <RouteMarks key={routeIndex} routeIndex={routeIndex} />

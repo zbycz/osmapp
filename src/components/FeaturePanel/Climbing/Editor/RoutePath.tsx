@@ -107,9 +107,9 @@ export const RoutePath = ({ routeIndex }: Props) => {
         });
       }
     } else if (isEditMode) {
-      machine.execute('editRoute', { routeIndex });
+      machine.execute('editRoute', { routeNumber: routeIndex });
     } else {
-      machine.execute('routeSelect', { routeIndex });
+      machine.execute('routeSelect', { routeNumber: routeIndex });
     }
     e.stopPropagation();
   };

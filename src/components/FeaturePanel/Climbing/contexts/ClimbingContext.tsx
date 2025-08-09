@@ -56,7 +56,7 @@ type ClimbingContextType = {
   isPointSelected: (pointNumber: number) => boolean;
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
-  routeSelectedIndex: number | null;
+  routeSelectedIndex: number | null | undefined;
   isPointClicked: boolean;
   setIsPointClicked: (isPointClicked: boolean) => void;
   setEditorPosition: (position: PositionPx) => void;
@@ -104,7 +104,7 @@ type ClimbingContextType = {
   setIsEditMode: (value: boolean | ((old: boolean) => boolean)) => void;
   viewportSize: Size;
   setViewportSize: (size: Size) => void;
-  routeIndexHovered: number | null;
+  routeIndexHovered: number | null | undefined;
   setRouteIndexHovered: (routeIndexHovered: number) => void;
   routeIndexExpanded: number | null;
   setRouteIndexExpanded: (routeIndexHovered: number | null) => void;
