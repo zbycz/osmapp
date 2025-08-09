@@ -112,7 +112,7 @@ export const RoutesEditor = ({
     }
   };
 
-  const onMouseMove = (event: React.MouseEvent /*TODO wrong*/) => {
+  const onMouseMove = (event: React.MouseEvent) => {
     const positionInImage = getPositionInImageFromMouse(
       svgRef,
       event,
@@ -168,7 +168,6 @@ export const RoutesEditor = ({
           isVisible={isRoutesLayerVisible}
           onClick={onCanvasClick}
           onEditorMouseMove={onMouseMove}
-          onEditorTouchMove={onMouseMove}
           transformOrigin={transformOrigin}
         />
       )}
