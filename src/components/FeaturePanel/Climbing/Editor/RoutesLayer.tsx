@@ -35,8 +35,7 @@ const Svg = styled.svg<{
 
 type Props = {
   onClick: (e: any) => void;
-  onEditorMouseMove?: (e: any) => void;
-  onEditorTouchMove?: (e: any) => void;
+  onEditorMouseMove: (e: React.MouseEvent) => void;
   isVisible?: boolean;
   transformOrigin?: any;
 };
@@ -44,7 +43,6 @@ type Props = {
 export const RoutesLayer = ({
   onClick,
   onEditorMouseMove,
-  onEditorTouchMove,
   isVisible = true,
   transformOrigin = { x: 0, y: 0 },
 }: Props) => {
@@ -83,9 +81,7 @@ export const RoutesLayer = ({
         onClick(e);
       }}
       onMouseUp={handleOnMovingPointDropOnCanvas}
-      onMouseMove={onEditorMouseMove}
-      onTouchMove={onEditorTouchMove}
-      onPointerMove={onEditorTouchMove}
+      onPointerMove={onEditorMouseMove}
       $imageSize={imageSize}
       $isVisible={isVisible}
       $transformOrigin={transformOrigin}
