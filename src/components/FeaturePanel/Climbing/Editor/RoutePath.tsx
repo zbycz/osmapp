@@ -124,7 +124,7 @@ export const RoutePath = ({ routeIndex }: Props) => {
       />
 
       {!isExtendingDifferentRoute &&
-        path.length > 2 &&
+        path.length >= 2 &&
         path.slice(0, -1).map(({ x, y }, index) => {
           const position1 = getPixelPosition({ x, y, units: 'percentage' });
           const position2 = getPixelPosition({
