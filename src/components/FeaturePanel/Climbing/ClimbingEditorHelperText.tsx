@@ -14,10 +14,8 @@ const InlineBlockContainer = styled.div`
 `;
 
 export const ClimbingEditorHelperText = () => {
-  const { routeSelectedIndex, getCurrentPath, getMachine } =
-    useClimbingContext();
+  const { routeSelectedIndex, getCurrentPath, machine } = useClimbingContext();
   const { feature } = useFeatureContext();
-  const machine = getMachine();
 
   const routePhotoPathsCount = getWikimediaCommonsPhotoPathKeys(
     feature.memberFeatures[routeSelectedIndex]?.tags ?? {},

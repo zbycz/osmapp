@@ -45,7 +45,7 @@ export const ClimbingCragDialog = ({
     isPointMoving,
     setIsEditMode,
     isEditMode,
-    getMachine,
+    machine,
     showDebugMenu,
     setRouteSelectedIndex,
     routes,
@@ -55,7 +55,6 @@ export const ClimbingCragDialog = ({
   } = useClimbingContext();
   const { feature } = useFeatureContext();
   const handleSave = useGetHandleSave(setIsEditMode);
-  const machine = getMachine();
   const router = useRouter();
   const featureLink = getOsmappLink(feature);
 

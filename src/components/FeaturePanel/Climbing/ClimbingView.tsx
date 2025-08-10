@@ -253,7 +253,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const {
     imageSize,
     routeSelectedIndex,
-    getMachine,
+    machine,
     isEditMode,
     viewportSize,
     editorPosition,
@@ -275,7 +275,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(null);
-  const machine = getMachine();
   const cragViewLayout = useGetCragViewLayout();
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const splitPaneSize = userSettings['climbing.splitPaneSize'];

@@ -55,7 +55,7 @@ const RouteNumberBadge = ({ routeIndex, x, y, osmId }: Props) => {
     imageSize,
     photoZoom,
     isRouteSelected,
-    getMachine,
+    machine,
     isEditMode,
     routeIndexHovered,
     setRouteIndexHovered,
@@ -101,7 +101,6 @@ const RouteNumberBadge = ({ routeIndex, x, y, osmId }: Props) => {
   const newX = getX(); // this shifts X coordinate in case of too small photo
   const newY = getY(); // this shifts Y coordinate in case of too small photo
 
-  const machine = getMachine();
   const commonProps = {
     cursor: 'pointer',
     pointerEvents: 'none',

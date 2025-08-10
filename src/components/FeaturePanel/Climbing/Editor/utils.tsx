@@ -28,10 +28,9 @@ export const usePointClickHandler = (index: number) => {
     setIsPointMoving,
     setIsPointClicked,
     pointSelectedIndex,
-    getMachine,
+    machine,
     getCurrentPath,
   } = useClimbingContext();
-  const machine = getMachine();
   const path = getCurrentPath();
 
   return (e: any) => {

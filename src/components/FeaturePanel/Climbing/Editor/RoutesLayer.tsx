@@ -42,7 +42,7 @@ export const RoutesLayer = ({ isVisible }: Props) => {
   const isMobileMode = useMobileMode();
   const {
     imageSize,
-    getMachine,
+    machine,
     routeSelectedIndex,
     routeIndexHovered,
     isPointMoving,
@@ -62,7 +62,6 @@ export const RoutesLayer = ({ isVisible }: Props) => {
     photoZoom,
     isPanningActiveRef,
   } = useClimbingContext();
-  const machine = getMachine();
   const path = getCurrentPath();
   if (!path) return null;
 

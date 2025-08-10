@@ -50,8 +50,7 @@ type Props = {
 };
 
 export const PointTypeButtons = ({ setShowRouteMarksMenu }: Props) => {
-  const { getMachine } = useClimbingContext();
-  const machine = getMachine();
+  const { machine } = useClimbingContext();
 
   const onPointTypeChange = (type: PointType | 'none') => {
     machine.execute('changePointType', { type: type === 'none' ? null : type });
