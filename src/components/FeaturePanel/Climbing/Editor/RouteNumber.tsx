@@ -9,6 +9,7 @@ import { RouteDifficulty } from './RouteDifficulty';
 import { getShiftForStartPoint } from '../utils/startPoint';
 import { getShortId } from '../../../../services/helpers';
 import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
+import { useMobileMode } from '../../../helpers';
 
 type Props = {
   routeIndex: number;
@@ -49,6 +50,7 @@ const CheckCircle = ({ x, y, scale }) => {
 };
 
 const RouteNumberBadge = ({ routeIndex, x, y, osmId }: Props) => {
+  const isMobileMode = useMobileMode();
   const {
     imageSize,
     photoZoom,
@@ -84,13 +86,17 @@ const RouteNumberBadge = ({ routeIndex, x, y, osmId }: Props) => {
     return y + RECT_Y_OFFSET;
   };
 
-  const onMouseEnter = () => {
-    setRouteIndexHovered(routeIndex);
-  };
+  const onMouseEnter = isMobileMode
+    ? undefined
+    : () => {
+        setRouteIndexHovered(routeIndex);
+      };
 
-  const onMouseLeave = () => {
-    setRouteIndexHovered(null);
-  };
+  const onMouseLeave = isMobileMode
+    ? undefined
+    : () => {
+        setRouteIndexHovered(null);
+      };
 
   const newX = getX(); // this shifts X coordinate in case of too small photo
   const newY = getY(); // this shifts Y coordinate in case of too small photo
