@@ -15,14 +15,30 @@ const NewMidpoint = styled.circle`
   pointer-events: none;
 `;
 
+const useTempMidpoint = () => {
+  const [midpoint, setMidpoint] = useState<PositionPx | null>(null);
+  const { getMachine, svgRef, photoZoom } = useClimbingContext();
+  const machine = getMachine();
+
+  const setMidpointPosition = (e: React.MouseEvent) => {
+    if (
+      machine.currentStateName === 'editRoute' ||
+      machine.currentStateName === 'extendRoute'
+    ) {
+      setMidpoint(getPositionInImageFromMouse(svgRef, e, photoZoom));
+    }
+  };
+
+  return { midpoint, setMidpointPosition };
+};
+
 type Props = {
   routeIndex: number;
 };
 
 export const InteractivePath = ({ routeIndex }: Props) => {
-  const [tempPointPosition, setTempPointPosition] = useState<PositionPx | null>(
-    null,
-  );
+  const isMobileMode = useMobileMode();
+  const { midpoint, setMidpointPosition } = useTempMidpoint();
   const {
     isPointMoving,
     isRouteSelected,
@@ -40,31 +56,12 @@ export const InteractivePath = ({ routeIndex }: Props) => {
   const machine = getMachine();
   const route = routes[routeIndex];
   const path = getPathForRoute(route);
-  const isMobileMode = useMobileMode();
-
   if (!path) {
     return null;
   }
 
-  const setMidpointPosition = (e: React.MouseEvent) => {
-    if (
-      machine.currentStateName === 'editRoute' ||
-      machine.currentStateName === 'extendRoute'
-    ) {
-      if (!routeIndexHovered) {
-        setRouteIndexHovered(routeIndex);
-      }
-      setTempPointPosition(getPositionInImageFromMouse(svgRef, e, photoZoom));
-    }
-  };
-
-  const setHover = () => {
-    setRouteIndexHovered(routeIndex);
-  };
-
-  const unsetHover = () => {
-    setRouteIndexHovered(null);
-  };
+  const setHover = () => setRouteIndexHovered(routeIndex);
+  const unsetHover = () => setRouteIndexHovered(null);
 
   const isMidpointAddScenario =
     !isPointMoving &&
@@ -123,10 +120,10 @@ export const InteractivePath = ({ routeIndex }: Props) => {
         );
       })}
 
-      {isMidpointAddScenario && tempPointPosition && (
+      {isMidpointAddScenario && midpoint && (
         <NewMidpoint
-          cx={tempPointPosition.x}
-          cy={tempPointPosition.y}
+          cx={midpoint.x}
+          cy={midpoint.y}
           fill="white"
           stroke="rgba(0,0,0,0.3)"
           r={7 / photoZoom.scale}
