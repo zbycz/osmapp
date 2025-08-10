@@ -11,12 +11,11 @@ type Props = {
 export const RoutePath = ({ routeIndex }: Props) => {
   const {
     getPixelPosition,
-    getMachine,
+    machine,
     routeIndexHovered,
     getPathForRoute,
     routes,
   } = useClimbingContext();
-  const machine = getMachine();
   const route = routes[routeIndex];
   const path = getPathForRoute(route);
 

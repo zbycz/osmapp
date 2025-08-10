@@ -16,7 +16,7 @@ export const RouteMarks = ({ routeIndex }: Props) => {
   const {
     getPixelPosition,
     isPointSelected,
-    getMachine,
+    machine,
     getPathForRoute,
     isRouteSelected,
     isOtherRouteSelected,
@@ -41,7 +41,6 @@ export const RouteMarks = ({ routeIndex }: Props) => {
         const position = getPixelPosition({ x, y, units: 'percentage' });
         const isActualPointSelected = isSelected && isPointSelected(index);
         const pointerEvents = isSelected || isEditMode ? 'auto' : 'none';
-        const machine = getMachine();
         const isThisRouteEditOrExtendMode =
           (machine.currentStateName === 'extendRoute' ||
             machine.currentStateName === 'pointMenu' ||

@@ -38,7 +38,7 @@ type Props = {
 export const StartPoint = ({ routeIndex }: Props) => {
   const {
     isRouteSelected,
-    getMachine,
+    machine,
     getPixelPosition,
     getPathForRoute,
     routes,
@@ -52,9 +52,7 @@ export const StartPoint = ({ routeIndex }: Props) => {
     ...path[0],
     units: 'percentage',
   });
-
   const isSelected = isRouteSelected(routeIndex);
-  const machine = getMachine();
 
   return (
     <>

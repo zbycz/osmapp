@@ -20,11 +20,10 @@ export const PointMenu = ({ anchorEl, setAnchorEl }) => {
   const {
     pointSelectedIndex,
     setPointSelectedIndex,
-    getMachine,
+    machine,
     isPointMoving,
     getCurrentPath,
   } = useClimbingContext();
-  const machine = getMachine();
   const open = Boolean(anchorEl) && !isPointMoving;
   const id = open ? 'simple-popper' : undefined;
   const selectedPoint = getCurrentPath()[pointSelectedIndex];

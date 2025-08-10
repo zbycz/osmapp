@@ -78,11 +78,10 @@ export const RouteListDndContent = ({ isEditable }) => {
     routeSelectedIndex,
     isRouteSelected,
     isEditMode,
-    getMachine,
+    machine,
     showDebugMenu,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
-  const machine = getMachine();
   useEffect(() => {
     const content = routes.map((route, index) => ({
       id: index,

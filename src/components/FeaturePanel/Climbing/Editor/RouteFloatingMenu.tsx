@@ -42,7 +42,7 @@ export const RouteFloatingMenu = () => {
     useState(false);
   const [showRouteMarksMenu, setShowRouteMarksMenu] = useState(false);
   const {
-    getMachine,
+    machine,
     pointSelectedIndex,
     routes,
     routeSelectedIndex,
@@ -53,7 +53,6 @@ export const RouteFloatingMenu = () => {
     isEditMode,
   } = useClimbingContext();
   const path = getCurrentPath();
-  const machine = getMachine();
 
   const isExtendVisible =
     (machine.currentStateName === 'pointMenu' &&

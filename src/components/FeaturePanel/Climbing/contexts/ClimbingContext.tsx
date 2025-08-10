@@ -21,8 +21,8 @@ import {
   ActionWithCallback,
   State,
   StateAction,
-  useGetMachineFactory,
-} from '../utils/useGetMachineFactory';
+  useStateMachine,
+} from '../utils/useStateMachine';
 import { positionUtilsFactory } from '../utils/positionUtilsFactory';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
@@ -83,7 +83,7 @@ type ClimbingContextType = {
   getCurrentPath: () => PathPoints;
   getPercentagePosition: (position: PositionPx) => Position;
   addZoom: (position: PositionPx) => PositionPx;
-  getMachine: () => {
+  machine: {
     currentState: Partial<Record<StateAction, ActionWithCallback>>;
     currentStateName: State;
     execute: (desiredAction: StateAction, props?: unknown) => void;
@@ -265,8 +265,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       photoZoom,
     });
 
-  // TODO return the `machine` not a factory
-  const getMachine = useGetMachineFactory({
+  const machine = useStateMachine({
     setRouteSelectedIndex,
     setPointSelectedIndex,
     updatePathOnRouteIndex,
@@ -355,7 +354,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setRouteSelectedIndex,
     updateRouteOnIndex,
     updatePathOnRouteIndex,
-    getMachine,
+    machine: machine,
     getPathForRoute,
     getCurrentPath,
     scrollOffset,

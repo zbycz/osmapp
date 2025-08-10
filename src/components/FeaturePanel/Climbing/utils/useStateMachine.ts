@@ -35,7 +35,7 @@ export type Machine = {
   [key in State]: Partial<Record<StateAction, ActionWithCallback>>;
 };
 
-export const useGetMachineFactory = ({
+export const useStateMachine = ({
   setRouteSelectedIndex,
   setPointSelectedIndex,
   updatePathOnRouteIndex,
@@ -227,7 +227,7 @@ export const useGetMachineFactory = ({
     },
   };
 
-  const getMachine = () => ({
+  return {
     currentState: states[currentState],
     currentStateName: currentState,
     execute: (desiredAction: StateAction, props?: unknown) => {
@@ -237,6 +237,5 @@ export const useGetMachineFactory = ({
         if (callback) callback(props);
       }
     },
-  });
-  return getMachine;
+  };
 };

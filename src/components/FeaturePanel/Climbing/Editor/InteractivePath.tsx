@@ -17,8 +17,7 @@ const NewMidpoint = styled.circle`
 
 const useTempMidpoint = () => {
   const [midpoint, setMidpoint] = useState<PositionPx | null>(null);
-  const { getMachine, svgRef, photoZoom } = useClimbingContext();
-  const machine = getMachine();
+  const { machine, svgRef, photoZoom } = useClimbingContext();
 
   const setMidpointPosition = (e: React.MouseEvent) => {
     if (
@@ -44,7 +43,7 @@ export const InteractivePath = ({ routeIndex, allowHoverMidpoint }: Props) => {
     isPointMoving,
     isRouteSelected,
     getPixelPosition,
-    getMachine,
+    machine,
     isEditMode,
     routeIndexHovered,
     setRouteIndexHovered,
@@ -54,7 +53,6 @@ export const InteractivePath = ({ routeIndex, allowHoverMidpoint }: Props) => {
     routes,
   } = useClimbingContext();
   const isSelected = isRouteSelected(routeIndex);
-  const machine = getMachine();
   const route = routes[routeIndex];
   const path = getPathForRoute(route);
   if (!path) {
