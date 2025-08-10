@@ -150,7 +150,7 @@ export const RoutesLayer = ({ isVisible }: Props) => {
       {routeIndexHovered != null && !isMobileMode ? (
         <>
           <RouteWithLabel routeIndex={routeIndexHovered} />
-          <InteractivePath routeIndex={routeIndexHovered} />
+          <InteractivePath routeIndex={routeIndexHovered} allowHoverMidpoint />
         </>
       ) : null}
 

@@ -34,9 +34,10 @@ const useTempMidpoint = () => {
 
 type Props = {
   routeIndex: number;
+  allowHoverMidpoint?: boolean;
 };
 
-export const InteractivePath = ({ routeIndex }: Props) => {
+export const InteractivePath = ({ routeIndex, allowHoverMidpoint }: Props) => {
   const isMobileMode = useMobileMode();
   const { midpoint, setMidpointPosition } = useTempMidpoint();
   const {
@@ -64,11 +65,10 @@ export const InteractivePath = ({ routeIndex }: Props) => {
   const unsetHover = () => setRouteIndexHovered(null);
 
   const isMidpointAddScenario =
+    isSelected &&
     !isPointMoving &&
     (machine.currentStateName === 'editRoute' ||
-      machine.currentStateName === 'extendRoute') &&
-    isSelected &&
-    routeIndexHovered !== null;
+      machine.currentStateName === 'extendRoute');
 
   const isExtendingDifferentRoute =
     machine.currentStateName === 'extendRoute' && !isRouteSelected(routeIndex);
@@ -83,6 +83,7 @@ export const InteractivePath = ({ routeIndex }: Props) => {
         hoveredPosition: getPositionInImageFromMouse(svgRef, e, photoZoom),
         hoveredSegmentIndex: segmentIndex,
       });
+      e.stopPropagation();
       return;
     }
 
@@ -120,7 +121,7 @@ export const InteractivePath = ({ routeIndex }: Props) => {
         );
       })}
 
-      {isMidpointAddScenario && midpoint && (
+      {allowHoverMidpoint && isMidpointAddScenario && midpoint && (
         <NewMidpoint
           cx={midpoint.x}
           cy={midpoint.y}
