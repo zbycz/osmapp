@@ -72,7 +72,10 @@ export const RoutesLayer = ({ isVisible }: Props) => {
 
     if (machine.currentStateName === 'pointMenu') {
       machine.execute('cancelPointMenu');
-    } else if (!isPanningActiveRef) {
+      return;
+    }
+
+    if (!isPanningActiveRef.current) {
       machine.execute('cancelRouteSelection');
     }
   };
@@ -108,7 +111,7 @@ export const RoutesLayer = ({ isVisible }: Props) => {
     }
   };
 
-  const handleOnMovingPointDropOnCanvas = () => {
+  const handleOnMovingPointDropped = () => {
     if (isPointMoving) {
       setPointSelectedIndex(null);
       setIsPointMoving(false);
@@ -121,7 +124,7 @@ export const RoutesLayer = ({ isVisible }: Props) => {
     <Svg
       $hasEditableCursor={machine.currentStateName === 'extendRoute'}
       onClick={onClick}
-      onMouseUp={handleOnMovingPointDropOnCanvas}
+      onMouseUp={handleOnMovingPointDropped}
       onPointerMove={onPointerMove}
       $imageSize={imageSize}
       $isVisible={isVisible}

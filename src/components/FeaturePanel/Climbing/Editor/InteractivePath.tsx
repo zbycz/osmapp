@@ -86,7 +86,10 @@ export const InteractivePath = ({ routeIndex }: Props) => {
         hoveredPosition: getPositionInImageFromMouse(svgRef, e, photoZoom),
         hoveredSegmentIndex: segmentIndex,
       });
-    } else if (isEditMode) {
+      return;
+    }
+
+    if (isEditMode) {
       machine.execute('editRoute', { routeNumber: routeIndex });
     } else {
       machine.execute('routeSelect', { routeNumber: routeIndex });
