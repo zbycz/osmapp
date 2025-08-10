@@ -87,6 +87,7 @@ function EnhancedTableHead({
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell />
       </TableRow>
     </TableHead>
   );

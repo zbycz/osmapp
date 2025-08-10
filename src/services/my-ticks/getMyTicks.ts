@@ -1,15 +1,12 @@
-import { getApiId, getShortId } from '../helpers';
+import { getApiId } from '../helpers';
 import { fetchJson } from '../fetch';
 import {
   getOverpassUrl,
+  OverpassFeature,
   overpassGeomToGeojson,
 } from '../overpass/overpassSearch';
 import { getAllTicks, getTickKey } from './ticks';
-import { Tick, TickStyle } from '../../components/FeaturePanel/Climbing/types';
-import {
-  findOrConvertRouteGrade,
-  getDifficulties,
-} from '../tagging/climbing/routeGrade';
+import { TickStyle } from '../../components/FeaturePanel/Climbing/types';
 import { FeatureTags, OsmId } from '../types';
 import { publishDbgObject } from '../../utils';
 
@@ -25,7 +22,9 @@ export type TickRowType = {
   tags: FeatureTags;
 };
 
-export const getMyTicks = async (userSettings): Promise<TickRowType[]> => {
+export const getMyTicksFeatures = async (
+  userSettings,
+): Promise<OverpassFeature[]> => {
   const allTicks = getAllTicks();
   publishDbgObject('allTicks', allTicks);
 
@@ -40,36 +39,5 @@ export const getMyTicks = async (userSettings): Promise<TickRowType[]> => {
   const overpass = await fetchJson(getOverpassUrl(query));
 
   const features = overpassGeomToGeojson(overpass);
-  const featureMap = Object.keys(features).reduce((acc, key) => {
-    const feature = features[key];
-    return {
-      ...acc,
-      [getShortId(feature.osmMeta)]: feature,
-    };
-  }, {});
-
-  const tickRows = allTicks.map((tick: Tick, index) => {
-    const feature = featureMap[tick.osmId];
-    const difficulties = getDifficulties(feature?.tags);
-    const { routeDifficulty } = findOrConvertRouteGrade(
-      difficulties,
-      userSettings['climbing.gradeSystem'],
-    );
-
-    return {
-      key: getTickKey(tick),
-      name: feature?.tags?.name,
-      grade: routeDifficulty.grade,
-      center: feature?.center,
-      index,
-      date: tick.date,
-      style: tick.style,
-      apiId: getApiId(tick.osmId),
-      tags: feature?.tags,
-    };
-  });
-
-  publishDbgObject('tickRows', tickRows);
-
-  return tickRows;
+  return features;
 };

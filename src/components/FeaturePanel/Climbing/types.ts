@@ -57,8 +57,10 @@ export type TickStyle =
   | 'TR'
   | 'FS'
   | null;
+
 export type Tick = {
   osmId: string;
   style: TickStyle;
   date: string;
+  key?: string;
 };

@@ -21,6 +21,7 @@ import { isClimbingCrag } from '../../../utils';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { GradeSystemSelect } from './GradeSystemSelect';
 import { PanelLabel } from './PanelLabel';
+import { OverpassFeature } from '../../../services/overpass/overpassSearch';
 
 const MAX_COLUMN_HEIGHT = 40;
 const NUMBER_OF_ROUTES_HEIGHT = 14;
@@ -102,13 +103,17 @@ const getGroupingLabel = (label: string, gradeSystem: GradeSystem) => {
     const match = label?.match(/^[A-Z0-9]+/);
     return match ? match[0] : '';
   }
+  if (gradeSystem === 'yds_class') {
+    const match = label?.match(/^[0-9]\.[0-9]+/);
+    return match ? match[0] : '';
+  }
   return String(parseFloat(label));
 };
 
 export const RouteDistribution = ({
   features,
 }: {
-  features: Array<Feature>;
+  features: Array<Feature | OverpassFeature>;
 }) => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
