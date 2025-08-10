@@ -283,6 +283,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     svgRef,
     photoZoom,
     setIsPanningDisabled,
+    photoPath,
   });
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;

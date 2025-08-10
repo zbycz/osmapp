@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { getEmptyRoute } from './getEmptyRoute';
 import { getPositionInImageFromMouse } from './mousePositionUtils';
+import { useSnackbar } from '../../../utils/SnackbarContext';
 
 export type State =
   | 'editRoute'
@@ -50,9 +51,11 @@ export const useGetMachineFactory = ({
   findCloserPoint,
   svgRef,
   photoZoom,
+  photoPath,
   setIsPanningDisabled,
 }) => {
   const [currentState, setCurrentState] = useState<State>('init');
+  const { showToast } = useSnackbar();
 
   const routeSelect = ({ routeNumber }) => {
     setRouteSelectedIndex(routeNumber);
@@ -124,9 +127,18 @@ export const useGetMachineFactory = ({
     );
   };
 
-  const addPointInBetween = ({ hoveredPosition, hoveredSegmentIndex }) => {
-    const position = getPercentagePosition(hoveredPosition);
+  const isMaximumNumberOfPoints = () => {
+    const currentLength = routes[routeSelectedIndex].paths?.[photoPath]?.length;
+    if (currentLength >= 19) {
+      showToast('Maximum number of points in a route is 19.');
+      return true;
+    }
+  };
 
+  const addPointInBetween = ({ hoveredPosition, hoveredSegmentIndex }) => {
+    if (isMaximumNumberOfPoints()) return;
+
+    const position = getPercentagePosition(hoveredPosition);
     updatePathOnRouteIndex(routeSelectedIndex, (path) => [
       ...path.slice(0, hoveredSegmentIndex + 1),
       position,
@@ -135,6 +147,8 @@ export const useGetMachineFactory = ({
   };
 
   const addPointToEnd = (event: React.MouseEvent) => {
+    if (isMaximumNumberOfPoints()) return;
+
     const positionInImage = getPositionInImageFromMouse(
       svgRef,
       event,
@@ -142,9 +156,7 @@ export const useGetMachineFactory = ({
     );
 
     const newCoordinate = getPercentagePosition(positionInImage);
-
     const closestPoint = findCloserPoint(newCoordinate);
-
     updatePathOnRouteIndex(routeSelectedIndex, (path) => [
       ...path,
       closestPoint ?? newCoordinate,
