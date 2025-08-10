@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from '@emotion/styled';
-
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
 import { RouteMarks } from './RouteMarks';
 import { InteractivePath } from './InteractivePath';
+import { updateElementOnIndex } from '../utils/array';
+import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
 
 const Svg = styled.svg<{
   $hasEditableCursor: boolean;
@@ -33,17 +34,10 @@ const Svg = styled.svg<{
 `;
 
 type Props = {
-  onClick: (e: any) => void;
-  onEditorMouseMove: (e: React.MouseEvent) => void;
-  isVisible?: boolean;
-  transformOrigin?: any;
+  isVisible: boolean;
 };
 
-export const RoutesLayer = ({
-  onClick,
-  onEditorMouseMove,
-  isVisible = true,
-}: Props) => {
+export const RoutesLayer = ({ isVisible }: Props) => {
   const {
     imageSize,
     getMachine,
@@ -57,11 +51,62 @@ export const RoutesLayer = ({
     routes,
     setIsPanningDisabled,
     svgRef,
+    setMousePosition,
+    getPercentagePosition,
+    findCloserPoint,
+    updatePathOnRouteIndex,
+    pointSelectedIndex,
+    isPointClicked,
+    photoZoom,
+    isPanningActiveRef,
   } = useClimbingContext();
-
   const machine = getMachine();
   const path = getCurrentPath();
   if (!path) return null;
+
+  const onClick = (event: React.MouseEvent) => {
+    if (machine.currentStateName === 'extendRoute') {
+      machine.execute('addPointToEnd', event);
+      return;
+    }
+
+    if (machine.currentStateName === 'pointMenu') {
+      machine.execute('cancelPointMenu');
+    } else if (!isPanningActiveRef) {
+      machine.execute('cancelRouteSelection');
+    }
+  };
+
+  const onPointerMove = (event: React.MouseEvent) => {
+    const positionInImage = getPositionInImageFromMouse(
+      svgRef,
+      event,
+      photoZoom,
+    );
+
+    if (isPointClicked) {
+      setMousePosition(null);
+      machine.execute('dragPoint', { position: positionInImage });
+      setIsPointMoving(true);
+
+      const newCoordinate = getPercentagePosition(positionInImage);
+      const closestPoint = findCloserPoint(newCoordinate);
+
+      const updatedPoint = closestPoint ?? newCoordinate;
+      updatePathOnRouteIndex(routeSelectedIndex, (path) =>
+        updateElementOnIndex(path, pointSelectedIndex, (point) => ({
+          ...point,
+          x: updatedPoint.x,
+          y: updatedPoint.y,
+          ...(closestPoint?.type ? { type: closestPoint?.type } : {}),
+        })),
+      );
+    } else if (machine.currentStateName !== 'extendRoute') {
+      setMousePosition(null);
+    } else if (routeIndexHovered === null) {
+      setMousePosition(positionInImage);
+    }
+  };
 
   const handleOnMovingPointDropOnCanvas = () => {
     if (isPointMoving) {
@@ -75,11 +120,9 @@ export const RoutesLayer = ({
   return (
     <Svg
       $hasEditableCursor={machine.currentStateName === 'extendRoute'}
-      onClick={(e) => {
-        onClick(e);
-      }}
+      onClick={onClick}
       onMouseUp={handleOnMovingPointDropOnCanvas}
-      onPointerMove={onEditorMouseMove}
+      onPointerMove={onPointerMove}
       $imageSize={imageSize}
       $isVisible={isVisible}
       xmlns="http://www.w3.org/2000/svg"
