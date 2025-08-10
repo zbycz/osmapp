@@ -6,6 +6,7 @@ import { RouteMarks } from './RouteMarks';
 import { InteractivePath } from './InteractivePath';
 import { updateElementOnIndex } from '../utils/array';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
+import { useMobileMode } from '../../../helpers';
 
 const Svg = styled.svg<{
   $hasEditableCursor: boolean;
@@ -38,6 +39,7 @@ type Props = {
 };
 
 export const RoutesLayer = ({ isVisible }: Props) => {
+  const isMobileMode = useMobileMode();
   const {
     imageSize,
     getMachine,
@@ -145,7 +147,7 @@ export const RoutesLayer = ({ isVisible }: Props) => {
         </>
       ) : null}
 
-      {routeIndexHovered != null ? (
+      {routeIndexHovered != null && !isMobileMode ? (
         <>
           <RouteWithLabel routeIndex={routeIndexHovered} />
           <InteractivePath routeIndex={routeIndexHovered} />

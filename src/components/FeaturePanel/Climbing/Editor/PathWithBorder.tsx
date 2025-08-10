@@ -8,6 +8,7 @@ import {
   getDifficultyColor,
 } from '../../../../services/tagging/climbing/routeGrade';
 import { ClimbingRoute } from '../types';
+import { useMobileMode } from '../../../helpers';
 
 const RouteLine = styled.path`
   pointer-events: none;
@@ -23,6 +24,7 @@ type Props = {
 };
 
 export const PathWithBorder = ({ d, routeIndex, opacity }: Props) => {
+  const isMobileMode = useMobileMode();
   const config = useConfig();
   const theme = useTheme();
   const {
@@ -68,7 +70,7 @@ export const PathWithBorder = ({ d, routeIndex, opacity }: Props) => {
           opacity ? opacity : isOtherSelected ? (isEditMode ? 1 : 0.6) : 1
         }
       />
-      {routeIndexHovered === routeIndex && (
+      {!isMobileMode && routeIndexHovered === routeIndex && (
         <RouteLine
           d={d}
           strokeWidth={config.pathStrokeWidth}
