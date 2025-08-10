@@ -50,76 +50,13 @@ export const RoutesEditor = ({
 }) => {
   const {
     imageSize,
-    getMachine,
-    setMousePosition,
-    setIsPointMoving,
-    getPercentagePosition,
-    findCloserPoint,
-    updatePathOnRouteIndex,
-    routeSelectedIndex,
-    pointSelectedIndex,
-    isPointClicked,
-    routeIndexHovered,
     loadPhotoRelatedData,
     loadedPhotos,
     photoRef,
-    svgRef,
     photoPath,
     setLoadedPhotos,
-    photoZoom,
     photoPaths,
-    isPanningActiveRef,
   } = useClimbingContext();
-  const machine = getMachine();
-
-  const onCanvasClick = (event: React.MouseEvent) => {
-    if (machine.currentStateName === 'extendRoute') {
-      machine.execute('addPointToEnd', event);
-      return;
-    }
-
-    if (machine.currentStateName === 'pointMenu') {
-      machine.execute('cancelPointMenu');
-    } else if (!isPanningActiveRef) {
-      machine.execute('cancelRouteSelection');
-    }
-  };
-
-  // @TODO doesn't work on mobile
-  const onMove = (position: PositionPx) => {
-    if (isPointClicked) {
-      setMousePosition(null);
-      machine.execute('dragPoint', { position });
-      setIsPointMoving(true);
-
-      const newCoordinate = getPercentagePosition(position);
-      const closestPoint = findCloserPoint(newCoordinate);
-
-      const updatedPoint = closestPoint ?? newCoordinate;
-      updatePathOnRouteIndex(routeSelectedIndex, (path) =>
-        updateElementOnIndex(path, pointSelectedIndex, (point) => ({
-          ...point,
-          x: updatedPoint.x,
-          y: updatedPoint.y,
-          ...(closestPoint?.type ? { type: closestPoint?.type } : {}),
-        })),
-      );
-    } else if (machine.currentStateName !== 'extendRoute') {
-      setMousePosition(null);
-    } else if (routeIndexHovered === null) {
-      setMousePosition(position);
-    }
-  };
-
-  const onMouseMove = (event: React.MouseEvent) => {
-    const positionInImage = getPositionInImageFromMouse(
-      svgRef,
-      event,
-      photoZoom,
-    );
-
-    onMove(positionInImage);
-  };
 
   const preloadOtherPhotos = () => {
     const photosToLoad = photoPaths.filter((path) => !loadedPhotos[path]);
@@ -162,13 +99,7 @@ export const RoutesEditor = ({
       <ImageContainer>
         <ImageElement src={imageUrl} onLoad={onPhotoLoad} ref={photoRef} />
       </ImageContainer>
-      {!isPhotoLoading && (
-        <RoutesLayer
-          isVisible={isRoutesLayerVisible}
-          onClick={onCanvasClick}
-          onEditorMouseMove={onMouseMove}
-        />
-      )}
+      {!isPhotoLoading && <RoutesLayer isVisible={isRoutesLayerVisible} />}
     </EditorContainer>
   );
 };
