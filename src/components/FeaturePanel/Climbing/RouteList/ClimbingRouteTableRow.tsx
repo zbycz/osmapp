@@ -16,7 +16,6 @@ import { intl, t } from '../../../../services/intl';
 import {
   Chip,
   IconButton,
-  Menu,
   MenuItem,
   Stack,
   Tooltip,
@@ -31,6 +30,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMobileMode } from '../../../helpers';
 import { ClimbingBadges } from '../ClimbingBadges';
+import { useMoreMenu } from '../useMoreMenu';
 
 const Container = styled.div`
   width: 100%;
@@ -93,30 +93,6 @@ const Row = styled('a', {
       $isHoverHighlighted ? 'rgba(0, 0, 0, 0.1)' : ''};
   }
 `;
-
-const useMoreMenu = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
-  const handleClickMore = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    event.preventDefault();
-    event.stopPropagation();
-  };
-
-  const handleCloseMore = (event) => {
-    setAnchorEl(null);
-    event.stopPropagation();
-  };
-
-  const MoreMenu = ({ children }) => (
-    <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMore}>
-      {children}
-    </Menu>
-  );
-
-  return { anchorEl, open, handleClickMore, handleCloseMore, MoreMenu };
-};
 
 type ClimbingTableRowProps = {
   feature: Feature;

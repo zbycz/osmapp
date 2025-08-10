@@ -118,7 +118,7 @@ const isClosedWay = (element: OverpassObject) => {
   return first.lat === last.lat && first.lon === last.lon;
 };
 
-type OverpassFeature = FeatureGeojson & {
+export type OverpassFeature = FeatureGeojson & {
   tags: Record<string, string>;
 };
 

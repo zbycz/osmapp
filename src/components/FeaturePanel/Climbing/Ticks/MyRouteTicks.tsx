@@ -3,8 +3,9 @@ import styled from '@emotion/styled';
 import { Table } from '@mui/material';
 import { findTicks, getTickKey } from '../../../../services/my-ticks/ticks';
 import { PanelLabel } from '../PanelLabel';
-import { TickRow } from '../TickRow';
+import { RouteTickRow } from '../RouteTickRow';
 import { AddTickButton } from './AddTickButton';
+import { ClientOnly } from '../../../helpers';
 
 const Container = styled.div`
   margin-bottom: 20px;
@@ -25,16 +26,18 @@ export const MyRouteTicks = ({ shortOsmId }) => {
     );
 
   return (
-    <Container>
-      <PanelLabel addition={<AddTickButton shortOsmId={shortOsmId} />}>
-        Route ticks
-      </PanelLabel>
-      <Table size="small">
-        {ticks.map((tick) => {
-          const tickKey = getTickKey(tick);
-          return <TickRow tick={tick} key={tickKey} />;
-        })}
-      </Table>
-    </Container>
+    <ClientOnly>
+      <Container>
+        <PanelLabel addition={<AddTickButton shortOsmId={shortOsmId} />}>
+          Route ticks
+        </PanelLabel>
+        <Table size="small">
+          {ticks.map((tick) => {
+            const tickKey = getTickKey(tick);
+            return <RouteTickRow tick={tick} key={tickKey} />;
+          })}
+        </Table>
+      </Container>
+    </ClientOnly>
   );
 };

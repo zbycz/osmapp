@@ -6,7 +6,7 @@ export const DEFAULT_MAP = 'basic';
 
 export const DEBUG_ID_SCHEMA = false;
 
-export const DEFAULT_DATA_FORMAT = 'd.M.yyyy';
+export const DEFAULT_DATA_FORMAT = 'd.M.yy';
 
 export const LANGUAGES = {
   de: 'Deutsch',

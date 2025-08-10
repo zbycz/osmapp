@@ -1,5 +1,12 @@
 import React from 'react';
-import { FormControl, MenuItem, Select, Tooltip } from '@mui/material';
+import {
+  FormControl,
+  FormControlLabel,
+  InputLabel,
+  MenuItem,
+  Select,
+  Tooltip,
+} from '@mui/material';
 import styled from '@emotion/styled';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import { TickStyle } from '../types';
@@ -24,8 +31,10 @@ export const TickStyleSelect = ({
   value: TickStyle;
   onChange: (e) => void;
 }) => (
-  <FormControl size="small">
-    <Select value={value} onChange={onChange}>
+  <FormControl>
+    <InputLabel>Tick style</InputLabel>
+
+    <Select value={value} onChange={onChange} label="Tick style">
       {tickStyles.map((tickStyle) => (
         <MenuItem key={tickStyle.key} value={tickStyle.key}>
           <Row>
