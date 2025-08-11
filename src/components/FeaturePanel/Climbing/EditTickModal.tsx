@@ -33,10 +33,12 @@ export const EditTickModal = ({
   const [tempTick, setTempTick] = useState<Partial<Tick>>(undefined);
 
   useEffect(() => {
-    setTempTick({
-      date: tick.date,
-      style: tick.style,
-    });
+    if (tick) {
+      setTempTick({
+        date: tick.date,
+        style: tick.style,
+      });
+    }
   }, [tick]);
 
   const updateTempTick = (key: string, value: unknown) => {

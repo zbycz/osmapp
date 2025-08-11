@@ -99,10 +99,9 @@ export const onTickAdd = ({
 }) => {
   if (!osmId) return;
   const ticks = getAllTicks();
-  setLocalStorageItem(KEY, [
-    ...ticks,
-    { osmId, date: new Date().toISOString(), style },
-  ]);
+  const newTick = { osmId, date: new Date().toISOString(), style };
+  setLocalStorageItem(KEY, [...ticks, newTick]);
+  return newTick;
 };
 
 export const findTicks = (osmId: string): Array<Tick> => {
