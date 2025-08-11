@@ -47,6 +47,7 @@ const getInitialToast = (featureFromRouter: Feature | '404') =>
     ? {
         message: t('url_not_found_toast'),
         severity: 'warning' as const,
+        action: undefined,
       }
     : undefined;
 
