@@ -90,7 +90,13 @@ const Chart = styled.div<{ $ratio: number; $color: string }>`
   width: 15px;
 `;
 
-const getGroupingLabel = (label: string, gradeSystem: GradeSystem) => {
+const getGroupingLabel = (
+  label: string,
+  gradeSystem: GradeSystem,
+  isGrouped: boolean,
+) => {
+  if (isGrouped === false) return label;
+
   if (gradeSystem === 'saxon') {
     const match = label?.match(/^[A-Z]+/);
     return match ? match[0] : '';
@@ -110,10 +116,31 @@ const getGroupingLabel = (label: string, gradeSystem: GradeSystem) => {
   return String(parseFloat(label));
 };
 
+const heightsRatiosCutMargins = (heightsRatios) => {
+  const leftMarginIndex = heightsRatios.findIndex(({ ratio }) => ratio > 0);
+  const rightMarginIndex = heightsRatios
+    .slice()
+    .reverse()
+    .findIndex(({ ratio }) => ratio > 0);
+
+  if (leftMarginIndex === -1 || rightMarginIndex === -1) {
+    return heightsRatios;
+  }
+
+  return heightsRatios.slice(
+    leftMarginIndex,
+    heightsRatios.length - rightMarginIndex,
+  );
+};
+
 export const RouteDistribution = ({
   features,
+  cutEmptyMargins = false,
+  isGrouped = true,
 }: {
   features: Array<Feature | OverpassFeature>;
+  cutEmptyMargins?: boolean;
+  isGrouped?: boolean;
 }) => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
@@ -125,7 +152,7 @@ export const RouteDistribution = ({
     GRADE_TABLE[gradeSystem].reduce<{ [grade: string]: number }>(
       (acc, grade) => ({
         ...acc,
-        [getGroupingLabel(grade, gradeSystem)]: 0,
+        [getGroupingLabel(grade, gradeSystem, isGrouped)]: 0,
       }),
       {},
     );
@@ -140,7 +167,7 @@ export const RouteDistribution = ({
         gradeSystem,
         difficulty.grade,
       );
-      const newGrade = getGroupingLabel(convertedGrade, gradeSystem);
+      const newGrade = getGroupingLabel(convertedGrade, gradeSystem, isGrouped);
       if (!structure) return {};
       const updatedKey = Object.keys(structure).find(
         (grade) => grade === newGrade,
@@ -178,13 +205,18 @@ export const RouteDistribution = ({
     ...heightsRatios.map(({ ratio }) => ratio),
   );
   const gradeSystemName = getGradeSystemName(gradeSystem);
+  // delete heightsRatios from left and right margins if they are empty and save it in new array
+
+  const data = cutEmptyMargins
+    ? heightsRatiosCutMargins(heightsRatios)
+    : heightsRatios;
 
   return (
     <Container>
       <ContentContainer>
         <Items>
           <GraphItems>
-            {heightsRatios.map((heightRatioItem) => {
+            {data.map((heightRatioItem) => {
               const color = getDifficultyColor(
                 {
                   gradeSystem: gradeSystem,

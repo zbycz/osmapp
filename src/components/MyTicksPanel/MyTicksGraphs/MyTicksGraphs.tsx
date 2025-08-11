@@ -1,6 +1,6 @@
 import { RouteDistribution } from '../../FeaturePanel/Climbing/RouteDistribution';
 import React from 'react';
-import { Typography } from '@mui/material';
+import { FormControlLabel, Switch, Typography } from '@mui/material';
 import { PanelSidePadding } from '../../utils/PanelHelpers';
 import { OverpassFeature } from '../../../services/overpass/overpassSearch';
 
@@ -9,6 +9,7 @@ type MyTicksGraphsProps = {
 };
 
 export const MyTicksGraphs = ({ features }: MyTicksGraphsProps) => {
+  const [isGrouped, setIsGrouped] = React.useState(true);
   if (features.length === 0) {
     return null;
   }
@@ -20,7 +21,23 @@ export const MyTicksGraphs = ({ features }: MyTicksGraphsProps) => {
           Routes distribution
         </Typography>
       </PanelSidePadding>
-      <RouteDistribution features={features} />
+      <RouteDistribution
+        features={features}
+        cutEmptyMargins={!isGrouped}
+        isGrouped={isGrouped}
+      />
+      <PanelSidePadding>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={isGrouped}
+              size="small"
+              onChange={(e) => setIsGrouped(e.target.checked)}
+            />
+          }
+          label="Grouping"
+        />
+      </PanelSidePadding>
     </>
   );
 };
