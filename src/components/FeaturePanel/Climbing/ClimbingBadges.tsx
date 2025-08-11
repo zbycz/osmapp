@@ -1,8 +1,10 @@
 import React from 'react';
-import { Feature } from '../../../services/types';
+import { Feature, TranslationId } from '../../../services/types';
 import styled from '@emotion/styled';
 import { Chip, Stack, Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { MessageType } from 'maplibre-gl';
 
 const StyledChip = styled(Chip)`
   font-size: 10px;
@@ -13,11 +15,6 @@ const StyledChip = styled(Chip)`
     padding: 4px;
   }
 `;
-
-type Props = {
-  feature: Feature;
-  hasTooltip?: boolean;
-};
 
 const climbingTypes = {
   boulder: {
@@ -135,8 +132,13 @@ const climbingHazards = {
   },
 } as const;
 
-const renderTitle = (label, tagValue: string) => {
+const renderTitle = (label: TranslationId, tagValue: string) => {
   return `${t(label)}${tagValue !== 'yes' ? ` (${tagValue})` : ''}`;
+};
+
+type Props = {
+  feature: Feature;
+  hasTooltip?: boolean;
 };
 
 export const ClimbingBadges = ({ feature, hasTooltip }: Props) => {
@@ -172,4 +174,13 @@ export const ClimbingBadges = ({ feature, hasTooltip }: Props) => {
       )}
     </Stack>
   );
+};
+
+export const PanelClimbingBadges = () => {
+  const { feature } = useFeatureContext();
+  if (!feature.tags.climbing) {
+    return null;
+  }
+
+  return <ClimbingBadges feature={feature} hasTooltip />;
 };
