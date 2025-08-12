@@ -130,7 +130,7 @@ const convertToRelationFactory = (
       const newRelation: DataItem = {
         shortId: newShortId,
         version: undefined,
-        tagsEntries: currentItem.tagsEntries,
+        tagsEntries: [['type', 'site'], ...currentItem.tagsEntries],
         toBeDeleted: false,
         nodeLonLat: undefined,
         nodes: undefined,

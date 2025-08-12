@@ -108,6 +108,20 @@ const TagsEditorInner = () => {
   );
 };
 
+const TagsCount = () => {
+  const { tagsEntries } = useCurrentItem();
+  if (!tagsEntries.length) {
+    return null;
+  }
+  return (
+    // This is intentionaly Typography, not a Chip. Because the number is not the same importancy level as number of Members/Parents.
+    <Typography variant="caption" color="secondary">
+      {' '}
+      ({tagsEntries.length})
+    </Typography>
+  );
+};
+
 export const TagsEditor = () => {
   const { focusTag } = useEditDialogContext();
   const focusThisEditor = isString(focusTag) && !majorKeys.includes(focusTag);
@@ -137,6 +151,7 @@ export const TagsEditor = () => {
             <AppsIcon />
             <Typography variant="button">
               {t('editdialog.tags_editor')}
+              <TagsCount />
             </Typography>
           </Stack>
         </AccordionSummary>
