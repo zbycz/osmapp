@@ -17,10 +17,12 @@ import { AddMemberForm } from './AddMemberForm';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { CragIcon } from '../../../Climbing/CragIcon';
 import { Setter } from '../../../../../types';
-import { useHandleItemClick, useOpenAll } from '../useHandleItemClick';
+import {
+  useHandleItemClick,
+  useHandleOpenAllMembers,
+} from '../useHandleItemClick';
 import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
 import { useCurrentItem } from '../../EditContext';
-import { Members } from '../../useEditItems';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -66,20 +68,13 @@ const AccordionComponent = ({
   membersLength,
   isExpanded,
   setIsExpanded,
-  members,
 }: {
   children: React.ReactNode;
   membersLength?: number;
   isExpanded?: boolean;
   setIsExpanded?: Setter<boolean>;
-  members: Members;
 }) => {
-  const openAll = useOpenAll(members.map(({ shortId }) => shortId));
-
-  const handleOpenAll = (e) => {
-    openAll();
-    e.stopPropagation();
-  };
+  const handleOpenAll = useHandleOpenAllMembers();
 
   return (
     <Accordion disableGutters elevation={0} square expanded={isExpanded}>
@@ -131,7 +126,6 @@ export const MembersEditor = () => {
       membersLength={members?.length}
       isExpanded={isExpanded}
       setIsExpanded={setIsExpanded}
-      members={members}
     >
       {members?.map((member) => (
         <FeatureRow

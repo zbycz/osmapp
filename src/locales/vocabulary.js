@@ -249,7 +249,7 @@ export default {
   'editdialog.comment': 'Comment on your changes (optional)',
   'editdialog.comment_checkbox': 'Add comment to your changes',
   'editdialog.comment_placeholder': 'Note, link to source, etc.',
-  'editdialog.info_edit': `Your edit will be immediately saved to the OpenStreetMap, but it can take a few minutes to show new content on the map. Please,
+  'editdialog.info_edit': `Your edit will be immediately saved to the OpenStreetMap, but the time to show up depends on each map layer. Please,
          enter only information from your own or verified sources. It is prohibited
          to copy copyrighted data (e.g. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">More info</a>`,
   'editdialog.info_note':

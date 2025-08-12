@@ -20,7 +20,10 @@ import { useCurrentItem, useEditContext } from '../../EditContext';
 import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
-import { useHandleItemClick, useOpenAll } from '../useHandleItemClick';
+import {
+  useHandleItemClick,
+  useHandleOpenAllParents,
+} from '../useHandleItemClick';
 import { Feature } from '../../../../../services/types';
 
 const SectionName = () => {
@@ -98,14 +101,7 @@ export const ParentsEditor = () => {
   const [isExpanded, setIsExpanded] = React.useState(false);
   const handleClick = useHandleItemClick(setIsExpanded);
   const parents = useGetParents();
-  const openAll = useOpenAll(
-    parents.map((parent) => getShortId(parent.osmMeta)),
-  );
-
-  const handleOpenAll = (e) => {
-    openAll();
-    e.stopPropagation();
-  };
+  const handleOpenAll = useHandleOpenAllParents(parents);
 
   if (!parents || parents.length === 0) {
     return null;
