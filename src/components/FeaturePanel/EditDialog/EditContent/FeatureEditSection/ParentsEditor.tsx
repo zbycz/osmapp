@@ -116,19 +116,11 @@ export const ParentsEditor = () => {
         id="panel1-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <Stack
-          direction="row"
-          spacing={2}
-          alignItems="center"
-          justifyContent="space-between"
-          flex="1"
-        >
-          <Stack direction="row" spacing={2} alignItems="center">
-            <Typography variant="button">
-              <SectionName />
-            </Typography>
-            <Chip size="small" label={parents.length} variant="outlined" />
-          </Stack>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography variant="button">
+            <SectionName />
+          </Typography>
+          <Chip size="small" label={parents.length} variant="outlined" />
         </Stack>
       </AccordionSummary>
       <AccordionDetails>

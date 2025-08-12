@@ -83,19 +83,11 @@ const AccordionComponent = ({
         id="panel1-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <Stack
-          direction="row"
-          spacing={2}
-          alignItems="center"
-          justifyContent="space-between"
-          flex="1"
-        >
-          <Stack direction="row" spacing={2} alignItems="center">
-            <SectionName />
-            {membersLength ? (
-              <Chip size="small" label={membersLength} variant="outlined" />
-            ) : null}
-          </Stack>
+        <Stack direction="row" spacing={2} alignItems="center">
+          <SectionName />
+          {membersLength ? (
+            <Chip size="small" label={membersLength} variant="outlined" />
+          ) : null}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
