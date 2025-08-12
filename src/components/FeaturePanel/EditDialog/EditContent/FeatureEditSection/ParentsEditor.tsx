@@ -25,6 +25,7 @@ import {
   useHandleOpenAllParents,
 } from '../useHandleItemClick';
 import { Feature } from '../../../../../services/types';
+import { OpenAllButton } from './helpers';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -128,11 +129,6 @@ export const ParentsEditor = () => {
             </Typography>
             <Chip size="small" label={parents.length} variant="outlined" />
           </Stack>
-          {isExpanded && (
-            <Button size="small" color="secondary" onClick={handleOpenAll}>
-              {t('editdialog.open_all')}
-            </Button>
-          )}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
@@ -148,6 +144,12 @@ export const ParentsEditor = () => {
               />
             );
           })}
+
+          {parents.length > 1 && (
+            <Stack alignItems="end">
+              <OpenAllButton onClick={handleOpenAll} />
+            </Stack>
+          )}
         </List>
       </AccordionDetails>
     </Accordion>

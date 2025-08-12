@@ -3,7 +3,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Button,
+  Box,
   Chip,
   List,
   Stack,
@@ -23,6 +23,7 @@ import {
 } from '../useHandleItemClick';
 import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
 import { useCurrentItem } from '../../EditContext';
+import { OpenAllButton } from './helpers';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -74,8 +75,6 @@ const AccordionComponent = ({
   isExpanded?: boolean;
   setIsExpanded?: Setter<boolean>;
 }) => {
-  const handleOpenAll = useHandleOpenAllMembers();
-
   return (
     <Accordion disableGutters elevation={0} square expanded={isExpanded}>
       <AccordionSummary
@@ -97,11 +96,6 @@ const AccordionComponent = ({
               <Chip size="small" label={membersLength} variant="outlined" />
             ) : null}
           </Stack>
-          {isExpanded && (
-            <Button size="small" color="secondary" onClick={handleOpenAll}>
-              {t('editdialog.open_all')}
-            </Button>
-          )}
         </Stack>
       </AccordionSummary>
       <AccordionDetails>
@@ -116,6 +110,7 @@ export const MembersEditor = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const handleClick = useHandleItemClick(setIsExpanded);
   const convertible = isConvertible(shortId, tags);
+  const handleOpenAll = useHandleOpenAllMembers();
 
   if (!members && !convertible) {
     return null;
@@ -137,7 +132,13 @@ export const MembersEditor = () => {
         />
       ))}
 
-      {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
+      <Stack direction="row" spacing={2}>
+        {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
+
+        <Box sx={{ flex: '1' }} />
+
+        {members?.length > 1 && <OpenAllButton onClick={handleOpenAll} />}
+      </Stack>
     </AccordionComponent>
   );
 };

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { CharacterCount, getInputTypeForKey } from '../helpers';
-import { Stack, TextField } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 import styled from '@emotion/styled';
+import { useLoadingState } from '../../../../utils/useLoadingState';
+import { t } from '../../../../../services/intl';
 
 const MAX_INPUT_LENGTH = 255;
 const InputContainer = styled.div`
@@ -75,5 +77,30 @@ export const TextFieldWithCharacterCount = ({
         }
       />
     </InputContainer>
+  );
+};
+
+type OpenAllButtonProps = {
+  onClick: (e: React.MouseEvent) => Promise<void>;
+};
+export const OpenAllButton = ({ onClick }: OpenAllButtonProps) => {
+  const { isLoading, startLoading, stopLoading } = useLoadingState();
+
+  const handleClick = (e: React.MouseEvent) => {
+    startLoading();
+    onClick(e).then(() => {
+      stopLoading();
+    });
+  };
+
+  return (
+    <Button
+      size="small"
+      color="secondary"
+      loading={isLoading}
+      onClick={handleClick}
+    >
+      {t('editdialog.open_all')}
+    </Button>
   );
 };

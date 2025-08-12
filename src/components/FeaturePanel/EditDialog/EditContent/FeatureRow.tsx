@@ -8,35 +8,23 @@ import {
 } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import styled from '@emotion/styled';
-import React, { useCallback, useState } from 'react';
+import React from 'react';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 import { useEditContext } from '../EditContext';
-import { useBoolState } from '../../../helpers';
+import { useLoadingState } from '../../../utils/useLoadingState';
 
-const useLoadingState = () => {
-  const [isLoading, start, stop] = useBoolState(false);
-  const timeout = React.useRef<NodeJS.Timeout>();
-  return {
-    isLoading,
-    startLoading: useCallback(() => {
-      timeout.current = setTimeout(start, 300);
-    }, [start]),
-    stopLoading: useCallback(() => {
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-        timeout.current = undefined;
-      }
-      stop();
-    }, [stop]),
-  };
-};
+const StyledListItem = styled(ListItem)`
+  &:hover {
+    background-color: ${({ theme }) => theme.palette.background.hover};
+    cursor: pointer;
+  }
+`;
 
-const StyledListItem = styled(ListItem)(({ theme }) => ({
-  ':hover': {
-    backgroundColor: theme.palette.background.hover,
-    cursor: 'pointer',
-  },
-}));
+const StyledDivider = styled(Divider)`
+  &:last-of-type {
+    border: none;
+  }
+`;
 
 type Props = {
   label?: string;
@@ -83,7 +71,7 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
           {isLoading ? <CircularProgress size={14} /> : <ChevronRightIcon />}
         </Stack>
       </StyledListItem>
-      <Divider />
+      <StyledDivider />
     </>
   );
 };

@@ -50,9 +50,9 @@ export const useHandleOpenAllParents = (parents: Feature[]) => {
   const { addItem, items } = useEditContext();
   const shortIds = parents.map((parent) => getShortId(parent.osmMeta));
 
-  return (e: React.MouseEvent) => {
+  return async (e: React.MouseEvent) => {
     e.stopPropagation();
-    addAllItems(shortIds, addItem, items);
+    await addAllItems(shortIds, addItem, items);
   };
 };
 
@@ -61,8 +61,8 @@ export const useHandleOpenAllMembers = () => {
   const { addItem, items } = useEditContext();
   const shortIds = members?.map(({ shortId }) => shortId);
 
-  return (e: React.MouseEvent) => {
+  return async (e: React.MouseEvent) => {
     e.stopPropagation();
-    addAllItems(shortIds, addItem, items);
+    await addAllItems(shortIds, addItem, items);
   };
 };
