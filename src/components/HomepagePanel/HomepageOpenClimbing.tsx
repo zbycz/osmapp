@@ -6,6 +6,7 @@ import {
   Accordion,
   AccordionSummary,
   AccordionDetails,
+  Box,
 } from '@mui/material';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -22,6 +23,7 @@ import { DividerOpenClimbing } from './DividerOpenClimbing';
 import { useMobileMode } from '../helpers';
 import { HomepageOpenClimbingGallery } from './HomepageOpenClimbingGallery';
 import { SupportUs } from './SupportUs';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 const AccordionStyle = {
   '&:before': {
     backgroundColor: 'transparent !important',
@@ -110,18 +112,18 @@ const Description = ({ isTextInfoExpanded, setIsTextInfoExpanded }) => (
     </Typography>
     {isTextInfoExpanded && (
       <Typography variant="body2" component="p" color="inherit" mt={1}>
-        {t('homepage.expanded_description_p1')}{' '}
+        {t('homepage.climbing.expanded_description_p1')}{' '}
         <Link href="https://wikipedia.org/wiki/OpenStreetMap" target="_blank">
           OpenStreetMap
         </Link>{' '}
-        {t('homepage.expanded_description_p2')}{' '}
+        {t('homepage.climbing.expanded_description_p2')}{' '}
         <Link
           href="https://wikipedia.org/wiki/Wikimedia_Commons"
           target="_blank"
         >
           Wikimedia Commons
-        </Link>{' '}
-        {t('homepage.expanded_description_p3')}
+        </Link>
+        {t('homepage.climbing.expanded_description_p3')}
       </Typography>
     )}
   </>
@@ -145,24 +147,36 @@ const Buttons = ({ onClose }) => (
     >
       {t('homepage.go_to_map_button')}
     </Button>
-    <Stack spacing={1} direction={'row'} mb={6}>
-      <Button
-        variant="text"
-        fullWidth
-        href="https://medium.com/@jvaclavik/how-to-contribute-to-openclimbing-org-9a159ddd5d4c"
-        target="_blank"
-      >
-        {t('homepage.add_new_climbing_area')}
-      </Button>
-      <Button
-        variant="text"
-        fullWidth
-        href={STORY_URL(intl.lang)}
-        target="_blank"
-      >
-        {t('homepage.our_story')}
-      </Button>
-    </Stack>
+    <Box mb={2}>
+      <Stack spacing={1} direction="row">
+        <Button
+          variant="text"
+          fullWidth
+          href="https://medium.com/@jvaclavik/how-to-contribute-to-openclimbing-org-9a159ddd5d4c"
+          target="_blank"
+        >
+          {t('homepage.add_new_climbing_area')}
+        </Button>
+        <Button
+          variant="text"
+          fullWidth
+          href={STORY_URL(intl.lang)}
+          target="_blank"
+        >
+          {t('homepage.our_story')}
+        </Button>
+      </Stack>
+      <Box sx={{ textAlign: 'center' }}>
+        <Button
+          variant="text"
+          href="https://community.openclimbing.org"
+          target="_blank"
+        >
+          <QuestionAnswerIcon fontSize="inherit" sx={{ mr: 1 }} />
+          {t('climbing.forum')}
+        </Button>
+      </Box>
+    </Box>
   </>
 );
 

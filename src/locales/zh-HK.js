@@ -122,9 +122,9 @@ export default {
   'homepage.openclimbing_description_p2': '所有資料都係開放嘅，任何人都可以編輯 – 同維基百科好似。',
   'homepage.openclimbing_climbing_area': '攀石區',
   'homepage.description_show_more': '顯示更多',
-  'homepage.expanded_description_p1': '呢個應用程式係開源開發，佢用',
-  'homepage.expanded_description_p2': '嚟儲存攀石路線，而相片就經',
-  'homepage.expanded_description_p3': '分享，令資訊可以簡單又有效率咁共享。',
+  'homepage.climbing.expanded_description_p1': '呢個應用程式係開源開發，佢用',
+  'homepage.climbing.expanded_description_p2': '嚟儲存攀石路線，而相片就經',
+  'homepage.climbing.expanded_description_p3': '分享，令資訊可以簡單又有效率咁共享。',
   'homepage.discover_more_p1': '發現其他',
   'homepage.discover_more_p2': '地區',
 

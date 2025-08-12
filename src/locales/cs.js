@@ -89,9 +89,9 @@ export default {
   'homepage.openclimbing_description_p2': `Všechna data jsou otevřená a každý je může upravit – podobně jako na Wikipedii.`,
   'homepage.openclimbing_climbing_area': `Lezecká oblast`,
   'homepage.description_show_more': `zobrazit více`,
-  'homepage.expanded_description_p1': `Aplikace je vyvíjena jako open-source, využívá`,
-  'homepage.expanded_description_p2': `pro ukládání lezeckých cest a obrázky jsou sdíleny prostřednictvím`,
-  'homepage.expanded_description_p3': `, což umožňuje snadné a efektivní sdílení informací.`,
+  'homepage.climbing.expanded_description_p1': `Aplikace je vyvíjena jako open-source, využívá`,
+  'homepage.climbing.expanded_description_p2': `pro ukládání lezeckých cest a obrázky jsou sdíleny prostřednictvím`,
+  'homepage.climbing.expanded_description_p3': `, což umožňuje snadné a efektivní sdílení informací.`,
   'homepage.discover_more_p1': `Prozkoumat dalších`,
   'homepage.discover_more_p2': `oblastí`,
 
@@ -405,6 +405,7 @@ export default {
   'climbing.type.crag': 'Lezecký sektor/skála',
   'climbing.type.gym': 'Lezecká stěna',
   'climbing.type.ferrata': 'Via Ferrata',
+  'climbing.forum': 'Diskusní fórum',
 
   'climbing_badges.hazard_animal_nest_description': 'Na cestě je hnízdo ptáků, vos nebo jiných zvířat.',
   'climbing_badges.hazard_animal_nest_label': 'zvířecí hnízdo',

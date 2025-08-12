@@ -122,9 +122,9 @@ export default {
   'homepage.openclimbing_description_p2': '所有数据都是开放的，任何人都可以编辑——类似于维基百科。',
   'homepage.openclimbing_climbing_area': '攀岩区域',
   'homepage.description_show_more': '显示更多',
-  'homepage.expanded_description_p1': '本应用是开源开发的，它使用',
-  'homepage.expanded_description_p2': '来存储攀岩路线，图片则通过',
-  'homepage.expanded_description_p3': '共享，从而实现简单高效的信息共享。',
+  'homepage.climbing.expanded_description_p1': '本应用是开源开发的，它使用',
+  'homepage.climbing.expanded_description_p2': '来存储攀岩路线，图片则通过',
+  'homepage.climbing.expanded_description_p3': '共享，从而实现简单高效的信息共享。',
   'homepage.discover_more_p1': '发现其他',
   'homepage.discover_more_p2': '区域',
 
