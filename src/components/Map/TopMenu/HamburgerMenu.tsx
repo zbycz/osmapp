@@ -21,6 +21,8 @@ import { HamburgerIconButton } from './HamburgerIconButton';
 import { PROJECT_ID } from '../../../services/project';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import Link from 'next/link';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
+import OpenInNewIcon from '@mui/icons-material/OpenInNew';
 
 const StyledGithubIcon = styled(GithubIcon)`
   filter: ${({ theme }) => theme.palette.invertFilter};
@@ -119,9 +121,21 @@ const GithubLink = ({ closeMenu }) => (
   </MenuItem>
 );
 const ClimbingAreasLink = ({ closeMenu }) => (
-  <MenuItem href={`/climbing-areas`} component={Link} onClick={closeMenu}>
+  <MenuItem href="/climbing-areas" component={Link} onClick={closeMenu}>
     <TerrainIcon fontSize="inherit" sx={{ mr: 1 }} />
     {t('climbingareas.title')}
+  </MenuItem>
+);
+const ClimbingForumLink = ({ closeMenu }) => (
+  <MenuItem
+    href="https://community.openclimbing.org"
+    component={Link}
+    onClick={closeMenu}
+    target="_blank"
+  >
+    <QuestionAnswerIcon fontSize="inherit" sx={{ mr: 1 }} />
+    {t('climbing.forum')}
+    <OpenInNewIcon fontSize="small" sx={{ ml: 1, fontSize: '11px' }} />
   </MenuItem>
 );
 const ClimbingGradesTableLink = ({ closeMenu }) => (
@@ -202,11 +216,12 @@ export const HamburgerMenu = () => {
         <EditLink closeMenu={close} />
         <StyledDivider />
         {isOpenClimbing && [
-          <Typography variant="caption" ml={2} key="climbing-header">
+          <Typography variant="caption" ml={2} key="header">
             {t('hamburger_menu.climbing.title')}
           </Typography>,
-          <ClimbingAreasLink closeMenu={close} key="climbing-areas" />,
-          <ClimbingGradesTableLink closeMenu={close} key="climbing-grades" />,
+          <ClimbingAreasLink closeMenu={close} key="areas" />,
+          <ClimbingGradesTableLink closeMenu={close} key="grades" />,
+          <ClimbingForumLink closeMenu={close} key="forum" />,
           <StyledDivider key="divider" />,
         ]}
         <InstallLink closeMenu={close} />

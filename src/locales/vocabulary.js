@@ -123,9 +123,9 @@ export default {
   'homepage.openclimbing_description_p2': `All data is open and anyone can edit it – similar to Wikipedia.`,
   'homepage.openclimbing_climbing_area': `Climbing area`,
   'homepage.description_show_more': `show more`,
-  'homepage.expanded_description_p1': `Application is developed as open-source, it uses`,
-  'homepage.expanded_description_p2': `for storing climbing routes and images are shared via`,
-  'homepage.expanded_description_p3': `, which allows easy and efficient sharing of information.`,
+  'homepage.climbing.expanded_description_p1': `Application is developed as open-source, it uses`,
+  'homepage.climbing.expanded_description_p2': `for storing climbing routes and images are shared via`,
+  'homepage.climbing.expanded_description_p3': `, which allows easy and efficient sharing of information.`,
   'homepage.discover_more_p1': `Discover other`,
   'homepage.discover_more_p2': `areas`,
 
@@ -460,6 +460,7 @@ export default {
   'climbing.type.crag': 'Climbing crag',
   'climbing.type.gym': 'Climbing gym',
   'climbing.type.ferrata': 'Via Ferrata',
+  'climbing.forum': 'Community board',
 
   'climbing_badges.hazard_animal_nest_description': 'Presence of birds, bees, or other wildlife on the route.',
   'climbing_badges.hazard_animal_nest_label': 'animal nest',
