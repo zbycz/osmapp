@@ -4,43 +4,54 @@ import {
   getPresetKey,
   Members,
 } from '../../useEditItems';
-import { getApiId, getShortId } from '../../../../../services/helpers';
+import { getApiId } from '../../../../../services/helpers';
 import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
 import { useCurrentItem, useEditContext } from '../../EditContext';
 import React, { useCallback, useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
-import { FeatureTags, OsmId } from '../../../../../services/types';
+import { FeatureTags, LonLat } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
-import { useMapStateContext } from '../../../../utils/MapStateContext';
+import { useMapStateContext, View } from '../../../../utils/MapStateContext';
 import { getPresetTranslation } from '../../../../../services/tagging/translations';
 import { fetchFreshItem, getNewNodeItem } from '../../itemsHelpers';
 
-const getLastNodeApiId = (members: Members) => {
+const getLastNode = (members: Members) => {
   const lastNode = members
     .toReversed()
     .find((member) => member.shortId.startsWith('n'));
-  return lastNode ? getApiId(lastNode.shortId) : null;
+  return lastNode ? lastNode.shortId : null;
 };
 
-const findItem = (items: EditDataItem[], osmId: OsmId) =>
-  items.find((item) => item.shortId === getShortId(osmId));
+const findItem = (items: EditDataItem[], shortId: string) =>
+  items.find((item) => item.shortId === shortId);
 
-const getLastNodeLocation = async (osmId: OsmId, items: EditDataItem[]) => {
-  if (osmId.id < 0) {
-    return findItem(items, osmId)?.nodeLonLat;
+const isNew = (shortId: string) => shortId.includes('-');
+
+const getLastNodeLocation = async (shortId: string, items: EditDataItem[]) => {
+  const lastNode = findItem(items, shortId);
+  if (lastNode) {
+    return lastNode.nodeLonLat;
   }
-  const element = await getOsmElement(osmId);
-  return [element.lon, element.lat];
+  if (!isNew(shortId)) {
+    const element = await getOsmElement(getApiId(shortId));
+    return [element.lon, element.lat];
+  }
+  return null;
 };
 
-const getNewNodeLocation = async (items: EditDataItem[], members: Members) => {
-  const osmId = getLastNodeApiId(members);
-  if (!osmId) {
+const getNextNodeLocation = async (items: EditDataItem[], members: Members) => {
+  const lastNode = getLastNode(members);
+  if (!lastNode) {
     return undefined;
   }
-  const lonLat = await getLastNodeLocation(osmId, items);
+  const lonLat = await getLastNodeLocation(lastNode, items);
   return lonLat.map((x) => x + 0.0001);
+};
+
+const getViewPoint = (view: View): LonLat => {
+  const [_, lat, lon] = view;
+  return [parseFloat(lon), parseFloat(lat)];
 };
 
 const ROUTE_BOTTOM_TAGS = {
@@ -61,26 +72,27 @@ const getMemberTags = (parentTags: FeatureTags) => {
   return {};
 };
 
+// TODO refactor
+
 export const AddMemberForm = () => {
   const { view } = useMapStateContext();
   const { addItem, items, setCurrent } = useEditContext();
-  const { members, setMembers, tags } = useCurrentItem();
+  const currentItem = useCurrentItem();
   const [showInput, setShowInput] = React.useState(false);
   const [label, setLabel] = React.useState('');
 
   const handleAddMember = useCallback(
     async (e) => {
-      let newItem: DataItem;
+      const { members, setMembers, tags, nodeLonLat } = currentItem;
 
+      let newItem: DataItem;
       if (label.match(/^[nwr]\d+$/)) {
         const apiId = getApiId(label);
         newItem = await fetchFreshItem(apiId);
       } else {
-        const [z, lat, lon] = view;
-        const viewPoint = [parseFloat(lon), parseFloat(lat)];
-        const newNodePosition =
-          (await getNewNodeLocation(items, members)) ?? viewPoint;
-        newItem = getNewNodeItem(newNodePosition, {
+        const nextPosition = await getNextNodeLocation(items, members);
+        const position = nextPosition ?? nodeLonLat ?? getViewPoint(view); // nodeLonLat for relation converted from node
+        newItem = getNewNodeItem(position, {
           name: label,
           ...getMemberTags(tags),
         });
@@ -106,7 +118,7 @@ export const AddMemberForm = () => {
         setCurrent(newShortId);
       }
     },
-    [addItem, items, label, members, setCurrent, setMembers, tags, view],
+    [addItem, currentItem, items, label, setCurrent, view],
   );
 
   useEffect(() => {
@@ -129,7 +141,7 @@ export const AddMemberForm = () => {
     };
   }, [handleAddMember, showInput]);
 
-  const isClimbingCrag = tags.climbing === 'crag';
+  const isClimbingCrag = currentItem.tags.climbing === 'crag';
 
   return (
     <>

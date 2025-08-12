@@ -56,6 +56,7 @@ export const modifyPresets = (presets: Presets) => {
   presets['climbing/route'].moreFields.push(...routeFields);
   presets['climbing/route_bottom'].moreFields.push(...routeFields);
   presets['climbing/crag'].geometry.push('line'); // line is not intended use, but we need to match way+climbing=crag
+  presets['type/site/climbing/area'].geometry.push('point'); // to be able to create it from node
 
   return presets;
 };

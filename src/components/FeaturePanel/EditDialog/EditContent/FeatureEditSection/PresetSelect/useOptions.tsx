@@ -55,7 +55,7 @@ const getEmptyOptions = (options: TranslatedPreset[], osmType: OsmType) => {
   const EMPTY_OPTIONS =
     PROJECT_ID === 'openclimbing'
       ? [
-          'climbing/area',
+          'type/site/climbing/area',
           'climbing/crag',
           'climbing/route_bottom',
           ...(osmType === 'way' ? ['climbing/route'] : []), // this preset has both geometris (node,way) we need it offered only for `way`

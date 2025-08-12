@@ -25,7 +25,7 @@ export type DataItem = {
   version: number | undefined; // undefined for new item
   tagsEntries: TagsEntries;
   toBeDeleted: boolean;
-  nodeLonLat: LonLat | undefined; // only for nodes
+  nodeLonLat: LonLat | undefined; // only for nodes & for relation converted from node
   nodes: number[] | undefined; // only for ways
   members: Members | undefined; // only for relations
 };
@@ -125,14 +125,20 @@ const convertToRelationFactory = (
       const newData = prevData.map((item) =>
         item.shortId === shortId ? { ...item, toBeDeleted: true } : item,
       );
-      const currentItem = newData.find((item) => item.shortId === shortId);
+      const node = newData.find((item) => item.shortId === shortId);
 
       const newRelation: DataItem = {
         shortId: newShortId,
         version: undefined,
-        tagsEntries: [['type', 'site'], ...currentItem.tagsEntries],
+        tagsEntries: Object.entries(
+          Object.fromEntries([
+            ['type', 'site'],
+            ['site', 'climbing'],
+            ...node.tagsEntries,
+          ]),
+        ),
         toBeDeleted: false,
-        nodeLonLat: undefined,
+        nodeLonLat: node.nodeLonLat, // will be used later for first node
         nodes: undefined,
         members: [],
       };
@@ -144,7 +150,7 @@ const convertToRelationFactory = (
       );
       newData.push(...newParentItems);
 
-      // update member id everywhere
+      // update member id in every "members" field
       return newData.map((item) => ({
         ...item,
         members: item.members?.map((member) =>
