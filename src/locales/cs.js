@@ -264,8 +264,7 @@ export default {
   'tags.author': 'Autor',
   'tags.climbing_grade_uiaa': 'UIAA klasifikace',
   'tags.climbing_grade_french': 'Francouzská klasifikace',
-  'tags.climbing_boulder': 'Boulder',
-  'tags.length': 'Délka',
+  'tags.climbing_length': 'Délka',
   'tags.wikimedia_commons_photo': 'Wikimedia Commons fotka',
 
   'coordinates.geo_uri': 'GeoURI (mapová appka v telefonu)',

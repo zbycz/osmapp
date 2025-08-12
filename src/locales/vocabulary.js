@@ -308,8 +308,7 @@ export default {
   'tags.author': 'Author',
   'tags.climbing_grade_uiaa': 'UIAA climbing grade',
   'tags.climbing_grade_french': 'French climbing grade',
-  'tags.climbing_boulder': 'Boulder',
-  'tags.length': 'Length',
+  'tags.climbing_length': 'Length',
   'tags.wikimedia_commons_photo': 'Wikimedia Commons photo',
 
   'coordinates.geo_uri': 'GeoURI (phone map app)',

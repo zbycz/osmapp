@@ -298,8 +298,7 @@ export default {
   'tags.author': '作者',
   'tags.climbing_grade_uiaa': 'UIAA 攀岩难度',
   'tags.climbing_grade_french': '法国攀岩难度',
-  'tags.climbing_boulder': '抱石',
-  'tags.length': '长度',
+  'tags.climbing_length': '长度',
   'tags.wikimedia_commons_photo': '维基共享资源照片',
 
   'coordinates.geo_uri': 'GeoURI (手机地图应用)',
