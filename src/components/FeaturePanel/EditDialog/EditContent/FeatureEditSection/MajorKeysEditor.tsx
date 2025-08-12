@@ -7,7 +7,7 @@ import {
 } from '../../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
-import { isClimbingRoute } from '../../../../../utils';
+import { isClimbingCrag, isClimbingRoute } from '../../../../../utils';
 import { useCurrentItem } from '../../EditContext';
 import { extractClimbingGradeFromTagName } from '../../../../../services/tagging/climbing/routeGrade';
 import { TextFieldWithCharacterCount } from './helpers';
@@ -56,8 +56,7 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
             author: t('tags.author'),
             'climbing:grade:uiaa': t('tags.climbing_grade_uiaa'),
             'climbing:grade:french': t('tags.climbing_grade_french'),
-            'climbing:boulder': t('tags.climbing_boulder'),
-            length: t('tags.length'),
+            'climbing:length': t('tags.climbing_length'),
           }
         : {}),
     },
