@@ -1,48 +1,31 @@
-# Název workflow
 name: Deploy na zby.cz
 
-# Kdy se má workflow spustit
 on:
   push:
-    branches:
-      - master
+  # branches:
+  #   - master
 
-# Definice jobů, které se mají provést
 jobs:
   build_and_deploy:
-    # Běží na nejnovější verzi Ubuntu
     runs-on: ubuntu-latest
 
     steps:
-      # Krok 1: Checkout kódu
-      # Stáhne kód z repozitáře do prostředí GitHub Actions
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
-      # Krok 2: Nastavení Node.js
-      # Nastaví prostředí Node.js
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '16' # Můžete zvolit jinou verzi, pokud je to potřeba
+          node-version: 20.x
+          cache: 'yarn'
 
-      # Krok 3: Instalace závislostí
-      # Nainstaluje všechny balíčky definované v package.json
       - name: Install dependencies
         run: yarn install
 
-      # Krok 4: Spuštění buildu
-      # Vytvoří produkční build aplikace
       - name: Build project
         run: yarn build
 
-      # Krok 5: Vytvoření ZIP archivu
-      # Zazipuje obsah složky "build" (nebo jiné, pokud máte)
       - name: Create zip archive
         run: zip -r build.zip build/
 
-      # Krok 6: Upload archivu
-      # Použije curl pro odeslání ZIP souboru a hashe commitu na cílovou URL
       - name: Upload to zby.cz
         run: |
           COMMIT_HASH=$(git rev-parse --short "$GITHUB_SHA")
