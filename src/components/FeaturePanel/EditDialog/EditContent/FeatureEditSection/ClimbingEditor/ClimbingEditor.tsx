@@ -6,12 +6,12 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import { MultiValueKeyEditor } from './MultiValueKeyEditor/MultiValueKeyEditor';
+import { MultiValueKeyEditor } from './MultiValueKeyEditor';
 import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { t } from '../../../../../services/intl';
-import { useCurrentItem } from '../../EditContext';
-import { Maki } from '../../../../utils/icons/Maki';
+import { t } from '../../../../../../services/intl';
+import { useCurrentItem } from '../../../EditContext';
+import { Maki } from '../../../../../utils/icons/Maki';
 
 const ClimbingMultiValuesInner = () => {
   return (
@@ -60,7 +60,7 @@ const ClimbingMultiValuesInner = () => {
   );
 };
 
-export const ClimbingMultiValues = () => {
+export const ClimbingEditor = () => {
   const { tags } = useCurrentItem();
   const [expanded, setExpanded] = useState(!!tags.climbing);
   if (!tags.climbing) {
