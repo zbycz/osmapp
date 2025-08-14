@@ -8,7 +8,7 @@ import { LocationEditor } from './FeatureEditSection/LocationEditor/LocationEdit
 import { ParentsEditor } from './FeatureEditSection/ParentsEditor';
 import { MembersEditor } from './FeatureEditSection/MembersEditor';
 import React from 'react';
-import { ClimbingMultiValues } from './FeatureEditSection/ClimbingMultiValues';
+import { ClimbingEditor } from './FeatureEditSection/ClimbingEditor/ClimbingEditor';
 
 export const ItemEditSection = () => {
   const { toBeDeleted } = useCurrentItem();
@@ -26,7 +26,7 @@ export const ItemEditSection = () => {
       <ItemHeading />
       <PresetSelect />
       <MajorKeysEditor />
-      <ClimbingMultiValues />
+      <ClimbingEditor />
       <TagsEditor />
       <LocationEditor />
       <ParentsEditor />
