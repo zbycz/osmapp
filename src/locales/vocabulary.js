@@ -254,6 +254,7 @@ export default {
          to copy copyrighted data (e.g. Google Maps). <a href="https://wiki.openstreetmap.org/wiki/How_We_Map">More info</a>`,
   'editdialog.info_note':
     'Your suggestion will be reviewed by OpenStreetMap volunteers. You can add additional information such as a link to a photo or a link to source material for them below!',
+  'editdialog.climbing_editor': 'Climbing',
   'editdialog.tags_editor': 'All properties – Tags',
   'editdialog.add_tag': 'Add tag',
   'editdialog.location': 'Location',
