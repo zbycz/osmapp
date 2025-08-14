@@ -1,5 +1,4 @@
 /* eslint-disable import/no-mutable-exports */
-import type { DocumentContext } from 'next/dist/shared/lib/utils';
 import { publishDbgObject } from '../utils';
 import { isBrowser } from '../components/helpers';
 import type { TranslationId } from './types';

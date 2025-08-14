@@ -1,5 +1,4 @@
 import { Feature } from '../../../services/types';
-import { useUserThemeContext } from '../../../helpers/theme';
 import { useMobileMode } from '../../helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import Router from 'next/router';

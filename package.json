@@ -83,6 +83,7 @@
     "eslint-config-next": "14.2.15",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-local-rules": "^3.0.2",
+    "eslint-plugin-unused-imports": "^4.1.4",
     "husky": "^4",
     "jest": "^30.0.2",
     "jest-environment-jsdom": "^30.0.2",

@@ -1,10 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import { RoutesLayer } from './RoutesLayer';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { updateElementOnIndex } from '../utils/array';
-import { PositionPx } from '../types';
-import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
 import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
 import { isMobileDevice } from '../../../helpers';
 

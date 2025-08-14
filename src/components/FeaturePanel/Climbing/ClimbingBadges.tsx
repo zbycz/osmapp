@@ -4,7 +4,6 @@ import styled from '@emotion/styled';
 import { Chip, Stack, Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { MessageType } from 'maplibre-gl';
 
 const StyledChip = styled(Chip)`
   font-size: 10px;

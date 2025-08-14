@@ -1,11 +1,4 @@
-import {
-  LineString,
-  OsmId,
-  Point,
-  GeometryCollection,
-  Feature,
-  LonLat,
-} from '../types';
+import { LineString, OsmId, Point, GeometryCollection, LonLat } from '../types';
 import { getPoiClass } from '../getPoiClass';
 import { getCenter } from '../getCenter';
 import { fetchJson } from '../fetch';

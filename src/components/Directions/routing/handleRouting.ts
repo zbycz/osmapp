@@ -5,7 +5,6 @@ import { LonLat } from '../../../services/types';
 import { Profile, RoutingResult } from './types';
 import { getGraphhopperResults } from './getGraphhopperResults';
 import { LineLayerSpecification } from '@maplibre/maplibre-gl-style-spec';
-import { type GeoJSON } from 'geojson';
 import { isMobileModeVanilla } from '../../helpers';
 
 // taken from or inspired by cartes.app, LGPL

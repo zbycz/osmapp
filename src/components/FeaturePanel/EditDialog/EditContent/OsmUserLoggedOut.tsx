@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, Box, Button, CircularProgress, Stack } from '@mui/material';
+import { Alert, Box, Button, CircularProgress } from '@mui/material';
 import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { t, Translation } from '../../../../services/intl';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';

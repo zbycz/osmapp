@@ -4,7 +4,6 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Link from 'next/link';
 import { intl, t } from '../../services/intl';
 import React from 'react';
-import { Typography } from '@mui/material';
 
 const HOMEPAGE_GALLERY_HEIGHT = 200;
 

@@ -13,7 +13,6 @@ import {
   Box,
   Typography,
 } from '@mui/material';
-import { NwrIcon } from './NwrIcon';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 type Props = {

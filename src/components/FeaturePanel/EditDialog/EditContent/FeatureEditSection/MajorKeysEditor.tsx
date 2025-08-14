@@ -7,7 +7,7 @@ import {
 } from '../../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
-import { isClimbingCrag, isClimbingRoute } from '../../../../../utils';
+import { isClimbingRoute } from '../../../../../utils';
 import { useCurrentItem } from '../../EditContext';
 import { extractClimbingGradeFromTagName } from '../../../../../services/tagging/climbing/routeGrade';
 import { TextFieldWithCharacterCount } from './helpers';

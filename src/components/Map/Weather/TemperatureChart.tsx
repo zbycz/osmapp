@@ -1,8 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { DetailedWeather } from './loadWeather';
 import zip from 'lodash/zip';
-import { sampleEvenly, Temperature } from './helpers';
-import { intl } from '../../../services/intl';
 import { useUserThemeContext } from '../../../helpers/theme';
 import { CoordinateSystem } from './CoordinateSystem';
 

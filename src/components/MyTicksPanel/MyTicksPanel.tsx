@@ -25,7 +25,6 @@ import { useAddHeatmap } from './useAddHeatmap';
 import { useSortedTable } from './useSortedTable';
 import { MyTicksRow } from './MyTicksRow';
 import { MyTicksGraphs } from './MyTicksGraphs/MyTicksGraphs';
-import { Feature } from '../../services/types';
 import { getAllTicks, getTickKey } from '../../services/my-ticks/ticks';
 import { publishDbgObject } from '../../utils';
 import { getApiId, getShortId } from '../../services/helpers';

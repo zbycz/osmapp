@@ -2,7 +2,7 @@ import React, { LegacyRef, useRef } from 'react';
 import styled from '@emotion/styled';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@mui/material';
-import { isDesktop, isMobileMode, useMobileMode } from '../helpers';
+import { isDesktop, useMobileMode } from '../helpers';
 import { useScrollShadow } from '../FeaturePanel/Climbing/utils/useScrollShadow';
 import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
 

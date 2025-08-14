@@ -11,12 +11,11 @@ import {
 } from '../../../services/tagging/translations';
 import { fetchJson } from '../../../services/fetch';
 import { OsmResponse } from '../../../services/osm/types';
-import { getOsmHistoryUrl, getOsmUrlOrFull } from '../../../services/osm/urls';
+import { getOsmUrlOrFull } from '../../../services/osm/urls';
 import { getItemsMap, ItemsMap } from '../../../services/osm/helpers';
-import { FetchError, getShortId } from '../../../services/helpers';
+import { getShortId } from '../../../services/helpers';
 import { findPreset } from '../../../services/tagging/presets';
 import { getNewId } from '../../../services/getCoordsFeature';
-import { getOsmElement } from '../../../services/osm/quickFetchFeature';
 import { getLastBeforeDeleted } from '../../../services/osm/osmApi';
 
 export const getNewNodeItem = (

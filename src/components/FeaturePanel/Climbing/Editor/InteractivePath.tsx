@@ -1,6 +1,6 @@
 import styled from '@emotion/styled';
 import React, { useState } from 'react';
-import { PositionPx, ZoomState } from '../types';
+import { PositionPx } from '../types';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useMobileMode } from '../../../helpers';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';

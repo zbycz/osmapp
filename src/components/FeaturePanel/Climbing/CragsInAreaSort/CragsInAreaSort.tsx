@@ -1,4 +1,4 @@
-import { MenuItem, Typography } from '@mui/material';
+import { MenuItem } from '@mui/material';
 import React from 'react';
 import { t } from '../../../../services/intl';
 import { PopperWithArrow } from '../../../utils/PopperWithArrow';

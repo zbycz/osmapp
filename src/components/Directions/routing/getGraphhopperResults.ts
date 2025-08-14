@@ -1,7 +1,6 @@
 import { Profile, RoutingResult } from './types';
 import { LonLat } from '../../../services/types';
 import { fetchJson } from '../../../services/fetch';
-import { intl } from '../../../services/intl';
 
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY_GRAPHHOPPER;
 

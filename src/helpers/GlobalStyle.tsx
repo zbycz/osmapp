@@ -1,12 +1,11 @@
 import React from 'react';
-import { Global, css, Theme, useTheme } from '@emotion/react';
+import { Global, css, Theme } from '@emotion/react';
 import {
   isDesktopResolution,
   isMobileMode,
   isTabletResolution,
 } from '../components/helpers';
 import { convertHexToRgba } from '../components/utils/colorUtils';
-import { useUserThemeContext } from './theme';
 
 // This function doesn't contain any logic - so no extraction needed.
 // eslint-disable-next-line max-lines-per-function

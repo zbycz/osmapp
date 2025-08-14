@@ -1,9 +1,6 @@
 // identifier should be in the form: foldername.messageid.
 // 識別碼應為以下格式：資料夾名稱.訊息id
 
-import { t } from '../services/intl';
-import React from 'react';
-
 export default {
   loading: '載入中',
   error: '錯誤',

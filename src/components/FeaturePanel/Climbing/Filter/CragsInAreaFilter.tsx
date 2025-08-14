@@ -2,7 +2,7 @@ import React from 'react';
 import { CragsInAreaFilterIcon } from './CragsInAreaFilterIcon';
 import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { FilterPopover } from './FilterPopover';
-import { isMobileMode, useMobileMode } from '../../../helpers';
+import { useMobileMode } from '../../../helpers';
 
 export const CragsInAreaFilter = () => {
   const { climbingFilter } = useUserSettingsContext();

@@ -1,7 +1,6 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Tooltip } from '@mui/material';
-import { useClimbingContext } from './contexts/ClimbingContext';
 
 type Props = {
   children: string | number;

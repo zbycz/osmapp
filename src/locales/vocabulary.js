@@ -1,8 +1,5 @@
 // identifier should be in the form: foldername.messageid.
 
-import { t } from '../services/intl';
-import React from 'react';
-
 export default {
   loading: 'Loading',
   error: 'Error',
