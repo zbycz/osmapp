@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import React from 'react';
 import { t } from '../../../../services/intl';
 import {
@@ -65,9 +66,7 @@ export const CategoryHeading = ({
   shownCategories,
   onChange,
 }: Props) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLButtonElement>(
-    null,
-  );
+  const [anchorEl, setAnchorEl] = useState<null | HTMLButtonElement>(null);
   const isShownOnMap = shownCategories.includes(category);
 
   return (

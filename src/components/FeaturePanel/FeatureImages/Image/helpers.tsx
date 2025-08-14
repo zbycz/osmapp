@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import React, { useEffect, useRef } from 'react';
 import Router from 'next/router';
@@ -11,7 +12,7 @@ export const initialSize: Size = { width: 100, height: HEIGHT }; // until image 
 
 export const useImgSizeOnload = () => {
   const imgRef = useRef<HTMLImageElement>(null);
-  const [size, setSize] = React.useState<Size>(initialSize);
+  const [size, setSize] = useState<Size>(initialSize);
   useEffect(() => {
     if (imgRef.current?.complete) {
       setSize({ width: imgRef.current.width, height: imgRef.current.height }); // SSR case

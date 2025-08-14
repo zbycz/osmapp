@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useMobileMode } from '../helpers';
 import { Button, Divider, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
@@ -67,7 +68,7 @@ const MobileResult = ({
   distance,
   ascent,
 }: Props & Record<'time' | 'distance' | 'ascent', string>) => {
-  const [showInstructions, setShowInstructions] = React.useState(false);
+  const [showInstructions, setShowInstructions] = useState(false);
 
   const { result } = useDirectionsContext();
   return (

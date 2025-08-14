@@ -1,5 +1,5 @@
+import { useEffect } from 'react';
 import { PointType } from '../types';
-import React from 'react';
 
 export const useFloatingMenuShortcuts = (
   onPointTypeChange: (type: PointType) => void,
@@ -9,7 +9,7 @@ export const useFloatingMenuShortcuts = (
   isDoneVisible: boolean,
   onFinishClimbingRouteClick: () => void,
 ) => {
-  React.useEffect(() => {
+  useEffect(() => {
     const downHandler = (e) => {
       if (e.key === 'b') {
         onPointTypeChange('bolt');

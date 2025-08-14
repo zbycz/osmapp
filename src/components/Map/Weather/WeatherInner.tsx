@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import styled from '@emotion/styled';
 import { CurrentWeatherResponse } from './loadWeather';
 import { icons } from './icons';
@@ -30,7 +31,7 @@ type Props = {
 
 export const WeatherInner = ({ response, lat, lng }: Props) => {
   const { currentTheme } = useUserThemeContext();
-  const [showWeatherDialog, setShowWeatherDialog] = React.useState(false);
+  const [showWeatherDialog, setShowWeatherDialog] = useState(false);
 
   const isDay = response.is_day === 1;
   const icon = icons[response.weather_code];

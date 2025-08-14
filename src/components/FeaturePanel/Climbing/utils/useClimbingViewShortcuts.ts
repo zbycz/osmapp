@@ -1,6 +1,6 @@
+import { useEffect } from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { usePhotoChange } from './usePhotoChange';
-import React from 'react';
 
 export const useClimbingViewShortcuts = () => {
   const {
@@ -12,7 +12,7 @@ export const useClimbingViewShortcuts = () => {
   } = useClimbingContext();
   const onPhotoChange = usePhotoChange();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const downHandler = (e) => {
       if (e.key === 'h') {
         setIsRoutesLayerVisible(!isRoutesLayerVisible);

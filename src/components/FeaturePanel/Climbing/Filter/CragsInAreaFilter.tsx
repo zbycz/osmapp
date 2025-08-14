@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import React from 'react';
 import { CragsInAreaFilterIcon } from './CragsInAreaFilterIcon';
 import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
@@ -7,8 +8,8 @@ import { useMobileMode } from '../../../helpers';
 export const CragsInAreaFilter = () => {
   const { climbingFilter } = useUserSettingsContext();
   const { isDefaultFilter, reset } = climbingFilter;
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [open, setOpen] = useState(false);
   const isMobileMode = useMobileMode();
 
   const handleToggle = (event: React.MouseEvent<HTMLElement>) => {

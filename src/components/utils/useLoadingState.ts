@@ -1,9 +1,10 @@
+import { useRef } from 'react';
 import { useBoolState } from '../helpers';
-import React, { useCallback } from 'react';
+import { useCallback } from 'react';
 
 export const useLoadingState = () => {
   const [isLoading, start, stop] = useBoolState(false);
-  const timeout = React.useRef<NodeJS.Timeout>();
+  const timeout = useRef<NodeJS.Timeout>();
 
   return {
     isLoading,

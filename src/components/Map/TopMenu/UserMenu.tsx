@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import React, { forwardRef, useState } from 'react';
 import { Divider, Menu, MenuItem } from '@mui/material';
@@ -112,7 +113,7 @@ UserLogin.displayName = 'UserLogin';
 // https://github.com/mui-org/material-ui/issues?q=is%3Aissue+is%3Aopen+menuitem+keyboard
 
 export const UserMenu = () => {
-  const anchorRef = React.useRef();
+  const anchorRef = useRef();
   const [opened, open, close] = useBoolState(false);
   const { activeLayers } = useMapStateContext();
   const hasClimbingLayer = activeLayers.includes('climbing');

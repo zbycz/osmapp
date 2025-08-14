@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Button,
   Stack,
@@ -257,7 +258,7 @@ const ImportantLinks = () => (
 );
 
 export function HomepageOpenClimbing({ onClose }: { onClose: () => void }) {
-  const [isTextInfoExpanded, setIsTextInfoExpanded] = React.useState(false);
+  const [isTextInfoExpanded, setIsTextInfoExpanded] = useState(false);
 
   return (
     <PanelContent>

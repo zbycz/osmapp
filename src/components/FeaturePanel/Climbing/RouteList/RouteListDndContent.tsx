@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
@@ -89,7 +90,7 @@ export const RouteListDndContent = ({ isEditable }) => {
     }));
     setItems(content);
   }, [routes]);
-  const parentRef = React.useRef<HTMLDivElement>(null);
+  const parentRef = useRef<HTMLDivElement>(null);
 
   const onRowClick = (index: number) => {
     const routeNumber = routeSelectedIndex === index ? null : index;

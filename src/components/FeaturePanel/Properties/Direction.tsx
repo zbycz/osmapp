@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import React from 'react';
 import { useUserThemeContext } from '../../../helpers/theme';
 import { use2dContext } from './helpers';
@@ -111,10 +112,10 @@ const drawRay = ({
 };
 
 const DirectionIndicator = ({ start, end }: { start: number; end: number }) => {
-  const canvas = React.useRef<HTMLCanvasElement>();
-  const [color, setColor] = React.useState('#000');
+  const canvas = useRef<HTMLCanvasElement>();
+  const [color, setColor] = useState('#000');
   const { currentTheme } = useUserThemeContext();
-  React.useEffect(() => {
+  useEffect(() => {
     setColor(currentTheme === 'light' ? '#000' : '#fff');
   }, [currentTheme]);
 

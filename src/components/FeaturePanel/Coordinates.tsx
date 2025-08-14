@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import React from 'react';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { positionToDeg } from '../../utils';
@@ -7,7 +8,7 @@ import { Typography } from '@mui/material';
 type Props = { coords: PositionBoth };
 
 export const Coords = ({ coords }: Props) => {
-  const anchorRef = React.useRef();
+  const anchorRef = useRef();
   const { feature } = useFeatureContext();
 
   return (

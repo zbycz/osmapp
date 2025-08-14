@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import React from 'react';
 import styled from '@emotion/styled';
 
@@ -17,7 +18,7 @@ export const RouteList = ({ isEditable }: { isEditable?: boolean }) => {
     routeIndexExpanded,
   } = useClimbingContext();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const downHandler = (e) => {
       if (routes.length === 0) return;
 

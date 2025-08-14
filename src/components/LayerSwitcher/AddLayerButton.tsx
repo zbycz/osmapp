@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import React from 'react';
 import { Box, Button } from '@mui/material';
 import { Layer, useMapStateContext } from '../utils/MapStateContext';
@@ -13,7 +14,7 @@ const fmtAttributionHtml = ({ url, html, text }: LayerIndexAttribution) => {
 
 export const AddUserLayerButton = () => {
   const { setActiveLayers, setUserLayers } = useMapStateContext();
-  const [isOpen, setOpen] = React.useState(false);
+  const [isOpen, setOpen] = useState(false);
 
   return (
     <>

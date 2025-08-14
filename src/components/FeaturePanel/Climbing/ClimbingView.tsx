@@ -302,7 +302,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     setUserSetting('climbing.splitPaneSize', null);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('resize', loadPhotoRelatedData);
     window.addEventListener('orientationchange', loadPhotoRelatedData);
 

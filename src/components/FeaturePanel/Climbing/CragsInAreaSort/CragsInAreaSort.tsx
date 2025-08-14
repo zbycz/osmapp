@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { MenuItem } from '@mui/material';
 import React from 'react';
 import { t } from '../../../../services/intl';
@@ -14,8 +15,8 @@ export const CragsInAreaSort = ({
   sortBy,
   setSortBy,
 }: CragsInAreaSortProps) => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [open, setOpen] = useState(false);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(!open);

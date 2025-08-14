@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import BrightnessAutoIcon from '@mui/icons-material/BrightnessAuto';
 import TerrainIcon from '@mui/icons-material/Terrain';
 import Brightness4Icon from '@mui/icons-material/Brightness4';
@@ -196,7 +197,7 @@ const ThemeSelection = () => {
 // https://github.com/mui-org/material-ui/issues?q=is%3Aissue+is%3Aopen+menuitem+keyboard
 
 export const HamburgerMenu = () => {
-  const anchorRef = React.useRef();
+  const anchorRef = useRef();
   const [opened, open, close] = useBoolState(false);
   const isOpenClimbing = PROJECT_ID === 'openclimbing';
 
