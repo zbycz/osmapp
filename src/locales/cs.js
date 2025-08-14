@@ -435,7 +435,7 @@ export default {
   'climbing_badges.hazard_slippery_rock_label': 'klouzavá skála',
   'climbing_badges.hazard_slippery_rock_description': 'Skála je ohlazená a kluzká vlivem častého lezení, typicky na vápenci.',
 
-  'climbing_badges.inclination_label': 'Sklon lezení',
+  'climbing_badges.inclination_label': 'Sklon skály',
   'climbing_badges.inclination_overhang_description': 'Převislá stěna (>90°) – vyžaduje sílu a dynamiku.',
   'climbing_badges.inclination_overhang_label': 'převis',
   'climbing_badges.inclination_roof_description': 'Stropní převis – leze se vodorovně nebo mírně dolů.',

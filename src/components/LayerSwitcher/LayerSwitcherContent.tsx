@@ -6,6 +6,7 @@ import { Layer, useMapStateContext, View } from '../utils/MapStateContext';
 import { Overlays } from './Overlays';
 import { AddUserLayerButton } from './AddLayerButton';
 import { BaseLayers } from './BaseLayers';
+import { Divider } from '@mui/material';
 
 type AllLayers = {
   basemapLayers: Layer[];
@@ -46,6 +47,8 @@ export const LayerSwitcherContent = () => {
   return (
     <>
       <LayersHeader />
+      <Divider />
+
       <BaseLayers baseLayers={basemapLayers} />
       <Overlays overlayLayers={overlayLayers} />
 

@@ -1,6 +1,6 @@
 import { useRef } from 'react';
 import React from 'react';
-import { Menu, MenuItem } from '@mui/material';
+import { ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
 import LanguageIcon from '@mui/icons-material/Language';
 import styled from '@emotion/styled';
@@ -52,8 +52,10 @@ export const LangSwitcher = () => {
         ref={anchorRef}
         title={t('map.language_title')}
       >
-        <StyledLanguageIcon />
-        {LANGUAGES[intl.lang]}
+        <ListItemIcon>
+          <LanguageIcon />
+        </ListItemIcon>
+        <ListItemText>{LANGUAGES[intl.lang]} </ListItemText>
       </MenuItem>
     </>
   );
