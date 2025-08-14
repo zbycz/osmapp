@@ -37,26 +37,43 @@ export const UncertainCover = styled.div`
   box-shadow: inset 0 0 100px rgba(255, 255, 255, 0.3);
 `;
 
-export const getClickHandler = (feature: Feature, def: ImageDef) => {
-  if (isTag(def) && feature.tags.climbing === 'crag') {
-    return () => {
+export type ImageClickHandler = (e: React.MouseEvent) => void | undefined; // undefined = no cursor
+
+export const getClickHandler = (
+  feature: Feature,
+  def: ImageDef,
+): ImageClickHandler => {
+  if (!isTag(def)) {
+    return undefined;
+  }
+
+  if (!def.v.startsWith('File:')) {
+    return undefined;
+  }
+
+  if (feature.tags.climbing === 'crag') {
+    return (e: React.MouseEvent) => {
       const featureLink = getOsmappLink(feature);
       const photoLink = removeFilePrefix(def.v);
 
       Router.push(`${featureLink}/climbing/photo/${photoLink}`);
+      e.stopPropagation();
+      e.preventDefault();
     };
   }
 
-  if (isTag(def) && feature.tags.climbing === 'route_bottom') {
+  if (feature.tags.climbing === 'route_bottom') {
     const parentCragFeature = feature.parentFeatures.filter(
       (item) => item.tags.climbing === 'crag',
     );
     if (parentCragFeature.length > 0) {
-      return () => {
+      return (e: React.MouseEvent) => {
         const featureLink = getOsmappLink(parentCragFeature[0]);
         const photoLink = removeFilePrefix(def.v);
 
         Router.push(`${featureLink}/climbing/photo/${photoLink}`);
+        e.stopPropagation();
+        e.preventDefault();
       };
     }
   }
