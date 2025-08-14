@@ -60,7 +60,7 @@ export const MultiValueKeyEditor: React.FC<{
   return (
     <Box>
       <EditorHeader
-        label={t(`${translationSuffix}_label` as TranslationId)}
+        label={t(`${translationSuffix}_label` as TranslationId)} // TODO TranslationId should never be dynamic, see https://github.com/zbycz/osmapp/pull/1229/files#r2276510504
         inactive={inactive}
         onClick={(e) => setAnchorEl(e.currentTarget)}
       />
@@ -76,7 +76,7 @@ export const MultiValueKeyEditor: React.FC<{
         )}
       </Menu>
 
-      <Box display="flex" flexDirection="column" gap={1}>
+      <Box display="flex" flexDirection="column" gap={1} ml={1}>
         {visibleKeys.map((v) => (
           <EditorItem
             key={v}

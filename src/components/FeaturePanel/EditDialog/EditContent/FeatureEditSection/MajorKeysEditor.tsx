@@ -132,7 +132,7 @@ export const MajorKeysEditor: React.FC = () => {
   };
 
   return (
-    <Box>
+    <Box mb={3}>
       {activeMajorKeys.map((k) => (
         <Box key={k} mb={2}>
           {getInputElement(k)}

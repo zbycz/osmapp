@@ -213,6 +213,7 @@ export default {
   'editdialog.info_note': `Váš návrh budou zpracovávat dobrovolníci OpenStreetMap, zde pro ně
         můžete přidat doplňující poznámku. Vhodné je podložit váš příspěvek odkazem na zdroj
         informace (web, foto atd.).`,
+  'editdialog.climbing_editor': 'Lezení',
   'editdialog.tags_editor': 'Všechny vlastnosti – tagy',
   'editdialog.add_tag': 'Přidat tag',
   'editdialog.location': 'Poloha',

@@ -11,8 +11,7 @@ import React from 'react';
 import { ClimbingMultiValues } from './FeatureEditSection/ClimbingMultiValues';
 
 export const ItemEditSection = () => {
-  const { toBeDeleted, tags } = useCurrentItem();
-  const isClimbing = tags.climbing;
+  const { toBeDeleted } = useCurrentItem();
   if (toBeDeleted) {
     return (
       <>
@@ -27,7 +26,7 @@ export const ItemEditSection = () => {
       <ItemHeading />
       <PresetSelect />
       <MajorKeysEditor />
-      {isClimbing && <ClimbingMultiValues />}
+      <ClimbingMultiValues />
       <TagsEditor />
       <LocationEditor />
       <ParentsEditor />
