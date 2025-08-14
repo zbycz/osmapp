@@ -24,7 +24,7 @@ export const MultiValueKeyEditor: React.FC<{
             key={k}
             k={k}
             setVisible={setVisible}
-            editable={editableValues.includes(k)}
+            customValue={editableValues.includes(k)}
           />
         ))}
       </Box>

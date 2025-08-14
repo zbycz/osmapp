@@ -31,16 +31,86 @@ const getValue = (value: string | undefined) => {
   return t('editdialog.custom_value');
 };
 
+type CustomValueInputProps = {
+  k?: string;
+};
+
+const CustomValueInput = ({ k }: CustomValueInputProps) => {
+  const { tags, setTag } = useCurrentItem();
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setTag(k, value.trim() === '' ? undefined : value);
+  };
+
+  return (
+    <Box mt={1} display="flex" alignItems="center" gap={1}>
+      <Typography variant="caption" color="text.secondary">
+        {t('editdialog.custom_value')}:
+      </Typography>
+      <TextField
+        size="small"
+        value={tags[k] ?? ''}
+        onChange={onChange}
+        sx={{ minWidth: 160 }}
+      />
+    </Box>
+  );
+};
+
+const EditButton = (props: { onClick: () => void }) => (
+  <IconButton size="small" onClick={props.onClick}>
+    <EditIcon fontSize="small" />
+  </IconButton>
+);
+
+const CloseButton = (props: { onClick: () => void }) => (
+  <IconButton size="small" onClick={props.onClick}>
+    <CloseIcon fontSize="small" />
+  </IconButton>
+);
+
+const ToggleTagButton = ({ k }: { k: string }) => {
+  const { tags, setTag } = useCurrentItem();
+  const value = tags[k];
+  const onSwitch = (checked: boolean) => setTag(k, checked ? 'yes' : 'no');
+
+  return (
+    <Box display="flex" flexDirection="column" alignItems="center">
+      <Switch
+        size="small"
+        checked={value === 'yes' || (value && value !== 'no')}
+        onChange={(e) => onSwitch(e.target.checked)}
+      />
+      <Typography variant="caption">{getValue(value)}</Typography>
+    </Box>
+  );
+};
+
+const TagLabel = ({ k }: { k: string }) => {
+  const desc = getDescription(k);
+  return (
+    <>
+      <Typography variant="body2" fontWeight="bold">
+        {getLabel(k)}
+      </Typography>
+      {!!desc && (
+        <Typography variant="caption" color="text.secondary">
+          {desc}
+        </Typography>
+      )}
+    </>
+  );
+};
+
 type Props = {
   k: string;
-  editable: boolean;
+  customValue: boolean;
   setVisible: Setter<string[]>;
 };
 
-export const EditorItem = ({ k, editable, setVisible }: Props) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const { tags, tagsEntries, setTag, setTagsEntries } = useCurrentItem();
-  const value = tags[k];
+export const EditorItem = ({ k, customValue, setVisible }: Props) => {
+  const [showCustom, setShowCustom] = useState(false);
+  const { tagsEntries, setTagsEntries } = useCurrentItem();
 
   const onRemove = () => {
     const index = tagsEntries.findIndex(([key]) => k === key);
@@ -48,61 +118,22 @@ export const EditorItem = ({ k, editable, setVisible }: Props) => {
     setVisible((prev) => prev.filter((key) => k !== key));
   };
 
-  const onSwitch = (checked: boolean) => setTag(k, checked ? 'yes' : 'no');
-
-  const onCustomChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setTag(k, value.trim() === '' ? undefined : value);
-  };
-
-  const toggleEdit = () => setIsEditing((prev) => !prev);
-  const desc = getDescription(k);
+  const toggleCustom = () => setShowCustom((prev) => !prev);
 
   return (
     <Paper variant="outlined" sx={{ p: 1.5 }}>
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <Box flex={1} mr={2}>
-          <Typography variant="body2" fontWeight="bold">
-            {getLabel(k)}
-          </Typography>
-          {!!desc && (
-            <Typography variant="caption" color="text.secondary">
-              {desc}
-            </Typography>
-          )}
-          {editable && isEditing && (
-            <Box mt={1} display="flex" alignItems="center" gap={1}>
-              <Typography variant="caption" color="text.secondary">
-                {t('editdialog.custom_value')}:
-              </Typography>
-              <TextField
-                size="small"
-                value={value ?? ''}
-                onChange={onCustomChange}
-                sx={{ minWidth: 160 }}
-              />
-            </Box>
-          )}
+          <TagLabel k={k} />
+          {customValue && showCustom && <CustomValueInput k={k} />}
         </Box>
 
         <Box display="flex" alignItems="center" gap={1}>
-          <Box display="flex" flexDirection="column" alignItems="center">
-            <Switch
-              size="small"
-              checked={value === 'yes' || (value && value !== 'no')}
-              onChange={(e) => onSwitch(e.target.checked)}
-            />
-            <Typography variant="caption">{getValue(value)}</Typography>
-          </Box>
+          <ToggleTagButton k={k} />
 
-          {editable && (
-            <IconButton size="small" onClick={toggleEdit}>
-              <EditIcon fontSize="small" />
-            </IconButton>
-          )}
-          <IconButton size="small" onClick={onRemove}>
-            <CloseIcon fontSize="small" />
-          </IconButton>
+          {customValue && <EditButton onClick={toggleCustom} />}
+
+          <CloseButton onClick={onRemove} />
         </Box>
       </Box>
     </Paper>
