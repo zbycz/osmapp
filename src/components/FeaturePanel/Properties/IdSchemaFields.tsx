@@ -33,6 +33,10 @@ const render = (uiField: UiField, feature: Feature): string | ReactNode => {
     return renderTag('wikidata', feature.tags.wikidata);
   }
 
+  if (field.fieldKey === 'level') {
+    return renderTag('level', feature.tags['level:ref'] ?? feature.tags.level);
+  }
+
   // combo with options
   if (fieldTranslation?.options?.[v]) {
     return renderTag(k, translateField(fieldTranslation, v));
