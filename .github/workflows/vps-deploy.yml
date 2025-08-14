@@ -11,27 +11,26 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
-
       - uses: actions/setup-node@v3
         with:
           node-version: 20.x
           cache: 'yarn'
-
-      - name: Install dependencies
-        run: yarn install
-
-      - name: Build project
-        run: yarn build
-
-      - name: Create zip archive
-        run: zip -r build.zip build/
-
+      - run: yarn install
+      - run: yarn build
+      - run: rm -r .next/cache
+      - run: yarn install --production
+      - run: zip -r build.zip ./
       - name: Upload to zby.cz
         run: |
           COMMIT_HASH=$(git rev-parse --short "$GITHUB_SHA")
-          COMMIT_MESSAGE=$(git log -1 --pretty=%B)
+          COMMIT_MESSAGE=$(git log -1 --pretty=%B \
+              | tr -cd '[:alnum:] ' \
+              | tr ' ' '-' \
+              | cut -c1-10 \
+              | tr '[:upper:]' '[:lower:]')
+
           curl 'https://upload.zby.cz/' \
             -H 'Content-Type: multipart/form-data' \
-            --form "file=@build.zip" \
+            --form "file=@package.json" \
             --form "commit_hash=$COMMIT_HASH" \
             --form "commit_message=$COMMIT_MESSAGE"
