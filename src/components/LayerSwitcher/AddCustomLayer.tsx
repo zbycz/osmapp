@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import * as React from 'react';
 import {
   Dialog,
@@ -54,11 +55,11 @@ type FetchingState = 'success' | 'loading' | 'error';
 const LayerDataInput: React.FC<{
   onSelect: (layer: LayerAutocompleteOption | null) => void;
 }> = ({ onSelect }) => {
-  const [layerIndex, setLayerIndex] = React.useState([]);
+  const [layerIndex, setLayerIndex] = useState([]);
   const [layerIndexState, setLayerIndexState] =
-    React.useState<FetchingState>('loading');
+    useState<FetchingState>('loading');
 
-  React.useEffect(() => {
+  useEffect(() => {
     loadLayer()
       .then((result) => {
         setLayerIndex(result);
@@ -122,9 +123,9 @@ const Details: React.FC<Detailsprops> = ({ layer, onChange, onValidation }) => {
       return { title, options };
     }) || [];
 
-  const [values, setValues] = React.useState<Record<string, string>>({});
+  const [values, setValues] = useState<Record<string, string>>({});
 
-  React.useEffect(() => {
+  useEffect(() => {
     onChange(values);
 
     const valuesLength = Object.keys(values).length;
@@ -227,18 +228,18 @@ const CustomChoose: React.FC<{
   onValidation: (isOk: boolean) => void;
   onChange: (layer: LayerIndex) => void;
 }> = ({ onValidation, onChange }) => {
-  const [url, setUrl] = React.useState(DEFAULT_VALUE);
-  const [isValid, setIsValid] = React.useState(false);
+  const [url, setUrl] = useState(DEFAULT_VALUE);
+  const [isValid, setIsValid] = useState(false);
 
-  React.useEffect(() => {
+  useEffect(() => {
     onValidation(isValid);
   }, [isValid, onValidation]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setIsValid(isValidLayerUrl(url, true));
   }, [url]);
 
-  React.useEffect(() => {
+  useEffect(() => {
     const sanitizedUrl = url.replace('{zoom}', '{z}');
 
     try {
@@ -289,11 +290,11 @@ export const AddCustomDialog: React.FC<AddDialogProps> = ({
   isOpen,
   onClose,
 }) => {
-  const [isSaveDisabled, setDisableSave] = React.useState(true);
+  const [isSaveDisabled, setDisableSave] = useState(true);
 
-  const [layer, setLayer] = React.useState<LayerIndex | null>(null);
-  const [layerUrl, setLayerUrl] = React.useState<string | null>(null);
-  const [choosingCustom, setChoosingCustom] = React.useState(false);
+  const [layer, setLayer] = useState<LayerIndex | null>(null);
+  const [layerUrl, setLayerUrl] = useState<string | null>(null);
+  const [choosingCustom, setChoosingCustom] = useState(false);
 
   const onReset = () => {
     onClose();

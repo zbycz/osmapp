@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import React, { useCallback, useEffect } from 'react';
 import styled from '@emotion/styled';
 import Router from 'next/router';
@@ -18,7 +19,7 @@ const Wrapper = styled.div`
 
 const useStateWithTimeout = () => {
   const [loading, start, stop] = useBoolState(false);
-  const timeout = React.useRef<NodeJS.Timeout>();
+  const timeout = useRef<NodeJS.Timeout>();
   return {
     loading,
     start: useCallback(() => {

@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import { useQuery } from 'react-query';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import styled from '@emotion/styled';
@@ -29,7 +30,7 @@ type WeatherProps = {
 };
 
 const useLoadWeather = ({ lat, lon }: WeatherProps) => {
-  const lastFetchedLocation = React.useRef<LonLat | null>(null);
+  const lastFetchedLocation = useRef<LonLat | null>(null);
 
   const { status, data, error } = useQuery(
     ['weather', lat, lon],

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Badge, Button } from '@mui/material';
 import React from 'react';
 import styled from '@emotion/styled';
@@ -15,8 +16,8 @@ export const MapFilter = () => {
   const { climbingFilter } = useUserSettingsContext();
   const { isDefaultFilter, isGradeIntervalDefault, isMinimumRoutesDefault } =
     climbingFilter;
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [open, setOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [open, setOpen] = useState(false);
   const handleToggle = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(!open);
     setAnchorEl(event.currentTarget);

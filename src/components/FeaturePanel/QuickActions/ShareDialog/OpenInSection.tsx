@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -50,7 +51,7 @@ const LinkItem = ({ href, label }: LinkItemProps) => (
 export const OpenInSection = () => {
   const { items } = useGetItems();
   const theme = useTheme();
-  const [expanded, setExpanded] = React.useState<number | undefined>(undefined);
+  const [expanded, setExpanded] = useState<number | undefined>(undefined);
 
   return (
     <section>

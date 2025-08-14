@@ -12,7 +12,7 @@ const useUpdateViewFromFeature = () => {
   const { feature } = useFeatureContext();
   const { setView } = useMapStateContext();
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!feature?.center) return;
     if (getMapViewFromHash()) return;
 

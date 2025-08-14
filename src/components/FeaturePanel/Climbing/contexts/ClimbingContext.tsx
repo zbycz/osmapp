@@ -190,12 +190,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
 
-  const [pointElement, setPointElement] = React.useState<null | HTMLElement>(
-    null,
+  const [pointElement, setPointElement] = useState<null | HTMLElement>(null);
+  const [routeListTopOffsets, setRouteListTopOffsets] = useState<Array<number>>(
+    [],
   );
-  const [routeListTopOffsets, setRouteListTopOffsets] = React.useState<
-    Array<number>
-  >([]);
 
   const setRouteListTopOffset = useCallback((index: number, offset: number) => {
     setRouteListTopOffsets((prevPositions) => {

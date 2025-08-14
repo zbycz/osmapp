@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import React from 'react';
 import zip from 'lodash/zip';
 import { GRADE_TABLE } from '../../../../services/tagging/climbing/gradeData';
@@ -60,7 +61,7 @@ const StyledTableCell = styled(TableCell, {
 `;
 
 export const ClimbingGradesTableBody = ({ columns }: BodyProps) => {
-  const [clickedItem, setClickedItem] = React.useState<{
+  const [clickedItem, setClickedItem] = useState<{
     row?: number;
     column?: number;
   }>({});

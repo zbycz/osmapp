@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Checkbox,
   FormControlLabel,
@@ -10,7 +11,7 @@ import { t } from '../../../../services/intl';
 
 export const CommentField = () => {
   const { comment, setComment } = useEditContext();
-  const [isCommentVisible, setIsCommentVisible] = React.useState(false);
+  const [isCommentVisible, setIsCommentVisible] = useState(false);
   return (
     <>
       <FormControlLabel

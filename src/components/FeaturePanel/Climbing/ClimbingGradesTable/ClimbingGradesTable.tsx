@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import React from 'react';
 import {
   AppBar,
@@ -28,7 +29,7 @@ type ClimbingGradesTableProps = {
 export const ClimbingGradesTable = ({ onClose }: ClimbingGradesTableProps) => {
   const { feature } = useFeatureContext();
 
-  const [isSettingVisible, setIsSettingVisible] = React.useState(false);
+  const [isSettingVisible, setIsSettingVisible] = useState(false);
 
   const handleClose = () => {
     if (onClose) {

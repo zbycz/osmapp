@@ -53,7 +53,6 @@ module.exports = {
   'no-react-prefixed-hooks': {
     meta: {
       type: 'problem',
-      fixable: 'code',
     },
     create(context) {
       return {

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import React from 'react';
 import { getFullOsmappLink, getShortLink } from '../../../../services/helpers';
 import { useFeatureContext } from '../../../utils/FeatureContext';
@@ -17,11 +18,11 @@ import { Setter } from '../../../../types';
 
 const useLink = (short: boolean) => {
   const { feature } = useFeatureContext();
-  const [link, setLink] = React.useState(
+  const [link, setLink] = useState(
     short ? getShortLink(feature) : getFullOsmappLink(feature),
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const url = short ? getShortLink(feature) : getFullOsmappLink(feature);
     setLink(url);
   }, [short, feature]);
@@ -59,7 +60,7 @@ const ShortenCheckbox = ({ short, setShort }: ShortenCheckboxProps) => {
 export const LinkSection = () => {
   const { feature } = useFeatureContext();
   const supportsShortUrl = !feature.point;
-  const [short, setShort] = React.useState(false);
+  const [short, setShort] = useState(false);
   const link = useLink(short);
 
   return (

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
 import { basicStyle } from '../styles/basicStyle';
 import { setGlobalMap } from '../../../services/mapStorage';
@@ -41,10 +41,10 @@ const filterConsoleLog = () => {
 // };
 
 export const useInitMap = () => {
-  const mapRef = React.useRef(null);
-  const [mapInState, setMapInState] = React.useState(null);
+  const mapRef = useRef(null);
+  const [mapInState, setMapInState] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!mapRef.current) return undefined;
 
     filterConsoleLog();

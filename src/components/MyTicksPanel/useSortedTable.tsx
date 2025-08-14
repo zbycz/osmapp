@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import React from 'react';
 import { TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
 import { TickRowType } from '../../services/my-ticks/getMyTicks';
@@ -94,8 +95,8 @@ function EnhancedTableHead({
 }
 
 export const useSortedTable = (tickRows: TickRowType[]) => {
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<OrderKey>('date');
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<OrderKey>('date');
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,

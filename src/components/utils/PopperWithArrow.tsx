@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Box,
   Divider,
@@ -100,7 +101,7 @@ export const PopperWithArrow = ({
   offset = [0, 0],
   sx,
 }: PopperWithArrowProps) => {
-  const [arrowRef, setArrowRef] = React.useState<HTMLElement | null>(null);
+  const [arrowRef, setArrowRef] = useState<HTMLElement | null>(null);
 
   return (
     <StyledPopper

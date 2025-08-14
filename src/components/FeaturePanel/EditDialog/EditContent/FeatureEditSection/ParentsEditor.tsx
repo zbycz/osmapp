@@ -98,7 +98,7 @@ const getLabel = (parent: Feature) => {
 };
 
 export const ParentsEditor = () => {
-  const [isExpanded, setIsExpanded] = React.useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
   const handleClick = useHandleItemClick(setIsExpanded);
   const parents = useGetParents();
   const handleOpenAll = useHandleOpenAllParents(parents);

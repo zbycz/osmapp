@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { RouteDistribution } from '../../FeaturePanel/Climbing/RouteDistribution';
 import React from 'react';
 import { FormControlLabel, Switch, Typography } from '@mui/material';
@@ -9,7 +10,7 @@ type MyTicksGraphsProps = {
 };
 
 export const MyTicksGraphs = ({ features }: MyTicksGraphsProps) => {
-  const [isGrouped, setIsGrouped] = React.useState(true);
+  const [isGrouped, setIsGrouped] = useState(true);
   if (features.length === 0) {
     return null;
   }

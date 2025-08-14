@@ -1,3 +1,4 @@
+import { useState, useRef, useEffect } from 'react';
 import React, { Ref } from 'react';
 import { FeaturePanel } from './FeaturePanel';
 import { Drawer } from '../utils/Drawer';
@@ -19,15 +20,15 @@ export const FeaturePanelInDrawer = ({
   scrollRef,
 }: FeaturePanelInDrawerProps) => {
   const { feature } = useFeatureContext();
-  const [collapsedHeight, setCollapsedHeight] = React.useState<number>(
+  const [collapsedHeight, setCollapsedHeight] = useState<number>(
     DRAWER_PREVIEW_HEIGHT,
   );
   const { height: windowHeight } = useScreensize();
   const maxCollapsedHeight = windowHeight / 3;
 
-  const headingRef = React.useRef<HTMLDivElement>();
+  const headingRef = useRef<HTMLDivElement>();
 
-  React.useEffect(() => {
+  useEffect(() => {
     const headingDiv = headingRef.current;
     if (!headingDiv) return;
 

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   DataItem,
   EditDataItem,
@@ -78,8 +79,8 @@ export const AddMemberForm = () => {
   const { view } = useMapStateContext();
   const { addItem, items, setCurrent } = useEditContext();
   const currentItem = useCurrentItem();
-  const [showInput, setShowInput] = React.useState(false);
-  const [label, setLabel] = React.useState('');
+  const [showInput, setShowInput] = useState(false);
+  const [label, setLabel] = useState('');
 
   const handleAddMember = useCallback(
     async (e) => {

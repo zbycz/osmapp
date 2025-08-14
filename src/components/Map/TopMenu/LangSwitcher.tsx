@@ -1,3 +1,4 @@
+import { useRef } from 'react';
 import React from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -15,7 +16,7 @@ const StyledLanguageIcon = styled(LanguageIcon)`
 
 export const LangSwitcher = () => {
   const { asPath } = useRouter();
-  const anchorRef = React.useRef();
+  const anchorRef = useRef();
   const [opened, open, close] = useBoolState(false);
 
   const getLangSetter = (lang) => (e) => {

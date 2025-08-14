@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { Feature } from '../../../../services/types';
 import React from 'react';
@@ -26,14 +27,14 @@ export const PublicTransportRoute = () => {
 };
 
 const StopList = ({ stops }: { stops: Feature[] }) => {
-  const [minimized, setMinimized] = React.useState(stops.length > 7);
+  const [minimized, setMinimized] = useState(stops.length > 7);
   const getStops = React.useCallback(
     () => (minimized ? [stops[0], stops[stops.length - 1]] : stops),
     [minimized, stops],
   );
-  const [renderedStops, setRenderedStops] = React.useState(getStops());
+  const [renderedStops, setRenderedStops] = useState(getStops());
 
-  React.useEffect(() => {
+  useEffect(() => {
     setRenderedStops(getStops());
   }, [minimized, getStops]);
 

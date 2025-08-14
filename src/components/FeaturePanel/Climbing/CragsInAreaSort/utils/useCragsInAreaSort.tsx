@@ -1,9 +1,9 @@
-import React from 'react';
+import { useState } from 'react';
 import { SortBy } from '../types';
 import { getWikimediaCommonsPhotoTags } from '../../utils/photo';
 
 export const useCragsInAreaSort = () => {
-  const [sortBy, setSortBy] = React.useState<SortBy>('default');
+  const [sortBy, setSortBy] = useState<SortBy>('default');
 
   const sortByFn = (sortBy: SortBy) => {
     switch (sortBy) {
