@@ -12,13 +12,19 @@ import {
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
 
-export const getLabel = (baseSuffix: string, valueKey: string) =>
-  t(`${baseSuffix}_${valueKey}_label` as TranslationId);
-const getDescription = (baseSuffix: string, valueKey: string) =>
-  t(`${baseSuffix}_${valueKey}_description` as TranslationId);
+const getTranslationKey = (key: string) => {
+  return key.replaceAll(':', '_').replace(/^climbing_/, '');
+};
+
+// TODO TranslationId should never be dynamic, see https://github.com/zbycz/osmapp/pull/1229/files#r2276510504
+export const getLabel = (key: string) =>
+  t(`climbing_badges.${getTranslationKey(key)}_label` as TranslationId);
+
+const getDescription = (key: string) =>
+  t(`climbing_badges.${getTranslationKey(key)}_description` as TranslationId);
+
 export const EditorItem: React.FC<{
-  baseSuffix: string;
-  valueKey: string;
+  k: string;
   value: string | undefined;
   editable: boolean;
   isEditing: boolean;
@@ -27,8 +33,7 @@ export const EditorItem: React.FC<{
   onRemove: () => void;
   onCustomChange: (val: string) => void;
 }> = ({
-  baseSuffix,
-  valueKey,
+  k,
   value,
   editable,
   isEditing,
@@ -37,8 +42,7 @@ export const EditorItem: React.FC<{
   onRemove,
   onCustomChange,
 }) => {
-  const label = getLabel(baseSuffix, valueKey);
-  const desc = getDescription(baseSuffix, valueKey);
+  const desc = getDescription(k);
 
   const getValue = (value: string | undefined) => {
     if (value === 'yes') return t('yes');
@@ -51,7 +55,7 @@ export const EditorItem: React.FC<{
       <Box display="flex" alignItems="center" justifyContent="space-between">
         <Box flex={1} mr={2}>
           <Typography variant="body2" fontWeight="bold">
-            {label}
+            {getLabel(k)}
           </Typography>
           {!!desc && (
             <Typography variant="caption" color="text.secondary">

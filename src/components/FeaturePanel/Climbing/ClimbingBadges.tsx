@@ -19,48 +19,48 @@ const StyledChip = styled(Chip)`
 const climbingTypes = {
   boulder: {
     value: 'climbing:boulder',
-    label: 'climbing_badges.type_boulder_label',
-    description: 'climbing_badges.type_boulder_description',
+    label: 'climbing_badges.boulder_label',
+    description: 'climbing_badges.boulder_description',
   },
   trad: {
     value: 'climbing:trad',
-    label: 'climbing_badges.type_trad_label',
-    description: 'climbing_badges.type_trad_description',
+    label: 'climbing_badges.trad_label',
+    description: 'climbing_badges.trad_description',
   },
   speed: {
     value: 'climbing:speed',
-    label: 'climbing_badges.type_speed_label',
-    description: 'climbing_badges.type_speed_description',
+    label: 'climbing_badges.speed_label',
+    description: 'climbing_badges.speed_description',
   },
   sport: {
     value: 'climbing:sport',
-    label: 'climbing_badges.type_sport_label',
-    description: 'climbing_badges.type_sport_description',
+    label: 'climbing_badges.sport_label',
+    description: 'climbing_badges.sport_description',
   },
   multipitch: {
     value: 'climbing:multipitch',
-    label: 'climbing_badges.type_multipitch_label',
-    description: 'climbing_badges.type_multipitch_description',
+    label: 'climbing_badges.multipitch_label',
+    description: 'climbing_badges.multipitch_description',
   },
   ice: {
     value: 'climbing:ice',
-    label: 'climbing_badges.type_ice_label',
-    description: 'climbing_badges.type_ice_description',
+    label: 'climbing_badges.ice_label',
+    description: 'climbing_badges.ice_description',
   },
   mixed: {
     value: 'climbing:mixed',
-    label: 'climbing_badges.type_mixed_label',
-    description: 'climbing_badges.type_mixed_description',
+    label: 'climbing_badges.mixed_label',
+    description: 'climbing_badges.mixed_description',
   },
   deepwater: {
     value: 'climbing:deepwater',
-    label: 'climbing_badges.type_deepwater_label',
-    description: 'climbing_badges.type_deepwater_description',
+    label: 'climbing_badges.deepwater_label',
+    description: 'climbing_badges.deepwater_description',
   },
   toprope: {
     value: 'climbing:toprope',
-    label: 'climbing_badges.type_toprope_label',
-    description: 'climbing_badges.type_toprope_description',
+    label: 'climbing_badges.toprope_label',
+    description: 'climbing_badges.toprope_description',
   },
 } as const;
 
