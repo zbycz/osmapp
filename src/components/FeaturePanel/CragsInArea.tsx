@@ -26,7 +26,6 @@ import { MemberItem } from './MemberFeatures/MemberItem';
 import { RouteDistribution } from './Climbing/RouteDistribution';
 import { CragsInAreaSort } from './Climbing/CragsInAreaSort/CragsInAreaSort';
 import { CragsInAreaFilter } from './Climbing/Filter/CragsInAreaFilter';
-import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import {
   useGetFilteredCrags,
   useGetMemberCrags,

@@ -25,7 +25,7 @@ import { Box, Stack } from '@mui/material';
 import { ClimbingStructuredData } from './Climbing/ClimbingStructuredData';
 import { isPublictransportRoute } from '../../utils';
 import { Sockets } from './Sockets/Sockets';
-import { ClimbingBadges, PanelClimbingBadges } from './Climbing/ClimbingBadges';
+import { PanelClimbingBadges } from './Climbing/ClimbingBadges';
 import { TestApiWarning } from './helpers/TestApiWarning';
 import { FeaturePanelClimbingGuideInfo } from './Climbing/FeaturePanelClimbingGuideInfo';
 import { FeaturedTag } from './FeaturedTag';

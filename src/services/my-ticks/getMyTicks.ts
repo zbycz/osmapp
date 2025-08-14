@@ -5,7 +5,7 @@ import {
   OverpassFeature,
   overpassGeomToGeojson,
 } from '../overpass/overpassSearch';
-import { getAllTicks, getTickKey } from './ticks';
+import { getAllTicks } from './ticks';
 import { TickStyle } from '../../components/FeaturePanel/Climbing/types';
 import { FeatureTags, OsmId } from '../types';
 import { publishDbgObject } from '../../utils';

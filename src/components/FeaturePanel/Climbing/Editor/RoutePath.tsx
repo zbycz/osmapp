@@ -2,7 +2,6 @@ import React from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { PathWithBorder } from './PathWithBorder';
 import { MouseTrackingLine } from './MouseTrackingLine';
-import { InteractivePath } from './InteractivePath';
 
 type Props = {
   routeIndex: number;

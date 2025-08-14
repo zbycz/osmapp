@@ -6,7 +6,6 @@ import { t } from '../../../services/intl';
 import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 import { insertOsmNote } from '../../../services/osm/insertOsmNote';
 import { useSnackbar } from '../../utils/SnackbarContext';
-import { getShortId } from '../../../services/helpers';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const useGetSaveNote = () => {

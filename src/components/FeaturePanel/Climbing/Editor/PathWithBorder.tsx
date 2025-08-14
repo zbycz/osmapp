@@ -7,7 +7,6 @@ import {
   getDifficulty,
   getDifficultyColor,
 } from '../../../../services/tagging/climbing/routeGrade';
-import { ClimbingRoute } from '../types';
 import { useMobileMode } from '../../../helpers';
 
 const RouteLine = styled.path`

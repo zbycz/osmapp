@@ -1,9 +1,6 @@
 // identifier should be in the form: foldername.messageid.
 // 标识符应采用以下格式：文件夹名.消息id
 
-import { t } from '../services/intl';
-import React from 'react';
-
 export default {
   loading: '加载中',
   error: '错误',

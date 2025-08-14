@@ -1,6 +1,5 @@
 import { LayerSpecification } from '@maplibre/maplibre-gl-style-spec';
 import { CLIMBING_TILES_SOURCE } from '../consts';
-import { linear } from './helpers';
 
 export const routesLines: LayerSpecification[] = [
   {

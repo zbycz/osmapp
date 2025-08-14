@@ -1,5 +1,5 @@
 import { getImagesFromCenter } from './images/getImageDefs';
-import { Feature, FeatureTags, LonLat, LonLatRounded, OsmType } from './types';
+import { Feature, FeatureTags, LonLat, LonLatRounded } from './types';
 
 let nextId = 0;
 export const getNewId = () => {

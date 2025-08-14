@@ -5,7 +5,6 @@ import { Tooltip } from '@mui/material';
 import React from 'react';
 import { t } from '../../services/intl';
 import { OsmType } from '../../services/types';
-import { fontSize } from '@mui/system';
 import { getApiId } from '../../services/helpers';
 
 export const getOsmTypeFromShortId = (shortId: string): OsmType =>

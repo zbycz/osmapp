@@ -16,7 +16,7 @@ import {
 
 import { Size } from './types';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { getReactKey, getShortId } from '../../../services/helpers';
+import { getReactKey } from '../../../services/helpers';
 
 const StyledSvg = styled.svg`
   position: absolute;

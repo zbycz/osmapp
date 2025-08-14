@@ -7,7 +7,6 @@ import { getWikimediaCommonsPhotoPathKeys } from './utils/photo';
 import { RouteNumber } from './RouteNumber';
 import { t } from '../../../services/intl';
 import { useMobileMode } from '../../helpers';
-import { type } from 'node:os';
 
 const InlineBlockContainer = styled.div`
   display: inline-block;

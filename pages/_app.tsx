@@ -9,7 +9,7 @@ import {
 import { UserThemeProvider } from '../src/helpers/theme';
 import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { doShortenerRedirect } from '../src/services/helpers';
-import { PROJECT_ID, PROJECT_NAME } from '../src/services/project';
+import { PROJECT_ID } from '../src/services/project';
 import { GoogleAnalytics } from '../src/components/App/google-analytics';
 import { Umami } from '../src/components/App/umami';
 import { SnackbarProvider } from '../src/components/utils/SnackbarContext';

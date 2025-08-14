@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback } from 'react';
 import { Stack } from '@mui/material';
 import { Result } from './Result';
 import { RoutingResult } from './routing/types';

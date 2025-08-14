@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { useFeatureContext } from '../utils/FeatureContext';
-import { PROJECT_ID } from '../../services/project';
 import { useMobileMode } from '../helpers';
 import { Homepage } from './Homepage';
 import { MobilePageDrawer } from '../utils/MobilePageDrawer';

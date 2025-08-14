@@ -8,7 +8,6 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
 } from '@mui/material';
 import { intl, t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
@@ -20,7 +19,6 @@ import {
 import { MobilePageDrawer } from '../utils/MobilePageDrawer';
 import { ClimbingArea } from '../../services/climbing-areas/getClimbingAreas';
 import Link from 'next/link';
-import { TooltipButton } from '../utils/TooltipButton';
 import { ClimbingGuideInfo } from '../FeaturePanel/Climbing/ClimbingGuideInfo';
 
 type ClimbingAreasPanelProps = {

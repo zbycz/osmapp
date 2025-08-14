@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Router from 'next/router';
 import styled from '@emotion/styled';
 import CloseIcon from '@mui/icons-material/Close';
 import TuneIcon from '@mui/icons-material/Tune';
@@ -15,7 +14,6 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { PhotoLink } from './PhotoLink';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { getLabel } from '../../../helpers/featureLabel';
-import { getOsmappLink } from '../../../services/helpers';
 import { UserSettingsDialog } from '../../HomepagePanel/UserSettingsDialog';
 import { useDragItems } from '../../utils/useDragItems';
 import { moveElementToIndex } from './utils/array';

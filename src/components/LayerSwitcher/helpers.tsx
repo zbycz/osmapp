@@ -3,13 +3,11 @@ import styled from '@emotion/styled';
 import { Box, IconButton, Typography, List, ListItemIcon } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import {
-  Layer,
   LayerIcon as LayerIconType,
   View,
   useMapStateContext,
 } from '../utils/MapStateContext';
 import { t, Translation } from '../../services/intl';
-import { Setter } from '../../types';
 
 type RemoveUserLayerActionProps = {
   url: string;

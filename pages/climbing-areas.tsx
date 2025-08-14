@@ -1,10 +1,5 @@
 import { ClimbingAreasPanel } from '../src/components/ClimbingAreasPanel/ClimbingAreasPanel';
-import {
-  GetServerSideProps,
-  InferGetServerSidePropsType,
-  NextPage,
-  NextPageContext,
-} from 'next';
+import { NextPage } from 'next';
 import {
   ClimbingArea,
   getClimbingAreas,

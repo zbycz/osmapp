@@ -16,7 +16,6 @@ import { getOsmappLink } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useGetHandleSave } from './useGetHandleSave';
 import { getWikimediaCommonsPhotoKeys, removeFilePrefix } from './utils/photo';
-import { useMobileMode } from '../../helpers';
 import { ClimbingEditorHelperText } from './ClimbingEditorHelperText';
 import { t } from '../../../services/intl';
 
