@@ -20,7 +20,7 @@ const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
   loading: () => <div style={{ height: 500 }} />,
 });
 
-const WayWarning = () => {
+const NotYetEditableWarning = () => {
   const { shortId } = useCurrentItem();
   const osmId = getApiId(shortId);
   const link = `https://www.openstreetmap.org/edit?${osmId.type}=${osmId.id}`;
@@ -33,7 +33,7 @@ const WayWarning = () => {
   );
 };
 
-const useNodeWithoutWayCheck = (osmId: OsmId) => {
+const useNodeEditableCheck = (osmId: OsmId) => {
   const isNew = osmId.id < 0;
   const [isNodeWithoutWay, setIsNodeWithoutWay] = useState(false);
 
@@ -49,29 +49,33 @@ const useNodeWithoutWayCheck = (osmId: OsmId) => {
   return isNew || isNodeWithoutWay;
 };
 
+const Content = () => {
+  const { shortId } = useCurrentItem();
+  const osmId = getApiId(shortId);
+  const isNodeEditable = useNodeEditableCheck(osmId);
+  const [mapStyle, setMapStyle] = useState<'outdoor' | 'satellite'>('outdoor');
+
+  if (osmId.type === 'way') {
+    return <NotYetEditableWarning />;
+  }
+  if (osmId.type !== 'node') {
+    return null;
+  }
+  if (!isNodeEditable) {
+    return <NotYetEditableWarning />;
+  }
+  return (
+    <EditFeatureMapDynamic mapStyle={mapStyle} setMapStyle={setMapStyle} />
+  );
+};
+
 export const LocationEditor = () => {
   const [expanded, setExpanded] = useState(false);
   const { shortId } = useCurrentItem();
   const osmId = getApiId(shortId);
-  const isNodeWithoutWay = useNodeWithoutWayCheck(osmId);
-  const [mapStyle, setMapStyle] = useState<'outdoor' | 'satellite'>('outdoor');
 
   if (osmId.type === 'relation') {
     return null;
-  }
-
-  let content = null;
-  if (expanded) {
-    if (osmId.type === 'node') {
-      content = isNodeWithoutWay ? (
-        <EditFeatureMapDynamic mapStyle={mapStyle} setMapStyle={setMapStyle} />
-      ) : (
-        <WayWarning />
-      );
-    }
-    if (osmId.type === 'way') {
-      content = <WayWarning />;
-    }
   }
 
   return (
@@ -88,7 +92,7 @@ export const LocationEditor = () => {
           <Typography variant="button">{t('editdialog.location')}</Typography>
         </Stack>
       </AccordionSummary>
-      <AccordionDetails>{content}</AccordionDetails>
+      <AccordionDetails>{expanded && <Content />}</AccordionDetails>
     </Accordion>
   );
 };

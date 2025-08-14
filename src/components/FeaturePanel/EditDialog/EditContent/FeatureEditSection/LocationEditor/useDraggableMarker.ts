@@ -3,6 +3,12 @@ import maplibregl, { LngLat } from 'maplibre-gl';
 import { createMapEffectHook } from '../../../../../helpers';
 import { LonLat } from '../../../../../../services/types';
 import { isGpsValid } from './isGpsValid';
+import { useCurrentItem } from '../../../EditContext';
+
+const MAIN_MARKER = {
+  color: 'salmon',
+  draggable: true,
+};
 
 const useUpdateDraggableFeatureMarker = createMapEffectHook<
   [
@@ -26,16 +32,8 @@ const useUpdateDraggableFeatureMarker = createMapEffectHook<
   markerRef.current = undefined;
 
   if (nodeLonLat && isGpsValid(nodeLonLat)) {
-    const [lng, lat] = nodeLonLat;
-
-    markerRef.current = new maplibregl.Marker({
-      color: 'salmon',
-      draggable: true,
-    })
-      .setLngLat({
-        lng: parseFloat(lng.toFixed(6)),
-        lat: parseFloat(lat.toFixed(6)),
-      })
+    markerRef.current = new maplibregl.Marker(MAIN_MARKER)
+      .setLngLat(nodeLonLat as [number, number])
       .addTo(map);
 
     markerRef.current?.on('dragend', onDragEnd);
@@ -44,8 +42,8 @@ const useUpdateDraggableFeatureMarker = createMapEffectHook<
 
 export function useDraggableFeatureMarker(
   mapRef: React.MutableRefObject<maplibregl.Map>,
-  currentItem: any,
 ) {
+  const currentItem = useCurrentItem();
   const markerRef = useRef<maplibregl.Marker>();
 
   const onMarkerChange = ({ lng, lat }: LngLat) => {
