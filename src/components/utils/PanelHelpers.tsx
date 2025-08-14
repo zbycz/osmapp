@@ -118,7 +118,7 @@ export const PanelFooterWrapper = styled.footer`
   line-height: 1.5;
 `;
 
-export const PANEL_GAP = '12px';
+export const PANEL_GAP = '16px';
 
 export const PanelSidePadding = styled.div`
   padding: 0 ${PANEL_GAP};
