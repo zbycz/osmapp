@@ -11,7 +11,7 @@ const LayerSwitcher = () => {
 
   return (
     <>
-      <LayerSwitcherButton onClick={open} />
+      <LayerSwitcherButton onClick={opened ? close : open} isOpened={opened} />
       <SwipeableDrawer
         anchor="right"
         open={opened}
@@ -20,6 +20,7 @@ const LayerSwitcher = () => {
         variant={panelFixed ? 'persistent' : 'temporary'}
         disableBackdropTransition
         disableSwipeToOpen
+        sx={{ pointerEvents: 'all' }}
       >
         <div role="presentation" style={{ width: '280px', height: '100%' }}>
           <ClosePanelButton right onClick={close} style={{ top: 13 }} />

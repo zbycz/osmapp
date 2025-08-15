@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { isDesktop, useMobileMode } from '../../helpers';
 import { HamburgerMenu } from './HamburgerMenu';
-import { UserMenu } from './UserMenu';
 
 const Wrapper = styled.span`
   vertical-align: top;
@@ -11,7 +10,7 @@ const Wrapper = styled.span`
   margin-top: -10px;
 
   @media ${isDesktop} {
-    margin-top: -5px;
+    margin-top: 8px;
   }
 `;
 
@@ -22,7 +21,6 @@ export const TopMenu = () => {
 
   return (
     <Wrapper>
-      <UserMenu />
       <HamburgerMenu />
     </Wrapper>
   );

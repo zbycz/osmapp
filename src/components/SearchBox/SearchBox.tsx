@@ -9,8 +9,7 @@ import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { isDesktop, useMobileMode } from '../helpers';
 import { SEARCH_BOX_HEIGHT } from './consts';
-import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
-import { UserMenu } from '../Map/TopMenu/UserMenu';
+import { HamburgerMenu } from '../Map/HamburgerMenu/HamburgerMenu';
 import { setLastFeature } from '../../services/lastFeatureStorage';
 import { DirectionsButton } from '../Directions/DirectionsButton';
 import { usePanelShown } from '../utils/usePanelShown';
@@ -102,14 +101,9 @@ const SearchBoxInner = ({ withoutPanel }) => {
         {!isMobileMode && featureShown && (
           <ClosePanelButton onClick={onClosePanel} />
         )}
-        {isMobileMode && (
-          <>
-            <UserMenu />
-            <HamburgerMenu />
-          </>
-        )}
 
         {(!featureShown || isMobileMode) && <DirectionsButton />}
+        {isMobileMode && <HamburgerMenu />}
       </StyledPaper>
     </TopPanel>
   );

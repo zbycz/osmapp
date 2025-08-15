@@ -65,6 +65,9 @@ const globalStyle = (theme: Theme) => css`
     user-select: none;
     -webkit-user-select: none;
   }
+  .maplibregl-ctrl-scale {
+    margin-bottom: 60px !important;
+  }
 
   .maplibregl-ctrl-group {
     background-color: ${convertHexToRgba(
@@ -105,14 +108,14 @@ const globalStyle = (theme: Theme) => css`
   }
 
   .maplibregl-ctrl-top-right {
-    top: 114px !important;
+    top: 60px !important;
 
     @media ${isTabletResolution} {
-      top: 54px !important;
+      top: 0px !important;
     }
 
     @media ${isDesktopResolution} {
-      top: 83px !important;
+      top: 64px !important;
     }
   }
 

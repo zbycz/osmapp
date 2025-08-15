@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import Router from 'next/router';
 import {
+  CircularProgress,
   Paper,
+  Stack,
   Table,
   TableBody,
   TableContainer,
@@ -94,9 +96,34 @@ const mapFeaturesDataToTicks = (
   return tickRows;
 };
 
+const MyTicksContent = ({ tickRows, features }) => {
+  const { visibleRows, tableHeader } = useSortedTable(tickRows);
+
+  return (
+    <>
+      {tickRows.length === 0 ? (
+        <NoTicksContent />
+      ) : (
+        <TableContainer component={Paper}>
+          <Table size="small">
+            {tableHeader}
+            <TableBody>
+              {visibleRows.map((tickRow) => (
+                <MyTicksRow tickRow={tickRow} key={tickRow.key} />
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
+      <MyTicksGraphs features={features} />
+    </>
+  );
+};
+
 export const MyTicksPanel = () => {
   const [tickRows, setTickRows] = useState<TickRowType[]>([]);
   const [features, setFeatures] = useState<OverpassFeature[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const { userSettings } = useUserSettingsContext();
 
   const handleClose = () => {
@@ -104,6 +131,7 @@ export const MyTicksPanel = () => {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     getMyTicksFeatures(userSettings).then((features) => {
       setFeatures(features);
       const allTicks = getAllTicks();
@@ -113,10 +141,10 @@ export const MyTicksPanel = () => {
         userSettings['climbing.gradeSystem'],
       );
       setTickRows(newTickRows);
+      setIsLoading(false);
     });
   }, [userSettings]);
   useAddHeatmap(tickRows);
-  const { visibleRows, tableHeader } = useSortedTable(tickRows);
 
   return (
     <ClientOnly>
@@ -127,21 +155,13 @@ export const MyTicksPanel = () => {
             <PanelSidePadding>
               <h1>{t('my_ticks.title')}</h1>
             </PanelSidePadding>
-            {tickRows.length === 0 ? (
-              <NoTicksContent />
+            {isLoading ? (
+              <Stack justifyContent="center" alignItems="center" height="100%">
+                <CircularProgress />
+              </Stack>
             ) : (
-              <TableContainer component={Paper}>
-                <Table size="small">
-                  {tableHeader}
-                  <TableBody>
-                    {visibleRows.map((tickRow) => (
-                      <MyTicksRow tickRow={tickRow} key={tickRow.key} />
-                    ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
+              <MyTicksContent tickRows={tickRows} features={features} />
             )}
-            <MyTicksGraphs features={features} />
           </PanelScrollbars>
         </PanelContent>
       </MobilePageDrawer>

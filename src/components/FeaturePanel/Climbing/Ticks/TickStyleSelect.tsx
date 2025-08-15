@@ -33,7 +33,7 @@ export const TickStyleSelect = ({
   <FormControl>
     <InputLabel>Tick style</InputLabel>
 
-    <Select value={value} onChange={onChange} label="Tick style">
+    <Select value={value} onChange={onChange} label="Tick style" size="small">
       {tickStyles.map((tickStyle) => (
         <MenuItem key={tickStyle.key} value={tickStyle.key}>
           <Row>

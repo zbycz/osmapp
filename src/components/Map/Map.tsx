@@ -9,7 +9,7 @@ import { MapFooter } from './MapFooter/MapFooter';
 import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
-import { TopMenu } from './TopMenu/TopMenu';
+import { TopMenu } from './HamburgerMenu/TopMenu';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { Weather } from './Weather/Weather';
 import { MapFilter } from './MapFilter/MapFilter';
@@ -38,9 +38,9 @@ const Spinner = styled(CircularProgress)`
 
 const TopRight = styled.div`
   position: absolute;
-  z-index: 1000;
+  z-index: 100;
   padding: 10px;
-  right: 0;
+  right: -4px;
   top: 62px;
 
   @media ${isDesktop} {
@@ -48,14 +48,26 @@ const TopRight = styled.div`
   }
 `;
 
+const BottomLeft = styled.div<{ $isFeaturePanelVisible: boolean }>`
+  position: absolute;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 999;
+  left: ${({ $isFeaturePanelVisible }) =>
+    $isFeaturePanelVisible ? `${FEATURE_PANEL_WIDTH}px` : '0px'};
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+  align-items: end;
+  padding: 0 0 8px 12px;
+`;
 const BottomRight = styled.div`
   position: absolute;
   right: 0;
   bottom: 0;
-  z-index: 1000;
   text-align: right;
   pointer-events: none;
-  z-index: 999;
+  z-index: 998;
 
   display: flex;
   gap: 4px;
@@ -113,8 +125,10 @@ const Map = () => {
       <NoscriptMessage />
       <TopRight>
         <TopMenu />
-        <LayerSwitcherDynamic />
       </TopRight>
+      <BottomLeft $isFeaturePanelVisible={isPanelShown && !isMobileMode}>
+        <LayerSwitcherDynamic />
+      </BottomLeft>
       <BottomRight>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
