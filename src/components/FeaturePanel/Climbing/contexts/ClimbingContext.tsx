@@ -28,6 +28,7 @@ import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
 import { getContainedSizeImage } from '../utils/image';
+import { Setter } from '../../../../types';
 
 type LoadedPhotos = Record<string, Record<number, boolean>>;
 type ImageSize = {
@@ -46,10 +47,10 @@ type ClimbingContextType = {
   imageSize: ImageSize;
   imageContainerSize: ImageSize;
   isRoutesLayerVisible: boolean;
-  setIsRoutesLayerVisible: (isRoutesLayerVisible: boolean) => void;
+  setIsRoutesLayerVisible: Setter<boolean>;
   isPointMoving: boolean;
   isPanningDisabled: boolean;
-  setIsPanningDisabled: (isPanningDisabled: boolean) => void;
+  setIsPanningDisabled: Setter<boolean>;
   isRouteSelected: (routeNumber: number) => boolean;
   isOtherRouteSelected: (routeNumber: number) => boolean;
   isRouteHovered: (routeNumber: number) => boolean;
@@ -58,18 +59,18 @@ type ClimbingContextType = {
   routes: Array<ClimbingRoute>;
   routeSelectedIndex: number | null | undefined;
   isPointClicked: boolean;
-  setIsPointClicked: (isPointClicked: boolean) => void;
-  setEditorPosition: (position: PositionPx) => void;
-  setImageSize: (ImageSize) => void;
-  setImageContainerSize: (ImageSize) => void;
+  setIsPointClicked: Setter<boolean>;
+  setEditorPosition: Setter<PositionPx>;
+  setImageSize: Setter<ImageSize>;
+  setImageContainerSize: Setter<ImageSize>;
   photoPaths: Array<string>;
-  setPhotoPaths: (path: Array<string>) => void;
+  setPhotoPaths: Setter<string[]>;
   photoPath: string;
-  setPhotoPath: (path: string) => void;
-  setIsPointMoving: (isPointMoving: boolean) => void;
-  setPointSelectedIndex: (pointSelectedIndex: number) => void;
-  setRoutes: (routes: Array<ClimbingRoute>) => void;
-  setRouteSelectedIndex: (routeSelectedIndex: number) => void;
+  setPhotoPath: Setter<string>;
+  setIsPointMoving: Setter<boolean>;
+  setPointSelectedIndex: Setter<number>;
+  setRoutes: Setter<ClimbingRoute[]>;
+  setRouteSelectedIndex: Setter<number>;
   updateRouteOnIndex: (
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
@@ -89,38 +90,38 @@ type ClimbingContextType = {
     execute: (desiredAction: StateAction, props?: unknown) => void;
   };
   scrollOffset: PositionPx;
-  setScrollOffset: (scrollOffset: PositionPx) => void;
+  setScrollOffset: Setter<PositionPx>;
   findCloserPoint: (position: Position) => PathPoint | null;
   photoZoom: ZoomState;
-  setPhotoZoom: (photoZoom: ZoomState) => void;
+  setPhotoZoom: Setter<ZoomState>;
   areRoutesLoading: boolean;
-  setAreRoutesLoading: (areRoutesLoading: boolean) => void;
+  setAreRoutesLoading: Setter<boolean>;
   mousePosition: PositionPx;
-  setMousePosition: (mousePosition: PositionPx | null) => void;
+  setMousePosition: Setter<PositionPx | null>;
   pointElement: null | HTMLElement;
   setPointElement: (pointElement: null | HTMLElement) => void;
   moveRoute: (from: number, to: number) => void;
   isEditMode: boolean;
-  setIsEditMode: (value: boolean | ((old: boolean) => boolean)) => void;
+  setIsEditMode: Setter<boolean>;
   viewportSize: Size;
-  setViewportSize: (size: Size) => void;
+  setViewportSize: Setter<Size>;
   routeIndexHovered: number | null | undefined;
-  setRouteIndexHovered: (routeIndexHovered: number) => void;
+  setRouteIndexHovered: Setter<number>;
   routeIndexExpanded: number | null;
-  setRouteIndexExpanded: (routeIndexHovered: number | null) => void;
+  setRouteIndexExpanded: Setter<number | null>;
   loadedPhotos: LoadedPhotos;
-  setLoadedPhotos: (loadedPhotos: LoadedPhotos) => void;
+  setLoadedPhotos: Setter<LoadedPhotos>;
   loadPhotoRelatedData: () => void;
   filterDifficulty: Array<string>;
-  setFilterDifficulty: (filterDifficulty: Array<string>) => void;
+  setFilterDifficulty: Setter<string[]>;
   photoRef: React.MutableRefObject<any>;
   svgRef: React.MutableRefObject<any>;
   getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
   showDebugMenu: boolean;
-  setShowDebugMenu: (showDebugMenu: boolean) => void;
+  setShowDebugMenu: Setter<boolean>;
   isPanningActiveRef: React.MutableRefObject<any>;
   arePointerEventsDisabled: boolean; // @TODO do we need it?
-  setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
+  setArePointerEventsDisabled: Setter<boolean>;
   preparePhotos: (cragPhotos: Array<string>) => void;
   routeListTopOffsets: Array<number>;
   setRouteListTopOffset: (

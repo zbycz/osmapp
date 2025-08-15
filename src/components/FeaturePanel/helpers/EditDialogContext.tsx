@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState } from 'react';
 import Router from 'next/router';
 import { isBrowser } from '../../helpers';
+import { Setter } from '../../../types';
 
 type Tag = string;
 
@@ -11,7 +12,7 @@ type EditDialogType = {
   close: () => void;
   openWithTag: (tag: Tag) => void;
   redirectOnClose: string | undefined;
-  setRedirectOnClose: (url: string | undefined) => void;
+  setRedirectOnClose: Setter<string | undefined>;
 };
 
 const EditDialogContext = createContext<EditDialogType>(undefined);

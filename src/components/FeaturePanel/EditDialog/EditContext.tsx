@@ -1,23 +1,24 @@
 import React, { createContext, useContext, useState } from 'react';
 import { SuccessInfo } from '../../../services/types';
 import { DataItem, EditDataItem, useEditItems } from './useEditItems';
+import { Setter } from '../../../types';
 
 type ShortId = string;
 
 type EditContextType = {
   successInfo: undefined | SuccessInfo;
-  setSuccessInfo: (info: undefined | SuccessInfo) => void;
+  setSuccessInfo: Setter<undefined | SuccessInfo>;
   isSaving: boolean;
-  setIsSaving: (b: boolean) => void;
+  setIsSaving: Setter<boolean>;
   location: string;
-  setLocation: (s: string) => void;
+  setLocation: Setter<string>;
   comment: string;
-  setComment: (s: string) => void;
+  setComment: Setter<string>;
   addItem: (newItem: DataItem) => void;
   removeItem: (shortId: string) => void;
-  items: Array<EditDataItem>;
+  items: EditDataItem[];
   current: string;
-  setCurrent: (s: string) => void;
+  setCurrent: Setter<string>;
 };
 
 const EditContext = createContext<EditContextType>(undefined);

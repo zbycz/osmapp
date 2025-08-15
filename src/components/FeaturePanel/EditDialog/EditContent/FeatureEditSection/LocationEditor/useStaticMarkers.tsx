@@ -7,6 +7,7 @@ import { t } from '../../../../../../services/intl';
 import { isGpsValid } from './isGpsValid';
 import { EditDataItem } from '../../../useEditItems';
 import { useEditContext } from '../../../EditContext';
+import { Setter } from '../../../../../../types';
 
 const GRAY_MARKER = {
   color: '#555',
@@ -18,7 +19,7 @@ const useUpdateFeatureMarkers = createMapEffectHook<
     {
       markerRefs: React.MutableRefObject<maplibregl.Marker[]>;
       items: EditDataItem[];
-      setCurrent: (shortId: string) => void;
+      setCurrent: Setter<string>;
       current: string;
     },
   ]

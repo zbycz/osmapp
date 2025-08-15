@@ -161,7 +161,7 @@ export const destroyRouting = () => {
 
 const LAST_MODE_STORAGE_KEY = 'last-directions-mode';
 export const getLastMode = () =>
-  window.localStorage?.getItem(LAST_MODE_STORAGE_KEY);
+  window.localStorage?.getItem(LAST_MODE_STORAGE_KEY) as Profile;
 
 export const handleRouting = async (
   mode: Profile,

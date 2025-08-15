@@ -11,19 +11,20 @@ import { Feature } from '../../services/types';
 import { useBoolState } from '../helpers';
 import { publishDbgObject } from '../../utils';
 import { setLastFeature } from '../../services/lastFeatureStorage';
+import { Setter } from '../../types';
 
 export type FeatureContextType = {
   feature: Feature | null;
   featureShown: boolean;
   /** Used only for skeletons (otherwise it gets loaded by router) */
-  setFeature: (feature: Feature | null) => void;
+  setFeature: Setter<Feature | null>;
   homepageShown: boolean;
   showHomepage: () => void;
   hideHomepage: () => void;
   persistHideHomepage: () => void;
   persistShowHomepage: () => void;
   preview: Feature | null;
-  setPreview: (feature: Feature | null) => void;
+  setPreview: Setter<Feature | null>;
 };
 
 export const FeatureContext = createContext<FeatureContextType>(undefined);

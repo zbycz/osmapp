@@ -5,6 +5,7 @@ import DirectionsWalkIcon from '@mui/icons-material/DirectionsWalk';
 import React from 'react';
 import styled from '@emotion/styled';
 import { Profile } from './routing/types';
+import { Setter } from '../../types';
 
 const StyledToggleButton = styled(ToggleButton)`
   padding: 8px;
@@ -23,7 +24,7 @@ const icons = [
 
 type Props = {
   value: Profile;
-  setMode: (value: ((prevState: Profile) => Profile) | Profile) => void;
+  setMode: Setter<Profile>;
   onChange: (value: Profile) => void;
 };
 

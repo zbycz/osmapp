@@ -41,7 +41,7 @@ export const useInputValueWithUrl = () => {
 };
 
 export const useHandleQuery = (
-  setInputValue: (value: string) => void,
+  setInputValue: Setter<string>,
   setIsOpen: Setter<boolean>,
   lastSyncedValue: React.MutableRefObject<string>,
 ) => {
