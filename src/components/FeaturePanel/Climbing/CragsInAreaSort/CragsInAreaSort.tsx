@@ -5,10 +5,11 @@ import { t } from '../../../../services/intl';
 import { PopperWithArrow } from '../../../utils/PopperWithArrow';
 import { CragsInAreaSortIcon } from './CragsInAreaSortIcon';
 import { SortBy } from './types';
+import { Setter } from '../../../../types';
 
 type CragsInAreaSortProps = {
   sortBy: SortBy;
-  setSortBy: (sortBy: SortBy) => void;
+  setSortBy: Setter<SortBy>;
 };
 
 export const CragsInAreaSort = ({

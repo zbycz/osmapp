@@ -14,10 +14,11 @@ import {
   Typography,
 } from '@mui/material';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Setter } from '../../types';
 
 type Props = {
   advanced: boolean;
-  setAdvanced: (value: ((prevState: boolean) => boolean) | boolean) => void;
+  setAdvanced: Setter<boolean>;
   toggleShowTags: () => void;
   showTagsTable: boolean;
 };

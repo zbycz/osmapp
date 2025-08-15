@@ -4,6 +4,7 @@ import {
 } from './UserSettingsContext';
 import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
 import { GradeSystem } from '../../../services/tagging/climbing/gradeSystems';
+import { Setter } from '../../../types';
 
 export type Interval = [number, number];
 
@@ -51,9 +52,9 @@ const isSameInterval = (a: Interval, b: Interval) =>
 export type ClimbingFilter = {
   grades: string[];
   gradeInterval: Interval;
-  setGradeInterval: (gradeInterval: Interval) => void;
+  setGradeInterval: Setter<Interval>;
   minimumRoutes: number;
-  setMinimumRoutes: (minimumRoutes: number) => void;
+  setMinimumRoutes: Setter<number>;
   isDefaultFilter: boolean;
   isGradeIntervalDefault: boolean;
   isMinimumRoutesDefault: boolean;

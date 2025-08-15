@@ -1,6 +1,7 @@
 import { Day, DaysTable } from './parser/types';
 import { useRef } from 'react';
 import { isValid } from './parser/buildString';
+import { Setter } from '../../../../../../types';
 
 const validateAndPopEmptySlots = (prevDays: DaysTable) =>
   prevDays.map((day) => {
@@ -20,9 +21,7 @@ const validateAndPopEmptySlots = (prevDays: DaysTable) =>
     return { ...day, timeSlots };
   });
 
-export const useGetBlurValidation = (
-  setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void,
-) => {
+export const useGetBlurValidation = (setDays: Setter<Day[]>) => {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   const onBlur = (e) => {

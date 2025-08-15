@@ -3,6 +3,7 @@ import { TextField } from '@mui/material';
 import React from 'react';
 import { Day, Slot } from './parser/types';
 import { isValid } from './parser/buildString';
+import { Setter } from '../../../../../../types';
 
 const Wrapper = styled.span`
   white-space: nowrap;
@@ -40,7 +41,7 @@ type Props = {
   timeSlot: Slot;
   onFocus: (e) => void;
   onBlur: (e) => void;
-  setDaysAndTag: (callback: (prev: Day[]) => Day[]) => void;
+  setDaysAndTag: Setter<Day[]>;
 };
 
 export const TimeSlot = ({

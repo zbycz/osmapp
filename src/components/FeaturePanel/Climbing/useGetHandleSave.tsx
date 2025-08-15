@@ -9,6 +9,7 @@ import {
   getNextWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from './utils/photo';
+import { Setter } from '../../../types';
 
 const getPathString = (path) =>
   path.length === 0
@@ -94,9 +95,7 @@ export const getClimbingRouteChanges = (
     .filter(Boolean);
 };
 
-export const useGetHandleSave = (
-  setIsEditMode: (value: boolean | ((old: boolean) => boolean)) => void,
-) => {
+export const useGetHandleSave = (setIsEditMode: Setter<boolean>) => {
   const { feature: crag } = useFeatureContext();
   const { routes, photoPaths } = useClimbingContext();
   const { showToast } = useSnackbar();

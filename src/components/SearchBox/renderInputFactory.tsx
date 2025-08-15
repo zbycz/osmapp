@@ -8,7 +8,7 @@ import { Setter } from '../../types';
 
 type SearchBoxInputProps = {
   params: AutocompleteRenderInputParams;
-  setInputValue: (value: string) => void;
+  setInputValue: Setter<string>;
   autocompleteRef: React.MutableRefObject<undefined>;
 };
 

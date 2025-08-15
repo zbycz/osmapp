@@ -24,6 +24,7 @@ import { Feature } from '../../../services/types';
 import { addFeatureCenterToCache } from '../../../services/osm/featureCenterToCache';
 import { getShortId, getUrlOsmId } from '../../../services/helpers';
 import Router from 'next/router';
+import { Setter } from '../../../types';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
@@ -194,7 +195,7 @@ export const getGeocoderSkeleton = ({ geocoder }: GeocoderOption): Feature => {
   };
 };
 
-type SetFeature = (feature: Feature | null) => void;
+type SetFeature = Setter<Feature | null>;
 
 export const geocoderOptionSelected = (
   option: GeocoderOption,

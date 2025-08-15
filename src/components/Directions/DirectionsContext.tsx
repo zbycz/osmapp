@@ -1,16 +1,17 @@
 import React, { createContext, useContext, useState } from 'react';
 import { Profile, RoutingResult } from './routing/types';
 import { Option } from '../SearchBox/types';
+import { Setter } from '../../types';
 
 type DirectionsContextType = {
   loading: boolean;
-  setLoading: (loading: boolean) => void;
+  setLoading: Setter<boolean>;
   mode: Profile;
-  setMode: (mode: Profile) => void;
+  setMode: Setter<Profile>;
   result: RoutingResult;
-  setResult: (result: RoutingResult) => void;
-  points: Array<Option>;
-  setPoints: (points: Array<Option>) => void;
+  setResult: Setter<RoutingResult>;
+  points: Option[];
+  setPoints: Setter<Option[]>;
 };
 
 export const DirectionsContext =

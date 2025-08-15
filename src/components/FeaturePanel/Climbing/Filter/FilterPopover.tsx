@@ -7,11 +7,12 @@ import { PopperWithArrow } from '../../../utils/PopperWithArrow';
 import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { Placement } from '@popperjs/core';
 import CloseIcon from '@mui/icons-material/Close';
+import { Setter } from '../../../../types';
 
 type FilterPopoverProps = {
   anchorEl: null | HTMLElement;
   open: boolean;
-  setOpen: (open: boolean) => void;
+  setOpen: Setter<boolean>;
   placement?: Placement;
   offset?: [number, number];
 };

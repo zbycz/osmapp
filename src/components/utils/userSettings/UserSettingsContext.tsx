@@ -11,6 +11,7 @@ import {
   ClimbingFilterSettings,
   getClimbingFilter,
 } from './getClimbingFilter';
+import { Setter } from '../../../types';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
 
@@ -30,7 +31,7 @@ export type UserSettingsType = Partial<{
 
 export type UserSettingsContextType = {
   userSettings: UserSettingsType;
-  setUserSettings: (userSettings: UserSettingsType) => void;
+  setUserSettings: Setter<UserSettingsType>;
   setUserSetting: <T extends keyof UserSettingsType>(
     key: T,
     value: UserSettingsType[T],
