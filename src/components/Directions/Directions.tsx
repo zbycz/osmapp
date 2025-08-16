@@ -2,8 +2,17 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { DirectionsProvider } from './DirectionsContext';
 import { DirectionsBox } from './DirectionsBox';
 import React from 'react';
+import styled from '@emotion/styled';
+import { t } from '../../services/intl';
 
-// TODO use router.pathname in SearchBox once THIS is a Page
+const StyledH1 = styled.h1`
+  position: absolute;
+  left: -9999px;
+`;
+
+const SeoTitle = () => (
+  <StyledH1>{t('featurepanel.directions_button')}</StyledH1>
+);
 
 export const Directions = () => {
   const { featureShown } = useFeatureContext();
@@ -14,6 +23,7 @@ export const Directions = () => {
 
   return (
     <DirectionsProvider>
+      <SeoTitle />
       <DirectionsBox />
     </DirectionsProvider>
   );

@@ -6,6 +6,7 @@ import {
   ListItemText,
   MenuItem,
   Stack,
+  styled,
   Typography,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
@@ -18,112 +19,107 @@ type UserLoginProps = {
   closeMenu: () => void;
 };
 
-function HeaderIcons(props: { onClick: () => void }) {
+const HeaderIcons = (props: { onClick: () => void }) => (
+  <Stack direction="row">
+    <UserSettingsItem />
+    <IconButton onClick={props.onClick}>
+      <CloseIcon />
+    </IconButton>
+  </Stack>
+);
+
+const StyleLogoutText = styled(Typography)`
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+`;
+const LogoutButton = ({ onClick }: { onClick: () => void }) => (
+  <StyleLogoutText // TODO make it a Button for accessibility
+    variant="caption"
+    onClick={onClick}
+    textTransform="lowercase"
+    color="text.secondary"
+    sx={{ cursor: 'pointer' }}
+  >
+    {t('user.logout')}
+  </StyleLogoutText>
+);
+
+const StyleUserLink = styled('a')`
+  color: ${({ theme }) => theme.palette.text.primary};
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`;
+const OsmUserLink = ({ osmUser }: { osmUser: string }) => (
+  <StyleUserLink
+    href={`https://www.openstreetmap.org/user/${osmUser}`}
+    target="_blank"
+    rel="noopener"
+    color="text.primary"
+    variant="body1"
+  >
+    {osmUser}
+  </StyleUserLink>
+);
+
+const LoggedUserHeader = ({ onClose }: { onClose: () => void }) => {
+  const { osmUser, handleLogout } = useOsmAuthContext();
+
   return (
-    <Stack direction="row">
-      <UserSettingsItem />
-      <IconButton onClick={props.onClick}>
-        <CloseIcon />
-      </IconButton>
+    <Stack
+      direction="row"
+      justifyContent="space-between"
+      gap={1}
+      alignItems="center"
+      m={1}
+      mt={2}
+      mb={2}
+    >
+      <Stack direction="row" gap={1.5} alignItems="center" ml={0.5}>
+        <LoginIconButton size={32} />
+        <Stack direction="column" justifyContent="center">
+          <OsmUserLink osmUser={osmUser} />
+          <LogoutButton onClick={handleLogout} />
+        </Stack>
+      </Stack>
+      <HeaderIcons onClick={onClose} />
     </Stack>
   );
-}
+};
 
-const LoggedUserHeader = ({
-  onClose,
-  onLogout,
-  osmUser,
-}: {
-  osmUser: string;
-  onLogout: () => void;
-  onClose: () => void;
-}) => (
-  <Stack
-    direction="row"
-    justifyContent="space-between"
-    gap={1}
-    alignItems="center"
-    m={1}
-    mt={2}
-    mb={2}
-  >
-    <Stack direction="row" gap={1.5} alignItems="center">
-      <LoginIconButton size={32} />
-      <Stack direction="column" justifyContent="center">
-        <Typography
-          component="a"
-          href={`https://www.openstreetmap.org/user/${osmUser}`}
-          target="_blank"
-          rel="noopener"
-          color="text.primary"
-          variant="button"
-        >
-          {osmUser}
-        </Typography>
-        <Typography
-          variant="caption"
-          onClick={onLogout}
-          textTransform="lowercase"
-          color="text.secondary"
-          sx={{ cursor: 'pointer' }}
-        >
-          {t('user.logout')}
-        </Typography>
-      </Stack>
+const LoggedOutUserHeader = ({ onClose }: { onClose: () => void }) => {
+  const { handleLogin } = useOsmAuthContext();
+
+  return (
+    <Stack
+      direction="row"
+      gap={1}
+      alignItems="center"
+      justifyContent="space-between"
+      mt={1}
+    >
+      <MenuItem onClick={handleLogin}>
+        <ListItemIcon>
+          <Avatar sx={{ width: 24, height: 24 }} />
+        </ListItemIcon>
+        <ListItemText>{t('user.login_register')}</ListItemText>
+      </MenuItem>
+      <HeaderIcons onClick={onClose} />
     </Stack>
-    <HeaderIcons onClick={onClose} />
-  </Stack>
-);
-
-const LoggedOutUserHeader = ({
-  onClose,
-  onLogIn,
-}: {
-  onLogIn: () => void;
-  onClose: () => void;
-}) => (
-  <Stack
-    direction="row"
-    gap={1}
-    alignItems="center"
-    justifyContent="space-between"
-    mt={1}
-  >
-    <MenuItem onClick={onLogIn}>
-      <ListItemIcon>
-        <Avatar sx={{ width: 24, height: 24 }} />
-      </ListItemIcon>
-      <ListItemText>{t('user.login_register')}</ListItemText>
-    </MenuItem>
-    <HeaderIcons onClick={onClose} />
-  </Stack>
-);
+  );
+};
 
 export const UserHeader = forwardRef<SVGSVGElement, UserLoginProps>(
   ({ closeMenu }) => {
-    const { osmUser, handleLogin, handleLogout } = useOsmAuthContext();
-    const login = () => {
-      closeMenu();
-      handleLogin();
-    };
-    const logout = () => {
-      closeMenu();
-      setTimeout(() => {
-        handleLogout();
-      }, 100);
-    };
-
+    const { osmUser } = useOsmAuthContext();
     if (!osmUser) {
-      return <LoggedOutUserHeader onLogIn={login} onClose={closeMenu} />;
+      return <LoggedOutUserHeader onClose={closeMenu} />;
     }
 
-    return (
-      <LoggedUserHeader
-        osmUser={osmUser}
-        onLogout={logout}
-        onClose={closeMenu}
-      />
-    );
+    return <LoggedUserHeader onClose={closeMenu} />;
   },
 );
 UserHeader.displayName = 'UserLogin';
