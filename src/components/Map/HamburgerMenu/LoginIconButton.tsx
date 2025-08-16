@@ -9,6 +9,7 @@ const StyledUserImg = styled.img<{ $size: number }>`
   height: ${({ $size }) => $size}px;
   border-radius: 50%;
   background-color: white;
+  margin-left: 3px;
 `;
 
 export const LoginIconButton = ({ size = 24 }: { size?: number }) => {

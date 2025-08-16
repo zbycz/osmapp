@@ -85,7 +85,7 @@ const GithubLink = () => (
       component="a"
       target="_blank"
     >
-      <StyledGithubIcon width={24} height={24} />
+      <StyledGithubIcon width={22} height={22} />
     </IconButton>
   </Tooltip>
 );
@@ -130,12 +130,12 @@ const themeOptions = {
     next: 'dark' as UserTheme,
   },
   dark: {
-    icon: LightModeIcon,
+    icon: DarkModeIcon,
     label: t('darkmode_on'),
     next: 'light' as UserTheme,
   },
   light: {
-    icon: DarkModeIcon,
+    icon: LightModeIcon,
     label: t('darkmode_off'),
     next: 'system' as UserTheme,
   },
@@ -173,7 +173,7 @@ export const HamburgerMenu = () => {
       <Drawer open={opened} onClose={close} anchor="right">
         <Stack direction="column" justifyContent="space-between" height="100%">
           <div>
-            <UserHeader closeMenu={close}></UserHeader>
+            <UserHeader closeMenu={close} />
             <Divider sx={{ mt: 1, mb: 2 }} />
             {(hasClimbingLayer || PROJECT_ID === 'openclimbing') && (
               <MyTicksMenuItem closeMenu={close} />
