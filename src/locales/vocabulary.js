@@ -218,7 +218,7 @@ export default {
   'map.about_link': 'About this app',
   'map.compass_tooltip': 'Drag to enter 3D. Click to reset.',
   'map.filter': 'Filter',
-  'climbing_legend.areas_crags': 'Crags/areas',
+  'climbing_legend.areas_crags': 'Areas/crags',
   'climbing_legend.topos': 'topos',
   'climbing_legend.only_position': 'only position',
 
