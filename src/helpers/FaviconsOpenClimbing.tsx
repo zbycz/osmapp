@@ -6,15 +6,15 @@ export const FaviconsOpenClimbing = () => (
   <>
     <link
       rel="shortcut icon"
-      href="/openclimbing/logo/osmapp_192.png"
+      href="/openclimbing/logo/openclimbing_192.png"
       sizes="192x192"
     />
     <link
       rel="shortcut icon"
-      href="/openclimbing/logo/osmapp_256.png"
+      href="/openclimbing/logo/openclimbing_256.png"
       sizes="256x256"
     />
-    <link rel="shortcut icon" href="/openclimbing/logo/osmapp_64.png" />
+    <link rel="shortcut icon" href="/openclimbing/logo/openclimbing_64.png" />
     <link
       rel="shortcut icon"
       href="/openclimbing/favicon.ico"
