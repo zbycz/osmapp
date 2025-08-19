@@ -218,6 +218,9 @@ export default {
   'map.about_link': 'About this app',
   'map.compass_tooltip': 'Drag to enter 3D. Click to reset.',
   'map.filter': 'Filter',
+  'climbing_legend.areas_crags': 'Crags/areas',
+  'climbing_legend.topos': 'topos',
+  'climbing_legend.only_position': 'only position',
 
   'editdialog.add_heading': 'Add to OpenStreetMap',
   'editdialog.undelete_heading': 'Add again to OpenStreetMap',
@@ -490,7 +493,6 @@ export default {
   'climbing_badges.hazard_slippery_rock_description':
     'The rock surface is worn smooth and slippery, often due to frequent traffic, especially on limestone.',
 
-  'climbing_badges.inclination_label': 'Inclination',
   'climbing_badges.inclination_label': 'Rock inclination',
   'climbing_badges.inclination_overhang_description': 'A wall that leans outward (>90°), requiring strength and power.',
   'climbing_badges.inclination_overhang_label': 'overhang',
