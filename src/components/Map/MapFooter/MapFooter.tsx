@@ -20,17 +20,16 @@ const StyledIconButton = styled(IconButton)`
   top: -5px;
 `;
 
-const FooterContainer = styled.div<{ $hasShadow: boolean }>`
+const FooterContainer = styled.div<{ $legendShown: boolean }>`
   pointer-events: all;
-  border-radius: 8px;
+  border-radius: ${({ $legendShown }) =>
+    $legendShown ? '8px 0 8px 8px' : '8px'};
   padding: 6px;
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.5)};
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  ${({ $hasShadow }) =>
-    $hasShadow ? 'box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);' : ''}
 `;
 
 const Wrapper = styled.div`
@@ -76,7 +75,7 @@ export const MapFooter = () => {
   const hasLegend = isMobileMode && featureShown ? false : hasClimbingLayer;
   const [legendShown, setLegendShown] = usePersistedState<boolean>(
     'isLegendVisible',
-    false,
+    true,
   );
   const isClient = useIsClient();
 
@@ -86,22 +85,24 @@ export const MapFooter = () => {
   }
 
   return (
-    <FooterContainer $hasShadow={hasLegend && legendShown}>
+    <>
       {hasLegend && (
         <ClimbingLegend
           isVisible={legendShown}
           setLegendShown={setLegendShown}
         />
       )}
-      <Wrapper>
-        <AttributionLinks />
-        {hasLegend && (
-          <LegendExpandButton
-            isVisible={!legendShown}
-            setLegendShown={setLegendShown}
-          />
-        )}
-      </Wrapper>
-    </FooterContainer>
+      <FooterContainer $legendShown={hasLegend && legendShown}>
+        <Wrapper>
+          <AttributionLinks />
+          {hasLegend && (
+            <LegendExpandButton
+              isVisible={!legendShown}
+              setLegendShown={setLegendShown}
+            />
+          )}
+        </Wrapper>
+      </FooterContainer>
+    </>
   );
 };
