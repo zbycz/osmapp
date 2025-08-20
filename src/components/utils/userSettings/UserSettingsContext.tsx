@@ -23,6 +23,7 @@ export type UserSettingsType = Partial<{
   'climbing.defaultClimbingStyle': TickStyle;
   'climbing.selectRoutesByScrolling': boolean;
   'climbing.switchPhotosByScrolling': boolean;
+  'climbing.showRelatedPhotoByRouteClick': boolean;
   'climbing.visibleGradeSystems': Record<string, boolean>;
   'climbing.cragViewLayout': CragViewLayout;
   'climbing.splitPaneSize': null | number;
@@ -48,6 +49,7 @@ const initialUserSettings: UserSettingsType = {
   'climbing.defaultClimbingStyle': 'OS',
   'climbing.selectRoutesByScrolling': isMobileDevice(),
   'climbing.switchPhotosByScrolling': true,
+  'climbing.showRelatedPhotoByRouteClick': true,
   'climbing.visibleGradeSystems': GRADE_SYSTEMS.filter(
     ({ minor }) => !minor,
   ).reduce((acc, { key }) => ({ ...acc, [key]: true }), {}),

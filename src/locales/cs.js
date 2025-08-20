@@ -24,6 +24,7 @@ export default {
   'user_settings.default_climbing_style': 'Výchozí styl přelezu',
   'user_settings.select_climbing_routes_by_scrolling': 'Vybírat lezecké cesty scrollováním',
   'user_settings.switch_climbing_photos_by_scrolling': 'Přepínat automaticky fotky při scrollování',
+  'user_settings.show_related_photo_by_route_click': 'Zobrazit relevantní fotku po kliknutí na cestu',
   'user_settings.crag_view_layout': 'Layout stránky u lezeckých sektorů',
   'user_settings.crag_view_layout_vertical': 'Vedle sebe',
   'user_settings.crag_view_layout_horizontal': 'Pod sebou',

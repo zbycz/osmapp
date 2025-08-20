@@ -8,6 +8,8 @@ import { DragHandler } from '../../../utils/DragHandler';
 import { GradeSystemSelect } from '../GradeSystemSelect';
 import { t } from '../../../../services/intl';
 import { Box } from '@mui/material';
+import { useReplacePhotoIfNeeded } from '../utils/useReplacePhotoIfNeeded';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 
 type Item = {
   id: number;
@@ -83,6 +85,7 @@ export const RouteListDndContent = ({ isEditable }) => {
     showDebugMenu,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
+  const { userSettings } = useUserSettingsContext();
   useEffect(() => {
     const content = routes.map((route, index) => ({
       id: index,
@@ -91,8 +94,13 @@ export const RouteListDndContent = ({ isEditable }) => {
     setItems(content);
   }, [routes]);
   const parentRef = useRef<HTMLDivElement>(null);
-
+  const replacePhotoIfNeeded = useReplacePhotoIfNeeded();
   const onRowClick = (index: number) => {
+    if (userSettings['climbing.showRelatedPhotoByRouteClick'] && !isEditMode) {
+      replacePhotoIfNeeded({
+        selectedIndex: index,
+      });
+    }
     const routeNumber = routeSelectedIndex === index ? null : index;
     if (isEditMode) {
       machine.execute('editRoute', { routeNumber });

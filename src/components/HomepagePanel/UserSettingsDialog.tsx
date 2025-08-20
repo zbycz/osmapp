@@ -99,6 +99,23 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
 
           <ListItem>
             <ListItemText>
+              {t('user_settings.show_related_photo_by_route_click')}
+            </ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              onChange={(e) => {
+                setUserSetting(
+                  'climbing.showRelatedPhotoByRouteClick',
+                  e.target.checked,
+                );
+              }}
+              checked={userSettings['climbing.showRelatedPhotoByRouteClick']}
+            />
+          </ListItem>
+
+          <ListItem>
+            <ListItemText>
               {t('user_settings.select_climbing_routes_by_scrolling')}
             </ListItemText>
             <Switch

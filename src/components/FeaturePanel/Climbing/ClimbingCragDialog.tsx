@@ -136,7 +136,7 @@ export const ClimbingCragDialog = ({
         ref={contentRef}
         onScroll={onScroll}
       >
-        <ClimbingView photo={photo} />
+        <ClimbingView />
       </DialogContent>
 
       {isEditMode && (
