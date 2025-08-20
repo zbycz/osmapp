@@ -16,8 +16,8 @@ const HideableContainer = styled.div<{ $isVisible: boolean }>`
   overflow: hidden;
 
   pointer-events: all;
-  border-radius: 8px 8px 0 0;
-  padding: ${({ $isVisible }) => ($isVisible ? '6px 6px 0 6px' : '0 6px')};
+  border-radius: 8px;
+  padding: ${({ $isVisible }) => ($isVisible ? '6px' : '0 6px')};
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.5)};
@@ -31,8 +31,6 @@ const Icon = styled.img`
 `;
 
 const Container = styled.div`
-  border-bottom: solid 1px
-    ${({ theme }) => convertHexToRgba(theme.palette.text.primary, 0.4)};
   display: flex;
   flex-direction: column;
 `;

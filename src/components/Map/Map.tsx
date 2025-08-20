@@ -70,6 +70,7 @@ const BottomRight = styled.div`
   z-index: 998;
 
   display: flex;
+  gap: 4px;
   flex-direction: column;
   align-items: end;
   padding: 0 4px 4px 4px;
