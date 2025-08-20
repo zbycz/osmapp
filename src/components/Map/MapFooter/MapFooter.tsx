@@ -10,9 +10,10 @@ import { AttributionLinks } from './AttributionLinks';
 import { useIsClient, useMobileMode } from '../../helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 
-const IconContainer = styled.div`
-  width: 20px;
+const IconContainer = styled.div<{ $isVisible: boolean }>`
+  width: ${({ $isVisible }) => ($isVisible ? '20px' : '0')};
   height: 20px;
+  transition: width 0.15s ease-out;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -22,8 +23,7 @@ const StyledIconButton = styled(IconButton)`
 
 const FooterContainer = styled.div<{ $legendShown: boolean }>`
   pointer-events: all;
-  border-radius: ${({ $legendShown }) =>
-    $legendShown ? '8px 0 8px 8px' : '8px'};
+  border-radius: 8px;
   padding: 6px;
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) =>
@@ -50,7 +50,7 @@ const Wrapper = styled.div`
 `;
 
 const LegendExpandButton = ({ isVisible, setLegendShown }) => (
-  <IconContainer>
+  <IconContainer $isVisible={isVisible}>
     {isVisible && (
       <Tooltip title="Show climbing legend" enterDelay={1000}>
         <StyledIconButton
