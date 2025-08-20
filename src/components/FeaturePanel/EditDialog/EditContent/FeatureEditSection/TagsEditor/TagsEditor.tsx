@@ -45,17 +45,6 @@ const Table = styled.table`
   }
 `;
 
-const TagsEditorHeading = () => (
-  <Typography
-    variant="overline"
-    component="h3"
-    color="textSecondary"
-    style={{ position: 'relative' }}
-  >
-    {t('editdialog.tags_editor')}
-  </Typography>
-);
-
 const TagsEditorInfo = () => (
   <tr>
     <td colSpan={2}>

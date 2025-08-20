@@ -12,10 +12,19 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { t } from '../../../../../../services/intl';
 import { useCurrentItem } from '../../../EditContext';
 import { Maki } from '../../../../../utils/icons/Maki';
+import styled from '@emotion/styled';
+
+const IconContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+`;
 
 const ClimbingMultiValuesInner = () => {
   return (
-    <Stack gap={1} ml={1}>
+    <Stack gap={1} ml={2}>
       <MultiValueKeyEditor
         label={t('climbing_badges.type_label')}
         keys={[
@@ -87,7 +96,9 @@ export const ClimbingEditor = () => {
         id="panel1-header"
       >
         <Stack direction="row" spacing={1} alignItems="center">
-          <Maki ico="climbing" size={16} themed />
+          <IconContainer>
+            <Maki ico="climbing" size={18} themed withMarginRight={false} />
+          </IconContainer>
           <Typography variant="button">
             {t('editdialog.climbing_editor')}
           </Typography>
