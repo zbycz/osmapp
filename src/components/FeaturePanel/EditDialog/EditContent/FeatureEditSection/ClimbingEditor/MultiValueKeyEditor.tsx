@@ -18,16 +18,18 @@ export const MultiValueKeyEditor: React.FC<{
   return (
     <>
       <EditorHeader label={label} inactive={inactive} setVisible={setVisible} />
-      <Box display="flex" flexDirection="column" gap={1} ml={1}>
-        {visible.map((k) => (
-          <EditorItem
-            key={k}
-            k={k}
-            setVisible={setVisible}
-            customValue={editableValues.includes(k)}
-          />
-        ))}
-      </Box>
+      {visible.length > 0 && (
+        <Box display="flex" flexDirection="column" gap={1} mb={2}>
+          {visible.map((k) => (
+            <EditorItem
+              key={k}
+              k={k}
+              setVisible={setVisible}
+              customValue={editableValues.includes(k)}
+            />
+          ))}
+        </Box>
+      )}
     </>
   );
 };

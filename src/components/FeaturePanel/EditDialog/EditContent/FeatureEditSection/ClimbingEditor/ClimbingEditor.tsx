@@ -15,7 +15,7 @@ import { Maki } from '../../../../../utils/icons/Maki';
 
 const ClimbingMultiValuesInner = () => {
   return (
-    <Stack gap={2}>
+    <Stack gap={1} ml={1}>
       <MultiValueKeyEditor
         label={t('climbing_badges.type_label')}
         keys={[
