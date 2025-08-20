@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { PointType } from '../types';
+import { useClimbingContext } from '../contexts/ClimbingContext';
 
 export const useFloatingMenuShortcuts = (
   onPointTypeChange: (type: PointType) => void,
@@ -9,34 +10,38 @@ export const useFloatingMenuShortcuts = (
   isDoneVisible: boolean,
   onFinishClimbingRouteClick: () => void,
 ) => {
+  const { isEditMode } = useClimbingContext();
+
   useEffect(() => {
     const downHandler = (e) => {
-      if (e.key === 'b') {
-        onPointTypeChange('bolt');
-      }
-      if (e.key === 'a') {
-        onPointTypeChange('anchor');
-      }
-      if (e.key === 's') {
-        onPointTypeChange('sling');
-      }
-      if (e.key === 'p') {
-        onPointTypeChange('piton');
-      }
-      if (e.key === 'u') {
-        onPointTypeChange('unfinished');
-      }
-      if (e.key === 'n') {
-        onPointTypeChange(null);
-      }
-      if (e.key === 'e') {
-        onContinueClimbingRouteClick();
-      }
-      if (isUndoVisible && e.key === 'z' && e.metaKey) {
-        handleUndo(e);
-      }
-      if (isDoneVisible && (e.key === 'Enter' || e.key === 'Escape')) {
-        onFinishClimbingRouteClick();
+      if (isEditMode) {
+        if (e.key === 'b') {
+          onPointTypeChange('bolt');
+        }
+        if (e.key === 'a') {
+          onPointTypeChange('anchor');
+        }
+        if (e.key === 's') {
+          onPointTypeChange('sling');
+        }
+        if (e.key === 'p') {
+          onPointTypeChange('piton');
+        }
+        if (e.key === 'u') {
+          onPointTypeChange('unfinished');
+        }
+        if (e.key === 'n') {
+          onPointTypeChange(null);
+        }
+        if (e.key === 'e') {
+          onContinueClimbingRouteClick();
+        }
+        if (isUndoVisible && e.key === 'z' && e.metaKey) {
+          handleUndo(e);
+        }
+        if (isDoneVisible && (e.key === 'Enter' || e.key === 'Escape')) {
+          onFinishClimbingRouteClick();
+        }
       }
     };
 
@@ -48,6 +53,7 @@ export const useFloatingMenuShortcuts = (
   }, [
     handleUndo,
     isDoneVisible,
+    isEditMode,
     isUndoVisible,
     onContinueClimbingRouteClick,
     onFinishClimbingRouteClick,
