@@ -3,11 +3,12 @@ import styled from '@emotion/styled';
 import { iconsLookup } from './iconsLookup';
 import { useUserThemeContext } from '../../../helpers/theme';
 
-const MakiImg = styled.img<{ $invert: boolean }>`
+const MakiImg = styled.img<{ $invert: boolean; $withMarginRight?: boolean }>`
   line-height: 14px;
-  margin-right: 6px;
+
   user-select: none;
   ${({ $invert }) => $invert && 'filter: invert(100%);'}
+  ${({ $withMarginRight }) => $withMarginRight && 'margin-right: 6px;'}
 `;
 
 type MakiProps = {
@@ -18,6 +19,7 @@ type MakiProps = {
   size?: number;
   middle?: boolean | undefined;
   themed?: boolean;
+  withMarginRight?: boolean;
 };
 
 export const Maki = ({
@@ -28,6 +30,7 @@ export const Maki = ({
   size = 12,
   middle = undefined,
   themed = false,
+  withMarginRight = true,
 }: MakiProps) => {
   const { currentTheme } = useUserThemeContext();
   const invertFinal = themed ? currentTheme === 'dark' : invert;
@@ -43,6 +46,7 @@ export const Maki = ({
       style={{ ...style, verticalAlign: middle ? 'middle' : undefined }}
       width={size}
       height={size}
+      $withMarginRight={withMarginRight}
     />
   );
 };
