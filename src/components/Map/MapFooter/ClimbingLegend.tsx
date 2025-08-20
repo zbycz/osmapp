@@ -7,7 +7,6 @@ import AreaBlue from '../../../../public/icons-climbing/icons/area-blue.svg';
 import CragRed from '../../../../public/icons-climbing/icons/crag-red.svg';
 import AreaGray from '../../../../public/icons-climbing/icons/area-gray.svg';
 import CragGray from '../../../../public/icons-climbing/icons/crag-gray.svg';
-import PhotoCameraIcon from '@mui/icons-material/PhotoCamera';
 import { t } from '../../../services/intl';
 
 const HideableContainer = styled.div<{ $isVisible: boolean }>`
@@ -17,7 +16,7 @@ const HideableContainer = styled.div<{ $isVisible: boolean }>`
 
   pointer-events: all;
   border-radius: 8px;
-  padding: ${({ $isVisible }) => ($isVisible ? '6px' : '0 6px')};
+  padding: ${({ $isVisible }) => ($isVisible ? '0px 4px 2px 4px' : '0 6px')};
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.5)};
@@ -53,7 +52,7 @@ const HeadingRow = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 25px;
+  margin-bottom: 2px;
 `;
 
 const Heading = styled.div`
@@ -96,15 +95,14 @@ export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
             <Icon src={CragRed.src} alt="Climbing crag with photos icon" />
           </span>
           {t('climbing_legend.topos')}
-          <PhotoCameraIcon sx={{ fontSize: '15px' }} />
         </Item>
-        <ItemFaded>
+        <Item>
           <span>
             <Icon src={AreaGray.src} alt="Climbing area without photos icon" />
             <Icon src={CragGray.src} alt="Climbing crag without photos icon" />
           </span>
           {t('climbing_legend.only_position')}
-        </ItemFaded>
+        </Item>
       </Container>
     </HideableContainer>
   );
