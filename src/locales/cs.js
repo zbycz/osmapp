@@ -177,9 +177,9 @@ export default {
   'map.about_link': 'O aplikaci',
   'map.compass_tooltip': 'Potáhnutí (drag) kompasu spustí 3D. Pro reset klikněte.',
   'map.filter': 'Filtr',
-  'climbing_legend.areas_crags': 'Oblasti/skály',
+  'climbing_legend.areas_crags': 'Lezení',
   'climbing_legend.topos': 'topo',
-  'climbing_legend.only_position': 'jen poloha',
+  'climbing_legend.only_position': 'poloha',
 
   'editdialog.add_heading': 'Přidat do OpenStreetMap',
   'editdialog.undelete_heading': 'Znovu přidat do OpenStreetMap',

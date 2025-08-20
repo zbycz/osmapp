@@ -14,6 +14,7 @@ const IconContainer = styled.div<{ $isVisible: boolean }>`
   width: ${({ $isVisible }) => ($isVisible ? '20px' : '0')};
   height: 20px;
   transition: width 0.15s ease-out;
+  margin-right: 4px;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -24,7 +25,7 @@ const StyledIconButton = styled(IconButton)`
 const FooterContainer = styled.div<{ $legendShown: boolean }>`
   pointer-events: all;
   border-radius: 8px;
-  padding: 6px;
+  padding: 2px 4px;
   color: ${({ theme }) => theme.palette.text.primary};
   background-color: ${({ theme }) =>
     convertHexToRgba(theme.palette.background.paper, 0.5)};
@@ -33,7 +34,6 @@ const FooterContainer = styled.div<{ $legendShown: boolean }>`
 `;
 
 const Wrapper = styled.div`
-  padding: 0 4px;
   font-size: 12px;
   color: ${({ theme }) => theme.palette.text.primary};
   font-weight: 400;

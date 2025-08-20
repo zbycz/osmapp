@@ -218,9 +218,9 @@ export default {
   'map.about_link': 'About this app',
   'map.compass_tooltip': 'Drag to enter 3D. Click to reset.',
   'map.filter': 'Filter',
-  'climbing_legend.areas_crags': 'Areas/crags',
-  'climbing_legend.topos': 'topos',
-  'climbing_legend.only_position': 'only position',
+  'climbing_legend.areas_crags': 'Climbing',
+  'climbing_legend.topos': 'topo',
+  'climbing_legend.only_position': 'position',
 
   'editdialog.add_heading': 'Add to OpenStreetMap',
   'editdialog.undelete_heading': 'Add again to OpenStreetMap',

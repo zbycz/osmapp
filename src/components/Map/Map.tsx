@@ -73,7 +73,7 @@ const BottomRight = styled.div`
   gap: 4px;
   flex-direction: column;
   align-items: end;
-  padding: 0 4px 4px 4px;
+  padding: 0 2px 2px 0;
 `;
 
 const BottomCenter = styled.div<{ $isFeaturePanelVisible: boolean }>`
