@@ -29,6 +29,7 @@ export default {
   'user_settings.default_climbing_style': 'Default climbing style',
   'user_settings.select_climbing_routes_by_scrolling': 'Select climbing routes by scrolling',
   'user_settings.switch_climbing_photos_by_scrolling': 'Switch photos automatically by scrolling',
+  'user_settings.show_related_photo_by_route_click': 'Show related photo by route click',
   'user_settings.crag_view_layout': 'Crag view layout',
   'user_settings.crag_view_layout_vertical': 'Side by side',
   'user_settings.crag_view_layout_horizontal': 'Underneath',
