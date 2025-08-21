@@ -128,7 +128,7 @@ export const Point = ({ x, y, type, index, routeIndex }: Props) => {
     <g transform={`translate(${x},${y}) scale(${1 / photoZoom.scale})`}>
       <ClickableArea
         fill="transparent"
-        r={isTouchDevice ? 20 : 10}
+        r={isTouchDevice ? 16 : 10}
         // eslint-disable-next-line react/jsx-props-no-spreading
         {...commonProps}
       >
@@ -138,7 +138,7 @@ export const Point = ({ x, y, type, index, routeIndex }: Props) => {
       <PointElement
         fill={pointColor}
         stroke={pointStroke}
-        r={isTouchDevice ? 7 : 4}
+        r={4}
         $isHovered={isHovered}
         $isPointSelected={isPointOnRouteSelected}
         // eslint-disable-next-line react/jsx-props-no-spreading

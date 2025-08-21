@@ -9,7 +9,7 @@ export const TransformWrapper = ({ children }) => {
     setPhotoZoom,
     isEditMode,
     isPanningDisabled,
-    isPanningActiveRef,
+    isAddingPointBlockedRef,
   } = useClimbingContext();
 
   const startPointerEvents = () => {
@@ -21,11 +21,19 @@ export const TransformWrapper = ({ children }) => {
 
   const handlePanningStart = () => {
     startPointerEvents();
-    isPanningActiveRef.current = true;
   };
+
+  const handlePanning = () => {
+    if (!isAddingPointBlockedRef.current) {
+      isAddingPointBlockedRef.current = true;
+    }
+  };
+
   const handlePanningStop = () => {
     startPointerEvents();
-    isPanningActiveRef.current = false;
+    setTimeout(() => {
+      isAddingPointBlockedRef.current = false;
+    }, 300);
   };
 
   return (
@@ -43,6 +51,7 @@ export const TransformWrapper = ({ children }) => {
       onZoomStart={stopPointerEvents}
       onZoomStop={startPointerEvents}
       onPanningStart={handlePanningStart}
+      onPanning={handlePanning}
       onPanningStop={handlePanningStop}
       disablePadding
       panning={{ disabled: isPanningDisabled }}
