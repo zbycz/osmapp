@@ -10,6 +10,7 @@ export const TransformWrapper = ({ children }) => {
     isEditMode,
     isPanningDisabled,
     isAddingPointBlockedRef,
+    isZoomingRef,
   } = useClimbingContext();
 
   const startPointerEvents = () => {
@@ -36,6 +37,15 @@ export const TransformWrapper = ({ children }) => {
     }, 300);
   };
 
+  const handleZoomStart = () => {
+    isZoomingRef.current = true;
+    stopPointerEvents();
+  };
+  const handleZoomStop = () => {
+    isZoomingRef.current = false;
+    startPointerEvents();
+  };
+
   return (
     <Wrapper
       doubleClick={{
@@ -48,8 +58,8 @@ export const TransformWrapper = ({ children }) => {
       onWheelStop={startPointerEvents}
       onPinchingStart={stopPointerEvents}
       onPinchingStop={startPointerEvents}
-      onZoomStart={stopPointerEvents}
-      onZoomStop={startPointerEvents}
+      onZoomStart={handleZoomStart}
+      onZoomStop={handleZoomStop}
       onPanningStart={handlePanningStart}
       onPanning={handlePanning}
       onPanningStop={handlePanningStop}

@@ -61,11 +61,13 @@ export const RoutesLayer = ({ isVisible }: Props) => {
     isPointClicked,
     photoZoom,
     isAddingPointBlockedRef,
+    isZoomingRef,
   } = useClimbingContext();
   const path = getCurrentPath();
   if (!path) return null;
 
   const onClick = (event: React.MouseEvent) => {
+    if (isZoomingRef.current) return;
     if (
       machine.currentStateName === 'extendRoute' &&
       !isAddingPointBlockedRef.current
@@ -91,7 +93,7 @@ export const RoutesLayer = ({ isVisible }: Props) => {
       photoZoom,
     );
 
-    if (isPointClicked) {
+    if (isPointClicked && !isZoomingRef.current) {
       setMousePosition(null);
       machine.execute('dragPoint', { position: positionInImage });
       setIsPointMoving(true);
@@ -116,7 +118,7 @@ export const RoutesLayer = ({ isVisible }: Props) => {
   };
 
   const handleOnMovingPointDropped = () => {
-    if (isPointMoving) {
+    if (isPointMoving && !isZoomingRef.current) {
       setPointSelectedIndex(null);
       setIsPointMoving(false);
       setIsPointClicked(false);

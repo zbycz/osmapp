@@ -120,6 +120,7 @@ type ClimbingContextType = {
   showDebugMenu: boolean;
   setShowDebugMenu: Setter<boolean>;
   isAddingPointBlockedRef: React.MutableRefObject<any>;
+  isZoomingRef: React.MutableRefObject<any>;
   arePointerEventsDisabled: boolean; // @TODO do we need it?
   setArePointerEventsDisabled: Setter<boolean>;
   preparePhotos: (cragPhotos: Array<string>) => void;
@@ -150,6 +151,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const photoRef = useRef(null);
   const svgRef = useRef(null);
   const isAddingPointBlockedRef = useRef(false);
+  const isZoomingRef = useRef(false);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
   const [photoPath, setPhotoPath] = useState<string>(null); // photo URL (pathname), should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);
@@ -390,6 +392,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     showDebugMenu,
     setShowDebugMenu,
     isAddingPointBlockedRef,
+    isZoomingRef,
     arePointerEventsDisabled,
     setArePointerEventsDisabled,
     preparePhotos,
