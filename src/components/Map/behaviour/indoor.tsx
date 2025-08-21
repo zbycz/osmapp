@@ -30,8 +30,11 @@ export const addIndoorEqual = async () => {
 export const removeIndoorEqual = () => {
   if (indoorEqual && indoorEqual._control) {
     const map = getGlobalMap();
-    console.log('Removing IndoorEquall', map, indoorEqual); // eslint-disable-line no-console
+    console.log('Removing IndoorEquall'); // eslint-disable-line no-console
+
     map.removeControl(indoorEqual);
+    indoorEqual.remove(); // see https://github.com/indoorequal/maplibre-gl-indoorequal/issues/136
+
     indoorEqual = null;
   }
 };

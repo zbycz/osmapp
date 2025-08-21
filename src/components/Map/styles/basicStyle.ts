@@ -2838,5 +2838,4 @@ export const basicStyle = addHoverPaint({
     ...poiLayers,
     ...overpassLayers,
   ],
-  id: 'ciw6czz2n00242kmg6hw20box',
 });
