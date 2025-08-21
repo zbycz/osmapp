@@ -54,7 +54,11 @@ export const TextFieldWithCharacterCount = ({
         fullWidth
         autoFocus={autoFocus}
         placeholder={placeholder}
-        inputProps={{ maxLength: MAX_INPUT_LENGTH }}
+        inputProps={{
+          maxLength: MAX_INPUT_LENGTH,
+          enterKeyHint: 'done',
+          inputMode: 'text',
+        }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
           setIsValidationReadyToCheck(true);
