@@ -60,13 +60,16 @@ export const RoutesLayer = ({ isVisible }: Props) => {
     pointSelectedIndex,
     isPointClicked,
     photoZoom,
-    isPanningActiveRef,
+    isAddingPointBlockedRef,
   } = useClimbingContext();
   const path = getCurrentPath();
   if (!path) return null;
 
   const onClick = (event: React.MouseEvent) => {
-    if (machine.currentStateName === 'extendRoute') {
+    if (
+      machine.currentStateName === 'extendRoute' &&
+      !isAddingPointBlockedRef.current
+    ) {
       machine.execute('addPointToEnd', event);
       return;
     }
@@ -76,7 +79,7 @@ export const RoutesLayer = ({ isVisible }: Props) => {
       return;
     }
 
-    if (!isPanningActiveRef.current) {
+    if (!isAddingPointBlockedRef.current) {
       machine.execute('cancelRouteSelection');
     }
   };
