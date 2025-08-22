@@ -95,10 +95,13 @@ const Row = styled('a', {
   }
 `;
 
-const MoreMenu = ({ feature }: { feature: Feature }) => {
+type MoreMenuProps = {
+  feature: Feature;
+  onTickAdd: (shortOsmId) => void;
+};
+const MoreMenu = ({ feature, onTickAdd }: MoreMenuProps) => {
   const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
   const { open: openEditDialog } = useEditDialogContext();
-  const { onTickAdd, EditTickModal } = useAddTick();
   const shortOsmId = getShortId(feature.osmMeta);
   const routeDetailUrl = getRouteDetailUrl(feature);
 
@@ -145,7 +148,6 @@ const MoreMenu = ({ feature }: { feature: Feature }) => {
           {t('climbingpanel.show_route_detail')}
         </MenuItem>
       </MoreMenu>
-      <EditTickModal />
     </>
   );
 };
@@ -242,6 +244,7 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
     const { climbingFilter } = useUserSettingsContext();
     const { gradeInterval } = climbingFilter;
     const [minIndex, maxIndex] = gradeInterval;
+    const { onTickAdd, EditTickModal } = useAddTick();
 
     if (!feature) {
       return null;
@@ -284,10 +287,10 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
               <RouteAuthor feature={feature} />
             </Stack>
             <RouteGrade feature={feature} />
-
-            <MoreMenu feature={feature} />
+            <MoreMenu feature={feature} onTickAdd={onTickAdd} />
           </Row>
         </Container>
+        <EditTickModal />
       </>
     );
   },
