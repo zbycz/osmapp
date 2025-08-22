@@ -22,7 +22,6 @@ import {
   Typography,
 } from '@mui/material';
 import Router from 'next/router';
-import { useSnackbar } from '../../../utils/SnackbarContext';
 import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import Link from 'next/link';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
@@ -36,7 +35,7 @@ import { useAddTick } from '../Ticks/AddTickButton';
 const Container = styled.div`
   width: 100%;
 `;
-const RoutePhoto = styled.div`
+const RouteNumberContainer = styled.div`
   width: 22px;
 `;
 const SelectedButton = styled.div`
@@ -126,8 +125,6 @@ export const ClimbingRouteTableRow = forwardRef<
     ref,
   ) => {
     const routeNumber = index + 1;
-    const { showToast } = useSnackbar();
-    const { userSettings } = useUserSettingsContext();
     const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
     const { open: openEditDialog } = useEditDialogContext();
     const isMobileMode = useMobileMode();
@@ -164,7 +161,8 @@ export const ClimbingRouteTableRow = forwardRef<
     };
 
     const gradeIndex = getGradeIndexFromTags(feature.tags);
-    const isVisible = gradeIndex >= minIndex && gradeIndex <= maxIndex;
+    const isVisible =
+      !gradeIndex || (gradeIndex >= minIndex && gradeIndex <= maxIndex);
 
     return (
       <>
@@ -181,11 +179,11 @@ export const ClimbingRouteTableRow = forwardRef<
             as={isHrefLinkVisible ? 'a' : 'div'}
             {...(isHrefLinkVisible ? linkProps : {})}
           >
-            <RoutePhoto>
+            <RouteNumberContainer>
               <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
                 {routeNumber}
               </RouteNumber>
-            </RoutePhoto>
+            </RouteNumberContainer>
             <Stack justifyContent="stretch" flex={1}>
               <RouteName>
                 <Typography variant="inherit" component="h3">
