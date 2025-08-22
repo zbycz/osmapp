@@ -5,11 +5,12 @@ import { HamburgerMenu } from './HamburgerMenu';
 
 const Wrapper = styled.span`
   vertical-align: top;
-  display: inline-block;
+  display: none; // we hide it on mobile by mediaquery, so it don't jump
 
   margin-top: -10px;
 
   @media ${isDesktop} {
+    display: inline-block;
     margin-top: 8px;
   }
 `;
