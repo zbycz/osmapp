@@ -7,6 +7,7 @@ import { getLabel } from '../../../helpers/featureLabel';
 import React from 'react';
 import styled from '@emotion/styled';
 import { PoiIcon } from '../../utils/icons/PoiIcon';
+import { Typography } from '@mui/material';
 
 const Li = styled.li`
   margin-left: 10px;
@@ -39,6 +40,13 @@ export const MemberItem = ({ feature }: Props) => {
         <PoiIcon tags={feature.tags} />
         {getLabel(feature)}
       </a>
+
+      {feature.members ? (
+        <Typography color="secondary" component="span" fontSize="12px">
+          {' '}
+          ({feature.members.length})
+        </Typography>
+      ) : null}
     </Li>
   );
 };
