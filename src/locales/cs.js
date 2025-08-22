@@ -180,7 +180,7 @@ export default {
   'map.filter': 'Filtr',
   'climbing_legend.areas_crags': 'Lezení',
   'climbing_legend.topos': 'topo',
-  'climbing_legend.only_position': 'pouze poloha',
+  'climbing_legend.only_position': 'jen poloha',
 
   'editdialog.add_heading': 'Přidat do OpenStreetMap',
   'editdialog.undelete_heading': 'Znovu přidat do OpenStreetMap',
