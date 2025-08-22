@@ -40,11 +40,6 @@ const Item = styled.div`
   gap: 7px;
   font-size: 12px;
   margin-left: 2px;
-
-  i {
-    font-style: normal;
-    opacity: 0.6;
-  }
 `;
 
 const ItemFaded = styled(Item)`
@@ -108,7 +103,7 @@ export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
             <Icon src={AreaGray.src} alt="Climbing area without photos icon" />
             <Icon src={CragGray.src} alt="Climbing crag without photos icon" />
           </span>
-          <i> {t('climbing_legend.only_position')}</i>
+          {t('climbing_legend.only_position')}
         </ItemFaded>
       </Container>
     </HideableContainer>
