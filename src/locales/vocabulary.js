@@ -221,7 +221,7 @@ export default {
   'map.filter': 'Filter',
   'climbing_legend.areas_crags': 'Climbing',
   'climbing_legend.topos': 'topo',
-  'climbing_legend.only_position': 'position',
+  'climbing_legend.only_position': 'only position',
 
   'editdialog.add_heading': 'Add to OpenStreetMap',
   'editdialog.undelete_heading': 'Add again to OpenStreetMap',

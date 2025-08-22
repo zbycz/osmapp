@@ -40,12 +40,19 @@ const Item = styled.div`
   gap: 7px;
   font-size: 12px;
   margin-left: 2px;
+
+  i {
+    font-style: normal;
+    opacity: 0.6;
+  }
 `;
 
 const ItemFaded = styled(Item)`
-  color: ${({ theme }) => theme.palette.text.secondary};
-  opacity: 0.5;
   margin-top: -2px;
+
+  img {
+    opacity: 0.5;
+  }
 `;
 
 const HeadingRow = styled.div`
@@ -96,13 +103,13 @@ export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
           </span>
           {t('climbing_legend.topos')}
         </Item>
-        <Item>
+        <ItemFaded>
           <span>
             <Icon src={AreaGray.src} alt="Climbing area without photos icon" />
             <Icon src={CragGray.src} alt="Climbing crag without photos icon" />
           </span>
-          {t('climbing_legend.only_position')}
-        </Item>
+          <i> {t('climbing_legend.only_position')}</i>
+        </ItemFaded>
       </Container>
     </HideableContainer>
   );
