@@ -267,8 +267,7 @@ export default {
   'tags.phone': 'Telefon',
   'tags.opening_hours': 'Otevírací doba',
   'tags.author': 'Autor',
-  'tags.climbing_grade_uiaa': 'UIAA klasifikace',
-  'tags.climbing_grade_french': 'Francouzská klasifikace',
+  'tags.climbing_grade': 'Lezecká obtížnost',
   'tags.climbing_length': 'Délka',
   'tags.wikimedia_commons_photo': 'Wikimedia Commons fotka',
 

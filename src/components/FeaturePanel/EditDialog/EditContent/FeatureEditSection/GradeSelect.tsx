@@ -5,15 +5,14 @@ import { RouteDifficultyBadge } from '../../../Climbing/RouteDifficultyBadge';
 import { AutocompleteSelect } from './AutocompleteSelect';
 import { FeatureTags } from '../../../../../services/types';
 import { useCurrentItem } from '../../EditContext';
+import { getGradeSystemName } from '../../../../../services/tagging/climbing/gradeSystems';
 
 type GradeSelectProps = {
-  data: { keys: string[]; names: any };
   k: string;
   climbingGradeSystem: string;
   tags: FeatureTags;
 };
 export const GradeSelect = ({
-  data: { names },
   k,
   climbingGradeSystem,
   tags,
@@ -30,7 +29,7 @@ export const GradeSelect = ({
   return (
     <AutocompleteSelect
       values={uniqueValues}
-      label={names[k]}
+      label={getGradeSystemName(climbingGradeSystem)}
       defaultValue={value}
       onChange={onChange}
       renderOption={(props, option, _state, ownerState) => {
