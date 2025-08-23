@@ -482,6 +482,10 @@ export default {
   'editdialog.edit_custom_value': 'Upravit hodnotu',
   'editdialog.remove': 'Odebrat',
 
+  'editdialog.draw_climbing_routes_title': 'Zakreslování lezeckých cest se dělá rovnou v detailu sektoru',
+  'editdialog.draw_climbing_routes_button': 'Chci zakreslovat cesty',
+  'editdialog.draw_climbing_routes_save_confirm': 'Chcete uložit vaše aktuální úpravy?',
+
   yes: 'Ano',
   no: 'Ne',
 };
