@@ -1,13 +1,13 @@
 import React from 'react';
 import Script from 'next/script';
-import { useMobileMode } from '../helpers';
+import { isMobileDevice, useMobileMode } from '../helpers';
 
 const OPENCLIMBING_ID = process.env.NEXT_PUBLIC_HOTJAR_ID_OPENCLIMING;
 
 export const HotJar = () => {
   const isMobileMode = useMobileMode();
 
-  return OPENCLIMBING_ID && !isMobileMode ? (
+  return OPENCLIMBING_ID && !isMobileDevice() && !isMobileMode ? (
     <Script id="hotjar-script" strategy="afterInteractive">
       {`
             (function(h,o,t,j,a,r){
