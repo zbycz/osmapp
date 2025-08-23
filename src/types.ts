@@ -18,7 +18,8 @@ export type ClimbingStatsResponse = {
 
 export type ClimbingTilesProperties = {
   type: 'area' | 'crag' | 'route' | 'gym' | 'ferrata';
-  label: string;
+  name: string;
+  label: string; // TODO remove 24/8 - only for migration
   // group only:
   routeCount?: number;
   hasImages?: boolean;
