@@ -9,7 +9,13 @@ export const shortbreadColorfulStyle = {
     license: 'https://creativecommons.org/publicdomain/zero/1.0/',
   },
   sources: OSMAPP_SOURCES,
-  sprite: OSMAPP_SPRITE,
+  sprite: [
+    ...OSMAPP_SPRITE,
+    {
+      id: 'basics',
+      url: 'https://vector.openstreetmap.org/demo/shortbread/sprites/basics/sprites',
+    },
+  ],
   glyphs: GLYPHS,
 
   layers: [
