@@ -308,8 +308,7 @@ export default {
   'tags.phone': 'Phone',
   'tags.opening_hours': 'Hours',
   'tags.author': 'Author',
-  'tags.climbing_grade_uiaa': 'UIAA climbing grade',
-  'tags.climbing_grade_french': 'French climbing grade',
+  'tags.climbing_grade': 'Climbing grade',
   'tags.climbing_length': 'Length',
   'tags.wikimedia_commons_photo': 'Wikimedia Commons photo',
 

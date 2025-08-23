@@ -9,10 +9,8 @@ import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import { isClimbingRoute } from '../../../../../utils';
 import { useCurrentItem } from '../../EditContext';
-import { extractClimbingGradeFromTagName } from '../../../../../services/tagging/climbing/routeGrade';
 import { TextFieldWithCharacterCount } from './helpers';
 import { WikimediaCommonsEditor } from './WikimediaCommonsEditor';
-import { GradeSelect } from './GradeSelect';
 
 export const majorKeys = [
   'name',
@@ -22,12 +20,7 @@ export const majorKeys = [
   'opening_hours',
 ];
 
-const climbingRouteMajorKeys = [
-  'author',
-  'climbing:grade:uiaa',
-  'climbing:grade:french',
-  'climbing:length',
-];
+const climbingRouteMajorKeys = ['author', 'climbing:length'];
 
 const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
   const wikimediaCommonTags = Array(numberOfWikimediaItems)
@@ -54,8 +47,6 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
       ...(isClimbingRoute
         ? {
             author: t('tags.author'),
-            'climbing:grade:uiaa': t('tags.climbing_grade_uiaa'),
-            'climbing:grade:french': t('tags.climbing_grade_french'),
             'climbing:length': t('tags.climbing_length'),
           }
         : {}),
@@ -99,18 +90,6 @@ export const MajorKeysEditor: React.FC = () => {
 
     if (k === 'opening_hours') {
       return <OpeningHoursEditor />;
-    }
-
-    const climbingGradeSystem = extractClimbingGradeFromTagName(k);
-    if (climbingGradeSystem) {
-      return (
-        <GradeSelect
-          data={data}
-          k={k}
-          climbingGradeSystem={climbingGradeSystem}
-          tags={tags}
-        />
-      );
     }
 
     if (k.startsWith('wikimedia_commons')) {

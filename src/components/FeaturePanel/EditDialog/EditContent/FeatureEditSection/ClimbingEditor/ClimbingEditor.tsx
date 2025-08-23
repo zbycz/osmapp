@@ -13,6 +13,7 @@ import { t } from '../../../../../../services/intl';
 import { useCurrentItem } from '../../../EditContext';
 import { Maki } from '../../../../../utils/icons/Maki';
 import styled from '@emotion/styled';
+import { ClimbingGradesEditor } from './ClimbingGradesEditor';
 
 const IconContainer = styled.div`
   display: flex;
@@ -106,6 +107,7 @@ export const ClimbingEditor = () => {
       </AccordionSummary>
       <AccordionDetails>
         <Box ml={2}>
+          <ClimbingGradesEditor />
           <ClimbingMultiValuesInner />
         </Box>
       </AccordionDetails>
