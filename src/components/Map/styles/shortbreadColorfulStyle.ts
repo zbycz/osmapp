@@ -1,42 +1,23 @@
 import { GLYPHS, OSMAPP_SOURCES, OSMAPP_SPRITE } from '../consts';
 import { StyleSpecification } from 'maplibre-gl';
 
-export const shortbreadEclipseStyle = {
+// https://github.com/versatiles-org/versatiles-style
+export const shortbreadColorfulStyle = {
   version: 8,
-  name: 'versatiles-eclipse',
+  name: 'versatiles-shadow',
   metadata: {
     license: 'https://creativecommons.org/publicdomain/zero/1.0/',
   },
-
   sources: OSMAPP_SOURCES,
   sprite: OSMAPP_SPRITE,
   glyphs: GLYPHS,
 
-  // glyphs: '/demo/shortbread/fonts/{fontstack}/{range}.pbf',
-  // sprite: [
-  //   {
-  //     id: 'basics',
-  //     url: '/demo/shortbread/sprites/basics/sprites',
-  //   },
-  // ],
-  // sources: {
-  //   'versatiles-shortbread': {
-  //     attribution:
-  //       '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-  //     tiles: ['/shortbread_v1/{z}/{x}/{y}.mvt'],
-  //     type: 'vector',
-  //     scheme: 'xyz',
-  //     bounds: [-180, -85.0511287798066, 180, 85.0511287798066],
-  //     minzoom: 0,
-  //     maxzoom: 14,
-  //   },
-  // },
   layers: [
     {
       id: 'background',
       type: 'background',
       paint: {
-        'background-color': 'hsl(33,48%,5%)',
+        'background-color': 'rgb(249,244,238)',
       },
     },
     {
@@ -45,7 +26,7 @@ export const shortbreadEclipseStyle = {
       type: 'fill',
       'source-layer': 'ocean',
       paint: {
-        'fill-color': 'hsl(205,69%,15%)',
+        'fill-color': 'rgb(190,221,243)',
       },
     },
     {
@@ -55,7 +36,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'water_polygons',
       filter: ['all', ['==', 'kind', 'glacier']],
       paint: {
-        'fill-color': 'hsl(0,0%,0%)',
+        'fill-color': 'rgb(255,255,255)',
       },
     },
     {
@@ -65,7 +46,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'commercial', 'retail']],
       paint: {
-        'fill-color': 'hsla(324,61%,8%,0.251)',
+        'fill-color': 'rgba(247,222,237,0.251)',
         'fill-opacity': {
           stops: [
             [10, 0],
@@ -81,7 +62,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'industrial', 'quarry', 'railway']],
       paint: {
-        'fill-color': 'hsla(49,100%,12%,0.333)',
+        'fill-color': 'rgba(255,244,194,0.333)',
         'fill-opacity': {
           stops: [
             [10, 0],
@@ -97,7 +78,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'garages', 'residential']],
       paint: {
-        'fill-color': 'hsla(33,18%,10%,0.2)',
+        'fill-color': 'rgba(234,230,225,0.2)',
         'fill-opacity': {
           stops: [
             [10, 0],
@@ -127,7 +108,7 @@ export const shortbreadEclipseStyle = {
         ],
       ],
       paint: {
-        'fill-color': 'hsl(43,51%,12%)',
+        'fill-color': 'rgb(240,231,209)',
         'fill-opacity': {
           stops: [
             [10, 0],
@@ -143,7 +124,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'landfill']],
       paint: {
-        'fill-color': 'hsl(50,29%,20%)',
+        'fill-color': 'rgb(219,214,189)',
         'fill-opacity': {
           stops: [
             [10, 0],
@@ -162,7 +143,7 @@ export const shortbreadEclipseStyle = {
         ['in', 'kind', 'park', 'village_green', 'recreation_ground'],
       ],
       paint: {
-        'fill-color': 'hsl(60,41%,25%)',
+        'fill-color': 'rgb(217,217,165)',
         'fill-opacity': {
           stops: [
             [11, 0],
@@ -178,7 +159,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'allotments', 'garden']],
       paint: {
-        'fill-color': 'hsl(60,41%,25%)',
+        'fill-color': 'rgb(217,217,165)',
         'fill-opacity': {
           stops: [
             [11, 0],
@@ -194,7 +175,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'cemetery', 'grave_yard']],
       paint: {
-        'fill-color': 'hsl(54,22%,17%)',
+        'fill-color': 'rgb(221,219,202)',
         'fill-opacity': {
           stops: [
             [13, 0],
@@ -213,7 +194,7 @@ export const shortbreadEclipseStyle = {
         ['in', 'kind', 'miniature_golf', 'playground', 'golf_course'],
       ],
       paint: {
-        'fill-color': 'hsl(84,29%,10%)',
+        'fill-color': 'rgb(231,237,222)',
       },
     },
     {
@@ -223,7 +204,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'bare_rock', 'scree', 'shingle']],
       paint: {
-        'fill-color': 'hsl(192,9%,11%)',
+        'fill-color': 'rgb(224,228,229)',
       },
     },
     {
@@ -233,7 +214,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'forest']],
       paint: {
-        'fill-color': 'hsl(100,43%,53%)',
+        'fill-color': 'rgb(102,170,68)',
         'fill-opacity': {
           stops: [
             [7, 0],
@@ -252,7 +233,7 @@ export const shortbreadEclipseStyle = {
         ['in', 'kind', 'grass', 'grassland', 'meadow', 'wet_meadow'],
       ],
       paint: {
-        'fill-color': 'hsl(90,41%,15%)',
+        'fill-color': 'rgb(216,232,200)',
         'fill-opacity': {
           stops: [
             [11, 0],
@@ -268,7 +249,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'heath', 'scrub']],
       paint: {
-        'fill-color': 'hsl(60,41%,25%)',
+        'fill-color': 'rgb(217,217,165)',
         'fill-opacity': {
           stops: [
             [11, 0],
@@ -284,7 +265,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'beach', 'sand']],
       paint: {
-        'fill-color': 'hsl(60,57%,5%)',
+        'fill-color': 'rgb(250,250,237)',
       },
     },
     {
@@ -294,7 +275,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'land',
       filter: ['all', ['in', 'kind', 'bog', 'marsh', 'string_bog', 'swamp']],
       paint: {
-        'fill-color': 'hsl(145,28%,14%)',
+        'fill-color': 'rgb(211,230,219)',
       },
     },
     {
@@ -309,7 +290,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(205,69%,15%)',
+        'line-color': 'rgb(190,221,243)',
         'line-width': {
           stops: [
             [9, 0],
@@ -338,7 +319,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(205,69%,15%)',
+        'line-color': 'rgb(190,221,243)',
         'line-width': {
           stops: [
             [9, 0],
@@ -367,7 +348,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(205,69%,15%)',
+        'line-color': 'rgb(190,221,243)',
         'line-width': {
           stops: [
             [13, 0],
@@ -396,7 +377,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(205,69%,15%)',
+        'line-color': 'rgb(190,221,243)',
         'line-width': {
           stops: [
             [14, 0],
@@ -419,7 +400,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'water_polygons',
       filter: ['==', 'kind', 'water'],
       paint: {
-        'fill-color': 'hsl(205,69%,15%)',
+        'fill-color': 'rgb(190,221,243)',
         'fill-opacity': {
           stops: [
             [4, 0],
@@ -435,7 +416,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'water_polygons',
       filter: ['==', 'kind', 'river'],
       paint: {
-        'fill-color': 'hsl(205,69%,15%)',
+        'fill-color': 'rgb(190,221,243)',
         'fill-opacity': {
           stops: [
             [4, 0],
@@ -451,7 +432,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'water_polygons',
       filter: ['in', 'kind', 'reservoir', 'basin', 'dock'],
       paint: {
-        'fill-color': 'hsl(205,69%,15%)',
+        'fill-color': 'rgb(190,221,243)',
         'fill-opacity': {
           stops: [
             [4, 0],
@@ -467,7 +448,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'dam_polygons',
       filter: ['==', 'kind', 'dam'],
       paint: {
-        'fill-color': 'hsl(33,48%,5%)',
+        'fill-color': 'rgb(249,244,238)',
         'fill-opacity': {
           stops: [
             [12, 0],
@@ -483,7 +464,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'dam_lines',
       filter: ['==', 'kind', 'dam'],
       paint: {
-        'line-color': 'hsl(205,69%,15%)',
+        'line-color': 'rgb(190,221,243)',
       },
       layout: {
         'line-cap': 'round',
@@ -497,7 +478,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'pier_polygons',
       filter: ['in', 'kind', 'pier', 'breakwater', 'groyne'],
       paint: {
-        'fill-color': 'hsl(33,48%,5%)',
+        'fill-color': 'rgb(249,244,238)',
         'fill-opacity': {
           stops: [
             [12, 0],
@@ -513,7 +494,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'pier_lines',
       filter: ['in', 'kind', 'pier', 'breakwater', 'groyne'],
       paint: {
-        'line-color': 'hsl(33,48%,5%)',
+        'line-color': 'rgb(249,244,238)',
       },
       layout: {
         'line-cap': 'round',
@@ -527,8 +508,8 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'danger_area'],
       paint: {
-        'fill-color': 'hsl(0,100%,50%)',
-        'fill-outline-color': 'hsl(0,100%,50%)',
+        'fill-color': 'rgb(255,0,0)',
+        'fill-outline-color': 'rgb(255,0,0)',
         'fill-opacity': 0.3,
         'fill-pattern': 'basics:pattern-warning',
       },
@@ -540,7 +521,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'university'],
       paint: {
-        'fill-color': 'hsl(60,100%,25%)',
+        'fill-color': 'rgb(255,255,128)',
         'fill-opacity': 0.1,
       },
     },
@@ -551,7 +532,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'college'],
       paint: {
-        'fill-color': 'hsl(60,100%,25%)',
+        'fill-color': 'rgb(255,255,128)',
         'fill-opacity': 0.1,
       },
     },
@@ -562,7 +543,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'school'],
       paint: {
-        'fill-color': 'hsl(60,100%,25%)',
+        'fill-color': 'rgb(255,255,128)',
         'fill-opacity': 0.1,
       },
     },
@@ -573,7 +554,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'hospital'],
       paint: {
-        'fill-color': 'hsl(0,100%,30%)',
+        'fill-color': 'rgb(255,102,102)',
         'fill-opacity': 0.1,
       },
     },
@@ -584,7 +565,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'prison'],
       paint: {
-        'fill-color': 'hsl(305,73%,3%)',
+        'fill-color': 'rgb(253,242,252)',
         'fill-pattern': 'basics:pattern-striped',
         'fill-opacity': 0.1,
       },
@@ -596,7 +577,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'parking'],
       paint: {
-        'fill-color': 'hsl(24,11%,9%)',
+        'fill-color': 'rgb(235,232,230)',
       },
     },
     {
@@ -606,7 +587,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'bicycle_parking'],
       paint: {
-        'fill-color': 'hsl(24,11%,9%)',
+        'fill-color': 'rgb(235,232,230)',
       },
     },
     {
@@ -616,7 +597,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'sites',
       filter: ['in', 'kind', 'construction'],
       paint: {
-        'fill-color': 'hsl(0,0%,34%)',
+        'fill-color': 'rgb(169,169,169)',
         'fill-pattern': 'basics:pattern-hatched_thin',
         'fill-opacity': 0.1,
       },
@@ -628,7 +609,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'street_polygons',
       filter: ['in', 'kind', 'runway', 'taxiway'],
       paint: {
-        'fill-color': 'hsl(0,0%,0%)',
+        'fill-color': 'rgb(255,255,255)',
         'fill-opacity': 0.5,
       },
     },
@@ -639,7 +620,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['==', 'kind', 'taxiway'],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [13, 0],
@@ -662,7 +643,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['==', 'kind', 'runway'],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [11, 0],
@@ -688,7 +669,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['==', 'kind', 'taxiway'],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [13, 0],
@@ -717,7 +698,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['==', 'kind', 'runway'],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [11, 0],
@@ -748,7 +729,7 @@ export const shortbreadEclipseStyle = {
       type: 'fill',
       'source-layer': 'buildings',
       paint: {
-        'fill-color': 'hsl(30,11%,14%)',
+        'fill-color': 'rgb(223,219,215)',
         'fill-opacity': {
           stops: [
             [14, 0],
@@ -763,7 +744,7 @@ export const shortbreadEclipseStyle = {
       type: 'fill',
       'source-layer': 'buildings',
       paint: {
-        'fill-color': 'hsl(30,38%,8%)',
+        'fill-color': 'rgb(242,234,226)',
         'fill-opacity': {
           stops: [
             [14, 0],
@@ -780,7 +761,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'street_polygons',
       filter: ['all', ['==', 'tunnel', true], ['==', 'kind', 'pedestrian']],
       paint: {
-        'fill-color': 'rgb(0,0,0)',
+        'fill-color': 'rgb(247,247,247)',
         'fill-opacity': {
           stops: [
             [12, 0],
@@ -808,7 +789,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'hsl(288,50%,4%)',
+        'line-color': 'hsl(288,13%,86%)',
       },
       minzoom: 15,
     },
@@ -831,7 +812,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'hsl(288,50%,4%)',
+        'line-color': 'hsl(288,13%,86%)',
       },
       minzoom: 15,
     },
@@ -854,7 +835,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'hsl(288,50%,4%)',
+        'line-color': 'hsl(288,13%,86%)',
       },
       minzoom: 15,
     },
@@ -877,7 +858,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'hsl(203,50%,3%)',
+        'line-color': 'hsl(203,11%,87%)',
       },
       minzoom: 15,
     },
@@ -888,7 +869,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'track'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(222,222,222)',
         'line-width': {
           stops: [
             [14, 2],
@@ -917,7 +898,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'pedestrian'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(222,222,222)',
         'line-width': {
           stops: [
             [12, 2],
@@ -947,7 +928,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'service'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(114,112,110)',
+        'line-color': 'rgb(221,220,218)',
         'line-width': {
           stops: [
             [14, 1],
@@ -976,7 +957,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'living_street'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(222,222,222)',
         'line-width': {
           stops: [
             [12, 2],
@@ -1006,7 +987,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'residential'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(222,222,222)',
         'line-width': {
           stops: [
             [12, 2],
@@ -1036,7 +1017,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'unclassified'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(222,222,222)',
         'line-width': {
           stops: [
             [12, 2],
@@ -1071,7 +1052,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(222,222,222)',
         'line-width': {
           stops: [
             [12, 2],
@@ -1106,7 +1087,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(142,84,34)',
+        'line-color': 'rgb(234,176,126)',
         'line-dasharray': [1, 0.3],
         'line-width': {
           stops: [
@@ -1136,7 +1117,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(142,84,34)',
+        'line-color': 'rgb(234,176,126)',
         'line-dasharray': [1, 0.3],
         'line-width': {
           stops: [
@@ -1166,7 +1147,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(142,84,34)',
+        'line-color': 'rgb(234,176,126)',
         'line-dasharray': [1, 0.3],
         'line-width': {
           stops: [
@@ -1196,7 +1177,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(142,84,34)',
+        'line-color': 'rgb(234,176,126)',
         'line-dasharray': [1, 0.3],
         'line-width': {
           stops: [
@@ -1226,7 +1207,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(222,222,222)',
         'line-width': {
           stops: [
             [12, 2],
@@ -1261,7 +1242,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(142,84,34)',
+        'line-color': 'rgb(234,176,126)',
         'line-dasharray': [1, 0.3],
         'line-width': {
           stops: [
@@ -1297,7 +1278,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(142,84,34)',
+        'line-color': 'rgb(234,176,126)',
         'line-dasharray': [1, 0.3],
         'line-width': {
           stops: [
@@ -1329,7 +1310,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(142,84,34)',
+        'line-color': 'rgb(234,176,126)',
         'line-dasharray': [1, 0.3],
         'line-width': {
           stops: [
@@ -1361,7 +1342,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(142,84,34)',
+        'line-color': 'rgb(234,176,126)',
         'line-dasharray': [1, 0.3],
         'line-width': {
           stops: [
@@ -1400,7 +1381,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'hsl(288,50%,4%)',
+        'line-color': 'hsl(288,33%,94%)',
         'line-dasharray': [1, 0.2],
       },
       minzoom: 15,
@@ -1424,7 +1405,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'hsl(288,50%,4%)',
+        'line-color': 'hsl(288,33%,94%)',
         'line-dasharray': [1, 0.2],
       },
       minzoom: 15,
@@ -1448,7 +1429,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'hsl(288,50%,4%)',
+        'line-color': 'hsl(288,33%,94%)',
         'line-dasharray': [1, 0.2],
       },
       minzoom: 15,
@@ -1472,7 +1453,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'hsl(203,50%,3%)',
+        'line-color': 'hsl(203,30%,95%)',
         'line-dasharray': [1, 0.2],
       },
       minzoom: 15,
@@ -1484,7 +1465,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'track'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [14, 1],
@@ -1513,7 +1494,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'pedestrian'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1543,7 +1524,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'service'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [14, 1],
@@ -1572,7 +1553,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'living_street'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1602,7 +1583,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'residential'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1632,7 +1613,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'unclassified'], ['==', 'tunnel', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1667,7 +1648,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
       },
       layout: {
         'line-join': 'round',
@@ -1686,7 +1667,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1721,7 +1702,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
       },
       layout: {
         'line-join': 'round',
@@ -1740,7 +1721,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1775,7 +1756,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1810,7 +1791,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1845,7 +1826,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1880,7 +1861,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(102,87,26)',
+        'line-color': 'rgb(255,240,179)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1909,7 +1890,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(102,87,26)',
+        'line-color': 'rgb(255,240,179)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1938,7 +1919,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(102,87,26)',
+        'line-color': 'rgb(255,240,179)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1967,7 +1948,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(133,87,26)',
+        'line-color': 'rgb(255,209,148)',
         'line-width': {
           stops: [
             [12, 1],
@@ -1996,7 +1977,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [12, 1],
@@ -2031,7 +2012,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(102,87,26)',
+        'line-color': 'rgb(255,240,179)',
         'line-width': {
           stops: [
             [11, 1],
@@ -2066,7 +2047,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(102,87,26)',
+        'line-color': 'rgb(255,240,179)',
         'line-width': {
           stops: [
             [8, 0],
@@ -2103,7 +2084,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(102,87,26)',
+        'line-color': 'rgb(255,240,179)',
         'line-width': {
           stops: [
             [7, 0],
@@ -2140,7 +2121,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(133,87,26)',
+        'line-color': 'rgb(255,209,148)',
         'line-width': {
           stops: [
             [5, 0],
@@ -2178,7 +2159,7 @@ export const shortbreadEclipseStyle = {
       ],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -2203,7 +2184,7 @@ export const shortbreadEclipseStyle = {
       ],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -2227,7 +2208,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(207,23%,28%)',
+        'line-color': 'rgb(166,184,199)',
         'line-width': {
           stops: [
             [11, 0],
@@ -2259,7 +2240,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [8, 1],
@@ -2289,7 +2270,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [14, 0],
@@ -2313,7 +2294,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [8, 1],
@@ -2343,7 +2324,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [14, 0],
@@ -2363,7 +2344,7 @@ export const shortbreadEclipseStyle = {
       filter: ['all', ['in', 'kind', 'monorail'], ['==', 'tunnel', true]],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -2383,7 +2364,7 @@ export const shortbreadEclipseStyle = {
       filter: ['all', ['in', 'kind', 'funicular'], ['==', 'tunnel', true]],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -2417,7 +2398,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -2442,7 +2423,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -2457,7 +2438,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(106,119,131)',
+        'line-color': 'rgb(188,202,213)',
         'line-width': {
           stops: [
             [11, 0],
@@ -2490,7 +2471,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [14, 0],
@@ -2520,7 +2501,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [15, 0],
@@ -2544,7 +2525,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [14, 0],
@@ -2574,7 +2555,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [15, 0],
@@ -2603,7 +2584,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -2623,7 +2604,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -2632,7 +2613,7 @@ export const shortbreadEclipseStyle = {
       type: 'fill',
       'source-layer': 'bridges',
       paint: {
-        'fill-color': 'rgb(17,12,6)',
+        'fill-color': 'rgb(244,239,233)',
         'fill-antialias': true,
         'fill-opacity': 0.8,
       },
@@ -2649,7 +2630,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'kind', 'pedestrian'],
       ],
       paint: {
-        'fill-color': 'rgba(21,5,25,0.25)',
+        'fill-color': 'rgba(251,235,255,0.25)',
         'fill-opacity': {
           stops: [
             [12, 0],
@@ -2684,7 +2665,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'rgb(14,0,18)',
+        'line-color': 'rgb(226,212,230)',
       },
       minzoom: 15,
     },
@@ -2712,7 +2693,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'rgb(14,0,18)',
+        'line-color': 'rgb(226,212,230)',
       },
       minzoom: 15,
     },
@@ -2740,7 +2721,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'rgb(14,0,18)',
+        'line-color': 'rgb(226,212,230)',
       },
       minzoom: 15,
     },
@@ -2768,7 +2749,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'rgb(0,9,14)',
+        'line-color': 'rgb(215,224,230)',
       },
       minzoom: 15,
     },
@@ -2784,7 +2765,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [14, 2],
@@ -2818,7 +2799,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [12, 2],
@@ -2853,7 +2834,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(114,112,110)',
+        'line-color': 'rgb(221,220,218)',
         'line-width': {
           stops: [
             [14, 1],
@@ -2887,7 +2868,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [12, 2],
@@ -2922,7 +2903,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [12, 2],
@@ -2957,7 +2938,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [12, 2],
@@ -2993,7 +2974,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [12, 2],
@@ -3029,7 +3010,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [12, 2],
@@ -3059,7 +3040,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [12, 2],
@@ -3089,7 +3070,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [12, 2],
@@ -3119,7 +3100,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [12, 2],
@@ -3149,7 +3130,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(36,5%,20%)',
+        'line-color': 'rgb(207,205,202)',
         'line-width': {
           stops: [
             [12, 2],
@@ -3185,7 +3166,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [11, 2],
@@ -3221,7 +3202,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [8, 0],
@@ -3253,7 +3234,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [7, 0],
@@ -3285,7 +3266,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [5, 0],
@@ -3328,7 +3309,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'rgb(21,5,25)',
+        'line-color': 'rgb(251,235,255)',
       },
       minzoom: 15,
     },
@@ -3356,7 +3337,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'rgb(21,5,25)',
+        'line-color': 'rgb(251,235,255)',
       },
       minzoom: 15,
     },
@@ -3384,7 +3365,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'rgb(21,5,25)',
+        'line-color': 'rgb(251,235,255)',
       },
       minzoom: 15,
     },
@@ -3412,7 +3393,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
       },
       minzoom: 15,
     },
@@ -3428,7 +3409,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [14, 1],
@@ -3462,7 +3443,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(288,100%,4%)',
+        'line-color': 'rgb(251,235,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3498,7 +3479,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [14, 1],
@@ -3532,7 +3513,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3567,7 +3548,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3602,7 +3583,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3638,7 +3619,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
       },
       layout: {
         'line-join': 'round',
@@ -3658,7 +3639,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3694,7 +3675,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
       },
       layout: {
         'line-join': 'round',
@@ -3714,7 +3695,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3750,7 +3731,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3786,7 +3767,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3822,7 +3803,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3858,7 +3839,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3888,7 +3869,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3918,7 +3899,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3948,7 +3929,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(34,100%,23%)',
+        'line-color': 'rgb(255,204,136)',
         'line-width': {
           stops: [
             [12, 1],
@@ -3978,7 +3959,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -4014,7 +3995,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [11, 1],
@@ -4050,7 +4031,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [8, 0],
@@ -4088,7 +4069,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [7, 0],
@@ -4126,7 +4107,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(34,100%,23%)',
+        'line-color': 'rgb(255,204,136)',
         'line-width': {
           stops: [
             [5, 0],
@@ -4165,7 +4146,7 @@ export const shortbreadEclipseStyle = {
       ],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -4191,7 +4172,7 @@ export const shortbreadEclipseStyle = {
       ],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -4216,7 +4197,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(207,23%,28%)',
+        'line-color': 'rgb(166,184,199)',
         'line-width': {
           stops: [
             [11, 0],
@@ -4249,7 +4230,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [8, 1],
@@ -4280,7 +4261,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [14, 0],
@@ -4305,7 +4286,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [8, 1],
@@ -4336,7 +4317,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [14, 0],
@@ -4361,7 +4342,7 @@ export const shortbreadEclipseStyle = {
       ],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -4386,7 +4367,7 @@ export const shortbreadEclipseStyle = {
       ],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -4421,7 +4402,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -4447,7 +4428,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -4463,7 +4444,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(106,119,131)',
+        'line-color': 'rgb(188,202,213)',
         'line-width': {
           stops: [
             [11, 0],
@@ -4497,7 +4478,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [14, 0],
@@ -4528,7 +4509,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [15, 0],
@@ -4553,7 +4534,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [14, 0],
@@ -4584,7 +4565,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'tunnel', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [15, 0],
@@ -4618,7 +4599,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -4643,7 +4624,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -4653,7 +4634,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'ferries',
       minzoom: 10,
       paint: {
-        'line-color': 'rgb(11,39,58)',
+        'line-color': 'rgb(171,199,219)',
         'line-width': {
           stops: [
             [10, 1],
@@ -4683,7 +4664,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -4708,7 +4689,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -4733,7 +4714,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -4758,7 +4739,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -4783,7 +4764,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [14, 0],
@@ -4812,7 +4793,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [12, 0],
@@ -4842,7 +4823,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [14, 0],
@@ -4871,7 +4852,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [12, 0],
@@ -4901,7 +4882,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [12, 0],
@@ -4931,7 +4912,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [12, 0],
@@ -4966,7 +4947,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [12, 0],
@@ -5001,7 +4982,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -5031,7 +5012,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -5061,7 +5042,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -5091,7 +5072,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -5121,7 +5102,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [12, 0],
@@ -5156,7 +5137,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': {
           stops: [
             [11, 0],
@@ -5191,7 +5172,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -5223,7 +5204,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -5255,7 +5236,7 @@ export const shortbreadEclipseStyle = {
         'line-join': 'round',
       },
       paint: {
-        'line-color': 'rgb(17,12,6)',
+        'line-color': 'rgb(244,239,233)',
         'line-opacity': 0.5,
         'line-width': {
           stops: [
@@ -5278,7 +5259,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'street_polygons',
       filter: ['all', ['==', 'bridge', true], ['==', 'kind', 'pedestrian']],
       paint: {
-        'fill-color': 'hsl(0,0%,0%)',
+        'fill-color': 'rgb(255,255,255)',
         'fill-opacity': {
           stops: [
             [12, 0],
@@ -5306,7 +5287,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'rgb(14,0,18)',
+        'line-color': 'rgb(226,212,230)',
       },
       minzoom: 15,
     },
@@ -5329,7 +5310,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'rgb(14,0,18)',
+        'line-color': 'rgb(226,212,230)',
       },
       minzoom: 15,
     },
@@ -5352,7 +5333,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'rgb(14,0,18)',
+        'line-color': 'rgb(226,212,230)',
       },
       minzoom: 15,
     },
@@ -5375,7 +5356,7 @@ export const shortbreadEclipseStyle = {
             [20, 22],
           ],
         },
-        'line-color': 'rgb(0,9,14)',
+        'line-color': 'rgb(215,224,230)',
       },
       minzoom: 15,
     },
@@ -5386,7 +5367,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'track'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(217,217,217)',
         'line-width': {
           stops: [
             [14, 2],
@@ -5415,7 +5396,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'pedestrian'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(217,217,217)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5445,7 +5426,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'service'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'rgb(114,112,110)',
+        'line-color': 'rgb(221,220,218)',
         'line-width': {
           stops: [
             [14, 1],
@@ -5474,7 +5455,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'living_street'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(217,217,217)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5504,7 +5485,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'residential'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(217,217,217)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5534,7 +5515,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'unclassified'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(217,217,217)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5569,7 +5550,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(217,217,217)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5604,7 +5585,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5633,7 +5614,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5662,7 +5643,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5691,7 +5672,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5720,7 +5701,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(217,217,217)',
         'line-width': {
           stops: [
             [12, 2],
@@ -5755,7 +5736,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [11, 2],
@@ -5790,7 +5771,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [8, 0],
@@ -5821,7 +5802,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [7, 0],
@@ -5852,7 +5833,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(28,72%,31%)',
+        'line-color': 'rgb(233,172,119)',
         'line-width': {
           stops: [
             [5, 0],
@@ -5890,7 +5871,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'rgb(21,5,25)',
+        'line-color': 'rgb(251,235,255)',
       },
       minzoom: 15,
     },
@@ -5913,7 +5894,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'rgb(21,5,25)',
+        'line-color': 'rgb(251,235,255)',
       },
       minzoom: 15,
     },
@@ -5936,7 +5917,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'rgb(21,5,25)',
+        'line-color': 'rgb(251,235,255)',
       },
       minzoom: 15,
     },
@@ -5959,7 +5940,7 @@ export const shortbreadEclipseStyle = {
             [20, 20],
           ],
         },
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
       },
       minzoom: 15,
     },
@@ -5970,7 +5951,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'track'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [14, 1],
@@ -5999,7 +5980,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'pedestrian'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6029,7 +6010,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'service'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'rgb(0,0,0)',
+        'line-color': 'rgb(247,247,247)',
         'line-width': {
           stops: [
             [14, 1],
@@ -6058,7 +6039,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'living_street'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6088,7 +6069,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'residential'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6118,7 +6099,7 @@ export const shortbreadEclipseStyle = {
       'source-layer': 'streets',
       filter: ['all', ['==', 'kind', 'unclassified'], ['==', 'bridge', true]],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6153,7 +6134,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
       },
       layout: {
         'line-join': 'round',
@@ -6172,7 +6153,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6207,7 +6188,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
       },
       layout: {
         'line-join': 'round',
@@ -6226,7 +6207,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6261,7 +6242,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6296,7 +6277,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(203,100%,3%)',
+        'line-color': 'rgb(239,249,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6331,7 +6312,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6366,7 +6347,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6395,7 +6376,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6424,7 +6405,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6453,7 +6434,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(34,100%,23%)',
+        'line-color': 'rgb(255,204,136)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6482,7 +6463,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(0,0%,0%)',
+        'line-color': 'rgb(255,255,255)',
         'line-width': {
           stops: [
             [12, 1],
@@ -6517,7 +6498,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [11, 1],
@@ -6552,7 +6533,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [8, 0],
@@ -6589,7 +6570,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(48,100%,17%)',
+        'line-color': 'rgb(255,238,170)',
         'line-width': {
           stops: [
             [7, 0],
@@ -6626,7 +6607,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'link', true],
       ],
       paint: {
-        'line-color': 'hsl(34,100%,23%)',
+        'line-color': 'rgb(255,204,136)',
         'line-width': {
           stops: [
             [5, 0],
@@ -6664,7 +6645,7 @@ export const shortbreadEclipseStyle = {
       ],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -6689,7 +6670,7 @@ export const shortbreadEclipseStyle = {
       ],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -6713,7 +6694,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(207,23%,28%)',
+        'line-color': 'rgb(166,184,199)',
         'line-width': {
           stops: [
             [11, 0],
@@ -6745,7 +6726,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [8, 1],
@@ -6775,7 +6756,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [14, 0],
@@ -6799,7 +6780,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [8, 1],
@@ -6829,7 +6810,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [14, 0],
@@ -6849,7 +6830,7 @@ export const shortbreadEclipseStyle = {
       filter: ['all', ['in', 'kind', 'monorail'], ['==', 'bridge', true]],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -6869,7 +6850,7 @@ export const shortbreadEclipseStyle = {
       filter: ['all', ['in', 'kind', 'funicular'], ['==', 'bridge', true]],
       minzoom: 15,
       paint: {
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
         'line-width': {
           stops: [
             [15, 0],
@@ -6903,7 +6884,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -6928,7 +6909,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -6943,7 +6924,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'rgb(106,119,131)',
+        'line-color': 'rgb(188,202,213)',
         'line-width': {
           stops: [
             [11, 0],
@@ -6976,7 +6957,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [14, 0],
@@ -7006,7 +6987,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [15, 0],
@@ -7030,7 +7011,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [14, 0],
@@ -7060,7 +7041,7 @@ export const shortbreadEclipseStyle = {
         ['==', 'bridge', true],
       ],
       paint: {
-        'line-color': 'rgb(108,115,122)',
+        'line-color': 'rgb(197,204,211)',
         'line-width': {
           stops: [
             [15, 0],
@@ -7089,7 +7070,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -7109,7 +7090,7 @@ export const shortbreadEclipseStyle = {
             [20, 5],
           ],
         },
-        'line-color': 'hsl(208,14%,27%)',
+        'line-color': 'rgb(177,187,196)',
       },
     },
     {
@@ -7245,8 +7226,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7298,8 +7279,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7349,8 +7330,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7450,8 +7431,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7501,8 +7482,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7550,8 +7531,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7597,8 +7578,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7633,8 +7614,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7669,8 +7650,8 @@ export const shortbreadEclipseStyle = {
             [17, 0.4],
           ],
         },
-        'icon-color': 'hsl(0,0%,67%)',
-        'text-color': 'hsl(0,0%,67%)',
+        'icon-color': 'rgb(85,85,85)',
+        'text-color': 'rgb(85,85,85)',
       },
     },
     {
@@ -7686,7 +7667,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'coastline', true],
       ],
       paint: {
-        'line-color': 'rgb(29,24,18)',
+        'line-color': 'rgb(249,245,239)',
         'line-blur': 1,
         'line-width': {
           stops: [
@@ -7723,7 +7704,7 @@ export const shortbreadEclipseStyle = {
           ],
         },
         'line-opacity': 0.75,
-        'line-color': 'rgb(29,24,18)',
+        'line-color': 'rgb(249,245,239)',
       },
     },
     {
@@ -7739,7 +7720,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'coastline', true],
       ],
       paint: {
-        'line-color': 'rgb(41,36,31)',
+        'line-color': 'rgb(250,245,240)',
         'line-blur': 1,
         'line-width': {
           stops: [
@@ -7768,7 +7749,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'coastline', true],
       ],
       paint: {
-        'line-color': 'hsl(240,24%,28%)',
+        'line-color': 'rgb(166,166,200)',
         'line-width': {
           stops: [
             [2, 0],
@@ -7802,7 +7783,7 @@ export const shortbreadEclipseStyle = {
             [10, 4],
           ],
         },
-        'line-color': 'hsl(246,17%,23%)',
+        'line-color': 'rgb(190,188,207)',
         'line-dasharray': [2, 1],
       },
       layout: {
@@ -7822,7 +7803,7 @@ export const shortbreadEclipseStyle = {
         ['!=', 'coastline', true],
       ],
       paint: {
-        'line-color': 'hsl(240,24%,28%)',
+        'line-color': 'rgb(166,166,200)',
         'line-width': {
           stops: [
             [7, 0],
@@ -7855,11 +7836,11 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'text-halo-color': 'rgb(40,33,25)',
+        'text-halo-color': 'rgb(243,235,227)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
-        'icon-color': 'rgb(20,15,9)',
-        'text-color': 'rgb(20,15,9)',
+        'icon-color': 'rgb(169,164,158)',
+        'text-color': 'rgb(169,164,158)',
       },
       minzoom: 17,
     },
@@ -7883,9 +7864,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(0,0%,0%)',
-        'text-color': 'hsl(0,0%,0%)',
-        'text-halo-color': 'hsl(34,100%,23%)',
+        'icon-color': 'rgb(255,255,255)',
+        'text-color': 'rgb(255,255,255)',
+        'text-halo-color': 'rgb(255,204,136)',
         'text-halo-width': 0.1,
         'text-halo-blur': 1,
       },
@@ -7910,9 +7891,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -7937,9 +7918,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -7964,9 +7945,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -7991,9 +7972,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8018,9 +7999,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8045,9 +8026,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8072,9 +8053,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8099,9 +8080,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8116,15 +8097,13 @@ export const shortbreadEclipseStyle = {
       layout: {
         'text-field': '{name}',
         'text-font': ['noto_sans_regular'],
-        'text-size': {
-          stops: [[14, 12]],
-        },
+        'text-size': { stops: [[14, 12]] },
         'text-transform': 'uppercase',
       },
       paint: {
-        'icon-color': 'rgb(170,196,202)',
-        'text-color': 'rgb(170,196,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,67,73)',
+        'text-color': 'rgb(40,67,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8139,15 +8118,13 @@ export const shortbreadEclipseStyle = {
       layout: {
         'text-field': '{name}',
         'text-font': ['noto_sans_regular'],
-        'text-size': {
-          stops: [[13, 13]],
-        },
+        'text-size': { stops: [[13, 13]] },
         'text-transform': 'uppercase',
       },
       paint: {
-        'icon-color': 'rgb(170,191,202)',
-        'text-color': 'rgb(170,191,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,62,73)',
+        'text-color': 'rgb(40,62,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8171,9 +8148,9 @@ export const shortbreadEclipseStyle = {
         'text-transform': 'uppercase',
       },
       paint: {
-        'icon-color': 'rgb(170,186,202)',
-        'text-color': 'rgb(170,186,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,57,73)',
+        'text-color': 'rgb(40,57,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8196,9 +8173,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'rgb(170,178,202)',
-        'text-color': 'rgb(170,178,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,48,73)',
+        'text-color': 'rgb(40,48,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8221,9 +8198,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'rgb(170,178,202)',
-        'text-color': 'rgb(170,178,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,48,73)',
+        'text-color': 'rgb(40,48,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8246,9 +8223,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'rgb(170,178,202)',
-        'text-color': 'rgb(170,178,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,48,73)',
+        'text-color': 'rgb(40,48,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8276,9 +8253,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'rgb(190,190,207)',
-        'text-color': 'rgb(190,190,207)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(61,61,77)',
+        'text-color': 'rgb(61,61,77)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8301,9 +8278,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'rgb(170,178,202)',
-        'text-color': 'rgb(170,178,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,48,73)',
+        'text-color': 'rgb(40,48,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8326,9 +8303,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'rgb(170,178,202)',
-        'text-color': 'rgb(170,178,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,48,73)',
+        'text-color': 'rgb(40,48,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8351,9 +8328,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'rgb(170,178,202)',
-        'text-color': 'rgb(170,178,202)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(40,48,73)',
+        'text-color': 'rgb(40,48,73)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8385,9 +8362,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8420,9 +8397,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8454,9 +8431,9 @@ export const shortbreadEclipseStyle = {
         },
       },
       paint: {
-        'icon-color': 'hsl(240,14%,77%)',
-        'text-color': 'hsl(240,14%,77%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(51,51,68)',
+        'text-color': 'rgb(51,51,68)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8582,9 +8559,9 @@ export const shortbreadEclipseStyle = {
       },
       paint: {
         'icon-opacity': 0.7,
-        'icon-color': 'hsl(270,4%,60%)',
-        'text-color': 'hsl(270,4%,60%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(102,98,106)',
+        'text-color': 'rgb(102,98,106)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8614,9 +8591,9 @@ export const shortbreadEclipseStyle = {
       },
       paint: {
         'icon-opacity': 0.7,
-        'icon-color': 'hsl(270,4%,60%)',
-        'text-color': 'hsl(270,4%,60%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(102,98,106)',
+        'text-color': 'rgb(102,98,106)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8650,9 +8627,9 @@ export const shortbreadEclipseStyle = {
       },
       paint: {
         'icon-opacity': 0.7,
-        'icon-color': 'hsl(270,4%,60%)',
-        'text-color': 'hsl(270,4%,60%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(102,98,106)',
+        'text-color': 'rgb(102,98,106)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8686,9 +8663,9 @@ export const shortbreadEclipseStyle = {
       },
       paint: {
         'icon-opacity': 0.7,
-        'icon-color': 'hsl(270,4%,60%)',
-        'text-color': 'hsl(270,4%,60%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(102,98,106)',
+        'text-color': 'rgb(102,98,106)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8722,9 +8699,9 @@ export const shortbreadEclipseStyle = {
       },
       paint: {
         'icon-opacity': 0.7,
-        'icon-color': 'hsl(270,4%,60%)',
-        'text-color': 'hsl(270,4%,60%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(102,98,106)',
+        'text-color': 'rgb(102,98,106)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8754,9 +8731,9 @@ export const shortbreadEclipseStyle = {
       },
       paint: {
         'icon-opacity': 0.7,
-        'icon-color': 'hsl(270,4%,60%)',
-        'text-color': 'hsl(270,4%,60%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(102,98,106)',
+        'text-color': 'rgb(102,98,106)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },
@@ -8786,9 +8763,9 @@ export const shortbreadEclipseStyle = {
       },
       paint: {
         'icon-opacity': 0.7,
-        'icon-color': 'hsl(270,4%,60%)',
-        'text-color': 'hsl(270,4%,60%)',
-        'text-halo-color': 'hsla(0,0%,0%,0.8)',
+        'icon-color': 'rgb(102,98,106)',
+        'text-color': 'rgb(102,98,106)',
+        'text-halo-color': 'rgba(255,255,255,0.8)',
         'text-halo-width': 2,
         'text-halo-blur': 1,
       },

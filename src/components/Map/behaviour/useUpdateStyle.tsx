@@ -24,7 +24,9 @@ import { Theme } from '../../../helpers/theme';
 import { addIndoorEqual, removeIndoorEqual } from './indoor';
 import { addClimbingTilesSource } from '../climbingTiles/climbingTilesSource';
 import { emptyStyle } from '../styles/emptyStyle';
-import { shortbreadEclipseStyle } from '../styles/shortbreadEclipseStyle';
+import { shortbreadShadowStyle } from '../styles/shortbreadShadowStyle';
+import { shortbreadColorfulStyle } from '../styles/shortbreadColorfulStyle';
+import { ShowToast } from '../../utils/SnackbarContext';
 
 const ofrBasicStyle = {
   ...basicStyle,
@@ -52,7 +54,9 @@ const getBaseStyle = (key: string, currentTheme: Theme): StyleSpecification => {
     return outdoorStyle;
   }
   if (key === 'shortbread') {
-    return shortbreadEclipseStyle;
+    return currentTheme === 'dark'
+      ? shortbreadShadowStyle
+      : shortbreadColorfulStyle;
   }
 
   const url = osmappLayers[key]?.url ?? key;
@@ -120,6 +124,30 @@ const addOverlaysToStyle = (
     });
 };
 
+let prevLayers: string[] = [];
+const shortbreadCheck = (activeLayers: string[], showToast: ShowToast) => {
+  if (
+    !prevLayers.includes('shortbread') &&
+    activeLayers.includes('shortbread')
+  ) {
+    showToast(
+      <>
+        Shortbread map (beta) is not clickable by design. See{' '}
+        <a
+          href="https://github.com/shortbread-tiles/shortbread-docs/issues/87"
+          target="_blank"
+          className="colorInherit"
+          style={{ textDecoration: 'underline' }}
+        >
+          Github for more info
+        </a>
+      </>,
+      'info',
+    );
+  }
+  prevLayers = activeLayers;
+};
+
 export const useUpdateStyle = createMapEffectHook(
   (
     map,
@@ -127,6 +155,7 @@ export const useUpdateStyle = createMapEffectHook(
     userLayers: Layer[],
     mapLoaded: boolean,
     currentTheme: Theme,
+    showToast: ShowToast,
   ) => {
     const [basemap, ...overlays] = activeLayers;
     const key = basemap ?? DEFAULT_MAP;
@@ -156,5 +185,7 @@ export const useUpdateStyle = createMapEffectHook(
     if (mapLoaded && overlays.includes('indoor')) {
       addIndoorEqual();
     }
+
+    shortbreadCheck(activeLayers, showToast);
   },
 );

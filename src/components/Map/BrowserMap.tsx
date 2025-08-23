@@ -20,6 +20,7 @@ import { useOnMapLongPressed } from './behaviour/useOnMapLongPressed';
 import { useAddTopRightControls } from './useAddTopRightControls';
 import { usePersistedScaleControl } from './behaviour/PersistedScaleControl';
 import { useUserThemeContext } from '../../helpers/theme';
+import { useSnackbar } from '../utils/SnackbarContext';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
@@ -47,6 +48,7 @@ const NotSupportedMessage = () => (
 // TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
 
 const BrowserMap = () => {
+  const { showToast } = useSnackbar();
   const { userLayers } = useMapStateContext();
   const mobileMode = useMobileMode();
   const { setFeature } = useFeatureContext();
@@ -65,7 +67,14 @@ const BrowserMap = () => {
   useUpdateViewOnMove(map, setViewFromMap, setBbox);
   useToggleTerrainControl(map);
   useUpdateMap(map, viewForMap);
-  useUpdateStyle(map, activeLayers, userLayers, mapLoaded, currentTheme);
+  useUpdateStyle(
+    map,
+    activeLayers,
+    userLayers,
+    mapLoaded,
+    currentTheme,
+    showToast,
+  );
   usePersistedScaleControl(map);
 
   return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;

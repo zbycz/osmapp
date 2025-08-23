@@ -62,13 +62,10 @@ export const osmappLayers: Layers = {
     ],
   },
   shortbread: {
-    name: `${t('layers.basic')} Shortbread`,
+    name: `${t('layers.basic')} Shortbread (beta)`,
     type: 'basemap',
     Icon: ExploreIcon,
-    attribution: [
-      '<a href="https://vector.openstreetmap.org/demo/shortbread/" target="_blank">OSM Shortbread demo</a>',
-      'osm',
-    ],
+    attribution: ['osm'],
   },
   makinaAfrica: {
     name: t('layers.makina_africa'),
