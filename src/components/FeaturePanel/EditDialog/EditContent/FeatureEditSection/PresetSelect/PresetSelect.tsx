@@ -36,7 +36,7 @@ const QuasiSelectBox = styled(Box)`
   padding: 10px 14px;
   border: 1px solid ${({ theme }) => theme.palette.action.disabled};
   border-radius: ${({ theme }) => theme.shape.borderRadius}px;
-  min-width: 300px;
+  flex: 1;
   cursor: pointer;
   background-color: ${({ theme }) => theme.palette.background.paper};
   min-height: 40px;
