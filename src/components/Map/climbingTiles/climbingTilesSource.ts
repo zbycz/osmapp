@@ -53,7 +53,7 @@ const processFeature = (
     ...feature,
     properties: {
       ...properties,
-      name: getLabel(properties.name, properties.routeCount),
+      label: getLabel(properties.name, properties.routeCount),
       color,
     },
   };

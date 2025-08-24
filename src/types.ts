@@ -19,13 +19,16 @@ export type ClimbingStatsResponse = {
 export type ClimbingTilesProperties = {
   type: 'area' | 'crag' | 'route' | 'gym' | 'ferrata';
   name: string;
+  label?: string; // computed on FE - processFeature()
+
   // group only:
   routeCount?: number;
   hasImages?: boolean;
   histogramCode?: string;
+
   // route only:
   gradeId?: number;
-  color?: string; // computed on FE
+  color?: string; // computed on FE - processFeature()
 };
 
 export type ClimbingSearchRecord = {
