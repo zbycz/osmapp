@@ -31,6 +31,14 @@ export const OSMAPP_SOURCES: Record<string, SourceSpecification> = {
     type: 'vector' as const,
     url: `https://tiles.openfreemap.org/planet`,
   },
+  'versatiles-shortbread': {
+    type: 'vector' as const,
+    scheme: 'xyz',
+    tiles: ['https://vector.openstreetmap.org/shortbread_v1/{z}/{x}/{y}.mvt'],
+    bounds: [-180, -85.0511287798066, 180, 85.0511287798066],
+    minzoom: 0,
+    maxzoom: 14,
+  },
   contours: {
     type: 'vector' as const,
     url: `https://api.maptiler.com/tiles/contours-v2/tiles.json?key=${apiKey}`,
