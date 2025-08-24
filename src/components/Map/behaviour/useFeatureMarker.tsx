@@ -4,14 +4,11 @@ import { createMapEffectHook } from '../../helpers';
 import { convertOsmIdToMapId, layersWithOsmId } from '../helpers';
 import { Feature } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { useRouter } from 'next/router';
+import { useUpdatePreviewMarker } from './previewMarkerWithArrow';
 
 const FEATURE_MARKER = {
   color: '#eb5757',
-  draggable: false,
-};
-
-const PREVIEW_MARKER = {
-  color: '#556cd6',
   draggable: false,
 };
 
@@ -55,25 +52,16 @@ const useUpdateFeatureMarker = createMapEffectHook<[Feature]>(
   },
 );
 
-let previewMarker: maplibregl.Marker;
-const useUpdatePreviewMarker = createMapEffectHook<[Feature]>(
-  (map, feature) => {
-    previewMarker?.remove();
-    previewMarker = undefined;
-
-    if (feature?.center) {
-      const [lng, lat] = feature.center;
-      previewMarker = new maplibregl.Marker(PREVIEW_MARKER)
-        .setLngLat([lng, lat])
-        .addTo(map);
-    }
-  },
-);
+const isPanelOpen = (pathname: string, homepageShown: boolean) =>
+  homepageShown || pathname !== '/';
 
 export const useFeatureMarker = (map: Map) => {
-  const { preview, feature } = useFeatureContext();
+  const { preview, feature, homepageShown } = useFeatureContext();
+  const { pathname } = useRouter();
+  const panelOpen = isPanelOpen(pathname, homepageShown);
+  useUpdatePreviewMarker(map, preview, panelOpen);
+
   useUpdateFeatureMarker(map, feature);
-  useUpdatePreviewMarker(map, preview);
 
   // hide the icon when tiles are fetched TODO sometimes broken (zoom problem)
   useEffect(() => {
