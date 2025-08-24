@@ -64,8 +64,7 @@ export default {
   'climbing.photos': '照片',
 
   'project.osmapp.description': '一个通用的 OpenStreetMap 应用',
-  'project.osmapp.serpDescription':
-    '一个基于 OpenStreetMap 数据库的开源世界地图。支持搜索、兴趣点点击、应用内地图编辑等功能！',
+  'project.osmapp.serpDescription': '一个基于 OpenStreetMap 数据库的开源世界地图。支持搜索、兴趣点点击、应用内地图编辑等功能！',
 
   'climbing.guideinfo.title': '免费攀岩指南',
   'climbing.guideinfo.description':
@@ -241,8 +240,7 @@ export default {
   'editdialog.anonymousMessage': '一个<b>匿名</b>的笔记将被添加到地图上。如果您登录到 OpenStreetMap，您的更改将是即时的。',
   'editdialog.add_major_tag': '添加',
   'editdialog.upload_photo': '上传照片',
-  'editdialog.upload_photo_tooltip':
-    '将照片上传到维基共享资源后，将其名称或 URL 粘贴到输入字段中。例如：File:Photo example.jpg',
+  'editdialog.upload_photo_tooltip': '将照片上传到维基共享资源后，将其名称或 URL 粘贴到输入字段中。例如：File:Photo example.jpg',
   'editdialog.upload_photo_filename_error': '无效的维基共享资源文件名。它应该看起来像这样：File:Photo example.jpg',
   'editdialog.location_checkbox': '新位置',
   'editdialog.location_placeholder': '例如：街道对面',
@@ -254,8 +252,7 @@ export default {
   'editdialog.info_edit': `您的编辑将立即保存到 OpenStreetMap，但显示的时间取决于每个地图图层。请
          仅输入您自己或已验证来源的信息。禁止
          复制受版权保护的数据（例如谷歌地图）。<a href="https://wiki.openstreetmap.org/wiki/How_We_Map">更多信息</a>`,
-  'editdialog.info_note':
-    '您的建议将由 OpenStreetMap 志愿者审核。您可以在下方添加额外信息，如照片链接或来源材料链接！',
+  'editdialog.info_note': '您的建议将由 OpenStreetMap 志愿者审核。您可以在下方添加额外信息，如照片链接或来源材料链接！',
   'editdialog.climbing_editor': '攀岩',
   'editdialog.tags_editor': '所有属性 – 标签',
   'editdialog.add_tag': '添加标签',
@@ -285,8 +282,7 @@ export default {
   'editsuccess.close_button': '完成',
   'editsuccess.note.heading': '感谢您的建议！',
   'editsuccess.note.subheading': 'OpenStreetMap 志愿者将对其进行审核。',
-  'editsuccess.note.body':
-    '更改的审核通常需要几天时间。如果该区域没有志愿者工作，则可能需要一段时间！',
+  'editsuccess.note.body': '更改的审核通常需要几天时间。如果该区域没有志愿者工作，则可能需要一段时间！',
   'editsuccess.note.urlLabel': '您可以在此处添加信息或关注更新：',
   'editsuccess.note.textLabel': '笔记文本',
   'editsuccess.edit.heading': '感谢您的编辑！',
@@ -300,8 +296,7 @@ export default {
   'editdialog.preset_select.placeholder': '选择类型',
   'editdialog.preset_select.search_placeholder': '键入以搜索…',
   'editdialog.preset_select.edit_button': '编辑',
-  'editdialog.preset_select.change_type_warning':
-    '更改类型不是常规操作。它将删除当前类型的标签并添加所选类型的标签。',
+  'editdialog.preset_select.change_type_warning': '更改类型不是常规操作。它将删除当前类型的标签并添加所选类型的标签。',
 
   'tags.name': '名称',
   'tags.description': '描述',
@@ -472,11 +467,9 @@ export default {
   'climbing_badges.hazard_death_fall_zone_label': '死亡坠落区',
   'climbing_badges.hazard_dirty_rock_description': '岩石表面有灰尘、泥浆或其他污垢，可能会降低抓握力或安全性。',
   'climbing_badges.hazard_dirty_rock_label': '脏岩石',
-  'climbing_badges.hazard_first_bolt_high_description':
-    '第一个挂片位置异常高，可能会增加未挂片前跌落触地风险。',
+  'climbing_badges.hazard_first_bolt_high_description': '第一个挂片位置异常高，可能会增加未挂片前跌落触地风险。',
   'climbing_badges.hazard_first_bolt_high_label': '第一个挂片太高',
-  'climbing_badges.hazard_long_runout_description':
-    '保护点之间的间距很大，可能导致长距离坠落或保护点之间风险增加。',
+  'climbing_badges.hazard_long_runout_description': '保护点之间的间距很大，可能导致长距离坠落或保护点之间风险增加。',
   'climbing_badges.hazard_long_runout_label': '长距放绳',
   'climbing_badges.hazard_loose_rock_description': '不稳定的岩石，可能会在重压下移动或破碎。',
   'climbing_badges.hazard_loose_rock_label': '松动岩石',
@@ -491,8 +484,7 @@ export default {
   'climbing_badges.hazard_wet_description': '岩石湿滑，即使在干燥天气也如此。',
   'climbing_badges.hazard_wet_label': '湿滑',
   'climbing_badges.hazard_slippery_rock_label': '滑岩',
-  'climbing_badges.hazard_slippery_rock_description':
-    '岩石表面因频繁使用而变得光滑，通常出现在石灰岩上。',
+  'climbing_badges.hazard_slippery_rock_description': '岩石表面因频繁使用而变得光滑，通常出现在石灰岩上。',
 
   'climbing_badges.inclination_label': '岩壁倾斜度',
   'climbing_badges.inclination_overhang_description': '向外倾斜（>90°）的岩壁，需要力量和爆发力。',

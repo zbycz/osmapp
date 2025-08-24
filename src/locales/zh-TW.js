@@ -64,8 +64,7 @@ export default {
   'climbing.photos': '照片',
 
   'project.osmapp.description': '一個通用的 OpenStreetMap App',
-  'project.osmapp.serpDescription':
-    '一個基於 OpenStreetMap 資料庫的開源世界地圖。有搜尋、可點擊的興趣點、App內地圖編輯等超多功能！',
+  'project.osmapp.serpDescription': '一個基於 OpenStreetMap 資料庫的開源世界地圖。有搜尋、可點擊的興趣點、App內地圖編輯等超多功能！',
 
   'climbing.guideinfo.title': '免費攀岩指南',
   'climbing.guideinfo.description':
@@ -239,8 +238,7 @@ export default {
   'editdialog.anonymousMessage': "'將會以<b>匿名</b>身分新增一筆註記到地圖上。如果您登入 OpenStreetMap，您的變更將會立即生效。'",
   'editdialog.add_major_tag': '新增',
   'editdialog.upload_photo': '上傳照片',
-  'editdialog.upload_photo_tooltip':
-    '將照片上傳到維基共享資源後，將其名稱或網址貼到輸入欄位中。例如：File:Photo example.jpg',
+  'editdialog.upload_photo_tooltip': '將照片上傳到維基共享資源後，將其名稱或網址貼到輸入欄位中。例如：File:Photo example.jpg',
   'editdialog.upload_photo_filename_error': '無效的維基共享資源檔案名稱，格式應為：File:Photo example.jpg',
   'editdialog.location_checkbox': '新地點',
   'editdialog.location_placeholder': '例如：街對面',
@@ -252,8 +250,7 @@ export default {
   'editdialog.info_edit': `您的編輯將立即儲存至 OpenStreetMap，但顯示的時間取決於每個地圖圖層。請
          僅輸入您自己或已查證來源的資訊。禁止
          複製受版權保護的資料（例如 Google 地圖）。<a href="https://wiki.openstreetmap.org/wiki/How_We_Map">更多資訊</a>`,
-  'editdialog.info_note':
-    '您的建議將由 OpenStreetMap 的志工審核。您可以在下方提供照片連結或資料來源等補充資訊喔！',
+  'editdialog.info_note': '您的建議將由 OpenStreetMap 的志工審核。您可以在下方提供照片連結或資料來源等補充資訊喔！',
   'editdialog.climbing_editor': '攀岩',
   'editdialog.tags_editor': '所有屬性 – 標籤',
   'editdialog.add_tag': '新增標籤',
@@ -283,8 +280,7 @@ export default {
   'editsuccess.close_button': '完成',
   'editsuccess.note.heading': '感謝您的建議！',
   'editsuccess.note.subheading': 'OpenStreetMap 的志工將會進行審核。',
-  'editsuccess.note.body':
-    '審核變更通常需要幾天。如果該區域沒有志工在處理，可能會需要更久喔！',
+  'editsuccess.note.body': '審核變更通常需要幾天。如果該區域沒有志工在處理，可能會需要更久喔！',
   'editsuccess.note.urlLabel': '您可以在這裡新增資訊或追蹤更新進度：',
   'editsuccess.note.textLabel': '註記內容',
   'editsuccess.edit.heading': '感謝您的編輯！',
@@ -298,8 +294,7 @@ export default {
   'editdialog.preset_select.placeholder': '選擇類型',
   'editdialog.preset_select.search_placeholder': '輸入以搜尋…',
   'editdialog.preset_select.edit_button': '編輯',
-  'editdialog.preset_select.change_type_warning':
-    '變更類型並非常見操作。這將會移除目前類型的標籤，並新增所選類型的標籤。',
+  'editdialog.preset_select.change_type_warning': '變更類型並非常見操作。這將會移除目前類型的標籤，並新增所選類型的標籤。',
 
   'tags.name': '名稱',
   'tags.description': '描述',
@@ -470,11 +465,9 @@ export default {
   'climbing_badges.hazard_death_fall_zone_label': '死亡墜落區',
   'climbing_badges.hazard_dirty_rock_description': '岩石表面有灰塵、泥巴或其他髒污，可能會降低摩擦力或安全性。',
   'climbing_badges.hazard_dirty_rock_label': '髒岩石',
-  'climbing_badges.hazard_first_bolt_high_description':
-    '第一個掛片位置異常高，可能會增加在扣上掛片前落地受傷的風險。',
+  'climbing_badges.hazard_first_bolt_high_description': '第一個掛片位置異常高，可能會增加在扣上掛片前落地受傷的風險。',
   'climbing_badges.hazard_first_bolt_high_label': '第一個掛片太高',
-  'climbing_badges.hazard_long_runout_description':
-    '保護點之間的間距很大，可能導致長距離墜落或掛片之間風險增加。',
+  'climbing_badges.hazard_long_runout_description': '保護點之間的間距很大，可能導致長距離墜落或掛片之間風險增加。',
   'climbing_badges.hazard_long_runout_label': '長程間距',
   'climbing_badges.hazard_loose_rock_description': '不穩定的岩石，可能在受力時移動或碎裂。',
   'climbing_badges.hazard_loose_rock_label': '鬆動岩石',
@@ -489,8 +482,7 @@ export default {
   'climbing_badges.hazard_wet_description': '岩石濕滑，即使在乾燥天氣也如此。',
   'climbing_badges.hazard_wet_label': '濕滑',
   'climbing_badges.hazard_slippery_rock_label': '光滑岩石',
-  'climbing_badges.hazard_slippery_rock_description':
-    '岩石表面因頻繁使用而變得光滑，尤其常出現在石灰岩上。',
+  'climbing_badges.hazard_slippery_rock_description': '岩石表面因頻繁使用而變得光滑，尤其常出現在石灰岩上。',
 
   'climbing_badges.inclination_label': '岩壁傾斜度',
   'climbing_badges.inclination_overhang_description': '一面向外傾斜（>90°）的牆，需要強大的力量和爆發力。',
