@@ -13,7 +13,10 @@ export const LogoOpenClimbing = ({ width, style }: LogoOpenClimbingProps) => (
     xmlns="http://www.w3.org/2000/svg"
     style={style}
   >
-    <rect width="609" height="609" fill="#EB5757" />
+    <path
+      d="M 60,0 L 549,0 A 60,60 0 0 1 609,60 L 609,549 A 60,60 0 0 1 549,609 L 60,609 A 60,60 0 0 1 0,549 L 0,60 A 60,60 0 0 1 60,0 "
+      fill="#EB5757"
+    />
     <mask
       id="mask0_1702_220"
       style={{ maskType: 'alpha' }}
