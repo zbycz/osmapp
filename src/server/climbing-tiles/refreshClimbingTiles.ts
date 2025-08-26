@@ -2,8 +2,8 @@ import { overpassToGeojsons } from './overpass/overpassToGeojsons';
 import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
 import format from 'pg-format';
-import { closeClient, getClient } from './db';
-import { queryTileStats, updateStats } from './utils';
+import { getPool } from './db';
+import { queryTileStats, addStats } from './utils';
 import { chunk } from 'lodash';
 import { readFileSync } from 'fs';
 import {
@@ -13,6 +13,7 @@ import {
 } from './refreshClimbingTilesHelpers';
 import { cacheTile000 } from './getClimbingTile';
 import { OsmResponse } from './overpass/types';
+import { PoolClient } from 'pg';
 
 const fetchFromOverpass = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -168,10 +169,9 @@ const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
   return records;
 };
 
-export const refreshClimbingTiles = async () => {
+const refreshInner = async (client: PoolClient) => {
   const { getBuildLog, log } = buildLogFactory();
   const start = performance.now();
-  const client = await getClient();
   const tileStats = await queryTileStats(client);
 
   const data = await fetchFromOverpass();
@@ -197,14 +197,36 @@ export const refreshClimbingTiles = async () => {
   await client.query('TRUNCATE TABLE climbing_tiles_cache');
 
   log('Caching tile 0/0/0');
-  await cacheTile000(records);
+  await cacheTile000(client, records);
 
   const buildDuration = Math.round(performance.now() - start);
   log(`Duration: ${buildDuration} ms`);
   log('Done.');
 
-  await updateStats(data, getBuildLog(), buildDuration, tileStats, records);
-  await closeClient(client);
+  await addStats(
+    client,
+    data,
+    getBuildLog(),
+    buildDuration,
+    tileStats,
+    records,
+  );
 
   return getBuildLog();
+};
+
+export const refreshClimbingTiles = async () => {
+  const client = await getPool().connect();
+  try {
+    await client.query('BEGIN');
+    const result = await refreshInner(client);
+    await client.query('COMMIT');
+
+    return result;
+  } catch (error) {
+    await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release(); // this is important - in finally
+  }
 };
