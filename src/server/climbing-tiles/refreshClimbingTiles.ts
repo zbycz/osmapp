@@ -72,7 +72,7 @@ const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
 
     //
     else if (node.tags.climbing === 'route_top') {
-      // TODO later + update climbingLayer
+      addRecord('route_top', node);
     }
 
     //

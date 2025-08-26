@@ -44,7 +44,7 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   const bboxCondition = getBboxCondition(bbox);
   const query = hasRoutes
     ? `SELECT * FROM climbing_features WHERE ${bboxCondition}`
-    : `SELECT * FROM climbing_features WHERE type != 'route' AND ${bboxCondition}`;
+    : `SELECT * FROM climbing_features WHERE type != 'route' AND type != 'route_top' AND ${bboxCondition}`;
 
   const records = await xataRestQueryPaginated<ClimbingFeaturesRecord>(query);
   const geojson = buildTileGeojson(isOptimizedToGrid, records, bbox);
@@ -60,8 +60,9 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   return JSON.stringify(geojson);
 };
 
-export const cacheTile000 = async (records: ClimbingFeaturesRecord[]) => {
+export const cacheTile000 = async (allRecords: ClimbingFeaturesRecord[]) => {
   const bbox = tileToBBOX({ z: 0, x: 0, y: 0 });
+  const records = allRecords.filter((r) => !r.type.startsWith('route'));
   const tile000 = buildTileGeojson(true, records, bbox);
 
   const client = await getClient();
