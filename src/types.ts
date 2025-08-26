@@ -17,7 +17,7 @@ export type ClimbingStatsResponse = {
 };
 
 export type ClimbingTilesProperties = {
-  type: 'area' | 'crag' | 'route' | 'gym' | 'ferrata';
+  type: 'area' | 'crag' | 'route' | 'route_top' | 'gym' | 'ferrata';
   name: string;
   label?: string; // computed on FE - processFeature()
 

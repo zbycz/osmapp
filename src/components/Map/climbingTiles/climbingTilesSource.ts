@@ -49,11 +49,12 @@ const processFeature = (
   const properties = feature.properties;
 
   const color = getColor(properties.gradeId);
+  const prefix = properties.type === 'route_top' ? '[top] ' : '';
   return {
     ...feature,
     properties: {
       ...properties,
-      label: getLabel(properties.name, properties.routeCount),
+      label: prefix + getLabel(properties.name, properties.routeCount),
       color,
     },
   };

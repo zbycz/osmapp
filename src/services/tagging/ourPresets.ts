@@ -58,6 +58,12 @@ export const modifyPresets = (presets: Presets) => {
   presets['climbing/crag'].geometry.push('line'); // line is not intended use, but we need to match way+climbing=crag
   presets['type/site/climbing/area'].geometry.push('point'); // to be able to create it from node
 
+  presets['climbing/route_top'] = JSON.parse(
+    JSON.stringify(presets['climbing/route_bottom']),
+  );
+  presets['climbing/route_top'].tags.climbing = 'route_top';
+  presets['climbing/route_top'].addTags.climbing = 'route_top';
+
   return presets;
 };
 
@@ -65,6 +71,11 @@ export const modifyPresets = (presets: Presets) => {
 export const getOurTranslations = (lang: string) => ({
   [lang]: {
     presets: {
+      presets: {
+        'climbing/route_top': {
+          name: 'Climbing route (top)',
+        },
+      },
       fields: {
         'climbing/summit_log': {
           label: 'Summit log',

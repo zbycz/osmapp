@@ -61,7 +61,7 @@ const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
       ? { type, name, routeCount: routeCount ?? 0, hasImages, histogramCode }
       : type === 'gym' || type === 'ferrata'
         ? { type, name }
-        : type === 'route'
+        : type === 'route' || type === 'route_top'
           ? { type, name, gradeId }
           : undefined;
 
