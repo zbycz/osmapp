@@ -15,7 +15,7 @@ export const usePersistedState = <T>(
   useEffect(() => {
     // we must set the localStorage value in useEffect to prevent hydration error
     const storedValue = getStoredValue(storageKey);
-    if (storedValue) {
+    if (storedValue != null) {
       setStateValue(storedValue);
     }
   }, [storageKey]);
