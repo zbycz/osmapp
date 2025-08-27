@@ -1,33 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import {
-  xataRestQuery,
-  xataRestUpdate,
-} from '../../../src/server/climbing-tiles/db';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
 import { ClimbingTick } from '../../../src/types';
+import { getPool } from '../../../src/server/climbing-tiles/db';
 
 const validateTick = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
-  const tick = await xataRestQuery<ClimbingTick>(
+  const tick = await getPool().query<ClimbingTick>(
     'SELECT id, "osmUserId" FROM climbing_ticks WHERE id=$1',
     [req.query.id],
   );
 
-  if (tick?.records?.length === 0) {
+  if (tick.rows?.length === 0) {
     throw new Error('Tick not found');
   }
 
-  if (tick.records[0].osmUserId !== user.id) {
+  if (tick.rows[0].osmUserId !== user.id) {
     throw new Error('This tick is owned by different user.');
   }
 
-  return tick.records[0].id;
+  return tick.rows[0].id;
 };
 
 const deleteTick = async (req: NextApiRequest) => {
   const tickId = await validateTick(req);
-  return xataRestQuery('DELETE FROM climbing_ticks WHERE id=$1', [tickId]);
+  await getPool().query('DELETE FROM climbing_ticks WHERE id=$1', [tickId]);
 };
 
 const ALLOWED_FIELDS = [
@@ -42,12 +39,21 @@ const ALLOWED_FIELDS = [
 
 const updateTick = async (req: NextApiRequest) => {
   const tickId = await validateTick(req);
-  return xataRestUpdate(
-    `UPDATE climbing_ticks SET ... WHERE id=$1`,
-    [tickId],
-    ALLOWED_FIELDS,
-    req.body,
+
+  const updates = ALLOWED_FIELDS.filter(
+    (field) => req.body[field] !== undefined,
   );
+  if (updates.length === 0) {
+    return;
+  }
+  const setClause = updates
+    .map((field, i) => `"${field}"=$${i + 2}`)
+    .join(', ');
+  const sql = `UPDATE climbing_ticks SET ${setClause} WHERE id=$1 RETURNING *`;
+  const setParams = updates.map((field) => req.body[field]);
+  const result = await getPool().query(sql, [tickId, ...setParams]);
+
+  return result.rows[0];
 };
 
 const performPutOrDelete = async (req: NextApiRequest) => {

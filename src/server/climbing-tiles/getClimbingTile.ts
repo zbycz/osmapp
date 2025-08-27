@@ -1,13 +1,9 @@
-import {
-  ClimbingFeaturesRecord,
-  getClient,
-  xataRestQuery,
-  xataRestQueryPaginated,
-} from './db';
+import { ClimbingFeaturesRecord, getPool } from './db';
 import { tileToBBOX } from './tileToBBOX';
 import { Tile } from '../../types';
 import { buildTileGeojson } from './buildTileGeojson';
 import { BBox } from 'geojson';
+import { PoolClient } from 'pg';
 
 const getBboxCondition = (bbox: BBox) =>
   `lon >= ${bbox[0]} AND lon <= ${bbox[2]} AND lat >= ${bbox[1]} AND lat <= ${bbox[3]}`;
@@ -31,13 +27,13 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   }
 
   const cacheKey = `${z}/${x}/${y}`;
-  const cache = await xataRestQuery(
+  const cache = await getPool().query(
     'SELECT tile_geojson FROM climbing_tiles_cache WHERE zxy = $1',
     [cacheKey],
   );
-  if (cache.records.length > 0) {
+  if (cache.rows.length > 0) {
     logCacheHit(start);
-    return cache.records[0].tile_geojson as string;
+    return cache.rows[0].tile_geojson as string;
   }
 
   const bbox = tileToBBOX({ z, x, y });
@@ -46,13 +42,13 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
     ? `SELECT * FROM climbing_features WHERE ${bboxCondition}`
     : `SELECT * FROM climbing_features WHERE type != 'route' AND type != 'route_top' AND ${bboxCondition}`;
 
-  const records = await xataRestQueryPaginated<ClimbingFeaturesRecord>(query);
-  const geojson = buildTileGeojson(isOptimizedToGrid, records, bbox);
+  const result = await getPool().query<ClimbingFeaturesRecord>(query);
+  const geojson = buildTileGeojson(isOptimizedToGrid, result.rows, bbox);
 
   const duration = Math.round(performance.now() - start);
   logCacheMiss(duration, geojson.features.length);
 
-  await xataRestQuery(
+  await getPool().query(
     `INSERT INTO climbing_tiles_cache VALUES ($1, $2, $3, $4) ON CONFLICT (zxy) DO NOTHING`,
     [cacheKey, JSON.stringify(geojson), duration, geojson.features.length],
   );
@@ -60,12 +56,14 @@ export const getClimbingTile = async ({ z, x, y }: Tile) => {
   return JSON.stringify(geojson);
 };
 
-export const cacheTile000 = async (allRecords: ClimbingFeaturesRecord[]) => {
+export const cacheTile000 = async (
+  client: PoolClient,
+  allRecords: ClimbingFeaturesRecord[],
+) => {
   const bbox = tileToBBOX({ z: 0, x: 0, y: 0 });
   const records = allRecords.filter((r) => !r.type.startsWith('route'));
   const tile000 = buildTileGeojson(true, records, bbox);
 
-  const client = await getClient();
   await client.query(
     `INSERT INTO climbing_tiles_cache VALUES ('0/0/0', $1, -1, -1)`,
     [tile000],

@@ -112,6 +112,6 @@ export const buildLogFactory = () => {
     buildLog.push(message);
     console.log(message); //eslint-disable-line no-console
   };
-  log('Starting...');
+  log('Starting - fetching from overpass...');
   return { getBuildLog: () => buildLog.join('\n'), log };
 };
