@@ -43,6 +43,7 @@ export const TitleAndMetaTags = () => {
     const titleLabel = getTitleLabel(feature);
     const title = `${titleLabel} | ${PROJECT_NAME}`;
     const description = feature.tags.description || t(PROJECT_SERP_DESCRIPTION);
+    const { center } = feature;
 
     const image = feature.imageDefs?.length
       ? `${PROJECT_URL}/api/og-image?id=${getShortId(feature.osmMeta)}`
@@ -55,6 +56,15 @@ export const TitleAndMetaTags = () => {
         <meta property="og:type" content="website" />
         <meta property="og:url" content={url} />
         <meta property="og:title" content={title} />
+        {center && (
+          <>
+            <meta
+              property="place:location:longitude"
+              content={`${center[0]}`}
+            />
+            <meta property="place:location:latitude" content={`${center[1]}`} />
+          </>
+        )}
         <meta property="og:site_name" content={PROJECT_NAME} />
         {image && <meta property="og:image" content={image} />}
         <meta property="og:description" content={description} />
