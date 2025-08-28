@@ -73,7 +73,7 @@ const Header = () => {
           sx={{ textAlign: isMobileMode ? 'left' : 'center' }}
           textTransform="lowercase"
         >
-          {t('project.openclimbing.climbing_guide')}
+          {t('project.openclimbing.description')}
         </Typography>
 
         <Typography

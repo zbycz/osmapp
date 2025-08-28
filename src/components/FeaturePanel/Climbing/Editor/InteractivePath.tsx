@@ -5,6 +5,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useMobileMode } from '../../../helpers';
 import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
 import { MouseTrackingLine } from './MouseTrackingLine';
+import { RouteLine } from './RouteLine';
 
 const InteractiveRectangle = styled.line`
   pointer-events: all;
@@ -97,27 +98,16 @@ export const InteractivePath = ({ routeIndex, allowHoverMidpoint }: Props) => {
 
   return (
     <>
-      {pathPx.slice(0, -1).map((position1, segmentIndex) => {
-        const position2 = pathPx[segmentIndex + 1];
-
-        return (
-          <InteractiveRectangle
-            // eslint-disable-next-line react/no-array-index-key
-            key={segmentIndex}
-            stroke="transparent"
-            strokeWidth={15}
-            x1={position1.x}
-            y1={position1.y}
-            x2={position2.x}
-            y2={position2.y}
-            onMouseEnter={isMobileMode ? undefined : setHover}
-            onMouseLeave={isMobileMode ? undefined : unsetHover}
-            onMouseMove={isMobileMode ? undefined : setMidpointPosition}
-            onClick={(e) => onClick(e, segmentIndex)}
-            cursor={isMidpointAddScenario ? 'copy' : 'pointer'}
-          />
-        );
-      })}
+      <RouteLine
+        pathPx={pathPx}
+        stroke="transparent"
+        strokeWidth={15}
+        onMouseEnter={isMobileMode ? undefined : setHover}
+        onMouseLeave={isMobileMode ? undefined : unsetHover}
+        onMouseMove={isMobileMode ? undefined : setMidpointPosition}
+        onClick={onClick}
+        cursor={isMidpointAddScenario ? 'copy' : 'pointer'}
+      />
 
       {allowHoverMidpoint && isMidpointAddScenario && midpoint && (
         <NewMidpoint
