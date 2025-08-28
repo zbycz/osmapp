@@ -14,18 +14,20 @@ const isRelation = ({ shortId }: DataItem) => shortId.startsWith('r');
 
 const TAG = ([k, v]: [string, string]) => k && v;
 
-const nodeItemToXml = (change: DataItem, changeset: string): NodeItemXml => {
+type Changeset = {} | { changeset: string };
+
+const nodeItemToXml = (change: DataItem, changeset: Changeset): NodeItemXml => {
   const { shortId, version = 0, tagsEntries, nodeLonLat } = change;
   const { id } = getApiId(shortId);
   const [lon, lat] = nodeLonLat;
 
   return {
-    $: { id, lon, lat, version, changeset },
+    $: { id, lon, lat, version, ...changeset },
     tag: tagsEntries.filter(TAG).map(([k, v]) => ({ $: { k, v } })),
   };
 };
 
-const wayItemToXml = (change: DataItem, changeset: string): WayItemXml => {
+const wayItemToXml = (change: DataItem, changeset: Changeset): WayItemXml => {
   const { shortId, version = 0, tagsEntries, nodes } = change;
   const { id } = getApiId(shortId);
 
@@ -34,7 +36,7 @@ const wayItemToXml = (change: DataItem, changeset: string): WayItemXml => {
   }
 
   return {
-    $: { id, version, changeset },
+    $: { id, version, ...changeset },
     tag: tagsEntries.filter(TAG).map(([k, v]) => ({ $: { k, v } })),
     nd: nodes.map((ref) => ({ $: { ref } })),
   };
@@ -42,13 +44,13 @@ const wayItemToXml = (change: DataItem, changeset: string): WayItemXml => {
 
 const relationItemToXml = (
   change: DataItem,
-  changeset: string,
+  changeset: Changeset,
 ): RelationItemXml => {
   const { shortId, version = 0, tagsEntries, members } = change;
   const { id } = getApiId(shortId);
 
   return {
-    $: { id, version, changeset },
+    $: { id, version, ...changeset },
     tag: tagsEntries.filter(TAG).map(([k, v]) => ({ $: { k, v } })),
     member: members.map(({ shortId, role }) => {
       const { type, id } = getApiId(shortId);
@@ -69,30 +71,32 @@ const condition = {
 const getXmlByAction = (
   changes: DataItem[],
   action: 'create' | 'modify' | 'delete',
-  changesetId: string,
+  changeset: Changeset,
 ) => {
   const items = changes.filter(condition[action]);
   return {
-    node: items.filter(isNode).map((node) => nodeItemToXml(node, changesetId)),
-    way: items.filter(isWay).map((way) => wayItemToXml(way, changesetId)),
+    node: items.filter(isNode).map((node) => nodeItemToXml(node, changeset)),
+    way: items.filter(isWay).map((way) => wayItemToXml(way, changeset)),
     relation: items
       .filter(isRelation)
       .toReversed() // new relation can be referenced by another only above, but OSM needs the reference beforehand
-      .map((relation) => relationItemToXml(relation, changesetId)),
+      .map((relation) => relationItemToXml(relation, changeset)),
   };
 };
 
 export const getDiffXml = (
-  changesetId: string,
   changes: DataItem[],
+  changesetId?: string,
 ): string => {
+  const changeset = changesetId ? { changeset: changesetId } : {};
+
   const xml: DiffDocXmljs = {
     $: { generator: 'OsmAPP', version: '0.6' },
-    create: getXmlByAction(changes, 'create', changesetId),
-    modify: getXmlByAction(changes, 'modify', changesetId),
+    create: getXmlByAction(changes, 'create', changeset),
+    modify: getXmlByAction(changes, 'modify', changeset),
     delete: {
       $: { 'if-unused': 'true' },
-      ...getXmlByAction(changes, 'delete', changesetId),
+      ...getXmlByAction(changes, 'delete', changeset),
     },
   };
 

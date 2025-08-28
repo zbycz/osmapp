@@ -114,7 +114,7 @@ export const saveChanges = async (
   const changesetXml = getChangesetXml({ changesetComment, feature: original });
   const changesetId = await api.putChangeset(changesetXml);
 
-  const diffXml = getDiffXml(changesetId, changes);
+  const diffXml = getDiffXml(changes, changesetId);
   const diffResult = await api.uploadDiff(changesetId, diffXml);
   const firstId = getFirstExistingId(diffResult, changes);
 

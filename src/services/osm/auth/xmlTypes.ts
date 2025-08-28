@@ -4,17 +4,17 @@ export type NodeItemXml = {
     lon: number;
     lat: number;
     version?: number;
-    changeset: string;
+    changeset?: string;
   };
   tag: { $: { k: string; v: string } }[];
 };
 export type WayItemXml = {
-  $: { id: number; version: number; changeset: string };
+  $: { id: number; version: number; changeset?: string };
   tag: { $: { k: string; v: string } }[];
   nd: { $: { ref: number } }[];
 };
 export type RelationItemXml = {
-  $: { id: number; version: number; changeset: string };
+  $: { id: number; version: number; changeset?: string };
   tag: { $: { k: string; v: string } }[];
   member: { $: { type: string; ref: number; role: string } }[];
 };
