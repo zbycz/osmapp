@@ -5,6 +5,18 @@ import { useEditContext } from '../EditContext';
 import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { useGetHandleSave } from '../useGetHandleSave';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
+import { getDiffXml } from '../../../../services/osm/auth/getDIffXml';
+
+const downloadFile = (content: string, filename: string) => {
+  const file = new Blob([content], { type: 'text/xml' });
+  const element = document.createElement('a');
+  element.style.display = 'none';
+  element.href = URL.createObjectURL(file);
+  element.download = filename;
+  document.body.appendChild(element);
+  element.click();
+  document.body.removeChild(element);
+};
 
 const SaveButton = () => {
   const { loggedIn } = useOsmAuthContext();
@@ -29,13 +41,31 @@ const CancelButton = () => {
   );
 };
 
+const DownloadButton = (props: { onClick: () => void }) => (
+  <button
+    className="linkLikeButton"
+    style={{ fontSize: '11px' }}
+    onClick={props.onClick}
+  >
+    {t('editdialog.download_osc')}
+  </button>
+);
+
 export const EditDialogActions = () => {
-  const { isSaving } = useEditContext();
+  const { isSaving, items } = useEditContext();
+
+  const download = () => {
+    const content = getDiffXml(items);
+    downloadFile(content, 'changes.osc');
+  };
 
   return (
     <DialogActions>
+      {items.length > 1 && <DownloadButton onClick={download} />}
+      <div style={{ flex: '1 1' }}></div>
       {isSaving && <CircularProgress size={20} />}
       <CancelButton />
+
       <SaveButton />
     </DialogActions>
   );

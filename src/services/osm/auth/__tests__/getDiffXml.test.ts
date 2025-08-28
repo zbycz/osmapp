@@ -50,7 +50,7 @@ const nodesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </osmChange>`;
 
 test('should convert nodes', () => {
-  expect(getDiffXml('123', [nodeNew, nodeChange, nodeToDelete])).toEqual(
+  expect(getDiffXml([nodeNew, nodeChange, nodeToDelete], '123')).toEqual(
     nodesXml,
   );
 });
@@ -113,7 +113,7 @@ const waysXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </osmChange>`;
 
 test('should convert ways', () => {
-  expect(getDiffXml('123', [wayNew, wayChange, wayToDelete])).toEqual(waysXml);
+  expect(getDiffXml([wayNew, wayChange, wayToDelete], '123')).toEqual(waysXml);
 });
 
 const relationNew: DataItem = {
@@ -171,6 +171,6 @@ const relationsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 test('should convert relations', () => {
   expect(
-    getDiffXml('123', [relationNew, relationChange, relationToDelete]),
+    getDiffXml([relationNew, relationChange, relationToDelete], '123'),
   ).toEqual(relationsXml);
 });

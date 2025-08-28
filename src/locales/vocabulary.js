@@ -280,6 +280,7 @@ export default {
   'editdialog.location_change_current_item': 'Edit',
   'editdialog.description_helper_text': 'Please enter your own description or one approved by its author.',
   'editdialog.wikimedia_commons_climbing_helper_text': 'You can draw climbing routes directly while viewing after saving the photo',
+  'editdialog.download_osc': 'Download osmChange file',
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',
