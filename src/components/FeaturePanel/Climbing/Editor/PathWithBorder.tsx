@@ -1,5 +1,4 @@
 import React from 'react';
-import styled from '@emotion/styled';
 import { useTheme } from '@mui/material';
 import { useConfig } from '../config';
 import { useClimbingContext } from '../contexts/ClimbingContext';
@@ -8,21 +7,16 @@ import {
   getDifficultyColor,
 } from '../../../../services/tagging/climbing/routeGrade';
 import { useMobileMode } from '../../../helpers';
-
-const RouteLine = styled.path`
-  pointer-events: none;
-`;
-const RouteBorder = styled.path`
-  pointer-events: none;
-`;
+import { PathPoints } from '../types';
+import { RouteLine } from './RouteLine';
 
 type Props = {
-  d: string; // TODO this should be moved inside this components
+  path: PathPoints;
   routeIndex: number;
   opacity?: number;
 };
 
-export const PathWithBorder = ({ d, routeIndex, opacity }: Props) => {
+export const PathWithBorder = ({ path, routeIndex, opacity }: Props) => {
   const isMobileMode = useMobileMode();
   const config = useConfig();
   const theme = useTheme();
@@ -32,7 +26,10 @@ export const PathWithBorder = ({ d, routeIndex, opacity }: Props) => {
     isEditMode,
     routes,
     isRouteSelected,
+    getPixelPosition,
   } = useClimbingContext();
+
+  const pathPx = path.map(getPixelPosition);
 
   const route = routes[routeIndex];
   const isSelected = isRouteSelected(routeIndex);
@@ -47,39 +44,39 @@ export const PathWithBorder = ({ d, routeIndex, opacity }: Props) => {
   );
   const isOtherSelected = isOtherRouteSelected(routeIndex);
 
+  const BorderPath = () => (
+    <RouteLine
+      pathPx={pathPx}
+      strokeWidth={isOtherSelected ? 2 : config.pathBorderWidth}
+      stroke={contrastColor}
+      opacity={opacity ? opacity : isOtherSelected ? 0 : 1}
+    />
+  );
+
+  const RoutePath = () => (
+    <RouteLine
+      pathPx={pathPx}
+      strokeWidth={isOtherSelected ? 1 : config.pathStrokeWidth}
+      stroke={isOtherSelected ? 'white' : strokeColor}
+      opacity={opacity ? opacity : isOtherSelected ? (isEditMode ? 1 : 0.6) : 1}
+    />
+  );
+
+  const HoverPath = () =>
+    !isMobileMode && routeIndexHovered === routeIndex ? (
+      <RouteLine
+        pathPx={pathPx}
+        strokeWidth={config.pathStrokeWidth}
+        stroke={`${config.pathStrokeColorSelected}80`}
+        opacity={opacity}
+      />
+    ) : null;
+
   return (
     <>
-      <RouteBorder
-        d={d}
-        strokeWidth={isOtherSelected ? 2 : config.pathBorderWidth}
-        stroke={contrastColor}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        opacity={opacity ? opacity : isOtherSelected ? 0 : 1}
-      />
-      <RouteLine
-        d={d}
-        strokeWidth={isOtherSelected ? 1 : config.pathStrokeWidth}
-        stroke={isOtherSelected ? 'white' : strokeColor}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        opacity={
-          opacity ? opacity : isOtherSelected ? (isEditMode ? 1 : 0.6) : 1
-        }
-      />
-      {!isMobileMode && routeIndexHovered === routeIndex && (
-        <RouteLine
-          d={d}
-          strokeWidth={config.pathStrokeWidth}
-          stroke={`${config.pathStrokeColorSelected}80`}
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          fill="none"
-          opacity={opacity}
-        />
-      )}
+      <BorderPath />
+      <RoutePath />
+      <HoverPath />
     </>
   );
 };
