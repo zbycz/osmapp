@@ -40,7 +40,7 @@ export default {
 
   'project.openclimbing.description': 'Otevřený lezecký průvodce',
   'project.openclimbing.serpDescription': 'Otevřený lezecký průvodce s vyznačením cest. Postaveno na projektech OpenStreetMap a Wikipedie.',
-  'project.openclimbing.climbing_guide': 'Lezecký průvodce | OpenClimbing',
+  'project.openclimbing.climbing_guide': 'Lezecký průvodce',
 
   'climbing.guideinfo.title': 'Otevřený lezecký průvodce',
   'climbing.guideinfo.description':

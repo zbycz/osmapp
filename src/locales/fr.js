@@ -92,7 +92,7 @@ export default {
   'editdialog.feature_type_select': 'Choisir un type',
   'editdialog.options_heading': 'Options',
   'editdialog.cancel_button': 'Annuler',
-  'editdialog.save_button_edit': 'Sauvegarder sur OSM',
+  'editdialog.save_button_edit': 'Sauvegarder sur OpenStreetMap',
   'editdialog.save_button_delete': 'Supprimer',
   'editdialog.save_button_note': 'Ajouter une note',
   'editdialog.changes_needed': 'Veuillez faire les modifications.',
