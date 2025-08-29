@@ -8,8 +8,13 @@ type Props = {
 };
 
 export const RoutePath = ({ routeIndex }: Props) => {
-  const { machine, routeIndexHovered, getPathForRoute, routes } =
-    useClimbingContext();
+  const {
+    getPixelPosition,
+    machine,
+    routeIndexHovered,
+    getPathForRoute,
+    routes,
+  } = useClimbingContext();
   const route = routes[routeIndex];
   const path = getPathForRoute(route);
 
@@ -17,9 +22,16 @@ export const RoutePath = ({ routeIndex }: Props) => {
     return null;
   }
 
+  const pointsInString = path
+    .map(({ x, y }, index) => {
+      const position = getPixelPosition({ x, y, units: 'percentage' });
+      return `${index === 0 ? 'M' : 'L'}${position.x} ${position.y}`;
+    })
+    .join(' ');
+
   return (
     <>
-      <PathWithBorder routeIndex={routeIndex} path={path} />
+      <PathWithBorder d={pointsInString} routeIndex={routeIndex} />
       {machine.currentStateName === 'extendRoute' &&
         routeIndexHovered === null && (
           <MouseTrackingLine routeIndex={routeIndex} />
