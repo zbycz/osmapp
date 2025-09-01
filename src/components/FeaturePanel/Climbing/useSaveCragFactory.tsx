@@ -1,5 +1,5 @@
 import { ClimbingRoute } from './types';
-import { Feature, FeatureTags } from '../../../services/types';
+import { Feature, FeatureTags, OsmId } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { invertedBoltCodeMap } from './utils/boltCodes';
@@ -50,50 +50,20 @@ const areUpdatedTagsSame = (updatedTags: {}, origTags: FeatureTags) => {
   return isSame;
 };
 
-export const getClimbingCragChanges = async (
-  crag: Feature,
-  photoPaths: Array<string>,
-): Promise<DataItem[]> => {
-  const updatedTags = {};
-  photoPaths.forEach((photoPath, index) => {
-    updatedTags[`wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`] =
-      `File:${photoPath}`;
-  });
-
-  if (areUpdatedTagsSame(updatedTags, crag.tags)) {
-    return [];
-  }
-
-  const freshItem = await fetchFreshItem(crag.osmMeta);
-
-  return [
-    {
-      ...freshItem,
-      tagsEntries: Object.entries({
-        ...Object.fromEntries(freshItem.tagsEntries),
-        ...updatedTags,
-      }),
-    },
-  ];
+type ClimbingUpdate = {
+  apiId: OsmId;
+  updatedTags: FeatureTags;
 };
 
-export const getClimbingRouteChanges = async (
-  routes: ClimbingRoute[],
+const constructChanges = async (
+  updates: ClimbingUpdate[],
 ): Promise<DataItem[]> => {
-  const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
-
-  const changedRoutes = existingRoutes.filter((route) => {
-    const updatedTags = getUpdatedPhotoTags(route);
-    return !areUpdatedTagsSame(updatedTags, route.feature.tags);
-  });
-
-  const changes = [];
-  for (const route of changedRoutes) {
-    const updatedTags = getUpdatedPhotoTags(route);
-    const freshItem = await fetchFreshItem(route.feature.osmMeta);
+  const dataItems = [];
+  for (const { apiId, updatedTags } of updates) {
+    const freshItem = await fetchFreshItem(apiId);
 
     // we don't have to compare versions, because only :path tags are changed
-    changes.push({
+    dataItems.push({
       ...freshItem,
       tagsEntries: Object.entries({
         ...Object.fromEntries(freshItem.tagsEntries),
@@ -102,7 +72,36 @@ export const getClimbingRouteChanges = async (
     } as DataItem);
   }
 
-  return changes;
+  return dataItems;
+};
+
+export const getClimbingCragUpdates = (
+  crag: Feature,
+  photoPaths: Array<string>,
+): ClimbingUpdate[] => {
+  const updatedTags = {};
+  photoPaths.forEach((photoPath, index) => {
+    updatedTags[`wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`] =
+      `File:${photoPath}`; // TODO this may change order of wikimedia_commons:# tags, we need photoPaths to store keys as well
+  });
+  const apiId = crag.osmMeta;
+  return areUpdatedTagsSame(updatedTags, crag.tags)
+    ? []
+    : [{ apiId, updatedTags }];
+};
+
+export const getClimbingRouteUpdates = (
+  routes: ClimbingRoute[],
+): ClimbingUpdate[] => {
+  const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
+
+  return existingRoutes.flatMap((route) => {
+    const updatedTags = getUpdatedPhotoTags(route);
+    const apiId = route.feature.osmMeta;
+    return areUpdatedTagsSame(updatedTags, route.feature.tags)
+      ? []
+      : [{ apiId, updatedTags }];
+  });
 };
 
 export const useSaveCragFactory = (setIsEditMode: Setter<boolean>) => {
@@ -111,12 +110,12 @@ export const useSaveCragFactory = (setIsEditMode: Setter<boolean>) => {
   const { showToast } = useSnackbar();
 
   return async () => {
-    const changes = [
-      ...(await getClimbingRouteChanges(routes)),
-      ...(await getClimbingCragChanges(crag, photoPaths)),
+    const updates = [
+      ...getClimbingRouteUpdates(routes),
+      ...getClimbingCragUpdates(crag, photoPaths),
     ];
 
-    if (changes.length === 0) {
+    if (updates.length === 0) {
       showToast('No changes found.', 'warning');
       return;
     }
@@ -126,10 +125,12 @@ export const useSaveCragFactory = (setIsEditMode: Setter<boolean>) => {
       return;
     }
 
+    const changes = await constructChanges(updates);
+
     const comment = `${changes.length} routes`;
     const result = await saveChanges(crag, comment, changes);
 
-    console.log('All routes saved', changes, result); // eslint-disable-line no-console
+    console.log('All routes saved', { updates, changes, result }); // eslint-disable-line no-console
     showToast('Data saved successfully!', 'success');
     setIsEditMode(false);
   };
