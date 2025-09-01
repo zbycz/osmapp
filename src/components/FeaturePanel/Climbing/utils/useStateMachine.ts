@@ -16,6 +16,7 @@ export type StateAction =
   | 'cancelPointMenu'
   | 'cancelRouteSelection'
   | 'changePointType'
+  | 'changeLineType'
   | 'createRoute'
   | 'deletePoint'
   | 'deleteRoute'
@@ -127,6 +128,15 @@ export const useStateMachine = ({
     );
   };
 
+  const changeLineType = ({ previousLineType }) => {
+    updatePathOnRouteIndex(routeSelectedIndex, (path) =>
+      updateElementOnIndex(path, pointSelectedIndex, (point) => ({
+        ...point,
+        previousLineType,
+      })),
+    );
+  };
+
   const isMaximumNumberOfPoints = () => {
     const currentLength = routes[routeSelectedIndex].paths?.[photoPath]?.length;
     if (currentLength >= 19) {
@@ -210,6 +220,7 @@ export const useStateMachine = ({
     pointMenu: {
       ...commonActions,
       changePointType: { nextState: 'editRoute', callback: changePointType },
+      changeLineType: { nextState: 'editRoute', callback: changeLineType },
       deletePoint: { nextState: 'editRoute', callback: deletePoint },
       cancelPointMenu: { nextState: 'editRoute', callback: cancelPointMenu },
       finishRoute: { nextState: 'editRoute', callback: finishRoute },
