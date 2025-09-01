@@ -6,7 +6,7 @@ import { join } from '../../../utils';
 import { clearFetchCache } from '../../fetchCache';
 import { getLabel } from '../../../helpers/featureLabel';
 import {
-  EditDataItem,
+  DataItem,
   Members,
 } from '../../../components/FeaturePanel/EditDialog/useEditItems';
 import { OSM_WEBSITE } from '../consts';
@@ -80,13 +80,15 @@ export const updateItemXml = (
   return xmljsBuildOsm(item);
 };
 
+const isClimbingChange = (change: DataItem) =>
+  Object.fromEntries(change.tagsEntries).climbing;
+
 const getCommentMulti = (
   original: Feature,
   comment: string,
-  changes: EditDataItem[],
+  changes: DataItem[],
 ) => {
-  const isClimbing = changes.some((change) => change.tags.climbing);
-  const suffix = isClimbing ? ' #climbing' : '';
+  const suffix = changes.some(isClimbingChange) ? ' #climbing' : '';
 
   // TODO find topmost parent in changes and use its name
   // eg. survey • Edited Roviště (5 items) #osmapp #climbing
@@ -104,7 +106,7 @@ const getCommentMulti = (
 export const saveChanges = async (
   original: Feature,
   comment: string,
-  changes: EditDataItem[],
+  changes: DataItem[],
 ): Promise<SuccessInfo> => {
   if (!changes.length) {
     throw new Error('No changes submitted.');

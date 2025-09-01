@@ -1,9 +1,9 @@
 import { DiffResultXmljs } from './auth/xmlTypes';
-import { EditDataItem } from '../../components/FeaturePanel/EditDialog/useEditItems';
+import { DataItem } from '../../components/FeaturePanel/EditDialog/useEditItems';
 import { getApiId } from '../helpers';
 import { OsmId } from '../types';
 
-const extractExistingId = (change: EditDataItem, result: DiffResultXmljs) => {
+const extractExistingId = (change: DataItem, result: DiffResultXmljs) => {
   const id = getApiId(change.shortId);
 
   if (id.id > 0) {
@@ -24,7 +24,7 @@ const extractExistingId = (change: EditDataItem, result: DiffResultXmljs) => {
 
 export const getFirstExistingId = (
   result: DiffResultXmljs,
-  changes: EditDataItem[],
+  changes: DataItem[],
 ): OsmId => {
   for (const change of changes) {
     const existingId = extractExistingId(change, result);
