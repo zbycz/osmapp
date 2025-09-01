@@ -2,7 +2,6 @@ import { ClimbingRoute } from './types';
 import { Feature, FeatureTags } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { CragChange, editCrag } from '../../../services/osm/auth/editCrag';
 import { invertedBoltCodeMap } from './utils/boltCodes';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
@@ -10,6 +9,9 @@ import {
   getWikimediaCommonsKey,
 } from './utils/photo';
 import { Setter } from '../../../types';
+import { DataItem } from '../EditDialog/useEditItems';
+import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
+import { fetchFreshItem } from '../EditDialog/itemsHelpers';
 
 const getPathString = (path) =>
   path.length === 0
@@ -41,77 +43,91 @@ const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   return updatedTags;
 };
 
-const isSameTags = (updatedTags: {}, origTags: FeatureTags) => {
+const areUpdatedTagsSame = (updatedTags: {}, origTags: FeatureTags) => {
   const isSame = Object.keys(updatedTags).every(
-    (key) => origTags[key] === updatedTags[key],
+    (key) => updatedTags[key] === origTags[key],
   );
   return isSame;
 };
 
-export const getClimbingCragChanges = (
+export const getClimbingCragChanges = async (
   crag: Feature,
   photoPaths: Array<string>,
-): CragChange[] => {
-  const newTags = {
-    ...crag.tags,
-    ...photoPaths.reduce((acc, photoPath, index) => {
-      return {
-        ...acc,
-        [`wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`]: `File:${photoPath}`,
-      };
-    }, {}),
-  };
-  const updatedCrag = {
-    ...crag,
-    tags: newTags,
-  };
+): Promise<DataItem[]> => {
+  const updatedTags = {};
+  photoPaths.forEach((photoPath, index) => {
+    updatedTags[`wikimedia_commons${index === 0 ? '' : `:${index + 1}`}`] =
+      `File:${photoPath}`;
+  });
 
-  const isSame = isSameTags(newTags, crag.tags);
+  if (areUpdatedTagsSame(updatedTags, crag.tags)) {
+    return [];
+  }
 
-  return isSame ? [] : [{ feature: updatedCrag, allTags: newTags }];
+  const freshItem = await fetchFreshItem(crag.osmMeta);
+
+  return [
+    {
+      ...freshItem,
+      tagsEntries: Object.entries({
+        ...Object.fromEntries(freshItem.tagsEntries),
+        ...updatedTags,
+      }),
+    },
+  ];
 };
 
-export const getClimbingRouteChanges = (
+export const getClimbingRouteChanges = async (
   routes: ClimbingRoute[],
-): CragChange[] => {
+): Promise<DataItem[]> => {
   const existingRoutes = routes.filter((route) => route.feature); // TODO new routes
 
-  return existingRoutes
-    .map((route) => {
-      const updatedTags = {
-        ...getUpdatedPhotoTags(route),
-      };
-      const isSame = isSameTags(updatedTags, route.feature.tags);
-      return isSame
-        ? undefined
-        : {
-            feature: route.feature,
-            allTags: {
-              ...route.feature.tags,
-              ...updatedTags,
-            },
-          };
-    })
-    .filter(Boolean);
+  const changedRoutes = existingRoutes.filter((route) => {
+    const updatedTags = getUpdatedPhotoTags(route);
+    return !areUpdatedTagsSame(updatedTags, route.feature.tags);
+  });
+
+  const changes = [];
+  for (const route of changedRoutes) {
+    const updatedTags = getUpdatedPhotoTags(route);
+    const freshItem = await fetchFreshItem(route.feature.osmMeta);
+
+    // we don't have to compare versions, because only :path tags are changed
+    changes.push({
+      ...freshItem,
+      tagsEntries: Object.entries({
+        ...Object.fromEntries(freshItem.tagsEntries),
+        ...updatedTags,
+      }),
+    } as DataItem);
+  }
+
+  return changes;
 };
 
-export const useGetHandleSave = (setIsEditMode: Setter<boolean>) => {
+export const useSaveCragFactory = (setIsEditMode: Setter<boolean>) => {
   const { feature: crag } = useFeatureContext();
   const { routes, photoPaths } = useClimbingContext();
   const { showToast } = useSnackbar();
 
   return async () => {
+    const changes = [
+      ...(await getClimbingRouteChanges(routes)),
+      ...(await getClimbingCragChanges(crag, photoPaths)),
+    ];
+
+    if (changes.length === 0) {
+      showToast('No changes found.', 'warning');
+      return;
+    }
+
     // eslint-disable-next-line no-alert
     if (window.confirm('Are you sure you want to save?') === false) {
       return;
     }
 
-    const changes = [
-      ...getClimbingRouteChanges(routes),
-      ...getClimbingCragChanges(crag, photoPaths),
-    ];
     const comment = `${changes.length} routes`;
-    const result = await editCrag(crag, comment, changes);
+    const result = await saveChanges(crag, comment, changes);
 
     console.log('All routes saved', changes, result); // eslint-disable-line no-console
     showToast('Data saved successfully!', 'success');

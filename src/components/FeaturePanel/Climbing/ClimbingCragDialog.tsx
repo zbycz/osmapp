@@ -14,7 +14,7 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingCragDialogHeader } from './ClimbingCragDialogHeader';
 import { getOsmappLink } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { useGetHandleSave } from './useGetHandleSave';
+import { useSaveCragFactory } from './useSaveCragFactory';
 import { getWikimediaCommonsPhotoKeys, removeFilePrefix } from './utils/photo';
 import { ClimbingEditorHelperText } from './ClimbingEditorHelperText';
 import { t } from '../../../services/intl';
@@ -53,7 +53,7 @@ export const ClimbingCragDialog = ({
     photoPaths,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
-  const handleSave = useGetHandleSave(setIsEditMode);
+  const saveCrag = useSaveCragFactory(setIsEditMode);
   const router = useRouter();
   const featureLink = getOsmappLink(feature);
 
@@ -162,11 +162,7 @@ export const ClimbingCragDialog = ({
                   {t('editdialog.cancel_button')}
                 </Button>
 
-                <Button
-                  onClick={handleSave}
-                  variant="contained"
-                  color="primary"
-                >
+                <Button onClick={saveCrag} variant="contained" color="primary">
                   {t('editdialog.save_button_edit')}
                 </Button>
               </Stack>
