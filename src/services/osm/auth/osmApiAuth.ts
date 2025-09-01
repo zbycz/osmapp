@@ -30,19 +30,15 @@ export const getChangesetXml = ({ changesetComment, feature }) => {
     </osm>`;
 };
 
-const getDescription = (toBeDeleted: boolean, feature: Feature) => {
-  const undelete = feature.deleted;
-  const action = undelete ? 'Undeleted' : toBeDeleted ? 'Deleted' : 'Edited';
-  const name = getLabel(feature) || getUrlOsmId(feature.osmMeta);
-  return `${action} ${name}`;
-};
-
 const getChangesetComment = (
   comment: string,
   toBeDeleted: boolean,
-  feature: Feature,
+  original: Feature,
 ) => {
-  const description = getDescription(toBeDeleted, feature);
+  const undelete = original.deleted;
+  const action = undelete ? 'Undeleted' : toBeDeleted ? 'Deleted' : 'Edited';
+  const name = getLabel(original) || getUrlOsmId(original.osmMeta);
+  const description = `${action} ${name}`;
   return join(comment, ' • ', `${description} #osmapp`);
 };
 
@@ -93,9 +89,12 @@ const getCommentMulti = (
   // TODO find topmost parent in changes and use its name
   // eg. survey • Edited Roviště (5 items) #osmapp #climbing
 
-  if (changes.length === 1 && original.point) {
-    const typeTag = changes[0].tagsEntries[0]?.join('=') ?? 'node with no tags';
-    return join(comment, ' • ', `Added ${typeTag} #osmapp`);
+  if (original.point) {
+    // adding a new node or relation
+    const typeTag = changes[0].tagsEntries[0]?.join('=') ?? 'item with no tags';
+    const name = Object.fromEntries(changes[0].tagsEntries).name ?? '';
+    const label = join(typeTag, ' ', name);
+    return join(comment, ' • ', `Added ${label} #osmapp${suffix}`);
   }
 
   const toBeDeleted = changes.length === 1 && changes[0].toBeDeleted;
