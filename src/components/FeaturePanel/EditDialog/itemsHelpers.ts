@@ -47,7 +47,8 @@ const getLabel = (itemsMap: ItemsMap, member: RelationMember) => {
 
 const getFullOrDeleted = async (apiId: OsmId): Promise<OsmResponse> => {
   try {
-    return await fetchJson<OsmResponse>(getOsmUrlOrFull(apiId));
+    const url = getOsmUrlOrFull(apiId);
+    return await fetchJson<OsmResponse>(url, { nocache: true }); // nocache - used for fetchFreshItem()
   } catch (e) {
     const undeleted = await getLastBeforeDeleted(e, apiId);
     if (undeleted) {
