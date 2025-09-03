@@ -1,5 +1,6 @@
-import { PositionPx } from '../types';
+import { LineType, PositionPx } from '../types';
 import React from 'react';
+import { useMobileMode } from '../../../helpers';
 
 type RouteLineProps = {
   pathPx: PositionPx[];
@@ -23,6 +24,19 @@ export const RouteLine = ({
   onClick,
   cursor,
 }: RouteLineProps) => {
+  const isMobileMode = useMobileMode();
+
+  const getLineDasharray = (previousLineType: LineType) => {
+    if (previousLineType === 'dotted') {
+      if (isMobileMode) {
+        return '0.6 4';
+      }
+      return '0.3 9';
+    }
+
+    return undefined;
+  };
+
   return (
     <>
       {pathPx.slice(0, -1).map((position1, segmentIndex) => {
@@ -46,6 +60,7 @@ export const RouteLine = ({
             strokeLinecap="round"
             strokeLinejoin="round"
             opacity={opacity}
+            strokeDasharray={getLineDasharray(position2.previousLineType)}
           />
         );
       })}

@@ -24,6 +24,7 @@ import { useFloatingMenuShortcuts } from './useFloatingMenuShortcuts';
 import { PointTypeButtons } from './PointTypeButtons';
 import { PointType } from '../types';
 import { addShortcutUnderline } from './utils';
+import { LineTypeButtons } from './LineTypeButtons';
 
 const Container = styled.div<{ $isEditMode: boolean }>`
   position: absolute;
@@ -40,7 +41,8 @@ const Container = styled.div<{ $isEditMode: boolean }>`
 export const RouteFloatingMenu = () => {
   const [isDeletePointDialogVisible, setIsDeletePointDialogVisible] =
     useState(false);
-  const [showRouteMarksMenu, setShowRouteMarksMenu] = useState(false);
+  const [showPointTypeMenu, setShowPointTypeMenu] = useState(false);
+  const [showLineTypeMenu, setShowLineTypeMenu] = useState(false);
   const {
     machine,
     pointSelectedIndex,
@@ -82,7 +84,7 @@ export const RouteFloatingMenu = () => {
     (type: PointType) => {
       machine.execute('changePointType', { type });
 
-      setShowRouteMarksMenu(false);
+      setShowPointTypeMenu(false);
     },
     [machine],
   );
@@ -142,11 +144,12 @@ export const RouteFloatingMenu = () => {
           color="primary"
           sx={{ pointerEvents: 'all', gap: 0.5 }}
         >
-          {showRouteMarksMenu ? (
+          {showPointTypeMenu || showLineTypeMenu ? (
             <>
               <Button
                 onClick={() => {
-                  setShowRouteMarksMenu(false);
+                  setShowPointTypeMenu(false);
+                  setShowLineTypeMenu(false);
                 }}
                 startIcon={<ArrowBackIcon />}
                 sx={{
@@ -155,7 +158,14 @@ export const RouteFloatingMenu = () => {
                   },
                 }}
               />
-              <PointTypeButtons setShowRouteMarksMenu={setShowRouteMarksMenu} />
+              {showPointTypeMenu && (
+                <PointTypeButtons
+                  setShowRouteMarksMenu={setShowPointTypeMenu}
+                />
+              )}
+              {showLineTypeMenu && (
+                <LineTypeButtons setShowLineTypeMenu={setShowLineTypeMenu} />
+              )}
             </>
           ) : (
             <>
@@ -170,14 +180,24 @@ export const RouteFloatingMenu = () => {
                 </Button>
               )}
               {machine.currentStateName === 'pointMenu' && (
-                <Button
-                  onClick={() => {
-                    setShowRouteMarksMenu(true);
-                  }}
-                >
-                  {t('climbingpanel.type')}
-                </Button>
+                <>
+                  <Button
+                    onClick={() => {
+                      setShowPointTypeMenu(true);
+                    }}
+                  >
+                    {t('climbingpanel.type')}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowLineTypeMenu(true);
+                    }}
+                  >
+                    {t('climbingpanel.line')}
+                  </Button>
+                </>
               )}
+
               {isUndoVisible && (
                 <Button
                   onClick={handleUndo}

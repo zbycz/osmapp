@@ -2,7 +2,6 @@ import { ClimbingRoute } from './types';
 import { Feature, FeatureTags, OsmId } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { invertedBoltCodeMap } from './utils/boltCodes';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import {
   getNextWikimediaCommonsIndex,
@@ -12,16 +11,7 @@ import { Setter } from '../../../types';
 import { DataItem } from '../EditDialog/useEditItems';
 import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 import { fetchFreshItem } from '../EditDialog/itemsHelpers';
-
-const getPathString = (path) =>
-  path.length === 0
-    ? undefined // TODO if there was empty key='', we will delete it, even though we shouldn't
-    : path
-        ?.map(
-          ({ x, y, type }) =>
-            `${x},${y}${type ? invertedBoltCodeMap[type] : ''}`,
-        )
-        .join('|');
+import { stringifyPath } from './utils/pathUtils';
 
 const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   const updatedTags = {};
@@ -32,11 +22,11 @@ const getUpdatedPhotoTags = (route: ClimbingRoute) => {
     const photoKey = route.photoToKeyMap[photoName];
 
     if (photoKey) {
-      updatedTags[`${photoKey}:path`] = getPathString(points);
+      updatedTags[`${photoKey}:path`] = stringifyPath(points);
     } else {
       const newKey = getWikimediaCommonsKey(newIndex + offset); // TODO this offset looks broken
       updatedTags[newKey] = `File:${photoName}`;
-      updatedTags[`${newKey}:path`] = getPathString(points);
+      updatedTags[`${newKey}:path`] = stringifyPath(points);
       offset += 1;
     }
   });
