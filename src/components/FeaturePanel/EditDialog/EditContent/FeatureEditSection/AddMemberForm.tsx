@@ -115,7 +115,7 @@ export const AddMemberForm = () => {
       ]);
       setShowInput(false);
       setLabel('');
-      if (!e.ctrlKey && !e.metaKey) {
+      if (e.ctrlKey || e.metaKey) {
         setCurrent(newShortId);
       }
     },

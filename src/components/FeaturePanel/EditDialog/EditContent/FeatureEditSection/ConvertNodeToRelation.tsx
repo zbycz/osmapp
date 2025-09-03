@@ -6,6 +6,7 @@ import React from 'react';
 import { FeatureTags } from '../../../../../services/types';
 import { getApiId } from '../../../../../services/helpers';
 
+// TODO maybe add sport=climbing as well? but this need more testing
 export const isConvertible = (shortId: string, tags: FeatureTags) =>
   shortId.startsWith('n') && ['crag', 'area'].includes(tags.climbing);
 

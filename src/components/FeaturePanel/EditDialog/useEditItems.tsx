@@ -43,6 +43,9 @@ export type EditDataItem = DataItem & {
   convertToRelation: ConvertToRelation;
 };
 
+export const isInItems = (items: Array<DataItem>, shortId: string) =>
+  items.some((item) => item.shortId === shortId);
+
 export const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
   const tags = Object.fromEntries(tagsEntries);
   const osmId = getApiId(shortId);
