@@ -5,6 +5,7 @@ import {
   AccordionSummary,
   Box,
   Chip,
+  Divider,
   List,
   Stack,
   Typography,
@@ -64,7 +65,7 @@ const SectionName = () => {
   return <Typography variant="button">{t('editdialog.members')}</Typography>;
 };
 
-const AccordionComponent = ({
+const CustomAccordion = ({
   children,
   membersLength,
   isExpanded,
@@ -74,13 +75,22 @@ const AccordionComponent = ({
   membersLength?: number;
   isExpanded?: boolean;
   setIsExpanded?: Setter<boolean>;
-}) => {
-  return (
-    <Accordion disableGutters elevation={0} square expanded={isExpanded}>
+}) => (
+  <>
+    <Divider />
+    <Accordion
+      disableGutters
+      elevation={0}
+      square
+      expanded={isExpanded}
+      sx={{
+        '&.MuiAccordion-root:before': {
+          opacity: 1,
+        },
+      }}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" spacing={2} alignItems="center">
@@ -90,12 +100,12 @@ const AccordionComponent = ({
           ) : null}
         </Stack>
       </AccordionSummary>
-      <AccordionDetails>
-        <List>{children}</List>
+      <AccordionDetails sx={{ pt: 0 }}>
+        <List disablePadding>{children}</List>
       </AccordionDetails>
     </Accordion>
-  );
-};
+  </>
+);
 
 export const MembersEditor = () => {
   const { shortId, members, tags } = useCurrentItem();
@@ -109,7 +119,7 @@ export const MembersEditor = () => {
   }
 
   return (
-    <AccordionComponent
+    <CustomAccordion
       membersLength={members?.length}
       isExpanded={isExpanded}
       setIsExpanded={setIsExpanded}
@@ -124,13 +134,13 @@ export const MembersEditor = () => {
         />
       ))}
 
-      <Stack direction="row" spacing={2}>
+      <Stack direction="row" spacing={2} mt={1}>
         {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
 
         <Box sx={{ flex: '1' }} />
 
         {handleOpenAll && <OpenAllButton onClick={handleOpenAll} />}
       </Stack>
-    </AccordionComponent>
+    </CustomAccordion>
   );
 };

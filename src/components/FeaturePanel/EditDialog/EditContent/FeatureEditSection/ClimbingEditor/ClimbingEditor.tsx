@@ -3,6 +3,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Box,
+  Divider,
   Stack,
   Typography,
 } from '@mui/material';
@@ -84,33 +85,41 @@ export const ClimbingEditor = () => {
   }
 
   return (
-    <Accordion
-      disableGutters
-      elevation={0}
-      square
-      expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
-    >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
+    <>
+      <Divider />
+      <Accordion
+        disableGutters
+        elevation={0}
+        square
+        expanded={expanded}
+        onChange={() => setExpanded(!expanded)}
+        sx={{
+          '&.MuiAccordion-root:before': {
+            opacity: 0,
+          },
+        }}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
-          <IconContainer>
-            <Maki ico="climbing" size={18} themed withMarginRight={false} />
-          </IconContainer>
-          <Typography variant="button">
-            {t('editdialog.climbing_editor')}
-          </Typography>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Box ml={2}>
-          <ClimbingGradesEditor />
-          <ClimbingMultiValuesInner />
-        </Box>
-      </AccordionDetails>
-    </Accordion>
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Stack direction="row" spacing={1} alignItems="center">
+            <IconContainer>
+              <Maki ico="climbing" size={18} themed withMarginRight={false} />
+            </IconContainer>
+            <Typography variant="button">
+              {t('editdialog.climbing_editor')}
+            </Typography>
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box ml={2}>
+            <ClimbingGradesEditor />
+            <ClimbingMultiValuesInner />
+          </Box>
+        </AccordionDetails>
+      </Accordion>
+    </>
   );
 };

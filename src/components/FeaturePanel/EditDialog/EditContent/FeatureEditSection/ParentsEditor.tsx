@@ -4,6 +4,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Chip,
+  Divider,
   List,
   Stack,
   Typography,
@@ -25,6 +26,7 @@ import {
 } from '../useHandleItemClick';
 import { Feature } from '../../../../../services/types';
 import { OpenAllButton } from './helpers';
+import { Setter } from '../../../../../types';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -97,6 +99,50 @@ const getLabel = (parent: Feature) => {
   return parent.tags?.name || parent.schema?.label || shortId;
 };
 
+const CustomAccordion = ({
+  children,
+  parentsLength,
+  isExpanded,
+  setIsExpanded,
+}: {
+  children: React.ReactNode;
+  parentsLength?: number;
+  isExpanded?: boolean;
+  setIsExpanded?: Setter<boolean>;
+}) => (
+  <>
+    <Divider />
+    <Accordion
+      disableGutters
+      elevation={0}
+      square
+      expanded={isExpanded}
+      sx={{
+        '&.MuiAccordion-root:before': {
+          opacity: 0,
+        },
+      }}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1-content"
+        id="panel1-header"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <Stack direction="row" spacing={2} alignItems="center">
+          <Typography variant="button">
+            <SectionName />
+          </Typography>
+          <Chip size="small" label={parentsLength} variant="outlined" />
+        </Stack>
+      </AccordionSummary>
+      <AccordionDetails sx={{ pt: 0 }}>
+        <List disablePadding>{children}</List>
+      </AccordionDetails>
+    </Accordion>
+  </>
+);
+
 export const ParentsEditor = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const handleClick = useHandleItemClick(setIsExpanded);
@@ -108,41 +154,28 @@ export const ParentsEditor = () => {
   }
 
   return (
-    <Accordion disableGutters elevation={0} square expanded={isExpanded}>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
-        onClick={() => setIsExpanded(!isExpanded)}
-      >
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">
-            <SectionName />
-          </Typography>
-          <Chip size="small" label={parents.length} variant="outlined" />
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails>
-        <List>
-          {parents.map((parent) => {
-            const shortId = getShortId(parent.osmMeta);
-            return (
-              <FeatureRow
-                key={shortId}
-                shortId={shortId}
-                label={getLabel(parent)}
-                onClick={(e) => handleClick(e, shortId)}
-              />
-            );
-          })}
+    <CustomAccordion
+      parentsLength={parents?.length}
+      isExpanded={isExpanded}
+      setIsExpanded={setIsExpanded}
+    >
+      {parents.map((parent) => {
+        const shortId = getShortId(parent.osmMeta);
+        return (
+          <FeatureRow
+            key={shortId}
+            shortId={shortId}
+            label={getLabel(parent)}
+            onClick={(e) => handleClick(e, shortId)}
+          />
+        );
+      })}
 
-          {parents.length > 1 && (
-            <Stack alignItems="end">
-              <OpenAllButton onClick={handleOpenAll} />
-            </Stack>
-          )}
-        </List>
-      </AccordionDetails>
-    </Accordion>
+      {parents.length > 1 && (
+        <Stack alignItems="end">
+          <OpenAllButton onClick={handleOpenAll} />
+        </Stack>
+      )}
+    </CustomAccordion>
   );
 };
