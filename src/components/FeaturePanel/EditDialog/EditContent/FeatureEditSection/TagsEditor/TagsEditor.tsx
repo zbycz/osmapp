@@ -5,6 +5,7 @@ import {
   AccordionDetails,
   AccordionSummary,
   Button,
+  Divider,
   Stack,
   Typography,
 } from '@mui/material';
@@ -122,31 +123,39 @@ export const TagsEditor = () => {
   }, [focusThisEditor]);
 
   return (
-    <Accordion
-      disableGutters
-      elevation={0}
-      square
-      expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
-    >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
+    <>
+      <Divider />
+      <Accordion
+        disableGutters
+        elevation={0}
+        square
+        expanded={expanded}
+        onChange={() => setExpanded(!expanded)}
+        sx={{
+          '&.MuiAccordion-root:before': {
+            opacity: 0,
+          },
+        }}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
-          <AppsIcon />
-          <Typography variant="button">
-            {t('editdialog.tags_editor')}
-            <TagsCount />
-          </Typography>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails>
-        <TagsEditorInner />
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Stack direction="row" spacing={1} alignItems="center">
+            <AppsIcon />
+            <Typography variant="button">
+              {t('editdialog.tags_editor')}
+              <TagsCount />
+            </Typography>
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails>
+          <TagsEditorInner />
 
-        <OptionsEditor />
-      </AccordionDetails>
-    </Accordion>
+          <OptionsEditor />
+        </AccordionDetails>
+      </Accordion>
+    </>
   );
 };

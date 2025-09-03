@@ -4,6 +4,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Divider,
   Stack,
   Typography,
 } from '@mui/material';
@@ -79,20 +80,28 @@ export const LocationEditor = () => {
   }
 
   return (
-    <Accordion
-      disableGutters
-      elevation={0}
-      square
-      expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
-    >
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Stack direction="row" gap={1} alignItems="center">
-          <PlaceIcon />
-          <Typography variant="button">{t('editdialog.location')}</Typography>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails>{expanded && <Content />}</AccordionDetails>
-    </Accordion>
+    <>
+      <Divider />
+      <Accordion
+        disableGutters
+        elevation={0}
+        square
+        expanded={expanded}
+        onChange={() => setExpanded(!expanded)}
+        sx={{
+          '&.MuiAccordion-root:before': {
+            opacity: 0,
+          },
+        }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Stack direction="row" gap={1} alignItems="center">
+            <PlaceIcon />
+            <Typography variant="button">{t('editdialog.location')}</Typography>
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails>{expanded && <Content />}</AccordionDetails>
+      </Accordion>
+    </>
   );
 };
