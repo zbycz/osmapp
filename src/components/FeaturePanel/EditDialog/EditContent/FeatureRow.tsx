@@ -68,7 +68,13 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
               )}
             </Stack>
           </ListItemText>
-          {isLoading ? <CircularProgress size={14} /> : <ChevronRightIcon />}
+          {isLoading ? (
+            <CircularProgress size={14} />
+          ) : (
+            <ChevronRightIcon
+              color={isAlreadyInItems ? 'primary' : 'secondary'}
+            />
+          )}
         </Stack>
       </StyledListItem>
       <StyledDivider />

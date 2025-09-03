@@ -9,6 +9,7 @@ import { ParentsEditor } from './FeatureEditSection/ParentsEditor';
 import { MembersEditor } from './FeatureEditSection/MembersEditor';
 import React from 'react';
 import { ClimbingEditor } from './FeatureEditSection/ClimbingEditor/ClimbingEditor';
+import { Box } from '@mui/material';
 
 export const ItemEditSection = () => {
   const { toBeDeleted } = useCurrentItem();
@@ -31,6 +32,7 @@ export const ItemEditSection = () => {
       <LocationEditor />
       <ParentsEditor />
       <MembersEditor />
+      <Box mt={4} />
     </>
   );
 };
