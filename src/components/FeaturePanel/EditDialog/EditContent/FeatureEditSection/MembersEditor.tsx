@@ -129,7 +129,7 @@ export const MembersEditor = () => {
 
         <Box sx={{ flex: '1' }} />
 
-        {members?.length > 1 && <OpenAllButton onClick={handleOpenAll} />}
+        {handleOpenAll && <OpenAllButton onClick={handleOpenAll} />}
       </Stack>
     </AccordionComponent>
   );

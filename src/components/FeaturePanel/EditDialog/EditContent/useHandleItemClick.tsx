@@ -61,6 +61,14 @@ export const useHandleOpenAllMembers = () => {
   const { addItem, items } = useEditContext();
   const shortIds = members?.map(({ shortId }) => shortId);
 
+  if (!members || members.length < 2) {
+    return undefined;
+  }
+
+  if (members.every((member) => isInItems(items, member.shortId))) {
+    return undefined;
+  }
+
   return async (e: React.MouseEvent) => {
     e.stopPropagation();
     await addAllItems(shortIds, addItem, items);

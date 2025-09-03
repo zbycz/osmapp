@@ -63,7 +63,7 @@ const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
     element.tags?.climbing === 'crag'
       ? Math.max(
           element.type === 'relation'
-            ? element.members.filter((member) => member.role === '').length
+            ? element.members.filter((member) => member.role === '').length // TODO filter by member element having climbing=route/route_bottom
             : 0,
           getRouteNumberFromTags(element),
         )
