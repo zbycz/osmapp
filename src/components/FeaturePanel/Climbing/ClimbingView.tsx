@@ -404,6 +404,13 @@ export const ClimbingView = () => {
     }
   };
 
+  const handleEdit = () => {
+    setIsEditMode(true);
+    setTimeout(() => {
+      loadPhotoRelatedData();
+    });
+  };
+
   return (
     <Container>
       {(showArrowOnTop || showArrowOnBottom) && (
@@ -449,12 +456,7 @@ export const ClimbingView = () => {
                     enterDelay={1500}
                     arrow
                   >
-                    <Fab
-                      size="small"
-                      color="secondary"
-                      aria-label="add"
-                      onClick={() => setIsEditMode(true)}
-                    >
+                    <Fab size="small" color="secondary" onClick={handleEdit}>
                       <EditIcon />
                     </Fab>
                   </Tooltip>

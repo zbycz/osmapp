@@ -51,6 +51,7 @@ export const ClimbingCragDialog = ({
     setPhotoPath,
     photoPath,
     photoPaths,
+    loadPhotoRelatedData,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
   const saveCrag = useSaveCragFactory(setIsEditMode);
@@ -107,6 +108,9 @@ export const ClimbingCragDialog = ({
   };
   const handleCancel = () => {
     setIsEditMode(false);
+    setTimeout(() => {
+      loadPhotoRelatedData();
+    });
   };
 
   const onNewRouteCreate = () => {
