@@ -20,6 +20,7 @@ export type ClimbingTilesProperties = {
   type: 'area' | 'crag' | 'route' | 'route_top' | 'gym' | 'ferrata';
   name: string;
   label?: string; // computed on FE - processFeature()
+  parentId?: number;
 
   // group only:
   routeCount?: number;

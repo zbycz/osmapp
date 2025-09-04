@@ -54,15 +54,22 @@ const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
     ? { type: 'LineString', coordinates: line }
     : { type: 'Point', coordinates: [lon, lat] };
 
-  const { routeCount, hasImages, gradeId, histogramCode } = record;
+  const { routeCount, hasImages, gradeId, histogramCode, parentId } = record;
   const name = record.name || record.nameRaw;
   const properties: ClimbingTilesProperties =
     type === 'area' || type === 'crag'
-      ? { type, name, routeCount: routeCount ?? 0, hasImages, histogramCode }
+      ? {
+          type,
+          name,
+          parentId,
+          routeCount: routeCount ?? 0,
+          hasImages,
+          histogramCode,
+        }
       : type === 'gym' || type === 'ferrata'
-        ? { type, name }
+        ? { type, name, parentId }
         : type === 'route' || type === 'route_top'
-          ? { type, name, gradeId }
+          ? { type, name, parentId, gradeId }
           : undefined;
 
   return { type: 'Feature', id, geometry, properties };

@@ -81,6 +81,7 @@ export const recordsFactory = (log: (message: string) => void) => {
       nameRaw,
       routeCount: feature.properties.routeCount,
       hasImages: feature.properties.hasImages,
+      parentId: feature.properties.parentId,
       gradeId,
       lon,
       lat,

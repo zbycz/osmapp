@@ -16,11 +16,12 @@ create table climbing_features
   "hasImages"     boolean,
   line            json,
   "gradeId"       integer,
-  "histogramCode" text
+  "histogramCode" text,
+  "parentId"      bigint
 );
 
 alter table climbing_features
-  owner to xata_owner_bb_3id0nfvj551arc4a8j3li4ee7s;
+  owner to zbytovsky;
 
 create table climbing_tiles_cache
 (
@@ -32,7 +33,7 @@ create table climbing_tiles_cache
 );
 
 alter table climbing_tiles_cache
-  owner to xata_owner_bb_3id0nfvj551arc4a8j3li4ee7s;
+  owner to zbytovsky;
 
 create table climbing_tiles_stats
 (
@@ -52,7 +53,7 @@ create table climbing_tiles_stats
 );
 
 alter table climbing_tiles_stats
-  owner to xata_owner_bb_3id0nfvj551arc4a8j3li4ee7s;
+  owner to zbytovsky;
 
 create table climbing_ticks
 (
@@ -69,5 +70,5 @@ create table climbing_ticks
 );
 
 alter table climbing_ticks
-  owner to xata_owner_bb_3id0nfvj551arc4a8j3li4ee7s;
+  owner to zbytovsky;
 
