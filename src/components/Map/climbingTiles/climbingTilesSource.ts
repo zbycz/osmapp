@@ -20,6 +20,7 @@ import { featureCollection, point } from '@turf/helpers';
 import convex from '@turf/convex';
 import polygonSmooth from '@turf/polygon-smooth';
 import buffer from '@turf/buffer';
+import { bbox } from '@turf/turf';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
@@ -130,8 +131,15 @@ const constructBoxes = (filteredFeatures: ClimbingTilesFeature[]) => {
         return [];
       }
 
-      // Expand slightly to ensure it fully contains all points
-      const buffered = buffer(hull, 0.01, { units: 'kilometers' });
+      // Compute bounding box of hull
+      const [minX, minY, maxX, maxY] = bbox(hull);
+      const width = maxX - minX;
+      const height = maxY - minY;
+      const maxDimension = Math.max(width, height);
+
+      // Buffer by 10% of largest dimension in degrees (~approximation)
+      const bufferDistance = maxDimension * 0.1;
+      const buffered = buffer(hull, bufferDistance, { units: 'degrees' });
       const smooth = polygonSmooth(buffered, { iterations: 3 });
 
       return [
