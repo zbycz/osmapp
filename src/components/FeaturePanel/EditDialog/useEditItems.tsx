@@ -43,8 +43,11 @@ export type EditDataItem = DataItem & {
   convertToRelation: ConvertToRelation;
 };
 
-export const isInItems = (items: Array<DataItem>, shortId: string) =>
+export const isInItems = (items: DataItem[], shortId: string) =>
   items.some((item) => item.shortId === shortId);
+
+const findInItems = (items: DataItem[], shortId: string) =>
+  items.find((item) => item.shortId === shortId);
 
 export const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
   const tags = Object.fromEntries(tagsEntries);
@@ -155,6 +158,13 @@ const getConversionTags = (node: DataItem) => {
   return { tagsToCopy, keepNode, keptTags };
 };
 
+const fetchParentItems = async (shortId: string) => {
+  const parentFeatures = await fetchParentFeatures(getApiId(shortId)); // without memberFeatures
+  return await Promise.all(
+    parentFeatures.map((feature) => fetchFreshItem(feature.osmMeta)), // we need full item (with members)
+  );
+};
+
 type ConvertToRelation = () => Promise<string>;
 const convertToRelationFactory = (
   setData: Setter<DataItem[]>,
@@ -163,8 +173,8 @@ const convertToRelationFactory = (
   // should work only for node - new or existing
 
   return async () => {
-    const [parentFeatures, waysFeatures] = await Promise.all([
-      fetchParentFeatures(getApiId(shortId)),
+    const [parentItems, waysFeatures] = await Promise.all([
+      fetchParentItems(shortId),
       fetchWays(getApiId(shortId)),
     ]);
 
@@ -172,13 +182,9 @@ const convertToRelationFactory = (
       throw new Error(`Can't convert node ${shortId} which is part of a way.`); // TODO duplicate the node ?
     }
 
-    const parentItems = await Promise.all(
-      parentFeatures.map((feature) => fetchFreshItem(feature.osmMeta)),
-    );
-
     const newShortId = `r${getNewId()}`;
     setData((prevData) => {
-      const node = prevData.find((item) => item.shortId === shortId);
+      const node = findInItems(prevData, shortId);
       const { tagsToCopy, keepNode, keptTags } = getConversionTags(node);
 
       const newRelation: DataItem = {
@@ -320,3 +326,5 @@ export const useEditItems = () => {
 
   return { items, addItem, removeItem };
 };
+
+export { convertToRelationFactory };

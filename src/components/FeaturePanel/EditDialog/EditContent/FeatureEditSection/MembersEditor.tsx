@@ -144,7 +144,7 @@ export const MembersEditor = () => {
       {members?.length && tags.climbing && (
         <Typography variant="body2" color="textSecondary" ml={1}>
           <Translation id="editdialog.members_climbing_info" />
-          {/* If we convert a natural=peak to crag relation, the peak stays as a member - this must be visible esp. for this scenario. */}
+          {/* If we convert a natural=peak to crag relation, the peak stays as a member - this notice must be visible especially for this scenario. */}
         </Typography>
       )}
     </CustomAccordion>
