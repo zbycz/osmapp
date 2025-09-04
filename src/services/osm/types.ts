@@ -14,6 +14,7 @@ export type OsmElement<T extends OsmType = 'node' | 'way' | 'relation'> = {
   tags?: Record<string, string>; // elements with no tags = tags is undefined
   members?: RelationMember[];
   nodes?: number[];
+  osmappDeletedMarker?: true;
 };
 
 export type OsmResponse<T extends OsmType = 'node' | 'way' | 'relation'> = {

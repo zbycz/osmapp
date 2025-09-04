@@ -47,7 +47,7 @@ const getNextNodeLocation = async (items: EditDataItem[], members: Members) => {
     return undefined;
   }
   const lonLat = await getLastNodeLocation(lastNode, items);
-  return lonLat.map((x) => x + 0.0001);
+  return lonLat?.map((x) => x + 0.0001);
 };
 
 const getViewPoint = (view: View): LonLat => {

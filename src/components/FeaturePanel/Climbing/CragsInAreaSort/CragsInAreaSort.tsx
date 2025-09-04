@@ -3,7 +3,7 @@ import { MenuItem } from '@mui/material';
 import React from 'react';
 import { t } from '../../../../services/intl';
 import { PopperWithArrow } from '../../../utils/PopperWithArrow';
-import { CragsInAreaSortIcon } from './CragsInAreaSortIcon';
+import { CragsInAreaSortButton } from './CragsInAreaSortButton';
 import { SortBy } from './types';
 import { Setter } from '../../../../types';
 
@@ -34,7 +34,11 @@ export const CragsInAreaSort = ({
 
   return (
     <>
-      <CragsInAreaSortIcon open={open} onClick={handleClick} sortBy={sortBy} />
+      <CragsInAreaSortButton
+        open={open}
+        onClick={handleClick}
+        sortBy={sortBy}
+      />
       <PopperWithArrow
         title={t('crag_sort.title')}
         isOpen={open}
