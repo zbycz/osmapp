@@ -4,7 +4,7 @@ import { t } from '../../../../services/intl';
 import SwapVertIcon from '@mui/icons-material/SwapVert';
 import { SortBy } from './types';
 
-export const CragsInAreaSortIcon = ({
+export const CragsInAreaSortButton = ({
   onClick,
   open,
   sortBy,

@@ -141,7 +141,7 @@ export const MembersEditor = () => {
 
         {handleOpenAll && <OpenAllButton onClick={handleOpenAll} />}
       </Stack>
-      {members?.length && tags.climbing && (
+      {!!members?.length && tags.climbing && (
         <Typography variant="body2" color="textSecondary" ml={1}>
           <Translation id="editdialog.members_climbing_info" />
           {/* If we convert a natural=peak to crag relation, the peak stays as a member - this notice must be visible especially for this scenario. */}
