@@ -16,6 +16,7 @@ export const Climbing = () => {
     router.query.all?.[3] === 'photo' ? router.query.all?.[4] : undefined;
   const routeNumber =
     router.query.all?.[3] === 'route' ? router.query.all?.[4] : undefined;
+  const edit = router.query.all?.[3] === 'edit';
 
   if (!isClimbingDialogShown) {
     return null;
@@ -26,6 +27,7 @@ export const Climbing = () => {
       <ClimbingCragDialog
         photo={photo}
         routeNumber={routeNumber ? parseFloat(routeNumber) : undefined}
+        edit={edit}
       />
     </ClimbingContextProvider>
   );
