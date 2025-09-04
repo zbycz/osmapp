@@ -11,6 +11,7 @@ export type ClimbingFeaturesRecord = {
   nameRaw: string;
   routeCount?: number;
   hasImages?: boolean;
+  parentId?: number;
   gradeId?: number;
   line?: number[][];
   histogramCode?: string;

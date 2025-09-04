@@ -164,6 +164,19 @@ const getRelationsWithAreaCount = (
     return relation;
   });
 
+const addParentIds = (lookup: Lookup) => {
+  for (const relation of Object.values(lookup.relation)) {
+    if (relation.tags?.climbing === 'area') {
+      for (const member of relation.members ?? []) {
+        const child = lookup[member.type][member.ref]; // we know, that in lookup is the same object as in nodesOut/waysOut
+        if (child) {
+          child.properties.parentId = relation.osmMeta.id;
+        }
+      }
+    }
+  }
+};
+
 export const overpassToGeojsons = (
   response: OsmResponse,
   log: (message: string) => void,
@@ -192,10 +205,20 @@ export const overpassToGeojsons = (
   // TODO: update only geometries (?)
   const RELATION_GEOM2 = getRelationGeomFn(lookup);
   const relationsOut2 = relations.map((relation) =>
-    convert(relation, RELATION_GEOM1, lookup),
+    convert(relation, RELATION_GEOM2, lookup),
   );
+  lookup.relation = {};
+  addToLookup(relationsOut2, lookup);
 
   const relationsOut3 = getRelationsWithAreaCount(relationsOut2, lookup);
+  lookup.relation = {};
+  addToLookup(relationsOut3, lookup);
 
-  return { node: nodesOut, way: waysOut, relation: relationsOut3 };
+  addParentIds(lookup);
+
+  return {
+    node: Object.values(lookup.node),
+    way: Object.values(lookup.way),
+    relation: Object.values(lookup.relation),
+  };
 };

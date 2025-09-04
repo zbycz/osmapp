@@ -50,6 +50,7 @@ export type GeojsonFeature<T extends FeatureGeometry = FeatureGeometry> = {
     routeCount?: number;
     hasImages?: boolean;
     histogram?: number[]; // indexed by GRADE_TABLE.uiaa
+    parentId?: number;
   };
   geometry: T;
   center?: number[];
