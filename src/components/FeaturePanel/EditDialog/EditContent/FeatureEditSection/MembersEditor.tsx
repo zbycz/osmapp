@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FeatureRow } from '../FeatureRow';
-import { t } from '../../../../../services/intl';
+import { t, Translation } from '../../../../../services/intl';
 import { AddMemberForm } from './AddMemberForm';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { CragIcon } from '../../../Climbing/CragIcon';
@@ -134,13 +134,19 @@ export const MembersEditor = () => {
         />
       ))}
 
-      <Stack direction="row" spacing={2} mt={1}>
+      <Stack direction="row" spacing={2} mt={1} ml={1}>
         {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
 
         <Box sx={{ flex: '1' }} />
 
         {handleOpenAll && <OpenAllButton onClick={handleOpenAll} />}
       </Stack>
+      {members?.length && tags.climbing && (
+        <Typography variant="body2" color="textSecondary" ml={1}>
+          <Translation id="editdialog.members_climbing_info" />
+          {/* If we convert a natural=peak to crag relation, the peak stays as a member - this notice must be visible especially for this scenario. */}
+        </Typography>
+      )}
     </CustomAccordion>
   );
 };

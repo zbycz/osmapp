@@ -2,7 +2,7 @@ import { FeatureTags, LonLat } from '../../../services/types';
 import { getApiId } from '../../../services/helpers';
 import { Setter } from '../../../types';
 import { useCallback, useMemo, useState } from 'react';
-import { publishDbgObject } from '../../../utils';
+import { not, publishDbgObject } from '../../../utils';
 import { findPreset } from '../../../services/tagging/presets';
 import { getPresetTranslation } from '../../../services/tagging/translations';
 import { getNewId } from '../../../services/getCoordsFeature';
@@ -43,8 +43,11 @@ export type EditDataItem = DataItem & {
   convertToRelation: ConvertToRelation;
 };
 
-export const isInItems = (items: Array<DataItem>, shortId: string) =>
+export const isInItems = (items: DataItem[], shortId: string) =>
   items.some((item) => item.shortId === shortId);
+
+const findInItems = (items: DataItem[], shortId: string) =>
+  items.find((item) => item.shortId === shortId);
 
 export const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
   const tags = Object.fromEntries(tagsEntries);
@@ -55,6 +58,9 @@ export const getPresetKey = ({ shortId, tagsEntries }: DataItem) => {
 
 const getName = (d: DataItem): string | undefined =>
   d.tagsEntries.find(([k]) => k === 'name')?.[1];
+
+const getLabel = (newRelation: DataItem) =>
+  getName(newRelation) ?? newRelation.shortId;
 
 const someNameHasChanged = (prevData: DataItem[], newData: DataItem[]) => {
   const prevNames = prevData.map((d) => getName(d));
@@ -103,14 +109,72 @@ const setDataItemFactory =
     });
   };
 
+const updateMemberLinks = (
+  item: DataItem,
+  oldShortId: string,
+  newRelation: DataItem,
+) => {
+  if (item.shortId === newRelation.shortId) {
+    return item;
+  }
+
+  // update member id in every parent
+  return {
+    ...item,
+    members: item.members?.map((member) =>
+      member.shortId === oldShortId
+        ? {
+            ...member,
+            shortId: newRelation.shortId,
+            label: getLabel(newRelation),
+          }
+        : member,
+    ),
+  };
+};
+
+// TODO we may lose some custom tags, if converting new item (it is deleted afterwards)
+//  remove climbing=* and find if this still matches some other preset (only keep it in that scenario)  (?)
+const copiedClimbingTags = ([k, v]) =>
+  k.startsWith('name') ||
+  k.startsWith('climbing') ||
+  k.startsWith('description') ||
+  k.startsWith('wikimedia_commons') ||
+  k.startsWith('website') ||
+  (k === 'sport' && v === 'climbing');
+
+const toBeRemovedTags = ([k, v]) =>
+  k.startsWith('climbing') || (k === 'sport' && v === 'climbing');
+
+const getConversionTags = (node: DataItem) => {
+  const tagsToCopy = node.tagsEntries.filter(copiedClimbingTags);
+  const restTags = node.tagsEntries.filter(not(copiedClimbingTags));
+
+  const keepNode = restTags.length > 0;
+  const keptTags = keepNode
+    ? node.tagsEntries.filter(not(toBeRemovedTags))
+    : [];
+
+  return { tagsToCopy, keepNode, keptTags };
+};
+
+const fetchParentItems = async (shortId: string) => {
+  const parentFeatures = await fetchParentFeatures(getApiId(shortId)); // without memberFeatures
+  return await Promise.all(
+    parentFeatures.map((feature) => fetchFreshItem(feature.osmMeta)), // we need full item (with members)
+  );
+};
+
 type ConvertToRelation = () => Promise<string>;
 const convertToRelationFactory = (
   setData: Setter<DataItem[]>,
   shortId: string,
 ): ConvertToRelation => {
+  // should work only for node - new or existing
+
   return async () => {
-    const [parentFeatures, waysFeatures] = await Promise.all([
-      fetchParentFeatures(getApiId(shortId)),
+    const [parentItems, waysFeatures] = await Promise.all([
+      fetchParentItems(shortId),
       fetchWays(getApiId(shortId)),
     ]);
 
@@ -118,17 +182,10 @@ const convertToRelationFactory = (
       throw new Error(`Can't convert node ${shortId} which is part of a way.`); // TODO duplicate the node ?
     }
 
-    const parentItems = await Promise.all(
-      parentFeatures.map((feature) => fetchFreshItem(feature.osmMeta)),
-    );
-
     const newShortId = `r${getNewId()}`;
     setData((prevData) => {
-      // TODO - don't delete e.g. natural=peak - leave it as node
-      const newData = prevData.map((item) =>
-        item.shortId === shortId ? { ...item, toBeDeleted: true } : item,
-      );
-      const node = newData.find((item) => item.shortId === shortId);
+      const node = findInItems(prevData, shortId);
+      const { tagsToCopy, keepNode, keptTags } = getConversionTags(node);
 
       const newRelation: DataItem = {
         shortId: newShortId,
@@ -137,35 +194,32 @@ const convertToRelationFactory = (
           Object.fromEntries([
             ['type', 'site'],
             ['site', 'climbing'],
-            ...node.tagsEntries,
+            ...tagsToCopy,
           ]),
         ),
         toBeDeleted: false,
-        nodeLonLat: node.nodeLonLat, // will be used later for first node
+        nodeLonLat: node.nodeLonLat, // will be used later for first node TODO rename it to make it clear
         nodes: undefined,
-        members: [],
+        members: keepNode ? [{ shortId, role: '', label: getLabel(node) }] : [],
       };
+
+      const newData = prevData.map((item) =>
+        item.shortId === shortId
+          ? keepNode
+            ? { ...item, tagsEntries: keptTags }
+            : { ...item, toBeDeleted: true, tagsEntries: [] }
+          : item,
+      );
       newData.push(newRelation);
 
       // add all parent relations which are not already there
-      const newParentItems = parentItems.filter(
-        (parent) => !newData.some((item) => item.shortId === parent.shortId),
+      newData.push(
+        ...parentItems.filter((parent) => !isInItems(newData, parent.shortId)),
       );
-      newData.push(...newParentItems);
 
-      // update member id in every "members" field
-      return newData.map((item) => ({
-        ...item,
-        members: item.members?.map((member) =>
-          member.shortId === shortId
-            ? {
-                ...member,
-                shortId: newShortId,
-                label: getName(newRelation) ?? newShortId,
-              }
-            : member,
-        ),
-      }));
+      return newData.map((item) =>
+        updateMemberLinks(item, shortId, newRelation),
+      );
     });
 
     return newShortId;
@@ -272,3 +326,5 @@ export const useEditItems = () => {
 
   return { items, addItem, removeItem };
 };
+
+export { convertToRelationFactory };
