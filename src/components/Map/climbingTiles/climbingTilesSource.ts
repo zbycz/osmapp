@@ -102,8 +102,8 @@ const constructBoxes = (filteredFeatures: ClimbingTilesFeature[]) => {
   return filteredFeatures
     .filter(({ id }) => (id as number) % 10 === 4)
     .flatMap((relation) => {
-      const mapId = relation.id;
-      const relationId = Math.floor((mapId as number) / 10);
+      const mapId = relation.id as number;
+      const relationId = Math.floor(mapId / 10);
 
       const subfeatures = filteredFeatures.filter(
         (f) => f.properties.parentId === relationId,
