@@ -15,8 +15,11 @@ import {
 import { join } from '../../../utils';
 import { mapClimbingFilter } from '../../utils/userSettings/getClimbingFilter';
 import { decodeHistogram } from '../../../server/climbing-tiles/overpass/histogram';
-import { getBbox } from '../../../services/getCenter';
 import { Feature as GeojsonFeature, Polygon } from 'geojson';
+import { featureCollection, point } from '@turf/helpers';
+import convex from '@turf/convex';
+import polygonSmooth from '@turf/polygon-smooth';
+import buffer from '@turf/buffer';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
@@ -120,23 +123,21 @@ const constructBoxes = (filteredFeatures: ClimbingTilesFeature[]) => {
         return [];
       }
 
-      const bbox = getBbox(coordinates);
+      const fc = featureCollection(coordinates.map((c) => point(c)));
+      const hull = convex(fc);
+
+      if (!hull) {
+        return [];
+      }
+
+      // Expand slightly to ensure it fully contains all points
+      const buffered = buffer(hull, 0.01, { units: 'kilometers' });
+      const smooth = polygonSmooth(buffered, { iterations: 3 });
+
       return [
         {
-          type: 'Feature' as const,
+          ...(smooth as any).features[0],
           id: mapId as number,
-          geometry: {
-            type: 'Polygon' as const,
-            coordinates: [
-              [
-                [bbox.w, bbox.s],
-                [bbox.e, bbox.s],
-                [bbox.e, bbox.n],
-                [bbox.w, bbox.n],
-                [bbox.w, bbox.s],
-              ],
-            ],
-          },
           properties: {
             type: 'box',
           },

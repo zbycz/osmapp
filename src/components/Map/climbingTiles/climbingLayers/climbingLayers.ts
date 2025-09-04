@@ -20,12 +20,12 @@ export const climbingLayers: LayerSpecification[] = [
     paint: {
       'line-color': '#f60',
       'line-width': 2,
-      'line-opacity': [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        1,
-        0,
-      ],
+      // 'line-opacity': [
+      //   'case',
+      //   ['boolean', ['feature-state', 'hover'], false],
+      //   1,
+      //   0,
+      // ],
     },
   },
 ];
