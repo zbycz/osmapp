@@ -17,7 +17,7 @@ import { mapClimbingFilter } from '../../utils/userSettings/getClimbingFilter';
 import { decodeHistogram } from '../../../server/climbing-tiles/overpass/histogram';
 import { Feature as GeojsonFeature, Polygon } from 'geojson';
 import { featureCollection, point } from '@turf/helpers';
-import convex from '@turf/convex';
+import concave from '@turf/concave';
 import polygonSmooth from '@turf/polygon-smooth';
 import buffer from '@turf/buffer';
 
@@ -124,7 +124,7 @@ const constructBoxes = (filteredFeatures: ClimbingTilesFeature[]) => {
       }
 
       const fc = featureCollection(coordinates.map((c) => point(c)));
-      const hull = convex(fc);
+      const hull = concave(fc);
 
       if (!hull) {
         return [];
