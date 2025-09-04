@@ -6,15 +6,15 @@ import {
   StyleSpecification,
 } from 'maplibre-gl';
 
-export const addHoverPaint = (origStyle): StyleSpecification => {
-  const hoverExpr = ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 1]; // prettier-ignore
-  const iconOpacity = ['case', ['boolean', ['feature-state', 'hideIcon'], false], 0, hoverExpr]; // prettier-ignore
+const HOVER_EXPRESSION = ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 1]; // prettier-ignore
+const ICON_OPACITY = ['case', ['boolean', ['feature-state', 'hideIcon'], false], 0, HOVER_EXPRESSION]; // prettier-ignore
 
+export const addHoverPaint = (origStyle): StyleSpecification => {
   origStyle.layers
     .filter((layer) => layer.id.match(/^poi-/))
     .forEach((layer) => {
       if (layer.paint) {
-        layer.paint['icon-opacity'] = iconOpacity; // eslint-disable-line no-param-reassign
+        layer.paint['icon-opacity'] = ICON_OPACITY; // eslint-disable-line no-param-reassign
       }
     });
 

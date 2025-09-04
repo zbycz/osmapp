@@ -15,6 +15,8 @@ import {
 import { join } from '../../../utils';
 import { mapClimbingFilter } from '../../utils/userSettings/getClimbingFilter';
 import { decodeHistogram } from '../../../server/climbing-tiles/overpass/histogram';
+import { getBbox } from '../../../services/getCenter';
+import { Feature as GeojsonFeature, Polygon } from 'geojson';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
@@ -92,6 +94,57 @@ const doClimbingFilter = (features: ClimbingTilesFeature[]) => {
   return filteredFeatures;
 };
 
+const constructBoxes = (filteredFeatures: ClimbingTilesFeature[]) => {
+  return filteredFeatures
+    .filter(({ id }) => (id as number) % 10 === 4)
+    .flatMap((relation) => {
+      const mapId = relation.id;
+      const relationId = Math.floor((mapId as number) / 10);
+
+      const subfeatures = filteredFeatures.filter(
+        (f) => f.properties.parentId === relationId,
+      );
+
+      // construct box around subfeatures
+      const coordinates = subfeatures.flatMap((f) => {
+        if (f.geometry.type === 'Point') {
+          return [f.geometry.coordinates];
+        }
+        if (f.geometry.type === 'LineString') {
+          return f.geometry.coordinates;
+        }
+        return [];
+      });
+
+      if (coordinates.length === 0) {
+        return [];
+      }
+
+      const bbox = getBbox(coordinates);
+      return [
+        {
+          type: 'Feature' as const,
+          id: mapId as number,
+          geometry: {
+            type: 'Polygon' as const,
+            coordinates: [
+              [
+                [bbox.w, bbox.s],
+                [bbox.e, bbox.s],
+                [bbox.e, bbox.n],
+                [bbox.w, bbox.n],
+                [bbox.w, bbox.s],
+              ],
+            ],
+          },
+          properties: {
+            type: 'box',
+          },
+        } as GeojsonFeature<Polygon>,
+      ];
+    });
+};
+
 const updateData = async () => {
   const map = getGlobalMap();
   const mapZoom = map.getZoom();
@@ -112,9 +165,11 @@ const updateData = async () => {
   }
   const filteredFeatures = doClimbingFilter(features);
 
+  const boxes = constructBoxes(features);
+
   map?.getSource<GeoJSONSource>(CLIMBING_TILES_SOURCE)?.setData({
     type: 'FeatureCollection' as const,
-    features: filteredFeatures.map(processFeature),
+    features: [...filteredFeatures.map(processFeature), ...boxes],
   });
 };
 
