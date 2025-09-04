@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -11,12 +11,10 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fetchParentFeatures } from '../../../../../services/osm/fetchParentFeatures';
-import { getApiId, getShortId } from '../../../../../services/helpers';
+import { getShortId } from '../../../../../services/helpers';
 import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
-import { fetchWays } from '../../../../../services/osm/fetchWays';
-import { useCurrentItem, useEditContext } from '../../EditContext';
+import { useCurrentItem } from '../../EditContext';
 import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
@@ -27,6 +25,7 @@ import {
 import { Feature } from '../../../../../services/types';
 import { OpenAllButton } from './helpers';
 import { Setter } from '../../../../../types';
+import { useGetParents } from './useGetParents';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -72,26 +71,6 @@ const SectionName = () => {
     );
   }
   return <Typography variant="button">{t('editdialog.parents')}</Typography>;
-};
-
-const useGetParents = () => {
-  const { current } = useEditContext();
-  const [parents, setParents] = useState<Feature[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      setParents([]);
-      if (getApiId(current).id < 0) {
-        return;
-      }
-      const [parentFeatures, waysFeatures] = await Promise.all([
-        fetchParentFeatures(getApiId(current)),
-        fetchWays(getApiId(current)),
-      ]);
-      setParents([...parentFeatures, ...waysFeatures]);
-    })();
-  }, [current]);
-  return parents;
 };
 
 const getLabel = (parent: Feature) => {

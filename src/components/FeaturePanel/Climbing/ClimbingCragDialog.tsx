@@ -33,9 +33,11 @@ const LeftActions = styled.div`
 export const ClimbingCragDialog = ({
   photo,
   routeNumber,
+  edit,
 }: {
   photo?: string;
   routeNumber?: number;
+  edit?: boolean;
 }) => {
   const contentRef = useRef(null);
 
@@ -62,8 +64,11 @@ export const ClimbingCragDialog = ({
     const tags = routes[routeNumber]?.feature?.tags || {};
     const photos = getWikimediaCommonsPhotoKeys(tags);
 
+    if (edit) setIsEditMode(true);
+
     if (routeNumber !== undefined && photos?.[0]) {
       setRouteSelectedIndex(routeNumber);
+
       const firstPhoto = tags[photos[0]];
       const newPhotoPath = removeFilePrefix(firstPhoto);
       router.replace(`${featureLink}/climbing/photo/${newPhotoPath}`);
@@ -75,6 +80,7 @@ export const ClimbingCragDialog = ({
       if (routeNumber !== undefined) setRouteSelectedIndex(routeNumber);
     }
   }, [
+    edit,
     featureLink,
     photo,
     photoPath,
@@ -82,6 +88,7 @@ export const ClimbingCragDialog = ({
     routeNumber,
     router,
     routes,
+    setIsEditMode,
     setPhotoPath,
     setRouteSelectedIndex,
   ]);

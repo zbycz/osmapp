@@ -25,13 +25,13 @@ const CustomizedDialog: React.FC = ({ children }) => {
   const fullScreen = useIsFullScreen();
   const { items } = useEditContext();
   const hasMoreItems = items.length > 1;
-
+  const { successInfo } = useEditContext();
   return (
     <StyledDialog
       fullScreen={fullScreen}
       open={opened}
       onClose={close}
-      disableEscapeKeyDown
+      disableEscapeKeyDown={!successInfo}
       aria-labelledby="edit-dialog-title"
       slotProps={{
         paper: {

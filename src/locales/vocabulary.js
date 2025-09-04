@@ -537,6 +537,10 @@ export default {
   'editdialog.edit_custom_value': 'Edit value',
   'editdialog.remove': 'Remove',
 
+  'editdialog.draw_climbing_routes_title': 'Drawing climbing routes is done directly in the crag detail',
+  'editdialog.draw_climbing_routes_button': 'Draw routes',
+  'editdialog.draw_climbing_routes_save_confirm': 'Do you want to save current changes?',
+
   yes: 'Yes',
   no: 'No',
 };

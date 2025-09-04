@@ -40,6 +40,22 @@ export const UncertainCover = styled.div`
 
 export type ImageClickHandler = (e: React.MouseEvent) => void | undefined; // undefined = no cursor
 
+export const filterCrags = (parentFeatures: Array<Feature>) => {
+  return parentFeatures.filter((item) => item.tags.climbing === 'crag');
+};
+
+export const getUrlToParentCrag = (
+  parentFeatures: Array<Feature>,
+  photo?: string,
+) => {
+  const parentCrags = filterCrags(parentFeatures);
+  if (parentCrags.length > 0) {
+    const featureLink = getOsmappLink(parentCrags[0]);
+    return `${featureLink}/climbing/${photo ? `photo/${photo}` : ''}`;
+  }
+  return null;
+};
+
 export const getClickHandler = (
   feature: Feature,
   def: ImageDef,
@@ -64,19 +80,18 @@ export const getClickHandler = (
   }
 
   if (feature.tags.climbing === 'route_bottom') {
-    const parentCragFeature = feature.parentFeatures.filter(
-      (item) => item.tags.climbing === 'crag',
+    const cragUrl = getUrlToParentCrag(
+      feature.parentFeatures,
+      removeFilePrefix(def.v),
     );
-    if (parentCragFeature.length > 0) {
-      return (e: React.MouseEvent) => {
-        const featureLink = getOsmappLink(parentCragFeature[0]);
-        const photoLink = removeFilePrefix(def.v);
 
-        Router.push(`${featureLink}/climbing/photo/${photoLink}`);
+    return (e: React.MouseEvent) => {
+      if (cragUrl) {
+        Router.push(cragUrl);
         e.stopPropagation();
         e.preventDefault();
-      };
-    }
+      }
+    };
   }
 
   return undefined;

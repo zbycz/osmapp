@@ -15,6 +15,7 @@ import { useCurrentItem } from '../../../EditContext';
 import { Maki } from '../../../../../utils/icons/Maki';
 import styled from '@emotion/styled';
 import { ClimbingGradesEditor } from './ClimbingGradesEditor';
+import { DrawClimbingRoutesBanner } from './DrawClimbingRoutesBanner';
 
 const IconContainer = styled.div`
   display: flex;
@@ -80,6 +81,7 @@ const ClimbingMultiValuesInner = () => {
 export const ClimbingEditor = () => {
   const { tags } = useCurrentItem();
   const [expanded, setExpanded] = useState(!!tags.climbing);
+
   if (!tags.climbing) {
     return null;
   }
@@ -119,6 +121,7 @@ export const ClimbingEditor = () => {
             <ClimbingMultiValuesInner />
           </Box>
         </AccordionDetails>
+        <DrawClimbingRoutesBanner />
       </Accordion>
     </>
   );
