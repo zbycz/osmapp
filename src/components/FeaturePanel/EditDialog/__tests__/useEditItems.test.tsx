@@ -1,7 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
 import { DataItem, useEditItems } from '../useEditItems';
 
-const initialItem: DataItem = {
+const initialItem = {
   shortId: 'n1',
   version: 1,
   tagsEntries: Object.entries({ amenity: 'cafe' }),
@@ -9,7 +9,7 @@ const initialItem: DataItem = {
   nodeLonLat: [14, 50],
   nodes: undefined,
   members: undefined,
-};
+} as DataItem;
 
 describe('useEditItems', () => {
   it('should add a new feature', () => {
@@ -25,7 +25,7 @@ describe('useEditItems', () => {
     expect(result.current.items[0].presetKey).toEqual('amenity/cafe');
     expect(result.current.items[0].tags).toEqual({ amenity: 'cafe' });
 
-    const newItem: DataItem = {
+    const newItem = {
       shortId: 'n2',
       version: 1,
       tagsEntries: [['amenity', 'restaurant']],
@@ -33,7 +33,7 @@ describe('useEditItems', () => {
       nodeLonLat: [14, 50],
       nodes: undefined,
       members: undefined,
-    };
+    } as DataItem;
 
     act(() => {
       result.current.addItem(newItem);

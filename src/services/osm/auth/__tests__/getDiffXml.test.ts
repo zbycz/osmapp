@@ -1,7 +1,7 @@
 import { DataItem } from '../../../../components/FeaturePanel/EditDialog/useEditItems';
 import { getDiffXml } from '../getDIffXml';
 
-const nodeNew: DataItem = {
+const nodeNew = {
   shortId: 'n-1',
   version: undefined,
   tagsEntries: [['newNode', 'yes']],
@@ -9,9 +9,9 @@ const nodeNew: DataItem = {
   nodes: undefined,
   nodeLonLat: [14, 50],
   toBeDeleted: false,
-};
+} as DataItem;
 
-const nodeChange: DataItem = {
+const nodeChange = {
   shortId: 'n2222',
   version: 2,
   tagsEntries: [['addedTags', 'yes']],
@@ -19,9 +19,9 @@ const nodeChange: DataItem = {
   nodes: undefined,
   nodeLonLat: [14, 50],
   toBeDeleted: false,
-};
+} as DataItem;
 
-const nodeToDelete: DataItem = {
+const nodeToDelete = {
   shortId: 'n9999',
   version: 9,
   tagsEntries: [],
@@ -30,7 +30,7 @@ const nodeToDelete: DataItem = {
 
   nodeLonLat: [14, 50],
   toBeDeleted: true,
-};
+} as DataItem;
 
 const nodesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <osmChange generator="OsmAPP" version="0.6">
@@ -55,7 +55,7 @@ test('should convert nodes', () => {
   );
 });
 
-const wayNew: DataItem = {
+const wayNew = {
   shortId: 'w-1',
   version: undefined,
   tagsEntries: [['newWay', 'yes']],
@@ -63,9 +63,9 @@ const wayNew: DataItem = {
   nodes: [4001, 4002, 4003],
   nodeLonLat: undefined,
   toBeDeleted: false,
-};
+} as DataItem;
 
-const wayChange: DataItem = {
+const wayChange = {
   shortId: 'w2222',
   version: 2,
   tagsEntries: [['addedTags', 'yes']],
@@ -73,9 +73,9 @@ const wayChange: DataItem = {
   nodes: [4001, 4002, 4003],
   nodeLonLat: undefined,
   toBeDeleted: false,
-};
+} as DataItem;
 
-const wayToDelete: DataItem = {
+const wayToDelete = {
   shortId: 'w9999',
   version: 9,
   tagsEntries: [],
@@ -83,7 +83,7 @@ const wayToDelete: DataItem = {
   nodes: [4001, 4002, 4003],
   nodeLonLat: undefined,
   toBeDeleted: true,
-};
+} as DataItem;
 
 const waysXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <osmChange generator="OsmAPP" version="0.6">
@@ -116,7 +116,7 @@ test('should convert ways', () => {
   expect(getDiffXml([wayNew, wayChange, wayToDelete], '123')).toEqual(waysXml);
 });
 
-const relationNew: DataItem = {
+const relationNew = {
   shortId: 'r-1',
   version: undefined,
   tagsEntries: [['new', 'yes']],
@@ -127,9 +127,9 @@ const relationNew: DataItem = {
   nodes: undefined,
   nodeLonLat: undefined,
   toBeDeleted: false,
-};
+} as DataItem;
 
-const relationChange: DataItem = {
+const relationChange = {
   shortId: 'r22',
   version: 2,
   tagsEntries: [['changed', 'yes']],
@@ -137,9 +137,9 @@ const relationChange: DataItem = {
   nodes: undefined,
   nodeLonLat: undefined,
   toBeDeleted: false,
-};
+} as DataItem;
 
-const relationToDelete: DataItem = {
+const relationToDelete = {
   shortId: 'r99',
   version: 9,
   tagsEntries: [],
@@ -147,7 +147,7 @@ const relationToDelete: DataItem = {
   nodes: undefined,
   nodeLonLat: undefined,
   toBeDeleted: true,
-};
+} as DataItem;
 
 const relationsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <osmChange generator="OsmAPP" version="0.6">

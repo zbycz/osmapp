@@ -18,7 +18,7 @@ jest.mock('../../../../services/getCoordsFeature', () => ({
   getNewId: jest.fn(),
 }));
 
-const initialNode: DataItem = {
+const initialNode = {
   shortId: 'n123',
   version: 1,
   tagsEntries: [
@@ -32,9 +32,10 @@ const initialNode: DataItem = {
   nodeLonLat: [14, 50],
   nodes: undefined,
   members: undefined,
-};
+} as DataItem;
 
-const parentItem: DataItem = {
+const parentFeature = { osmMeta: { type: 'relation', id: 99 } };
+const parentItem = {
   shortId: 'r99',
   tagsEntries: [['type', 'site']],
   version: 1,
@@ -42,8 +43,7 @@ const parentItem: DataItem = {
   nodeLonLat: undefined,
   nodes: undefined,
   members: undefined,
-};
-const parentFeature = { osmMeta: { type: 'relation', id: 99 } };
+} as DataItem;
 
 describe('convertToRelationFactory', () => {
   beforeEach(() => {

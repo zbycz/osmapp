@@ -7,6 +7,7 @@ import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 import { insertOsmNote } from '../../../services/osm/insertOsmNote';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
+import { getFullOsmappLink } from '../../../services/helpers';
 
 const useGetSaveNote = () => {
   const { showToast } = useSnackbar();
@@ -14,21 +15,20 @@ const useGetSaveNote = () => {
   const { location, comment, items } = useEditContext();
 
   return async () => {
-    const texts = items.map((item) => {
-      const { tags, toBeDeleted } = item;
-      const noteText = createNoteText(
-        feature, // TODO this is wrong, we must diff each feature from its original state, not from the feature it was opened from
-        tags,
-        toBeDeleted,
-        location,
-        comment,
-        isUndelete,
-      );
-      return noteText;
-    });
+    const texts = [];
+    if (comment) {
+      texts.push(`${comment}`);
+    }
+    texts.push(
+      ...items
+        .filter(({ modified }) => modified)
+        .map((item) => createNoteText(item, location, comment, isUndelete)),
+    );
+
+    texts.push(`\nSubmitted from ${getFullOsmappLink(feature)}`);
 
     const noteText = texts.join('\n\n--------\n');
-    if (noteText == null) {
+    if (!noteText.length) {
       showToast(t('editdialog.changes_needed'), 'warning');
       return;
     }
@@ -49,10 +49,9 @@ export const useGetHandleSave = () => {
     try {
       setIsSaving(true);
 
-      // TODO do not save when no changes
-
+      const changes = items.filter((item) => item.modified);
       const successInfo = loggedIn
-        ? await saveChanges(feature, comment, items)
+        ? await saveChanges(feature, comment, changes)
         : await saveNote();
 
       setSuccessInfo(successInfo);

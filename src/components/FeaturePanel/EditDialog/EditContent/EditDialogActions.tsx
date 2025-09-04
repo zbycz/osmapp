@@ -21,9 +21,16 @@ const downloadFile = (content: string, filename: string) => {
 const SaveButton = () => {
   const { loggedIn } = useOsmAuthContext();
   const handleSave = useGetHandleSave();
+  const { items } = useEditContext();
+  const disabled = !items.some((item) => item.modified);
 
   return (
-    <Button onClick={handleSave} color="primary" variant="contained">
+    <Button
+      onClick={handleSave}
+      color="primary"
+      variant="contained"
+      disabled={disabled}
+    >
       {loggedIn
         ? t('editdialog.save_button_edit')
         : t('editdialog.save_button_note')}
