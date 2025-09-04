@@ -1,6 +1,6 @@
 import { fetchParentFeatures } from '../../../../services/osm/fetchParentFeatures';
 import { fetchWays } from '../../../../services/osm/fetchWays';
-import { fetchFreshItem } from '../itemsHelpers';
+import { addEmptyOriginalState, fetchFreshItem } from '../itemsHelpers';
 import { getNewId } from '../../../../services/getCoordsFeature';
 
 import { convertToRelationFactory, DataItem } from '../useEditItems';
@@ -11,14 +11,15 @@ jest.mock('../../../../services/osm/fetchParentFeatures', () => ({
 jest.mock('../../../../services/osm/fetchWays', () => ({
   fetchWays: jest.fn(),
 }));
-jest.mock('../itemsHelpers', () => ({
-  fetchFreshItem: jest.fn(),
-}));
+jest.mock('../itemsHelpers', () => {
+  const actual = jest.requireActual('../itemsHelpers');
+  return { ...actual, fetchFreshItem: jest.fn() };
+});
 jest.mock('../../../../services/getCoordsFeature', () => ({
   getNewId: jest.fn(),
 }));
 
-const initialNode: DataItem = {
+const initialNode: DataItem = addEmptyOriginalState({
   shortId: 'n123',
   version: 1,
   tagsEntries: [
@@ -32,9 +33,10 @@ const initialNode: DataItem = {
   nodeLonLat: [14, 50],
   nodes: undefined,
   members: undefined,
-};
+});
 
-const parentItem: DataItem = {
+const parentFeature = { osmMeta: { type: 'relation', id: 99 } };
+const parentItem = {
   shortId: 'r99',
   tagsEntries: [['type', 'site']],
   version: 1,
@@ -42,8 +44,7 @@ const parentItem: DataItem = {
   nodeLonLat: undefined,
   nodes: undefined,
   members: undefined,
-};
-const parentFeature = { osmMeta: { type: 'relation', id: 99 } };
+} as DataItem;
 
 describe('convertToRelationFactory', () => {
   beforeEach(() => {

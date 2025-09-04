@@ -8,7 +8,8 @@ import { getPresetTranslation } from '../../../services/tagging/translations';
 import { getNewId } from '../../../services/getCoordsFeature';
 import { fetchParentFeatures } from '../../../services/osm/fetchParentFeatures';
 import { fetchWays } from '../../../services/osm/fetchWays';
-import { fetchFreshItem } from './itemsHelpers';
+import { addEmptyOriginalState, fetchFreshItem } from './itemsHelpers';
+import { isEqual } from 'lodash';
 
 export type TagsEntries = [string, string][];
 
@@ -28,7 +29,16 @@ export type DataItem = {
   nodeLonLat: LonLat | undefined; // only for nodes & for relation converted from node
   nodes: number[] | undefined; // only for ways
   members: Members | undefined; // only for relations
+  originalState: {
+    tags: FeatureTags;
+    isDeleted: boolean;
+    nodeLonLat: LonLat | undefined;
+    nodes: number[] | undefined;
+    members: Members;
+  };
 };
+
+export type DataItemRaw = Omit<DataItem, 'originalState'>;
 
 export type EditDataItem = DataItem & {
   setTagsEntries: SetTagsEntries;
@@ -41,6 +51,7 @@ export type EditDataItem = DataItem & {
   setNodeLonLat: (lonLat: LonLat) => void;
   toggleToBeDeleted: () => void;
   convertToRelation: ConvertToRelation;
+  modified: boolean;
 };
 
 export const isInItems = (items: DataItem[], shortId: string) =>
@@ -146,11 +157,13 @@ const copiedClimbingTags = ([k, v]) =>
 const toBeRemovedTags = ([k, v]) =>
   k.startsWith('climbing') || (k === 'sport' && v === 'climbing');
 
+const isNew = (item: DataItem) => item.shortId.includes('-');
+
 const getConversionTags = (node: DataItem) => {
   const tagsToCopy = node.tagsEntries.filter(copiedClimbingTags);
   const restTags = node.tagsEntries.filter(not(copiedClimbingTags));
 
-  const keepNode = restTags.length > 0;
+  const keepNode = !isNew(node) && restTags.length > 0;
   const keptTags = keepNode
     ? node.tagsEntries.filter(not(toBeRemovedTags))
     : [];
@@ -187,7 +200,7 @@ const convertToRelationFactory = (
       const node = findInItems(prevData, shortId);
       const { tagsToCopy, keepNode, keptTags } = getConversionTags(node);
 
-      const newRelation: DataItem = {
+      const newRelation: DataItem = addEmptyOriginalState({
         shortId: newShortId,
         version: undefined,
         tagsEntries: Object.entries(
@@ -201,7 +214,7 @@ const convertToRelationFactory = (
         nodeLonLat: node.nodeLonLat, // will be used later for first node TODO rename it to make it clear
         nodes: undefined,
         members: keepNode ? [{ shortId, role: '', label: getLabel(node) }] : [],
-      };
+      });
 
       const newData = prevData.map((item) =>
         item.shortId === shortId
@@ -282,6 +295,25 @@ const toggleToBeDeletedFactory = (setDataItem: SetDataItem) => {
     }));
 };
 
+const getModifiedFlag = (dataItem: DataItem): boolean => {
+  if (dataItem.shortId.includes('-')) {
+    return true;
+  }
+
+  const { tagsEntries, toBeDeleted, nodeLonLat, nodes, members } = dataItem;
+  const orig = dataItem.originalState;
+  return (
+    !isEqual(
+      tagsEntries.filter(([k, v]) => k && v),
+      Object.entries(orig.tags),
+    ) ||
+    !isEqual(nodeLonLat, orig.nodeLonLat) ||
+    !isEqual(nodes, orig.nodes) ||
+    !isEqual(members, orig.members) ||
+    toBeDeleted !== orig.isDeleted
+  );
+};
+
 export const useEditItems = () => {
   const [data, setData] = useState<DataItem[]>([]);
 
@@ -305,6 +337,7 @@ export const useEditItems = () => {
           presetKey,
           presetLabel: getPresetTranslation(presetKey),
           convertToRelation: convertToRelationFactory(setData, shortId),
+          modified: getModifiedFlag(dataItem),
         };
         // TODO maybe keep reference to original EditDataItem if DataItem didnt change? #performance
       }),

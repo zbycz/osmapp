@@ -4,13 +4,13 @@ import {
   OsmId,
   RelationMember,
 } from '../../../services/types';
-import { DataItem } from './useEditItems';
+import { DataItem, DataItemRaw, Members } from './useEditItems';
 import {
   fetchSchemaTranslations,
   getPresetTranslation,
 } from '../../../services/tagging/translations';
 import { fetchJson } from '../../../services/fetch';
-import { OsmResponse } from '../../../services/osm/types';
+import { OsmElement, OsmResponse } from '../../../services/osm/types';
 import { getOsmUrlOrFull } from '../../../services/osm/urls';
 import { getItemsMap, ItemsMap } from '../../../services/osm/helpers';
 import { getShortId } from '../../../services/helpers';
@@ -18,18 +18,30 @@ import { findPreset } from '../../../services/tagging/presets';
 import { getNewId } from '../../../services/getCoordsFeature';
 import { getLastBeforeDeleted } from '../../../services/osm/osmApi';
 
+export const addEmptyOriginalState = (dataItem: DataItemRaw): DataItem => ({
+  ...dataItem,
+  originalState: {
+    tags: {},
+    isDeleted: false,
+    nodeLonLat: undefined,
+    nodes: undefined,
+    members: undefined,
+  },
+});
+
 export const getNewNodeItem = (
   [lon, lat]: LonLat,
   tags: FeatureTags = {},
-): DataItem => ({
-  shortId: `n${getNewId()}`,
-  version: undefined,
-  tagsEntries: Object.entries(tags),
-  toBeDeleted: false,
-  nodeLonLat: [lon, lat],
-  nodes: undefined,
-  members: undefined,
-});
+): DataItem =>
+  addEmptyOriginalState({
+    shortId: `n${getNewId()}`,
+    version: undefined,
+    tagsEntries: Object.entries(tags),
+    toBeDeleted: false,
+    nodeLonLat: [lon, lat],
+    nodes: undefined,
+    members: undefined,
+  });
 
 const getLabel = (itemsMap: ItemsMap, member: RelationMember) => {
   const element = itemsMap[member.type][member.ref];
@@ -58,27 +70,39 @@ const getFullOrDeleted = async (apiId: OsmId): Promise<OsmResponse> => {
   }
 };
 
-// For FeaturePanel - use getFullFeatureWithMemberFeatures() which returns `Feature` type
+const getMembers = (el: OsmElement, itemsMap: ItemsMap): Members =>
+  el.members?.map((member) => ({
+    shortId: getShortId({ type: member.type, id: member.ref }),
+    role: member.role,
+    label: getLabel(itemsMap, member),
+  })) ?? [];
+
+// For FeaturePanel use getFullFeatureWithMemberFeatures() which returns `Feature` type
 export const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
   await fetchSchemaTranslations();
   const full = await getFullOrDeleted(apiId);
   const itemsMap = getItemsMap(full.elements);
-  const main = itemsMap[apiId.type][apiId.id];
+  const el = itemsMap[apiId.type][apiId.id];
+
+  const tags = el.tags ?? {};
+  const nodeLonLat = el.type === 'node' ? [el.lon, el.lat] : undefined;
+  const nodes = el.type === 'way' ? el.nodes : undefined;
+  const members = el.type === 'relation' ? getMembers(el, itemsMap) : undefined;
 
   return {
-    shortId: getShortId(apiId),
-    version: main.version,
-    tagsEntries: Object.entries(main.tags ?? {}),
+    shortId: getShortId(el),
+    version: el.version,
+    tagsEntries: Object.entries(tags),
     toBeDeleted: false,
-    nodeLonLat: apiId.type === 'node' ? [main.lon, main.lat] : undefined,
-    nodes: apiId.type === 'way' ? main.nodes : undefined,
-    members:
-      apiId.type === 'relation'
-        ? (main.members?.map((member) => ({
-            shortId: getShortId({ type: member.type, id: member.ref }),
-            role: member.role,
-            label: getLabel(itemsMap, member),
-          })) ?? [])
-        : undefined,
+    nodeLonLat,
+    nodes,
+    members,
+    originalState: {
+      tags: JSON.parse(JSON.stringify(tags)),
+      isDeleted: !!el.osmappDeletedMarker, // for undelete the initial value is changed to false
+      nodeLonLat,
+      nodes,
+      members,
+    },
   };
 };

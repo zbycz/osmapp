@@ -45,32 +45,53 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
+const ModifiedBadge = styled.div(({ theme }) => ({
+  position: 'absolute',
+  top: 8,
+  right: 8,
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.primary.main,
+}));
+
 type TabLabelProps = {
   item: EditDataItem;
 };
+
 const TabLabel = ({
-  item: { shortId, tags, presetLabel, toBeDeleted },
+  item: { shortId, tags, presetLabel, toBeDeleted, modified },
 }: TabLabelProps) => (
-  <Stack direction="column" alignItems="flex-start" width="100%">
-    <Stack
-      direction="row"
-      gap={1}
-      alignItems="center"
-      justifyContent="space-between"
-      width="100%"
-    >
-      <StyledTypography
-        variant="button"
-        whiteSpace="nowrap"
-        $deleted={toBeDeleted}
+  <>
+    {modified && <ModifiedBadge />}
+    <Stack direction="column" alignItems="flex-start" width="100%">
+      <Stack
+        direction="row"
+        gap={1}
+        alignItems="center"
+        justifyContent="space-between"
+        width="100%"
       >
-        {tags.name || shortId}
-      </StyledTypography>
+        <StyledTypography
+          variant="button"
+          whiteSpace="nowrap"
+          $deleted={toBeDeleted}
+        >
+          {tags.name || shortId}
+        </StyledTypography>
+      </Stack>
+      <Typography
+        variant="caption"
+        textTransform="lowercase"
+        whiteSpace="nowrap"
+      >
+        {presetLabel}{' '}
+        {shortId[0] === 'n' ? null : (
+          <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
+        )}
+      </Typography>
     </Stack>
-    <Typography variant="caption" textTransform="lowercase" whiteSpace="nowrap">
-      {presetLabel} <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
-    </Typography>
-  </Stack>
+  </>
 );
 
 export const ItemsTabs = () => {
