@@ -8,7 +8,7 @@ export const routesLines: LayerSpecification[] = [
     type: 'line',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 13,
-    filter: ['all', ['==', 'type', 'route']],
+    filter: ['==', 'type', 'route'],
     layout: { 'line-cap': 'round' },
     paint: {
       'line-color': '#f8f4f0',
@@ -21,7 +21,7 @@ export const routesLines: LayerSpecification[] = [
     type: 'line',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 13,
-    filter: ['all', ['==', 'type', 'route']],
+    filter: ['==', 'type', 'route'],
     layout: { 'line-cap': 'round' },
     paint: {
       'line-color': ['coalesce', ['get', 'color'], '#999'],
@@ -34,7 +34,7 @@ export const routesLines: LayerSpecification[] = [
     type: 'line',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 13,
-    filter: ['all', ['==', 'type', 'route']],
+    filter: ['==', 'type', 'route'],
     layout: { 'line-cap': 'round' },
     paint: {
       'line-color': '#000',
@@ -52,7 +52,7 @@ export const routesLines: LayerSpecification[] = [
     metadata: { clickableWithOsmId: true },
     type: 'symbol',
     source: CLIMBING_TILES_SOURCE,
-    filter: ['all', ['==', 'type', 'route']],
+    filter: ['==', 'type', 'route'],
     layout: {
       'symbol-placement': 'line-center',
       'text-font': ['Noto Sans Regular'],

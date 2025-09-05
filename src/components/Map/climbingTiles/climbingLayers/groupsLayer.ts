@@ -55,7 +55,7 @@ export const groupsLayer: LayerSpecification = {
   type: 'symbol',
   source: CLIMBING_TILES_SOURCE,
   maxzoom: 20,
-  filter: ['all', ['in', 'type', 'area', 'crag']],
+  filter: ['in', 'type', 'area', 'crag'],
   layout: GROUPS_LAYOUT,
   paint: {
     'icon-opacity': hover(1, 0.6),
@@ -72,7 +72,7 @@ export const groupsLayer: LayerSpecification = {
 export const gymsLayer: LayerSpecification = {
   ...groupsLayer,
   id: 'climbing gym',
-  filter: ['all', ['==', 'type', 'gym']],
+  filter: ['==', 'type', 'gym'],
   minzoom: 9,
   maxzoom: 24,
   layout: {
@@ -84,7 +84,7 @@ export const gymsLayer: LayerSpecification = {
 export const ferrataLayer: LayerSpecification = {
   ...groupsLayer,
   id: 'climbing via_ferrata',
-  filter: ['all', ['==', 'type', 'ferrata']],
+  filter: ['==', 'type', 'ferrata'],
   layout: {
     ...groupsLayer.layout,
     'icon-image': VIA_FERRATA.IMAGE,

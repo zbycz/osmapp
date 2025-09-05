@@ -9,7 +9,11 @@ export const routesPoints: LayerSpecification[] = [
     type: 'circle',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 13,
-    filter: ['in', 'type', 'route', 'route_top'],
+    filter: [
+      'all',
+      ['in', 'type', 'route', 'route_top'],
+      ['==', '$type', 'Point'],
+    ],
     paint: {
       'circle-color': [
         'case',
