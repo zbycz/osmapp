@@ -5,8 +5,8 @@ import {
   MapMouseEvent,
   StyleSpecification,
 } from 'maplibre-gl';
-import { isMobileDevice } from '../../helpers';
 import { climbingLayers } from '../climbingTiles/climbingLayers/climbingLayers';
+import { isMobileDevice } from '../../helpers';
 
 const HOVER_EXPRESSION = ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 1]; // prettier-ignore
 const ICON_OPACITY = ['case', ['boolean', ['feature-state', 'hideIcon'], false], 0, HOVER_EXPRESSION]; // prettier-ignore
@@ -23,6 +23,10 @@ export const addHoverPaint = (origStyle): StyleSpecification => {
   return origStyle;
 };
 
+const CLIMBING_CLICKABLE_LAYERS = climbingLayers
+  .filter((l) => (l.metadata as any)?.clickableWithOsmId)
+  .map((l) => l.id);
+
 export const setUpHover = (map: Map, layersWithOsmId: string[]) => {
   let lastHover = null;
 
@@ -31,46 +35,7 @@ export const setUpHover = (map: Map, layersWithOsmId: string[]) => {
   const setHoverOff = (feature: FeatureIdentifier | null) =>
     feature && map.setFeatureState(feature, { hover: false });
 
-  const onMouseMove = (
-    e: MapMouseEvent & {
-      features?: MapGeoJSONFeature[];
-    } & Object,
-  ) => {
-    if (e.features && e.features.length > 0) {
-      const feature = e.features[0];
-      if (feature !== lastHover) {
-        setHoverOff(lastHover);
-        setHoverOn(feature);
-        lastHover = feature;
-        map.getCanvas().style.cursor = 'pointer'; // eslint-disable-line no-param-reassign
-      }
-    }
-  };
-
-  const onMouseLeave = () => {
-    setHoverOff(lastHover);
-    lastHover = null;
-    // TODO delay 200ms
-    map.getCanvas().style.cursor = ''; // eslint-disable-line no-param-reassign
-  };
-
-  const onMapMove = (e) => {
-    onMouseLeave();
-
-    const layers = climbingLayers
-      .filter((l) => (l.metadata as any)?.clickableWithOsmId)
-      .map((l) => l.id);
-
-    const touch = e?.originalEvent?.changedTouches?.[0];
-    if (!touch) {
-      return;
-    }
-
-    const features = map.queryRenderedFeatures([touch.pageX, touch.pageY], {
-      layers,
-    });
-    const feature = features.length > 0 ? features[0] : null;
-
+  const featureHovered = (feature: MapGeoJSONFeature) => {
     if (feature !== lastHover) {
       setHoverOff(lastHover);
       setHoverOn(feature);
@@ -79,12 +44,30 @@ export const setUpHover = (map: Map, layersWithOsmId: string[]) => {
     }
   };
 
+  const onMouseMove = (
+    e: MapMouseEvent & { features?: MapGeoJSONFeature[] },
+  ) => {
+    cancelHover();
+    if (e.features && e.features.length > 0) {
+      featureHovered(e.features[0]);
+    }
+  };
+
+  const cancelHover = () => {
+    setHoverOff(lastHover);
+    lastHover = null;
+    // TODO delay 200ms
+    map.getCanvas().style.cursor = ''; // eslint-disable-line no-param-reassign
+  };
+
   layersWithOsmId.forEach((layer) => {
     map.on('mousemove', layer, onMouseMove); // TODO unregister
-    map.on('mouseleave', layer, onMouseLeave);
-
-    if (isMobileDevice()) {
-      map.on('moveend', onMapMove);
-    }
+    map.on('mouseleave', layer, cancelHover);
   });
+
+  if (isMobileDevice()) {
+    CLIMBING_CLICKABLE_LAYERS.forEach((layer) => {
+      map.on('click', layer, onMouseMove);
+    });
+  }
 };
