@@ -5,6 +5,8 @@ import {
   MapMouseEvent,
   StyleSpecification,
 } from 'maplibre-gl';
+import { isMobileDevice } from '../../helpers';
+import { climbingLayers } from '../climbingTiles/climbingLayers/climbingLayers';
 
 const HOVER_EXPRESSION = ['case', ['boolean', ['feature-state', 'hover'], false], 0.5, 1]; // prettier-ignore
 const ICON_OPACITY = ['case', ['boolean', ['feature-state', 'hideIcon'], false], 0, HOVER_EXPRESSION]; // prettier-ignore
@@ -52,8 +54,37 @@ export const setUpHover = (map: Map, layersWithOsmId: string[]) => {
     map.getCanvas().style.cursor = ''; // eslint-disable-line no-param-reassign
   };
 
+  const onMapMove = (e) => {
+    onMouseLeave();
+
+    const layers = climbingLayers
+      .filter((l) => (l.metadata as any)?.clickableWithOsmId)
+      .map((l) => l.id);
+
+    const touch = e?.originalEvent?.changedTouches?.[0];
+    if (!touch) {
+      return;
+    }
+
+    const features = map.queryRenderedFeatures([touch.pageX, touch.pageY], {
+      layers,
+    });
+    const feature = features.length > 0 ? features[0] : null;
+
+    if (feature !== lastHover) {
+      setHoverOff(lastHover);
+      setHoverOn(feature);
+      lastHover = feature;
+      map.getCanvas().style.cursor = 'pointer'; // eslint-disable-line no-param-reassign
+    }
+  };
+
   layersWithOsmId.forEach((layer) => {
-    map.on('mousemove', layer, onMouseMove);
+    map.on('mousemove', layer, onMouseMove); // TODO unregister
     map.on('mouseleave', layer, onMouseLeave);
+
+    if (isMobileDevice()) {
+      map.on('moveend', onMapMove);
+    }
   });
 };
