@@ -51,6 +51,18 @@ const getRouteNumberFromTags = (element: OsmItem) => {
   return Number.isNaN(sum) ? 1 : sum; // can be eg. "yes" .. eg. relation/15056469
 };
 
+const getRouteCount = <T extends OsmItem>(element: T) => {
+  if (element.tags?.climbing === 'crag') {
+    return Math.max(
+      element.type === 'relation'
+        ? element.members.filter((member) => member.role === '').length // TODO filter by member element having climbing=route/route_bottom
+        : 0,
+      getRouteNumberFromTags(element),
+    );
+  }
+  return undefined;
+};
+
 const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
   element: T,
   geometryFn: (element: T) => TGeometry,
@@ -59,20 +71,10 @@ const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
   const { type, id, tags = {} } = element;
   const geometry = geometryFn(element);
   const center = getCenter(geometry) ?? undefined;
-  const osmappRouteCount =
-    element.tags?.climbing === 'crag'
-      ? Math.max(
-          element.type === 'relation'
-            ? element.members.filter((member) => member.role === '').length // TODO filter by member element having climbing=route/route_bottom
-            : 0,
-          getRouteNumberFromTags(element),
-        )
-      : undefined;
-
   const histogram = getHistogram(element, lookup);
 
   const properties: GeojsonFeature['properties'] = {
-    routeCount: osmappRouteCount,
+    routeCount: getRouteCount(element),
     hasImages: Object.keys(tags).some((key) =>
       key.startsWith('wikimedia_commons'),
     ),
@@ -144,7 +146,7 @@ const getRelationsWithAreaCount = (
         ({ type, ref }) => lookup[type][ref]?.properties,
       );
       const routeCount = members
-        .map((member) => member?.routeCount ?? 0)
+        .map((member) => member?.routeCount ?? 1)
         .reduce((acc, count) => acc + count);
       const hasImages = members.some((member) => member?.hasImages);
 
