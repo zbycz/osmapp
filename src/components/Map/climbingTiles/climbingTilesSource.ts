@@ -21,6 +21,7 @@ import convex from '@turf/convex';
 import polygonSmooth from '@turf/polygon-smooth';
 import buffer from '@turf/buffer';
 import { bbox } from '@turf/turf';
+import distance from '@turf/distance';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
@@ -98,7 +99,7 @@ const doClimbingFilter = (features: ClimbingTilesFeature[]) => {
   return filteredFeatures;
 };
 
-const constructBoxes = (filteredFeatures: ClimbingTilesFeature[]) => {
+const constructOutlines = (filteredFeatures: ClimbingTilesFeature[]) => {
   return filteredFeatures
     .filter(({ id }) => (id as number) % 10 === 4)
     .flatMap((relation) => {
@@ -136,6 +137,8 @@ const constructBoxes = (filteredFeatures: ClimbingTilesFeature[]) => {
       const width = maxX - minX;
       const height = maxY - minY;
       const maxDimension = Math.max(width, height);
+      const meters = distance([minX, minY], [maxX, maxY], { units: 'meters' });
+      const minZoom = Math.log2((5 * 40075016) / (meters * 256));
 
       // Buffer by 10% of largest dimension in degrees (~approximation)
       const bufferDistance = maxDimension * 0.1;
@@ -145,9 +148,10 @@ const constructBoxes = (filteredFeatures: ClimbingTilesFeature[]) => {
       return [
         {
           ...(smooth as any).features[0],
-          id: mapId as number,
+          id: mapId,
           properties: {
-            type: 'box',
+            type: 'outline',
+            minZoom,
           },
         } as GeojsonFeature<Polygon>,
       ];
@@ -174,7 +178,7 @@ const updateData = async () => {
   }
   const filteredFeatures = doClimbingFilter(features);
 
-  const boxes = constructBoxes(features);
+  const boxes = constructOutlines(features);
 
   map?.getSource<GeoJSONSource>(CLIMBING_TILES_SOURCE)?.setData({
     type: 'FeatureCollection' as const,
