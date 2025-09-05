@@ -168,7 +168,7 @@ const getRelationsWithAreaCount = (
 
 const addParentIds = (lookup: Lookup) => {
   for (const relation of Object.values(lookup.relation)) {
-    if (relation.tags?.climbing === 'area') {
+    if (['area', 'crag'].includes(relation.tags?.climbing)) {
       for (const member of relation.members ?? []) {
         const child = lookup[member.type][member.ref]; // we know, that in lookup is the same object as in nodesOut/waysOut
         if (child) {

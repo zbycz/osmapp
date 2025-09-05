@@ -15,6 +15,7 @@ import {
 import { join } from '../../../utils';
 import { mapClimbingFilter } from '../../utils/userSettings/getClimbingFilter';
 import { decodeHistogram } from '../../../server/climbing-tiles/overpass/histogram';
+import { constructOutlines } from './constructOutlines';
 
 const getTileJson = async ({ z, x, y }: Tile) => {
   try {
@@ -112,9 +113,11 @@ const updateData = async () => {
   }
   const filteredFeatures = doClimbingFilter(features);
 
+  const boxes = constructOutlines(features);
+
   map?.getSource<GeoJSONSource>(CLIMBING_TILES_SOURCE)?.setData({
     type: 'FeatureCollection' as const,
-    features: filteredFeatures.map(processFeature),
+    features: [...filteredFeatures.map(processFeature), ...boxes],
   });
 };
 
