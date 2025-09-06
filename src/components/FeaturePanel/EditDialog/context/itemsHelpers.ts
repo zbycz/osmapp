@@ -4,7 +4,6 @@ import {
   OsmId,
   RelationMember,
 } from '../../../../services/types';
-import { DataItem, DataItemRaw, Members } from './useEditItems';
 import {
   fetchSchemaTranslations,
   getPresetTranslation,
@@ -17,6 +16,7 @@ import { getShortId } from '../../../../services/helpers';
 import { findPreset } from '../../../../services/tagging/presets';
 import { getNewId } from '../../../../services/getCoordsFeature';
 import { getLastBeforeDeleted } from '../../../../services/osm/osmApi';
+import { DataItem, DataItemRaw, Members } from './types';
 
 export const addEmptyOriginalState = (dataItem: DataItemRaw): DataItem => ({
   ...dataItem,

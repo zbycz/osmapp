@@ -1,10 +1,11 @@
-import { DataItem, EditDataItem, isInItems } from '../context/useEditItems';
+import { isInItems } from '../context/useEditItems';
 import React from 'react';
 import { useCurrentItem, useEditContext } from '../context/EditContext';
 import { getApiId, getShortId } from '../../../../services/helpers';
 import { fetchFreshItem } from '../context/itemsHelpers';
 import { Setter } from '../../../../types';
 import { Feature } from '../../../../services/types';
+import { DataItem, EditDataItem } from '../context/types';
 
 export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
   const { addItem, items, setCurrent } = useEditContext();

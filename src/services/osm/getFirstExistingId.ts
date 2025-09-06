@@ -1,7 +1,7 @@
 import { DiffResultXmljs } from './auth/xmlTypes';
-import { DataItem } from '../../components/FeaturePanel/EditDialog/context/useEditItems';
 import { getApiId } from '../helpers';
 import { OsmId } from '../types';
+import { DataItem } from '../../components/FeaturePanel/EditDialog/context/types';
 
 const extractExistingId = (change: DataItem, result: DiffResultXmljs) => {
   const id = getApiId(change.shortId);

@@ -1,7 +1,7 @@
-import { EditDataItem } from '../../../../components/FeaturePanel/EditDialog/context/useEditItems';
 import { parseToXmljs } from '../xmlHelpers';
 import { DiffResultXmljs } from '../xmlTypes';
 import { getFirstExistingId } from '../../getFirstExistingId';
+import { EditDataItem } from '../../../../components/FeaturePanel/EditDialog/context/types';
 
 const diffResponse = `<?xml version="1.0" encoding="UTF-8"?>
       <diffResult version="0.6" generator="openstreetmap-cgimap 2.0.1.2504041438 (3164272 faffy.openstreetmap.org)">

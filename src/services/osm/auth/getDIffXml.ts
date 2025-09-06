@@ -1,4 +1,3 @@
-import { DataItem } from '../../../components/FeaturePanel/EditDialog/context/useEditItems';
 import { getApiId } from '../../helpers';
 import {
   DiffDocXmljs,
@@ -7,6 +6,7 @@ import {
   WayItemXml,
 } from './xmlTypes';
 import { xmljsBuildOsmChange } from './xmlHelpers';
+import { DataItem } from '../../../components/FeaturePanel/EditDialog/context/types';
 
 const isNode = ({ shortId }: DataItem) => shortId.startsWith('n');
 const isWay = ({ shortId }: DataItem) => shortId.startsWith('w');
