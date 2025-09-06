@@ -1,4 +1,4 @@
-import { useEditContext } from './EditContext';
+import { useEditContext } from './context/EditContext';
 import { EditDialogTitle } from './EditDialogTitle';
 import { SuccessContent } from './SuccessContent';
 import { EditContent } from './EditContent/EditContent';

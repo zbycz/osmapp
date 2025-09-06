@@ -14,7 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getShortId } from '../../../../../services/helpers';
 import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
-import { useCurrentItem } from '../../EditContext';
+import { useCurrentItem } from '../../context/EditContext';
 import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';

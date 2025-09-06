@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box } from '@mui/material';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 import { EditorHeader } from './EditorHeader';
 import { EditorItem } from './EditorItem';
 

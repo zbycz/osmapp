@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import EditIcon from '@mui/icons-material/Edit';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 import { Setter } from '../../../../../../types';
 
 const getTranslationKey = (key: string) => {

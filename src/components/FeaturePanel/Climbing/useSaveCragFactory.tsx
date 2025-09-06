@@ -8,9 +8,9 @@ import {
   getWikimediaCommonsKey,
 } from './utils/photo';
 import { Setter } from '../../../types';
-import { DataItem } from '../EditDialog/useEditItems';
+import { DataItem } from '../EditDialog/context/useEditItems';
 import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
-import { fetchFreshItem } from '../EditDialog/itemsHelpers';
+import { fetchFreshItem } from '../EditDialog/context/itemsHelpers';
 import { stringifyPath } from './utils/pathUtils';
 
 const getUpdatedPhotoTags = (route: ClimbingRoute) => {

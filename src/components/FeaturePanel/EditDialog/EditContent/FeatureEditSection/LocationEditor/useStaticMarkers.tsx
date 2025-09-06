@@ -5,8 +5,8 @@ import { Button, Stack, Typography } from '@mui/material';
 import { createMapEffectHook } from '../../../../../helpers';
 import { t } from '../../../../../../services/intl';
 import { isGpsValid } from './isGpsValid';
-import { EditDataItem } from '../../../useEditItems';
-import { useEditContext } from '../../../EditContext';
+import { EditDataItem } from '../../../context/useEditItems';
+import { useEditContext } from '../../../context/EditContext';
 import { Setter } from '../../../../../../types';
 
 const GRAY_MARKER = {

@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 import { t, Translation } from '../../../../../../services/intl';
 import { encodeUrl } from '../../../../../../helpers/utils';
 import React from 'react';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const CantEditText = () => {
   const { tags } = useCurrentItem();

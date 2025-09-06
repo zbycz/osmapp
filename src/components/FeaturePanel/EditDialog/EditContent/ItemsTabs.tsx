@@ -7,9 +7,9 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useEditContext } from '../EditContext';
+import { useEditContext } from '../context/EditContext';
 import React from 'react';
-import { EditDataItem } from '../useEditItems';
+import { EditDataItem } from '../context/useEditItems';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
 
 const StyledTypography = styled(Typography, {

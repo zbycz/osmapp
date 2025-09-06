@@ -1,4 +1,4 @@
-import { useCurrentItem, useEditContext } from '../../../EditContext';
+import { useCurrentItem, useEditContext } from '../../../context/EditContext';
 import { useGetHandleSave } from '../../../useGetHandleSave';
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { useGetParents } from '../useGetParents';

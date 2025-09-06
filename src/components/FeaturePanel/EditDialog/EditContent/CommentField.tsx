@@ -6,7 +6,7 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import { useEditContext } from '../EditContext';
+import { useEditContext } from '../context/EditContext';
 import { t } from '../../../../services/intl';
 
 export const CommentField = () => {

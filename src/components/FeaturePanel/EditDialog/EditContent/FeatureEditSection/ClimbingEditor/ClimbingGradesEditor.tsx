@@ -2,7 +2,7 @@ import { extractClimbingGradeFromTagName } from '../../../../../../services/tagg
 import { GradeSelect } from '../GradeSelect';
 import React from 'react';
 import { useUserSettingsContext } from '../../../../../utils/userSettings/UserSettingsContext';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 import { GradeSystemSelect } from '../../../../Climbing/GradeSystemSelect';
 import { Box, Stack, Typography } from '@mui/material';
 import { t } from '../../../../../../services/intl';

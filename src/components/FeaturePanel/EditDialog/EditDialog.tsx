@@ -3,9 +3,9 @@ import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 import { useEditDialogFeature } from './utils';
-import { EditContextProvider, useEditContext } from './EditContext';
+import { EditContextProvider, useEditContext } from './context/EditContext';
 import { getReactKey } from '../../../services/helpers';
-import { fetchFreshItem, getNewNodeItem } from './itemsHelpers';
+import { fetchFreshItem, getNewNodeItem } from './context/itemsHelpers';
 import {
   EditDialogContent,
   EditDialogLoadingSkeleton,

@@ -1,7 +1,7 @@
 import { Button, CircularProgress, DialogActions } from '@mui/material';
 import React from 'react';
 import { t } from '../../../../services/intl';
-import { useEditContext } from '../EditContext';
+import { useEditContext } from '../context/EditContext';
 import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { useGetHandleSave } from '../useGetHandleSave';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';

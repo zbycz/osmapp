@@ -3,20 +3,20 @@ import {
   LonLat,
   OsmId,
   RelationMember,
-} from '../../../services/types';
+} from '../../../../services/types';
 import { DataItem, DataItemRaw, Members } from './useEditItems';
 import {
   fetchSchemaTranslations,
   getPresetTranslation,
-} from '../../../services/tagging/translations';
-import { fetchJson } from '../../../services/fetch';
-import { OsmElement, OsmResponse } from '../../../services/osm/types';
-import { getOsmUrlOrFull } from '../../../services/osm/urls';
-import { getItemsMap, ItemsMap } from '../../../services/osm/helpers';
-import { getShortId } from '../../../services/helpers';
-import { findPreset } from '../../../services/tagging/presets';
-import { getNewId } from '../../../services/getCoordsFeature';
-import { getLastBeforeDeleted } from '../../../services/osm/osmApi';
+} from '../../../../services/tagging/translations';
+import { fetchJson } from '../../../../services/fetch';
+import { OsmElement, OsmResponse } from '../../../../services/osm/types';
+import { getOsmUrlOrFull } from '../../../../services/osm/urls';
+import { getItemsMap, ItemsMap } from '../../../../services/osm/helpers';
+import { getShortId } from '../../../../services/helpers';
+import { findPreset } from '../../../../services/tagging/presets';
+import { getNewId } from '../../../../services/getCoordsFeature';
+import { getLastBeforeDeleted } from '../../../../services/osm/osmApi';
 
 export const addEmptyOriginalState = (dataItem: DataItemRaw): DataItem => ({
   ...dataItem,

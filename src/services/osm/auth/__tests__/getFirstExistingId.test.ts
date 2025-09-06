@@ -1,4 +1,4 @@
-import { EditDataItem } from '../../../../components/FeaturePanel/EditDialog/useEditItems';
+import { EditDataItem } from '../../../../components/FeaturePanel/EditDialog/context/useEditItems';
 import { parseToXmljs } from '../xmlHelpers';
 import { DiffResultXmljs } from '../xmlTypes';
 import { getFirstExistingId } from '../../getFirstExistingId';

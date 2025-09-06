@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import { outdoorStyle } from '../../../../../Map/styles/outdoorStyle';
 import { COMPASS_TOOLTIP } from '../../../../../Map/useAddTopRightControls';
-import { useCurrentItem, useEditContext } from '../../../EditContext';
+import { useCurrentItem, useEditContext } from '../../../context/EditContext';
 import { useFeatureMarkers } from './useStaticMarkers';
 import { useDraggableFeatureMarker } from './useDraggableMarker';
 import { isGpsValid } from './isGpsValid';

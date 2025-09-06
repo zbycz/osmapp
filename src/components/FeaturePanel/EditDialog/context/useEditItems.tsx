@@ -1,13 +1,13 @@
-import { FeatureTags, LonLat } from '../../../services/types';
-import { getApiId } from '../../../services/helpers';
-import { Setter } from '../../../types';
+import { FeatureTags, LonLat } from '../../../../services/types';
+import { getApiId } from '../../../../services/helpers';
+import { Setter } from '../../../../types';
 import { useCallback, useMemo, useState } from 'react';
-import { not, publishDbgObject } from '../../../utils';
-import { findPreset } from '../../../services/tagging/presets';
-import { getPresetTranslation } from '../../../services/tagging/translations';
-import { getNewId } from '../../../services/getCoordsFeature';
-import { fetchParentFeatures } from '../../../services/osm/fetchParentFeatures';
-import { fetchWays } from '../../../services/osm/fetchWays';
+import { not, publishDbgObject } from '../../../../utils';
+import { findPreset } from '../../../../services/tagging/presets';
+import { getPresetTranslation } from '../../../../services/tagging/translations';
+import { getNewId } from '../../../../services/getCoordsFeature';
+import { fetchParentFeatures } from '../../../../services/osm/fetchParentFeatures';
+import { fetchWays } from '../../../../services/osm/fetchWays';
 import { addEmptyOriginalState, fetchFreshItem } from './itemsHelpers';
 import { isEqual } from 'lodash';
 

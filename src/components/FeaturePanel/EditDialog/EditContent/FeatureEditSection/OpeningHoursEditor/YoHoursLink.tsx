@@ -2,7 +2,7 @@ import { Typography } from '@mui/material';
 import { encodeUrl } from '../../../../../../helpers/utils';
 import React from 'react';
 import { Translation } from '../../../../../../services/intl';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 export const YoHoursLink = () => {
   const { tags } = useCurrentItem();

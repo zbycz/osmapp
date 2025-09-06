@@ -14,7 +14,7 @@ import { getApiId } from '../../../../../../services/helpers';
 import { fetchWays } from '../../../../../../services/osm/fetchWays';
 import { OsmId } from '../../../../../../services/types';
 import PlaceIcon from '@mui/icons-material/Place';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
   ssr: false,

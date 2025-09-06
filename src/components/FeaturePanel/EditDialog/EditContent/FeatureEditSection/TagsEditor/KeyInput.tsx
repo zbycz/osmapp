@@ -1,7 +1,7 @@
 import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import React, { useEffect, useState } from 'react';
 import { FastInput } from './helpers';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const useUpdatedState = (currentKey: string) => {
   const [tmpKey, setTmpKey] = useState(currentKey);

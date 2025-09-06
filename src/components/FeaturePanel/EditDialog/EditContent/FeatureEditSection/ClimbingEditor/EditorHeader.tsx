@@ -3,7 +3,7 @@ import { Box, Button, Menu, MenuItem, Typography } from '@mui/material';
 import { t } from '../../../../../../services/intl';
 import { getLabel } from './EditorItem';
 import { Setter } from '../../../../../../types';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 export const EditorHeader: React.FC<{
   label: string;

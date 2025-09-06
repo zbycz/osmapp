@@ -10,7 +10,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import styled from '@emotion/styled';
 import React from 'react';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
-import { useEditContext } from '../EditContext';
+import { useEditContext } from '../context/EditContext';
 import { useLoadingState } from '../../../utils/useLoadingState';
 
 const StyledListItem = styled(ListItem)`

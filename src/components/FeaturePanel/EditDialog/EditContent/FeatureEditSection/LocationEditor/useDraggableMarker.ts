@@ -3,7 +3,7 @@ import maplibregl, { LngLat } from 'maplibre-gl';
 import { createMapEffectHook } from '../../../../../helpers';
 import { LonLat } from '../../../../../../services/types';
 import { isGpsValid } from './isGpsValid';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const MAIN_MARKER = {
   color: 'salmon',

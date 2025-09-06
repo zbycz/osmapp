@@ -5,7 +5,7 @@ import {
 } from '../../../../../../services/tagging/translations';
 import { allPresets } from '../../../../../../services/tagging/data';
 import { useEffect, useMemo, useState } from 'react';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 import { getApiId } from '../../../../../../services/helpers';
 import { OsmType } from '../../../../../../services/types';
 import { PROJECT_ID } from '../../../../../../services/project';

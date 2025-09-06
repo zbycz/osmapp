@@ -1,4 +1,4 @@
-import { useEditContext } from '../../EditContext';
+import { useEditContext } from '../../context/EditContext';
 import { useEffect, useState } from 'react';
 import { Feature } from '../../../../../services/types';
 import { getApiId } from '../../../../../services/helpers';

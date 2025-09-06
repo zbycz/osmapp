@@ -12,7 +12,7 @@ import {
 import { t, Translation } from '../../../services/intl';
 import { nl2br } from '../../utils/nl2br';
 import { SuccessInfo } from '../../../services/types';
-import { useEditContext } from './EditContext';
+import { useEditContext } from './context/EditContext';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 
 const StyledCheckCircleIcon = styled(CheckCircleIcon)`
