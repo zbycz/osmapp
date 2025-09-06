@@ -98,7 +98,7 @@ export const convertToRelationFactory = (
           ]),
         ),
         toBeDeleted: false,
-        nodeLonLat: node.nodeLonLat, // will be used later for first node TODO rename it to make it clear
+        relationClickedLonLat: node.nodeLonLat,
         members: keepNode ? [{ shortId, role: '', label: getLabel(node) }] : [],
       });
 

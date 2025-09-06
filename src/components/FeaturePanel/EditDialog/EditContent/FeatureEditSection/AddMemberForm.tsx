@@ -74,13 +74,13 @@ const getMemberTags = (parentTags: FeatureTags) => {
 export const AddMemberForm = () => {
   const { view } = useMapStateContext();
   const { addItem, items, setCurrent } = useEditContext();
-  const currentItem = useCurrentItem();
+  const relation = useCurrentItem();
   const [showInput, setShowInput] = useState(false);
   const [label, setLabel] = useState('');
 
   const handleAddMember = useCallback(
     async (e) => {
-      const { members, setMembers, tags, nodeLonLat } = currentItem;
+      const { members, setMembers, tags, relationClickedLonLat } = relation;
 
       let newItem: DataItem;
       if (label.match(/^[nwr]\d+$/)) {
@@ -88,7 +88,8 @@ export const AddMemberForm = () => {
         newItem = await fetchFreshItem(apiId);
       } else {
         const nextPosition = await getNextNodeLocation(items, members);
-        const position = nextPosition ?? nodeLonLat ?? getViewPoint(view); // nodeLonLat for relation converted from node
+        const position =
+          nextPosition ?? relationClickedLonLat ?? getViewPoint(view);
         newItem = getNewNodeItem(position, {
           name: label,
           ...getMemberTags(tags),
@@ -115,7 +116,7 @@ export const AddMemberForm = () => {
         setCurrent(newShortId);
       }
     },
-    [addItem, currentItem, items, label, setCurrent, view],
+    [addItem, relation, items, label, setCurrent, view],
   );
 
   useEffect(() => {
@@ -138,7 +139,7 @@ export const AddMemberForm = () => {
     };
   }, [handleAddMember, showInput]);
 
-  const isClimbingCrag = currentItem.tags.climbing === 'crag';
+  const isClimbingCrag = relation.tags.climbing === 'crag';
 
   return (
     <>
