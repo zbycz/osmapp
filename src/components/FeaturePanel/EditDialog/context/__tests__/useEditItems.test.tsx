@@ -9,8 +9,6 @@ const initialItem: DataItem = addEmptyOriginalState({
   tagsEntries: Object.entries({ amenity: 'cafe' }),
   toBeDeleted: false,
   nodeLonLat: [14, 50],
-  nodes: undefined,
-  members: undefined,
 });
 
 describe('useEditItems', () => {
@@ -33,8 +31,6 @@ describe('useEditItems', () => {
       tagsEntries: [['amenity', 'restaurant']],
       toBeDeleted: false,
       nodeLonLat: [14, 50],
-      nodes: undefined,
-      members: undefined,
     });
 
     act(() => {

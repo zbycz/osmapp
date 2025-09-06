@@ -32,8 +32,6 @@ const initialNode: DataItem = addEmptyOriginalState({
   ],
   toBeDeleted: false,
   nodeLonLat: [14, 50],
-  nodes: undefined,
-  members: undefined,
 });
 
 const parentFeature = { osmMeta: { type: 'relation', id: 99 } };
@@ -42,9 +40,7 @@ const parentItem = {
   tagsEntries: [['type', 'site']],
   version: 1,
   toBeDeleted: false,
-  nodeLonLat: undefined,
-  nodes: undefined,
-  members: undefined,
+  members: [],
 } as DataItem;
 
 describe('convertToRelationFactory', () => {

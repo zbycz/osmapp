@@ -39,8 +39,6 @@ export const getNewNodeItem = (
     tagsEntries: Object.entries(tags),
     toBeDeleted: false,
     nodeLonLat: [lon, lat],
-    nodes: undefined,
-    members: undefined,
   });
 
 const getLabel = (itemsMap: ItemsMap, member: RelationMember) => {

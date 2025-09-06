@@ -5,31 +5,24 @@ const nodeNew = {
   shortId: 'n-1',
   version: undefined,
   tagsEntries: [['newNode', 'yes']],
-  members: undefined,
-  nodes: undefined,
-  nodeLonLat: [14, 50],
   toBeDeleted: false,
+  nodeLonLat: [14, 50],
 } as DataItem;
 
 const nodeChange = {
   shortId: 'n2222',
   version: 2,
   tagsEntries: [['addedTags', 'yes']],
-  members: undefined,
-  nodes: undefined,
-  nodeLonLat: [14, 50],
   toBeDeleted: false,
+  nodeLonLat: [14, 50],
 } as DataItem;
 
 const nodeToDelete = {
   shortId: 'n9999',
   version: 9,
   tagsEntries: [],
-  members: undefined,
-  nodes: undefined,
-
-  nodeLonLat: [14, 50],
   toBeDeleted: true,
+  nodeLonLat: [14, 50],
 } as DataItem;
 
 const nodesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -59,30 +52,24 @@ const wayNew = {
   shortId: 'w-1',
   version: undefined,
   tagsEntries: [['newWay', 'yes']],
-  members: undefined,
-  nodes: [4001, 4002, 4003],
-  nodeLonLat: undefined,
   toBeDeleted: false,
+  nodes: [4001, 4002, 4003],
 } as DataItem;
 
 const wayChange = {
   shortId: 'w2222',
   version: 2,
   tagsEntries: [['addedTags', 'yes']],
-  members: undefined,
-  nodes: [4001, 4002, 4003],
-  nodeLonLat: undefined,
   toBeDeleted: false,
+  nodes: [4001, 4002, 4003],
 } as DataItem;
 
 const wayToDelete = {
   shortId: 'w9999',
   version: 9,
   tagsEntries: [],
-  members: undefined,
-  nodes: [4001, 4002, 4003],
-  nodeLonLat: undefined,
   toBeDeleted: true,
+  nodes: [4001, 4002, 4003],
 } as DataItem;
 
 const waysXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
@@ -120,33 +107,27 @@ const relationNew = {
   shortId: 'r-1',
   version: undefined,
   tagsEntries: [['new', 'yes']],
+  toBeDeleted: false,
   members: [
     { shortId: 'n-1', role: 'role', label: 'x' },
     { shortId: 'w-2', role: 'role', label: 'y' },
   ],
-  nodes: undefined,
-  nodeLonLat: undefined,
-  toBeDeleted: false,
 } as DataItem;
 
 const relationChange = {
   shortId: 'r22',
   version: 2,
   tagsEntries: [['changed', 'yes']],
-  members: [{ shortId: 'n-1', role: 'role', label: 'x' }],
-  nodes: undefined,
-  nodeLonLat: undefined,
   toBeDeleted: false,
+  members: [{ shortId: 'n-1', role: 'role', label: 'x' }],
 } as DataItem;
 
 const relationToDelete = {
   shortId: 'r99',
   version: 9,
   tagsEntries: [],
-  members: [],
-  nodes: undefined,
-  nodeLonLat: undefined,
   toBeDeleted: true,
+  members: [],
 } as DataItem;
 
 const relationsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
