@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { useEditContext } from '../context/EditContext';
 import React from 'react';
-import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
+import { NwrIcon } from '../../NwrIcon';
 import { EditDataItem } from '../context/types';
 
 const StyledTypography = styled(Typography, {
@@ -85,10 +85,7 @@ const TabLabel = ({
         textTransform="lowercase"
         whiteSpace="nowrap"
       >
-        {presetLabel}{' '}
-        {shortId[0] === 'n' ? null : (
-          <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
-        )}
+        {presetLabel} <NwrIcon shortId={shortId} hideNode />
       </Typography>
     </Stack>
   </>

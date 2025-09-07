@@ -10,7 +10,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DownloadIcon from '@mui/icons-material/Download';
 import styled from '@emotion/styled';
 import React from 'react';
-import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
+import { NwrIcon } from '../../NwrIcon';
 import { useEditContext } from '../context/EditContext';
 import { useLoadingState } from '../../../utils/useLoadingState';
 
@@ -62,7 +62,7 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
           <ListItemText>
             <Stack direction="row" gap={2} alignItems="center">
               <Typography>{label || shortId}</Typography>
-              <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
+              <NwrIcon shortId={shortId} hideNode />
               {role && (
                 <>
                   <div style={{ flex: '1' }} />
