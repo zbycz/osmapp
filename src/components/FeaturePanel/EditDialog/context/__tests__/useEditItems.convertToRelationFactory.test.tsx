@@ -12,7 +12,7 @@ jest.mock('../../../../../services/osm/fetchWays', () => ({
   fetchWays: jest.fn(),
 }));
 jest.mock('../itemsHelpers', () => {
-  const actual = jest.requireActual('../context/itemsHelpers');
+  const actual = jest.requireActual('../itemsHelpers');
   return { ...actual, fetchFreshItem: jest.fn() };
 });
 jest.mock('../../../../../services/getCoordsFeature', () => ({
