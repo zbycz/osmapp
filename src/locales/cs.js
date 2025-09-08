@@ -476,6 +476,11 @@ export default {
   'climbing_badges.trad_description': 'Tradiční lezení s využitím vlastního postupového jištění.',
   'climbing_badges.trad_label': 'tradiční lezení',
 
+  'climbing_badges.other_tags_label': 'Ostatní tagy',
+  'climbing_badges.family_friendly_label': 'vhodné pro rodiny',
+  'climbing_badges.family_friendly_description':
+    'Lezecká oblast je bezpečná a vhodná pro rodiny s dětmi (snadný přístup, bezpečný terén, prostor na hraní).',
+
   'editdialog.add_value': 'Přidat',
   'editdialog.all_values_added': 'Všechny hodnoty byly přidány',
   'editdialog.custom_value': 'Vlastní hodnota',
