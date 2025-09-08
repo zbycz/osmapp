@@ -7,6 +7,7 @@ import {
   Typography,
 } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import DownloadIcon from '@mui/icons-material/Download';
 import styled from '@emotion/styled';
 import React from 'react';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
@@ -24,6 +25,10 @@ const StyledDivider = styled(Divider)`
   &:last-of-type {
     border: none;
   }
+`;
+
+const StyledDownloadIcon = styled(DownloadIcon)`
+  font-size: 18px;
 `;
 
 type Props = {
@@ -56,9 +61,7 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
         >
           <ListItemText>
             <Stack direction="row" gap={2} alignItems="center">
-              <Typography color={isAlreadyInItems ? 'secondary' : undefined}>
-                {label || shortId}
-              </Typography>
+              <Typography>{label || shortId}</Typography>
               <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
               {role && (
                 <>
@@ -71,9 +74,12 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
           {isLoading ? (
             <CircularProgress size={14} />
           ) : (
-            <ChevronRightIcon
-              color={isAlreadyInItems ? 'primary' : 'secondary'}
-            />
+            <>
+              {!isAlreadyInItems ? (
+                <StyledDownloadIcon color="secondary" />
+              ) : null}
+              <ChevronRightIcon color="primary" />
+            </>
           )}
         </Stack>
       </StyledListItem>
