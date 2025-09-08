@@ -15,9 +15,6 @@ export type DataItem = {
   version: number | undefined; // undefined for new item
   tagsEntries: TagsEntries;
   toBeDeleted: boolean;
-  nodeLonLat: LonLat | undefined; // only for nodes & for relation converted from node
-  nodes: number[] | undefined; // only for ways
-  members: Members | undefined; // only for relations
   originalState: {
     tags: FeatureTags;
     isDeleted: boolean;
@@ -25,6 +22,9 @@ export type DataItem = {
     nodes: number[] | undefined;
     members: Members;
   };
+  nodeLonLat?: LonLat; // only for nodes & for relation converted from node
+  nodes?: number[]; // only for ways
+  members?: Members; // only for relations
 };
 
 export type DataItemRaw = Omit<DataItem, 'originalState'>;

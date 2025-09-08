@@ -7,7 +7,7 @@ import { getItemsMap, getMemberFeatures } from './helpers';
 import { addSchemaToFeature } from '../tagging/idTaggingScheme';
 import { osmToFeature } from './osmToFeature';
 
-// For EditDialog - use fetchFreshItem() which returns DataItem
+// For EditDialog use fetchFreshItem() which returns DataItem
 export const getFullFeatureWithMemberFeatures = async (
   apiId: OsmId,
 ): Promise<Feature> => {
