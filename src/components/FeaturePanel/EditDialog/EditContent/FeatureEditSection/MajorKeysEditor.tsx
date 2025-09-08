@@ -7,22 +7,25 @@ import {
 } from '../../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
-import { isClimbingRoute } from '../../../../../utils';
+import {
+  isClimbingCragOrArea as isClimbingCragOrAreaFn,
+  isClimbingRoute as isClimbingRouteFn,
+} from '../../../../../utils';
 import { useCurrentItem } from '../../context/EditContext';
 import { TextFieldWithCharacterCount } from './helpers';
 import { WikimediaCommonsEditor } from './WikimediaCommonsEditor';
+import { FeatureTags } from '../../../../../services/types';
 
-export const majorKeys = [
-  'name',
-  'description',
-  'website',
-  'phone',
-  'opening_hours',
-];
-
+const basicMajorKeys = ['name', 'description', 'website'];
+const nonClimbingMajorKeys = ['phone', 'opening_hours'];
 const climbingRouteMajorKeys = ['author', 'climbing:length'];
+export const majorKeys = [...basicMajorKeys, ...nonClimbingMajorKeys];
 
-const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
+const getData = (numberOfWikimediaItems: number, tags: FeatureTags) => {
+  const isClimbingCragOrArea = isClimbingCragOrAreaFn(tags);
+  const isClimbingRoute = isClimbingRouteFn(tags);
+  const isClimbing = isClimbingCragOrArea || isClimbingRoute;
+
   const wikimediaCommonTags = Array(numberOfWikimediaItems)
     .fill('')
     .reduce((acc, _, index) => {
@@ -33,7 +36,8 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
 
   return {
     keys: [
-      ...majorKeys,
+      ...basicMajorKeys,
+      ...(isClimbing ? [] : nonClimbingMajorKeys),
       ...Object.keys(wikimediaCommonTags),
       ...(isClimbingRoute ? climbingRouteMajorKeys : []),
     ],
@@ -41,8 +45,12 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
       name: t('tags.name'),
       description: t('tags.description'),
       website: t('tags.website'),
-      phone: t('tags.phone'),
-      opening_hours: t('tags.opening_hours'),
+      ...(isClimbing
+        ? {}
+        : {
+            phone: t('tags.phone'),
+            opening_hours: t('tags.opening_hours'),
+          }),
       ...wikimediaCommonTags,
       ...(isClimbingRoute
         ? {
@@ -59,8 +67,8 @@ export const MajorKeysEditor: React.FC = () => {
   const { tags, setTag } = useCurrentItem();
 
   const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
-  const isRoute = isClimbingRoute(tags);
-  const data = getData(nextWikimediaCommonsIndex + 1, isRoute);
+
+  const data = getData(nextWikimediaCommonsIndex + 1, tags);
 
   const [activeMajorKeys, setActiveMajorKeys] = useState(() =>
     data.keys.filter((k) => !!tags[k]),
