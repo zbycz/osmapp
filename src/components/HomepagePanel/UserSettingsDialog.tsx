@@ -16,13 +16,45 @@ import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
 import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
 import { t } from '../../services/intl';
+import { usePersistedState } from '../utils/usePersistedState';
+import { LOCAL_STORAGE_CACHE } from '../../services/fetchCache';
 
 type Props = {
   onClose: (event: unknown) => void;
   isOpened: boolean;
 };
 
+const StoreRequests = () => {
+  const [value, setValue] = usePersistedState(
+    'store_requests_to_local_storage',
+    false,
+  );
+
+  return (
+    <ListItem>
+      <ListItemText>
+        Develop: store all network requests (reload needed)
+      </ListItemText>
+      <Switch
+        color="primary"
+        edge="end"
+        onChange={() => {
+          setValue((prev) => {
+            if (prev) {
+              LOCAL_STORAGE_CACHE.clear();
+            }
+
+            return !prev;
+          });
+        }}
+        checked={!!value}
+      />
+    </ListItem>
+  );
+};
+
 // TODO refactor this - extract member functions
+
 // eslint-disable-next-line max-lines-per-function
 export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
@@ -170,6 +202,8 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
               </MenuItem>
             </Select>
           </ListItem>
+
+          <StoreRequests />
         </List>
       </DialogContent>
     </Dialog>
