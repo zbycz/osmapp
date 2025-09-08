@@ -1,10 +1,5 @@
 import { useState } from 'react';
-import {
-  DataItem,
-  EditDataItem,
-  getPresetKey,
-  Members,
-} from '../../context/useEditItems';
+import { getPresetKey } from '../../context/useEditItems';
 import { getApiId } from '../../../../../services/helpers';
 import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
 import { useCurrentItem, useEditContext } from '../../context/EditContext';
@@ -16,6 +11,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { useMapStateContext, View } from '../../../../utils/MapStateContext';
 import { getPresetTranslation } from '../../../../../services/tagging/translations';
 import { fetchFreshItem, getNewNodeItem } from '../../context/itemsHelpers';
+import { DataItem, EditDataItem, Members } from '../../context/types';
 
 const getLastNode = (members: Members) => {
   const lastNode = members

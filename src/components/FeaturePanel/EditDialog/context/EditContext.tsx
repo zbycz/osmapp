@@ -1,7 +1,8 @@
 import React, { createContext, useContext, useState } from 'react';
 import { SuccessInfo } from '../../../../services/types';
-import { DataItem, EditDataItem, useEditItems } from './useEditItems';
+import { useEditItems } from './useEditItems';
 import { Setter } from '../../../../types';
+import { DataItem, EditDataItem } from './types';
 
 type ShortId = string;
 

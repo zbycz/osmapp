@@ -1,5 +1,5 @@
-import { DataItem } from '../../../../components/FeaturePanel/EditDialog/context/useEditItems';
 import { getDiffXml } from '../getDIffXml';
+import { DataItem } from '../../../../components/FeaturePanel/EditDialog/context/types';
 
 const nodeNew = {
   shortId: 'n-1',

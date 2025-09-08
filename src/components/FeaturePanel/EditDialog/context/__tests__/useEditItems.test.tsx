@@ -1,6 +1,7 @@
 import { act, renderHook } from '@testing-library/react';
-import { DataItem, useEditItems } from '../useEditItems';
+import { useEditItems } from '../useEditItems';
 import { addEmptyOriginalState } from '../itemsHelpers';
+import { DataItem } from '../types';
 
 const initialItem: DataItem = addEmptyOriginalState({
   shortId: 'n1',

@@ -9,8 +9,8 @@ import {
 } from '@mui/material';
 import { useEditContext } from '../context/EditContext';
 import React from 'react';
-import { EditDataItem } from '../context/useEditItems';
 import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
+import { EditDataItem } from '../context/types';
 
 const StyledTypography = styled(Typography, {
   shouldForwardProp: (prop) => !prop.startsWith('$'),

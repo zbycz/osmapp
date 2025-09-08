@@ -5,16 +5,16 @@ import { getApiId, getFullOsmappLink, getUrlOsmId } from '../../helpers';
 import { join } from '../../../utils';
 import { clearFetchCache } from '../../fetchCache';
 import { getLabel } from '../../../helpers/featureLabel';
-import {
-  DataItem,
-  Members,
-} from '../../../components/FeaturePanel/EditDialog/context/useEditItems';
 import { OSM_WEBSITE } from '../consts';
 import { getDiffXml } from './getDIffXml';
 import { SingleDocXmljs } from './xmlTypes';
 import { xmljsBuildOsm } from './xmlHelpers';
 import * as api from './api';
 import { getFirstExistingId } from '../getFirstExistingId';
+import {
+  DataItem,
+  Members,
+} from '../../../components/FeaturePanel/EditDialog/context/types';
 
 export const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [

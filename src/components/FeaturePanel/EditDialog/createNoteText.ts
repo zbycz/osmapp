@@ -1,5 +1,5 @@
-import { EditDataItem } from './context/useEditItems';
 import { getApiId, getUrlOsmId } from '../../../services/helpers';
+import { EditDataItem } from './context/types';
 
 export const createNoteText = (
   change: EditDataItem,
