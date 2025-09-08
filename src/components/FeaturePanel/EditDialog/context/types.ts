@@ -22,9 +22,10 @@ export type DataItem = {
     nodes: number[] | undefined;
     members: Members;
   };
-  nodeLonLat?: LonLat; // only for nodes & for relation converted from node
+  nodeLonLat?: LonLat; // only for nodes
   nodes?: number[]; // only for ways
   members?: Members; // only for relations
+  relationClickedLonLat?: LonLat; // only for relations (converted from clicked node)
 };
 
 export type DataItemRaw = Omit<DataItem, 'originalState'>;
