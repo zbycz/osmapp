@@ -4,6 +4,7 @@ import styled from '@emotion/styled';
 import { Chip, Stack, Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
 
 const StyledChip = styled(Chip)`
   font-size: 10px;
@@ -131,8 +132,29 @@ const climbingHazards = {
   },
 } as const;
 
-const renderTitle = (label: TranslationId, tagValue: string) => {
-  return `${t(label)}${tagValue !== 'yes' ? ` (${tagValue})` : ''}`;
+const otherTags = {
+  family_friendly: {
+    value: 'climbing:family_friendly',
+    label: 'climbing_badges.family_friendly_label',
+    description: 'climbing_badges.family_friendly_description',
+    icon: ChildFriendlyIcon,
+  },
+} as const;
+
+const renderTitle = (
+  label: TranslationId,
+  tagValue: string,
+  Icon?: React.ElementType,
+) => {
+  return (
+    <Stack direction="row" gap={0.4} alignItems="center">
+      {Icon && <Icon fontSize="inherit" />}
+      <span>
+        {t(label)}
+        {tagValue !== 'yes' ? ` (${tagValue})` : ''}
+      </span>
+    </Stack>
+  );
 };
 
 type Props = {
@@ -166,6 +188,20 @@ export const ClimbingBadges = ({ feature, hasTooltip }: Props) => {
                 label={renderTitle(label, tagValue)}
                 size="small"
                 color="error"
+              />
+            </Tooltip>
+          ) : null;
+        },
+      )}
+      {Object.entries(otherTags).map(
+        ([_key, { value, label, description, icon }]) => {
+          const tagValue = feature.tags?.[value];
+          return tagValue !== 'no' && tagValue !== undefined ? (
+            <Tooltip key={value} title={hasTooltip ? t(description) : ''} arrow>
+              <StyledChip
+                label={renderTitle(label, tagValue, icon)}
+                size="small"
+                color="success"
               />
             </Tooltip>
           ) : null;

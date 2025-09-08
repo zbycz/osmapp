@@ -74,6 +74,10 @@ const ClimbingMultiValuesInner = () => {
           'climbing:hazard:long_runout',
         ]}
       />
+      <MultiValueKeyEditor
+        label={t('climbing_badges.other_tags_label')}
+        keys={['climbing:family_friendly']}
+      />
     </Stack>
   );
 };
