@@ -5,10 +5,7 @@ import { Tooltip } from '@mui/material';
 import React from 'react';
 import { t } from '../../services/intl';
 import { OsmType } from '../../services/types';
-import { getApiId } from '../../services/helpers';
-
-export const getOsmTypeFromShortId = (shortId: string): OsmType =>
-  getApiId(shortId).type;
+import { getApiId, getUrlOsmId } from '../../services/helpers';
 
 type TypeMap = {
   [key: string]: {
@@ -38,32 +35,60 @@ const typeMap: TypeMap = {
   },
 };
 
-type Props = {
-  osmType: OsmType;
-  color?: string;
-  fontSize?: string;
+const getTooltip = (osmType: OsmType, shortId?: string) => {
+  const { label, description } = typeMap[osmType];
+  const english = label.toLowerCase() === osmType ? '' : ` (${osmType})`;
+  const longId = getUrlOsmId(getApiId(shortId));
+
+  return (
+    <>
+      OSM {label}
+      {english}
+      <br />
+      {description}
+      {shortId ? (
+        <>
+          <br />
+          {shortId.includes('-') ? 'Local' : 'OSM'} ID: {longId}
+        </>
+      ) : null}
+    </>
+  );
 };
 
-export const NwrIcon = ({ osmType, color, fontSize }: Props) => {
-  const type = typeMap[osmType];
-  if (!type) {
+type Props = {
+  osmType?: OsmType;
+  shortId?: string;
+  color?: string;
+  fontSize?: string;
+  hideNode?: boolean;
+};
+
+export const NwrIcon = ({
+  osmType: osmTypeProp,
+  shortId,
+  color,
+  fontSize,
+  hideNode,
+}: Props) => {
+  const osmType = shortId ? getApiId(shortId).type : osmTypeProp;
+  const typeMapElement = typeMap[osmType];
+
+  if (!typeMapElement) {
     return null;
   }
 
-  const { Icon, scale, label, description } = type;
-  const english = label.toLowerCase() === osmType ? '' : ` (${osmType})`;
+  if (hideNode && osmType === 'node') {
+    return null;
+  }
 
+  if (shortId && osmTypeProp) {
+    throw new Error('Only one of `shortId` and `osmType` is allowed');
+  }
+
+  const { Icon, scale } = typeMapElement;
   return (
-    <Tooltip
-      title={
-        <>
-          OSM {label}
-          {english}
-          <br />
-          {description}
-        </>
-      }
-    >
+    <Tooltip title={getTooltip(osmType, shortId)}>
       <Icon
         fontSize={fontSize || 'inherit'}
         color={color || 'secondary'}

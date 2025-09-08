@@ -6,6 +6,7 @@ import { useFeatureContext } from '../utils/FeatureContext';
 import { Feature } from '../../services/types';
 import { OSM_WEBSITE } from '../../services/osm/consts';
 import { NwrIcon } from './NwrIcon';
+import { getShortId } from '../../services/helpers';
 
 const A = ({ href, children }) =>
   href ? (
@@ -73,7 +74,7 @@ export const FeatureDescription = () => {
 
   return (
     <Stack direction="row" gap={1.2} alignItems="center">
-      <NwrIcon osmType={osmMeta.type} />
+      <NwrIcon shortId={getShortId(osmMeta)} />
 
       {t('featurepanel.feature_description_osm', {
         type: capitalize(type),
