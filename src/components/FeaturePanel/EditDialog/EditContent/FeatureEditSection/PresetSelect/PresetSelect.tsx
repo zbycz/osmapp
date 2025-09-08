@@ -4,7 +4,7 @@ import { Box, Button, Tooltip, Typography } from '@mui/material';
 import styled from '@emotion/styled';
 import { allPresets } from '../../../../../../services/tagging/data';
 import { t } from '../../../../../../services/intl';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { PoiIcon } from '../../../../../utils/icons/PoiIcon';
 import { PresetMenu } from './PresetMenu';

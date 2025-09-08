@@ -1,7 +1,7 @@
 import React from 'react';
 import { Checkbox, FormControlLabel, TextField } from '@mui/material';
 import { useEditDialogFeature } from '../../utils';
-import { useCurrentItem, useEditContext } from '../../EditContext';
+import { useCurrentItem, useEditContext } from '../../context/EditContext';
 import { t, Translation } from '../../../../../services/intl';
 import { useOsmAuthContext } from '../../../../utils/OsmAuthContext';
 import { useToggleState } from '../../../../helpers';

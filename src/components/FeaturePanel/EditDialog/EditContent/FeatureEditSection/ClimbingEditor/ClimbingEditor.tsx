@@ -11,7 +11,7 @@ import { MultiValueKeyEditor } from './MultiValueKeyEditor';
 import React, { useState } from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { t } from '../../../../../../services/intl';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 import { Maki } from '../../../../../utils/icons/Maki';
 import styled from '@emotion/styled';
 import { ClimbingGradesEditor } from './ClimbingGradesEditor';

@@ -1,21 +1,21 @@
-import { fetchParentFeatures } from '../../../../services/osm/fetchParentFeatures';
-import { fetchWays } from '../../../../services/osm/fetchWays';
+import { fetchParentFeatures } from '../../../../../services/osm/fetchParentFeatures';
+import { fetchWays } from '../../../../../services/osm/fetchWays';
 import { addEmptyOriginalState, fetchFreshItem } from '../itemsHelpers';
-import { getNewId } from '../../../../services/getCoordsFeature';
+import { getNewId } from '../../../../../services/getCoordsFeature';
 
 import { convertToRelationFactory, DataItem } from '../useEditItems';
 
-jest.mock('../../../../services/osm/fetchParentFeatures', () => ({
+jest.mock('../../../../../services/osm/fetchParentFeatures', () => ({
   fetchParentFeatures: jest.fn(),
 }));
-jest.mock('../../../../services/osm/fetchWays', () => ({
+jest.mock('../../../../../services/osm/fetchWays', () => ({
   fetchWays: jest.fn(),
 }));
 jest.mock('../itemsHelpers', () => {
   const actual = jest.requireActual('../itemsHelpers');
   return { ...actual, fetchFreshItem: jest.fn() };
 });
-jest.mock('../../../../services/getCoordsFeature', () => ({
+jest.mock('../../../../../services/getCoordsFeature', () => ({
   getNewId: jest.fn(),
 }));
 

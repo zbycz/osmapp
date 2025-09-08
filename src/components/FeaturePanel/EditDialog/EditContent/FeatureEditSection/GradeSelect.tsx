@@ -4,7 +4,7 @@ import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData'
 import { RouteDifficultyBadge } from '../../../Climbing/RouteDifficultyBadge';
 import { AutocompleteSelect } from './AutocompleteSelect';
 import { FeatureTags } from '../../../../../services/types';
-import { useCurrentItem } from '../../EditContext';
+import { useCurrentItem } from '../../context/EditContext';
 import { getGradeSystemName } from '../../../../../services/tagging/climbing/gradeSystems';
 
 type GradeSelectProps = {

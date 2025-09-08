@@ -19,7 +19,7 @@ import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
 import { OptionsEditor } from '../OptionsEditor';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const Table = styled.table`
   width: calc(100% - 8px);

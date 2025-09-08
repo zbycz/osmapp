@@ -1,4 +1,4 @@
-import { useCurrentItem } from '../EditContext';
+import { useCurrentItem } from '../context/EditContext';
 import { ItemHeading } from './FeatureEditSection/ItemHeading';
 import { PlaceCancelledToggle } from './FeatureEditSection/OptionsEditor';
 import { PresetSelect } from './FeatureEditSection/PresetSelect/PresetSelect';

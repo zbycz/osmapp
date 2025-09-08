@@ -7,7 +7,7 @@ import { useInitEditFeatureMap } from './useInitEditFeatureMap';
 import { LngLat } from 'maplibre-gl';
 import LayersIcon from '@mui/icons-material/Layers';
 import { getMapStyle } from './getMapStyle';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const Container = styled.div`
   width: 100%;

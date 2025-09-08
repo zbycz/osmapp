@@ -1,4 +1,4 @@
-import { useCurrentItem, useEditContext } from '../../EditContext';
+import { useCurrentItem, useEditContext } from '../../context/EditContext';
 import { Alert, Button } from '@mui/material';
 import { NwrIcon } from '../../../NwrIcon';
 import { t } from '../../../../../services/intl';

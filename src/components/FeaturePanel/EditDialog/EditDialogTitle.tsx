@@ -5,7 +5,7 @@ import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { t } from '../../../services/intl';
 import CommentIcon from '@mui/icons-material/Comment';
 import EditIcon from '@mui/icons-material/Edit';
-import { useEditContext } from './EditContext';
+import { useEditContext } from './context/EditContext';
 import CloseIcon from '@mui/icons-material/Close';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
 

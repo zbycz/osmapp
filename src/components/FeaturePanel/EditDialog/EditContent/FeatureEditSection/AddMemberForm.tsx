@@ -4,10 +4,10 @@ import {
   EditDataItem,
   getPresetKey,
   Members,
-} from '../../useEditItems';
+} from '../../context/useEditItems';
 import { getApiId } from '../../../../../services/helpers';
 import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
-import { useCurrentItem, useEditContext } from '../../EditContext';
+import { useCurrentItem, useEditContext } from '../../context/EditContext';
 import React, { useCallback, useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
 import { FeatureTags, LonLat } from '../../../../../services/types';
@@ -15,7 +15,7 @@ import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
 import { useMapStateContext, View } from '../../../../utils/MapStateContext';
 import { getPresetTranslation } from '../../../../../services/tagging/translations';
-import { fetchFreshItem, getNewNodeItem } from '../../itemsHelpers';
+import { fetchFreshItem, getNewNodeItem } from '../../context/itemsHelpers';
 
 const getLastNode = (members: Members) => {
   const lastNode = members

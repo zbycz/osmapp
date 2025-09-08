@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Menu, MenuItem } from '@mui/material';
 import { PoiIcon } from '../../../../../utils/icons/PoiIcon';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 import {
   TranslatedPreset,
   useDisplayedOptions,

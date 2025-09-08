@@ -8,7 +8,7 @@ import {
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
 import { isClimbingRoute } from '../../../../../utils';
-import { useCurrentItem } from '../../EditContext';
+import { useCurrentItem } from '../../context/EditContext';
 import { TextFieldWithCharacterCount } from './helpers';
 import { WikimediaCommonsEditor } from './WikimediaCommonsEditor';
 

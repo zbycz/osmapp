@@ -1,6 +1,6 @@
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { useEditDialogFeature } from './utils';
-import { useEditContext } from './EditContext';
+import { useEditContext } from './context/EditContext';
 import { createNoteText } from './createNoteText';
 import { t } from '../../../services/intl';
 import { saveChanges } from '../../../services/osm/auth/osmApiAuth';

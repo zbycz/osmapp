@@ -8,7 +8,7 @@ import { getLabel } from '../../../helpers/featureLabel';
 import {
   DataItem,
   Members,
-} from '../../../components/FeaturePanel/EditDialog/useEditItems';
+} from '../../../components/FeaturePanel/EditDialog/context/useEditItems';
 import { OSM_WEBSITE } from '../consts';
 import { getDiffXml } from './getDIffXml';
 import { SingleDocXmljs } from './xmlTypes';

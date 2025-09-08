@@ -1,5 +1,5 @@
 import { DiffResultXmljs } from './auth/xmlTypes';
-import { DataItem } from '../../components/FeaturePanel/EditDialog/useEditItems';
+import { DataItem } from '../../components/FeaturePanel/EditDialog/context/useEditItems';
 import { getApiId } from '../helpers';
 import { OsmId } from '../types';
 

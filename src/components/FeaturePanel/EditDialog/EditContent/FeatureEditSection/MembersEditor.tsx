@@ -23,7 +23,7 @@ import {
   useHandleOpenAllMembers,
 } from '../useHandleItemClick';
 import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
-import { useCurrentItem } from '../../EditContext';
+import { useCurrentItem } from '../../context/EditContext';
 import { OpenAllButton } from './helpers';
 
 const SectionName = () => {

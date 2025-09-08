@@ -1,4 +1,4 @@
-import { useCurrentItem } from '../../EditContext';
+import { useCurrentItem } from '../../context/EditContext';
 import { Box, Button, Stack, Tooltip } from '@mui/material';
 import { TextFieldWithCharacterCount } from './helpers';
 import { t } from '../../../../../services/intl';

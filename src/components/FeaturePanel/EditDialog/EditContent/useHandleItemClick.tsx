@@ -1,8 +1,8 @@
-import { DataItem, EditDataItem, isInItems } from '../useEditItems';
+import { DataItem, EditDataItem, isInItems } from '../context/useEditItems';
 import React from 'react';
-import { useCurrentItem, useEditContext } from '../EditContext';
+import { useCurrentItem, useEditContext } from '../context/EditContext';
 import { getApiId, getShortId } from '../../../../services/helpers';
-import { fetchFreshItem } from '../itemsHelpers';
+import { fetchFreshItem } from '../context/itemsHelpers';
 import { Setter } from '../../../../types';
 import { Feature } from '../../../../services/types';
 
