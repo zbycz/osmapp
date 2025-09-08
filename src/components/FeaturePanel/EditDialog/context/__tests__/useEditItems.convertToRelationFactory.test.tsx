@@ -3,8 +3,8 @@ import { fetchWays } from '../../../../../services/osm/fetchWays';
 import { addEmptyOriginalState, fetchFreshItem } from '../itemsHelpers';
 import { getNewId } from '../../../../../services/getCoordsFeature';
 
-import { convertToRelationFactory } from '../useEditItems';
 import { DataItem } from '../types';
+import { convertToRelationFactory } from '../convertToRelationFactory';
 
 jest.mock('../../../../../services/osm/fetchParentFeatures', () => ({
   fetchParentFeatures: jest.fn(),
