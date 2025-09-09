@@ -531,6 +531,11 @@ export default {
   'climbing_badges.trad_description': 'Traditional climbing using removable gear for protection.',
   'climbing_badges.trad_label': 'trad',
 
+  'climbing_badges.other_tags_label': 'Other tags',
+  'climbing_badges.family_friendly_label': 'family-friendly',
+  'climbing_badges.family_friendly_description':
+    'The climbing area is safe and suitable for families with children (easy access, safe terrain, space to play).',
+
   'editdialog.add_value': 'Add',
   'editdialog.all_values_added': 'All values added',
   'editdialog.custom_value': 'Custom value',
