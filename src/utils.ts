@@ -64,10 +64,12 @@ export const not =
   (item: T) =>
     !predicate(item);
 
+export const isClimbingCragOrArea = (tags: FeatureTags) =>
+  tags.climbing === 'crag' || tags.climbing === 'area';
+
 // decides whether to fetch memberFeatures
 export const isClimbingRelation = (feature: Feature) =>
-  feature.osmMeta.type === 'relation' &&
-  (feature.tags.climbing === 'crag' || feature.tags.climbing === 'area');
+  feature.osmMeta.type === 'relation' && isClimbingCragOrArea(feature.tags);
 
 export const isClimbingCrag = (feature: Feature) =>
   feature.osmMeta.type === 'relation' && feature.tags.climbing === 'crag';
