@@ -245,6 +245,8 @@ export default {
   'editdialog.download_osc': 'Stáhnout osmChange',
   'editdialog.members_climbing_info':
     'Do relace lze přidat i jiné relevantní objekty, jako třeba parkoviště nebo referenci na konkrétní vrchol či sráz (natural=cliff).',
+  'editdialog.no_location_alert': 'Nastavte, prosím, polohu tažením bodu.',
+  'editdialog.set_location_for_all_items': 'Nastave, prosím, polohu všem prvkům.',
 
   'editsuccess.close_button': 'Zavřít',
   'editsuccess.note.heading': 'Děkujeme za Váš návrh!',

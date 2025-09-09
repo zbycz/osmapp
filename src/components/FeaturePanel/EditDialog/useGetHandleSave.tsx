@@ -42,11 +42,22 @@ export const useGetHandleSave = () => {
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { feature } = useEditDialogFeature();
   const { setRedirectOnClose } = useEditDialogContext();
-  const { setSuccessInfo, setIsSaving, comment, items } = useEditContext();
+  const { setSuccessInfo, setIsSaving, comment, items, setValidate } =
+    useEditContext();
   const saveNote = useGetSaveNote();
 
   return async () => {
     try {
+      if (
+        items
+          .filter(({ shortId }) => shortId[0] === 'n')
+          .some(({ nodeLonLat }) => nodeLonLat === undefined)
+      ) {
+        showToast(t('editdialog.set_location_for_all_items'), 'warning');
+        setValidate(true);
+        return;
+      }
+
       setIsSaving(true);
 
       const changes = items.filter((item) => item.modified);

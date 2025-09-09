@@ -38,10 +38,7 @@ const useUpdateFeatureMarkers = createMapEffectHook<
     const [lng, lat] = item.nodeLonLat;
 
     const marker = new maplibregl.Marker(GRAY_MARKER)
-      .setLngLat({
-        lng: parseFloat(lng.toFixed(6)),
-        lat: parseFloat(lat.toFixed(6)),
-      })
+      .setLngLat({ lng, lat })
       .addTo(map);
 
     const popupContainer = document.createElement('div');

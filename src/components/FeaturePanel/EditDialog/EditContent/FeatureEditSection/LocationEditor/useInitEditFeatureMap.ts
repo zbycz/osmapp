@@ -6,7 +6,8 @@ import { useCurrentItem, useEditContext } from '../../../context/EditContext';
 import { useFeatureMarkers } from './useStaticMarkers';
 import { useDraggableFeatureMarker } from './useDraggableMarker';
 import { isGpsValid } from './isGpsValid';
-import { Setter } from '../../../../../../types';
+import { LonLat } from '../../../../../../services/types';
+import { getGlobalMap } from '../../../../../../services/mapStorage';
 
 const GEOLOCATION_CONTROL = new maplibregl.GeolocateControl({
   positionOptions: { enableHighAccuracy: true },
@@ -14,26 +15,17 @@ const GEOLOCATION_CONTROL = new maplibregl.GeolocateControl({
   trackUserLocation: true,
 });
 
-const useUpdateCenter = (
-  isFirstMapLoad: boolean,
-  mapRef: React.MutableRefObject<maplibregl.Map>,
-  setIsFirstMapLoad: Setter<boolean>,
-) => {
-  const currentItem = useCurrentItem();
+const useUpdateCenter = (mapRef: React.MutableRefObject<maplibregl.Map>) => {
+  const { nodeLonLat } = useCurrentItem();
+  const updatedHere = useRef<LonLat>();
 
   const updateCenter = useCallback(() => {
-    if (
-      isFirstMapLoad &&
-      currentItem?.nodeLonLat &&
-      isGpsValid(currentItem?.nodeLonLat)
-    ) {
-      mapRef.current?.jumpTo({
-        center: currentItem.nodeLonLat as [number, number],
-        zoom: 18.5,
-      });
-      setIsFirstMapLoad(false);
+    const center = nodeLonLat as [number, number];
+    if (center && updatedHere.current !== center && isGpsValid(center)) {
+      mapRef.current?.easeTo({ center });
+      updatedHere.current = center;
     }
-  }, [currentItem.nodeLonLat, isFirstMapLoad, mapRef, setIsFirstMapLoad]);
+  }, [mapRef, nodeLonLat]);
 
   useEffect(() => {
     mapRef.current?.on('load', updateCenter);
@@ -42,17 +34,16 @@ const useUpdateCenter = (
   useEffect(updateCenter, [updateCenter]);
 };
 
-export function useInitEditFeatureMap(
-  isFirstMapLoad: boolean,
-  setIsFirstMapLoad: Setter<boolean>,
-) {
+const getMapCenter = (): LonLat => getGlobalMap().getCenter().toArray();
+
+export function useInitEditFeatureMap() {
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<maplibregl.Map>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const { current } = useEditContext();
   const currentItem = useCurrentItem();
-  const { onMarkerChange } = useDraggableFeatureMarker(mapRef);
   useFeatureMarkers(mapRef);
+  const { onMarkerChange } = useDraggableFeatureMarker(mapRef);
 
   useEffect(() => {
     setIsMapLoaded(false);
@@ -63,6 +54,8 @@ export function useInitEditFeatureMap(
       style: outdoorStyle,
       attributionControl: false,
       refreshExpiredTiles: false,
+      zoom: 18,
+      center: getMapCenter() as [number, number],
       locale: {
         'NavigationControl.ResetBearing': COMPASS_TOOLTIP,
       },
@@ -81,11 +74,7 @@ export function useInitEditFeatureMap(
     };
   }, [containerRef, current]);
 
-  useUpdateCenter(isFirstMapLoad, mapRef, setIsFirstMapLoad);
-
-  useEffect(() => {
-    setIsFirstMapLoad(true);
-  }, [current, setIsFirstMapLoad]);
+  useUpdateCenter(mapRef);
 
   return { containerRef, isMapLoaded, currentItem, onMarkerChange, mapRef };
 }

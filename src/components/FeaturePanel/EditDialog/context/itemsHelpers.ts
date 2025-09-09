@@ -30,7 +30,7 @@ export const addEmptyOriginalState = (dataItem: DataItemRaw): DataItem => ({
 });
 
 export const getNewNodeItem = (
-  [lon, lat]: LonLat,
+  nodeLonLat: LonLat | undefined,
   tags: FeatureTags = {},
 ): DataItem =>
   addEmptyOriginalState({
@@ -38,7 +38,7 @@ export const getNewNodeItem = (
     version: undefined,
     tagsEntries: Object.entries(tags),
     toBeDeleted: false,
-    nodeLonLat: [lon, lat],
+    nodeLonLat,
   });
 
 const getLabel = (itemsMap: ItemsMap, member: RelationMember) => {
