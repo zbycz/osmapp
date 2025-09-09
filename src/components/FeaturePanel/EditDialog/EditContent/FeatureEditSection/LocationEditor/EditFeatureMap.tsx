@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { Chip, CircularProgress, Stack, TextField } from '@mui/material';
+import React, { useEffect } from 'react';
+import { Alert, Chip, CircularProgress } from '@mui/material';
 
 import styled from '@emotion/styled';
-import { t } from '../../../../../../services/intl';
 import { useInitEditFeatureMap } from './useInitEditFeatureMap';
-import { LngLat } from 'maplibre-gl';
 import LayersIcon from '@mui/icons-material/Layers';
 import { getMapStyle } from './getMapStyle';
 import { useCurrentItem } from '../../../context/EditContext';
+import { LocationInputs } from './LocationInputs';
+import { t } from '../../../../../../services/intl';
 
 const Container = styled.div`
   width: 100%;
@@ -36,17 +36,25 @@ const MapStyle = styled.div`
   right: 4px;
 `;
 
+const StyledAlert = styled(Alert)`
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+`;
+const NoLocationAlert = () => (
+  <StyledAlert severity="info">{t('editdialog.no_location_alert')}</StyledAlert>
+);
+
 const EditFeatureMap = ({ mapStyle, setMapStyle }) => {
-  const [isFirstMapLoad, setIsFirstMapLoad] = useState(true);
-  const { containerRef, isMapLoaded, currentItem, onMarkerChange, mapRef } =
-    useInitEditFeatureMap(isFirstMapLoad, setIsFirstMapLoad);
+  const { containerRef, isMapLoaded, mapRef } = useInitEditFeatureMap();
 
   useEffect(() => {
     const style = getMapStyle(mapStyle);
     mapRef.current.setStyle(style);
   }, [mapStyle, mapRef]);
 
-  const { shortId } = useCurrentItem();
+  const { shortId, nodeLonLat } = useCurrentItem();
   const isNode = shortId[0] === 'n';
   if (!isNode) return null;
 
@@ -76,36 +84,11 @@ const EditFeatureMap = ({ mapStyle, setMapStyle }) => {
             color="secondary"
           />
         </MapStyle>
+
+        {nodeLonLat === undefined && <NoLocationAlert />}
       </Container>
 
-      <Stack direction="row" mt={2} gap={1}>
-        <TextField
-          label={t('editdialog.location_latitude')}
-          variant="outlined"
-          value={currentItem?.nodeLonLat[1] || ''}
-          onChange={(e) => {
-            onMarkerChange({
-              lng: currentItem?.nodeLonLat[0],
-              lat: parseFloat(e.target.value),
-            } as LngLat);
-            setIsFirstMapLoad(true);
-          }}
-          size="small"
-        />
-        <TextField
-          label={t('editdialog.location_longitude')}
-          variant="outlined"
-          value={currentItem?.nodeLonLat[0] || ''}
-          onChange={(e) => {
-            onMarkerChange({
-              lng: parseFloat(e.target.value),
-              lat: currentItem?.nodeLonLat[1],
-            } as LngLat);
-            setIsFirstMapLoad(true);
-          }}
-          size="small"
-        />
-      </Stack>
+      <LocationInputs key={shortId} />
     </>
   );
 };

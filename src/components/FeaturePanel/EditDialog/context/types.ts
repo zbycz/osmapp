@@ -22,7 +22,7 @@ export type DataItem = {
     nodes: number[] | undefined;
     members: Members;
   };
-  nodeLonLat?: LonLat; // only for nodes
+  nodeLonLat?: LonLat; // only for nodes (may be undefined until user selects the location)
   nodes?: number[]; // only for ways
   members?: Members; // only for relations
   relationClickedLonLat?: LonLat; // only for relations (converted from clicked node)

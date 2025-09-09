@@ -11,6 +11,7 @@ import { useEditContext } from '../context/EditContext';
 import React from 'react';
 import { NwrIcon } from '../../NwrIcon';
 import { EditDataItem } from '../context/types';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const StyledTypography = styled(Typography, {
   shouldForwardProp: (prop) => !prop.startsWith('$'),
@@ -55,41 +56,51 @@ const ModifiedBadge = styled.div(({ theme }) => ({
   backgroundColor: theme.palette.primary.main,
 }));
 
+const StyledWarningIcon = styled(WarningIcon)`
+  font-size: 15px;
+`;
+
+const WarningBadge = ({ item }: { item: EditDataItem }) => {
+  const { validate } = useEditContext();
+  return validate &&
+    item.shortId[0] === 'n' &&
+    item.nodeLonLat === undefined ? (
+    <StyledWarningIcon color="warning" />
+  ) : null;
+};
+
 type TabLabelProps = {
   item: EditDataItem;
 };
 
-const TabLabel = ({
-  item: { shortId, tags, presetLabel, toBeDeleted, modified },
-}: TabLabelProps) => (
-  <>
-    {modified && <ModifiedBadge />}
-    <Stack direction="column" alignItems="flex-start" width="100%">
-      <Stack
-        direction="row"
-        gap={1}
-        alignItems="center"
-        justifyContent="space-between"
-        width="100%"
-      >
-        <StyledTypography
-          variant="button"
+const TabLabel = ({ item }: TabLabelProps) => {
+  const { shortId, tags, presetLabel, toBeDeleted, modified } = item;
+
+  return (
+    <>
+      {modified && <ModifiedBadge />}
+      <Stack direction="column" alignItems="flex-start" width="100%">
+        <Stack direction="row" gap={1} alignItems="center" width="100%">
+          <WarningBadge item={item} />
+          <StyledTypography
+            variant="button"
+            whiteSpace="nowrap"
+            $deleted={toBeDeleted}
+          >
+            {tags.name || shortId}
+          </StyledTypography>
+        </Stack>
+        <Typography
+          variant="caption"
+          textTransform="lowercase"
           whiteSpace="nowrap"
-          $deleted={toBeDeleted}
         >
-          {tags.name || shortId}
-        </StyledTypography>
+          {presetLabel} <NwrIcon shortId={shortId} hideNode />
+        </Typography>
       </Stack>
-      <Typography
-        variant="caption"
-        textTransform="lowercase"
-        whiteSpace="nowrap"
-      >
-        {presetLabel} <NwrIcon shortId={shortId} hideNode />
-      </Typography>
-    </Stack>
-  </>
-);
+    </>
+  );
+};
 
 export const ItemsTabs = () => {
   const { items, current, setCurrent } = useEditContext();

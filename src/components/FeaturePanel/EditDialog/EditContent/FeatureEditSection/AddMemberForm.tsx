@@ -1,55 +1,15 @@
 import { useState } from 'react';
 import { getApiId } from '../../../../../services/helpers';
-import { getOsmElement } from '../../../../../services/osm/quickFetchFeature';
 import { useCurrentItem, useEditContext } from '../../context/EditContext';
 import React, { useCallback, useEffect } from 'react';
 import { Button, TextField } from '@mui/material';
-import { FeatureTags, LonLat } from '../../../../../services/types';
+import { FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
-import { useMapStateContext, View } from '../../../../utils/MapStateContext';
 import { getPresetTranslation } from '../../../../../services/tagging/translations';
 import { fetchFreshItem, getNewNodeItem } from '../../context/itemsHelpers';
-import { DataItem, EditDataItem, Members } from '../../context/types';
+import { DataItem } from '../../context/types';
 import { getPresetKey } from '../../context/utils';
-
-const getLastNode = (members: Members) => {
-  const lastNode = members
-    .toReversed()
-    .find((member) => member.shortId.startsWith('n'));
-  return lastNode ? lastNode.shortId : null;
-};
-
-const findItem = (items: EditDataItem[], shortId: string) =>
-  items.find((item) => item.shortId === shortId);
-
-const isNew = (shortId: string) => shortId.includes('-');
-
-const getLastNodeLocation = async (shortId: string, items: EditDataItem[]) => {
-  const lastNode = findItem(items, shortId);
-  if (lastNode) {
-    return lastNode.nodeLonLat;
-  }
-  if (!isNew(shortId)) {
-    const element = await getOsmElement(getApiId(shortId));
-    return [element.lon, element.lat];
-  }
-  return null;
-};
-
-const getNextNodeLocation = async (items: EditDataItem[], members: Members) => {
-  const lastNode = getLastNode(members);
-  if (!lastNode) {
-    return undefined;
-  }
-  const lonLat = await getLastNodeLocation(lastNode, items);
-  return lonLat?.map((x) => x + 0.0001);
-};
-
-const getViewPoint = (view: View): LonLat => {
-  const [_, lat, lon] = view;
-  return [parseFloat(lon), parseFloat(lat)];
-};
 
 const ROUTE_BOTTOM_TAGS = {
   climbing: 'route_bottom',
@@ -72,25 +32,21 @@ const getMemberTags = (parentTags: FeatureTags) => {
 // TODO refactor
 
 export const AddMemberForm = () => {
-  const { view } = useMapStateContext();
-  const { addItem, items, setCurrent } = useEditContext();
+  const { addItem, setCurrent } = useEditContext();
   const relation = useCurrentItem();
   const [showInput, setShowInput] = useState(false);
   const [label, setLabel] = useState('');
 
   const handleAddMember = useCallback(
     async (e) => {
-      const { members, setMembers, tags, relationClickedLonLat } = relation;
+      const { setMembers, tags } = relation;
 
       let newItem: DataItem;
       if (label.match(/^[nwr]\d+$/)) {
         const apiId = getApiId(label);
         newItem = await fetchFreshItem(apiId);
       } else {
-        const nextPosition = await getNextNodeLocation(items, members);
-        const position =
-          nextPosition ?? relationClickedLonLat ?? getViewPoint(view);
-        newItem = getNewNodeItem(position, {
+        newItem = getNewNodeItem(undefined, {
           name: label,
           ...getMemberTags(tags),
         });
@@ -116,7 +72,7 @@ export const AddMemberForm = () => {
         setCurrent(newShortId);
       }
     },
-    [addItem, relation, items, label, setCurrent, view],
+    [addItem, relation, label, setCurrent],
   );
 
   useEffect(() => {

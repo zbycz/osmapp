@@ -13,6 +13,7 @@ import { Box } from '@mui/material';
 
 export const ItemEditSection = () => {
   const { toBeDeleted } = useCurrentItem();
+  const { shortId } = useCurrentItem();
   if (toBeDeleted) {
     return (
       <>
@@ -26,7 +27,7 @@ export const ItemEditSection = () => {
     <>
       <ItemHeading />
       <PresetSelect />
-      <MajorKeysEditor />
+      <MajorKeysEditor key={shortId} />
       <ClimbingEditor />
       <TagsEditor />
       <LocationEditor />

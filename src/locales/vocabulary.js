@@ -283,6 +283,8 @@ export default {
   'editdialog.download_osc': 'Download osmChange',
   'editdialog.members_climbing_info':
     'Members of climbing crag can also be other relevant objects, like parking or reference to specific peak or cliff (natural=cliff).',
+  'editdialog.no_location_alert': 'Please set a location by dragging the marker.',
+  'editdialog.set_location_for_all_items': 'Please set a location for all items.',
 
   'editsuccess.close_button': 'Done',
   'editsuccess.note.heading': 'Thank you for your suggestion!',

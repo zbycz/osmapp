@@ -20,6 +20,8 @@ type EditContextType = {
   items: EditDataItem[];
   current: string;
   setCurrent: Setter<string>;
+  validate: boolean;
+  setValidate: Setter<boolean>;
 };
 
 const EditContext = createContext<EditContextType>(undefined);
@@ -29,6 +31,7 @@ export const EditContextProvider: React.FC = ({ children }) => {
   const [isSaving, setIsSaving] = useState(false);
   const [location, setLocation] = useState(''); // only for note
   const [comment, setComment] = useState('');
+  const [validate, setValidate] = useState(false);
   const { items, addItem, removeItem } = useEditItems();
   const [current, setCurrent] = useState<ShortId>(''); // to get currentItem - use `useCurrentItem()`
 
@@ -46,6 +49,8 @@ export const EditContextProvider: React.FC = ({ children }) => {
     items,
     current,
     setCurrent,
+    validate,
+    setValidate,
   };
 
   return <EditContext.Provider value={value}>{children}</EditContext.Provider>;
