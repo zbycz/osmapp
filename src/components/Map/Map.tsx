@@ -48,32 +48,23 @@ const TopRight = styled.div`
   }
 `;
 
-const BottomLeft = styled.div<{ $isFeaturePanelVisible: boolean }>`
+const BottomLeft = styled.div`
   position: absolute;
   bottom: 0;
   pointer-events: none;
   z-index: 999;
-  left: ${({ $isFeaturePanelVisible }) =>
-    $isFeaturePanelVisible ? `${FEATURE_PANEL_WIDTH}px` : '0px'};
+  left: 0px;
   display: flex;
-  gap: 4px;
   flex-direction: column;
-  align-items: end;
-  padding: 0 0 8px 12px;
+  align-items: flex-start;
+  padding: 0 0 4px 4px;
 `;
 const BottomRight = styled.div`
   position: absolute;
-  right: 0;
-  bottom: 0;
-  text-align: right;
+  right: 6px;
+  bottom: 6px;
   pointer-events: none;
   z-index: 998;
-
-  display: flex;
-  gap: 4px;
-  flex-direction: column;
-  align-items: end;
-  padding: 0 2px 2px 0;
 `;
 
 const BottomCenter = styled.div<{ $isFeaturePanelVisible: boolean }>`
@@ -126,14 +117,14 @@ const Map = () => {
       <TopRight>
         <TopMenu />
       </TopRight>
-      <BottomLeft $isFeaturePanelVisible={isPanelShown && !isMobileMode}>
-        <LayerSwitcherDynamic />
-      </BottomLeft>
-      <BottomRight>
+      <BottomLeft>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
         <Weather />
         <MapFooter />
+      </BottomLeft>
+      <BottomRight>
+        <LayerSwitcherDynamic />
       </BottomRight>
       {hasClimbingLayer && (
         <BottomCenter $isFeaturePanelVisible={isPanelShown && !isMobileMode}>
