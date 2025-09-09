@@ -20,7 +20,6 @@ const WeatherWrapper = styled.div`
   width: fit-content;
   border-radius: 8px;
   font-size: 0.85rem;
-
   pointer-events: all;
 `;
 

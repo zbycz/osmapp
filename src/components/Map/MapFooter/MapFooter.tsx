@@ -5,7 +5,6 @@ import styled from '@emotion/styled';
 import { IconButton, Tooltip } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { ClimbingLegend } from './ClimbingLegend';
-import { convertHexToRgba } from '../../utils/colorUtils';
 import { AttributionLinks } from './AttributionLinks';
 import { useIsClient, useMobileMode } from '../../helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
@@ -14,6 +13,7 @@ const IconContainer = styled.div<{ $isVisible: boolean }>`
   width: ${({ $isVisible }) => ($isVisible ? '20px' : '0')};
   height: 20px;
   transition: width 0.15s ease-out;
+  margin-left: -4px;
   margin-right: 4px;
 `;
 
@@ -25,12 +25,12 @@ const StyledIconButton = styled(IconButton)`
 const FooterContainer = styled.div<{ $legendShown: boolean }>`
   pointer-events: all;
   border-radius: 8px;
-  padding: 2px 4px;
+  padding: 1px 4px;
   color: ${({ theme }) => theme.palette.text.primary};
-  background-color: ${({ theme }) =>
-    convertHexToRgba(theme.palette.background.paper, 0.5)};
+  background-color: rgba(250, 250, 250, 0.5);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
+  margin-top: 4px;
 `;
 
 const Wrapper = styled.div`
@@ -95,6 +95,7 @@ export const MapFooter = () => {
       <FooterContainer $legendShown={hasLegend && legendShown}>
         <Wrapper>
           <AttributionLinks />
+
           {hasLegend && (
             <LegendExpandButton
               isVisible={!legendShown}

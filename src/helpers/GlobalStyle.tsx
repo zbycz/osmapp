@@ -65,8 +65,11 @@ const globalStyle = (theme: Theme) => css`
     user-select: none;
     -webkit-user-select: none;
   }
+  .maplibregl-ctrl-bottom-right {
+    bottom: 60px !important;
+  }
   .maplibregl-ctrl-scale {
-    margin-bottom: 60px !important;
+    background-color: hsla(0, 0%, 100%, 0.5) !important;
   }
 
   .maplibregl-ctrl-group {

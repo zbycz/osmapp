@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { IconButton, Tooltip } from '@mui/material';
+import { IconButton, Stack, Tooltip } from '@mui/material';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import AreaBlue from '../../../../public/icons-climbing/icons/area-blue.svg';
 import CragRed from '../../../../public/icons-climbing/icons/crag-red.svg';
@@ -13,15 +13,6 @@ const HideableContainer = styled.div<{ $isVisible: boolean }>`
   transition: max-height 0.15s ease-out;
   max-height: ${({ $isVisible }) => ($isVisible ? 500 : 0)}px;
   overflow: hidden;
-
-  pointer-events: all;
-  border-radius: 8px;
-  padding: ${({ $isVisible }) => ($isVisible ? '0px 4px 2px 4px' : '0 6px')};
-  color: ${({ theme }) => theme.palette.text.primary};
-  background-color: ${({ theme }) =>
-    convertHexToRgba(theme.palette.background.paper, 0.5)};
-  backdrop-filter: blur(15px);
-  -webkit-backdrop-filter: blur(15px);
 `;
 
 const Icon = styled.img`
@@ -30,8 +21,15 @@ const Icon = styled.img`
 `;
 
 const Container = styled.div`
-  display: flex;
-  flex-direction: column;
+  pointer-events: all;
+  border-radius: 8px;
+  padding: 0 4px 2px 4px;
+  color: ${({ theme }) => theme.palette.text.primary};
+  background-color: ${({ theme }) =>
+    convertHexToRgba(theme.palette.background.paper, 0.5)};
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  margin-top: 4px;
 `;
 
 const Item = styled.div`
@@ -87,24 +85,32 @@ export const ClimbingLegend = ({ isVisible, setLegendShown }) => {
   return (
     <HideableContainer $isVisible={isVisible}>
       <Container>
-        <HeadingRow>
-          <Heading>{t('climbing_legend.areas_crags')}</Heading>
-          <CloseButton onClick={onLegendClose} />
-        </HeadingRow>
-        <Item>
-          <span>
-            <Icon src={AreaBlue.src} alt="Climbing area with photos icon" />
-            <Icon src={CragRed.src} alt="Climbing crag with photos icon" />
-          </span>
-          {t('climbing_legend.topos')}
-        </Item>
-        <ItemFaded>
-          <span>
-            <Icon src={AreaGray.src} alt="Climbing area without photos icon" />
-            <Icon src={CragGray.src} alt="Climbing crag without photos icon" />
-          </span>
-          {t('climbing_legend.only_position')}
-        </ItemFaded>
+        <Stack direction="column">
+          <HeadingRow>
+            <Heading>{t('climbing_legend.areas_crags')}</Heading>
+            <CloseButton onClick={onLegendClose} />
+          </HeadingRow>
+          <Item>
+            <span>
+              <Icon src={AreaBlue.src} alt="Climbing area with photos icon" />
+              <Icon src={CragRed.src} alt="Climbing crag with photos icon" />
+            </span>
+            {t('climbing_legend.topos')}
+          </Item>
+          <ItemFaded>
+            <span>
+              <Icon
+                src={AreaGray.src}
+                alt="Climbing area without photos icon"
+              />
+              <Icon
+                src={CragGray.src}
+                alt="Climbing crag without photos icon"
+              />
+            </span>
+            {t('climbing_legend.only_position')}
+          </ItemFaded>
+        </Stack>
       </Container>
     </HideableContainer>
   );
