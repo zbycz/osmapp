@@ -38,8 +38,6 @@ const typeMap: TypeMap = {
 const getTooltip = (osmType: OsmType, shortId?: string) => {
   const { label, description } = typeMap[osmType];
   const english = label.toLowerCase() === osmType ? '' : ` (${osmType})`;
-  const longId = getUrlOsmId(getApiId(shortId));
-
   return (
     <>
       OSM {label}
@@ -49,7 +47,8 @@ const getTooltip = (osmType: OsmType, shortId?: string) => {
       {shortId ? (
         <>
           <br />
-          {shortId.includes('-') ? 'Local' : 'OSM'} ID: {longId}
+          {shortId.includes('-') ? 'Local' : 'OSM'} ID:{' '}
+          {getUrlOsmId(getApiId(shortId))}
         </>
       ) : null}
     </>
