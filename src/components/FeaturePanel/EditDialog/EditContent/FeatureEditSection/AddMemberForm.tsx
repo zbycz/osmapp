@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { getApiId } from '../../../../../services/helpers';
 import { useCurrentItem, useEditContext } from '../../context/EditContext';
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback } from 'react';
 import { Button, TextField } from '@mui/material';
 import { FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
@@ -10,6 +10,7 @@ import { getPresetTranslation } from '../../../../../services/tagging/translatio
 import { fetchFreshItem, getNewNodeItem } from '../../context/itemsHelpers';
 import { DataItem } from '../../context/types';
 import { getPresetKey } from '../../context/utils';
+import { Setter } from '../../../../../types';
 
 const ROUTE_BOTTOM_TAGS = {
   climbing: 'route_bottom',
@@ -29,12 +30,9 @@ const getMemberTags = (parentTags: FeatureTags) => {
   return {};
 };
 
-// TODO refactor
-
-export const AddMemberForm = () => {
+const useHandleAddMember = (setShowInput: Setter<boolean>) => {
   const { addItem, setCurrent } = useEditContext();
   const relation = useCurrentItem();
-  const [showInput, setShowInput] = useState(false);
   const [label, setLabel] = useState('');
 
   const handleAddMember = useCallback(
@@ -72,9 +70,49 @@ export const AddMemberForm = () => {
         setCurrent(newShortId);
       }
     },
-    [addItem, relation, label, setCurrent],
+    [relation, label, addItem, setShowInput, setCurrent],
   );
+  return { label, setLabel, handleAddMember };
+};
 
+const ShowFormButton = (props: { onClick: () => void }) => {
+  const relation = useCurrentItem();
+  const isClimbingCrag = relation.tags.climbing === 'crag';
+  return (
+    <Button startIcon={<AddIcon />} onClick={props.onClick} variant="text">
+      {isClimbingCrag
+        ? t('editdialog.members.add_climbing_route')
+        : t('editdialog.members.add_member')}
+    </Button>
+  );
+};
+
+const ConfirmButton = (props: { onClick: (e) => Promise<void> }) => (
+  <Button onClick={props.onClick} variant="text">
+    {t('editdialog.members.confirm')}
+  </Button>
+);
+
+const MemberNameInput = (props: {
+  value: string;
+  setLabel: Setter<string>;
+}) => (
+  <TextField
+    value={props.value}
+    size="small"
+    label={t('editdialog.members.name')}
+    onChange={(e) => {
+      props.setLabel(e.target.value);
+    }}
+    autoFocus
+  />
+);
+
+const useKeyboardShortcuts = (
+  showInput: boolean,
+  handleAddMember: (e) => Promise<void>,
+  setShowInput: Setter<boolean>,
+) => {
   useEffect(() => {
     const downHandler = (e) => {
       if (!showInput) return;
@@ -93,37 +131,23 @@ export const AddMemberForm = () => {
     return () => {
       window.removeEventListener('keydown', downHandler);
     };
-  }, [handleAddMember, showInput]);
+  }, [handleAddMember, setShowInput, showInput]);
+};
 
-  const isClimbingCrag = relation.tags.climbing === 'crag';
+export const AddMemberForm = () => {
+  const [showInput, setShowInput] = useState(false);
+  const { label, setLabel, handleAddMember } = useHandleAddMember(setShowInput);
+  useKeyboardShortcuts(showInput, handleAddMember, setShowInput);
 
   return (
     <>
       {showInput ? (
         <>
-          <TextField
-            value={label}
-            size="small"
-            label={t('editdialog.members.name')}
-            onChange={(e) => {
-              setLabel(e.target.value);
-            }}
-          />
-
-          <Button onClick={handleAddMember} variant="text">
-            {t('editdialog.members.confirm')}
-          </Button>
+          <MemberNameInput value={label} setLabel={setLabel} />
+          <ConfirmButton onClick={handleAddMember} />
         </>
       ) : (
-        <Button
-          startIcon={<AddIcon />}
-          onClick={() => setShowInput(true)}
-          variant="text"
-        >
-          {isClimbingCrag
-            ? t('editdialog.members.add_climbing_route')
-            : t('editdialog.members.add_member')}
-        </Button>
+        <ShowFormButton onClick={() => setShowInput(true)} />
       )}
     </>
   );
