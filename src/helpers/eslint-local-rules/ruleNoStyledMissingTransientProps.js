@@ -1,0 +1,53 @@
+const ruleNoStyledMissingTransientProps = {
+  meta: {
+    type: 'problem',
+    docs: {
+      description:
+        'Warns when a styled component has custom props but is missing shouldForwardProp.',
+      category: 'Possible Errors',
+      recommended: true,
+      url: '',
+    },
+    schema: [],
+    messages: {
+      missingShouldForwardProp:
+        "styled() has custom props, but is missing `shouldForwardProp`. Make sure that your props start with `$` and add `styled(..., { shouldForwardProp: (prop) => !prop.startsWith('$') })`.",
+    },
+  },
+  create(context) {
+    return {
+      CallExpression(callExpression) {
+        if (
+          callExpression.callee.type === 'Identifier' &&
+          callExpression.callee.name === 'styled'
+        ) {
+          let hasCustomProps = false;
+          let hasShouldForwardProp = false;
+          const taggedTemplate = callExpression.parent;
+
+          if (
+            taggedTemplate.typeArguments &&
+            taggedTemplate.typeArguments.type ===
+              'TSTypeParameterInstantiation' &&
+            taggedTemplate.typeArguments.params.length > 0
+          ) {
+            hasCustomProps = true;
+          }
+
+          if (callExpression.arguments.length > 1) {
+            hasShouldForwardProp = true;
+          }
+
+          if (hasCustomProps && !hasShouldForwardProp) {
+            context.report({
+              node: callExpression,
+              messageId: 'missingShouldForwardProp',
+            });
+          }
+        }
+      },
+    };
+  },
+};
+
+module.exports = ruleNoStyledMissingTransientProps;
