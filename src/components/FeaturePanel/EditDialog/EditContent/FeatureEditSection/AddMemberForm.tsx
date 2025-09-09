@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { getApiId } from '../../../../../services/helpers';
 import { useCurrentItem, useEditContext } from '../../context/EditContext';
-import React, { useCallback } from 'react';
-import { Button, TextField } from '@mui/material';
+import { Button, IconButton, TextField } from '@mui/material';
 import { FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
@@ -11,6 +10,10 @@ import { fetchFreshItem, getNewNodeItem } from '../../context/itemsHelpers';
 import { DataItem } from '../../context/types';
 import { getPresetKey } from '../../context/utils';
 import { Setter } from '../../../../../types';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import styled from '@emotion/styled';
+
+type Scene = null | 'single' | 'batch';
 
 const ROUTE_BOTTOM_TAGS = {
   climbing: 'route_bottom',
@@ -30,7 +33,7 @@ const getMemberTags = (parentTags: FeatureTags) => {
   return {};
 };
 
-const useHandleAddMember = (setShowInput: Setter<boolean>) => {
+const useHandleAddMember = (setScene: Setter<Scene>) => {
   const { addItem, setCurrent } = useEditContext();
   const relation = useCurrentItem();
   const [label, setLabel] = useState('');
@@ -64,13 +67,13 @@ const useHandleAddMember = (setShowInput: Setter<boolean>) => {
         ...(prev ?? []),
         { shortId: newShortId, role: '', label: newLabel },
       ]);
-      setShowInput(false);
+      setScene(null);
       setLabel('');
       if (e.ctrlKey || e.metaKey) {
         setCurrent(newShortId);
       }
     },
-    [relation, label, addItem, setShowInput, setCurrent],
+    [relation, label, addItem, setScene, setCurrent],
   );
   return { label, setLabel, handleAddMember };
 };
@@ -109,20 +112,20 @@ const MemberNameInput = (props: {
 );
 
 const useKeyboardShortcuts = (
-  showInput: boolean,
   handleAddMember: (e) => Promise<void>,
-  setShowInput: Setter<boolean>,
+  scene: Scene,
+  setScene: Setter<Scene>,
 ) => {
   useEffect(() => {
     const downHandler = (e) => {
-      if (!showInput) return;
+      if (!scene) return;
 
       if (e.key === 'Enter') {
         handleAddMember(e);
       }
 
       if (e.key === 'Escape') {
-        setShowInput(false);
+        setScene(null);
       }
     };
 
@@ -131,23 +134,38 @@ const useKeyboardShortcuts = (
     return () => {
       window.removeEventListener('keydown', downHandler);
     };
-  }, [handleAddMember, setShowInput, showInput]);
+  }, [handleAddMember, setScene, scene]);
 };
 
+const StyledFormatListBulletedIcon = styled(FormatListBulletedIcon)`
+  font-size: 16px;
+`;
+
+const BatchButton = ({ onClick }: { onClick: () => void }) => (
+  <div>
+    <IconButton onClick={onClick}>
+      <StyledFormatListBulletedIcon />
+    </IconButton>
+  </div>
+);
+
 export const AddMemberForm = () => {
-  const [showInput, setShowInput] = useState(false);
-  const { label, setLabel, handleAddMember } = useHandleAddMember(setShowInput);
-  useKeyboardShortcuts(showInput, handleAddMember, setShowInput);
+  const [scene, setScene] = useState<Scene>();
+  const { label, setLabel, handleAddMember } = useHandleAddMember(setScene);
+  useKeyboardShortcuts(handleAddMember, scene, setScene);
 
   return (
     <>
-      {showInput ? (
+      {scene === 'single' ? (
         <>
           <MemberNameInput value={label} setLabel={setLabel} />
           <ConfirmButton onClick={handleAddMember} />
+          {/*<BatchButton onClick={() => setScene('batch')} />*/}
         </>
       ) : (
-        <ShowFormButton onClick={() => setShowInput(true)} />
+        // ) : scene === 'batch' ? (
+        //   <BatchScene />
+        <ShowFormButton onClick={() => setScene('single')} />
       )}
     </>
   );

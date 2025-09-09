@@ -134,7 +134,7 @@ export const MembersEditor = () => {
         />
       ))}
 
-      <Stack direction="row" spacing={2} mt={1} ml={1}>
+      <Stack direction="row" alignItems="center" spacing={2} mt={1} ml={1}>
         {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
 
         <Box sx={{ flex: '1' }} />
