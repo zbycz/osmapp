@@ -17,6 +17,7 @@ import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData'
 import { getOsmTagFromGradeSystem } from '../../../../../services/tagging/climbing/routeGrade';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import CloseIcon from '@mui/icons-material/Close';
+import { GradeSystem } from '../../../../../services/tagging/climbing/gradeSystems';
 
 export type Scene = null | 'single' | 'batch';
 
@@ -92,7 +93,7 @@ const useGetGradeSystemOrUndefined = (scene: string) => {
   const relation = useCurrentItem();
   const { userSettings } = useUserSettingsContext();
   if (scene === 'batch' && relation.tags.climbing) {
-    return userSettings['climbing.gradeSystem'] ?? 'uiaa';
+    return (userSettings['climbing.gradeSystem'] ?? 'uiaa') as GradeSystem;
   }
   return undefined;
 };
@@ -226,13 +227,9 @@ const StyledTextareaAutosize = styled(TextareaAutosize)`
 `;
 
 const BatchTextarea = (props: { label: string; setLabel: Setter<string> }) => {
-  const { tags } = useCurrentItem();
-  const { userSettings } = useUserSettingsContext();
-  const gradeSystem = userSettings['climbing.gradeSystem'] ?? 'uiaa';
-  const grades = GRADE_TABLE[gradeSystem];
-  const example = grades[24];
-  const placeholder = tags.climbing
-    ? `Cat in a Hat ${example}\n...`
+  const gradeSystem = useGetGradeSystemOrUndefined('batch');
+  const placeholder = gradeSystem
+    ? `Cat in a Hat ${GRADE_TABLE[gradeSystem][24]}\n...`
     : 'name\n...';
 
   return (
@@ -243,7 +240,7 @@ const BatchTextarea = (props: { label: string; setLabel: Setter<string> }) => {
         placeholder={placeholder}
         onChange={(e) => props.setLabel(e.target.value)}
       />
-      {tags.climbing ? <GradeSystemSelect /> : null}
+      {gradeSystem ? <GradeSystemSelect /> : null}
     </>
   );
 };
