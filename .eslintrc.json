@@ -23,6 +23,7 @@
         "IIFEs": true
       }
     ],
+    "local-rules/max-lines-per-function-LOCAL": "warn",
     "unused-imports/no-unused-imports": "error"
   },
   "overrides": [
