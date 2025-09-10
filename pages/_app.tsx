@@ -41,6 +41,7 @@ import Router from 'next/router';
 import { fetchSchemaTranslations } from '../src/services/tagging/translations';
 import Head from 'next/head';
 import { HotJar } from '../src/components/App/hotjar';
+import { TicksProvider } from '../src/components/FeaturePanel/Climbing/Ticks/TicksContext';
 
 const getInitialToast = (featureFromRouter: Feature | '404') =>
   featureFromRouter === '404'
@@ -101,24 +102,26 @@ const MyApp = (props: Props) => {
                   <OsmAuthProvider cookies={cookies}>
                     <StarsProvider>
                       <EditDialogProvider /* TODO supply router.query */>
-                        <QueryClientProvider client={reactQueryClient}>
-                          <Head>
-                            <meta
-                              name="viewport"
-                              content="width=device-width, user-scalable=no, initial-scale=1"
-                            />
-                          </Head>
-                          <Loading />
-                          <SearchBox />
-                          <ResponsiveFeaturePanel />
-                          <HomepagePanel />
-                          <Climbing />
-                          <Map />
-                          <TitleAndMetaTags />
+                        <TicksProvider>
+                          <QueryClientProvider client={reactQueryClient}>
+                            <Head>
+                              <meta
+                                name="viewport"
+                                content="width=device-width, user-scalable=no, initial-scale=1"
+                              />
+                            </Head>
+                            <Loading />
+                            <SearchBox />
+                            <ResponsiveFeaturePanel />
+                            <HomepagePanel />
+                            <Climbing />
+                            <Map />
+                            <TitleAndMetaTags />
 
-                          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-                          <Component {...pageProps} />
-                        </QueryClientProvider>
+                            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+                            <Component {...pageProps} />
+                          </QueryClientProvider>
+                        </TicksProvider>
                       </EditDialogProvider>
                     </StarsProvider>
                   </OsmAuthProvider>

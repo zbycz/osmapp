@@ -26,7 +26,7 @@ const FooterContainer = styled.div<{ $legendShown: boolean }>`
   pointer-events: all;
   border-radius: 8px;
   padding: 1px 4px;
-  color: ${({ theme }) => theme.palette.text.primary};
+  color: rgba(0, 0, 0, 0.8);
   background-color: rgba(250, 250, 250, 0.5);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
@@ -35,7 +35,7 @@ const FooterContainer = styled.div<{ $legendShown: boolean }>`
 
 const Wrapper = styled.div`
   font-size: 12px;
-  color: ${({ theme }) => theme.palette.text.primary};
+  color: rgba(0, 0, 0, 0.5);
   font-weight: 400;
   text-align: left;
   display: flex;
@@ -44,7 +44,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
 
   a {
-    color: ${({ theme }) => theme.palette.text.primary};
+    color: rgba(0, 0, 0, 0.8);
     text-decoration: underline;
   }
 `;
@@ -56,6 +56,7 @@ const LegendExpandButton = ({ isVisible, setLegendShown }) => (
         <StyledIconButton
           size="small"
           edge="end"
+          color="inherit"
           onClick={() => {
             setLegendShown(true);
           }}

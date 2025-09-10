@@ -30,8 +30,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useMobileMode } from '../../../helpers';
 import { ClimbingBadges } from '../ClimbingBadges';
 import { useMoreMenu } from '../useMoreMenu';
-import { useAddTick } from '../Ticks/AddTickButton';
 import { useClimbingContext } from '../contexts/ClimbingContext';
+import { useTicksContext } from '../Ticks/TicksContext';
 
 const Container = styled.div`
   width: 100%;
@@ -244,8 +244,8 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
     const { climbingFilter } = useUserSettingsContext();
     const { gradeInterval } = climbingFilter;
     const [minIndex, maxIndex] = gradeInterval;
-    const { onTickAdd, EditTickModal } = useAddTick();
-
+    const { onNewTickAdd } = useTicksContext();
+    const { userSettings } = useUserSettingsContext();
     if (!feature) {
       return null;
     }
@@ -287,10 +287,17 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
               <RouteAuthor feature={feature} />
             </Stack>
             <RouteGrade feature={feature} />
-            <MoreMenu feature={feature} onTickAdd={onTickAdd} />
+            <MoreMenu
+              feature={feature}
+              onTickAdd={() =>
+                onNewTickAdd(
+                  shortId,
+                  userSettings['climbing.defaultClimbingStyle'],
+                )
+              }
+            />
           </Row>
         </Container>
-        <EditTickModal />
       </>
     );
   },
