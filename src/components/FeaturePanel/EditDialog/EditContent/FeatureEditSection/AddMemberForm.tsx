@@ -84,7 +84,17 @@ const convertLine = async (
   const tags = Object.fromEntries(newItem.tagsEntries);
   const newLabel = tags.name ?? presetLabel;
   const newMember = { shortId: newItem.shortId, role: '', label: newLabel };
+
   return { newItem, newMember };
+};
+
+const useGetGradeSystemOrUndefined = (scene: string) => {
+  const relation = useCurrentItem();
+  const { userSettings } = useUserSettingsContext();
+  if (scene === 'batch' && relation.tags.climbing) {
+    return userSettings['climbing.gradeSystem'] ?? 'uiaa';
+  }
+  return undefined;
 };
 
 const useHandleAddMember = (
@@ -95,24 +105,20 @@ const useHandleAddMember = (
 ) => {
   const { addItem, setCurrent } = useEditContext();
   const relation = useCurrentItem();
-  const { userSettings } = useUserSettingsContext();
-  const gradeSystem =
-    scene === 'batch' && relation.tags.climbing
-      ? (userSettings['climbing.gradeSystem'] ?? 'uiaa')
-      : undefined;
+  const gradeSystem = useGetGradeSystemOrUndefined(scene);
 
   return async (e: React.MouseEvent) => {
     const lines = label.split('\n').filter(Boolean);
     const newMembers: Members = [];
-    const { setMembers, tags } = relation;
 
     for (const line of lines) {
+      const { tags } = relation;
       const { newItem, newMember } = await convertLine(line, tags, gradeSystem);
       addItem(newItem);
       newMembers.push(newMember);
     }
 
-    setMembers((prev) => [...(prev ?? []), ...newMembers]);
+    relation.setMembers((prev) => [...(prev ?? []), ...newMembers]);
     setScene(null);
     setLabel('');
 
