@@ -1,28 +1,36 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { getApiId } from '../../../../../services/helpers';
 import { useCurrentItem, useEditContext } from '../../context/EditContext';
-import { Button, IconButton, TextField } from '@mui/material';
+import { Button, IconButton, TextareaAutosize, TextField } from '@mui/material';
 import { FeatureTags } from '../../../../../services/types';
 import { t } from '../../../../../services/intl';
 import AddIcon from '@mui/icons-material/Add';
 import { getPresetTranslation } from '../../../../../services/tagging/translations';
 import { fetchFreshItem, getNewNodeItem } from '../../context/itemsHelpers';
-import { DataItem } from '../../context/types';
+import { DataItem, Members } from '../../context/types';
 import { getPresetKey } from '../../context/utils';
 import { Setter } from '../../../../../types';
-import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import styled from '@emotion/styled';
+import { GradeSystemSelect } from '../../../Climbing/GradeSystemSelect';
+import { useUserSettingsContext } from '../../../../utils/userSettings/UserSettingsContext';
+import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData';
+import { getOsmTagFromGradeSystem } from '../../../../../services/tagging/climbing/routeGrade';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import CloseIcon from '@mui/icons-material/Close';
+import { GradeSystem } from '../../../../../services/tagging/climbing/gradeSystems';
 
-type Scene = null | 'single' | 'batch';
+export type Scene = null | 'single' | 'batch';
 
 const ROUTE_BOTTOM_TAGS = {
   climbing: 'route_bottom',
   sport: 'climbing',
 };
+
 const CRAG_TAGS = {
   climbing: 'crag',
   sport: 'climbing',
 };
+
 const getMemberTags = (parentTags: FeatureTags) => {
   if (parentTags.climbing === 'crag') {
     return ROUTE_BOTTOM_TAGS;
@@ -33,50 +41,123 @@ const getMemberTags = (parentTags: FeatureTags) => {
   return {};
 };
 
-const useHandleAddMember = (setScene: Setter<Scene>) => {
+const parseGradeFromLine = (line: string, gradeSystem?: string) => {
+  if (!gradeSystem) {
+    return { gradeTags: {}, name: line };
+  }
+
+  const grades = GRADE_TABLE[gradeSystem];
+  const words = line.split(' ');
+  const lastWord = words[words.length - 1];
+  if (grades.includes(lastWord)) {
+    return {
+      gradeTags: {
+        [getOsmTagFromGradeSystem(gradeSystem)]: lastWord,
+      },
+      name: line.substring(0, line.length - lastWord.length - 1),
+    };
+  }
+
+  return { gradeTags: {}, name: line };
+};
+
+const convertLine = async (
+  line: string,
+  parentTags: FeatureTags,
+  gradeSystem: string,
+) => {
+  let newItem: DataItem;
+  if (line.match(/^[nwr]\d+$/)) {
+    const apiId = getApiId(line);
+    newItem = await fetchFreshItem(apiId);
+  } else {
+    const { gradeTags, name } = parseGradeFromLine(line, gradeSystem);
+    newItem = getNewNodeItem(undefined, {
+      name,
+      ...getMemberTags(parentTags),
+      ...gradeTags,
+    });
+  }
+
+  // TODO this code could be removed, if we lookup the label in render among editItems
+  const presetKey = getPresetKey(newItem);
+  const presetLabel = getPresetTranslation(presetKey);
+  const tags = Object.fromEntries(newItem.tagsEntries);
+  const newLabel = tags.name ?? presetLabel;
+  const newMember = { shortId: newItem.shortId, role: '', label: newLabel };
+
+  return { newItem, newMember };
+};
+
+const useGetGradeSystemOrUndefined = (scene: string) => {
+  const relation = useCurrentItem();
+  const { userSettings } = useUserSettingsContext();
+  if (scene === 'batch' && relation.tags.climbing) {
+    return (userSettings['climbing.gradeSystem'] ?? 'uiaa') as GradeSystem;
+  }
+  return undefined;
+};
+
+const useHandleAddMember = (
+  scene: string,
+  setScene: Setter<Scene>,
+  label: string,
+  setLabel: Setter<string>,
+) => {
   const { addItem, setCurrent } = useEditContext();
   const relation = useCurrentItem();
-  const [label, setLabel] = useState('');
+  const gradeSystem = useGetGradeSystemOrUndefined(scene);
 
-  const handleAddMember = useCallback(
-    async (e) => {
-      const { setMembers, tags } = relation;
+  return async (e: React.MouseEvent) => {
+    const lines = label.split('\n').filter(Boolean);
+    const newMembers: Members = [];
 
-      let newItem: DataItem;
-      if (label.match(/^[nwr]\d+$/)) {
-        const apiId = getApiId(label);
-        newItem = await fetchFreshItem(apiId);
-      } else {
-        newItem = getNewNodeItem(undefined, {
-          name: label,
-          ...getMemberTags(tags),
-        });
-      }
-
-      const newShortId = newItem.shortId;
-
-      // TODO this code could be removed, if we lookup the label in render among editItems
-      const presetKey = getPresetKey(newItem);
-      const presetLabel = getPresetTranslation(presetKey);
-      const tags2 = Object.fromEntries(newItem.tagsEntries);
-      const newLabel = tags2.name ?? presetLabel;
-
+    for (const line of lines) {
+      const { tags } = relation;
+      const { newItem, newMember } = await convertLine(line, tags, gradeSystem);
       addItem(newItem);
+      newMembers.push(newMember);
+    }
 
-      setMembers((prev) => [
-        ...(prev ?? []),
-        { shortId: newShortId, role: '', label: newLabel },
-      ]);
-      setScene(null);
-      setLabel('');
-      if (e.ctrlKey || e.metaKey) {
-        setCurrent(newShortId);
-      }
-    },
-    [relation, label, addItem, setScene, setCurrent],
-  );
-  return { label, setLabel, handleAddMember };
+    relation.setMembers((prev) => [...(prev ?? []), ...newMembers]);
+    setScene(null);
+    setLabel('');
+
+    if (newMembers.length && (e.ctrlKey || e.metaKey)) {
+      setCurrent(newMembers[0].shortId);
+    }
+  };
 };
+
+const StyledFormatListBulletedIcon = styled(FormatListBulletedIcon)`
+  font-size: 16px;
+`;
+export const BatchButton = ({ onClick }: { onClick: () => void }) => (
+  <div>
+    <IconButton onClick={onClick}>
+      <StyledFormatListBulletedIcon />
+    </IconButton>
+  </div>
+);
+
+const StyledCloseIcon = styled(CloseIcon)`
+  font-size: 16px;
+`;
+export const CancelButton = (props: {
+  setLabel: Setter<string>;
+  setScene: Setter<Scene>;
+}) => (
+  <div>
+    <IconButton
+      onClick={() => {
+        props.setLabel('');
+        props.setScene(null);
+      }}
+    >
+      <StyledCloseIcon />
+    </IconButton>
+  </div>
+);
 
 const ShowFormButton = (props: { onClick: () => void }) => {
   const relation = useCurrentItem();
@@ -97,11 +178,11 @@ const ConfirmButton = (props: { onClick: (e) => Promise<void> }) => (
 );
 
 const MemberNameInput = (props: {
-  value: string;
+  label: string;
   setLabel: Setter<string>;
 }) => (
   <TextField
-    value={props.value}
+    value={props.label}
     size="small"
     label={t('editdialog.members.name')}
     onChange={(e) => {
@@ -118,7 +199,9 @@ const useKeyboardShortcuts = (
 ) => {
   useEffect(() => {
     const downHandler = (e) => {
-      if (!scene) return;
+      if (scene !== 'single') {
+        return;
+      }
 
       if (e.key === 'Enter') {
         handleAddMember(e);
@@ -137,34 +220,52 @@ const useKeyboardShortcuts = (
   }, [handleAddMember, setScene, scene]);
 };
 
-const StyledFormatListBulletedIcon = styled(FormatListBulletedIcon)`
-  font-size: 16px;
+const StyledTextareaAutosize = styled(TextareaAutosize)`
+  background-color: ${({ theme }) => theme.palette.background.paper};
+  color: ${({ theme }) => theme.palette.text.primary};
+  width: 50%;
 `;
 
-const BatchButton = ({ onClick }: { onClick: () => void }) => (
-  <div>
-    <IconButton onClick={onClick}>
-      <StyledFormatListBulletedIcon />
-    </IconButton>
-  </div>
-);
+const BatchTextarea = (props: { label: string; setLabel: Setter<string> }) => {
+  const gradeSystem = useGetGradeSystemOrUndefined('batch');
+  const placeholder = gradeSystem
+    ? `Cat in a Hat ${GRADE_TABLE[gradeSystem][24]}\n...`
+    : 'name\n...';
+
+  return (
+    <>
+      <StyledTextareaAutosize
+        minRows={3}
+        value={props.label}
+        placeholder={placeholder}
+        onChange={(e) => props.setLabel(e.target.value)}
+      />
+      {gradeSystem ? <GradeSystemSelect /> : null}
+    </>
+  );
+};
 
 export const AddMemberForm = () => {
   const [scene, setScene] = useState<Scene>();
-  const { label, setLabel, handleAddMember } = useHandleAddMember(setScene);
+  const [label, setLabel] = useState('');
+  const handleAddMember = useHandleAddMember(scene, setScene, label, setLabel);
   useKeyboardShortcuts(handleAddMember, scene, setScene);
 
   return (
     <>
       {scene === 'single' ? (
         <>
-          <MemberNameInput value={label} setLabel={setLabel} />
+          <MemberNameInput label={label} setLabel={setLabel} />
           <ConfirmButton onClick={handleAddMember} />
-          {/*<BatchButton onClick={() => setScene('batch')} />*/}
+          <BatchButton onClick={() => setScene('batch')} />
+        </>
+      ) : scene === 'batch' ? (
+        <>
+          <BatchTextarea label={label} setLabel={setLabel} />
+          <ConfirmButton onClick={handleAddMember} />
+          <CancelButton setLabel={setLabel} setScene={setScene} />
         </>
       ) : (
-        // ) : scene === 'batch' ? (
-        //   <BatchScene />
         <ShowFormButton onClick={() => setScene('single')} />
       )}
     </>
