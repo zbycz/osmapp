@@ -5,11 +5,12 @@ import {
   convex,
   distance,
   featureCollection,
+  lineString,
   polygonSmooth,
 } from '@turf/turf';
-import { Feature as GeojsonFeature, Polygon } from 'geojson';
+import { Feature as GeojsonFeature, LineString, Polygon } from 'geojson';
 
-const getMeasures = (hull: GeojsonFeature<Polygon>) => {
+const getMeasures = (hull: GeojsonFeature<Polygon | LineString>) => {
   const [minX, minY, maxX, maxY] = bbox(hull);
   const width = maxX - minX;
   const height = maxY - minY;
@@ -29,11 +30,19 @@ const getHullForSubfeatures = (
   const subfeatures = features.filter(
     (f) => f.properties.parentId === relationId,
   );
-  if (subfeatures.length === 0) {
+  if (subfeatures.length <= 1) {
     return null;
   }
 
-  return convex(featureCollection(subfeatures));
+  const hull = convex(featureCollection(subfeatures));
+  if (!hull) {
+    // two points or colinear points --> make a straight line
+    const coords = subfeatures.flatMap((f) =>
+      f.geometry.type === 'Point' ? [f.geometry.coordinates] : [],
+    );
+    return lineString(coords);
+  }
+  return hull;
 };
 
 export const constructOutlines = (features: ClimbingTilesFeature[]) => {
