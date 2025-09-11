@@ -27,7 +27,7 @@ export const ItemEditSection = () => {
     <>
       <ItemHeading />
       <PresetSelect />
-      <MajorKeysEditor key={shortId} />
+      <MajorKeysEditor />
       <ClimbingEditor />
       <TagsEditor />
       <LocationEditor />
