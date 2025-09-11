@@ -3,13 +3,13 @@ import { getPool } from '../../../src/server/climbing-tiles/db';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
 import format from 'pg-format';
-import { ClimbingTick } from '../../../src/types';
+import { ClimbingTickDb } from '../../../src/types';
 
 const addTickToDB = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
   const { pairing, style, myGrade, osmType, osmId, note, timestamp } = req.body;
 
-  const newTick: Omit<ClimbingTick, 'id'> = {
+  const newTick: Omit<ClimbingTickDb, 'id'> = {
     osmUserId: user.id,
     osmType,
     osmId,
@@ -31,7 +31,7 @@ const addTickToDB = async (req: NextApiRequest) => {
 
 const getAllTicks = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
-  const result = await getPool().query<ClimbingTick>(
+  const result = await getPool().query<ClimbingTickDb>(
     'SELECT * FROM climbing_ticks WHERE "osmUserId" = $1',
     [user.id],
   );
