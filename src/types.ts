@@ -49,11 +49,15 @@ export type ClimbingTilesFeature = GeojsonFeature<
 export type ClimbingTick = {
   id: number;
   osmUserId: number;
-  osmType: string | null;
-  osmId: number | null;
+  shortId: string | null;
   timestamp: string;
   style: string | null;
   myGrade: string | null;
   note: string | null;
   pairing: Record<string, string> | null;
+};
+
+export type ClimbingTickDb = Omit<ClimbingTick, 'shortId'> & {
+  osmType: string | null;
+  osmId: number | null;
 };

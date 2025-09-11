@@ -1,12 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
-import { ClimbingTick } from '../../../src/types';
+import { ClimbingTickDb } from '../../../src/types';
 import { getPool } from '../../../src/server/climbing-tiles/db';
 
-const validateTick = async (req: NextApiRequest) => {
+const validateRequestAndGetTick = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
-  const tick = await getPool().query<ClimbingTick>(
+  const tick = await getPool().query<ClimbingTickDb>(
     'SELECT id, "osmUserId" FROM climbing_ticks WHERE id=$1',
     [req.query.id],
   );
@@ -23,7 +23,7 @@ const validateTick = async (req: NextApiRequest) => {
 };
 
 const deleteTick = async (req: NextApiRequest) => {
-  const tickId = await validateTick(req);
+  const tickId = await validateRequestAndGetTick(req);
   await getPool().query('DELETE FROM climbing_ticks WHERE id=$1', [tickId]);
 };
 
@@ -38,10 +38,11 @@ const ALLOWED_FIELDS = [
 ];
 
 const updateTick = async (req: NextApiRequest) => {
-  const tickId = await validateTick(req);
+  const tickId = await validateRequestAndGetTick(req);
 
+  const newData = req.body;
   const updates = ALLOWED_FIELDS.filter(
-    (field) => req.body[field] !== undefined,
+    (field) => newData[field] !== undefined,
   );
   if (updates.length === 0) {
     return;
@@ -50,7 +51,7 @@ const updateTick = async (req: NextApiRequest) => {
     .map((field, i) => `"${field}"=$${i + 2}`)
     .join(', ');
   const sql = `UPDATE climbing_ticks SET ${setClause} WHERE id=$1 RETURNING *`;
-  const setParams = updates.map((field) => req.body[field]);
+  const setParams = updates.map((field) => newData[field]);
   const result = await getPool().query(sql, [tickId, ...setParams]);
 
   return result.rows[0];
