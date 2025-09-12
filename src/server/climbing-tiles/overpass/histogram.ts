@@ -1,6 +1,6 @@
 import { getDifficulty } from '../../../services/tagging/climbing/routeGrade';
 import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
-import { GeojsonFeature, Lookup, OsmItem } from './types';
+import { GeojsonFeature } from './types';
 
 export const encodeHistogram = (array: number[] | undefined): string | null => {
   if (!array) {
@@ -55,39 +55,34 @@ export const decodeHistogram = (base64String: string): number[] => {
   return resultArray;
 };
 
-export const getHistogram = <T extends OsmItem>(element: T, lookup: Lookup) => {
-  if (element.type === 'relation' && element.tags?.climbing === 'crag') {
-    const array = element.members.reduce((acc, { type, ref }) => {
-      const route = lookup[type][ref];
-      if (!route) return acc;
+export const getHistogram = (cragMembers: GeojsonFeature[]) => {
+  const result: number[] = [];
+  for (const route of cragMembers) {
+    if (!route) continue;
 
-      const grade = getDifficulty(route.tags);
-      if (!grade) return acc;
+    const grade = getDifficulty(route.tags);
+    if (!grade) continue;
 
-      const table = GRADE_TABLE[grade.gradeSystem];
-      if (!table) return acc;
+    const table = GRADE_TABLE[grade.gradeSystem];
+    if (!table) continue;
 
-      const index = table.indexOf(grade.grade);
-      acc[index] = (acc[index] ?? 0) + 1;
-
-      return acc;
-    }, [] as number[]);
-
-    return array;
-  } else {
-    return undefined;
+    const index = table.indexOf(grade.grade);
+    result[index] = (result[index] ?? 0) + 1;
   }
+
+  return result;
 };
 
-export const sumMemberHistograms = (
-  members: GeojsonFeature['properties'][],
-) => {
-  const histograms = members.map((member) => member?.histogram).filter(Boolean);
+export const sumMemberHistograms = (members: GeojsonFeature[]) => {
+  const histograms = members
+    .map((member) => member?.properties.histogram)
+    .filter(Boolean);
 
-  return histograms.reduce((acc, histogram) => {
-    histogram.forEach(
-      (value, index) => (acc[index] = (acc[index] ?? 0) + value),
-    );
-    return acc;
-  }, []);
+  const result: number[] = [];
+  for (const histogram of histograms) {
+    histogram.forEach((value, index) => {
+      result[index] = (result[index] ?? 0) + value;
+    });
+  }
+  return result;
 };
