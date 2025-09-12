@@ -4,6 +4,8 @@ const path = require('path');
 const MAX_LINES = 50;
 
 const IGNORED = [
+  '.test.ts',
+  '.test.tsx',
   'GlobalStyle.tsx',
   'FaviconsOsmapp.tsx',
   'FaviconsOpenClimbing.tsx',
