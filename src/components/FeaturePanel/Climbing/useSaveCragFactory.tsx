@@ -12,6 +12,7 @@ import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 import { fetchFreshItem } from '../EditDialog/context/itemsHelpers';
 import { stringifyPath } from './utils/pathUtils';
 import { DataItem } from '../EditDialog/context/types';
+import { addWebsite } from './addWebsite';
 
 const getUpdatedPhotoTags = (route: ClimbingRoute) => {
   const updatedTags = {};
@@ -62,7 +63,7 @@ const constructChanges = async (
     } as DataItem);
   }
 
-  return dataItems;
+  return dataItems.map(addWebsite);
 };
 
 export const getClimbingCragUpdates = (
