@@ -24,6 +24,7 @@ export const AutocompleteSelect = ({
       options={values}
       defaultValue={defaultValue}
       onChange={onChange}
+      onInputChange={onChange}
       renderInput={(params) => (
         <TextField {...params} margin="dense" label={label} />
       )}

@@ -505,6 +505,7 @@ export default {
   'climbing_rock.serpentine': 'hadovec',
   'climbing_rock.marble': 'mramor',
   'climbing_rock.serpentinite': 'serpentinit',
+  'climbing_rock.chert': 'buližník',
 
   'editdialog.add_value': 'Přidat',
   'editdialog.all_values_added': 'Všechny hodnoty byly přidány',
