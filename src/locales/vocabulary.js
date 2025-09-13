@@ -388,6 +388,8 @@ export default {
   'publictransport.bus': 'Bus',
   'publictransport.trolleybus': 'Trolleybus',
   'publictransport.subway': 'Subway',
+  'publictransport.tram': 'Tram',
+  'publictransport.funicular': 'Funicular',
   'publictransport.unknown': 'Unknown type',
 
   'publictransport.show_this_category': 'Show this category',
