@@ -7,9 +7,11 @@ export const AutocompleteSelect = ({
   defaultValue,
   renderOption,
   onChange,
+  freeSolo,
 }) => {
   return (
     <Autocomplete
+      freeSolo={freeSolo}
       options={values}
       defaultValue={defaultValue}
       onChange={onChange}

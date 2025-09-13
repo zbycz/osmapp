@@ -32,6 +32,7 @@ export const GradeSelect = ({
       label={getGradeSystemName(climbingGradeSystem)}
       defaultValue={value}
       onChange={onChange}
+      freeSolo
       renderOption={(props, option, _state, ownerState) => {
         const { key, ...optionProps } = props;
         return (
