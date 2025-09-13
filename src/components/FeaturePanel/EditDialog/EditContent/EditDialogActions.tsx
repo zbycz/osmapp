@@ -49,13 +49,14 @@ const CancelButton = () => {
 };
 
 const DownloadButton = (props: { onClick: () => void }) => (
-  <button
-    className="linkLikeButton"
-    style={{ fontSize: '11px' }}
+  <Button
+    variant="text"
+    color="secondary"
+    sx={{ fontSize: '11px', textTransform: 'none' }}
     onClick={props.onClick}
   >
     {t('editdialog.download_osc')}
-  </button>
+  </Button>
 );
 
 export const EditDialogActions = () => {
@@ -68,7 +69,7 @@ export const EditDialogActions = () => {
 
   return (
     <DialogActions>
-      {items.length > 1 && <DownloadButton onClick={download} />}
+      <DownloadButton onClick={download} />
       <div style={{ flex: '1 1' }}></div>
       {isSaving && <CircularProgress size={20} />}
       <CancelButton />
