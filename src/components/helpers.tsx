@@ -29,7 +29,7 @@ export function isServer() {
   return typeof window === 'undefined';
 }
 
-type MapEffect<T extends any[]> = (map: Map, ...rest: T) => void;
+type MapEffect<T extends any[]> = (map: Map, ...rest: T) => void | (() => void);
 
 export const createMapEffectHook =
   <T extends any[]>(mapEffectFn: MapEffect<T>) =>
@@ -39,7 +39,7 @@ export const createMapEffectHook =
         return;
       }
 
-      mapEffectFn(map, ...rest);
+      return mapEffectFn(map, ...rest);
     }, [map, ...rest]); // eslint-disable-line react-hooks/exhaustive-deps
 
 type MapEvent = keyof MapEventType;
