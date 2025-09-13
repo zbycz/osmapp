@@ -16,6 +16,7 @@ import { Maki } from '../../../../../utils/icons/Maki';
 import styled from '@emotion/styled';
 import { ClimbingGradesEditor } from './ClimbingGradesEditor';
 import { DrawClimbingRoutesBanner } from './DrawClimbingRoutesBanner';
+import { ClimbingRockSelect } from '../ClimbingRockSelect';
 
 const IconContainer = styled.div`
   display: flex;
@@ -27,7 +28,7 @@ const IconContainer = styled.div`
 
 const ClimbingMultiValuesInner = () => {
   return (
-    <Stack gap={1} ml={2}>
+    <Stack gap={1} ml={2} mt={2}>
       <MultiValueKeyEditor
         label={t('climbing_badges.type_label')}
         keys={[
@@ -122,6 +123,7 @@ export const ClimbingEditor = () => {
         <AccordionDetails>
           <Box ml={2}>
             <ClimbingGradesEditor />
+            <ClimbingRockSelect />
             <ClimbingMultiValuesInner />
           </Box>
         </AccordionDetails>

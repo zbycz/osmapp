@@ -5,6 +5,8 @@ import { Chip, Stack, Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
+import TerrainIcon from '@mui/icons-material/Terrain';
+import { CLIMBING_ROCK_OPTIONS } from '../../../services/tagging/climbing/climbingRockData';
 
 const StyledChip = styled(Chip)`
   font-size: 10px;
@@ -162,6 +164,33 @@ type Props = {
   hasTooltip?: boolean;
 };
 
+const MaterialBadge = ({ feature }) => {
+  const material = feature.tags?.['climbing:rock'];
+  if (!material) return null;
+
+  const translationItem = CLIMBING_ROCK_OPTIONS.find(
+    ({ value }) => value === material,
+  );
+  return (
+    material && (
+      <StyledChip
+        label={
+          <Stack direction="row" gap={0.4} alignItems="center">
+            <TerrainIcon fontSize="inherit" />
+            <span>
+              {translationItem?.translationKey
+                ? t(translationItem.translationKey)
+                : material}
+            </span>
+          </Stack>
+        }
+        size="small"
+        color="success"
+      />
+    )
+  );
+};
+
 export const ClimbingBadges = ({ feature, hasTooltip }: Props) => {
   return (
     <Stack direction="row" spacing={0.5} flexWrap="wrap">
@@ -207,6 +236,7 @@ export const ClimbingBadges = ({ feature, hasTooltip }: Props) => {
           ) : null;
         },
       )}
+      <MaterialBadge feature={feature} />
     </Stack>
   );
 };
