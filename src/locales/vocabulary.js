@@ -560,6 +560,7 @@ export default {
   'climbing_rock.serpentine': 'serpentine',
   'climbing_rock.marble': 'marble',
   'climbing_rock.serpentinite': 'serpentinite',
+  'climbing_rock.chert': 'chert',
 
   'editdialog.add_value': 'Add',
   'editdialog.all_values_added': 'All values added',
