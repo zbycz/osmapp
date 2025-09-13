@@ -7,24 +7,29 @@ const CLIMBING_VALUES_FOR_AUTO_ADDING_WEBSITE = ['area', 'crag'];
 const addOpenClimbingWebsite = (item: EditDataItem, currentUrl: string) => {
   const nextWebsiteIndex = getLastCommonKeyIndex(item.tags, 'website') + 1;
   if (nextWebsiteIndex === 1) {
+    const tags = {
+      ...item.tags,
+      website: currentUrl,
+    };
+
     return {
       ...item,
-      tags: {
-        ...item.tags,
-        website: currentUrl,
-      },
+      tags,
+      tagsEntries: Object.entries(tags),
     };
   }
 
   const newKey = `website:${nextWebsiteIndex}`;
+  const tags = {
+    ...item.tags,
+    website: currentUrl,
+    [newKey]: item.tags.website,
+  };
 
   return {
     ...item,
-    tags: {
-      ...item.tags,
-      website: currentUrl,
-      [newKey]: item.tags.website,
-    },
+    tags,
+    tagsEntries: Object.entries(tags),
   };
 };
 
