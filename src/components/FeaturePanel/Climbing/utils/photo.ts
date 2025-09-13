@@ -59,15 +59,10 @@ export const getCommonTags = (tags: FeatureTags, commonTag: string) => {
   );
 };
 
-export const getCommonKeys = (tags: FeatureTags, commonKey: string) =>
-  getCommonTags(tags, commonKey).map(([tagKey, _tagValue]) => tagKey); // TODO this returns also :path keys, not sure if intended
-
-export const getLastWikimediaCommonsIndex = (tags: FeatureTags) => {
-  return getLastCommonKeyIndex(tags, 'wikimedia_commons');
-};
-
 export const getLastCommonKeyIndex = (tags: FeatureTags, commonKey: string) => {
-  const keys = getCommonKeys(tags, commonKey);
+  const keys = getCommonTags(tags, commonKey).map(
+    ([tagKey, _tagValue]) => tagKey,
+  );
 
   const maxKey = keys.reduce((max, key) => {
     if (key === commonKey) return Math.max(max, 0);
