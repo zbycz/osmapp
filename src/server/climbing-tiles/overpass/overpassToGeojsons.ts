@@ -10,6 +10,7 @@ import {
   OsmResponse,
   OsmWay,
 } from './types';
+import { getUrlOsmId } from '../../../services/helpers';
 
 const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
@@ -190,12 +191,17 @@ const addToLookup = <T extends FeatureGeometry>(
   });
 };
 
-const addParentIds = (lookup: Lookup) => {
+const addParentIds = (lookup: Lookup, log: (message: string) => void) => {
   for (const relation of Object.values(lookup.relation)) {
     if (['area', 'crag'].includes(relation.tags?.climbing)) {
       for (const member of relation.members ?? []) {
         const child = lookup[member.type][member.ref]; // we know, that in lookup is the same object as in nodesOut/waysOut
         if (child) {
+          if (child.properties.parentId) {
+            log(
+              `Child ${getUrlOsmId(child.osmMeta)} has more parents: ${child.properties.parentId} and ${relation.osmMeta.id}`,
+            );
+          }
           child.properties.parentId = relation.osmMeta.id;
         }
       }
@@ -224,7 +230,7 @@ export const overpassToGeojsons = (
     );
   }
 
-  addParentIds(lookup);
+  addParentIds(lookup, log);
 
   return {
     node: Object.values(lookup.node),
