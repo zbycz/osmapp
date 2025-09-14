@@ -66,3 +66,10 @@ const getNextNodePosition = async (items: DataItem[], shortId: string) => {
 
 export const getTmpNodePosition = async (items: DataItem[], shortId: string) =>
   (await getNextNodePosition(items, shortId)) ?? getMapCenter();
+
+// TODO test cases:
+// convertedRelation empty - returns clicked...
+// convertedRelation first node without lonLat - returns click
+// convertedRelation first node with lonLat - returns it
+// existing relation with existing node + new node
+// existing relation with existing way + new node
