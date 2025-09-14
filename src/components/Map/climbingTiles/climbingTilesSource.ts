@@ -133,6 +133,7 @@ export const addClimbingTilesSource = (style: StyleSpecification) => {
   if (!eventsAdded) {
     const map = getGlobalMap();
     map.on('load', updateData);
+    map.on('styledata', updateData);
     map.on('moveend', updateData);
     eventsAdded = true;
   }
@@ -142,6 +143,7 @@ export const removeClimbingTilesSource = () => {
   if (eventsAdded) {
     const map = getGlobalMap();
     map.off('load', updateData);
+    map.off('styledata', updateData);
     map.off('moveend', updateData);
     eventsAdded = false;
   }
