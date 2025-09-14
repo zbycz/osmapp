@@ -46,31 +46,43 @@ const convertOsmIdToMapId = (apiId: OsmId) => {
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
-  const { type, osmType, osmId, line, lon, lat } = record;
-  const id = convertOsmIdToMapId({ type: osmType, id: osmId });
+const getProperties = (
+  record: ClimbingFeaturesRecord,
+): ClimbingTilesProperties => {
+  const { type, parentId } = record;
+  const name = record.name || record.nameRaw;
 
+  if (type === 'area' || type === 'crag') {
+    const { routeCount = 0, hasImages, histogramCode } = record;
+    return {
+      type,
+      name,
+      parentId,
+      routeCount,
+      hasImages,
+      histogramCode,
+    };
+  }
+
+  if (type === 'route' || type === 'route_top') {
+    const { gradeId, gradeTxt } = record;
+    return { type, name, parentId, gradeId, gradeTxt };
+  }
+
+  if (type === 'gym' || type === 'ferrata') {
+    return { type, name, parentId };
+  }
+
+  return undefined;
+};
+
+const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
+  const { osmType, osmId, line, lon, lat } = record;
+  const id = convertOsmIdToMapId({ type: osmType, id: osmId });
+  const properties = getProperties(record);
   const geometry: Geometry = line
     ? { type: 'LineString', coordinates: line }
     : { type: 'Point', coordinates: [lon, lat] };
-
-  const { routeCount, hasImages, gradeId, histogramCode, parentId } = record;
-  const name = record.name || record.nameRaw;
-  const properties: ClimbingTilesProperties =
-    type === 'area' || type === 'crag'
-      ? {
-          type,
-          name,
-          parentId,
-          routeCount: routeCount ?? 0,
-          hasImages,
-          histogramCode,
-        }
-      : type === 'gym' || type === 'ferrata'
-        ? { type, name, parentId }
-        : type === 'route' || type === 'route_top'
-          ? { type, name, parentId, gradeId }
-          : undefined;
 
   return { type: 'Feature', id, geometry, properties };
 };

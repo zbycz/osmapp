@@ -26,16 +26,16 @@ const firstPointGeometry = (
   },
 });
 
-const getNameWithDifficulty = (tags: FeatureTags) => {
-  if (tags.climbing?.startsWith('route')) {
+const getRouteGradeTxt = (tags: FeatureTags) => {
+  if (tags?.climbing?.startsWith('route')) {
     const gradeKey = Object.keys(tags).find((key) =>
       key.match(/^climbing:grade:[^:]+$/),
     );
-    const grade = gradeKey ? tags[gradeKey] : '';
-    return `${tags.name ?? ''}${grade ? ` ${grade}` : ''}`;
+    if (gradeKey) {
+      return tags[gradeKey];
+    }
   }
-
-  return tags.name ?? null;
+  return null;
 };
 
 const getRouteGradeIndex = (tags: FeatureTags) => {
@@ -69,9 +69,10 @@ export const recordsFactory = (log: (message: string) => void) => {
     }
 
     const [lon, lat] = coordinates;
-    const name = getNameWithDifficulty(feature.tags);
+    const gradeTxt = getRouteGradeTxt(feature.tags);
     const gradeId = getRouteGradeIndex(feature.tags);
 
+    const name = feature.tags.name;
     const nameRaw = removeDiacritics(name);
     const record: ClimbingFeaturesRecord = {
       type,
@@ -83,6 +84,7 @@ export const recordsFactory = (log: (message: string) => void) => {
       hasImages: feature.properties.hasImages,
       parentId: feature.properties.parentId,
       gradeId,
+      gradeTxt,
       lon,
       lat,
       line:

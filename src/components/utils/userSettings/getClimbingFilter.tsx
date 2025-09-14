@@ -24,6 +24,7 @@ const SETTINGS_KEY = 'climbing.filter';
 const DEFAULT_MINIMUM_ROUTES = 1;
 
 export const mapClimbingFilter = {
+  gradeSystem: undefined,
   gradeInterval: undefined,
   minimumRoutes: undefined,
   isDefaultFilter: false,
@@ -32,14 +33,17 @@ export const mapClimbingFilter = {
   callback: () => {},
 };
 const updateMapFilter = (
+  gradeSystem: GradeSystem,
   gradeInterval: Interval,
   minimumRoutes: number,
   isDefaultFilter: boolean,
 ) => {
   if (
+    mapClimbingFilter.gradeSystem != gradeSystem ||
     !isEqual(mapClimbingFilter.gradeInterval, gradeInterval) ||
     mapClimbingFilter.minimumRoutes != minimumRoutes
   ) {
+    mapClimbingFilter.gradeSystem = gradeSystem;
     mapClimbingFilter.gradeInterval = gradeInterval;
     mapClimbingFilter.minimumRoutes = minimumRoutes;
     mapClimbingFilter.isDefaultFilter = isDefaultFilter;
@@ -66,8 +70,9 @@ export const getClimbingFilter = (
   userSettings: UserSettingsType,
   setUserSetting: UserSettingsContextType['setUserSetting'],
 ): ClimbingFilter => {
-  const currentSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
-  const grades = GRADE_TABLE[currentSystem];
+  const userSystem = userSettings['climbing.gradeSystem'];
+
+  const grades = GRADE_TABLE[userSystem || 'uiaa'];
   const data = (userSettings[SETTINGS_KEY] ?? {}) as ClimbingFilterSettings;
 
   const setFilter: SetFilter = (name, value) => {
@@ -90,7 +95,7 @@ export const getClimbingFilter = (
 
   const isDefaultFilter = isGradeIntervalDefault && isMinimumRoutesDefault;
 
-  updateMapFilter(gradeInterval, minimumRoutes, isDefaultFilter);
+  updateMapFilter(userSystem, gradeInterval, minimumRoutes, isDefaultFilter);
 
   return {
     grades,

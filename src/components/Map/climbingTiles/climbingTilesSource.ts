@@ -4,7 +4,11 @@ import { EMPTY_GEOJSON_SOURCE, OSMAPP_SPRITE } from '../consts';
 import { getGlobalMap } from '../../../services/mapStorage';
 import { climbingLayers } from './climbingLayers/climbingLayers';
 import type { StyleSpecification } from '@maplibre/maplibre-gl-style-spec';
-import { ClimbingTilesFeature, Tile } from '../../../types';
+import {
+  ClimbingTilesFeature,
+  ClimbingTilesProperties,
+  Tile,
+} from '../../../types';
 import { computeTiles } from './computeTiles';
 import { CLIMBING_TILES_HOST } from '../../../services/osm/consts';
 import { CLIMBING_SPRITE, CLIMBING_TILES_SOURCE } from './consts';
@@ -33,7 +37,7 @@ const numberToSuperScript = (number?: number) =>
     ? number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d])
     : '';
 
-const getLabel = (name: string, routeCount: number) =>
+const getLabelWithRouteCount = (name: string, routeCount: number) =>
   join(name, '\n', numberToSuperScript(routeCount));
 
 const getColor = (gradeId: number): string | undefined => {
@@ -44,18 +48,30 @@ const getColor = (gradeId: number): string | undefined => {
   return undefined;
 };
 
+const joinLabel = (...params: string[]) => params.filter(Boolean).join(' ');
+
+const getGrade = (properties: ClimbingTilesProperties) => {
+  const gradeSystem = mapClimbingFilter.gradeSystem;
+  const convertedGrade = GRADE_TABLE[gradeSystem]?.[properties.gradeId];
+  return convertedGrade ? convertedGrade : properties.gradeTxt;
+};
+
 const processFeature = (
   feature: ClimbingTilesFeature,
 ): ClimbingTilesFeature => {
   const properties = feature.properties;
 
   const color = getColor(properties.gradeId);
-  const prefix = properties.type === 'route_top' ? '[top] ' : '';
+  const prefix = properties.type === 'route_top' ? '[top]' : '';
+
+  const grade = getGrade(properties);
+  const label = joinLabel(prefix, properties.name, grade);
+
   return {
     ...feature,
     properties: {
       ...properties,
-      label: prefix + getLabel(properties.name, properties.routeCount),
+      label: getLabelWithRouteCount(label, properties.routeCount),
       color,
     },
   };
