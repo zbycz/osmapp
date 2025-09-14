@@ -16,6 +16,7 @@ export type ClimbingStatsResponse = {
   routesCount: number;
 };
 
+// @see climbingTilesSource#processFeature()
 export type ClimbingTilesProperties = {
   type: 'area' | 'crag' | 'route' | 'route_top' | 'gym' | 'ferrata';
   name: string;
@@ -29,6 +30,7 @@ export type ClimbingTilesProperties = {
 
   // route only:
   gradeId?: number;
+  gradeTxt?: string;
   color?: string; // computed on FE - processFeature()
 };
 
