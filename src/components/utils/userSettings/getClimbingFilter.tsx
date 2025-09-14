@@ -5,6 +5,7 @@ import {
 import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
 import { GradeSystem } from '../../../services/tagging/climbing/gradeSystems';
 import { Setter } from '../../../types';
+import { isEqual } from 'lodash';
 
 export type Interval = [number, number];
 
@@ -36,7 +37,7 @@ const updateMapFilter = (
   isDefaultFilter: boolean,
 ) => {
   if (
-    mapClimbingFilter.gradeInterval != gradeInterval ||
+    !isEqual(mapClimbingFilter.gradeInterval, gradeInterval) ||
     mapClimbingFilter.minimumRoutes != minimumRoutes
   ) {
     mapClimbingFilter.gradeInterval = gradeInterval;
