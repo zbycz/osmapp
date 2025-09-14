@@ -181,7 +181,7 @@ const refreshInner = async (client: PoolClient) => {
   log(`Records: ${records.length}`);
 
   const columns = Object.keys(records[0]);
-  const chunks = chunk(records, 10000); // This produces queries about 2 MB big
+  const chunks = chunk(records, 1000); // XATA max size is probably 4 MB, but it was out of memory on 1.8MB as well. This produces queries about 0.4 MB big
 
   await client.query('TRUNCATE TABLE climbing_features');
   for (const [index, chunk] of chunks.entries()) {
@@ -218,13 +218,13 @@ const refreshInner = async (client: PoolClient) => {
 export const refreshClimbingTiles = async () => {
   const client = await getPool().connect();
   try {
-    await client.query('BEGIN');
+    // await client.query('BEGIN'); // xata is out of memory for transaction
     const result = await refreshInner(client);
-    await client.query('COMMIT');
+    // await client.query('COMMIT');
 
     return result;
   } catch (error) {
-    await client.query('ROLLBACK');
+    // await client.query('ROLLBACK');
     throw error;
   } finally {
     client.release(); // this is important - in finally
