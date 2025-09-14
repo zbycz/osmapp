@@ -218,13 +218,13 @@ const refreshInner = async (client: PoolClient) => {
 export const refreshClimbingTiles = async () => {
   const client = await getPool().connect();
   try {
-    await client.query('BEGIN');
+    // await client.query('BEGIN'); // xata is out of memory for transaction
     const result = await refreshInner(client);
-    await client.query('COMMIT');
+    // await client.query('COMMIT');
 
     return result;
   } catch (error) {
-    await client.query('ROLLBACK');
+    // await client.query('ROLLBACK');
     throw error;
   } finally {
     client.release(); // this is important - in finally
