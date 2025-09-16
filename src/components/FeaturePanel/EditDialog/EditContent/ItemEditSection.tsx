@@ -29,10 +29,10 @@ export const ItemEditSection = () => {
       <PresetSelect />
       <MajorKeysEditor />
       <ClimbingEditor />
-      <TagsEditor />
-      <LocationEditor />
       <ParentsEditor />
       <MembersEditor />
+      <LocationEditor />
+      <TagsEditor />
       <Box mt={4} />
     </>
   );
