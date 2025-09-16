@@ -1,18 +1,27 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Setter } from '../../types';
+import { ClimbingTick, Setter } from '../../types';
 import { EditTickModal } from '../FeaturePanel/Climbing/EditTickModal';
 import { Tick, TickStyle } from '../FeaturePanel/Climbing/types';
 import { onTickAdd } from '../../services/my-ticks/ticks';
 import { Button } from '@mui/material';
 import { useSnackbar } from './SnackbarContext';
 import { useUserSettingsContext } from './userSettings/UserSettingsContext';
-import { postClimbingTick } from '../../services/my-ticks/myTicksApi';
+import {
+  getClimbingTicks,
+  postClimbingTick,
+} from '../../services/my-ticks/myTicksApi';
+import { useQuery, useQueryClient } from 'react-query';
+import { PROJECT_ID } from '../../services/project';
+import { useOsmAuthContext } from './OsmAuthContext';
 
 export type TicksContextType = {
   editedTick: Tick | null;
   setEditedTick: Setter<Tick | null>;
   addTick: (shortId: string) => void;
   addTickToDb: (shortId: string) => Promise<void>;
+  data: ClimbingTick[] | null;
+  error: unknown;
+  isFetching: boolean;
 };
 
 const EditTickButton = (props: { onClick: () => void }) => (
@@ -33,6 +42,14 @@ export const TicksProvider: React.FC = ({ children }) => {
   const { showToast } = useSnackbar();
   const style = useGetDefaultTickStyle();
 
+  const { loggedIn } = useOsmAuthContext();
+  const { data, error, isFetching } = useQuery({
+    queryKey: ['climbing-ticks'],
+    queryFn: getClimbingTicks,
+    initialData: [],
+    enabled: PROJECT_ID === 'openclimbing' && loggedIn,
+  });
+
   const addTick = (shortId: string) => {
     const newTick = onTickAdd({ osmId: shortId, style });
     showToast(
@@ -42,10 +59,12 @@ export const TicksProvider: React.FC = ({ children }) => {
     );
   };
 
+  const queryClient = useQueryClient();
   const addTickToDb = async (shortId: string) => {
     if (!shortId) return;
     const timestamp = new Date().toISOString();
     await postClimbingTick({ shortId, timestamp, style });
+    await queryClient.invalidateQueries(['climbing-ticks']);
     showToast('Tick added to DB!', 'success');
   };
 
@@ -54,6 +73,9 @@ export const TicksProvider: React.FC = ({ children }) => {
     setEditedTick,
     addTick,
     addTickToDb,
+    data,
+    error,
+    isFetching,
   };
 
   return (
