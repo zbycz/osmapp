@@ -14,16 +14,17 @@ import DrawIcon from '@mui/icons-material/Draw';
 import { t } from '../../../../../../services/intl';
 
 export const DrawClimbingRoutesBanner = () => {
-  const { tags, modified } = useCurrentItem();
+  const { shortId, tags } = useCurrentItem();
   const handleSave = useGetHandleSave();
   const { close } = useEditDialogContext();
-  const { current } = useEditContext();
+  const { items } = useEditContext();
   const parents = useGetParents();
   const parentCrags = filterCrags(parents);
+  const someModified = items.some(({ modified }) => modified);
 
   const onDraw = () => {
     if (
-      modified &&
+      someModified &&
       window.confirm(t('editdialog.draw_climbing_routes_save_confirm'))
     ) {
       handleSave();
@@ -35,7 +36,7 @@ export const DrawClimbingRoutesBanner = () => {
         Router.push(cragUrl);
       }
     } else if (tags.climbing === 'crag') {
-      Router.push(`/${getUrlOsmId(getApiId(current))}/climbing/edit`);
+      Router.push(`/${getUrlOsmId(getApiId(shortId))}/climbing/edit`);
     }
   };
 
