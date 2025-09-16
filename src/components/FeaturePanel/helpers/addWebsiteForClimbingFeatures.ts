@@ -1,5 +1,8 @@
 import { EditDataItem } from '../EditDialog/context/types';
-import { getFullLinkFromEditDataItem } from '../../../services/helpers';
+import {
+  getApiId,
+  getFullLinkFromEditDataItem,
+} from '../../../services/helpers';
 import { getLastCommonKeyIndex } from '../Climbing/utils/photo';
 
 const CLIMBING_VALUES_FOR_AUTO_ADDING_WEBSITE = ['area', 'crag'];
@@ -42,7 +45,8 @@ export const addWebsiteForClimbingFeatures = (items: EditDataItem[]) => {
           tag.startsWith('website') && item.tags[tag].startsWith(currentUrl),
       );
 
-      if (!isWebsiteAlreadyAdded) {
+      const osmId = getApiId(item.shortId);
+      if (!isWebsiteAlreadyAdded && osmId.id > 0) {
         return addOpenClimbingWebsite(item, currentUrl);
       }
     }
