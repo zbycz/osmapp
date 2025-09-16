@@ -1,8 +1,8 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ClimbingTick, Setter } from '../../types';
 import { EditTickModal } from '../FeaturePanel/Climbing/EditTickModal';
-import { Tick, TickStyle } from '../FeaturePanel/Climbing/types';
-import { getAllTicks, onTickAdd } from '../../services/my-ticks/ticks';
+import { TickStyle } from '../FeaturePanel/Climbing/types';
+import { getAllTicks } from '../../services/my-ticks/ticks';
 import { Button } from '@mui/material';
 import { useSnackbar } from './SnackbarContext';
 import { useUserSettingsContext } from './userSettings/UserSettingsContext';
@@ -10,18 +10,19 @@ import {
   deleteClimbingTick,
   getClimbingTicks,
   postClimbingTick,
+  putClimbingTick,
 } from '../../services/my-ticks/myTicksApi';
 import { useQuery, useQueryClient } from 'react-query';
 import { PROJECT_ID } from '../../services/project';
 import { useOsmAuthContext } from './OsmAuthContext';
 
 export type TicksContextType = {
-  editedTick: Tick | null;
-  setEditedTick: Setter<Tick | null>;
-  addTick: (shortId: string) => void;
+  editedTickId: number | null;
+  setEditedTickId: Setter<number | null>;
   addTickToDb: (shortId: string) => Promise<void>;
   deleteTickFromDb: (tickId: number) => Promise<void>;
-  data: ClimbingTick[] | null;
+  updateTick: (tick: Partial<ClimbingTick>) => Promise<void>;
+  ticks: ClimbingTick[] | null;
   error: unknown;
   isFetching: boolean;
 };
@@ -70,12 +71,16 @@ const useMigrateFromLocalStorage = () => {
 };
 
 export const TicksProvider: React.FC = ({ children }) => {
-  const [editedTick, setEditedTick] = useState<Tick | null>(null);
+  const [editedTickId, setEditedTickId] = useState<number | null>(null);
   const { showToast } = useSnackbar();
   const style = useGetDefaultTickStyle();
-
+  const queryClient = useQueryClient();
   const { loggedIn } = useOsmAuthContext();
-  const { data, error, isFetching } = useQuery({
+  const {
+    data: ticks,
+    error,
+    isFetching,
+  } = useQuery({
     queryKey: ['climbing-ticks'],
     queryFn: getClimbingTicks,
     initialData: [],
@@ -85,22 +90,16 @@ export const TicksProvider: React.FC = ({ children }) => {
 
   useMigrateFromLocalStorage();
 
-  const addTick = (shortId: string) => {
-    const newTick = onTickAdd({ osmId: shortId, style });
-    showToast(
-      'Tick added!',
-      'success',
-      <EditTickButton onClick={() => setEditedTick(newTick)} />,
-    );
-  };
-
-  const queryClient = useQueryClient();
   const addTickToDb = async (shortId: string) => {
     if (!shortId) return;
     const timestamp = new Date().toISOString();
-    await postClimbingTick({ shortId, timestamp, style });
+    const id = await postClimbingTick({ shortId, timestamp, style });
     await queryClient.invalidateQueries(['climbing-ticks']);
-    showToast('Tick added to DB!', 'success');
+    showToast(
+      'Tick added!',
+      'success',
+      <EditTickButton onClick={() => setEditedTickId(id)} />,
+    );
   };
 
   const deleteTickFromDb = async (tickId: number) => {
@@ -108,13 +107,18 @@ export const TicksProvider: React.FC = ({ children }) => {
     await queryClient.invalidateQueries(['climbing-ticks']);
   };
 
+  const updateTick = async (tick: Partial<ClimbingTick>) => {
+    await putClimbingTick(tick);
+    await queryClient.invalidateQueries(['climbing-ticks']);
+  };
+
   const value: TicksContextType = {
-    editedTick,
-    setEditedTick,
-    addTick,
+    editedTickId,
+    setEditedTickId,
     addTickToDb,
     deleteTickFromDb,
-    data,
+    updateTick,
+    ticks,
     error,
     isFetching,
   };
@@ -122,7 +126,7 @@ export const TicksProvider: React.FC = ({ children }) => {
   return (
     <TicksContext.Provider value={value}>
       {children}
-      <EditTickModal tick={editedTick} onClose={() => setEditedTick(null)} />
+      <EditTickModal />
     </TicksContext.Provider>
   );
 };

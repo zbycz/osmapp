@@ -20,13 +20,14 @@ const addTickToDB = async (req: NextApiRequest) => {
     pairing,
   };
 
-  return await xataRestQuery(
+  const insertResult = await xataRestQuery<ClimbingTickDb>(
     format(
-      'INSERT INTO climbing_ticks (%I) VALUES (%L)',
+      'INSERT INTO climbing_ticks (%I) VALUES (%L) RETURNING id',
       Object.keys(newTick),
       Object.values(newTick),
     ),
   );
+  return insertResult.rows[0]?.id;
 };
 
 const getAllTicks = async (req: NextApiRequest) => {

@@ -45,9 +45,9 @@ const NoTicksFound = () => (
 
 const MyRouteTicksInner = () => {
   const { feature } = useFeatureContext();
-  const { data, error, isFetching } = useTicksContext();
+  const { ticks, error, isFetching } = useTicksContext();
   const { loggedIn } = useOsmAuthContext();
-  const ticksForRoute = data.filter(
+  const ticksForRoute = ticks.filter(
     ({ shortId }) => shortId === getShortId(feature.osmMeta),
   );
 

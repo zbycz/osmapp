@@ -126,7 +126,7 @@ export const MyTicksPanel = () => {
   const [features, setFeatures] = useState<OverpassFeature[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { userSettings } = useUserSettingsContext();
-  const { data } = useTicksContext();
+  const { ticks } = useTicksContext();
 
   const handleClose = () => {
     Router.push(`/`);
@@ -158,7 +158,7 @@ export const MyTicksPanel = () => {
               <h1>{t('my_ticks.title')}</h1>
             </PanelSidePadding>
 
-            {data.map((tick) => (
+            {ticks.map((tick) => (
               <pre key={tick.id}>{JSON.stringify(tick, null, 2)}</pre>
             ))}
 

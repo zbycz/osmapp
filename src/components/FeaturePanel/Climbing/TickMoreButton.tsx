@@ -48,7 +48,7 @@ type Props = {
 
 export const TickMoreButton = ({ tick }: Props) => {
   const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
-  const { setEditedTick } = useTicksContext();
+  const { setEditedTickId } = useTicksContext();
 
   return (
     <>
@@ -59,8 +59,7 @@ export const TickMoreButton = ({ tick }: Props) => {
       <MoreMenu>
         <MenuItem
           onClick={(e) => {
-            alert('Come back later :) - Work in progress.');
-            setEditedTick(null); // setEditedTick(tick);
+            setEditedTickId(tick.id);
             handleCloseMore(e);
           }}
           disableRipple
