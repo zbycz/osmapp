@@ -120,7 +120,7 @@ const AddTickMenuItem = ({ feature, closeMenu }: AddTickMenuItemProps) => {
     try {
       await addTickToDb(getShortId(feature.osmMeta));
     } catch (e) {
-      showToast(`Error: ${e.message ?? e}`, 'error');
+      showToast(`Error: ${e}`, 'error');
     } finally {
       setLoading(false);
       closeMenu(event);

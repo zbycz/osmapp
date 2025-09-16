@@ -7,6 +7,7 @@ import { Button } from '@mui/material';
 import { useSnackbar } from './SnackbarContext';
 import { useUserSettingsContext } from './userSettings/UserSettingsContext';
 import {
+  deleteClimbingTick,
   getClimbingTicks,
   postClimbingTick,
 } from '../../services/my-ticks/myTicksApi';
@@ -19,6 +20,7 @@ export type TicksContextType = {
   setEditedTick: Setter<Tick | null>;
   addTick: (shortId: string) => void;
   addTickToDb: (shortId: string) => Promise<void>;
+  deleteTickFromDb: (tickId: number) => Promise<void>;
   data: ClimbingTick[] | null;
   error: unknown;
   isFetching: boolean;
@@ -47,6 +49,7 @@ export const TicksProvider: React.FC = ({ children }) => {
     queryKey: ['climbing-ticks'],
     queryFn: getClimbingTicks,
     initialData: [],
+    keepPreviousData: true,
     enabled: PROJECT_ID === 'openclimbing' && loggedIn,
   });
 
@@ -68,11 +71,17 @@ export const TicksProvider: React.FC = ({ children }) => {
     showToast('Tick added to DB!', 'success');
   };
 
+  const deleteTickFromDb = async (tickId: number) => {
+    await deleteClimbingTick(tickId);
+    await queryClient.invalidateQueries(['climbing-ticks']);
+  };
+
   const value: TicksContextType = {
     editedTick,
     setEditedTick,
     addTick,
     addTickToDb,
+    deleteTickFromDb,
     data,
     error,
     isFetching,

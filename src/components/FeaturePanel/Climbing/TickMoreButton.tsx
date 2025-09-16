@@ -1,28 +1,54 @@
 import React, { useState } from 'react';
-import { IconButton, MenuItem } from '@mui/material';
+import { CircularProgress, IconButton, MenuItem } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { getTickKey, onTickDelete } from '../../../services/my-ticks/ticks';
 import { useSnackbar } from '../../utils/SnackbarContext';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { useMoreMenu } from './useMoreMenu';
-import { EditTickModal } from './EditTickModal';
+import { ClimbingTick } from '../../../types';
+import { useTicksContext } from '../../utils/TicksContext';
 
-export const TickMoreButton = ({ tick }) => {
-  const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
-  const [showEditTickModal, setShowEditTickModal] = useState(false);
+type DeleteTickMenuItemProps = {
+  tick: ClimbingTick;
+  closeMenu: (e: React.MouseEvent) => void;
+};
 
-  const tickKey = getTickKey(tick);
+const DeleteTickMenuItem = ({ tick, closeMenu }: DeleteTickMenuItemProps) => {
   const { showToast } = useSnackbar();
+  const { deleteTickFromDb } = useTicksContext();
+  const [loading, setLoading] = useState(false);
 
-  const deleteTick = (key) => {
-    onTickDelete(key);
+  const onClick = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+
+    setLoading(true);
+    try {
+      await deleteTickFromDb(tick.id);
+      showToast('Tick was deleted', 'success');
+    } catch (e) {
+      showToast(`Error: ${e}`, 'error');
+    } finally {
+      setLoading(false);
+      closeMenu(event);
+    }
   };
 
-  const handleTickDelete = () => {
-    deleteTick(tickKey);
-    showToast('Tick was deleted', 'success');
-  };
+  return (
+    <MenuItem onClick={onClick} disableRipple>
+      <DeleteIcon />
+      Delete tick &nbsp;
+      {loading && <CircularProgress size={24} />}
+    </MenuItem>
+  );
+};
+
+type Props = {
+  tick: ClimbingTick;
+};
+
+export const TickMoreButton = ({ tick }: Props) => {
+  const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
+  const { setEditedTick } = useTicksContext();
 
   return (
     <>
@@ -33,32 +59,17 @@ export const TickMoreButton = ({ tick }) => {
       <MoreMenu>
         <MenuItem
           onClick={(e) => {
+            alert('Come back later :) - Work in progress.');
+            setEditedTick(null); // setEditedTick(tick);
             handleCloseMore(e);
-            setShowEditTickModal(true);
           }}
           disableRipple
         >
           <EditIcon />
           Edit tick
         </MenuItem>{' '}
-        <MenuItem
-          onClick={(e) => {
-            handleCloseMore(e);
-            handleTickDelete();
-          }}
-          disableRipple
-        >
-          <DeleteIcon />
-          Delete tick
-        </MenuItem>
+        <DeleteTickMenuItem tick={tick} closeMenu={handleCloseMore} />
       </MoreMenu>
-
-      <EditTickModal
-        tick={tick}
-        onClose={() => {
-          setShowEditTickModal(false);
-        }}
-      />
     </>
   );
 };

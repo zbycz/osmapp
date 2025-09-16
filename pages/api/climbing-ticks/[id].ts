@@ -7,6 +7,15 @@ import { serverFetchOsmUser } from '../../../src/server/osmApiAuthServer';
 import { OSM_TOKEN_COOKIE } from '../../../src/services/osm/consts';
 import { ClimbingTick } from '../../../src/types';
 
+class HttpError extends Error {
+  constructor(
+    public message: string = '',
+    public code: number,
+  ) {
+    super();
+  }
+}
+
 const validateRequestAndGetTick = async (req: NextApiRequest) => {
   const user = await serverFetchOsmUser(req.cookies[OSM_TOKEN_COOKIE]);
   const tick = await xataRestQuery<ClimbingTick>(
@@ -15,11 +24,11 @@ const validateRequestAndGetTick = async (req: NextApiRequest) => {
   );
 
   if (tick.rows?.length === 0) {
-    throw new Error('Tick not found');
+    throw new HttpError('Tick not found', 404);
   }
 
   if (tick.rows[0].osmUserId !== user.id) {
-    throw new Error('This tick is owned by different user.');
+    throw new HttpError('This tick is owned by different user.', 401);
   }
 
   return tick.rows[0].id;
@@ -65,7 +74,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     const result = await performPutOrDelete(req);
     res.status(200).setHeader('Content-Type', 'application/json').send(result);
   } catch (err) {
-    console.error(err); // eslint-disable-line no-console
-    res.status(500).send(String(err));
+    if (err instanceof HttpError) {
+      res.status(err.code).send(err.message);
+    } else {
+      console.error(err); // eslint-disable-line no-console
+      res.status(500).send(String(err));
+    }
   }
 };

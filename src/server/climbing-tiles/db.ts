@@ -26,10 +26,10 @@ if (!global.db) {
 types.setTypeParser(20, (val) => parseInt(val, 10));
 types.setTypeParser(1700, (val) => parseFloat(val));
 
-const XATA_DATABASE = `osmapp_db:${process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL_BRANCH ?? 'main'}`;
+const XATA_DATABASE = `osmapp_db:${process.env.XATA_BRANCH ?? 'main'}`;
 const XATA_REST_URL = `https://osmapp-tvgiad.us-east-1.xata.sh/db/${XATA_DATABASE}/sql`;
 
-if (process.env.NEXT_PUBLIC_CLIMBING_TILES_LOCAL_BRANCH) {
+if (process.env.XATA_BRANCH) {
   console.warn(`Using DB: ${XATA_DATABASE}`); //eslint-disable-line no-console
 }
 
