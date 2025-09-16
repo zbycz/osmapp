@@ -6,6 +6,9 @@ import { PanelLabel } from '../PanelLabel';
 import { RouteTickRow } from '../RouteTickRow';
 import { AddTickButton } from './AddTickButton';
 import { ClientOnly } from '../../../helpers';
+import { isFeatureClimbingRoute } from '../../../../utils';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { getShortId } from '../../../../services/helpers';
 
 const Container = styled.div`
   margin-bottom: 20px;
@@ -16,21 +19,25 @@ const Row = styled.div`
   margin: 20px 10px;
 `;
 
-export const MyRouteTicks = ({ shortOsmId }) => {
-  const ticks = findTicks(shortOsmId);
+export const MyRouteTicks = () => {
+  const { feature } = useFeatureContext();
+  if (!isFeatureClimbingRoute(feature)) {
+    return null;
+  }
+
+  const shortId = getShortId(feature.osmMeta);
+  const ticks = findTicks(shortId);
   if (ticks.length === 0)
     return (
       <Row>
-        <AddTickButton shortOsmId={shortOsmId} />
+        <AddTickButton />
       </Row>
     );
 
   return (
     <ClientOnly>
       <Container>
-        <PanelLabel addition={<AddTickButton shortOsmId={shortOsmId} />}>
-          Route ticks
-        </PanelLabel>
+        <PanelLabel addition={<AddTickButton />}>Route ticks</PanelLabel>
         <Table size="small">
           {ticks.map((tick) => {
             const tickKey = getTickKey(tick);

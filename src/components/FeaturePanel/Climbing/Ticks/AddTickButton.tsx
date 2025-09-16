@@ -2,20 +2,20 @@ import React from 'react';
 import { Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import { isTicked } from '../../../../services/my-ticks/ticks';
-import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
-import { useTicksContext } from './TicksContext';
+import { useTicksContext } from '../../../utils/TicksContext';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { getShortId } from '../../../../services/helpers';
 
-export const AddTickButton = ({ shortOsmId }) => {
-  const ticked = isTicked(shortOsmId);
-  const { userSettings } = useUserSettingsContext();
+export const AddTickButton = () => {
   const { addTick } = useTicksContext();
+  const { feature } = useFeatureContext();
+  const shortId = getShortId(feature.osmMeta);
+  const ticked = isTicked(shortId);
 
   return (
     <>
       <Button
-        onClick={() =>
-          addTick(shortOsmId, userSettings['climbing.defaultClimbingStyle'])
-        }
+        onClick={() => addTick(shortId)}
         color="secondary"
         size="small"
         variant="text"
