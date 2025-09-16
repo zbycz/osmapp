@@ -279,7 +279,6 @@ export default {
   'editdialog.members.convert_button': 'Convert to relation',
   'editdialog.location_change_current_item': 'Edit',
   'editdialog.description_helper_text': 'Please enter your own description or with written approval of its author.',
-  'editdialog.wikimedia_commons_climbing_helper_text': 'You can draw climbing routes directly while viewing after saving the photo',
   'editdialog.download_osc': 'Download osmChange',
   'editdialog.members_climbing_info':
     'Members of climbing crag can also be other relevant objects, like parking or reference to specific peak or cliff (natural=cliff).',

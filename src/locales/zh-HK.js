@@ -277,7 +277,6 @@ export default {
   'editdialog.members.convert_button': '轉換為關係',
   'editdialog.location_change_current_item': '編輯',
   'editdialog.description_helper_text': '請輸入你嘅描述，或者經作者同意嘅描述。',
-  'editdialog.wikimedia_commons_climbing_helper_text': '上載相片後，你喺睇相嗰陣就可以直接繪製攀石路線',
 
   'editsuccess.close_button': '完成',
   'editsuccess.note.heading': '多謝你嘅建議！',

@@ -277,7 +277,6 @@ export default {
   'editdialog.members.convert_button': '转换为关系',
   'editdialog.location_change_current_item': '编辑',
   'editdialog.description_helper_text': '请输入您自己的描述或经作者批准的描述。',
-  'editdialog.wikimedia_commons_climbing_helper_text': '保存照片后，您可以在查看照片时直接绘制攀岩路线',
 
   'editsuccess.close_button': '完成',
   'editsuccess.note.heading': '感谢您的建议！',

@@ -241,7 +241,6 @@ export default {
   'editdialog.members.convert_button': 'Změnit na relaci',
   'editdialog.location_change_current_item': 'Upravit',
   'editdialog.description_helper_text': 'Zadávejte prosím vlastní popis nebo s písemným souhlasem autora.',
-  'editdialog.wikimedia_commons_climbing_helper_text': 'Lezecké cesty můžete zakreslit přímo při prohlížení fotografie po uložení fotky.',
   'editdialog.download_osc': 'Stáhnout osmChange',
   'editdialog.members_climbing_info':
     'Do relace lze přidat i jiné relevantní objekty, jako třeba parkoviště nebo referenci na konkrétní vrchol či sráz (natural=cliff).',
