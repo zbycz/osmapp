@@ -13,6 +13,11 @@ import React from 'react';
 import { NwrIcon } from '../../NwrIcon';
 import { useEditContext } from '../context/EditContext';
 import { useLoadingState } from '../../../utils/useLoadingState';
+import { PoiIcon } from '../../../utils/icons/PoiIcon';
+import { allPresets } from '../../../../services/tagging/data';
+import { DataItem, EditDataItem } from '../context/types';
+import { isDesktop } from '../../../helpers';
+import { findInItems } from '../context/utils';
 
 const StyledListItem = styled(ListItem)`
   &:hover {
@@ -31,6 +36,48 @@ const StyledDownloadIcon = styled(DownloadIcon)`
   font-size: 18px;
 `;
 
+const getGradeSuffix = ({ tagsEntries }: DataItem) => {
+  const match = tagsEntries.find(([k]) => k.startsWith('climbing:grade:'));
+  if (match) {
+    return ` ${match[1]}`;
+  }
+  return '';
+};
+
+const StyledPresetLabel = styled(Typography)`
+  display: none;
+  @media ${isDesktop} {
+    display: block;
+  }
+`;
+
+const getLabel = (dataItem: EditDataItem) => {
+  if (dataItem) {
+    const gradeSuffix = getGradeSuffix(dataItem);
+    return (
+      <>
+        <Typography>{`${dataItem.tags.name}${gradeSuffix}`}</Typography>
+        <StyledPresetLabel color="secondary">
+          – {dataItem.presetLabel}
+        </StyledPresetLabel>
+      </>
+    );
+  }
+  return undefined;
+};
+
+const PoiIconForItem = ({ dataItem }: { dataItem: EditDataItem }) =>
+  dataItem ? (
+    <PoiIcon
+      tags={allPresets[dataItem.presetKey]?.tags}
+      size={16}
+      middle
+      themed
+    />
+  ) : (
+    <StyledDownloadIcon color="secondary" />
+  );
+
 type Props = {
   label?: string;
   shortId: string;
@@ -41,8 +88,7 @@ type Props = {
 export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
   const { isLoading, startLoading, stopLoading } = useLoadingState();
   const { items } = useEditContext();
-  const isAlreadyInItems = items.find((item) => item.shortId === shortId);
-
+  const dataItem = findInItems(items, shortId);
   const handleClick = (e: React.MouseEvent) => {
     startLoading();
     onClick(e).then(() => {
@@ -61,7 +107,8 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
         >
           <ListItemText>
             <Stack direction="row" gap={2} alignItems="center">
-              <Typography>{label || shortId}</Typography>
+              <PoiIconForItem dataItem={dataItem} />
+              {getLabel(dataItem) || label || shortId}
               <NwrIcon shortId={shortId} hideNode />
               {role && (
                 <>
@@ -74,12 +121,7 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
           {isLoading ? (
             <CircularProgress size={14} />
           ) : (
-            <>
-              {!isAlreadyInItems ? (
-                <StyledDownloadIcon color="secondary" />
-              ) : null}
-              <ChevronRightIcon color="primary" />
-            </>
+            <ChevronRightIcon color="primary" />
           )}
         </Stack>
       </StyledListItem>
