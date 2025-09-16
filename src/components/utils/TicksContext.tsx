@@ -16,11 +16,13 @@ import { useQuery, useQueryClient } from 'react-query';
 import { PROJECT_ID } from '../../services/project';
 import { useOsmAuthContext } from './OsmAuthContext';
 
+const QUERY_KEY = ['climbing-ticks'];
+
 export type TicksContextType = {
   editedTickId: number | null;
   setEditedTickId: Setter<number | null>;
-  addTickToDb: (shortId: string) => Promise<void>;
-  deleteTickFromDb: (tickId: number) => Promise<void>;
+  addTick: (shortId: string) => Promise<void>;
+  deleteTick: (tickId: number) => Promise<void>;
   updateTick: (tick: Partial<ClimbingTick>) => Promise<void>;
   ticks: ClimbingTick[] | null;
   error: unknown;
@@ -70,53 +72,72 @@ const useMigrateFromLocalStorage = () => {
   }, [loggedIn, queryClient, showToast]);
 };
 
-export const TicksProvider: React.FC = ({ children }) => {
-  const [editedTickId, setEditedTickId] = useState<number | null>(null);
+const useGetAddTick = (setEditedTickId: Setter<number>) => {
+  const queryClient = useQueryClient();
   const { showToast } = useSnackbar();
   const style = useGetDefaultTickStyle();
-  const queryClient = useQueryClient();
-  const { loggedIn } = useOsmAuthContext();
-  const {
-    data: ticks,
-    error,
-    isFetching,
-  } = useQuery({
-    queryKey: ['climbing-ticks'],
-    queryFn: getClimbingTicks,
-    initialData: [],
-    keepPreviousData: true,
-    enabled: PROJECT_ID === 'openclimbing' && loggedIn,
-  });
 
-  useMigrateFromLocalStorage();
-
-  const addTickToDb = async (shortId: string) => {
+  return async (shortId: string) => {
     if (!shortId) return;
     const timestamp = new Date().toISOString();
     const id = await postClimbingTick({ shortId, timestamp, style });
-    await queryClient.invalidateQueries(['climbing-ticks']);
+    await queryClient.invalidateQueries(QUERY_KEY);
     showToast(
       'Tick added!',
       'success',
       <EditTickButton onClick={() => setEditedTickId(id)} />,
     );
   };
+};
 
-  const deleteTickFromDb = async (tickId: number) => {
+const useGetDeleteTick = () => {
+  const queryClient = useQueryClient();
+  return async (tickId: number) => {
     await deleteClimbingTick(tickId);
-    await queryClient.invalidateQueries(['climbing-ticks']);
+    await queryClient.invalidateQueries(QUERY_KEY);
   };
+};
 
-  const updateTick = async (tick: Partial<ClimbingTick>) => {
+const useGetUpdateTick = () => {
+  const queryClient = useQueryClient();
+  return async (tick: Partial<ClimbingTick>) => {
     await putClimbingTick(tick);
-    await queryClient.invalidateQueries(['climbing-ticks']);
+    await queryClient.invalidateQueries(QUERY_KEY);
   };
+};
+
+const useClimbingTicksQuery = () => {
+  const { loggedIn } = useOsmAuthContext();
+  const {
+    data: ticks,
+    error,
+    isFetching,
+  } = useQuery({
+    queryKey: QUERY_KEY,
+    queryFn: getClimbingTicks,
+    initialData: [],
+    keepPreviousData: true,
+    enabled: PROJECT_ID === 'openclimbing' && loggedIn,
+  });
+
+  return { ticks, error, isFetching };
+};
+
+export const TicksProvider: React.FC = ({ children }) => {
+  const [editedTickId, setEditedTickId] = useState<number | null>(null);
+  const { ticks, error, isFetching } = useClimbingTicksQuery();
+
+  useMigrateFromLocalStorage();
+
+  const addTick = useGetAddTick(setEditedTickId);
+  const deleteTick = useGetDeleteTick();
+  const updateTick = useGetUpdateTick();
 
   const value: TicksContextType = {
     editedTickId,
     setEditedTickId,
-    addTickToDb,
-    deleteTickFromDb,
+    addTick,
+    deleteTick,
     updateTick,
     ticks,
     error,

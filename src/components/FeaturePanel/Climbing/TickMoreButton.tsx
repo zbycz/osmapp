@@ -15,7 +15,7 @@ type DeleteTickMenuItemProps = {
 
 const DeleteTickMenuItem = ({ tick, closeMenu }: DeleteTickMenuItemProps) => {
   const { showToast } = useSnackbar();
-  const { deleteTickFromDb } = useTicksContext();
+  const { deleteTick } = useTicksContext();
   const [loading, setLoading] = useState(false);
 
   const onClick = async (event: React.MouseEvent) => {
@@ -23,7 +23,7 @@ const DeleteTickMenuItem = ({ tick, closeMenu }: DeleteTickMenuItemProps) => {
 
     setLoading(true);
     try {
-      await deleteTickFromDb(tick.id);
+      await deleteTick(tick.id);
       showToast('Tick was deleted', 'success');
     } catch (e) {
       showToast(`Error: ${e}`, 'error');

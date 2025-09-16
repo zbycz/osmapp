@@ -8,7 +8,7 @@ import { useFeatureContext } from '../../../utils/FeatureContext';
 import { getShortId } from '../../../../services/helpers';
 
 export const AddTickButton = () => {
-  const { addTickToDb } = useTicksContext();
+  const { addTick } = useTicksContext();
   const { feature } = useFeatureContext();
   const { loggedIn } = useOsmAuthContext();
   const { showToast } = useSnackbar();
@@ -23,7 +23,7 @@ export const AddTickButton = () => {
 
     setLoading(true);
     try {
-      await addTickToDb(getShortId(feature.osmMeta));
+      await addTick(getShortId(feature.osmMeta));
     } catch (e) {
       showToast(`Error: ${e}`, 'error');
     } finally {
