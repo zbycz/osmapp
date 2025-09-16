@@ -1,7 +1,7 @@
 // The order of this array must be the same as CSV in gradeData.ts
 export const GRADE_SYSTEMS = [
   {
-    key: 'uiaa',
+    key: 'uiaa', // TODO this should be `as const` otherwise it is just string
     name: 'UIAA',
     flags: '🇪🇺',
     minor: false,

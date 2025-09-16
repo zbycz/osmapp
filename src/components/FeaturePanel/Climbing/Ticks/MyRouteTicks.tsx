@@ -1,14 +1,15 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Table } from '@mui/material';
-import { findTicks, getTickKey } from '../../../../services/my-ticks/ticks';
 import { PanelLabel } from '../PanelLabel';
-import { RouteTickRow } from '../RouteTickRow';
 import { AddTickButton } from './AddTickButton';
-import { ClientOnly } from '../../../helpers';
-import { isFeatureClimbingRoute } from '../../../../utils';
+import { DotLoader } from '../../../helpers';
+import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { useFeatureContext } from '../../../utils/FeatureContext';
 import { getShortId } from '../../../../services/helpers';
+import { RouteTickRow } from '../RouteTickRow';
+import { isFeatureClimbingRoute } from '../../../../utils';
+import { useTicksContext } from '../../../utils/TicksContext';
 
 const Container = styled.div`
   margin-bottom: 20px;
@@ -19,32 +20,71 @@ const Row = styled.div`
   margin: 20px 10px;
 `;
 
+const NotLoggedIn = () => (
+  <Row>
+    <AddTickButton />
+  </Row>
+);
+
+const ErrorLoadingTicks = () => {
+  const { error } = useTicksContext();
+
+  return (
+    <Container>
+      <PanelLabel>Route ticks</PanelLabel>
+      Error: {JSON.stringify(error)}
+    </Container>
+  );
+};
+
+const NoTicksFound = () => (
+  <Row>
+    <AddTickButton />
+  </Row>
+);
+
+const MyRouteTicksInner = () => {
+  const { feature } = useFeatureContext();
+  const { data, error, isFetching } = useTicksContext();
+  const { loggedIn } = useOsmAuthContext();
+  const ticksForRoute = data.filter(
+    ({ shortId }) => shortId === getShortId(feature.osmMeta),
+  );
+
+  if (!loggedIn) {
+    return <NotLoggedIn />;
+  }
+  if (isFetching && ticksForRoute.length === 0) {
+    return <DotLoader />;
+  }
+  if (error) {
+    return <ErrorLoadingTicks />;
+  }
+  if (ticksForRoute.length === 0) {
+    return <NoTicksFound />;
+  }
+
+  return (
+    <Container>
+      <PanelLabel addition={<AddTickButton />}>
+        Route ticks
+        <span>{isFetching && <DotLoader />}</span>
+      </PanelLabel>
+
+      <Table size="small">
+        {ticksForRoute.map((tick) => {
+          return <RouteTickRow key={tick.id} tick={tick} />;
+        })}
+      </Table>
+    </Container>
+  );
+};
+
 export const MyRouteTicks = () => {
   const { feature } = useFeatureContext();
   if (!isFeatureClimbingRoute(feature)) {
     return null;
   }
 
-  const shortId = getShortId(feature.osmMeta);
-  const ticks = findTicks(shortId);
-  if (ticks.length === 0)
-    return (
-      <Row>
-        <AddTickButton />
-      </Row>
-    );
-
-  return (
-    <ClientOnly>
-      <Container>
-        <PanelLabel addition={<AddTickButton />}>Route ticks</PanelLabel>
-        <Table size="small">
-          {ticks.map((tick) => {
-            const tickKey = getTickKey(tick);
-            return <RouteTickRow tick={tick} key={tickKey} />;
-          })}
-        </Table>
-      </Container>
-    </ClientOnly>
-  );
+  return <MyRouteTicksInner />;
 };

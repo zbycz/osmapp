@@ -51,6 +51,7 @@ export const getClimbingTicks = async () => {
   const allTicks = await fetchJson<ClimbingTickDb[]>('/api/climbing-ticks', {
     method: 'GET',
     headers: { 'Content-Type': 'application/json' },
+    nocache: true,
   });
 
   return allTicks.map(convertFromDb);
