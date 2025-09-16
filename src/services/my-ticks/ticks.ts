@@ -1,4 +1,7 @@
-import { Tick, TickStyle } from '../../components/FeaturePanel/Climbing/types';
+import {
+  LocalStorageTick,
+  TickStyle,
+} from '../../components/FeaturePanel/Climbing/types';
 import { t } from '../intl';
 
 const KEY = 'ticks';
@@ -64,7 +67,7 @@ export const tickStyles: Array<{
   },
 ];
 
-const getLocalStorageItem = (key: string): Array<Tick> => {
+const getLocalStorageItem = (key: string): Array<LocalStorageTick> => {
   if (typeof window === 'undefined') return [];
   const raw = window?.localStorage.getItem(key);
   if (raw) {
@@ -79,4 +82,6 @@ const getLocalStorageItem = (key: string): Array<Tick> => {
   return [];
 };
 
-export const getAllTicks = (): Array<Tick> => getLocalStorageItem(KEY);
+/** @deprecated load ticks from useTicksContext */
+export const getAllTicks = (): Array<LocalStorageTick> =>
+  getLocalStorageItem(KEY);
