@@ -1,5 +1,5 @@
 import { ClimbingTick, ClimbingTickDb } from '../../types';
-import { fetchJson } from '../fetch';
+import { fetchJson, fetchText } from '../fetch';
 import { getApiId, getShortId } from '../helpers';
 import { OsmType } from '../types';
 
@@ -30,17 +30,19 @@ const convertFromDb = (dbRow: ClimbingTickDb): ClimbingTick => {
 export const postClimbingTick = async (
   tick: Partial<Omit<ClimbingTick, 'id' | 'osmUserId'>>,
 ) => {
-  return await fetchJson('/api/climbing-ticks', {
+  const id = await fetchText('/api/climbing-ticks', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(convertToDb(tick)),
   });
+  return parseInt(id, 10);
 };
 
-export const putClimbingTick = async (
-  tick: Partial<Omit<ClimbingTick, 'id' | 'osmUserId'>>,
-) => {
-  return await fetchJson<ClimbingTick>('/api/climbing-ticks', {
+export const putClimbingTick = async (tick: Partial<ClimbingTick>) => {
+  if (!tick.id) {
+    throw new Error('Tick.id missing');
+  }
+  await fetchJson(`/api/climbing-ticks/${tick.id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(convertToDb(tick)),
