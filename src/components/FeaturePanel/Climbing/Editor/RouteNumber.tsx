@@ -3,20 +3,13 @@ import React from 'react';
 import styled from '@emotion/styled';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useRouteNumberColors } from '../utils/useRouteNumberColors';
-import { isTicked } from '../../../../services/my-ticks/ticks';
 import { useTheme } from '@mui/material';
 import { RouteDifficulty } from './RouteDifficulty';
 import { getShiftForStartPoint } from '../utils/startPoint';
 import { getShortId } from '../../../../services/helpers';
 import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { useMobileMode } from '../../../helpers';
-
-type Props = {
-  routeIndex: number;
-  x: number;
-  y: number;
-  osmId: string;
-};
+import { useTicksContext } from '../../../utils/TicksContext';
 
 const Text = styled.text<{ $scale: number }>`
   user-select: none;
@@ -49,7 +42,15 @@ const CheckCircle = ({ x, y, scale }) => {
   );
 };
 
-const RouteNumberBadge = ({ routeIndex, x, y, osmId }: Props) => {
+type Props = {
+  routeIndex: number;
+  x: number;
+  y: number;
+  shortId: string;
+};
+
+const RouteNumberBadge = ({ routeIndex, x, y, shortId }: Props) => {
+  const { isTicked } = useTicksContext();
   const isMobileMode = useMobileMode();
   const {
     imageSize,
@@ -152,7 +153,7 @@ const RouteNumberBadge = ({ routeIndex, x, y, osmId }: Props) => {
         fill={colors.background}
         {...commonProps}
       />
-      {isTicked(osmId) && (
+      {isTicked(shortId) && (
         <CheckCircle x={newX} y={newY + TEXT_Y_SHIFT} scale={photoZoom.scale} />
       )}
       <Text
@@ -190,7 +191,7 @@ export const RouteNumber = ({ routeIndex }: { routeIndex: number }) => {
     ...path[0],
     units: 'percentage',
   });
-  const osmId = route.feature?.osmMeta
+  const shortId = route.feature?.osmMeta
     ? getShortId(route.feature.osmMeta)
     : null;
 
@@ -200,7 +201,7 @@ export const RouteNumber = ({ routeIndex }: { routeIndex: number }) => {
         routeIndex={routeIndex}
         x={x + shift}
         y={y}
-        osmId={osmId}
+        shortId={shortId}
       />
       {userSettings['climbing.isGradesOnPhotosVisible'] && (
         <RouteDifficulty x={x + shift} y={y + 40} route={route} />

@@ -9,7 +9,6 @@ import {
 import CheckIcon from '@mui/icons-material/Check';
 import { getWikimediaCommonsPhotoPathKeys } from '../utils/photo';
 import { RouteNumber } from '../RouteNumber';
-import { isTicked } from '../../../../services/my-ticks/ticks';
 import { getOsmappLink, getShortId } from '../../../../services/helpers';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { intl, t } from '../../../../services/intl';
@@ -272,6 +271,7 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
     },
     ref,
   ) => {
+    const { isTicked } = useTicksContext();
     const { climbingFilter } = useUserSettingsContext();
     const { gradeInterval } = climbingFilter;
     const [minIndex, maxIndex] = gradeInterval;

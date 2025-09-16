@@ -8,12 +8,12 @@ import { useFeatureContext } from '../../../utils/FeatureContext';
 import { getShortId } from '../../../../services/helpers';
 
 export const AddTickButton = () => {
-  const { addTick } = useTicksContext();
+  const { addTick, isTicked } = useTicksContext();
   const { feature } = useFeatureContext();
   const { loggedIn } = useOsmAuthContext();
   const { showToast } = useSnackbar();
   const [loading, setLoading] = useState(false);
-  const ticked = false; //TODO
+  const ticked = isTicked(getShortId(feature.osmMeta));
 
   const onClick = async () => {
     if (!loggedIn) {
@@ -38,7 +38,7 @@ export const AddTickButton = () => {
         color="secondary"
         size="small"
         variant="text"
-        endIcon={<CheckIcon color={ticked ? 'primary' : undefined} />}
+        endIcon={<CheckIcon color={ticked ? 'success' : undefined} />}
         loading={loading}
       >
         Add tick
