@@ -35,6 +35,7 @@ import { getDifficulties } from '../../services/tagging/climbing/routeGrade';
 import { findOrConvertRouteGrade } from '../../services/tagging/climbing/routeGrade';
 import { GradeSystem } from '../../services/tagging/climbing/gradeSystems';
 import { OverpassFeature } from '../../services/overpass/overpassSearch';
+import { useTicksContext } from '../utils/TicksContext';
 
 function NoTicksContent() {
   return (
@@ -125,6 +126,7 @@ export const MyTicksPanel = () => {
   const [features, setFeatures] = useState<OverpassFeature[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const { userSettings } = useUserSettingsContext();
+  const { data } = useTicksContext();
 
   const handleClose = () => {
     Router.push(`/`);
@@ -155,6 +157,11 @@ export const MyTicksPanel = () => {
             <PanelSidePadding>
               <h1>{t('my_ticks.title')}</h1>
             </PanelSidePadding>
+
+            {data.map((tick) => (
+              <pre key={tick.id}>{JSON.stringify(tick, null, 2)}</pre>
+            ))}
+
             {isLoading ? (
               <Stack justifyContent="center" alignItems="center" height="100%">
                 <CircularProgress />

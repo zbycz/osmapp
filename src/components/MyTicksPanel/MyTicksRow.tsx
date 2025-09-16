@@ -9,7 +9,6 @@ import { DEFAULT_DATA_FORMAT } from '../../config.mjs';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { getDifficulties } from '../../services/tagging/climbing/routeGrade';
 import { TickStyleBadge } from '../../services/my-ticks/TickStyleBadge';
-import { TickMoreButton } from '../FeaturePanel/Climbing/TickMoreButton';
 
 export const MyTicksRow = ({ tickRow }: { tickRow: TickRowType }) => {
   const routeDifficulties = getDifficulties(tickRow.tags);
@@ -30,9 +29,7 @@ export const MyTicksRow = ({ tickRow }: { tickRow: TickRowType }) => {
       <TableCell sx={{ textAlign: 'right' }}>
         {format(date, DEFAULT_DATA_FORMAT)}
       </TableCell>
-      <TableCell>
-        <TickMoreButton tick={tickRow} />
-      </TableCell>
+      <TableCell>{/*<TickMoreButton tick={tickRow} />*/}</TableCell>
     </TableRow>
   );
 };
