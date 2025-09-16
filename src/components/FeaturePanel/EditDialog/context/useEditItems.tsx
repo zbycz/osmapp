@@ -15,52 +15,16 @@ import {
   TagsEntries,
 } from './types';
 import { convertToRelationFactory } from './convertToRelationFactory';
-import { getName, getPresetKey } from './utils';
-
-const someNameHasChanged = (prevData: DataItem[], newData: DataItem[]) => {
-  const prevNames = prevData.map((d) => getName(d));
-  const newNames = newData.map((d) => getName(d));
-  return prevNames.some((name, index) => name !== newNames[index]);
-};
-
-const hasMember = (item: DataItem, shortId: string) =>
-  item.members?.some((member) => member.shortId === shortId);
-
-const getItemName = (items: DataItem[], shortId: string) => {
-  const current = items.find((dataItem) => dataItem.shortId === shortId);
-  return getName(current);
-};
-
-const cloneItem = (item: DataItem) =>
-  JSON.parse(JSON.stringify(item)) as DataItem;
-
-const updateAllMemberLabels = (newItems: DataItem[], updatedId: string) =>
-  newItems.map((item) => {
-    if (hasMember(item, updatedId)) {
-      const clone = cloneItem(item);
-      const { members } = clone;
-      const idx = members.findIndex(({ shortId }) => shortId === updatedId);
-      members[idx].label = getItemName(newItems, updatedId);
-      return clone;
-    } else {
-      return item;
-    }
-  });
+import { getPresetKey } from './utils';
 
 type SetDataItem = (updateFn: (prevValue: DataItem) => DataItem) => void;
 const setDataItemFactory =
   (setData: Setter<DataItem[]>, shortId: string): SetDataItem =>
   (updateFn) => {
-    setData((prevData) => {
-      const newData = prevData.map((item) =>
+    setData((prev) => {
+      return prev.map((item) =>
         item.shortId === shortId ? updateFn(item) : item,
       );
-
-      if (someNameHasChanged(prevData, newData)) {
-        // only current item can change, but this check is cheap
-        return updateAllMemberLabels(newData, shortId);
-      }
-      return newData;
     });
   };
 
