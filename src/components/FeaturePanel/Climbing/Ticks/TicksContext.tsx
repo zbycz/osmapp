@@ -9,8 +9,14 @@ import { useSnackbar } from '../../../utils/SnackbarContext';
 export type TicksContextType = {
   editedTick: Tick | null;
   setEditedTick: Setter<Tick | null>;
-  onNewTickAdd: (shortOsmId: string, defaultClimbingStyle: string) => void;
+  addTick: (shortId: string, style: TickStyle) => void;
 };
+
+const EditTickButton = (props: { onClick: () => void }) => (
+  <Button color="inherit" size="small" onClick={props.onClick}>
+    Edit tick
+  </Button>
+);
 
 export const TicksContext = createContext<TicksContextType>(undefined);
 
@@ -18,33 +24,19 @@ export const TicksProvider: React.FC = ({ children }) => {
   const [editedTick, setEditedTick] = useState<Tick | null>(null);
   const { showToast } = useSnackbar();
 
-  const onNewTickAdd = (
-    shortOsmId: string,
-    defaultClimbingStyle: TickStyle,
-  ) => {
-    const newTick = onTickAdd({
-      osmId: shortOsmId,
-      style: defaultClimbingStyle,
-    });
+  const addTick = (shortId: string, style: TickStyle) => {
+    const newTick = onTickAdd({ osmId: shortId, style });
     showToast(
       'Tick added!',
       'success',
-      <Button
-        color="inherit"
-        size="small"
-        onClick={() => {
-          setEditedTick(newTick);
-        }}
-      >
-        Edit tick
-      </Button>,
+      <EditTickButton onClick={() => setEditedTick(newTick)} />,
     );
   };
 
   const value: TicksContextType = {
     editedTick,
     setEditedTick,
-    onNewTickAdd,
+    addTick,
   };
 
   return (
@@ -53,9 +45,7 @@ export const TicksProvider: React.FC = ({ children }) => {
       <EditTickModal
         tick={editedTick}
         isOpen={!!editedTick}
-        onClose={() => {
-          setEditedTick(null);
-        }}
+        onClose={() => setEditedTick(null)}
       />
     </TicksContext.Provider>
   );

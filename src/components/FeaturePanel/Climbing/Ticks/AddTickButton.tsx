@@ -8,16 +8,13 @@ import { useTicksContext } from './TicksContext';
 export const AddTickButton = ({ shortOsmId }) => {
   const ticked = isTicked(shortOsmId);
   const { userSettings } = useUserSettingsContext();
-  const { onNewTickAdd } = useTicksContext();
+  const { addTick } = useTicksContext();
 
   return (
     <>
       <Button
         onClick={() =>
-          onNewTickAdd(
-            shortOsmId,
-            userSettings['climbing.defaultClimbingStyle'],
-          )
+          addTick(shortOsmId, userSettings['climbing.defaultClimbingStyle'])
         }
         color="secondary"
         size="small"

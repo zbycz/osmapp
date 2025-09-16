@@ -244,7 +244,7 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
     const { climbingFilter } = useUserSettingsContext();
     const { gradeInterval } = climbingFilter;
     const [minIndex, maxIndex] = gradeInterval;
-    const { onNewTickAdd } = useTicksContext();
+    const { addTick } = useTicksContext();
     const { userSettings } = useUserSettingsContext();
     if (!feature) {
       return null;
@@ -290,10 +290,7 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
             <MoreMenu
               feature={feature}
               onTickAdd={() =>
-                onNewTickAdd(
-                  shortId,
-                  userSettings['climbing.defaultClimbingStyle'],
-                )
+                addTick(shortId, userSettings['climbing.defaultClimbingStyle'])
               }
             />
           </Row>
