@@ -27,6 +27,7 @@ export type TicksContextType = {
   ticks: ClimbingTick[] | null;
   error: unknown;
   isFetching: boolean;
+  isTicked: (shortId: string) => boolean;
 };
 
 const EditTickButton = (props: { onClick: () => void }) => (
@@ -123,6 +124,9 @@ const useClimbingTicksQuery = () => {
   return { ticks, error, isFetching };
 };
 
+const getIsTicked = (ticks: ClimbingTick[]) => (shortId: string) =>
+  ticks.some((tick) => tick.shortId === shortId);
+
 export const TicksProvider: React.FC = ({ children }) => {
   const [editedTickId, setEditedTickId] = useState<number | null>(null);
   const { ticks, error, isFetching } = useClimbingTicksQuery();
@@ -132,6 +136,7 @@ export const TicksProvider: React.FC = ({ children }) => {
   const addTick = useGetAddTick(setEditedTickId);
   const deleteTick = useGetDeleteTick();
   const updateTick = useGetUpdateTick();
+  const isTicked = getIsTicked(ticks);
 
   const value: TicksContextType = {
     editedTickId,
@@ -142,6 +147,7 @@ export const TicksProvider: React.FC = ({ children }) => {
     ticks,
     error,
     isFetching,
+    isTicked,
   };
 
   return (

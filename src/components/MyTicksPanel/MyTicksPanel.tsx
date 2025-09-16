@@ -27,7 +27,7 @@ import { useAddHeatmap } from './useAddHeatmap';
 import { useSortedTable } from './useSortedTable';
 import { MyTicksRow } from './MyTicksRow';
 import { MyTicksGraphs } from './MyTicksGraphs/MyTicksGraphs';
-import { getAllTicks, getTickKey } from '../../services/my-ticks/ticks';
+import { getAllTicks } from '../../services/my-ticks/ticks';
 import { publishDbgObject } from '../../utils';
 import { getApiId, getShortId } from '../../services/helpers';
 import { Tick } from '../FeaturePanel/Climbing/types';
@@ -80,7 +80,7 @@ const mapFeaturesDataToTicks = (
       );
 
       return {
-        key: getTickKey(tick),
+        key: `${tick.osmId}-${tick.date}`, // TODO tick.id
         name: feature?.tags?.name,
         grade: routeDifficulty.grade,
         center: feature?.center,
