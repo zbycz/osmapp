@@ -102,8 +102,8 @@ const MyApp = (props: Props) => {
                   <OsmAuthProvider cookies={cookies}>
                     <StarsProvider>
                       <EditDialogProvider /* TODO supply router.query */>
-                        <TicksProvider>
-                          <QueryClientProvider client={reactQueryClient}>
+                        <QueryClientProvider client={reactQueryClient}>
+                          <TicksProvider>
                             <Head>
                               <meta
                                 name="viewport"
@@ -120,8 +120,8 @@ const MyApp = (props: Props) => {
 
                             {/* eslint-disable-next-line react/jsx-props-no-spreading */}
                             <Component {...pageProps} />
-                          </QueryClientProvider>
-                        </TicksProvider>
+                          </TicksProvider>
+                        </QueryClientProvider>
                       </EditDialogProvider>
                     </StarsProvider>
                   </OsmAuthProvider>

@@ -49,11 +49,7 @@ export const TicksProvider: React.FC = ({ children }) => {
   return (
     <TicksContext.Provider value={value}>
       {children}
-      <EditTickModal
-        tick={editedTick}
-        isOpen={!!editedTick}
-        onClose={() => setEditedTick(null)}
-      />
+      <EditTickModal tick={editedTick} onClose={() => setEditedTick(null)} />
     </TicksContext.Provider>
   );
 };

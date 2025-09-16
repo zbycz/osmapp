@@ -55,7 +55,6 @@ export const TickMoreButton = ({ tick }) => {
 
       <EditTickModal
         tick={tick}
-        isOpen={showEditTickModal}
         onClose={() => {
           setShowEditTickModal(false);
         }}

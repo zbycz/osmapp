@@ -20,15 +20,10 @@ import CloseIcon from '@mui/icons-material/Close';
 
 type EditTickModalProps = {
   tick: Tick;
-  isOpen: boolean;
   onClose: () => void;
 };
 
-export const EditTickModal = ({
-  tick,
-  isOpen,
-  onClose,
-}: EditTickModalProps) => {
+export const EditTickModal = ({ tick, onClose }: EditTickModalProps) => {
   const { showToast } = useSnackbar();
   const [tempTick, setTempTick] = useState<Partial<Tick>>(undefined);
 
@@ -67,7 +62,7 @@ export const EditTickModal = ({
   if (!tempTick) return null;
 
   return (
-    <Dialog open={isOpen} onClose={onClose}>
+    <Dialog open={!!tick} onClose={onClose}>
       <AppBar position="static" color="transparent">
         <Toolbar>
           <Stack
