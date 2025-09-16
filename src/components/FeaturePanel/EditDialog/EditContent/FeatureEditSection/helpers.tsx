@@ -4,6 +4,7 @@ import { Button, Stack, TextField } from '@mui/material';
 import styled from '@emotion/styled';
 import { useLoadingState } from '../../../../utils/useLoadingState';
 import { t } from '../../../../../services/intl';
+import DownloadIcon from '@mui/icons-material/Download';
 
 const MAX_INPUT_LENGTH = 255;
 const InputContainer = styled.div`
@@ -97,6 +98,7 @@ export const OpenAllButton = ({ onClick }: OpenAllButtonProps) => {
     <Button
       size="small"
       color="secondary"
+      startIcon={<DownloadIcon />}
       loading={isLoading}
       onClick={handleClick}
     >
