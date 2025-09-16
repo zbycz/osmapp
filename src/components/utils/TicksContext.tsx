@@ -6,11 +6,13 @@ import { onTickAdd } from '../../services/my-ticks/ticks';
 import { Button } from '@mui/material';
 import { useSnackbar } from './SnackbarContext';
 import { useUserSettingsContext } from './userSettings/UserSettingsContext';
+import { postClimbingTick } from '../../services/my-ticks/myTicksApi';
 
 export type TicksContextType = {
   editedTick: Tick | null;
   setEditedTick: Setter<Tick | null>;
   addTick: (shortId: string) => void;
+  addTickToDb: (shortId: string) => Promise<void>;
 };
 
 const EditTickButton = (props: { onClick: () => void }) => (
@@ -40,10 +42,18 @@ export const TicksProvider: React.FC = ({ children }) => {
     );
   };
 
+  const addTickToDb = async (shortId: string) => {
+    if (!shortId) return;
+    const timestamp = new Date().toISOString();
+    await postClimbingTick({ shortId, timestamp, style });
+    showToast('Tick added to DB!', 'success');
+  };
+
   const value: TicksContextType = {
     editedTick,
     setEditedTick,
     addTick,
+    addTickToDb,
   };
 
   return (
