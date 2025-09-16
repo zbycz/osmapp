@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { ClimbingTick, Setter } from '../../types';
 import { EditTickModal } from '../FeaturePanel/Climbing/EditTickModal';
 import { Tick, TickStyle } from '../FeaturePanel/Climbing/types';
-import { onTickAdd } from '../../services/my-ticks/ticks';
+import { getAllTicks, onTickAdd } from '../../services/my-ticks/ticks';
 import { Button } from '@mui/material';
 import { useSnackbar } from './SnackbarContext';
 import { useUserSettingsContext } from './userSettings/UserSettingsContext';
@@ -39,6 +39,36 @@ const useGetDefaultTickStyle = (): TickStyle => {
 
 export const TicksContext = createContext<TicksContextType>(undefined);
 
+const useMigrateFromLocalStorage = () => {
+  // delete this code after 12/2025
+  const { showToast } = useSnackbar();
+  const { loggedIn } = useOsmAuthContext();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    (async () => {
+      const oldTicks = getAllTicks();
+
+      if (loggedIn && oldTicks && oldTicks.length > 0) {
+        for (const tick of oldTicks) {
+          await postClimbingTick({
+            shortId: tick.osmId,
+            style: tick.style,
+            timestamp: tick.date,
+          });
+        }
+
+        const backup = localStorage.getItem('ticks');
+        localStorage.setItem('ticks_IMPORTED', backup);
+        localStorage.removeItem('ticks');
+
+        await queryClient.invalidateQueries(QUERY_KEY);
+        showToast('Your ticks from browser migrated to the DB.', 'info');
+      }
+    })();
+  }, [loggedIn, queryClient, showToast]);
+};
+
 export const TicksProvider: React.FC = ({ children }) => {
   const [editedTick, setEditedTick] = useState<Tick | null>(null);
   const { showToast } = useSnackbar();
@@ -52,6 +82,8 @@ export const TicksProvider: React.FC = ({ children }) => {
     keepPreviousData: true,
     enabled: PROJECT_ID === 'openclimbing' && loggedIn,
   });
+
+  useMigrateFromLocalStorage();
 
   const addTick = (shortId: string) => {
     const newTick = onTickAdd({ osmId: shortId, style });
