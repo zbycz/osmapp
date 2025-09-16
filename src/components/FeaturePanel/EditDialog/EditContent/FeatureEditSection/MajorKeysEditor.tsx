@@ -86,13 +86,6 @@ export const MajorKeysEditor: React.FC = () => {
     }
   }, [activeMajorKeys, focusTag]);
 
-  const getHelperText = (k: string) => {
-    if (k === 'description') {
-      return t('editdialog.description_helper_text');
-    }
-    return undefined;
-  };
-
   const getInputElement = (k: string) => {
     if (!data.keys?.includes(k)) return null;
 
@@ -113,7 +106,6 @@ export const MajorKeysEditor: React.FC = () => {
           setTag(e.target.name, e.target.value);
         }}
         value={tags[k] ?? ''}
-        helperText={getHelperText(k)}
       />
     );
   };
