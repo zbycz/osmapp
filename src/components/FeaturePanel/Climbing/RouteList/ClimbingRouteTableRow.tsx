@@ -1,5 +1,5 @@
 import { Feature } from '../../../../services/types';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
 import {
@@ -15,6 +15,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { intl, t } from '../../../../services/intl';
 import {
   Chip,
+  CircularProgress,
   IconButton,
   MenuItem,
   Stack,
@@ -32,6 +33,8 @@ import { ClimbingBadges } from '../ClimbingBadges';
 import { useMoreMenu } from '../useMoreMenu';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useTicksContext } from '../../../utils/TicksContext';
+import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
+import { useSnackbar } from '../../../utils/SnackbarContext';
 
 const Container = styled.div`
   width: 100%;
@@ -83,6 +86,7 @@ const Row = styled('a', {
   padding: 8px;
   transition: all 0.1s;
   opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0.2)};
+
   *,
   &:focus {
     text-decoration: none;
@@ -95,23 +99,53 @@ const Row = styled('a', {
   }
 `;
 
+type AddTickMenuItemProps = {
+  feature: Feature;
+  closeMenu: (event: React.MouseEvent) => void;
+};
+const AddTickMenuItem = ({ feature, closeMenu }: AddTickMenuItemProps) => {
+  const { loggedIn } = useOsmAuthContext();
+  const { addTickToDb } = useTicksContext();
+  const { showToast } = useSnackbar();
+  const [loading, setLoading] = useState(false);
+
+  const handleAddTick = async (event: React.MouseEvent) => {
+    event.stopPropagation();
+    if (!loggedIn) {
+      showToast('Please log in to add tick.', 'warning');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await addTickToDb(getShortId(feature.osmMeta));
+    } catch (e) {
+      showToast(`Error: ${e.message ?? e}`, 'error');
+    } finally {
+      setLoading(false);
+      closeMenu(event);
+    }
+  };
+
+  return (
+    <MenuItem onClick={handleAddTick} disableRipple>
+      <CheckIcon />
+      {t('climbingpanel.add_tick')}
+      &nbsp;
+      {loading && <CircularProgress size={24} />}
+    </MenuItem>
+  );
+};
+
 type MoreMenuProps = {
   feature: Feature;
 };
 const MoreMenu = ({ feature }: MoreMenuProps) => {
-  const { addTick } = useTicksContext();
   const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
   const { open: openEditDialog } = useEditDialogContext();
-  const shortId = getShortId(feature.osmMeta);
   const routeDetailUrl = getRouteDetailUrl(feature);
 
-  const handleShowRouteDetail = (event) => {
-    handleCloseMore(event);
-    event.stopPropagation();
-  };
-
-  const handleAddTick = (event: React.MouseEvent) => {
-    addTick(shortId);
+  const handleShowRouteDetail = (event: React.MouseEvent) => {
     handleCloseMore(event);
     event.stopPropagation();
   };
@@ -123,13 +157,10 @@ const MoreMenu = ({ feature }: MoreMenuProps) => {
       </IconButton>
 
       <MoreMenu>
-        <MenuItem onClick={handleAddTick} disableRipple>
-          <CheckIcon />
-          {t('climbingpanel.add_tick')}
-        </MenuItem>
+        <AddTickMenuItem feature={feature} closeMenu={handleCloseMore} />
 
         <MenuItem
-          onClick={(e) => {
+          onClick={(e: React.MouseEvent) => {
             handleShowRouteDetail(e);
             Router.push(routeDetailUrl).then(() => {
               openEditDialog();

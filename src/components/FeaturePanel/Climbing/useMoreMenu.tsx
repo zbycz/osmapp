@@ -12,7 +12,7 @@ export const useMoreMenu = () => {
     event.stopPropagation();
   };
 
-  const handleCloseMore = (event) => {
+  const handleCloseMore = (event: React.MouseEvent) => {
     setAnchorEl(null);
     event.stopPropagation();
   };
