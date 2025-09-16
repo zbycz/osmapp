@@ -31,7 +31,7 @@ import { useMobileMode } from '../../../helpers';
 import { ClimbingBadges } from '../ClimbingBadges';
 import { useMoreMenu } from '../useMoreMenu';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { useTicksContext } from '../Ticks/TicksContext';
+import { useTicksContext } from '../../../utils/TicksContext';
 
 const Container = styled.div`
   width: 100%;
@@ -97,12 +97,12 @@ const Row = styled('a', {
 
 type MoreMenuProps = {
   feature: Feature;
-  onTickAdd: (shortOsmId) => void;
 };
-const MoreMenu = ({ feature, onTickAdd }: MoreMenuProps) => {
+const MoreMenu = ({ feature }: MoreMenuProps) => {
+  const { addTick } = useTicksContext();
   const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
   const { open: openEditDialog } = useEditDialogContext();
-  const shortOsmId = getShortId(feature.osmMeta);
+  const shortId = getShortId(feature.osmMeta);
   const routeDetailUrl = getRouteDetailUrl(feature);
 
   const handleShowRouteDetail = (event) => {
@@ -110,8 +110,8 @@ const MoreMenu = ({ feature, onTickAdd }: MoreMenuProps) => {
     event.stopPropagation();
   };
 
-  const handleAddTick = (event) => {
-    onTickAdd(shortOsmId);
+  const handleAddTick = (event: React.MouseEvent) => {
+    addTick(shortId);
     handleCloseMore(event);
     event.stopPropagation();
   };
@@ -244,8 +244,6 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
     const { climbingFilter } = useUserSettingsContext();
     const { gradeInterval } = climbingFilter;
     const [minIndex, maxIndex] = gradeInterval;
-    const { addTick } = useTicksContext();
-    const { userSettings } = useUserSettingsContext();
     if (!feature) {
       return null;
     }
@@ -287,12 +285,7 @@ export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
               <RouteAuthor feature={feature} />
             </Stack>
             <RouteGrade feature={feature} />
-            <MoreMenu
-              feature={feature}
-              onTickAdd={() =>
-                addTick(shortId, userSettings['climbing.defaultClimbingStyle'])
-              }
-            />
+            <MoreMenu feature={feature} />
           </Row>
         </Container>
       </>

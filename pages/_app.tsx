@@ -41,7 +41,7 @@ import Router from 'next/router';
 import { fetchSchemaTranslations } from '../src/services/tagging/translations';
 import Head from 'next/head';
 import { HotJar } from '../src/components/App/hotjar';
-import { TicksProvider } from '../src/components/FeaturePanel/Climbing/Ticks/TicksContext';
+import { TicksProvider } from '../src/components/utils/TicksContext';
 
 const getInitialToast = (featureFromRouter: Feature | '404') =>
   featureFromRouter === '404'

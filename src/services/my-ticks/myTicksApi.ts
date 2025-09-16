@@ -28,7 +28,7 @@ const convertFromDb = (dbRow: ClimbingTickDb): ClimbingTick => {
 };
 
 export const postClimbingTick = async (
-  tick: Omit<ClimbingTick, 'id' | 'osmUserId'>,
+  tick: Partial<Omit<ClimbingTick, 'id' | 'osmUserId'>>,
 ) => {
   return await fetchJson('/api/climbing-ticks', {
     method: 'POST',

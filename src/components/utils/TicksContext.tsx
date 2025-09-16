@@ -1,15 +1,16 @@
 import React, { createContext, useContext, useState } from 'react';
-import { Setter } from '../../../../types';
-import { EditTickModal } from '../EditTickModal';
-import { Tick, TickStyle } from '../types';
-import { onTickAdd } from '../../../../services/my-ticks/ticks';
+import { Setter } from '../../types';
+import { EditTickModal } from '../FeaturePanel/Climbing/EditTickModal';
+import { Tick, TickStyle } from '../FeaturePanel/Climbing/types';
+import { onTickAdd } from '../../services/my-ticks/ticks';
 import { Button } from '@mui/material';
-import { useSnackbar } from '../../../utils/SnackbarContext';
+import { useSnackbar } from './SnackbarContext';
+import { useUserSettingsContext } from './userSettings/UserSettingsContext';
 
 export type TicksContextType = {
   editedTick: Tick | null;
   setEditedTick: Setter<Tick | null>;
-  addTick: (shortId: string, style: TickStyle) => void;
+  addTick: (shortId: string) => void;
 };
 
 const EditTickButton = (props: { onClick: () => void }) => (
@@ -18,13 +19,19 @@ const EditTickButton = (props: { onClick: () => void }) => (
   </Button>
 );
 
+const useGetDefaultTickStyle = (): TickStyle => {
+  const { userSettings } = useUserSettingsContext();
+  return userSettings['climbing.defaultClimbingStyle'] ?? 'OS';
+};
+
 export const TicksContext = createContext<TicksContextType>(undefined);
 
 export const TicksProvider: React.FC = ({ children }) => {
   const [editedTick, setEditedTick] = useState<Tick | null>(null);
   const { showToast } = useSnackbar();
+  const style = useGetDefaultTickStyle();
 
-  const addTick = (shortId: string, style: TickStyle) => {
+  const addTick = (shortId: string) => {
     const newTick = onTickAdd({ osmId: shortId, style });
     showToast(
       'Tick added!',
