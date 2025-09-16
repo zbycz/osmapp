@@ -2,10 +2,10 @@ import { DataItem } from './types';
 import { getApiId } from '../../../../services/helpers';
 import { findPreset } from '../../../../services/tagging/presets';
 
-export const isInItems = (items: DataItem[], shortId: string) =>
+export const isInItems = <T extends DataItem>(items: T[], shortId: string) =>
   items.some((item) => item.shortId === shortId);
 
-export const findInItems = (items: DataItem[], shortId: string) =>
+export const findInItems = <T extends DataItem>(items: T[], shortId: string) =>
   items.find((item) => item.shortId === shortId);
 
 export const getName = (d: DataItem): string | undefined =>

@@ -278,7 +278,7 @@ export default {
   'editdialog.members.climbing_crag_convert_description': 'For adding climbing routes, you need to convert node to relation.',
   'editdialog.members.convert_button': 'Convert to relation',
   'editdialog.location_change_current_item': 'Edit',
-  'editdialog.description_helper_text': 'Please enter your own description or one approved by its author.',
+  'editdialog.description_helper_text': 'Please enter your own description or with written approval of its author.',
   'editdialog.wikimedia_commons_climbing_helper_text': 'You can draw climbing routes directly while viewing after saving the photo',
   'editdialog.download_osc': 'Download osmChange',
   'editdialog.members_climbing_info':
