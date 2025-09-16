@@ -61,6 +61,7 @@ const DownloadButton = (props: { onClick: () => void }) => (
 
 export const EditDialogActions = () => {
   const { isSaving, items } = useEditContext();
+  const isModified = items.some(({ modified }) => modified);
 
   const download = () => {
     const content = getDiffXml(items);
@@ -69,7 +70,7 @@ export const EditDialogActions = () => {
 
   return (
     <DialogActions>
-      <DownloadButton onClick={download} />
+      {isModified && <DownloadButton onClick={download} />}
       <div style={{ flex: '1 1' }}></div>
       {isSaving && <CircularProgress size={20} />}
       <CancelButton />
