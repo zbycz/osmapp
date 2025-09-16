@@ -105,7 +105,7 @@ type AddTickMenuItemProps = {
 };
 const AddTickMenuItem = ({ feature, closeMenu }: AddTickMenuItemProps) => {
   const { loggedIn } = useOsmAuthContext();
-  const { addTickToDb } = useTicksContext();
+  const { addTick } = useTicksContext();
   const { showToast } = useSnackbar();
   const [loading, setLoading] = useState(false);
 
@@ -118,7 +118,7 @@ const AddTickMenuItem = ({ feature, closeMenu }: AddTickMenuItemProps) => {
 
     setLoading(true);
     try {
-      await addTickToDb(getShortId(feature.osmMeta));
+      await addTick(getShortId(feature.osmMeta));
     } catch (e) {
       showToast(`Error: ${e}`, 'error');
     } finally {
