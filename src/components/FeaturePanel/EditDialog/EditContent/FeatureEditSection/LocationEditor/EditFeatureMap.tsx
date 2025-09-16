@@ -10,10 +10,12 @@ import { LocationInputs } from './LocationInputs';
 import { t } from '../../../../../../services/intl';
 
 const Container = styled.div`
-  width: 100%;
   height: 500px;
   position: relative;
   overflow: hidden;
+  left: -30px;
+  width: calc(100% + 60px);
+  border-radius: 3px;
 `;
 
 const LoadingContainer = styled.div`
@@ -74,7 +76,11 @@ const EditFeatureMap = ({ mapStyle, setMapStyle }) => {
             <CircularProgress color="primary" />
           </LoadingContainer>
         )}
-        <Map $isVisible={isMapLoaded} ref={containerRef} />
+        <Map
+          className="edit-feature-map"
+          $isVisible={isMapLoaded}
+          ref={containerRef}
+        />
         <MapStyle>
           <Chip
             component="button"
