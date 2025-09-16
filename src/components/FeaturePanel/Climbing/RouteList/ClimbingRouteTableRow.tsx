@@ -34,6 +34,7 @@ import { useClimbingContext } from '../contexts/ClimbingContext';
 import { useTicksContext } from '../../../utils/TicksContext';
 import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { useSnackbar } from '../../../utils/SnackbarContext';
+import { PROJECT_ID } from '../../../../services/project';
 
 const Container = styled.div`
   width: 100%;
@@ -107,6 +108,10 @@ const AddTickMenuItem = ({ feature, closeMenu }: AddTickMenuItemProps) => {
   const { addTick } = useTicksContext();
   const { showToast } = useSnackbar();
   const [loading, setLoading] = useState(false);
+
+  if (PROJECT_ID !== 'openclimbing') {
+    return null; // ticks are not loaded in context
+  }
 
   const handleAddTick = async (event: React.MouseEvent) => {
     event.stopPropagation();

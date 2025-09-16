@@ -10,6 +10,7 @@ import { getShortId } from '../../../../services/helpers';
 import { RouteTickRow } from '../RouteTickRow';
 import { isFeatureClimbingRoute } from '../../../../utils';
 import { useTicksContext } from '../../../utils/TicksContext';
+import { PROJECT_ID } from '../../../../services/project';
 
 const Container = styled.div`
   margin-bottom: 20px;
@@ -84,6 +85,10 @@ export const MyRouteTicks = () => {
   const { feature } = useFeatureContext();
   if (!isFeatureClimbingRoute(feature)) {
     return null;
+  }
+
+  if (PROJECT_ID !== 'openclimbing') {
+    return null; // ticks are not loaded in context
   }
 
   return <MyRouteTicksInner />;
