@@ -4,7 +4,6 @@ import { Feature, OsmId, OsmType, Position } from './types';
 import { join, roundedToDegUrl } from '../utils';
 import { PROJECT_URL } from './project';
 import { getIdFromShortener, getShortenerSlug } from './shortener';
-import { EditDataItem } from '../components/FeaturePanel/EditDialog/context/types';
 
 export const getShortId = ({ id, type }: OsmId): string => `${type[0]}${id}`;
 export const getUrlOsmId = ({ id, type }: OsmId): string => `${type}/${id}`;
@@ -32,11 +31,6 @@ export const getOsmappLink = (feature: Feature | null) => {
 
 export const getFullOsmappLink = (feature: Feature) =>
   `${PROJECT_URL}${getOsmappLink(feature)}`;
-
-export const getFullLinkFromEditDataItem = (item: EditDataItem) => {
-  const osmId = getApiId(item.shortId);
-  return `${PROJECT_URL}/${osmId.type}/${osmId.id}`;
-};
 
 export const getShortLink = (feature: Feature) => {
   const slug = getShortenerSlug(feature.osmMeta);
