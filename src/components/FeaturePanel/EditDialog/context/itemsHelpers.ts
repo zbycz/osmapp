@@ -72,7 +72,7 @@ const getMembers = (el: OsmElement, itemsMap: ItemsMap): Members =>
   el.members?.map((member) => ({
     shortId: getShortId({ type: member.type, id: member.ref }),
     role: member.role,
-    label: getLabel(itemsMap, member),
+    originalLabel: getLabel(itemsMap, member),
   })) ?? [];
 
 // For FeaturePanel use getFullFeatureWithMemberFeatures() which returns `Feature` type

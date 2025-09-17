@@ -6,7 +6,7 @@ import { Setter } from '../../../../types';
 import { fetchWays } from '../../../../services/osm/fetchWays';
 import { getNewId } from '../../../../services/getCoordsFeature';
 import { not } from '../../../../utils';
-import { findInItems, getLabel, isInItems } from './utils';
+import { findInItems, isInItems } from './utils';
 
 const updateMemberLinks = (
   item: DataItem,
@@ -23,9 +23,8 @@ const updateMemberLinks = (
     members: item.members?.map((member) =>
       member.shortId === oldShortId
         ? {
-            ...member,
             shortId: newRelation.shortId,
-            label: getLabel(newRelation),
+            role: member.role,
           }
         : member,
     ),
@@ -99,7 +98,7 @@ export const convertToRelationFactory = (
         ),
         toBeDeleted: false,
         relationClickedLonLat: node.nodeLonLat,
-        members: keepNode ? [{ shortId, role: '', label: getLabel(node) }] : [],
+        members: keepNode ? [{ shortId, role: '' }] : [],
       });
 
       const newData = prevData.map((item) =>
