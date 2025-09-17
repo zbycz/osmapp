@@ -128,7 +128,7 @@ export const MembersEditor = () => {
         <FeatureRow
           key={member.shortId}
           shortId={member.shortId}
-          label={member.label}
+          originalLabel={member.originalLabel}
           role={member.role}
           onClick={(e: React.MouseEvent) => handleClick(e, member.shortId)}
         />

@@ -144,7 +144,7 @@ export const ParentsEditor = () => {
           <FeatureRow
             key={shortId}
             shortId={shortId}
-            label={getLabel(parent)}
+            originalLabel={getLabel(parent)}
             onClick={(e) => handleClick(e, shortId)}
           />
         );

@@ -36,6 +36,13 @@ const StyledDownloadIcon = styled(DownloadIcon)`
   font-size: 18px;
 `;
 
+const StyledPresetLabel = styled(Typography)`
+  display: none;
+  @media ${isDesktop} {
+    display: block;
+  }
+`;
+
 const getGradeSuffix = ({ tagsEntries }: DataItem) => {
   const match = tagsEntries.find(([k]) => k.startsWith('climbing:grade:'));
   if (match) {
@@ -43,13 +50,6 @@ const getGradeSuffix = ({ tagsEntries }: DataItem) => {
   }
   return '';
 };
-
-const StyledPresetLabel = styled(Typography)`
-  display: none;
-  @media ${isDesktop} {
-    display: block;
-  }
-`;
 
 const getLabel = (dataItem: EditDataItem) => {
   if (dataItem) {
@@ -79,13 +79,18 @@ const PoiIconForItem = ({ dataItem }: { dataItem: EditDataItem }) =>
   );
 
 type Props = {
-  label?: string;
   shortId: string;
   onClick: (e: React.MouseEvent) => Promise<void>;
+  originalLabel?: string;
   role?: string;
 };
 
-export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
+export const FeatureRow = ({
+  shortId,
+  onClick,
+  originalLabel,
+  role,
+}: Props) => {
   const { isLoading, startLoading, stopLoading } = useLoadingState();
   const { items } = useEditContext();
   const dataItem = findInItems(items, shortId);
@@ -108,7 +113,7 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
           <ListItemText>
             <Stack direction="row" gap={2} alignItems="center">
               <PoiIconForItem dataItem={dataItem} />
-              {getLabel(dataItem) || label || shortId}
+              {getLabel(dataItem) || originalLabel || shortId}
               <NwrIcon shortId={shortId} hideNode />
               {role && (
                 <>

@@ -109,8 +109,8 @@ const relationNew = {
   tagsEntries: [['new', 'yes']],
   toBeDeleted: false,
   members: [
-    { shortId: 'n-1', role: 'role', label: 'x' },
-    { shortId: 'w-2', role: 'role', label: 'y' },
+    { shortId: 'n-1', role: 'role' },
+    { shortId: 'w-2', role: 'role' },
   ],
 } as DataItem;
 
@@ -119,7 +119,7 @@ const relationChange = {
   version: 2,
   tagsEntries: [['changed', 'yes']],
   toBeDeleted: false,
-  members: [{ shortId: 'n-1', role: 'role', label: 'x' }],
+  members: [{ shortId: 'n-1', role: 'role', originalLabel: 'ignored' }],
 } as DataItem;
 
 const relationToDelete = {

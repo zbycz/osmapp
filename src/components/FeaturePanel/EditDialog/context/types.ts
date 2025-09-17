@@ -5,8 +5,7 @@ export type TagsEntries = [string, string][];
 export type Members = Array<{
   shortId: string;
   role: string;
-  label: string; // cached from other dataItems, or from originalFeature
-  // TODO rename to originalLabel - only to be used when member is not among editItems
+  originalLabel?: string; // only shown when member is not among editItems
 }>;
 
 // internal type stored in the state
