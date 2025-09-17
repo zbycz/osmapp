@@ -12,7 +12,7 @@ export const MinimumRoutesFilter = () => {
   };
 
   return (
-    <Stack gap={1} ml={2} mr={2} mb={2}>
+    <Stack gap={1} ml={2} mr={2} sx={{ paddingBottom: 2 }}>
       <div>
         {t('crag_filter.show_at_least')} <strong>{minimumRoutes}</strong>{' '}
         {t('crag_filter.routes')}

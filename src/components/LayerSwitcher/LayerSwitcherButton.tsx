@@ -5,7 +5,7 @@ import { css } from '@emotion/react';
 import { t } from '../../services/intl';
 import { useMobileMode } from '../helpers';
 import { convertHexToRgba } from '../utils/colorUtils';
-import { Typography } from '@mui/material';
+import { Typography, Tooltip } from '@mui/material';
 import MapIcon from '@mui/icons-material/Map';
 
 const StyledLayerSwitcher = styled.button<{
@@ -13,7 +13,7 @@ const StyledLayerSwitcher = styled.button<{
   $isOpened: boolean;
 }>`
   margin: 0;
-  padding: 4px 20px 4px 16px;
+  padding: 2px 20px 2px 16px;
   display: flex;
   gap: 8px;
   align-items: center;
@@ -62,15 +62,17 @@ export const LayerSwitcherButton = ({
 }) => {
   const isMobileMode = useMobileMode();
   return (
-    <StyledLayerSwitcher
-      onClick={onClick}
-      $isMobileMode={isMobileMode}
-      $isOpened={isOpened}
-    >
-      <MapIcon />
-      {!isMobileMode && (
-        <Typography variant="button">{t('layerswitcher.button')}</Typography>
-      )}
-    </StyledLayerSwitcher>
+    <Tooltip title={isMobileMode ? t('layerswitcher.button') : null} arrow>
+      <StyledLayerSwitcher
+        onClick={onClick}
+        $isMobileMode={isMobileMode}
+        $isOpened={isOpened}
+      >
+        <MapIcon />
+        {!isMobileMode && (
+          <Typography variant="button">{t('layerswitcher.button')}</Typography>
+        )}
+      </StyledLayerSwitcher>
+    </Tooltip>
   );
 };
