@@ -27,7 +27,7 @@ const LayerSwitcher = () => {
   useLayerSwitcherShortcuts(close);
 
   return (
-    <>
+    <div>
       <LayerSwitcherButton onClick={opened ? close : open} isOpened={opened} />
       <SwipeableDrawer
         anchor="right"
@@ -44,7 +44,7 @@ const LayerSwitcher = () => {
           <LayerSwitcherContent />
         </div>
       </SwipeableDrawer>
-    </>
+    </div>
   );
 };
 
