@@ -68,6 +68,9 @@ const globalStyle = (theme: Theme) => css`
   .maplibregl-ctrl-bottom-right {
     bottom: 50px !important;
   }
+  .edit-feature-map .maplibregl-ctrl-bottom-right {
+    bottom: 0px !important;
+  }
   .maplibregl-ctrl-scale {
     background-color: hsla(0, 0%, 100%, 0.5) !important;
   }
@@ -120,6 +123,10 @@ const globalStyle = (theme: Theme) => css`
     @media ${isDesktopResolution} {
       top: 64px !important;
     }
+  }
+
+  .edit-feature-map .maplibregl-ctrl-top-right {
+    top: 35px !important;
   }
 
   .maplibregl-canvas:not(:focus) {

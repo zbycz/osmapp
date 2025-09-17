@@ -46,7 +46,6 @@ const NotSupportedMessage = () => (
 );
 
 // TODO #460 https://cdn.klokantech.com/openmaptiles-language/v1.0/openmaptiles-language.js + use localized name in FeaturePanel
-
 const BrowserMap = () => {
   const { showToast } = useSnackbar();
   const { userLayers } = useMapStateContext();
@@ -55,7 +54,7 @@ const BrowserMap = () => {
   const { mapLoaded, setMapLoaded, mapClickOverrideRef } = useMapStateContext();
   const { currentTheme } = useUserThemeContext();
 
-  const [map, mapRef] = useInitMap();
+  const [map, containerRef, mapRef] = useInitMap();
   useAddTopRightControls(map, mobileMode);
   useOnMapClicked(map, setFeature, mapClickOverrideRef);
   useOnMapLongPressed(map, setFeature);
@@ -75,9 +74,10 @@ const BrowserMap = () => {
     currentTheme,
     showToast,
   );
-  usePersistedScaleControl(map);
 
-  return <div ref={mapRef} style={{ height: '100%', width: '100%' }} />;
+  usePersistedScaleControl(mapRef, mapLoaded);
+
+  return <div ref={containerRef} style={{ height: '100%', width: '100%' }} />;
 };
 
 const BrowserMapCheck = () => {
