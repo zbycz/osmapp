@@ -71,7 +71,7 @@ export const PoiIcon = ({
     // TODO merge these icons with getPoiClass logic
     const isClimbingArea = tags.climbing === 'area';
     const isClimbingCrag = tags.climbing === 'crag';
-    const isClimbingRoute = tags.climbing === 'route_bottom';
+    const isClimbingRoute = ['route_bottom', 'route'].includes(tags.climbing);
 
     if (isClimbingArea) return <ClimbingAreaIcon size={size} />;
     if (isClimbingCrag) return <ClimbingCragIcon size={size} />;
