@@ -12,6 +12,7 @@ type GradeSelectProps = {
   climbingGradeSystem: string;
   tags: FeatureTags;
 };
+
 export const GradeSelect = ({
   k,
   climbingGradeSystem,
@@ -19,33 +20,30 @@ export const GradeSelect = ({
 }: GradeSelectProps) => {
   const values = GRADE_TABLE[climbingGradeSystem];
   const uniqueValues = [...new Set(values)];
-  const value = tags[k] ?? '';
+  const currentValue = tags[k] ?? '';
   const { setTag } = useCurrentItem();
 
-  const onChange = (_e, option) => {
-    setTag(k, option);
+  const onChange = (_e: React.SyntheticEvent, option: string | null) => {
+    setTag(k, option ?? '');
   };
 
   return (
     <AutocompleteSelect
       values={uniqueValues}
       label={getGradeSystemName(climbingGradeSystem)}
-      defaultValue={value}
+      value={currentValue || null}
       onChange={onChange}
       freeSolo
-      renderOption={(props, option, _state, ownerState) => {
-        const { key, ...optionProps } = props;
-        return (
-          <Box key={key} {...optionProps}>
-            <RouteDifficultyBadge
-              routeDifficulty={{
-                gradeSystem: climbingGradeSystem,
-                grade: ownerState.getOptionLabel(option),
-              }}
-            />
-          </Box>
-        );
-      }}
+      renderOption={(props, option) => (
+        <Box component="li" {...props}>
+          <RouteDifficultyBadge
+            routeDifficulty={{
+              gradeSystem: climbingGradeSystem,
+              grade: typeof option === 'string' ? option : option.label,
+            }}
+          />
+        </Box>
+      )}
     />
   );
 };
