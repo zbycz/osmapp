@@ -15,9 +15,11 @@ import { useEditContext } from '../context/EditContext';
 import { useLoadingState } from '../../../utils/useLoadingState';
 import { PoiIcon } from '../../../utils/icons/PoiIcon';
 import { allPresets } from '../../../../services/tagging/data';
-import { DataItem, EditDataItem } from '../context/types';
+import { EditDataItem } from '../context/types';
 import { isDesktop } from '../../../helpers';
 import { findInItems } from '../context/utils';
+import { getDifficulties } from '../../../../services/tagging/climbing/routeGrade';
+import { ConvertedRouteDifficultyBadge } from '../../Climbing/ConvertedRouteDifficultyBadge';
 
 const StyledListItem = styled(ListItem)`
   &:hover {
@@ -43,24 +45,33 @@ const StyledPresetLabel = styled(Typography)`
   }
 `;
 
-const getGradeSuffix = ({ tagsEntries }: DataItem) => {
-  const match = tagsEntries.find(([k]) => k.startsWith('climbing:grade:'));
-  if (match) {
-    return ` ${match[1]}`;
-  }
-  return '';
-};
-
 const getLabel = (dataItem: EditDataItem) => {
   if (dataItem) {
-    const gradeSuffix = getGradeSuffix(dataItem);
+    const hasGrade = dataItem.tagsEntries.find(([k]) =>
+      k.startsWith('climbing:grade:'),
+    );
+    const routeDifficulties = getDifficulties(dataItem.tags);
     return (
-      <>
-        <Typography>{`${dataItem.tags.name}${gradeSuffix}`}</Typography>
-        <StyledPresetLabel color="secondary">
-          – {dataItem.presetLabel}
-        </StyledPresetLabel>
-      </>
+      <Stack
+        direction="row"
+        gap={1}
+        alignItems="center"
+        justifyContent="space-between"
+        width="100%"
+        mr={1}
+      >
+        <Stack direction="column">
+          <Typography>{dataItem.tags.name} </Typography>
+          <StyledPresetLabel color="secondary" variant="caption">
+            {dataItem.presetLabel}
+          </StyledPresetLabel>
+        </Stack>
+        {hasGrade && (
+          <ConvertedRouteDifficultyBadge
+            routeDifficulties={routeDifficulties}
+          />
+        )}
+      </Stack>
     );
   }
   return undefined;
