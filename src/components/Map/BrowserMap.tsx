@@ -21,10 +21,7 @@ import { useAddTopRightControls } from './useAddTopRightControls';
 import { usePersistedScaleControl } from './behaviour/PersistedScaleControl';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useSnackbar } from '../utils/SnackbarContext';
-import {
-  PreviewArrow,
-  usePreviewMarker,
-} from './behaviour/previewMarkerWithArrow';
+import { PreviewArrow, usePreviewMarker } from './behaviour/usePreviewMarker';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
