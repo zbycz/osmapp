@@ -25,9 +25,27 @@ const ArrowIcon = styled.div`
 
 export const PreviewArrow = () => <ArrowIcon id="preview-arrow" />;
 
-const fitsInBox = (x: number, y: number, w: number, h: number) => {
+const intersectionVisible = (
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  left: number,
+) => {
   const E = 1e-3; // epsilon tolerance, due to float precision
-  return x >= -E && x <= w + E && y >= -E && y <= h + E;
+  return x >= left - E && x <= w + E && y >= -E && y <= h + E;
+};
+
+const movePoint10pxInside = (
+  point: [number, number],
+  dx: number,
+  dy: number,
+): [number, number] => {
+  const MARGIN = 10;
+  const len = Math.sqrt(dx * dx + dy * dy);
+  const dxUnit = dx / len;
+  const dyUnit = dy / len;
+  return [point[0] - dxUnit * MARGIN, point[1] - dyUnit * MARGIN];
 };
 
 const intersectRect = (
@@ -38,7 +56,6 @@ const intersectRect = (
   dy: number,
   w: number,
   h: number,
-  margin: number = 10,
 ): [number, number] | null => {
   const tVals: number[] = [];
 
@@ -58,7 +75,7 @@ const intersectRect = (
     if (t > 0) {
       const x = cx + dx * t;
       const y = cy + dy * t;
-      if (fitsInBox(x, y, w, h) && t < bestT) {
+      if (t < bestT && intersectionVisible(x, y, w, h, left)) {
         best = [x, y];
         bestT = t;
       }
@@ -69,10 +86,7 @@ const intersectRect = (
     return null;
   }
 
-  const len = Math.sqrt(dx * dx + dy * dy);
-  const ux = dx / len;
-  const uy = dy / len;
-  return [best[0] - ux * margin, best[1] - uy * margin];
+  return movePoint10pxInside(best, dx, dy);
 };
 
 const isInsideBounds = (
