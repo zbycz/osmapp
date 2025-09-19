@@ -1,20 +1,34 @@
 import maplibregl, { Map, Point } from 'maplibre-gl';
 import styled from '@emotion/styled';
-import { createMapEffectHook, isMobileModeVanilla } from '../../helpers';
+import { isMobileModeVanilla } from '../../helpers';
 import { FEATURE_PANEL_WIDTH } from '../../utils/PanelHelpers';
-import { Feature } from '../../../services/types';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
 
-export const PreviewArrow = styled.div`
+const PREVIEW_MARKER = {
+  color: '#556cd6',
+  draggable: false,
+};
+
+const ArrowIcon = styled.div`
   position: absolute;
   width: 20px;
   height: 20px;
-  background: #556cd6;
+  background: ${PREVIEW_MARKER.color};
   clip-path: polygon(0 0, 100% 50%, 0 100%, 25% 50%);
   transform-origin: 50% 50%;
   pointer-events: none;
   display: none;
   z-index: 10000;
 `;
+
+export const PreviewArrow = () => <ArrowIcon id="preview-arrow" />;
+
+const fitsInBox = (x: number, y: number, w: number, h: number) => {
+  const E = 1e-3; // epsilon tolerance, due to float precision
+  return x >= -E && x <= w + E && y >= -E && y <= h + E;
+};
 
 const intersectRect = (
   left: number,
@@ -29,7 +43,7 @@ const intersectRect = (
   const tVals: number[] = [];
 
   if (dx !== 0) {
-    tVals.push((left - cx) / dx);
+    tVals.push((left - cx) / dx); // `t` from line equation: 0 = ax + bx*t
     tVals.push((w - cx) / dx);
   }
   if (dy !== 0) {
@@ -44,9 +58,7 @@ const intersectRect = (
     if (t > 0) {
       const x = cx + dx * t;
       const y = cy + dy * t;
-
-      const E = 1e-4; // epsilon tolerance
-      if (x >= -E && x <= w + E && y >= -E && y <= h + E && t < bestT) {
+      if (fitsInBox(x, y, w, h) && t < bestT) {
         best = [x, y];
         bestT = t;
       }
@@ -77,35 +89,21 @@ const isInsideBounds = (
   );
 };
 
-export let previewMarker: maplibregl.Marker;
-
-export const updateArrowFactory = (map: Map, isPanelOpen: boolean) => () => {
+const setArrowPosition = (
+  left: number,
+  w: number,
+  h: number,
+  marker: Point,
+) => {
   const arrow = document.getElementById('preview-arrow');
   if (!arrow) return;
 
-  if (!previewMarker || (isMobileModeVanilla() && isPanelOpen)) {
-    arrow.style.display = 'none';
-    return;
-  }
-
-  const left = isPanelOpen ? FEATURE_PANEL_WIDTH : 0;
-
-  const canvas = map.getCanvas();
-  const w = canvas.width;
-  const h = canvas.height;
-  const markerPixel = map.project(previewMarker.getLngLat());
-
-  if (isInsideBounds(markerPixel, left, w, h)) {
-    arrow.style.display = 'none';
-    return;
-  }
-
-  const centerPixel = { x: left + (w - left) / 2, y: h / 2 };
-  const dx = markerPixel.x - centerPixel.x;
-  const dy = markerPixel.y - centerPixel.y;
+  const center = { x: left + (w - left) / 2, y: h / 2 };
+  const dx = marker.x - center.x;
+  const dy = marker.y - center.y;
   const angle = Math.atan2(dy, dx);
 
-  const edge = intersectRect(left, centerPixel.x, centerPixel.y, dx, dy, w, h);
+  const edge = intersectRect(left, center.x, center.y, dx, dy, w, h);
   if (edge) {
     arrow.style.left = `${edge[0] - 10}px`;
     arrow.style.top = `${edge[1] - 10}px`;
@@ -116,27 +114,52 @@ export const updateArrowFactory = (map: Map, isPanelOpen: boolean) => () => {
   }
 };
 
-const PREVIEW_MARKER = {
-  color: '#556cd6',
-  draggable: false,
+let previewMarker: maplibregl.Marker;
+
+export const updateArrowFactory = (map: Map, isPanelOpen: boolean) => () => {
+  const arrow = document.getElementById('preview-arrow');
+  if (!arrow) return;
+
+  if (!previewMarker || (isMobileModeVanilla() && isPanelOpen)) {
+    arrow.style.display = 'none';
+    return;
+  }
+
+  const leftOffset = isPanelOpen ? FEATURE_PANEL_WIDTH : 0;
+
+  const canvas = map.getCanvas();
+  const w = canvas.width;
+  const h = canvas.height;
+  const marker = map.project(previewMarker.getLngLat());
+
+  if (isInsideBounds(marker, leftOffset, w, h)) {
+    arrow.style.display = 'none';
+  } else {
+    setArrowPosition(leftOffset, w, h, marker);
+  }
 };
 
-export const useUpdatePreviewMarker = createMapEffectHook<[Feature, boolean]>(
-  (map, feature, isPanelOpen) => {
+const isPanelOpen = (pathname: string, homepageShown: boolean) =>
+  homepageShown || pathname !== '/';
+
+export const usePreviewMarker = (map: Map) => {
+  const { preview, homepageShown } = useFeatureContext();
+  const { pathname } = useRouter();
+  const panelOpen = isPanelOpen(pathname, homepageShown);
+
+  useEffect(() => {
+    if (!map) return;
     previewMarker?.remove();
     previewMarker = undefined;
 
-    const point = feature?.center as [number, number];
-
-    if (point) {
+    if (preview?.center) {
       previewMarker = new maplibregl.Marker(PREVIEW_MARKER)
-        .setLngLat(point)
+        .setLngLat(preview.center as [number, number])
         .addTo(map);
 
-      const updateArrow = updateArrowFactory(map, isPanelOpen);
-      updateArrow();
-
+      const updateArrow = updateArrowFactory(map, panelOpen);
       map.on('move', updateArrow);
+      updateArrow();
 
       return () => {
         map.off('move', updateArrow);
@@ -148,5 +171,5 @@ export const useUpdatePreviewMarker = createMapEffectHook<[Feature, boolean]>(
         }
       };
     }
-  },
-);
+  }, [map, panelOpen, preview?.center]);
+};

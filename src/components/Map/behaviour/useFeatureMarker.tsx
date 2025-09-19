@@ -4,8 +4,6 @@ import { createMapEffectHook } from '../../helpers';
 import { convertOsmIdToMapId, layersWithOsmId } from '../helpers';
 import { Feature } from '../../../services/types';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { useRouter } from 'next/router';
-import { useUpdatePreviewMarker } from './previewMarkerWithArrow';
 
 const FEATURE_MARKER = {
   color: '#eb5757',
@@ -52,15 +50,8 @@ const useUpdateFeatureMarker = createMapEffectHook<[Feature]>(
   },
 );
 
-const isPanelOpen = (pathname: string, homepageShown: boolean) =>
-  homepageShown || pathname !== '/';
-
 export const useFeatureMarker = (map: Map) => {
-  const { preview, feature, homepageShown } = useFeatureContext();
-  const { pathname } = useRouter();
-  const panelOpen = isPanelOpen(pathname, homepageShown);
-  useUpdatePreviewMarker(map, preview, panelOpen);
-
+  const { feature } = useFeatureContext();
   useUpdateFeatureMarker(map, feature);
 
   // hide the icon when tiles are fetched TODO sometimes broken (zoom problem)
