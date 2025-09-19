@@ -21,6 +21,7 @@ import { useAddTopRightControls } from './useAddTopRightControls';
 import { usePersistedScaleControl } from './behaviour/PersistedScaleControl';
 import { useUserThemeContext } from '../../helpers/theme';
 import { useSnackbar } from '../utils/SnackbarContext';
+import { PreviewArrow, usePreviewMarker } from './behaviour/usePreviewMarker';
 
 const useOnMapLoaded = createMapEventHook<'load', [MapEventHandler<'load'>]>(
   (_, onMapLoaded) => ({
@@ -60,6 +61,7 @@ const BrowserMap = () => {
   useOnMapLongPressed(map, setFeature);
   useOnMapLoaded(map, setMapLoaded);
   useFeatureMarker(map);
+  usePreviewMarker(map);
 
   const { viewForMap, setViewFromMap, setBbox, activeLayers } =
     useMapStateContext();
@@ -77,7 +79,12 @@ const BrowserMap = () => {
 
   usePersistedScaleControl(mapRef, mapLoaded);
 
-  return <div ref={containerRef} style={{ height: '100%', width: '100%' }} />;
+  return (
+    <>
+      <div ref={containerRef} style={{ height: '100%', width: '100%' }} />
+      <PreviewArrow />
+    </>
+  );
 };
 
 const BrowserMapCheck = () => {

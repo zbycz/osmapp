@@ -10,11 +10,6 @@ const FEATURE_MARKER = {
   draggable: false,
 };
 
-const PREVIEW_MARKER = {
-  color: '#556cd6',
-  draggable: false,
-};
-
 const setPoiIconVisibility = (
   map: Map,
   feature: Feature | undefined,
@@ -55,25 +50,9 @@ const useUpdateFeatureMarker = createMapEffectHook<[Feature]>(
   },
 );
 
-let previewMarker: maplibregl.Marker;
-const useUpdatePreviewMarker = createMapEffectHook<[Feature]>(
-  (map, feature) => {
-    previewMarker?.remove();
-    previewMarker = undefined;
-
-    if (feature?.center) {
-      const [lng, lat] = feature.center;
-      previewMarker = new maplibregl.Marker(PREVIEW_MARKER)
-        .setLngLat([lng, lat])
-        .addTo(map);
-    }
-  },
-);
-
 export const useFeatureMarker = (map: Map) => {
-  const { preview, feature } = useFeatureContext();
+  const { feature } = useFeatureContext();
   useUpdateFeatureMarker(map, feature);
-  useUpdatePreviewMarker(map, preview);
 
   // hide the icon when tiles are fetched TODO sometimes broken (zoom problem)
   useEffect(() => {
