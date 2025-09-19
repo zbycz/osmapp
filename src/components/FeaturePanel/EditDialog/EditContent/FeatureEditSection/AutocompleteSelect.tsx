@@ -1,34 +1,57 @@
 import { Autocomplete, TextField } from '@mui/material';
 import React from 'react';
 
-type AutocompleteSelectProps = {
-  values: string[];
+export type Option = {
   label: string;
-  defaultValue: string;
-  renderOption?: any;
-  onChange: (event: React.SyntheticEvent, value: string | null) => void;
+  value: string;
+};
+
+type AutocompleteSelectProps = {
+  values: (string | Option)[];
+  label: string;
+  value: string | Option | null;
+  renderOption?: (
+    props: React.HTMLAttributes<HTMLLIElement>,
+    option: string | Option,
+  ) => React.ReactNode;
+  onChange: (
+    event: React.SyntheticEvent,
+    value: string | Option | null,
+  ) => void;
   freeSolo?: boolean;
+};
+
+const getLabel = (option: string | Option): string =>
+  typeof option === 'string' ? option : option.label;
+
+const isEqual = (opt: string | Option, val: string | Option): boolean => {
+  if (typeof opt === 'string' && typeof val === 'string') {
+    return opt === val;
+  }
+  if (typeof opt !== 'string' && typeof val !== 'string') {
+    return opt.value === val.value;
+  }
+  return false;
 };
 
 export const AutocompleteSelect = ({
   values,
   label,
-  defaultValue,
+  value,
   renderOption,
   onChange,
   freeSolo,
-}: AutocompleteSelectProps) => {
-  return (
-    <Autocomplete
-      freeSolo={freeSolo}
-      options={values}
-      defaultValue={defaultValue}
-      onChange={onChange}
-      onInputChange={onChange}
-      renderInput={(params) => (
-        <TextField {...params} margin="dense" label={label} />
-      )}
-      renderOption={renderOption}
-    />
-  );
-};
+}: AutocompleteSelectProps) => (
+  <Autocomplete
+    freeSolo={freeSolo}
+    options={values}
+    getOptionLabel={getLabel}
+    isOptionEqualToValue={isEqual}
+    value={value}
+    onChange={onChange}
+    renderInput={(params) => (
+      <TextField {...params} margin="dense" label={label} />
+    )}
+    renderOption={renderOption}
+  />
+);
