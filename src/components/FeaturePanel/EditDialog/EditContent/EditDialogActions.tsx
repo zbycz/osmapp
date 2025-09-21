@@ -4,8 +4,8 @@ import { t } from '../../../../services/intl';
 import { useEditContext } from '../context/EditContext';
 import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
 import { useGetHandleSave } from '../useGetHandleSave';
-import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import { getDiffXml } from '../../../../services/osm/auth/getDIffXml';
+import { useEditDialogClose } from '../utils';
 
 const downloadFile = (content: string, filename: string) => {
   const file = new Blob([content], { type: 'text/xml' });
@@ -39,10 +39,10 @@ const SaveButton = () => {
 };
 
 const CancelButton = () => {
-  const { close } = useEditDialogContext();
+  const handleClose = useEditDialogClose();
 
   return (
-    <Button onClick={close} color="primary">
+    <Button onClick={handleClose} color="primary">
       {t('editdialog.cancel_button')}
     </Button>
   );
