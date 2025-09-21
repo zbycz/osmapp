@@ -7,11 +7,16 @@ import { GradeSystemSelect } from '../../../../Climbing/GradeSystemSelect';
 import { Box, Stack, Typography } from '@mui/material';
 import { t } from '../../../../../../services/intl';
 import { isClimbingRoute } from '../../../../../../utils';
+import {
+  DEFAULT_GRADE_SYSTEM,
+  getGradeSystemName,
+} from '../../../../../../services/tagging/climbing/gradeSystems';
 
 export const ClimbingGradesEditor = () => {
   const { tags } = useCurrentItem();
   const { userSettings } = useUserSettingsContext();
-  const currentGradeSystem = userSettings['climbing.gradeSystem'] ?? 'uiaa';
+  const currentGradeSystem =
+    userSettings['climbing.gradeSystem'] ?? DEFAULT_GRADE_SYSTEM;
 
   const key = `climbing:grade:${currentGradeSystem}`;
   const climbingGradeSystem = extractClimbingGradeFromTagName(key);
@@ -30,7 +35,10 @@ export const ClimbingGradesEditor = () => {
             tags={tags}
           />
         </Box>
-        <GradeSystemSelect allowUnsetValue={false} />
+        <GradeSystemSelect
+          allowUnsetValue={false}
+          defaultLabel={getGradeSystemName(DEFAULT_GRADE_SYSTEM)}
+        />
       </Stack>
     </Box>
   );

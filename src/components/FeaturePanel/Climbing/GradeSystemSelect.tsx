@@ -67,12 +67,14 @@ type Props = {
   allowUnsetValue?: boolean;
   size?: 'small' | 'tiny';
   onGradeSystemChange?: (gradeSystem: GradeSystem) => void;
+  defaultLabel?: string;
 };
 
 export const GradeSystemSelect = ({
   allowUnsetValue = true,
   size,
   onGradeSystemChange,
+  defaultLabel = t('grade_system_select.convert_grade_short'),
 }: Props) => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const [isGradeTableOpen, setIsGradeTableOpen] = useState<boolean>(false);
@@ -108,8 +110,7 @@ export const GradeSystemSelect = ({
           size="small"
           variant="text"
         >
-          {getGradeSystemName(selectedGradeSystem) ??
-            t('grade_system_select.convert_grade_short')}
+          {getGradeSystemName(selectedGradeSystem) ?? defaultLabel}
         </Button>
         <Menu
           anchorEl={anchorEl}

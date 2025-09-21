@@ -3,7 +3,10 @@ import {
   UserSettingsType,
 } from './UserSettingsContext';
 import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
-import { GradeSystem } from '../../../services/tagging/climbing/gradeSystems';
+import {
+  DEFAULT_GRADE_SYSTEM,
+  GradeSystem,
+} from '../../../services/tagging/climbing/gradeSystems';
 import { Setter } from '../../../types';
 import { isEqual } from 'lodash';
 
@@ -72,7 +75,7 @@ export const getClimbingFilter = (
 ): ClimbingFilter => {
   const userSystem = userSettings['climbing.gradeSystem'];
 
-  const grades = GRADE_TABLE[userSystem || 'uiaa'];
+  const grades = GRADE_TABLE[userSystem || DEFAULT_GRADE_SYSTEM];
   const data = (userSettings[SETTINGS_KEY] ?? {}) as ClimbingFilterSettings;
 
   const setFilter: SetFilter = (name, value) => {

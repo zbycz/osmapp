@@ -1,6 +1,8 @@
 import { ClimbingRoute } from '../types';
 import { getPoiClass } from '../../../../services/getPoiClass';
 
+import { DEFAULT_GRADE_SYSTEM } from '../../../../services/tagging/climbing/gradeSystems';
+
 let counter = -1;
 
 export const getEmptyRoute = (): ClimbingRoute => {
@@ -9,7 +11,7 @@ export const getEmptyRoute = (): ClimbingRoute => {
   const tags = { climbing: 'route_bottom', sport: 'climbing' };
   return {
     id: '',
-    difficulty: { grade: '', gradeSystem: 'uiaa' },
+    difficulty: { grade: '', gradeSystem: DEFAULT_GRADE_SYSTEM },
     paths: {},
     updatedTags: { ...tags },
     feature: {
