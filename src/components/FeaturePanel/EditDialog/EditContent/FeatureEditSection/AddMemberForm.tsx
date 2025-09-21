@@ -17,7 +17,10 @@ import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData'
 import { getOsmTagFromGradeSystem } from '../../../../../services/tagging/climbing/routeGrade';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import CloseIcon from '@mui/icons-material/Close';
-import { GradeSystem } from '../../../../../services/tagging/climbing/gradeSystems';
+import {
+  DEFAULT_GRADE_SYSTEM,
+  GradeSystem,
+} from '../../../../../services/tagging/climbing/gradeSystems';
 
 export type Scene = null | 'single' | 'batch';
 
@@ -93,7 +96,8 @@ const useGetGradeSystemOrUndefined = (scene: string) => {
   const relation = useCurrentItem();
   const { userSettings } = useUserSettingsContext();
   if (scene === 'batch' && relation.tags.climbing) {
-    return (userSettings['climbing.gradeSystem'] ?? 'uiaa') as GradeSystem;
+    return (userSettings['climbing.gradeSystem'] ??
+      DEFAULT_GRADE_SYSTEM) as GradeSystem;
   }
   return undefined;
 };

@@ -10,6 +10,7 @@ import { ContentContainer } from './ContentContainer';
 import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
 import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import {
+  DEFAULT_GRADE_SYSTEM,
   getGradeSystemName,
   GradeSystem,
 } from '../../../services/tagging/climbing/gradeSystems';
@@ -143,7 +144,8 @@ export const RouteDistribution = ({
   isGrouped?: boolean;
 }) => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
-  const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
+  const gradeSystem =
+    userSettings['climbing.gradeSystem'] || DEFAULT_GRADE_SYSTEM;
 
   const theme = useTheme();
   if (features?.length === 0) return null;

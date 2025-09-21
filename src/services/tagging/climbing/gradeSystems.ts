@@ -97,3 +97,5 @@ export type GradeSystem = (typeof GRADE_SYSTEMS)[number]['key'];
 
 export const getGradeSystemName = (gradeSystemKey: GradeSystem) =>
   GRADE_SYSTEMS.find((item) => item.key === gradeSystemKey)?.name;
+
+export const DEFAULT_GRADE_SYSTEM = 'uiaa';

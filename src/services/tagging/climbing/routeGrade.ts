@@ -5,7 +5,7 @@ import {
   gradeColors,
   gradeTableString,
 } from './gradeData';
-import { GradeSystem } from './gradeSystems';
+import { DEFAULT_GRADE_SYSTEM, GradeSystem } from './gradeSystems';
 import { FeatureTags } from '../../types';
 
 export const exportGradeDataToWikiTable = () => {
@@ -47,7 +47,7 @@ export const getDifficulty = (
     const system = key.split(':', 3)[2];
 
     return {
-      gradeSystem: (system ?? 'uiaa') as GradeSystem, // @TODO `gradeSystem` type should be `string`
+      gradeSystem: (system ?? DEFAULT_GRADE_SYSTEM) as GradeSystem, // @TODO `gradeSystem` type should be `string`
       grade: tags[key],
     };
   }
