@@ -63,7 +63,7 @@ export const LocationInputs = () => {
     const pos = [lon, lat];
 
     if (pos.every(isNumeric)) {
-      const toBeSet = pos.map(parseFloat);
+      const toBeSet = pos.map(parseFloat) as LonLat;
       setNodeLonLat(toBeSet);
       updatedFromHere.current = toBeSet;
       setLonError(false);

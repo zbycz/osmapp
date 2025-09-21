@@ -35,19 +35,18 @@ export const isInstant = (def: ImageDef): def is ImageDefFromTag =>
   isTag(def) && def.instant;
 
 // coordinates in geojson format: [lon, lat] = [x,y]
-export type LonLat = number[];
-export type LonLatRounded = string[];
-export type Position = LonLat; // TODO merge those two types
-export type PositionBoth = LonLat | LonLatRounded;
+export type LonLat = [number, number];
+export type LonLatRounded = [string, string];
+export type LonLatBoth = LonLat | LonLatRounded;
 
 export interface Point {
   type: 'Point';
-  coordinates: Position;
+  coordinates: LonLat;
 }
 
 export interface LineString {
   type: 'LineString';
-  coordinates: Position[];
+  coordinates: LonLat[];
 }
 
 export interface GeometryCollection {
@@ -113,7 +112,7 @@ export type Feature = {
   parentFeatures?: Feature[];
   imageDefs?: ImageDef[];
   properties: FeatureProperties;
-  center: Position;
+  center: LonLat;
   countryCode?: string; // ISO3166-1 code lowercase, undefined = no country
   roundedCenter?: LonLatRounded;
   error?: 'network' | 'unknown' | '404' | '500'; // etc.

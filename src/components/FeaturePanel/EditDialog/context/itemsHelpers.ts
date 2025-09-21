@@ -83,7 +83,7 @@ export const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
   const el = itemsMap[apiId.type][apiId.id];
 
   const tags = el.tags ?? {};
-  const nodeLonLat = el.type === 'node' ? [el.lon, el.lat] : undefined;
+  const nodeLonLat: LonLat = el.type === 'node' ? [el.lon, el.lat] : undefined;
   const nodes = el.type === 'way' ? el.nodes : undefined;
   const members = el.type === 'relation' ? getMembers(el, itemsMap) : undefined;
 

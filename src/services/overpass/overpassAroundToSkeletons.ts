@@ -1,17 +1,17 @@
 import {
   Feature,
-  LineString,
-  Point,
   FeatureGeometry,
-  isPoint,
   isLineString,
-  Position,
+  isPoint,
+  LineString,
+  LonLat,
+  Point,
 } from '../types';
 
 import { getPoiClass } from '../getPoiClass';
 import { getBbox } from '../getCenter';
 
-export const getCenter = (geometry: FeatureGeometry): Position => {
+export const getCenter = (geometry: FeatureGeometry): LonLat => {
   if (isPoint(geometry)) {
     return geometry.coordinates;
   }

@@ -2,10 +2,10 @@ import { useRef } from 'react';
 import React from 'react';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { positionToDeg } from '../../utils';
-import { PositionBoth } from '../../services/types';
+import { LonLatBoth } from '../../services/types';
 import { Typography } from '@mui/material';
 
-type Props = { coords: PositionBoth };
+type Props = { coords: LonLatBoth };
 
 export const Coords = ({ coords }: Props) => {
   const anchorRef = useRef();

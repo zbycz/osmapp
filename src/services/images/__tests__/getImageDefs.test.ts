@@ -1,8 +1,8 @@
 import { getImageDefs } from '../getImageDefs';
 
-import { ImageDef } from '../../types';
+import { ImageDef, LonLat } from '../../types';
 
-const center = [14, 50];
+const center: LonLat = [14, 50];
 
 test('conversion', () => {
   const tags = {

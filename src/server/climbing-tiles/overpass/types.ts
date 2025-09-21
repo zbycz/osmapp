@@ -3,6 +3,7 @@ import {
   FeatureTags,
   GeometryCollection,
   LineString,
+  LonLat,
   OsmId,
   Point,
 } from '../../../services/types';
@@ -53,7 +54,7 @@ export type GeojsonFeature<T extends FeatureGeometry = FeatureGeometry> = {
     parentId?: number;
   };
   geometry: T;
-  center?: number[];
+  center?: LonLat;
   members?: OsmRelation['members'];
 };
 

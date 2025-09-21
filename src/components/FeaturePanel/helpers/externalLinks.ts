@@ -1,5 +1,5 @@
 import { getLabel } from '../../../helpers/featureLabel';
-import { Feature, PositionBoth } from '../../../services/types';
+import { Feature, LonLatBoth } from '../../../services/types';
 import { View } from '../../utils/MapStateContext';
 import { OSM_WEBSITE } from '../../../services/osm/consts';
 
@@ -13,7 +13,7 @@ export const getIdEditorLink = (feature: Feature, view?: View) => {
 
 export const getAppleMapsLink = (
   feature: Feature,
-  position: PositionBoth,
+  position: LonLatBoth,
   isSateliteActive: boolean,
 ) => {
   const layer = isSateliteActive

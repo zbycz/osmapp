@@ -52,10 +52,9 @@ export const getCoordsOption = (inputValue: string): CoordsOption[] => {
   const [_, c1Str, c2Str] = matches;
   const c1 = Number(c1Str);
   const c2 = Number(c2Str);
-  const coords = [
-    [c2, c1],
-    [c1, c2],
-  ].filter((c) => isValidCoord(c));
+  const coords = [[c2, c1] as LonLat, [c1, c2] as LonLat].filter((c) =>
+    isValidCoord(c),
+  );
   return coords.map((coord) => ({
     type: 'coords',
     coords: {

@@ -1,9 +1,9 @@
-import { Position, SuccessInfo } from '../types';
+import { LonLat, SuccessInfo } from '../types';
 import { fetchJson } from '../fetch';
 import { API_SERVER, OSM_WEBSITE } from './consts';
 
 export const insertOsmNote = async (
-  point: Position,
+  point: LonLat,
   text: string,
 ): Promise<SuccessInfo> => {
   const [lon, lat] = point;

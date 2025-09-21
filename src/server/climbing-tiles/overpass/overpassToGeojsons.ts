@@ -1,4 +1,4 @@
-import { FeatureGeometry, OsmId } from '../../../services/types';
+import { FeatureGeometry, OsmId, Point } from '../../../services/types';
 import { getCenter } from '../../../services/getCenter';
 import { getHistogram, sumMemberHistograms } from './histogram';
 import {
@@ -103,8 +103,8 @@ const getNodeWayProperties = (element: OsmNode | OsmWay) => {
 };
 
 const convertNode = (node: OsmNode): GeojsonFeature => {
-  const geometry = {
-    type: 'Point' as const,
+  const geometry: Point = {
+    type: 'Point',
     coordinates: [node.lon, node.lat],
   };
 

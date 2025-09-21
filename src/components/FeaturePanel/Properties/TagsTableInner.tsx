@@ -5,8 +5,8 @@ import { useToggleState } from '../../helpers';
 import { InlineEditButton } from '../helpers/InlineEditButton';
 import { buildAddress } from '../../../services/helpers';
 import { ToggleButton } from '../helpers/ToggleButton';
-import { renderTag, getHumanValue } from './renderTag';
-import { Position } from '../../../services/types';
+import { getHumanValue, renderTag } from './renderTag';
+import { LonLat } from '../../../services/types';
 
 const isAddr = (k: string) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k: string) => k.match(/^name(:|$)/);
@@ -110,7 +110,7 @@ const previewYesNoGroup = (
 
 type TagsTableInnerProps = {
   tags: Record<string, string>;
-  center: Position;
+  center: LonLat;
   except?: string[];
 };
 

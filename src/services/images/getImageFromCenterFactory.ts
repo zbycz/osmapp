@@ -1,8 +1,8 @@
-import { t, intl } from '../intl';
-import { Position } from '../types';
+import { intl, t } from '../intl';
+import { LonLat } from '../types';
 import { ImageType } from './getImageDefs';
 
-export const getBearing = ([aX, aY]: Position, [bX, bY]: Position): number => {
+export const getBearing = ([aX, aY]: LonLat, [bX, bY]: LonLat): number => {
   const angle = (Math.atan2(bX - aX, bY - aY) * 180) / Math.PI;
   return angle < 0 ? angle + 360 : angle;
 };
@@ -11,8 +11,8 @@ const subtractAngle = (a: number, b: number): number =>
   Math.min(Math.abs(a - b), a - b + 360);
 
 type ImageProvider<T> = {
-  getImages: (pos: Position) => Promise<T[]>;
-  getImageCoords: (img: T) => Position;
+  getImages: (pos: LonLat) => Promise<T[]>;
+  getImageCoords: (img: T) => LonLat;
   getImageAngle: (img: T) => number | undefined;
   isPano: (img: T) => boolean;
   getImageUrl: (img: T) => string;
@@ -39,7 +39,7 @@ export const getImageFromCenterFactory =
       getDescription,
     }: ImageProvider<T>,
   ) =>
-  async (poiCoords: Position): Promise<ImageType | null> => {
+  async (poiCoords: LonLat): Promise<ImageType | null> => {
     const apiImages = await getImages(poiCoords);
     if (!apiImages.length) {
       return null;
