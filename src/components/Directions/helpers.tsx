@@ -30,8 +30,8 @@ export const buildUrl = (mode: 'car' | 'bike' | 'walk', points: Option[]) => {
   return encodeUrl`/directions/${mode}/${urlParts}`;
 };
 
-const urlCoordsToLonLat = (coords: string): LonLat =>
-  coords.split(',').map(Number);
+const urlCoordsToLonLat = (coords: string) =>
+  coords.split(',').map(Number) as LonLat;
 
 export const parseUrlParts = (urlParts: string[]): Option[] =>
   urlParts.map((urlPart) => {

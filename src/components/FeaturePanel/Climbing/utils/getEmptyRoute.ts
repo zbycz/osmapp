@@ -17,7 +17,7 @@ export const getEmptyRoute = (): ClimbingRoute => {
       osmMeta: { type: 'node', id: counter },
       tags,
       properties: { ...getPoiClass(tags) },
-      center: [], // TODO
+      center: [0, 0], // TODO
     },
   };
 };

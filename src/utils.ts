@@ -32,7 +32,7 @@ export const getRoundedPosition = (
 ): LonLatRounded => {
   const degPerPx = Math.cos((lat * Math.PI) / 180) / 2 ** zoom;
   const exp = Math.round(Math.log10(degPerPx)) * -1;
-  return [lon.toFixed(exp), lat.toFixed(exp), zoom.toFixed(2)];
+  return [lon.toFixed(exp), lat.toFixed(exp)];
 };
 
 export const roundedToDegUrl = ([lon, lat]: LonLatRounded) => `${lat},${lon}`;

@@ -8,7 +8,7 @@ export const getNewId = () => {
 };
 
 export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
-  const center = [lon, lat].map(parseFloat);
+  const center = [lon, lat].map(parseFloat) as LonLat;
   return {
     type: 'Feature',
     point: true,

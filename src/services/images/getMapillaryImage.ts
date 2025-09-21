@@ -1,18 +1,13 @@
 import { fetchJson } from '../fetch';
 import { getImageFromCenterFactory } from './getImageFromCenterFactory';
+import { Point } from '../types';
 
 export const MAPILLARY_ACCESS_TOKEN = process.env.NEXT_PUBLIC_API_KEY_MAPILLARY;
 
 type MapillaryImage = {
   compass_angle: number;
-  computed_geometry: {
-    type: string;
-    coordinates: number[];
-  };
-  geometry: {
-    type: string;
-    coordinates: number[];
-  };
+  computed_geometry: Point;
+  geometry: Point;
   captured_at: number;
   thumb_1024_url: string;
   thumb_original_url: string;

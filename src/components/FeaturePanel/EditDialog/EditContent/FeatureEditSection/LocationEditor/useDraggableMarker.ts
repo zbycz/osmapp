@@ -67,8 +67,7 @@ export function useDraggableFeatureMarker(
   }, [items, map, nodeLonLat, setNodeLonLat, shortId]);
 
   const onMarkerChange = ({ lng, lat }: LngLat) => {
-    const newLonLat = [lng, lat];
-    setNodeLonLat(newLonLat);
+    setNodeLonLat([lng, lat]);
   };
 
   return { onMarkerChange };
