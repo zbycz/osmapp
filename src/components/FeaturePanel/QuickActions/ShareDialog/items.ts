@@ -1,6 +1,6 @@
 import { isIOS } from '../../../../helpers/platforms';
 import { t } from '../../../../services/intl';
-import { PositionBoth } from '../../../../services/types';
+import { LonLatBoth } from '../../../../services/types';
 import { isMobileDevice } from '../../../helpers';
 
 type ImageAttribution = {
@@ -33,7 +33,7 @@ type ItemArgs = {
   osmQuery: string;
   appleMaps: string;
   idEditor: string;
-  position: PositionBoth;
+  position: LonLatBoth;
   zoomInt: number;
   isSateliteActive: boolean;
 };

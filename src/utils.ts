@@ -1,25 +1,25 @@
 import {
   Feature,
   FeatureTags,
+  LonLat,
   LonLatRounded,
-  Position,
-  PositionBoth,
+  LonLatBoth,
 } from './services/types';
 
 // Accuracy = 1m, see https://gis.stackexchange.com/questions/8650/measuring-accuracy-of-latitude-and-longitude
 export const roundDeg = (deg) => (deg.toFixed ? deg.toFixed(5) : deg);
 
-export const positionToDeg = ([lon, lat]: PositionBoth) =>
+export const positionToDeg = ([lon, lat]: LonLatBoth) =>
   `${roundDeg(lat)}° ${roundDeg(lon)}°`;
 
-export const positionToDegUrl = ([lon, lat]: PositionBoth) =>
+export const positionToDegUrl = ([lon, lat]: LonLatBoth) =>
   `${roundDeg(lat)},${roundDeg(lon)}`;
 
 // Degrees and Minutes
 const toDM = (x) =>
   `${Math.floor(x)}° ${((x - Math.floor(x)) * 60).toFixed(3)}'`;
 
-export const positionToDM = ([lat, lon]: PositionBoth) =>
+export const positionToDM = ([lat, lon]: LonLatBoth) =>
   `${toDM(lat)} ${toDM(lon)}`;
 
 // https://wiki.openstreetmap.org/wiki/Zoom_levels
@@ -27,7 +27,7 @@ export const positionToDM = ([lat, lon]: PositionBoth) =>
 // const metersPerPxOnEquator = 156543.03392
 // const mPerPx = metersPerPxOnEquator * Math.cos(lat * Math.PI / 180) / Math.pow(2, zoom)
 export const getRoundedPosition = (
-  [lon, lat]: Position,
+  [lon, lat]: LonLat,
   zoom: number,
 ): LonLatRounded => {
   const degPerPx = Math.cos((lat * Math.PI) / 180) / 2 ** zoom;
