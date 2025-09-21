@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
-import { useEditDialogFeature } from './utils';
+import { useEditDialogClose, useEditDialogFeature } from './utils';
 import { EditContextProvider, useEditContext } from './context/EditContext';
 import { getReactKey } from '../../../services/helpers';
 import { fetchFreshItem, getNewNodeItem } from './context/itemsHelpers';
@@ -20,18 +20,22 @@ const StyledDialog = styled(Dialog)`
     align-items: start;
   }
 `;
+
 const CustomizedDialog: React.FC = ({ children }) => {
-  const { opened, close } = useEditDialogContext();
+  const handleClose = useEditDialogClose();
+  const { opened } = useEditDialogContext();
   const fullScreen = useIsFullScreen();
   const { items } = useEditContext();
   const hasMoreItems = items.length > 1;
   const { successInfo } = useEditContext();
+  const isModified = items.some(({ modified }) => modified);
+
   return (
     <StyledDialog
       fullScreen={fullScreen}
       open={opened}
-      onClose={close}
-      disableEscapeKeyDown={!successInfo}
+      onClose={handleClose}
+      disableEscapeKeyDown={isModified && !successInfo}
       aria-labelledby="edit-dialog-title"
       slotProps={{
         paper: {
