@@ -168,7 +168,7 @@ export const usePreviewMarker = (map: Map) => {
 
     if (preview?.center) {
       previewMarker = new maplibregl.Marker(PREVIEW_MARKER)
-        .setLngLat(preview.center as [number, number])
+        .setLngLat(preview.center)
         .addTo(map);
 
       const updateArrow = updateArrowFactory(map, panelOpen);

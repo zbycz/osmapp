@@ -245,7 +245,7 @@ const useInitMap = () => {
     mapRef.current?.on('load', () => {
       if (isFirstMapLoad) {
         mapRef.current.jumpTo({
-          center: feature.center as [number, number],
+          center: feature.center,
           zoom: 18.5,
         });
 
