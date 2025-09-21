@@ -142,8 +142,8 @@ export const updateArrowFactory = (map: Map, isPanelOpen: boolean) => () => {
   const leftOffset = isPanelOpen ? FEATURE_PANEL_WIDTH : 0;
 
   const canvas = map.getCanvas();
-  const w = canvas.width;
-  const h = canvas.height;
+  const w = canvas.clientWidth;
+  const h = canvas.clientHeight;
   const marker = map.project(previewMarker.getLngLat());
 
   if (isInsideBounds(marker, leftOffset, w, h)) {
