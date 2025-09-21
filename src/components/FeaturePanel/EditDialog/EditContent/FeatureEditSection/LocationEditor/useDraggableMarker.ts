@@ -55,9 +55,9 @@ export function useDraggableFeatureMarker(
       const tmpPos = nodeLonLat ?? (await getTmpNodePosition(items, shortId));
       if (tmpPos) {
         markerRef.current = new maplibregl.Marker(MAIN_MARKER)
-          .setLngLat(tmpPos as [number, number])
+          .setLngLat(tmpPos)
           .addTo(map);
-        map.easeTo({ center: tmpPos as [number, number] });
+        map.easeTo({ center: tmpPos });
 
         markerRef.current.on('dragend', () => {
           setNodeLonLat(markerRef.current?.getLngLat().toArray());

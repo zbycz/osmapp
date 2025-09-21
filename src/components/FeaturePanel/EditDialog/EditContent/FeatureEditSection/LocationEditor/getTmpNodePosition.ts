@@ -16,7 +16,7 @@ const getMapCenter = (): LonLat => getGlobalMap().getCenter().toArray();
 
 const isExisting = (shortId: string) => !shortId.includes('-');
 
-const getNodeOrWayPoint = async (shortId: string) => {
+const getNodeOrWayPoint = async (shortId: string): Promise<LonLat> => {
   const element = await getOsmElement(getApiId(shortId));
   if (shortId[0] === 'n') {
     return [element.lon, element.lat];
@@ -59,7 +59,7 @@ const getNextNodePosition = async (items: DataItem[], shortId: string) => {
   }
 
   const location = await getPositionFromMembers(items, parent);
-  const moved = location?.map((x) => x + 0.00005); // +- 5m
+  const moved = location?.map((x) => x + 0.00005) as LonLat; // +- 5m
 
   return moved ?? parent.relationClickedLonLat; // may be also undefined
 };

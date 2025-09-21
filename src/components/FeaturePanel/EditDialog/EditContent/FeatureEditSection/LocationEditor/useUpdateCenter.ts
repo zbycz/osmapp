@@ -9,7 +9,7 @@ export const useUpdateCenter = (mapRef: React.MutableRefObject<Map | null>) => {
   const lastCentered = useRef<LonLat | null>(null);
 
   const updateCenter = useCallback(() => {
-    const center = nodeLonLat as [number, number] | undefined;
+    const center = nodeLonLat;
     if (!center || !isGpsValid(center)) return;
 
     if (
