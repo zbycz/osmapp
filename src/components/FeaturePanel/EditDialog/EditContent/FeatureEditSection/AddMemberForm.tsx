@@ -18,8 +18,6 @@ import { getOsmTagFromGradeSystem } from '../../../../../services/tagging/climbi
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import CloseIcon from '@mui/icons-material/Close';
 
-
-
 export type Scene = null | 'single' | 'batch';
 
 const ROUTE_BOTTOM_TAGS = {

@@ -8,8 +8,6 @@ import { Box, Stack, Typography } from '@mui/material';
 import { t } from '../../../../../../services/intl';
 import { isClimbingRoute } from '../../../../../../utils';
 
-
-
 export const ClimbingGradesEditor = () => {
   const { tags } = useCurrentItem();
   const { gradeSystem } = useUserSettingsContext();
