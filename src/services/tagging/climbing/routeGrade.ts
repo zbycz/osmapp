@@ -103,15 +103,6 @@ export const getDifficultyColor = (
   return gradeColors[uiaaGrade]?.[mode] || DEFAULT_COLOR;
 };
 
-// used for climbingTiles
-export const getDifficultyColorByTags = (
-  tags: FeatureTags,
-  mode: 'light' | 'dark',
-): string | undefined => {
-  const difficulty = getDifficulty(tags);
-  return difficulty ? getDifficultyColor(difficulty, mode) : undefined;
-};
-
 export const findOrConvertRouteGrade = (
   routeDifficulties: RouteDifficulty[],
   selectedRouteSystem: string,

@@ -12,6 +12,7 @@ import {
   getClimbingFilter,
 } from './getClimbingFilter';
 import { Setter } from '../../../types';
+import { getGradeSystem } from './getGradeSystem';
 
 type CragViewLayout = 'vertical' | 'horizontal' | 'auto';
 
@@ -38,6 +39,7 @@ export type UserSettingsContextType = {
     value: UserSettingsType[T],
   ) => void;
   climbingFilter: ClimbingFilter;
+  gradeSystem: GradeSystem;
 };
 
 const initialUserSettings: UserSettingsType = {
@@ -73,13 +75,12 @@ export const UserSettingsProvider: React.FC = ({ children }) => {
     setUserSettings({ ...userSettings, [key]: value });
   };
 
-  const climbingFilter = getClimbingFilter(userSettings, setUserSetting);
-
   const value: UserSettingsContextType = {
     userSettings,
     setUserSetting,
     setUserSettings,
-    climbingFilter,
+    climbingFilter: getClimbingFilter(userSettings, setUserSetting),
+    gradeSystem: getGradeSystem(userSettings),
   };
   return (
     <UserSettingsContext.Provider value={value}>

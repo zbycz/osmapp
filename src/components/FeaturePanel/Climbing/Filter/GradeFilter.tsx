@@ -8,8 +8,6 @@ import { Interval } from '../../../utils/userSettings/getClimbingFilter';
 import styled from '@emotion/styled';
 import { useGetSliderColors } from '../../../../services/tagging/climbing/gradeData';
 
-import { DEFAULT_GRADE_SYSTEM } from '../../../../services/tagging/climbing/gradeSystems';
-
 const convertToUnique = ([minIndex, maxIndex]: Interval, grades: string[]) => {
   const uniqueGrades = [...new Set(grades)];
   const value: Interval = [
@@ -64,9 +62,7 @@ const GradesFilterSlider = () => {
 };
 
 export const GradeFilter = () => {
-  const { userSettings, climbingFilter } = useUserSettingsContext();
-  const currentGradeSystem =
-    userSettings['climbing.gradeSystem'] || DEFAULT_GRADE_SYSTEM;
+  const { gradeSystem, climbingFilter } = useUserSettingsContext();
   const { gradeInterval, grades } = climbingFilter;
 
   return (
@@ -88,7 +84,7 @@ export const GradeFilter = () => {
           {t('crag_filter.grade_from')}{' '}
           <RouteDifficultyBadge
             routeDifficulty={{
-              gradeSystem: currentGradeSystem,
+              gradeSystem,
               grade: grades[gradeInterval[0]],
             }}
           />{' '}
@@ -97,7 +93,7 @@ export const GradeFilter = () => {
               {t('crag_filter.grade_to')}{' '}
               <RouteDifficultyBadge
                 routeDifficulty={{
-                  gradeSystem: currentGradeSystem,
+                  gradeSystem,
                   grade: grades[gradeInterval[1]],
                 }}
               />
