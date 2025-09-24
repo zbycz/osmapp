@@ -19,7 +19,7 @@ import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import CloseIcon from '@mui/icons-material/Close';
 import {
   DEFAULT_GRADE_SYSTEM,
-  GradeSystem,
+  getGradeSystemName,
 } from '../../../../../services/tagging/climbing/gradeSystems';
 
 export type Scene = null | 'single' | 'batch';
@@ -94,10 +94,9 @@ const convertLine = async (
 
 const useGetGradeSystemOrUndefined = (scene: string) => {
   const relation = useCurrentItem();
-  const { userSettings } = useUserSettingsContext();
-  if (scene === 'batch' && relation.tags.climbing) {
-    return (userSettings['climbing.gradeSystem'] ??
-      DEFAULT_GRADE_SYSTEM) as GradeSystem;
+  const { gradeSystem } = useUserSettingsContext();
+  if (scene === 'batch' && relation.tags.climbing === 'crag') {
+    return gradeSystem;
   }
   return undefined;
 };
@@ -244,7 +243,11 @@ const BatchTextarea = (props: { label: string; setLabel: Setter<string> }) => {
         placeholder={placeholder}
         onChange={(e) => props.setLabel(e.target.value)}
       />
-      {gradeSystem ? <GradeSystemSelect /> : null}
+      {gradeSystem ? (
+        <GradeSystemSelect
+          defaultLabel={getGradeSystemName(DEFAULT_GRADE_SYSTEM)}
+        />
+      ) : null}
     </>
   );
 };

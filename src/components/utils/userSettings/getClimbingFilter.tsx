@@ -8,7 +8,7 @@ import {
   GradeSystem,
 } from '../../../services/tagging/climbing/gradeSystems';
 import { Setter } from '../../../types';
-import { isEqual } from 'lodash';
+import { updateMapFilter } from './mapClimbingFilter';
 
 export type Interval = [number, number];
 
@@ -25,34 +25,6 @@ type SetFilter = <T extends keyof ClimbingFilterSettings>(
 
 const SETTINGS_KEY = 'climbing.filter';
 const DEFAULT_MINIMUM_ROUTES = 1;
-
-export const mapClimbingFilter = {
-  gradeSystem: undefined,
-  gradeInterval: undefined,
-  minimumRoutes: undefined,
-  isDefaultFilter: false,
-  isGradeIntervalDefault: true,
-  isMinimumRoutesDefault: true,
-  callback: () => {},
-};
-const updateMapFilter = (
-  gradeSystem: GradeSystem,
-  gradeInterval: Interval,
-  minimumRoutes: number,
-  isDefaultFilter: boolean,
-) => {
-  if (
-    mapClimbingFilter.gradeSystem != gradeSystem ||
-    !isEqual(mapClimbingFilter.gradeInterval, gradeInterval) ||
-    mapClimbingFilter.minimumRoutes != minimumRoutes
-  ) {
-    mapClimbingFilter.gradeSystem = gradeSystem;
-    mapClimbingFilter.gradeInterval = gradeInterval;
-    mapClimbingFilter.minimumRoutes = minimumRoutes;
-    mapClimbingFilter.isDefaultFilter = isDefaultFilter;
-    mapClimbingFilter.callback();
-  }
-};
 
 const isSameInterval = (a: Interval, b: Interval) =>
   a[0] === b[0] && a[1] === b[1];

@@ -14,15 +14,15 @@ import {
 
 export const ClimbingGradesEditor = () => {
   const { tags } = useCurrentItem();
-  const { userSettings } = useUserSettingsContext();
-  const currentGradeSystem =
-    userSettings['climbing.gradeSystem'] ?? DEFAULT_GRADE_SYSTEM;
+  const { gradeSystem } = useUserSettingsContext();
 
-  const key = `climbing:grade:${currentGradeSystem}`;
+  const key = `climbing:grade:${gradeSystem}`;
   const climbingGradeSystem = extractClimbingGradeFromTagName(key);
   const isRoute = isClimbingRoute(tags);
 
-  if (!isRoute) return null;
+  if (!isRoute) {
+    return null;
+  }
 
   return (
     <Box mb={2}>
