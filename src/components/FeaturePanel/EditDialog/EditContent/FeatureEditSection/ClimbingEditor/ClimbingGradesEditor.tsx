@@ -7,10 +7,8 @@ import { GradeSystemSelect } from '../../../../Climbing/GradeSystemSelect';
 import { Box, Stack, Typography } from '@mui/material';
 import { t } from '../../../../../../services/intl';
 import { isClimbingRoute } from '../../../../../../utils';
-import {
-  DEFAULT_GRADE_SYSTEM,
-  getGradeSystemName,
-} from '../../../../../../services/tagging/climbing/gradeSystems';
+
+
 
 export const ClimbingGradesEditor = () => {
   const { tags } = useCurrentItem();
@@ -35,10 +33,7 @@ export const ClimbingGradesEditor = () => {
             tags={tags}
           />
         </Box>
-        <GradeSystemSelect
-          allowUnsetValue={false}
-          defaultLabel={getGradeSystemName(DEFAULT_GRADE_SYSTEM)}
-        />
+        <GradeSystemSelect showDefaultOnButton />
       </Stack>
     </Box>
   );

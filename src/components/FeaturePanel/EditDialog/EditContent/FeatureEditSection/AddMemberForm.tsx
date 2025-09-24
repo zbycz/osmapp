@@ -17,10 +17,8 @@ import { GRADE_TABLE } from '../../../../../services/tagging/climbing/gradeData'
 import { getOsmTagFromGradeSystem } from '../../../../../services/tagging/climbing/routeGrade';
 import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  DEFAULT_GRADE_SYSTEM,
-  getGradeSystemName,
-} from '../../../../../services/tagging/climbing/gradeSystems';
+
+
 
 export type Scene = null | 'single' | 'batch';
 
@@ -243,11 +241,7 @@ const BatchTextarea = (props: { label: string; setLabel: Setter<string> }) => {
         placeholder={placeholder}
         onChange={(e) => props.setLabel(e.target.value)}
       />
-      {gradeSystem ? (
-        <GradeSystemSelect
-          defaultLabel={getGradeSystemName(DEFAULT_GRADE_SYSTEM)}
-        />
-      ) : null}
+      {gradeSystem ? <GradeSystemSelect showDefaultOnButton /> : null}
     </>
   );
 };

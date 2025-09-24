@@ -12,6 +12,7 @@ import {
   Tooltip,
 } from '@mui/material';
 import {
+  DEFAULT_GRADE_SYSTEM,
   getGradeSystemName,
   GRADE_SYSTEMS,
   GradeSystem,
@@ -23,7 +24,7 @@ import { ClimbingGradesTable } from './ClimbingGradesTable/ClimbingGradesTable';
 import { useVisibleGradeSystems } from './utils/useVisibleGradeSystems';
 import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 
-const GradeSystemItem = ({ showMinor, onClick, selectedGradeSystem }) => {
+const GradeSystemItems = ({ showMinor, onClick, selectedGradeSystem }) => {
   const visibleGradeSystems = useVisibleGradeSystems();
 
   const filteredGradeSystems = GRADE_SYSTEMS.filter(({ key }) =>
@@ -64,17 +65,16 @@ const GradeSystemItem = ({ showMinor, onClick, selectedGradeSystem }) => {
 };
 
 type Props = {
-  allowUnsetValue?: boolean;
   size?: 'small' | 'tiny';
   onGradeSystemChange?: (gradeSystem: GradeSystem) => void;
-  defaultLabel?: string;
+  showDefaultOnButton?: boolean;
 };
 
+// TODO this needs extracting of sub components
 export const GradeSystemSelect = ({
-  allowUnsetValue = true,
   size,
   onGradeSystemChange,
-  defaultLabel = t('grade_system_select.convert_grade_short'),
+  showDefaultOnButton,
 }: Props) => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const [isGradeTableOpen, setIsGradeTableOpen] = useState<boolean>(false);
@@ -97,6 +97,10 @@ export const GradeSystemSelect = ({
     handleClose();
   };
 
+  const buttonLabel = showDefaultOnButton
+    ? getGradeSystemName(DEFAULT_GRADE_SYSTEM)
+    : t('grade_system_select.convert_grade_short');
+
   return (
     <>
       <Stack direction="row" spacing={1} alignItems="center">
@@ -110,7 +114,7 @@ export const GradeSystemSelect = ({
           size="small"
           variant="text"
         >
-          {getGradeSystemName(selectedGradeSystem) ?? defaultLabel}
+          {getGradeSystemName(selectedGradeSystem) ?? buttonLabel}
         </Button>
         <Menu
           anchorEl={anchorEl}
@@ -129,20 +133,16 @@ export const GradeSystemSelect = ({
           <ListSubheader sx={{ background: 'transparent' }}>
             {t('grade_system_select.select_grade_system')}
           </ListSubheader>
-          {allowUnsetValue && (
-            <MenuItem
-              value={null}
-              sx={{ paddingLeft: 4 }}
-              onClick={() => {
-                changeGradeSystem(undefined);
-              }}
-              selected={selectedGradeSystem === null}
-            >
-              {t('grade_system_select.default_grade_system')}
-            </MenuItem>
-          )}
+          <MenuItem
+            value={null}
+            sx={{ paddingLeft: 4 }}
+            onClick={() => changeGradeSystem(undefined)}
+            selected={!selectedGradeSystem}
+          >
+            {t('grade_system_select.default_grade_system')}
+          </MenuItem>
 
-          <GradeSystemItem
+          <GradeSystemItems
             showMinor={false}
             onClick={changeGradeSystem}
             selectedGradeSystem={selectedGradeSystem}
@@ -162,7 +162,7 @@ export const GradeSystemSelect = ({
           )}
 
           {showMore && (
-            <GradeSystemItem
+            <GradeSystemItems
               showMinor
               onClick={changeGradeSystem}
               selectedGradeSystem={selectedGradeSystem}
