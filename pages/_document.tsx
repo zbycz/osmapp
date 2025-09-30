@@ -19,7 +19,6 @@ import { FaviconsOsmapp } from '../src/helpers/FaviconsOsmapp';
 import { PROJECT_ID, setProjectForSSR } from '../src/services/project';
 import { FaviconsOpenClimbing } from '../src/helpers/FaviconsOpenClimbing';
 import styled from '@emotion/styled';
-import { logRequest } from '../src/server/logRequest';
 import { getUrlForLangLinks, LangLinks } from '../src/helpers/LangLinks';
 
 const Body = styled.body`
@@ -91,8 +90,6 @@ MyDocument.getInitialProps = async (
   setProjectForSSR(ctx.req);
 
   const initialProps = await documentGetInitialProps(ctx);
-
-  logRequest(ctx, serverIntl);
 
   return {
     ...initialProps,

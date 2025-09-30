@@ -5,7 +5,11 @@ import styled from '@emotion/styled';
 import { getEstablishmentRatingValue } from '../../../services/fhrsApi';
 import { DotLoader } from '../../helpers';
 
-const useLoadingState = () => {
+// TODO replace with react-query
+//  Please do not copy `useLoadingStateDeprecated()` elsewhere, use react-query instead.
+//  Refer to `FeaturePanel/Runways/Runways.tsx` for usage.
+//  More in https://tkdodo.eu/blog/why-you-want-react-query
+const useLoadingStateDeprecated = () => {
   const [rating, setRating] = useState<number>();
   const [error, setError] = useState<string>();
   const [loading, setLoading] = useState(true);
@@ -51,7 +55,7 @@ const RatingRound = styled.span`
 
 export const FoodHygieneRatingSchemeRenderer = ({ v }) => {
   const { rating, error, loading, startRating, finishRating, failRating } =
-    useLoadingState();
+    useLoadingStateDeprecated();
 
   useEffect(() => {
     (async () => {

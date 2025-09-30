@@ -1,9 +1,10 @@
 import fetch from 'isomorphic-unfetch';
 import { isServer } from '../components/helpers';
-import { Feature, OsmId, OsmType, Position } from './types';
+import { Feature, LonLat, OsmId, OsmType } from './types';
 import { join, roundedToDegUrl } from '../utils';
 import { PROJECT_URL } from './project';
 import { getIdFromShortener, getShortenerSlug } from './shortener';
+import { EditDataItem } from '../components/FeaturePanel/EditDialog/context/types';
 
 export const getShortId = ({ id, type }: OsmId): string => `${type[0]}${id}`;
 export const getUrlOsmId = ({ id, type }: OsmId): string => `${type}/${id}`;
@@ -31,6 +32,11 @@ export const getOsmappLink = (feature: Feature | null) => {
 
 export const getFullOsmappLink = (feature: Feature) =>
   `${PROJECT_URL}${getOsmappLink(feature)}`;
+
+export const getFullLinkFromEditDataItem = (item: EditDataItem) => {
+  const osmId = getApiId(item.shortId);
+  return `${PROJECT_URL}/${osmId.type}/${osmId.id}`;
+};
 
 export const getShortLink = (feature: Feature) => {
   const slug = getShortenerSlug(feature.osmMeta);
@@ -68,7 +74,7 @@ export const getImageSize = (url): Promise<ImageSize> =>
 
 // TODO better mexico border + add Australia, New Zealand & South Africa
 const polygonUsCan = [[-143, 36], [-117, 32], [-96, 25], [-50, 19], [-56, 71], [-175, 70], [-143, 36]]; // prettier-ignore
-const isInside = ([x, y]: Position, points) => {
+const isInside = ([x, y]: LonLat, points) => {
   // ray-casting algorithm based on https://wrf.ecse.rpi.edu/Research/Short_Notes/pnpoly.html
   let inside = false;
   for (let i = 0, j = points.length - 1; i < points.length; j = i, i += 1) {
@@ -80,7 +86,7 @@ const isInside = ([x, y]: Position, points) => {
   }
   return inside;
 };
-const isNumberFirst = (loc: Position) => loc && isInside(loc, polygonUsCan);
+const isNumberFirst = (loc: LonLat) => loc && isInside(loc, polygonUsCan);
 
 export const buildAddress = (
   {
@@ -93,7 +99,7 @@ export const buildAddress = (
     'addr:state': state,
     'addr:postcode': postcode,
   }: Record<string, string>,
-  position?: Position,
+  position?: LonLat,
 ) => {
   const number = hnum ?? join(cnum, '/', snum);
   const streetPlace = street ?? place;

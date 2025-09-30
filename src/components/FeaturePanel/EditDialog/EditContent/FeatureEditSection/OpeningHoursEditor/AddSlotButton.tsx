@@ -3,10 +3,11 @@ import { IconButton } from '@mui/material';
 import { isValid } from './parser/buildString';
 import AddIcon from '@mui/icons-material/Add';
 import React from 'react';
+import { Setter } from '../../../../../../types';
 
 type Props = {
   dayIdx: number;
-  setDays: (value: ((prevState: Day[]) => Day[]) | Day[]) => void;
+  setDays: Setter<Day[]>;
   timeSlots: Slot[];
 };
 

@@ -15,7 +15,7 @@ import { CopyFromAboveButton } from './CopyFromAboveButton';
 import { useGetBlurValidation } from './useGetBlurValidation';
 import { SetDaysAndTagFn, SetDaysFn } from './types';
 
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const Wrapper = styled.div`
   display: flex;

@@ -9,6 +9,7 @@ import { motorwayConstruction } from './layers/contruction';
 import { overpassLayers } from './layers/overpassLayers';
 import { cliffsLayers } from './layers/cliffsLayers';
 import { SymbolLayerSpecification } from '@maplibre/maplibre-gl-style-spec';
+import { landcoverRockLayer } from './layers/landcoverRockLayer';
 
 // Maptiler Outdoor style is copyrighted – only to be used with valid Maptiler subscription
 // https://www.maptiler.com/maps/outdoor/
@@ -94,6 +95,7 @@ export const outdoorStyle = addHoverPaint({
       metadata: {},
       'source-layer': 'landcover',
     },
+    landcoverRockLayer,
     {
       id: 'globallandcover_grass',
       type: 'fill',
@@ -667,7 +669,7 @@ export const outdoorStyle = addHoverPaint({
         visibility: 'visible',
       },
       paint: {
-        'line-color': 'hsl(24, 10%, 60%)',
+        'line-color': 'hsl(25,6%,38%)',
         'line-dasharray': [5, 2],
         'line-width': [
           'interpolate',

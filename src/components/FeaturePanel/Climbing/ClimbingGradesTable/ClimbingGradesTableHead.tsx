@@ -1,5 +1,5 @@
 import React from 'react';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import {
   Chip,
   IconButton,
@@ -10,7 +10,7 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
-import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing';
+import { GRADE_SYSTEMS } from '../../../../services/tagging/climbing/gradeSystems';
 import TuneIcon from '@mui/icons-material/Tune';
 
 type HeadProps = {

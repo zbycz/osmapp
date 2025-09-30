@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import * as React from 'react';
 import {
   Box,
@@ -35,9 +36,8 @@ export const SuccessLayerInput: React.FC<SuccessLayerDataInputProps> = ({
   index,
   onSelect,
 }) => {
-  const [showOnlyAllowedForOsm, setShowOnlyAllowedForOsm] =
-    React.useState(false);
-  const [currentlyVisible, setCurrentlyVisible] = React.useState(true);
+  const [showOnlyAllowedForOsm, setShowOnlyAllowedForOsm] = useState(false);
+  const [currentlyVisible, setCurrentlyVisible] = useState(true);
   const { view } = useMapStateContext();
 
   const options = index

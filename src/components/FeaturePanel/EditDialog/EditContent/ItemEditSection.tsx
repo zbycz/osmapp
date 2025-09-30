@@ -1,4 +1,4 @@
-import { useCurrentItem } from '../EditContext';
+import { useCurrentItem } from '../context/EditContext';
 import { ItemHeading } from './FeatureEditSection/ItemHeading';
 import { PlaceCancelledToggle } from './FeatureEditSection/OptionsEditor';
 import { PresetSelect } from './FeatureEditSection/PresetSelect/PresetSelect';
@@ -8,10 +8,12 @@ import { LocationEditor } from './FeatureEditSection/LocationEditor/LocationEdit
 import { ParentsEditor } from './FeatureEditSection/ParentsEditor';
 import { MembersEditor } from './FeatureEditSection/MembersEditor';
 import React from 'react';
+import { ClimbingEditor } from './FeatureEditSection/ClimbingEditor/ClimbingEditor';
+import { Box } from '@mui/material';
 
 export const ItemEditSection = () => {
   const { toBeDeleted } = useCurrentItem();
-
+  const { shortId } = useCurrentItem();
   if (toBeDeleted) {
     return (
       <>
@@ -26,10 +28,12 @@ export const ItemEditSection = () => {
       <ItemHeading />
       <PresetSelect />
       <MajorKeysEditor />
-      <TagsEditor />
-      <LocationEditor />
+      <ClimbingEditor />
       <ParentsEditor />
       <MembersEditor />
+      <LocationEditor />
+      <TagsEditor />
+      <Box mt={4} />
     </>
   );
 };

@@ -1,4 +1,4 @@
-import { Alert, Snackbar } from '@mui/material';
+import { Alert, Snackbar, AlertProps } from '@mui/material';
 import React, {
   createContext,
   useContext,
@@ -11,6 +11,7 @@ type Severity = 'success' | 'info' | 'warning' | 'error' | undefined;
 export type ShowToast = (
   message: string | React.ReactNode,
   severity?: Severity,
+  action?: AlertProps['action'],
 ) => void;
 export type SnackbarContextType = {
   showToast: ShowToast;
@@ -23,7 +24,11 @@ const SnackbarContext = createContext<SnackbarContextType>({
 export const useSnackbar = () => useContext(SnackbarContext);
 
 type Props = {
-  initialToast?: { message: string | React.ReactNode; severity?: Severity };
+  initialToast?: {
+    message: string | React.ReactNode;
+    severity?: Severity;
+    action?: AlertProps['action'];
+  };
 };
 
 // TODO maybe allow more messages ?
@@ -37,6 +42,9 @@ export const SnackbarProvider: React.FC<Props> = ({
     initialToast?.message ?? '',
   );
   const [severity, setSeverity] = useState<Severity>(initialToast?.severity);
+  const [action, setAction] = useState<AlertProps['action'] | undefined>(
+    initialToast?.action,
+  );
 
   useEffect(() => {
     if (initialToast) {
@@ -55,10 +63,15 @@ export const SnackbarProvider: React.FC<Props> = ({
 
   const value: SnackbarContextType = useMemo(
     () => ({
-      showToast: (message: React.ReactNode, severity?: Severity) => {
+      showToast: (
+        message: React.ReactNode,
+        severity?: Severity,
+        action?: AlertProps['action'],
+      ) => {
         setMessage(message);
         setSeverity(severity);
         setOpen(true);
+        setAction(action);
       },
     }),
     [],
@@ -73,7 +86,12 @@ export const SnackbarProvider: React.FC<Props> = ({
         anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
         onClose={handleClose}
       >
-        <Alert onClose={handleClose} severity={severity} variant="filled">
+        <Alert
+          onClose={handleClose}
+          severity={severity}
+          variant="filled"
+          action={action}
+        >
           {message}
         </Alert>
       </Snackbar>

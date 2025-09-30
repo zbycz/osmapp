@@ -1,5 +1,5 @@
 {
-  "plugins": ["eslint-plugin-local-rules"],
+  "plugins": ["eslint-plugin-local-rules", "unused-imports"],
   "extends": ["next/core-web-vitals", "prettier", "plugin:local-rules/all"],
   "rules": {
     "import/no-anonymous-default-export": "off",
@@ -22,7 +22,9 @@
         "skipComments": true,
         "IIFEs": true
       }
-    ]
+    ],
+    "local-rules/max-lines-per-function-LOCAL": "warn",
+    "unused-imports/no-unused-imports": "error"
   },
   "overrides": [
     {

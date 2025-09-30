@@ -1,26 +1,34 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+
+const getStoredValue = (storageKey: string) =>
+  JSON.parse(global?.window?.localStorage.getItem(storageKey) ?? 'null');
+
+const storeValue = <T>(storageKey: string, value: T) =>
+  window?.localStorage.setItem(storageKey, JSON.stringify(value));
 
 export const usePersistedState = <T>(
   storageKey: string,
   init: T,
 ): [T, Dispatch<SetStateAction<T>>] => {
-  const persist = (value: T) =>
-    window?.localStorage.setItem(storageKey, JSON.stringify(value));
+  const [value, setStateValue] = useState<T>(init);
 
-  const initialState = () =>
-    JSON.parse(global?.window?.localStorage.getItem(storageKey) ?? 'null') ??
-    init;
-  const [value, setStateValue] = useState<T>(initialState);
+  useEffect(() => {
+    // we must set the localStorage value in useEffect to prevent hydration error
+    const storedValue = getStoredValue(storageKey);
+    if (storedValue != null) {
+      setStateValue(storedValue);
+    }
+  }, [storageKey]);
 
   const setValue = (param: (prev: T) => T | T) => {
     if (typeof param === 'function') {
       setStateValue((current) => {
         const newValue = param(current);
-        persist(newValue);
+        storeValue(storageKey, newValue);
         return newValue;
       });
     } else {
-      persist(param);
+      storeValue(storageKey, param);
       setStateValue(param);
     }
   };

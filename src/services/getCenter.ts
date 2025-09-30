@@ -68,7 +68,7 @@ export const getCenter = (geometry: FeatureGeometry): LonLat => {
     return getCenterOfBbox(allPoints);
   }
   if (isPolygon(geometry)) {
-    const outerCoords = geometry.coordinates[0];
+    const outerCoords = geometry.coordinates[0] as LonLat[];
     return getCenterOfBbox(outerCoords);
   }
 

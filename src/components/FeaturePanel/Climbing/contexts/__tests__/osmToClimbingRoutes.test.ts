@@ -78,6 +78,7 @@ const feature: Feature = {
 
 const climbingRoutes = [
   {
+    author: undefined,
     difficulty: {
       grade: '5.7',
       gradeSystem: 'yds_class',
@@ -91,6 +92,7 @@ const climbingRoutes = [
     updatedTags: feature.memberFeatures[0].tags,
   },
   {
+    author: undefined,
     difficulty: {
       grade: '5.7',
       gradeSystem: 'yds_class',
@@ -107,6 +109,7 @@ const climbingRoutes = [
           type: 'bolt',
         },
         {
+          previousLineType: 'solid',
           units: 'percentage',
           x: 0.573,
           y: 0.245,
@@ -115,11 +118,13 @@ const climbingRoutes = [
       ],
       'jickovice2.jpg': [
         {
+          type: undefined,
           units: 'percentage',
           x: 0.1,
           y: 0.1,
         },
         {
+          previousLineType: 'solid',
           units: 'percentage',
           x: 0.573,
           y: 0.245,

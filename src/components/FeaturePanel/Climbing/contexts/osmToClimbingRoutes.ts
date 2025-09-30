@@ -1,23 +1,11 @@
 import { Feature, FeatureTags } from '../../../../services/types';
-import { ClimbingRoute, PathPoints } from '../types';
+import { ClimbingRoute } from '../types';
 import { getUrlOsmId } from '../../../../services/helpers';
-import { boltCodeMap } from '../utils/boltCodes';
 import { removeFilePrefix } from '../utils/photo';
-import { getDifficulty } from '../utils/grades/routeGrade';
+import { getDifficulty } from '../../../../services/tagging/climbing/routeGrade';
 import { publishDbgObject } from '../../../../utils';
 import { getDividedFeaturesBySections } from '../utils/getDividedFeaturesBySections';
-
-const parsePathString = (pathString?: string): PathPoints =>
-  pathString
-    ?.split('|')
-    .map((coords) => coords.split(',', 2))
-    .map(([x, y]) => ({
-      x: parseFloat(x),
-      y: parseFloat(y),
-      units: 'percentage' as const,
-      type: boltCodeMap[y.slice(-1)],
-    })) ?? [];
-// @TODO filter( where x and y are really numbers)
+import { parsePathString } from '../utils/pathUtils';
 
 const getPathsByImage = (tags: FeatureTags) => {
   const keys = Object.keys(tags).filter((key) =>

@@ -1,4 +1,4 @@
-import { Button, GridLegacy, Typography } from '@mui/material';
+import { Button, Stack, Typography } from '@mui/material';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import React from 'react';
@@ -109,26 +109,19 @@ export const Homepage = ({ mobileMode, onClick }: Props) => {
               />
             </Center>
             <Spacer />
-            <GridLegacy
-              container
-              direction="row"
-              alignItems="flex-start"
-              justifyContent="flex-start"
-            >
-              <GridLegacy item xs={4}>
-                <img
-                  src="/logo-osm.svg"
-                  alt="OpenStreetMap logo"
-                  width={100}
-                  height={100}
-                />
-              </GridLegacy>
-              <GridLegacy item xs={8}>
-                <Typography variant="body2" paragraph>
+            <Stack direction="row" spacing={2}>
+              <img
+                src="/logo-osm.svg"
+                alt="OpenStreetMap logo"
+                width={100}
+                height={100}
+              />
+              <div>
+                <Typography variant="body2">
                   <Translation id="homepage.about_osm" />
                 </Typography>
-              </GridLegacy>
-            </GridLegacy>
+              </div>
+            </Stack>
             <Spacer />
             <Typography
               variant="overline"
@@ -214,6 +207,12 @@ export const Homepage = ({ mobileMode, onClick }: Props) => {
                   GraphHopper
                 </a>
                 {` – ${t('homepage.graphhopper')}`}
+              </li>
+              <li>
+                <a href="https://indoorequal.com/" target="_blank">
+                  indoor=
+                </a>
+                {` – ${t('homepage.indoorequal')}`}
               </li>
             </ul>
             <a href="https://www.maptiler.com" target="_blank">

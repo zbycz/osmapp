@@ -14,9 +14,8 @@ import { useClimbingContext } from './contexts/ClimbingContext';
 import { ClimbingCragDialogHeader } from './ClimbingCragDialogHeader';
 import { getOsmappLink } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
-import { useGetHandleSave } from './useGetHandleSave';
+import { useSaveCragFactory } from './useSaveCragFactory';
 import { getWikimediaCommonsPhotoKeys, removeFilePrefix } from './utils/photo';
-import { useMobileMode } from '../../helpers';
 import { ClimbingEditorHelperText } from './ClimbingEditorHelperText';
 import { t } from '../../../services/intl';
 
@@ -34,9 +33,11 @@ const LeftActions = styled.div`
 export const ClimbingCragDialog = ({
   photo,
   routeNumber,
+  edit,
 }: {
   photo?: string;
   routeNumber?: number;
+  edit?: boolean;
 }) => {
   const contentRef = useRef(null);
 
@@ -45,17 +46,17 @@ export const ClimbingCragDialog = ({
     isPointMoving,
     setIsEditMode,
     isEditMode,
-    getMachine,
+    machine,
     showDebugMenu,
     setRouteSelectedIndex,
     routes,
     setPhotoPath,
     photoPath,
     photoPaths,
+    loadPhotoRelatedData,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
-  const handleSave = useGetHandleSave(setIsEditMode);
-  const machine = getMachine();
+  const saveCrag = useSaveCragFactory(setIsEditMode);
   const router = useRouter();
   const featureLink = getOsmappLink(feature);
 
@@ -63,8 +64,11 @@ export const ClimbingCragDialog = ({
     const tags = routes[routeNumber]?.feature?.tags || {};
     const photos = getWikimediaCommonsPhotoKeys(tags);
 
+    if (edit) setIsEditMode(true);
+
     if (routeNumber !== undefined && photos?.[0]) {
       setRouteSelectedIndex(routeNumber);
+
       const firstPhoto = tags[photos[0]];
       const newPhotoPath = removeFilePrefix(firstPhoto);
       router.replace(`${featureLink}/climbing/photo/${newPhotoPath}`);
@@ -76,6 +80,7 @@ export const ClimbingCragDialog = ({
       if (routeNumber !== undefined) setRouteSelectedIndex(routeNumber);
     }
   }, [
+    edit,
     featureLink,
     photo,
     photoPath,
@@ -83,6 +88,7 @@ export const ClimbingCragDialog = ({
     routeNumber,
     router,
     routes,
+    setIsEditMode,
     setPhotoPath,
     setRouteSelectedIndex,
   ]);
@@ -109,6 +115,9 @@ export const ClimbingCragDialog = ({
   };
   const handleCancel = () => {
     setIsEditMode(false);
+    setTimeout(() => {
+      loadPhotoRelatedData();
+    });
   };
 
   const onNewRouteCreate = () => {
@@ -121,6 +130,11 @@ export const ClimbingCragDialog = ({
       open
       onClose={handleClose}
       disableEscapeKeyDown={isEditMode}
+      slotProps={{
+        paper: {
+          elevation: 0,
+        },
+      }}
     >
       <ClimbingCragDialogHeader onClose={handleClose} />
 
@@ -133,7 +147,7 @@ export const ClimbingCragDialog = ({
         ref={contentRef}
         onScroll={onScroll}
       >
-        <ClimbingView photo={photo} />
+        <ClimbingView />
       </DialogContent>
 
       {isEditMode && (
@@ -159,11 +173,7 @@ export const ClimbingCragDialog = ({
                   {t('editdialog.cancel_button')}
                 </Button>
 
-                <Button
-                  onClick={handleSave}
-                  variant="contained"
-                  color="primary"
-                >
+                <Button onClick={saveCrag} variant="contained" color="primary">
                   {t('editdialog.save_button_edit')}
                 </Button>
               </Stack>

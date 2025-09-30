@@ -1,13 +1,11 @@
 import React from 'react';
 import { Box, Chip, Stack } from '@mui/material';
-import { getOsmappLink, getReactKey } from '../../../services/helpers';
+import { getReactKey } from '../../../services/helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { PanelLabel } from '../Climbing/PanelLabel';
 import { MemberItem } from './MemberItem';
 import { ClimbingItem } from './ClimbingItem';
 import styled from '@emotion/styled';
-import { GradeSystemSelect } from '../Climbing/GradeSystemSelect';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
 import { Feature } from '../../../services/types';
 import { isRouteMaster } from '../../../utils';
 import { t } from '../../../services/intl';
@@ -21,24 +19,6 @@ const getHeading = (feature: Feature) => {
     return t('member_features.routes');
   }
   return t('member_features.subitems');
-};
-
-const PanelAddition = () => {
-  const { feature } = useFeatureContext();
-  const { userSettings, setUserSetting } = useUserSettingsContext();
-
-  if (feature.tags.climbing !== 'crag') {
-    return null;
-  }
-
-  return (
-    <GradeSystemSelect
-      setGradeSystem={(system) => {
-        setUserSetting('climbing.gradeSystem', system);
-      }}
-      selectedGradeSystem={userSettings['climbing.gradeSystem']}
-    />
-  );
 };
 
 const Ul = styled.ul`
@@ -68,7 +48,7 @@ export const MemberFeatures = () => {
   return (
     <Box mb={1}>
       <Box ml={-2} mr={-2}>
-        <PanelLabel addition={<PanelAddition />}>
+        <PanelLabel>
           <Stack direction="row" gap={1.5}>
             <div>{getHeading(feature)}</div>
             <Chip

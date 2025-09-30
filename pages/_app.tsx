@@ -9,11 +9,11 @@ import {
 import { UserThemeProvider } from '../src/helpers/theme';
 import { GlobalStyle } from '../src/helpers/GlobalStyle';
 import { doShortenerRedirect } from '../src/services/helpers';
-import { PROJECT_ID, PROJECT_NAME } from '../src/services/project';
+import { PROJECT_ID } from '../src/services/project';
 import { GoogleAnalytics } from '../src/components/App/google-analytics';
 import { Umami } from '../src/components/App/umami';
 import { SnackbarProvider } from '../src/components/utils/SnackbarContext';
-import { UserSettingsProvider } from '../src/components/utils/UserSettingsContext';
+import { UserSettingsProvider } from '../src/components/utils/userSettings/UserSettingsContext';
 import {
   MapStateProvider,
   View,
@@ -40,12 +40,15 @@ import { Climbing } from '../src/components/Climbing/Climbing';
 import Router from 'next/router';
 import { fetchSchemaTranslations } from '../src/services/tagging/translations';
 import Head from 'next/head';
+import { HotJar } from '../src/components/App/hotjar';
+import { TicksProvider } from '../src/components/utils/TicksContext';
 
 const getInitialToast = (featureFromRouter: Feature | '404') =>
   featureFromRouter === '404'
     ? {
         message: t('url_not_found_toast'),
         severity: 'warning' as const,
+        action: undefined,
       }
     : undefined;
 
@@ -100,22 +103,24 @@ const MyApp = (props: Props) => {
                     <StarsProvider>
                       <EditDialogProvider /* TODO supply router.query */>
                         <QueryClientProvider client={reactQueryClient}>
-                          <Head>
-                            <meta
-                              name="viewport"
-                              content="width=device-width, user-scalable=no, initial-scale=1"
-                            />
-                          </Head>
-                          <Loading />
-                          <SearchBox />
-                          <ResponsiveFeaturePanel />
-                          <HomepagePanel />
-                          <Climbing />
-                          <Map />
-                          <TitleAndMetaTags />
+                          <TicksProvider>
+                            <Head>
+                              <meta
+                                name="viewport"
+                                content="width=device-width, user-scalable=no, initial-scale=1"
+                              />
+                            </Head>
+                            <Loading />
+                            <SearchBox />
+                            <ResponsiveFeaturePanel />
+                            <HomepagePanel />
+                            <Climbing />
+                            <Map />
+                            <TitleAndMetaTags />
 
-                          {/* eslint-disable-next-line react/jsx-props-no-spreading */}
-                          <Component {...pageProps} />
+                            {/* eslint-disable-next-line react/jsx-props-no-spreading */}
+                            <Component {...pageProps} />
+                          </TicksProvider>
                         </QueryClientProvider>
                       </EditDialogProvider>
                     </StarsProvider>
@@ -129,7 +134,12 @@ const MyApp = (props: Props) => {
         </UserThemeProvider>
       </AppCacheProvider>
       <Umami />
-      {PROJECT_ID === 'openclimbing' && <GoogleAnalytics />}
+      {PROJECT_ID === 'openclimbing' && (
+        <>
+          <GoogleAnalytics />
+          <HotJar />
+        </>
+      )}
     </>
   );
 };

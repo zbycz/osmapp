@@ -4,7 +4,7 @@ import { IconButton, Stack } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { getInputTypeForKey } from '../../helpers';
 import { FastInput } from './helpers';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const useHidableDeleteButton = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);

@@ -61,6 +61,12 @@ export const osmappLayers: Layers = {
       'osm',
     ],
   },
+  shortbread: {
+    name: `${t('layers.basic')} Shortbread (beta)`,
+    type: 'basemap',
+    Icon: ExploreIcon,
+    attribution: ['osm'],
+  },
   makinaAfrica: {
     name: t('layers.makina_africa'),
     type: 'basemap',

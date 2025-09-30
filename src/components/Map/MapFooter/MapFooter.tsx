@@ -5,14 +5,16 @@ import styled from '@emotion/styled';
 import { IconButton, Tooltip } from '@mui/material';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { ClimbingLegend } from './ClimbingLegend';
-import { convertHexToRgba } from '../../utils/colorUtils';
 import { AttributionLinks } from './AttributionLinks';
 import { useIsClient, useMobileMode } from '../../helpers';
 import { useFeatureContext } from '../../utils/FeatureContext';
 
-const IconContainer = styled.div`
-  width: 20px;
+const IconContainer = styled.div<{ $isVisible: boolean }>`
+  width: ${({ $isVisible }) => ($isVisible ? '20px' : '0')};
   height: 20px;
+  transition: width 0.15s ease-out;
+  margin-left: -4px;
+  margin-right: 4px;
 `;
 
 const StyledIconButton = styled(IconButton)`
@@ -20,23 +22,20 @@ const StyledIconButton = styled(IconButton)`
   top: -5px;
 `;
 
-const FooterContainer = styled.div<{ $hasShadow: boolean }>`
+const FooterContainer = styled.div<{ $legendShown: boolean }>`
   pointer-events: all;
   border-radius: 8px;
-  padding: 6px;
-  color: ${({ theme }) => theme.palette.text.primary};
-  background-color: ${({ theme }) =>
-    convertHexToRgba(theme.palette.background.paper, 0.5)};
+  padding: 1px 4px;
+  color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(250, 250, 250, 0.5);
   backdrop-filter: blur(15px);
   -webkit-backdrop-filter: blur(15px);
-  ${({ $hasShadow }) =>
-    $hasShadow ? 'box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);' : ''}
+  margin-top: 4px;
 `;
 
 const Wrapper = styled.div`
-  padding: 0 4px;
   font-size: 12px;
-  color: ${({ theme }) => theme.palette.text.primary};
+  color: rgba(0, 0, 0, 0.5);
   font-weight: 400;
   text-align: left;
   display: flex;
@@ -45,18 +44,19 @@ const Wrapper = styled.div`
   justify-content: space-between;
 
   a {
-    color: ${({ theme }) => theme.palette.text.primary};
+    color: rgba(0, 0, 0, 0.8);
     text-decoration: underline;
   }
 `;
 
 const LegendExpandButton = ({ isVisible, setLegendShown }) => (
-  <IconContainer>
+  <IconContainer $isVisible={isVisible}>
     {isVisible && (
       <Tooltip title="Show climbing legend" enterDelay={1000}>
         <StyledIconButton
           size="small"
           edge="end"
+          color="inherit"
           onClick={() => {
             setLegendShown(true);
           }}
@@ -76,7 +76,7 @@ export const MapFooter = () => {
   const hasLegend = isMobileMode && featureShown ? false : hasClimbingLayer;
   const [legendShown, setLegendShown] = usePersistedState<boolean>(
     'isLegendVisible',
-    false,
+    true,
   );
   const isClient = useIsClient();
 
@@ -86,22 +86,25 @@ export const MapFooter = () => {
   }
 
   return (
-    <FooterContainer $hasShadow={hasLegend && legendShown}>
+    <>
       {hasLegend && (
         <ClimbingLegend
           isVisible={legendShown}
           setLegendShown={setLegendShown}
         />
       )}
-      <Wrapper>
-        <AttributionLinks />
-        {hasLegend && (
-          <LegendExpandButton
-            isVisible={!legendShown}
-            setLegendShown={setLegendShown}
-          />
-        )}
-      </Wrapper>
-    </FooterContainer>
+      <FooterContainer $legendShown={hasLegend && legendShown}>
+        <Wrapper>
+          <AttributionLinks />
+
+          {hasLegend && (
+            <LegendExpandButton
+              isVisible={!legendShown}
+              setLegendShown={setLegendShown}
+            />
+          )}
+        </Wrapper>
+      </FooterContainer>
+    </>
   );
 };

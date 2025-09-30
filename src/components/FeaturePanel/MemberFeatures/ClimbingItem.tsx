@@ -11,19 +11,19 @@ const Container = styled.div`
   margin: 0px -12px;
 `;
 
-export const ClimbingItem = ({
-  feature,
-  index,
-  cragFeature,
-}: {
+type Props = {
   feature: Feature;
   index: number;
   cragFeature: Feature;
-}) => {
+};
+
+export const ClimbingItem = ({ feature, index, cragFeature }: Props) => {
   const mobileMode = useMobileMode();
   const { setPreview } = useFeatureContext();
 
-  if (!feature) return null;
+  if (!feature) {
+    return null;
+  }
 
   const handleHover = () => feature.center && setPreview(feature);
 

@@ -7,49 +7,104 @@ import {
   Typography,
 } from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import DownloadIcon from '@mui/icons-material/Download';
 import styled from '@emotion/styled';
-import React, { useCallback, useState } from 'react';
-import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
-import { useEditContext } from '../EditContext';
-import { useBoolState } from '../../../helpers';
+import React from 'react';
+import { NwrIcon } from '../../NwrIcon';
+import { useEditContext } from '../context/EditContext';
+import { useLoadingState } from '../../../utils/useLoadingState';
+import { PoiIcon } from '../../../utils/icons/PoiIcon';
+import { allPresets } from '../../../../services/tagging/data';
+import { EditDataItem } from '../context/types';
+import { isDesktop } from '../../../helpers';
+import { findInItems } from '../context/utils';
+import { getDifficulties } from '../../../../services/tagging/climbing/routeGrade';
+import { ConvertedRouteDifficultyBadge } from '../../Climbing/ConvertedRouteDifficultyBadge';
 
-const useLoadingState = () => {
-  const [isLoading, start, stop] = useBoolState(false);
-  const timeout = React.useRef<NodeJS.Timeout>();
-  return {
-    isLoading,
-    startLoading: useCallback(() => {
-      timeout.current = setTimeout(start, 300);
-    }, [start]),
-    stopLoading: useCallback(() => {
-      if (timeout.current) {
-        clearTimeout(timeout.current);
-        timeout.current = undefined;
-      }
-      stop();
-    }, [stop]),
-  };
+const StyledListItem = styled(ListItem)`
+  &:hover {
+    background-color: ${({ theme }) => theme.palette.background.hover};
+    cursor: pointer;
+  }
+`;
+
+const StyledDivider = styled(Divider)`
+  &:last-of-type {
+    border: none;
+  }
+`;
+
+const StyledDownloadIcon = styled(DownloadIcon)`
+  font-size: 18px;
+`;
+
+const StyledPresetLabel = styled(Typography)`
+  display: none;
+  @media ${isDesktop} {
+    display: block;
+  }
+`;
+
+const getLabel = (dataItem: EditDataItem) => {
+  if (dataItem) {
+    const hasGrade = dataItem.tagsEntries.find(([k]) =>
+      k.startsWith('climbing:grade:'),
+    );
+    const routeDifficulties = getDifficulties(dataItem.tags);
+    return (
+      <Stack
+        direction="row"
+        gap={1}
+        alignItems="center"
+        justifyContent="space-between"
+        width="100%"
+        mr={1}
+      >
+        <Stack direction="column">
+          <Typography>{dataItem.tags.name} </Typography>
+          <StyledPresetLabel color="secondary" variant="caption">
+            {dataItem.presetLabel}
+          </StyledPresetLabel>
+        </Stack>
+        {hasGrade && (
+          <ConvertedRouteDifficultyBadge
+            routeDifficulties={routeDifficulties}
+          />
+        )}
+      </Stack>
+    );
+  }
+  return undefined;
 };
 
-const StyledListItem = styled(ListItem)(({ theme }) => ({
-  ':hover': {
-    backgroundColor: theme.palette.background.hover,
-    cursor: 'pointer',
-  },
-}));
+const PoiIconForItem = ({ dataItem }: { dataItem: EditDataItem }) =>
+  dataItem ? (
+    <PoiIcon
+      tags={allPresets[dataItem.presetKey]?.tags}
+      size={16}
+      middle
+      themed
+    />
+  ) : (
+    <StyledDownloadIcon color="secondary" />
+  );
 
 type Props = {
-  label?: string;
   shortId: string;
   onClick: (e: React.MouseEvent) => Promise<void>;
+  originalLabel?: string;
   role?: string;
 };
 
-export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
+export const FeatureRow = ({
+  shortId,
+  onClick,
+  originalLabel,
+  role,
+}: Props) => {
   const { isLoading, startLoading, stopLoading } = useLoadingState();
   const { items } = useEditContext();
-  const isAlreadyInItems = items.find((item) => item.shortId === shortId);
-
+  const dataItem = findInItems(items, shortId);
   const handleClick = (e: React.MouseEvent) => {
     startLoading();
     onClick(e).then(() => {
@@ -68,10 +123,9 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
         >
           <ListItemText>
             <Stack direction="row" gap={2} alignItems="center">
-              <Typography color={isAlreadyInItems ? 'secondary' : undefined}>
-                {label || shortId}
-              </Typography>
-              <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
+              <PoiIconForItem dataItem={dataItem} />
+              {getLabel(dataItem) || originalLabel || shortId}
+              <NwrIcon shortId={shortId} hideNode />
               {role && (
                 <>
                   <div style={{ flex: '1' }} />
@@ -80,10 +134,14 @@ export const FeatureRow = ({ label, shortId, onClick, role }: Props) => {
               )}
             </Stack>
           </ListItemText>
-          {isLoading ? <CircularProgress size={14} /> : <ChevronRightIcon />}
+          {isLoading ? (
+            <CircularProgress size={14} />
+          ) : (
+            <ChevronRightIcon color="primary" />
+          )}
         </Stack>
       </StyledListItem>
-      <Divider />
+      <StyledDivider />
     </>
   );
 };

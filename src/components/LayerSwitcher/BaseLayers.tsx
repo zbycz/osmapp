@@ -14,7 +14,6 @@ import {
 import React from 'react';
 import { ListItemButton, ListItemText, Tooltip } from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
-import { TooltipButton } from '../utils/TooltipButton';
 
 const OutsideOfView = () => (
   <Tooltip title="Not visible currently" arrow placement="top-end">

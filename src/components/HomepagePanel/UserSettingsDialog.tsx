@@ -13,16 +13,48 @@ import React from 'react';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { PanelLabel } from '../FeaturePanel/Climbing/PanelLabel';
 import { GradeSystemSelect } from '../FeaturePanel/Climbing/GradeSystemSelect';
-import { useUserSettingsContext } from '../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../utils/userSettings/UserSettingsContext';
 import { TickStyleSelect } from '../FeaturePanel/Climbing/Ticks/TickStyleSelect';
 import { t } from '../../services/intl';
+import { usePersistedState } from '../utils/usePersistedState';
+import { LOCAL_STORAGE_CACHE } from '../../services/fetchCache';
 
 type Props = {
   onClose: (event: unknown) => void;
   isOpened: boolean;
 };
 
+const StoreRequests = () => {
+  const [value, setValue] = usePersistedState(
+    'store_requests_to_local_storage',
+    false,
+  );
+
+  return (
+    <ListItem>
+      <ListItemText>
+        Develop: store all network requests (reload needed)
+      </ListItemText>
+      <Switch
+        color="primary"
+        edge="end"
+        onChange={() => {
+          setValue((prev) => {
+            if (prev) {
+              LOCAL_STORAGE_CACHE.clear();
+            }
+
+            return !prev;
+          });
+        }}
+        checked={!!value}
+      />
+    </ListItem>
+  );
+};
+
 // TODO refactor this - extract member functions
+
 // eslint-disable-next-line max-lines-per-function
 export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
   const { setUserSetting, userSettings } = useUserSettingsContext();
@@ -66,12 +98,7 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
             <ListItemText>
               {t('user_settings.default_grade_system')}
             </ListItemText>
-            <GradeSystemSelect
-              setGradeSystem={(gradeSystem) => {
-                setUserSetting('climbing.gradeSystem', gradeSystem);
-              }}
-              selectedGradeSystem={userSettings['climbing.gradeSystem']}
-            />
+            <GradeSystemSelect />
           </ListItem>
           <ListItem>
             <ListItemText>
@@ -99,6 +126,23 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
               onChange={(e) => {
                 setUserSetting('climbing.defaultClimbingStyle', e.target.value);
               }}
+            />
+          </ListItem>
+
+          <ListItem>
+            <ListItemText>
+              {t('user_settings.show_related_photo_by_route_click')}
+            </ListItemText>
+            <Switch
+              color="primary"
+              edge="end"
+              onChange={(e) => {
+                setUserSetting(
+                  'climbing.showRelatedPhotoByRouteClick',
+                  e.target.checked,
+                );
+              }}
+              checked={userSettings['climbing.showRelatedPhotoByRouteClick']}
             />
           </ListItem>
 
@@ -158,6 +202,8 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
               </MenuItem>
             </Select>
           </ListItem>
+
+          <StoreRequests />
         </List>
       </DialogContent>
     </Dialog>

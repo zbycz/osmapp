@@ -8,9 +8,9 @@ import { PathsSvg } from '../PathsSvg';
 
 import { HEIGHT } from '../helpers';
 import {
+  ImageClickHandler,
   initialSize,
   UncertainCover,
-  useGetOnClick,
   useImgSizeOnload,
 } from './helpers';
 import { PanoramaImg } from './PanoramaImg';
@@ -18,6 +18,7 @@ import { InfoButton } from './InfoButton';
 import { ImageDef, isTag } from '../../../../services/types';
 import { isMobileMode } from '../../../helpers';
 import { css } from '@emotion/react';
+import { PANEL_GAP } from '../../../utils/PanelHelpers';
 
 const Img = styled.img<{ $hasPaths: boolean }>`
   margin-left: 50%;
@@ -26,18 +27,19 @@ const Img = styled.img<{ $hasPaths: boolean }>`
   ${({ $hasPaths }) => $hasPaths && `opacity: 0.9;`}
 `;
 
+// example wide image: relation/1515375
 const CROP_IMAGE_CSS = css`
   overflow: hidden;
-  max-width: calc(410px - 2 * 8px);
+  max-width: calc(410px - 2 * ${PANEL_GAP});
   @media ${isMobileMode} {
-    max-width: calc(100% - 2 * 8px);
+    max-width: calc(100% - 2 * ${PANEL_GAP});
   }
 
   &:has(+ div) {
-    // leave some space if there is another image on the right
-    max-width: calc(410px - 2 * 8px - 15px);
+    // if there is another image on the right, show 15px of it
+    max-width: calc(410px - 2 * ${PANEL_GAP} - 15px);
     @media ${isMobileMode} {
-      max-width: calc(100% - 2 * 8px - 15px);
+      max-width: calc(100% - 2 * ${PANEL_GAP} - 15px);
     }
   }
 `;
@@ -49,9 +51,9 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
   vertical-align: top;
   overflow: hidden;
 
-  margin-right: 12px;
+  margin-right: ${PANEL_GAP};
   &:first-of-type {
-    margin-left: 16px;
+    margin-left: ${PANEL_GAP};
   }
 
   ${({ onClick }) => onClick && `cursor: pointer;`}
@@ -61,12 +63,13 @@ const ImageWrapper = styled.div<{ $hasPaths: boolean }>`
 type Props = {
   def: ImageDef;
   image: ImageType;
+  onClick: ImageClickHandler;
   alt?: string;
 };
 
-export const Image = ({ def, image, alt }: Props) => {
+export const Image = ({ def, image, onClick, alt }: Props) => {
   const { imgRef, size, onPhotoLoad } = useImgSizeOnload();
-  const onClick = useGetOnClick(def);
+
   const hasPaths =
     isTag(def) && !!(def.path?.length || def.memberPaths?.length);
 

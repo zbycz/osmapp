@@ -15,6 +15,10 @@ import { getPresetOptions } from './options/preset';
 import { Option } from './types';
 import { getOsmOptions } from './options/osm';
 import { getCoordsOption } from './options/coords';
+import {
+  CLIMBING_SEARCH_ABORTABLE_QUEUE,
+  fetchClimbingSearchOptions,
+} from './options/climbing';
 
 const getMatchedOptions = (inputValue: string, stars: Star[]) => {
   if (inputValue === '') {
@@ -60,7 +64,7 @@ export const getFirstOption = async (
     return before[0];
   }
 
-  const geocoderOptions = await fetchGeocoderOptions(query, view);
+  const geocoderOptions = await fetchGeocoderOptions(query, view, undefined);
   if (geocoderOptions.length > 0) {
     return geocoderOptions[0];
   }
@@ -78,6 +82,7 @@ export const useGetOptions = (
     (async () => {
       try {
         abortFetch(GEOCODER_ABORTABLE_QUEUE);
+        abortFetch(CLIMBING_SEARCH_ABORTABLE_QUEUE);
 
         const options = getMatchedOptions(inputValue, stars);
         if (options) {
@@ -92,17 +97,21 @@ export const useGetOptions = (
         setOptions([...before, { type: 'loader' }]);
 
         await debounceGeocoderOrReject(400);
-        const geocoderOptions = await fetchGeocoderOptions(
-          inputValue,
-          view,
-          GEOCODER_ABORTABLE_QUEUE,
-        );
+        const [geocoderOptions, climbingOptions] = await Promise.all([
+          fetchGeocoderOptions(inputValue, view),
+          fetchClimbingSearchOptions(inputValue, view),
+        ]);
 
         if (inputValue !== valueRef.current) {
           return; // This blocks rendering of old result, when user already changed input
         }
 
-        setOptions([...before, ...geocoderOptions, ...restPresets]);
+        setOptions([
+          ...before,
+          ...climbingOptions,
+          ...geocoderOptions,
+          ...restPresets,
+        ]);
       } catch (e) {
         if (e instanceof GeocoderDebounced || e instanceof GeocoderAborted) {
           return;

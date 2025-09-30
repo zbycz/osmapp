@@ -1,5 +1,5 @@
 import { getImagesFromCenter } from './images/getImageDefs';
-import { Feature, FeatureTags, LonLat, LonLatRounded, OsmType } from './types';
+import { Feature, FeatureTags, LonLat, LonLatRounded } from './types';
 
 let nextId = 0;
 export const getNewId = () => {
@@ -8,7 +8,7 @@ export const getNewId = () => {
 };
 
 export const getCoordsFeature = ([lon, lat]: LonLatRounded): Feature => {
-  const center = [lon, lat].map(parseFloat);
+  const center = [lon, lat].map(parseFloat) as LonLat;
   return {
     type: 'Feature',
     point: true,

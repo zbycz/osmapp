@@ -1,180 +1,189 @@
-import {
-  FeatureGeometry,
-  FeatureTags,
-  GeometryCollection,
-  LineString,
-  OsmId,
-  Point,
-} from '../../../services/types';
-import { join } from '../../../utils';
+import { FeatureGeometry, OsmId, Point } from '../../../services/types';
 import { getCenter } from '../../../services/getCenter';
-
-type OsmType = 'node' | 'way' | 'relation';
-type OsmNode = {
-  type: 'node';
-  id: number;
-  lat: number;
-  lon: number;
-  tags?: Record<string, string>;
-};
-type OsmWay = {
-  type: 'way';
-  id: number;
-  nodes: number[];
-  tags?: Record<string, string>;
-};
-type OsmRelation = {
-  type: 'relation';
-  id: number;
-  members: {
-    type: OsmType;
-    ref: number;
-    role: string;
-  }[];
-  tags?: Record<string, string>;
-  center?: { lat: number; lon: number }; // only for overpass `out center` queries
-};
-type OsmItem = OsmNode | OsmWay | OsmRelation;
-export type OsmResponse = {
-  elements: OsmItem[];
-  osm3s: { timestamp_osm_base: string }; // overpass only
-};
-
-export type GeojsonFeature<T extends FeatureGeometry = FeatureGeometry> = {
-  type: 'Feature';
-  id: number;
-  osmMeta: OsmId;
-  tags: FeatureTags;
-  properties: {
-    climbing?: string;
-    osmappRouteCount?: number;
-    osmappHasImages?: boolean;
-    osmappType?: 'node' | 'way' | 'relation';
-    osmappLabel?: string;
-  };
-  geometry: T;
-  center?: number[];
-  members?: OsmRelation['members'];
-};
-
-type Lookup = {
-  node: Record<number, GeojsonFeature<Point>>;
-  way: Record<number, GeojsonFeature<LineString>>;
-  relation: Record<number, GeojsonFeature<GeometryCollection>>;
-};
+import { getHistogram, sumMemberHistograms } from './histogram';
+import {
+  GeojsonFeature,
+  Lookup,
+  OsmItem,
+  OsmNode,
+  OsmRelation,
+  OsmResponse,
+  OsmWay,
+} from './types';
+import { getUrlOsmId } from '../../../services/helpers';
 
 const convertOsmIdToMapId = (apiId: OsmId) => {
   const osmToMapType = { node: 0, way: 1, relation: 4 };
   return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
 };
 
-const getItems = (elements: OsmItem[]) => {
+const getItems = (elements: OsmItem[], log: (message: string) => void) => {
   const nodes: OsmNode[] = [];
   const ways: OsmWay[] = [];
   const relations: OsmRelation[] = [];
-  elements.forEach((element) => {
+  for (const element of elements) {
     if (element.type === 'node') {
       nodes.push(element);
     } else if (element.type === 'way') {
       ways.push(element);
     } else if (element.type === 'relation') {
-      relations.push(element);
+      if (element.members) {
+        relations.push(element);
+      } else {
+        log(`Skipping relation without members: relation/${element.id}`);
+      }
     }
-  });
+  }
   return { nodes, ways, relations };
 };
 
-const numberToSuperScript = (number?: number) =>
-  number && number > 1
-    ? number.toString().replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[+d])
-    : '';
-
-const getLabel = (tags: FeatureTags, osmappRouteCount: number) =>
-  join(tags?.name, '\n', numberToSuperScript(osmappRouteCount));
-
-const getRouteNumberFromTags = (element: OsmItem) => {
-  // TODO sum all types
-  const number = parseFloat(element.tags['climbing:sport'] ?? '0');
-
-  // can be eg. "yes" .. eg. relation/15056469
-  return Number.isNaN(number) ? 1 : number;
+const safeParseFloat = (value: string | undefined): number => {
+  const num = parseFloat(value ?? '0');
+  return Number.isNaN(num) ? 0 : num;
 };
 
-const convert = <T extends OsmItem, TGeometry extends FeatureGeometry>(
-  element: T,
-  geometryFn: (element: T) => TGeometry,
-): GeojsonFeature<TGeometry> => {
+const getRouteNumberFromTags = ({ tags }: OsmItem) => {
+  const sum =
+    safeParseFloat(tags['climbing:sport']) +
+    safeParseFloat(tags['climbing:trad']) +
+    safeParseFloat(tags['climbing:ice']) +
+    safeParseFloat(tags['climbing:multipitch']);
+
+  return sum > 0 ? sum : 1; // default 1 for crag with unknown count (needed for proper z-index in map)
+};
+
+const isRoute = (member: GeojsonFeature) =>
+  ['route', 'route_bottom'].includes(member.tags.climbing);
+
+const hasOwnImages = (element: OsmItem) =>
+  Object.keys(element.tags ?? {}).some((key) =>
+    key.startsWith('wikimedia_commons'),
+  );
+
+const hasMemberImages = (member: GeojsonFeature) =>
+  member?.properties.hasImages;
+
+const getCommonFields = (
+  element: OsmItem,
+  geometry: FeatureGeometry,
+): GeojsonFeature => {
   const { type, id, tags = {} } = element;
-  const geometry = geometryFn(element);
   const center = getCenter(geometry) ?? undefined;
-  const osmappRouteCount =
-    element.tags?.climbing === 'crag'
-      ? Math.max(
-          element.type === 'relation'
-            ? element.members.filter((member) => member.role === '').length
-            : 0,
-          getRouteNumberFromTags(element),
-        )
-      : undefined;
-  const properties = {
-    climbing: tags?.climbing,
-    name: tags?.name,
-    osmappType: type,
-    osmappRouteCount,
-    osmappLabel: getLabel(tags, osmappRouteCount),
-    osmappHasImages: Object.keys(tags).some((key) =>
-      key.startsWith('wikimedia_commons'),
-    ),
-  };
 
   return {
     type: 'Feature',
     id: convertOsmIdToMapId({ type, id }),
     osmMeta: { type, id },
     tags,
-    properties,
     geometry,
     center,
     members: element.type === 'relation' ? element.members : undefined,
+    properties: {},
   };
 };
 
-const getNodeGeomFn =
-  () =>
-  (node: any): Point => ({
+const getNodeWayProperties = (element: OsmNode | OsmWay) => {
+  const { tags = {} } = element;
+
+  if (
+    tags.climbing === 'crag' ||
+    tags.climbing === 'area' ||
+    tags.natural === 'cliff' ||
+    tags.natural === 'peak'
+  ) {
+    return {
+      hasImages: hasOwnImages(element),
+      routeCount: getRouteNumberFromTags(element),
+    };
+  }
+
+  return {
+    hasImages: hasOwnImages(element),
+  };
+};
+
+const convertNode = (node: OsmNode): GeojsonFeature => {
+  const geometry: Point = {
     type: 'Point',
     coordinates: [node.lon, node.lat],
-  });
-
-const getWayGeomFn =
-  (lookup: Lookup) =>
-  ({ nodes }: OsmWay): LineString => ({
-    type: 'LineString' as const,
-    coordinates: nodes
-      .map((ref) => lookup.node[ref]?.geometry?.coordinates)
-      .filter(Boolean), // some nodes may be missing
-  });
-
-const getRelationGeomFn =
-  (lookup: Lookup) =>
-  ({ members, center }: OsmRelation): FeatureGeometry => {
-    const geometries = members
-      .map(({ type, ref }) => lookup[type][ref]?.geometry)
-      .filter(Boolean); // some members may be undefined in first pass
-
-    return geometries.length
-      ? {
-          type: 'GeometryCollection',
-          geometries,
-        }
-      : center
-        ? { type: 'Point', coordinates: [center.lon, center.lat] }
-        : undefined;
   };
 
-const addToLookup = <T extends FeatureGeometry>(
-  items: GeojsonFeature<T>[],
+  return {
+    ...getCommonFields(node, geometry),
+    properties: getNodeWayProperties(node),
+  };
+};
+
+const convertWay = (way: OsmWay, lookup: Lookup): GeojsonFeature => {
+  const geometry = {
+    type: 'LineString' as const,
+    coordinates: way.nodes
+      .map((ref) => lookup.node[ref]?.geometry?.coordinates)
+      .filter(Boolean),
+  };
+
+  return {
+    ...getCommonFields(way, geometry),
+    properties: getNodeWayProperties(way),
+  };
+};
+
+const getRelationProperties = (
+  relation: OsmRelation,
+  members: GeojsonFeature[],
+) => {
+  const { tags = {} } = relation;
+
+  if (tags.climbing === 'crag') {
+    return {
+      hasImages: hasOwnImages(relation) || members.some(hasMemberImages),
+      histogram: getHistogram(members),
+      routeCount: Math.max(
+        members.filter(isRoute).length,
+        getRouteNumberFromTags(relation),
+      ),
+    };
+  }
+
+  if (tags.climbing === 'area') {
+    return {
+      hasImages: hasOwnImages(relation) || members.some(hasMemberImages),
+      histogram: sumMemberHistograms(members),
+      routeCount: members
+        .map((member) => member?.properties.routeCount ?? 1)
+        .reduce((acc, count) => acc + count, 0),
+    };
+  }
+
+  return {};
+};
+
+const lookupRelationMembers = (element: OsmItem, lookup: Lookup) =>
+  element.type === 'relation'
+    ? element.members.map(({ type, ref }) => lookup[type][ref]).filter(Boolean) // some members may be undefined in first pass
+    : [];
+
+const convertRelation = (
+  relation: OsmRelation,
   lookup: Lookup,
+): GeojsonFeature => {
+  const members = lookupRelationMembers(relation, lookup); // TODO lookup-members + common-fields are repeated in each pass (unneccesary)
+  const geometry = members.length
+    ? {
+        type: 'GeometryCollection' as const,
+        geometries: members.map(({ geometry }) => geometry),
+      }
+    : undefined;
+
+  return {
+    ...getCommonFields(relation, geometry),
+    properties: getRelationProperties(relation, members),
+  };
+};
+
+const addToLookup = <T extends FeatureGeometry>(
+  lookup: Lookup,
+  items: GeojsonFeature<T>[],
 ) => {
   items.forEach((item) => {
     // @ts-ignore
@@ -182,65 +191,50 @@ const addToLookup = <T extends FeatureGeometry>(
   });
 };
 
-const getRelationWithAreaCount = (
-  relations: GeojsonFeature[],
-  lookup: Record<string, Record<string, GeojsonFeature>>,
-) =>
-  relations.map((relation) => {
-    if (relation.tags?.climbing === 'area') {
-      const members = relation.members.map(
-        ({ type, ref }) => lookup[type][ref]?.properties,
-      );
-      const osmappRouteCount = members
-        .map((member) => member?.osmappRouteCount ?? 0)
-        .reduce((acc, count) => acc + count);
-      const osmappHasImages = members
-        .map((member) => member?.osmappHasImages)
-        .some((value) => value === true);
-
-      return {
-        ...relation,
-        properties: {
-          ...relation.properties,
-          osmappRouteCount,
-          osmappHasImages,
-          osmappLabel: getLabel(relation.tags, osmappRouteCount),
-        },
-      };
+const addParentIds = (lookup: Lookup, log: (message: string) => void) => {
+  for (const relation of Object.values(lookup.relation)) {
+    if (['area', 'crag'].includes(relation.tags?.climbing)) {
+      for (const member of relation.members ?? []) {
+        const child = lookup[member.type][member.ref]; // we know, that in lookup is the same object as in nodesOut/waysOut
+        if (child) {
+          if (child.properties.parentId) {
+            log(
+              `Child ${getUrlOsmId(child.osmMeta)} has more parents: ${child.properties.parentId} and ${relation.osmMeta.id}`,
+            );
+          }
+          child.properties.parentId = relation.osmMeta.id;
+        }
+      }
     }
+  }
+};
 
-    return relation;
-  });
-
-export const overpassToGeojsons = (response: OsmResponse) => {
-  const { nodes, ways, relations } = getItems(response.elements);
-
+export const overpassToGeojsons = (
+  response: OsmResponse,
+  log: (message: string) => void,
+) => {
   const lookup = { node: {}, way: {}, relation: {} } as Lookup;
+  const { nodes, ways, relations } = getItems(response.elements, log);
 
-  const NODE_GEOM = getNodeGeomFn();
-  const nodesOut = nodes.map((node) => convert(node, NODE_GEOM));
-  addToLookup(nodesOut, lookup);
+  addToLookup(lookup, nodes.map(convertNode));
 
-  const WAY_GEOM = getWayGeomFn(lookup);
-  const waysOut = ways.map((way) => convert(way, WAY_GEOM));
-  addToLookup(waysOut, lookup);
-
-  // first pass
-  const RELATION_GEOM1 = getRelationGeomFn(lookup);
-  const relationsOut1 = relations.map((relation) =>
-    convert(relation, RELATION_GEOM1),
-  );
-  addToLookup(relationsOut1, lookup);
-
-  // second pass for climbing=area geometries
-  // TODO: loop while number of geometries changes
-  // TODO: update only geometries (?)
-  const RELATION_GEOM2 = getRelationGeomFn(lookup);
-  const relationsOut2 = relations.map((relation) =>
-    convert(relation, RELATION_GEOM2),
+  addToLookup(
+    lookup,
+    ways.map((way) => convertWay(way, lookup)),
   );
 
-  const relationsOut3 = getRelationWithAreaCount(relationsOut2, lookup);
+  for (let i = 0; i < 3; i++) {
+    addToLookup(
+      lookup,
+      relations.map((relation) => convertRelation(relation, lookup)),
+    );
+  }
 
-  return { node: nodesOut, way: waysOut, relation: relationsOut3 };
+  addParentIds(lookup, log);
+
+  return {
+    node: Object.values(lookup.node),
+    way: Object.values(lookup.way),
+    relation: Object.values(lookup.relation),
+  };
 };

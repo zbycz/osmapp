@@ -1,17 +1,18 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 
 import styled from '@emotion/styled';
 import dynamic from 'next/dynamic';
 import BugReport from '@mui/icons-material/BugReport';
-import { Button, CircularProgress } from '@mui/material';
-import { isDesktop, useBoolState } from '../helpers';
+import { Button, CircularProgress, Stack } from '@mui/material';
+import { isDesktop } from '../helpers';
 import { MapFooter } from './MapFooter/MapFooter';
 import { SHOW_PROTOTYPE_UI } from '../../config.mjs';
 import { LayerSwitcherButton } from '../LayerSwitcher/LayerSwitcherButton';
 import { MaptilerLogo } from './MapFooter/MaptilerLogo';
-import { TopMenu } from './TopMenu/TopMenu';
+import { TopMenu } from './HamburgerMenu/TopMenu';
 import { useMapStateContext } from '../utils/MapStateContext';
 import { Weather } from './Weather/Weather';
+import { MapFilter } from './MapFilter/MapFilter';
 
 const BrowserMapDynamic = dynamic(() => import('./BrowserMap'), {
   ssr: false,
@@ -35,9 +36,9 @@ const Spinner = styled(CircularProgress)`
 
 const TopRight = styled.div`
   position: absolute;
-  z-index: 1000;
+  z-index: 100;
   padding: 10px;
-  right: 0;
+  right: -4px;
   top: 62px;
 
   @media ${isDesktop} {
@@ -45,20 +46,23 @@ const TopRight = styled.div`
   }
 `;
 
-const BottomRight = styled.div`
+const BottomLeft = styled.div`
   position: absolute;
-  right: 0;
   bottom: 0;
-  z-index: 1000;
-  text-align: right;
   pointer-events: none;
   z-index: 999;
-
+  left: 0px;
   display: flex;
-  gap: 4px;
   flex-direction: column;
-  align-items: end;
-  padding: 0 4px 4px 4px;
+  align-items: flex-start;
+  padding: 0 0 4px 4px;
+`;
+const BottomRight = styled.div`
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  pointer-events: none;
+  z-index: 998;
 `;
 
 const BugReportButton = () => (
@@ -77,7 +81,8 @@ const NoscriptMessage = () => (
 );
 
 const Map = () => {
-  const { mapLoaded } = useMapStateContext();
+  const { mapLoaded, activeLayers } = useMapStateContext();
+  const hasClimbingLayer = activeLayers.includes('climbing');
 
   return (
     <>
@@ -86,13 +91,18 @@ const Map = () => {
       <NoscriptMessage />
       <TopRight>
         <TopMenu />
-        <LayerSwitcherDynamic />
       </TopRight>
-      <BottomRight>
+      <BottomLeft>
         {SHOW_PROTOTYPE_UI && <BugReportButton />}
         <MaptilerLogo />
         <Weather />
         <MapFooter />
+      </BottomLeft>
+      <BottomRight>
+        <Stack direction="row" alignItems="center" gap={1}>
+          {hasClimbingLayer && <MapFilter />}
+          <LayerSwitcherDynamic />
+        </Stack>
       </BottomRight>
     </>
   );

@@ -6,53 +6,31 @@ import { PulsedPoint } from './Points/PulsedPoint';
 import { Sling } from './Points/Sling';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { Anchor } from './Points/Anchor';
-import { ClimbingRoute } from '../types';
 import { UnfinishedPoint } from './Points/UnfinishedPoint';
 
 type Props = {
-  route: ClimbingRoute;
-  routeNumber: number;
-  onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
+  routeIndex: number;
 };
 
-export const RouteMarks = ({
-  route,
-  routeNumber,
-  onPointInSelectedRouteClick,
-}: Props) => {
+export const RouteMarks = ({ routeIndex }: Props) => {
   const {
     getPixelPosition,
     isPointSelected,
-    getMachine,
+    machine,
     getPathForRoute,
     isRouteSelected,
-    pointElement,
-    isPointMoving,
-    setPointElement,
-    setPointSelectedIndex,
-    setIsPointMoving,
-    setIsPointClicked,
     isOtherRouteSelected,
     isEditMode,
+    routes,
   } = useClimbingContext();
-  const isSelected = isRouteSelected(routeNumber);
-  const isOtherSelected = isOtherRouteSelected(routeNumber);
+  const isSelected = isRouteSelected(routeIndex);
+  const isOtherSelected = isOtherRouteSelected(routeIndex);
+  const route = routes[routeIndex];
+  const path = getPathForRoute(route);
+
   return (
     <>
-      {getPathForRoute(route).map(({ x, y, type }, index) => {
-        const onMarkedPointClick = (e: any) => {
-          // @TODO unify with Point.tsx
-          if (!isPointMoving) {
-            onPointInSelectedRouteClick(e);
-            setPointElement(pointElement !== null ? null : e.currentTarget);
-            setPointSelectedIndex(index);
-            setIsPointMoving(false);
-            setIsPointClicked(false);
-            e.stopPropagation();
-            e.preventDefault();
-          }
-        };
-
+      {path.map(({ x, y, type }, index) => {
         const isBoltVisible = !isOtherSelected && type === 'bolt';
         const isAnchorVisible = !isOtherSelected && type === 'anchor';
         const isSlingVisible = !isOtherSelected && type === 'sling';
@@ -63,7 +41,6 @@ export const RouteMarks = ({
         const position = getPixelPosition({ x, y, units: 'percentage' });
         const isActualPointSelected = isSelected && isPointSelected(index);
         const pointerEvents = isSelected || isEditMode ? 'auto' : 'none';
-        const machine = getMachine();
         const isThisRouteEditOrExtendMode =
           (machine.currentStateName === 'extendRoute' ||
             machine.currentStateName === 'pointMenu' ||
@@ -73,7 +50,7 @@ export const RouteMarks = ({
         const xOffset = isSelected && isEditMode ? 15 : 0;
         return (
           // eslint-disable-next-line react/no-array-index-key
-          <React.Fragment key={`${routeNumber}-${index}-${x}-${y}`}>
+          <React.Fragment key={`${routeIndex}-${index}-${x}-${y}`}>
             {isThisRouteEditOrExtendMode && <PulsedPoint x={x} y={y} />}
 
             {isBoltVisible && (
@@ -82,7 +59,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             {isPitonVisible && (
@@ -91,7 +68,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             {isSlingVisible && (
@@ -100,7 +77,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             {isAnchorVisible && (
@@ -109,7 +86,7 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             {isUnfinishedPointVisible && (
@@ -118,16 +95,15 @@ export const RouteMarks = ({
                 y={position.y}
                 isPointSelected={isActualPointSelected}
                 pointerEvents={pointerEvents}
-                onClick={onMarkedPointClick}
+                pointIndex={index}
               />
             )}
             <Point
               x={position.x}
               y={position.y}
               type={type}
-              onPointInSelectedRouteClick={onPointInSelectedRouteClick}
               index={index}
-              routeNumber={routeNumber}
+              routeIndex={routeIndex}
             />
           </React.Fragment>
         );

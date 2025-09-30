@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useRef } from 'react';
 import styled from '@emotion/styled';
 import { Global, css } from '@emotion/react';
 import React, { Ref, useState } from 'react';
@@ -61,7 +62,7 @@ export const Drawer = ({
   defaultOpen = false,
   scrollRef,
 }: Props) => {
-  const newRef = React.useRef<HTMLDivElement>(null);
+  const newRef = useRef<HTMLDivElement>(null);
   const ref = scrollRef || newRef;
   const [open, setOpen] = useState(defaultOpen);
 

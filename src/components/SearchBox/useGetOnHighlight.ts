@@ -31,5 +31,9 @@ export const useGetOnHighlight = () => {
     if (option.type === 'geocoder' && option.geocoder.geometry?.coordinates) {
       setPreview(getGeocoderSkeleton(option));
     }
+    if (option.type === 'climbing') {
+      const { lat, lon } = option.climbing;
+      setPreview({ center: [lon, lat] } as Feature); // TODO fix setPreview to accept only coordinates
+    }
   };
 };

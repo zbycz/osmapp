@@ -4,105 +4,132 @@ import { Scrollbars } from 'react-custom-scrollbars';
 import Link from 'next/link';
 import { intl, t } from '../../services/intl';
 import React from 'react';
-import { Typography } from '@mui/material';
+import { useFeatureContext } from '../utils/FeatureContext';
+import { Feature, LonLat } from '../../services/types';
 
 const HOMEPAGE_GALLERY_HEIGHT = 200;
 
-const data = [
+type GalleryItemType = {
+  href: string;
+  src: string;
+  label: string;
+  center: LonLat;
+};
+
+const data: GalleryItemType[] = [
   {
     href: '/relation/17262675',
     src: '/images/homepage/hlubocepske-plotny',
-    children: 'Hlubočepské plotny 🇨🇿',
+    label: 'Hlubočepské plotny 🇨🇿',
+    center: [14.3927293, 50.0441017],
   },
   {
     href: '/relation/17696060',
     src: '/images/homepage/frankenjura',
-    children: 'Frankenjura 🇩🇪',
+    label: 'Frankenjura 🇩🇪',
+    center: [11.3682785, 49.7465462],
   },
   {
     href: '/relation/17470613',
     src: '/images/homepage/alkazar',
-    children: 'Alkazar 🇨🇿',
+    label: 'Alkazar 🇨🇿',
+    center: [14.1244611, 49.950313],
   },
   {
     href: '/relation/19250793',
     src: '/images/homepage/sokoliki',
-    children: 'Sokoliki 🇵🇱',
+    label: 'Sokoliki 🇵🇱',
+    center: [15.8679484, 50.8674463],
   },
   {
     href: '/relation/14297763',
     src: '/images/homepage/velka',
-    children: 'Velká (Vltavská žula) 🇨🇿',
+    label: 'Velká (Vltavská žula) 🇨🇿',
+    center: [14.2516807, 49.6666024],
   },
   {
     href: '/relation/18501782',
     src: '/images/homepage/geyikbayiri',
-    children: 'Geyikbayırı 🇹🇷',
+    label: 'Geyikbayırı 🇹🇷',
+    center: [30.4868349, 36.8754952],
   },
   {
     href: '/relation/17130099',
     src: '/images/homepage/roviste',
-    children: 'Roviště 🇨🇿',
+    label: 'Roviště 🇨🇿',
+    center: [14.2556371, 49.660973],
   },
   {
     href: '/relation/19257709',
     src: '/images/homepage/szklarska-poreba',
-    children: 'Szklarska Poręba 🇵🇱',
+    label: 'Szklarska Poręba 🇵🇱',
+    center: [15.5108783, 50.8266512],
   },
   {
     href: '/relation/18647139',
     src: '/images/homepage/san-bartolo',
-    children: 'San Bartolo 🇪🇸',
+    label: 'San Bartolo 🇪🇸',
+    center: [-5.7209517, 36.0889594],
   },
   {
     href: '/relation/18452584',
     src: '/images/homepage/rochlitz',
-    children: 'Rochlitz 🇩🇪',
+    label: 'Rochlitz 🇩🇪',
+    center: [12.7719492, 51.0273325],
   },
   {
     href: '/relation/18478296',
     src: '/images/homepage/timpa-rossa',
-    children: 'Timpa Rossa 🇮🇹',
+    label: 'Timpa Rossa 🇮🇹',
+    center: [14.9483232, 36.8386582],
   },
   {
     href: '/relation/18218704',
     src: '/images/homepage/rastenfeld',
-    children: 'Rastenfeld 🇦🇹',
+    label: 'Rastenfeld 🇦🇹',
+    center: [15.3213433, 48.566838],
   },
   {
     href: '/relation/17142287',
     src: '/images/homepage/lomy-nad-velkou',
-    children: 'Lomy nad Velkou 🇨🇿',
+    label: 'Lomy nad Velkou 🇨🇿',
+    center: [14.2511312, 49.652123],
   },
   {
     href: '/relation/17400318',
     src: '/images/homepage/kobyla',
-    children: 'Kobyla 🇨🇿',
+    label: 'Kobyla 🇨🇿',
+    center: [14.0806949, 49.9136053],
   },
   {
     href: '/relation/18286650',
     src: '/images/homepage/ratao',
-    children: 'Ratão 🇵🇹',
+    label: 'Ratão 🇵🇹',
+    center: [-8.2314618, 41.0469073],
   },
   {
     href: '/relation/14297668',
     src: '/images/homepage/jickovice',
-    children: 'Jickovice 🇨🇿',
+    label: 'Jickovice 🇨🇿',
+    center: [14.1955833, 49.4537897],
   },
   {
     href: '/relation/17301396',
     src: '/images/homepage/tetinske-skaly',
-    children: 'Tetínské skály 🇨🇿',
+    label: 'Tetínské skály 🇨🇿',
+    center: [14.1077375, 49.9496788],
   },
   {
     href: '/relation/17416413',
     src: '/images/homepage/solvayovy-lomy',
-    children: 'Solvayovy lomy 🇨🇿',
+    label: 'Solvayovy lomy 🇨🇿',
+    center: [14.1446707, 49.9725761],
   },
   {
     href: '/relation/17399801',
     src: '/images/homepage/u-zidovy-strouhy',
-    children: 'U Židovy strouhy 🇨🇿',
+    label: 'U Židovy strouhy 🇨🇿',
+    center: [14.4631705, 49.2822267],
   },
   // {
   //   href: '/relation/17424002',
@@ -130,7 +157,7 @@ export const GalleryWrapper = styled.div`
   min-height: calc(
     ${HOMEPAGE_GALLERY_HEIGHT}px + 10px
   ); // otherwise it shrinks b/c of flex
-  margin: 40px -32px 0px -32px;
+  margin: 40px -32px 0 -32px;
 `;
 
 const Gradient = styled.div<{ blur?: boolean }>`
@@ -153,7 +180,7 @@ const Gradient = styled.div<{ blur?: boolean }>`
   );`}
 `;
 
-const Text = styled.h2<{ center: boolean }>`
+const Text = styled.h2<{ center?: boolean }>`
   position: absolute;
   bottom: 10px;
   text-align: center;
@@ -198,39 +225,46 @@ const GalleryItemContainer = styled.div`
   }
 `;
 
-type GalleryItemProps = {
-  children: React.ReactNode;
-  src: string;
-  srcSet?: string;
-  href: string;
-  blur?: boolean;
-  center?: boolean;
-  alt?: string;
-  title?: string;
+const GalleryItem = ({ item }: { item: GalleryItemType }) => {
+  const { setPreview } = useFeatureContext();
+  const onHover = () => setPreview({ center: item.center } as Feature); // TODO fix setPreview to accept only coordinates
+
+  return (
+    <GalleryItemContainer>
+      <StyledLink href={item.href} locale={intl.lang} onMouseEnter={onHover}>
+        <>
+          <img
+            src={`${item.src}.jpg`}
+            srcSet={`${item.src}.jpg, ${item.src}-2.jpg 2x`}
+            height={HOMEPAGE_GALLERY_HEIGHT}
+            alt={`${t('homepage.openclimbing_climbing_area')} ${item.label}`}
+            title={`${t('homepage.openclimbing_climbing_area')} ${item.label}`}
+          />
+          <Gradient>
+            <Text>{item.label}</Text>
+          </Gradient>
+        </>
+      </StyledLink>
+    </GalleryItemContainer>
+  );
 };
 
-const GalleryItem = ({
-  children,
-  src,
-  srcSet,
-  href,
-  blur,
-  center,
-  alt,
-  title,
-}: GalleryItemProps) => (
+const DiscoverMoreItem = () => (
   <GalleryItemContainer>
-    <StyledLink href={href} locale={intl.lang}>
+    <StyledLink href="/climbing-areas" locale={intl.lang}>
       <>
         <img
-          src={src}
-          srcSet={srcSet}
+          src="/images/homepage/solvayovy-lomy.jpg"
           height={HOMEPAGE_GALLERY_HEIGHT}
-          alt={alt}
-          title={title}
+          alt="illustration"
         />
-        <Gradient blur={blur}>
-          <Text center={center}>{children}</Text>
+        <Gradient blur>
+          <Text center>
+            <DiscoveryMoreText>
+              {t('homepage.discover_more_p1')}
+            </DiscoveryMoreText>
+            700+ {t('homepage.discover_more_p2')}
+          </Text>
         </Gradient>
       </>
     </StyledLink>
@@ -241,29 +275,9 @@ export const HomepageOpenClimbingGallery = () => (
   <GalleryWrapper>
     <StyledScrollbars universal autoHide>
       {data.map((item) => (
-        <GalleryItem
-          key={item.href}
-          href={item.href}
-          src={`${item.src}.jpg`}
-          srcSet={`${item.src}.jpg,
-          ${item.src}-2.jpg 2x`}
-          alt={`${t('homepage.openclimbing_climbing_area')} ${item.children}`}
-          title={`${t('homepage.openclimbing_climbing_area')} ${item.children}`}
-        >
-          {item.children}
-        </GalleryItem>
+        <GalleryItem key={item.href} item={item} />
       ))}
-
-      <GalleryItem
-        blur
-        center
-        href="/climbing-areas"
-        src="/images/homepage/solvayovy-lomy.jpg"
-        alt="Solvayovy lomy"
-      >
-        <DiscoveryMoreText>{t('homepage.discover_more_p1')}</DiscoveryMoreText>
-        370+ {t('homepage.discover_more_p2')}
-      </GalleryItem>
+      <DiscoverMoreItem />
     </StyledScrollbars>
   </GalleryWrapper>
 );

@@ -1,8 +1,8 @@
 import { Stack, Typography } from '@mui/material';
-import { getOsmTypeFromShortId, NwrIcon } from '../../../NwrIcon';
+import { NwrIcon } from '../../../NwrIcon';
 import React from 'react';
 import styled from '@emotion/styled';
-import { useCurrentItem } from '../../EditContext';
+import { useCurrentItem } from '../../context/EditContext';
 
 const StyledTypography = styled(Typography, {
   shouldForwardProp: (prop) => !prop.startsWith('$'),
@@ -28,7 +28,7 @@ export const ItemHeading = () => {
         <Typography variant="caption" color="secondary">
           {shortId}
         </Typography>
-        <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
+        <NwrIcon shortId={shortId} />
       </Stack>
     </Stack>
   );

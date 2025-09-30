@@ -11,6 +11,7 @@ import {
   WIKIPEDIA_CS,
 } from './apiMocks.fixture';
 import * as makeCategoryImageModule from '../makeCategoryImage';
+import english from '../../../locales/vocabulary';
 
 jest.mock('../makeCategoryImage', () => ({
   makeCategoryImage: jest.fn(),
@@ -32,6 +33,16 @@ beforeEach(() => {
   jest.restoreAllMocks();
   expect.hasAssertions();
 });
+
+jest.mock('../../intl', () => ({
+  intl: { lang: 'en' },
+  t: (key, obj) => {
+    return Object.entries(obj).reduce(
+      (acc, [key, val]) => acc.replace(`__${key}__`, val),
+      english[key],
+    );
+  },
+}));
 
 test('ImageFromCenter - mapillary', async () => {
   mockApi(MAPILLARY);

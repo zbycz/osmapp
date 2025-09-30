@@ -1,92 +1,74 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import maplibregl from 'maplibre-gl';
 import { outdoorStyle } from '../../../../../Map/styles/outdoorStyle';
 import { COMPASS_TOOLTIP } from '../../../../../Map/useAddTopRightControls';
-import { useCurrentItem, useEditContext } from '../../../EditContext';
+import { useCurrentItem, useEditContext } from '../../../context/EditContext';
 import { useFeatureMarkers } from './useStaticMarkers';
 import { useDraggableFeatureMarker } from './useDraggableMarker';
-import { isGpsValid } from './isGpsValid';
+import { getGlobalMap } from '../../../../../../services/mapStorage';
+import { usePersistedScaleControl } from '../../../../../Map/behaviour/PersistedScaleControl';
+import { useUpdateCenter } from './useUpdateCenter';
 
-export function useInitEditFeatureMap(isFirstMapLoad, setIsFirstMapLoad) {
-  const containerRef = React.useRef<HTMLDivElement>(null);
-  const mapRef = React.useRef<maplibregl.Map>(null);
+const GEOLOCATION_CONTROL = new maplibregl.GeolocateControl({
+  positionOptions: { enableHighAccuracy: true },
+  fitBoundsOptions: { duration: 4000 },
+  trackUserLocation: true,
+});
 
+const getMapCenter = () => getGlobalMap().getCenter().toArray();
+
+export function useInitEditFeatureMap() {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
 
-  const { current, items, setCurrent } = useEditContext();
+  const { current } = useEditContext();
   const currentItem = useCurrentItem();
 
-  useFeatureMarkers(mapRef, items, setCurrent, current);
-
-  const { onMarkerChange } = useDraggableFeatureMarker(mapRef, currentItem);
+  useFeatureMarkers(mapRef);
+  const { onMarkerChange } = useDraggableFeatureMarker(mapRef);
 
   useEffect(() => {
+    if (!containerRef.current) return;
+
     setIsMapLoaded(false);
-    if (!containerRef.current) return undefined;
 
     const map = new maplibregl.Map({
       container: containerRef.current,
       style: outdoorStyle,
       attributionControl: false,
       refreshExpiredTiles: false,
+      zoom: 18,
+      center: getMapCenter(),
       locale: {
         'NavigationControl.ResetBearing': COMPASS_TOOLTIP,
       },
     });
 
     map.scrollZoom.setWheelZoomRate(1 / 200);
-
-    const geolocation = new maplibregl.GeolocateControl({
-      positionOptions: { enableHighAccuracy: true },
-      fitBoundsOptions: { duration: 4000 },
-      trackUserLocation: true,
-    });
-    map.addControl(geolocation);
+    map.addControl(GEOLOCATION_CONTROL);
 
     mapRef.current = map;
 
-    mapRef.current.on('load', () => {
-      setIsMapLoaded(true);
-    });
+    const handleLoad = () => setIsMapLoaded(true);
+    map.on('load', handleLoad);
 
     return () => {
-      if (map) {
-        map.remove();
-      }
+      map.off('load', handleLoad);
+      map.remove();
+      mapRef.current = null;
     };
   }, [containerRef, current]);
 
-  const updateCenter = useCallback(() => {
-    if (
-      isFirstMapLoad &&
-      currentItem?.nodeLonLat &&
-      isGpsValid(currentItem?.nodeLonLat)
-    ) {
-      mapRef.current?.jumpTo({
-        center: currentItem.nodeLonLat as [number, number],
-        zoom: 18.5,
-      });
-      setIsFirstMapLoad(false);
-    }
-  }, [currentItem.nodeLonLat, isFirstMapLoad, setIsFirstMapLoad]);
+  useUpdateCenter(mapRef);
 
-  useEffect(() => {
-    mapRef.current?.on('load', () => {
-      updateCenter();
-    });
-  }, [updateCenter]);
+  usePersistedScaleControl(mapRef, isMapLoaded);
 
-  useEffect(() => {
-    updateCenter();
-  }, [current, updateCenter]);
-
-  useEffect(() => {
-    setIsFirstMapLoad(true);
-  }, [current, setIsFirstMapLoad]);
-
-  useEffect(() => {
-    setIsFirstMapLoad(true);
-  }, [current, setIsFirstMapLoad]);
-
-  return { containerRef, isMapLoaded, currentItem, onMarkerChange, mapRef };
+  return {
+    containerRef,
+    isMapLoaded,
+    currentItem,
+    onMarkerChange,
+    mapRef,
+  };
 }

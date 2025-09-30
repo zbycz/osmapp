@@ -9,10 +9,10 @@ import { t } from '../../services/intl';
 import { ClosePanelButton } from '../utils/ClosePanelButton';
 import { isDesktop, useMobileMode } from '../helpers';
 import { SEARCH_BOX_HEIGHT } from './consts';
-import { HamburgerMenu } from '../Map/TopMenu/HamburgerMenu';
-import { UserMenu } from '../Map/TopMenu/UserMenu';
+import { HamburgerMenu } from '../Map/HamburgerMenu/HamburgerMenu';
 import { setLastFeature } from '../../services/lastFeatureStorage';
 import { DirectionsButton } from '../Directions/DirectionsButton';
+import { usePanelShown } from '../utils/usePanelShown';
 
 const TopPanel = styled.div`
   position: absolute;
@@ -101,35 +101,21 @@ const SearchBoxInner = ({ withoutPanel }) => {
         {!isMobileMode && featureShown && (
           <ClosePanelButton onClick={onClosePanel} />
         )}
-        {isMobileMode && (
-          <>
-            <UserMenu />
-            <HamburgerMenu />
-          </>
-        )}
 
         {(!featureShown || isMobileMode) && <DirectionsButton />}
+        {isMobileMode && <HamburgerMenu />}
       </StyledPaper>
     </TopPanel>
   );
 };
 
 export const SearchBox = () => {
-  const { featureShown, homepageShown } = useFeatureContext();
+  const isPanelShown = usePanelShown();
 
   const router = useRouter();
   if (router.asPath.startsWith('/directions')) {
     return null;
   }
 
-  const otherPageShown = router.pathname !== '/'; // TODO there was a bug in nextjs which sometimes gave some nonsense pathname like `?nxtPall` – CHECK!
-
-  const panelShown = router.pathname.match(/^\/(node|way|relation)\//)
-    ? featureShown
-    : // homepageShown => url '/'
-      // featureShown => url '/xxx/123', but skeleton can be shown earlier
-      // any other panel => url other than root
-      homepageShown || featureShown || otherPageShown;
-
-  return <SearchBoxInner withoutPanel={!panelShown} />;
+  return <SearchBoxInner withoutPanel={!isPanelShown} />;
 };

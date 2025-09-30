@@ -1,41 +1,48 @@
 import { Feature } from '../../../../services/types';
-import React, { forwardRef } from 'react';
+import React, { forwardRef, useState } from 'react';
 import styled from '@emotion/styled';
 import { ConvertedRouteDifficultyBadge } from '../ConvertedRouteDifficultyBadge';
-import { getDifficulties } from '../utils/grades/routeGrade';
+import {
+  getDifficulties,
+  getGradeIndexFromTags,
+} from '../../../../services/tagging/climbing/routeGrade';
 import CheckIcon from '@mui/icons-material/Check';
 import { getWikimediaCommonsPhotoPathKeys } from '../utils/photo';
 import { RouteNumber } from '../RouteNumber';
-import { isTicked, onTickAdd } from '../../../../services/ticks';
 import { getOsmappLink, getShortId } from '../../../../services/helpers';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { intl, t } from '../../../../services/intl';
 import {
   Chip,
+  CircularProgress,
   IconButton,
-  Menu,
   MenuItem,
   Stack,
   Tooltip,
   Typography,
 } from '@mui/material';
 import Router from 'next/router';
-import { useSnackbar } from '../../../utils/SnackbarContext';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import Link from 'next/link';
 import { useEditDialogContext } from '../../helpers/EditDialogContext';
 import EditIcon from '@mui/icons-material/Edit';
 import CloseIcon from '@mui/icons-material/Close';
 import { useMobileMode } from '../../../helpers';
-import { ClimbingTypeBadge } from '../ClimbingTypeBadge';
+import { ClimbingBadges } from '../ClimbingBadges';
+import { useMoreMenu } from '../useMoreMenu';
+import { useClimbingContext } from '../contexts/ClimbingContext';
+import { useTicksContext } from '../../../utils/TicksContext';
+import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
+import { useSnackbar } from '../../../utils/SnackbarContext';
+import { PROJECT_ID } from '../../../../services/project';
 
 const Container = styled.div`
   width: 100%;
 `;
-const RoutePhoto = styled.div`
+const RouteNumberContainer = styled.div`
   width: 22px;
 `;
-const SelectedButton = styled.div`
+const SelectedButtonContainer = styled.div`
   position: absolute;
   right: 0;
 `;
@@ -45,9 +52,8 @@ const StyledChip = styled(Chip)`
   height: 18px;
 `;
 
-const RouteName = styled.div<{ opacity: number }>`
+const RouteNameContainer = styled.div`
   flex: 1;
-  opacity: ${({ opacity }) => opacity};
   display: flex;
   gap: 8px;
   position: relative;
@@ -55,20 +61,19 @@ const RouteName = styled.div<{ opacity: number }>`
   user-select: text;
 `;
 
-const RouteDescription = styled.div<{ opacity: number }>`
+const RouteDescriptionContainer = styled.div`
   font-size: 10px;
-  opacity: ${({ opacity }) => opacity};
   color: ${({ theme }) => theme.palette.text.secondary};
   user-select: text;
 `;
 
-const RouteAuthor = styled(RouteDescription)``;
+const RouteAuthorContainer = styled(RouteDescriptionContainer)``;
 
-const RouteGrade = styled.div``;
+const RouteGradeContainer = styled.div``;
 
 const Row = styled('a', {
   shouldForwardProp: (prop) => !prop.startsWith('$'),
-})<{ $isHoverHighlighted: boolean }>`
+})<{ $isHoverHighlighted: boolean; $isVisible: boolean }>`
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -80,6 +85,8 @@ const Row = styled('a', {
   cursor: pointer;
   padding: 8px;
   transition: all 0.1s;
+  opacity: ${({ $isVisible }) => ($isVisible ? 1 : 0.2)};
+
   *,
   &:focus {
     text-decoration: none;
@@ -92,46 +99,170 @@ const Row = styled('a', {
   }
 `;
 
-const useMoreMenu = () => {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+type AddTickMenuItemProps = {
+  feature: Feature;
+  closeMenu: (event: React.MouseEvent) => void;
+};
+const AddTickMenuItem = ({ feature, closeMenu }: AddTickMenuItemProps) => {
+  const { loggedIn } = useOsmAuthContext();
+  const { addTick } = useTicksContext();
+  const { showToast } = useSnackbar();
+  const [loading, setLoading] = useState(false);
 
-  const handleClickMore = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-    event.preventDefault();
+  if (PROJECT_ID !== 'openclimbing') {
+    return null; // ticks are not loaded in context
+  }
+
+  const handleAddTick = async (event: React.MouseEvent) => {
     event.stopPropagation();
+    if (!loggedIn) {
+      showToast('Please log in to add tick.', 'warning');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      await addTick(getShortId(feature.osmMeta));
+    } catch (e) {
+      showToast(`Error: ${e}`, 'error');
+    } finally {
+      setLoading(false);
+      closeMenu(event);
+    }
   };
 
-  const handleCloseMore = (event) => {
-    setAnchorEl(null);
-    event.stopPropagation();
-  };
-
-  const MoreMenu = ({ children }) => (
-    <Menu anchorEl={anchorEl} open={open} onClose={handleCloseMore}>
-      {children}
-    </Menu>
+  return (
+    <MenuItem onClick={handleAddTick} disableRipple>
+      <CheckIcon />
+      {t('climbingpanel.add_tick')}
+      &nbsp;
+      {loading && <CircularProgress size={24} />}
+    </MenuItem>
   );
-
-  return { anchorEl, open, handleClickMore, handleCloseMore, MoreMenu };
 };
 
-type ClimbingTableRowProps = {
+type MoreMenuProps = {
+  feature: Feature;
+};
+const MoreMenu = ({ feature }: MoreMenuProps) => {
+  const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
+  const { open: openEditDialog } = useEditDialogContext();
+  const routeDetailUrl = getRouteDetailUrl(feature);
+
+  const handleShowRouteDetail = (event: React.MouseEvent) => {
+    handleCloseMore(event);
+    event.stopPropagation();
+  };
+
+  return (
+    <>
+      <IconButton color="secondary" onClick={handleClickMore}>
+        <MoreHorizIcon color="secondary" />
+      </IconButton>
+
+      <MoreMenu>
+        <AddTickMenuItem feature={feature} closeMenu={handleCloseMore} />
+
+        <MenuItem
+          onClick={(e: React.MouseEvent) => {
+            handleShowRouteDetail(e);
+            Router.push(routeDetailUrl).then(() => {
+              openEditDialog();
+            });
+          }}
+        >
+          <EditIcon />
+          {t('climbingpanel.edit_route')}
+        </MenuItem>
+        <MenuItem
+          component={Link}
+          href={routeDetailUrl}
+          locale={intl.lang}
+          onClick={handleShowRouteDetail}
+        >
+          {t('climbingpanel.show_route_detail')}
+        </MenuItem>
+      </MoreMenu>
+    </>
+  );
+};
+
+const getRouteDetailUrl = (feature: Feature) =>
+  `${getOsmappLink(feature)}${typeof window !== 'undefined' ? window.location.hash : ''}`;
+
+const SelectedButton = () => {
+  const { setRouteSelectedIndex } = useClimbingContext();
+
+  const handleDeselectRoute = (e) => {
+    setRouteSelectedIndex(null);
+    e.preventDefault();
+  };
+
+  return (
+    <SelectedButtonContainer>
+      <Tooltip title="Deselect route">
+        <StyledChip
+          label="selected"
+          onDelete={handleDeselectRoute}
+          size="small"
+          deleteIcon={<CloseIcon />}
+          color="secondary"
+          variant="filled"
+        />
+      </Tooltip>
+    </SelectedButtonContainer>
+  );
+};
+
+const RouteDescription = ({ feature }: { feature: Feature }) =>
+  feature.tags?.description ? (
+    <RouteDescriptionContainer>
+      <Typography variant="inherit" component="p">
+        {feature.tags?.description}
+      </Typography>
+    </RouteDescriptionContainer>
+  ) : null;
+
+const RouteAuthor = ({ feature }: { feature: Feature }) =>
+  feature.tags?.author ? (
+    <RouteAuthorContainer>{feature.tags?.author}</RouteAuthorContainer>
+  ) : null;
+
+const RouteName = (props: { feature: Feature; selected: boolean }) => {
+  const isMobileMode = useMobileMode();
+  return (
+    <RouteNameContainer>
+      <Typography variant="inherit" component="h3">
+        {props.feature.tags?.name}
+      </Typography>
+      <ClimbingBadges feature={props.feature} />
+
+      {!isMobileMode && props.selected && <SelectedButton />}
+    </RouteNameContainer>
+  );
+};
+
+const RouteGrade = ({ feature }: { feature: Feature }) => {
+  const routeDifficulties = getDifficulties(feature.tags);
+  return (
+    <RouteGradeContainer>
+      <ConvertedRouteDifficultyBadge routeDifficulties={routeDifficulties} />
+    </RouteGradeContainer>
+  );
+};
+
+type Props = {
   feature: Feature;
   index: number;
   onClick: (e: any) => void;
   onMouseEnter?: (e: any) => void;
   onMouseLeave?: (e: any) => void;
-  onDeselectRoute?: (e: any) => void;
   isHoverHighlighted?: boolean;
   isSelected?: boolean;
   isHrefLinkVisible?: boolean;
 };
 
-export const ClimbingRouteTableRow = forwardRef<
-  HTMLDivElement,
-  ClimbingTableRowProps
->(
+export const ClimbingRouteTableRow = forwardRef<HTMLDivElement, Props>(
   (
     {
       feature,
@@ -139,140 +270,61 @@ export const ClimbingRouteTableRow = forwardRef<
       onClick,
       onMouseEnter,
       onMouseLeave,
-      onDeselectRoute,
       isHoverHighlighted = false,
       isSelected = false,
       isHrefLinkVisible = true,
     },
     ref,
   ) => {
-    const routeNumber = index + 1;
-    const { showToast } = useSnackbar();
-    const { userSettings } = useUserSettingsContext();
-    const { MoreMenu, handleClickMore, handleCloseMore } = useMoreMenu();
-    const { open: openEditDialog } = useEditDialogContext();
-    const isMobileMode = useMobileMode();
+    const { isTicked } = useTicksContext();
+    const { climbingFilter } = useUserSettingsContext();
+    const { gradeInterval } = climbingFilter;
+    const [minIndex, maxIndex] = gradeInterval;
+    if (!feature) {
+      return null;
+    }
 
-    if (!feature) return null;
-
-    const shortOsmId = getShortId(feature.osmMeta);
-    const routeDifficulties = getDifficulties(feature.tags);
     const photoPathsCount = getWikimediaCommonsPhotoPathKeys(
       feature.tags,
     ).length;
     const shortId = getShortId(feature.osmMeta);
     const hasTick = isTicked(shortId);
+    const gradeIndex = getGradeIndexFromTags(feature.tags);
+    const isVisible =
+      !gradeIndex || (gradeIndex >= minIndex && gradeIndex <= maxIndex);
 
-    const routeDetailUrl = `${getOsmappLink(feature)}${typeof window !== 'undefined' ? window.location.hash : ''}`;
-
-    const handleShowRouteDetail = (event) => {
-      handleCloseMore(event);
-      event.stopPropagation();
-    };
-
-    const handleAddTick = (event) => {
-      onTickAdd({
-        osmId: shortOsmId,
-        style: userSettings['climbing.defaultClimbingStyle'],
-      });
-      showToast('Tick added!', 'success');
-      handleCloseMore(event);
-      event.stopPropagation();
-    };
-    const linkProps = {
-      href: routeDetailUrl,
-      locale: intl.lang,
-    };
     return (
-      <Container ref={ref}>
-        <Row
-          onClick={(e) => {
-            onClick(e);
-            e.preventDefault();
-          }}
-          onMouseEnter={onMouseEnter}
-          onMouseLeave={onMouseLeave}
-          $isHoverHighlighted={isHoverHighlighted}
-          as={isHrefLinkVisible ? 'a' : 'div'}
-          {...(isHrefLinkVisible ? linkProps : {})}
-        >
-          <RoutePhoto>
-            <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
-              {routeNumber}
-            </RouteNumber>
-          </RoutePhoto>
-          <Stack justifyContent="stretch" flex={1}>
-            <RouteName opacity={photoPathsCount === 0 ? 0.5 : 1}>
-              <Typography variant="inherit" component="h3">
-                {feature.tags?.name}
-              </Typography>
-              <ClimbingTypeBadge feature={feature} />
-
-              {!isMobileMode && isSelected && (
-                <SelectedButton>
-                  <Tooltip title="Deselect route">
-                    <StyledChip
-                      label="selected"
-                      onDelete={onDeselectRoute}
-                      size="small"
-                      deleteIcon={<CloseIcon />}
-                      color="secondary"
-                      variant="filled"
-                    />
-                  </Tooltip>
-                </SelectedButton>
-              )}
-            </RouteName>
-
-            {feature.tags?.description && (
-              <RouteDescription opacity={photoPathsCount === 0 ? 0.5 : 1}>
-                <Typography variant="inherit" component="p">
-                  {feature.tags?.description}
-                </Typography>
-              </RouteDescription>
-            )}
-            {feature.tags?.author && (
-              <RouteAuthor opacity={0.5}>{feature.tags?.author}</RouteAuthor>
-            )}
-          </Stack>
-          <RouteGrade>
-            <ConvertedRouteDifficultyBadge
-              routeDifficulties={routeDifficulties}
-            />
-          </RouteGrade>
-
-          <IconButton color="secondary" onClick={handleClickMore}>
-            <MoreHorizIcon color="secondary" />
-          </IconButton>
-
-          <MoreMenu>
-            <MenuItem onClick={handleAddTick} disableRipple>
-              <CheckIcon />
-              {t('climbingpanel.add_tick')}
-            </MenuItem>
-
-            <MenuItem
-              onClick={(e) => {
-                handleShowRouteDetail(e);
-                Router.push(routeDetailUrl).then(() => {
-                  openEditDialog();
-                });
-              }}
-            >
-              <EditIcon />
-              {t('climbingpanel.edit_route')}
-            </MenuItem>
-            <MenuItem
-              component={Link}
-              href={routeDetailUrl}
-              locale={intl.lang}
-              onClick={handleShowRouteDetail}
-            >
-              {t('climbingpanel.show_route_detail')}
-            </MenuItem>
-          </MoreMenu>
-        </Row>
-      </Container>
+      <>
+        <Container ref={ref}>
+          <Row
+            $isVisible={isVisible}
+            onClick={(e) => {
+              onClick(e);
+              e.preventDefault();
+            }}
+            onMouseEnter={onMouseEnter}
+            onMouseLeave={onMouseLeave}
+            $isHoverHighlighted={isHoverHighlighted}
+            as={isHrefLinkVisible ? 'a' : 'div'}
+            href={isHrefLinkVisible ? getRouteDetailUrl(feature) : undefined}
+            // @ts-ignore
+            locale={isHrefLinkVisible ? intl.lang : undefined}
+          >
+            <RouteNumberContainer>
+              <RouteNumber hasCircle={photoPathsCount > 0} hasTick={hasTick}>
+                {index + 1}
+              </RouteNumber>
+            </RouteNumberContainer>
+            <Stack justifyContent="stretch" flex={1}>
+              <RouteName feature={feature} selected={isSelected} />
+              <RouteDescription feature={feature} />
+              <RouteAuthor feature={feature} />
+            </Stack>
+            <RouteGrade feature={feature} />
+            <MoreMenu feature={feature} />
+          </Row>
+        </Container>
+      </>
     );
   },
 );

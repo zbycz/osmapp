@@ -1,18 +1,18 @@
-import { Position } from '../../types';
+import { LonLat } from '../../types';
 import { getBearing } from '../getImageFromCenterFactory';
 
 jest.mock('maplibre-gl', () => ({}));
 
-const point: Position = [0, 0];
-const pointAbove: Position = [0, 1];
-const point45: Position = [1, 1];
-const pointRight: Position = [1, 0];
-const pointBelow: Position = [0, -1]; // 180
-const point225: Position = [-1, -1]; // 180+45
-const pointLeft: Position = [-1, 0];
+const point: LonLat = [0, 0];
+const pointAbove: LonLat = [0, 1];
+const point45: LonLat = [1, 1];
+const pointRight: LonLat = [1, 0];
+const pointBelow: LonLat = [0, -1]; // 180
+const point225: LonLat = [-1, -1]; // 180+45
+const pointLeft: LonLat = [-1, 0];
 
-const praha: Position = [14.3, 50.1]; // lon, lat  --> x,y
-const liberec: Position = [15.05, 50.75];
+const praha: LonLat = [14.3, 50.1]; // lon, lat  --> x,y
+const liberec: LonLat = [15.05, 50.75];
 
 describe('getBearing', () => {
   it('should work for node', async () => {

@@ -2,9 +2,11 @@ import React, { LegacyRef, useRef } from 'react';
 import styled from '@emotion/styled';
 import { Scrollbars } from 'react-custom-scrollbars';
 import { useTheme } from '@mui/material';
-import { isDesktop, isMobileMode, useMobileMode } from '../helpers';
+import { isDesktop, useMobileMode } from '../helpers';
 import { useScrollShadow } from '../FeaturePanel/Climbing/utils/useScrollShadow';
 import { SEARCH_BOX_HEIGHT } from '../SearchBox/consts';
+
+export const FEATURE_PANEL_WIDTH = 410;
 
 // custom scrollbar
 // better: https://github.com/rommguy/react-custom-scroll
@@ -31,7 +33,7 @@ const Container = styled.div`
 
   width: 100%;
   @media ${isDesktop} {
-    width: 410px;
+    width: ${FEATURE_PANEL_WIDTH}px;
   }
 
   & > div > div {
@@ -116,6 +118,8 @@ export const PanelFooterWrapper = styled.footer`
   line-height: 1.5;
 `;
 
+export const PANEL_GAP = '16px';
+
 export const PanelSidePadding = styled.div`
-  padding: 0 16px;
+  padding: 0 ${PANEL_GAP};
 `;

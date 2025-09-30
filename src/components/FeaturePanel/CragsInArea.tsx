@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Box, Chip, Typography } from '@mui/material';
+import { Box, Chip, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import Router from 'next/router';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -10,7 +10,7 @@ import {
   getUrlOsmId,
 } from '../../services/helpers';
 import { Feature, isInstant } from '../../services/types';
-import { useMobileMode } from '../helpers';
+import { ClientOnly, isMobileMode, useMobileMode } from '../helpers';
 import { getHumanPoiType, getLabel } from '../../helpers/featureLabel';
 
 import { Slider, Wrapper } from './FeatureImages/FeatureImages';
@@ -21,10 +21,29 @@ import Link from 'next/link';
 import { naturalSort } from './Climbing/utils/array';
 import { PanelLabel } from './Climbing/PanelLabel';
 import { PROJECT_ID } from '../../services/project';
+import { getClickHandler } from './FeatureImages/Image/helpers';
 import { MemberItem } from './MemberFeatures/MemberItem';
 import { RouteDistribution } from './Climbing/RouteDistribution';
+import { CragsInAreaSort } from './Climbing/CragsInAreaSort/CragsInAreaSort';
+import { CragsInAreaFilter } from './Climbing/Filter/CragsInAreaFilter';
+import {
+  useGetFilteredCrags,
+  useGetMemberCrags,
+} from './Climbing/Filter/utils/useGetFilteredCrags';
+import { useCragsInAreaSort } from './Climbing/CragsInAreaSort/utils/useCragsInAreaSort';
 
 const isOpenClimbing = PROJECT_ID === 'openclimbing';
+
+const StyledPaper = styled(Paper)`
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  opacity: 0.9;
+
+  @media ${isMobileMode} {
+    position: sticky;
+  }
+`;
 
 const Ul = styled.ul`
   padding: 0;
@@ -54,7 +73,7 @@ const InnerContainer = styled.div`
   }
 `;
 
-const CragList = styled.div`
+const CragListContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -114,6 +133,23 @@ const Header = ({
   </Box>
 );
 
+const AreaInfo = ({ crags, numberOfRoutes, feature }) => {
+  return (
+    <PanelLabel
+      addition={
+        crags.length > 1 ? (
+          <NumberOfVisible crags={crags.length} routes={numberOfRoutes} />
+        ) : null
+      }
+    >
+      {t('featurepanel.climbing_sectors')}{' '}
+      {feature.tags.name
+        ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
+        : ''}
+    </PanelLabel>
+  );
+};
+
 const Gallery = ({ images, feature }) => {
   const poiType = getHumanPoiType(feature);
   const alt = `${poiType} ${getLabel(feature)}`;
@@ -127,10 +163,31 @@ const Gallery = ({ images, feature }) => {
             def={item.def}
             image={item.image}
             alt={`${alt} ${index + 1}`}
+            onClick={getClickHandler(feature, item.def)}
           />
         ))}
       </Slider>
     </Wrapper>
+  );
+};
+
+const CragList = ({ crags, other }) => {
+  return (
+    <Box mt={2} mb={4}>
+      <CragListContainer>
+        {crags.map((item) => (
+          <CragItem key={getOsmappLink(item)} feature={item} />
+        ))}
+      </CragListContainer>
+
+      {other.length > 0 && (
+        <Ul>
+          {other.map((item) => (
+            <MemberItem key={getReactKey(item)} feature={item} />
+          ))}
+        </Ul>
+      )}
+    </Box>
   );
 };
 
@@ -165,7 +222,7 @@ const CragItem = ({ feature }: { feature: Feature }) => {
             label={getLabel(feature)}
             routesCount={feature.members?.length}
           />
-          {images.length ? <Gallery images={images} feature={feature} /> : null}
+          {images.length ? <Gallery feature={feature} images={images} /> : null}
         </InnerContainer>
       </StyledLink>
       {feature.memberFeatures.length > 0 && (
@@ -177,64 +234,86 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
-export const CragsInArea = () => {
+const NumberOfVisible = (props: { crags: any; routes: any }) => (
+  <Chip
+    size="small"
+    variant="outlined"
+    label={
+      <>
+        <strong>{props.crags}</strong> {t('featurepanel.sectors')},{' '}
+        <strong>{props.routes}</strong> {t('featurepanel.routes')}
+      </>
+    }
+    sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
+  />
+);
+
+const NumberOfHiddenCrags = (props: { count: number }) => (
+  <ClientOnly>
+    <Typography variant="caption" color="secondary" sx={{ paddingRight: 2 }}>
+      <strong>{props.count}</strong> {t('featurepanel.hidden_crags')}
+    </Typography>
+  </ClientOnly>
+);
+
+const CragsInAreaInner = () => {
   const { feature } = useFeatureContext();
+  const { sortByFn, sortBy, setSortBy } = useCragsInAreaSort();
+  const unfilteredCrags = useGetMemberCrags();
+  const crags = useGetFilteredCrags(unfilteredCrags).sort(sortByFn(sortBy));
+  const numberOfHiddenCrags = unfilteredCrags.length - crags.length;
 
-  if (!feature.memberFeatures?.length || feature.tags.climbing !== 'area') {
-    return null;
-  }
+  const otherFeatures = feature.memberFeatures.filter(
+    ({ tags }) => tags.climbing !== 'crag',
+  );
 
-  const crags = feature.memberFeatures.filter(({ tags }) => tags.climbing);
-  const other = feature.memberFeatures.filter(({ tags }) => !tags.climbing);
-
-  const numberOfRoutes = crags.reduce((acc, { members }) => {
-    return acc + (members?.length ?? 0);
+  const numberOfRoutes = crags.reduce((acc, { memberFeatures }) => {
+    return acc + (memberFeatures?.length ?? 0);
   }, 0);
 
-  const allCragRoutes = crags.reduce((acc, crag) => {
-    return [...acc, ...crag.memberFeatures];
+  const allCragRoutes = crags.reduce((acc, { memberFeatures }) => {
+    return [...acc, ...memberFeatures];
   }, []);
 
   return (
     <>
-      {crags.length > 1 && <RouteDistribution features={allCragRoutes} />}
+      {crags.length > 1 ? (
+        <>
+          <StyledPaper elevation={0} square>
+            <Stack
+              direction="row"
+              spacing={0.5}
+              justifyContent="flex-end"
+              m={1}
+              alignItems="center"
+            >
+              {numberOfHiddenCrags > 0 && (
+                <NumberOfHiddenCrags count={numberOfHiddenCrags} />
+              )}
+              <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />
+              <CragsInAreaFilter />
+            </Stack>
+          </StyledPaper>
+          <RouteDistribution features={allCragRoutes} />
+        </>
+      ) : null}
 
-      <PanelLabel
-        addition={
-          <Chip
-            size="small"
-            variant="outlined"
-            label={
-              <>
-                <strong>{crags.length}</strong> {t('featurepanel.sectors')},{' '}
-                <strong>{numberOfRoutes}</strong> {t('featurepanel.routes')}
-              </>
-            }
-            sx={{ position: 'relative', top: 2, fontWeight: 'normal' }}
-          />
-        }
-      >
-        {t('featurepanel.climbing_sectors')}{' '}
-        {feature.tags.name
-          ? `${t('featurepanel.climbing_sectors_in')} ${feature.tags.name}`
-          : ''}
-      </PanelLabel>
+      <AreaInfo
+        crags={crags}
+        numberOfRoutes={numberOfRoutes}
+        feature={feature}
+      />
 
-      <Box mt={2} mb={4}>
-        <CragList>
-          {crags.map((item) => (
-            <CragItem key={getOsmappLink(item)} feature={item} />
-          ))}
-        </CragList>
-
-        {other.length > 0 && (
-          <Ul>
-            {other.map((item) => (
-              <MemberItem key={getReactKey(item)} feature={item} />
-            ))}
-          </Ul>
-        )}
-      </Box>
+      <CragList crags={crags} other={otherFeatures} />
     </>
   );
+};
+
+export const CragsInArea = () => {
+  const { feature } = useFeatureContext();
+  if (feature.tags.climbing !== 'area' || !feature.memberFeatures?.length) {
+    return null;
+  }
+
+  return <CragsInAreaInner />;
 };

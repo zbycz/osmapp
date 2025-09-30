@@ -8,7 +8,7 @@ export const routesLines: LayerSpecification[] = [
     type: 'line',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 13,
-    filter: ['all', ['==', 'type', 'route']],
+    filter: ['==', 'type', 'route'],
     layout: { 'line-cap': 'round' },
     paint: {
       'line-color': '#f8f4f0',
@@ -21,10 +21,10 @@ export const routesLines: LayerSpecification[] = [
     type: 'line',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 13,
-    filter: ['all', ['==', 'type', 'route']],
+    filter: ['==', 'type', 'route'],
     layout: { 'line-cap': 'round' },
     paint: {
-      'line-color': '#ea5540',
+      'line-color': ['coalesce', ['get', 'color'], '#999'],
       'line-width': 2,
     },
   },
@@ -34,10 +34,10 @@ export const routesLines: LayerSpecification[] = [
     type: 'line',
     source: CLIMBING_TILES_SOURCE,
     minzoom: 13,
-    filter: ['all', ['==', 'type', 'route']],
+    filter: ['==', 'type', 'route'],
     layout: { 'line-cap': 'round' },
     paint: {
-      'line-color': '#4150a0',
+      'line-color': '#000',
       'line-opacity': [
         'case',
         ['boolean', ['feature-state', 'hover'], false],
@@ -52,11 +52,11 @@ export const routesLines: LayerSpecification[] = [
     metadata: { clickableWithOsmId: true },
     type: 'symbol',
     source: CLIMBING_TILES_SOURCE,
-    filter: ['all', ['==', 'type', 'route']],
+    filter: ['==', 'type', 'route'],
     layout: {
       'symbol-placement': 'line-center',
       'text-font': ['Noto Sans Regular'],
-      'text-field': '{name}',
+      'text-field': '{label}',
       'text-size': 12,
       'text-rotation-alignment': 'map',
     },
@@ -64,12 +64,6 @@ export const routesLines: LayerSpecification[] = [
       'text-color': '#000000',
       'text-halo-width': 1.5,
       'text-halo-color': 'rgba(255,255,255,0.7)',
-      'text-opacity': [
-        'case',
-        ['boolean', ['feature-state', 'hover'], false],
-        0.5,
-        1,
-      ],
     },
   },
 ];

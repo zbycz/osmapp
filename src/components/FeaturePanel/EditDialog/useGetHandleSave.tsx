@@ -1,13 +1,14 @@
 import { useOsmAuthContext } from '../../utils/OsmAuthContext';
 import { useEditDialogFeature } from './utils';
-import { useEditContext } from './EditContext';
+import { useEditContext } from './context/EditContext';
 import { createNoteText } from './createNoteText';
 import { t } from '../../../services/intl';
 import { saveChanges } from '../../../services/osm/auth/osmApiAuth';
 import { insertOsmNote } from '../../../services/osm/insertOsmNote';
 import { useSnackbar } from '../../utils/SnackbarContext';
-import { getShortId } from '../../../services/helpers';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
+import { getFullOsmappLink } from '../../../services/helpers';
+import { addWebsiteForClimbingFeatures } from '../helpers/addWebsiteForClimbingFeatures';
 
 const useGetSaveNote = () => {
   const { showToast } = useSnackbar();
@@ -15,21 +16,20 @@ const useGetSaveNote = () => {
   const { location, comment, items } = useEditContext();
 
   return async () => {
-    const texts = items.map((item) => {
-      const { tags, toBeDeleted } = item;
-      const noteText = createNoteText(
-        feature, // TODO this is wrong, we must diff each feature from its original state, not from the feature it was opened from
-        tags,
-        toBeDeleted,
-        location,
-        comment,
-        isUndelete,
-      );
-      return noteText;
-    });
+    const texts = [];
+    if (comment) {
+      texts.push(`${comment}`);
+    }
+    texts.push(
+      ...items
+        .filter(({ modified }) => modified)
+        .map((item) => createNoteText(item, location, comment, isUndelete)),
+    );
+
+    texts.push(`\nSubmitted from ${getFullOsmappLink(feature)}`);
 
     const noteText = texts.join('\n\n--------\n');
-    if (noteText == null) {
+    if (!noteText.length) {
       showToast(t('editdialog.changes_needed'), 'warning');
       return;
     }
@@ -43,17 +43,30 @@ export const useGetHandleSave = () => {
   const { loggedIn, handleLogout } = useOsmAuthContext();
   const { feature } = useEditDialogFeature();
   const { setRedirectOnClose } = useEditDialogContext();
-  const { setSuccessInfo, setIsSaving, comment, items } = useEditContext();
+  const { setSuccessInfo, setIsSaving, comment, items, setValidate } =
+    useEditContext();
   const saveNote = useGetSaveNote();
 
   return async () => {
     try {
+      if (
+        items
+          .filter(({ shortId }) => shortId[0] === 'n')
+          .some(({ nodeLonLat }) => nodeLonLat === undefined)
+      ) {
+        showToast(t('editdialog.set_location_for_all_items'), 'warning');
+        setValidate(true);
+        return;
+      }
+
       setIsSaving(true);
 
-      // TODO do not save when no changes
+      const changes = addWebsiteForClimbingFeatures(
+        items.filter((item) => item.modified),
+      );
 
       const successInfo = loggedIn
-        ? await saveChanges(feature, comment, items)
+        ? await saveChanges(feature, comment, changes)
         : await saveNote();
 
       setSuccessInfo(successInfo);

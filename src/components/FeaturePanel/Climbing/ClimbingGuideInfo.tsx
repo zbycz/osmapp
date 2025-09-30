@@ -7,7 +7,6 @@ import {
   Stack,
   Typography,
   useTheme,
-  Paper,
 } from '@mui/material';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import { t } from '../../../services/intl';

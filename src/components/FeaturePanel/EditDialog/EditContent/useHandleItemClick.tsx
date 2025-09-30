@@ -1,12 +1,12 @@
-import { EditDataItem } from '../useEditItems';
-import React, { Dispatch, SetStateAction } from 'react';
-import { useEditContext } from '../EditContext';
-import { getApiId } from '../../../../services/helpers';
-import { fetchFreshItem } from '../itemsHelpers';
+import React from 'react';
+import { useCurrentItem, useEditContext } from '../context/EditContext';
+import { getApiId, getShortId } from '../../../../services/helpers';
+import { fetchFreshItem } from '../context/itemsHelpers';
 import { Setter } from '../../../../types';
+import { Feature } from '../../../../services/types';
+import { DataItem, EditDataItem } from '../context/types';
 
-const isInItems = (items: Array<EditDataItem>, shortId: string) =>
-  items.find((item) => item.shortId === shortId);
+import { isInItems } from '../context/utils';
 
 export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
   const { addItem, items, setCurrent } = useEditContext();
@@ -29,5 +29,47 @@ export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
         setCurrent(shortId);
       }
     }
+  };
+};
+
+const addAllItems = async (
+  shortIds: string[],
+  addItem: (newItem: DataItem) => void,
+  items: Array<EditDataItem>,
+) => {
+  const promises = shortIds
+    .filter((shortId) => !isInItems(items, shortId))
+    .map((shortId) => fetchFreshItem(getApiId(shortId)));
+
+  const newItems = await Promise.all(promises);
+  newItems.forEach((item) => addItem(item));
+};
+
+export const useHandleOpenAllParents = (parents: Feature[]) => {
+  const { addItem, items } = useEditContext();
+  const shortIds = parents.map((parent) => getShortId(parent.osmMeta));
+
+  return async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await addAllItems(shortIds, addItem, items);
+  };
+};
+
+export const useHandleOpenAllMembers = () => {
+  const { members } = useCurrentItem();
+  const { addItem, items } = useEditContext();
+  const shortIds = members?.map(({ shortId }) => shortId);
+
+  if (!members || members.length < 2) {
+    return undefined;
+  }
+
+  if (members.every((member) => isInItems(items, member.shortId))) {
+    return undefined;
+  }
+
+  return async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    await addAllItems(shortIds, addItem, items);
   };
 };

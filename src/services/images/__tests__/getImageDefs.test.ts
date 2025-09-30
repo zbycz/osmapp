@@ -1,8 +1,8 @@
 import { getImageDefs } from '../getImageDefs';
 
-import { ImageDef } from '../../types';
+import { ImageDef, LonLat } from '../../types';
 
-const center = [14, 50];
+const center: LonLat = [14, 50];
 
 test('conversion', () => {
   const tags = {
@@ -54,6 +54,12 @@ test('conversion', () => {
       type: 'tag',
       k: 'wikimedia_commons:xy',
       v: 'Category:cat.jpg',
+      instant: false,
+    },
+    {
+      type: 'tag',
+      k: 'website',
+      v: 'https://site-may-have-og-image',
       instant: false,
     },
     {

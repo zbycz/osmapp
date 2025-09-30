@@ -1,9 +1,10 @@
-/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from '@emotion/styled';
 import { useClimbingContext } from '../../contexts/ClimbingContext';
 import { useConfig } from '../../config';
 import { useMobileMode } from '../../../../helpers';
+import { usePointClickHandler } from '../utils';
+import { PointType } from '../../types';
 
 const ClickableArea = styled.circle``;
 
@@ -41,22 +42,19 @@ const usePointColor = (type, isHovered) => {
   };
 };
 
-export const Point = ({
-  x,
-  y,
-  onPointInSelectedRouteClick,
-  type,
-  index,
-  routeNumber,
-}) => {
+type Props = {
+  routeIndex: number;
+  index: number;
+  type: PointType;
+  x: number;
+  y: number;
+};
+
+export const Point = ({ x, y, type, index, routeIndex }: Props) => {
   const [isHovered, setIsHovered] = useState(false);
   const {
     setPointSelectedIndex,
-    setIsPointMoving,
     setIsPointClicked,
-    isPointMoving,
-    pointElement,
-    setPointElement,
     setRouteIndexHovered,
     photoZoom,
     getCurrentPath,
@@ -67,8 +65,8 @@ export const Point = ({
     isEditMode,
   } = useClimbingContext();
   const isMobileMode = useMobileMode();
-  const isSelected = isRouteSelected(routeNumber);
-  const isOtherSelected = isOtherRouteSelected(routeNumber);
+  const isSelected = isRouteSelected(routeIndex);
+  const isOtherSelected = isOtherRouteSelected(routeIndex);
   const { pointColor, pointStroke } = usePointColor(type, isHovered);
 
   const isPointOnRouteSelected = isSelected && isPointSelected(index);
@@ -81,7 +79,7 @@ export const Point = ({
     setIsHovered(true);
     const isLastPoint = getCurrentPath().length - 1 === index;
     if (!isLastPoint) {
-      setRouteIndexHovered(routeNumber);
+      setRouteIndexHovered(routeIndex);
     }
   };
 
@@ -97,19 +95,7 @@ export const Point = ({
     e.stopPropagation();
   };
 
-  const onPointMouseUp = (e) => {
-    // @TODO unify with RouteMarks.tsx
-    if (!isPointMoving) {
-      onPointInSelectedRouteClick(e);
-      setPointElement(pointElement !== null ? null : e.currentTarget);
-      setPointSelectedIndex(index);
-      setIsPointMoving(false);
-      setIsPointClicked(false);
-      e.stopPropagation();
-      e.preventDefault();
-    }
-  };
-
+  const onPointMouseUp = usePointClickHandler(index);
   const isTouchDevice = 'ontouchstart' in window;
 
   const commonProps = {
@@ -142,7 +128,8 @@ export const Point = ({
     <g transform={`translate(${x},${y}) scale(${1 / photoZoom.scale})`}>
       <ClickableArea
         fill="transparent"
-        r={isTouchDevice ? 20 : 10}
+        r={isTouchDevice ? 16 : 10}
+        // eslint-disable-next-line react/jsx-props-no-spreading
         {...commonProps}
       >
         {title}
@@ -151,9 +138,10 @@ export const Point = ({
       <PointElement
         fill={pointColor}
         stroke={pointStroke}
-        r={isTouchDevice ? 7 : 4}
+        r={4}
         $isHovered={isHovered}
         $isPointSelected={isPointOnRouteSelected}
+        // eslint-disable-next-line react/jsx-props-no-spreading
         {...commonProps}
       >
         {title}

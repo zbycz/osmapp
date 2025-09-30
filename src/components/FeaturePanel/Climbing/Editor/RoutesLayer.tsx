@@ -1,20 +1,17 @@
 import React from 'react';
 import styled from '@emotion/styled';
-
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RouteWithLabel } from './RouteWithLabel';
-import { RouteFloatingMenu } from './RouteFloatingMenu';
 import { RouteMarks } from './RouteMarks';
-import { getMouseFromPositionInImage } from '../utils/mousePositionUtils';
-import { DIALOG_TOP_BAR_HEIGHT } from '../config';
-
-type RouteRenders = { route: React.ReactNode; marks: React.ReactNode };
+import { InteractivePath } from './InteractivePath';
+import { updateElementOnIndex } from '../utils/array';
+import { getPositionInImageFromMouse } from '../utils/mousePositionUtils';
+import { useMobileMode } from '../../../helpers';
 
 const Svg = styled.svg<{
   $hasEditableCursor: boolean;
   $imageSize: { width: number; height: number };
   $isVisible: boolean;
-  $transformOrigin: any;
 }>`
   position: absolute;
   top: 0;
@@ -24,8 +21,9 @@ const Svg = styled.svg<{
   transition: ${({ $isVisible }) =>
     $isVisible ? 'opacity 0.1s ease' : 'none'};
   transform-origin: 0 0;
+
   ${({ $hasEditableCursor }) =>
-    `cursor: ${$hasEditableCursor ? 'crosshair' : 'auto'}`};
+    $hasEditableCursor ? `cursor: crosshair;` : ''};
   ${({ $imageSize: { width, height } }) =>
     `width: ${width}px;
     height:${height}px;
@@ -37,28 +35,16 @@ const Svg = styled.svg<{
 `;
 
 type Props = {
-  onClick: (e: any) => void;
-  onEditorMouseMove?: (e: any) => void;
-  onEditorTouchMove?: (e: any) => void;
-  isVisible?: boolean;
-  transformOrigin?: any;
+  isVisible: boolean;
 };
 
-export const RoutesLayer = ({
-  onClick,
-  onEditorMouseMove,
-  onEditorTouchMove,
-  isVisible = true,
-  transformOrigin = { x: 0, y: 0 },
-}: Props) => {
+export const RoutesLayer = ({ isVisible }: Props) => {
+  const isMobileMode = useMobileMode();
   const {
     imageSize,
-    pointSelectedIndex,
+    machine,
     routeSelectedIndex,
-    getMachine,
-    isRouteSelected,
-    isRouteHovered,
-    getPixelPosition,
+    routeIndexHovered,
     isPointMoving,
     setIsPointClicked,
     setIsPointMoving,
@@ -67,26 +53,72 @@ export const RoutesLayer = ({
     routes,
     setIsPanningDisabled,
     svgRef,
+    setMousePosition,
+    getPercentagePosition,
+    findCloserPoint,
+    updatePathOnRouteIndex,
+    pointSelectedIndex,
+    isPointClicked,
+    photoZoom,
+    isAddingPointBlockedRef,
+    isZoomingRef,
   } = useClimbingContext();
-
-  const machine = getMachine();
   const path = getCurrentPath();
   if (!path) return null;
 
-  const onPointInSelectedRouteClick = (
-    event: React.MouseEvent<HTMLElement>,
-  ) => {
-    machine.execute('showPointMenu');
-    const isDoubleClick = event.detail === 2;
-    const lastPointIndex = path.length - 1;
+  const onClick = (event: React.MouseEvent) => {
+    if (isZoomingRef.current) return;
+    if (
+      machine.currentStateName === 'extendRoute' &&
+      !isAddingPointBlockedRef.current
+    ) {
+      machine.execute('addPointToEnd', event);
+      return;
+    }
 
-    if (isDoubleClick && pointSelectedIndex === lastPointIndex) {
-      machine.execute('finishRoute');
+    if (machine.currentStateName === 'pointMenu') {
+      machine.execute('cancelPointMenu');
+      return;
+    }
+
+    if (!isAddingPointBlockedRef.current) {
+      machine.execute('cancelRouteSelection');
     }
   };
 
-  const handleOnMovingPointDropOnCanvas = () => {
-    if (isPointMoving) {
+  const onPointerMove = (event: React.MouseEvent) => {
+    const positionInImage = getPositionInImageFromMouse(
+      svgRef,
+      event,
+      photoZoom,
+    );
+
+    if (isPointClicked && !isZoomingRef.current) {
+      setMousePosition(null);
+      machine.execute('dragPoint', { position: positionInImage });
+      setIsPointMoving(true);
+
+      const newCoordinate = getPercentagePosition(positionInImage);
+      const closestPoint = findCloserPoint(newCoordinate);
+
+      const updatedPoint = closestPoint ?? newCoordinate;
+      updatePathOnRouteIndex(routeSelectedIndex, (path) =>
+        updateElementOnIndex(path, pointSelectedIndex, (point) => ({
+          ...point,
+          x: updatedPoint.x,
+          y: updatedPoint.y,
+          ...(closestPoint?.type ? { type: closestPoint?.type } : {}),
+        })),
+      );
+    } else if (machine.currentStateName !== 'extendRoute') {
+      setMousePosition(null);
+    } else if (routeIndexHovered === null) {
+      setMousePosition(positionInImage);
+    }
+  };
+
+  const handleOnMovingPointDropped = () => {
+    if (isPointMoving && !isZoomingRef.current) {
       setPointSelectedIndex(null);
       setIsPointMoving(false);
       setIsPointClicked(false);
@@ -94,96 +126,41 @@ export const RoutesLayer = ({
     }
   };
 
-  const sortedRoutes = routes.reduce<{
-    selected: Array<RouteRenders>;
-    rest: Array<RouteRenders>;
-    hovered: Array<RouteRenders>;
-  }>(
-    (acc, route, index) => {
-      const RouteInner = () => (
-        <RouteWithLabel
-          route={route}
-          routeNumber={index}
-          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
-        />
-      );
-      const RenderRouteMarks = () => (
-        <RouteMarks
-          route={route}
-          routeNumber={index}
-          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
-        />
-      );
-
-      if (isRouteSelected(index)) {
-        return {
-          ...acc,
-          selected: [
-            ...acc.selected,
-            { route: <RouteInner />, marks: <RenderRouteMarks /> },
-          ],
-        };
-      }
-      if (isRouteHovered(index)) {
-        return {
-          ...acc,
-          hovered: [
-            ...acc.hovered,
-            { route: <RouteInner />, marks: <RenderRouteMarks /> },
-          ],
-        };
-      }
-      return {
-        ...acc,
-        rest: [
-          ...acc.rest,
-          { route: <RouteInner />, marks: <RenderRouteMarks /> },
-        ],
-      };
-    },
-    { selected: [], rest: [], hovered: [] },
-  );
-
-  const lastPointOfSelectedRoute =
-    routeSelectedIndex !== null && path.length > 0
-      ? getPixelPosition(path[path.length - 1])
-      : null;
-
-  const selectedPointOfSelectedRoute =
-    pointSelectedIndex !== null &&
-    path.length > 0 &&
-    routes[routeSelectedIndex] &&
-    path[pointSelectedIndex]
-      ? getPixelPosition(path[pointSelectedIndex])
-      : null;
-
-  const routeFloatingMenuPosition =
-    machine.currentStateName === 'pointMenu'
-      ? selectedPointOfSelectedRoute
-      : lastPointOfSelectedRoute;
-
   return (
     <Svg
       $hasEditableCursor={machine.currentStateName === 'extendRoute'}
-      onClick={(e) => {
-        onClick(e);
-      }}
-      onMouseUp={handleOnMovingPointDropOnCanvas}
-      onMouseMove={onEditorMouseMove}
-      onTouchMove={onEditorTouchMove}
-      onPointerMove={onEditorTouchMove}
+      onClick={onClick}
+      onMouseUp={handleOnMovingPointDropped}
+      onPointerMove={onPointerMove}
       $imageSize={imageSize}
       $isVisible={isVisible}
-      $transformOrigin={transformOrigin}
       xmlns="http://www.w3.org/2000/svg"
       ref={svgRef}
     >
-      {sortedRoutes.rest.map((item) => item.route)}
-      {sortedRoutes.rest.map((item) => item.marks)}
-      {sortedRoutes.selected.map((item) => item.route)}
-      {sortedRoutes.selected.map((item) => item.marks)}
-      {sortedRoutes.hovered.map((item) => item.route)}
-      {sortedRoutes.hovered.map((item) => item.marks)}
+      {routes.map((_, routeIndex) => (
+        <React.Fragment key={routeIndex}>
+          <RouteWithLabel routeIndex={routeIndex} />
+          <InteractivePath routeIndex={routeIndex} />
+        </React.Fragment>
+      ))}
+
+      {routeSelectedIndex != null ? (
+        <>
+          <RouteWithLabel routeIndex={routeSelectedIndex} />
+          <InteractivePath routeIndex={routeSelectedIndex} />
+        </>
+      ) : null}
+
+      {routeIndexHovered != null && !isMobileMode ? (
+        <>
+          <RouteWithLabel routeIndex={routeIndexHovered} />
+          <InteractivePath routeIndex={routeIndexHovered} allowHoverMidpoint />
+        </>
+      ) : null}
+
+      {routes.map((_, routeIndex) => (
+        <RouteMarks key={routeIndex} routeIndex={routeIndex} />
+      ))}
     </Svg>
   );
 };

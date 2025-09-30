@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from '@emotion/styled';
 import { RoutesLayer } from './RoutesLayer';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { updateElementOnIndex } from '../utils/array';
-import { PositionPx } from '../types';
-import {
-  getMouseFromPositionInImage,
-  getPositionInImageFromMouse,
-} from '../utils/mousePositionUtils';
 import { getCommonsImageUrl } from '../../../../services/images/getCommonsImageUrl';
 import { isMobileDevice } from '../../../helpers';
-import { RouteFloatingMenu } from './RouteFloatingMenu';
 
-const EditorContainer = styled.div<{ imageHeight: number }>`
+const EditorContainer = styled.div<{
+  $imageHeight: number;
+}>`
   display: flex;
   justify-content: center;
-  height: ${({ imageHeight }) => `${imageHeight}px`};
+  height: ${({ $imageHeight }) => `${$imageHeight}px`};
   top: 0;
   position: absolute;
   width: 100%;
@@ -52,83 +47,13 @@ export const RoutesEditor = ({
 }) => {
   const {
     imageSize,
-    getMachine,
-    setMousePosition,
-    setIsPointMoving,
-    getPercentagePosition,
-    findCloserPoint,
-    updatePathOnRouteIndex,
-    routeSelectedIndex,
-    pointSelectedIndex,
-    isPointClicked,
-    routeIndexHovered,
     loadPhotoRelatedData,
     loadedPhotos,
     photoRef,
-    svgRef,
     photoPath,
     setLoadedPhotos,
-    photoZoom,
     photoPaths,
   } = useClimbingContext();
-  const machine = getMachine();
-  const [transformOrigin] = useState({ x: 0, y: 0 }); // @TODO remove ?
-
-  const onCanvasClick = (e) => {
-    if (machine.currentStateName === 'extendRoute') {
-      machine.execute('addPointToEnd', {
-        position: { x: e.clientX, y: e.clientY },
-      });
-      return;
-    }
-
-    if (machine.currentStateName === 'pointMenu') {
-      machine.execute('cancelPointMenu');
-    } else {
-      machine.execute('cancelRouteSelection');
-    }
-  };
-
-  // @TODO doesn't work on mobile
-  const onMove = (position: PositionPx) => {
-    if (isPointClicked) {
-      setMousePosition(null);
-      machine.execute('dragPoint', { position });
-      setIsPointMoving(true);
-
-      const newCoordinate = getPercentagePosition(position);
-      const closestPoint = findCloserPoint(newCoordinate);
-
-      const updatedPoint = closestPoint ?? newCoordinate;
-      updatePathOnRouteIndex(routeSelectedIndex, (path) =>
-        updateElementOnIndex(path, pointSelectedIndex, (point) => ({
-          ...point,
-          x: updatedPoint.x,
-          y: updatedPoint.y,
-          ...(closestPoint?.type ? { type: closestPoint?.type } : {}),
-        })),
-      );
-    } else if (machine.currentStateName !== 'extendRoute') {
-      setMousePosition(null);
-    } else if (routeIndexHovered === null) {
-      setMousePosition(position);
-    }
-  };
-
-  const onMouseMove = (e) => {
-    const mousePosition: PositionPx = {
-      x: e.clientX,
-      y: e.clientY,
-      units: 'px',
-    };
-    const positionInImage = getPositionInImageFromMouse(
-      svgRef,
-      mousePosition,
-      photoZoom,
-    );
-
-    onMove(positionInImage);
-  };
 
   const preloadOtherPhotos = () => {
     const photosToLoad = photoPaths.filter((path) => !loadedPhotos[path]);
@@ -163,24 +88,15 @@ export const RoutesEditor = ({
     preloadOtherPhotos();
     setIsPhotoLoading(false);
   };
-
   return (
     <EditorContainer
-      imageHeight={imageSize.height}
+      $imageHeight={imageSize.height}
       onContextMenu={isMobileDevice() ? (e) => e.preventDefault() : undefined}
     >
       <ImageContainer>
         <ImageElement src={imageUrl} onLoad={onPhotoLoad} ref={photoRef} />
       </ImageContainer>
-      {!isPhotoLoading && (
-        <RoutesLayer
-          isVisible={isRoutesLayerVisible}
-          onClick={onCanvasClick}
-          onEditorMouseMove={onMouseMove}
-          onEditorTouchMove={onMouseMove}
-          transformOrigin={transformOrigin}
-        />
-      )}
+      {!isPhotoLoading && <RoutesLayer isVisible={isRoutesLayerVisible} />}
     </EditorContainer>
   );
 };

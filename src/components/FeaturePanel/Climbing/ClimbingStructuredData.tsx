@@ -5,9 +5,9 @@ import { getHumanPoiType } from '../../../helpers/featureLabel';
 import {
   findOrConvertRouteGrade,
   getDifficulties,
-} from './utils/grades/routeGrade';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { getGradeSystemName } from '../../../services/tagging/climbing';
+} from '../../../services/tagging/climbing/routeGrade';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
+import { getGradeSystemName } from '../../../services/tagging/climbing/gradeSystems';
 import Head from 'next/head';
 
 const generateScriptContent = (feature, userSettings) => {

@@ -2,7 +2,6 @@ import styled from '@emotion/styled';
 import { SEARCH_BOX_HEIGHT } from './consts';
 import { css } from '@emotion/react';
 import { isDesktop } from '../helpers';
-import { Paper } from '@mui/material';
 
 export const TopPanel = styled.div<{ $isMobileMode: boolean }>`
   position: absolute;

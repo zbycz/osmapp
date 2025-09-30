@@ -5,15 +5,6 @@ import { Point } from './Points/Point';
 import { MouseTrackingLine } from './MouseTrackingLine';
 import { useConfig } from '../config';
 
-type Props = {
-  x: number;
-  y: number;
-  routeNumberXShift: number;
-  routeNumber: number;
-  onPointInSelectedRouteClick: (event: React.MouseEvent<any>) => void;
-  osmId: string;
-};
-
 const NonEditablePoint = ({ x, y, isSelected }) => {
   const config = useConfig();
   return (
@@ -40,37 +31,40 @@ const NonEditablePoint = ({ x, y, isSelected }) => {
   );
 };
 
-export const StartPoint = ({
-  x,
-  y,
-  routeNumber,
-  routeNumberXShift = 0,
-  osmId,
-  onPointInSelectedRouteClick,
-}: Props) => {
-  const { isRouteSelected, getMachine } = useClimbingContext();
-  const isSelected = isRouteSelected(routeNumber);
-  const machine = getMachine();
+type Props = {
+  routeIndex: number;
+};
+
+export const StartPoint = ({ routeIndex }: Props) => {
+  const {
+    isRouteSelected,
+    machine,
+    getPixelPosition,
+    getPathForRoute,
+    routes,
+  } = useClimbingContext();
+
+  const route = routes[routeIndex];
+  const path = getPathForRoute(route);
+  if (!route || !path || path?.length === 0) return null;
+
+  const { x, y } = getPixelPosition({
+    ...path[0],
+    units: 'percentage',
+  });
+  const isSelected = isRouteSelected(routeIndex);
+
   return (
     <>
       {isSelected &&
       (machine.currentStateName === 'editRoute' ||
         machine.currentStateName === 'extendRoute') ? (
-        <Point
-          x={x}
-          y={y}
-          onPointInSelectedRouteClick={onPointInSelectedRouteClick}
-          index={0}
-          routeNumber={routeNumber}
-          type={undefined}
-        />
+        <Point x={x} y={y} index={0} routeIndex={routeIndex} type={undefined} />
       ) : (
         <NonEditablePoint isSelected={isSelected} x={x} y={y} />
       )}
-      <MouseTrackingLine routeNumber={routeNumber} />
-      <RouteNumber x={x + routeNumberXShift} y={y} osmId={osmId}>
-        {routeNumber}
-      </RouteNumber>
+      <MouseTrackingLine routeIndex={routeIndex} />
+      <RouteNumber routeIndex={routeIndex} />
     </>
   );
 };

@@ -1,14 +1,15 @@
+import { useRef } from 'react';
 import styled from '@emotion/styled';
 import React, { useEffect, useState } from 'react';
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 import { RenderListRow } from './RouteListRow';
 import { useDragItems } from '../../../utils/useDragItems';
 import { DragHandler } from '../../../utils/DragHandler';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
 import { GradeSystemSelect } from '../GradeSystemSelect';
 import { t } from '../../../../services/intl';
 import { Box } from '@mui/material';
+import { useReplacePhotoIfNeeded } from '../utils/useReplacePhotoIfNeeded';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 
 type Item = {
   id: number;
@@ -80,12 +81,11 @@ export const RouteListDndContent = ({ isEditable }) => {
     routeSelectedIndex,
     isRouteSelected,
     isEditMode,
-    getMachine,
+    machine,
     showDebugMenu,
   } = useClimbingContext();
   const [items, setItems] = useState([]);
-  const machine = getMachine();
-  const { userSettings, setUserSetting } = useUserSettingsContext();
+  const { userSettings } = useUserSettingsContext();
   useEffect(() => {
     const content = routes.map((route, index) => ({
       id: index,
@@ -93,9 +93,14 @@ export const RouteListDndContent = ({ isEditable }) => {
     }));
     setItems(content);
   }, [routes]);
-  const parentRef = React.useRef<HTMLDivElement>(null);
-
+  const parentRef = useRef<HTMLDivElement>(null);
+  const replacePhotoIfNeeded = useReplacePhotoIfNeeded();
   const onRowClick = (index: number) => {
+    if (userSettings['climbing.showRelatedPhotoByRouteClick'] && !isEditMode) {
+      replacePhotoIfNeeded({
+        selectedIndex: index,
+      });
+    }
     const routeNumber = routeSelectedIndex === index ? null : index;
     if (isEditMode) {
       machine.execute('editRoute', { routeNumber });
@@ -149,12 +154,7 @@ export const RouteListDndContent = ({ isEditable }) => {
         <MaxWidthContainer>
           <NameHeader>{t('member_features.climbing')}</NameHeader>
           <Box mr={1}>
-            <GradeSystemSelect
-              setGradeSystem={(system) => {
-                setUserSetting('climbing.gradeSystem', system);
-              }}
-              selectedGradeSystem={userSettings['climbing.gradeSystem']}
-            />
+            <GradeSystemSelect />
           </Box>
         </MaxWidthContainer>
       </TableHeader>

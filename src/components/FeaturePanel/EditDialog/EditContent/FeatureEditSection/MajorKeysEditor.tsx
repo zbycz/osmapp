@@ -1,45 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import {
-  Button,
-  TextField,
-  Typography,
-  Box,
-  Switch,
-  Stack,
-  Tooltip,
-} from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import { t } from '../../../../../services/intl';
 import {
-  getNextWikimediaCommonsIndex,
+  getLastWikimediaCommonsIndex,
   getWikimediaCommonsKey,
 } from '../../../Climbing/utils/photo';
 import { useEditDialogContext } from '../../../helpers/EditDialogContext';
 import { OpeningHoursEditor } from './OpeningHoursEditor/OpeningHoursEditor';
-import styled from '@emotion/styled';
-import { CharacterCount, getInputTypeForKey } from '../helpers';
-import { isClimbingRoute } from '../../../../../utils';
-import OpenInNew from '@mui/icons-material/OpenInNew';
-import { useCurrentItem } from '../../EditContext';
+import {
+  isClimbingCragOrArea as isClimbingCragOrAreaFn,
+  isClimbingRoute as isClimbingRouteFn,
+} from '../../../../../utils';
+import { useCurrentItem } from '../../context/EditContext';
+import { TextFieldWithCharacterCount } from './helpers';
+import { WikimediaCommonsEditor } from './WikimediaCommonsEditor';
+import { FeatureTags } from '../../../../../services/types';
 
-export const climbingRouteMajorKeys = [
-  'author',
-  'climbing:grade:uiaa',
-  'climbing:grade:french',
-  'climbing:boulder',
-  'length',
-];
+const basicMajorKeys = ['name', 'description', 'website'];
+const nonClimbingMajorKeys = ['phone', 'opening_hours'];
+const climbingRouteMajorKeys = ['author', 'climbing:length'];
+export const majorKeys = [...basicMajorKeys, ...nonClimbingMajorKeys];
 
-export const majorKeys = [
-  'name',
-  'description',
-  'website',
-  'phone',
-  'opening_hours',
-];
+const getData = (numberOfWikimediaItems: number, tags: FeatureTags) => {
+  const isClimbingCragOrArea = isClimbingCragOrAreaFn(tags);
+  const isClimbingRoute = isClimbingRouteFn(tags);
+  const isClimbing = isClimbingCragOrArea || isClimbingRoute;
 
-const MAX_INPUT_LENGTH = 255;
-
-const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
   const wikimediaCommonTags = Array(numberOfWikimediaItems)
     .fill('')
     .reduce((acc, _, index) => {
@@ -50,7 +36,8 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
 
   return {
     keys: [
-      ...majorKeys,
+      ...basicMajorKeys,
+      ...(isClimbing ? [] : nonClimbingMajorKeys),
       ...Object.keys(wikimediaCommonTags),
       ...(isClimbingRoute ? climbingRouteMajorKeys : []),
     ],
@@ -58,99 +45,31 @@ const getData = (numberOfWikimediaItems: number, isClimbingRoute?: boolean) => {
       name: t('tags.name'),
       description: t('tags.description'),
       website: t('tags.website'),
-      phone: t('tags.phone'),
-      opening_hours: t('tags.opening_hours'),
+      ...(isClimbing
+        ? {}
+        : {
+            phone: t('tags.phone'),
+            opening_hours: t('tags.opening_hours'),
+          }),
       ...wikimediaCommonTags,
       ...(isClimbingRoute
         ? {
             author: t('tags.author'),
-            'climbing:grade:uiaa': t('tags.climbing_grade_uiaa'),
-            'climbing:grade:french': t('tags.climbing_grade_french'),
-            'climbing:boulder': t('tags.climbing_boulder'),
-            length: t('tags.length'),
+            'climbing:length': t('tags.climbing_length'),
           }
         : {}),
     },
   };
 };
 
-const InputContainer = styled.div`
-  position: relative;
-`;
-
-type TextFieldProps = {
-  k: string;
-  label: string;
-  onChange: React.ChangeEventHandler<HTMLInputElement | HTMLTextAreaElement>;
-  value?: string;
-  placeholder?: string;
-  autoFocus?: boolean;
-  error?: boolean;
-  helperText?: string;
-};
-
-const TextFieldWithCharacterCount = ({
-  k,
-  error,
-  helperText,
-  label,
-  autoFocus,
-  onChange,
-  value,
-  placeholder,
-}: TextFieldProps) => {
-  const [isFocused, setIsFocused] = useState(false);
-  const [isValidationReadyToCheck, setIsValidationReadyToCheck] =
-    useState(false);
-  const inputType = getInputTypeForKey(k);
-
-  return (
-    <InputContainer>
-      <TextField
-        error={isValidationReadyToCheck && error}
-        label={label}
-        type={inputType}
-        multiline={inputType === 'text'}
-        value={value}
-        InputLabelProps={{ shrink: true }}
-        variant="outlined"
-        margin="normal"
-        name={k}
-        onChange={onChange}
-        fullWidth
-        autoFocus={autoFocus}
-        placeholder={placeholder}
-        inputProps={{ maxLength: MAX_INPUT_LENGTH }}
-        onFocus={() => setIsFocused(true)}
-        onBlur={() => {
-          setIsValidationReadyToCheck(true);
-          setIsFocused(false);
-        }}
-        slotProps={{ formHelperText: { component: 'div' } }}
-        helperText={
-          <Stack direction="row" spacing={1}>
-            {isValidationReadyToCheck && helperText}
-            <CharacterCount
-              count={value?.length}
-              max={MAX_INPUT_LENGTH}
-              isInputFocused={isFocused}
-            />
-          </Stack>
-        }
-      />
-    </InputContainer>
-  );
-};
-
-// TODO refactor this - extract member functions
-// eslint-disable-next-line max-lines-per-function
-export const MajorKeysEditor = () => {
+export const MajorKeysEditor: React.FC = () => {
   const { focusTag } = useEditDialogContext();
   const { tags, setTag } = useCurrentItem();
 
-  // TODO this code will be replaced when implementing id presets fields
-  const nextWikimediaCommonsIndex = getNextWikimediaCommonsIndex(tags);
-  const data = getData(nextWikimediaCommonsIndex + 1, isClimbingRoute(tags));
+  const lastWikimediaCommonsIndex = getLastWikimediaCommonsIndex(tags);
+
+  const data = getData(lastWikimediaCommonsIndex + 1, tags);
+
   const [activeMajorKeys, setActiveMajorKeys] = useState(() =>
     data.keys.filter((k) => !!tags[k]),
   );
@@ -158,20 +77,21 @@ export const MajorKeysEditor = () => {
   const inactiveMajorKeys = data.keys.filter(
     (k) =>
       !activeMajorKeys.includes(k) ||
-      k === getWikimediaCommonsKey(nextWikimediaCommonsIndex + 1),
+      k === getWikimediaCommonsKey(lastWikimediaCommonsIndex + 1),
   );
 
-  const isWikimediaCommonsFileNameInvalid = (value: string) => {
-    const regex = /^File:.+\.[a-zA-Z0-9_]+$/;
-    return !regex.test(value);
-  };
-
   useEffect(() => {
-    // name can be clicked even though it was built from preset name
     if (focusTag === 'name' && !activeMajorKeys.includes('name')) {
       setActiveMajorKeys((arr) => [...arr, 'name']);
     }
-  }, [focusTag]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [activeMajorKeys, focusTag]);
+
+  const getHelperText = (k: string) => {
+    if (k === 'description') {
+      return t('editdialog.description_helper_text');
+    }
+    return undefined;
+  };
 
   const getInputElement = (k: string) => {
     if (!data.keys?.includes(k)) return null;
@@ -181,46 +101,7 @@ export const MajorKeysEditor = () => {
     }
 
     if (k.startsWith('wikimedia_commons')) {
-      const error = isWikimediaCommonsFileNameInvalid(tags[k]);
-
-      return (
-        <Stack direction="row" spacing={1} alignItems="center">
-          <Box flex={1}>
-            <TextFieldWithCharacterCount
-              label={data.names[k]}
-              helperText={
-                error ? t('editdialog.upload_photo_filename_error') : undefined
-              }
-              error={error}
-              k={k}
-              autoFocus={focusTag === k}
-              placeholder="File:Photo example.jpg"
-              onChange={(e) => {
-                setTag(e.target.name, e.target.value);
-              }}
-              value={tags[k] ?? ''}
-            />
-          </Box>
-          <div>
-            <Tooltip
-              arrow
-              title={t('editdialog.upload_photo_tooltip')}
-              enterDelay={1000}
-            >
-              <Button
-                variant="text"
-                color="primary"
-                onClick={() => {}}
-                endIcon={<OpenInNew />}
-                target="_blank"
-                href="https://commons.wikimedia.org/wiki/Special:UploadWizard"
-              >
-                {t('editdialog.upload_photo')}
-              </Button>
-            </Tooltip>
-          </div>
-        </Stack>
-      );
+      return <WikimediaCommonsEditor k={k} />;
     }
 
     return (
@@ -232,6 +113,7 @@ export const MajorKeysEditor = () => {
           setTag(e.target.name, e.target.value);
         }}
         value={tags[k] ?? ''}
+        helperText={getHelperText(k)}
       />
     );
   };
@@ -239,23 +121,24 @@ export const MajorKeysEditor = () => {
   return (
     <Box mb={3}>
       {activeMajorKeys.map((k) => (
-        <div key={k}>{getInputElement(k)}</div>
+        <Box key={k} mb={2}>
+          {getInputElement(k)}
+        </Box>
       ))}
+
       {!!inactiveMajorKeys.length && (
         <>
           <Typography variant="body1" component="span" color="textSecondary">
             {t('editdialog.add_major_tag')}:
           </Typography>
           {inactiveMajorKeys.map((k) => (
-            <React.Fragment key={k}>
-              {' '}
-              <Button
-                size="small"
-                onClick={() => setActiveMajorKeys((arr) => [...arr, k])}
-              >
-                {data.names[k]}
-              </Button>
-            </React.Fragment>
+            <Button
+              key={k}
+              size="small"
+              onClick={() => setActiveMajorKeys((arr) => [...arr, k])}
+            >
+              {data.names[k]}
+            </Button>
           ))}
         </>
       )}

@@ -1,6 +1,9 @@
-import { Feature } from 'geojson';
+import { Feature as GeojsonFeature, Geometry } from 'geojson';
+import { OsmType } from './services/types';
 
 export type Setter<T> = React.Dispatch<React.SetStateAction<T>>;
+
+// below ONLY shared types among server + client
 
 export type Tile = { z: number; x: number; y: number };
 
@@ -13,4 +16,50 @@ export type ClimbingStatsResponse = {
   routesCount: number;
 };
 
-export type CTFeature = Feature;
+// @see climbingTilesSource#processFeature()
+export type ClimbingTilesProperties = {
+  type: 'area' | 'crag' | 'route' | 'route_top' | 'gym' | 'ferrata';
+  name: string;
+  label?: string; // computed on FE - processFeature()
+  parentId?: number;
+
+  // group only:
+  routeCount?: number;
+  hasImages?: boolean;
+  histogramCode?: string;
+
+  // route only:
+  gradeId?: number;
+  gradeTxt?: string;
+  color?: string; // computed on FE - processFeature()
+};
+
+export type ClimbingSearchRecord = {
+  type: 'area' | 'crag' | 'gym' | 'ferrata';
+  lon: number;
+  lat: number;
+  osmType: OsmType;
+  osmId: number;
+  name: string;
+};
+
+export type ClimbingTilesFeature = GeojsonFeature<
+  Geometry,
+  ClimbingTilesProperties
+>;
+
+export type ClimbingTick = {
+  id: number;
+  osmUserId: number;
+  shortId: string | null;
+  timestamp: string;
+  style: string | null;
+  myGrade: string | null;
+  note: string | null;
+  pairing: Record<string, string> | null;
+};
+
+export type ClimbingTickDb = Omit<ClimbingTick, 'shortId'> & {
+  osmType: string | null;
+  osmId: number | null;
+};

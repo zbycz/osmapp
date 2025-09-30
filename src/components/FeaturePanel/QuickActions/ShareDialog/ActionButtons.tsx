@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import React from 'react';
 import styled from '@emotion/styled';
 import { Button, Tooltip, IconButton } from '@mui/material';
@@ -16,7 +17,7 @@ type Props = {
 };
 
 export const ActionButtons = ({ payload, type }: Props) => {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
     await navigator.clipboard.writeText(payload);

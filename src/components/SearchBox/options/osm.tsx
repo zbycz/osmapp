@@ -1,9 +1,9 @@
 import React from 'react';
 import { OsmOption } from '../types';
 import MapIcon from '@mui/icons-material/Map';
-import { GridLegacy, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { IconPart } from '../utils';
-import Router, { NextRouter } from 'next/router';
+import Router from 'next/router';
 import { isUrl } from '../../../helpers/utils';
 
 const parseType = (rawType: string) => {
@@ -83,14 +83,14 @@ export const OsmRow = ({ option: { osm } }: Props) => (
     <IconPart>
       <MapIcon />
     </IconPart>
-    <GridLegacy item xs>
+    <Grid size={{ xs: 12 }}>
       <span style={{ fontWeight: 700 }}>
         {osm.type}/{osm.id}
       </span>
       <Typography variant="body2" color="textSecondary">
         OpenStreetMap Object
       </Typography>
-    </GridLegacy>
+    </Grid>
   </>
 );
 

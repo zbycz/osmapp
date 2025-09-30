@@ -1,10 +1,16 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Table } from '@mui/material';
-import { findTicks, getTickKey } from '../../../../services/ticks';
 import { PanelLabel } from '../PanelLabel';
-import { TickRow } from '../TickRow';
 import { AddTickButton } from './AddTickButton';
+import { DotLoader } from '../../../helpers';
+import { useOsmAuthContext } from '../../../utils/OsmAuthContext';
+import { useFeatureContext } from '../../../utils/FeatureContext';
+import { getShortId } from '../../../../services/helpers';
+import { RouteTickRow } from '../RouteTickRow';
+import { isFeatureClimbingRoute } from '../../../../utils';
+import { useTicksContext } from '../../../utils/TicksContext';
+import { PROJECT_ID } from '../../../../services/project';
 
 const Container = styled.div`
   margin-bottom: 20px;
@@ -15,26 +21,75 @@ const Row = styled.div`
   margin: 20px 10px;
 `;
 
-export const MyRouteTicks = ({ shortOsmId }) => {
-  const ticks = findTicks(shortOsmId);
-  if (ticks.length === 0)
-    return (
-      <Row>
-        <AddTickButton shortOsmId={shortOsmId} />
-      </Row>
-    );
+const NotLoggedIn = () => (
+  <Row>
+    <AddTickButton />
+  </Row>
+);
+
+const ErrorLoadingTicks = () => {
+  const { error } = useTicksContext();
 
   return (
     <Container>
-      <PanelLabel addition={<AddTickButton shortOsmId={shortOsmId} />}>
+      <PanelLabel>Route ticks</PanelLabel>
+      Error: {JSON.stringify(error)}
+    </Container>
+  );
+};
+
+const NoTicksFound = () => (
+  <Row>
+    <AddTickButton />
+  </Row>
+);
+
+const MyRouteTicksInner = () => {
+  const { feature } = useFeatureContext();
+  const { ticks, error, isFetching } = useTicksContext();
+  const { loggedIn } = useOsmAuthContext();
+  const ticksForRoute = ticks.filter(
+    ({ shortId }) => shortId === getShortId(feature.osmMeta),
+  );
+
+  if (!loggedIn) {
+    return <NotLoggedIn />;
+  }
+  if (isFetching && ticksForRoute.length === 0) {
+    return <DotLoader />;
+  }
+  if (error) {
+    return <ErrorLoadingTicks />;
+  }
+  if (ticksForRoute.length === 0) {
+    return <NoTicksFound />;
+  }
+
+  return (
+    <Container>
+      <PanelLabel addition={<AddTickButton />}>
         Route ticks
+        <span>{isFetching && <DotLoader />}</span>
       </PanelLabel>
+
       <Table size="small">
-        {ticks.map((tick) => {
-          const tickKey = getTickKey(tick);
-          return <TickRow tick={tick} key={tickKey} />;
+        {ticksForRoute.map((tick) => {
+          return <RouteTickRow key={tick.id} tick={tick} />;
         })}
       </Table>
     </Container>
   );
+};
+
+export const MyRouteTicks = () => {
+  const { feature } = useFeatureContext();
+  if (!isFeatureClimbingRoute(feature)) {
+    return null;
+  }
+
+  if (PROJECT_ID !== 'openclimbing') {
+    return null; // ticks are not loaded in context
+  }
+
+  return <MyRouteTicksInner />;
 };

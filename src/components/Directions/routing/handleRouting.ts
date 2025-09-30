@@ -5,7 +5,6 @@ import { LonLat } from '../../../services/types';
 import { Profile, RoutingResult } from './types';
 import { getGraphhopperResults } from './getGraphhopperResults';
 import { LineLayerSpecification } from '@maplibre/maplibre-gl-style-spec';
-import { type GeoJSON } from 'geojson';
 import { isMobileModeVanilla } from '../../helpers';
 
 // taken from or inspired by cartes.app, LGPL
@@ -162,7 +161,7 @@ export const destroyRouting = () => {
 
 const LAST_MODE_STORAGE_KEY = 'last-directions-mode';
 export const getLastMode = () =>
-  window.localStorage?.getItem(LAST_MODE_STORAGE_KEY);
+  window.localStorage?.getItem(LAST_MODE_STORAGE_KEY) as Profile;
 
 export const handleRouting = async (
   mode: Profile,

@@ -183,8 +183,8 @@ const usePhotoMarkers = (photoExifs, mapRef) => {
 };
 
 const useInitMap = () => {
-  const containerRef = React.useRef(null);
-  const mapRef = React.useRef<maplibregl.Map>(null);
+  const containerRef = useRef(null);
+  const mapRef = useRef<maplibregl.Map>(null);
   const [isMapLoaded, setIsMapLoaded] = useState(false);
   const [isFirstMapLoad, setIsFirstMapLoad] = useState(true);
 
@@ -199,7 +199,7 @@ const useInitMap = () => {
     [],
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     const geolocation = new maplibregl.GeolocateControl({
       positionOptions: {
         enableHighAccuracy: true,
@@ -245,7 +245,7 @@ const useInitMap = () => {
     mapRef.current?.on('load', () => {
       if (isFirstMapLoad) {
         mapRef.current.jumpTo({
-          center: feature.center as [number, number],
+          center: feature.center,
           zoom: 18.5,
         });
 

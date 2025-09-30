@@ -1,9 +1,6 @@
 import { FeatureTags } from '../../../../services/types';
 import { isIOS } from '../../../../helpers/platforms';
 import { naturalSort } from './array';
-import Router from 'next/router';
-import { getOsmappLink } from '../../../../services/helpers';
-import { useFeatureContext } from '../../../utils/FeatureContext';
 
 // @TODO move file outside of climbing
 
@@ -16,6 +13,9 @@ export const removeFilePrefix = (name: string) => name?.replace(/^File:/, '');
 
 export const isWikimediaCommons = (tag: string) =>
   tag.startsWith('wikimedia_commons');
+
+export const hasWikimediaCommons = (tags: FeatureTags) =>
+  Object.keys(tags).some((tag) => isWikimediaCommons(tag));
 
 export const isWikimediaCommonsPhoto = ([key, value]: [string, string]) => {
   // regexp to match wikimedia_commons, wikimedia_commons:2, etc. but not  wikimedia_commons:path, wikimedia_commons:whatever
@@ -50,26 +50,30 @@ export const isWikimediaCommonsPhotoPath = (tag: string) => {
 export const getWikimediaCommonsPhotoPathKeys = (tags: FeatureTags) =>
   Object.keys(tags).filter(isWikimediaCommonsPhotoPath);
 
-export const getWikimediaCommonsTags = (tags: FeatureTags) => {
+export const getCommonTags = (tags: FeatureTags, commonTag: string) => {
   return naturalSort(
     Object.entries(tags).filter(([key]) => {
-      return isWikimediaCommons(key);
+      return key.startsWith(commonTag);
     }),
     (item) => item[0],
   );
 };
 
-export const getWikimediaCommonsKeys = (tags: FeatureTags) =>
-  getWikimediaCommonsTags(tags).map(([tagKey, _tagValue]) => tagKey); // TODO this returns also :path keys, not sure if intended
+export const getCommonKeys = (tags: FeatureTags, commonKey: string) =>
+  getCommonTags(tags, commonKey).map(([tagKey, _tagValue]) => tagKey); // TODO this returns also :path keys, not sure if intended
 
-export const getNextWikimediaCommonsIndex = (tags: FeatureTags) => {
-  const keys = getWikimediaCommonsKeys(tags);
+export const getLastWikimediaCommonsIndex = (tags: FeatureTags) => {
+  return getLastCommonKeyIndex(tags, 'wikimedia_commons');
+};
+
+export const getLastCommonKeyIndex = (tags: FeatureTags, commonKey: string) => {
+  const keys = getCommonKeys(tags, commonKey);
 
   const maxKey = keys.reduce((max, key) => {
-    if (key === 'wikimedia_commons') return Math.max(max, 0);
+    if (key === commonKey) return Math.max(max, 0);
 
     const parts = key.split(':');
-    if (parts[0] === 'wikimedia_commons' && parts.length > 1) {
+    if (parts[0] === commonKey && parts.length > 1) {
       const number = parseInt(parts[1], 10);
       if (!Number.isNaN(number)) {
         return Math.max(max, number - 1);

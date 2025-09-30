@@ -1,7 +1,5 @@
-import { RawPresets } from './types/Presets';
+import { Presets } from './types/Presets';
 import type { RawFields } from './types/Fields';
-
-// until https://github.com/openstreetmap/id-tagging-schema/pull/1113 is merged
 
 export const ourFields: RawFields = {
   'climbing/summit_log': {
@@ -28,11 +26,6 @@ export const ourFields: RawFields = {
     type: 'combo',
     options: ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'],
   },
-  'climbing/length': {
-    key: 'climbing:length',
-    type: 'number',
-    minValue: 0,
-  },
   'climbing/bolts': {
     key: 'climbing:bolts',
     type: 'number',
@@ -47,123 +40,40 @@ export const ourFields: RawFields = {
     type: 'combo',
     options: ['expansion', 'glue-in', 'ring'],
   },
-  'climbing/grade/uiaa': {
-    key: 'climbing:grade:uiaa',
-    type: 'text',
-  },
-  'climbing/grade/saxon': {
-    key: 'climbing:grade:saxon',
-    type: 'text',
-  },
-  'climbing/grade/french': {
-    key: 'climbing:grade:french',
-    type: 'text',
-  },
 };
 
-export const ourPresets = {
-  'climbing/route_bottom': {
-    icon: 'temaki-abseiling',
-    geometry: ['point'],
-    fields: ['{climbing/route}'],
-    moreFields: ['{climbing/route}'],
-    tags: {
-      climbing: 'route_bottom',
-    },
-    addTags: {
-      sport: 'climbing',
-      climbing: 'route_bottom',
-    },
-  },
-  'climbing/route': {
-    icon: 'temaki-abseiling',
-    geometry: ['point', 'line'], // TODO could be relation, but we must not offer it in PresetSelect
-    fields: [
-      'name',
-      'climbing/length',
-      'climbing/grade/uiaa',
-      'climbing/grade/french',
-      'climbing/grade/saxon',
-    ],
-    moreFields: [
-      'climbing/bolts',
-      'climbing/bolted',
-      'climbing/bolt',
-      'climbing/orientation',
-      'climbing/quality',
-      'climbing/rock',
-      'climbing/summit_log',
-      'website',
-      'ele',
-    ],
-    tags: {
-      climbing: 'route',
-    },
-    addTags: {
-      sport: 'climbing',
-      climbing: 'route',
-    },
-  },
-  'climbing/crag': {
-    icon: 'temaki-abseiling',
-    geometry: ['point', 'line', 'relation'], // line is not intended use, but we need to match way+climbing=crag
-    fields: ['name'],
-    moreFields: [
-      'climbing/length',
-      'climbing/routes',
-      'climbing/bolted',
-      'climbing/bolt',
-      'climbing/orientation',
-      'climbing/quality',
-      'climbing/rock',
-      'website',
-      'ele',
-    ],
-    tags: {
-      climbing: 'crag',
-    },
-    addTags: {
-      sport: 'climbing',
-      climbing: 'crag',
-    },
-  },
-  'climbing/area': {
-    icon: 'temaki-abseiling',
-    geometry: ['point', 'relation'],
-    fields: ['name'],
-    tags: {
-      climbing: 'area',
-    },
-    addTags: {
-      sport: 'climbing',
-      climbing: 'area',
-    },
-  },
-} as RawPresets;
+const routeFields = [
+  'climbing/bolts',
+  'climbing/bolted',
+  'climbing/bolt',
+  'climbing/orientation',
+  'climbing/quality',
+  'climbing/rock',
+  'climbing/summit_log',
+];
+
+export const modifyPresets = (presets: Presets) => {
+  presets['climbing/route'].moreFields.push(...routeFields);
+  presets['climbing/route_bottom'].moreFields.push(...routeFields);
+  presets['climbing/crag'].geometry.push('line'); // line is not intended use, but we need to match way+climbing=crag
+  presets['type/site/climbing/area'].geometry.push('point'); // to be able to create it from node
+
+  presets['climbing/route_top'] = JSON.parse(
+    JSON.stringify(presets['climbing/route_bottom']),
+  );
+  presets['climbing/route_top'].tags.climbing = 'route_top';
+  presets['climbing/route_top'].addTags.climbing = 'route_top';
+
+  return presets;
+};
 
 // eslint-disable-next-line max-lines-per-function
 export const getOurTranslations = (lang: string) => ({
   [lang]: {
     presets: {
       presets: {
-        'climbing/route_bottom': {
-          name:
-            lang === 'cs'
-              ? 'Lezecká cesta (začátek)'
-              : 'Climbing Route (start)',
-          terms: 'rock climbing,climbing',
-        },
-        'climbing/route': {
-          name: lang === 'cs' ? 'Lezecká cesta' : 'Climbing Route',
-          terms: 'rock climbing,climbing',
-        },
-        'climbing/crag': {
-          name: lang === 'cs' ? 'Lezecký sektor' : 'Climbing Crag',
-          terms: 'rock climbing,climbing',
-        },
-        'climbing/area': {
-          name: lang === 'cs' ? 'Lezecká oblast' : 'Climbing Area',
-          terms: 'rock climbing,climbing',
+        'climbing/route_top': {
+          name: 'Climbing route (top)',
         },
       },
       fields: {
@@ -192,9 +102,6 @@ export const getOurTranslations = (lang: string) => ({
             NW: 'North-West',
           },
         },
-        'climbing/length': {
-          label: 'Length (m)',
-        },
         'climbing/bolts': {
           label: 'Number of bolts',
         },
@@ -208,18 +115,6 @@ export const getOurTranslations = (lang: string) => ({
             'glue-in': 'glue-in bolt',
             ring: 'ring bolt',
           },
-        },
-        'climbing/grade/uiaa': {
-          label: 'Grade (UIAA)',
-          placeholder: '6-',
-        },
-        'climbing/grade/saxon': {
-          label: 'Grade (saxon)',
-          placeholder: 'VIIa',
-        },
-        'climbing/grade/french': {
-          label: 'Grade (french)',
-          placeholder: '5c',
         },
       },
     },

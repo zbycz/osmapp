@@ -36,9 +36,9 @@ const getRoutingFailed = (showToast: ShowToast) => {
 };
 
 export const useReactToUrl = (
-  setMode: (param: ((current: string) => string) | string) => void,
-  setPoints: (points: Array<Option>) => void,
-  setResult: (result: RoutingResult) => void,
+  setMode: Setter<Profile>,
+  setPoints: Setter<Option[]>,
+  setResult: Setter<RoutingResult>,
 ) => {
   const { showToast } = useSnackbar();
   const initialModeWasSet = useRef(false);

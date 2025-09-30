@@ -5,16 +5,16 @@ import { getApiId, getFullOsmappLink, getUrlOsmId } from '../../helpers';
 import { join } from '../../../utils';
 import { clearFetchCache } from '../../fetchCache';
 import { getLabel } from '../../../helpers/featureLabel';
-import {
-  EditDataItem,
-  Members,
-} from '../../../components/FeaturePanel/EditDialog/useEditItems';
 import { OSM_WEBSITE } from '../consts';
 import { getDiffXml } from './getDIffXml';
 import { SingleDocXmljs } from './xmlTypes';
 import { xmljsBuildOsm } from './xmlHelpers';
 import * as api from './api';
 import { getFirstExistingId } from '../getFirstExistingId';
+import {
+  DataItem,
+  Members,
+} from '../../../components/FeaturePanel/EditDialog/context/types';
 
 export const getChangesetXml = ({ changesetComment, feature }) => {
   const tags = [
@@ -30,19 +30,15 @@ export const getChangesetXml = ({ changesetComment, feature }) => {
     </osm>`;
 };
 
-const getDescription = (toBeDeleted: boolean, feature: Feature) => {
-  const undelete = feature.deleted;
-  const action = undelete ? 'Undeleted' : toBeDeleted ? 'Deleted' : 'Edited';
-  const name = getLabel(feature) || getUrlOsmId(feature.osmMeta);
-  return `${action} ${name}`;
-};
-
 const getChangesetComment = (
   comment: string,
   toBeDeleted: boolean,
-  feature: Feature,
+  original: Feature,
 ) => {
-  const description = getDescription(toBeDeleted, feature);
+  const undelete = original.deleted;
+  const action = undelete ? 'Undeleted' : toBeDeleted ? 'Deleted' : 'Edited';
+  const name = getLabel(original) || getUrlOsmId(original.osmMeta);
+  const description = `${action} ${name}`;
   return join(comment, ' • ', `${description} #osmapp`);
 };
 
@@ -80,20 +76,25 @@ export const updateItemXml = (
   return xmljsBuildOsm(item);
 };
 
+const isClimbingChange = (change: DataItem) =>
+  Object.fromEntries(change.tagsEntries).climbing;
+
 const getCommentMulti = (
   original: Feature,
   comment: string,
-  changes: EditDataItem[],
+  changes: DataItem[],
 ) => {
-  const isClimbing = changes.some((change) => change.tags.climbing);
-  const suffix = isClimbing ? ' #climbing' : '';
+  const suffix = changes.some(isClimbingChange) ? ' #climbing' : '';
 
   // TODO find topmost parent in changes and use its name
   // eg. survey • Edited Roviště (5 items) #osmapp #climbing
 
-  if (changes.length === 1 && original.point) {
-    const typeTag = changes[0].tagsEntries[0]?.join('=') ?? 'node with no tags';
-    return join(comment, ' • ', `Added ${typeTag} #osmapp`);
+  if (original.point) {
+    // adding a new node or relation
+    const typeTag = changes[0].tagsEntries[0]?.join('=') ?? 'item with no tags';
+    const name = Object.fromEntries(changes[0].tagsEntries).name ?? '';
+    const label = join(typeTag, ' ', name);
+    return join(comment, ' • ', `Added ${label} #osmapp${suffix}`);
   }
 
   const toBeDeleted = changes.length === 1 && changes[0].toBeDeleted;
@@ -104,7 +105,7 @@ const getCommentMulti = (
 export const saveChanges = async (
   original: Feature,
   comment: string,
-  changes: EditDataItem[],
+  changes: DataItem[],
 ): Promise<SuccessInfo> => {
   if (!changes.length) {
     throw new Error('No changes submitted.');
@@ -114,7 +115,7 @@ export const saveChanges = async (
   const changesetXml = getChangesetXml({ changesetComment, feature: original });
   const changesetId = await api.putChangeset(changesetXml);
 
-  const diffXml = getDiffXml(changesetId, changes);
+  const diffXml = getDiffXml(changes, changesetId);
   const diffResult = await api.uploadDiff(changesetId, diffXml);
   const firstId = getFirstExistingId(diffResult, changes);
 

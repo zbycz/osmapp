@@ -21,13 +21,14 @@ import {
   ActionWithCallback,
   State,
   StateAction,
-  useGetMachineFactory,
-} from '../utils/useGetMachineFactory';
+  useStateMachine,
+} from '../utils/useStateMachine';
 import { positionUtilsFactory } from '../utils/positionUtilsFactory';
 import { Feature } from '../../../../services/types';
 import { osmToClimbingRoutes } from './osmToClimbingRoutes';
 import { publishDbgObject } from '../../../../utils';
 import { getContainedSizeImage } from '../utils/image';
+import { Setter } from '../../../../types';
 
 type LoadedPhotos = Record<string, Record<number, boolean>>;
 type ImageSize = {
@@ -46,30 +47,30 @@ type ClimbingContextType = {
   imageSize: ImageSize;
   imageContainerSize: ImageSize;
   isRoutesLayerVisible: boolean;
-  setIsRoutesLayerVisible: (isRoutesLayerVisible: boolean) => void;
+  setIsRoutesLayerVisible: Setter<boolean>;
   isPointMoving: boolean;
   isPanningDisabled: boolean;
-  setIsPanningDisabled: (isPanningDisabled: boolean) => void;
+  setIsPanningDisabled: Setter<boolean>;
   isRouteSelected: (routeNumber: number) => boolean;
   isOtherRouteSelected: (routeNumber: number) => boolean;
   isRouteHovered: (routeNumber: number) => boolean;
   isPointSelected: (pointNumber: number) => boolean;
   pointSelectedIndex: number;
   routes: Array<ClimbingRoute>;
-  routeSelectedIndex: number;
+  routeSelectedIndex: number | null | undefined;
   isPointClicked: boolean;
-  setIsPointClicked: (isPointClicked: boolean) => void;
-  setEditorPosition: (position: PositionPx) => void;
-  setImageSize: (ImageSize) => void;
-  setImageContainerSize: (ImageSize) => void;
+  setIsPointClicked: Setter<boolean>;
+  setEditorPosition: Setter<PositionPx>;
+  setImageSize: Setter<ImageSize>;
+  setImageContainerSize: Setter<ImageSize>;
   photoPaths: Array<string>;
-  setPhotoPaths: (path: Array<string>) => void;
+  setPhotoPaths: Setter<string[]>;
   photoPath: string;
-  setPhotoPath: (path: string) => void;
-  setIsPointMoving: (isPointMoving: boolean) => void;
-  setPointSelectedIndex: (pointSelectedIndex: number) => void;
-  setRoutes: (routes: Array<ClimbingRoute>) => void;
-  setRouteSelectedIndex: (routeSelectedIndex: number) => void;
+  setPhotoPath: Setter<string>;
+  setIsPointMoving: Setter<boolean>;
+  setPointSelectedIndex: Setter<number>;
+  setRoutes: Setter<ClimbingRoute[]>;
+  setRouteSelectedIndex: Setter<number>;
   updateRouteOnIndex: (
     routeIndex: number,
     callback?: (route: ClimbingRoute) => ClimbingRoute,
@@ -83,43 +84,45 @@ type ClimbingContextType = {
   getCurrentPath: () => PathPoints;
   getPercentagePosition: (position: PositionPx) => Position;
   addZoom: (position: PositionPx) => PositionPx;
-  getMachine: () => {
+  machine: {
     currentState: Partial<Record<StateAction, ActionWithCallback>>;
     currentStateName: State;
     execute: (desiredAction: StateAction, props?: unknown) => void;
   };
   scrollOffset: PositionPx;
-  setScrollOffset: (scrollOffset: PositionPx) => void;
+  setScrollOffset: Setter<PositionPx>;
   findCloserPoint: (position: Position) => PathPoint | null;
   photoZoom: ZoomState;
-  setPhotoZoom: (photoZoom: ZoomState) => void;
+  setPhotoZoom: Setter<ZoomState>;
   areRoutesLoading: boolean;
-  setAreRoutesLoading: (areRoutesLoading: boolean) => void;
+  setAreRoutesLoading: Setter<boolean>;
   mousePosition: PositionPx;
-  setMousePosition: (mousePosition: PositionPx | null) => void;
+  setMousePosition: Setter<PositionPx | null>;
   pointElement: null | HTMLElement;
   setPointElement: (pointElement: null | HTMLElement) => void;
   moveRoute: (from: number, to: number) => void;
   isEditMode: boolean;
-  setIsEditMode: (value: boolean | ((old: boolean) => boolean)) => void;
+  setIsEditMode: Setter<boolean>;
   viewportSize: Size;
-  setViewportSize: (size: Size) => void;
-  routeIndexHovered: number;
-  setRouteIndexHovered: (routeIndexHovered: number) => void;
+  setViewportSize: Setter<Size>;
+  routeIndexHovered: number | null | undefined;
+  setRouteIndexHovered: Setter<number>;
   routeIndexExpanded: number | null;
-  setRouteIndexExpanded: (routeIndexHovered: number | null) => void;
+  setRouteIndexExpanded: Setter<number | null>;
   loadedPhotos: LoadedPhotos;
-  setLoadedPhotos: (loadedPhotos: LoadedPhotos) => void;
+  setLoadedPhotos: Setter<LoadedPhotos>;
   loadPhotoRelatedData: () => void;
   filterDifficulty: Array<string>;
-  setFilterDifficulty: (filterDifficulty: Array<string>) => void;
+  setFilterDifficulty: Setter<string[]>;
   photoRef: React.MutableRefObject<any>;
   svgRef: React.MutableRefObject<any>;
   getAllRoutesPhotos: (cragPhotos: Array<string>) => void;
   showDebugMenu: boolean;
-  setShowDebugMenu: (showDebugMenu: boolean) => void;
+  setShowDebugMenu: Setter<boolean>;
+  isAddingPointBlockedRef: React.MutableRefObject<any>;
+  isZoomingRef: React.MutableRefObject<any>;
   arePointerEventsDisabled: boolean; // @TODO do we need it?
-  setArePointerEventsDisabled: (arePointerEventsDisabled: boolean) => void;
+  setArePointerEventsDisabled: Setter<boolean>;
   preparePhotos: (cragPhotos: Array<string>) => void;
   routeListTopOffsets: Array<number>;
   setRouteListTopOffset: (
@@ -147,8 +150,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   publishDbgObject('climbingRoutes', initialRoutes);
   const photoRef = useRef(null);
   const svgRef = useRef(null);
+  const isAddingPointBlockedRef = useRef(false);
+  const isZoomingRef = useRef(false);
   const [photoPaths, setPhotoPaths] = useState<Array<string>>(null);
-  const [photoPath, setPhotoPath] = useState<string>(null); // photo, should be null
+  const [photoPath, setPhotoPath] = useState<string>(null); // photo URL (pathname), should be null
   const [showDebugMenu, setShowDebugMenu] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
@@ -188,12 +193,10 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
   const [routeSelectedIndex, setRouteSelectedIndex] = useState<number>(null);
   const [pointSelectedIndex, setPointSelectedIndex] = useState<number>(null);
 
-  const [pointElement, setPointElement] = React.useState<null | HTMLElement>(
-    null,
+  const [pointElement, setPointElement] = useState<null | HTMLElement>(null);
+  const [routeListTopOffsets, setRouteListTopOffsets] = useState<Array<number>>(
+    [],
   );
-  const [routeListTopOffsets, setRouteListTopOffsets] = React.useState<
-    Array<number>
-  >([]);
 
   const setRouteListTopOffset = useCallback((index: number, offset: number) => {
     setRouteListTopOffsets((prevPositions) => {
@@ -263,7 +266,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
       photoZoom,
     });
 
-  const getMachine = useGetMachineFactory({
+  const machine = useStateMachine({
     setRouteSelectedIndex,
     setPointSelectedIndex,
     updatePathOnRouteIndex,
@@ -280,6 +283,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     svgRef,
     photoZoom,
     setIsPanningDisabled,
+    photoPath,
   });
 
   const isRouteSelected = (index: number) => routeSelectedIndex === index;
@@ -351,7 +355,7 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     setRouteSelectedIndex,
     updateRouteOnIndex,
     updatePathOnRouteIndex,
-    getMachine,
+    machine: machine,
     getPathForRoute,
     getCurrentPath,
     scrollOffset,
@@ -387,6 +391,8 @@ export const ClimbingContextProvider = ({ children, feature }: Props) => {
     getAllRoutesPhotos,
     showDebugMenu,
     setShowDebugMenu,
+    isAddingPointBlockedRef,
+    isZoomingRef,
     arePointerEventsDisabled,
     setArePointerEventsDisabled,
     preparePhotos,

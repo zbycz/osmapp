@@ -3,6 +3,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { grey, red } from '@mui/material/colors';
 import React, { createContext, useContext, useMemo, useState } from 'react';
 import { useMediaQuery } from '@mui/material';
+import { Setter } from '../types';
 
 const lightTheme = createTheme({
   palette: {
@@ -86,11 +87,6 @@ const darkTheme = createTheme({
       selected: '#ffffff',
     },
   },
-  components: {
-    MuiPaper: {
-      styleOverrides: { root: { backgroundImage: 'unset' } },
-    },
-  },
 });
 
 export type Theme = 'light' | 'dark';
@@ -98,7 +94,7 @@ export type UserTheme = 'system' | Theme;
 
 type UserThemeContextType = {
   userTheme: UserTheme;
-  setUserTheme: (choice: UserTheme) => void;
+  setUserTheme: Setter<UserTheme>;
   theme: typeof lightTheme | typeof darkTheme;
   currentTheme: Theme;
 };

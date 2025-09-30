@@ -32,7 +32,8 @@ export const getLastBeforeDeleted = async (
     return undefined;
   }
 
-  const { elements } = await fetchJson<OsmResponse>(getOsmHistoryUrl(apiId)); // TODO use multi fetch instead of history: https://wiki.openstreetmap.org/wiki/API_v0.6#Multi_fetch:_GET_/api/0.6/[nodes|ways|relations]?#parameters
+  const url = getOsmHistoryUrl(apiId); // TODO use multi fetch instead of history: https://wiki.openstreetmap.org/wiki/API_v0.6#Multi_fetch:_GET_/api/0.6/[nodes|ways|relations]?#parameters
+  const { elements } = await fetchJson<OsmResponse>(url, { nocache: true }); // nocache - used in fetchFreshItem()
   const length = elements?.length;
 
   if (length >= 2) {

@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import styled from '@emotion/styled';
 import { Button } from '@mui/material';
 import ChevronRight from '@mui/icons-material/ChevronRight';
@@ -31,7 +32,7 @@ export function use2dContext(
   handler: (ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) => void,
   deps: React.DependencyList = [],
 ) {
-  React.useEffect(() => {
+  useEffect(() => {
     const canvas = ref.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');

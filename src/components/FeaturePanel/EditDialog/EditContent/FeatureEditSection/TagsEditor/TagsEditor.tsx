@@ -4,8 +4,8 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  Box,
   Button,
+  Divider,
   Stack,
   Typography,
 } from '@mui/material';
@@ -19,7 +19,7 @@ import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
 import { OptionsEditor } from '../OptionsEditor';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const Table = styled.table`
   width: calc(100% - 8px);
@@ -45,17 +45,6 @@ const Table = styled.table`
     font-size: 13px;
   }
 `;
-
-const TagsEditorHeading = () => (
-  <Typography
-    variant="overline"
-    component="h3"
-    color="textSecondary"
-    style={{ position: 'relative' }}
-  >
-    {t('editdialog.tags_editor')}
-  </Typography>
-);
 
 const TagsEditorInfo = () => (
   <tr>
@@ -108,6 +97,20 @@ const TagsEditorInner = () => {
   );
 };
 
+const TagsCount = () => {
+  const { tagsEntries } = useCurrentItem();
+  if (!tagsEntries.length) {
+    return null;
+  }
+  return (
+    // This is intentionaly Typography, not a Chip. Because the number is not the same importancy level as number of Members/Parents.
+    <Typography variant="caption" color="secondary">
+      {' '}
+      ({tagsEntries.length})
+    </Typography>
+  );
+};
+
 export const TagsEditor = () => {
   const { focusTag } = useEditDialogContext();
   const focusThisEditor = isString(focusTag) && !majorKeys.includes(focusTag);
@@ -120,30 +123,39 @@ export const TagsEditor = () => {
   }, [focusThisEditor]);
 
   return (
-    <Accordion
-      disableGutters
-      elevation={0}
-      square
-      expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
-    >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
+    <>
+      <Divider />
+      <Accordion
+        disableGutters
+        elevation={0}
+        square
+        expanded={expanded}
+        onChange={() => setExpanded(!expanded)}
+        sx={{
+          '&.MuiAccordion-root:before': {
+            opacity: 0,
+          },
+        }}
       >
-        <Stack direction="row" spacing={1} alignItems="center">
-          <AppsIcon />
-          <Typography variant="button">
-            {t('editdialog.tags_editor')}
-          </Typography>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails>
-        <TagsEditorInner />
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Stack direction="row" spacing={1} alignItems="center">
+            <AppsIcon />
+            <Typography variant="button">
+              {t('editdialog.tags_editor')}
+              <TagsCount />
+            </Typography>
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails>
+          <TagsEditorInner />
 
-        <OptionsEditor />
-      </AccordionDetails>
-    </Accordion>
+          <OptionsEditor />
+        </AccordionDetails>
+      </Accordion>
+    </>
   );
 };

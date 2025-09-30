@@ -1,5 +1,4 @@
 import { ASTNode, ASTNodeComparison, ASTNodeExpression } from './ast';
-import { isSpecialComparisonValue } from './isAst';
 
 const processNode = (node: ASTNode): string[][] => {
   switch (node.type) {

@@ -1,12 +1,11 @@
 import React from 'react';
-import { Global, css, Theme, useTheme } from '@emotion/react';
+import { Global, css, Theme } from '@emotion/react';
 import {
   isDesktopResolution,
   isMobileMode,
   isTabletResolution,
 } from '../components/helpers';
 import { convertHexToRgba } from '../components/utils/colorUtils';
-import { useUserThemeContext } from './theme';
 
 // This function doesn't contain any logic - so no extraction needed.
 // eslint-disable-next-line max-lines-per-function
@@ -66,6 +65,15 @@ const globalStyle = (theme: Theme) => css`
     user-select: none;
     -webkit-user-select: none;
   }
+  .maplibregl-ctrl-bottom-right {
+    bottom: 50px !important;
+  }
+  .edit-feature-map .maplibregl-ctrl-bottom-right {
+    bottom: 0px !important;
+  }
+  .maplibregl-ctrl-scale {
+    background-color: hsla(0, 0%, 100%, 0.5) !important;
+  }
 
   .maplibregl-ctrl-group {
     background-color: ${convertHexToRgba(
@@ -106,15 +114,19 @@ const globalStyle = (theme: Theme) => css`
   }
 
   .maplibregl-ctrl-top-right {
-    top: 114px !important;
+    top: 60px !important;
 
     @media ${isTabletResolution} {
-      top: 54px !important;
+      top: 0px !important;
     }
 
     @media ${isDesktopResolution} {
-      top: 83px !important;
+      top: 64px !important;
     }
+  }
+
+  .edit-feature-map .maplibregl-ctrl-top-right {
+    top: 35px !important;
   }
 
   .maplibregl-canvas:not(:focus) {

@@ -2,8 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 import CheckIcon from '@mui/icons-material/Check';
 import { useClimbingContext } from './contexts/ClimbingContext';
-import { isTicked } from '../../../services/ticks';
 import { getShortId } from '../../../services/helpers';
+import { useTicksContext } from '../../utils/TicksContext';
 
 const Text = styled.div``;
 const Container = styled.div`
@@ -19,6 +19,7 @@ const Container = styled.div`
 `;
 
 export const YellowedBadge = () => {
+  const { isTicked } = useTicksContext();
   const { routes } = useClimbingContext();
   const isVisible =
     routes.length > 0 &&

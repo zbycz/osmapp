@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 import { Tooltip, useTheme } from '@mui/material';
-import { getDifficultyColor } from './utils/grades/routeGrade';
+import { getDifficultyColor } from '../../../services/tagging/climbing/routeGrade';
 import { RouteDifficulty } from './types';
 
 const Container = styled.div<{ $color: string; $isTooltipActive: boolean }>`
@@ -24,7 +24,10 @@ type Props = {
 export const RouteDifficultyBadge = ({ routeDifficulty, tooltip }: Props) => {
   const theme = useTheme();
 
-  const colorByDifficulty = getDifficultyColor(routeDifficulty, theme);
+  const colorByDifficulty = getDifficultyColor(
+    routeDifficulty,
+    theme.palette.mode,
+  );
 
   return (
     <Tooltip title={tooltip} enterDelay={1000} arrow>

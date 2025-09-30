@@ -1,5 +1,5 @@
 import StarIcon from '@mui/icons-material/Star';
-import { GridLegacy, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import React from 'react';
 import {
   diceCoefficientSort,
@@ -10,7 +10,7 @@ import {
 } from '../utils';
 import type { Star } from '../../utils/StarsContext';
 import { StarOption } from '../types';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { getApiId, getUrlOsmId } from '../../../services/helpers';
 import Router from 'next/router';
 
@@ -50,12 +50,12 @@ export const StarRow = ({ option: { star }, inputValue }: Props) => {
         <StarIcon />
         {distance !== null && <div>{distance}</div>}
       </IconPart>
-      <GridLegacy item xs={8}>
+      <Grid size={{ xs: 8 }}>
         {highlightText(star.label, inputValue)}
         <Typography variant="body2" color="textSecondary">
           {star.poiType}
         </Typography>
-      </GridLegacy>
+      </Grid>
     </>
   );
 };

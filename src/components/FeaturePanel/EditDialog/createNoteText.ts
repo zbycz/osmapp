@@ -1,60 +1,50 @@
-import { Feature, FeatureTags } from '../../../services/types';
-import { getFullOsmappLink } from '../../../services/helpers';
-import { getLabel, hasName } from '../../../helpers/featureLabel';
+import { getApiId, getUrlOsmId } from '../../../services/helpers';
+import { EditDataItem } from './context/types';
 
 export const createNoteText = (
-  feature: Feature,
-  newTags: FeatureTags,
-  placeCancelled: boolean,
+  change: EditDataItem,
   location: string,
   note: string,
   isUndelete: boolean,
 ) => {
-  const isAdded = ([k, v]) => v && !feature.tags[k];
-  const isRemoved = ([k, v]) => v && !newTags[k];
-  const addedTags = Object.entries(newTags).filter(isAdded);
-  const removedTags = Object.entries(feature.tags).filter(isRemoved);
-  const changedTags = Object.entries(newTags).filter(
-    ([k, v]) => !isAdded([k, v]) && v && v !== feature.tags[k],
+  const { tags, toBeDeleted, originalState: orig } = change;
+
+  const isAdded = ([k, v]) => v && !orig.tags[k];
+  const isRemoved = ([k, v]) => v && !tags[k];
+  const addedTags = Object.entries(tags).filter(isAdded);
+  const removedTags = Object.entries(orig.tags).filter(isRemoved);
+  const changedTags = Object.entries(tags).filter(
+    ([k, v]) => !isAdded([k, v]) && v && v !== orig.tags[k],
   );
   const changeOrAddedTags = [...addedTags, ...changedTags];
 
-  if (
-    !changeOrAddedTags.length &&
-    !removedTags.length &&
-    !placeCancelled &&
-    !location &&
-    !note &&
-    !isUndelete
-  ) {
-    return null;
+  const noteText = [];
+  if (change.shortId.includes('-')) {
+    noteText.push(`New ${getApiId(change.shortId).type} created`);
+  } else {
+    noteText.push(`Edited ${getUrlOsmId(getApiId(change.shortId))}`);
   }
 
-  const noteText = [];
-  if (!feature.point) {
-    const { subclass } = feature.properties;
+  const preset = change.presetLabel;
+  if (preset) {
     noteText.push(
-      hasName(feature) ? `${getLabel(feature)} (${subclass}):` : subclass,
+      change.tags.name ? `${change.tags.name} (${preset}):` : preset,
     );
     noteText.push('');
   }
   if (isUndelete) {
     noteText.push('! Suggested undelete');
   }
-  if (placeCancelled) {
+  if (toBeDeleted) {
     noteText.push('! Place was marked permanently closed.');
   }
-  if (note) {
-    noteText.push(note);
-    noteText.push('');
-  }
-  if (location) {
+  if (location || change.nodeLonLat) {
     noteText.push('Suggested location change:');
-    noteText.push(location);
+    noteText.push(location || change.nodeLonLat.toReversed().join(', '));
     noteText.push('');
   }
   if (changeOrAddedTags.length) {
-    noteText.push(feature.point ? 'Suggested tags:' : 'Suggested changes:');
+    noteText.push('Suggested changes:');
     noteText.push(changeOrAddedTags.map(([k, v]) => `${k}=${v}`).join('\n'));
     noteText.push('');
   }
@@ -63,7 +53,6 @@ export const createNoteText = (
     noteText.push(removedTags.map(([k]) => k).join(', '));
     noteText.push('');
   }
-  noteText.push('');
-  noteText.push(`Submitted from ${getFullOsmappLink(feature)}`);
+
   return noteText.join('\n');
 };

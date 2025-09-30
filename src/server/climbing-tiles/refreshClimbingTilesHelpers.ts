@@ -1,7 +1,10 @@
-import { GeojsonFeature } from './overpass/overpassToGeojsons';
-import { LineString, LonLat, Point } from '../../services/types';
-import { ClimbingFeaturesRecords } from './db';
-import { CTFeature } from '../../types';
+import { FeatureTags, LineString, LonLat, Point } from '../../services/types';
+import { ClimbingFeaturesRecord } from './db';
+import { removeDiacritics } from './utils';
+import { getDifficulty } from '../../services/tagging/climbing/routeGrade';
+import { GRADE_TABLE } from '../../services/tagging/climbing/gradeData';
+import { encodeHistogram } from './overpass/histogram';
+import { GeojsonFeature } from './overpass/types';
 
 export const centerGeometry = (
   feature: GeojsonFeature,
@@ -23,39 +26,75 @@ const firstPointGeometry = (
   },
 });
 
-const prepareGeojson = (
-  type: string,
-  { id, geometry, properties }: GeojsonFeature,
-): CTFeature => ({
-  type: 'Feature',
-  id,
-  geometry,
-  properties: { ...properties, type },
-});
+const getRouteGradeTxt = (tags: FeatureTags) => {
+  if (tags?.climbing?.startsWith('route')) {
+    const gradeKey = Object.keys(tags).find((key) =>
+      key.match(/^climbing:grade:[^:]+$/),
+    );
+    if (gradeKey) {
+      return tags[gradeKey];
+    }
+  }
+  return null;
+};
 
-const removeDiacritics = (str: string) =>
-  str?.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+const getRouteGradeIndex = (tags: FeatureTags) => {
+  if (tags?.climbing?.startsWith('route')) {
+    const difficulty = getDifficulty(tags);
+    if (!difficulty) {
+      return null;
+    }
+    const { gradeSystem, grade } = difficulty;
+    const grades = GRADE_TABLE[gradeSystem];
+    if (!grades) {
+      return null;
+    }
+    const index = grades.indexOf(grade);
+    return index >= 0 ? index : null;
+  }
 
-export const recordsFactory = () => {
-  const records: ClimbingFeaturesRecords = [];
+  return null;
+};
+
+export const recordsFactory = (log: (message: string) => void) => {
+  const records: ClimbingFeaturesRecord[] = [];
   const addRecordRaw = (
     type: string,
     coordinates: LonLat,
     feature: GeojsonFeature,
   ) => {
-    const lon = coordinates[0];
-    const lat = coordinates[1];
-    return records.push({
+    if (!coordinates) {
+      log(`Skipping record without geometry, mapid: ${feature.id}`);
+      return;
+    }
+
+    const [lon, lat] = coordinates;
+    const gradeTxt = getRouteGradeTxt(feature.tags);
+    const gradeId = getRouteGradeIndex(feature.tags);
+
+    const name = feature.tags.name;
+    const nameRaw = removeDiacritics(name);
+    const record: ClimbingFeaturesRecord = {
       type,
       osmType: feature.osmMeta.type,
       osmId: feature.osmMeta.id,
-      name: feature.tags.name,
-      nameRaw: removeDiacritics(feature.tags.name),
-      count: feature.properties.osmappRouteCount || 0,
+      name: name === nameRaw ? null : name, // query length optimization
+      nameRaw,
+      routeCount: feature.properties.routeCount,
+      hasImages: feature.properties.hasImages,
+      parentId: feature.properties.parentId,
+      gradeId,
+      gradeTxt,
       lon,
       lat,
-      geojson: prepareGeojson(type, feature),
-    });
+      line:
+        feature.geometry.type === 'LineString'
+          ? (JSON.stringify(feature.geometry.coordinates) as unknown as any) // careful, pg and rest handles differently
+          : null,
+      histogramCode: encodeHistogram(feature.properties.histogram),
+    };
+
+    records.push(record);
   };
 
   const addRecord = (type: string, feature: GeojsonFeature<Point>) => {
@@ -63,7 +102,7 @@ export const recordsFactory = () => {
   };
 
   const addRecordWithLine = (type: string, way: GeojsonFeature<LineString>) => {
-    addRecord(type, firstPointGeometry(way));
+    addRecord(type, firstPointGeometry(way)); // TODO this may be optimized not to create two row but one with firstPoint coordinates + way geometry -> in geojson again construct two items (2800 records ~ 4% saved)
     addRecordRaw(type, way.center, way);
   };
 
@@ -76,6 +115,6 @@ export const buildLogFactory = () => {
     buildLog.push(message);
     console.log(message); //eslint-disable-line no-console
   };
-  log('Starting...');
+  log('Starting - fetching from overpass...');
   return { getBuildLog: () => buildLog.join('\n'), log };
 };

@@ -4,11 +4,12 @@ import { useMapStateContext } from '../utils/MapStateContext';
 import { Option } from './types';
 import { osmOptionSelected } from './options/osm';
 import { coordsOptionsSelected } from './options/coords';
-import { geocoderOptionSelected, useInputValueState } from './options/geocoder';
+import { geocoderOptionSelected } from './options/geocoder';
 import { starOptionSelected } from './options/stars';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { Setter } from '../../types';
 import { useCallback } from 'react';
+import { climbingOptionSelected } from './options/climbing';
 
 export const useGetOnSelected = (setOverpassLoading: Setter<boolean>) => {
   const { setFeature, setPreview } = useFeatureContext();
@@ -29,6 +30,9 @@ export const useGetOnSelected = (setOverpassLoading: Setter<boolean>) => {
           break;
         case 'geocoder':
           geocoderOptionSelected(option, setFeature);
+          break;
+        case 'climbing':
+          climbingOptionSelected(option);
           break;
         case 'osm':
           osmOptionSelected(option);

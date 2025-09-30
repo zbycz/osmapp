@@ -4,6 +4,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Divider,
   Stack,
   Typography,
 } from '@mui/material';
@@ -13,14 +14,14 @@ import { getApiId } from '../../../../../../services/helpers';
 import { fetchWays } from '../../../../../../services/osm/fetchWays';
 import { OsmId } from '../../../../../../services/types';
 import PlaceIcon from '@mui/icons-material/Place';
-import { useCurrentItem } from '../../../EditContext';
+import { useCurrentItem } from '../../../context/EditContext';
 
 const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
   ssr: false,
   loading: () => <div style={{ height: 500 }} />,
 });
 
-const WayWarning = () => {
+const NotYetEditableWarning = () => {
   const { shortId } = useCurrentItem();
   const osmId = getApiId(shortId);
   const link = `https://www.openstreetmap.org/edit?${osmId.type}=${osmId.id}`;
@@ -33,7 +34,7 @@ const WayWarning = () => {
   );
 };
 
-const useNodeWithoutWayCheck = (osmId: OsmId) => {
+const useNodeEditableCheck = (osmId: OsmId) => {
   const isNew = osmId.id < 0;
   const [isNodeWithoutWay, setIsNodeWithoutWay] = useState(false);
 
@@ -49,46 +50,58 @@ const useNodeWithoutWayCheck = (osmId: OsmId) => {
   return isNew || isNodeWithoutWay;
 };
 
+const Content = () => {
+  const { shortId } = useCurrentItem();
+  const osmId = getApiId(shortId);
+  const isNodeEditable = useNodeEditableCheck(osmId);
+  const [mapStyle, setMapStyle] = useState<'outdoor' | 'satellite'>('outdoor');
+
+  if (osmId.type === 'way') {
+    return <NotYetEditableWarning />;
+  }
+  if (osmId.type !== 'node') {
+    return null;
+  }
+  if (!isNodeEditable) {
+    return <NotYetEditableWarning />;
+  }
+  return (
+    <EditFeatureMapDynamic mapStyle={mapStyle} setMapStyle={setMapStyle} />
+  );
+};
+
 export const LocationEditor = () => {
   const [expanded, setExpanded] = useState(false);
   const { shortId } = useCurrentItem();
   const osmId = getApiId(shortId);
-  const isNodeWithoutWay = useNodeWithoutWayCheck(osmId);
-  const [mapStyle, setMapStyle] = useState<'outdoor' | 'satellite'>('outdoor');
 
   if (osmId.type === 'relation') {
     return null;
   }
 
-  let content = null;
-  if (expanded) {
-    if (osmId.type === 'node') {
-      content = isNodeWithoutWay ? (
-        <EditFeatureMapDynamic mapStyle={mapStyle} setMapStyle={setMapStyle} />
-      ) : (
-        <WayWarning />
-      );
-    }
-    if (osmId.type === 'way') {
-      content = <WayWarning />;
-    }
-  }
-
   return (
-    <Accordion
-      disableGutters
-      elevation={0}
-      square
-      expanded={expanded}
-      onChange={() => setExpanded(!expanded)}
-    >
-      <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-        <Stack direction="row" gap={1} alignItems="center">
-          <PlaceIcon />
-          <Typography variant="button">{t('editdialog.location')}</Typography>
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails>{content}</AccordionDetails>
-    </Accordion>
+    <>
+      <Divider />
+      <Accordion
+        disableGutters
+        elevation={0}
+        square
+        expanded={expanded}
+        onChange={() => setExpanded(!expanded)}
+        sx={{
+          '&.MuiAccordion-root:before': {
+            opacity: 0,
+          },
+        }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Stack direction="row" gap={1} alignItems="center">
+            <PlaceIcon />
+            <Typography variant="button">{t('editdialog.location')}</Typography>
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails>{expanded && <Content />}</AccordionDetails>
+      </Accordion>
+    </>
   );
 };

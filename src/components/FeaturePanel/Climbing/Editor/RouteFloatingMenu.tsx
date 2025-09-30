@@ -18,9 +18,13 @@ import {
   Tooltip,
 } from '@mui/material';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { PointType } from '../types';
 import UndoIcon from '@mui/icons-material/Undo';
 import { t } from '../../../../services/intl';
+import { useFloatingMenuShortcuts } from './useFloatingMenuShortcuts';
+import { PointTypeButtons } from './PointTypeButtons';
+import { PointType } from '../types';
+import { addShortcutUnderline } from './utils';
+import { LineTypeButtons } from './LineTypeButtons';
 
 const Container = styled.div<{ $isEditMode: boolean }>`
   position: absolute;
@@ -37,9 +41,10 @@ const Container = styled.div<{ $isEditMode: boolean }>`
 export const RouteFloatingMenu = () => {
   const [isDeletePointDialogVisible, setIsDeletePointDialogVisible] =
     useState(false);
-  const [showRouteMarksMenu, setShowRouteMarksMenu] = useState(false);
+  const [showPointTypeMenu, setShowPointTypeMenu] = useState(false);
+  const [showLineTypeMenu, setShowLineTypeMenu] = useState(false);
   const {
-    getMachine,
+    machine,
     pointSelectedIndex,
     routes,
     routeSelectedIndex,
@@ -50,7 +55,6 @@ export const RouteFloatingMenu = () => {
     isEditMode,
   } = useClimbingContext();
   const path = getCurrentPath();
-  const machine = getMachine();
 
   const isExtendVisible =
     (machine.currentStateName === 'pointMenu' &&
@@ -80,7 +84,7 @@ export const RouteFloatingMenu = () => {
     (type: PointType) => {
       machine.execute('changePointType', { type });
 
-      setShowRouteMarksMenu(false);
+      setShowPointTypeMenu(false);
     },
     [machine],
   );
@@ -100,50 +104,14 @@ export const RouteFloatingMenu = () => {
     [machine],
   );
 
-  React.useEffect(() => {
-    const downHandler = (e) => {
-      if (e.key === 'b') {
-        onPointTypeChange('bolt');
-      }
-      if (e.key === 'a') {
-        onPointTypeChange('anchor');
-      }
-      if (e.key === 's') {
-        onPointTypeChange('sling');
-      }
-      if (e.key === 'p') {
-        onPointTypeChange('piton');
-      }
-      if (e.key === 'u') {
-        onPointTypeChange('unfinished');
-      }
-      if (e.key === 'n') {
-        onPointTypeChange(null);
-      }
-      if (e.key === 'e') {
-        onContinueClimbingRouteClick();
-      }
-      if (isUndoVisible && e.key === 'z' && e.metaKey) {
-        handleUndo(e);
-      }
-      if (isDoneVisible && (e.key === 'Enter' || e.key === 'Escape')) {
-        onFinishClimbingRouteClick();
-      }
-    };
-
-    window.addEventListener('keydown', downHandler);
-
-    return () => {
-      window.removeEventListener('keydown', downHandler);
-    };
-  }, [
+  useFloatingMenuShortcuts(
+    onPointTypeChange,
+    onContinueClimbingRouteClick,
+    isUndoVisible,
     handleUndo,
     isDoneVisible,
-    isUndoVisible,
-    onContinueClimbingRouteClick,
     onFinishClimbingRouteClick,
-    onPointTypeChange,
-  ]);
+  );
 
   return (
     <>
@@ -176,11 +144,12 @@ export const RouteFloatingMenu = () => {
           color="primary"
           sx={{ pointerEvents: 'all', gap: 0.5 }}
         >
-          {showRouteMarksMenu ? (
+          {showPointTypeMenu || showLineTypeMenu ? (
             <>
               <Button
                 onClick={() => {
-                  setShowRouteMarksMenu(false);
+                  setShowPointTypeMenu(false);
+                  setShowLineTypeMenu(false);
                 }}
                 startIcon={<ArrowBackIcon />}
                 sx={{
@@ -189,48 +158,14 @@ export const RouteFloatingMenu = () => {
                   },
                 }}
               />
-              <Button
-                onClick={() => {
-                  onPointTypeChange('bolt');
-                }}
-              >
-                {t('climbingpanel.climbing_point_bolt')}
-              </Button>
-              <Button
-                onClick={() => {
-                  onPointTypeChange('anchor');
-                }}
-              >
-                {t('climbingpanel.climbing_point_anchor')}
-              </Button>
-              <Button
-                onClick={() => {
-                  onPointTypeChange('sling');
-                }}
-              >
-                {t('climbingpanel.climbing_point_sling')}
-              </Button>
-              <Button
-                onClick={() => {
-                  onPointTypeChange('piton');
-                }}
-              >
-                {t('climbingpanel.climbing_point_piton')}
-              </Button>
-              <Button
-                onClick={() => {
-                  onPointTypeChange('unfinished');
-                }}
-              >
-                {t('climbingpanel.climbing_point_unfinished')}
-              </Button>
-              <Button
-                onClick={() => {
-                  onPointTypeChange(null);
-                }}
-              >
-                {t('climbingpanel.climbing_point_none')}
-              </Button>
+              {showPointTypeMenu && (
+                <PointTypeButtons
+                  setShowRouteMarksMenu={setShowPointTypeMenu}
+                />
+              )}
+              {showLineTypeMenu && (
+                <LineTypeButtons setShowLineTypeMenu={setShowLineTypeMenu} />
+              )}
             </>
           ) : (
             <>
@@ -240,19 +175,29 @@ export const RouteFloatingMenu = () => {
                   startIcon={<AddLocationIcon />}
                 >
                   {getCurrentPath().length > 0
-                    ? t('climbingpanel.extend')
+                    ? addShortcutUnderline(t('climbingpanel.extend'), 'e')
                     : t('climbingpanel.start')}
                 </Button>
               )}
               {machine.currentStateName === 'pointMenu' && (
-                <Button
-                  onClick={() => {
-                    setShowRouteMarksMenu(true);
-                  }}
-                >
-                  {t('climbingpanel.type')}
-                </Button>
+                <>
+                  <Button
+                    onClick={() => {
+                      setShowPointTypeMenu(true);
+                    }}
+                  >
+                    {t('climbingpanel.type')}
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      setShowLineTypeMenu(true);
+                    }}
+                  >
+                    {t('climbingpanel.line')}
+                  </Button>
+                </>
               )}
+
               {isUndoVisible && (
                 <Button
                   onClick={handleUndo}

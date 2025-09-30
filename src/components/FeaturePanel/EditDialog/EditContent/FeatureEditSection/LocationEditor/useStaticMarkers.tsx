@@ -5,13 +5,21 @@ import { Button, Stack, Typography } from '@mui/material';
 import { createMapEffectHook } from '../../../../../helpers';
 import { t } from '../../../../../../services/intl';
 import { isGpsValid } from './isGpsValid';
+import { useEditContext } from '../../../context/EditContext';
+import { Setter } from '../../../../../../types';
+import { EditDataItem } from '../../../context/types';
+
+const GRAY_MARKER = {
+  color: '#555',
+  opacity: '0.4',
+};
 
 const useUpdateFeatureMarkers = createMapEffectHook<
   [
     {
       markerRefs: React.MutableRefObject<maplibregl.Marker[]>;
-      items: any[];
-      setCurrent: (shortId: string) => void;
+      items: EditDataItem[];
+      setCurrent: Setter<string>;
       current: string;
     },
   ]
@@ -24,18 +32,13 @@ const useUpdateFeatureMarkers = createMapEffectHook<
       !isGpsValid(item.nodeLonLat) ||
       item.shortId === current ||
       item.shortId[0] !== 'n'
-    )
+    ) {
       return;
+    }
     const [lng, lat] = item.nodeLonLat;
 
-    const marker = new maplibregl.Marker({
-      color: '#555',
-      opacity: '0.4',
-    })
-      .setLngLat({
-        lng: parseFloat(lng.toFixed(6)),
-        lat: parseFloat(lat.toFixed(6)),
-      })
+    const marker = new maplibregl.Marker(GRAY_MARKER)
+      .setLngLat({ lng, lat })
       .addTo(map);
 
     const popupContainer = document.createElement('div');
@@ -71,10 +74,8 @@ const useUpdateFeatureMarkers = createMapEffectHook<
 
 export function useFeatureMarkers(
   mapRef: React.MutableRefObject<maplibregl.Map>,
-  items: any[],
-  setCurrent: (shortId: string) => void,
-  current: string,
 ) {
+  const { current, items, setCurrent } = useEditContext();
   const markerRefs = useRef<maplibregl.Marker[]>([]);
 
   useUpdateFeatureMarkers(mapRef.current, {

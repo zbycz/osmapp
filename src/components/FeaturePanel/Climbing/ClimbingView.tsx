@@ -2,34 +2,22 @@ import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import SplitPane from 'react-split-pane';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import {
-  CircularProgress,
-  Fab,
-  IconButton,
-  Tooltip,
-  useTheme,
-} from '@mui/material';
+import { CircularProgress, Fab, IconButton, Tooltip } from '@mui/material';
 import { TransformComponent } from 'react-zoom-pan-pinch';
 import { useClimbingContext } from './contexts/ClimbingContext';
 import { RoutesEditor } from './Editor/RoutesEditor';
 import { useFeatureContext } from '../../utils/FeatureContext';
 import {
   getResolution,
-  getWikimediaCommonsKeys,
-  getWikimediaCommonsPhotoKeys,
-  getWikimediaCommonsPhotoTags,
-  getWikimediaCommonsPhotoTagsObject,
   getWikimediaCommonsPhotoValues,
   removeFilePrefix,
 } from './utils/photo';
 import { TransformWrapper } from './TransformWrapper';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { getCommonsImageUrl } from '../../../services/images/getCommonsImageUrl';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { CLIMBING_ROUTE_ROW_HEIGHT, SPLIT_PANE_DEFAULT_SIZE } from './config';
 import { ClimbingViewContent } from './ClimbingViewContent';
-import { getOsmappLink } from '../../../services/helpers';
-import { useRouter } from 'next/router';
 import FormatListNumberedIcon from '@mui/icons-material/FormatListNumbered';
 import MapIcon from '@mui/icons-material/Map';
 import EditIcon from '@mui/icons-material/Edit';
@@ -37,8 +25,8 @@ import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useGetCragViewLayout } from './utils/useCragViewLayout';
 import { RouteFloatingMenu } from './Editor/RouteFloatingMenu';
 import { t } from '../../../services/intl';
-import { usePhotoChange } from './utils/usePhotoChange';
 import { useClimbingViewShortcuts } from './utils/useClimbingViewShortcuts';
+import { useReplacePhotoIfNeeded } from './utils/useReplacePhotoIfNeeded';
 
 export const DEFAULT_CRAG_VIEW_LAYOUT = 'horizontal';
 
@@ -260,11 +248,11 @@ const FabMapSwitcher = ({ isMapVisible, setIsMapVisible }) => (
   </FabContainer>
 );
 
-export const ClimbingView = ({ photo }: { photo?: string }) => {
+export const ClimbingView = () => {
   const {
     imageSize,
     routeSelectedIndex,
-    getMachine,
+    machine,
     isEditMode,
     viewportSize,
     editorPosition,
@@ -276,17 +264,16 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     loadedPhotos,
     routeListTopOffsets,
     setRouteSelectedIndex,
-    routes,
     setIsEditMode,
     isRoutesLayerVisible,
   } = useClimbingContext();
   const { feature } = useFeatureContext();
+  const replacePhotoIfNeeded = useReplacePhotoIfNeeded();
 
   const [photoResolution, setPhotoResolution] = useState(200);
   const [isSplitViewDragging, setIsSplitViewDragging] = useState(false);
   const [imageUrl, setImageUrl] = useState(null);
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(null);
-  const machine = getMachine();
   const cragViewLayout = useGetCragViewLayout();
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const splitPaneSize = userSettings['climbing.splitPaneSize'];
@@ -314,7 +301,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     setUserSetting('climbing.splitPaneSize', null);
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     window.addEventListener('resize', loadPhotoRelatedData);
     window.addEventListener('orientationchange', loadPhotoRelatedData);
 
@@ -377,7 +364,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
   const showArrowOnBottom =
     splitPaneSize === viewportSize.height - editorPosition.y;
 
-  const router = useRouter();
   const [isPhotoLoading, setIsPhotoLoading] = useState(false);
   const [isMapVisible, setIsMapVisible] = useState(false);
 
@@ -389,16 +375,6 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     Object.keys(resolutions).filter((key) => resolutions[key] === true).length >
       0;
 
-  const replacePhotoIfNeeded = (photos: string[], selectedIndex: number) => {
-    if (!photos.includes(photoPath) && selectedIndex > -1 && !isPhotoLoading) {
-      if (photos.length > 0) {
-        const featureLink = getOsmappLink(feature);
-        router.replace(`${featureLink}/climbing/photo/${photos[0]}`);
-        setIsPhotoLoading(true);
-      }
-    }
-  };
-
   const selectRouteByScroll = (e) => {
     const { scrollTop } = e.target;
     const scrollTopWithOffset = scrollTop + 20 + CLIMBING_ROUTE_ROW_HEIGHT;
@@ -409,11 +385,12 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
         offset + CLIMBING_ROUTE_ROW_HEIGHT >= scrollTopWithOffset,
     );
 
-    const selectedRoute = routes[selectedIndex];
-    const photos = selectedRoute?.paths ? Object.keys(selectedRoute.paths) : [];
-
     if (userSettings['climbing.switchPhotosByScrolling'])
-      replacePhotoIfNeeded(photos, selectedIndex);
+      replacePhotoIfNeeded({
+        isPhotoLoading,
+        setIsPhotoLoading,
+        selectedIndex,
+      });
     if (selectedIndex !== -1) setRouteSelectedIndex(selectedIndex);
   };
 
@@ -425,6 +402,13 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
     ) {
       selectRouteByScroll(e);
     }
+  };
+
+  const handleEdit = () => {
+    setIsEditMode(true);
+    setTimeout(() => {
+      loadPhotoRelatedData();
+    });
   };
 
   return (
@@ -472,12 +456,7 @@ export const ClimbingView = ({ photo }: { photo?: string }) => {
                     enterDelay={1500}
                     arrow
                   >
-                    <Fab
-                      size="small"
-                      color="secondary"
-                      aria-label="add"
-                      onClick={() => setIsEditMode(true)}
-                    >
+                    <Fab size="small" color="secondary" onClick={handleEdit}>
                       <EditIcon />
                     </Fab>
                   </Tooltip>

@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { FeaturedTag } from './FeaturedTag';
 import { useFeatureContext } from '../utils/FeatureContext';
 import { FEATURED_KEYS } from '../../services/tagging/featuredKeys';
+import uniqBy from 'lodash/uniqBy';
 
 const Spacer = styled.div`
   padding-bottom: 10px;
@@ -11,7 +12,7 @@ const Spacer = styled.div`
 export const FeaturedTags = () => {
   const { feature } = useFeatureContext();
 
-  const keys =
+  const duplicatedKeys =
     feature.schema?.featuredTags
       .map(([k, v]) => ({
         k,
@@ -19,6 +20,12 @@ export const FeaturedTags = () => {
         featuredKey: FEATURED_KEYS.find(({ matcher }) => matcher.test(k)),
       }))
       .filter(({ featuredKey, v }) => featuredKey && v) ?? [];
+
+  const keys = uniqBy(
+    duplicatedKeys,
+    ({ featuredKey, v, k }) =>
+      `${featuredKey.renderer}-${featuredKey.uniqPredicate?.(k, v) ?? v}`,
+  );
 
   if (!keys.length) {
     return null;

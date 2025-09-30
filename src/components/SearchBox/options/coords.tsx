@@ -1,4 +1,4 @@
-import { GridLegacy, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import { Feature, LonLat } from '../../../services/types';
 import { Setter } from '../../../types';
 import { CoordsOption } from '../types';
@@ -52,10 +52,9 @@ export const getCoordsOption = (inputValue: string): CoordsOption[] => {
   const [_, c1Str, c2Str] = matches;
   const c1 = Number(c1Str);
   const c2 = Number(c2Str);
-  const coords = [
-    [c2, c1],
-    [c1, c2],
-  ].filter((c) => isValidCoord(c));
+  const coords = [[c2, c1] as LonLat, [c1, c2] as LonLat].filter((c) =>
+    isValidCoord(c),
+  );
   return coords.map((coord) => ({
     type: 'coords',
     coords: {
@@ -86,12 +85,12 @@ export const CoordsRow = ({ option: { coords } }: Props) => (
     <IconPart>
       <TravelExploreIcon />
     </IconPart>
-    <GridLegacy item xs>
+    <Grid size={12}>
       <span style={{ fontWeight: 700 }}>{coords.label}</span>
       <Typography variant="body2" color="textSecondary">
         {coords.sublabel}
       </Typography>
-    </GridLegacy>
+    </Grid>
   </>
 );
 

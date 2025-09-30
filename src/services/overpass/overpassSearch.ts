@@ -1,10 +1,4 @@
-import {
-  LineString,
-  OsmId,
-  Point,
-  GeometryCollection,
-  Feature,
-} from '../types';
+import { LineString, OsmId, Point, GeometryCollection, LonLat } from '../types';
 import { getPoiClass } from '../getPoiClass';
 import { getCenter } from '../getCenter';
 import { fetchJson } from '../fetch';
@@ -42,7 +36,7 @@ type OverpassObject = {
   members?: any[];
 };
 
-const geojsonCoords = ({ geometry }: OverpassObject): [number, number][] =>
+const geojsonCoords = ({ geometry }: OverpassObject): LonLat[] =>
   geometry.map(({ lon, lat }) => [lon, lat]);
 
 const GEOMETRY = {
@@ -66,15 +60,16 @@ const GEOMETRY = {
   },
 
   relation: ({
-    members,
+    members = [],
     tags = {},
   }: OverpassObject): GeometryCollection | Polygon => {
     if (tags.type === 'multipolygon') {
-      const outer = members
+      const membersWithGeometry = members.filter(({ geometry }) => geometry); //eg `op:relation(1561811)`
+      const outer = membersWithGeometry
         .filter(({ role }) => role === 'outer')
         .flatMap(geojsonCoords);
 
-      const inner = members
+      const inner = membersWithGeometry
         .filter(({ role }) => role === 'inner')
         .map(geojsonCoords);
 
@@ -116,7 +111,7 @@ const isClosedWay = (element: OverpassObject) => {
   return first.lat === last.lat && first.lon === last.lon;
 };
 
-type OverpassFeature = FeatureGeojson & {
+export type OverpassFeature = FeatureGeojson & {
   tags: Record<string, string>;
 };
 

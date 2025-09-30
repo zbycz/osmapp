@@ -5,8 +5,8 @@ import { useToggleState } from '../../helpers';
 import { InlineEditButton } from '../helpers/InlineEditButton';
 import { buildAddress } from '../../../services/helpers';
 import { ToggleButton } from '../helpers/ToggleButton';
-import { renderTag } from './renderTag';
-import { Position } from '../../../services/types';
+import { getHumanValue, renderTag } from './renderTag';
+import { LonLat } from '../../../services/types';
 
 const isAddr = (k: string) => k.match(/^addr:|uir_adr|:addr/);
 const isName = (k: string) => k.match(/^name(:|$)/);
@@ -30,6 +30,15 @@ type TagsGroupProps = {
   hideArrow?: boolean;
 };
 
+const getTagGroupPreview = (tags: [string, string][]) => {
+  const tag =
+    tags.find(([key]) => key.endsWith('short')) ??
+    tags.find(([key]) => key.endsWith('wikipedia')) ??
+    tags.find(([key]) => !key.endsWith('wikidata')) ??
+    tags[0];
+  return getHumanValue(tag[0], tag[1]);
+};
+
 const TagsGroup = ({
   tags,
   label,
@@ -48,7 +57,7 @@ const TagsGroup = ({
         <th>{label}</th>
         <td style={{ overflow: 'visible' }}>
           <InlineEditButton k={tags[0][0]} />
-          {value || tags[0]?.[1]}
+          {value || getTagGroupPreview(tags)}
           {!hideArrow && <ToggleButton onClick={toggle} isShown={isShown} />}
         </td>
       </tr>
@@ -101,7 +110,7 @@ const previewYesNoGroup = (
 
 type TagsTableInnerProps = {
   tags: Record<string, string>;
-  center: Position;
+  center: LonLat;
   except?: string[];
 };
 

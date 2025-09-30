@@ -1,0 +1,251 @@
+import React from 'react';
+import { Feature, TranslationId } from '../../../services/types';
+import styled from '@emotion/styled';
+import { Chip, Stack, Tooltip } from '@mui/material';
+import { t } from '../../../services/intl';
+import { useFeatureContext } from '../../utils/FeatureContext';
+import ChildFriendlyIcon from '@mui/icons-material/ChildFriendly';
+import TerrainIcon from '@mui/icons-material/Terrain';
+import { CLIMBING_ROCK_OPTIONS } from '../../../services/tagging/climbing/climbingRockData';
+
+const StyledChip = styled(Chip)`
+  font-size: 10px;
+  font-weight: 600;
+  height: 14px;
+  padding: 0;
+  > span {
+    padding: 4px;
+  }
+`;
+
+const climbingTypes = {
+  boulder: {
+    value: 'climbing:boulder',
+    label: 'climbing_badges.boulder_label',
+    description: 'climbing_badges.boulder_description',
+  },
+  trad: {
+    value: 'climbing:trad',
+    label: 'climbing_badges.trad_label',
+    description: 'climbing_badges.trad_description',
+  },
+  speed: {
+    value: 'climbing:speed',
+    label: 'climbing_badges.speed_label',
+    description: 'climbing_badges.speed_description',
+  },
+  sport: {
+    value: 'climbing:sport',
+    label: 'climbing_badges.sport_label',
+    description: 'climbing_badges.sport_description',
+  },
+  multipitch: {
+    value: 'climbing:multipitch',
+    label: 'climbing_badges.multipitch_label',
+    description: 'climbing_badges.multipitch_description',
+  },
+  ice: {
+    value: 'climbing:ice',
+    label: 'climbing_badges.ice_label',
+    description: 'climbing_badges.ice_description',
+  },
+  mixed: {
+    value: 'climbing:mixed',
+    label: 'climbing_badges.mixed_label',
+    description: 'climbing_badges.mixed_description',
+  },
+  deepwater: {
+    value: 'climbing:deepwater',
+    label: 'climbing_badges.deepwater_label',
+    description: 'climbing_badges.deepwater_description',
+  },
+  toprope: {
+    value: 'climbing:toprope',
+    label: 'climbing_badges.toprope_label',
+    description: 'climbing_badges.toprope_description',
+  },
+} as const;
+
+const climbingHazards = {
+  loose_rock: {
+    value: 'climbing:hazard:loose_rock',
+    label: 'climbing_badges.hazard_loose_rock_label',
+    description: 'climbing_badges.hazard_loose_rock_description',
+  },
+  rockfall_zone: {
+    value: 'climbing:hazard:rockfall_zone',
+    label: 'climbing_badges.hazard_rockfall_zone_label',
+    description: 'climbing_badges.hazard_rockfall_zone_description',
+  },
+  wet: {
+    value: 'climbing:hazard:wet',
+    label: 'climbing_badges.hazard_wet_label',
+    description: 'climbing_badges.hazard_wet_description',
+  },
+  vegetation: {
+    value: 'climbing:hazard:vegetation',
+    label: 'climbing_badges.hazard_vegetation_label',
+    description: 'climbing_badges.hazard_vegetation_description',
+  },
+  unstable_anchor: {
+    value: 'climbing:hazard:unstable_anchor',
+    label: 'climbing_badges.hazard_unstable_anchor_label',
+    description: 'climbing_badges.hazard_unstable_anchor_description',
+  },
+  missing_anchor: {
+    value: 'climbing:hazard:missing_anchor',
+    label: 'climbing_badges.hazard_missing_anchor_label',
+    description: 'climbing_badges.hazard_missing_anchor_description',
+  },
+  animal_nest: {
+    value: 'climbing:hazard:animal_nest',
+    label: 'climbing_badges.hazard_animal_nest_label',
+    description: 'climbing_badges.hazard_animal_nest_description',
+  },
+  death_fall_zone: {
+    value: 'climbing:hazard:death_fall_zone',
+    label: 'climbing_badges.hazard_death_fall_zone_label',
+    description: 'climbing_badges.hazard_death_fall_zone_description',
+  },
+  first_bolt_high: {
+    value: 'climbing:hazard:first_bolt_high',
+    label: 'climbing_badges.hazard_first_bolt_high_label',
+    description: 'climbing_badges.hazard_first_bolt_high_description',
+  },
+  long_runout: {
+    value: 'climbing:hazard:long_runout',
+    label: 'climbing_badges.hazard_long_runout_label',
+    description: 'climbing_badges.hazard_long_runout_description',
+  },
+  bad_protection: {
+    value: 'climbing:hazard:bad_protection',
+    label: 'climbing_badges.hazard_bad_protection_label',
+    description: 'climbing_badges.hazard_bad_protection_description',
+  },
+  dirty_rock: {
+    value: 'climbing:hazard:dirty_rock',
+    label: 'climbing_badges.hazard_dirty_rock_label',
+    description: 'climbing_badges.hazard_dirty_rock_description',
+  },
+  slippery_rock: {
+    value: 'climbing:hazard:slippery_rock',
+    label: 'climbing_badges.hazard_slippery_rock_label',
+    description: 'climbing_badges.hazard_slippery_rock_description',
+  },
+} as const;
+
+const otherTags = {
+  family_friendly: {
+    value: 'climbing:family_friendly',
+    label: 'climbing_badges.family_friendly_label',
+    description: 'climbing_badges.family_friendly_description',
+    icon: ChildFriendlyIcon,
+  },
+} as const;
+
+const renderTitle = (
+  label: TranslationId,
+  tagValue: string,
+  Icon?: React.ElementType,
+) => {
+  return (
+    <Stack direction="row" gap={0.4} alignItems="center">
+      {Icon && <Icon fontSize="inherit" />}
+      <span>
+        {t(label)}
+        {tagValue !== 'yes' ? ` (${tagValue})` : ''}
+      </span>
+    </Stack>
+  );
+};
+
+type Props = {
+  feature: Feature;
+  hasTooltip?: boolean;
+};
+
+const MaterialBadge = ({ feature }) => {
+  const material = feature.tags?.['climbing:rock'];
+  if (!material) return null;
+
+  const translationItem = CLIMBING_ROCK_OPTIONS.find(
+    ({ value }) => value === material,
+  );
+  return (
+    material && (
+      <StyledChip
+        label={
+          <Stack direction="row" gap={0.4} alignItems="center">
+            <TerrainIcon fontSize="inherit" />
+            <span>
+              {translationItem?.translationKey
+                ? t(translationItem.translationKey)
+                : material}
+            </span>
+          </Stack>
+        }
+        size="small"
+        color="success"
+      />
+    )
+  );
+};
+
+export const ClimbingBadges = ({ feature, hasTooltip }: Props) => {
+  return (
+    <Stack direction="row" spacing={0.5} flexWrap="wrap">
+      {Object.entries(climbingTypes).map(
+        ([_key, { value, label, description }]) =>
+          feature.tags?.[value] === 'yes' ? (
+            <Tooltip key={value} title={hasTooltip ? t(description) : ''} arrow>
+              <StyledChip
+                label={t(label)}
+                size="small"
+                color="primary"
+                variant="filled"
+              />
+            </Tooltip>
+          ) : null,
+      )}
+
+      {Object.entries(climbingHazards).map(
+        ([_key, { value, label, description }]) => {
+          const tagValue = feature.tags?.[value];
+          return tagValue !== 'no' && tagValue !== undefined ? (
+            <Tooltip key={value} title={hasTooltip ? t(description) : ''} arrow>
+              <StyledChip
+                label={renderTitle(label, tagValue)}
+                size="small"
+                color="error"
+              />
+            </Tooltip>
+          ) : null;
+        },
+      )}
+      {Object.entries(otherTags).map(
+        ([_key, { value, label, description, icon }]) => {
+          const tagValue = feature.tags?.[value];
+          return tagValue !== 'no' && tagValue !== undefined ? (
+            <Tooltip key={value} title={hasTooltip ? t(description) : ''} arrow>
+              <StyledChip
+                label={renderTitle(label, tagValue, icon)}
+                size="small"
+                color="success"
+              />
+            </Tooltip>
+          ) : null;
+        },
+      )}
+      <MaterialBadge feature={feature} />
+    </Stack>
+  );
+};
+
+export const PanelClimbingBadges = () => {
+  const { feature } = useFeatureContext();
+  if (!feature.tags.climbing) {
+    return null;
+  }
+
+  return <ClimbingBadges feature={feature} hasTooltip />;
+};

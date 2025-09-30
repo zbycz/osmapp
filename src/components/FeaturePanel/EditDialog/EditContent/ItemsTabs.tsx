@@ -7,10 +7,11 @@ import {
   useMediaQuery,
   useTheme,
 } from '@mui/material';
-import { useEditContext } from '../EditContext';
+import { useEditContext } from '../context/EditContext';
 import React from 'react';
-import { EditDataItem } from '../useEditItems';
-import { getOsmTypeFromShortId, NwrIcon } from '../../NwrIcon';
+import { NwrIcon } from '../../NwrIcon';
+import { EditDataItem } from '../context/types';
+import WarningIcon from '@mui/icons-material/Warning';
 
 const StyledTypography = styled(Typography, {
   shouldForwardProp: (prop) => !prop.startsWith('$'),
@@ -27,6 +28,7 @@ const StyledTabs = styled(Tabs)`
   ${({ theme }) => theme.breakpoints.up('sm')} {
     border-right: 1px solid ${({ theme }) => theme.palette.divider};
     resize: horizontal;
+    width: 200px;
     min-width: 120px;
     max-width: 50%;
 
@@ -45,33 +47,61 @@ const StyledTabs = styled(Tabs)`
   }
 `;
 
+const ModifiedBadge = styled.div(({ theme }) => ({
+  position: 'absolute',
+  top: 8,
+  right: 8,
+  width: 8,
+  height: 8,
+  borderRadius: '50%',
+  backgroundColor: theme.palette.primary.main,
+}));
+
+const StyledWarningIcon = styled(WarningIcon)`
+  font-size: 15px;
+`;
+
+const WarningBadge = ({ item }: { item: EditDataItem }) => {
+  const { validate } = useEditContext();
+  return validate &&
+    item.shortId[0] === 'n' &&
+    item.nodeLonLat === undefined ? (
+    <StyledWarningIcon color="warning" />
+  ) : null;
+};
+
 type TabLabelProps = {
   item: EditDataItem;
 };
-const TabLabel = ({
-  item: { shortId, tags, presetLabel, toBeDeleted },
-}: TabLabelProps) => (
-  <Stack direction="column" alignItems="flex-start" width="100%">
-    <Stack
-      direction="row"
-      gap={1}
-      alignItems="center"
-      justifyContent="space-between"
-      width="100%"
-    >
-      <StyledTypography
-        variant="button"
-        whiteSpace="nowrap"
-        $deleted={toBeDeleted}
-      >
-        {tags.name || shortId}
-      </StyledTypography>
-    </Stack>
-    <Typography variant="caption" textTransform="lowercase" whiteSpace="nowrap">
-      {presetLabel} <NwrIcon osmType={getOsmTypeFromShortId(shortId)} />
-    </Typography>
-  </Stack>
-);
+
+const TabLabel = ({ item }: TabLabelProps) => {
+  const { shortId, tags, presetLabel, toBeDeleted, modified } = item;
+
+  return (
+    <>
+      {modified && <ModifiedBadge />}
+      <Stack direction="column" alignItems="flex-start" width="100%">
+        <Stack direction="row" gap={1} alignItems="center" width="100%">
+          <WarningBadge item={item} />
+          <StyledTypography
+            variant="button"
+            whiteSpace="nowrap"
+            $deleted={toBeDeleted}
+          >
+            {tags.name || shortId}
+          </StyledTypography>
+        </Stack>
+        <Typography
+          variant="caption"
+          textTransform="lowercase"
+          whiteSpace="nowrap"
+        >
+          {presetLabel} <NwrIcon shortId={shortId} hideNode />
+        </Typography>
+      </Stack>
+    </>
+  );
+};
 
 export const ItemsTabs = () => {
   const { items, current, setCurrent } = useEditContext();
@@ -83,7 +113,7 @@ export const ItemsTabs = () => {
       {items.length > 1 && (
         <StyledTabs
           orientation={isSmallScreen ? 'horizontal' : 'vertical'}
-          variant={isSmallScreen ? 'scrollable' : 'standard'}
+          variant="scrollable"
           value={current}
           onChange={(_event: React.SyntheticEvent, newShortId: string) => {
             setCurrent(newShortId);

@@ -1,11 +1,12 @@
+import { useState } from 'react';
 import React from 'react';
 import { TableCell, TableHead, TableRow, TableSortLabel } from '@mui/material';
-import { TickRowType } from '../../services/my-ticks/getMyTicks';
+import { FetchedClimbingTick } from '../../services/my-ticks/getMyTicks';
 import { t } from '../../services/intl';
 
 function descendingComparator(
-  a: TickRowType,
-  b: TickRowType,
+  a: FetchedClimbingTick,
+  b: FetchedClimbingTick,
   orderBy: OrderKey,
 ) {
   return a[orderBy]?.localeCompare(b[orderBy]) ?? 0;
@@ -16,7 +17,7 @@ type Order = 'asc' | 'desc';
 function getComparator(
   order: Order,
   orderBy: OrderKey,
-): (a: TickRowType, b: TickRowType) => number {
+): (a: FetchedClimbingTick, b: FetchedClimbingTick) => number {
   return order === 'desc'
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
@@ -87,14 +88,15 @@ function EnhancedTableHead({
             </TableSortLabel>
           </TableCell>
         ))}
+        <TableCell />
       </TableRow>
     </TableHead>
   );
 }
 
-export const useSortedTable = (tickRows: TickRowType[]) => {
-  const [order, setOrder] = React.useState<Order>('asc');
-  const [orderBy, setOrderBy] = React.useState<OrderKey>('date');
+export const useSortedTable = (tickRows: FetchedClimbingTick[]) => {
+  const [order, setOrder] = useState<Order>('asc');
+  const [orderBy, setOrderBy] = useState<OrderKey>('date');
 
   const handleRequestSort = (
     _: React.MouseEvent<unknown>,
@@ -105,7 +107,7 @@ export const useSortedTable = (tickRows: TickRowType[]) => {
     setOrderBy(property);
   };
   const visibleRows = React.useMemo(
-    () => tickRows.sort(getComparator(order, orderBy)),
+    () => tickRows?.sort(getComparator(order, orderBy)),
     [order, orderBy, tickRows],
   );
 

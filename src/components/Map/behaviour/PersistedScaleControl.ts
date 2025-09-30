@@ -1,7 +1,6 @@
 import { Map, ScaleControl } from 'maplibre-gl';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
-import { createMapEventHook } from '../../helpers';
-import { useEffect } from 'react';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
+import { useEffect, MutableRefObject } from 'react';
 
 // https://github.com/maplibre/maplibre-gl-js/blob/afe4377706429a6b4e708e62a3c39a795ae8f28e/src/ui/control/scale_control.js#L36-L83
 
@@ -34,39 +33,32 @@ class ClickableScaleControl extends ScaleControl {
   }
 }
 
-export const usePersistedScaleControl = (map: Map) => {
+export const usePersistedScaleControl = (
+  mapRef: MutableRefObject<Map | null>,
+  isReady: boolean,
+) => {
   const { userSettings, setUserSetting } = useUserSettingsContext();
   const { isImperial } = userSettings;
 
   useEffect(() => {
-    if (!map) {
-      return;
-    }
+    const map = mapRef.current;
+    if (!isReady || !map) return;
 
     const scaleControl = new ClickableScaleControl({
       maxWidth: 80,
       unit: isImperial ? 'imperial' : 'metric',
-      onClick: () => {
-        setUserSetting('isImperial', !isImperial);
-      },
+      onClick: () => setUserSetting('isImperial', !isImperial),
       getHoverText: () => (isImperial ? 'km' : 'mile'),
     });
 
-    const addControl = () => {
-      map.addControl(scaleControl);
-    };
-
-    if (map.loaded()) {
-      addControl();
-    } else {
-      map.on('load', addControl);
-    }
+    try {
+      map.addControl(scaleControl, 'bottom-right');
+    } catch {}
 
     return () => {
-      map.off('load', addControl);
       try {
         map.removeControl(scaleControl);
       } catch {}
     };
-  }, [map, isImperial, setUserSetting]);
+  }, [mapRef, isReady, isImperial, setUserSetting]);
 };

@@ -1,9 +1,9 @@
-import { OsmResponse, overpassToGeojsons } from './overpass/overpassToGeojsons';
+import { overpassToGeojsons } from './overpass/overpassToGeojsons';
 import { encodeUrl } from '../../helpers/utils';
 import { fetchJson } from '../../services/fetch';
 import format from 'pg-format';
-import { closeClient, getClient } from './db';
-import { queryTileStats, updateStats } from './utils';
+import { getPool } from './db';
+import { queryTileStats, addStats } from './utils';
 import { chunk } from 'lodash';
 import { readFileSync } from 'fs';
 import {
@@ -12,6 +12,8 @@ import {
   recordsFactory,
 } from './refreshClimbingTilesHelpers';
 import { cacheTile000 } from './getClimbingTile';
+import { OsmResponse } from './overpass/types';
+import { PoolClient } from 'pg';
 
 const fetchFromOverpass = async () => {
   if (process.env.NODE_ENV === 'development') {
@@ -40,20 +42,25 @@ const fetchFromOverpass = async () => {
   return data;
 };
 
+// (splitting this function doesn't make sense - it has very simple structure)
 // eslint-disable-next-line max-lines-per-function
-const getNewRecords = (data: OsmResponse) => {
-  const geojsons = overpassToGeojsons(data); // 300 ms on 200k items
-  const { records, addRecord, addRecordWithLine } = recordsFactory();
+const getNewRecords = (data: OsmResponse, log: (message: string) => void) => {
+  const geojsons = overpassToGeojsons(data, log); // 300 ms on 200k items
+  const { records, addRecord, addRecordWithLine } = recordsFactory(log);
 
   for (const node of geojsons.node) {
     if (!node.tags || node.tags.climbing === 'no') continue;
-    if (
-      node.tags.climbing === 'area' ||
-      node.tags.climbing === 'boulder' ||
+    if (node.tags.climbing === 'area') {
+      addRecord('area', node);
+    }
+
+    //
+    else if (
       node.tags.climbing === 'crag' ||
+      node.tags.climbing === 'boulder' ||
       node.tags.natural === 'peak'
     ) {
-      addRecord('group', node);
+      addRecord('crag', node);
     }
 
     //
@@ -66,7 +73,7 @@ const getNewRecords = (data: OsmResponse) => {
 
     //
     else if (node.tags.climbing === 'route_top') {
-      // TODO later + update climbingLayer
+      addRecord('route_top', node);
     }
 
     //
@@ -85,7 +92,7 @@ const getNewRecords = (data: OsmResponse) => {
       ) {
         addRecord('gym', node);
       } else {
-        addRecord('group', node); //this needs tweaking
+        addRecord('crag', node); //this needs tweaking
       }
     }
 
@@ -109,8 +116,13 @@ const getNewRecords = (data: OsmResponse) => {
     }
 
     //
+    else if (way.tags.climbing === 'area') {
+      addRecord('area', centerGeometry(way)); // way climbing=area probably doesnt exist
+    }
+
+    //
     else if (way.tags.climbing || way.tags.sport === 'climbing') {
-      addRecord('group', centerGeometry(way));
+      addRecord('crag', centerGeometry(way));
     }
 
     // TODO 900 ways – parts of some climbing relations
@@ -132,13 +144,18 @@ const getNewRecords = (data: OsmResponse) => {
     }
 
     // climbing=area, boulder, crag, route
+    else if (relation.tags.climbing === 'area') {
+      addRecord('area', centerGeometry(relation));
+    }
+
+    //
     else if (
       relation.tags.climbing ||
       relation.tags.sport === 'climbing' ||
       relation.tags.type === 'site' ||
       relation.tags.type === 'multipolygon'
     ) {
-      addRecord('group', centerGeometry(relation));
+      addRecord('crag', centerGeometry(relation));
     }
 
     // TODO 4 items to debug
@@ -152,20 +169,19 @@ const getNewRecords = (data: OsmResponse) => {
   return records;
 };
 
-export const refreshClimbingTiles = async () => {
+const refreshInner = async (client: PoolClient) => {
   const { getBuildLog, log } = buildLogFactory();
   const start = performance.now();
-  const client = await getClient();
   const tileStats = await queryTileStats(client);
 
   const data = await fetchFromOverpass();
   log(`Overpass elements: ${data.elements.length}`);
 
-  const records = getNewRecords(data); // ~ 55k records
+  const records = getNewRecords(data, log); // ~ 55k records
   log(`Records: ${records.length}`);
 
   const columns = Object.keys(records[0]);
-  const chunks = chunk(records, 5000); // XATA max size is probably 4 MB, this produces queries about 2 MB big
+  const chunks = chunk(records, 1000); // XATA max size is probably 4 MB, but it was out of memory on 1.8MB as well. This produces queries about 0.4 MB big
 
   await client.query('TRUNCATE TABLE climbing_features');
   for (const [index, chunk] of chunks.entries()) {
@@ -181,14 +197,36 @@ export const refreshClimbingTiles = async () => {
   await client.query('TRUNCATE TABLE climbing_tiles_cache');
 
   log('Caching tile 0/0/0');
-  await cacheTile000(records);
+  await cacheTile000(client, records);
 
   const buildDuration = Math.round(performance.now() - start);
   log(`Duration: ${buildDuration} ms`);
   log('Done.');
 
-  await updateStats(data, getBuildLog(), buildDuration, tileStats, records);
-  await closeClient(client);
+  await addStats(
+    client,
+    data,
+    getBuildLog(),
+    buildDuration,
+    tileStats,
+    records,
+  );
 
   return getBuildLog();
+};
+
+export const refreshClimbingTiles = async () => {
+  const client = await getPool().connect();
+  try {
+    // await client.query('BEGIN'); // xata is out of memory for transaction
+    const result = await refreshInner(client);
+    // await client.query('COMMIT');
+
+    return result;
+  } catch (error) {
+    // await client.query('ROLLBACK');
+    throw error;
+  } finally {
+    client.release(); // this is important - in finally
+  }
 };

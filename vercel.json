@@ -6,6 +6,9 @@
     },
     "pages/api/climbing-tiles/tile.ts": {
       "maxDuration": 30
+    },
+    "pages/api/climbing-tiles/search.ts": {
+      "maxDuration": 30
     }
   },
   "crons": [

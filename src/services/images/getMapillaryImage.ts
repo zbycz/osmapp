@@ -1,19 +1,13 @@
 import { fetchJson } from '../fetch';
 import { getImageFromCenterFactory } from './getImageFromCenterFactory';
+import { Point } from '../types';
 
-export const MAPILLARY_ACCESS_TOKEN =
-  'MLY|4742193415884187|44e43b57d0211d8283a7ca1c3e6a63f2';
+export const MAPILLARY_ACCESS_TOKEN = process.env.NEXT_PUBLIC_API_KEY_MAPILLARY;
 
 type MapillaryImage = {
   compass_angle: number;
-  computed_geometry: {
-    type: string;
-    coordinates: number[];
-  };
-  geometry: {
-    type: string;
-    coordinates: number[];
-  };
+  computed_geometry: Point;
+  geometry: Point;
   captured_at: number;
   thumb_1024_url: string;
   thumb_original_url: string;

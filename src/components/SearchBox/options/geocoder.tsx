@@ -1,4 +1,4 @@
-import { GridLegacy, Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 import React, { useCallback, useRef, useState } from 'react';
 import { join } from '../../../utils';
 import {
@@ -19,11 +19,12 @@ import {
 } from '../types';
 import { View } from '../../utils/MapStateContext';
 import { PoiIcon } from '../../utils/icons/PoiIcon';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import { Feature } from '../../../services/types';
 import { addFeatureCenterToCache } from '../../../services/osm/featureCenterToCache';
 import { getShortId, getUrlOsmId } from '../../../services/helpers';
 import Router from 'next/router';
+import { Setter } from '../../../types';
 
 const PHOTON_SUPPORTED_LANGS = ['en', 'de', 'fr'];
 const DEFAULT = 'en'; // this was 'default' but it throws away some results, using 'en' was suggested https://github.com/zbycz/osmapp/issues/226
@@ -75,7 +76,7 @@ export const debounceGeocoderOrReject = (delay: number): Promise<void> => {
 export const fetchGeocoderOptions = async (
   inputValue: string,
   view: View,
-  abortQueue?: string,
+  abortQueue: string = GEOCODER_ABORTABLE_QUEUE,
 ): Promise<Option[]> => {
   try {
     const searchResponse = await fetchJson<PhotonResponse>(
@@ -150,12 +151,12 @@ export const GeocoderRow = ({ option: { geocoder }, inputValue }: Props) => {
         />
         <div>{distance}</div>
       </IconPart>
-      <GridLegacy item xs>
+      <Grid size={{ xs: 12 }}>
         {highlightText(text, inputValue)}
         <Typography variant="body2" color="textSecondary">
           {additionalText}
         </Typography>
-      </GridLegacy>
+      </Grid>
     </>
   );
 };
@@ -194,7 +195,7 @@ export const getGeocoderSkeleton = ({ geocoder }: GeocoderOption): Feature => {
   };
 };
 
-type SetFeature = (feature: Feature | null) => void;
+type SetFeature = Setter<Feature | null>;
 
 export const geocoderOptionSelected = (
   option: GeocoderOption,

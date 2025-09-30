@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useEffect, useRef } from 'react';
 import { useClimbingContext } from '../contexts/ClimbingContext';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { Feature } from '../../../../services/types';
 import { ClimbingRouteTableRow } from './ClimbingRouteTableRow';
 
@@ -74,7 +74,6 @@ export const RenderListRow = ({ routeId, parentRef, feature }: Props) => {
       onClick={handleClick}
       ref={ref}
       isSelected={isSelected}
-      onDeselectRoute={handleDeselectRoute}
       isHrefLinkVisible={false}
     />
   );

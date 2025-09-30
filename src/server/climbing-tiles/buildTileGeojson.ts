@@ -1,17 +1,19 @@
-import { BBox } from 'geojson';
-import { CTFeature } from '../../types';
+import { BBox, Geometry } from 'geojson';
+import { ClimbingTilesFeature, ClimbingTilesProperties } from '../../types';
+import { ClimbingFeaturesRecord } from './db';
+import { OsmId } from '../../services/types';
 
 // rows or columns count
 const COUNT = 500;
 
 const optimizeFeaturesToGrid = (
-  features: CTFeature[],
+  features: ClimbingTilesFeature[],
   [west, south, east, north]: BBox,
-): CTFeature[] => {
+): ClimbingTilesFeature[] => {
   const intervalX = (east - west) / COUNT;
   const intervalY = (north - south) / COUNT;
   const grid = Array.from({ length: COUNT }, () =>
-    Array.from({ length: COUNT }, () => null as CTFeature | null),
+    Array.from({ length: COUNT }, () => null as ClimbingTilesFeature | null),
   );
 
   for (const feature of features) {
@@ -27,9 +29,8 @@ const optimizeFeaturesToGrid = (
       const current = grid[xIndex][yIndex];
       const shouldReplaceCell =
         !current ||
-        !current.properties.osmappRouteCount ||
-        current.properties.osmappRouteCount <
-          feature.properties.osmappRouteCount;
+        !current.properties.routeCount ||
+        current.properties.routeCount < feature.properties.routeCount;
 
       if (shouldReplaceCell) {
         grid[xIndex][yIndex] = feature;
@@ -40,11 +41,59 @@ const optimizeFeaturesToGrid = (
   return grid.flat().filter((f) => f !== null);
 };
 
+const convertOsmIdToMapId = (apiId: OsmId) => {
+  const osmToMapType = { node: 0, way: 1, relation: 4 };
+  return parseInt(`${apiId.id}${osmToMapType[apiId.type]}`, 10);
+};
+
+const getProperties = (
+  record: ClimbingFeaturesRecord,
+): ClimbingTilesProperties => {
+  const { type, parentId } = record;
+  const name = record.name || record.nameRaw;
+
+  if (type === 'area' || type === 'crag') {
+    const { routeCount = 0, hasImages, histogramCode } = record;
+    return {
+      type,
+      name,
+      parentId,
+      routeCount,
+      hasImages,
+      histogramCode,
+    };
+  }
+
+  if (type === 'route' || type === 'route_top') {
+    const { gradeId, gradeTxt } = record;
+    return { type, name, parentId, gradeId, gradeTxt };
+  }
+
+  if (type === 'gym' || type === 'ferrata') {
+    return { type, name, parentId };
+  }
+
+  return undefined;
+};
+
+const buildGeojson = (record: ClimbingFeaturesRecord): ClimbingTilesFeature => {
+  const { osmType, osmId, line, lon, lat } = record;
+  const id = convertOsmIdToMapId({ type: osmType, id: osmId });
+  const properties = getProperties(record);
+  const geometry: Geometry = line
+    ? { type: 'LineString', coordinates: line }
+    : { type: 'Point', coordinates: [lon, lat] };
+
+  return { type: 'Feature', id, geometry, properties };
+};
+
 export const buildTileGeojson = (
   isOptimizedToGrid: boolean,
-  featuresInBbox: CTFeature[],
+  recordsInBbox: ClimbingFeaturesRecord[],
   bbox: BBox,
 ): GeoJSON.FeatureCollection => {
+  const featuresInBbox = recordsInBbox.map(buildGeojson);
+
   const features = isOptimizedToGrid
     ? optimizeFeaturesToGrid(featuresInBbox, bbox)
     : featuresInBbox;

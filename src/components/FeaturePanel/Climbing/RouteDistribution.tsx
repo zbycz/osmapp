@@ -5,27 +5,33 @@ import {
   convertGrade,
   getDifficulty,
   getDifficultyColor,
-} from './utils/grades/routeGrade';
+} from '../../../services/tagging/climbing/routeGrade';
 import { ContentContainer } from './ContentContainer';
-import { GRADE_TABLE } from './utils/grades/gradeData';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { GRADE_TABLE } from '../../../services/tagging/climbing/gradeData';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 import {
   getGradeSystemName,
   GradeSystem,
-} from '../../../services/tagging/climbing';
+} from '../../../services/tagging/climbing/gradeSystems';
 import { Feature } from '../../../services/types';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { Tooltip } from '@mui/material';
 import { t } from '../../../services/intl';
 import { isClimbingCrag } from '../../../utils';
 import { useFeatureContext } from '../../utils/FeatureContext';
+import { GradeSystemSelect } from './GradeSystemSelect';
+import { PanelLabel } from './PanelLabel';
+import { OverpassFeature } from '../../../services/overpass/overpassSearch';
 
 const MAX_COLUMN_HEIGHT = 40;
 const NUMBER_OF_ROUTES_HEIGHT = 14;
 const MAX_CHART_HEIGHT = MAX_COLUMN_HEIGHT + NUMBER_OF_ROUTES_HEIGHT;
 
 const Container = styled.div`
-  margin: 4px 12px 0;
+  margin: 4px 0px 0px;
+
+  padding: 0 4px 8px 16px;
+  overflow: auto;
 `;
 
 const Items = styled.div`
@@ -35,11 +41,14 @@ const Items = styled.div`
 `;
 
 const NumberOfRoutes = styled.div`
-  text-align: center;
-  font-size: 9px;
+  font-size: 8px;
+  max-width: 15px;
 `;
 const Column = styled.div`
   flex: 1;
+  gap: 4px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const GraphItems = styled.div`
@@ -52,18 +61,21 @@ const GradeSystemName = styled.div`
   font-size: 10px;
   flex: 1;
   text-align: right;
+  display: flex;
+  justify-content: flex-end;
 `;
 
 const DifficultyLevel = styled.div<{ $isActive: boolean; $color: string }>`
   text-align: center;
   color: ${({ $color, $isActive, theme }) =>
     $isActive ? $color : convertHexToRgba(theme.palette.secondary.main, 0.6)};
-  font-weight: bold;
-  font-size: 10px;
+  font-weight: ${({ $isActive }) => ($isActive ? 'bold' : 'normal')};
+  font-size: 9px;
+  transform: rotateZ(270deg);
 `;
 
 const StaticHeightContainer = styled.div`
-  height: ${MAX_CHART_HEIGHT};
+  height: ${MAX_CHART_HEIGHT}px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
@@ -75,44 +87,78 @@ const Chart = styled.div<{ $ratio: number; $color: string }>`
   background-color: ${({ $color, theme, $ratio }) =>
     $ratio === 0 ? theme.palette.secondary.main : $color};
   border-radius: 2px;
-  width: 17px;
+  width: 15px;
 `;
 
-const getGroupingLabel = (label: string, gradeSystem: GradeSystem) => {
+const getGroupingLabel = (
+  label: string,
+  gradeSystem: GradeSystem,
+  isGrouped: boolean,
+) => {
+  if (isGrouped === false) return label;
+
   if (gradeSystem === 'saxon') {
     const match = label?.match(/^[A-Z]+/);
+    return match ? match[0] : '';
+  }
+  if (gradeSystem === 'polish') {
+    const match = label?.match(/^[A-Z]+\.?[0-9]?/);
     return match ? match[0] : '';
   }
   if (gradeSystem === 'hueco') {
     const match = label?.match(/^[A-Z0-9]+/);
     return match ? match[0] : '';
   }
+  if (gradeSystem === 'yds_class') {
+    const match = label?.match(/^[0-9]\.[0-9]+/);
+    return match ? match[0] : '';
+  }
   return String(parseFloat(label));
+};
+
+const heightsRatiosCutMargins = (heightsRatios) => {
+  const leftMarginIndex = heightsRatios.findIndex(({ ratio }) => ratio > 0);
+  const rightMarginIndex = heightsRatios
+    .slice()
+    .reverse()
+    .findIndex(({ ratio }) => ratio > 0);
+
+  if (leftMarginIndex === -1 || rightMarginIndex === -1) {
+    return heightsRatios;
+  }
+
+  return heightsRatios.slice(
+    leftMarginIndex,
+    heightsRatios.length - rightMarginIndex,
+  );
 };
 
 export const RouteDistribution = ({
   features,
+  cutEmptyMargins = false,
+  isGrouped = true,
 }: {
-  features: Array<Feature>;
+  features: Array<Feature | OverpassFeature>;
+  cutEmptyMargins?: boolean;
+  isGrouped?: boolean;
 }) => {
-  const { userSettings } = useUserSettingsContext();
-  const gradeSystem = userSettings['climbing.gradeSystem'] || 'uiaa';
+  const { gradeSystem } = useUserSettingsContext();
 
   const theme = useTheme();
-  if (features.length === 0) return null;
+  if (features?.length === 0) return null;
 
   const prepareOccurrenceStructure = () =>
     GRADE_TABLE[gradeSystem].reduce<{ [grade: string]: number }>(
       (acc, grade) => ({
         ...acc,
-        [getGroupingLabel(grade, gradeSystem)]: 0,
+        [getGroupingLabel(grade, gradeSystem, isGrouped)]: 0,
       }),
       {},
     );
 
   const getOccurrences = () => {
     const structure = prepareOccurrenceStructure();
-    return features.reduce((acc, feature) => {
+    return features?.reduce((acc, feature) => {
       const difficulty = getDifficulty(feature.tags);
       if (!difficulty) return acc;
       const convertedGrade = convertGrade(
@@ -120,7 +166,7 @@ export const RouteDistribution = ({
         gradeSystem,
         difficulty.grade,
       );
-      const newGrade = getGroupingLabel(convertedGrade, gradeSystem);
+      const newGrade = getGroupingLabel(convertedGrade, gradeSystem, isGrouped);
       if (!structure) return {};
       const updatedKey = Object.keys(structure).find(
         (grade) => grade === newGrade,
@@ -132,7 +178,13 @@ export const RouteDistribution = ({
 
   const routeOccurrences = getOccurrences();
 
-  if (!routeOccurrences) return null;
+  if (
+    !routeOccurrences ||
+    !Object.values(routeOccurrences).find(
+      (numberOfRoutes) => numberOfRoutes > 0,
+    )
+  )
+    return null;
 
   const heightsRatios = Object.keys(routeOccurrences).map((key) => ({
     grade: key,
@@ -142,26 +194,36 @@ export const RouteDistribution = ({
     heightsRatios.length < 2 ||
     heightsRatios.reduce((acc, { ratio }) => acc + ratio, 0) === 0
   )
-    return null;
+    return (
+      <PanelLabel addition={<GradeSystemSelect />}>
+        {t('grade_system_select.convert_grade')}
+      </PanelLabel>
+    );
 
   const getMaxHeightRatio = Math.max(
     ...heightsRatios.map(({ ratio }) => ratio),
   );
   const gradeSystemName = getGradeSystemName(gradeSystem);
+  // delete heightsRatios from left and right margins if they are empty and save it in new array
+
+  const data = cutEmptyMargins
+    ? heightsRatiosCutMargins(heightsRatios)
+    : heightsRatios;
 
   return (
     <Container>
       <ContentContainer>
         <Items>
           <GraphItems>
-            {heightsRatios.map((heightRatioItem) => {
+            {data.map((heightRatioItem) => {
               const color = getDifficultyColor(
                 {
                   gradeSystem: gradeSystem,
                   grade: heightRatioItem.grade,
                 },
-                theme,
+                theme.palette.mode,
               );
+
               const numberOfRoutesKey = Object.keys(routeOccurrences).find(
                 (key) => key === heightRatioItem.grade,
               );
@@ -193,7 +255,7 @@ export const RouteDistribution = ({
                 gradeSystemName,
               })}
             >
-              <>{gradeSystemName}</>
+              <GradeSystemSelect size="tiny" />
             </Tooltip>
           </GradeSystemName>
         </Items>

@@ -1,4 +1,4 @@
-import { useCurrentItem, useEditContext } from '../../EditContext';
+import { useCurrentItem, useEditContext } from '../../context/EditContext';
 import { Alert, Button } from '@mui/material';
 import { NwrIcon } from '../../../NwrIcon';
 import { t } from '../../../../../services/intl';
@@ -6,6 +6,7 @@ import React from 'react';
 import { FeatureTags } from '../../../../../services/types';
 import { getApiId } from '../../../../../services/helpers';
 
+// TODO maybe add sport=climbing as well? but this need more testing
 export const isConvertible = (shortId: string, tags: FeatureTags) =>
   shortId.startsWith('n') && ['crag', 'area'].includes(tags.climbing);
 

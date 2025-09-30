@@ -2,10 +2,10 @@ import React, { useEffect } from 'react';
 import { Dialog, useMediaQuery, useTheme } from '@mui/material';
 import styled from '@emotion/styled';
 import { useEditDialogContext } from '../helpers/EditDialogContext';
-import { useEditDialogFeature } from './utils';
-import { EditContextProvider, useEditContext } from './EditContext';
+import { useEditDialogClose, useEditDialogFeature } from './utils';
+import { EditContextProvider, useEditContext } from './context/EditContext';
 import { getReactKey } from '../../../services/helpers';
-import { fetchFreshItem, getNewNodeItem } from './itemsHelpers';
+import { fetchFreshItem, getNewNodeItem } from './context/itemsHelpers';
 import {
   EditDialogContent,
   EditDialogLoadingSkeleton,
@@ -20,25 +20,32 @@ const StyledDialog = styled(Dialog)`
     align-items: start;
   }
 `;
+
 const CustomizedDialog: React.FC = ({ children }) => {
-  const { opened, close } = useEditDialogContext();
+  const handleClose = useEditDialogClose();
+  const { opened } = useEditDialogContext();
   const fullScreen = useIsFullScreen();
   const { items } = useEditContext();
   const hasMoreItems = items.length > 1;
+  const { successInfo } = useEditContext();
+  const isModified = items.some(({ modified }) => modified);
 
   return (
     <StyledDialog
-      PaperProps={{
-        sx: {
-          height: '100%',
-          maxWidth: hasMoreItems ? 1100 : 900,
-        },
-      }}
       fullScreen={fullScreen}
       open={opened}
-      onClose={close}
-      disableEscapeKeyDown
+      onClose={handleClose}
+      disableEscapeKeyDown={isModified && !successInfo}
       aria-labelledby="edit-dialog-title"
+      slotProps={{
+        paper: {
+          sx: {
+            height: '100%',
+            maxWidth: hasMoreItems ? 1100 : 900,
+          },
+          elevation: 0,
+        },
+      }}
       sx={{ height: '100%' }}
     >
       {children}

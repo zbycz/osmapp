@@ -1,17 +1,20 @@
 import { Feature, FeatureTags } from '../../../services/types';
-import { GradeSystem } from '../../../services/tagging/climbing';
+import { GradeSystem } from '../../../services/tagging/climbing/gradeSystems';
 
 export type PointType = 'anchor' | 'bolt' | 'piton' | 'sling' | 'unfinished';
+export type LineType = 'solid' | 'dotted';
 
 export type Position = {
   x: number;
   y: number;
   units: 'percentage';
+  previousLineType?: LineType;
 };
 export type PositionPx = {
   x: number;
   y: number;
   units: 'px';
+  previousLineType?: LineType;
 };
 
 export type Size = {
@@ -57,8 +60,11 @@ export type TickStyle =
   | 'TR'
   | 'FS'
   | null;
-export type Tick = {
+
+/** @deprecated use ClimbingTick type */
+export type LocalStorageTick = {
   osmId: string;
   style: TickStyle;
   date: string;
+  key?: string;
 };

@@ -5,9 +5,9 @@ import {
   getDifficulties,
   getDifficulty,
   getDifficultyColor,
-} from '../utils/grades/routeGrade';
+} from '../../../../services/tagging/climbing/routeGrade';
 import { ClimbingRoute } from '../types';
-import { useUserSettingsContext } from '../../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../../utils/userSettings/UserSettingsContext';
 import { useClimbingContext } from '../contexts/ClimbingContext';
 
 type Props = {
@@ -35,7 +35,10 @@ export const RouteDifficulty = ({ route, x, y }: Props) => {
   const {
     photoZoom: { scale },
   } = useClimbingContext();
-  const color = getDifficultyColor(getDifficulty(route.feature.tags), theme);
+  const color = getDifficultyColor(
+    getDifficulty(route.feature.tags),
+    theme.palette.mode,
+  );
   const routeDifficulties = getDifficulties(route.feature?.tags);
   const selectedRouteSystem = userSettings['climbing.gradeSystem'];
   const { routeDifficulty } = findOrConvertRouteGrade(

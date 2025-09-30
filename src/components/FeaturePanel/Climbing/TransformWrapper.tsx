@@ -9,6 +9,8 @@ export const TransformWrapper = ({ children }) => {
     setPhotoZoom,
     isEditMode,
     isPanningDisabled,
+    isAddingPointBlockedRef,
+    isZoomingRef,
   } = useClimbingContext();
 
   const startPointerEvents = () => {
@@ -16,6 +18,32 @@ export const TransformWrapper = ({ children }) => {
   };
   const stopPointerEvents = () => {
     setArePointerEventsDisabled(true);
+  };
+
+  const handlePanningStart = () => {
+    startPointerEvents();
+  };
+
+  const handlePanning = () => {
+    if (!isAddingPointBlockedRef.current) {
+      isAddingPointBlockedRef.current = true;
+    }
+  };
+
+  const handlePanningStop = () => {
+    startPointerEvents();
+    setTimeout(() => {
+      isAddingPointBlockedRef.current = false;
+    }, 300);
+  };
+
+  const handleZoomStart = () => {
+    isZoomingRef.current = true;
+    stopPointerEvents();
+  };
+  const handleZoomStop = () => {
+    isZoomingRef.current = false;
+    startPointerEvents();
   };
 
   return (
@@ -30,10 +58,11 @@ export const TransformWrapper = ({ children }) => {
       onWheelStop={startPointerEvents}
       onPinchingStart={stopPointerEvents}
       onPinchingStop={startPointerEvents}
-      onZoomStart={stopPointerEvents}
-      onZoomStop={startPointerEvents}
-      onPanningStart={startPointerEvents}
-      onPanningStop={startPointerEvents}
+      onZoomStart={handleZoomStart}
+      onZoomStop={handleZoomStop}
+      onPanningStart={handlePanningStart}
+      onPanning={handlePanning}
+      onPanningStop={handlePanningStop}
       disablePadding
       panning={{ disabled: isPanningDisabled }}
       wheel={{ step: 100 }}

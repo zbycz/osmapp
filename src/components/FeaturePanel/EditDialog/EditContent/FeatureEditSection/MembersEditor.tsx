@@ -3,7 +3,9 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Box,
   Chip,
+  Divider,
   List,
   Stack,
   Typography,
@@ -11,14 +13,18 @@ import {
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { FeatureRow } from '../FeatureRow';
-import { t } from '../../../../../services/intl';
+import { t, Translation } from '../../../../../services/intl';
 import { AddMemberForm } from './AddMemberForm';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
 import { CragIcon } from '../../../Climbing/CragIcon';
 import { Setter } from '../../../../../types';
-import { useHandleItemClick } from '../useHandleItemClick';
+import {
+  useHandleItemClick,
+  useHandleOpenAllMembers,
+} from '../useHandleItemClick';
 import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
-import { useCurrentItem } from '../../EditContext';
+import { useCurrentItem } from '../../context/EditContext';
+import { OpenAllButton } from './helpers';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -59,7 +65,7 @@ const SectionName = () => {
   return <Typography variant="button">{t('editdialog.members')}</Typography>;
 };
 
-const AccordionComponent = ({
+const CustomAccordion = ({
   children,
   membersLength,
   isExpanded,
@@ -69,13 +75,22 @@ const AccordionComponent = ({
   membersLength?: number;
   isExpanded?: boolean;
   setIsExpanded?: Setter<boolean>;
-}) => {
-  return (
-    <Accordion disableGutters elevation={0} square expanded={isExpanded}>
+}) => (
+  <>
+    <Divider />
+    <Accordion
+      disableGutters
+      elevation={0}
+      square
+      expanded={isExpanded}
+      sx={{
+        '&.MuiAccordion-root:before': {
+          opacity: 1,
+        },
+      }}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <Stack direction="row" spacing={2} alignItems="center">
@@ -85,25 +100,26 @@ const AccordionComponent = ({
           ) : null}
         </Stack>
       </AccordionSummary>
-      <AccordionDetails>
-        <List>{children}</List>
+      <AccordionDetails sx={{ pt: 0 }}>
+        <List disablePadding>{children}</List>
       </AccordionDetails>
     </Accordion>
-  );
-};
+  </>
+);
 
 export const MembersEditor = () => {
   const { shortId, members, tags } = useCurrentItem();
   const [isExpanded, setIsExpanded] = useState(false);
   const handleClick = useHandleItemClick(setIsExpanded);
   const convertible = isConvertible(shortId, tags);
+  const handleOpenAll = useHandleOpenAllMembers();
 
   if (!members && !convertible) {
     return null;
   }
 
   return (
-    <AccordionComponent
+    <CustomAccordion
       membersLength={members?.length}
       isExpanded={isExpanded}
       setIsExpanded={setIsExpanded}
@@ -112,13 +128,25 @@ export const MembersEditor = () => {
         <FeatureRow
           key={member.shortId}
           shortId={member.shortId}
-          label={member.label}
+          originalLabel={member.originalLabel}
           role={member.role}
           onClick={(e: React.MouseEvent) => handleClick(e, member.shortId)}
         />
       ))}
 
-      {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
-    </AccordionComponent>
+      <Stack direction="row" alignItems="center" spacing={2} mt={1} ml={1}>
+        {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
+
+        <Box sx={{ flex: '1' }} />
+
+        {handleOpenAll && <OpenAllButton onClick={handleOpenAll} />}
+      </Stack>
+      {!!members?.length && tags.climbing && (
+        <Typography variant="body2" color="textSecondary" ml={1}>
+          <Translation id="editdialog.members_climbing_info" />
+          {/* If we convert a natural=peak to crag relation, the peak stays as a member - this notice must be visible especially for this scenario. */}
+        </Typography>
+      )}
+    </CustomAccordion>
   );
 };

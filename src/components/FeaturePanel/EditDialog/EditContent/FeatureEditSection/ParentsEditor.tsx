@@ -1,26 +1,31 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
   Chip,
+  Divider,
   List,
   Stack,
   Typography,
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { fetchParentFeatures } from '../../../../../services/osm/fetchParentFeatures';
-import { getApiId, getShortId } from '../../../../../services/helpers';
+import { getShortId } from '../../../../../services/helpers';
 import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
-import { fetchWays } from '../../../../../services/osm/fetchWays';
-import { useCurrentItem, useEditContext } from '../../EditContext';
+import { useCurrentItem } from '../../context/EditContext';
 import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
-import { useHandleItemClick } from '../useHandleItemClick';
+import {
+  useHandleItemClick,
+  useHandleOpenAllParents,
+} from '../useHandleItemClick';
 import { Feature } from '../../../../../services/types';
+import { OpenAllButton } from './helpers';
+import { Setter } from '../../../../../types';
+import { useGetParents } from './useGetParents';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -68,42 +73,35 @@ const SectionName = () => {
   return <Typography variant="button">{t('editdialog.parents')}</Typography>;
 };
 
-const useGetParents = () => {
-  const { current } = useEditContext();
-  const [parents, setParents] = useState<Feature[]>([]);
-
-  useEffect(() => {
-    (async () => {
-      setParents([]);
-      if (getApiId(current).id < 0) {
-        return;
-      }
-      const [parentFeatures, waysFeatures] = await Promise.all([
-        fetchParentFeatures(getApiId(current)),
-        fetchWays(getApiId(current)),
-      ]);
-      setParents([...parentFeatures, ...waysFeatures]);
-    })();
-  }, [current]);
-  return parents;
-};
-
 const getLabel = (parent: Feature) => {
   const shortId = getShortId(parent.osmMeta);
   return parent.tags?.name || parent.schema?.label || shortId;
 };
 
-export const ParentsEditor = () => {
-  const [isExpanded, setIsExpanded] = React.useState(false);
-  const handleClick = useHandleItemClick(setIsExpanded);
-  const parents = useGetParents();
-
-  if (!parents || parents.length === 0) {
-    return null;
-  }
-
-  return (
-    <Accordion disableGutters elevation={0} square expanded={isExpanded}>
+const CustomAccordion = ({
+  children,
+  parentsLength,
+  isExpanded,
+  setIsExpanded,
+}: {
+  children: React.ReactNode;
+  parentsLength?: number;
+  isExpanded?: boolean;
+  setIsExpanded?: Setter<boolean>;
+}) => (
+  <>
+    <Divider />
+    <Accordion
+      disableGutters
+      elevation={0}
+      square
+      expanded={isExpanded}
+      sx={{
+        '&.MuiAccordion-root:before': {
+          opacity: 0,
+        },
+      }}
+    >
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="panel1-content"
@@ -114,24 +112,49 @@ export const ParentsEditor = () => {
           <Typography variant="button">
             <SectionName />
           </Typography>
-          <Chip size="small" label={parents.length} variant="outlined" />
+          <Chip size="small" label={parentsLength} variant="outlined" />
         </Stack>
       </AccordionSummary>
-      <AccordionDetails>
-        <List>
-          {parents.map((parent) => {
-            const shortId = getShortId(parent.osmMeta);
-            return (
-              <FeatureRow
-                key={shortId}
-                shortId={shortId}
-                label={getLabel(parent)}
-                onClick={(e) => handleClick(e, shortId)}
-              />
-            );
-          })}
-        </List>
+      <AccordionDetails sx={{ pt: 0 }}>
+        <List disablePadding>{children}</List>
       </AccordionDetails>
     </Accordion>
+  </>
+);
+
+export const ParentsEditor = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const handleClick = useHandleItemClick(setIsExpanded);
+  const parents = useGetParents();
+  const handleOpenAll = useHandleOpenAllParents(parents);
+
+  if (!parents || parents.length === 0) {
+    return null;
+  }
+
+  return (
+    <CustomAccordion
+      parentsLength={parents?.length}
+      isExpanded={isExpanded}
+      setIsExpanded={setIsExpanded}
+    >
+      {parents.map((parent) => {
+        const shortId = getShortId(parent.osmMeta);
+        return (
+          <FeatureRow
+            key={shortId}
+            shortId={shortId}
+            originalLabel={getLabel(parent)}
+            onClick={(e) => handleClick(e, shortId)}
+          />
+        );
+      })}
+
+      {parents.length > 1 && (
+        <Stack alignItems="end">
+          <OpenAllButton onClick={handleOpenAll} />
+        </Stack>
+      )}
+    </CustomAccordion>
   );
 };

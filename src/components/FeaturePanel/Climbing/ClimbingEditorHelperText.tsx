@@ -7,17 +7,14 @@ import { getWikimediaCommonsPhotoPathKeys } from './utils/photo';
 import { RouteNumber } from './RouteNumber';
 import { t } from '../../../services/intl';
 import { useMobileMode } from '../../helpers';
-import { type } from 'node:os';
 
 const InlineBlockContainer = styled.div`
   display: inline-block;
 `;
 
 export const ClimbingEditorHelperText = () => {
-  const { routeSelectedIndex, getCurrentPath, getMachine } =
-    useClimbingContext();
+  const { routeSelectedIndex, getCurrentPath, machine } = useClimbingContext();
   const { feature } = useFeatureContext();
-  const machine = getMachine();
 
   const routePhotoPathsCount = getWikimediaCommonsPhotoPathKeys(
     feature.memberFeatures[routeSelectedIndex]?.tags ?? {},

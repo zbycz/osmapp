@@ -1,36 +1,29 @@
-import { DataItem } from '../../../../components/FeaturePanel/EditDialog/useEditItems';
 import { getDiffXml } from '../getDIffXml';
+import { DataItem } from '../../../../components/FeaturePanel/EditDialog/context/types';
 
-const nodeNew: DataItem = {
+const nodeNew = {
   shortId: 'n-1',
   version: undefined,
   tagsEntries: [['newNode', 'yes']],
-  members: undefined,
-  nodes: undefined,
-  nodeLonLat: [14, 50],
   toBeDeleted: false,
-};
+  nodeLonLat: [14, 50],
+} as DataItem;
 
-const nodeChange: DataItem = {
+const nodeChange = {
   shortId: 'n2222',
   version: 2,
   tagsEntries: [['addedTags', 'yes']],
-  members: undefined,
-  nodes: undefined,
-  nodeLonLat: [14, 50],
   toBeDeleted: false,
-};
+  nodeLonLat: [14, 50],
+} as DataItem;
 
-const nodeToDelete: DataItem = {
+const nodeToDelete = {
   shortId: 'n9999',
   version: 9,
   tagsEntries: [],
-  members: undefined,
-  nodes: undefined,
-
-  nodeLonLat: [14, 50],
   toBeDeleted: true,
-};
+  nodeLonLat: [14, 50],
+} as DataItem;
 
 const nodesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <osmChange generator="OsmAPP" version="0.6">
@@ -50,40 +43,34 @@ const nodesXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </osmChange>`;
 
 test('should convert nodes', () => {
-  expect(getDiffXml('123', [nodeNew, nodeChange, nodeToDelete])).toEqual(
+  expect(getDiffXml([nodeNew, nodeChange, nodeToDelete], '123')).toEqual(
     nodesXml,
   );
 });
 
-const wayNew: DataItem = {
+const wayNew = {
   shortId: 'w-1',
   version: undefined,
   tagsEntries: [['newWay', 'yes']],
-  members: undefined,
-  nodes: [4001, 4002, 4003],
-  nodeLonLat: undefined,
   toBeDeleted: false,
-};
+  nodes: [4001, 4002, 4003],
+} as DataItem;
 
-const wayChange: DataItem = {
+const wayChange = {
   shortId: 'w2222',
   version: 2,
   tagsEntries: [['addedTags', 'yes']],
-  members: undefined,
-  nodes: [4001, 4002, 4003],
-  nodeLonLat: undefined,
   toBeDeleted: false,
-};
+  nodes: [4001, 4002, 4003],
+} as DataItem;
 
-const wayToDelete: DataItem = {
+const wayToDelete = {
   shortId: 'w9999',
   version: 9,
   tagsEntries: [],
-  members: undefined,
-  nodes: [4001, 4002, 4003],
-  nodeLonLat: undefined,
   toBeDeleted: true,
-};
+  nodes: [4001, 4002, 4003],
+} as DataItem;
 
 const waysXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <osmChange generator="OsmAPP" version="0.6">
@@ -113,41 +100,35 @@ const waysXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 </osmChange>`;
 
 test('should convert ways', () => {
-  expect(getDiffXml('123', [wayNew, wayChange, wayToDelete])).toEqual(waysXml);
+  expect(getDiffXml([wayNew, wayChange, wayToDelete], '123')).toEqual(waysXml);
 });
 
-const relationNew: DataItem = {
+const relationNew = {
   shortId: 'r-1',
   version: undefined,
   tagsEntries: [['new', 'yes']],
-  members: [
-    { shortId: 'n-1', role: 'role', label: 'x' },
-    { shortId: 'w-2', role: 'role', label: 'y' },
-  ],
-  nodes: undefined,
-  nodeLonLat: undefined,
   toBeDeleted: false,
-};
+  members: [
+    { shortId: 'n-1', role: 'role' },
+    { shortId: 'w-2', role: 'role' },
+  ],
+} as DataItem;
 
-const relationChange: DataItem = {
+const relationChange = {
   shortId: 'r22',
   version: 2,
   tagsEntries: [['changed', 'yes']],
-  members: [{ shortId: 'n-1', role: 'role', label: 'x' }],
-  nodes: undefined,
-  nodeLonLat: undefined,
   toBeDeleted: false,
-};
+  members: [{ shortId: 'n-1', role: 'role', originalLabel: 'ignored' }],
+} as DataItem;
 
-const relationToDelete: DataItem = {
+const relationToDelete = {
   shortId: 'r99',
   version: 9,
   tagsEntries: [],
-  members: [],
-  nodes: undefined,
-  nodeLonLat: undefined,
   toBeDeleted: true,
-};
+  members: [],
+} as DataItem;
 
 const relationsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <osmChange generator="OsmAPP" version="0.6">
@@ -171,6 +152,6 @@ const relationsXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
 test('should convert relations', () => {
   expect(
-    getDiffXml('123', [relationNew, relationChange, relationToDelete]),
+    getDiffXml([relationNew, relationChange, relationToDelete], '123'),
   ).toEqual(relationsXml);
 });

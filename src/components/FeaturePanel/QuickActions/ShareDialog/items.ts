@@ -1,6 +1,6 @@
 import { isIOS } from '../../../../helpers/platforms';
 import { t } from '../../../../services/intl';
-import { PositionBoth } from '../../../../services/types';
+import { LonLatBoth } from '../../../../services/types';
 import { isMobileDevice } from '../../../helpers';
 
 type ImageAttribution = {
@@ -33,7 +33,7 @@ type ItemArgs = {
   osmQuery: string;
   appleMaps: string;
   idEditor: string;
-  position: PositionBoth;
+  position: LonLatBoth;
   zoomInt: number;
   isSateliteActive: boolean;
 };
@@ -57,8 +57,7 @@ export const items = ({
         {
           label: 'Apple maps',
           href: appleMaps,
-          image:
-            'https://upload.wikimedia.org/wikipedia/commons/1/17/AppleMaps_logo.svg',
+          image: '/share-icons/osm.webp',
         },
       ]
     : []),
@@ -71,12 +70,12 @@ export const items = ({
       `&center=${lat},${lon}` +
       `&zoom=${zoomInt}` +
       `&basemap=${isSateliteActive ? 'satellite' : 'roadmap'}`,
-    image:
-      'https://upload.wikimedia.org/wikipedia/commons/a/aa/Google_Maps_icon_%282020%29.svg',
+    image: '/share-icons/google-maps.webp',
   },
   {
-    label: 'Mapy.cz',
-    href: `https://mapy.cz/zakladni?q=${lat}%C2%B0%20${lon}%C2%B0`,
+    label: 'Mapy.com',
+    href: `https://mapy.com/turisticka?q=${lat}%C2%B0%20${lon}%C2%B0`,
+    image: '/share-icons/mapy-com.webp',
   },
   ...(isMobileDevice()
     ? [
@@ -86,10 +85,6 @@ export const items = ({
         },
       ]
     : []),
-  {
-    label: 'OpenStreetMap.cz',
-    href: `https://openstreetmap.cz/${osmQuery}`,
-  },
   {
     label: 'iD editor',
     href: idEditor,

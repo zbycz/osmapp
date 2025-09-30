@@ -1,14 +1,14 @@
+import { useRef } from 'react';
 import { useQuery } from 'react-query';
 import { useMapStateContext } from '../../utils/MapStateContext';
 import styled from '@emotion/styled';
-import { DotLoader } from '../../helpers';
 import { convertHexToRgba } from '../../utils/colorUtils';
 import { loadCurrentWeather } from './loadWeather';
 import { WeatherInner } from './WeatherInner';
 import { LonLat } from '../../../services/types';
 import React from 'react';
 import { getDistance } from '../../SearchBox/utils';
-import { useUserSettingsContext } from '../../utils/UserSettingsContext';
+import { useUserSettingsContext } from '../../utils/userSettings/UserSettingsContext';
 
 const WeatherWrapper = styled.div`
   color: ${({ theme }) => theme.palette.text.primary};
@@ -20,7 +20,6 @@ const WeatherWrapper = styled.div`
   width: fit-content;
   border-radius: 8px;
   font-size: 0.85rem;
-
   pointer-events: all;
 `;
 
@@ -30,7 +29,7 @@ type WeatherProps = {
 };
 
 const useLoadWeather = ({ lat, lon }: WeatherProps) => {
-  const lastFetchedLocation = React.useRef<LonLat | null>(null);
+  const lastFetchedLocation = useRef<LonLat | null>(null);
 
   const { status, data, error } = useQuery(
     ['weather', lat, lon],

@@ -1,5 +1,3 @@
-import { images } from 'next/dist/build/webpack/config/blocks/images';
-
 export const addElementToIndex = <T>(
   array: Array<T>,
   index: number,

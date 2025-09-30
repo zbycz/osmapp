@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import React from 'react';
 import styled from '@emotion/styled';
 import EditIcon from '@mui/icons-material/Edit';
-import { IconButton, Stack, Tooltip, useMediaQuery } from '@mui/material';
+import { IconButton, Tooltip, useMediaQuery } from '@mui/material';
 import { useEditDialogContext } from './helpers/EditDialogContext';
 import { PoiDescription } from './helpers/PoiDescription';
 import { getLabel, getSecondaryLabel } from '../../helpers/featureLabel';
@@ -56,7 +57,7 @@ const HeadingsWrapper = styled.div`
 
 const Headings = () => {
   const isOpenClimbing = PROJECT_ID === 'openclimbing';
-  const [isHovered, setIsHovered] = React.useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const onMouseEnter = () => {
     setIsHovered(true);

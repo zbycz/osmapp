@@ -25,8 +25,8 @@ export const sortKey = [
   -1,
   [
     '+',
-    ['to-number', ['get', 'osmappRouteCount']],
-    ['case', ['get', 'osmappHasImages'], 10000, 0], // preference for items with images
+    ['to-number', ['get', 'routeCount']],
+    ['case', ['get', 'hasImages'], 10000, 0], // preference for items with images
     ['case', ['to-boolean', ['get', 'name']], 2, 0], // prefer items with name
   ],
 ] as DataDrivenPropertyValueSpecification<number>;
@@ -39,7 +39,7 @@ export const linearByRouteCount = (
 ): ExpressionSpecification => [
   'interpolate',
   ['linear'],
-  ['coalesce', ['get', 'osmappRouteCount'], 0],
+  ['coalesce', ['get', 'routeCount'], 0],
   from,
   a,
   to,
@@ -51,7 +51,7 @@ const ifHasImages = (
   elseValue: string,
 ): ExpressionSpecification => [
   'case',
-  ['get', 'osmappHasImages'],
+  ['coalesce', ['get', 'hasImages'], false],
   value,
   elseValue,
 ];
@@ -67,7 +67,7 @@ export const ifCrag = (
   elseValue: ExpressionSpecification | number,
 ): ExpressionSpecification => [
   'case',
-  ['==', ['get', 'climbing'], 'crag'],
+  ['==', ['get', 'type'], 'crag'],
   crag,
   elseValue,
 ];

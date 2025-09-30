@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import maplibregl from 'maplibre-gl';
 import { basicStyle } from '../styles/basicStyle';
 import { setGlobalMap } from '../../../services/mapStorage';
@@ -41,16 +41,17 @@ const filterConsoleLog = () => {
 // };
 
 export const useInitMap = () => {
-  const mapRef = React.useRef(null);
-  const [mapInState, setMapInState] = React.useState(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const mapRef = useRef<maplibregl.Map | null>(null);
+  const [mapInState, setMapInState] = useState<maplibregl.Map | null>(null);
 
-  React.useEffect(() => {
-    if (!mapRef.current) return undefined;
+  useEffect(() => {
+    if (!containerRef.current) return;
 
     filterConsoleLog();
 
     const map = new maplibregl.Map({
-      container: mapRef.current,
+      container: containerRef.current,
       style: basicStyle,
       attributionControl: false,
       refreshExpiredTiles: false,
@@ -58,15 +59,19 @@ export const useInitMap = () => {
         'NavigationControl.ResetBearing': COMPASS_TOOLTIP,
       },
     });
+
     setGlobalMap(map);
     setMapInState(map);
-    map.scrollZoom.setWheelZoomRate(1 / 200); // 1/450 is default, bigger value = faster
+    mapRef.current = map;
+
+    map.scrollZoom.setWheelZoomRate(1 / 200);
 
     return () => {
       setGlobalMap(null);
-      map?.remove();
+      mapRef.current = null;
+      map.remove();
     };
-  }, [mapRef]);
+  }, []);
 
-  return [mapInState, mapRef];
+  return [mapInState, containerRef, mapRef] as const;
 };

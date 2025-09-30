@@ -29,10 +29,11 @@ export const findCloserPointFactory =
     getPathForRoute: (route: ClimbingRoute) => PathPoints;
   }) =>
   (checkedPosition: Position) => {
+    const isTouchDevice = 'ontouchstart' in window;
+    const STICKY_THRESHOLD = isTouchDevice ? 0.03 : 0.015;
+
     if (routeSelectedIndex === null || !checkedPosition.x || !checkedPosition.y)
       return null;
-
-    const STICKY_THRESHOLD = 0.015;
 
     return routes
       .map((route, index) => {
