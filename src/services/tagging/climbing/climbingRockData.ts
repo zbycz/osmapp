@@ -21,4 +21,6 @@ export const CLIMBING_ROCK_OPTIONS = [
   { value: 'marble', translationKey: 'climbing_rock.marble' },
   { value: 'serpentinite', translationKey: 'climbing_rock.serpentinite' },
   { value: 'chert', translationKey: 'climbing_rock.chert' },
+  { value: 'trachyandesite', translationKey: 'climbing_rock.trachyandesite' },
+  { value: 'tuff', translationKey: 'climbing_rock.tuff' },
 ] as const;

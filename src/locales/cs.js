@@ -505,6 +505,8 @@ export default {
   'climbing_rock.marble': 'mramor',
   'climbing_rock.serpentinite': 'serpentinit',
   'climbing_rock.chert': 'buližník',
+  'climbing_rock.trachyandesite': 'znělec',
+  'climbing_rock.tuff': 'sopečný tuf',
 
   'editdialog.add_value': 'Přidat',
   'editdialog.all_values_added': 'Všechny hodnoty byly přidány',
