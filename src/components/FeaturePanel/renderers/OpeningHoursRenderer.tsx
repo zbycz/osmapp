@@ -52,14 +52,27 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
 
   switch (status) {
     case 'opened':
-      return { statusText: t('opening_hours.open', { todayTime: '' }).trim(), time: todayTime };
+      return {
+        statusText: t('opening_hours.open', { todayTime: '' }).trim(),
+        time: todayTime,
+      };
     case 'closed':
       return isOpenedToday
-        ? { statusText: t('opening_hours.now_closed_but_today', { todayTime: '' }).trim(), time: todayTime }
+        ? {
+            statusText: t('opening_hours.now_closed_but_today', {
+              todayTime: '',
+            }).trim(),
+            time: todayTime,
+          }
         : { statusText: t('opening_hours.today_closed'), time: null };
     case 'opens-soon':
       return isOpenedToday
-        ? { statusText: t('opening_hours.opens_soon_today', { todayTime: '' }).trim(), time: todayTime }
+        ? {
+            statusText: t('opening_hours.opens_soon_today', {
+              todayTime: '',
+            }).trim(),
+            time: todayTime,
+          }
         : { statusText: t('opening_hours.opens_soon'), time: null };
     case 'closes-soon':
       return { statusText: t('opening_hours.closes_soon'), time: null };
