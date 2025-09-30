@@ -52,17 +52,17 @@ const formatDescription = (status: Status, days: SimpleOpeningHoursTable) => {
 
   switch (status) {
     case 'opened':
-      return t('opening_hours.open', { todayTime });
+      return { statusText: t('opening_hours.open', { todayTime: '' }).trim(), time: todayTime };
     case 'closed':
       return isOpenedToday
-        ? t('opening_hours.now_closed_but_today', { todayTime })
-        : t('opening_hours.today_closed');
+        ? { statusText: t('opening_hours.now_closed_but_today', { todayTime: '' }).trim(), time: todayTime }
+        : { statusText: t('opening_hours.today_closed'), time: null };
     case 'opens-soon':
       return isOpenedToday
-        ? t('opening_hours.opens_soon_today', { todayTime })
-        : t('opening_hours.opens_soon');
+        ? { statusText: t('opening_hours.opens_soon_today', { todayTime: '' }).trim(), time: todayTime }
+        : { statusText: t('opening_hours.opens_soon'), time: null };
     case 'closes-soon':
-      return t('opening_hours.closes_soon');
+      return { statusText: t('opening_hours.closes_soon'), time: null };
   }
 };
 
@@ -91,13 +91,14 @@ export const OpeningHoursRenderer = ({ v }) => {
     ...timesByDay.slice(0, currentDay),
   ];
 
+  const description = formatDescription(status, daysTable);
+
   return (
     <>
       <AccessTime fontSize="small" />
       <div suppressHydrationWarning>
-        <StatusText status={status}>
-          {formatDescription(status, daysTable)}
-        </StatusText>
+        <StatusText status={status}>{description.statusText}</StatusText>
+        {description.time && ` ${description.time}`}
         {maybeReasons.length > 0 && (
           <>
             <br />
