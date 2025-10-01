@@ -39,6 +39,7 @@ export const getNewNodeItem = (
     tagsEntries: Object.entries(tags),
     toBeDeleted: false,
     nodeLonLat,
+    sections: tags.climbing ? ['climbing'] : [],
   });
 
 const getLabel = (itemsMap: ItemsMap, member: RelationMember) => {
@@ -102,5 +103,6 @@ export const fetchFreshItem = async (apiId: OsmId): Promise<DataItem> => {
       nodes,
       members,
     },
+    sections: tags.climbing ? ['climbing'] : [],
   };
 };

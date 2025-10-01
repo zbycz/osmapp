@@ -8,10 +8,13 @@ import {
   Typography,
 } from '@mui/material';
 import { MultiValueKeyEditor } from './MultiValueKeyEditor';
-import React, { useState } from 'react';
+import React from 'react';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { t } from '../../../../../../services/intl';
-import { useCurrentItem } from '../../../context/EditContext';
+import {
+  useCurrentItem,
+  useExpandedSections,
+} from '../../../context/EditContext';
 import { Maki } from '../../../../../utils/icons/Maki';
 import styled from '@emotion/styled';
 import { ClimbingGradesEditor } from './ClimbingGradesEditor';
@@ -85,7 +88,7 @@ const ClimbingMultiValuesInner = () => {
 
 export const ClimbingEditor = () => {
   const { tags } = useCurrentItem();
-  const [expanded, setExpanded] = useState(!!tags.climbing);
+  const { expanded, toggleExpanded } = useExpandedSections('climbing');
 
   if (!tags.climbing) {
     return null;
@@ -94,12 +97,13 @@ export const ClimbingEditor = () => {
   return (
     <>
       <Divider />
-      <Accordion
+      <Accordion // TODO replace Accordion with custom collapse component, it is not accordion anymore :)
         disableGutters
         elevation={0}
         square
         expanded={expanded}
-        onChange={() => setExpanded(!expanded)}
+        onChange={toggleExpanded}
+        slotProps={{ transition: { timeout: 0 } }}
         sx={{
           '&.MuiAccordion-root:before': {
             opacity: 0,

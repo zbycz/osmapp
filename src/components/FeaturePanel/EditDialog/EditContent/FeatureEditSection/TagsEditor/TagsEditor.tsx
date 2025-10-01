@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from '@emotion/styled';
 import {
   Accordion,
@@ -19,7 +19,10 @@ import { useEditDialogContext } from '../../../../helpers/EditDialogContext';
 import { KeyInput } from './KeyInput';
 import { ValueInput } from './ValueInput';
 import { OptionsEditor } from '../OptionsEditor';
-import { useCurrentItem } from '../../../context/EditContext';
+import {
+  useCurrentItem,
+  useExpandedSections,
+} from '../../../context/EditContext';
 
 const Table = styled.table`
   width: calc(100% - 8px);
@@ -57,7 +60,7 @@ const TagsEditorInfo = () => (
 );
 
 const AddButton = () => {
-  const { tagsEntries, setTagsEntries } = useCurrentItem();
+  const { setTagsEntries } = useCurrentItem();
   return (
     <tr>
       <td colSpan={2}>
@@ -114,23 +117,22 @@ const TagsCount = () => {
 export const TagsEditor = () => {
   const { focusTag } = useEditDialogContext();
   const focusThisEditor = isString(focusTag) && !majorKeys.includes(focusTag);
-  const [expanded, setExpanded] = useState(focusThisEditor);
+  const { expanded, expand, toggleExpanded } = useExpandedSections('tags');
 
   useEffect(() => {
-    if (focusThisEditor) {
-      setExpanded(true);
-    }
-  }, [focusThisEditor]);
+    if (focusThisEditor) expand();
+  }, [focusThisEditor, expand]);
 
   return (
     <>
       <Divider />
-      <Accordion
+      <Accordion // TODO replace Accordion with custom collapse component, it is not accordion anymore :)
         disableGutters
         elevation={0}
         square
         expanded={expanded}
-        onChange={() => setExpanded(!expanded)}
+        onChange={toggleExpanded}
+        slotProps={{ transition: { timeout: 0 } }}
         sx={{
           '&.MuiAccordion-root:before': {
             opacity: 0,

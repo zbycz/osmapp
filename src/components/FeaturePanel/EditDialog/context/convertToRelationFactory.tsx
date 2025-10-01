@@ -99,6 +99,7 @@ export const convertToRelationFactory = (
         toBeDeleted: false,
         relationClickedLonLat: node.nodeLonLat,
         members: keepNode ? [{ shortId, role: '' }] : [],
+        sections: ['members'],
       });
 
       const newData = prevData.map((item) =>
