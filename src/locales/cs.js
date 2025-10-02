@@ -387,6 +387,7 @@ export default {
   'crag_filter.routes': 'cestami',
   'crag_filter.reset': 'Reset',
   'crag_filter.done': 'Hotovo',
+  'crag_filter.zoom_in': 'Filtrování nad mapou je v beta režimu, všechny výsledky se zobrazí od zoomu __zoom__. <link>více informací</link>',
 
   'member_features.subitems': 'Položky',
   'member_features.climbing': 'Lezecké cesty',

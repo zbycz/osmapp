@@ -439,6 +439,7 @@ export default {
   'crag_filter.routes': 'routes',
   'crag_filter.reset': 'Reset',
   'crag_filter.done': 'Done',
+  'crag_filter.zoom_in': 'Map filtering is in beta, all filtered results are shown from zoom __zoom__. <link>more info</link>',
 
   'member_features.subitems': 'Subitems',
   'member_features.climbing': 'Climbing routes',
