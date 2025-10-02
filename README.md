@@ -103,15 +103,15 @@ GNU GPL
 
 ## Related projects
 
+- **Facilmap.org**
+  - relation viewer, POIs filtering, collaborative maps, embed etc.
+  - https://facilmap.org/ ([Github](https://github.com/FacilMap/facilmap))
 - **Cartes.app** 🇫🇷
   - Universal osm app by [@leam](https://github.com/laem) via [#217](https://github.com/zbycz/osmapp/issues/217)
   - https://cartes.app ([GitHub](https://github.com/laem/cartes))
-- **OpenStreetMap-NG**
-  - Migration of OSM.org to new technologies. We support this project! 🤞❤️
-  - [https://github.com/Zaczero/openstreetmap-ng](https://github.com/Zaczero/openstreetmap-ng/blob/main/ANNOUNCEMENT.md)
-- **Qwant Maps** (sadly not developed anymore)
-  - great tech stack: [BE in Python](https://github.com/Qwant/idunn), geocoding, directions, MaplibreGL. We may reuse parts of code in the future. Url was e.g. `https://qwant.com/maps/place/osm:node:1369322781` – super fast + SSR.
-  - https://github.com/Qwant/qwantmaps
+- **MapCarta**
+  - Clickable OSM POIs, images from wikipedia
+  - https://mapcarta.com (closed sourced)
 - **Awesome OpenStreetMap projects**
   - curated list of OSM projects [![Awesome](https://awesome.re/badge.svg)](https://awesome.re)
   - https://github.com/osmlab/awesome-openstreetmap#readme
