@@ -8,6 +8,23 @@ import { useUserSettingsContext } from '../../../utils/userSettings/UserSettings
 import { Placement } from '@popperjs/core';
 import { Setter } from '../../../../types';
 
+const ResetButton = (props: { onClick: () => void }) => (
+  <Button onClick={props.onClick} size="small" color="secondary">
+    {t('crag_filter.reset')}
+  </Button>
+);
+
+const DoneButton = (props: { onClick: () => void }) => (
+  <Button
+    variant="contained"
+    size="small"
+    onClick={props.onClick}
+    sx={{ mr: 1 }}
+  >
+    {t('crag_filter.done')}
+  </Button>
+);
+
 type FilterPopoverProps = {
   anchorEl: null | HTMLElement;
   open: boolean;
@@ -50,44 +67,14 @@ export const FilterPopover = ({
           sx={{ minWidth: 350 }}
           addition={
             <Stack direction="row" gap={1} alignItems="center">
-              {!isDefaultFilter && (
-                <Button onClick={reset} size="small" color="secondary">
-                  {t('crag_filter.reset')}
-                </Button>
-              )}
-              {/* <IconButton */}
-              {/*   onClick={handleClose} */}
-              {/*   size="small" */}
-              {/*   color="secondary" */}
-              {/*   sx={{ mr: 1 }} */}
-              {/* > */}
-              {/*    */}
-              {/*   <CloseIcon fontSize="small" /> */}
-              {/* </IconButton> */}
-              <Button
-                variant="contained"
-                size="small"
-                onClick={handleClose}
-                sx={{ mr: 1 }}
-              >
-                {t('crag_filter.done')}
-              </Button>
+              {!isDefaultFilter && <ResetButton onClick={reset} />}
+              <DoneButton onClick={handleClose} />
             </Stack>
           }
         >
           <Box>
             <GradeFilter />
             <MinimumRoutesFilter />
-            {/* <Stack */}
-            {/*   direction="row" */}
-            {/*   gap={1} */}
-            {/*   alignItems="center" */}
-            {/*   sx={{ ml: 1, paddingBottom: 1 }} */}
-            {/* > */}
-            {/*   <Button variant="contained" size="small" onClick={handleClose}> */}
-            {/*     {t('crag_filter.done')} */}
-            {/*   </Button> */}
-            {/* </Stack> */}
           </Box>
         </PopperWithArrow>
       </Box>
