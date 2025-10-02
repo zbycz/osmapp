@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Accordion,
   AccordionDetails,
@@ -14,7 +14,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { getShortId } from '../../../../../services/helpers';
 import { FeatureRow } from '../FeatureRow';
 import { t } from '../../../../../services/intl';
-import { useCurrentItem } from '../../context/EditContext';
+import { useCurrentItem, useExpandedSections } from '../../context/EditContext';
 import { isClimbingRoute as getIsClimbingRoute } from '../../../../../utils';
 import { AreaIcon } from '../../../Climbing/AreaIcon';
 import { CragIcon } from '../../../Climbing/CragIcon';
@@ -24,7 +24,6 @@ import {
 } from '../useHandleItemClick';
 import { Feature } from '../../../../../services/types';
 import { OpenAllButton } from './helpers';
-import { Setter } from '../../../../../types';
 import { useGetParents } from './useGetParents';
 
 const SectionName = () => {
@@ -81,50 +80,49 @@ const getLabel = (parent: Feature) => {
 const CustomAccordion = ({
   children,
   parentsLength,
-  isExpanded,
-  setIsExpanded,
 }: {
   children: React.ReactNode;
-  parentsLength?: number;
-  isExpanded?: boolean;
-  setIsExpanded?: Setter<boolean>;
-}) => (
-  <>
-    <Divider />
-    <Accordion
-      disableGutters
-      elevation={0}
-      square
-      expanded={isExpanded}
-      sx={{
-        '&.MuiAccordion-root:before': {
-          opacity: 0,
-        },
-      }}
-    >
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1-content"
-        id="panel1-header"
-        onClick={() => setIsExpanded(!isExpanded)}
+  parentsLength: number | undefined;
+}) => {
+  const { expanded, toggleExpanded } = useExpandedSections('parents');
+  return (
+    <>
+      <Divider />
+      <Accordion // TODO replace Accordion with custom collapse component, it is not accordion anymore :)
+        disableGutters
+        elevation={0}
+        square
+        expanded={expanded}
+        slotProps={{ transition: { timeout: 0 } }}
+        sx={{
+          '&.MuiAccordion-root:before': {
+            opacity: 0,
+          },
+        }}
       >
-        <Stack direction="row" spacing={2} alignItems="center">
-          <Typography variant="button">
-            <SectionName />
-          </Typography>
-          <Chip size="small" label={parentsLength} variant="outlined" />
-        </Stack>
-      </AccordionSummary>
-      <AccordionDetails sx={{ pt: 0 }}>
-        <List disablePadding>{children}</List>
-      </AccordionDetails>
-    </Accordion>
-  </>
-);
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1-content"
+          id="panel1-parents-header"
+          onClick={toggleExpanded}
+        >
+          <Stack direction="row" spacing={2} alignItems="center">
+            <Typography variant="button">
+              <SectionName />
+            </Typography>
+            <Chip size="small" label={parentsLength} variant="outlined" />
+          </Stack>
+        </AccordionSummary>
+        <AccordionDetails sx={{ pt: 0 }}>
+          <List disablePadding>{children}</List>
+        </AccordionDetails>
+      </Accordion>
+    </>
+  );
+};
 
 export const ParentsEditor = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
-  const handleClick = useHandleItemClick(setIsExpanded);
+  const handleClick = useHandleItemClick();
   const parents = useGetParents();
   const handleOpenAll = useHandleOpenAllParents(parents);
 
@@ -133,11 +131,7 @@ export const ParentsEditor = () => {
   }
 
   return (
-    <CustomAccordion
-      parentsLength={parents?.length}
-      isExpanded={isExpanded}
-      setIsExpanded={setIsExpanded}
-    >
+    <CustomAccordion parentsLength={parents?.length}>
       {parents.map((parent) => {
         const shortId = getShortId(parent.osmMeta);
         return (

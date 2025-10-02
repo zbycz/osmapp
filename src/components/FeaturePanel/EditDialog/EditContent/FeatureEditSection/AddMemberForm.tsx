@@ -63,7 +63,7 @@ const parseGradeFromLine = (line: string, gradeSystem?: string) => {
 const convertLine = async (
   line: string,
   parentTags: FeatureTags,
-  gradeSystem: string,
+  gradeSystem: string | undefined,
 ) => {
   let newItem: DataItem;
   if (line.match(/^[nwr]\d+$/)) {

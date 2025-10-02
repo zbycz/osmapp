@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState } from 'react';
 import { SuccessInfo } from '../../../../services/types';
 import { useEditItems } from './useEditItems';
 import { Setter } from '../../../../types';
-import { DataItem, EditDataItem } from './types';
+import { DataItem, EditDataItem, Section } from './types';
 
 type ShortId = string;
 
@@ -62,4 +62,27 @@ export const useCurrentItem = (): EditDataItem => {
   const { items, current } = useEditContext();
 
   return items.find((item) => item.shortId === current);
+};
+
+const isInSections = (sections: Section[], current: Section) =>
+  sections.some((section) => section === current);
+
+export const useExpandedSections = (current: Section) => {
+  const { sections, setSections } = useCurrentItem();
+
+  return {
+    expanded: isInSections(sections, current),
+    toggleExpanded: () => {
+      setSections((prev) =>
+        isInSections(prev, current)
+          ? prev.filter((section) => section !== current)
+          : [...prev, current],
+      );
+    },
+    expand: () => {
+      setSections((prev) =>
+        isInSections(prev, current) ? prev : [...prev, current],
+      );
+    },
+  };
 };

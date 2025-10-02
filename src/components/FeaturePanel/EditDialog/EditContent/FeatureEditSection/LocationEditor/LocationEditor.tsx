@@ -14,7 +14,10 @@ import { getApiId } from '../../../../../../services/helpers';
 import { fetchWays } from '../../../../../../services/osm/fetchWays';
 import { OsmId } from '../../../../../../services/types';
 import PlaceIcon from '@mui/icons-material/Place';
-import { useCurrentItem } from '../../../context/EditContext';
+import {
+  useCurrentItem,
+  useExpandedSections,
+} from '../../../context/EditContext';
 
 const EditFeatureMapDynamic = dynamic(() => import('./EditFeatureMap'), {
   ssr: false,
@@ -71,7 +74,7 @@ const Content = () => {
 };
 
 export const LocationEditor = () => {
-  const [expanded, setExpanded] = useState(false);
+  const { expanded, toggleExpanded } = useExpandedSections('location');
   const { shortId } = useCurrentItem();
   const osmId = getApiId(shortId);
 
@@ -82,12 +85,13 @@ export const LocationEditor = () => {
   return (
     <>
       <Divider />
-      <Accordion
+      <Accordion // TODO replace Accordion with custom collapse component, it is not accordion anymore :)
         disableGutters
         elevation={0}
         square
         expanded={expanded}
-        onChange={() => setExpanded(!expanded)}
+        onChange={toggleExpanded}
+        slotProps={{ transition: { timeout: 0 } }}
         sx={{
           '&.MuiAccordion-root:before': {
             opacity: 0,

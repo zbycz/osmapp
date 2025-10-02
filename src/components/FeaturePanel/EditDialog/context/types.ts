@@ -8,6 +8,8 @@ export type Members = Array<{
   originalLabel?: string; // only shown when member is not among editItems
 }>;
 
+export type Section = 'climbing' | 'location' | 'parents' | 'members' | 'tags';
+
 // internal type stored in the state
 export type DataItem = {
   shortId: string;
@@ -21,6 +23,7 @@ export type DataItem = {
     nodes: number[] | undefined;
     members: Members;
   };
+  sections: Section[];
   nodeLonLat?: LonLat; // only for nodes (may be undefined until user selects the location)
   nodes?: number[]; // only for ways
   members?: Members; // only for relations
@@ -41,6 +44,7 @@ export type EditDataItem = DataItem & {
   toggleToBeDeleted: () => void;
   convertToRelation: ConvertToRelation;
   modified: boolean;
+  setSections: SetSections;
 };
 
 export type ConvertToRelation = () => Promise<string>;
@@ -52,3 +56,5 @@ export type SetTagsEntries = (
 export type SetShortId = (shortId: string) => void;
 
 export type SetMembers = (updateFn: (prev: Members) => Members) => void;
+
+export type SetSections = (updateFn: (prev: Section[]) => Section[]) => void;

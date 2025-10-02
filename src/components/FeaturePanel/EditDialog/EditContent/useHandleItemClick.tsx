@@ -2,32 +2,23 @@ import React from 'react';
 import { useCurrentItem, useEditContext } from '../context/EditContext';
 import { getApiId, getShortId } from '../../../../services/helpers';
 import { fetchFreshItem } from '../context/itemsHelpers';
-import { Setter } from '../../../../types';
 import { Feature } from '../../../../services/types';
 import { DataItem, EditDataItem } from '../context/types';
 
 import { isInItems } from '../context/utils';
 
-export const useHandleItemClick = (setIsExpanded: Setter<boolean>) => {
+export const useHandleItemClick = () => {
   const { addItem, items, setCurrent } = useEditContext();
 
   return async (e: React.MouseEvent, shortId: string) => {
-    const isCmdClicked = e.ctrlKey || e.metaKey;
-    const switchToNewTab = !isCmdClicked;
-    const apiId = getApiId(shortId);
-
     if (!isInItems(items, shortId)) {
-      const newItem = await fetchFreshItem(apiId);
+      const newItem = await fetchFreshItem(getApiId(shortId));
       addItem(newItem);
+    }
 
-      if (switchToNewTab) {
-        setIsExpanded(false);
-        setCurrent(newItem.shortId);
-      }
-    } else {
-      if (switchToNewTab) {
-        setCurrent(shortId);
-      }
+    const switchToNewTab = !e.ctrlKey && !e.metaKey;
+    if (switchToNewTab) {
+      setCurrent(shortId);
     }
   };
 };
