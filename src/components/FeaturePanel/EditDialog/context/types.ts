@@ -2,11 +2,12 @@ import { FeatureTags, LonLat } from '../../../../services/types';
 
 export type TagsEntries = [string, string][];
 
-export type Members = Array<{
+export type Member = {
   shortId: string;
   role: string;
   originalLabel?: string; // only shown when member is not among editItems
-}>;
+};
+export type Members = Member[];
 
 export type Section = 'climbing' | 'location' | 'parents' | 'members' | 'tags';
 

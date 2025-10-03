@@ -12,18 +12,22 @@ import {
   useTheme,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { FeatureRow } from '../FeatureRow';
-import { t, Translation } from '../../../../../services/intl';
-import { AddMemberForm } from './AddMemberForm';
+import { FeatureRow } from '../../FeatureRow';
+import { t, Translation } from '../../../../../../services/intl';
+import { AddMemberForm } from '../AddMemberForm';
 import ShowChartIcon from '@mui/icons-material/ShowChart';
-import { CragIcon } from '../../../Climbing/CragIcon';
+import { CragIcon } from '../../../../Climbing/CragIcon';
 import {
   useHandleItemClick,
   useHandleOpenAllMembers,
-} from '../useHandleItemClick';
-import { ConvertNodeToRelation, isConvertible } from './ConvertNodeToRelation';
-import { useCurrentItem, useExpandedSections } from '../../context/EditContext';
-import { OpenAllButton } from './helpers';
+} from '../../useHandleItemClick';
+import { ConvertNodeToRelation, isConvertible } from '../ConvertNodeToRelation';
+import {
+  useCurrentItem,
+  useExpandedSections,
+} from '../../../context/EditContext';
+import { OpenAllButton } from '../helpers';
+import { Member } from '../../../context/types';
 
 const SectionName = () => {
   const theme = useTheme();
@@ -98,17 +102,26 @@ const CustomAccordion = ({
             ) : null}
           </Stack>
         </AccordionSummary>
-        <AccordionDetails sx={{ pt: 0 }}>
-          <List disablePadding>{children}</List>
-        </AccordionDetails>
+        <AccordionDetails sx={{ pt: 0 }}>{children}</AccordionDetails>
       </Accordion>
     </>
   );
 };
 
+const MemberItem = ({ member }: { member: Member }) => {
+  const handleClick = useHandleItemClick();
+  return (
+    <FeatureRow
+      shortId={member.shortId}
+      originalLabel={member.originalLabel}
+      role={member.role}
+      onClick={(e: React.MouseEvent) => handleClick(e, member.shortId)}
+    />
+  );
+};
+
 export const MembersEditor = () => {
   const { shortId, members, tags } = useCurrentItem();
-  const handleClick = useHandleItemClick();
   const convertible = isConvertible(shortId, tags);
   const handleOpenAll = useHandleOpenAllMembers();
 
@@ -118,15 +131,13 @@ export const MembersEditor = () => {
 
   return (
     <CustomAccordion membersLength={members?.length}>
-      {members?.map((member) => (
-        <FeatureRow
-          key={member.shortId}
-          shortId={member.shortId}
-          originalLabel={member.originalLabel}
-          role={member.role}
-          onClick={(e: React.MouseEvent) => handleClick(e, member.shortId)}
-        />
-      ))}
+      {!!members && (
+        <List disablePadding>
+          {members.map((member) => (
+            <MemberItem key={member.shortId} member={member} />
+          ))}
+        </List>
+      )}
 
       <Stack direction="row" alignItems="center" spacing={2} mt={1} ml={1}>
         {convertible ? <ConvertNodeToRelation /> : <AddMemberForm />}
