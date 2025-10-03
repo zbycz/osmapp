@@ -13,12 +13,16 @@ const StyledIconButton = styled(IconButton, {
   shouldForwardProp: (prop) => !prop.startsWith('$'),
 })<{ $isOpened: boolean }>`
   pointer-events: all;
-  &,
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.1); // same as LayerSwitcherButton
+  backdrop-filter: blur(15px);
+
+  background-color: ${({ theme, $isOpened }) =>
+    $isOpened
+      ? theme.palette.background.paper
+      : convertHexToRgba(theme.palette.background.paper, 0.8)};
+
   &:hover {
-    background-color: ${({ theme, $isOpened }) =>
-      $isOpened
-        ? theme.palette.background.paper
-        : convertHexToRgba(theme.palette.background.paper, 0.8)};
+    background-color: ${({ theme }) => theme.palette.background.paper};
   }
 `;
 
