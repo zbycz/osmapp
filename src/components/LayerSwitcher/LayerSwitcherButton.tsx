@@ -60,7 +60,8 @@ export const LayerSwitcherButton = ({
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   isOpened?: boolean;
 }) => {
-  const isMobileMode = useMobileMode();
+  const isMobileMode = useMobileMode(); // TODO this could be done with media queries, is there a reason why it is not?
+
   return (
     <Tooltip title={isMobileMode ? t('layerswitcher.button') : null} arrow>
       <StyledLayerSwitcher
