@@ -277,7 +277,7 @@ const CragsInAreaInner = () => {
 
   return (
     <>
-      {crags.length > 1 ? (
+      {unfilteredCrags.length > 0 ? (
         <>
           <StyledPaper elevation={0} square>
             <Stack
@@ -294,7 +294,7 @@ const CragsInAreaInner = () => {
               <CragsInAreaFilter />
             </Stack>
           </StyledPaper>
-          <RouteDistribution features={allCragRoutes} />
+          {crags.length > 1 && <RouteDistribution features={allCragRoutes} />}
         </>
       ) : null}
 
