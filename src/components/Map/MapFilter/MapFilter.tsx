@@ -22,11 +22,40 @@ const StyledIconButton = styled(IconButton, {
   }
 `;
 
-export const MapFilter = () => {
-  const { climbingFilter } = useUserSettingsContext();
+type MapFilterButtonProps = {
+  onClick: (event: React.MouseEvent<HTMLElement>) => void;
+  open: boolean;
+};
+const MapFilterButton = ({ open, onClick }: MapFilterButtonProps) => {
   const isMobileMode = useMobileMode();
   const { isDefaultFilter, isGradeIntervalDefault, isMinimumRoutesDefault } =
-    climbingFilter;
+    useUserSettingsContext().climbingFilter;
+  const numberOfActiveFilters = [
+    isGradeIntervalDefault,
+    isMinimumRoutesDefault,
+  ].filter((item) => !item).length;
+
+  return (
+    <Badge
+      variant="standard"
+      badgeContent={numberOfActiveFilters}
+      color="error"
+      invisible={isDefaultFilter}
+    >
+      <Tooltip title={t('map.filter')} arrow>
+        <StyledIconButton
+          onClick={onClick}
+          $isOpened={open}
+          size={isMobileMode ? 'large' : 'medium'}
+        >
+          <FilterListAltIcon fontSize="small" />
+        </StyledIconButton>
+      </Tooltip>
+    </Badge>
+  );
+};
+
+export const MapFilter = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const handleToggle = (event: React.MouseEvent<HTMLElement>) => {
@@ -34,29 +63,9 @@ export const MapFilter = () => {
     setAnchorEl(event.currentTarget);
   };
 
-  const numberOfActiveFilters = [
-    isGradeIntervalDefault,
-    isMinimumRoutesDefault,
-  ].filter((item) => !item).length;
-
   return (
     <>
-      <Badge
-        variant="standard"
-        badgeContent={numberOfActiveFilters}
-        color="error"
-        invisible={isDefaultFilter}
-      >
-        <Tooltip title={t('map.filter')} arrow>
-          <StyledIconButton
-            onClick={handleToggle}
-            $isOpened={open}
-            size={isMobileMode ? 'large' : 'medium'}
-          >
-            <FilterListAltIcon fontSize="small" />
-          </StyledIconButton>
-        </Tooltip>
-      </Badge>
+      <MapFilterButton open={open} onClick={handleToggle} />
 
       <FilterPopover
         anchorEl={anchorEl}
