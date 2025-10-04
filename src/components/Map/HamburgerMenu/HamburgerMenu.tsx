@@ -25,7 +25,7 @@ import { getIdEditorLink } from '../../FeaturePanel/helpers/externalLinks';
 import { UserTheme, useUserThemeContext } from '../../../helpers/theme';
 import GithubIcon from '../../../assets/GithubIcon';
 import { LangSwitcher } from './LangSwitcher';
-import { HamburgerIconButton } from './HamburgerIconButton';
+import { HamburgerMenuButton } from './HamburgerMenuButton';
 import { PROJECT_ID } from '../../../services/project';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import Link from 'next/link';
@@ -200,7 +200,7 @@ export const HamburgerMenu = () => {
         </Stack>
       </Drawer>
 
-      <HamburgerIconButton anchorRef={anchorRef} onClick={open} />
+      <HamburgerMenuButton anchorRef={anchorRef} onClick={open} />
     </>
   );
 };
