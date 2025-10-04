@@ -10,6 +10,7 @@ import { MembersEditor } from './FeatureEditSection/MembersEditor/MembersEditor'
 import React from 'react';
 import { ClimbingEditor } from './FeatureEditSection/ClimbingEditor/ClimbingEditor';
 import { Box } from '@mui/material';
+import { ImagesEditor } from './ImagesEditor';
 
 export const ItemEditSection = () => {
   const { toBeDeleted } = useCurrentItem();
@@ -28,6 +29,7 @@ export const ItemEditSection = () => {
       <ItemHeading />
       <PresetSelect />
       <MajorKeysEditor />
+      <ImagesEditor />
       <ClimbingEditor />
       <ParentsEditor />
       <MembersEditor />

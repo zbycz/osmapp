@@ -6,7 +6,6 @@ import {
 } from '../../../services/images/getImageDefs';
 import { not, publishDbgObject } from '../../../utils';
 import { getImageFromApi } from '../../../services/images/getImageFromApi';
-import { useFeatureContext } from '../../utils/FeatureContext';
 import { ImageDef, isInstant } from '../../../services/types';
 import uniqBy from 'lodash/uniqBy';
 
@@ -108,9 +107,7 @@ const getInitialState = (defs: ImageDef[]) =>
     image: getInstantImage(def),
   })) ?? [];
 
-export const useLoadImages = () => {
-  const { feature } = useFeatureContext();
-  const defs = feature?.imageDefs;
+export const useLoadImages = (defs: ImageDef[]) => {
   const apiDefs = useMemo(() => defs?.filter(not(isInstant)) ?? [], [defs]);
 
   const initialState = useMemo(() => getInitialState(defs), [defs]);

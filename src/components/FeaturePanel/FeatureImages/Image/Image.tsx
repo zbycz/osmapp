@@ -6,7 +6,7 @@ import {
 } from '../../../../services/images/getImageDefs';
 import { PathsSvg } from '../PathsSvg';
 
-import { HEIGHT } from '../helpers';
+import { IMAGE_HEIGHT } from '../helpers';
 import {
   ImageClickHandler,
   initialSize,
@@ -82,7 +82,7 @@ export const Image = ({ def, image, onClick, alt }: Props) => {
       ) : (
         <Img
           src={image.imageUrl}
-          height={HEIGHT}
+          height={IMAGE_HEIGHT}
           alt={alt || getImageDefId(def)}
           onLoad={onPhotoLoad}
           $hasPaths={hasPaths}
