@@ -40,6 +40,7 @@ const getIndexFromWikimediaCommonsKey = (key: string): number | undefined => {
   return undefined;
 };
 
+// @TODO delete?
 export const WikimediaCommonsEditor = ({ k }: { k: string }) => {
   const { focusTag } = useEditDialogContext();
   const { tags, setTag } = useCurrentItem();

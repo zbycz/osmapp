@@ -1,10 +1,10 @@
 import styled from '@emotion/styled';
 
-export const HEIGHT = 238;
+export const IMAGE_HEIGHT = 238;
 
 export const ImageSkeleton = styled.div`
   width: 200px;
-  height: ${HEIGHT}px;
+  height: ${IMAGE_HEIGHT}px;
   margin: 0 auto;
   animation: skeleton-loading 1s linear infinite alternate;
 
