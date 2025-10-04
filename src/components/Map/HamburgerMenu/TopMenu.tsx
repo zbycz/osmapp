@@ -11,7 +11,7 @@ const Wrapper = styled.span`
 
   @media ${isDesktop} {
     display: inline-block;
-    margin-top: 8px;
+    margin-top: 5px;
   }
 `;
 
