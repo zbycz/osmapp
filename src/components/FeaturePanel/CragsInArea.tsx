@@ -142,7 +142,7 @@ const AreaInfo = ({ crags }: { crags: Feature[] }) => {
   return (
     <PanelLabel
       addition={
-        crags.length > 1 ? (
+        crags.length >= 2 ? (
           <NumberOfVisible crags={crags.length} routes={numberOfRoutes} />
         ) : null
       }
@@ -173,31 +173,6 @@ const Gallery = ({ images, feature }) => {
         ))}
       </Slider>
     </Wrapper>
-  );
-};
-
-const CragList = ({ crags }: { crags: Feature[] }) => {
-  const { feature } = useFeatureContext();
-  const otherFeatures = feature.memberFeatures.filter(
-    ({ tags }) => tags.climbing !== 'crag',
-  );
-
-  return (
-    <Box mt={2} mb={4}>
-      <CragListContainer>
-        {crags.map((item) => (
-          <CragItem key={getOsmappLink(item)} feature={item} />
-        ))}
-      </CragListContainer>
-
-      {otherFeatures.length > 0 && (
-        <Ul>
-          {otherFeatures.map((item) => (
-            <MemberItem key={getReactKey(item)} feature={item} />
-          ))}
-        </Ul>
-      )}
-    </Box>
   );
 };
 
@@ -244,6 +219,31 @@ const CragItem = ({ feature }: { feature: Feature }) => {
   );
 };
 
+const CragList = ({ crags }: { crags: Feature[] }) => {
+  const { feature } = useFeatureContext();
+  const otherFeatures = feature.memberFeatures.filter(
+    ({ tags }) => tags.climbing !== 'crag',
+  );
+
+  return (
+    <Box mt={2} mb={4}>
+      <CragListContainer>
+        {crags.map((item) => (
+          <CragItem key={getOsmappLink(item)} feature={item} />
+        ))}
+      </CragListContainer>
+
+      {otherFeatures.length > 0 && (
+        <Ul>
+          {otherFeatures.map((item) => (
+            <MemberItem key={getReactKey(item)} feature={item} />
+          ))}
+        </Ul>
+      )}
+    </Box>
+  );
+};
+
 const NumberOfVisible = (props: { crags: any; routes: any }) => (
   <Chip
     size="small"
@@ -279,10 +279,10 @@ const AllCragsDistribution = ({ crags }: { crags: Feature[] }) => {
     return [...acc, ...memberFeatures];
   }, []);
 
-  if (crags.length <= 1) {
-    return null;
+  if (crags.length >= 2) {
+    return <RouteDistribution features={allCragRoutes} />;
   }
-  return <RouteDistribution features={allCragRoutes} />;
+  return null;
 };
 
 const FilterRow: React.FC = ({ children }) => (
@@ -306,7 +306,7 @@ const CragsInAreaInner = () => {
 
   return (
     <>
-      {unfilteredCrags.length > 0 && (
+      {unfilteredCrags.length >= 2 && (
         <FilterRow>
           <NumberOfHiddenCrags crags={crags} />
           <CragsInAreaSort setSortBy={setSortBy} sortBy={sortBy} />

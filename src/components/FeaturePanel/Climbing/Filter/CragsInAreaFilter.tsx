@@ -6,8 +6,7 @@ import { FilterPopover } from './FilterPopover';
 import { useMobileMode } from '../../../helpers';
 
 export const CragsInAreaFilter = () => {
-  const { climbingFilter } = useUserSettingsContext();
-  const { isDefaultFilter, reset } = climbingFilter;
+  const { isDefaultFilter } = useUserSettingsContext().climbingFilter;
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const isMobileMode = useMobileMode();
