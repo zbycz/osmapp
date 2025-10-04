@@ -1,4 +1,5 @@
 import {
+  ExpressionInputType,
   ExpressionSpecification,
   LayerSpecification,
 } from '@maplibre/maplibre-gl-style-spec';
@@ -11,10 +12,15 @@ const HOVER: ExpressionSpecification = [
   0,
 ];
 
+const SHOULD_SHOW: ExpressionInputType | ExpressionSpecification =
+  global.window?.localStorage.getItem('show_all_climbing_outlines') === 'true'
+    ? 1
+    : HOVER;
+
 const BY_ZOOM = (z: number): ExpressionSpecification => [
   'case',
   ['>', z, ['get', 'minZoom']],
-  HOVER,
+  SHOULD_SHOW,
   0,
 ];
 

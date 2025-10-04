@@ -53,6 +53,27 @@ const StoreRequests = () => {
   );
 };
 
+const ShowAllClimbingOutlines = () => {
+  const [value, setValue] = usePersistedState(
+    'show_all_climbing_outlines',
+    false,
+  );
+
+  return (
+    <ListItem>
+      <ListItemText>
+        Develop: show all outlines on climbing layer (reload needed)
+      </ListItemText>
+      <Switch
+        color="primary"
+        edge="end"
+        onChange={() => setValue((prev) => !prev)}
+        checked={!!value}
+      />
+    </ListItem>
+  );
+};
+
 // TODO refactor this - extract member functions
 
 // eslint-disable-next-line max-lines-per-function
@@ -204,6 +225,7 @@ export const UserSettingsDialog = ({ onClose, isOpened }: Props) => {
           </ListItem>
 
           <StoreRequests />
+          <ShowAllClimbingOutlines />
         </List>
       </DialogContent>
     </Dialog>
