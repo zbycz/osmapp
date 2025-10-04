@@ -10,7 +10,6 @@ import { getImageDefs, mergeMemberImageDefs } from '../images/getImageDefs';
 import { fetchOverpassCenter } from '../overpass/fetchOverpassCenter';
 import {
   isClimbingRelation,
-  isFeatureClimbingRoute,
   isPublictransportRoute,
   isRouteMaster,
 } from '../../utils';
@@ -201,11 +200,6 @@ const addMemberFeatures = async (feature: Feature) => {
 //  - maybe this can be merged in fetchFeatureWithCenter()
 //  - check: Warning: data for page "/[[...all]]" (path "/relation/4810774") is 627 kB which exceeds the threshold of 128 kB, this amount of data can reduce performance. See more info here: https://nextjs.org/docs/messages/large-page-data
 const addMembersAndParents = async (feature: Feature): Promise<Feature> => {
-  if (isFeatureClimbingRoute(feature)) {
-    const parentFeatures = await fetchParentFeatures(feature.osmMeta);
-    return { ...feature, parentFeatures };
-  }
-
   if (
     isClimbingRelation(feature) ||
     isPublictransportRoute(feature) ||
@@ -221,6 +215,12 @@ const addMembersAndParents = async (feature: Feature): Promise<Feature> => {
       center: feature.center, // feature contains correct center from centerCache or overpass
       parentFeatures,
     };
+  }
+
+  // fallback for climbing=route and climbing=boulder and non-relation crags/areas
+  if (feature.tags.climbing || feature.tags.sport === 'climbing') {
+    const parentFeatures = await fetchParentFeatures(feature.osmMeta);
+    return { ...feature, parentFeatures };
   }
 
   return feature;
