@@ -37,7 +37,7 @@ const GROUPS_LAYOUT: SymbolLayerSpecification['layout'] = {
   'text-offset': [0, 0.6],
   'icon-optional': false,
   'icon-ignore-placement': false,
-  'icon-allow-overlap': ['step', ['zoom'], true, 4, false],
+  'icon-allow-overlap': ['step', ['zoom'], true, 4, false, 15, true],
   'text-field': ['step', ['zoom'], '', 4, ['get', 'label']],
   'text-padding': 2,
   'text-font': ['Noto Sans Bold'],
